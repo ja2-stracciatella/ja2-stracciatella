@@ -1,7 +1,7 @@
 #ifndef __SCREEN_IDS
 #define __SCREEN_IDS
 
-typedef enum ScreenTypes
+enum ScreenTypes
 {
 	EDIT_SCREEN,
 	SAVING_SCREEN,
