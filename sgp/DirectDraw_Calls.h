@@ -2,7 +2,7 @@
 #define	__DirectDraw_Calls_H__
 
 #include "DirectX_Common.h"
-#include <ddraw.h>
+#include <DDraw.h>
 
 // Direct Draw Functions
 

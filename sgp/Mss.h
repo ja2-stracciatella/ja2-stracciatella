@@ -39,6 +39,8 @@
 #ifndef MSS_H
 #define MSS_H
 
+#include "Stubs.h"
+
 // IS_DOS for DOS
 // IS_WINDOWS for Windows or Win32s
 // IS_WIN32 for Win32s
@@ -192,6 +194,10 @@
     #endif
   #endif
 #endif
+
+#define IS_32
+#define IS_LE
+#define IS_X86
 
 #if (!defined(IS_LE) && !defined(IS_BE))
   #error MSS.H did not detect your platform.  Define __DOS__, _WINDOWS, WIN32, or macintosh.

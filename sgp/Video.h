@@ -2,7 +2,7 @@
 #define __VIDEO_
 
 //#include <windows.h> /* XXX */
-//#include <ddraw.h> /* XXX */
+#include <DDraw.h>
 //#include <process.h> /* XXX */
 
 #include "Local.h"

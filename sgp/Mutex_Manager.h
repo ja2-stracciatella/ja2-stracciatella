@@ -1,7 +1,7 @@
 #ifndef __MUTEX_
 #define __MUTEX_
 
-#include <process.h>
+//#include <process.h> /* XXX */
 #include "Types.h"
 #include "Local.h"
 

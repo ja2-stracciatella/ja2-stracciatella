@@ -1,6 +1,8 @@
 #ifndef __TYPES_
 #define __TYPES_
 
+#define lengthof(a) (sizeof(a) / sizeof(a[0]))
+
 #ifndef _SIRTECH_TYPES_
 #define _SIRTECH_TYPES_
 

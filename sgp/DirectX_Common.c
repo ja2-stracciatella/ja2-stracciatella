@@ -8,7 +8,7 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <ddraw.h>
+	#include <DDraw.h>
 	#include "DirectX_Common.h"
 	#include <windows.h>
 	#include "Debug.h"

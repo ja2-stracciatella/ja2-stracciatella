@@ -9,6 +9,9 @@
 
 #ifndef __DDRAW_INCLUDED__
 #define __DDRAW_INCLUDED__
+
+#include "Stubs.h"
+
 #if defined( _WIN32 )  && !defined( _NO_COM )
 #define COM_NO_WINDOWS_H
 #include <objbase.h>

@@ -6,7 +6,7 @@
 	#include "DirectX_Common.h"
 	#include "DirectDraw_Calls.h"
 
-	#include <ddraw.h>
+	#include <DDraw.h>
 	#include "Debug.h"
 	#include "video_private.h"
 #endif

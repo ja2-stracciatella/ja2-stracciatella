@@ -10,7 +10,7 @@
 #include "VObject.h"
 #include "MouseSystem.h"
 #include "SoundMan.h"
-#include "Button Sound Control.h"
+#include "Button_Sound_Control.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -97,6 +97,8 @@ extern "C" {
 #define	GUI_SND_DMOV										BUTTON_SOUND_DISABLED_MOVED_ONTO
 
 extern UINT32 ButtonDestBuffer;
+
+struct _GUI_BUTTON;
 
 // GUI_BUTTON callback function type
 typedef void (*GUI_CALLBACK)(struct _GUI_BUTTON *,INT32);
@@ -187,7 +189,7 @@ INT16 FindFreeIconSlot(void);
 INT32 GetNextButtonNumber(void);
 
 // Now used by Wizardry -- DB
-void SetButtonFastHelpText(INT32 iButton, UINT16 *Text);
+void SetButtonFastHelpText(INT32 iButton, wchar_t *Text);
 
 #ifdef _JA2_RENDER_DIRTY
 void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn );
@@ -254,8 +256,8 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, UINT8 *filename, INT16 Priority, G
 INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 yloc,INT16 w,INT16 h,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 
-INT32 CreateTextButton(UINT16 *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
-INT32 CreateIconAndTextButton( INT32 Image, UINT16 *string, UINT32 uiFont,
+INT32 CreateTextButton(wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
+INT32 CreateIconAndTextButton( INT32 Image, wchar_t *string, UINT32 uiFont,
 															 INT16 sForeColor, INT16 sShadowColor,
 															 INT16 sForeColorDown, INT16 sShadowColorDown,
 															 INT8 bJustification,
@@ -263,20 +265,18 @@ INT32 CreateIconAndTextButton( INT32 Image, UINT16 *string, UINT32 uiFont,
 															 GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
 
 //New functions
-void SpecifyButtonText( INT32 iButtonID, UINT16 *string );
+void SpecifyButtonText( INT32 iButtonID, wchar_t *string );
 void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont );
 void SpecifyButtonMultiColorFont(INT32 iButtonID, BOOLEAN fMultiColor);
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor );
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown );
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited );
 void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification );
-void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiFont,
+void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor );
-void SpecifyFullButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiFont,
+void SpecifyFullButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
 																		  INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification );
-void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiFont,
-																			INT16 sForeColor, INT16 sShadowColor );
 void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText );
 void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText );
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth);
