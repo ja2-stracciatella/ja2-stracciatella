@@ -9,7 +9,8 @@ CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/TacticalAI
 CFLAGS += -I ../../sgp/trunk
 
-#CFLAGS += -Wall -W -std=c99
+#CFLAGS += -Wall -W
+#CFLAGS += -std=c99
 CFLAGS += -Werror-implicit-function-declaration
 CFLAGS += -Wimplicit-int
 CFLAGS += -Wsequence-point
@@ -19,10 +20,12 @@ CFLAGS += -Werror
 
 CFLAGS += -DJA2
 
+LDFLAGS += -lm
+
 SRCS += ./Build/AniViewScreen.c
 SRCS += ./Build/Credits.c
 SRCS += ./Build/Editor/Cursor_Modes.c
-SRCS += ./Build/Editor/EditScreen.c
+#SRCS += ./Build/Editor/EditScreen.c
 SRCS += ./Build/Editor/Edit_Sys.c
 SRCS += ./Build/Editor/EditorBuildings.c
 SRCS += ./Build/Editor/EditorItems.c
@@ -35,7 +38,7 @@ SRCS += ./Build/Editor/Editor_Taskbar_Creation.c
 SRCS += ./Build/Editor/Editor_Taskbar_Utils.c
 SRCS += ./Build/Editor/Editor_Undo.c
 SRCS += ./Build/Editor/Item_Statistics.c
-SRCS += ./Build/Editor/LoadScreen.c
+#SRCS += ./Build/Editor/LoadScreen.c
 SRCS += ./Build/Editor/MessageBox.c
 SRCS += ./Build/Editor/NewSmooth.c
 SRCS += ./Build/Editor/PopupMenu.c
@@ -305,22 +308,26 @@ SRCS += ./Build/Utils/Timer_Control.c
 SRCS += ./Build/Utils/Utilities.c
 #SRCS += ./Build/Utils/Win_Util.c
 SRCS += ./Build/Utils/WordWrap.c
-SRCS += ./Build/Utils/_DutchText.c
+#SRCS += ./Build/Utils/_DutchText.c
 SRCS += ./Build/Utils/_EnglishText.c
-SRCS += ./Build/Utils/_FrenchText.c
-SRCS += ./Build/Utils/_GermanText.c
-SRCS += ./Build/Utils/_ItalianText.c
+#SRCS += ./Build/Utils/_FrenchText.c
+#SRCS += ./Build/Utils/_GermanText.c
+#SRCS += ./Build/Utils/_ItalianText.c
 SRCS += ./Build/Utils/_JA25EnglishText.c
-SRCS += ./Build/Utils/_JA25GermanText.c
-SRCS += ./Build/Utils/_PolishText.c
-SRCS += ./Build/Utils/_RussianText.c
-SRCS += ./Build/Utils/_TaiwaneseText.c
+#SRCS += ./Build/Utils/_JA25GermanText.c
+#SRCS += ./Build/Utils/_PolishText.c
+#SRCS += ./Build/Utils/_RussianText.c
+#SRCS += ./Build/Utils/_TaiwaneseText.c
 OBJS = $(SRCS:.c=.o)
 
 .SUFFIXES:
 .SUFFIXES: .C .c .o
 
-all: $(OBJS)
+all: ja2
+
+ja2: $(OBJS)
+	@echo '===> Binde $@'
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 
 .C.o:
 .c.o:
