@@ -4,12 +4,11 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
 	#include "Debug.h"
 	#include "Input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "English.h"
 	#if defined( JA2 ) || defined( UTIL )
 		#include "Video.h"
@@ -18,8 +17,6 @@
 	#endif
 	#include "Local.h"
 #endif
-
-#include "zmouse.h"
 
 // Make sure to refer to the translation table which is within one of the following files (depending
 // on the language used). ENGLISH.C, JAPANESE.C, FRENCH.C, GERMAN.C, SPANISH.C, etc...

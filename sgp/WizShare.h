@@ -19,6 +19,7 @@
 //
 //**************************************************************************
 
+#include "Stubs.h"
 #include "Types.h"
 
 //**************************************************************************
@@ -36,7 +37,7 @@
 //
 //**************************************************************************
 
-#pragma pack(push, 1)
+//#pragma pack(push, 1) /* XXX */
 
 typedef struct WizSharedtag
 {
@@ -49,6 +50,6 @@ typedef struct WizSharedtag
 	CHAR		cMessages[NUM_MESSAGES][MAX_MSG_LENGTH];
 } WizShared;
 
-#pragma pack(pop)
+//#pragma pack(pop) /* XXX */
 
 #endif

@@ -2,6 +2,7 @@
 #define __VOBJECT_BLITTERS
 
 #include "Shading.h"
+#include "Stubs.h"
 #include "VSurface.h"
 #include "VObject.h"
 

@@ -12,6 +12,7 @@
 	#include "DirectX_Common.h"
 	#include <windows.h>
 	#include "Debug.h"
+	#include <string.h>
 #endif
 
 void  DirectXZeroMem ( void* pMemory, int nSize )

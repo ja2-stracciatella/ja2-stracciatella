@@ -8,7 +8,10 @@
 
 	#include <DDraw.h>
 	#include "Debug.h"
-	#include "video_private.h"
+	#include "Video_Private.h"
+	#include <string.h>
+	#include "SGP.h"
+	#include "VObject_Blitters.h"
 #endif
 
 // DirectDrawSurface2 Calls
@@ -397,13 +400,13 @@ HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 
 
 
 	// Lock surfaces
-	DDLockSurface( (LPDIRECTDRAWSURFACE2)pDestSurface, NULL, &SurfaceDescription, 0, NULL);
+	DDLockSurface( (LPDIRECTDRAWSURFACE2)pDestSurface, NULL, &SurfaceDescription, 0, 0);
 	uiDestPitchBYTES = SurfaceDescription.lPitch;
 	pDestBuf				 = SurfaceDescription.lpSurface;
 
 
 	// Lock surfaces
-	DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, NULL);
+	DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, 0);
 	uiSrcPitchBYTES = SurfaceDescription.lPitch;
 	pSrcBuf				 = SurfaceDescription.lpSurface;
 
@@ -458,7 +461,7 @@ HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDe
 
 
 	// Lock surfaces
-	DDLockSurface( (LPDIRECTDRAWSURFACE2)pDestSurface, NULL, &SurfaceDescription, 0, NULL);
+	DDLockSurface( (LPDIRECTDRAWSURFACE2)pDestSurface, NULL, &SurfaceDescription, 0, 0);
 	uiDestPitchBYTES = SurfaceDescription.lPitch;
 	pDestBuf				 = SurfaceDescription.lpSurface;
 
@@ -466,7 +469,7 @@ HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDe
 	if ( pSrcSurface != NULL )
 	{
 		// Lock surfaces
-		DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, NULL);
+		DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, 0);
 		uiSrcPitchBYTES = SurfaceDescription.lPitch;
 		pSrcBuf				 = SurfaceDescription.lpSurface;
 	}
@@ -490,7 +493,7 @@ HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDe
 	else if ( uiFlags == DDBLT_WAIT )
 	{
 		// Lock surfaces
-		DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, NULL);
+		DDLockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL, &SurfaceDescription, 0, 0);
 		uiSrcPitchBYTES = SurfaceDescription.lPitch;
 		pSrcBuf				 = SurfaceDescription.lpSurface;
 

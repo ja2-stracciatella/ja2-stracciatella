@@ -73,19 +73,31 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 	{
 		iFileLoader = UNKNOWN_FILE_READER;
 
+		#if 0 /* XXX */
 		if ( _stricmp( Extension, "PCX" ) == 0 )
+		#else
+		if (strcasecmp( Extension, "PCX" ) == 0)
+		#endif
 		{
 			iFileLoader = PCX_FILE_READER;
 			break;
 		}
 
+		#if 0 /* XXX */
 		if ( _stricmp( Extension, "TGA" ) == 0 )
+		#else
+		if (strcasecmp( Extension, "TGA" ) == 0)
+		#endif
 		{
 			iFileLoader = TGA_FILE_READER;
 			break;
 		}
 
+		#if 0 /* XXX */
 		if ( _stricmp( Extension, "STI" ) == 0 )
+		#else
+		if (strcasecmp( Extension, "STI" ) == 0)
+		#endif
 		{
 			iFileLoader = STCI_FILE_READER;
 			break;
@@ -313,9 +325,9 @@ BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT
 	Assert( hImage->pCompressedImageData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -398,9 +410,9 @@ BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UIN
 	Assert( hImage->pCompressedImageData != NULL );
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Start check" );
 	// Validations
-	CHECKF( usX >= 0 );
+	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -490,9 +502,9 @@ BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestW
 	Assert( hImage->p16BPPData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -533,9 +545,9 @@ BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDes
 	Assert( hImage->p16BPPData != NULL );
 
 	// Validations
-	CHECKF( usX >= 0 );
+	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < hImage->usWidth );
-	CHECKF( usY >= 0 );
+	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < hImage->usHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
@@ -596,9 +608,9 @@ BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDest
 
 	// Validations
 	CHECKF( hImage->p16BPPData != NULL );
-	CHECKF( usX >= 0 );
+	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
-	CHECKF( usY >= 0 );
+	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );

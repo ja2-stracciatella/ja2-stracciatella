@@ -6,7 +6,7 @@
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include "PCX.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "FileMan.h"
 #endif
 

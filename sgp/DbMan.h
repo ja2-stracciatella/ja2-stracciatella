@@ -45,7 +45,6 @@
 //
 //**************************************************************************
 
-typedef UINT8		BYTE;
 typedef UINT32		HDBFILE;
 typedef UINT16		HFILEINDEX;
 typedef UINT16		HDBINDEX;

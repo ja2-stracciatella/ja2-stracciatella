@@ -23,7 +23,7 @@
 #else
 	#include "Types.h"
 	#include "FileMan.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "WCheck.h"
 	#include "HImage.h"
 	#include "string.h"

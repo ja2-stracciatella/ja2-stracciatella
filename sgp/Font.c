@@ -7,13 +7,11 @@
 	#include "Types.h"
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <malloc.h>
-	#include <windows.h>
 	#include <stdarg.h>
 	#include <wchar.h>
 	#include "SGP.h"
 	#include "PCX.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "FileMan.h"
 	#include "Font.h"
 	#include "Debug.h"
@@ -27,6 +25,7 @@
 	#include "HImage.h"
 	#include "VObject.h"
 	#include "VObject_Blitters.h"
+	#include <string.h>
 #endif
 //*******************************************************
 //
@@ -409,7 +408,7 @@ UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 // evaluate to is 512.
 //    'uiCharCount' specifies how many characters of the string are counted.
 //*****************************************************************************
-INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, UINT16 *pFontString, ...)
+INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, wchar_t *pFontString, ...)
 {
 va_list argptr;
 wchar_t	string[512];
@@ -417,7 +416,7 @@ wchar_t	string[512];
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
   // make sure the character count is legal
@@ -447,12 +446,12 @@ wchar_t	string[512];
 // 'uiCharCount' specifies how many characters of the string are counted.
 // YOU HAVE TO PREBUILD THE FAST HELP STRING!
 //*****************************************************************************
-INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, UINT16 *pFontString )
+INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, wchar_t *pFontString )
 {
 	wchar_t	string[512];
 	UINT32 i, index;
 	INT16 sBoldDiff = 0;
-	UINT16 str[2];
+	wchar_t str[2];
 
 	Assert(pFontString!=NULL);
 
@@ -533,10 +532,10 @@ INT16 StringNPixLength(UINT16 *string, UINT32 uiMaxCount, INT32 UseFont)
 //	Returns the length of a string in pixels, depending on the font given.
 //
 //*****************************************************************************
-INT16 StringPixLength(UINT16 *string, INT32 UseFont)
+INT16 StringPixLength(wchar_t *string, INT32 UseFont)
 {
 	UINT32 Cur;
-	UINT16 *curletter,transletter;
+	wchar_t *curletter,transletter;
 
 	if (string == NULL)
 	{
@@ -716,10 +715,10 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters. Uses monochrome font color settings
 //*****************************************************************************
-UINT32 mprintf(INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 mprintf(INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 UINT32			uiDestPitchBYTES;
@@ -728,7 +727,7 @@ UINT8				*pDestBuf;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -768,32 +767,32 @@ UINT8				*pDestBuf;
 }
 
 
-void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, UINT16 *pFontString, ... )
+void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, wchar_t *pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	FindFontRightCoordinates( sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY );
 }
 
-void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, UINT16 *pFontString, ... )
+void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, wchar_t *pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	FindFontCenterCoordinates( sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY );
 }
 
 
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, UINT16 *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -805,7 +804,7 @@ void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
 	*psNewY = yp;
 }
 
-void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, UINT16 *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
+void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -825,10 +824,10 @@ void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHe
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters.
 //*****************************************************************************
-UINT32 gprintf(INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 gprintf(INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 UINT32			uiDestPitchBYTES;
@@ -837,7 +836,7 @@ UINT8				*pDestBuf;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -876,10 +875,10 @@ UINT8				*pDestBuf;
 	return(0);
 }
 
-UINT32 gprintfDirty(INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 gprintfDirty(INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 UINT32			uiDestPitchBYTES;
@@ -888,7 +887,7 @@ UINT8				*pDestBuf;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -945,17 +944,17 @@ UINT8				*pDestBuf;
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters.
 //*****************************************************************************
-UINT32 gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -990,17 +989,17 @@ wchar_t	string[512];
 }
 
 
-UINT32 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -1034,10 +1033,10 @@ wchar_t	string[512];
 }
 
 
-UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 UINT16	usOldForeColor;
@@ -1045,7 +1044,7 @@ UINT16	usOldForeColor;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;
@@ -1094,10 +1093,10 @@ UINT16	usOldForeColor;
 }
 
 
-UINT32 mprintf_coded( INT32 x, INT32 y, UINT16 *pFontString, ...)
+UINT32 mprintf_coded( INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
-UINT16	*curletter, transletter;
+wchar_t	*curletter, transletter;
 va_list argptr;
 wchar_t	string[512];
 UINT16	usOldForeColor;
@@ -1107,7 +1106,7 @@ UINT8				*pDestBuf;
 	Assert(pFontString!=NULL);
 
 	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	curletter=string;

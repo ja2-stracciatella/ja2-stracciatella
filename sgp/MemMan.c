@@ -24,8 +24,6 @@
 //	#include "WIZ8 SGP ALL.H"
 //#else
 	#include "Types.h"
-	#include <windows.h>
-	#include <malloc.h>
 	#include <stdlib.h>
 	#include <string.h>
 	#include "MemMan.h"

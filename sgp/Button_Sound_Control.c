@@ -5,7 +5,7 @@
 #else
 	#include "Types.h"
 	#include "Button_System.h"
-	#include "Button Sound Control.h"
+	#include "Button_Sound_Control.h"
 	#include "Sound_Control.h"
 	#include "JAScreens.h"
 #endif

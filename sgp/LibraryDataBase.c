@@ -4,13 +4,12 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include "windows.h"
 	#include "FileMan.h"
 	#include "LibraryDataBase.h"
 	#include "MemMan.h"
-	#include "stdio.h"
 	#include "WCheck.h"
 	#include "Debug.h"
+	#include <string.h>
 
 	#if defined(JA2) || defined( UTIL )
 		#include "Video.h"
@@ -21,7 +20,7 @@
 
 //NUMBER_OF_LIBRARIES
 #ifdef JA2
-	#include	"Ja2 Libs.c"
+	#include	"JA2_Libs.c"
 	#include	"GameSettings.h"
 #elif defined(UTIL)
 	LibraryInitHeader gGameLibaries[ ] = { 0 };

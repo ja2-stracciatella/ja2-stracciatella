@@ -15,27 +15,35 @@
 
 typedef char CHAR;
 
+typedef BYTE* LPBYTE;
+
 typedef int AIL_DRIVER;
 typedef int AILDOSDLS;
 typedef int BOOL;
 typedef int FILETIME;
 typedef int HANDLE;
+typedef int HBITMAP;
 typedef int HDC;
+typedef int HHOOK;
+typedef int HKEY;
 typedef int HINSTANCE;
 typedef int HRESULT;
 typedef int HWND;
+typedef int INT;
 typedef int IO_PARMS;
+typedef int LPARAM;
+typedef int LRESULT;
 typedef int MMRESULT;
-typedef int RECT;
+typedef int PALETTEENTRY;
+typedef int WIN32_FIND_DATA;
+typedef int WPARAM;
 
-typedef int* LPPALETTEENTRY;
+typedef PALETTEENTRY* LPPALETTEENTRY;
 typedef int* LPRGNDATA;
 
 typedef unsigned int UINT;
 
 typedef unsigned long DWORD;
-
-typedef RECT* LPRECT;
 
 typedef void* LPVOID;
 
@@ -46,6 +54,16 @@ typedef struct
   int x;
   int y;
 } POINT;
+
+typedef struct
+{
+  int left;
+  int top;
+  int right;
+  int bottom;
+} RECT;
+
+typedef RECT* LPRECT;
 
 void GetCursorPos(POINT*);
 
@@ -80,5 +98,9 @@ int GetVolumeInformation(const char*, const char*, size_t, UINT32*, UINT32*, UIN
 int GetLastError(void);
 #define ERROR_NOT_READY 1
 void ShowCursor(int);
+
+UINT32 GetTickCount(void);
+
+#define INVALID_HANDLE_VALUE 0;
 
 #endif

@@ -124,9 +124,9 @@ void DestroyEnglishTransTable( void );
 
 extern HVOBJECT	 GetFontObject(INT32 iFont);
 extern UINT32		 gprintf(INT32 x, INT32 y, wchar_t *pFontString, ...);
-extern UINT32    gprintfDirty(INT32 x, INT32 y, UINT16 *pFontString, ...);
+extern UINT32    gprintfDirty(INT32 x, INT32 y, wchar_t *pFontString, ...);
 extern UINT32		 mprintf(INT32 x, INT32 y, wchar_t *pFontString, ...);
-extern UINT32		 gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, UINT16 *pFontString, ...);
+extern UINT32		 gprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...);
 extern UINT32		 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...);
 
 // Function for displaying coded test. Since it's slower to do this, it's separate from  the normal fuctions

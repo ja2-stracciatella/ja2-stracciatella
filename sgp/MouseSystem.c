@@ -17,12 +17,11 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
 	#include "Debug.h"
 	#include "Input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "Line.h"
 	#if (defined( JA2 ) || defined( UTIL ))
 		#include "Video.h"
@@ -33,7 +32,7 @@
 	#endif
 	#ifdef _JA2_RENDER_DIRTY
 		#include "Render_Dirty.h"
-		#include "\JA2\Build\utils\Font Control.h"
+		#include "Font_Control.h"
 	#endif
 	#include "English.h"
 	// Include mouse system defs and macros
@@ -1234,7 +1233,7 @@ void RefreshMouseRegions( )
 
 }
 
-void SetRegionFastHelpText( MOUSE_REGION *region, UINT16 *szText )
+void SetRegionFastHelpText( MOUSE_REGION *region, wchar_t *szText )
 {
 	Assert( region );
 
@@ -1253,7 +1252,7 @@ void SetRegionFastHelpText( MOUSE_REGION *region, UINT16 *szText )
 		return; //blank (or clear)
 
 	// Allocate memory for the button's FastHelp text string...
-	region->FastHelpText = (UINT16*)MemAlloc( (wcslen( szText ) + 1) * sizeof(UINT16) );
+	region->FastHelpText = (wchar_t*)MemAlloc( (wcslen( szText ) + 1) * sizeof(wchar_t) );
 	Assert( region->FastHelpText );
 
 	wcscpy( region->FastHelpText, szText );
@@ -1286,15 +1285,16 @@ INT16 GetNumberOfLinesInHeight( STR16 pStringA )
 	STR16 pToken;
 	INT16 sCounter = 0;
 	CHAR16 pString[ 512 ];
+	wchar_t* Context = NULL;
 
 	wcscpy( pString, pStringA );
 
 	// tokenize
-	pToken = wcstok( pString, L"\n" );
+	pToken = wcstok(pString, L"\n", &Context);
 
 	while( pToken != NULL )
   {
-		 pToken = wcstok( NULL, L"\n" );
+		 pToken = wcstok(NULL, L"\n", &Context);
 		 sCounter++;
 	}
 
@@ -1369,10 +1369,12 @@ INT16 GetWidthOfString( STR16 pStringA )
 	CHAR16 pString[ 512 ];
 	STR16 pToken;
 	INT16 sWidth = 0;
+	wchar_t* Context = NULL;
+
 	wcscpy( pString, pStringA );
 
 	// tokenize
-	pToken = wcstok( pString, L"\n" );
+	pToken = wcstok(pString, L"\n", &Context);
 
 	while( pToken != NULL )
   {
@@ -1381,7 +1383,7 @@ INT16 GetWidthOfString( STR16 pStringA )
 			sWidth = StringPixLength( pToken, FONT10ARIAL );
 		}
 
-		pToken = wcstok( NULL, L"\n" );
+		pToken = wcstok(NULL, L"\n", &Context);
 	}
 
 	return( sWidth );
@@ -1395,11 +1397,12 @@ void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 	UINT32 uiCursorXPos;
 	CHAR16 pString[ 512 ];
 	INT32 iLength;
+	wchar_t* Context = NULL;
 
 	wcscpy( pString, pStringA );
 
 	// tokenize
-	pToken = wcstok( pString, L"\n" );
+	pToken = wcstok(pString, L"\n", &Context);
 
 	while( pToken != NULL )
   {
@@ -1420,7 +1423,7 @@ void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 			}
 			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(FONT10ARIAL)+1), L"%c", pToken[ i ] );
 		}
-		pToken = wcstok( NULL, L"\n" );
+		pToken = wcstok( NULL, L"\n", &Context);
 		iCounter++;
 	}
 }

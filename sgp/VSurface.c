@@ -15,9 +15,10 @@
 	#include "HImage.h"
 	#include "VSurface.h"
 	#include "VSurface_Private.h"
-	#include "video_private.h"
+	#include "Video_Private.h"
 	#include "WCheck.h"
 	#include "VObject_Blitters.h"
+	#include <string.h>
 #endif
 
 extern void SetClippingRect(SGPRect *clip);
@@ -1177,7 +1178,7 @@ BYTE *LockVideoSurfaceBuffer( HVSURFACE hVSurface, UINT32 *pPitch )
 		return(LockFrameBuffer(pPitch));
 #endif
 
-	DDLockSurface( (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData, NULL, &SurfaceDescription, 0, NULL);
+	DDLockSurface( (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData, NULL, &SurfaceDescription, 0, 0);
 
 	*pPitch = SurfaceDescription.lPitch;
 

@@ -14,10 +14,11 @@
 	#include "HImage.h"
 	#include "VObject.h"
 	#include "VObject_Private.h"
-	#include "video_private.h"
+	#include "Video_Private.h"
 	#include "WCheck.h"
 	#include "VObject_Blitters.h"
 	#include "SGP.h"
+	#include <string.h>
 #endif
 
 // ******************************************************************************
@@ -1027,7 +1028,7 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
-	CHECKF( usIndex >= 0 );
+	//CHECKF( usIndex >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usIndex < hVObject->usNumberOfObjects );
 
 	memcpy( pETRLEObject, &( hVObject->pETRLEObject[ usIndex ] ), sizeof( ETRLEObject ) );

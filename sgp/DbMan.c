@@ -23,13 +23,12 @@
 #else
 	#include "Types.h"
 	#include <stdlib.h>
-	#include <malloc.h>
 	#include <stdio.h>
-	#include "windows.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
 	#include "DbMan.h"
 	#include "Debug.h"
+	#include <string.h>
 #endif
 
 //**************************************************************************

@@ -25,14 +25,15 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
-	#include <ddeml.h>
+	//#include <ddeml.h>
 	#include <stdio.h>
 	#include "Debug.h"
 	#include "WCheck.h"
 	#include "TopicIDs.h"
 	#include "TopicOps.h"
 	#include "WizShare.h"
+	#include <string.h>
+	#include <stdarg.h>
 
 	//Kris addition
 	#ifdef JA2

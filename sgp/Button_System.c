@@ -10,12 +10,11 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
 	#include "Debug.h"
 	#include "Input.h"
-	#include "memman.h"
+	#include "MemMan.h"
 	#include "English.h"
 	#include "VObject.h"
 	#include "VObject_Blitters.h"
@@ -26,9 +25,9 @@
 	#if defined( JA2 ) || defined( UTIL )
 		#include "WordWrap.h"
 		#include "Video.h"
-		#include "Button Sound Control.h"
+		#include "Button_Sound_Control.h"
 		#ifdef _JA2_RENDER_DIRTY
-			#include "\JA2\Build\utils\Font Control.h"
+			#include "Font_Control.h"
 			#include "Render_Dirty.h"
 			#include "Utilities.h"
 		#endif
@@ -1665,7 +1664,7 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 }
 
 //Creates a generic button with text on it.
-INT32 CreateTextButton(UINT16 *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateTextButton(wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
@@ -1709,7 +1708,7 @@ INT32 CreateTextButton(UINT16 *string, UINT32 uiFont, INT16 sForeColor, INT16 sS
 	b->string = NULL;
 	if ( string && wcslen( string ) )
 	{
-		b->string = (UINT16*)MemAlloc( (wcslen(string)+1)*sizeof(UINT16) );
+		b->string = (wchar_t*)MemAlloc( (wcslen(string)+1)*sizeof(wchar_t) );
 		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateTextButton." );
 		wcscpy( b->string, string );
 	}
@@ -2103,7 +2102,7 @@ INT32 CreateSimpleButton( INT32 x, INT32 y, UINT8 *filename, INT32 Type, INT16 P
 }
 
 
-INT32 CreateIconAndTextButton( INT32 Image, UINT16 *string, UINT32 uiFont,
+INT32 CreateIconAndTextButton( INT32 Image, wchar_t *string, UINT32 uiFont,
 															 INT16 sForeColor, INT16 sShadowColor,
 															 INT16 sForeColorDown, INT16 sShadowColorDown,
 															 INT8 bJustification,
@@ -2166,7 +2165,7 @@ INT32 CreateIconAndTextButton( INT32 Image, UINT16 *string, UINT32 uiFont,
 	b->string = NULL;
 	if ( string  )
 	{
-		b->string = (UINT16*)MemAlloc( (wcslen(string)+1)*sizeof(UINT16) );
+		b->string = (wchar_t*)MemAlloc( (wcslen(string)+1)*sizeof(wchar_t) );
 		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateIconAndTextButton." );
 		wcscpy( b->string, string );
 	}
@@ -2239,7 +2238,7 @@ INT32 CreateIconAndTextButton( INT32 Image, UINT16 *string, UINT32 uiFont,
 }
 
 //New functions
-void SpecifyButtonText( INT32 iButtonID, UINT16 *string )
+void SpecifyButtonText( INT32 iButtonID, wchar_t *string )
 {
 	GUI_BUTTON *b;
 
@@ -2256,7 +2255,7 @@ void SpecifyButtonText( INT32 iButtonID, UINT16 *string )
 	if( string && wcslen( string ) )
 	{
 		//allocate memory for the new string
-		b->string = (UINT16*)MemAlloc( (wcslen(string)+1)*sizeof(UINT16) );
+		b->string = (wchar_t*)MemAlloc( (wcslen(string)+1)*sizeof(wchar_t) );
 		Assert( b->string );
 		//copy the string to the button
 		wcscpy( b->string, string );
@@ -2336,7 +2335,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
-void SpecifyFullButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiFont,
+void SpecifyFullButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )
 {
@@ -2359,7 +2358,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiF
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
-void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, UINT16 *string, INT32 uiFont,
+void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
 	GUI_BUTTON *b;
@@ -2516,7 +2515,7 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 //
 //	Set the text that will be displayed as the FastHelp
 //
-void SetButtonFastHelpText(INT32 iButton, UINT16 *Text)
+void SetButtonFastHelpText(INT32 iButton, wchar_t *Text)
 {
 	GUI_BUTTON *b;
 	if(iButton<0 || iButton>MAX_BUTTONS)
@@ -3988,8 +3987,13 @@ BOOLEAN SetDialogAttributes( CreateDlgInfo *pDlgInfo, INT32 iAttrib, ... )
 
 			if ( iFontOptions & DLG_USE_MONO_FONTS )
 			{
+				#if 0 /* XXX */
 				ubFGrnd = va_arg( arg, UINT8 );
 				ubBGrnd = va_arg( arg, UINT8 );
+				#else
+				ubFGrnd = va_arg( arg, int );
+				ubBGrnd = va_arg( arg, int );
+				#endif
 				pDlgInfo->usTextCols = ((((UINT16)ubBGrnd)<<8) | (UINT16)ubFGrnd);
 			}
 			break;

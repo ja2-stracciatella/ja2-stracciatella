@@ -56,7 +56,7 @@ typedef struct _MOUSE_REGION {
 
 	//Fast help vars.
 	INT16					FastHelpTimer;		// Countdown timer for FastHelp text
-	UINT16				*FastHelpText;		// Text string for the FastHelp (describes buttons if left there a while)
+	wchar_t				*FastHelpText;		// Text string for the FastHelp (describes buttons if left there a while)
 	INT32					FastHelpRect;
 	MOUSE_HELPTEXT_DONE_CALLBACK HelpDoneCallback;
 

@@ -6,8 +6,6 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
-	#include <windowsx.h>
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <string.h>
@@ -22,7 +20,7 @@
 	#include "Gameloop.h"
 	#include "SoundMan.h"
 	#ifdef JA2
-		#include "JA2 Splash.h"
+		#include "JA2_Splash.h"
 		#include "Timer_Control.h"
 	#endif
 	#if !defined( JA2 ) && !defined( UTIL )
@@ -31,8 +29,6 @@
 #endif
 
 	#include "Input.h"
-	#include "zmouse.h"
-
 
 
 #include "ExceptionHandling.h"
