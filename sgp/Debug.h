@@ -14,8 +14,6 @@
 #ifndef __DEBUG_MANAGER_
 #define __DEBUG_MANAGER_
 
-#include <crtdbg.h>
-
 #include "Types.h"
 #include "TopicOps.h"
 #include "TopicIDs.h"
