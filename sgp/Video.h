@@ -1,9 +1,9 @@
 #ifndef __VIDEO_
 #define __VIDEO_
 
-#include <windows.h>
-#include <ddraw.h>
-#include <process.h>
+//#include <windows.h> /* XXX */
+//#include <ddraw.h> /* XXX */
+//#include <process.h> /* XXX */
 
 #include "Local.h"
 #include "Debug.h"
