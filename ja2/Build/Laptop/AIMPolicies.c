@@ -9,6 +9,7 @@
 	#include "WordWrap.h"
 	#include "Encrypted_File.h"
 	#include "Text.h"
+	#include <string.h>
 #endif
 
 
@@ -680,7 +681,7 @@ UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 	if(fNumber != 0.0)
 	{
 		//Display the section number
-		swprintf(sTemp, L"%2.1f", fNumber);
+		swprintf(sTemp, lengthof(sTemp), L"%2.1f", fNumber);
 		DrawTextToScreen(sTemp, AIM_POLICY_PARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -701,7 +702,7 @@ UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumbe
 	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
 
 	//Display the section number
-	swprintf(sTemp, L"%2.2f", fNumber);
+	swprintf(sTemp, lengthof(sTemp), L"%2.2f", fNumber);
 	DrawTextToScreen(sTemp, AIM_POLICY_SUBPARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	//Display the text beside the section number

@@ -32,6 +32,13 @@
 	#include "Campaign.h"
 	#include "Environment.h"
 	#include "PathAI.h"
+	#include "Soldier_Macros.h"
+	#include "StrategicMap.h"
+	#include "Quests.h"
+	#include "Interface.h"
+	#include "Points.h"
+	#include "Smell.h"
+	#include "Text.h"
 #endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
@@ -56,6 +63,7 @@ static FIXEDPT gqStandardWindowTopHeight = INT32_TO_FIXEDPT( WINDOW_TOP_HEIGHT_U
 
 UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
 {
+	#if 0 /* XXX I hope that's correct */
 UINT32 uiResult;
 
 	__asm {
@@ -82,6 +90,9 @@ UINT32 uiResult;
 		}
 
 		return(uiResult);
+	#else
+	return (long long)uiA * uiB >> 16;
+	#endif
 }
 
 
@@ -144,7 +155,7 @@ static UINT8 gubTreeSightReduction[ANIM_STAND + 1] =
 
 #define MAX_CHANCE_OF_HITTING_STRUCTURE 90
 
-static guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
+static UINT32 guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
 {
 	 0,	// 0 tiles
 	 0,

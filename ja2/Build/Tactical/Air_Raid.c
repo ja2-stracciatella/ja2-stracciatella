@@ -31,6 +31,8 @@
 	#include "Text.h"
 	#include "Morale.h"
 	#include "Map_Screen_Helicopter.h"
+	#include "MapScreen.h"
+	#include "Structure_Wrap.h"
 #endif
 
 #define		SCRIPT_DELAY													10

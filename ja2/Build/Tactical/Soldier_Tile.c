@@ -54,6 +54,9 @@
 	#include "Soldier_Tile.h"
 	#include "Soldier_Add.h"
 	#include "FOV.h"
+	#include "Message.h"
+	#include "Text.h"
+	#include "NPC.h"
 #endif
 
 extern INT8		gbNumMercsUntilWaitingOver;

@@ -15,6 +15,8 @@
 	#include "Animation_Control.h"
 	#include "Render_Fun.h"
 	#include "StrategicMap.h"
+	#include "Environment.h"
+	#include "WorldMan.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge

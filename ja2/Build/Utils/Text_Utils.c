@@ -5,6 +5,7 @@
 	#include "Text.h"
 	#include "FileMan.h"
 	#include "JA2_Demo_Ads.h"
+	#include "GameSettings.h"
 #endif
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
@@ -212,7 +213,7 @@ void LoadAllExternalText( void )
 	LoadAllItemNames();
 }
 
-INT16* GetWeightUnitString( void )
+wchar_t* GetWeightUnitString( void )
 {
 	if ( gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric
 	{

@@ -121,7 +121,7 @@ typedef struct
 	UINT16							usTactialTurnLimitCounter;
 	BOOLEAN							fInTopMessage;
 	UINT8								ubTopMessageType;
-	INT16								zTopMessageString[20];
+	wchar_t							zTopMessageString[20];
 	UINT16							usTactialTurnLimitMax;
 	UINT32							uiTactialTurnLimitClock;
 	BOOLEAN							fTactialTurnLimitStartedBeep;
@@ -192,9 +192,9 @@ INT8		gbShowEnemies;
 UINT16  gusSelectedSoldier;
 UINT16  gusOldSelectedSoldier;
 
-CHAR8		gzAlertStr[][ 30 ];
-CHAR8		gzActionStr[][ 30 ];
-CHAR8	  gzDirectionStr[][ 30 ];
+extern CHAR8		gzAlertStr[][ 30 ];
+extern CHAR8		gzActionStr[][ 30 ];
+extern CHAR8	  gzDirectionStr[][ 30 ];
 
 // TEMP FOR E3
 UINT8				gubCurrentScene;
@@ -235,7 +235,7 @@ extern BOOLEAN FlatRoofAboveGridNo( INT32 iMapIndex );
 BOOLEAN ExecuteOverhead( );
 BOOLEAN ResetAllAnimationCache(  );
 
-void EndTurn( );
+void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 void EndTacticalDemo( );
 

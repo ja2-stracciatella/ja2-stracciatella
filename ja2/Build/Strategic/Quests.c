@@ -25,6 +25,11 @@
 	#include "Campaign.h"
 	#include "GameSettings.h"
 	#include "Arms_Dealer_Init.h"
+	#include "Random.h"
+	#include "Assignments.h"
+	#include "Town_Militia.h"
+	#include "Strategic.h"
+	#include "Strategic_Event_Handler.h"
 #endif
 
 #include "BobbyRMailOrder.h"

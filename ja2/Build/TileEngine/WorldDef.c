@@ -58,6 +58,11 @@
 	#include "Pits.h"
 	#include "Game_Clock.h"
 	#include "Buildings.h"
+	#include "StrategicMap.h"
+	#include "Overhead_Map.h"
+	#include "Meanwhile.h"
+	#include "SmokeEffects.h"
+	#include "LightEffects.h"
 #endif
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );

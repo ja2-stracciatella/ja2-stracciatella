@@ -89,6 +89,18 @@
 	#include	"LightEffects.h"
 	#include "HelpScreen.h"
 	#include "Animated_ProgressBar.h"
+	#include "MercTextBox.h"
+	#include "Map_Information.h"
+	#include "Interface_Items.h"
+	#include "Civ_Quotes.h"
+	#include "Scheduling.h"
+	#include "Animation_Data.h"
+	#include "Cheats.h"
+	#include "Render_Dirty.h"
+	#include "Strategic_Event_Handler.h"
+	#include "Interface_Panels.h"
+	#include "Interface_Dialogue.h"
+	#include "Assignments.h"
 #endif
 
 #include		"BobbyR.h"
@@ -114,8 +126,8 @@ extern void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion );
 extern void TrashAllSoldiers( );
 extern void ResetJA2ClockGlobalTimers( void );
 
-extern BeginLoadScreen();
-extern EndLoadScreen();
+extern void BeginLoadScreen();
+extern void EndLoadScreen();
 
 //Global variable used
 #ifdef JA2BETAVERSION
@@ -457,7 +469,7 @@ void	HandleOldBobbyRMailOrders();
 /////////////////////////////////////////////////////
 
 
-BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
+BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 GameDesc )
 {
 	UINT32	uiNumBytesWritten=0;
 	HWFILE	hFile=0;
@@ -470,6 +482,9 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 	INT32		iSaveLoadGameMessageBoxID = -1;
 	UINT16	usPosX, usActualWidth, usActualHeight;
 	BOOLEAN fWePausedIt = FALSE;
+
+	wchar_t pGameDesc[256];
+	wcslcpy(pGameDesc, GameDesc, lengthof(pGameDesc));
 
 
 	sprintf( saveDir, "%S", pMessageStrings[ MSG_SAVEDIRECTORY ] );
@@ -567,10 +582,10 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc )
 		guiCurrentQuickSaveNumber++;
 
 		if( gfUseConsecutiveQuickSaveSlots )
-			swprintf( pGameDesc, L"%s%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
+			swprintf( pGameDesc, lengthof(pGameDesc), L"%s%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
 		else
 #endif
-			swprintf( pGameDesc, pMessageStrings[ MSG_QUICKSAVE_NAME ] );
+			swprintf( pGameDesc, lengthof(pGameDesc), pMessageStrings[ MSG_QUICKSAVE_NAME ] );
 	}
 
 	//If there was no string, add one

@@ -11,6 +11,7 @@
 	#include "Render_Fun.h"
 	#include "StrategicMap.h"
 	#include "Sys_Globals.h"
+	#include "WorldMan.h"
 #endif
 
 #define ROOF_LOCATION_CHANCE 8

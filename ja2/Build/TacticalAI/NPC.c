@@ -34,7 +34,20 @@
 #ifdef JA2TESTVERSION
 	#include	"Quest_Debug_System.h"
 	#include	"QuestText.h"
-	#endif
+#endif
+
+	#include "SkillCheck.h"
+	#include "Render_Fun.h"
+	#include "StrategicMap.h"
+	#include "Text.h"
+	#include "Finances.h"
+	#include "Arms_Dealer_Init.h"
+	#include "Interface_Items.h"
+	#include "OppList.h"
+	#include "Animation_Control.h"
+	#include "Scheduling.h"
+	#include "Tactical_Save.h"
+	#include "Campaign_Types.h"
 #endif
 
 #define NUM_CIVQUOTE_SECTORS 20
@@ -1165,9 +1178,9 @@ BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UIN
 				}
 				else
 				{
-					INT16		sTempString[ 100 ];
+					wchar_t sTempString[ 100 ];
 
-					swprintf( sTempString, L"%ld", iCost - uiMoneyAmount - giHospitalTempBalance );
+					swprintf( sTempString, lengthof(sTempString), L"%ld", iCost - uiMoneyAmount - giHospitalTempBalance );
 					InsertDollarSignInToString( sTempString );
 
 					// not enough cash

@@ -54,6 +54,13 @@
 	#include "math.h"
 	#include "SkillCheck.h"
 	#include "Strategic_Pathing.h"
+	#include "Game_Event_Hook.h"
+	#include "Strategic_Event_Handler.h"
+	#include "Map_Information.h"
+	#include "Strategic_Status.h"
+	#include "History.h"
+	#include "Map_Screen_Interface_Map_Inventory.h"
+	#include "Interface_Dialogue.h"
 #endif
 
 
@@ -1632,7 +1639,7 @@ BOOLEAN CanCharacterSleep( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 			if( fExplainWhyNot )
 			{
 				// on the move, can't sleep
-				swprintf( sString, zMarksMapScreenText[ 5 ], pSoldier->name );
+				swprintf( sString, lengthof(sString), zMarksMapScreenText[ 5 ], pSoldier->name );
 				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 			}
 
@@ -1647,7 +1654,7 @@ BOOLEAN CanCharacterSleep( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 				if( fExplainWhyNot )
 				{
 					// is driving, can't sleep
-					swprintf( sString, zMarksMapScreenText[ 7 ], pSoldier->name );
+					swprintf( sString, lengthof(sString), zMarksMapScreenText[ 7 ], pSoldier->name );
 					DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 				}
 
@@ -1690,7 +1697,7 @@ BOOLEAN CanCharacterSleep( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 	{
 		if( fExplainWhyNot )
 		{
-			swprintf( sString, zMarksMapScreenText[ 4 ], pSoldier->name );
+			swprintf( sString, lengthof(sString), zMarksMapScreenText[ 4 ], pSoldier->name );
 			DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 		}
 
@@ -1719,7 +1726,7 @@ BOOLEAN CanCharacterBeAwakened( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot )
 	{
 		if ( fExplainWhyNot )
 		{
-			swprintf( sString, zMarksMapScreenText[ 6 ], pSoldier->name );
+			swprintf( sString, lengthof(sString), zMarksMapScreenText[ 6 ], pSoldier->name );
 			DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 		}
 
@@ -7273,20 +7280,20 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			switch( bCanJoinSquad )
 			{
 				case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
-					swprintf( sString, pMapErrorString[ 36 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
+					swprintf( sString, lengthof(sString), pMapErrorString[ 36 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
 					break;
 				case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
-					swprintf( sString, pMapErrorString[ 37 ], pSoldier->name );
+					swprintf( sString, lengthof(sString), pMapErrorString[ 37 ], pSoldier->name );
 					break;
 				case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
-					swprintf( sString, pMapErrorString[ 20 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
+					swprintf( sString, lengthof(sString), pMapErrorString[ 20 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
 					break;
 				case CHARACTER_CANT_JOIN_SQUAD_FULL:
-					swprintf( sString, pMapErrorString[ 19 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
+					swprintf( sString, lengthof(sString), pMapErrorString[ 19 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
 					break;
 				default:
 					// generic "you can't join this squad" msg
-					swprintf( sString, pMapErrorString[ 38 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
+					swprintf( sString, lengthof(sString), pMapErrorString[ 38 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
 					break;
 			}
 
@@ -7364,7 +7371,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						// can we keep militia in this town?
 						if( MilitiaTrainingAllowedInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == FALSE )
 						{
-							swprintf( sString, pMapErrorString[ 31 ], pTownNames[ bTownId ] );
+							swprintf( sString, lengthof(sString), pMapErrorString[ 31 ], pTownNames[ bTownId ] );
 							DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 							break;
 						}
@@ -7382,13 +7389,13 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA );
-							swprintf( sString, zMarksMapScreenText[ 21 ], sStringA );
+							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA, lengthof(sStringA));
+							swprintf( sString, lengthof(sString), zMarksMapScreenText[ 21 ], sStringA );
 						}
 						else
 						{
 							// town
-							swprintf( sString, zMarksMapScreenText[ 21 ], pTownNames[ bTownId ] );
+							swprintf( sString, lengthof(sString), zMarksMapScreenText[ 21 ], pTownNames[ bTownId ] );
 						}
 
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
@@ -7397,7 +7404,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 					if ( CountMilitiaTrainersInSoldiersSector( pSoldier ) >= MAX_MILITIA_TRAINERS_PER_SECTOR )
 					{
-						swprintf( sString, gzLateLocalizedString[ 47 ], MAX_MILITIA_TRAINERS_PER_SECTOR );
+						swprintf( sString, lengthof(sString), gzLateLocalizedString[ 47 ], MAX_MILITIA_TRAINERS_PER_SECTOR );
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -7746,7 +7753,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf( sString, zMarksMapScreenText[ 19 ], pSoldier->name );
+						swprintf( sString, lengthof(sString), zMarksMapScreenText[ 19 ], pSoldier->name );
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}
@@ -7842,7 +7849,7 @@ void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf( sString, zMarksMapScreenText[ 18 ], pSoldier->name );
+						swprintf( sString, lengthof(sString), zMarksMapScreenText[ 18 ], pSoldier->name );
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}
@@ -7952,7 +7959,7 @@ void CreateSquadBox( void )
  for(uiCounter=0; uiCounter <= uiMaxSquad; uiCounter++)
  {
 	 // get info about current squad and put in  string
-	 swprintf( sString, L"%s ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
+	 swprintf( sString, lengthof(sString), L"%s ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
 	 AddMonoString(&hStringHandle, sString );
 
 	 // make sure it is unhighlighted
@@ -8241,48 +8248,48 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
 				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
-					 swprintf( sDollarString, L"%d", 0 );
+					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
 				 }
 				 else
 				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].sSalary );
+					  swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].sSalary );
 				 }
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
 
 				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
-					 swprintf( sDollarString, L"%d", 0 );
+					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
 				 }
 				 else
 				 {
-					  swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiWeeklySalary );
+					  swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiWeeklySalary );
 				 }
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString );
+				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString );
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
 
 				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 				 {
-					 swprintf( sDollarString, L"%d", 0 );
+					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
 				 }
 				 else
 				 {
-					 swprintf( sDollarString, L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiBiWeeklySalary );
+					 swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiBiWeeklySalary );
 				 }
 
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 default:
@@ -8501,11 +8508,11 @@ void CreateAssignmentsBox( void )
 		if( ( uiCounter == ASSIGN_MENU_ON_DUTY ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment < ON_DUTY ) )
 		{
 			// show his squad # in brackets
-			swprintf( sString, L"%s(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
+			swprintf( sString, lengthof(sString), L"%s(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
 		}
 		else
 		{
-			swprintf( sString, pAssignMenuStrings[uiCounter] );
+			swprintf( sString, lengthof(sString), pAssignMenuStrings[uiCounter] );
 		}
 
 		AddMonoString(&hStringHandle, sString );
@@ -10526,12 +10533,12 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 			if( fWakeUp )
 			{
 				// inform player not everyone could be woke up
-				swprintf( sString, pMapErrorString[ 27 ] );
+				swprintf( sString, lengthof(sString), pMapErrorString[ 27 ] );
 			}
 			else
 			{
 				// inform player not everyone could be put to sleep
-				swprintf( sString, pMapErrorString[ 26 ]);
+				swprintf( sString, lengthof(sString), pMapErrorString[ 26 ]);
 			}
 
 			if( fDisplayWarning )

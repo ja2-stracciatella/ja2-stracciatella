@@ -29,6 +29,8 @@
 	#include "Strategic.h"
 	#include "Game_Clock.h"
 	#include "Text.h"
+	#include <string.h>
+	#include "LaptopSave.h"
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
@@ -581,13 +583,18 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 							 }
 							 else
 							 {
+								 wchar_t Temp[] = { (wchar_t)uiKey, L'\0' };
 
 								 if(uiFullNameCharacterPosition < 1 )
 								 {
 						       uiFullNameCharacterPosition = 0;
 								 }
 								 // make sure we haven't moved too far
+								 #if 0 /* XXX */
 								 if( ( uiFullNameCursorPosition + StringPixLength( &( ( CHAR16 )uiKey ), FONT14ARIAL ) ) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+								 #else
+								 if ((uiFullNameCursorPosition + StringPixLength(Temp, FONT14ARIAL)) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+								 #endif
 								 {
 									 // do nothing for now, when pop up is in place, display
 									 break;
@@ -616,6 +623,7 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 							 }
 							 else
 							 {
+								 wchar_t Temp[] = { (wchar_t)uiKey, L'\0' };
 
 								 if(uiNickNameCharacterPosition == -1)
 								 {
@@ -623,7 +631,11 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 								 }
 
 								  // make sure we haven't moved too far
+								 #if 0 /* XXX */
 								 if( ( uiNickNameCursorPosition + StringPixLength( &( ( CHAR16 )uiKey ), FONT14ARIAL ) ) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X )
+								 #else
+								 if ((uiNickNameCursorPosition + StringPixLength(Temp, FONT14ARIAL)) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+								 #endif
 								 {
 									 // do nothing for now, when pop up is in place, display
 									 break;

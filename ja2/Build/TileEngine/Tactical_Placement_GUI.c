@@ -39,6 +39,7 @@
 	#include "Assignments.h"
 	#include "Text.h"
 	#include "WordWrap.h"
+	#include "Game_Clock.h"
 #endif
 
 typedef struct MERCPLACEMENT
@@ -403,7 +404,7 @@ void RenderTacticalPlacementGUI()
 	SOLDIERTYPE *pSoldier;
 	UINT32 uiDestPitchBYTES;
 	UINT16 usHatchColor;
-	UINT16 str[ 128 ];
+	wchar_t str[ 128 ];
 	UINT8 *pDestBuf;
 	UINT8 ubColor;
 	if( gfTacticalPlacementFirstTime )
@@ -471,7 +472,7 @@ void RenderTacticalPlacementGUI()
 		SetFontForeground( FONT_BEIGE );
 		SetFontShadow( 141 );
 
-		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, TRUE );
+		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE );
 
 		mprintf( 120, 335, L"%s %s -- %s...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
 
@@ -769,7 +770,11 @@ void ChooseRandomEdgepoints()
 			}
 			else
 			{
+				#if 0 /* XXX unsigned < 0 ? */
 				if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData < 0 || gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX )
+				#else
+				if (gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX)
+				#endif
 				{
 					i = i;
 				}

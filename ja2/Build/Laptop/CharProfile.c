@@ -22,6 +22,8 @@
 	#include "IMPVideoObjects.h"
 	#include "IMP_Confirm.h"
 	#include "MessageBoxScreen.h"
+	#include "LaptopSave.h"
+	#include <string.h>
 #endif
 
 
@@ -88,7 +90,7 @@ INT32 giIMPButtonImage[1];
 // visted subpages
 BOOLEAN fVisitedIMPSubPages[ IMP_NUM_PAGES ];
 extern INT32 iCurrentPortrait;
-extern iCurrentVoices;
+extern int iCurrentVoices;
 extern	INT32 giMaxPersonalityQuizQuestion;
 extern	BOOLEAN fStartOverFlag;
 

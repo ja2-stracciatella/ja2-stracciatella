@@ -42,7 +42,7 @@
 	#include "Insurance_Info.h"
 	#include "Insurance_Comments.h"
 	#include "Funeral.h"
-	#include "sirtech.h"
+	#include "Sir-Tech.h"
 	#include "Finances.h"
 	#include "Personnel.h"
 	#include "History.h"
@@ -78,6 +78,9 @@
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "BrokenLink.h"
 	#include "BobbyRShipments.h"
+	#include "Dialogue_Control.h"
+	#include "HelpScreen.h"
+	#include "Cheats.h"
 #endif
 
 
@@ -94,9 +97,6 @@ enum{
 	MAX_ICON_COUNT,
 };
 
-enum{
-
-};
 enum{
 	NO_REGION=0,
 	EMAIL_REGION,
@@ -4190,7 +4190,7 @@ void DisplayPlayersBalanceToDate( void )
   SetFontShadow(NO_SHADOW);
 
 	// parse straigth number
-	swprintf( sString, L"%d", LaptopSaveInfo.iCurrentBalance );
+	swprintf( sString, lengthof(sString), L"%d", LaptopSaveInfo.iCurrentBalance );
 
 	// put in commas, then dollar sign
 	InsertCommasForDollarFigure( sString );
@@ -4401,7 +4401,7 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect pCenteringRect= {LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 
@@ -4421,7 +4421,7 @@ BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, 
 }
 
 
-BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
@@ -4433,7 +4433,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 
 	return( ( iLaptopMessageBox != -1 ) );
 }
 
-BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 	// reset exit mode
@@ -5275,7 +5275,7 @@ void PrintBalance( void )
 	SetFontBackground( FONT_BLACK );
 	SetFontShadow( NO_SHADOW );
 
-	swprintf(pString, L"%d", LaptopSaveInfo.iCurrentBalance);
+	swprintf(pString, lengthof(pString), L"%d", LaptopSaveInfo.iCurrentBalance);
 	InsertCommasForDollarFigure( pString );
 	InsertDollarSignInToString( pString );
 
@@ -5323,7 +5323,7 @@ void PrintNumberOnTeam( void )
 	}
 
 
-	swprintf( pString, L"%s %d",pPersonnelString[ 0 ], iCounter );
+	swprintf( pString, lengthof(pString), L"%s %d",pPersonnelString[ 0 ], iCounter );
 
 	usFontHeight = GetFontHeight( FONT10ARIAL );
 	usStrLength = StringPixLength( pString, FONT10ARIAL );
@@ -5704,7 +5704,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
 
-		swprintf( sString, L"%s  -  %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
+		swprintf( sString, lengthof(sString), L"%s  -  %s", pWebTitle[0], pWebPagesTitles[ iIndex ] );
 		mprintf(140 ,33 ,sString);
 	}
 

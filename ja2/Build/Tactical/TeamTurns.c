@@ -41,6 +41,11 @@
 	#ifdef DEBUG_INTERRUPTS
 		#include "Debug.h"
 	#endif
+	#include "RenderWorld.h"
+	#include "Rotting_Corpses.h"
+	#include "Squads.h"
+	#include "Soldier_Macros.h"
+	#include "NPC.h"
 #endif
 
 extern void DecayPublicOpplist(INT8 bTeam);
@@ -612,7 +617,7 @@ void StartInterrupt( void )
 	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
-		INT16		sTemp[ 255 ];
+		wchar_t	sTemp[ 255 ];
 		UINT8		ubInterrupters = 0;
 		INT32		iSquad, iCounter;
 

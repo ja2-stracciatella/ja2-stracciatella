@@ -46,6 +46,8 @@
 	#include "Spread_Burst.h"
 	#include "Squads.h"
 	#include "Line.h"
+	#include "Map_Screen_Interface.h"
+	#include "Civ_Quotes.h"
 #endif
 
 #define				CLOCK_X								554

@@ -21,6 +21,10 @@
 	#include "Explosion_Control.h"
 	#include "Random.h"
 	#include "Lighting.h"
+	#include "Game_Clock.h"
+	#include "OppList.h"
+	#include "Tactical_Save.h"
+	#include "Campaign_Types.h"
 #endif
 
 #include "SaveLoadGame.h"

@@ -18,6 +18,7 @@
 	#include "VObject_Blitters.h"
 	#include "Font_Control.h"
 	#include "Sound_Control.h"
+	#include <string.h>
 #endif
 
 UINT16 *szClipboard;
@@ -32,7 +33,7 @@ void AddChar( UINT32 uiKey );
 void RemoveChar( UINT8 ubArrayIndex );
 void DeleteHilitedText();
 
-void DoublePercentileCharacterFromStringIntoString( UINT16 *pSrcString, UINT16 *pDstString );
+void DoublePercentileCharacterFromStringIntoString( wchar_t *pSrcString, wchar_t *pDstString );
 
 //All exclusive input types are handled in this function.
 void HandleExclusiveInput( UINT32 uiKey );
@@ -63,7 +64,7 @@ typedef struct TEXTINPUTNODE{
 	UINT8 ubID;
 	UINT16 usInputType;
 	UINT8 ubMaxChars;
-	UINT16 *szString;
+	wchar_t *szString;
 	UINT8 ubStrLen;
 	BOOLEAN fEnabled;
 	BOOLEAN fUserField;
@@ -238,7 +239,7 @@ void KillAllTextInputModes()
 //of calls to this function dictate the TAB order from traversing from one field to the next.  This
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
 void AddTextInputField( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority,
-											  UINT16 *szInitText, UINT8 ubMaxChars, UINT16 usInputType )
+											  wchar_t *szInitText, UINT8 ubMaxChars, UINT16 usInputType )
 {
 	TEXTINPUTNODE *pNode;
 	pNode = (TEXTINPUTNODE*)MemAlloc(sizeof(TEXTINPUTNODE));
@@ -266,18 +267,18 @@ void AddTextInputField( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, IN
 	if( usInputType == INPUTTYPE_EXCLUSIVE_24HOURCLOCK )
 		ubMaxChars = 6;
 	//Allocate and copy the string.
-	pNode->szString = (UINT16*)MemAlloc( (ubMaxChars+1)*sizeof(UINT16) );
+	pNode->szString = (wchar_t*)MemAlloc( (ubMaxChars+1)*sizeof(wchar_t) );
 	Assert( pNode->szString );
 	if( szInitText )
 	{
 		pNode->ubStrLen = (UINT8)wcslen( szInitText );
 		Assert( pNode->ubStrLen <= ubMaxChars );
-		swprintf( pNode->szString, szInitText );
+		swprintf( pNode->szString, ubMaxChars + 1, szInitText );
 	}
 	else
 	{
 		pNode->ubStrLen = 0;
-		swprintf( pNode->szString, L"" );
+		swprintf( pNode->szString, ubMaxChars + 1, L"" );
 	}
 	pNode->ubMaxChars = ubMaxChars; //max string length
 
@@ -383,7 +384,7 @@ INT16 GetActiveFieldID()
 //This is a useful call made from an external user input field.  Using the previous file dialog example, this
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
-void SetInputFieldStringWith16BitString( UINT8 ubField, UINT16 *szNewText )
+void SetInputFieldStringWith16BitString( UINT8 ubField, wchar_t *szNewText )
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -395,12 +396,12 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, UINT16 *szNewText )
 			{
 				curr->ubStrLen = (UINT8)wcslen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				swprintf( curr->szString, szNewText );
+				swprintf( curr->szString, curr->ubMaxChars + 1, szNewText );
 			}
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
-				swprintf( curr->szString, L"");
+				swprintf( curr->szString, curr->ubMaxChars + 1, L"");
 			}
 			else
 			{
@@ -424,12 +425,12 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
 			{
 				curr->ubStrLen = (UINT8)strlen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				swprintf( curr->szString, L"%S", szNewText );
+				swprintf( curr->szString, curr->ubMaxChars + 1, L"%S", szNewText );
 			}
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
-				swprintf( curr->szString, L"" );
+				swprintf( curr->szString, curr->ubMaxChars + 1, L"" );
 			}
 			else
 			{
@@ -458,7 +459,7 @@ void Get8BitStringFromField( UINT8 ubField, UINT8 *szString )
 	szString[0] = '\0';
 }
 
-void Get16BitStringFromField( UINT8 ubField, UINT16 *szString )
+void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length)
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -466,7 +467,7 @@ void Get16BitStringFromField( UINT8 ubField, UINT16 *szString )
 	{
 		if( curr->ubID == ubField )
 		{
-			swprintf( szString, curr->szString );
+			swprintf( szString, Length, curr->szString );
 			return;
 		}
 		curr = curr->next;
@@ -478,10 +479,10 @@ void Get16BitStringFromField( UINT8 ubField, UINT16 *szString )
 //returns -1 if blank or invalid.  Only works for positive numbers.
 INT32 GetNumericStrictValueFromField( UINT8 ubField )
 {
-	UINT16 *ptr;
-	UINT16 str[20];
+	wchar_t *ptr;
+	wchar_t str[20];
 	INT32 total;
-	Get16BitStringFromField( ubField, str );
+	Get16BitStringFromField( ubField, str, lengthof(str));
 	//Blank string, so return -1
 	if( str[0] == '\0' )
 		return -1;
@@ -515,14 +516,14 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 			if( curr->fUserField )
 				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
 			if( iNumber < 0 ) //negative number converts to blank string
-				swprintf( curr->szString, L"" );
+				swprintf( curr->szString, curr->ubMaxChars + 1, L"" );
 			else
 			{
 				INT32 iMax = (INT32)pow( 10.0, curr->ubMaxChars );
 				if( iNumber > iMax ) //set string to max value based on number of chars.
-					swprintf( curr->szString, L"%d", iMax - 1 );
+					swprintf( curr->szString, curr->ubMaxChars + 1, L"%d", iMax - 1 );
 				else	//set string to the number given
-					swprintf( curr->szString, L"%d", iNumber );
+					swprintf( curr->szString, curr->ubMaxChars + 1, L"%d", iNumber );
 			}
 			curr->ubStrLen = (UINT8)wcslen( curr->szString );
 			return;
@@ -1242,7 +1243,7 @@ void RenderActiveTextField()
 {
 	UINT32 uiCursorXPos;
 	UINT16 usOffset;
-	UINT16 str[ 256 ];
+	wchar_t str[ 256 ];
 	if( !gpActive || !gpActive->szString )
 		return;
 
@@ -1320,7 +1321,7 @@ void RenderInactiveTextField( UINT8 ubID )
 {
 	UINT16 usOffset;
 	TEXTINPUTNODE* pNode, *curr;
-	UINT16 str[ 256 ];
+	wchar_t str[ 256 ];
 	curr = gpTextInputHead;
 	pNode = NULL;
 	while( curr )
@@ -1348,7 +1349,7 @@ void RenderInactiveTextField( UINT8 ubID )
 void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
 {
 	UINT16 usOffset;
-	UINT16 str[ 256 ];
+	wchar_t str[ 256 ];
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
@@ -1747,7 +1748,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	}
 }
 
-void DoublePercentileCharacterFromStringIntoString( UINT16 *pSrcString, UINT16 *pDstString )
+void DoublePercentileCharacterFromStringIntoString( wchar_t *pSrcString, wchar_t *pDstString )
 {
 	INT32 iSrcIndex = 0, iDstIndex = 0;
 	while( pSrcString[ iSrcIndex ] != 0 )

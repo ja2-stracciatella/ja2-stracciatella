@@ -22,6 +22,7 @@
 	#include "Campaign_Types.h"
 	#include "Strategic_Town_Loyalty.h"
 	#include "StrategicMap.h"
+	#include "Assignments.h"
 #endif
 
 #define MAP_BORDER_X 261
@@ -1141,7 +1142,7 @@ void CreateMouseRegionsForLevelMarkers( void )
 
 		MSYS_SetRegionUserData(&LevelMouseRegions[sCounter],0,sCounter);
 
-		swprintf( sString, L"%s %d", zMarksMapScreenText[ 0 ], sCounter + 1 );
+		swprintf( sString, lengthof(sString), L"%s %d", zMarksMapScreenText[ 0 ], sCounter + 1 );
 		SetRegionFastHelpText( &LevelMouseRegions[ sCounter ], sString );
   }
 

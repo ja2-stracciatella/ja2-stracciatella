@@ -14,6 +14,7 @@
 	#include "Interface.h"
 	#include "Overhead.h"
 	#include "Cursor_Control.h"
+	#include "Sound_Control.h"
 #endif
 
 
@@ -1243,7 +1244,7 @@ void BltJA2CursorData( )
 
 void DrawMouseText( )
 {
-	INT16 pStr[ 512 ];
+	wchar_t pStr[ 512 ];
 	INT16 sX, sY;
 	static BOOLEAN fShow = FALSE;
 	static BOOLEAN fHoldInvalid = TRUE;
@@ -1340,7 +1341,7 @@ void DrawMouseText( )
 				// Set dest for gprintf to be different
 			SetFontDestBuffer( MOUSE_BUFFER , 0, 0, 64, 64, FALSE );
 
-			swprintf( pStr, L"%d", gsCurrentActionPoints );
+			swprintf( pStr, lengthof(pStr), L"%d", gsCurrentActionPoints );
 
 			if ( gfUIDisplayActionPointsCenter )
 			{

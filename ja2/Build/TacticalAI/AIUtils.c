@@ -17,6 +17,12 @@
 	#include "Points.h"
 	#include "GameSettings.h"
 	#include "Buildings.h"
+	#include "Soldier_Macros.h"
+	#include "Render_Fun.h"
+	#include "StrategicMap.h"
+	#include "Environment.h"
+	#include "Lighting.h"
+	#include "Soldier_Create.h"
 #endif
 
 //
@@ -582,7 +588,11 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	*/
 
 	// if range is restricted, make sure origin is a legal gridno!
+	#if 0 /* XXX unsigned < 0 ? */
 	if (fRangeRestricted && ((usOrigin < 0) || (usOrigin >= GRIDSIZE)))
+	#else
+	if (fRangeRestricted && usOrigin >= GRIDSIZE)
+	#endif
 	{
 #ifdef BETAVERSION
 		NameMessage(pSoldier,"has illegal origin, but his roaming range is restricted!",1000);

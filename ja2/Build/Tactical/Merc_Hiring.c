@@ -51,6 +51,11 @@
 	#include "JAScreens.h"
 	#include "Text.h"
 	#include "Merc_Contract.h"
+	#include "LaptopSave.h"
+	#include "Personnel.h"
+	#include "Auto_Resolve.h"
+	#include "Map_Screen_Interface_Bottom.h"
+	#include "Quests.h"
 #endif
 
 #define	MIN_FLIGHT_PREP_TIME	6
@@ -629,7 +634,7 @@ void CheckForValidArrivalSector( )
 		return;
 	}
 
-	GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString1 );
+	GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString1, lengthof(zShortTownIDString1));
 
 
 	// If here - we need to do a search!
@@ -671,9 +676,9 @@ void CheckForValidArrivalSector( )
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2 );
+		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2, lengthof(zShortTownIDString2));
 
-		swprintf( sString, L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
+		swprintf( sString, lengthof(sString), L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 

@@ -40,6 +40,10 @@
 	#include "Merc_Contract.h"
 	#include "Strategic_Merc_Handler.h"
 	#include "Language_Defines.h"
+	#include "Assignments.h"
+	#include "StrategicMap.h"
+	#include "Sound_Control.h"
+	#include "Quests.h"
 #endif
 
 #include "Strategic_Town_Loyalty.h"
@@ -932,7 +936,7 @@ BOOLEAN RenderAIMMembers()
 	//Display Option Gear Cost text
 	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
-	swprintf(wTemp, L"%d", gMercProfiles[gbCurrentSoldier].usOptionalGearCost);
+	swprintf(wTemp, lengthof(wTemp), L"%d", gMercProfiles[gbCurrentSoldier].usOptionalGearCost);
 	InsertCommasForDollarFigure( wTemp );
 	InsertDollarSignInToString( wTemp );
 	uiPosX = AIM_MEMBER_OPTIONAL_GEAR_X + StringPixLength( CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_M_FONT_STATIC_TEXT) + 5;
@@ -993,7 +997,7 @@ BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 u
 {
 	wchar_t		sStr[10];
 
-	swprintf(sStr, L"%d", iNumber);
+	swprintf(sStr, lengthof(sStr), L"%d", iNumber);
 
 	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, ulFont, ubColor, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED	);
 
@@ -1004,7 +1008,7 @@ BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLo
 {
 	wchar_t		sStr[10];
 
-	swprintf(sStr, L"%d",iNumber);
+	swprintf(sStr, lengthof(sStr), L"%d",iNumber);
 	InsertCommasForDollarFigure( sStr );
 	InsertDollarSignInToString( sStr );
 
@@ -1072,11 +1076,11 @@ BOOLEAN	UpdateMercInfo(void)
 		wchar_t	sMedicalString[40];
 
 		// Display the medical cost
-		swprintf( zTemp, L"%d", gMercProfiles[ gbCurrentSoldier ].sMedicalDepositAmount );
+		swprintf( zTemp, lengthof(zTemp), L"%d", gMercProfiles[ gbCurrentSoldier ].sMedicalDepositAmount );
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 
-		swprintf( sMedicalString, L"%s %s", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
+		swprintf( sMedicalString, lengthof(sMedicalString), L"%s %s", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
 
 		// If the string will be displayed in more then 2 lines, recenter the string
 		if( ( DisplayWrappedString( 0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT,  sMedicalString, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( AIM_FONT12ARIAL ) ) > 2 )
@@ -1222,7 +1226,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 	HVOBJECT		hVObject;
 	UINT32			usHeight, usWidth;
   ETRLEObject	*pTrav;
-	UINT16			gzItemName[ SIZE_ITEM_NAME ];
+	wchar_t			gzItemName[ SIZE_ITEM_NAME ];
 	UINT8				ubItemCount=0;
 //	UINT16			gzTempItemName[ SIZE_ITEM_INFO ];
 
@@ -1265,7 +1269,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 				wchar_t zTempStr[ 32 ];
 //				UINT16	usWidthOfNumber;
 
-				swprintf( zTempStr, L"x%d", gMercProfiles[ ubMercID ].bInvNumber[ i ] );
+				swprintf( zTempStr, lengthof(zTempStr), L"x%d", gMercProfiles[ ubMercID ].bInvNumber[ i ] );
 
 				DrawTextToScreen( zTempStr, (UINT16)(PosX-1), (UINT16)(PosY+20), AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
 			}
@@ -1840,12 +1844,12 @@ BOOLEAN DisplayVideoConferencingDisplay()
 	//Title & Name
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
-		swprintf( sMercName, L"%s",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
+		swprintf( sMercName, lengthof(sMercName), L"%s",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 	else
 	{
-		swprintf( sMercName, L"%s %s",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
+		swprintf( sMercName, lengthof(sMercName), L"%s %s",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -2008,7 +2012,7 @@ UINT32 DisplayMercChargeAmount()
 	}
 
 
-  swprintf( wDollarTemp, L"%d", giContractAmount);
+  swprintf( wDollarTemp, lengthof(wDollarTemp), L"%d", giContractAmount);
 	InsertCommasForDollarFigure( wDollarTemp );
 	InsertDollarSignInToString( wDollarTemp );
 
@@ -2016,9 +2020,9 @@ UINT32 DisplayMercChargeAmount()
 //	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
 	{
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-			swprintf(wTemp, L"%s %s", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
+			swprintf(wTemp, lengthof(wTemp), L"%s %s", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
 		else
-			swprintf(wTemp, L"%s", wDollarTemp );
+			swprintf(wTemp, lengthof(wTemp), L"%s", wDollarTemp );
 
 		DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X+1, AIM_CONTRACT_CHARGE_AMOUNNT_Y+3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
@@ -2442,13 +2446,13 @@ BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex)
 	return(fIsTheMercTalking);
 }
 
-void DisplayTextForMercFaceVideoPopUp(STR16 pString)
+void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length)
 {
 
 #ifdef TAIWANESE
-	swprintf( gsTalkingMercText, L"%s", pString );
+	swprintf( gsTalkingMercText, Length, L"%s", pString );
 #else
-	swprintf( gsTalkingMercText, L"\"%s\"", pString );
+	swprintf( gsTalkingMercText, Length, L"\"%s\"", pString );
 #endif
 
 	//Set the minimum time for the dialogue text to be present
@@ -4389,23 +4393,23 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 	uiHour = ( ( LaptopSaveInfo.sLastHiredMerc.uiArrivalTime ) - ( ( ( LaptopSaveInfo.sLastHiredMerc.uiArrivalTime ) / 1440 ) * 1440 ) ) / 60;
 
 	//create the time string
-	swprintf( zTimeString, L"%02d:%02d", uiHour, 0 );
+	swprintf( zTimeString, lengthof(zTimeString), L"%02d:%02d", uiHour, 0 );
 
 	//get the id string
-	GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, zSectorIDString, FALSE );
+	GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, zSectorIDString, lengthof(zSectorIDString), FALSE );
 
 	//create the string to display to the user, looks like....
 	//	L"%s should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %s.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 
 #ifdef GERMAN
 	//Germans version has a different argument order
-	swprintf( szLocAndTime, pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
+	swprintf( szLocAndTime, lengthof(szLocAndTime), pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
 							gMercProfiles[ pSoldier->ubProfile ].zNickname,
 							LaptopSaveInfo.sLastHiredMerc.uiArrivalTime / 1440,
 							zTimeString,
 							zSectorIDString );
 #else
-	swprintf( szLocAndTime, pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
+	swprintf( szLocAndTime, lengthof(szLocAndTime), pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
 							gMercProfiles[ pSoldier->ubProfile ].zNickname,
 							zSectorIDString,
 							LaptopSaveInfo.sLastHiredMerc.uiArrivalTime / 1440,

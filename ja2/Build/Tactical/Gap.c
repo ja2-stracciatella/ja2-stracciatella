@@ -10,6 +10,7 @@
 	#include "Timer_Control.h"
 	#include <stdio.h>
 	#include "FileMan.h"
+	#include <string.h>
 #endif
 
 #if 0

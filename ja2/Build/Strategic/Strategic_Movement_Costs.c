@@ -4,6 +4,7 @@
 	#include "Campaign_Types.h"
 	#include "Queen_Command.h"
 	#include "Strategic_Movement.h"
+	#include "Tactical_Save.h"
 #endif
 
 UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ] =

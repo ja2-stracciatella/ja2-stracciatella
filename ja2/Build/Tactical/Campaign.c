@@ -21,6 +21,18 @@
 	#include "Sys_Globals.h"
 	#include "Text.h"
 	#include "GameSettings.h"
+	#include "Assignments.h"
+	#include "MapScreen.h"
+	#include "Interface.h"
+	#include "Game_Event_Hook.h"
+	#include "Overhead.h"
+	#include "Meanwhile.h"
+	#include "Quests.h"
+	#include "Soldier_Macros.h"
+	#include "Squads.h"
+	#include "Strategic.h"
+	#include "StrategicMap.h"
+	#include "Town_Militia.h"
 #endif
 
 #include "EMail.h"
@@ -617,7 +629,7 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 				CHAR16 wTempString[ 128 ];
 
 				// tell player about it
-				BuildStatChangeString( wTempString, pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );
+				BuildStatChangeString( wTempString, lengthof(wTempString), pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
 			}
 
@@ -1488,7 +1500,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 
 
 
-void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
+void BuildStatChangeString( STR16 wString, size_t Length, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
 {
 	UINT8 ubStringIndex;
 
@@ -1515,7 +1527,7 @@ void BuildStatChangeString( STR16 wString, STR16 wName, BOOLEAN fIncrease, INT16
 		ubStringIndex += 2;
 	}
 
-	swprintf( wString, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ),
+	swprintf( wString, Length, L"%s %s %d %s %s", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ),
 					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
 }
 

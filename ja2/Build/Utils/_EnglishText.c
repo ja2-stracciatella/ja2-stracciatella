@@ -107,13 +107,13 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-UINT16 ItemNames[MAXITEMS][80] =
+wchar_t ItemNames[MAXITEMS][80] =
 {
 	L"",
 };
 
 
-UINT16 ShortItemNames[MAXITEMS][80] =
+wchar_t ShortItemNames[MAXITEMS][80] =
 {
 	L"",
 };
@@ -123,7 +123,7 @@ UINT16 ShortItemNames[MAXITEMS][80] =
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-UINT16 AmmoCaliber[][20] =
+wchar_t AmmoCaliber[][20] =
 {
 	L"0",
 	L".38 cal",
@@ -151,7 +151,7 @@ UINT16 AmmoCaliber[][20] =
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-UINT16 BobbyRayAmmoCaliber[][20] =
+wchar_t BobbyRayAmmoCaliber[][20] =
 {
 	L"0",
 	L".38 cal",
@@ -172,7 +172,7 @@ UINT16 BobbyRayAmmoCaliber[][20] =
 };
 
 
-UINT16 WeaponType[][30] =
+wchar_t WeaponType[][30] =
 {
 	L"Other",
 	L"Pistol",
@@ -185,7 +185,7 @@ UINT16 WeaponType[][30] =
 	L"Shotgun",
 };
 
-UINT16 TeamTurnString[][STRING_LENGTH] =
+wchar_t TeamTurnString[][STRING_LENGTH] =
 {
 	L"Player's Turn", // player's turn
 	L"Opponents' Turn",
@@ -195,7 +195,7 @@ UINT16 TeamTurnString[][STRING_LENGTH] =
 	// planning turn
 };
 
-UINT16 Message[][STRING_LENGTH] =
+wchar_t Message[][STRING_LENGTH] =
 {
 	L"",
 
@@ -1022,7 +1022,7 @@ STR16 sKeyDescriptionStrings[2] =
 
 //The headers used to describe various weapon statistics.
 
-INT16		gWeaponStatsDesc[][ 14 ] =
+wchar_t		gWeaponStatsDesc[][ 14 ] =
 {
 	L"Weight (%s):",
 	L"Status:",
@@ -1037,7 +1037,7 @@ INT16		gWeaponStatsDesc[][ 14 ] =
 
 //The headers used for the merc's money.
 
-INT16 gMoneyStatsDesc[][ 13 ] =
+wchar_t gMoneyStatsDesc[][ 13 ] =
 {
 	L"Amount",
 	L"Remaining:", //this is the overall balance
@@ -1053,7 +1053,7 @@ INT16 gMoneyStatsDesc[][ 13 ] =
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
 //only, but represent the precentage of points remaining.
 
-UINT16 zHealthStr[][13] =
+wchar_t zHealthStr[][13] =
 {
 	L"DYING",		//	>= 0
 	L"CRITICAL", 		//	>= 15
@@ -1075,18 +1075,18 @@ STR16	gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-INT16		gzProsLabel[10] =
+wchar_t		gzProsLabel[10] =
 {
 	L"Pros:",
 };
 
-INT16		gzConsLabel[10] =
+wchar_t		gzConsLabel[10] =
 {
 	L"Cons:",
 };
 
 //Conversation options a player has when encountering an NPC
-UINT16 zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
+wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 {
 	L"Come Again?", 	//meaning "Repeat yourself"
 	L"Friendly",		//approach in a friendly
@@ -1097,7 +1097,7 @@ UINT16 zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 };
 
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
-UINT16 zDealerStrings[4][ SMALL_STRING_LENGTH ]=
+wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 {
 	L"Buy/Sell",
 	L"Buy",
@@ -1105,7 +1105,7 @@ UINT16 zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 	L"Repair",
 };
 
-UINT16 zDialogActions[1][ SMALL_STRING_LENGTH ] =
+wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] =
 {
 	L"Done",
 };
@@ -1146,7 +1146,7 @@ STR16	zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-UINT16 TacticalStr[][ MED_STRING_LENGTH ] =
+wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 {
 	L"Air Raid",
 	L"Apply first aid automatically?",
@@ -2479,7 +2479,7 @@ STR16 pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-UINT16 LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
+wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
 {
 	L"You have been defeated in this sector!",
 	L"The enemy, having no mercy for the team's soul, devours each and every one of you!",
@@ -3694,7 +3694,7 @@ STR16 pMessageStrings[] =
 };
 
 
-UINT16 ItemPickupHelpPopup[][40] =
+wchar_t ItemPickupHelpPopup[][40] =
 {
 	L"OK",
 	L"Scroll Up",
@@ -3839,7 +3839,7 @@ STR16	gzCreditNames[]=
 {
 	L"Chris Camfield",
 	L"Shaun Lyng",
-	L"Kris Märnes",
+	L"Kris Maernes", /* XXX L"Kris Märnes" */
 	L"Ian Currie",
 	L"Linda Currie",
 	L"Eric \"WTF\" Cheng",

@@ -31,6 +31,12 @@
 	#include "World_Items.h"
 	#include "Environment.h"
 	#include "Message.h"
+	#include "Faces.h"
+	#include "Squads.h"
+	#include "Interactive_Tiles.h"
+	#include "Gameloop.h"
+	#include "SysUtil.h"
+	#include "Tile_Surface.h"
 #endif
 
 

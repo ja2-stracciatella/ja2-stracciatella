@@ -15,6 +15,13 @@
 	#include "Handle_UI.h"
 	#include "Points.h"
 	#include "Interface.h"
+	#include "Interface_Dialogue.h"
+	#include "TeamTurns.h"
+	#include "Music_Control.h"
+	#include "History.h"
+	#include "Game_Clock.h"
+	#include "StrategicMap.h"
+	#include "Animation_Data.h"
 #endif
 
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };

@@ -36,6 +36,16 @@
 	#include "Interface_Control.h"
 	#include "ShopKeeper_Interface.h"
 	#include "Cursors.h"
+	#include "GameSettings.h"
+	#include "Environment.h"
+	#include "Auto_Resolve.h"
+	#include "Interface_Items.h"
+	#include "History.h"
+	#include "Game_Clock.h"
+	#include "Smell.h"
+	#include "StrategicMap.h"
+	#include "Campaign_Types.h"
+	#include "Soldier_Macros.h"
 #endif
 
 #define ANY_MAGSIZE 255
@@ -1471,9 +1481,9 @@ BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAt
 			if ( fAttemptingAttachment && ValidAttachmentClass( usAttachment, pObj->usItem ) )
 			{
 				// well, maybe the player thought he could
-				UINT16	zTemp[ 100 ];
+				wchar_t	zTemp[ 100 ];
 
-				swprintf( zTemp, Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
+				swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			}
 
@@ -2965,9 +2975,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
-			UINT16	zTemp[ 150 ];
+			wchar_t	zTemp[ 150 ];
 
-			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
+			swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			return( FALSE );
 		}
@@ -2976,9 +2986,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
-			UINT16	zTemp[ 150 ];
+			wchar_t	zTemp[ 150 ];
 
-			swprintf( zTemp, Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
+			swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
 			return( FALSE );
 		}

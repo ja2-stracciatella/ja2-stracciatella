@@ -23,6 +23,10 @@
 		#include "RenderWorld.h"
 		#include "Video.h"
 	#endif
+	#include "WorldMan.h"
+	#include "StrategicMap.h"
+	#include "Environment.h"
+	#include "Lighting.h"
 #endif
 
 #include "PathAIDebug.h"
@@ -1247,7 +1251,11 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// assume we have to stand up!
 	// use the min macro here to make sure we don't wrap the UINT8 to 255...
 
+	#if 0 /* doppelt? */
 	gubNPCAPBudget = 	gubNPCAPBudget = __min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
+	#else
+	gubNPCAPBudget = 	__min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
+	#endif
 	//NumMessage("Search Range = ",iSearchRange);
 	//NumMessage("gubNPCAPBudget = ",gubNPCAPBudget);
 

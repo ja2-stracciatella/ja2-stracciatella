@@ -2,8 +2,6 @@
 	#include "Utils_All.h"
   #include "Interface_Control.h"
 #else
-	#include <windows.h>
-	#include <mmsystem.h>
 	#include <string.h>
 	#include "WCheck.h"
 	#include "stdlib.h"
@@ -14,6 +12,7 @@
 	#include "Handle_Items.h"
 	#include "WorldDef.h"
 	#include "RenderWorld.h"
+	#include "Interface_Control.h"
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN

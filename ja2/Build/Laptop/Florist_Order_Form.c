@@ -17,6 +17,8 @@
 	#include "Game_Clock.h"
 	#include "English.h"
 	#include "Text.h"
+	#include "LaptopSave.h"
+	#include "Random.h"
 #endif
 
 #include "Meanwhile.h"
@@ -485,8 +487,8 @@ void ExitFloristOrderForm()
 	RemoveButton( guiFlowerOrderGalleryButton );
 
 	//Store the text fields
-	Get16BitStringFromField( 1, gsSentimentTextField );
-	Get16BitStringFromField( 2, gsNameTextField );
+	Get16BitStringFromField( 1, gsSentimentTextField, lengthof(gsSentimentTextField));
+	Get16BitStringFromField( 2, gsNameTextField, lengthof(gsNameTextField));
 	gbCurrentlySelectedCard = -1;
 
 
@@ -894,7 +896,7 @@ void DisplayFlowerDynamicItems()
 */
 	//order number
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_ORDER_NUMBER], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_ORDER_NUM_NAME_X;
-	swprintf(sTemp, L"%d", LaptopSaveInfo.uiFlowerOrderNumber );
+	swprintf(sTemp, lengthof(sTemp), L"%d", LaptopSaveInfo.uiFlowerOrderNumber );
 	DrawTextToScreen( sTemp, usPosX, FLOWER_ORDER_ORDER_NUM_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	guiFlowerPrice = 0;
@@ -927,7 +929,7 @@ void DisplayFlowerDynamicItems()
 	else
 		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubWhenItGetsThereCost;
 
-	swprintf( sTemp, L"$%d.00 %s", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
+	swprintf( sTemp, lengthof(sTemp), L"$%d.00 %s", guiFlowerPrice, pMessageStrings[ MSG_USDOLLAR_ABBREVIATION ] );
 	DrawTextToScreen( sTemp, usPosX, FLOWER_ORDER_BOUQUET_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 }
 
@@ -1037,12 +1039,12 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 			//if its the personel sentiment field
 			if( ubTextFieldID == 1 )
 			{
-				Get16BitStringFromField( ubTextFieldID, gsSentimentTextField );
+				Get16BitStringFromField( ubTextFieldID, gsSentimentTextField, lengthof(gsSentimentTextField));
 			}
 			else if( ubTextFieldID == 2 )
 			{
 				//else its the name field
-				Get16BitStringFromField( ubTextFieldID, gsNameTextField );
+				Get16BitStringFromField( ubTextFieldID, gsNameTextField, lengthof(gsNameTextField));
 			}
 
 			SetActiveField(0);
@@ -1072,7 +1074,7 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 
 			//disable the text entry fields
 //			DisableAllTextFields();
-				Get16BitStringFromField( 1, gsSentimentTextField );
+				Get16BitStringFromField( 1, gsSentimentTextField, lengthof(gsSentimentTextField));
 				KillTextInputMode();
 
 			//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)
@@ -1265,12 +1267,12 @@ void HandleFloristOrderKeyBoardInput()
 					//if its the personel sentiment field
 					if( ubTextFieldID == 1 )
 					{
-						Get16BitStringFromField( ubTextFieldID, gsSentimentTextField );
+						Get16BitStringFromField( ubTextFieldID, gsSentimentTextField, lengthof(gsSentimentTextField));
 					}
 					else if( ubTextFieldID == 2 )
 					{
 						//else its the name field
-						Get16BitStringFromField( ubTextFieldID, gsNameTextField );
+						Get16BitStringFromField( ubTextFieldID, gsNameTextField, lengthof(gsNameTextField));
 					}
 
 					SetActiveField(0);

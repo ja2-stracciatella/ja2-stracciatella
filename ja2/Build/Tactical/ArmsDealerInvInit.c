@@ -6,6 +6,12 @@
 	#include "Item_Types.h"
 	#include "Arms_Dealer_Init.h"
 	#include "Debug.h"
+	#include "Weapons.h"
+	#include "Campaign.h"
+	#include "BobbyR.h"
+	#include "LaptopSave.h"
+	#include "ShopKeeper_Interface.h"
+	#include "Random.h"
 #endif
 
 

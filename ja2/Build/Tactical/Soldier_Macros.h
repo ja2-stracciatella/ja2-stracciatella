@@ -5,6 +5,7 @@
 #include "TeamTurns.h"
 #include "Soldier_Profile.h"
 #include "Assignments.h"
+#include "Animation_Data.h"
 
 // MACROS
 #define RPC_RECRUITED( p )	( ( p->ubProfile == NO_PROFILE ) ? FALSE : ( gMercProfiles[ p->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )

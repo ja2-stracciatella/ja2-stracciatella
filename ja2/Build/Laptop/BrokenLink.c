@@ -2,7 +2,11 @@
 	#include "Laptop All.h"
 	#include "BrokenLink.h"
 #else
-
+	#include "BrokenLink.h"
+	#include "Font.h"
+	#include "WordWrap.h"
+	#include "Laptop.h"
+	#include "Text.h"
 #endif
 
 

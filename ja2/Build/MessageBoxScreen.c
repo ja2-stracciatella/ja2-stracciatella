@@ -23,6 +23,9 @@
 	#include "Cursor_Control.h"
 	#include "Laptop.h"
 	#include "Text.h"
+	#include "MapScreen.h"
+	#include "Overhead_Map.h"
+	#include "TileDef.h"
 #endif
 
 #define		MSGBOX_DEFAULT_WIDTH							300
@@ -33,8 +36,6 @@
 
 #define		MSGBOX_SMALL_BUTTON_WIDTH					31
 #define		MSGBOX_SMALL_BUTTON_X_SEP					8
-
-typedef void (*MSGBOX_CALLBACK)( UINT8 bExitValue );
 
 // old mouse x and y positions
 SGPPoint pOldMousePosition;
@@ -75,7 +76,7 @@ CHAR16		gzUserDefinedButton1[ 128 ];
 CHAR16		gzUserDefinedButton2[ 128 ];
 
 
-INT32 DoMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+INT32 DoMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	VSURFACE_DESC		vs_desc;
 	UINT16	usTextBoxWidth;
@@ -1194,27 +1195,27 @@ UINT32	MessageBoxScreenShutdown(  )
 
 
 // a basic box that don't care what screen we came from
-void DoScreenIndependantMessageBox( INT16 *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
 // a basic box that don't care what screen we came from
-void DoUpperScreenIndependantMessageBox( INT16 *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoUpperScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y / 2 };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
 // a basic box that don't care what screen we came from
-void DoLowerScreenIndependantMessageBox( INT16 *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect CenteringRect= {0, INV_INTERFACE_START_Y / 2, 640, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
-void DoScreenIndependantMessageBoxWithRect( INT16 *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+void DoScreenIndependantMessageBoxWithRect( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 
 	/// which screen are we in?

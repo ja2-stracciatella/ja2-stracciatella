@@ -39,6 +39,9 @@
 	#include "SkillCheck.h"
 	#include "GameSettings.h"
 	#include "SaveLoadMap.h"
+	#include "Soldier_Macros.h"
+	#include "SmokeEffects.h"
+	#include "Auto_Resolve.h"
 #endif
 
 #define MINCHANCETOHIT          1
@@ -1980,7 +1983,7 @@ void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 s
 }
 
 
-void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, UINT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped )
+void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, INT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped )
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;

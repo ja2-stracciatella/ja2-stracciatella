@@ -31,6 +31,7 @@
 	#include "Game_Event_Hook.h"
 	#include "LaptopSave.h"
 	#include "Strategic.h"
+	#include "Random.h"
 #endif
 
 #define IMP_MERC_FILE "IMP.dat"

@@ -23,6 +23,15 @@
 	#include "HelpScreen.h"
 	#include "HelpScreenText.h"
 	#include "Line.h"
+	#include "Game_Clock.h"
+	#include "GameSettings.h"
+	#include "Laptop.h"
+	#include "English.h"
+	#include "Text_Input.h"
+	#include "RenderWorld.h"
+	#include "Game_Init.h"
+	#include "Overhead.h"
+	#include "Button_System.h"
 #endif
 
 

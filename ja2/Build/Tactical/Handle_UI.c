@@ -72,6 +72,17 @@
 	#include "Render_Dirty.h"
 	#include "GameSettings.h"
 	#include "LOS.h"
+	#include "Campaign_Types.h"
+	#include "Queen_Command.h"
+	#include "Options_Screen.h"
+	#include "SaveLoadGame.h"
+	#include "Spread_Burst.h"
+	#include "AI.h"
+	#include "Game_Clock.h"
+	#include "Civ_Quotes.h"
+	#include "QArray.h"
+	#include "Environment.h"
+	#include "Map_Information.h"
 #endif
 
 
@@ -335,13 +346,13 @@ UINT32									guiTimerLastUpdate = 0;
 UINT32									guiTimerCursorDelay = 0;
 
 
-INT16			gzLocation[ 20 ];
+wchar_t		gzLocation[ 20 ];
 BOOLEAN		gfLocation = FALSE;
 
-INT16			gzIntTileLocation[ 20 ];
+wchar_t		gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 
-INT16			gzIntTileLocation2[ 20 ];
+wchar_t		gzIntTileLocation2[ 20 ];
 BOOLEAN		gfUIIntTileLocation2;
 
 MOUSE_REGION	gDisableRegion;
@@ -2515,7 +2526,7 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 				// If this is one of our own guys.....pop up requiester...
 				if ( ( pTSoldier->bTeam == gbPlayerNum || pTSoldier->bTeam == MILITIA_TEAM ) && Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass != IC_MEDKIT && pSoldier->inv[ HANDPOS ].usItem != GAS_CAN && gTacticalStatus.ubLastRequesterTargetID != pTSoldier->ubProfile && ( pTSoldier->ubID != pSoldier->ubID ) )
 				{
-					INT16							zStr[200];
+					wchar_t zStr[200];
 
 					gpRequesterMerc			  = pSoldier;
 					gpRequesterTargetMerc = pTSoldier;
@@ -2523,7 +2534,7 @@ UINT32 UIHandleCAMercShoot( UI_EVENT *pUIEvent )
 
 					fDidRequester = TRUE;
 
-					swprintf( zStr, TacticalStr[ ATTACK_OWN_GUY_PROMPT ], pTSoldier->name );
+					swprintf( zStr, lengthof(zStr), TacticalStr[ ATTACK_OWN_GUY_PROMPT ], pTSoldier->name );
 
 					DoMessageBox( MSG_BOX_BASIC_STYLE, zStr, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, AttackRequesterCallback, NULL );
 

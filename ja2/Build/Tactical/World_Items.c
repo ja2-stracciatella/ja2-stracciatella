@@ -25,6 +25,8 @@
 	#include "Action_Items.h"
 	#include "Pits.h"
 	#include "GameSettings.h"
+	#include "Quests.h"
+	#include "Soldier_Profile.h"
 #endif
 
 //Global dynamic array of all of the items in a loaded map.

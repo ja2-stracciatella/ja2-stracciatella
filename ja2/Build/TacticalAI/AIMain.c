@@ -40,6 +40,15 @@
 	#include "Vehicles.h"
 	#include "RenderWorld.h"
 	#include "AIList.h"
+	#include "Soldier_Macros.h"
+	#include "Bullets.h"
+	#include "Physics.h"
+	#include "Debug_Control.h"
+	#include "Interface_Panels.h"
+	#include "Sound_Control.h"
+	#include "Civ_Quotes.h"
+	#include "Quests.h"
+	#include "Queen_Command.h"
 #endif
 
 extern void PauseAITemporarily( void );

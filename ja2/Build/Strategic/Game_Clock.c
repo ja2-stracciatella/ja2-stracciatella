@@ -20,6 +20,12 @@
 	#include "Event_Pump.h"
 	#include "Text.h"
 	#include "Interface_Control.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "Map_Screen_Interface_Bottom.h"
+	#include "MapScreen.h"
+	#include "GameScreen.h"
+	#include "Fade_Screen.h"
+	#include "Map_Information.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK
@@ -82,7 +88,7 @@ INT32			  iPausedPopUpBox = -1;
 UINT32			guiDay;
 UINT32			guiHour;
 UINT32			guiMin;
-UINT16			gswzWorldTimeStr[20];
+wchar_t			gswzWorldTimeStr[20];
 INT32				giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
 UINT16      usPausedActualWidth;
 UINT16			usPausedActualHeight;
@@ -111,7 +117,7 @@ void InitNewGameClock( )
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
+	swprintf( WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
 	guiTimeCurrentSectorWasLastLoaded = 0;
 	guiGameSecondsPerRealSecond = 0;
 	gubClockResolution = 1;
@@ -237,7 +243,7 @@ void AdvanceClock( UINT8 ubWarpCode )
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
+	swprintf( WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
 
 	if( gfResetAllPlayerKnowsEnemiesFlags && !gTacticalStatus.fEnemyInSector )
 	{
@@ -1005,7 +1011,7 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
+	swprintf( WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%s %d, %02d:%02d", pDayStrings[ 0 ], guiDay, guiHour, guiMin );
 
 	if( !gfBasement && !gfCaves )
 		gfDoLighting		 = TRUE;

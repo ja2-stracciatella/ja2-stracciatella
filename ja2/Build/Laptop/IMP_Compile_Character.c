@@ -29,6 +29,7 @@
 	#include "Soldier_Profile.h"
 	#include "Animation_Data.h"
 	#include "Random.h"
+	#include "LaptopSave.h"
 #endif
 
 // how many times should a 'die' be rolled for skills of the same type?

@@ -58,6 +58,8 @@ typedef enum
 
 }	UI_MODE;
 
+struct TAG_UI_EVENT;
+
 typedef UINT32 (*UI_HANDLEFNC)( struct TAG_UI_EVENT* );
 
 typedef struct TAG_UI_EVENT
@@ -211,13 +213,13 @@ BOOLEAN		gUITargetReady;
 BOOLEAN		gUITargetShotWaiting;
 UINT16		gsUITargetShotGridNo;
 
-INT16			gzLocation[ 20 ];
+extern wchar_t		gzLocation[ 20 ];
 BOOLEAN		gfUIBodyHitLocation;
 
-INT16			gzIntTileLocation[ 20 ];
+wchar_t		gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 
-INT16			gzIntTileLocation2[ 20 ];
+wchar_t		gzIntTileLocation2[ 20 ];
 BOOLEAN		gfUIIntTileLocation2;
 
 BOOLEAN		gfUIWaitingForUserSpeechAdvance;

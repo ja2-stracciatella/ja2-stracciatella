@@ -32,7 +32,6 @@
 	#include "Interface.h"
 	#include "Soldier_Ani.h"
 	#include <wchar.h>
-	#include <tchar.h>
 	#include "English.h"
 	#include "FileMan.h"
 	#include "MessageBoxScreen.h"
@@ -333,7 +332,11 @@ UINT16 GetAnimStateFromName( INT8 *zName )
 	// FInd the next animation with start height the same...
 	for ( cnt = 0; cnt < NUMANIMATIONSTATES; cnt++ )
 	{
+		#if 0 /* XXX */
 		if ( stricmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
+		#else
+		if ( strcasecmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
+		#endif
 		{
 			return( (UINT16) cnt );
 		}
@@ -350,7 +353,7 @@ void BuildListFile( )
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;
-	INT16 zError[128];
+	wchar_t zError[128];
 
 
 	//Verify the existance of the header text file.
@@ -393,7 +396,7 @@ void BuildListFile( )
 		}
 		else
 		{
-			swprintf( zError, L"Animation str %S is not known: ", currFilename );
+			swprintf( zError, lengthof(zError), L"Animation str %S is not known: ", currFilename );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, NULL, NULL );
 			fclose( infoFile );
 			return;

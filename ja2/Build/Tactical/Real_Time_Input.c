@@ -56,10 +56,11 @@
 	#include "Assignments.h"
 	#include "Map_Screen_Interface.h"
 	#include "RenderWorld.h"
-	#include	"GameSettings.h"
+	#include "GameSettings.h"
 	#include "English.h"
 	#include "Text.h"
 	#include "Soldier_Macros.h"
+	#include "Render_Dirty.h"
 #endif
 
 

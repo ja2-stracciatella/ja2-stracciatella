@@ -9,6 +9,7 @@
 	#include "WCheck.h"
 	#include "Event_Manager.h"
 	#include "Timer_Control.h"
+	#include <string.h>
 #endif
 
 HLIST		hEventQueue = NULL;

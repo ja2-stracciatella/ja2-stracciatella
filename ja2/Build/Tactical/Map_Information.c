@@ -20,6 +20,9 @@
 	#include "Sys_Globals.h"
 	#include "Message.h"
 	#include "Weapons.h"
+	#include "Environment.h"
+	#include "Lighting.h"
+	#include "Animated_ProgressBar.h"
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!

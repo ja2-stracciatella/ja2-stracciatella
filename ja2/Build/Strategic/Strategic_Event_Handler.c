@@ -27,6 +27,9 @@
 	#include "RenderWorld.h"
 	#include "Soldier_Profile.h"
 	#include "EMail.h"
+	#include "Strategic.h"
+	#include "Structure_Wrap.h"
+	#include "History.h"
 #endif
 #include "BobbyRMailOrder.h"
 

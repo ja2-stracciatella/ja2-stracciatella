@@ -11,9 +11,9 @@ extern "C" {
 //	Keeps track of the game version
 //
 
-extern	INT16		zVersionLabel[16];
-extern	INT8		czVersionNumber[16];
-extern	INT16		zTrackingNumber[16];
+extern	wchar_t		zVersionLabel[16];
+extern	char		czVersionNumber[16];
+extern	wchar_t		zTrackingNumber[16];
 
 
 

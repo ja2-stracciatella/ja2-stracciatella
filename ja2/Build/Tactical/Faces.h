@@ -97,7 +97,7 @@ typedef struct
 	BOOLEAN		fDisplayTextOver;								// Boolean indicating to display text on face
 	BOOLEAN		fOldDisplayTextOver;						// OLD Boolean indicating to display text on face
 	BOOLEAN		fCanHandleInactiveNow;
-	INT16			zDisplayText[ 30 ];							// String of text that can be displayed
+	wchar_t			zDisplayText[ 30 ];							// String of text that can be displayed
 
 	UINT16		usEyesX;
 	UINT16		usEyesY;

@@ -9,6 +9,7 @@
 	#include "Overhead.h"
 	#include "Isometric_Utils.h"
 	#include "RenderWorld.h"
+	#include <math.h>
 #endif
 
 #define		SOUND_FAR_VOLUME_MOD		25

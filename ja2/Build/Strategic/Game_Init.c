@@ -44,6 +44,20 @@
 	#include "AIMMembers.h"
 	#include "Dialogue_Control.h"
 	#include "NPC.h"
+	#include "OppList.h"
+	#include "GameSettings.h"
+	#include "Interface_Dialogue.h"
+	#include "Map_Screen_Interface_Border.h"
+	#include "Map_Screen_Helicopter.h"
+	#include "Vehicles.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "PreBattle_Interface.h"
+	#include "Arms_Dealer_Init.h"
+	#include "BobbyR.h"
+	#include "HelpScreen.h"
+	#include "Air_Raid.h"
+	#include "Interface.h"
+	#include "Cheats.h"
 #endif
 
 // Temp function
@@ -54,7 +68,7 @@ extern UINT32 uiMeanWhileFlags;
 extern BOOLEAN gfGamePaused;
 
 extern UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
-extern InitVehicles( );
+void InitVehicles(void); /* XXX shouldn't be here */
 
 
 UINT8			gubScreenCount=0;

@@ -24,6 +24,10 @@
 	#include "SkillCheck.h"
 	#include "WCheck.h"
 	#include "Soldier_Profile.h"
+	#include "Soldier_Macros.h"
+	#include "Drugs_And_Alcohol.h"
+	#include "WorldMan.h"
+	#include "Interface_Items.h"
 #endif
 
 extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );

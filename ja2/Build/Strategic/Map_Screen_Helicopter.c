@@ -12,7 +12,6 @@
 	#include "Strategic_Pathing.h"
 	#include "Random.h"
 	#include "Game_Event_Hook.h"
-	#include "String.h"
 	#include "Dialogue_Control.h"
 	#include "Message.h"
 	#include "Strategic_Movement.h"
@@ -28,6 +27,15 @@
 	#include "Squads.h"
 	#include "Player_Command.h"
 	#include "Sound_Control.h"
+	#include "Meanwhile.h"
+	#include "Map_Screen_Interface_Border.h"
+	#include "Strategic_Event_Handler.h"
+	#include "Overhead.h"
+	#include "Soldier_Create.h"
+	#include "RenderWorld.h"
+	#include "SoundMan.h"
+	#include "Isometric_Utils.h"
+	#include "Scheduling.h"
 #endif
 
 

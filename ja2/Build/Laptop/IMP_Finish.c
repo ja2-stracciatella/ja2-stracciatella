@@ -22,6 +22,7 @@
 	#include "SoundMan.h"
 	#include "IMP_Compile_Character.h"
 	#include "Text.h"
+	#include "LaptopSave.h"
 #endif
 
 // min time btween frames of animation
@@ -207,7 +208,7 @@ void CreateIMPFinishButtons( void )
   SpecifyButtonIcon(  giIMPFinishButton[ 4 ], guiCHARACTERPORTRAIT, 0,
 													 33, 23, FALSE );
 
-	swprintf( sString, pImpButtonText[ 5 ], iCurrentVoices + 1 );
+	swprintf( sString, lengthof(sString), pImpButtonText[ 5 ], iCurrentVoices + 1 );
 
 	// the voice button
 	giIMPFinishButtonImage[5]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
@@ -632,7 +633,7 @@ void RenderCharFullName( void )
 	SetFontBackground( FONT_BLACK );
 
 
-	swprintf( sString, pIMPFinishStrings[ 0 ], pFullName );
+	swprintf( sString, lengthof(sString), pIMPFinishStrings[ 0 ], pFullName );
 
 
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);

@@ -24,6 +24,19 @@
 	#include "Tactical_Save.h"
 	#include "Soldier_Ani.h"
 	#include "Strategic_AI.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "Soldier_Profile.h"
+	#include "Quests.h"
+	#include "Auto_Resolve.h"
+	#include "Animation_Data.h"
+	#include "Game_Event_Hook.h"
+	#include "Game_Clock.h"
+	#include "RenderWorld.h"
+	#include "Dialogue_Control.h"
+	#include "Campaign_Init.h"
+	#include "Meanwhile.h"
+	#include "Soldier_Macros.h"
+	#include "Morale.h"
 #endif
 
 #ifdef JA2BETAVERSION

@@ -28,6 +28,9 @@
 	#include "JA2_Demo_Ads.h"
 	#include "Text.h"
 	#include "HelpScreen.h"
+	#include "SaveLoadGame.h"
+	#include "Finances.h"
+	#include "Options_Screen.h"
 #endif
 
 
@@ -40,7 +43,7 @@ INT32	 giStartingMemValue = 0;
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 UINT8		gubCheckForFreeSpaceOnHardDriveCount=DONT_CHECK_FOR_FREE_SPACE;
 
-extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
+extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
 extern	void			NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack( UINT8 bExitValue );
 extern BOOLEAN gfTacticalPlacementGUIActive;
 extern BOOLEAN gfTacticalPlacementGUIDirty;
@@ -223,14 +226,14 @@ void GameLoop(void)
 					UINT32	uiSpaceOnDrive;
 					CHAR16	zSizeNeeded[512];
 
-					swprintf( zSizeNeeded, L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
+					swprintf( zSizeNeeded, lengthof(zSizeNeeded), L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
 					InsertCommasForDollarFigure( zSizeNeeded );
 
 					uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
 
-					swprintf( zSpaceOnDrive, L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
+					swprintf( zSpaceOnDrive, lengthof(zSpaceOnDrive), L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
 
-					swprintf( zText, pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, zSizeNeeded );
+					swprintf( zText, lengthof(zText), pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, zSizeNeeded );
 
 					if( guiPreviousOptionScreen == MAP_SCREEN )
 						DoMapMessageBox( MSG_BOX_BASIC_STYLE, zText, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );

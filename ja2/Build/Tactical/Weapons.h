@@ -234,7 +234,7 @@ extern INT8 EffectiveArmour( OBJECTTYPE * pObj );
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );
 extern BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
 extern void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange , UINT8 ubAttackerID, BOOLEAN fHit, UINT8 ubSpecial, UINT8 ubHitLocation );
-extern void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, UINT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped );
+extern void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, INT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped );
 extern void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
 extern INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, INT16 sHitBy, UINT8 * pubSpecial );
 extern BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT16 sGridNo );

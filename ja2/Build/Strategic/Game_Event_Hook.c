@@ -36,6 +36,9 @@
 	#include "Strategic_AI.h"
 	#include "Merc_Contract.h"
 	#include "Strategic_Status.h"
+	#include "Soldier_Profile.h"
+	#include "Laptop.h"
+	#include "Campaign.h"
 #endif
 
 #ifdef JA2BETAVERSION

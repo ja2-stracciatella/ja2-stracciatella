@@ -14,6 +14,9 @@
 	#include "Vehicles.h"
 	#include "Map_Screen_Helicopter.h"
 	#include "Soldier_Profile.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "Soldier_Macros.h"
 #endif
 
 

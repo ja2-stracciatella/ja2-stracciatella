@@ -50,6 +50,9 @@
 	#include "EditorMercs.h"
 	#include "Soldier_Tile.h"
 	#include "Soldier_Find.h"
+	#include "Vehicles.h"
+	#include "GameSettings.h"
+	#include "UI_Cursors.h"
 #endif
 
 

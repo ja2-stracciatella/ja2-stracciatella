@@ -1,6 +1,8 @@
 #ifndef __WORLDMAN_H_
 #define __WORLDMAN_H_
 
+#include "WorldDef.h"
+
 // memory-accounting function
 void CountLevelNodes( void );
 

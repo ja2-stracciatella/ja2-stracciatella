@@ -27,6 +27,11 @@
 	#include "Animation_Data.h"
 	#include "Message.h"
 	#include "Font_Control.h"
+	#include "Tactical_Save.h"
+	#include "Campaign_Types.h"
+	#include "Game_Clock.h"
+	#include "Queen_Command.h"
+	#include "Scheduling.h"
 #endif
 
 extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );
@@ -522,7 +527,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 						curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
 					}
 
-					swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+					swprintf( curr->pDetailedPlacement->name, lengthof(curr->pDetailedPlacement->name), pSoldier->name );
 
 					//Copy patrol points
 					curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
@@ -1605,7 +1610,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 							curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
 						}
 
-						swprintf( curr->pDetailedPlacement->name, pSoldier->name );
+						swprintf( curr->pDetailedPlacement->name, lengthof(curr->pDetailedPlacement->name), pSoldier->name );
 
 						//Copy patrol points
 						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;

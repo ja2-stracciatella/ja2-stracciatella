@@ -71,7 +71,9 @@ INT16 GetBaseTile( STRUCTURE * pStructure );
 //
 // functions to work with the editor undo code
 //
-void DeleteStructureFromTile( PTR pMapElement, STRUCTURE * pStructure );
+struct MAP_ELEMENT;
+
+void DeleteStructureFromTile( struct MAP_ELEMENT* pMapElement, STRUCTURE * pStructure );
 
 void DebugStructurePage1( void );
 

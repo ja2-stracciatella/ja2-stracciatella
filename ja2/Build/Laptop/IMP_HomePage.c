@@ -18,6 +18,7 @@
 	#include "LaptopSave.h"
 	#include "Line.h"
 	#include "English.h"
+	#include <string.h>
 #endif
 
 void GetPlayerKeyBoardInputForIMPHomePage( void );

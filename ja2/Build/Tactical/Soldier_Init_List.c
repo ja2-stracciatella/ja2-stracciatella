@@ -26,6 +26,19 @@
 	#include "Animation_Data.h"
 	#include "Message.h"
 	#include "Font_Control.h"
+	#include "Sound_Control.h"
+	#include "Quests.h"
+	#include "Render_Fun.h"
+	#include "Meanwhile.h"
+	#include "Strategic_AI.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "Strategic.h"
+	#include "Debug_Control.h"
+	#include "Inventory_Choosing.h"
+	#include "Campaign_Types.h"
+	#include "AI.h"
+	#include "NPC.h"
+	#include "Scheduling.h"
 #endif
 
 BOOLEAN gfOriginalList = TRUE;

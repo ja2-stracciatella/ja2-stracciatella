@@ -11,10 +11,12 @@ BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UIN
 
 void FilenameForBPP(STR pFilename, STR pDestination);
 
-BOOLEAN	 WrapString( INT16 *pStr, INT16 *pStr2, UINT16 usWidth, INT32 uiFont );
+BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidth, INT32 uiFont );
 
+#if 0 /* XXX Seem to be unused */
 BOOLEAN IfWinNT(void);
 BOOLEAN IfWin95(void);
+#endif
 
 void HandleLimitedNumExecutions( );
 

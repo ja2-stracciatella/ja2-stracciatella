@@ -324,7 +324,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void );
 void ToggleEntryInSelectedList( INT8 bEntry );
 
 // reset assignments for mercs on selected list who have this assignment
-void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( );
+void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList(INT8 bAssignment);
 
 /*
 // plot path for selected character list
@@ -352,7 +352,7 @@ void EnableTeamInfoPanels( void );
 void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, INT16 yp );
 
 // do mapscreen message box
-INT32 DoMapMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+INT32 DoMapMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
 // hop up one leve,l int he map screen level interface
 void GoUpOneLevelInMap( void );

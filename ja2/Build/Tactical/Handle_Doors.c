@@ -23,6 +23,16 @@
 	#include "Message.h"
 	#include "Text.h"
 	#include "Random.h"
+	#include "SkillCheck.h"
+	#include "Dialogue_Control.h"
+	#include "Render_Fun.h"
+	#include "Quests.h"
+	#include "StrategicMap.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "Soldier_Profile.h"
+	#include "Isometric_Utils.h"
+	#include "AI.h"
+	#include "Soldier_Macros.h"
 #endif
 
 BOOLEAN gfSetPerceivedDoorState = FALSE;

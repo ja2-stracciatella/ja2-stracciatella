@@ -158,8 +158,8 @@ typedef enum{
 
 typedef struct
 {
-	UINT16	zName[ NAME_LENGTH ];
-	UINT16	zNickname[ NICKNAME_LENGTH ];
+	wchar_t	zName[ NAME_LENGTH ];
+	wchar_t	zNickname[ NICKNAME_LENGTH ];
 	UINT32	uiAttnSound;
 	UINT32	uiCurseSound;
 	UINT32	uiDieSound;

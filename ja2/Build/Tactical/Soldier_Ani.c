@@ -55,6 +55,11 @@
 	#include "Campaign.h"
 	#include "LOS.h"
 	#include "GameSettings.h"
+	#include "Boxing.h"
+	#include "Drugs_And_Alcohol.h"
+	#include "Smell.h"
+	#include "Strategic_Status.h"
+	#include "Interface_Dialogue.h"
 #endif
 
 #define		NO_JUMP											0

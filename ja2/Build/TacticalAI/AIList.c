@@ -17,6 +17,10 @@
 	#include "Overhead.h"
 	#include "Debug.h"
 	#include "AIInternals.h"
+	#include "AI.h"
+	#include "OppList.h"
+	#include "Interface.h"
+	#include "Tactical_Save.h"
 #endif
 
 #define AI_LIST_SIZE TOTAL_SOLDIERS

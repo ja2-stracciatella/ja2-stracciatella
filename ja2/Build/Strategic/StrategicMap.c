@@ -85,6 +85,19 @@
 	#include "Points.h"
 	#include "JA2_Demo_Ads.h"
 	#include "Render_Dirty.h"
+	#include "Loading_Screen.h"
+	#include "Enemy_Soldier_Save.h"
+	#include "Boxing.h"
+	#include "NPC.h"
+	#include "Strategic_Event_Handler.h"
+	#include "MessageBoxScreen.h"
+	#include "Interface_Dialogue.h"
+	#include "History.h"
+	#include "Bullets.h"
+	#include "Physics.h"
+	#include "Explosion_Control.h"
+	#include "Auto_Resolve.h"
+	#include "Cursors.h"
 #endif
 
 #include "SaveLoadGame.h"
@@ -712,10 +725,10 @@ void InitializeSAMSites( void )
 
 
 // get short sector name without town name
-void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString )
+void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length)
 {
 	// OK, build string id like J11
-	swprintf( sString, L"%S%S",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
+	swprintf( sString, Length, L"%S%S",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
 
 	return;
 }
@@ -1875,33 +1888,33 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 			if( fError )
 			{ //strategic insertion failed because it expected to find an entry point.  This is likely
 				//a missing part of the map or possible fault in strategic movement costs, traversal logic, etc.
-				UINT16 szEntry[10];
-				UINT16 szSector[10];
+				wchar_t szEntry[10];
+				wchar_t szSector[10];
 				INT16 sGridNo;
-				GetLoadedSectorString( szSector );
+				GetLoadedSectorString(szSector, lengthof(szSector));
 				if( gMapInformation.sNorthGridNo != -1 )
 				{
-					swprintf( szEntry, L"north" );
+					swprintf( szEntry, lengthof(szEntry), L"north" );
 					sGridNo = gMapInformation.sNorthGridNo;
 				}
 				else if( gMapInformation.sEastGridNo != -1 )
 				{
-					swprintf( szEntry, L"east" );
+					swprintf( szEntry, lengthof(szEntry), L"east" );
 					sGridNo = gMapInformation.sEastGridNo;
 				}
 				else if( gMapInformation.sSouthGridNo != -1 )
 				{
-					swprintf( szEntry, L"south" );
+					swprintf( szEntry, lengthof(szEntry), L"south" );
 					sGridNo = gMapInformation.sSouthGridNo;
 				}
 				else if( gMapInformation.sWestGridNo != -1 )
 				{
-					swprintf( szEntry, L"west" );
+					swprintf( szEntry, lengthof(szEntry), L"west" );
 					sGridNo = gMapInformation.sWestGridNo;
 				}
 				else if( gMapInformation.sCenterGridNo != -1 )
 				{
-					swprintf( szEntry, L"center" );
+					swprintf( szEntry, lengthof(szEntry), L"center" );
 					sGridNo = gMapInformation.sCenterGridNo;
 				}
 				else
@@ -1965,7 +1978,7 @@ void InitializeStrategicMapSectorTownNames( void )
 
 
 // Get sector ID string makes a string like 'A9 - OMERTA', or just J11 if no town....
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, BOOLEAN fDetailed )
+void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed )
 {
 
 #ifdef JA2DEMO
@@ -1980,7 +1993,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 	UINT8 ubSectorID = 0;
 	UINT8 ubLandType = 0;
 
-	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 )
+	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 ) /* Empty? */
 	{
 		//swprintf( zString, L"%s", pErrorStrings[0] );
 	}
@@ -1992,27 +2005,27 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
 			if( bMineIndex != -1 )
 			{
-				swprintf( zString, L"%c%d: %s %s", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
+				swprintf( zString, Length, L"%c%d: %s %s", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
 			}
 			else switch( SECTOR( sSectorX, sSectorY ) )
 			{
 				case SEC_A10:
-					swprintf( zString, L"A10: %s", pLandTypeStrings[ REBEL_HIDEOUT ] );
+					swprintf( zString, Length, L"A10: %s", pLandTypeStrings[ REBEL_HIDEOUT ] );
 					break;
 				case SEC_J9:
-					swprintf( zString, L"J9: %s", pLandTypeStrings[ TIXA_DUNGEON ] );
+					swprintf( zString, Length, L"J9: %s", pLandTypeStrings[ TIXA_DUNGEON ] );
 					break;
 				case SEC_K4:
-					swprintf( zString, L"K4: %s", pLandTypeStrings[ ORTA_BASEMENT ] );
+					swprintf( zString, Length, L"K4: %s", pLandTypeStrings[ ORTA_BASEMENT ] );
 					break;
 				case SEC_O3:
-					swprintf( zString, L"O3: %s", pLandTypeStrings[ TUNNEL ] );
+					swprintf( zString, Length, L"O3: %s", pLandTypeStrings[ TUNNEL ] );
 					break;
 				case SEC_P3:
-					swprintf( zString, L"P3: %s", pLandTypeStrings[ SHELTER ] );
+					swprintf( zString, Length, L"P3: %s", pLandTypeStrings[ SHELTER ] );
 					break;
 				default:
-					swprintf( zString, L"%c%d: %s", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
+					swprintf( zString, Length, L"%c%d: %s", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
 					break;
 			}
 		}
@@ -2027,7 +2040,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 		ubSectorID = (UINT8)SECTOR( sSectorX, sSectorY );
 		pSector = &SectorInfo[ ubSectorID ];
 		ubLandType = pSector->ubTraversability[ 4 ];
-		swprintf( zString, L"%c%d: ", 'A' + sSectorY - 1, sSectorX );
+		swprintf( zString, Length, L"%c%d: ", 'A' + sSectorY - 1, sSectorX );
 
 		if ( bTownNameID == BLANK_SECTOR )
 		{
@@ -3601,17 +3614,17 @@ void UpdateAirspaceControl( void )
 		CHAR16 sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];
 
 		// get the name of the old sector
-		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString1, FALSE );
+		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE );
 
 		// move the landing zone over to Omerta
 		gsMercArriveSectorX = 9;
 		gsMercArriveSectorY = 1;
 
 		// get the name of the new sector
-		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString2, FALSE );
+		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString2, lengthof(sMsgSubString2), FALSE );
 
 		// now build the string
-		swprintf( sMsgString, pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2 );
+		swprintf( sMsgString, lengthof(sMsgString), pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2 );
 
 		// confirm the change with overlay message
 		DoScreenIndependantMessageBox( sMsgString, MSG_BOX_FLAG_OK, NULL );
@@ -4470,20 +4483,20 @@ INT16 PickGridNoToWalkIn( SOLDIERTYPE *pSoldier, UINT8 ubInsertionDirection, UIN
 }
 
 
-void GetLoadedSectorString( UINT16 *pString )
+void GetLoadedSectorString( wchar_t *pString, size_t Length)
 {
 	if( !gfWorldLoaded )
 	{
-		swprintf( pString, L"" );
+		swprintf( pString, Length, L"" );
 		return;
 	}
 	if( gbWorldSectorZ )
 	{
-		swprintf( pString, L"%c%d_b%d", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ );
+		swprintf( pString, Length, L"%c%d_b%d", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ );
 	}
 	else if( !gbWorldSectorZ )
 	{
-		swprintf( pString, L"%c%d", gWorldSectorY + 'A' - 1, gWorldSectorX );
+		swprintf( pString, Length, L"%c%d", gWorldSectorY + 'A' - 1, gWorldSectorX );
 	}
 }
 

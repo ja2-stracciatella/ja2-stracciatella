@@ -10,6 +10,7 @@
 	#include "Font_Control.h"
 	#include "Message.h"
 	#include "Text.h"
+	#include <string.h>
 #endif
 
 #ifdef JA2TESTVERSION
@@ -205,7 +206,7 @@ void AdjustClockToEventStamp( STRATEGICEVENT *pEvent, UINT32 *puiAdjustment )
 
 	#endif
 
-	swprintf( WORLDTIMESTR, L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
+	swprintf( WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%s %d, %02d:%02d", gpGameClockString[ STR_GAMECLOCK_DAY_NAME ], guiDay, guiHour, guiMin );
 }
 
 //If there are any events pending, they are processed, until the time limit is reached, or

@@ -29,6 +29,13 @@
 	#include "English.h"
 	#include "Cursors.h"
 	#include "Cursor_Control.h"
+	#include "Merc_Hiring.h"
+	#include "Message.h"
+	#include "Text.h"
+	#include "Strategic_Turns.h"
+	#include "AI.h"
+	#include "Dialogue_Control.h"
+	#include "Music_Control.h"
 #endif
 
 #define		MAX_MERC_IN_HELI		20

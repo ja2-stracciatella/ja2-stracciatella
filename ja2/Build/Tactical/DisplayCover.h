@@ -1,6 +1,9 @@
 #ifndef _DISPLAY_COVER__H_
 #define _DISPLAY_COVER__H_
 
+#include "Types.h"
+#include "Soldier_Control.h"
+
 void	DisplayCoverOfSelectedGridNo( );
 void	RemoveCoverOfSelectedGridNo();
 

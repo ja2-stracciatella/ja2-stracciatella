@@ -10,6 +10,10 @@
 	#include "Strategic_Mines.h"
 	#include "EMail.h"
 	#include "Game_Clock.h"
+	#include "GameSettings.h"
+	#include "History.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "Debug.h"
 #endif
 
 

@@ -52,6 +52,7 @@
 	#include "Rotting_Corpses.h"
 	#include "FileMan.h"
 	#include "Environment.h"
+	#include "PathAI.h"
 #endif
 
 #define LVL1_L1_PER			(50)
@@ -3083,7 +3084,11 @@ INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_TEMPLATES; iCount++)
 	{
+		#if 0 /* XXX */
 		if((pLightNames[iCount]!=NULL) && !(stricmp(pFilename, pLightNames[iCount])))
+		#else
+		if (pLightNames[iCount] != NULL && strcasecmp(pFilename, pLightNames[iCount]) == 0)
+		#endif
 			return(iCount);
 	}
 

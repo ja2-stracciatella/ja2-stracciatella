@@ -35,6 +35,19 @@
 	#include "LaptopSave.h"
 	#include "Sound_Control.h"
 	#include "Interface_Items.h"
+	#include "WordWrap.h"
+	#include "Dialogue_Control.h"
+	#include "Meanwhile.h"
+	#include "Map_Screen_Helicopter.h"
+	#include "Map_Screen_Interface_TownMine_Info.h"
+	#include "Merc_Contract.h"
+	#include "Map_Screen_Interface_Map_Inventory.h"
+	#include "Explosion_Control.h"
+	#include "Creature_Spreading.h"
+	#include "Soldier_Macros.h"
+	#include "GameSettings.h"
+	#include "_JA25EnglishText.h"
+	#include "SaveLoadScreen.h"
 #endif
 
 
@@ -620,8 +633,8 @@ void DrawNameOfLoadedSector( void )
 	SetFontBackground( FONT_BLACK );
 
 
-	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, TRUE );
-	ReduceStringLength( sString, 80, COMPFONT );
+	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, lengthof(sString), TRUE );
+	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
 
 	VarFindFontCenterCoordinates( 548, 426, 80, 16, COMPFONT, &sFontX, &sFontY, sString );
 	mprintf( sFontX, sFontY, L"%s", sString );
@@ -958,11 +971,11 @@ void DisplayCompressMode( void )
 	{
 		if( IsTimeBeingCompressed() )
 		{
-			swprintf( sString, L"%s", sTimeStrings[ giTimeCompressMode ] );
+			swprintf( sString, lengthof(sString), L"%s", sTimeStrings[ giTimeCompressMode ] );
 		}
 		else
 		{
-			swprintf( sString, L"%s", sTimeStrings[ 0 ] );
+			swprintf( sString, lengthof(sString), L"%s", sTimeStrings[ 0 ] );
 		}
 	}
 
@@ -1420,7 +1433,7 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%s", pMapScreenBottomText[ 0 ] );
+	swprintf( sString, lengthof(sString), L"%s", pMapScreenBottomText[ 0 ] );
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
@@ -1428,7 +1441,7 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	// print it
 	mprintf( sFontX, sFontY, L"%s", sString );
 
-	swprintf( sString, L"%s", zMarksMapScreenText[ 2 ] );
+	swprintf( sString, lengthof(sString), L"%s", zMarksMapScreenText[ 2 ] );
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
@@ -1455,7 +1468,7 @@ void DisplayCurrentBalanceForMapBottom( void )
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%d", LaptopSaveInfo.iCurrentBalance );
+	swprintf( sString, lengthof(sString), L"%d", LaptopSaveInfo.iCurrentBalance );
 
 	// insert
 
@@ -1554,7 +1567,7 @@ void DisplayProjectedDailyMineIncome( void )
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, L"%d", iRate );
+	swprintf( sString, lengthof(sString), L"%d", iRate );
 
 	// insert
 	InsertCommasForDollarFigure( sString );

@@ -55,6 +55,12 @@
 	#include "OppList.h"
 	#include "Smell.h"
 	#include "GameSettings.h"
+	#include "Interface.h"
+	#include "End_Game.h"
+	#include "WorldDat.h"
+	#include "Keys.h"
+	#include "FOV.h"
+	#include "Map_Information.h"
 #endif
 
 #include "Soldier_Macros.h"
@@ -1034,7 +1040,11 @@ BOOLEAN ExplosiveDamageStructureAtGridNo( STRUCTURE * pCurrent, STRUCTURE **ppNe
 				// Get tile type
 				GetTileType( pNode->usIndex, &uiTileType );
 				// Check if we are a fountain!
+				#if 0 /* XXX */
 				if ( stricmp( gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ uiTileType ], "fount1.sti" ) == 0 )
+				#else
+				if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[uiTileType], "fount1.sti") == 0)
+				#endif
 				{
 					// Yes we are!
 					// Remove water....

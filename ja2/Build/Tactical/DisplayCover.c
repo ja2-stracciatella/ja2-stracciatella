@@ -4,6 +4,26 @@
 	#include "Interface.h"
 	#include "_Ja25Englishtext.h"
 	//#include "Ja25 Strategic Ai.h"
+#else
+	#include "DisplayCover.h"
+	#include "Isometric_Utils.h"
+	#include "Overhead.h"
+	#include "Message.h"
+	#include "_JA25EnglishText.h"
+	#include "GameSettings.h"
+	#include "RenderWorld.h"
+	#include "Interface.h"
+	#include "Debug.h"
+	#include "PathAI.h"
+	#include "WorldMan.h"
+	#include "OppList.h"
+	#include "LOS.h"
+	#include "Weapons.h"
+	#include "Game_Clock.h"
+	#include "Animation_Control.h"
+	#include "Text.h"
+	#include "StrategicMap.h"
+	#include "Render_Fun.h"
 #endif
 
 //*******  Local Defines **************************************************
@@ -601,12 +621,12 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	if( WeaponInHand( pSoldier ) )
 	{
 		//display a string with the weapons range, then range to target
-		swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, usRange );
+		swprintf( zOutputString, lengthof(zOutputString), zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, usRange );
 	}
 	else
 	{
 		//display a string with the range to target
-		swprintf( zOutputString, zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET ], usRange );
+		swprintf( zOutputString, lengthof(zOutputString), zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET ], usRange );
 	}
 
 	//Display the msg

@@ -3,6 +3,8 @@
 #include "Item_Types.h"
 #include "Soldier_Control.h"
 
+void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
+
 extern UINT8 SlotToPocket[7];
 
 extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );

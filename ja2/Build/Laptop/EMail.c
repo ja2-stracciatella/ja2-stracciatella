@@ -19,6 +19,9 @@
 	#include "AIMMembers.h"
 	#include "Random.h"
 	#include "Text.h"
+	#include "LaptopSave.h"
+	#include <string.h>
+	#include "Finances.h"
 #endif
 
 
@@ -1368,7 +1371,7 @@ void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 		//if the subject will be too long, cap it, and add the '...'
 		if( StringPixLength( pTempSubject, MESSAGE_FONT ) >= SUBJECT_WIDTH - 10 )
 		{
-			ReduceStringLength( pTempSubject, SUBJECT_WIDTH - 10, MESSAGE_FONT );
+			ReduceStringLength( pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, MESSAGE_FONT );
 		}
 
 	  // display string subject
@@ -1379,7 +1382,7 @@ void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 		//if the subject will be too long, cap it, and add the '...'
 		if( StringPixLength( pTempSubject, FONT10ARIALBOLD ) >= SUBJECT_WIDTH - 10 )
 		{
-			ReduceStringLength( pTempSubject, SUBJECT_WIDTH - 10, FONT10ARIALBOLD );
+			ReduceStringLength( pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, FONT10ARIALBOLD );
 		}
 
 		// display string subject
@@ -1436,7 +1439,7 @@ void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-  swprintf(sString, L"%s %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
+  swprintf(sString, lengthof(sString), L"%s %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
   mprintf(DATE_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ),sString);
 
 	SetFont( MESSAGE_FONT );
@@ -2963,7 +2966,7 @@ void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 	mprintf( usX, MESSAGE_DATE_Y+ (UINT16)iViewerY , pEmailHeaders[2]);
 
 	// the actual date info
-	swprintf(sString, L"%d", ( ( pMail->iDate ) / ( 24 * 60) ) );
+	swprintf(sString, lengthof(sString), L"%d", ( ( pMail->iDate ) / ( 24 * 60) ) );
 	mprintf( MESSAGE_HEADER_X+235, MESSAGE_DATE_Y + (UINT16)iViewerY, sString);
 
 
@@ -3368,7 +3371,7 @@ void HandleIMPCharProfileResultsMessage( void)
 			{
 				wchar_t	zTemp[512];
 
-				swprintf( zTemp, L" %s", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
+				swprintf( zTemp, lengthof(zTemp), L" %s", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
 				wcscat( pString, zTemp );
 			}
 
@@ -4586,9 +4589,9 @@ void DisplayWhichPageOfEmailProgramIsDisplayed( void )
 
 	// page number
 	if( iLastPage < 0 )
-		swprintf( sString, L"%d / %d", 1, 1);
+		swprintf( sString, lengthof(sString), L"%d / %d", 1, 1);
 	else
-		swprintf( sString, L"%d / %d", iCurrentPage + 1, iLastPage + 1);
+		swprintf( sString, lengthof(sString), L"%d / %d", iCurrentPage + 1, iLastPage + 1);
 
 	// print it
 	mprintf( PAGE_NUMBER_X ,PAGE_NUMBER_Y, sString );
@@ -4654,7 +4657,7 @@ BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 	giNumberOfPagesToCurrentEmail = ( giNumberOfPagesToCurrentEmail );
 
 	// parse current page and max number of pages to email
-	swprintf( sString,L"%d / %d", ( giMessagePage + 1 ), ( giNumberOfPagesToCurrentEmail - 1 ) );
+	swprintf( sString, lengthof(sString), L"%d / %d", ( giMessagePage + 1 ), ( giNumberOfPagesToCurrentEmail - 1 ) );
 
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_BLACK );
@@ -5077,7 +5080,7 @@ BOOLEAN ReplaceMercNameAndAmountWithProperData( CHAR16 *pFinishedString, EmailPt
 			{
 				CHAR16	sDollarAmount[64];
 
-				swprintf( sDollarAmount, L"%d", pMail->iFirstData );
+				swprintf( sDollarAmount, lengthof(sDollarAmount), L"%d", pMail->iFirstData );
 
 				InsertCommasForDollarFigure( sDollarAmount );
 				InsertDollarSignInToString( sDollarAmount );

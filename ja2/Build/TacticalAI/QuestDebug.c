@@ -7,6 +7,7 @@
 	#include "stdio.h"
 	#include "Debug.h"
 	#include "Message.h"
+	#include <string.h>
 #endif
 
 #define	QUEST_DEBUG_FILE			"QuestDebug.txt"

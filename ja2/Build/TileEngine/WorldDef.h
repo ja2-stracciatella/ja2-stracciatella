@@ -185,7 +185,7 @@ typedef struct TAG_level_node
 #define		TOPMOST_START_INDEX								8
 
 
-typedef struct
+typedef struct MAP_ELEMENT
 {
 	union
 	{

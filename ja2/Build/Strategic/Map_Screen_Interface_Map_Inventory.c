@@ -23,6 +23,11 @@
 	#include "Overhead.h"
 	#include "English.h"
 	#include "Multi_Language_Graphic_Utils.h"
+	#include "MapScreen.h"
+	#include "Radar_Screen.h"
+	#include "Message.h"
+	#include "Interface_Panels.h"
+	#include "WordWrap.h"
 #endif
 
 #include "ShopKeeper_Interface.h"
@@ -131,8 +136,6 @@ BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 extern UINT32	guiNumWorldItems;
 extern BOOLEAN fShowInventoryFlag;
 extern BOOLEAN fMapScreenBottomDirty;
-
-extern BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidth, UINT32 uiFont );
 
 extern OBJECTTYPE gItemPointer;
 
@@ -363,7 +366,7 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 
 	if( StringPixLength( sString, MAP_IVEN_FONT ) >= ( MAP_INVEN_SLOT_WIDTH ) )
 	{
-		ReduceStringLength( sString, ( INT16 )( MAP_INVEN_SLOT_WIDTH - StringPixLength( L" ...", MAP_IVEN_FONT ) ), MAP_IVEN_FONT );
+		ReduceStringLength( sString, lengthof(sString), ( INT16 )( MAP_INVEN_SLOT_WIDTH - StringPixLength( L" ...", MAP_IVEN_FONT ) ), MAP_IVEN_FONT );
 	}
 
 	FindFontCenterCoordinates( (INT16)( 4 + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) ),
@@ -414,7 +417,7 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 	{
 			if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.ubNumberOfObjects > 0 )
 			{
-				GetHelpTextForItem( pStr , &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o ), NULL );
+				GetHelpTextForItem( pStr , lengthof(pStr), &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o ), NULL );
 				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
 
 				/*
@@ -809,11 +812,11 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				if ( gpItemPointer == NULL )
 				{
-					swprintf( sString, pMapInventoryErrorString[ 2 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					swprintf( sString, lengthof(sString), pMapInventoryErrorString[ 2 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
 				}
 				else
 				{
-					swprintf( sString, pMapInventoryErrorString[ 5 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					swprintf( sString, lengthof(sString), pMapInventoryErrorString[ 5 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
 				}
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -1640,7 +1643,7 @@ void DisplayPagesForMapInventoryPool( void )
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
 
 	// grab current and last pages
-	swprintf( sString, L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
+	swprintf( sString, lengthof(sString), L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
 
 	// grab centered coords
 	FindFontCenterCoordinates(MAP_INVENTORY_POOL_PAGE_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_PAGE_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
@@ -1696,7 +1699,7 @@ void DrawNumberOfIventoryPoolItems( void )
 	iNumberOfItems = GetTotalNumberOfItemsInSectorStash( );
 
 	// get number of items
-	swprintf( sString, L"%d", iNumberOfItems );
+	swprintf( sString, lengthof(sString), L"%d", iNumberOfItems );
 
 	// set font stuff
 	SetFont( COMPFONT );
@@ -1748,7 +1751,7 @@ void DisplayCurrentSector( void )
 	INT16 sX, sY;
 
 
-	swprintf( sString, L"%s%s%s", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
+	swprintf( sString, lengthof(sString), L"%s%s%s", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
 	// set font stuff
 	SetFont( COMPFONT );
@@ -1862,7 +1865,7 @@ void DrawTextOnSectorInventory( void )
 	CHAR16 sString[ 64 ];
 
 	// parse the string
-	swprintf( sString, zMarksMapScreenText[ 11 ] );
+	swprintf( sString, lengthof(sString), zMarksMapScreenText[ 11 ] );
 
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
 

@@ -35,6 +35,8 @@
 	#include	"Message.h"
 	#include	"Language_Defines.h"
 	#include "Multi_Language_Graphic_Utils.h"
+	#include "Map_Information.h"
+	#include "SmokeEffects.h"
 #endif
 
 #include		"WorldMan.h"
@@ -1145,7 +1147,7 @@ void MusicSliderChangeCallBack( INT32 iNewValue )
 	MusicSetVolume( iNewValue );
 }
 
-BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
@@ -1157,7 +1159,7 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExi
 	return( ( giOptionsMessageBox != -1 ) );
 }
 
-BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 639, 479 };
 

@@ -14,6 +14,8 @@
 	#include "Personnel.h"
 	#include "Tactical_Save.h"
 	#include "Isometric_Utils.h"
+	#include "Vehicles.h"
+	#include "Game_Clock.h"
 #endif
 
 StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];

@@ -25,6 +25,7 @@
 	#include "SaveLoadMap.h"
 	#include "Random.h"
 	#include "Render_Fun.h"
+	#include "GameSettings.h"
 #endif
 
 extern BOOLEAN	gfBasement;

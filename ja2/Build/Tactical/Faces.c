@@ -27,11 +27,15 @@
 	#include "Assignments.h"
 	#include "Random.h"
 	#include "Line.h"
-	#include	"GameSettings.h"
+	#include "GameSettings.h"
 	#include "Squads.h"
 	#include "Interface.h"
 	#include "Quests.h"
 	#include "Animation_Control.h"
+	#include "Drugs_And_Alcohol.h"
+	#include "Interface_Items.h"
+	#include "Meanwhile.h"
+	#include "Map_Screen_Interface.h"
 #endif
 
 // Defines
@@ -1307,7 +1311,7 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 			{
 				SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
 
-				swprintf( sString, L"%d", pSoldier->bOppCnt );
+				swprintf( sString, lengthof(sString), L"%d", pSoldier->bOppCnt );
 
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_DKRED );
@@ -1516,11 +1520,11 @@ void HandleRenderFaceAdjustments( FACETYPE *pFace, BOOLEAN fDisplayBuffer, BOOLE
 
 				if ( fShowMaximum )
 				{
-					swprintf( sString, L"%d/%d", sPtsAvailable, usMaximumPts );
+					swprintf( sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts );
 				}
 				else
 				{
-					swprintf( sString, L"%d", sPtsAvailable );
+					swprintf( sString, lengthof(sString), L"%d", sPtsAvailable );
 				}
 
 				usTextWidth = StringPixLength( sString, FONT10ARIAL );

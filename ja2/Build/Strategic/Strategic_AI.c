@@ -19,6 +19,17 @@
 	#include "Strategic.h"
 	#include "Explosion_Control.h"
 	#include "Town_Militia.h"
+	#include "Overhead.h"
+	#include "Quests.h"
+	#include "Player_Command.h"
+	#include "Campaign_Init.h"
+	#include "Game_Init.h"
+	#include "PreBattle_Interface.h"
+	#include "Soldier_Profile.h"
+	#include "Scheduling.h"
+	#include "Campaign.h"
+	#include "Map_Information.h"
+	#include "Interface_Dialogue.h"
 #endif
 
 #define SAI_VERSION		29

@@ -26,6 +26,8 @@
 	#include "Weapons.h"
 	#include "Keys.h"
 	#include "Bullets.h"
+	#include "Rotting_Corpses.h"
+	#include "SmokeEffects.h"
 #endif
 
 

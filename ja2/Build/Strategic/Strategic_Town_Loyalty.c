@@ -22,6 +22,15 @@
 	#include "Vehicles.h"
 	#include "Game_Clock.h"
 	#include "Game_Event_Hook.h"
+	#include "Morale.h"
+	#include "Text.h"
+	#include "MessageBoxScreen.h"
+	#include "Creature_Spreading.h"
+	#include "Town_Militia.h"
+	#include "History.h"
+	#include "Meanwhile.h"
+	#include "GameSettings.h"
+	#include "Strategic_Status.h"
 #endif
 
 
@@ -1065,7 +1074,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 
 
 	// get sector name string
-	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, TRUE );
+	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, lengthof(wSectorName), TRUE );
 
 	// go through list of items in sector and randomly remove them
 
@@ -1552,8 +1561,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 {
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyChange = 0;
-	UINT16 str[256];
-	UINT16 pSectorString[128];
+	wchar_t str[256];
+	wchar_t pSectorString[128];
 
 
 	// get town id
@@ -1566,8 +1575,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 	}
 
 	//Report this to player
-	GetSectorIDString( sSectorX, sSectorY, 0, pSectorString, TRUE );
-	swprintf( str, gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
+	GetSectorIDString( sSectorX, sSectorY, 0, pSectorString, lengthof(pSectorString), TRUE );
+	swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 
 	// use same formula as if it were a civilian "murder" in tactical!!!

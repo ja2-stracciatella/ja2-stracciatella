@@ -20,6 +20,14 @@
 	#include "PathAI.h"
 	#include "Render_Fun.h"
 	#include "Boxing.h"
+	#include "Soldier_Profile.h"
+	#include "Soldier_Macros.h"
+	#include "LOS.h"
+	#include "StrategicMap.h"
+	#include "Quests.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "Soldier_Ani.h"
+	#include "Rotting_Corpses.h"
 #endif
 
 extern BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance );

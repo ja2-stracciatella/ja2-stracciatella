@@ -9,7 +9,7 @@
 	#include	"Render_Dirty.h"
 	#include  "Text_Input.h"
 	#include	"SaveLoadGame.h"
-	#include  "Stdio.h"
+	//#include  "Stdio.h"
 	#include	"WordWrap.h"
 	#include	"StrategicMap.h"
 	#include	"Finances.h"
@@ -35,6 +35,7 @@
 	#include	"Message.h"
 	#include	"Map_Screen_Interface.h"
 	#include "Multi_Language_Graphic_Utils.h"
+	#include "Campaign_Types.h"
 #endif
 
 #include "Campaign_Init.h"
@@ -1014,7 +1015,7 @@ void		GetSaveLoadScreenUserInput()
 						bActiveTextField = (INT8)GetActiveFieldID();
 						if( bActiveTextField && bActiveTextField != -1 )
 						{
-							Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField);
+							Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
 							SetActiveField(0);
 
 							DestroySaveLoadTextInputBoxes();
@@ -1063,7 +1064,7 @@ void SaveLoadGameNumber( INT8 bSaveGameID )
 		bActiveTextField = (INT8)GetActiveFieldID();
 		if( bActiveTextField && bActiveTextField != -1 )
 		{
-			Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField );
+			Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
 		}
 
 		//if there is save game in the slot, ask for confirmation before overwriting
@@ -1071,7 +1072,7 @@ void SaveLoadGameNumber( INT8 bSaveGameID )
 		{
 			CHAR16	sText[512];
 
-			swprintf( sText, zSaveLoadText[SLG_CONFIRM_SAVE], bSaveGameID );
+			swprintf( sText, lengthof(sText), zSaveLoadText[SLG_CONFIRM_SAVE], bSaveGameID );
 
 			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack );
 		}
@@ -1119,7 +1120,7 @@ void SaveLoadGameNumber( INT8 bSaveGameID )
 }
 
 
-BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// do message box and return
   giSaveLoadMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT8 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  pCenteringRect );
@@ -1128,7 +1129,7 @@ BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, INT16 *zString, UINT32 uiEx
 	return( ( giSaveLoadMessageBox != -1 ) );
 }
 
-BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 639, 479 };
 
@@ -1339,10 +1340,10 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			CHAR16		zDifString[256];
 
 			//Create a string for difficulty level
-			swprintf( zDifString, L"%s %s", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
+			swprintf( zDifString, lengthof(zDifString), L"%s %s", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
 
 			//make a string containing the extended options
-			swprintf( zMouseHelpTextString, L"%20s     %22s     %22s     %22s", zDifString,
+			swprintf( zMouseHelpTextString, lengthof(zMouseHelpTextString), L"%20s     %22s     %22s     %22s", zDifString,
 						/*gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT + SaveGameHeader.sInitialGameOptions.fTurnTimeLimit + 1],*/
 
 						SaveGameHeader.sInitialGameOptions.fIronManMode ? gzGIOScreenText[ GIO_IRON_MAN_TEXT ] : gzGIOScreenText[ GIO_SAVE_ANYWHERE_TEXT ],
@@ -1358,21 +1359,21 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 		else
 		{
 			//Create the string for the Data
-			swprintf( zDateString, L"%s %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
+			swprintf( zDateString, lengthof(zDateString), L"%s %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
 
 			//Create the string for the current location
 			if( SaveGameHeader.sSectorX == -1 && SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ < 0 )
 			{
 				if( ( SaveGameHeader.uiDay * NUM_SEC_IN_DAY + SaveGameHeader.ubHour * NUM_SEC_IN_HOUR + SaveGameHeader.ubMin * NUM_SEC_IN_MIN ) <= STARTING_TIME )
-					swprintf( zLocationString, gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+					swprintf( zLocationString, lengthof(zLocationString), gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
 				else
-					swprintf( zLocationString, gzLateLocalizedString[14] );
+					swprintf( zLocationString, lengthof(zLocationString), gzLateLocalizedString[14] );
 			}
 			else
 			{
 				gfGettingNameFromSaveLoadScreen = TRUE;
 
-				GetSectorIDString( SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ, zLocationString, FALSE );
+				GetSectorIDString( SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ, zLocationString, lengthof(zLocationString), FALSE );
 
 				gfGettingNameFromSaveLoadScreen = FALSE;
 			}
@@ -1385,16 +1386,16 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			if( SaveGameHeader.ubNumOfMercsOnPlayersTeam == 1 )
 			{
 				//use "merc"
-				swprintf( zNumMercsString, L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
+				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
 			}
 			else
 			{
 				//use "mercs"
-				swprintf( zNumMercsString, L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
+				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
 			}
 
 			//Get the current balance
-			swprintf( zBalanceString, L"%d", SaveGameHeader.iCurrentBalance);
+			swprintf( zBalanceString, lengthof(zBalanceString), L"%d", SaveGameHeader.iCurrentBalance);
 			InsertCommasForDollarFigure( zBalanceString );
 			InsertDollarSignInToString( zBalanceString );
 
@@ -1406,7 +1407,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			DrawTextToScreen( zDateString, (UINT16)(usPosX+SLG_DATE_OFFSET_X), (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 			//if the sector string exceeds the width, and the ...
-			ReduceStringLength( zLocationString, SLG_SECTOR_WIDTH, uiFont );
+			ReduceStringLength( zLocationString, lengthof(zLocationString), SLG_SECTOR_WIDTH, uiFont );
 
 			//The Sector
 			DrawTextToScreen( zLocationString, (UINT16)(usPosX+SLG_SECTOR_OFFSET_X), (UINT16)(usPosY+SLG_SECTOR_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
@@ -1716,7 +1717,7 @@ void SelectedSaveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 					bActiveTextField = (INT8)GetActiveFieldID();
 					if( bActiveTextField && bActiveTextField != -1 )
 					{
-						Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField);
+						Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
 						SetActiveField(0);
 
 						DestroySaveLoadTextInputBoxes();
@@ -2075,12 +2076,12 @@ void DisplayOnScreenNumber( BOOLEAN fErase )
 		if( bLoopNum != 10 )
 		{
 			bNum = bLoopNum;
-			swprintf( zTempString, L"%2d", bNum );
+			swprintf( zTempString, lengthof(zTempString), L"%2d", bNum );
 		}
 		else
 		{
 			bNum = 0;
-			swprintf( zTempString, L"%2d", bNum );
+			swprintf( zTempString, lengthof(zTempString), L"%2d", bNum );
 		}
 
 		if( !fErase )

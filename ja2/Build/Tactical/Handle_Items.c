@@ -55,6 +55,12 @@
 	#include "QArray.h"
 	#include "Render_Fun.h"
 	#include "Environment.h"
+	#include "Map_Information.h"
+	#include "GameSettings.h"
+	#include "StrategicMap.h"
+	#include "End_Game.h"
+	#include "Interface_Control.h"
+	#include "Map_Screen_Interface_Map_Inventory.h"
 #endif
 
 #define					NUM_ITEMS_LISTED			8
@@ -3081,7 +3087,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 	INT16 sY;
 	INVTYPE			*pItem;
 	ITEM_POOL		*pTempItemPool;
-	INT16 pStr[ 100 ];
+	wchar_t pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
 	INT16	 sLargeLineWidth = 0, sLineWidth;
 	BOOLEAN			fRecalcNumListed = FALSE;
@@ -3174,11 +3180,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			// Set string
 			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, lengthof(pStr), L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, lengthof(pStr), L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			// Get Width
@@ -3251,7 +3257,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 		{
 			SetFontForeground( FONT_MCOLOR_DKGRAY );
 		}
-		swprintf( pStr, TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
+		swprintf( pStr, lengthof(pStr), TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
 		gprintfdirty( sFontX, sY, pStr );
 		mprintf( sFontX, sY, pStr );
 		sY += GetFontHeight( SMALLFONT1 ) - 2;
@@ -3281,11 +3287,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, lengthof(pStr), L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, lengthof(pStr), L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			gprintfdirty( sFontX, sY, pStr );
@@ -3319,7 +3325,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 				{
 					SetFontForeground( FONT_MCOLOR_DKGRAY );
 				}
-				swprintf( pStr, TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
+				swprintf( pStr, lengthof(pStr), TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
 				gprintfdirty( sFontX, sY, pStr );
 				mprintf( sFontX, sY, pStr );
 			}

@@ -11,6 +11,7 @@
 	#include "VSurface_Private.h"
 	#include "WCheck.h"
 	#include "Font_Control.h"
+	#include "WinFont.h"
 #endif
 
 INT32          giCurWinFont = 0;
@@ -353,7 +354,7 @@ UINT16    WFGetFontHeight( INT32 FontNum )
   }
 }
 
-INT16 WFStringPixLength( UINT16 *string,INT32 UseFont )
+INT16 WFStringPixLength( wchar_t *string,INT32 UseFont )
 {
   if ( USE_WINFONTS( ) )
   {

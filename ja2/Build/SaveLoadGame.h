@@ -2,6 +2,7 @@
 #define _SAVE_LOAD_GAME_H_
 
 #include "Soldier_Control.h"
+#include "GameSettings.h"
 
 #define		BYTESINMEGABYTE						1048576 //1024*1024
 #define		REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)

@@ -83,6 +83,14 @@
 	#include "SkillCheck.h"
 	#include "Boxing.h"
 	#include "Overhead_Map.h"
+	#include "Map_Information.h"
+	#include "Game_Clock.h"
+	#include "Explosion_Control.h"
+	#include "Text.h"
+	#include "Strategic_Merc_Handler.h"
+	#include "Campaign_Types.h"
+	#include "Strategic_Status.h"
+	#include "Civ_Quotes.h"
 #endif
 
 extern INT16 DirIncrementer[8];
@@ -3752,10 +3760,12 @@ UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss )
 			ubVolume += 2;
 */
 
+	#if 0 /* XXX unsigned < 0 ? */
 	if (ubVolume < 0)
 	{
 	 ubVolume = 0;
 	}
+	#endif
 
 	return( ubVolume );
 }

@@ -37,6 +37,15 @@
 	#include "Player_Command.h"
 	#include "Strategic_AI.h"
 	#include "Town_Militia.h"
+	#include "Music_Control.h"
+	#include "Campaign.h"
+	#include "Isometric_Utils.h"
+	#include "Meanwhile.h"
+	#include "Inventory_Choosing.h"
+	#include "Map_Screen_Interface_Border.h"
+	#include "Auto_Resolve.h"
+	#include "GameSettings.h"
+	#include "Quests.h"
 #endif
 
 // the delay for a group about to arrive
@@ -1148,10 +1157,10 @@ BOOLEAN CheckConditionsForBattle( GROUP *pGroup )
 			}
 			else
 			{
-				UINT16 str[ 256 ];
-				UINT16 pSectorStr[ 128 ];
-				GetSectorIDString( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ , pSectorStr, TRUE );
-				swprintf( str, gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr );
+				wchar_t str[ 256 ];
+				wchar_t pSectorStr[ 128 ];
+				GetSectorIDString( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ , pSectorStr, lengthof(pSectorStr), TRUE );
+				swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
 		}
@@ -2212,8 +2221,8 @@ BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals( GROUP *pFirstGroup )
 
 	if( ubNumNearbyGroups )
 	{ //postpone the battle until the user answers the dialog.
-		UINT16 str[255];
-		UINT16 *pStr, *pEnemyType;
+		wchar_t str[255];
+		wchar_t *pStr, *pEnemyType;
 		InterruptTime();
 		PauseGame();
 		LockPauseState( 13 );
@@ -2238,7 +2247,7 @@ BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals( GROUP *pFirstGroup )
 		//header, sector, singular/plural str, confirmation string.
 		//Ex:  Enemies have been detected in sector J9 and another squad is
 		//     about to arrive.  Do you wish to coordinate a simultaneous arrival?
-		swprintf( str, pStr,
+		swprintf( str, lengthof(str), pStr,
 			pEnemyType, //Enemy type (Enemies or bloodcats)
 			'A' + gpPendingSimultaneousGroup->ubSectorY - 1, gpPendingSimultaneousGroup->ubSectorX ); //Sector location
 		wcscat( str, L"  " );
@@ -4503,9 +4512,9 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 
 void ReportVehicleOutOfGas( INT32 iVehicleID, UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	UINT16 str[255];
+	wchar_t str[255];
 	//Report that the vehicle that just arrived is out of gas.
-	swprintf( str, gzLateLocalizedString[ 5 ],
+	swprintf( str, lengthof(str), gzLateLocalizedString[ 5 ],
 		pVehicleStrings[ pVehicleList[ iVehicleID ].ubVehicleType ],
 		ubSectorY + 'A' - 1, ubSectorX );
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
@@ -4731,12 +4740,12 @@ BOOLEAN TestForBloodcatAmbush( GROUP *pGroup )
 
 void NotifyPlayerOfBloodcatBattle( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	UINT16 str[ 256 ];
-	UINT16 zTempString[ 128 ];
+	wchar_t str[ 256 ];
+	wchar_t zTempString[ 128 ];
 	if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 	{
-		GetSectorIDString( ubSectorX, ubSectorY, 0, zTempString, TRUE );
-		swprintf( str, pMapErrorString[ 12 ], zTempString );
+		GetSectorIDString( ubSectorX, ubSectorY, 0, zTempString, lengthof(zTempString), TRUE );
+		swprintf( str, lengthof(str), pMapErrorString[ 12 ], zTempString );
 	}
 	else if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 	{
@@ -4954,8 +4963,8 @@ BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote( GROUP *pGroup )
 	gpGroupPrompting = pGroup;
 
 	// build string for squad
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, wSectorName, FALSE );
-	swprintf( sString, pLandMarkInSectorString[ 0 ], pGroup->pPlayerList->pSoldier->bAssignment + 1, wSectorName );
+	GetSectorIDString( sSectorX, sSectorY, bSectorZ, wSectorName, lengthof(wSectorName), FALSE );
+	swprintf( sString, lengthof(sString), pLandMarkInSectorString[ 0 ], pGroup->pPlayerList->pSoldier->bAssignment + 1, wSectorName );
 
 	if ( GroupAtFinalDestination( pGroup ) )
 	{

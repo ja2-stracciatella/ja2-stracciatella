@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "Soldier_Control.h"
+#include "Strategic_Movement.h"
 
 // costs of flying through sectors
 #define COST_AIRSPACE_SAFE    100

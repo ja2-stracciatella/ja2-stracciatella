@@ -248,11 +248,11 @@ void CreateIMPMainPageButtons( void )
 
 	if( iCurrentProfileMode == 5 )
 	{
-		swprintf( sString, pImpButtonText[ 5 ], iCurrentVoices + 1 );
+		swprintf( sString, lengthof(sString), pImpButtonText[ 5 ], iCurrentVoices + 1 );
 	}
 	else
 	{
-		swprintf( sString, pImpButtonText[ 25 ] );
+		swprintf( sString, lengthof(sString), pImpButtonText[ 25 ] );
 	}
 	giIMPMainPageButton[5] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 5 ], sString, FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,

@@ -33,6 +33,11 @@
 	#include "WorldDef.h"
 	#include "Campaign.h"
 	#include "Sound_Control.h"
+	#include "Interface.h"
+	#include "MapScreen.h"
+	#include "Game_Clock.h"
+	#include "Handle_Doors.h"
+	#include "Map_Screen_Interface.h"
 #endif
 
 

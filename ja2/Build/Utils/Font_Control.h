@@ -22,7 +22,7 @@ extern      INT32       giCurWinFont;
 
 // ATE: A few winfont wrappers..
 UINT16    WFGetFontHeight( INT32 FontNum );
-INT16     WFStringPixLength( UINT16 *string,INT32 UseFont );
+INT16     WFStringPixLength( wchar_t *string, INT32 UseFont );
 
 
 

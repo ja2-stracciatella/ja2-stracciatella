@@ -10,13 +10,11 @@
 
 #include "Types.h"
 #include <stdio.h>
-#include <io.h>
 #include <string.h>
 #include <fcntl.h>
 #include <share.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <malloc.h>
 #include <stdlib.h>
 
 #include "Debug.h"

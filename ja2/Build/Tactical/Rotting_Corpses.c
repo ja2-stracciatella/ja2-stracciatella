@@ -34,6 +34,14 @@
 	#include "World_Items.h"
 	#include "Explosion_Control.h"
 	#include "GameSettings.h"
+	#include "Interface_Items.h"
+	#include "Soldier_Profile.h"
+	#include "Soldier_Macros.h"
+	#include "Keys.h"
+	#include "Render_Fun.h"
+	#include "Strategic.h"
+	#include "QArray.h"
+	#include "Interface.h"
 #endif
 
 #define CORPSE_WARNING_MAX 5

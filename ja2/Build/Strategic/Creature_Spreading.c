@@ -26,6 +26,9 @@
 	#include "Map_Edgepoints.h"
 	#include "Animation_Data.h"
 	#include "OppList.h"
+	#include "Meanwhile.h"
+	#include "Strategic_AI.h"
+	#include "Map_Information.h"
 #endif
 
 #ifdef JA2BETAVERSION

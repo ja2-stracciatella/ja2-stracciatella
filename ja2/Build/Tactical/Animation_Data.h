@@ -507,7 +507,7 @@ typedef enum
 } AnimationSurfaceTypes;
 
 // Enumerations for struct data
-typedef enum
+enum
 {
 	S_STRUCT,
 	C_STRUCT,

@@ -14,6 +14,8 @@
 	#include "Strategic.h"
 	#include "Strategic_Pathing.h"
 	#include "Soldier_Control.h"
+	#include "Soldier_Macros.h"
+	#include "Render_Fun.h"
 #endif
 
 // from strategic

@@ -6,7 +6,10 @@
 	#include "SGP.h"
 	#include "Render_Dirty.h"
 	#include "Font_Control.h"
-	#include "Stdio.h"
+	#include <stdio.h>
+	#include <string.h>
+	#include <stdarg.h>
+	#include "WinFont.h"
 #endif
 
 
@@ -50,7 +53,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 		return(FALSE);
 
 	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, pString, argptr);	// process string (get output str)
+	vswprintf(TempString, lengthof(TempString), pString, argptr);	// process string (get output str)
 	va_end(argptr);
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
@@ -168,7 +171,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 		return(FALSE);
 
 	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, pString, argptr);	// process string (get output str)
+	vswprintf(TempString, lengthof(TempString), pString, argptr);	// process string (get output str)
 	va_end(argptr);
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
@@ -1952,10 +1955,10 @@ FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont,
 
 
 
-BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont )
+BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont )
 {
 	wchar_t			OneChar[2];
-	UINT16			zTemp[ 1024 ];
+	wchar_t			zTemp[ 1024 ];
 	wchar_t			zStrDots[16];
 	UINT32			uiDotWidth;
 	UINT32			uiTempStringPixWidth=0;
@@ -2017,7 +2020,7 @@ BOOLEAN ReduceStringLength( STR16 pString, UINT32 uiWidthToFitIn, UINT32 uiFont 
 
 
 	//combine the temp string and the '...' to form the finished string
-	swprintf( pString, L"%s%s", zTemp, zStrDots );
+	swprintf( pString, Length, L"%s%s", zTemp, zStrDots );
 
 	return( TRUE );
 }

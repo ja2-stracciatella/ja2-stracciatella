@@ -42,6 +42,10 @@
 	#include "PreBattle_Interface.h"
 	#include "Auto_Resolve.h"
 	#include "Morale.h"
+	#include "AI.h"
+	#include "Strategic_Mines.h"
+	#include "MapScreen.h"
+	#include <math.h>
 #endif
 
 
@@ -1065,26 +1069,26 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 	//Expanded the default names based on team.
 	switch( pCreateStruct->bTeam )
 	{
-		case ENEMY_TEAM:		swprintf( pSoldier->name, TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
-		case MILITIA_TEAM:	swprintf( pSoldier->name, TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
+		case ENEMY_TEAM:		swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
+		case MILITIA_TEAM:	swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
 		case CIV_TEAM:
 			if( pSoldier->ubSoldierClass == SOLDIER_CLASS_MINER )
 			{
-				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MINER_NAME ] );
+				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CIV_TEAM_MINER_NAME ] );
 			}
 			else
 			{
-				swprintf( pSoldier->name, TacticalStr[ CIV_TEAM_MERC_NAME ] );
+				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CIV_TEAM_MERC_NAME ] );
 			}
 			break;
 		case CREATURE_TEAM:
 			if( pSoldier->ubBodyType == BLOODCAT )
 			{
-				swprintf( pSoldier->name, gzLateLocalizedString[ 36 ] );
+				swprintf( pSoldier->name, lengthof(pSoldier->name), gzLateLocalizedString[ 36 ] );
 			}
 			else
 			{
-				swprintf( pSoldier->name, TacticalStr[ CREATURE_TEAM_MERC_NAME ] );	break;
+				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CREATURE_TEAM_MERC_NAME ] );	break;
 			}
 			break;
 	}
@@ -1164,7 +1168,11 @@ BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVeh
 	SOLDIERTYPE *		pSoldier;
 
 	// Check range of index given
+	#if 0 /* XXX unsigned < 0 ? */
 	if ( usSoldierIndex < 0 || usSoldierIndex > TOTAL_SOLDIERS-1 )
+	#else
+	if (usSoldierIndex > TOTAL_SOLDIERS - 1)
+	#endif
 	{
 		// Set debug message
 
@@ -1567,7 +1575,11 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->bExpLevel = min( 9, pp->bExpLevel ); //maximum exp. level of 9
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
+	#if 0 /* unsigned < 0 ? */
 	ubStatsLevel = max( 0, ubStatsLevel );	//minimum stats level of 0
+	#else
+	ubStatsLevel = ubStatsLevel;	//minimum stats level of 0
+	#endif
 	ubStatsLevel = min( 9, ubStatsLevel );	//maximum stats level of 9
 
 	//Set the minimum base attribute

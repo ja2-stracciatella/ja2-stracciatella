@@ -8,6 +8,7 @@
 	#include "Video.h"
 	#include "WorldDat.h"
 	#include "FileMan.h"
+	#include <string.h>
 #endif
 
 

@@ -25,6 +25,8 @@
 	#include "Physics.h"
 	#include "Soldier_Macros.h"
 	#include "Text.h"
+	#include "Interactive_Tiles.h"
+	#include "PathAI.h"
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING

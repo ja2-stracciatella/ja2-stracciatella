@@ -24,6 +24,16 @@
 	#include "Input.h"
 	#include "English.h"
 	#include "Text.h"
+	#include "Strategic_Movement.h"
+	#include "Soldier_Macros.h"
+	#include "Squads.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "PreBattle_Interface.h"
+	#include "Strategic.h"
+	#include "Fade_Screen.h"
+	#include "MessageBoxScreen.h"
+	#include "Quests.h"
+	#include "Creature_Spreading.h"
 #endif
 
 BOOLEAN		gfInSectorExitMenu = FALSE;
@@ -527,8 +537,8 @@ void UpdateSectorExitMenu( )
 		MSYS_DisableRegion(&(gExitDialog.SingleRegion) );
 		if( gExitDialog.fSelectedMercIsEPC )
 		{ //EPCs cannot leave the sector alone and must be escorted
-			UINT16 str[ 256 ];
-			swprintf( str, pExitingSectorHelpText[ EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT ], MercPtrs[ gusSelectedSoldier ]->name );
+			wchar_t str[ 256 ];
+			swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT ], MercPtrs[ gusSelectedSoldier ]->name );
 			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
 			SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
 		}
@@ -536,17 +546,17 @@ void UpdateSectorExitMenu( )
 		{ //It has been previously determined that there are only two mercs in the squad, the selected merc
 			//isn't an EPC, but the other merc is.  That means that this merc cannot leave the sector alone
 			//as he would isolate the EPC.
-			UINT16 str[ 256 ];
+			wchar_t str[ 256 ];
 			if( !gExitDialog.fSquadHasMultipleEPCs )
 			{
 				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
 				{ //male singular
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
+					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
 										MercPtrs[ gExitDialog.bSingleMoveWillIsolateEPC ]->name );
 				}
 				else
 				{ //female singular
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
+					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
 										MercPtrs[ gExitDialog.bSingleMoveWillIsolateEPC ]->name );
 				}
 			}
@@ -554,23 +564,23 @@ void UpdateSectorExitMenu( )
 			{
 				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
 				{ //male plural
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
 				}
 				else
 				{ //female plural
-					swprintf( str, pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
 				}
 			}
-			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
-			SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
+			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str);
+			SetRegionFastHelpText( &gExitDialog.SingleRegion, str);
 		}
 	}
 	else
 	{
-		UINT16 str[ 256 ];
+		wchar_t str[ 256 ];
 		EnableButton( gExitDialog.uiSingleMoveButton );
 		MSYS_EnableRegion(&(gExitDialog.SingleRegion) );
-		swprintf( str, pExitingSectorHelpText[ EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT ], MercPtrs[ gusSelectedSoldier ]->name );
+		swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT ], MercPtrs[ gusSelectedSoldier ]->name );
 		SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
 		SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
 	}
@@ -703,7 +713,7 @@ BOOLEAN HandleSectorExitMenu( )
 
 void RemoveSectorExitMenu( BOOLEAN fOk )
 {
-	INT16		Str[ 50 ];
+	wchar_t Str[ 50 ];
 
 	if ( gfInSectorExitMenu )
 	{
@@ -745,7 +755,7 @@ void RemoveSectorExitMenu( BOOLEAN fOk )
 			// Check if there are more than one in this squad
 			if ( gExitDialog.ubNumPeopleOnSquad == 0 )
 			{
-				swprintf( Str, pMessageStrings[	MSG_EPC_CANT_TRAVERSE ], MercPtrs[ gusSelectedSoldier ]->name );
+				swprintf( Str, lengthof(Str), pMessageStrings[	MSG_EPC_CANT_TRAVERSE ], MercPtrs[ gusSelectedSoldier ]->name );
 
 				DoMessageBox( MSG_BOX_BASIC_STYLE, Str, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, NULL, NULL );
 				return;

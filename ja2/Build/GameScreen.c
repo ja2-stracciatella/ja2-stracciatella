@@ -28,7 +28,6 @@
 	#include "Interface.h"
 	#include "Handle_UI.h"
 	#include <wchar.h>
-	#include <tchar.h>
 	#include "Cursors.h"
 	#include "VObject_Blitters.h"
 	#include "Button_System.h"
@@ -79,6 +78,10 @@
 	#include "Strategic_AI.h"
 	#include "HelpScreen.h"
 	#include "PreBattle_Interface.h"
+	#include "Sound_Control.h"
+	#include "MessageBoxScreen.h"
+	#include "Text.h"
+	#include "GameSettings.h"
 #endif
 
 
@@ -163,7 +166,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( VideoOverlayDesc.pzText, L"90" );
+	swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"90" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
@@ -172,7 +175,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.sTop				 = 0;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( VideoOverlayDesc.pzText, L"Levelnodes: 100000" );
+	swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"Levelnodes: 100000" );
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 

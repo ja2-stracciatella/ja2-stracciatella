@@ -8,7 +8,6 @@
 	#include "Font_Control.h"
 	#include "Message.h"
 	#include "memory.h"
-	#include "mbstring.h"
 	#include "Timer_Control.h"
 	#include "Render_Dirty.h"
 	#include "RenderWorld.h"
@@ -23,6 +22,7 @@
 	#include "Dialogue_Control.h"
 	#include <stdio.h>
 	#include "Game_Clock.h"
+	#include <stdarg.h>
 #endif
 
 typedef struct
@@ -233,7 +233,7 @@ BOOLEAN CreateStringVideoOverlay( ScrollStringStPtr pStringSt, UINT16 usX, UINT1
 	VideoOverlayDesc.ubFontFore  = (unsigned char)pStringSt->usColor;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( VideoOverlayDesc.pzText, pStringSt->pString16 );
+	swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), pStringSt->pString16 );
 	VideoOverlayDesc.BltCallback = BlitString;
 	pStringSt->iVideoOverlay =  RegisterVideoOverlay( ( VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
@@ -624,7 +624,7 @@ void ScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	}
 
 	va_start(argptr, pStringA);
-	vswprintf(DestString, pStringA, argptr);
+	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
 	va_end(argptr);
 
 	// pass onto tactical message and mapscreen message
@@ -764,7 +764,7 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		    pStringSt=GetNextString(pStringSt);
 
 	va_start(argptr, pStringA);       	// Set up variable argument pointer
-	vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+	vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	if ( ubPriority == MSG_DEBUG )
@@ -777,7 +777,7 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf( DestString, L"Debug: %s", DestStringA );
+		swprintf( DestString, lengthof(DestString), L"Debug: %s", DestStringA );
 		WriteMessageToFile( DestStringA );
 	}
 
@@ -907,7 +907,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_UI_FEEDBACK )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
-		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
 		BeginUIMessage( DestString );
@@ -917,7 +917,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_SKULL_UI_FEEDBACK )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
-		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
 		InternalBeginUIMessage( TRUE, DestString );
@@ -928,10 +928,10 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 	if ( ubPriority == MSG_ERROR )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
-		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
-		swprintf( DestStringA, L"DEBUG: %s", DestString );
+		swprintf( DestStringA, lengthof(DestStringA), L"DEBUG: %s", DestString );
 
 		BeginUIMessage( DestStringA );
 		WriteMessageToFile( DestStringA );
@@ -946,7 +946,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 			 ( ubPriority == MSG_MAP_UI_POSITION_LOWER  ) )
 	{
 		va_start(argptr, pStringA);       	// Set up variable argument pointer
-		vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
 		BeginMapUIMessage( ubPriority, DestString );
@@ -969,7 +969,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		    pStringSt=GetNextString(pStringSt);
 
 	va_start(argptr, pStringA);       	// Set up variable argument pointer
-	vswprintf(DestString, pStringA, argptr);	// process gprintf string (get output str)
+	vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
 	if ( ubPriority == MSG_DEBUG )
@@ -982,7 +982,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf( DestString, L"Debug: %s", DestStringA );
+		swprintf( DestString, lengthof(DestString), L"Debug: %s", DestStringA );
 	}
 
 	if ( ubPriority == MSG_DIALOG )

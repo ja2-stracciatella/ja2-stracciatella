@@ -24,7 +24,6 @@
 	#include "WorldDef.h"
 	#include "EditScreen.h"
 	#include <wchar.h>
-	#include <tchar.h>
 	#include "Timer_Control.h"
 	#include "Sys_Globals.h"
 	#include "Interface.h"
@@ -152,12 +151,12 @@ void DisplayFrameRate( )
 	{
 		// FRAME RATE
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-		swprintf( VideoOverlayDesc.pzText, L"%ld", __min( uiFPS, 1000 ) );
+		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( uiFPS, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
 
 		// TIMER COUNTER
-		swprintf( VideoOverlayDesc.pzText, L"%ld", __min( giTimerDiag, 1000 ) );
+		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( giTimerDiag, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
 		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
 

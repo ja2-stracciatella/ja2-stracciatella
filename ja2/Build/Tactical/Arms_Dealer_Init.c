@@ -4,7 +4,7 @@
 	#include "Types.h"
 	#include "stdlib.h"
 	#include "Arms_Dealer_Init.h"
-	#include "String.h"
+	#include <string.h>
 	#include "Debug.h"
 	#include "Random.h"
 	#include "Weapons.h"
@@ -14,6 +14,8 @@
 	#include "Message.h"
 	#include "Soldier_Profile.h"
 	#include "Handle_Items.h"
+	#include "Quests.h"
+	#include "Scheduling.h"
 #endif
 
 

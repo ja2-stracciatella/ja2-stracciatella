@@ -48,7 +48,7 @@ void HandleAirRaid( );
 BOOLEAN BeginAirRaid( );
 BOOLEAN InAirRaid( );
 
-BOOLEAN HandleAirRaidEndTurn( );
+BOOLEAN HandleAirRaidEndTurn(UINT8 ubTeam);
 
 
 //Save the air raid info to the saved game

@@ -2,7 +2,6 @@
 	#include "Tactical All.h"
 #else
 	#include "Vehicles.h"
-	#include "String.h"
 	#include "Strategic_Pathing.h"
 	#include "Assignments.h"
 	#include "Strategic_Movement.h"
@@ -29,6 +28,15 @@
 	#include "Animation_Control.h"
 	#include "StrategicMap.h"
 	#include "Interface_Control.h"
+	#include "Campaign_Types.h"
+	#include "Sys_Globals.h"
+	#include "Map_Screen_Interface.h"
+	#include "JAScreens.h"
+	#include "Quests.h"
+	#include "Tactical_Save.h"
+	#include "Soldier_Macros.h"
+	#include "OppList.h"
+	#include "Soldier_Ani.h"
 #endif
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];
@@ -1904,7 +1912,11 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 					// ! This means that the pointer contains a bogus pointer, but a real ID for the soldier.
 					// ! When reloading, this bogus pointer is converted to a byte to contain the id of the soldier so
 					// ! we can get the REAL pointer to the soldier
+					#if 0 /* XXX hä?! */
 					TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * ) pVehicleList[cnt].pPassengers[ ubPassengerCnt ]->ubProfile;
+					#else
+					TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * )(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ]->ubProfile;
+					#endif
 				}
 			}
 
@@ -2011,7 +2023,11 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
+							#if 0 /* XXX hä ?! */
 						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+							#else
+						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+							#endif
   					}
           }
           else
@@ -2020,7 +2036,11 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 					  {
 						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
 						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
+							#if 0 /* XXX hä?! */
 						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+							#else
+						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
+							#endif
   					}
             else
             {

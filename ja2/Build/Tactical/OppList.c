@@ -42,6 +42,12 @@
 	#include "Meanwhile.h"
 	#include "WorldMan.h"
 	#include "SkillCheck.h"
+	#include "Smell.h"
+	#include "GameSettings.h"
+	#include "Game_Clock.h"
+	#include "Civ_Quotes.h"
+	#include "Sound_Control.h"
+	#include "Drugs_And_Alcohol.h"
 #endif
 
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
@@ -4221,7 +4227,7 @@ void DebugSoldierPage3( )
 
 }
 
-void AppendAttachmentCode( UINT16 usItem, UINT16 *str )
+void AppendAttachmentCode( UINT16 usItem, wchar_t *str ) /* XXX Needs length */
 {
 	switch( usItem )
 	{
@@ -4242,7 +4248,7 @@ void AppendAttachmentCode( UINT16 usItem, UINT16 *str )
 
 void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 {
-	UINT16 szAttach[30];
+	wchar_t szAttach[30];
 	BOOLEAN fAttachments;
 	//100%  Qty: 2  Attach:
 	//100%  Qty: 2
@@ -4256,7 +4262,7 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 		  pObject->usAttachItem[2] || pObject->usAttachItem[3] )
 	{
 		fAttachments = TRUE;
-		swprintf( szAttach, L"(" );
+		swprintf( szAttach, lengthof(szAttach), L"(" );
 		AppendAttachmentCode( pObject->usAttachItem[0], szAttach );
 		AppendAttachmentCode( pObject->usAttachItem[1], szAttach );
 		AppendAttachmentCode( pObject->usAttachItem[2], szAttach );
@@ -4268,13 +4274,13 @@ void WriteQuantityAndAttachments( OBJECTTYPE *pObject, INT32 yp )
 	{ //ammo
 		if( pObject->ubNumberOfObjects > 1 )
 		{
-			UINT16 str[50];
-			UINT16 temp[5];
+			wchar_t str[50];
+			wchar_t temp[5];
 			UINT8 i;
-			swprintf( str, L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
+			swprintf( str, lengthof(str), L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
 			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
 			{
-				swprintf( temp, L", %d", pObject->bStatus[0] );
+				swprintf( temp, lengthof(temp), L", %d", pObject->bStatus[0] );
 				wcscat( str, temp );
 			}
 			wcscat( str, L")" );
@@ -4308,8 +4314,8 @@ void DebugSoldierPage4( )
 {
 	SOLDIERTYPE				*pSoldier;
 	UINT32						uiMercFlags;
-	UINT16 szOrders[20];
-	UINT16 szAttitude[20];
+	wchar_t szOrders[20];
+	wchar_t szAttitude[20];
 	UINT16						usSoldierIndex;
 	UINT8							ubLine;
 
@@ -4346,25 +4352,25 @@ void DebugSoldierPage4( )
 			SOLDIERINITNODE		*pNode;
 			switch( pSoldier->bOrders )
 			{
-				case STATIONARY:	swprintf( szOrders, L"STATIONARY" );			break;
-				case ONGUARD:			swprintf( szOrders, L"ON GUARD" );				break;
-				case ONCALL:			swprintf( szOrders, L"ON CALL" );					break;
-				case SEEKENEMY:		swprintf( szOrders, L"SEEK ENEMY" );			break;
-				case CLOSEPATROL:	swprintf( szOrders, L"CLOSE PATROL" );		break;
-				case FARPATROL:		swprintf( szOrders, L"FAR PATROL" );			break;
-				case POINTPATROL:	swprintf( szOrders, L"POINT PATROL" );		break;
-				case RNDPTPATROL:	swprintf( szOrders, L"RND PT PATROL" );		break;
-				default:					swprintf( szOrders, L"UNKNOWN" );					break;
+				case STATIONARY:	swprintf( szOrders, lengthof(szOrders), L"STATIONARY" );			break;
+				case ONGUARD:			swprintf( szOrders, lengthof(szOrders), L"ON GUARD" );				break;
+				case ONCALL:			swprintf( szOrders, lengthof(szOrders), L"ON CALL" );					break;
+				case SEEKENEMY:		swprintf( szOrders, lengthof(szOrders), L"SEEK ENEMY" );			break;
+				case CLOSEPATROL:	swprintf( szOrders, lengthof(szOrders), L"CLOSE PATROL" );		break;
+				case FARPATROL:		swprintf( szOrders, lengthof(szOrders), L"FAR PATROL" );			break;
+				case POINTPATROL:	swprintf( szOrders, lengthof(szOrders), L"POINT PATROL" );		break;
+				case RNDPTPATROL:	swprintf( szOrders, lengthof(szOrders), L"RND PT PATROL" );		break;
+				default:					swprintf( szOrders, lengthof(szOrders), L"UNKNOWN" );					break;
 			}
 			switch( pSoldier->bAttitude )
 			{
-				case DEFENSIVE:		swprintf( szAttitude, L"DEFENSIVE" );			break;
-				case BRAVESOLO:		swprintf( szAttitude, L"BRAVE SOLO" );		break;
-				case BRAVEAID:		swprintf( szAttitude, L"BRAVE AID" );			break;
-				case AGGRESSIVE:	swprintf( szAttitude, L"AGGRESSIVE" );		break;
-				case CUNNINGSOLO:	swprintf( szAttitude, L"CUNNING SOLO" );	break;
-				case CUNNINGAID:	swprintf( szAttitude, L"CUNNING AID"	);	break;
-				default:					swprintf( szAttitude, L"UNKNOWN" );				break;
+				case DEFENSIVE:		swprintf( szAttitude, lengthof(szAttitude), L"DEFENSIVE" );			break;
+				case BRAVESOLO:		swprintf( szAttitude, lengthof(szAttitude), L"BRAVE SOLO" );		break;
+				case BRAVEAID:		swprintf( szAttitude, lengthof(szAttitude), L"BRAVE AID" );			break;
+				case AGGRESSIVE:	swprintf( szAttitude, lengthof(szAttitude), L"AGGRESSIVE" );		break;
+				case CUNNINGSOLO:	swprintf( szAttitude, lengthof(szAttitude), L"CUNNING SOLO" );	break;
+				case CUNNINGAID:	swprintf( szAttitude, lengthof(szAttitude), L"CUNNING AID"	);	break;
+				default:					swprintf( szAttitude, lengthof(szAttitude), L"UNKNOWN" );				break;
 			}
 			pNode = gSoldierInitHead;
 			while( pNode )
@@ -5448,11 +5454,13 @@ UINT8 CalcEffVolume(SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubN
 		iEffVolume -= 5;
 	}
 
+ #if 0 /* XXX Something is very wrong here... */
  if (pSoldier->bAssignment == SLEEPING )
  {
 	// decrease effective volume since we're asleep!
 	 iEffVolume -= 5;
  }
+ #endif
 
 	// check for floor/roof difference
 	if (bLevel > pSoldier->bLevel)

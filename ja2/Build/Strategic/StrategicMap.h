@@ -83,17 +83,17 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 void InitializeMapStructure();
 
 // get short sector name without town name
-void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString );
+void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length);
 
 //NEW!
 //Calculates the name of the sector based on the loaded sector values.
 //Examples:		A9
 //						A10_B1
 //						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-void GetLoadedSectorString( UINT16 *pString );
+void GetLoadedSectorString( wchar_t *pString, size_t Length);
 
 // This will get an ID string like A9- OMERTA...
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, BOOLEAN fDetailed );
+void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed );
 
 void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter );
 

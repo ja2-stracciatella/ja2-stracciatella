@@ -14,6 +14,7 @@
 	#include "Cursors.h"
 	#include "EMail.h"
 	#include "Text.h"
+	#include <string.h>
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X
@@ -858,11 +859,13 @@ BOOLEAN DisplayFormattedText( void )
 
 	iLength = ubFileRecordsLength[pFilesList->ubCode];
 
+	#if 0 /* XXX */
 	if( pFilesList->ubFormat < ENRICO_BACKGROUND )
 	{
 
 	  LoadEncryptedDataFromFile("BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * (iOffSet) * 2, FILE_STRING_SIZE * iLength * 2);
 	}
+	#endif
 
 	// reset counter
 	iCounter=0;

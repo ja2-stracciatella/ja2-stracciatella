@@ -911,8 +911,12 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		TileElement->ubFullTile = 1;
 	}
 
+	#if 0 /* XXX */
 	if ( uiDatabaseElem >= FIRSTTEXTURE1 &&
 			 uiDatabaseElem <= DEEPWATERTEXTURE10 )
+	#else
+	if (uiDatabaseElem <= DEEPWATERTEXTURE10)
+	#endif
 	{
 		// Set tile 'fullness' attribute
 		TileElement->ubFullTile = gFullBaseTileValues[ uiDatabaseElem ];

@@ -24,6 +24,9 @@
 	#include "Fog_Of_War.h"
 	#include "StrategicMap.h"
 	#include "Boxing.h"
+	#include "OppList.h"
+	#include "Lighting.h"
+	#include "Soldier_Macros.h"
 #endif
 
 /* view directions */

@@ -3,7 +3,6 @@
 #else
 	#include "Types.h"
 	#include <stdio.h>
-	#include <Windows.h>
 	#include "SGP.h"
 	#include "time.h"
 	#include "VObject.h"
@@ -126,10 +125,10 @@ BOOLEAN DisplayPaletteRep( PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UIN
 }
 
 
-BOOLEAN	 WrapString( INT16 *pStr, INT16 *pStr2, UINT16 usWidth, INT32 uiFont )
+BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidth, INT32 uiFont )
 {
 	UINT32 Cur, uiLet, uiNewLet, uiHyphenLet;
-	UINT16 *curletter,transletter;
+	wchar_t *curletter,transletter;
 	BOOLEAN	fLineSplit = FALSE;
 	HVOBJECT	hFont;
 
@@ -175,8 +174,12 @@ BOOLEAN	 WrapString( INT16 *pStr, INT16 *pStr2, UINT16 usWidth, INT32 uiFont )
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
-				swprintf( pStr2, L"-%s", &(pStr[uiHyphenLet]) );
+				swprintf( pStr2, Length, L"-%s", &(pStr[uiHyphenLet]) );
+				#if 0 /* XXX typo? */
 				pStr[uiHyphenLet] = (INT16)'/0';
+				#else
+				pStr[uiHyphenLet] = L'\0';
+				#endif
 				fLineSplit = TRUE;  //hyphen method
 				break;
 			}
@@ -194,6 +197,7 @@ BOOLEAN	 WrapString( INT16 *pStr, INT16 *pStr2, UINT16 usWidth, INT32 uiFont )
 }
 
 
+#if 0 /* XXX Seem to be unused */
 BOOLEAN IfWinNT(void)
 {
 	OSVERSIONINFO OsVerInfo;
@@ -221,6 +225,7 @@ BOOLEAN IfWin95(void)
 	else
 		return(FALSE);
 }
+#endif
 
 
 void HandleLimitedNumExecutions( )

@@ -1,5 +1,32 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
+#else
+	#include "Civ_Quotes.h"
+	#include "MouseSystem.h"
+	#include "StrategicMap.h"
+	#include <stdio.h>
+	#include "WCheck.h"
+	#include "Encrypted_File.h"
+	#include "MessageBoxScreen.h"
+	#include "Queen_Command.h"
+	#include "Overhead.h"
+	#include "AI.h"
+	#include "Render_Dirty.h"
+	#include "MercTextBox.h"
+	#include "Text.h"
+	#include "ScreenIDs.h"
+	#include "Animation_Data.h"
+	#include "Video.h"
+	#include "Message.h"
+	#include "RenderWorld.h"
+	#include "Cursors.h"
+	#include "Dialogue_Control.h"
+	#include "Quests.h"
+	#include "MapScreen.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "NPC.h"
+	#include "Strategic_Mines.h"
+	#include "Random.h"
 #endif
 
 
@@ -95,7 +122,7 @@ typedef struct
 
 QUOTE_SYSTEM_STRUCT	gCivQuoteData;
 
-INT16		gzCivQuote[ 320 ];
+wchar_t	gzCivQuote[ 320 ];
 UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
 
@@ -112,7 +139,7 @@ void CopyNumEntriesIntoQuoteStruct( )
 }
 
 
-BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 *zQuote )
+BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t *zQuote )
 {
 	UINT8 zFileName[164];
 
@@ -332,7 +359,7 @@ void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY )
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	INT16									zQuote[ 320 ];
+	wchar_t								zQuote[ 320 ];
 
 	// OK, do we have another on?
 	if ( gCivQuoteData.bActive )
@@ -348,9 +375,9 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 #ifdef TAIWANESE
-	swprintf( gzCivQuote, L"%s", zQuote );
+	swprintf( gzCivQuote, lengthof(gzCivQuote), L"%s", zQuote );
 #else
-	swprintf( gzCivQuote, L"\"%s\"", zQuote );
+	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%s\"", zQuote );
 #endif
 
 

@@ -2,7 +2,7 @@
 #define __INTERFACE_PANELS
 
 
-typedef enum
+enum
 {
 	STANCEUP_BUTTON = 0,
 	UPDOWN_BUTTON,
@@ -22,7 +22,7 @@ typedef enum
 };
 
 
-typedef enum
+enum
 {
 	TEAM_DONE_BUTTON = 0,
 	TEAM_MAP_SCREEN_BUTTON,

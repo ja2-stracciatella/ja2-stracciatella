@@ -14,6 +14,12 @@
 	#include "SkillCheck.h"
 	#include "Soldier_Profile.h"
 	#include "Isometric_Utils.h"
+	#include "Soldier_Macros.h"
+	#include "PathAI.h"
+	#include "GameSettings.h"
+	#include "StrategicMap.h"
+	#include "Lighting.h"
+	#include "Environment.h"
 #endif
 
 extern INT16 DirIncrementer[8];

@@ -12,6 +12,10 @@
 	#include "Soldier_Profile_Type.h"
 	#include "Items.h"
 	#include "Weapons.h"
+	#include "Soldier_Macros.h"
+	#include "NPC.h"
+	#include "Render_Fun.h"
+	#include "Quests.h"
 #endif
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )

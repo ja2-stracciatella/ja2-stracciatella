@@ -40,7 +40,7 @@ FADE_HOOK		gFadeOutDoneCallback = NULL;
 
 void FadeFrameBufferSquare(  );
 void FadeFrameBufferVersionOne(  );
-void FadeFrameBufferVersionFaster(  );
+void FadeFrameBufferVersionFaster(INT8 bFadeValue);
 void FadeFrameBufferSide( );
 void FadeFrameBufferRealFade( );
 

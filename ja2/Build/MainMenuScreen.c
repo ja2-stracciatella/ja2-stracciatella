@@ -31,6 +31,7 @@
 	#include "Text.h"
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Encrypted_File.h"
+	#include "JA2_Splash.h"
 #endif
 
 #define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"
@@ -518,7 +519,7 @@ void SetMainMenuExitScreen( UINT32 uiNewScreen )
 
 void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 {
-	static fRegionCreated = FALSE;
+	static BOOLEAN fRegionCreated = FALSE;
 
 	if( fCreate )
 	{

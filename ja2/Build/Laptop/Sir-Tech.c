@@ -2,7 +2,7 @@
 	#include "Laptop All.h"
 #else
 	#include "Laptop.h"
-	#include "SirTech.h"
+	#include "Sir-Tech.h"
 #endif
 
 void GameInitSirTech()

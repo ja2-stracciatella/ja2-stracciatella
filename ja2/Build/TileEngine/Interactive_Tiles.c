@@ -33,6 +33,11 @@
 	#include "Handle_Items.h"
 	#include "Message.h"
 	#include "Handle_UI.h"
+	#include "NPC.h"
+	#include "Explosion_Control.h"
+	#include "Text.h"
+	#include "GameSettings.h"
+	#include "Environment.h"
 #endif
 
 #define		MAX_INTTILE_STACK							10
@@ -957,6 +962,7 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
+	#if 0 /* XXX INLINE ASSEMBLER */
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1067,6 +1073,9 @@ BlitFound:
 
 BlitDone:
 	}
+	#else
+		fprintf(stderr, __FILE__ ": not done yet");
+	#endif
 
 	return(fDataFound);
 

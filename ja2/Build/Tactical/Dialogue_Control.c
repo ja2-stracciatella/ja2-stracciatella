@@ -34,7 +34,7 @@
 	#include "GameScreen.h"
 	#include "Random.h"
 	#include "Map_Screen_Helicopter.h"
-	#include	"GameSettings.h"
+	#include "GameSettings.h"
 	#include "ShopKeeper_Interface.h"
 	#include "Map_Screen_Interface.h"
 	#include "Text.h"
@@ -45,6 +45,16 @@
 	#include "SkillCheck.h"
 	#include "Interface_Control.h"
 	#include "Finances.h"
+	#include "Civ_Quotes.h"
+	#include "Map_Screen_Interface_Map.h"
+	#include "OppList.h"
+	#include "AI.h"
+	#include "WorldMan.h"
+	#include "Map_Screen_Interface_Bottom.h"
+	#include "Campaign.h"
+	#include "End_Game.h"
+	#include "LOS.h"
+	#include "QArray.h"
 #endif
 
 #define		DIALOGUESIZE					480
@@ -141,7 +151,7 @@ UINT16			gusSubtitleBoxHeight;
 INT32				giTextBoxOverlay = -1;
 BOOLEAN			gfFacePanelActive = FALSE;
 UINT32			guiScreenIDUsedWhenUICreated;
-INT16					gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
+wchar_t				gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
 MOUSE_REGION	gTextBoxMouseRegion;
 MOUSE_REGION	gFacePopupMouseRegion;
 BOOLEAN				gfUseAlternateDialogueFile = FALSE;
@@ -186,11 +196,11 @@ void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
 
 // Handler functions for tactical ui diaplay
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr );
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr );
+void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr );
+void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr );
 void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex );
 void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr );
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr );
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr, size_t Length);
 
 
 void HandleExternNPCSpeechFace( INT32 iIndex );
@@ -198,7 +208,7 @@ void HandleExternNPCSpeechFace( INT32 iIndex );
 
 
 extern BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
-extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
+extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
 
 
 
@@ -431,7 +441,7 @@ void HandleDialogueUIAdjustments( )
 
 
 						// Setup UI again!
-						CreateTalkingUI( gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, pSoldier, gzQuoteStr );
+						CreateTalkingUI( gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, pSoldier, gzQuoteStr, lengthof(gzQuoteStr));
 					}
 				}
 			}
@@ -940,7 +950,7 @@ void HandleDialogue( )
 			if( QItem->uiSpecialEventData < 3 )
 			{
 				// post a notice if the player wants to withdraw money from thier account to cover the difference?
-				swprintf( zMoney, L"%d", QItem->uiSpecialEventData2 );
+				swprintf( zMoney, lengthof(zMoney), L"%d", QItem->uiSpecialEventData2 );
 				InsertCommasForDollarFigure( zMoney );
 				InsertDollarSignInToString( zMoney );
 			}
@@ -948,21 +958,21 @@ void HandleDialogue( )
 			switch( QItem->uiSpecialEventData  )
 			{
 				case( 0 ):
-						swprintf( zText, SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
+						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
 
 						//popup a message stating the player doesnt have enough money
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack );
 				break;
 				case( 1 ):
 						//if the player is trading items
-						swprintf( zText, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE ], zMoney );
+						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE ], zMoney );
 
 						//ask them if we should deduct money out the players account to cover the difference
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
 
 				break;
 				case( 2 ):
-						swprintf( zText, SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST ], zMoney );
+						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST ], zMoney );
 
 						//ask them if we should deduct money out the players account to cover the difference
 						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
@@ -1012,7 +1022,7 @@ void HandleDialogue( )
 				CHAR16 wTempString[ 128 ];
 
 				// tell player about stat increase
-				BuildStatChangeString( wTempString, pSoldier->name, ( BOOLEAN ) QItem->uiSpecialEventData, ( INT16 ) QItem->uiSpecialEventData2, ( UINT8 ) QItem->uiSpecialEventData3 );
+				BuildStatChangeString( wTempString, lengthof(wTempString), pSoldier->name, ( BOOLEAN ) QItem->uiSpecialEventData, ( INT16 ) QItem->uiSpecialEventData2, ( UINT8 ) QItem->uiSpecialEventData3 );
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
 			}
 		}
@@ -1184,7 +1194,7 @@ void HandleDialogue( )
 
 
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, UINT16 *zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString );
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t *zDialogueText, size_t Length, UINT32 *puiSoundID, CHAR8 *zSoundString );
 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
@@ -1621,7 +1631,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	CHECKF( iFaceIndex != -1 );
 
   if ( !GetDialogue( ubCharacterNum,
-                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, &uiSoundID, zSoundString) )
+                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), &uiSoundID, zSoundString) )
   {
     return( FALSE );
   }
@@ -1637,7 +1647,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 		SetFaceTalking( iFaceIndex, zSoundString, gzQuoteStr, RATE_11025, 30, 1, MIDDLEPAN );
 	}
 	// pSoldier can be null here... ( if NOT from an alive soldier )
-	CreateTalkingUI( bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr );
+	CreateTalkingUI( bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr, lengthof(gzQuoteStr));
 
 	// Set global handleer ID value, used when face desides it's done...
 	gbUIHandlerID = bUIHandlerID;
@@ -1648,7 +1658,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 }
 
 
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr )
+void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr, size_t Length)
 {
 
 	// Show text, if on
@@ -1667,7 +1677,7 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 				break;
 
 			case DIALOGUE_CONTACTPAGE_UI:
-				DisplayTextForMercFaceVideoPopUp( zQuoteStr );
+				DisplayTextForMercFaceVideoPopUp( zQuoteStr, Length);
 				break;
 
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
@@ -1803,7 +1813,7 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 
 
 
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, UINT16 *zDialogueText, UINT32 *puiSoundID, CHAR8 *zSoundString )
+BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t *zDialogueText, size_t Length, UINT32 *puiSoundID, CHAR8 *zSoundString )
 {
   UINT8 *pFilename;
 
@@ -1815,7 +1825,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 				LoadEncryptedDataFromFile( pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
 				if(zDialogueText[0] == 0)
         {
-					swprintf( zDialogueText, L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
+					swprintf( zDialogueText, Length, L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1824,7 +1834,7 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 			}
 			else
 			{
-				swprintf( zDialogueText, L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
+				swprintf( zDialogueText, Length, L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1870,9 +1880,9 @@ BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, 
 
 
 // Handlers for tactical UI stuff
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr )
+void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
 
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
@@ -1883,10 +1893,10 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, L"%s", zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%s", zQuoteStr );
 #else
-	swprintf( gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
-	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%s\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 }
@@ -1895,7 +1905,7 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, INT16 *zQuoteStr )
 // Handlers for tactical UI stuff
 void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
 
 
@@ -1908,10 +1918,10 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, L"%s", zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%s", zQuoteStr );
 #else
-	swprintf( gTalkPanel.zQuoteStr, L"\"%s\"", zQuoteStr );
-	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%s\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 
@@ -1932,18 +1942,18 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 }
 
 
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, INT16 *zQuoteStr )
+void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr )
 {
-	INT16									zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
 
 	//BUild text
 	// How do we do this with defines?
 	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 #ifdef TAIWANESE
-	swprintf( zText, L"%s", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%s", zQuoteStr );
 #else
-	swprintf( zText, L"\"%s\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"\"%s\"", zQuoteStr );
 #endif
 	sLeft	= 110;
 
@@ -1954,7 +1964,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, INT16 *zQuot
 	ExecuteTacticalTextBox( sLeft, zText );
 
 #ifndef TAIWANESE
-	swprintf( zText, L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
 #endif
 
@@ -2292,7 +2302,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 	UINT8	 *pDestBuf, *pSrcBuf;
 	INT16 sFontX, sFontY;
 	SOLDIERTYPE *pSoldier;
-	INT16					zTownIDString[50];
+	wchar_t					zTownIDString[50];
 
 
 	if ( gpCurrentTalkingFace == NULL )
@@ -2331,9 +2341,9 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 			// What sector are we in, ( and is it the same as ours? )
 			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
 			{
-				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, FALSE );
+				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, lengthof(zTownIDString), FALSE );
 
-        ReduceStringLength( zTownIDString, 64 , BLOCKFONT2 );
+        ReduceStringLength( zTownIDString, lengthof(zTownIDString), 64 , BLOCKFONT2 );
 
 				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", zTownIDString );
 				mprintf( sFontX, sFontY, L"%s", zTownIDString );

@@ -98,6 +98,17 @@
 	#include "JAScreens.h"
 	#include "Strategic.h"
 	#include "Arms_Dealer_Init.h"
+	#include "Interface_Utils.h"
+	#include "Air_Raid.h"
+	#include "Civ_Quotes.h"
+	#include "Drugs_And_Alcohol.h"
+	#include "History.h"
+	#include "LOS.h"
+	#include "Interface_Dialogue.h"
+	#include "Strategic_AI.h"
+	#include "End_Game.h"
+	#include "Strategic_Status.h"
+	#include "PreBattle_Interface.h"
 #endif
 
 extern UINT8	gubAICounter;
@@ -711,7 +722,11 @@ BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
 	// Check range of index given
 	*ppSoldier = NULL;
 
+	#if 0 /* XXX */
 	if ( usSoldierIndex < 0 || usSoldierIndex > TOTAL_SOLDIERS-1 )
+	#else
+	if (usSoldierIndex > TOTAL_SOLDIERS - 1)
+	#endif
 	{
 		// Set debug message
 		return( FALSE );
@@ -3136,7 +3151,11 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier )
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 {
 	SOLDIERTYPE *pKiller = NULL;
+	#if 0 /* XXX -1 ?! */
   BOOLEAN bVisible;
+	#else
+  INT8 bVisible;
+	#endif
 
 	pSoldierOld->uiStatusFlags |= SOLDIER_DEAD;
   bVisible = pSoldierOld->bVisible;
@@ -7864,7 +7883,7 @@ void HandleEndDemoInCreatureLevel( )
 			DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_GO_SEE_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL );
 		}
 	}
-	#endif JA2DEMO
+	#endif
 }
 
 

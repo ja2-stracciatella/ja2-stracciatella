@@ -48,6 +48,8 @@
 	#include "Summary_Info.h"
 	#include "GameSettings.h"
 	#include "Game_Init.h"
+	#include "Strategic_Movement.h"
+	#include "Vehicles.h"
 #endif
 
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );

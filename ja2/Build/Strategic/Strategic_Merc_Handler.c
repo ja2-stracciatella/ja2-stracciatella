@@ -36,6 +36,9 @@
 	#include "ScreenIDs.h"
 	#include "Gameloop.h"
 	#include "JAScreens.h"
+	#include "Soldier_Macros.h"
+	#include "Finances.h"
+	#include "Quests.h"
 #endif
 
 
@@ -47,7 +50,7 @@ BOOLEAN fContractOverMeTooFlag = FALSE;
 BOOLEAN fContractOverAndIWontRenewMeTooFlag = FALSE;
 BOOLEAN fProcessingAMerc = FALSE;
 SOLDIERTYPE *pProcessingSoldier = NULL;
-extern BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat = FALSE;
+BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat = FALSE;
 
 // build a list of mercs based on departure time
 void BuildMercQuitList( SOLDIERTYPE *pMercList );
@@ -306,7 +309,7 @@ void MercDailyUpdate()
 						CHAR16	zMoney[128];
 
 						//create a string for the salary owed to the npc
-						swprintf( zMoney, L"%d", sSalary );
+						swprintf( zMoney, lengthof(zMoney), L"%d", sSalary );
 						InsertCommasForDollarFigure( zMoney );
 						InsertDollarSignInToString( zMoney );
 
