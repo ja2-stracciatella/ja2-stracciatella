@@ -321,7 +321,7 @@ SRCS += ./Build/Utils/_JA25EnglishText.c
 OBJS = $(SRCS:.c=.o)
 
 .SUFFIXES:
-.SUFFIXES: .C .c .o
+.SUFFIXES: .c .o
 
 all: ja2
 
@@ -329,7 +329,6 @@ ja2: $(OBJS)
 	@echo '===> Binde $@'
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 
-.C.o:
 .c.o:
 	@echo '===> Übersetze $<'
 	@$(CC) $(CFLAGS) -c $< -o $@
