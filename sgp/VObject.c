@@ -3,21 +3,21 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "DirectDraw Calls.h"
+	#include "DirectDraw_Calls.h"
 	#include <stdio.h>
-	#include "debug.h"
+	#include "Debug.h"
 	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
+		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif
-	#include "himage.h"
-	#include "vobject.h"
-	#include "vobject_private.h"
+	#include "HImage.h"
+	#include "VObject.h"
+	#include "VObject_Private.h"
 	#include "video_private.h"
-	#include "wcheck.h"
-	#include "vobject_blitters.h"
-	#include "sgp.h"
+	#include "WCheck.h"
+	#include "VObject_Blitters.h"
+	#include "SGP.h"
 #endif
 
 // ******************************************************************************

@@ -24,11 +24,11 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <ddeml.h>
 	#include <stdio.h>
-	#include "debug.h"
+	#include "Debug.h"
 	#include "WCheck.h"
 	#include "TopicIDs.h"
 	#include "TopicOps.h"
@@ -36,16 +36,16 @@
 
 	//Kris addition
 	#ifdef JA2
-		#include "screenids.h"
-		#include "Sys Globals.h"
-		#include "jascreens.h"
-		#include "gameloop.h"
-		#include "input.h"
+		#include "ScreenIDs.h"
+		#include "Sys_Globals.h"
+		#include "JAScreens.h"
+		#include "Gameloop.h"
+		#include "Input.h"
 	#endif
 
 	// CJC added
 	#ifndef _NO_DEBUG_TXT
-		#include "fileman.h"
+		#include "FileMan.h"
 	#endif
 #endif
 

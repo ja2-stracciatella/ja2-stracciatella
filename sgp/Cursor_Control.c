@@ -3,15 +3,15 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "Cursor Control.h"
+	#include "Cursor_Control.h"
 
 	#if defined( JA2 ) || defined( UTIL )
-	#include "video.h"
+	#include "Video.h"
 	#else
 	#include "video2.h"
 	#endif
 
-	#include "wcheck.h"
+	#include "WCheck.h"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

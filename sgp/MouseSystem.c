@@ -16,30 +16,30 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
-	#include "debug.h"
-	#include "input.h"
+	#include "Debug.h"
+	#include "Input.h"
 	#include "memman.h"
-	#include "line.h"
+	#include "Line.h"
 	#if (defined( JA2 ) || defined( UTIL ))
-		#include "video.h"
+		#include "Video.h"
 		#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
 	#else
 		#include "video2.h"
 		#define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
 	#endif
 	#ifdef _JA2_RENDER_DIRTY
-		#include "render dirty.h"
+		#include "Render_Dirty.h"
 		#include "\JA2\Build\utils\Font Control.h"
 	#endif
-	#include "english.h"
+	#include "English.h"
 	// Include mouse system defs and macros
-	#include "mousesystem.h"
-	#include "Cursor Control.h"
-	#include "Button System.h"
+	#include "MouseSystem.h"
+	#include "Cursor_Control.h"
+	#include "Button_System.h"
 #endif
 
 #ifdef JA2_PRECOMPILED_HEADERS

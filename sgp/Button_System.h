@@ -7,9 +7,9 @@
 #ifndef __BUTTON_SYSTEM_H
 #define __BUTTON_SYSTEM_H
 
-#include "vobject.h"
-#include "mousesystem.h"
-#include "soundman.h"
+#include "VObject.h"
+#include "MouseSystem.h"
+#include "SoundMan.h"
 #include "Button Sound Control.h"
 
 #ifdef __cplusplus

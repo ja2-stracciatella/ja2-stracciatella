@@ -2,7 +2,7 @@
 
 #define COMPRESSION_H
 
-#include "types.h"
+#include "Types.h"
 
 // Notes on how to use these functions without getting your hands dirty:
 

@@ -23,7 +23,7 @@
 //#elif defined( WIZ8_PRECOMPILED_HEADERS )
 //	#include "WIZ8 SGP ALL.H"
 //#else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <malloc.h>
 	#include <stdlib.h>
@@ -47,7 +47,7 @@
 //**************************************************************************
 
 #ifdef JA2
-#include "mousesystem.h"
+#include "MouseSystem.h"
 #include "MessageBoxScreen.h"
 STR16 gzJA2ScreenNames[] =
 {

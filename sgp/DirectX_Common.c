@@ -1,4 +1,4 @@
-#include "types.h"
+#include "Types.h"
 #include <objbase.h>
 #include <initguid.h>
 
@@ -7,11 +7,11 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <ddraw.h>
-	#include "DirectX Common.h"
+	#include "DirectX_Common.h"
 	#include <windows.h>
-	#include "debug.h"
+	#include "Debug.h"
 #endif
 
 void  DirectXZeroMem ( void* pMemory, int nSize )

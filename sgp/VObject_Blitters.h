@@ -1,9 +1,9 @@
 #ifndef __VOBJECT_BLITTERS
 #define __VOBJECT_BLITTERS
 
-#include "shading.h"
-#include "vsurface.h"
-#include "vobject.h"
+#include "Shading.h"
+#include "VSurface.h"
+#include "VObject.h"
 
 #ifdef __cplusplus
 extern "C" {

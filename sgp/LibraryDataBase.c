@@ -13,7 +13,7 @@
 	#include "Debug.h"
 
 	#if defined(JA2) || defined( UTIL )
-		#include "video.h"
+		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif

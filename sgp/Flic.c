@@ -35,8 +35,8 @@
 #include <conio.h>
 #include "flic.h"
 #include "windows.h"
-#include "types.h"
-#include "wcheck.h"
+#include "Types.h"
+#include "WCheck.h"
 
 //**************************************************************************
 //

@@ -1,7 +1,7 @@
 #ifndef __INPUT_
 #define __INPUT_
 
-#include "types.h"
+#include "Types.h"
 
 #define SCAN_CODE_MASK						0xff0000
 #define EXT_CODE_MASK							0x01000000

@@ -1,36 +1,36 @@
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 	#include "JA2 Splash.h"
-	#include "utilities.h"
+	#include "Utilities.h"
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <windowsx.h>
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <string.h>
-	#include "sgp.h"
+	#include "SGP.h"
 	#include "RegInst.h"
-	#include "vobject.h"
-	#include "font.h"
-	#include "local.h"
-	#include "Fileman.h"
-	#include "input.h"
+	#include "VObject.h"
+	#include "Font.h"
+	#include "Local.h"
+	#include "FileMan.h"
+	#include "Input.h"
 	#include "Random.h"
-	#include "gameloop.h"
-	#include "soundman.h"
+	#include "Gameloop.h"
+	#include "SoundMan.h"
 	#ifdef JA2
 		#include "JA2 Splash.h"
-		#include "Timer Control.h"
+		#include "Timer_Control.h"
 	#endif
 	#if !defined( JA2 ) && !defined( UTIL )
 		#include "GameData.h"               // for MoveTimer() [Wizardry specific]
 	#endif
 #endif
 
-	#include "input.h"
+	#include "Input.h"
 	#include "zmouse.h"
 
 

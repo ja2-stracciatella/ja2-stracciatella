@@ -9,28 +9,28 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
-	#include "debug.h"
-	#include "input.h"
+	#include "Debug.h"
+	#include "Input.h"
 	#include "memman.h"
-	#include "english.h"
-	#include "vobject.h"
-	#include "vobject_blitters.h"
-	#include "soundman.h"
-	#include "Button System.h"
-	#include "line.h"
+	#include "English.h"
+	#include "VObject.h"
+	#include "VObject_Blitters.h"
+	#include "SoundMan.h"
+	#include "Button_System.h"
+	#include "Line.h"
 	#include <stdarg.h>
 	#if defined( JA2 ) || defined( UTIL )
 		#include "WordWrap.h"
-		#include "video.h"
+		#include "Video.h"
 		#include "Button Sound Control.h"
 		#ifdef _JA2_RENDER_DIRTY
 			#include "\JA2\Build\utils\Font Control.h"
-			#include "Render Dirty.h"
-			#include "utilities.h"
+			#include "Render_Dirty.h"
+			#include "Utilities.h"
 		#endif
 	#else
 		#include "video2.h"
@@ -44,8 +44,8 @@
 #else
 	#define		MSYS_STARTING_CURSORVAL		MSYS_NO_CURSOR
 	// The following should be moved from here
-	#define GETPIXELDEPTH( )	( gbPixelDepth )		// From "utilities.h" in JA2
-	#define		COLOR_RED						162							// From "lighting.h" in JA2
+	#define GETPIXELDEPTH( )	( gbPixelDepth )		// From "Utilities.h" in JA2
+	#define		COLOR_RED						162							// From "Lighting.h" in JA2
 	#define		COLOR_BLUE					203
 	#define		COLOR_YELLOW				144
 	#define		COLOR_GREEN					184
@@ -55,7 +55,7 @@
 	#define		COLOR_ORANGE				76
 	#define		COLOR_WHITE					208
 	#define		COLOR_BLACK					72
-	// this doesn't exactly belong here either... (From "Font Control.h" in JA2)
+	// this doesn't exactly belong here either... (From "Font_Control.h" in JA2)
 	#define		FONT_MCOLOR_BLACK				0
 #endif
 #define		COLOR_DKGREY				136

@@ -3,7 +3,7 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "english.h"
+	#include "English.h"
 #endif
 
 // The gsKeyTranslationTable is used to return KEY values on the basis of the virtual key code and

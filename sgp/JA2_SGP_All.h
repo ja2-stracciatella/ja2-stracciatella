@@ -9,36 +9,36 @@
 
 
 #include "WordWrap.h"
-#include "video.h"
+#include "Video.h"
 #include "Button Sound Control.h"
-#include "Sound Control.h"
+#include "Sound_Control.h"
 #ifdef _JA2_RENDER_DIRTY
 	#include "\JA2\Build\utils\Font Control.h"
-	#include "Render Dirty.h"
-	#include "utilities.h"
+	#include "Render_Dirty.h"
+	#include "Utilities.h"
 #endif
-#include "input.h"
+#include "Input.h"
 #include "memman.h"
-#include "english.h"
-#include "vobject.h"
-#include "vobject_blitters.h"
-#include "soundman.h"
-#include "Button System.h"
-#include "line.h"
+#include "English.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "SoundMan.h"
+#include "Button_System.h"
+#include "Line.h"
 #include <stdarg.h>
-#include "debug.h"
+#include "Debug.h"
 #ifndef NO_ZLIB_COMPRESSION
 	#include "zlib.h"
 	#include "Compression.h"
 #endif
-#include "types.h"
+#include "Types.h"
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
 #include "Container.h"
 #include <iostream.h>
-#include "Cursor Control.h"
-#include "wcheck.h"
+#include "Cursor_Control.h"
+#include "WCheck.h"
 #include "FileMan.h"
 #include "DbMan.h"
 #include <windows.h>
@@ -46,28 +46,28 @@
 #include "TopicIDs.h"
 #include "TopicOps.h"
 #include "WizShare.h"
-#include "screenids.h"
-#include "Sys Globals.h"
-#include "jascreens.h"
-#include "gameloop.h"
-#include "DirectX Common.h"
-#include "DirectDraw Calls.h"
+#include "ScreenIDs.h"
+#include "Sys_Globals.h"
+#include "JAScreens.h"
+#include "Gameloop.h"
+#include "DirectX_Common.h"
+#include "DirectDraw_Calls.h"
 #include "video_private.h"
 #include <direct.h>
 #include "RegInst.h"
 #include "LibraryDataBase.h"
 #include "io.h"
 #include <wchar.h>
-#include "sgp.h"
-#include "pcx.h"
+#include "SGP.h"
+#include "PCX.h"
 #include "Font.h"
-#include "himage.h"
+#include "HImage.h"
 #include <math.h>
 #include <string.h>
-#include "impTGA.h"
+#include "ImpTGA.h"
 #include "STCI.h"
 #include <memory.h>
-#include "local.h"
+#include "Local.h"
 #include <tchar.h>
 #include <assert.h>
 #include "Install.h"
@@ -75,22 +75,22 @@
 #ifdef _DEBUG
 	#include <crtdbg.h>
 #endif
-#include "mousesystem.h"
-#include "Mutex Manager.h"
+#include "MouseSystem.h"
+#include "Mutex_Manager.h"
 #include "Random.h"
 #include <windowsx.h>
-#include "vobject_private.h"
-#include "shading.h"
-#include "mss.h"
-#include "imgfmt.h"
-#include "timer.h"
-#include "renderworld.h"
-#include "Isometric utils.h"
-#include "fade screen.h"
-#include "timer control.h"
-#include "vsurface.h"
-#include "vsurface_private.h"
-#include "Timer Control.h"
+#include "VObject_Private.h"
+#include "Shading.h"
+#include "Mss.h"
+#include "ImgFmt.h"
+#include "Timer.h"
+#include "RenderWorld.h"
+#include "Isometric_Utils.h"
+#include "Fade_Screen.h"
+#include "Timer_Control.h"
+#include "VSurface.h"
+#include "VSurface_Private.h"
+#include "Timer_Control.h"
 
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef __FONT_H_
 #define __FONT_H_
 
-#include "types.h"
-#include "himage.h"
-#include "vobject.h"
+#include "Types.h"
+#include "HImage.h"
+#include "VObject.h"
 
 
 #define		DEFAULT_SHADOW			2

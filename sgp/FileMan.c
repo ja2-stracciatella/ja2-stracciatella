@@ -556,7 +556,7 @@ void FileClose( HWFILE hFile )
 #ifdef JA2TESTVERSION
 	extern UINT32 uiTotalFileReadTime;
 	extern UINT32 uiTotalFileReadCalls;
-	#include "Timer Control.h"
+	#include "Timer_Control.h"
 #endif
 
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )

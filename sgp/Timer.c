@@ -3,14 +3,14 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
+		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif
-	#include "timer.h"
+	#include "Timer.h"
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN

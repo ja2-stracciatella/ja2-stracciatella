@@ -3,11 +3,11 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
-	#include "Button System.h"
+	#include "Types.h"
+	#include "Button_System.h"
 	#include "Button Sound Control.h"
-	#include "Sound Control.h"
-	#include "jascreens.h"
+	#include "Sound_Control.h"
+	#include "JAScreens.h"
 #endif
 
 void SpecifyButtonSoundScheme( INT32 iButtonID, INT8 bSoundScheme )

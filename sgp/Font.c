@@ -4,29 +4,29 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <malloc.h>
 	#include <windows.h>
 	#include <stdarg.h>
 	#include <wchar.h>
-	#include "sgp.h"
-	#include "pcx.h"
+	#include "SGP.h"
+	#include "PCX.h"
 	#include "memman.h"
-	#include "fileman.h"
+	#include "FileMan.h"
 	#include "Font.h"
 	#include "Debug.h"
 
 	#if defined( JA2 ) || defined( UTIL )
-	#include "video.h"
+	#include "Video.h"
 	#else
 	#include "video2.h"
 	#endif
 
-	#include "himage.h"
-	#include "vobject.h"
-	#include "vobject_blitters.h"
+	#include "HImage.h"
+	#include "VObject.h"
+	#include "VObject_Blitters.h"
 #endif
 //*******************************************************
 //

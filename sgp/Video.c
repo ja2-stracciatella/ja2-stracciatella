@@ -4,18 +4,18 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "Video.h"
-	#include "vobject_blitters.h"
-	#include "sgp.h"
+	#include "VObject_Blitters.h"
+	#include "SGP.h"
 	#include <stdio.h>
-	#include "renderworld.h"
-	#include "Render Dirty.h"
-	#include "Isometric utils.h"
-	#include "fade screen.h"
-	#include "impTGA.h"
-	#include "timer control.h"
-	#include "Fileman.h"
+	#include "RenderWorld.h"
+	#include "Render_Dirty.h"
+	#include "Isometric_Utils.h"
+	#include "Fade_Screen.h"
+	#include "ImpTGA.h"
+	#include "Timer_Control.h"
+	#include "FileMan.h"
 #endif
 
 #ifndef _MT

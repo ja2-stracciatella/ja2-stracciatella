@@ -2,7 +2,7 @@
 #define __IMAGE_H
 
 #include "MemMan.h"
-#include "imgfmt.h"
+#include "ImgFmt.h"
 
 // The HIMAGE module provides a common interface for managing image data. This module
 // includes:

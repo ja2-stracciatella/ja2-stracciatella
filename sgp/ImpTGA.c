@@ -21,15 +21,15 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
-	#include "Fileman.h"
+	#include "Types.h"
+	#include "FileMan.h"
 	#include "memman.h"
 	#include "WCheck.h"
-	#include "himage.h"
+	#include "HImage.h"
 	#include "string.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
+		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif

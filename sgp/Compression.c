@@ -4,7 +4,7 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "MemMan.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#include "zlib.h"
 #endif
 

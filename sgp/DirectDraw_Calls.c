@@ -3,11 +3,11 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "DirectX Common.h"
-	#include "DirectDraw Calls.h"
+	#include "DirectX_Common.h"
+	#include "DirectDraw_Calls.h"
 
 	#include <ddraw.h>
-	#include "debug.h"
+	#include "Debug.h"
 	#include "video_private.h"
 #endif
 

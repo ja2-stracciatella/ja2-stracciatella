@@ -16,7 +16,7 @@
 
 #include <crtdbg.h>
 
-#include "types.h"
+#include "Types.h"
 #include "TopicOps.h"
 #include "TopicIDs.h"
 

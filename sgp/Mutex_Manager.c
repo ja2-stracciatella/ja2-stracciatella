@@ -3,8 +3,8 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "Mutex Manager.h"
-	#include "debug.h"
+	#include "Mutex_Manager.h"
+	#include "Debug.h"
 #endif
 //#define __MUTEX_TYPE
 

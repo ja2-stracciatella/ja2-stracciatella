@@ -3,7 +3,7 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "line.h"
+	#include "Line.h"
 #endif
 
 //**************************************************************************

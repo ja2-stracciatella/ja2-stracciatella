@@ -1,7 +1,7 @@
 #ifndef	__DirectDraw_Calls_H__
 #define	__DirectDraw_Calls_H__
 
-#include "DirectX Common.h"
+#include "DirectX_Common.h"
 #include <ddraw.h>
 
 // Direct Draw Functions

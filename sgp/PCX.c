@@ -5,9 +5,9 @@
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include "pcx.h"
+	#include "PCX.h"
 	#include "memman.h"
-	#include "fileman.h"
+	#include "FileMan.h"
 #endif
 
 // Local typedefs

@@ -6,8 +6,8 @@
 	#include <string.h>
 	#include "MemMan.h"
 	#include "FileMan.h"
-	#include "imgfmt.h"
-	#include "himage.h"
+	#include "ImgFmt.h"
+	#include "HImage.h"
 	#include "Types.h"
 	#include "Debug.h"
 	#include "WCheck.h"

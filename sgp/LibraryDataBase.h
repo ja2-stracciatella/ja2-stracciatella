@@ -41,7 +41,7 @@ typedef struct
 
 
 #ifdef JA2
-	#include "Ja2 Libs.h"
+	#include "JA2_Libs.h"
 #elif UTIL
 	#define NUMBER_OF_LIBRARIES 0
 	typedef	FILETIME				SGP_FILETIME;

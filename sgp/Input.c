@@ -3,20 +3,20 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <stdio.h>
 	#include <memory.h>
-	#include "debug.h"
-	#include "input.h"
+	#include "Debug.h"
+	#include "Input.h"
 	#include "memman.h"
-	#include "english.h"
+	#include "English.h"
 	#if defined( JA2 ) || defined( UTIL )
-		#include "video.h"
+		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif
-	#include "local.h"
+	#include "Local.h"
 #endif
 
 #include "zmouse.h"

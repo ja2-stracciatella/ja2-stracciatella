@@ -21,7 +21,7 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include "RegInst.h"
 	#include "WCheck.h"
 #endif

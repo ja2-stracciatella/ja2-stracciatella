@@ -5,17 +5,17 @@
 #else
 	#include <math.h>
 	#include <stdlib.h>
-	#include "types.h"
+	#include "Types.h"
 	#include "string.h"
-	#include "debug.h"
-	#include "fileman.h"
-	#include "himage.h"
-	#include "impTGA.h"
-	#include "pcx.h"
+	#include "Debug.h"
+	#include "FileMan.h"
+	#include "HImage.h"
+	#include "ImpTGA.h"
+	#include "PCX.h"
 	#include "STCI.h"
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "Compression.h"
-	#include "vobject.h"
+	#include "VObject.h"
 #endif
 
 // This is the color substituted to keep a 24bpp -> 16bpp color

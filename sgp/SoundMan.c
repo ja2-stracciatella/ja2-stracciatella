@@ -12,12 +12,12 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "soundman.h"
+	#include "SoundMan.h"
 	#include "FileMan.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#include "MemMan.h"
-	#include "mss.h"
-	#include "random.h"
+	#include "Mss.h"
+	#include "Random.h"
 #endif
 
 // Uncomment this to disable the startup of sound hardware

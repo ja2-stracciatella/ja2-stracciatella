@@ -1,7 +1,7 @@
 #ifndef __ENGLISH_
 #define __ENGLISH_
 
-#include "types.h"
+#include "Types.h"
 
 #define SHIFT               16
 #define CTRL                17
