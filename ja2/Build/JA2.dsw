@@ -1,0 +1,185 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "Editor"=.\Editor\Editor.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Laptop"=.\Laptop\Laptop.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Standard Gaming Platform"="..\..\Standard Gaming Platform\Standard Gaming Platform.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Strategic"=.\Strategic\Strategic.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Tactical"=.\Tactical\Tactical.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "TacticalAI"=.\TacticalAI\TacticalAI.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "TileEngine"=.\TileEngine\TileEngine.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Utils"=.\Utils\Utils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ja2"=.\JA2.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Jagged Alliance 2/Development/Programming/Jagged Alliance 2/Build", AVAAAAAA
+    ..\..\ja2source\ja2\build
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name TileEngine
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Standard Gaming Platform
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Tactical
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Utils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name TacticalAI
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Editor
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Laptop
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Strategic
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
