@@ -1,8 +1,8 @@
 #ifndef __INVENTORY_CHOOSING_H
 #define __INVENTORY_CHOOSING_H
 
-#include "types.h"
-#include "Soldier Create.h"
+#include "Types.h"
+#include "Soldier_Create.h"
 
 #define MORTAR_GRENADE_CLASS	100
 

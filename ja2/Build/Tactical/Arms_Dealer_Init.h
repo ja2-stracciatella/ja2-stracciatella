@@ -2,7 +2,7 @@
 #define _ARMS_DEALERS_INIT__H_
 
 
-#include "Store Inventory.h"
+#include "Store_Inventory.h"
 
 
 //enums for the various arms dealers

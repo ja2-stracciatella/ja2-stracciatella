@@ -1,10 +1,10 @@
 #ifndef __LAPTOP_H
 #define __LAPTOP_H
 
-#include "types.h"
-#include "sgp.h"
-#include "Font Control.h"
-#include "messageboxscreen.h"
+#include "Types.h"
+#include "SGP.h"
+#include "Font_Control.h"
+#include "MessageBoxScreen.h"
 
 
 

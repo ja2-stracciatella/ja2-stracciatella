@@ -2,12 +2,12 @@
 	#include "Laptop All.h"
 #else
 	#include "Types.h"
-	#include "Store Inventory.h"
+	#include "Store_Inventory.h"
 	#include "Random.h"
 	#include "Weapons.h"
 	#include "Debug.h"
 	#include "LaptopSave.h"
-	#include "ShopKeeper Interface.h"
+	#include "ShopKeeper_Interface.h"
 #endif
 
 

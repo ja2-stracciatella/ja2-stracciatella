@@ -2,7 +2,7 @@
 #define _MORALE_H
 
 #include "Types.h"
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 
 #define	DEFAULT_MORALE		50

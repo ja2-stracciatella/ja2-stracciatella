@@ -1,7 +1,7 @@
 #ifndef __GAP_H
 #define __GAP_H
 
-#include "faces.h"
+#include "Faces.h"
 
 typedef UINT8		AudioSample8;
 typedef INT16		AudioSample16;

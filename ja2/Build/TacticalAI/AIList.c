@@ -15,7 +15,7 @@
 #else
 	#include "AIList.h"
 	#include "Overhead.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#include "AIInternals.h"
 #endif
 

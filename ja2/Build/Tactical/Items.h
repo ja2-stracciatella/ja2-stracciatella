@@ -1,7 +1,7 @@
 #ifndef ITEMS_H
 #define ITEMS_H
-#include "Item Types.h"
-#include "Soldier Control.h"
+#include "Item_Types.h"
+#include "Soldier_Control.h"
 
 extern UINT8 SlotToPocket[7];
 

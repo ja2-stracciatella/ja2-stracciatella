@@ -1,7 +1,7 @@
 #ifndef __CAMPAIGN_H
 #define __CAMPAIGN_H
 
-#include "Soldier Profile.h"
+#include "Soldier_Profile.h"
 
 #define SALARYAMT               0
 #define HEALTHAMT               1

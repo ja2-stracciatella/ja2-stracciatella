@@ -13,33 +13,33 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#include "MemMan.h"
-	#include "Overhead Types.h"
-	#include "Soldier Control.h"
-	#include "Animation Cache.h"
-	#include "Animation Data.h"
-	#include "Animation Control.h"
-	#include "container.h"
-	#include "interface.h"
+	#include "Overhead_Types.h"
+	#include "Soldier_Control.h"
+	#include "Animation_Cache.h"
+	#include "Animation_Data.h"
+	#include "Animation_Control.h"
+	#include "Container.h"
+	#include "Interface.h"
 	#include <math.h>
 
-	#include "input.h"
-	#include "english.h"
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "renderworld.h"
-	#include "pathai.h"
+	#include "Input.h"
+	#include "English.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "RenderWorld.h"
+	#include "PathAI.h"
 	#include "PathAIDebug.h"
 	#include "Points.h"
-	#include "ai.h"
+	#include "AI.h"
 	#include "Random.h"
-	#include "message.h"
-	#include "structure wrap.h"
-	#include "keys.h"
-	#include "gamesettings.h"
+	#include "Message.h"
+	#include "Structure_Wrap.h"
+	#include "Keys.h"
+	#include "GameSettings.h"
 	#include "Buildings.h"
 #endif
 
@@ -56,7 +56,7 @@ extern UINT16 gubAnimSurfaceIndex[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 //#define PATHAI_SKIPLIST_DEBUG
 
 #ifdef PATHAI_VISIBLE_DEBUG
-#include "video.h"
+#include "Video.h"
 
 extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;

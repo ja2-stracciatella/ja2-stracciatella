@@ -1,21 +1,21 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "worlddef.h"
-	#include "worlddat.h"
+	#include "WorldDef.h"
+	#include "WorldDat.h"
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "time.h"
-	#include "video.h"
-	#include "debug.h"
-	#include "smooth.h"
-	#include "worldman.h"
-	#include "mousesystem.h"
-	#include "sys globals.h"
-	#include "tiledat.h"
-	#include "Fileman.h"
+	#include "Video.h"
+	#include "Debug.h"
+	#include "Smooth.h"
+	#include "WorldMan.h"
+	#include "MouseSystem.h"
+	#include "Sys_Globals.h"
+	#include "TileDat.h"
+	#include "FileMan.h"
 #endif
 
 

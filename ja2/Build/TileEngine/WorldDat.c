@@ -4,12 +4,12 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include <wchar.h>
-	#include "worlddat.h"
-	#include "worlddef.h"
-	#include "tiledef.h"
-	#include "sys globals.h"
-	#include "tile surface.h"
-	#include "fileMan.h"
+	#include "WorldDat.h"
+	#include "WorldDef.h"
+	#include "TileDef.h"
+	#include "Sys_Globals.h"
+	#include "Tile_Surface.h"
+	#include "FileMan.h"
 #endif
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES

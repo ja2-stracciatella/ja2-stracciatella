@@ -3,17 +3,17 @@
 #else
 	#include "Types.h"
 	#include "stdlib.h"
-	#include "Arms Dealer Init.h"
+	#include "Arms_Dealer_Init.h"
 	#include "String.h"
 	#include "Debug.h"
 	#include "Random.h"
 	#include "Weapons.h"
 	#include "FileMan.h"
-	#include "Game Clock.h"
+	#include "Game_Clock.h"
 	#include "ArmsDealerInvInit.h"
 	#include "Message.h"
-	#include "soldier profile.h"
-	#include "Handle Items.h"
+	#include "Soldier_Profile.h"
+	#include "Handle_Items.h"
 #endif
 
 

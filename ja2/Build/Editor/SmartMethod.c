@@ -1,17 +1,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "worlddef.h"	//LEVELNODE def
-	#include "worldman.h"	//ReplaceStructIndex
+	#include "WorldDef.h"	//LEVELNODE def
+	#include "WorldMan.h"	//ReplaceStructIndex
 	#include "SmartMethod.h"
-	#include "Smoothing Utils.h"
-	#include "Editor Undo.h"
+	#include "Smoothing_Utils.h"
+	#include "Editor_Undo.h"
 #endif
 
 UINT8 gubDoorUIValue = 0;

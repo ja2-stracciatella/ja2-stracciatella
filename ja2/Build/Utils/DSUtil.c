@@ -2,13 +2,13 @@
 // TAKEN FROM MS SAMPLES FOR DirectSound
 
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 	#include <windows.h>
 	#include <windowsx.h>
 	#include <mmsystem.h>
 	#include <dsound.h>
 #else
-	#include "types.h"
+	#include "Types.h"
 	#include <windows.h>
 	#include <windowsx.h>
 	#include <mmsystem.h>
@@ -28,7 +28,7 @@ typedef struct
 } SNDOBJ, *HSNDOBJ;
 
 #define _HSNDOBJ_DEFINED
-#include "dsutil.h"
+#include "DSUtil.h"
 
 static const char c_szWAV[] = "WAVE";
 

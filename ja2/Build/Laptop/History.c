@@ -1,20 +1,20 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
+	#include "Laptop.h"
 	#include "History.h"
-	#include "Game clock.h"
+	#include "Game_Clock.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "Debug.h"
 	#include "WordWrap.h"
-	#include "Render Dirty.h"
-	#include "Encrypted File.h"
-	#include "cursors.h"
-	#include "Soldier Profile.h"
-	#include "strategicmap.h"
+	#include "Render_Dirty.h"
+	#include "Encrypted_File.h"
+	#include "Cursors.h"
+	#include "Soldier_Profile.h"
+	#include "StrategicMap.h"
 	#include "QuestText.h"
-	#include "text.h"
+	#include "Text.h"
 #endif
 
 

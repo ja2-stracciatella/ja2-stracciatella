@@ -1,9 +1,9 @@
 #ifndef __SOLDER_PROFILE_H
 #define __SOLDER_PROFILE_H
 
-#include "Soldier Control.h"
-#include "Soldier Profile Type.h"
-#include "Merc Hiring.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile_Type.h"
+#include "Merc_Hiring.h"
 
 extern INT8 gbSkillTraitBonus[NUM_SKILLTRAITS];
 extern UINT8 gubTerrorists[];

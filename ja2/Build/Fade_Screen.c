@@ -1,17 +1,17 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
 #else
-	#include "sgp.h"
-	#include "screenids.h"
-	#include "Timer Control.h"
-	#include "sys globals.h"
-	#include "fade screen.h"
-	#include "sysutil.h"
-	#include "vobject_blitters.h"
-	#include "cursor control.h"
-	#include "music control.h"
-	#include "Render Dirty.h"
-	#include "gameloop.h"
+	#include "SGP.h"
+	#include "ScreenIDs.h"
+	#include "Timer_Control.h"
+	#include "Sys_Globals.h"
+	#include "Fade_Screen.h"
+	#include "SysUtil.h"
+	#include "VObject_Blitters.h"
+	#include "Cursor_Control.h"
+	#include "Music_Control.h"
+	#include "Render_Dirty.h"
+	#include "Gameloop.h"
 #endif
 
 #define  SQUARE_STEP			8

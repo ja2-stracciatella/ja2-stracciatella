@@ -1,7 +1,7 @@
 #ifndef __EMAIL_H
 #define __EMAIL_H
 
-#include "types.h"
+#include "Types.h"
 
 // defines
 #define MAX_EMAIL_LINES 10 //max number of lines can be shown in a message

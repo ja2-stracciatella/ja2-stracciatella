@@ -1,9 +1,9 @@
 #ifndef _INTERFACE_H
 #define _INTERFACE_H
 
-#include "handle UI.h"
-#include "mousesystem.h"
-#include "structure.h"
+#include "Handle_UI.h"
+#include "MouseSystem.h"
+#include "Structure.h"
 
 #define					MAX_UICOMPOSITES	4
 

@@ -19,28 +19,28 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-#include "DEBUG.H"
+#include "Debug.h"
 #include "FileMan.h"
-#include "smack.h"
-#include "ddraw.h"
-#include "mss.h"
-#include "DirectX Common.h"
-#include "DirectDraw Calls.h"
+#include "Smack.h"
+#include "DDraw.h"
+#include "Mss.h"
+#include "DirectX_Common.h"
+#include "DirectDraw_Calls.h"
 #include "Cinematics.h"
-#include "soundman.h"
+#include "SoundMan.h"
 
 #ifdef JA2
-	#include "video.h"
+	#include "Video.h"
 #else
 	#include "video2.h"
 #endif
 
-#include "vsurface_private.h"
+#include "VSurface_Private.h"
 
 #include "Intro.h"
 
 
-#include "radmalw.i"
+#include "RADMALW.I"
 
 
 #include <crtdbg.h>

@@ -1,8 +1,8 @@
 #ifndef __TEXT_H
 #define __TEXT_H
 
-#include "items.h"
-#include "types.h"
+#include "Items.h"
+#include "Types.h"
 
 #define STRING_LENGTH 255
 

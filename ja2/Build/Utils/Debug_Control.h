@@ -1,7 +1,7 @@
 #ifndef __DEBUG_CONTROL_
 #define __DEBUG_CONTROL_
 
-#include "types.h"
+#include "Types.h"
 
 
 //#define		_PHYSICSSUBSYSTEM_DEBUG

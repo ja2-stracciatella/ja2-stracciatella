@@ -1,16 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include "types.h"
-	#include "strategic town reputation.h"
-	#include "soldier profile type.h"
-	#include "game event hook.h"
-	#include "Soldier Profile.h"
+	#include "Types.h"
+	#include "Strategic_Town_Reputation.h"
+	#include "Soldier_Profile_Type.h"
+	#include "Game_Event_Hook.h"
+	#include "Soldier_Profile.h"
 	#include "Overhead.h"
-	#include "Game Clock.h"
-	#include "strategic town loyalty.h"
+	#include "Game_Clock.h"
+	#include "Strategic_Town_Loyalty.h"
 	#include "Debug.h"
-	#include "message.h"
+	#include "Message.h"
 #endif
 
 

@@ -2,7 +2,7 @@
 #define _PLAYER_COMMAND_H
 
 // header file to track the information a player 'knows' about a sector, which may in fact not be true
-#include "Strategic Movement.h"
+#include "Strategic_Movement.h"
 
 
 // build main facilities strings for sector

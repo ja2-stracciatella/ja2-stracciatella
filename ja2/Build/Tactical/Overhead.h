@@ -3,10 +3,10 @@
 
 #include <string.h>
 #include <stdio.h>
-//#include "container.h"
-#include "Soldier Control.h"
-#include "overhead types.h"
-#include "soldier find.h"
+//#include "Container.h"
+#include "Soldier_Control.h"
+#include "Overhead_Types.h"
+#include "Soldier_Find.h"
 #define				ADD_SOLDIER_NO_PROFILE_ID		200
 
 #define  MAX_REALTIME_SPEED_VAL						10

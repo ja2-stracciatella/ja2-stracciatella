@@ -2,38 +2,38 @@
 	#include "TileEngine All.h"
 #else
 	#include <string.h>
-	#include "types.h"
-	#include "wcheck.h"
-	#include "debug.h"
+	#include "Types.h"
+	#include "WCheck.h"
+	#include "Debug.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
-	#include "structure.h"
-	#include "tiledef.h"
-	#include "worlddef.h"
-	#include "worldman.h"
+	#include "Structure.h"
+	#include "TileDef.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
 
-	#include "interface.h"
+	#include "Interface.h"
 
-	#include "isometric utils.h"
-	#include "font.h"
-	#include "font control.h"
-	#include "los.h"
+	#include "Isometric_Utils.h"
+	#include "Font.h"
+	#include "Font_Control.h"
+	#include "LOS.h"
 
-	#include "lighting.h"
+	#include "Lighting.h"
 	#include "Smell.h"
 	#include "SaveLoadMap.h"
-	#include "strategicmap.h"
+	#include "StrategicMap.h"
 
 
-	#include "Sys Globals.h"	//for access to gfEditMode flag
+	#include "Sys_Globals.h"	//for access to gfEditMode flag
 
 	//Kris:
 	#ifdef JA2EDITOR
-	#include "Editor Undo.h"	//for access to AddToUndoList( iMapIndex )
+	#include "Editor_Undo.h"	//for access to AddToUndoList( iMapIndex )
 	#endif
 
-	#include "explosion control.h"
-	#include "sound control.h"
+	#include "Explosion_Control.h"
+	#include "Sound_Control.h"
 
 	#include "Buildings.h"
 #endif

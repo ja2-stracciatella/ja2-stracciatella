@@ -3,9 +3,9 @@
 #else
 	#include "Types.h"
 	#include "ArmsDealerInvInit.h"
-	#include "Item Types.h"
-	#include "Arms Dealer Init.h"
-	#include "DEbug.h"
+	#include "Item_Types.h"
+	#include "Arms_Dealer_Init.h"
+	#include "Debug.h"
 #endif
 
 

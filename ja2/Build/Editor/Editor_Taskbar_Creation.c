@@ -1,25 +1,25 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
 	//sgp
-	#include "Button System.h"
-	#include "Font Control.h"
-	#include "debug.h"
+	#include "Button_System.h"
+	#include "Font_Control.h"
+	#include "Debug.h"
 	//editor
 	#include "EditorDefines.h"
 	#include "Editor Callback Prototypes.h"
-	#include "Editor Taskbar Utils.h"
+	#include "Editor_Taskbar_Utils.h"
 	#include "EditorMercs.h"
 	#include "EditorMapInfo.h"
 	//tactical
-	#include "Soldier Create.h"
-	#include "overhead types.h"
+	#include "Soldier_Create.h"
+	#include "Overhead_Types.h"
 #endif
 
 //Category tabs of the editor buttons

@@ -1,20 +1,20 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include "Player Command.h"
-	#include "Queen Command.h"
-	#include "Campaign Types.h"
+	#include "Player_Command.h"
+	#include "Queen_Command.h"
+	#include "Campaign_Types.h"
 	#include "Strategic.h"
-	#include "Strategic Town Loyalty.h"
-	#include "Strategic Mines.h"
-	#include "text.h"
-	#include "laptopsave.h"
-	#include "quests.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "Strategic_Mines.h"
+	#include "Text.h"
+	#include "LaptopSave.h"
+	#include "Quests.h"
 	#include "Morale.h"
 	#include "Overhead.h"
-	#include "strategicmap.h"
-	#include "Map Screen Helicopter.h"
-	#include "Game Clock.h"
+	#include "StrategicMap.h"
+	#include "Map_Screen_Helicopter.h"
+	#include "Game_Clock.h"
 #endif
 
 

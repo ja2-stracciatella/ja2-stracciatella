@@ -1,13 +1,13 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "AimArchives.h"
-	#include "aim.h"
+	#include "Laptop.h"
+	#include "AIMArchives.h"
+	#include "AIM.h"
 	#include "WordWrap.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "Encrypted File.h"
+	#include "Encrypted_File.h"
 	#include "Text.h"
 #endif
 

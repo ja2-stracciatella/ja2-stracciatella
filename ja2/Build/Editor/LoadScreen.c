@@ -1,45 +1,45 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
 	#include <stdio.h>
-	#include "Font Control.h"
-	#include "renderworld.h"
-	#include "render dirty.h"
+	#include "Font_Control.h"
+	#include "RenderWorld.h"
+	#include "Render_Dirty.h"
 	#include "loadscreen.h"
 	#include "selectwin.h"
 	#include "EditorDefines.h"
 	#include "messagebox.h"
-	#include "Text Input.h"
-	#include "Soldier Create.h"
-	#include "Soldier Init List.h"
+	#include "Text_Input.h"
+	#include "Soldier_Create.h"
+	#include "Soldier_Init_List.h"
 	#include "EditorBuildings.h"
-	#include "Editor Taskbar Utils.h"
-	#include "Editor Undo.h"
-	#include "editscreen.h"
-	#include "strategicmap.h"
+	#include "Editor_Taskbar_Utils.h"
+	#include "Editor_Undo.h"
+	#include "EditScreen.h"
+	#include "StrategicMap.h"
 	#include "Editor Modes.h"
-	#include "Map Information.h"
-	#include "Sys Globals.h"
+	#include "Map_Information.h"
+	#include "Sys_Globals.h"
 	#include "Sector Summary.h"
 	#include "newsmooth.h"
-	#include "Simple Render Utils.h"
-	#include "Animated ProgressBar.h"
+	#include "Simple_Render_Utils.h"
+	#include "Animated_ProgressBar.h"
 	#include "EditorMercs.h"
-	#include "lighting.h"
+	#include "Lighting.h"
 	#include "EditorMapInfo.h"
-	#include "environment.h"
-	#include "edit_sys.h"
+	#include "Environment.h"
+	#include "Edit_Sys.h"
 	#include "EditorItems.h"
-	#include "english.h"
-	#include "gameloop.h"
-	#include "message.h"
-	#include "pits.h"
+	#include "English.h"
+	#include "Gameloop.h"
+	#include "Message.h"
+	#include "Pits.h"
 	#include "Item Statistics.h"
 	#include "Scheduling.h"
 #endif
@@ -1145,8 +1145,8 @@ BOOLEAN ExternalSaveMap( UINT16 *szFilename )
 
 #else //non-editor version
 
-#include "types.h"
-#include "screenids.h"
+#include "Types.h"
+#include "ScreenIDs.h"
 
 UINT32 LoadSaveScreenInit()
 {

@@ -2,11 +2,11 @@
 #define __TACTICAL_SAVE_H_
 
 
-#include "World Items.h"
+#include "World_Items.h"
 #include "WorldDef.h"
-#include "rotting corpses.h"
+#include "Rotting_Corpses.h"
 
-#include "Soldier Profile Type.h"
+#include "Soldier_Profile_Type.h"
 
 
 #define		MAPS_DIR		"Temp\\"

@@ -4,26 +4,26 @@
 	#include <wchar.h>
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
+	#include "Debug.h"
 	#include "MemMan.h"
-	#include "Overhead Types.h"
-	#include "Soldier Control.h"
-	#include "random.h"
-	#include "campaign.h"
-	#include "dialogue control.h"
-	#include "Map Screen Interface.h"
+	#include "Overhead_Types.h"
+	#include "Soldier_Control.h"
+	#include "Random.h"
+	#include "Campaign.h"
+	#include "Dialogue_Control.h"
+	#include "Map_Screen_Interface.h"
 	#include "Message.h"
-	#include "Game Clock.h"
-	#include "Strategic Mines.h"
-	#include "Strategic Status.h"
-	#include "Sys Globals.h"
+	#include "Game_Clock.h"
+	#include "Strategic_Mines.h"
+	#include "Strategic_Status.h"
+	#include "Sys_Globals.h"
 	#include "Text.h"
 	#include "GameSettings.h"
 #endif
 
-#include "email.h"
+#include "EMail.h"
 
 
 extern	UINT8	gbPlayerNum;

@@ -1,7 +1,7 @@
 #ifndef __ANIMATED_PROGRESSBAR_H
 #define __ANIMATED_PROGRESSBAR_H
 
-#include "types.h"
+#include "Types.h"
 
 #define MAX_PROGRESSBARS 4
 

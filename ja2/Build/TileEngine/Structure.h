@@ -1,9 +1,9 @@
 #ifndef STRUCTURE_H
 #define STRUCTURE_H
 
-#include "Structure Internals.h"
-#include "tiledef.h"
-#include "overhead types.h"
+#include "Structure_Internals.h"
+#include "TileDef.h"
+#include "Overhead_Types.h"
 
 #define NOTHING_BLOCKING							0
 #define BLOCKING_REDUCE_RANGE					1

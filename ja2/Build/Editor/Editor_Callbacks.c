@@ -1,18 +1,18 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "types.h"
-	#include "Button System.h"
+	#include "Types.h"
+	#include "Button_System.h"
 	#include "EditorDefines.h"
 
-	#include "Editor Taskbar Utils.h"
-	#include "renderworld.h"
+	#include "Editor_Taskbar_Utils.h"
+	#include "RenderWorld.h"
 	#include "EditorItems.h"
 
 	#include "Editor Callback Prototypes.h"
@@ -20,16 +20,16 @@
 
 	#include "EditorBuildings.h"
 	#include "EditorMercs.h"
-	#include "editscreen.h"
+	#include "EditScreen.h"
 	#include "Item Statistics.h"
 	#include "Cursor Modes.h"
 	#include "popupmenu.h"
-	#include "Simple Render Utils.h"
-	#include "Soldier Init List.h"
+	#include "Simple_Render_Utils.h"
+	#include "Soldier_Init_List.h"
 	#include "Overhead.h"
 	#include "Scheduling.h"
-	#include "input.h"
-	#include "Map Information.h"
+	#include "Input.h"
+	#include "Map_Information.h"
 	#include "EditorMapInfo.h"
 #endif
 

@@ -1,8 +1,8 @@
 #ifndef __STRATEGIC_MOVEMENT_H
 #define __STRATEGIC_MOVEMENT_H
 
-#include "types.h"
-#include "Soldier Control.h"
+#include "Types.h"
+#include "Soldier_Control.h"
 #include "FileMan.h"
 
 

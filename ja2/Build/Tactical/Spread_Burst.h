@@ -1,7 +1,7 @@
 #ifndef _SPREAD_BURST_H
 #define _SPREAD_BURST_H
 
-#include "soldier control.h"
+#include "Soldier_Control.h"
 
 void ResetBurstLocations( );
 void AccumulateBurstLocation( INT16 sGridNo );

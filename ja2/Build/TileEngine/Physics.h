@@ -1,11 +1,11 @@
 #ifndef __PHYSICS_H
 #define	__PHYSICS_H
 
-#include "phys math.h"
-#include "sgp.h"
-#include "worlddef.h"
-#include "items.h"
-#include "Soldier Control.h"
+#include "Phys_Math.h"
+#include "SGP.h"
+#include "WorldDef.h"
+#include "Items.h"
+#include "Soldier_Control.h"
 
 
 extern UINT32 guiNumObjectSlots;

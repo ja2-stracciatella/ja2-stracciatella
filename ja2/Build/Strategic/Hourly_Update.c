@@ -2,13 +2,13 @@
 	#include "Strategic All.h"
 #else
 	#include "Assignments.h"
-	#include "Strategic Town Loyalty.h"
-	#include "Strategic Merc Handler.h"
-	#include "Strategic Mines.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "Strategic_Merc_Handler.h"
+	#include "Strategic_Mines.h"
 	#include "Campaign.h"
 	#include "Morale.h"
 	#include "Quests.h"
-	#include "Game Clock.h"
+	#include "Game_Clock.h"
 #endif
 
 void HourlyQuestUpdate( void );

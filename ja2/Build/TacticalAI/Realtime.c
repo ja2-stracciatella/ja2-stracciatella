@@ -1,15 +1,15 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "ai.h"
+	#include "AI.h"
 	#include "AIInternals.h"
-	#include "Isometric utils.h"
+	#include "Isometric_Utils.h"
 	#include "Points.h"
-	#include "overhead.h"
-	#include "opplist.h"
-	#include "rotting corpses.h"
-	#include "soldier add.h"
-	#include "Soldier Profile Type.h"
+	#include "Overhead.h"
+	#include "OppList.h"
+	#include "Rotting_Corpses.h"
+	#include "Soldier_Add.h"
+	#include "Soldier_Profile_Type.h"
 	#include "Items.h"
 	#include "Weapons.h"
 #endif

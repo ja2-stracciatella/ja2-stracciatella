@@ -2,21 +2,21 @@
 	#include "Strategic All.h"
 #else
 	#include <String.h>
-	#include "Strategic Mines.h"
+	#include "Strategic_Mines.h"
 	#include "Finances.h"
-	#include "Strategic Town Loyalty.h"
-	#include "strategic.h"
-	#include "Game Clock.h"
-	#include "strategicmap.h"
+	#include "Strategic_Town_Loyalty.h"
+	#include "Strategic.h"
+	#include "Game_Clock.h"
+	#include "StrategicMap.h"
 	#include "Random.h"
-	#include "Soldier Profile.h"
-	#include "Dialogue Control.h"
-	#include "Map Screen Interface.h"
+	#include "Soldier_Profile.h"
+	#include "Dialogue_Control.h"
+	#include "Map_Screen_Interface.h"
 	#include "Quests.h"
-	#include "Creature Spreading.h"
-	#include "message.h"
+	#include "Creature_Spreading.h"
+	#include "Message.h"
 	#include "Text.h"
-	#include "Game Event Hook.h"
+	#include "Game_Event_Hook.h"
 #endif
 
 

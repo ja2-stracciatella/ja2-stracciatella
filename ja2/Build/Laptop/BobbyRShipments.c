@@ -2,7 +2,7 @@
 	#include "Laptop All.h"
 	#include "BobbyRShipments.h"
 #else
-	#include "laptop.h"
+	#include "Laptop.h"
 	#include "BobbyRShipments.h"
 #endif
 

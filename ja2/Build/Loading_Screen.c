@@ -1,6 +1,6 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "JA2 All.h"
-	#include "Loading Screen.h"
+	#include "Loading_Screen.h"
 #else
 	//???
 #endif

@@ -4,15 +4,15 @@
 	#include <stdio.h>
 	#include <string.h>
 
-	#include "types.h"
-	#include "wcheck.h"
+	#include "Types.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
-	#include "Animation Cache.h"
-	#include "Animation Data.h"
-	#include "Animation Control.h"
-	#include "sys globals.h"
-	#include "Debug Control.h"
+	#include "Debug.h"
+	#include "Animation_Cache.h"
+	#include "Animation_Data.h"
+	#include "Animation_Control.h"
+	#include "Sys_Globals.h"
+	#include "Debug_Control.h"
 #endif
 
 #define EMPTY_CACHE_ENTRY		65000

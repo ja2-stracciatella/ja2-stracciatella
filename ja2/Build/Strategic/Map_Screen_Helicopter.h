@@ -2,7 +2,7 @@
 #define __MAP_SCREEN_HELICOPTER_H
 
 #include "Types.h"
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 // costs of flying through sectors
 #define COST_AIRSPACE_SAFE    100

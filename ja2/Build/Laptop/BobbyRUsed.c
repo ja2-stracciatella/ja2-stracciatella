@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
+	#include "Laptop.h"
 	#include "BobbyRUsed.h"
 	#include "BobbyR.h"
 	#include "BobbyRGuns.h"

@@ -3,20 +3,20 @@
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include "sgp.h"
-	#include "himage.h"
-	#include "vobject.h"
-	#include "interface utils.h"
-	#include "render dirty.h"
-	#include "interface.h"
-	#include "interface control.h"
-	#include "sysutil.h"
-	#include "faces.h"
-	#include "render dirty.h"
-	#include "weapons.h"
+	#include "SGP.h"
+	#include "HImage.h"
+	#include "VObject.h"
+	#include "Interface_Utils.h"
+	#include "Render_Dirty.h"
+	#include "Interface.h"
+	#include "Interface_Control.h"
+	#include "SysUtil.h"
+	#include "Faces.h"
+	#include "Render_Dirty.h"
+	#include "Weapons.h"
 	#include "Overhead.h"
-	#include "Soldier macros.h"
-	#include "line.h"
+	#include "Soldier_Macros.h"
+	#include "Line.h"
 #endif
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )

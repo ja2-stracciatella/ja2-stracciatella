@@ -7,15 +7,15 @@
 	#include <stdio.h>
 	#include <errno.h>
 
-	#include "worlddef.h"
-	#include "renderworld.h"
-	#include "vsurface.h"
-	#include "Render Dirty.h"
-	#include "sysutil.h"
-	#include "container.h"
-	#include "wcheck.h"
-	#include "video.h"
-	#include "vobject_blitters.h"
+	#include "WorldDef.h"
+	#include "RenderWorld.h"
+	#include "VSurface.h"
+	#include "Render_Dirty.h"
+	#include "SysUtil.h"
+	#include "Container.h"
+	#include "WCheck.h"
+	#include "Video.h"
+	#include "VObject_Blitters.h"
 #endif
 
 #ifdef JA2BETAVERSION

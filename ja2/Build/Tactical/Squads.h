@@ -1,7 +1,7 @@
 #ifndef _SQUADS_H
 #define _SQUADS_H
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 #include "FileMan.h"
 
 // header for squad management system

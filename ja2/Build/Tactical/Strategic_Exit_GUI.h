@@ -1,7 +1,7 @@
 #ifndef __EXIT_GUI_H
 #define __EXIT_GUI_H
 
-#include "types.h"
+#include "Types.h"
 
 enum
 {

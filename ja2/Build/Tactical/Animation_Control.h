@@ -2,8 +2,8 @@
 #define __ANIMATION_CONTROL_H
 
 // Header file for merc animation control
-#include "Soldier Control.h"
-#include "Animation Data.h"
+#include "Soldier_Control.h"
+#include "Animation_Data.h"
 
 // Defines
 // #######################################################

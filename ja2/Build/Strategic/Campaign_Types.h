@@ -1,7 +1,7 @@
 #ifndef __CAMPAIGN_TYPES_H
 #define __CAMPAIGN_TYPES_H
 
-#include "types.h"
+#include "Types.h"
 
 //Macro to convert sector coordinates (1-16,1-16) to 0-255
 #define SECTOR(x,y)				((y-1)*16+x-1)

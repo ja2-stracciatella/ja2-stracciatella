@@ -4,7 +4,7 @@
 #ifndef __SMOOTHING_UTILS_H
 #define __SMOOTHING_UTILS_H
 
-#include "worlddef.h"
+#include "WorldDef.h"
 
 //Use these values when specifically replacing a wall with new type.
 enum {	//Wall tile types

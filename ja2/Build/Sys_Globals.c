@@ -4,10 +4,10 @@
 	#include <stdarg.h>
 	#include <stdio.h>
 	#include <wchar.h>
-	#include "types.h"
-	#include "screenids.h"
-	#include "Sys Globals.h"
-	#include "gameloop.h"
+	#include "Types.h"
+	#include "ScreenIDs.h"
+	#include "Sys_Globals.h"
+	#include "Gameloop.h"
 #endif
 
 

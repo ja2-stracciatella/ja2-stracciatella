@@ -2,8 +2,8 @@
 #define __INTERFACE_DIALOGUE_H
 
 
-#include "mousesystem.h"
-#include "npc.h"
+#include "MouseSystem.h"
+#include "NPC.h"
 
 extern UINT8 gubSrcSoldierProfile;
 

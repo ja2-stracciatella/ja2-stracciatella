@@ -1,7 +1,7 @@
 #ifndef __RENDERWORLD_H
 #define __RENDERWORLD_H
 
-#include "worlddef.h"
+#include "WorldDef.h"
 
 // TEMP SELECT STUFF
 #define		NO_SELECT			0

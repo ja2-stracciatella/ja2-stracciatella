@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
@@ -9,33 +9,33 @@
 
 #ifndef PRECOMPILEDHEADERS
 	#include <stdio.h>
-	#include "types.h"
+	#include "Types.h"
 	#include "Sector Summary.h"
-	#include "Timer Control.h"
-	#include "vsurface.h"
-	#include "Button System.h"
-	#include "Font Control.h"
-	#include "Simple Render Utils.h"
-	#include "Editor Taskbar Utils.h"
-	#include "line.h"
-	#include "input.h"
-	#include "vobject_blitters.h"
+	#include "Timer_Control.h"
+	#include "VSurface.h"
+	#include "Button_System.h"
+	#include "Font_Control.h"
+	#include "Simple_Render_Utils.h"
+	#include "Editor_Taskbar_Utils.h"
+	#include "Line.h"
+	#include "Input.h"
+	#include "VObject_Blitters.h"
 	#include "loadscreen.h"
-	#include "Text Input.h"
-	#include "mousesystem.h"
-	#include "strategicmap.h"
-	#include "Fileman.h"
-	#include "Exit Grids.h"
-	#include "Map Information.h"
-	#include "Summary Info.h"
-	#include "Animated ProgressBar.h"
-	#include "worlddef.h"
-	#include "worlddat.h"
+	#include "Text_Input.h"
+	#include "MouseSystem.h"
+	#include "StrategicMap.h"
+	#include "FileMan.h"
+	#include "Exit_Grids.h"
+	#include "Map_Information.h"
+	#include "Summary_Info.h"
+	#include "Animated_ProgressBar.h"
+	#include "WorldDef.h"
+	#include "WorldDat.h"
 	#include "EditorDefines.h"
-	#include "editscreen.h"
-	#include "english.h"
-	#include "World Items.h"
-	#include "text.h"
+	#include "EditScreen.h"
+	#include "English.h"
+	#include "World_Items.h"
+	#include "Text.h"
 #endif
 
 extern BOOLEAN gfOverheadMapDirty;

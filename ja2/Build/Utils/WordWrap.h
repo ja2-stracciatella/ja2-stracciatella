@@ -1,9 +1,9 @@
 #ifndef	__WORDWRAP_H_
 #define	__WORDWRAP_H_
 
-#include "types.h"
-#include "LAPTOP\files.h"
-#include "LAPTOP\email.h"
+#include "Types.h"
+#include "Files.h"
+#include "EMail.h"
 
 //Flags for DrawTextToScreen()
 

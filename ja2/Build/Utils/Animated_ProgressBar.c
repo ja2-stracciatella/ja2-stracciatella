@@ -1,15 +1,15 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
-	#include "types.h"
-	#include "Animated ProgressBar.h"
+	#include "Types.h"
+	#include "Animated_ProgressBar.h"
 	#include "MemMan.h"
-	#include "debug.h"
-	#include "Font Control.h"
-	#include "vsurface.h"
-	#include "video.h"
-	#include "Render Dirty.h"
-	#include "music control.h"
+	#include "Debug.h"
+	#include "Font_Control.h"
+	#include "VSurface.h"
+	#include "Video.h"
+	#include "Render_Dirty.h"
+	#include "Music_Control.h"
 #endif
 
 double rStart, rEnd;

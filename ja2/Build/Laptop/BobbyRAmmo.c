@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
+	#include "Laptop.h"
 	#include "BobbyRAmmo.h"
 	#include "BobbyRGuns.h"
 	#include "BobbyR.h"
@@ -9,9 +9,9 @@
 	#include "WCheck.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "interface items.h"
-	#include "Encrypted File.h"
-	#include "text.h"
+	#include "Interface_Items.h"
+	#include "Encrypted_File.h"
+	#include "Text.h"
 #endif
 
 UINT32		guiAmmoBackground;

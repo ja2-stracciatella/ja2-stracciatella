@@ -6,11 +6,11 @@
 	#include "WCheck.h"
 	#include "Debug.h"
 	#include "WordWrap.h"
-	#include "Render Dirty.h"
-	#include "Encrypted File.h"
-	#include "cursors.h"
-	#include "IMP HomePage.h"
-	#include "laptop.h"
+	#include "Render_Dirty.h"
+	#include "Encrypted_File.h"
+	#include "Cursors.h"
+	#include "IMP_HomePage.h"
+	#include "Laptop.h"
 #endif
 
 // globals

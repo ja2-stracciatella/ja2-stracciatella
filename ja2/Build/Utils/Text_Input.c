@@ -1,23 +1,23 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
 	#include <math.h>
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h>
 	#include <wchar.h>
-	#include "input.h"
-	#include "font.h"
-	#include "english.h"
-	#include "vsurface.h"
-	#include "video.h"
-	#include "debug.h"
-	#include "cursors.h"
-	#include "Text Input.h"
-	#include "Timer Control.h"
-	#include "vobject_blitters.h"
-	#include "Font Control.h"
-	#include "Sound Control.h"
+	#include "Input.h"
+	#include "Font.h"
+	#include "English.h"
+	#include "VSurface.h"
+	#include "Video.h"
+	#include "Debug.h"
+	#include "Cursors.h"
+	#include "Text_Input.h"
+	#include "Timer_Control.h"
+	#include "VObject_Blitters.h"
+	#include "Font_Control.h"
+	#include "Sound_Control.h"
 #endif
 
 UINT16 *szClipboard;

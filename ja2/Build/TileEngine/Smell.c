@@ -1,15 +1,15 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "worlddef.h"
+	#include "WorldDef.h"
 	#include "Random.h"
 	#include "Smell.h"
-	#include "worldman.h"
-	#include "renderworld.h"
+	#include "WorldMan.h"
+	#include "RenderWorld.h"
 	#include "SaveLoadMap.h"
-	#include "gamesettings.h"
-	#include "message.h"
-	#include "Isometric utils.h"
+	#include "GameSettings.h"
+	#include "Message.h"
+	#include "Isometric_Utils.h"
 #endif
 
 /*

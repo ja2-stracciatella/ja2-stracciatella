@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
@@ -10,17 +10,17 @@
 	#include "stdlib.h"
 	#include "FileMan.h"
 	#include "time.h"
-	#include "debug.h"
-	#include "tiledef.h"
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "smooth.h"
-	#include "editscreen.h"
+	#include "Debug.h"
+	#include "TileDef.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "Smooth.h"
+	#include "EditScreen.h"
 	#include "selectwin.h"
-	#include "isometric utils.h"
-	#include "structure wrap.h"
-	#include "Exit Grids.h"
-	#include "Editor Undo.h"
+	#include "Isometric_Utils.h"
+	#include "Structure_Wrap.h"
+	#include "Exit_Grids.h"
+	#include "Editor_Undo.h"
 #endif
 
 INT16 gbSmoothStruct[] =

@@ -2,7 +2,7 @@
 #define HELP_SCREEN_TEXT__H_
 
 
-#include "Encrypted File.h"
+#include "Encrypted_File.h"
 
 #define		HELPSCREEN_FILE		"BINARYDATA\\Help.edt"
 

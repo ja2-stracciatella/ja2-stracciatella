@@ -1,7 +1,7 @@
 #ifndef _CINEMATICS_H_
 #define _CINEMATICS_H_
 
-#include "smack.h"
+#include "Smack.h"
 
 typedef struct {
 

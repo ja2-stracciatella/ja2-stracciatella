@@ -1,15 +1,15 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "florist.h"
-	#include "florist Cards.h"
+	#include "Laptop.h"
+	#include "Florist.h"
+	#include "Florist_Cards.h"
 	#include "WCheck.h"
 	#include "Utilities.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "Encrypted File.h"
-	#include "Florist Gallery.h"
+	#include "Encrypted_File.h"
+	#include "Florist_Gallery.h"
 	#include "Text.h"
 #endif
 

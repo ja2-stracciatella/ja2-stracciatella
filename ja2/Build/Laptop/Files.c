@@ -2,18 +2,18 @@
 	#include "Laptop All.h"
 #else
 	#include <stdio.h>
-	#include "laptop.h"
-	#include "files.h"
-	#include "Game clock.h"
+	#include "Laptop.h"
+	#include "Files.h"
+	#include "Game_Clock.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "Debug.h"
 	#include "WordWrap.h"
-	#include "Render Dirty.h"
-	#include "Encrypted File.h"
-	#include "cursors.h"
-	#include "email.h"
-	#include "text.h"
+	#include "Render_Dirty.h"
+	#include "Encrypted_File.h"
+	#include "Cursors.h"
+	#include "EMail.h"
+	#include "Text.h"
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X

@@ -3,8 +3,8 @@
 
 #include "Types.h"
 
-#include "Soldier Control.h"
-#include "Strategic Movement.h"
+#include "Soldier_Control.h"
+#include "Strategic_Movement.h"
 
 #define	MAX_VEHICLES	10
 

@@ -1,7 +1,7 @@
 #ifndef __ISOMETRIC_UTILSH
 #define __ISOMETRIC_UTILSH
 
-#include "worlddef.h"
+#include "WorldDef.h"
 
 //DEFINES
 #define MAXCOL					WORLD_COLS

@@ -1,8 +1,8 @@
 #ifndef __BOBBYR_H
 #define __BOBBYR_H
 
-#include "Item Types.h"
-#include "Store Inventory.h"
+#include "Item_Types.h"
+#include "Store_Inventory.h"
 
 
 void GameInitBobbyR();

@@ -2,7 +2,7 @@
 #define __STRATEGIC_AI_H
 
 #include "FileMan.h"
-#include "Strategic Movement.h"
+#include "Strategic_Movement.h"
 
 void InitStrategicAI();
 void KillStrategicAI();

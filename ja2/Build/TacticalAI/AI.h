@@ -1,9 +1,9 @@
 #ifndef __AI_H
 #define __AI_H
 
-#include "types.h"
-#include "worlddef.h"
-#include "Soldier Control.h"
+#include "Types.h"
+#include "WorldDef.h"
+#include "Soldier_Control.h"
 
 #define TESTAICONTROL
 

@@ -4,7 +4,7 @@
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H
 
-#include "Button System.h"
+#include "Button_System.h"
 
 #define EDITOR_LIGHT_MAX		(SHADE_MIN + SHADE_MAX)
 #define EDITOR_LIGHT_FAKE		(EDITOR_LIGHT_MAX - SHADE_MAX - 2)

@@ -1,9 +1,9 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Strategic All.h"
 #else
-	#include "Campaign Types.h"
-	#include "Queen Command.h"
-	#include "Strategic Movement.h"
+	#include "Campaign_Types.h"
+	#include "Queen_Command.h"
+	#include "Strategic_Movement.h"
 #endif
 
 UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ] =

@@ -1,7 +1,7 @@
 #ifndef _BUILDDEFINES_H
 #define _BUILDDEFINES_H
 
-#include "Language Defines.h"
+#include "Language_Defines.h"
 
 // Beta version
 // #define	JA2BETAVERSION

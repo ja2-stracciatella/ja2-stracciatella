@@ -3,20 +3,20 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
-	#include "Animation Data.h"
-	#include "Animation Control.h"
-	#include "Soldier Control.h"
-	#include "jascreens.h"
-	#include "tiledef.h"
-	#include "Sys Globals.h"
-	#include "Debug Control.h"
-	#include "utilities.h"
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "Fileman.h"
+	#include "Debug.h"
+	#include "Animation_Data.h"
+	#include "Animation_Control.h"
+	#include "Soldier_Control.h"
+	#include "JAScreens.h"
+	#include "TileDef.h"
+	#include "Sys_Globals.h"
+	#include "Debug_Control.h"
+	#include "Utilities.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "FileMan.h"
 #endif
 
 #define EMPTY_SLOT		-1

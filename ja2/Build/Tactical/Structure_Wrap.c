@@ -2,17 +2,17 @@
 	#include "Tactical All.h"
 #else
 	#include <stdio.h>
-	#include "debug.h"
-	#include "wcheck.h"
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "structure wrap.h"
-	#include "isometric utils.h"
-	#include "worldman.h"
-	#include "overhead.h"
-	#include "renderworld.h"
-	#include "strategicmap.h"
-	#include "rotting corpses.h"
+	#include "Debug.h"
+	#include "WCheck.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "Structure_Wrap.h"
+	#include "Isometric_Utils.h"
+	#include "WorldMan.h"
+	#include "Overhead.h"
+	#include "RenderWorld.h"
+	#include "StrategicMap.h"
+	#include "Rotting_Corpses.h"
 #endif
 
 extern BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo );

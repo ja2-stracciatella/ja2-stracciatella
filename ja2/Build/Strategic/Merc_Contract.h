@@ -2,7 +2,7 @@
 #define _MERC_CONTRACT_H_
 
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 
 //enums used for extending contract, etc.

@@ -1,7 +1,7 @@
 #ifndef __WORLD_ITEMS
 #define __WORLD_ITEMS
 
-#include "items.h"
+#include "Items.h"
 #include "FileMan.h"
 
 

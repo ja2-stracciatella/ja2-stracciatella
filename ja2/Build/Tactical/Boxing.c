@@ -1,20 +1,20 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "Soldier Control.h"
+	#include "Soldier_Control.h"
 	#include "Overhead.h"
 	#include "Boxing.h"
-	#include "Render Fun.h"
+	#include "Render_Fun.h"
 	#include "Random.h"
-	#include "Worldman.h"
-	#include "Soldier Profile.h"
+	#include "WorldMan.h"
+	#include "Soldier_Profile.h"
 	#include "NPC.h"
-	#include "Opplist.h"
-	#include "ai.h"
-	#include "Dialogue Control.h"
-	#include "Handle UI.h"
+	#include "OppList.h"
+	#include "AI.h"
+	#include "Dialogue_Control.h"
+	#include "Handle_UI.h"
 	#include "Points.h"
-	#include "interface.h"
+	#include "Interface.h"
 #endif
 
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };

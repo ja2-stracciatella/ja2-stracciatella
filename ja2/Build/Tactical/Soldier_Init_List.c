@@ -4,28 +4,28 @@
 	#include <stdio.h>
 	#include <memory.h>
 
-	#include "types.h"
+	#include "Types.h"
 
-	#include "strategicmap.h"
-	#include "overhead.h"
-	#include "isometric utils.h"
+	#include "StrategicMap.h"
+	#include "Overhead.h"
+	#include "Isometric_Utils.h"
 
-	#include "soldier add.h"
-	#include "soldier create.h"
-	#include "Soldier Init List.h"
-	#include "debug.h"
+	#include "Soldier_Add.h"
+	#include "Soldier_Create.h"
+	#include "Soldier_Init_List.h"
+	#include "Debug.h"
 	#include "Random.h"
-	#include "items.h"
+	#include "Items.h"
 
-	#include "cursors.h"
+	#include "Cursors.h"
 
-	#include "Map Information.h"
-	#include "soldier profile.h"
-	#include "Sys Globals.h"
+	#include "Map_Information.h"
+	#include "Soldier_Profile.h"
+	#include "Sys_Globals.h"
 	#include "EditorMercs.h"
-	#include "Animation Data.h"
-	#include "message.h"
-	#include "Font Control.h"
+	#include "Animation_Data.h"
+	#include "Message.h"
+	#include "Font_Control.h"
 #endif
 
 BOOLEAN gfOriginalList = TRUE;

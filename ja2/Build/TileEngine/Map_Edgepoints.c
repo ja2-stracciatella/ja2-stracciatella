@@ -2,19 +2,19 @@
 	#include "TileEngine All.h"
 #else
 	#include <memory.h>
-	#include "Map Edgepoints.h"
-	#include "Soldier Control.h"
-	#include "pathai.h"
-	#include "ai.h"
-	#include "Map Information.h"
-	#include "renderworld.h"
-	#include "Isometric Utils.h"
-	#include "debug.h"
+	#include "Map_Edgepoints.h"
+	#include "Soldier_Control.h"
+	#include "PathAI.h"
+	#include "AI.h"
+	#include "Map_Information.h"
+	#include "RenderWorld.h"
+	#include "Isometric_Utils.h"
+	#include "Debug.h"
 	#include "Random.h"
-	#include "strategic.h"
-	#include "Animation Control.h"
-	#include "Render Fun.h"
-	#include "strategicmap.h"
+	#include "Strategic.h"
+	#include "Animation_Control.h"
+	#include "Render_Fun.h"
+	#include "StrategicMap.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge
@@ -1723,8 +1723,8 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 }
 
 #ifdef JA2BETAVERSION
-#include "worldman.h"
-#include "message.h"
+#include "WorldMan.h"
+#include "Message.h"
 void ShowMapEdgepoints()
 {
 	INT32 i, usIllegal1 = 0, usIllegal2 = 0;

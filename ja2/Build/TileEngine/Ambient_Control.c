@@ -2,12 +2,12 @@
 	#include "TileEngine All.h"
 #else
 	#include "stdio.h"
-	#include "sgp.h"
-	#include "Ambient types.h"
-	#include "fileman.h"
-	#include "environment.h"
-	#include "Sound Control.h"
-	#include "Game Events.h"
+	#include "SGP.h"
+	#include "Ambient_Types.h"
+	#include "FileMan.h"
+	#include "Environment.h"
+	#include "Sound_Control.h"
+	#include "Game_Events.h"
 #endif
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];

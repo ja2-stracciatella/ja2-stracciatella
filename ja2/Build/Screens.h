@@ -2,7 +2,7 @@
 #define __SCREEN_MANAGER
 
 #include "Types.h"
-#include "ScreenIds.h"
+#include "ScreenIDs.h"
 
 // Each screen in the game comes with a Status flag (what was the last thing the screen was doing), an Initialization
 // function (which loads up the screen if necessary), a Handler function which is called while the screen is showing and
@@ -32,6 +32,6 @@ extern Screens GameScreens[MAX_SCREENS];
 // We must include all the following .H files which have prototypes for all the initialization, handler and shutdown
 // functions for all the screens. There should be as many includes as there are screens.
 
-#include "jascreens.h"
+#include "JAScreens.h"
 
 #endif

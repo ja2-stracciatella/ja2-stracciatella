@@ -2,16 +2,16 @@
 	#include "Laptop All.h"
 #else
 	#include "WordWrap.h"
-	#include "sgp.h"
-	#include "Render Dirty.h"
-	#include "Encrypted File.h"
-	#include "IMP Text System.h"
+	#include "SGP.h"
+	#include "Render_Dirty.h"
+	#include "Encrypted_File.h"
+	#include "IMP_Text_System.h"
 	#include "CharProfile.h"
-	#include "laptop.h"
-	#include "IMP Personality Quiz.h"
-	#include "IMP Personality Finish.h"
-	#include "IMP Attribute Selection.h"
-	#include "IMP MainPage.h"
+	#include "Laptop.h"
+	#include "IMP_Personality_Quiz.h"
+	#include "IMP_Personality_Finish.h"
+	#include "IMP_Attribute_Selection.h"
+	#include "IMP_MainPage.h"
 #endif
 
 #define IMP_SEEK_AMOUNT 5 * 80 * 2

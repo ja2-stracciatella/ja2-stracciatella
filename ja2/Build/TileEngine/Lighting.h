@@ -1,7 +1,7 @@
 #ifndef _LIGHTING_H_
 #define _LIGHTING_H_
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 /****************************************************************************************
 * JA2 Lighting Module

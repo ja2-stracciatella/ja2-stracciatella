@@ -1,23 +1,23 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
-	#include "sgp.h"
+	#include "SGP.h"
 	#ifdef JA2EDITOR
 		#include "Screens.h"
-		#include "Maputility.h"
-		#include "worlddef.h"
-		#include "overhead.h"
-		#include "fileman.h"
+		#include "MapUtility.h"
+		#include "WorldDef.h"
+		#include "Overhead.h"
+		#include "FileMan.h"
 		#include "loadscreen.h"
-		#include "overhead map.h"
-		#include "radar screen.h"
-		#include "vobject_blitters.h"
+		#include "Overhead_Map.h"
+		#include "Radar_Screen.h"
+		#include "VObject_Blitters.h"
 		#include "sticonvert.h"
-		#include "font control.h"
-		#include "worlddat.h"
-		#include "english.h"
-		#include "map information.h"
-		#include "line.h"
+		#include "Font_Control.h"
+		#include "WorldDat.h"
+		#include "English.h"
+		#include "Map_Information.h"
+		#include "Line.h"
 	#endif
 #endif
 
@@ -347,8 +347,8 @@ UINT32 MapUtilScreenShutdown( )
 
 #else //non-editor version
 
-#include "types.h"
-#include "screenids.h"
+#include "Types.h"
+#include "ScreenIDs.h"
 
 UINT32	MapUtilScreenInit( )
 {

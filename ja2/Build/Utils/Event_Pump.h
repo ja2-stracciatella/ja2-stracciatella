@@ -1,7 +1,7 @@
 #ifndef EVENT_PROCESSOR_H
 #define EVENT_PROCESSOR_H
 
-#include "Event Manager.h"
+#include "Event_Manager.h"
 
 
 #define NETWORK_PATH_DATA_SIZE	6

@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "aim.h"
+	#include "Laptop.h"
+	#include "AIM.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
-	#include "timer control.h"
+	#include "Timer_Control.h"
 	#include "Debug.h"
 	#include "WordWrap.h"
-	#include "Encrypted File.h"
-	#include "email.h"
-	#include "Game Clock.h"
+	#include "Encrypted_File.h"
+	#include "EMail.h"
+	#include "Game_Clock.h"
 	#include "Text.h"
 	#include "LaptopSave.h"
-	#include "Multi Language Graphic Utils.h"
+	#include "Multi_Language_Graphic_Utils.h"
 #endif
 
 

@@ -1,5 +1,5 @@
 #include "BuildDefines.h"
-#include "Fileman.h"
+#include "FileMan.h"
 
 #ifdef JA2EDITOR
 

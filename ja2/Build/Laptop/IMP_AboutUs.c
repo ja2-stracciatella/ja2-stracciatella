@@ -1,18 +1,18 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "IMP AboutUs.h"
+	#include "IMP_AboutUs.h"
 	#include "CharProfile.h"
 	#include "IMPVideoObjects.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "Debug.h"
 	#include "WordWrap.h"
-	#include "Render Dirty.h"
-	#include "Encrypted File.h"
-	#include "cursors.h"
-	#include "laptop.h"
-	#include "IMP Text System.h"
+	#include "Render_Dirty.h"
+	#include "Encrypted_File.h"
+	#include "Cursors.h"
+	#include "Laptop.h"
+	#include "IMP_Text_System.h"
 #endif
 
 // IMP AboutUs buttons

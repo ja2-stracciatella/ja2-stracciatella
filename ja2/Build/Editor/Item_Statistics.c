@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
@@ -9,28 +9,28 @@
 #ifndef PRECOMPILEDHEADERS
 	#include <memory.h>
 	#include <stdio.h>
-	#include "types.h"
-	#include "mousesystem.h"
-	#include "Button System.h"
-	#include "font control.h"
+	#include "Types.h"
+	#include "MouseSystem.h"
+	#include "Button_System.h"
+	#include "Font_Control.h"
 	#include "EditorDefines.h"
-	#include "Editor Taskbar Utils.h"
+	#include "Editor_Taskbar_Utils.h"
 	#include "EditorMercs.h"
 	#include "EditorItems.h"
 	#include "Item Statistics.h"
-	#include "Text Input.h"
-	#include "Action Items.h"
+	#include "Text_Input.h"
+	#include "Action_Items.h"
 	#include "Item types.h"
-	#include "video.h"
-	#include "Simple Render Utils.h"
+	#include "Video.h"
+	#include "Simple_Render_Utils.h"
 	#include "Weapons.h"
 	#include "Items.h"
-	#include "editscreen.h"
+	#include "EditScreen.h"
 	#include "Random.h"
-	#include "Handle Items.h"
-	#include "World Items.h"
+	#include "Handle_Items.h"
+	#include "World_Items.h"
 	#include "PopupMenu.h"
-	#include "pits.h"
+	#include "Pits.h"
 #endif
 
 INT32 giBothCheckboxButton = -1;

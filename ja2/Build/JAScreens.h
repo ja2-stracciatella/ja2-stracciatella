@@ -1,10 +1,10 @@
 #ifndef __JASCREENS_H_
 #define __JASCREENS_H_
 
-#include "sgp.h"
-#include "ScreenIds.h"
-#include "mousesystem.h"
-#include "Button System.h"
+#include "SGP.h"
+#include "ScreenIDs.h"
+#include "MouseSystem.h"
+#include "Button_System.h"
 
 extern UINT32 EditScreenInit(void);
 extern UINT32 EditScreenHandle(void);

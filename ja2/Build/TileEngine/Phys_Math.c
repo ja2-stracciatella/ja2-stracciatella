@@ -1,7 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
 #else
-	#include "phys math.h"
+	#include "Phys_Math.h"
 	#include <memory.h>
 #endif
 

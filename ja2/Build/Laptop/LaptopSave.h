@@ -1,9 +1,9 @@
 #ifndef _LAPTOP_SAVE_H_
 #define _LAPTOP_SAVE_H_
 
-#include "Item Types.h"
+#include "Item_Types.h"
 #include "FileMan.h"
-#include "Store Inventory.h"
+#include "Store_Inventory.h"
 
 #define		MAX_BOOKMARKS											20
 

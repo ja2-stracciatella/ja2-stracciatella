@@ -2,12 +2,12 @@
 	#include "TileEngine All.h"
 #else
 	#include <stdio.h>
-	#include "types.h"
-	#include "lighting.h"
-	#include "Shade Table Util.h"
-	#include "video.h"
+	#include "Types.h"
+	#include "Lighting.h"
+	#include "Shade_Table_Util.h"
+	#include "Video.h"
 	#include "WorldDat.h"
-	#include "Fileman.h"
+	#include "FileMan.h"
 #endif
 
 

@@ -2,7 +2,7 @@
 
 #define BUILDING_H
 
-#include "worlddef.h"
+#include "WorldDef.h"
 // for what it's worth, 2 bytes, we use roof climb spots as 1-based
 // so the 0th entry is always 0 and can be compared with (and not equal)
 // NOWHERE or any other location

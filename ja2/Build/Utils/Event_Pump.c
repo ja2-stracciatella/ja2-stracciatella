@@ -1,20 +1,20 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h>
-	#include "sgp.h"
-	#include "container.h"
-	#include "wcheck.h"
-	#include "Event Pump.h"
+	#include "SGP.h"
+	#include "Container.h"
+	#include "WCheck.h"
+	#include "Event_Pump.h"
 	#include "Timer.h"
-	#include "Soldier Control.h"
-	#include "Sound Control.h"
+	#include "Soldier_Control.h"
+	#include "Sound_Control.h"
 	#include "Overhead.h"
-	#include "weapons.h"
-	#include "Animation Control.h"
-	#include "opplist.h"
+	#include "Weapons.h"
+	#include "Animation_Control.h"
+	#include "OppList.h"
 #endif
 
 #ifdef NETWORKED

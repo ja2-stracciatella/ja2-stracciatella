@@ -3,7 +3,7 @@
 
 
 #include "Types.h"
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 
 // delay for change in ATM mode

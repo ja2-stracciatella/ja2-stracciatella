@@ -1,7 +1,7 @@
 #ifndef __GAME_EVENT_HOOK_H
 #define __GAME_EVENT_HOOK_H
 
-#include "types.h"
+#include "Types.h"
 
 enum
 {

@@ -1,14 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "insurance Info.h"
-	#include "insurance.h"
+	#include "Laptop.h"
+	#include "Insurance_Info.h"
+	#include "Insurance.h"
 	#include "WCheck.h"
 	#include "Utilities.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "Insurance Text.h"
+	#include "Insurance_Text.h"
 	#include "Text.h"
 #endif
 

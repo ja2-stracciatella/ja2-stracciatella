@@ -2,19 +2,19 @@
 	#include "Tactical All.h"
 #else	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
-	#include "Animation Control.h"
-	#include "Animation Data.h"
+	#include "Debug.h"
+	#include "Animation_Control.h"
+	#include "Animation_Data.h"
 	#include "FileMan.h"
-	#include "weapons.h"
-	#include "message.h"
-	#include "structure.h"
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "rotting corpses.h"
-	#include "points.h"
+	#include "Weapons.h"
+	#include "Message.h"
+	#include "Structure.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "Rotting_Corpses.h"
+	#include "Points.h"
 #endif
 
 // Defines for Anim inst reading, taken from orig Jagged

@@ -3,17 +3,17 @@
 #else
 	#include "Types.h"
 	#include "Squads.h"
-	#include "Strategic Pathing.h"
-	#include "Strategicmap.h"
+	#include "Strategic_Pathing.h"
+	#include "StrategicMap.h"
 	#include "Faces.h"
-	#include "Strategic Movement.h"
+	#include "Strategic_Movement.h"
 	#include "Assignments.h"
-	#include "OverHead.h"
+	#include "Overhead.h"
 	#include "RenderWorld.h"
 	#include "Interface.h"
 	#include "Vehicles.h"
-	#include "Map Screen Helicopter.h"
-	#include "Soldier Profile.h"
+	#include "Map_Screen_Helicopter.h"
+	#include "Soldier_Profile.h"
 #endif
 
 

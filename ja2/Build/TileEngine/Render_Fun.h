@@ -2,7 +2,7 @@
 #define __RENDER_FUN_H
 
 #include <stdio.h>
-#include "worlddef.h"
+#include "WorldDef.h"
 
 #define		NO_ROOM			0
 #define   MAX_ROOMS		250

@@ -1,7 +1,7 @@
 #ifndef _QUEST_DEBUG_SYSTEM_H_
 #define _QUEST_DEBUG_SYSTEM_H_
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 #include "NPC.h"
 
 

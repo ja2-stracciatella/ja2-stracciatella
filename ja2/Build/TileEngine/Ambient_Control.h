@@ -2,8 +2,8 @@
 #define __AMBIENT_CONTROL
 
 
-#include "sgp.h"
-#include "Ambient types.h"
+#include "SGP.h"
+#include "Ambient_Types.h"
 
 BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID );
 

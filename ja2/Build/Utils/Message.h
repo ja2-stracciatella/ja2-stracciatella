@@ -1,11 +1,11 @@
 #ifndef __MESSAGE_H
 #define __MESSAGE_H
 
-//#include "sgp.h"
-#include "font.h"
-#include "Font Control.h"
-#include "types.h"
-#include "Fileman.h"
+//#include "SGP.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "Types.h"
+#include "FileMan.h"
 
 
 struct stringstruct{

@@ -1,7 +1,7 @@
 #ifndef _SOLDIER_FUNCTIONS_H
 #define _SOLDIER_FUNCTIONS_H
 
-#include "soldier control.h"
+#include "Soldier_Control.h"
 
 
 void ContinueMercMovement( SOLDIERTYPE *pSoldier );

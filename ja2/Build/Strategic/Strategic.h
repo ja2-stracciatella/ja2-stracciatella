@@ -2,8 +2,8 @@
 #define __STRATEGIC_H
 // header for strategic structure
 #include "Types.h"
-#include "mapscreen.h"
-#include "soldier control.h"
+#include "MapScreen.h"
+#include "Soldier_Control.h"
 
 
 struct strategicmapelement{

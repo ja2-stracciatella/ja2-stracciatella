@@ -6,8 +6,8 @@
 // structure_extern.h, not structure.h!
 //
 
-#include "types.h"
-#include "himage.h"
+#include "Types.h"
+#include "HImage.h"
 
 // A few words about the overall structure scheme:
 //

@@ -2,13 +2,13 @@
 	#include "AI All.h"
 #else
 	#include "AIInternals.h"
-	#include "ai.h"
-	#include "pathai.h"
-	#include "items.h"
-	#include "World Items.h"
+	#include "AI.h"
+	#include "PathAI.h"
+	#include "Items.h"
+	#include "World_Items.h"
 #endif
 
-#include "Queen Command.h"
+#include "Queen_Command.h"
 
 void MakeClosestEnemyChosenOne()
 {

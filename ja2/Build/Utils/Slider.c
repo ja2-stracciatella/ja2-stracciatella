@@ -1,9 +1,9 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
 	#include	"Types.h"
 	#include	"WordWrap.h"
-	#include	"Render Dirty.h"
+	#include	"Render_Dirty.h"
 	#include	"Utilities.h"
 	#include	"Cursors.h"
 	#include	"WCheck.h"

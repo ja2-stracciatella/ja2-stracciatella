@@ -1,7 +1,7 @@
 #ifndef _SOLDIER_ADD_H
 #define _SOLDIER_ADD_H
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 
 
 // Finds a gridno given a sweet spot

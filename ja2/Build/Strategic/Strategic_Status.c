@@ -2,14 +2,14 @@
 	#include "Strategic All.h"
 #else
 	#include <memory.h>
-	#include "Strategic Status.h"
-	#include "Inventory Choosing.h"
+	#include "Strategic_Status.h"
+	#include "Inventory_Choosing.h"
 	#include "FileMan.h"
-	#include "Soldier Profile.h"
+	#include "Soldier_Profile.h"
 	#include "Campaign.h"
-	#include "Strategic Mines.h"
-	#include "email.h"
-	#include "Game Clock.h"
+	#include "Strategic_Mines.h"
+	#include "EMail.h"
+	#include "Game_Clock.h"
 #endif
 
 

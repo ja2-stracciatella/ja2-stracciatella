@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "ai.h"
+	#include "AI.h"
 	#include "AIInternals.h"
-	#include "Isometric Utils.h"
-	#include "overhead.h"
-	#include "worldman.h"
-	#include "pathai.h"
-	#include "points.h"
-	#include "message.h"
+	#include "Isometric_Utils.h"
+	#include "Overhead.h"
+	#include "WorldMan.h"
+	#include "PathAI.h"
+	#include "Points.h"
+	#include "Message.h"
 	#include "Smell.h"
-	#include "mapscreen.h"
-	#include "strategic.h"
-	#include "Strategic Pathing.h"
-	#include "Soldier Control.h"
+	#include "MapScreen.h"
+	#include "Strategic.h"
+	#include "Strategic_Pathing.h"
+	#include "Soldier_Control.h"
 #endif
 
 // from strategic

@@ -1,9 +1,9 @@
 #ifndef __STRATEGIC_STATUS_H
 #define __STRATEGIC_STATUS_H
 
-#include "types.h"
-#include "Item Types.h"
-#include "Soldier Control.h"
+#include "Types.h"
+#include "Item_Types.h"
+#include "Soldier_Control.h"
 
 //Enemy is allowed to capture the player after certain day
 #define STARTDAY_ALLOW_PLAYER_CAPTURE_FOR_RESCUE		4

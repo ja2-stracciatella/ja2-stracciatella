@@ -2,16 +2,16 @@
 	#include "Tactical All.h"
 #else
 	#include "SkillCheck.h"
-	#include "Soldier Profile.h"
+	#include "Soldier_Profile.h"
 	#include "Random.h"
 	#include "Items.h"
-	#include "Dialogue Control.h"
+	#include "Dialogue_Control.h"
 	#include "Overhead.h"
-	#include "Soldier macros.h"
-	#include "Isometric Utils.h"
+	#include "Soldier_Macros.h"
+	#include "Isometric_Utils.h"
 	#include "Morale.h"
-	#include "drugs and alcohol.h"
-	#include "strategicmap.h"
+	#include "Drugs_And_Alcohol.h"
+	#include "StrategicMap.h"
 #endif
 
 INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )

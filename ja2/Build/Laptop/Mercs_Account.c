@@ -1,23 +1,23 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "mercs Account.h"
-	#include "mercs.h"
+	#include "Laptop.h"
+	#include "Mercs_Account.h"
+	#include "Mercs.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "Soldier Profile.h"
-	#include "finances.h"
-	#include "Game Clock.h"
-	#include "Soldier Add.h"
+	#include "Soldier_Profile.h"
+	#include "Finances.h"
+	#include "Game_Clock.h"
+	#include "Soldier_Add.h"
 	#include "Overhead.h"
 	#include "History.h"
-	#include "Email.h"
+	#include "EMail.h"
 	#include "LaptopSave.h"
 	#include "Text.h"
-	#include "Speck Quotes.h"
+	#include "Speck_Quotes.h"
 #endif
 
 

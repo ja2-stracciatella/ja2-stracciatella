@@ -1,11 +1,11 @@
 #ifndef __WORLDDEF_H
 #define __WORLDDEF_H
 
-#include "vobject.h"
-#include "tiledef.h"
-#include "Soldier Control.h"
-#include "structure.h"
-#include "Handle Items.h"
+#include "VObject.h"
+#include "TileDef.h"
+#include "Soldier_Control.h"
+#include "Structure.h"
+#include "Handle_Items.h"
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20

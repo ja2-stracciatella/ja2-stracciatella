@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "vobject.h"
-	#include "video.h"
-	#include "font.h"
-	#include "Font Control.h"
+	#include "VObject.h"
+	#include "Video.h"
+	#include "Font.h"
+	#include "Font_Control.h"
 	#include "messagebox.h"
-	#include "input.h"
-	#include "english.h"
+	#include "Input.h"
+	#include "English.h"
 #endif
 
 //internal variables.

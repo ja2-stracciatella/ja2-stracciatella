@@ -1,8 +1,8 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
-	#include "sgp.h"
-	#include "qarray.h"
+	#include "SGP.h"
+	#include "QArray.h"
 #endif
 
 BOOLEAN QuoteExp_HeadShotOnly[75] =

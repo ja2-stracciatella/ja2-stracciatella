@@ -1,14 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h>
-	#include "sgp.h"
-	#include "container.h"
-	#include "wcheck.h"
-	#include "Event Manager.h"
-	#include "Timer Control.h"
+	#include "SGP.h"
+	#include "Container.h"
+	#include "WCheck.h"
+	#include "Event_Manager.h"
+	#include "Timer_Control.h"
 #endif
 
 HLIST		hEventQueue = NULL;

@@ -1,8 +1,8 @@
 #ifndef __TACTICAL_PLACEMENT_GUI_H
 #define __TACTICAL_PLACEMENT_GUI_H
 
-#include "Soldier Control.h"
-#include "mousesystem.h"
+#include "Soldier_Control.h"
+#include "MouseSystem.h"
 
 void InitTacticalPlacementGUI();
 void KillTacticalPlacementGUI();

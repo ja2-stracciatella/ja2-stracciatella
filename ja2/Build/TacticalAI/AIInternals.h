@@ -1,8 +1,8 @@
-#include "types.h"
-#include "Isometric Utils.h"
-#include "Animation Control.h"
+#include "Types.h"
+#include "Isometric_Utils.h"
+#include "Animation_Control.h"
 #include "Overhead.h"
-#include "random.h"
+#include "Random.h"
 #include "Points.h"
 
 

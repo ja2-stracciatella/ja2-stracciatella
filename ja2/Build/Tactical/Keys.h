@@ -1,7 +1,7 @@
 #ifndef		_KEYS_H_
 #define		_KEYS_H_
 
-#include "types.h"
+#include "Types.h"
 #include "FileMan.h"
 
 typedef struct

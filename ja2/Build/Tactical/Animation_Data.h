@@ -1,11 +1,11 @@
 #ifndef ANIMATION_DATA_H_
 #define ANIMATION_DATA_H_
 
-#include "vobject.h"
+#include "VObject.h"
 
-#include "Soldier Control.h"
+#include "Soldier_Control.h"
 #include "Overhead.h"
-#include "Structure Internals.h"
+#include "Structure_Internals.h"
 
 
 // DEFINES FOR ANIMATION PROFILES

@@ -4,7 +4,7 @@
 #ifndef __SUMMARY_INFO_H
 #define __SUMMARY_INFO_H
 
-#include "types.h"
+#include "Types.h"
 
 #define GLOBAL_SUMMARY_VERSION		14
 #define MINIMUMVERSION						7

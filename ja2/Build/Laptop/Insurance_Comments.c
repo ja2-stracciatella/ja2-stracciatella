@@ -1,10 +1,10 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
-	#include "Insurance Text.h"
-	#include "insurance.h"
-	#include "insurance Comments.h"
+	#include "Laptop.h"
+	#include "Insurance_Text.h"
+	#include "Insurance.h"
+	#include "Insurance_Comments.h"
 	#include "WCheck.h"
 	#include "Utilities.h"
 	#include "WordWrap.h"

@@ -1,7 +1,7 @@
 #ifndef __ANIMATION_CACHE_H
 #define __ANIMATION_CACHE_H
 
-#include "types.h"
+#include "Types.h"
 
 #define MAX_CACHE_SIZE		20
 #define MIN_CACHE_SIZE		2

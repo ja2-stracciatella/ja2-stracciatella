@@ -3,18 +3,18 @@
 #else
 	#include <stdio.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
-	#include "tiledef.h"
-	#include "Animation Cache.h"
-	#include "Animation Data.h"
-	#include "Animation Control.h"
-	#include "sys globals.h"
-	#include "Debug Control.h"
-	#include "tile surface.h"
-	#include "tile cache.h"
-	#include "fileman.h"
+	#include "Debug.h"
+	#include "TileDef.h"
+	#include "Animation_Cache.h"
+	#include "Animation_Data.h"
+	#include "Animation_Control.h"
+	#include "Sys_Globals.h"
+	#include "Debug_Control.h"
+	#include "Tile_Surface.h"
+	#include "Tile_Cache.h"
+	#include "FileMan.h"
 #endif
 
 

@@ -2,13 +2,13 @@
 	#include "Strategic All.h"
 #else
 	#include <stdio.h>
-	#include "types.h"
-	#include "Game Events.h"
-	#include "Game Clock.h"
+	#include "Types.h"
+	#include "Game_Events.h"
+	#include "Game_Clock.h"
 	#include "MemMan.h"
 	#include "Debug.h"
-	#include "Font Control.h"
-	#include "message.h"
+	#include "Font_Control.h"
+	#include "Message.h"
 	#include "Text.h"
 #endif
 

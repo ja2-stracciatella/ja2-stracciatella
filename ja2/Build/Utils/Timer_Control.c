@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
-  #include "interface control.h"
+	#include "Utils_All.h"
+  #include "Interface_Control.h"
 #else
 	#include <windows.h>
 	#include <mmsystem.h>
 	#include <string.h>
-	#include "wcheck.h"
+	#include "WCheck.h"
 	#include "stdlib.h"
-	#include "debug.h"
-	#include "Soldier Control.h"
-	#include "Timer Control.h"
-	#include "overhead.h"
-	#include "handle items.h"
-	#include "worlddef.h"
-	#include "renderworld.h"
+	#include "Debug.h"
+	#include "Soldier_Control.h"
+	#include "Timer_Control.h"
+	#include "Overhead.h"
+	#include "Handle_Items.h"
+	#include "WorldDef.h"
+	#include "RenderWorld.h"
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN

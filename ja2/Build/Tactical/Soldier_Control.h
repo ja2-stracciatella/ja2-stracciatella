@@ -6,11 +6,11 @@
 //Please don't change this value from 10.  It will invalidate all of the maps and soldiers.
 #define MAXPATROLGRIDS  10  // *** THIS IS A DUPLICATION - MUST BE MOVED !
 
-#include "Animation Cache.h"
-#include "Timer Control.h"
-#include "vobject.h"
-#include "Overhead Types.h"
-#include "Item Types.h"
+#include "Animation_Cache.h"
+#include "Timer_Control.h"
+#include "VObject.h"
+#include "Overhead_Types.h"
+#include "Item_Types.h"
 
 
 // TEMP VALUES FOR NAMES

@@ -1,9 +1,9 @@
 #ifndef __SYSTEM_UTILS
 #define __SYSTEM_UTILS
 
-#include "font.h"
-#include "Isometric Utils.h"
-#include "interface.h"
+#include "Font.h"
+#include "Isometric_Utils.h"
+#include "Interface.h"
 
 // Global variables for video objects
 extern UINT32					guiBOTTOMPANEL;

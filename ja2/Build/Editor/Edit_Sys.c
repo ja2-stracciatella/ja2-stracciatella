@@ -1,33 +1,33 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "smooth.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "Smooth.h"
 	#include "newsmooth.h"
-	#include "edit_sys.h"
-	#include "editscreen.h"
+	#include "Edit_Sys.h"
+	#include "EditScreen.h"
 	#include "selectwin.h"
 	#include "EditorTerrain.h"
 	#include "EditorBuildings.h"
 	#include "EditorMercs.h"
 	#include "EditorDefines.h"
-	#include "Smoothing Utils.h"
+	#include "Smoothing_Utils.h"
 	#include "Cursor Modes.h"
-	#include "Render Fun.h"
-	#include "Isometric Utils.h"
-	#include "Editor Undo.h"
-	#include "Exit Grids.h"
-	#include "environment.h"
-	#include "Simple Render Utils.h"
-	#include "Road Smoothing.h"
+	#include "Render_Fun.h"
+	#include "Isometric_Utils.h"
+	#include "Editor_Undo.h"
+	#include "Exit_Grids.h"
+	#include "Environment.h"
+	#include "Simple_Render_Utils.h"
+	#include "Road_Smoothing.h"
 #endif
 
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius );

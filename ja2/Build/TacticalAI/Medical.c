@@ -1,16 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
-	#include "types.h"
-	#include "wcheck.h"
-	#include "Soldier Control.h"
-	#include "Soldier Functions.h"
-	#include "ai.h"
+	#include "Types.h"
+	#include "WCheck.h"
+	#include "Soldier_Control.h"
+	#include "Soldier_Functions.h"
+	#include "AI.h"
 	#include "AIInternals.h"
-	#include "Animation Control.h"
-	#include "pathai.h"
-	#include "overhead.h"
-	#include "items.h"
+	#include "Animation_Control.h"
+	#include "PathAI.h"
+	#include "Overhead.h"
+	#include "Items.h"
 	#include "Message.h"
 #endif
 

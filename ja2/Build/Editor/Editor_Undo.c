@@ -1,24 +1,24 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "worlddef.h"
-	#include "worldman.h"
-	#include "smooth.h"
-	#include "input.h"
-	#include "debug.h"
-	#include "Isometric Utils.h"
+	#include "WorldDef.h"
+	#include "WorldMan.h"
+	#include "Smooth.h"
+	#include "Input.h"
+	#include "Debug.h"
+	#include "Isometric_Utils.h"
 
-	#include "editscreen.h"
-	#include "Editor Undo.h"
-	#include "Render Fun.h"  //for access to gubWorldRoomInfo;
+	#include "EditScreen.h"
+	#include "Editor_Undo.h"
+	#include "Render_Fun.h"  //for access to gubWorldRoomInfo;
 	#include "Cursor Modes.h"
-	#include "Exit Grids.h"
+	#include "Exit_Grids.h"
 #endif
 
 /*

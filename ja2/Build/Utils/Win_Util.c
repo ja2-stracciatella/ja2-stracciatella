@@ -3,12 +3,12 @@
 #include <windowsx.h>
 #include <mmsystem.h>
 #include <dsound.h>
-#include "dsutil.h"
-#include "debug.h"
+#include "DSUtil.h"
+#include "Debug.h"
 
-#include "sgp.h"
+#include "SGP.h"
 
-#include "Sound Control.h"
+#include "Sound_Control.h"
 
 // THIS MODULE IS TEMPORARY - USED FOR OUR SOUND SYSTEM INTIL IT IS IMPLEMENTED FOR THE SGP
 extern HWND                          ghWindow;

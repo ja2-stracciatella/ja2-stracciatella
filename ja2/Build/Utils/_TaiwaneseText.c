@@ -1,11 +1,11 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
 #else
-	#include "Language Defines.h"
+	#include "Language_Defines.h"
 	#ifdef TAIWANESE
-		#include "text.h"
-		#include "Fileman.h"
-		#include "JA2 Demo Ads.h"
+		#include "Text.h"
+		#include "FileMan.h"
+		#include "JA2_Demo_Ads.h"
 	#endif
 #endif
 

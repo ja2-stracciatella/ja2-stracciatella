@@ -1,7 +1,7 @@
 #ifndef __MAP_INFORMATION_H
 #define __MAP_INFORMATION_H
 
-#include "types.h"
+#include "Types.h"
 
 extern FLOAT gdMajorMapVersion;
 extern UINT8 gubMinorMapVersion;

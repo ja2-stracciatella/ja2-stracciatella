@@ -3,14 +3,14 @@
 #else
 	#include "Types.h"
 	#include "Buildings.h"
-	#include "Isometric Utils.h"
-	#include "Pathai.h"
-	#include "Structure Wrap.h"
+	#include "Isometric_Utils.h"
+	#include "PathAI.h"
+	#include "Structure_Wrap.h"
 	#include "Random.h"
 	#include "Overhead.h"
-	#include "Render Fun.h"
-	#include "Strategicmap.h"
-	#include "Sys Globals.h"
+	#include "Render_Fun.h"
+	#include "StrategicMap.h"
+	#include "Sys_Globals.h"
 #endif
 
 #define ROOF_LOCATION_CHANCE 8

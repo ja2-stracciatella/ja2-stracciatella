@@ -1,24 +1,24 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Editor All.h"
 #else
-	#include "builddefines.h"
+	#include "BuildDefines.h"
 #endif
 
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include "types.h"
+	#include "Types.h"
 	#include "Cursor Modes.h"
-	#include "renderworld.h"
-	#include "random.h"
-	#include "worldman.h"
-	#include "interface.h"
-	#include "Isometric Utils.h"
-	#include "editscreen.h"
+	#include "RenderWorld.h"
+	#include "Random.h"
+	#include "WorldMan.h"
+	#include "Interface.h"
+	#include "Isometric_Utils.h"
+	#include "EditScreen.h"
 	#include "EditorDefines.h"
-	#include "input.h"
-	#include "english.h"
-	#include "Editor Taskbar Utils.h"
+	#include "Input.h"
+	#include "English.h"
+	#include "Editor_Taskbar_Utils.h"
 	#include "Overhead.h"
 	#include "EditorMercs.h"
 	#include "EditorBuildings.h"

@@ -1,22 +1,22 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Laptop All.h"
 #else
-	#include "laptop.h"
+	#include "Laptop.h"
 	#include "BobbyR.h"
 	#include "BobbyRGuns.h"
 	#include "Utilities.h"
 	#include "WCheck.h"
 	#include "WordWrap.h"
 	#include "Cursors.h"
-	#include "interface items.h"
+	#include "Interface_Items.h"
 	#include "Weapons.h"
-	#include "Store Inventory.h"
-	#include "Game Event Hook.h"
-	#include "Game Clock.h"
+	#include "Store_Inventory.h"
+	#include "Game_Event_Hook.h"
+	#include "Game_Clock.h"
 	#include "LaptopSave.h"
 	#include "Random.h"
 	#include "Text.h"
-	#include "Multi Language Graphic Utils.h"
+	#include "Multi_Language_Graphic_Utils.h"
 #endif
 
 

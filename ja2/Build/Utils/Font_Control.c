@@ -1,16 +1,16 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
+	#include "Utils_All.h"
   #include "winfont.h"
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h>
-	#include "sgp.h"
-	#include "himage.h"
-	#include "vsurface.h"
-	#include "vsurface_private.h"
-	#include "wcheck.h"
-	#include "Font Control.h"
+	#include "SGP.h"
+	#include "HImage.h"
+	#include "VSurface.h"
+	#include "VSurface_Private.h"
+	#include "WCheck.h"
+	#include "Font_Control.h"
 #endif
 
 INT32          giCurWinFont = 0;

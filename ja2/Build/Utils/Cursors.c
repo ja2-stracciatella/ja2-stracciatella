@@ -1,19 +1,19 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils All.h"
-	#include "interface items.h"
+	#include "Utils_All.h"
+	#include "Interface_Items.h"
 #else
 	#include <wchar.h>
-	#include "sgp.h"
-	#include "cursors.h"
-	#include "Timer Control.h"
-	#include "jascreens.h"
-	#include "font.h"
-	#include "Font Control.h"
-	#include "Sys Globals.h"
-	#include "Handle UI.h"
-	#include "interface.h"
-	#include "overhead.h"
-	#include "Cursor Control.h"
+	#include "SGP.h"
+	#include "Cursors.h"
+	#include "Timer_Control.h"
+	#include "JAScreens.h"
+	#include "Font.h"
+	#include "Font_Control.h"
+	#include "Sys_Globals.h"
+	#include "Handle_UI.h"
+	#include "Interface.h"
+	#include "Overhead.h"
+	#include "Cursor_Control.h"
 #endif
 
 

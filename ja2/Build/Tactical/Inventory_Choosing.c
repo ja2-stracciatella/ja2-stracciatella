@@ -2,12 +2,12 @@
 	#include "Tactical All.h"
 #else
 	#include <memory.h>
-	#include "Inventory Choosing.h"
-	#include "animation data.h"
+	#include "Inventory_Choosing.h"
+	#include "Animation_Data.h"
 	#include "Items.h"
 	#include "Random.h"
 	#include "Weapons.h"
-	#include "Strategic Status.h"
+	#include "Strategic_Status.h"
 	#include "Campaign.h"
 	#include "GameSettings.h"
 #endif
