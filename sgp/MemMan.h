@@ -78,7 +78,7 @@ extern void		ShutdownMemoryManager( void );
 		extern PTR		MemReallocReal( PTR ptr, UINT32 size, const char *, INT32 );
 	#else
 		//Release build verison
-		#include <malloc.h>
+		#include <stdlib.h>
 		#define		MemAlloc( size )				malloc( (size) )
 		#define		MemFree( ptr )					free( (ptr) )
 		#define		MemRealloc( ptr, size )	realloc( (ptr), (size) )
