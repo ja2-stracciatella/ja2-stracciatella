@@ -2172,6 +2172,3 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		#endif
 		return FALSE;
 }
-
-
-

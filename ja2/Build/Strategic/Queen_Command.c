@@ -1884,4 +1884,3 @@ BOOLEAN OnlyHostileCivsInSector()
 	//We only have hostile civilians, don't allow time compression.
 	return TRUE;
 }
-

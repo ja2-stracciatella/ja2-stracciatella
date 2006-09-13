@@ -447,5 +447,3 @@ void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue )
 }
 
 #endif
-
-

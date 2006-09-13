@@ -596,4 +596,3 @@ void	DoneFadeOutDueToEndMusic( void )
 	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
 	//SetPendingNewScreen( MAINMENU_SCREEN );
 }
-

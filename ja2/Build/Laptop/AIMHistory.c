@@ -616,4 +616,3 @@ void ChangingAimHistorySubPage( UINT8 ubSubPageNumber )
 		fFastLoadFlag = TRUE;
 	}
 }
-

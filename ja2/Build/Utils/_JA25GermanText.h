@@ -38,5 +38,3 @@ enum
 extern	STR16	gzIronManModeWarningText[];
 
 #endif
-
-

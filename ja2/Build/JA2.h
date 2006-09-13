@@ -5,4 +5,3 @@
 #define JA2MAPVERSION_NUM			1.00
 
 #endif
-

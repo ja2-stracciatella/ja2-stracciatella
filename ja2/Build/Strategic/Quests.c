@@ -1381,4 +1381,3 @@ BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
-

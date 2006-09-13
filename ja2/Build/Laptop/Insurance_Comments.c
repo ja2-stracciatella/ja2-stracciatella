@@ -214,5 +214,3 @@ BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 
 	return( TRUE );
 }
-
-

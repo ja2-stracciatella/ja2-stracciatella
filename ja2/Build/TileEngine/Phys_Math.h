@@ -58,6 +58,3 @@ vector_3	VCrossProduct( vector_3 *a, vector_3 *b );
 
 
 #endif
-
-
-

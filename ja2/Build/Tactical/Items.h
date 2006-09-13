@@ -180,4 +180,3 @@ extern void TurnOffXRayEffects( SOLDIERTYPE * pSoldier );
 extern INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
 
 #endif
-

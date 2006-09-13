@@ -391,4 +391,3 @@ void GetRootName( INT8 *pDestStr, INT8 *pSrcStr )
 	}
 
 }
-

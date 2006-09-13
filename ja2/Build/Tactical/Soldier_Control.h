@@ -1189,4 +1189,3 @@ void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldier );
 void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue );
 
 #endif
-

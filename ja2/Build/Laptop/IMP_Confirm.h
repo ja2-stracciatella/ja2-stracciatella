@@ -13,4 +13,3 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId );
 void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID );
 
 #endif
-

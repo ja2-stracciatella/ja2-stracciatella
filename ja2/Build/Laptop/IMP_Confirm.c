@@ -671,5 +671,3 @@ void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
 	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
 	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
 }
-
-

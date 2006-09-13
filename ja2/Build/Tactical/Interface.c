@@ -3991,4 +3991,3 @@ void RenderTopmostMultiPurposeLocator( )
 
 	BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos, VO_BLT_SRCTRANSPARENCY, NULL );
 }
-

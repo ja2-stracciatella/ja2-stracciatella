@@ -2363,4 +2363,3 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 	return( sClosestSpot );
 
 }
-

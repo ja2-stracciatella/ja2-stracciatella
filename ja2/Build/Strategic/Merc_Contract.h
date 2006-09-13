@@ -85,4 +85,3 @@ extern UINT8 ubQuitType;
 extern BOOLEAN gfFirstMercSayQuote;
 
 #endif
-

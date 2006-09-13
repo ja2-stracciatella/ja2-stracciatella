@@ -203,5 +203,3 @@ void RenderAccumulatedBurstLocations( )
 		}
 	}
 }
-
-

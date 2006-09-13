@@ -345,4 +345,3 @@ BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion  )
 
 	return( TRUE );
 }
-

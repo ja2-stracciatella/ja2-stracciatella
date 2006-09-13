@@ -381,4 +381,3 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	EndFrameBufferRender();
 	RefreshScreen( NULL );
 }
-

@@ -258,5 +258,3 @@ void HandleTacticalEndTurn( )
 	HandleRPCDescription( );
 
 }
-
-

@@ -243,5 +243,3 @@ FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight )
 
 	return( fWeight );
 }
-
-

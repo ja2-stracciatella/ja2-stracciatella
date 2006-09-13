@@ -9,4 +9,3 @@ void DisableQuickSound( );
 void PlayQuickSound( INT16 sSound );
 
 #endif
-

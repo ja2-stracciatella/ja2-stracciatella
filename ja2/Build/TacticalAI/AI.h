@@ -241,4 +241,3 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly);
 
 
 #endif
-

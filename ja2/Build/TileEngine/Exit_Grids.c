@@ -406,5 +406,3 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 		return( NOWHERE );
 	}
 }
-
-

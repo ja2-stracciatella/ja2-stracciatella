@@ -695,4 +695,3 @@ void ChangingAimArchiveSubPage( UINT8 ubSubPageNumber )
 		fFastLoadFlag = TRUE;
 	}
 }
-

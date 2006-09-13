@@ -1195,4 +1195,3 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 
 	return( TRUE );
 }
-

@@ -201,5 +201,3 @@ void CQuantizer::GetColorTable (RGBQUAD* prgb)
     UINT nIndex = 0;
     GetPaletteColors (m_pTree, prgb, &nIndex);
 }
-
-

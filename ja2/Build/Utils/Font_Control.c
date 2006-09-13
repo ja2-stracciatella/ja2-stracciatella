@@ -367,5 +367,3 @@ INT16 WFStringPixLength( wchar_t *string,INT32 UseFont )
 	  return( StringPixLength( string, UseFont ) );
   }
 }
-
-

@@ -501,4 +501,3 @@ void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLe
 	  giNPCReferenceCount = 0;
   }
 }
-

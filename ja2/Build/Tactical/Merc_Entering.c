@@ -816,5 +816,3 @@ void HandleFirstHeliDropOfGame( )
 	CharacterDialogueWithSpecialEvent( 0, 0,   0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
 
 }
-
-

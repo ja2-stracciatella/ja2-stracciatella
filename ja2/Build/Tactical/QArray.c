@@ -585,5 +585,3 @@ BOOLEAN QuoteExp_WitnessQueenBugDeath[73] =
 /* 71	unused  */      0,
 /* 72	Maddog  */      1,
 };
-
-

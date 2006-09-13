@@ -15,4 +15,3 @@ BOOLEAN		gfIngagedInDrop;
 
 
 #endif
-

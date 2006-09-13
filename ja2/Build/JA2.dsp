@@ -7,16 +7,16 @@
 CFG=ja2 - Win32 Demo Bounds Checker
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "JA2.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "JA2.mak" CFG="ja2 - Win32 Demo Bounds Checker"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "ja2 - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "ja2 - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "ja2 - Win32 Release with Debug Info" (based on "Win32 (x86) Application")
@@ -25,7 +25,7 @@ CFG=ja2 - Win32 Demo Bounds Checker
 !MESSAGE "ja2 - Win32 Release Demo" (based on "Win32 (x86) Application")
 !MESSAGE "ja2 - Win32 Demo Release with Debug Info" (based on "Win32 (x86) Application")
 !MESSAGE "ja2 - Win32 Demo Bounds Checker" (based on "Win32 (x86) Application")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -254,7 +254,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib winmm.lib /nologo /subsystem:windows /profile /map /debug /machine:I386 /out:"\ja2\ja2.exe"
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib winmm.lib smackw32.lib mss32.lib /nologo /subsystem:windows /profile /map /debug /machine:I386 /out:"d:\ja2demo\ja2.exe"
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 

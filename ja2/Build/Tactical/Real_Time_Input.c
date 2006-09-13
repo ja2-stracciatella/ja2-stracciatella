@@ -1549,6 +1549,3 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 
 	}
 }
-
-
-

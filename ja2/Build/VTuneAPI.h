@@ -55,4 +55,3 @@ BOOL VtResumeSampling(void);
 #endif  // _VTUNE_PROFILING
 
 #endif  // _VTUNEAPI_H_
-

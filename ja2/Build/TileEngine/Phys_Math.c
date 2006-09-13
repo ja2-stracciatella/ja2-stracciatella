@@ -124,22 +124,3 @@ vector_3 VGetNormal( vector_3 *a )
 	}
 	return ( c );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1390,5 +1390,3 @@ void EndAirRaid( )
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Ending Air Raid." );
 
 }
-
-

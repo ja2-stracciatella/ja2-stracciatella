@@ -36,5 +36,3 @@ BOOLEAN  SET_ERROR( const char *String, ...)
 
 	return( FALSE );
 }
-
-

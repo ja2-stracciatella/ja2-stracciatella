@@ -7,16 +7,16 @@
 CFG=Tactical - Win32 Demo Bounds Checker
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "Tactical.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "Tactical.mak" CFG="Tactical - Win32 Demo Bounds Checker"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "Tactical - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "Tactical - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "Tactical - Win32 Release with Debug Info" (based on "Win32 (x86) Static Library")
@@ -25,7 +25,7 @@ CFG=Tactical - Win32 Demo Bounds Checker
 !MESSAGE "Tactical - Win32 Release Demo" (based on "Win32 (x86) Static Library")
 !MESSAGE "Tactical - Win32 Demo Release with Debug Info" (based on "Win32 (x86) Static Library")
 !MESSAGE "Tactical - Win32 Demo Bounds Checker" (based on "Win32 (x86) Static Library")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -218,7 +218,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 
@@ -331,7 +331,7 @@ SOURCE=".\Handle Doors.c"
 
 !ELSEIF  "$(CFG)" == "Tactical - Win32 Demo Bounds Checker"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -417,7 +417,7 @@ SOURCE=.\LOS.c
 
 !ELSEIF  "$(CFG)" == "Tactical - Win32 Demo Bounds Checker"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -466,7 +466,7 @@ SOURCE=.\Overhead.c
 
 !ELSEIF  "$(CFG)" == "Tactical - Win32 Demo Bounds Checker"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -491,7 +491,7 @@ SOURCE=.\PATHAI.C
 
 !ELSEIF  "$(CFG)" == "Tactical - Win32 Demo Bounds Checker"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -560,7 +560,7 @@ SOURCE=".\Soldier Init List.c"
 
 !ELSEIF  "$(CFG)" == "Tactical - Win32 Demo Bounds Checker"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -594,7 +594,7 @@ SOURCE=".\Soldier Tile.c"
 # ADD BASE CPP /Od
 # ADD CPP /Od
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File

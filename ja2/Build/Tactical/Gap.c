@@ -269,6 +269,3 @@ UINT32 PlayJA2GapSample( CHAR8 *zSoundFile, UINT32 usRate, UINT32 ubVolume, UINT
 
 	return(SoundPlayStreamedFile( zSoundFile, &spParms));
 }
-
-
-

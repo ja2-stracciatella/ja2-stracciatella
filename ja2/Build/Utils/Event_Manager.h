@@ -30,4 +30,3 @@ UINT32	EventQueueSize( UINT8 ubQueueID );
 
 
 #endif
-

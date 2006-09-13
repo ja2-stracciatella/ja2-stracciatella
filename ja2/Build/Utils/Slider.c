@@ -775,4 +775,3 @@ void SetSliderValue( UINT32 uiSliderID, UINT32 uiNewValue )
 
 	CalculateNewSliderBoxPosition( pSlider );
 }
-

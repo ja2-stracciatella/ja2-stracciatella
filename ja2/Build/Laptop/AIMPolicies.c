@@ -886,4 +886,3 @@ void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber )
 		fFastLoadFlag = TRUE;
 	}
 }
-

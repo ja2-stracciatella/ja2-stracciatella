@@ -22,4 +22,3 @@ void ChangeSizeOfDisplayCover( INT32 iNewSize );
 void ChangeSizeOfLOS( INT32 iNewSize );
 
 #endif
-

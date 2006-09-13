@@ -3672,5 +3672,3 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
 	return(TRUE);
 
 }
-
-

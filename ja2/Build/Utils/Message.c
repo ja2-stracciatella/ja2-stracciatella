@@ -1874,6 +1874,3 @@ void DisplayLastMessage( void )
 }
 
 */
-
-
-

@@ -4195,4 +4195,3 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 	}
 
 }
-

@@ -2541,5 +2541,3 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 
 	return DoesVehicleHaveAnyPassengers( iVehicleID );
 }
-
-

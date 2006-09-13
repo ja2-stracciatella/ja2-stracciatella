@@ -422,4 +422,3 @@ void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber )
 		fFastLoadFlag = TRUE;
 	}
 }
-

@@ -81,7 +81,7 @@ void MapPalette( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, INT16 s
 					{
 						dLowestDist = dCubeDist;
 						bBest = cnt;
-					}					
+					}
 				}
 
 				// Now we have the lowest value

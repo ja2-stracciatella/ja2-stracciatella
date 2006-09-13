@@ -1713,5 +1713,3 @@ INT16 GetSoldierIDFromMercID(UINT8 ubMercID)
 
 	return( -1 );
 }
-
-

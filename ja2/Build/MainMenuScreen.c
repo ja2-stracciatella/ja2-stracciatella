@@ -700,5 +700,3 @@ void RestoreButtonBackGrounds()
 	}
 #endif
 }
-
-

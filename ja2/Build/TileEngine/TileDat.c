@@ -939,4 +939,3 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		TileElement->uiFlags |= ROOF_TILE;
 	}
 }
-

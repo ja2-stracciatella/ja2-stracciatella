@@ -1031,4 +1031,3 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 		*psScreenX = sScreenX;
 		*psScreenY = sScreenY;
 }
-

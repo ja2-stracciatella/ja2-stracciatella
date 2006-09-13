@@ -330,4 +330,3 @@ BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT
 
 	return(TRUE);
 }
-

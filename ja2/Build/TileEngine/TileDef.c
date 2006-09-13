@@ -1313,4 +1313,3 @@ void FreeAnimTileData( TILE_ELEMENT *pTileElem )
 		MemFree( pTileElem->pAnimData );
 	}
 }
-

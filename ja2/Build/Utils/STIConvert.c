@@ -828,4 +828,3 @@ UINT8 * CheckForDataInRowOrColumn( UINT8 * pPixel, UINT16 usIncrement, UINT16 us
 	}
 	return( NULL );
 }
-

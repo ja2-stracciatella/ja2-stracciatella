@@ -1256,4 +1256,3 @@ BOOLEAN ClearEventQueue( void )
 
 	return( TRUE );
 }
-
