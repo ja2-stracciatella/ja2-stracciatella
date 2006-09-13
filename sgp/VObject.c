@@ -1590,4 +1590,3 @@ void PerformVideoInfoDumpIntoFile( UINT8 *filename, BOOLEAN fAppend )
 }
 
 #endif
-

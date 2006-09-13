@@ -242,4 +242,3 @@ char*	DirectXErrorDescription ( INT32 iDXReturn )
       : return "Unrecognized error value.\0";
     }
 }
-

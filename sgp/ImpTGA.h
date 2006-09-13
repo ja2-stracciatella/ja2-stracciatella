@@ -51,4 +51,3 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage,  UINT16 fContents );
 #endif
 
 #endif
-

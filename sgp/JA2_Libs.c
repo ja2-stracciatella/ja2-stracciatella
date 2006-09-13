@@ -53,5 +53,3 @@ LibraryInitHeader gGameLibaries[ ] =
 #endif
 
 };
-
-

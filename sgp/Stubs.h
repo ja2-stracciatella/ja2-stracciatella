@@ -88,7 +88,7 @@ void GetSystemDirectory(char*, size_t);
 void _splitpath(const char*, char*, char*, char*, char*);
 
 int GetPrivateProfileString(const char*, const char*, const char*, const char*, size_t, const char*);
-int WritePrivateProfileString(const char*, const char*, const char*, const char*); 
+int WritePrivateProfileString(const char*, const char*, const char*, const char*);
 int GetLogicalDriveStrings(size_t, const char*);
 int GetDriveType(const char*);
 int GetVolumeInformation(const char*, const char*, size_t, UINT32*, UINT32*, UINT32*, const char*, size_t);

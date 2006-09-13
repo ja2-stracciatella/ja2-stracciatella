@@ -1693,4 +1693,3 @@ void FlicClearBitmap( HBITMAP hBitmap, INT iColourIndex )
 		((CHAR *)dibSection.dsBm.bmBits)[i] = iColourIndex;
 	}
 }
-

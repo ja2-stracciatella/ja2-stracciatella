@@ -1120,4 +1120,3 @@ INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 )
    /* Compare all of both strings: */
    return _stricmp( sSearchKey, sFileNameWithPath );
 }
-

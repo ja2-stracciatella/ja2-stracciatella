@@ -1034,4 +1034,3 @@ BOOLEAN GetShortFilename( STR strFilename, STR strPathname )
 
 	return(TRUE);
 }
-

@@ -2082,4 +2082,3 @@ UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
 
 	return( uiBytesFree );
 }
-

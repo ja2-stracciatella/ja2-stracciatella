@@ -358,4 +358,3 @@ extern UINT16 GetWidthOfButtonPic( UINT16 usButtonPicID, INT32 iSlot );
 #endif
 
 #endif
-

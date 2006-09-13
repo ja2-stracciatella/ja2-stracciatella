@@ -262,7 +262,7 @@ STR	GetExceptionString( DWORD uiExceptionCode )
 		case EXCEPTION_NONCONTINUABLE_EXCEPTION:
  			return( "The thread tried to continue execution after a noncontinuable exception occurred.");
 		case EXCEPTION_PRIV_INSTRUCTION:
- 			return( "The thread tried to execute an instruction whose operation is not allowed in the current machine mode."); 
+ 			return( "The thread tried to execute an instruction whose operation is not allowed in the current machine mode.");
 		case EXCEPTION_SINGLE_STEP:
  			return( "A trace trap or other single-instruction mechanism signaled that one instruction has been executed.");
 		case EXCEPTION_STACK_OVERFLOW:
@@ -316,7 +316,7 @@ BOOLEAN GetAndDisplayModuleAndSystemInfo( HWFILE hFile, CONTEXT *pContext )
 	if (GetFileTime(GetRealFileHandleFromFileManFileHandle( hFile ), 0, 0, &LastWriteTime))
 	{
 		PrintTime( zString, LastWriteTime);
-	
+
 		ErrorLog( hFile, "\tFile created on: %s\r\n", zString );
 	}
 
@@ -400,7 +400,7 @@ BOOLEAN DisplayStack( HWFILE hFile, CONTEXT	*pContext  )
 				Suffix = "\r\n";
 			output += wsprintf(output, "%08x%s", *pStack, Suffix);
 			pStack++;
-	
+
 			// Check for when the buffer is almost full, and flush it to disk.
 			if (output > nearend)
 			{

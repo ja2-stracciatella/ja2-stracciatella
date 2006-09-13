@@ -2667,4 +2667,3 @@ BOOLEAN _AddAndRecordVSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UIN
 }
 
 #endif
-

@@ -60,4 +60,3 @@ typedef struct sgpBitmaptag
 } SGPBitmap;
 
 #endif
-
