@@ -5,9 +5,12 @@
 #else
 	#include "Mutex_Manager.h"
 	#include "Debug.h"
+	#include <SDL.h>
 #endif
 //#define __MUTEX_TYPE
-
+/* __MUTEX_TYPE not ported, but else-case ported 
+ * TODO: Port complex case, using SDL_semaphore
+ */
 #ifdef __MUTEX_TYPE
 
 //
@@ -149,7 +152,7 @@ BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, char *szFilename)
 // Use defines to allocate slots in the mutex manager. Put these defines in LOCAL.H
 //
 
-CRITICAL_SECTION MutexTable[MAX_MUTEX_HANDLES];
+SDL_mutex *  MutexTable[MAX_MUTEX_HANDLES];
 
 BOOLEAN InitializeMutexManager(void)
 {
@@ -161,7 +164,7 @@ BOOLEAN InitializeMutexManager(void)
 
   for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
   {
-    InitializeCriticalSection(&MutexTable[uiIndex]);
+    MutexTable[uiIndex] = SDL_CreateMutex();
   }
 
   RegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
@@ -181,7 +184,7 @@ void ShutdownMutexManager(void)
 
   for (uiIndex = 0; uiIndex < MAX_MUTEX_HANDLES; uiIndex++)
   {
-    DeleteCriticalSection(&MutexTable[uiIndex]);
+    SDL_DestroyMutex(MutexTable[uiIndex]);
   }
 
   UnRegisterDebugTopic(TOPIC_MUTEX, "Mutex Manager");
@@ -203,19 +206,19 @@ BOOLEAN DeleteMutex(UINT32 uiMutexIndex)
 
 BOOLEAN EnterMutex(UINT32 uiMutexIndex, INT32 nLine, char *szFilename)
 {
-  EnterCriticalSection(&MutexTable[uiMutexIndex]);
+  SDL_mutexP(MutexTable[uiMutexIndex]);
   return TRUE;
 }
 
 BOOLEAN EnterMutexWithTimeout(UINT32 uiMutexIndex, UINT32 uiTimeout, INT32 nLine, char *szFilename)
 {
-  EnterCriticalSection(&MutexTable[uiMutexIndex]);
+  SDL_mutexP(MutexTable[uiMutexIndex]);
   return TRUE;
 }
 
 BOOLEAN LeaveMutex(UINT32 uiMutexIndex, INT32 nLine, char *szFilename)
 {
-  LeaveCriticalSection(&MutexTable[uiMutexIndex]);
+  SDL_mutexV(MutexTable[uiMutexIndex]);
 
   return TRUE;
 }

@@ -1,3 +1,8 @@
+SDL_CONFIG = sdl-config
+#SDL_CONFIG = sdl11-config
+CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
+
+CFLAGS += $(CFLAGS_SDL)
 CFLAGS += -I ja2/Build
 CFLAGS += -I ja2/Build/Tactical
 CFLAGS += -I ja2/Build/Strategic
@@ -9,7 +14,7 @@ CFLAGS += -I ja2/Build/TileEngine
 CFLAGS += -I ja2/Build/TacticalAI
 CFLAGS += -I sgp
 
-#CFLAGS += -std=c99
+CFLAGS += -std=gnu99
 #CFLAGS += -Wall
 #CFLAGS += -W
 CFLAGS += -Werror
@@ -327,7 +332,7 @@ SRCS += sgp/Compression.c
 SRCS += sgp/Container.c
 SRCS += sgp/Cursor_Control.c
 SRCS += sgp/DbMan.c
-#SRCS += sgp/Debug.c
+SRCS += sgp/Debug.c
 #SRCS += sgp/DirectDraw_Calls.c
 #SRCS += sgp/DirectX_Common.c
 SRCS += sgp/English.c
@@ -343,7 +348,7 @@ SRCS += sgp/JA2_Libs.c
 SRCS += sgp/Line.c
 #SRCS += sgp/MemMan.c
 SRCS += sgp/MouseSystem.c
-#SRCS += sgp/Mutex_Manager.c
+SRCS += sgp/Mutex_Manager.c
 SRCS += sgp/PCX.c
 SRCS += sgp/Random.c
 #SRCS += sgp/RegInst.c
@@ -351,7 +356,7 @@ SRCS += sgp/Random.c
 SRCS += sgp/STCI.c
 #SRCS += sgp/Shading.c # inline assembler
 #SRCS += sgp/SoundMan.c
-#SRCS += sgp/Timer.c
+SRCS += sgp/Timer.c
 SRCS += sgp/VObject.c
 #SRCS += sgp/VObject_Blitters.c # inline assembler
 #SRCS += sgp/VSurface.c

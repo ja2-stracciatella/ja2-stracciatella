@@ -4,25 +4,25 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Types.h"
-	#include <windows.h>
+	#include "Stubs.h"
 	#if defined( JA2 ) || defined( UTIL )
 		#include "Video.h"
 	#else
 		#include "video2.h"
 	#endif
 	#include "Timer.h"
+	#include <SDL.h>
 #endif
 
-#ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN
-#endif
 
 UINT32 guiStartupTime;
 UINT32 guiCurrentTime;
 
+static SDL_TimerID clock_id;
+
 void CALLBACK Clock( HWND hWindow, UINT uMessage, UINT idEvent, DWORD dwTime )
 {
-  guiCurrentTime = GetTickCount();
+  guiCurrentTime = SDL_GetTicks();
   if (guiCurrentTime < guiStartupTime)
   { // Adjust guiCurrentTime because of loopback on the timer value
     guiCurrentTime = guiCurrentTime + (0xffffffff - guiStartupTime);
@@ -37,8 +37,9 @@ BOOLEAN InitializeClockManager(void)
 {
 
   // Register the start time (use WIN95 API call)
-  guiCurrentTime = guiStartupTime = GetTickCount();
-  SetTimer(ghWindow, MAIN_TIMER_ID, 10, (TIMERPROC)Clock);
+  guiCurrentTime = guiStartupTime = SDL_GetTicks();
+  /* SetTimer(ghWindow, MAIN_TIMER_ID, 10, (TIMERPROC)Clock); */
+  clock_id = SDL_AddTimer(10,(SDL_NewTimerCallback)Clock,NULL);
 
 
   return TRUE;
@@ -48,7 +49,8 @@ void    ShutdownClockManager(void)
 {
 
   // Make sure we kill the timer
-  KillTimer(ghWindow, MAIN_TIMER_ID);
+  /* KillTimer(ghWindow, MAIN_TIMER_ID); */
+  SDL_RemoveTimer(clock_id);
 
 }
 

@@ -300,7 +300,7 @@ void DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage )
 
 void RemoveDebugText( void )
 {
-	DeleteFile( gpcDebugLogFileName );
+	FileDelete( gpcDebugLogFileName );
 }
 
 
@@ -491,7 +491,7 @@ extern HVOBJECT FontObjs[25];
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 void _FailMessage( UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile )
 {
-	MSG Message;
+	/*MSG Message;*/
 	UINT8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
 	FILE *DebugFile;
@@ -536,6 +536,15 @@ void _FailMessage( UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile )
 	sprintf( gubErrorText, "Assertion Failure -- Line %d in %s", uiLineNum, pSourceFile );
 	SetPendingNewScreen( ERROR_SCREEN );
 	SetCurrentScreen( ERROR_SCREEN );
+	/* Using windows-COM-model - I don't think it is really necessary,
+	 * so I comment it out for the moment to make the file 
+	 * compile. We can add our own way of doing this later
+	 * - Wolf
+	 *
+	 * TODO: Repair this function and add something of our own
+	 * (if we need this at all)
+	 */
+#if 0
 	while (gfProgramIsRunning)
 	{
 		if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
@@ -554,6 +563,7 @@ void _FailMessage( UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile )
 			gfSGPInputReceived  =  FALSE;
 		}
 	}
+#endif
 #endif
 	exit(0);
 }
