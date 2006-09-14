@@ -38,9 +38,7 @@ BOOLEAN InitializeClockManager(void)
 
   // Register the start time (use WIN95 API call)
   guiCurrentTime = guiStartupTime = SDL_GetTicks();
-  /* SetTimer(ghWindow, MAIN_TIMER_ID, 10, (TIMERPROC)Clock); */
   clock_id = SDL_AddTimer(10,(SDL_NewTimerCallback)Clock,NULL);
-
 
   return TRUE;
 }
@@ -49,9 +47,7 @@ void    ShutdownClockManager(void)
 {
 
   // Make sure we kill the timer
-  /* KillTimer(ghWindow, MAIN_TIMER_ID); */
   SDL_RemoveTimer(clock_id);
-
 }
 
 TIMER   GetClock(void)
