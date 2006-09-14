@@ -354,7 +354,7 @@ UINT16    WFGetFontHeight( INT32 FontNum )
   }
 }
 
-INT16 WFStringPixLength( wchar_t *string,INT32 UseFont )
+INT16 WFStringPixLength(const wchar_t *string,INT32 UseFont )
 {
   if ( USE_WINFONTS( ) )
   {

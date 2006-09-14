@@ -221,7 +221,7 @@ void			DoneFadeOutForExitGameInitOptionScreen( void );
 void			DoneFadeInForExitGameInitOptionScreen( void );
 // JA2Gold: no more timed turns setting
 //UINT8			GetCurrentTimedTurnsButtonSetting();
-BOOLEAN		DoGioMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+BOOLEAN		DoGioMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 void			DisplayMessageToUserAboutGameDifficulty();
 void			ConfirmGioDifSettingMessageBoxCallBack( UINT8 bExitValue );
 BOOLEAN		DisplayMessageToUserAboutIronManMode();
@@ -1152,7 +1152,7 @@ void DoneFadeInForExitGameInitOptionScreen( void )
 }
 
 
-BOOLEAN DoGioMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoGioMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 639, 479 };
 

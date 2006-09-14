@@ -734,14 +734,14 @@ void MonitorMapUIMessage( void );
 void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary );
 void ShadeMapElem( INT16 sMapX, INT16 sMapY );
 void PopupText( wchar_t *pFontString, ... );
-void DrawString(STR16 pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
+void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
 
 // Clock
 void SetClock(STR16 pString);
-void SetClockMin(STR16, ...);
-void SetClockHour(STR16 pStringA, ...);
-void SetHourAlternate(STR16 pStringA, ...);
-void SetDayAlternate(STR16 pStringA, ...);
+void SetClockMin(const wchar_t *, ...);
+void SetClockHour(const wchar_t *pStringA, ...);
+void SetHourAlternate(const wchar_t *pStringA, ...);
+void SetDayAlternate(const wchar_t *pStringA, ...);
 
 void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber );
 void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo );
@@ -4075,7 +4075,7 @@ UINT32 MapScreenHandle(void)
 
 
 
-void DrawString(STR16 pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
+void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
 {
 	// draw monochrome string
 	SetFont(uiFont);
@@ -4085,7 +4085,7 @@ void DrawString(STR16 pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
 
 
 
-void SetDayAlternate(STR16 pStringA, ...)
+void SetDayAlternate(const wchar_t *pStringA, ...)
 {
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
@@ -4119,7 +4119,7 @@ void SetDayAlternate(STR16 pStringA, ...)
 }
 
 
-void SetHourAlternate(STR16 pStringA, ...)
+void SetHourAlternate(const wchar_t *pStringA, ...)
 {
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
@@ -4155,7 +4155,7 @@ void SetHourAlternate(STR16 pStringA, ...)
 
 
 
-void SetClockHour(STR16 pStringA, ...)
+void SetClockHour(const wchar_t *pStringA, ...)
 {
  // this sets the clock counter, unwind loop
  UINT16 uiX=0;
@@ -4186,7 +4186,7 @@ void SetClockHour(STR16 pStringA, ...)
 	mprintf( uiX, uiY, String );
 }
 
-void SetClockMin(STR16 pStringA, ...)
+void SetClockMin(const wchar_t *pStringA, ...)
 {
  // this sets the clock counter, unwind loop
  wchar_t String[10];

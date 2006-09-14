@@ -226,13 +226,13 @@ enum
 
 
 
-STR16		QuestStates[]	= {
+const wchar_t *QuestStates[]	= {
 						L"N.S.",
 						L"In Prog.",
 						L"Done",
 };
 
-STR16		QuestDebugText[] =
+const wchar_t *QuestDebugText[] =
 {
 	L"Quest Debug System",
 	L"Quests",
@@ -339,7 +339,7 @@ enum
 
 
 
-STR16		PocketText[] = {
+const wchar_t *PocketText[] = {
 	L"Helmet",
 	L"Vest",
 	L"Leg",
@@ -611,8 +611,8 @@ void			CalcPositionOfNewScrollBoxLocation();
 void			DisplaySelectedListBox( );
 void			DisplaySelectedNPC( );
 void			DisplaySelectedItem( );
-void			TextEntryBox( STR16 pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
-BOOLEAN		CreateDestroyDisplayTextEntryBox( UINT8 ubAction, STR16 pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
+void			TextEntryBox(const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
+BOOLEAN		CreateDestroyDisplayTextEntryBox( UINT8 ubAction, const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
 void			InitQuestDebugTextInputBoxes();
 void			DestroyQuestDebugTextInputBoxes();
 void			AddNPCToGridNo( INT32 iGridNo );
@@ -2701,7 +2701,7 @@ void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 rea
 
 
 
-BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, STR16 pString, TEXT_ENTRY_CALLBACK EntryCallBack )
+BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, const wchar_t *pString, TEXT_ENTRY_CALLBACK EntryCallBack )
 {
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	static wchar_t	zString[ 256 ];
@@ -2857,7 +2857,7 @@ void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void TextEntryBox( STR16 pString, TEXT_ENTRY_CALLBACK TextEntryCallBack )
+void TextEntryBox(const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack )
 {
 	CreateDestroyDisplayTextEntryBox( QD_DROP_DOWN_CREATE, pString, TextEntryCallBack );
 	gubTextEntryAction = QD_DROP_DOWN_DISPLAY;

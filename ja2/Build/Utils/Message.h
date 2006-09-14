@@ -56,10 +56,10 @@ extern BOOLEAN fOkToBeepNewMessage;
 
 
 
-void ScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ...);
+void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ...);
 
 // same as screen message, but only display to mapscreen message system, not tactical
-void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ...);
+void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ...);
 
 void ScrollString( void );
 void DisplayStringsInMapScreenMessageList( void );

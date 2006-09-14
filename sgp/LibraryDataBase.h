@@ -183,7 +183,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibheader, BO
 BOOLEAN InitializeFileDatabase( );
 BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
-BOOLEAN CheckIfFileExistInLibrary( STR pFileName );
+BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 INT16 GetLibraryIDFromFileName( STR pFileName );
 HWFILE OpenFileFromLibrary( STR pName );
 HWFILE CreateRealFileHandle( HANDLE hFile );

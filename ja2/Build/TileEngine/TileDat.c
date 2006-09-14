@@ -226,7 +226,7 @@ UINT8	gFullBaseTileValues[] =
 };
 
 
-STR gTileSurfaceName[NUMBEROFTILETYPES] =
+const char *gTileSurfaceName[NUMBEROFTILETYPES] =
 {
 "TEXTURE1",
 "TEXTURE2",

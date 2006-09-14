@@ -3029,7 +3029,7 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 	if the file wasn't loaded.
 
 ***************************************************************************************/
-INT32 LightLoad(STR pFilename)
+INT32 LightLoad(const char *pFilename)
 {
 HWFILE hFile;
 LIGHT_NODE *pNewLight=NULL, *pLastLight=NULL;
@@ -3078,7 +3078,7 @@ INT32 iLight;
 	disk. Returns the index of the template, or (-1) if it couldn't be loaded.
 
 ***************************************************************************************/
-INT32 LightLoadCachedTemplate(STR pFilename)
+INT32 LightLoadCachedTemplate(const char *pFilename)
 {
 INT32 iCount;
 
@@ -3203,7 +3203,7 @@ INT32 iCount;
 * If this function fails (out of sprites, or bad template name) it returns (-1).
 *
 ********************************************************************************/
-INT32 LightSpriteCreate(STR pName, UINT32 uiLightType)
+INT32 LightSpriteCreate(const char *pName, UINT32 uiLightType)
 {
 INT32 iSprite;
 

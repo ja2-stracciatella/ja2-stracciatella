@@ -1147,7 +1147,7 @@ void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, I
 
 
 
-INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {	// reset the highlighted line
 	giHighLine = -1;
   return DoMessageBox( ubStyle, zString, uiExitScreen, ( UINT16 ) ( usFlags | MSG_BOX_FLAG_USE_CENTERING_RECT ), ReturnCallback, pCenteringRect );
@@ -1155,7 +1155,7 @@ INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScr
 
 
 
-INT32 DoMapMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+INT32 DoMapMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 
@@ -2590,7 +2590,7 @@ void ShutDownUserDefineHelpTextRegions( void )
 
 // thsi will setup the fast help text regions that are unrelated to mouse regions
 // user is to pass in the x,y position of the box, the width to wrap the strings and the string itself
-BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], STR16 sString[], INT32 iSize )
+BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], const wchar_t *sString[], INT32 iSize )
 {
 	INT32 iCounter = 0;
 

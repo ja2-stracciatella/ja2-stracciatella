@@ -76,7 +76,7 @@ CHAR16		gzUserDefinedButton1[ 128 ];
 CHAR16		gzUserDefinedButton2[ 128 ];
 
 
-INT32 DoMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	VSURFACE_DESC		vs_desc;
 	UINT16	usTextBoxWidth;
@@ -1195,7 +1195,7 @@ UINT32	MessageBoxScreenShutdown(  )
 
 
 // a basic box that don't care what screen we came from
-void DoScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoScreenIndependantMessageBox(const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
@@ -1215,7 +1215,7 @@ void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBO
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
-void DoScreenIndependantMessageBoxWithRect( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+void DoScreenIndependantMessageBoxWithRect(const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 
 	/// which screen are we in?

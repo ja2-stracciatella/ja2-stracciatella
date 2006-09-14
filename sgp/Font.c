@@ -325,7 +325,7 @@ int count;
 //  This function returns (-1) if it fails, and debug msgs for a reason.
 //  Otherwise the font number is returned.
 //*****************************************************************************
-INT32 LoadFontFile(UINT8 *filename)
+INT32 LoadFontFile(const char *filename)
 {
 VOBJECT_DESC		vo_desc;
 UINT32					LoadIndex;
@@ -532,10 +532,11 @@ INT16 StringNPixLength(UINT16 *string, UINT32 uiMaxCount, INT32 UseFont)
 //	Returns the length of a string in pixels, depending on the font given.
 //
 //*****************************************************************************
-INT16 StringPixLength(wchar_t *string, INT32 UseFont)
+INT16 StringPixLength(const wchar_t *string, INT32 UseFont)
 {
 	UINT32 Cur;
-	wchar_t *curletter,transletter;
+	const wchar_t *curletter;
+	wchar_t transletter;
 
 	if (string == NULL)
 	{
@@ -715,7 +716,7 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters. Uses monochrome font color settings
 //*****************************************************************************
-UINT32 mprintf(INT32 x, INT32 y, wchar_t *pFontString, ...)
+UINT32 mprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
@@ -767,7 +768,7 @@ UINT8				*pDestBuf;
 }
 
 
-void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, wchar_t *pFontString, ... )
+void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, const wchar_t *pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
@@ -779,7 +780,7 @@ void VarFindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 	FindFontRightCoordinates( sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY );
 }
 
-void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, wchar_t *pFontString, ... )
+void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY, const wchar_t *pFontString, ... )
 {
 	wchar_t	string[512];
 	va_list argptr;
@@ -792,7 +793,7 @@ void VarFindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 
 }
 
 
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -804,7 +805,7 @@ void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
 	*psNewY = yp;
 }
 
-void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
+void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY )
 {
 	INT16 xp,yp;
 
@@ -824,7 +825,7 @@ void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHe
 // the parameters are identical to printf. The resulting string may be no longer
 // than 512 word-characters.
 //*****************************************************************************
-UINT32 gprintf(INT32 x, INT32 y, wchar_t *pFontString, ...)
+UINT32 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
@@ -989,7 +990,7 @@ wchar_t	string[512];
 }
 
 
-UINT32 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...)
+UINT32 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, const wchar_t *pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;

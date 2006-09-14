@@ -7,7 +7,7 @@
 
 
 
-STR16		QuestDescText[] =
+const wchar_t *QuestDescText[] =
 {
 	L"Deliver Letter",
 	L"Food Route",
@@ -46,7 +46,7 @@ STR16		QuestDescText[] =
 };
 
 
-STR16		FactDescText[] =
+const wchar_t *FactDescText[] =
 {
 	L"Omerta Liberated",
 	L"Drassen Liberated",

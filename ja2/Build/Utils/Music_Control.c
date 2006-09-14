@@ -38,7 +38,7 @@ INT8		gbFadeSpeed = 1;
 
 #ifdef JA2DEMO
 
-CHAR8 *szMusicList[NUM_MUSIC]=
+const char *szMusicList[NUM_MUSIC]=
 {
 	"MUSIC\\marimbad 2.wav",
 	"MUSIC\\menumix1.wav",
@@ -60,7 +60,7 @@ CHAR8 *szMusicList[NUM_MUSIC]=
 
 #else
 
-CHAR8 *szMusicList[NUM_MUSIC]=
+const char *szMusicList[NUM_MUSIC]=
 {
 	"MUSIC\\marimbad 2.wav",
 	"MUSIC\\menumix1.wav",

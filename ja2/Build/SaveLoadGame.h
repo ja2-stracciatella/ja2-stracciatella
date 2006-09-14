@@ -64,13 +64,13 @@ void			CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName 
 
 
 
-BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 pGameDesc );
+BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );
 BOOLEAN LoadSavedGame( UINT8 ubSavedGameID );
 
 BOOLEAN CopySavedSoldierInfoToNewSoldier( SOLDIERTYPE *pDestSourceInfo, SOLDIERTYPE *pSourceInfo );
 
-BOOLEAN		SaveFilesToSavedGame( STR pSrcFileName, HWFILE hFile );
-BOOLEAN		LoadFilesFromSavedGame( STR pSrcFileName, HWFILE hFile );
+BOOLEAN		SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile );
+BOOLEAN		LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile );
 
 BOOLEAN DoesUserHaveEnoughHardDriveSpace();
 

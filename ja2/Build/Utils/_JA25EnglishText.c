@@ -14,7 +14,7 @@
 
 // VERY TRUNCATED FILE COPIED FROM JA2.5 FOR ITS FEATURES FOR JA2 GOLD
 
-STR16	zNewTacticalMessages[]=
+const wchar_t *zNewTacticalMessages[]=
 {
 	L"Range to target: %d tiles",
 	L"Attaching the transmitter to your laptop computer.",
@@ -42,7 +42,7 @@ STR16	zNewTacticalMessages[]=
 };
 
 //@@@:  New string as of March 3, 2000.
-STR16	gzIronManModeWarningText[]=
+const wchar_t *gzIronManModeWarningText[]=
 {
 	L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?",
 };

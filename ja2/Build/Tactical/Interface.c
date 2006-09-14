@@ -98,7 +98,7 @@ typedef struct
 TOP_MESSAGE		gTopMessage;
 BOOLEAN				gfTopMessageDirty = FALSE;
 
-void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, wchar_t *psString );
+void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, const wchar_t *psString );
 extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState );
 
 
@@ -1449,7 +1449,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	INT16 sX, sY;
 	INT32 iBack;
 	TILE_ELEMENT							 TileElem;
-	wchar_t										*pStr;
+	const wchar_t *pStr;
 	wchar_t										 NameStr[ 50 ];
 	UINT16										 usGraphicToUse = THIRDPOINTERS1;
   BOOLEAN                    fRaiseName = FALSE;
@@ -2870,7 +2870,7 @@ void EndUIMessage( )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
-BOOLEAN AddTopMessage( UINT8 ubType, wchar_t *pzString )
+BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 {
 	UINT32	cnt;
 	BOOLEAN	fFound = FALSE;
@@ -2907,7 +2907,7 @@ BOOLEAN AddTopMessage( UINT8 ubType, wchar_t *pzString )
 	return( FALSE );
 }
 
-void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, wchar_t *psString )
+void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, const wchar_t *psString )
 {
 	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
   VOBJECT_DESC    VObjectDesc;
@@ -3504,7 +3504,7 @@ void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier )
+const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 {
 	INT32 cnt, cntStart;
 	if( pSoldier->bLife == pSoldier->bLifeMax )

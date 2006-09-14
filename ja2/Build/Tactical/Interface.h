@@ -201,7 +201,7 @@ enum
 } MESSAGE_TYPES;
 
 void HandleTopMessages( );
-BOOLEAN AddTopMessage( UINT8 ubType, wchar_t *pzString );
+BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString );
 BOOLEAN InTopMessageBarAnimation( );
 void EndTopMessage( );
 
@@ -209,7 +209,7 @@ void PauseRT( BOOLEAN fPause );
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 
-wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );
+const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );
 
 
 void GetLaunchItemParamsFromUI( );

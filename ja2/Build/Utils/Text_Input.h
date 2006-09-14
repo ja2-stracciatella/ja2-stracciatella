@@ -113,7 +113,7 @@ void RemoveTextInputField( UINT8 ubField );
 //This is a useful call made from an external user input field.  Using the previous file dialog example, this
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
-void SetInputFieldStringWith16BitString( UINT8 ubField, wchar_t *szNewText );
+void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText );
 void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText );
 
 //Allows external functions to access the strings within the fields at anytime.

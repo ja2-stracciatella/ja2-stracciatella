@@ -3106,7 +3106,7 @@ void RenderSoldierCellHealth( SOLDIERCELL *pCell )
 {
 	INT32 cnt, cntStart;
 	INT32 xp, yp;
-	wchar_t *pStr;
+	const wchar_t *pStr;
 	wchar_t str[20];
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;

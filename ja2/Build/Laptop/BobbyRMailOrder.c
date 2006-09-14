@@ -29,7 +29,7 @@
 
 typedef struct
 {
-	STR16  *psCityLoc;
+	const wchar_t **psCityLoc;
 	UINT16	usOverNightExpress;
 	UINT16	us2DaysService;
 	UINT16	usStandardService;

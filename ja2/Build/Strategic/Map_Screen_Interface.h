@@ -352,7 +352,7 @@ void EnableTeamInfoPanels( void );
 void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, INT16 yp );
 
 // do mapscreen message box
-INT32 DoMapMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+INT32 DoMapMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
 // hop up one leve,l int he map screen level interface
 void GoUpOneLevelInMap( void );
@@ -495,7 +495,7 @@ void StopShowingInterfaceFastHelpText( void );
 BOOLEAN IsTheInterfaceFastHelpTextActive( void );
 
 //set up the tactical lists
-BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], STR16 sString[], INT32 iSize );
+BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], const wchar_t *sString[], INT32 iSize );
 
 
 // the alternate mapscreen movement system

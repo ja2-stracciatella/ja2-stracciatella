@@ -69,7 +69,7 @@ INT16 sFacePositions[ NUMBER_OF_PLAYER_PORTRAITS ][ 4 ]=
 	{0,0,0,0},
 };
 
-STR8 pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
+const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 {
 	"Faces\\200.sti",
 	"Faces\\201.sti",
@@ -89,7 +89,7 @@ STR8 pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 	"Faces\\215.sti",
 };
 
-STR8 pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
+const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 {
 	"Faces\\BigFaces\\200.sti",
 	"Faces\\BigFaces\\201.sti",
@@ -664,7 +664,7 @@ void SetMercSkinAndHairColors( void )
 			};
 
 	// skin strings
-	STR sSkinStrings[]={
+	const char *sSkinStrings[]={
 		"PINKSKIN",
 		"TANSKIN",
 		"DARKSKIN",
@@ -672,7 +672,7 @@ void SetMercSkinAndHairColors( void )
 	};
 
 	// the hair colors
-	STR sHairStrings[]={
+	const char *sHairStrings[]={
 		"BROWNHEAD",
 		"BLACKHEAD",
 		"WHITEHEAD",

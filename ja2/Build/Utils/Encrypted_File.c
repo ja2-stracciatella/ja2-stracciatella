@@ -9,7 +9,7 @@
 #include "Language_Defines.h"
 
 
-BOOLEAN LoadEncryptedDataFromFile(STR pFileName, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
+BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
 {
 	HWFILE		hFile;
 	UINT16		i;

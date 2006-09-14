@@ -66,7 +66,7 @@ typedef struct {
 
 #define NUM_WAV_CHUNKS	3
 
-CHAR8	*cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
+const char *cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
 
 
 // global settings
@@ -98,10 +98,10 @@ CHAR8	*cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
 // Local Function Prototypes
 BOOLEAN		SoundInitCache(void);
 BOOLEAN		SoundShutdownCache(void);
-UINT32		SoundLoadSample(STR pFilename);
+UINT32		SoundLoadSample(const char *pFilename);
 UINT32		SoundFreeSample(STR pFilename);
-UINT32		SoundGetCached(STR pFilename);
-UINT32		SoundLoadDisk(STR pFilename);
+UINT32		SoundGetCached(const char *pFilename);
+UINT32		SoundLoadDisk(const char *pFilename);
 
 // Low level
 UINT32		SoundGetEmptySample(void);
@@ -114,9 +114,9 @@ BOOLEAN		SoundGetDriverName(HDIGDRIVER DIG, CHAR8 *cBuf);
 BOOLEAN		SoundShutdownHardware(void);
 UINT32		SoundGetFreeChannel(void);
 UINT32		SoundStartSample(UINT32 uiSample, UINT32 uiChannel, SOUNDPARMS *pParms);
-UINT32		SoundStartStream(STR pFilename, UINT32 uiChannel, SOUNDPARMS *pParms);
+UINT32		SoundStartStream(const char *pFilename, UINT32 uiChannel, SOUNDPARMS *pParms);
 UINT32		SoundGetUniqueID(void);
-BOOLEAN		SoundPlayStreamed(STR pFilename);
+BOOLEAN		SoundPlayStreamed(const char *pFilename);
 BOOLEAN		SoundCleanCache(void);
 BOOLEAN		SoundSampleIsPlaying(UINT32 uiSample);
 BOOLEAN		SoundIndexIsPlaying(UINT32 uiSound);
@@ -149,7 +149,7 @@ H3DPOBJECT	gh3DListener=0;
 BOOLEAN			gfUsingEAX=TRUE;
 UINT32			guiRoomTypeIndex=0;
 
-CHAR8* pEAXRoomTypes[EAXROOMTYPE_NUM_TYPES] =
+const char* pEAXRoomTypes[EAXROOMTYPE_NUM_TYPES] =
 {
 	// None
 	"PLAIN",
@@ -264,7 +264,7 @@ void ShutdownSoundManager(void)
 //
 //*******************************************************************************
 
-UINT32 SoundPlay(STR pFilename, SOUNDPARMS *pParms)
+UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
 {
 	UINT32 uiSample, uiChannel;
 
@@ -310,7 +310,7 @@ UINT32 SoundPlay(STR pFilename, SOUNDPARMS *pParms)
 //						If an error occured, SOUND_ERROR will be returned
 //
 //*******************************************************************************
-UINT32	SoundPlayStreamedFile( STR pFilename, SOUNDPARMS *pParms )
+UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 {
 	UINT32	uiChannel;
 	HANDLE	hRealFileHandle;
@@ -1449,7 +1449,7 @@ UINT32 uiCount;
 //	Returns: TRUE, always
 //
 //*******************************************************************************
-UINT32 SoundLoadSample(STR pFilename)
+UINT32 SoundLoadSample(const char *pFilename)
 {
 UINT32 uiSample=NO_SAMPLE;
 
@@ -1560,7 +1560,7 @@ BOOLEAN fFreed=FALSE;
 //						in the cache.
 //
 //*******************************************************************************
-UINT32 SoundGetCached(STR pFilename)
+UINT32 SoundGetCached(const char *pFilename)
 {
 UINT32 uiCount;
 
@@ -1584,7 +1584,7 @@ UINT32 uiCount;
 //						in the cache.
 //
 //*******************************************************************************
-UINT32 SoundLoadDisk(STR pFilename)
+UINT32 SoundLoadDisk(const char *pFilename)
 {
 HWFILE	hFile;
 UINT32	uiSize, uiSample;
@@ -2132,7 +2132,7 @@ CHAR8 AILString[200];
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-UINT32 SoundStartStream(STR pFilename, UINT32 uiChannel, SOUNDPARMS *pParms)
+UINT32 SoundStartStream(const char *pFilename, UINT32 uiChannel, SOUNDPARMS *pParms)
 {
 UINT32 uiSoundID, uiSpeed;
 CHAR8	AILString[200];
@@ -2233,7 +2233,7 @@ static UINT32 uiNextID=0;
 //	Returns:	TRUE if it should be streamed, FALSE if loaded.
 //
 //*******************************************************************************
-BOOLEAN SoundPlayStreamed(STR pFilename)
+BOOLEAN SoundPlayStreamed(const char *pFilename)
 {
 HWFILE hDisk;
 UINT32 uiFilesize;

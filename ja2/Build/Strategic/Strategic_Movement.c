@@ -2222,7 +2222,8 @@ BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals( GROUP *pFirstGroup )
 	if( ubNumNearbyGroups )
 	{ //postpone the battle until the user answers the dialog.
 		wchar_t str[255];
-		wchar_t *pStr, *pEnemyType;
+		const wchar_t *pStr;
+		const wchar_t *pEnemyType;
 		InterruptTime();
 		PauseGame();
 		LockPauseState( 13 );

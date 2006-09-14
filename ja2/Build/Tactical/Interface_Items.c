@@ -418,8 +418,8 @@ typedef struct
 	INT32 iXPosition[NUM_INV_HELPTEXT_ENTRIES];
 	INT32 iYPosition[NUM_INV_HELPTEXT_ENTRIES];
 	INT32 iWidth[NUM_INV_HELPTEXT_ENTRIES];
-	STR16 sString1[NUM_INV_HELPTEXT_ENTRIES];
-	STR16 sString2[NUM_INV_HELPTEXT_ENTRIES];
+	const wchar_t *sString1[NUM_INV_HELPTEXT_ENTRIES];
+	const wchar_t *sString2[NUM_INV_HELPTEXT_ENTRIES];
 } INV_HELPTEXT;
 
 
@@ -555,7 +555,7 @@ UINT32					guiBodyInvVO[ 4 ][ 2 ];
 UINT32					guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
-BOOLEAN AttemptToAddSubstring( STR16 zDest, STR16 zTemp, UINT32 * puiStringLength, UINT32 uiPixLimit )
+BOOLEAN AttemptToAddSubstring( STR16 zDest, const wchar_t *zTemp, UINT32 * puiStringLength, UINT32 uiPixLimit )
 {
 	UINT32 uiRequiredStringLength, uiTempStringLength;
 
@@ -585,7 +585,7 @@ BOOLEAN AttemptToAddSubstring( STR16 zDest, STR16 zTemp, UINT32 * puiStringLengt
 void GenerateProsString( wchar_t * zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimit )
 {
 	UINT32			uiStringLength = 0;
-	wchar_t *		zTemp;
+	const wchar_t *zTemp;
 	UINT16			usItem = pObject->usItem;
 	UINT8				ubWeight;
 
@@ -691,7 +691,7 @@ void GenerateProsString( wchar_t * zItemPros, OBJECTTYPE * pObject, UINT32 uiPix
 void GenerateConsString( wchar_t * zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimit )
 {
 	UINT32			uiStringLength = 0;
-	wchar_t *		zTemp;
+	const wchar_t *zTemp;
 	UINT8				ubWeight;
 	UINT16			usItem = pObject->usItem;
 

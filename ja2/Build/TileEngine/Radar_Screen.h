@@ -7,7 +7,7 @@
 void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
-BOOLEAN LoadRadarScreenBitmap( CHAR8 *aFilename );
+BOOLEAN LoadRadarScreenBitmap(const char *aFilename);
 
 // RADAR WINDOW DEFINES
 #define	RADAR_WINDOW_X				543

@@ -569,7 +569,7 @@ void UnHideMessagesDuringNPCDialogue( void )
 }
 
 // new screen message
-void ScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
+void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 {
 
 	wchar_t	DestString[512];
@@ -844,7 +844,7 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 }
 
 
-void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
+void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 {
   // this function sets up the string into several single line structures
 

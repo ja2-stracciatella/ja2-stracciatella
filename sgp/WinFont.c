@@ -44,13 +44,13 @@ LOGFONT gLogFont;
 HWINFONT	WinFonts[ MAX_WIN_FONTS ];
 
 
-void Convert16BitStringTo8BitChineseBig5String( UINT8 *dst, UINT16 *src )
+void Convert16BitStringTo8BitChineseBig5String( UINT8 *dst, const wchar_t *src )
 {
 	INT32 i, j;
-	char *ptr;
+	const char *ptr;
 
 	i = j = 0;
-	ptr = (char*)src;
+	ptr = (const char*)src;
 	while( ptr[j] || ptr[j + 1] )
 	{
 		if( ptr[j] )
@@ -240,7 +240,7 @@ void PrintWinFont( UINT32 uiDestBuf, INT32 iFont, INT32 x, INT32 y, UINT16 *pFon
 
 }
 
-INT16 WinFontStringPixLength( UINT16 *string2, INT32 iFont )
+INT16 WinFontStringPixLength(const wchar_t *string2, INT32 iFont )
 {
   HWINFONT                *pWinFont;
   HDC                     hdc;

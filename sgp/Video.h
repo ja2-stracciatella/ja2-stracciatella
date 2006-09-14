@@ -81,7 +81,7 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 
 void RefreshScreen(void *DummyVariable);
 
-void FatalError( UINT8 *pError, ...);
+void FatalError(const char *pError, ...);
 
 
 extern SGPPaletteEntry			gSgpPalette[256];

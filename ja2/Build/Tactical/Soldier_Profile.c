@@ -217,7 +217,7 @@ BOOLEAN LoadMercProfiles(void)
 {
 //	FILE *fptr;
 	HWFILE fptr;
-	char *pFileName = "BINARYDATA\\Prof.dat";
+	const char *pFileName = "BINARYDATA\\Prof.dat";
 	UINT32 uiLoop, uiLoop2, uiLoop3;
 	UINT16 usItem, usNewGun, usAmmo, usNewAmmo;
 	UINT32	uiNumBytesRead;

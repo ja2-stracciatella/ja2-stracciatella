@@ -307,7 +307,7 @@ BOOL WriteProfileInt(STR lpszSection, STR lpszEntry, int nValue)
 	return TRUE;
 }
 
-BOOL WriteProfileChar(STR lpszSection, STR lpszEntry, STR lpszValue)
+BOOL WriteProfileChar(const char *lpszSection, const char *lpszEntry, STR lpszValue)
 {
 	assert(lpszSection != NULL);
 

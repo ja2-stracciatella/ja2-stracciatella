@@ -202,7 +202,7 @@ INT32 FindFreeButtonSlot(void)
 //
 //	Load images for use with QuickButtons.
 //
-INT32 LoadButtonImage(UINT8 *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	VOBJECT_DESC	vo_desc;
 	UINT32				UseSlot;
@@ -1664,7 +1664,7 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 }
 
 //Creates a generic button with text on it.
-INT32 CreateTextButton(wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
 	INT32	ButtonNum;
@@ -2102,7 +2102,7 @@ INT32 CreateSimpleButton( INT32 x, INT32 y, UINT8 *filename, INT32 Type, INT16 P
 }
 
 
-INT32 CreateIconAndTextButton( INT32 Image, wchar_t *string, UINT32 uiFont,
+INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont,
 															 INT16 sForeColor, INT16 sShadowColor,
 															 INT16 sForeColorDown, INT16 sShadowColorDown,
 															 INT8 bJustification,
@@ -2238,7 +2238,7 @@ INT32 CreateIconAndTextButton( INT32 Image, wchar_t *string, UINT32 uiFont,
 }
 
 //New functions
-void SpecifyButtonText( INT32 iButtonID, wchar_t *string )
+void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 {
 	GUI_BUTTON *b;
 
@@ -2335,7 +2335,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
-void SpecifyFullButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
+void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )
 {
@@ -2358,7 +2358,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 ui
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
-void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, wchar_t *string, INT32 uiFont,
+void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
 	GUI_BUTTON *b;
@@ -2515,7 +2515,7 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 //
 //	Set the text that will be displayed as the FastHelp
 //
-void SetButtonFastHelpText(INT32 iButton, wchar_t *Text)
+void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 {
 	GUI_BUTTON *b;
 	if(iButton<0 || iButton>MAX_BUTTONS)
@@ -4074,7 +4074,7 @@ void DrawDialogBox( INT32 iDlgBox )
 
 
 
-INT32 CreateCheckBoxButton( INT16 x, INT16 y, UINT8 *filename, INT16 Priority, GUI_CALLBACK ClickCallback )
+INT32 CreateCheckBoxButton( INT16 x, INT16 y, const char *filename, INT16 Priority, GUI_CALLBACK ClickCallback )
 {
 	GUI_BUTTON *b;
 	INT32 ButPic, iButtonID;

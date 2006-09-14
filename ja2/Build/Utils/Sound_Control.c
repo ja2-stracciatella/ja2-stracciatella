@@ -462,7 +462,7 @@ UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UIN
 }
 
 
-UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
 {
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
@@ -481,7 +481,7 @@ UINT32 PlayJA2SampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, U
 }
 
 
-UINT32 PlayJA2StreamingSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
+UINT32 PlayJA2StreamingSampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
 {
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array

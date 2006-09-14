@@ -84,10 +84,10 @@ extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
 extern void		ShutdownFileManager( void );
 extern void		FileDebug( BOOLEAN f );
 
-extern BOOLEAN	FileExists( STR strFilename );
+extern BOOLEAN	FileExists( const char *strFilename );
 extern BOOLEAN	FileExistsNoDB( STR strFilename );
-extern BOOLEAN	FileDelete( STR strFilename );
-extern HWFILE	FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
+extern BOOLEAN	FileDelete( const char *strFilename );
+extern HWFILE	FileOpen( const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
 extern void		FileClose( HWFILE );
 
 extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
@@ -100,18 +100,18 @@ extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );
 extern INT32	FileGetPos( HWFILE );
 
 extern UINT32	FileGetSize( HWFILE );
-extern UINT32 FileSize(STR strFilename);
+extern UINT32 FileSize(const char *strFilename);
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory );
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory );
-BOOLEAN MakeFileManDirectory( STRING512 pcDirectory );
+BOOLEAN MakeFileManDirectory(const char *pcDirectory);
 
 // WARNING: THESE DELETE ALL FILES IN THE DIRECTORY ( and all subdirectories if fRecursive is TRUE!! )
-BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive);
-BOOLEAN EraseDirectory( STRING512 pcDirectory);
+BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive);
+BOOLEAN EraseDirectory(const char *pcDirectory);
 
 typedef struct _GETFILESTRUCT_TAG {
 	INT32 iFindHandle;
@@ -120,7 +120,7 @@ typedef struct _GETFILESTRUCT_TAG {
 	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
 
-BOOLEAN GetFileFirst( CHAR8 *pSpec, GETFILESTRUCT *pGFStruct );
+BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct );
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct );
 void GetFileClose( GETFILESTRUCT *pGFStruct );
 
@@ -129,8 +129,8 @@ BOOLEAN FileMove(STR strOldName, STR strNewName);
 
 //Added by Kris Morness
 BOOLEAN FileSetAttributes( STR filename, UINT32 uiNewAttribs );
-UINT32	FileGetAttributes( STR filename );
-BOOLEAN FileClearAttributes( STR filename );
+UINT32	FileGetAttributes(const char *filename);
+BOOLEAN FileClearAttributes( const char *filename );
 
 //returns true if at end of file, else false
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile );

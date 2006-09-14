@@ -749,7 +749,7 @@ BOOLEAN CopyExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 s
 // to the video buffer.
 //
 //*****************************************************************************
-UINT16 gprintfdirty(INT16 x, INT16 y, wchar_t *pFontString, ...)
+UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...)
 {
 va_list argptr;
 wchar_t	string[512];
@@ -810,7 +810,7 @@ UINT16 uiStringLength, uiStringHeight;
 }
 
 
-UINT16 gprintfRestore(INT16 x, INT16 y, wchar_t *pFontString, ...)
+UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...)
 {
 va_list argptr;
 wchar_t	string[512];

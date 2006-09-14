@@ -18,7 +18,7 @@ CFLAGS += -Wimplicit-int
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
 CFLAGS += -Wsequence-point
-#CFLAGS += -Wwrite-strings
+CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
 

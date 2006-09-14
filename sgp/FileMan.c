@@ -219,7 +219,7 @@ void FileDebug( BOOLEAN f )
 //
 //**************************************************************************
 
-BOOLEAN FileExists( STR strFilename )
+BOOLEAN FileExists(const char *strFilename)
 {
 	BOOLEAN	fExists = FALSE;
 	FILE		*file;
@@ -312,7 +312,7 @@ BOOLEAN FileExistsNoDB( STR strFilename )
 //
 //**************************************************************************
 
-BOOLEAN FileDelete( STR strFilename )
+BOOLEAN FileDelete(const char *strFilename)
 {
 	return( DeleteFile( strFilename ) );
 }
@@ -341,7 +341,7 @@ BOOLEAN FileDelete( STR strFilename )
 //
 //**************************************************************************
 
-HWFILE FileOpen( STR strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
+HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
 	HWFILE	hFile;
 	HANDLE	hRealFile;

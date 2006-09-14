@@ -1233,7 +1233,7 @@ void RefreshMouseRegions( )
 
 }
 
-void SetRegionFastHelpText( MOUSE_REGION *region, wchar_t *szText )
+void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
 {
 	Assert( region );
 

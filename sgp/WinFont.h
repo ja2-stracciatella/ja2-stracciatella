@@ -13,9 +13,9 @@ void SetWinFontForeColor( INT32 iFont, COLORVAL *pColor );
 
 void PrintWinFont( UINT32 uiDestBuf, INT32 iFont, INT32 x, INT32 y, wchar_t *pFontString, ...);
 
-INT16 WinFontStringPixLength( wchar_t *string, INT32 iFont );
-INT16 GetWinFontHeight( wchar_t *string, INT32 iFont );
-UINT32	WinFont_mprintf( INT32 iFont, INT32 x, INT32 y, wchar_t *pFontString, ...);
+INT16 WinFontStringPixLength(const wchar_t *string, INT32 iFont );
+INT16 GetWinFontHeight(const wchar_t *string, INT32 iFont );
+UINT32	WinFont_mprintf( INT32 iFont, INT32 x, INT32 y, const wchar_t *pFontString, ...);
 
 BOOLEAN DoesWinFontExistOnSystem( STR16 pTypeFaceName, INT32 iCharSet );
 

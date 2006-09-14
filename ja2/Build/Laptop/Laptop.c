@@ -564,7 +564,7 @@ void ShouldNewMailBeDisplayed( void );
 void DisplayPlayersBalanceToDate( void );
 void CheckIfNewWWWW( void );
 void HandleLapTopESCKey( void );
-BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, STR16 pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex );
+BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex );
 void RemoveTitleBarMaximizeGraphics();
 BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX );
 void HandleSlidingTitleBar( void );
@@ -4401,7 +4401,7 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect pCenteringRect= {LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 
@@ -4421,7 +4421,7 @@ BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen
 }
 
 
-BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
@@ -4433,7 +4433,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, wchar_t *zString, UINT3
 	return( ( iLaptopMessageBox != -1 ) );
 }
 
-BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
   SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 	// reset exit mode
@@ -4472,7 +4472,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 }
 
 
-BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, STR16 pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex )
+BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex )
 {
 	VSURFACE_DESC		vs_desc;
   HVOBJECT	hImageHandle;

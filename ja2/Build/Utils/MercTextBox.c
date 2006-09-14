@@ -45,7 +45,7 @@ MercPopUpBox * GetPopUpBoxIndex( INT32 iId );
 // MercTextBox.h
 
 // filenames for border popup .sti's
-STR8 zMercBorderPopupFilenames[ ] = {
+const char *zMercBorderPopupFilenames[ ] = {
  "INTERFACE\\TactPopUp.sti",
  "INTERFACE\\TactRedPopUp.sti",
  "INTERFACE\\TactBluePopUp.sti",
@@ -56,7 +56,7 @@ STR8 zMercBorderPopupFilenames[ ] = {
 };
 
 // filenames for background popup .pcx's
-STR8 zMercBackgroundPopupFilenames[ ] = {
+const char *zMercBackgroundPopupFilenames[ ] = {
   "INTERFACE\\TactPopupBackground.pcx",
   "INTERFACE\\TactPopupWhiteBackground.pcx",
   "INTERFACE\\TactPopupGreyBackground.pcx",
@@ -315,7 +315,7 @@ MercPopUpBox * GetPopUpBoxIndex( INT32 iId )
 	return( gpPopUpBoxList[ iId ] );
 }
 
-INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, STR16 pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight)
+INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight)
 {
 	UINT16 usNumberVerticalPixels, usNumberOfLines;
 	UINT16 usTextWidth, usHeight;

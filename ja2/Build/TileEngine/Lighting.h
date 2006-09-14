@@ -124,7 +124,7 @@ BOOLEAN		LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32
 // Save a light list into a file
 BOOLEAN		LightSave(INT32 uiLight, STR pFilename);
 // Load a light list from a file
-INT32			LightLoad(STR pFilename);
+INT32			LightLoad(const char *pFilename);
 
 // Sets the RGB values and number of light colors (1/2)
 BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors);
@@ -135,7 +135,7 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal);
 // High-Level Sprite Interface
 
 // Creates a new light sprite from a given filename/predefined symbol
-INT32			LightSpriteCreate(STR pName, UINT32 uiLightType);
+INT32			LightSpriteCreate(const char *pName, UINT32 uiLightType);
 // Destroys the instance of that light
 BOOLEAN		LightSpriteDestroy(INT32 iSprite);
 // Sets the tile position of the light instance

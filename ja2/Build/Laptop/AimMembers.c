@@ -514,7 +514,7 @@ BOOLEAN DisplayVideoConferencingDisplay();
 BOOLEAN DisplayMercsVideoFace();
 void		DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown);
 UINT32	DisplayMercChargeAmount();
-BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, STR16 sString1, STR16 sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
+BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t *sString1, const wchar_t *sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
 BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum);
 BOOLEAN InitVideoFace(UINT8 ubMercID);
 BOOLEAN	DisplaySnowBackground();
@@ -539,7 +539,7 @@ BOOLEAN EnableDisableCurrentVideoConferenceButtons( BOOLEAN fEnable);
 BOOLEAN CanMercBeHired();
 BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit );
 BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops);
-void		DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, STR16 pString);
+void		DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t *pString);
 
 void		DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset );
 void		DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack( UINT8 bExitValue );
@@ -1404,7 +1404,7 @@ BOOLEAN DisplayMercsFace()
 {
   HVOBJECT hFaceHandle;
   HVOBJECT hPortraitHandle;
-	STR							sFaceLoc = "FACES\\BIGFACES\\";
+	const char *sFaceLoc = "FACES\\BIGFACES\\";
 	char						sTemp[100];
   VOBJECT_DESC    VObjectDesc;
 	SOLDIERTYPE			*pSoldier=NULL;
@@ -1574,7 +1574,7 @@ UINT8	GetStatColor( INT8 bStat )
 }
 
 //displays the dots between the stats and the stat name
-void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, STR16 pString)
+void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t *pString)
 {
 	INT16 sNumberOfDots;
 	UINT16 usStringLength = StringPixLength(pString, AIM_M_FONT_STATIC_TEXT);
@@ -1894,7 +1894,7 @@ BOOLEAN DisplayVideoConferencingDisplay()
 BOOLEAN DisplayMercsVideoFace()
 {
   HVOBJECT	hTerminalHandle;
-	STR				sFaceLoc = "FACES\\";
+	const char *sFaceLoc = "FACES\\";
 
 	// Get and Blt Terminal Frame
 	GetVideoObject(&hTerminalHandle, guiVideoConfTerminal);
@@ -2030,7 +2030,7 @@ UINT32 DisplayMercChargeAmount()
 	return(giContractAmount);
 }
 
-BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, STR16 sString1, STR16 sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
+BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t *sString1, const wchar_t *sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
 {
   VOBJECT_DESC  VObjectDesc;
   HVOBJECT			hPopupBoxHandle;

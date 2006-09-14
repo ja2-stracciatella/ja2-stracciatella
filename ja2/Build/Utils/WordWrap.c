@@ -25,7 +25,7 @@ void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords )
 }
 
 
-WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
+WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)
 {
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
@@ -142,7 +142,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 
 
-WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, STR16 pString, ...)
+WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)
 {
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
@@ -360,7 +360,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 //					the gap in between the lines
 //
 
-UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, STR16 pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags )
+UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t *pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags )
 {
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
@@ -434,7 +434,7 @@ UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
 
-BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
+BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
 {
 	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight=0;
@@ -527,7 +527,7 @@ BOOLEAN DrawTextToScreen(STR16 pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidt
 //
 
 UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
-															 UINT32 uiFont, UINT8 ubColor, STR16 pString,
+															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
 															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
 
@@ -1418,7 +1418,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 
 // now variant for grabbing height
 UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
-															 UINT32 uiFont, UINT8 ubColor, STR16 pString,
+															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
 															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
 	UINT16	usHeight;
@@ -1773,7 +1773,7 @@ INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, 
 	return( iNewYPosition );
 }
 
-void ShadowText(UINT32 uiDestVSurface, STR16 pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
+void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
 {
 	UINT32 uiLength = StringPixLength( pString, uiFont);
 	UINT16 usFontHeight = WFGetFontHeight( uiFont );

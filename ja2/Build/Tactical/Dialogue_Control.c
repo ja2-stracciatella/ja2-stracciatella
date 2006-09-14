@@ -208,7 +208,7 @@ void HandleExternNPCSpeechFace( INT32 iIndex );
 
 
 extern BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
-extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
+extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
 
 
 

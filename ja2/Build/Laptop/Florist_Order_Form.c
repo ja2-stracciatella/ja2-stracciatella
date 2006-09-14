@@ -143,7 +143,7 @@
 
 typedef struct
 {
-	STR16 *psCityLoc;
+	const wchar_t **psCityLoc;
 	UINT8	ubNextDayDeliveryCost;
 	UINT8	ubWhenItGetsThereCost;
 } FlowerOrderLocationStruct;

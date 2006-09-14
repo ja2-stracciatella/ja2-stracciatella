@@ -469,7 +469,7 @@ void	HandleOldBobbyRMailOrders();
 /////////////////////////////////////////////////////
 
 
-BOOLEAN SaveGame( UINT8 ubSaveGameID, STR16 GameDesc )
+BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 {
 	UINT32	uiNumBytesWritten=0;
 	HWFILE	hFile=0;
@@ -3309,7 +3309,7 @@ BOOLEAN LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 }
 */
 
-BOOLEAN SaveFilesToSavedGame( STR pSrcFileName, HWFILE hFile )
+BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
 	UINT32	uiNumBytesWritten=0;
@@ -3387,7 +3387,7 @@ BOOLEAN SaveFilesToSavedGame( STR pSrcFileName, HWFILE hFile )
 }
 
 
-BOOLEAN LoadFilesFromSavedGame( STR pSrcFileName, HWFILE hFile )
+BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
 	UINT32	uiNumBytesWritten=0;

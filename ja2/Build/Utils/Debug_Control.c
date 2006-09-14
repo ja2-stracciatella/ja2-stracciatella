@@ -57,7 +57,7 @@ void AiDbgMessage( CHAR8 *strMessage)
 #endif
 
 
-void LiveMessage( CHAR8 *strMessage)
+void LiveMessage(const char *strMessage)
 {
   FILE      *OutFile;
 

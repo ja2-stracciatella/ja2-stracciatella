@@ -119,7 +119,7 @@ extern BOOLEAN		gfDebugTopics[MAX_TOPICS_ALLOTED];
 #endif
 
 // public interface to debug methods:
-extern	void		DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, CHAR8 *Str);
+extern	void		DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *Str);
 extern	BOOLEAN	DbgSetDebugLevel(UINT16 TopicId, UINT8 uiDebugLevel);
 extern	void		DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine );
 //extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );

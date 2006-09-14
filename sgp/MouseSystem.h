@@ -201,7 +201,7 @@ void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
 // Usually used to force change of mouse cursor if panels switch, etc
 void RefreshMouseRegions( );
 
-void SetRegionFastHelpText( MOUSE_REGION *region, wchar_t *szText );
+void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
 
 void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn );
 

@@ -424,7 +424,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
   HVOBJECT hFaceHandle;
   HVOBJECT hPortraitHandle;
-	STR							sFaceLoc = "FACES\\BIGFACES\\";
+	const char *sFaceLoc = "FACES\\BIGFACES\\";
 	char						sTemp[100];
 	MERCPROFILESTRUCT	*pMerc;
   VOBJECT_DESC    VObjectDesc;

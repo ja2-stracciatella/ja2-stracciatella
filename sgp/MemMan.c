@@ -47,7 +47,7 @@
 #ifdef JA2
 #include "MouseSystem.h"
 #include "MessageBoxScreen.h"
-STR16 gzJA2ScreenNames[] =
+const wchar_t *gzJA2ScreenNames[] =
 {
 	L"EDIT_SCREEN",
 	L"SAVING_SCREEN",

@@ -366,7 +366,7 @@ void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
 
 
 // adds a FIRST column string to the CURRENT popup box
-void AddMonoString(INT32 *hStringHandle, STR16 pString)
+void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 {
  STR16 pLocalString=NULL;
  POPUPSTRINGPTR pStringSt=NULL;
@@ -416,7 +416,7 @@ void AddMonoString(INT32 *hStringHandle, STR16 pString)
 
 
 // adds a SECOND column string to the CURRENT popup box
-void AddSecondColumnMonoString( INT32 *hStringHandle, STR16 pString )
+void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 {
 	STR16 pLocalString=NULL;
 	POPUPSTRINGPTR pStringSt=NULL;

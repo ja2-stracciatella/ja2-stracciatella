@@ -347,7 +347,7 @@ void DbgClearAllTopics( void )
 //
 //**************************************************************************
 
-void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, CHAR *strMessage)
+void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *strMessage)
 {
 #ifndef _NO_DEBUG_TXT
   FILE      *OutFile;

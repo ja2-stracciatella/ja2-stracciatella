@@ -257,7 +257,7 @@ INT16 DirYIncrementer[8] =
  };
 
 
-STR8 pVertStrings[]={
+const char *pVertStrings[]={
 "X",
 "A",
 "B",
@@ -279,7 +279,7 @@ STR8 pVertStrings[]={
 "R",
 };
 
-STR8 pHortStrings[]={
+const char *pHortStrings[]={
 "X",
 "1",
 "2",
@@ -1119,7 +1119,7 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 
-BOOLEAN MapExists( UINT8 *szFilename )
+BOOLEAN MapExists(const char *szFilename )
 {
 	UINT8 str[50];
 	HWFILE fp;

@@ -88,7 +88,7 @@ BOOLEAN InitRadarScreen( )
 		return( TRUE );
 }
 
-BOOLEAN LoadRadarScreenBitmap( CHAR8 *aFilename )
+BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 {
   VOBJECT_DESC    VObjectDesc;
 	CHAR8						zFilename[ 260 ];

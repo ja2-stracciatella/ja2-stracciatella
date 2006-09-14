@@ -605,7 +605,7 @@ INT8			GetInvSlotOfUnfullMoneyInMercInventory( SOLDIERTYPE *pSoldier );
 void			ClearPlayersOfferSlot( INT32 ubSlotToClear );
 void			ClearArmsDealerOfferSlot( INT32 ubSlotToClear );
 void			ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue );
-BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
+BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
 BOOLEAN		WillShopKeeperRejectObjectsFromPlayer( INT8 bDealerId, INT8 bSlotId );
 void			CheckAndHandleClearingOfPlayerOfferArea( void );
 void			CrossOutUnwantedItems( void );
@@ -6083,7 +6083,7 @@ void EvaluateItemAddedToPlayersOfferArea( INT8 bSlotID, BOOLEAN fFirstOne )
 
 
 
-BOOLEAN DoSkiMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
 	SGPRect pCenteringRect= {0, 0, 639, 339 };
 

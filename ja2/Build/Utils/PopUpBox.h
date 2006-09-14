@@ -79,7 +79,7 @@ void GetBoxSize(  INT32 hBoxHandle, SGPRect *Dimensions );
 void SetBoxFlags( INT32 hBoxHandle, UINT32 uiFlags);
 void SetBorderType(INT32 hBoxHandle,INT32 BorderObjectIndex);
 void SetBackGroundSurface(INT32 hBoxHandle, INT32 BackGroundSurfaceIndex);
-void AddMonoString(INT32 *hStringHandle, STR16 pString);
+void AddMonoString(INT32 *hStringHandle, const wchar_t *pString);
 void AddColorString(INT32 *hStringHandle, STR16 pString);
 void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont);
 void SetBoxFont(INT32 hBoxHandle, UINT32 uiFont);
@@ -135,7 +135,7 @@ void SetBoxLineForeground( INT32 iBox, INT32 iStringValue, UINT8 ubColor );
 void HideAllBoxes( void );
 
 // add the second column monocrome string
-void AddSecondColumnMonoString( INT32 *hStringHandle, STR16 pString );
+void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString );
 
 // set the 2nd column font for this box
 void SetBoxSecondColumnFont(INT32 hBoxHandle, UINT32 uiFont);

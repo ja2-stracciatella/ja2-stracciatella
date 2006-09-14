@@ -27,7 +27,7 @@ BOOLEAN PerformTimeLimitedCheck();
 
 
 
-void FilenameForBPP(STR pFilename, STR pDestination)
+void FilenameForBPP(const char *pFilename, STR pDestination)
 {
 UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 

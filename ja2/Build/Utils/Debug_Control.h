@@ -12,7 +12,7 @@
 #endif
 
 
-void LiveMessage( CHAR8 *strMessage);
+void LiveMessage(const char *strMessage);
 
 
 #ifdef _ANIMSUBSYSTEM_DEBUG

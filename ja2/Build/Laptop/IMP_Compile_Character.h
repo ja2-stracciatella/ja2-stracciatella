@@ -20,6 +20,6 @@ void ResetIncrementCharacterAttributes( void );
 void HandleMercStatsForChangesInFace( void );
 
 
-extern STR8 pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
-extern STR8 pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
+extern const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
+extern const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
 #endif
