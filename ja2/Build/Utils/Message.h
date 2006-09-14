@@ -46,7 +46,6 @@ typedef struct stringstruct ScrollStringSt;
 typedef ScrollStringSt *ScrollStringStPtr;
 
 
-extern ScrollStringStPtr pStringS;
 extern UINT32 StringCount;
 extern UINT8 gubCurrentMapMessageString;
 extern BOOLEAN fDisableJustForIan;
