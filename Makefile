@@ -358,12 +358,19 @@ SRCS += sgp/VObject.c
 #SRCS += sgp/Video.c
 #SRCS += sgp/WinFont.c
 
+DEPS = $(SRCS:.c=.d)
 OBJS = $(SRCS:.c=.o)
 
 .SUFFIXES:
-.SUFFIXES: .c .o
+.SUFFIXES: .c .d .o
 
 all: ja
+
+depend: $(DEPS)
+
+ifeq ($(findstring $(MAKECMDGOALS), clean depend),)
+-include $(DEPS)
+endif
 
 ja: $(OBJS)
 	@echo '===> LD $@'
@@ -373,6 +380,10 @@ ja: $(OBJS)
 	@echo '===> CC $<'
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+.c.d:
+	@echo '===> DEP $<'
+	@$(CC) $(CFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+
 clean:
 	@echo '===> CLEAN'
-	@rm -fr $(OBJS)
+	@rm -fr $(DEPS) $(OBJS)
