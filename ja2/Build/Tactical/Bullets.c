@@ -25,6 +25,7 @@
 	#include "Random.h"
 	#include "GameSettings.h"
 	#include "FileMan.h"
+	#include "Debug.h"
 #endif
 
 

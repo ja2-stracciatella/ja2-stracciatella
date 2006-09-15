@@ -50,6 +50,7 @@
 	#include "Game_Init.h"
 	#include "Strategic_Movement.h"
 	#include "Vehicles.h"
+	#include "Shading.h"
 #endif
 
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );

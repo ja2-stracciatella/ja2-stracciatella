@@ -13,6 +13,7 @@
 	#include "Timer_Control.h"
 	#include "StrategicMap.h"
 	#include "Fade_Screen.h"
+	#include "Debug.h"
 #endif
 
 

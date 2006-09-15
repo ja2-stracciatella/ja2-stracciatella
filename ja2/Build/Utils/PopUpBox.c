@@ -5,6 +5,7 @@
 	#include "SysUtil.h"
 	#include "Debug.h"
 	#include "Video.h"
+	#include "MemMan.h"
 #endif
 
 

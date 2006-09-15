@@ -16,6 +16,7 @@
 	#include "WCheck.h"
 	#include "Compression.h"
 	#include "VObject.h"
+	#include "MemMan.h"
 #endif
 
 // This is the color substituted to keep a 24bpp -> 16bpp color

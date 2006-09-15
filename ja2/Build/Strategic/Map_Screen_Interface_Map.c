@@ -41,6 +41,9 @@
 	#include "Tactical_Save.h"
 	#include "Map_Information.h"
 	#include "Air_Raid.h"
+	#include "MemMan.h"
+	#include "Button_System.h"
+	#include "Debug.h"
 #endif
 
 

@@ -28,6 +28,11 @@
 	#include "Message.h"
 	#include "Interface_Panels.h"
 	#include "WordWrap.h"
+	#include "Button_System.h"
+	#include "Debug.h"
+	#include "ScreenIDs.h"
+	#include "VSurface.h"
+	#include "MemMan.h"
 #endif
 
 #include "ShopKeeper_Interface.h"

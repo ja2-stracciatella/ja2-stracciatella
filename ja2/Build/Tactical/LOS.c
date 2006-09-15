@@ -39,6 +39,7 @@
 	#include "Points.h"
 	#include "Smell.h"
 	#include "Text.h"
+	#include <stdlib.h>
 #endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10

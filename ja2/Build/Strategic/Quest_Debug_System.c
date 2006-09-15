@@ -38,6 +38,11 @@
 	#include  "Message.h"
 	#include  "Random.h"
 	#include  <stdarg.h>
+	#include  "Button_System.h"
+	#include  "Debug.h"
+	#include  "JAScreens.h"
+	#include  "ScreenIDs.h"
+	#include  "VSurface.h"
 #endif
 
 //#ifdef JA2BETAVERSION

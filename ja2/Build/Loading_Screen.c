@@ -12,6 +12,7 @@
 	#include "Font_Control.h"
 	#include "Video.h"
 	#include "Render_Dirty.h"
+	#include "Debug.h"
 #endif
 
 extern HVSURFACE ghFrameBuffer;

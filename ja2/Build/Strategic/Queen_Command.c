@@ -37,6 +37,7 @@
 	#include "Meanwhile.h"
 	#include "Soldier_Macros.h"
 	#include "Morale.h"
+	#include "MemMan.h"
 #endif
 
 #ifdef JA2BETAVERSION

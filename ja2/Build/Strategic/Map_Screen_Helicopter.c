@@ -36,6 +36,7 @@
 	#include "SoundMan.h"
 	#include "Isometric_Utils.h"
 	#include "Scheduling.h"
+	#include "Debug.h"
 #endif
 
 

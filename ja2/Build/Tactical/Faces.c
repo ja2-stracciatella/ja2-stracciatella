@@ -36,6 +36,8 @@
 	#include "Interface_Items.h"
 	#include "Meanwhile.h"
 	#include "Map_Screen_Interface.h"
+	#include "SoundMan.h"
+	#include "JAScreens.h"
 #endif
 
 // Defines

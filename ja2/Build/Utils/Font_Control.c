@@ -12,6 +12,7 @@
 	#include "WCheck.h"
 	#include "Font_Control.h"
 	#include "WinFont.h"
+	#include "MemMan.h"
 #endif
 
 INT32          giCurWinFont = 0;

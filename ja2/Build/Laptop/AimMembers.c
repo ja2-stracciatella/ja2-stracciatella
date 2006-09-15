@@ -46,6 +46,9 @@
 	#include "Quests.h"
 	#include "Button_System.h"
 	#include "Video.h"
+	#include "SoundMan.h"
+	#include <stdlib.h>
+	#include "ScreenIDs.h"
 #endif
 
 #include "Strategic_Town_Loyalty.h"

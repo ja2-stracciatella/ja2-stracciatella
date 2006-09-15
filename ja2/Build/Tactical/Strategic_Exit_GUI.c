@@ -34,6 +34,7 @@
 	#include "MessageBoxScreen.h"
 	#include "Quests.h"
 	#include "Creature_Spreading.h"
+	#include "Video.h"
 #endif
 
 BOOLEAN		gfInSectorExitMenu = FALSE;

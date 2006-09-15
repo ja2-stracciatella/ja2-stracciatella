@@ -13,6 +13,7 @@
 	#include "Animation_Control.h"
 	#include "Sys_Globals.h"
 	#include "Debug_Control.h"
+	#include "MemMan.h"
 #endif
 
 #define EMPTY_CACHE_ENTRY		65000

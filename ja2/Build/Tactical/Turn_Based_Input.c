@@ -110,6 +110,8 @@
 	#include "Queen_Command.h"
 	#include "PreBattle_Interface.h"
 	#include "_JA25EnglishText.h"
+	#include "VSurface.h"
+	#include "MemMan.h"
 #endif
 
 	#include	"Quest_Debug_System.h"

@@ -17,6 +17,7 @@
 	#include <string.h>
 	#include "Button_System.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X

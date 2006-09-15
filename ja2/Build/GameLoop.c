@@ -33,6 +33,7 @@
 	#include "Options_Screen.h"
 	#include "Debug.h"
 	#include "Video.h"
+	#include "MemMan.h"
 #endif
 
 

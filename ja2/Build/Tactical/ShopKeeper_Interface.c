@@ -50,6 +50,12 @@
 	#include "OppList.h"
 	#include "NPC.h"
 	#include "LOS.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "MemMan.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 #include "BuildDefines.h"

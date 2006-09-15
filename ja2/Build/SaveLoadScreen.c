@@ -36,6 +36,11 @@
 	#include	"Map_Screen_Interface.h"
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Campaign_Types.h"
+	#include "Button_System.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "Local.h"
+	#include "VSurface.h"
 #endif
 
 #include "Campaign_Init.h"

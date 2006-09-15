@@ -53,6 +53,8 @@
 	#include "FileMan.h"
 	#include "Environment.h"
 	#include "PathAI.h"
+	#include "MemMan.h"
+	#include <stdlib.h>
 #endif
 
 #define LVL1_L1_PER			(50)

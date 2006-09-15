@@ -16,6 +16,7 @@
 	#include "Tile_Surface.h"
 	#include "Tile_Cache.h"
 	#include "FileMan.h"
+	#include "MemMan.h"
 #endif
 
 

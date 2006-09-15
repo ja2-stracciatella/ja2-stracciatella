@@ -25,6 +25,7 @@
 	#include "Button_System.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
 #endif
 
 

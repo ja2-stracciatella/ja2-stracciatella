@@ -14,6 +14,7 @@
 	#include "Random.h"
 	#include "WorldMan.h"
 	#include "SoundMan.h"
+	#include "Debug.h"
 #endif
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];

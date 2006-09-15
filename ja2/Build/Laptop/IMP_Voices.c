@@ -21,6 +21,7 @@
 	#include "Text.h"
 	#include "LaptopSave.h"
 	#include "Button_System.h"
+	#include "SoundMan.h"
 #endif
 
 //current and last pages

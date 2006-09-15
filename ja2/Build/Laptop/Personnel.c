@@ -33,6 +33,7 @@
 	#include "Merc_Contract.h"
 	#include "Button_System.h"
 	#include "VSurface.h"
+	#include <stdlib.h>
 #endif
 
 #include "Soldier_Macros.h"

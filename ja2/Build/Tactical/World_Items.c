@@ -27,6 +27,7 @@
 	#include "GameSettings.h"
 	#include "Quests.h"
 	#include "Soldier_Profile.h"
+	#include "MemMan.h"
 #endif
 
 //Global dynamic array of all of the items in a loaded map.

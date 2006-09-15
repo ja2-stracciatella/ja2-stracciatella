@@ -2,9 +2,6 @@
 #define __RANDOM_
 
 #include "Types.h"
-#include "Debug.h"
-#include <stdlib.h>
-#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {

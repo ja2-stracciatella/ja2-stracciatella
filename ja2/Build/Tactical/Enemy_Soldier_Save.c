@@ -32,6 +32,7 @@
 	#include "Game_Clock.h"
 	#include "Queen_Command.h"
 	#include "Scheduling.h"
+	#include "MemMan.h"
 #endif
 
 extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );

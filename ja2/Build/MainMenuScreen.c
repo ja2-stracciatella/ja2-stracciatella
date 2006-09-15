@@ -32,6 +32,11 @@
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Encrypted_File.h"
 	#include "JA2_Splash.h"
+	#include "Debug.h"
+	#include "Video.h"
+	#include "Button_System.h"
+	#include "JAScreens.h"
+	#include "Local.h"
 #endif
 
 #define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"

@@ -4,7 +4,6 @@
 
 #include "HImage.h"		// For SGPPaletteEntry
 #include "VObject.h"	// For HVOBJECT_SHADE_TABLES
-#include "VSurface.h"	// For
 
 #ifdef __cplusplus
 extern "C" {

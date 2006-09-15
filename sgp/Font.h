@@ -2,7 +2,6 @@
 #define __FONT_H_
 
 #include "Types.h"
-#include "HImage.h"
 #include "VObject.h"
 
 

@@ -39,6 +39,7 @@
 	#include "AI.h"
 	#include "NPC.h"
 	#include "Scheduling.h"
+	#include "MemMan.h"
 #endif
 
 BOOLEAN gfOriginalList = TRUE;

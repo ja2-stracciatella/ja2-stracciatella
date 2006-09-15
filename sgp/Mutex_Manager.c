@@ -5,6 +5,7 @@
 #else
 	#include "Mutex_Manager.h"
 	#include "Debug.h"
+	#include "Local.h"
 	#include <SDL.h>
 #endif
 //#define __MUTEX_TYPE

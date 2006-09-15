@@ -40,6 +40,11 @@
 	#include "Cursor_Control.h"
 	#include "Button_System.h"
 	#include "Timer.h"
+	#include "Font_Control.h"
+	#include "JAScreens.h"
+	#include "Local.h"
+	#include "Render_Dirty.h"
+	#include "VSurface.h"
 #endif
 
 #ifdef JA2_PRECOMPILED_HEADERS

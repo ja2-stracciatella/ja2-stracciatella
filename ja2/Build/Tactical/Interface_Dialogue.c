@@ -79,6 +79,8 @@
 	#include "Map_Screen_Helicopter.h"
 	#include "Button_System.h"
 	#include "Video.h"
+	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 INT16	sBasementEnterGridNos[ ] = { 13362, 13363, 13364, 13365, 13525, 13524 };

@@ -98,6 +98,9 @@
 	#include "Explosion_Control.h"
 	#include "Auto_Resolve.h"
 	#include "Cursors.h"
+	#include "Video.h"
+	#include "VSurface.h"
+	#include "Debug.h"
 #endif
 
 #include "SaveLoadGame.h"

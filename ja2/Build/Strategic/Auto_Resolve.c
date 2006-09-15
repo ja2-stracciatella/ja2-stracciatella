@@ -59,6 +59,8 @@
 	#include "Inventory_Choosing.h"
 	#include "Game_Event_Hook.h"
 	#include "Map_Information.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 //#include "vtuneapi.h"

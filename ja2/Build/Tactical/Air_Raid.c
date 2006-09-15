@@ -33,6 +33,8 @@
 	#include "Map_Screen_Helicopter.h"
 	#include "MapScreen.h"
 	#include "Structure_Wrap.h"
+	#include "SoundMan.h"
+	#include "Debug.h"
 #endif
 
 #define		SCRIPT_DELAY													10

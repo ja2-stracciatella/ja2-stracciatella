@@ -9,6 +9,7 @@
 	#include "Items.h"
 	#include "Rotting_Corpses.h"
 	#include "Soldier_Add.h"
+	#include "Debug.h"
 #endif
 
 #define CAN_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER && s->ubBodyType != INFANT_MONSTER)

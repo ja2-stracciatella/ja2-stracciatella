@@ -57,6 +57,8 @@
 	#include "QArray.h"
 	#include "JAScreens.h"
 	#include "Video.h"
+	#include "SoundMan.h"
+	#include "MemMan.h"
 #endif
 
 #define		DIALOGUESIZE					480

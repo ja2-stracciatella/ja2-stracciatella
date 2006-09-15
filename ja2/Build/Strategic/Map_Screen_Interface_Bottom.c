@@ -48,6 +48,9 @@
 	#include "GameSettings.h"
 	#include "_JA25EnglishText.h"
 	#include "SaveLoadScreen.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 

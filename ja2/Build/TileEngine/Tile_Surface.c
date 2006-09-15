@@ -17,6 +17,7 @@
 	#include "Sys_Globals.h"
 	#include "TileDat.h"
 	#include "FileMan.h"
+	#include "MemMan.h"
 #endif
 
 

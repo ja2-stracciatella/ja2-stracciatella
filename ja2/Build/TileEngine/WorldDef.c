@@ -63,6 +63,8 @@
 	#include "Meanwhile.h"
 	#include "SmokeEffects.h"
 	#include "LightEffects.h"
+	#include "MemMan.h"
+	#include "JAScreens.h"
 #endif
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );

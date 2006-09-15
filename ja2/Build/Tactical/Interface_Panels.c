@@ -71,6 +71,9 @@
 	#include "MessageBoxScreen.h"
 	#include "WordWrap.h"
 	#include "Boxing.h"
+	#include "Video.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
 #endif
 
 

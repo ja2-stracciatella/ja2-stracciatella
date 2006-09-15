@@ -11,6 +11,7 @@
 	#include <stdio.h>
 	#include "FileMan.h"
 	#include <string.h>
+	#include "MemMan.h"
 #endif
 
 #if 0

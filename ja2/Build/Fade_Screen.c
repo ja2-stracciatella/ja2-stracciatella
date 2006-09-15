@@ -12,6 +12,7 @@
 	#include "Music_Control.h"
 	#include "Render_Dirty.h"
 	#include "Gameloop.h"
+	#include "Video.h"
 #endif
 
 #define  SQUARE_STEP			8

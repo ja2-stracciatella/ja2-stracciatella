@@ -42,6 +42,7 @@
 	#include "Strategic.h"
 	#include "QArray.h"
 	#include "Interface.h"
+	#include "MemMan.h"
 #endif
 
 #define CORPSE_WARNING_MAX 5

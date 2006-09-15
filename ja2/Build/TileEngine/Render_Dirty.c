@@ -19,6 +19,9 @@
 	#include <stdarg.h>
 	#include "Font_Control.h"
 	#include "WinFont.h"
+	#include "MemMan.h"
+	#include "Debug.h"
+	#include "SGP.h"
 #endif
 
 #ifdef JA2BETAVERSION

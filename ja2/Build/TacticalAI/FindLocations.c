@@ -27,6 +27,7 @@
 	#include "StrategicMap.h"
 	#include "Environment.h"
 	#include "Lighting.h"
+	#include "Debug.h"
 #endif
 
 #include "PathAIDebug.h"

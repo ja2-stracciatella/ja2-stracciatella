@@ -62,6 +62,7 @@
 	#include "Keys.h"
 	#include "FOV.h"
 	#include "Map_Information.h"
+	#include "MemMan.h"
 #endif
 
 #include "Soldier_Macros.h"

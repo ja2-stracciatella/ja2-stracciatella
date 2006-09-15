@@ -19,6 +19,8 @@
 	#include "VObject_Blitters.h"
 	#include "SGP.h"
 	#include <string.h>
+	#include "MemMan.h"
+	#include "Shading.h"
 #endif
 
 // ******************************************************************************

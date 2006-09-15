@@ -30,6 +30,9 @@
 	#include "English.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
+	#include "Button_System.h"
+	#include "Debug.h"
 #endif
 
 

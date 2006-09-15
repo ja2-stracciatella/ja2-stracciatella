@@ -28,6 +28,7 @@
 	#include "Soldier_Profile.h"
 	#include "Quests.h"
 	#include "Vehicles.h"
+	#include "MemMan.h"
 #endif
 
 #ifdef JA2EDITOR

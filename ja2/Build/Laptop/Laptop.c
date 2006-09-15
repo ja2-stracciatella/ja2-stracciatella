@@ -81,6 +81,9 @@
 	#include "Dialogue_Control.h"
 	#include "HelpScreen.h"
 	#include "Cheats.h"
+	#include "Video.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 

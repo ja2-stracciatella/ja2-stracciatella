@@ -52,6 +52,12 @@
 	#include "Cursor_Control.h"
 	#include "Game_Init.h"
 	#include "Finances.h"
+	#include "Button_System.h"
+	#include "JAScreens.h"
+	#include "Local.h"
+	#include "Video.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 // inventory pool position on screen

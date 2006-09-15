@@ -3,7 +3,6 @@
 
 //#include <process.h> /* XXX */
 #include "Types.h"
-#include "Local.h"
 
 extern BOOLEAN InitializeMutexManager(void);
 extern void    ShutdownMutexManager(void);

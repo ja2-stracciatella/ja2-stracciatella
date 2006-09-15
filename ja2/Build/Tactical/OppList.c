@@ -48,6 +48,7 @@
 	#include "Civ_Quotes.h"
 	#include "Sound_Control.h"
 	#include "Drugs_And_Alcohol.h"
+	#include "Debug.h"
 #endif
 
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA

@@ -33,6 +33,7 @@
 	#include "Isometric_Utils.h"
 	#include "AI.h"
 	#include "Soldier_Macros.h"
+	#include "Debug.h"
 #endif
 
 BOOLEAN gfSetPerceivedDoorState = FALSE;

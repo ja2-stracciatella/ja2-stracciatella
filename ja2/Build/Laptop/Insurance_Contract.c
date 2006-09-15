@@ -28,6 +28,10 @@
 	#include "Button_System.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
+	#include "Debug.h"
+	#include "ScreenIDs.h"
+	#include "JAScreens.h"
 #endif
 
 #define		INS_CTRCT_ORDER_GRID_WIDTH					132

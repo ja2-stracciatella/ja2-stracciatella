@@ -15,6 +15,7 @@
 	#include "RenderWorld.h"
 	#include "Render_Dirty.h"
 	#include "Interface.h"
+	#include "VSurface.h"
 #endif
 
 

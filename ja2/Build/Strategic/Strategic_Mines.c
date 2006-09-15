@@ -21,6 +21,7 @@
 	#include "Strategic_AI.h"
 	#include "History.h"
 	#include "Campaign_Types.h"
+	#include "Debug.h"
 #endif
 
 

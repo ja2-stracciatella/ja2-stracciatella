@@ -45,6 +45,7 @@
 	#include "Soldier_Macros.h"
 	#include "History.h"
 	#include "Video.h"
+	#include "Debug.h"
 #endif
 
 extern void InitializeTacticalStatusAtBattleStart();

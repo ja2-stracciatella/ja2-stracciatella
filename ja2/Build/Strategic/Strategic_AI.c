@@ -30,6 +30,8 @@
 	#include "Campaign.h"
 	#include "Map_Information.h"
 	#include "Interface_Dialogue.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #define SAI_VERSION		29

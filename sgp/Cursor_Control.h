@@ -4,17 +4,9 @@
 #include "Types.h"
 #include "FileMan.h"
 #include "VObject.h"
-#include "VSurface.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-
-#if defined( JA2 ) || defined( UTIL )
-#include "Video.h"
-#else
-#include "video2.h"
 #endif
 
 

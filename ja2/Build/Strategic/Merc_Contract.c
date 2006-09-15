@@ -37,6 +37,7 @@
 	#include "Insurance_Contract.h"
 	#include "Vehicles.h"
 	#include "EMail.h"
+	#include "Debug.h"
 #endif
 
 

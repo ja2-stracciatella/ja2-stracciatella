@@ -12,6 +12,7 @@
 	#include <string.h>
 	#include "Button_System.h"
 	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

@@ -21,6 +21,7 @@
 	#include "English.h"
 	#include <string.h>
 	#include "Button_System.h"
+	#include "Stubs.h" // XXX
 #endif
 
 UINT32 giIMPPersonalityQuizButton[ 2 ];

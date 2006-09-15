@@ -103,6 +103,8 @@
 	#include "Assignments.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
+	#include "JAScreens.h"
 #endif
 
 #include		"BobbyR.h"

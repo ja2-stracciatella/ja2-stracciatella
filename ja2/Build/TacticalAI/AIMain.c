@@ -49,6 +49,7 @@
 	#include "Civ_Quotes.h"
 	#include "Quests.h"
 	#include "Queen_Command.h"
+	#include "Debug.h"
 #endif
 
 extern void PauseAITemporarily( void );

@@ -29,6 +29,8 @@
 	#include "Meanwhile.h"
 	#include "Strategic_AI.h"
 	#include "Map_Information.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #ifdef JA2BETAVERSION

@@ -34,6 +34,7 @@
 	#include "WizShare.h"
 	#include <string.h>
 	#include <stdarg.h>
+	#include <stdlib.h>
 
 	//Kris addition
 	#ifdef JA2

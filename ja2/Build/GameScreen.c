@@ -82,6 +82,8 @@
 	#include "MessageBoxScreen.h"
 	#include "Text.h"
 	#include "GameSettings.h"
+	#include "Debug.h"
+	#include "Video.h"
 #endif
 
 

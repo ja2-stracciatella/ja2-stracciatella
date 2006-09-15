@@ -9,6 +9,8 @@
 	#include "WorldDat.h"
 	#include "FileMan.h"
 	#include <string.h>
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 

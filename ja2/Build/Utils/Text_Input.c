@@ -19,6 +19,8 @@
 	#include "Font_Control.h"
 	#include "Sound_Control.h"
 	#include <string.h>
+	#include "MemMan.h"
+	#include "MouseSystem.h"
 #endif
 
 UINT16 *szClipboard;

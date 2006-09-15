@@ -63,6 +63,8 @@
 	#include "Map_Screen_Interface_Map_Inventory.h"
 	#include "ScreenIDs.h"
 	#include "VSurface.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #define					NUM_ITEMS_LISTED			8

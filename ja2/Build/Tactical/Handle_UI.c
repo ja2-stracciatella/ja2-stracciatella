@@ -83,6 +83,8 @@
 	#include "QArray.h"
 	#include "Environment.h"
 	#include "Map_Information.h"
+	#include "Video.h"
+	#include "Screens.h"
 #endif
 
 

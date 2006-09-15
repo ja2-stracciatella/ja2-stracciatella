@@ -39,6 +39,7 @@
 	#include "Soldier_Profile.h"
 	#include "Laptop.h"
 	#include "Campaign.h"
+	#include "Debug.h"
 #endif
 
 #ifdef JA2BETAVERSION

@@ -14,6 +14,7 @@
 	#include "Auto_Resolve.h"
 	#include "Map_Screen_Interface_Map.h"
 	#include "Strategic.h"
+	#include "Debug.h"
 #endif
 
 

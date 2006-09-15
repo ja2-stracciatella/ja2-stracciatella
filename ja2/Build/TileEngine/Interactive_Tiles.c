@@ -38,6 +38,7 @@
 	#include "Text.h"
 	#include "GameSettings.h"
 	#include "Environment.h"
+	#include "Debug.h"
 #endif
 
 #define		MAX_INTTILE_STACK							10

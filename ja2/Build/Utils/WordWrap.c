@@ -13,6 +13,8 @@
 	#include "Debug.h"
 	#include "Stubs.h" // XXX
 	#include "Video.h"
+	#include "MemMan.h"
+	#include "VSurface.h"
 #endif
 
 

@@ -60,6 +60,8 @@
 	#include "Smell.h"
 	#include "Strategic_Status.h"
 	#include "Interface_Dialogue.h"
+	#include "SoundMan.h"
+	#include "JAScreens.h"
 #endif
 
 #define		NO_JUMP											0

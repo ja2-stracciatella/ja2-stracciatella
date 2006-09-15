@@ -15,6 +15,8 @@
 	#include "Overhead.h"
 	#include "Cursor_Control.h"
 	#include "Sound_Control.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

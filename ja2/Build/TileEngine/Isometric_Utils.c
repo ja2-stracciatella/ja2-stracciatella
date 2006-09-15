@@ -17,6 +17,7 @@
 	#include "Overhead.h"
 	#include "Random.h"
 	#include "PathAI.h"
+	#include <stdlib.h>
 #endif
 
 

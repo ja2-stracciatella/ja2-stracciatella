@@ -46,6 +46,8 @@
 	#include "StrategicMap.h"
 	#include "Campaign_Types.h"
 	#include "Soldier_Macros.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #define ANY_MAGSIZE 255

@@ -4,6 +4,8 @@
 	#include "WIZ8 SGP ALL.H"
 #else
 	#include "Random.h"
+	#include <stdlib.h>
+	#include <time.h>
 #endif
 
 #ifdef PRERANDOM_GENERATOR

@@ -47,6 +47,9 @@
 	#include "MapScreen.h"
 	#include <math.h>
 	#include "JAScreens.h"
+	#include "SoundMan.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 

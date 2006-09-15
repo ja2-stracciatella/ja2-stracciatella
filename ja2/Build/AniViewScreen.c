@@ -36,6 +36,7 @@
 	#include "FileMan.h"
 	#include "MessageBoxScreen.h"
 	#include "Video.h"
+	#include "MemMan.h"
 #endif
 
 

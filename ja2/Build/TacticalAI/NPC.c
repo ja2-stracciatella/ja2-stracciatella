@@ -48,6 +48,8 @@
 	#include "Scheduling.h"
 	#include "Tactical_Save.h"
 	#include "Campaign_Types.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #define NUM_CIVQUOTE_SECTORS 20

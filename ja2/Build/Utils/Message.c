@@ -24,6 +24,7 @@
 	#include "Game_Clock.h"
 	#include <stdarg.h>
 	#include "VSurface.h"
+	#include "MemMan.h"
 #endif
 
 typedef struct

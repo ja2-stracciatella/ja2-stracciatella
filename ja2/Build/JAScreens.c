@@ -58,6 +58,8 @@
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Text.h"
 	#include "Language_Defines.h"
+	#include "Video.h"
+	#include "Debug.h"
 #endif
 
 #define _UNICODE

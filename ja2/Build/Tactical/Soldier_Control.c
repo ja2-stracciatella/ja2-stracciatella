@@ -91,6 +91,7 @@
 	#include "Campaign_Types.h"
 	#include "Strategic_Status.h"
 	#include "Civ_Quotes.h"
+	#include "JAScreens.h"
 #endif
 
 extern INT16 DirIncrementer[8];

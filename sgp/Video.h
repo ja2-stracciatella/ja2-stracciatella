@@ -5,12 +5,8 @@
 #include <DDraw.h>
 //#include <process.h> /* XXX */
 
-#include "Local.h"
-#include "Debug.h"
 #include "Types.h"
-#include "DirectDraw_Calls.h"
-#include "VSurface.h"
-#include "Mutex_Manager.h"
+#include "HImage.h"
 
 #define BUFFER_READY          0x00
 #define BUFFER_BUSY           0x01

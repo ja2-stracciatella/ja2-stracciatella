@@ -37,6 +37,10 @@
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Map_Information.h"
 	#include "SmokeEffects.h"
+	#include "Button_System.h"
+	#include "JAScreens.h"
+	#include "ScreenIDs.h"
+	#include "VSurface.h"
 #endif
 
 #include		"WorldMan.h"

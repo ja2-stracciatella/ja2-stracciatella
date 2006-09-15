@@ -28,6 +28,7 @@
 	#include "Bullets.h"
 	#include "Rotting_Corpses.h"
 	#include "SmokeEffects.h"
+	#include "MemMan.h"
 #endif
 
 

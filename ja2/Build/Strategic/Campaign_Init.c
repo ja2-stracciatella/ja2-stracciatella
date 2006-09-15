@@ -13,6 +13,8 @@
 	#include "Creature_Spreading.h"
 	#include "Strategic_AI.h"
 	#include "Tactical_Save.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 extern void	InitStrategicMovementCosts();

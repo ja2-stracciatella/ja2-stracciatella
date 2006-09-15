@@ -39,6 +39,8 @@
 	#include "Tile_Surface.h"
 	#include "Button_System.h"
 	#include "Video.h"
+	#include <stdlib.h>
+	#include "Debug.h"
 #endif
 
 

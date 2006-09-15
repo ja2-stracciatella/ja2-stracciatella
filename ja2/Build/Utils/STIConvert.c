@@ -13,6 +13,7 @@
 	#include "PCX.h"
 	#include "ImpTGA.h"
 	#include "WCheck.h"
+	#include "MemMan.h"
 #endif
 
 //CONVERT_TO_16_BIT

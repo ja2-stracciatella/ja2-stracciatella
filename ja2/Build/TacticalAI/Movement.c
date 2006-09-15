@@ -16,6 +16,8 @@
 	#include "Soldier_Control.h"
 	#include "Soldier_Macros.h"
 	#include "Render_Fun.h"
+	#include "Debug.h"
+	#include <stdlib.h>
 #endif
 
 // from strategic

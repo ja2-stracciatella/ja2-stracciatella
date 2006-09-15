@@ -32,6 +32,7 @@
 	#include "Game_Init.h"
 	#include "Overhead.h"
 	#include "Button_System.h"
+	#include "Video.h"
 #endif
 
 

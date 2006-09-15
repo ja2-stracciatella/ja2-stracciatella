@@ -40,6 +40,8 @@
 	#include "Text.h"
 	#include "WordWrap.h"
 	#include "Game_Clock.h"
+	#include "MemMan.h"
+	#include "JAScreens.h"
 #endif
 
 typedef struct MERCPLACEMENT

@@ -27,6 +27,7 @@
 	#include "Text.h"
 	#include "Interactive_Tiles.h"
 	#include "PathAI.h"
+	#include "Debug.h"
 #endif
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING

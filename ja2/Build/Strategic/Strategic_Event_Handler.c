@@ -30,6 +30,7 @@
 	#include "Strategic.h"
 	#include "Structure_Wrap.h"
 	#include "History.h"
+	#include "Debug.h"
 #endif
 #include "BobbyRMailOrder.h"
 

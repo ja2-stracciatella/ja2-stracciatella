@@ -58,6 +58,8 @@
 	#include "Air_Raid.h"
 	#include "Interface.h"
 	#include "Cheats.h"
+	#include "SoundMan.h"
+	#include "Debug.h"
 #endif
 
 // Temp function

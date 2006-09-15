@@ -27,6 +27,7 @@
 	#include "Button_System.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Debug.h"
 #endif
 
 #define		MERC_TEXT_FONT									FONT12ARIAL

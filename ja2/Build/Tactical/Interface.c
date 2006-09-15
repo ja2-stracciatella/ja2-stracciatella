@@ -55,6 +55,8 @@
 	#include "GameSettings.h"
 	#include "Squads.h"
 	#include "Message.h"
+	#include "Debug.h"
+	#include "Video.h"
 #endif
 
 #define ARROWS_X_OFFSET			10

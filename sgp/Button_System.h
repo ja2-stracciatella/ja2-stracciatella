@@ -9,7 +9,6 @@
 
 #include "VObject.h"
 #include "MouseSystem.h"
-#include "SoundMan.h"
 #include "Button_Sound_Control.h"
 
 #ifdef __cplusplus

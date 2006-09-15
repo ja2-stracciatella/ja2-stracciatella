@@ -17,6 +17,7 @@
 	#include "WorldDef.h"
 	#include "WorldMan.h"
 	#include "FileMan.h"
+	#include "MemMan.h"
 #endif
 
 #define EMPTY_SLOT		-1

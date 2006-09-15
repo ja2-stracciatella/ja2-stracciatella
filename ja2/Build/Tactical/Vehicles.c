@@ -37,6 +37,8 @@
 	#include "Soldier_Macros.h"
 	#include "OppList.h"
 	#include "Soldier_Ani.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];

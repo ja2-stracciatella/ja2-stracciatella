@@ -46,6 +46,7 @@
 	#include "Squads.h"
 	#include "Soldier_Macros.h"
 	#include "NPC.h"
+	#include "Debug.h"
 #endif
 
 extern void DecayPublicOpplist(INT8 bTeam);

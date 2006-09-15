@@ -26,6 +26,8 @@
 	#include "HelpScreen.h"
 	#include "Map_Screen_Helicopter.h"
 	#include "Tactical_Save.h"
+	#include "Button_System.h"
+	#include "Debug.h"
 #endif
 
 

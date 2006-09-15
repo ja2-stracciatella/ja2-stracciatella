@@ -36,6 +36,7 @@
 	#include "AI.h"
 	#include "Dialogue_Control.h"
 	#include "Music_Control.h"
+	#include "SoundMan.h"
 #endif
 
 #define		MAX_MERC_IN_HELI		20

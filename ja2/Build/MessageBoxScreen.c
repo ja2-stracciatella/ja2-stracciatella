@@ -26,6 +26,9 @@
 	#include "MapScreen.h"
 	#include "Overhead_Map.h"
 	#include "TileDef.h"
+	#include "Button_System.h"
+	#include "JAScreens.h"
+	#include "Video.h"
 #endif
 
 #define		MSGBOX_DEFAULT_WIDTH							300

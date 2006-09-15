@@ -16,6 +16,7 @@
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Button_System.h"
 #endif
 
 

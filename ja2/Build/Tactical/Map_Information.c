@@ -23,6 +23,7 @@
 	#include "Environment.h"
 	#include "Lighting.h"
 	#include "Animated_ProgressBar.h"
+	#include "Debug.h"
 #endif
 
 //Don't mess with this value, unless you want to force update all maps in the game!

@@ -29,6 +29,8 @@
 	#include "World_Items.h"
 	#include "Environment.h"
 	#include "SoundMan.h"
+	#include "MemMan.h"
+	#include "Debug.h"
 #endif
 
 #include "Campaign.h"

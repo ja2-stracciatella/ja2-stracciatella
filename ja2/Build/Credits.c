@@ -19,6 +19,10 @@
 	#include "English.h"
 	#include "Encrypted_File.h"
 	#include "Random.h"
+	#include "MemMan.h"
+	#include "Button_System.h"
+	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 

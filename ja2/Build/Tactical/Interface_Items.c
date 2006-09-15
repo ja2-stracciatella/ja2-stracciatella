@@ -72,6 +72,12 @@
 	#include "OppList.h"
 	#include "LOS.h"
 	#include "Map_Screen_Interface_Map.h"
+	#include "JAScreens.h"
+	#include "ScreenIDs.h"
+	#include "Video.h"
+	#include "MemMan.h"
+	#include <stdlib.h>
+	#include "Debug.h"
 #endif
 
 #define		ITEMDESC_FONT							BLOCKFONT2
