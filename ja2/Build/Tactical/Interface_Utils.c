@@ -19,6 +19,9 @@
 	#include "Line.h"
 	#include "WCheck.h"
 	#include "Vehicles.h"
+	#include "JAScreens.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )

@@ -26,6 +26,10 @@
 	#include "GameScreen.h"
 	#include "Fade_Screen.h"
 	#include "Map_Information.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK

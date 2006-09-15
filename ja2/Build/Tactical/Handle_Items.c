@@ -61,6 +61,8 @@
 	#include "End_Game.h"
 	#include "Interface_Control.h"
 	#include "Map_Screen_Interface_Map_Inventory.h"
+	#include "ScreenIDs.h"
+	#include "VSurface.h"
 #endif
 
 #define					NUM_ITEMS_LISTED			8

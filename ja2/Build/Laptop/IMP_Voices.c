@@ -20,6 +20,7 @@
 	#include "IMP_Text_System.h"
 	#include "Text.h"
 	#include "LaptopSave.h"
+	#include "Button_System.h"
 #endif
 
 //current and last pages

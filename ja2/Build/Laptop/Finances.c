@@ -17,6 +17,8 @@
 	#include "LaptopSave.h"
 	#include "Campaign_Types.h"
 	#include "StrategicMap.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 // the global defines

@@ -7,6 +7,8 @@
 	#include "WordWrap.h"
 	#include "Laptop.h"
 	#include "Text.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

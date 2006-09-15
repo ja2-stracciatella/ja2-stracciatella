@@ -12,6 +12,9 @@
 	#include "Cursors.h"
 	#include "BobbyRMailOrder.h"
 	#include "WordWrap.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

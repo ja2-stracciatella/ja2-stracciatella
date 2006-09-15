@@ -46,6 +46,7 @@
 	#include "Auto_Resolve.h"
 	#include "GameSettings.h"
 	#include "Quests.h"
+	#include "Video.h"
 #endif
 
 // the delay for a group about to arrive

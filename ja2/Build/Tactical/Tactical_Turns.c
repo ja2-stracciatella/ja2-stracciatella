@@ -31,6 +31,7 @@
 	#include "StrategicMap.h"
 	#include "Random.h"
 	#include "Explosion_Control.h"
+	#include "JAScreens.h"
 #endif
 
 extern void DecayPublicOpplist( INT8 bTeam );

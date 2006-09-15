@@ -14,6 +14,8 @@
 	#include "Text.h"
 	#include "LaptopSave.h"
 	#include "Multi_Language_Graphic_Utils.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

@@ -23,6 +23,8 @@
 	#include "Strategic_Town_Loyalty.h"
 	#include "StrategicMap.h"
 	#include "Assignments.h"
+	#include "Debug.h"
+	#include "Video.h"
 #endif
 
 #define MAP_BORDER_X 261

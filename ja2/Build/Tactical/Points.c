@@ -28,6 +28,7 @@
 	#include "Drugs_And_Alcohol.h"
 	#include "WorldMan.h"
 	#include "Interface_Items.h"
+	#include "Debug.h"
 #endif
 
 extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );

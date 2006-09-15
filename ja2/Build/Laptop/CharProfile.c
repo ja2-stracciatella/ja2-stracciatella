@@ -24,6 +24,8 @@
 	#include "MessageBoxScreen.h"
 	#include "LaptopSave.h"
 	#include <string.h>
+	#include "Button_System.h"
+	#include "Debug.h"
 #endif
 
 

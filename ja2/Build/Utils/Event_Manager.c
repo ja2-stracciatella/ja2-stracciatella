@@ -10,6 +10,8 @@
 	#include "Event_Manager.h"
 	#include "Timer_Control.h"
 	#include <string.h>
+	#include "Debug.h"
+	#include "MemMan.h"
 #endif
 
 HLIST		hEventQueue = NULL;

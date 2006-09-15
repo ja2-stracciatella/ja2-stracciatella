@@ -46,6 +46,7 @@
 	#include "Strategic_Mines.h"
 	#include "MapScreen.h"
 	#include <math.h>
+	#include "JAScreens.h"
 #endif
 
 

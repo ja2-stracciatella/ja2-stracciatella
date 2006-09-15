@@ -11,6 +11,9 @@
 	#include "Encrypted_File.h"
 	#include "Florist_Gallery.h"
 	#include "Text.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

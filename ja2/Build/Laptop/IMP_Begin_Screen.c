@@ -31,6 +31,9 @@
 	#include "Text.h"
 	#include <string.h>
 	#include "LaptopSave.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138

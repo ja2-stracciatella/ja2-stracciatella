@@ -37,6 +37,8 @@
 	#include "Gameloop.h"
 	#include "SysUtil.h"
 	#include "Tile_Surface.h"
+	#include "Button_System.h"
+	#include "Video.h"
 #endif
 
 

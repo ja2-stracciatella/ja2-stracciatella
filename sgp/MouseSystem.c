@@ -39,6 +39,7 @@
 	#include "MouseSystem.h"
 	#include "Cursor_Control.h"
 	#include "Button_System.h"
+	#include "Timer.h"
 #endif
 
 #ifdef JA2_PRECOMPILED_HEADERS

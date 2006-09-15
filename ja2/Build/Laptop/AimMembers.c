@@ -44,6 +44,8 @@
 	#include "StrategicMap.h"
 	#include "Sound_Control.h"
 	#include "Quests.h"
+	#include "Button_System.h"
+	#include "Video.h"
 #endif
 
 #include "Strategic_Town_Loyalty.h"

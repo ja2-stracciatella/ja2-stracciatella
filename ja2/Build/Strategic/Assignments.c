@@ -61,6 +61,7 @@
 	#include "History.h"
 	#include "Map_Screen_Interface_Map_Inventory.h"
 	#include "Interface_Dialogue.h"
+	#include "JAScreens.h"
 #endif
 
 

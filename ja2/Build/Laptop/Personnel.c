@@ -31,6 +31,8 @@
 	#include "StrategicMap.h"
 	#include "Animation_Data.h"
 	#include "Merc_Contract.h"
+	#include "Button_System.h"
+	#include "VSurface.h"
 #endif
 
 #include "Soldier_Macros.h"

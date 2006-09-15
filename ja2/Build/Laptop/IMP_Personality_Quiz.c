@@ -20,6 +20,7 @@
 	#include "Input.h"
 	#include "English.h"
 	#include <string.h>
+	#include "Button_System.h"
 #endif
 
 UINT32 giIMPPersonalityQuizButton[ 2 ];

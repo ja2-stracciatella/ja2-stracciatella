@@ -48,6 +48,7 @@
 	#include "Line.h"
 	#include "Map_Screen_Interface.h"
 	#include "Civ_Quotes.h"
+	#include "Video.h"
 #endif
 
 #define				CLOCK_X								554

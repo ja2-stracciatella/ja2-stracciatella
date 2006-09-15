@@ -19,6 +19,8 @@
 	#include "IMP_Text_System.h"
 	#include "IMP_Voices.h"
 	#include "IMP_Compile_Character.h"
+	#include "Button_System.h"
+	#include "VSurface.h"
 #endif
 
 //current and last pages

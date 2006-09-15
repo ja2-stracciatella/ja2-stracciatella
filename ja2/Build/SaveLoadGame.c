@@ -101,6 +101,8 @@
 	#include "Interface_Panels.h"
 	#include "Interface_Dialogue.h"
 	#include "Assignments.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #include		"BobbyR.h"

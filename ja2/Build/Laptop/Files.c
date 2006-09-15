@@ -15,6 +15,8 @@
 	#include "EMail.h"
 	#include "Text.h"
 	#include <string.h>
+	#include "Button_System.h"
+	#include "VSurface.h"
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X

@@ -10,6 +10,9 @@
 	#include <string.h>
 	#include <stdarg.h>
 	#include "WinFont.h"
+	#include "Debug.h"
+	#include "Stubs.h" // XXX
+	#include "Video.h"
 #endif
 
 

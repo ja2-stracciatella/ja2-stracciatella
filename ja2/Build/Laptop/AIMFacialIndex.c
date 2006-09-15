@@ -13,6 +13,8 @@
 	#include "Text.h"
 	#include "AIMSort.h"
 	#include "Assignments.h"
+	#include "Button_System.h"
+	#include "Video.h"
 #endif
 
 

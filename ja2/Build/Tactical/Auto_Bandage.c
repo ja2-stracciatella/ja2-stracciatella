@@ -28,6 +28,8 @@
 	#include "WordWrap.h"
 	#include "Cursors.h"
 	#include "English.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

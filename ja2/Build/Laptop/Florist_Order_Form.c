@@ -19,6 +19,9 @@
 	#include "Text.h"
 	#include "LaptopSave.h"
 	#include "Random.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #include "Meanwhile.h"

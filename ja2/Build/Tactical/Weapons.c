@@ -42,6 +42,7 @@
 	#include "Soldier_Macros.h"
 	#include "SmokeEffects.h"
 	#include "Auto_Resolve.h"
+	#include "SoundMan.h"
 #endif
 
 #define MINCHANCETOHIT          1

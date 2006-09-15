@@ -10,6 +10,8 @@
 	#include "VObject_Blitters.h"
 	#include "Render_Dirty.h"
 	#include "Message.h"
+	#include "Debug.h"
+	#include "Video.h"
 #endif
 
 

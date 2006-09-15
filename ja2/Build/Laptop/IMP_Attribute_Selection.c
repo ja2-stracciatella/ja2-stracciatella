@@ -19,6 +19,8 @@
 	#include "IMP_Text_System.h"
 	#include "IMP_Compile_Character.h"
 	#include "Text.h"
+	#include "Button_System.h"
+	#include "Video.h"
 #endif
 
 // width of the slider bar region

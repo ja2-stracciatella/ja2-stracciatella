@@ -10,6 +10,10 @@
 	#include "Encrypted_File.h"
 	#include "Text.h"
 	#include <string.h>
+	#include "Button_System.h"
+	#include "Debug.h"
+	#include "VSurface.h"
+	#include "Video.h"
 #endif
 
 

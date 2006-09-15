@@ -28,6 +28,7 @@
 	#include "OppList.h"
 	#include "World_Items.h"
 	#include "Environment.h"
+	#include "SoundMan.h"
 #endif
 
 #include "Campaign.h"

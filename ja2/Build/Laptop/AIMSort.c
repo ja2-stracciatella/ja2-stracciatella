@@ -12,6 +12,9 @@
 	#include "Game_Clock.h"
 	#include "Text.h"
 	#include "Multi_Language_Graphic_Utils.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

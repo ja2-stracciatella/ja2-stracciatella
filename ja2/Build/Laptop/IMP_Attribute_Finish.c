@@ -18,6 +18,7 @@
 	#include "Laptop.h"
 	#include "IMP_Text_System.h"
 	#include "IMP_Attribute_Selection.h"
+	#include "Button_System.h"
 #endif
 
 // buttons

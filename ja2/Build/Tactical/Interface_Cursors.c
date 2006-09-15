@@ -22,6 +22,7 @@
 	#include "Overhead.h"
 	#include "Interface_Items.h"
 	#include "GameSettings.h"
+	#include "Video.h"
 #endif
 
 #define DISPLAY_AP_INDEX					MOCKFLOOR1

@@ -3,6 +3,7 @@
 
 #include "Items.h"
 #include "Handle_Items.h"
+#include "MouseSystem.h"
 
 // DEFINES FOR ITEM SLOT SIZES IN PIXELS
 #define		BIG_INV_SLOT_WIDTH				61

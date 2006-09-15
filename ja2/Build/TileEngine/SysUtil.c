@@ -11,6 +11,7 @@
 	#include "WCheck.h"
 	#include "SysUtil.h"
 	#include "RenderWorld.h"
+	#include "Video.h"
 #endif
 
 UINT32					guiBOTTOMPANEL = 0;

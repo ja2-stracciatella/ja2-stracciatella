@@ -1,6 +1,7 @@
 #ifndef __OVERHEADMAP_H
 #define __OVERHEADMAP_H
 
+#include "MouseSystem.h"
 
 void InitNewOverheadDB( UINT8 ubTilesetID );
 void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS, BOOLEAN fFromMapUtility );

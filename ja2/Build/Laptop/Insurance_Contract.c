@@ -25,6 +25,9 @@
 	#include "Strategic_Status.h"
 	#include "Assignments.h"
 	#include "Map_Screen_Interface.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #define		INS_CTRCT_ORDER_GRID_WIDTH					132

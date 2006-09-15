@@ -21,6 +21,9 @@
 	#include "LaptopSave.h"
 	#include "IMP_Compile_Character.h"
 	#include "IMP_Portraits.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

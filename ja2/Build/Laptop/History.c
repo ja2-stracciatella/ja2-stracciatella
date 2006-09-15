@@ -18,6 +18,8 @@
 	#include "Message.h"
 	#include "LaptopSave.h"
 	#include "QuestText.h"
+	#include "Button_System.h"
+	#include "VSurface.h"
 #endif
 
 

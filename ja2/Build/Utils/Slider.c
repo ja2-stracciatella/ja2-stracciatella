@@ -10,6 +10,8 @@
 	#include	"Slider.h"
 	#include	"SysUtil.h"
 	#include	"Line.h"
+	#include	"Debug.h"
+	#include	"Video.h"
 #endif
 
 

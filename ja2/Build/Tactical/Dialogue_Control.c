@@ -55,6 +55,8 @@
 	#include "End_Game.h"
 	#include "LOS.h"
 	#include "QArray.h"
+	#include "JAScreens.h"
+	#include "Video.h"
 #endif
 
 #define		DIALOGUESIZE					480

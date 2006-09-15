@@ -26,6 +26,9 @@
 	#include "Assignments.h"
 	#include "Input.h"
 	#include "English.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #include "Cheats.h"

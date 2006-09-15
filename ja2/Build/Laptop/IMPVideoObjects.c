@@ -13,6 +13,9 @@
 	#include "Laptop.h"
 	#include "Multi_Language_Graphic_Utils.h"
 	#include "IMP_Attribute_Selection.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 // globals

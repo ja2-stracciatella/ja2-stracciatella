@@ -35,6 +35,7 @@
 	#include "English.h"
 	#include "FileMan.h"
 	#include "MessageBoxScreen.h"
+	#include "Video.h"
 #endif
 
 

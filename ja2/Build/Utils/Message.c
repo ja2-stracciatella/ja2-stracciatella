@@ -23,6 +23,7 @@
 	#include <stdio.h>
 	#include "Game_Clock.h"
 	#include <stdarg.h>
+	#include "VSurface.h"
 #endif
 
 typedef struct

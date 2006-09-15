@@ -22,6 +22,9 @@
 	#include "LaptopSave.h"
 	#include <string.h>
 	#include "Finances.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 

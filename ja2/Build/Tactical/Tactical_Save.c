@@ -47,6 +47,7 @@
 	#include "MessageBoxScreen.h"
 	#include "Queen_Command.h"
 	#include "Map_Screen_Interface_Map_Inventory.h"
+	#include "ScreenIDs.h"
 #endif
 
 BOOLEAN gfWasInMeanwhile = FALSE;

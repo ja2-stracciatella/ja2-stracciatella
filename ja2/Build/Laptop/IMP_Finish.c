@@ -23,6 +23,9 @@
 	#include "IMP_Compile_Character.h"
 	#include "Text.h"
 	#include "LaptopSave.h"
+	#include "Button_System.h"
+	#include "ScreenIDs.h"
+	#include "VSurface.h"
 #endif
 
 // min time btween frames of animation

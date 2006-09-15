@@ -31,6 +31,8 @@
 	#include "SaveLoadGame.h"
 	#include "Finances.h"
 	#include "Options_Screen.h"
+	#include "Debug.h"
+	#include "Video.h"
 #endif
 
 

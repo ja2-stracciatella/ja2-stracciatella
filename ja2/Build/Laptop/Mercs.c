@@ -24,6 +24,9 @@
 	#include "Soldier_Profile.h"
 	#include "Game_Event_Hook.h"
 	#include "Quests.h"
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 #define		MERC_TEXT_FONT									FONT12ARIAL

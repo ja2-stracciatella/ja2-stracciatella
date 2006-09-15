@@ -1,6 +1,7 @@
 #ifndef _UTILITIES_H_
 #define _UTILITIES_H_
 
+#include "HImage.h"
 #include "Overhead_Types.h"
 #include "SGP.h"
 

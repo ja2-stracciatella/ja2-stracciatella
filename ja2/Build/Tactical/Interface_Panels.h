@@ -1,6 +1,7 @@
 #ifndef __INTERFACE_PANELS
 #define __INTERFACE_PANELS
 
+#include "MouseSystem.h"
 
 enum
 {

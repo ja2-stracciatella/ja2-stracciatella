@@ -23,6 +23,7 @@
 	#include "OppList.h"
 	#include "Random.h"
 	#include "StrategicMap.h"
+	#include "SoundMan.h"
 #endif
 
 //effects whether or not time of day effects the lighting.  Underground

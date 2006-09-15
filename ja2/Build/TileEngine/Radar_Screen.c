@@ -30,6 +30,9 @@
 	#include "Meanwhile.h"
 	#include "StrategicMap.h"
 	#include "Animation_Data.h"
+	#include "JAScreens.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 extern INT32 iCurrentMapSectorZ;

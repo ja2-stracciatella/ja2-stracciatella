@@ -11,6 +11,9 @@
 	#include "Insurance_Text.h"
 	#include "Text.h"
 	#include <string.h>
+	#include "Button_System.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 
