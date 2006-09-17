@@ -8,7 +8,6 @@
 	#include "Gameloop.h"
 	#include "HImage.h"
 	#include "VObject.h"
-	#include "VObject_Private.h"
 	#include "VObject_Blitters.h"
 	#include "WCheck.h"
 	#include "Input.h"

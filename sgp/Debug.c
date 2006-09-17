@@ -31,7 +31,6 @@
 	#include "WCheck.h"
 	#include "TopicIDs.h"
 	#include "TopicOps.h"
-	#include "WizShare.h"
 	#include <string.h>
 	#include <stdarg.h>
 	#include <stdlib.h>

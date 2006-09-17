@@ -13,8 +13,6 @@
 	#endif
 	#include "HImage.h"
 	#include "VObject.h"
-	#include "VObject_Private.h"
-	#include "Video_Private.h"
 	#include "WCheck.h"
 	#include "VObject_Blitters.h"
 	#include "SGP.h"

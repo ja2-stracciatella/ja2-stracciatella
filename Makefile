@@ -331,7 +331,6 @@ SRCS += sgp/Button_System.c
 SRCS += sgp/Compression.c
 SRCS += sgp/Container.c
 SRCS += sgp/Cursor_Control.c
-SRCS += sgp/DbMan.c
 SRCS += sgp/Debug.c
 #SRCS += sgp/DirectDraw_Calls.c
 #SRCS += sgp/DirectX_Common.c
