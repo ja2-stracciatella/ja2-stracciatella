@@ -347,7 +347,6 @@ SRCS += sgp/JA2_Libs.c
 SRCS += sgp/Line.c
 #SRCS += sgp/MemMan.c
 SRCS += sgp/MouseSystem.c
-SRCS += sgp/Mutex_Manager.c
 SRCS += sgp/PCX.c
 SRCS += sgp/Random.c
 #SRCS += sgp/RegInst.c

@@ -11,7 +11,6 @@
 	#include "Timer_Control.h"
 	#include "Render_Dirty.h"
 	#include "RenderWorld.h"
-	#include "Mutex_Manager.h"
 	#include "Local.h"
 	#include "Interface.h"
 	#include "Map_Screen_Interface_Bottom.h"
@@ -756,8 +755,6 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		// Init display array!
 		memset( gpDisplayList, 0, sizeof( gpDisplayList ) );
 		fFirstTimeInMessageSystem = FALSE;
-		//if(!(InitializeMutex(SCROLL_MESSAGE_MUTEX,"ScrollMessageMutex" )))
-		//	return;
 	}
 
 
@@ -840,9 +837,6 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 
 	// clear up list of wrapped strings
 	ClearWrappedStrings( pStringWrapperHead );
-
- //LeaveMutex(SCROLL_MESSAGE_MUTEX, __LINE__, __FILE__);
- return;
 }
 
 
@@ -961,8 +955,6 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		// Init display array!
 		memset( gpDisplayList, 0, sizeof( gpDisplayList ) );
 		fFirstTimeInMessageSystem = FALSE;
-		//if(!(InitializeMutex(SCROLL_MESSAGE_MUTEX,"ScrollMessageMutex" )))
-		//	return;
 	}
 
 
@@ -1022,8 +1014,6 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 	//PlayNewMessageSound( );
 
 	MoveToEndOfMapScreenMessageList( );
-
-	//LeaveMutex(SCROLL_MESSAGE_MUTEX, __LINE__, __FILE__);
 }
 
 

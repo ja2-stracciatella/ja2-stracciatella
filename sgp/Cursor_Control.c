@@ -333,9 +333,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 
 	if ( gfCursorDatabaseInit )
 	{
-		// Enter mouse buffer mutex
-	  //EnterMutex(MOUSE_BUFFER_MUTEX, __LINE__, __FILE__);
-
 		// If the current cursor is the first index, disable cursors
 
 		if ( uiCursorIndex == VIDEO_NO_CURSOR )

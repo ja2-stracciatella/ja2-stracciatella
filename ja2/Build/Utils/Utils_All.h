@@ -63,7 +63,6 @@
 #include "WordWrap.h"
 #include "Message.h"
 #include <memory.h>
-#include "Mutex_Manager.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "SoundMan.h"

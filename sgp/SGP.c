@@ -435,16 +435,6 @@ BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 		return FALSE;
 	}
 
-#ifdef JA2
-  FastDebugMsg("Initializing Mutex Manager");
-	// Initialize the Dirty Rectangle Manager
-	if (InitializeMutexManager() == FALSE)
-	{ // We were unable to initialize the game
-		FastDebugMsg("FAILED : Initializing Mutex Manager");
-		return FALSE;
-	}
-#endif
-
 	FastDebugMsg("Initializing File Manager");
 	// Initialize the File Manager
 	if (InitializeFileManager(NULL) == FALSE)
@@ -600,9 +590,6 @@ void ShutdownStandardGamingPlatform(void)
   ShutdownInputManager();
   ShutdownContainers();
   ShutdownFileManager();
-#ifdef JA2
-  ShutdownMutexManager();
-#endif
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 	DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
