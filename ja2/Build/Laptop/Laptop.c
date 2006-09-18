@@ -1888,7 +1888,7 @@ UINT32 LaptopScreenHandle()
 			BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &DstRect, &SrcRect2 );
 			InvalidateScreen();
 			//gfPrintFrameBuffer = TRUE;
-			RefreshScreen( NULL );
+			RefreshScreen();
 		}
 		fReDrawScreenFlag = TRUE;
 	}
@@ -2554,7 +2554,7 @@ BOOLEAN LeaveLapTopScreen( void )
 				BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &DstRect, &SrcRect2 );
 				InvalidateScreen();
 				//gfPrintFrameBuffer = TRUE;
-				RefreshScreen( NULL );
+				RefreshScreen();
 			}
 		}
 	}

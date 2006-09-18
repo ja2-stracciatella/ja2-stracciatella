@@ -285,7 +285,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 		InvalidateRegion( pCurr->usBarLeft, pCurr->usBarTop, pCurr->usBarRight, pCurr->usBarBottom );
 		ExecuteBaseDirtyRectQueue();
 		EndFrameBufferRender();
-		RefreshScreen( NULL );
+		RefreshScreen();
 	}
 
 	// update music here

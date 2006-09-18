@@ -550,7 +550,7 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 
 		BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &SrcRect, &DstRect );
 		InvalidateScreen();
-		RefreshScreen( NULL );
+		RefreshScreen();
 
 		//Restore the previous rect.
 		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)DstRect.iLeft, (UINT16)DstRect.iTop,

@@ -516,5 +516,5 @@ void DisplaySirtechSplashScreen()
 
 
 	InvalidateScreen();
-	RefreshScreen( NULL );
+	RefreshScreen();
 }

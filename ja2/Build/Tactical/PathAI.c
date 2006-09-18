@@ -1930,7 +1930,7 @@ ENDOFLOOP:
 				RenderCoverDebug( );
 				InvalidateScreen( );
 				EndFrameBufferRender();
-				RefreshScreen( NULL );
+				RefreshScreen();
 			}
 		}
 	#endif
@@ -1994,7 +1994,7 @@ ENDOFLOOP:
 				RenderCoverDebug( );
 				InvalidateScreen( );
 				EndFrameBufferRender();
-				RefreshScreen( NULL );
+				RefreshScreen();
 			}
 		#endif
 

@@ -460,12 +460,12 @@ void BeginLoadScreen( )
 			SrcRect.iBottom = 480 - 39 * iPercentage / 100;
 			BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &SrcRect, &DstRect );
 			InvalidateScreen();
-			RefreshScreen( NULL );
+			RefreshScreen();
 		}
 	}
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 	InvalidateScreen( );
-	RefreshScreen( NULL );
+	RefreshScreen();
 
 	//If we are loading a saved game, use the Loading screen we saved into the SavedGameHeader file
 	// ( which gets reloaded into gubLastLoadingScreenID )
@@ -4739,7 +4739,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	// ATE: Change cursor to wait cursor for duration of frame.....
 	// save old cursor ID....
 	SetCurrentCursorFromDatabase( CURSOR_WAIT_NODELAY );
-	RefreshScreen( NULL );
+	RefreshScreen();
 
 	// JA2Gold: Leaving sector, so get rid of ambients!
 	DeleteAllAmbients();

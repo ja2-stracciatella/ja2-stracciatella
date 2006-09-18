@@ -380,5 +380,5 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	InvalidateScreen( );
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
-	RefreshScreen( NULL );
+	RefreshScreen();
 }

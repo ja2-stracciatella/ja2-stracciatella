@@ -515,7 +515,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 			 InvalidateScreen( );
 			 EndFrameBufferRender();
-			 RefreshScreen( NULL );
+			 RefreshScreen();
 
 			 do
 			 {

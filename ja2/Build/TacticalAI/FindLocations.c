@@ -1060,7 +1060,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		RenderCoverDebug( );
 		InvalidateScreen( );
 		EndFrameBufferRender();
-		RefreshScreen( NULL );
+		RefreshScreen();
 		/*
 	 iLoop = GetJA2Clock();
 	 do

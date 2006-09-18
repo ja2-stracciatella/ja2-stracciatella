@@ -658,8 +658,7 @@ void FadeInFrameBufferRealFade( )
 			ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 0, 0, 640, 480 );
 		}
 
-		// Refresh Screen
-		RefreshScreen( NULL );
+		RefreshScreen();
 
 		// Copy save buffer back
 		RestoreExternBackgroundRect( 0, 0, 640, 480 );

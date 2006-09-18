@@ -136,7 +136,7 @@ void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 		DrawTextToScreen( L"GENERATING MAP EDGEPOINTS!  Please wait...",
 			30, 160, 600, FONT10ARIALBOLD, FONT_YELLOW, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
 
-		RefreshScreen( NULL );
+		RefreshScreen();
 		GenerateMapEdgepoints();
 		switch( *pubStrategicInsertionCode )
 		{

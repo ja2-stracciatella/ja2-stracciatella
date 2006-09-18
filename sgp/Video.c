@@ -1377,7 +1377,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 
 
-void RefreshScreen(void *DummyVariable)
+void RefreshScreen(void)
 {
   static UINT32  uiRefreshThreadState, uiIndex;
   UINT16  usScreenWidth, usScreenHeight;

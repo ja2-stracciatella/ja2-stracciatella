@@ -254,7 +254,7 @@ BOOLEAN HandleAutoBandage( )
 			//Shadow area
 			ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, 640, 480 );
 			InvalidateScreen( );
-			RefreshScreen( NULL );
+			RefreshScreen();
 		}
 
 		DisplayAutoBandageUpdatePanel( );

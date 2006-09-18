@@ -1009,7 +1009,7 @@ void DoDemoIntroduction()
 	yp = (UINT16)(yp + 35 + height);
 	height = DisplayWrappedString( 20, yp, 400, 3, FONT14ARIAL, FONT_LTKHAKI, gpDemoIntroString[5], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 
-	RefreshScreen( NULL );
+	RefreshScreen();
 	while (gfProgramIsRunning)
 	{
 		if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
@@ -1045,7 +1045,7 @@ void DoDemoIntroduction()
 					{
 						ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640,	480, 0 );
 						InvalidateScreen();
-						RefreshScreen( NULL );
+						RefreshScreen();
 						return;
 					}
 				}
@@ -1072,7 +1072,7 @@ void DoDemoIntroduction()
 				}
 			}
 			gfSGPInputReceived  =  FALSE;
-			RefreshScreen( NULL );
+			RefreshScreen();
 		}
 	}
 }
