@@ -2,7 +2,6 @@
 // TAKEN FROM MS SAMPLES FOR DirectSound
 
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils_All.h"
 	#include <windows.h>
 	#include <windowsx.h>
 	#include <mmsystem.h>

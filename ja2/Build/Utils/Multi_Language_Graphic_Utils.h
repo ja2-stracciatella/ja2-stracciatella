@@ -1,6 +1,8 @@
 #ifndef __MULTI_LANGUAGE_GRAPHIC_UTILS_H
 #define __MULTI_LANGUAGE_GRAPHIC_UTILS_H
 
+#include "Types.h"
+
 enum
 {
 	MLG_AIMSYMBOL,

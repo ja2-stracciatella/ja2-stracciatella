@@ -1,5 +1,4 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils_All.h"
   #include "winfont.h"
 #else
 	#include "WordWrap.h"

@@ -1,5 +1,6 @@
-#include "Utils_All.h"
 #include "Language_Defines.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include <stdio.h>
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {

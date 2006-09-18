@@ -1,5 +1,4 @@
 #ifdef PRECOMPILEDHEADERS
-	#include "Utils_All.h"
 #else
 	#include "Language_Defines.h"
 	#if defined( ENGLISH ) || defined( TAIWANESE )
