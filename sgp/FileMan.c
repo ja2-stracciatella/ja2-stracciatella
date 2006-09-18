@@ -41,60 +41,16 @@
 	#include "Container.h"
 	#include "LibraryDataBase.h"
 #endif
-//**************************************************************************
-//
-//				Defines
-//
-//**************************************************************************
+
 
 #define FILENAME_LENGTH					600
 
 #define CHECKF(exp)  if (!(exp)) { return(FALSE); }
-#define CHECKV(exp)  if (!(exp)) { return; }
-#define CHECKN(exp)  if (!(exp)) { return(NULL); }
-#define CHECKBI(exp) if (!(exp)) { return(-1); }
-
-#define PRINT_DEBUG_INFO	FileDebugPrint();
-
-//**************************************************************************
-//
-//				Typedefs
-//
-//**************************************************************************
-
-typedef struct FMFileInfoTag
-{
-	CHAR		strFilename[FILENAME_LENGTH];
-	UINT8		uiFileAccess;
-	UINT32	uiFilePosition;
-	HANDLE	hFileHandle;
-	HDBFILE	hDBFile;
-
-} FMFileInfo;	// for 'File Manager File Information'
-
-typedef struct FileSystemTag
-{
-	FMFileInfo	*pFileInfo;
-	UINT32	uiNumHandles;
-	BOOLEAN	fDebug;
-	BOOLEAN	fDBInitialized;
-
-	CHAR		*pcFileNames;
-	UINT32	uiNumFilesInDirectory;
-} FileSystem;
-
-//**************************************************************************
-//
-//				Variables
-//
-//**************************************************************************
 
 
 //The FileDatabaseHeader
 DatabaseManagerHeaderStruct gFileDataBase;
 
-
-//FileSystem gfs;
 
 WIN32_FIND_DATA Win32FindInfo[20];
 BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
@@ -113,26 +69,8 @@ HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
 
 
-//**************************************************************************
-//
-//				Function Prototypes
-//
-//**************************************************************************
-
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
 
-void		FileDebugPrint( void );
-HANDLE	GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile );
-HWFILE	CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile );
-void		DestroyFileHandle( HWFILE hFile );
-void		BuildFileDirectory( void );
-INT32		GetFilesInDirectory( HCONTAINER hStack, CHAR *, HANDLE hFile, WIN32_FIND_DATA *pFind );
-
-//**************************************************************************
-//
-//				Functions
-//
-//**************************************************************************
 
 //**************************************************************************
 //
@@ -177,24 +115,6 @@ void ShutdownFileManager( void )
 	UnRegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 }
 
-//**************************************************************************
-//
-// FileDebug
-//
-//		To set whether or not we should print debug info.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-
-void FileDebug( BOOLEAN f )
-{
-//	gfs.fDebug = f;
-}
 
 //**************************************************************************
 //
@@ -738,58 +658,6 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 	return(fRet);
 }
 
-//**************************************************************************
-//
-// FilePrintf
-//
-//		To printf to a file.
-//
-// Parameter List :
-//
-//		HWFILE	-> handle to file to seek in
-//		...		-> arguments, 1st of which should be a string
-//
-// Return Value :
-//
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
-//
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//		9 Feb 98	DEF - modified to work with the library system
-//
-//**************************************************************************
-
-BOOLEAN _cdecl FilePrintf( HWFILE hFile, UINT8 *strFormatted, ... )
-{
-	UINT8		strToSend[80];
-	va_list	argptr;
-	BOOLEAN fRetVal = FALSE;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		va_start(argptr, strFormatted);
-		vsprintf( strToSend, strFormatted, argptr );
-		va_end(argptr);
-
-		fRetVal = FileWrite( hFile, strToSend, strlen(strToSend), NULL );
-	}
-	else
-	{
-		//its a library file, cant write to it so return an error
-		fRetVal = FALSE;
-	}
-
-	return( fRetVal );
-}
 
 //**************************************************************************
 //
@@ -980,311 +848,6 @@ UINT32 FileGetSize( HWFILE hFile )
 		return( uiFileSize );
 }
 
-//**************************************************************************
-//
-// FileDebugPrint
-//
-//		To print the state of memory to output.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-
-void FileDebugPrint( void )
-{
-}
-
-//**************************************************************************
-//
-// GetHandleToRealFile
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//		9 Feb 98	DEF - modified to work with the library system
-//
-//**************************************************************************
-
-HANDLE GetHandleToRealFile( HWFILE hFile, BOOLEAN *pfDatabaseFile )
-{
-	HANDLE	hRealFile;
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-
-	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	//if its a real file, read the data from the file
-	if( sLibraryID == REAL_FILE_LIBRARY_ID )
-	{
-		//Get the handle to the real file
-		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
-		*pfDatabaseFile = FALSE;
-	}
-	else
-	{
-		*pfDatabaseFile = TRUE;
-		hRealFile = (HANDLE) hFile;
-	}
-
-	return(hRealFile);
-}
-
-//**************************************************************************
-//
-// CreateFileHandle
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-/*
-
-	not needed anymore
-
-HWFILE CreateFileHandle( HANDLE hRealFile, BOOLEAN fDatabaseFile )
-{
-	UINT32		i, uiOldNumHandles;
-	FMFileInfo		*pNewFileInfo;
-
-	Assert( !fDatabaseFile || (fDatabaseFile && gfs.fDBInitialized) );
-
-	// don't use 1st position - it'll confuse the users
-	for ( i=1 ; i<gfs.uiNumHandles ; i++ )
-	{
-		if ( gfs.pFileInfo[i].hFileHandle == 0 && gfs.pFileInfo[i].hDBFile == 0 )
-		{
-			if ( fDatabaseFile )
-				gfs.pFileInfo[i].hDBFile = (HDBFILE)hRealFile;
-			else
-				gfs.pFileInfo[i].hFileHandle = hRealFile;
-			return( i );
-		}
-	}
-
-	uiOldNumHandles = gfs.uiNumHandles;
-
-	pNewFileInfo = (FMFileInfo *)MemRealloc( gfs.pFileInfo, gfs.uiNumHandles + NUM_FILES_TO_ADD_AT_A_TIME );
-	if ( !pNewFileInfo )
-	{
-		// TBD: error error error
-		return(0);
-	}
-	gfs.pFileInfo = (FMFileInfo *)pNewFileInfo;
-	gfs.uiNumHandles = gfs.uiNumHandles + NUM_FILES_TO_ADD_AT_A_TIME;
-
-	for ( i=uiOldNumHandles ; i<gfs.uiNumHandles ; i++ )
-	{
-		gfs.pFileInfo[i].hFileHandle = 0;
-		gfs.pFileInfo[i].hDBFile = 0;
-	}
-
-	if ( fDatabaseFile )
-		gfs.pFileInfo[uiOldNumHandles].hDBFile = (HDBFILE)hRealFile;
-	else
-		gfs.pFileInfo[uiOldNumHandles].hFileHandle = hRealFile;
-
-	return(uiOldNumHandles);
-}
-*/
-
-//**************************************************************************
-//
-// DestroyFileHandle
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
-/*
-void DestroyFileHandle( HWFILE hFile )
-{
-	if ( hFile < gfs.uiNumHandles && hFile )
-	{
-		gfs.pFileInfo[hFile].hFileHandle = 0;
-		gfs.pFileInfo[hFile].hDBFile = 0;
-	}
-}
-*/
-
-
-
-//**************************************************************************
-//
-// BuildFileDirectory
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		??nov96:HJH		-> creation
-//
-//**************************************************************************
-
-void BuildFileDirectory( void )
-{
-
-	return;	// temporary until container stuff is fixed
-/*
-	INT32					i, iNumFiles = 0;
-	HANDLE				hFile, hFileIn;
-	WIN32_FIND_DATA	find, inFind;
-	BOOLEAN				fMore = TRUE;
-	CHAR					cName[FILENAME_LENGTH], cDir[FILENAME_LENGTH], cSubDir[FILENAME_LENGTH];
-	HCONTAINER			hStack;
-
-
-
-	//
-	//	First, push all the file names in the directory (and subdirectories)
-	//	onto the stack.
-	//
-
-	GetProfileChar( "Startup", "InstPath", "", cDir );
-
-	if ( strlen( cDir ) == 0 )
-		return;
-
-	hStack = CreateStack( 100, FILENAME_LENGTH );
-	if (hStack == NULL)
-	{
-		FastDebugMsg(String("BuildFileDirectory: CreateStack Failed for the filename stack"));
-		return;
-	}
-
-	find.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-
-	strcpy( &(cDir[strlen(cDir)]), "\\*.*\0" );
-	hFile = FindFirstFile( cDir, &find );
-	while ( fMore )
-	{
-		if ( find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-		{
-			if ( strcmp( find.cFileName, "." ) != 0 && strcmp( find.cFileName, ".." ) != 0 )
-			{
-				// a valid directory
-				inFind.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-				strcpy( cSubDir, cDir );
-				strcpy( &(cSubDir[strlen(cDir)-3]), find.cFileName );
-				strcpy( &(cSubDir[strlen(cSubDir)]), "\\*.*\0" );
-				hFileIn = FindFirstFile( cSubDir, &inFind );
-				iNumFiles += GetFilesInDirectory( hStack, cSubDir, hFileIn, &inFind );
-				FindClose( hFileIn );
-			}
-		}
-		else
-		{
-			iNumFiles++;
-			strcpy( cName, cDir );
-			strcpy( &(cName[strlen(cName)-3]), find.cFileName );
-			CharLower( cName );
-			hStack = Push( hStack, cName );
-		}
-		find.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-		fMore = FindNextFile( hFile, &find );
-	}
-	FindClose( hFile );
-
-	//
-	//	Okay, we have all the files in the stack, now put them in place.
-	//
-	gfs.uiNumFilesInDirectory = iNumFiles;
-
-	gfs.pcFileNames = (CHAR *)MemAlloc( iNumFiles * FILENAME_LENGTH );
-
-	if ( gfs.pcFileNames )
-	{
-		for ( i=0 ; i<iNumFiles ; i++ )
-		{
-			Pop( hStack, (void *)(&gfs.pcFileNames[i*FILENAME_LENGTH]) );
-		}
-	}
-
-	//
-	//	Clean up.
-	//
-
-	DeleteStack( hStack );
-*/
-}
-
-//**************************************************************************
-//
-// GetFilesInDirectory
-//
-//		Gets the files in a directory and the subdirectories.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		??nov96:HJH		-> creation
-//
-//**************************************************************************
-
-INT32 GetFilesInDirectory( HCONTAINER hStack, CHAR *pcDir, HANDLE hFile, WIN32_FIND_DATA *pFind )
-{
-	INT32					iNumFiles;
-	WIN32_FIND_DATA	inFind;
-	BOOLEAN				fMore;
-	CHAR					cName[FILENAME_LENGTH], cDir[FILENAME_LENGTH];
-	HANDLE				hFileIn;
-
-	fMore = TRUE;
-	iNumFiles = 0;
-
-	while ( fMore )
-	{
-		if ( pFind->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-		{
-			if ( strcmp( pFind->cFileName, "." ) != 0 && strcmp( pFind->cFileName, ".." ) != 0 )
-			{
-				// a valid directory - recurse and find the files in that directory
-
-				inFind.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-				strcpy( cDir, pcDir );
-				strcpy( &(cDir[strlen(cDir)-3]), pFind->cFileName );
-				strcpy( &(cDir[strlen(cDir)]), "\\*.*\0" );
-				hFileIn = FindFirstFile( cDir, &inFind );
-				iNumFiles += GetFilesInDirectory( hStack, cDir, hFileIn, &inFind );
-				FindClose( hFileIn );
-			}
-		}
-		else
-		{
-			iNumFiles++;
-			strcpy( cName, pcDir );
-			strcpy( &(cName[strlen(cName)-3]), pFind->cFileName );
-			CharLower( cName );
-			hStack = Push( hStack, cName );
-		}
-		pFind->dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY;
-		fMore = FindNextFile( hFile, pFind );
-	}
-
-	return(iNumFiles);
-}
 
 BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
 {
@@ -1623,119 +1186,6 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 }
 
 
-
-BOOLEAN FileCopy(STR strSrcFile, STR strDstFile, BOOLEAN fFailIfExists)
-{
-	return(CopyFile(strSrcFile, strDstFile, fFailIfExists));
-
-// Not needed, use Windows CopyFile
-/*
-	HWFILE hFile;
-	UINT32 uiSize;
-	CHAR *pBuffer;
-	UINT32 uiBytesRead, uiBytesWritten;
-
-
-	// open source file
-  hFile = FileOpen(strSrcFile, FILE_ACCESS_READ, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Src file %s", strSrcFile));
-    return(FALSE);
-  }
-
-	// get its size
-	uiSize = FileGetSize(hFile);
-	if (uiSize == 0)
-	{
-   	FastDebugMsg(String("FileCopy: size is 0, Src file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
-	}
-
-	// allocate a buffer big enough to hold the entire file
-	pBuffer = MemAlloc(uiSize);
-	if (pBuffer == NULL)
-	{
-		FastDebugMsg(String("FileCopy: ERROR - MemAlloc pBuffer failed, size %d", uiSize));
-    FileClose(hFile);
-		return(FALSE);
-	}
-
-	// read the file into memory
-  if (!FileRead(hFile, pBuffer, uiSize, &uiBytesRead))
-  {
-   	FastDebugMsg(String("FileCopy: FileRead failed, file %s", strSrcFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
-
-	// close source file
-  FileClose(hFile);
-
-
-	// open destination file
-  hFile = FileOpen(strDstFile, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
-  if (hFile == 0)
-  {
-   	FastDebugMsg(String("FileCopy: FileOpen failed on Dst file %s", strDstFile));
-    return(FALSE);
-  }
-
-	// write buffer to the destination file
-  if (!FileWrite(hFile, pBuffer, uiSize, &uiBytesWritten))
-  {
-   	FastDebugMsg(String("FileCopy: FileWrite failed, file %s", strDstFile));
-    FileClose(hFile);
-    return(FALSE);
-  }
-
-	// close destination file
-  FileClose(hFile);
-
-
-  MemFree(pBuffer);
-  pBuffer = NULL;
-	return(TRUE);
-*/
-}
-
-BOOLEAN FileMove(STR strOldName, STR strNewName)
-{
-	// rename
-	return(MoveFile(strOldName, strNewName));
-}
-
-//Additions by Kris Morness
-BOOLEAN FileSetAttributes( STR strFilename, UINT32 uiNewAttribs )
-{
-	UINT32	uiFileAttrib = 0;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_ARCHIVE )
-		uiFileAttrib |= FILE_ATTRIBUTE_ARCHIVE;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_HIDDEN )
-		uiFileAttrib |= FILE_ATTRIBUTE_HIDDEN;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_NORMAL )
-		uiFileAttrib |= FILE_ATTRIBUTE_NORMAL;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_OFFLINE )
-		uiFileAttrib |= FILE_ATTRIBUTE_OFFLINE;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_READONLY )
-		uiFileAttrib |= FILE_ATTRIBUTE_READONLY;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_SYSTEM	)
-		uiFileAttrib |= FILE_ATTRIBUTE_SYSTEM;
-
-	if( uiNewAttribs & FILE_ATTRIBUTES_TEMPORARY )
-		uiFileAttrib |= FILE_ATTRIBUTE_TEMPORARY;
-
-	return SetFileAttributes( strFilename, uiFileAttrib );
-}
-
-
 UINT32 FileGetAttributes( STR strFilename )
 {
 	UINT32	uiAttribs = 0;
@@ -1921,6 +1371,7 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 	return( CompareFileTime( pFirstFileTime, pSecondFileTime ) );
 }
 
+
 UINT32 FileSize(STR strFilename)
 {
 HWFILE hFile;
@@ -1934,7 +1385,6 @@ UINT32 uiSize;
 
 	return(uiSize);
 }
-
 
 
 HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
@@ -1964,76 +1414,6 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 	return( 0 );
 }
 
-//**************************************************************************
-//
-// AddSubdirectoryToPath
-//
-//		Puts a subdirectory of the current working directory into the current
-// task's system path.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		10June98:DB		-> creation
-//
-//**************************************************************************
-BOOLEAN AddSubdirectoryToPath(CHAR8 *pDirectory)
-{
-CHAR8	*pSystemPath;
-CHAR8 *pPath;
-UINT32 uiPathLen;
-
-	// Check for NULL
-	if(!pDirectory)
-		return(FALSE);
-
-	// Check for zero length string
-	if(!strlen(pDirectory))
-		return(FALSE);
-
-	if((pSystemPath=(CHAR8 *)MemAlloc(_MAX_PATH))==NULL)
-		return(FALSE);
-
-	memset(pSystemPath, 0, _MAX_PATH);
-
-	if((pPath=(CHAR8 *)MemAlloc(_MAX_PATH))==NULL)
-	{
-		MemFree(pSystemPath);
-		return(FALSE);
-	}
-
-	memset(pPath, 0, _MAX_PATH);
-
-	// Builds a path to the directory with the SR DLL files.
-	_getcwd(pPath, _MAX_PATH);
-	uiPathLen=strlen(pPath);
-	if(uiPathLen)
-		uiPathLen--;
-	if(pPath[uiPathLen]!='\\')
-		strcat(pPath, "\\");
-
-	strcat(pPath, pDirectory);
-
-	// Appends it to the path for the current task
-	if(GetEnvironmentVariable("PATH", pSystemPath, _MAX_PATH))
-	{
-		strcat(pSystemPath, ";");
-		strcat(pSystemPath, pPath);
-		SetEnvironmentVariable("PATH", pSystemPath);
-		MemFree(pSystemPath);
-		MemFree(pPath);
-		return(TRUE);
-	}
-	else
-	{
-		MemFree(pSystemPath);
-		MemFree(pPath);
-		return(FALSE);
-	}
-
-}
-
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
@@ -2056,8 +1436,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 
 	return( uiFreeSpace );
 }
-
-
 
 
 UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )

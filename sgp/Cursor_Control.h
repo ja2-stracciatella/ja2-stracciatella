@@ -10,11 +10,8 @@ extern "C" {
 #endif
 
 
-extern UINT32		GetCursorHandle(UINT32 uiCursorIndex);
-extern void     UnloadCursorData(UINT32 uiCursorIndex);
 extern BOOLEAN  LoadCursorData(UINT32 uiCursorIndex);
 extern void     CursorDatabaseClear(void);
-extern UINT16		GetCursorSubIndex(UINT32 uiCursorIndex);
 extern BOOLEAN  SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  );
 
 #define ANIMATED_CURSOR							0x02
@@ -100,8 +97,6 @@ void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorDat
 void SetMouseBltHook( MOUSEBLT_HOOK pMouseBltOverride );
 
 void SetExternVOData( UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex );
-void RemoveExternVOData( UINT32 uiCursorIndex );
-
 
 #ifdef __cplusplus
 }

@@ -1965,20 +1965,6 @@ LPDIRECTDRAWSURFACE2 GetVideoSurfaceDDSurface( HVSURFACE hVSurface )
 	return( (LPDIRECTDRAWSURFACE2) hVSurface->pSurfaceData );
 }
 
-LPDIRECTDRAWSURFACE GetVideoSurfaceDDSurfaceOne( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	return( (LPDIRECTDRAWSURFACE) hVSurface->pSurfaceData1 );
-}
-
-
-LPDIRECTDRAWPALETTE  GetVideoSurfaceDDPalette( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	return( (LPDIRECTDRAWPALETTE) hVSurface->pPalette );
-}
 
 HVSURFACE CreateVideoSurfaceFromDDSurface( LPDIRECTDRAWSURFACE2 lpDDSurface )
 {

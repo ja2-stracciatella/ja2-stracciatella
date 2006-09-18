@@ -373,33 +373,3 @@ BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
   }
   return TRUE;
 }
-
-
-BOOLEAN IsSTCIETRLEFile( CHAR8 * ImageFile )
-{
-	HWFILE		hFile;
-	STCIHeader	Header;
-	UINT32		uiBytesRead;
-
-	CHECKF( FileExists( ImageFile ) );
-
-	// Open the file and read the header
-	hFile = FileOpen( ImageFile, FILE_ACCESS_READ, FALSE );
-	CHECKF( hFile );
-
-	if (!FileRead( hFile, &Header, STCI_HEADER_SIZE, &uiBytesRead ) || uiBytesRead != STCI_HEADER_SIZE || memcmp( Header.cID, STCI_ID_STRING, STCI_ID_LEN ) != 0 )
-	{
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header." );
-		FileClose( hFile );
-		return( FALSE );
-	}
-	FileClose( hFile );
-	if (Header.fFlags & STCI_ETRLE_COMPRESSED)
-	{
-	    return( TRUE );
-	}
-	else
-	{
-	    return( FALSE );
-	}
-}

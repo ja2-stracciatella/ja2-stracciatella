@@ -412,11 +412,6 @@ BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 	// First, initialize the registry keys.
 	InitializeRegistryKeys( "Wizardry8", "Wizardry8key" );
 
-	// For rendering DLLs etc.
-#ifndef JA2
-	AddSubdirectoryToPath("DLL");
-#endif
-
 	// Second, read in settings
 	GetRuntimeSettings( );
 

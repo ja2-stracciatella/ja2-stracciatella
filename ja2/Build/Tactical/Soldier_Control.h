@@ -1106,8 +1106,6 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 
 BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier );
 
-BOOLEAN PreloadSoldierBattleSounds( SOLDIERTYPE *pSoldier, BOOLEAN fRemove );
-
 #define PTR_CIVILIAN    (pSoldier->bTeam == CIV_TEAM)
 #define PTR_CROUCHED	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH)
 #define PTR_STANDING	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND)

@@ -7147,50 +7147,6 @@ BOOLEAN DoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID )
 }
 
 
-BOOLEAN PreloadSoldierBattleSounds( SOLDIERTYPE *pSoldier, BOOLEAN fRemove )
-{
-	UINT32 cnt;
-
-	CHECKF( pSoldier->bActive != FALSE );
-
-	for ( cnt = 0; cnt < NUM_MERC_BATTLE_SOUNDS; cnt++ )
-	{
-		// OK, build file and play!
-		if ( pSoldier->ubProfile != NO_PROFILE )
-		{
-			if ( gBattleSndsData[ cnt ].fPreload )
-			{
-				if ( fRemove )
-				{
-					SoundUnlockSample( gBattleSndsData[ cnt ].zName );
-				}
-				else
-				{
-					SoundLockSample( gBattleSndsData[ cnt ].zName );
-				}
-			}
-		}
-		else
-		{
-			if ( gBattleSndsData[ cnt ].fPreload && gBattleSndsData[ cnt ].fBadGuy )
-			{
-				if ( fRemove )
-				{
-					SoundUnlockSample( gBattleSndsData[ cnt ].zName );
-				}
-				else
-				{
-					SoundLockSample( gBattleSndsData[ cnt ].zName );
-				}
-			}
-		}
-	}
-
-	return( TRUE );
-}
-
-
-
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 {
 	// Check if we are near a lower level

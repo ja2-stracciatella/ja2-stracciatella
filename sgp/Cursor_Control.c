@@ -625,27 +625,3 @@ void SetExternVOData( UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex
 		}
 	}
 }
-
-
-void RemoveExternVOData( UINT32 uiCursorIndex )
-{
-	CursorData		*pCurData;
-	CursorImage		*pCurImage;
-	UINT32				cnt;
-
-	pCurData = &( gpCursorDatabase[ uiCursorIndex ] );
-
-	for ( cnt = 0; cnt < pCurData->usNumComposites; cnt++ )
-	{
-		pCurImage = &( pCurData->Composites[ cnt ] );
-
-		if ( gpCursorFileDatabase[ pCurImage->uiFileIndex ].ubFlags & USE_EXTERN_VO_CURSOR )
-		{
-			gpCursorFileDatabase[ pCurImage->uiFileIndex ].hVObject = NULL;
-		}
-
-	}
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
