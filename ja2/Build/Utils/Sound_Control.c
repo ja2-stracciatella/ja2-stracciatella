@@ -418,15 +418,7 @@ BOOLEAN InitJA2Sound( )
 
 BOOLEAN ShutdownJA2Sound( )
 {
-//UINT32 uiCount;
-
 	SoundStopAll();
-
-	//for(uiCount=0; uiCount < NUM_SAMPLES; uiCount++)
-	//{
-	//	SoundUnlockSample(szSoundEffects[uiCount]);
-	//	SoundFreeSample(szSoundEffects[uiCount]);
-	//}
 
 	return( TRUE );
 }

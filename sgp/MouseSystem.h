@@ -186,13 +186,9 @@ INT32 MSYS_AddRegion(MOUSE_REGION *region);
 void MSYS_RemoveRegion(MOUSE_REGION *region);
 void MSYS_EnableRegion(MOUSE_REGION *region);
 void MSYS_DisableRegion(MOUSE_REGION *region);
-void MSYS_ChangeRegionPriority(MOUSE_REGION *region,INT8 priority);
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata);
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index);
 
-INT32 MSYS_GrabMouse(MOUSE_REGION *region);
-void MSYS_ReleaseMouse(MOUSE_REGION *region);
-void MSYS_MoveMouseRegionBy( MOUSE_REGION *region, INT16 sDeltaX, INT16 sDeltaY);
 void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY);
 
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
@@ -209,25 +205,8 @@ void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBAC
 void DisplayFastHelp( MOUSE_REGION *region );
 void RenderFastHelp();
 
-void SetFastHelpDelay( INT16 sFastHelpDelay );
-void EnableMouseFastHelp( void );
-void DisableMouseFastHelp( void );
-
-void ResetClickedMode(void);
-
-#ifdef _JA2_RENDER_DIRTY
-
-BOOLEAN	SetRegionSavedRect( MOUSE_REGION *region);
-void		FreeRegionSavedRect( MOUSE_REGION *region );
-
-#endif
-
-// *****************************************************************************
-
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-
-// EOF *************************************************************************

@@ -341,9 +341,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 
 			SetMouseCursorProperties( 0, 0, 5, 5 );
 			DirtyCursor( );
-
-			//EnableCursor( FALSE );
-
 		}
 		else
 		{
@@ -570,9 +567,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 
 			SetMouseCursorProperties( 0, 0, 5, 5 );
 			DirtyCursor( );
-
-			//EnableCursor( FALSE );
-
 		}
 		else
 		{

@@ -106,7 +106,6 @@ MOUSE_REGION *MSYS_CurrRegion = NULL;
 BOOLEAN gfPersistantFastHelpMode;
 
 INT16   gsFastHelpDelay = 600; // In timer ticks
-BOOLEAN gfShowFastHelp  = TRUE;
 
 // help text is done, now execute callback, if there is one
 void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region );
@@ -1078,22 +1077,6 @@ void MSYS_SetCurrentCursor(UINT16 Cursor)
 }
 
 
-
-//=================================================================================================
-//	MSYS_ChangeRegionPriority
-//
-//	Set the priority of a mouse region
-//
-void MSYS_ChangeRegionPriority(MOUSE_REGION *region,INT8 priority)
-{
-	if(priority==MSYS_PRIORITY_AUTO)
-		priority=MSYS_PRIORITY_NORMAL;
-
-	region->PriorityLevel = priority;
-}
-
-
-
 //=================================================================================================
 //	MSYS_SetRegionUserData
 //
@@ -1137,47 +1120,6 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 }
 
 
-
-//=================================================================================================
-//	MSYS_GrabMouse
-//
-//	Assigns all mouse activity to a region, effectively blocking any other region from having
-//	control.
-//
-INT32 MSYS_GrabMouse(MOUSE_REGION *region)
-{
-	if(!MSYS_RegionInList(region))
-		return(MSYS_REGION_NOT_IN_LIST);
-
-	if(MSYS_Mouse_Grabbed == TRUE)
-		return(MSYS_ALREADY_GRABBED);
-
-	MSYS_Mouse_Grabbed = TRUE;
-	MSYS_GrabRegion = region;
-	return(MSYS_GRABBED_OK);
-}
-
-
-
-//=================================================================================================
-//	MSYS_ReleaseMouse
-//
-//	Releases a previously grabbed mouse region
-//
-void MSYS_ReleaseMouse(MOUSE_REGION *region)
-{
-	if(MSYS_GrabRegion != region)
-		return;
-
-	if(MSYS_Mouse_Grabbed == TRUE)
-	{
-		MSYS_Mouse_Grabbed = FALSE;
-		MSYS_GrabRegion = NULL;
-		MSYS_UpdateMouseRegion();
-	}
-}
-
-
 /* ==================================================================================
    MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
 
@@ -1203,27 +1145,6 @@ void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
 	// now move bottom right based on topleft + width or height
   region -> RegionBottomRightX = sX + sWidth;
 	region -> RegionBottomRightY = sY + sHeight;
-
-	return;
-}
-
-/* ==================================================================================
-   MSYS_MoveMouseRegionBy( MOUSE_REGION *region, INT16 sDeltaX, INT16 sDeltaY)
-
-	 Moves a Mouse region by sDeltaX sDeltaY on the screen
-
-*/
-
-void MSYS_MoveMouseRegionBy( MOUSE_REGION *region, INT16 sDeltaX, INT16 sDeltaY)
-{
-
-	// move top left
-	region -> RegionTopLeftX = region -> RegionTopLeftX + sDeltaX;
-	region -> RegionTopLeftY = region -> RegionTopLeftY + sDeltaY;
-
-	// now move bottom right
-  region -> RegionBottomRightX = region -> RegionBottomRightX + sDeltaX;
-	region -> RegionBottomRightY = region -> RegionBottomRightY + sDeltaY;
 
 	return;
 }
@@ -1592,7 +1513,7 @@ void RenderFastHelp()
 		iTimeDifferential += 0x7fffffff;
 	iLastClock = iCurrentClock;
 
-	if( MSYS_CurrRegion && MSYS_CurrRegion->FastHelpText && gfShowFastHelp )
+	if( MSYS_CurrRegion && MSYS_CurrRegion->FastHelpText)
 	{
 		if( !MSYS_CurrRegion->FastHelpTimer )
 		{
@@ -1630,15 +1551,6 @@ void RenderFastHelp()
 }
 #endif
 
-BOOLEAN	SetRegionSavedRect( MOUSE_REGION *region)
-{
-	return FALSE;
-}
-
-void FreeRegionSavedRect( MOUSE_REGION *region )
-{
-
-}
 
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow )
 {
@@ -1691,25 +1603,4 @@ void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region )
 	//( *( region->HelpDoneCallback ) )( );
 
 	return;
-}
-
-
-void SetFastHelpDelay( INT16 sFastHelpDelay )
-{
-  gsFastHelpDelay = sFastHelpDelay;
-}
-
-void EnableMouseFastHelp( void )
-{
-  gfShowFastHelp = TRUE;
-}
-
-void DisableMouseFastHelp( void )
-{
-  gfShowFastHelp = FALSE;
-}
-
-void ResetClickedMode(void)
-{
-	gfClickedModeOn = FALSE;
 }

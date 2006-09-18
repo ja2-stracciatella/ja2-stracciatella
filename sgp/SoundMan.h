@@ -168,16 +168,8 @@ extern BOOLEAN	SoundSetMemoryLimit(UINT32 uiLimit);
 extern BOOLEAN	SoundSetCacheThreshhold(UINT32 uiThreshold);
 extern HDIGDRIVER SoundGetDriverHandle(void);
 
-// Master volume control functions
-extern BOOLEAN	SoundSetDigitalVolume(UINT32 uiVolume);
-extern UINT32		SoundGetDigitalVolume(UINT32 uiVolume);
-extern void			SoundSetDefaultVolume(UINT32 uiVolume);
-extern UINT32		SoundGetDefaultVolume(void);
-
-
 // Cache control functions
 extern UINT32		SoundLoadSample(const char *pFilename);
-extern UINT32		SoundFreeSample(STR pFilename);
 extern UINT32		SoundLockSample(STR pFilename);
 extern UINT32		SoundUnlockSample(STR pFilename);
 extern BOOLEAN	SoundEmptyCache(void);
@@ -197,60 +189,20 @@ extern void			SoundSampleSetVolumeRange(UINT32 uiSample, UINT32 uiVolMin, UINT32
 extern void			SoundSampleSetPanRange(UINT32 uiSample, UINT32 uiPanMin, UINT32 uiPanMax);
 
 // Sound instance manipulation functions
-extern void			SoundSetMusic(UINT32 uiSound);
 extern BOOLEAN	SoundStopMusic(void);
 extern BOOLEAN	SoundStopAll(void);
 extern BOOLEAN	SoundStopAllRandom(void);
 extern BOOLEAN	SoundStop(UINT32 uiSoundID);
 extern BOOLEAN	SoundIsPlaying(UINT32 uiSoundID);
-extern BOOLEAN	SoundFileIsPlaying(CHAR8 *pFilename);
 extern BOOLEAN	SoundSetFadeVolume(UINT32 uiSoundID, UINT32 uiVolume, UINT32 uiRate, BOOLEAN fStopAtZero);
 extern BOOLEAN	SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume);
 extern BOOLEAN	SoundSetPan(UINT32 uiSoundID, UINT32 uiPan);
-extern BOOLEAN	SoundSetFrequency(UINT32 uiSoundID, UINT32 uiFreq);
-extern BOOLEAN	SoundSetLoop(UINT32 uiSoundID, UINT32 uiLoop);
 extern UINT32		SoundGetVolume(UINT32 uiSoundID);
-extern UINT32		SoundGetPan(UINT32 uiSoundID);
-extern UINT32		SoundGetFrequency(UINT32 uiSoundID);
-extern UINT32		SoundGetLoop(UINT32 uiSoundID);
 extern UINT32		SoundGetPosition(UINT32 uiSoundID);
-extern BOOLEAN	SoundGetMilliSecondPosition(UINT32 uiSoundID, UINT32 *puiTotalMilliseconds, UINT32 *puiCurrentMilliseconds);
 
-// Sound instance group functions
-extern BOOLEAN	SoundStopGroup(UINT32 uiPriority);
-extern BOOLEAN	SoundFreeGroup(UINT32 uiPriority);
-
-extern void SoundSetSampleFlags( UINT32 uiSample, UINT32 uiFlags );
 extern void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags );
 
 extern void SoundEnableSound(BOOLEAN fEnable);
-
-
-// New 3D sound priovider
-extern void				Sound3DSetProvider(CHAR8 *pProviderName);
-extern BOOLEAN		Sound3DInitProvider(CHAR8 *pProviderName);
-extern void				Sound3DShutdownProvider(void);
-
-// 3D sound control
-extern void				Sound3DSetPosition(UINT32 uiSample, FLOAT flX, FLOAT flY, FLOAT flZ);
-extern void				Sound3DSetVelocity(UINT32 uiSample, FLOAT flX, FLOAT flY, FLOAT flZ);
-extern void				Sound3DSetListener(FLOAT flX, FLOAT flY, FLOAT flZ);
-extern void				Sound3DSetFacing(FLOAT flXFace, FLOAT flYFace, FLOAT flZFace, FLOAT flXUp, FLOAT flYUp, FLOAT flZUp);
-extern void				Sound3DSetDirection(UINT32 uiSample, FLOAT flXFace, FLOAT flYFace, FLOAT flZFace, FLOAT flXUp, FLOAT flYUp, FLOAT flZUp);
-extern void				Sound3DSetFalloff(UINT32 uiSample, FLOAT flMax, FLOAT flMin);
-extern void				Sound3DSetEnvironment(INT32 iEnvironment);
-extern UINT32			Sound3DPlay(STR pFilename, SOUND3DPARMS *pParms);
-extern UINT32			Sound3DStartSample(UINT32 uiSample, UINT32 uiChannel, SOUND3DPARMS *pParms);
-extern void				Sound3DStopAll(void);
-extern UINT32			Sound3DPlayRandom(STR pFilename, RANDOM3DPARMS *pParms);
-extern UINT32			Sound3DStartRandom(UINT32 uiSample, SOUND3DPOS *Pos);
-extern void				Sound3DSetRoomType(UINT32 uiRoomType);
-
-// Status query functions
-extern UINT32			Sound3DChannelsInUse(void);
-extern UINT32			SoundStreamsInUse(void);
-extern UINT32			Sound2DChannelsInUse(void);
-extern UINT32			SoundTotalChannelsInUse(void);
 
 #ifdef __cplusplus
 }

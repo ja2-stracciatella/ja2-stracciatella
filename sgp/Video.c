@@ -158,7 +158,6 @@ UINT32                        guiRefreshThreadState;  // THREAD_ON, THREAD_OFF, 
 // Dirty rectangle management variables
 //
 
-void                          (*gpFrameBufferRefreshOverride)(void);
 SGPRect                       gListOfDirtyRegions[MAX_DIRTY_REGIONS];
 UINT32                        guiDirtyRegionCount;
 BOOLEAN                       gfForceFullScreenRefresh;
@@ -167,10 +166,6 @@ BOOLEAN                       gfForceFullScreenRefresh;
 SGPRect                       gDirtyRegionsEx[MAX_DIRTY_REGIONS];
 UINT32                        gDirtyRegionsFlagsEx[MAX_DIRTY_REGIONS];
 UINT32                        guiDirtyRegionExCount;
-
-SGPRect                       gBACKUPListOfDirtyRegions[MAX_DIRTY_REGIONS];
-UINT32                        gBACKUPuiDirtyRegionCount;
-BOOLEAN                       gBACKUPfForceFullScreenRefresh;
 
 //
 // Screen output stuff
@@ -567,7 +562,6 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
   guiRefreshThreadState        = THREAD_OFF;
   guiDirtyRegionCount          = 0;
   gfForceFullScreenRefresh     = TRUE;
-  gpFrameBufferRefreshOverride = NULL;
   gpCursorStore                = NULL;
   gfPrintFrameBuffer           = FALSE;
   guiPrintFrameBufferIndex     = 0;
@@ -703,7 +697,6 @@ BOOLEAN RestoreVideoManager(void)
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth )
 {
@@ -712,45 +705,6 @@ void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDep
 	*ubBitDepth = (UINT8) gubScreenPixelDepth;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN CanBlitToFrameBuffer(void)
-{
-  BOOLEAN fCanBlit;
-
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
-  fCanBlit = (guiFrameBufferState == BUFFER_READY);
-
-  return fCanBlit;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN CanBlitToMouseBuffer(void)
-{
-  BOOLEAN fCanBlit;
-
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // MOUSE_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
-  fCanBlit = (guiMouseBufferState == BUFFER_READY);
-
-  return fCanBlit;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
@@ -884,46 +838,6 @@ void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 ui
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void InvalidateRegions(SGPRect *pArrayOfRegions, UINT32 uiRegionCount)
-{
-  if (gfForceFullScreenRefresh == TRUE)
-  {
-    //
-    // There's no point in going on since we are forcing a full screen refresh
-    //
-
-    return;
-  }
-
-  if ((guiDirtyRegionCount + uiRegionCount) < MAX_DIRTY_REGIONS)
-  {
-    UINT32 uiIndex;
-
-    for (uiIndex = 0; uiIndex < uiRegionCount; uiIndex++)
-    {
-      //
-      // Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
-      //
-
-      gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = pArrayOfRegions[uiIndex].iLeft;
-      gListOfDirtyRegions[guiDirtyRegionCount].iTop    = pArrayOfRegions[uiIndex].iTop;
-      gListOfDirtyRegions[guiDirtyRegionCount].iRight  = pArrayOfRegions[uiIndex].iRight;
-      gListOfDirtyRegions[guiDirtyRegionCount].iBottom = pArrayOfRegions[uiIndex].iBottom;
-
-      guiDirtyRegionCount++;
-    }
-  }
-  else
-  {
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 void InvalidateScreen(void)
 {
   //
@@ -940,28 +854,6 @@ void InvalidateScreen(void)
   guiFrameBufferState = BUFFER_DIRTY;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void InvalidateFrameBuffer(void)
-{
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
-
-  guiFrameBufferState = BUFFER_DIRTY;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void SetFrameBufferRefreshOverride(PTR pFrameBufferRefreshOverride)
-{
-
-  gpFrameBufferRefreshOverride = pFrameBufferRefreshOverride;
-}
 
 //#define SCROLL_TEST
 
@@ -1593,23 +1485,6 @@ void RefreshScreen(void *DummyVariable)
   //
 	if (guiFrameBufferState == BUFFER_DIRTY)
 	{
-
-		// Well the frame buffer is dirty.
-		//
-
-		if (gpFrameBufferRefreshOverride != NULL)
-		{
-			//
-			// Method (3) - We are using a function override to refresh the frame buffer. First we
-			// call the override function then we must set the override pointer to NULL
-			//
-
-			(*gpFrameBufferRefreshOverride)();
-			gpFrameBufferRefreshOverride = NULL;
-
-		}
-
-
 		if ( gfFadeInitialized && gfFadeInVideo )
 		{
 			gFadeFunction( );
@@ -2639,49 +2514,6 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 	return TRUE;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN SetMouseCursorFromObject(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usOffsetX, UINT16 usOffsetY )
-{
-  BOOLEAN      ReturnValue;
-  PTR          pTmpPointer;
-  UINT32       uiPitch;
-  ETRLEObject  pETRLEPointer;
-
-  //
-  // Erase cursor background
-  //
-
-  pTmpPointer = LockMouseBuffer(&uiPitch);
-  memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  UnlockMouseBuffer();
-
-  //
-  // Get new cursor data
-  //
-
-  ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL);
-  guiMouseBufferState = BUFFER_DIRTY;
-
-  if (GetVideoObjectETRLEPropertiesFromIndex(uiVideoObjectHandle, &pETRLEPointer, usVideoObjectSubIndex))
-  {
-    gsMouseCursorXOffset = usOffsetX;
-    gsMouseCursorYOffset = usOffsetY;
-    gusMouseCursorWidth = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
-    gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
-
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-
-  }
-  else
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
-  }
-
-  return ReturnValue;
-}
 
 BOOLEAN EraseMouseCursor( )
 {
@@ -2723,64 +2555,6 @@ void DirtyCursor( )
   guiMouseBufferState = BUFFER_DIRTY;
 }
 
-void EnableCursor( BOOLEAN fEnable )
-{
-	if ( fEnable )
-	{
-		guiMouseBufferState = BUFFER_DISABLED;
-	}
-	else
-	{
-		guiMouseBufferState = BUFFER_READY;
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN HideMouseCursor(void)
-{
-  guiMouseBufferState = BUFFER_DISABLED;
-
-  return TRUE;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN LoadCursorFile(PTR pFilename)
-{
-  VOBJECT_DESC VideoObjectDescription;
-
-  //
-  // Make sure the old cursor store is destroyed
-  //
-
-  if (gpCursorStore != NULL)
-  {
-    DeleteVideoObject(gpCursorStore);
-    gpCursorStore = NULL;
-  }
-
-  //
-  // Get the source file with all the cursors inside
-  //
-
-  VideoObjectDescription.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(VideoObjectDescription.ImageFile, pFilename);
-  gpCursorStore = CreateVideoObject(&VideoObjectDescription);
-
-  //
-  // Were we successful in creating the cursor store ?
-  //
-
-  if (gpCursorStore == NULL)
-  {
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY )
 {

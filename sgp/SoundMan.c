@@ -23,51 +23,6 @@
 // Uncomment this to disable the startup of sound hardware
 //#define SOUND_DISABLE
 
-#pragma pack(push,1)
-
-// WAV file chunk definitions
-typedef struct {
-				// General chunk header
-				CHAR8				cTag[4];
-				UINT32			uiChunkSize;
-				} WAVCHUNK;
-
-typedef struct {
-				// WAV header
-				CHAR8				cRiff[4];				// "RIFF"
-				UINT32			uiChunkSize;		// Chunk length
-				CHAR8				cFileType[4];		// "WAVE"
-				} WAVRIFF;
-
-typedef struct {
-				// FMT chunk
-				CHAR8				cFormat[4];			// "FMT "
-				UINT32			uiChunkSize;		// Chunk length
-				UINT16			uiStereo;				// 1 if stereo, 0 if mono (Not reliable, use channels instead)
-				UINT16			uiChannels;			// number of channels used 1=mono, 2=stereo, etc.
-				UINT32			uiSpeed;				// Sampling Rate (speed)
-				UINT32			uiBytesSec;			// Number of bytes per sec
-				UINT16			uiBytesSample;	// Number of bytes per sample (1 = 8 bit mono,
-																		// 2 = 8 bit stereo or 16 bit mono, 4 = 16 bit stereo
-				UINT16			uiBitsSample;		// bits per sample
-				} WAVFMT;
-
-typedef struct {
-				// Data chunk
-				CHAR8				cName[4];				// "DATA"
-				UINT32			uiChunkSize;		// Chunk length
-				} WAVDATA;
-
-#pragma pack(pop)
-
-#define	WAV_CHUNK_RIFF					0
-#define	WAV_CHUNK_FMT						1
-#define WAV_CHUNK_DATA					2
-
-#define NUM_WAV_CHUNKS	3
-
-const char *cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
-
 
 // global settings
 #define		SOUND_MAX_CACHED			128						// number of cache slots
@@ -78,16 +33,11 @@ const char *cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
 #define		SOUND_MAX_CHANNELS		32						// number of mixer channels
 #endif
 
-#pragma message("TEMP!")
 
 #define		SOUND_DEFAULT_MEMORY	(8048*1024)		// default memory limit
 #define		SOUND_DEFAULT_THRESH	(256*8024)		// size for sample to be double-buffered
 #define		SOUND_DEFAULT_STREAM	(64*1024)			// double-buffered buffer size
 
-/*#define		SOUND_DEFAULT_MEMORY	(2048*1024)		// default memory limit
-#define		SOUND_DEFAULT_THRESH	(256*1024)		// size for sample to be double-buffered
-#define		SOUND_DEFAULT_STREAM	(64*1024)			// double-buffered buffer size
-*/
 // playing/random value to indicate default
 #define		SOUND_PARMS_DEFAULT		0xffffffff
 
@@ -99,13 +49,11 @@ const char *cWAVChunks[3]={"RIFF", "FMT ", "DATA"};
 BOOLEAN		SoundInitCache(void);
 BOOLEAN		SoundShutdownCache(void);
 UINT32		SoundLoadSample(const char *pFilename);
-UINT32		SoundFreeSample(STR pFilename);
 UINT32		SoundGetCached(const char *pFilename);
 UINT32		SoundLoadDisk(const char *pFilename);
 
 // Low level
 UINT32		SoundGetEmptySample(void);
-BOOLEAN		SoundProcessWAVHeader(UINT32 uiSample);
 UINT32		SoundFreeSampleIndex(UINT32 uiSample);
 UINT32		SoundGetIndexByID(UINT32 uiSoundID);
 static HDIGDRIVER SoundInitDriver(UINT32 uiRate, UINT16 uiBits, UINT16 uiChans);
@@ -131,7 +79,6 @@ UINT32		guiSoundMemoryUsed=0;													// Memory currently in use
 UINT32		guiSoundCacheThreshold=SOUND_DEFAULT_THRESH;	// Double-buffered threshold
 
 HDIGDRIVER hSoundDriver;																// Sound driver handle
-BOOLEAN		fDirectSound=TRUE;														// Using Direct Sound
 
 // Local module variables
 BOOLEAN		fSoundSystemInit=FALSE;												// Startup called T/F
@@ -142,39 +89,6 @@ SAMPLETAG	pSampleList[SOUND_MAX_CACHED];
 // Sound channel list for output channels
 SOUNDTAG	pSoundList[SOUND_MAX_CHANNELS];
 
-// 3D sound globals
-CHAR8				*gpProviderName=NULL;
-HPROVIDER		gh3DProvider=0;
-H3DPOBJECT	gh3DListener=0;
-BOOLEAN			gfUsingEAX=TRUE;
-UINT32			guiRoomTypeIndex=0;
-
-const char* pEAXRoomTypes[EAXROOMTYPE_NUM_TYPES] =
-{
-	// None
-	"PLAIN",
-
-	// S,M,L Cave
-	"STONECORRIDOR",
-	"CAVE",
-	"CONCERTHALL",
-
-	// S,M,L Room
-	"LIVINGROOM",
-	"ROOM",
-	"AUDITORIUM",
-
-	// Flat open, valley
-	"CITY",
-	"MOUNTAINS",
-
-	// Swimming
-	"UNDERWATER"
-};
-
-//*******************************************************************************
-// High Level Interface
-//*******************************************************************************
 
 //*******************************************************************************
 // SoundEnableSound
@@ -219,9 +133,6 @@ UINT32 uiCount;
 	guiSoundMemoryUsed=0;
 	guiSoundCacheThreshold=SOUND_DEFAULT_THRESH;
 
-	if(gpProviderName && !gh3DProvider)
-		Sound3DInitProvider(gpProviderName);
-
 	return(TRUE);
 }
 
@@ -234,9 +145,6 @@ UINT32 uiCount;
 //*******************************************************************************
 void ShutdownSoundManager(void)
 {
-	if(gh3DProvider)
-		Sound3DShutdownProvider();
-
 	SoundStopAll();
 	SoundStopMusic();
 	SoundShutdownCache();
@@ -560,37 +468,6 @@ UINT32 uiSound;
 	return(FALSE);
 }
 
-//*******************************************************************************
-// SoundStopGroup
-//
-//		Stops multiple instances of sounds that have the indicated priority. This
-//	is useful for silencing all ambient sounds when switching to menus, etc.
-//
-//	Returns:	TRUE if samples were actually stopped, FALSE if none were found
-//
-//*******************************************************************************
-BOOLEAN SoundStopGroup(UINT32 uiPriority)
-{
-UINT32 uiCount;
-BOOLEAN fStopped=FALSE;
-
-	if(fSoundSystemInit)
-	{
-		for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
-		{
-			if((pSoundList[uiCount].hMSS!=NULL) || (pSoundList[uiCount].hMSSStream!=NULL) || (pSoundList[uiCount].hM3D!=NULL))
-			{
-				if(pSoundList[uiCount].uiPriority==uiPriority)
-				{
-					SoundStop(pSoundList[uiCount].uiSoundID);
-					fStopped=TRUE;
-				}
-			}
-		}
-	}
-
-	return(fStopped);
-}
 
 //*******************************************************************************
 // SoundSetMemoryLimit
@@ -627,79 +504,6 @@ BOOLEAN SoundGetSystemInfo(void)
 	return(FALSE);
 }
 
-//*******************************************************************************
-// SoundSetDigitalVolume
-//
-//		Sets the master volume for the digital section. All sample volumes will be
-//	affected by this setting.
-//
-//	Returns:	TRUE, always
-//
-//*******************************************************************************
-BOOLEAN SoundSetDigitalVolume(UINT32 uiVolume)
-{
-UINT32 uiVolClip;
-
-	if(fSoundSystemInit)
-	{
-		uiVolClip=__min(uiVolume, 127);
-		AIL_set_digital_master_volume(hSoundDriver, uiVolClip);
-	}
-	return(TRUE);
-}
-
-//*******************************************************************************
-// SoundGetDigitalVolume
-//
-//		Returns the current value of the digital master volume.
-//
-//	Returns:	0-127
-//
-//*******************************************************************************
-UINT32 SoundGetDigitalVolume(UINT32 uiVolume)
-{
-	if(fSoundSystemInit)
-		return((UINT32)AIL_digital_master_volume(hSoundDriver));
-	else
-		return(0);
-}
-
-
-
-//*****************************************************************************************
-// SoundSetDefaultVolume
-//
-// Sets the volume to use when a default is not chosen.
-//
-// Returns BOOLEAN            -
-//
-// UINT32 uiVolume            -
-//
-// Created:  3/28/00 Derek Beland
-//*****************************************************************************************
-void SoundSetDefaultVolume(UINT32 uiVolume)
-{
-	guiSoundDefaultVolume=__min(uiVolume, 127);
-}
-
-
-//*****************************************************************************************
-// SoundGetDefaultVolume
-//
-//
-//
-// Returns UINT32             -
-//
-// UINT32 uiVolume            -
-//
-// Created:  3/28/00 Derek Beland
-//*****************************************************************************************
-UINT32 SoundGetDefaultVolume(void)
-{
-	return(guiSoundDefaultVolume);
-}
-
-
 
 //*******************************************************************************
 // SoundStopAll
@@ -723,47 +527,6 @@ UINT32 uiCount;
 	return(TRUE);
 }
 
-
-//*****************************************************************************************
-// SoundSetFadeVolume
-//
-// Sets a target volume to fade towards. The fade volume is updated in SoundServiceStreams.
-//
-// Returns BOOLEAN            - TRUE if the fading volume was set, FALSE otherwise
-//
-// UINT32 uiSoundID           - ID of sound
-// UINT32 uiVolume            - Volume to fade towards (0-127)
-// UINT32 uiRate              - Total time taken to change volume
-// BOOLEAN fStopAtZero        - If TRUE, sample is stopped when volume reaches zero
-//
-// Created:  3/17/00 Derek Beland
-//*****************************************************************************************
-BOOLEAN SoundSetFadeVolume(UINT32 uiSoundID, UINT32 uiVolume, UINT32 uiRate, BOOLEAN fStopAtZero)
-{
-UINT32 uiSound, uiVolCap, uiVolumeDiff;
-
-	if(fSoundSystemInit)
-	{
-		uiVolCap=__min(uiVolume, 127);
-
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			uiVolumeDiff = abs(uiVolCap - SoundGetVolumeIndex(uiSound));
-
-			if(!uiVolumeDiff)
-				return(FALSE);
-
-			pSoundList[uiSound].uiFadeVolume = uiVolCap;
-			pSoundList[uiSound].fStopAtZero = fStopAtZero;
-			pSoundList[uiSound].uiFadeRate = uiRate / uiVolumeDiff;
-			pSoundList[uiSound].uiFadeTime = GetTickCount();
-
-			return(TRUE);
-		}
-	}
-
-	return(FALSE);
-}
 
 //*******************************************************************************
 // SoundSetVolume
@@ -860,75 +623,6 @@ UINT32 uiSound, uiPanCap;
 	return(FALSE);
 }
 
-//*******************************************************************************
-// SoundSetFrequency
-//
-//		Sets the frequency on a currently playing sound.
-//
-//	Returns:	TRUE if the frequency was actually set on the sample, FALSE if the
-//						sample had already expired or couldn't be found
-//
-//*******************************************************************************
-BOOLEAN SoundSetFrequency(UINT32 uiSoundID, UINT32 uiFreq)
-{
-UINT32 uiSound, uiFreqCap;
-
-	if(fSoundSystemInit)
-	{
-		uiFreqCap=__min(uiFreq, 44100);
-
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-				AIL_set_sample_playback_rate(pSoundList[uiSound].hMSS, uiFreqCap);
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-				AIL_set_stream_playback_rate(pSoundList[uiSound].hMSSStream, uiFreqCap);
-
-			if(pSoundList[uiSound].hM3D!=NULL)
-				AIL_set_3D_sample_playback_rate(pSoundList[uiSound].hM3D, uiFreqCap);
-
-			return(TRUE);
-		}
-	}
-
-	return(FALSE);
-}
-
-//*******************************************************************************
-// SoundSetLoop
-//
-//		Sets the loop on a currently playing sound.
-//
-//	Returns:	TRUE if the loop was actually set on the sample, FALSE if the
-//						sample had already expired or couldn't be found
-//
-//*******************************************************************************
-BOOLEAN SoundSetLoop(UINT32 uiSoundID, UINT32 uiLoop)
-{
-UINT32 uiSound, uiLoopCap;
-
-	if(fSoundSystemInit)
-	{
-		uiLoopCap=__min(uiLoop, 10000);
-
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-				AIL_set_sample_loop_count(pSoundList[uiSound].hMSS, uiLoopCap);
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-				AIL_set_stream_loop_count(pSoundList[uiSound].hMSSStream, uiLoopCap);
-
-			if(pSoundList[uiSound].hM3D!=NULL)
-				AIL_set_3D_sample_loop_count(pSoundList[uiSound].hM3D, uiLoopCap);
-
-			return(TRUE);
-		}
-	}
-
-	return(FALSE);
-}
 
 //*******************************************************************************
 // SoundGetVolume
@@ -979,89 +673,6 @@ UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 	return(SOUND_ERROR);
 }
 
-//*******************************************************************************
-// SoundGetPan
-//
-//		Returns the current pan setting of a sound that is playing. If the sound
-//	has expired, or could not be found, SOUND_ERROR is returned.
-//
-//*******************************************************************************
-UINT32 SoundGetPan(UINT32 uiSoundID)
-{
-UINT32 uiSound;
-
-	if(fSoundSystemInit)
-	{
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-				return((UINT32)AIL_sample_pan(pSoundList[uiSound].hMSS));
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-				return((UINT32)AIL_stream_pan(pSoundList[uiSound].hMSSStream));
-		}
-	}
-
-	return(SOUND_ERROR);
-}
-
-//*******************************************************************************
-// SoundGetFrequency
-//
-//		Returns the current frequency setting of a sound that is playing. If the sound
-//	has expired, or could not be found, SOUND_ERROR is returned.
-//
-//*******************************************************************************
-UINT32 SoundGetFrequency(UINT32 uiSoundID)
-{
-UINT32 uiSound;
-
-	if(fSoundSystemInit)
-	{
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-				return((UINT32)AIL_sample_playback_rate(pSoundList[uiSound].hMSS));
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-				return((UINT32)AIL_stream_playback_rate(pSoundList[uiSound].hMSSStream));
-
-			if(pSoundList[uiSound].hM3D!=NULL)
-				return((UINT32)AIL_3D_sample_playback_rate(pSoundList[uiSound].hM3D));
-		}
-	}
-
-	return(SOUND_ERROR);
-}
-
-//*******************************************************************************
-// SoundGetLoop
-//
-//		Returns the current loop count of a sound that is playing. If the sound
-//	has expired, or could not be found, SOUND_ERROR is returned.
-//
-//*******************************************************************************
-UINT32 SoundGetLoop(UINT32 uiSoundID)
-{
-UINT32 uiSound;
-
-	if(fSoundSystemInit)
-	{
-		if((uiSound=SoundGetIndexByID(uiSoundID))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-				return((UINT32)AIL_sample_loop_count(pSoundList[uiSound].hMSS));
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-				return((UINT32)AIL_stream_loop_count(pSoundList[uiSound].hMSSStream));
-
-			if(pSoundList[uiSound].hM3D!=NULL)
-				return((UINT32)AIL_3D_sample_loop_count(pSoundList[uiSound].hM3D));
-		}
-	}
-
-	return(SOUND_ERROR);
-}
 
 //*******************************************************************************
 // SoundServiceRandom
@@ -1325,51 +936,6 @@ UINT32 uiSound, uiTime, uiPosition;
 	return(0);
 }
 
-//*****************************************************************************************
-//
-//  SoundGetMilliSecondPosition
-//
-//  Get the sounds total length and our current position within that
-//  sound in milliseconds
-//
-//
-//  Returns BOOLEAN:	TRUE if the sound exists.
-//
-//  Created by:     Gilles Beauparlant
-//  Created on:     7/23/99
-//
-//*****************************************************************************************
-BOOLEAN SoundGetMilliSecondPosition(UINT32 uiSoundID, UINT32 *puiTotalMilliseconds, UINT32 *puiCurrentMilliseconds)
-{
-UINT32 uiSound;
-
-	if(fSoundSystemInit)
-	{
-		uiSound=SoundGetIndexByID(uiSoundID);
-		if(uiSound!=NO_SAMPLE)
-		{
-			if(pSoundList[uiSound].hMSS!=NULL)
-			{
-				AIL_sample_ms_position(pSoundList[uiSound].hMSS, puiTotalMilliseconds, puiCurrentMilliseconds);
-				return TRUE;
-			}
-
-			if(pSoundList[uiSound].hMSSStream!=NULL)
-			{
-				AIL_stream_ms_position(pSoundList[uiSound].hMSSStream, puiTotalMilliseconds, puiCurrentMilliseconds);
-				return TRUE;
-			}
-		}
-	}
-
-	*puiTotalMilliseconds = 0;
-	*puiCurrentMilliseconds = 0;
-	return FALSE;
-}
-
-//*******************************************************************************
-// Cacheing Subsystem
-//*******************************************************************************
 
 //*******************************************************************************
 // SoundInitCache
@@ -1504,52 +1070,7 @@ UINT32 uiSample;
 	return(NO_SAMPLE);
 }
 
-//*******************************************************************************
-// SoundFreeSample
-//
-//		Releases the resources associated with a sample from the cache.
-//
-//	Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
-//						in the cache.
-//
-//*******************************************************************************
-UINT32 SoundFreeSample(STR pFilename)
-{
-UINT32 uiSample;
 
-	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
-	{
-		if(!SoundSampleIsPlaying(uiSample))
-		{
-			SoundFreeSampleIndex(uiSample);
-			return(uiSample);
-		}
-	}
-
-	return(NO_SAMPLE);
-}
-
-//*******************************************************************************
-// SoundFreeGroup
-//
-//		Releases a group of samples with a given priority. Does not take into
-// account locked/unlocked status.
-//
-//	Returns:	TRUE if samples were freed, FALSE if none
-//
-// NOTE:
-//		This function is going to be removed! If you are attempting to stop all
-// random sounds, call SoundStopAllRandom instead.
-//
-//*******************************************************************************
-BOOLEAN SoundFreeGroup(UINT32 uiPriority)
-{
-BOOLEAN fFreed=FALSE;
-
-	SoundStopGroup(uiPriority);
-
-	return(fFreed);
-}
 //*******************************************************************************
 // SoundGetCached
 //
@@ -1644,10 +1165,6 @@ BOOLEAN fRemoved=TRUE;
 		strupr(pSampleList[uiSample].pName);
 		pSampleList[uiSample].uiSize=uiSize;
 		pSampleList[uiSample].uiFlags|=SAMPLE_ALLOCATED;
-
-/*		if(!strstr(pFilename, ".MP3"))
-			SoundProcessWAVHeader(uiSample);
-*/		return(uiSample);
 	}
 
 	return(NO_SAMPLE);
@@ -1735,36 +1252,6 @@ UINT32 uiCount;
 	return(NO_SAMPLE);
 }
 
-//*******************************************************************************
-// SoundProcessWAVHeader
-//
-//		Reads the information contained in the header of a loaded WAV file, and
-//	transfers it to the system structures for that slot.
-//
-//	Returns:	TRUE if a good header was processed, FALSE if an error occurred.
-//
-//*******************************************************************************
-BOOLEAN SoundProcessWAVHeader(UINT32 uiSample)
-{
-CHAR8 *pChunk;
-AILSOUNDINFO ailInfo;
-
-	pChunk=(CHAR8 *)pSampleList[uiSample].pData;
-	if(!AIL_WAV_info((void *)pChunk, &ailInfo))
-		return(FALSE);
-
-	pSampleList[uiSample].uiSpeed=ailInfo.rate;
-	pSampleList[uiSample].fStereo=(BOOLEAN)(ailInfo.channels==2);
-	pSampleList[uiSample].ubBits=(UINT8)ailInfo.bits;
-
-	pSampleList[uiSample].pSoundStart=(PTR)ailInfo.data_ptr;
-	pSampleList[uiSample].uiSoundSize=ailInfo.data_len;
-
-	pSampleList[uiSample].uiAilWaveFormat=ailInfo.format;
-	pSampleList[uiSample].uiADPCMBlockSize=ailInfo.block_size;
-
-	return(TRUE);
-}
 
 //*******************************************************************************
 // SoundFreeSampleIndex
@@ -1839,9 +1326,6 @@ CHAR8	cDriverName[128];
 	// that number is set by SOUND_MAX_CHANNELS
 	AIL_set_preference(DIG_MIXER_CHANNELS, SOUND_MAX_CHANNELS);
 
-
-	fDirectSound=TRUE;
-
 	AIL_set_preference(DIG_USE_WAVEOUT,NO);
 	// startup with DirectSound
 	if (hSoundDriver == NULL)
@@ -1871,7 +1355,6 @@ CHAR8	cDriverName[128];
 	// nothing in DirectSound worked, so try waveOut
 	if (hSoundDriver == NULL)
 	{
-		fDirectSound=FALSE;
 		AIL_set_preference(DIG_USE_WAVEOUT,YES);
 	}
 
@@ -2343,16 +1826,6 @@ HDIGDRIVER SoundGetDriverHandle(void)
 	return(hSoundDriver);
 }
 
-// FUNCTIONS TO SET / RESET SAMPLE FLAGS
-void SoundSetSampleFlags( UINT32 uiSample, UINT32 uiFlags )
-{
-	// CHECK FOR VALUE SAMPLE
-	if((pSampleList[ uiSample ].uiFlags&SAMPLE_ALLOCATED) )
-	{
-		// SET
-		pSampleList[uiSample].uiFlags |= uiFlags;
-	}
-}
 
 void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 {
@@ -2384,33 +1857,6 @@ UINT32 uiCount;
 }
 
 
-//*****************************************************************************************
-// SoundFileIsPlaying
-//
-// Returns true or false on whether a certain file is currently being played. This function
-// will only work on sounds loaded into the cache, it will NOT work on streamed sounds.
-//
-// Returns BOOLEAN            -
-//
-// CHAR8 *pFilename           -
-//
-// Created:  2/24/00 Derek Beland
-//*****************************************************************************************
-BOOLEAN SoundFileIsPlaying(CHAR8 *pFilename)
-{
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
-	{
-		if(SoundIndexIsPlaying(uiCount))
-		{
-			if(stricmp(pSampleList[pSoundList[uiCount].uiSample].pName, pFilename)==0)
-				return(TRUE);
-		}
-	}
-
-	return(FALSE);
-}
 //*****************************************************************************************
 // SoundSampleSetVolumeRange
 //
@@ -2455,27 +1901,6 @@ void SoundSampleSetPanRange(UINT32 uiSample, UINT32 uiPanMin, UINT32 uiPanMax)
 }
 
 
-
-//*****************************************************************************************
-// SoundSetMusic
-//
-// Marks a sample as being music. Cannot be stopped by anything other than SoundStopMusic.
-//
-// Returns nothing.
-//
-// UINT32 uiSound             - Sound instance to stop
-//
-// Created:  3/16/00 Derek Beland
-//*****************************************************************************************
-void SoundSetMusic(UINT32 uiSoundID)
-{
-UINT32 uiSound=SoundGetIndexByID(uiSoundID);
-
-	if(uiSound!=NO_SAMPLE)
-		pSoundList[uiSound].fMusic=TRUE;
-}
-
-
 //*****************************************************************************************
 // SoundStopMusic
 //
@@ -2506,695 +1931,4 @@ BOOLEAN fStopped=FALSE;
 	}
 
 	return(fStopped);
-}
-
-//*****************************************************************************************
-//
-//
-//
-//
-// New 3D Sound Code
-//
-//
-//
-//
-//*****************************************************************************************
-
-
-
-
-
-
-//*****************************************************************************************
-// Sound3DSetProvider
-//
-// Sets the name of the 3D provider to initialize with.
-//
-// Returns nothing.
-//
-// CHAR8 *pProviderName       - Pointer to provider name
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetProvider(CHAR8 *pProviderName)
-{
-	Assert(pProviderName);
-
-	if(pProviderName)
-	{
-		gpProviderName = (CHAR8 *)MemAlloc(strlen(pProviderName)+1);
-		strcpy(gpProviderName, pProviderName);
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DInitProvider
-//
-// Attempt
-//
-// Returns BOOLEAN            -
-//
-// CHAR8 *pProviderName       -
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-BOOLEAN Sound3DInitProvider(CHAR8 *pProviderName)
-{
-HPROENUM hEnum=HPROENUM_FIRST;
-HPROVIDER hProvider=0;
-BOOLEAN fDone=FALSE;
-CHAR8 *pName;
-INT32 iResult;
-
-	// 3D sound providers depend on the 2D sound system being initialized first
-	if(!fSoundSystemInit || !pProviderName)
-		return(FALSE);
-
-	// We're already booted up
-	if(gh3DProvider)
-		return(TRUE);
-
-	while(!fDone)
-	{
-		if(!AIL_enumerate_3D_providers(&hEnum, &hProvider, &pName))
-			fDone=TRUE;
-		else if(hProvider)
-		{
-			if(strcmp(pProviderName, pName)==0)
-			{
-				fDone=TRUE;
-				if(AIL_open_3D_provider(hProvider)==M3D_NOERR)
-				{
-					gh3DProvider = hProvider;
-
-					// Create a "listener" which represents our position in space
-					gh3DListener = AIL_open_3D_listener(gh3DProvider);
-					if(!gh3DListener)
-					{
-						AIL_close_3D_provider(gh3DProvider);
-						return(FALSE);
-					}
-					Sound3DSetListener(0.0f, 0.0f, 0.0f);
-
-			    AIL_3D_provider_attribute(gh3DProvider, "EAX environment selection", &iResult);
-					if(iResult!=(-1))
-						gfUsingEAX = TRUE;
-
-					return(TRUE);
-				}
-
-			}
-		}
-	}
-
-	// We didn't find a provider with a matching name that would boot up
-	return(FALSE);
-}
-
-
-//*****************************************************************************************
-// Sound3DShutdownProvider
-//
-// Shuts down and deallocates the 3D sound system
-//
-// Returns nothing.
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DShutdownProvider(void)
-{
-	Sound3DStopAll();
-
-	if(gh3DListener)
-	{
-		AIL_close_3D_listener(gh3DListener);
-		gh3DListener=0;
-	}
-
-	if(gh3DProvider)
-	{
-		AIL_close_3D_provider(gh3DProvider);
-		gh3DProvider=0;
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DSetPosition
-//
-// Sets the 3-space position of a sound sample.
-//
-// Returns nothing.
-//
-// UINT32 uiSample            - ID of sample
-// FLOAT flX                  - X coordinate
-// FLOAT flY                  - Y coordinate
-// FLOAT flZ                  - Z coordinate
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetPosition(UINT32 uiSample, FLOAT flX, FLOAT flY, FLOAT flZ)
-{
-UINT32 uiChannel;
-
-	if(fSoundSystemInit && gh3DProvider)
-	{
-		if((uiChannel=SoundGetIndexByID(uiSample))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiChannel].hM3D!=NULL)
-			{
-				AIL_set_3D_position(pSoundList[uiChannel].hM3D, flX, flY, flZ);
-			}
-		}
-	}
-}
-
-//*****************************************************************************************
-// Sound3DSetVelocity
-//
-// Sets the velocity of a sample. This is important for calculation of doppler effect (pitch
-// shifting, think of a train whistle as it passes by you).
-//
-// Returns nothing.
-//
-// UINT32 uiSample            - ID of sample
-// FLOAT flX                  - X coordinate
-// FLOAT flY                  - Y coordinate
-// FLOAT flZ                  - Z coordinate
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetVelocity(UINT32 uiSample, FLOAT flX, FLOAT flY, FLOAT flZ)
-{
-UINT32 uiChannel;
-
-	if(fSoundSystemInit && gh3DProvider)
-	{
-		if((uiChannel=SoundGetIndexByID(uiSample))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiChannel].hM3D!=NULL)
-			{
-			}
-		}
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DSetListener
-//
-// Sets the listener location. This should be set to the current camera location.
-//
-// Returns nothing.
-//
-// FLOAT flX                  - X coordinate
-// FLOAT flY                  - Y coordinate
-// FLOAT flZ                  - Z coordinate
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetListener(FLOAT flX, FLOAT flY, FLOAT flZ)
-{
-	if(fSoundSystemInit && gh3DListener)
-		AIL_set_3D_position(gh3DListener, flX, flY, flZ);
-}
-
-
-//*****************************************************************************************
-// Sound3DSetFacing
-//
-// Sets the orientation of the listener. The inputs are two vectors that are *always* at
-// right angles to each other. The first is the facing vector, and the second is the up
-// vector, which points out of the top of the listeners head.
-//
-// Returns nothing.
-//
-// FLOAT flXFace              - X coordinate facing
-// FLOAT flYFace              - Y coordinate facing
-// FLOAT flZFace              - Z coordinate facing
-// FLOAT flXUp                - X coordinate up
-// FLOAT flYUp                - Y coordinate up
-// FLOAT flZUp                - Z coordinate up
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetFacing(FLOAT flXFace, FLOAT flYFace, FLOAT flZFace, FLOAT flXUp, FLOAT flYUp, FLOAT flZUp)
-{
-	if(fSoundSystemInit && gh3DListener)
-		AIL_set_3D_orientation(gh3DListener, flXFace, flYFace, flZFace, flXUp, flYUp, flZUp);
-}
-
-//*****************************************************************************************
-// Sound3DSetDirection
-//
-// Sets the orientation of the listener. The inputs are two vectors that are *always* at
-// right angles to each other. The first is the facing vector, and the second is the up
-// vector, which points out of the top of the listeners head.
-//
-// Returns nothing.
-//
-// FLOAT flXFace              - X coordinate facing
-// FLOAT flYFace              - Y coordinate facing
-// FLOAT flZFace              - Z coordinate facing
-// FLOAT flXUp                - X coordinate up
-// FLOAT flYUp                - Y coordinate up
-// FLOAT flZUp                - Z coordinate up
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetDirection(UINT32 uiSample, FLOAT flXFace, FLOAT flYFace, FLOAT flZFace, FLOAT flXUp, FLOAT flYUp, FLOAT flZUp)
-{
-UINT32 uiChannel;
-
-	if(fSoundSystemInit && gh3DProvider)
-	{
-		if((uiChannel=SoundGetIndexByID(uiSample))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiChannel].hM3D!=NULL)
-			{
-				AIL_set_3D_orientation(pSoundList[uiChannel].hM3D, flXFace, flYFace, flZFace, flXUp, flYUp, flZUp);
-			}
-		}
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DSetFalloff
-//
-// Sets the falloff of the sound which determines the maximum radius at which the sample
-// produces any sound, and the minimum distance before the sound volume begins to fall off
-// towards zero.
-//
-// Returns nothing.
-//
-// UINT32 uiSample            - Sample index
-// FLOAT flMax                - Point at which the sound volume is zero
-// FLOAT flMin                - Point at which the sound volume begins to fall off
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetFalloff(UINT32 uiSample, FLOAT flMax, FLOAT flMin)
-{
-UINT32 uiChannel;
-// max = far
-// min = near
-
-	if(fSoundSystemInit && gh3DProvider)
-	{
-		if((uiChannel=SoundGetIndexByID(uiSample))!=NO_SAMPLE)
-		{
-			if(pSoundList[uiChannel].hM3D!=NULL)
-			{
-				AIL_set_3D_sample_distances(pSoundList[uiChannel].hM3D, flMax, flMin);
-			}
-		}
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DActiveSounds
-//
-// Returns the number of active sounds.
-//
-// Returns INT32              - Number of 3D sounds playing
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-INT32 Sound3DActiveSounds(void)
-{
-	return((INT32)AIL_active_3D_sample_count(gh3DProvider));
-}
-
-
-//*****************************************************************************************
-// Sound3DSetEnvironment
-//
-// Sets the current environment type for the listener. This determines which atmospheric
-// effects are applied to the 3D sounds. Eg. Caves, underwater, etc.
-//
-// Returns nothing.
-//
-// INT32 iEnvironment         - Index of environment type
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetEnvironment(INT32 iEnvironment)
-{
-	if(fSoundSystemInit && gh3DProvider)
-	{
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DPlay
-//
-// Starts a 3D sample playing.
-//
-// Returns UINT32             - Sound index
-//
-// STR pFilename              - Pointer to filename of sound
-// SOUNDPARMS *pParms         - Parameter struct (or NULL for defaults)
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-UINT32 Sound3DPlay(STR pFilename, SOUND3DPARMS *pParms)
-{
-	UINT32 uiSample, uiChannel;
-
-	if(fSoundSystemInit && gh3DProvider)
-	{
-		if((uiSample=SoundLoadSample(pFilename))!=NO_SAMPLE)
-		{
-			if((uiChannel=SoundGetFreeChannel())!=SOUND_ERROR)
-			{
-				return(Sound3DStartSample(uiSample, uiChannel, pParms));
-			}
-		}
-		else
-		{
-			FastDebugMsg(String("Sound3DPlay: ERROR: Failed loading sample %s\n", pFilename ) );
-		}
-	}
-
-	return(SOUND_ERROR);
-}
-
-//*******************************************************************************
-// Sound3DStartSample
-//
-//		Starts up a sample on the specified channel. Override parameters are passed
-//	in through the structure pointer pParms. Any entry with a value of 0xffffffff
-//	will be filled in by the system.
-//
-//	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
-//
-//*******************************************************************************
-UINT32 Sound3DStartSample(UINT32 uiSample, UINT32 uiChannel, SOUND3DPARMS *pParms)
-{
-UINT32 uiSoundID;
-CHAR8 AILString[200];
-
-	if(!fSoundSystemInit || !gh3DProvider)
-		return(SOUND_ERROR);
-
-	// Stereo samples have no purpose in 3D, nor MP3 files
-	if(pSampleList[uiSample].fStereo || strstr(pSampleList[uiSample].pName, ".MP3"))
-		return(SOUND_ERROR);
-
-	if((pSoundList[uiChannel].hM3D = AIL_allocate_3D_sample_handle(gh3DProvider))==NULL)
-	{
-		sprintf(AILString, "AIL3D Error: %s", AIL_last_error());
-		DbgMessage(TOPIC_GAME, DBG_LEVEL_0, AILString);
-		return(SOUND_ERROR);
-	}
-
-	if(!AIL_set_3D_sample_file(pSoundList[uiChannel].hM3D, pSampleList[uiSample].pData))
-	{
-		AIL_release_3D_sample_handle(pSoundList[uiChannel].hM3D);
-		pSoundList[uiChannel].hM3D=NULL;
-
-		sprintf(AILString, "AIL3D Set Sample Error: %s", AIL_last_error());
-		DbgMessage(TOPIC_GAME, DBG_LEVEL_0, AILString);
-		return(SOUND_ERROR);
-	}
-
-	// Store the natural playback rate before we modify it below
-	pSampleList[uiSample].uiSpeed=AIL_3D_sample_playback_rate(pSoundList[uiChannel].hM3D);
-
-	if(pSampleList[uiSample].uiFlags & SAMPLE_RANDOM)
-	{
-		if((pSampleList[uiSample].uiSpeedMin != SOUND_PARMS_DEFAULT) && (pSampleList[uiSample].uiSpeedMax != SOUND_PARMS_DEFAULT))
-		{
-			UINT32 uiSpeed = pSampleList[uiSample].uiSpeedMin+Random(pSampleList[uiSample].uiSpeedMax-pSampleList[uiSample].uiSpeedMin);
-
-			AIL_set_3D_sample_playback_rate(pSoundList[uiChannel].hM3D, uiSpeed);
-		}
-	}
-	else
-	{
-		if((pParms!=NULL) && (pParms->uiSpeed!=SOUND_PARMS_DEFAULT))
-			AIL_set_3D_sample_playback_rate(pSoundList[uiChannel].hM3D, pParms->uiSpeed);
-	}
-
-	if((pParms!=NULL) && (pParms->uiPitchBend!=SOUND_PARMS_DEFAULT))
-	{
-		UINT32 uiRate = AIL_3D_sample_playback_rate(pSoundList[uiChannel].hM3D);
-		UINT32 uiBend = uiRate * pParms->uiPitchBend/100;
-		AIL_set_3D_sample_playback_rate(pSoundList[uiChannel].hM3D,	uiRate + (Random(uiBend*2)-uiBend));
-	}
-
-	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
-		AIL_set_3D_sample_volume(pSoundList[uiChannel].hM3D, pParms->uiVolume);
-	else
-		AIL_set_3D_sample_volume(pSoundList[uiChannel].hM3D, guiSoundDefaultVolume);
-
-	if((pParms!=NULL) && (pParms->uiLoop!=SOUND_PARMS_DEFAULT))
-	{
-		AIL_set_3D_sample_loop_count(pSoundList[uiChannel].hM3D, pParms->uiLoop);
-
-		// If looping infinately, lock the sample so it can't be unloaded
-		// and mark it as a looping sound
-		if(pParms->uiLoop==0)
-		{
-			pSampleList[uiSample].uiFlags|=SAMPLE_LOCKED;
-			pSoundList[uiChannel].fLooping=TRUE;
-		}
-	}
-
-	if((pParms!=NULL) && (pParms->uiPriority!=SOUND_PARMS_DEFAULT))
-		pSoundList[uiChannel].uiPriority=pParms->uiPriority;
-	else
-		pSoundList[uiChannel].uiPriority=PRIORITY_MAX;
-
-	if((pParms!=NULL) && ((UINT32)pParms->EOSCallback!=SOUND_PARMS_DEFAULT))
-	{
-		pSoundList[uiChannel].EOSCallback=pParms->EOSCallback;
-		pSoundList[uiChannel].pCallbackData=pParms->pCallbackData;
-	}
-	else
-	{
-		pSoundList[uiChannel].EOSCallback=NULL;
-		pSoundList[uiChannel].pCallbackData=NULL;
-	}
-
-
-	AIL_set_3D_position(pSoundList[uiChannel].hM3D, pParms->Pos.flX, pParms->Pos.flY, pParms->Pos.flZ);
-	AIL_set_3D_velocity_vector(pSoundList[uiChannel].hM3D, pParms->Pos.flVelX, pParms->Pos.flVelY, pParms->Pos.flVelZ);
-	AIL_set_3D_orientation(pSoundList[uiChannel].hM3D, pParms->Pos.flFaceX, pParms->Pos.flFaceY, pParms->Pos.flFaceZ, pParms->Pos.flUpX, pParms->Pos.flUpY, pParms->Pos.flUpZ);
-//	AIL_set_3D_sample_distances(pSoundList[uiChannel].hM3D, pParms->Pos.flFalloffMax, pParms->Pos.flFalloffMin);
-	AIL_set_3D_sample_distances(pSoundList[uiChannel].hM3D, 99999999.9f, 99999999.9f);
-
-	uiSoundID=SoundGetUniqueID();
-	pSoundList[uiChannel].uiSoundID=uiSoundID;
-	pSoundList[uiChannel].uiSample=uiSample;
-	pSoundList[uiChannel].uiTimeStamp=GetTickCount();
-
-	pSampleList[uiSample].uiCacheHits++;
-
-	AIL_start_3D_sample(pSoundList[uiChannel].hM3D);
-
-	return(uiSoundID);
-}
-
-
-//*****************************************************************************************
-// Sound3DStopAll
-//
-// Stops all currently playing 3D samples.
-//
-// Returns nothing.
-//
-// Created:  8/17/99 Derek Beland
-//*****************************************************************************************
-void Sound3DStopAll(void)
-{
-UINT32 uiChannel;
-
-	// Stop all currently playing random sounds
-	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
-	{
-		if(pSoundList[uiChannel].hM3D!=NULL)
-			SoundStopIndex(uiChannel);
-	}
-}
-
-//*******************************************************************************
-// Sound3DStartRandom
-//
-//	Starts an instance of a random sample.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
-UINT32 Sound3DStartRandom(UINT32 uiSample, SOUND3DPOS *pPos)
-{
-UINT32 uiChannel, uiSoundID;
-SOUND3DPARMS sp3DParms;
-
-	if(pPos && ((uiChannel=SoundGetFreeChannel())!=SOUND_ERROR))
-	{
-		memset(&sp3DParms, 0xff, sizeof(SOUND3DPARMS));
-
-//		sp3DParms.uiSpeed=pSampleList[uiSample].uiSpeedMin+Random(pSampleList[uiSample].uiSpeedMax-pSampleList[uiSample].uiSpeedMin);
-		sp3DParms.uiLoop=1;
-		sp3DParms.uiPriority=pSampleList[uiSample].uiPriority;
-
-//		memcpy(&sp3DParms.Pos, pPos, sizeof(SOUND3DPOS));
-
-		sp3DParms.Pos.flX=pPos->flX;
-		sp3DParms.Pos.flY=pPos->flY;
-		sp3DParms.Pos.flZ=pPos->flZ;
-
-		sp3DParms.Pos.flVelX=pPos->flVelX;
-		sp3DParms.Pos.flVelY=pPos->flVelY;
-		sp3DParms.Pos.flVelZ=pPos->flVelZ;
-
-		sp3DParms.Pos.flFaceX=pPos->flFaceX;
-		sp3DParms.Pos.flFaceY=pPos->flFaceY;
-		sp3DParms.Pos.flFaceZ=pPos->flFaceZ;
-
-		sp3DParms.Pos.flUpX=pPos->flUpX;
-		sp3DParms.Pos.flUpY=pPos->flUpY;
-		sp3DParms.Pos.flUpZ=pPos->flUpZ;
-
-		sp3DParms.Pos.flFalloffMax=pPos->flFalloffMax;
-		sp3DParms.Pos.flFalloffMin=pPos->flFalloffMin;
-
-		sp3DParms.Pos.uiVolume=pPos->uiVolume;
-		sp3DParms.uiVolume=pPos->uiVolume;
-
-		if((uiSoundID=Sound3DStartSample(uiSample, uiChannel, &sp3DParms))!=SOUND_ERROR)
-		{
-			pSampleList[uiSample].uiTimeNext=GetTickCount()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
-			pSampleList[uiSample].uiInstances++;
-			return(uiSoundID);
-		}
-	}
-
-	return(NO_SAMPLE);
-}
-
-
-//*****************************************************************************************
-// Sound3DSetRoomType
-//
-// Sets the environment presets (reverb, chorus, etc) for 3D sounds. Currently only
-// has effect for EAX cards.
-//
-// Returns nothing.
-//
-// UINT32 uiRoomType          - Index of room type (see Soundman.h e_EAXRoomTypes)
-//
-// Created:  8/23/99 Derek Beland
-//*****************************************************************************************
-void Sound3DSetRoomType(UINT32 uiRoomType)
-{
-	if(gh3DProvider && gfUsingEAX && (guiRoomTypeIndex!=uiRoomType))
-	{
-		CHAR8 cName[128];
-
-		sprintf(cName, "EAX_ENVIRONMENT_%s", pEAXRoomTypes[uiRoomType]);
-
-		AIL_set_3D_provider_preference(gh3DProvider, cName, (void *)(&uiRoomType));
-		guiRoomTypeIndex = uiRoomType;
-	}
-}
-
-
-//*****************************************************************************************
-// Sound3DChannelsUsed
-//
-//
-//
-// Returns UINT32             -
-//
-// Created:  5/26/00 Derek Beland
-//*****************************************************************************************
-UINT32 Sound3DChannelsInUse(void)
-{
-UINT32 uiChannel, uiUsed=0;
-
-	// Stop all currently playing random sounds
-	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
-	{
-		if(pSoundList[uiChannel].hM3D!=NULL)
-			uiUsed++;
-	}
-
-	return(uiUsed);
-}
-
-
-//*****************************************************************************************
-// SoundStreamsInUse
-//
-//
-//
-// Returns UINT32             -
-//
-// Created:  5/26/00 Derek Beland
-//*****************************************************************************************
-UINT32 SoundStreamsInUse(void)
-{
-UINT32 uiChannel, uiUsed=0;
-
-	// Stop all currently playing random sounds
-	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
-	{
-		if(pSoundList[uiChannel].hMSSStream!=NULL)
-			uiUsed++;
-	}
-
-	return(uiUsed);
-}
-
-
-//*****************************************************************************************
-// Sound2DChannelsInUse
-//
-//
-//
-// Returns UINT32             -
-//
-// Created:  5/26/00 Derek Beland
-//*****************************************************************************************
-UINT32 Sound2DChannelsInUse(void)
-{
-UINT32 uiChannel, uiUsed=0;
-
-	// Stop all currently playing random sounds
-	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
-	{
-		if(pSoundList[uiChannel].hMSS!=NULL)
-			uiUsed++;
-	}
-
-	return(uiUsed);
-}
-
-//*****************************************************************************************
-// SoundChannelsInUse
-//
-//
-//
-// Returns UINT32             -
-//
-// Created:  5/26/00 Derek Beland
-//*****************************************************************************************
-UINT32 SoundTotalChannelsInUse(void)
-{
-UINT32 uiChannel, uiUsed=0;
-
-	// Stop all currently playing random sounds
-	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
-	{
-		if(SoundIndexIsPlaying(uiChannel))
-			uiUsed++;
-	}
-
-	return(uiUsed);
 }
