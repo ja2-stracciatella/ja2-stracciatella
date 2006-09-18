@@ -84,8 +84,6 @@ typedef struct {
 				UINT32			uiTimeStamp;
 				BOOLEAN			fLooping;
 				HWFILE			hFile;
-				BOOLEAN			fMusic;
-				BOOLEAN			fStopAtZero;
 				UINT32			uiFadeVolume;
 				UINT32			uiFadeRate;
 				UINT32			uiFadeTime;
@@ -164,14 +162,10 @@ extern BOOLEAN	InitializeSoundManager(void);
 extern void			ShutdownSoundManager(void);
 
 // Configuration functions
-extern BOOLEAN	SoundSetMemoryLimit(UINT32 uiLimit);
-extern BOOLEAN	SoundSetCacheThreshhold(UINT32 uiThreshold);
 extern HDIGDRIVER SoundGetDriverHandle(void);
 
 // Cache control functions
 extern UINT32		SoundLoadSample(const char *pFilename);
-extern UINT32		SoundLockSample(STR pFilename);
-extern UINT32		SoundUnlockSample(STR pFilename);
 extern BOOLEAN	SoundEmptyCache(void);
 extern BOOLEAN	SoundSampleIsInUse(UINT32 uiSample);
 
@@ -182,11 +176,8 @@ extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 extern UINT32		SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms);
 extern BOOLEAN	SoundRandomShouldPlay(UINT32 uiSample);
 extern UINT32		SoundStartRandom(UINT32 uiSample);
-extern UINT32		SoundStreamCallback(STR pFilename, SOUNDPARMS *pParms, void (*pCallback)(UINT8 *, UINT32, UINT32, UINT32, void *), void *);
 extern BOOLEAN	SoundServiceStreams(void);
 extern BOOLEAN	SoundServiceRandom(void);
-extern void			SoundSampleSetVolumeRange(UINT32 uiSample, UINT32 uiVolMin, UINT32 uiVolMax);
-extern void			SoundSampleSetPanRange(UINT32 uiSample, UINT32 uiPanMin, UINT32 uiPanMax);
 
 // Sound instance manipulation functions
 extern BOOLEAN	SoundStopMusic(void);
@@ -194,7 +185,6 @@ extern BOOLEAN	SoundStopAll(void);
 extern BOOLEAN	SoundStopAllRandom(void);
 extern BOOLEAN	SoundStop(UINT32 uiSoundID);
 extern BOOLEAN	SoundIsPlaying(UINT32 uiSoundID);
-extern BOOLEAN	SoundSetFadeVolume(UINT32 uiSoundID, UINT32 uiVolume, UINT32 uiRate, BOOLEAN fStopAtZero);
 extern BOOLEAN	SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume);
 extern BOOLEAN	SoundSetPan(UINT32 uiSoundID, UINT32 uiPan);
 extern UINT32		SoundGetVolume(UINT32 uiSoundID);

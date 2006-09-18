@@ -406,13 +406,6 @@ void DelayedSoundTimerCallback( void );
 
 BOOLEAN InitJA2Sound( )
 {
-//UINT32 uiCount;
-
-	//for(uiCount=0; uiCount < NUM_SAMPLES; uiCount++)
-	//{
-	//	SoundLoadSample(szSoundEffects[uiCount]);
-	//	SoundLockSample(szSoundEffects[uiCount]);
-	//}
 	return( TRUE );
 }
 

@@ -146,7 +146,6 @@ UINT32 uiCount;
 void ShutdownSoundManager(void)
 {
 	SoundStopAll();
-	SoundStopMusic();
 	SoundShutdownCache();
 	Sleep(1000);
 	SoundShutdownHardware();
@@ -354,38 +353,6 @@ UINT32 uiSample, uiTicks;
 	return(SOUND_ERROR);
 }
 
-//*******************************************************************************
-// SoundStreamCallback
-//
-//	Plays a sound through streaming, and executes a callback for each buffer
-//	loaded.
-//
-//	Returns:	If successful, it returns the sample index it is loaded to, else
-//						SOUND_ERROR is returned.
-//
-//*******************************************************************************
-UINT32 SoundStreamCallback(STR pFilename, SOUNDPARMS *pParms, void (*pCallback)(UINT8 *, UINT32, UINT32, UINT32, void *), void *pData)
-{
-UINT32 uiChannel, uiSoundID;
-
-	if(fSoundSystemInit)
-	{
-		if((uiChannel=SoundGetFreeChannel())!=SOUND_ERROR)
-		{
-			uiSoundID=SoundStartStream(pFilename, uiChannel, pParms);
-			if(uiSoundID!=SOUND_ERROR)
-			{
-				AIL_auto_service_stream(pSoundList[uiChannel].hMSSStream, FALSE);
-				pSoundList[uiChannel].pCallback=pCallback;
-				pSoundList[uiChannel].pData=pData;
-				pSoundList[uiChannel].uiFlags|=SOUND_CALLBACK;
-
-				return(uiSoundID);
-			}
-		}
-	}
-	return(SOUND_ERROR);
-}
 
 //*******************************************************************************
 // SoundIsPlaying
@@ -470,42 +437,6 @@ UINT32 uiSound;
 
 
 //*******************************************************************************
-// SoundSetMemoryLimit
-//
-//		Specifies how much memory the sound system is allowed to dynamically
-// allocate. Once this limit is reached, the cache code will start dropping the
-// least-used samples. You should always set the limit higher by a good margin
-// than your actual memory requirements, to give the cache some elbow room.
-//
-//	Returns:	TRUE if the limit was set, or FALSE if the memory already used is
-//						greater than the limit requested.
-//
-//*******************************************************************************
-BOOLEAN SoundSetMemoryLimit(UINT32 uiLimit)
-{
-	if(guiSoundMemoryLimit < guiSoundMemoryUsed)
-		return(FALSE);
-
-	guiSoundMemoryLimit=uiLimit;
-	return(TRUE);
-}
-
-//*******************************************************************************
-// SoundGetSystemInfo
-//
-//		Returns information about the capabilities of the hardware. Currently does
-//	nothing.
-//
-//	Returns:	FALSE, always
-//
-//*******************************************************************************
-BOOLEAN SoundGetSystemInfo(void)
-{
-	return(FALSE);
-}
-
-
-//*******************************************************************************
 // SoundStopAll
 //
 //		Stops all currently playing sounds.
@@ -520,8 +451,7 @@ UINT32 uiCount;
 	if(fSoundSystemInit)
 	{
 		for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
-			if(!pSoundList[uiCount].fMusic)
-				SoundStopIndex(uiCount);
+			SoundStopIndex(uiCount);
 	}
 
 	return(TRUE);
@@ -852,10 +782,7 @@ void		*pData;
 						else if(uiVolume > pSoundList[uiCount].uiFadeVolume)
 						{
 							uiVolume--;
-							if(!uiVolume && pSoundList[uiCount].fStopAtZero)
-								SoundStopIndex(uiCount);
-							else
-								SoundSetVolumeIndex(uiCount, uiVolume);
+							SoundSetVolumeIndex(uiCount, uiVolume);
 						}
 
 						pSoundList[uiCount].uiFadeTime = uiTime;
@@ -967,24 +894,6 @@ BOOLEAN SoundShutdownCache(void)
 	return(TRUE);
 }
 
-//*******************************************************************************
-// SoundSetCacheThreshold
-//
-//		Sets the sound size above which samples will be played double-buffered,
-// below which they will be loaded into the cache.
-//
-//	Returns: TRUE, always
-//
-//*******************************************************************************
-BOOLEAN SoundSetCacheThreshhold(UINT32 uiThreshold)
-{
-	if(uiThreshold==0)
-		guiSoundCacheThreshold=SOUND_DEFAULT_THRESH;
-	else
-		guiSoundCacheThreshold=uiThreshold;
-
-	return(TRUE);
-}
 
 //*******************************************************************************
 // SoundEmptyCache
@@ -1023,51 +932,6 @@ UINT32 uiSample=NO_SAMPLE;
 		return(uiSample);
 
 	return(SoundLoadDisk(pFilename));
-}
-
-//*******************************************************************************
-// SoundLockSample
-//
-//		Locks a sample into cache memory, so the cacheing system won't release it
-//	when it needs room.
-//
-//	Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
-//						in the cache.
-//
-//*******************************************************************************
-UINT32 SoundLockSample(STR pFilename)
-{
-UINT32 uiSample;
-
-	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
-	{
-		pSampleList[uiSample].uiFlags|=SAMPLE_LOCKED;
-		return(uiSample);
-	}
-
-	return(NO_SAMPLE);
-}
-
-//*******************************************************************************
-// SoundUnlockSample
-//
-//		Removes the lock on a sample so the cache is free to dump it when necessary.
-//
-//	Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
-//						in the cache.
-//
-//*******************************************************************************
-UINT32 SoundUnlockSample(STR pFilename)
-{
-UINT32 uiSample;
-
-	if((uiSample=SoundGetCached(pFilename))!=NO_SAMPLE)
-	{
-		pSampleList[uiSample].uiFlags&=(~SAMPLE_LOCKED);
-		return(uiSample);
-	}
-
-	return(NO_SAMPLE);
 }
 
 
@@ -1854,81 +1718,4 @@ UINT32 uiCount;
 	}
 
 	return(FALSE);
-}
-
-
-//*****************************************************************************************
-// SoundSampleSetVolumeRange
-//
-// Sets the minimum and maximum volume for a sample.
-//
-// Returns nothing.
-//
-// UINT32 uiSample            - Sample handle
-// UINT32 uiVolMin            - Minimum volume
-// UINT32 uiVolMax            - Maximum volume
-//
-// Created:  10/29/97 Andrew Emmons
-//*****************************************************************************************
-void SoundSampleSetVolumeRange(UINT32 uiSample, UINT32 uiVolMin, UINT32 uiVolMax)
-{
-	Assert((uiSample >= 0) && (uiSample < SOUND_MAX_CACHED));
-
-	pSampleList[uiSample].uiVolMin=uiVolMin;
-	pSampleList[uiSample].uiVolMax=uiVolMax;
-}
-
-
-//*****************************************************************************************
-// SoundSampleSetPanRange
-//
-// Sets the left/right pan values for a sample.
-//
-// Returns nothing.
-//
-// UINT32 uiSample            - Sample handle
-// UINT32 uiPanMin            - Left setting
-// UINT32 uiPanMax            - Right setting
-//
-// Created:  10/29/97 Andrew Emmons
-//*****************************************************************************************
-void SoundSampleSetPanRange(UINT32 uiSample, UINT32 uiPanMin, UINT32 uiPanMax)
-{
-	Assert((uiSample >= 0) && (uiSample < SOUND_MAX_CACHED));
-
-	pSampleList[uiSample].uiPanMin=uiPanMin;
-	pSampleList[uiSample].uiPanMax=uiPanMax;
-}
-
-
-//*****************************************************************************************
-// SoundStopMusic
-//
-// Stops any sound instance with the music flag.
-//
-// Returns nothing.
-//
-// Created:  3/16/00 Derek Beland
-//*****************************************************************************************
-BOOLEAN SoundStopMusic(void)
-{
-UINT32 uiCount;
-BOOLEAN fStopped=FALSE;
-
-	if(fSoundSystemInit)
-	{
-		for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
-		{
-			if((pSoundList[uiCount].hMSS!=NULL) || (pSoundList[uiCount].hMSSStream!=NULL) || (pSoundList[uiCount].hM3D!=NULL))
-			{
-				if(pSoundList[uiCount].fMusic)
-				{
-					SoundStop(pSoundList[uiCount].uiSoundID);
-					fStopped=TRUE;
-				}
-			}
-		}
-	}
-
-	return(fStopped);
 }
