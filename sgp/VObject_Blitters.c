@@ -6783,7 +6783,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	__asm {
 

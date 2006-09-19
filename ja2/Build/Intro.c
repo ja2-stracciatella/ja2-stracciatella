@@ -463,7 +463,7 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	if( iIndexOfFlicToPlay != -1 )
 	{

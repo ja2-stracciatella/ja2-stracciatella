@@ -233,7 +233,7 @@ void
 DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppOldSurface2 )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert ( ppOldSurface1 != NULL );
 	Assert ( ppOldSurface2 != NULL );
@@ -305,7 +305,7 @@ void DDCreatePalette( LPDIRECTDRAW2 pDirectDraw, UINT32 uiFlags, LPPALETTEENTRY 
 								IUnknown FAR * pUnkOuter)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert( pDirectDraw != NULL );
 
