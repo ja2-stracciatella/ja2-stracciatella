@@ -1616,7 +1616,7 @@ BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2
 void DequeueAllKeyBoardEvents()
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	InputAtom  InputEvent;
 	MSG				 KeyMessage;

@@ -13,7 +13,7 @@ LibraryInitHeader gGameLibaries[ ] =
 	{ "Cursors.slf",					FALSE, TRUE },
 	{ "Faces.slf",						FALSE, TRUE },
 	{ "Fonts.slf",						FALSE, TRUE },
-	{ "Interface.slf",				FALSE, TRUE },
+	{ "InterFace.slf",				FALSE, TRUE },
 	{ "Laptop.slf",						FALSE, TRUE },
 	{ "Maps.slf",							TRUE,  TRUE },
 	{ "MercEdt.slf",					FALSE, TRUE },

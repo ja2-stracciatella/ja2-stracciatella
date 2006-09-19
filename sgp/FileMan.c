@@ -673,9 +673,6 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	HANDLE	hRealFile;
 	LONG		lDistanceToMove;
 	DWORD		dwMoveMethod;
@@ -689,6 +686,9 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
@@ -709,6 +709,7 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 
 		if ( SetFilePointer( hRealFile, iDistance, NULL, dwMoveMethod ) == 0xFFFFFFFF )
 			return(FALSE);
+#endif
 	}
 	else
 	{
@@ -718,7 +719,6 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 	}
 
 	return(TRUE);
-#endif
 }
 
 //**************************************************************************
@@ -813,10 +813,7 @@ INT32 FileGetPos( HWFILE hFile )
 
 UINT32 FileGetSize( HWFILE hFile )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	HANDLE  hRealHandle;
+	FILE* hRealHandle;
 	UINT32	uiFileSize = 0xFFFFFFFF;
 
 	INT16 sLibraryID;
@@ -827,10 +824,15 @@ UINT32 FileGetSize( HWFILE hFile )
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
+		long here;
+
 		//Get the handle to a real file
 		hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-		uiFileSize = GetFileSize( hRealHandle, NULL );
+		here = ftell(hRealHandle);
+		fseek(hRealHandle, 0, SEEK_END);
+		uiFileSize = ftell(hRealHandle);
+		fseek(hRealHandle, here, SEEK_SET);
 	}
 	else
 	{
@@ -844,7 +846,6 @@ UINT32 FileGetSize( HWFILE hFile )
 		return(0);
 	else
 		return( uiFileSize );
-#endif
 }
 
 
@@ -1094,6 +1095,9 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 {
 #if 1 // XXX TODO
+	FIXME
+	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\", %p)\n", __FILE__, __LINE__, __func__, pSpec, pGFStruct);
+	return FALSE;
 	UNIMPLEMENTED();
 #else
 	INT32 x,iWhich=0;
@@ -1282,6 +1286,8 @@ UINT32 FileGetAttributes(const char *strFilename)
 BOOLEAN FileClearAttributes(const char *strFilename)
 {
 #if 1 // XXX TODO
+	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\")\n", __FILE__, __LINE__, __func__, strFilename);
+	return FALSE;
 	UNIMPLEMENTED();
 #else
 	return SetFileAttributes( strFilename, FILE_ATTRIBUTE_NORMAL );

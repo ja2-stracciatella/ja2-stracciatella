@@ -12997,7 +12997,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	__asm {
 

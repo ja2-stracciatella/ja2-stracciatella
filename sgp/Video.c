@@ -2466,7 +2466,9 @@ void UnlockFrameBuffer(void)
 PTR LockMouseBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	*uiPitch = screen->pitch;
+	return screen->pixels;
 #else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
@@ -2491,7 +2493,7 @@ PTR LockMouseBuffer(UINT32 *uiPitch)
 void UnlockMouseBuffer(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;

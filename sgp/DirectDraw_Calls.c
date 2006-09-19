@@ -13,7 +13,7 @@ DDCreateSurface (	LPDIRECTDRAW2 pExistingDirectDraw,
 								LPDIRECTDRAWSURFACE2 *ppNewSurface2 )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert ( pExistingDirectDraw != NULL );
 	Assert ( pNewSurfaceDesc != NULL );
@@ -81,7 +81,7 @@ DDCreateSurfaceInMemory ( LPDIRECTDRAW2 pExistingDirectDraw,
 void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFACEDESC pSurfaceDesc, UINT32 uiFlags, HANDLE hEvent )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	HRESULT ReturnCode;
 
@@ -104,7 +104,7 @@ void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFAC
 void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert( pSurface != NULL );
 
@@ -116,7 +116,7 @@ void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 void DDGetSurfaceDescription ( LPDIRECTDRAWSURFACE2 pSurface, DDSURFACEDESC *pSurfaceDesc )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert ( pSurface != NULL );
 	Assert ( pSurfaceDesc != NULL );
@@ -400,7 +400,7 @@ void DDReleaseDC( LPDIRECTDRAWSURFACE2 pSurface, HDC hDC )
 void DDSetSurfaceColorKey( LPDIRECTDRAWSURFACE2 pSurface, UINT32 uiFlags, LPDDCOLORKEY pDDColorKey )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	Assert( pSurface != NULL );
 	Assert( pDDColorKey != NULL );

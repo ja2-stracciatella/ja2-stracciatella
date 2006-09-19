@@ -170,9 +170,6 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
@@ -198,9 +195,12 @@ BOOLEAN EnterIntroScreen()
 		return( TRUE );
 	}
 
+#if 1 // XXX TODO
+	FIXME
+#else
 	//initialize smacker
 	SmkInitialize( ghWindow, 640, 480);
-
+#endif
 
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
@@ -220,7 +220,6 @@ BOOLEAN EnterIntroScreen()
 
 
 	return( TRUE );
-#endif
 }
 
 void RenderIntroScreen()
@@ -230,7 +229,7 @@ void RenderIntroScreen()
 void ExitIntroScreen()
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 	//shutdown smaker
 	SmkShutdown();
@@ -239,9 +238,6 @@ void ExitIntroScreen()
 
 void HandleIntroScreen()
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
 	//if we are exiting this screen, this frame, dont update the screen
@@ -249,8 +245,12 @@ void HandleIntroScreen()
 		return;
 
 
+#if 1 // XXX TODO
+	FIXME
+#else
 	//handle smaker each frame
 	fFlicStillPlaying = SmkPollFlics();
+#endif
 
 	//if the flic is not playing
 	if( !fFlicStillPlaying )
@@ -271,16 +271,12 @@ void HandleIntroScreen()
 	}
 
 	InvalidateScreen();
-#endif
 }
 
 
 
 void		GetIntroScreenUserInput()
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	InputAtom Event;
 	POINT  MousePos;
 
@@ -321,7 +317,11 @@ void		GetIntroScreenUserInput()
 					PrepareToExitIntroScreen();
 					break;
 				case SPACE:
+#if 1 // XXX TODO
+					UNIMPLEMENTED();
+#else
 					SmkCloseFlic( gpSmackFlic );
+#endif
 					break;
 
 #ifdef JA2TESTVERSION
@@ -342,9 +342,12 @@ void		GetIntroScreenUserInput()
 	if( gfLeftButtonState || gfRightButtonState )
 	{
 		//advance to the next flic
+#if 1 // XXX TODO
+		UNIMPLEMENTED();
+#else
 		SmkCloseFlic( gpSmackFlic );
-	}
 #endif
+	}
 }
 
 
