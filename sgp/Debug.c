@@ -147,26 +147,12 @@ STRING512 gpcDebugLogFileName;
 //		xxjun98:CJC		-> creation
 //
 //**************************************************************************
-BOOLEAN DbgGetLogFileName( STRING512 pcName )
+static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 {
-	// use the provided buffer to get the directory name, then tack on
-	// "\debug.txt"
 #ifndef _NO_DEBUG_TXT
-	if ( ! GetExecutableDirectory( pcName ) )
-	{
-		return( FALSE );
-	}
-
-	if ( strlen( pcName ) > (512 - strlen( "\\debug.txt" ) - 1 ) )
-	{
-		// no room!
-		return( FALSE );
-	}
-
-	strcat( pcName, "\\debug.txt" );
+	strcpy(pcName, "debug.txt");
 #endif
-
-	return( TRUE );
+	return TRUE;
 }
 
 

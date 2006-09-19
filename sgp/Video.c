@@ -2,6 +2,7 @@
 #include "Fade_Screen.h"
 #include "FileMan.h"
 #include "ImpTGA.h"
+#include "Input.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "MemMan.h"
@@ -12,6 +13,7 @@
 #include "Types.h"
 #include "VObject_Blitters.h"
 #include "Video.h"
+#include <SDL.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -170,10 +172,58 @@ void VideoMovieCapture( BOOLEAN fEnable );
 void RefreshMovieCache( );
 
 
-BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *WindowProc)
+static SDL_Surface *screen;
+
+
+BOOLEAN InitializeVideoManager(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+
+	UINT32 uiIndex;
+	UINT32 uiPitch;
+	PTR pTmpPointer;
+
+	RegisterDebugTopic(TOPIC_VIDEO, "Video");
+	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
+
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, gbPixelDepth, SDL_SWSURFACE | SDL_HWPALETTE);
+
+	memset(gpFrameData, 0, sizeof(gpFrameData));
+
+	gusScreenWidth = SCREEN_WIDTH;
+	gusScreenHeight = SCREEN_HEIGHT;
+	gubScreenPixelDepth = gbPixelDepth;
+
+	// Blank out the frame buffer
+	pTmpPointer = LockFrameBuffer(&uiPitch);
+	memset(pTmpPointer, 0, 480 * uiPitch);
+	UnlockFrameBuffer();
+
+	/* Initialize the main mouse background surfaces. There are two of them
+	 * (one for each of the Primary and Backbuffer surfaces)
+	 */
+	for (uiIndex = 0; uiIndex < 1; uiIndex++)
+	{
+		// Initialize various mouse background variables
+		gMouseCursorBackground[uiIndex].fRestore = FALSE;
+	}
+
+	// Initialize state variables
+	guiFrameBufferState          = BUFFER_DIRTY;
+	guiMouseBufferState          = BUFFER_DISABLED;
+	guiVideoManagerState         = VIDEO_ON;
+	guiRefreshThreadState        = THREAD_OFF;
+	guiDirtyRegionCount          = 0;
+	gfForceFullScreenRefresh     = TRUE;
+	gpCursorStore                = NULL;
+	gfPrintFrameBuffer           = FALSE;
+	guiPrintFrameBufferIndex     = 0;
+
+	// This function must be called to setup RGB information
+	GetRGBDistribution();
+
+	return TRUE;
 #else
   UINT32        uiIndex, uiPitch;
   HRESULT       ReturnCode;
@@ -551,9 +601,6 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
 
 void ShutdownVideoManager(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   //UINT32  uiRefreshThreadState;
 
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
@@ -563,6 +610,11 @@ void ShutdownVideoManager(void)
   // down
   //
 
+	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+
+#if 1
+	FIXME
+#else
   IDirectDrawSurface2_Release(gpMouseCursorOriginal);
   IDirectDrawSurface2_Release(gpMouseCursor);
   IDirectDrawSurface2_Release(gMouseCursorBackground[0].pSurface);
@@ -572,6 +624,7 @@ void ShutdownVideoManager(void)
   IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
   IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
   IDirectDraw2_Release( gpDirectDrawObject );
+#endif
 
   // destroy the window
   // DestroyWindow( ghWindow );
@@ -588,7 +641,6 @@ void ShutdownVideoManager(void)
   FreeMouseCursor( );
 
   UnRegisterDebugTopic(TOPIC_VIDEO, "Video");
-#endif
 }
 
 
@@ -2338,7 +2390,9 @@ void UnlockBackBuffer(void)
 PTR LockFrameBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	*uiPitch = screen->pitch;
+	return screen->pixels;
 #else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
@@ -2370,7 +2424,7 @@ PTR LockFrameBuffer(UINT32 *uiPitch)
 void UnlockFrameBuffer(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
@@ -2439,7 +2493,12 @@ void UnlockMouseBuffer(void)
 BOOLEAN GetRGBDistribution(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	UINT16 usBit;
+
+	gusRedMask   = 0xF800;
+	gusGreenMask = 0x07E0;
+	gusBlueMask  = 0x001F;
 #else
 DDSURFACEDESC SurfaceDescription;
 UINT16        usBit;
@@ -2470,6 +2529,7 @@ HRESULT       ReturnCode;
 	gusRedMask   = (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
 	gusGreenMask = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
 	gusBlueMask  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
+#endif
 
 
 	// RGB 5,5,5
@@ -2505,7 +2565,6 @@ HRESULT       ReturnCode;
 	}
 
   return TRUE;
-#endif
 }
 
 

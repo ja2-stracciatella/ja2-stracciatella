@@ -222,6 +222,8 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 BOOLEAN FileDelete(const char *strFilename)
 {
 #if 1 // XXX TODO
+	fprintf(stderr, "===> %s:%d: Ignoring %s(\"%s\")\n", __FILE__, __LINE__, __func__, strFilename);
+	return FALSE;
 	UNIMPLEMENTED();
 #else
 	return( DeleteFile( strFilename ) );

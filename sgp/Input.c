@@ -315,9 +315,6 @@ LRESULT Result;
 
 BOOLEAN InitializeInputManager(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   // Link to debugger
   RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
   // Initialize the gfKeyState table to FALSE everywhere
@@ -349,24 +346,27 @@ BOOLEAN InitializeInputManager(void)
   // Initialize the string input mechanism
   gfCurrentStringInputState = FALSE;
   gpCurrentStringDescriptor = NULL;
+#if 1 // XXX TODO
+	FIXME
+#else
   // Activate the hook functions for both keyboard and Mouse
   ghKeyboardHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC) KeyboardHandler, (HINSTANCE) 0, GetCurrentThreadId());
   DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set keyboard hook returned %d", ghKeyboardHook));
 
   ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC) MouseHandler, (HINSTANCE) 0, GetCurrentThreadId());
   DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
-  return TRUE;
 #endif
+  return TRUE;
 }
 
 void ShutdownInputManager(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
   // mouse hooks will be destroyed
   UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
+#if 1 // XXX TODO
+	FIXME
+#else
   UnhookWindowsHookEx(ghKeyboardHook);
   UnhookWindowsHookEx(ghMouseHook);
 #endif
@@ -1542,11 +1542,11 @@ void RestrictMouseCursor(SGPRect *pRectangle)
 void FreeMouseCursor(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
   ClipCursor(NULL);
-	fCursorWasClipped = FALSE;
 #endif
+	fCursorWasClipped = FALSE;
 }
 
 void RestoreCursorClipRect( void )

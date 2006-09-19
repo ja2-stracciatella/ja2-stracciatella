@@ -4,8 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define UNIMPLEMENTED() \
-	fprintf(stderr, "===> %s:%d: %s is not implemented\n", __FILE__, __LINE__, __func__); \
+	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();
+#define FIXME \
+	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
+
 
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 

@@ -138,16 +138,10 @@ UINT32 uiCount;
 //*******************************************************************************
 void ShutdownSoundManager(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	SoundStopAll();
 	SoundShutdownCache();
-	Sleep(1000);
 	SoundShutdownHardware();
-	//Sleep(1000);
 	fSoundSystemInit=FALSE;
-#endif
 }
 
 //*******************************************************************************
@@ -753,7 +747,8 @@ UINT32 uiChannel, uiSample;
 BOOLEAN SoundServiceStreams(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return FALSE;
 #else
 UINT32 uiCount, uiSpeed, uiBuffLen, uiBytesPerSample;
 UINT8		*pBuffer;
@@ -1148,7 +1143,8 @@ UINT32 uiCount;
 UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return NO_SAMPLE;
 #else
 	if(pSampleList[uiSample].uiFlags&SAMPLE_ALLOCATED)
 	{
@@ -1299,7 +1295,8 @@ CHAR8	cDriverName[128];
 BOOLEAN SoundShutdownHardware(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return FALSE;
 #else
 	if(fSoundSystemInit)
 		AIL_shutdown();
