@@ -28,11 +28,16 @@ void InitJA2SplashScreen()
 	INT32 i = 0;
 
 	InitializeJA2Clock();
+#if 1
+	FIXME
+	sprintf(DataDir, "Data");
+#else
 	// Get Executable Directory
 	GetExecutableDirectory( CurrentDir );
 
 	// Adjust Current Dir
 	sprintf( DataDir, "%s\\Data", CurrentDir );
+#endif
 	if ( !SetFileManCurrentDirectory( DataDir ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");

@@ -5,7 +5,9 @@
 
 void GetCursorPos(POINT* pos)
 {
-	UNIMPLEMENTED();
+	FIXME
+	pos->x = 0;
+	pos->y = 0;
 }
 
 

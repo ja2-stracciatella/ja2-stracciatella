@@ -30,9 +30,6 @@ BOOLEAN PerformTimeLimitedCheck();
 
 void FilenameForBPP(const char *pFilename, STR pDestination)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 
 	if(GETPIXELDEPTH()==16)
@@ -42,6 +39,9 @@ UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 	}
 	else
 	{
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 		_splitpath(pFilename, Drive, Dir, Name, Ext);
 
 		strcat(Name, "_8");
@@ -51,8 +51,8 @@ UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 		strcat(pDestination, DATA_8_BIT_DIR);
 		strcat(pDestination, Name);
 		strcat(pDestination, Ext);
-	}
 #endif
+	}
 }
 
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )

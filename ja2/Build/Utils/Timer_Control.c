@@ -176,7 +176,7 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 BOOLEAN InitializeJA2Clock(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
 
 #ifdef CALLBACKTIMER
@@ -211,8 +211,8 @@ BOOLEAN InitializeJA2Clock(void)
 
 #endif
 
-  return TRUE;
 #endif
+  return TRUE;
 }
 
 void    ShutdownJA2Clock(void)

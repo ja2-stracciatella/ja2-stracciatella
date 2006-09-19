@@ -210,7 +210,7 @@ UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
 UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 {
 	UINT32	uiChannel;
-	HANDLE	hRealFileHandle;
+	FILE* hRealFileHandle;
 	CHAR8		pFileHandlefileName[ 128 ];
 	HWFILE	hFile;
 	UINT32	uiRetVal=FALSE;
@@ -237,7 +237,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 
 			//Get the real file handle of the file
 			hRealFileHandle = GetRealFileHandleFromFileManFileHandle( hFile );
-			if( hRealFileHandle == 0 )
+			if (hRealFileHandle == NULL)
 			{
 				FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()\n", pFilename ) );
 				return( SOUND_ERROR );
@@ -1195,7 +1195,8 @@ UINT32 uiCount;
 BOOLEAN SoundInitHardware(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return FALSE;
 #else
 UINT32 uiCount;
 CHAR8	cDriverName[128];

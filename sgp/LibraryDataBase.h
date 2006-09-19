@@ -54,7 +54,7 @@ extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 typedef struct
 {
 	UINT32	uiFileID;						// id of the file ( they start at 1 )
-	HANDLE	hRealFileHandle;		// if the file is a Real File, this its handle
+	FILE* hRealFileHandle;		// if the file is a Real File, this its handle
 } RealFileOpenStruct;
 
 
@@ -80,7 +80,7 @@ typedef struct
 typedef struct
 {
 	STR			sLibraryPath;
-	HANDLE	hLibraryHandle;
+	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	BOOLEAN	fLibraryOpen;
 //	BOOLEAN	fAnotherFileAlreadyOpenedLibrary;				//this variable is set when a file is opened from the library and reset when the file is close.  No 2 files can have access to the library at 1 time.
@@ -185,8 +185,8 @@ BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 INT16 GetLibraryIDFromFileName(const char *pFileName);
-HWFILE OpenFileFromLibrary( STR pName );
-HWFILE CreateRealFileHandle( HANDLE hFile );
+HWFILE OpenFileFromLibrary(const char *pName);
+HWFILE CreateRealFileHandle(FILE* hFile);
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID );
 BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );
 BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileIndex, PTR pData, UINT32 uiBytesToRead, UINT32 *pBytesRead );

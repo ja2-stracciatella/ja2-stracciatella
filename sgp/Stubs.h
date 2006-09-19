@@ -20,7 +20,6 @@ typedef BYTE* LPBYTE;
 typedef int AIL_DRIVER;
 typedef int AILDOSDLS;
 typedef int BOOL;
-typedef int FILETIME;
 typedef int HANDLE;
 typedef int HBITMAP;
 typedef int HDC;
@@ -37,6 +36,8 @@ typedef int MMRESULT;
 typedef int PALETTEENTRY;
 typedef int WIN32_FIND_DATA;
 typedef int WPARAM;
+
+typedef long long FILETIME;
 
 typedef void* H3DSAMPLE;
 typedef int HDIGDRIVER;

@@ -28,6 +28,9 @@
 #include "Types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 
 #define FILENAME_LENGTH					600
@@ -256,13 +259,9 @@ BOOLEAN FileDelete(const char *strFilename)
 
 HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	HWFILE	hFile;
-	HANDLE	hRealFile;
-	DWORD		dwAccess;
-	DWORD		dwFlagsAndAttributes;
+	FILE*	hRealFile;
+	const char* dwAccess;
 	BOOLEAN	fExists;
 	DWORD		dwCreationFlags;
 	HWFILE hLibFile;
@@ -275,22 +274,22 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 	fExists = FileExistsNoDB( strFilename );
 
 	dwAccess = 0;
-	if ( uiOptions & FILE_ACCESS_READ )
-		dwAccess |= GENERIC_READ;
-	if ( uiOptions & FILE_ACCESS_WRITE )
-		dwAccess |= GENERIC_WRITE;
-
-	dwFlagsAndAttributes = FILE_FLAG_RANDOM_ACCESS;
-	if ( fDeleteOnClose )
-		dwFlagsAndAttributes |= FILE_FLAG_DELETE_ON_CLOSE;
+	if (uiOptions & FILE_ACCESS_READ && uiOptions & FILE_ACCESS_WRITE) {
+		dwAccess = "r+";
+	} else if (uiOptions & FILE_ACCESS_READ) {
+		dwAccess = "r";
+	} else if (uiOptions & FILE_ACCESS_WRITE) {
+		dwAccess = "w";
+	} else {
+		dwAccess = "";
+		abort(); // XXX something is fishy
+	}
 
 	//if the file is on the disk
 	if ( fExists )
 	{
-		hRealFile = CreateFile( strFilename, dwAccess, 0, NULL, OPEN_ALWAYS,
-										dwFlagsAndAttributes, NULL );
-
-		if ( hRealFile == INVALID_HANDLE_VALUE )
+		hRealFile = fopen(strFilename, dwAccess);
+		if (hRealFile == NULL)
 		{
 			return(0);
 		}
@@ -338,6 +337,11 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 
 	if ( !hFile )
 	{
+#if 1
+		FIXME
+		hRealFile = fopen(strFilename, "w");
+		if (hRealFile == NULL) return 0;
+#else
 		if ( uiOptions & FILE_CREATE_NEW )
 		{
 			dwCreationFlags = CREATE_NEW;
@@ -363,7 +367,6 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 			dwCreationFlags = OPEN_ALWAYS;
 		}
 
-
 		hRealFile = CreateFile( strFilename, dwAccess, 0, NULL, dwCreationFlags,
 										dwFlagsAndAttributes, NULL );
 		if ( hRealFile == INVALID_HANDLE_VALUE )
@@ -374,6 +377,7 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 
 			return(0);
 		}
+#endif
 
 		hFile = CreateRealFileHandle( hRealFile );
 	}
@@ -382,7 +386,6 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 		return(0);
 
 	return(hFile);
-#endif
 }
 
 
@@ -407,9 +410,6 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 
 void FileClose( HWFILE hFile )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 
@@ -421,7 +421,7 @@ void FileClose( HWFILE hFile )
 		//if its not already closed
 		if( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID != 0 )
 		{
-			CloseHandle( gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle );
+			fclose(gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle);
 			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].uiFileID = 0;
 			gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle= 0;
 			gFileDataBase.RealFiles.iNumFilesOpen--;
@@ -438,7 +438,6 @@ void FileClose( HWFILE hFile )
 		if( gFileDataBase.fInitialized )
 			CloseLibraryFile( sLibraryID, uiFileNum );
 	}
-#endif
 }
 
 //**************************************************************************
@@ -476,11 +475,8 @@ void FileClose( HWFILE hFile )
 
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	HANDLE	hRealFile;
-	DWORD		dwNumBytesToRead, dwNumBytesRead;
+	FILE* hRealFile;
+	UINT32 dwNumBytesToRead, dwNumBytesRead;
 	BOOLEAN	fRet = FALSE;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -504,18 +500,10 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 		{
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-			fRet = ReadFile( hRealFile, pDest, dwNumBytesToRead, &dwNumBytesRead, NULL );
-			if ( dwNumBytesToRead != dwNumBytesRead )
-			{
-				UINT32 uiLastError = GetLastError();
-				char zString[1024];
-				FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-
-				fRet = FALSE;
-			}
+			fRet = (fread(pDest, dwNumBytesToRead, 1, hRealFile) == 1);
 
 			if ( puiBytesRead )
-				*puiBytesRead = (UINT32)dwNumBytesRead;
+				*puiBytesRead = (UINT32)dwNumBytesToRead;
 		}
 	}
 	else
@@ -546,7 +534,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 	#endif
 
 	return(fRet);
-#endif
 }
 
 //**************************************************************************
@@ -578,11 +565,8 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 
 BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	HANDLE	hRealFile;
-	DWORD		dwNumBytesToWrite, dwNumBytesWritten;
+	FILE* hRealFile;
+	DWORD		dwNumBytesToWrite;
 	BOOLEAN	fRet;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -598,13 +582,10 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-		fRet = WriteFile( hRealFile, pDest, dwNumBytesToWrite, &dwNumBytesWritten, NULL );
-
-		if (dwNumBytesToWrite != dwNumBytesWritten)
-			fRet = FALSE;
+		fRet = (fwrite(pDest, dwNumBytesToWrite, 1, hRealFile) == 1);
 
 		if ( puiBytesWritten )
-			*puiBytesWritten = (UINT32)dwNumBytesWritten;
+			*puiBytesWritten = (UINT32)dwNumBytesToWrite;
 	}
 	else
 	{
@@ -615,7 +596,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	}
 
 	return(fRet);
-#endif
 }
 
 //**************************************************************************
@@ -871,7 +851,7 @@ UINT32 FileGetSize( HWFILE hFile )
 BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	return chdir(pcDirectory) == 0;
 #else
 	 return( SetCurrentDirectory( pcDirectory ) );
 #endif
@@ -929,11 +909,7 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory(const char *pcDirectory)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	return CreateDirectory( pcDirectory, NULL );
-#endif
+	return mkdir(pcDirectory, 0755) == 0;
 }
 
 
@@ -1252,7 +1228,15 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 UINT32 FileGetAttributes(const char *strFilename)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	UINT32 uiFileAttrib = 0;
+	struct stat sb;
+
+	if (stat(strFilename, &sb) != 0) return 0xFFFFFFFF;
+
+	if (S_ISDIR(sb.st_mode)) uiFileAttrib |= FILE_ATTRIBUTES_DIRECTORY;
+
+	return uiFileAttrib;
 #else
 	UINT32	uiAttribs = 0;
 	UINT32	uiFileAttrib = 0;
@@ -1470,7 +1454,7 @@ UINT32 uiSize;
 }
 
 
-HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
+FILE* GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 {
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -1494,7 +1478,7 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 			return( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
 		}
 	}
-	return( 0 );
+	return NULL;
 }
 
 

@@ -163,9 +163,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 
 BOOLEAN ImageFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, HVOBJECT BkgrndImg, UINT16 Index, INT16 Ox, INT16 Oy);
 
-// This function sets the global video Surfaces for primary and backbuffer
-BOOLEAN SetPrimaryVideoSurfaces( );
-
 // Sets transparency
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor );
 

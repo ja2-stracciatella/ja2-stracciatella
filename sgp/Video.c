@@ -1404,9 +1404,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 void RefreshScreen(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   static UINT32  uiRefreshThreadState, uiIndex;
   UINT16  usScreenWidth, usScreenHeight;
   static BOOLEAN fShowMouse;
@@ -1487,6 +1484,9 @@ void RefreshScreen(void)
 		Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
 		Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
 
+#if 1
+		FIXME
+#else
 		do
 		{
 			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -1500,6 +1500,7 @@ void RefreshScreen(void)
 				}
 			}
 		} while (ReturnCode != DD_OK);
+#endif
 
 		// Save position into other background region
 		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
@@ -1533,6 +1534,9 @@ void RefreshScreen(void)
 				Region.right = usScreenWidth;
 				Region.bottom = usScreenHeight;
 
+#if 1
+		FIXME
+#else
 				do
 				{
 					ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, 0, 0, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -1546,8 +1550,7 @@ void RefreshScreen(void)
 						}
 					}
 				} while (ReturnCode != DD_OK);
-
-
+#endif
 			}
 			else
 			{
@@ -1558,6 +1561,9 @@ void RefreshScreen(void)
 					Region.right  = gListOfDirtyRegions[uiIndex].iRight;
 					Region.bottom = gListOfDirtyRegions[uiIndex].iBottom;
 
+#if 1
+		FIXME
+#else
 					do
 					{
 						ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -1571,7 +1577,7 @@ void RefreshScreen(void)
 							goto ENDOFLOOP;
 						}
 					} while (ReturnCode != DD_OK);
-
+#endif
 				}
 
 				// Now do new, extended dirty regions
@@ -1594,6 +1600,9 @@ void RefreshScreen(void)
 
 					}
 
+#if 1
+		FIXME
+#else
 					do
 					{
 						ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, Region.left, Region.top, gpFrameBuffer, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
@@ -1607,11 +1616,9 @@ void RefreshScreen(void)
 							goto ENDOFLOOP;
 						}
 					} while (ReturnCode != DD_OK);
-
+#endif
 				}
-
 			}
-
 		}
 		if ( gfRenderScroll )
 		{
@@ -1644,8 +1651,11 @@ void RefreshScreen(void)
 	}
 
 
-  if (gfPrintFrameBuffer == TRUE)
+  if (gfPrintFrameBuffer)
   {
+#if 1
+		FIXME
+#else
     LPDIRECTDRAWSURFACE    _pTmpBuffer;
     LPDIRECTDRAWSURFACE2   pTmpBuffer;
     DDSURFACEDESC          SurfaceDescription;
@@ -1781,6 +1791,7 @@ void RefreshScreen(void)
 
 		strcat( ExecDir, "\\Data" );
 		SetFileManCurrentDirectory( ExecDir );
+#endif
   }
 
   //
@@ -1790,6 +1801,9 @@ void RefreshScreen(void)
 
   if (guiMouseBufferState == BUFFER_DIRTY)
   {
+#if 1
+		FIXME
+#else
     //
     // Well the mouse buffer is dirty. Upload the whole thing
     //
@@ -1809,6 +1823,7 @@ void RefreshScreen(void)
     } while (ReturnCode != DD_OK);
 
     guiMouseBufferState = BUFFER_READY;
+#endif
   }
 
   //
@@ -1906,6 +1921,9 @@ void RefreshScreen(void)
 
 			if ((Region.right > Region.left)&&(Region.bottom > Region.top))
 			{
+#if 1
+		FIXME
+#else
 				// Save clipped region
 				gMouseCursorBackground[CURRENT_MOUSE_DATA].Region = Region;
 
@@ -1949,6 +1967,7 @@ void RefreshScreen(void)
 						goto ENDOFLOOP;
 					}
 				} while (ReturnCode != DD_OK);
+#endif
 			}
 			else
 			{
@@ -1980,6 +1999,9 @@ void RefreshScreen(void)
 
   }
 
+#if 1
+		FIXME
+#else
   ///////////////////////////////////////////////////////////////////////////////////////////////
   //
   // (1) Flip Pages
@@ -2207,6 +2229,7 @@ void RefreshScreen(void)
 			}
 		} while (ReturnCode != DD_OK);
 	}
+#endif
 
 	guiDirtyRegionExCount = 0;
 
@@ -2215,7 +2238,6 @@ ENDOFLOOP:
 
 
 	fFirstTime = FALSE;
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2744,9 +2766,6 @@ HRESULT       ReturnCode;
 
 void FatalError(const char *pError, ...)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	va_list argptr;
 
 	va_start(argptr, pError);       	// Set up variable argument pointer
@@ -2756,18 +2775,18 @@ void FatalError(const char *pError, ...)
 
 	gfFatalError = TRUE;
 
+#if 1 // XXX TODO
+	FIXME
+#else
 	// Release DDraw
 	IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
   IDirectDraw2_Release( gpDirectDrawObject );
 	ShowWindow( ghWindow, SW_HIDE );
-
-  // destroy the window
-  // DestroyWindow( ghWindow );
+#endif
 
 	gfProgramIsRunning = FALSE;
 
-	MessageBox( ghWindow, gFatalErrorString, "JA2 Fatal Error", MB_OK | MB_TASKMODAL );
-#endif
+	fprintf(stderr, "FATAL ERROR: %s\n", gFatalErrorString);
 }
 
 

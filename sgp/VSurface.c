@@ -109,11 +109,9 @@ HVSURFACE		ghBackBuffer = NULL;
 HVSURFACE   ghFrameBuffer = NULL;
 HVSURFACE   ghMouseBuffer = NULL;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface Manager functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+static BOOLEAN SetPrimaryVideoSurfaces(void);
+
 
 BOOLEAN InitializeVideoSurfaceManager( )
 {
@@ -465,8 +463,12 @@ BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex )
   return FALSE;
 }
 
-BOOLEAN SetPrimaryVideoSurfaces( )
+
+static BOOLEAN SetPrimaryVideoSurfaces(void)
 {
+#if 1
+	FIXME
+#else
 	LPDIRECTDRAWSURFACE2 pSurface;
 
 	// Delete surfaces if they exist
@@ -514,7 +516,8 @@ BOOLEAN SetPrimaryVideoSurfaces( )
 	CHECKF( ghFrameBuffer != NULL );
 
 
-	return( TRUE );
+#endif
+	return TRUE;
 }
 
 void DeletePrimaryVideoSurfaces( )

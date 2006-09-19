@@ -434,7 +434,8 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 UINT32 MemGetFree( void )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return 0;
 #else
 	MEMORYSTATUS ms;
 

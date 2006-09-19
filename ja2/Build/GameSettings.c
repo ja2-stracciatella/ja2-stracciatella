@@ -272,7 +272,9 @@ void InitGameOptions()
 BOOLEAN GetCDLocation( )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	strcpy(gzCdDirectory, ".");
+	return TRUE;
 #else
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];

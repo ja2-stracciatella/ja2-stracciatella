@@ -44,7 +44,7 @@ INT			CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
 BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, FileHeaderStruct **pFileHeader);
 void		AddSlashToPath( STR pName );
 HWFILE	CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
-BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID );
+static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
 INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
 
@@ -230,12 +230,9 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 
 BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	HANDLE	hFile;
+	FIXME
+	FILE*	hFile;
 	UINT16	usNumEntries=0;
-	UINT32	uiNumBytesRead;
 	UINT32	uiLoop;
 	DIRENTRY DirEntry;
 	LIBHEADER	LibFileHeader;
@@ -243,8 +240,8 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	CHAR8		zTempPath[ SGPFILENAME_LEN ];
 
 	//open the library for reading ( if it exists )
-	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-	if( hFile == INVALID_HANDLE_VALUE )
+	hFile = fopen(pLibraryName, "rb");
+	if (hFile == NULL)
 	{
 		//if it failed finding the file on the hard drive, and the file can be on the cdrom
 		if( fCanBeOnCDrom )
@@ -253,14 +250,10 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 			sprintf( zTempPath, "%s%s", gzCdDirectory, pLibraryName );
 
 			//look on the cdrom
-			hFile = CreateFile( zTempPath, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-			if( hFile == INVALID_HANDLE_VALUE )
+			hFile = fopen(zTempPath, "rb");
+			if (hFile == NULL)
 			{
-				UINT32 uiLastError = GetLastError();
-				char zString[1024];
-				FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-
-				return( FALSE );
+				return FALSE;
 			}
 			else
 				FastDebugMsg( String("CD Library %s opened.", zTempPath));
@@ -273,17 +266,11 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	}
 
 	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( hFile, &LibFileHeader, sizeof( LIBHEADER ), &uiNumBytesRead, NULL ) )
+	if (fread(&LibFileHeader, sizeof(LibFileHeader), 1, hFile) != 1)
 		return( FALSE );
-
-	if( uiNumBytesRead != sizeof( LIBHEADER ) )
-	{
-		//Error Reading the file database header.
-		return( FALSE );
-	}
 
 	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
+	fseek(hFile, -(LibFileHeader.iEntries * (ssize_t)sizeof(DIRENTRY)), SEEK_END);
 
 	//loop through the library and determine the number of files that are FILE_OK
 	//ie.  so we dont load the old or deleted files
@@ -291,7 +278,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
 		//read in the file header
-		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), &uiNumBytesRead, NULL ) )
+		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1)
 			return( FALSE );
 
 		if( DirEntry.ubState == FILE_OK )
@@ -308,14 +295,14 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 
 	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	SetFilePointer( hFile, -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) ), NULL, FILE_END );
+	fseek(hFile, -(LibFileHeader.iEntries * (ssize_t)sizeof(DIRENTRY)), SEEK_END);
 
 	//loop through all the entries
 	uiCount=0;
 	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
 	{
 		//read in the file header
-		if( !ReadFile( hFile, &DirEntry, sizeof( DIRENTRY ), &uiNumBytesRead, NULL ) )
+		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1)
 			return( FALSE );
 
 
@@ -403,7 +390,6 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	pLibHeader->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 
 	return( TRUE );
-#endif
 }
 
 
@@ -411,12 +397,8 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead, UINT32 *pBytesRead )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT32	uiOffsetInLibrary, uiLength;
-	HANDLE	hLibraryFile;
-	UINT32	uiNumBytesRead;
+	FILE* hLibraryFile;
 	UINT32	uiCurPos;
 
 
@@ -428,7 +410,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 
 
 	//set the file pointer to the right location
-	SetFilePointer( hLibraryFile, ( uiOffsetInLibrary + uiCurPos ), NULL, FILE_BEGIN );
+	fseek(hLibraryFile, uiOffsetInLibrary + uiCurPos, SEEK_SET);
 
 	//if we are trying to read more data then the size of the file, return an error
 	if( uiBytesToRead + uiCurPos > uiLength )
@@ -438,27 +420,14 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	}
 
 	//get the data
-	if( !ReadFile( hLibraryFile, pData, uiBytesToRead, &uiNumBytesRead, NULL ) )
+	if (fread(pData, uiBytesToRead, 1, hLibraryFile) != 1)
 		return( FALSE );
 
-	if( uiBytesToRead != uiNumBytesRead )
-	{
-//		Gets the reason why the function failed
-//		UINT32 uiLastError = GetLastError();
-//		char zString[1024];
-//		FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
+	gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFilePosInFile += uiBytesToRead;
 
-		return( FALSE );
-	}
-
-	gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile += uiNumBytesRead;
-
-	//	CloseHandle( hLibraryFile );
-
-	*pBytesRead = uiNumBytesRead;
+	*pBytesRead = uiBytesToRead;
 
 	return( TRUE );
-#endif
 }
 
 //************************************************************************
@@ -632,19 +601,13 @@ void AddSlashToPath( STR pName )
 //
 //************************************************************************
 
-HWFILE OpenFileFromLibrary( STR pName )
+HWFILE OpenFileFromLibrary(const char *pName)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	FileHeaderStruct *pFileHeader;
 	HWFILE					hLibFile;
 	INT16							sLibraryID;
 	UINT16						uiLoop1;
 	UINT32						uiFileNum=0;
-
-	UINT32						uiNewFilePosition=0;
-
 
 	//Check if the file can be contained from an open library ( the path to the file a library path )
 	sLibraryID = GetLibraryIDFromFileName( pName );
@@ -714,13 +677,10 @@ HWFILE OpenFileFromLibrary( STR pName )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
 
 			//Save the current file position in the library
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiActualPositionInLibrary = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_CURRENT );
+			gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiActualPositionInLibrary = ftell(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle);
 
 			//Set the file position in the library to the begining of the 'file' in the library
-			uiNewFilePosition = SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset, NULL, FILE_BEGIN );
-
-			uiNewFilePosition = GetFileSize( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, NULL );
-
+			fseek(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileOffset, SEEK_SET);
 		}
 		else
 		{
@@ -739,7 +699,6 @@ HWFILE OpenFileFromLibrary( STR pName )
 	gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary = uiFileNum;
 
 	return( hLibFile );
-#endif
 }
 
 
@@ -757,7 +716,7 @@ HWFILE CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum )
 }
 
 
-HWFILE CreateRealFileHandle( HANDLE hFile )
+HWFILE CreateRealFileHandle(FILE* hFile)
 {
 	HWFILE hLibFile;
 	INT32	iLoop1;
@@ -833,9 +792,6 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	if( IsLibraryOpened( sLibraryID ) )
 	{
 		//if the uiFileID is invalid
@@ -851,7 +807,7 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
 
 			//reset the libraries file pointer to the positon it was in prior to opening the current file
-			SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiActualPositionInLibrary, NULL, FILE_CURRENT);
+			fseek(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileID].uiActualPositionInLibrary, SEEK_CUR); // XXX is SEEK_CUR correct here?
 
 			//decrement the number of files that are open
 			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen--;
@@ -863,7 +819,6 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 	}
 
 	return( TRUE );
-#endif
 }
 
 
@@ -1015,26 +970,19 @@ BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 }
 
 
-
-
-BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
+static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT16 usLoop1=0;
 
-	CHAR8 sName[ 60 ];
-	CHAR8 sPath[ 90 ];
-	CHAR8 sDrive[ 60 ];
-	CHAR8 sExt[ 6 ];
+	const char* sTempName;
+	const char* sName;
 
-	CHAR8	sTempName[ 70 ];
-
-	_splitpath( pFileName, sDrive, sPath, sName, sExt);
-
-	strcpy( sTempName, sName );
-	strcat( sTempName, sExt );
+	FIXME
+	sName = pFileName;
+	while ((sTempName = strpbrk(sName, "/\\")) != NULL)
+	{
+		sName = sTempName + 1;
+	}
 
 	//loop through all the open files to see if 'new' file to open is already open
 	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
@@ -1043,12 +991,11 @@ BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].uiFileID != 0 )
 		{
 			//Check if the file already exists
-			if (strcasecmp(sTempName, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader->pFileName) == 0)
+			if (strcasecmp(sName, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader->pFileName) == 0)
 				return( TRUE );
 		}
 	}
 	return( FALSE );
-#endif
 }
 
 
