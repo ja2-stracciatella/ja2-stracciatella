@@ -1,7 +1,8 @@
 #ifndef _CINEMATICS_H_
 #define _CINEMATICS_H_
 
-#include "Smack.h"
+#include "DDraw.h"
+#include "Stubs.h"
 
 typedef struct {
 
@@ -23,7 +24,7 @@ typedef struct {
 
 void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
 void				SmkShutdown(void);
-SMKFLIC			*SmkPlayFlic(CHAR8 *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fAutoClose);
+SMKFLIC			*SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fAutoClose);
 BOOLEAN			SmkPollFlics(void);
 SMKFLIC			*SmkOpenFlic(CHAR8 *cFilename);
 void				SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop);

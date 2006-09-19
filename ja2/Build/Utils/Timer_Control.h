@@ -74,9 +74,6 @@ void    ShutdownJA2Clock( void );
 
 UINT32	GetPauseJA2Clock( );
 
-UINT32 InitializeJA2TimerID( UINT32 uiDelay, UINT32 uiCallbackID, UINT32 uiUser );
-void	 RemoveJA2TimerCallback( UINT32 uiTimer );
-
 void PauseTime( BOOLEAN fPaused );
 
 void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALLBACK pCallback, BOOLEAN fReplace );

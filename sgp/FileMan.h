@@ -84,7 +84,7 @@ extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
 extern void		ShutdownFileManager( void );
 
 extern BOOLEAN	FileExists( const char *strFilename );
-extern BOOLEAN	FileExistsNoDB( STR strFilename );
+extern BOOLEAN	FileExistsNoDB(const char *strFilename);
 extern BOOLEAN	FileDelete( const char *strFilename );
 extern HWFILE	FileOpen( const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
 extern void		FileClose( HWFILE );
@@ -99,7 +99,7 @@ extern INT32	FileGetPos( HWFILE );
 extern UINT32	FileGetSize( HWFILE );
 extern UINT32 FileSize(const char *strFilename);
 
-BOOLEAN SetFileManCurrentDirectory( STR pcDirectory );
+BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory);
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
 

@@ -41,7 +41,7 @@ CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
 INT			CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader );
+BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, FileHeaderStruct **pFileHeader);
 void		AddSlashToPath( STR pName );
 HWFILE	CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
 BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID );
@@ -159,6 +159,9 @@ INT16 i;
 
 BOOLEAN ShutDownFileDatabase( )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT16 sLoop1;
 
 	// Free up the memory used for each library
@@ -188,6 +191,7 @@ BOOLEAN ShutDownFileDatabase( )
 	}
 
 	return( TRUE );
+#endif
 }
 
 
@@ -195,6 +199,9 @@ BOOLEAN ShutDownFileDatabase( )
 
 BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	BOOLEAN fRetVal = FALSE;
 	HANDLE	hFile;
 
@@ -215,6 +222,7 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 	}
 
 	return( fRetVal );
+#endif
 }
 
 
@@ -222,6 +230,9 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 
 BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hFile;
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
@@ -392,6 +403,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	pLibHeader->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 
 	return( TRUE );
+#endif
 }
 
 
@@ -399,6 +411,9 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead, UINT32 *pBytesRead )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiOffsetInLibrary, uiLength;
 	HANDLE	hLibraryFile;
 	UINT32	uiNumBytesRead;
@@ -443,6 +458,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	*pBytesRead = uiNumBytesRead;
 
 	return( TRUE );
+#endif
 }
 
 //************************************************************************
@@ -451,7 +467,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 //
 //************************************************************************
 
-BOOLEAN CheckIfFileExistInLibrary( STR pFileName )
+BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 {
 	INT16 sLibraryID;
 	FileHeaderStruct *pFileHeader;
@@ -478,7 +494,7 @@ BOOLEAN CheckIfFileExistInLibrary( STR pFileName )
 //	( eg. File is  Laptop\Test.sti, if the Laptop\ library is open, it returns true
 //
 //************************************************************************
-INT16 GetLibraryIDFromFileName( STR pFileName )
+INT16 GetLibraryIDFromFileName(const char *pFileName)
 {
 INT16 sLoop1, sBestMatch=-1;
 
@@ -492,7 +508,7 @@ INT16 sLoop1, sBestMatch=-1;
 			if( strlen( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath ) == 0 )
 			{
 				//determine if there is a directory in the file name
-				if( strchr( pFileName, '\\' ) == NULL && strchr( pFileName, '//' ) == NULL )
+				if (strchr(pFileName, '\\') == NULL && strchr(pFileName, '/') == NULL)
 				{
 					//There is no directory in the file name
 					return( sLoop1 );
@@ -503,7 +519,7 @@ INT16 sLoop1, sBestMatch=-1;
 			else
 			{
 				// if the directory paths are the same, to the length of the lib's path
-				if( _strnicmp( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath, pFileName, strlen( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath ) ) == 0 )
+				if(strncasecmp(gFileDataBase.pLibraries[sLoop1].sLibraryPath, pFileName, strlen(gFileDataBase.pLibraries[sLoop1].sLibraryPath)) == 0)
 				{
 					// if we've never matched, or this match's path is longer than the previous match (meaning it's more exact)
 					if((sBestMatch==(-1)) || (strlen(gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath) > strlen(gFileDataBase.pLibraries[ sBestMatch ].sLibraryPath)))
@@ -527,7 +543,7 @@ INT16 sLoop1, sBestMatch=-1;
 //
 //************************************************************************
 
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID, STR pstrFileName, FileHeaderStruct **pFileHeader )
+BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, FileHeaderStruct **pFileHeader)
 {
 	FileHeaderStruct **ppFileHeader;
 	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
@@ -573,7 +589,7 @@ INT CompareFileNames( CHAR8 *arg1[], FileHeaderStruct **arg2 )
 	sprintf( sFileNameWithPath, "%s%s", gFileDataBase.pLibraries[ gsCurrentLibrary ].sLibraryPath, TempFileHeader->pFileName );
 
    /* Compare all of both strings: */
-   return _stricmp( sSearchKey, sFileNameWithPath );
+   return strcasecmp(sSearchKey, sFileNameWithPath);
 }
 
 
@@ -618,6 +634,9 @@ void AddSlashToPath( STR pName )
 
 HWFILE OpenFileFromLibrary( STR pName )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	FileHeaderStruct *pFileHeader;
 	HWFILE					hLibFile;
 	INT16							sLibraryID;
@@ -720,6 +739,7 @@ HWFILE OpenFileFromLibrary( STR pName )
 	gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary = uiFileNum;
 
 	return( hLibFile );
+#endif
 }
 
 
@@ -813,6 +833,9 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if( IsLibraryOpened( sLibraryID ) )
 	{
 		//if the uiFileID is invalid
@@ -840,6 +863,7 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 	}
 
 	return( TRUE );
+#endif
 }
 
 
@@ -902,6 +926,9 @@ BOOLEAN OpenLibrary( INT16 sLibraryID )
 
 BOOLEAN CloseLibrary( INT16 sLibraryID )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiLoop1;
 
 	//if the library isnt loaded, dont close it
@@ -967,6 +994,7 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 
 
 	return( TRUE );
+#endif
 }
 
 BOOLEAN IsLibraryOpened( INT16 sLibraryID )
@@ -991,6 +1019,9 @@ BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 
 BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT16 usLoop1=0;
 
 	CHAR8 sName[ 60 ];
@@ -1012,16 +1043,20 @@ BOOLEAN CheckIfFileIsAlreadyOpen( STR pFileName, INT16 sLibraryID )
 		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].uiFileID != 0 )
 		{
 			//Check if the file already exists
-			if( _stricmp( sTempName, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].pFileHeader->pFileName ) == 0 )
+			if (strcasecmp(sTempName, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader->pFileName) == 0)
 				return( TRUE );
 		}
 	}
 	return( FALSE );
+#endif
 }
 
 
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
 	DIRENTRY *pDirEntry;
@@ -1095,6 +1130,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	pAllEntries = NULL;
 
 	return( TRUE );
+#endif
 }
 
 
@@ -1118,5 +1154,5 @@ INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 )
 	sprintf( sFileNameWithPath, "%s", TempDirEntry->sFileName );
 
    /* Compare all of both strings: */
-   return _stricmp( sSearchKey, sFileNameWithPath );
+   return strcasecmp(sSearchKey, sFileNameWithPath);
 }

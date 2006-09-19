@@ -184,7 +184,7 @@ BOOLEAN InitializeFileDatabase( );
 BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
-INT16 GetLibraryIDFromFileName( STR pFileName );
+INT16 GetLibraryIDFromFileName(const char *pFileName);
 HWFILE OpenFileFromLibrary( STR pName );
 HWFILE CreateRealFileHandle( HANDLE hFile );
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID );

@@ -1,8 +1,8 @@
 #ifndef __SOUNDMAN_
 #define __SOUNDMAN_
 
+#include "Stubs.h"
 #include "Types.h"
-#include "Mss.h"
 
 #ifdef __cplusplus
 extern "C" {

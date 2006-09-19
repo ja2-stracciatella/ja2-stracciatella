@@ -30,6 +30,9 @@ BOOLEAN PerformTimeLimitedCheck();
 
 void FilenameForBPP(const char *pFilename, STR pDestination)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 
 	if(GETPIXELDEPTH()==16)
@@ -49,7 +52,7 @@ UINT8 Drive[128], Dir[128], Name[128], Ext[128];
 		strcat(pDestination, Name);
 		strcat(pDestination, Ext);
 	}
-
+#endif
 }
 
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
@@ -231,6 +234,9 @@ BOOLEAN IfWin95(void)
 
 void HandleLimitedNumExecutions( )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	// Get system directory
   HWFILE     hFileHandle;
 	UINT8	ubSysDir[ 512 ];
@@ -283,7 +289,7 @@ void HandleLimitedNumExecutions( )
 
 	// Close file
 	FileClose( hFileHandle );
-
+#endif
 }
 
 

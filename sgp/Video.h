@@ -5,6 +5,7 @@
 #include <DDraw.h>
 //#include <process.h> /* XXX */
 
+#include "Stubs.h"
 #include "Types.h"
 #include "HImage.h"
 

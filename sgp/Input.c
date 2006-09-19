@@ -98,6 +98,7 @@ void		AdjustMouseForWindowOrigin(void);
 
 // These are the hook functions for both keyboard and mouse
 
+#if 0 // XXX TODO
 LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
 {
 #ifndef JA2
@@ -309,8 +310,14 @@ LRESULT Result;
 
 #endif
 
+#endif
+
+
 BOOLEAN InitializeInputManager(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   // Link to debugger
   RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
   // Initialize the gfKeyState table to FALSE everywhere
@@ -349,14 +356,20 @@ BOOLEAN InitializeInputManager(void)
   ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC) MouseHandler, (HINSTANCE) 0, GetCurrentThreadId());
   DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
   return TRUE;
+#endif
 }
 
 void ShutdownInputManager(void)
-{ // There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
+{
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
+	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
   // mouse hooks will be destroyed
   UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
   UnhookWindowsHookEx(ghKeyboardHook);
   UnhookWindowsHookEx(ghMouseHook);
+#endif
 }
 
 void QueuePureEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
@@ -557,6 +570,9 @@ BOOLEAN DequeueEvent(InputAtom *Event)
 
 void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   UINT32 ubKey;
   UINT16 ubChar;
   POINT  MousePos;
@@ -958,6 +974,7 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
 			gfAltState = FALSE;
 		}
   }
+#endif
 }
 
 void KeyDown(UINT32 usParam, UINT32 uiParam)
@@ -1512,29 +1529,45 @@ void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 
 void RestrictMouseCursor(SGPRect *pRectangle)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   // Make a copy of our rect....
   memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
   ClipCursor((RECT *)pRectangle);
 	fCursorWasClipped = TRUE;
+#endif
 }
 
 void FreeMouseCursor(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   ClipCursor(NULL);
 	fCursorWasClipped = FALSE;
+#endif
 }
 
 void RestoreCursorClipRect( void )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   if ( fCursorWasClipped )
   {
     ClipCursor( &gCursorClipRect );
   }
+#endif
 }
 
 void GetRestrictedClipCursor( SGPRect *pRectangle )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	GetClipCursor((RECT *) pRectangle );
+#endif
 }
 
 BOOLEAN IsCursorRestricted( void )
@@ -1544,6 +1577,9 @@ BOOLEAN IsCursorRestricted( void )
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	FLOAT flNewXPos, flNewYPos;
 
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
@@ -1561,6 +1597,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
 
 	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
+#endif
 }
 
 
@@ -1578,6 +1615,9 @@ BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2
 
 void DequeueAllKeyBoardEvents()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	InputAtom  InputEvent;
 	MSG				 KeyMessage;
 
@@ -1590,6 +1630,7 @@ void DequeueAllKeyBoardEvents()
   {
 		//dont do anything
 	}
+#endif
 }
 
 
@@ -1644,7 +1685,11 @@ void HandleSingleClicksAndButtonRepeats( void )
 
 INT16 GetMouseWheelDeltaValue( UINT32 wParam )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT16 sDelta = HIWORD( wParam );
 
 	return( sDelta / WHEEL_DELTA );
+#endif
 }

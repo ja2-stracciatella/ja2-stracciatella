@@ -6,42 +6,28 @@
 //	Originally by Derek Beland and Bret Rowden.
 //
 //----------------------------------------------------------------------------------
-//#include "LocalCodeAll.h"
 
-#include "Types.h"
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <share.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-
-#include "Debug.h"
-#include "FileMan.h"
-#include "Smack.h"
-#include "DDraw.h"
-#include "Mss.h"
-#include "DirectX_Common.h"
-#include "DirectDraw_Calls.h"
 #include "Cinematics.h"
-#include "SoundMan.h"
-
-#ifdef JA2
-	#include "Video.h"
-#else
-	#include "video2.h"
-#endif
-
-#include "VSurface_Private.h"
-
+#include "DDraw.h"
+#include "Debug.h"
+#include "DirectDraw_Calls.h"
+#include "DirectX_Common.h"
+#include "FileMan.h"
 #include "Intro.h"
-
-
+//#include "Mss.h" // XXX
 #include "RADMALW.I"
+//#include "Smack.h" // XXX
+#include "SoundMan.h"
+#include "Types.h"
+#include "VSurface_Private.h"
+#include "Video.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-
-#include <crtdbg.h>
 
 //-Structures----------------------------------------------------------------------
 
@@ -71,7 +57,6 @@ LPDIRECTDRAWSURFACE2 lpVideoPlayback2=NULL;
 //-Function-Prototypes-------------------------------------------------------------
 void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
 void				SmkShutdown(void);
-SMKFLIC			*SmkPlayFlic(CHAR8 *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fAutoClose);
 BOOLEAN			SmkPollFlics(void);
 SMKFLIC			*SmkOpenFlic(CHAR8 *cFilename);
 void				SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop);
@@ -164,7 +149,7 @@ UINT32 uiCount;
 	}
 }
 
-SMKFLIC *SmkPlayFlic(CHAR8 *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
+SMKFLIC *SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
 {
 SMKFLIC *pSmack;
 

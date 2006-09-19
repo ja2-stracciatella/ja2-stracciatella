@@ -1,18 +1,9 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "DirectX_Common.h"
-	#include "DirectDraw_Calls.h"
-
-	#include <DDraw.h>
-	#include "Debug.h"
-	#include "Video_Private.h"
-	#include <string.h>
-	#include "SGP.h"
-	#include "VObject_Blitters.h"
-#endif
+#include "Debug.h"
+#include "DirectDraw_Calls.h"
+#include "DirectX_Common.h"
+#include "SGP.h"
+#include "VObject_Blitters.h"
+#include <string.h>
 
 // DirectDrawSurface2 Calls
 void
@@ -21,6 +12,9 @@ DDCreateSurface (	LPDIRECTDRAW2 pExistingDirectDraw,
 								LPDIRECTDRAWSURFACE *ppNewSurface1,
 								LPDIRECTDRAWSURFACE2 *ppNewSurface2 )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert ( pExistingDirectDraw != NULL );
 	Assert ( pNewSurfaceDesc != NULL );
 	Assert ( ppNewSurface1 != NULL );
@@ -32,6 +26,7 @@ DDCreateSurface (	LPDIRECTDRAW2 pExistingDirectDraw,
 
 	//get the direct draw surface 2 interface
 	ATTEMPT ( IDirectDrawSurface_QueryInterface ( *ppNewSurface1,	&IID_IDirectDrawSurface2, (LPVOID*) ppNewSurface2 ) );
+#endif
 }
 
 
@@ -85,6 +80,9 @@ DDCreateSurfaceInMemory ( LPDIRECTDRAW2 pExistingDirectDraw,
 // Lock, unlock calls
 void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFACEDESC pSurfaceDesc, UINT32 uiFlags, HANDLE hEvent )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HRESULT ReturnCode;
 
 	Assert( pSurface != NULL );
@@ -100,20 +98,26 @@ void DDLockSurface ( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFAC
 	} while( ReturnCode == DDERR_WASSTILLDRAWING );
 
 	ATTEMPT( ReturnCode );
-
+#endif
 }
 
 void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_Unlock( pSurface, pSurfaceData ) );
-
+#endif
 }
 
 
 void DDGetSurfaceDescription ( LPDIRECTDRAWSURFACE2 pSurface, DDSURFACEDESC *pSurfaceDesc )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert ( pSurface != NULL );
 	Assert ( pSurfaceDesc != NULL );
 
@@ -121,15 +125,19 @@ void DDGetSurfaceDescription ( LPDIRECTDRAWSURFACE2 pSurface, DDSURFACEDESC *pSu
 	pSurfaceDesc->dwSize = sizeof ( DDSURFACEDESC );
 
 	ATTEMPT ( IDirectDrawSurface2_GetSurfaceDesc ( pSurface, pSurfaceDesc ) );
+#endif
 }
 
 void DDGetSurfaceCaps ( LPDIRECTDRAWSURFACE2 pSurface, DDSCAPS *pSurfaceCaps )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL  );
 	Assert( pSurfaceCaps != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_GetCaps( pSurface, pSurfaceCaps ) );
-
+#endif
 }
 
 void DDCreateRasterSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHeight,
@@ -137,6 +145,9 @@ void DDCreateRasterSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHei
 									  LPDIRECTDRAWSURFACE *ppRasterSurface1,
 									  LPDIRECTDRAWSURFACE2 *ppRasterSurface2 )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	DDSURFACEDESC	DDSurfaceDesc;
 
 	// validate used portions of the structure
@@ -154,6 +165,7 @@ void DDCreateRasterSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHei
 	DDSurfaceDesc.dwHeight	= iHeight;
 	DDSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_3DDEVICE | DDSCAPS_OFFSCREENPLAIN;
 	DDCreateSurfaceInMemory ( pDirectDraw, &DDSurfaceDesc, fVideoMemory, ppRasterSurface1, ppRasterSurface2 );
+#endif
 }
 
 void DDCreateZBufferSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHeight,
@@ -161,6 +173,9 @@ void DDCreateZBufferSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHe
 									  LPDIRECTDRAWSURFACE *ppZBufferSurface1,
 									  LPDIRECTDRAWSURFACE2 *ppZBufferSurface2 )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	DDSURFACEDESC	DDSurfaceDesc;
 
 	// validate used portions of the structure
@@ -179,35 +194,47 @@ void DDCreateZBufferSurface ( LPDIRECTDRAW2 pDirectDraw, INT32 iWidth, INT32 iHe
 	DDSurfaceDesc.dwZBufferBitDepth	= 16;
 	DDSurfaceDesc.ddsCaps.dwCaps		= DDSCAPS_ZBUFFER;
 	DDCreateSurfaceInMemory ( pDirectDraw, &DDSurfaceDesc, fVideoMemory, ppZBufferSurface1, ppZBufferSurface2 );
+#endif
 }
 
 void
 DDAddAttachedSurface (	LPDIRECTDRAWSURFACE2 pParentSurface,
 							LPDIRECTDRAWSURFACE2 pAddChildSurface )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert ( pParentSurface != NULL  );
 	Assert ( pAddChildSurface != NULL );
 
 	// attach the child to the parent surface
 	ATTEMPT ( IDirectDrawSurface2_AddAttachedSurface ( pParentSurface,
 								pAddChildSurface ) );
+#endif
 }
 
 void
 DDDeleteAttachedSurface (	LPDIRECTDRAWSURFACE2 pParentSurface,
 							LPDIRECTDRAWSURFACE2 pDeleteChildSurface )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert ( pParentSurface != NULL  );
 	Assert ( pDeleteChildSurface != NULL );
 
 	// seperate the z buffer surface from the raster surface
 	ATTEMPT ( IDirectDrawSurface2_DeleteAttachedSurface ( pParentSurface,
 									0, pDeleteChildSurface ) );
+#endif
 }
 
 void
 DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppOldSurface2 )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert ( ppOldSurface1 != NULL );
 	Assert ( ppOldSurface2 != NULL );
 	Assert ( *ppOldSurface1 != NULL );
@@ -218,19 +245,27 @@ DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppO
 
 	*ppOldSurface1 = NULL;
 	*ppOldSurface2 = NULL;
+#endif
 }
 
 void DDRestoreSurface( LPDIRECTDRAWSURFACE2 pSurface )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_Restore( pSurface ) );
+#endif
 }
 
 
 void DDBltFastSurface( LPDIRECTDRAWSURFACE2 pDestSurface, UINT32 uiX, UINT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface,
 							LPRECT pSrcRect, UINT32 uiTrans)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HRESULT ReturnCode;
 
 	Assert( pDestSurface != NULL  );
@@ -241,13 +276,16 @@ void DDBltFastSurface( LPDIRECTDRAWSURFACE2 pDestSurface, UINT32 uiX, UINT32 uiY
 		ReturnCode = IDirectDrawSurface2_SGPBltFast( pDestSurface, uiX, uiY, pSrcSurface, pSrcRect, uiTrans );
 
 	} while( ReturnCode == DDERR_WASSTILLDRAWING );
+#endif
 }
 
 
 void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECTDRAWSURFACE2 pSrcSurface,
 					    LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HRESULT ReturnCode;
 
 	Assert( pDestSurface != NULL  );
@@ -259,138 +297,185 @@ void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECT
 	} while( ReturnCode == DDERR_WASSTILLDRAWING );
 
 	ATTEMPT( ReturnCode );
+#endif
 }
 
 
 void DDCreatePalette( LPDIRECTDRAW2 pDirectDraw, UINT32 uiFlags, LPPALETTEENTRY pColorTable, LPDIRECTDRAWPALETTE FAR *ppDDPalette,
 								IUnknown FAR * pUnkOuter)
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pDirectDraw != NULL );
 
 	ATTEMPT( IDirectDraw2_CreatePalette( pDirectDraw, uiFlags, pColorTable, ppDDPalette, pUnkOuter ) );
-
+#endif
 }
 
 void DDSetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE pDDPalette )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pDDPalette != NULL  );
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_SetPalette( pSurface, pDDPalette ) );
-
+#endif
 }
 
 void DDGetSurfacePalette( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWPALETTE *ppDDPalette )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( ppDDPalette != NULL );
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_GetPalette( pSurface, ppDDPalette ) );
-
+#endif
 }
 
 void DDSetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 uiStartingEntry,
 								UINT32 uiCount, LPPALETTEENTRY pEntries )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pPalette != NULL );
 	Assert( pEntries != NULL );
 
 	ATTEMPT( IDirectDrawPalette_SetEntries( pPalette, uiFlags, uiStartingEntry, uiCount, pEntries ) );
-
+#endif
 }
 
 void DDGetPaletteEntries( LPDIRECTDRAWPALETTE pPalette, UINT32 uiFlags, UINT32 uiBase,
 								UINT32 uiNumEntries, LPPALETTEENTRY pEntries )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pPalette != NULL );
 	Assert( pEntries != NULL );
 
 	ATTEMPT( IDirectDrawPalette_GetEntries( pPalette, uiFlags, uiBase, uiNumEntries, pEntries ) );
-
+#endif
 }
 
 void DDReleasePalette( LPDIRECTDRAWPALETTE pPalette )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pPalette != NULL );
 
 	ATTEMPT( IDirectDrawPalette_Release( pPalette ) );
+#endif
 }
 
 void DDGetDC( LPDIRECTDRAWSURFACE2 pSurface, HDC *phDC )
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 	Assert( phDC != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_GetDC( pSurface, phDC ) );
-
+#endif
 }
 
 void DDReleaseDC( LPDIRECTDRAWSURFACE2 pSurface, HDC hDC )
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_ReleaseDC( pSurface, hDC ) );
-
+#endif
 }
 
 void DDSetSurfaceColorKey( LPDIRECTDRAWSURFACE2 pSurface, UINT32 uiFlags, LPDDCOLORKEY pDDColorKey )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 	Assert( pDDColorKey != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_SetColorKey( pSurface, uiFlags, pDDColorKey ) );
-
+#endif
 }
 
 void DDGetDDInterface( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAW *ppDirectDraw )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 	Assert( ppDirectDraw != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_GetDDInterface( pSurface, ppDirectDraw ) );
+#endif
 }
 
 // Clipper FUnctions
 void DDCreateClipper( LPDIRECTDRAW2 pDirectDraw, UINT32 fFlags, LPDIRECTDRAWCLIPPER *pDDClipper )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pDirectDraw != NULL );
 	Assert( pDDClipper != NULL );
 
 	ATTEMPT( IDirectDraw2_CreateClipper( pDirectDraw, 0, pDDClipper, NULL ) );
-
+#endif
 }
 
 void DDSetClipper( LPDIRECTDRAWSURFACE2 pSurface, LPDIRECTDRAWCLIPPER pDDClipper )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pSurface != NULL );
 	Assert( pDDClipper != NULL );
 
 	ATTEMPT( IDirectDrawSurface2_SetClipper( pSurface, pDDClipper ) );
-
+#endif
 }
 
 void DDReleaseClipper( LPDIRECTDRAWCLIPPER pDDClipper )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pDDClipper != NULL );
 
 	ATTEMPT( IDirectDrawClipper_Release( pDDClipper ) );
+#endif
 }
 
 void DDSetClipperList( LPDIRECTDRAWCLIPPER pDDClipper, LPRGNDATA pClipList, UINT32 uiFlags)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	Assert( pDDClipper != NULL );
 	Assert( pClipList != NULL );
 
 	ATTEMPT( IDirectDrawClipper_SetClipList( pDDClipper, pClipList, uiFlags ) );
+#endif
 }
 
 
 
 HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 uiX, INT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiTrans )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	DDSURFACEDESC SurfaceDescription;
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;
@@ -447,11 +532,15 @@ HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 
 	DDUnlockSurface( (LPDIRECTDRAWSURFACE2)pSrcSurface, NULL );
 
 	return( DD_OK );
+#endif
 }
 
 
 HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	DDSURFACEDESC SurfaceDescription;
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;
@@ -541,4 +630,5 @@ HRESULT BltDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDe
 	}
 
 	return( DD_OK );
+#endif
 }

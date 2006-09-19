@@ -1,32 +1,20 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-	#include "resource.h"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include "Video.h"
-	#include "VObject_Blitters.h"
-	#include "SGP.h"
-	#include <stdio.h>
-	#include "RenderWorld.h"
-	#include "Render_Dirty.h"
-	#include "Isometric_Utils.h"
-	#include "Fade_Screen.h"
-	#include "ImpTGA.h"
-	#include "Timer_Control.h"
-	#include "FileMan.h"
-#endif
+#include "Debug.h"
+#include "Fade_Screen.h"
+#include "FileMan.h"
+#include "ImpTGA.h"
+#include "Isometric_Utils.h"
+#include "Local.h"
+#include "MemMan.h"
+#include "RenderWorld.h"
+#include "Render_Dirty.h"
+#include "SGP.h"
+#include "Timer_Control.h"
+#include "Types.h"
+#include "VObject_Blitters.h"
+#include "Video.h"
+#include <stdarg.h>
+#include <stdio.h>
 
-#ifndef _MT
-	#define _MT
-#endif
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Local Defines
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define MAX_DIRTY_REGIONS     128
 
@@ -43,12 +31,6 @@
 #define PREVIOUS_MOUSE_DATA		1
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Local Typedefs
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 typedef struct
 {
   BOOLEAN                 fRestore;
@@ -60,21 +42,10 @@ typedef struct
 
 } MouseCursorBackground;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// LOCAL globals
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//
-// Video state variables
-//
 
 static UINT16                 gusScreenWidth;
 static UINT16                 gusScreenHeight;
 static UINT8                  gubScreenPixelDepth;
-
-static RECT    gScrollRegion;
 
 #define			MAX_NUM_FRAMES			25
 
@@ -199,11 +170,11 @@ void VideoMovieCapture( BOOLEAN fEnable );
 void RefreshMovieCache( );
 
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *WindowProc)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   UINT32        uiIndex, uiPitch;
   HRESULT       ReturnCode;
   HWND          hWindow;
@@ -574,11 +545,15 @@ BOOLEAN InitializeVideoManager(HINSTANCE hInstance, UINT16 usCommandShow, void *
 
 
   return TRUE;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShutdownVideoManager(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   //UINT32  uiRefreshThreadState;
 
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
@@ -613,9 +588,9 @@ void ShutdownVideoManager(void)
   FreeMouseCursor( );
 
   UnRegisterDebugTopic(TOPIC_VIDEO, "Video");
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SuspendVideoManager(void)
 {
@@ -623,17 +598,12 @@ void SuspendVideoManager(void)
 
 }
 
-void DoTester( )
-{
-  IDirectDraw2_RestoreDisplayMode( gpDirectDrawObject );
-  IDirectDraw2_SetCooperativeLevel(gpDirectDrawObject, ghWindow, DDSCL_NORMAL );
-  ShowCursor(TRUE);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOLEAN RestoreVideoManager(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HRESULT ReturnCode;
 
   //
@@ -695,6 +665,7 @@ BOOLEAN RestoreVideoManager(void)
   {
     return FALSE;
   }
+#endif
 }
 
 
@@ -857,9 +828,11 @@ void InvalidateScreen(void)
 
 //#define SCROLL_TEST
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip, UINT32 uiCurrentMouseBackbuffer )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT16 usWidth, usHeight;
 	UINT8	 ubBitDepth;
   HRESULT ReturnCode;
@@ -1373,12 +1346,15 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 	//UpdateSaveBuffer();
 	//SaveBackgroundRects();
+#endif
 }
-
 
 
 void RefreshScreen(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   static UINT32  uiRefreshThreadState, uiIndex;
   UINT16  usScreenWidth, usScreenHeight;
   static BOOLEAN fShowMouse;
@@ -2187,7 +2163,7 @@ ENDOFLOOP:
 
 
 	fFirstTime = FALSE;
-
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2248,6 +2224,9 @@ LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
 
 PTR LockPrimarySurface(UINT32 *uiPitch)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
 
@@ -2269,12 +2248,15 @@ PTR LockPrimarySurface(UINT32 *uiPitch)
 
   *uiPitch = SurfaceDescription.lPitch;
   return SurfaceDescription.lpSurface;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockPrimarySurface(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
 
@@ -2285,12 +2267,15 @@ void UnlockPrimarySurface(void)
   {
     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
   }
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockBackBuffer(UINT32 *uiPitch)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
 
@@ -2319,12 +2304,15 @@ PTR LockBackBuffer(UINT32 *uiPitch)
 
   *uiPitch = SurfaceDescription.lPitch;
   return SurfaceDescription.lpSurface;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockBackBuffer(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
 
@@ -2343,12 +2331,15 @@ void UnlockBackBuffer(void)
   {
     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
   }
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockFrameBuffer(UINT32 *uiPitch)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
 
@@ -2372,12 +2363,15 @@ PTR LockFrameBuffer(UINT32 *uiPitch)
   *uiPitch = SurfaceDescription.lPitch;
 
   return SurfaceDescription.lpSurface;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockFrameBuffer(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
 
@@ -2389,12 +2383,15 @@ void UnlockFrameBuffer(void)
   {
     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
   }
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PTR LockMouseBuffer(UINT32 *uiPitch)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
 
@@ -2411,12 +2408,15 @@ PTR LockMouseBuffer(UINT32 *uiPitch)
   *uiPitch = SurfaceDescription.lPitch;
 
   return SurfaceDescription.lpSurface;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void UnlockMouseBuffer(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
 
@@ -2427,6 +2427,7 @@ void UnlockMouseBuffer(void)
   {
     DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
   }
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2437,6 +2438,9 @@ void UnlockMouseBuffer(void)
 
 BOOLEAN GetRGBDistribution(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 DDSURFACEDESC SurfaceDescription;
 UINT16        usBit;
 HRESULT       ReturnCode;
@@ -2501,9 +2505,9 @@ HRESULT       ReturnCode;
 	}
 
   return TRUE;
+#endif
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BlueBitMask)
 {
@@ -2635,9 +2639,12 @@ void PrintScreen(void)
   gfPrintFrameBuffer = TRUE;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOLEAN Set8BPPPalette(SGPPaletteEntry *pPalette)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 HRESULT       ReturnCode;
 
   // If we are in 256 colors, then we have to initialize the palette system to 0 (faded out)
@@ -2672,12 +2679,15 @@ HRESULT       ReturnCode;
   }
 
 	return(TRUE);
+#endif
 }
 
 
-
-void FatalError( UINT8 *pError, ...)
+void FatalError(const char *pError, ...)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	va_list argptr;
 
 	va_start(argptr, pError);       	// Set up variable argument pointer
@@ -2698,7 +2708,7 @@ void FatalError( UINT8 *pError, ...)
 	gfProgramIsRunning = FALSE;
 
 	MessageBox( ghWindow, gFatalErrorString, "JA2 Fatal Error", MB_OK | MB_TASKMODAL );
-
+#endif
 }
 
 
@@ -2736,6 +2746,9 @@ typedef struct {
 
 void SnapshotSmall(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT32 iCountX, iCountY;
   DDSURFACEDESC SurfaceDescription;
 	UINT16 *pVideo, *pDest;
@@ -2808,7 +2821,7 @@ void SnapshotSmall(void)
   }
 
 //	fclose(disk);
-
+#endif
 }
 
 
@@ -2855,7 +2868,7 @@ void RefreshMovieCache( )
 	TARGA_HEADER Header;
 	INT32 iCountX, iCountY;
 	FILE *disk;
-	CHAR8 cFilename[_MAX_PATH];
+	CHAR8 cFilename[2048];
 	static UINT32 uiPicNum=0;
 	UINT16 *pDest;
 	INT32	cnt;

@@ -19,28 +19,15 @@
 //
 //**************************************************************************
 
-//**************************************************************************
-//
-//				Includes
-//
-//**************************************************************************
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include <stdlib.h>
-	#include <stdio.h>
-
-	#include "FileMan.h"
-	#include "MemMan.h"
-	#include "DbMan.h"
-	#include "Debug.h"
-	#include "RegInst.h"
-	#include "Container.h"
-	#include "LibraryDataBase.h"
-#endif
+#include "Container.h"
+#include "Debug.h"
+#include "FileMan.h"
+#include "LibraryDataBase.h"
+#include "MemMan.h"
+#include "RegInst.h"
+#include "Types.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 #define FILENAME_LENGTH					600
@@ -189,7 +176,7 @@ BOOLEAN FileExists(const char *strFilename)
 //
 //**************************************************************************
 
-BOOLEAN FileExistsNoDB( STR strFilename )
+BOOLEAN FileExistsNoDB(const char *strFilename)
 {
 	BOOLEAN	fExists = FALSE;
 	FILE		*file;
@@ -234,7 +221,11 @@ BOOLEAN FileExistsNoDB( STR strFilename )
 
 BOOLEAN FileDelete(const char *strFilename)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	return( DeleteFile( strFilename ) );
+#endif
 }
 
 //**************************************************************************
@@ -263,17 +254,18 @@ BOOLEAN FileDelete(const char *strFilename)
 
 HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HWFILE	hFile;
 	HANDLE	hRealFile;
 	DWORD		dwAccess;
 	DWORD		dwFlagsAndAttributes;
-	HDBFILE	hDBFile;
 	BOOLEAN	fExists;
 	DWORD		dwCreationFlags;
 	HWFILE hLibFile;
 
 	hFile = 0;
-	hDBFile = 0;
 	dwCreationFlags = 0;
 
 	// check if the file exists - note that we use the function FileExistsNoDB
@@ -388,6 +380,7 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 		return(0);
 
 	return(hFile);
+#endif
 }
 
 
@@ -412,6 +405,9 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 
 void FileClose( HWFILE hFile )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 
@@ -440,6 +436,7 @@ void FileClose( HWFILE hFile )
 		if( gFileDataBase.fInitialized )
 			CloseLibraryFile( sLibraryID, uiFileNum );
 	}
+#endif
 }
 
 //**************************************************************************
@@ -477,6 +474,9 @@ void FileClose( HWFILE hFile )
 
 BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hRealFile;
 	DWORD		dwNumBytesToRead, dwNumBytesRead;
 	BOOLEAN	fRet = FALSE;
@@ -544,6 +544,7 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 	#endif
 
 	return(fRet);
+#endif
 }
 
 //**************************************************************************
@@ -575,6 +576,9 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 
 BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hRealFile;
 	DWORD		dwNumBytesToWrite, dwNumBytesWritten;
 	BOOLEAN	fRet;
@@ -609,6 +613,7 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	}
 
 	return(fRet);
+#endif
 }
 
 //**************************************************************************
@@ -686,6 +691,9 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hRealFile;
 	LONG		lDistanceToMove;
 	DWORD		dwMoveMethod;
@@ -728,6 +736,7 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 	}
 
 	return(TRUE);
+#endif
 }
 
 //**************************************************************************
@@ -755,6 +764,9 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 
 INT32 FileGetPos( HWFILE hFile )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hRealFile;
 	UINT32	uiPositionInFile=0;
 
@@ -791,6 +803,7 @@ INT32 FileGetPos( HWFILE hFile )
 	}
 
 	return(BAD_INDEX);
+#endif
 }
 
 //**************************************************************************
@@ -818,6 +831,9 @@ INT32 FileGetPos( HWFILE hFile )
 
 UINT32 FileGetSize( HWFILE hFile )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE  hRealHandle;
 	UINT32	uiFileSize = 0xFFFFFFFF;
 
@@ -846,27 +862,39 @@ UINT32 FileGetSize( HWFILE hFile )
 		return(0);
 	else
 		return( uiFileSize );
+#endif
 }
 
 
-BOOLEAN SetFileManCurrentDirectory( STR pcDirectory )
+BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	 return( SetCurrentDirectory( pcDirectory ) );
+#endif
 }
 
 
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if (GetCurrentDirectory( 512, pcDirectory ) == 0)
 	{
 		return( FALSE );
 	}
 	return( TRUE );
+#endif
 }
 
 
 BOOLEAN DirectoryExists( STRING512 pcDirectory )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiAttribs;
 	DWORD		uiLastError;
 
@@ -893,12 +921,17 @@ BOOLEAN DirectoryExists( STRING512 pcDirectory )
 
 	// this could also mean that the name given is that of a file, or that an error occurred
 	return FALSE;
+#endif
 }
 
 
-BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
+BOOLEAN MakeFileManDirectory(const char *pcDirectory)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	return CreateDirectory( pcDirectory, NULL );
+#endif
 }
 
 
@@ -906,8 +939,11 @@ BOOLEAN MakeFileManDirectory( STRING512 pcDirectory )
 // Removes ALL FILES in the specified directory (and all subdirectories with their files if fRecursive is TRUE)
 // Use EraseDirectory() to simply delete directory contents without deleting the directory itself
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
+BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
 	const CHAR8	*pFileSpec = "*.*";
@@ -984,6 +1020,7 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 	}
 
 	return fRetval;
+#endif
 }
 
 
@@ -991,8 +1028,11 @@ BOOLEAN RemoveFileManDirectory( STRING512 pcDirectory, BOOLEAN fRecursive )
 // Removes ALL FILES in the specified directory but leaves the directory alone.  Does not affect any subdirectories!
 // Use RemoveFilemanDirectory() to also delete the directory itself, or to recursively delete subdirectories.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOLEAN EraseDirectory( STRING512 pcDirectory)
+BOOLEAN EraseDirectory(const char *pcDirectory)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
 	const CHAR8	*pFileSpec = "*.*";
@@ -1039,11 +1079,15 @@ BOOLEAN EraseDirectory( STRING512 pcDirectory)
 	}
 
 	return( TRUE );
+#endif
 }
 
 
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	SGPFILENAME	ModuleFilename;
 	UINT32 cnt;
 
@@ -1065,11 +1109,15 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 	}
 
 	return( TRUE );
+#endif
 }
 
 
-BOOLEAN GetFileFirst( CHAR8 *pSpec, GETFILESTRUCT *pGFStruct )
+BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
 
@@ -1100,10 +1148,14 @@ BOOLEAN GetFileFirst( CHAR8 *pSpec, GETFILESTRUCT *pGFStruct )
 	W32toSGPFileFind( pGFStruct, &Win32FindInfo[iWhich] );
 
 	return(TRUE);
+#endif
 }
 
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	CHECKF( pGFStruct != NULL );
 
 	if ( FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo[pGFStruct->iFindHandle]) )
@@ -1112,10 +1164,14 @@ BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 		return(TRUE);
 	}
 	return(FALSE);
+#endif
 }
 
 void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if ( pGFStruct == NULL )
 		return;
 
@@ -1124,10 +1180,14 @@ void GetFileClose( GETFILESTRUCT *pGFStruct )
 	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
 
 	return;
+#endif
 }
 
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32 uiAttribMask;
 
 	// Copy the filename
@@ -1183,11 +1243,15 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 				break;
 		}
 	}
+#endif
 }
 
 
-UINT32 FileGetAttributes( STR strFilename )
+UINT32 FileGetAttributes(const char *strFilename)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiAttribs = 0;
 	UINT32	uiFileAttrib = 0;
 
@@ -1223,20 +1287,28 @@ UINT32 FileGetAttributes( STR strFilename )
 
 
 	return( uiFileAttrib );
+#endif
 }
 
 
 
 
-BOOLEAN FileClearAttributes( STR strFilename )
+BOOLEAN FileClearAttributes(const char *strFilename)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	return SetFileAttributes( strFilename, FILE_ATTRIBUTE_NORMAL );
+#endif
 }
 
 
 //returns true if at end of file, else false
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 	HANDLE	hRealFile;
@@ -1302,12 +1374,16 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 
 	//we are not and the end of a file
 	return( 0 );
+#endif
 }
 
 
 
 BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	HANDLE	hRealFile;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -1363,16 +1439,21 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 	}
 
 	return( TRUE );
+#endif
 }
 
 
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	return( CompareFileTime( pFirstFileTime, pSecondFileTime ) );
+#endif
 }
 
 
-UINT32 FileSize(STR strFilename)
+UINT32 FileSize(const char *strFilename)
 {
 HWFILE hFile;
 UINT32 uiSize;
@@ -1417,6 +1498,9 @@ HANDLE	GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   STRING512		zExecDir;
   STRING512		zDrive;
 	STRING512		zDir;
@@ -1435,11 +1519,15 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 	uiFreeSpace = GetFreeSpaceOnHardDrive( zDrive );
 
 	return( uiFreeSpace );
+#endif
 }
 
 
 UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32			uiBytesFree=0;
 
 	UINT32			uiSectorsPerCluster=0;
@@ -1459,4 +1547,5 @@ UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
 	uiBytesFree = uiBytesPerSector * uiNumberOfFreeClusters * uiSectorsPerCluster;
 
 	return( uiBytesFree );
+#endif
 }

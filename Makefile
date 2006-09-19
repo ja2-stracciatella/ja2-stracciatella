@@ -1,6 +1,7 @@
 SDL_CONFIG = sdl-config
 #SDL_CONFIG = sdl11-config
 CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
+LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
 
 CFLAGS += $(CFLAGS_SDL)
 CFLAGS += -I ja2/Build
@@ -27,35 +28,37 @@ CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
 
+LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
+LDFLAGS += -lz
 
 SRCS :=
 SRCS += ja2/Build/AniViewScreen.c
 SRCS += ja2/Build/Credits.c
-SRCS += ja2/Build/Editor/Cursor_Modes.c
-SRCS += ja2/Build/Editor/EditScreen.c
-SRCS += ja2/Build/Editor/Edit_Sys.c
-SRCS += ja2/Build/Editor/EditorBuildings.c
-SRCS += ja2/Build/Editor/EditorItems.c
-SRCS += ja2/Build/Editor/EditorMapInfo.c
-SRCS += ja2/Build/Editor/EditorMercs.c
-SRCS += ja2/Build/Editor/EditorTerrain.c
-SRCS += ja2/Build/Editor/Editor_Callbacks.c
-SRCS += ja2/Build/Editor/Editor_Modes.c
-SRCS += ja2/Build/Editor/Editor_Taskbar_Creation.c
-SRCS += ja2/Build/Editor/Editor_Taskbar_Utils.c
-SRCS += ja2/Build/Editor/Editor_Undo.c
-SRCS += ja2/Build/Editor/Item_Statistics.c
-SRCS += ja2/Build/Editor/LoadScreen.c
-SRCS += ja2/Build/Editor/MessageBox.c
-SRCS += ja2/Build/Editor/NewSmooth.c
-SRCS += ja2/Build/Editor/PopupMenu.c
-SRCS += ja2/Build/Editor/Road_Smoothing.c
-SRCS += ja2/Build/Editor/Sector_Summary.c
-SRCS += ja2/Build/Editor/SelectWin.c
-SRCS += ja2/Build/Editor/SmartMethod.c
-SRCS += ja2/Build/Editor/Smooth.c
-SRCS += ja2/Build/Editor/Smoothing_Utils.c
+#SRCS += ja2/Build/Editor/Cursor_Modes.c
+#SRCS += ja2/Build/Editor/EditScreen.c
+#SRCS += ja2/Build/Editor/Edit_Sys.c
+#SRCS += ja2/Build/Editor/EditorBuildings.c
+#SRCS += ja2/Build/Editor/EditorItems.c
+#SRCS += ja2/Build/Editor/EditorMapInfo.c
+#SRCS += ja2/Build/Editor/EditorMercs.c
+#SRCS += ja2/Build/Editor/EditorTerrain.c
+#SRCS += ja2/Build/Editor/Editor_Callbacks.c
+#SRCS += ja2/Build/Editor/Editor_Modes.c
+#SRCS += ja2/Build/Editor/Editor_Taskbar_Creation.c
+#SRCS += ja2/Build/Editor/Editor_Taskbar_Utils.c
+#SRCS += ja2/Build/Editor/Editor_Undo.c
+#SRCS += ja2/Build/Editor/Item_Statistics.c
+#SRCS += ja2/Build/Editor/LoadScreen.c
+#SRCS += ja2/Build/Editor/MessageBox.c
+#SRCS += ja2/Build/Editor/NewSmooth.c
+#SRCS += ja2/Build/Editor/PopupMenu.c
+#SRCS += ja2/Build/Editor/Road_Smoothing.c
+#SRCS += ja2/Build/Editor/Sector_Summary.c
+#SRCS += ja2/Build/Editor/SelectWin.c
+#SRCS += ja2/Build/Editor/SmartMethod.c
+#SRCS += ja2/Build/Editor/Smooth.c
+#SRCS += ja2/Build/Editor/Smoothing_Utils.c
 SRCS += ja2/Build/Fade_Screen.c
 SRCS += ja2/Build/GameInitOptionsScreen.c
 SRCS += ja2/Build/GameLoop.c
@@ -64,7 +67,7 @@ SRCS += ja2/Build/GameSettings.c
 SRCS += ja2/Build/GameVersion.c
 SRCS += ja2/Build/HelpScreen.c
 SRCS += ja2/Build/Init.c
-#SRCS += ja2/Build/Intro.c
+SRCS += ja2/Build/Intro.c
 SRCS += ja2/Build/JA2_Splash.c
 SRCS += ja2/Build/JAScreens.c
 SRCS += ja2/Build/Laptop/AIM.c
@@ -271,7 +274,7 @@ SRCS += ja2/Build/TileEngine/Phys_Math.c
 SRCS += ja2/Build/TileEngine/Physics.c
 SRCS += ja2/Build/TileEngine/Pits.c
 SRCS += ja2/Build/TileEngine/Radar_Screen.c
-#SRCS += ja2/Build/TileEngine/RenderWorld.c # inline assembler
+SRCS += ja2/Build/TileEngine/RenderWorld.c # inline assembler
 SRCS += ja2/Build/TileEngine/Render_Dirty.c
 SRCS += ja2/Build/TileEngine/Render_Fun.c
 SRCS += ja2/Build/TileEngine/Render_Z.c
@@ -332,33 +335,34 @@ SRCS += sgp/Compression.c
 SRCS += sgp/Container.c
 SRCS += sgp/Cursor_Control.c
 SRCS += sgp/Debug.c
-#SRCS += sgp/DirectDraw_Calls.c
+SRCS += sgp/DirectDraw_Calls.c
 #SRCS += sgp/DirectX_Common.c
 SRCS += sgp/English.c
-#SRCS += sgp/FileMan.c
+SRCS += sgp/FileMan.c
 #SRCS += sgp/Flic.c
 SRCS += sgp/Font.c
 SRCS += sgp/HImage.c
 SRCS += sgp/ImpTGA.c
-#SRCS += sgp/Input.c
+SRCS += sgp/Input.c
 #SRCS += sgp/Install.c
-SRCS += sgp/JA2_Libs.c
-#SRCS += sgp/LibraryDataBase.c
+#SRCS += sgp/JA2_Libs.c # XXX is included in sgp/LibraryDataBase.c
+SRCS += sgp/LibraryDataBase.c
 SRCS += sgp/Line.c
-#SRCS += sgp/MemMan.c
+SRCS += sgp/MemMan.c
 SRCS += sgp/MouseSystem.c
 SRCS += sgp/PCX.c
 SRCS += sgp/Random.c
 #SRCS += sgp/RegInst.c
-#SRCS += sgp/SGP.c
+SRCS += sgp/SGP.c
 SRCS += sgp/STCI.c
-#SRCS += sgp/Shading.c # inline assembler
-#SRCS += sgp/SoundMan.c
+SRCS += sgp/Shading.c # inline assembler
+SRCS += sgp/SoundMan.c
+SRCS += sgp/Stubs.c
 SRCS += sgp/Timer.c
 SRCS += sgp/VObject.c
-#SRCS += sgp/VObject_Blitters.c # inline assembler
-#SRCS += sgp/VSurface.c
-#SRCS += sgp/Video.c
+SRCS += sgp/VObject_Blitters.c # inline assembler
+SRCS += sgp/VSurface.c
+SRCS += sgp/Video.c
 #SRCS += sgp/WinFont.c
 
 DEPS = $(SRCS:.c=.d)
@@ -377,7 +381,7 @@ endif
 
 ja: $(OBJS)
 	@echo '===> LD $@'
-	@#$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@ # XXX Do not link
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 
 .c.o:
 	@echo '===> CC $<'

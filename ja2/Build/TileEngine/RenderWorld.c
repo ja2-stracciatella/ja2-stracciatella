@@ -1,52 +1,30 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
-
-	#include "WorldDef.h"
-	#include "RenderWorld.h"
-	#include "VSurface.h"
-	#include "Input.h"
-	#include "SysUtil.h"
-	#include "wchar.h"
-	#include "Video.h"
-	#include "VObject_Blitters.h"
-	#include "Debug.h"
-	#include "WCheck.h"
-	#include "WorldMan.h"
-	#include "JAScreens.h"
-	#include "Edit_Sys.h"
-	#include "Isometric_Utils.h"
-	#include "Line.h"
-	#include "Animation_Control.h"
-	#include "Animation_Data.h"
-	#include "Timer_Control.h"
-	#include "Radar_Screen.h"
-	#include "Render_Dirty.h"
-	#include "Font_Control.h"
-	#include "Sys_Globals.h"
-	#include "Render_Dirty.h"
-	#include "Lighting.h"
-	#include "Overhead_Types.h"
-	#include "Overhead.h"
-	#include "Weapons.h"
-	#include "AI.h"
-	#include "VObject.h"
-	#include "Render_Fun.h"
-	#include "LOS.h"
-	#include "Interactive_Tiles.h"
-	#include "Interface_Cursors.h"
-	#include "Rotting_Corpses.h"
-	#include "Tile_Cache.h"
-	#include "Tile_Animation.h"
-	#include "English.h"
-	#include "World_Items.h"
-	#include "GameSettings.h"
-	#include "Interface_Control.h"
-	#include "Sound_Control.h"
-#endif
+#include "Animation_Control.h"
+#include "Animation_Data.h"
+#include "Debug.h"
+#include "English.h"
+#include "Font_Control.h"
+#include "GameSettings.h"
+#include "Handle_UI.h"
+#include "Interactive_Tiles.h"
+#include "Interface_Control.h"
+#include "Overhead.h"
+#include "Radar_Screen.h"
+#include "Render_Dirty.h"
+#include "Render_Fun.h"
+#include "RenderWorld.h"
+#include "Rotting_Corpses.h"
+#include "SGP.h"
+#include "Shading.h"
+#include "Sound_Control.h"
+#include "SysUtil.h"
+#include "Sys_Globals.h"
+#include "Tile_Cache.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
+#include "WCheck.h"
+#include "WorldMan.h"
+#include <math.h>
+#include <stdio.h>
 
 
 ///////////////////////////
@@ -4462,6 +4440,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPit
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4720,6 +4701,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }
@@ -4860,6 +4842,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *pBuffer
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5118,6 +5103,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }
@@ -5264,6 +5250,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5542,6 +5531,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }
@@ -5678,6 +5668,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5968,6 +5961,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }
@@ -6140,6 +6134,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip( UINT16 *pBuffer, UINT3
 	usZLevel=usZStartLevel;
 	usZIndex=usZStartIndex;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6410,6 +6407,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7155,6 +7153,9 @@ BOOLEAN Zero8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitc
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7237,6 +7238,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7279,6 +7281,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransInvZ( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7347,6 +7352,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7389,6 +7395,9 @@ BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(1280-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7451,6 +7460,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(fHidden);
 

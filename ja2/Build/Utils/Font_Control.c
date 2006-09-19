@@ -7,7 +7,6 @@
 	#include "SGP.h"
 	#include "HImage.h"
 	#include "VSurface.h"
-	#include "VSurface_Private.h"
 	#include "WCheck.h"
 	#include "Font_Control.h"
 	#include "WinFont.h"

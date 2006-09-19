@@ -1,6 +1,12 @@
 #ifndef __TYPES_
 #define __TYPES_
 
+#include <stdio.h>
+#include <stdlib.h>
+#define UNIMPLEMENTED() \
+	fprintf(stderr, "===> %s:%d: %s is not implemented\n", __FILE__, __LINE__, __func__); \
+	abort();
+
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 
 #ifndef _SIRTECH_TYPES_

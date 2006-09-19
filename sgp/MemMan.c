@@ -350,6 +350,9 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 
 PTR *MemAllocLocked( UINT32 uiSize )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	PTR	ptr;
 
 	if ( !fMemManagerInit )
@@ -376,11 +379,15 @@ PTR *MemAllocLocked( UINT32 uiSize )
 #endif
 
 	return( ptr );
+#endif
 }
 
 
 void MemFreeLocked( PTR ptr, UINT32 uiSize )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if ( !fMemManagerInit )
     DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
 
@@ -406,6 +413,7 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 #ifdef DEBUG_MEM_LEAKS
   DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
 #endif
+#endif
 }
 
 
@@ -425,12 +433,16 @@ void MemFreeLocked( PTR ptr, UINT32 uiSize )
 
 UINT32 MemGetFree( void )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
 	GlobalMemoryStatus( &ms );
 
 	return( ms.dwAvailPhys );
+#endif
 }
 
 
@@ -450,12 +462,16 @@ UINT32 MemGetFree( void )
 
 UINT32 MemGetTotalSystem( void )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	MEMORYSTATUS ms;
 
 	ms.dwLength = sizeof(MEMORYSTATUS);
 	GlobalMemoryStatus( &ms );
 
 	return( ms.dwTotalPhys );
+#endif
 }
 
 

@@ -1,28 +1,32 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-	#include "Intro.h"
-	#include "Cinematics.h"
-#else
-	#include "SGP.h"
-	#include "Sys_Globals.h"
-	#include "SysUtil.h"
-	#include "VObject_Blitters.h"
-	#include "WCheck.h"
-	#include "Cursors.h"
-	#include "Font_Control.h"
-	#include "Cursor_Control.h"
-	#include "Render_Dirty.h"
-	#include "GameScreen.h"
-	#include	"Text.h"
-	#include	"Utilities.h"
-	#include	"WordWrap.h"
-	#include "Font_Control.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Line.h"
-	#include "Intro.h"
-	#include "Cinematics.h"
-#endif
+#include "Cinematics.h"
+#include "Cursor_Control.h"
+#include "Cursors.h"
+#include "Debug.h"
+#include "English.h"
+#include "Font_Control.h"
+#include "Game_Init.h"
+#include "GameScreen.h"
+#include "Intro.h"
+#include "LibraryDataBase.h"
+#include "Line.h"
+#include "Local.h"
+#include "MainMenuScreen.h"
+#include "MessageBoxScreen.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Music_Control.h"
+#include "Render_Dirty.h"
+#include "ScreenIDs.h"
+#include "SGP.h"
+#include "Soldier_Profile.h"
+#include "SysUtil.h"
+#include "Sys_Globals.h"
+#include "Text.h"
+#include "Text.h"
+#include "Utilities.h"
+#include "Video.h"
+#include "VObject_Blitters.h"
+#include "WCheck.h"
+#include "WordWrap.h"
 
 extern STR16	gzIntroScreen[];
 extern HVSURFACE ghFrameBuffer;
@@ -75,7 +79,7 @@ enum
 
 INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 
-CHAR		*gpzSmackerFileNames[] =
+const char *gpzSmackerFileNames[] =
 {
 	//begining of the game
 	"INTRO\\Rebel_cr.smk",
@@ -166,6 +170,9 @@ UINT32	IntroScreenHandle( void )
 
 BOOLEAN EnterIntroScreen()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	INT32 iFirstVideoID = -1;
 
 	ClearMainMenu();
@@ -213,6 +220,7 @@ BOOLEAN EnterIntroScreen()
 
 
 	return( TRUE );
+#endif
 }
 
 void RenderIntroScreen()
@@ -221,13 +229,19 @@ void RenderIntroScreen()
 
 void ExitIntroScreen()
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	//shutdown smaker
 	SmkShutdown();
+#endif
 }
 
 void HandleIntroScreen()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
 	//if we are exiting this screen, this frame, dont update the screen
@@ -257,12 +271,16 @@ void HandleIntroScreen()
 	}
 
 	InvalidateScreen();
+#endif
 }
 
 
 
 void		GetIntroScreenUserInput()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	InputAtom Event;
 	POINT  MousePos;
 
@@ -326,6 +344,7 @@ void		GetIntroScreenUserInput()
 		//advance to the next flic
 		SmkCloseFlic( gpSmackFlic );
 	}
+#endif
 }
 
 
@@ -440,7 +459,9 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
-
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if( iIndexOfFlicToPlay != -1 )
 	{
 		//start playing a flic
@@ -461,6 +482,7 @@ void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 #endif
 		}
 	}
+#endif
 }
 
 

@@ -3,7 +3,7 @@
 
 
 #ifdef __RAD32__
-  #include "malloc.h"
+  #include <stdlib.h>
 
   #define radmalrad malloc
   #define radfrrad free
@@ -17,7 +17,7 @@
       #define radfree GlobalFreePtr
     #endif
   #else
-    #include "malloc.h"
+    #include <stdlib.h>
     #define radmalrad(num) _fmalloc((int)num)
     #define radfrrad _ffree
   #endif
@@ -34,7 +34,7 @@ RADEXPFUNC void PTR4* RADEXPLINK radmalloc(u32 numbytes)
 
   if ((numbytes==0) || (numbytes==0xffffffff))
     return(0);
-  
+
   temp=(u8 PTR4*)radmalrad(numbytes+16);
   if (temp==0)
     return(0);
@@ -48,10 +48,10 @@ RADEXPFUNC void PTR4* RADEXPLINK radmalloc(u32 numbytes)
 
 RADEXPFUNC void RADEXPLINK radfree(void PTR4* ptr)
 {
-  if (ptr) 
+  if (ptr)
     radfrrad( ((u8 PTR4*)ptr)-((u8 PTR4*)ptr)[-1] );
 }
-  
+
 #endif
 */
 #endif

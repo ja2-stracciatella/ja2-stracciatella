@@ -35,7 +35,7 @@ RADEXPFUNC void RADEXPLINK radfree(void PTR4* ptr)
 
 #else
 
-#include "radmal.i"
+#include "RADMAL.I"
 
 #endif
 

@@ -5,20 +5,13 @@
 *
 * Derek Beland, May 28, 1997
 *********************************************************************************/
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include <stdio.h>
-	#include <string.h>
-	#include "SoundMan.h"
-	#include "FileMan.h"
-	#include "Debug.h"
-	#include "MemMan.h"
-	#include "Mss.h"
-	#include "Random.h"
-#endif
+
+#include "Debug.h"
+#include "FileMan.h"
+#include "LibraryDataBase.h"
+#include "Random.h"
+#include "SoundMan.h"
+#include <string.h>
 
 // Uncomment this to disable the startup of sound hardware
 //#define SOUND_DISABLE
@@ -145,13 +138,16 @@ UINT32 uiCount;
 //*******************************************************************************
 void ShutdownSoundManager(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	SoundStopAll();
 	SoundShutdownCache();
 	Sleep(1000);
 	SoundShutdownHardware();
 	//Sleep(1000);
 	fSoundSystemInit=FALSE;
-
+#endif
 }
 
 //*******************************************************************************
@@ -388,6 +384,9 @@ UINT32 uiSound;
 //*****************************************************************************************
 BOOLEAN SoundIndexIsPlaying(UINT32 uiSound)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 INT32 iStatus=SMP_DONE;
 
 	if(fSoundSystemInit)
@@ -405,6 +404,7 @@ INT32 iStatus=SMP_DONE;
 	}
 
 	return(FALSE);
+#endif
 }
 
 //*******************************************************************************
@@ -500,6 +500,9 @@ UINT32 uiSound, uiVolCap;
 //*****************************************************************************************
 BOOLEAN SoundSetVolumeIndex(UINT32 uiChannel, UINT32 uiVolume)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiVolCap;
 
 	if(fSoundSystemInit)
@@ -519,6 +522,7 @@ UINT32 uiVolCap;
 	}
 
 	return(FALSE);
+#endif
 }
 
 //*******************************************************************************
@@ -532,6 +536,9 @@ UINT32 uiVolCap;
 //*******************************************************************************
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiSound, uiPanCap;
 
 	if(fSoundSystemInit)
@@ -551,6 +558,7 @@ UINT32 uiSound, uiPanCap;
 	}
 
 	return(FALSE);
+#endif
 }
 
 
@@ -588,6 +596,9 @@ UINT32 uiSound;
 //*****************************************************************************************
 UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if(fSoundSystemInit)
 	{
 		if(pSoundList[uiChannel].hMSS!=NULL)
@@ -601,6 +612,7 @@ UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 	}
 
 	return(SOUND_ERROR);
+#endif
 }
 
 
@@ -740,6 +752,9 @@ UINT32 uiChannel, uiSample;
 //*******************************************************************************
 BOOLEAN SoundServiceStreams(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiCount, uiSpeed, uiBuffLen, uiBytesPerSample;
 UINT8		*pBuffer;
 void		*pData;
@@ -793,6 +808,7 @@ void		*pData;
 	}
 
 	return(TRUE);
+#endif
 }
 
 
@@ -951,7 +967,7 @@ UINT32 uiCount;
 
 	for(uiCount=0; uiCount < SOUND_MAX_CACHED; uiCount++)
 	{
-		if(_stricmp(pSampleList[uiCount].pName, pFilename)==0)
+		if (strcasecmp(pSampleList[uiCount].pName, pFilename) == 0)
 			return(uiCount);
 	}
 
@@ -971,6 +987,9 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundLoadDisk(const char *pFilename)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 HWFILE	hFile;
 UINT32	uiSize, uiSample;
 BOOLEAN fRemoved=TRUE;
@@ -1032,6 +1051,7 @@ BOOLEAN fRemoved=TRUE;
 	}
 
 	return(NO_SAMPLE);
+#endif
 }
 
 
@@ -1127,6 +1147,9 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if(pSampleList[uiSample].uiFlags&SAMPLE_ALLOCATED)
 	{
 		if(pSampleList[uiSample].pData!=NULL)
@@ -1140,6 +1163,7 @@ UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 	}
 
 	return(NO_SAMPLE);
+#endif
 }
 
 //*******************************************************************************
@@ -1174,6 +1198,9 @@ UINT32 uiCount;
 //*******************************************************************************
 BOOLEAN SoundInitHardware(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiCount;
 CHAR8	cDriverName[128];
 
@@ -1258,6 +1285,7 @@ CHAR8	cDriverName[128];
 		}
 	}
 */
+#endif
 }
 
 //*******************************************************************************
@@ -1270,10 +1298,14 @@ CHAR8	cDriverName[128];
 //*******************************************************************************
 BOOLEAN SoundShutdownHardware(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if(fSoundSystemInit)
 		AIL_shutdown();
 
 	return(TRUE);
+#endif
 }
 
 //*******************************************************************************
@@ -1286,6 +1318,9 @@ BOOLEAN SoundShutdownHardware(void)
 //*******************************************************************************
 static HDIGDRIVER SoundInitDriver(UINT32 uiRate, UINT16 uiBits, UINT16 uiChans)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 static PCMWAVEFORMAT	sPCMWF;
 HDIGDRIVER						DIG;
 CHAR8									cBuf[128];
@@ -1306,6 +1341,7 @@ CHAR8									cBuf[128];
 	FastDebugMsg(String("Sound Init: %dKHz, %d uiBits, %s %s\n", uiRate, uiBits, (uiChans==1)? "Mono": "Stereo", cBuf));
 
 	return(DIG);
+#endif
 }
 
 //*******************************************************************************
@@ -1318,6 +1354,9 @@ CHAR8									cBuf[128];
 //*******************************************************************************
 BOOLEAN SoundGetDriverName(HDIGDRIVER DIG, CHAR8 *cBuf)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	if(DIG)
 	{
 		cBuf[0]='\0';
@@ -1326,6 +1365,7 @@ BOOLEAN SoundGetDriverName(HDIGDRIVER DIG, CHAR8 *cBuf)
 	}
 	else
 		return(FALSE);
+#endif
 }
 
 //*******************************************************************************
@@ -1366,6 +1406,9 @@ UINT32 uiCount;
 //*******************************************************************************
 UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, SOUNDPARMS *pParms)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiSoundID;
 CHAR8 AILString[200];
 
@@ -1467,6 +1510,7 @@ CHAR8 AILString[200];
 	AIL_start_sample(pSoundList[uiChannel].hMSS);
 
 	return(uiSoundID);
+#endif
 }
 
 //*******************************************************************************
@@ -1481,6 +1525,9 @@ CHAR8 AILString[200];
 //*******************************************************************************
 UINT32 SoundStartStream(const char *pFilename, UINT32 uiChannel, SOUNDPARMS *pParms)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiSoundID, uiSpeed;
 CHAR8	AILString[200];
 
@@ -1551,6 +1598,7 @@ CHAR8	AILString[200];
 	pSoundList[uiChannel].uiFadeVolume = SoundGetVolumeIndex(uiChannel);
 
 	return(uiSoundID);
+#endif
 }
 
 //*******************************************************************************
@@ -1608,6 +1656,9 @@ UINT32 uiFilesize;
 //*******************************************************************************
 BOOLEAN SoundStopIndex(UINT32 uiChannel)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT32 uiSample;
 
 	if(fSoundSystemInit)
@@ -1677,6 +1728,7 @@ UINT32 uiSample;
 	}
 
 	return(FALSE);
+#endif
 }
 
 //*******************************************************************************

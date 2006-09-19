@@ -1,24 +1,7 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "DirectDraw_Calls.h"
-	#include <stdio.h>
-	#include "Debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "VObject_Private.h"
-	#include "Video_Private.h"
-	#include "WCheck.h"
-	#include "VObject_Blitters.h"
-	#include "Shading.h"
-#endif
+#include "Debug.h"
+#include "Shading.h"
+#include "Video.h"
+#include <string.h>
 
 BOOLEAN ShadesCalculateTables(SGPPaletteEntry *p8BPPPalette);
 BOOLEAN ShadesCalculatePalette(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pDestPalette, UINT16 usRed, UINT16 usGreen, UINT16 usBlue, BOOLEAN fMono);
@@ -116,6 +99,9 @@ UINT32 rmod, gmod, bmod;
 
 void FindIndecies(SGPPaletteEntry *pSrcPalette, SGPPaletteEntry *pMapPalette, UINT8 *pTable)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 UINT16 usCurIndex, usCurDelta, usCurCount;
 UINT32 *pSavedPtr;
 
@@ -194,6 +180,7 @@ NotThisCol:
 		dec		usCurCount
 		jnz		DoNextIndex
 	}
+#endif
 }
 
 /**********************************************************************************************

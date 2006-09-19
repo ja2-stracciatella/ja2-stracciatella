@@ -1,48 +1,22 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-	#include "JA2 Splash.h"
-	#include "Utilities.h"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <string.h>
-	#include "SGP.h"
-	#include "RegInst.h"
-	#include "VObject.h"
-	#include "Font.h"
-	#include "Local.h"
-	#include "FileMan.h"
-	#include "Input.h"
-	#include "Random.h"
-	#include "Gameloop.h"
-	#include "SoundMan.h"
-	#ifdef JA2
-		#include "JA2_Splash.h"
-		#include "Timer_Control.h"
-	#endif
-	#if !defined( JA2 ) && !defined( UTIL )
-		#include "GameData.h"               // for MoveTimer() [Wizardry specific]
-	#endif
-#endif
-
-	#include "Input.h"
-
-
-#include "ExceptionHandling.h"
-
-#include "dbt.h"
-
-#ifdef JA2
-	#include "BuildDefines.h"
-	#include "Intro.h"
-#endif
-
-#ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN
-#endif
+#include "BuildDefines.h"
+#include "Debug.h"
+#include "FileMan.h"
+#include "Font.h"
+#include "Gameloop.h"
+#include "Input.h"
+#include "JA2_Splash.h"
+#include "Local.h"
+#include "MemMan.h"
+#include "Random.h"
+#include "RegInst.h"
+#include "SGP.h"
+#include "Stubs.h"
+#include "SoundMan.h"
+#include "Timer.h"
+#include "Video.h"
+#include "VSurface.h"
+#include <stdio.h>
+#include <string.h>
 
 
 extern UINT32 MemDebugCounter;
@@ -59,8 +33,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 BOOLEAN          InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow);
 void             ShutdownStandardGamingPlatform(void);
 void						 GetRuntimeSettings( );
-
-int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow);
 
 
 #if !defined(JA2) && !defined(UTILS)
@@ -107,9 +79,10 @@ BOOLEAN	gfIgnoreMessages=FALSE;
 // GLOBAL VARIBLE, SET TO DEFAULT BUT CAN BE CHANGED BY THE GAME IF INIT FILE READ
 UINT8		gbPixelDepth = PIXEL_DEPTH;
 
+#if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
 {
-	static fRestore = FALSE;
+	static BOOLEAN fRestore = FALSE;
 
   if(gfIgnoreMessages)
 		return(DefWindowProc(hWindow, Message, wParam, lParam));
@@ -399,11 +372,14 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
   }
   return 0L;
 }
-
+#endif
 
 
 BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	FontTranslationTable *pFontTable;
 
 	// now required by all (even JA2) in order to call ShutdownSGP
@@ -527,6 +503,7 @@ BOOLEAN InitializeStandardGamingPlatform(HINSTANCE hInstance, int sCommandShow)
 	gfGameInitialized = TRUE;
 
 	return TRUE;
+#endif
 }
 
 
@@ -603,37 +580,9 @@ void ShutdownStandardGamingPlatform(void)
 
 int PASCAL WinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
 {
-
-//If we are to use exception handling
-#ifdef ENABLE_EXCEPTION_HANDLING
-	int Result = -1;
-
-
-	__try
-	{
-		Result = HandledWinMain(hInstance, hPrevInstance, pCommandLine, sCommandShow);
-	}
-	__except( RecordExceptionInfo( GetExceptionInformation() ))
-	{
-		// Do nothing here - RecordExceptionInfo() has already done
-		// everything that is needed. Actually this code won't even
-		// get called unless you return EXCEPTION_EXECUTE_HANDLER from
-		// the __except clause.
-
-
-	}
-	return Result;
-
-}
-
-//Do not place code in between WinMain and Handled WinMain
-
-
-
-int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR pCommandLine, int sCommandShow)
-{
-//DO NOT REMOVE, used for exception handing list above in WinMain
-#endif
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
   MSG				Message;
 	HWND			hPrevInstanceWindow;
 
@@ -733,12 +682,22 @@ int PASCAL HandledWinMain(HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPSTR p
 
 	// return wParam of the last message received
 	return Message.wParam;
+#endif
+}
+
+
+int main(int argc, char* argv[])
+{
+	WinMain(0,  0, NULL, 0);
 }
 
 
 
 void SGPExit(void)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	static BOOLEAN fAlreadyExiting = FALSE;
 	BOOLEAN fUnloadScreens = TRUE;
 
@@ -778,12 +737,16 @@ void SGPExit(void)
 	VideoDumpMemoryLeaks();
 #endif
 
+#endif
 }
 
 
 
 void GetRuntimeSettings( )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	// Runtime settings - for now use INI file - later use registry
 	STRING512				ExeDir;
 	STRING512				INIFile;
@@ -794,7 +757,7 @@ void GetRuntimeSettings( )
 	sprintf( INIFile, "%s\\sgp.ini", ExeDir );
 
 	gbPixelDepth = GetPrivateProfileInt( "SGP", "PIXEL_DEPTH", PIXEL_DEPTH, INIFile );
-
+#endif
 }
 
 void ShutdownWithErrorBox(CHAR8 *pcMessage)
@@ -899,7 +862,7 @@ void ProcessJa2CommandLineBeforeInitialization(CHAR8 *pCommandLine)
 	while(pToken)
 	{
 		//if its the NO SOUND option
-		if(!_strnicmp(pToken, "/NOSOUND", 8))
+		if (strncasecmp(pToken, "/NOSOUND", 8) == 0)
 		{
 			//disable the sound
 			SoundEnableSound(FALSE);

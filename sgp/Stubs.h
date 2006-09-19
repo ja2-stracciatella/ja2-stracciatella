@@ -38,12 +38,19 @@ typedef int PALETTEENTRY;
 typedef int WIN32_FIND_DATA;
 typedef int WPARAM;
 
+typedef void* H3DSAMPLE;
+typedef int HDIGDRIVER;
+typedef void* HSAMPLE;
+typedef void* HSTREAM;
+
 typedef PALETTEENTRY* LPPALETTEENTRY;
 typedef int* LPRGNDATA;
 
 typedef unsigned int UINT;
 
 typedef unsigned long DWORD;
+
+typedef char* LPSTR;
 
 typedef void* LPVOID;
 
@@ -75,6 +82,7 @@ void GetCursorPos(POINT*);
 #define min(a, b) __min(a, b)
 
 
+#if 0
 /* Timer_Control das gibt noch Kopfschmerzen... */
 typedef void (*LPTIMECALLBACK)(UINT uiID, UINT uiMsg, DWORD uiUser, DWORD uiDw1, DWORD uiDw2);
 typedef int TIMECAPS;
@@ -83,7 +91,9 @@ MMRESULT timeSetEvent(int, int, LPTIMECALLBACK, DWORD, int);
 MMRESULT timeKillEvent(MMRESULT);
 #define TIMERR_NOERROR 0
 #define TIME_PERIODIC 0
+#endif
 
+#if 0
 void GetSystemDirectory(char*, size_t);
 void _splitpath(const char*, char*, char*, char*, char*);
 
@@ -94,6 +104,7 @@ int GetDriveType(const char*);
 int GetVolumeInformation(const char*, const char*, size_t, UINT32*, UINT32*, UINT32*, const char*, size_t);
 #define DRIVE_CDROM 0
 #define ERROR_SUCCESS 0
+#endif
 
 int GetLastError(void);
 #define ERROR_NOT_READY 1
@@ -104,6 +115,15 @@ UINT32 GetTickCount(void);
 void OutputDebugString(const char*);
 
 #define INVALID_HANDLE_VALUE 0
+
+typedef void Smack;
+typedef void SmackBuf;
+
+#if 0
+typedef void* LPDIRECTDRAW2;
+typedef void* LPDIRECTDRAWPALETTE;
+typedef void* LPDIRECTDRAWSURFACE2;
+#endif
 
 #ifdef __linux__
 /* Gcc lacks this function

@@ -271,6 +271,9 @@ void InitGameOptions()
 
 BOOLEAN GetCDLocation( )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiStrngLength = 0;
 	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
 	UINT32	uiDriveType=0;
@@ -328,12 +331,16 @@ BOOLEAN GetCDLocation( )
 	}
 
 	return( TRUE );
+#endif
 }
 
 
 
 BOOLEAN GetCDromDriveLetter( STR8	pString )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiSize=0;
 	UINT8		ubCnt=0;
 	CHAR8		zDriveLetters[512];
@@ -377,6 +384,7 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 	}
 
 	return( FALSE );
+#endif
 }
 
 
@@ -435,6 +443,9 @@ BOOLEAN GetCDromDriveLetter( STR8	pString )
 
 BOOLEAN CheckIfGameCdromIsInCDromDrive()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	CHAR8		zVolumeNameBuffer[512];
 	UINT32	uiVolumeSerialNumber=0;
 	UINT32	uiMaxComponentLength=0;
@@ -485,18 +496,21 @@ BOOLEAN CheckIfGameCdromIsInCDromDrive()
       ShowCursor(TRUE);
       ShutdownWithErrorBox( sString );
 
-      //DoTester( );
       //MessageBox(NULL, sString, "Error", MB_OK | MB_ICONERROR  );
 
 			return( FALSE );
 	}
 
 	return( TRUE );
+#endif
 }
 
 
 BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiRetVal=0;
 
 	//Do a crude check to make sure the Ja2.ini file is the right on
@@ -513,6 +527,7 @@ BOOLEAN GetCdromLocationFromIniFile( STR pRootOfCdromDrive )
 		strcat( pRootOfCdromDrive, ":\\" );
 		return( TRUE );
 	}
+#endif
 }
 
 
@@ -536,6 +551,9 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 
 BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	UINT32	uiDriveType;
 	CHAR8		zRootName[512];
 
@@ -556,6 +574,7 @@ BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
 	}
 
 	return( FALSE );
+#endif
 }
 
 void DisplayGameSettings( )

@@ -1,25 +1,9 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "DirectDraw_Calls.h"
-	#include <stdio.h>
-	#include "Debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"													// JA2
-	#else
-		#include "video2.h"				// Wiz8
-	#endif
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "VObject_Private.h"
-	#include "Video_Private.h"
-	#include "WCheck.h"
-	#include "VObject.h"
-	#include "VObject_Blitters.h"
-	#include "Shading.h"
-#endif
+#include "Debug.h"
+#include "MemMan.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "WCheck.h"
+#include <string.h>
 
 SGPRect	ClippingRect={0, 0, 640, 480};
 													//555      565
@@ -106,6 +90,9 @@ INT32		ClipX1, ClipY1, ClipX2, ClipY2;
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -290,6 +277,7 @@ RSEnd:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -380,6 +368,9 @@ SixteenBPPObjectInfo *	p16BPPObject;
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -549,6 +540,7 @@ RSEnd:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -633,6 +625,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -812,6 +807,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -866,6 +862,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -940,6 +939,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1022,6 +1022,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1204,6 +1207,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1257,6 +1261,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1328,6 +1335,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1423,6 +1431,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	usZLevel=usZValue;
 //	usZLinesToGo=WORLD_TILE_Y;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1608,6 +1619,7 @@ RSLoop2:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1664,6 +1676,9 @@ UINT32 uiLineSkip, usWidth, usHeight;
 	if((usHeight==0) || (usWidth==0))
 		return(FALSE);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		edi, pZPtr
 		xor		eax, eax
@@ -1679,6 +1694,7 @@ BZR1:
 		dec		edx
 		jnz		BZR1
 	}
+#endif
 
 	return(TRUE);
 }
@@ -1734,6 +1750,9 @@ BOOLEAN Blt8BPPDataTo8BPPBuffer( UINT8 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJE
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX);
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1797,6 +1816,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -1848,6 +1868,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferMonoShadow( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1929,6 +1952,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2008,6 +2032,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferMonoShadowClip( UINT8 *pBuffer, UINT32 uiDestPitc
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2195,6 +2222,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2249,6 +2277,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZPixelate( UINT16 *pBuffer, UINT32 uiDestPit
 	uiLineFlag=(iTempY&1);
 
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2325,6 +2356,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2379,6 +2411,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBPixelate( UINT16 *pBuffer, UINT32 uiDestP
 
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2451,6 +2486,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2534,6 +2570,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZClipPixelate( UINT16 *pBuffer, UINT32 uiDes
 
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2721,6 +2760,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -2804,6 +2844,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBClipPixelate( UINT16 *pBuffer, UINT32 uiD
 
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2988,6 +3031,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3079,6 +3123,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransparentClip( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3283,6 +3330,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3330,6 +3378,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3429,6 +3480,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3484,6 +3536,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES,
 	LineSkipZ=LineSkip*2;
 	uiZComp=(UINT32)usZValue;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3661,6 +3716,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3713,6 +3769,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3776,6 +3835,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3829,6 +3889,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBColor( UINT16 *pBuffer, UINT32 uiDestPitc
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3899,6 +3962,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -3979,6 +4043,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4152,6 +4219,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4232,6 +4300,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4402,6 +4473,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4482,6 +4554,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransZNBClipColor( UINT16 *pBuffer, UINT32 uiDest
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4660,6 +4735,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4710,6 +4786,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4774,6 +4853,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4824,6 +4904,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4885,6 +4968,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -4965,6 +5049,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5137,6 +5224,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -5217,6 +5305,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 	LineSkipZ=LineSkip*2;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5386,6 +5477,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -5439,6 +5531,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransShadowZ( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5513,6 +5608,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -5566,6 +5662,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransShadowZNB( UINT16 *pBuffer, UINT32 uiDestPit
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5637,6 +5736,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -5719,6 +5819,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransShadowZClip( UINT16 *pBuffer, UINT32 uiDestP
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5900,6 +6003,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -5981,6 +6085,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferTransShadowZNBClip( UINT16 *pBuffer, UINT32 uiDes
 	LineSkipZ=LineSkip*2;
 	pPal8BPP=hSrcVObject->pShade8;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6159,6 +6266,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6205,6 +6313,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES,
 	pPal8BPP = hSrcVObject->pShade8;
 	LineSkip=(uiDestPitchBYTES-(usWidth));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6302,6 +6413,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6379,6 +6491,9 @@ BOOLEAN Blt8BPPDataTo8BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkip=(uiDestPitchBYTES-(BlitLength));
 
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6583,6 +6698,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6666,6 +6782,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -6859,6 +6978,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -6889,6 +7009,9 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth*2);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth*2);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -6930,6 +7053,7 @@ BlitDwords:
 BlitDone:
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -6956,6 +7080,9 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth*2);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth*2);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -6984,6 +7111,7 @@ Blit3:
 	jnz		BlitNewLine
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7052,6 +7180,9 @@ SGPRect *clipregion=NULL;
 	uiLineSkipDest=uiDestPitch;//+((BlitLength-1)*2);
 	uiLineSkipSrc=uiSrcPitch-(BlitLength*2);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -7082,6 +7213,7 @@ BlitNTL2:
 	jnz		BlitNewLine
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7107,6 +7239,9 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -7142,6 +7277,7 @@ BlitLineDone:
 	jnz		BlitNewLine
 
 	}
+#endif
 
 	return(TRUE);
 }
@@ -7194,6 +7330,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7271,6 +7410,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7327,6 +7467,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7421,6 +7564,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7504,6 +7648,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7690,6 +7837,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7743,6 +7891,9 @@ ETRLEObject *pTrav;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -7821,6 +7972,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -7903,6 +8055,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8089,6 +8244,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8140,6 +8296,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8208,6 +8367,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8259,6 +8419,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8324,6 +8487,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8376,6 +8540,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBColor( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8446,6 +8613,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8495,6 +8663,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadow( UINT16 *pBuffer, UINT32 uiDestPitch
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8558,6 +8729,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8608,6 +8780,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZ( UINT16 *pBuffer, UINT32 uiDestPitc
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8682,6 +8857,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8732,6 +8908,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNB( UINT16 *pBuffer, UINT32 uiDestPi
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8807,6 +8986,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -8909,6 +9089,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 	uiLineFlag=(iTempY&1);
 
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9009,6 +9192,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9088,6 +9272,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip( UINT16 *pBuffer, UINT32 uiDest
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9270,6 +9457,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9348,6 +9536,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip( UINT16 *pBuffer, UINT32 uiDestP
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9518,6 +9709,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9596,6 +9788,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBClip( UINT16 *pBuffer, UINT32 uiDe
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9779,6 +9974,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -9858,6 +10054,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10065,6 +10264,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10145,6 +10345,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowBelowOrEqualZNBClip( UINT16 *pBuffer,
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10328,6 +10531,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10378,6 +10582,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10441,6 +10648,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10520,6 +10728,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10693,6 +10904,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10742,6 +10954,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -10803,6 +11018,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -10882,6 +11098,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11052,6 +11271,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11131,6 +11351,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11304,6 +11527,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11382,6 +11606,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11552,6 +11779,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11632,6 +11860,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClipColor( UINT16 *pBuffer, UINT32 uiDes
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -11810,6 +12041,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -11858,6 +12090,9 @@ BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, H
 	p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -11893,6 +12128,7 @@ BlitLoop:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -11939,6 +12175,9 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 	p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12032,6 +12271,7 @@ DoneRow:
 
 DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12077,6 +12317,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalf( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 	LineSkip=(uiDestPitchBYTES-(usWidth&0xfffffffe));
 	uiSrcSkip=(uiSrcPitch*2)-(usWidth&0xfffffffe);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12117,6 +12360,7 @@ ReadMask:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12172,6 +12416,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip			= (uiDestPitchBYTES-(usWidth&0xfffffffe));
 	uiSrcSkip			= (uiSrcPitch*2)-(usWidth&0xfffffffe);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -12212,6 +12459,7 @@ ReadMask:
 
 //DoneBlit:											// finished blit
 	}
+#endif
 
 	return( TRUE );
 
@@ -12269,6 +12517,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMask(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, H
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -12366,6 +12617,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -12432,6 +12684,9 @@ BOOLEAN Blt16BPPBufferPixelateRectWithColor(UINT16 *pBuffer, UINT32 uiDestPitchB
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		esi, Pattern				// Pointer to pixel pattern
 		mov		edi, DestPtr				// Pointer to top left of rect area
@@ -12464,6 +12719,7 @@ BlitLine2:
 		dec		height
 		jnz		BlitNewLine
 	}
+#endif
 
 	return(TRUE);
 }
@@ -12590,6 +12846,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -12687,6 +12946,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -12736,6 +12996,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitch
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -12833,6 +13096,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -12892,6 +13156,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransMirror( UINT16 *pBuffer, UINT32 uiDestPitch
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	uiDestSkip=(uiDestPitchBYTES+(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 // esi = pointer to source data
 // edi = pointer to destination buffer
@@ -13002,6 +13269,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13078,6 +13346,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparentClip( UINT16 *pBuffer, UINT32 uiDestP
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -13290,6 +13561,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13428,6 +13700,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -13632,6 +13907,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13680,6 +13956,9 @@ UINT16 *DestPtr;
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		esi, OFFSET ShadeTable
 		mov		edi, DestPtr
@@ -13702,6 +13981,7 @@ BlitLine:
 		dec		edx
 		jnz		BlitNewLine
 }
+#endif
 
 	return(TRUE);
 }
@@ -13748,6 +14028,9 @@ UINT16 *DestPtr;
 	CHECKF(width >=1);
 	CHECKF(height >=1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		esi, OFFSET IntensityTable
 		mov		edi, DestPtr
@@ -13770,6 +14053,7 @@ BlitLine:
 		dec		edx
 		jnz		BlitNewLine
 }
+#endif
 
 	return(TRUE);
 }
@@ -13819,6 +14103,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadow( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -13913,6 +14200,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -13986,6 +14274,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferFullTransparent( HVOBJECT hDestVObject, HVOBJECT
 	pDest = pDest + uiDestStart;
 	pSrc =  pSrc + uiSrcStart;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		esi, pSrc						// pointer to current line start address in source
 		mov		edi, pDest					// pointer to current line start address in destination
@@ -14023,6 +14314,7 @@ NextColumn:
 
 DoneBlit:											// finished blit
 		}
+#endif
 
 	ReleaseVideoObjectBuffer( hSrcVObject );
 	ReleaseVideoObjectBuffer( hDestVObject );
@@ -14284,6 +14576,9 @@ UINT8		*startoffset;
 	linelength=x2real-x1real+1;
 	lineskip=uiDestPitchBYTES-linelength;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		edi, startoffset
 		mov		al, color
@@ -14330,6 +14625,7 @@ FillLineEnd:
 		jnz		LineLoop
 
 	}
+#endif
 	return(TRUE);
 }
 
@@ -14357,6 +14653,9 @@ UINT16		*startoffset;
 	linelength=x2real-x1real+1;
 	lineskip=uiDestPitchBYTES-(linelength*2);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 		mov		edi, startoffset
 		mov		ax, color
@@ -14393,6 +14692,7 @@ FillLineEnd:
 		jnz		LineLoop
 
 	}
+#endif
 	return(TRUE);
 }
 
@@ -14511,6 +14811,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -14579,6 +14882,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -14650,6 +14954,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -14825,6 +15132,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -14897,6 +15205,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15088,6 +15399,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15163,6 +15475,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 	uiLineFlag=(iTempY&1);
 
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15379,6 +15694,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15421,6 +15737,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow( UINT16 *pBuffer, UINT32 uiDestPit
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15479,6 +15798,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15549,6 +15869,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip( UINT16 *pBuffer, UINT32 uiDes
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15760,6 +16083,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15802,6 +16126,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -15888,6 +16215,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -15932,6 +16260,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16040,6 +16371,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16083,6 +16415,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16169,6 +16504,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16219,6 +16555,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchB
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16282,6 +16621,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16361,6 +16701,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16534,6 +16877,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16583,6 +16927,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitc
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16644,6 +16991,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16723,6 +17071,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZNBClip( UINT16 *pBuffer, UINT32 uiDest
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -16893,6 +17244,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -16971,6 +17323,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -17175,6 +17530,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -17222,6 +17578,9 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -17319,6 +17678,7 @@ BlitDoneLine:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 
@@ -17402,6 +17762,9 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 	uiLineFlag=(iTempY&1);
 
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -17594,6 +17957,7 @@ RSLoop1:
 
 BlitDone:
 	}
+#endif
 
 	return(TRUE);
 

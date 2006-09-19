@@ -44,7 +44,7 @@ extern "C" {
 #endif
 
 // call once per execution of application:
-extern BOOLEAN InitializeRegistryKeys(STR strAppName, STR strRegistryKey);
+extern BOOLEAN InitializeRegistryKeys(const char *strAppName, const char *strRegistryKey);
 
 // returns key for HKEY_CURRENT_USER\"Software"\RegistryKey\ProfileName
 // creating it if it doesn't exist

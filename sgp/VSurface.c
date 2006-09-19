@@ -1,25 +1,13 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "DirectDraw_Calls.h"
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include "Debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
-	#include "HImage.h"
-	#include "VSurface.h"
-	#include "VSurface_Private.h"
-	#include "Video_Private.h"
-	#include "WCheck.h"
-	#include "VObject_Blitters.h"
-	#include <string.h>
-#endif
+#include "Debug.h"
+#include "DirectDraw_Calls.h"
+#include "Local.h"
+#include "MemMan.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
+#include "VSurface_Private.h"
+#include "Video.h"
+#include "WCheck.h"
+#include <string.h>
 
 extern void SetClippingRect(SGPRect *clip);
 extern void GetClippingRect(SGPRect *clip);
@@ -1301,7 +1289,7 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 	// Create palette object if not already done so
 	if ( hVSurface->pPalette == NULL )
 	{
-		DDCreatePalette( GetDirectDraw2Object(), (DDPCAPS_8BIT | DDPCAPS_ALLOW256), (LPPALETTEENTRY)(&pSrcPalette[0]), &((LPDIRECTDRAWPALETTE)hVSurface->pPalette), NULL);
+		DDCreatePalette( GetDirectDraw2Object(), (DDPCAPS_8BIT | DDPCAPS_ALLOW256), (LPPALETTEENTRY)(&pSrcPalette[0]), (LPDIRECTDRAWPALETTE*)&hVSurface->pPalette, NULL);
 
 		// Set into surface
 		//DDSetSurfacePalette( (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData, (LPDIRECTDRAWPALETTE)hVSurface->pPalette );
@@ -1332,7 +1320,7 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransColor )
 {
   DDCOLORKEY		ColorKey;
-  DWORD					fFlags = CLR_INVALID;
+  DWORD					fFlags;
 	LPDIRECTDRAWSURFACE2	lpDDSurface;
 
 	// Assertions
@@ -1468,14 +1456,14 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 	// Release surface
 	if ( hVSurface->pSurfaceData1 != NULL )
 	{
-		DDReleaseSurface( &(LPDIRECTDRAWSURFACE)hVSurface->pSurfaceData1, &lpDDSurface );
+		DDReleaseSurface((LPDIRECTDRAWSURFACE*)&hVSurface->pSurfaceData1, &lpDDSurface );
 	}
 
 	// Release backup surface
 	if ( hVSurface->pSavedSurfaceData != NULL )
 	{
-		DDReleaseSurface( &(LPDIRECTDRAWSURFACE)hVSurface->pSavedSurfaceData1,
-								&(LPDIRECTDRAWSURFACE2)hVSurface->pSavedSurfaceData );
+		DDReleaseSurface((LPDIRECTDRAWSURFACE*)&hVSurface->pSavedSurfaceData1,
+								(LPDIRECTDRAWSURFACE2*)&hVSurface->pSavedSurfaceData );
 	}
 
 	// Release region data
@@ -1504,6 +1492,9 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 
 BOOLEAN SetClipList( HVSURFACE hVSurface, SGPRect *RegionData, UINT16 usNumRegions )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	RGNDATA							*pRgnData;
 	UINT16							cnt;
 	RECT								aRect;
@@ -1564,6 +1555,7 @@ BOOLEAN SetClipList( HVSURFACE hVSurface, SGPRect *RegionData, UINT16 usNumRegio
 	MemFree( pRgnData );
 
 	return( TRUE );
+#endif
 }
 
 
@@ -1968,6 +1960,9 @@ LPDIRECTDRAWSURFACE2 GetVideoSurfaceDDSurface( HVSURFACE hVSurface )
 
 HVSURFACE CreateVideoSurfaceFromDDSurface( LPDIRECTDRAWSURFACE2 lpDDSurface )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	// Create Video Surface
 	DDPIXELFORMAT			  PixelFormat;
 	HVSURFACE						hVSurface;
@@ -2025,6 +2020,7 @@ HVSURFACE CreateVideoSurfaceFromDDSurface( LPDIRECTDRAWSURFACE2 lpDDSurface )
   DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_0, String("Success in Creating Video Surface from DD Surface" ) );
 
 	return( hVSurface );
+#endif
 }
 
 HVSURFACE GetPrimaryVideoSurface( )
