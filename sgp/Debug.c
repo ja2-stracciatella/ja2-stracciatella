@@ -548,7 +548,7 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 	}
 #endif
 #endif
-	exit(0);
+	abort();
 }
 
 #else //NOT JAGGED ALLIANCE 2
