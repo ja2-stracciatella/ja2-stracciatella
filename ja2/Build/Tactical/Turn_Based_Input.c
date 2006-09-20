@@ -116,6 +116,13 @@
 
 	#include	"Quest_Debug_System.h"
 
+#ifdef JA2TESTVERSION
+#	include "Ambient_Control.h"
+#endif
+
+#ifdef JA2BETAVERSION
+#	include "Strategic_AI.h"
+#endif
 
 
 extern UIKEYBOARD_HOOK					gUIKeyboardHook;

@@ -36,6 +36,10 @@
 	#include "MemMan.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "PreBattle_Interface.h"
+#endif
+
 
 UINT32 guiCurrentScreen;
 UINT32 guiPendingScreen = NO_PENDING_SCREEN;

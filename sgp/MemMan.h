@@ -67,7 +67,8 @@ extern void		ShutdownMemoryManager( void );
 	extern void		MemFreeXDebug( PTR ptr, const char *szCodeString, INT32 iLineNum, void *pSpecial );
 	extern PTR		MemReallocXDebug( PTR ptr, UINT32 size, const char *szCodeString, INT32 iLineNum, void *pSpecial );
 #else
-	#ifdef _DEBUG
+	#if 0
+	//#ifdef _DEBUG /// XXX TODO
 		//This is another debug feature.  Not as sophistocated, but definately not the pig the extreme system is.
 		//This system reports all memory allocations/deallocations in the debug output.
 		#define		MemAlloc( size )			MemAllocReal( (size), __FILE__, __LINE__ )

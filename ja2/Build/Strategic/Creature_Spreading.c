@@ -34,6 +34,8 @@
 #endif
 
 #ifdef JA2BETAVERSION
+#	include "MessageBoxScreen.h"
+
 	BOOLEAN gfClearCreatureQuest = FALSE;
 	extern UINT32 uiMeanWhileFlags;
 #endif
@@ -402,8 +404,8 @@ void InitCreatureQuest()
 		default:
 			#ifdef JA2BETAVERSION
 			{
-				UINT16 str[512];
-				swprintf( str, L"Creature quest never chose a lair and won't infect any mines.  Infectible mines = %d, iRandom = %d.  "
+				wchar_t str[512];
+				swprintf(str, lengthof(str), L"Creature quest never chose a lair and won't infect any mines.  Infectible mines = %d, iRandom = %d.  "
 											 L"This isn't a bug if you are not receiving income from any mines.", iNumMinesInfectible, iOrigRandom );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			}
@@ -1020,7 +1022,7 @@ UINT8 CreaturesInUndergroundSector( UINT8 ubSectorID, UINT8 ubSectorZ )
 
 BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 {
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < MAX_NUMBER_OF_MINES ) );
+	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
 
 	if( !gMineStatus[ ubMineIndex ].fPrevInvadedByMonsters )
 	{

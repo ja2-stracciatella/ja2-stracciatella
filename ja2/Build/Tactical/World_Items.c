@@ -30,6 +30,11 @@
 	#include "MemMan.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "Message.h"
+#endif
+
+
 //Global dynamic array of all of the items in a loaded map.
 WORLDITEM *		gWorldItems = NULL;
 UINT32				guiNumWorldItems = 0;

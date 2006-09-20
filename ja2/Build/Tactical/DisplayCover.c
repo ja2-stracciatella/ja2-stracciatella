@@ -134,7 +134,7 @@ void DisplayCoverOfSelectedGridNo( )
 #ifdef JA2TESTVERSION
 				{
 					CHAR16	zString[512];
-					swprintf( zString, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__DISPLAY_COVER ], gGameSettings.ubSizeOfDisplayCover );
+					swprintf(zString, lengthof(zString), L"%s, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
 				}
 #else
@@ -676,7 +676,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 #ifdef JA2TESTVERSION
 				{
 					CHAR16	zString[512];
-					swprintf( zString, L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__LOS ], gGameSettings.ubSizeOfLOS );
+					swprintf(zString, lengthof(zString), L"%s, (%d)", zNewTacticalMessages[ TCTL_MSG__LOS ], gGameSettings.ubSizeOfLOS);
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
 				}
 #else

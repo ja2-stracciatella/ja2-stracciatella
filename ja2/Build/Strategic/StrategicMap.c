@@ -507,7 +507,7 @@ void EndLoadScreen( )
 #ifdef JA2TESTVERSION
 	//Report the time it took to load the map.  This is temporary until we are satisfied with the time
 	//it takes to load the map.
-	UINT16 str[60];
+	wchar_t str[60];
 	FILE *fp;
 	UINT32 uiSeconds;
 	UINT32 uiHundreths;
@@ -521,12 +521,12 @@ void EndLoadScreen( )
 	SetFontBackground( FONT_NEARBLACK );
 	if( !gbWorldSectorZ )
 	{
-		swprintf( str, L"%c%d ENTER SECTOR TIME:  %d.%02d seconds.",
+		swprintf(str, lengthof(str), L"%c%d ENTER SECTOR TIME:  %d.%02d seconds.",
 							'A' + gWorldSectorY - 1, gWorldSectorX, uiSeconds, uiHundreths );
 	}
 	else
 	{
-		swprintf( str, L"%c%d_b%d ENTER SECTOR TIME:  %d.%02d seconds.",
+		swprintf(str, lengthof(str), L"%c%d_b%d ENTER SECTOR TIME:  %d.%02d seconds.",
 							'A' + gWorldSectorY - 1, gWorldSectorX, gbWorldSectorZ, uiSeconds, uiHundreths );
 	}
 	ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, str );

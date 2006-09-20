@@ -29,10 +29,9 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include <stdio.h>
-	#ifdef _DEBUG
-		#include <crtdbg.h>
-	#endif
 //#endif
+
+#undef _DEBUG // XXX TODO
 
 #ifdef _DEBUG
 	//#define DEBUG_MEM_LEAKS // turns on tracking of every MemAlloc and MemFree!

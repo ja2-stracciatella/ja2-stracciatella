@@ -706,10 +706,10 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 
 #ifdef JA2BETAVERSION
 	{
-		UINT16 str[ 512 ];
+		wchar_t str[512];
 		if( PlayerMercsInSector( pNew->ubSectorX, pNew->ubSectorY, 0 ) || CountAllMilitiaInSector( pNew->ubSectorX, pNew->ubSectorY ) )
 		{
-			swprintf( str, L"Attempting to send enemy troops from player occupied location.  "
+			swprintf(str, lengthof(str), L"Attempting to send enemy troops from player occupied location.  "
 										 L"Please ALT+TAB out of the game before doing anything else and send 'Strategic Decisions.txt' "
 										 L"and this message.  You'll likely need to revert to a previous save.  If you can reproduce this "
 										 L"with a save close to this event, that would really help me! -- KM:0" );
@@ -717,7 +717,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 		}
 		else if( pNew->ubGroupSize > 25 )
 		{
-			swprintf( str, L"Strategic AI warning:  Creating an enemy group containing %d soldiers "
+			swprintf(str, lengthof(str), L"Strategic AI warning:  Creating an enemy group containing %d soldiers "
 										 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
 										 L"to evaluate a potential problems with very large enemy groups.",
 										 pNew->ubGroupSize, ubNumAdmins, ubNumTroops, ubNumElites,
@@ -4483,8 +4483,8 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 	if( pItem->usItem != GAS_CAN )
 	{
 		#ifdef JA2BETAVERSION
-			UINT16 str[ 100 ];
-			swprintf( str, L"%s is supposed to have gas can in hand.  ATE:0", pSoldier->name );
+			wchar_t str[100];
+			swprintf(str, lengthof(str), L"%s is supposed to have gas can in hand.  ATE:0", pSoldier->name );
 			DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 		#endif
 		return;
@@ -5144,17 +5144,17 @@ void ValidateGroups( GROUP *pGroup )
 	if( !pGroup->fPlayer && !pGroup->ubGroupSize )
 	{
 		//report error
-		UINT16 str[ 512 ];
+		wchar_t str[512];
 		if( pGroup->ubSectorIDOfLastReassignment == 255 )
 		{
-			swprintf( str, L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
+			swprintf(str, lengthof(str), L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
 										 L"  Group %d in sector %c%d originated from sector %c%d.",
 										 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
 										 SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ) );
 		}
 		else
 		{
-			swprintf( str, L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
+			swprintf(str, lengthof(str), L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
 										 L"  Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
 										 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
 										 SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),

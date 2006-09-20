@@ -227,8 +227,8 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 
 	if( ubInvalidGroups || pSector->ubAdminsInBattle || pSector->ubTroopsInBattle || pSector->ubElitesInBattle || pSector->ubCreaturesInBattle )
 	{
-		UINT16 str[ 512 ];
-		swprintf( str, L"Strategic info warning:  Sector 'in battle' counters are not clear when they should be.  "
+		wchar_t str[512];
+		swprintf(str, lengthof(str), L"Strategic info warning:  Sector 'in battle' counters are not clear when they should be.  "
 									 L"If you can provide information on how a previous battle was resolved here or nearby patrol "
 									 L"(auto resolve, tactical battle, cheat keys, or retreat),"
 									 L"please forward that info (no data files necessary) as well as the following code (very important):  "

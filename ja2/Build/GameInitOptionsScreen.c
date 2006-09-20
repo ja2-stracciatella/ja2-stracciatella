@@ -27,6 +27,11 @@
 	#include "VSurface.h"
 #endif
 
+#ifdef JA2TESTVERSION
+#	include "Soldier_Profile.h"
+#endif
+
+
 ////////////////////////////////////////////
 //
 //	Global Defines

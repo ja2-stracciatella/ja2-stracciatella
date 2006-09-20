@@ -60,6 +60,11 @@
 
 #include "BuildDefines.h"
 
+#ifdef JA2TESTVERSION
+#	include "Soldier_Create.h"
+#endif
+
+
 // temp
 struct skirgbcolor
 {
@@ -1610,7 +1615,7 @@ void DisplayAllDealersCash()
 		DrawTextToScreen( gMercProfiles[ ArmsDealerInfo[ bArmsDealer ].ubShopKeeperID ].zNickname, 540, usPosY, 0, FONT10ARIAL, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
 
 		//Display the arms dealer cash on hand
-		swprintf( zTemp, L"%d", gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash );
+		swprintf(zTemp, lengthof(zTemp), L"%d", gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash );
 
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );

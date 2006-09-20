@@ -3441,7 +3441,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 }
 
 
-void NpcRecordLogging( UINT8 ubApproach, STR pStringA, ...)
+void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 {
 	static BOOLEAN	fFirstTimeIn = TRUE;
 //	static UINT32		uiLineNumber = 1;

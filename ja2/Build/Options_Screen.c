@@ -908,11 +908,6 @@ void		GetOptionsScreenUserInput()
 				}
 				break;
 
-
-				case 'z':
-					 SetErrorMode( SEM_FAILCRITICALERRORS );
-					break;
-
 				case 'q':
 //					ShouldMercSayPrecedentToRepeatOneSelf( 11, 99 );
 					break;

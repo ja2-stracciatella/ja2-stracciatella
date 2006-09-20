@@ -29,6 +29,10 @@
 	#include "Soldier_Macros.h"
 #endif
 
+#ifdef _DEBUG
+#	include "Video.h"
+#endif
+
 /* view directions */
 #define DLEFT           0
 #define DRIGHT          1

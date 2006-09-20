@@ -143,9 +143,8 @@ BOOLEAN ShutdownVideoObjectManager( );
 
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
-	void PerformVideoInfoDumpIntoFile( UINT8 *filename, BOOLEAN fAppend );
-	void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend );
-	BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, UINT8 *pSourceFile );
+	void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend);
+	BOOLEAN _AddAndRecordVObject(VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile);
 	#define AddVideoObject( a, b )			_AddAndRecordVObject( a, b, __LINE__, __FILE__ )
 #else
 	#define AddVideoObject( a, b )			AddStandardVideoObject( a, b )

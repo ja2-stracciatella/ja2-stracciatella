@@ -744,7 +744,7 @@ INT8 GetMineIndexForSector( INT16 sX, INT16 sY )
 
 void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY )
 {
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < MAX_NUMBER_OF_MINES ) );
+	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
 
 	*psX = gMineLocation[ ubMineIndex ].sSectorX;
 	*psY = gMineLocation[ ubMineIndex ].sSectorY;
@@ -1276,7 +1276,7 @@ BOOLEAN PlayerForgotToTakeOverMine( UINT8 ubMineIndex )
 	MINE_STATUS_TYPE *pMineStatus;
 
 
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < MAX_NUMBER_OF_MINES ) );
+	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
 
 	pMineStatus = &(gMineStatus[ ubMineIndex ]);
 
@@ -1304,7 +1304,7 @@ BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex )
 	MINE_STATUS_TYPE *pMineStatus;
 
 
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < MAX_NUMBER_OF_MINES ) );
+	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
 
 	pMineStatus = &(gMineStatus[ ubMineIndex ]);
 

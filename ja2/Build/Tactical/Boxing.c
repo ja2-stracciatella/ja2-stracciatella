@@ -24,6 +24,11 @@
 	#include "Animation_Data.h"
 #endif
 
+#ifdef JA2TESTVERSION
+#	include "Message.h"
+#endif
+
+
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
 UINT8 gubBoxerID[ NUM_BOXERS ] = { NOBODY, NOBODY, NOBODY };
 BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };

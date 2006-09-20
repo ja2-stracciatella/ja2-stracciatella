@@ -25,6 +25,7 @@
 #endif
 
 #ifdef JA2BETAVERSION
+#	include "JAScreens.h"
 #include "Message.h"
 #endif
 

@@ -453,12 +453,12 @@ void	HandleOldBobbyRMailOrders();
 #ifdef JA2BETAVERSION
 	void			InitSaveGameFilePosition();
 	void			InitLoadGameFilePosition();
-	void			SaveGameFilePosition( INT32 iPos, STR pMsg );
-	void			LoadGameFilePosition( INT32 iPos, STR pMsg );
+	static void SaveGameFilePosition(INT32 iPos, const char *pMsg);
+	static void LoadGameFilePosition(INT32 iPos, const char *pMsg);
 
 
-	void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFile );
-	void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGameID  );
+	static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
+	static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, UINT8 ubSaveGameID);
 #endif
 
 #ifdef JA2BETAVERSION
@@ -4228,7 +4228,8 @@ void InitSaveGameFilePosition()
 	FileDelete( zFileName );
 }
 
-void SaveGameFilePosition( INT32 iPos, STR pMsg )
+
+static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -4271,7 +4272,9 @@ void InitLoadGameFilePosition()
 
 	FileDelete( zFileName );
 }
-void LoadGameFilePosition( INT32 iPos, STR pMsg )
+
+
+static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -4885,7 +4888,7 @@ BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 
 #ifdef JA2BETAVERSION
 
-void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGameID )
+static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, UINT8 ubSaveGameID)
 {
 	CHAR8		zFileName[128];
 	HWFILE	hFile;
@@ -4935,7 +4938,8 @@ void InitShutDownMapTempFileTest( BOOLEAN fInit, STR pNameOfFile, UINT8 ubSaveGa
 	}
 }
 
-void WriteTempFileNameToFile( STR pFileName, UINT32 uiSizeOfFile, HFILE hSaveFile )
+
+static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];

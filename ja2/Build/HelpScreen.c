@@ -35,7 +35,9 @@
 	#include "Video.h"
 #endif
 
-
+#ifdef JA2BETAVERSION
+#	include "Debug.h"
+#endif
 
 
 extern INT16 gsVIEWPORT_END_Y;

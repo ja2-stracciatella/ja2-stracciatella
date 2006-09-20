@@ -110,6 +110,12 @@
 	#include "Local.h"
 #endif
 
+#ifdef JA2TESTVERSION
+#	include "Map_Information.h"
+#	include "Soldier_Create.h"
+#	include "StrategicMap.h"
+#	include "Strategic_Status.h"
+#endif
 
 
 // DEFINES
@@ -12301,7 +12307,7 @@ void DumpSectorDifficultyInfo( void )
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
 
-	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ, wSectorName, TRUE );
+	GetSectorIDString(sSelMapX, sSelMapY, (INT8)iCurrentMapSectorZ, wSectorName, lengthof(wSectorName), TRUE);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %s", wSectorName );
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );

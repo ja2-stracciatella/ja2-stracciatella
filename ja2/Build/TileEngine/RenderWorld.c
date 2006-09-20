@@ -691,7 +691,7 @@ extern UINT8 gubGridNoMarkers[ WORLD_MAX ];
 extern UINT8 gubGridNoValue;
 
 extern BOOLEAN gfDisplayCoverValues;
-extern BOOLEAN gfDisplayGridNoVisibleValues = 0;
+BOOLEAN gfDisplayGridNoVisibleValues = 0;
 extern INT16	gsCoverValue[ WORLD_MAX ];
 extern INT16	gsBestCover;
 

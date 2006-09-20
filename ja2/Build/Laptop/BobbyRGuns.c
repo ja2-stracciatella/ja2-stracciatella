@@ -25,6 +25,10 @@
 	#include "ScreenIDs.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "Debug.h"
+#endif
+
 
 #define		BOBBYR_DEFAULT_MENU_COLOR					255
 

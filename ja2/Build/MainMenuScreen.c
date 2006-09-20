@@ -39,6 +39,11 @@
 	#include "Local.h"
 #endif
 
+#ifdef _DEBUG
+#	include "GameVersion.h"
+#endif
+
+
 #define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"
 #define MAINMENU_RECORD_SIZE					80 * 2
 

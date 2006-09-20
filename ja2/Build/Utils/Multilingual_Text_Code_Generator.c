@@ -34,6 +34,7 @@ CREATED:	Feb 16, 1999
 #include "Language_Defines.h"
 #include "Debug.h"
 #include "FileMan.h"
+#include <string.h>
 
 //Currently in JA2's _EnglishText, these tokens make up all of the
 //format specifiers that are actually used.  Feel free to add more,
@@ -73,7 +74,7 @@ enum
 #define LCG_FOREIGNNEWFILE					"_NewGermanText.c"
 
 //Given a file pointer, searches for the next DB string
-UINT32 CountDoubleByteStringsInFile( UINT8 *filename );
+static UINT32 CountDoubleByteStringsInFile(const char *filename);
 
 
 //One function does it all.  First looks for the cmd line arg, and if it matches
@@ -140,7 +141,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( UINT8 *str )
 	return TRUE;
 }
 
-UINT32 CountDoubleByteStringsInFile( UINT8 *filename )
+UINT32 CountDoubleByteStringsInFile(const char *filename)
 {
 	FILE *fp = NULL;
 	UINT32 uiNumStrings = 0;

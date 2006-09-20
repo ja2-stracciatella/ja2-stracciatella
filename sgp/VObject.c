@@ -1479,7 +1479,7 @@ typedef struct DUMPFILENAME
 	UINT8 str[256];
 }DUMPFILENAME;
 
-void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
+static void DumpVObjectInfoIntoFile(const char *filename, BOOLEAN fAppend)
 {
 	VOBJECT_NODE *curr;
 	FILE *fp;
@@ -1522,7 +1522,7 @@ void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 		fFound = FALSE;
 		for( i = 0; i < uiUniqueID; i++ )
 		{
-			if( !_stricmp( tempName, pName[i].str ) && !_stricmp( tempCode, pCode[i].str ) )
+			if (strcasecmp(tempName, pName[i].str) == 0 && strcasecmp(tempCode, pCode[i].str) == 0)
 			{ //same string
 				fFound = TRUE;
 				(puiCounter[ i ])++;
@@ -1558,7 +1558,7 @@ void DumpVObjectInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 }
 
 //Debug wrapper for adding vObjects
-BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, UINT8 *pSourceFile )
+BOOLEAN _AddAndRecordVObject(VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
 {
 	UINT16 usLength;
 	UINT8 str[256];
@@ -1583,7 +1583,7 @@ BOOLEAN _AddAndRecordVObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32
 	return TRUE;
 }
 
-void PerformVideoInfoDumpIntoFile( UINT8 *filename, BOOLEAN fAppend )
+void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend)
 {
 	DumpVObjectInfoIntoFile( filename, fAppend );
 	DumpVSurfaceInfoIntoFile( filename, TRUE );

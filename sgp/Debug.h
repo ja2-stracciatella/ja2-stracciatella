@@ -60,7 +60,7 @@ extern	UINT8		*String(const char *String, ...);
 //Assert( pointer, "This pointer is null and you tried to access it in function A ");
 //It'll make debugging a little simpler.  In anal cases, you could build the string first, then assert
 //with it.
-extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
+extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile);
 
 #define Assert(a)										(a) ? _Null() : _FailMessage( NULL, __LINE__, __FILE__ )
 #define AssertMsg(a,b)							(a) ? _Null() : _FailMessage(    b, __LINE__, __FILE__ )
@@ -123,7 +123,7 @@ extern	void		DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel,
 extern	BOOLEAN	DbgSetDebugLevel(UINT16 TopicId, UINT8 uiDebugLevel);
 extern	void		DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine );
 //extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
-extern	void		DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage );
+extern void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage);
 extern	void		DbgClearAllTopics( void );
 extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString);
 

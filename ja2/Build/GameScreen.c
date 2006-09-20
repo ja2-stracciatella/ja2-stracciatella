@@ -86,6 +86,10 @@
 	#include "Video.h"
 #endif
 
+#ifdef JA2TESTVERSION
+#	include "Scheduling.h"
+#endif
+
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 

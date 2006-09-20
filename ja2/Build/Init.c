@@ -53,6 +53,11 @@
 	#include "Shading.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "Multilingual_Text_Code_Generator.h"
+#endif
+
+
 extern BOOLEAN GetCDromDriveLetter( STR8	pString );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -191,7 +196,7 @@ UINT32 InitializeJA2(void)
 
 #ifdef JA2BETAVERSION
 	//This allows the QuickSave Slots to be autoincremented, ie everytime the user saves, there will be a new quick save file
-	if ( _stricmp( gzCommandLine, "-quicksave" ) == 0 )
+	if (strcasecmp(gzCommandLine, "-quicksave") == 0)
 	{
 		gfUseConsecutiveQuickSaveSlots = TRUE;
 	}

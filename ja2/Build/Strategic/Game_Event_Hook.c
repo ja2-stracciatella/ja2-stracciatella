@@ -43,6 +43,8 @@
 #endif
 
 #ifdef JA2BETAVERSION
+#	include "JAScreens.h"
+
 extern BOOLEAN gfMercsNeverQuit;
 #endif
 

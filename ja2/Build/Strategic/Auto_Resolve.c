@@ -63,6 +63,10 @@
 	#include "Debug.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "Cheats.h"
+#endif
+
 //#include "vtuneapi.h"
 
 //#define INVULNERABILITY

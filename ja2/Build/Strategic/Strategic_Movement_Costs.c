@@ -7,6 +7,11 @@
 	#include "Tactical_Save.h"
 #endif
 
+#ifdef JA2TESTVERSION
+#	include "Debug.h"
+#endif
+
+
 UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ] =
 {
     {

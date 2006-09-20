@@ -31,6 +31,11 @@
 	#include "Video.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "Debug.h"
+#endif
+
+
 #define		MSGBOX_DEFAULT_WIDTH							300
 
 #define		MSGBOX_BUTTON_WIDTH								61

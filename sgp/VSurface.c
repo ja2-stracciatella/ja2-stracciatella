@@ -2547,7 +2547,9 @@ typedef struct DUMPFILENAME
 {
 	UINT8 str[256];
 }DUMPFILENAME;
-void DumpVSurfaceInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
+
+
+void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
 {
 	VSURFACE_NODE *curr;
 	FILE *fp;
@@ -2590,7 +2592,7 @@ void DumpVSurfaceInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 		fFound = FALSE;
 		for( i = 0; i < uiUniqueID; i++ )
 		{
-			if( !_stricmp( tempName, pName[i].str ) && !_stricmp( tempCode, pCode[i].str ) )
+			if (strcasecmp(tempName, pName[i].str) == 0 && strcasecmp(tempCode, pCode[i].str) == 0)
 			{ //same string
 				fFound = TRUE;
 				(puiCounter[ i ])++;
@@ -2626,7 +2628,7 @@ void DumpVSurfaceInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 }
 
 //Debug wrapper for adding vsurfaces
-BOOLEAN _AddAndRecordVSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, UINT8 *pSourceFile )
+BOOLEAN _AddAndRecordVSurface(VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
 {
 	UINT16 usLength;
 	UINT8 str[256];

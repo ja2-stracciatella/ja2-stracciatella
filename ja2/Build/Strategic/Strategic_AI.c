@@ -34,6 +34,14 @@
 	#include "Debug.h"
 #endif
 
+#ifdef JA2BETAVERSION
+#	include "JAScreens.h"
+#	include "MessageBoxScreen.h"
+#	include "Squads.h"
+#	include <stdarg.h>
+#endif
+
+
 #define SAI_VERSION		29
 
 /*
@@ -402,8 +410,8 @@ void ReinitializeUnvisitedGarrisons();
 //"Strategic Decisions.txt" in the JA2\Data directory.  This also records the time that each log entry
 //was made.
 #ifdef JA2BETAVERSION
-void LogStrategicEvent( UINT8 *str, ... ); //adds a timestamp.
-void LogStrategicMsg( UINT8 *str, ... ); //doesn't use the time stamp
+void LogStrategicEvent(const char *str, ...); //adds a timestamp.
+void LogStrategicMsg(const char *str, ...); //doesn't use the time stamp
 void ClearStrategicLog();
 #endif
 
@@ -454,7 +462,7 @@ void UpgradeAdminsToTroops();
 
 
 #ifdef JA2BETAVERSION
-void SAIReportError( STR16 wErrorString );
+void SAIReportError(const wchar_t *wErrorString);
 #else
 #define SAIReportError( a ) //define it out
 #endif
@@ -634,8 +642,8 @@ void ValidatePendingGroups()
 		}
 		if( iErrorsForInvalidPendingGroup )
 		{
-			UINT16 str[256];
-			swprintf( str, L"Strategic AI:  Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save."
+			wchar_t str[256];
+			swprintf(str, lengthof(str), L"Strategic AI:  Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save."
 										 L"You can continue playing, as this has been auto-corrected.  No need to send any debug files.", iErrorsForInvalidPendingGroup );
 			SAIReportError( str );
 		}
@@ -665,8 +673,8 @@ void ValidateWeights( INT32 iID )
 		}
 		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
 		{
-			UINT16 str[256];
-			swprintf( str, L"Strategic AI:  Internal error #%02d (total request/reinforcement points).  Please report error including error#.  "
+			wchar_t str[256];
+			swprintf(str, lengthof(str), L"Strategic AI:  Internal error #%02d (total request/reinforcement points).  Please report error including error#.  "
 										 L"You can continue playing, as the points have been auto-corrected.  No need to send any save/debug files.", iID );
 			//Correct the misalignment.
 			giReinforcementPoints = iSumReinforcementPoints;
@@ -684,8 +692,8 @@ void ValidateGroup( GROUP *pGroup )
 		{
 			#ifdef JA2BETAVERSION
 			{
-				UINT16 str[256];
-				swprintf( str, L"Strategic AI:  Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Strategic Decisions.txt.",
+				wchar_t str[256];
+				swprintf(str, lengthof(str), L"Strategic AI:  Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Strategic Decisions.txt.",
 											 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
 				SAIReportError( str );
 			}
@@ -725,8 +733,8 @@ void ValidateLargeGroup( GROUP *pGroup )
 	#ifdef JA2BETAVERSION
 		if( pGroup->ubGroupSize > 25 )
 		{
-			UINT16 str[ 512 ];
-			swprintf( str, L"Strategic AI warning:  Enemy group containing %d soldiers "
+			wchar_t str[ 512 ];
+			swprintf(str, lengthof(str), L"Strategic AI warning:  Enemy group containing %d soldiers "
 									 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
 									 L"to evaluate a potential problems with very large enemy groups.",
 									 pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
@@ -782,7 +790,7 @@ void ValidatePlayersAreInOneGroupOnly()
 	GROUP *pGroup, *pOtherGroup;
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
-	UINT16 str[ 1024 ];
+	wchar_t str[1024];
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
 	iNumErrors = 0;
@@ -874,7 +882,7 @@ void ValidatePlayersAreInOneGroupOnly()
 					pGroup = GetGroup( pSoldier->ubGroupID );
 					Assert( pGroup );
 					Assert( pOtherGroup );
-					swprintf( str, L"%s in %c%d thinks he/she is in group %d in %c%d but isn't.  "
+					swprintf(str, lengthof(str), L"%s in %c%d thinks he/she is in group %d in %c%d but isn't.  "
 												 L"Group %d in %c%d thinks %s is in the group but isn't.  %s will be assigned to a unique squad.  "
 												 L"Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
@@ -918,7 +926,7 @@ void ValidatePlayersAreInOneGroupOnly()
 					Assert( pGroup );
 					Assert( pOtherGroup );
 
-					swprintf( str, L"%s in %c%d has been found in multiple groups.  The group he/she is supposed "
+					swprintf(str, lengthof(str), L"%s in %c%d has been found in multiple groups.  The group he/she is supposed "
 												 L"to be in is group %d in %c%d, but %s was also found to be in group %d in %c%d.  %s was found in %d groups "
 												 L"total.  Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
@@ -929,7 +937,7 @@ void ValidatePlayersAreInOneGroupOnly()
 				else if( !iGroups )
 				{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his
 					//own unique squad as a correction.
-					swprintf( str, L"%s in %c%d cannot be found in any group.  %s will be assigned to a unique group/squad.  "
+					swprintf(str, lengthof(str), L"%s in %c%d cannot be found in any group.  %s will be assigned to a unique group/squad.  "
 												 L"Please provide details on how you think this may have happened.  Send screenshot and PRIOR save.  Do not send a save "
 												 L"you create after this point as the info will have been corrected by then.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, pSoldier->name );
@@ -960,8 +968,8 @@ void ValidatePlayersAreInOneGroupOnly()
 	if( iNumErrors )
 	{ //The first error to be detected is the one responsible for building the strings.  We will simply append another string containing
 		//the total number of detected errors.
-		UINT16 tempstr[ 128 ];
-		swprintf( tempstr, L"  A total of %d related errors have been detected.", iNumErrors );
+		wchar_t tempstr[128];
+		swprintf(tempstr, lengthof(tempstr), L"  A total of %d related errors have been detected.", iNumErrors );
 		wcscat( str, tempstr );
 		SAIReportError( str );
 	}
@@ -969,7 +977,7 @@ void ValidatePlayersAreInOneGroupOnly()
 #endif
 
 #ifdef JA2BETAVERSION
-void SAIReportError( STR16 wErrorString )
+void SAIReportError(const wchar_t *wErrorString)
 {
 	// runtime static only, don't save
 	#ifdef JA2TESTVERSION
@@ -1858,8 +1866,8 @@ BOOLEAN EvaluateGroupSituation( GROUP *pGroup )
 					{
 						UINT8 ubCut;
 						#ifdef JA2BETAVERSION
-						UINT16 str[512];
-						swprintf( str, L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d."
+						wchar_t str[512];
+						swprintf(str, lengthof(str), L"Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d."
 													 L"Please send Strategic Decisions.txt and PRIOR save.",
 													 pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
 													 pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
@@ -3974,7 +3982,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 #ifdef JA2BETAVERSION
 
-void LogStrategicMsg( UINT8 *str, ... )
+void LogStrategicMsg(const char *str, ...)
 {
 	va_list argptr;
 	UINT8	string[512];
@@ -4003,7 +4011,7 @@ void LogStrategicMsg( UINT8 *str, ... )
 	fclose( fp );
 }
 
-void LogStrategicEvent( UINT8 *str, ... )
+void LogStrategicEvent(const char *str, ...)
 {
 	va_list argptr;
 	UINT8	string[512];

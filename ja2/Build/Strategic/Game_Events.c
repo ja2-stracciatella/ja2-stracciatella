@@ -15,8 +15,7 @@
 
 #ifdef JA2TESTVERSION
 
-UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
+static const wchar_t *gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE]={
 	L"Null",
 	L"ChangeLightValue",
 	L"WeatherStart",
@@ -27,7 +26,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"BobbyRayPurchase",
 	L"DailyUpdateBobbyRayInventory",
 	L"UpdateBobbyRayInventory",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"DailyUpdateOfMercSite",
 	L"Day3AddEMailFromSpeck",
 	L"DelayedHiringOfMerc",
@@ -38,7 +36,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"MercContractOver",
 	L"GroupArrival",
 	L"Day2AddEMailFromIMP",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"MercComplainEquipment",
 	L"HourlyUpdate",
 	L"HandleMineIncome",
@@ -49,7 +46,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"SetByNPCSystem",
 	L"SecondAirportAttendantArrived",
 	L"HelicopterHoverTooLong",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"HelicopterHoverWayTooLong",
 	L"HelicopterDoneRefuelling",
 	L"MercLeaveEquipInOmerta",
@@ -60,7 +56,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"BeginRainStorm",
 	L"EndRainStorm",
 	L"HandleTownOpinion",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"SetupTownOpinion",
 	L"DelayedDeathHandling",
 	L"BeginAirRaid",
@@ -71,7 +66,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"DecayCreatures",
 	L"CreatureNightPlanning",
 	L"CreatureAttack",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"EvaluateQueenSituation",
 	L"CheckEnemyControlledSector",
 	L"TurnOnNightLights",
@@ -82,7 +76,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"ForceTimeInterupt",
 	L"EnricoEmailEvent",
 	L"InsuranceInvestigationStarted",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"InsuranceInvestigationOver",
 	L"HandleMinuteUpdate",
 	L"TemperatureUpdate",
@@ -93,7 +86,6 @@ UINT16 gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE][40]={
 	L"RemoveAssassin",
 	L"BandageBleedingMercs",
 	L"ShowUpdateMenu",
-	//1234567890123456789012345678901234567890 (increase size of array if necessary)
 	L"SetMenuReason",
 	L"AddSoldierToUpdateBox",
 	L"BeginContractRenewalSequence",

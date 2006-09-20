@@ -10941,7 +10941,7 @@ void DebugValidateSoldierData( )
 	SOLDIERTYPE		*pSoldier;
 	CHAR16 sString[ 1024 ];
 	BOOLEAN fProblemDetected = FALSE;
-	static uiFrameCount = 0;
+	static UINT32 uiFrameCount = 0;
 
 
 	// this function is too slow to run every frame, so do the check only every 50 frames
@@ -10968,13 +10968,13 @@ void DebugValidateSoldierData( )
 				if ( pSoldier->ubGroupID == 0 && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_POW && !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
 				{
 					// This is bad!
-					swprintf( sString, L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", cnt );
+					swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", cnt);
 					fProblemDetected = TRUE;
 				}
 				else if ( ( pSoldier->ubGroupID != 0 ) && ( GetGroup( pSoldier->ubGroupID ) == NULL ) )
 				{
 					// This is bad!
-					swprintf( sString, L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", cnt, pSoldier->ubGroupID );
+					swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", cnt, pSoldier->ubGroupID);
 					fProblemDetected = TRUE;
 				}
 			}
@@ -10994,7 +10994,7 @@ void DebugValidateSoldierData( )
 						 ( pSoldier->sSectorY <= 0 ) || ( pSoldier->sSectorY >= 17 ) ||
 						 ( pSoldier->bSectorZ  < 0 ) || ( pSoldier->bSectorZ >   3 ) ) )
 			{
-				swprintf( sString, L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", cnt, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", cnt, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
 				fProblemDetected = TRUE;
 			}
 		}

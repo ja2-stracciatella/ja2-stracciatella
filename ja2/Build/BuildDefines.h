@@ -21,7 +21,7 @@
 // Do combinations
 #ifdef JA2TESTVERSION
 	#define JA2BETAVERSION
-	#define JA2EDITOR
+	//#define JA2EDITOR
 #endif
 
 #ifdef JA2BETAVERSION

@@ -30,6 +30,10 @@
 	#define BR_INVENTORY_TURNOVER_DEBUG
 #endif
 
+#ifdef BR_INVENTORY_TURNOVER_DEBUG
+#	include "Message.h"
+#endif
+
 
 #define BOBBIES_SIGN_FONT							FONT14ARIAL
 #define BOBBIES_SIGN_COLOR						2

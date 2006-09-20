@@ -86,7 +86,10 @@
 	#include "Debug.h"
 #endif
 
-
+#ifdef JA2TESTVERSION
+#	include "Arms_Dealer_Init.h"
+#	include "Strategic_Status.h"
+#endif
 
 
 // icons text id's

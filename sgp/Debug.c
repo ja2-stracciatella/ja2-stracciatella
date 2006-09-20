@@ -230,7 +230,7 @@ void DbgShutdown(void)
 //
 //**************************************************************************
 
-void DbgTopicRegistration( UINT8 ubCmd, UINT16 *usTopicID, CHAR8 *zMessage )
+void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 {
 	UINT16 usIndex,usUse;
 	BOOLEAN fFound;
@@ -472,7 +472,7 @@ void _Null(void)
 extern HVOBJECT FontObjs[25];
 
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
-void _FailMessage( UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile )
+void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile)
 {
 	/*MSG Message;*/
 	UINT8 ubOutputString[512];

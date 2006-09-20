@@ -41,6 +41,10 @@
 #endif
 
 #ifdef JA2BETAVERSION
+#	include "JAScreens.h"
+#	include "ScreenIDs.h"
+#	include "MessageBoxScreen.h"
+
 	extern BOOLEAN gfClearCreatureQuest;
 #endif
 
@@ -87,8 +91,8 @@ void ValidateEnemiesHaveWeapons()
 		// do message box and return
 		if( iNumInvalid )
 		{
-			UINT16 str[ 100 ];
-			swprintf( str, L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid );
+			wchar_t str[100];
+			swprintf(str, lengthof(str), L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid);
 			iErrorDialog = DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
 		}
 	#endif
@@ -693,7 +697,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
 	INT32 iNumEnemiesInSector;
 	SECTORINFO *pSector;
-	UINT16 str[128];
+	wchar_t str[128];
 	EvaluateDeathEffectsToSoldierInitList( pSoldier );
 
 	switch( pSoldier->ubProfile )
@@ -743,8 +747,8 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 		if( !pGroup )
 		{
 			#ifdef JA2BETAVERSION
-				UINT16 str[256];
-				swprintf( str, L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID );
+				wchar_t str[256];
+				swprintf(str, lengthof(str), L"Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
 			return;
@@ -752,8 +756,8 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 		if( pGroup->fPlayer )
 		{
 			#ifdef JA2BETAVERSION
-				UINT16 str[256];
-				swprintf( str, L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID );
+				wchar_t str[256];
+				swprintf(str, lengthof(str), L"Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 			#endif
 			return;
@@ -764,7 +768,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumElites )
 					{
-						swprintf( str, L"Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID );
+						swprintf(str, lengthof(str), L"Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -790,7 +794,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumTroops )
 					{
-						swprintf( str, L"Enemy troop killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID );
+						swprintf(str, lengthof(str), L"Enemy troop killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -816,7 +820,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumAdmins )
 					{
-						swprintf( str, L"Enemy administrator killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID );
+						swprintf(str, lengthof(str), L"Enemy administrator killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
