@@ -305,7 +305,7 @@ void DDCreatePalette( LPDIRECTDRAW2 pDirectDraw, UINT32 uiFlags, LPPALETTEENTRY 
 								IUnknown FAR * pUnkOuter)
 {
 #if 1 // XXX TODO
-	FIXME
+	UNIMPLEMENTED();
 #else
 	Assert( pDirectDraw != NULL );
 

@@ -1462,6 +1462,72 @@ void RefreshScreen(void)
     return;
   }
 
+#if 1 // XXX TODO
+	if (guiFrameBufferState == BUFFER_DIRTY)
+	{
+		if (gfFadeInitialized && gfFadeInVideo)
+		{
+			gFadeFunction();
+		}
+		else
+		{
+			if (gfForceFullScreenRefresh)
+			{
+				SDL_UpdateRect(screen, 0, 0, 0, 0);
+			}
+			else
+			{
+				for (uiIndex = 0; uiIndex < guiDirtyRegionCount; uiIndex++)
+				{
+					SDL_UpdateRect(
+						screen,
+						gListOfDirtyRegions[uiIndex].iLeft,
+						gListOfDirtyRegions[uiIndex].iTop,
+						gListOfDirtyRegions[uiIndex].iRight  - gListOfDirtyRegions[uiIndex].iLeft,
+						gListOfDirtyRegions[uiIndex].iBottom - gListOfDirtyRegions[uiIndex].iTop
+					);
+				}
+
+				// Now do new, extended dirty regions
+				for (uiIndex = 0; uiIndex < guiDirtyRegionExCount; uiIndex++)
+				{
+					Region.left   = gDirtyRegionsEx[uiIndex].iLeft;
+					Region.bottom = gDirtyRegionsEx[uiIndex].iBottom;
+
+					// Do some checks if we are in the process of scrolling!
+					if (gfRenderScroll)
+					{
+						// Check if we are completely out of bounds
+						if (Region.top <= gsVIEWPORT_WINDOW_END_Y && Region.bottom <= gsVIEWPORT_WINDOW_END_Y)
+						{
+							continue;
+						}
+					}
+
+					SDL_UpdateRect(
+						screen,
+						gDirtyRegionsEx[uiIndex].iLeft,
+						gDirtyRegionsEx[uiIndex].iTop,
+						gDirtyRegionsEx[uiIndex].iRight  - gDirtyRegionsEx[uiIndex].iLeft,
+						gDirtyRegionsEx[uiIndex].iBottom - gDirtyRegionsEx[uiIndex].iTop
+					);
+				}
+			}
+		}
+		if (gfRenderScroll)
+		{
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA);
+		}
+		gfIgnoreScrollDueToCenterAdjust = FALSE;
+
+		// Update the guiFrameBufferState variable to reflect that the frame buffer can now be handled
+		guiFrameBufferState = BUFFER_READY;
+
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = FALSE;
+		guiDirtyRegionExCount = 0;
+	}
+#else
 
   //
   // Get the current mouse position
@@ -2235,8 +2301,7 @@ void RefreshScreen(void)
 
 
 ENDOFLOOP:
-
-
+#endif
 	fFirstTime = FALSE;
 }
 
@@ -2255,38 +2320,38 @@ LPDIRECTDRAW2 GetDirectDraw2Object(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetPrimarySurfaceObject(void)
+SDL_Surface* GetPrimarySurfaceObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
-
-	return gpPrimarySurface;
+	FIXME
+	Assert(screen != NULL);
+	return screen;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetBackBufferObject(void)
+SDL_Surface* GetBackBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
-
-	return gpBackBuffer;
+	FIXME
+	Assert(screen != NULL);
+	return screen;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetFrameBufferObject(void)
+SDL_Surface* GetFrameBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
-
-	return gpFrameBuffer;
+	FIXME
+	Assert(screen != NULL);
+	return screen;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-LPDIRECTDRAWSURFACE2 GetMouseBufferObject(void)
+SDL_Surface* GetMouseBufferObject(void)
 {
-	Assert( gpPrimarySurface != NULL );
-
-	return gpMouseCursor;
+	FIXME
+	Assert(screen != NULL);
+	return screen;
 }
 
 

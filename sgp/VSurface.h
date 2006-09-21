@@ -5,6 +5,7 @@
 #include "Container.h"
 #include "HImage.h"
 #include "VObject.h"
+#include <SDL.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -86,6 +87,7 @@ typedef struct
 
 typedef struct
 {
+	SDL_Surface* surface;
 	UINT16					usHeight;							// Height of Video Surface
 	UINT16					usWidth;							// Width of Video Surface
 	UINT8						ubBitDepth;						// BPP ALWAYS 16!
@@ -96,7 +98,7 @@ typedef struct
 	PTR							pSavedSurfaceData;		// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
 																				// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
 	UINT32					fFlags;								// Used to describe memory usage, etc
-	PTR							pPalette;						  // A void pointer, but for this implementation a DDPalette
+	SDL_Color* pPalette;
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 	COLORVAL				TransparentColor;			// Defaults to 0,0,0
 	PTR							pClipper;							// A void pointer encapsolated as a clipper Surface
