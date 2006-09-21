@@ -12,10 +12,7 @@
 	#include "WorldDef.h"
 	#include "RenderWorld.h"
 	#include "Interface_Control.h"
-#endif
-
-#ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN
+	#include <SDL.h>
 #endif
 
 INT32	giClockTimer = -1;
@@ -68,7 +65,7 @@ INT32		giTimerTeamTurnUpdate			= 0;
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 
 // Clock Callback event ID
-MMRESULT	gTimerID;
+SDL_TimerID	gTimerID;
 
 // GLOBALS FOR CALLBACK
 UINT32				gCNT;
@@ -94,10 +91,11 @@ extern UINT32 guiFlashCursorBaseTime;
 extern INT32 giPotCharPathBaseTime;
 
 
-void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	)
+UINT32 CALLBACK TimeProc(UINT32 interval, void * params	)
 {
 	static BOOLEAN fInFunction = FALSE;
 	//SOLDIERTYPE		*pSoldier;
+	Assert(interval > 0);
 
 	if ( !fInFunction )
 	{
@@ -168,23 +166,18 @@ void CALLBACK TimeProc( UINT uID,	UINT uMsg, DWORD dwUser, DWORD dw1,	DWORD dw2	
 
 		fInFunction = FALSE;
 	}
-
+	return interval;
 }
 
 
 
 BOOLEAN InitializeJA2Clock(void)
 {
-#if 1 // XXX TODO
-	FIXME
-#else
-
 #ifdef CALLBACKTIMER
 
 
-	MMRESULT	mmResult;
-	TIMECAPS	tc;
 	INT32			cnt;
+	SDL_InitSubSystem(SDL_INIT_TIMER);
 
 	// Init timer delays
 	for ( cnt = 0; cnt < NUMTIMERS; cnt++ )
@@ -193,23 +186,13 @@ BOOLEAN InitializeJA2Clock(void)
 	}
 
 
-	// First get timer resolutions
-	mmResult = timeGetDevCaps( &tc, sizeof( tc ) );
-
-	if ( mmResult != TIMERR_NOERROR )
-	{
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not get timer properties");
-	}
-
-	// Set timer at lowest resolution. Could use middle of lowest/highest, we'll see how this performs first
-	gTimerID = timeSetEvent( BASETIMESLICE, BASETIMESLICE, TimeProc, (DWORD)0, TIME_PERIODIC );
+	gTimerID = SDL_AddTimer(BASETIMESLICE,&TimeProc,NULL);
 
 	if ( !gTimerID )
 	{
 		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
 	}
 
-#endif
 
 #endif
   return TRUE;
@@ -217,17 +200,12 @@ BOOLEAN InitializeJA2Clock(void)
 
 void    ShutdownJA2Clock(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-  // Make sure we kill the timer
 #ifdef CALLBACKTIMER
 
-  timeKillEvent( gTimerID );
+	SDL_RemoveTimer(gTimerID);
 
 #endif
 
-#endif
 }
 
 
