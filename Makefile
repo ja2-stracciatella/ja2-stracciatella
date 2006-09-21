@@ -1,5 +1,4 @@
 SDL_CONFIG = sdl-config
-#SDL_CONFIG = sdl11-config
 CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
 
