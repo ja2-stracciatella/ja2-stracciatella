@@ -25,10 +25,6 @@
 #define VIDEO_SHUTTING_DOWN   0x02
 #define VIDEO_SUSPENDED       0x04
 
-#define THREAD_OFF            0x00
-#define THREAD_ON             0x01
-#define THREAD_SUSPENDED      0x02
-
 #define CURRENT_MOUSE_DATA		0
 #define PREVIOUS_MOUSE_DATA		1
 
@@ -125,7 +121,6 @@ HWND                          ghWindow;
 UINT32                        guiFrameBufferState;    // BUFFER_READY, BUFFER_DIRTY
 UINT32                        guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 UINT32								        guiVideoManagerState;   // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
-UINT32                        guiRefreshThreadState;  // THREAD_ON, THREAD_OFF, THREAD_SUSPENDED
 
 //
 // Dirty rectangle management variables
@@ -213,7 +208,6 @@ BOOLEAN InitializeVideoManager(void)
 	guiFrameBufferState          = BUFFER_DIRTY;
 	guiMouseBufferState          = BUFFER_DISABLED;
 	guiVideoManagerState         = VIDEO_ON;
-	guiRefreshThreadState        = THREAD_OFF;
 	guiDirtyRegionCount          = 0;
 	gfForceFullScreenRefresh     = TRUE;
 	gpCursorStore                = NULL;
@@ -580,7 +574,6 @@ BOOLEAN InitializeVideoManager(void)
   guiFrameBufferState          = BUFFER_DIRTY;
   guiMouseBufferState          = BUFFER_DISABLED;
   guiVideoManagerState         = VIDEO_ON;
-  guiRefreshThreadState        = THREAD_OFF;
   guiDirtyRegionCount          = 0;
   gfForceFullScreenRefresh     = TRUE;
   gpCursorStore                = NULL;
@@ -601,8 +594,6 @@ BOOLEAN InitializeVideoManager(void)
 
 void ShutdownVideoManager(void)
 {
-  //UINT32  uiRefreshThreadState;
-
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
 
   //
@@ -1404,7 +1395,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 void RefreshScreen(void)
 {
-  static UINT32  uiRefreshThreadState, uiIndex;
+  static UINT32 uiIndex;
   UINT16  usScreenWidth, usScreenHeight;
   static BOOLEAN fShowMouse;
   HRESULT ReturnCode;
@@ -1431,35 +1422,26 @@ void RefreshScreen(void)
 
   switch (guiVideoManagerState)
   {
-    case VIDEO_ON
-    : //
+    case VIDEO_ON:
       // Excellent, everything is cosher, we continue on
-      //
-      uiRefreshThreadState = guiRefreshThreadState = THREAD_ON;
       usScreenWidth = gusScreenWidth;
       usScreenHeight = gusScreenHeight;
       break;
-    case VIDEO_OFF
-    : //
+
+    case VIDEO_OFF:
       // Hot damn, the video manager is suddenly off. We have to bugger out of here. Don't forget to
       // leave the critical section
-      //
-      guiRefreshThreadState = THREAD_OFF;
       return;
-    case VIDEO_SUSPENDED
-    : //
+
+    case VIDEO_SUSPENDED:
       // This are suspended. Make sure the refresh function does try to access any of the direct
       // draw surfaces
-      //
-      uiRefreshThreadState = guiRefreshThreadState = THREAD_SUSPENDED;
       break;
-    case VIDEO_SHUTTING_DOWN
-    : //
+
+    case VIDEO_SHUTTING_DOWN:
       // Well things are shutting down. So we need to bugger out of there. Don't forget to leave the
       // critical section before returning
-      //
-    guiRefreshThreadState = THREAD_OFF;
-    return;
+      return;
   }
 
 #if 1 // XXX TODO
