@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "MemMan.h"
+#include "Shading.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WCheck.h"
@@ -6998,6 +6999,19 @@ BlitDone:
 **********************************************************************************************/
 BOOLEAN Blt16BPPTo16BPP(UINT16 *pDest, UINT32 uiDestPitch, UINT16 *pSrc, UINT32 uiSrcPitch, INT32 iDestXPos, INT32 iDestYPos, INT32 iSrcXPos, INT32 iSrcYPos, UINT32 uiWidth, UINT32 uiHeight)
 {
+#if 1 // XXX TODO
+	UINT32 i;
+
+	for (i = 0; i < uiHeight; i++)
+	{
+		UINT32 j;
+		memcpy(
+			pDest + uiDestPitch * (iDestYPos + i) + 2 * iDestXPos,
+			pSrc  + uiSrcPitch  * (iSrcYPos  + i) + 2 * iSrcXPos,
+			uiWidth * 2
+		);
+	}
+#else
 UINT16 *pSrcPtr, *pDestPtr;
 UINT32 uiLineSkipDest, uiLineSkipSrc;
 
@@ -7009,9 +7023,6 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipDest=uiDestPitch-(uiWidth*2);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth*2);
 
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 __asm {
 	mov		esi, pSrcPtr
 	mov		edi, pDestPtr
@@ -12997,7 +13008,32 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparent( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	FIXME
+	for (;;)
+	{
+		UINT8 data = *SrcPtr++;
+
+		if (data == 0)
+		{
+			if (--usHeight == 0) break;
+			DestPtr += LineSkip;
+			continue;
+		}
+		if (data & 0x80)
+		{
+			// Transparent
+			DestPtr += (data & 0x7F) * 2;
+		}
+		else
+		{
+			do
+			{
+				*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				SrcPtr++;
+				DestPtr += 2;
+			}
+			while (--data != 0);
+		}
+	}
 #else
 	__asm {
 
@@ -14029,7 +14065,18 @@ UINT16 *DestPtr;
 	CHECKF(height >=1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	do
+	{
+		UINT32 w = width;
+		do
+		{
+			*DestPtr = IntensityTable[*DestPtr];
+			DestPtr++;
+		}
+		while (--w > 0);
+		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
+	}
+	while (--height > 0);
 #else
 	__asm {
 		mov		esi, OFFSET IntensityTable
