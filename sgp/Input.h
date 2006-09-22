@@ -112,8 +112,6 @@ extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 extern BOOLEAN   gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 
-extern BOOLEAN		gfSGPInputReceived;
-
 
 #define _KeyDown(a)        gfKeyState[(a)]
 #define _LeftButtonDown    gfLeftButtonState

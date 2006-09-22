@@ -543,7 +543,6 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 		else
 		{ // Windows hasn't processed any messages, therefore we handle the rest
 			GameLoop();
-			gfSGPInputReceived  =  FALSE;
 		}
 	}
 #endif

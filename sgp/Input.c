@@ -74,9 +74,6 @@ UINT16    gusQueueCount;
 UINT16    gusHeadIndex;
 UINT16    gusTailIndex;
 
-// ATE: Added to signal if we have had input this frame - cleared by the SGP main loop
-BOOLEAN		gfSGPInputReceived = FALSE;
-
 // This is the WIN95 hook specific data and defines used to handle the keyboard and
 // mouse hook
 
@@ -113,12 +110,10 @@ LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
   if (lParam & TRANSITION_MASK)
   { // The key has been released
     KeyUp(wParam, lParam);
-		//gfSGPInputReceived =  TRUE;
   }
   else
   { // Key was up
     KeyDown(wParam, lParam);
-		gfSGPInputReceived =  TRUE;
   }
 
   return TRUE;
@@ -150,8 +145,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       uiParam = uiParam | gusMouseXPos;
       // Update the button state
 			gfLeftButtonState = TRUE;
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
       // Trigger an input event
       QueueEvent(LEFT_BUTTON_DOWN, 0, uiParam);
 	    break;
@@ -164,8 +157,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfLeftButtonState = FALSE;
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
       // Trigger an input event
       QueueEvent(LEFT_BUTTON_UP, 0, uiParam);
       break;
@@ -178,8 +169,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfRightButtonState = TRUE;
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
       // Trigger an input event
       QueueEvent(RIGHT_BUTTON_DOWN, 0, uiParam);
       break;
@@ -192,8 +181,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfRightButtonState = FALSE;
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
       // Trigger an input event
       QueueEvent(RIGHT_BUTTON_UP, 0, uiParam);
       break;
@@ -209,8 +196,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
       {
         QueueEvent(MOUSE_POS, 0, uiParam);
       }
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
       break;
   }
   return TRUE;
@@ -271,8 +256,6 @@ LRESULT Result;
 	      gusMouseYPos = (UINT16)(uiYPos-rcClient.top);
 			}
 		  uiParam = (UINT32)gusMouseYPos<<16 | (UINT32)gusMouseXPos;
-			//Set that we have input
-      gfSGPInputReceived =  TRUE;
 	    break;
   }
 

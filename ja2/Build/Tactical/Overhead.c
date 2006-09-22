@@ -4137,8 +4137,6 @@ UINT32 EnterTacticalDemoMode()
 	// Set demo timer
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
 
-	gfSGPInputReceived = FALSE;
-
 	gTacticalStatus.fGoingToEnterDemo = FALSE;
 
 	return( INIT_SCREEN );

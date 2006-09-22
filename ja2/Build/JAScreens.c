@@ -1071,7 +1071,6 @@ void DoDemoIntroduction()
 					}
 				}
 			}
-			gfSGPInputReceived  =  FALSE;
 			RefreshScreen();
 		}
 	}

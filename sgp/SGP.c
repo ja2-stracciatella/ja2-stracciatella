@@ -614,9 +614,6 @@ int main(int argc, char* argv[])
       else
       { // Well, the game is active, so we handle the game stuff
         GameLoop();
-
-				// After this frame, reset input given flag
-	      gfSGPInputReceived  =  FALSE;
       }
     }
 #endif
