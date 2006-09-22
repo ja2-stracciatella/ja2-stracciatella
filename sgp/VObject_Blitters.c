@@ -6784,7 +6784,116 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	FIXME
+	// Skip lines
+	while (TopSkip-- > 0)
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+			if (data == 0) break;
+			if (data & 0x80) continue;
+			SrcPtr += data;
+		}
+	}
+
+	for (;;)
+	{
+		UINT32 skip = LeftSkip;
+		UINT32 count;
+		UINT8 data;
+
+		for (;;)
+		{
+			data = *SrcPtr++;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				if (skip > data)
+				{
+					data -= skip;
+				}
+				else
+				{
+					DestPtr += 2 * (data - skip);
+					break;
+				}
+			}
+			else
+			{
+				if (skip >= data)
+				{
+					SrcPtr += data;
+					skip -= data;
+				}
+				else
+				{
+					SrcPtr += skip;
+					data -= skip;
+					count = BlitLength;
+					goto blit_pixels;
+					break;
+				}
+			}
+		}
+
+		for (;;)
+		{
+			count = BlitLength;
+			data = *SrcPtr++;
+			if (data == 0) goto next_line;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				if (count <= data) break;
+				count -= data;
+			}
+			else
+			{
+				UINT32 n;
+blit_pixels:
+				n = (count > data ? data : count);
+
+				do
+				{
+					switch (*SrcPtr++)
+					{
+						case 0:                     *(UINT16*)DestPtr = usBackground; break;
+						case 1:  if (usShadow != 0) *(UINT16*)DestPtr = usShadow;     break;
+						default:                    *(UINT16*)DestPtr = usForeground; break;
+					}
+					DestPtr += 2;
+				}
+				while (--n > 0);
+
+				if (count <= data)
+				{
+					SrcPtr  += data - count;
+					DestPtr += 2 * (data - count);
+					break;
+				}
+			}
+		}
+
+		for (;;)
+		{
+			data = *SrcPtr++;
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+			}
+			else
+			{
+				SrcPtr += data;
+			}
+			DestPtr += 2 * data;
+		}
+
+next_line:
+		if (--BlitHeight == 0) break;
+		DestPtr += LineSkip;
+	}
 #else
 	__asm {
 
