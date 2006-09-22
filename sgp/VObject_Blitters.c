@@ -7006,8 +7006,8 @@ BOOLEAN Blt16BPPTo16BPP(UINT16 *pDest, UINT32 uiDestPitch, UINT16 *pSrc, UINT32 
 	{
 		UINT32 j;
 		memcpy(
-			pDest + uiDestPitch * (iDestYPos + i) + 2 * iDestXPos,
-			pSrc  + uiSrcPitch  * (iSrcYPos  + i) + 2 * iSrcXPos,
+			(UINT8*)pDest + uiDestPitch * (iDestYPos + i) + 2 * iDestXPos,
+			(UINT8*)pSrc  + uiSrcPitch  * (iSrcYPos  + i) + 2 * iSrcXPos,
 			uiWidth * 2
 		);
 	}
