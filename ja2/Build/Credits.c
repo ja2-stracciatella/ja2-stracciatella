@@ -796,7 +796,6 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
-	UINT32	uiSizeOfString = ( wcslen( pString ) + 2 ) * 2;
 	UINT32	uiFontToUse;
 	UINT8		uiColorToUse;
 
@@ -853,7 +852,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 	pNodeToAdd->sPosX = CRDT_TEXT_START_LOC;
 
 	//Allocate memory for the string
-	pNodeToAdd->pString = MemAlloc( uiSizeOfString );
+	pNodeToAdd->pString = MemAlloc(sizeof(*pNodeToAdd->pString) * (wcslen(pString) + 1));
 	if( pNodeToAdd->pString == NULL )
 		return( FALSE );
 
