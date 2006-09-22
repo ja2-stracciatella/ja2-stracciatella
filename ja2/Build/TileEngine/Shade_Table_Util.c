@@ -45,7 +45,7 @@ void DetermineRGBDistributionSettings()
 	//3-4 seconds to the time of a map load.
 #if 1
 	FIXME
-	sprintf(ShadeTableDir, "%s", ExecDir, SHADE_TABLE_DIR );
+	sprintf(ShadeTableDir, "%s", SHADE_TABLE_DIR);
 #else
 	GetExecutableDirectory( ExecDir );
 	sprintf( ShadeTableDir, "%s\\Data\\%s", ExecDir, SHADE_TABLE_DIR );
