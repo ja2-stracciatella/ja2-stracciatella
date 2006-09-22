@@ -591,32 +591,78 @@ int main(int argc, char* argv[])
   // attend to the gaming mechanics themselves
   while (gfProgramIsRunning)
   {
-#if 1 // XXX TODO
-		FIXME
-		GameLoop();
-#else
-    if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
-    { // We have a message on the WIN95 queue, let's get it
-      if (!GetMessage(&Message, NULL, 0, 0))
-      { // It's quitting time
-        return Message.wParam;
-      }
-      // Ok, now that we have the message, let's handle it
-      TranslateMessage(&Message);
-      DispatchMessage(&Message);
-    }
-    else
-    { // Windows hasn't processed any messages, therefore we handle the rest
-      if (gfApplicationActive == FALSE)
-      { // Well we got nothing to do but to wait for a message to activate
-        WaitMessage();
-      }
-      else
-      { // Well, the game is active, so we handle the game stuff
-        GameLoop();
-      }
-    }
-#endif
+		SDL_Event event;
+
+		if (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
+				case SDL_ACTIVEEVENT:
+					if (event.active.state & SDL_APPACTIVE)
+					{
+						gfApplicationActive = (event.active.gain != 0);
+						break;
+					}
+					break;
+
+				case SDL_MOUSEBUTTONDOWN:
+				{
+					UINT32 pos = event.button.y << 16 | event.button.x;
+
+					switch (event.button.button)
+					{
+						case SDL_BUTTON_LEFT:
+							gfLeftButtonState = TRUE;
+							QueueEvent(LEFT_BUTTON_DOWN, 0, pos);
+							break;
+
+						case SDL_BUTTON_RIGHT:
+							gfRightButtonState = TRUE;
+							QueueEvent(RIGHT_BUTTON_DOWN, 0, pos);
+							break;
+					}
+					break;
+				}
+
+				case SDL_MOUSEBUTTONUP:
+				{
+					UINT32 pos = event.button.y << 16 | event.button.x;
+
+					switch (event.button.button)
+					{
+						case SDL_BUTTON_LEFT:
+							gfLeftButtonState = FALSE;
+							QueueEvent(LEFT_BUTTON_UP, 0, pos);
+							break;
+
+						case SDL_BUTTON_RIGHT:
+							gfRightButtonState = FALSE;
+							QueueEvent(RIGHT_BUTTON_UP, 0, pos);
+							break;
+					}
+					break;
+				}
+
+				case SDL_QUIT:
+					gfProgramIsRunning = FALSE;
+					break;
+
+				default:
+					fprintf(stderr, "Received event of type %d\n", event.type);
+					break;
+			}
+		}
+		else
+		{
+			if (gfApplicationActive)
+			{
+				GameLoop();
+			}
+			else
+			{
+				SDL_WaitEvent(NULL);
+			}
+		}
   }
 
   // This is the normal exit point

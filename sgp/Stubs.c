@@ -5,9 +5,12 @@
 
 void GetCursorPos(POINT* pos)
 {
-	FIXME
-	pos->x = 0;
-	pos->y = 0;
+	int x;
+	int y;
+
+	SDL_GetMouseState(&x, &y);
+	pos->x = x;
+	pos->y = y;
 }
 
 
