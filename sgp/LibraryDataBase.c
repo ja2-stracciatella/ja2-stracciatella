@@ -159,9 +159,6 @@ INT16 i;
 
 BOOLEAN ShutDownFileDatabase( )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT16 sLoop1;
 
 	// Free up the memory used for each library
@@ -180,7 +177,7 @@ BOOLEAN ShutDownFileDatabase( )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg( String("ShutDownFileDatabase( ):  ERROR:  real file id still exists, wasnt closed") );
-		CloseHandle( gFileDataBase.RealFiles.pRealFilesOpen[ sLoop1 ].hRealFileHandle );
+		fclose(gFileDataBase.RealFiles.pRealFilesOpen[sLoop1].hRealFileHandle);
 	}
 
 	//Free up the memory used for the real files array for the opened files
@@ -191,7 +188,6 @@ BOOLEAN ShutDownFileDatabase( )
 	}
 
 	return( TRUE );
-#endif
 }
 
 
@@ -881,9 +877,6 @@ BOOLEAN OpenLibrary( INT16 sLibraryID )
 
 BOOLEAN CloseLibrary( INT16 sLibraryID )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT32	uiLoop1;
 
 	//if the library isnt loaded, dont close it
@@ -944,12 +937,11 @@ BOOLEAN CloseLibrary( INT16 sLibraryID )
 	gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen = FALSE;
 
 	//close the file ( note libraries are to be closed by the Windows close function )
-	CloseHandle( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle );
+	fclose(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle);
 
 
 
 	return( TRUE );
-#endif
 }
 
 BOOLEAN IsLibraryOpened( INT16 sLibraryID )
