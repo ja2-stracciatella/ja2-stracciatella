@@ -394,7 +394,7 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
  if (pStringSt == NULL)
 	return;
 
- pLocalString=(MemAlloc(wcslen(pString)*2+2));
+ pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
  if (pLocalString == NULL)
 	return;
 
@@ -444,7 +444,7 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 	if (pStringSt == NULL)
 		return;
 
-  pLocalString=(MemAlloc(wcslen(pString)*2+2));
+	pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
 	if (pLocalString == NULL)
 		return;
 
@@ -491,7 +491,7 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
  if (pStringSt == NULL)
 	return;
 
- pLocalString=(MemAlloc(wcslen(pString)*2+2));
+ pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
  if (pLocalString == NULL)
 	return;
 

@@ -1256,7 +1256,7 @@ void AddStringToFilesList( STR16 pString )
 
 
   // alloc string and copy
-	pFileString-> pString = MemAlloc( ( wcslen( pString ) * 2 ) + 2 );
+	pFileString->pString = MemAlloc(sizeof(*pFileString->pString) * (wcslen(pString) + 1));
 	wcscpy( pFileString->pString, pString );
 	pFileString->pString[ wcslen( pString ) ] = 0;
 

@@ -797,8 +797,8 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, 
   //pTempEmail->pText[iCounter]=NULL;
 
 	// copy subject
-	pTempEmail->pSubject=MemAlloc( 128 * 2 );
-	memset( pTempEmail->pSubject, 0, sizeof( CHAR16 ) * 128 );
+	pTempEmail->pSubject = MemAlloc(sizeof(*pTempEmail->pSubject) * 128);
+	memset(pTempEmail->pSubject, 0, sizeof(*pTempEmail->pSubject) * 128);
 	wcscpy(pTempEmail->pSubject,pSubject);
 
 	// copy offset and length of the actual message in email.edt
@@ -1233,9 +1233,9 @@ void SwapMessages(INT32 iIdA, INT32 iIdB)
  EmailPtr pA=pEmailList;
  EmailPtr pB=pEmailList;
  EmailPtr pTemp=MemAlloc(sizeof(Email) );
- pTemp->pSubject= MemAlloc( 128 * 2 );
 
- memset( pTemp->pSubject, 0, sizeof( CHAR16 ) * 128 );
+ pTemp->pSubject = MemAlloc(sizeof(*pTemp->pSubject) * 128);
+ memset(pTemp->pSubject, 0, sizeof(*pTemp->pSubject) * 128);
 
  if(!pA->Next)
 	 return;

@@ -91,7 +91,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 			//allocate memory for the string
 			pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-			pWrappedString->pNextWrappedString->sString = MemAlloc( (wcslen(DestString) +2 )* 2 );
+			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 			if( pWrappedString->pNextWrappedString->sString == NULL)
 				return (NULL);
 
@@ -120,7 +120,7 @@ WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixe
 
 			//allocate memory for the string
 			pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING));
-			pWrappedString->pNextWrappedString->sString = MemAlloc((wcslen(DestString) +2 )* 2 );
+			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 
 			//Copy the string into the new struct
 			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
@@ -215,7 +215,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 
 			//allocate memory for the string
 			pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-			pWrappedString->pNextWrappedString->sString = MemAlloc( (wcslen(DestString) +2 )* 2 );
+			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 			if( pWrappedString->pNextWrappedString->sString == NULL)
 				return (NULL);
 
@@ -261,7 +261,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			{
 				//allocate memory for the string
 				pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-				pWrappedString->pNextWrappedString->sString = MemAlloc( (wcslen(DestString) +2 )* 2 );
+				pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 				if( pWrappedString->pNextWrappedString->sString == NULL)
 					return (NULL);
 
@@ -299,7 +299,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 
 					//allocate memory for the string
 					pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-					pWrappedString->pNextWrappedString->sString = MemAlloc( (wcslen(DestString) + 2) * 2 );
+					pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 					if( pWrappedString->pNextWrappedString->sString == NULL)
 						return (NULL);
 
@@ -313,7 +313,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 
 					 //allocate memory for the string
 					 pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING));
-					 pWrappedString->pNextWrappedString->sString = MemAlloc((wcslen(pNullString) +2 )* 2 );
+						pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 					 wcscpy(pWrappedString->pNextWrappedString->sString, pNullString);
 					 pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
