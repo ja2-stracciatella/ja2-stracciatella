@@ -12211,7 +12211,20 @@ BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, H
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	do
+	{
+		UINT32 w = BlitLength;
+
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr++];
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr  += SrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--BlitHeight > 0);
 #else
 	__asm {
 
