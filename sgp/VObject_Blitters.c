@@ -12451,7 +12451,21 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalf( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 	uiSrcSkip=(uiSrcPitch*2)-(usWidth&0xfffffffe);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	usHeight /= 2;
+	do
+	{
+		UINT32 w = usWidth / 2;
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+			SrcPtr += 2;
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr += uiSrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
@@ -13521,7 +13535,110 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparentClip( UINT16 *pBuffer, UINT32 uiDestP
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	// Skip lines
+	while (TopSkip-- > 0)
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+			if (data == 0) break;
+			if (data & 0x80) continue;
+			SrcPtr += data;
+		}
+	}
+
+	for (;;)
+	{
+		UINT32 skip = LeftSkip;
+		UINT32 count;
+		UINT8 data;
+
+		for (;;)
+		{
+			data = *SrcPtr++;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				if (skip > data)
+				{
+					skip -= data;
+				}
+				else
+				{
+					DestPtr += 2 * (data - skip);
+					break;
+				}
+			}
+			else
+			{
+				if (skip >= data)
+				{
+					SrcPtr += data;
+					skip -= data;
+				}
+				else
+				{
+					SrcPtr += skip;
+					data -= skip;
+					count = BlitLength;
+					goto blit_pixels;
+				}
+			}
+		}
+
+		for (;;)
+		{
+			count = BlitLength;
+			data = *SrcPtr++;
+			if (data == 0) goto next_line;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				if (count <= data) break;
+				count -= data;
+			}
+			else
+			{
+				UINT32 n;
+blit_pixels:
+				n = (count > data ? data : count);
+
+				do
+				{
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr++];
+					DestPtr += 2;
+				}
+				while (--n > 0);
+
+				if (count <= data)
+				{
+					SrcPtr  += data - count;
+					DestPtr += 2 * (data - count);
+					break;
+				}
+			}
+		}
+
+		for (;;)
+		{
+			data = *SrcPtr++;
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+			}
+			else
+			{
+				SrcPtr += data;
+			}
+			DestPtr += 2 * data;
+		}
+
+next_line:
+		if (--BlitHeight == 0) break;
+		DestPtr += LineSkip - RightSkip * 2; // XXX I don't know why - RightSkip * 2 is necessary, investigate later
+	}
 #else
 	__asm {
 
