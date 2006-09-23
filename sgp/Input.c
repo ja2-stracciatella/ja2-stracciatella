@@ -1512,14 +1512,14 @@ void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 
 void RestrictMouseCursor(SGPRect *pRectangle)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   // Make a copy of our rect....
   memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
+#if 1 // Should probably removed completly. Confining the mouse cursor is The Wrong Thing(tm)
+	FIXME
+#else
   ClipCursor((RECT *)pRectangle);
-	fCursorWasClipped = TRUE;
 #endif
+	fCursorWasClipped = TRUE;
 }
 
 void FreeMouseCursor(void)
@@ -1547,7 +1547,11 @@ void RestoreCursorClipRect( void )
 void GetRestrictedClipCursor( SGPRect *pRectangle )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	pRectangle->iLeft   = 0;
+	pRectangle->iTop    = 0;
+	pRectangle->iRight  = SCREEN_WIDTH;
+	pRectangle->iBottom = SCREEN_HEIGHT;
 #else
 	GetClipCursor((RECT *) pRectangle );
 #endif
@@ -1560,9 +1564,6 @@ BOOLEAN IsCursorRestricted( void )
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	FLOAT flNewXPos, flNewYPos;
 
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
@@ -1575,6 +1576,10 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	//
 	// Alex Meduna, Dec. 3, 1997
 
+#if 1
+	FIXME
+	SDL_WarpMouse(uiNewXPos, uiNewYPos);
+#else
 	// Adjust coords based on our resolution
 	flNewXPos = ( (FLOAT)uiNewXPos / SCREEN_WIDTH ) * 65536;
 	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
