@@ -10,6 +10,7 @@
 
 BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
 {
+	UINT16 str[uiSeekAmount / 2];
 	HWFILE		hFile;
 	UINT16		i;
 	UINT32		uiBytesRead;
@@ -29,7 +30,7 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 		return( FALSE );
 	}
 
-	if( !FileRead( hFile, pDestString, uiSeekAmount, &uiBytesRead) )
+	if (!FileRead(hFile, str, sizeof(str), &uiBytesRead))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed FileRead");
@@ -37,10 +38,9 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 	}
 
 	// Decrement, by 1, any value > 32
-	for(i=0; (i<uiSeekAmount) && (pDestString[i] != 0); i++ )
+	for (i = 0; i < uiSeekAmount / 2 - 1 && str[i] != 0; i++)
 	{
-		if( pDestString[i] > 33 )
-			pDestString[i] -= 1;
+		pDestString[i] = (str[i] > 33 ? str[i] - 1 : str[i]);
 		#ifdef POLISH
 			switch( pDestString[ i ] )
 			{
@@ -67,6 +67,7 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 			}
 		#endif
 	}
+	pDestString[i] = L'\0';
 
 	FileClose(hFile);
 	return(TRUE);
