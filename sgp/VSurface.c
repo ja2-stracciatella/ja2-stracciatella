@@ -2069,8 +2069,22 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 			uiDDFlags = DDBLTFAST_NOCOLORKEY;
 		}
 
-		DDBltFastSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, iDestX, iDestY, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, SrcRect, uiDDFlags );
+#if 1 // XXX TODO
+		SDL_Rect srcrect;
+		SDL_Rect dstrect;
 
+		srcrect.x = SrcRect->left;
+		srcrect.y = SrcRect->top;
+		srcrect.w = SrcRect->right  - SrcRect->left;
+		srcrect.h = SrcRect->bottom - SrcRect->top;
+		dstrect.x = iDestX;
+		dstrect.y = iDestY;
+
+		// XXX colour key?
+		SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
+#else
+		DDBltFastSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, iDestX, iDestY, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, SrcRect, uiDDFlags );
+#endif
 	}
 	else
 	{
