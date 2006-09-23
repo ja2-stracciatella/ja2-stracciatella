@@ -14118,7 +14118,19 @@ UINT16 *DestPtr;
 	CHECKF(height >=1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	do
+	{
+		UINT32 w = width;
+
+		do
+		{
+			*DestPtr = ShadeTable[*DestPtr];
+			DestPtr++;
+		}
+		while (--w > 0);
+		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
+	}
+	while (--height > 0);
 #else
 	__asm {
 		mov		esi, OFFSET ShadeTable
