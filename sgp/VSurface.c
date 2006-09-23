@@ -2106,11 +2106,24 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 
 		// Check for -ve values
 
+#if 1 // XXX TODO
+		SDL_Rect srcrect;
+		SDL_Rect dstrect;
 
+		srcrect.x = SrcRect->left;
+		srcrect.y = SrcRect->top;
+		srcrect.w = SrcRect->right  - SrcRect->left;
+		srcrect.h = SrcRect->bottom - SrcRect->top;
+		dstrect.x = DestRect.left;
+		dstrect.y = DestRect.top;
 
+		// XXX colour key?
+		SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
+#else
 		DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, &DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData,
 							SrcRect, uiDDFlags, NULL );
 
+#endif
 	}
 
 	// Update backup surface with new data
