@@ -742,10 +742,7 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 
 INT32 FileGetPos( HWFILE hFile )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	HANDLE	hRealFile;
+	FILE* hRealFile;
 	UINT32	uiPositionInFile=0;
 
 	INT16 sLibraryID;
@@ -759,12 +756,7 @@ INT32 FileGetPos( HWFILE hFile )
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-		uiPositionInFile = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT);
-		if( uiPositionInFile == 0xFFFFFFFF )
-		{
-			uiPositionInFile = 0;
-		}
-		return( uiPositionInFile );
+		return ftell(hRealFile);
 	}
 	else
 	{
@@ -781,7 +773,6 @@ INT32 FileGetPos( HWFILE hFile )
 	}
 
 	return(BAD_INDEX);
-#endif
 }
 
 //**************************************************************************
