@@ -12805,7 +12805,23 @@ BOOLEAN Blt16BPPBufferPixelateRectWithColor(UINT16 *pBuffer, UINT32 uiDestPitchB
 	CHECKF(height >=1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UINT32 row = 0;
+	do
+	{
+		UINT32 col = 0;
+		UINT32 w = width;
+
+		do
+		{
+			if (Pattern[row][col] != 0) *DestPtr = usColor;
+			DestPtr++;
+			col = (col + 1) % 8;
+		}
+		while (--w > 0);
+		DestPtr += LineSkip / 2;
+		row = (row + 1) % 8;
+	}
+	while (--height > 0);
 #else
 	__asm {
 		mov		esi, Pattern				// Pointer to pixel pattern
