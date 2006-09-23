@@ -673,9 +673,9 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
-	HANDLE	hRealFile;
+	FILE* hRealFile;
 	LONG		lDistanceToMove;
-	DWORD		dwMoveMethod;
+	int dwMoveMethod;
 	INT32		iDistance=0;
 
 	INT16 sLibraryID;
@@ -686,30 +686,26 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 		//Get the handle to the real file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
 		iDistance = (INT32) uiDistance;
 
 		if ( uiHow == FILE_SEEK_FROM_START )
-			dwMoveMethod = FILE_BEGIN;
+			dwMoveMethod = SEEK_SET;
 		else if ( uiHow == FILE_SEEK_FROM_END )
 		{
-			dwMoveMethod = FILE_END;
+			dwMoveMethod = SEEK_END;
 			if( iDistance > 0 )
 				iDistance = -(iDistance);
 		}
 		else
-			dwMoveMethod = FILE_CURRENT;
+			dwMoveMethod = SEEK_CUR;
 
 		lDistanceToMove = (LONG)uiDistance;
 
-		if ( SetFilePointer( hRealFile, iDistance, NULL, dwMoveMethod ) == 0xFFFFFFFF )
+		if (fseek(hRealFile, iDistance, dwMoveMethod) != 0)
 			return(FALSE);
-#endif
 	}
 	else
 	{
