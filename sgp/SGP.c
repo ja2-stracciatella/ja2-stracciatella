@@ -605,6 +605,47 @@ int main(int argc, char* argv[])
 					}
 					break;
 
+				case SDL_KEYDOWN:
+				{
+					int x;
+					int y;
+
+					SDL_GetMouseState(&x, &y);
+					UINT32 pos = y << 16 | x;
+
+					SDLKey key = event.key.keysym.sym; // XXX mapping
+					if (key < lengthof(gfKeyState))
+					{
+						if (!gfKeyState[key])
+						{
+							gfKeyState[key] = TRUE;
+							QueueEvent(KEY_DOWN, key, pos);
+						}
+						else
+						{
+							QueueEvent(KEY_REPEAT, key, pos);
+						}
+					}
+					break;
+				}
+
+				case SDL_KEYUP:
+				{
+					int x;
+					int y;
+
+					SDL_GetMouseState(&x, &y);
+					UINT32 pos = y << 16 | x;
+
+					SDLKey key = event.key.keysym.sym; // XXX mapping
+					if (key < lengthof(gfKeyState))
+					{
+						gfKeyState[key] = FALSE;
+						QueueEvent(KEY_UP, key, pos);
+					}
+					break;
+				}
+
 				case SDL_MOUSEBUTTONDOWN:
 				{
 					UINT32 pos = event.button.y << 16 | event.button.x;
