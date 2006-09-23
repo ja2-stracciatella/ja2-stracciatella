@@ -1416,15 +1416,15 @@ void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFina
 	switch( pFinance->ubCode)
 	{
 		case ACCRUED_INTEREST:
-			swprintf(pString, Length, L"%s", pTransactionText[ACCRUED_INTEREST]);
+			swprintf(pString, Length, L"%S", pTransactionText[ACCRUED_INTEREST]);
 			break;
 
 		case ANONYMOUS_DEPOSIT:
-			swprintf(pString, Length, L"%s", pTransactionText[ANONYMOUS_DEPOSIT]);
+			swprintf(pString, Length, L"%S", pTransactionText[ANONYMOUS_DEPOSIT]);
 			break;
 
 		case TRANSACTION_FEE:
-			swprintf(pString, Length, L"%s", pTransactionText[TRANSACTION_FEE]);
+			swprintf(pString, Length, L"%S", pTransactionText[TRANSACTION_FEE]);
 			break;
 
 		case HIRED_MERC:
@@ -1432,11 +1432,11 @@ void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFina
 			break;
 
 		case BOBBYR_PURCHASE:
-			swprintf(pString, Length, L"%s", pTransactionText[ BOBBYR_PURCHASE ]);
+			swprintf(pString, Length, L"%S", pTransactionText[ BOBBYR_PURCHASE ]);
 			break;
 
 		case PAY_SPECK_FOR_MERC:
-			swprintf(pString, Length, L"%s", pTransactionText[ PAY_SPECK_FOR_MERC ], gMercProfiles[pFinance->ubSecondCode].zName);
+			swprintf(pString, Length, L"%S", pTransactionText[ PAY_SPECK_FOR_MERC ], gMercProfiles[pFinance->ubSecondCode].zName);
 			break;
 
 		case MEDICAL_DEPOSIT:
@@ -1444,7 +1444,7 @@ void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFina
 			break;
 
 		case IMP_PROFILE:
-			swprintf(pString, Length, L"%s", pTransactionText[ IMP_PROFILE ] );
+			swprintf(pString, Length, L"%S", pTransactionText[ IMP_PROFILE ] );
 			break;
 
 		case PURCHASED_INSURANCE:
@@ -1485,7 +1485,7 @@ void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFina
 			break;
 
 		case PURCHASED_FLOWERS:
-			swprintf(pString, Length, L"%s", pTransactionText[ PURCHASED_FLOWERS ] );
+			swprintf(pString, Length, L"%S", pTransactionText[ PURCHASED_FLOWERS ] );
 			break;
 
 		case FULL_MEDICAL_REFUND:
@@ -1557,7 +1557,7 @@ void DisplayFinancePageNumberAndDateRange( void )
 		pCurrentFinance = pFinanceListHead;
     if( !pCurrentFinance )
 		{
-     swprintf( sString, lengthof(sString), L"%s %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+     swprintf( sString, lengthof(sString), L"%S %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	   mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 		 return;
 		}
@@ -1573,7 +1573,7 @@ void DisplayFinancePageNumberAndDateRange( void )
 
 	// get the last page
 
-  swprintf( sString, lengthof(sString), L"%s %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+  swprintf( sString, lengthof(sString), L"%S %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 
 	// reset shadow

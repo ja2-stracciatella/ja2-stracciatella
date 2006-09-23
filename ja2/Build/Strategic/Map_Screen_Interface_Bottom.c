@@ -625,7 +625,7 @@ void BtnOptionsFromMapScreenCallback( GUI_BUTTON *btn, INT32 reason )
 
 void DrawNameOfLoadedSector( void )
 {
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
   INT16 sFontX, sFontY;
 
 
@@ -640,7 +640,7 @@ void DrawNameOfLoadedSector( void )
 	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
 
 	VarFindFontCenterCoordinates( 548, 426, 80, 16, COMPFONT, &sFontX, &sFontY, sString );
-	mprintf( sFontX, sFontY, L"%s", sString );
+	mprintf( sFontX, sFontY, L"%S", sString );
 }
 
 
@@ -974,11 +974,11 @@ void DisplayCompressMode( void )
 	{
 		if( IsTimeBeingCompressed() )
 		{
-			swprintf( sString, lengthof(sString), L"%s", sTimeStrings[ giTimeCompressMode ] );
+			swprintf( sString, lengthof(sString), L"%S", sTimeStrings[ giTimeCompressMode ] );
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), L"%s", sTimeStrings[ 0 ] );
+			swprintf( sString, lengthof(sString), L"%S", sTimeStrings[ 0 ] );
 		}
 	}
 
@@ -1436,21 +1436,21 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%s", pMapScreenBottomText[ 0 ] );
+	swprintf( sString, lengthof(sString), L"%S", pMapScreenBottomText[ 0 ] );
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%s", sString );
+	mprintf( sFontX, sFontY, L"%S", sString );
 
-	swprintf( sString, lengthof(sString), L"%s", zMarksMapScreenText[ 2 ] );
+	swprintf( sString, lengthof(sString), L"%S", zMarksMapScreenText[ 2 ] );
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%s", sString );
+	mprintf( sFontX, sFontY, L"%S", sString );
 
 	// ste the font buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
@@ -1482,7 +1482,7 @@ void DisplayCurrentBalanceForMapBottom( void )
 	VarFindFontCenterCoordinates( 359, 387 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%s", sString );
+	mprintf( sFontX, sFontY, L"%S", sString );
 
 	return;
 }
@@ -1580,7 +1580,7 @@ void DisplayProjectedDailyMineIncome( void )
 	VarFindFontCenterCoordinates( 359, 433 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%s", sString );
+	mprintf( sFontX, sFontY, L"%S", sString );
 
 	return;
 }

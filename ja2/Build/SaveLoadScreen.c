@@ -1396,7 +1396,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 			else
 			{
 				//use "mercs"
-				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %s", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
+				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %S", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
 			}
 
 			//Get the current balance

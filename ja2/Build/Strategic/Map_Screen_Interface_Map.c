@@ -486,7 +486,7 @@ INT32 giClickHeliIconBaseTime = 0;
 void DisplayLevelString( void );
 
 void ShowTownText( void );
-void DrawTownLabels(STR16 pString, STR16 pStringA,UINT16 usFirstX, UINT16 usFirstY);
+void DrawTownLabels(wchar_t *pString, wchar_t *pStringA,UINT16 usFirstX, UINT16 usFirstY);
 void ShowTeamAndVehicles(INT32 fShowFlags);
 BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor );
 BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor );
@@ -933,8 +933,8 @@ void GetScreenXYFromMapXYStationary( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16
 
 void ShowTownText( void )
 {
-	CHAR16 sString[ 32 ];
-	CHAR16 sStringA[ 32 ];
+	wchar_t sString[ 32 ];
+	wchar_t sStringA[ 32 ];
 	INT8 bTown = 0;
 	UINT16 usX,usY;
 	BOOLEAN fLoyaltyTooLowToTrainMilitia;
@@ -950,14 +950,14 @@ void ShowTownText( void )
 		// skip Orta/Tixa until found
 		if( ( ( fFoundOrta != FALSE ) || ( bTown != ORTA ) ) && ( ( bTown != TIXA ) || ( fFoundTixa != FALSE) ) )
 		{
-			swprintf( sString, lengthof(sString), L"%s", pTownNames[ bTown ] );
+			swprintf( sString, lengthof(sString), L"%S", pTownNames[ bTown ] );
 
 			fLoyaltyTooLowToTrainMilitia = FALSE;
 
 			// don't show loyalty string until loyalty tracking for that town has been started
 			if( gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
-				swprintf( sStringA, lengthof(sStringA), L"%d%%%% %s", gTownLoyalty[ bTown ].ubRating, gsLoyalString[ 0 ]);
+				swprintf( sStringA, lengthof(sStringA), L"%d%%%% %S", gTownLoyalty[ bTown ].ubRating, gsLoyalString[ 0 ]);
 
 				// if loyalty is too low to train militia, and militia training is allowed here
 				if ( ( gTownLoyalty[ bTown ].ubRating < MIN_RATING_TO_TRAIN_TOWN ) && MilitiaTrainingAllowedInTown( bTown ) )
@@ -992,7 +992,7 @@ void ShowTownText( void )
 }
 
 
-void DrawTownLabels(STR16 pString, STR16 pStringA, UINT16 usFirstX, UINT16 usFirstY)
+void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16 usFirstY)
 {
 	// this procedure will draw the given strings on the screen centered around the given x and at the given y
 
@@ -1707,11 +1707,11 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 		if( pCharacter->bAssignment >= ON_DUTY )
 		{
 			// not on the surface, character won't move until they reach surface..info player of this fact
-			MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%s %s", pCharacter->name, gsUndergroundString[0] );
+			MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%S %S", pCharacter->name, gsUndergroundString[0] );
 		}
 		else	// squad
 		{
-			MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%s %s", pLongAssignmentStrings[ pCharacter->bAssignment ], gsUndergroundString[0] );
+			MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%S %S", pLongAssignmentStrings[ pCharacter->bAssignment ], gsUndergroundString[0] );
 		}
 		return;
 	}
@@ -4320,7 +4320,7 @@ void DisplayDistancesForHelicopter( void )
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%s", pHelicopterEtaStrings[ 0 ] );
+	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 0 ] );
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, sString );
 
 /*
@@ -4340,21 +4340,21 @@ void DisplayDistancesForHelicopter( void )
 
 	SetFontForeground( FONT_LTGREEN );
 
-	swprintf( sString, lengthof(sString), L"%s", pHelicopterEtaStrings[ 1 ] );
+	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 1 ] );
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight( MAP_FONT ), sString );
 
 	swprintf( sString, lengthof(sString), L"%d", sNumSafeSectors );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%s", pHelicopterEtaStrings[ 2 ] );
+	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 2 ] );
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight( MAP_FONT ), sString );
 
 	swprintf( sString, lengthof(sString), L"%d", sNumUnSafeSectors );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 2 * GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%s", pHelicopterEtaStrings[ 3 ] );
+	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 3 ] );
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ), sString );
 
 
@@ -4367,7 +4367,7 @@ void DisplayDistancesForHelicopter( void )
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%s", pHelicopterEtaStrings[ 4 ] );
+	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 4 ] );
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ), sString );
 
 
@@ -4377,7 +4377,7 @@ void DisplayDistancesForHelicopter( void )
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
 	iTime += GetPathTravelTimeDuringPlotting( pVehicleList[ iHelicopterVehicleId ].pMercPath );
 
-	swprintf( sString, lengthof(sString), L"%d%s %d%s", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
+	swprintf( sString, lengthof(sString), L"%d%S %d%S", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ) ), sString );
 
@@ -4736,7 +4736,7 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 	ubMineIndex = GetMineIndexForSector( sMapX, sMapY );
 
 	// display associated town name, followed by "mine"
-	swprintf( wString, lengthof(wString), L"%s %s", pTownNames[ GetTownAssociatedWithMine( GetMineIndexForSector( sMapX, sMapY ) ) ],  pwMineStrings[ 0 ] );
+	swprintf( wString, lengthof(wString), L"%S %S", pTownNames[ GetTownAssociatedWithMine( GetMineIndexForSector( sMapX, sMapY ) ) ],  pwMineStrings[ 0 ] );
 	AdjustXForLeftMapEdge(wString, &sScreenX);
 	mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
 	ubLineCnt++;
@@ -4745,7 +4745,7 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 	// check if mine is empty (abandoned) or running out
 	if (gMineStatus[ ubMineIndex ].fEmpty)
 	{
-		swprintf( wString, lengthof(wString), L"%s", pwMineStrings[ 5 ] );
+		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 5 ] );
 		AdjustXForLeftMapEdge(wString, &sScreenX);
 		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
 		ubLineCnt++;
@@ -4753,7 +4753,7 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 	else
 	if (gMineStatus[ ubMineIndex ].fShutDown)
 	{
-		swprintf( wString, lengthof(wString), L"%s", pwMineStrings[ 6 ] );
+		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 6 ] );
 		AdjustXForLeftMapEdge(wString, &sScreenX);
 		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
 		ubLineCnt++;
@@ -4761,7 +4761,7 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 	else
 	if (gMineStatus[ ubMineIndex ].fRunningOut)
 	{
-		swprintf( wString, lengthof(wString), L"%s", pwMineStrings[ 7 ] );
+		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 7 ] );
 		AdjustXForLeftMapEdge(wString, &sScreenX);
 		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
 		ubLineCnt++;
@@ -5016,7 +5016,7 @@ void DisplayLevelString( void )
 	SetFont( MAP_FONT );
 	SetFontForeground( MAP_INDEX_COLOR );
 	SetFontBackground( FONT_BLACK );
-	swprintf( sString, lengthof(sString), L"%s %d", sMapLevelString[ 0 ], iCurrentMapSectorZ );
+	swprintf( sString, lengthof(sString), L"%S %d", sMapLevelString[ 0 ], iCurrentMapSectorZ );
 
 	mprintf(  MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, sString  );
 
@@ -5764,12 +5764,12 @@ void DrawTownMilitiaName( void )
 	INT16 sX, sY;
 
 	// get the name for the current militia town
-	swprintf( sString, lengthof(sString), L"%s %s", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 0 ] );
+	swprintf( sString, lengthof(sString), L"%S %S", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 0 ] );
 	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, MILITIA_BOX_TEXT_TITLE_HEIGHT, sString, FONT10ARIAL, &sX, &sY );
 	mprintf(  sX, sY, sString );
 
 	// might as well show the unassigned string
-	swprintf( sString, lengthof(sString), L"%s %s", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 1 ] );
+	swprintf( sString, lengthof(sString), L"%S %S", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 1 ] );
 	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, GetFontHeight( FONT10ARIAL ), sString, FONT10ARIAL, &sX, &sY );
 	mprintf(  sX, sY, sString );
 
