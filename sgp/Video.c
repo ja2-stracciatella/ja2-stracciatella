@@ -25,9 +25,6 @@
 #define VIDEO_SHUTTING_DOWN   0x02
 #define VIDEO_SUSPENDED       0x04
 
-#define CURRENT_MOUSE_DATA		0
-#define PREVIOUS_MOUSE_DATA		1
-
 
 typedef struct
 {
@@ -96,7 +93,7 @@ static LPDIRECTDRAWSURFACE2   gpMouseCursor = NULL;
 static LPDIRECTDRAWSURFACE    _gpMouseCursorOriginal = NULL;
 static LPDIRECTDRAWSURFACE2   gpMouseCursorOriginal = NULL;
 
-static MouseCursorBackground  gMouseCursorBackground[2];
+static MouseCursorBackground  gMouseCursorBackground;
 
 static HVOBJECT               gpCursorStore;
 
@@ -175,7 +172,6 @@ BOOLEAN InitializeVideoManager(void)
 #if 1 // XXX TODO
 	FIXME
 
-	UINT32 uiIndex;
 	UINT32 uiPitch;
 	PTR pTmpPointer;
 
@@ -195,14 +191,7 @@ BOOLEAN InitializeVideoManager(void)
 	memset(pTmpPointer, 0, 480 * uiPitch);
 	UnlockFrameBuffer();
 
-	/* Initialize the main mouse background surfaces. There are two of them
-	 * (one for each of the Primary and Backbuffer surfaces)
-	 */
-	for (uiIndex = 0; uiIndex < 1; uiIndex++)
-	{
-		// Initialize various mouse background variables
-		gMouseCursorBackground[uiIndex].fRestore = FALSE;
-	}
+	gMouseCursorBackground.fRestore = FALSE;
 
 	// Initialize state variables
 	guiFrameBufferState          = BUFFER_DIRTY;
@@ -219,7 +208,7 @@ BOOLEAN InitializeVideoManager(void)
 
 	return TRUE;
 #else
-  UINT32        uiIndex, uiPitch;
+  UINT32        uiPitch;
   HRESULT       ReturnCode;
   HWND          hWindow;
   WNDCLASS      WindowClass;
@@ -527,45 +516,29 @@ BOOLEAN InitializeVideoManager(void)
     return FALSE;
   }
 
-  //
-  // Initialize the main mouse background surfaces. There are two of them (one for each of the Primary
-  // and Backbuffer surfaces
-  //
+	gMouseCursorBackground.fRestore = FALSE;
 
-  for (uiIndex = 0; uiIndex < 1; uiIndex++)
-  {
-    //
-    // Initialize various mouse background variables
-    //
+	ZEROMEM(SurfaceDescription);
+	SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
+	SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
+	SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
+	SurfaceDescription.dwWidth        = MAX_CURSOR_WIDTH;
+	SurfaceDescription.dwHeight       = MAX_CURSOR_HEIGHT;
+	ReturnCode = IDirectDraw2_CreateSurface(gpDirectDrawObject, &SurfaceDescription, &gMouseCursorBackground._pSurface, NULL);
+	if (ReturnCode != DD_OK)
+	{
+		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to create MouseCursorBackground");
+		DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		return FALSE;
+	}
 
-    gMouseCursorBackground[uiIndex].fRestore = FALSE;
-
-    //
-    // Initialize the direct draw surfaces for the mouse background
-    //
-
-    ZEROMEM(SurfaceDescription);
-    SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-    SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-    //SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-		SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-    SurfaceDescription.dwWidth        = MAX_CURSOR_WIDTH;
-    SurfaceDescription.dwHeight       = MAX_CURSOR_HEIGHT;
-    ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &(gMouseCursorBackground[uiIndex]._pSurface), NULL );
-    if (ReturnCode != DD_OK)
-    {
-      DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to create MouseCursorBackground");
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      return FALSE;
-    }
-
-    ReturnCode = IDirectDrawSurface_QueryInterface(gMouseCursorBackground[uiIndex]._pSurface, &IID_IDirectDrawSurface2, &(gMouseCursorBackground[uiIndex].pSurface));
-    if (ReturnCode != DD_OK)
-    {
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      return FALSE;
-    }
-  }
+	ReturnCode = IDirectDrawSurface_QueryInterface(gMouseCursorBackground._pSurface, &IID_IDirectDrawSurface2, &gMouseCursorBackground.pSurface);
+	if (ReturnCode != DD_OK)
+	{
+		DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
+		return FALSE;
+	}
+}
 
   //
   // Initialize state variables
@@ -608,7 +581,7 @@ void ShutdownVideoManager(void)
 #else
   IDirectDrawSurface2_Release(gpMouseCursorOriginal);
   IDirectDrawSurface2_Release(gpMouseCursor);
-  IDirectDrawSurface2_Release(gMouseCursorBackground[0].pSurface);
+  IDirectDrawSurface2_Release(gMouseCursorBackground.pSurface);
   IDirectDrawSurface2_Release(gpBackBuffer);
   IDirectDrawSurface2_Release(gpPrimarySurface);
 
@@ -677,7 +650,7 @@ BOOLEAN RestoreVideoManager(void)
 	  // Restore the mouse surfaces and make sure to initialize the gpMouseCursor surface
     //
 
-    ReturnCode = IDirectDrawSurface2_Restore( gMouseCursorBackground[0].pSurface );
+    ReturnCode = IDirectDrawSurface2_Restore(gMouseCursorBackground.pSurface);
     if (ReturnCode != DD_OK)
     {
       DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -871,7 +844,7 @@ void InvalidateScreen(void)
 
 //#define SCROLL_TEST
 
-void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip, UINT32 uiCurrentMouseBackbuffer )
+void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
@@ -880,8 +853,7 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 	UINT8	 ubBitDepth;
   HRESULT ReturnCode;
   static RECT    Region;
-	static UINT16	 usMouseXPos, usMouseYPos;
-	static RECT		 StripRegions[ 2 ], MouseRegion;
+	static RECT		 StripRegions[ 2 ];
 	UINT16				 usNumStrips = 0;
 	INT32					 cnt;
 	INT16					 sShiftX, sShiftY;
@@ -900,15 +872,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 	StripRegions[ 1 ].right  = gsVIEWPORT_END_X;
 	StripRegions[ 1 ].top    = gsVIEWPORT_WINDOW_START_Y;
 	StripRegions[ 1 ].bottom = gsVIEWPORT_WINDOW_END_Y;
-
-	MouseRegion.left		= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usLeft;
-	MouseRegion.top			= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usTop;
-	MouseRegion.right		= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usRight;
-	MouseRegion.bottom	= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usBottom;
-
-	usMouseXPos					= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseXPos;
-	usMouseYPos					= gMouseCursorBackground[ uiCurrentMouseBackbuffer ].usMouseYPos;
-
 
 	switch (uiDirection)
 	{
@@ -942,7 +905,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			}
 
 			StripRegions[ 0 ].right =(INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-			usMouseXPos += sScrollXIncrement;
 
 			usNumStrips = 1;
 			break;
@@ -985,8 +947,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			//}
 
 			StripRegions[ 0 ].left =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-			usMouseXPos -= sScrollXIncrement;
-
 			usNumStrips = 1;
 			break;
 
@@ -1026,9 +986,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			//}
 			StripRegions[ 0 ].bottom =(INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
 			usNumStrips = 1;
-
-			usMouseYPos += sScrollYIncrement;
-
 			break;
 
 		case SCROLL_DOWN:
@@ -1068,9 +1025,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 			StripRegions[ 0 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
 			usNumStrips = 1;
-
-			usMouseYPos -= sScrollYIncrement;
-
 			break;
 
 		case SCROLL_UPLEFT:
@@ -1112,10 +1066,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
 			StripRegions[ 1 ].left	 = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
 			usNumStrips = 2;
-
-			usMouseYPos += sScrollYIncrement;
-			usMouseXPos += sScrollXIncrement;
-
 			break;
 
 		case SCROLL_UPRIGHT:
@@ -1156,10 +1106,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
 			StripRegions[ 1 ].right  = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
 			usNumStrips = 2;
-
-			usMouseYPos += sScrollYIncrement;
-			usMouseXPos -= sScrollXIncrement;
-
 			break;
 
 		case SCROLL_DOWNLEFT:
@@ -1203,10 +1149,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			StripRegions[ 1 ].top		= (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
 			StripRegions[ 1 ].left  = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
 			usNumStrips = 2;
-
-			usMouseYPos -= sScrollYIncrement;
-			usMouseXPos += sScrollXIncrement;
-
 			break;
 
 		case SCROLL_DOWNRIGHT:
@@ -1247,10 +1189,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			StripRegions[ 1 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
 			StripRegions[ 1 ].right = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
 			usNumStrips = 2;
-
-			usMouseYPos -= sScrollYIncrement;
-			usMouseXPos -= sScrollXIncrement;
-
 			break;
 
 	}
@@ -1357,31 +1295,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 		// BLIT NEW
 		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
-
-
-#if 0
-
-		// Erase mouse from old position
-		if (gMouseCursorBackground[ uiCurrentMouseBackbuffer ].fRestore == TRUE )
-		{
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, usMouseXPos, usMouseYPos, gMouseCursorBackground[uiCurrentMouseBackbuffer].pSurface, (LPRECT)&MouseRegion, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-
-					}
-				}
-			} while (ReturnCode != DD_OK);
-		}
-
-#endif
-
 	}
 
 
@@ -1498,7 +1411,7 @@ void RefreshScreen(void)
 		}
 		if (gfRenderScroll)
 		{
-			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA);
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE);
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 
@@ -1525,19 +1438,19 @@ void RefreshScreen(void)
 
 
 	// RESTORE OLD POSITION OF MOUSE
-	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
+	if (gMouseCursorBackground.fRestore)
 	{
-		Region.left = gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft;
-		Region.top = gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop;
-		Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
-		Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
+		Region.left   = gMouseCursorBackground.usLeft;
+		Region.top    = gMouseCursorBackground.usTop;
+		Region.right  = gMouseCursorBackground.usRight;
+		Region.bottom = gMouseCursorBackground.usBottom;
 
 #if 1
 		FIXME
 #else
 		do
 		{
-			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground.usMouseXPos, gMouseCursorBackground.usMouseYPos, gMouseCursorBackground.pSurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
 			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 			{
 				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -1549,10 +1462,6 @@ void RefreshScreen(void)
 			}
 		} while (ReturnCode != DD_OK);
 #endif
-
-		// Save position into other background region
-		memcpy( &(gMouseCursorBackground[PREVIOUS_MOUSE_DATA] ), &(gMouseCursorBackground[CURRENT_MOUSE_DATA] ), sizeof( MouseCursorBackground ) );
-
 	}
 
 
@@ -1670,7 +1579,7 @@ void RefreshScreen(void)
 		}
 		if ( gfRenderScroll )
 		{
-			ScrollJA2Background( guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE, PREVIOUS_MOUSE_DATA );
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE);
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 
@@ -1941,30 +1850,30 @@ void RefreshScreen(void)
       // future restore
       //
 
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore    = TRUE;
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight     = (UINT16) Region.right - (UINT16) Region.left;
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom    = (UINT16) Region.bottom - (UINT16) Region.top;
+      gMouseCursorBackground.fRestore = TRUE;
+      gMouseCursorBackground.usRight  = (UINT16)Region.right  - (UINT16)Region.left;
+      gMouseCursorBackground.usBottom = (UINT16)Region.bottom - (UINT16)Region.top;
       if (Region.left < 0)
       {
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = (UINT16) (0 - Region.left);
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = 0;
+        gMouseCursorBackground.usLeft = (UINT16)(0 - Region.left);
+        gMouseCursorBackground.usMouseXPos = 0;
         Region.left = 0;
       }
       else
       {
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos = (UINT16) MousePos.x - gsMouseCursorXOffset;
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft = 0;
+        gMouseCursorBackground.usMouseXPos = (UINT16)MousePos.x - gsMouseCursorXOffset;
+        gMouseCursorBackground.usLeft = 0;
       }
       if (Region.top < 0)
       {
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = 0;
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = (UINT16) (0 - Region.top);
+        gMouseCursorBackground.usMouseYPos = 0;
+        gMouseCursorBackground.usTop = (UINT16)(0 - Region.top);
         Region.top = 0;
       }
       else
       {
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos = (UINT16) MousePos.y - gsMouseCursorYOffset;
-        gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop = 0;
+        gMouseCursorBackground.usMouseYPos = (UINT16)MousePos.y - gsMouseCursorYOffset;
+        gMouseCursorBackground.usTop = 0;
       }
 
 			if ((Region.right > Region.left)&&(Region.bottom > Region.top))
@@ -1973,7 +1882,7 @@ void RefreshScreen(void)
 		FIXME
 #else
 				// Save clipped region
-				gMouseCursorBackground[CURRENT_MOUSE_DATA].Region = Region;
+				gMouseCursorBackground.Region = Region;
 
 				//
 				// Ok, do the actual data save to the mouse background
@@ -1981,7 +1890,7 @@ void RefreshScreen(void)
 
 				do
 				{
-					ReturnCode = IDirectDrawSurface2_SGPBltFast(gMouseCursorBackground[CURRENT_MOUSE_DATA].pSurface, gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft, gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop, gpBackBuffer, &Region, DDBLTFAST_NOCOLORKEY);
+					ReturnCode = IDirectDrawSurface2_SGPBltFast(gMouseCursorBackground.pSurface, gMouseCursorBackground.usLeft, gMouseCursorBackground.usTop, gpBackBuffer, &Region, DDBLTFAST_NOCOLORKEY);
 					if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 					{
 						DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -1997,14 +1906,14 @@ void RefreshScreen(void)
 				// Step (2) - Blit mouse cursor to back buffer
 				//
 
-				Region.left = gMouseCursorBackground[CURRENT_MOUSE_DATA].usLeft;
-				Region.top = gMouseCursorBackground[CURRENT_MOUSE_DATA].usTop;
-				Region.right = gMouseCursorBackground[CURRENT_MOUSE_DATA].usRight;
-				Region.bottom = gMouseCursorBackground[CURRENT_MOUSE_DATA].usBottom;
+				Region.left   = gMouseCursorBackground.usLeft;
+				Region.top    = gMouseCursorBackground.usTop;
+				Region.right  = gMouseCursorBackground.usRight;
+				Region.bottom = gMouseCursorBackground.usBottom;
 
 				do
 				{
-					ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpMouseCursor, &Region, DDBLTFAST_SRCCOLORKEY);
+					ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground.usMouseXPos, gMouseCursorBackground.usMouseYPos, gpMouseCursor, &Region, DDBLTFAST_SRCCOLORKEY);
 					if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 					{
 						DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
@@ -2022,8 +1931,7 @@ void RefreshScreen(void)
 	      //
 				// Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
 				//
-
-				gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
+				gMouseCursorBackground.fRestore = FALSE;
 			}
 
     }
@@ -2032,9 +1940,7 @@ void RefreshScreen(void)
       //
       // Hum, the mouse was not blitted this round. Henceforth we will flag fRestore as FALSE
       //
-
-      gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
-
+      gMouseCursorBackground.fRestore = FALSE;
     }
   }
   else
@@ -2042,9 +1948,7 @@ void RefreshScreen(void)
     //
     // Well since there was no mouse handling this round, we disable the mouse restore
     //
-
-    gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore = FALSE;
-
+    gMouseCursorBackground.fRestore = FALSE;
   }
 
 #if 1
@@ -2147,38 +2051,14 @@ void RefreshScreen(void)
 
 	}
 
-
-	// COPY MOUSE AREAS FROM PRIMARY BACK!
-
-	// FIRST OLD ERASED POSITION
-	if (gMouseCursorBackground[PREVIOUS_MOUSE_DATA].fRestore == TRUE )
-	{
-		Region = 	gMouseCursorBackground[PREVIOUS_MOUSE_DATA].Region;
-
-		do
-		{
-			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[PREVIOUS_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-			if (ReturnCode != DD_OK && ReturnCode != DDERR_WASSTILLDRAWING )
-			{
-				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-				if (ReturnCode == DDERR_SURFACELOST)
-				{
-					goto ENDOFLOOP;
-				}
-			}
-		} while (ReturnCode != DD_OK);
-	}
-
 	// NOW NEW MOUSE AREA
-	if (gMouseCursorBackground[CURRENT_MOUSE_DATA].fRestore == TRUE )
+	if (gMouseCursorBackground.fRestore)
 	{
-		Region = 	gMouseCursorBackground[CURRENT_MOUSE_DATA].Region;
-
+		Region = gMouseCursorBackground.Region;
 
 		do
 		{
-			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseXPos, gMouseCursorBackground[CURRENT_MOUSE_DATA].usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
+			ReturnCode = IDirectDrawSurface2_SGPBltFast(gpBackBuffer, gMouseCursorBackground.usMouseXPos, gMouseCursorBackground.usMouseYPos, gpPrimarySurface, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
 			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
 			{
 				DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
