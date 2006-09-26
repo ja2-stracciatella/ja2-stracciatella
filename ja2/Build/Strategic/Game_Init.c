@@ -60,6 +60,7 @@
 	#include "Cheats.h"
 	#include "SoundMan.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 // Temp function

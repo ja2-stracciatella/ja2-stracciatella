@@ -13,6 +13,7 @@
 	#include "StrategicMap.h"
 	#include "Fade_Screen.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 

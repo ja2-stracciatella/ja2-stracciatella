@@ -17,6 +17,7 @@
 	#include "Debug.h"
 	#include "JAScreens.h"
 	#include "Soldier_Macros.h"
+	#include "ScreenIDs.h"
 #endif
 
 

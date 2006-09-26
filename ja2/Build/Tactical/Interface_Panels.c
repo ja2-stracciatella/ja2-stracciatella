@@ -74,6 +74,7 @@
 	#include "Video.h"
 	#include "Debug.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 

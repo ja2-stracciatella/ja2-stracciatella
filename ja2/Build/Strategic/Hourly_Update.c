@@ -17,6 +17,7 @@
 	#include "Finances.h"
 	#include "History.h"
 	#include "Dialogue_Control.h"
+	#include "ScreenIDs.h"
 #endif
 
 void HourlyQuestUpdate( void );

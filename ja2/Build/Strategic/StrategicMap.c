@@ -101,6 +101,7 @@
 	#include "Video.h"
 	#include "VSurface.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 #include "SaveLoadGame.h"

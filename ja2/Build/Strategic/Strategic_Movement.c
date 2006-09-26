@@ -47,6 +47,7 @@
 	#include "GameSettings.h"
 	#include "Quests.h"
 	#include "Video.h"
+	#include "ScreenIDs.h"
 #endif
 
 // the delay for a group about to arrive

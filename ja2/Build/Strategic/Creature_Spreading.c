@@ -31,6 +31,7 @@
 	#include "Map_Information.h"
 	#include "MemMan.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 #ifdef JA2BETAVERSION

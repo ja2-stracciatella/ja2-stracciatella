@@ -33,6 +33,8 @@
 	#include "JAScreens.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Button_System.h"
+	#include "ScreenIDs.h"
 #endif
 
 extern INT32 iCurrentMapSectorZ;

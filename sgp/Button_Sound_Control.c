@@ -8,6 +8,7 @@
 	#include "Button_Sound_Control.h"
 	#include "Sound_Control.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 void SpecifyButtonSoundScheme( INT32 iButtonID, INT8 bSoundScheme )

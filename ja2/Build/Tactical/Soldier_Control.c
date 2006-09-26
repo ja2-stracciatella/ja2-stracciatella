@@ -92,6 +92,7 @@
 	#include "Strategic_Status.h"
 	#include "Civ_Quotes.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 extern INT16 DirIncrementer[8];

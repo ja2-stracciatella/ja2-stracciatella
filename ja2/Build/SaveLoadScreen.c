@@ -41,6 +41,7 @@
 	#include "JAScreens.h"
 	#include "Local.h"
 	#include "VSurface.h"
+	#include "ScreenIDs.h"
 #endif
 
 #include "Campaign_Init.h"

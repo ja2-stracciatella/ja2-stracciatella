@@ -108,6 +108,7 @@
 	#include <stdlib.h>
 	#include "Debug.h"
 	#include "Local.h"
+	#include "Button_System.h"
 #endif
 
 #ifdef JA2TESTVERSION

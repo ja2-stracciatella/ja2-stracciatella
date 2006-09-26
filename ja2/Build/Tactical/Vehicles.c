@@ -39,6 +39,7 @@
 	#include "Soldier_Ani.h"
 	#include "MemMan.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];

@@ -23,6 +23,7 @@
 	#include "RT_Time_Defines.h"
 	#include "Assignments.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 #define	NUM_SEC_PER_STRATEGIC_TURN					( NUM_SEC_IN_MIN * 15 )	// Every fifteen minutes

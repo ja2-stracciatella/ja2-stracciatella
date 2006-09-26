@@ -38,6 +38,7 @@
 	#include "Vehicles.h"
 	#include "EMail.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 

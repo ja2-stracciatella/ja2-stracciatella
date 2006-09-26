@@ -46,6 +46,7 @@
 	#include "History.h"
 	#include "Video.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 extern void InitializeTacticalStatusAtBattleStart();

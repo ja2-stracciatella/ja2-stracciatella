@@ -30,6 +30,8 @@
 	#include "JAScreens.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Button_System.h"
+	#include "ScreenIDs.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK

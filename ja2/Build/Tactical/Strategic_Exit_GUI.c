@@ -35,6 +35,7 @@
 	#include "Quests.h"
 	#include "Creature_Spreading.h"
 	#include "Video.h"
+	#include "ScreenIDs.h"
 #endif
 
 BOOLEAN		gfInSectorExitMenu = FALSE;

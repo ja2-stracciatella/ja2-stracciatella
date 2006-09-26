@@ -62,6 +62,7 @@
 	#include "Interface_Dialogue.h"
 	#include "SoundMan.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 #define		NO_JUMP											0

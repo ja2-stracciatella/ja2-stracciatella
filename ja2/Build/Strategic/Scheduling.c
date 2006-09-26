@@ -29,6 +29,7 @@
 	#include "Quests.h"
 	#include "Vehicles.h"
 	#include "MemMan.h"
+	#include "ScreenIDs.h"
 #endif
 
 #ifdef JA2EDITOR

@@ -112,6 +112,7 @@
 	#include "_JA25EnglishText.h"
 	#include "VSurface.h"
 	#include "MemMan.h"
+	#include "Button_System.h"
 #endif
 
 	#include	"Quest_Debug_System.h"

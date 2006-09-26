@@ -105,6 +105,7 @@
 	#include "VSurface.h"
 	#include "MemMan.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 #include		"BobbyR.h"

@@ -63,6 +63,8 @@
 	#include "Interface_Dialogue.h"
 	#include "JAScreens.h"
 	#include "Debug.h"
+	#include "Button_System.h"
+	#include "ScreenIDs.h"
 #endif
 
 

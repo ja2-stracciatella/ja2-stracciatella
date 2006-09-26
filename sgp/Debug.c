@@ -48,6 +48,8 @@
 	#ifndef _NO_DEBUG_TXT
 		#include "FileMan.h"
 	#endif
+
+	#include "VObject.h"
 #endif
 
 #ifdef __cplusplus

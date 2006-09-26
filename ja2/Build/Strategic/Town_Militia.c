@@ -27,6 +27,7 @@
 	#include "Map_Screen_Interface_Map.h"
 	#include "JAScreens.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 #define SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST 50

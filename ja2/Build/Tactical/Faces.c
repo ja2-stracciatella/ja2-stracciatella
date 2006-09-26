@@ -38,6 +38,7 @@
 	#include "Map_Screen_Interface.h"
 	#include "SoundMan.h"
 	#include "JAScreens.h"
+	#include "ScreenIDs.h"
 #endif
 
 // Defines

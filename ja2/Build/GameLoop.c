@@ -34,6 +34,7 @@
 	#include "Debug.h"
 	#include "Video.h"
 	#include "MemMan.h"
+	#include "Button_System.h"
 #endif
 
 #ifdef JA2BETAVERSION
