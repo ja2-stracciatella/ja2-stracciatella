@@ -932,23 +932,8 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 	b->bIconYOffset = -1;
 	b->fShiftImage = TRUE;
 
-	// Set the click callback function (if any)
-	if(ClickCallback != BUTTON_NO_CALLBACK)
-	{
-		b->ClickCallback = ClickCallback;
-		BType |= BUTTON_CLICK_CALLBACK;
-	}
-	else
-		b->ClickCallback = BUTTON_NO_CALLBACK;
-
-	// Set the move callback function (if any)
-	if(MoveCallback != BUTTON_NO_CALLBACK)
-	{
-		b->MoveCallback = MoveCallback;
-		BType |= BUTTON_MOVE_CALLBACK;
-	}
-	else
-		b->MoveCallback = BUTTON_NO_CALLBACK;
+	b->ClickCallback = ClickCallback;
+	b->MoveCallback = MoveCallback;
 
 	// Define a mouse region for this button
 	MSYS_DefineRegion(&b->Area, (UINT16)xloc, (UINT16)yloc, (UINT16)(xloc+w), (UINT16)(yloc+h),
@@ -1061,23 +1046,8 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	b->bIconYOffset = -1;
 	b->fShiftImage = TRUE;
 
-	// Set the button click callback function (if any)
-	if(ClickCallback != BUTTON_NO_CALLBACK)
-	{
-		b->ClickCallback = ClickCallback;
-		BType |= BUTTON_CLICK_CALLBACK;
-	}
-	else
-		b->ClickCallback = BUTTON_NO_CALLBACK;
-
-	// Set the button's mouse movement callback function (if any)
-	if(MoveCallback != BUTTON_NO_CALLBACK)
-	{
-		b->MoveCallback = MoveCallback;
-		BType |= BUTTON_MOVE_CALLBACK;
-	}
-	else
-		b->MoveCallback = BUTTON_NO_CALLBACK;
+	b->ClickCallback = ClickCallback;
+	b->MoveCallback = MoveCallback;
 
 	// Define a MOUSE_REGION for this button
 	MSYS_DefineRegion(&b->Area, (UINT16)xloc, (UINT16)yloc, (UINT16)(xloc+w), (UINT16)(yloc+h),
@@ -1145,23 +1115,8 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 	b->Group = -1;
 	b->string = NULL;
 
-	// Set the hotspot click callback function (if any)
-	if(ClickCallback != BUTTON_NO_CALLBACK)
-	{
-		b->ClickCallback = ClickCallback;
-		BType |= BUTTON_CLICK_CALLBACK;
-	}
-	else
-		b->ClickCallback = BUTTON_NO_CALLBACK;
-
-	// Set the hotspot's mouse movement callback function (if any)
-	if(MoveCallback != BUTTON_NO_CALLBACK)
-	{
-		b->MoveCallback = MoveCallback;
-		BType |= BUTTON_MOVE_CALLBACK;
-	}
-	else
-		b->MoveCallback = BUTTON_NO_CALLBACK;
+	b->ClickCallback = ClickCallback;
+	b->MoveCallback = MoveCallback;
 
 	// define a MOUSE_REGION for this hotspot
 	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,(UINT16)(xloc+Width),(UINT16)(yloc+Height),
@@ -1290,23 +1245,8 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 	b->ubToggleButtonOldState = 0;
 	b->ubToggleButtonActivated = FALSE;
 
-	// Set the button click callback function (if any)
-	if(ClickCallback != BUTTON_NO_CALLBACK)
-	{
-		b->ClickCallback = ClickCallback;
-		BType |= BUTTON_CLICK_CALLBACK;
-	}
-	else
-		b->ClickCallback = BUTTON_NO_CALLBACK;
-
-	// Set the button's mouse movement callback function (if any)
-	if(MoveCallback != BUTTON_NO_CALLBACK)
-	{
-		b->MoveCallback = MoveCallback;
-		BType |= BUTTON_MOVE_CALLBACK;
-	}
-	else
-		b->MoveCallback = BUTTON_NO_CALLBACK;
+	b->ClickCallback = ClickCallback;
+	b->MoveCallback = MoveCallback;
 
 	memset( &b->Area, 0, sizeof( MOUSE_REGION ) );
 	// Define a MOUSE_REGION for this QuickButton
@@ -1463,23 +1403,8 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 	b->iIconID = -1;
 	b->usIconIndex = 0;
 
-	// Set the button click callback function (if any)
-	if(ClickCallback != BUTTON_NO_CALLBACK)
-	{
-		b->ClickCallback = ClickCallback;
-		BType |= BUTTON_CLICK_CALLBACK;
-	}
-	else
-		b->ClickCallback = BUTTON_NO_CALLBACK;
-
-	// Set the button's mouse movement callback function (if any)
-	if(MoveCallback != BUTTON_NO_CALLBACK)
-	{
-		b->MoveCallback = MoveCallback;
-		BType |= BUTTON_MOVE_CALLBACK;
-	}
-	else
-		b->MoveCallback = BUTTON_NO_CALLBACK;
+	b->ClickCallback = ClickCallback;
+	b->MoveCallback = MoveCallback;
 
 	// Define a MOUSE_REGION for this QuickButton
 	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,
@@ -1855,8 +1780,8 @@ static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)
 
 	// If this button is enabled and there is a callback function associated with it,
 	// call the callback function.
-	if((b->uiFlags & BUTTON_ENABLED) && (b->uiFlags & BUTTON_MOVE_CALLBACK))
-		(b->MoveCallback)(b,reason);
+	if (b->uiFlags & BUTTON_ENABLED && b->MoveCallback != BUTTON_NO_CALLBACK)
+		b->MoveCallback(b, reason);
 }
 
 
@@ -1978,15 +1903,15 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 	// Button not enabled but allowed to use callback, then do that!
 	if(!(b->uiFlags & BUTTON_ENABLED) && (b->uiFlags & BUTTON_ALLOW_DISABLED_CALLBACK))
 	{
-		if( b->uiFlags & BUTTON_CLICK_CALLBACK )
+		if (b->ClickCallback != BUTTON_NO_CALLBACK)
 		{
-			(b->ClickCallback)(b, reason | BUTTON_DISABLED_CALLBACK );
+			b->ClickCallback(b, reason | BUTTON_DISABLED_CALLBACK );
 		}
 		return;
 	}
 
 	// If there is a callback function with this button, call it
-	if(b->uiFlags & BUTTON_CLICK_CALLBACK)
+	if (b->ClickCallback != BUTTON_NO_CALLBACK)
 	{
 		//Kris:  January 6, 1998
 		//Added these checks to avoid a case where it was possible to process a leftbuttonup message when
@@ -1994,7 +1919,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 		gfDelayButtonDeletion = TRUE;
 		if( !(reason & MSYS_CALLBACK_REASON_LBUTTON_UP) || b->MoveCallback != DEFAULT_MOVE_CALLBACK ||
 				b->MoveCallback == DEFAULT_MOVE_CALLBACK && gpPrevAnchoredButton == b )
-			(b->ClickCallback)(b,reason);
+			b->ClickCallback(b, reason);
 		gfDelayButtonDeletion = FALSE;
 	}
 	else if((reason & MSYS_CALLBACK_REASON_LBUTTON_DWN) && !(b->uiFlags & BUTTON_IGNORE_CLICKS))
