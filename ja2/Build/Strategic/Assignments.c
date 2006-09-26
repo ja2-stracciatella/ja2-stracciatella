@@ -65,6 +65,8 @@
 	#include "Debug.h"
 	#include "Button_System.h"
 	#include "ScreenIDs.h"
+	#include "VSurface.h"
+	#include "WCheck.h"
 #endif
 
 

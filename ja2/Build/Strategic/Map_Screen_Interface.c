@@ -59,6 +59,8 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "VSurface.h"
+	#include "WCheck.h"
 #endif
 
 // inventory pool position on screen

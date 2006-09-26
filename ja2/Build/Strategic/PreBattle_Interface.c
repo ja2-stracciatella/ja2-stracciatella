@@ -47,6 +47,8 @@
 	#include "Video.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "Render_Dirty.h"
+	#include "VSurface.h"
 #endif
 
 extern void InitializeTacticalStatusAtBattleStart();

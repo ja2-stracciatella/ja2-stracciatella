@@ -36,6 +36,8 @@
 	#include "Creature_Spreading.h"
 	#include "Video.h"
 	#include "ScreenIDs.h"
+	#include "Render_Dirty.h"
+	#include "VSurface.h"
 #endif
 
 BOOLEAN		gfInSectorExitMenu = FALSE;

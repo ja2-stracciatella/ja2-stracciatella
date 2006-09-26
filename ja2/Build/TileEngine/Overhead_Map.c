@@ -94,7 +94,7 @@ INT16							gsOveritemPoolGridNo;
 
 
 void HandleOverheadUI( );
-void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
+static void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
 void DeleteOverheadDB( );
 BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo );
@@ -1463,19 +1463,15 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 }
 */
 
-void MoveInOverheadRegionCallback(MOUSE_REGION *reg, INT32 reason)
-{
-	//Calculate the cursor...
-}
 
-void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
+static void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if( gfTacticalPlacementGUIActive )
 	{
-		HandleTacticalPlacementClicksInOverheadMap( reg, reason );
+		HandleTacticalPlacementClicksInOverheadMap(reason);
 		return;
 	}
 

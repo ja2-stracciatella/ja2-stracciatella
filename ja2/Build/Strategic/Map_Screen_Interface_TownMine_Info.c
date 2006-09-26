@@ -28,6 +28,8 @@
 	#include "Tactical_Save.h"
 	#include "Button_System.h"
 	#include "Debug.h"
+	#include "Render_Dirty.h"
+	#include "VSurface.h"
 #endif
 
 

@@ -959,7 +959,8 @@ void SelectNextUnplacedUnit()
 	}
 }
 
-void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason )
+
+void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 {
 	INT32 i;
 	INT16 sGridNo;

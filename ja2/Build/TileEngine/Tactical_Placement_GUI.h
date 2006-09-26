@@ -2,14 +2,13 @@
 #define __TACTICAL_PLACEMENT_GUI_H
 
 #include "Soldier_Control.h"
-#include "MouseSystem.h"
 
 void InitTacticalPlacementGUI();
 void KillTacticalPlacementGUI();
 void TacticalPlacementHandle();
 void RenderTacticalPlacementGUI();
 
-void HandleTacticalPlacementClicksInOverheadMap( MOUSE_REGION *reg, INT32 reason );
+void HandleTacticalPlacementClicksInOverheadMap(INT32 reason);
 
 extern BOOLEAN gfTacticalPlacementGUIActive;
 extern BOOLEAN gfEnterTacticalPlacementGUI;
