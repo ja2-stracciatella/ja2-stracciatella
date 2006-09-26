@@ -1847,7 +1847,7 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 
 	hVSurface->surface           = surface;
 	hVSurface->usHeight          = surface->h;
-	hVSurface->usWidth           = surface->h;
+	hVSurface->usWidth           = surface->w;
 	hVSurface->ubBitDepth        = surface->format->BitsPerPixel;
 	hVSurface->pSurfaceData      = NULL; // XXX remove
 	hVSurface->pSurfaceData1     = NULL; // XXX remove
