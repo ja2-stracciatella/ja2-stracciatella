@@ -164,6 +164,8 @@ void VideoMovieCapture( BOOLEAN fEnable );
 void RefreshMovieCache( );
 
 
+static SDL_Surface *mouse_background;
+static SDL_Surface *mouse_cursor;
 static SDL_Surface *screen;
 
 
@@ -179,6 +181,18 @@ BOOLEAN InitializeVideoManager(void)
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, gbPixelDepth, SDL_SWSURFACE | SDL_HWPALETTE);
+
+	mouse_background = SDL_CreateRGBSurface(
+		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, gbPixelDepth,
+		screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask
+	);
+
+	mouse_cursor = SDL_CreateRGBSurface(
+		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, gbPixelDepth,
+		screen->format->Rmask, screen->format->Gmask, screen->format->Bmask, screen->format->Amask
+	);
+
+	SDL_SetColorKey(mouse_cursor, SDL_SRCCOLORKEY, 0);
 
 	memset(gpFrameData, 0, sizeof(gpFrameData));
 
@@ -2394,8 +2408,8 @@ PTR LockMouseBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
 	FIXME
-	*uiPitch = screen->pitch;
-	return screen->pixels;
+	*uiPitch = mouse_cursor->pitch;
+	return mouse_cursor->pixels;
 #else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
