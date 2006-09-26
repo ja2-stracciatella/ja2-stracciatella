@@ -2353,7 +2353,6 @@ void UnlockBackBuffer(void)
 PTR LockFrameBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
-	FIXME
 	*uiPitch = screen->pitch;
 	return screen->pixels;
 #else
@@ -2387,7 +2386,6 @@ PTR LockFrameBuffer(UINT32 *uiPitch)
 void UnlockFrameBuffer(void)
 {
 #if 1 // XXX TODO
-	FIXME
 #else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;
@@ -2407,7 +2405,6 @@ void UnlockFrameBuffer(void)
 PTR LockMouseBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
-	FIXME
 	*uiPitch = mouse_cursor->pitch;
 	return mouse_cursor->pixels;
 #else
@@ -2434,7 +2431,6 @@ PTR LockMouseBuffer(UINT32 *uiPitch)
 void UnlockMouseBuffer(void)
 {
 #if 1 // XXX TODO
-	FIXME
 #else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;

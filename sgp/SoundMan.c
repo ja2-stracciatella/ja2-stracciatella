@@ -747,7 +747,6 @@ UINT32 uiChannel, uiSample;
 BOOLEAN SoundServiceStreams(void)
 {
 #if 1 // XXX TODO
-	FIXME
 	return FALSE;
 #else
 UINT32 uiCount, uiSpeed, uiBuffLen, uiBytesPerSample;

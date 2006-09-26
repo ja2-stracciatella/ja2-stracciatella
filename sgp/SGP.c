@@ -687,10 +687,6 @@ int main(int argc, char* argv[])
 				case SDL_QUIT:
 					gfProgramIsRunning = FALSE;
 					break;
-
-				default:
-					fprintf(stderr, "Received event of type %d\n", event.type);
-					break;
 			}
 		}
 		else
