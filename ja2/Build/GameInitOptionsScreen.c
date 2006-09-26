@@ -25,6 +25,7 @@
 	#include "ScreenIDs.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Button_Sound_Control.h"
 #endif
 
 #ifdef JA2TESTVERSION

@@ -614,12 +614,6 @@ void MSYS_UpdateMouseRegion(void)
 				MSYS_PrevRegion->uiFlags &= (~MSYS_GOT_BACKGROUND);
 				MSYS_PrevRegion->uiFlags &= (~MSYS_FASTHELP_RESET);
 
-				#ifndef UTIL
-					// dirty buttons, need a re-render
-//DEF: Nov 30 98
-//				PausedMarkButtonsDirty( );
-				#endif
-
 				//if( region->uiFlags & MSYS_REGION_ENABLED )
 				//	region->uiFlags |= BUTTON_DIRTY;
 #ifndef JA2

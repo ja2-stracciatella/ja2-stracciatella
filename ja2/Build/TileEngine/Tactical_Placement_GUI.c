@@ -435,9 +435,6 @@ void RenderTacticalPlacementGUI()
 		InvalidateRegion( 0, 0, 320, 480 );
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
-		//DisableHilightsAndHelpText();
-		//RenderButtons();
-		//EnableHilightsAndHelpText();
 		for( i = 0; i < giPlacements; i++ )
 		{ //Render the mercs
 			pSoldier = gMercPlacement[ i ].pSoldier;

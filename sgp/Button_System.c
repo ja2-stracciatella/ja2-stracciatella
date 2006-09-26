@@ -1,63 +1,40 @@
-/***********************************************************************************************
-	Button System.c
+// Rewritten mostly by Kris Morness
 
-	Rewritten mostly by Kris Morness
-***********************************************************************************************/
+#include "Button_Sound_Control.h"
+#include "Button_System.h"
+#include "Debug.h"
+#include "Font.h"
+#include "Input.h"
+#include "Lighting.h"
+#include "MemMan.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "WordWrap.h"
+#include <stdio.h>
 
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include <stdio.h>
-	#include <memory.h>
-	#include "Debug.h"
-	#include "Input.h"
-	#include "MemMan.h"
-	#include "English.h"
-	#include "VObject.h"
-	#include "VObject_Blitters.h"
-	#include "SoundMan.h"
-	#include "Button_System.h"
-	#include "Line.h"
-	#include <stdarg.h>
-	#if defined( JA2 ) || defined( UTIL )
-		#include "WordWrap.h"
-		#include "Video.h"
-		#include "Button_Sound_Control.h"
-		#ifdef _JA2_RENDER_DIRTY
-			#include "Font_Control.h"
-			#include "Render_Dirty.h"
-			#include "Utilities.h"
-		#endif
-	#else
-		#include "video2.h"
-	#endif
+#ifdef _JA2_RENDER_DIRTY
+#	include "Font_Control.h"
+#	include "Utilities.h"
 #endif
 
 
-//ATE: Added to let Wiz default creating mouse regions with no cursor, JA2 default to a cursor ( first one )
+// Moved here from Button System.c by DB 99/01/07
+// Names of the default generic button image files.
 #ifdef JA2
-	#define		MSYS_STARTING_CURSORVAL		0
+#define DEFAULT_GENERIC_BUTTON_OFF			"GENBUTN.STI"
+#define DEFAULT_GENERIC_BUTTON_ON				"GENBUTN2.STI"
+#define DEFAULT_GENERIC_BUTTON_OFF_HI		"GENBUTN3.STI"
+#define DEFAULT_GENERIC_BUTTON_ON_HI		"GENBUTN4.STI"
 #else
-	#define		MSYS_STARTING_CURSORVAL		MSYS_NO_CURSOR
-	// The following should be moved from here
-	#define GETPIXELDEPTH( )	( gbPixelDepth )		// From "Utilities.h" in JA2
-	#define		COLOR_RED						162							// From "Lighting.h" in JA2
-	#define		COLOR_BLUE					203
-	#define		COLOR_YELLOW				144
-	#define		COLOR_GREEN					184
-	#define		COLOR_LTGREY				134
-	#define		COLOR_BROWN					80
-	#define		COLOR_PURPLE				160
-	#define		COLOR_ORANGE				76
-	#define		COLOR_WHITE					208
-	#define		COLOR_BLACK					72
-	// this doesn't exactly belong here either... (From "Font_Control.h" in JA2)
-	#define		FONT_MCOLOR_BLACK				0
+#define DEFAULT_GENERIC_BUTTON_OFF			"Data\\Message Box\\GENBUTN.STI"
+#define DEFAULT_GENERIC_BUTTON_ON				"Data\\Message Box\\GENBUTN2.STI"
+#define DEFAULT_GENERIC_BUTTON_OFF_HI		"Data\\Message Box\\GENBUTN3.STI"
+#define DEFAULT_GENERIC_BUTTON_ON_HI		"Data\\Message Box\\GENBUTN4.STI"
 #endif
-#define		COLOR_DKGREY				136
+
+
+#define		MSYS_STARTING_CURSORVAL		0
 
 
 #define MAX_GENERIC_PICS		40
@@ -66,26 +43,27 @@
 
 #define GUI_BTN_NONE							0
 #define GUI_BTN_DUPLICATE_VOBJ		1
-#define GUI_BTN_EXTERNAL_VOBJ			2
 
 
-UINT8		str[128];
+static UINT8 str[128];
 
 //Kris:  December 2, 1997
 //Special internal debugging utilities that will ensure that you don't attempt to delete
 //an already deleted button, or it's images, etc.  It will also ensure that you don't create
 //the same button that already exists.
 //TO REMOVE ALL DEBUG FUNCTIONALITY:  simply comment out BUTTONSYSTEM_DEBUGGING definition
-#ifdef JA2
-  #ifdef _DEBUG
-	  #define BUTTONSYSTEM_DEBUGGING
-  #endif
+#if defined(JA2) && defined(_DEBUG)
+#	define BUTTONSYSTEM_DEBUGGING
 #endif
 
+
 #ifdef BUTTONSYSTEM_DEBUGGING
+
 BOOLEAN gfIgnoreShutdownAssertions;
+
+
 //Called immediately before assigning the button to the button list.
-void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
+static void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 {
 	INT32 x;
 	GUI_BUTTON *c;
@@ -111,7 +89,9 @@ void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 		AssertMsg( 0, str );
 	}
 }
+
 #endif
+
 
 //Kris:
 //These are the variables used for the anchoring of a particular button.
@@ -119,65 +99,53 @@ void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 //When you move around, you don't want to select other buttons, even when you release
 //it.  This follows the Windows 95 convention.
 GUI_BUTTON *gpAnchoredButton;
-GUI_BUTTON *gpPrevAnchoredButton;
+static GUI_BUTTON *gpPrevAnchoredButton;
 BOOLEAN gfAnchoredState;
-void ReleaseAnchorMode();
 
-INT8 gbDisabledButtonStyle;
-void DrawHatchOnButton( GUI_BUTTON *b );
-void DrawShadeOnButton( GUI_BUTTON *b );
-void DrawDefaultOnButton( GUI_BUTTON *b );
-
-GUI_BUTTON *gpCurrentFastHelpButton;
+static INT8 gbDisabledButtonStyle;
+static void DrawShadeOnButton(const GUI_BUTTON *b);
+static void DrawHatchOnButton(const GUI_BUTTON *b);
 
 BOOLEAN gfRenderHilights = TRUE;
 
 BUTTON_PICS		ButtonPictures[MAX_BUTTON_PICS];
-INT32					ButtonPicsLoaded;
+static INT32 ButtonPicsLoaded;
 
-UINT32 ButtonDestBuffer = BACKBUFFER;
-UINT32 ButtonDestPitch = 640*2;
-UINT32 ButtonDestBPP = 16;
+UINT32 ButtonDestBuffer = FRAME_BUFFER;
 
 GUI_BUTTON *ButtonList[MAX_BUTTONS];
 
-INT32 ButtonsInList=0;
 
 UINT16 GetWidthOfButtonPic( UINT16 usButtonPicID, INT32 iSlot )
 {
 	return ButtonPictures[ usButtonPicID ].vobj->pETRLEObject[ iSlot ].usWidth;
 }
 
-HVOBJECT GenericButtonGrayed[MAX_GENERIC_PICS];
-HVOBJECT GenericButtonOffNormal[MAX_GENERIC_PICS];
-HVOBJECT GenericButtonOffHilite[MAX_GENERIC_PICS];
-HVOBJECT GenericButtonOnNormal[MAX_GENERIC_PICS];
-HVOBJECT GenericButtonOnHilite[MAX_GENERIC_PICS];
-HVOBJECT GenericButtonBackground[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonGrayed[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonOffNormal[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonOffHilite[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonOnNormal[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonOnHilite[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonBackground[MAX_GENERIC_PICS];
 UINT16 GenericButtonFillColors[MAX_GENERIC_PICS];
-UINT16 GenericButtonBackgroundIndex[MAX_GENERIC_PICS];
-INT16 GenericButtonOffsetX[MAX_GENERIC_PICS];
-INT16 GenericButtonOffsetY[MAX_GENERIC_PICS];
+static UINT16 GenericButtonBackgroundIndex[MAX_GENERIC_PICS];
+static INT16 GenericButtonOffsetX[MAX_GENERIC_PICS];
+static INT16 GenericButtonOffsetY[MAX_GENERIC_PICS];
 
-HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
+static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
 // flag to state we wish to render buttons on the one after the next pass through render buttons
-BOOLEAN fPausedMarkButtonsDirtyFlag = FALSE;
-BOOLEAN fDisableHelpTextRestoreFlag = FALSE;
+static BOOLEAN fPausedMarkButtonsDirtyFlag = FALSE;
+static BOOLEAN fDisableHelpTextRestoreFlag = FALSE;
 
-BOOLEAN gfDelayButtonDeletion = FALSE;
-BOOLEAN gfPendingButtonDeletion = FALSE;
-void RemoveButtonsMarkedForDeletion();
+static BOOLEAN gfDelayButtonDeletion = FALSE;
+static BOOLEAN gfPendingButtonDeletion = FALSE;
 
 extern MOUSE_REGION *MSYS_PrevRegion;
-extern MOUSE_REGION *MSYS_CurrRegion;
 
-//=============================================================================
-//	FindFreeButtonSlot
-//
-//	Finds an available slot for loading button pictures
-//
-INT32 FindFreeButtonSlot(void)
+
+// Finds an available slot for loading button pictures
+static INT32 FindFreeButtonSlot(void)
 {
 	int slot;
 
@@ -196,12 +164,7 @@ INT32 FindFreeButtonSlot(void)
 }
 
 
-
-//=============================================================================
-//	LoadButtonImage
-//
-//	Load images for use with QuickButtons.
-//
+// Load images for use with QuickButtons.
 INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	VOBJECT_DESC	vo_desc;
@@ -321,12 +284,8 @@ INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32
 }
 
 
-//=============================================================================
-//	UseLoadedButtonImage
-//
-//	Uses a previously loaded quick button image for use with QuickButtons.
-//	The function simply duplicates the vobj!
-//
+// Uses a previously loaded quick button image for use with QuickButtons.
+// The function simply duplicates the vobj!
 INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	UINT32				UseSlot;
@@ -338,13 +297,6 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 	if( ButtonPictures[LoadedImg].vobj == NULL )
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %d",LoadedImg));
-		return(-1);
-	}
-
-	// Is button image an external vobject?
-	if( ButtonPictures[LoadedImg].fFlags & GUI_BTN_EXTERNAL_VOBJ )
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given (%d), cannot use external images as duplicates.",LoadedImg));
 		return(-1);
 	}
 
@@ -444,144 +396,6 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 }
 
 
-
-//=============================================================================
-//	UseVObjAsButtonImage
-//
-//	Uses a previously loaded VObject for use with QuickButtons.
-//	The function simply duplicates the vobj pointer and uses that.
-//
-//		**** NOTE ****
-//			The image isn't unloaded with a call to UnloadButtonImage. The internal
-//			structures are simply removed from the button image list. It's up to
-//			the user to actually unload the image.
-//
-INT32 UseVObjAsButtonImage(HVOBJECT hVObject, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
-{
-	UINT32				UseSlot;
-	ETRLEObject		*pTrav;
-	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
-
-
-	// Is button image index given valid?
-	if( hVObject == NULL )
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("UseVObjAsButtonImage: Invalid VObject image given"));
-		return(-1);
-	}
-
-	// is there ANY file to open?
-	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("UseVObjAsButtonImage: No button pictures indexes selected for VObject"));
-		return(-1);
-	}
-
-	// Get a button image slot
-	if((UseSlot=FindFreeButtonSlot()) == BUTTON_NO_SLOT)
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("UseVObjAsButtonImage: Out of button image slots for VObject"));
-		return(-1);
-	}
-
-	// Init the QuickButton image structure with indexes to use
-	ButtonPictures[UseSlot].vobj = hVObject;
-	ButtonPictures[UseSlot].Grayed=Grayed;
-	ButtonPictures[UseSlot].OffNormal=OffNormal;
-	ButtonPictures[UseSlot].OffHilite=OffHilite;
-	ButtonPictures[UseSlot].OnNormal=OnNormal;
-	ButtonPictures[UseSlot].OnHilite=OnHilite;
-	ButtonPictures[UseSlot].fFlags = GUI_BTN_EXTERNAL_VOBJ;
-
-	// Fit the button size to the largest image in the set
-	MaxWidth=MaxHeight=0;
-	if(Grayed != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[Grayed]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OffNormal != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OffHilite != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OnNormal != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OnHilite != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	// Set the width and height for this image set
-	ButtonPictures[UseSlot].MaxHeight=MaxHeight;
-	ButtonPictures[UseSlot].MaxWidth=MaxWidth;
-
-	// return the image slot number
-	ButtonPicsLoaded++;
-	return(UseSlot);
-}
-
-
-
-//=============================================================================
-//	SetButtonDestBuffer
-//
-//	Sets the destination buffer for all button blits.
-//
-BOOLEAN SetButtonDestBuffer(UINT32 DestBuffer)
-{
-	if(DestBuffer != BUTTON_USE_DEFAULT)
-		ButtonDestBuffer = DestBuffer;
-
-	return(TRUE);
-}
-
-
-
 //Removes a QuickButton image from the system.
 void UnloadButtonImage(INT32 Index)
 {
@@ -604,7 +418,7 @@ void UnloadButtonImage(INT32 Index)
 	}
 
 	// If this is a duplicated button image, then don't trash the vobject
-	if(ButtonPictures[Index].fFlags & GUI_BTN_DUPLICATE_VOBJ || ButtonPictures[Index].fFlags & GUI_BTN_EXTERNAL_VOBJ)
+	if(ButtonPictures[Index].fFlags & GUI_BTN_DUPLICATE_VOBJ)
 	{
 		ButtonPictures[Index].vobj = NULL;
 		ButtonPicsLoaded--;
@@ -645,12 +459,7 @@ void UnloadButtonImage(INT32 Index)
 }
 
 
-
-//=============================================================================
-//	EnableButton
-//
-//	Enables an already created button.
-//
+// Enables an already created button.
 BOOLEAN EnableButton( INT32 iButtonID )
 {
 	GUI_BUTTON *b;
@@ -673,22 +482,14 @@ BOOLEAN EnableButton( INT32 iButtonID )
 	else
 		OldState = 0;
 
-
-	// Return previous ENABLED state of this button
-	return((OldState==BUTTON_ENABLED)?TRUE:FALSE);
+	return OldState == BUTTON_ENABLED;
 }
 
 
-
-//=============================================================================
-//	DisableButton
-//
-//	Disables a button. The button remains in the system list, and can be
-//	reactivated by calling EnableButton.
-//
-//	Diabled buttons will appear "grayed out" on the screen (unless the
-//	graphics for such are not available).
-//
+// Disables a button. The button remains in the system list, and can be
+// reactivated by calling EnableButton.
+// Diabled buttons will appear "grayed out" on the screen (unless the
+// graphics for such are not available).
 BOOLEAN DisableButton(INT32 iButtonID )
 {
 	GUI_BUTTON *b;
@@ -712,39 +513,17 @@ BOOLEAN DisableButton(INT32 iButtonID )
 	else
 		OldState = 0;
 
-	// Return previous ENABLED state of button
-	return((OldState==BUTTON_ENABLED)?TRUE:FALSE);
+	return OldState == BUTTON_ENABLED;
 }
 
 
-
-//=============================================================================
-//	InitializeButtonImageManager
-//
-//	Initializes the button image sub-system. This function is called by
-//	InitButtonSystem.
-//
-BOOLEAN InitializeButtonImageManager(INT32 DefaultBuffer, INT32 DefaultPitch, INT32 DefaultBPP)
+// Initializes the button image sub-system. This function is called by
+// InitButtonSystem.
+static BOOLEAN InitializeButtonImageManager(void)
 {
 	VOBJECT_DESC	vo_desc;
 	UINT8 Pix;
 	int x;
-
-	// Set up the default settings
-	if(DefaultBuffer != BUTTON_USE_DEFAULT)
-		ButtonDestBuffer = (UINT32)DefaultBuffer;
-	else
-		ButtonDestBuffer = FRAME_BUFFER;
-
-	if(DefaultPitch != BUTTON_USE_DEFAULT)
-		ButtonDestPitch = (UINT32)DefaultPitch;
-	else
-		ButtonDestPitch = 640*2;
-
-	if(DefaultBPP != BUTTON_USE_DEFAULT)
-		ButtonDestBPP = (UINT32)DefaultBPP;
-	else
-		ButtonDestBPP = 16;
 
 	// Blank out all QuickButton images
 	for(x=0;x<MAX_BUTTON_PICS;x++)
@@ -824,13 +603,8 @@ BOOLEAN InitializeButtonImageManager(INT32 DefaultBuffer, INT32 DefaultPitch, IN
 }
 
 
-
-//=============================================================================
-//	FindFreeGenericSlot
-//
-//	Finds the next available slot for generic (TEXT and/or ICONIC) buttons.
-//
-INT16 FindFreeGenericSlot(void)
+// Finds the next available slot for generic (TEXT and/or ICONIC) buttons.
+static INT16 FindFreeGenericSlot(void)
 {
 	INT16 slot,x;
 
@@ -845,13 +619,8 @@ INT16 FindFreeGenericSlot(void)
 }
 
 
-
-//=============================================================================
-//	FindFreeIconSlot
-//
-//	Finds the next available slot for button icon images.
-//
-INT16 FindFreeIconSlot(void)
+// Finds the next available slot for button icon images.
+static INT16 FindFreeIconSlot(void)
 {
 	INT16 slot,x;
 
@@ -866,12 +635,7 @@ INT16 FindFreeIconSlot(void)
 }
 
 
-
-//=============================================================================
-//	LoadGenericButtonIcon
-//
-//	Loads an image file for use as a button icon.
-//
+// Loads an image file for use as a button icon.
 INT16 LoadGenericButtonIcon(UINT8 *filename)
 {
 	INT16 ImgSlot;
@@ -900,11 +664,8 @@ INT16 LoadGenericButtonIcon(UINT8 *filename)
 	return(ImgSlot);
 }
 
-//=============================================================================
-//	UnloadGenericButtonIcon
-//
-//	Removes a button icon graphic from the system
-//
+
+// Removes a button icon graphic from the system
 BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 {
 	if( GenImg < 0 || GenImg >= MAX_BUTTON_ICONS  )
@@ -928,14 +689,9 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 }
 
 
-
-//=============================================================================
-//	UnloadGenericButtonImage
-//
-//	Removes the images associated with a generic button. Except the icon
-//	image of iconic buttons. See above.
-//
-BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
+// Removes the images associated with a generic button. Except the icon
+// image of iconic buttons. See above.
+static BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 {
 	BOOLEAN fDeletedSomething = FALSE;
 	if( GenImg < 0 || GenImg >= MAX_GENERIC_PICS  )
@@ -1003,13 +759,8 @@ BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
 }
 
 
-
-//=============================================================================
-//	LoadGenericButtonImages
-//
-//	Loads the image files required for displaying a generic button.
-//
-INT16 LoadGenericButtonImages(UINT8 *GrayName,UINT8 *OffNormName,UINT8 *OffHiliteName,UINT8 *OnNormName,UINT8 *OnHiliteName,UINT8 *BkGrndName,INT16 Index,INT16 OffsetX, INT16 OffsetY)
+// Loads the image files required for displaying a generic button.
+static INT16 LoadGenericButtonImages(UINT8 *GrayName,UINT8 *OffNormName,UINT8 *OffHiliteName,UINT8 *OnNormName,UINT8 *OnHiliteName,UINT8 *BkGrndName,INT16 Index,INT16 OffsetX, INT16 OffsetY)
 {
 	INT16 ImgSlot;
 	VOBJECT_DESC	vo_desc;
@@ -1130,14 +881,8 @@ INT16 LoadGenericButtonImages(UINT8 *GrayName,UINT8 *OffNormName,UINT8 *OffHilit
 }
 
 
-//=============================================================================
-//	ShutdownButtonImageManager
-//
-//	Cleans up, and shuts down the button image manager sub-system.
-//
-//	This function is called by ShutdownButtonSystem.
-//
-void ShutdownButtonImageManager(void)
+// Cleans up, and shuts down the button image manager sub-system.
+static void ShutdownButtonImageManager(void)
 {
 	int x;
 
@@ -1203,13 +948,8 @@ void ShutdownButtonImageManager(void)
 }
 
 
-
-//=============================================================================
-//	InitButtonSystem
-//
-//	Initializes the GUI button system for use. Must be called before using
-//	any other button functions.
-//
+// Initializes the GUI button system for use. Must be called before using
+// any other button functions.
 BOOLEAN InitButtonSystem(void)
 {
 	INT32 x;
@@ -1227,26 +967,19 @@ BOOLEAN InitButtonSystem(void)
 	}
 
 	// Initialize the button image manager sub-system
-	if(InitializeButtonImageManager(-1,-1,-1) == FALSE)
+	if (!InitializeButtonImageManager())
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"Failed button image manager init\n");
 		return(FALSE);
 	}
 
-	ButtonsInList = 0;
-
 	return(TRUE);
 }
 
 
-
-//=============================================================================
-//	ShutdownButtonSystem
-//
-//	Shuts down and cleans up the GUI button system. Must be called before
-//	exiting the program. Button functions should not be used after calling
-//	this function.
-//
+// Shuts down and cleans up the GUI button system. Must be called before
+// exiting the program. Button functions should not be used after calling
+// this function.
 void ShutdownButtonSystem(void)
 {
 	int x;
@@ -1263,7 +996,8 @@ void ShutdownButtonSystem(void)
 	UnRegisterDebugTopic(TOPIC_BUTTON_HANDLER,"Button System & Button Image Manager");
 }
 
-void RemoveButtonsMarkedForDeletion()
+
+static void RemoveButtonsMarkedForDeletion(void)
 {
 	INT32 i;
 	for( i = 0; i < MAX_BUTTONS; i++ )
@@ -1275,12 +1009,9 @@ void RemoveButtonsMarkedForDeletion()
 	}
 }
 
-//=============================================================================
-//	RemoveButton
-//
-//	Removes a button from the system's list. All memory associated with the
-//	button is released.
-//
+
+// Removes a button from the system's list. All memory associated with the
+// button is released.
 void RemoveButton(INT32 iButtonID)
 {
 	GUI_BUTTON *b;
@@ -1325,13 +1056,6 @@ void RemoveButton(INT32 iButtonID)
 	// ...kill it!!!
 	MSYS_RemoveRegion(&b->Area);
 
-#ifdef _JA2_RENDER_DIRTY
-	if ( b->uiFlags & BUTTON_SAVEBACKGROUND )
-	{
-		FreeBackgroundRectPending(b->BackRect);
-	}
-#endif
-
 	// Get rid of the text string
 	if (b->string != NULL)
 		MemFree( b->string );
@@ -1347,13 +1071,8 @@ void RemoveButton(INT32 iButtonID)
 }
 
 
-
-//=============================================================================
-//	GetNextButtonNumber
-//
-//	Finds the next available button slot.
-//
-INT32 GetNextButtonNumber(void)
+// Finds the next available button slot.
+static INT32 GetNextButtonNumber(void)
 {
 	INT32 x;
 
@@ -1367,176 +1086,11 @@ INT32 GetNextButtonNumber(void)
 }
 
 
-
-//=============================================================================
-//	ResizeButton
-//
-//	Changes the size of a generic button.
-//
-//	QuickButtons cannot be resized, therefore this function ignores the
-//	call if a QuickButton is given.
-//
-void ResizeButton(INT32 iButtonID,INT16 w, INT16 h)
-{
-	GUI_BUTTON *b;
-	INT32	xloc,yloc;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to resize button with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	// if button size is too small, adjust it.
-	if(w<4)
-		w=4;
-	if(h<3)
-		h=3;
-
-	b = ButtonList[ iButtonID ];
-
-	if( !b )
-	{
-		sprintf( str, "Attempting to resize deleted button with buttonID %d", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	// If this is a QuickButton, ignore this call
-	if((b->uiFlags & BUTTON_TYPES) == BUTTON_QUICK)
-		return;
-
-	// Get current button screen location
-	xloc=b->XLoc;
-	yloc=b->YLoc;
-
-	// Set the new MOUSE_REGION area values to reflect change in size.
-	b->Area.RegionTopLeftX=(UINT16)xloc;
-	b->Area.RegionTopLeftY=(UINT16)yloc;
-	b->Area.RegionBottomRightX=(UINT16)(xloc+w);
-	b->Area.RegionBottomRightY=(UINT16)(yloc+h);
-	b->uiFlags |= BUTTON_DIRTY;
-
-#ifdef _JA2_RENDER_DIRTY
-	if ( b->uiFlags & BUTTON_SAVEBACKGROUND )
-	{
-		FreeBackgroundRectPending(b->BackRect);
-		b->BackRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, NULL,
-					(INT16)xloc, (INT16)yloc, (INT16)(xloc+w), (INT16)(yloc+h) );
-	}
-#endif
-
-}
+static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason);
+static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason);
 
 
-
-//=============================================================================
-//	SetButtonPosition
-//
-//	Sets the position of a button on the screen. The position is relative
-//	to the top left corner of the button.
-//
-void SetButtonPosition( INT32 iButtonID ,INT16 x, INT16 y)
-{
-	GUI_BUTTON *b;
-	INT32	xloc,yloc,w,h;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to set button position with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	b=ButtonList[ iButtonID ];
-
-	if( !b )
-	{
-		sprintf( str, "Attempting to set button position with buttonID %d", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	// Get new screen position
-	xloc=(INT16)x;
-	yloc=(INT16)y;
-	// Compute current width and height of this button
-	w = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
-	h = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
-
-	// Set button to new location
-	b->XLoc=x;
-	b->YLoc=y;
-	// Set the buttons MOUSE_REGION to appropriate area
-	b->Area.RegionTopLeftX=(UINT16)xloc;
-	b->Area.RegionTopLeftY=(UINT16)yloc;
-	b->Area.RegionBottomRightX=(UINT16)(xloc+w);
-	b->Area.RegionBottomRightY=(UINT16)(yloc+h);
-	b->uiFlags |= BUTTON_DIRTY;
-
-#ifdef _JA2_RENDER_DIRTY
-	if ( b->uiFlags & BUTTON_SAVEBACKGROUND )
-	{
-		FreeBackgroundRectPending(b->BackRect);
-		b->BackRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, NULL,
-						(INT16)xloc, (INT16)yloc, (INT16)(xloc+w), (INT16)(yloc+h) );
-	}
-#endif
-
-}
-
-//=============================================================================
-//	SetButtonIcon
-//
-//	Sets the icon to be displayed on a IconicButton.
-//
-//	Calling this function with a button type other than Iconic has no effect.
-//
-INT32 SetButtonIcon( INT32 iButtonID, INT16 Icon, INT16 IconIndex )
-{
-	GUI_BUTTON *b;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to set button icon with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-		return -1;
-	}
-	if( Icon < 0 || Icon >= MAX_BUTTON_ICONS )
-	{
-		sprintf( str, "Attempting to set button[%d] icon with out of range icon index %d.", iButtonID, Icon );
-		AssertMsg( 0, str );
-		return -1;
-	}
-
-	b = ButtonList[ iButtonID ];
-
-	if( !b )
-	{
-		sprintf( str, "Attempting to set deleted button icon with buttonID %d", iButtonID );
-		AssertMsg( 0, str );
-		return -1;
-	}
-
-	// If button isn't an icon button, ignore this call
-	if(((b->uiFlags & BUTTON_TYPES) == BUTTON_QUICK) ||
-		 ((b->uiFlags & BUTTON_TYPES) == BUTTON_HOT_SPOT) ||
-		 ((b->uiFlags & BUTTON_TYPES) == BUTTON_GENERIC))
-	{
-		return -1;
-	}
-
-	// Set the icon number and index to use for this button
-	b->iIconID = Icon;
-	b->usIconIndex = IconIndex;
-
-	return Icon;
-}
-
-
-
-//=============================================================================
-//	CreateIconButton
-//
-//	Creates an Iconic type button.
-//
+// Creates an Iconic type button.
 INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 yloc,INT16 w,INT16 h,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
@@ -1593,12 +1147,10 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 		b->UserData[x] = 0;
 	b->Group = -1;
 
-	b->bDefaultStatus = DEFAULT_STATUS_NONE;
 	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
 	//Init text
 	b->string = NULL;
 	b->usFont = 0;
-	b->fMultiColor=FALSE;
 	b->sForeColor = 0;
 	b->sWrappedWidth = -1;
 	b->sShadowColor = -1;
@@ -1647,10 +1199,6 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 	// Set this button's flags
 	b->uiFlags |= ( BUTTON_ENABLED | BType | BUTTON_GENERIC );
 
-#ifdef _JA2_RENDER_DIRTY
-	b->BackRect = -1;
-#endif
-
 	// Add button to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound( b );
@@ -1662,6 +1210,7 @@ INT32 CreateIconButton(INT16 Icon,INT16 IconIndex,INT16 GenImg,INT16 xloc,INT16 
 	// return this button's slot number
 	return(ButtonNum);
 }
+
 
 //Creates a generic button with text on it.
 INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority,GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
@@ -1728,11 +1277,9 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	for(x=0;x<4;x++)
 		b->UserData[x] = 0;
 	b->Group = -1;
-	b->bDefaultStatus = DEFAULT_STATUS_NONE;
 	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
 	//Init string
 	b->usFont = (UINT16)uiFont;
-	b->fMultiColor=FALSE;
 	b->sForeColor = sForeColor;
 	b->sWrappedWidth = -1;
 	b->sShadowColor = sShadowColor;
@@ -1781,10 +1328,6 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	// Set the flags for this button
 	b->uiFlags |= ( BUTTON_ENABLED | BType | BUTTON_GENERIC);
 
-#ifdef _JA2_RENDER_DIRTY
-	b->BackRect = -1;
-#endif
-
 	// Add this button to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound( b );
@@ -1798,13 +1341,8 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 }
 
 
-
-//=============================================================================
-//	CreateHotSpot
-//
-//	Creates a button like HotSpot. HotSpots have no graphics associated with
-//	them.
-//
+// Creates a button like HotSpot. HotSpots have no graphics associated with
+// them.
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
@@ -1874,10 +1412,6 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 	// Set the flags entry for this hotspot
 	b->uiFlags |= (BUTTON_ENABLED|BType|BUTTON_HOT_SPOT);
 
-#ifdef _JA2_RENDER_DIRTY
-	b->BackRect = -1;
-#endif
-
 	// Add this button (hotspot) to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound( b );
@@ -1891,10 +1425,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 }
 
 
-
-// ============================================================================
 // Addition Oct15/97, Carter
-// SetButtonCursor
 // will simply set the cursor for the mouse region the button occupies
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
@@ -1906,12 +1437,9 @@ BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 	return TRUE;
 }
 
-//=============================================================================
-//	QuickCreateButton
-//
-//	Creates a QuickButton. QuickButtons only have graphics associated with
-//	them. They cannot be re-sized, nor can the graphic be changed.
-//
+
+// Creates a QuickButton. QuickButtons only have graphics associated with
+// them. They cannot be re-sized, nor can the graphic be changed.
 INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON *b;
@@ -1964,14 +1492,12 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 	}
 
 	// shadow style
-	b->bDefaultStatus = DEFAULT_STATUS_NONE;
 	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
 
 	b->Group = -1;
 	//Init string
 	b->string = NULL;
 	b->usFont = 0;
-	b->fMultiColor=FALSE;
 	b->sForeColor = 0;
 	b->sWrappedWidth = -1;
 	b->sShadowColor = -1;
@@ -2035,9 +1561,6 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 
 	// Set the flags for this button
 	b->uiFlags |= BUTTON_ENABLED | BType | BUTTON_QUICK;
-#ifdef _JA2_RENDER_DIRTY
-	b->BackRect = -1;
-#endif
 
 	// Add this QuickButton to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
@@ -2051,6 +1574,7 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 	return(ButtonNum);
 }
 
+
 //A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more assumptions.  It self manages the
 //loading, and deleting of the image.  The size of the image determines the size of the button.  It also uses
 //the default move callback which emulates Win95.  Finally, it sets the priority to normal.  The function you
@@ -2060,21 +1584,12 @@ INT32 CreateEasyNoToggleButton ( INT32 x, INT32 y, UINT8 *filename, GUI_CALLBACK
 	return CreateSimpleButton( x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
+
 INT32 CreateEasyToggleButton   ( INT32 x, INT32 y, UINT8 *filename, GUI_CALLBACK ClickCallback )
 {
 	return CreateSimpleButton( x, y, filename, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
 }
 
-INT32 CreateEasyNewToggleButton( INT32 x, INT32 y, UINT8 *filename, GUI_CALLBACK ClickCallback )
-{
-	return CreateSimpleButton( x, y, filename, BUTTON_NEWTOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback );
-}
-
-//Same as above, but accepts specify toggle type
-INT32 CreateEasyButton( INT32 x, INT32 y, UINT8 *filename, INT32 Type, GUI_CALLBACK ClickCallback)
-{
-	return CreateSimpleButton( x, y, filename, Type, MSYS_PRIORITY_NORMAL, ClickCallback );
-}
 
 //Same as above, but accepts priority specification.
 INT32 CreateSimpleButton( INT32 x, INT32 y, UINT8 *filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback )
@@ -2158,7 +1673,6 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 	for(x=0;x<4;x++)
 		b->UserData[x] = 0;
 	b->Group = -1;
-	b->bDefaultStatus = DEFAULT_STATUS_NONE;
 	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
 
 	// Allocate memory for the button's text string...
@@ -2172,7 +1686,6 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 
 	b->bJustification = bJustification;
 	b->usFont = (UINT16)uiFont;
-	b->fMultiColor=FALSE;
 	b->sForeColor = sForeColor;
 	b->sWrappedWidth = -1;
 	b->sShadowColor = sShadowColor;
@@ -2221,10 +1734,6 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 	// Set the flags for this button
 	b->uiFlags |= ( BUTTON_ENABLED | BType | BUTTON_QUICK );
 
-#ifdef _JA2_RENDER_DIRTY
-	b->BackRect = -1;
-#endif
-
 	// Add this QuickButton to the button list
 	#ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound( b );
@@ -2236,6 +1745,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 	// return the button number (slot)
 	return(iButtonID);
 }
+
 
 //New functions
 void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
@@ -2263,16 +1773,6 @@ void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 	}
 }
 
-void SpecifyButtonMultiColorFont(INT32 iButtonID, BOOLEAN fMultiColor)
-{
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-	b->fMultiColor = fMultiColor;
-	b->uiFlags |= BUTTON_DIRTY ;
-}
 
 void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 {
@@ -2284,6 +1784,7 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 	b->usFont = (UINT16)uiFont;
 	b->uiFlags |= BUTTON_DIRTY ;
 }
+
 
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor )
 {
@@ -2297,6 +1798,7 @@ void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadow
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
+
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown )
 {
 	GUI_BUTTON *b;
@@ -2309,6 +1811,7 @@ void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 s
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
+
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited )
 {
 	GUI_BUTTON *b;
@@ -2320,6 +1823,7 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 	b->sShadowColorHilited = sShadowColorHilited;
 	b->uiFlags |= BUTTON_DIRTY ;
 }
+
 
 void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 {
@@ -2334,6 +1838,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 	b->bJustification = bJustification;
 	b->uiFlags |= BUTTON_DIRTY ;
 }
+
 
 void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor,
@@ -2358,6 +1863,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
+
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
@@ -2374,6 +1880,7 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string,
 	b->uiFlags |= BUTTON_DIRTY ;
 }
 
+
 void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
 	GUI_BUTTON *b;
@@ -2386,6 +1893,7 @@ void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOf
 	b->bTextYOffset = bTextYOffset;
 	b->fShiftText = fShiftText;
 }
+
 
 void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
@@ -2411,6 +1919,7 @@ void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 
 	b->sWrappedWidth = sWrappedWidth;
 }
+
 
 void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 {
@@ -2454,49 +1963,6 @@ BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideo
 	return TRUE;
 }
 
-void RemoveTextFromButton( INT32 iButtonID )
-{
-	GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-	//Init string
-	if( b->string )
-		MemFree( b->string );
-	b->string = NULL;
-	b->usFont = 0;
-	b->sForeColor = 0;
-	b->sWrappedWidth = -1;
-	b->sShadowColor = -1;
-	b->sForeColorDown = -1;
-	b->sShadowColorDown = -1;
-	b->sForeColorHilited = -1;
-	b->sShadowColorHilited = -1;
-	b->bJustification = BUTTON_TEXT_CENTER;
-	b->bTextXOffset = -1;
-	b->bTextYOffset = -1;
-	b->bTextXSubOffSet = 0;
-	b->bTextYSubOffSet = 0;
-	b->fShiftText = TRUE;
-}
-
-void RemoveIconFromButton( INT32 iButtonID )
-{
-	GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-	//Clear icon
-	b->iIconID = -1;
-	b->usIconIndex = -1;
-	b->bIconXOffset = -1;
-	b->bIconYOffset = -1;
-	b->fShiftImage = TRUE;
-}
 
 void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 {
@@ -2510,11 +1976,8 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
-//=============================================================================
-//	SetButtonFastHelpText
-//
-//	Set the text that will be displayed as the FastHelp
-//
+
+// Set the text that will be displayed as the FastHelp
 void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 {
 	GUI_BUTTON *b;
@@ -2524,6 +1987,7 @@ void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 	AssertMsg( b, "Called SetButtonFastHelpText() with a non-existant button." );
 	SetRegionFastHelpText( &b->Area, Text );
 }
+
 
 void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn )
 {
@@ -2536,13 +2000,10 @@ void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK Callback
 	SetRegionHelpEndCallback( &b->Area, CallbackFxn );
 }
 
-//=============================================================================
-//	QuickButtonCallbackMMove
-//
-//	Dispatches all button callbacks for mouse movement. This function gets
-//	called by the Mouse System. *DO NOT CALL DIRECTLY*
-//
-void QuickButtonCallbackMMove(MOUSE_REGION *reg,INT32 reason)
+
+// Dispatches all button callbacks for mouse movement. This function gets
+// called by the Mouse System. *DO NOT CALL DIRECTLY*
+static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)
 {
 	GUI_BUTTON *b;
 	INT32 iButtonID;
@@ -2638,14 +2099,9 @@ void QuickButtonCallbackMMove(MOUSE_REGION *reg,INT32 reason)
 }
 
 
-
-//=============================================================================
-//	QuickButtonCallbackMButn
-//
-//	Dispatches all button callbacks for button presses. This function is
-//	called by the Mouse System. *DO NOT CALL DIRECTLY*
-//
-void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
+// Dispatches all button callbacks for button presses. This function is
+// called by the Mouse System. *DO NOT CALL DIRECTLY*
+static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 {
 	GUI_BUTTON *b;
 	INT32		iButtonID;
@@ -2823,6 +2279,10 @@ void QuickButtonCallbackMButn( MOUSE_REGION *reg, INT32 reason )
 	}
 }
 
+
+static void DrawButtonFromPtr(GUI_BUTTON *b);
+
+
 void RenderButtons(void)
 {
 	INT32			iButtonID;
@@ -2852,12 +2312,6 @@ void RenderButtons(void)
 			if ( fOldEnabled != ( b->uiOldFlags & BUTTON_ENABLED ) )
 			{
 				//Something is different, set dirty!
-				b->uiFlags |= BUTTON_DIRTY;
-			}
-
-			// If we ABSOLUTELY want to render every frame....
-			if ( b->uiFlags & BUTTON_SAVEBACKGROUND )
-			{
 				b->uiFlags |= BUTTON_DIRTY;
 			}
 
@@ -2897,13 +2351,10 @@ void RenderButtons(void)
 	RestoreFontSettings();
 }
 
-//*****************************************************************************
-// MarkAButtonDirty
-//
+
 void MarkAButtonDirty( INT32 iButtonNum )
 {
   // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
-
 
   // If the button exists, and it's not owned by another object, draw it
 		if( ButtonList[ iButtonNum ] )
@@ -2911,12 +2362,9 @@ void MarkAButtonDirty( INT32 iButtonNum )
 			// Turn on dirty flag
 			ButtonList[ iButtonNum ]->uiFlags |= BUTTON_DIRTY;
 		}
-
 }
 
-//=============================================================================
-//	MarkButtonsDirty
-//
+
 void MarkButtonsDirty( void )
 {
 	INT32 x;
@@ -2940,6 +2388,7 @@ void UnMarkButtonDirty( INT32 iButtonIndex )
   }
 }
 
+
 void UnmarkButtonsDirty( void )
 {
 	INT32 x;
@@ -2953,29 +2402,15 @@ void UnmarkButtonsDirty( void )
 	}
 }
 
+
 void ForceButtonUnDirty( INT32 iButtonIndex )
 {
 	ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
 	ButtonList[ iButtonIndex ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
 
-//=============================================================================
-// PauseMarkButtonsDirty
-//
 
-void PausedMarkButtonsDirty( void )
-{
-	// set flag for frame after the next rendering of buttons
-	fPausedMarkButtonsDirtyFlag = TRUE;
-
-	return;
-}
-
-//=============================================================================
-//	DrawButton
-//
-//	Draws a single button on the screen.
-//
+// Draws a single button on the screen.
 BOOLEAN DrawButton(INT32 iButtonID )
 {
 	// Fail if button handle out of range
@@ -3000,14 +2435,15 @@ BOOLEAN DrawButton(INT32 iButtonID )
 }
 
 
+static void DrawCheckBoxButton(const GUI_BUTTON *b);
+static void DrawGenericButton(const GUI_BUTTON *b);
+static void DrawIconOnButton(const GUI_BUTTON *b);
+static void DrawQuickButton(const GUI_BUTTON *b);
+static void DrawTextOnButton(const GUI_BUTTON *b);
 
-//=============================================================================
-//	DrawButtonFromPtr
-//
-//	Given a pointer to a GUI_BUTTON structure, draws the button on the
-//	screen.
-//
-void DrawButtonFromPtr(GUI_BUTTON *b)
+
+// Given a pointer to a GUI_BUTTON structure, draws the button on the screen.
+static void DrawButtonFromPtr(GUI_BUTTON *b)
 {
 	Assert( b );
 	// Draw the appropriate button according to button type
@@ -3036,27 +2472,16 @@ void DrawButtonFromPtr(GUI_BUTTON *b)
 		DrawTextOnButton( b );
 	//If the button is disabled, and a style has been calculated, then
 	//draw the style last.
-	switch( gbDisabledButtonStyle )
+	switch (gbDisabledButtonStyle)
 	{
-		case DISABLED_STYLE_HATCHED:
-			DrawHatchOnButton( b );
-			break;
-		case DISABLED_STYLE_SHADED:
-			DrawShadeOnButton( b );
-			break;
-	}
-	if( b->bDefaultStatus )
-	{
-		DrawDefaultOnButton( b );
+		case DISABLED_STYLE_HATCHED: DrawHatchOnButton(b); break;
+		case DISABLED_STYLE_SHADED:  DrawShadeOnButton(b); break;
 	}
 }
 
-//=============================================================================
-//	DrawQuickButton
-//
-//	Draws a QuickButton type button on the screen.
-//
-void DrawQuickButton(GUI_BUTTON *b)
+
+// Draws a QuickButton type button on the screen.
+static void DrawQuickButton(const GUI_BUTTON *b)
 {
 	INT32 UseImage;
 	UseImage=0;
@@ -3108,7 +2533,8 @@ void DrawQuickButton(GUI_BUTTON *b)
 								 VO_BLT_SRCTRANSPARENCY, NULL);
 }
 
-void DrawHatchOnButton( GUI_BUTTON *b )
+
+static void DrawHatchOnButton(const GUI_BUTTON *b)
 {
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
@@ -3122,7 +2548,8 @@ void DrawHatchOnButton( GUI_BUTTON *b )
 	UnLockVideoSurface( ButtonDestBuffer );
 }
 
-void DrawShadeOnButton( GUI_BUTTON *b )
+
+static void DrawShadeOnButton(const GUI_BUTTON *b)
 {
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
@@ -3136,34 +2563,6 @@ void DrawShadeOnButton( GUI_BUTTON *b )
 	UnLockVideoSurface( ButtonDestBuffer );
 }
 
-void DrawDefaultOnButton( GUI_BUTTON *b )
-{
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-	pDestBuf = LockVideoSurface( ButtonDestBuffer, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-	if( b->bDefaultStatus == DEFAULT_STATUS_DARKBORDER || b->bDefaultStatus == DEFAULT_STATUS_WINDOWS95 )
-	{
-		//left (one thick)
-		LineDraw( TRUE, b->Area.RegionTopLeftX-1, b->Area.RegionTopLeftY-1, b->Area.RegionTopLeftX-1, b->Area.RegionBottomRightY+1, 0, pDestBuf );
-		//top (one thick)
-		LineDraw( TRUE, b->Area.RegionTopLeftX-1, b->Area.RegionTopLeftY-1, b->Area.RegionBottomRightX+1, b->Area.RegionTopLeftY-1, 0, pDestBuf );
-		//right (two thick)
-		LineDraw( TRUE, b->Area.RegionBottomRightX, b->Area.RegionTopLeftY-1, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY+1, 0, pDestBuf );
-		LineDraw( TRUE, b->Area.RegionBottomRightX+1, b->Area.RegionTopLeftY-1, b->Area.RegionBottomRightX+1, b->Area.RegionBottomRightY+1, 0, pDestBuf );
-		//bottom (two thick)
-		LineDraw( TRUE, b->Area.RegionTopLeftX-1, b->Area.RegionBottomRightY, b->Area.RegionBottomRightX+1, b->Area.RegionBottomRightY, 0, pDestBuf );
-		LineDraw( TRUE, b->Area.RegionTopLeftX-1, b->Area.RegionBottomRightY+1, b->Area.RegionBottomRightX+1, b->Area.RegionBottomRightY+1, 0, pDestBuf );
-		#ifdef JA2
-		InvalidateRegion( b->Area.RegionTopLeftX-1, b->Area.RegionTopLeftY-1, b->Area.RegionBottomRightX+1, b->Area.RegionBottomRightY+1 );
-		#endif
-	}
-	if( b->bDefaultStatus == DEFAULT_STATUS_DOTTEDINTERIOR || b->bDefaultStatus == DEFAULT_STATUS_WINDOWS95 )
-	{ //Draw an internal dotted rectangle.
-
-	}
-	UnLockVideoSurface( ButtonDestBuffer );
-}
 
 void DrawCheckBoxButtonOn( INT32 iButtonID )
 {
@@ -3182,6 +2581,7 @@ void DrawCheckBoxButtonOn( INT32 iButtonID )
 
 	gfLeftButtonState = fLeftButtonState;
 }
+
 
 void DrawCheckBoxButtonOff( INT32 iButtonID )
 {
@@ -3202,7 +2602,7 @@ void DrawCheckBoxButtonOff( INT32 iButtonID )
 }
 
 
-void DrawCheckBoxButton( GUI_BUTTON *b )
+static void DrawCheckBoxButton(const GUI_BUTTON *b)
 {
 	INT32 UseImage;
 
@@ -3260,7 +2660,8 @@ void DrawCheckBoxButton( GUI_BUTTON *b )
 								 VO_BLT_SRCTRANSPARENCY, NULL);
 }
 
-void DrawIconOnButton(GUI_BUTTON *b)
+
+static void DrawIconOnButton(const GUI_BUTTON *b)
 {
 	INT32 xp,yp,width,height,IconX,IconY;
 	INT32 IconW,IconH;
@@ -3367,7 +2768,7 @@ void DrawIconOnButton(GUI_BUTTON *b)
 
 
 //If a button has text attached to it, then it'll draw it last.
-void DrawTextOnButton(GUI_BUTTON *b)
+static void DrawTextOnButton(const GUI_BUTTON *b)
 {
 	INT32 xp,yp,width,height,TextX,TextY;
 	SGPRect NewClip,OldClip;
@@ -3537,24 +2938,16 @@ void DrawTextOnButton(GUI_BUTTON *b)
 			mprintf(xp, yp, b->string);
 		}
 #else
-		if(b->fMultiColor)
-			gprintf(xp, yp, b->string);
-		else
-			mprintf(xp, yp, b->string);
+		mprintf(xp, yp, b->string);
 #endif
 		// Restore the old text printing settings
 	}
 }
 
 
-
-//=============================================================================
-//	DrawGenericButton
-//
-//	This function is called by the DrawIconicButton and DrawTextButton
-//	routines to draw the borders and background of the buttons.
-//
-void DrawGenericButton(GUI_BUTTON *b)
+// This function is called by the DrawIconicButton and DrawTextButton
+// routines to draw the borders and background of the buttons.
+static void DrawGenericButton(const GUI_BUTTON *b)
 {
 	INT32 NumChunksWide,NumChunksHigh,cx,cy,width,height,hremain,wremain;
 	INT32 q,ImgNum,ox,oy;
@@ -3810,268 +3203,7 @@ void DrawGenericButton(GUI_BUTTON *b)
 
 	// Unlock buffer
 	UnLockVideoSurface( ButtonDestBuffer );
-
 }
-
-
-
-
-
-//=======================================================================================================
-// Dialog box code
-//
-
-
-//=======================================================================================================
-//=======================================================================================================
-//
-//	Very preliminary stuff follows
-//
-//=======================================================================================================
-//=======================================================================================================
-
-
-
-typedef struct _CreateDlgInfo {
-	INT32			iFlags;						// Holds the creation flags
-
-	INT32			iPosX;						// Screen position of dialog box
-	INT32			iPosY;
-	INT32			iWidth;						// Dimensions of dialog box (if needed)
-	INT32			iHeight;
-
-	INT32			iAreaWidth;				// Dimensions of area the dialog box will be
-	INT32			iAreaHeight;			// placed (for auto-sizing and auto-placement
-	INT32			iAreaOffsetX;			// only)
-	INT32			iAreaOffsetY;
-
-	UINT16		*zDlgText;				// Text to be displayed (if any)
-	INT32			iTextFont;				// Font to be used for text (if any)
-	UINT16		usTextCols;				// Font colors (for mono fonts only)
-
-	INT32			iTextAreaX;				// Area in dialog box where text is to be
-	INT32			iTextAreaY;				// put (for non-auto placed text)
-	INT32			iTextAreaWidth;
-	INT32			iTextAreaHeight;
-
-	HVOBJECT	hBackImg;					// Background pic for dialog box (if any)
-	INT32			iBackImgIndex;		// Sub-image index to use for image
-	INT32			iBackOffsetX;			// Offset on dialog box where to put image
-	INT32			iBackOffsetY;
-
-	HVOBJECT	hIconImg;					// Icon image pic and index.
-	INT32			iIconImgIndex;
-	INT32			iIconPosX;
-	INT32			iIconPosY;
-
-	INT32			iBtnTypes;
-
-	INT32			iOkPosX;					// Ok button info
-	INT32			iOkPosY;
-	INT32			iOkWidth;
-	INT32			iOkHeight;
-	INT32			iOkImg;
-
-	INT32			iCnclPosX;				// Cancel button info
-	INT32			iCnclPosY;
-	INT32			iCnclWidth;
-	INT32			iCnclHeight;
-	INT32			iCnclImg;
-} CreateDlgInfo;
-
-#define DLG_RESTRICT_MOUSE				1
-#define DLG_OK_BUTTON							2
-#define DLG_CANCEL_BUTTON					4
-#define DLG_AUTOSIZE							8
-#define DLG_RECREATE							16
-#define DLG_AUTOPOSITION					32
-#define DLG_TEXT_IN_AREA					64
-#define DLG_USE_BKGRND_IMAGE			128
-#define DLG_USE_BORDERS						256
-#define DLG_USE_BTN_HOTSPOTS			512
-#define DLG_USE_MONO_FONTS				1024
-#define DLG_IS_ACTIVE							2048
-
-#define DLG_MANUAL_RENDER					0
-#define DLG_START_RENDER					1
-#define DLG_STOP_RENDER						2
-#define DLG_AUTO_RENDER						3
-
-#define DLG_GET_STATUS						0
-#define DLG_WAIT_FOR_RESPONSE			1
-
-#define DLG_STATUS_NONE						0
-#define DLG_STATUS_OK							1
-#define DLG_STATUS_CANCEL					2
-#define DLG_STATUS_PENDING				3
-
-#define DLG_CLEARALL							0
-#define DLG_POSITION							1
-#define DLG_AREA									2
-#define DLG_TEXT									3
-#define DLG_TEXTAREA							4
-#define DLG_BACKPIC								5
-#define DLG_ICON									6
-#define DLG_OKBUTTON							7
-#define DLG_CANCELBUTTON					8
-#define DLG_OPTIONS								9
-#define DLG_SIZE									10
-
-
-BOOLEAN SetDialogAttributes( CreateDlgInfo *pDlgInfo, INT32 iAttrib, ... )
-{
-	va_list arg;
-	INT32 iFont,iFontOptions;
-	UINT16 *zString;
-	INT32 iX,iY,iW,iH;
-	INT32 iIndex;
-	HVOBJECT hVObj;
-	INT32 iButnImg;
-	INT32 iFlags;
-	UINT8 ubFGrnd,ubBGrnd;
-
-	// Set up for var args
-	va_start( arg, iAttrib );		// Init variable argument list
-
-	switch (iAttrib)
-	{
-		case DLG_CLEARALL:
-			// Check to make sure it's not enabled, if so either abort or trash it!
-			memset( pDlgInfo, 0, sizeof(CreateDlgInfo) );
-			break;
-
-		case DLG_POSITION:
-			// Screen X/Y position of dialog box
-			iFlags = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			break;
-
-		case DLG_SIZE:
-			// Width and height of doalog box
-			iFlags = va_arg( arg, INT32 );
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			break;
-
-		case DLG_AREA:
-			// Area where dialog box should be placed in (if not screen)
-			iFlags = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			break;
-
-		case DLG_TEXT:
-			// Set text and font for this dialog box
-			iFontOptions = va_arg( arg, INT32 );
-
-			iFont = va_arg( arg, INT32 );
-			pDlgInfo->iTextFont = iFont;
-
-			zString = (UINT16 *)va_arg( arg, UINT32 );
-
-			if ( pDlgInfo->zDlgText != NULL )
-				MemFree( pDlgInfo->zDlgText );
-
-			if ( zString == NULL )
-				pDlgInfo->zDlgText = NULL;
-			else
-			{
-				pDlgInfo->zDlgText = NULL;	// Temp
-			}
-
-			if ( iFontOptions & DLG_USE_MONO_FONTS )
-			{
-				#if 0 /* XXX */
-				ubFGrnd = va_arg( arg, UINT8 );
-				ubBGrnd = va_arg( arg, UINT8 );
-				#else
-				ubFGrnd = va_arg( arg, int );
-				ubBGrnd = va_arg( arg, int );
-				#endif
-				pDlgInfo->usTextCols = ((((UINT16)ubBGrnd)<<8) | (UINT16)ubFGrnd);
-			}
-			break;
-
-		case DLG_TEXTAREA:
-			// Area on dialog box where the text should go!
-			iFlags = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			break;
-
-		case DLG_BACKPIC:
-			iFlags = va_arg( arg, INT32 );
-			hVObj = (HVOBJECT)va_arg( arg, UINT32 );
-			iIndex = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			break;
-
-		case DLG_ICON:
-			// Icon
-			iFlags = va_arg( arg, INT32 );
-			hVObj = (HVOBJECT)va_arg( arg, UINT32 );
-			iIndex = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			break;
-
-		case DLG_OKBUTTON:
-			// Ok button options
-			iFlags = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			iButnImg = va_arg( arg, INT32 );
-			break;
-
-		case DLG_CANCELBUTTON:
-			// Cancel button options
-			iFlags = va_arg( arg, INT32 );
-			iX = va_arg( arg, INT32 );
-			iY = va_arg( arg, INT32 );
-			iW = va_arg( arg, INT32 );
-			iH = va_arg( arg, INT32 );
-			iButnImg = va_arg( arg, INT32 );
-			break;
-
-		case DLG_OPTIONS:
-			iFlags = va_arg( arg, INT32 );
-			break;
-	}
-
-	va_end( arg ); // Must have this for proper exit
-
-	return(TRUE);
-}
-
-INT32 CreateDialogBox( CreateDlgInfo *pDlgInfo )
-{
-	return (-1);
-}
-
-
-void RemoveDialogBox( void )
-{
-}
-
-
-void DrawDialogBox( INT32 iDlgBox )
-{
-}
-
-
-//------------------------------------------------------------------------------------------------------
-
 
 
 INT32 CreateCheckBoxButton( INT16 x, INT16 y, const char *filename, INT16 Priority, GUI_CALLBACK ClickCallback )
@@ -4102,6 +3234,7 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, const char *filename, INT16 Priori
 	return( iButtonID );
 }
 
+
 // Added Oct17, 97 Carter - kind of mindless, but might as well have it
 void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 {
@@ -4112,10 +3245,9 @@ void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 	b->UserData[index]=userdata;
 }
 
+
 INT32 MSYS_GetBtnUserData(GUI_BUTTON *b,INT32 index)
 {
-
-
 	if(index < 0 || index > 3)
 		return(0);
 
@@ -4157,6 +3289,7 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
+
 void ReleaseAnchorMode()
 {
   if( !gpAnchoredButton )
@@ -4180,53 +3313,6 @@ void ReleaseAnchorMode()
 	gpAnchoredButton = NULL;
 }
 
-#ifdef _JA2_RENDER_DIRTY
-
-
-// Used to setup a dirtysaved region for buttons
-BOOLEAN	SetButtonSavedRect( INT32 iButton )
-{
-	GUI_BUTTON *b;
-	INT32	xloc,yloc,w,h;
-
-	Assert( iButton >=0 );
-	Assert( iButton <MAX_BUTTONS);
-
-	b=ButtonList[ iButton ];
-
-	xloc=b->XLoc;
-	yloc=b->YLoc;
-	w = ( b->Area.RegionBottomRightX - b->Area.RegionTopLeftX );
-	h = ( b->Area.RegionBottomRightY - b->Area.RegionTopLeftY );
-
-	if ( !(b->uiFlags & BUTTON_SAVEBACKGROUND ) )
-	{
-		b->uiFlags |= BUTTON_SAVEBACKGROUND;
-
-		b->BackRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, NULL,
-					(INT16)xloc, (INT16)yloc, (INT16)(xloc+w), (INT16)(yloc+h) );
-	}
-
-	return( TRUE );
-}
-
-void FreeButtonSavedRect( INT32 iButton )
-{
-	GUI_BUTTON *b;
-
-	Assert( iButton >=0 );
-	Assert( iButton <MAX_BUTTONS);
-
-	b=ButtonList[ iButton ];
-
-	if ( (b->uiFlags & BUTTON_SAVEBACKGROUND ) )
-	{
-		b->uiFlags &= (~BUTTON_SAVEBACKGROUND);
-		FreeBackgroundRectPending(b->BackRect);
-	}
-}
-
-#endif
 
 //Kris:
 //Yet new logical additions to the winbart library.
@@ -4274,123 +3360,4 @@ void DisableButtonHelpTextRestore( void )
 void EnableButtonHelpTextRestore( void )
 {
 	fDisableHelpTextRestoreFlag = TRUE;
-}
-
-void GiveButtonDefaultStatus( INT32 iButtonID, INT32 iDefaultStatus )
-{
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-	b = ButtonList[ iButtonID ];
-	//If new default status added, then this assert may need to be adjusted.
-	AssertMsg( iDefaultStatus >= DEFAULT_STATUS_NONE && iDefaultStatus <= DEFAULT_STATUS_WINDOWS95,
-		String( "Illegal button default status of %d", iDefaultStatus ) );
-	Assert( b );
-
-	if( b->bDefaultStatus != (INT8)iDefaultStatus )
-	{
-		b->bDefaultStatus = (INT8)iDefaultStatus;
-		b->uiFlags |= BUTTON_DIRTY;
-	}
-}
-
-void RemoveButtonDefaultStatus( INT32 iButtonID )
-{
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if( b->bDefaultStatus )
-	{
-		b->bDefaultStatus = DEFAULT_STATUS_NONE;
-		b->uiFlags |= BUTTON_DIRTY;
-	}
-}
-
-BOOLEAN GetButtonArea(INT32 iButtonID, SGPRect *pRect)
-{
-GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-	Assert(pRect);
-
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if((pRect==NULL) || (b==NULL))
-		return(FALSE);
-
-	pRect->iLeft=b->Area.RegionTopLeftX;
-	pRect->iTop=b->Area.RegionTopLeftY;
-	pRect->iRight=b->Area.RegionBottomRightX;
-	pRect->iBottom=b->Area.RegionBottomRightY;
-
-	return(TRUE);
-}
-
-INT32 GetButtonWidth(INT32 iButtonID)
-{
-GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if(b==NULL)
-		return(-1);
-
-	return(b->Area.RegionBottomRightX - b->Area.RegionTopLeftX);
-}
-
-INT32 GetButtonHeight(INT32 iButtonID)
-{
-GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if(b==NULL)
-		return(-1);
-
-	return(b->Area.RegionBottomRightY - b->Area.RegionTopLeftY);
-}
-
-INT32 GetButtonX(INT32 iButtonID)
-{
-GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if(b==NULL)
-		return(0);
-
-	return(b->Area.RegionTopLeftX);
-}
-
-INT32 GetButtonY(INT32 iButtonID)
-{
-GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
-	if(b==NULL)
-		return(0);
-
-	return(b->Area.RegionTopLeftY);
 }
