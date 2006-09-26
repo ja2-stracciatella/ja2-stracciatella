@@ -58,6 +58,7 @@
 	#include "Video.h"
 	#include "MemMan.h"
 	#include "Debug.h"
+	#include "ScreenIDs.h"
 #endif
 
 // inventory pool position on screen

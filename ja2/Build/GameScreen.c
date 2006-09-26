@@ -84,6 +84,7 @@
 	#include "GameSettings.h"
 	#include "Debug.h"
 	#include "Video.h"
+	#include "JAScreens.h"
 #endif
 
 #ifdef JA2TESTVERSION

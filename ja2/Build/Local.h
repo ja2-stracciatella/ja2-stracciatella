@@ -1,8 +1,6 @@
 #ifndef __LOCAL_DEFINES_
 #define __LOCAL_DEFINES_
 
-#include "Screens.h"
-
 //
 // Make sure the application has a name
 //

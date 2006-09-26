@@ -2,6 +2,7 @@
 	#include "JA2 All.h"
 #else
 	#include "Screens.h"
+	#include "JAScreens.h"
 #endif
 
 

@@ -45,6 +45,7 @@
 	#include "Local.h"
 	#include "Render_Dirty.h"
 	#include "VSurface.h"
+	#include "ScreenIDs.h"
 #endif
 
 #ifdef JA2_PRECOMPILED_HEADERS

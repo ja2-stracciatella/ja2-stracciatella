@@ -109,6 +109,7 @@
 	#include "Debug.h"
 	#include "Local.h"
 	#include "Button_System.h"
+	#include "JAScreens.h"
 #endif
 
 #ifdef JA2TESTVERSION

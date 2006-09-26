@@ -29,9 +29,4 @@ typedef struct Screens
 
 extern Screens GameScreens[MAX_SCREENS];
 
-// We must include all the following .H files which have prototypes for all the initialization, handler and shutdown
-// functions for all the screens. There should be as many includes as there are screens.
-
-#include "JAScreens.h"
-
 #endif
