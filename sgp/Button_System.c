@@ -121,22 +121,13 @@ UINT16 GetWidthOfButtonPic( UINT16 usButtonPicID, INT32 iSlot )
 	return ButtonPictures[ usButtonPicID ].vobj->pETRLEObject[ iSlot ].usWidth;
 }
 
-static HVOBJECT GenericButtonGrayed[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOffNormal[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOffHilite[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOnNormal[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOnHilite[MAX_GENERIC_PICS];
-static HVOBJECT GenericButtonBackground[MAX_GENERIC_PICS];
 UINT16 GenericButtonFillColors[MAX_GENERIC_PICS];
-static UINT16 GenericButtonBackgroundIndex[MAX_GENERIC_PICS];
-static INT16 GenericButtonOffsetX[MAX_GENERIC_PICS];
-static INT16 GenericButtonOffsetY[MAX_GENERIC_PICS];
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
-
-// flag to state we wish to render buttons on the one after the next pass through render buttons
-static BOOLEAN fPausedMarkButtonsDirtyFlag = FALSE;
-static BOOLEAN fDisableHelpTextRestoreFlag = FALSE;
 
 static BOOLEAN gfDelayButtonDeletion = FALSE;
 static BOOLEAN gfPendingButtonDeletion = FALSE;
@@ -540,17 +531,11 @@ static BOOLEAN InitializeButtonImageManager(void)
 	// Blank out all Generic button data
 	for(x=0;x<MAX_GENERIC_PICS;x++)
 	{
-		GenericButtonGrayed[x]=NULL;
 		GenericButtonOffNormal[x]=NULL;
 		GenericButtonOffHilite[x]=NULL;
 		GenericButtonOnNormal[x]=NULL;
 		GenericButtonOnHilite[x]=NULL;
-		GenericButtonBackground[x]=NULL;
-		GenericButtonBackgroundIndex[x]=0;
 		GenericButtonFillColors[x]=0;
-		GenericButtonBackgroundIndex[x]=0;
-		GenericButtonOffsetX[x]=0;
-		GenericButtonOffsetY[x]=0;
 	}
 
 	// Blank out all icon images
@@ -600,22 +585,6 @@ static BOOLEAN InitializeButtonImageManager(void)
 		GenericButtonFillColors[0]=COLOR_DKGREY;
 
 	return(TRUE);
-}
-
-
-// Finds the next available slot for generic (TEXT and/or ICONIC) buttons.
-static INT16 FindFreeGenericSlot(void)
-{
-	INT16 slot,x;
-
-	slot=BUTTON_NO_SLOT;
-	for(x=0;x<MAX_GENERIC_PICS && slot<0;x++)
-	{
-		if(GenericButtonOffNormal[x]==NULL)
-			slot=x;
-	}
-
-	return(slot);
 }
 
 
@@ -689,198 +658,6 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 }
 
 
-// Removes the images associated with a generic button. Except the icon
-// image of iconic buttons. See above.
-static BOOLEAN UnloadGenericButtonImage(INT16 GenImg)
-{
-	BOOLEAN fDeletedSomething = FALSE;
-	if( GenImg < 0 || GenImg >= MAX_GENERIC_PICS  )
-	{
-		sprintf( str, "Attempting to UnloadGenericButtonImage with out of range index %d.", GenImg );
-		AssertMsg( 0, str );
-	}
-
-	// For each possible image type in a generic button, check if it's
-	// present, and if so, remove it.
-	if(GenericButtonGrayed[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonGrayed[GenImg]);
-		GenericButtonGrayed[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	if(GenericButtonOffNormal[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonOffNormal[GenImg]);
-		GenericButtonOffNormal[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	if(GenericButtonOffHilite[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonOffHilite[GenImg]);
-		GenericButtonOffHilite[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	if(GenericButtonOnNormal[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonOnNormal[GenImg]);
-		GenericButtonOnNormal[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	if(GenericButtonOnHilite[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonOnHilite[GenImg]);
-		GenericButtonOnHilite[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	if(GenericButtonBackground[GenImg]!=NULL)
-	{
-		DeleteVideoObject(GenericButtonBackground[GenImg]);
-		GenericButtonBackground[GenImg]=NULL;
-		fDeletedSomething = TRUE;
-	}
-
-	#ifdef BUTTONSYSTEM_DEBUGGING
-	if( !gfIgnoreShutdownAssertions && !fDeletedSomething )
-		AssertMsg( 0, "Attempting to UnloadGenericButtonImage that has no images (already deleted)." );
-	#endif
-
-	// Reset the remaining variables
-	GenericButtonFillColors[GenImg]=0;
-	GenericButtonBackgroundIndex[GenImg]=0;
-	GenericButtonOffsetX[GenImg]=0;
-	GenericButtonOffsetY[GenImg]=0;
-
-	return(TRUE);
-}
-
-
-// Loads the image files required for displaying a generic button.
-static INT16 LoadGenericButtonImages(UINT8 *GrayName,UINT8 *OffNormName,UINT8 *OffHiliteName,UINT8 *OnNormName,UINT8 *OnHiliteName,UINT8 *BkGrndName,INT16 Index,INT16 OffsetX, INT16 OffsetY)
-{
-	INT16 ImgSlot;
-	VOBJECT_DESC	vo_desc;
-	UINT8 Pix;
-
-	// if the images for Off-Normal and On-Normal don't exist, abort call
-	if((OffNormName == BUTTON_NO_FILENAME) || (OnNormName == BUTTON_NO_FILENAME))
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "LoadGenericButtonImages: No filenames for OFFNORMAL and/or ONNORMAL images");
-		return(-1);
-	}
-
-	// Get a slot number for these images
-	if((ImgSlot=FindFreeGenericSlot()) == -1)
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "LoadGenericButtonImages: Out of generic button slots");
-		return(-1);
-	}
-
-	// Load the image for the Off-Normal button state (required)
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, OffNormName);
-
-	if((GenericButtonOffNormal[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",OffNormName));
-		return(-1);
-	}
-
-	// Load the image for the On-Normal button state (required)
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, OnNormName);
-
-	if((GenericButtonOnNormal[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",OnNormName));
-		return(-1);
-	}
-
-	// For the optional button state images, see if a filename was given, and
-	// if so, load it.
-
-	if(GrayName != BUTTON_NO_FILENAME)
-	{
-		vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy(vo_desc.ImageFile, GrayName);
-
-		if((GenericButtonGrayed[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-		{
-			DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",GrayName));
-			return(-1);
-		}
-	}
-	else
-		GenericButtonGrayed[ImgSlot] = NULL;
-
-	if(OffHiliteName != BUTTON_NO_FILENAME)
-	{
-		vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy(vo_desc.ImageFile, OffHiliteName);
-
-		if((GenericButtonOffHilite[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-		{
-			DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",OffHiliteName));
-			return(-1);
-		}
-	}
-	else
-		GenericButtonOffHilite[ImgSlot] = NULL;
-
-	if(OnHiliteName != BUTTON_NO_FILENAME)
-	{
-		vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy(vo_desc.ImageFile, OnHiliteName);
-
-		if((GenericButtonOnHilite[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-		{
-			DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",OnHiliteName));
-			return(-1);
-		}
-	}
-	else
-		GenericButtonOnHilite[ImgSlot] = NULL;
-
-	if(BkGrndName != BUTTON_NO_FILENAME)
-	{
-		vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy(vo_desc.ImageFile, BkGrndName);
-
-		if((GenericButtonBackground[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
-		{
-			DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonImages: Couldn't create VOBJECT for %s",BkGrndName));
-			return(-1);
-		}
-	}
-	else
-		GenericButtonBackground[ImgSlot] = NULL;
-
-	GenericButtonBackgroundIndex[ImgSlot]=Index;
-
-	// Get the background fill color from the last (9th) sub-image in the
-	// Off-Normal image.
-	Pix=0;
-	if(!GetETRLEPixelValue(&Pix,GenericButtonOffNormal[ImgSlot],8,0,0))
-	{
-		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "LoadGenericButtonImages: Couldn't get generic button's background pixel value");
-		return(-1);
-	}
-
-	GenericButtonFillColors[ImgSlot]=GenericButtonOffNormal[ImgSlot]->p16BPPPalette[Pix];
-
-	// Set the button's background image adjustement offsets
-	GenericButtonOffsetX[ImgSlot]=OffsetX;
-	GenericButtonOffsetY[ImgSlot]=OffsetY;
-
-	// Return the slot number used.
-	return(ImgSlot);
-}
-
-
 // Cleans up, and shuts down the button image manager sub-system.
 static void ShutdownButtonImageManager(void)
 {
@@ -897,12 +674,6 @@ static void ShutdownButtonImageManager(void)
 	// Remove all GenericButton images
 	for(x=0;x<MAX_GENERIC_PICS;x++)
 	{
-		if(GenericButtonGrayed[x]!=NULL)
-		{
-			DeleteVideoObject(GenericButtonGrayed[x]);
-			GenericButtonGrayed[x]=NULL;
-		}
-
 		if(GenericButtonOffNormal[x]!=NULL)
 		{
 			DeleteVideoObject(GenericButtonOffNormal[x]);
@@ -927,16 +698,7 @@ static void ShutdownButtonImageManager(void)
 			GenericButtonOnHilite[x]=NULL;
 		}
 
-		if(GenericButtonBackground[x]!=NULL)
-		{
-			DeleteVideoObject(GenericButtonBackground[x]);
-			GenericButtonBackground[x]=NULL;
-		}
-
 		GenericButtonFillColors[x]=0;
-		GenericButtonBackgroundIndex[x]=0;
-		GenericButtonOffsetX[x]=0;
-		GenericButtonOffsetY[x]=0;
 	}
 
 	// Remove all button icons
@@ -990,7 +752,6 @@ void ShutdownButtonSystem(void)
 		if(ButtonList[x]!=NULL)
 			RemoveButton(x);
 	}
-	// Shutdown the button image manager sub-system
 	ShutdownButtonImageManager();
 
 	UnRegisterDebugTopic(TOPIC_BUTTON_HANDLER,"Button System & Button Image Manager");
@@ -2341,13 +2102,6 @@ void RenderButtons(void)
 		}
 	}
 
-	// check if we want to render 1 frame later?
-	if( ( fPausedMarkButtonsDirtyFlag == TRUE ) && ( fDisableHelpTextRestoreFlag == FALSE ) )
-	{
-		fPausedMarkButtonsDirtyFlag = FALSE;
-		MarkButtonsDirty( );
-	}
-
 	RestoreFontSettings();
 }
 
@@ -2961,7 +2715,7 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 	// Select the graphics to use depending on the current state of the button
 	if( b->uiFlags & BUTTON_ENABLED )
 	{
-		if ( !(b->uiFlags & BUTTON_ENABLED) && (GenericButtonGrayed[b->ImageNum]==NULL) )
+		if (!(b->uiFlags & BUTTON_ENABLED))
 			BPic = GenericButtonOffNormal[b->ImageNum];
 		else if(b->uiFlags & BUTTON_CLICKED_ON)
 		{
@@ -2978,8 +2732,6 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 				BPic = GenericButtonOffNormal[b->ImageNum];
 		}
 	}
-	else if( GenericButtonGrayed[ b->ImageNum ] )
-		BPic = GenericButtonGrayed[b->ImageNum];
 	else
 	{
 		BPic = GenericButtonOffNormal[ b->ImageNum ];
@@ -3026,26 +2778,6 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 																						 b->Area.RegionBottomRightX,
 																						 b->Area.RegionBottomRightY,
 																						 GenericButtonFillColors[b->ImageNum]);
-
-	// If there is a background image, fill the button's area with it
-	if(GenericButtonBackground[b->ImageNum]!=NULL)
-	{
-		ox=oy=0;
-		// if the button was clicked on, adjust the background image so that we get
-		// the illusion that it is sunk into the screen.
-		if(b->uiFlags & BUTTON_CLICKED_ON)
-			ox=oy=1;
-
-		// Fill the area with the image, tilling it if need be.
-		ImageFillVideoSurfaceArea(ButtonDestBuffer,b->Area.RegionTopLeftX+ox,
-																							 b->Area.RegionTopLeftY+oy,
-																							 b->Area.RegionBottomRightX,
-																							 b->Area.RegionBottomRightY,
-																							 GenericButtonBackground[b->ImageNum],
-																							 GenericButtonBackgroundIndex[b->ImageNum],
-																							 GenericButtonOffsetX[b->ImageNum],
-																							 GenericButtonOffsetY[b->ImageNum]);
-	}
 
 	// Lock the dest buffer
 	pDestBuf = LockVideoSurface( ButtonDestBuffer, &uiDestPitchBYTES );
@@ -3350,14 +3082,4 @@ void ShowButton( INT32 iButtonNum )
 	#ifdef JA2
 		InvalidateRegion(b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
 	#endif
-}
-
-void DisableButtonHelpTextRestore( void )
-{
-	fDisableHelpTextRestoreFlag = TRUE;
-}
-
-void EnableButtonHelpTextRestore( void )
-{
-	fDisableHelpTextRestoreFlag = TRUE;
 }
