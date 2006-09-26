@@ -34,11 +34,6 @@
 #define MAP_BORDER_CORNER_Y 279
 
 
-
-// extern to anchored button in winbart97
-extern GUI_BUTTON *gpAnchoredButton;
-extern BOOLEAN  gfAnchoredState;
-
 // mouse levels
 MOUSE_REGION LevelMouseRegions[ 4 ];
 
@@ -106,7 +101,6 @@ void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason);
 void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason);
 //void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason);
 
-void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason);
 void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 
 void CommonBtnCallbackBtnDownChecks( void );
@@ -1059,38 +1053,6 @@ void HandleMapScrollButtonStates( void )
 	return;
 }
 */
-
-
-// generic button mvt callback for mapscreen map border
-void BtnGenericMouseMoveButtonCallbackForMapBorder(GUI_BUTTON *btn,INT32 reason)
-{
-	//If the button isn't the anchored button, then we don't want to modify the button state.
-
-	if( btn != gpAnchoredButton )
-	{
-		if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-		{
-			if( btn->Area.uiFlags & MSYS_FASTHELP )
-			{
-			  // redraw area
-			  fMapPanelDirty = TRUE;
-			}
-		}
-		return;
-	}
-
-	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		if( !gfAnchoredState )
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON ;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-}
 
 
 /*

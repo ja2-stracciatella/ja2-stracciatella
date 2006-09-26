@@ -98,9 +98,9 @@ static void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 //When you click on a button, it get's anchored, until you release the mouse button.
 //When you move around, you don't want to select other buttons, even when you release
 //it.  This follows the Windows 95 convention.
-GUI_BUTTON *gpAnchoredButton;
+static GUI_BUTTON *gpAnchoredButton;
 static GUI_BUTTON *gpPrevAnchoredButton;
-BOOLEAN gfAnchoredState;
+static BOOLEAN gfAnchoredState;
 
 static INT8 gbDisabledButtonStyle;
 static void DrawShadeOnButton(const GUI_BUTTON *b);
