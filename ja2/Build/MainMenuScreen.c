@@ -90,7 +90,6 @@ extern	BOOLEAN		gfLoadGameUponEntry;
 
 
 void ExitMainMenu( );
-void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 void HandleMainMenuInput();
 void HandleMainMenuScreen();
 void DisplayAssignmentText();
@@ -357,56 +356,22 @@ void ExitMainMenu( )
 }
 
 
-void MenuButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT8	bID;
-
-	bID = (UINT8)btn->UserData[0];
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// handle menu
+		INT8 bID = (UINT8)btn->UserData[0];
+
 		gbHandledMainMenu = bID;
 		RenderMainMenu();
 
-		if( gbHandledMainMenu == NEW_GAME )
+		switch (gbHandledMainMenu)
 		{
-			SetMainMenuExitScreen( GAME_INIT_OPTIONS_SCREEN );
+			case NEW_GAME:  SetMainMenuExitScreen(GAME_INIT_OPTIONS_SCREEN); break;
+			case LOAD_GAME: if (gfKeyState[ALT]) gfLoadGameUponEntry = TRUE; break;
 		}
-		else if( gbHandledMainMenu == LOAD_GAME )
-		{
-			if( gfKeyState[ ALT ] )
-				gfLoadGameUponEntry = TRUE;
-		}
-
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		RenderMainMenu();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
-
-void MenuButtonMoveCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-//		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		RenderMainMenu();
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-//		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		RenderMainMenu();
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-}
-
 
 
 void HandleMainMenuInput()
