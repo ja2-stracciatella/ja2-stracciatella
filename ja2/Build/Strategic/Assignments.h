@@ -5,7 +5,6 @@
 
 #include "Types.h"
 #include "Soldier_Control.h"
-#include "MouseSystem.h"
 #include "Strategic_Movement.h"
 
 
@@ -210,16 +209,6 @@ extern INT32 ghMoveBox;
 //extern INT32 ghUpdateBox;
 
 
-extern MOUSE_REGION    gAssignmentScreenMaskRegion;
-
-extern MOUSE_REGION    gAssignmentMenuRegion[  ];
-extern MOUSE_REGION    gTrainingMenuRegion[  ];
-extern MOUSE_REGION    gAttributeMenuRegion[  ];
-extern MOUSE_REGION    gSquadMenuRegion[  ];
-extern MOUSE_REGION    gContractMenuRegion[  ];
-extern MOUSE_REGION    gRemoveMercAssignRegion[  ];
-extern MOUSE_REGION		 gVehicleMenuRegion[];
-
 extern BOOLEAN fShownContractMenu;
 extern BOOLEAN fShownAssignmentMenu;
 extern BOOLEAN fShowRepairMenu;
@@ -233,45 +222,8 @@ extern BOOLEAN fGlowContractRegion;
 extern BOOLEAN gfReEvaluateEveryonesNothingToDo;
 
 
-// pop up menu mouse regions
-void CreateDestroyMouseRegionsForAssignmentMenu( void );
-void AssignmentMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-void CreateDestroyMouseRegionsForTrainingMenu( void );
-void TrainingMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-void CreateDestroyMouseRegionsForAttributeMenu( void );
-void AttributeMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void AttributesMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-void CreateDestroyMouseRegionsForSquadMenu( BOOLEAN fPositionBox );
-void SquadMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-// vehicle menu
-void CreateDestroyMouseRegionForVehicleMenu( void );
-void VehicleMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void VehicleMenuBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
-
-// repair menu
-void CreateDestroyMouseRegionForRepairMenu( void );
-void RepairMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-// contract menu
 void CreateDestroyMouseRegionsForContractMenu( void );
-void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void ContractMenuMvtCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter );
-
-// remove merc from team menu callback
-void RemoveMercMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void RemoveMercMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void CreateDestroyMouseRegionsForRemoveMenu( void );
-
-// misc assignment GUI functions
 void HandleShadingOfLinesForAssignmentMenus( void );
 BOOLEAN IsCharacterAliveAndConscious( SOLDIERTYPE *pCharacter );
 void CreateDestroyScreenMaskForAssignmentAndContractMenus( void );

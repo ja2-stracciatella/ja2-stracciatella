@@ -140,19 +140,19 @@ INT16 gsAssignmentBoxesX, gsAssignmentBoxesY;
 
 
 // assignment menu mouse regions
-MOUSE_REGION    gAssignmentMenuRegion[ MAX_ASSIGN_STRING_COUNT ];
-MOUSE_REGION    gTrainingMenuRegion[ MAX_TRAIN_STRING_COUNT ];
-MOUSE_REGION    gAttributeMenuRegion[ MAX_ATTRIBUTE_STRING_COUNT ];
-MOUSE_REGION    gSquadMenuRegion[ MAX_SQUAD_MENU_STRING_COUNT ];
-MOUSE_REGION    gContractMenuRegion[ MAX_CONTRACT_MENU_STRING_COUNT ];
-MOUSE_REGION    gRemoveMercAssignRegion[ MAX_REMOVE_MERC_COUNT ];
-MOUSE_REGION    gEpcMenuRegion[ MAX_EPC_MENU_STRING_COUNT ];
-MOUSE_REGION    gRepairMenuRegion[ 20 ];
+static MOUSE_REGION gAssignmentMenuRegion[MAX_ASSIGN_STRING_COUNT];
+static MOUSE_REGION gTrainingMenuRegion[MAX_TRAIN_STRING_COUNT];
+static MOUSE_REGION gAttributeMenuRegion[MAX_ATTRIBUTE_STRING_COUNT];
+static MOUSE_REGION gSquadMenuRegion[MAX_SQUAD_MENU_STRING_COUNT];
+static MOUSE_REGION gContractMenuRegion[MAX_CONTRACT_MENU_STRING_COUNT];
+static MOUSE_REGION gRemoveMercAssignRegion[MAX_REMOVE_MERC_COUNT];
+static MOUSE_REGION gEpcMenuRegion[MAX_EPC_MENU_STRING_COUNT];
+static MOUSE_REGION gRepairMenuRegion[20];
 
 // mouse region for vehicle menu
-MOUSE_REGION		gVehicleMenuRegion[ 20 ];
+static MOUSE_REGION gVehicleMenuRegion[20];
 
-MOUSE_REGION    gAssignmentScreenMaskRegion;
+static MOUSE_REGION gAssignmentScreenMaskRegion;
 
 BOOLEAN fShownAssignmentMenu = FALSE;
 BOOLEAN fShowVehicleMenu = FALSE;
@@ -4580,6 +4580,10 @@ void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier )
 }
 
 
+static void CreateDestroyMouseRegionsForRemoveMenu(void);
+static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 void CreateDestroyMouseRegionsForAssignmentMenu( void )
 {
@@ -4710,6 +4714,9 @@ void CreateDestroyMouseRegionsForAssignmentMenu( void )
 	}
 }
 
+
+static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 void CreateDestroyMouseRegionForVehicleMenu( void )
@@ -4872,8 +4879,7 @@ void HandleShadingOfLinesForVehicleMenu( void )
 }
 
 
-
-void VehicleMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1, iVehicleID;
@@ -4923,7 +4929,7 @@ void VehicleMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void VehicleMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -5137,6 +5143,9 @@ void HandleShadingOfLinesForRepairMenu( void )
 
 	return;
 }
+
+
+static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 void CreateDestroyMouseRegionForRepairMenu( void )
@@ -5435,7 +5444,7 @@ void RepairMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void RepairMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -5714,6 +5723,10 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 	return;
 }
 
+
+static void CreateDestroyMouseRegionsForTrainingMenu(void);
+static void CreateDestroyMouseRegionsForAttributeMenu(void);
+static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox);
 
 
 void DetermineWhichAssignmentMenusCanBeShown( void )
@@ -6132,6 +6145,10 @@ void CreateDestroyMouseRegions( void )
 }
 
 
+static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 void CreateDestroyMouseRegionsForContractMenu( void )
 {
 	static BOOLEAN fCreated = FALSE;
@@ -6263,8 +6280,11 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 }
 
 
+static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
-void CreateDestroyMouseRegionsForTrainingMenu( void )
+
+static void CreateDestroyMouseRegionsForTrainingMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
@@ -6365,8 +6385,11 @@ void CreateDestroyMouseRegionsForTrainingMenu( void )
 }
 
 
+static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
-void CreateDestroyMouseRegionsForAttributeMenu( void )
+
+static void CreateDestroyMouseRegionsForAttributeMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
@@ -6467,8 +6490,11 @@ void CreateDestroyMouseRegionsForAttributeMenu( void )
 }
 
 
+static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
-void CreateDestroyMouseRegionsForRemoveMenu( void )
+
+static void CreateDestroyMouseRegionsForRemoveMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
@@ -6583,7 +6609,11 @@ void CreateDestroyMouseRegionsForRemoveMenu( void )
 }
 
 
-void CreateDestroyMouseRegionsForSquadMenu( BOOLEAN fPositionBox )
+static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
 {
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
@@ -6688,8 +6718,7 @@ void CreateDestroyMouseRegionsForSquadMenu( BOOLEAN fPositionBox )
 }
 
 
-
-void AssignmentMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -6739,7 +6768,7 @@ void AssignmentMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void RemoveMercMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void RemoveMercMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -6765,7 +6794,7 @@ void RemoveMercMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void ContractMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for Contract region
 	INT32 iValue = -1;
@@ -6793,8 +6822,7 @@ void ContractMenuMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void SquadMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -6830,7 +6858,7 @@ void SquadMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void RemoveMercMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for contract region
 	INT32 iValue = -1;
@@ -6983,7 +7011,7 @@ void MercDismissConfirmCallBack( UINT8 bExitValue )
 }
 
 
-void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for contract region
 	INT32 iValue = -1;
@@ -7104,8 +7132,7 @@ void ContractMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void TrainingMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -7136,8 +7163,7 @@ void TrainingMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void AttributeMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
 	INT32 iValue = -1;
@@ -7161,7 +7187,7 @@ void AttributeMenuMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -7316,9 +7342,7 @@ void SquadMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-
-void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -7511,7 +7535,7 @@ void TrainingMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void AttributesMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
@@ -7579,7 +7603,8 @@ void AttributesMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 };
 
-void AssignmentMenuBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
