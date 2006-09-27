@@ -3,8 +3,8 @@
 
 //ONLY ONE OF THESE CAN BE DEFINED AT A TIME!
 
-#define ENGLISH
-//#define GERMAN
+//#define ENGLISH
+#define GERMAN
 //#define RUSSIAN
 //#define DUTCH
 //#define POLISH
