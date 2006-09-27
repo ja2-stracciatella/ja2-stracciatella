@@ -444,52 +444,45 @@ BOOLEAN		gfAimMemberCanMercSayOpeningQuote = TRUE;
 //Graphic for following
 INT32		guiPreviousContactNextButtonImage;
 //Previous Button
-void BtnPreviousButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnPreviousButtonCallback(GUI_BUTTON *btn, INT32 reason);
 INT32	giPreviousButton;
 
 //Contact
-void BtnContactButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason);
 INT32	giContactButton;
 
 //NExt
-void BtnNextButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
 INT32	giNextButton;
 
 //Video conference buttons
 INT32		guiVideoConferenceButtonImage[3];
 
 //Contract Length Button
-void BtnContractLengthButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giContractLengthButton[3];
 
 //BuyEquipment Button
-void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giBuyEquipmentButton[2];
 
 //Authorize Payment Button
-void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giAuthorizeButton[2];
 
 //Hang up Button
-void BtnHangUpButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giHangUpButton;
 
 // PopupBox button
-void BtnPopUpOkButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiPopUpOkButton;
 INT32		guiPopUpImage;
 
 //First Contact Screen, Goto Hire merc Button
-void BtnFirstContactButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giFirstContactButton[2];
 
 //Leave Message merc Button
-void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giAnsweringMachineButton[2];
 
 //X to Close the video conference Button
 INT32		giXToCloseVideoConfButtonImage;
-void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn,INT32 reason);
 INT32	giXToCloseVideoConfButton;
 
 
@@ -1299,109 +1292,51 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 }
 
 
-
-
-void BtnPreviousButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnPreviousButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
 
-			InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		gbCurrentIndex =
+			(gbCurrentIndex > 0 ? gbCurrentIndex - 1 : MAX_NUMBER_MERCS - 1);
 
-			if( gbCurrentIndex > 0)
-				gbCurrentIndex--;
-			else
-				gbCurrentIndex = MAX_NUMBER_MERCS - 1;
-
-			gfRedrawScreen = TRUE;
-
-			gbCurrentSoldier = AimMercArray[gbCurrentIndex];
-
-			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		gfRedrawScreen = TRUE;
+		gbCurrentSoldier = AimMercArray[gbCurrentIndex];
+		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
 }
 
-void BtnContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			//if we are not already in the video conferemce mode, go in to it
-			if( !gubVideoConferencingMode)
-			{
 
-				gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
+static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		// if we are not already in the video conferemce mode, go in to it
+		if (!gubVideoConferencingMode)
+		{
+			gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
 //				gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
-				gfFirstTimeInContactScreen = TRUE;
-			}
-
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			gfFirstTimeInContactScreen = TRUE;
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+
+		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
 	}
 }
 
-void BtnNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-			InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
 
-			if( gbCurrentIndex < MAX_NUMBER_MERCS-1 )
-				gbCurrentIndex++;
-			else
-				gbCurrentIndex = 0;
+		gbCurrentIndex =
+			(gbCurrentIndex < MAX_NUMBER_MERCS - 1 ? gbCurrentIndex + 1 : 0);
 
-			gbCurrentSoldier = AimMercArray[gbCurrentIndex];
-
-			gfRedrawScreen = TRUE;
-
-			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		gbCurrentSoldier = AimMercArray[gbCurrentIndex];
+		gfRedrawScreen = TRUE;
+		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
 }
 
@@ -1597,95 +1532,52 @@ void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t *
 }
 
 
-void BtnContractLengthButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
 
 		gubContractLength = ubRetValue;
 		DisplaySelectLights(TRUE, FALSE);
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		DisplaySelectLights(FALSE, FALSE);
-
 		guiMercAttitudeTime = GetJA2Clock();
-
 		DisplayMercChargeAmount();
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-
-//		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
 
-void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
 		gfBuyEquipment = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 		DisplaySelectLights(FALSE, TRUE);
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		DisplaySelectLights(FALSE, FALSE);
 		DisplayMercChargeAmount();
-
 		guiMercAttitudeTime = GetJA2Clock();
-
-//		InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
-//Transfer funds button callback
-void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
 
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+//Transfer funds button callback
+static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
 
 		gfStopMercFromTalking = TRUE;
 		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
 
 		//If we try to hire the merc
-		if( ubRetValue == 0)
+		if (ubRetValue == 0)
 		{
 			StopMercTalking();
 
@@ -1693,7 +1585,7 @@ void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 //			if( CanMercBeHired() )
 			{
 				//Was the merc hired
-				if( AimMemberHireMerc() )
+				if (AimMemberHireMerc())
 				{
 					// if merc was hired
 					InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], NULL, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
@@ -1708,7 +1600,7 @@ void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 					giIdOfLastHiredMerc = AimMercArray[gbCurrentIndex];
 				}
 			}
-/*
+#if 0 // XXX was commented out
 			else
 			{
 				//else the merc doesnt like a player on the team, hang up when the merc is done complaining
@@ -1718,19 +1610,13 @@ void BtnAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
 
 				gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
 			}
-*/
+#endif
 		}
-		// else we cancel
 		else
 		{
+			// else we cancel
 			gubVideoConferencingMode = AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
 		}
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
@@ -2167,34 +2053,25 @@ BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t *sString1, const
 }
 
 
-void BtnPopUpOkButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	static BOOLEAN fInCallback=TRUE;
+	static BOOLEAN fInCallback = TRUE;
 
-	if( fInCallback )
+	if (fInCallback)
 	{
-		if (!(btn->uiFlags & BUTTON_ENABLED))
-			return;
-
-		if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-		{
-			btn->uiFlags |= BUTTON_CLICKED_ON;
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-		if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
 			UINT8 ubCurPageNum = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
 			fInCallback = FALSE;
 
 //			gfStopMercFromTalking = TRUE;
 
 			gubPopUpBoxAction = AIM_POPUP_DELETE;
 
-			if( gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE )
+			if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
 			{
-				if( ubCurPageNum == AIM_POPUP_BOX_SUCCESS)
+				if (ubCurPageNum == AIM_POPUP_BOX_SUCCESS)
 				{
 					gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
 					WaitForMercToFinishTalkingOrUserToClick();
@@ -2205,127 +2082,77 @@ void BtnPopUpOkButtonCallback(GUI_BUTTON *btn,INT32 reason)
 			}
 
 			fInCallback = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 		}
 	}
 }
+
 
 // we first contact merc.  We either go to hire him or cancel the call
-void BtnFirstContactButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+
+//		gfStopMercFromTalking = TRUE;
+		StopMercTalking();
+
+		gfAimMemberCanMercSayOpeningQuote = FALSE;
+
+		if (ubRetValue == 0)
 		{
-			UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-
-//			gfStopMercFromTalking = TRUE;
-			StopMercTalking();
-
-			gfAimMemberCanMercSayOpeningQuote = FALSE;
-
-			if( ubRetValue == 0)
+			if (CanMercBeHired())
 			{
-				if( CanMercBeHired() )
-				{
-					gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
-				}
+				gubVideoConferencingMode = AIM_VIDEO_HIRE_MERC_MODE;
 			}
-			else
-			{
-				gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-			}
-
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-}
-
-
-void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		else
 		{
-			UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-
-			if( ubRetValue == 0)
-			{
-				//Set a flag indicating that the merc has a message
-				gMercProfiles[ gbCurrentSoldier ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
-				WaitForMercToFinishTalkingOrUserToClick();
-
-				//Display a message box displaying a messsage that the message was recorded
-//				DoLapTopMessageBox( 10, AimPopUpText[ AIM_MEMBER_MESSAGE_RECORDED ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				InitCreateDeleteAimPopUpBox( AIM_POPUP_CREATE, L" ", AimPopUpText[ AIM_MEMBER_MESSAGE_RECORDED ], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS );
-
-
-				SpecifyDisabledButtonStyle( giAnsweringMachineButton[1], DISABLED_STYLE_NONE );
-				DisableButton( giAnsweringMachineButton[1]);
-				DisableButton( giAnsweringMachineButton[0] );
-			}
-			else
-			{
-				gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-//				gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-			}
-
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-}
-
-
-void BtnHangUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(CONTACT_X,CONTACT_BOX_Y,CONTACT_BR_X,CONTACT_BR_Y);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-//			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			InvalidateRegion(CONTACT_X,CONTACT_BOX_Y,CONTACT_BR_X,CONTACT_BR_Y);
 		}
 	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
+}
+
+
+static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(CONTACT_X,CONTACT_BOX_Y,CONTACT_BR_X,CONTACT_BR_Y);
+		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+
+		if (ubRetValue == 0)
+		{
+			//Set a flag indicating that the merc has a message
+			gMercProfiles[gbCurrentSoldier].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
+			WaitForMercToFinishTalkingOrUserToClick();
+
+			//Display a message box displaying a messsage that the message was recorded
+//			DoLapTopMessageBox(10, AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+
+
+			SpecifyDisabledButtonStyle(giAnsweringMachineButton[1], DISABLED_STYLE_NONE);
+			DisableButton(giAnsweringMachineButton[1]);
+			DisableButton(giAnsweringMachineButton[0]);
+		}
+		else
+		{
+			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
+//			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+		}
 	}
 }
+
+
+static void BtnHangUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+//		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
+	}
+}
+
 
 // InitVideoFace() is called once to initialize things
 BOOLEAN  InitVideoFace(UINT8 ubMercID)
@@ -3070,23 +2897,12 @@ void StopMercTalking()
 }
 
 
-
-void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-//			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
+		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
+//		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
 }
 

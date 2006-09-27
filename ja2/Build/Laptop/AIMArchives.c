@@ -113,7 +113,6 @@ UINT32		guiPopUpPic;
 UINT32		guiDoneButton;
 
 UINT8			gubPageNum;
-UINT8			gunAlumniButtonDown=255;
 BOOLEAN		gfExitingAimArchives;
 UINT8			gubDrawOldMerc;
 UINT8			gfDrawPopUpBox=FALSE;
@@ -135,7 +134,7 @@ MOUSE_REGION		gDoneRegion;
 void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Previous Button
-void		BtnAlumniPageButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiAlumniPageButton[3];
 INT32		guiAlumniPageButtonImage;
 
@@ -406,47 +405,20 @@ void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void BtnAlumniPageButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		gunAlumniButtonDown=ubRetValue;
-
-		InvalidateRegion(AIM_ALUMNI_PAGE1_X,AIM_ALUMNI_PAGE1_Y, AIM_ALUMNI_PAGE_END_X,AIM_ALUMNI_PAGE_END_Y);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			RemoveAimAlumniFaceRegion();
-
-			ChangingAimArchiveSubPage( ubRetValue );
-
-			gubPageNum = ubRetValue;
-
-			gfReDrawScreen = TRUE;
-
-			gfDestroyPopUpBox = TRUE;
-
-			gunAlumniButtonDown=255;
-			ResetAimArchiveButtons();
-			DisableAimArchiveButton();
-			gfDrawPopUpBox = FALSE;
-
-			InvalidateRegion(AIM_ALUMNI_PAGE1_X,AIM_ALUMNI_PAGE1_Y, AIM_ALUMNI_PAGE_END_X,AIM_ALUMNI_PAGE_END_Y);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		gunAlumniButtonDown=255;
+		RemoveAimAlumniFaceRegion();
+		ChangingAimArchiveSubPage(ubRetValue);
+		gubPageNum = ubRetValue;
+		gfReDrawScreen = TRUE;
+		gfDestroyPopUpBox = TRUE;
+		ResetAimArchiveButtons();
 		DisableAimArchiveButton();
-		InvalidateRegion(AIM_ALUMNI_PAGE1_X,AIM_ALUMNI_PAGE1_Y, AIM_ALUMNI_PAGE_END_X,AIM_ALUMNI_PAGE_END_Y);
+		gfDrawPopUpBox = FALSE;
 	}
 }
 
