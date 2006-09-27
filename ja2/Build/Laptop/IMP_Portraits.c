@@ -21,6 +21,7 @@
 	#include "IMP_Compile_Character.h"
 	#include "Button_System.h"
 	#include "VSurface.h"
+	#include "Font_Control.h"
 #endif
 
 //current and last pages

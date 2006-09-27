@@ -11,6 +11,8 @@
 #ifndef _MOUSE_SYSTEM_MACROS_H_
 #define _MOUSE_SYSTEM_MACROS_H_
 
+#include "Types.h"
+
 // Special macro hook for the mouse handler. Allows a call to a secondary mouse handler.
 // Define the label _MOUSE_SYSTEM_HOOK_ to activate. Undef it to deactivate.
 //

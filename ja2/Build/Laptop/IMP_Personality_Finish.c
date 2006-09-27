@@ -18,6 +18,7 @@
 	#include "IMP_Text_System.h"
 	#include "IMP_Compile_Character.h"
 	#include "Button_System.h"
+	#include "Font_Control.h"
 #endif
 
 // this is the amount of time, the player waits until booted back to main profileing screen

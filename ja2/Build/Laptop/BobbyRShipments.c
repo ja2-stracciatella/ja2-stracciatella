@@ -15,6 +15,7 @@
 	#include "Button_System.h"
 	#include "Video.h"
 	#include "VSurface.h"
+	#include "Font_Control.h"
 #endif
 
 

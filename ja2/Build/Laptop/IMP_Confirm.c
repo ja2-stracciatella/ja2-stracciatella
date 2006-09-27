@@ -33,6 +33,7 @@
 	#include "Strategic.h"
 	#include "Random.h"
 	#include "Button_System.h"
+	#include "Font_Control.h"
 #endif
 
 #define IMP_MERC_FILE "IMP.dat"

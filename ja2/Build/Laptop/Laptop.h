@@ -1,14 +1,8 @@
-#ifndef __LAPTOP_H
-#define __LAPTOP_H
+#ifndef LAPTOP_H
+#define LAPTOP_H
 
-#include "Types.h"
-#include "SGP.h"
-#include "Font_Control.h"
 #include "MessageBoxScreen.h"
-
-
-
-
+#include "Types.h"
 
 INT32			EnterLaptop();
 void			ExitLaptop();

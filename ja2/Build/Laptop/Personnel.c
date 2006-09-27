@@ -34,6 +34,7 @@
 	#include "Button_System.h"
 	#include "VSurface.h"
 	#include <stdlib.h>
+	#include "Font_Control.h"
 #endif
 
 #include "Soldier_Macros.h"

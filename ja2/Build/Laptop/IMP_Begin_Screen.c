@@ -35,6 +35,7 @@
 	#include "Video.h"
 	#include "VSurface.h"
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138

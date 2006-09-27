@@ -49,6 +49,7 @@
 	#include "SoundMan.h"
 	#include <stdlib.h>
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 #include "Strategic_Town_Loyalty.h"

@@ -26,6 +26,7 @@
 	#include "Button_System.h"
 	#include "ScreenIDs.h"
 	#include "VSurface.h"
+	#include "Font_Control.h"
 #endif
 
 // min time btween frames of animation

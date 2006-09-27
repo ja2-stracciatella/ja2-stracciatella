@@ -26,6 +26,7 @@
 	#include <string.h>
 	#include "Button_System.h"
 	#include "Debug.h"
+	#include "Font_Control.h"
 #endif
 
 

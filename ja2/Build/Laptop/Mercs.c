@@ -28,6 +28,7 @@
 	#include "Video.h"
 	#include "VSurface.h"
 	#include "Debug.h"
+	#include "Font_Control.h"
 #endif
 
 #define		MERC_TEXT_FONT									FONT12ARIAL

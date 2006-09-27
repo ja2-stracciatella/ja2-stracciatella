@@ -23,6 +23,7 @@
 	#include "VSurface.h"
 	#include <stdlib.h>
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 #ifdef JA2BETAVERSION

@@ -14,6 +14,7 @@
 	#include <string.h>
 	#include "Button_System.h"
 	#include "Video.h"
+	#include "Font_Control.h"
 #endif
 
 

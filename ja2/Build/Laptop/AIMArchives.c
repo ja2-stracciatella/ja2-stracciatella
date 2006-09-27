@@ -14,6 +14,7 @@
 	#include "Debug.h"
 	#include "VSurface.h"
 	#include "Video.h"
+	#include "Font_Control.h"
 #endif
 
 

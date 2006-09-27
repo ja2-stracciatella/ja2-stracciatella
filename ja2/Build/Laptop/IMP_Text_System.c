@@ -12,6 +12,7 @@
 	#include "IMP_Personality_Finish.h"
 	#include "IMP_Attribute_Selection.h"
 	#include "IMP_MainPage.h"
+	#include "Font_Control.h"
 #endif
 
 #define IMP_SEEK_AMOUNT 5 * 80 * 2

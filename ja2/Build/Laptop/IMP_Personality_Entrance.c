@@ -16,6 +16,7 @@
 	#include "Laptop.h"
 	#include "IMP_Text_System.h"
 	#include "Button_System.h"
+	#include "Font_Control.h"
 #endif
 
 // IMP personality entrance buttons

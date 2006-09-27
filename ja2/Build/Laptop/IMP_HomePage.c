@@ -23,6 +23,7 @@
 	#include "Video.h"
 	#include "VSurface.h"
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 void GetPlayerKeyBoardInputForIMPHomePage( void );

@@ -30,6 +30,7 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 

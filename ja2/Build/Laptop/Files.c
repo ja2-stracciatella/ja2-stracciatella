@@ -18,6 +18,7 @@
 	#include "Button_System.h"
 	#include "VSurface.h"
 	#include "MemMan.h"
+	#include "Font_Control.h"
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X

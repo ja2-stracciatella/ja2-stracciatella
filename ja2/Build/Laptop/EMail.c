@@ -26,6 +26,7 @@
 	#include "Video.h"
 	#include "VSurface.h"
 	#include "MemMan.h"
+	#include "Font_Control.h"
 #endif
 
 

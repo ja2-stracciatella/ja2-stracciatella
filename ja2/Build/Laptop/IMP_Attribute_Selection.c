@@ -22,6 +22,7 @@
 	#include "Button_System.h"
 	#include "Video.h"
 	#include "ScreenIDs.h"
+	#include "Font_Control.h"
 #endif
 
 // width of the slider bar region
