@@ -13,6 +13,11 @@
 	#include "Video.h"
 #endif
 
+#ifndef ENGLISH
+#	include "Multi_Language_Graphic_Utils.h"
+#endif
+
+
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
 extern HVSURFACE ghFrameBuffer;
