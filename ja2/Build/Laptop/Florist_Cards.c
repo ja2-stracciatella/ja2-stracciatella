@@ -54,7 +54,7 @@ void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 INT32		guiFlowerCardsButtonImage;
-void		BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiFlowerCardsBackButton;
 
 
@@ -203,28 +203,10 @@ void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
 	}
 }

@@ -73,7 +73,7 @@ BOOLEAN		gfHomePageActive=FALSE;		//Specifies whether or not the home page or th
 
 //Graphic for button
 INT32		guiGalleryButtonImage;
-void		BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiGalleryButton;
 
 
@@ -258,31 +258,14 @@ void RemoveFloristDefaults()
 }
 
 
-
-void BtnGalleryButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
 }
+
 
 void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {

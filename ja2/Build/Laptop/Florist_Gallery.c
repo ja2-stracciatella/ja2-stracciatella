@@ -77,13 +77,12 @@ BOOLEAN		FloristGallerySubPagesVisitedFlag[ 4 ];
 
 //Floral buttons
 INT32		guiGalleryButtonImage;
-void		BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiGalleryButton[ FLOR_GALLERY_NUMBER_FLORAL_BUTTONS ];
 
 //Next Previous buttons
 INT32		guiFloralGalleryButtonImage;
-void		BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason);
-void		BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiFloralGalleryButton[2];
 
 
@@ -179,105 +178,47 @@ void RenderFloristGallery()
 }
 
 
-void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		if (gubCurFlowerIndex + 3 <= FLOR_GALLERY_NUMBER_FLORAL_IMAGES)
+			gubCurFlowerIndex += 3;
 
-
-			if( (gubCurFlowerIndex + 3 ) <= FLOR_GALLERY_NUMBER_FLORAL_IMAGES )
-				gubCurFlowerIndex += 3;
-
-			ChangingFloristGallerySubPage( gubCurFlowerIndex );
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-
-			gfRedrawFloristGallery = TRUE;
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		ChangingFloristGallerySubPage(gubCurFlowerIndex);
+		gfRedrawFloristGallery = TRUE;
 	}
 }
 
 
-void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		if (gubCurFlowerIndex != 0)
 		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-
-			if( gubCurFlowerIndex != 0 )
-			{
-				if( gubCurFlowerIndex >=3 )
-					gubCurFlowerIndex -= 3;
-				else
-					gubCurFlowerIndex = 0;
-
-				ChangingFloristGallerySubPage( gubCurFlowerIndex );
-			}
+			if (gubCurFlowerIndex >= 3)
+				gubCurFlowerIndex -= 3;
 			else
-			{
-				guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
-			}
-
-			gfRedrawFloristGallery = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+				gubCurFlowerIndex = 0;
+			ChangingFloristGallerySubPage(gubCurFlowerIndex);
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		else
+		{
+			guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
+		}
+		gfRedrawFloristGallery = TRUE;
 	}
 }
 
 
-
-void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentlySelectedFlower = (UINT8) MSYS_GetBtnUserData( btn, 0 );
-			guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
-
-			gfShowBookmarks = FALSE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentlySelectedFlower = (UINT8) MSYS_GetBtnUserData( btn, 0 );
+		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
+		gfShowBookmarks = FALSE;
 	}
 }
 

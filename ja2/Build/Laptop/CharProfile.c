@@ -103,7 +103,7 @@ void LoadImpGraphics( void );
 void RemoveImpGraphics( void );
 void CreateIMPButtons( void );
 void DestroyIMPButtons( void );
-void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPCancelCallback(GUI_BUTTON *btn, INT32 reason);
 BOOLEAN HasTheCurrentIMPPageBeenVisited( void );
 extern void SetAttributes( void );
 
@@ -634,68 +634,51 @@ void DestroyIMPButtons( void )
 	return;
 }
 
-void BtnIMPCancelCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnIMPCancelCallback(GUI_BUTTON *btn, INT32 reason)
 {
-   // btn callback for IMP cancel button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		// back to the main page, otherwise, back to home page
+		switch (iCurrentImpPage)
 		{
+			case IMP_MAIN_PAGE:
+				iCurrentImpPage = IMP_HOME_PAGE;
+				fButtonPendingFlag = TRUE;
+				iCurrentProfileMode = 0;
+				fFinishedCharGeneration = FALSE;
+				ResetCharacterStats( );
+				break;
 
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// back to the main page, otherwise, back to home page
-			if( iCurrentImpPage == IMP_MAIN_PAGE )
-			{
-			  iCurrentImpPage = IMP_HOME_PAGE;
-			  fButtonPendingFlag = TRUE;
-			  iCurrentProfileMode = 0;
-			  fFinishedCharGeneration = FALSE;
-			  ResetCharacterStats( );
-			}
-			else if( iCurrentImpPage == IMP_FINISH )
-			{
+			case IMP_FINISH:
 				iCurrentImpPage = IMP_MAIN_PAGE;
 				iCurrentProfileMode = 4;
 				fFinishedCharGeneration = FALSE;
-			  fButtonPendingFlag = TRUE;
-			  //iCurrentProfileMode = 0;
-			  //fFinishedCharGeneration = FALSE;
-			  //ResetCharacterStats( );
+				fButtonPendingFlag = TRUE;
+				//iCurrentProfileMode = 0;
+				//fFinishedCharGeneration = FALSE;
+				//ResetCharacterStats( );
+				break;
 
-			}
-
-			else if( iCurrentImpPage == IMP_PERSONALITY_QUIZ || iCurrentImpPage == IMP_PERSONALITY_FINISH)
-			{
+			case IMP_PERSONALITY_QUIZ:
+			case IMP_PERSONALITY_FINISH:
 				giMaxPersonalityQuizQuestion = 0;
-	      fStartOverFlag = TRUE;
+				fStartOverFlag = TRUE;
 				iCurrentAnswer = -1;
 				iCurrentImpPage = IMP_PERSONALITY;
 				fButtonPendingFlag = TRUE;
-			}
+				break;
 
-			else
-			{
-				if( iCurrentImpPage == IMP_ATTRIBUTE_PAGE )
-				{
-					SetAttributes( );
-				}
-			  iCurrentImpPage = IMP_MAIN_PAGE;
+			case IMP_ATTRIBUTE_PAGE:
+				SetAttributes();
+				/* FALLTHROUGH */
+
+			default:
+				iCurrentImpPage = IMP_MAIN_PAGE;
 				iCurrentAnswer = -1;
-			}
-    }
+				break;
+		}
 	}
-
-
-	return;
 }
 
 
