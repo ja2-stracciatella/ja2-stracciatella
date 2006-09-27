@@ -1,3 +1,5 @@
+ICONV = iconv
+
 SDL_CONFIG = sdl-config
 CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
@@ -324,10 +326,10 @@ SRCS += ja2/Build/Utils/WordWrap.c
 SRCS += ja2/Build/Utils/_DutchText.c
 SRCS += ja2/Build/Utils/_EnglishText.c
 SRCS += ja2/Build/Utils/_FrenchText.c
-SRCS += ja2/Build/Utils/_GermanText.c
+SRCS += ja2/Build/Utils/GermanText.c
 SRCS += ja2/Build/Utils/_ItalianText.c
 SRCS += ja2/Build/Utils/_JA25EnglishText.c
-SRCS += ja2/Build/Utils/_JA25GermanText.c
+SRCS += ja2/Build/Utils/JA25GermanText.c
 SRCS += ja2/Build/Utils/_PolishText.c
 SRCS += ja2/Build/Utils/_RussianText.c
 SRCS += ja2/Build/Utils/_TaiwaneseText.c
@@ -395,4 +397,11 @@ ja: $(OBJS)
 
 clean:
 	@echo '===> CLEAN'
-	@rm -fr $(DEPS) $(OBJS)
+	@rm -fr $(DEPS) $(OBJS) ja2/Build/Utils/JA25GermanText.c ja2/Build/Utils/GermanText.c
+
+ja2/Build/Utils/JA25GermanText.c: ja2/Build/Utils/_JA25GermanText.c
+ja2/Build/Utils/GermanText.c: ja2/Build/Utils/_GermanText.c
+
+ja2/Build/Utils/JA25GermanText.c ja2/Build/Utils/GermanText.c:
+	@echo '===> ICONV $<'
+	@$(ICONV) -f ISO8859-15 -t UTF-8 < $< > $@

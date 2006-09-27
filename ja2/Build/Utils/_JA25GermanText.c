@@ -7,13 +7,14 @@
 		#include "FileMan.h"
 		#include "JA2_Demo_Ads.h"
 	#endif
+	#include <wchar.h>
 #endif
 
 #ifdef GERMAN
 
 // VERY TRUNCATED FILE COPIED FROM JA2.5 FOR ITS FEATURES FOR JA2 GOLD
 
-STR16	zNewTacticalMessages[]=
+const wchar_t *zNewTacticalMessages[]=
 {
 	L"Entfernung zum Ziel: %d Felder",
 	L"Verbinden Sie den Transmitter mit Ihrem Laptop-Computer.",
@@ -41,7 +42,7 @@ L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich G
 };
 
 //@@@:  New string as of March 3, 2000.
-STR16	gzIronManModeWarningText[]=
+const wchar_t *gzIronManModeWarningText[]=
 {
 	L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?",
 };
