@@ -159,7 +159,6 @@ UINT32		guiFuneralAdImages;
 UINT32		guiBobbyRAdImages;
 
 
-UINT8			gubAimMenuButtonDown=255;
 UINT32		gubWarningTimer;
 UINT8			gubCurrentAdvertisment;
 
@@ -183,7 +182,7 @@ MOUSE_REGION    gSelectedLinksRegion;
 void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Bottom Buttons
-void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBottomButtons[ NUM_AIM_SCREENS ];
 INT32		guiBottomButtonImage;
 
@@ -312,8 +311,6 @@ BOOLEAN EnterAIM()
 
 	// disable the region because only certain banners will be 'clickable'
   MSYS_DisableRegion(&gSelectedBannerRegion);
-
-	gubAimMenuButtonDown=255;
 
 	fFirstTimeIn = FALSE;
 	RenderAIM();
@@ -627,34 +624,12 @@ BOOLEAN ExitAimMenuBar(void)
 }
 
 
-void BtnAimBottomButtonsCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	UINT32		bNewValue;
-
-	bNewValue = MSYS_GetBtnUserData( btn, 0 );
-	gubAimMenuButtonDown = 255;
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		gubAimMenuButtonDown = (UINT8)MSYS_GetBtnUserData( btn, 1 );
-		InvalidateRegion(BOTTOM_BUTTON_START_X,BOTTOM_BUTTON_START_Y,BOTTOM_BUTTON_END_X,BOTTOM_BUTTON_END_Y);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
-
-			guiCurrentLaptopMode = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-
-			InvalidateRegion(BOTTOM_BUTTON_START_X,BOTTOM_BUTTON_START_Y,BOTTOM_BUTTON_END_X,BOTTOM_BUTTON_END_Y);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(BOTTOM_BUTTON_START_X,BOTTOM_BUTTON_START_Y,BOTTOM_BUTTON_END_X,BOTTOM_BUTTON_END_Y);
+		ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
+		guiCurrentLaptopMode = (UINT8)MSYS_GetBtnUserData(btn, 0);
 	}
 	DisableAimButton();
 }
