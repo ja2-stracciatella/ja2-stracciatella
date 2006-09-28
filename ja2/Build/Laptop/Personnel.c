@@ -2430,7 +2430,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 
 				if ( Item[pSoldier->inv[ ubCounter ].usItem ].usItemClass & IC_GUN )
 				{
-					swprintf( sString, lengthof(sString), L"%s", AmmoCaliber[ Weapon[ Item[  pSoldier->inv[ ubCounter ].usItem ].ubClassIndex ].ubCalibre ]);
+					swprintf( sString, lengthof(sString), L"%S", AmmoCaliber[ Weapon[ Item[  pSoldier->inv[ ubCounter ].usItem ].ubClassIndex ].ubCalibre ]);
 
 					// shorten if needed
 					if( StringPixLength( sString, FONT10ARIAL) > ( 171 - 75 ) )

@@ -1079,7 +1079,7 @@ BOOLEAN	UpdateMercInfo(void)
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 
-		swprintf( sMedicalString, lengthof(sMedicalString), L"%s %s", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
+		swprintf( sMedicalString, lengthof(sMedicalString), L"%S %S", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
 
 		// If the string will be displayed in more then 2 lines, recenter the string
 		if( ( DisplayWrappedString( 0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT,  sMedicalString, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( AIM_FONT12ARIAL ) ) > 2 )
@@ -1736,12 +1736,12 @@ BOOLEAN DisplayVideoConferencingDisplay()
 	//Title & Name
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
-		swprintf( sMercName, lengthof(sMercName), L"%s",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
+		swprintf( sMercName, lengthof(sMercName), L"%S",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 	else
 	{
-		swprintf( sMercName, lengthof(sMercName), L"%s %s",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
+		swprintf( sMercName, lengthof(sMercName), L"%S %S",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -1912,9 +1912,9 @@ UINT32 DisplayMercChargeAmount()
 //	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
 	{
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-			swprintf(wTemp, lengthof(wTemp), L"%s %s", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
+			swprintf(wTemp, lengthof(wTemp), L"%S %S", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
 		else
-			swprintf(wTemp, lengthof(wTemp), L"%s", wDollarTemp );
+			swprintf(wTemp, lengthof(wTemp), L"%S", wDollarTemp );
 
 		DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X+1, AIM_CONTRACT_CHARGE_AMOUNNT_Y+3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
@@ -2283,9 +2283,9 @@ void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length)
 {
 
 #ifdef TAIWANESE
-	swprintf( gsTalkingMercText, Length, L"%s", pString );
+	swprintf( gsTalkingMercText, Length, L"%S", pString );
 #else
-	swprintf( gsTalkingMercText, Length, L"\"%s\"", pString );
+	swprintf( gsTalkingMercText, Length, L"\"%S\"", pString );
 #endif
 
 	//Set the minimum time for the dialogue text to be present
