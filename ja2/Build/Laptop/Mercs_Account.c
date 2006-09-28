@@ -78,13 +78,13 @@ INT32		giMercTotalContractCharge;
 BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
 
 // The Authorize button
-void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercAuthorizeBoxButton;
 INT32		guiMercAuthorizeButtonImage;
 
 
 // The Back button
-void BtnMercBackButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackBoxButton;
 
 
@@ -214,68 +214,35 @@ void RenderMercsAccount()
 }
 
 
-void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			CHAR16	wzAuthorizeString[512];
-			CHAR16	wzDollarAmount[128];
+		CHAR16 wzAuthorizeString[512];
+		CHAR16 wzDollarAmount[128];
 
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		swprintf(wzDollarAmount, lengthof(wzDollarAmount), L"%d", giMercTotalContractCharge);
 
-			swprintf( wzDollarAmount, lengthof(wzDollarAmount), L"%d", giMercTotalContractCharge );
+		InsertCommasForDollarFigure(wzDollarAmount);
+		InsertDollarSignInToString(wzDollarAmount);
 
-			InsertCommasForDollarFigure( wzDollarAmount );
-			InsertDollarSignInToString( wzDollarAmount );
+		//create the string to show to the user
+		swprintf(wzAuthorizeString, lengthof(wzAuthorizeString), MercAccountText[MERC_ACCOUNT_AUTHORIZE_CONFIRMATION], wzDollarAmount);
 
-			//create the string to show to the user
-			swprintf( wzAuthorizeString, lengthof(wzAuthorizeString), MercAccountText[MERC_ACCOUNT_AUTHORIZE_CONFIRMATION], wzDollarAmount );
-
-			DoLapTopMessageBox( MSG_BOX_BLUE_ON_GREY, wzAuthorizeString, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, MercAuthorizePaymentMessageBoxCallBack );
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		DoLapTopMessageBox(MSG_BOX_BLUE_ON_GREY, wzAuthorizeString, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, MercAuthorizePaymentMessageBoxCallBack);
 	}
 }
 
 
-void BtnMercBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
-			gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentLaptopMode = LAPTOP_MODE_MERC;
+		gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;
 	}
 }
+
 
 void DisplayHiredMercs()
 {

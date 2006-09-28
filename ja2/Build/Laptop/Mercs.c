@@ -245,16 +245,16 @@ NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES 
 //
 
 // The Account Box button
-void BtnAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiAccountBoxButton;
 INT32		guiAccountBoxButtonImage;
 
 //File Box
 UINT32	guiFileBoxButton;
-void BtnFileBoxButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
 // The 'X' to close the video conf window button
-void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiXToCloseMercVideoButton;
 INT32		guiXToCloseMercVideoButtonImage;
 
@@ -654,65 +654,29 @@ BOOLEAN RemoveMercBackGround()
 }
 
 
-
-
-void BtnAccountBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_NO_ACCOUNT)
+			guiCurrentLaptopMode = LAPTOP_MODE_MERC_NO_ACCOUNT;
+		else
+			guiCurrentLaptopMode = LAPTOP_MODE_MERC_ACCOUNT;
+
+		if (iMercPopUpBox != -1)
 		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			if( LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_NO_ACCOUNT )
-				guiCurrentLaptopMode = LAPTOP_MODE_MERC_NO_ACCOUNT;
-			else
-				guiCurrentLaptopMode = LAPTOP_MODE_MERC_ACCOUNT;
-
-			if( iMercPopUpBox != -1 )
-			{
-				ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
-				RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
-			}
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			ButtonList[guiAccountBoxButton]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+			RenderMercPopUpBoxFromIndex(iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
-void BtnFileBoxButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentLaptopMode = LAPTOP_MODE_MERC_FILES;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentLaptopMode = LAPTOP_MODE_MERC_FILES;
 	}
 }
 
@@ -1345,38 +1309,21 @@ BOOLEAN InitDestroyXToCloseVideoWindow( BOOLEAN fCreate )
 }
 
 
-void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		//Stop speck from talking
+//		ShutupaYoFace(giVideoSpeckFaceIndex);
+		StopSpeckFromTalking();
 
-			//Stop speck from talking
-//			ShutupaYoFace( giVideoSpeckFaceIndex );
-			StopSpeckFromTalking( );
+		//make sure we are done the intro speech
+		gfDoneIntroSpeech = TRUE;
 
-			//make sure we are done the intro speech
-			gfDoneIntroSpeech = TRUE;
+		//remove the video conf mode
+		gubCurrentMercVideoMode = MERC_VIDEO_EXIT_VIDEO_MODE;
 
-			//remove the video conf mode
-			gubCurrentMercVideoMode = MERC_VIDEO_EXIT_VIDEO_MODE;
-
-			gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 	}
 }
 

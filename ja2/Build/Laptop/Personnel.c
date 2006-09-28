@@ -375,10 +375,10 @@ void RenderPersonnel( void );
 void RenderPersonnelStats(INT32 iId, INT32 iSlot);
 BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther );
 BOOLEAN RenderPersonnelPictures( void );
-void LeftButtonCallBack(GUI_BUTTON *btn,INT32 reason);
-void RightButtonCallBack(GUI_BUTTON *btn,INT32 reason);
-void LeftFFButtonCallBack(GUI_BUTTON *btn,INT32 reason);
-void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason);
+static void LeftButtonCallBack(GUI_BUTTON *btn, INT32 reason);
+static void RightButtonCallBack(GUI_BUTTON *btn, INT32 reason);
+static void LeftFFButtonCallBack(GUI_BUTTON *btn, INT32 reason);
+static void RightFFButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 void PersonnelPortraitCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void CreatePersonnelButtons( void );
 void DeletePersonnelButtons( void );
@@ -417,8 +417,8 @@ void CreateDestroyCurrentDepartedMouseRegions( void );
 void PersonnelCurrentTeamCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void PersonnelDepartedTeamCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void CreateDestroyButtonsForDepartedTeamList( void );
-void DepartedDownCallBack(GUI_BUTTON *btn,INT32 reason);
-void DepartedUpCallBack(GUI_BUTTON *btn,INT32 reason);
+static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason);
+static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason);
 void DisplayPastMercsPortraits( void );
 BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther );
 INT32 GetIdOfPastMercInSlot( INT32 iSlot );
@@ -434,9 +434,9 @@ void DisplayInventoryForSelectedChar( void );
 INT32 GetNumberOfInventoryItemsOnCurrentMerc( void );
 void CreateDestroyPersonnelInventoryScrollButtons( void );
 void EnableDisableInventoryScrollButtons( void );
-void PersonnelINVStartButtonCallback(GUI_BUTTON *btn,INT32 reason);
-void EmployementInfoButtonCallback(GUI_BUTTON *btn,INT32 reason);
-void PersonnelStatStartButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason);
 void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason );
 INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam( void );
 
@@ -485,15 +485,15 @@ void DisplayATMAmount( void );
 // create destroy ATM button
 void CreateDestroyStartATMButton( void );
 void CreateDestroyATMButton( void );
-void ATMStartButtonCallback(GUI_BUTTON *btn,INT32 reason);
-void ATMNumberButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void ATMStartButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void ATMNumberButtonCallback(GUI_BUTTON *btn, INT32 reason);
 void HandleStateOfATMButtons( void );
-void ATMOtherButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void ATMOtherButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 // atm misc functions
 
-void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void ATMOther2ButtonCallback(GUI_BUTTON *btn, INT32 reason);
 void DisplayATMStrings( void );
 void DisplayAmountOnCurrentMerc( void );
 void RenderRectangleForPersonnelTransactionAmount( void );
@@ -1168,120 +1168,57 @@ void DeletePersonnelButtons( void )
 }
 
 
-void LeftButtonCallBack(GUI_BUTTON *btn,INT32 reason)
+static void LeftButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-		 PrevPersonnelFace( );
-		 uiCurrentInventoryIndex = 0;
-		 guiSliderPosition = 0;
-
-		}
+		fReDrawScreenFlag = TRUE;
+		PrevPersonnelFace();
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
 	}
 }
 
-void LeftFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
+
+static void LeftFFButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-		 PrevPersonnelFace( );
-     PrevPersonnelFace( );
-     PrevPersonnelFace( );
-		 PrevPersonnelFace( );
-
-		 // set states
-		 SetPersonnelButtonStates( );
-		}
+		fReDrawScreenFlag = TRUE;
+		PrevPersonnelFace();
+		PrevPersonnelFace();
+		PrevPersonnelFace();
+		PrevPersonnelFace();
+		SetPersonnelButtonStates();
 	}
 }
 
-void RightButtonCallBack(GUI_BUTTON *btn,INT32 reason)
+
+static void RightButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-     fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-     NextPersonnelFace( );
-		 uiCurrentInventoryIndex = 0;
-		 guiSliderPosition = 0;
-
-
-		}
+		fReDrawScreenFlag = TRUE;
+		NextPersonnelFace();
+		uiCurrentInventoryIndex = 0;
+		guiSliderPosition = 0;
 	}
 }
 
-void RightFFButtonCallBack(GUI_BUTTON *btn,INT32 reason)
+
+static void RightFFButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-     fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-     NextPersonnelFace( );
-     NextPersonnelFace( );
-     NextPersonnelFace( );
-     NextPersonnelFace( );
-
-		 // set states
-		 SetPersonnelButtonStates( );
-		}
+		fReDrawScreenFlag = TRUE;
+		NextPersonnelFace();
+		NextPersonnelFace();
+		NextPersonnelFace();
+		NextPersonnelFace();
+		SetPersonnelButtonStates();
 	}
 }
+
 
 void DisplayHeader( void )
 {
@@ -2534,102 +2471,32 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 }
 
 
-void InventoryUpButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void InventoryUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = 0;
-	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
-	INT32 cnt = 0;
-	INT32 iId = 0;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
+			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if( btn->uiFlags & (BUTTON_CLICKED_ON) )
-		{
-			btn->uiFlags &= ~(BUTTON_CLICKED_ON);
-
-			if( uiCurrentInventoryIndex == 0 )
-			{
-				return;
-			}
-
-			// up one element
-			uiCurrentInventoryIndex--;
-			fReDrawScreenFlag = TRUE;
-
-			FindPositionOfPersInvSlider( );
-		}
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
-	{
-		if( uiCurrentInventoryIndex == 0 )
-		{
-			return;
-		}
-
-		// up one element
+		if (uiCurrentInventoryIndex == 0) return;
 		uiCurrentInventoryIndex--;
 		fReDrawScreenFlag = TRUE;
-		FindPositionOfPersInvSlider( );
+		FindPositionOfPersInvSlider();
 	}
 }
 
 
-void InventoryDownButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void InventoryDownButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = 0;
-	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
-	INT32 cnt = 0;
-	INT32 iId = 0;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
+			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( ( INT32 )uiCurrentInventoryIndex >= ( INT32 )( GetNumberOfInventoryItemsOnCurrentMerc( ) - NUMBER_OF_INVENTORY_PERSONNEL ) )
+		if ((INT32)uiCurrentInventoryIndex >= (INT32)(GetNumberOfInventoryItemsOnCurrentMerc() - NUMBER_OF_INVENTORY_PERSONNEL))
 		{
 			return;
 		}
-
-		// up one element
 		uiCurrentInventoryIndex++;
 		fReDrawScreenFlag = TRUE;
-		FindPositionOfPersInvSlider( );
-
+		FindPositionOfPersInvSlider();
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if( btn->uiFlags & (BUTTON_CLICKED_ON) )
-		{
-			btn->uiFlags &= ~(BUTTON_CLICKED_ON);
-
-			if( ( INT32 )uiCurrentInventoryIndex >= ( INT32 )( GetNumberOfInventoryItemsOnCurrentMerc( ) - NUMBER_OF_INVENTORY_PERSONNEL ) )
-			{
-				return;
-			}
-
-			// up one element
-			uiCurrentInventoryIndex++;
-			fReDrawScreenFlag = TRUE;
-
-			FindPositionOfPersInvSlider( );
-
-		}
-	}
-
 }
 
 
@@ -4720,61 +4587,31 @@ void CreateDestroyButtonsForDepartedTeamList( void )
 }
 
 
-void DepartedUpCallBack(GUI_BUTTON *btn,INT32 reason)
+static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
+		if (giCurrentUpperLeftPortraitNumber - 20 >= 0)
 		{
-
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		  btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-		  if(  giCurrentUpperLeftPortraitNumber - 20 >= 0 )
-			{
-			  giCurrentUpperLeftPortraitNumber-=20;
-			  fReDrawScreenFlag = TRUE;
-			}
+			giCurrentUpperLeftPortraitNumber -= 20;
+			fReDrawScreenFlag = TRUE;
 		}
 	}
 }
 
 
-void DepartedDownCallBack(GUI_BUTTON *btn,INT32 reason)
+static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
+		if (giCurrentUpperLeftPortraitNumber + 20 < GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam())
 		{
-
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			if( ( giCurrentUpperLeftPortraitNumber + 20 ) < ( GetNumberOfDeadOnPastTeam( ) + GetNumberOfLeftOnPastTeam( ) + GetNumberOfOtherOnPastTeam( ) ) )
-			{
-				giCurrentUpperLeftPortraitNumber+=20;
-				fReDrawScreenFlag = TRUE;
-			}
+			giCurrentUpperLeftPortraitNumber += 20;
+			fReDrawScreenFlag = TRUE;
 		}
 	}
 }
+
 
 void DisplayPastMercsPortraits( void )
 {
@@ -5948,313 +5785,235 @@ void CreateDestroyATMButton( void )
 }
 
 
-void ATMStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void ATMStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			fReDrawScreenFlag=TRUE;
-			fShowAtmPanel = TRUE;
-			fShowAtmPanelStartButton = FALSE;
-			fATMFlags = 0;
-
-		}
+		fReDrawScreenFlag=TRUE;
+		fShowAtmPanel = TRUE;
+		fShowAtmPanelStartButton = FALSE;
+		fATMFlags = 0;
 	}
 }
 
-void PersonnelINVStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
 
+static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		fReDrawScreenFlag=TRUE;
-    btn->uiFlags |= (BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		fReDrawScreenFlag = TRUE;
+    btn->uiFlags |= BUTTON_CLICKED_ON;
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags       &= ~BUTTON_CLICKED_ON;
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
 //		fShowInventory = TRUE;
 		gubPersonnelInfoState = PRSNL_INV;
 	}
 }
 
-void PersonnelStatStartButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
 
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag = TRUE;
     btn->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags        &= ~BUTTON_CLICKED_ON;
 //		fShowInventory = FALSE;
 		gubPersonnelInfoState = PRSNL_STATS;
 	}
 }
 
 
-void EmployementInfoButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag = TRUE;
     btn->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags  &= ~BUTTON_CLICKED_ON;
+		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gubPersonnelInfoState = PRSNL_EMPLOYMENT;
 	}
 }
 
 
-void ATMOther2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void ATMOther2ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = 0;
-	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
-	INT32 cnt = 0;
-	INT32 iId = 0;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-
-	iValue = MSYS_GetBtnUserData( btn, 0 );
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
+		INT32 iValue = MSYS_GetBtnUserData(btn, 0);
 
-		switch( iValue )
+		switch (iValue)
 		{
-			case( DEPOSIT_ATM ):
+			case DEPOSIT_ATM:
 				fATMFlags = 2;
 				fReDrawScreenFlag=TRUE;
-				ButtonList[ giPersonnelATMSideButton[ WIDTHDRAWL_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
-			break;
-			case( WIDTHDRAWL_ATM ):
+				ButtonList[giPersonnelATMSideButton[WIDTHDRAWL_ATM]]->uiFlags &= ~BUTTON_CLICKED_ON;
+				break;
+
+			case WIDTHDRAWL_ATM:
 				fATMFlags = 3;
-				fReDrawScreenFlag=TRUE;
-				ButtonList[ giPersonnelATMSideButton[ DEPOSIT_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
-			break;
+				fReDrawScreenFlag = TRUE;
+				ButtonList[giPersonnelATMSideButton[DEPOSIT_ATM]]->uiFlags &= ~BUTTON_CLICKED_ON;
+				break;
 		}
 	}
-
 }
 
-void ATMOtherButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void ATMOtherButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = 0;
-	SOLDIERTYPE *pSoldier = MercPtrs[ 0 ];
-	INT32 cnt = 0;
-	INT32 iId = 0;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-
-	iValue = MSYS_GetBtnUserData( btn, 0 );
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
+		if (iCurrentPersonSelectedId != -1)
 		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			if( iCurrentPersonSelectedId != -1 )
+			if (fCurrentTeamMode)
 			{
-				if( fCurrentTeamMode == TRUE )
+				INT32 iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
+				SOLDIERTYPE* pSoldier = MercPtrs[iId];
+				INT32 iValue = MSYS_GetBtnUserData(btn, 0);
+
+				switch (iValue)
 				{
-					iId = GetIdOfThisSlot( iCurrentPersonSelectedId );
-					cnt = 0;
-
-					// set soldier
-					pSoldier = MercPtrs[ iId ];
-
-
-					switch( iValue )
-					{
-						case( OK_ATM ):
-							if( fATMFlags == 0 )
+					case OK_ATM:
+						if( fATMFlags == 0 )
+						{
+							fATMFlags = 1;
+							fReDrawScreenFlag=TRUE;
+							fOneFrameDelayInPersonnel = TRUE;
+						}
+						else if( fATMFlags == 2 )
+						{
+							// deposit from merc to account
+							if( GetFundsOnMerc( pSoldier ) >= wcstol( sTransferString, NULL, 10 ) )
 							{
-								fATMFlags = 1;
-								fReDrawScreenFlag=TRUE;
-								fOneFrameDelayInPersonnel = TRUE;
-							}
-							else if( fATMFlags == 2 )
-							{
-								// deposit from merc to account
-								if( GetFundsOnMerc( pSoldier ) >= wcstol( sTransferString, NULL, 10 ) )
-								{
-									if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
-									{
-										fOldATMFlags = fATMFlags;
-										fATMFlags = 5;
-
-										iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
-										swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-										fReDrawScreenFlag=TRUE;
-									}
-									else
-									{
-										// transfer
-										TransferFundsFromMercToBank( pSoldier, wcstol( sTransferString, NULL, 10 ) );
-										sTransferString[ 0 ] = 0;
-										fReDrawScreenFlag=TRUE;
-									}
-								}
-								else
+								if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
 								{
 									fOldATMFlags = fATMFlags;
-									fATMFlags = 4;
-									iValue = GetFundsOnMerc( pSoldier );
+									fATMFlags = 5;
+
+									iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
 									swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
 									fReDrawScreenFlag=TRUE;
 								}
-							}
-							else if( fATMFlags == 3 )
-							{
-								// deposit from merc to account
-								if( LaptopSaveInfo.iCurrentBalance >= wcstol( sTransferString, NULL, 10 ) )
-								{
-									if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
-									{
-										fOldATMFlags = fATMFlags;
-										fATMFlags = 5;
-
-										iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
-										swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-										fReDrawScreenFlag=TRUE;
-									}
-									else
-									{
-										// transfer
-										TransferFundsFromBankToMerc( pSoldier, wcstol( sTransferString, NULL, 10 ) );
-										sTransferString[ 0 ] = 0;
-										fReDrawScreenFlag=TRUE;
-									}
-								}
 								else
 								{
-									fOldATMFlags = fATMFlags;
-									fATMFlags = 4;
-									iValue = LaptopSaveInfo.iCurrentBalance;
-									swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
+									// transfer
+									TransferFundsFromMercToBank( pSoldier, wcstol( sTransferString, NULL, 10 ) );
+									sTransferString[ 0 ] = 0;
 									fReDrawScreenFlag=TRUE;
 								}
-							}
-							else if( fATMFlags == 4 )
-							{
-								fATMFlags = fOldATMFlags;
-								fReDrawScreenFlag=TRUE;
-							}
-						break;
-						case( DEPOSIT_ATM ):
-							fATMFlags = 2;
-							fReDrawScreenFlag=TRUE;
-
-						break;
-						case( WIDTHDRAWL_ATM ):
-							fATMFlags = 3;
-							fReDrawScreenFlag=TRUE;
-						break;
-						case( CANCEL_ATM ):
-							if( sTransferString[ 0 ] != 0 )
-							{
-								sTransferString[ 0 ] = 0;
-							}
-							else if( fATMFlags != 0 )
-							{
-								fATMFlags = 0;
-								ButtonList[ giPersonnelATMSideButton[ WIDTHDRAWL_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
-								ButtonList[ giPersonnelATMSideButton[ DEPOSIT_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
 							}
 							else
 							{
-								fShowAtmPanel = FALSE;
-								fShowAtmPanelStartButton = TRUE;
-
+								fOldATMFlags = fATMFlags;
+								fATMFlags = 4;
+								iValue = GetFundsOnMerc( pSoldier );
+								swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
+								fReDrawScreenFlag=TRUE;
 							}
+						}
+						else if( fATMFlags == 3 )
+						{
+							// deposit from merc to account
+							if( LaptopSaveInfo.iCurrentBalance >= wcstol( sTransferString, NULL, 10 ) )
+							{
+								if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
+								{
+									fOldATMFlags = fATMFlags;
+									fATMFlags = 5;
+
+									iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
+									swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
+									fReDrawScreenFlag=TRUE;
+								}
+								else
+								{
+									// transfer
+									TransferFundsFromBankToMerc( pSoldier, wcstol( sTransferString, NULL, 10 ) );
+									sTransferString[ 0 ] = 0;
+									fReDrawScreenFlag=TRUE;
+								}
+							}
+							else
+							{
+								fOldATMFlags = fATMFlags;
+								fATMFlags = 4;
+								iValue = LaptopSaveInfo.iCurrentBalance;
+								swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
+								fReDrawScreenFlag=TRUE;
+							}
+						}
+						else if( fATMFlags == 4 )
+						{
+							fATMFlags = fOldATMFlags;
 							fReDrawScreenFlag=TRUE;
+						}
 						break;
-						case( CLEAR_ATM ):
+
+					case DEPOSIT_ATM:
+						fATMFlags = 2;
+						fReDrawScreenFlag=TRUE;
+						break;
+
+					case WIDTHDRAWL_ATM:
+						fATMFlags = 3;
+						fReDrawScreenFlag=TRUE;
+						break;
+
+					case CANCEL_ATM:
+						if( sTransferString[ 0 ] != 0 )
+						{
 							sTransferString[ 0 ] = 0;
-							fReDrawScreenFlag=TRUE;
+						}
+						else if( fATMFlags != 0 )
+						{
+							fATMFlags = 0;
+							ButtonList[ giPersonnelATMSideButton[ WIDTHDRAWL_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+							ButtonList[ giPersonnelATMSideButton[ DEPOSIT_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+						}
+						else
+						{
+							fShowAtmPanel = FALSE;
+							fShowAtmPanelStartButton = TRUE;
+
+						}
+						fReDrawScreenFlag=TRUE;
 						break;
-					}
+
+					case CLEAR_ATM:
+						sTransferString[ 0 ] = 0;
+						fReDrawScreenFlag=TRUE;
+						break;
 				}
 			}
 		}
 	}
 }
 
-void ATMNumberButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void ATMNumberButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	INT32 iValue = 0;
-	INT32 iCounter = 0;
-	CHAR16 sZero[ 2 ] = L"0";
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	iValue = MSYS_GetBtnUserData( btn, 0 );
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-			fReDrawScreenFlag=TRUE;
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			// find position in value string, append character at end
-			for( iCounter = 0; iCounter < ( INT32 )wcslen( sTransferString ) ; iCounter++ );
-			sTransferString[ iCounter ] = ( sZero[ 0 ] + ( UINT16 )iValue );
-			sTransferString[ iCounter + 1 ] = 0;
-			fReDrawScreenFlag=TRUE;
+		INT32 iValue = MSYS_GetBtnUserData(btn, 0);
+		INT32 iCounter;
 
-			// gone too far
-			if( StringPixLength( sTransferString, ATM_FONT ) >= ATM_DISPLAY_WIDTH - 10 )
-			{
-				sTransferString[ iCounter ] = 0;
-			}
+		// find position in value string, append character at end
+		iCounter = wcslen(sTransferString);
+		sTransferString[iCounter] = L'0' + (UINT16)iValue;
+		sTransferString[iCounter + 1] = L'\0';
+		fReDrawScreenFlag = TRUE;
+
+		// gone too far
+		if (StringPixLength(sTransferString, ATM_FONT) >= ATM_DISPLAY_WIDTH - 10)
+		{
+			sTransferString[iCounter] = L'\0';
 		}
 	}
 }
+
 
 void DisplayATMAmount( void )
 {

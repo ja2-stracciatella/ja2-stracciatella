@@ -118,20 +118,20 @@ UINT32	guiMercFace;
 //
 
 // The Prev button
-void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiPrevButton;
 INT32		guiButtonImage;
 
 // The Next button
-void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiNextButton;
 
 // The Hire button
-void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiHireButton;
 
 // The Back button
-void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackButton;
 
 
@@ -300,126 +300,55 @@ void RenderMercsFiles()
 }
 
 
-
-
-void BtnMercPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			if( gubCurMercIndex > 0 )
-				gubCurMercIndex--;
-
-			//Since there are 2 larry roachburns
-			if( gubCurMercIndex == MERC_LARRY_ROACHBURN)
-				gubCurMercIndex--;
-
-			fReDrawScreenFlag = TRUE;
-
-			//Enable or disable the buttons
-			EnableDisableMercFilesNextPreviousButton( );
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		if (gubCurMercIndex > 0) gubCurMercIndex--;
+		//Since there are 2 larry roachburns
+		if (gubCurMercIndex == MERC_LARRY_ROACHBURN) gubCurMercIndex--;
+		fReDrawScreenFlag = TRUE;
+		EnableDisableMercFilesNextPreviousButton();
 	}
 }
 
 
-void BtnMercNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-
-			if( gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex-1 )
-				gubCurMercIndex++;
-
-			//Since there are 2 larry roachburns
-			if( gubCurMercIndex == MERC_LARRY_ROACHBURN)
-				gubCurMercIndex++;
-
-			fReDrawScreenFlag = TRUE;
-
-			//Enable or disable the buttons
-			EnableDisableMercFilesNextPreviousButton( );
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		if (gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex - 1) gubCurMercIndex++;
+		//Since there are 2 larry roachburns
+		if (gubCurMercIndex == MERC_LARRY_ROACHBURN) gubCurMercIndex++;
+		fReDrawScreenFlag = TRUE;
+		EnableDisableMercFilesNextPreviousButton( );
 	}
 }
 
 
-void BtnMercHireButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		//if the players accont is suspended, go back to the main screen and have Speck inform the players
+		if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_SUSPENDED)
 		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			//if the players accont is suspended, go back to the main screen and have Speck inform the players
-			if( LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_SUSPENDED )
-			{
-				guiCurrentLaptopMode = LAPTOP_MODE_MERC;
-				gusMercVideoSpeckSpeech = SPECK_QUOTE_ALTERNATE_OPENING_5_PLAYER_OWES_SPECK_ACCOUNT_SUSPENDED;
-				gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
-
-			}
-
-			//else try to hire the merc
-			else if( MercFilesHireMerc( GetMercIDFromMERCArray( gubCurMercIndex ) ) )
-			{
-				guiCurrentLaptopMode = LAPTOP_MODE_MERC;
-				gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
-
-				//start the merc talking
-//				HandlePlayerHiringMerc( GetMercIDFromMERCArray( gubCurMercIndex ) );
-
-				//We just hired a merc
-				gfJustHiredAMercMerc = TRUE;
-
-				//Display a popup msg box telling the user when and where the merc will arrive
-				DisplayPopUpBoxExplainingMercArrivalLocationAndTime( GetMercIDFromMERCArray( gubCurMercIndex ) );
-			}
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
+			gusMercVideoSpeckSpeech = SPECK_QUOTE_ALTERNATE_OPENING_5_PLAYER_OWES_SPECK_ACCOUNT_SUSPENDED;
+			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		else if (MercFilesHireMerc(GetMercIDFromMERCArray(gubCurMercIndex)))
+		{
+			// else try to hire the merc
+			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
+			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
+
+			//start the merc talking
+//			HandlePlayerHiringMerc(GetMercIDFromMERCArray(gubCurMercIndex));
+
+			gfJustHiredAMercMerc = TRUE;
+			DisplayPopUpBoxExplainingMercArrivalLocationAndTime(GetMercIDFromMERCArray(gubCurMercIndex));
+		}
 	}
 }
 
@@ -668,32 +597,15 @@ BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 }
 
 
-
-void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
-			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		guiCurrentLaptopMode = LAPTOP_MODE_MERC;
+		gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 	}
 }
+
 
 void EnableDisableMercFilesNextPreviousButton( )
 {
