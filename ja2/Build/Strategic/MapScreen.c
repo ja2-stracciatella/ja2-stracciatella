@@ -928,7 +928,7 @@ void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void );
 
 // inventory
 void CreateDestroyTrashCanRegion( void );
-void DoneInventoryMapBtnCallback( GUI_BUTTON *btn,INT32 reason );
+static void DoneInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 // handle cursor for invenetory mode..update to object selected, if needed
@@ -939,14 +939,14 @@ void MAPBeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
 
 // create/destroy inventory button as needed
 void CreateDestroyMapInvButton();
-void PrevInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason );
-void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason );
+static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason);
+static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 // check if cursor needs to be set to checkmark or to the walking guy?
 void UpdateCursorIfInLastSector( void );
 
-void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason);
 void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
 
 // blt inventory panel
@@ -7588,60 +7588,33 @@ void MapScreenMarkRegionBtnCallback(MOUSE_REGION *pRegion, INT32 iReason )
 }
 
 
-
-void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void ContractButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if( ( iDialogueBox != -1 ) )
-	{
-		return;
-	}
+	if (iDialogueBox != -1) return;
 
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-		}
+		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 
-/*
-		if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+#if 0 // XXX was commented out
+		if (bSelectedDestChar != -1 || fPlotForHelicopter == TRUE)
 		{
-			AbortMovementPlottingMode( );
+			AbortMovementPlottingMode();
 			return;
 		}
-*/
+#endif
 
 		// redraw region
-		if( btn->Area.uiFlags & MSYS_HAS_BACKRECT )
-		{
-			fCharacterInfoPanelDirty = TRUE;
-		}
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
+		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fCharacterInfoPanelDirty = TRUE;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-		}
-
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
-			RequestContractMenu( );
-	  }
+		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
+		RequestContractMenu();
 	}
-	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
+	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-		}
+		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText( );
 	}
 }
 
@@ -10045,27 +10018,17 @@ void InvmaskRegionBtnCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 }
 
 
-void DoneInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
+static void DoneInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	// prevent inventory from being closed while stack popup up!
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		if (gMPanelRegion.Cursor != EXTERN_CURSOR && !InItemStackPopup())
 		{
-			btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
-			if ( gMPanelRegion.Cursor != EXTERN_CURSOR && !InItemStackPopup() )
-			{
-				fEndShowInventoryFlag = TRUE;
-			}
+			fEndShowInventoryFlag = TRUE;
 		}
 	}
 }
-
 
 
 void StartConfirmMapMoveMode( INT16 sMapY )
@@ -10540,40 +10503,23 @@ void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
 }
 
 
-void PrevInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
+static void PrevInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
-			GoToPrevCharacterInList( );
-		}
+		GoToPrevCharacterInList();
 	}
 }
 
 
-void NextInventoryMapBtnCallback( GUI_BUTTON *btn, INT32 reason )
+static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
-			GoToNextCharacterInList( );
-		}
+		GoToNextCharacterInList();
 	}
 }
+
 
 void CreateDestroyMapCharacterScrollButtons( void )
 {
@@ -10746,37 +10692,24 @@ void MapScreenDemoOkBoxCallback( UINT8 bExitValue )
 #endif
 
 
-
-void MapSortBtnCallback( GUI_BUTTON *btn, INT32 reason )
+static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = 0;
-
 	// grab the button index value for the sort buttons
-	iValue = MSYS_GetBtnUserData( btn, 0 );
+	INT32 iValue = MSYS_GetBtnUserData(btn, 0);
 
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if( IsMapScreenHelpTextUp() )
+		if (IsMapScreenHelpTextUp())
 		{
-			// stop mapscreen text
 			StopMapScreenHelpText( );
 			return;
 		}
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags &= ~(BUTTON_CLICKED_ON);
-
-			ChangeCharacterListSortMethod( iValue );
-		}
+		ChangeCharacterListSortMethod( iValue );
 	}
 }
-
 
 
 void AddTeamPanelSortButtonsForMapScreen( void )

@@ -393,8 +393,8 @@ void DisplayUpdateBox( void );
 */
 void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWideMode );
 void RenderSoldierSmallFaceForUpdatePanel( INT32 iIndex, INT32 iX, INT32 iY );
-void ContinueUpdateButtonCallback(GUI_BUTTON *btn,INT32 reason);
-void StopUpdateButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason);
+static void StopUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason);
 //INT32 GetSquadListIndexForSquadNumber( INT32 iSquadNumber );
 INT8 FindSquadThatSoldierCanJoin( SOLDIERTYPE *pSoldier );
 BOOLEAN CanSoldierMoveWithVehicleId( SOLDIERTYPE *pSoldier, INT32 iVehicle1Id );
@@ -5221,45 +5221,23 @@ void RenderSoldierSmallFaceForUpdatePanel( INT32 iIndex, INT32 iX, INT32 iY )
 	return;
 }
 
-void ContinueUpdateButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			EndUpdateBox( TRUE );	// restart time compression
-		}
+		EndUpdateBox(TRUE); // restart time compression
 	}
-
-	return;
 }
 
 
-void StopUpdateButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void StopUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			EndUpdateBox( FALSE );  // stop time compression
-		}
+		EndUpdateBox(FALSE); // stop time compression
 	}
-
-	return;
 }
-
 
 
 void EndUpdateBox( BOOLEAN fContinueTimeCompression )

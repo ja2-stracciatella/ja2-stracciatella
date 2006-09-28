@@ -171,13 +171,12 @@ BOOLEAN PlaceObjectInInventoryStash( OBJECTTYPE *pInventorySlot, OBJECTTYPE *pIt
 void RenderItemsForCurrentPageOfInventoryPool( void );
 BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage );
 void UpdateHelpTextForInvnentoryStashSlots( void );
-void MapInventoryPoolPrevBtn( GUI_BUTTON *btn, INT32 reason );
-void MapInventoryPoolNextBtn( GUI_BUTTON *btn, INT32 reason );
+static void MapInventoryPoolPrevBtn(GUI_BUTTON *btn, INT32 reason);
+static void MapInventoryPoolNextBtn(GUI_BUTTON *btn, INT32 reason);
 void DisplayPagesForMapInventoryPool( void );
 void DrawNumberOfIventoryPoolItems( void );
 void CreateMapInventoryPoolDoneButton( void );
 void DestroyInventoryPoolDoneButton( void );
-void MapInventoryPoolDoneBtn( GUI_BUTTON *btn, INT32 reason );
 void DisplayCurrentSector( void );
 void CheckAndUnDateSlotAllocation( void );
 void ClearUpTempUnSeenList( void );
@@ -1569,69 +1568,40 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 	return( TRUE );
 }
 
-void MapInventoryPoolNextBtn( GUI_BUTTON *btn, INT32 reason )
+
+static void MapInventoryPoolNextBtn(GUI_BUTTON *btn, INT32 reason)
 {
-		if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
+		if (iCurrentInventoryPoolPage < iLastInventoryPoolPage)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// if can go to next page, go there
-			if( iCurrentInventoryPoolPage < ( iLastInventoryPoolPage ) )
-			{
-				iCurrentInventoryPoolPage++;
-				fMapPanelDirty = TRUE;
-			}
-		}
-	}
-}
-
-void MapInventoryPoolPrevBtn( GUI_BUTTON *btn, INT32 reason )
-{
-		if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// if can go to next page, go there
-			if( iCurrentInventoryPoolPage > 0 )
-			{
-				iCurrentInventoryPoolPage--;
-				fMapPanelDirty = TRUE;
-			}
+			iCurrentInventoryPoolPage++;
+			fMapPanelDirty = TRUE;
 		}
 	}
 }
 
 
-void MapInventoryPoolDoneBtn( GUI_BUTTON *btn, INT32 reason )
+static void MapInventoryPoolPrevBtn(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
+		if (iCurrentInventoryPoolPage > 0)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// done
-			fShowMapInventoryPool = FALSE;
+			iCurrentInventoryPoolPage--;
+			fMapPanelDirty = TRUE;
 		}
 	}
 }
 
+
+static void MapInventoryPoolDoneBtn(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+  {
+		fShowMapInventoryPool = FALSE;
+	}
+}
 
 
 void DisplayPagesForMapInventoryPool( void )
