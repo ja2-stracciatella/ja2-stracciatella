@@ -538,8 +538,7 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
 void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-// minimize callback
-void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason );
@@ -3807,28 +3806,16 @@ void DeleteLoadPending( void )
 	return;
 }
 
-void BtnErrorCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnErrorCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fErrorFlag=FALSE;
-
-		}
+		fErrorFlag = FALSE;
 	}
 }
+
+
 void CreateDestroyErrorButton( void )
 {
  static BOOLEAN fOldErrorFlag=FALSE;
@@ -4838,75 +4825,53 @@ void DestroyMinimizeButtonForCurrentMode( void )
 }
 
 
-void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-	  if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-	    btn->uiFlags|=(BUTTON_CLICKED_ON);
-		}
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
+		switch (guiCurrentLaptopMode)
 		{
-		  btn->uiFlags&=~(BUTTON_CLICKED_ON);
+			case LAPTOP_MODE_EMAIL:
+				gLaptopProgramStates[LAPTOP_PROGRAM_MAILER] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[0], guiTITLEBARICONS, 0);
+				break;
 
-			switch( guiCurrentLaptopMode )
-			{
-			  case( LAPTOP_MODE_EMAIL ):
-					gLaptopProgramStates[ LAPTOP_PROGRAM_MAILER ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[ 0 ], guiTITLEBARICONS, 0 );
-				  SetCurrentToLastProgramOpened( );
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
+			case LAPTOP_MODE_FILES:
+				gLaptopProgramStates[LAPTOP_PROGRAM_FILES] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[5], guiTITLEBARICONS, 2);
 				break;
-				case( LAPTOP_MODE_FILES ):
-					gLaptopProgramStates[ LAPTOP_PROGRAM_FILES ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[5], guiTITLEBARICONS, 2 );
-				  SetCurrentToLastProgramOpened( );
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
+
+			case LAPTOP_MODE_FINANCES:
+				gLaptopProgramStates[LAPTOP_PROGRAM_FINANCES] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[2], guiTITLEBARICONS, 5);
 				break;
-				case( LAPTOP_MODE_FINANCES ):
-					gLaptopProgramStates[ LAPTOP_PROGRAM_FINANCES ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[ 2 ], guiTITLEBARICONS, 5 );
-					SetCurrentToLastProgramOpened( );
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
+
+			case LAPTOP_MODE_HISTORY:
+				gLaptopProgramStates[LAPTOP_PROGRAM_HISTORY] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[4], guiTITLEBARICONS, 4);
 				break;
-				case( LAPTOP_MODE_HISTORY ):
-					gLaptopProgramStates[ LAPTOP_PROGRAM_HISTORY ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[4], guiTITLEBARICONS, 4 );
-					SetCurrentToLastProgramOpened( );
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
+
+			case LAPTOP_MODE_PERSONNEL:
+				gLaptopProgramStates[LAPTOP_PROGRAM_PERSONNEL] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[3], guiTITLEBARICONS, 3);
 				break;
-				case( LAPTOP_MODE_PERSONNEL ):
-					gLaptopProgramStates[ LAPTOP_PROGRAM_PERSONNEL ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[3], guiTITLEBARICONS, 3 );
-					SetCurrentToLastProgramOpened( );
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
+
+			case LAPTOP_MODE_NONE:
+				// nothing
+				return;
+
+			default:
+				gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] = LAPTOP_PROGRAM_MINIMIZED;
+				InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[7], guiTITLEBARICONS, 1);
+				gfShowBookmarks = FALSE;
 				break;
-				case( LAPTOP_MODE_NONE ):
-				 // nothing
-				break;
-				default:
-					gLaptopProgramStates[ LAPTOP_PROGRAM_WEB_BROWSER ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pLaptopIcons[ 7 ], guiTITLEBARICONS, 1 );
-					SetCurrentToLastProgramOpened( );
-					gfShowBookmarks = FALSE;
-					fMinizingProgram = TRUE;
-					fInitTitle = TRUE;
-				break;
-			}
 		}
+		SetCurrentToLastProgramOpened();
+		fMinizingProgram = TRUE;
+		fInitTitle = TRUE;
 	}
 }
+
 
 INT32 FindLastProgramStillOpen( void )
 {
