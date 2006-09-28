@@ -1108,7 +1108,8 @@ BOOLEAN	UpdateMercInfo(void)
 
 BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 {
-	UINT16 str[SIZE_MERC_BIO_INFO / 2];
+	UINT16 strbio[SIZE_MERC_BIO_INFO / 2];
+	UINT16 stradd[SIZE_MERC_ADDITIONAL_INFO / 2];
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT16		i;
@@ -1130,15 +1131,15 @@ BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 		return( FALSE );
 	}
 
-	if (!FileRead(hFile, str, sizeof(str), &uiBytesRead))
+	if (!FileRead(hFile, strbio, sizeof(strbio), &uiBytesRead))
 	{
 		return( FALSE );
 	}
 
 	// Decrement, by 1, any value > 32
-	for (i = 0; i < SIZE_MERC_BIO_INFO / 2 - 1 && str[i] != 0; i++ )
+	for (i = 0; i < SIZE_MERC_BIO_INFO / 2 - 1 && strbio[i] != 0; i++ )
 	{
-		pInfoString[i] = (str[i] > 33 ? str[i] - 1 : str[i]);
+		pInfoString[i] = (strbio[i] > 33 ? strbio[i] - 1 : strbio[i]);
 		#ifdef POLISH
 			switch( pInfoString[ i ] )
 			{
@@ -1175,15 +1176,15 @@ BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 		return( FALSE );
 	}
 
-	if (!FileRead(hFile, str, sizeof(str), &uiBytesRead))
+	if (!FileRead(hFile, stradd, sizeof(stradd), &uiBytesRead))
 	{
 		return( FALSE );
 	}
 
 	// Decrement, by 1, any value > 32
-	for (i = 0; i < SIZE_MERC_BIO_INFO / 2 - 1 && str[i] != 0; i++ )
+	for (i = 0; i < SIZE_MERC_ADDITIONAL_INFO / 2 - 1 && stradd[i] != 0; i++ )
 	{
-		pAddInfo[i] = (str[i] > 33 ? str[i] - 1 : str[i]);
+		pAddInfo[i] = (stradd[i] > 33 ? stradd[i] - 1 : stradd[i]);
 		#ifdef POLISH
 			switch( pAddInfo[ i ] )
 			{
