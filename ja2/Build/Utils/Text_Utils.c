@@ -9,6 +9,7 @@
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 {
+	UINT16 str_name[SIZE_ITEM_NAME / 2];
 	HWFILE		hFile;
 	UINT32		uiBytesRead;
 	UINT16		i;
@@ -32,17 +33,16 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 		return( FALSE );
 	}
 
-	if( !FileRead( hFile, pNameString, SIZE_ITEM_NAME, &uiBytesRead) )
+	if (!FileRead(hFile, str_name, sizeof(str_name), &uiBytesRead))
 	{
 		FileClose(hFile);
 		return( FALSE );
 	}
 
 	// Decrement, by 1, any value > 32
-	for(i=0; (i<SIZE_ITEM_NAME) && (pNameString[i] != 0); i++ )
+	for (i = 0; i < SIZE_ITEM_NAME / 2 - 1 && str_name[i] != 0; i++ )
 	{
-		if( pNameString[i] > 33 )
-			pNameString[i] -= 1;
+		pNameString[i] = (str_name[i] > 33 ? str_name[i] - 1 : str_name[i]);
 		#ifdef POLISH
 			switch( pNameString[ i ] )
 			{
@@ -69,12 +69,15 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			}
 		#endif
 	}
+	pNameString[i] = L'\0';
 
 	// condition added by Chris - so we can get the name without the item info
 	// when desired, by passing in a null pInfoString
 
 	if (pInfoString != NULL)
 	{
+		UINT16 str_info[SIZE_ITEM_INFO / 2];
+
 		// Get the additional info
 		uiStartSeekAmount = ((SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex ) + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME;
 		if ( FileSeek( hFile, uiStartSeekAmount, FILE_SEEK_FROM_START ) == FALSE )
@@ -83,17 +86,16 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 			return( FALSE );
 		}
 
-		if( !FileRead( hFile, pInfoString, SIZE_ITEM_INFO, &uiBytesRead) )
+		if (!FileRead(hFile, str_info, sizeof(str_info), &uiBytesRead))
 		{
 			FileClose(hFile);
 			return( FALSE );
 		}
 
 		// Decrement, by 1, any value > 32
-		for(i=0; (i<SIZE_ITEM_INFO) && (pInfoString[i] != 0); i++ )
+		for (i = 0; i < SIZE_ITEM_INFO / 2 - 1 && str_info[i] != 0; i++ )
 		{
-			if( pInfoString[i] > 33 )
-				pInfoString[i] -= 1;
+			pInfoString[i] = (str_info[i] > 33 ? str_info[i] - 1 : str_info[i]);
 			#ifdef POLISH
 				switch( pInfoString[ i ] )
 				{
@@ -120,6 +122,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 				}
 			#endif
 		}
+		pInfoString[i] = L'\0';
 	}
 
 	FileClose(hFile);
@@ -128,6 +131,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 
 BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 {
+	UINT16 str[SIZE_ITEM_NAME / 2];
 	HWFILE		hFile;
 //  wchar_t		DestString[ SIZE_MERC_BIO_INFO ];
 	UINT32		uiBytesRead;
@@ -150,17 +154,16 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 		return( FALSE );
 	}
 
-	if( !FileRead( hFile, pNameString, SIZE_ITEM_NAME, &uiBytesRead) )
+	if (!FileRead(hFile, str, sizeof(str), &uiBytesRead))
 	{
 		FileClose(hFile);
 		return( FALSE );
 	}
 
 	// Decrement, by 1, any value > 32
-	for(i=0; (i<SIZE_ITEM_NAME) && (pNameString[i] != 0); i++ )
+	for (i = 0; i < SIZE_ITEM_NAME / 2 - 1 && str[i] != 0; i++ )
 	{
-		if( pNameString[i] > 33 )
-			pNameString[i] -= 1;
+		pNameString[i] = (str[i] > 33 ? str[i] - 1 : str[i]);
 		#ifdef POLISH
 			switch( pNameString[ i ] )
 			{
@@ -187,6 +190,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 			}
 		#endif
 	}
+	pNameString[i] = '\0';
 
 	FileClose(hFile);
 	return(TRUE);
