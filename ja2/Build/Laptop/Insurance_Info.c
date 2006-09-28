@@ -69,11 +69,11 @@ BOOLEAN		InsuranceInfoSubPagesVisitedFlag[ INS_INFO_LAST_PAGE-1 ];
 
 
 INT32		guiInsPrevButtonImage;
-void		BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsPrevBackButton;
 
 INT32		guiInsNextButtonImage;
-void		BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsNextBackButton;
 
 
@@ -246,65 +246,27 @@ void RenderInsuranceInfo()
 }
 
 
-
-void BtnInsPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			if( gubCurrentInsInfoSubPage > 0 )
-				gubCurrentInsInfoSubPage --;
-
-			ChangingInsuranceInfoSubPage( gubCurrentInsInfoSubPage );
-//			fPausedReDrawScreenFlag = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		if (gubCurrentInsInfoSubPage > 0) gubCurrentInsInfoSubPage--;
+		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
+//		fPausedReDrawScreenFlag = TRUE;
 	}
 }
 
-void BtnInsNextButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			if( gubCurrentInsInfoSubPage < (INS_INFO_LAST_PAGE -1) )
-				gubCurrentInsInfoSubPage ++;
-
-			ChangingInsuranceInfoSubPage( gubCurrentInsInfoSubPage );
-
-//			fPausedReDrawScreenFlag = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		if (gubCurrentInsInfoSubPage < INS_INFO_LAST_PAGE - 1) gubCurrentInsInfoSubPage++;
+		ChangingInsuranceInfoSubPage(gubCurrentInsInfoSubPage);
+//		fPausedReDrawScreenFlag = TRUE;
 	}
 }
+
 
 void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {

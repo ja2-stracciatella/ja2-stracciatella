@@ -136,25 +136,22 @@ MOUSE_REGION    gSelectedInsuranceContractLinkRegion[2];
 void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 INT32		guiInsContractPrevButtonImage;
-void		BtnInsContractPrevButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsContractPrevBackButton;
 
 INT32		guiInsContractNextButtonImage;
-void		BtnInsContractNextButtonCallBack(GUI_BUTTON *btn,INT32 reason);
+static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsContractNextBackButton;
 
 
 //Graphic for Accept, Clear button for form 1
 INT32		guiInsuranceAcceptClearForm1ButtonImage;
-void		BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiInsuranceAcceptClearForm1Button;
 
 //Graphic for Accept, Clear button for form 2
-void		BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiInsuranceAcceptClearForm2Button;
 
 //Graphic for Accept, Clear button for form 3
-void		BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiInsuranceAcceptClearForm3Button;
 
 
@@ -437,69 +434,26 @@ void RenderInsuranceContract()
 }
 
 
-
-
-
-void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			if( gsCurrentInsuranceMercIndex > 2 )
-				gsCurrentInsuranceMercIndex -= 3;
-
-			//signal that we want to change the number of forms on the page
-			gfChangeInsuranceFormButtons = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		if (gsCurrentInsuranceMercIndex > 2) gsCurrentInsuranceMercIndex -= 3;
+		// signal that we want to change the number of forms on the page
+		gfChangeInsuranceFormButtons = TRUE;
 	}
 }
 
 
-
-void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-			gsCurrentInsuranceMercIndex += 3;
-
-			//signal that we want to change the number of forms on the page
-			gfChangeInsuranceFormButtons = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		gsCurrentInsuranceMercIndex += 3;
+		// signal that we want to change the number of forms on the page
+		gfChangeInsuranceFormButtons = TRUE;
 	}
 }
-
-
 
 
 BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
@@ -743,138 +697,82 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 }
 
 
-
-void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm1);
+
+		//the accept button
+		if (ubButton == 0)
 		{
-			UINT8	ubButton = (UINT8) MSYS_GetBtnUserData( btn, 0 );
-			UINT8	ubSoldierID = (UINT8) GetSoldierIDFromMercID( gubMercIDForMercInForm1 );
+			//handle the accept button, (global to all accept button
+			HandleAcceptButton(ubSoldierID, 1);
 
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+			//specify the length of the insurance contract
+			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
 
-			//the accept button
-			if( ubButton == 0 )
-			{
-				//handle the accept button, (global to all accept button
-				HandleAcceptButton( ubSoldierID, 1 );
-
-				//specify the length of the insurance contract
-				Menptr[ ubSoldierID ].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
-
-				//reset the insurance length
-				gsForm1InsuranceLengthNumber = 0;
-			}
-
-			//redraw the screen
-			fPausedReDrawScreenFlag = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			//reset the insurance length
+			gsForm1InsuranceLengthNumber = 0;
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+
+		//redraw the screen
+		fPausedReDrawScreenFlag = TRUE;
 	}
 }
 
 
-
-void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm2);
+
+		//the accept button
+		if (ubButton == 0)
 		{
-			UINT8	ubButton = (UINT8) MSYS_GetBtnUserData( btn, 0 );
-			UINT8	ubSoldierID = (UINT8) GetSoldierIDFromMercID( gubMercIDForMercInForm2 );
+			//handle the accept button, (global to all accept button
+			HandleAcceptButton(ubSoldierID, 2);
 
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+			//specify the length of the insurance contract
+			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
 
-			//the accept button
-			if( ubButton == 0 )
-			{
-				//handle the accept button, (global to all accept button
-				HandleAcceptButton( ubSoldierID, 2 );
-
-				//specify the length of the insurance contract
-				Menptr[ ubSoldierID ].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
-
-				//reset the insurance length
-				gsForm2InsuranceLengthNumber = 0;
-			}
-
-			//redraw the screen
-			fPausedReDrawScreenFlag = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			//reset the insurance length
+			gsForm2InsuranceLengthNumber = 0;
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+
+		//redraw the screen
+		fPausedReDrawScreenFlag = TRUE;
 	}
 }
 
 
-
-
-void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm3);
+
+		//the accept button
+		if (ubButton == 0)
 		{
-			UINT8	ubButton = (UINT8) MSYS_GetBtnUserData( btn, 0 );
-			UINT8	ubSoldierID = (UINT8) GetSoldierIDFromMercID( gubMercIDForMercInForm3 );
+			//handle the accept button, (global to all accept button
+			HandleAcceptButton(ubSoldierID, 3);
 
-			btn->uiFlags &= (~BUTTON_CLICKED_ON );
+			//specify the length of the insurance contract
+			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
 
-			//the accept button
-			if( ubButton == 0 )
-			{
-				//handle the accept button, (global to all accept button
-				HandleAcceptButton( ubSoldierID, 3 );
-
-				//specify the length of the insurance contract
-				Menptr[ ubSoldierID ].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
-
-				//reset the insurance length
-				gsForm3InsuranceLengthNumber = 0;
-			}
-
-			//redraw the screen
-			fPausedReDrawScreenFlag = TRUE;
-
-			InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			//reset the insurance length
+			gsForm3InsuranceLengthNumber = 0;
 		}
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+
+		//redraw the screen
+		fPausedReDrawScreenFlag = TRUE;
 	}
 }
-
 
 
 INT8 GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID )
