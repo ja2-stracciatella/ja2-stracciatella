@@ -82,30 +82,21 @@ void MoveAheadAQuestion( void );
 void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void );
 
 
-// answer button callbacks
-void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason);
 
-// other callbacks
-void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn,INT32 reason);
-void PreviousQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason );
-void NextQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason );
-
-
-
-
-
-
-
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
 
 
 void EnterIMPPersonalityQuiz( void )
@@ -512,451 +503,198 @@ void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
 }
 
 
-void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
- if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 0;
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-
-
-			// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-		}
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 0;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
 	}
 }
 
 
-void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 1;
-
-			// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-    	PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 2;
-
-				// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 3;
-
-
-				// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 4;
-
-				// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 5;
-
-
-				// highlight answer
-		  PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 6;
-
-				// highlight answer
-		  PrintIMPPersonalityQuizQuestionAndAnsers( );
-
-				// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 7;
-
-			// redraw text
-			PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 8;
-
-			PrintImpText( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-			fReDrawCharProfile = TRUE;
-
-		}
-	}
-}
-
-void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      // reset buttons
-			ResetQuizAnswerButtons( );
-
-			// now set this button on
-      btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-			// ok, check to see if button was disabled, if so, re enable
-      CheckStateOfTheConfirmButton( );
-
-			iCurrentAnswer = 9;
-
-				// highlight answer
-		  PrintIMPPersonalityQuizQuestionAndAnsers( );
-
-			// the current and last question numbers
-	    PrintQuizQuestionNumber( );
-
-		}
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 1;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
 	}
 }
 
 
-
-
-
-
-void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 2;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
 	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+}
+
+
+static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 3;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 4;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 5;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 6;
+		PrintIMPPersonalityQuizQuestionAndAnsers();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 7;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton();
+		iCurrentAnswer = 8;
+		PrintImpText();
+		PrintQuizQuestionNumber();
+		fReDrawCharProfile = TRUE;
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		ResetQuizAnswerButtons();
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		CheckStateOfTheConfirmButton( );
+		iCurrentAnswer = 9;
+		PrintIMPPersonalityQuizQuestionAndAnsers();
+		PrintQuizQuestionNumber();
+	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		if (iCurrentAnswer != -1)
 		{
+			ResetQuizAnswerButtons( );
+			iQuizAnswerList[giCurrentPersonalityQuizQuestion] = iCurrentAnswer;
+			iCurrentAnswer = -1;
 
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			if( iCurrentAnswer != -1)
+			// next question, JOHNNY!
+			if (giCurrentPersonalityQuizQuestion == giMaxPersonalityQuizQuestion)
 			{
+				giMaxPersonalityQuizQuestion++;
+			}
 
-				// reset all the buttons
-				ResetQuizAnswerButtons( );
+			giCurrentPersonalityQuizQuestion++;
+			CheckAndUpdateNextPreviousIMPQuestionButtonStates();
 
-				// copy the answer into the list
-		    iQuizAnswerList[ giCurrentPersonalityQuizQuestion ] = iCurrentAnswer;
-
-				// reset answer for next question
-				iCurrentAnswer = -1;
-
-				// next question, JOHNNY!
-				if( giCurrentPersonalityQuizQuestion == giMaxPersonalityQuizQuestion )
-				{
-					giMaxPersonalityQuizQuestion++;
-				}
-
-        giCurrentPersonalityQuizQuestion++;
-				CheckAndUpdateNextPreviousIMPQuestionButtonStates();
-
-				// OPPS!, done..time to finish up
-				if( giCurrentPersonalityQuizQuestion > 15)
-				{
-					iCurrentImpPage = IMP_PERSONALITY_FINISH;
-					// process
-					CompileQuestionsInStatsAndWhatNot( );
-				}
+			// OPPS!, done..time to finish up
+			if (giCurrentPersonalityQuizQuestion > 15)
+			{
+				iCurrentImpPage = IMP_PERSONALITY_FINISH;
+				CompileQuestionsInStatsAndWhatNot();
 			}
 		}
 	}
 }
 
 
-
-void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
+		giMaxPersonalityQuizQuestion = 0;
+		fStartOverFlag = TRUE;
 
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
-			giMaxPersonalityQuizQuestion = 0;
-      fStartOverFlag = TRUE;
-
-			iCurrentImpPage = IMP_PERSONALITY;
-			fButtonPendingFlag = TRUE;
-			iCurrentAnswer = -1;
-		}
+		iCurrentImpPage = IMP_PERSONALITY;
+		fButtonPendingFlag = TRUE;
+		iCurrentAnswer = -1;
 	}
 }
+
 
 void ResetQuizAnswerButtons( void )
 {
@@ -1821,43 +1559,20 @@ void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
 
 }
 
-void PreviousQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason )
-{
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-	  return;
 
-	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		MoveBackAQuestion( );
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			MoveBackAQuestion( );
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		}
-	}
-	return;
 }
 
 
-void NextQuestionButtonCallback( GUI_BUTTON *btn, INT32 iReason )
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-	  return;
-
-	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		MoveAheadAQuestion( );
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-			MoveAheadAQuestion( );
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		}
-	}
-	return;
 }

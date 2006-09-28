@@ -128,9 +128,8 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem);
 
-// callbacks
-void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason );
-void BtnIMPConfirmYes( GUI_BUTTON *btn,INT32 reason );
+static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason);
 
 
 void EnterIMPConfirm( void )
@@ -258,138 +257,78 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 }
 
 
-void  BtnIMPConfirmYes(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP Homepage About US button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (LaptopSaveInfo.fIMPCompletedFlag)
 		{
-
-			// reset button
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			if( LaptopSaveInfo.fIMPCompletedFlag )
-			{
-				// already here, leave
-				return;
-			}
-
-			if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
-			{
-				// not enough
-		    return;
-			}
-
-			// line moved by CJC Nov 28 2002 to AFTER the check for money
-			LaptopSaveInfo.fIMPCompletedFlag = TRUE;
-
-			// charge the player
-			AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
-      AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
-			AddCharacterToPlayersTeam( );
-
-			// write the created imp merc
-			WriteOutCurrentImpCharacter( ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) );
-
-			fButtonPendingFlag = TRUE;
-			iCurrentImpPage = IMP_HOME_PAGE;
-
-			// send email notice
-			//AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ) );
-			AddFutureDayStrategicEvent( EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2 );
-			//RenderCharProfile( );
-
-			ResetCharacterStats();
-
-			//Display a popup msg box telling the user when and where the merc will arrive
-			//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId );
-
-			//reset the id of the last merc so we dont get the DisplayPopUpBoxExplainingMercArrivalLocationAndTime() pop up box in another screen by accident
-			LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
+			// already here, leave
+			return;
 		}
-	}
 
+		if (LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE)
+		{
+			// not enough
+			return;
+		}
+
+		// line moved by CJC Nov 28 2002 to AFTER the check for money
+		LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+
+		// charge the player
+		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
+		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
+		AddCharacterToPlayersTeam();
+
+		// write the created imp merc
+		WriteOutCurrentImpCharacter((UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId));
+
+		fButtonPendingFlag = TRUE;
+		iCurrentImpPage = IMP_HOME_PAGE;
+
+		// send email notice
+		//AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin());
+		AddFutureDayStrategicEvent(EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2);
+		//RenderCharProfile();
+
+		ResetCharacterStats();
+
+		//Display a popup msg box telling the user when and where the merc will arrive
+		//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId );
+
+		//reset the id of the last merc so we dont get the DisplayPopUpBoxExplainingMercArrivalLocationAndTime() pop up box in another screen by accident
+		LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
+	}
 }
+
 
 // fixed? by CJC Nov 28 2002
-void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
+static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason)
 {
-  	// btn callback for IMP Homepage About US button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		iCurrentImpPage = IMP_FINISH;
 
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+#if 0 // XXX was commented out
+		LaptopSaveInfo.fIMPCompletedFlag = FALSE;
+		ResetCharacterStats();
+
+		fButtonPendingFlag = TRUE;
+		iCurrentImpPage = IMP_HOME_PAGE;
+#endif
+
+#if 0 // XXX was commented out
+		if( fNoAlreadySelected == TRUE )
 		{
-
-			iCurrentImpPage = IMP_FINISH;
-
-			/*
-
-			LaptopSaveInfo.fIMPCompletedFlag = FALSE;
-			ResetCharacterStats();
-
+			// already selected no
 			fButtonPendingFlag = TRUE;
 			iCurrentImpPage = IMP_HOME_PAGE;
-			*/
-			/*
-			if( fNoAlreadySelected == TRUE )
-			{
-				// already selected no
-				fButtonPendingFlag = TRUE;
-				iCurrentImpPage = IMP_HOME_PAGE;
-			}
-      fNoAlreadySelected = TRUE;
-			*/
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		}
+		fNoAlreadySelected = TRUE;
+#endif
 	}
 }
-
-/*
-void BtnIMPConfirmNo( GUI_BUTTON *btn,INT32 reason )
-{
-
-
-  	// btn callback for IMP Homepage About US button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
-		{
-			LaptopSaveInfo.fIMPCompletedFlag = TRUE;
-			if( fNoAlreadySelected == TRUE )
-			{
-				// already selected no
-				fButtonPendingFlag = TRUE;
-				iCurrentImpPage = IMP_HOME_PAGE;
-			}
-      fNoAlreadySelected = TRUE;
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		}
-	}
-}
-*/
 
 
 #define PROFILE_HAS_SKILL_TRAIT( p, t ) ((p->bSkillTrait == t) || (p->bSkillTrait2 == t))

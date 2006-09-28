@@ -49,8 +49,7 @@ INT32 GlowColorsList[][3] ={
 	{ 0,255,0 },
 };
 
-// btn callbacks
-void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
 
 // position defines
 #define IMP_PLAYER_ACTIVATION_STRING_X LAPTOP_SCREEN_UL_X + 261
@@ -456,25 +455,11 @@ void RemoveIMPHomePageButtons( void )
 }
 
 
-
-void BtnIMPAboutUsCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP Homepage About US button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      iCurrentImpPage = IMP_ABOUT_US;
-			fButtonPendingFlag = TRUE;
-		}
+		iCurrentImpPage = IMP_ABOUT_US;
+		fButtonPendingFlag = TRUE;
 	}
 }

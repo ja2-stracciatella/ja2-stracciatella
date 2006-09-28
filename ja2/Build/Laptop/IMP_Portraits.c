@@ -47,10 +47,9 @@ void CreateIMPPortraitButtons( void );
 void DestroyIMPPortraitButtons( void );
 
 
-// callbacks
-void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, INT32 reason);
 
 void EnterIMPPortraits( void )
 {
@@ -267,102 +266,41 @@ void DestroyIMPPortraitButtons( void )
 }
 
 
-void BtnIMPPortraitNextCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP attrbite begin button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// next picture!!
-			IncrementPictureIndex( );
-
-			fReDrawPortraitScreenFlag = TRUE;
-		}
+		IncrementPictureIndex();
+		fReDrawPortraitScreenFlag = TRUE;
 	}
 }
 
-void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP attrbite begin button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			// previous picture, please!!!
-			DecrementPicture( );
-
-			fReDrawPortraitScreenFlag = TRUE;
-		}
+		DecrementPicture();
+		fReDrawPortraitScreenFlag = TRUE;
 	}
 }
 
-void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP attrbite begin button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		iCurrentImpPage = IMP_MAIN_PAGE;
 
-			// go to main page
-			iCurrentImpPage = IMP_MAIN_PAGE;
+		// current mode now is voice
+		if (iCurrentProfileMode < 4) iCurrentProfileMode = 4;
 
-			// current mode now is voice
-		  if( iCurrentProfileMode < 4 )
-			{
-        iCurrentProfileMode = 4;
-			}
+		// if we are already done, leave
+		if (iCurrentProfileMode == 5) iCurrentImpPage = IMP_FINISH;
 
-			// if we are already done, leave
-	    if( iCurrentProfileMode == 5)
-			{
-	      iCurrentImpPage = IMP_FINISH;
-			}
+		// grab picture number
+		iPortraitNumber = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
 
-			// grab picture number
-			if( fCharacterIsMale  )
-			{
-        // male
-				iPortraitNumber = iCurrentPortrait;
-			}
-			else
-			{
-        // female
-				iPortraitNumber = iCurrentPortrait + ( 8 );
-
-			}
-
-			fButtonPendingFlag = TRUE;
-		}
+		fButtonPendingFlag = TRUE;
 	}
 }

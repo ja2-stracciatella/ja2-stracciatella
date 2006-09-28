@@ -28,9 +28,7 @@ void DestroyIMPAttributeEntranceButtons( void );
 void CreateIMPAttributeEntranceButtons( void );
 
 
-// callbacks
-void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn,INT32 reason);
-
+static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 void EnterIMPAttributeEntrance( void )
@@ -106,24 +104,11 @@ void DestroyIMPAttributeEntranceButtons( void )
 }
 
 
-void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP attrbite begin button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
-			fButtonPendingFlag = TRUE;
-		}
+		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
+		fButtonPendingFlag = TRUE;
 	}
 }

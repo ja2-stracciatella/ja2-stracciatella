@@ -129,9 +129,9 @@ void DrawBonusPointsRemaining( void );
 void SetGeneratedCharacterAttributes( void );
 
 // callbacks
-void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn, INT32 reason);
 void SliderRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason );
 void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void StatAtZeroBoxCallBack( UINT8 bExitValue );
@@ -899,38 +899,22 @@ void DestroyIMPAttributeSelectionButtons( void )
 }
 
 
-
-void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP attrbite begin button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		//are we done diting, or just reviewing the stats?
+		if (fReviewStats)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-			//are we done diting, or just reviewing the stats?
-			if( fReviewStats == TRUE )
-			{
-				iCurrentImpPage = IMP_FINISH;
-			}
-			else
-			{
-        iCurrentImpPage = IMP_ATTRIBUTE_FINISH;
-			}
-			fButtonPendingFlag = TRUE;
+			iCurrentImpPage = IMP_FINISH;
 		}
+		else
+		{
+			iCurrentImpPage = IMP_ATTRIBUTE_FINISH;
+		}
+		fButtonPendingFlag = TRUE;
 	}
 }
-
 
 
 void RenderAttributeBoxes( void )
@@ -1208,81 +1192,32 @@ void DestroyAttributeSliderButtons( void )
 }
 
 
-void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = -1;
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-
-	iValue = (INT32)MSYS_GetBtnUserData( btn, 0 );
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-      DecrementStat( iValue );
-			// stat has changed, rerender
-      fHasAnySlidingBarMoved = TRUE;
-			uiBarToReRender = iValue;
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
+		INT32 iValue = (INT32)MSYS_GetBtnUserData(btn, 0);
 
-    DecrementStat( iValue );
-		fHasAnySlidingBarMoved = TRUE;
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-    uiBarToReRender = iValue;
-	}
-
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-		}
-	}
-}
-
-
-void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn,INT32 reason)
-{
-  INT32 iValue = -1;
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	iValue = (INT32)MSYS_GetBtnUserData( btn, 0 );
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
-	{
-      IncrementStat( iValue  );
-			// stat has changed, rerender
-      fHasAnySlidingBarMoved = TRUE;
-			uiBarToReRender = iValue;
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-
-    IncrementStat( iValue );
+		DecrementStat(iValue);
 		fHasAnySlidingBarMoved = TRUE;
 		uiBarToReRender = iValue;
-		btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-	}
-
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-		}
 	}
 }
 
+
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
+	{
+  	INT32 iValue = (INT32)MSYS_GetBtnUserData(btn, 0);
+
+		IncrementStat(iValue);
+		fHasAnySlidingBarMoved = TRUE;
+		uiBarToReRender = iValue;
+	}
+}
 
 
 void CreateSlideRegionMouseRegions( void )

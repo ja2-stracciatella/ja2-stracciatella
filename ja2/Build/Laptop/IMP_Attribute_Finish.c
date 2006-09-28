@@ -32,9 +32,8 @@ void DestroyAttributeFinishButtons( void );
 extern void SetGeneratedCharacterAttributes( void );
 
 
-// callbacks
-void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 void EnterIMPAttributeFinish( void )
@@ -137,61 +136,36 @@ void DestroyAttributeFinishButtons( void )
 }
 
 
-void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		// gone far enough
+		iCurrentImpPage = IMP_MAIN_PAGE;
+		if (iCurrentProfileMode < 3)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      // gone far enough
-		  iCurrentImpPage = IMP_MAIN_PAGE;
-		  if( iCurrentProfileMode < 3 )
-			{
-        iCurrentProfileMode = 3;
-			}
-		  // if we are already done, leave
-	    if( iCurrentProfileMode == 5)
-			{
-	      iCurrentImpPage = IMP_FINISH;
-			}
-
-			// SET ATTRIBUTES NOW
-			SetGeneratedCharacterAttributes( );
-			fButtonPendingFlag = TRUE;
+			iCurrentProfileMode = 3;
 		}
+		// if we are already done, leave
+		if (iCurrentProfileMode == 5)
+		{
+			iCurrentImpPage = IMP_FINISH;
+		}
+
+		// SET ATTRIBUTES NOW
+		SetGeneratedCharacterAttributes();
+		fButtonPendingFlag = TRUE;
 	}
 }
 
-void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP personality quiz answer button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		// if no, return to attribute
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fReturnStatus = TRUE;
 		fButtonPendingFlag = TRUE;
-		}
 	}
 }

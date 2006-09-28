@@ -60,18 +60,15 @@ BOOLEAN LoadCharacterPortrait( void );
 void DestroyCharacterPortrait( void );
 
 
-// callbacks
-void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn, INT32 reason);
 void FinishMessageBoxCallBack( UINT8 bExitValue );
-extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn,INT32 reason);
-extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn,INT32 reason);
-
-
+extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason);
+extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 void EnterIMPFinish( void )
@@ -279,215 +276,143 @@ void DeleteIMPFinishButtons( void )
 }
 
 
-void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
-	// btn callback for IMP Homepage About US button
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 1 ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, FinishMessageBoxCallBack);
-
-		}
+		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pImpPopUpStrings[1], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, FinishMessageBoxCallBack);
 	}
 }
 
-void BtnIMPFinishDoneCallback(GUI_BUTTON *btn,INT32 reason)
-{
 
+static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
+{
 	// btn callback for Main Page Begin Profiling
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      iCurrentImpPage = IMP_CONFIRM;
-			CreateACharacterFromPlayerEnteredStats( );
-			fButtonPendingFlag = TRUE;
-			iCurrentProfileMode = 0;
-			fFinishedCharGeneration = FALSE;
-			//ResetCharacterStats( );
-		}
+		iCurrentImpPage = IMP_CONFIRM;
+		CreateACharacterFromPlayerEnteredStats();
+		fButtonPendingFlag = TRUE;
+		iCurrentProfileMode = 0;
+		fFinishedCharGeneration = FALSE;
+		//ResetCharacterStats();
 	}
 }
 
 
-void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
 	// btn callback for Main Page Begin Profiling
   static BOOLEAN fAnimateFlag = FALSE;
 	static UINT32 uiBaseTime = 0;
 	static BOOLEAN fState = 0;
+
   INT32 iDifference = 0;
 
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
      uiBaseTime = GetJA2Clock();
-		 SpecifyButtonText( giIMPFinishButton[2], pImpButtonText[ 23 ] );
+		 SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[23]);
      fAnimateFlag = TRUE;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			fButtonPendingFlag = TRUE;
-			uiBaseTime = 0;
-      fAnimateFlag = FALSE;
-			SpecifyButtonText( giIMPFinishButton[2], pImpButtonText[ 2 ] );
-		}
+		fButtonPendingFlag = TRUE;
+		uiBaseTime = 0;
+		fAnimateFlag = FALSE;
+		SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[2]);
 	}
 
 	// get amount of time between callbacks
   iDifference = GetJA2Clock() - uiBaseTime;
 
-	if( fAnimateFlag )
+	if (fAnimateFlag)
 	{
-    if( iDifference > ANIMATE_MIN_TIME )
+    if (iDifference > ANIMATE_MIN_TIME)
 		{
-
 			uiBaseTime = GetJA2Clock();
-			if( fState )
+			if (fState)
 			{
-        SpecifyButtonIcon( giIMPFinishButton[2] , guiANALYSE, 1, 33, 23, FALSE );
-
+        SpecifyButtonIcon(giIMPFinishButton[2], guiANALYSE, 1, 33, 23, FALSE);
 				fState = FALSE;
 			}
 			else
 			{
-        SpecifyButtonIcon( giIMPFinishButton[2] , guiANALYSE, 0, 33, 23, FALSE );
-
+        SpecifyButtonIcon(giIMPFinishButton[2], guiANALYSE, 0, 33, 23, FALSE);
 				fState = TRUE;
 			}
-
-		}
-	}
-
-
-}
-
-void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn,INT32 reason)
-{
-
-	// btn callback for Main Page Begin Profiling
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-  // if not this far in char generation, don't alot ANY action
-	if( iCurrentProfileMode < 2 )
-	{
-		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		return;
-	}
-
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
-			fButtonPendingFlag = TRUE;
-			SpecifyButtonText( giIMPFinishButton[2], pImpButtonText[ 2 ] );
 		}
 	}
 }
 
-void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn,INT32 reason)
-{
 
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
+{
 	// btn callback for Main Page Begin Profiling
 
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
   // if not this far in char generation, don't alot ANY action
-	if( iCurrentProfileMode < 3 )
+	if (iCurrentProfileMode < 2)
 	{
-		btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
+		btn->uiFlags &= ~BUTTON_CLICKED_ON;
 		return;
 	}
 
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
+		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
+		fButtonPendingFlag = TRUE;
+		SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[2]);
+	}
+}
+
+
+static void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn, INT32 reason)
+{
+	// btn callback for Main Page Begin Profiling
+
+  // if not this far in char generation, don't alot ANY action
+	if (iCurrentProfileMode < 3)
+	{
+		btn->uiFlags &= ~BUTTON_CLICKED_ON;
+		return;
+	}
+
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
 		 sFaceX = 253;
 		 sFaceY = 247;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		  sFaceX = 253;
-			sFaceY = 245;
-		}
+		sFaceX = 253;
+		sFaceY = 245;
 	}
 }
 
 
-void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 {
-
 	// btn callback for Main Page Begin Profiling
 
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
   // if not this far in char generation, don't alot ANY action
-	if( iCurrentProfileMode < 4 )
+	if (iCurrentProfileMode < 4)
 	{
-		btn->uiFlags&=~(BUTTON_CLICKED_ON);
+		btn->uiFlags &= ~BUTTON_CLICKED_ON;
 		fButtonPendingFlag = TRUE;
 		return;
 	}
 
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		// play voice
+		if (!SoundIsPlaying(uiVoiceSound))
 		{
-      // play voice
-			if( ! SoundIsPlaying( uiVoiceSound ) )
-			{
-        uiVoiceSound = PlayVoice( );
-			}
-			btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			fButtonPendingFlag = TRUE;
+			uiVoiceSound = PlayVoice();
 		}
+		fButtonPendingFlag = TRUE;
 	}
 }
+
 
 BOOLEAN RenderCharProfileFinishFace( void )
 {
