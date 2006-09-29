@@ -98,7 +98,6 @@ MMRESULT timeKillEvent(MMRESULT);
 void GetSystemDirectory(char*, size_t);
 void _splitpath(const char*, char*, char*, char*, char*);
 
-int GetPrivateProfileString(const char*, const char*, const char*, const char*, size_t, const char*);
 int WritePrivateProfileString(const char*, const char*, const char*, const char*);
 int GetLogicalDriveStrings(size_t, const char*);
 int GetDriveType(const char*);
@@ -106,6 +105,9 @@ int GetVolumeInformation(const char*, const char*, size_t, UINT32*, UINT32*, UIN
 #define DRIVE_CDROM 0
 #define ERROR_SUCCESS 0
 #endif
+
+size_t GetPrivateProfileString(const char* app_name, const char* key_name, const char* default_value, char* out_buf, size_t buf_size, const char* filename);
+
 
 int GetLastError(void);
 #define ERROR_NOT_READY 1

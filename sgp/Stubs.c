@@ -1,6 +1,7 @@
 #include "Stubs.h"
 #include <SDL.h>
 #include <stdio.h>
+#include <string.h>
 
 
 void GetCursorPos(POINT* pos)
@@ -17,6 +18,14 @@ void GetCursorPos(POINT* pos)
 UINT32 GetTickCount(void)
 {
 	return SDL_GetTicks();
+}
+
+
+size_t GetPrivateProfileString(const char* app_name, const char* key_name, const char* default_value, char* out_buf, size_t buf_size, const char* filename)
+{
+	FIXME
+	strlcpy(out_buf, default_value, buf_size);
+	return strlen(out_buf);
 }
 
 
