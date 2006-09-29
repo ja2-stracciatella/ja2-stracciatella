@@ -28,6 +28,7 @@
 #include "Types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -849,7 +850,9 @@ BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory )
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	strcpy(pcDirectory, "./");
+	return TRUE;
 #else
 	if (GetCurrentDirectory( 512, pcDirectory ) == 0)
 	{
@@ -1054,7 +1057,9 @@ BOOLEAN EraseDirectory(const char *pcDirectory)
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	strcpy(pcDirectory, "./");
+	return TRUE;
 #else
 	SGPFILENAME	ModuleFilename;
 	UINT32 cnt;
@@ -1287,17 +1292,13 @@ BOOLEAN FileClearAttributes(const char *strFilename)
 //returns true if at end of file, else false
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
-	HANDLE	hRealFile;
+	FILE* hRealFile;
 //	UINT8		Data;
 	UINT32	uiNumberOfBytesRead=0;
 	UINT32	uiOldFilePtrLoc=0;
 	UINT32	uiEndOfFilePtrLoc=0;
-	UINT32	temp=0;
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
 
@@ -1308,13 +1309,14 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
 		//Get the current position of the file pointer
-		uiOldFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_CURRENT );
+		uiOldFilePtrLoc = ftell(hRealFile);
 
 		//Get the end of file ptr location
-		uiEndOfFilePtrLoc = SetFilePointer( hRealFile, 0, NULL, FILE_END );
+		fseek(hRealFile, 0, SEEK_END);
+		uiEndOfFilePtrLoc = ftell(hRealFile);
 
 		//reset back to the original location
-		temp = SetFilePointer( hRealFile, -( (INT32)( uiEndOfFilePtrLoc - uiOldFilePtrLoc ) ), NULL, FILE_END );
+		fseek(hRealFile, uiOldFilePtrLoc, SEEK_SET);
 
 		//if the 2 pointers are the same, we are at the end of a file
 		if( uiEndOfFilePtrLoc <= uiOldFilePtrLoc )
@@ -1355,7 +1357,6 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 
 	//we are not and the end of a file
 	return( 0 );
-#endif
 }
 
 
