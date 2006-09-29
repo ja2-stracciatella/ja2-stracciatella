@@ -982,7 +982,8 @@ UINT32 uiCount;
 UINT32 SoundLoadDisk(const char *pFilename)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return NO_SAMPLE;
 #else
 HWFILE	hFile;
 UINT32	uiSize, uiSample;
