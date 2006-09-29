@@ -326,9 +326,6 @@ BOOLEAN ReloadTilesetSlot( INT32 iSlot )
 
 BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   SGPFILENAME			cTemp;
 	UINT32					uiLoop;
 
@@ -455,7 +452,6 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 	}
 
 	return( TRUE );
-#endif
 }
 
 BOOLEAN AddTileSurface( char * cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot )
