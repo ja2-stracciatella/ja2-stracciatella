@@ -15126,7 +15126,36 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	{
+		for (;;) {
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += data * 2;
+			}
+			else
+			{
+				do
+				{
+					UINT32 src = *SrcPtr++;
+
+					if (src != 254)
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[src];
+					}
+					else if (fDoOutline)
+					{
+						*(UINT16*)DestPtr = s16BPPColor;
+					}
+					DestPtr += 2;
+				} while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	} while (--usHeight > 0);
 #else
 	__asm {
 
@@ -16052,7 +16081,30 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	{
+		for (;;) {
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += data * 2;
+			}
+			else
+			{
+				do
+				{
+					if (*SrcPtr++ != 254)
+					{
+						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					}
+					DestPtr += 2;
+				} while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	} while (--usHeight > 0);
 #else
 	__asm {
 
