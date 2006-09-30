@@ -15126,8 +15126,10 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
 #if 1 // XXX TODO
+	do
 	{
-		for (;;) {
+		for (;;)
+		{
 			UINT8 data = *SrcPtr++;
 
 			if (data == 0) break;
@@ -15151,11 +15153,13 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 						*(UINT16*)DestPtr = s16BPPColor;
 					}
 					DestPtr += 2;
-				} while (--data > 0);
+				}
+				while (--data > 0);
 			}
 		}
 		DestPtr += LineSkip;
-	} while (--usHeight > 0);
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
@@ -16081,8 +16085,10 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow( UINT16 *pBuffer, UINT32 uiDestPit
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
 #if 1 // XXX TODO
+	do
 	{
-		for (;;) {
+		for (;;)
+		{
 			UINT8 data = *SrcPtr++;
 
 			if (data == 0) break;
@@ -16100,11 +16106,13 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow( UINT16 *pBuffer, UINT32 uiDestPit
 						*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
 					}
 					DestPtr += 2;
-				} while (--data > 0);
+				}
+				while (--data > 0);
 			}
 		}
 		DestPtr += LineSkip;
-	} while (--usHeight > 0);
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
