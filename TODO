@@ -1,0 +1,16 @@
+high prio
+- get tactical working
+
+med prio
+- investigate on not/incorrectly displayed items in the merc hire view (maybe Blt8BPPDataTo16BPPBufferOutlineShadow())
+
+low prio
+- remove RestrictMouseCursor() et al.
+- r80
+- ingame mouse cursor
+- sound
+
+cosmetic
+- massive code duplication for ROT-1 "encrypted" data (r65, r113)
+- FileCheckEndOfFile() complicated
+- Use FileExistsNoDB() in FileExists()
