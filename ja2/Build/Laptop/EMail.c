@@ -392,27 +392,27 @@ BOOLEAN EnterEmail()
 
 	// title bar
   VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/programtitlebar.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailTitle));
 
 	// the list background
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Mailwindow.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/Mailwindow.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailBackground));
 
 	// the indication/notification box
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\MailIndicator.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/MailIndicator.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailIndicator));
 
 	// the message background
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\emailviewer.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/emailviewer.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailMessage));
 
   // the message background
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\maillistdivider.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/maillistdivider.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMAILDIVIDER));
 
   //AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ) );
@@ -673,7 +673,7 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA\\Email.edt", pSubject, 640*(iMessageOffset), 640);
+	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
 
 	//Make a fake email that will contain the codes ( ie the merc ID )
 	FakeEmail.iFirstData = iFirstData;
@@ -707,7 +707,7 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA\\Email.edt", pSubject, 640*(iMessageOffset), 640);
+	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
 
 	// add message to list
 	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, FALSE, 0, 0 );
@@ -734,7 +734,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA\\Email.edt", pSubject, 640*(iMessageOffset), 640);
+	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
 
 	// add message to list
 	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, TRUE, 0, 0 );
@@ -1438,7 +1438,7 @@ void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-  swprintf(sString, lengthof(sString), L"%s %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
+  swprintf(sString, lengthof(sString), L"%S %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
   mprintf(DATE_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ),sString);
 
 	SetFont( MESSAGE_FONT );
@@ -1955,7 +1955,7 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 
 		// add X button
-    giMessageButtonImage[0]=  LoadButtonImage( "LAPTOP\\X.sti" ,-1,0,-1,1,-1 );
+    giMessageButtonImage[0]=  LoadButtonImage( "LAPTOP/X.sti" ,-1,0,-1,1,-1 );
 	  giMessageButton[0] = QuickCreateButton( giMessageButtonImage[0], BUTTON_X + 2,(INT16) ( BUTTON_Y + ( INT16 )iViewerY + 1),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageXCallback );
@@ -1964,12 +1964,12 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		if( giNumberOfPagesToCurrentEmail > 2 )
 		{
 			// add next and previous mail page buttons
-			giMailMessageButtonsImage[0]=  LoadButtonImage( "LAPTOP\\NewMailButtons.sti" ,-1,0,-1,3,-1 );
+			giMailMessageButtonsImage[0]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,0,-1,3,-1 );
 			giMailMessageButtons[0] = QuickCreateButton( giMailMessageButtonsImage[0], PREVIOUS_PAGE_BUTTON_X,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnPreviousEmailPageCallback );
 
-			giMailMessageButtonsImage[1]=  LoadButtonImage( "LAPTOP\\NewMailButtons.sti" ,-1,1,-1,4,-1 );
+			giMailMessageButtonsImage[1]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,1,-1,4,-1 );
 			giMailMessageButtons[1] = QuickCreateButton( giMailMessageButtonsImage[1], NEXT_PAGE_BUTTON_X ,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNextEmailPageCallback );
@@ -1978,7 +1978,7 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 		}
 
-    giMailMessageButtonsImage[2]=  LoadButtonImage( "LAPTOP\\NewMailButtons.sti" ,-1,2,-1,5,-1 );
+    giMailMessageButtonsImage[2]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,2,-1,5,-1 );
 		giMailMessageButtons[2] = QuickCreateButton( giMailMessageButtonsImage[2], DELETE_BUTTON_X,(INT16) ( BUTTON_LOWER_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteCallback );
@@ -2039,7 +2039,7 @@ void CreateDestroyNewMailButton()
   fOldNewMailFlag=TRUE;
 
 	// load image and setup button
-	giNewMailButtonImage[0]=LoadButtonImage( "LAPTOP\\YesNoButtons.sti" ,-1,0,-1,1,-1 );
+	giNewMailButtonImage[0]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,0,-1,1,-1 );
   giNewMailButton[0]= QuickCreateButton( giNewMailButtonImage[0], NEW_BTN_X+10, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST-2,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNewOkback);
@@ -2419,13 +2419,13 @@ void CreateDestroyDeleteNoticeMailButton()
 
 	 // YES button
   fOldDeleteMailFlag=TRUE;
-	giDeleteMailButtonImage[0]=LoadButtonImage( "LAPTOP\\YesNoButtons.sti" ,-1,0,-1,1,-1 );
+	giDeleteMailButtonImage[0]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,0,-1,1,-1 );
   giDeleteMailButton[0]= QuickCreateButton( giDeleteMailButtonImage[0], NEW_BTN_X+1, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteYesback);
 
 	// NO button
-	giDeleteMailButtonImage[1]=LoadButtonImage( "LAPTOP\\YesNoButtons.sti" ,-1,2,-1,3,-1 );
+	giDeleteMailButtonImage[1]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,2,-1,3,-1 );
   giDeleteMailButton[1]= QuickCreateButton( giDeleteMailButtonImage[1], NEW_BTN_X+40, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteNoback);
@@ -2714,7 +2714,7 @@ void CreateMailScreenButtons( void )
 	// create sort buttons, right now - not finished
 
 	// read sort
-	giSortButtonImage[0]=  LoadButtonImage( "LAPTOP\\mailbuttons.sti" ,-1,0,-1,4,-1 );
+	giSortButtonImage[0]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,0,-1,4,-1 );
 	giSortButton[0] = QuickCreateButton( giSortButtonImage[0], ENVELOPE_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ReadCallback);
@@ -2722,7 +2722,7 @@ void CreateMailScreenButtons( void )
 
 
 	// subject sort
-	giSortButtonImage[1]=  LoadButtonImage( "LAPTOP\\mailbuttons.sti" ,-1,1,-1,5,-1 );
+	giSortButtonImage[1]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,1,-1,5,-1 );
 	giSortButton[1] = QuickCreateButton( giSortButtonImage[1], FROM_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FromCallback);
@@ -2733,7 +2733,7 @@ void CreateMailScreenButtons( void )
 
 
 	// sender sort
-	giSortButtonImage[2]=  LoadButtonImage( "LAPTOP\\mailbuttons.sti" ,-1,2,-1,6,-1 );
+	giSortButtonImage[2]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,2,-1,6,-1 );
 	giSortButton[2] = QuickCreateButton( giSortButtonImage[2], SUBJECT_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)SubjectCallback );
@@ -2745,7 +2745,7 @@ void CreateMailScreenButtons( void )
 
 
 	// date sort
-  giSortButtonImage[3]=  LoadButtonImage( "LAPTOP\\mailbuttons.sti" ,-1,3,-1,7,-1 );
+  giSortButtonImage[3]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,3,-1,7,-1 );
 	giSortButton[3] = QuickCreateButton( giSortButtonImage[3], DATE_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DateCallback);
@@ -3187,14 +3187,14 @@ void HandleIMPCharProfileResultsMessage( void)
 	  while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 			// have to place players name into string for first record
 			if( iCounter == 0)
 			{
 				wchar_t	zTemp[512];
 
-				swprintf( zTemp, lengthof(zTemp), L" %s", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
+				swprintf( zTemp, lengthof(zTemp), L" %S", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
 				wcscat( pString, zTemp );
 			}
 
@@ -3213,7 +3213,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3254,13 +3254,13 @@ void HandleIMPCharProfileResultsMessage( void)
 
 		// personality tick
 //  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
-//		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + Random( IMP_PERSONALITY_LENGTH - 1 ) + 1 ), MAIL_STRING_SIZE );
-		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + 1 ), MAIL_STRING_SIZE );
+//		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + Random( IMP_PERSONALITY_LENGTH - 1 ) + 1 ), MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + 1 ), MAIL_STRING_SIZE );
 		// add to list
 		AddEmailRecordToList( pString );
 
 		// persoanlity paragraph
-		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_PERSONALITY_LENGTH ), MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_PERSONALITY_LENGTH ), MAIL_STRING_SIZE );
     // add to list
 		AddEmailRecordToList( pString );
 
@@ -3268,7 +3268,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bPersonalityTrait == FEAR_OF_INSECTS )
 		{
       // persoanlity paragraph
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_PERSONALITY_LENGTH + 1 ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_PERSONALITY_LENGTH + 1 ), MAIL_STRING_SIZE );
 			// add to list
 			AddEmailRecordToList( pString );
 		}
@@ -3282,7 +3282,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3326,20 +3326,20 @@ void HandleIMPCharProfileResultsMessage( void)
 		}
 
 		// attitude title
-		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet ), MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet ), MAIL_STRING_SIZE );
 		// add to list
 		AddEmailRecordToList( pString );
 
 
 		// attitude tick
 //  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
-//		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + Random( IMP_ATTITUDE_LENGTH - 2 ) + 1 ), MAIL_STRING_SIZE );
-		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + 1 ), MAIL_STRING_SIZE );
+//		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + Random( IMP_ATTITUDE_LENGTH - 2 ) + 1 ), MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + 1 ), MAIL_STRING_SIZE );
 		// add to list
 		AddEmailRecordToList( pString );
 
 		// attitude paragraph
-		LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_ATTITUDE_LENGTH - 1 ), MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_ATTITUDE_LENGTH - 1 ), MAIL_STRING_SIZE );
     // add to list
 		AddEmailRecordToList( pString );
 
@@ -3347,7 +3347,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( iOffSet != IMP_ATTITUDE_NORMAL )
 		{
       // attitude paragraph
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_ATTITUDE_LENGTH ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + IMP_ATTITUDE_LENGTH ), MAIL_STRING_SIZE );
       // add to list
 		  AddEmailRecordToList( pString );
 		}
@@ -3362,7 +3362,7 @@ void HandleIMPCharProfileResultsMessage( void)
 	  while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3406,7 +3406,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while (iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3419,7 +3419,7 @@ void HandleIMPCharProfileResultsMessage( void)
     if ( fSufficientMarkSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MARK  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MARK  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3429,7 +3429,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if ( fSufficientMedSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MED  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MED  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3438,7 +3438,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if ( fSufficientMechSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MECH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_MECH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3448,7 +3448,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if ( fSufficientExplSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_EXPL  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_IMPERIAL_EXPL  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3494,7 +3494,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3506,7 +3506,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMarkSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MARK  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MARK  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3515,7 +3515,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMedSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MED  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MED  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3524,7 +3524,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMechSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MECH ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_MECH ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3533,7 +3533,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientExplSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_EXPL ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NEED_TRAIN_EXPL ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3578,7 +3578,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3590,7 +3590,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMechSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MECH ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MECH ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3599,7 +3599,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMarkSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MARK ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MARK ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3608,7 +3608,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientMedSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MED ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_MED ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3616,7 +3616,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientExplSkill )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_EXPL ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_NO_SKILL_EXPL ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3631,7 +3631,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3643,7 +3643,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == KNIFING )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == KNIFING ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_KNIFE ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_KNIFE ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3653,7 +3653,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == LOCKPICKING)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == LOCKPICKING) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_LOCK ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_LOCK ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3663,7 +3663,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == HANDTOHAND )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == HANDTOHAND ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_HAND ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_HAND ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3673,7 +3673,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == ELECTRONICS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == ELECTRONICS ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_ELEC ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_ELEC ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3682,7 +3682,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == NIGHTOPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == NIGHTOPS ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_NIGHT ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_NIGHT ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3691,7 +3691,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == THROWING)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == THROWING) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_THROW ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_THROW ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3700,7 +3700,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == TEACHING )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == TEACHING ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_TEACH ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_TEACH ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3709,7 +3709,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == HEAVY_WEAPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == HEAVY_WEAPS ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_HEAVY ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_HEAVY ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3718,7 +3718,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == AUTO_WEAPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == AUTO_WEAPS ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_AUTO ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_AUTO ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3727,7 +3727,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == STEALTHY )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == STEALTHY ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_STEALTH ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_STEALTH ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3736,7 +3736,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == AMBIDEXT)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == AMBIDEXT) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_AMBI ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_AMBI ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3745,7 +3745,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == THIEF )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == THIEF ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_THIEF ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_THIEF ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3754,7 +3754,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == MARTIALARTS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == MARTIALARTS ) )
     {
       	// read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_MARTIAL ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_SKILLS_SPECIAL_MARTIAL ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3770,7 +3770,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3830,7 +3830,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3842,7 +3842,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientHlth )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_HEALTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_HEALTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3852,7 +3852,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientDex )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_DEXTERITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_DEXTERITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3861,7 +3861,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientStr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_STRENGTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_STRENGTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3870,7 +3870,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientAgi )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_AGILITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_AGILITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3879,7 +3879,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientWis )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_WISDOM  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_WISDOM  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3888,7 +3888,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientLdr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_LEADERSHIP  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_SUPER_LEADERSHIP  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3952,7 +3952,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -3964,7 +3964,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientHlth )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_HEALTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_HEALTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3974,7 +3974,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientDex )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_DEXTERITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_DEXTERITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3983,7 +3983,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientStr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_STRENGTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_STRENGTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -3994,7 +3994,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientAgi )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_AGILITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_AGILITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4003,7 +4003,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientWis )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_WISDOM  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_WISDOM  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4012,7 +4012,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientLdr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_LEADERSHIP  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_LOW_LEADERSHIP  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4076,7 +4076,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -4088,7 +4088,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientHlth )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_HEALTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_HEALTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4099,7 +4099,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientDex )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_DEXTERITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_DEXTERITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4108,7 +4108,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientStr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_STRENGTH  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_STRENGTH  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4119,7 +4119,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientAgi )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_AGILITY  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_AGILITY  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4130,7 +4130,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		if( fSufficientWis )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_WISDOM  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_WISDOM  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4146,7 +4146,7 @@ void HandleIMPCharProfileResultsMessage( void)
     if( fSufficientLdr )
 		{
 			// read one record from email file
-			LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_LEADERSHIP  ), MAIL_STRING_SIZE );
+			LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( IMP_PHYSICAL_VERY_LOW_LEADERSHIP  ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4160,7 +4160,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -4224,7 +4224,7 @@ void HandleIMPCharProfileResultsMessage( void)
     while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -4240,7 +4240,7 @@ void HandleIMPCharProfileResultsMessage( void)
 		while(iEndOfSection > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Impass.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 		  // add to list
 		  AddEmailRecordToList( pString );
@@ -4356,14 +4356,14 @@ void CreateNextPreviousEmailPageButtons( void )
 	// this function will create the buttons to advance and go back email pages
 
 	// next button
-	giMailPageButtonsImage[0]=  LoadButtonImage( "LAPTOP\\NewMailButtons.sti" ,-1,1,-1,4,-1 );
+	giMailPageButtonsImage[0]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,1,-1,4,-1 );
 	giMailPageButtons[0] = QuickCreateButton( giMailPageButtonsImage[0],NEXT_PAGE_X, NEXT_PAGE_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextRegionButtonCallback );
 	SetButtonCursor(giMailPageButtons[0], CURSOR_LAPTOP_SCREEN);
 
 	// previous button
-	giMailPageButtonsImage[1]=  LoadButtonImage( "LAPTOP\\NewMailButtons.sti" ,-1,0,-1,3,-1 );
+	giMailPageButtonsImage[1]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,0,-1,3,-1 );
 	giMailPageButtons[1] = QuickCreateButton( giMailPageButtonsImage[1],PREVIOUS_PAGE_X, NEXT_PAGE_Y,
 									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 									(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PreviousRegionButtonCallback );
@@ -4471,7 +4471,7 @@ BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 	// get and blt the email list background
    // load, blt and delete graphics
 	//VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-//	FilenameForBPP( "LAPTOP\\mailindent.sti", VObjectDesc.ImageFile );
+//	FilenameForBPP( "LAPTOP/mailindent.sti", VObjectDesc.ImageFile );
 	//CHECKF( AddVideoObject( &VObjectDesc, &uiMailIndent ) );
  // GetVideoObject( &hHandle, uiMailIndent );
  // BltVideoObject( FRAME_BUFFER, hHandle, 0,VIEWER_X + INDENT_X_OFFSET, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 10, VO_BLT_SRCTRANSPARENCY,NULL );
@@ -4571,7 +4571,7 @@ void PreProcessEmail( EmailPtr pMail )
 	  while(pMail->usLength > iCounter)
 		{
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA\\Email.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+		  LoadEncryptedDataFromFile( "BINARYDATA/Email.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -4800,7 +4800,7 @@ void ModifyInsuranceEmails( UINT16 usMessageId, INT32 *iResults, EmailPtr pMail,
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{
 		// read one record from email file
-		LoadEncryptedDataFromFile( "BINARYDATA\\Email.edt", pString, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE );
+		LoadEncryptedDataFromFile( "BINARYDATA/Email.edt", pString, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE );
 
 		//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.
 		ReplaceMercNameAndAmountWithProperData( pString, pMail );
