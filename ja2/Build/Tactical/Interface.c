@@ -261,7 +261,7 @@ BOOLEAN InitializeTacticalInterface(  )
   VOBJECT_DESC    VObjectDesc;
 
 	// Load button Interfaces
-	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE\\newicons3.sti", -1,3,4,5,-1 );
+	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE/newicons3.sti", -1,3,4,5,-1 );
 	iIconImages[ SNEAK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 6, 7, 8, -1 );
 	iIconImages[ RUN_IMAGES ]				= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 0, 1, 2, -1 );
 	iIconImages[ CRAWL_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 9, 10, 11, -1 );
@@ -278,7 +278,7 @@ BOOLEAN InitializeTacticalInterface(  )
 	iIconImages[ TOOLKITACTIONC_IMAGES ]	= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 39, 40, 41, -1 );
 	iIconImages[ WIRECUTACTIONC_IMAGES ]	= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 42, 43, 44, -1 );
 
-	iIconImages[ OPEN_DOOR_IMAGES ]				= LoadButtonImage("INTERFACE\\door_op2.sti", -1,9,10,11,-1 );
+	iIconImages[ OPEN_DOOR_IMAGES ]				= LoadButtonImage("INTERFACE/door_op2.sti", -1,9,10,11,-1 );
 	iIconImages[ EXAMINE_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 12, 13, 14, -1 );
 	iIconImages[ LOCKPICK_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 21, 22, 23, -1 );
 	iIconImages[ BOOT_DOOR_IMAGES ]				= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 25, 26, 27, -1 );
@@ -294,129 +294,129 @@ BOOLEAN InitializeTacticalInterface(  )
 
 	if ( GETPIXELDEPTH() == 8 )
 	{
-		strcpy( vs_desc.ImageFile, "INTERFACE\\IN_TEXT_8.pcx" );
+		strcpy( vs_desc.ImageFile, "INTERFACE/IN_TEXT_8.pcx" );
 	}
 	else if ( GETPIXELDEPTH() == 16 )
 	{
-		strcpy( vs_desc.ImageFile, "INTERFACE\\IN_TEXT.STI" );
+		strcpy( vs_desc.ImageFile, "INTERFACE/IN_TEXT.STI" );
 	}
 
 	if( !AddVideoSurface( &vs_desc, &guiINTEXT ) )
-		AssertMsg( 0, "Missing INTERFACE\\In_text.sti");
+		AssertMsg( 0, "Missing INTERFACE/In_text.sti");
 	SetVideoSurfaceTransparency( guiINTEXT, FROMRGB( 255, 0, 0 ) );
 
 
 	// LOAD CLOSE ANIM
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\p_close.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/p_close.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiCLOSE ) )
-		AssertMsg(0, "Missing INTERFACE\\p_close.sti" );
+		AssertMsg(0, "Missing INTERFACE/p_close.sti" );
 
 	// LOAD DEAD ANIM
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\p_dead.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/p_dead.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiDEAD ) )
-		AssertMsg(0, "Missing INTERFACE\\p_dead.sti" );
+		AssertMsg(0, "Missing INTERFACE/p_dead.sti" );
 
 	// LOAD HATCH
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\hatch.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/hatch.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiHATCH ) )
-		AssertMsg(0, "Missing INTERFACE\\hatch.sti" );
+		AssertMsg(0, "Missing INTERFACE/hatch.sti" );
 
 	// LOAD INTERFACE GUN PICTURES
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mdguns.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/mdguns.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiGUNSM ) )
-		AssertMsg(0, "Missing INTERFACE\\mdguns.sti" );
+		AssertMsg(0, "Missing INTERFACE/mdguns.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mdp1items.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/mdp1items.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiP1ITEMS ) )
-		AssertMsg(0, "Missing INTERFACE\\mdplitems.sti" );
+		AssertMsg(0, "Missing INTERFACE/mdplitems.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mdp2items.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/mdp2items.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiP2ITEMS ) )
-		AssertMsg(0, "Missing INTERFACE\\mdp2items.sti" );
+		AssertMsg(0, "Missing INTERFACE/mdp2items.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mdp3items.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/mdp3items.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiP3ITEMS ) )
-		AssertMsg(0, "Missing INTERFACE\\mdp3items.sti" );
+		AssertMsg(0, "Missing INTERFACE/mdp3items.sti" );
 
 	// LOAD INTERFACE BUTTON BORDER
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\button_frame.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/button_frame.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiBUTTONBORDER ) )
-		AssertMsg(0, "Missing INTERFACE\\button_frame.sti" );
+		AssertMsg(0, "Missing INTERFACE/button_frame.sti" );
 
 	// LOAD AIM CUBES
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\aimcubes.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/aimcubes.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiAIMCUBES ) )
-		AssertMsg(0, "Missing INTERFACE\\aimcubes.sti" );
+		AssertMsg(0, "Missing INTERFACE/aimcubes.sti" );
 
 	// LOAD AIM BARS
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\aimbars.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/aimbars.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiAIMBARS ) )
-		AssertMsg(0, "Missing INTERFACE\\aimbars.sti" );
+		AssertMsg(0, "Missing INTERFACE/aimbars.sti" );
 
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventor.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/inventor.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiVEHINV ) )
-		AssertMsg(0, "Missing INTERFACE\\inventor.sti" );
+		AssertMsg(0, "Missing INTERFACE/inventor.sti" );
 
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\burst1.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/burst1.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiBURSTACCUM ) )
-		AssertMsg(0, "Missing INTERFACE\\burst1.sti" );
+		AssertMsg(0, "Missing INTERFACE/burst1.sti" );
 
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\portraiticons.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/portraiticons.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiPORTRAITICONS ) )
-		AssertMsg(0, "Missing INTERFACE\\portraiticons.sti" );
+		AssertMsg(0, "Missing INTERFACE/portraiticons.sti" );
 
 
 
 	// LOAD RADIO
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\radio.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/radio.sti", VObjectDesc.ImageFile);
 
 	if( !AddVideoObject( &VObjectDesc, &guiRADIO ) )
-	//	AssertMsg(0, "Missing INTERFACE\\bracket.sti" );
-		AssertMsg(0, "Missing INTERFACE\\radio.sti" );
+	//	AssertMsg(0, "Missing INTERFACE/bracket.sti" );
+		AssertMsg(0, "Missing INTERFACE/radio.sti" );
 
 	// LOAD RADIO2
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\radio2.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/radio2.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiRADIO2 ) )
-		AssertMsg(0, "Missing INTERFACE\\radio2.sti" );
+		AssertMsg(0, "Missing INTERFACE/radio2.sti" );
 
 	// LOAD com panel 2
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\communicationpopup.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/communicationpopup.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiCOMPANEL ) )
-		AssertMsg(0, "Missing INTERFACE\\communicationpopup.sti" );
+		AssertMsg(0, "Missing INTERFACE/communicationpopup.sti" );
 
 	// LOAD ITEM GRIDS....
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\itemgrid.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/itemgrid.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiITEMPOINTERHATCHES ) )
-		AssertMsg(0, "Missing INTERFACE\\itemgrid.sti" );
+		AssertMsg(0, "Missing INTERFACE/itemgrid.sti" );
 
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\communicationpopup_2.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/communicationpopup_2.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &guiCOMPANELB ) )
-		AssertMsg(0, "Missing INTERFACE\\communicationpopup_2.sti" );
+		AssertMsg(0, "Missing INTERFACE/communicationpopup_2.sti" );
 
 
 	// Alocate message surfaces
@@ -1635,7 +1635,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
     else if ( pSoldier->bAssignment >= ON_DUTY )
     {
 			SetFontForeground( FONT_YELLOW );
-			swprintf( NameStr, lengthof(NameStr), L"(%s)", pAssignmentStrings[ pSoldier->bAssignment ] );
+			swprintf( NameStr, lengthof(NameStr), L"(%S)", pAssignmentStrings[ pSoldier->bAssignment ] );
 			FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 			gprintfdirty( sX, sY, NameStr );
 			mprintf( sX, sY, NameStr );
@@ -1671,14 +1671,14 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
     {
 		  if ( fRaiseName )
 		  {
-			  swprintf( NameStr, lengthof(NameStr), L"%s", pSoldier->name );
+			  swprintf( NameStr, lengthof(NameStr), L"%S", pSoldier->name );
 			  FindFontCenterCoordinates( sXPos, (INT16)( sYPos - 10 ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 			  gprintfdirty( sX, sY, NameStr );
 			  mprintf( sX, sY, NameStr );
 		  }
 		  else
 		  {
-			  swprintf( NameStr, lengthof(NameStr), L"%s", pSoldier->name );
+			  swprintf( NameStr, lengthof(NameStr), L"%S", pSoldier->name );
 			  FindFontCenterCoordinates( sXPos, sYPos, (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
 			  gprintfdirty( sX, sY, NameStr );
 			  mprintf( sX, sY, NameStr );
@@ -2201,7 +2201,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ USE_KEYRING_ICON ], AP_UNLOCK_DOOR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ USE_KEYRING_ICON ], AP_UNLOCK_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ USE_KEYRING_ICON ], zDisp );
 
@@ -2232,7 +2232,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ], AP_USE_CROWBAR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ], AP_USE_CROWBAR );
 	}
 	SetButtonFastHelpText( iActionIcons[ USE_CROWBAR_ICON ], zDisp );
 
@@ -2262,7 +2262,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ], AP_PICKLOCK );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ], AP_PICKLOCK );
 	}
 	SetButtonFastHelpText( iActionIcons[ LOCKPICK_DOOR_ICON ], zDisp );
 
@@ -2294,7 +2294,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ], AP_EXPLODE_DOOR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ], AP_EXPLODE_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ EXPLOSIVE_DOOR_ICON ], zDisp );
 
@@ -2328,7 +2328,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 		}
 		else
 		{
-			swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ], AP_OPEN_DOOR );
+			swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ], AP_OPEN_DOOR );
 		}
 	}
 	else
@@ -2339,7 +2339,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 		}
 		else
 		{
-			swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ], AP_OPEN_DOOR );
+			swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ], AP_OPEN_DOOR );
 		}
 	}
 	SetButtonFastHelpText( iActionIcons[ OPEN_DOOR_ICON ], zDisp );
@@ -2366,7 +2366,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ], AP_EXAMINE_DOOR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ], AP_EXAMINE_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ EXAMINE_DOOR_ICON ], zDisp );
 
@@ -2390,7 +2390,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ], AP_BOOT_DOOR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ], AP_BOOT_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ BOOT_DOOR_ICON ], zDisp );
 
@@ -2415,7 +2415,7 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 	}
 	else
 	{
-		swprintf( zDisp, lengthof(zDisp), L"%s ( %d )", pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ], AP_UNTRAP_DOOR );
+		swprintf( zDisp, lengthof(zDisp), L"%S ( %d )", pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ], AP_UNTRAP_DOOR );
 	}
 	SetButtonFastHelpText( iActionIcons[ UNTRAP_DOOR_ICON ], zDisp );
 
@@ -2925,21 +2925,21 @@ void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, const wchar_t *psString )
 	memset( &VObjectDesc, 0, sizeof( VObjectDesc ) );
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 
-	FilenameForBPP("INTERFACE\\rect.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/rect.sti", VObjectDesc.ImageFile);
 
 	if( !AddVideoObject( &VObjectDesc, &uiBAR ) )
-		AssertMsg(0, "Missing INTERFACE\\rect.sti" );
+		AssertMsg(0, "Missing INTERFACE/rect.sti" );
 
 	//if ( gGameOptions.fTurnTimeLimit )
 	{
-		FilenameForBPP("INTERFACE\\timebargreen.sti", VObjectDesc.ImageFile);
+		FilenameForBPP("INTERFACE/timebargreen.sti", VObjectDesc.ImageFile);
 		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
-			AssertMsg(0, "Missing INTERFACE\\timebargreen.sti" );
+			AssertMsg(0, "Missing INTERFACE/timebargreen.sti" );
 	}
 
-	FilenameForBPP("INTERFACE\\timebaryellow.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("INTERFACE/timebaryellow.sti", VObjectDesc.ImageFile);
 	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
-		AssertMsg(0, "Missing INTERFACE\\timebaryellow.sti" );
+		AssertMsg(0, "Missing INTERFACE/timebaryellow.sti" );
 
 	// Change dest buffer
 	SetFontDestBuffer( uiSurface , 0, 0, 640, 20, FALSE );
@@ -3218,7 +3218,7 @@ void HandleTopMessages( )
 										gTopMessage.uiTimeSinceLastBeep = GetJA2Clock( );
 
 										// Start sample....
-										PlayJA2SampleFromFile( "SOUNDS\\TURN_NEAR_END.WAV", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
+										PlayJA2SampleFromFile( "SOUNDS/TURN_NEAR_END.WAV", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
 									}
 								}
 

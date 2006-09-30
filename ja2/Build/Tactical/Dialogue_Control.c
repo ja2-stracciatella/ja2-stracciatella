@@ -1734,15 +1734,15 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 		{
 			// build name of wav file (characternum + quotenum)
 			#ifdef RUSSIAN
-				sprintf( zFileName,"NPC_SPEECH\\g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"NPC_SPEECH/g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 			#else
-				sprintf( zFileName,"NPC_SPEECH\\d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"NPC_SPEECH/d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 			#endif
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"NPCDATA\\d_%03d.EDT", ubCharacterNum );
+			sprintf( zFileName,"NPCDATA/d_%03d.EDT", ubCharacterNum );
 		}
 	}
 	else if ( ubCharacterNum >= FIRST_RPC &&
@@ -1768,12 +1768,12 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 
 		if ( fWavFile )
 		{
-			sprintf( zFileName,"NPC_SPEECH\\%03d_%03d.wav",ubFileNumID,usQuoteNum );
+			sprintf( zFileName,"NPC_SPEECH/%03d_%03d.wav",ubFileNumID,usQuoteNum );
 		}
 		else
 		{
 		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"NPCDATA\\%03d.EDT", ubFileNumID );
+			sprintf( zFileName,"NPCDATA/%03d.EDT", ubFileNumID );
 		}
 	}
 	else
@@ -1783,18 +1783,18 @@ INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN 
 			#ifdef RUSSIAN
 				if( ubCharacterNum >= FIRST_RPC && gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
 				{
-					sprintf( zFileName,"SPEECH\\r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+					sprintf( zFileName,"SPEECH/r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 				}
 				else
 			#endif
 			{	// build name of wav file (characternum + quotenum)
-				sprintf( zFileName,"SPEECH\\%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf( zFileName,"SPEECH/%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 			}
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"MERCEDT\\%03d.EDT", ubCharacterNum );
+			sprintf( zFileName,"MERCEDT/%03d.EDT", ubCharacterNum );
 		}
 	}
 
@@ -1898,11 +1898,11 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%s", zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%S", zQuoteStr );
 #else
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%s\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
 #endif
 }
 
@@ -1923,11 +1923,11 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 
 	// post message to mapscreen message system
 #ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%s", zQuoteStr );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%S", zQuoteStr );
 #else
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%s\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
 #endif
 
 	if ( guiCurrentScreen == MAP_SCREEN )
@@ -1956,9 +1956,9 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	// How do we do this with defines?
 	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 #ifdef TAIWANESE
-	swprintf( zText, lengthof(zText), L"%s", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%S", zQuoteStr );
 #else
-	swprintf( zText, lengthof(zText), L"\"%s\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"\"%S\"", zQuoteStr );
 #endif
 	sLeft	= 110;
 
@@ -1969,8 +1969,8 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	ExecuteTacticalTextBox( sLeft, zText );
 
 #ifndef TAIWANESE
-	swprintf( zText, lengthof(zText), L"%s: \"%s\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  zText );
+	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
 #endif
 
 }
@@ -2340,8 +2340,8 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		  //reset the font dest buffer
 		  SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,640,480, FALSE);
 
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", pSoldier->name );
-			mprintf( sFontX, sFontY, L"%s", pSoldier->name );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", pSoldier->name );
+			mprintf( sFontX, sFontY, L"%S", pSoldier->name );
 
 			// What sector are we in, ( and is it the same as ours? )
 			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
@@ -2350,8 +2350,8 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 
         ReduceStringLength( zTownIDString, lengthof(zTownIDString), 64 , BLOCKFONT2 );
 
-				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", zTownIDString );
-				mprintf( sFontX, sFontY, L"%s", zTownIDString );
+				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", zTownIDString );
+				mprintf( sFontX, sFontY, L"%S", zTownIDString );
 			}
 
 		  //reset the font dest buffer
@@ -2365,8 +2365,8 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		}
 		else
 		{
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%s", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
-			mprintf( sFontX, sFontY, L"%s", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			mprintf( sFontX, sFontY, L"%S", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
 		}
 
 		//RenderAutoFace( gpCurrentTalkingFace->iID );
