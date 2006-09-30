@@ -5,7 +5,7 @@ med prio
 - investigate on not/incorrectly displayed items in the merc hire view (maybe Blt8BPPDataTo16BPPBufferOutlineShadow())
 
 low prio
-- remove RestrictMouseCursor() et al.
+- TODO0000 remove RestrictMouseCursor() et al.
 - r80
 - ingame mouse cursor
 - sound

@@ -1514,8 +1514,7 @@ void RestrictMouseCursor(SGPRect *pRectangle)
 {
   // Make a copy of our rect....
   memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
-#if 1 // Should probably removed completly. Confining the mouse cursor is The Wrong Thing(tm)
-	FIXME
+#if 1 // XXX TODO0000 Should probably removed completly. Confining the mouse cursor is The Wrong Thing(tm)
 #else
   ClipCursor((RECT *)pRectangle);
 #endif
@@ -1524,8 +1523,7 @@ void RestrictMouseCursor(SGPRect *pRectangle)
 
 void FreeMouseCursor(void)
 {
-#if 1 // XXX TODO
-	FIXME
+#if 1 // XXX TODO0000
 #else
   ClipCursor(NULL);
 #endif
@@ -1534,7 +1532,7 @@ void FreeMouseCursor(void)
 
 void RestoreCursorClipRect( void )
 {
-#if 1 // XXX TODO
+#if 1 // XXX TODO0000
 	UNIMPLEMENTED();
 #else
   if ( fCursorWasClipped )
@@ -1546,8 +1544,7 @@ void RestoreCursorClipRect( void )
 
 void GetRestrictedClipCursor( SGPRect *pRectangle )
 {
-#if 1 // XXX TODO
-	FIXME
+#if 1 // XXX TODO0000
 	pRectangle->iLeft   = 0;
 	pRectangle->iTop    = 0;
 	pRectangle->iRight  = SCREEN_WIDTH;
