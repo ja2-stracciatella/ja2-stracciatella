@@ -97,6 +97,9 @@ HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
 void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
 
 
+static char start_path[512];
+
+
 //**************************************************************************
 //
 // FileSystemInit
@@ -113,6 +116,8 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
 
 BOOLEAN	InitializeFileManager( STR strIndexFilename )
 {
+	getcwd(start_path, sizeof(start_path)); // XXX HACK0002
+
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
 }
@@ -897,8 +902,7 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(pcDirectory, "./");
-	return TRUE;
+	return getcwd(pcDirectory, sizeof(STRING512)) != NULL;
 #else
 	if (GetCurrentDirectory( 512, pcDirectory ) == 0)
 	{
@@ -1112,7 +1116,7 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(pcDirectory, "./");
+	strcpy(pcDirectory, start_path);
 	return TRUE;
 #else
 	SGPFILENAME	ModuleFilename;
