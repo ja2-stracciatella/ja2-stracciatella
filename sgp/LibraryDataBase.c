@@ -327,6 +327,8 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 
 			//copy the file name, offset and length into the header
 			strcpy( pLibHeader->pFileHeader[ uiCount ].pFileName, DirEntry.sFileName);
+			// XXX HACK0000
+			for (char* s = pLibHeader->pFileHeader[uiCount].pFileName; *s != '\0'; s++) if (*s == '\\') *s = '/';
 			pLibHeader->pFileHeader[ uiCount ].uiFileOffset = DirEntry.uiOffset;
 			pLibHeader->pFileHeader[ uiCount ].uiFileLength = DirEntry.uiLength;
 
@@ -349,6 +351,8 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 	{
 		pLibHeader->sLibraryPath = MemAlloc( strlen( LibFileHeader.sPathToLibrary ) + 1 );
 		strcpy( pLibHeader->sLibraryPath, LibFileHeader.sPathToLibrary );
+		// XXX HACK0000
+		for (char* s = pLibHeader->sLibraryPath; *s != '\0'; s++) if (*s == '\\') *s = '/';
 	}
 	else
 	{
