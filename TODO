@@ -2,7 +2,6 @@ high prio
 - get tactical working
 
 med prio
-- investigate on not/incorrectly displayed items in the merc hire view (maybe Blt8BPPDataTo16BPPBufferOutlineShadow())
 - HACK0000 find a clean solution for the \ problem, convert all pathes to /
 
 low prio
