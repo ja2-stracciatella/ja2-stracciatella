@@ -36,7 +36,7 @@
 
 
 
-#define		MERCBIOFILE												"BINARYDATA\\MercBios.edt"
+#define		MERCBIOFILE												"BINARYDATA/MercBios.edt"
 
 #define		MERC_BIO_FONT											FONT14ARIAL//FONT12ARIAL
 #define		MERC_BIO_COLOR										FONT_MCOLOR_WHITE
@@ -169,17 +169,17 @@ BOOLEAN EnterMercsFiles()
 
 	// load the Portrait box graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\PortraitBox.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/PortraitBox.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiPortraitBox));
 
 	// load the bio box graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BioBox.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/BioBox.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiBioBox));
 
 
 	// Prev Box button
-	guiButtonImage  = LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
+	guiButtonImage  = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiPrevButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_PREVIOUS],
 													 FONT12ARIAL,
@@ -357,7 +357,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
   HVOBJECT hFaceHandle;
   HVOBJECT hPortraitHandle;
-	const char *sFaceLoc = "FACES\\BIGFACES\\";
+	const char *sFaceLoc = "FACES/BIGFACES/";
 	char						sTemp[100];
 	MERCPROFILESTRUCT	*pMerc;
   VOBJECT_DESC    VObjectDesc;
@@ -521,7 +521,7 @@ void DisplayMercsStats( UINT8 ubMercID )
 	DrawTextToScreen( MercInfo[MERC_FILES_SALARY], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_NAME_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	usPosX = MERC_STATS_SECOND_COL_X + StringPixLength(MercInfo[MERC_FILES_SALARY], MERC_NAME_FONT) + 1;
-	swprintf(sString, lengthof(sString), L"%d %s", gMercProfiles[ ubMercID ].sSalary, MercInfo[MERC_FILES_PER_DAY]);
+	swprintf(sString, lengthof(sString), L"%d %S", gMercProfiles[ ubMercID ].sSalary, MercInfo[MERC_FILES_PER_DAY]);
 	DrawTextToScreen( sString, usPosX, usPosY, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 }
 

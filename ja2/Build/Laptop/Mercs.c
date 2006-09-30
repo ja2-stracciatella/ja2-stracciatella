@@ -361,37 +361,37 @@ BOOLEAN EnterMercs()
 
 	// load the Account box graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\AccountBox.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/AccountBox.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiAccountBox));
 
 	// load the files Box graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\FilesBox.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/FilesBox.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiFilesBox));
 
 	// load the MercSymbol graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\MERCSymbol.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/MERCSymbol.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMercSymbol));
 
 	// load the SpecPortrait graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\SpecPortrait.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/SpecPortrait.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiSpecPortrait));
 
 	// load the Arrow graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Arrow.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/Arrow.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiArrow));
 
 	// load the Merc video conf background graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\SpeckComWindow.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/SpeckComWindow.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMercVideoPopupBackground));
 
 
 	// Account Box button
-	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP\\SmallButtons.sti", -1,0,-1,1,-1 );
+	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP/SmallButtons.sti", -1,0,-1,1,-1 );
 
 	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y,
 																BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
@@ -632,7 +632,7 @@ BOOLEAN InitMercBackGround()
 
 	// load the Merc background graphic and add it
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\MERCBackGround.sti", VObjectDesc.ImageFile);
+	FilenameForBPP("LAPTOP/MERCBackGround.sti", VObjectDesc.ImageFile);
 	CHECKF(AddVideoObject(&VObjectDesc, &guiMercBackGround));
 
 	return(TRUE);
@@ -1287,7 +1287,7 @@ BOOLEAN InitDestroyXToCloseVideoWindow( BOOLEAN fCreate )
 	//if we are asked to create the buttons and the button isnt already created
 	if( fCreate && !fButtonCreated )
 	{
-		guiXToCloseMercVideoButtonImage = LoadButtonImage("LAPTOP\\CloseButton.sti", -1,0,-1,1,-1 );
+		guiXToCloseMercVideoButtonImage = LoadButtonImage("LAPTOP/CloseButton.sti", -1,0,-1,1,-1 );
 
 		guiXToCloseMercVideoButton = QuickCreateButton( guiXToCloseMercVideoButtonImage, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y,
 																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
@@ -1475,9 +1475,9 @@ void DisplayTextForSpeckVideoPopUp( STR16 pString )
 //	wcscpy(gsSpeckDialogueTextPopUp, pString);
 	//add the "" around the speech.
 #ifdef TAIWANESE
-	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"%s", pString );
+	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"%S", pString );
 #else
-	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"\"%s\"", pString );
+	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"\"%S\"", pString );
 #endif
 
 	gfDisplaySpeckTextBox = TRUE;
