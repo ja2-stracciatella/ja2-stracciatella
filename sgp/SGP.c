@@ -695,6 +695,7 @@ int main(int argc, char* argv[])
 			if (gfApplicationActive)
 			{
 				GameLoop();
+				SDL_Delay(1); // XXX HACK0001
 			}
 			else
 			{
