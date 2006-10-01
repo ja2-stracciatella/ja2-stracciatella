@@ -7786,7 +7786,32 @@ BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject
 	LineSkip=(1280-(usWidth*2));
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				SrcPtr += 2 * data;
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue) return FALSE;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
