@@ -7588,7 +7588,41 @@ ETRLEObject *pTrav;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						if (uiLineFlag != (((uintptr_t)DestPtr & 2) != 0)) continue;
+					}
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
