@@ -9126,7 +9126,49 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNB( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					UINT8 px = *SrcPtr++;
+
+					if (px == 254)
+					{
+						if (*(UINT16*)ZPtr < usZValue)
+						{
+							*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+						}
+					}
+					else
+					{
+						if (*(UINT16*)ZPtr <= usZValue)
+						{
+							*(UINT16*)DestPtr = p16BPPPalette[px];
+						}
+					}
+					DestPtr += 2;
+					ZPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
