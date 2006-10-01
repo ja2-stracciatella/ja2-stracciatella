@@ -962,7 +962,9 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
-	#if 0 /* XXX INLINE ASSEMBLER */
+#if 1 // XXX TODO
+	FIXME // XXX TODO0001
+#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -1073,9 +1075,7 @@ BlitFound:
 
 BlitDone:
 	}
-	#else
-		fprintf(stderr, __FILE__ ": not done yet");
-	#endif
+#endif
 
 	return(fDataFound);
 

@@ -7588,7 +7588,7 @@ ETRLEObject *pTrav;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -8417,7 +8417,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -8540,7 +8540,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -9029,7 +9029,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNB( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -9210,7 +9210,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured( UINT16 *pBuffer, UINT32 
 
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -9909,7 +9909,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBClip( UINT16 *pBuffer, UINT32 uiDe
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -10175,7 +10175,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -10703,7 +10703,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -10849,7 +10849,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -11075,7 +11075,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -11472,7 +11472,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -11727,7 +11727,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -13010,7 +13010,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -13992,7 +13992,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -15553,7 +15553,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -15823,7 +15823,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -16501,7 +16501,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -16635,7 +16635,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -16790,7 +16790,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB( UINT16 *pBuffer, UINT32 uiDestPitchB
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -18137,7 +18137,7 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 

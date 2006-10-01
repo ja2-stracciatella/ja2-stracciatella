@@ -4441,7 +4441,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPit
 	usZIndex=usZStartIndex;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -4843,7 +4843,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *pBuffer
 	usZIndex=usZStartIndex;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -5251,7 +5251,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UINT32 ui
 	usZIndex=usZStartIndex;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -5669,7 +5669,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *pBuffer
 	usZIndex=usZStartIndex;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 
@@ -7396,7 +7396,7 @@ BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject
 	LineSkip=(1280-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	__asm {
 

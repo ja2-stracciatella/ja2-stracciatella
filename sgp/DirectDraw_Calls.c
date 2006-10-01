@@ -284,7 +284,7 @@ void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECT
 					    LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME // XXX TODO0001
 #else
 	HRESULT ReturnCode;
 
