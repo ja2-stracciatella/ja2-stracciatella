@@ -13540,7 +13540,32 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+			}
+			else
+			{
+				SrcPtr += data;
+				do
+				{
+					*(UINT16*)DestPtr = ShadeTable[*(UINT16*)DestPtr];
+					DestPtr += 2;
+				}
+				while (--data  > 0);
+			}
+		}
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
