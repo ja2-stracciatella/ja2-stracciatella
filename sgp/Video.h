@@ -36,12 +36,9 @@ extern void                 GetCurrentVideoSettings(UINT16 *usWidth, UINT16 *usH
 extern void                 InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 extern void                 InvalidateScreen(void);
 extern LPDIRECTDRAW2        GetDirectDraw2Object(void);
-extern SDL_Surface* GetPrimarySurfaceObject(void);
 extern SDL_Surface* GetBackBufferObject(void);
 extern SDL_Surface* GetFrameBufferObject(void);
 extern SDL_Surface* GetMouseBufferObject(void);
-extern PTR                  LockPrimarySurface(UINT32 *uiPitch);
-extern void                 UnlockPrimarySurface(void);
 extern PTR                  LockBackBuffer(UINT32 *uiPitch);
 extern void                 UnlockBackBuffer(void);
 extern PTR                  LockFrameBuffer(UINT32 *uiPitch);

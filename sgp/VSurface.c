@@ -104,7 +104,6 @@ HLIST				ghVideoSurfaces = NULL;
 //OBSOLETE!!!!!!!!!
 
 
-HVSURFACE		ghPrimary = NULL;
 HVSURFACE		ghBackBuffer = NULL;
 HVSURFACE   ghFrameBuffer = NULL;
 HVSURFACE   ghMouseBuffer = NULL;
@@ -245,14 +244,9 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *puiPitch )
 	VSURFACE_NODE *curr;
 
   //
-  // Check if given backbuffer or primary buffer
+  // Check if given backbuffer
   //
 #ifdef JA2
-  if ( uiVSurface == PRIMARY_SURFACE )
-  {
-    return LockPrimarySurface( puiPitch );
-  }
-
   if ( uiVSurface == BACKBUFFER )
   {
     return LockBackBuffer( puiPitch );
@@ -300,15 +294,9 @@ void UnLockVideoSurface( UINT32 uiVSurface )
 	VSURFACE_NODE *curr;
 
   //
-  // Check if given backbuffer or primary buffer
+  // Check if given backbuffer
   //
 #ifdef JA2
-  if ( uiVSurface == PRIMARY_SURFACE )
-  {
-    UnlockPrimarySurface();
-    return;
-  }
-
   if ( uiVSurface == BACKBUFFER )
   {
     UnlockBackBuffer();
@@ -426,12 +414,6 @@ BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex )
 		CheckValidVSurfaceIndex( uiIndex );
 	#endif
 
-  if ( uiIndex == PRIMARY_SURFACE )
-  {
-    *hVSurface = ghPrimary;
-		return TRUE;
-  }
-
   if ( uiIndex == BACKBUFFER )
   {
     *hVSurface = ghBackBuffer;
@@ -474,16 +456,7 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 	// Delete surfaces if they exist
 	DeletePrimaryVideoSurfaces( );
 
-  //
-	// Get Primary surface
-  //
 #ifdef JA2
-	pSurface = GetPrimarySurfaceObject();
-	CHECKF( pSurface != NULL );
-
-	ghPrimary = CreateVideoSurfaceFromDDSurface( pSurface );
-	CHECKF( ghPrimary != NULL );
-
   //
 	// Get Backbuffer surface
   //
@@ -523,12 +496,6 @@ void DeletePrimaryVideoSurfaces( )
   //
 	// If globals are not null, delete them
   //
-
-	if ( ghPrimary != NULL )
-	{
-		DeleteVideoSurface( ghPrimary );
-		ghPrimary = NULL;
-	}
 
 	if ( ghBackBuffer != NULL )
 	{
@@ -1891,10 +1858,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	return hVSurface;
 }
 
-HVSURFACE GetPrimaryVideoSurface( )
-{
-	return( ghPrimary );
-}
 
 HVSURFACE GetBackBufferVideoSurface( )
 {

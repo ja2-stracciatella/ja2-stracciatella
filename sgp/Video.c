@@ -2196,15 +2196,6 @@ LPDIRECTDRAW2 GetDirectDraw2Object(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-SDL_Surface* GetPrimarySurfaceObject(void)
-{
-	FIXME
-	Assert(screen != NULL);
-	return screen;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 SDL_Surface* GetBackBufferObject(void)
 {
 	FIXME
@@ -2236,54 +2227,6 @@ SDL_Surface* GetMouseBufferObject(void)
 // Buffer access functions
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-PTR LockPrimarySurface(UINT32 *uiPitch)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-  HRESULT       ReturnCode;
-  DDSURFACEDESC SurfaceDescription;
-
-
-  ZEROMEM(SurfaceDescription);
-	SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-
-  do
-  {
-	  ReturnCode = IDirectDrawSurface2_Lock(gpPrimarySurface, NULL, &SurfaceDescription, 0, NULL);
-    if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-    {
-      DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to lock backbuffer");
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      return NULL;
-    }
-
-  } while (ReturnCode != DD_OK);
-
-  *uiPitch = SurfaceDescription.lPitch;
-  return SurfaceDescription.lpSurface;
-#endif
-}
-
-
-void UnlockPrimarySurface(void)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-  DDSURFACEDESC SurfaceDescription;
-  HRESULT       ReturnCode;
-
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_Unlock(gpPrimarySurface, &SurfaceDescription);
-	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-  }
-#endif
-}
 
 
 PTR LockBackBuffer(UINT32 *uiPitch)

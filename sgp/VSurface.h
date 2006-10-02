@@ -17,7 +17,6 @@
 // Defines for special video object handles given to blit function
 //
 
-#define PRIMARY_SURFACE							            0xFFFFFFF0
 #define BACKBUFFER									            0xFFFFFFF1
 #define FRAME_BUFFER                            0xFFFFFFF2
 #define MOUSE_BUFFER                            0xFFFFFFF3
@@ -251,7 +250,6 @@ BOOLEAN SetClipList( HVSURFACE hVSurface, SGPRect *RegionData, UINT16 usNumRegio
 
 BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_vs_fx *pBltFx );
 
-HVSURFACE GetPrimaryVideoSurface( );
 HVSURFACE GetBackBufferVideoSurface( );
 
 BOOLEAN ShadowVideoSurfaceRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
