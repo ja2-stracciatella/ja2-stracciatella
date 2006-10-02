@@ -246,13 +246,92 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 }
 
 
+typedef struct
+{
+	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
+	//Used by editor for validation purposes.
+	BOOLEAN						fStatic;
+
+	//Profile information used for special NPCs and player mercs.
+	UINT8							ubProfile;
+	BOOLEAN						fPlayerMerc;
+	BOOLEAN						fPlayerPlan;
+	BOOLEAN						fCopyProfileItemsOver;
+
+	//Location information
+	INT16							sSectorX;
+	INT16							sSectorY;
+	INT8							bDirection;
+	INT16							sInsertionGridNo;
+
+	// Can force a team, but needs flag set
+	INT8							bTeam;
+	INT8							bBodyType;
+
+	//Orders and attitude settings
+	INT8							bAttitude;
+	INT8							bOrders;
+
+	//Attributes
+	INT8							bLifeMax;
+	INT8							bLife;
+	INT8							bAgility;
+	INT8							bDexterity;
+	INT8							bExpLevel;
+	INT8							bMarksmanship;
+	INT8							bMedical;
+	INT8							bMechanical;
+	INT8							bExplosive;
+	INT8							bLeadership;
+	INT8							bStrength;
+	INT8							bWisdom;
+	INT8							bMorale;
+	INT8							bAIMorale;
+
+	//Inventory
+	OBJECTTYPE				Inv[ NUM_INV_SLOTS ];
+
+	//Palette information for soldiers.
+	PaletteRepID			HeadPal;
+	PaletteRepID			PantsPal;
+	PaletteRepID			VestPal;
+	PaletteRepID			SkinPal;
+	PaletteRepID			MiscPal;
+
+	//Waypoint information for patrolling
+	INT16 sPatrolGrid[ MAXPATROLGRIDS ];
+	INT8 bPatrolCnt;
+
+	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)
+	BOOLEAN						fVisible;
+	UINT16						name[10]; // XXX 16bit chars
+
+	UINT8							ubSoldierClass;	//army, administrator, elite
+
+	BOOLEAN						fOnRoof;
+
+	INT8							bSectorZ;
+
+	SOLDIERTYPE				*pExistingSoldier;
+	BOOLEAN						fUseExistingSoldier;
+	UINT8							ubCivilianGroup;
+
+	BOOLEAN						fKillSlotIfOwnerDies;
+	UINT8							ubScheduleID;
+
+	BOOLEAN						fUseGivenVehicle;
+	INT8							bUseGivenVehicleID;
+	BOOLEAN						fHasKeys;
+
+	INT8 bPadding[115];
+} SOLDIERCREATE_STRUCT_ON_DISK;
+
 
 BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 {
 	UINT32 i;
 	UINT8 ubNumIndividuals;
 	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	SOLDIERINITNODE *pNode;
 	BOOLEAN fCowInSector = FALSE;
 
@@ -295,7 +374,9 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
-			LOADDATA( &tempDetailedPlacement, *hBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
+			SOLDIERCREATE_STRUCT_ON_DISK tempDetailedPlacement;
+
+			LOADDATA(&tempDetailedPlacement, *hBuffer, sizeof(tempDetailedPlacement));
 			//allocate memory for new static detailed placement
 			pNode->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 			if( !pNode->pDetailedPlacement )
@@ -304,7 +385,16 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 				return FALSE;
 			}
 			//copy the file information from temp var to node in list.
+#if 1 // XXX HACK0003 16bit strings -> wchar_t
+			memcpy(pNode->pDetailedPlacement, &tempDetailedPlacement, (UINT8*)tempDetailedPlacement.name - (UINT8*)&tempDetailedPlacement);
+			for (UINT32 i = 0; i < lengthof(tempDetailedPlacement.name); i++)
+			{
+				pNode->pDetailedPlacement->name[i] = tempDetailedPlacement.name[i];
+			}
+			memcpy(&pNode->pDetailedPlacement->ubSoldierClass, &tempDetailedPlacement.ubSoldierClass, (UINT8*)(&tempDetailedPlacement.name + 1) - (UINT8*)&tempDetailedPlacement.ubSoldierClass);
+#else
 			memcpy( pNode->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+#endif
 
 			if( tempDetailedPlacement.ubProfile != NO_PROFILE )
 			{

@@ -432,10 +432,9 @@ BOOLEAN LoadMercProfiles(void)
 		return(FALSE);
 	}
 
-FIXME
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
-#if 1 // XXX ugly hack for 16bit strings -> wchar_t
+#if 1 // XXX HACK0003 16bit strings -> wchar_t
 		MERCPROFILESTRUCT_ON_DISK tempprof;
 		UINT32 i;
 

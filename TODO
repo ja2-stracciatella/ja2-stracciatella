@@ -12,6 +12,7 @@ low prio
 - sound
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
+- HACK0003 load data in a cleaner way, especially wide strings
 
 cosmetic
 - massive code duplication for ROT-1 "encrypted" data (r65, r113)
