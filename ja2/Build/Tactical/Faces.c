@@ -2076,7 +2076,7 @@ BOOLEAN FaceRestoreSavedBackgroundRect( INT32 iFaceIndex, INT16 sDestLeft, INT16
 	// Add rect to frame buffer queue
 	if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
 	{
-		InvalidateRegionEx( sDestLeft - 2, sDestTop - 2, (sDestLeft + sWidth + 3), ( sDestTop + sHeight + 2 ), 0 );
+		InvalidateRegionEx(sDestLeft - 2, sDestTop - 2, sDestLeft + sWidth + 3, sDestTop + sHeight + 2);
 	}
 	return(TRUE);
 }

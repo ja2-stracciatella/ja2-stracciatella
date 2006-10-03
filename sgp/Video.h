@@ -61,7 +61,7 @@ BOOLEAN											Set8BPPPalette(SGPPaletteEntry *pPalette);
 void												VideoCaptureToggle( void );
 
 
-void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags );
+void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void RefreshScreen(void);
 

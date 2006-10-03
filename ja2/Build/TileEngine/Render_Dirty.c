@@ -128,8 +128,7 @@ void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 	aRect.iRight	= iRight;
 	aRect.iBottom	= iBottom;
 
-	InvalidateRegionEx( aRect.iLeft, aRect.iTop, aRect.iRight, aRect.iBottom, 0 );
-
+	InvalidateRegionEx(aRect.iLeft, aRect.iTop, aRect.iRight, aRect.iBottom);
 }
 
 BOOLEAN ExecuteBaseDirtyRectQueue( )
@@ -655,7 +654,7 @@ BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT1
 	UnLockVideoSurface(guiSAVEBUFFER);
 
 	// Add rect to frame buffer queue
-	InvalidateRegionEx( sLeft, sTop, (sLeft + sWidth), ( sTop + sHeight ), 0 );
+	InvalidateRegionEx(sLeft, sTop, sLeft + sWidth, sTop + sHeight);
 
 	return(TRUE);
 }
@@ -703,7 +702,7 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 	UnLockVideoSurface(guiSAVEBUFFER);
 
 	// Add rect to frame buffer queue
-	InvalidateRegionEx( sLeft, sTop, (sLeft + sWidth), ( sTop + sHeight ), 0 );
+	InvalidateRegionEx(sLeft, sTop, sLeft + sWidth, sTop + sHeight);
 
 	return(TRUE);
 }
@@ -808,7 +807,7 @@ UINT16 uiStringLength, uiStringHeight;
 
 	if ( uiStringLength > 0 )
 	{
-		InvalidateRegionEx( x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight), 0 );
+		InvalidateRegionEx(x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight));
 	}
 	return(uiStringLength);
 }

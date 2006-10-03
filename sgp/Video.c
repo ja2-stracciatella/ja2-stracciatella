@@ -126,7 +126,6 @@ static BOOLEAN gfForceFullScreenRefresh;
 
 
 static SGPRect gDirtyRegionsEx[MAX_DIRTY_REGIONS];
-static UINT32  gDirtyRegionsFlagsEx[MAX_DIRTY_REGIONS];
 static UINT32  guiDirtyRegionExCount;
 
 //
@@ -155,7 +154,6 @@ extern INT16  gusGreenShift;
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags );
 void SnapshotSmall( void );
 void VideoMovieCapture( BOOLEAN fEnable );
 void RefreshMovieCache( );
@@ -766,7 +764,10 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 }
 
 
-void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags )
+static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
+
+
+void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
 	INT32 iOldBottom;
 
@@ -777,22 +778,22 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 	{
 			// Add new top region
 			iBottom				= gsVIEWPORT_WINDOW_END_Y;
-			AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
+			AddRegionEx(iLeft, iTop, iRight, iBottom);
 
 			// Add new bottom region
 			iTop   = gsVIEWPORT_WINDOW_END_Y;
 			iBottom	= iOldBottom;
-			AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
+			AddRegionEx(iLeft, iTop, iRight, iBottom);
 
 	}
 	else
 	{
-		 AddRegionEx( iLeft, iTop, iRight, iBottom, uiFlags );
+		 AddRegionEx(iLeft, iTop, iRight, iBottom);
 	}
 }
 
 
-void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 uiFlags )
+void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
 
   if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
@@ -823,11 +824,7 @@ void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT32 ui
     gDirtyRegionsEx[ guiDirtyRegionExCount ].iTop    = iTop;
     gDirtyRegionsEx[ guiDirtyRegionExCount ].iRight  = iRight;
     gDirtyRegionsEx[ guiDirtyRegionExCount ].iBottom = iBottom;
-
-		gDirtyRegionsFlagsEx[ guiDirtyRegionExCount ] = uiFlags;
-
     guiDirtyRegionExCount++;
-
   }
 	else
 	{
