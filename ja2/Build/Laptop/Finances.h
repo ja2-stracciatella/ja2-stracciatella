@@ -9,17 +9,6 @@ void RenderFinances();
 
 #define	FINANCES_DATA_FILE					"TEMP\\finances.dat"
 
-// the financial structure
-struct finance{
- UINT8 ubCode; // the code index in the finance code table
- UINT32 uiIdNumber; // unique id number
- UINT8 ubSecondCode; // secondary code
- UINT32 uiDate; // time in the world in global time
- INT32 iAmount; // the amount of the transaction
- INT32 iBalanceToDate;
- struct finance *Next; // next unit in the list
-};
-
 enum
 {
 	ACCRUED_INTEREST,
@@ -53,16 +42,9 @@ enum
 
 };
 
-
-typedef struct finance FinanceUnit;
-typedef struct finance *FinanceUnitPtr;
-
-extern FinanceUnitPtr pFinanceListHead;
-//extern INT32 iCurrentBalance;
 UINT32 AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
 void InsertDollarSignInToString( STR16 pString );
 void InsertCommasForDollarFigure( STR16 pString );
-INT32 GetTodaysDaysIncome( void );
 INT32 GetProjectedTotalDailyIncome( void );
 
 #endif
