@@ -2,6 +2,7 @@
 	#include "AI All.h"
 #else
 	#include <stdlib.h>
+	#include "Stubs.h" // XXX
 	#include "Isometric_Utils.h"
 	#include "AI.h"
 	#include "AIInternals.h"

@@ -2,6 +2,7 @@
 	#include "AI All.h"
   #include "Strategic_Status.h"
 #else
+	#include "Stubs.h" // XXX
 	#include "AI.h"
 	#include "AIInternals.h"
 	#include "Isometric_Utils.h"
