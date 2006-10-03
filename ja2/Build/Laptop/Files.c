@@ -19,6 +19,7 @@
 	#include "VSurface.h"
 	#include "MemMan.h"
 	#include "Font_Control.h"
+	#include "FileMan.h"
 #endif
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X

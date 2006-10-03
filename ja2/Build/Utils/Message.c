@@ -25,6 +25,7 @@
 	#include "MemMan.h"
 	#include "JAScreens.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 typedef struct

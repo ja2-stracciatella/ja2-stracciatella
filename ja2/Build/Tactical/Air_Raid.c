@@ -35,6 +35,7 @@
 	#include "Structure_Wrap.h"
 	#include "SoundMan.h"
 	#include "Debug.h"
+	#include "FileMan.h"
 #endif
 
 #define		SCRIPT_DELAY													10

@@ -92,6 +92,7 @@
 	#include "Civ_Quotes.h"
 	#include "JAScreens.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 extern INT16 DirIncrementer[8];

@@ -28,6 +28,7 @@
 	#include "Quests.h"
 	#include "Soldier_Profile.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 #ifdef JA2BETAVERSION

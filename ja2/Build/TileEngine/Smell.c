@@ -13,6 +13,7 @@
 	#include "Map_Information.h"
 	#include "Game_Clock.h"
 	#include "Overhead.h"
+	#include "Stubs.h" // XXX
 #endif
 
 /*

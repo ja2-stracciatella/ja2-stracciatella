@@ -2,7 +2,6 @@
 #define NPC_H
 
 #include "MapScreen.h"
-#include "FileMan.h"
 
 #define NUM_NPC_QUOTE_RECORDS 50
 

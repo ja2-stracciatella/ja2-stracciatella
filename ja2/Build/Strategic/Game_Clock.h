@@ -1,9 +1,6 @@
 #ifndef __WORLD_CLOCK
 #define __WORLD_CLOCK
 
-#include "FileMan.h"
-
-
 // where the time string itself is rendered
 #define			CLOCK_X										554
 #define			CLOCK_Y										459

@@ -41,6 +41,7 @@
 	#include "Keys.h"
 	#include "GameSettings.h"
 	#include "Buildings.h"
+	#include "Stubs.h" // XXX
 #endif
 
 #include "PathAIDebug.h"

@@ -38,6 +38,7 @@
 	#include "Soldier_Macros.h"
 	#include "Morale.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 #ifdef JA2BETAVERSION

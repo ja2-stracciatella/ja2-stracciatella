@@ -2,6 +2,7 @@
 	#include "Tactical All.h"
 #else
 	#include "Types.h"
+	#include "FileMan.h"
 	#include "Soldier_Control.h"
 	#include "Overhead.h"
 	#include "Animation_Control.h"

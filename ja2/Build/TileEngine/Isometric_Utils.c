@@ -18,6 +18,7 @@
 	#include "Random.h"
 	#include "PathAI.h"
 	#include <stdlib.h>
+	#include "Stubs.h" // XXX
 #endif
 
 

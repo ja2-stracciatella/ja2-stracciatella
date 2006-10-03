@@ -39,6 +39,7 @@
 	#include "EMail.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 

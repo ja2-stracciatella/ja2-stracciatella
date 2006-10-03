@@ -18,6 +18,7 @@
 	#include "History.h"
 	#include "Dialogue_Control.h"
 	#include "ScreenIDs.h"
+	#include "Stubs.h" // XXX
 #endif
 
 void HourlyQuestUpdate( void );

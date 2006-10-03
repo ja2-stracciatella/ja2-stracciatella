@@ -24,6 +24,7 @@
 	#include "Text.h"
 	#include "StrategicMap.h"
 	#include "Render_Fun.h"
+	#include "Stubs.h" // XXX
 #endif
 
 //*******  Local Defines **************************************************

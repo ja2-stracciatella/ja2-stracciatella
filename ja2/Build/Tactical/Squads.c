@@ -18,6 +18,7 @@
 	#include "JAScreens.h"
 	#include "Soldier_Macros.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 

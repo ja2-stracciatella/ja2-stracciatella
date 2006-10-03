@@ -11,6 +11,7 @@
 	#include "Message.h"
 	#include "Text.h"
 	#include <string.h>
+	#include "FileMan.h"
 #endif
 
 #ifdef JA2TESTVERSION

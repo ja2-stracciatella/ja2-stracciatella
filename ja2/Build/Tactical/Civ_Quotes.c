@@ -27,6 +27,7 @@
 	#include "NPC.h"
 	#include "Strategic_Mines.h"
 	#include "Random.h"
+	#include "FileMan.h"
 #endif
 
 

@@ -34,6 +34,7 @@
 	#include "Random.h"
 	#include "Button_System.h"
 	#include "Font_Control.h"
+	#include "FileMan.h"
 #endif
 
 #define IMP_MERC_FILE "IMP.dat"

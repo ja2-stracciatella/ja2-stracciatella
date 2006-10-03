@@ -2,7 +2,6 @@
 #define __MAP_EDGEPOINTS_H
 
 #include "Types.h"
-#include "FileMan.h"
 
 typedef struct MAPEDGEPOINTINFO
 {

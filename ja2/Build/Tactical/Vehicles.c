@@ -40,6 +40,7 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];

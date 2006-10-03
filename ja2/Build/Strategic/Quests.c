@@ -30,6 +30,7 @@
 	#include "Town_Militia.h"
 	#include "Strategic.h"
 	#include "Strategic_Event_Handler.h"
+	#include "FileMan.h"
 #endif
 
 #include "BobbyRMailOrder.h"

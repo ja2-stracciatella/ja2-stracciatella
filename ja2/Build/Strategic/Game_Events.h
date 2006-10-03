@@ -2,7 +2,6 @@
 #define __GAME_EVENTS_H
 
 #include "Game_Event_Hook.h"
-#include "FileMan.h"
 
 #define SEF_PREVENT_DELETION	0x01
 #define SEF_DELETION_PENDING	0x02

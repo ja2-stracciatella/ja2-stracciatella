@@ -42,6 +42,7 @@
 	#include "Local.h"
 	#include "VSurface.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 #include "Campaign_Init.h"

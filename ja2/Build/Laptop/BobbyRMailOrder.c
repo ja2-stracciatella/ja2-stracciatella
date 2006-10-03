@@ -31,6 +31,7 @@
 	#include "Debug.h"
 	#include "ScreenIDs.h"
 	#include "Font_Control.h"
+	#include "FileMan.h"
 #endif
 
 

@@ -12,6 +12,7 @@
 	#include "Morale.h"
 	#include "Drugs_And_Alcohol.h"
 	#include "StrategicMap.h"
+	#include "Stubs.h" // XXX
 #endif
 
 INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )

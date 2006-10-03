@@ -33,6 +33,7 @@
 	#include "Queen_Command.h"
 	#include "Scheduling.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );

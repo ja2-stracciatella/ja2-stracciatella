@@ -25,6 +25,7 @@
 	#include "OppList.h"
 	#include "Tactical_Save.h"
 	#include "Campaign_Types.h"
+	#include "FileMan.h"
 #endif
 
 #include "SaveLoadGame.h"

@@ -48,6 +48,7 @@
 	#include "Quests.h"
 	#include "Video.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 // the delay for a group about to arrive

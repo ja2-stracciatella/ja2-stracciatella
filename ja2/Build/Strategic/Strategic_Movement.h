@@ -3,7 +3,6 @@
 
 #include "Types.h"
 #include "Soldier_Control.h"
-#include "FileMan.h"
 
 
 enum //enemy intentions,

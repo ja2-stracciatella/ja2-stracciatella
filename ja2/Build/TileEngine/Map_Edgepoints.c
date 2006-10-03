@@ -18,6 +18,7 @@
 	#include "Environment.h"
 	#include "WorldMan.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 //dynamic arrays that contain the valid gridno's for each edge

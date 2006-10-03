@@ -2,7 +2,6 @@
 #define __WORLD_ITEMS
 
 #include "Items.h"
-#include "FileMan.h"
 
 
 #define	WORLD_ITEM_DONTRENDER												0x0001

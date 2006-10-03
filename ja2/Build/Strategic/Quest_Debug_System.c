@@ -43,6 +43,7 @@
 	#include  "JAScreens.h"
 	#include  "ScreenIDs.h"
 	#include  "VSurface.h"
+	#include  "FileMan.h"
 #endif
 
 //#ifdef JA2BETAVERSION

@@ -60,6 +60,7 @@
 	#include "SoundMan.h"
 	#include "MemMan.h"
 	#include "Button_System.h"
+	#include "FileMan.h"
 #endif
 
 #define		DIALOGUESIZE					480

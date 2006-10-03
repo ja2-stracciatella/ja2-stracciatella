@@ -65,6 +65,7 @@
 	#include "VSurface.h"
 	#include "MemMan.h"
 	#include "Debug.h"
+	#include "Stubs.h" // XXX
 #endif
 
 #define					NUM_ITEMS_LISTED			8

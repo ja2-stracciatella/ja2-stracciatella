@@ -4,9 +4,7 @@
 #include "Types.h"
 #include "Campaign_Types.h"
 #include "Soldier_Control.h"
-#include "FileMan.h"
 #include "Strategic_Movement.h"
-
 
 
 extern BOOLEAN gfPendingEnemies;

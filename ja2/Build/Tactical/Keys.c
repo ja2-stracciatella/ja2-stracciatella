@@ -39,6 +39,7 @@
 	#include "Handle_Doors.h"
 	#include "Map_Screen_Interface.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 

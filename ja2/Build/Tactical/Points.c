@@ -29,6 +29,7 @@
 	#include "WorldMan.h"
 	#include "Interface_Items.h"
 	#include "Debug.h"
+	#include "Stubs.h" // XXX
 #endif
 
 extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );

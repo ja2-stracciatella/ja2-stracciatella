@@ -22,6 +22,7 @@
 	#include "History.h"
 	#include "Campaign_Types.h"
 	#include "Debug.h"
+	#include "FileMan.h"
 #endif
 
 

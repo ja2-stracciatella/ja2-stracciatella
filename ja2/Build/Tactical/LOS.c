@@ -40,6 +40,7 @@
 	#include "Smell.h"
 	#include "Text.h"
 	#include <stdlib.h>
+	#include "Stubs.h" // XXX
 #endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10

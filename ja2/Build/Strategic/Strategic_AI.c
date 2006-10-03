@@ -32,6 +32,7 @@
 	#include "Interface_Dialogue.h"
 	#include "MemMan.h"
 	#include "Debug.h"
+	#include "FileMan.h"
 #endif
 
 #ifdef JA2BETAVERSION

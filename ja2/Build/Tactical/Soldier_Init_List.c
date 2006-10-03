@@ -40,6 +40,7 @@
 	#include "NPC.h"
 	#include "Scheduling.h"
 	#include "MemMan.h"
+	#include "FileMan.h"
 #endif
 
 #ifdef JA2BETAVERSION

@@ -2,7 +2,6 @@
 #define __SOLDIER_INIT_LIST_H
 
 #include "Soldier_Create.h"
-#include "FileMan.h"
 
 typedef struct SOLDIERINITNODE
 {

@@ -20,6 +20,7 @@
 	#include "Campaign.h"
 	#include "MapScreen.h"
 	#include "Soldier_Macros.h"
+	#include "Stubs.h" // XXX
 #endif
 
 #define MORALE_MOD_MAX 50		// morale *mod* range is -50 to 50, if you change this, check the decay formulas!

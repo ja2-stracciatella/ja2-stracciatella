@@ -22,6 +22,7 @@
 	#include "Game_Clock.h"
 	#include "StrategicMap.h"
 	#include "Animation_Data.h"
+	#include "Stubs.h" // XXX
 #endif
 
 #ifdef JA2TESTVERSION

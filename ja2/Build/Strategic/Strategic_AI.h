@@ -1,7 +1,6 @@
 #ifndef __STRATEGIC_AI_H
 #define __STRATEGIC_AI_H
 
-#include "FileMan.h"
 #include "Strategic_Movement.h"
 
 void InitStrategicAI();

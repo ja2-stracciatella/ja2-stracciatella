@@ -12,6 +12,7 @@
 	#include "LaptopSave.h"
 	#include "ShopKeeper_Interface.h"
 	#include "Random.h"
+	#include "Stubs.h" // XXX
 #endif
 
 

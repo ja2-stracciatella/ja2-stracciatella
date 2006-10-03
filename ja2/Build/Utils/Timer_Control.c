@@ -13,6 +13,7 @@
 	#include "RenderWorld.h"
 	#include "Interface_Control.h"
 	#include <SDL.h>
+	#include "Stubs.h"
 #endif
 
 INT32	giClockTimer = -1;

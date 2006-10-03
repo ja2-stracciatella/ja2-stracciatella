@@ -30,6 +30,7 @@
 	#include "Animation_Data.h"
 	#include "Random.h"
 	#include "LaptopSave.h"
+	#include "Stubs.h" // XXX
 #endif
 
 // how many times should a 'die' be rolled for skills of the same type?

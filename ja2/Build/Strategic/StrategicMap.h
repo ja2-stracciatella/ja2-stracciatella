@@ -3,7 +3,6 @@
 // this file is for manipulation of the strategic map structure
 #include "Types.h"
 #include "Soldier_Control.h"
-#include "FileMan.h"
 
 //The maximum size for any team strategically speaking.  For example, we can't have more than 20 enemies, militia, or creatures at a time.
 #define MAX_STRATEGIC_TEAM_SIZE	20

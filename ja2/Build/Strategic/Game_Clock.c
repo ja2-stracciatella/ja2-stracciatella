@@ -32,6 +32,7 @@
 	#include "VSurface.h"
 	#include "Button_System.h"
 	#include "ScreenIDs.h"
+	#include "FileMan.h"
 #endif
 
 //#define DEBUG_GAME_CLOCK

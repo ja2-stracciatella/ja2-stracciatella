@@ -31,6 +31,7 @@
 	#include "Structure_Wrap.h"
 	#include "History.h"
 	#include "Debug.h"
+	#include "Stubs.h" // XXX
 #endif
 #include "BobbyRMailOrder.h"
 

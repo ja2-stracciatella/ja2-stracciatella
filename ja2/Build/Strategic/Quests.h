@@ -1,7 +1,6 @@
 #ifndef __QUESTS_H
 #define __QUESTS_H
 
-#include "FileMan.h"
 #include "StrategicMap.h"
 
 //  Quest.ubStatus values
