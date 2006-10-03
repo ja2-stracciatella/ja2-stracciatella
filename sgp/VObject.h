@@ -2,7 +2,6 @@
 #define __VOBJECT_H
 
 #include "Types.h"
-#include "Container.h"
 #include "HImage.h"
 
 // ************************************************************************************
@@ -215,13 +214,6 @@ UINT16 FillObjectRect(UINT32 iObj, INT32 x1, INT32 y1, INT32 x2, INT32 y2, COLOR
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY );
 
-
-// ****************************************************************************
-//
-// Globals
-//
-// ****************************************************************************
-extern HLIST ghVideoObjects;
 
 // ****************************************************************************
 //
