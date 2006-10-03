@@ -44,6 +44,7 @@
 	#include  "ScreenIDs.h"
 	#include  "VSurface.h"
 	#include  "FileMan.h"
+	#include  "SGP.h"
 #endif
 
 //#ifdef JA2BETAVERSION

@@ -85,6 +85,7 @@
 	#include "Map_Information.h"
 	#include "Video.h"
 	#include "Screens.h"
+	#include "SGP.h"
 #endif
 
 

@@ -2,7 +2,6 @@
 #define	__PHYSICS_H
 
 #include "Phys_Math.h"
-#include "SGP.h"
 #include "WorldDef.h"
 #include "Items.h"
 #include "Soldier_Control.h"

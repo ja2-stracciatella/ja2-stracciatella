@@ -3,7 +3,6 @@
 
 #include "HImage.h"
 #include "Overhead_Types.h"
-#include "SGP.h"
 
 #define GETPIXELDEPTH( )	( gbPixelDepth )
 
