@@ -44,8 +44,6 @@
 //
 //*******************************************************
 
-SGPPaletteEntry gSgpPalette[256];
-
 typedef struct
 {
 	UINT16 usDefaultPixelDepth;

@@ -21,7 +21,6 @@
 
 
 extern HWND										ghWindow;
-extern UINT32                 guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 
 
 #ifdef __cplusplus
@@ -45,7 +44,6 @@ extern PTR                  LockFrameBuffer(UINT32 *uiPitch);
 extern void                 UnlockFrameBuffer(void);
 extern PTR                  LockMouseBuffer(UINT32 *uiPitch);
 extern void                 UnlockMouseBuffer(void);
-extern BOOLEAN              GetRGBDistribution(void);
 extern BOOLEAN              GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BblueBitMask);
 extern BOOLEAN							SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY );
 extern void                 StartFrameBufferRender(void);
@@ -68,10 +66,6 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UI
 void RefreshScreen(void);
 
 void FatalError(const char *pError, ...);
-
-
-extern SGPPaletteEntry			gSgpPalette[256];
-extern LPDIRECTDRAWPALETTE	gpDirectDrawPalette;
 
 #ifdef __cplusplus
 }

@@ -44,10 +44,10 @@ static UINT8                  gubScreenPixelDepth;
 
 #define			MAX_NUM_FRAMES			25
 
-BOOLEAN												gfVideoCapture=FALSE;
-UINT32												guiFramePeriod = (1000 / 15 );
-UINT32												guiLastFrame;
-UINT16													*gpFrameData[ MAX_NUM_FRAMES ];
+static BOOLEAN gfVideoCapture = FALSE;
+static UINT32  guiFramePeriod = 1000 / 15;
+static UINT32  guiLastFrame;
+static UINT16* gpFrameData[MAX_NUM_FRAMES];
 INT32													giNumFrames = 0;
 
 //
@@ -97,13 +97,10 @@ static MouseCursorBackground  gMouseCursorBackground;
 
 static HVOBJECT               gpCursorStore;
 
-BOOLEAN			gfFatalError = FALSE;
-char				gFatalErrorString[ 512 ];
-
 // 8-bit palette stuff
 
-SGPPaletteEntry								gSgpPalette[256];
-LPDIRECTDRAWPALETTE						gpDirectDrawPalette;
+static SGPPaletteEntry     gSgpPalette[256];
+static LPDIRECTDRAWPALETTE gpDirectDrawPalette;
 
 //
 // Make sure we record the value of the hWindow (main window frame for the application)
@@ -115,29 +112,29 @@ HWND                          ghWindow;
 // Refresh thread based variables
 //
 
-UINT32                        guiFrameBufferState;    // BUFFER_READY, BUFFER_DIRTY
-UINT32                        guiMouseBufferState;    // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
-UINT32								        guiVideoManagerState;   // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
+static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
+static UINT32 guiMouseBufferState;  // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
+static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
 
 //
 // Dirty rectangle management variables
 //
 
-SGPRect                       gListOfDirtyRegions[MAX_DIRTY_REGIONS];
-UINT32                        guiDirtyRegionCount;
-BOOLEAN                       gfForceFullScreenRefresh;
+static SGPRect gListOfDirtyRegions[MAX_DIRTY_REGIONS];
+static UINT32  guiDirtyRegionCount;
+static BOOLEAN gfForceFullScreenRefresh;
 
 
-SGPRect                       gDirtyRegionsEx[MAX_DIRTY_REGIONS];
-UINT32                        gDirtyRegionsFlagsEx[MAX_DIRTY_REGIONS];
-UINT32                        guiDirtyRegionExCount;
+static SGPRect gDirtyRegionsEx[MAX_DIRTY_REGIONS];
+static UINT32  gDirtyRegionsFlagsEx[MAX_DIRTY_REGIONS];
+static UINT32  guiDirtyRegionExCount;
 
 //
 // Screen output stuff
 //
 
-BOOLEAN                       gfPrintFrameBuffer;
-UINT32                        guiPrintFrameBufferIndex;
+static BOOLEAN gfPrintFrameBuffer;
+static UINT32  guiPrintFrameBufferIndex;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -167,6 +164,9 @@ void RefreshMovieCache( );
 static SDL_Surface *mouse_background;
 static SDL_Surface *mouse_cursor;
 static SDL_Surface *screen;
+
+
+static BOOLEAN GetRGBDistribution(void);
 
 
 BOOLEAN InitializeVideoManager(void)
@@ -2394,7 +2394,7 @@ void UnlockMouseBuffer(void)
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN GetRGBDistribution(void)
+static BOOLEAN GetRGBDistribution(void)
 {
 #if 1 // XXX TODO
 	FIXME
@@ -2648,14 +2648,13 @@ HRESULT       ReturnCode;
 
 void FatalError(const char *pError, ...)
 {
+	char gFatalErrorString[512];
+
 	va_list argptr;
 
 	va_start(argptr, pError);       	// Set up variable argument pointer
 	vsprintf(gFatalErrorString, pError, argptr);
 	va_end(argptr);
-
-
-	gfFatalError = TRUE;
 
 #if 1 // XXX TODO
 	FIXME
