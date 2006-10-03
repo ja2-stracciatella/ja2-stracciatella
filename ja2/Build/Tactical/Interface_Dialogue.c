@@ -721,8 +721,8 @@ void RenderTalkingMenu( )
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( 33 );
 		}
-		VarFindFontCenterCoordinates( (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s", gMercProfiles[ gTalkPanel.ubCharNum ].zNickname );
-		mprintf( sFontX, sFontY, L"%s", gMercProfiles[ ubCharacterNum ].zNickname );
+		VarFindFontCenterCoordinates( (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", gMercProfiles[ gTalkPanel.ubCharNum ].zNickname );
+		mprintf( sFontX, sFontY, L"%S", gMercProfiles[ ubCharacterNum ].zNickname );
 
 		// Set font settings back
 		SetFontShadow( DEFAULT_SHADOW );
@@ -851,8 +851,8 @@ void RenderTalkingMenu( )
 					switch( cnt )
 					{
 						case 0:
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s", zTalkMenuStrings[ cnt ] );
-							mprintf( sFontX, sFontY, L"%s", zTalkMenuStrings[ cnt ] );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTalkMenuStrings[ cnt ] );
+							mprintf( sFontX, sFontY, L"%S", zTalkMenuStrings[ cnt ] );
 							break;
 						case 4:
 							//if its an arms dealer
@@ -868,12 +868,12 @@ void RenderTalkingMenu( )
 							else
 								wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
 
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s", zTempString );
-							mprintf( sFontX, sFontY, L"%s", zTempString );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTempString );
+							mprintf( sFontX, sFontY, L"%S", zTempString );
 							break;
 						default:
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
-							mprintf( sFontX, sFontY, L"%s (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
+							mprintf( sFontX, sFontY, L"%S (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
 							break;
 					}
 				}
@@ -894,13 +894,13 @@ void RenderTalkingMenu( )
 						else
 							wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
 
-						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s", zTempString );
-						mprintf( sFontX, sFontY, L"%s", zTempString );
+						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTempString );
+						mprintf( sFontX, sFontY, L"%S", zTempString );
 					}
 					else
 					{
-						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%s", zTalkMenuStrings[ cnt ] );
-						mprintf( sFontX, sFontY, L"%s", zTalkMenuStrings[ cnt ] );
+						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTalkMenuStrings[ cnt ] );
+						mprintf( sFontX, sFontY, L"%S", zTalkMenuStrings[ cnt ] );
 					}
 				}
 			}
