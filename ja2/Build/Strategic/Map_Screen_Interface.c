@@ -2013,13 +2013,13 @@ void UpdateCharRegionHelpText( void )
 				if ( AM_A_ROBOT( MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ] ) )
 				{
 					// robot (condition only)
-					swprintf( sString, lengthof(sString), L"%s: %d/%d",
+					swprintf( sString, lengthof(sString), L"%S: %d/%d",
 													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
 				}
 				else if ( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					// vehicle (condition/fuel)
-					swprintf( sString, lengthof(sString), L"%s: %d/%d, %s: %d/%d",
+					swprintf( sString, lengthof(sString), L"%S: %d/%d, %S: %d/%d",
 													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
 													pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
 				}
@@ -2027,7 +2027,7 @@ void UpdateCharRegionHelpText( void )
 				{
 					// person (health/energy/morale)
 					GetMoraleString( pSoldier, pMoraleStr );
-					swprintf( sString, lengthof(sString), L"%s: %d/%d, %s: %d/%d, %s: %s",
+					swprintf( sString, lengthof(sString), L"%S: %d/%d, %S: %d/%d, %S: %S",
 													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
 													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
 													pMapScreenStatusStrings[ 2 ], pMoraleStr );
@@ -2041,7 +2041,7 @@ void UpdateCharRegionHelpText( void )
 		else
 		{
 			// POW - stats unknown
-			swprintf( sString, lengthof(sString), L"%s: ??, %s: ??, %s: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
+			swprintf( sString, lengthof(sString), L"%S: ??, %S: ??, %S: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
 		}
 
 		SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
@@ -3573,7 +3573,7 @@ void AddStringsToMoveBox( void )
 
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
-	swprintf( sString, lengthof(sString), L"%s %s", pMovementMenuStrings[ 0 ], sStringB );
+	swprintf( sString, lengthof(sString), L"%S %S", pMovementMenuStrings[ 0 ], sStringB );
 	AddMonoString(&hStringHandle, sString );
 
 
@@ -3587,11 +3587,11 @@ void AddStringsToMoveBox( void )
 		// add this squad, now add all the grunts in it
 		if( fSquadIsMoving[ iCount ] )
 		{
-			swprintf( sString, lengthof(sString), L"*%s*", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
+			swprintf( sString, lengthof(sString), L"*%S*", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), L"%s", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
+			swprintf( sString, lengthof(sString), L"%S", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
 		}
 		AddMonoString(&hStringHandle, sString );
 
@@ -3603,11 +3603,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in squads
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					swprintf( sString, lengthof(sString), L"   *%s*", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, lengthof(sString), L"   *%S*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					swprintf( sString, lengthof(sString), L"   %s", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, lengthof(sString), L"   %S", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}
@@ -3621,11 +3621,11 @@ void AddStringsToMoveBox( void )
 		// add this vehicle
 		if( fVehicleIsMoving[ iCount ] )
 		{
-			swprintf( sString, lengthof(sString), L"*%s*", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ] ].ubVehicleType ] );
+			swprintf( sString, lengthof(sString), L"*%S*", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ] ].ubVehicleType ] );
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), L"%s", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ]  ].ubVehicleType ] );
+			swprintf( sString, lengthof(sString), L"%S", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ]  ].ubVehicleType ] );
 		}
 		AddMonoString(&hStringHandle, sString );
 
@@ -3637,11 +3637,11 @@ void AddStringsToMoveBox( void )
 				// add mercs in vehicles
 				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
 				{
-					swprintf( sString, lengthof(sString), L"   *%s*", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, lengthof(sString), L"   *%S*", pSoldierMovingList[ iCountB ]->name );
 				}
 				else
 				{
-					swprintf( sString, lengthof(sString), L"   %s", pSoldierMovingList[ iCountB ]->name );
+					swprintf( sString, lengthof(sString), L"   %S", pSoldierMovingList[ iCountB ]->name );
 				}
 				AddMonoString(&hStringHandle, sString );
 			}
@@ -3662,11 +3662,11 @@ void AddStringsToMoveBox( void )
 				// add OTHER header line
 				if( AllOtherSoldiersInListAreSelected( ) )
 				{
-					swprintf( sString, lengthof(sString), L"*%s*", pMovementMenuStrings[ 3 ] );
+					swprintf( sString, lengthof(sString), L"*%S*", pMovementMenuStrings[ 3 ] );
 				}
 				else
 				{
-					swprintf( sString, lengthof(sString), L"%s", pMovementMenuStrings[ 3 ] );
+					swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 3 ] );
 				}
 				AddMonoString(&hStringHandle, sString );
 
@@ -3676,11 +3676,11 @@ void AddStringsToMoveBox( void )
 			// add OTHER soldiers (not on duty nor in a vehicle)
 			if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCount ] ) == TRUE )
 			{
-				swprintf( sString, lengthof(sString), L"  *%s ( %s )*", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
+				swprintf( sString, lengthof(sString), L"  *%S ( %S )*", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
 			}
 			else
 			{
-				swprintf( sString, lengthof(sString), L"   %s ( %s )", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
+				swprintf( sString, lengthof(sString), L"   %S ( %S )", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
 			}
 			AddMonoString(&hStringHandle, sString );
 		}
@@ -3694,7 +3694,7 @@ void AddStringsToMoveBox( void )
 	if ( IsAnythingSelectedForMoving() )
 	{
 		// add PLOT MOVE line
-		swprintf( sString, lengthof(sString), L"%s", pMovementMenuStrings[ 1 ] );
+		swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 1 ] );
 		AddMonoString(&hStringHandle, sString );
 	}
 	else
@@ -3705,7 +3705,7 @@ void AddStringsToMoveBox( void )
 
 
 	// add cancel line
-	swprintf( sString, lengthof(sString), L"%s", pMovementMenuStrings[ 2 ] );
+	swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 2 ] );
 	AddMonoString(&hStringHandle, sString );
 
 	return;
@@ -4848,7 +4848,7 @@ void DisplaySoldierUpdateBox( )
 			RenderSoldierSmallFaceForUpdatePanel( iCounter, iFaceX, iFaceY );
 
 			// display the mercs name
-			swprintf( sString, lengthof(sString), L"%s", pUpdateSoldierBox[ iCounter ]->name );
+			swprintf( sString, lengthof(sString), L"%S", pUpdateSoldierBox[ iCounter ]->name );
 			DrawTextToScreen( sString, (UINT16)(iFaceX-5), (UINT16)(iFaceY + 31), 57, TINYFONT1, FONT_LTRED, FONT_BLACK, 0, CENTER_JUSTIFIED );
 		}
 	}
@@ -5845,11 +5845,11 @@ BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber 
 			// are they male or female
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%s %s", pSoldier->name ,pMapErrorString[ 6 ] );
+				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%S %S", pSoldier->name ,pMapErrorString[ 6 ] );
 			}
 			else
 			{
-				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%s %s", pSoldier->name ,pMapErrorString[ 7 ] );
+				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%S %S", pSoldier->name ,pMapErrorString[ 7 ] );
 			}
 
 			*pbErrorNumber = -99;	// customized error message!
