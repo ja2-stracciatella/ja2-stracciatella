@@ -2,7 +2,6 @@
 #define __TILEDEF_H
 
 #include "VObject.h"
-#include "Timer.h"
 #include "TileDat.h"
 #include "Structure.h"
 
