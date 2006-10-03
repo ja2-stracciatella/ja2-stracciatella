@@ -6,11 +6,6 @@
 	#include "DirectDraw_Calls.h"
 	#include <stdio.h>
 	#include "Debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
 	#include "HImage.h"
 	#include "VObject.h"
 	#include "WCheck.h"

@@ -28,11 +28,6 @@
 	#include "HImage.h"
 	#include "string.h"
 	#include "Debug.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
 #endif
 
 //**************************************************************************

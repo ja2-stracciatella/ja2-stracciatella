@@ -8,7 +8,6 @@
 	#include "WCheck.h"
 	#include "stdlib.h"
 	#include "time.h"
-	#include "Video.h"
 	#include "Debug.h"
 	#include "WorldMan.h"
 	#include "Gameloop.h"

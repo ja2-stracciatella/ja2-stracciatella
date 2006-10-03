@@ -23,7 +23,6 @@
 	#include "Render_Dirty.h"
 	#include "RenderWorld.h"
 	#include "Sys_Globals.h"
-	#include "Video.h"
 	#include "Points.h"
 	#include "Win_Util.h"
 	#include "Sound_Control.h"

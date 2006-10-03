@@ -10,12 +10,6 @@
 	#include "WCheck.h"
 	#include "Debug.h"
 	#include <string.h>
-
-	#if defined(JA2) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
 #endif
 
 //NUMBER_OF_LIBRARIES

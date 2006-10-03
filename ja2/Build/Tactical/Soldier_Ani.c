@@ -15,7 +15,6 @@
 	#include "Weapons.h"
 	#include "Soldier_Ani.h"
 	#include "Random.h"
-	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Sound_Control.h"
 	#include "Isometric_Utils.h"

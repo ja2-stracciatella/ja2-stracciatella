@@ -12,7 +12,6 @@
 	#include "SysUtil.h"
 	#include "Container.h"
 	#include "WCheck.h"
-	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Faces.h"
 	#include "Utilities.h"

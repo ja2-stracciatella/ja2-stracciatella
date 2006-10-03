@@ -5,11 +5,6 @@
 #else
 	#include "Types.h"
 	#include "Stubs.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
 	#include "Timer.h"
 	#include <SDL.h>
 #endif

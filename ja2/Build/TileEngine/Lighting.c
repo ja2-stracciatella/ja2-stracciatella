@@ -27,7 +27,6 @@
 	#include "Input.h"
 	#include "SysUtil.h"
 	#include "wchar.h"
-	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Debug.h"
 	#include "WCheck.h"
