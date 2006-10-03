@@ -13136,7 +13136,21 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	uiSrcSkip			= (uiSrcPitch*2)-(usWidth&0xfffffffe);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	usHeight /= 2;
+	do
+	{
+		UINT32 w = usWidth / 2;
+		do
+		{
+			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+			SrcPtr  += 2;
+			DestPtr += 2;
+		}
+		while (--w > 0);
+		SrcPtr  += uiSrcSkip;
+		DestPtr += LineSkip;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
