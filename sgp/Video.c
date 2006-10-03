@@ -148,16 +148,6 @@ extern INT16  gusRedShift;
 extern INT16  gusBlueShift;
 extern INT16  gusGreenShift;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Local Function Prototypes
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void SnapshotSmall( void );
-void VideoMovieCapture( BOOLEAN fEnable );
-void RefreshMovieCache( );
-
 
 static SDL_Surface *mouse_background;
 static SDL_Surface *mouse_cursor;
@@ -793,7 +783,7 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 }
 
 
-void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
+static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
 
   if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
@@ -1315,6 +1305,9 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 	//SaveBackgroundRects();
 #endif
 }
+
+
+static void SnapshotSmall(void);
 
 
 void RefreshScreen(void)
@@ -2700,7 +2693,10 @@ typedef struct {
 #pragma pack (pop)
 
 
-void SnapshotSmall(void)
+static void RefreshMovieCache(void);
+
+
+static void SnapshotSmall(void)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
@@ -2784,16 +2780,10 @@ void SnapshotSmall(void)
 void VideoCaptureToggle(void)
 {
 #ifdef JA2TESTVERSION
-	VideoMovieCapture( (BOOLEAN)!gfVideoCapture);
-#endif
-}
-
-void VideoMovieCapture( BOOLEAN fEnable )
-{
 	INT32 cnt;
 
-	gfVideoCapture=fEnable;
-	if(fEnable)
+	gfVideoCapture = !gfVideoCapture;
+	if (gfVideoCapture)
 	{
 		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
 		{
@@ -2817,9 +2807,11 @@ void VideoMovieCapture( BOOLEAN fEnable )
 		}
 		giNumFrames = 0;
 	}
+#endif
 }
 
-void RefreshMovieCache( )
+
+static void RefreshMovieCache(void)
 {
 	TARGA_HEADER Header;
 	INT32 iCountX, iCountY;
