@@ -307,7 +307,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 						{
 							PlayJA2Sample( RG_ID_IMPRINTED, RATE_11025, HIGHVOLUME, 1, MIDDLE );
 
-      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%s\"", TacticalStr[ GUN_GOT_FINGERPRINT ] );
+      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%S\"", TacticalStr[ GUN_GOT_FINGERPRINT ] );
 
 							return( ITEM_HANDLE_BROKEN );
 						}
@@ -3185,11 +3185,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			// Set string
 			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, lengthof(pStr), L"%s (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, lengthof(pStr), L"%S (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%s", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			// Get Width
@@ -3292,11 +3292,11 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
-				swprintf( pStr, lengthof(pStr), L"%s (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
+				swprintf( pStr, lengthof(pStr), L"%S (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%s", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
+				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
 			}
 
 			gprintfdirty( sFontX, sY, pStr );
@@ -5165,7 +5165,7 @@ BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
 
             if ( fDisplay )
             {
-      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%s\"", TacticalStr[ GUN_NOGOOD_FINGERPRINT ] );
+      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%S\"", TacticalStr[ GUN_NOGOOD_FINGERPRINT ] );
             }
 			    }
 			    return( FALSE );
