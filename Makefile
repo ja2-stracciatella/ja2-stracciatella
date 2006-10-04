@@ -505,7 +505,7 @@ Data:
 	@ln -s $(DATA)/TILECACHE/M_d_wtr_nb.jsd   Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/Mustard2.sti     Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/P_DECOMP2.jsd    Data/TILECACHE/
-	@ln -s $(DATA)/TILECACHE/SHCKWAVE.sti     Data/TILECACHE/
+	@ln -s $(DATA)/TILECACHE/SHCKWAVE.sti     Data/TILECACHE/shckwave.STI
 	@ln -s $(DATA)/TILECACHE/SMALMUST.sti     Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/SMALSMKE.sti     Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/SMALTEAR.sti     Data/TILECACHE/
@@ -528,9 +528,9 @@ Data:
 	@ln -s $(DATA)/TILECACHE/W_DEAD2.JSD      Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/W_DEAD2_nb.jsd   Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/ZGRAV_A.sti      Data/TILECACHE/
-	@ln -s $(DATA)/TILECACHE/ZGRAV_B.sti      Data/TILECACHE/
-	@ln -s $(DATA)/TILECACHE/ZGRAV_C.sti      Data/TILECACHE/
-	@ln -s $(DATA)/TILECACHE/ZGRAV_D.sti      Data/TILECACHE/
+	@ln -s $(DATA)/TILECACHE/ZGRAV_B.sti      Data/TILECACHE/ZGRAV_B.STI
+	@ln -s $(DATA)/TILECACHE/ZGRAV_C.sti      Data/TILECACHE/ZGRAV_C.STI
+	@ln -s $(DATA)/TILECACHE/ZGRAV_D.sti      Data/TILECACHE/ZGRAV_D.STI
 	@ln -s $(DATA)/TILECACHE/f_dead.JSD       Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/f_dead_nb.jsd    Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/ft_dead2.JSD     Data/TILECACHE/
