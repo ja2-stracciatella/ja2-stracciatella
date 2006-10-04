@@ -1095,7 +1095,7 @@ void RenderPreBattleInterface()
 		SetFontShadow( FONT_NEARBLACK );
 
 		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, pSectorName, lengthof(pSectorName), TRUE );
-		mprintf( 70, 17, L"%s %s", gpStrategicString[ STR_PB_SECTOR ], pSectorName );
+		mprintf( 70, 17, L"%S %S", gpStrategicString[ STR_PB_SECTOR ], pSectorName );
 
 		//enemy
 		SetFont( FONT14ARIAL );
