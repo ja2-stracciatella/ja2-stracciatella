@@ -392,7 +392,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 			{
 				pNode->pDetailedPlacement->name[i] = tempDetailedPlacement.name[i];
 			}
-			memcpy(&pNode->pDetailedPlacement->ubSoldierClass, &tempDetailedPlacement.ubSoldierClass, (UINT8*)(&tempDetailedPlacement.name + 1) - (UINT8*)&tempDetailedPlacement.ubSoldierClass);
+			memcpy(&pNode->pDetailedPlacement->ubSoldierClass, &tempDetailedPlacement.ubSoldierClass, (UINT8*)(&tempDetailedPlacement + 1) - (UINT8*)&tempDetailedPlacement.ubSoldierClass);
 #else
 			memcpy( pNode->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
 #endif
