@@ -284,7 +284,7 @@ UINT32 ErrorScreenHandle(void)
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	SetFontShadow( 60 );		 //60 is near black
-	mprintf( 50, 255, L"%S", gubErrorText );
+	mprintf( 50, 255, L"%s", gubErrorText );
 	SetFontForeground( FONT_LTRED );
 
 #ifdef JA2BETAVERSION
