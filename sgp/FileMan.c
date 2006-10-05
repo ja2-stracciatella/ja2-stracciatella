@@ -327,7 +327,7 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 	} else if (uiOptions & FILE_ACCESS_READ) {
 		dwAccess = "r";
 	} else if (uiOptions & FILE_ACCESS_WRITE) {
-		dwAccess = "w";
+		dwAccess = "r+"; // XXX HACK do not truncate the file
 	} else {
 		dwAccess = "";
 		abort(); // XXX something is fishy
