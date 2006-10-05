@@ -963,7 +963,26 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	do
+	{
+		for (;;)
+		{
+			UINT8 PxCount = *SrcPtr++;
+			if (PxCount == 0) break;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+			}
+			else
+			{
+				if (iStartPos < iTestPos && iTestPos <= iStartPos + PxCount) return TRUE;
+				SrcPtr += PxCount;
+			}
+			iStartPos += PxCount;
+		}
+		if (iStartPos >= iTestPos) break;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
