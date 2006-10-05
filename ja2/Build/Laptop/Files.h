@@ -2,7 +2,7 @@
 #define __FILES_H
 
 
-#define	FILES_DAT_FILE			"TEMP\\files.dat"
+#define	FILES_DAT_FILE			"Temp\\files.dat"
 
 void GameInitFiles();
 void EnterFiles();
