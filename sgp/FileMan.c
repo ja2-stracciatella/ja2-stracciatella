@@ -271,9 +271,7 @@ BOOLEAN FileDelete(const char *strFilename)
 	BACKSLASH(strFilename);
 
 #if 1 // XXX TODO
-	fprintf(stderr, "===> %s:%d: Ignoring %s(\"%s\")\n", __FILE__, __LINE__, __func__, strFilename);
-	return FALSE;
-	UNIMPLEMENTED();
+	return unlink(strFilename) == 0;
 #else
 	return( DeleteFile( strFilename ) );
 #endif
