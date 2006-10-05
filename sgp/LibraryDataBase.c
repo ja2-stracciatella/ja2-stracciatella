@@ -216,6 +216,13 @@ BOOLEAN CheckForLibraryExistence( STR pLibraryName )
 }
 
 
+static int CompareFileHeader(const void* a, const void* b)
+{
+	const FileHeaderStruct* fhsa = a;
+	const FileHeaderStruct* fhsb = b;
+
+	return strcasecmp(fhsa->pFileName, fhsb->pFileName);
+}
 
 
 BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
@@ -330,6 +337,7 @@ BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BO
 		}
 	}
 
+	qsort(pLibHeader->pFileHeader, usNumEntries, sizeof(*pLibHeader->pFileHeader), CompareFileHeader);
 
 	pLibHeader->usNumberOfEntries = usNumEntries;
 
