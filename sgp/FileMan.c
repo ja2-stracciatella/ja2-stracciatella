@@ -1545,7 +1545,8 @@ FILE* GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return 1024 * 1024 * 1024; // XXX TODO return an arbitrary number for now
 #else
   STRING512		zExecDir;
   STRING512		zDrive;
