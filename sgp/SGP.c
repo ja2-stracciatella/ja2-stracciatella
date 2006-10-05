@@ -651,6 +651,9 @@ int main(int argc, char* argv[])
 				{
 					UINT32 pos = event.button.y << 16 | event.button.x;
 
+					gusMouseXPos = event.button.x;
+					gusMouseYPos = event.button.y;
+
 					switch (event.button.button)
 					{
 						case SDL_BUTTON_LEFT:
@@ -670,6 +673,9 @@ int main(int argc, char* argv[])
 				{
 					UINT32 pos = event.button.y << 16 | event.button.x;
 
+					gusMouseXPos = event.button.x;
+					gusMouseYPos = event.button.y;
+
 					switch (event.button.button)
 					{
 						case SDL_BUTTON_LEFT:
@@ -684,6 +690,11 @@ int main(int argc, char* argv[])
 					}
 					break;
 				}
+
+				case SDL_MOUSEMOTION:
+					gusMouseXPos = event.motion.x;
+					gusMouseYPos = event.motion.y;
+					break;
 
 				case SDL_QUIT:
 					gfProgramIsRunning = FALSE;
