@@ -1206,9 +1206,9 @@ BOOLEAN GetVSurfacePaletteEntries( HVSURFACE hVSurface, SGPPaletteEntry *pPalett
 
 	for (i = 0; i < 256; i++)
 	{
-		pPalette[i].peRed = hVSurface->pPalette[i].r;
-		pPalette[i].peRed = hVSurface->pPalette[i].g;
-		pPalette[i].peRed = hVSurface->pPalette[i].b;
+		pPalette[i].peRed   = hVSurface->pPalette[i].r;
+		pPalette[i].peGreen = hVSurface->pPalette[i].g;
+		pPalette[i].peBlue  = hVSurface->pPalette[i].b;
 	}
 
 	return( TRUE );
