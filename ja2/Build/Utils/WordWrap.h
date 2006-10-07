@@ -2,7 +2,6 @@
 #define	__WORDWRAP_H_
 
 #include "Types.h"
-#include "Files.h"
 
 //Flags for DrawTextToScreen()
 
@@ -55,7 +54,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 BOOLEAN WillThisStringGetCutOff( INT32 iCurrentYPosition, INT32 iBottomOfPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap, INT32 iPage  );
 BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap );
 INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap );
-FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidthPtr iWidthArray );
 
 // Places a shadow the width an height of the string, to PosX, posY
 void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY );

@@ -992,6 +992,118 @@ BOOLEAN DisplayFormattedText( void )
 }
 
 
+static FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidthPtr WidthList )
+{
+	// get the first record on this page - build pages up until this point
+
+	FileStringPtr CurrentRecord = NULL;
+
+	INT32 iCurrentPositionOnThisPage = 0;
+	INT32 iCurrentPage =0;
+	INT32 iCounter =0;
+	FileRecordWidthPtr pWidthList = WidthList;
+	UINT16 usCurrentWidth = usWidth;
+
+
+
+
+	// null record list, nothing to do
+	if( RecordList == NULL )
+	{
+
+		return ( CurrentRecord );
+
+	}
+
+	CurrentRecord = RecordList;
+
+	// while we are not on the current page
+	while( iCurrentPage < iPage )
+	{
+
+
+		usCurrentWidth = usWidth;
+		pWidthList = WidthList;
+
+		while( pWidthList )
+		{
+
+			if( iCounter == pWidthList->iRecordNumber )
+			{
+				usCurrentWidth = ( INT16 ) pWidthList->iRecordWidth;
+//				iCurrentPositionOnThisPage += pWidthList->iRecordHeightAdjustment;
+
+
+				if( pWidthList->iRecordHeightAdjustment == iPageSize )
+				{
+					if( iCurrentPositionOnThisPage != 0 )
+						iCurrentPositionOnThisPage += iPageSize - iCurrentPositionOnThisPage;
+				}
+				else
+					iCurrentPositionOnThisPage += pWidthList->iRecordHeightAdjustment;
+
+			}
+			pWidthList = pWidthList ->Next;
+
+		}
+
+		// build record list to this point
+		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
+															  uiFont, 0, CurrentRecord->pString,
+															 0, 0, 0 ) )  < iPageSize )
+		{
+
+
+
+
+
+
+			// still room on this page
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
+															  uiFont, 0, CurrentRecord->pString,
+															 0, 0, 0 ) ;
+
+			// next record
+			CurrentRecord = CurrentRecord->Next;
+			iCounter++;
+
+			usCurrentWidth = usWidth;
+			pWidthList = WidthList;
+			while( pWidthList )
+			{
+
+				if( iCounter == pWidthList->iRecordNumber )
+				{
+					usCurrentWidth = ( INT16 ) pWidthList->iRecordWidth;
+
+					if( pWidthList->iRecordHeightAdjustment == iPageSize )
+					{
+						if( iCurrentPositionOnThisPage != 0 )
+							iCurrentPositionOnThisPage += iPageSize - iCurrentPositionOnThisPage;
+					}
+					else
+						iCurrentPositionOnThisPage += pWidthList->iRecordHeightAdjustment;
+
+				}
+				pWidthList = pWidthList->Next;
+			}
+
+		}
+
+		// reset position
+		iCurrentPositionOnThisPage = 0;
+
+
+		// next page
+		iCurrentPage++;
+//		iCounter++;
+
+	}
+
+	return ( CurrentRecord );
+}
+
+
 BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 {
 	INT32 iCounter = 0;
