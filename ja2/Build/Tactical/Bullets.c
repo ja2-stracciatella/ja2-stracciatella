@@ -10,7 +10,6 @@
 	#include "VSurface.h"
 	#include "Render_Dirty.h"
 	#include "SysUtil.h"
-	#include "Container.h"
 	#include "WCheck.h"
 	#include "VObject_Blitters.h"
 	#include "Faces.h"
