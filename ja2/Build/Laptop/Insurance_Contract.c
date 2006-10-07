@@ -33,6 +33,7 @@
 	#include "ScreenIDs.h"
 	#include "JAScreens.h"
 	#include "Font_Control.h"
+	#include "EMail.h"
 #endif
 
 #define		INS_CTRCT_ORDER_GRID_WIDTH					132

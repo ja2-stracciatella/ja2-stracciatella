@@ -35,6 +35,7 @@
 	#include "VSurface.h"
 	#include <stdlib.h>
 	#include "Font_Control.h"
+	#include "EMail.h"
 #endif
 
 #include "Soldier_Macros.h"

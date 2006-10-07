@@ -1692,6 +1692,63 @@ SetUnNewMessages()
 	return;
 }
 
+
+static RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize )
+{
+	// get the first record on this page - build pages up until this point
+
+	RecordPtr CurrentRecord = NULL;
+
+	INT32 iCurrentPositionOnThisPage = 0;
+	INT32 iCurrentPage =0;
+
+
+
+	// null record list, nothing to do
+	if( RecordList == NULL )
+	{
+
+		return ( CurrentRecord );
+
+	}
+
+	CurrentRecord = RecordList;
+
+	// while we are not on the current page
+	while( iCurrentPage < iPage )
+	{
+		// build record list to this point
+		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usWidth, ubGap,
+															  uiFont, 0, CurrentRecord->pRecord,
+															 0, 0, 0 ) )  <= iPageSize )
+		{
+
+			// still room on this page
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usWidth, ubGap,
+															  uiFont, 0, CurrentRecord->pRecord,
+															 0, 0, 0 ) ;
+
+			// next record
+			CurrentRecord = CurrentRecord -> Next;
+
+			// check if we have gone too far?
+			if( CurrentRecord == NULL )
+			{
+				return( CurrentRecord );
+			}
+		}
+
+		// reset position
+		iCurrentPositionOnThisPage = 0;
+
+		// next page
+		iCurrentPage++;
+	}
+
+	return ( CurrentRecord );
+}
+
+
 INT32 DisplayEmailMessage(EmailPtr pMail)
 {
   HVOBJECT hHandle;
