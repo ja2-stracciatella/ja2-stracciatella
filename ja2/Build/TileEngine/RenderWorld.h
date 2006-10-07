@@ -1,7 +1,7 @@
 #ifndef __RENDERWORLD_H
 #define __RENDERWORLD_H
 
-#include "WorldDef.h"
+#include "VObject.h"
 
 // TEMP SELECT STUFF
 #define		NO_SELECT			0
