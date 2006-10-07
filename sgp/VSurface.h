@@ -116,9 +116,6 @@ BOOLEAN InitializeVideoSurfaceManager( );
 // Deletes any video Surface placed into list
 BOOLEAN ShutdownVideoSurfaceManager( );
 
-// Restores all video Surfaces in list
-BOOLEAN RestoreVideoSurfaces( );
-
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend);
@@ -164,8 +161,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc );
 // Gets the RGB palette entry values
 BOOLEAN GetVSurfacePaletteEntries( HVSURFACE hVSurface, SGPPaletteEntry *pPalette );
 
-BOOLEAN RestoreVideoSurface( HVSURFACE hVSurface );
-
 // Returns a flat pointer for direct manipulation of data
 BYTE *LockVideoSurfaceBuffer( HVSURFACE hVSurface, UINT32 *pPitch );
 
@@ -180,9 +175,6 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 
 // Sets HVSurface palette, creates if nessessary. Also sets 16BPP palette
 BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalette );
-
-// Used if it's in video memory, will re-load backup copy
-//BOOLEAN RestoreVideoSurface( HVSurface hVSurface );
 
 // Deletes all data, including palettes, regions, DD Surfaces
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface );

@@ -256,7 +256,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
           {
 #ifdef JA2
 	          RestoreVideoManager();
-		        RestoreVideoSurfaces();	// Restore any video surfaces
 
 						// unpause the JA2 Global clock
             if ( !gfPauseDueToPlayerGamePause )
@@ -267,7 +266,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 						if(!VideoInspectorIsEnabled())
 						{
 	            RestoreVideoManager();
-		          RestoreVideoSurfaces();	// Restore any video surfaces
 						}
 
 	          MoveTimer(TIMER_RESUME);

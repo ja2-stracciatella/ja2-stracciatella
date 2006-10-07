@@ -146,26 +146,6 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 }
 
 
-BOOLEAN RestoreVideoSurfaces( )
-{
-	VSURFACE_NODE *curr;
-
-  //
-	// Loop through Video Surfaces and Restore
-  //
-	curr = gpVSurfaceTail;
-	while( curr )
-	{
-		if( !RestoreVideoSurface( curr->hVSurface ) )
-		{
-			return FALSE;
-		}
-		curr = curr->prev;
-	}
-	return TRUE;
-}
-
-
 BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex )
 {
 
@@ -899,65 +879,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
   DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_3, String("Success in Creating Video Surface" ) );
 
 	return( hVSurface );
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Called when surface is lost, for the most part called by utility functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOLEAN RestoreVideoSurface( HVSURFACE hVSurface )
-{
-	LPDIRECTDRAWSURFACE2		lpDDSurface;
-	LPDIRECTDRAWSURFACE2		lpBackupDDSurface;
-	RECT										aRect;
-
-	Assert( hVSurface != NULL );
-
-  //
-	// Restore is only for VIDEO MEMORY - should check if VIDEO and QUIT if not
-  //
-
-	if ( !( hVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE ) )
-	{
-    //
-		// No second surfaace has been allocated, return failure
-    //
-
-	  DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String("Failed to restore Video Surface surface" ) );
-		return( FALSE );
-	}
-
-  //
-	// Check for valid secondary surface
-  //
-
-	if ( hVSurface->pSavedSurfaceData1 == NULL )
-	{
-    //
-		// No secondary surface available
-    //
-
-	  DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String("Failure in retoring- no secondary surface found" ) );
-		return( FALSE );
-	}
-
-	// Restore primary surface
-	lpDDSurface = ( LPDIRECTDRAWSURFACE2 )hVSurface->pSurfaceData;
-	DDRestoreSurface( lpDDSurface );
-
-	// Blit backup surface data into primary
-	lpBackupDDSurface = ( LPDIRECTDRAWSURFACE2 )hVSurface->pSavedSurfaceData;
-
-	aRect.top = (int)0;
-	aRect.left = (int)0;
-	aRect.bottom = (int)hVSurface->usHeight;
-	aRect.right = (int)hVSurface->usWidth;
-
-	DDBltFastSurface( (LPDIRECTDRAWSURFACE2)hVSurface->pSavedSurfaceData, 0, 0, (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData, &aRect, DDBLTFAST_NOCOLORKEY );
-
-	return( TRUE );
 }
 
 
