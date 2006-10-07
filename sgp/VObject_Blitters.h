@@ -151,9 +151,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 
 BOOLEAN DDBlt8BPPDataTo16BPPBuffer( HVOBJECT hDestVObject, HVOBJECT hSrcVObject, UINT16 usX, UINT16 usY, SGPRect *srcRect );
 BOOLEAN DDBlt8BPPDataTo16BPPBufferFullTransparent( HVOBJECT hDestVObject, HVOBJECT hSrcVObject, UINT16 usX, UINT16 usY, SGPRect *srcRect );
-BOOLEAN DDFillSurface( HVOBJECT hDestVObject, blt_fx *pBltFx );
-BOOLEAN DDFillSurfaceRect( HVOBJECT hDestVObject, blt_fx *pBltFx );
-BOOLEAN BltVObjectUsingDD( HVOBJECT hDestVObject, HVOBJECT hSrcVObject, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
 
 
 BOOLEAN BlitZRect(UINT16 *pZBuffer, UINT32 uiPitch, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, UINT16 usZValue);
