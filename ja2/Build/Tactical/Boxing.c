@@ -23,6 +23,7 @@
 	#include "StrategicMap.h"
 	#include "Animation_Data.h"
 	#include "Stubs.h" // XXX
+	#include "Items.h"
 #endif
 
 #ifdef JA2TESTVERSION

@@ -17,6 +17,7 @@
 	#include "Quests.h"
 	#include "Scheduling.h"
 	#include "MemMan.h"
+	#include "Items.h"
 #endif
 
 

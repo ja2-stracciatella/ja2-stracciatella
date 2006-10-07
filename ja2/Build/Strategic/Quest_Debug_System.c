@@ -45,6 +45,7 @@
 	#include  "VSurface.h"
 	#include  "FileMan.h"
 	#include  "SGP.h"
+	#include  "Items.h"
 #endif
 
 //#ifdef JA2BETAVERSION

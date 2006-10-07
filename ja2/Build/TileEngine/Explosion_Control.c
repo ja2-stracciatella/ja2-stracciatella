@@ -64,6 +64,7 @@
 	#include "Map_Information.h"
 	#include "MemMan.h"
 	#include "FileMan.h"
+	#include "Items.h"
 #endif
 
 #include "Soldier_Macros.h"

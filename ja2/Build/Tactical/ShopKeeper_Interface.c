@@ -56,6 +56,7 @@
 	#include "Debug.h"
 	#include "JAScreens.h"
 	#include "ScreenIDs.h"
+	#include "Items.h"
 #endif
 
 #include "BuildDefines.h"

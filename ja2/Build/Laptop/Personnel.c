@@ -36,6 +36,7 @@
 	#include <stdlib.h>
 	#include "Font_Control.h"
 	#include "EMail.h"
+	#include "Items.h"
 #endif
 
 #include "Soldier_Macros.h"

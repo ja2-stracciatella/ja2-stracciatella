@@ -1,7 +1,7 @@
 #ifndef __WORLD_ITEMS
 #define __WORLD_ITEMS
 
-#include "Items.h"
+#include "Item_Types.h"
 
 
 #define	WORLD_ITEM_DONTRENDER												0x0001

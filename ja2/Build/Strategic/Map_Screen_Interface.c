@@ -62,6 +62,7 @@
 	#include "VSurface.h"
 	#include "WCheck.h"
 	#include "EMail.h"
+	#include "Items.h"
 #endif
 
 // inventory pool position on screen

@@ -78,6 +78,7 @@
 	#include "MemMan.h"
 	#include <stdlib.h>
 	#include "Debug.h"
+	#include "Items.h"
 #endif
 
 #define		ITEMDESC_FONT							BLOCKFONT2

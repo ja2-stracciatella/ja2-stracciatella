@@ -1,7 +1,7 @@
 #ifndef __TEXT_H
 #define __TEXT_H
 
-#include "Items.h"
+#include "Item_Types.h"
 #include "Types.h"
 
 #define STRING_LENGTH 255

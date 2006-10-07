@@ -57,6 +57,7 @@
 	#include "Message.h"
 	#include "Debug.h"
 	#include "Video.h"
+	#include "Items.h"
 #endif
 
 #define ARROWS_X_OFFSET			10

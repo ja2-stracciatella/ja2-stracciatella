@@ -49,6 +49,7 @@
 	#include "Video.h"
 	#include "ScreenIDs.h"
 	#include "FileMan.h"
+	#include "Items.h"
 #endif
 
 // the delay for a group about to arrive

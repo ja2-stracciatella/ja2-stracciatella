@@ -32,6 +32,7 @@
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "FileMan.h"
+	#include "Items.h"
 #endif
 
 #include "Campaign.h"

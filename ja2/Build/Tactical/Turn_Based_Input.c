@@ -113,6 +113,7 @@
 	#include "VSurface.h"
 	#include "MemMan.h"
 	#include "Button_System.h"
+	#include "Items.h"
 #endif
 
 	#include	"Quest_Debug_System.h"

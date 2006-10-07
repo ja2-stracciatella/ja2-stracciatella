@@ -54,6 +54,7 @@
 	#include "Personnel.h"
 	#include "Environment.h"
 	#include "Player_Command.h"
+	#include "Items.h"
 #endif
 
 #ifdef JA2EDITOR

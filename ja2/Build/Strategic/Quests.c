@@ -31,6 +31,7 @@
 	#include "Strategic.h"
 	#include "Strategic_Event_Handler.h"
 	#include "FileMan.h"
+	#include "Items.h"
 #endif
 
 #include "BobbyRMailOrder.h"

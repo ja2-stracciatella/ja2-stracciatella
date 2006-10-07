@@ -33,6 +33,7 @@
 	#include "Explosion_Control.h"
 	#include "JAScreens.h"
 	#include "ScreenIDs.h"
+	#include "Items.h"
 #endif
 
 extern void DecayPublicOpplist( INT8 bTeam );

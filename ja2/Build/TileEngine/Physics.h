@@ -3,7 +3,6 @@
 
 #include "Phys_Math.h"
 #include "WorldDef.h"
-#include "Items.h"
 #include "Soldier_Control.h"
 
 

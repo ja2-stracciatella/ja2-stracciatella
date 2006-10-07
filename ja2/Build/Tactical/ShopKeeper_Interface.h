@@ -1,6 +1,7 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
+#include "Soldier_Control.h"
 #include "Store_Inventory.h"
 
 
