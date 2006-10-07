@@ -24,6 +24,16 @@
 #endif
 
 
+typedef struct
+{
+	CHAR8    sFileName[FILENAME_SIZE];
+	UINT32   uiOffset;
+	UINT32   uiLength;
+	UINT8    ubState;
+	UINT8    ubReserved;
+	FILETIME sFileTime;
+	UINT16   usReserved2;
+} DIRENTRY;
 
 
 //used when doing the binary search of the libraries
