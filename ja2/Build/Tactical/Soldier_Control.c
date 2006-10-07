@@ -5526,7 +5526,7 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
 	}
 
 
-	CreateSoldierPaletteTables( pSoldier, HVOBJECT_GLOW_GREEN );
+	CreateSoldierPaletteTables(pSoldier);
 
 
 	// Build a grayscale palette for testing grayout of mercs

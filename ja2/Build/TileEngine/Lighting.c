@@ -3627,7 +3627,7 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 }
 
 
-UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier, UINT32 uiType)
+UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 {
 	SGPPaletteEntry LightPal[256];
 	UINT32 uiCount;
