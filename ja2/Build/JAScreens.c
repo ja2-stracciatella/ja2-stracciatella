@@ -924,11 +924,11 @@ UINT32 SexScreenHandle(void)
 
 	if( bCurFrame < 24 )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
+		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, 0, sX, sY, VO_BLT_SRCTRANSPARENCY);
 	}
 	else
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, (INT8)(bCurFrame%8 ), sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
+		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, (INT8)(bCurFrame%8 ), sX, sY, VO_BLT_SRCTRANSPARENCY);
 	}
 
 	InvalidateRegion( sX, sY, (INT16)( sX + pTrav->usWidth ), (INT16)( sY + pTrav->usHeight ) );
@@ -985,7 +985,7 @@ void DoDemoIntroduction()
 		AssertMsg( 0, "Failed to load DemoAds\\DemoScreen1.sti" );
 		return;
 	}
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL );
+	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
 	DeleteVideoObjectFromIndex( uiTempID );
 	InvalidateScreen();
 
@@ -1109,8 +1109,8 @@ void DisplayTopwareGermanyAddress()
 	UnLockVideoSurface( FRAME_BUFFER );
 
 	//Draw the anti-aliased address now.
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400, VO_BLT_SRCTRANSPARENCY, NULL );
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400, VO_BLT_SRCTRANSPARENCY, NULL );
+	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400, VO_BLT_SRCTRANSPARENCY);
 	InvalidateRegion( 208, 390, 431, 475 );
 	DeleteVideoObjectFromIndex( uiTempID );
 	ExecuteBaseDirtyRectQueue();
@@ -1345,7 +1345,7 @@ UINT32 DemoExitScreenHandle(void)
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL );
+			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			PlayJA2SampleFromFile( "DemoAds\\Swoosh.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
@@ -1530,7 +1530,7 @@ UINT32 DemoExitScreenHandle(void)
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL );
+			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			PlayJA2SampleFromFile( "DemoAds\\Swoosh.wav", RATE_11025, MIDVOLUME, 1, MIDDLEPAN );

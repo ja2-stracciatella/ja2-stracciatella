@@ -653,7 +653,7 @@ void RenderTopmostTacticalInterface( )
 						sX -= 10;
 						sY -= 10;
 
-						BltVideoObjectFromIndex(  FRAME_BUFFER, uiBogTarget, 0, sX, sY, VO_BLT_SRCTRANSPARENCY, NULL );
+						BltVideoObjectFromIndex(  FRAME_BUFFER, uiBogTarget, 0, sX, sY, VO_BLT_SRCTRANSPARENCY);
 						InvalidateRegion( sX, sY, sX + 20, sY + 20 );
 					}
 				}

@@ -715,7 +715,7 @@ BOOLEAN ImageFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 		xc = (INT16)iDestX1;
 		for(w=0;w<wblits;w++)
 		{
-			BltVideoObject(uiDestVSurface, BkgrndImg, Index, xc+Ox, yc+Oy, VO_BLT_SRCTRANSPARENCY, NULL);
+			BltVideoObject(uiDestVSurface, BkgrndImg, Index, xc+Ox, yc+Oy, VO_BLT_SRCTRANSPARENCY);
 			xc += pw;
 		}
 		yc += ph;
@@ -2320,7 +2320,7 @@ VSURFACE_DESC hDesc;
 
 		if(AddVideoSurface(&hDesc, &uiVSurface))
 		{
-			if(BltVideoObjectFromIndex(uiVSurface, uiVObject, usSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY, NULL))
+			if(BltVideoObjectFromIndex(uiVSurface, uiVObject, usSubIndex, 0, 0, VO_BLT_SRCTRANSPARENCY))
 			{
 				*puiVSurface=uiVSurface;
 				return(TRUE);

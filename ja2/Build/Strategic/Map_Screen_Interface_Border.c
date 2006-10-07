@@ -173,7 +173,7 @@ void RenderMapBorder( void )
 
 	// get and blt border
 	GetVideoObject(&hHandle, guiMapBorder );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,MAP_BORDER_X, MAP_BORDER_Y, VO_BLT_SRCTRANSPARENCY,NULL );
+	BltVideoObject( guiSAVEBUFFER , hHandle, 0,MAP_BORDER_X, MAP_BORDER_Y, VO_BLT_SRCTRANSPARENCY);
 
 	// show the level marker
 	DisplayCurrentLevelMarker( );
@@ -202,7 +202,7 @@ void RenderMapBorderCorner( void )
 
 	// get and blt corner
 	GetVideoObject(&hHandle, guiMapBorderCorner );
-	BltVideoObject( FRAME_BUFFER , hHandle, 0,MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, VO_BLT_SRCTRANSPARENCY,NULL );
+	BltVideoObject( FRAME_BUFFER , hHandle, 0,MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, VO_BLT_SRCTRANSPARENCY);
 
 	InvalidateRegion( MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, 635, 315);
 
@@ -236,7 +236,7 @@ void RenderMapBorderEtaPopUp( void )
 
 	// get and blt ETA box
 	GetVideoObject(&hHandle, guiMapBorderEtaPopUp );
-	BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + 215, 291, VO_BLT_SRCTRANSPARENCY,NULL );
+	BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + 215, 291, VO_BLT_SRCTRANSPARENCY);
 
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
 
@@ -1088,7 +1088,7 @@ void DisplayCurrentLevelMarker( void )
 
 	// it's actually a white rectangle, not a green arrow!
 	GetVideoObject(&hHandle, guiLEVELMARKER );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,	MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ), VO_BLT_SRCTRANSPARENCY,NULL );
+	BltVideoObject( guiSAVEBUFFER , hHandle, 0,	MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ), VO_BLT_SRCTRANSPARENCY);
 
 	return;
 }

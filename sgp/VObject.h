@@ -31,14 +31,6 @@ typedef UINT32 COLORVAL;
 #define HVOBJECT_GLOW_YELLOW										2
 #define HVOBJECT_GLOW_RED												3
 
-// Effects structure for specialized blitting
-typedef struct
-{
-	UINT32	uiShadowLevel;
-	SGPRect	ClipRect;
-
-} blt_fx;
-
 
 // Z-buffer info structure for properly assigning Z values
 typedef struct
@@ -160,21 +152,9 @@ UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hVSrcObject,
-												 UINT16 usRegionIndex,
-												 INT32	iDestX,
-												 INT32  iDestY,
-												 UINT32 fBltFlags,
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags);
 
-BOOLEAN BltVideoObjectFromIndex(  UINT32	uiDestVSurface,
-												 UINT32 uiSrcVObject,
-												 UINT16 usRegionIndex,
-												 INT32	iDestX,
-												 INT32  iDestY,
-												 UINT32 fBltFlags,
-												 blt_fx *pBltFx );
+BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags);
 
 // Sets transparency
 BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );
@@ -232,8 +212,6 @@ extern BOOLEAN gfVideoObjectsInit;
 
 // These blitting functions more-or less encapsolate all of the functionality of DirectDraw
 // Blitting, giving an API layer for portability.
-
-BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_fx *pBltFx );
 
 HVOBJECT GetPrimaryVideoObject( );
 HVOBJECT GetBackBufferVideoObject( );

@@ -255,7 +255,11 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 	return FALSE;
 }
 
-BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, blt_fx *pBltFx )
+
+static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags);
+
+
+BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags)
 {
 	UINT16               *pBuffer;
 	UINT32								uiPitch;
@@ -280,7 +284,7 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
-	if ( !BltVideoObjectToBuffer( pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags, pBltFx ) )
+	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags))
 	{
     UnLockVideoSurface( uiDestVSurface );
 		// VO Blitter will set debug messages for error conditions
@@ -356,13 +360,7 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 // Based on flags, blit accordingly
 // There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
 // clipping lists
-BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
-												 HVOBJECT hSrcVObject,
-												 UINT16 usRegionIndex,
-												 INT32  iDestX,
-												 INT32  iDestY,
-												 UINT32 fBltFlags,
-												 blt_fx *pBltFx )
+BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags)
 {
 
 	UINT16								*pBuffer;
@@ -377,7 +375,7 @@ BOOLEAN BltVideoObject(  UINT32	uiDestVSurface,
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
-	if ( !BltVideoObjectToBuffer( pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags, pBltFx ) )
+	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags))
 	{
 		UnLockVideoSurface( uiDestVSurface );
 		// VO Blitter will set debug messages for error conditions
@@ -697,7 +695,7 @@ UINT32 count;
 // *******************************************************************
 
 // High level blit function encapsolates ALL effects and BPP
-BOOLEAN BltVideoObjectToBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_fx *pBltFx )
+static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags)
 {
 
 	// Assertions

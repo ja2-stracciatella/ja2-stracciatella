@@ -201,7 +201,7 @@ BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 
 	//Get and display the insurance bullet
 	GetVideoObject(&hPixHandle, guiInsCmntBulletImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INS_CMNT_FIRST_BULLET_X, usPosY, VO_BLT_SRCTRANSPARENCY,NULL);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INS_CMNT_FIRST_BULLET_X, usPosY, VO_BLT_SRCTRANSPARENCY);
 
 	//Display the commenters comment
 	GetInsuranceText( ubComment, sText );			//+INS_CMNT_COMMENT_OFFSET_Y
