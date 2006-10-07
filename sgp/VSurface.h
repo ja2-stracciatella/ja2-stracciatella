@@ -2,7 +2,6 @@
 #define __VSURFACE_H
 
 #include "Types.h"
-#include "Container.h"
 #include "HImage.h"
 #include "VObject.h"
 #include <SDL.h>
@@ -30,8 +29,6 @@
 #define VS_BLT_USEDESTCOLORKEY									0x000000200
 #define VS_BLT_FAST															0x000000004
 #define VS_BLT_CLIPPED													0x000000008
-#define VS_BLT_SRCREGION												0x000000010
-#define VS_BLT_DESTREGION												0x000000080
 #define VS_BLT_SRCSUBRECT												0x000000040
 #define VS_BLT_COLORFILLRECT										0x000000100
 #define VS_BLT_MIRROR_Y													0x000001000
@@ -67,22 +64,6 @@ typedef struct
 #define VSURFACE_CREATE_DEFAULT			  0x00000020		// Creates and empty Surface of given width, height and BPP
 #define VSURFACE_CREATE_FROMFILE			 0x00000040		// Creates a video Surface from a file ( using HIMAGE )
 
-//
-// The following structure is used to define a region of the video Surface
-// These regions are stored via a HLIST
-//
-
-typedef struct
-{
-	SGPRect								RegionCoords;							// Rectangle describing coordinates of region
-	SGPPoint							Origin;										// Origin used for hot spots, etc
-	UINT8									ubHitMask;								// Byte flags for hit detection
-
-} VSURFACE_REGION;
-
-//
-// This structure is a video Surface. Contains a HLIST of regions
-//
 
 typedef struct
 {
@@ -101,8 +82,6 @@ typedef struct
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 	COLORVAL				TransparentColor;			// Defaults to 0,0,0
 	PTR							pClipper;							// A void pointer encapsolated as a clipper Surface
-	HLIST						RegionList;						// A List of regions within the video Surface
-
 } SGPVSurface, *HVSURFACE;
 
 //
@@ -167,9 +146,6 @@ BOOLEAN ImageFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 // Sets transparency
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor );
 
-// Adds a video Surface region
-BOOLEAN AddVideoSurfaceRegion( UINT32 uiIndex, VSURFACE_REGION *pNewRegion );
-
 // Gets width, hight, bpp information
 BOOLEAN GetVideoSurfaceDescription( UINT32 uiIndex, UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth );
 
@@ -210,25 +186,6 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 
 // Deletes all data, including palettes, regions, DD Surfaces
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface );
-BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Region manipulation functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Regions will allow creation of sections within the Surface to manipulate quickly and cleanly
-// An example would be a cursor tileset
-BOOLEAN AddVSurfaceRegion( HVSURFACE hVSurface, VSURFACE_REGION *pNewRegion );
-BOOLEAN AddVSurfaceRegionAtIndex( HVSURFACE hVSurface, UINT16 usIndex, VSURFACE_REGION *pNewRegion );
-BOOLEAN AddVSurfaceRegions( HVSURFACE hVSurface, VSURFACE_REGION **ppNewRegions, UINT16 uiNumRegions );
-BOOLEAN RemoveVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex );
-BOOLEAN ClearAllVSurfaceRegions( HVSURFACE hVSurface );
-BOOLEAN GetVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex,  VSURFACE_REGION *aRegion );
-BOOLEAN GetNumRegions( HVSURFACE hVSurface , UINT32 *puiNumRegions );
-BOOLEAN ReplaceVSurfaceRegion( HVSURFACE hVSurface , UINT16 usIndex, VSURFACE_REGION *aRegion );
 BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

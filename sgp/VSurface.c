@@ -20,19 +20,6 @@ extern void GetClippingRect(SGPRect *clip);
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Defines
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//
-// This define is sent to CreateList SGP function. It dynamically re-sizes if
-// the list gets larger
-//
-
-#define DEFAULT_NUM_REGIONS		5
-#define DEFAULT_VIDEO_SURFACE_LIST_SIZE	10
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -80,7 +67,6 @@ enum
 {
 	DEBUGSTR_NONE,
 	DEBUGSTR_SETVIDEOSURFACETRANSPARENCY,
-	DEBUGSTR_ADDVIDEOSURFACEREGION,
 	DEBUGSTR_GETVIDEOSURFACEDESCRIPTION,
 	DEBUGSTR_BLTVIDEOSURFACE_DST,
 	DEBUGSTR_BLTVIDEOSURFACE_SRC,
@@ -97,11 +83,6 @@ void CheckValidVSurfaceIndex( UINT32 uiIndex );
 #endif
 
 INT32				giMemUsedInSurfaces;
-
-
-//OBSOLETE!!!!!!!!!
-HLIST				ghVideoSurfaces = NULL;
-//OBSOLETE!!!!!!!!!
 
 
 HVSURFACE		ghBackBuffer = NULL;
@@ -359,28 +340,6 @@ BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 	return( TRUE );
 }
 
-BOOLEAN AddVideoSurfaceRegion( UINT32 uiIndex, VSURFACE_REGION *pNewRegion )
-{
-	HVSURFACE hVSurface;
-
-  //
-	// Get Video Surface
-  //
-
-	#ifdef _DEBUG
-		gubVSDebugCode = DEBUGSTR_ADDVIDEOSURFACEREGION;
-	#endif
-	CHECKF( GetVideoSurface( &hVSurface, uiIndex ) );
-
-  //
-	// Add Region
-  //
-
-	CHECKF( AddVSurfaceRegion( hVSurface, pNewRegion ) );
-
-	return( TRUE );
-
-}
 
 BOOLEAN GetVideoSurfaceDescription( UINT32 uiIndex, UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth )
 {
@@ -844,7 +803,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
 	hVSurface->TransparentColor   = FROMRGB(0, 0, 0);
-	hVSurface->RegionList         = CreateList(DEFAULT_NUM_REGIONS, sizeof(VSURFACE_REGION));
 	hVSurface->fFlags             = 0;
 	hVSurface->pClipper           = NULL;
 
@@ -1310,9 +1268,6 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 								(LPDIRECTDRAWSURFACE2*)&hVSurface->pSavedSurfaceData );
 	}
 
-	// Release region data
-	DeleteList( hVSurface->RegionList );
-
 	//If there is a 16bpp palette, free it
 	if( hVSurface->p16BPPPalette != NULL )
 	{
@@ -1409,80 +1364,6 @@ BOOLEAN SetClipList( HVSURFACE hVSurface, SGPRect *RegionData, UINT16 usNumRegio
 //
 // ********************************************************
 
-BOOLEAN GetNumRegions( HVSURFACE hVSurface , UINT32 *puiNumRegions )
-{
-	Assert( hVSurface );
-
-	*puiNumRegions = ListSize( hVSurface->RegionList );
-
-	return( TRUE );
-
-}
-
-BOOLEAN AddVSurfaceRegion( HVSURFACE hVSurface, VSURFACE_REGION *pNewRegion )
-{
-	Assert( hVSurface != NULL );
-	Assert( pNewRegion != NULL );
-
-	// Add new region to list
-	hVSurface->RegionList = AddtoList( hVSurface->RegionList, pNewRegion, ListSize( hVSurface->RegionList ) );
-
-	return( TRUE );
-}
-
-// Add a group of regions
-BOOLEAN AddVSurfaceRegions( HVSURFACE hVSurface, VSURFACE_REGION **ppNewRegions, UINT16 uiNumRegions )
-{
-	UINT16 cnt;
-
-	Assert( hVSurface != NULL );
-	Assert( ppNewRegions != NULL );
-
-	for ( cnt = 0; cnt < uiNumRegions; cnt++ )
-	{
-		AddVSurfaceRegion( hVSurface, ppNewRegions[ cnt ] );
-	}
-
-	return( TRUE );
-}
-
-BOOLEAN RemoveVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex )
-{
-	VSURFACE_REGION	aRegion;
-
-	Assert( hVSurface != NULL );
-
-	return( RemfromList( hVSurface->RegionList, &aRegion, usIndex ) );
-
-}
-
-BOOLEAN ClearAllVSurfaceRegions( HVSURFACE hVSurface )
-{
-	UINT32 uiListSize, cnt;
-
-	Assert( hVSurface != NULL );
-
-	uiListSize = ListSize( hVSurface->RegionList );
-
-	for ( cnt = uiListSize - 1; cnt >= 0; cnt-- )
-	{
-		RemoveVSurfaceRegion( hVSurface, (UINT16)cnt );
-	}
-
-	return( TRUE );
-}
-
-BOOLEAN GetVSurfaceRegion( HVSURFACE hVSurface, UINT16 usIndex, VSURFACE_REGION *aRegion )
-{
-	Assert( hVSurface != NULL );
-
-	if ( !PeekList( hVSurface->RegionList, aRegion, usIndex ) )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
 
 BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect)
 {
@@ -1497,35 +1378,6 @@ BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect)
 	return( TRUE );
 }
 
-BOOLEAN ReplaceVSurfaceRegion( HVSURFACE hVSurface , UINT16 usIndex, VSURFACE_REGION *aRegion )
-{
-	VSURFACE_REGION OldRegion;
-
-	Assert( hVSurface != NULL );
-
-	// Validate index given
-	if ( !PeekList( hVSurface->RegionList, &OldRegion, usIndex ) )
-	{
-		return( FALSE );
-	}
-
-	// Replace information
-	hVSurface->RegionList = AddtoList( hVSurface->RegionList, aRegion, usIndex );
-
-	return( TRUE );
-}
-
-BOOLEAN AddVSurfaceRegionAtIndex( HVSURFACE hVSurface, UINT16 usIndex, VSURFACE_REGION *pNewRegion )
-{
-	Assert( hVSurface != NULL );
-	Assert( pNewRegion != NULL );
-
-	// Add new region to list
-	hVSurface->RegionList = AddtoList( hVSurface->RegionList, pNewRegion, usIndex );
-
-	return( TRUE );
-
-}
 
 // *******************************************************************
 //
@@ -1538,7 +1390,6 @@ BOOLEAN AddVSurfaceRegionAtIndex( HVSURFACE hVSurface, UINT16 usIndex, VSURFACE_
 
 BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_vs_fx *pBltFx )
 {
-	VSURFACE_REGION aRegion;
 	RECT					 SrcRect, DestRect;
 	UINT8					*pSrcSurface8, *pDestSurface8;
 	UINT16				*pDestSurface16, *pSrcSurface16;
@@ -1546,24 +1397,6 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 
 	// Assertions
 	Assert( hDestVSurface != NULL );
-
-	// Check that both region and subrect are not given
-	if ((fBltFlags&VS_BLT_SRCREGION) && (fBltFlags&VS_BLT_SRCSUBRECT))
-	{
-			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Inconsistant blit flags given" ));
-			return( FALSE );
-	}
-
-	// Check for dest src options
-	if ( fBltFlags & VS_BLT_DESTREGION )
-	{
-			CHECKF( pBltFx != NULL );
-			CHECKF( GetVSurfaceRegion( hDestVSurface, pBltFx->DestRegion, &aRegion ) );
-
-			// Set starting coordinates from destination region
-			iDestY = aRegion.RegionCoords.iTop;
-			iDestX = aRegion.RegionCoords.iLeft;
-	}
 
 	// Check for fill, if true, fill entire region with color
 	if ( fBltFlags & VS_BLT_COLORFILL )
@@ -1580,18 +1413,6 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 	// Check for source coordinate options - from region, specific rect or full src dimensions
 	do
 	{
-		// Get Region from index, if specified
-		if ( fBltFlags & VS_BLT_SRCREGION )
-		{
-			CHECKF( GetVSurfaceRegion( hSrcVSurface, usIndex, &aRegion ) )
-
-			SrcRect.top = (int)aRegion.RegionCoords.iTop;
-			SrcRect.left = (int)aRegion.RegionCoords.iLeft;
-			SrcRect.bottom = (int)aRegion.RegionCoords.iBottom;
-			SrcRect.right = (int)aRegion.RegionCoords.iRight;
-			break;
-		}
-
 		// Use SUBRECT if specified
 		if ( fBltFlags & VS_BLT_SRCSUBRECT )
 		{
@@ -1819,7 +1640,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->pSurfaceData      = NULL; // XXX remove
 	hVSurface->pSurfaceData1     = NULL; // XXX remove
 	hVSurface->pSavedSurfaceData = NULL; // XXX remove
-	hVSurface->RegionList        = CreateList( DEFAULT_NUM_REGIONS, sizeof( VSURFACE_REGION ) );
 	hVSurface->fFlags            = 0;
 
 	if (surface->format->palette != NULL) // XXX necessary?
@@ -2353,9 +2173,6 @@ void CheckValidVSurfaceIndex( UINT32 uiIndex )
 		{
 			case DEBUGSTR_SETVIDEOSURFACETRANSPARENCY:
 				sprintf( str, "SetVideoSurfaceTransparency" );
-				break;
-			case DEBUGSTR_ADDVIDEOSURFACEREGION:
-				sprintf( str, "AddVideoSurfaceRegion" );
 				break;
 			case DEBUGSTR_GETVIDEOSURFACEDESCRIPTION:
 				sprintf( str, "GetVideoSurfaceDescription" );
