@@ -1786,7 +1786,7 @@ void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UI
 }
 
 
-BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont )
+BOOLEAN ReduceStringLength( wchar_t * pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont )
 {
 	wchar_t			OneChar[2];
 	wchar_t			zTemp[ 1024 ];
@@ -1851,7 +1851,7 @@ BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidthToFitIn,
 
 
 	//combine the temp string and the '...' to form the finished string
-	swprintf( pString, Length, L"%s%s", zTemp, zStrDots );
+	swprintf( pString, Length, L"%S%S", zTemp, zStrDots );
 
 	return( TRUE );
 }
