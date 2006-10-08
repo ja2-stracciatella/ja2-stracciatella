@@ -58,19 +58,15 @@ extern HDIGDRIVER SoundGetDriverHandle(void);
 
 // Cache control functions
 extern UINT32		SoundLoadSample(const char *pFilename);
-extern BOOLEAN	SoundEmptyCache(void);
-extern BOOLEAN	SoundSampleIsInUse(UINT32 uiSample);
 
 // Play/service sample functions
 extern UINT32		SoundPlay(const char *pFilename, SOUNDPARMS *pParms);
 extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms );
 
 extern UINT32		SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms);
-extern BOOLEAN	SoundRandomShouldPlay(UINT32 uiSample);
 extern BOOLEAN	SoundServiceStreams(void);
 
 // Sound instance manipulation functions
-extern BOOLEAN	SoundStopMusic(void);
 extern BOOLEAN	SoundStopAll(void);
 extern BOOLEAN	SoundStopAllRandom(void);
 extern BOOLEAN	SoundStop(UINT32 uiSoundID);
