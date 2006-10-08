@@ -35,60 +35,6 @@ typedef struct {
 				UINT32			uiVolume;
 				} SOUND3DPOS;
 
-// Struct definition for sample slots in the cache
-//		Holds the regular sample data, as well as the
-//		data for the random samples
-
-typedef struct {
-				CHAR8				pName[128];						// Path to sample data
-				UINT32			uiSize;								// Size of sample data
-				UINT32			uiSoundSize;					// Playable sound size
-				UINT32			uiFlags;							// Status flags
-				UINT32			uiSpeed;							// Playback frequency
-				BOOLEAN			fStereo;							// Stereo/Mono
-				UINT8				ubBits;								// 8/16 bits
-				PTR					pData;								// pointer to sample data memory
-				PTR					pSoundStart;					// pointer to start of sound data
-				UINT32			uiCacheHits;
-
-				UINT32			uiTimeNext;						// Random sound data
-				UINT32			uiTimeMin, uiTimeMax;
-				UINT32			uiSpeedMin, uiSpeedMax;
-				UINT32			uiVolMin, uiVolMax;
-				UINT32			uiPanMin, uiPanMax;
-				UINT32			uiPriority;
-				UINT32			uiInstances;
-				UINT32			uiMaxInstances;
-
-				UINT32			uiAilWaveFormat;			// AIL wave sample type
-				UINT32			uiADPCMBlockSize;			// Block size for compressed files
-
-				} SAMPLETAG;
-
-// Structure definition for slots in the sound output
-//		These are used for both the cached and double-buffered
-//		streams
-typedef struct {
-				SAMPLETAG		*pSample;
-				UINT32			uiSample;
-				HSAMPLE			hMSS;
-				HSTREAM			hMSSStream;
-				H3DSAMPLE		hM3D;
-				UINT32			uiFlags;
-				UINT32			uiSoundID;
-				UINT32			uiPriority;
-				void				(*pCallback)(UINT8*, UINT32, UINT32, UINT32, void *);
-				void				*pData;
-				void				(*EOSCallback)(void *);
-				void				*pCallbackData;
-				UINT32			uiTimeStamp;
-				BOOLEAN			fLooping;
-				HWFILE			hFile;
-				UINT32			uiFadeVolume;
-				UINT32			uiFadeRate;
-				UINT32			uiFadeTime;
-				} SOUNDTAG;
-
 // Structure definition for sound parameters being passed down to
 //		the sample playing function
 typedef struct {
