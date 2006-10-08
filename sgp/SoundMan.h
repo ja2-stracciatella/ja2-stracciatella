@@ -24,16 +24,6 @@ extern "C" {
 #define		PRIORITY_MAX					0xfffffffe
 #define		PRIORITY_RANDOM				PRIORITY_MAX-1
 
-// Structure definition for 3D sound positional information used by
-// various other structs and functions
-typedef struct {
-				FLOAT				flX, flY, flZ;
-				FLOAT				flVelX, flVelY, flVelZ;
-				FLOAT				flFaceX, flFaceY, flFaceZ;
-				FLOAT				flUpX, flUpY, flUpZ;
-				FLOAT				flFalloffMin, flFalloffMax;
-				UINT32			uiVolume;
-				} SOUND3DPOS;
 
 // Structure definition for sound parameters being passed down to
 //		the sample playing function
@@ -48,20 +38,6 @@ typedef struct {
 				void				*pCallbackData;
 				} SOUNDPARMS;
 
-// Structure definition for 3D sound parameters being passed down to
-//		the sample playing function
-typedef struct {
-				UINT32			uiSpeed;
-				UINT32			uiPitchBend;					// Random pitch bend range +/-
-				UINT32			uiVolume;							// volume at distance zero
-				UINT32			uiLoop;
-				UINT32			uiPriority;
-				void				(*EOSCallback)(void *);
-				void				*pCallbackData;
-
-				SOUND3DPOS	Pos; // NOT optional, MUST be set
-				} SOUND3DPARMS;
-
 
 // Structure definition for parameters to the random sample playing
 //		function
@@ -74,34 +50,6 @@ typedef struct {
 				UINT32			uiMaxInstances;
 				} RANDOMPARMS;
 
-// Structure definition for parameters to the random 3D sample playing
-//		function
-typedef struct {
-				UINT32			uiTimeMin, uiTimeMax;
-				UINT32			uiSpeedMin, uiSpeedMax;
-				UINT32			uiVolMin, uiVolMax;
-				UINT32			uiPriority;
-				UINT32			uiMaxInstances;
-
-				SOUND3DPOS	Pos; // NOT optional, MUST be set
-				} RANDOM3DPARMS;
-
-
-	enum e_EAXRoomTypes
-	{
-		EAXROOMTYPE_NONE=0,
-		EAXROOMTYPE_SMALL_CAVE,
-		EAXROOMTYPE_MEDIUM_CAVE,
-		EAXROOMTYPE_LARGE_CAVE,
-		EAXROOMTYPE_SMALL_ROOM,
-		EAXROOMTYPE_MEDIUM_ROOM,
-		EAXROOMTYPE_LARGE_ROOM,
-		EAXROOMTYPE_OUTDOORS_FLAT,
-		EAXROOMTYPE_OUTDOORS_CANYON,
-		EAXROOMTYPE_UNDERWATER,
-
-		EAXROOMTYPE_NUM_TYPES
-	};
 
 // Global startup/shutdown functions
 extern BOOLEAN	InitializeSoundManager(void);

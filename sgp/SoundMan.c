@@ -76,7 +76,6 @@ typedef struct
 	UINT32     uiSample;
 	HSAMPLE    hMSS;
 	HSTREAM    hMSSStream;
-	H3DSAMPLE  hM3D;
 	UINT32     uiFlags;
 	UINT32     uiSoundID;
 	UINT32     uiPriority;
@@ -446,9 +445,6 @@ INT32 iStatus=SMP_DONE;
 		if(pSoundList[uiSound].hMSSStream!=NULL)
 			iStatus = AIL_stream_status(pSoundList[uiSound].hMSSStream);
 
-		if(pSoundList[uiSound].hM3D!=NULL)
-			iStatus = AIL_3D_sample_status(pSoundList[uiSound].hM3D);
-
 		return((iStatus!=SMP_DONE) && (iStatus!=SMP_STOPPED));
 	}
 
@@ -564,9 +560,6 @@ UINT32 uiVolCap;
 		if(pSoundList[uiChannel].hMSSStream!=NULL)
 			AIL_set_stream_volume(pSoundList[uiChannel].hMSSStream, uiVolCap);
 
-		if(pSoundList[uiChannel].hM3D!=NULL)
-			AIL_set_3D_sample_volume(pSoundList[uiChannel].hM3D, uiVolCap);
-
 		return(TRUE);
 	}
 
@@ -655,10 +648,6 @@ static UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 
 		if(pSoundList[uiChannel].hMSSStream!=NULL)
 			return((UINT32)AIL_stream_volume(pSoundList[uiChannel].hMSSStream));
-
-		if(pSoundList[uiChannel].hM3D!=NULL)
-			return((UINT32)AIL_3D_sample_volume(pSoundList[uiChannel].hM3D));
-	}
 
 	return(SOUND_ERROR);
 #endif
@@ -765,7 +754,7 @@ UINT32 uiChannel, uiSample;
 	// Stop all currently playing random sounds
 	for(uiChannel=0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
 	{
-		if((pSoundList[uiChannel].hMSS!=NULL) || (pSoundList[uiChannel].hM3D!=NULL))
+		if (pSoundList[uiChannel].hMSS !=  NULL)
 		{
 			uiSample=pSoundList[uiChannel].uiSample;
 
@@ -829,7 +818,7 @@ void		*pData;
 				}
 			}
 
-			if(pSoundList[uiCount].hMSS || pSoundList[uiCount].hMSSStream || pSoundList[uiCount].hM3D)
+			if (pSoundList[uiCount].hMSS || pSoundList[uiCount].hMSSStream)
 			{
 				// If a sound has a handle, but isn't playing, stop it and free up the handle
 				if(!SoundIsPlaying(pSoundList[uiCount].uiSoundID))
@@ -1440,7 +1429,7 @@ UINT32 uiCount;
 			SoundStopIndex(uiCount);
 		}
 
-		if((pSoundList[uiCount].hMSS==NULL) && (pSoundList[uiCount].hMSSStream==NULL) && (pSoundList[uiCount].hM3D==NULL))
+		if (pSoundList[uiCount].hMSS == NULL && pSoundList[uiCount].hMSSStream == NULL)
 			return(uiCount);
 	}
 
@@ -1744,26 +1733,6 @@ UINT32 uiSample;
 					pSoundList[uiChannel].hMSSStream=NULL;
 					if(pSoundList[uiChannel].EOSCallback!=NULL)
 						pSoundList[uiChannel].EOSCallback(pSoundList[uiChannel].pCallbackData);
-
-					pSoundList[uiChannel].uiSample=NO_SAMPLE;
-				}
-
-				if(pSoundList[uiChannel].hM3D!=NULL)
-				{
-					AIL_stop_3D_sample(pSoundList[uiChannel].hM3D);
-					AIL_release_3D_sample_handle(pSoundList[uiChannel].hM3D);
-					pSoundList[uiChannel].hM3D=NULL;
-					uiSample=pSoundList[uiChannel].uiSample;
-
-					// if this was a random sample, decrease the iteration count
-					if(pSampleList[uiSample].uiFlags&SAMPLE_RANDOM)
-						pSampleList[uiSample].uiInstances--;
-
-					if(pSoundList[uiChannel].EOSCallback!=NULL)
-						pSoundList[uiChannel].EOSCallback(pSoundList[uiChannel].pCallbackData);
-
-					if(pSoundList[uiChannel].fLooping && !SoundSampleIsInUse(uiChannel))
-						SoundRemoveSampleFlags(uiSample, SAMPLE_LOCKED);
 
 					pSoundList[uiChannel].uiSample=NO_SAMPLE;
 				}
