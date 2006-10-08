@@ -34,9 +34,6 @@
 // playing/random value to indicate default
 #define		SOUND_PARMS_DEFAULT		0xffffffff
 
-// Sound status flags
-#define		SOUND_CALLBACK				0x00000008
-
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -79,7 +76,6 @@ typedef struct
 	UINT32     uiFlags;
 	UINT32     uiSoundID;
 	UINT32     uiPriority;
-	void       (*pCallback)(UINT8*, UINT32, UINT32, UINT32, void*);
 	void*      pData;
 	void       (*EOSCallback)(void*);
 	void*      pCallbackData;
@@ -655,32 +651,6 @@ static UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
 
 
 //*******************************************************************************
-// SoundServiceRandom
-//
-//		This function should be polled by the application if random samples are
-//	used. The time marks on each are checked and if it is time to spawn a new
-//	instance of the sound, the number already in existance are checked, and if
-//	there is room, a new one is made and the count updated.
-//		If random samples are not being used, there is no purpose in polling this
-//	function.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
-BOOLEAN SoundServiceRandom(void)
-{
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < SOUND_MAX_CACHED; uiCount++)
-	{
-		if(!(pSampleList[uiCount].uiFlags&SAMPLE_RANDOM_MANUAL) && SoundRandomShouldPlay(uiCount))
-			SoundStartRandom(uiCount);
-	}
-
-	return(FALSE);
-}
-
-//*******************************************************************************
 // SoundRandomShouldPlay
 //
 //	Determines whether a random sound is ready for playing or not.
@@ -701,38 +671,6 @@ UINT32 uiTicks;
 	return(FALSE);
 }
 
-//*******************************************************************************
-// SoundStartRandom
-//
-//	Starts an instance of a random sample.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
-UINT32 SoundStartRandom(UINT32 uiSample)
-{
-UINT32 uiChannel, uiSoundID;
-SOUNDPARMS spParms;
-
-	if((uiChannel=SoundGetFreeChannel())!=SOUND_ERROR)
-	{
-		memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-//		spParms.uiSpeed=pSampleList[uiSample].uiSpeedMin+Random(pSampleList[uiSample].uiSpeedMax-pSampleList[uiSample].uiSpeedMin);
-		spParms.uiVolume=pSampleList[uiSample].uiVolMin+Random(pSampleList[uiSample].uiVolMax-pSampleList[uiSample].uiVolMin);
-		spParms.uiPan=pSampleList[uiSample].uiPanMin+Random(pSampleList[uiSample].uiPanMax-pSampleList[uiSample].uiPanMin);
-		spParms.uiLoop=1;
-		spParms.uiPriority=pSampleList[uiSample].uiPriority;
-
-		if((uiSoundID=SoundStartSample(uiSample, uiChannel, &spParms))!=SOUND_ERROR)
-		{
-			pSampleList[uiSample].uiTimeNext=GetTickCount()+pSampleList[uiSample].uiTimeMin+Random(pSampleList[uiSample].uiTimeMax-pSampleList[uiSample].uiTimeMin);
-			pSampleList[uiSample].uiInstances++;
-			return(uiSoundID);
-		}
-	}
-	return(NO_SAMPLE);
-}
 
 //*******************************************************************************
 // SoundStopAllRandom
@@ -802,22 +740,6 @@ void		*pData;
 	{
 		for(uiCount=0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
 		{
-			if(pSoundList[uiCount].hMSSStream!=NULL)
-			{
-				if(AIL_service_stream(pSoundList[uiCount].hMSSStream, 0))
-				{
-					if(pSoundList[uiCount].uiFlags&SOUND_CALLBACK)
-					{
-						uiSpeed=pSoundList[uiCount].hMSSStream->datarate;
-						uiBuffLen=pSoundList[uiCount].hMSSStream->bufsize;
-						pBuffer=pSoundList[uiCount].hMSSStream->bufs[pSoundList[uiCount].hMSSStream->buf1];
-						uiBytesPerSample=pSoundList[uiCount].hMSSStream->samp->format;
-						pData=pSoundList[uiCount].pData;
-						pSoundList[uiCount].pCallback(pBuffer, uiBuffLen, uiSpeed, uiBytesPerSample, pData);
-					}
-				}
-			}
-
 			if (pSoundList[uiCount].hMSS || pSoundList[uiCount].hMSSStream)
 			{
 				// If a sound has a handle, but isn't playing, stop it and free up the handle
