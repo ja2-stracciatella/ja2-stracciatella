@@ -376,15 +376,15 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 #ifdef TAIWANESE
-	swprintf( gzCivQuote, lengthof(gzCivQuote), L"%s", zQuote );
+	swprintf( gzCivQuote, lengthof(gzCivQuote), L"%S", zQuote );
 #else
-	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%s\"", zQuote );
+	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%S\"", zQuote );
 #endif
 
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
-		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%s",  gzCivQuote );
+		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  gzCivQuote );
 	}
 
 	// Create video oeverlay....
