@@ -53,7 +53,6 @@ typedef struct
 	// Random sound data
 	UINT32  uiTimeNext;
 	UINT32  uiTimeMin, uiTimeMax;
-	UINT32  uiSpeedMin, uiSpeedMax;
 	UINT32  uiVolMin, uiVolMax;
 	UINT32  uiPanMin, uiPanMax;
 	UINT32  uiPriority;
@@ -347,10 +346,6 @@ UINT32 uiSample, uiTicks;
 				pSampleList[uiSample].uiTimeMax=pParms->uiTimeMin;
 			else
 				pSampleList[uiSample].uiTimeMax=pParms->uiTimeMax;
-
-			pSampleList[uiSample].uiSpeedMin=pParms->uiSpeedMin;
-
-			pSampleList[uiSample].uiSpeedMax=pParms->uiSpeedMax;
 
 			if(pParms->uiVolMin==SOUND_PARMS_DEFAULT)
 				pSampleList[uiSample].uiVolMin=guiSoundDefaultVolume;
@@ -1383,29 +1378,13 @@ CHAR8 AILString[200];
 	// Store the natural playback rate before we modify it below
 	pSampleList[uiSample].uiSpeed=AIL_sample_playback_rate(pSoundList[uiChannel].hMSS);
 
-	if(pSampleList[uiSample].uiFlags & SAMPLE_RANDOM)
-	{
-		if((pSampleList[uiSample].uiSpeedMin != SOUND_PARMS_DEFAULT) && (pSampleList[uiSample].uiSpeedMin != SOUND_PARMS_DEFAULT))
-		{
-			UINT32 uiSpeed = pSampleList[uiSample].uiSpeedMin+Random(pSampleList[uiSample].uiSpeedMax-pSampleList[uiSample].uiSpeedMin);
-
-			AIL_set_sample_playback_rate(pSoundList[uiChannel].hMSS, uiSpeed);
-		}
-	}
-	else
+	if (!(pSampleList[uiSample].uiFlags & SAMPLE_RANDOM))
 	{
 		if((pParms!=NULL) && (pParms->uiSpeed!=SOUND_PARMS_DEFAULT))
 		{
 			Assert((pParms->uiSpeed > 0) && (pParms->uiSpeed <= 60000));
 			AIL_set_sample_playback_rate(pSoundList[uiChannel].hMSS, pParms->uiSpeed);
 		}
-	}
-
-	if((pParms!=NULL) && (pParms->uiPitchBend!=SOUND_PARMS_DEFAULT))
-	{
-		UINT32 uiRate = AIL_sample_playback_rate(pSoundList[uiChannel].hMSS);
-		UINT32 uiBend = uiRate * pParms->uiPitchBend/100;
-		AIL_set_sample_playback_rate(pSoundList[uiChannel].hMSS, uiRate + (Random(uiBend*2)-uiBend));
 	}
 
 	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
@@ -1497,12 +1476,6 @@ CHAR8	AILString[200];
 		uiSpeed=pParms->uiSpeed;
 	else
 		uiSpeed=AIL_stream_playback_rate(pSoundList[uiChannel].hMSSStream);
-
-	if((pParms!=NULL) && (pParms->uiPitchBend!=SOUND_PARMS_DEFAULT))
-	{
-		UINT32 uiBend = uiSpeed * pParms->uiPitchBend/100;
-		uiSpeed+=(Random(uiBend*2)-uiBend);
-	}
 
 	AIL_set_stream_playback_rate(pSoundList[uiChannel].hMSSStream, uiSpeed);
 

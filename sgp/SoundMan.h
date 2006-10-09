@@ -27,7 +27,6 @@ extern "C" {
 //		the sample playing function
 typedef struct {
 				UINT32			uiSpeed;
-				UINT32			uiPitchBend;					// Random pitch bend range +/-
 				UINT32			uiVolume;
 				UINT32			uiPan;
 				UINT32			uiLoop;
@@ -41,7 +40,6 @@ typedef struct {
 //		function
 typedef struct {
 				UINT32			uiTimeMin, uiTimeMax;
-				UINT32			uiSpeedMin, uiSpeedMax;
 				UINT32			uiVolMin, uiVolMax;
 				UINT32			uiPanMin, uiPanMax;
 				UINT32			uiPriority;
