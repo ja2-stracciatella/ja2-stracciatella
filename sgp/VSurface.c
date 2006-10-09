@@ -899,12 +899,8 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 // colorkey value.
 BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransColor )
 {
-#if 1
-	FIXME
-#else
-  DDCOLORKEY		ColorKey;
-  DWORD					fFlags;
-	LPDIRECTDRAWSURFACE2	lpDDSurface;
+	Uint32 ColorKey;
+	SDL_Surface* Surface;
 
 	// Assertions
 	Assert( hVSurface != NULL );
@@ -912,34 +908,18 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 	//Set trans color into Video Surface
 	hVSurface->TransparentColor = TransColor;
 
-	// Get surface pointer
-	lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;
-	CHECKF( lpDDSurface != NULL );
+	Surface = hVSurface->surface;
+	CHECKF(Surface != NULL);
 
 	// Get right pixel format, based on bit depth
 
 	switch( hVSurface->ubBitDepth )
 	{
-			case 8:
-
-				// Use color directly
-				ColorKey.dwColorSpaceLowValue  = TransColor;
-				ColorKey.dwColorSpaceHighValue = TransColor;
-				break;
-
-			case 16:
-
-				fFlags = Get16BPPColor( TransColor );
-
-				//fFlags now contains our closest match
-				ColorKey.dwColorSpaceLowValue  = fFlags;
-				ColorKey.dwColorSpaceHighValue = ColorKey.dwColorSpaceLowValue;
-				break;
-
+		case  8: ColorKey = TransColor;                break;
+		case 16: ColorKey = Get16BPPColor(TransColor); break;
 	}
 
-	DDSetSurfaceColorKey( lpDDSurface, DDCKEY_SRCBLT, &ColorKey);
-#endif
+	SDL_SetColorKey(Surface, SDL_SRCCOLORKEY, ColorKey);
 
 	return( TRUE );
 }
