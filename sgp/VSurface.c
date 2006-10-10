@@ -9,8 +9,6 @@
 #include "WCheck.h"
 #include <string.h>
 
-extern void SetClippingRect(SGPRect *clip);
-extern void GetClippingRect(SGPRect *clip);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
