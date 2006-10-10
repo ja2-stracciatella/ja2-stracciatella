@@ -16,12 +16,6 @@ typedef UINT32 COLORVAL;
 
 // Defines for blitting
 #define VO_BLT_SRCTRANSPARENCY									0x000000002
-#define VO_BLT_DESTTRANSPARENCY									0x000000120
-#define VO_BLT_SHADOW														0x000000200
-#define VO_BLT_TRANSSHADOW											0x000000003
-#define VO_BLT_UNCOMPRESSED											0x000004000
-#define VO_BLT_CLIP															0x000000001
-#define VO_BLT_MIRROR_Y													0x000001000 // must be the same as VS_BLT_MIRROR_Y for Wiz!!!
 
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48

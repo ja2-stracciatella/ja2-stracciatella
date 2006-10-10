@@ -723,17 +723,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 				{
 					if(gbPixelDepth==16)
 					{
-#ifndef JA2
-						if ( fBltFlags & VO_BLT_MIRROR_Y)
-						{
-							if(!BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo16BPPBufferTransMirror( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-// CLipping version not done -- DB
-//								Blt8BPPDataTo16BPPBufferTransMirrorClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							break;
-						}
-						else
-#endif
 						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
 						{
 							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
@@ -742,15 +731,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 								Blt8BPPDataTo16BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
 							break;
 						}
-						else if ( fBltFlags & VO_BLT_SHADOW  )
-						{
-							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo16BPPBufferShadowClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							else
-								Blt8BPPDataTo16BPPBufferShadow( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-							break;
-						}
-
 					}
 					else if(gbPixelDepth==8)
 					{
@@ -760,14 +740,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 								Blt8BPPDataTo8BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
 							else
 								Blt8BPPDataTo8BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-							break;
-						}
-						else if ( fBltFlags & VO_BLT_SHADOW  )
-						{
-							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo8BPPBufferShadowClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							else
-								Blt8BPPDataTo8BPPBufferShadow( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
 							break;
 						}
 					}
