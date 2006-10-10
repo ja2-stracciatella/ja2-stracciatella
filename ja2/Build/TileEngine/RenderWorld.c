@@ -2160,15 +2160,6 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 								{
 									if(gbPixelDepth==16)
 									{
-										/*if(fConvertTo16)
-										{
-											ConvertVObjectRegionTo16BPP(hVObject, usImageIndex, 4);
-											if(CheckFor16BPPRegion(hVObject, usImageIndex, 4, &us16BPPIndex))
-											{
-												Blt16BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES,  hVObject, sXPos, sYPos, us16BPPIndex, &gClippingRect);
-											}
-										}*/
-
 										if( fMultiTransShadowZBlitter )
 										{
 											if ( fZBlitter )

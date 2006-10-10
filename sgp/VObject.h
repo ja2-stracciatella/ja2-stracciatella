@@ -32,17 +32,6 @@ typedef struct
 	INT8 *		pbZChange;			// change to the Z value in each strip (after the first)
 } ZStripInfo;
 
-typedef struct
-{
-	UINT16 *		p16BPPData;
-	UINT16			usRegionIndex;
-	UINT8			ubShadeLevel;
-	UINT16			usWidth;
-	UINT16			usHeight;
-	INT16			sOffsetX;
-	INT16			sOffsetY;
-} SixteenBPPObjectInfo;
-
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 // From RGB to COLORVAL
 #define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
@@ -68,7 +57,6 @@ typedef struct TAG_HVOBJECT
 
 	PTR										pPixData;						// ETRLE pixel data
 	ETRLEObject						*pETRLEObject;				// Object offset data etc
-	SixteenBPPObjectInfo	*p16BPPObject;
 	UINT16								*pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
 	UINT16								*pShadeCurrent;
 	UINT16								*pGlow;								// glow highlight table
@@ -76,7 +64,6 @@ typedef struct TAG_HVOBJECT
 	UINT8									*pGlow8;							// 8-bit glow table
 	ZStripInfo						**ppZStripInfo;				// Z-value strip info arrays
 
-	UINT16								usNumberOf16BPPObjects;
 	UINT16								usNumberOfObjects;	// Total number of objects
 	UINT8									ubBitDepth;						// BPP
 
@@ -187,9 +174,6 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREInde
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex );
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex );
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight );
-
-BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel );
-BOOLEAN CheckFor16BPPRegion( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel, UINT16 * pusIndex );
 
 BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
