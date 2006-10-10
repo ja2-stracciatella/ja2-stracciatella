@@ -640,7 +640,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->pSurfaceData       = NULL; // XXX remove
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
-	hVSurface->fFlags             = 0;
 
 	// Determine memory and other attributes of newly created surface
 
@@ -652,18 +651,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 		SDL_FreeSurface(surface);
 		MemFree(hVSurface);
 		return NULL;
-	}
-
-	// Look for system memory
-	if (surface->flags & SDL_SWSURFACE)
-	{
-		hVSurface->fFlags |= VSURFACE_SYSTEM_MEM_USAGE;
-	}
-
-	// Look for video memory
-	if (surface->flags & SDL_HWSURFACE)
-	{
-		hVSurface->fFlags |= VSURFACE_VIDEO_MEM_USAGE;
 	}
 
   //
@@ -1174,7 +1161,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->usWidth           = surface->w;
 	hVSurface->ubBitDepth        = surface->format->BitsPerPixel;
 	hVSurface->pSurfaceData      = NULL; // XXX remove
-	hVSurface->fFlags            = 0;
 
 	if (surface->format->palette != NULL) // XXX necessary?
 	{
@@ -1194,16 +1180,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	{
 		hVSurface->pPalette = NULL;
 		hVSurface->p16BPPPalette = NULL;
-	}
-	// Set meory flags
-	if (surface->flags & SDL_SWSURFACE)
-	{
-		hVSurface->fFlags |= VSURFACE_SYSTEM_MEM_USAGE;
-	}
-
-	if (surface->flags & SDL_HWSURFACE)
-	{
-		hVSurface->fFlags |= VSURFACE_VIDEO_MEM_USAGE;
 	}
 
 	// All is well

@@ -50,7 +50,6 @@ typedef struct
 	UINT16					usWidth;							// Width of Video Surface
 	UINT8						ubBitDepth;						// BPP ALWAYS 16!
 	PTR							pSurfaceData;					// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-	UINT32					fFlags;								// Used to describe memory usage, etc
 	SDL_Color* pPalette;
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 } SGPVSurface, *HVSURFACE;
