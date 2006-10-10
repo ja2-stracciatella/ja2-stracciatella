@@ -51,7 +51,6 @@ typedef struct
 // Video object creation flags
 // Used in the VOBJECT_DESC structure to describe creation flags
 
-#define VOBJECT_CREATE_DEFAULT			  0x00000020		// Creates and empty object of given width, height and BPP
 #define VOBJECT_CREATE_FROMFILE			  0x00000040		// Creates a video object from a file ( using HIMAGE )
 #define VOBJECT_CREATE_FROMHIMAGE		  0x00000080		// Creates a video object from a pre-loaded hImage
 
@@ -146,9 +145,6 @@ BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usReg
 
 BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
-// Sets transparency
-BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );
-
 
 // **********************************************************************************
 //
@@ -175,9 +171,6 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);
 // Sets the current object shade table using a vobject handle
 UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade);
 
-// Fills a rectangular area of an object with a color
-UINT16 FillObjectRect(UINT32 iObj, INT32 x1, INT32 y1, INT32 x2, INT32 y2, COLORVAL color32);
-
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY );
 
@@ -195,11 +188,6 @@ BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObj
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex );
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight );
 
-BOOLEAN SetVideoObjectPalette8BPP(INT32 uiVideoObject, SGPPaletteEntry *pPal8);
-BOOLEAN SetVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 *pPal16);
-BOOLEAN GetVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 **ppPal16);
-BOOLEAN CopyVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 *ppPal16);
-
 BOOLEAN ConvertVObjectRegionTo16BPP( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel );
 BOOLEAN CheckFor16BPPRegion( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel, UINT16 * pusIndex );
 
@@ -207,7 +195,6 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
 BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY );
 BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY );
-BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
 #ifdef __cplusplus
 }

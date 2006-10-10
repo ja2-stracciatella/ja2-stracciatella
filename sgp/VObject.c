@@ -57,14 +57,10 @@ UINT32				guiVObjectSize = 0;
 enum
 {
 	DEBUGSTR_NONE,
-	DEBUGSTR_SETVIDEOOBJECTTRANSPARENCY,
 	DEBUGSTR_BLTVIDEOOBJECTFROMINDEX,
 	DEBUGSTR_SETOBJECTHANDLESHADE,
 	DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES,
 	DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX,
-	DEBUGSTR_SETVIDEOOBJECTPALETTE8BPP,
-	DEBUGSTR_GETVIDEOOBJECTPALETTE16BPP,
-	DEBUGSTR_COPYVIDEOOBJECTPALETTE16BPP,
 	DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX,
 	DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX,
 	DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX
@@ -186,19 +182,6 @@ BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 	return TRUE ;
 }
 
-
-BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor )
-{
-	HVOBJECT hVObject;
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_SETVIDEOOBJECTTRANSPARENCY;
-	#endif
-	CHECKF( GetVideoObject( &hVObject, uiIndex ) );
-
-	return( TRUE );
-}
 
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 {
@@ -702,51 +685,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 
 }
 
-BOOLEAN PixelateVideoObjectRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
-{
-	UINT16 *pBuffer;
-	UINT32 uiPitch;
-	SGPRect   area;
-	UINT8 uiPattern[8][8]={	{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0},
-													{0,1,0,1,0,1,0,1},
-													{1,0,1,0,1,0,1,0}};
-
-	// Lock video surface
-	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
-
-	if ( pBuffer == NULL )
-	{
-		return( FALSE );
-	}
-
-	area.iTop=Y1;
-	area.iBottom=Y2;
-	area.iLeft=X1;
-	area.iRight=X2;
-
-	// Now we have the video object and surface, call the shadow function
-	if(!Blt16BPPBufferPixelateRect(pBuffer, uiPitch, &area, uiPattern))
-	{
-		UnLockVideoSurface( uiDestVSurface );
-		// Blit has failed if false returned
-		return( FALSE );
-	}
-
-	// Mark as dirty if it's the backbuffer
-	//if ( uiDestVSurface == BACKBUFFER )
-	//{
-	//	InvalidateBackbuffer( );
-	//}
-
-	UnLockVideoSurface( uiDestVSurface );
-	return( TRUE );
-}
-
 
 /**********************************************************************************************
  DestroyObjectPaletteTables
@@ -826,32 +764,6 @@ UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 	}
 	return(SetObjectShade(hObj, uiShade));
 }
-
-/*
-UINT16 FillObjectRect(UINT32 iObj, INT32 x1, INT32 y1, INT32 x2, INT32 y2, COLORVAL color32)
-{
-UINT16	*pBuffer;
-UINT32	uiPitch;
-//HVSURFACE pSurface;
-
-	// Lock video surface
-	pBuffer = (UINT16*)LockVideoSurface(iObj, &uiPitch );
-	//UnLockVideoSurface(iObj);
-
-
-	if (pBuffer == NULL)
-		return( FALSE );
-
-	FillRect16BPP(pBuffer, uiPitch, x1, y1, x2, y2, Get16BPPColor(color32));
-
-	// Mark as dirty if it's the backbuffer
-	if(iObj == BACKBUFFER)
-		InvalidateBackbuffer();
-
-	UnLockVideoSurface(iObj);
-}
-
-*/
 
 
 /********************************************************************************************
@@ -981,49 +893,6 @@ BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObjec
 	return( TRUE );
 }
 
-BOOLEAN SetVideoObjectPalette8BPP(INT32 uiVideoObject, SGPPaletteEntry *pPal8)
-{
-	HVOBJECT							hVObject;
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_SETVIDEOOBJECTPALETTE8BPP;
-	#endif
-	CHECKF( GetVideoObject( &hVObject, uiVideoObject ) );
-
-	return( SetVideoObjectPalette( hVObject, pPal8 ) );
-}
-
-
-BOOLEAN GetVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 **ppPal16)
-{
-	HVOBJECT							hVObject;
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTPALETTE16BPP;
-	#endif
-	CHECKF( GetVideoObject( &hVObject, uiVideoObject ) );
-
-	*ppPal16 = hVObject->p16BPPPalette;
-
-	return( TRUE );
-}
-
-BOOLEAN CopyVideoObjectPalette16BPP(INT32 uiVideoObject, UINT16 *ppPal16)
-{
-	HVOBJECT							hVObject;
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_COPYVIDEOOBJECTPALETTE16BPP;
-	#endif
-	CHECKF( GetVideoObject( &hVObject, uiVideoObject ) );
-
-	memcpy(ppPal16, hVObject->p16BPPPalette, 256*2);
-
-	return( TRUE );
-}
 
 BOOLEAN CheckFor16BPPRegion( HVOBJECT hVObject, UINT16 usRegionIndex, UINT8 ubShadeLevel, UINT16 * pusIndex )
 {
@@ -1331,9 +1200,6 @@ void CheckValidVObjectIndex( UINT32 uiIndex )
 		UINT8 str[60];
 		switch( gubVODebugCode )
 		{
-			case DEBUGSTR_SETVIDEOOBJECTTRANSPARENCY:
-				sprintf( str, "SetVideoObjectTransparency" );
-				break;
 			case DEBUGSTR_BLTVIDEOOBJECTFROMINDEX:
 				sprintf( str, "BltVideoObjectFromIndex" );
 				break;
@@ -1345,15 +1211,6 @@ void CheckValidVObjectIndex( UINT32 uiIndex )
 				break;
 			case DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX:
 				sprintf( str, "GetVideoObjectETRLEPropertiesFromIndex" );
-				break;
-			case DEBUGSTR_SETVIDEOOBJECTPALETTE8BPP:
-				sprintf( str, "SetVideoObjectPalette8BPP" );
-				break;
-			case DEBUGSTR_GETVIDEOOBJECTPALETTE16BPP:
-				sprintf( str, "GetVideoObjectPalette16BPP" );
-				break;
-			case DEBUGSTR_COPYVIDEOOBJECTPALETTE16BPP:
-				sprintf( str, "CopyVideoObjectPalette16BPP" );
 				break;
 			case DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX:
 				sprintf( str, "BltVideoObjectOutlineFromIndex" );
