@@ -309,35 +309,35 @@ void RenderBobbyR()
 
 	// Bobby's Name
 	GetVideoObject(&hPixHandle, guiBobbyName);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBY_RAYS_NAME_X, BOBBY_RAYS_NAME_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBY_RAYS_NAME_X, BOBBY_RAYS_NAME_Y);
 
 	// Plaque
 	GetVideoObject(&hPixHandle, guiPlaque);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBYS_PLAQUES_X, BOBBYS_PLAQUES_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBYS_PLAQUES_X, BOBBYS_PLAQUES_Y);
 
 	// Top Hinge
 	GetVideoObject(&hPixHandle, guiTopHinge);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_TOPHINGE_X, BOBBIES_TOPHINGE_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_TOPHINGE_X, BOBBIES_TOPHINGE_Y);
 
 	// Bottom Hinge
 	GetVideoObject(&hPixHandle, guiBottomHinge);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_BOTTOMHINGE_X, BOBBIES_BOTTOMHINGE_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_BOTTOMHINGE_X, BOBBIES_BOTTOMHINGE_Y);
 
 	// StorePlaque
 	GetVideoObject(&hStorePlaqueHandle, guiStorePlaque);
-  BltVideoObject(FRAME_BUFFER, hStorePlaqueHandle, 0,BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hStorePlaqueHandle, 0,BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y);
 
 	// Handle
 	GetVideoObject(&hPixHandle, guiHandle);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_HANDLE_X, BOBBIES_HANDLE_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_HANDLE_X, BOBBIES_HANDLE_Y);
 
 /*
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// The undercontsruction graphic
 		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y, VO_BLT_SRCTRANSPARENCY);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y);
 	}
 */
 
@@ -424,7 +424,7 @@ BOOLEAN DrawBobbyRWoodBackground()
 		uiPosX = BOBBY_WOOD_BACKGROUND_X;
 		for(x=0; x<4; x++)
 		{
-		  BltVideoObject(FRAME_BUFFER, hWoodBackGroundHandle, 0,uiPosX, uiPosY, VO_BLT_SRCTRANSPARENCY);
+		  BltVideoObject(FRAME_BUFFER, hWoodBackGroundHandle, 0,uiPosX, uiPosY);
 			uiPosX += BOBBY_WOOD_BACKGROUND_WIDTH;
 		}
 		uiPosY += BOBBY_WOOD_BACKGROUND_HEIGHT;
@@ -501,7 +501,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 		uiPosX = LAPTOP_SCREEN_UL_X;
 		for(x=0; x<ubNumX; x++)
 		{
-		  BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 0,uiPosX, uiPosY, VO_BLT_SRCTRANSPARENCY);
+		  BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 0,uiPosX, uiPosY);
 			uiPosX += usWidth;
 		}
 		uiPosY += usHeight;
@@ -534,9 +534,9 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 	{
 		// The undercontsruction graphic
 		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
-		BltVideoObject(FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y);
 
-		BltVideoObject( FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION1_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject( FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION1_Y);
 
 		DrawTextToScreen( BobbyRaysFrontText[ BOBBYR_UNDER_CONSTRUCTION ], BOBBYR_UNDER_CONSTRUCTION_TEXT_X, BOBBYR_UNDER_CONSTRUCTION_TEXT_Y, BOBBYR_UNDER_CONSTRUCTION_TEXT_WIDTH, FONT16ARIAL, BOBBIES_SENTENCE_COLOR, BOBBIES_SIGN_BACKCOLOR, FALSE, CENTER_JUSTIFIED | INVALIDATE_TEXT );
 

@@ -146,9 +146,9 @@ UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags);
+BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
-BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags);
+BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 // Sets transparency
 BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );

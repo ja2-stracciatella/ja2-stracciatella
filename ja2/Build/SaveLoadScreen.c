@@ -799,7 +799,7 @@ void			RenderSaveLoadScreen()
 	}
 
 	GetVideoObject(&hPixHandle, guiSlgBackGroundImage);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0);
 
 	if( gfSaveGame )
 	{
@@ -808,7 +808,7 @@ void			RenderSaveLoadScreen()
 		//Display the Title
 //		DrawTextToScreen( zSaveLoadText[SLG_SAVE_GAME], 0, 10, 639, SAVE_LOAD_TITLE_FONT, SAVE_LOAD_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 		GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 	else
 	{
@@ -816,7 +816,7 @@ void			RenderSaveLoadScreen()
 
 		//Display the Title
 		GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 
 	}
 
@@ -1226,7 +1226,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 
 	//background
 	GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, gbSaveGameSelectedLocation[ bEntryID ], usPosX, usPosY, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, gbSaveGameSelectedLocation[ bEntryID ], usPosX, usPosY);
 
 
 	//

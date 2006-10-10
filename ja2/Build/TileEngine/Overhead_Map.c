@@ -769,8 +769,8 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 						pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
 
 						// RENDER!
-						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, gSmallTileDatabase[ gpWorldLevelData[ usTileIndex ].pLandHead->usIndex ], sX, sY, VO_BLT_SRCTRANSPARENCY);
-						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, 0, sX, sY, VO_BLT_SRCTRANSPARENCY);
+						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, gSmallTileDatabase[ gpWorldLevelData[ usTileIndex ].pLandHead->usIndex ], sX, sY);
+						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, 0, sX, sY);
 						Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
 
 						pNode = pNode->pPrevNode;
@@ -1083,7 +1083,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 		if ( !fFromMapUtility )
 		{
 			// Render border!
-			BltVideoObjectFromIndex( FRAME_BUFFER, uiOVERMAP, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
+			BltVideoObjectFromIndex( FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
 		}
 
     // Update the save buffer

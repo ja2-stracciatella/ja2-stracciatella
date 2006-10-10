@@ -2441,8 +2441,8 @@ void UpdateMercsInfo()
 			break;
 		case MERC_BASICMODE:
 		case MERC_GENERALMODE:
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiExclamation, 0, 188, 362, VO_BLT_SRCTRANSPARENCY);
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiKeyImage, 0, 186, 387, VO_BLT_SRCTRANSPARENCY);
+			BltVideoObjectFromIndex( FRAME_BUFFER, guiExclamation, 0, 188, 362);
+			BltVideoObjectFromIndex( FRAME_BUFFER, guiKeyImage, 0, 186, 387);
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
@@ -2878,7 +2878,7 @@ void RenderMercInventoryPanel()
 {
 	INT32 x;
 	//Draw the graphical panel
-	BltVideoObjectFromIndex( FRAME_BUFFER, guiMercInventoryPanel, 0, MERCPANEL_X, MERCPANEL_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObjectFromIndex( FRAME_BUFFER, guiMercInventoryPanel, 0, MERCPANEL_X, MERCPANEL_Y);
 	//Mark the buttons dirty, so they don't disappear.
 	for( x = FIRST_MERCS_INVENTORY_BUTTON; x <= LAST_MERCS_INVENTORY_BUTTON; x++ )
 	{

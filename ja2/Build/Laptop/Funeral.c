@@ -222,19 +222,19 @@ void RenderFuneral()
 
 	// LeftColumn
 	GetVideoObject(&hPixHandle, guiLeftColumn);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_LEFT_COLUMN_X, FUNERAL_LEFT_COLUMN_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_LEFT_COLUMN_X, FUNERAL_LEFT_COLUMN_Y);
 
 	// Mcgillicuttys
 	GetVideoObject(&hPixHandle, guiMcGillicuttys);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y);
 
 	// Mortuary
 	GetVideoObject(&hPixHandle, guiMortuary);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MORTUARY_SIGN_X, FUNERAL_MORTUARY_SIGN_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MORTUARY_SIGN_X, FUNERAL_MORTUARY_SIGN_Y);
 
 	// right column
 	GetVideoObject(&hPixHandle, guiRightColumn);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_RIGHT_COLUMN_X, FUNERAL_RIGHT_COLUMN_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_RIGHT_COLUMN_X, FUNERAL_RIGHT_COLUMN_Y);
 
 
 		// LinkCarving
@@ -243,7 +243,7 @@ void RenderFuneral()
 	usPosX = FUNERAL_LINK_1_X;
 	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)
 	{
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,usPosX, FUNERAL_LINK_1_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,usPosX, FUNERAL_LINK_1_Y);
 
 		//Calculate the height of the string, as it needs to be vertically centered.
 		usStringHeight = IanWrappedStringHeight( 0, 0, FUNERAL_LINK_TEXT_WIDTH, 2,
@@ -290,7 +290,7 @@ void DisplayFuneralRipTombStone()
 	// rip tombstone
 	GetVideoObject(&hPixHandle, guiClosedSign);
 	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X+5, FUNERAL_CLOSED_RIP_SIGN_Y+5);
-	BltVideoObject( FRAME_BUFFER, hPixHandle, 0,FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject( FRAME_BUFFER, hPixHandle, 0,FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y);
 
 	SetFontShadow( FUNERAL_RIP_SHADOW_COLOR );
 

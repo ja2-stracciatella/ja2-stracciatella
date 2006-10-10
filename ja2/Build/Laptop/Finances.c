@@ -552,7 +552,7 @@ void RenderFinances( void )
 
 		// display border
 	GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23);
 
 
 	// title bar icon
@@ -621,11 +621,11 @@ static void RenderBackGround(void)
 
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y - 2, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y - 2);
 
 	// get and blt the top part of the screen, video object and blt to screen
   GetVideoObject(&hHandle, guiTOP);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
 	DrawFinanceTitleText( );
 	return;
 }
@@ -650,12 +650,12 @@ static void DrawSummaryLines(void)
   GetVideoObject(&hHandle, guiLINE);
 
 	// blit summary LINE object to screen
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y, VO_BLT_SRCTRANSPARENCY);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y+2, VO_BLT_SRCTRANSPARENCY);
-  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y, VO_BLT_SRCTRANSPARENCY);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y, VO_BLT_SRCTRANSPARENCY);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y2, VO_BLT_SRCTRANSPARENCY);
-  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y2, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
+  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y);
+	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y2);
+  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y2);
 
 
 	return;
@@ -699,16 +699,16 @@ static void DrawRecordsBackGround(void)
 	{
 		// get and blt middle background to screen
     GetVideoObject(&hHandle, guiLISTCOLUMNS);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, TOP_X + 10, TOP_Y + 18 + ( iCounter * BLOCK_HEIGHT ) + 1, VO_BLT_SRCTRANSPARENCY);
+    BltVideoObject(FRAME_BUFFER, hHandle, 0, TOP_X + 10, TOP_Y + 18 + ( iCounter * BLOCK_HEIGHT ) + 1);
 	}
 
 	// the divisorLines
   GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 17 + ( 6 * ( BLOCK_HEIGHT ) ), VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 17 + ( 6 * ( BLOCK_HEIGHT ) ));
   GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( 6 * ( BLOCK_HEIGHT ) ) , VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( 6 * ( BLOCK_HEIGHT ) ));
   GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( ( iCounter  ) * ( BLOCK_HEIGHT ) ) , VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( ( iCounter  ) * ( BLOCK_HEIGHT ) ));
 
 
 	// the header text

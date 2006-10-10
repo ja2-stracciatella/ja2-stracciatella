@@ -256,10 +256,10 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 }
 
 
-static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags);
+static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 
-BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags)
+BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
 {
 	UINT16               *pBuffer;
 	UINT32								uiPitch;
@@ -284,7 +284,7 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
-	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags))
+	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY))
 	{
     UnLockVideoSurface( uiDestVSurface );
 		// VO Blitter will set debug messages for error conditions
@@ -360,7 +360,7 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 // Based on flags, blit accordingly
 // There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
 // clipping lists
-BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags)
+BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
 {
 
 	UINT16								*pBuffer;
@@ -375,7 +375,7 @@ BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usReg
 	}
 
 	// Now we have the video object and surface, call the VO blitter function
-	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY, fBltFlags))
+	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY))
 	{
 		UnLockVideoSurface( uiDestVSurface );
 		// VO Blitter will set debug messages for error conditions
@@ -695,7 +695,7 @@ UINT32 count;
 // *******************************************************************
 
 // High level blit function encapsolates ALL effects and BPP
-static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags)
+static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY)
 {
 
 	// Assertions
@@ -723,25 +723,19 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 				{
 					if(gbPixelDepth==16)
 					{
-						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
-						{
-							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo16BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							else
-								Blt8BPPDataTo16BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-							break;
-						}
+						if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
+							Blt8BPPDataTo16BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
+						else
+							Blt8BPPDataTo16BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
+						break;
 					}
 					else if(gbPixelDepth==8)
 					{
-						if ( fBltFlags & VO_BLT_SRCTRANSPARENCY  )
-						{
-							if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-								Blt8BPPDataTo8BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-							else
-								Blt8BPPDataTo8BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-							break;
-						}
+						if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
+							Blt8BPPDataTo8BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
+						else
+							Blt8BPPDataTo8BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
+						break;
 					}
 					// Use default blitter here
 					//Blt8BPPDataTo16BPPBuffer( hDestVObject, hSrcVObject, (UINT16)iDestX, (UINT16)iDestY, (SGPRect*)&SrcRect );

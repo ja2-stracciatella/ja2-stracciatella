@@ -2110,7 +2110,7 @@ static void DrawQuickButton(const GUI_BUTTON *b)
 	}
 
 	// Display the button image
-	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, (UINT16)UseImage, b->XLoc, b->YLoc, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, (UINT16)UseImage, b->XLoc, b->YLoc);
 }
 
 
@@ -2235,7 +2235,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 	}
 
 	// Display the button image
-	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, (UINT16)UseImage, b->XLoc, b->YLoc, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, (UINT16)UseImage, b->XLoc, b->YLoc);
 }
 
 
@@ -2334,9 +2334,9 @@ static void DrawIconOnButton(const GUI_BUTTON *b)
 		SetClippingRect(&NewClip);
 		// Blit the icon
 		if( b->uiFlags & BUTTON_GENERIC )
-			BltVideoObject(ButtonDestBuffer,GenericButtonIcons[b->iIconID], b->usIconIndex, (INT16)xp, (INT16)yp, VO_BLT_SRCTRANSPARENCY);
+			BltVideoObject(ButtonDestBuffer,GenericButtonIcons[b->iIconID], b->usIconIndex, (INT16)xp, (INT16)yp);
 		else
-			BltVideoObject(ButtonDestBuffer, hvObject, b->usIconIndex, (INT16)xp, (INT16)yp, VO_BLT_SRCTRANSPARENCY);
+			BltVideoObject(ButtonDestBuffer, hvObject, b->usIconIndex, (INT16)xp, (INT16)yp);
 		// Restore previous clip region
 		SetClippingRect(&OldClip);
 	}

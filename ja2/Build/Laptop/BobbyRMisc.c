@@ -78,7 +78,7 @@ void RenderBobbyRMisc()
 
 	// GunForm
 	GetVideoObject(&hPixHandle, guiMiscGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(IC_BOBBY_MISC);
 

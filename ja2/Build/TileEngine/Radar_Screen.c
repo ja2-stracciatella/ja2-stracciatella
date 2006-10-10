@@ -320,7 +320,7 @@ void RenderRadarScreen( )
 			}
 		}
 
-		BltVideoObjectFromIndex(  guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObjectFromIndex(  guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
 	}
 
 	// FIRST DELETE WHAT'S THERE
@@ -648,7 +648,7 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 	  CHECKF(AddVideoObject(&VObjectDesc, &uiHandle));
 
 	  GetVideoObject(&hHandle, uiHandle);
-		BltVideoObject( guiSAVEBUFFER , hHandle, 0,538, 0 + gsVIEWPORT_END_Y, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObject( guiSAVEBUFFER , hHandle, 0,538, 0 + gsVIEWPORT_END_Y);
 
 		RestoreExternBackgroundRect( 538, gsVIEWPORT_END_Y, ( 640 - 538 ),( INT16 ) ( 480 - gsVIEWPORT_END_Y ) );
 

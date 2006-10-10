@@ -467,10 +467,10 @@ void RenderStationaryGroups()
 			pSector = &SectorInfo[ iSector ];
 
 			if( pSector->uiFlags & SF_MINING_SITE )
-				BltVideoObject( FRAME_BUFFER, hVObject, MINING_ICON, xp + 25, yp - 1, VO_BLT_SRCTRANSPARENCY);
+				BltVideoObject( FRAME_BUFFER, hVObject, MINING_ICON, xp + 25, yp - 1);
 
 			if( pSector->uiFlags & SF_SAM_SITE )
-				BltVideoObject( FRAME_BUFFER, hVObject, SAM_ICON, xp + 20, yp + 4, VO_BLT_SRCTRANSPARENCY);
+				BltVideoObject( FRAME_BUFFER, hVObject, SAM_ICON, xp + 20, yp + 4);
 
 
 			if( pSector->ubNumberOfCivsAtLevel[0] + pSector->ubNumberOfCivsAtLevel[1] + pSector->ubNumberOfCivsAtLevel[2] )
@@ -578,7 +578,7 @@ void RenderMovingGroupsAndMercs()
 				//influence for enemy patrol groups.
 				if( pGroup->uiTraverseTime )
 				{
-					BltVideoObject( FRAME_BUFFER, hVObject, GROUP_ANCHOR, VIEWER_LEFT + VIEWER_CELLW * (pGroup->ubSectorX - 1), VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY - 1), VO_BLT_SRCTRANSPARENCY);
+					BltVideoObject( FRAME_BUFFER, hVObject, GROUP_ANCHOR, VIEWER_LEFT + VIEWER_CELLW * (pGroup->ubSectorX - 1), VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY - 1));
 				}
 
 				ubNumAdmins = pGroup->pEnemyGroup->ubNumAdmins;//+ pGroup->pEnemyGroup->ubAdminsInBattle;
@@ -829,7 +829,7 @@ void RenderViewer()
 	if( gfRenderMap )
 	{
 		gfRenderMap = FALSE;
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiMapGraphicID, 0, VIEWER_LEFT, VIEWER_TOP, VO_BLT_SRCTRANSPARENCY);
+		BltVideoObjectFromIndex( FRAME_BUFFER, guiMapGraphicID, 0, VIEWER_LEFT, VIEWER_TOP);
 		InvalidateRegion( VIEWER_LEFT, VIEWER_TOP, VIEWER_RIGHT, VIEWER_BOTTOM );
 		//Draw the coordinates
 		ClearViewerRegion( 0, 0, VIEWER_RIGHT, 14 );
@@ -1845,7 +1845,7 @@ void BlitGroupIcon( UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY,
 	Assert( ubIconColor < NUM_ICON_COLORS );
 
 	ubObjectIndex = ( ubIconType * NUM_ICON_COLORS ) + ubIconColor;
-	BltVideoObject( FRAME_BUFFER, hVObject, ubObjectIndex, uiX, uiY, VO_BLT_SRCTRANSPARENCY);
+	BltVideoObject( FRAME_BUFFER, hVObject, ubObjectIndex, uiX, uiY);
 }
 
 

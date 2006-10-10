@@ -128,7 +128,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 
 	  // show it
     GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY);
+    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 
 
     // and kick it's sorry ..umm never mind, outta here
@@ -145,7 +145,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 
 	  // show it
     GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY , VO_BLT_SRCTRANSPARENCY);
+    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 
 
     // and kick it's sorry ..umm never mind, outta here

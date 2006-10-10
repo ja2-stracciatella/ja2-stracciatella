@@ -627,7 +627,7 @@ BOOLEAN		RenderCreditScreen()
   HVOBJECT hPixHandle;
 
 	GetVideoObject(&hPixHandle, guiCreditBackGroundImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0, VO_BLT_SRCTRANSPARENCY);
+  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0);
 /*
 	HVSURFACE hVSurface;
 
@@ -1427,7 +1427,7 @@ void HandleCreditEyeBlinking()
 	{
 		if( ( GetJA2Clock() - gCreditFaces[ubCnt].uiLastBlinkTime ) > (UINT32)gCreditFaces[ubCnt].sBlinkFreq )
 		{
-		  BltVideoObject( FRAME_BUFFER, hPixHandle, (UINT8)(ubCnt*3), gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, VO_BLT_SRCTRANSPARENCY);
+		  BltVideoObject( FRAME_BUFFER, hPixHandle, (UINT8)(ubCnt*3), gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY);
 			InvalidateRegion( gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, gCreditFaces[ubCnt].sEyeX + CRDT_EYE_WIDTH, gCreditFaces[ubCnt].sEyeY + CRDT_EYE_HEIGHT );
 
 			gCreditFaces[ubCnt].uiLastBlinkTime = GetJA2Clock();
