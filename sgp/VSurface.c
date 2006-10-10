@@ -603,11 +603,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	// Do memory description, based on specified flags
 	do
 	{
-		if (VSurfaceDesc->fCreateFlags & VSURFACE_DEFAULT_MEM_USAGE)
-		{
-			surface_flags = 0;
-			break;
-		}
 		if (VSurfaceDesc->fCreateFlags & VSURFACE_VIDEO_MEM_USAGE)
 		{
 			surface_flags = SDL_HWSURFACE;

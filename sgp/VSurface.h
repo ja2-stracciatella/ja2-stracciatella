@@ -32,7 +32,6 @@
 // Used to describe the memory usage of a video Surface
 //
 
-#define	VSURFACE_DEFAULT_MEM_USAGE		0x00000001			// Default mem usage is same as DD, try video and then try system. Will usually work
 #define	VSURFACE_VIDEO_MEM_USAGE			0x00000002			// Will force surface into video memory and will fail if it can't
 #define	VSURFACE_SYSTEM_MEM_USAGE			0x00000004			// Will force surface into system memory and will fail if it can't
 
