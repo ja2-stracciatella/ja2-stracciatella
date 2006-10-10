@@ -2,7 +2,6 @@
 #define __VSURFACE_H
 
 #include "Types.h"
-#include "HImage.h"
 #include "VObject.h"
 #include <SDL.h>
 
