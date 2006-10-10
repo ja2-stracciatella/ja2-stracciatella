@@ -1,6 +1,6 @@
 high prio
 - TODO0001 implement blitters and related functions
-- get tactical working
+- missing corpses
 
 med prio
 - HACK0000 find a clean solution for the \ problem, convert all pathes to /
@@ -13,6 +13,7 @@ low prio
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
 - HACK0003 load data in a cleaner way, especially wide strings
+- HACK0004 Disable background scrolling to avoid ScrollJA2Background()
 
 cosmetic
 - massive code duplication for ROT-1 "encrypted" data (r65, r113)
