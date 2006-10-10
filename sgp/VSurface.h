@@ -34,7 +34,6 @@
 
 typedef struct
 {
-	COLORVAL ColorFill;		// Used for fill effect
 	SGPRect	 SrcRect;			// Given SRC subrect instead of srcregion
 } blt_vs_fx;
 

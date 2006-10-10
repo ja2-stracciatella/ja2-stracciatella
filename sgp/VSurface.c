@@ -29,7 +29,6 @@ extern void GetClippingRect(SGPRect *clip);
 
 BOOLEAN UpdateBackupSurface( HVSURFACE hVSurface );
 BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT *DestRect, RECT *SrcRect );
-BOOLEAN FillSurface( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx );
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
 BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect, RECT *DestRect );
@@ -1388,27 +1387,6 @@ BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSr
 		// Both have to be modified or by default streching occurs
 		SrcRect->top = 0;
 		DestRect->top = DestRect->bottom - ( SrcRect->bottom - SrcRect->top );
-	}
-
-	return( TRUE );
-}
-
-
-BOOLEAN FillSurface( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
-{
-	DDBLTFX				 BlitterFX;
-
-	Assert( hDestVSurface != NULL );
-	CHECKF( pBltFx != NULL );
-
-	BlitterFX.dwSize = sizeof( DDBLTFX );
-	BlitterFX.dwFillColor = pBltFx->ColorFill;
-
-	DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, NULL, NULL, NULL, DDBLT_COLORFILL, &BlitterFX );
-
-	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
-	{
-		UpdateBackupSurface( hDestVSurface );
 	}
 
 	return( TRUE );
