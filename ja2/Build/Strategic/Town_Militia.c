@@ -542,7 +542,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-		swprintf( sString, lengthof(sString), L"%s%d. %s", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
+		swprintf( sString, lengthof(sString), L"%S%d. %S", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
 	}
 
 	// if we are in mapscreen, make a pop up
@@ -674,7 +674,7 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 		{
 			StopTimeCompression();
 
-			swprintf( sString, lengthof(sString), L"%s", pMilitiaConfirmStrings[ 2 ] );
+			swprintf( sString, lengthof(sString), L"%S", pMilitiaConfirmStrings[ 2 ] );
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		}
 	}
