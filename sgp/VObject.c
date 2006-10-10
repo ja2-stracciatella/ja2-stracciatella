@@ -48,9 +48,9 @@ typedef struct VOBJECT_NODE
 
 }VOBJECT_NODE;
 
-VOBJECT_NODE  *gpVObjectHead = NULL;
-VOBJECT_NODE  *gpVObjectTail = NULL;
-UINT32				guiVObjectIndex = 1;
+static VOBJECT_NODE* gpVObjectHead = NULL;
+static VOBJECT_NODE* gpVObjectTail = NULL;
+static UINT32 guiVObjectIndex = 1;
 UINT32				guiVObjectSize = 0;
 
 #ifdef _DEBUG
@@ -66,9 +66,9 @@ enum
 	DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX
 };
 
-UINT8 gubVODebugCode = 0;
+static UINT8 gubVODebugCode = 0;
 
-void CheckValidVObjectIndex( UINT32 uiIndex );
+static void CheckValidVObjectIndex(UINT32 uiIndex);
 #endif
 
 // **************************************************************
@@ -113,7 +113,9 @@ BOOLEAN ShutdownVideoObjectManager( )
 	return TRUE;
 }
 
-UINT32 CountVideoObjectNodes()
+
+#ifdef JA2TESTVERSION
+static UINT32 CountVideoObjectNodes(void)
 {
 	VOBJECT_NODE *curr;
 	UINT32 i = 0;
@@ -125,6 +127,8 @@ UINT32 CountVideoObjectNodes()
 	}
 	return i;
 }
+#endif
+
 
 BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 {
@@ -340,6 +344,9 @@ BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usReg
 // *******************************************************************************
 
 
+static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, SGPPaletteEntry* pSrcPalette);
+
+
 HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 {
 	HVOBJECT						hVObject;
@@ -441,7 +448,7 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 
 
 // Palette setting is expensive, need to set both DDPalette and create 16BPP palette
-BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette )
+static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, SGPPaletteEntry* pSrcPalette)
 {
 
 	Assert( hVObject != NULL );
@@ -1011,8 +1018,9 @@ BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject,
 	return( TRUE );
 }
 
+
 #ifdef _DEBUG
-void CheckValidVObjectIndex( UINT32 uiIndex )
+static void CheckValidVObjectIndex(UINT32 uiIndex)
 {
 	BOOLEAN fAssertError = FALSE;
 	if( uiIndex == 0xffffffff )

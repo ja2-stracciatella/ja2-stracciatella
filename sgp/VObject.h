@@ -143,9 +143,6 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 // Created from a VOBJECT_DESC structure. Can be from a file via HIMAGE or empty.
 HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc );
 
-// Sets HVOBJECT palette, creates if nessessary. Also sets 16BPP palette
-BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette );
-
 // Deletes all data
 BOOLEAN DeleteVideoObject( HVOBJECT hVObject );
 
