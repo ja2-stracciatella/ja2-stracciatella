@@ -27,13 +27,9 @@ extern void GetClippingRect(SGPRect *clip);
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT *DestRect, RECT *SrcRect );
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
-BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect, RECT *DestRect );
-BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect);
-
-void DeletePrimaryVideoSurfaces( );
+static void DeletePrimaryVideoSurfaces(void);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -54,11 +50,10 @@ typedef struct VSURFACE_NODE
 
 }VSURFACE_NODE;
 
-VSURFACE_NODE  *gpVSurfaceHead = NULL;
-VSURFACE_NODE  *gpVSurfaceTail = NULL;
-UINT32				guiVSurfaceIndex = 0;
+static VSURFACE_NODE* gpVSurfaceHead = NULL;
+static VSURFACE_NODE* gpVSurfaceTail = NULL;
+static UINT32 guiVSurfaceIndex = 0;
 UINT32				guiVSurfaceSize = 0;
-UINT32				guiVSurfaceTotalAdded = 0;
 
 #ifdef _DEBUG
 enum
@@ -74,17 +69,17 @@ enum
 	DEBUGSTR_DELETEVIDEOSURFACEFROMINDEX
 };
 
-UINT8 gubVSDebugCode = 0;
+static UINT8 gubVSDebugCode = 0;
 
-void CheckValidVSurfaceIndex( UINT32 uiIndex );
+static void CheckValidVSurfaceIndex(UINT32 uiIndex);
 #endif
 
 INT32				giMemUsedInSurfaces;
 
 
-HVSURFACE		ghBackBuffer = NULL;
+static HVSURFACE ghBackBuffer = NULL;
 HVSURFACE   ghFrameBuffer = NULL;
-HVSURFACE   ghMouseBuffer = NULL;
+static HVSURFACE ghMouseBuffer = NULL;
 
 
 static BOOLEAN SetPrimaryVideoSurfaces(void);
@@ -137,10 +132,12 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 	gpVSurfaceTail = NULL;
 	guiVSurfaceIndex = 0;
 	guiVSurfaceSize = 0;
-	guiVSurfaceTotalAdded = 0;
 	UnRegisterDebugTopic(TOPIC_VIDEOSURFACE, "Video Objects");
 	return TRUE;
 }
+
+
+static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor);
 
 
 BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex )
@@ -191,10 +188,13 @@ BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex 
 	Assert( guiVSurfaceIndex < 0xfffffff0 ); //unlikely that we will ever use 2 billion VSurfaces!
 	//We would have to create about 70 VSurfaces per second for 1 year straight to achieve this...
 	guiVSurfaceSize++;
-	guiVSurfaceTotalAdded++;
 
 	return TRUE ;
 }
+
+
+static BYTE* LockVideoSurfaceBuffer(HVSURFACE hVSurface, UINT32* pPitch);
+static void UnLockVideoSurfaceBuffer(HVSURFACE hVSurface);
 
 
 BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *puiPitch )
@@ -403,7 +403,8 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 	return TRUE;
 }
 
-void DeletePrimaryVideoSurfaces( )
+
+static void DeletePrimaryVideoSurfaces(void)
 {
   //
 	// If globals are not null, delete them
@@ -532,6 +533,10 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 // Video Surface Manipulation Functions
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect* pSrcRect);
+
 
 HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 {
@@ -711,7 +716,7 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 // Lock must be followed by release
 // Pitch MUST be used for all width calculations ( Pitch is in bytes )
 // The time between Locking and unlocking must be minimal
-BYTE *LockVideoSurfaceBuffer( HVSURFACE hVSurface, UINT32 *pPitch )
+static BYTE* LockVideoSurfaceBuffer(HVSURFACE hVSurface, UINT32* pPitch)
 {
 	Assert( hVSurface != NULL );
 	Assert( pPitch != NULL );
@@ -721,15 +726,17 @@ BYTE *LockVideoSurfaceBuffer( HVSURFACE hVSurface, UINT32 *pPitch )
 	return hVSurface->surface->pixels;
 }
 
-void UnLockVideoSurfaceBuffer( HVSURFACE hVSurface )
+
+static void UnLockVideoSurfaceBuffer(HVSURFACE hVSurface)
 {
 	Assert( hVSurface != NULL );
 
 	SDL_UnlockSurface(hVSurface->surface); // XXX necessary?
 }
 
+
 // Given an HIMAGE object, blit imagery into existing Video Surface. Can be from 8->16 BPP
-BOOLEAN SetVideoSurfaceDataFromHImage( HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect *pSrcRect )
+static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect* pSrcRect)
 {
 	BYTE		*pDest;
 	UINT32	fBufferBPP = 0;
@@ -847,9 +854,10 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 	return( TRUE );
 }
 
+
 // Transparency needs to take RGB value and find best fit and place it into DD Surface
 // colorkey value.
-BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransColor )
+static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor)
 {
 	Uint32 ColorKey;
 	SDL_Surface* Surface;
@@ -989,7 +997,7 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 }
 
 
-BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect)
+static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, RECT* pRect)
 {
 	Assert( hVSurface != NULL );
 	Assert( pRect != NULL );
@@ -1222,7 +1230,7 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 
 // UTILITY FUNCTIONS FOR BLITTING
 
-BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT *DestRect, RECT *SrcRect )
+static BOOLEAN ClipReleatedSrcAndDestRectangles(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT* DestRect, RECT* SrcRect)
 {
 
 	Assert( hDestVSurface != NULL );
@@ -1417,8 +1425,7 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 BOOLEAN Blt16BPPBufferShadowRectAlternateTable(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area);
 
 
-
-BOOLEAN InternalShadowVideoSurfaceRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, BOOLEAN fLowPercentShadeTable )
+static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, BOOLEAN fLowPercentShadeTable)
 {
 	UINT16 *pBuffer;
 	UINT32 uiPitch;
@@ -1527,7 +1534,7 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 
 //
 // BltVSurfaceUsingDDBlt will always use Direct Draw Blt,NOT BltFast
-BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect, RECT *DestRect )
+static BOOLEAN BltVSurfaceUsingDDBlt(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT* SrcRect, RECT* DestRect)
 {
 	UINT32		uiDDFlags;
 

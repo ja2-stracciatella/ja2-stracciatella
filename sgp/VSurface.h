@@ -126,18 +126,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc );
 // Gets the RGB palette entry values
 BOOLEAN GetVSurfacePaletteEntries( HVSURFACE hVSurface, SGPPaletteEntry *pPalette );
 
-// Returns a flat pointer for direct manipulation of data
-BYTE *LockVideoSurfaceBuffer( HVSURFACE hVSurface, UINT32 *pPitch );
-
-// Must be called after Locking buffer call above
-void UnLockVideoSurfaceBuffer( HVSURFACE hVSurface );
-
-// Set data from HIMAGE.
-BOOLEAN SetVideoSurfaceDataFromHImage( HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect *pSrcRect );
-
-// Sets Transparency color into HVSurface and the underlying DD surface
-BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransColor );
-
 // Sets HVSurface palette, creates if nessessary. Also sets 16BPP palette
 BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalette );
 
