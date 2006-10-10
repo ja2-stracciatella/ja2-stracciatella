@@ -188,24 +188,12 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREInde
 
 // ****************************************************************************
 //
-// Macros
-//
-// ****************************************************************************
-
-extern BOOLEAN gfVideoObjectsInit;
-#define VideoObjectsInitialized()	(gfVideoObjectsInit)
-
-// ****************************************************************************
-//
 // Blt Functions
 //
 // ****************************************************************************
 
 // These blitting functions more-or less encapsolate all of the functionality of DirectDraw
 // Blitting, giving an API layer for portability.
-
-HVOBJECT GetPrimaryVideoObject( );
-HVOBJECT GetBackBufferVideoObject( );
 
 BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex );
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex );

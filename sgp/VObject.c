@@ -31,32 +31,9 @@
 // *******************************************************************************
 
 
-// *******************************************************************************
-// Defines
-// *******************************************************************************
-
-// This define is sent to CreateList SGP function. It dynamically re-sizes if
-// the list gets larger
-#define DEFAULT_VIDEO_OBJECT_LIST_SIZE	10
-
 #define COMPRESS_TRANSPARENT				0x80
 #define COMPRESS_RUN_MASK						0x7F
 
-// *******************************************************************************
-// External Functions and variables
-// *******************************************************************************
-
-// *******************************************************************************
-// LOCAL functions
-// *******************************************************************************
-
-
-// *******************************************************************************
-// LOCAL global variables
-// *******************************************************************************
-
-
-BOOLEAN	gfVideoObjectsInit=FALSE;
 
 typedef struct VOBJECT_NODE
 {
@@ -75,7 +52,6 @@ VOBJECT_NODE  *gpVObjectHead = NULL;
 VOBJECT_NODE  *gpVObjectTail = NULL;
 UINT32				guiVObjectIndex = 1;
 UINT32				guiVObjectSize = 0;
-UINT32				guiVObjectTotalAdded = 0;
 
 #ifdef _DEBUG
 enum
@@ -114,7 +90,6 @@ BOOLEAN InitializeVideoObjectManager( )
 	Assert( !gpVObjectTail );
 	RegisterDebugTopic(TOPIC_VIDEOOBJECT, "Video Object Manager");
 	gpVObjectHead = gpVObjectTail = NULL;
-	gfVideoObjectsInit=TRUE;
 	return TRUE ;
 }
 
@@ -138,9 +113,7 @@ BOOLEAN ShutdownVideoObjectManager( )
 	gpVObjectTail = NULL;
 	guiVObjectIndex = 1;
 	guiVObjectSize = 0;
-	guiVObjectTotalAdded = 0;
 	UnRegisterDebugTopic(TOPIC_VIDEOOBJECT, "Video Objects");
-	gfVideoObjectsInit=FALSE;
 	return TRUE;
 }
 
@@ -205,7 +178,6 @@ BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 	Assert( guiVObjectIndex < 0xfffffff0 ); //unlikely that we will ever use 2 billion vobjects!
 	//We would have to create about 70 vobjects per second for 1 year straight to achieve this...
 	guiVObjectSize++;
-	guiVObjectTotalAdded++;
 
 	#ifdef JA2TESTVERSION
 		if( CountVideoObjectNodes() != guiVObjectSize )
