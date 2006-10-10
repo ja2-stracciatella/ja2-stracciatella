@@ -1086,18 +1086,6 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 	// Assertions
 	Assert( hDestVSurface != NULL );
 
-	// Check for fill, if true, fill entire region with color
-	if ( fBltFlags & VS_BLT_COLORFILL )
-	{
-		return( FillSurface( hDestVSurface, pBltFx ) );
-	}
-
-	// Check for colorfill rectangle
-	if ( fBltFlags & VS_BLT_COLORFILLRECT )
-	{
-		return( FillSurfaceRect( hDestVSurface, pBltFx ) );
-	}
-
 	// Check for source coordinate options - from region, specific rect or full src dimensions
 	do
 	{
@@ -1156,80 +1144,52 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 	if((iDestY+(INT32)uiHeight) < (INT32)DestRect.top)
 		return(FALSE);
 
-	// DB The mirroring stuff has to do it's own clipping because
-	// it needs to invert some of the numbers
-	if(!(fBltFlags & VS_BLT_MIRROR_Y))
+	if((iDestX+(INT32)uiWidth) >= (INT32)DestRect.right)
 	{
-		if((iDestX+(INT32)uiWidth) >= (INT32)DestRect.right)
-		{
-			SrcRect.right-=((iDestX+uiWidth)-DestRect.right);
-			uiWidth-=((iDestX+uiWidth)-DestRect.right);
-		}
-		if((iDestY+(INT32)uiHeight) >= (INT32)DestRect.bottom)
-		{
-			SrcRect.bottom-=((iDestY+uiHeight)-DestRect.bottom);
-			uiHeight-=((iDestY+uiHeight)-DestRect.bottom);
-		}
-		if(iDestX < DestRect.left)
-		{
-			SrcRect.left+=(DestRect.left-iDestX);
-			uiWidth-=(DestRect.left-iDestX);
-			iDestX=DestRect.left;
-		}
-		if(iDestY < (INT32)DestRect.top)
-		{
-			SrcRect.top+=(DestRect.top-iDestY);
-			uiHeight-=(DestRect.top-iDestY);
-			iDestY=DestRect.top;
-		}
+		SrcRect.right-=((iDestX+uiWidth)-DestRect.right);
+		uiWidth-=((iDestX+uiWidth)-DestRect.right);
+	}
+	if((iDestY+(INT32)uiHeight) >= (INT32)DestRect.bottom)
+	{
+		SrcRect.bottom-=((iDestY+uiHeight)-DestRect.bottom);
+		uiHeight-=((iDestY+uiHeight)-DestRect.bottom);
+	}
+	if(iDestX < DestRect.left)
+	{
+		SrcRect.left+=(DestRect.left-iDestX);
+		uiWidth-=(DestRect.left-iDestX);
+		iDestX=DestRect.left;
+	}
+	if(iDestY < (INT32)DestRect.top)
+	{
+		SrcRect.top+=(DestRect.top-iDestY);
+		uiHeight-=(DestRect.top-iDestY);
+		iDestY=DestRect.top;
 	}
 
 	// Send dest position, rectangle, etc to DD bltfast function
 	// First check BPP values for compatibility
 	if ( hDestVSurface->ubBitDepth == 16 && hSrcVSurface->ubBitDepth == 16 )
 	{
-		if(fBltFlags & VS_BLT_MIRROR_Y)
-		{
-			if((pSrcSurface16=(UINT16 *)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch))==NULL)
-			{
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP surface for blitting" ));
-				return(FALSE);
-			}
-
-			if((pDestSurface16=(UINT16 *)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch))==NULL)
-			{
-				UnLockVideoSurfaceBuffer(hSrcVSurface);
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP dest surface for blitting" ));
-				return(FALSE);
-			}
-
-			Blt16BPPTo16BPPMirror(pDestSurface16, uiDestPitch, pSrcSurface16, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
-			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			UnLockVideoSurfaceBuffer(hDestVSurface);
-			return(TRUE);
-		}
 // For testing with non-DDraw blitting, uncomment to test -- DB
 #ifndef JA2
-		else
+		if((pSrcSurface16=(UINT16 *)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch))==NULL)
 		{
-			if((pSrcSurface16=(UINT16 *)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch))==NULL)
-			{
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP surface for blitting" ));
-				return(FALSE);
-			}
-
-			if((pDestSurface16=(UINT16 *)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch))==NULL)
-			{
-				UnLockVideoSurfaceBuffer(hSrcVSurface);
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP dest surface for blitting" ));
-				return(FALSE);
-			}
-
-			Blt16BPPTo16BPP(pDestSurface16, uiDestPitch, pSrcSurface16, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
-			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			UnLockVideoSurfaceBuffer(hDestVSurface);
-			return(TRUE);
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP surface for blitting" ));
+			return(FALSE);
 		}
+
+		if((pDestSurface16=(UINT16 *)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch))==NULL)
+		{
+			UnLockVideoSurfaceBuffer(hSrcVSurface);
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP dest surface for blitting" ));
+			return(FALSE);
+		}
+
+		Blt16BPPTo16BPP(pDestSurface16, uiDestPitch, pSrcSurface16, uiSrcPitch, iDestX, iDestY, SrcRect.left, SrcRect.top, uiWidth, uiHeight);
+		UnLockVideoSurfaceBuffer(hSrcVSurface);
+		UnLockVideoSurfaceBuffer(hDestVSurface);
+		return(TRUE);
 #endif
 
 		CHECKF( BltVSurfaceUsingDD( hDestVSurface, hSrcVSurface, fBltFlags, iDestX, iDestY, &SrcRect ) );
@@ -1510,12 +1470,6 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		if ( fBltFlags & VS_BLT_USECOLORKEY )
 		{
 			uiDDFlags |= DDBLTFAST_SRCCOLORKEY;
-		}
-
-		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USEDESTCOLORKEY )
-		{
-			uiDDFlags |= DDBLTFAST_DESTCOLORKEY;
 		}
 
 		if ( uiDDFlags == 0 )

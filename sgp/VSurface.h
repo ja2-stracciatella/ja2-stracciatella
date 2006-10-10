@@ -24,14 +24,9 @@
 // Defines for blitting
 //
 
-#define VS_BLT_COLORFILL												0x000000020
 #define VS_BLT_USECOLORKEY											0x000000002
-#define VS_BLT_USEDESTCOLORKEY									0x000000200
 #define VS_BLT_FAST															0x000000004
-#define VS_BLT_CLIPPED													0x000000008
 #define VS_BLT_SRCSUBRECT												0x000000040
-#define VS_BLT_COLORFILLRECT										0x000000100
-#define VS_BLT_MIRROR_Y													0x000001000
 
 //
 // Effects structure for specialized blitting
