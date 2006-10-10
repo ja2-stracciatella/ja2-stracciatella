@@ -7990,7 +7990,7 @@ void CreateSquadBox( void )
  for(uiCounter=0; uiCounter <= uiMaxSquad; uiCounter++)
  {
 	 // get info about current squad and put in  string
-	 swprintf( sString, lengthof(sString), L"%s ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
+	 swprintf( sString, lengthof(sString), L"%S ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
 	 AddMonoString(&hStringHandle, sString );
 
 	 // make sure it is unhighlighted
@@ -8237,8 +8237,8 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 {
  UINT32 hStringHandle;
  UINT32 uiCounter;
- CHAR16 sString[ 50 ];
- CHAR16 sDollarString[ 50 ];
+ wchar_t sString[ 50 ];
+ wchar_t sDollarString[ 50 ];
 
  ContractPosition.iX = OrigContractPosition.iX;
 
@@ -8287,7 +8287,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 				 }
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
@@ -8303,7 +8303,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString );
+				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString );
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
@@ -8320,7 +8320,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%s ( %s )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 default:
@@ -8539,7 +8539,7 @@ void CreateAssignmentsBox( void )
 		if( ( uiCounter == ASSIGN_MENU_ON_DUTY ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment < ON_DUTY ) )
 		{
 			// show his squad # in brackets
-			swprintf( sString, lengthof(sString), L"%s(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
+			swprintf( sString, lengthof(sString), L"%S(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
 		}
 		else
 		{
