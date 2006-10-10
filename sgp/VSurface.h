@@ -26,7 +26,6 @@
 
 #define VS_BLT_USECOLORKEY											0x000000002
 #define VS_BLT_FAST															0x000000004
-#define VS_BLT_SRCSUBRECT												0x000000040
 
 //
 // Video Surface Flags

@@ -1071,20 +1071,16 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 	// Assertions
 	Assert( hDestVSurface != NULL );
 
-	// Check for source coordinate options - from region, specific rect or full src dimensions
-	do
+	// Check for source coordinate options - specific rect or full src dimensions
+	if (SRect != NULL)
 	{
-		// Use SUBRECT if specified
-		if ( fBltFlags & VS_BLT_SRCSUBRECT )
-		{
-			CHECKF(SRect != NULL);
-			SrcRect.top    = SRect->iTop;
-			SrcRect.left   = SRect->iLeft;
-			SrcRect.bottom = SRect->iBottom;
-			SrcRect.right  = SRect->iRight;
-			break;
-		}
-
+		SrcRect.top    = SRect->iTop;
+		SrcRect.left   = SRect->iLeft;
+		SrcRect.bottom = SRect->iBottom;
+		SrcRect.right  = SRect->iRight;
+	}
+	else
+	{
 		// Here, use default, which is entire Video Surface
 		// Check Sizes, SRC size MUST be <= DEST size
 		if ( hDestVSurface->usHeight < hSrcVSurface->usHeight )
@@ -1102,8 +1098,7 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 		SrcRect.left = (int)0;
 		SrcRect.bottom = (int)hSrcVSurface->usHeight;
 		SrcRect.right = (int)hSrcVSurface->usWidth;
-
-	} while( FALSE );
+	}
 
 	// Once here, assert valid Src
 	Assert( hSrcVSurface != NULL );
