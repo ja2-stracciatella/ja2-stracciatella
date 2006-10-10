@@ -42,26 +42,6 @@ void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 }
 
 
-void
-DDReleaseSurface ( LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppOldSurface2 )
-{
-#if 1 // XXX TODO
-	FIXME
-#else
-	Assert ( ppOldSurface1 != NULL );
-	Assert ( ppOldSurface2 != NULL );
-	Assert ( *ppOldSurface1 != NULL );
-	Assert ( *ppOldSurface2 != NULL );
-
-	ATTEMPT ( IDirectDrawSurface2_Release ( *ppOldSurface2 ) );
-	ATTEMPT ( IDirectDrawSurface_Release ( *ppOldSurface1 ) );
-
-	*ppOldSurface1 = NULL;
-	*ppOldSurface2 = NULL;
-#endif
-}
-
-
 void DDBltFastSurface( LPDIRECTDRAWSURFACE2 pDestSurface, UINT32 uiX, UINT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface,
 							LPRECT pSrcRect, UINT32 uiTrans)
 {

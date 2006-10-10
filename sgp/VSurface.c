@@ -637,7 +637,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->usHeight           = usHeight;
 	hVSurface->usWidth            = usWidth;
 	hVSurface->ubBitDepth         = ubBitDepth;
-	hVSurface->pSurfaceData1      = NULL; // XXX remove
 	hVSurface->pSurfaceData       = NULL; // XXX remove
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
@@ -958,8 +957,6 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 // Deletes all palettes, surfaces and region data
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 {
-	LPDIRECTDRAWSURFACE2	lpDDSurface;
-
 	// Assertions
 	CHECKF( hVSurface != NULL );
 
@@ -968,15 +965,6 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 	{
 		MemFree(hVSurface->pPalette);
 		hVSurface->pPalette = NULL;
-	}
-
-	// Get surface pointer
-	lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;
-
-	// Release surface
-	if ( hVSurface->pSurfaceData1 != NULL )
-	{
-		DDReleaseSurface((LPDIRECTDRAWSURFACE*)&hVSurface->pSurfaceData1, &lpDDSurface );
 	}
 
 	//If there is a 16bpp palette, free it
@@ -1186,7 +1174,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->usWidth           = surface->w;
 	hVSurface->ubBitDepth        = surface->format->BitsPerPixel;
 	hVSurface->pSurfaceData      = NULL; // XXX remove
-	hVSurface->pSurfaceData1     = NULL; // XXX remove
 	hVSurface->fFlags            = 0;
 
 	if (surface->format->palette != NULL) // XXX necessary?

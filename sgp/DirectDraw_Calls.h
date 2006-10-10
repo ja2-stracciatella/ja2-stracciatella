@@ -12,9 +12,6 @@ extern "C" {
 
 // Surface Functions
 
-void DDReleaseSurface (	LPDIRECTDRAWSURFACE *ppOldSurface1, LPDIRECTDRAWSURFACE2 *ppOldSurface2 );
-
-
 void DDLockSurface( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFACEDESC pSurfaceDesc,
 					    UINT32 uiFlags, HANDLE hEvent);
 
