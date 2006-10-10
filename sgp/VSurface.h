@@ -36,9 +36,6 @@ typedef struct
 {
 	COLORVAL ColorFill;		// Used for fill effect
 	SGPRect	 SrcRect;			// Given SRC subrect instead of srcregion
-	SGPRect	 FillRect;		// Given SRC subrect instead of srcregion
-	UINT16	 DestRegion;  // Given a DEST region for dest positions within the VO
-
 } blt_vs_fx;
 
 //

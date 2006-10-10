@@ -30,7 +30,7 @@ extern void GetClippingRect(SGPRect *clip);
 BOOLEAN UpdateBackupSurface( HVSURFACE hVSurface );
 BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT *DestRect, RECT *SrcRect );
 BOOLEAN FillSurface( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx );
-BOOLEAN FillSurfaceRect( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx );
+static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
 BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect, RECT *DestRect );
 BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect);
@@ -475,7 +475,6 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRe
 
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP)
 {
-	blt_vs_fx BltFx;
 	HVSURFACE	hDestVSurface;
 	SGPRect Clip;
 
@@ -486,9 +485,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 	{
 		return FALSE;
 	}
-
-	BltFx.ColorFill = Color16BPP;
-	BltFx.DestRegion = 0;
 
   //
 	// Clip fill region coords
@@ -523,12 +519,13 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 	if((iDestX2 <= iDestX1) || (iDestY2 <= iDestY1))
 		return(FALSE);
 
-	BltFx.SrcRect.iLeft =	BltFx.FillRect.iLeft = iDestX1;
-	BltFx.SrcRect.iTop = BltFx.FillRect.iTop = iDestY1;
-	BltFx.SrcRect.iRight = BltFx.FillRect.iRight = iDestX2;
-	BltFx.SrcRect.iBottom = BltFx.FillRect.iBottom = iDestY2;
+	SDL_Rect Rect;
+	Rect.x = iDestX1;
+	Rect.y = iDestY1;
+	Rect.w = iDestX2 - iDestX1;
+	Rect.h = iDestY2 - iDestY1;
 
-	return( FillSurfaceRect( hDestVSurface, &BltFx ) );
+	return FillSurfaceRect(hDestVSurface, &Rect, Color16BPP);
 }
 
 
@@ -1417,18 +1414,13 @@ BOOLEAN FillSurface( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
 	return( TRUE );
 }
 
-BOOLEAN FillSurfaceRect( HVSURFACE hDestVSurface, blt_vs_fx *pBltFx )
+
+static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color)
 {
-	SDL_Rect rect;
-
 	Assert( hDestVSurface != NULL );
-	CHECKF( pBltFx != NULL );
+	CHECKF(Rect != NULL);
 
-	rect.x = pBltFx->FillRect.iLeft;
-	rect.y = pBltFx->FillRect.iTop;
-	rect.w = pBltFx->FillRect.iRight - pBltFx->FillRect.iLeft;
-	rect.h = pBltFx->FillRect.iBottom - pBltFx->FillRect.iTop;
-	SDL_FillRect(hDestVSurface->surface, &rect, pBltFx->ColorFill);
+	SDL_FillRect(hDestVSurface->surface, Rect, Color);
 
 	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
 	{
