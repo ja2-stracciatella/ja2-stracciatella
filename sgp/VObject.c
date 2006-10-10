@@ -148,9 +148,6 @@ BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 		return FALSE ;
 	}
 
-	// Set transparency to default
-	SetVideoObjectTransparencyColor( hVObject, FROMRGB( 0, 0, 0 ) );
-
 	// Set into video object list
 	if( gpVObjectHead )
 	{ //Add node after tail
@@ -199,9 +196,6 @@ BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor )
 		gubVODebugCode = DEBUGSTR_SETVIDEOOBJECTTRANSPARENCY;
 	#endif
 	CHECKF( GetVideoObject( &hVObject, uiIndex ) );
-
-	// Set transparency
-	SetVideoObjectTransparencyColor( hVObject, TransColor );
 
 	return( TRUE );
 }
@@ -499,20 +493,6 @@ BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette )
 	hVObject->pShadeCurrent = hVObject->p16BPPPalette;
 
 //  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Video Object Palette change successfull" ));
-	return( TRUE );
-}
-
-// Transparency needs to take RGB value and find best fit and place it into DD Surface
-// colorkey value.
-BOOLEAN SetVideoObjectTransparencyColor( HVOBJECT hVObject, COLORVAL TransColor )
-{
-
-	// Assertions
-	Assert( hVObject != NULL );
-
-	//Set trans color into video object
-	hVObject->TransparentColor = TransColor;
-
 	return( TRUE );
 }
 

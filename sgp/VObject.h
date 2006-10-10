@@ -65,7 +65,6 @@ typedef struct TAG_HVOBJECT
 	UINT32							fFlags;								// Special flags
 	UINT32							uiSizePixData;			// ETRLE data size
 	SGPPaletteEntry			*pPaletteEntry;				// 8BPP Palette
-	COLORVAL						TransparentColor;			// Defaults to 0,0,0
 	UINT16							*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 
 	PTR										pPixData;						// ETRLE pixel data
@@ -160,9 +159,6 @@ BOOLEAN SetVideoObjectTransparency( UINT32 uiIndex, COLORVAL TransColor );
 
 // Created from a VOBJECT_DESC structure. Can be from a file via HIMAGE or empty.
 HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc );
-
-// Sets Transparency color into HVOBJECT
-BOOLEAN SetVideoObjectTransparencyColor( HVOBJECT hVObject, COLORVAL TransColor );
 
 // Sets HVOBJECT palette, creates if nessessary. Also sets 16BPP palette
 BOOLEAN SetVideoObjectPalette( HVOBJECT hVObject, SGPPaletteEntry *pSrcPalette );
