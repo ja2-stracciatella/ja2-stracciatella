@@ -59,9 +59,7 @@ typedef struct TAG_HVOBJECT
 	ETRLEObject						*pETRLEObject;				// Object offset data etc
 	UINT16								*pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
 	UINT16								*pShadeCurrent;
-	UINT16								*pGlow;								// glow highlight table
 	UINT8									*pShade8;							// 8-bit shading index table
-	UINT8									*pGlow8;							// 8-bit glow table
 	ZStripInfo						**ppZStripInfo;				// Z-value strip info arrays
 
 	UINT16								usNumberOfObjects;	// Total number of objects

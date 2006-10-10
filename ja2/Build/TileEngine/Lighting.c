@@ -3621,7 +3621,6 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		// build neutral palette as well!
 		// Set current shade table to neutral color
 		pObj->pShadeCurrent=pObj->pShades[4];
-		pObj->pGlow=pObj->pShades[0];
 
 		return(TRUE);
 }

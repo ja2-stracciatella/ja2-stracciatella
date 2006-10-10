@@ -414,7 +414,6 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 			if ( hImage->ubBitDepth == 8 )
 			{
 				hVObject->pShade8=ubColorTables[DEFAULT_SHADE_LEVEL];
-				hVObject->pGlow8=ubColorTables[0];
 
 				SetVideoObjectPalette( hVObject, hImage->pPalette );
 
@@ -724,7 +723,6 @@ BOOLEAN f16BitPal;
 	}
 
 	hVObject->pShadeCurrent=NULL;
-	hVObject->pGlow=NULL;
 
 	return(TRUE);
 
