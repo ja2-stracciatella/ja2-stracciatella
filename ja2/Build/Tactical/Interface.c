@@ -3155,7 +3155,6 @@ void CheckForAndHandleEndPlayerTimeLimit( )
 void HandleTopMessages( )
 {
 	//UINT32		uiTime;
-	blt_vs_fx BltFx;
 
 	// OK, is out current count > 0 ?
 		if ( gTacticalStatus.fInTopMessage )
@@ -3263,28 +3262,22 @@ void HandleTopMessages( )
 
 		if ( gfTopMessageDirty )
 		{
+			SGPRect SrcRect;
+
 			gTopMessage.sWorldRenderX = gsRenderCenterX;
 			gTopMessage.sWorldRenderY = gsRenderCenterY;
 
-			// Redner!
-			BltFx.SrcRect.iLeft = 0;
-			BltFx.SrcRect.iTop  = 20 - gTopMessage.bYPos;
-			BltFx.SrcRect.iRight = 640;
-			BltFx.SrcRect.iBottom = 20;
+			SrcRect.iLeft   =   0;
+			SrcRect.iTop    =  20 - gTopMessage.bYPos;
+			SrcRect.iRight  = 640;
+			SrcRect.iBottom =  20;
+			BltVideoSurface(FRAME_BUFFER, gTopMessage.uiSurface, 0, 0, 0, VS_BLT_SRCSUBRECT, &SrcRect);
 
-			BltVideoSurface( FRAME_BUFFER, gTopMessage.uiSurface, 0,
-																		 0, 0,
-																		 VS_BLT_SRCSUBRECT, &BltFx );
-
-			// Save to save buffer....
-			BltFx.SrcRect.iLeft = 0;
-			BltFx.SrcRect.iTop  = 0;
-			BltFx.SrcRect.iRight = 640;
-			BltFx.SrcRect.iBottom = 20;
-
-			BltVideoSurface( guiSAVEBUFFER, FRAME_BUFFER, 0,
-																		 0, 0,
-																		 VS_BLT_SRCSUBRECT, &BltFx );
+			SrcRect.iLeft   =   0;
+			SrcRect.iTop    =   0;
+			SrcRect.iRight  = 640;
+			SrcRect.iBottom =  20;
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, VS_BLT_SRCSUBRECT, &SrcRect);
 
 			InvalidateRegion( 0, 0, 640, 20 );
 
@@ -3302,15 +3295,14 @@ void HandleTopMessages( )
 
 void EndTopMessage( )
 {
-//	blt_vs_fx BltFx;
-
-
 	// OK, end the topmost message!
 	if ( gTacticalStatus.fInTopMessage )
 	{
 		// Are we the last?
 		//if ( gTopMessage.bCurrentMessage == 1 )
 		{
+			SGPRect SrcRect;
+
 			// We are....
 			// Re-render our strip and then copy to the save buffer...
 			gsVIEWPORT_WINDOW_START_Y = 0;
@@ -3321,14 +3313,11 @@ void EndTopMessage( )
 			//gsVIEWPORT_WINDOW_START_Y = 20;
 
 			// Copy into save buffer...
-			//BltFx.SrcRect.iLeft = 0;
-			//BltFx.SrcRect.iTop  = 0;
-			//BltFx.SrcRect.iRight = 640;
-			//BltFx.SrcRect.iBottom = 20;
-
-			//BltVideoSurface( guiSAVEBUFFER, FRAME_BUFFER, 0,
-			//															 0, 0,
-			//															 VS_BLT_SRCSUBRECT, &BltFx );
+			//SrcRect.iLeft   =   0;
+			//SrcRect.iTop    =   0;
+			//SrcRect.iRight  = 640;
+			//SrcRect.iBottom =  20;
+			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, VS_BLT_SRCSUBRECT, &SrcRect);
 		}
 		//else
 		//{

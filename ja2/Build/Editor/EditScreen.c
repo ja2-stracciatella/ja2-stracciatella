@@ -2605,7 +2605,6 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 	INT32				iPicHeight, iPicWidth;
 	HVSURFACE		hvSurface;
 	INT32				iWinWidth, iWinHeight;
-	blt_vs_fx		vSfx;
 
 	WinRect.iLeft = (iWindow == 0) ? (336) : (488);
 	WinRect.iTop = 211;
@@ -2650,10 +2649,7 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 		iStartY = ((iWinHeight - iPicHeight) / 2) + WinRect.iTop;
 	}
 
-	vSfx.SrcRect = ClipRect;
-	BltVideoSurface( FRAME_BUFFER, vSurface, 0,
-																 iStartX, iStartY,
-																 VS_BLT_SRCSUBRECT, &vSfx );
+	BltVideoSurface(FRAME_BUFFER, vSurface, 0, iStartX, iStartY, VS_BLT_SRCSUBRECT, &ClipRect);
 }
 
 

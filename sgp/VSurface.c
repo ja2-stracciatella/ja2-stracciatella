@@ -439,7 +439,7 @@ void DeletePrimaryVideoSurfaces( )
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, blt_vs_fx *pBltFx )
+BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect)
 {
 
 	HVSURFACE	hDestVSurface;
@@ -459,7 +459,7 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRe
 	{
 		return FALSE;
 	}
-	if ( !BltVideoSurfaceToVideoSurface( hDestVSurface, hSrcVSurface, usRegionIndex, iDestX, iDestY, fBltFlags, pBltFx ) )
+	if (!BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, usRegionIndex, iDestX, iDestY, fBltFlags, SrcRect))
 	{ // VO Blitter will set debug messages for error conditions
 		return FALSE ;
 	}
@@ -1061,7 +1061,7 @@ BOOLEAN GetVSurfaceRect( HVSURFACE hVSurface, RECT *pRect)
 // Blt  will use DD Blt or BltFast depending on flags.
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 
-BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, blt_vs_fx *pBltFx )
+BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SRect)
 {
 	RECT					 SrcRect, DestRect;
 	UINT8					*pSrcSurface8, *pDestSurface8;
@@ -1077,17 +1077,11 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 		// Use SUBRECT if specified
 		if ( fBltFlags & VS_BLT_SRCSUBRECT )
 		{
-			SGPRect aSubRect;
-
-			CHECKF( pBltFx != NULL );
-
-			aSubRect = pBltFx->SrcRect;
-
-			SrcRect.top = (int)aSubRect.iTop;
-			SrcRect.left = (int)aSubRect.iLeft;
-			SrcRect.bottom = (int)aSubRect.iBottom;
-			SrcRect.right = (int)aSubRect.iRight;
-
+			CHECKF(SRect != NULL);
+			SrcRect.top    = SRect->iTop;
+			SrcRect.left   = SRect->iLeft;
+			SrcRect.bottom = SRect->iBottom;
+			SrcRect.right  = SRect->iRight;
 			break;
 		}
 
