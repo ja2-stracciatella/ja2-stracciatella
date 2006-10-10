@@ -650,9 +650,7 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->pSavedSurfaceData  = NULL;
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
-	hVSurface->TransparentColor   = FROMRGB(0, 0, 0);
 	hVSurface->fFlags             = 0;
-	hVSurface->pClipper           = NULL;
 
 	// Determine memory and other attributes of newly created surface
 
@@ -905,9 +903,6 @@ BOOLEAN SetVideoSurfaceTransparencyColor( HVSURFACE hVSurface, COLORVAL TransCol
 	// Assertions
 	Assert( hVSurface != NULL );
 
-	//Set trans color into Video Surface
-	hVSurface->TransparentColor = TransColor;
-
 	Surface = hVSurface->surface;
 	CHECKF(Surface != NULL);
 
@@ -1014,12 +1009,6 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 		MemFree(hVSurface->pPalette);
 		hVSurface->pPalette = NULL;
 	}
-
-	//if ( hVSurface->pClipper != NULL )
-	//{
-		// Release Clipper
-	//	DDReleaseClipper( (LPDIRECTDRAWCLIPPER)hVSurface->pClipper );
-	//}
 
 	// Get surface pointer
 	lpDDSurface = (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData;

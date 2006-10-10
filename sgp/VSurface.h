@@ -75,8 +75,6 @@ typedef struct
 	UINT32					fFlags;								// Used to describe memory usage, etc
 	SDL_Color* pPalette;
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
-	COLORVAL				TransparentColor;			// Defaults to 0,0,0
-	PTR							pClipper;							// A void pointer encapsolated as a clipper Surface
 } SGPVSurface, *HVSURFACE;
 
 //
