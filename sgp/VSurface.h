@@ -35,7 +35,6 @@
 #define	VSURFACE_DEFAULT_MEM_USAGE		0x00000001			// Default mem usage is same as DD, try video and then try system. Will usually work
 #define	VSURFACE_VIDEO_MEM_USAGE			0x00000002			// Will force surface into video memory and will fail if it can't
 #define	VSURFACE_SYSTEM_MEM_USAGE			0x00000004			// Will force surface into system memory and will fail if it can't
-#define VSURFACE_RESERVED_SURFACE			0x00000100			// Reserved for special purposes, like a primary surface
 
 //
 // Video Surface creation flags
@@ -54,10 +53,6 @@ typedef struct
 	UINT8						ubBitDepth;						// BPP ALWAYS 16!
 	PTR							pSurfaceData;					// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
 	PTR							pSurfaceData1;				// Direct Draw One Interface
-	PTR							pSavedSurfaceData1;		// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-																				// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
-	PTR							pSavedSurfaceData;		// A void pointer, but for this implementation, is really a lpDirectDrawSurface;
-																				// pSavedSurfaceData is used to hold all video memory Surfaces so that they my be restored
 	UINT32					fFlags;								// Used to describe memory usage, etc
 	SDL_Color* pPalette;
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits

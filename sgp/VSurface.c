@@ -27,7 +27,6 @@ extern void GetClippingRect(SGPRect *clip);
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN UpdateBackupSurface( HVSURFACE hVSurface );
 BOOLEAN ClipReleatedSrcAndDestRectangles( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, RECT *DestRect, RECT *SrcRect );
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
@@ -642,8 +641,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->ubBitDepth         = ubBitDepth;
 	hVSurface->pSurfaceData1      = NULL; // XXX remove
 	hVSurface->pSurfaceData       = NULL; // XXX remove
-	hVSurface->pSavedSurfaceData1 = NULL;
-	hVSurface->pSavedSurfaceData  = NULL;
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
 	hVSurface->fFlags             = 0;
@@ -670,34 +667,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	if (surface->flags & SDL_HWSURFACE)
 	{
 		hVSurface->fFlags |= VSURFACE_VIDEO_MEM_USAGE;
-	}
-
-	// If in video memory, create backup surface
-	if (hVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE)
-	{
-#if 1
-		UNIMPLEMENTED();
-#else
-		SurfaceDescription.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
-		SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-		SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-		SurfaceDescription.dwWidth = usWidth;
-		SurfaceDescription.dwHeight = usHeight;
-		SurfaceDescription.ddpfPixelFormat = PixelFormat;
-
-    //
-		// Create Surface
-    //
-
-		DDCreateSurface (	lpDD2Object, &SurfaceDescription, &lpDDS, &lpDDS2 );
-
-    //
-		// Save surface to backup
-    //
-
-		hVSurface->pSavedSurfaceData1 = lpDDS;
-		hVSurface->pSavedSurfaceData = lpDDS2;
-#endif
 	}
 
   //
@@ -762,12 +731,6 @@ void UnLockVideoSurfaceBuffer( HVSURFACE hVSurface )
 	Assert( hVSurface != NULL );
 
 	SDL_UnlockSurface(hVSurface->surface); // XXX necessary?
-
-	// Copy contents if surface is in video
-	if ( hVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
-	{
-		UpdateBackupSurface( hVSurface );
-	}
 }
 
 // Given an HIMAGE object, blit imagery into existing Video Surface. Can be from 8->16 BPP
@@ -1015,13 +978,6 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 		DDReleaseSurface((LPDIRECTDRAWSURFACE*)&hVSurface->pSurfaceData1, &lpDDSurface );
 	}
 
-	// Release backup surface
-	if ( hVSurface->pSavedSurfaceData != NULL )
-	{
-		DDReleaseSurface((LPDIRECTDRAWSURFACE*)&hVSurface->pSavedSurfaceData1,
-								(LPDIRECTDRAWSURFACE2*)&hVSurface->pSavedSurfaceData );
-	}
-
 	//If there is a 16bpp palette, free it
 	if( hVSurface->p16BPPPalette != NULL )
 	{
@@ -1200,37 +1156,6 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 }
 
 
-
-// ******************************************************************************************
-//
-// UTILITY FUNCTIONS
-//
-// ******************************************************************************************
-
-// Blt to backup buffer
-BOOLEAN UpdateBackupSurface( HVSURFACE hVSurface )
-{
-	RECT		aRect;
-
-	// Assertions
-	Assert( hVSurface != NULL );
-
-	// Validations
-	CHECKF( hVSurface->pSavedSurfaceData != NULL );
-
-	aRect.top = (int)0;
-	aRect.left = (int)0;
-	aRect.bottom = (int)hVSurface->usHeight;
-	aRect.right = (int)hVSurface->usWidth;
-
-	// Copy all contents into backup buffer
-	DDBltFastSurface( (LPDIRECTDRAWSURFACE2)hVSurface->pSurfaceData, 0, 0, (LPDIRECTDRAWSURFACE2)hVSurface->pSavedSurfaceData, &aRect, DDBLTFAST_NOCOLORKEY );
-
-	return( TRUE );
-
-}
-
-
 // *****************************************************************************
 //
 // Private DirectDraw manipulation functions
@@ -1261,7 +1186,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->ubBitDepth        = surface->format->BitsPerPixel;
 	hVSurface->pSurfaceData      = NULL; // XXX remove
 	hVSurface->pSurfaceData1     = NULL; // XXX remove
-	hVSurface->pSavedSurfaceData = NULL; // XXX remove
 	hVSurface->fFlags            = 0;
 
 	if (surface->format->palette != NULL) // XXX necessary?
@@ -1389,11 +1313,6 @@ static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 C
 
 	SDL_FillRect(hDestVSurface->surface, Rect, Color);
 
-	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
-	{
-		UpdateBackupSurface( hDestVSurface );
-	}
-
 	return( TRUE );
 }
 
@@ -1495,12 +1414,6 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 							SrcRect, uiDDFlags, NULL );
 
 #endif
-	}
-
-	// Update backup surface with new data
-	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
-	{
-		UpdateBackupSurface( hDestVSurface );
 	}
 
 	return( TRUE );
@@ -1634,12 +1547,6 @@ BOOLEAN BltVSurfaceUsingDDBlt( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, 
 
 	DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData,
 						SrcRect, uiDDFlags, NULL );
-
-	// Update backup surface with new data
-	if ( hDestVSurface->fFlags & VSURFACE_VIDEO_MEM_USAGE && !hDestVSurface->fFlags & VSURFACE_RESERVED_SURFACE )
-	{
-		UpdateBackupSurface( hDestVSurface );
-	}
 
 	return( TRUE );
 }
