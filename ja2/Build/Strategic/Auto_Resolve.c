@@ -1555,7 +1555,7 @@ void RenderAutoResolve()
 	gpAR->fRenderAutoResolve = FALSE;
 
 	GetVideoSurface( &hVSurface, gpAR->iInterfaceBuffer );
-	BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, gpAR->Rect.iLeft, gpAR->Rect.iTop, VO_BLT_SRCTRANSPARENCY, 0 );
+	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, gpAR->Rect.iLeft, gpAR->Rect.iTop, VS_BLT_USECOLORKEY, 0);
 
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{

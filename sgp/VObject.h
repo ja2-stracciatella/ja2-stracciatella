@@ -14,9 +14,6 @@
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 typedef UINT32 COLORVAL;
 
-// Defines for blitting
-#define VO_BLT_SRCTRANSPARENCY									0x000000002
-
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48
 

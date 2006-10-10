@@ -4421,7 +4421,7 @@ BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 u
 	}
 
 
-	BltStretchVideoSurface(FRAME_BUFFER, guiTitleBarSurface, 0, 0, VO_BLT_SRCTRANSPARENCY, &SrcRect, &DestRect );
+	BltStretchVideoSurface(FRAME_BUFFER, guiTitleBarSurface, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DestRect);
 
 	InvalidateRegion(DestRect.iLeft,DestRect.iTop, DestRect.iRight, DestRect.iBottom);
 	InvalidateRegion(LastRect.iLeft,LastRect.iTop, LastRect.iRight, LastRect.iBottom);

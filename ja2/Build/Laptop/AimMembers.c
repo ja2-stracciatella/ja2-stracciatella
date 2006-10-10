@@ -2232,7 +2232,7 @@ BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex)
 //	if( !gfIsAnsweringMachineActive )
 	{
 		//Blt the face surface to the video background surface
-		if(	!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, 0, 0, VO_BLT_SRCTRANSPARENCY, &SrcRect, &DestRect ) )
+		if (!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DestRect))
 			return(FALSE);
 
 		//if the merc is not at home and the players is leaving a message, shade the players face
@@ -3804,7 +3804,7 @@ BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit )
 
 
 
-	BltStretchVideoSurface(FRAME_BUFFER, guiVideoTitleBar, 0, 0, VO_BLT_SRCTRANSPARENCY, &SrcRect, &DestRect );
+	BltStretchVideoSurface(FRAME_BUFFER, guiVideoTitleBar, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DestRect);
 
 	InvalidateRegion(DestRect.iLeft,DestRect.iTop, DestRect.iRight, DestRect.iBottom);
 	InvalidateRegion(LastRect.iLeft,LastRect.iTop, LastRect.iRight, LastRect.iBottom);
@@ -4116,7 +4116,7 @@ BOOLEAN DisplayShadedStretchedMercFace( UINT8 ubMercID, UINT16 usPosX, UINT16 us
 	DestRect.iBottom = DestRect.iTop + AIM_MEMBER_VIDEO_FACE_HEIGHT;
 
 
-	if(	!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, 0, 0, VO_BLT_SRCTRANSPARENCY, &SrcRect, &DestRect ) )
+	if (!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DestRect))
 		return(FALSE);
 
 
