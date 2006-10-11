@@ -53,9 +53,9 @@ void DisableEditorRegion( INT8 bRegionID );
 
 
 //Rendering Utils
-void mprintfEditor(INT16 x, INT16 y, UINT16 *pFontString, ...);
+void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...);
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom );
-void DrawEditorInfoBox( UINT16 *str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h );
+void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
 
 extern INT32	giEditMercDirectionIcons[2];
 extern UINT32 guiMercInventoryPanel;

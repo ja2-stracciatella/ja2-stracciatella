@@ -38,6 +38,7 @@
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
 #	include "MessageBoxScreen.h"
+#	include "ScreenIDs.h"
 #	include "Squads.h"
 #	include <stdarg.h>
 #endif

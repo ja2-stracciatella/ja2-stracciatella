@@ -52,4 +52,8 @@ LibraryInitHeader gGameLibaries[ ] =
 	{ "Russian.slf",					FALSE, TRUE },
 #endif
 
+#ifdef JA2EDITOR
+	{ "Editor.slf",           FALSE, TRUE }
+#endif
+
 };

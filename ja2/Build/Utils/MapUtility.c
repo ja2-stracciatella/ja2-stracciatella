@@ -7,22 +7,24 @@
 		#include "WorldDef.h"
 		#include "Overhead.h"
 		#include "FileMan.h"
-		#include "loadscreen.h"
+		#include "LoadScreen.h"
 		#include "Overhead_Map.h"
 		#include "Radar_Screen.h"
 		#include "VObject_Blitters.h"
-		#include "sticonvert.h"
+		#include "STIConvert.h"
 		#include "Font_Control.h"
 		#include "WorldDat.h"
 		#include "English.h"
 		#include "Map_Information.h"
 		#include "Line.h"
+		#include "MemMan.h"
+		#include "Video.h"
 	#endif
 #endif
 
 #ifdef JA2EDITOR
 
-#include "quantize wrap.h"
+#include "Quantize_Wrap.h"
 
 #define		MINIMAP_X_SIZE			88
 #define		MINIMAP_Y_SIZE			44

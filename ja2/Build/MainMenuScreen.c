@@ -37,10 +37,7 @@
 	#include "Button_System.h"
 	#include "JAScreens.h"
 	#include "Local.h"
-#endif
-
-#ifdef _DEBUG
-#	include "GameVersion.h"
+	#include "GameVersion.h"
 #endif
 
 

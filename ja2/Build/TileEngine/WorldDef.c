@@ -83,8 +83,7 @@
 #define	 MAP_NPCSCHEDULES_SAVED				0x00000100
 
 #ifdef JA2EDITOR
-	extern BOOLEAN gfErrorCatch;
-	extern UINT16 gzErrorCatchString[256];
+#	include "LoadScreen.h"
 #endif
 
 // TEMP
@@ -1719,7 +1718,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( LayerCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				LayerCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1730,7 +1729,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.",
 				uiNumWarningsCaught, LayerCount, cnt );
 		}
 		bCounts[ cnt ][ 0 ] = LayerCount;
@@ -1759,7 +1758,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( ObjectCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ObjectCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1770,7 +1769,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.",
 				uiNumWarningsCaught, ObjectCount, cnt );
 		}
 		bCounts[ cnt ][ 1 ] = ObjectCount;
@@ -1789,7 +1788,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( StructCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				StructCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1800,7 +1799,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.",
 				uiNumWarningsCaught, StructCount, cnt );
 		}
 		bCounts[ cnt ][ 2 ] = StructCount;
@@ -1824,7 +1823,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( ShadowCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ShadowCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1835,7 +1834,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.",
 				uiNumWarningsCaught, ShadowCount, cnt );
 		}
 		bCounts[ cnt ][ 3 ] = ShadowCount;
@@ -1854,7 +1853,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( RoofCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				RoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1865,7 +1864,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.",
 				uiNumWarningsCaught, RoofCount, cnt );
 		}
 		bCounts[ cnt ][ 4 ] = RoofCount;
@@ -1887,7 +1886,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		}
 		if( OnRoofCount > 15 )
 		{
-			swprintf( gzErrorCatchString, L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				OnRoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
@@ -1898,7 +1897,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		{
 			uiNumWarningsCaught++;
 			gfErrorCatch = TRUE;
-			swprintf( gzErrorCatchString, L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.",
+			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.",
 				uiNumWarningsCaught, OnRoofCount, cnt );
 		}
 		bCounts[ cnt ][ 5 ] = RoofCount;
@@ -2220,7 +2219,7 @@ void InitLoadedWorld( )
 extern double MasterStart, MasterEnd;
 extern BOOLEAN gfUpdatingNow;
 
-BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
+BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 {
 	FLOAT	dMajorMapVersion;
 	SUMMARYFILE *pSummary;
@@ -2233,7 +2232,7 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 	INT32 cnt;
 	INT32 i;
 	INT32 iTilesetID;
-	UINT16 str[40];
+	wchar_t str[40];
 	UINT8	bCounts[ WORLD_MAX ][8];
 	UINT8 ubCombine;
 	UINT8 szDirFilename[ 50 ];
@@ -2274,7 +2273,7 @@ BOOLEAN EvaluateWorld( UINT8 *pSector, UINT8 ubLevel )
 	FileRead( hfile, pBuffer, uiFileSize, &uiBytesRead );
 	FileClose( hfile );
 
-	swprintf( str, L"Analyzing map %S", szFilename );
+	swprintf(str, lengthof(str), L"Analyzing map %s", szFilename);
 	if( !gfUpdatingNow )
 		SetRelativeStartAndEndPercentage( 0, 0, 100, str );
 	else

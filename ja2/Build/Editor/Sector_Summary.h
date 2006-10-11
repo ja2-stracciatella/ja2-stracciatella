@@ -14,7 +14,7 @@ void DestroySummaryWindow();
 void RenderSummaryWindow();
 void LoadWorldInfo();
 
-void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate );
+void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate);
 
 void SaveGlobalSummary();
 void LoadGlobalSummary();

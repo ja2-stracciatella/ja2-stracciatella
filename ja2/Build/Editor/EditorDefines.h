@@ -5,7 +5,7 @@
 #define __EDITORDEFINES_H
 
 #include "Types.h"
-#include "Button Defines.h"
+#include "Button_Defines.h"
 
 enum
 {

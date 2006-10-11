@@ -22,29 +22,31 @@
 	#include "Soldier_Find.h"
 	#include "World_Items.h"
 	#include "Text.h"
-	#include "Overhead map.h"
-	#include "Cursor Modes.h"
+	#include "Overhead_Map.h"
+	#include "Cursor_Modes.h"
 	#include "EditScreen.h"
 	#include "EditorTerrain.h"
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "EditorItems.h"
 	#include "EditorMercs.h"
 	#include "EditorBuildings.h"
 	#include "EditorMapInfo.h"
 	#include "EditorDefines.h"
 	#include "Editor_Taskbar_Utils.h"
-	#include "Editor Taskbar Creation.h"
-	#include "Editor Callback Prototypes.h"
-	#include "Editor Modes.h"
+	#include "Editor_Taskbar_Creation.h"
+	#include "Editor_Callback_Prototypes.h"
+	#include "Editor_Modes.h"
 	#include "Text_Input.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Map_Information.h"
-	#include "Sector Summary.h"
-	#include "Item Statistics.h"
+	#include "Sector_Summary.h"
+	#include "Item_Statistics.h"
 	#include "Pits.h"
 	#include "Soldier_Find.h"
 	#include "Lighting.h"
 	#include "Keys.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
 #endif
 
 void RenderEditorInfo();
@@ -157,8 +159,8 @@ void LoadEditorImages()
 	if( !AddVideoObject( &VObjectDesc, &guiOmertaMap ) )
 		AssertMsg( 0, "Failed to load data\\editor\\omerta.sti" );
 	//Set up the merc directional buttons.
-	giEditMercDirectionIcons[0] = LoadGenericButtonIcon("EDITOR//arrowsoff.sti");
-	giEditMercDirectionIcons[1] = LoadGenericButtonIcon("EDITOR//arrowson.sti");
+	giEditMercDirectionIcons[0] = LoadGenericButtonIcon("EDITOR/arrowsoff.sti");
+	giEditMercDirectionIcons[1] = LoadGenericButtonIcon("EDITOR/arrowson.sti");
 
 	giEditMercImage[0] = LoadButtonImage("EDITOR\\leftarrow.sti",0,1,2,3,4);
 	giEditMercImage[1] = LoadButtonImage("EDITOR\\rightarrow.sti",0,1,2,3,4);
@@ -427,7 +429,7 @@ void EnableEditorTaskbar(void)
 //A specialized mprint function that'll restore the editor panel underneath the
 //string before rendering the string.  This is obviously only useful for drawing text
 //in the editor taskbar.
-void mprintfEditor(INT16 x, INT16 y, UINT16 *pFontString, ...)
+void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 {
 	va_list argptr;
 	wchar_t	string[512];
@@ -436,7 +438,7 @@ void mprintfEditor(INT16 x, INT16 y, UINT16 *pFontString, ...)
 	Assert( pFontString != NULL );
 
 	va_start( argptr, pFontString );       	// Set up variable argument pointer
-	vswprintf( string, pFontString, argptr);	// process gprintf string (get output str)
+	vswprintf(string, lengthof(string), pFontString, argptr); // process gprintf string (get output str)
 	va_end( argptr );
 
 	uiStringLength = StringPixLength( string, FontDefault );
@@ -473,7 +475,7 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //This is a new function which duplicates the older "yellow info boxes" that
 //are common throughout the editor.  This draws the yellow box with the indentation
 //look.
-void DrawEditorInfoBox( UINT16 *str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h )
+void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
 {
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
@@ -691,31 +693,32 @@ void RenderMapEntryPointsAndLights()
 	}
 }
 
-void BuildTriggerName( OBJECTTYPE *pItem, UINT16 *szItemName )
+
+static void BuildTriggerName(OBJECTTYPE* pItem, wchar_t* szItemName, size_t length)
 {
 	if( pItem->usItem == SWITCH )
 	{
 		if( pItem->bFrequency == PANIC_FREQUENCY )
-			swprintf( szItemName, L"Panic Trigger1" );
+			swprintf(szItemName, length, L"Panic Trigger1");
 		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
-			swprintf( szItemName, L"Panic Trigger2" );
+			swprintf(szItemName, length, L"Panic Trigger2");
 		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
-			swprintf( szItemName, L"Panic Trigger3" );
+			swprintf(szItemName, length, L"Panic Trigger3");
 		else
-			swprintf( szItemName, L"Trigger%d", pItem->bFrequency - 50 );
+			swprintf(szItemName, length, L"Trigger%d", pItem->bFrequency - 50);
 	}
 	else
 	{ //action item
 		if( pItem->bDetonatorType == BOMB_PRESSURE )
-			swprintf( szItemName, L"Pressure Action" );
+			swprintf(szItemName, length, L"Pressure Action");
 		else if( pItem->bFrequency == PANIC_FREQUENCY )
-			swprintf( szItemName, L"Panic Action1" );
+			swprintf(szItemName, length, L"Panic Action1");
 		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
-			swprintf( szItemName, L"Panic Action2" );
+			swprintf(szItemName, length, L"Panic Action2");
 		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
-			swprintf( szItemName, L"Panic Action3" );
+			swprintf(szItemName, length, L"Panic Action3");
 		else
-			swprintf( szItemName, L"Action%d", pItem->bFrequency - 50 );
+			swprintf(szItemName, length, L"Action%d", pItem->bFrequency - 50);
 	}
 }
 
@@ -723,16 +726,16 @@ void RenderDoorLockInfo()
 {
 	INT16 i, xp, yp;
 	INT16 sScreenX, sScreenY;
-	UINT16 str[ 50 ];
+	wchar_t str[50];
 	for( i = 0; i < gubNumDoors; i++ )
 	{
 		GetGridNoScreenPos( DoorTable[ i ].sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY > 390 )
 			continue;
 		if( DoorTable[ i ].ubLockID != 255 )
-			swprintf( str, L"%S", LockTable[ DoorTable[ i ].ubLockID ].ubEditorName );
+			swprintf(str, lengthof(str), L"%S", LockTable[DoorTable[i].ubLockID].ubEditorName);
 		else
-			swprintf( str, L"No Lock ID" );
+			swprintf(str, lengthof(str), L"No Lock ID");
 		xp = sScreenX - 10;
 		yp = sScreenY - 40;
 		DisplayWrappedString( xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
@@ -744,26 +747,26 @@ void RenderDoorLockInfo()
 			switch( DoorTable[ i ].ubTrapID )
 			{
 				case EXPLOSION:
-					swprintf( str, L"Explosion Trap" );
+					swprintf(str, lengthof(str), L"Explosion Trap");
 					break;
 				case ELECTRIC:
-					swprintf( str, L"Electric Trap" );
+					swprintf(str, lengthof(str), L"Electric Trap");
 					break;
 				case SIREN:
-					swprintf( str, L"Siren Trap" );
+					swprintf(str, lengthof(str), L"Siren Trap");
 					break;
 				case SILENT_ALARM:
-					swprintf( str, L"Silent Alarm" );
+					swprintf(str, lengthof(str), L"Silent Alarm");
 					break;
 				case SUPER_ELECTRIC:
-					swprintf( str, L"Super Electric Trap" );
+					swprintf(str, lengthof(str), L"Super Electric Trap");
 					break;
 
 			}
 			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
 			yp = sScreenY;
 			mprintf( xp, yp, str );
-			swprintf( str, L"Trap Level %d", DoorTable[ i ].ubTrapLevel );
+			swprintf(str, lengthof(str), L"Trap Level %d", DoorTable[i].ubTrapLevel);
 			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
 			mprintf( xp, yp+10, str );
 		}
@@ -776,7 +779,7 @@ void RenderSelectedItemBlownUp()
 	HVOBJECT hVObject;
 	INT16 sScreenX, sScreenY, xp, yp;
 	ITEM_POOL	*pItemPool;
-	UINT16 szItemName[ SIZE_ITEM_NAME ];
+	wchar_t szItemName[SIZE_ITEM_NAME];
 	INT32 i;
 	INT16 sWidth, sHeight, sOffsetX, sOffsetY;
 
@@ -805,11 +808,11 @@ void RenderSelectedItemBlownUp()
 	SetFontShadow( FONT_NEARBLACK );
 	if( gpItem->usItem == ACTION_ITEM || gpItem->usItem == SWITCH )
 	{
-		BuildTriggerName( gpItem, szItemName );
+		BuildTriggerName(gpItem, szItemName, lengthof(szItemName));
 	}
 	else if( Item[ gpItem->usItem ].usItemClass == IC_KEY )
 	{
-		swprintf( szItemName, L"%S", LockTable[ gpItem->ubKeyID ].ubEditorName );
+		swprintf(szItemName, lengthof(szItemName), L"%S", LockTable[ gpItem->ubKeyID ].ubEditorName);
 	}
 	else
 	{
@@ -821,7 +824,7 @@ void RenderSelectedItemBlownUp()
 
 	if( gpItem->usItem == ACTION_ITEM )
 	{
-		UINT16 *pStr;
+		const wchar_t* pStr;
 		pStr = GetActionItemName( gpItem );
 		xp = sScreenX - (StringPixLength( pStr, FONT10ARIALBOLD ) - 40) / 2;
 		yp += 10;
@@ -870,9 +873,9 @@ void RenderEditorInfo( )
 
 	//Display the mapindex position
 	if( GetMouseMapPos( &iMapIndex ) )
-		swprintf( FPSText, L"   (%d)   ", iMapIndex );
+		swprintf(FPSText, lengthof(FPSText), L"   (%d)   ", iMapIndex);
 	else
-		swprintf( FPSText, L"          " );
+		swprintf(FPSText, lengthof(FPSText), L"          ");
 	mprintfEditor( (UINT16)(50-StringPixLength( FPSText, FONT12POINT1 )/2), 463, FPSText );
 
 	switch( iCurrentTaskbar )
@@ -886,9 +889,9 @@ void RenderEditorInfo( )
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )
-				swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
+				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 220, 430, 60, 30 );
-			swprintf( FPSText, L"%d%%", gusSelectionDensity );
+			swprintf(FPSText, lengthof(FPSText), L"%d%%", gusSelectionDensity);
 			DrawEditorInfoBox( FPSText, FONT12POINT1, 310, 430, 40, 30 );
 			break;
 		case TASK_ITEMS:
@@ -898,7 +901,7 @@ void RenderEditorInfo( )
 		case TASK_BUILDINGS:
 			UpdateBuildingsInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
+				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 530, 430, 60, 30 );
 			break;
 		case TASK_MERCS:
@@ -907,7 +910,7 @@ void RenderEditorInfo( )
 		case TASK_MAPINFO:
 			UpdateMapInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf( wszSelType[LINESELECTION], L"Width: %d", gusSelectionWidth );
+				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
 			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 440, 430, 60, 30 );
 			break;
 	}

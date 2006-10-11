@@ -91,6 +91,10 @@
 #	include "Scheduling.h"
 #endif
 
+#ifdef JA2EDITOR
+# include "EditScreen.h"
+#endif
+
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 

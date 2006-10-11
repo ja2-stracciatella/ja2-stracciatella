@@ -11,7 +11,7 @@
 	#include "TileDef.h"
 	#include "WorldDef.h"
 	#include "WorldMan.h"
-	#include "newsmooth.h"
+	#include "NewSmooth.h"
 	#include "Isometric_Utils.h"
 	#include "EditorBuildings.h"
 	#include "Edit_Sys.h"
@@ -21,6 +21,7 @@
 	#include "Environment.h"
 	#include "Random.h"
 	#include "Render_Fun.h"
+	#include "Debug.h"
 #endif
 
 
@@ -415,7 +416,7 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 	UINT16 usVariants;
 	UINT16 usVariantChosen;
 	UINT16 usWallPieceChosen = 0;
-	if( usWallPieceType >= 0 || usWallPieceType < NUM_WALL_TYPES )
+	if (usWallPieceType < NUM_WALL_TYPES)
 	{
 		usVariants = gbWallTileLUT[ usWallPieceType ][ 0 ];
 		usVariantChosen = ( rand() % usVariants ) + 1;

@@ -7,7 +7,6 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <windows.h>
 	#include "TileDef.h"
 	#include "Edit_Sys.h"
 	#include "VSurface.h"
@@ -22,7 +21,7 @@
 	#include "Font.h"
 	#include "Font_Control.h"
 	#include "EditScreen.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Interface_Panels.h"
@@ -54,14 +53,18 @@
 	#include "Editor_Taskbar_Utils.h"
 	#include "Exit_Grids.h"
 	#include "Editor_Undo.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Simple_Render_Utils.h"
 	#include "Map_Information.h"
 	#include "Isometric_Utils.h"
 	#include "Render_Dirty.h"
-	#include "popupmenu.h"
+	#include "PopupMenu.h"
 	#include "Scheduling.h"
 	#include "Timer_Control.h"
+	#include "MemMan.h"
+	#include "Items.h"
+	#include "Debug.h"
+	#include "Message.h"
 #endif
 
 extern void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY, BOOLEAN fRadio );
@@ -73,7 +76,7 @@ extern void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT1
 //	SANMONA_ARMS_GROUP,
 //	ANGELS_GROUP,
 //	NUM_CIV_GROUPS
-UINT16 gszCivGroupNames[ NUM_CIV_GROUPS ][ 20 ] =
+const wchar_t* gszCivGroupNames[NUM_CIV_GROUPS] =
 {
 	L"NONE",
 	L"REBEL",
@@ -111,7 +114,7 @@ UINT16 gszCivGroupNames[ NUM_CIV_GROUPS ][ 20 ] =
 //	SCHEDULE_ACTION_ENTERSECTOR,
 //	SCHEDULE_ACTION_STAYINSECTOR,
 //  SCHEDULE_ACTION_SLEEP,
-UINT16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20] =
+const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS] =
 {
 	L"No action",
 	L"Lock door",
@@ -137,7 +140,7 @@ enum
 	NUM_SCHEDULE_INSTRUCTIONS
 };
 
-extern BOOLEAN gfSingleAction = FALSE;
+BOOLEAN gfSingleAction = FALSE;
 BOOLEAN gfUseScheduleData2 = FALSE;
 UINT8 gubCurrentScheduleActionIndex = 0;
 SCHEDULENODE gCurrSchedule;
@@ -184,7 +187,7 @@ void SetupTextInputForMercSchedule();
 void ExtractAndUpdateMercAttributes();
 void ExtractAndUpdateMercProfile();
 void ExtractAndUpdateMercSchedule();
-void CalcStringForValue( UINT16 *str, INT32 iValue, UINT32 uiMax );
+static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax);
 void ChangeBodyType( INT8 bOffset );  //+1 or -1 only
 
 //internal merc variables
@@ -263,21 +266,21 @@ BOOLEAN gfShowCivilians = TRUE;
 
 INT16 sCurBaseDiff = DEFAULT_DIFF;
 BOOLEAN fAskForBaseDifficulty = TRUE;
-UINT16 *zDiffNames[NUM_DIFF_LVLS] = { L"Wimp", L"Easy", L"Average", L"Tough", L"Steroid Users Only" };
+const wchar_t* zDiffNames[NUM_DIFF_LVLS] = { L"Wimp", L"Easy", L"Average", L"Tough", L"Steroid Users Only" };
 INT16 sBaseStat[NUM_DIFF_LVLS] = { 50, 60, 70, 80, 90 };
 INT16 sBaseExpLvl[NUM_DIFF_LVLS] = { 1, 3, 5, 7, 9 };
 
-UINT16 *EditMercStat[12] = { L"Max Health",L"Cur Health",L"Strength",
+static const wchar_t* EditMercStat[12] = { L"Max Health",L"Cur Health",L"Strength",
 														 L"Agility",L"Dexterity",L"Charisma",
 														 L"Wisdom",L"Marksmanship",L"Explosives",
 														 L"Medical",L"Scientific",L"Exp Level" };
 
 #define NUM_MERC_ORDERS 8
-UINT16 *EditMercOrders[8] = { L"Stationary",L"On Guard",L"Close Patrol",
+static const wchar_t* EditMercOrders[8] = { L"Stationary",L"On Guard",L"Close Patrol",
 															L"Far Patrol",L"Point Patrol",L"On Call",
 															L"Seek Enemy", L"Random Point Patrol"};
 
-UINT16 *EditMercAttitudes[6] = { L"Defensive",L"Brave Loner",L"Brave Buddy",
+static const wchar_t* EditMercAttitudes[6] = { L"Defensive",L"Brave Loner",L"Brave Buddy",
 																	L"Cunning Loner",L"Cunning Buddy",
 																	L"Aggressive" };
 
@@ -304,8 +307,6 @@ INT8 gbCurrCreature = BLOODCAT;
 BOOLEAN gfSaveBuffer = FALSE;
 BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
 SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
-void CopyMercPlacement();
-void PasteMercPlacement();
 
 void GameInitEditorMercsInfo()
 {
@@ -771,7 +772,7 @@ void DisplayEditMercWindow( void )
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	UINT16 usFillColorBack, usFillColorDark, usFillColorLight, usFillColorTextBk;
 	INT32 x, iXOff;
-	INT16 TempString[30];
+	wchar_t TempString[30];
 	SOLDIERTYPE *pSoldier;
 	INT8 iEditStat[12];
 
@@ -851,7 +852,7 @@ void DisplayEditMercWindow( void )
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 30, iYPos + 111 + (20 * x) + 19, usFillColorLight );
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 29, iYPos + 111 + (20 * x) + 18, usFillColorTextBk );
 
-		swprintf( TempString, L"%d", iEditStat[x] );
+		swprintf(TempString, lengthof(TempString), L"%d", iEditStat[x]);
 		iXOff = (30 - StringPixLength( TempString, FONT12POINT1 )) / 2;
 		gprintf( iXPos + 118 + iXOff, iYPos + 114 + (20 * x), L"%s", TempString );
 	}
@@ -1715,7 +1716,7 @@ void DeleteSelectedMerc()
 
 void SetupTextInputForMercProfile()
 {
-	UINT16 str[4];
+	wchar_t str[4];
 	INT16 sNum;
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
@@ -1724,42 +1725,42 @@ void SetupTextInputForMercProfile()
 	if( sNum == NO_PROFILE )
 		str[0] = '\0';
 	else
-		CalcStringForValue( str, gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES );
+		CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
 	AddTextInputField( 200, 430, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
 }
 
 void SetupTextInputForMercAttributes()
 {
-	UINT16 str[4];
+	wchar_t str[4];
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExpLevel, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExpLevel, 100);
 	AddTextInputField( 200, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLife, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLife, 100);
 	AddTextInputField( 200, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLifeMax, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLifeMax, 100);
 	AddTextInputField( 200, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMarksmanship, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMarksmanship, 100);
 	AddTextInputField( 200, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bStrength, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bStrength, 100);
 	AddTextInputField( 300, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bAgility, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bAgility, 100);
 	AddTextInputField( 300, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bDexterity, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bDexterity, 100);
 	AddTextInputField( 300, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bWisdom, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bWisdom, 100);
 	AddTextInputField( 300, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bLeadership, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLeadership, 100);
 	AddTextInputField( 400, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bExplosive, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExplosive, 100);
 	AddTextInputField( 400, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMedical, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMedical, 100);
 	AddTextInputField( 400, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMechanical, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMechanical, 100);
 	AddTextInputField( 400, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue( str, gpSelected->pDetailedPlacement->bMorale, 100 );
+	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMorale, 100);
 	AddTextInputField( 500, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
 	if( !gfCanEditMercs )
@@ -1769,14 +1770,14 @@ void SetupTextInputForMercAttributes()
 //In the merc editing, all detailed placement values for generated attributes are set to -1.
 //When making a generated attribute static, we then set the value to its applicable value.
 //This function is similar to the itoa function except that -1 is converted to a null string.
-void CalcStringForValue( UINT16 *str, INT32 iValue, UINT32 uiMax )
+static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax)
 {
 	if( iValue < 0 )			//a blank string is determined by a negative value.
 		str[0] = '\0';
 	else if( (UINT32)iValue > uiMax )	//higher than max attribute value, so convert it to the max.
-		swprintf( str, L"%d", uiMax );
+		swprintf(str, length, L"%d", uiMax);
 	else										//this is a valid static value, so convert it to a string.
-		swprintf( str, L"%d", iValue );
+		swprintf(str, length, L"%d", iValue);
 }
 
 void ExtractAndUpdateMercAttributes()
@@ -2384,37 +2385,37 @@ void SetMercEditingMode( UINT8 ubNewMode )
 
 void DisplayBodyTypeInfo()
 {
-	UINT16 str[20];
+	const wchar_t* str;
 	switch( gpSelected->pBasicPlacement->bBodyType )
 	{
-		case RANDOM:							swprintf( str, L"Random" );					break;
-		case REGMALE:							swprintf( str, L"Reg Male" );				break;
-		case BIGMALE:							swprintf( str, L"Big Male" );				break;
-		case STOCKYMALE:					swprintf( str, L"Stocky Male" );		break;
-		case REGFEMALE:						swprintf( str, L"Reg Female" );			break;
-		case TANK_NE:							swprintf( str, L"NE Tank" );				break;
-		case TANK_NW:							swprintf( str, L"NW Tank" );				break;
-		case FATCIV:							swprintf( str, L"Fat Civilian" );		break;
-		case MANCIV:							swprintf( str, L"M Civilian" );			break;
-		case MINICIV:							swprintf( str, L"Miniskirt" );			break;
-		case DRESSCIV:						swprintf( str, L"F Civilian" );			break;
-		case HATKIDCIV:						swprintf( str, L"Kid w/ Hat" );			break;
-		case HUMVEE:							swprintf( str, L"Humvee" );					break;
-		case ELDORADO:						swprintf( str, L"Eldorado" );				break;
-		case ICECREAMTRUCK:				swprintf( str, L"Icecream Truck" );	break;
-		case JEEP:								swprintf( str, L"Jeep" );						break;
-		case KIDCIV:							swprintf( str, L"Kid Civilian" );		break;
-		case COW:									swprintf( str, L"Domestic Cow" );		break;
-		case CRIPPLECIV:					swprintf( str, L"Cripple" );				break;
-		case ROBOTNOWEAPON:				swprintf( str, L"Unarmed Robot" );	break;
-		case LARVAE_MONSTER:			swprintf( str, L"Larvae" );					break;
-		case INFANT_MONSTER:			swprintf( str, L"Infant" );					break;
-		case YAF_MONSTER:					swprintf( str, L"Yng F Monster" );	break;
-		case YAM_MONSTER:					swprintf( str, L"Yng M Monster" );	break;
-		case ADULTFEMALEMONSTER:	swprintf( str, L"Adt F Monster" );	break;
-		case AM_MONSTER:					swprintf( str, L"Adt M Monster" );	break;
-		case QUEENMONSTER:				swprintf( str, L"Queen Monster" );	break;
-		case BLOODCAT:						swprintf( str, L"Bloodcat" );				break;
+		case RANDOM:              str = L"Random";         break;
+		case REGMALE:             str = L"Reg Male";       break;
+		case BIGMALE:             str = L"Big Male";       break;
+		case STOCKYMALE:          str = L"Stocky Male";    break;
+		case REGFEMALE:           str = L"Reg Female";     break;
+		case TANK_NE:             str = L"NE Tank";        break;
+		case TANK_NW:             str = L"NW Tank";        break;
+		case FATCIV:              str = L"Fat Civilian";   break;
+		case MANCIV:              str = L"M Civilian";     break;
+		case MINICIV:             str = L"Miniskirt";      break;
+		case DRESSCIV:            str = L"F Civilian";     break;
+		case HATKIDCIV:           str = L"Kid w/ Hat";     break;
+		case HUMVEE:              str = L"Humvee";         break;
+		case ELDORADO:            str = L"Eldorado";       break;
+		case ICECREAMTRUCK:       str = L"Icecream Truck"; break;
+		case JEEP:                str = L"Jeep";           break;
+		case KIDCIV:              str = L"Kid Civilian";   break;
+		case COW:                 str = L"Domestic Cow";   break;
+		case CRIPPLECIV:          str = L"Cripple";        break;
+		case ROBOTNOWEAPON:       str = L"Unarmed Robot";  break;
+		case LARVAE_MONSTER:      str = L"Larvae";         break;
+		case INFANT_MONSTER:      str = L"Infant";         break;
+		case YAF_MONSTER:         str = L"Yng F Monster";  break;
+		case YAM_MONSTER:         str = L"Yng M Monster";  break;
+		case ADULTFEMALEMONSTER:  str = L"Adt F Monster";  break;
+		case AM_MONSTER:          str = L"Adt M Monster";  break;
+		case QUEENMONSTER:        str = L"Queen Monster";  break;
+		case BLOODCAT:            str = L"Bloodcat";       break;
 	}
 	DrawEditorInfoBox( str, FONT10ARIAL, 490, 364, 70, 20 );
 }
@@ -2530,8 +2531,8 @@ void UpdateMercsInfo()
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
 			{ //scope trick
-				UINT16 tempStr[500];
-				swprintf( tempStr, L"%s%s%s%s%s%d.",
+				wchar_t tempStr[500];
+				swprintf(tempStr, lengthof(tempStr), L"%s%s%s%s%s%d.",
 					L"By specifying a profile index, all of the information will be extracted from the profile ",
 					L"and override any values that you have edited.  It will also disable the editing features ",
 					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically ",
@@ -2579,33 +2580,33 @@ void UpdateMercsInfo()
 			mprintf( 172, 439, L"4)" );
 			if( gubScheduleInstructions )
 			{
-				UINT16 str[255];
-				UINT16 keyword[10] = L"";
+				wchar_t str[255];
+				const wchar_t* keyword = L"";
 				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, 388, 590, 450, Get16BPPColor( FROMRGB( 32, 45, 72 ) ) );
 				switch( gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] )
 				{
-					case SCHEDULE_ACTION_LOCKDOOR:			swprintf( keyword, L"lock" );			break;
-					case SCHEDULE_ACTION_UNLOCKDOOR:		swprintf( keyword, L"unlock" );		break;
-					case SCHEDULE_ACTION_OPENDOOR:			swprintf( keyword, L"open" );			break;
-					case SCHEDULE_ACTION_CLOSEDOOR:			swprintf( keyword, L"close" );		break;
+					case SCHEDULE_ACTION_LOCKDOOR:   keyword = L"lock";   break;
+					case SCHEDULE_ACTION_UNLOCKDOOR: keyword = L"unlock"; break;
+					case SCHEDULE_ACTION_OPENDOOR:   keyword = L"open";   break;
+					case SCHEDULE_ACTION_CLOSEDOOR:  keyword = L"close";  break;
 				}
 				switch( gubScheduleInstructions )
 				{
 					case SCHEDULE_INSTRUCTIONS_DOOR1:
-						swprintf( str, L"Click on the gridno adjacent to the door that you wish to %s.", keyword );
+						swprintf(str, lengthof(str), L"Click on the gridno adjacent to the door that you wish to %s.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_DOOR2:
-						swprintf( str, L"Click on the gridno where you wish to move after you %s the door.", keyword );
+						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move after you %s the door.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_GRIDNO:
-						swprintf( str, L"Click on the gridno where you wish to move to." );
+						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move to.");
 						break;
 					case SCHEDULE_INSTRUCTIONS_SLEEP:
-						swprintf( str, L"Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up." );
+						swprintf(str, lengthof(str), L"Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up.");
 					default:
 						return;
 				}
-				wcscat( str, L"  Hit ESC to abort entering this line in the schedule." );
+				wcscat(str, L"  Hit ESC to abort entering this line in the schedule.");
 				DisplayWrappedString( 436, 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, FALSE, LEFT_JUSTIFIED );
 			}
 			break;
@@ -2653,7 +2654,7 @@ void RenderSelectedMercsInventory()
 	UINT8 *pSrc, *pDst;
 	INT32 xp, yp;
 	UINT32 uiSrcPitchBYTES, uiDstPitchBYTES;
-	UINT16 pItemName[100];
+	wchar_t pItemName[100];
 	UINT8 ubFontColor;
 	if( gsSelectedMercID == -1 )
 		return;
@@ -3105,9 +3106,9 @@ void RenderMercStrings()
 	SOLDIERTYPE								 *pSoldier;
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
-	UINT16 *pStr;
+	const wchar_t* pStr;
 	SOLDIERINITNODE *curr;
-	UINT16 str[50];
+	wchar_t str[50];
 
 	curr = gSoldierInitHead;
 	while( curr )
@@ -3145,7 +3146,7 @@ void RenderMercStrings()
 				sYPos += 10;
 
 				SetFontForeground( FONT_GRAY2 );
-				swprintf( str, L"Slot #%d", pSoldier->ubID );
+				swprintf(str, lengthof(str), L"Slot #%d", pSoldier->ubID);
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
@@ -3171,7 +3172,7 @@ void RenderMercStrings()
 				sYPos += 10;
 
 				SetFontForeground( FONT_GRAY2 );
-				swprintf( str, L"Slot #%d", pSoldier->ubID );
+				swprintf(str, lengthof(str), L"Slot #%d", pSoldier->ubID);
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
@@ -3188,7 +3189,7 @@ void RenderMercStrings()
 						SetFontForeground( FONT_DKRED );
 					else
 						SetFontForeground( FONT_RED );
-					swprintf( str, L"Patrol orders with no waypoints" );
+					swprintf(str, lengthof(str), L"Patrol orders with no waypoints");
 					FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 					if( sY < 352 )
 					{
@@ -3204,7 +3205,7 @@ void RenderMercStrings()
 					SetFontForeground( FONT_DKRED );
 				else
 					SetFontForeground( FONT_RED );
-				swprintf( str, L"Waypoints with no patrol orders" );
+				swprintf(str, lengthof(str), L"Waypoints with no patrol orders");
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
@@ -3301,9 +3302,9 @@ void CancelCurrentScheduleAction()
 
 void RegisterCurrentScheduleAction( INT32 iMapIndex )
 {
-	UINT16 str[6];
+	wchar_t str[6];
 	MarkWorldDirty();
-	swprintf( str, L"%d", iMapIndex );
+	swprintf(str, lengthof(str), L"%d", iMapIndex);
 	if( gfUseScheduleData2 )
 	{
 		if( gfSingleAction )
@@ -3493,7 +3494,7 @@ void RenderCurrentSchedule()
 	INT16 sXMapPos, sYMapPos;
 	INT16 sScreenX, sScreenY;
 	INT16 sX, sY;
-	UINT16 str[ 3 ];
+	wchar_t str[3];
 	for( i = 0; i < 8; i++ )
 	{
 		if( i % 2 )
@@ -3526,7 +3527,7 @@ void RenderCurrentSchedule()
 			SetFont(TINYFONT1);
 			SetFontBackground( FONT_LTKHAKI );
 			SetFontForeground( FONT_WHITE );
-			swprintf( str, L"%d%c", i/2 + 1, 'A' + (i%2) );
+			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
 			VarFindFontCenterCoordinates( sScreenX, sScreenY, 1, 1, TINYFONT1, &sX, &sY, str );
 			mprintf( sX, sY, str );
 		}
@@ -3537,7 +3538,7 @@ void UpdateScheduleInfo()
 {
 	INT32 i;
 	SCHEDULENODE *pSchedule;
-	UINT16 str[6];
+	wchar_t str[6];
 	if( gpSelected->pSoldier->ubScheduleID )
 	{
 		pSchedule = GetSchedule( gpSelected->pSoldier->ubScheduleID );
@@ -3549,13 +3550,13 @@ void UpdateScheduleInfo()
 		{ //Update the text and buttons
 			MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], 0, pSchedule->ubAction[i] );
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
-			swprintf( str, L"" );
+			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData1[i] != 0xffff )
-				swprintf( str, L"%d", pSchedule->usData1[i] );
+				swprintf(str, lengthof(str), L"%d", pSchedule->usData1[i]);
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], str );
-			swprintf( str, L"" );
+			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData2[i] != 0xffff )
-				swprintf( str, L"%d", pSchedule->usData2[i] );
+				swprintf(str, lengthof(str), L"%d", pSchedule->usData2[i]);
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], str );
 			if( gubCurrMercMode == MERC_SCHEDULEMODE )
 			{ //Update the text input fields too!

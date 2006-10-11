@@ -40,6 +40,7 @@
 	#include "Strategic_Status.h"
 	#include "Video.h"
 	#include "WordWrap.h"
+	#include "SGP.h"
 #endif
 
 #ifdef JA2BETAVERSION
@@ -338,7 +339,7 @@ BOOLEAN CreateAIViewer()
 		CreatureAttackCallback );
 
 	iViewerButton[ QUEEN_AWAKE_TOGGLE ] =
-		CreateCheckBoxButton(	104, VIEWER_BOTTOM + 22, "DevTools//SmCheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake );
+		CreateCheckBoxButton(	104, VIEWER_BOTTOM + 22, "DevTools/SmCheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake );
 	if( gfQueenAIAwake )
 	{
 		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags |= BUTTON_CLICKED_ON;

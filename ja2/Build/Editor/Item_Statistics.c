@@ -17,10 +17,10 @@
 	#include "Editor_Taskbar_Utils.h"
 	#include "EditorMercs.h"
 	#include "EditorItems.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Text_Input.h"
 	#include "Action_Items.h"
-	#include "Item types.h"
+	#include "Item_Types.h"
 	#include "Video.h"
 	#include "Simple_Render_Utils.h"
 	#include "Weapons.h"
@@ -39,7 +39,7 @@ INT32 giSciFiCheckboxButton = -1;
 INT32 giAlarmTriggerButton = -1;
 INT32 giOwnershipGroupButton = -1;
 
-UINT16 gszActionItemDesc[ NUM_ACTIONITEMS ][ 30 ] =
+const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS] =
 {
 	L"Klaxon Mine",
 	L"Flare Mine",
@@ -77,7 +77,7 @@ UINT16 gszActionItemDesc[ NUM_ACTIONITEMS ][ 30 ] =
 	L"Big teargas",
 };
 
-UINT16* GetActionItemName( OBJECTTYPE *pItem )
+const wchar_t* GetActionItemName(OBJECTTYPE* pItem)
 {
 	if( !pItem || pItem->usItem != ACTION_ITEM )
 		return NULL;
@@ -535,7 +535,7 @@ void UpdateItemStatsPanel()
 		case EDITING_TRIGGERS:
 			mprintf( 512, 369, L"Trap Level");
 			mprintf( 512, 389, L"Tolerance" );
-			if( gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3 && gpItem->bFrequency <= PANIC_FREQUENCY )
+			if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
 				mprintf( 500, 407, L"Alarm Trigger" );
 			break;
 	}
@@ -602,13 +602,13 @@ void SetupGameTypeFlags()
 	if( gpEditingItemPool )
 	{
 		giBothCheckboxButton =
-			CreateCheckBoxButton(	573, 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, BothModesCheckboxCallback );
+			CreateCheckBoxButton(	573, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, BothModesCheckboxCallback );
 		SetButtonFastHelpText( giBothCheckboxButton, L"Item appears in both Sci-Fi and Realistic modes. (|B)" );
 		giRealisticCheckboxButton =
-			CreateCheckBoxButton(	595, 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, RealisticOnlyCheckboxCallback );
+			CreateCheckBoxButton(	595, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, RealisticOnlyCheckboxCallback );
 		SetButtonFastHelpText( giRealisticCheckboxButton, L"Item appears in |Realistic mode only." );
 		giSciFiCheckboxButton =
-			CreateCheckBoxButton(	616, 365, "EDITOR//radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
+			CreateCheckBoxButton(	616, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
 		SetButtonFastHelpText( giSciFiCheckboxButton, L"Item appears in |Sci-Fi mode only." );
 
 		if( gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags & WORLD_ITEM_REALISTIC_ONLY )
@@ -641,18 +641,18 @@ void RemoveGameTypeFlags()
 
 void SetupGunGUI()
 {
-	UINT16 str[20];
+	wchar_t str[20];
 	INT16 yp;
 	memset( gfAttachment, 0, NUM_ATTACHMENT_BUTTONS );
-	swprintf( str, L"%d", gpItem->bGunStatus );
+	swprintf(str, lengthof(str), L"%d", gpItem->bGunStatus);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubGunShotsLeft );
+	swprintf(str, lengthof(str), L"%d", gpItem->ubGunShotsLeft);
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
@@ -787,14 +787,14 @@ void ExtractAndUpdateGunGUI()
 
 void SetupAmmoGUI()
 {
-	UINT16 str[20];
-	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
+	wchar_t str[20];
+	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -832,14 +832,14 @@ void ExtractAndUpdateAmmoGUI()
 
 void SetupArmourGUI()
 {
-	UINT16 str[20];
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	wchar_t str[20];
+	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
@@ -893,14 +893,14 @@ void ExtractAndUpdateArmourGUI()
 
 void SetupEquipGUI()
 {
-	UINT16 str[20];
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	wchar_t str[20];
+	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -937,21 +937,21 @@ void ExtractAndUpdateEquipGUI()
 
 void SetupExplosivesGUI()
 {
-	UINT16 str[20];
+	wchar_t str[20];
 	INT16 yp;
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubNumberOfObjects );
+	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	if( Item[ gpItem->usItem ].ubPerPocket == 1 )
 	{
 		DisableTextField( 2 );
 	}
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	yp = 375;
@@ -1019,12 +1019,12 @@ void ExtractAndUpdateExplosivesGUI()
 
 void SetupMoneyGUI()
 {
-	UINT16 str[20];
-	swprintf( str, L"%d", gpItem->uiMoneyAmount );
+	wchar_t str[20];
+	swprintf(str, lengthof(str), L"%d", gpItem->uiMoneyAmount);
 	AddTextInputField( 485, 380, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1057,8 +1057,8 @@ void RemoveMoneyGUI()
 
 void SetupOwnershipGUI()
 {
-	UINT16 str[20];
-	swprintf( str, L"%d", gpItem->ubOwnerProfile );
+	wchar_t str[20];
+	swprintf(str, lengthof(str), L"%d", gpItem->ubOwnerProfile);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	giOwnershipGroupButton =
 		CreateTextButton( gszCivGroupNames[ gpItem->ubOwnerCivGroup ], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -1103,10 +1103,10 @@ void RemoveOwnershipGUI()
 
 void SetupKeysGUI()
 {
-	UINT16 str[20];
+	wchar_t str[20];
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1129,15 +1129,15 @@ void RemoveKeysGUI()
 
 void SetupActionItemsGUI()
 {
-	UINT16 str[4];
-	UINT16 *pStr;
-	swprintf( str, L"%d", gpItem->bStatus[0] );
+	wchar_t str[4];
+	const wchar_t* pStr;
+	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
 	AddTextInputField( 485, 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->bTrap );
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	pStr = GetActionItemName( gpItem );
@@ -1196,19 +1196,19 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 
 void SetupTriggersGUI()
 {
-	UINT16 str[4];
-	swprintf( str, L"%d", gpItem->bTrap );
+	wchar_t str[4];
+	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
 	AddTextInputField( 485, 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf( str, L"%d", gpItem->ubTolerance );
+	swprintf(str, lengthof(str), L"%d", gpItem->ubTolerance);
 	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf( str, L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance );
+		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-		if( gpItem->bFrequency <= PANIC_FREQUENCY && gpItem->bFrequency >= PANIC_FREQUENCY_3 )
+		if (gpItem->bFrequency >= PANIC_FREQUENCY_3)
 		{
 			giAlarmTriggerButton =
-				CreateCheckBoxButton(	485, 405, "EDITOR//smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
+				CreateCheckBoxButton(	485, 405, "EDITOR/smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
 				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -1241,7 +1241,7 @@ void ExtractAndUpdateTriggersGUI()
 
 void RemoveTriggersGUI()
 {
-	if( gpEditingItemPool && gpItem->bFrequency <= PANIC_FREQUENCY && gpItem->bFrequency >= PANIC_FREQUENCY_3 )
+	if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
 	{
 		if( giAlarmTriggerButton != -1 )
 		{

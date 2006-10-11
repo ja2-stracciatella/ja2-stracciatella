@@ -17,16 +17,18 @@
 	#include "EditorBuildings.h"
 	#include "EditorTerrain.h" //for access to TerrainTileDrawMode
 	#include "Render_Fun.h"
-	#include "newsmooth.h"
+	#include "NewSmooth.h"
 	#include "Editor_Undo.h"
 	#include "Editor_Taskbar_Utils.h"
-	#include "Editor Modes.h"
+	#include "Editor_Modes.h"
 	#include "Smoothing_Utils.h"
 	#include "Text_Input.h"
 	#include "Keys.h"
 	#include "Environment.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "Simple_Render_Utils.h"
+	#include "Debug.h"
+	#include "MemMan.h"
 #endif
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
@@ -225,7 +227,7 @@ void CopyBuilding( INT32 iMapIndex )
 
 //depending on the offset, we will either sort in increasing order, or decreasing order.
 //This will prevent overlapping problems.
-void SortBuildingLayout( iMapIndex )
+static void SortBuildingLayout(INT32 iMapIndex)
 {
 	BUILDINGLAYOUTNODE *head, *curr, *prev, *prevBest, *best;
 	INT32 iBestIndex;
@@ -529,7 +531,7 @@ void InitDoorEditing( INT32 iMapIndex )
 	AddTextInputField( 210, 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
 	AddTextInputField( 210, 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
 	iDoorButton[ DOOR_LOCKED ] =
-		CreateCheckBoxButton(	210, 215, "EDITOR//SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback );
+		CreateCheckBoxButton(	210, 215, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback );
 
 	pDoor = FindDoorInfoAtGridNo( iDoorMapIndex );
 	if( pDoor )
@@ -728,16 +730,16 @@ void RemoveLockedDoorCursors()
 
 void SetupTextInputForBuildings()
 {
-	UINT16 str[4];
+	wchar_t str[4];
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
-	swprintf( str, L"%d", gubMaxRoomNumber );
+	swprintf(str, lengthof(str), L"%d", gubMaxRoomNumber);
 	AddTextInputField( 410, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }
 
 void ExtractAndUpdateBuildingInfo()
 {
-	UINT16 str[4];
+	wchar_t str[4];
 	INT32 temp;
 	//extract light1 colors
 	temp = min( GetNumericStrictValueFromField( 1 ), 255 );
@@ -749,7 +751,7 @@ void ExtractAndUpdateBuildingInfo()
 	{
 		gubCurrRoomNumber = 0;
 	}
-	swprintf( str, L"%d", gubCurrRoomNumber );
+	swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
 	SetInputFieldStringWith16BitString( 1, str );
 	SetActiveField( 0 );
 }

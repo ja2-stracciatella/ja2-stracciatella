@@ -19,7 +19,7 @@
 	#include "EditScreen.h"
 	#include "Sys_Globals.h"
 	#include "SmartMethod.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "Interface.h"
 	#include "Lighting.h"
 	#include "Interactive_Tiles.h"
@@ -29,12 +29,12 @@
 	#include "Handle_UI.h"
 	#include "Event_Pump.h"
 	#include "World_Items.h"
-	#include "loadscreen.h"
+	#include "LoadScreen.h"
 	#include "Render_Dirty.h"
 	#include "Isometric_Utils.h"
 	#include "Message.h"
 	#include "Render_Fun.h"
-	#include "popupmenu.h"
+	#include "PopupMenu.h"
 	#include "Overhead_Map.h"
 	#include "EditorDefines.h"
 	#include "EditorTerrain.h"
@@ -42,20 +42,20 @@
 	#include "EditorItems.h"
 	#include "EditorMercs.h"
 	#include "EditorMapInfo.h"
-	#include "newsmooth.h"
+	#include "NewSmooth.h"
 	#include "Smoothing_Utils.h"
-	#include "messagebox.h"
+	#include "MessageBox.h"
 	#include "Soldier_Create.h"
 	#include "Soldier_Init_List.h"
 	#include "Text_Input.h"
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "Editor_Taskbar_Utils.h"
-	#include "Editor Modes.h"
+	#include "Editor_Modes.h"
 	#include "Editor_Undo.h"
 	#include "Exit_Grids.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Map_Information.h"
-	#include "Sector Summary.h"
+	#include "Sector_Summary.h"
 	#include "Game_Clock.h"
 	#include "Game_Init.h"
 	#include "Environment.h"
@@ -64,7 +64,7 @@
 	#include "Line.h"
 	#include "English.h"
 	#include "Random.h"
-	#include "scheduling.h"
+	#include "Scheduling.h"
 	#include "Road_Smoothing.h"
 	#include "StrategicMap.h"
 	#include "Message.h"
@@ -72,6 +72,10 @@
 	#include "Inventory_Choosing.h"
 	#include "Music_Control.h"
 	#include "Soldier_Profile.h"
+	#include "GameSettings.h"
+	#include "JAScreens.h"
+	#include "Shading.h"
+	#include "Debug.h"
 #endif
 
 
@@ -169,9 +173,6 @@ void EnsureStatusOfEditorButtons();
 
 extern BOOLEAN fAllDone;
 extern DisplayList Selection;
-
-extern void DisableButtonHelpTextRestore();
-extern void EnableButtonHelpTextRestore();
 
 void UpdateLastActionBeforeLeaving();
 
@@ -290,8 +291,6 @@ BOOLEAN EditModeInit( void )
 
 	PauseGame();
 	fEditModeFirstTime = FALSE;
-
-	DisableButtonHelpTextRestore();
 
 	if( fFirstTimeInEditModeInit )
 	{
@@ -530,8 +529,6 @@ BOOLEAN EditModeShutdown( void )
 			RemoveAllPits();
 		}
 	}
-
-	EnableButtonHelpTextRestore();
 
 	if( gfNeedToInitGame )
 	{
@@ -3214,7 +3211,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_SAW_ROOM:
 			case DRAW_MODE_ROOM:
 			case DRAW_MODE_CAVES:
-				if( gusSelectionType >= SMALLSELECTION && gusSelectionType <= XLARGESELECTION )
+				if (gusSelectionType <= XLARGESELECTION)
 					ProcessAreaSelection( TRUE );
 				break;
 			case DRAW_MODE_NEWROOF:
@@ -3243,7 +3240,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_OSTRUCTS1:
 			case DRAW_MODE_OSTRUCTS2:
 			case DRAW_MODE_DEBRIS:
-				if( gusSelectionType >= SMALLSELECTION && gusSelectionType <= XLARGESELECTION )
+				if (gusSelectionType <= XLARGESELECTION)
 				{
 					DrawObjectsBasedOnSelectionRegion();
 				}
@@ -3325,7 +3322,7 @@ void HandleMouseClicksInGameScreen()
 			case DRAW_MODE_ROADS:					iEditorToolbarState = TBAR_MODE_GET_ROADS;				break;
 
 			case DRAW_MODE_CAVES:
-				if( gusSelectionType >= SMALLSELECTION && gusSelectionType <= XLARGESELECTION )
+				if (gusSelectionType <= XLARGESELECTION)
 					ProcessAreaSelection( FALSE );
 				break;
 
@@ -3368,18 +3365,6 @@ void HandleMouseClicksInGameScreen()
 
 BOOLEAN DoIRenderASpecialMouseCursor()
 {
-	INT16 sMouseX_M, sMouseY_M;
-
-	// Draw basic mouse
-	if ( GetMouseXY( &sMouseX_M, &sMouseY_M ) )
-	{
-		if ( (gsCursorGridNo = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x8000 )
-		{
-			// Add basic cursor
-			//gBasicCursorNode = AddTopmostToTail( gsCursorGridNo, FIRSTPOINTERS1 );
-		}
-	}
-
 	if ( iCurrentTaskbar != TASK_OPTIONS )
 	{
 		switch ( iDrawMode )
@@ -3524,8 +3509,8 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				gubMaxRoomNumber++;
 				if( iCurrentTaskbar == TASK_BUILDINGS && TextInputMode() )
 				{
-					UINT16 str[4];
-					swprintf( str, L"%d", gubCurrRoomNumber );
+					wchar_t str[4];
+					swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
 					SetInputFieldStringWith16BitString( 1, str );
 					SetActiveField( 0 );
 				}
@@ -3799,8 +3784,8 @@ void UpdateLastActionBeforeLeaving()
 
 void ReloadMap()
 {
-	UINT16 szFilename[30];
-	swprintf( szFilename, L"%S", gubFilename );
+	wchar_t szFilename[30];
+	swprintf(szFilename, lengthof(szFilename), L"%s", gubFilename);
 	ExternalLoadMap( szFilename );
 }
 

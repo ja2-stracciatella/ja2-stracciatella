@@ -17,8 +17,9 @@
 	#include "EditScreen.h"
 	#include "Editor_Undo.h"
 	#include "Render_Fun.h"  //for access to gubWorldRoomInfo;
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "Exit_Grids.h"
+	#include "MemMan.h"
 #endif
 
 /*

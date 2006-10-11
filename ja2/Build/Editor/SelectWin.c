@@ -13,9 +13,11 @@
 	#include "Random.h"
 	#include "SysUtil.h"
 	#include "Font_Control.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "EditorDefines.h"
 	#include "Editor_Taskbar_Utils.h"
+	#include "MemMan.h"
+	#include "Stubs.h" // XXX
 #endif
 
 
@@ -182,10 +184,10 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 	DisableEditorTaskbar( );
 
 	// Load up the button images
-	iButtonIcons[ CANCEL_ICON ] = LoadGenericButtonIcon( "EDITOR//bigX.sti" );
-	iButtonIcons[ UP_ICON ] = LoadGenericButtonIcon( "EDITOR//lgUpArrow.sti" );
-	iButtonIcons[ DOWN_ICON ] = LoadGenericButtonIcon( "EDITOR//lgDownArrow.sti" );
-	iButtonIcons[ OK_ICON ] = LoadGenericButtonIcon( "EDITOR//checkmark.sti" );
+	iButtonIcons[ CANCEL_ICON ] = LoadGenericButtonIcon( "EDITOR/bigX.sti" );
+	iButtonIcons[ UP_ICON ] = LoadGenericButtonIcon( "EDITOR/lgUpArrow.sti" );
+	iButtonIcons[ DOWN_ICON ] = LoadGenericButtonIcon( "EDITOR/lgDownArrow.sti" );
+	iButtonIcons[ OK_ICON ] = LoadGenericButtonIcon( "EDITOR/checkmark.sti" );
 
 	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, SelWinClkCallback);

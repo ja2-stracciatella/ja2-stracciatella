@@ -8,7 +8,7 @@
 
 #ifndef PRECOMPILEDHEADERS
 	#include "Types.h"
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "RenderWorld.h"
 	#include "Random.h"
 	#include "WorldMan.h"
@@ -22,6 +22,7 @@
 	#include "Overhead.h"
 	#include "EditorMercs.h"
 	#include "EditorBuildings.h"
+	#include "Debug.h"
 #endif
 
 BOOLEAN fValidCursor = FALSE;
@@ -35,7 +36,8 @@ UINT16 gusSavedBuildingSelectionType = AREASELECTION;
 INT16 sGridX, sGridY;
 INT16 sBadMarker = -1;
 
-UINT16 *wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", L"Width: xx", L"Area" };
+wchar_t SelTypeWidth[] = L"Width: xx";
+const wchar_t* const wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", SelTypeWidth, L"Area" };
 
 BOOLEAN gfAllowRightButtonSelections = FALSE;
 BOOLEAN gfCurrentSelectionWithRightButton = FALSE;

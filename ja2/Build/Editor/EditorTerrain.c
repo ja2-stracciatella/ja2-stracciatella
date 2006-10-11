@@ -7,7 +7,6 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <windows.h>
 	#include "TileDef.h"
 	#include "Edit_Sys.h"
 	#include "VSurface.h"
@@ -21,7 +20,7 @@
 	#include "Font.h"
 	#include "Font_Control.h"
 	#include "EditScreen.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Interface_Panels.h"
@@ -30,7 +29,7 @@
 	#include "EditorDefines.h"
 	#include "EditorTerrain.h"
 	#include "Editor_Taskbar_Utils.h"
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "English.h"
 #endif
 

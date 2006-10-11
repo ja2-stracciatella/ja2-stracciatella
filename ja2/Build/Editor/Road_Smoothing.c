@@ -12,6 +12,7 @@
 	#include "TileDat.h"
 	#include "WorldDef.h"
 	#include "WorldMan.h"
+	#include "Editor_Undo.h"
 #endif
 
 

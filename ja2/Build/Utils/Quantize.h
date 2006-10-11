@@ -1,6 +1,8 @@
 #ifndef __QUANTIZE_H_
 #define __QUANTIZE_H_
 
+#include "Stubs.h" // XXX
+
 typedef struct _NODE {
     BOOL bIsLeaf;               // TRUE if node has no children
     UINT nPixelCount;           // Number of pixels represented by this leaf
@@ -23,7 +25,7 @@ protected:
 public:
     CQuantizer (UINT nMaxColors, UINT nColorBits);
     virtual ~CQuantizer ();
-    ProcessImage (BYTE *pData, int iWidth, int iHeight );
+    BOOL ProcessImage (BYTE *pData, int iWidth, int iHeight );
     UINT GetColorCount ();
     void GetColorTable (RGBQUAD* prgb);
 

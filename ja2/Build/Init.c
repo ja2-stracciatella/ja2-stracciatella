@@ -55,6 +55,11 @@
 
 #ifdef JA2BETAVERSION
 #	include "Multilingual_Text_Code_Generator.h"
+
+#	ifdef JA2EDITOR
+#		include "EditScreen.h"
+#		include "JAScreens.h"
+#	endif
 #endif
 
 

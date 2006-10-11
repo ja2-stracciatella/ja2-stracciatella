@@ -23,8 +23,8 @@
 	#include "Font_Control.h"
 	#include "Line.h"
 	#include "WorldDat.h"
-	#include "selectwin.h"
-	#include "popupmenu.h"
+	#include "SelectWin.h"
+	#include "PopupMenu.h"
 	#include "EditorDefines.h"
 	#include "Render_Dirty.h"
 	#include "Debug.h"
@@ -34,7 +34,9 @@
 	#include "EditorMercs.h"
 	#include "Scheduling.h"
 	#include "English.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
+	#include "Video.h"
+	#include "VSurface.h"
 #endif
 
 CurrentPopupMenuInformation gPopup;
@@ -44,11 +46,11 @@ MOUSE_REGION popupRegion;
 UINT16 gusEntryHeight;
 BOOLEAN fWaitingForLButtonRelease = FALSE;
 
-extern UINT16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
+extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
 //Finds the string for any popup menu in JA2 -- the strings are stored
 //in different ways in each instance.
-INT16* GetPopupMenuString( UINT8 ubIndex )
+static const wchar_t* GetPopupMenuString(UINT8 ubIndex)
 {
 	switch( gPopup.ubPopupMenuID )
 	{

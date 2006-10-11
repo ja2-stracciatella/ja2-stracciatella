@@ -11,16 +11,16 @@
 	#include "WorldDef.h"
 	#include "WorldMan.h"
 	#include "Smooth.h"
-	#include "newsmooth.h"
+	#include "NewSmooth.h"
 	#include "Edit_Sys.h"
 	#include "EditScreen.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "EditorTerrain.h"
 	#include "EditorBuildings.h"
 	#include "EditorMercs.h"
 	#include "EditorDefines.h"
 	#include "Smoothing_Utils.h"
-	#include "Cursor Modes.h"
+	#include "Cursor_Modes.h"
 	#include "Render_Fun.h"
 	#include "Isometric_Utils.h"
 	#include "Editor_Undo.h"
@@ -28,6 +28,7 @@
 	#include "Environment.h"
 	#include "Simple_Render_Utils.h"
 	#include "Road_Smoothing.h"
+	#include "MemMan.h"
 #endif
 
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius );
@@ -1102,9 +1103,6 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
-
-	if ( sGridNo >= 0x8000 )
-		return;
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{

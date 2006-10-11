@@ -44,6 +44,7 @@
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
+#	include "ScreenIDs.h"
 
 extern BOOLEAN gfMercsNeverQuit;
 #endif

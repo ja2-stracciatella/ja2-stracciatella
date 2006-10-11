@@ -33,7 +33,7 @@
 #endif
 
 #ifdef JA2EDITOR
-extern UINT16 gszScheduleActions[ NUM_SCHEDULE_ACTIONS ][20];
+extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 #endif
 
 BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime );

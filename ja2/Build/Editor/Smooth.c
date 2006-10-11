@@ -16,7 +16,6 @@
 	#include "WorldMan.h"
 	#include "Smooth.h"
 	#include "EditScreen.h"
-	#include "selectwin.h"
 	#include "Isometric_Utils.h"
 	#include "Structure_Wrap.h"
 	#include "Exit_Grids.h"

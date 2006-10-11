@@ -2,11 +2,9 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "types.h"
-#include <windows.h>
 #include "Quantize.h"
-#include "types.h"
-#include "himage.h"
+#include "Types.h"
+#include "HImage.h"
 
 CQuantizer::CQuantizer (UINT nMaxColors, UINT nColorBits)
 {
@@ -109,8 +107,8 @@ NODE* CQuantizer::CreateNode (UINT nLevel, UINT nColorBits, UINT* pLeafCount,
 {
     NODE* pNode;
 
-    if ((pNode = (NODE*) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
-        sizeof (NODE))) == NULL)
+		pNode = new NODE;
+    if (pNode == NULL)
         return NULL;
 
     pNode->bIsLeaf = (nLevel == nColorBits) ? TRUE : FALSE;
@@ -126,10 +124,11 @@ NODE* CQuantizer::CreateNode (UINT nLevel, UINT nColorBits, UINT* pLeafCount,
 void CQuantizer::ReduceTree (UINT nColorBits, UINT* pLeafCount,
     NODE** pReducibleNodes)
 {
+		int i;
     //
     // Find the deepest level containing at least one reducible node.
     //
-    for (int i=nColorBits - 1; (i>0) && (pReducibleNodes[i] == NULL); i--);
+    for (i = nColorBits - 1; i > 0 && pReducibleNodes[i] == NULL; i--) {}
 
     //
     // Reduce the node most recently added to the list at level i.
@@ -148,7 +147,7 @@ void CQuantizer::ReduceTree (UINT nColorBits, UINT* pLeafCount,
             nGreenSum += pNode->pChild[i]->nGreenSum;
             nBlueSum += pNode->pChild[i]->nBlueSum;
             pNode->nPixelCount += pNode->pChild[i]->nPixelCount;
-            HeapFree (GetProcessHeap (), 0, pNode->pChild[i]);
+						delete pNode->pChild[i];
             pNode->pChild[i] = NULL;
             nChildren++;
         }
@@ -167,7 +166,7 @@ void CQuantizer::DeleteTree (NODE** ppNode)
         if ((*ppNode)->pChild[i] != NULL)
             DeleteTree (&((*ppNode)->pChild[i]));
     }
-    HeapFree (GetProcessHeap (), 0, *ppNode);
+		delete *ppNode;
     *ppNode = NULL;
 }
 

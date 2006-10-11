@@ -52,6 +52,10 @@
 		LIBRARY_RUSSIAN_DATA,
 #endif
 
+#ifdef JA2EDITOR
+		LIBRARY_EDITOR,
+#endif
+
 		NUMBER_OF_LIBRARIES
 	};
 

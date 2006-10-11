@@ -26,7 +26,6 @@ extern BOOLEAN gfDestroyFDlg;
 
 UINT32 WaitForFileName( void );
 void RemoveFileDialog(void);
-void CreateFileDialog( UINT16 *zTitle );
 
 void SelectFileDialogYPos( UINT16 usRelativeYPos );
 
@@ -37,11 +36,11 @@ BOOLEAN ExtractFilenameFromFields();
 BOOLEAN ValidCoordinate();
 BOOLEAN ValidFilename();
 
-BOOLEAN ExternalLoadMap( UINT16 *szFilename );
-BOOLEAN ExternalSaveMap( UINT16 *szFilename );
+BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
+BOOLEAN ExternalSaveMap(const wchar_t* szFilename);
 
 extern BOOLEAN gfErrorCatch;
-extern UINT16 gzErrorCatchString[ 256 ];
+extern wchar_t gzErrorCatchString[256];
 
 #endif
 #endif

@@ -7,7 +7,6 @@
 #ifdef JA2EDITOR
 
 #ifndef PRECOMPILEDHEADERS
-	#include <windows.h>
 	#include "TileDef.h"
 	#include "Edit_Sys.h"
 	#include "VSurface.h"
@@ -21,7 +20,7 @@
 	#include "Font.h"
 	#include "Font_Control.h"
 	#include "EditScreen.h"
-	#include "selectwin.h"
+	#include "SelectWin.h"
 	#include "Video.h"
 	#include "VObject_Blitters.h"
 	#include "Interface_Panels.h"
@@ -36,12 +35,15 @@
 	#include "Weapons.h"
 	#include "Editor_Taskbar_Utils.h"
 	#include "WordWrap.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Simple_Render_Utils.h"
 	#include "WorldMan.h"
 	#include "Random.h"
 	#include "Pits.h"
 	#include "Keys.h"
+	#include "Debug.h"
+	#include "Items.h"
+	#include "MemMan.h"
 #endif
 
 #define NUMBER_TRIGGERS			27
@@ -217,8 +219,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	INT16 sWidth, sOffset, sStart;
 	INT16 i, x, y;
 	UINT16 usCounter;
-	INT16 pStr[ 100 ];//, pStr2[ 100 ];
-	UINT16 pItemName[SIZE_ITEM_NAME];
+	wchar_t pStr[100];//, pStr2[ 100 ];
+	wchar_t pItemName[SIZE_ITEM_NAME];
 	UINT8						ubBitDepth;
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
@@ -360,7 +362,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			SetFontForeground( FONT_MCOLOR_WHITE );
 			SetFontDestBuffer( eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight, FALSE );
 
-			swprintf( pStr, L"%S", LockTable[ i ].ubEditorName );
+			swprintf(pStr, lengthof(pStr), L"%s", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 
 			//Calculate the center position of the graphic in a 60 pixel wide area.
@@ -464,41 +466,41 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{
 					LoadItemInfo( usCounter, pItemName, NULL );
-					swprintf( pStr, L"%s", pItemName );
+					swprintf(pStr, lengthof(pStr), L"%S", pItemName);
 				}
 				else
 				{
 					if( i == PRESSURE_ACTION_ID )
 					{
-						swprintf( pStr, L"Pressure Action" );
+						swprintf(pStr, lengthof(pStr), L"Pressure Action");
 					}
 					else if( i < 2 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( pStr, L"Panic Trigger1" );
+							swprintf(pStr, lengthof(pStr), L"Panic Trigger1");
 						else
-							swprintf( pStr, L"Panic Action1" );
+							swprintf(pStr, lengthof(pStr), L"Panic Action1");
 					}
 					else if( i < 4 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( pStr, L"Panic Trigger2" );
+							swprintf(pStr, lengthof(pStr), L"Panic Trigger2");
 						else
-							swprintf( pStr, L"Panic Action2" );
+							swprintf(pStr, lengthof(pStr), L"Panic Action2");
 					}
 					else if( i < 6 )
 					{
 						if( usCounter == SWITCH )
-							swprintf( pStr, L"Panic Trigger3" );
+							swprintf(pStr, lengthof(pStr), L"Panic Trigger3");
 						else
-							swprintf( pStr, L"Panic Action3" );
+							swprintf(pStr, lengthof(pStr), L"Panic Action3");
 					}
 					else
 					{
 						if( usCounter == SWITCH )
-							swprintf( pStr, L"Trigger%d", (i-4)/2 );
+							swprintf(pStr, lengthof(pStr), L"Trigger%d", (i - 4) / 2);
 						else
-							swprintf( pStr, L"Action%d", (i-4)/2 );
+							swprintf(pStr, lengthof(pStr), L"Action%d", (i - 4) / 2);
 					}
 				}
 				DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
@@ -1597,7 +1599,7 @@ void DisplayItemStatistics()
 {
 	BOOLEAN fUseSelectedItem;
 	INT16 usItemIndex;
-	UINT16 pItemName[SIZE_ITEM_NAME];
+	wchar_t pItemName[SIZE_ITEM_NAME];
 	INVTYPE *pItem;
 
 	if( !eInfo.fActive )

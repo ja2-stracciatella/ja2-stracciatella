@@ -49,7 +49,7 @@ extern UINT8 gubCurrMercMode, gubPrevMercMode;
 
 #define NUM_DIFF_LVLS						5
 
-extern UINT16 *zDiffNames[NUM_DIFF_LVLS];
+extern const wchar_t* zDiffNames[NUM_DIFF_LVLS];
 extern INT16 sCurBaseDiff;
 extern INT16 gsSelectedMercID;
 extern INT16 gsSelectedMercGridNo;
@@ -142,6 +142,9 @@ void StartScheduleAction();
 
 void InitDetailedPlacementForMerc();
 void KillDetailedPlacementForMerc();
+
+void CopyMercPlacement(INT32 iMapIndex);
+void PasteMercPlacement(INT32 iMapIndex);
 
 #endif
 #endif

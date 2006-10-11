@@ -18,19 +18,23 @@ CFLAGS += -I ja2/Build/TileEngine
 CFLAGS += -I ja2/Build/TacticalAI
 CFLAGS += -I sgp
 
-CFLAGS += -std=gnu99
 #CFLAGS += -Wall
 #CFLAGS += -W
 CFLAGS += -Werror
-CFLAGS += -Werror-implicit-function-declaration
-CFLAGS += -Wimplicit-int
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
-CFLAGS += -Wsequence-point
 CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
 #CFLAGS += -D_DEBUG
+
+CCFLAGS += $(CFLAGS)
+CCFLAGS += -std=gnu99
+CCFLAGS += -Werror-implicit-function-declaration
+CCFLAGS += -Wimplicit-int
+CCFLAGS += -Wsequence-point
+
+CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
@@ -39,30 +43,30 @@ LDFLAGS += -lz
 SRCS :=
 SRCS += ja2/Build/AniViewScreen.c
 SRCS += ja2/Build/Credits.c
-#SRCS += ja2/Build/Editor/Cursor_Modes.c
-#SRCS += ja2/Build/Editor/EditScreen.c
-#SRCS += ja2/Build/Editor/Edit_Sys.c
-#SRCS += ja2/Build/Editor/EditorBuildings.c
-#SRCS += ja2/Build/Editor/EditorItems.c
-#SRCS += ja2/Build/Editor/EditorMapInfo.c
-#SRCS += ja2/Build/Editor/EditorMercs.c
-#SRCS += ja2/Build/Editor/EditorTerrain.c
-#SRCS += ja2/Build/Editor/Editor_Callbacks.c
-#SRCS += ja2/Build/Editor/Editor_Modes.c
-#SRCS += ja2/Build/Editor/Editor_Taskbar_Creation.c
-#SRCS += ja2/Build/Editor/Editor_Taskbar_Utils.c
-#SRCS += ja2/Build/Editor/Editor_Undo.c
-#SRCS += ja2/Build/Editor/Item_Statistics.c
-#SRCS += ja2/Build/Editor/LoadScreen.c
-#SRCS += ja2/Build/Editor/MessageBox.c
-#SRCS += ja2/Build/Editor/NewSmooth.c
-#SRCS += ja2/Build/Editor/PopupMenu.c
-#SRCS += ja2/Build/Editor/Road_Smoothing.c
-#SRCS += ja2/Build/Editor/Sector_Summary.c
-#SRCS += ja2/Build/Editor/SelectWin.c
-#SRCS += ja2/Build/Editor/SmartMethod.c
-#SRCS += ja2/Build/Editor/Smooth.c
-#SRCS += ja2/Build/Editor/Smoothing_Utils.c
+SRCS += ja2/Build/Editor/Cursor_Modes.c
+SRCS += ja2/Build/Editor/EditScreen.c
+SRCS += ja2/Build/Editor/Edit_Sys.c
+SRCS += ja2/Build/Editor/EditorBuildings.c
+SRCS += ja2/Build/Editor/EditorItems.c
+SRCS += ja2/Build/Editor/EditorMapInfo.c
+SRCS += ja2/Build/Editor/EditorMercs.c
+SRCS += ja2/Build/Editor/EditorTerrain.c
+SRCS += ja2/Build/Editor/Editor_Callbacks.c
+SRCS += ja2/Build/Editor/Editor_Modes.c
+SRCS += ja2/Build/Editor/Editor_Taskbar_Creation.c
+SRCS += ja2/Build/Editor/Editor_Taskbar_Utils.c
+SRCS += ja2/Build/Editor/Editor_Undo.c
+SRCS += ja2/Build/Editor/Item_Statistics.c
+SRCS += ja2/Build/Editor/LoadScreen.c
+SRCS += ja2/Build/Editor/MessageBox.c
+SRCS += ja2/Build/Editor/NewSmooth.c
+SRCS += ja2/Build/Editor/PopupMenu.c
+SRCS += ja2/Build/Editor/Road_Smoothing.c
+SRCS += ja2/Build/Editor/Sector_Summary.c
+SRCS += ja2/Build/Editor/SelectWin.c
+SRCS += ja2/Build/Editor/SmartMethod.c
+SRCS += ja2/Build/Editor/Smooth.c
+SRCS += ja2/Build/Editor/Smoothing_Utils.c
 SRCS += ja2/Build/Fade_Screen.c
 SRCS += ja2/Build/GameInitOptionsScreen.c
 SRCS += ja2/Build/GameLoop.c
@@ -314,6 +318,8 @@ SRCS += ja2/Build/Utils/Multi_Language_Graphic_Utils.c
 SRCS += ja2/Build/Utils/Multilingual_Text_Code_Generator.c
 SRCS += ja2/Build/Utils/Music_Control.c
 SRCS += ja2/Build/Utils/PopUpBox.c
+SRCS += ja2/Build/Utils/Quantize.cc
+SRCS += ja2/Build/Utils/Quantize_Wrap.cc
 SRCS += ja2/Build/Utils/STIConvert.c
 SRCS += ja2/Build/Utils/Slider.c
 SRCS += ja2/Build/Utils/Sound_Control.c
@@ -369,11 +375,11 @@ SRCS += sgp/VSurface.c
 SRCS += sgp/Video.c
 #SRCS += sgp/WinFont.c
 
-DEPS = $(SRCS:.c=.d)
-OBJS = $(SRCS:.c=.o)
+DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
+OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
 
 .SUFFIXES:
-.SUFFIXES: .c .d .o
+.SUFFIXES: .c .cc .d .o
 
 all: ja
 
@@ -385,15 +391,23 @@ endif
 
 ja: $(OBJS)
 	@echo '===> LD $@'
-	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
+	@$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CCFLAGS) -c $< -o $@
+
+.cc.o:
+	@echo '===> CXX $<'
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .c.d:
 	@echo '===> DEP $<'
-	@$(CC) $(CFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+	@$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+
+.cc.d:
+	@echo '===> DEP $<'
+	@$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean:
 	@echo '===> CLEAN'

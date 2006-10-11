@@ -11,10 +11,10 @@
 	#include "Font_Control.h"
 	#include "RenderWorld.h"
 	#include "Render_Dirty.h"
-	#include "loadscreen.h"
-	#include "selectwin.h"
+	#include "LoadScreen.h"
+	#include "SelectWin.h"
 	#include "EditorDefines.h"
-	#include "messagebox.h"
+	#include "MessageBox.h"
 	#include "Text_Input.h"
 	#include "Soldier_Create.h"
 	#include "Soldier_Init_List.h"
@@ -23,11 +23,11 @@
 	#include "Editor_Undo.h"
 	#include "EditScreen.h"
 	#include "StrategicMap.h"
-	#include "Editor Modes.h"
+	#include "Editor_Modes.h"
 	#include "Map_Information.h"
 	#include "Sys_Globals.h"
-	#include "Sector Summary.h"
-	#include "newsmooth.h"
+	#include "Sector_Summary.h"
+	#include "NewSmooth.h"
 	#include "Simple_Render_Utils.h"
 	#include "Animated_ProgressBar.h"
 	#include "EditorMercs.h"
@@ -40,14 +40,20 @@
 	#include "Gameloop.h"
 	#include "Message.h"
 	#include "Pits.h"
-	#include "Item Statistics.h"
+	#include "Item_Statistics.h"
 	#include "Scheduling.h"
+	#include "Debug.h"
+	#include "JAScreens.h"
+	#include "MemMan.h"
+	#include "MessageBoxScreen.h"
+	#include "ScreenIDs.h"
+	#include "WorldDef.h"
 #endif
 
 //===========================================================================
 
 BOOLEAN gfErrorCatch = FALSE;
-UINT16 gzErrorCatchString[ 256 ] = L"";
+wchar_t gzErrorCatchString[256] = L"";
 INT32	giErrorCatchMessageBox = 0;
 
 extern void RemoveMercsInSector();
@@ -85,7 +91,7 @@ INT32 iCurrFileShown;
 INT32	iLastFileClicked;
 INT32 iLastClickTime;
 
-UINT16 gzFilename[31];
+static wchar_t gzFilename[31];
 
 FDLG_LIST *FileList = NULL;
 
@@ -100,7 +106,7 @@ BOOLEAN gfIllegalName;
 BOOLEAN gfDeleteFile;
 BOOLEAN gfNoFiles;
 
-UINT16 zOrigName[60];
+static wchar_t zOrigName[60];
 GETFILESTRUCT FileInfo;
 
 BOOLEAN fEnteringLoadSaveScreen = TRUE;
@@ -133,6 +139,10 @@ UINT32 LoadSaveScreenShutdown(void)
 {
  return TRUE;
 }
+
+
+static void CreateFileDialog(const wchar_t* zTitle);
+
 
 void LoadSaveScreenEntry()
 {
@@ -168,9 +178,9 @@ void LoadSaveScreenEntry()
 		GetFileClose(&FileInfo);
 	}
 
-	swprintf( zOrigName, L"%s Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load" );
+	swprintf(zOrigName, lengthof(zOrigName), L"%S Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load");
 
-	swprintf( gzFilename, L"%S", gubFilename );
+	swprintf(gzFilename, lengthof(gzFilename), L"%s", gubFilename);
 
 	CreateFileDialog( zOrigName );
 
@@ -225,7 +235,7 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 				if( !temp )
 					wcscpy( gzFilename, L"" );
 				else
-					swprintf( gzFilename, L"%S", temp->FileInfo.zFileName );
+					swprintf(gzFilename, lengthof(gzFilename), L"%s", temp->FileInfo.zFileName);
 				if( ValidFilename() )
 				{
 					SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -370,14 +380,14 @@ UINT32 LoadSaveScreenHandle(void)
 			sprintf( gszCurrFilename, "MAPS\\%S", gzFilename );
 			if( GetFileFirst(gszCurrFilename, &FileInfo) )
 			{
-				UINT16 str[40];
+				wchar_t str[40];
 				if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_HIDDEN|FILE_IS_SYSTEM) )
 				{
-					swprintf( str, L" Delete READ-ONLY file %s? ", gzFilename );
+					swprintf(str, lengthof(str), L" Delete READ-ONLY file %S? ", gzFilename);
 					gfReadOnly = TRUE;
 				}
 				else
-					swprintf( str, L" Delete file %s? ", gzFilename );
+					swprintf(str, lengthof(str), L" Delete file %S? ", gzFilename);
 				gfDeleteFile = TRUE;
 				CreateMessageBox( str );
 			}
@@ -421,7 +431,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, 118, 183, 522, 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
-			swprintf( zOrigName, L"Loading map:  %s", gzFilename );
+			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %S", gzFilename);
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -433,7 +443,7 @@ UINT32 LoadSaveScreenHandle(void)
 }
 
 
-void CreateFileDialog( UINT16 *zTitle )
+static void CreateFileDialog(const wchar_t* zTitle)
 {
 
 	iFDlgState = DIALOG_NONE;
@@ -449,9 +459,9 @@ void CreateFileDialog( UINT16 *zTitle )
 		BUTTON_USE_DEFAULT, 406, 225, 50, 30, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgCancelCallback );
 
 	//Scroll buttons
-	iFileDlgButtons[2] = CreateSimpleButton( 426,92,"EDITOR//uparrow.sti", BUTTON_NO_TOGGLE,
+	iFileDlgButtons[2] = CreateSimpleButton( 426,92,"EDITOR/uparrow.sti", BUTTON_NO_TOGGLE,
 																MSYS_PRIORITY_HIGH, FDlgUpCallback );
-	iFileDlgButtons[3] = CreateSimpleButton( 426,182,"EDITOR//downarrow.sti", BUTTON_NO_TOGGLE,
+	iFileDlgButtons[3] = CreateSimpleButton( 426,182,"EDITOR/downarrow.sti", BUTTON_NO_TOGGLE,
 																MSYS_PRIORITY_HIGH, FDlgDwnCallback );
 
 	//File list window
@@ -467,7 +477,7 @@ void CreateFileDialog( UINT16 *zTitle )
 	if( iCurrentAction == ACTION_SAVE_MAP )
 	{	//checkboxes
 		//The update world info checkbox
-		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
+		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
 		if( gfUpdateSummaryInfo )
 			ButtonList[ iFileDlgButtons[6] ]->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -597,7 +607,7 @@ void SelectFileDialogYPos( UINT16 usRelativeYPos )
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
 			FListNode->FileInfo.zFileName[30] = 0;
-			swprintf( gzFilename, L"%S", FListNode->FileInfo.zFileName );
+			swprintf(gzFilename, lengthof(gzFilename), L"%s", FListNode->FileInfo.zFileName);
 			if( ValidFilename() )
 			{
 				SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -638,7 +648,7 @@ FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 	}
 
 	// Add and sort alphabetically without regard to case -- function limited to 10 chars comparison
-	if ( stricmp(pList->FileInfo.zFileName, pInfo->zFileName ) > 0 )
+	if (strcasecmp(pList->FileInfo.zFileName, pInfo->zFileName) > 0)
 	{
 		// pInfo is smaller than pList (i.e. Insert before)
 		pNode = (FDLG_LIST *)MemAlloc( sizeof(FDLG_LIST) );
@@ -812,15 +822,16 @@ void HandleMainKeyEvents( InputAtom *pEvent )
 		if( curr )
 		{
 			SetInputFieldStringWith8BitString( 0, curr->FileInfo.zFileName );
-			swprintf( gzFilename, L"%S", curr->FileInfo.zFileName );
+			swprintf(gzFilename, lengthof(gzFilename), L"%s", curr->FileInfo.zFileName);
 		}
 	}
 }
 
+
 //editor doesn't care about the z value.  It uses it's own methods.
-void SetGlobalSectorValues( UINT16 *szFilename )
+static void SetGlobalSectorValues(const wchar_t* szFilename)
 {
-	UINT16 *pStr;
+	const wchar_t* pStr;
 	if( ValidCoordinate() )
 	{
 		//convert the coordinate string into into the actual global sector coordinates.
@@ -876,7 +887,7 @@ UINT32 ProcessFileIO()
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
-			swprintf( zOrigName, L"Saving map:  %s", gzFilename );
+			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %S", gzFilename);
 			usStartX = 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = 180 - GetFontHeight( LARGEFONT1 ) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
@@ -1059,7 +1070,7 @@ void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason )
 
 BOOLEAN ExtractFilenameFromFields()
 {
-	Get16BitStringFromField( 0, gzFilename );
+	Get16BitStringFromField(0, gzFilename, lengthof(gzFilename));
 	return ValidFilename();
 }
 
@@ -1094,7 +1105,7 @@ BOOLEAN ValidCoordinate()
 
 BOOLEAN ValidFilename()
 {
-	UINT16 *pDest;
+	const wchar_t* pDest;
 	if( gzFilename[0] != '\0' );
 	{
 		pDest = wcsstr( gzFilename, L".dat" );
@@ -1106,7 +1117,7 @@ BOOLEAN ValidFilename()
 	return FALSE;
 }
 
-BOOLEAN ExternalLoadMap( UINT16 *szFilename )
+BOOLEAN ExternalLoadMap(const wchar_t* szFilename)
 {
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )
@@ -1124,7 +1135,7 @@ BOOLEAN ExternalLoadMap( UINT16 *szFilename )
 	return FALSE;
 }
 
-BOOLEAN ExternalSaveMap( UINT16 *szFilename )
+BOOLEAN ExternalSaveMap(const wchar_t* szFilename)
 {
 	Assert( szFilename );
 	if( !wcslen( szFilename ) )

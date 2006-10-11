@@ -57,6 +57,16 @@ typedef void* LPVOID;
 
 typedef long LONG;
 
+
+typedef struct
+{
+	BYTE rgbBlue;
+	BYTE rgbGreen;
+	BYTE rgbRed;
+	BYTE rgbReserved;
+} RGBQUAD;
+
+
 typedef struct
 {
   int x;

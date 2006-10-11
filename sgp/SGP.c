@@ -558,6 +558,7 @@ int main(int argc, char* argv[])
 {
 #if 1 // XXX TODO
 	FIXME
+	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
 #else
 	strlcpy(gzCommandLine, pCommandLine, lengthof(gzCommandLine));
 

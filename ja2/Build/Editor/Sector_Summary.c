@@ -10,7 +10,7 @@
 #ifndef PRECOMPILEDHEADERS
 	#include <stdio.h>
 	#include "Types.h"
-	#include "Sector Summary.h"
+	#include "Sector_Summary.h"
 	#include "Timer_Control.h"
 	#include "VSurface.h"
 	#include "Button_System.h"
@@ -20,7 +20,7 @@
 	#include "Line.h"
 	#include "Input.h"
 	#include "VObject_Blitters.h"
-	#include "loadscreen.h"
+	#include "LoadScreen.h"
 	#include "Text_Input.h"
 	#include "MouseSystem.h"
 	#include "StrategicMap.h"
@@ -36,6 +36,10 @@
 	#include "English.h"
 	#include "World_Items.h"
 	#include "Text.h"
+	#include "Debug.h"
+	#include "MemMan.h"
+	#include "Soldier_Create.h"
+	#include "Video.h"
 #endif
 
 extern BOOLEAN gfOverheadMapDirty;
@@ -53,7 +57,7 @@ enum{
 	BETA,
 	RELEASE
 };
-UINT16 gszVersionType[5][10] = { L"Pre-Alpha", L"Alpha", L"Demo", L"Beta", L"Release" };
+static const wchar_t* const gszVersionType[5] = { L"Pre-Alpha", L"Alpha", L"Demo", L"Beta", L"Release" };
 #define GLOBAL_SUMMARY_STATE			RELEASE
 
 //Regular masks
@@ -209,9 +213,9 @@ INT16 gsSelSectorX, gsSelSectorY;
 //summary is going to be persistant or not.
 UINT32 giInitTimer;
 
-UINT16 gszFilename[40];
-UINT16 gszTempFilename[21];
-UINT16 gszDisplayName[21];
+static wchar_t gszFilename[40];
+static wchar_t gszTempFilename[21];
+static wchar_t gszDisplayName[21];
 
 void CalculateOverrideStatus();
 
@@ -281,12 +285,12 @@ void CreateSummaryWindow()
 		SummaryOkayCallback );
 
 	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
 	ButtonList[ iSummaryButton[ SUMMARY_GRIDCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderGrid = TRUE;
 
 	iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] =
-		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
+		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
 	ButtonList[ iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderProgress = TRUE;
 
@@ -322,7 +326,7 @@ void CreateSummaryWindow()
 		ButtonList[ iSummaryButton[ SUMMARY_B3 ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[ SUMMARY_ALTERNATE ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR//smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
 	if( gfAlternateMaps )
 		ButtonList[ iSummaryButton[ SUMMARY_ALTERNATE ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -671,7 +675,7 @@ void RenderItemDetails()
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
 	INT32 index, i;
-	UINT16 str[100];
+	wchar_t str[100];
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 uiTriggerQuantity[8], uiActionQuantity[8], uiTriggerExistChance[8], uiActionExistChance[8];
 	UINT32 xp, yp;
@@ -788,27 +792,28 @@ void RenderItemDetails()
 					SetFontForeground( FONT_RED );
 				else
 					SetFontForeground( 77 );
+				const wchar_t* Type;
 				switch( i )
 				{
-					case 0: swprintf( str, L"Panic1" );		break;
-					case 1:	swprintf( str, L"Panic2" );		break;
-					case 2:	swprintf( str, L"Panic3" );		break;
-					case 3:	swprintf( str, L"Norm1" );		break;
-					case 4:	swprintf( str, L"Norm2" );		break;
-					case 5:	swprintf( str, L"Norm3" );		break;
-					case 6:	swprintf( str, L"Norm4" );		break;
-					case 7:	swprintf( str, L"Pressure Actions" );		break;
+					case 0: Type = L"Panic1";           break;
+					case 1:	Type = L"Panic2";           break;
+					case 2:	Type = L"Panic3";           break;
+					case 3:	Type = L"Norm1";            break;
+					case 4:	Type = L"Norm2";            break;
+					case 5:	Type = L"Norm3";            break;
+					case 6:	Type = L"Norm4";            break;
+					case 7:	Type = L"Pressure Actions"; break;
 				}
 				if( i < 7 )
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:  %3.02f trigger(s), %3.02f action(s)", str, dAvgExistChance, dAvgStatus );
+					mprintf(xp, yp, L"%s:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
 				}
 				else
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf( xp, yp, L"%s:  %3.02f", str, dAvgExistChance );
+					mprintf(xp, yp, L"%s:  %3.02f", Type, dAvgExistChance);
 				}
 				yp += 10;
 				if( yp >= 355 )
@@ -1008,7 +1013,7 @@ void RenderSummaryWindow()
 		SetFontShadow( FONT_NEARBLACK );
 		if( gfGlobalSummaryExists )
 		{
-			UINT16 str[100];
+			wchar_t str[100];
 			BOOLEAN fSectorSummaryExists = FALSE;
 			if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 			{
@@ -1046,8 +1051,8 @@ void RenderSummaryWindow()
 					x = gsSelSectorX - 1, y = gsSelSectorY - 1;
 				else
 					x = gsSectorX - 1, y = gsSectorY - 1;
-				swprintf( str, L"%c%d", y + 'A', x + 1 );
-				swprintf( gszFilename, str );
+				swprintf(str, lengthof(str), L"%c%d", y + 'A', x + 1);
+				swprintf(gszFilename, lengthof(gszFilename), str);
 				giCurrLevel = giCurrentViewLevel;
 				switch( giCurrentViewLevel )
 				{
@@ -1175,7 +1180,7 @@ void RenderSummaryWindow()
 						case 6:	wcscat( gszFilename, L"_b2_a.dat" );	break;
 						case 7:	wcscat( gszFilename, L"_b3_a.dat" );	break;
 					}
-					swprintf( gszDisplayName, gszFilename );
+					swprintf(gszDisplayName, lengthof(gszDisplayName), gszFilename);
 					EnableButton( iSummaryButton[ SUMMARY_LOAD ] );
 					if( gpCurrentSectorSummary )
 					{
@@ -1250,7 +1255,7 @@ void RenderSummaryWindow()
 						case ALTERNATE_B2_MASK:			wcscat( gszFilename, L"_b2_a.dat" );	break;
 						case ALTERNATE_B3_MASK:			wcscat( gszFilename, L"_b3_a.dat" );	break;
 					}
-					swprintf( gszDisplayName, gszFilename );
+					swprintf(gszDisplayName, lengthof(gszDisplayName), gszFilename);
 					DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				}
 				SPECIALCASE_LABEL:
@@ -1362,8 +1367,8 @@ void RenderSummaryWindow()
 		}
 		for( x = 1; x <= 16; x++ )
 		{
-			UINT16 str[3];
-			swprintf( str, L"%d", x );
+			wchar_t str[3];
+			swprintf(str, lengthof(str), L"%d", x);
 			mprintf( MAP_LEFT+x*13-(13+StringPixLength( str, SMALLCOMPFONT ))/2, MAP_TOP-8, str );
 		}
 		if( gfRenderGrid )
@@ -1385,7 +1390,7 @@ void RenderSummaryWindow()
 		if( gfRenderProgress )
 		{
 			UINT8 ubNumUndergroundLevels;
-			UINT16 str[2];
+			wchar_t str[2];
 			for( y = 0; y < 16; y++ )
 			{
 				ClipRect.iTop = MAP_TOP + y*13;
@@ -1403,7 +1408,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf( str, L"%d", ubNumUndergroundLevels );
+							swprintf(str, lengthof(str), L"%d", ubNumUndergroundLevels);
 							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
 						}
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
@@ -1423,7 +1428,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf( str, L"%d", ubNumUndergroundLevels );
+							swprintf(str, lengthof(str), L"%d", ubNumUndergroundLevels);
 							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
 						}
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
@@ -1509,11 +1514,11 @@ void RenderSummaryWindow()
 	}
 }
 
-void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate )
+void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 {
-	UINT16 str[50];
+	wchar_t str[50];
 	UINT8 szCoord[40];
-	UINT16 *ptr;
+	const wchar_t* ptr;
 	INT16 x, y;
 
 	gfRenderSummary = TRUE;
@@ -1605,7 +1610,7 @@ void UpdateSectorSummary( UINT16 *gszFilename, BOOLEAN fUpdate )
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
-		swprintf( str, L"Analyzing map:  %s...", gszFilename );
+		swprintf(str, lengthof(str), L"Analyzing map:  %S...", gszFilename);
 
 		if( gfSummaryWindowActive )
 		{
@@ -1720,7 +1725,6 @@ void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-#include "Tile Surface.h"
 
 void PerformTest()
 {
@@ -2066,8 +2070,8 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT16 *ptr;
-		UINT16 str[ 50 ];
+		const wchar_t* ptr;
+		wchar_t str[50];
 		gfRenderSummary = TRUE;
 
 		SetFont( FONT10ARIAL );
@@ -2081,7 +2085,7 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 		CreateProgressBar( 0, MAP_LEFT+5, MAP_BOTTOM+110, 573, MAP_BOTTOM+120 );
 
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, 318, 578, 356 );
-		swprintf( str, L"Loading map:  %s", gszDisplayName );
+		swprintf(str, lengthof(str), L"Loading map:  %S", gszDisplayName);
 		SetProgressBarTitle( 0, str, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
 
@@ -2173,7 +2177,7 @@ void CalculateOverrideStatus()
 	}
 	else
 		sprintf( szFilename, "MAPS\\%S", gszFilename );
-	swprintf( gszDisplayName, L"%S", &(szFilename[5]) );
+	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%s", szFilename + 5);
 	if( GetFileFirst( szFilename, &FileInfo) )
 	{
 		if( gfWorldLoaded )
@@ -2581,14 +2585,14 @@ void UpdateMasterProgress()
 void ReportError( UINT8 *pSector, UINT8 ubLevel )
 {
 	static INT32 yp = 180;
-	UINT16 str[40];
-	UINT16 temp[10];
+	wchar_t str[40];
+	wchar_t temp[10];
 
 	//Make sure the file exists... if not, then return false
-	swprintf( str, L"%S", pSector );
+	swprintf(str, lengthof(str), L"%s", pSector);
 	if( ubLevel % 4  )
 	{
-		swprintf( temp, L"_b%d.dat", ubLevel % 4 );
+		swprintf(temp, lengthof(temp), L"_b%d.dat", ubLevel % 4);
 		wcscat( str, temp );
 	}
 	mprintf( 10, yp, L"Skipping update for %s.  Probably due to tileset conflicts...", str );
@@ -2709,8 +2713,8 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 
 void ExtractTempFilename()
 {
-	UINT16 str[40];
-	Get16BitStringFromField( 1, str );
+	wchar_t str[40];
+	Get16BitStringFromField(1, str, lengthof(str));
 	if( wcscmp( gszTempFilename, str ) )
 	{
 		wcscpy( gszTempFilename, str );
@@ -2718,13 +2722,13 @@ void ExtractTempFilename()
 		gfOverrideDirty = TRUE;
 	}
 	if( !wcslen( str ) )
-		swprintf( gszDisplayName, L"test.dat" );
+		swprintf(gszDisplayName, lengthof(gszDisplayName), L"test.dat");
 }
 
 void ApologizeOverrideAndForceUpdateEverything()
 {
 	INT32 x, y;
-	UINT16 str[ 50 ];
+	wchar_t str[50];
 	UINT8 name[50];
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
@@ -2740,11 +2744,11 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SetFont( HUGEFONT );
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );
-	swprintf( str, L"MAJOR VERSION UPDATE" );
+	swprintf(str, lengthof(str), L"MAJOR VERSION UPDATE");
 	mprintf( 320 - StringPixLength( str, HUGEFONT )/2, 105, str );
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
-	swprintf( str, L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated );
+	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);
 	mprintf( 320 - StringPixLength( str, FONT10ARIAL )/2, 130, str );
 
 	CreateProgressBar( 2, 120, 170, 520, 202 );
