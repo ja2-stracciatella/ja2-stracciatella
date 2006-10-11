@@ -1447,20 +1447,11 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 
 
 //
-// BltVSurfaceUsingDDBlt will always use Direct Draw Blt,NOT BltFast
-static BOOLEAN BltVSurfaceUsingDDBlt(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT* SrcRect, RECT* DestRect)
-{
-	DDBltSurface((LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, SrcRect, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
-	return( TRUE );
-}
-
-
-//
 // This function will stretch the source image to the size of the dest rect.
 //
 // If the 2 images are not 16 Bpp, it returns false.
 //
-BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, SGPRect *SrcRect, SGPRect *DestRect )
+BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPRect* SrcRect, SGPRect* DestRect)
 {
 	HVSURFACE	hDestVSurface;
 	HVSURFACE	hSrcVSurface;
@@ -1484,16 +1475,8 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT3
 	if( (hDestVSurface->ubBitDepth != 16) && (hSrcVSurface->ubBitDepth != 16) )
 		return(FALSE);
 
-	if(!BltVSurfaceUsingDDBlt( hDestVSurface, hSrcVSurface, fBltFlags, iDestX, iDestY, (RECT*)SrcRect, (RECT*)DestRect ) )
-	{
-    //
-		// VO Blitter will set debug messages for error conditions
-    //
-
-		return( FALSE );
-	}
-
-	return( TRUE );
+	DDBltSurface((LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, (RECT*)DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, (RECT*)SrcRect, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
+	return TRUE;
 }
 
 

@@ -1876,7 +1876,7 @@ UINT32 LaptopScreenHandle()
 			//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
 			//SrcRect2.iBottom = 425 + 55 * iScalePercentage / 100;
 
-			//BltStretchVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, 0, 0, 0, &SrcRect1, &DstRect );
+			//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
 			//SetFont( FONT10ARIAL );
 			//SetFontForeground( FONT_YELLOW );
@@ -1888,7 +1888,7 @@ UINT32 LaptopScreenHandle()
 			//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
 			//UnLockVideoSurface( FRAME_BUFFER );
 
-			BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &DstRect, &SrcRect2 );
+			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 			InvalidateScreen();
 			//gfPrintFrameBuffer = TRUE;
 			RefreshScreen();
@@ -2526,7 +2526,7 @@ BOOLEAN LeaveLapTopScreen( void )
 				//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
 				//SrcRect2.iBottom = 425 + 55 * iScalePercentage / 100;
 
-				//BltStretchVideoSurface( FRAME_BUFFER, guiEXTRABUFFER, 0, 0, 0, &SrcRect1, &DstRect );
+				//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
 				//SetFont( FONT10ARIAL );
 				//SetFontForeground( FONT_YELLOW );
@@ -2538,7 +2538,7 @@ BOOLEAN LeaveLapTopScreen( void )
 				//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
 				//UnLockVideoSurface( FRAME_BUFFER );
 
-				BltStretchVideoSurface( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0, &DstRect, &SrcRect2 );
+				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 				InvalidateScreen();
 				//gfPrintFrameBuffer = TRUE;
 				RefreshScreen();
@@ -4420,7 +4420,7 @@ BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 u
 		}
 	}
 
-	BltStretchVideoSurface(FRAME_BUFFER, guiTitleBarSurface, 0, 0, 0, &SrcRect, &DestRect);
+	BltStretchVideoSurface(FRAME_BUFFER, guiTitleBarSurface, &SrcRect, &DestRect);
 
 	InvalidateRegion(DestRect.iLeft,DestRect.iTop, DestRect.iRight, DestRect.iBottom);
 	InvalidateRegion(LastRect.iLeft,LastRect.iTop, LastRect.iRight, LastRect.iBottom);

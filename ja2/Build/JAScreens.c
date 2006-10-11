@@ -1389,7 +1389,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop = 0;
 			DstRect.iBottom = 480;
 			BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
-			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DstRect);
+			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		else
@@ -1403,7 +1403,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop = 20 * (iPercentage-50) / 50;
 			DstRect.iBottom = 480 - 250 * (iPercentage-50) / 50;
 			BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
-			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DstRect);
+			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		if( iPercentage == 100 )
@@ -1570,7 +1570,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop = 0;
 			DstRect.iBottom = 480;
 			BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
-			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DstRect);
+			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		else
@@ -1588,7 +1588,7 @@ UINT32 DemoExitScreenHandle(void)
 				DstRect.iBottom -= (iPercentage-50);
 			#endif
 			BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
-			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, VS_BLT_USECOLORKEY, &SrcRect, &DstRect);
+			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		if( iPercentage == 100 )

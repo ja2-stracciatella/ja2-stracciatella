@@ -2869,7 +2869,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	DstRect.iBottom = DstRect.iTop + iDstHeight;
 
 	//scale the item down to the smaller buffer.
-	BltStretchVideoSurface(uiDstID, uiSrcID, 0, 0, 0, &SrcRect, &DstRect);
+	BltStretchVideoSurface(uiDstID, uiSrcID, &SrcRect, &DstRect);
 
 	//invalidate the mercs new item index
 	gusMercsNewItemIndex = 0xffff;
