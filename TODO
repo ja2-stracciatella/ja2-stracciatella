@@ -16,6 +16,7 @@ low prio
 - HACK0004 Disable background scrolling to avoid ScrollJA2Background()
 - HACK0005 Set gusSelectedSoldier in EnterCombat() to 0 if it is NO_SOLDIER
   (happens when entering a sector and being immediatly in combat)
+- HACK0006 Implement a zoom blitter
 
 cosmetic
 - massive code duplication for ROT-1 "encrypted" data (r65, r113)

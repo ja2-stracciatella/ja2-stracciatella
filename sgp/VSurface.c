@@ -1475,7 +1475,18 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPR
 	if( (hDestVSurface->ubBitDepth != 16) && (hSrcVSurface->ubBitDepth != 16) )
 		return(FALSE);
 
-	DDBltSurface((LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, (RECT*)DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, (RECT*)SrcRect, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
+	// XXX HACK0006 this should zoom the source to the destination size, just blit unzoomed for now
+	SDL_Rect src;
+	src.x = SrcRect->iLeft;
+	src.y = SrcRect->iTop;
+	src.w = min(SrcRect->iRight  - SrcRect->iLeft, DestRect->iRight  - DestRect->iLeft);
+	src.h = min(SrcRect->iBottom - SrcRect->iTop,  DestRect->iBottom - DestRect->iTop);
+
+	SDL_Rect dst;
+	dst.x = DestRect->iLeft;
+	dst.y = DestRect->iTop;
+
+	SDL_BlitSurface(hSrcVSurface->surface, &src, hDestVSurface->surface, &dst);
 	return TRUE;
 }
 
