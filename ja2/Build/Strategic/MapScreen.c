@@ -6570,7 +6570,7 @@ void PopupText( wchar_t *pFontString, ...  )
 
 	FindFontCenterCoordinates( 0, 0, SCREEN_WIDTH, INTERFACE_START_Y, PopupString, LARGEFONT1, &sX, &sY );
 
-	BltVideoSurface( FRAME_BUFFER, guiINTEXT, 0, 85, 160, VS_BLT_FAST | VS_BLT_USECOLORKEY, NULL );
+	BltVideoSurface(FRAME_BUFFER, guiINTEXT, 0, 85, 160, VS_BLT_FAST, NULL);
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
 

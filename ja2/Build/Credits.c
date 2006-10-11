@@ -1074,8 +1074,7 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 
 	GetVideoSurface( &hVSurface, pCurrent->uiVideoSurfaceImage );
 
-
-	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, pCurrent->sPosX, pCurrent->sPosY, VS_BLT_USECOLORKEY, NULL);
+	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, pCurrent->sPosX, pCurrent->sPosY, 0, NULL);
 
 	return( TRUE );
 }

@@ -1283,35 +1283,15 @@ static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 C
 
 BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect )
 {
-	UINT32		uiDDFlags;
-	RECT			DestRect;
+	SDL_Rect srcrect;
+	SDL_Rect dstrect;
 
   // Blit using the correct blitter
 	if ( fBltFlags & VS_BLT_FAST )
 	{
-
 		// Validations
 		CHECKF( iDestX >= 0 );
 		CHECKF( iDestY >= 0 );
-
-		// Default flags
-		uiDDFlags = 0;
-
-		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USECOLORKEY )
-		{
-			uiDDFlags |= DDBLTFAST_SRCCOLORKEY;
-		}
-
-		if ( uiDDFlags == 0 )
-		{
-			// Default here is no colorkey
-			uiDDFlags = DDBLTFAST_NOCOLORKEY;
-		}
-
-#if 1 // XXX TODO
-		SDL_Rect srcrect;
-		SDL_Rect dstrect;
 
 		srcrect.x = SrcRect->left;
 		srcrect.y = SrcRect->top;
@@ -1319,27 +1299,13 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 		srcrect.h = SrcRect->bottom - SrcRect->top;
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
-
-		// XXX colour key?
-		SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
-#else
-		DDBltFastSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, iDestX, iDestY, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, SrcRect, uiDDFlags );
-#endif
 	}
 	else
 	{
 		// Normal, specialized blit for clipping, etc
 
-		// Default flags
-		uiDDFlags = DDBLT_WAIT;
-
-		// Convert flags into DD flags, ( for transparency use, etc )
-		if ( fBltFlags & VS_BLT_USECOLORKEY )
-		{
-			uiDDFlags |= DDBLT_KEYSRC;
-		}
-
 		// Setup dest rectangle
+		RECT DestRect;
 		DestRect.top =  (int)iDestY;
 		DestRect.left = (int)iDestX;
 		DestRect.bottom = (int)iDestY + ( SrcRect->bottom - SrcRect->top );
@@ -1358,29 +1324,16 @@ BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UIN
 			return( TRUE );
 		}
 
-		// Check for -ve values
-
-#if 1 // XXX TODO
-		SDL_Rect srcrect;
-		SDL_Rect dstrect;
-
 		srcrect.x = SrcRect->left;
 		srcrect.y = SrcRect->top;
 		srcrect.w = SrcRect->right  - SrcRect->left;
 		srcrect.h = SrcRect->bottom - SrcRect->top;
 		dstrect.x = DestRect.left;
 		dstrect.y = DestRect.top;
-
-		// XXX colour key?
-		SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
-#else
-		DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, &DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData,
-							SrcRect, uiDDFlags, NULL );
-
-#endif
 	}
 
-	return( TRUE );
+	SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
+	return TRUE;
 }
 
 BOOLEAN Blt16BPPBufferShadowRectAlternateTable(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area);
@@ -1497,20 +1450,7 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 // BltVSurfaceUsingDDBlt will always use Direct Draw Blt,NOT BltFast
 static BOOLEAN BltVSurfaceUsingDDBlt(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT* SrcRect, RECT* DestRect)
 {
-	UINT32		uiDDFlags;
-
-	// Default flags
-	uiDDFlags = DDBLT_WAIT;
-
-	// Convert flags into DD flags, ( for transparency use, etc )
-	if ( fBltFlags & VS_BLT_USECOLORKEY )
-	{
-		uiDDFlags |= DDBLT_KEYSRC;
-	}
-
-	DDBltSurface( (LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData,
-						SrcRect, uiDDFlags, NULL );
-
+	DDBltSurface((LPDIRECTDRAWSURFACE2)hDestVSurface->pSurfaceData, DestRect, (LPDIRECTDRAWSURFACE2)hSrcVSurface->pSurfaceData, SrcRect, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
 	return( TRUE );
 }
 

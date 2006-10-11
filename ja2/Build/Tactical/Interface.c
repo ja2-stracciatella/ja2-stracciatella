@@ -2061,8 +2061,7 @@ void BlitPopupText( VIDEO_OVERLAY *pBlitter )
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
-	BltVideoSurface( pBlitter->uiDestBuff, guiINTEXT, 0, pBlitter->pBackground->sLeft, pBlitter->pBackground->sTop, VS_BLT_FAST | VS_BLT_USECOLORKEY, NULL );
-
+	BltVideoSurface(pBlitter->uiDestBuff, guiINTEXT, 0, pBlitter->pBackground->sLeft, pBlitter->pBackground->sTop, VS_BLT_FAST, NULL);
 
 	pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);
 
