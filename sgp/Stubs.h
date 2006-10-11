@@ -145,5 +145,9 @@ typedef void* LPDIRECTDRAWSURFACE2;
  * it needs to be added)
  **/
 size_t wcslcpy(wchar_t *s1, const wchar_t *s2, size_t n);
+
+/* Another function which isn't present in glibc
+ */
+size_t strlcpy(char*,const char*,size_t);
 #endif
 #endif
