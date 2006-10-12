@@ -377,7 +377,7 @@ UINT8								gubScrollSpeedEndID		= 4;
 
 UINT8								gubCurScrollSpeedID		= 1;
 
-BOOLEAN							gfDoVideoScroll = FALSE;/* HACK0004: avoid ScrollJA2Background() */
+BOOLEAN							gfDoVideoScroll = TRUE;
 BOOLEAN							gfDoSubtileScroll = FALSE;
 
 BOOLEAN							gfScrollPending		= FALSE;

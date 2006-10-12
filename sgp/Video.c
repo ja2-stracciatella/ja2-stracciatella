@@ -6,6 +6,7 @@
 #include "Local.h"
 #include "MemMan.h"
 #include "RenderWorld.h"
+#include "Render_Dirty.h"
 #include "SGP.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -844,21 +845,22 @@ void InvalidateScreen(void)
 
 //#define SCROLL_TEST
 
-void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, LPDIRECTDRAWSURFACE2 pSource, LPDIRECTDRAWSURFACE2 pDest, BOOLEAN fRenderStrip)
+static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, BOOLEAN fRenderStrip)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT16 usWidth, usHeight;
 	UINT8	 ubBitDepth;
-  HRESULT ReturnCode;
-  static RECT    Region;
 	static RECT		 StripRegions[ 2 ];
 	UINT16				 usNumStrips = 0;
 	INT32					 cnt;
 	INT16					 sShiftX, sShiftY;
 	INT32					 uiCountY;
 
+	// XXX TODO0002 does not work correctly, causes graphic artifacts
+	SDL_Surface* Frame  = screen;
+	SDL_Surface* Source = screen; // Primary
+	SDL_Surface* Dest   = screen; // Back
+	SDL_Rect SrcRect;
+	SDL_Rect DstRect;
 
  	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
@@ -876,25 +878,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 	switch (uiDirection)
 	{
 		case SCROLL_LEFT:
-
-			Region.left = 0;
-			Region.top = gsVIEWPORT_WINDOW_START_Y;
-			Region.right = usWidth-(sScrollXIncrement);
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = 0;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight;
+			DstRect.x = sScrollXIncrement;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY = gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -910,26 +900,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_RIGHT:
-
-
-			Region.left = sScrollXIncrement;
-			Region.top = gsVIEWPORT_WINDOW_START_Y;
-			Region.right = usWidth;
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = sScrollXIncrement;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight;
+			DstRect.x = 0;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY= gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -951,26 +928,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_UP:
-
-			Region.left = 0;
-			Region.top = gsVIEWPORT_WINDOW_START_Y;
-			Region.right = usWidth;
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
-
+			SrcRect.x = 0;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SrcRect.w = usWidth;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = 0;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			for(uiCountY=sScrollYIncrement-1+gsVIEWPORT_WINDOW_START_Y; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
 			{
@@ -989,25 +953,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_DOWN:
-
-			Region.left = 0;
-			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			Region.right = usWidth;
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = 0;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SrcRect.w = usWidth;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = 0;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// Zero out z
 			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement ); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -1028,25 +980,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_UPLEFT:
-
-			Region.left = 0;
-			Region.top = gsVIEWPORT_WINDOW_START_Y;
-			Region.right = usWidth-(sScrollXIncrement);
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = 0;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = sScrollXIncrement;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -1069,25 +1009,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_UPRIGHT:
-
-			Region.left = sScrollXIncrement;
-			Region.top = gsVIEWPORT_WINDOW_START_Y;
-			Region.right = usWidth;
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight - sScrollYIncrement;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = sScrollXIncrement;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = 0;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -1109,25 +1037,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_DOWNLEFT:
-
-			Region.left = 0;
-			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			Region.right = usWidth-(sScrollXIncrement);
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, sScrollXIncrement, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = 0;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = sScrollXIncrement;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -1152,25 +1068,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			break;
 
 		case SCROLL_DOWNRIGHT:
-
-			Region.left = sScrollXIncrement;
-			Region.top = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			Region.right = usWidth;
-			Region.bottom = gsVIEWPORT_WINDOW_START_Y + usHeight;
-
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, 0, gsVIEWPORT_WINDOW_START_Y, pSource, (LPRECT)&Region, DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-
-					if (ReturnCode == DDERR_SURFACELOST)
-					{
-						break;
-					}
-				}
-			} while (ReturnCode != DD_OK);
+			SrcRect.x = sScrollXIncrement;
+			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			SrcRect.w = usWidth - sScrollXIncrement;
+			SrcRect.h = usHeight - sScrollYIncrement;
+			DstRect.x = 0;
+			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 			// memset z-buffer
 			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
@@ -1195,19 +1099,9 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 	if ( fRenderStrip )
 	{
-
-		// Memset to 0
 #ifdef SCROLL_TEST
-		{
-			DDBLTFX				 BlitterFX;
-
-			BlitterFX.dwSize = sizeof( DDBLTFX );
-			BlitterFX.dwFillColor = 0;
-
-			DDBltSurface( (LPDIRECTDRAWSURFACE2)pDest, NULL, NULL, NULL, DDBLT_COLORFILL, &BlitterFX );
-		}
+		SDL_FillRect(Dest, NULL, 0);
 #endif
-
 
 		for ( cnt = 0; cnt < usNumStrips; cnt++ )
 		{
@@ -1215,20 +1109,13 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 			// Optimize Redundent tiles too!
 			//ExamineZBufferRect( (INT16)StripRegions[ cnt ].left, (INT16)StripRegions[ cnt ].top, (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom );
 
-			do
-			{
-				ReturnCode = IDirectDrawSurface2_SGPBltFast(pDest, StripRegions[ cnt ].left, StripRegions[ cnt ].top, gpFrameBuffer, (LPRECT)&( StripRegions[ cnt ] ), DDBLTFAST_NOCOLORKEY);
-				if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-				{
-					DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-				}
-
-				if (ReturnCode == DDERR_SURFACELOST)
-				{
-					break;
-				}
-			} while (ReturnCode != DD_OK);
-
+			SrcRect.x = StripRegions[cnt].left;
+			SrcRect.y = StripRegions[cnt].top;
+			SrcRect.w = StripRegions[cnt].right  - StripRegions[cnt].left;
+			SrcRect.h = StripRegions[cnt].bottom - StripRegions[cnt].top;
+			DstRect.x = StripRegions[cnt].left;
+			DstRect.y = StripRegions[cnt].top;
+			SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
 		}
 
 		sShiftX = 0;
@@ -1302,7 +1189,6 @@ void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScr
 
 	//UpdateSaveBuffer();
 	//SaveBackgroundRects();
-#endif
 }
 
 
@@ -1414,7 +1300,8 @@ void RefreshScreen(void)
 		}
 		if (gfRenderScroll)
 		{
-			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE);
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, TRUE);
+			gfRenderScroll = FALSE;
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 
@@ -1582,7 +1469,7 @@ void RefreshScreen(void)
 		}
 		if ( gfRenderScroll )
 		{
-			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, gpPrimarySurface, gpBackBuffer, TRUE);
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, TRUE);
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 
@@ -2207,7 +2094,9 @@ SDL_Surface* GetMouseBufferObject(void)
 PTR LockBackBuffer(UINT32 *uiPitch)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	*uiPitch = screen->pitch;
+	return screen->pixels;
 #else
   HRESULT       ReturnCode;
   DDSURFACEDESC SurfaceDescription;
@@ -2244,7 +2133,7 @@ PTR LockBackBuffer(UINT32 *uiPitch)
 void UnlockBackBuffer(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
 #else
   DDSURFACEDESC SurfaceDescription;
   HRESULT       ReturnCode;

@@ -42,27 +42,6 @@ void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData )
 }
 
 
-void DDBltSurface( LPDIRECTDRAWSURFACE2 pDestSurface, LPRECT pDestRect, LPDIRECTDRAWSURFACE2 pSrcSurface,
-					    LPRECT pSrcRect, UINT32 uiFlags, LPDDBLTFX pDDBltFx )
-{
-#if 1 // XXX TODO
-	FIXME // XXX TODO0001
-#else
-	HRESULT ReturnCode;
-
-	Assert( pDestSurface != NULL  );
-
-	do
-	{
-		ReturnCode = IDirectDrawSurface2_SGPBlt( pDestSurface, pDestRect, pSrcSurface, pSrcRect, uiFlags, pDDBltFx );
-
-	} while( ReturnCode == DDERR_WASSTILLDRAWING );
-
-	ATTEMPT( ReturnCode );
-#endif
-}
-
-
 HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 uiX, INT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiTrans )
 {
 #if 1 // XXX TODO
