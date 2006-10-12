@@ -3,7 +3,6 @@
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
 	#include "WIZ8 SGP ALL.H"
 #else
-	#include "DirectDraw_Calls.h"
 	#include <stdio.h>
 	#include "Debug.h"
 	#include "HImage.h"

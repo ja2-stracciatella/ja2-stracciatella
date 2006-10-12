@@ -1,9 +1,6 @@
 #ifndef __VIDEO_
 #define __VIDEO_
 
-//#include <windows.h> /* XXX */
-#include <DDraw.h>
-//#include <process.h> /* XXX */
 #include <SDL.h>
 
 #include "Stubs.h"
@@ -34,7 +31,6 @@ extern BOOLEAN              RestoreVideoManager(void);
 extern void                 GetCurrentVideoSettings(UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth);
 extern void                 InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 extern void                 InvalidateScreen(void);
-extern LPDIRECTDRAW2        GetDirectDraw2Object(void);
 extern SDL_Surface* GetBackBufferObject(void);
 extern SDL_Surface* GetFrameBufferObject(void);
 extern SDL_Surface* GetMouseBufferObject(void);
