@@ -23,7 +23,6 @@
 	#include "RenderWorld.h"
 	#include "Sys_Globals.h"
 	#include "Points.h"
-	#include "Win_Util.h"
 	#include "Sound_Control.h"
 	#include "Weapons.h"
 	#include "VObject_Blitters.h"
