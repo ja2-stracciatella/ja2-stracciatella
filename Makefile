@@ -347,7 +347,6 @@ SRCS += sgp/DirectDraw_Calls.c
 #SRCS += sgp/DirectX_Common.c
 SRCS += sgp/English.c
 SRCS += sgp/FileMan.c
-#SRCS += sgp/Flic.c
 SRCS += sgp/Font.c
 SRCS += sgp/HImage.c
 SRCS += sgp/ImpTGA.c
