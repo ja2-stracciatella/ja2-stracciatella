@@ -23,7 +23,6 @@
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"
-#include "RegInst.h"
 #include "Types.h"
 #include <stdio.h>
 #include <stdlib.h>

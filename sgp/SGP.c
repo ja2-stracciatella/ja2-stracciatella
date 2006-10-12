@@ -11,7 +11,6 @@
 #include "Local.h"
 #include "MemMan.h"
 #include "Random.h"
-#include "RegInst.h"
 #include "SGP.h"
 #include "Stubs.h"
 #include "SoundMan.h"
