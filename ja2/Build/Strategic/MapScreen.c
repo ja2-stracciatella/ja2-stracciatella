@@ -1004,11 +1004,6 @@ void BullsEyeOrChopperSelectionPopupCallback( UINT8 ubExitValue );
 
 void WakeUpAnySleepingSelectedMercsOnFootOrDriving( void );
 
-void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length);
-void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length);
-void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length, UINT8 *pubFontColor );
-
 void InitPreviousPaths( void );
 void RememberPreviousPathForAllSelectedChars( void );
 void RestorePreviousPaths( void );

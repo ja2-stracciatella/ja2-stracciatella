@@ -187,12 +187,6 @@ INT32 giHilitedInvolved, giHilitedUninvolved;
 
 extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
-extern void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[] );
-extern void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], UINT8 *pubFontColor );
-
-
 
 #ifdef JA2BETAVERSION
 //The group is passed so we can extract the sector location
@@ -1208,18 +1202,18 @@ void RenderPreBattleInterface()
 						x = 72 + (54-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						//LOC
-						GetMapscreenMercLocationString( MercPtrs[ i ], str );
+						GetMapscreenMercLocationString(MercPtrs[i], str, lengthof(str));
 						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						//DEST
-						GetMapscreenMercDestinationString( MercPtrs[ i ], str );
+						GetMapscreenMercDestinationString(MercPtrs[i], str, lengthof(str));
 						if( wcslen( str ) > 0 )
 						{
 							x = 164 + (41-StringPixLength( str, BLOCKFONT2)) / 2;
 							mprintf( x, y, str );
 						}
 						//DEP
-						GetMapscreenMercDepartureString( MercPtrs[ i ], str, &ubJunk );
+						GetMapscreenMercDepartureString(MercPtrs[i], str, lengthof(str), &ubJunk);
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						line++;
