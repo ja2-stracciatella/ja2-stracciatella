@@ -570,8 +570,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 		}
 		else
 		{
-
-			SetCurrentCursor( (UINT16)uiCursorIndex, 0, 0 );
 			ReturnValue = TRUE;
 		}
 	}

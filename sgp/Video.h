@@ -41,7 +41,6 @@ extern void                 UnlockFrameBuffer(void);
 extern PTR                  LockMouseBuffer(UINT32 *uiPitch);
 extern void                 UnlockMouseBuffer(void);
 extern BOOLEAN              GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BblueBitMask);
-extern BOOLEAN							SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY );
 extern void                 StartFrameBufferRender(void);
 extern void                 EndFrameBufferRender(void);
 extern void                 PrintScreen(void);

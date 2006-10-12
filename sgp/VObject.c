@@ -842,7 +842,8 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 	return( FALSE );
 }
 
-BOOLEAN GetVideoObjectETRLEProperties( HVOBJECT hVObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
+
+static BOOLEAN GetVideoObjectETRLEProperties(HVOBJECT hVObject, ETRLEObject* pETRLEObject, UINT16 usIndex)
 {
 	//CHECKF( usIndex >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usIndex < hVObject->usNumberOfObjects );

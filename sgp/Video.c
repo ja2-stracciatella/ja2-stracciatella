@@ -95,8 +95,6 @@ static LPDIRECTDRAWSURFACE2   gpMouseCursorOriginal = NULL;
 
 static MouseCursorBackground  gMouseCursorBackground;
 
-static HVOBJECT               gpCursorStore;
-
 // 8-bit palette stuff
 
 static SGPPaletteEntry     gSgpPalette[256];
@@ -201,7 +199,6 @@ BOOLEAN InitializeVideoManager(void)
 	guiVideoManagerState         = VIDEO_ON;
 	guiDirtyRegionCount          = 0;
 	gfForceFullScreenRefresh     = TRUE;
-	gpCursorStore                = NULL;
 	gfPrintFrameBuffer           = FALSE;
 	guiPrintFrameBufferIndex     = 0;
 
@@ -551,7 +548,6 @@ BOOLEAN InitializeVideoManager(void)
   guiVideoManagerState         = VIDEO_ON;
   guiDirtyRegionCount          = 0;
   gfForceFullScreenRefresh     = TRUE;
-  gpCursorStore                = NULL;
   gfPrintFrameBuffer           = FALSE;
   guiPrintFrameBufferIndex     = 0;
 
@@ -596,12 +592,6 @@ void ShutdownVideoManager(void)
   // DestroyWindow( ghWindow );
 
   guiVideoManagerState = VIDEO_OFF;
-
-  if (gpCursorStore != NULL)
-  {
-    DeleteVideoObject(gpCursorStore);
-    gpCursorStore = NULL;
-  }
 
   // ATE: Release mouse cursor!
   FreeMouseCursor( );
@@ -2386,62 +2376,6 @@ void DirtyCursor( )
   guiMouseBufferState = BUFFER_DIRTY;
 }
 
-
-BOOLEAN SetCurrentCursor(UINT16 usVideoObjectSubIndex,  UINT16 usOffsetX, UINT16 usOffsetY )
-{
-  BOOLEAN      ReturnValue;
-  PTR          pTmpPointer;
-  UINT32       uiPitch;
-  ETRLEObject  pETRLEPointer;
-
-  //
-  // Make sure we have a cursor store
-  //
-
-  if (gpCursorStore == NULL)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "ERROR : Cursor store is not loaded");
-    return FALSE;
-  }
-
-  //
-  // Ok, then blit the mouse cursor to the MOUSE_BUFFER (which is really gpMouseBufferOriginal)
-  //
-  //
-  // Erase cursor background
-  //
-
-  pTmpPointer = LockMouseBuffer(&uiPitch);
-  memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  UnlockMouseBuffer();
-
-  //
-  // Get new cursor data
-  //
-
-  ReturnValue = BltVideoObject(MOUSE_BUFFER, gpCursorStore, usVideoObjectSubIndex, 0, 0);
-  guiMouseBufferState = BUFFER_DIRTY;
-
-  if (GetVideoObjectETRLEProperties(gpCursorStore, &pETRLEPointer, usVideoObjectSubIndex))
-  {
-    gsMouseCursorXOffset = usOffsetX;
-    gsMouseCursorYOffset = usOffsetY;
-    gusMouseCursorWidth = pETRLEPointer.usWidth + pETRLEPointer.sOffsetX;
-    gusMouseCursorHeight = pETRLEPointer.usHeight + pETRLEPointer.sOffsetY;
-
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Mouse Create with [ %d. %d ] [ %d, %d]", pETRLEPointer.sOffsetX, pETRLEPointer.sOffsetY, pETRLEPointer.usWidth, pETRLEPointer.usHeight));
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "=================================================");
-  }
-  else
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to get mouse info");
-  }
-
-  return ReturnValue;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void StartFrameBufferRender(void)
 {
