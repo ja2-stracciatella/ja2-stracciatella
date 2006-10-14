@@ -1,26 +1,16 @@
 #ifndef _SHADING_H_
 #define _SHADING_H_
 
-
-#include "HImage.h"		// For SGPPaletteEntry
 #include "VObject.h"	// For HVOBJECT_SHADE_TABLES
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-BOOLEAN ShadesCalculateTables(SGPPaletteEntry *p8BPPPalette);
-
 void BuildShadeTable(void);
 void BuildIntensityTable(void);
 void SetShadeTablePercent( FLOAT uiShadePercent );
 
-#ifdef JA2	// Jul. 23 '97 - ALEX - because Wizardry isn't using it & no longer has a version of Set8BPPPalette() available
-void Init8BitTables(void);
-BOOLEAN Set8BitModePalette(SGPPaletteEntry *pPal);
-#endif
-
-extern SGPPaletteEntry Shaded8BPPPalettes[HVOBJECT_SHADE_TABLES+3][256];
 extern UINT8 ubColorTables[HVOBJECT_SHADE_TABLES+3][256];
 
 extern UINT16	IntensityTable[65536];

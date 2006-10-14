@@ -5,7 +5,6 @@
 
 #include "Stubs.h"
 #include "Types.h"
-#include "HImage.h"
 
 #define BUFFER_READY          0x00
 #define BUFFER_BUSY           0x01
@@ -49,9 +48,6 @@ extern BOOLEAN							EraseMouseCursor( );
 extern BOOLEAN							SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth );
 extern BOOLEAN							BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos );
 void												DirtyCursor( );
-
-BOOLEAN											Set8BPPPalette(SGPPaletteEntry *pPalette);
-// 8-bit palette globals
 
 void												VideoCaptureToggle( void );
 

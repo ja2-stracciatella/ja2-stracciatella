@@ -95,11 +95,6 @@ static LPDIRECTDRAWSURFACE2   gpMouseCursorOriginal = NULL;
 
 static MouseCursorBackground  gMouseCursorBackground;
 
-// 8-bit palette stuff
-
-static SGPPaletteEntry     gSgpPalette[256];
-static LPDIRECTDRAWPALETTE gpDirectDrawPalette;
-
 //
 // Make sure we record the value of the hWindow (main window frame for the application)
 //
@@ -2398,49 +2393,6 @@ void EndFrameBufferRender(void)
 void PrintScreen(void)
 {
   gfPrintFrameBuffer = TRUE;
-}
-
-
-BOOLEAN Set8BPPPalette(SGPPaletteEntry *pPalette)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-HRESULT       ReturnCode;
-
-  // If we are in 256 colors, then we have to initialize the palette system to 0 (faded out)
-  memcpy(gSgpPalette, pPalette, sizeof(SGPPaletteEntry)*256);
-
-  ReturnCode = IDirectDraw_CreatePalette(gpDirectDrawObject, (DDPCAPS_8BIT | DDPCAPS_ALLOW256), (LPPALETTEENTRY)(&gSgpPalette[0]), &gpDirectDrawPalette, NULL);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to create palette (Rc = %d)", ReturnCode));
-	  return(FALSE);
-  }
-  // Apply the palette to the surfaces
-  ReturnCode = IDirectDrawSurface_SetPalette(gpPrimarySurface, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to primary surface"));
-	  return(FALSE);
-  }
-
-	ReturnCode = IDirectDrawSurface_SetPalette(gpBackBuffer, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to back buffer"));
-	  return(FALSE);
-  }
-
-	ReturnCode = IDirectDrawSurface_SetPalette(gpFrameBuffer, gpDirectDrawPalette);
-  if (ReturnCode != DD_OK)
-  {
-    DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, String("Failed to apply 8-bit palette to frame buffer"));
-	  return(FALSE);
-  }
-
-	return(TRUE);
-#endif
 }
 
 
