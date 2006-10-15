@@ -73,8 +73,6 @@ extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 
 UINT32 InitializeJA2(void)
 {
-  HandleJA2CDCheck( );
-
 	gfWorldLoaded = FALSE;
 
 	// Load external text

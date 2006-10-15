@@ -246,8 +246,6 @@ void			HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEA
 void			HandleHighLightedText( BOOLEAN fHighLight );
 
 
-
-extern	BOOLEAN CheckIfGameCdromIsInCDromDrive();
 extern	void ToggleItemGlow( BOOLEAN fOn );
 
 
@@ -877,36 +875,6 @@ void		GetOptionsScreenUserInput()
 						uiTest2 = PlayJA2SampleFromFile( "Sounds\\RAID Dive.wav", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
 					}
 					break;
-				case 't':
-				{
-/*
-					{
-						CHAR8		zCdromRootDrive[512];
-						HWFILE	hFile;
-
-						if( !GetCdromLocationFromIniFile( zCdromRootDrive ) )
-							return;
-
-						//Check if a file exists on the cdrom
-						sprintf( zCdromRootDrive, "%sData\\NPC_Speech.slf", zCdromRootDrive );
-
-				//		if( FileExistsNoDB( zCdromRootDrive ) )
-						hFile = FileOpen( zCdromRootDrive, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
-						if( hFile != 0 )
-						{
-							FileClose( hFile );
-							sprintf( zCdromRootDrive, "%sData\\NPC_Speech.slf", zCdromRootDrive );
-						}
-						else
-						{
-							sprintf( zCdromRootDrive, "%sData\\NPC_Speech.slf", zCdromRootDrive );
-						}
-
-						uiLastTimeToCheckCDromDrive = GetJA2Clock();
-					}
-*/
-				}
-				break;
 
 				case 'q':
 //					ShouldMercSayPrecedentToRepeatOneSelf( 11, 99 );

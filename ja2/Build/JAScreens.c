@@ -366,9 +366,6 @@ UINT32 InitScreenHandle(void)
 			gfDontUseDDBlits = TRUE;
 		}
 
-		// Load version number....
-		//HandleLimitedNumExecutions( );
-
 		// Load init screen and blit!
 		vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 

@@ -28,7 +28,6 @@ extern UINT32 MemDebugCounter;
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
-extern	BOOLEAN	CheckIfGameCdromIsInCDromDrive();
 extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 
 // Prototype Declarations
@@ -329,30 +328,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 			fRestore = TRUE;
 			break;
 
-
-#if defined( JA2 )
-	#ifndef JA2DEMO
-		case  WM_DEVICECHANGE:
-			{
-				DEV_BROADCAST_HDR  *pHeader = (DEV_BROADCAST_HDR  *)lParam;
-
-				//if a device has been removed
-				if( wParam == DBT_DEVICEREMOVECOMPLETE )
-				{
-					//if its  a disk
-					if( pHeader->dbch_devicetype == DBT_DEVTYP_VOLUME )
-					{
-						//check to see if the play cd is still in the cdrom
-						if( !CheckIfGameCdromIsInCDromDrive() )
-						{
-						}
-					}
-				}
-			}
-			break;
-	#endif
-#endif
-
     default
     : return DefWindowProc(hWindow, Message, wParam, lParam);
   }
@@ -564,12 +539,6 @@ int main(int argc, char* argv[])
 	//Process the command line BEFORE initialization
 	ProcessJa2CommandLineBeforeInitialization( pCommandLine );
 #endif
-
-	// Handle Check for CD
-	if ( !HandleJA2CDCheck( ) )
-	{
-		return( 0 );
-	}
 
   if (!InitializeStandardGamingPlatform())
   {
