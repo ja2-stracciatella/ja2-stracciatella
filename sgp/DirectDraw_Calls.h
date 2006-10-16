@@ -18,12 +18,6 @@ void DDLockSurface( LPDIRECTDRAWSURFACE2 pSurface, LPRECT pDestRect, LPDDSURFACE
 void DDUnlockSurface( LPDIRECTDRAWSURFACE2 pSurface, PTR pSurfaceData );
 
 
-HRESULT BltFastDDSurfaceUsingSoftware( LPDIRECTDRAWSURFACE2 pDestSurface, INT32 uiX, INT32 uiY, LPDIRECTDRAWSURFACE2 pSrcSurface, LPRECT pSrcRect, UINT32 uiTrans );
-
-
-#define IDirectDrawSurface2_SGPBltFast(p,a,b,c,d,e)         ( ( gfDontUseDDBlits == TRUE ) ?  BltFastDDSurfaceUsingSoftware( p, a, b, c, d, e ) : ( IDirectDrawSurface2_BltFast(p,a,b,c,d,e) ) )
-
-
 #ifdef __cplusplus
 }
 #endif

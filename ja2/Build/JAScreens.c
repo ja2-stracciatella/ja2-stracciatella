@@ -361,11 +361,6 @@ UINT32 InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 0 )
 	{
-		if ( strcmp( gzCommandLine, "-NODD" ) == 0 )
-		{
-			gfDontUseDDBlits = TRUE;
-		}
-
 		// Load init screen and blit!
 		vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 
@@ -408,15 +403,6 @@ UINT32 InitScreenHandle(void)
 #ifdef _DEBUG
 		mprintf( 10, 440, L"SOLDIERTYPE: %d bytes", sizeof( SOLDIERTYPE ) );
 #endif
-
-		if ( gfDontUseDDBlits )
-		{
-			#ifdef _DEBUG
-				mprintf( 10, 450, L"SOLDIERTYPE: %d bytes", sizeof( SOLDIERTYPE ) );
-			#else
-				mprintf( 10, 440, L"Using software blitters" );
-			#endif
-		}
 
 		InvalidateScreen( );
 

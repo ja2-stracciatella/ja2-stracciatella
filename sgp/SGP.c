@@ -63,7 +63,6 @@ UINT8			gbPixelDepth;					// GLOBAL RUN-TIME SETTINGS
 BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 BOOLEAN gfGameInitialized = FALSE;
-BOOLEAN	gfDontUseDDBlits	= FALSE;
 
 CHAR8		gzCommandLine[100];		// Command line given
 
