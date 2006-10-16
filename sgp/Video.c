@@ -12,7 +12,6 @@
 #include "Types.h"
 #include "VObject_Blitters.h"
 #include "Video.h"
-#include <DDraw.h>
 #include <SDL.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -1263,23 +1262,8 @@ static void RefreshMovieCache(void);
 
 static void SnapshotSmall(void)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	INT32 iCountX, iCountY;
-  DDSURFACEDESC SurfaceDescription;
 	UINT16 *pVideo, *pDest;
-
-  HRESULT       ReturnCode;
-
-
-  ZEROMEM(SurfaceDescription);
-	SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_Lock( gpPrimarySurface, NULL, &SurfaceDescription, 0, NULL);
-	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-  {
-		return;
-  }
 
 //	sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
 
@@ -1296,7 +1280,7 @@ static void SnapshotSmall(void)
 //	fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
 
 		// Get the write pointer
-	pVideo = (UINT16*)SurfaceDescription.lpSurface;
+	pVideo = (UINT16*)ScreenBuffer->pixels;
 
 	pDest = gpFrameData[ giNumFrames ];
 
@@ -1314,7 +1298,7 @@ static void SnapshotSmall(void)
 	//		usPixel555=	(UINT16)(uiData);
 
 		//	fwrite( &usPixel555, sizeof(UINT16), 1, disk);
-	//		fwrite(	(void *)(((UINT8 *)SurfaceDescription.lpSurface) + ( iCountY * 640 * 2) + ( iCountX * 2 ) ), 2 * sizeof( BYTE ), 1, disk );
+	//		fwrite(	(void *)(((UINT8 *)ScreenBuffer->pixels) + ( iCountY * 640 * 2) + ( iCountX * 2 ) ), 2 * sizeof( BYTE ), 1, disk );
 
 		 *( pDest + ( iCountY * 640 ) + ( iCountX ) ) = *( pVideo + ( iCountY * 640 ) + ( iCountX ) );
 		}
@@ -1328,17 +1312,7 @@ static void SnapshotSmall(void)
 		RefreshMovieCache( );
 	}
 
-
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_Unlock(gpPrimarySurface, &SurfaceDescription);
-	if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-  }
-
 //	fclose(disk);
-#endif
 }
 
 
