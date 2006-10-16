@@ -822,15 +822,6 @@ void RefreshScreen(void)
 
   if (gfPrintFrameBuffer)
   {
-#if 1
-		FIXME
-#else
-  	HRESULT ReturnCode;
-  	RECT Region;
-
-    LPDIRECTDRAWSURFACE    _pTmpBuffer;
-    LPDIRECTDRAWSURFACE2   pTmpBuffer;
-    DDSURFACEDESC          SurfaceDescription;
     FILE                  *OutputFile;
     UINT8                  FileName[64];
     INT32                  iIndex;
@@ -840,67 +831,10 @@ void RefreshScreen(void)
 		GetExecutableDirectory( ExecDir );
 		SetFileManCurrentDirectory( ExecDir );
 
-    //
-    // Create temporary system memory surface. This is used to correct problems with the backbuffer
-    // surface which can be interlaced or have a funky pitch
-    //
-
-    ZEROMEM(SurfaceDescription);
-    SurfaceDescription.dwSize         = sizeof(DDSURFACEDESC);
-    SurfaceDescription.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-    SurfaceDescription.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-    SurfaceDescription.dwWidth        = usScreenWidth;
-    SurfaceDescription.dwHeight       = usScreenHeight;
-    ReturnCode = IDirectDraw2_CreateSurface ( gpDirectDrawObject, &SurfaceDescription, &_pTmpBuffer, NULL );
-		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-    {
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    }
-
-    ReturnCode = IDirectDrawSurface_QueryInterface(_pTmpBuffer, &IID_IDirectDrawSurface2, &pTmpBuffer);
-		if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-    {
-      DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    }
-
-    //
-    // Copy the primary surface to the temporary surface
-    //
-
-    Region.left = 0;
-    Region.top = 0;
-    Region.right = usScreenWidth;
-    Region.bottom = usScreenHeight;
-
-    do
-    {
-      ReturnCode = IDirectDrawSurface2_SGPBltFast(pTmpBuffer, 0, 0, gpPrimarySurface, &Region, DDBLTFAST_NOCOLORKEY);
-		  if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-      {
-        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      }
-    } while (ReturnCode != DD_OK);
-
-    //
-    // Ok now that temp surface has contents of backbuffer, copy temp surface to disk
-    //
-
     sprintf(FileName, "SCREEN%03d.TGA", guiPrintFrameBufferIndex++);
     if ((OutputFile = fopen(FileName, "wb")) != NULL)
     {
       fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x02, 0xe0, 0x01, 0x10, 0);
-
-      //
-      // Lock temp surface
-      //
-
-      ZEROMEM(SurfaceDescription);
-	    SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-      ReturnCode = IDirectDrawSurface2_Lock(pTmpBuffer, NULL, &SurfaceDescription, 0, NULL);
-			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-      {
-        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      }
 
       //
       // Copy 16 bit buffer to file
@@ -919,7 +853,7 @@ void RefreshScreen(void)
 				if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
         {
           // Read into a buffer...
-          memcpy( p16BPPData, ( ((UINT8 *)SurfaceDescription.lpSurface) + (iIndex * 640 * 2) ), 640 * 2 );
+					memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2);
 
           // Convert....
           ConvertRGBDistribution565To555( p16BPPData, 640 );
@@ -929,7 +863,7 @@ void RefreshScreen(void)
         }
         else
         {
-          fwrite((void *)(((UINT8 *)SurfaceDescription.lpSurface) + (iIndex * 640 * 2)), 640 * 2, 1, OutputFile);
+					fwrite((UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2, 1, OutputFile);
         }
       }
 
@@ -940,30 +874,12 @@ void RefreshScreen(void)
       }
 
       fclose(OutputFile);
-
-      //
-      // Unlock temp surface
-      //
-
-      ZEROMEM(SurfaceDescription);
-      SurfaceDescription.dwSize = sizeof(DDSURFACEDESC);
-      ReturnCode = IDirectDrawSurface2_Unlock(pTmpBuffer, &SurfaceDescription);
-			if ((ReturnCode != DD_OK)&&(ReturnCode != DDERR_WASSTILLDRAWING))
-      {
-        DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-      }
     }
 
-    //
-    // Release temp surface
-    //
-
     gfPrintFrameBuffer = FALSE;
-    IDirectDrawSurface2_Release(pTmpBuffer);
 
 		strcat( ExecDir, "\\Data" );
 		SetFileManCurrentDirectory( ExecDir );
-#endif
   }
 
 	if (guiMouseBufferState == BUFFER_DIRTY)

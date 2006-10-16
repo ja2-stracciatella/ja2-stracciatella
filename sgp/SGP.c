@@ -600,17 +600,26 @@ int main(int argc, char* argv[])
 
 				case SDL_KEYUP:
 				{
-					int x;
-					int y;
+					SDLKey key = event.key.keysym.sym;
 
-					SDL_GetMouseState(&x, &y);
-					UINT32 pos = y << 16 | x;
-
-					SDLKey key = event.key.keysym.sym; // XXX mapping
-					if (key < lengthof(gfKeyState))
+					switch (key)
 					{
-						gfKeyState[key] = FALSE;
-						QueueEvent(KEY_UP, key, pos);
+						case SDLK_PRINT:
+							PrintScreen();
+							break;
+
+						default:
+							if (key < lengthof(gfKeyState)) // XXX mapping
+							{
+								int x;
+								int y;
+								SDL_GetMouseState(&x, &y);
+								UINT32 pos = y << 16 | x;
+
+								gfKeyState[key] = FALSE;
+								QueueEvent(KEY_UP, key, pos);
+							}
+							break;
 					}
 					break;
 				}
