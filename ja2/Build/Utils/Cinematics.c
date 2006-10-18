@@ -32,14 +32,11 @@
 
 struct SMKFLIC
 {
-	const char*          cFilename;
 	HWFILE               hFileHandle;
 	Smack*               SmackHandle;
 	SmackBuf*            SmackBuffer;
 	UINT32               uiFlags;
- LPDIRECTDRAWSURFACE2 lpDDS;
-	HWND                 hWindow;
-	UINT32               uiFrame;
+	LPDIRECTDRAWSURFACE2 lpDDS;
 	UINT32               uiLeft;
 	UINT32               uiTop;
 };
@@ -52,31 +49,15 @@ struct SMKFLIC
 // SMKFLIC uiFlags
 #define SMK_FLIC_OPEN				0x00000001							// Flic is open
 #define SMK_FLIC_PLAYING		0x00000002							// Flic is playing
-#define SMK_FLIC_LOOP				0x00000004							// Play flic in a loop
 #define SMK_FLIC_AUTOCLOSE	0x00000008							// Close when done
 
 //-Globals-------------------------------------------------------------------------
-SMKFLIC SmkList[SMK_NUM_FLICS];
+static SMKFLIC SmkList[SMK_NUM_FLICS];
 
-HWND				hDisplayWindow=0;
-UINT32			uiDisplayHeight, uiDisplayWidth;
-BOOLEAN			fSuspendFlics=FALSE;
-UINT32			uiFlicsPlaying=0;
-UINT32			guiSmackPixelFormat=SMACKBUFFER565;
+static HWND hDisplayWindow = 0;
+static UINT32 guiSmackPixelFormat = SMACKBUFFER565;
 
-LPDIRECTDRAWSURFACE lpVideoPlayback=NULL;
-LPDIRECTDRAWSURFACE2 lpVideoPlayback2=NULL;
-
-
-//-Function-Prototypes-------------------------------------------------------------
-void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
-void				SmkShutdown(void);
-BOOLEAN			SmkPollFlics(void);
-void				SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop);
-void				SmkCloseFlic(SMKFLIC *pSmack);
-SMKFLIC			*SmkGetFreeFlic(void);
-void SmkSetupVideo(void);
-void SmkShutdownVideo(void);
+static LPDIRECTDRAWSURFACE2 lpVideoPlayback2 = NULL;
 
 
 BOOLEAN SmkPollFlics(void)
@@ -90,42 +71,36 @@ DDSURFACEDESC SurfaceDescription;
 		if(SmkList[uiCount].uiFlags & SMK_FLIC_PLAYING)
 		{
 			fFlicStatus=TRUE;
-			if(!fSuspendFlics)
+			if(!SmackWait(SmkList[uiCount].SmackHandle))
 			{
-				if(!SmackWait(SmkList[uiCount].SmackHandle))
-				{
-					DDLockSurface(SmkList[uiCount].lpDDS, NULL, &SurfaceDescription, 0, NULL);
-			    SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
-																					SmkList[uiCount].uiTop,
-																					SurfaceDescription.lPitch,
-																					SmkList[uiCount].SmackHandle->Height,
-																					SurfaceDescription.lpSurface,
-																					guiSmackPixelFormat);
-					SmackDoFrame(SmkList[uiCount].SmackHandle);
-					DDUnlockSurface(SmkList[uiCount].lpDDS, SurfaceDescription.lpSurface);
-					// temp til I figure out what to do with it
-					//InvalidateRegion(0,0, 640, 480, FALSE);
+				DDLockSurface(SmkList[uiCount].lpDDS, NULL, &SurfaceDescription, 0, NULL);
+				SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
+																				SmkList[uiCount].uiTop,
+																				SurfaceDescription.lPitch,
+																				SmkList[uiCount].SmackHandle->Height,
+																				SurfaceDescription.lpSurface,
+																				guiSmackPixelFormat);
+				SmackDoFrame(SmkList[uiCount].SmackHandle);
+				DDUnlockSurface(SmkList[uiCount].lpDDS, SurfaceDescription.lpSurface);
+				// temp til I figure out what to do with it
+				//InvalidateRegion(0,0, 640, 480, FALSE);
 
-					// Check to see if the flic is done the last frame
-					if(SmkList[uiCount].SmackHandle->FrameNum==(SmkList[uiCount].SmackHandle->Frames-1))
-					{
-						// If flic is looping, reset frame to 0
-						if(SmkList[uiCount].uiFlags & SMK_FLIC_LOOP)
-							SmackGoto(SmkList[uiCount].SmackHandle, 0);
-						else if(SmkList[uiCount].uiFlags & SMK_FLIC_AUTOCLOSE)
-							SmkCloseFlic(&SmkList[uiCount]);
-					}
-					else
-						SmackNextFrame(SmkList[uiCount].SmackHandle);
+				// Check to see if the flic is done the last frame
+				if(SmkList[uiCount].SmackHandle->FrameNum==(SmkList[uiCount].SmackHandle->Frames-1))
+				{
+					// If flic is looping, reset frame to 0
+					if (SmkList[uiCount].uiFlags & SMK_FLIC_AUTOCLOSE)
+						SmkCloseFlic(&SmkList[uiCount]);
 				}
+				else
+					SmackNextFrame(SmkList[uiCount].SmackHandle);
 			}
 		}
 	}
-	if(!fFlicStatus)
-		SmkShutdownVideo();
 
 	return(fFlicStatus);
 }
+
 
 void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 {
@@ -136,8 +111,6 @@ void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 
 	// Set playback window properties
 	hDisplayWindow=hWindow;
-	uiDisplayWidth=uiWidth;
-	uiDisplayHeight=uiHeight;
 
 	// Use MMX acceleration, if available
 	SmackUseMMX(1);
@@ -149,6 +122,7 @@ void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 	if( pSoundDriver )
 		SmackSoundUseMSS( pSoundDriver );
 }
+
 
 void SmkShutdown(void)
 {
@@ -175,7 +149,8 @@ SMKFLIC *pSmack;
 		return(NULL);
 
 	// Set the blitting position on the screen
-	SmkSetBlitPosition(pSmack, uiLeft, uiTop);
+	pSmack->uiLeft = uiLeft;
+	pSmack->uiTop  = uiTop;
 
 	// We're now playing, flag the flic for the poller to update
 	pSmack->uiFlags|=SMK_FLIC_PLAYING;
@@ -184,6 +159,10 @@ SMKFLIC *pSmack;
 
 	return(pSmack);
 }
+
+
+static SMKFLIC* SmkGetFreeFlic(void);
+static void SmkSetupVideo(void);
 
 
 static SMKFLIC* SmkOpenFlic(const char* cFilename)
@@ -225,9 +204,7 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	// Make sure we have a video surface
 	SmkSetupVideo();
 
-	pSmack->cFilename=cFilename;
 	pSmack->lpDDS=lpVideoPlayback2;
-	pSmack->hWindow=hDisplayWindow;
 
 	// Smack flic is now open and ready to go
 	pSmack->uiFlags|=SMK_FLIC_OPEN;
@@ -235,11 +212,6 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	return(pSmack);
 }
 
-void SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop)
-{
-	pSmack->uiLeft=uiLeft;
-	pSmack->uiTop=uiTop;
-}
 
 void SmkCloseFlic(SMKFLIC *pSmack)
 {
@@ -256,7 +228,8 @@ void SmkCloseFlic(SMKFLIC *pSmack)
 	memset(pSmack, 0, sizeof(SMKFLIC));
 }
 
-SMKFLIC *SmkGetFreeFlic(void)
+
+static SMKFLIC* SmkGetFreeFlic(void)
 {
 UINT32 uiCount;
 
@@ -267,7 +240,8 @@ UINT32 uiCount;
 	return(NULL);
 }
 
-void SmkSetupVideo(void)
+
+static void SmkSetupVideo(void)
 {
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT ReturnCode;
@@ -287,10 +261,4 @@ void SmkSetupVideo(void)
 	else
 		guiSmackPixelFormat=SMACKBUFFER555;
 
-}
-
-void SmkShutdownVideo(void)
-{
-//DEF:
-//	CinematicModeOff();
 }
