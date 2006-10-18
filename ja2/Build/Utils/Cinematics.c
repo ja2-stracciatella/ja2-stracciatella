@@ -8,10 +8,7 @@
 //----------------------------------------------------------------------------------
 
 #include "Cinematics.h"
-#include "DDraw.h"
 #include "Debug.h"
-#include "DirectDraw_Calls.h"
-#include "DirectX_Common.h"
 #include "FileMan.h"
 #include "Intro.h"
 //#include "Mss.h" // XXX
@@ -20,7 +17,6 @@
 #include "Smack_Stub.h" // XXX
 #include "SoundMan.h"
 #include "Types.h"
-#include "VSurface_Private.h"
 #include "Video.h"
 #include <fcntl.h>
 #include <stdio.h>
@@ -32,13 +28,12 @@
 
 struct SMKFLIC
 {
-	HWFILE               hFileHandle;
-	Smack*               SmackHandle;
-	SmackBuf*            SmackBuffer;
-	UINT32               uiFlags;
-	LPDIRECTDRAWSURFACE2 lpDDS;
-	UINT32               uiLeft;
-	UINT32               uiTop;
+	HWFILE    hFileHandle;
+	Smack*    SmackHandle;
+	SmackBuf* SmackBuffer;
+	UINT32    uiFlags;
+	UINT32    uiLeft;
+	UINT32    uiTop;
 };
 
 
@@ -57,14 +52,11 @@ static SMKFLIC SmkList[SMK_NUM_FLICS];
 static HWND hDisplayWindow = 0;
 static UINT32 guiSmackPixelFormat = SMACKBUFFER565;
 
-static LPDIRECTDRAWSURFACE2 lpVideoPlayback2 = NULL;
-
 
 BOOLEAN SmkPollFlics(void)
 {
 UINT32 uiCount;
 BOOLEAN fFlicStatus=FALSE;
-DDSURFACEDESC SurfaceDescription;
 
 	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
 	{
@@ -73,17 +65,20 @@ DDSURFACEDESC SurfaceDescription;
 			fFlicStatus=TRUE;
 			if(!SmackWait(SmkList[uiCount].SmackHandle))
 			{
-				DDLockSurface(SmkList[uiCount].lpDDS, NULL, &SurfaceDescription, 0, NULL);
-				SmackToBuffer(SmkList[uiCount].SmackHandle,SmkList[uiCount].uiLeft,
-																				SmkList[uiCount].uiTop,
-																				SurfaceDescription.lPitch,
-																				SmkList[uiCount].SmackHandle->Height,
-																				SurfaceDescription.lpSurface,
-																				guiSmackPixelFormat);
+				UINT32 Pitch;
+				UINT16* Dest = LockFrameBuffer(&Pitch);
+				SmackToBuffer
+				(
+					SmkList[uiCount].SmackHandle,
+					SmkList[uiCount].uiLeft,
+					SmkList[uiCount].uiTop,
+					Pitch,
+					SmkList[uiCount].SmackHandle->Height,
+					Dest,
+					guiSmackPixelFormat
+				);
 				SmackDoFrame(SmkList[uiCount].SmackHandle);
-				DDUnlockSurface(SmkList[uiCount].lpDDS, SurfaceDescription.lpSurface);
-				// temp til I figure out what to do with it
-				//InvalidateRegion(0,0, 640, 480, FALSE);
+				UnlockFrameBuffer();
 
 				// Check to see if the flic is done the last frame
 				if(SmkList[uiCount].SmackHandle->FrameNum==(SmkList[uiCount].SmackHandle->Frames-1))
@@ -204,8 +199,6 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	// Make sure we have a video surface
 	SmkSetupVideo();
 
-	pSmack->lpDDS=lpVideoPlayback2;
-
 	// Smack flic is now open and ready to go
 	pSmack->uiFlags|=SMK_FLIC_OPEN;
 
@@ -243,16 +236,7 @@ UINT32 uiCount;
 
 static void SmkSetupVideo(void)
 {
-	DDSURFACEDESC SurfaceDescription;
-	HRESULT ReturnCode;
 	UINT32 usRed, usGreen, usBlue;
-	HVSURFACE hVSurface;
-
-// DEF:
-//	lpVideoPlayback2=CinematicModeOn();
-
-	GetVideoSurface( &hVSurface, FRAME_BUFFER );
-	lpVideoPlayback2 = GetVideoSurfaceDDSurface( hVSurface );
 
 	GetPrimaryRGBDistributionMasks(&usRed, &usGreen, &usBlue);
 
