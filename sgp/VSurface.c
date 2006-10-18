@@ -134,9 +134,6 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 }
 
 
-static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor);
-
-
 BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex )
 {
 
@@ -154,9 +151,6 @@ BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex 
 		// Video Object will set error condition.
 		return FALSE ;
 	}
-
-	// Set transparency to default
-	SetVideoSurfaceTransparencyColor( hVSurface, FROMRGB( 0, 0, 0 ) );
 
 	// Set into video object list
 	if( gpVSurfaceHead )
@@ -291,6 +285,10 @@ void UnLockVideoSurface( UINT32 uiVSurface )
 
 	UnLockVideoSurfaceBuffer( curr->hVSurface );
 }
+
+
+static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor);
+
 
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 {
