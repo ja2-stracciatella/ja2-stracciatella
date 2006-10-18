@@ -17,6 +17,7 @@
 //#include "Mss.h" // XXX
 #include "RADMALW.I"
 //#include "Smack.h" // XXX
+#include "Smack_Stub.h" // XXX
 #include "SoundMan.h"
 #include "Types.h"
 #include "VSurface_Private.h"
@@ -29,7 +30,20 @@
 #include <sys/types.h>
 
 
-//-Structures----------------------------------------------------------------------
+struct SMKFLIC
+{
+	const char*          cFilename;
+	HWFILE               hFileHandle;
+	Smack*               SmackHandle;
+	SmackBuf*            SmackBuffer;
+	UINT32               uiFlags;
+ LPDIRECTDRAWSURFACE2 lpDDS;
+	HWND                 hWindow;
+	UINT32               uiFrame;
+	UINT32               uiLeft;
+	UINT32               uiTop;
+};
+
 
 //-Flags-and-Symbols---------------------------------------------------------------
 
@@ -58,7 +72,6 @@ LPDIRECTDRAWSURFACE2 lpVideoPlayback2=NULL;
 void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
 void				SmkShutdown(void);
 BOOLEAN			SmkPollFlics(void);
-SMKFLIC			*SmkOpenFlic(CHAR8 *cFilename);
 void				SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop);
 void				SmkCloseFlic(SMKFLIC *pSmack);
 SMKFLIC			*SmkGetFreeFlic(void);
@@ -149,6 +162,10 @@ UINT32 uiCount;
 	}
 }
 
+
+static SMKFLIC* SmkOpenFlic(const char* cFilename);
+
+
 SMKFLIC *SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
 {
 SMKFLIC *pSmack;
@@ -168,10 +185,11 @@ SMKFLIC *pSmack;
 	return(pSmack);
 }
 
-SMKFLIC *SmkOpenFlic(CHAR8 *cFilename)
+
+static SMKFLIC* SmkOpenFlic(const char* cFilename)
 {
 	SMKFLIC *pSmack;
-	HANDLE	hFile;
+	FILE* hFile;
 
 	// Get an available flic slot from the list
 	if(!(pSmack=SmkGetFreeFlic()))
@@ -253,7 +271,7 @@ void SmkSetupVideo(void)
 {
 	DDSURFACEDESC SurfaceDescription;
 	HRESULT ReturnCode;
-	UINT16 usRed, usGreen, usBlue;
+	UINT32 usRed, usGreen, usBlue;
 	HVSURFACE hVSurface;
 
 // DEF:
@@ -262,18 +280,7 @@ void SmkSetupVideo(void)
 	GetVideoSurface( &hVSurface, FRAME_BUFFER );
 	lpVideoPlayback2 = GetVideoSurfaceDDSurface( hVSurface );
 
-  ZEROMEM(SurfaceDescription);
-  SurfaceDescription.dwSize = sizeof (DDSURFACEDESC);
-  ReturnCode = IDirectDrawSurface2_GetSurfaceDesc ( lpVideoPlayback2, &SurfaceDescription );
-  if (ReturnCode != DD_OK)
-  {
-    DirectXAttempt ( ReturnCode, __LINE__, __FILE__ );
-    return;
-  }
-
-	usRed   = (UINT16) SurfaceDescription.ddpfPixelFormat.dwRBitMask;
-	usGreen = (UINT16) SurfaceDescription.ddpfPixelFormat.dwGBitMask;
-	usBlue  = (UINT16) SurfaceDescription.ddpfPixelFormat.dwBBitMask;
+	GetPrimaryRGBDistributionMasks(&usRed, &usGreen, &usBlue);
 
 	if((usRed==0xf800) && (usGreen==0x07e0) && (usBlue==0x001f))
 		guiSmackPixelFormat=SMACKBUFFER565;

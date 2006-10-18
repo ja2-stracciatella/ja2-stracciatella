@@ -4,29 +4,12 @@
 #include "DDraw.h"
 #include "Stubs.h"
 
-typedef struct {
-
-		CHAR8										*cFilename;
-//		HFILE										hFileHandle;
-		HWFILE									hFileHandle;
-		Smack										*SmackHandle;
-		SmackBuf								*SmackBuffer;
-		UINT32									uiFlags;
-		LPDIRECTDRAWSURFACE2		lpDDS;
-		HWND										hWindow;
-		UINT32									uiFrame;
-		UINT32									uiLeft, uiTop;
-//		LPDIRECTDRAW2						lpDD;
-//		UINT32									uiNumFrames;
-//		UINT8										*pAudioData;
-//		UINT8										*pCueData;
-							}	SMKFLIC;
+typedef struct SMKFLIC SMKFLIC;
 
 void				SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight);
 void				SmkShutdown(void);
 SMKFLIC			*SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fAutoClose);
 BOOLEAN			SmkPollFlics(void);
-SMKFLIC			*SmkOpenFlic(CHAR8 *cFilename);
 void				SmkSetBlitPosition(SMKFLIC *pSmack, UINT32 uiLeft, UINT32 uiTop);
 void				SmkCloseFlic(SMKFLIC *pSmack);
 SMKFLIC			*SmkGetFreeFlic(void);

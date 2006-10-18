@@ -195,12 +195,8 @@ BOOLEAN EnterIntroScreen()
 		return( TRUE );
 	}
 
-#if 1 // XXX TODO
-	FIXME
-#else
 	//initialize smacker
 	SmkInitialize( ghWindow, 640, 480);
-#endif
 
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
@@ -228,12 +224,8 @@ void RenderIntroScreen()
 
 void ExitIntroScreen()
 {
-#if 1 // XXX TODO
-	FIXME
-#else
 	//shutdown smaker
 	SmkShutdown();
-#endif
 }
 
 void HandleIntroScreen()
@@ -244,13 +236,8 @@ void HandleIntroScreen()
 	if( gfIntroScreenExit )
 		return;
 
-
-#if 1 // XXX TODO
-	FIXME
-#else
 	//handle smaker each frame
 	fFlicStillPlaying = SmkPollFlics();
-#endif
 
 	//if the flic is not playing
 	if( !fFlicStillPlaying )
@@ -317,11 +304,7 @@ void		GetIntroScreenUserInput()
 					PrepareToExitIntroScreen();
 					break;
 				case SPACE:
-#if 1 // XXX TODO
-					UNIMPLEMENTED();
-#else
 					SmkCloseFlic( gpSmackFlic );
-#endif
 					break;
 
 #ifdef JA2TESTVERSION
@@ -342,11 +325,7 @@ void		GetIntroScreenUserInput()
 	if( gfLeftButtonState || gfRightButtonState )
 	{
 		//advance to the next flic
-#if 1 // XXX TODO
-		UNIMPLEMENTED();
-#else
 		SmkCloseFlic( gpSmackFlic );
-#endif
 	}
 }
 
@@ -462,9 +441,6 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 
 void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 {
-#if 1 // XXX TODO
-	FIXME
-#else
 	if( iIndexOfFlicToPlay != -1 )
 	{
 		//start playing a flic
@@ -485,7 +461,6 @@ void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
 #endif
 		}
 	}
-#endif
 }
 
 

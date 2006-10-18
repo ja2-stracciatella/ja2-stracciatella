@@ -20,7 +20,6 @@ typedef BYTE* LPBYTE;
 typedef int AIL_DRIVER;
 typedef int AILDOSDLS;
 typedef int BOOL;
-typedef int HANDLE;
 typedef int HBITMAP;
 typedef int HDC;
 typedef int HHOOK;
@@ -39,8 +38,9 @@ typedef int WPARAM;
 
 typedef long long FILETIME;
 
+typedef void* HANDLE;
 typedef void* H3DSAMPLE;
-typedef int HDIGDRIVER;
+typedef void* HDIGDRIVER;
 typedef void* HSAMPLE;
 typedef void* HSTREAM;
 
@@ -128,9 +128,6 @@ UINT32 GetTickCount(void);
 void OutputDebugString(const char*);
 
 #define INVALID_HANDLE_VALUE 0
-
-typedef void Smack;
-typedef void SmackBuf;
 
 #if 0
 typedef void* LPDIRECTDRAW2;
