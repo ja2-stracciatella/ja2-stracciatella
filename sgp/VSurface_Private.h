@@ -1,6 +1,7 @@
 #ifndef __VSURFACE_PRIVATE_
 #define __VSURFACE_PRIVATE_
 
+#include "DDraw.h"
 #include "VSurface.h"
 
 // ***********************************************************************

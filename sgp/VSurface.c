@@ -1,5 +1,4 @@
 #include "Debug.h"
-#include "DirectDraw_Calls.h"
 #include "Local.h"
 #include "MemMan.h"
 #include "VObject_Blitters.h"

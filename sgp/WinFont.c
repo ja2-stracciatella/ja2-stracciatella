@@ -16,7 +16,6 @@
 #include "Debug.h"
 #include "VSurface.h"
 #include "VSurface_Private.h"
-#include "DirectX_Common.h"
 #include <DDraw.h>
 #include "winfont.h"
 #include "Font.h"
