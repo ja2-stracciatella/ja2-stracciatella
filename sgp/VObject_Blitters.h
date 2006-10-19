@@ -11,7 +11,6 @@ extern "C" {
 
 extern SGPRect		ClippingRect;
 extern UINT32			guiTranslucentMask;
-extern UINT16			White16BPPPalette[ 256 ];
 
 extern void SetClippingRect(SGPRect *clip);
 void GetClippingRect(SGPRect *clip);

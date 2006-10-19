@@ -15,7 +15,6 @@
 	#include "Weapons.h"
 	#include "Soldier_Ani.h"
 	#include "Random.h"
-	#include "VObject_Blitters.h"
 	#include "Sound_Control.h"
 	#include "Isometric_Utils.h"
 	#include "Handle_UI.h"
@@ -63,6 +62,7 @@
 	#include "JAScreens.h"
 	#include "ScreenIDs.h"
 	#include "Items.h"
+	#include "Shading.h"
 #endif
 
 #define		NO_JUMP											0
