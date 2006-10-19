@@ -65,12 +65,6 @@
 #endif
 
 
-typedef struct
-{
-	UINT16  usNumberOfSymbols;
-	UINT16 *DynamicArrayOf16BitValues;
-} FontTranslationTable;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -99,11 +93,9 @@ extern BOOLEAN	 SetFont(INT32 iFontIndex);
 
 extern INT32		 LoadFontFile(const char *pFileName);
 extern UINT16    GetFontHeight(INT32 FontNum);
-extern BOOLEAN   InitializeFontManager(UINT16 usDefaultPixDepth, FontTranslationTable *pTransTable);
+extern BOOLEAN   InitializeFontManager(void);
 extern void      ShutdownFontManager(void);
 extern void			 UnloadFont(UINT32 FontIndex);
-
-extern FontTranslationTable *CreateEnglishTransTable(  );
 
 extern INT16 GetIndex(UINT16 siChar);
 extern UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex);

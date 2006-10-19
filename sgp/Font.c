@@ -32,13 +32,15 @@
 #define MAX_FONTS				 25
 
 
-typedef struct
+struct FontTranslationTable
 {
-	UINT16 usDefaultPixelDepth;
-	FontTranslationTable *pTranslationTable;
-} FontManager;
+	UINT16  usNumberOfSymbols;
+	UINT16* DynamicArrayOf16BitValues;
+};
+typedef struct FontTranslationTable FontTranslationTable;
 
-static FontManager* pFManager;
+
+static FontTranslationTable TranslationTable;
 HVOBJECT	FontObjs[MAX_FONTS];
 
 // Destination printing parameters
@@ -475,10 +477,10 @@ INT16 GetIndex(UINT16 siChar)
 {
 	UINT16 *pTrav;
 	UINT16 ssCount=0;
-	UINT16	usNumberOfSymbols = pFManager->pTranslationTable->usNumberOfSymbols;
+	UINT16 usNumberOfSymbols = TranslationTable.usNumberOfSymbols;
 
 	// search the Translation Table and return the index for the font
-	pTrav = pFManager->pTranslationTable->DynamicArrayOf16BitValues;
+	pTrav = TranslationTable.DynamicArrayOf16BitValues;
 	while (ssCount < usNumberOfSymbols )
 	{
 		if (siChar == *pTrav)
@@ -842,6 +844,8 @@ UINT8				*pDestBuf;
 }
 
 
+static void CreateEnglishTransTable(void);
+
 
 //*****************************************************************************
 // InitializeFontManager
@@ -849,9 +853,8 @@ UINT8				*pDestBuf;
 //	Starts up the font manager system with the appropriate translation table.
 //
 //*****************************************************************************
-BOOLEAN InitializeFontManager(UINT16 usDefaultPixelDepth, FontTranslationTable *pTransTable)
+BOOLEAN InitializeFontManager(void)
 {
-FontTranslationTable *pTransTab;
 int count;
 UINT16 uiRight, uiBottom;
 UINT8 uiPixelDepth;
@@ -867,27 +870,9 @@ UINT8 uiPixelDepth;
 
 	FontDestWrap=FALSE;
 
-	// register the appropriate debug topics
-	if(pTransTable == NULL)
-	{
-    return FALSE;
-  }
 	RegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
 
-	if ((pFManager = (FontManager *)MemAlloc(sizeof(FontManager)))==NULL)
-	{
-    return FALSE;
-  }
-
-	if((pTransTab = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable)))==NULL)
-	{
-    return FALSE;
-  }
-
-	pFManager->pTranslationTable = pTransTab;
-	pFManager->usDefaultPixelDepth = usDefaultPixelDepth;
-	pTransTab->usNumberOfSymbols = pTransTable->usNumberOfSymbols;
-  pTransTab->DynamicArrayOf16BitValues = pTransTable->DynamicArrayOf16BitValues;
+	CreateEnglishTransTable();
 
 	// Mark all font slots as empty
 	for(count=0; count < MAX_FONTS; count++)
@@ -907,8 +892,6 @@ void ShutdownFontManager(void)
   INT32 count;
 
 	UnRegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
-  if(pFManager)
-		MemFree(pFManager);
 
 	for(count=0; count < MAX_FONTS; count++)
 	{
@@ -925,19 +908,9 @@ void ShutdownFontManager(void)
 //*****************************************************************************
 void DestroyEnglishTransTable( void )
 {
-	if(pFManager)
+	if (TranslationTable.DynamicArrayOf16BitValues != NULL)
 	{
-		if (pFManager->pTranslationTable != NULL)
-		{
-			if (pFManager->pTranslationTable->DynamicArrayOf16BitValues != NULL)
-			{
-				MemFree( pFManager->pTranslationTable->DynamicArrayOf16BitValues );
-			}
-
-			MemFree( pFManager->pTranslationTable );
-
-			pFManager->pTranslationTable = NULL;
-		}
+		MemFree(TranslationTable.DynamicArrayOf16BitValues);
 	}
 }
 
@@ -947,20 +920,16 @@ void DestroyEnglishTransTable( void )
 //
 // Creates the English text->font map table.
 //*****************************************************************************
-FontTranslationTable *CreateEnglishTransTable(  )
+static void CreateEnglishTransTable(void)
 {
-	FontTranslationTable *pTable = NULL;
-	UINT16	*temp;
-
-  pTable = (FontTranslationTable *)MemAlloc(sizeof(FontTranslationTable));
-	#ifdef JA2
-		// ha ha, we have more than Wizardry now (again)
-		pTable->usNumberOfSymbols = 172;
-	#else
-		pTable->usNumberOfSymbols = 155;
-	#endif
-	pTable->DynamicArrayOf16BitValues = (UINT16 *)MemAlloc(pTable->usNumberOfSymbols * 2);
-	temp = pTable->DynamicArrayOf16BitValues;
+#ifdef JA2
+	// ha ha, we have more than Wizardry now (again)
+	TranslationTable.usNumberOfSymbols = 172;
+#else
+	TranslationTable.usNumberOfSymbols = 155;
+#endif
+	UINT16* temp = MemAlloc(TranslationTable.usNumberOfSymbols * sizeof(*temp));
+	TranslationTable.DynamicArrayOf16BitValues = temp;
 
 	*temp = 'A';
 	temp++;
@@ -1442,6 +1411,4 @@ FontTranslationTable *CreateEnglishTransTable(  )
 
 // 154
 #endif
-
-	   return pTable;
 }

@@ -331,8 +331,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 
 static BOOLEAN InitializeStandardGamingPlatform(void)
 {
-	FontTranslationTable *pFontTable;
-
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
 
@@ -404,23 +402,14 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
   // We don't need to check for a return value here since so far its always TRUE
   InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
 
-	// Create font translation table (store in temp structure)
-	pFontTable = CreateEnglishTransTable( );
-	if ( pFontTable == NULL )
-	{
-		return( FALSE );
-	}
-
 	// Initialize Font Manager
 	FastDebugMsg("Initializing the Font Manager");
 	// Init the manager and copy the TransTable stuff into it.
-	if ( !InitializeFontManager( 8, pFontTable ) )
+	if (!InitializeFontManager())
 	{
 		FastDebugMsg("FAILED : Initializing Font Manager");
 		return FALSE;
 	}
-	// Don't need this thing anymore, so get rid of it (but don't de-alloc the contents)
-	MemFree( pFontTable );
 
 	FastDebugMsg("Initializing Sound Manager");
 	// Initialize the Sound Manager (DirectSound)
