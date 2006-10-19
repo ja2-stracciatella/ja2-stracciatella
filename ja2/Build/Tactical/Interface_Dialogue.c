@@ -4,6 +4,7 @@
 	#include "PreBattle_Interface.h"
 #else
 	#include <stdio.h>
+	#include "Video.h"
 	#include "SGP.h"
 	#include "Soldier_Control.h"
 	#include "Encrypted_File.h"
@@ -78,7 +79,6 @@
 	#include "End_Game.h"
 	#include "Map_Screen_Helicopter.h"
 	#include "Button_System.h"
-	#include "Video.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
 	#include "Files.h"
