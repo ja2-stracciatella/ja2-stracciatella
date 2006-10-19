@@ -195,37 +195,6 @@ BOOLEAN ShutDownFileDatabase( )
 }
 
 
-
-
-BOOLEAN CheckForLibraryExistence( STR pLibraryName )
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	BOOLEAN fRetVal = FALSE;
-	HANDLE	hFile;
-
-	//try to opent the file, if we canm the library exists
-	hFile = CreateFile( pLibraryName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL );
-
-	//if the file was not opened
-	if( hFile == INVALID_HANDLE_VALUE )
-	{
-
-		//the file wasnt opened
-		fRetVal = FALSE;
-	}
-	else
-	{
-		CloseHandle( hFile );
-		fRetVal = TRUE;
-	}
-
-	return( fRetVal );
-#endif
-}
-
-
 static int CompareFileHeader(const void* a, const void* b)
 {
 	const FileHeaderStruct* fhsa = a;
