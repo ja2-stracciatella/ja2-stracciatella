@@ -345,17 +345,10 @@ static const UINT8 gubNewScrollYSpeeds[2][NUMSPEEDS] =
 	10, 20, 60, 80, 80											// Video mode scroll
 };
 
-// These speeds are only an indication of how long to do each subtile step until moving on to another
-static const UINT8 gubNewScrollIDSpeeds[] = { 10, 10, 20, 20,  20 };
-
-
-static const UINT8 gubScrollSpeedStartID = 2;
-static const UINT8 gubScrollSpeedEndID   = 4;
 
 UINT8								gubCurScrollSpeedID		= 1;
 
 BOOLEAN							gfDoVideoScroll = TRUE;
-static BOOLEAN gfDoSubtileScroll = FALSE;
 
 BOOLEAN							gfScrollPending		= FALSE;
 
@@ -3239,19 +3232,6 @@ void ScrollWorld( )
 
 	if ( fDoScroll )
 	{
-			if ( gfDoSubtileScroll )
-			{
-				if ( gfScrollInertia > gubNewScrollIDSpeeds[ gubCurScrollSpeedID ] )
-				{
-					gubCurScrollSpeedID++;
-
-					if ( gubCurScrollSpeedID > gubScrollSpeedEndID )
-					{
-						gubCurScrollSpeedID = gubScrollSpeedEndID;
-					}
-				}
-			}
-
 			// Adjust speed based on whether shift is down
 			if ( _KeyDown( SHIFT ) )
 			{
@@ -3348,12 +3328,6 @@ void ScrollWorld( )
 
 		gfScrollInertia = FALSE;
 		gfScrollPending = FALSE;
-
-		if ( gfDoSubtileScroll )
-		{
-			gubCurScrollSpeedID = gubScrollSpeedStartID;
-		}
-
 	}
 }
 
