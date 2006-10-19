@@ -730,19 +730,16 @@ wchar_t	string[512];
 }
 
 
-UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+static UINT32 vmprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
-va_list argptr;
 wchar_t	string[512];
 UINT16	usOldForeColor;
 
 	Assert(pFontString!=NULL);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
+	vswprintf(string, lengthof(string), pFontString, ArgPtr);
 
 	curletter=string;
 
@@ -783,64 +780,29 @@ UINT16	usOldForeColor;
 }
 
 
+UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+{
+	va_list ArgPtr;
+	va_start(ArgPtr, pFontString);
+	UINT32 Ret = vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	va_end(ArgPtr);
+
+	return Ret;
+}
+
+
 UINT32 mprintf_coded( INT32 x, INT32 y, wchar_t *pFontString, ...)
 {
-INT32		destx, desty;
-wchar_t	*curletter, transletter;
-va_list argptr;
-wchar_t	string[512];
-UINT16	usOldForeColor;
-UINT32			uiDestPitchBYTES;
-UINT8				*pDestBuf;
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
 
-	Assert(pFontString!=NULL);
+	va_list ArgPtr;
+	va_start(ArgPtr, pFontString);
+	UINT32 Ret = vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	va_end(ArgPtr);
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	curletter=string;
-
-	destx=x;
-	desty=y;
-
-	usOldForeColor = FontForeground16;
-
-	// Lock the dest buffer
-	pDestBuf = LockVideoSurface( FontDestBuffer, &uiDestPitchBYTES );
-
-	while((*curletter)!=0)
-	{
-		if ( (*curletter) == 180 )
-		{
-			curletter++;
-			SetFontForeground( (UINT8)(*curletter) );
-			curletter++;
-		}
-		else if ( (*curletter) == 181 )
-		{
-			FontForeground16 = usOldForeColor;
-			curletter++;
-		}
-
-		transletter=GetIndex(*curletter++);
-
-
-		if(FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
-		{
-			destx=x;
-			desty+=GetHeight(FontObjs[FontDefault], transletter);
-		}
-
-		// Blit directly
-		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx+=GetWidth(FontObjs[FontDefault], transletter);
-	}
-
-	// Unlock buffer
-	UnLockVideoSurface( FontDestBuffer );
-
-	return(0);
+	UnLockVideoSurface(FontDestBuffer);
+	return Ret;
 }
 
 
