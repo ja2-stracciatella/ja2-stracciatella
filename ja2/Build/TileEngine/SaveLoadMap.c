@@ -10,7 +10,6 @@
 	#include "WorldMan.h"
 	#include "StrategicMap.h"
 	#include "Campaign_Types.h"
-	#include "RenderWorld.h"
 	#include "Render_Fun.h"
 	#include "FOV.h"
 	#include "WorldDef.h"

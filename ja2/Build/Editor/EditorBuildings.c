@@ -11,7 +11,6 @@
 	#include "Edit_Sys.h"
 	#include "SysUtil.h"
 	#include "Font_Control.h"
-	#include "RenderWorld.h"	//ClearRenderFlags();
 	#include "WorldMan.h"			//HideStructOfGivenType()
 	#include "EditorDefines.h"
 	#include "EditorBuildings.h"

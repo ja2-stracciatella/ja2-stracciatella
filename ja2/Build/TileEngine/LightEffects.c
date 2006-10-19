@@ -17,7 +17,6 @@
 	#include "LightEffects.h"
 	#include "Message.h"
 	#include "Isometric_Utils.h"
-	#include "RenderWorld.h"
 	#include "Explosion_Control.h"
 	#include "Random.h"
 	#include "Lighting.h"

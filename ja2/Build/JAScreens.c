@@ -18,7 +18,6 @@
 	#include "Screens.h"
 	#include "Font_Control.h"
 	#include "SysUtil.h"
-	#include "RenderWorld.h"
 	#include "TileDef.h"
 	#include "WorldDef.h"
 	#include "EditScreen.h"

@@ -2,7 +2,6 @@
 #else
 	#include "MercTextBox.h"
 	#include "WCheck.h"
-	#include "RenderWorld.h"
 	#include "Font_Control.h"
 	#include "Utilities.h"
 	#include "WordWrap.h"

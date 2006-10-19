@@ -10,7 +10,6 @@
 	#include "math.h"
 	#include "WorldDef.h"
 	#include "WorldMan.h"
-	#include "RenderWorld.h"
 	#include "Assignments.h"
 	#include "Soldier_Control.h"
 	#include "Animation_Control.h"

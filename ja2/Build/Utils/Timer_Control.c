@@ -10,7 +10,6 @@
 	#include "Overhead.h"
 	#include "Handle_Items.h"
 	#include "WorldDef.h"
-	#include "RenderWorld.h"
 	#include "Interface_Control.h"
 	#include <SDL.h>
 	#include "Stubs.h"

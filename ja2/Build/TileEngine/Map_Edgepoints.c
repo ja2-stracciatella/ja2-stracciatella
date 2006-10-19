@@ -7,7 +7,6 @@
 	#include "PathAI.h"
 	#include "AI.h"
 	#include "Map_Information.h"
-	#include "RenderWorld.h"
 	#include "Isometric_Utils.h"
 	#include "Debug.h"
 	#include "Random.h"

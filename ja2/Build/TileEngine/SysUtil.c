@@ -9,7 +9,6 @@
 	#include "VSurface.h"
 	#include "WCheck.h"
 	#include "SysUtil.h"
-	#include "RenderWorld.h"
 	#include "Video.h"
 #endif
 

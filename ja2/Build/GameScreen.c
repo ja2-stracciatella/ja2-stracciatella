@@ -11,7 +11,6 @@
 	#include "VObject.h"
 	#include "WCheck.h"
 	#include "WorldDef.h"
-	#include "RenderWorld.h"
 	#include "Input.h"
 	#include "Font.h"
 	#include "ScreenIDs.h"

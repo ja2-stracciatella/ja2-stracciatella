@@ -24,7 +24,6 @@
 	#include "Soldier_Create.h"
 	#include "Soldier_Add.h"
 	#include "OppList.h"
-	#include "RenderWorld.h"
 	#include "Soldier_Profile.h"
 	#include "EMail.h"
 	#include "Strategic.h"

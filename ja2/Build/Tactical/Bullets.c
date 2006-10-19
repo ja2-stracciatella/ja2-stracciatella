@@ -6,7 +6,6 @@
 	#include <errno.h>
 
 	#include "WorldDef.h"
-	#include "RenderWorld.h"
 	#include "VSurface.h"
 	#include "Render_Dirty.h"
 	#include "SysUtil.h"

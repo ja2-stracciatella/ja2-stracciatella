@@ -1,5 +1,4 @@
 #include "WorldDef.h"
-#include "RenderWorld.h"
 #include "Isometric_Utils.h"
 
 INT16 gsRScreenCenterX, gsRScreenCenterY;

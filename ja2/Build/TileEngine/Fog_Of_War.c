@@ -6,7 +6,6 @@
 	#include "Isometric_Utils.h"
 	#include "WorldMan.h"
 	#include "Simple_Render_Utils.h"
-	#include "RenderWorld.h"
 	#include "Lighting.h"
 #endif
 

@@ -30,7 +30,6 @@
 	#include "World_Items.h"
 	#include "WorldMan.h"
 	#include "Overhead.h"	//GetSoldier
-	#include "RenderWorld.h"
 	#include "Animation_Data.h"
 	#include "Animation_Control.h"
 	#include "Lighting.h"

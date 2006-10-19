@@ -29,7 +29,6 @@
 	#include "English.h"
 	#include "WorldDef.h"
 	#include "WorldMan.h"
-	#include "RenderWorld.h"
 	#include "PathAI.h"
 	#include "PathAIDebug.h"
 	#include "Points.h"

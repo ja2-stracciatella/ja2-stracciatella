@@ -12,7 +12,6 @@
 	#include "EditorDefines.h"
 
 	#include "Editor_Taskbar_Utils.h"
-	#include "RenderWorld.h"
 	#include "EditorItems.h"
 
 	#include "Editor_Callback_Prototypes.h"

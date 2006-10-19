@@ -38,7 +38,6 @@
 	#include "Environment.h"
 	#include "Music_Control.h"
 	#include "AI.h"
-	#include "RenderWorld.h"
 	#include "Font_Control.h"
 	#include "WorldMan.h"
 	#include "Handle_UI_Plan.h"
