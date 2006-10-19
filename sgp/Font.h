@@ -76,9 +76,6 @@ extern "C" {
 #endif
 
 extern INT32		FontDefault;
-extern UINT32		FontDestBuffer;
-extern SGPRect	FontDestRegion;
-extern BOOLEAN	FontDestWrap;
 
 
 void SetFontColors(UINT16 usColors);

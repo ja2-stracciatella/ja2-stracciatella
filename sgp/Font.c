@@ -38,26 +38,26 @@ typedef struct
 	FontTranslationTable *pTranslationTable;
 } FontManager;
 
-FontManager *pFManager;
+static FontManager* pFManager;
 HVOBJECT	FontObjs[MAX_FONTS];
 
 // Destination printing parameters
 INT32			FontDefault=(-1);
-UINT32		FontDestBuffer=BACKBUFFER;
-SGPRect		FontDestRegion={0,0,640,480};
-BOOLEAN		FontDestWrap=FALSE;
-UINT16		FontForeground16=0;
-UINT16		FontBackground16=0;
-UINT16		FontShadow16=DEFAULT_SHADOW;
+static UINT32  FontDestBuffer   = BACKBUFFER;
+static SGPRect FontDestRegion   = { 0, 0, 640, 480 };
+static BOOLEAN FontDestWrap     = FALSE;
+static UINT16  FontForeground16 = 0;
+static UINT16  FontBackground16 = 0;
+static UINT16  FontShadow16     = DEFAULT_SHADOW;
 
 // Temp, for saving printing parameters
-INT32			SaveFontDefault=(-1);
-UINT32		SaveFontDestBuffer=BACKBUFFER;
-SGPRect		SaveFontDestRegion={0,0,640,480};
-BOOLEAN		SaveFontDestWrap=FALSE;
-UINT16		SaveFontForeground16=0;
-UINT16		SaveFontShadow16=0;
-UINT16		SaveFontBackground16=0;
+static INT32   SaveFontDefault      = -1;
+static UINT32  SaveFontDestBuffer   = BACKBUFFER;
+static SGPRect SaveFontDestRegion   = { 0, 0, 640, 480};
+static BOOLEAN SaveFontDestWrap     = FALSE;
+static UINT16  SaveFontForeground16 = 0;
+static UINT16  SaveFontShadow16     = 0;
+static UINT16  SaveFontBackground16 = 0;
 
 //*****************************************************************************
 // SetFontColors
@@ -174,7 +174,7 @@ HVOBJECT GetFontObject(INT32 iFont)
 //	Locates an empty slot in the font table.
 //
 //*****************************************************************************
-INT32 FindFreeFont(void)
+static INT32 FindFreeFont(void)
 {
 int count;
 
@@ -435,7 +435,7 @@ void RestoreFontSettings(void)
 //	Returns the height of a given character in the font.
 //
 //*****************************************************************************
-UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
+static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
   ETRLEObject *pTrav;
 
