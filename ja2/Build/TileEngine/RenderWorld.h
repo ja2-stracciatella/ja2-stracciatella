@@ -11,7 +11,6 @@
 
 
 BOOLEAN							gfDoVideoScroll;
-BOOLEAN							gfDoSubtileScroll;
 UINT8								gubCurScrollSpeedID;
 
 // RENDERING FLAGS
@@ -104,8 +103,6 @@ INT16	gsRenderWorldOffsetY;
 
 // CURRENT VIEWPORT IN WORLD COORDS
 INT16 gsTopLeftWorldX, gsTopLeftWorldY;
-INT16 gsTopRightWorldX, gsTopRightWorldY;
-INT16 gsBottomLeftWorldX, gsBottomLeftWorldY;
 INT16 gsBottomRightWorldX, gsBottomRightWorldY;
 
 
@@ -115,10 +112,6 @@ UINT32		fSelectMode;
 
 
 // GLOBAL COORDINATES
-INT16 gTopLeftWorldLimitX, gTopLeftWorldLimitY;
-INT16 gTopRightWorldLimitX, gTopRightWorldLimitY;
-INT16 gBottomLeftWorldLimitX, gBottomLeftWorldLimitY;
-INT16 gBottomRightWorldLimitX, gBottomRightWorldLimitY;
 INT16 gCenterWorldX, gCenterWorldY;
 INT16 gsTLX, gsTLY, gsTRX, gsTRY;
 INT16 gsBLX, gsBLY, gsBRX, gsBRY;
@@ -135,12 +128,9 @@ void ScrollWorld( );
 void InitRenderParams( UINT8 ubRestrictionID );
 void RenderWorld( );
 
-void ResetLayerOptimizing(void);
 void ResetSpecificLayerOptimizing( UINT32 uiRowFlag );
 
 // Routines of RenderWorld
-extern void RenderStaticWorld(  );
-extern void RenderDynamicWorld(  );
 void CopyRenderBuffer( );
 
 void SetRenderFlags(UINT32 uiFlags);
@@ -163,12 +153,7 @@ BOOLEAN ConcealWalls(INT16 sX, INT16 sY, INT16 sRadius);
 BOOLEAN RevealWalls(INT16 sX, INT16 sY, INT16 sRadius);
 void ConcealAllWalls(void);
 
-BOOLEAN ApplyScrolling( INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly );
-
-BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion);
-
 void RenderStaticWorldRect(INT16, INT16, INT16, INT16, BOOLEAN );
-void RenderMarkedWorld(void);
 void RenderDynamicMercWorld( void );
 
 void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
