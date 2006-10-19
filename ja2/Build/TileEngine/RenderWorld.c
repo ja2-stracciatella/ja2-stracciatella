@@ -437,10 +437,6 @@ BOOLEAN	gfIgnoreScrollDueToCenterAdjust = FALSE;
 
 
 // GLOBAL SCROLLING PARAMS
-static INT16 gTopLeftWorldLimitX, gTopLeftWorldLimitY;
-static INT16 gTopRightWorldLimitX, gTopRightWorldLimitY;
-static INT16 gBottomLeftWorldLimitX, gBottomLeftWorldLimitY;
-static INT16 gBottomRightWorldLimitX, gBottomRightWorldLimitY;
 INT16 gCenterWorldY;
 INT16 gsTLX, gsTLY, gsTRX, gsTRY;
 INT16 gsBLX, gsBLY, gsBRX, gsBRY;
@@ -3368,6 +3364,14 @@ void InitRenderParams( UINT8 ubRestrictionID )
 		UINT32 cnt, cnt2;
 		DOUBLE  dWorldX, dWorldY;
 
+	INT16 gTopLeftWorldLimitX;
+	INT16 gTopLeftWorldLimitY;
+	INT16 gTopRightWorldLimitX;
+	INT16 gTopRightWorldLimitY;
+	INT16 gBottomLeftWorldLimitX;
+	INT16 gBottomLeftWorldLimitY;
+	INT16 gBottomRightWorldLimitX;
+	INT16 gBottomRightWorldLimitY;
 		switch( ubRestrictionID )
 		{
 			case 0:		//Default!
