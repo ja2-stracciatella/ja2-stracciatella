@@ -57,8 +57,6 @@ INT32		FontsLoaded=0;
 // Destination printing parameters
 INT32			FontDefault=(-1);
 UINT32		FontDestBuffer=BACKBUFFER;
-UINT32		FontDestPitch=640*2;
-UINT32		FontDestBPP=16;
 SGPRect		FontDestRegion={0,0,640,480};
 BOOLEAN		FontDestWrap=FALSE;
 UINT16		FontForeground16=0;
@@ -68,8 +66,6 @@ UINT16		FontShadow16=DEFAULT_SHADOW;
 // Temp, for saving printing parameters
 INT32			SaveFontDefault=(-1);
 UINT32		SaveFontDestBuffer=BACKBUFFER;
-UINT32		SaveFontDestPitch=640*2;
-UINT32		SaveFontDestBPP=16;
 SGPRect		SaveFontDestRegion={0,0,640,480};
 BOOLEAN		SaveFontDestWrap=FALSE;
 UINT16		SaveFontForeground16=0;
@@ -419,8 +415,6 @@ void SaveFontSettings(void)
 {
 	SaveFontDefault=FontDefault;
 	SaveFontDestBuffer=FontDestBuffer;
-	SaveFontDestPitch=FontDestPitch;
-	SaveFontDestBPP=FontDestBPP;
 	SaveFontDestRegion=FontDestRegion;
 	SaveFontDestWrap=FontDestWrap;
 	SaveFontForeground16 = FontForeground16;
@@ -440,8 +434,6 @@ void RestoreFontSettings(void)
 {
 	FontDefault=SaveFontDefault;
 	FontDestBuffer=SaveFontDestBuffer;
-	FontDestPitch=SaveFontDestPitch;
-	FontDestBPP=SaveFontDestBPP;
 	FontDestRegion=SaveFontDestRegion;
 	FontDestWrap=SaveFontDestWrap;
 	FontForeground16 = SaveFontForeground16;
@@ -879,17 +871,12 @@ UINT8 uiPixelDepth;
 
 	FontDefault=(-1);
 	FontDestBuffer=BACKBUFFER;
-	FontDestPitch=0;
-
-	//	FontDestBPP=0;
 
 	GetCurrentVideoSettings( &uiRight, &uiBottom, &uiPixelDepth );
 	FontDestRegion.iLeft = 0;
 	FontDestRegion.iTop = 0;
 	FontDestRegion.iRight=(INT32)uiRight;
 	FontDestRegion.iBottom=(INT32)uiBottom;
-	FontDestBPP=(UINT32)uiPixelDepth;
-
 
 	FontDestWrap=FALSE;
 

@@ -77,8 +77,6 @@ extern "C" {
 
 extern INT32		FontDefault;
 extern UINT32		FontDestBuffer;
-extern UINT32		FontDestPitch;
-extern UINT32		FontDestBPP;
 extern SGPRect	FontDestRegion;
 extern BOOLEAN	FontDestWrap;
 
