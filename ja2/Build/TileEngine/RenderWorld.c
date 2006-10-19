@@ -43,7 +43,6 @@ extern INT16 gsVIEWPORT_WINDOW_START_Y;
 extern INT16 gsVIEWPORT_END_X;
 
 UINT16 *gpZBuffer=NULL;
-static BOOLEAN gfTagAnimatedTiles = TRUE;
 
 static INT16 gsCurrentGlowFrame = 0;
 static INT16 gsCurrentItemGlowFrame = 0;
@@ -2645,7 +2644,6 @@ static void RenderMarkedWorld(void)
 
 static void RenderDynamicWorld(void)
 {
-	UINT8		ubNumLevels;
 	UINT32	uiLevelFlags[ 10 ];
 	UINT16	sLevelIDs[ 10 ];
 
@@ -2653,57 +2651,27 @@ static void RenderDynamicWorld(void)
 
 	RestoreBackgroundRects();
 
-	if(!gfTagAnimatedTiles)
-	{
-		uiLevelFlags[0] = TILES_DYNAMIC_OBJECTS;
-		uiLevelFlags[1] = TILES_DYNAMIC_SHADOWS;
-		uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
-		uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
-		uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
-		uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS;
-		uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
-		uiLevelFlags[7] = TILES_DYNAMIC_ONROOF;
-		uiLevelFlags[8] = TILES_DYNAMIC_TOPMOST;
+	uiLevelFlags[0] = TILES_DYNAMIC_OBJECTS;
+	uiLevelFlags[1] = TILES_DYNAMIC_SHADOWS;
+	uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
+	uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
+	uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
+	uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS;
+	uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
+	uiLevelFlags[7] = TILES_DYNAMIC_ONROOF;
+	uiLevelFlags[8] = TILES_DYNAMIC_TOPMOST;
 
-		sLevelIDs[0]		= RENDER_DYNAMIC_OBJECTS;
-		sLevelIDs[1]		= RENDER_DYNAMIC_SHADOWS;
-		sLevelIDs[2]		= RENDER_DYNAMIC_STRUCT_MERCS;
-		sLevelIDs[3]		= RENDER_DYNAMIC_MERCS;
-		sLevelIDs[4]		= RENDER_DYNAMIC_STRUCTS;
-		sLevelIDs[5]		= RENDER_DYNAMIC_MERCS;
-		sLevelIDs[6]		= RENDER_DYNAMIC_ROOF;
-		sLevelIDs[7]		= RENDER_DYNAMIC_ONROOF;
-		sLevelIDs[8]		= RENDER_DYNAMIC_TOPMOST;
+	sLevelIDs[0] = RENDER_DYNAMIC_OBJECTS;
+	sLevelIDs[1] = RENDER_DYNAMIC_SHADOWS;
+	sLevelIDs[2] = RENDER_DYNAMIC_STRUCT_MERCS;
+	sLevelIDs[3] = RENDER_DYNAMIC_MERCS;
+	sLevelIDs[4] = RENDER_DYNAMIC_STRUCTS;
+	sLevelIDs[5] = RENDER_DYNAMIC_MERCS;
+	sLevelIDs[6] = RENDER_DYNAMIC_ROOF;
+	sLevelIDs[7] = RENDER_DYNAMIC_ONROOF;
+	sLevelIDs[8] = RENDER_DYNAMIC_TOPMOST;
 
-		ubNumLevels = 9;
-	}
-	else
-	{
-		gfTagAnimatedTiles=FALSE;
-		uiLevelFlags[0] = TILES_DYNAMIC_OBJECTS;
-		uiLevelFlags[1] = TILES_DYNAMIC_SHADOWS;
-		uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
-		uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
-		uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
-		uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS;
-		uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
-		uiLevelFlags[7] = TILES_DYNAMIC_ONROOF;
-		uiLevelFlags[8] = TILES_DYNAMIC_TOPMOST;
-
-		sLevelIDs[0]		= RENDER_DYNAMIC_OBJECTS;
-		sLevelIDs[1]		= RENDER_DYNAMIC_SHADOWS;
-		sLevelIDs[2]		= RENDER_DYNAMIC_STRUCT_MERCS;
-		sLevelIDs[3]		= RENDER_DYNAMIC_MERCS;
-		sLevelIDs[4]		= RENDER_DYNAMIC_STRUCTS;
-		sLevelIDs[5]		= RENDER_DYNAMIC_MERCS;
-		sLevelIDs[6]		= RENDER_DYNAMIC_ROOF;
-		sLevelIDs[7]		= RENDER_DYNAMIC_ONROOF;
-		sLevelIDs[8]		= RENDER_DYNAMIC_TOPMOST;
-
-		ubNumLevels = 9;
-	}
-
-	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, ubNumLevels, uiLevelFlags, sLevelIDs );
+	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 9, uiLevelFlags, sLevelIDs);
 
 	#ifdef JA2EDITOR
 	if( !gfEditMode && !gfAniEditMode )
