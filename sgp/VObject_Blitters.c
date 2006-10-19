@@ -1,6 +1,7 @@
 #include "Debug.h"
 #include "MemMan.h"
 #include "Shading.h"
+#include "Stubs.h" // XXX
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WCheck.h"

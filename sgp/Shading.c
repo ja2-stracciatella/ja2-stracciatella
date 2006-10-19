@@ -1,6 +1,7 @@
 #include "Debug.h"
 #include "Shading.h"
 #include "Video.h"
+#include "VObject.h"
 #include <string.h>
 
 UINT16	IntensityTable[65536];

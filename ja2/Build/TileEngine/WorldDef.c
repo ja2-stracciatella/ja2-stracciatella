@@ -29,7 +29,6 @@
 	#include "Event_Pump.h"
 	#include "Handle_UI.h"
 	#include "OppList.h"
-	#include "Shading.h"
 	#include "Animation_Control.h"
 	#include "World_Items.h"
 	#include "RenderWorld.h"

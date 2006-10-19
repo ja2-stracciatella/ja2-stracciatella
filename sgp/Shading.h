@@ -1,8 +1,6 @@
 #ifndef _SHADING_H_
 #define _SHADING_H_
 
-#include "VObject.h"	// For HVOBJECT_SHADE_TABLES
-
 #ifdef __cplusplus
 extern "C" {
 #endif

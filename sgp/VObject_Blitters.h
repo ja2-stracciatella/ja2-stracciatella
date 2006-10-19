@@ -1,7 +1,6 @@
 #ifndef __VOBJECT_BLITTERS
 #define __VOBJECT_BLITTERS
 
-#include "Stubs.h"
 #include "VSurface.h"
 #include "VObject.h"
 
