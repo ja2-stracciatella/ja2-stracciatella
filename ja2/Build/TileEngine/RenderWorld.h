@@ -123,8 +123,6 @@ BOOLEAN			gfScrollPending;
 
 void RenderStaticWorldRect(INT16, INT16, INT16, INT16, BOOLEAN );
 
-void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
-
 void InvalidateWorldRedundency(void);
 
 void SetRenderCenter( INT16 sNewX, INT16 sNewY );

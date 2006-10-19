@@ -23,7 +23,6 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "WorldMan.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -545,9 +544,6 @@ static const UINT8 RenderFXStartIndex[] =
 	ONROOF_START_INDEX,		// DYNAMIC ONROOF
 	TOPMOST_START_INDEX,	// DYNAMIC TOPMOST
 };
-
-
-static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS );
 
 
 static void ClearMarkedTiles(void);
@@ -2285,6 +2281,7 @@ static void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 
 
 
 static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly);
+static void ExamineZBufferRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 static void RenderDynamicWorld(void);
 static void RenderMarkedWorld(void);
 static void RenderStaticWorld(void);
@@ -6809,13 +6806,19 @@ static void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPoin
 #endif
 
 
-void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS);
+
+
+static void ExamineZBufferRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
 	CalcRenderParameters( sLeft, sTop, sRight, sBottom );
 
 	ExamineZBufferForHiddenTiles( gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS );
 
 }
+
+
+static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 
 
 static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
@@ -7209,7 +7212,7 @@ BlitDone:
 }
 
 
-BOOLEAN IsTileRedundent( UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
+static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
