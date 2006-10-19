@@ -1,30 +1,14 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "HImage.h"
-	#include "VSurface.h"
-	#include "WCheck.h"
-	#include "SysUtil.h"
-	#include "Video.h"
-#endif
+#include "SysUtil.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "WCheck.h"
 
-UINT32					guiBOTTOMPANEL = 0;
-UINT32					guiRIGHTPANEL = 0;
 UINT32					guiRENDERBUFFER = 0;
 UINT32					guiSAVEBUFFER = 0;
 UINT32					guiEXTRABUFFER = 0;
 
 BOOLEAN gfExtraBuffer = FALSE;
 
-BOOLEAN	InitializeSystemVideoObjects( )
-{
-
-	return( TRUE );
-}
 
 BOOLEAN	InitializeGameVideoObjects( )
 {

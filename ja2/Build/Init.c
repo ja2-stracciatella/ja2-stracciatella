@@ -12,7 +12,6 @@
 	#include "VObject_Blitters.h"
 	#include "RenderWorld.h"
 	#include "MouseSystem.h"
-	#include "SysUtil.h"
 	#include "WorldDef.h"
 	#include "Animation_Data.h"
 	#include "Overhead.h"
@@ -83,10 +82,6 @@ UINT32 InitializeJA2(void)
 
 	gsRenderCenterX = 805;
 	gsRenderCenterY = 805;
-
-
-	// Init data
-	InitializeSystemVideoObjects( );
 
 	// Init animation system
 	if ( !InitAnimationSystem( ) )
