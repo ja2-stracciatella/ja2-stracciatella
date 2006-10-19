@@ -546,6 +546,9 @@ void RenderRadarScreen( )
 
 void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
 {
+	const INT16 SCROLL_X_STEP = WORLD_TILE_X;
+	const INT16 SCROLL_Y_STEP = WORLD_TILE_Y * 2;
+
 	INT16 sScreenX, sScreenY;
 	INT16	sTempX_W, sTempY_W;
 	INT16 sNewCenterWorldX, sNewCenterWorldY;
