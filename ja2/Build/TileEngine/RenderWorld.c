@@ -471,7 +471,6 @@ INT16		  gsRenderCenterY;
 INT16			gsRenderWorldOffsetX = -1;
 INT16			gsRenderWorldOffsetY = -1;
 SGPRect		gSelectRegion;
-SGPPoint	gSelectAnchor;
 
 
 typedef struct

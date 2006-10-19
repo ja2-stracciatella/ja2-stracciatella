@@ -236,6 +236,10 @@ void UpdateCursorAreas()
 	}
 }
 
+
+static SGPPoint gSelectAnchor;
+
+
 void ForceAreaSelectionWidth()
 {
 	UINT16 gusDecSelWidth;

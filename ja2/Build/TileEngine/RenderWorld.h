@@ -89,7 +89,6 @@ INT16 gsBottomRightWorldX, gsBottomRightWorldY;
 
 
 SGPRect		gSelectRegion;
-SGPPoint	gSelectAnchor;
 
 
 // GLOBAL COORDINATES
