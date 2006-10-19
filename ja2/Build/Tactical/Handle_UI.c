@@ -1699,10 +1699,6 @@ UINT32 UIHandleMChangeToHandMode( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleAChangeToMove( UI_EVENT *pUIEvent )
 {
-	 // Set merc glow back to normal
-	 // ( could have been set when in target cursor )
-	 SetMercGlowNormal( );
-
 	 // gsOutOfRangeGridNo = NOWHERE;
 
 	 gfPlotNewMovement = TRUE;

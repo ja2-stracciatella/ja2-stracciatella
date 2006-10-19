@@ -16,7 +16,6 @@
 	#include "WorldMan.h"
 	#include "UI_Cursors.h"
 	#include "LOS.h"
-	#include "RenderWorld.h"
 	#include "Interface.h"
 	#include "UI_Cursors.h"
 	#include "Cursors.h"
@@ -171,10 +170,6 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 			break;
 
 		case TARGETCURS:
-
-			// Set merc glow script
-			SetMercGlowFast( );
-
 			if ( fActivated )
 			{
 				ubCursorID = HandleActivatedTargetCursor( pSoldier, sTargetGridNo, fShowAPs, fRecalc, uiCursorFlags );

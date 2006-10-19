@@ -177,10 +177,6 @@ void InvalidateWorldRedundency(void);
 void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius);
 void DirtyWorldRender( );
 
-// These two functions will setup the glow frame script to use then glowing enemy mercs....
-void SetMercGlowFast( );
-void SetMercGlowNormal( );
-
 void SetRenderCenter( INT16 sNewX, INT16 sNewY );
 
 #ifdef _DEBUG

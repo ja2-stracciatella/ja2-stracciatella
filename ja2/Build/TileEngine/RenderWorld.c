@@ -390,45 +390,8 @@ UINT32							uiAdditiveLayerUsedFlags=0xffffffff;
 // Array of shade values to use.....
 #define NUM_GLOW_FRAMES					30
 
-#if 0
-INT16	gsGlowFrames[] =
-{
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
 
-	0,
-	1,
-	2,
-	3,
-	4,
-	5,
-	6,
-	7,
-	8,
-	9,
-
-	9,
-	8,
-	7,
-	6,
-	5,
-	4,
-	3,
-	2,
-	1,
-	0,
-};
-#endif
-
-INT16	gsGlowFrames[] =
+static const UINT8 gsGlowFrames[] =
 {
 	0,
 	0,
@@ -463,47 +426,6 @@ INT16	gsGlowFrames[] =
 	2,
 	0,
 };
-
-
-// This has to be the same # of frames as NUM_GLOW_FRAMES
-INT16	gsFastGlowFrames[] =
-{
-	0,
-	0,
-	6,
-	7,
-	8,
-	9,
-	8,
-	7,
-	6,
-	5,
-
-	0,
-	0,
-	6,
-	7,
-	8,
-	9,
-	8,
-	7,
-	6,
-	5,
-
-	0,
-	0,
-	6,
-	7,
-	8,
-	9,
-	8,
-	7,
-	6,
-	5,
-};
-
-// The glow frame pointer can be adjusted to use a faster/ slower glow
-INT16	*gpGlowFramePointer	= gsGlowFrames;
 
 
 UINT32							gScrollDirectionFlags[ NUM_WORLD_DIRECTIONS ] =
@@ -1830,9 +1752,9 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 													// Does he have baton?
 													if ( (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 													{
-														pShadeTable = pShadeStart[ gpGlowFramePointer[ gsCurrentGlowFrame ] + bGlowShadeOffset ];
+														pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
 
-														if ( gpGlowFramePointer[ gsCurrentGlowFrame ] >= 7 )
+														if (gsGlowFrames[gsCurrentGlowFrame] >= 7)
 														{
 															gsForceSoldierZLevel = TOPMOST_Z_LEVEL;
 														}
@@ -1840,26 +1762,14 @@ void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT
 												}
 												else
 												{
-													pShadeTable = pShadeStart[ gpGlowFramePointer[ gsCurrentGlowFrame ] + bGlowShadeOffset ];
+													pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
 
-													if ( gpGlowFramePointer[ gsCurrentGlowFrame ] >= 7 )
+													if (gsGlowFrames[gsCurrentGlowFrame] >= 7)
 													{
 														gsForceSoldierZLevel = TOPMOST_Z_LEVEL;
 													}
 												}
 											}
-
-											//if ( gusSelectedSoldier != NOBODY )
-											//{
-											//	pSelSoldier = MercPtrs[ gusSelectedSoldier ];
-
-												// Shade differently depending on visiblity
-											//	if ( pSoldier->bVisible == 0 || ( pSelSoldier->bOppList[ pSoldier->ubID ] == 0  ) )
-											//	{
-													// Shade gray
-											//		pShadeTable = pSoldier->pGlowShades[ gpGlowFramePointer[ gsCurrentGlowFrame ] + 10 ];
-											//	}
-											//}
 										}
 									}
 
@@ -7935,17 +7845,6 @@ BlitDone:
 	return(fHidden);
 
 }
-
-void SetMercGlowFast( )
-{
-	//gpGlowFramePointer	= gsFastGlowFrames;
-}
-
-void SetMercGlowNormal( )
-{
-	gpGlowFramePointer	= gsGlowFrames;
-}
-
 
 
 #if 0
