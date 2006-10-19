@@ -27,22 +27,10 @@
 	#include "VObject_Blitters.h"
 	#include <string.h>
 #endif
-//*******************************************************
-//
-//   Defines
-//
-//*******************************************************
 
-#define PALETTE_SIZE     768
-#define STRING_DELIMITER 0
-#define ID_BLACK         0
+
 #define MAX_FONTS				 25
 
-//*******************************************************
-//
-//   Typedefs
-//
-//*******************************************************
 
 typedef struct
 {
@@ -52,7 +40,6 @@ typedef struct
 
 FontManager *pFManager;
 HVOBJECT	FontObjs[MAX_FONTS];
-INT32		FontsLoaded=0;
 
 // Destination printing parameters
 INT32			FontDefault=(-1);
