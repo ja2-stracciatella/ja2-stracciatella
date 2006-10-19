@@ -3490,7 +3490,6 @@ BOOLEAN LightSpriteDirty(INT32 iSprite)
 	//iMapRight=LightSprites[iSprite].iX+LightMapRight[LightSprites[iSprite].iTemplate];
 	//iMapBottom=LightSprites[iSprite].iY+LightMapBottom[LightSprites[iSprite].iTemplate];
 
-	//ReRenderWorld(iMapLeft, iMapTop, iMapRight, iMapBottom);
 	//UpdateSaveBuffer();
 	//AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
 	//AddBaseDirtyRect(iLeft_s, iTop_s,

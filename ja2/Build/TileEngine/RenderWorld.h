@@ -1,15 +1,6 @@
 #ifndef __RENDERWORLD_H
 #define __RENDERWORLD_H
 
-#include "VObject.h"
-
-// TEMP SELECT STUFF
-#define		NO_SELECT			0
-#define		FULL_SELECT		1
-#define   SELECT_WIDTH	2
-#define   SELECT_HEIGHT	3
-
-
 BOOLEAN							gfDoVideoScroll;
 UINT8								gubCurScrollSpeedID;
 
@@ -21,8 +12,6 @@ UINT8								gubCurScrollSpeedID;
 #define RENDER_FLAG_NOZ					0x00000010
 #define RENDER_FLAG_ROOMIDS			0x00000020
 #define RENDER_FLAG_CHECKZ			0x00000040
-#define RENDER_FLAG_ONLYLAND		0x00000080
-#define RENDER_FLAG_ONLYSTRUCT	0x00000100
 #define	RENDER_FLAG_FOVDEBUG		0x00000200
 
 #define	SCROLL_UP							0x00000001
@@ -43,7 +32,6 @@ UINT8								gubCurScrollSpeedID;
 #define STRUCT_Z_LEVEL			4
 #define ROOF_Z_LEVEL				5
 #define ONROOF_Z_LEVEL			6
-#define FOG_Z_LEVEL					7
 #define TOPMOST_Z_LEVEL			32767
 
 
@@ -72,18 +60,12 @@ UINT8								gubCurScrollSpeedID;
 #define TILES_DYNAMIC_TOPMOST									0x00000001
 
 
-
-
 BOOLEAN			gfRenderScroll;
 INT16				gsScrollXIncrement;
 INT16				gsScrollYIncrement;
 INT32				guiScrollDirection;
-BOOLEAN			gfScrollStart;
 extern INT16	 gsRenderHeight;
 
-
-// Distance around mercs to pixelate walls
-#define REVEAL_WALLS_RADIUS	3
 
 // GLOBAL VARIABLES
 INT16	SCROLL_X_STEP;
@@ -108,7 +90,6 @@ INT16 gsBottomRightWorldX, gsBottomRightWorldY;
 
 SGPRect		gSelectRegion;
 SGPPoint	gSelectAnchor;
-UINT32		fSelectMode;
 
 
 // GLOBAL COORDINATES
@@ -117,8 +98,6 @@ INT16 gsTLX, gsTLY, gsTRX, gsTRY;
 INT16 gsBLX, gsBLY, gsBRX, gsBRY;
 INT16	gsCX, gsCY;
 DOUBLE	gdScaleX, gdScaleY;
-
-BOOLEAN fLandLayerDirty;
 
 BOOLEAN	gfIgnoreScrollDueToCenterAdjust;
 
@@ -130,11 +109,7 @@ void RenderWorld( );
 
 void ResetSpecificLayerOptimizing( UINT32 uiRowFlag );
 
-// Routines of RenderWorld
-void CopyRenderBuffer( );
-
 void SetRenderFlags(UINT32 uiFlags);
-UINT32 GetRenderFlags(void);
 void ClearRenderFlags(UINT32 uiFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
@@ -146,21 +121,11 @@ BOOLEAN gfIgnoreScrolling;
 BOOLEAN			gfScrollInertia;
 BOOLEAN			gfScrollPending;
 
-// Definitions for dirty rectangle uploads
-void ReRenderWorld(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
-
-BOOLEAN ConcealWalls(INT16 sX, INT16 sY, INT16 sRadius);
-BOOLEAN RevealWalls(INT16 sX, INT16 sY, INT16 sRadius);
-void ConcealAllWalls(void);
-
 void RenderStaticWorldRect(INT16, INT16, INT16, INT16, BOOLEAN );
-void RenderDynamicMercWorld( void );
 
 void ExamineZBufferRect( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 
 void InvalidateWorldRedundency(void);
-void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius);
-void DirtyWorldRender( );
 
 void SetRenderCenter( INT16 sNewX, INT16 sNewY );
 

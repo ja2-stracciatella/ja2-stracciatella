@@ -35,7 +35,6 @@
 
 
 extern INT8 gDebugStr[128];
-BOOLEAN fLandLayerDirty = TRUE;
 
 extern INT16 gsVIEWPORT_START_X;
 extern INT16 gsVIEWPORT_START_Y;
@@ -68,14 +67,7 @@ extern BOOLEAN gfTopMessageDirty;
 #define LARGER_VIEWPORT_YOFFSET_S			( VIEWPORT_YOFFSET_S * 5 )
 
 
-
-
-#define TILES_TYPE_BITMASK				0x00040000
-
-#define TILES_TYPE_MASK						0x07ffffff
-
 #define TILES_DIRTY								0x80000000
-#define TILES_DYNAMIC							0x40000000
 #define TILES_NOZWRITE						0x20000000
 #define TILES_MARKED							0x10000000
 #define TILES_NOZ									0x04000000
@@ -111,9 +103,6 @@ enum
 
 };
 
-#define	SCROLL_INTERTIA_STEP1		6
-#define	SCROLL_INTERTIA_STEP2		8
-
 #define SHORT_ROUND( x ) ( x )
 
 #define	NUM_ITEM_CYCLE_COLORS			60
@@ -123,9 +112,6 @@ static UINT16 us16BPPItemCycleRedColors[NUM_ITEM_CYCLE_COLORS];
 static UINT16 us16BPPItemCycleYellowColors[NUM_ITEM_CYCLE_COLORS];
 
 
-static INT16 gsLobOutline;
-static INT16 gsThrowOutline;
-static INT16 gsGiveOutline;
 static INT16 gusNormalItemOutlineColor;
 static INT16 gusYellowItemOutlineColor;
 
@@ -445,8 +431,6 @@ INT16 gsVIEWPORT_WINDOW_START_Y	= 0;
 INT16 gsVIEWPORT_END_X					= 640;
 
 INT16 gsTopLeftWorldX, gsTopLeftWorldY;
-static INT16 gsTopRightWorldX, gsTopRightWorldY;
-static INT16 gsBottomLeftWorldX, gsBottomLeftWorldY;
 INT16 gsBottomRightWorldX, gsBottomRightWorldY;
 BOOLEAN gfIgnoreScrolling = FALSE;
 
@@ -458,7 +442,7 @@ static INT16 gTopLeftWorldLimitX, gTopLeftWorldLimitY;
 static INT16 gTopRightWorldLimitX, gTopRightWorldLimitY;
 static INT16 gBottomLeftWorldLimitX, gBottomLeftWorldLimitY;
 static INT16 gBottomRightWorldLimitX, gBottomRightWorldLimitY;
-INT16 Slide, gCenterWorldY;
+INT16 gCenterWorldY;
 INT16 gsTLX, gsTLY, gsTRX, gsTRY;
 INT16 gsBLX, gsBLY, gsBRX, gsBRY;
 INT16	gsCX, gsCY;
@@ -483,7 +467,6 @@ static INT16 gsLEndXS, gsLEndYS;
 
 
 BOOLEAN			gfRenderScroll = FALSE;
-BOOLEAN			gfScrollStart  = FALSE;
 INT16				gsScrollXIncrement;
 INT16				gsScrollYIncrement;
 INT32				guiScrollDirection;
@@ -500,7 +483,6 @@ INT16		  gsRenderCenterY;
 INT16			gsRenderWorldOffsetX = -1;
 INT16			gsRenderWorldOffsetY = -1;
 SGPRect		gSelectRegion;
-UINT32		fSelectMode = NO_SELECT;
 SGPPoint	gSelectAnchor;
 
 
@@ -605,128 +587,6 @@ static void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPoin
 #endif
 
 
-void DeleteFromWorld( UINT16 usTileIndex, UINT32 uiRenderTiles, UINT16 usIndex );
-
-
-void RenderHighlight( INT16 sMouseX_M, INT16 sMouseY_M, INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS );
-BOOLEAN CheckRenderCenter( INT16 sNewCenterX, INT16 sNewCenterY );
-
-
-
-
-BOOLEAN RevealWalls(INT16 sX, INT16 sY, INT16 sRadius)
-{
-LEVELNODE *pStruct;
-INT16 sCountX, sCountY;
-UINT32 uiTile;
-BOOLEAN fRerender=FALSE;
-TILE_ELEMENT *TileElem;
-
-	for(sCountY=sY-sRadius; sCountY < (sY+sRadius+2); sCountY++)
-		for(sCountX=sX-sRadius; sCountX < (sX+sRadius+2); sCountX++)
-		{
-			uiTile=FASTMAPROWCOLTOPOS(sCountY, sCountX);
-			pStruct=gpWorldLevelData[uiTile].pStructHead;
-
-			while(pStruct!=NULL)
-			{
-				TileElem = &(gTileDatabase[pStruct->usIndex]);
-				switch(TileElem->usWallOrientation)
-				{
-					case NO_ORIENTATION:
-						break;
-
-					case INSIDE_TOP_RIGHT:
-					case OUTSIDE_TOP_RIGHT:
-						if(sCountX >= sX)
-						{
-							pStruct->uiFlags|=LEVELNODE_REVEAL;
-							fRerender=TRUE;
-						}
-						break;
-
-					case INSIDE_TOP_LEFT:
-					case OUTSIDE_TOP_LEFT:
-						if(sCountY >= sY)
-						{
-							pStruct->uiFlags|=LEVELNODE_REVEAL;
-							fRerender=TRUE;
-						}
-						break;
-				}
-				pStruct=pStruct->pNext;
-			}
-		}
-
-	return(TRUE);
-}
-
-BOOLEAN ConcealWalls(INT16 sX, INT16 sY, INT16 sRadius)
-{
-LEVELNODE *pStruct;
-INT16 sCountX, sCountY;
-UINT32 uiTile;
-BOOLEAN fRerender=FALSE;
-TILE_ELEMENT *TileElem;
-
-
-	for(sCountY=sY-sRadius; sCountY < (sY+sRadius+2); sCountY++)
-		for(sCountX=sX-sRadius; sCountX < (sX+sRadius+2); sCountX++)
-		{
-			uiTile=FASTMAPROWCOLTOPOS(sCountY, sCountX);
-			pStruct=gpWorldLevelData[uiTile].pStructHead;
-
-			while(pStruct!=NULL)
-			{
-				TileElem = &(gTileDatabase[pStruct->usIndex]);
-				switch(TileElem->usWallOrientation)
-				{
-					case NO_ORIENTATION:
-						break;
-
-					case INSIDE_TOP_RIGHT:
-					case OUTSIDE_TOP_RIGHT:
-						if(sCountX >= sX)
-						{
-							pStruct->uiFlags&=(~LEVELNODE_REVEAL);
-							fRerender=TRUE;
-						}
-						break;
-
-					case INSIDE_TOP_LEFT:
-					case OUTSIDE_TOP_LEFT:
-						if(sCountY >= sY)
-						{
-							pStruct->uiFlags&=(~LEVELNODE_REVEAL);
-							fRerender=TRUE;
-						}
-						break;
-				}
-				pStruct=pStruct->pNext;
-			}
-		}
-
-	return(TRUE);
-
-}
-
-void ConcealAllWalls(void)
-{
-LEVELNODE *pStruct;
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < WORLD_MAX; uiCount++)
-	{
-		pStruct=gpWorldLevelData[uiCount].pStructHead;
-		while(pStruct!=NULL)
-		{
-			pStruct->uiFlags&=(~LEVELNODE_REVEAL);
-			pStruct=pStruct->pNext;
-		}
-	}
-}
-
-
 static void ResetLayerOptimizing(void)
 {
 	uiLayerUsedFlags = 0xffffffff;
@@ -754,10 +614,6 @@ void ClearRenderFlags(UINT32 uiFlags)
 	gRenderFlags&=(~uiFlags);
 }
 
-UINT32 GetRenderFlags(void)
-{
-	return(gRenderFlags);
-}
 
 void RenderSetShadows(BOOLEAN fShadows)
 {
@@ -2392,42 +2248,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 }
 
 
-
-void DeleteFromWorld( UINT16 usTileIndex, UINT32 uiRenderTiles, UINT16 usIndex )
-{
-	switch( uiRenderTiles )
-	{
-		case TILES_DYNAMIC_LAND:
-		case TILES_STATIC_LAND:
-			RemoveLand( usTileIndex, usIndex );
-			break;
-		case TILES_DYNAMIC_OBJECTS:
-		case TILES_STATIC_OBJECTS:
-			RemoveObject( usTileIndex, usIndex );
-			break;
-		case TILES_STATIC_STRUCTURES:
-		case TILES_DYNAMIC_STRUCTURES:
-			RemoveStruct( usTileIndex, usIndex );
-			break;
-		case TILES_DYNAMIC_ROOF:
-		case TILES_STATIC_ROOF:
-			RemoveRoof( usTileIndex, usIndex );
-			break;
-		case TILES_STATIC_ONROOF:
-			RemoveOnRoof( usTileIndex, usIndex );
-			break;
-
-		case TILES_DYNAMIC_TOPMOST:
-		case TILES_STATIC_TOPMOST:
-			RemoveTopmost( usTileIndex, usIndex );
-			break;
-
-	}
-
-}
-
-
-
 // memcpy's the background to the new scroll position, and renders the missing strip
 // via the RenderStaticWorldRect. Dynamic stuff will be updated on the next frame
 // by the normal render cycle
@@ -2447,15 +2267,12 @@ static void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 
 		if ( gfRenderScroll == FALSE )
 		{
 			guiScrollDirection   = uiDirection;
-			gfScrollStart				 = TRUE;
 			gsScrollXIncrement	 = 0;
 			gsScrollYIncrement	 = 0;
 		}
 		else
 		{
 			guiScrollDirection   |= uiDirection;
-			gfScrollStart = FALSE;
-
 		}
 
 		gfRenderScroll =	TRUE;
@@ -3625,10 +3442,6 @@ void InitRenderParams( UINT8 ubRestrictionID )
 			us16BPPItemCycleYellowColors[ cnt2 ] = Get16BPPColor( FROMRGB( ubRGBItemCycleYellowColors[ cnt ], ubRGBItemCycleYellowColors[ cnt + 1 ], ubRGBItemCycleYellowColors[ cnt + 2] ) );
 		}
 
-		gsLobOutline = Get16BPPColor( FROMRGB( 10, 200, 10 ) );
-		gsThrowOutline = Get16BPPColor( FROMRGB( 253, 212, 10 ) );
-		gsGiveOutline = Get16BPPColor( FROMRGB( 253, 0, 0 ) );
-
 		gusNormalItemOutlineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
 		gusYellowItemOutlineColor = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
 }
@@ -3898,12 +3711,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 				gsTopLeftWorldX = sTopLeftWorldX - gsTLX;
 				gsTopLeftWorldY = sTopLeftWorldY - gsTLY;
 
-				gsTopRightWorldX = sTopRightWorldX - gsTLX;
-				gsTopRightWorldY = sTopRightWorldY - gsTLY;
-
-				gsBottomLeftWorldX = sBottomLeftWorldX - gsTLX;
-				gsBottomLeftWorldY = sBottomLeftWorldY - gsTLY;
-
 				gsBottomRightWorldX = sBottomRightWorldX - gsTLX;
 				gsBottomRightWorldY = sBottomRightWorldY - gsTLY;
 
@@ -3924,26 +3731,6 @@ UINT32 uiCount;
 	for(uiCount=0; uiCount < WORLD_MAX; uiCount++)
 		gpWorldLevelData[uiCount].uiFlags&=(~MAPELEMENT_REDRAW);
 
-}
-
-// @@ATECLIP TO WORLD!
-void InvalidateWorldRedundencyRadius(INT16 sX, INT16 sY, INT16 sRadius)
-{
-	INT16 sCountX, sCountY;
-	UINT32 uiTile;
-
-	SetRenderFlags( RENDER_FLAG_CHECKZ );
-
-	for(sCountY=sY-sRadius; sCountY < (sY+sRadius+2); sCountY++)
-	{
-		for(sCountX=sX-sRadius; sCountX < (sX+sRadius+2); sCountX++)
-		{
-			uiTile=FASTMAPROWCOLTOPOS(sCountY, sCountX);
-
-			gpWorldLevelData[uiTile].uiFlags |= MAPELEMENT_REEVALUATE_REDUNDENCY;
-
-		}
-	}
 }
 
 

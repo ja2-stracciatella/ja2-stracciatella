@@ -126,7 +126,6 @@ BOOLEAN				gfTacticalDisableRegionActive = FALSE;
 INT8					gbTacticalDisableMode	= FALSE;
 MODAL_HOOK		gModalDoneCallback;
 BOOLEAN				gfBeginEndTurn = FALSE;
-extern				BOOLEAN				gfTopMessageDirty;
 extern				BOOLEAN		gfFailedToSaveGameWhenInsideAMessageBox;
 extern				BOOLEAN		gfFirstHeliRun;
 extern				BOOLEAN		gfRenderFullThisFrame;

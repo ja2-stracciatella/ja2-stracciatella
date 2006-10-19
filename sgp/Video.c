@@ -1015,7 +1015,6 @@ void RefreshScreen(void)
 	if (gfRenderScroll)
 	{
 		gfRenderScroll = FALSE;
-		gfScrollStart  = FALSE;
 	}
 
 	gfForceFullScreenRefresh = FALSE;
