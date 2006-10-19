@@ -1496,10 +1496,7 @@ void DisplayTextForSpeckVideoPopUp( STR16 pString )
 	}
 
 	//Create the popup box
-  SET_USE_WINFONTS( TRUE );
-  SET_WINFONT( giSubTitleWinFont );
   iMercPopUpBox = PrepareMercPopupBox( iMercPopUpBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsSpeckDialogueTextPopUp, 300, 0, 0, 0, &gusSpeckDialogueActualWidth, &usActualHeight);
-  SET_USE_WINFONTS( FALSE );
 
 	gusSpeckDialogueX = ( LAPTOP_SCREEN_LR_X - gusSpeckDialogueActualWidth - LAPTOP_SCREEN_UL_X ) / 2 + LAPTOP_SCREEN_UL_X;
 

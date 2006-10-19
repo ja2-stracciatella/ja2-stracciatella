@@ -1,7 +1,5 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "TileEngine All.h"
-  #include "winfont.h"
-
 #else
 	#include "math.h"
 	#include <stdio.h>
@@ -17,7 +15,6 @@
 	#include "VObject_Blitters.h"
 	#include <stdarg.h>
 	#include "Font_Control.h"
-	#include "WinFont.h"
 	#include "MemMan.h"
 	#include "Debug.h"
 	#include "SGP.h"
@@ -764,16 +761,8 @@ INT32 iBack;
 	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
-  if ( USE_WINFONTS( ) )
-  {
-	  uiStringLength=WinFontStringPixLength( string, GET_WINFONT( ) );
-	  uiStringHeight=GetWinFontHeight( string, GET_WINFONT( ) );
-  }
-  else
-  {
-	  uiStringLength=StringPixLength(string, FontDefault);
-	  uiStringHeight=GetFontHeight(FontDefault);
-  }
+	uiStringLength = StringPixLength(string, FontDefault);
+	uiStringHeight = GetFontHeight(FontDefault);
 
 	if ( uiStringLength > 0 )
 	{

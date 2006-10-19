@@ -386,7 +386,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	// reset flags
 	guiFlags = 0;
 
-	usStringPixLength = WFStringPixLength( pString, TEXT_POPUP_FONT);
+	usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
 
 	if( usStringPixLength < ( usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X ) * 2 ) )
 	{
@@ -544,29 +544,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		sDispTextXPos += 30;
 	}
 
-
-//if language represents words with a single char
-#ifdef SINGLE_CHAR_WORDS
-	{
-		//Enable the use of single word wordwrap
-		if( gfUseWinFonts )
-		{
-			UseSingleCharWordsForWordWrap( TRUE );
-		}
-
-		//Display the text
-		DisplayWrappedString( sDispTextXPos, (INT16)(( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY ) ), usTextWidth, 2, MERC_TEXT_FONT, ubFontColor,  pString, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-
-		//Disable the use of single word wordwrap
-		UseSingleCharWordsForWordWrap( FALSE );
-	}
-#else
-	{
-		//Display the text
-		DisplayWrappedString( sDispTextXPos, (INT16)(( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY ) ), usTextWidth, 2, MERC_TEXT_FONT, ubFontColor,  pString, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	}
-#endif
-
+	DisplayWrappedString(sDispTextXPos, (INT16)(MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY), usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, pString, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
 	SetFontShadow(DEFAULT_SHADOW);

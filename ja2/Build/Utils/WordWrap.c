@@ -1,5 +1,4 @@
 #ifdef PRECOMPILEDHEADERS
-  #include "winfont.h"
 #else
 	#include "WordWrap.h"
 	#include "SGP.h"
@@ -8,142 +7,12 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include <stdarg.h>
-	#include "WinFont.h"
 	#include "Debug.h"
 	#include "Stubs.h" // XXX
 	#include "Video.h"
 	#include "MemMan.h"
 	#include "VSurface.h"
 #endif
-
-
-#define		SINGLE_CHARACTER_WORD_FOR_WORDWRAP
-
-
-BOOLEAN	gfUseSingleCharWordsForWordWrap = FALSE;
-
-
-void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords )
-{
-	gfUseSingleCharWordsForWordWrap = fUseSingleCharWords;
-}
-
-
-WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)
-{
-	WRAPPED_STRING FirstWrappedString;
-	WRAPPED_STRING *pWrappedString = NULL;
-	wchar_t					TempString[1024];
-//	wchar_t         pNullString[2];
-	INT16						usCurIndex, usEndIndex, usDestIndex;
-  wchar_t					DestString[1024];
-	va_list					argptr;
-	BOOLEAN					fDone = FALSE;
-	UINT16					usCurrentWidthPixels=0;
-//	UINT16					usCurrentLineWidthPixels=0;
-	wchar_t					OneChar[2];
-  BOOLEAN					fNewLine=FALSE;
-//	BOOLEAN					fTheStringIsToLong=FALSE;
-//	INT32 iCounter=0;
-//	INT32 iErrorCount = 0;
-//  pNullString[0]=L' ';
-//	pNullString[1]=0;
-
-	memset(&FirstWrappedString, 0, sizeof(WRAPPED_STRING) );
-
-	*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
-
-	if(pString == NULL)
-		return(FALSE);
-
-	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, lengthof(TempString), pString, argptr);	// process string (get output str)
-	va_end(argptr);
-
-	usCurIndex = usEndIndex = usDestIndex = 0;
-	OneChar[1] = L'\0';
-
-	while(!fDone)
-	{
-    fNewLine=FALSE;
-
-		DestString[ usDestIndex ] = TempString[ usCurIndex ];
-
-		//If the new char is a newline character
-    if( DestString[usDestIndex] == NEWLINE_CHAR )
-		{
-			DestString[usDestIndex]=TempString[usCurIndex]=0;
-			fNewLine=TRUE;
-		}
-
-		//Get the next char
-		OneChar[0] = TempString[ usCurIndex ];
-
-  	usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
-
-		//If we are at the end of the string
-		if(TempString[ usCurIndex  ] == 0)
-		{
-			//get to next WrappedString structure
-			pWrappedString = &FirstWrappedString;
-			while(pWrappedString->pNextWrappedString != NULL)
-				pWrappedString = pWrappedString->pNextWrappedString;
-
-			//allocate memory for the string
-			pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-			if( pWrappedString->pNextWrappedString->sString == NULL)
-				return (NULL);
-
-			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
-			pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
-
-			return(FirstWrappedString.pNextWrappedString);
-		}
-
-		//if we are at the end of the line
-		if( usCurrentWidthPixels >= usLineWidthPixels )
-		{
-			fNewLine = TRUE;
-		}
-
-
-		if( fNewLine )
-		{
-			//End the current line
-			DestString[ usDestIndex + 1 ] = '\0';
-
-			//get to next WrappedString structure
-			pWrappedString = &FirstWrappedString;
-			while(pWrappedString->pNextWrappedString != NULL)
-				pWrappedString = pWrappedString->pNextWrappedString;
-
-			//allocate memory for the string
-			pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING));
-			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-
-			//Copy the string into the new struct
-			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
-			pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
-
-			fNewLine = FALSE;
-
-			usCurrentWidthPixels =0;
-			usDestIndex = 0;
-			usCurIndex++;
-			usEndIndex = usCurIndex;
-			continue;
-		}
-
-		usCurIndex++;
-		usDestIndex++;
-	}
-
-	return(FirstWrappedString.pNextWrappedString);
-}
-
-
-
 
 
 WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)
@@ -203,7 +72,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 		}
 		OneChar[0] = TempString[ usCurIndex ];
 
-  	usCurrentWidthPixels += WFStringPixLength( OneChar, ulFont);
+  	usCurrentWidthPixels += StringPixLength(OneChar, ulFont);
 
 		//If we are at the end of the string
 		if(TempString[ usCurIndex  ] == 0)
@@ -239,7 +108,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			 {
 		 		OneChar[0] = DestString[ usDestIndex ];
 
-  		 	usCurrentWidthPixels -= WFStringPixLength( OneChar, ulFont);
+  		 	usCurrentWidthPixels -= StringPixLength(OneChar, ulFont);
 
 				usCurIndex--;
 				usDestIndex--;
@@ -276,7 +145,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 
 				pCurrentStringLoc = &TempString[ usEndIndex ];
 				//if last line, put line into string structure
-        if ( WFStringPixLength( pCurrentStringLoc, ulFont) < usLineWidthPixels )
+        if (StringPixLength(pCurrentStringLoc, ulFont) < usLineWidthPixels)
         {
 					// run until end of DestString
 					wcscpy(DestString, pCurrentStringLoc);
@@ -332,7 +201,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zText );
 
 				//error
-				usLineWidthPixels = 1 + WFStringPixLength( &TempString[usCurIndex], ulFont);
+				usLineWidthPixels = 1 + StringPixLength(&TempString[usCurIndex], ulFont);
 
 				*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
 
@@ -371,17 +240,9 @@ UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
   UINT16	usHeight;
 
-  usHeight = WFGetFontHeight(uiFont);
+  usHeight = GetFontHeight(uiFont);
 
-	//If we are to a Single char for a word ( like in Taiwan )
-	if( gfUseSingleCharWordsForWordWrap )
-	{
-		pFirstWrappedString = LineWrapForSingleCharWords(uiFont, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
-	}
-	else
-	{
-		pFirstWrappedString = LineWrap(uiFont, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
-	}
+	pFirstWrappedString = LineWrap(uiFont, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
 
 	//if an error occured and a word was bigger then the width passed in, reset the width
 	if( usLineWidthIfWordIsWiderThenWidth != usWidth )
@@ -403,7 +264,7 @@ UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8
 		usPosY += usHeight + ubGap;
 	}
 
-	return(uiCounter * (WFGetFontHeight(uiFont) + ubGap));
+	return uiCounter * (GetFontHeight(uiFont) + ubGap);
 }
 
 
@@ -458,53 +319,23 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 	}
 	else if( ulFlags & CENTER_JUSTIFIED )
 	{
-		VarFindFontCenterCoordinates( usLocX, usLocY, usWidth, WFGetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr );
+		VarFindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr);
 	}
 	else if( ulFlags & RIGHT_JUSTIFIED )
 	{
-  	VarFindFontRightCoordinates( usLocX, usLocY, usWidth, WFGetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr );
+  	VarFindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr);
 	}
 
 	SetFont(ulFont);
 
-  if ( USE_WINFONTS( ) )
-  {
-    COLORVAL Color = FROMRGB( 255, 255, 255 );
-    SetWinFontForeColor( GET_WINFONT( ), &Color );
-  }
-  else
-  {
-    SetFontForeground(ubColor);
-    SetFontBackground( ubBackGroundColor );
-  }
+	SetFontForeground(ubColor);
+	SetFontBackground(ubBackGroundColor);
 
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-  if ( USE_WINFONTS( ) )
-  {
-	  if( fDirty )
-	  {
-		  gprintfdirty( usPosX, usPosY, pStr);
-		  WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr);
-	  }
-	  else
-	  {
-		  WinFont_mprintf( GET_WINFONT( ), usPosX,usPosY,pStr);
-	  }
-  }
-  else
-  {
-	  if( fDirty )
-	  {
-		  gprintfdirty( usPosX, usPosY, pStr);
-		  mprintf(usPosX,usPosY,pStr);
-	  }
-	  else
-	  {
-		  mprintf(usPosX,usPosY,pStr);
-	  }
-  }
+	if (fDirty) gprintfdirty(usPosX, usPosY, pStr);
+	mprintf(usPosX, usPosY, pStr);
 
 	if( IAN_WRAP_NO_SHADOW & ulFlags )
 	{
@@ -514,8 +345,8 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 
 	if( ulFlags & INVALIDATE_TEXT )
 	{
-		  usFontHeight= WFGetFontHeight( ulFont );
-		  usStringWidth = WFStringPixLength( pStr, ulFont );
+		  usFontHeight = GetFontHeight(ulFont);
+		  usStringWidth = StringPixLength(pStr, ulFont);
 
   		InvalidateRegion( usPosX, usPosY, usPosX+usStringWidth, usPosY+usFontHeight );
 	}
@@ -545,7 +376,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 	CHAR16	zLineString[128] = L"",zWordString[64]= L"";
 
-  usHeight = WFGetFontHeight( uiFont );
+  usHeight = GetFontHeight(uiFont);
 
 	do
 	{
@@ -603,7 +434,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// increment Y position for next time
-  						usPosY += (WFGetFontHeight(uiLocalFont)) + ubGap; //; // +ubGap
+  						usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 							// we just used a line, so note that
 							usLinesUsed++;
@@ -654,7 +485,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 
 						// increment Y position for next time
-  					usPosY += (WFGetFontHeight(uiLocalFont))+ubGap; //; // +ubGap
+  					usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 						// we just used a line, so note that
 						usLinesUsed++;
@@ -703,7 +534,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// calc length of what we just wrote
-							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+							usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
@@ -747,7 +578,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
   						// calc length of what we just wrote
-							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+							usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
@@ -816,7 +647,7 @@ DEF: commented out for Beta.  Nov 30
 						ubLocalColor = 184;;
 
 						// calc length of what we just wrote
-						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -856,7 +687,7 @@ DEF: commented out for Beta.  Nov 30
 						}
 
   					// calc length of what we just wrote
-						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -887,7 +718,7 @@ DEF: commented out for Beta.  Nov 30
 				zWordString[usDestCounter]   = 0;
 
 				// get the length (in pixels) of this word
-				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 				// add a space (in case we add another word to it)
 				zWordString[usDestCounter++] = 32;
@@ -901,7 +732,7 @@ DEF: commented out for Beta.  Nov 30
 					// yes we can fit this word.
 
 					// get the length AGAIN (in pixels with the SPACE) for this word
-				  usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+				  usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 					// calc new pixel length for the line
 					usLineLengthPixels += usWordLengthPixels;
@@ -936,7 +767,7 @@ DEF: commented out for Beta.  Nov 30
 
 
 					// increment Y position for next time
-					usPosY += (WFGetFontHeight(uiLocalFont))+ubGap;//; // +ubGap
+					usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 					// reset x position
 					usLocalPosX = usPosX;
@@ -948,7 +779,7 @@ DEF: commented out for Beta.  Nov 30
 					wcscpy(zLineString,zWordString);
 
   				// remeasure the line length
-					usLineLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+					usLineLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 					// reset dest char counter
 					usDestCounter = 0;
@@ -987,7 +818,7 @@ DEF: commented out for Beta.  Nov 30
 	}
 
 	// return how many Y pixels we used
-	return(usLinesUsed * ( WFGetFontHeight(uiFont) + ubGap ) ); // +ubGap
+	return usLinesUsed * (GetFontHeight(uiFont) + ubGap);
 }
 
 
@@ -1096,7 +927,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
   UINT32 iTotalHeight =0;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
 
-  usHeight = WFGetFontHeight(uiFont);
+  usHeight = GetFontHeight(uiFont);
 
 	// identical to ianwordwrap, but this one lets the user to specify the page they want to display, if the text takes more than one page
 	// multiple calls to this function will allow one to work out how many pages there are
@@ -1145,7 +976,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);
 
 							// increment Y position for next time
-							usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
+							usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 							// we just used a line, so note that
 							usLinesUsed++;
@@ -1182,7 +1013,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 
 
 						// increment Y position for next time
-  					usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
+  					usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 						// we just used a line, so note that
 						usLinesUsed++;
@@ -1218,7 +1049,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
 
 							// calc length of what we just wrote
-							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+							usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
@@ -1248,7 +1079,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
 
   						// calc length of what we just wrote
-  						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+  						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
@@ -1290,7 +1121,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						ubLocalColor = 184;;
 
 						// calc length of what we just wrote
-  					usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+  					usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -1317,7 +1148,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
   					// calc length of what we just wrote
-						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -1348,7 +1179,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 				zWordString[usDestCounter]   = 0;
 
 				// get the length (in pixels) of this word
-  			usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+  			usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 				// add a space (in case we add another word to it)
 				zWordString[usDestCounter++] = 32;
@@ -1362,7 +1193,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 					// yes we can fit this word.
 
 					// get the length AGAIN (in pixels with the SPACE) for this word
-  				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+  				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 					// calc new pixel length for the line
 					usLineLengthPixels += usWordLengthPixels;
@@ -1384,7 +1215,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 					usLocalPosX = usPosX;
 
 					// increment Y position for next time
-  				usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
+  				usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 					// we just used a line, so note that
 					usLinesUsed++;
@@ -1393,7 +1224,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 					wcscpy(zLineString,zWordString);
 
 					// remeasure the line length
-  				usLineLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+  				usLineLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 					// reset dest char counter
 					usDestCounter = 0;
@@ -1416,7 +1247,7 @@ INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
   DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
 
 	// return how many Y pixels we used
-  return(usLinesUsed * ( WFGetFontHeight(uiFont) + ( UINT16 )ubGap )  ); // +ubGap
+  return usLinesUsed * (GetFontHeight(uiFont) + ubGap);
 }
 
 
@@ -1435,7 +1266,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
   UINT32 iTotalHeight =0;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
 
-	usHeight = WFGetFontHeight(uiFont);
+	usHeight = GetFontHeight(uiFont);
 
 	// simply a cut and paste operation on Ian Display Wrapped, but will not write string to screen
 	// since this all we want to do, everything IanWrapped will do but without displaying string
@@ -1478,7 +1309,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						{
 
 							// increment Y position for next time
-  						usPosY += (WFGetFontHeight(uiLocalFont)) + ubGap;
+  						usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 							// we just used a line, so note that
 							usLinesUsed++;
@@ -1512,7 +1343,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 						// increment Y position for next time
-  					usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
+  					usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 						// we just used a line, so note that
 						usLinesUsed++;
@@ -1544,7 +1375,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						{
 
 							// calc length of what we just wrote
-  						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+  						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
 
@@ -1569,7 +1400,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						{
 
   						// calc length of what we just wrote
-							usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+							usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 							// calculate new x position for next time
 							usLocalPosX += usPhraseLengthPixels;
@@ -1605,7 +1436,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						ubLocalColor = 184;;
 
 						// calc length of what we just wrote
-						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -1629,7 +1460,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
   					// calc length of what we just wrote
-						usPhraseLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 						// calculate new x position for next time
 						usLocalPosX += usPhraseLengthPixels;
@@ -1660,7 +1491,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 				zWordString[usDestCounter]   = 0;
 
 				// get the length (in pixels) of this word
-				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 				// add a space (in case we add another word to it)
 				zWordString[usDestCounter++] = 32;
@@ -1674,7 +1505,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 					// yes we can fit this word.
 
 					// get the length AGAIN (in pixels with the SPACE) for this word
-  				usWordLengthPixels = WFStringPixLength(zWordString,uiLocalFont);
+  				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
 
 					// calc new pixel length for the line
 					usLineLengthPixels += usWordLengthPixels;
@@ -1691,7 +1522,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 					// increment Y position for next time
-  				usPosY += (WFGetFontHeight(uiLocalFont)) +ubGap;
+  				usPosY += GetFontHeight(uiLocalFont) + ubGap;
 
 					// reset x position
 					usLocalPosX = usPosX;
@@ -1703,7 +1534,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 					wcscpy(zLineString,zWordString);
 
 					// remeasure the line length
-  				usLineLengthPixels = WFStringPixLength(zLineString,uiLocalFont);
+  				usLineLengthPixels = StringPixLength(zLineString, uiLocalFont);
 
 					// reset dest char counter
 					usDestCounter = 0;
@@ -1723,7 +1554,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 	// return how many Y pixels we used
-	return( usLinesUsed * ( WFGetFontHeight(uiFont) + ( UINT16 )ubGap) ); // +ubGap
+	return usLinesUsed * (GetFontHeight(uiFont) + ubGap);
 }
 
 
@@ -1780,7 +1611,7 @@ INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, 
 void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
 {
 	UINT32 uiLength = StringPixLength( pString, uiFont);
-	UINT16 usFontHeight = WFGetFontHeight( uiFont );
+	UINT16 usFontHeight = GetFontHeight(uiFont);
 
 	ShadowVideoSurfaceRect( uiDestVSurface, usPosX, usPosY, usPosX+uiLength+1, usPosY+usFontHeight+1 );
 }
@@ -1798,7 +1629,7 @@ BOOLEAN ReduceStringLength( wchar_t * pString, size_t Length, UINT32 uiWidthToFi
 	UINT32			uiSrcStringCntr = 0;
 	UINT32			uiOneCharWidth = 0;
 
-  uiStringPixWidth = WFStringPixLength( pString, uiFont );
+  uiStringPixWidth = StringPixLength(pString, uiFont);
 
 	OneChar[1] = L'\0';
 	zTemp[0] = L'\0';

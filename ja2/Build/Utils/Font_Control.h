@@ -4,29 +4,6 @@
 #include "BuildDefines.h"
 #include "Font.h"
 
-extern      BOOLEAN     gfUseWinFonts;
-extern      INT32       giCurWinFont;
-
-// ATE: Use this define to enable winfonts in JA2
-// #define     WINFONTS
-
-#ifdef WINFONTS
-  #define     USE_WINFONTS( )               ( gfUseWinFonts )
-#else
-  #define     USE_WINFONTS( )               ( FALSE )
-#endif
-
-#define     GET_WINFONT( )                ( giCurWinFont )
-#define     SET_USE_WINFONTS( fSet )      ( gfUseWinFonts = fSet );
-#define     SET_WINFONT( fFont )          ( giCurWinFont = fFont );
-
-// ATE: A few winfont wrappers..
-UINT16    WFGetFontHeight( INT32 FontNum );
-INT16     WFStringPixLength(const wchar_t *string, INT32 UseFont);
-
-
-
-
 
 // Global variables for video objects
 INT32						gpLargeFontType1;
@@ -96,8 +73,6 @@ HVOBJECT				gvo14PointHumanist;
 INT32						gpHugeFont;
 HVOBJECT				gvoHugeFont;
 #endif
-
-INT32           giSubTitleWinFont;
 
 
 BOOLEAN					gfFontsInit;

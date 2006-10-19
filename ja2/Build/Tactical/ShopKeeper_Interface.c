@@ -4742,10 +4742,7 @@ void InitShopKeeperSubTitledText( STR16 pString )
 		UINT16 usActualWidth=0;
 		UINT16 usActualHeight=0;
 
-    SET_USE_WINFONTS( TRUE );
-    SET_WINFONT( giSubTitleWinFont );
 		giPopUpBoxId = PrepareMercPopupBox( giPopUpBoxId, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
-    SET_USE_WINFONTS( FALSE );
 
 //		gusPositionOfSubTitlesX = ( 640 - usActualWidth ) / 2 ;
 		//position it to start under the guys face

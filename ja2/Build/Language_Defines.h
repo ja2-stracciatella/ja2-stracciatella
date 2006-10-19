@@ -11,11 +11,4 @@
 
 #define BLOOD_N_GORE_ENABLED
 
-
-
-//if the language represents words as single chars
-#ifdef TAIWAN
-	#define	SINGLE_CHAR_WORDS
-#endif
-
 #endif

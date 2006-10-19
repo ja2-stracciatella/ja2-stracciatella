@@ -367,7 +367,6 @@ SRCS += sgp/VObject.c
 SRCS += sgp/VObject_Blitters.c # inline assembler
 SRCS += sgp/VSurface.c
 SRCS += sgp/Video.c
-#SRCS += sgp/WinFont.c
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))

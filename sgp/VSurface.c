@@ -3,7 +3,6 @@
 #include "MemMan.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
-#include "VSurface_Private.h"
 #include "Video.h"
 #include "WCheck.h"
 #include <string.h>
@@ -634,7 +633,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	hVSurface->usHeight           = usHeight;
 	hVSurface->usWidth            = usWidth;
 	hVSurface->ubBitDepth         = ubBitDepth;
-	hVSurface->pSurfaceData       = NULL; // XXX remove
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
 
@@ -1129,27 +1127,11 @@ BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVS
 }
 
 
-// *****************************************************************************
-//
-// Private DirectDraw manipulation functions
-//
-// *****************************************************************************
-
-LPDIRECTDRAWSURFACE2 GetVideoSurfaceDDSurface( HVSURFACE hVSurface )
-{
-	Assert( hVSurface != NULL );
-
-	return( (LPDIRECTDRAWSURFACE2) hVSurface->pSurfaceData );
-}
-
-
 static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 {
 	// Create Video Surface
 	HVSURFACE						hVSurface;
-	LPDIRECTDRAWPALETTE	pDDPalette;
 	SGPPaletteEntry			SGPPalette[ 256 ];
-	HRESULT							ReturnCode;
 
 	hVSurface = MemAlloc(sizeof(*hVSurface));
 
@@ -1157,7 +1139,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->usHeight          = surface->h;
 	hVSurface->usWidth           = surface->w;
 	hVSurface->ubBitDepth        = surface->format->BitsPerPixel;
-	hVSurface->pSurfaceData      = NULL; // XXX remove
 
 	if (surface->format->palette != NULL) // XXX necessary?
 	{

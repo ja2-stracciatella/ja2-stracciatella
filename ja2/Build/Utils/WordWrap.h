@@ -61,9 +61,4 @@ void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UI
 
 BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidth, UINT32 uiFont );
 
-
-void UseSingleCharWordsForWordWrap( BOOLEAN fUseSingleCharWords );
-WRAPPED_STRING *LineWrapForSingleCharWords(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...);
-
-
 #endif
