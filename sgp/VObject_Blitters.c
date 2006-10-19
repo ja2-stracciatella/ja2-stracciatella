@@ -11,10 +11,6 @@ SGPRect	ClippingRect={0, 0, 640, 480};
 													//555      565
 UINT32	guiTranslucentMask=0x3def; //0x7bef;		// mask for halving 5,6,5
 
-// GLOBALS for pre-calculating skip values
-INT32		gLeftSkip, gRightSkip, gTopSkip, gBottomSkip;
-BOOLEAN	gfUsePreCalcSkips = FALSE;
-
 
 /**********************************************************************************************
  Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent
@@ -9044,12 +9040,10 @@ CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 
 
 
 	// Calculate rows hanging off each side of the screen
-	gLeftSkip=__min(ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	gRightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
-	gTopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
-	gBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
-
-	gfUsePreCalcSkips = TRUE;
+	INT32 gLeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), (INT32)usWidth);
+	INT32 gTopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
+	INT32 gRightSkip  = __min(  max(ClipX2, iTempX + (INT32)usWidth)  - ClipX2, (INT32)usWidth);
+	INT32 gBottomSkip = __min(__max(ClipY2, iTempY + (INT32)usHeight) - ClipY2, (INT32)usHeight);
 
 	// check if whole thing is clipped
 	if((gLeftSkip >=(INT32)usWidth) || (gRightSkip >=(INT32)usWidth))
