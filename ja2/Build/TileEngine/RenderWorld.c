@@ -117,8 +117,6 @@ static INT16 gusYellowItemOutlineColor;
 INT16		gsRenderHeight = 0;
 BOOLEAN	gfRenderFullThisFrame = 0;
 
-UINT8		gubIntTileCheckFlags	 = INTILE_CHECK_SELECTIVE;
-
 
 static const UINT8 ubRGBItemCycleWhiteColors[] =
 {
@@ -704,7 +702,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 	{
 		if ( ShouldCheckForMouseDetections( ) )
 		{
-			BeginCurInteractiveTileCheck( gubIntTileCheckFlags );
+			BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
 			fCheckForMouseDetections = TRUE;
 
 			// If we are in edit mode, don't do this...
