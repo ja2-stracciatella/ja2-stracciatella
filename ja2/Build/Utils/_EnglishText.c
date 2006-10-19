@@ -1,14 +1,14 @@
 #ifdef PRECOMPILEDHEADERS
 #else
 	#include "Language_Defines.h"
-	#if defined( ENGLISH ) || defined( TAIWANESE )
+	#ifdef ENGLISH
 		#include "Text.h"
 		#include "FileMan.h"
 		#include "JA2_Demo_Ads.h"
 	#endif
 #endif
 
-#if defined( ENGLISH ) || defined( TAIWANESE )
+#ifdef ENGLISH
 
 /*
 

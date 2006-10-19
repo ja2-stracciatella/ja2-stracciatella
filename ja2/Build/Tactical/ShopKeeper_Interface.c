@@ -4729,12 +4729,7 @@ void InitShopKeeperSubTitledText( STR16 pString )
 	//Clear the contents of the subtitle text
 	memset( gsShopKeeperTalkingText, 0, SKI_SUBTITLE_TEXT_SIZE );
 
-#ifdef TAIWANESE
-	swprintf( gsShopKeeperTalkingText, lengthof(gsShopKeeperTalkingText), L"%S", pString );
-#else
 	swprintf( gsShopKeeperTalkingText, lengthof(gsShopKeeperTalkingText), L"\"%S\"", pString );
-#endif
-
 
 	//Now setup the popup box
 	if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )

@@ -4,7 +4,7 @@
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {
-	#if defined( ENGLISH ) || defined( TAIWANESE ) || defined( FRENCH )
+	#if defined(ENGLISH) || defined(FRENCH)
 		switch( usMLGGraphicID )
 		{
 			case MLG_AIMSYMBOL:
@@ -248,8 +248,6 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		  sprintf( zLanguage, "RUSSIAN" );
 		#elif defined( SPANISH )
 		  sprintf( zLanguage, "SPANISH" );
-		#elif defined( TAIWANESE )
-		  sprintf( zLanguage, "TAIWANESE" );
 		#endif
 
 		switch( usMLGGraphicID )

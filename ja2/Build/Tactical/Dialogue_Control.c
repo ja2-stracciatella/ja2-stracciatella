@@ -1899,13 +1899,9 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 	}
 
 	// post message to mapscreen message system
-#ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%S", zQuoteStr );
-#else
 	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
 	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
-#endif
 }
 
 
@@ -1924,13 +1920,9 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 	}
 
 	// post message to mapscreen message system
-#ifdef TAIWANESE
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"%S", zQuoteStr );
-#else
 	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
 	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
-#endif
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
@@ -1957,11 +1949,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 	//BUild text
 	// How do we do this with defines?
 	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-#ifdef TAIWANESE
-	swprintf( zText, lengthof(zText), L"%S", zQuoteStr );
-#else
 	swprintf( zText, lengthof(zText), L"\"%S\"", zQuoteStr );
-#endif
 	sLeft	= 110;
 
 
@@ -1970,11 +1958,8 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 
 	ExecuteTacticalTextBox( sLeft, zText );
 
-#ifndef TAIWANESE
 	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
-#endif
-
 }
 
 

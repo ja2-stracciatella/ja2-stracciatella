@@ -336,7 +336,6 @@ SRCS += ja2/Build/Utils/_JA25EnglishText.c
 SRCS += ja2/Build/Utils/JA25GermanText.c
 SRCS += ja2/Build/Utils/_PolishText.c
 SRCS += ja2/Build/Utils/_RussianText.c
-SRCS += ja2/Build/Utils/_TaiwaneseText.c
 SRCS += sgp/Button_Sound_Control.c
 SRCS += sgp/Button_System.c
 SRCS += sgp/Compression.c
