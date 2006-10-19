@@ -1328,7 +1328,7 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 	SetFontBackground( pBlitter->ubFontBack );
 	SetFontForeground( pBlitter->ubFontFore );
 
-	mprintf_buffer( pDestBuf, uiDestPitchBYTES, pBlitter->uiFontID, pBlitter->sX, pBlitter->sY, pBlitter->zText );
+	mprintf_buffer(pDestBuf, uiDestPitchBYTES, pBlitter->sX, pBlitter->sY, pBlitter->zText);
 
 	UnLockVideoSurface( pBlitter->uiDestBuff );
 

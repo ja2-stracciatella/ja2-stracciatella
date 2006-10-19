@@ -301,7 +301,7 @@ void BlitString( VIDEO_OVERLAY *pBlitter )
 	SetFontBackground( pBlitter->ubFontBack );
 	SetFontForeground( pBlitter->ubFontFore );
 	SetFontShadow( DEFAULT_SHADOW );
-	mprintf_buffer_coded( pDestBuf, uiDestPitchBYTES, pBlitter->uiFontID, pBlitter->sX, pBlitter->sY, pBlitter->zText );
+	mprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, pBlitter->sX, pBlitter->sY, pBlitter->zText);
 	UnLockVideoSurface( pBlitter->uiDestBuff );
 
 }

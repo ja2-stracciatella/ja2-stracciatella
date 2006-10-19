@@ -6569,7 +6569,7 @@ void PopupText( wchar_t *pFontString, ...  )
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_MCOLOR_DKGRAY );
 
-	mprintf_buffer( pDestBuf, uiDestPitchBYTES, LARGEFONT1, sX, sY, PopupString );
+	mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, PopupString);
 
 	UnLockVideoSurface( FRAME_BUFFER );
 

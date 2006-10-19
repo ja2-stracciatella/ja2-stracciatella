@@ -693,7 +693,7 @@ UINT8				*pDestBuf;
 }
 
 
-UINT32 mprintf_buffer( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, const wchar_t *pFontString, ...)
+UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;
@@ -730,7 +730,7 @@ wchar_t	string[512];
 }
 
 
-UINT32 mprintf_buffer_coded( UINT8 *pDestBuf, UINT32 uiDestPitchBYTES, UINT32 FontType, INT32 x, INT32 y, wchar_t *pFontString, ...)
+UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
 INT32		destx, desty;
 wchar_t	*curletter, transletter;

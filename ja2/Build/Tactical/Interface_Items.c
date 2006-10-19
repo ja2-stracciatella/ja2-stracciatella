@@ -6431,7 +6431,7 @@ void RenderItemPickupMenu( )
 				  swprintf( pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects );
 
 				  VarFindFontRightCoordinates( sCenX, sCenY, 42, 1 , ITEM_FONT, &sFontX, &sFontY, pStr );
-				  mprintf_buffer( pDestBuf, uiDestPitchBYTES, ITEM_FONT, sFontX, sFontY, pStr );
+				  mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 				}
       	SetFont( ITEMDESC_FONT );
 
@@ -6450,7 +6450,7 @@ void RenderItemPickupMenu( )
 
 				  sNewX = sCenX + 43 - uiStringLength - 4;
 
-  				mprintf_buffer( pDestBuf, uiDestPitchBYTES, ITEMDESC_FONT, sNewX, sNewY, pStr );
+  				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, pStr);
 				  //gprintfinvalidate( sNewX, sNewY, pStr );
 			  }
 
@@ -6495,7 +6495,7 @@ void RenderItemPickupMenu( )
 					swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ pObject->usItem ] );
 				}
 				VarFindFontCenterCoordinates( sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1 , ITEMDESC_FONT, &sFontX, &sFontY, pStr );
-				mprintf_buffer( pDestBuf, uiDestPitchBYTES, ITEMDESC_FONT, sFontX, sFontY, pStr );
+				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 
 				sY += ITEMPICK_GRAPHIC_YSPACE;
 			}
