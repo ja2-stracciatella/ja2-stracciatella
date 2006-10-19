@@ -34,6 +34,8 @@ extern const wchar_t* const wszSelType[6];
 
 extern BOOLEAN gfCurrentSelectionWithRightButton;
 
+extern SGPRect gSelectRegion;
+
 #endif
 
 #endif

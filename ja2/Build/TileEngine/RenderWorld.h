@@ -88,9 +88,6 @@ INT16 gsTopLeftWorldX, gsTopLeftWorldY;
 INT16 gsBottomRightWorldX, gsBottomRightWorldY;
 
 
-SGPRect		gSelectRegion;
-
-
 // GLOBAL COORDINATES
 INT16 gCenterWorldX, gCenterWorldY;
 INT16 gsTLX, gsTLY, gsTRX, gsTRY;

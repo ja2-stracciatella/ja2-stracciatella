@@ -25,6 +25,10 @@
 	#include "Debug.h"
 #endif
 
+
+SGPRect gSelectRegion;
+
+
 BOOLEAN fValidCursor = FALSE;
 BOOLEAN fAnchored =	FALSE;
 BOOLEAN gfBrushEnabled = TRUE;
