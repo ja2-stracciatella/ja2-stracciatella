@@ -380,17 +380,8 @@ void RenderRadarScreen( )
 
 	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
-		if(gbPixelDepth==16)
-		{
-			usLineColor = Get16BPPColor( FROMRGB( 0, 255, 0 ) );
-			RectangleDraw( TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, usLineColor, pDestBuf );
-		}
-		else if(gbPixelDepth==8)
-		{
-			// DB Need to change this to a color from the 8-but standard palette
-			usLineColor = COLOR_GREEN;
-			RectangleDraw8( TRUE, sRadarTLX + 1, sRadarTLY + 1, sRadarBRX + 1, sRadarBRY + 1, usLineColor, pDestBuf );
-		}
+		usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
+		RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, usLineColor, pDestBuf);
 	}
 
 	// Cycle fFlash variable
@@ -430,24 +421,18 @@ void RenderRadarScreen( )
 			sXSoldRadar += RADAR_WINDOW_X;
 			sYSoldRadar += gsRadarY;
 
-			// if we are in 16 bit mode....kind of redundant
-			if(gbPixelDepth==16)
+			if (fFlashHighLightInventoryItemOnradarMap)
 			{
-				if( ( fFlashHighLightInventoryItemOnradarMap ) )
-				{
-					usLineColor = Get16BPPColor( FROMRGB(  0,  255,  0 ) );
+				usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
+			}
+			else
+			{
+				usLineColor = Get16BPPColor(FROMRGB(255, 255, 255));
+			}
 
-				}
-				else
-				{
-					// DB Need to add a radar color for 8-bit
-					usLineColor = Get16BPPColor( FROMRGB(  255,  255,  255 ) );
-				}
-
-				if( iCurrentlyHighLightedItem == iCounter )
-				{
-					RectangleDraw( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf );
-				}
+			if (iCurrentlyHighLightedItem == iCounter)
+			{
+				RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
 			}
 		}
 	}
@@ -496,62 +481,50 @@ void RenderRadarScreen( )
 				sXSoldRadar += RADAR_WINDOW_X;
 				sYSoldRadar += gsRadarY;
 
-
-				if(gbPixelDepth==16)
+				// Are we a selected guy?
+				if (pSoldier->ubID == gusSelectedSoldier)
 				{
-					// DB Need to add a radar color for 8-bit
-
-					// Are we a selected guy?
-					if ( pSoldier->ubID == gusSelectedSoldier )
+					if (gfRadarCurrentGuyFlash)
 					{
-						if ( gfRadarCurrentGuyFlash )
-						{
-							usLineColor = 0;
-						}
-						else
-						{
-              // If on roof, make darker....
-              if ( pSoldier->bLevel > 0 )
-              {
-						    usLineColor = Get16BPPColor( FROMRGB( 150, 150, 0 ) );
-              }
-              else
-              {
-							  usLineColor = Get16BPPColor( gTacticalStatus.Team[ pSoldier->bTeam ].RadarColor );
-              }
-						}
+						usLineColor = 0;
 					}
 					else
 					{
-						usLineColor = Get16BPPColor( gTacticalStatus.Team[ pSoldier->bTeam ].RadarColor );
-
-            // Override civ team with red if hostile...
-            if ( pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) )
-            {
-							usLineColor = Get16BPPColor( FROMRGB( 255, 0, 0 ) );
-            }
-
-						// Render different color if an enemy and he's unconscious
-						if ( pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE )
+						// If on roof, make darker....
+						if (pSoldier->bLevel > 0)
 						{
-							usLineColor = Get16BPPColor( FROMRGB( 128, 128, 128 ) );
+							usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
 						}
+						else
+						{
+							usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
+						}
+					}
+				}
+				else
+				{
+					usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
 
-            // If on roof, make darker....
-            if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0 )
-            {
-						  usLineColor = Get16BPPColor( FROMRGB( 150, 150, 0 ) );
-            }
+					// Override civ team with red if hostile...
+					if (pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(255, 0, 0));
 					}
 
-					RectangleDraw( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );
+					// Render different color if an enemy and he's unconscious
+					if (pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(128, 128, 128));
+					}
+
+					// If on roof, make darker....
+					if (pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
+					}
 				}
-				else if(gbPixelDepth==8)
-				{
-					// DB Need to change this to a color from the 8-but standard palette
-					usLineColor = COLOR_BLUE;
-					RectangleDraw8( TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar+1, sYSoldRadar+1, usLineColor, pDestBuf );
-				}
+
+				RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
 			}
 		}
 	}

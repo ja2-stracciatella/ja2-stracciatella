@@ -3,8 +3,6 @@
 #include "Video.h"
 #include <string.h>
 
-UINT8 ubColorTables[HVOBJECT_SHADE_TABLES+3][256];
-
 UINT16	IntensityTable[65536];
 UINT16	ShadeTable[65536];
 UINT16	White16BPPPalette[ 256 ];

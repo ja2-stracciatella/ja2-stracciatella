@@ -64,8 +64,6 @@ BOOLEAN		FontDestWrap=FALSE;
 UINT16		FontForeground16=0;
 UINT16		FontBackground16=0;
 UINT16		FontShadow16=DEFAULT_SHADOW;
-UINT8			FontForeground8=0;
-UINT8			FontBackground8=0;
 
 // Temp, for saving printing parameters
 INT32			SaveFontDefault=(-1);
@@ -77,8 +75,6 @@ BOOLEAN		SaveFontDestWrap=FALSE;
 UINT16		SaveFontForeground16=0;
 UINT16		SaveFontShadow16=0;
 UINT16		SaveFontBackground16=0;
-UINT8			SaveFontForeground8=0;
-UINT8			SaveFontBackground8=0;
 
 //*****************************************************************************
 // SetFontColors
@@ -104,8 +100,7 @@ UINT8 ubForeground, ubBackground;
 // SetFontForeground
 //
 //	Sets the foreground color of the currently selected font. The parameter is
-// the index into the 8-bit palette. In 8BPP mode, that index number is used
-// for the pixel value to be drawn for nontransparent pixels. In 16BPP mode,
+// the index into the 8-bit palette. In 16BPP mode,
 // the RGB values from the palette are used to create the pixel color. Note
 // that if you change fonts, the selected foreground/background colors will
 // stay at what they are currently set to.
@@ -117,8 +112,6 @@ UINT32 uiRed, uiGreen, uiBlue;
 
 	if((FontDefault < 0) || (FontDefault > MAX_FONTS))
 		return;
-
-	FontForeground8=ubForeground;
 
 	uiRed=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubForeground].peRed;
 	uiGreen=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubForeground].peGreen;
@@ -134,8 +127,6 @@ UINT32 uiRed, uiGreen, uiBlue;
 
 	if((FontDefault < 0) || (FontDefault > MAX_FONTS))
 		return;
-
-	//FontForeground8=ubForeground;
 
 	uiRed=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubShadow].peRed;
 	uiGreen=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubShadow].peGreen;
@@ -157,8 +148,7 @@ UINT32 uiRed, uiGreen, uiBlue;
 // SetFontBackground
 //
 //	Sets the Background color of the currently selected font. The parameter is
-// the index into the 8-bit palette. In 8BPP mode, that index number is used
-// for the pixel value to be drawn for nontransparent pixels. In 16BPP mode,
+// the index into the 8-bit palette. In 16BPP mode,
 // the RGB values from the palette are used to create the pixel color. If the
 // background value is zero, the background of the font will be transparent.
 // Note that if you change fonts, the selected foreground/background colors will
@@ -171,8 +161,6 @@ UINT32 uiRed, uiGreen, uiBlue;
 
 	if((FontDefault < 0) || (FontDefault > MAX_FONTS))
 		return;
-
-	FontBackground8=ubBackground;
 
 	uiRed=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubBackground].peRed;
 	uiGreen=(UINT32)FontObjs[FontDefault]->pPaletteEntry[ubBackground].peGreen;
@@ -438,8 +426,6 @@ void SaveFontSettings(void)
 	SaveFontForeground16 = FontForeground16;
 	SaveFontShadow16 = FontShadow16;
 	SaveFontBackground16 = FontBackground16;
-	SaveFontForeground8 = FontForeground8;
-	SaveFontBackground8 = FontBackground8;
 }
 
 
@@ -461,8 +447,6 @@ void RestoreFontSettings(void)
 	FontForeground16 = SaveFontForeground16;
 	FontShadow16 = SaveFontShadow16;
 	FontBackground16 = SaveFontBackground16;
-	FontForeground8 = SaveFontForeground8;
-	FontBackground8 = SaveFontBackground8;
 }
 
 
@@ -615,14 +599,7 @@ UINT8				*pDestBuf;
 		}
 
 		// Blit directly
-		if ( gbPixelDepth == 8 )
-		{
-			Blt8BPPDataTo8BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground8, FontBackground8);
-		}
-		else
-		{
-			Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16 );
-		}
+		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx+=GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -724,14 +701,7 @@ UINT8				*pDestBuf;
 		}
 
 		// Blit directly
-		if ( gbPixelDepth == 8 )
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip( (UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion );
-		}
-		else
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion );
-		}
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion);
 		destx+=GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -771,14 +741,7 @@ wchar_t	string[512];
 		}
 
 		// Blit directly
-		if ( gbPixelDepth == 8 )
-		{
-			Blt8BPPDataTo8BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground8, FontBackground8);
-		}
-		else
-		{
-			Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16 );
-		}
+		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx+=GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -831,14 +794,7 @@ UINT16	usOldForeColor;
 		}
 
 		// Blit directly
-		if ( gbPixelDepth == 8 )
-		{
-			Blt8BPPDataTo8BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground8, FontBackground8);
-		}
-		else
-		{
-			Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16 );
-		}
+		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx+=GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -896,14 +852,7 @@ UINT8				*pDestBuf;
 		}
 
 		// Blit directly
-		if ( gbPixelDepth == 8 )
-		{
-			Blt8BPPDataTo8BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground8, FontBackground8);
-		}
-		else
-		{
-			Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16 );
-		}
+		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx+=GetWidth(FontObjs[FontDefault], transletter);
 	}
 

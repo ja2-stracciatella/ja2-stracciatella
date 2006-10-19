@@ -293,14 +293,7 @@ BOOLEAN InitializeTacticalInterface(  )
 
 	// failing the CHECKF after this will cause you to lose your mouse
 
-	if ( GETPIXELDEPTH() == 8 )
-	{
-		strcpy( vs_desc.ImageFile, "INTERFACE/IN_TEXT_8.pcx" );
-	}
-	else if ( GETPIXELDEPTH() == 16 )
-	{
-		strcpy( vs_desc.ImageFile, "INTERFACE/IN_TEXT.STI" );
-	}
+	strcpy(vs_desc.ImageFile, "INTERFACE/IN_TEXT.STI");
 
 	if( !AddVideoSurface( &vs_desc, &guiINTEXT ) )
 		AssertMsg( 0, "Missing INTERFACE/In_text.sti");
@@ -1874,98 +1867,39 @@ void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sW
 	{
 		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (FLOAT)100;
 		dWidth			=	dPercentage * sWidth;
-		if(gbPixelDepth==16)
-		{
-			usLineColor = Get16BPPColor( FROMRGB( 240,  240, 20  ) );
-			RectangleDraw( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-		}
-		else if(gbPixelDepth==8)
-		{
-		// DB Need to change this to a color from the 8-bit standard palette
-			usLineColor = COLOR_RED;
-			RectangleDraw8( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-		}
+		usLineColor = Get16BPPColor(FROMRGB(240, 240, 20));
+		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
-
 
 	if( bBandage )
 	{
 		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
 		dWidth			=	dPercentage * sWidth;
-		if(gbPixelDepth==16)
-		{
-			usLineColor = Get16BPPColor( FROMRGB( 222, 132, 132 ) );
-			RectangleDraw( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-		}
-		else if(gbPixelDepth==8)
-		{
-			// DB Need to change this to a color from the 8-bit standard palette
-			usLineColor = COLOR_RED;
-			RectangleDraw8( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-		}
+		usLineColor = Get16BPPColor( FROMRGB( 222, 132, 132 ) );
+		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
-
 
 	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
-	if(gbPixelDepth==16)
-	{
-		usLineColor = Get16BPPColor( FROMRGB( 200, 0, 0 ) );
-		RectangleDraw( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-	}
-	else if(gbPixelDepth==8)
-	{
-	// DB Need to change this to a color from the 8-bit standard palette
-		usLineColor = COLOR_RED;
-		RectangleDraw8( TRUE, sXPos + 3, sYPos + 1, (INT32)( sXPos + dWidth + 3 ), sYPos + 1, usLineColor, pDestBuf );
-	}
-
-
+	usLineColor = Get16BPPColor(FROMRGB(200, 0, 0));
+	RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreathMax ) / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
-	if(gbPixelDepth==16)
-	{
-		usLineColor = Get16BPPColor( FROMRGB( 20, 20, 150 ) );
-		RectangleDraw( TRUE, sXPos + 3, sYPos + 4, (INT32)( sXPos + dWidth + 3 ), sYPos + 4, usLineColor, pDestBuf );
-	}
-	else if(gbPixelDepth==8)
-	{
-	// DB Need to change this to a color from the 8-bit standard palette
-		usLineColor = COLOR_BLUE;
-		RectangleDraw8( TRUE, sXPos + 3, sYPos + 4, (INT32)( sXPos + dWidth + 3 ), sYPos + 4, usLineColor, pDestBuf );
-	}
+	usLineColor = Get16BPPColor(FROMRGB(20, 20, 150));
+	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreath ) / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
-	if(gbPixelDepth==16)
-	{
-		usLineColor = Get16BPPColor( FROMRGB( 100, 100, 220 ) );
-		RectangleDraw( TRUE, sXPos + 3, sYPos + 4, (INT32)( sXPos + dWidth + 3 ), sYPos + 4, usLineColor, pDestBuf );
-	}
-	else if(gbPixelDepth==8)
-	{
-	// DB Need to change this to a color from the 8-bit standard palette
-		usLineColor = COLOR_BLUE;
-		RectangleDraw8( TRUE, sXPos + 3, sYPos + 4, (INT32)( sXPos + dWidth + 3 ), sYPos + 4, usLineColor, pDestBuf );
-	}
+	usLineColor = Get16BPPColor(FROMRGB(100, 100, 220));
+	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	/*
 	// morale
 	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
 	dWidth			=	dPercentage * sWidth;
-	if(gbPixelDepth==16)
-	{
-		usLineColor = Get16BPPColor( FROMRGB( 0, 250, 0 ) );
-		RectangleDraw( TRUE, sXPos + 1, sYPos + 7, (INT32)( sXPos + dWidth + 1 ), sYPos + 7, usLineColor, pDestBuf );
-	}
-	else if(gbPixelDepth==8)
-	{
-	// DB Need to change this to a color from the 8-bit standard palette
-		usLineColor = COLOR_GREEN;
-		RectangleDraw8( TRUE, sXPos + 1, sYPos + 7, (INT32)( sXPos + dWidth + 1 ), sYPos + 7, usLineColor, pDestBuf );
-	}
-
+	usLineColor = Get16BPPColor(FROMRGB(0, 250, 0));
+	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);
 	*/
 
 	UnLockVideoSurface( FRAME_BUFFER );

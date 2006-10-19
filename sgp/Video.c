@@ -35,7 +35,6 @@ typedef struct
 
 static UINT16                 gusScreenWidth;
 static UINT16                 gusScreenHeight;
-static UINT8                  gubScreenPixelDepth;
 
 #define			MAX_NUM_FRAMES			25
 
@@ -117,7 +116,7 @@ BOOLEAN InitializeVideoManager(void)
 	RegisterDebugTopic(TOPIC_VIDEO, "Video");
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, gbPixelDepth, SDL_SWSURFACE | SDL_HWPALETTE);
+	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_HWPALETTE);
 	if (ScreenBuffer == NULL)
 	{
 		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to set up video mode");
@@ -130,12 +129,12 @@ BOOLEAN InitializeVideoManager(void)
 	Uint32 Amask = ScreenBuffer->format->Amask;
 
 	FrameBuffer = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, gbPixelDepth,
+		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 16,
 		Rmask, Gmask, Bmask, Amask
 	);
 
 	MouseCursor = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, gbPixelDepth,
+		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, 16,
 		Rmask, Gmask, Bmask, Amask
 	);
 	SDL_SetColorKey(MouseCursor, SDL_SRCCOLORKEY, 0);
@@ -146,7 +145,6 @@ BOOLEAN InitializeVideoManager(void)
 
 	gusScreenWidth = SCREEN_WIDTH;
 	gusScreenHeight = SCREEN_HEIGHT;
-	gubScreenPixelDepth = gbPixelDepth;
 
 	// Blank out the frame buffer
 	UINT32 uiPitch;
@@ -234,7 +232,7 @@ void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDep
 {
 	*usWidth = (UINT16) gusScreenWidth;
 	*usHeight = (UINT16) gusScreenHeight;
-	*ubBitDepth = (UINT8) gubScreenPixelDepth;
+	*ubBitDepth = 16;
 }
 
 

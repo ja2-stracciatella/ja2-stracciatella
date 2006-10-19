@@ -57,9 +57,6 @@ BOOLEAN						gfCapturingVideo = FALSE;
 RECT				rcWindow;
 #endif
 
-// moved from header file: 24mar98:HJH
-UINT8			gbPixelDepth;					// GLOBAL RUN-TIME SETTINGS
-
 BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 BOOLEAN gfGameInitialized = FALSE;
@@ -68,9 +65,6 @@ CHAR8		gzCommandLine[100];		// Command line given
 
 CHAR8		gzErrorMsg[2048]="";
 BOOLEAN	gfIgnoreMessages=FALSE;
-
-// GLOBAL VARIBLE, SET TO DEFAULT BUT CAN BE CHANGED BY THE GAME IF INIT FILE READ
-UINT8		gbPixelDepth = PIXEL_DEPTH;
 
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)

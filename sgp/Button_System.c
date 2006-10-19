@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "Font.h"
 #include "Input.h"
-#include "Lighting.h"
 #include "MemMan.h"
 #include "SGP.h"
 #include "VObject_Blitters.h"
@@ -580,10 +579,7 @@ static BOOLEAN InitializeButtonImageManager(void)
 		return(FALSE);
 	}
 
-	if(GETPIXELDEPTH()==16)
-		GenericButtonFillColors[0]=GenericButtonOffNormal[0]->p16BPPPalette[Pix];
-	else if(GETPIXELDEPTH()==8)
-		GenericButtonFillColors[0]=COLOR_DKGREY;
+	GenericButtonFillColors[0] = GenericButtonOffNormal[0]->p16BPPPalette[Pix];
 
 	return(TRUE);
 }
@@ -2614,145 +2610,32 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 		else
 			ImgNum=1;
 
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)(b->XLoc + (q*iBorderWidth)),
-											(INT32)b->YLoc,
-											(UINT16)ImgNum, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)(b->XLoc + (q*iBorderWidth)),
-											(INT32)b->YLoc,
-											(UINT16)ImgNum, &ClipRect );
-		}
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, (INT32)(b->XLoc + q * iBorderWidth), (INT32)b->YLoc, (UINT16)ImgNum, &ClipRect);
 
 		if(q==0)
 			ImgNum=5;
 		else
 			ImgNum=6;
 
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)(b->XLoc + (q*iBorderWidth)),
-											cy, (UINT16)ImgNum, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip((UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)(b->XLoc + (q*iBorderWidth)),
-											cy, (UINT16)ImgNum, &ClipRect );
-		}
-
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, (INT32)(b->XLoc + q * iBorderWidth), cy, (UINT16)ImgNum, &ClipRect);
 	}
 	// Blit the right side corners
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx, (INT32)b->YLoc,
-											2, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx, (INT32)b->YLoc,
-											2, &ClipRect );
-		}
-
-
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx, cy, 7, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx, cy, 7, &ClipRect );
-		}
+	Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, cx, (INT32)b->YLoc, 2, &ClipRect);
+	Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
 	// Draw the vertical members of the button's borders
 	NumChunksHigh--;
 
 	if(hremain!=0)
 	{
 		q=NumChunksHigh;
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)b->XLoc,
-											(INT32)(b->YLoc + (q*iBorderHeight) - (iBorderHeight-hremain)),
-											3, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)b->XLoc,
-											(INT32)(b->YLoc + (q*iBorderHeight) - (iBorderHeight-hremain)),
-											3, &ClipRect );
-		}
-
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx,	(INT32)(b->YLoc + (q*iBorderHeight) - (iBorderHeight-hremain)),
-											4, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip((UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx,	(INT32)(b->YLoc + (q*iBorderHeight) - (iBorderHeight-hremain)),
-											4, &ClipRect );
-		}
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, (INT32)b->XLoc, (INT32)(b->YLoc + q * iBorderHeight - iBorderHeight + hremain), 3, &ClipRect);
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, cx, (INT32)(b->YLoc + q * iBorderHeight - iBorderHeight + hremain), 4, &ClipRect);
 	}
 
 	for(q=1;q<NumChunksHigh;q++)
 	{
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)b->XLoc,
-											(INT32)(b->YLoc + (q*iBorderHeight)),
-											3, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip((UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											(INT32)b->XLoc,
-											(INT32)(b->YLoc + (q*iBorderHeight)),
-											3, &ClipRect );
-		}
-
-		if(gbPixelDepth==16)
-		{
-			Blt8BPPDataTo16BPPBufferTransparentClip( (UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx,	(INT32)(b->YLoc + (q*iBorderHeight)),
-											4, &ClipRect );
-		}
-		else if(gbPixelDepth==8)
-		{
-			Blt8BPPDataTo8BPPBufferTransparentClip((UINT16*)pDestBuf,
-											uiDestPitchBYTES, BPic,
-											cx,	(INT32)(b->YLoc + (q*iBorderHeight)),
-											4, &ClipRect );
-		}
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, (INT32)b->XLoc, (INT32)(b->YLoc + q * iBorderHeight), 3, &ClipRect);
+		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, BPic, cx, (INT32)(b->YLoc + q * iBorderHeight), 4, &ClipRect);
 	}
 
 	// Unlock buffer

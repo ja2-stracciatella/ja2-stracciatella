@@ -675,13 +675,7 @@ BOOLEAN UpdateSaveBufferWithBackbuffer(void)
 	pSrcBuf = LockVideoSurface(FRAME_BUFFER, &uiSrcPitchBYTES);
 	pDestBuf = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
 
-	if(gbPixelDepth==16)
-	{
-		// BLIT HERE
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-					0, 0, 0, 0, 640, 480 );
-	}
+	Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES, 0, 0, 0, 0, 640, 480);
 
 	UnLockVideoSurface(FRAME_BUFFER);
 	UnLockVideoSurface(guiSAVEBUFFER);

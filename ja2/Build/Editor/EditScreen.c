@@ -1022,10 +1022,7 @@ void ShowCurrentDrawingMode( void )
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
 	usFillColor = GenericButtonFillColors[0];
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	if(gbPixelDepth==16)
-		RectangleDraw( FALSE, 0, 400, 99, 458, usFillColor, pDestBuf );
-	else if(gbPixelDepth==8)
-		RectangleDraw8( FALSE, 0, 400, 99, 458, usFillColor, pDestBuf );
+	RectangleDraw(FALSE, 0, 400, 99, 458, usFillColor, pDestBuf);
 
 	UnLockVideoSurface( FRAME_BUFFER );
 

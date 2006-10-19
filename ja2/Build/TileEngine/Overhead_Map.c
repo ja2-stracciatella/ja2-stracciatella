@@ -1099,13 +1099,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	    pSrcBuf = LockVideoSurface(guiRENDERBUFFER, &uiSrcPitchBYTES);
 	    pDestBuf = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
 
-	    if(gbPixelDepth==16)
-	    {
-		    // BLIT HERE
-		    Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-					    (UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-					    0, 0, 0, 0, usWidth, usHeight );
-	    }
+			Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES, 0, 0, 0, 0, usWidth, usHeight);
 
 	    UnLockVideoSurface(guiRENDERBUFFER);
 	    UnLockVideoSurface(guiSAVEBUFFER);

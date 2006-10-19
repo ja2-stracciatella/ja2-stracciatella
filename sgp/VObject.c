@@ -412,10 +412,7 @@ HVOBJECT CreateVideoObject( VOBJECT_DESC *VObjectDesc )
 			// Set palette from himage
 			if ( hImage->ubBitDepth == 8 )
 			{
-				hVObject->pShade8=ubColorTables[DEFAULT_SHADE_LEVEL];
-
 				SetVideoObjectPalette( hVObject, hImage->pPalette );
-
 			}
 
 			if ( VObjectDesc->fCreateFlags & VOBJECT_CREATE_FROMFILE )
@@ -648,32 +645,11 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 				break;
 
 			case 8:
-
 				// Switch based on flags given
-				do
-				{
-					if(gbPixelDepth==16)
-					{
-						if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-							Blt8BPPDataTo16BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-						else
-							Blt8BPPDataTo16BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-						break;
-					}
-					else if(gbPixelDepth==8)
-					{
-						if(BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-							Blt8BPPDataTo8BPPBufferTransparentClip( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-						else
-							Blt8BPPDataTo8BPPBufferTransparent( pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex );
-						break;
-					}
-					// Use default blitter here
-					//Blt8BPPDataTo16BPPBuffer( hDestVObject, hSrcVObject, (UINT16)iDestX, (UINT16)iDestY, (SGPRect*)&SrcRect );
-
-				} while( FALSE );
-
-
+				if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
+					Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
+				else
+					Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex);
 				break;
 	}
 

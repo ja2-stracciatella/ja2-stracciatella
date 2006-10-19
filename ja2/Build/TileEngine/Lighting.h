@@ -62,19 +62,6 @@
 #define		LIGHT_NIGHTTIME			0x0100		// light stays on when dark outside
 
 
-#define		COLOR_RED						162
-#define		COLOR_BLUE					203
-#define		COLOR_YELLOW				144
-#define		COLOR_GREEN					184
-#define		COLOR_LTGREY				134
-#define		COLOR_DKGREY				136
-#define		COLOR_BROWN					80
-#define		COLOR_PURPLE				160
-#define		COLOR_ORANGE				76
-#define		COLOR_WHITE					208
-#define		COLOR_BLACK					72
-
-
 // stucture of node in linked list for lights
 typedef struct light_p {
 					INT16		iDX, iDY;

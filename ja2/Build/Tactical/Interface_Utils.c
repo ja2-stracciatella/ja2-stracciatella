@@ -483,10 +483,7 @@ void RenderSoldierFace( SOLDIERTYPE *pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLE
 	else
 	{
 		// Put close panel there
-		//if(gbPixelDepth==16)
-		//{
-			BltVideoObjectFromIndex( guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
-		//}
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
 		RestoreExternBackgroundRect( sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT );
 	}
 
