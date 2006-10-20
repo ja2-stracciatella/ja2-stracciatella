@@ -601,7 +601,6 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 
 static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT32 iStartPointX_S, INT32 iStartPointY_S, INT32 iEndXS, INT32 iEndYS, UINT8 ubNumLevels, UINT32 *puiLevels, UINT16 *psLevelIDs )
 {
-	LEVELNODE		*pNode;
 	HVOBJECT		hVObject;
 	TILE_ELEMENT *TileElem=NULL;
 	UINT32			uiDestPitchBYTES;
@@ -617,7 +616,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 	static			UINT8				ubLevelNodeStartIndex[ NUM_RENDER_FX_TYPES ];
 	UINT16			usOutlineColor=0;
 
-	static			INT32				iTileMapPos[ 500 ];
 	BOOLEAN				fCheckForMouseDetections = FALSE;
 	static				RenderFXType  RenderFXList[ NUM_RENDER_FX_TYPES ];
 	INT16					sWorldY;
@@ -668,18 +666,17 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 	do
 	{
-		INT32 iTempPosX_M = iAnchorPosX_M;
-		INT32 iTempPosY_M = iAnchorPosY_M;
-		INT32 iTempPosX_S = iAnchorPosX_S;
-		INT32 iTempPosY_S = iAnchorPosY_S;
+		static INT32 iTileMapPos[500];
 
-		UINT32 uiMapPosIndex;
-
-		uiMapPosIndex = 0;
-
-		// Build tile index list
-		do
 		{
+			INT32 iTempPosX_M = iAnchorPosX_M;
+			INT32 iTempPosY_M = iAnchorPosY_M;
+			INT32 iTempPosX_S = iAnchorPosX_S;
+			UINT32 uiMapPosIndex = 0;
+
+			// Build tile index list
+			do
+			{
 				iTileMapPos[ uiMapPosIndex ] = FASTMAPROWCOLTOPOS( iTempPosY_M, iTempPosX_M );
 
 				iTempPosX_S += 40;
@@ -687,24 +684,21 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 				iTempPosY_M --;
 
 				uiMapPosIndex++;
-
-		} while( iTempPosX_S < iEndXS );
-
+			} while( iTempPosX_S < iEndXS );
+		}
 
 
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
-		{
+  	{
 			UINT32 uiRowFlags = puiLevels[cnt];
 
 			if (!(uiRowFlags & TILES_ALL_DYNAMICS) || uiLayerUsedFlags & uiRowFlags || uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)
 			{
-				iTempPosX_M = iAnchorPosX_M;
-				iTempPosY_M = iAnchorPosY_M;
-				iTempPosX_S = iAnchorPosX_S;
-				iTempPosY_S = iAnchorPosY_S;
-
-				uiMapPosIndex = 0;
-
+				INT32 iTempPosX_M = iAnchorPosX_M;
+				INT32 iTempPosY_M = iAnchorPosY_M;
+				INT32 iTempPosX_S = iAnchorPosX_S;
+				INT32 iTempPosY_S = iAnchorPosY_S;
+				UINT32 uiMapPosIndex = 0;
 
 				if(bXOddFlag > 0)
 					iTempPosX_S += 20;
@@ -727,6 +721,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							}
 						}
 
+						LEVELNODE* pNode;
 						if((uiFlags&TILES_MARKED) && !(gpWorldLevelData[uiTileIndex].uiFlags&MAPELEMENT_REDRAW))
 						{
 							pNode=NULL;
