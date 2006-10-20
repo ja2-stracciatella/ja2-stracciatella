@@ -285,7 +285,6 @@ SRCS += ja2/Build/TileEngine/Radar_Screen.c
 SRCS += ja2/Build/TileEngine/RenderWorld.c # inline assembler
 SRCS += ja2/Build/TileEngine/Render_Dirty.c
 SRCS += ja2/Build/TileEngine/Render_Fun.c
-SRCS += ja2/Build/TileEngine/Render_Z.c
 SRCS += ja2/Build/TileEngine/SaveLoadMap.c
 SRCS += ja2/Build/TileEngine/Shade_Table_Util.c
 SRCS += ja2/Build/TileEngine/Simple_Render_Utils.c
