@@ -1,16 +1,13 @@
 #include "WorldDef.h"
 #include "Isometric_Utils.h"
 
-INT16 gsRScreenCenterY;
-INT16 gsRDistToCenterY, gsRDistToCenterX;
-
 #define GetMapXYWorldY( sWorldCellX, sWorldCellY, sWorldY )\
 {\
 \
-	gsRDistToCenterX = ( sWorldCellX * CELL_X_SIZE ) - gCenterWorldX;\
-	gsRDistToCenterY = ( sWorldCellY * CELL_Y_SIZE ) - gCenterWorldY;\
+	INT16 gsRDistToCenterX = (sWorldCellX * CELL_X_SIZE) - gCenterWorldX;\
+	INT16 gsRDistToCenterY = (sWorldCellY * CELL_Y_SIZE) - gCenterWorldY;\
 \
-	gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;\
+	INT16 gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;\
 \
 	sWorldY = gsRScreenCenterY + gsCY - gsTLY;\
 }
