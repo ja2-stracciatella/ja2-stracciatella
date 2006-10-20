@@ -666,7 +666,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 			RenderFXList[ cnt ]					 = RenderFX[ psLevelIDs[ cnt ] ];
 	}
 
-	BOOLEAN fEndRenderCol = FALSE;
 	do
 	{
 		INT32 iTempPosX_M = iAnchorPosX_M;
@@ -696,21 +695,14 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 		{
 			UINT32 uiRowFlags = puiLevels[cnt];
-			BOOLEAN fDoRow = TRUE;
 
-			if ( ( uiRowFlags & TILES_ALL_DYNAMICS ) && !( uiLayerUsedFlags & uiRowFlags ) && !( uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE ) )
-			{
-				fDoRow = FALSE;
-			}
-
-			if ( fDoRow )
+			if (!(uiRowFlags & TILES_ALL_DYNAMICS) || uiLayerUsedFlags & uiRowFlags || uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)
 			{
 				iTempPosX_M = iAnchorPosX_M;
 				iTempPosY_M = iAnchorPosY_M;
 				iTempPosX_S = iAnchorPosX_S;
 				iTempPosY_S = iAnchorPosY_S;
 
-				BOOLEAN fEndRenderRow = FALSE;
 				uiMapPosIndex = 0;
 
 
@@ -2126,16 +2118,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 					iTempPosX_S += 40;
 					iTempPosX_M ++;
 					iTempPosY_M --;
-
-					if ( iTempPosX_S >= iEndXS )
-					{
-						fEndRenderRow = TRUE;
-					}
-
-				} while( !fEndRenderRow );
-
+				} while (iTempPosX_S < iEndXS);
 			}
-
 		}
 
 		if ( bXOddFlag > 0 )
@@ -2149,13 +2133,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 		bXOddFlag = !bXOddFlag;
 		iAnchorPosY_S += 10;
-
-		if ( iAnchorPosY_S >= iEndYS )
-		{
-			fEndRenderCol = TRUE;
-		}
 	}
-	while( !fEndRenderCol );
+	while (iAnchorPosY_S < iEndYS);
 
 	if(!(uiFlags&TILES_DIRTY))
 		UnLockVideoSurface( FRAME_BUFFER );
