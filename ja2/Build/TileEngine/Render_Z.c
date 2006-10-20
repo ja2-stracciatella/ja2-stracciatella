@@ -1,6 +1,3 @@
-#include "WorldDef.h"
-#include "Isometric_Utils.h"
-
 #define GetMapXYWorldY( sWorldCellX, sWorldCellY, sWorldY )\
 {\
 \
