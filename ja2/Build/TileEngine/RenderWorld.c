@@ -1589,20 +1589,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								}
 								else if ( ( uiLevelNodeFlags  & LEVELNODE_ITEM ) && !( uiFlags&TILES_DIRTY ) )
 								{
-										BOOLEAN fZBlit = FALSE;
-
-										BOOLEAN bItemOutline;
 										if ( uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF )
 										{
 											usOutlineColor = gusYellowItemOutlineColor;
-											bItemOutline = TRUE;
-											fZBlit = TRUE;
 										}
 										else
 										{
 											usOutlineColor = gusNormalItemOutlineColor;
-											bItemOutline = TRUE;
-											fZBlit = TRUE;
 										}
 
 										if ( gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] )
@@ -1610,19 +1603,16 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 												if ( uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF )
 												{
 													usOutlineColor = us16BPPItemCycleYellowColors[ gsCurrentItemGlowFrame ];
-													bItemOutline = TRUE;
 												}
 												else
 												{
 													if ( gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON  )
 													{
 														usOutlineColor = us16BPPItemCycleRedColors[ gsCurrentItemGlowFrame ];
-														bItemOutline = TRUE;
 													}
 													else
 													{
 														usOutlineColor = us16BPPItemCycleWhiteColors[ gsCurrentItemGlowFrame ];
-														bItemOutline = TRUE;
 													}
 												}
 										}
@@ -1631,38 +1621,24 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 										if ( bBlitClipVal == FALSE )
 										{
-											if ( fZBlit )
+											if ( fObscuredBlitter )
 											{
-												if ( fObscuredBlitter )
-												{
-													Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( (UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline );
-												}
-												else
-												{
-													Blt8BPPDataTo16BPPBufferOutlineZ((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline );
-												}
+												Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( (UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, TRUE );
 											}
 											else
 											{
-												Blt8BPPDataTo16BPPBufferOutline((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline );
+												Blt8BPPDataTo16BPPBufferOutlineZ((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, TRUE );
 											}
 										}
 										else if ( bBlitClipVal == TRUE )
 										{
-											if ( fZBlit )
+											if ( fObscuredBlitter )
 											{
-												if ( fObscuredBlitter )
-												{
-													Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( (UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline, &gClippingRect );
-												}
-												else
-												{
-													Blt8BPPDataTo16BPPBufferOutlineZClip((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline, &gClippingRect );
-												}
+												Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( (UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, TRUE, &gClippingRect );
 											}
 											else
 											{
-												Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline, &gClippingRect );
+												Blt8BPPDataTo16BPPBufferOutlineZClip((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, TRUE, &gClippingRect );
 											}
 										}
 								}
