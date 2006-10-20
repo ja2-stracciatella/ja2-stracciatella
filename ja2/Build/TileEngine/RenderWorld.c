@@ -611,7 +611,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 	BOOLEAN			fRenderTile=TRUE;
 	BOOLEAN			fPixelate=FALSE;
 	INT16				sMultiTransShadowZBlitterIndex=-1;
-	BOOLEAN			fTranslucencyType=FALSE;
 	INT16				sX, sY;
 	static			UINT8				ubLevelNodeStartIndex[ NUM_RENDER_FX_TYPES ];
 	UINT16			usOutlineColor=0;
@@ -654,9 +653,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 			}
 		}
 	}
-
-	if(gTacticalStatus.uiFlags&TRANSLUCENCY_TYPE)
-		fTranslucencyType=TRUE;
 
 	for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 	{
@@ -754,7 +750,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							BOOLEAN fUseTileElem              = FALSE;
 							BOOLEAN fMultiTransShadowZBlitter = FALSE;
 							BOOLEAN fObscuredBlitter          = FALSE;
-							fTranslucencyType						= TRUE;
+							BOOLEAN fTranslucencyType         = TRUE;
               UINT32 uiAniTileFlags = 0;
 							INT16 gsForceSoldierZLevel = FALSE;
 							SOLDIERTYPE* pSoldier = NULL;

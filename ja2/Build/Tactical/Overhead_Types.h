@@ -40,7 +40,6 @@
 #define			SHOW_ALL_ITEMS											0x000000010
 #define			SHOW_AP_LEFT												0x000000020
 #define			SHOW_ALL_MERCS											0x000000040
-#define			TRANSLUCENCY_TYPE										0x000000080
 #define			GODMODE															0x000000100
 #define			DEMOMODE														0x000000200
 #define			PLAYER_TEAM_DEAD										0x000000400

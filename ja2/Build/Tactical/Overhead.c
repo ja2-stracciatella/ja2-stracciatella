@@ -658,7 +658,7 @@ BOOLEAN InitOverhead( )
 	}
 
 	// Set other tactical flags
-	gTacticalStatus.uiFlags = TURNBASED | TRANSLUCENCY_TYPE;
+	gTacticalStatus.uiFlags = TURNBASED;
 	gTacticalStatus.sSlideTarget = NOWHERE;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
