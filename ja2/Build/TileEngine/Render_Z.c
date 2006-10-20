@@ -1,7 +1,7 @@
 #include "WorldDef.h"
 #include "Isometric_Utils.h"
 
-INT16 gsRScreenCenterX, gsRScreenCenterY;
+INT16 gsRScreenCenterY;
 INT16 gsRDistToCenterY, gsRDistToCenterX;
 
 #define GetMapXYWorldY( sWorldCellX, sWorldCellY, sWorldY )\
@@ -9,17 +9,6 @@ INT16 gsRDistToCenterY, gsRDistToCenterX;
 \
 	gsRDistToCenterX = ( sWorldCellX * CELL_X_SIZE ) - gCenterWorldX;\
 	gsRDistToCenterY = ( sWorldCellY * CELL_Y_SIZE ) - gCenterWorldY;\
-\
-	gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;\
-\
-	sWorldY = gsRScreenCenterY + gsCY - gsTLY;\
-}
-
-#define GetMapXYWorldYFromCellCoords( sWorldCellX, sWorldCellY, sWorldY )\
-{\
-\
-	gsRDistToCenterX = sWorldCellX  - gCenterWorldX;\
-	gsRDistToCenterY = sWorldCellY  - gCenterWorldY;\
 \
 	gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;\
 \
@@ -237,9 +226,3 @@ INT16 gsRDistToCenterY, gsRDistToCenterX;
 	}\
 \
 }
-
-
-//#if 0
-//		sZOffsetX = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetX;\
-////		sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
-//#endif
