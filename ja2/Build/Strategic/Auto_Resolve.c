@@ -67,7 +67,6 @@
 #	include "Cheats.h"
 #endif
 
-//#include "vtuneapi.h"
 
 //#define INVULNERABILITY
 
@@ -2089,9 +2088,6 @@ void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 	UINT8 ubCurrentGroupID = 0;
 	BOOLEAN fFirstGroup = TRUE;
 
-
-	//VtResumeSampling();
-
 	MSYS_RemoveRegion( &gpAR->AutoResolveRegion );
 	DeleteVideoObjectFromIndex( gpAR->iPanelImages );
 	DeleteVideoObjectFromIndex( gpAR->iFaces );
@@ -2320,7 +2316,6 @@ void RemoveAutoResolveInterface( BOOLEAN fDeleteForGood )
 		gubNumCreaturesAttackingTown = 0;
 		gubSectorIDOfCreatureAttack = 0;
 	}
-	//VtPauseSampling();
 }
 
 void PauseButtonCallback( GUI_BUTTON *btn, INT32 reason )
