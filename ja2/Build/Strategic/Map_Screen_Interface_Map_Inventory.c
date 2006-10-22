@@ -2086,7 +2086,7 @@ void CheckGridNoOfItemsInMapScreenMapInventory()
 
 void SortSectorInventory( WORLDITEM *pInventory, UINT32 uiSizeOfArray )
 {
-	qsort( (LPVOID)pInventory, (size_t) uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare );
+	qsort(pInventory, uiSizeOfArray, sizeof(WORLDITEM), MapScreenSectorInventoryCompare);
 }
 
 

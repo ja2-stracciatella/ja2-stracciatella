@@ -659,7 +659,7 @@ void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 
 BOOLEAN SortMercArray(void)
 {
-	qsort( (LPVOID)AimMercArray, (size_t) MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
+	qsort(AimMercArray, MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
 
 	return(TRUE);
 }
