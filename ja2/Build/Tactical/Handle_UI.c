@@ -393,7 +393,6 @@ BOOLEAN		gfUIDisplayActionPointsCenter		= FALSE;
 
 INT16			gUIDisplayActionPointsOffY			= 0;
 INT16			gUIDisplayActionPointsOffX			= 0;
-BOOLEAN		gfUIDoNotHighlightSelMerc				= FALSE;
 BOOLEAN		gfUIHandleSelection							= FALSE;
 BOOLEAN		gfUIHandleSelectionAboveGuy			= FALSE;
 BOOLEAN		gfUIInDeadlock									= FALSE;
@@ -465,7 +464,6 @@ UINT32  HandleTacticalUI( void )
 		gfUIDisplayActionPointsInvalid	= FALSE;
 		gfUIDisplayActionPointsBlack  	= FALSE;
 		gfUIDisplayActionPointsCenter		= FALSE;
-		gfUIDoNotHighlightSelMerc				= FALSE;
 		gfUIHandleSelection							= NO_GUY_SELECTION;
 		gfUIHandleSelectionAboveGuy			= FALSE;
 		gfUIDisplayDamage								= FALSE;
@@ -2767,7 +2765,6 @@ void HandleObjectHighlighting( )
 		{
 			// Check for selected
 			pSoldier->pCurrentShade = pSoldier->pShades[ 0 ];
-			gfUIDoNotHighlightSelMerc = TRUE;
 		}
 	}
 

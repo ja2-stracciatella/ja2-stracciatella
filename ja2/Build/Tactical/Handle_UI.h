@@ -186,7 +186,6 @@ BOOLEAN		gfUIDisplayActionPointsBlack;
 BOOLEAN		gfUIDisplayActionPointsCenter;
 INT16			gUIDisplayActionPointsOffY;
 INT16			gUIDisplayActionPointsOffX;
-BOOLEAN		gfUIDoNotHighlightSelMerc;
 UINT32		guiShowUPDownArrows;
 BOOLEAN		gfUIHandleSelection;
 BOOLEAN		gfUIHandleSelectionAboveGuy;
