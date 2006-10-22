@@ -104,7 +104,6 @@ SRCS += ja2/Build/Laptop/Florist_Cards.c
 SRCS += ja2/Build/Laptop/Florist_Gallery.c
 SRCS += ja2/Build/Laptop/Florist_Order_Form.c
 SRCS += ja2/Build/Laptop/Funeral.c
-SRCS += ja2/Build/Laptop/GunEmporium.c
 SRCS += ja2/Build/Laptop/History.c
 SRCS += ja2/Build/Laptop/IMPVideoObjects.c
 SRCS += ja2/Build/Laptop/IMP_AboutUs.c
