@@ -1061,7 +1061,7 @@ INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
 }
 
 
-INT8 FindObjExcludingSlot( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bExcludeSlot )
+static INT8 FindObjExcludingSlot(const SOLDIERTYPE* pSoldier, UINT16 usItem, INT8 bExcludeSlot)
 {
 	INT8 bLoop;
 

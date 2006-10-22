@@ -33,7 +33,6 @@ extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 // Prototype Declarations
 
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam);
-void             ShutdownStandardGamingPlatform(void);
 
 
 #if !defined(JA2) && !defined(UTILS)
@@ -48,10 +47,6 @@ BOOLEAN						gfCapturingVideo = FALSE;
 #endif
 
 
-#ifdef JA2
-	void ProcessJa2CommandLineBeforeInitialization(CHAR8 *pCommandLine);
-#endif
-
 // Global Variable Declarations
 #ifdef WINDOWED_MODE
 RECT				rcWindow;
@@ -59,12 +54,12 @@ RECT				rcWindow;
 
 BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
-BOOLEAN gfGameInitialized = FALSE;
+static BOOLEAN gfGameInitialized = FALSE;
 
 CHAR8		gzCommandLine[100];		// Command line given
 
-CHAR8		gzErrorMsg[2048]="";
-BOOLEAN	gfIgnoreMessages=FALSE;
+static char    gzErrorMsg[2048] = "";
+static BOOLEAN gfIgnoreMessages = FALSE;
 
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
@@ -329,6 +324,9 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 #endif
 
 
+static void SGPExit(void);
+
+
 static BOOLEAN InitializeStandardGamingPlatform(void)
 {
 	// now required by all (even JA2) in order to call ShutdownSGP
@@ -439,7 +437,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 }
 
 
-void ShutdownStandardGamingPlatform(void)
+static void ShutdownStandardGamingPlatform(void)
 {
 #ifndef JA2
 	static BOOLEAN Reenter = FALSE;
@@ -508,6 +506,9 @@ void ShutdownStandardGamingPlatform(void)
 
   ShutdownDebugManager();
 }
+
+
+static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine);
 
 
 int main(int argc, char* argv[])
@@ -685,7 +686,7 @@ int main(int argc, char* argv[])
 }
 
 
-void SGPExit(void)
+static void SGPExit(void)
 {
 	static BOOLEAN fAlreadyExiting = FALSE;
 	BOOLEAN fUnloadScreens = TRUE;
@@ -803,8 +804,7 @@ CHAR8	*pCopy=NULL, *pToken;
 #endif
 
 
-
-void ProcessJa2CommandLineBeforeInitialization(CHAR8 *pCommandLine)
+static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine)
 {
 	CHAR8 cSeparators[]="\t =";
 	CHAR8	*pCopy=NULL, *pToken;

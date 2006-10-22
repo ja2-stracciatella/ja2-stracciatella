@@ -15,7 +15,8 @@
 	#include "Stubs.h" // XXX
 #endif
 
-INT8 EffectiveStrength( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveStrength(const SOLDIERTYPE* pSoldier)
 {
 	INT8	bBandaged;
 	INT32	iEffStrength;
@@ -45,7 +46,8 @@ INT8 EffectiveWisdom( SOLDIERTYPE * pSoldier )
 	return( (INT8) iEffWisdom );
 }
 
-INT8 EffectiveAgility( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveAgility(const SOLDIERTYPE* pSoldier)
 {
 	INT32	iEffAgility;
 
@@ -153,7 +155,8 @@ INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
 	}
 }
 
-INT8 EffectiveMarksmanship( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveMarksmanship(const SOLDIERTYPE* pSoldier)
 {
 	INT32	iEffMarksmanship;
 
@@ -164,7 +167,8 @@ INT8 EffectiveMarksmanship( SOLDIERTYPE * pSoldier )
 	return( (INT8) iEffMarksmanship );
 }
 
-INT8 EffectiveDexterity( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveDexterity(const SOLDIERTYPE* pSoldier)
 {
 	INT32	iEffDexterity;
 

@@ -140,10 +140,6 @@ extern  INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
 void ResetAllMercSpeeds( );
-void HandleBloodForNewGridNo( SOLDIERTYPE *pSoldier );
-BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving );
-void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier );
-void HandleCreatureTenseQuote( );
 
 
 void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSelected );
@@ -177,7 +173,7 @@ extern BOOLEAN                  gfAmINetworked;
 
 // ATE: GLOBALS FOR E3
 UINT8                           gubCurrentScene = 0;
-CHAR8                     gzLevelFilenames[ ][ 50 ] =
+static const char* const gzLevelFilenames[] =
 {
 	"A9.dat",
 	"ScotTBMines.dat",
@@ -186,11 +182,10 @@ CHAR8                     gzLevelFilenames[ ][ 50 ] =
 	"IanRTNight.dat",
 	"LindaRTCave1.dat",
 	"LindaRTCave2.dat"
-
 };
 
 
-INT8                      ubLevelMoveLink[ 10 ] =
+static const INT8 ubLevelMoveLink[10] =
 {
 	1,
 	2,
@@ -212,8 +207,8 @@ SOLDIERTYPE      *MercPtrs[ TOTAL_SOLDIERS ];
 SOLDIERTYPE      *MercSlots[ TOTAL_SOLDIERS ];
 UINT32                   guiNumMercSlots = 0;
 
-SOLDIERTYPE      *AwaySlots[ TOTAL_SOLDIERS ];
-UINT32                   guiNumAwaySlots = 0;
+static SOLDIERTYPE* AwaySlots[TOTAL_SOLDIERS];
+static UINT32       guiNumAwaySlots = 0;
 
 // DEF: changed to have client wait for gPlayerNum assigned from host
 UINT8                            gbPlayerNum = 0;
@@ -305,7 +300,7 @@ CHAR8                   gzDirectionStr[][ 30 ] =
 };
 
 // TEMP VALUES FOR TEAM DEAFULT POSITIONS
-UINT8 bDefaultTeamRanges[ MAXTEAMS ][ 2 ] =
+static const UINT8 bDefaultTeamRanges[MAXTEAMS][2] =
 {
 	0,              19,                                                                                             //20  US
 	20,             51,                                                                                             //32  ENEMY
@@ -841,6 +836,11 @@ FLOAT gdRadiansForAngle[ ] =
 	(FLOAT)( -3 * PI / 4 ),
 
 };
+
+
+static void HandleBloodForNewGridNo(const SOLDIERTYPE* pSoldier);
+static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving);
+static void HandleCreatureTenseQuote(void);
 
 
 BOOLEAN ExecuteOverhead( )
@@ -2361,7 +2361,7 @@ void HandleJohnArrival( SOLDIERTYPE * pSoldier )
 }
 
 
-BOOLEAN HandleAtNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving )
+static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 {
 	INT16														sMineGridNo;
 	UINT8		                        ubVolume;
@@ -4141,10 +4141,12 @@ UINT32 EnterTacticalDemoMode()
 
 }
 
-CHAR8 *GetSceneFilename(  )
+
+const char* GetSceneFilename(void)
 {
 	return( gzLevelFilenames[ gubCurrentScene ] );
 }
+
 
 extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
 
@@ -4277,8 +4279,9 @@ INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeop
 	return( TRUE );
 }
 
+
 // NB if making changes don't forget to update NewOKDestination
-INT16 NewOKDestinationAndDirection( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, INT8 bDirection, BOOLEAN fPeopleToo, INT8 bLevel )
+static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, INT8 bDirection, BOOLEAN fPeopleToo, INT8 bLevel)
 {
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
@@ -7626,7 +7629,8 @@ void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,  INT8 bNumMercsWai
 
 }
 
-void HandleBloodForNewGridNo( SOLDIERTYPE *pSoldier )
+
+static void HandleBloodForNewGridNo(const SOLDIERTYPE* pSoldier)
 {
 	// Handle bleeding...
 	if ( ( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD ) )
@@ -8031,7 +8035,10 @@ BOOLEAN HostileBloodcatsPresent( void )
 }
 
 
-void HandleCreatureTenseQuote( )
+static void DoCreatureTensionQuote(SOLDIERTYPE* pSoldier);
+
+
+static void HandleCreatureTenseQuote(void)
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
@@ -8086,7 +8093,7 @@ void HandleCreatureTenseQuote( )
 }
 
 
-void DoCreatureTensionQuote( SOLDIERTYPE *pSoldier )
+static void DoCreatureTensionQuote(SOLDIERTYPE* pSoldier)
 {
   INT32   iRandomQuote;
   BOOLEAN fCanDoQuote = TRUE;

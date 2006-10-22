@@ -403,7 +403,7 @@ void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPointReduction )
 }
 
 
-INT8 GetDrunkLevel( SOLDIERTYPE *pSoldier )
+INT8 GetDrunkLevel(const SOLDIERTYPE* pSoldier)
 {
 	INT8 bNumDrinks;
 
@@ -436,7 +436,7 @@ INT8 GetDrunkLevel( SOLDIERTYPE *pSoldier )
 }
 
 
-INT32 EffectStatForBeingDrunk( SOLDIERTYPE *pSoldier, INT32 iStat )
+INT32 EffectStatForBeingDrunk(const SOLDIERTYPE* pSoldier, INT32 iStat)
 {
 	return( ( iStat * giDrunkModifier[ GetDrunkLevel( pSoldier ) ] / 100 ) );
 }

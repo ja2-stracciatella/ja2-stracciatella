@@ -71,17 +71,17 @@
 
 
 BOOLEAN	gfInMovementMenu = FALSE;
-INT32		giMenuAnchorX, giMenuAnchorY;
-
+static INT32 giMenuAnchorX;
+static INT32 giMenuAnchorY;
 
 
 #define PROG_BAR_START_X			5
 #define PROG_BAR_START_Y			2
 #define PROG_BAR_LENGTH				627
 
-BOOLEAN	gfProgBarActive      = FALSE;
-UINT8		gubProgNumEnemies		 = 0;
-UINT8		gubProgCurEnemy			 = 0;
+static BOOLEAN gfProgBarActive   = FALSE;
+static UINT8   gubProgNumEnemies = 0;
+static UINT8   gubProgCurEnemy   = 0;
 
 typedef struct
 {
@@ -97,38 +97,34 @@ typedef struct
 
 } TOP_MESSAGE;
 
+static TOP_MESSAGE gTopMessage;
+BOOLEAN gfTopMessageDirty = FALSE;
 
-TOP_MESSAGE		gTopMessage;
-BOOLEAN				gfTopMessageDirty = FALSE;
-
-void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, const wchar_t *psString );
 extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState );
 
 
-MOUSE_REGION	gMenuOverlayRegion;
-
+static MOUSE_REGION gMenuOverlayRegion;
 
 
 UINT16				gusOldSelectedSoldier		= NO_SOLDIER;
 
 // OVerlay ID
-INT32					giPopupSlideMessageOverlay = -1;
-UINT16				gusOverlayPopupBoxWidth, gusOverlayPopupBoxHeight;
-MercPopUpBox	gpOverrideMercBox;
+static INT32        giPopupSlideMessageOverlay = -1;
+static UINT16       gusOverlayPopupBoxWidth;
+static UINT16       gusOverlayPopupBoxHeight;
+static MercPopUpBox gpOverrideMercBox;
 
-INT32					giUIMessageOverlay = -1;
-UINT16				gusUIMessageWidth, gusUIMessageHeight;
-MercPopUpBox	gpUIMessageOverrideMercBox;
+INT32					      giUIMessageOverlay = -1;
+static UINT16       gusUIMessageWidth;
+static UINT16       gusUIMessageHeight;
+static MercPopUpBox gpUIMessageOverrideMercBox;
 UINT32				guiUIMessageTime = 0;
-INT32					iOverlayMessageBox = -1;
-INT32					iUIMessageBox = -1;
+static INT32        iOverlayMessageBox = -1;
+static INT32        iUIMessageBox = -1;
 UINT32				guiUIMessageTimeDelay = 0;
-BOOLEAN				gfUseSkullIconMessage = FALSE;
+static BOOLEAN      gfUseSkullIconMessage = FALSE;
 
-// Overlay callback
-void BlitPopupText( VIDEO_OVERLAY *pBlitter );
-
-BOOLEAN	gfPanelAllocated = FALSE;
+static BOOLEAN gfPanelAllocated = FALSE;
 
 extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
@@ -169,7 +165,7 @@ enum
 	NUM_ICON_IMAGES
 };
 
-INT32					iIconImages[ NUM_ICON_IMAGES ];
+static INT32 iIconImages[NUM_ICON_IMAGES];
 
 enum
 {
@@ -197,7 +193,7 @@ enum
 };
 
 
-INT32					iActionIcons[ NUM_ICONS ];
+static INT32 iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
 UINT32					guiRENDERBUFFER;
@@ -209,33 +205,29 @@ UINT32					guiGUNSM;
 UINT32					guiP1ITEMS;
 UINT32					guiP2ITEMS;
 UINT32					guiP3ITEMS;
-UINT32					guiBUTTONBORDER;
+static UINT32 guiBUTTONBORDER;
 UINT32					guiRADIO;
-UINT32					guiRADIO2;
+static UINT32 guiRADIO2;
 UINT32					guiCOMPANEL;
 UINT32					guiCOMPANELB;
-UINT32					guiAIMCUBES;
-UINT32					guiAIMBARS;
+static UINT32 guiAIMCUBES;
+static UINT32 guiAIMBARS;
 UINT32					guiVEHINV;
 UINT32					guiBURSTACCUM;
-UINT32					guiITEMPOINTERHATCHES;
+static UINT32   guiITEMPOINTERHATCHES;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
 MOUSE_REGION	gRadarRegion;
 
 
-UINT16 gsUpArrowX;
-UINT16 gsUpArrowY;
-UINT16 gsDownArrowX;
-UINT16 gsDownArrowY;
+static UINT16 gsUpArrowX;
+static UINT16 gsUpArrowY;
+static UINT16 gsDownArrowX;
+static UINT16 gsDownArrowY;
 
-UINT32 giUpArrowRect;
-UINT32 giDownArrowRect;
-
-
-void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight );
-void PopupDoorOpenMenu( BOOLEAN fClosingDoor );
+static UINT32 giUpArrowRect;
+static UINT32 giDownArrowRect;
 
 
 BOOLEAN fFirstTimeInGameScreen  = TRUE;
@@ -243,17 +235,6 @@ BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
 INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
 INT16		gsCurrentSoldierGridNo	= 0;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
-
-// LOCAL FUCTIONS
-void BtnPositionCallback( GUI_BUTTON *btn, INT32 reason );
-void BtnMovementCallback( GUI_BUTTON *btn, INT32 reason );
-void BtnDoorMenuCallback( GUI_BUTTON *btn, INT32 reason );
-void MovementMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-UINT32 CalcUIMessageDuration( STR16 wString );
-
-
 
 
 BOOLEAN InitializeTacticalInterface(  )
@@ -609,6 +590,9 @@ BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID )
 }
 
 
+static void HandleUpDownArrowBackgrounds(void);
+
+
 void HandleInterfaceBackgrounds( )
 {
 	HandleUpDownArrowBackgrounds( );
@@ -632,6 +616,9 @@ void BtnPositionCallback(GUI_BUTTON *btn,INT32 reason)
 
 }
 
+
+static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
+static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent )
@@ -1003,7 +990,8 @@ void CancelMovementMenu( )
 	guiPendingOverrideEvent		= A_CHANGE_TO_MOVE;
 }
 
-void BtnMovementCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32		uiBtnID;
 	UI_EVENT	*pUIEvent;
@@ -1068,7 +1056,11 @@ void BtnMovementCallback(GUI_BUTTON *btn,INT32 reason)
 
 }
 
-void HandleUpDownArrowBackgrounds( )
+
+static void GetArrowsBackground(void);
+
+
+static void HandleUpDownArrowBackgrounds(void)
 {
 	static	UINT32						 uiOldShowUpDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
@@ -1228,7 +1220,8 @@ void EraseRenderArrows( )
 	giDownArrowRect = 0;
 }
 
-void GetArrowsBackground( )
+
+static void GetArrowsBackground(void)
 {
 	SOLDIERTYPE								 *pSoldier;
 	INT16											 sMercScreenX, sMercScreenY;
@@ -1436,6 +1429,9 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 		*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
 	}
 }
+
+
+static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight);
 
 
 void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
@@ -1773,8 +1769,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 }
 
 
-
-void RenderOverlayMessage( VIDEO_OVERLAY *pBlitter )
+static void RenderOverlayMessage(VIDEO_OVERLAY* pBlitter)
 {
 	// Override it!
 	OverrideMercPopupBox( &gpOverrideMercBox );
@@ -1841,7 +1836,7 @@ void EndOverlayMessage( )
 }
 
 
-void DrawBarsInUIBox( SOLDIERTYPE *pSoldier , INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight )
+static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight)
 {
 	FLOAT											 dWidth, dPercentage;
 	//UINT16										 usLineColor;
@@ -2034,8 +2029,12 @@ typedef struct
 
 } OPENDOOR_MENU;
 
-OPENDOOR_MENU	gOpenDoorMenu;
+static OPENDOOR_MENU gOpenDoorMenu;
 BOOLEAN				gfInOpenDoorMenu = FALSE;
+
+
+static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
+
 
 BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fClosingDoor )
 {
@@ -2099,7 +2098,12 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 	return( TRUE );
 }
 
-void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
+
+static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 {
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	wchar_t							zDisp[ 100 ];
@@ -2446,7 +2450,8 @@ void CancelOpenDoorMenu( )
 	gOpenDoorMenu.fMenuHandled = 2;
 }
 
-void BtnDoorMenuCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32		uiBtnID;
 
@@ -2628,7 +2633,7 @@ BOOLEAN HandleOpenDoorMenu( )
 }
 
 
-void RenderUIMessage( VIDEO_OVERLAY *pBlitter )
+static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 {
 	// Shade area first...
 	ShadowVideoSurfaceRect( pBlitter->uiDestBuff, pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2 );
@@ -2637,6 +2642,9 @@ void RenderUIMessage( VIDEO_OVERLAY *pBlitter )
 
 	InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth, pBlitter->sY + gusUIMessageHeight );
 }
+
+
+static UINT32 CalcUIMessageDuration(const wchar_t* wString);
 
 
 void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... )
@@ -2806,6 +2814,9 @@ void EndUIMessage( )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
+static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString);
+
+
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 {
 	UINT32	cnt;
@@ -2843,7 +2854,8 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 	return( FALSE );
 }
 
-void CreateTopMessage( UINT32 uiSurface, UINT8 ubType, const wchar_t *psString )
+
+static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString)
 {
 	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
   VOBJECT_DESC    VObjectDesc;
@@ -3059,7 +3071,8 @@ void TurnExpiredCallBack( UINT8 bExitValue )
 	UIHandleEndTurn( NULL );
 }
 
-void CheckForAndHandleEndPlayerTimeLimit( )
+
+static void CheckForAndHandleEndPlayerTimeLimit(void)
 {
 	if ( gTacticalStatus.fInTopMessage )
 	{
@@ -3413,7 +3426,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 }
 
 
-void MovementMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3421,13 +3434,15 @@ void MovementMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void DoorMenuBackregionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CancelOpenDoorMenu( );
 	}
 }
+
 
 const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier )
 {
@@ -3479,8 +3494,7 @@ static AIMCUBE_UI_DATA	gCubeUIData;
 #define	GET_CUBES_HEIGHT_FROM_UIHEIGHT( h )  ( 32 + ( h * 64 ) )
 
 
-
-void CalculateAimCubeUIPhysics( )
+static void CalculateAimCubeUIPhysics(void)
 {
 	UINT8	ubHeight;
 
@@ -3791,19 +3805,19 @@ void DirtyTopMessage( )
 
 
 
-UINT32 CalcUIMessageDuration( STR16 wString )
+static UINT32 CalcUIMessageDuration(const wchar_t* wString)
 {
 	// base + X per letter
 	return( 1000 + 50 * wcslen( wString ) );
 }
 
 
-BOOLEAN   gfMultipurposeLocatorOn = FALSE;
-UINT32    guiMultiPurposeLocatorLastUpdate;
-INT8      gbMultiPurposeLocatorFrame;
-INT16     gsMultiPurposeLocatorGridNo;
-INT8      gbMultiPurposeLocatorLevel;
-INT8      gbMultiPurposeLocatorCycles;
+static BOOLEAN gfMultipurposeLocatorOn = FALSE;
+static UINT32  guiMultiPurposeLocatorLastUpdate;
+static INT8    gbMultiPurposeLocatorFrame;
+static INT16   gsMultiPurposeLocatorGridNo;
+static INT8    gbMultiPurposeLocatorLevel;
+static INT8    gbMultiPurposeLocatorCycles;
 
 void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 {

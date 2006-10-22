@@ -45,6 +45,10 @@ typedef union
 	UINT32	uiValue;
 } SplitUINT32;
 
+
+static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents);
+
+
 HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 {
 	HIMAGE			hImage = NULL;
@@ -146,6 +150,10 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 
 }
 
+
+static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents);
+
+
 BOOLEAN DestroyImage( HIMAGE hImage )
 {
 	Assert( hImage != NULL );
@@ -159,7 +167,8 @@ BOOLEAN DestroyImage( HIMAGE hImage )
 	return( TRUE );
 }
 
-BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents )
+
+static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents)
 {
 
 	Assert( hImage != NULL );
@@ -210,7 +219,8 @@ BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents )
 	return( TRUE );
 }
 
-BOOLEAN LoadImageData( HIMAGE hImage, UINT16 fContents )
+
+static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents)
 {
 	BOOLEAN fReturnVal = FALSE;
 
@@ -247,6 +257,18 @@ BOOLEAN LoadImageData( HIMAGE hImage, UINT16 fContents )
 	return( fReturnVal );
 
 }
+
+
+#ifndef NO_ZLIB_COMPRESSION
+static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+#endif
+
+static BOOLEAN Copy8BPPImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+
 
 BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
 {
@@ -307,7 +329,7 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 #ifndef NO_ZLIB_COMPRESSION
 
-BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	UINT32	uiNumLines;
 	UINT32	uiLineSize;
@@ -387,7 +409,8 @@ BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT
 	return( TRUE );
 }
 
-BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+
+static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	UINT32		uiNumLines;
 	UINT32		uiLineSize;
@@ -483,7 +506,8 @@ BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UIN
 	return( TRUE );
 }
 
-BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+
+static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	// 16BPP Compressed image has not been implemented yet
 	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
@@ -492,7 +516,7 @@ BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UI
 #endif //NO_ZLIB_COMPRESSION
 
 
-BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+static BOOLEAN Copy8BPPImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
@@ -536,7 +560,8 @@ BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestW
 
 }
 
-BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+
+static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
@@ -592,7 +617,7 @@ BOOLEAN Extract16BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf )
 }
 
 
-BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 rows, cols;

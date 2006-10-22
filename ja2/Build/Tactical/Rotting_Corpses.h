@@ -149,13 +149,10 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam );
 void MercLooksForCorpses( SOLDIERTYPE *pSoldier );
 void RebuildAllCorpseShadeTables( );
 
-UINT16				CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse );
-
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
 
 
 void HandleRottingCorpses( );
-void AddCrowToCorpse( ROTTING_CORPSE *pCorpse );
 
 void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID );
 void CorpseHit( INT16 sGridNo, UINT16 usStructureID );

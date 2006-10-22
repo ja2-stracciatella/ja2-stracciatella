@@ -13,9 +13,9 @@
 	#include "WCheck.h"
 #endif
 
-BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader );
-BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader );
-BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage );
+static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
+static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
+
 
 BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 {
@@ -85,7 +85,8 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 	return( TRUE );
 }
 
-BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
+
+static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
 {
 	UINT32			uiBytesRead;
 
@@ -162,7 +163,10 @@ BOOLEAN STCILoadRGB( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader *
 }
 
 
-BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHeader * pHeader )
+static BOOLEAN STCISetPalette(PTR pSTCIPalette, HIMAGE hImage);
+
+
+static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
 {
 	UINT32			uiFileSectionSize;
 	UINT32			uiBytesRead;
@@ -346,7 +350,7 @@ BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, STCIHead
 }
 
 
-BOOLEAN STCISetPalette( PTR pSTCIPalette, HIMAGE hImage )
+static BOOLEAN STCISetPalette(PTR pSTCIPalette, HIMAGE hImage)
 {
 	UINT16								usIndex;
 	STCIPaletteElement *	pubPalette;

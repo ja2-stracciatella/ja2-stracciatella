@@ -3048,7 +3048,8 @@ BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 	return( TRUE );
 }
 
-BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, UINT16 *pusSubState )
+
+BOOLEAN SubstituteBodyTypeAnimation(const SOLDIERTYPE* pSoldier, UINT16 usTestState, UINT16* pusSubState)
 {
 	BOOLEAN fSubFound = FALSE;
 
@@ -3326,7 +3327,7 @@ UINT16	gusQueenMonsterSpitAnimPerDir[] =
 };
 
 
-UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 {
 	UINT16 usAnimSurface;
 	UINT16 usAltAnimSurface;

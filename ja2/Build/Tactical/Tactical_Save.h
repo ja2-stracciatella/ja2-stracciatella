@@ -33,9 +33,6 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile );
 //Save the Map Temp files to the saved game file
 BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile );
 
-// delete temp file
-BOOLEAN DeleteTempItemMapFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
 
 //Retrieves the number of items in the sectors temp item file
 BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *puiNumberOfItems, BOOLEAN fIfEmptyCreate );
@@ -89,7 +86,6 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet );
 BOOLEAN SetSectorFlag( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet );
-BOOLEAN ReSetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet );
 BOOLEAN ReSetSectorFlag( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet );
 
 

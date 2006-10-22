@@ -27,8 +27,8 @@ void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPoints );
 
 INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType );
 INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType );
-INT8 GetDrunkLevel( SOLDIERTYPE *pSoldier );
-INT32 EffectStatForBeingDrunk( SOLDIERTYPE *pSoldier, INT32 iStat );
+INT8 GetDrunkLevel(const SOLDIERTYPE* pSoldier);
+INT32 EffectStatForBeingDrunk(const SOLDIERTYPE* pSoldier, INT32 iStat);
 BOOLEAN MercUnderTheInfluence( SOLDIERTYPE *pSoldier );
 
 

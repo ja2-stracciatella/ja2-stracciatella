@@ -51,17 +51,7 @@
 	#include "FileMan.h"
 #endif
 
-BOOLEAN gfWasInMeanwhile = FALSE;
-
-
-
-///////////////////////////////////////////////////////////////
-//
-// Global Defines
-//
-///////////////////////////////////////////////////////////////
-
-
+static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
 // This struct is used to save info from the NPCQuoteInfo struct that can change.
@@ -84,16 +74,6 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp\\NpcQuote.tmp"
 
 
-
-
-
-///////////////////////////////////////////////////////////////
-//
-// Global Variables
-//
-///////////////////////////////////////////////////////////////
-
-
 extern	UINT32			guiNumWorldItems;
 
 extern	NPCQuoteInfo *	gpNPCQuoteInfoArray[NUM_PROFILES];
@@ -104,44 +84,7 @@ extern UINT8 gubEncryptionArray2[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTA
 extern UINT8 gubEncryptionArray3[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ];
 extern UINT8 gubEncryptionArray4[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ];
 
-INT32 giErrorMessageBox = 0;
-
-///////////////////////////////////////////////////////////////
-//
-// Function Prototypes
-//
-///////////////////////////////////////////////////////////////
-
-void TempFileLoadErrorMessageReturnCallback( UINT8 ubRetVal );
-
-BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
-BOOLEAN RetrieveTempFileFromSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-BOOLEAN AddTempFileToSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-
-BOOLEAN SaveRottingCorpsesToTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-BOOLEAN LoadRottingCorpsesFromTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-void LoadNPCInformationFromProfileStruct();
-void SaveNPCInformationToProfileStruct( );
-
-BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-
-INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID);
-
-
-BOOLEAN SetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet );
-BOOLEAN GetUnderGroundSectorFlagStatus( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToCheck );
-
-BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile();
-BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId );
-BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId );
-UINT32	GetLastTimePlayerWasInSector();
-void		SetLastTimePlayerWasInSector();
+static INT32 giErrorMessageBox = 0;
 
 
 extern void InitLoadedWorld( );
@@ -154,17 +97,7 @@ extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 #endif
 
 
-void	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame );
-UINT32 UpdateLoadedSectorsItemInventory( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems );
-
-//ppp
-
-///////////////////////////////////////////////////////////////
-//
-// Functions
-//
-///////////////////////////////////////////////////////////////
-
+static BOOLEAN AddTempFileToSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 // SaveMapTempFilesToSavedGameFile() Looks for and opens all Map Modification files.  It add each mod file to the save game file.
@@ -317,6 +250,10 @@ BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+
+
+static BOOLEAN RetrieveTempFileFromSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame);
 
 
 // LoadMapTempFilesFromSavedGameFile() loads all the temp files from the saved game file and writes them into the temp directory
@@ -522,10 +459,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 }
 
 
-
-
-
-BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData )
+BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData)
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -711,6 +645,9 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 }
 
 
+static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+
+
 BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItemsToAdd, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, BOOLEAN fReplaceEntireFile )
 {
 	UINT32	uiNumberOfItems=0;
@@ -818,6 +755,12 @@ BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sG
 }
 
 extern BOOLEAN gfInMeanwhile;
+
+
+static void SaveNPCInformationToProfileStruct(void);
+static void SetLastTimePlayerWasInSector(void);
+static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+
 
 BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 {
@@ -1077,6 +1020,13 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 }
 
 
+static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static UINT32 GetLastTimePlayerWasInSector(void);
+static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void LoadNPCInformationFromProfileStruct(void);
+
+
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 {
 	BOOLEAN fUsedTempFile = FALSE;
@@ -1228,7 +1178,7 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 }
 
 
-void SetLastTimePlayerWasInSector()
+static void SetLastTimePlayerWasInSector(void)
 {
 	if( !gbWorldSectorZ )
 		SectorInfo[ SECTOR( gWorldSectorX,gWorldSectorY) ].uiTimeCurrentSectorWasLastLoaded = GetWorldTotalMin();
@@ -1258,8 +1208,7 @@ void SetLastTimePlayerWasInSector()
 }
 
 
-
-UINT32 GetLastTimePlayerWasInSector()
+static UINT32 GetLastTimePlayerWasInSector(void)
 {
 	if( !gbWorldSectorZ )
 		return( SectorInfo[ SECTOR( gWorldSectorX,gWorldSectorY) ].uiTimeCurrentSectorWasLastLoaded );
@@ -1292,9 +1241,7 @@ UINT32 GetLastTimePlayerWasInSector()
 }
 
 
-
-
-BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	UINT32	uiNumberOfItems=0;
 	WORLDITEM *pWorldItems = NULL;
@@ -1396,10 +1343,7 @@ BOOLEAN LoadAndAddWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-
-
-
-BOOLEAN AddTempFileToSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN AddTempFileToSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -1413,8 +1357,7 @@ BOOLEAN AddTempFileToSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 
 }
 
 
-
-BOOLEAN RetrieveTempFileFromSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN RetrieveTempFileFromSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -1427,6 +1370,8 @@ BOOLEAN RetrieveTempFileFromSavedGame( HWFILE hFile, UINT32 uiType, INT16 sMapX,
 	return( TRUE );
 }
 
+
+static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
 
 
 //Deletes the Temp map Directory
@@ -1466,8 +1411,7 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 }
 
 
-
-BOOLEAN SaveRottingCorpsesToTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesWritten=0;
@@ -1539,7 +1483,7 @@ BOOLEAN SaveRottingCorpsesToTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ
 }
 
 
-BOOLEAN DeleteTempItemMapFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	UINT8 bSectorId = 0;
 //	CHAR8		zTempName[ 128 ];
@@ -1569,7 +1513,7 @@ BOOLEAN DeleteTempItemMapFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-BOOLEAN LoadRottingCorpsesFromTempCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead=0;
@@ -1733,7 +1677,11 @@ BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT
 	return( TRUE );
 }
 
-void SaveNPCInformationToProfileStruct( )
+
+static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
+
+
+static void SaveNPCInformationToProfileStruct(void)
 {
 	UINT32								cnt;
 	SOLDIERTYPE *					pSoldier;
@@ -1801,7 +1749,12 @@ void SaveNPCInformationToProfileStruct( )
 
 extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest );
 
-void LoadNPCInformationFromProfileStruct()
+
+static INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID);
+static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId);
+
+
+static void LoadNPCInformationFromProfileStruct(void)
 {
 	UINT32					cnt;
 	INT16						sSoldierID;
@@ -2019,7 +1972,7 @@ BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 
 }
 
 
-BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
 
@@ -2043,7 +1996,7 @@ BOOLEAN DoesTempFileExistsForMap( UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 
 }
 
 
-INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
+static INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
 {
 	UINT16 cnt;
 	UINT8		ubLastTeamID;
@@ -2069,10 +2022,8 @@ INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
 }
 
 
-
-
 //Initializes the NPC temp array
-BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
+static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 {
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
@@ -2124,8 +2075,7 @@ BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile()
 }
 
 
-
-BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
+static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 {
 	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
@@ -2179,9 +2129,7 @@ BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile( UINT8 ubNpcId )
 }
 
 
-
-
-BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile( UINT8 ubNpcId )
+static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId)
 {
 	UINT32	uiNumBytesRead;
 	UINT8		ubCnt;
@@ -2358,8 +2306,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 }
 
 
-
-BOOLEAN SetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet )
+static BOOLEAN SetUnderGroundSectorFlag(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet)
 {
 	UNDERGROUND_SECTORINFO *pTempNode = gpUndergroundSectorInfoHead;
 
@@ -2383,7 +2330,8 @@ BOOLEAN SetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSector
 	return( FALSE );
 }
 
-BOOLEAN ReSetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet )
+
+static BOOLEAN ReSetUnderGroundSectorFlag(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet)
 {
 	UNDERGROUND_SECTORINFO *pTempNode = gpUndergroundSectorInfoHead;
 
@@ -2407,7 +2355,8 @@ BOOLEAN ReSetUnderGroundSectorFlag( INT16 sSectorX, INT16 sSectorY, UINT8 ubSect
 	return( FALSE );
 }
 
-BOOLEAN GetUnderGroundSectorFlagStatus( INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToCheck )
+
+static BOOLEAN GetUnderGroundSectorFlagStatus(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToCheck)
 {
 	UNDERGROUND_SECTORINFO *pTempNode = gpUndergroundSectorInfoHead;
 
@@ -2668,10 +2617,12 @@ BOOLEAN LoadTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
 	return( LoadFilesFromSavedGame( NPC_TEMP_QUOTE_FILE, hFile ) );
 }
 
-void TempFileLoadErrorMessageReturnCallback( UINT8 ubRetVal )
+
+static void TempFileLoadErrorMessageReturnCallback(UINT8 ubRetVal)
 {
 	gfProgramIsRunning = FALSE;
 }
+
 
 //if you call this function, make sure you return TRUE (if applicable) to make the game
 //think it succeeded the load.  This sets up the dialog for the game exit, after the hacker
@@ -2742,8 +2693,8 @@ UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
 	return( uiChecksum );
 }
 
-//UINT8 gubEncryptionArray4[ BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ][ NEW_ROTATION_ARRAY_SIZE ] =
-UINT8 * GetRotationArray( void )
+
+static const UINT8* GetRotationArray(void)
 {
 	// based on guiJA2EncryptionSet
 	if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 )
@@ -2778,9 +2729,8 @@ BOOLEAN NewJA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, 
 	UINT8		ubLastByteForNextLoop;
 	BOOLEAN	fRet;
 	UINT8 *	pMemBlock;
-	UINT8	* pubRotationArray;
 
-	pubRotationArray = GetRotationArray();
+	const UINT8* pubRotationArray = GetRotationArray();
 
 	fRet = FileRead( hFile, pDest, uiBytesToRead, puiBytesRead );
 	if ( fRet )
@@ -2810,7 +2760,6 @@ BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite
 	UINT8		ubLastByte = 0;//, ubTemp;
 	UINT8 * pMemBlock;
 	BOOLEAN	fRet;
-	UINT8	* pubRotationArray;
 
 	pMemBlock = (UINT8 *) MemAlloc( uiBytesToWrite );
 
@@ -2820,7 +2769,7 @@ BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite
 	}
 	memset( pMemBlock, 0, uiBytesToWrite );
 
-	pubRotationArray = GetRotationArray();
+	const UINT8* pubRotationArray = GetRotationArray();
 
 	memcpy( pMemBlock, pDest, uiBytesToWrite );
 	for ( uiLoop = 0; uiLoop < uiBytesToWrite; uiLoop++ )
@@ -2844,7 +2793,7 @@ BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite
 
 
 #define ROTATION_ARRAY_SIZE 46
-UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
+static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
 BOOLEAN JA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
@@ -3002,6 +2951,10 @@ void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, 
 	}
 }
 
+
+static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems);
+
+
 UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32 uiNumberOfItems=0;
@@ -3060,7 +3013,7 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 }
 
 
-void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame )
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame)
 {
 	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
 	WORLDITEM * pTotalSectorList = NULL;
@@ -3116,7 +3069,8 @@ void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( INT16 sMapX, INT
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector( sMapX, sMapY, bMapZ, uiItemCount );
 }
 
-UINT32 UpdateLoadedSectorsItemInventory( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems )
+
+static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems)
 {
 	UINT32	uiCounter;
 	UINT32	uiItemCounter=0;

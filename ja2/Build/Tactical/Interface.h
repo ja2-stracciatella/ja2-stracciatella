@@ -87,7 +87,6 @@ extern UINT32		guiCOMPANELB;
 UINT32					guiRADIO;
 UINT32					guiPORTRAITICONS;
 UINT32					guiBURSTACCUM;
-UINT32					guiITEMPOINTERHATCHES;
 
 
 MOUSE_REGION		gViewportRegion;
@@ -164,8 +163,6 @@ void RestoreInterface( );
 
 void RenderArrows( );
 void EraseRenderArrows( );
-void GetArrowsBackground( );
-void HandleUpDownArrowBackgrounds( );
 
 void EndDeadlockMsg( );
 

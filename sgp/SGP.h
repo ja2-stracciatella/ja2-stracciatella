@@ -18,8 +18,6 @@ extern BOOLEAN		gfCapturingVideo;
 
 #endif
 
-// function prototypes
-void SGPExit(void);
 void ShutdownWithErrorBox(CHAR8 *pcMessage);
 
 #ifdef __cplusplus

@@ -546,8 +546,6 @@ INT8		gbStanceButPos[2][3][3] =
 
 
 // Mouse button and region callbacks
-//void BtnPositionCallback( GUI_BUTTON *btn, INT32 reason );
-//void BtnMovementCallback( GUI_BUTTON *btn, INT32 reason );
 void SelectedMercButtonCallback( MOUSE_REGION * pRegion, INT32 iReason );
 void SelectedMercButtonMoveCallback( MOUSE_REGION *pRegion, INT32 iReason );
 void SelectedMercEnemyIndicatorCallback( MOUSE_REGION * pRegion, INT32 iReason );

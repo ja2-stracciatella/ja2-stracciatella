@@ -152,31 +152,15 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents );
 // This function destroys the HIMAGE structure as well as its contents
 BOOLEAN DestroyImage( HIMAGE hImage );
 
-// This function releases data allocated to various parts of the image based
-// on the contents flags passed as a parameter.  If a contents flag is given
-// and the image does not contain that data, no error is raised
-BOOLEAN ReleaseImageData( HIMAGE hImage, UINT16 fContents );
-
-// This function will attept to Load data from an existing image object's filename
-// In this way, dynamic loading of image data can be done
-BOOLEAN LoadImageData( HIMAGE hImage, UINT16 fContents );
-
 // This function will run the appropriate copy function based on the type of HIMAGE object
 BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
 
 // The following blitters are used by the function above as well as clients
 #ifndef NO_ZLIB_COMPRESSION
-	BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
-	BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
-	BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
 	// This function will extract a compressed image into a non-compressed buffer
 	BOOLEAN Extract8BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf );
 	BOOLEAN Extract16BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf );
 #endif
-
-BOOLEAN Copy8BPPImageTo8BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
-BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
-BOOLEAN Copy16BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
 
 
 // This function will create a buffer in memory of ETRLE data, excluding palette

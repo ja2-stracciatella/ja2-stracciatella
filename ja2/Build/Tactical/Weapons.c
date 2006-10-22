@@ -82,13 +82,6 @@ extern void TeamChangesSides( UINT8 ubTeam, INT8 bSide );
 
 extern BOOLEAN	gfNextFireJam;
 
-BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj );
-
-BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseThrown( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo );
-
 INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BOOLEAN fBladeAttack );
 
 BOOLEAN gfNextShotKills = FALSE;
@@ -342,7 +335,7 @@ EXPLOSIVETYPE Explosive[] =
 };
 
 
-INT8 gzBurstSndStrings[][30] =
+static const char* const gzBurstSndStrings[] =
 {
 	"",													// NOAMMO
 	"",													// 38
@@ -366,7 +359,8 @@ INT8 gzBurstSndStrings[][30] =
 
 // the amount of momentum reduction for the head, torso, and legs
 // used to determine whether the bullet will go through someone
-UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
+static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
+
 
 UINT16 GunRange( OBJECTTYPE * pObj )
 {
@@ -669,6 +663,12 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 }
 
 
+static BOOLEAN UseGun(      SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static BOOLEAN UseBlade(    SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static BOOLEAN UseThrown(   SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static BOOLEAN UseLauncher( SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+
+
 BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 {
 	// ignore passed in target gridno for now
@@ -857,7 +857,10 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 }
 
 
-BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj);
+
+
+static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32							uiHitChance, uiDiceRoll;
 	INT16								sXMapPos, sYMapPos;
@@ -1231,7 +1234,8 @@ BOOLEAN UseGun( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	return( TRUE );
 }
 
-BOOLEAN UseBlade( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
+
+static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	SOLDIERTYPE *				pTargetSoldier;
 	INT32								iHitChance, iDiceRoll;
@@ -1660,7 +1664,8 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	return( TRUE );
 }
 
-BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
+
+static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32		uiHitChance, uiDiceRoll;
 	INT16			sAPCost = 0;
@@ -1745,7 +1750,7 @@ BOOLEAN UseThrown( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 }
 
 
-BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
+static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32			uiHitChance, uiDiceRoll;
 	INT16				sAPCost = 0;
@@ -1861,7 +1866,8 @@ BOOLEAN UseLauncher( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	return( TRUE );
 }
 
-BOOLEAN DoSpecialEffectAmmoMiss( UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, INT32 iBullet )
+
+static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, INT32 iBullet)
 {
 	ANITILE_PARAMS	AniParams;
 	UINT8						ubAmmoType;
@@ -4498,7 +4504,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 }
 
 
-BOOLEAN WillExplosiveWeaponFail( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj )
+static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj)
 {
   if ( pSoldier->bTeam == gbPlayerNum || pSoldier->bVisible == 1 )
   {

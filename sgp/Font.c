@@ -41,7 +41,7 @@ typedef struct FontTranslationTable FontTranslationTable;
 
 
 static FontTranslationTable TranslationTable;
-HVOBJECT	FontObjs[MAX_FONTS];
+static HVOBJECT FontObjs[MAX_FONTS];
 
 // Destination printing parameters
 INT32			FontDefault=(-1);

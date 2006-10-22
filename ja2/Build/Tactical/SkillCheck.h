@@ -11,14 +11,14 @@ extern INT32 SkillCheck( SOLDIERTYPE *pSoldier, INT8 bReason, INT8 bDifficulty )
 extern INT8 CalcTrapDetectLevel( SOLDIERTYPE *pSoldier, BOOLEAN fExamining );
 
 
-extern	INT8 EffectiveStrength( SOLDIERTYPE *pSoldier );
+extern INT8 EffectiveStrength(const SOLDIERTYPE* pSoldier);
 extern	INT8 EffectiveWisdom( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveAgility( SOLDIERTYPE *pSoldier );
+extern INT8 EffectiveAgility(const SOLDIERTYPE* pSoldier);
 extern	INT8 EffectiveMechanical( SOLDIERTYPE *pSoldier );
 extern	INT8 EffectiveExplosive( SOLDIERTYPE *pSoldier );
 extern	INT8 EffectiveLeadership( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveMarksmanship( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveDexterity( SOLDIERTYPE *pSoldier );
+extern INT8 EffectiveMarksmanship(const SOLDIERTYPE* pSoldier);
+extern INT8 EffectiveDexterity(const SOLDIERTYPE* pSoldier);
 extern	INT8 EffectiveExpLevel( SOLDIERTYPE *pSoldier );
 extern	INT8 EffectiveMedical( SOLDIERTYPE *pSoldier );
 

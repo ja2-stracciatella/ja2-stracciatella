@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 
-extern BOOLEAN  LoadCursorData(UINT32 uiCursorIndex);
 extern void     CursorDatabaseClear(void);
 extern BOOLEAN  SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  );
 

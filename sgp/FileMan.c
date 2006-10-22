@@ -1540,6 +1540,9 @@ FILE* GetRealFileHandleFromFileManFileHandle( HWFILE hFile )
 }
 
 
+static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter);
+
+
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 {
 #if 1 // XXX TODO
@@ -1568,7 +1571,7 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 }
 
 
-UINT32 GetFreeSpaceOnHardDrive( STR pzDriveLetter )
+static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();

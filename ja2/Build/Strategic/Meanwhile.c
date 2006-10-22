@@ -41,7 +41,7 @@
 
 #define MAX_MEANWHILE_PROFILES	10
 
-INT8 gzMeanwhileStr[][30] =
+static const char* const gzMeanwhileStr[] =
 {
 	"End of player's first battle",
 	"Drassen Lib. ",
@@ -64,7 +64,7 @@ INT8 gzMeanwhileStr[][30] =
 
 
 // the snap to grid nos for meanwhile scenes
-UINT16 gusMeanWhileGridNo[]=
+static const UINT16 gusMeanWhileGridNo[] =
 {
 	12248,
 	12248,
@@ -103,27 +103,20 @@ MEANWHILE_DEFINITION	gMeanwhileDef[NUM_MEANWHILES];
 BOOLEAN								gfMeanwhileTryingToStart = FALSE;
 BOOLEAN								gfInMeanwhile = FALSE;
 // END SERIALIZATION
-INT16									gsOldSectorX;
-INT16									gsOldSectorY;
-INT16									gsOldSectorZ;
-INT16									gsOldSelectedSectorX;
-INT16									gsOldSelectedSectorY;
-INT16									gsOldSelectedSectorZ;
+static INT16 gsOldSectorX;
+static INT16 gsOldSectorY;
+static INT16 gsOldSectorZ;
+static INT16 gsOldSelectedSectorX;
+static INT16 gsOldSelectedSectorY;
+static INT16 gsOldSelectedSectorZ;
 
-UINT32								guiOldScreen;
-NPC_SAVE_INFO					gNPCSaveData[ MAX_MEANWHILE_PROFILES ];
-UINT32								guiNumNPCSaves = 0;
-BOOLEAN								gfReloadingScreenFromMeanwhile = FALSE;
-INT16									gsOldCurInterfacePanel = 0;
-BOOLEAN								gfWorldWasLoaded = FALSE;
-UINT8									ubCurrentMeanWhileId = 0;
-
-void BeginMeanwhileCallBack( UINT8 bExitValue );
-void DoneFadeOutMeanwhile( void );
-void DoneFadeInMeanwhile( void );
-void DoneFadeOutMeanwhileOnceDone( void );
-void DoneFadeInMeanwhileOnceDone( void );
-void LocateMeanWhileGrid( void );
+static UINT32        guiOldScreen;
+static NPC_SAVE_INFO gNPCSaveData[MAX_MEANWHILE_PROFILES];
+static UINT32        guiNumNPCSaves = 0;
+static BOOLEAN       gfReloadingScreenFromMeanwhile = FALSE;
+static INT16         gsOldCurInterfacePanel = 0;
+static BOOLEAN       gfWorldWasLoaded = FALSE;
+static UINT8         ubCurrentMeanWhileId = 0;
 
 UINT32 uiMeanWhileFlags = 0;
 
@@ -149,10 +142,8 @@ UINT32 uiMeanWhileFlags = 0;
 extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
 
 
-void ProcessImplicationsOfMeanwhile( void );
-
 // set flag for this event
-void SetMeanWhileFlag( UINT8 ubMeanwhileID )
+static void SetMeanWhileFlag(UINT8 ubMeanwhileID)
 {
 	switch( ubMeanwhileID )
 	{
@@ -211,7 +202,7 @@ void SetMeanWhileFlag( UINT8 ubMeanwhileID )
 }
 
 // is this flag set?
-BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
+static BOOLEAN GetMeanWhileFlag(UINT8 ubMeanwhileID)
 {
 	UINT32 uiTrue = FALSE;
 	switch( ubMeanwhileID )
@@ -280,7 +271,7 @@ BOOLEAN GetMeanWhileFlag( UINT8 ubMeanwhileID )
 }
 
 
-INT32 GetFreeNPCSave( void )
+static INT32 GetFreeNPCSave(void)
 {
 	UINT32 uiCount;
 
@@ -296,7 +287,8 @@ INT32 GetFreeNPCSave( void )
 	return( -1 );
 }
 
-void RecountNPCSaves( void )
+
+static void RecountNPCSaves(void)
 {
 	INT32 uiCount;
 
@@ -364,7 +356,10 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 }
 
 
-void BringupMeanwhileBox( )
+static void BeginMeanwhileCallBack(UINT8 bExitValue);
+
+
+static void BringupMeanwhileBox(void)
 {
 	wchar_t zStr[256];
 
@@ -427,7 +422,11 @@ void CheckForMeanwhileOKStart( )
 	}
 }
 
-void StartMeanwhile( )
+
+static void DoneFadeOutMeanwhile(void);
+
+
+static void StartMeanwhile(void)
 {
 	INT32 iIndex;
 	INT8	bNumDone = 0;
@@ -594,7 +593,11 @@ void StartMeanwhile( )
 }
 
 
-void DoneFadeOutMeanwhile( )
+static void DoneFadeInMeanwhile(void);
+static void LocateMeanWhileGrid(void);
+
+
+static void DoneFadeOutMeanwhile(void)
 {
 	// OK, insertion data found, enter sector!
 
@@ -609,7 +612,7 @@ void DoneFadeOutMeanwhile( )
 }
 
 
-void DoneFadeInMeanwhile( )
+static void DoneFadeInMeanwhile(void)
 {
 	// ATE: double check that we are in meanwhile
 	// this is if we cancel right away.....
@@ -627,9 +630,10 @@ void DoneFadeInMeanwhile( )
 }
 
 
+static void ProcessImplicationsOfMeanwhile(void);
 
 
-void BeginMeanwhileCallBack( UINT8 bExitValue )
+static void BeginMeanwhileCallBack(UINT8 bExitValue)
 {
 	if ( bExitValue == MSG_BOX_RETURN_OK || bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -687,7 +691,8 @@ BOOLEAN AreInMeanwhile( )
 	return( FALSE );
 }
 
-void ProcessImplicationsOfMeanwhile( void )
+
+static void ProcessImplicationsOfMeanwhile(void)
 {
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
@@ -767,6 +772,10 @@ void ProcessImplicationsOfMeanwhile( void )
 	}
 }
 
+
+static void DoneFadeOutMeanwhileOnceDone(void);
+
+
 void EndMeanwhile( )
 {
 	UINT32		cnt;
@@ -825,7 +834,11 @@ void EndMeanwhile( )
 
 }
 
-void DoneFadeOutMeanwhileOnceDone( )
+
+static void DoneFadeInMeanwhileOnceDone(void);
+
+
+static void DoneFadeOutMeanwhileOnceDone(void)
 {
 	UINT32		cnt;
 	UINT8		ubProfile;
@@ -890,12 +903,14 @@ void DoneFadeOutMeanwhileOnceDone( )
 
 }
 
-void DoneFadeInMeanwhileOnceDone( )
+
+static void DoneFadeInMeanwhileOnceDone(void)
 {
 
 }
 
-void LocateMeanWhileGrid( void )
+
+static void LocateMeanWhileGrid(void)
 {
 	INT16 sGridNo = 0;
 
@@ -1249,7 +1264,7 @@ void HandleFirstBattleVictory( void )
 }
 
 
-void HandleDelayedFirstBattleVictory( void )
+static void HandleDelayedFirstBattleVictory(void)
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;

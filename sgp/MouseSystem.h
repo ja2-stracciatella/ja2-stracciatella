@@ -168,12 +168,6 @@ extern "C" {
 //		The prototype for MSYS_SGP_Mouse_Handler_Hook() is defined in mousesystem_macros.h
 
 // Internal Functions
-INT32 MSYS_GetNewID(void);
-void MSYS_TrashRegList(void);
-void MSYS_AddRegionToList(MOUSE_REGION *region);
-INT32 MSYS_RegionInList(MOUSE_REGION *region);
-void MSYS_DeleteRegionFromList(MOUSE_REGION *region);
-void MSYS_UpdateMouseRegion(void);
 void MSYS_SetCurrentCursor(UINT16 Cursor);
 
 // External
@@ -202,7 +196,6 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
 void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn );
 
 // Now also used by Wizardry -- DB
-void DisplayFastHelp( MOUSE_REGION *region );
 void RenderFastHelp();
 
 #ifdef __cplusplus

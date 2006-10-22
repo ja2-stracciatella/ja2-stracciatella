@@ -63,50 +63,42 @@
 //
 //Records and stores the last place the user clicked.  These values are compared to the current
 //click to determine if a double click event has been detected.
-MOUSE_REGION	*gpRegionLastLButtonDown = NULL;
-MOUSE_REGION	*gpRegionLastLButtonUp = NULL;
-UINT32				guiRegionLastLButtonDownTime = 0;
-
-
+static MOUSE_REGION* gpRegionLastLButtonDown      = NULL;
+static MOUSE_REGION* gpRegionLastLButtonUp        = NULL;
+static UINT32        guiRegionLastLButtonDownTime = 0;
 
 
 extern void ReleaseAnchorMode();  //private function used here (implemented in Button System.c)
 
-// number of lines in height help text will be
-INT16 GetNumberOfLinesInHeight( STR16 pStringA );
-INT16 GetWidthOfString( STR16 pStringA );
-void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY );
 
-
-
-INT32 MSYS_ScanForID=FALSE;
-INT32 MSYS_CurrentID=MSYS_ID_SYSTEM;
+static INT32 MSYS_ScanForID = FALSE;
+static INT32 MSYS_CurrentID = MSYS_ID_SYSTEM;
 
 INT16 MSYS_CurrentMX=0;
 INT16 MSYS_CurrentMY=0;
-INT16 MSYS_CurrentButtons=0;
-INT16 MSYS_Action=0;
+static INT16 MSYS_CurrentButtons = 0;
+static INT16 MSYS_Action         = 0;
 
-BOOLEAN	MSYS_SystemInitialized=FALSE;
-BOOLEAN MSYS_UseMouseHandlerHook=FALSE;
+static BOOLEAN MSYS_SystemInitialized   = FALSE;
+static BOOLEAN MSYS_UseMouseHandlerHook = FALSE;
 
 BOOLEAN MSYS_Mouse_Grabbed=FALSE;
 MOUSE_REGION *MSYS_GrabRegion = NULL;
 
-UINT16				gusClickedIDNumber;
-BOOLEAN				gfClickedModeOn = FALSE;
+static UINT16  gusClickedIDNumber;
+static BOOLEAN gfClickedModeOn = FALSE;
 
-MOUSE_REGION *MSYS_RegList = NULL;
+static MOUSE_REGION* MSYS_RegList = NULL;
 
 MOUSE_REGION *MSYS_PrevRegion = NULL;
-MOUSE_REGION *MSYS_CurrRegion = NULL;
+static MOUSE_REGION* MSYS_CurrRegion = NULL;
 
 //When set, the fast help text will be instantaneous, if consecutive regions with help text are
 //hilighted.  It is set, whenever the timer for the first help button expires, and the mode is
 //cleared as soon as the cursor moves into no region or a region with no helptext.
 BOOLEAN gfPersistantFastHelpMode;
 
-INT16   gsFastHelpDelay = 600; // In timer ticks
+static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
 // help text is done, now execute callback, if there is one
 void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region );
@@ -117,13 +109,13 @@ void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region );
 //NOTE:  This doesn't really need to be here, however, it is a good indication that
 //when an error appears here, that you need to go below to the init code and initialize the
 //values there as well.  That's the only reason why I left this here.
-MOUSE_REGION MSYS_SystemBaseRegion = {
+static MOUSE_REGION MSYS_SystemBaseRegion = {
 								MSYS_ID_SYSTEM, MSYS_PRIORITY_SYSTEM, BASE_REGION_FLAGS,
 								-32767, -32767, 32767, 32767, 0, 0, 0, 0, 0, 0,
 								MSYS_NO_CALLBACK, MSYS_NO_CALLBACK, { 0,0,0,0 },
 								0, 0, -1, MSYS_NO_CALLBACK, NULL, NULL };
 
-BOOLEAN					gfRefreshUpdate = FALSE;
+static BOOLEAN gfRefreshUpdate = FALSE;
 
 //Kris:  December 3, 1997
 //Special internal debugging utilities that will ensure that you don't attempt to delete
@@ -141,6 +133,11 @@ BOOLEAN					gfRefreshUpdate = FALSE;
 #ifdef MOUSESYSTEM_DEBUGGING
 BOOLEAN gfIgnoreShutdownAssertions;
 #endif
+
+
+static void MSYS_TrashRegList(void);
+static void MSYS_AddRegionToList(MOUSE_REGION* region);
+
 
 //======================================================================================================
 //	MSYS_Init
@@ -228,6 +225,8 @@ void MSYS_Shutdown(void)
 	UnRegisterDebugTopic(TOPIC_MOUSE_SYSTEM, "Mouse Region System");
 }
 
+
+static void MSYS_UpdateMouseRegion(void);
 
 
 //======================================================================================================
@@ -334,14 +333,13 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLE
 }
 
 
-
 //======================================================================================================
 //	MSYS_GetNewID
 //
 //	Returns a unique ID number for region nodes. If no new ID numbers can be found, the MAX value
 //	is returned.
 //
-INT32 MSYS_GetNewID(void)
+static INT32 MSYS_GetNewID(void)
 {
 	INT32 retID;
 	INT32 Current,found,done;
@@ -388,7 +386,7 @@ INT32 MSYS_GetNewID(void)
 //
 //	Deletes the entire region list.
 //
-void MSYS_TrashRegList(void)
+static void MSYS_TrashRegList(void)
 {
 	while( MSYS_RegList )
 	{
@@ -404,6 +402,8 @@ void MSYS_TrashRegList(void)
 }
 
 
+static void MSYS_DeleteRegionFromList(MOUSE_REGION* region);
+
 
 //======================================================================================================
 //	MSYS_AddRegionToList
@@ -411,7 +411,7 @@ void MSYS_TrashRegList(void)
 //	Add a region struct to the current list. The list is sorted by priority levels. If two entries
 //	have the same priority level, then the latest to enter the list gets the higher priority.
 //
-void MSYS_AddRegionToList(MOUSE_REGION *region)
+static void MSYS_AddRegionToList(MOUSE_REGION* region)
 {
 	MOUSE_REGION *curr;
 	INT32 done;
@@ -479,7 +479,7 @@ void MSYS_AddRegionToList(MOUSE_REGION *region)
 //
 //	Scan region list for presence of a node with the same region ID number
 //
-INT32 MSYS_RegionInList( MOUSE_REGION *region )
+static INT32 MSYS_RegionInList(const MOUSE_REGION* region)
 {
 	MOUSE_REGION *Current;
 	INT32 found;
@@ -502,7 +502,7 @@ INT32 MSYS_RegionInList( MOUSE_REGION *region )
 //
 //	Removes a region from the current list.
 //
-void MSYS_DeleteRegionFromList(MOUSE_REGION *region)
+static void MSYS_DeleteRegionFromList(MOUSE_REGION* region)
 {
 	// If no list present, there's nothin' to do.
 	if( !MSYS_RegList )
@@ -563,7 +563,7 @@ void MSYS_DeleteRegionFromList(MOUSE_REGION *region)
 //	Searches the list for the highest priority region and updates it's info. It also dispatches
 //	the callback functions
 //
-void MSYS_UpdateMouseRegion(void)
+static void MSYS_UpdateMouseRegion(void)
 {
 	INT32 found;
 	UINT32 ButtonReason;
@@ -1202,7 +1202,8 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
 	//region->FastHelpTimer = gsFastHelpDelay;
 }
 
-INT16 GetNumberOfLinesInHeight( STR16 pStringA )
+
+static INT16 GetNumberOfLinesInHeight(const wchar_t* pStringA)
 {
 	STR16 pToken;
 	INT16 sCounter = 0;
@@ -1226,11 +1227,16 @@ INT16 GetNumberOfLinesInHeight( STR16 pStringA )
 
 
 #ifdef _JA2_RENDER_DIRTY
+
+static INT16 GetWidthOfString(const wchar_t* pStringA);
+static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY);
+
+
 //=============================================================================
 //	DisplayFastHelp
 //
 //
-void DisplayFastHelp( MOUSE_REGION *region )
+static void DisplayFastHelp(MOUSE_REGION* region)
 {
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
@@ -1286,7 +1292,7 @@ void DisplayFastHelp( MOUSE_REGION *region )
 }
 
 
-INT16 GetWidthOfString( STR16 pStringA )
+static INT16 GetWidthOfString(const wchar_t* pStringA)
 {
 	CHAR16 pString[ 512 ];
 	STR16 pToken;
@@ -1312,7 +1318,8 @@ INT16 GetWidthOfString( STR16 pStringA )
 
 }
 
-void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
+
+static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY)
 {
 	STR16 pToken;
 	INT32 iCounter = 0, i;

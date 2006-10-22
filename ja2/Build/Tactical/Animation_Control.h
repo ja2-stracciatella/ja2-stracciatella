@@ -556,11 +556,11 @@ extern UINT16 gubAnimSurfaceCorpseID[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 BOOLEAN LoadAnimationStateInstructions( );
 void	InitAnimationSurfacesPerBodytype( );
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );
-BOOLEAN SubstituteBodyTypeAnimation( SOLDIERTYPE *pSoldier, UINT16 usTestState, UINT16 *pusSubState );
+BOOLEAN SubstituteBodyTypeAnimation(const SOLDIERTYPE* pSoldier, UINT16 usTestState, UINT16* pusSubState);
 INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename );
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
-UINT16	DetermineSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
+UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
 // This function could be wrapped in a debug marco, since it only returns pSoldier->ubAnimSurface but

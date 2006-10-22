@@ -226,12 +226,6 @@ void HandleTacticalEndTurn( )
 				{
 					TurnOffXRayEffects( pSoldier );
 				}
-
-				// Handle stat changes if ness.
-				//if ( fCheckStats )
-				//{
-				////	UpdateStats( pSoldier );
-				//}
 			}
 		}
 

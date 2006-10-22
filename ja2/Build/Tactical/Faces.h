@@ -166,9 +166,6 @@ INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags );
 // This function allocates a slot in the table for the face, loads it's STI file, sets some
 // values for X,Y locations of eyes from the profile. Does not mkae the face visible or anything like that
 
-// INternal init face, called if you don;t want to give a profile ID ( send NO_PROFILE ) for ID
-INT32	InternalInitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency );
-
 
 // Removes the face from the internal table, deletes any memory allocated if any.
 void DeleteFace( INT32 iFaceIndex );
@@ -179,9 +176,6 @@ void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iF
 // Internal savebuffer which is used to facilitate the rendering of only things which have changed when
 // blinking. IF the value of FACE_AUTO_RESTORE_BUFFER is given, the system will allocate it's own memory for
 // a saved buffer and will delete it when finished with it. This function also takes an XY location
-
-// Same as above, yet used mostly internally. Is compatible with the fact that a soldier profile ID is not required...
-void InternalSetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex , UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY );
 
 
 // To begin rendering of the face sprite, call this function once:
@@ -222,9 +216,6 @@ void SetAllAutoFacesInactive( );
 BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY );
 
 // FUnctions usually not needed for most uses, but give a finer control over rendering if needed
-void BlinkAutoFace( INT32 iFaceIndex );
-void MouthAutoFace( INT32 iFaceIndex );
-void HandleTalkingAutoFace( INT32 iFaceIndex );
 void HandleTalkingAutoFaces( );
 
 

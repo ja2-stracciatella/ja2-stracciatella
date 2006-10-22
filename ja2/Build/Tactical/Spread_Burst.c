@@ -32,8 +32,8 @@ typedef struct
 
 
 
-BURST_LOCATIONS			gsBurstLocations[ MAX_BURST_LOCATIONS ];
-INT8								gbNumBurstLocations = 0;
+static BURST_LOCATIONS gsBurstLocations[MAX_BURST_LOCATIONS];
+static INT8            gbNumBurstLocations = 0;
 
 extern BOOLEAN gfBeginBurstSpreadTracking;
 

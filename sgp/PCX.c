@@ -28,9 +28,9 @@
 #define PCX_OUTOFMEMORY    8
 
 
-BOOLEAN SetPcxPalette( PcxObject *pCurrentPcxObject, HIMAGE hImage );
-BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
-PcxObject *LoadPcx(UINT8 *pFilename);
+static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
+static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
+static PcxObject* LoadPcx(const char* pFilename);
 
 
 BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
@@ -81,7 +81,7 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 }
 
 
-PcxObject *LoadPcx(UINT8 *pFilename)
+static PcxObject* LoadPcx(const char* pFilename)
 {
   PcxHeader  Header;
   PcxObject *pCurrentPcxObject;
@@ -152,7 +152,8 @@ PcxObject *LoadPcx(UINT8 *pFilename)
   return pCurrentPcxObject;
 }
 
-BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)
+
+static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)
 {
   UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
@@ -354,7 +355,8 @@ BOOLEAN BlitPcxToBuffer( PcxObject *pCurrentPcxObject, UINT8 *pBuffer, UINT16 us
 	return( TRUE );
 }
 
-BOOLEAN SetPcxPalette( PcxObject *pCurrentPcxObject, HIMAGE hImage )
+
+static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 {
 	UINT16 Index;
 	UINT8  *pubPalette;

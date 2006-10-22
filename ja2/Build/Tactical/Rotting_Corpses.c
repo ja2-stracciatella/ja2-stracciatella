@@ -62,11 +62,11 @@ extern		SGPPaletteEntry	gpLightColors[3];
 extern		UINT16 gusShadeLevels[16][3];
 
 
-void MakeCorpseVisible( SOLDIERTYPE *pSoldier, ROTTING_CORPSE *pCorpse );
+static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorpse);
 
 
 // When adding a corpse, add struct data...
-CHAR8	zCorpseFilenames[ NUM_CORPSES ][70] =
+static const char* const zCorpseFilenames[NUM_CORPSES] =
 {
 	"",
 	"ANIMS\\CORPSES\\S_D_JFK.STI",
@@ -131,7 +131,7 @@ CHAR8	zCorpseFilenames[ NUM_CORPSES ][70] =
 
 
 // When adding a corpse, add struct data...
-CHAR8	zNoBloodCorpseFilenames[ NUM_CORPSES ][70] =
+static const char* const	zNoBloodCorpseFilenames[NUM_CORPSES] =
 {
 	"",
 	"ANIMS\\CORPSES\\M_D_JFK_NB.STI",
@@ -206,7 +206,8 @@ UINT8		gb4DirectionsFrom8[8] =
 	0			// NW
 };
 
-UINT8		gb2DirectionsFrom8[8] =
+
+static const UINT8 gb2DirectionsFrom8[8] =
 {
 	0,		// NORTH
 	7,		// NE
@@ -219,7 +220,7 @@ UINT8		gb2DirectionsFrom8[8] =
 };
 
 
-BOOLEAN	gbCorpseValidForDecapitation[ NUM_CORPSES ] =
+static const BOOLEAN gbCorpseValidForDecapitation[NUM_CORPSES] =
 {
 	0,
 	0,
@@ -283,8 +284,7 @@ BOOLEAN	gbCorpseValidForDecapitation[ NUM_CORPSES ] =
 };
 
 
-
-INT8 gDecapitatedCorpse[ NUM_CORPSES ] =
+static const INT8 gDecapitatedCorpse[NUM_CORPSES] =
 {
 	0,
 	SMERC_JFK,
@@ -353,14 +353,10 @@ ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 INT32						giNumRottingCorpse = 0;
 
 
-BOOLEAN CreateCorpsePalette( ROTTING_CORPSE *pCorpse );
-BOOLEAN				CreateCorpseShadedPalette( ROTTING_CORPSE *pCorpse, UINT32 uiBase, SGPPaletteEntry *pShadePal);
-
 void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot );
 
 
-
-INT32 GetFreeRottingCorpse(void)
+static INT32 GetFreeRottingCorpse(void)
 {
 	INT32 iCount;
 
@@ -449,6 +445,9 @@ UINT16 GetCorpseStructIndex( ROTTING_CORPSE_DEFINITION *pCorpseDef, BOOLEAN fFor
 
 	return( bDirection );
 }
+
+
+static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse);
 
 
 INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
@@ -645,7 +644,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 }
 
 
-void FreeCorpsePalettes( ROTTING_CORPSE *pCorpse )
+static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 {
 	INT32 cnt;
 
@@ -691,9 +690,10 @@ void RemoveCorpse( INT32 iCorpseID )
 }
 
 
+static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse);
 
 
-BOOLEAN CreateCorpsePalette( ROTTING_CORPSE *pCorpse )
+static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 {
 	CHAR8	zColFilename[ 100 ];
 	INT8	bBodyTypePalette;
@@ -987,7 +987,7 @@ INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 }
 
 
-void AddCrowToCorpse( ROTTING_CORPSE *pCorpse )
+static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
@@ -1175,7 +1175,8 @@ void HandleRottingCorpses( )
   }
 }
 
-void MakeCorpseVisible( SOLDIERTYPE *pSoldier, ROTTING_CORPSE *pCorpse )
+
+static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorpse)
 {
 	pCorpse->def.bVisible = 1;
 	SetRenderFlags( RENDER_FLAG_FULL );
@@ -1328,7 +1329,11 @@ void RebuildAllCorpseShadeTables( )
 	}
 }
 
-UINT16 CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse )
+
+static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, SGPPaletteEntry* pShadePal);
+
+
+static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 {
 	SGPPaletteEntry LightPal[256];
 	UINT32 uiCount;
@@ -1352,7 +1357,7 @@ UINT16 CreateCorpsePaletteTables( ROTTING_CORPSE *pCorpse )
 }
 
 
-BOOLEAN CreateCorpseShadedPalette( ROTTING_CORPSE *pCorpse, UINT32 uiBase, SGPPaletteEntry *pShadePal )
+static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, SGPPaletteEntry* pShadePal)
 {
 	UINT32 uiCount;
 
@@ -1371,7 +1376,7 @@ BOOLEAN CreateCorpseShadedPalette( ROTTING_CORPSE *pCorpse, UINT32 uiBase, SGPPa
 }
 
 
-ROTTING_CORPSE  *FindCorpseBasedOnStructure( INT16 sGridNo, STRUCTURE *pStructure )
+static ROTTING_CORPSE* FindCorpseBasedOnStructure(INT16 sGridNo, STRUCTURE* pStructure)
 {
 	LEVELNODE					*pLevelNode;
 	ROTTING_CORPSE		*pCorpse = NULL;

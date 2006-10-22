@@ -1200,10 +1200,6 @@ void HandleDialogue( )
 }
 
 
-
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t *zDialogueText, size_t Length, UINT32 *puiSoundID, CHAR8 *zSoundString );
-
-
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
@@ -1538,6 +1534,10 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 	return( TRUE );
 }
 
+
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, UINT32* puiSoundID, CHAR8* zSoundString);
+
+
 BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
 {
 	CHAR8		zSoundString[ 164 ];
@@ -1819,8 +1819,7 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 }
 
 
-
-BOOLEAN GetDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t *zDialogueText, size_t Length, UINT32 *puiSoundID, CHAR8 *zSoundString )
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, UINT32* puiSoundID, CHAR8* zSoundString)
 {
   UINT8 *pFilename;
 
@@ -2353,8 +2352,6 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 		}
 
 		//RenderAutoFace( gpCurrentTalkingFace->iID );
-		//BlinkAutoFace( gpCurrentTalkingFace->iID );
-		//MouthAutoFace( gpCurrentTalkingFace->iID );
 
 
 		pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);

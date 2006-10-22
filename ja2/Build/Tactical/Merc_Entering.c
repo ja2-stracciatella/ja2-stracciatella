@@ -80,7 +80,7 @@ enum
 } HeliCodes;
 
 
-UINT8			ubHeliScripts[ NUM_HELI_STATES ][ MAX_HELI_SCRIPT ] =
+static const UINT8 ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 {
 	// HELI_APPROACH
 	HELI_REST,
@@ -343,37 +343,31 @@ UINT8			ubHeliScripts[ NUM_HELI_STATES ][ MAX_HELI_SCRIPT ] =
 };
 
 
-BOOLEAN		gfHandleHeli = FALSE;
-UINT8			gusHeliSeats[ MAX_MERC_IN_HELI ];
-INT8			gbNumHeliSeatsOccupied = 0;
+static BOOLEAN gfHandleHeli = FALSE;
+static UINT8   gusHeliSeats[ MAX_MERC_IN_HELI ];
+static INT8    gbNumHeliSeatsOccupied = 0;
 
-BOOLEAN		gfFirstGuyDown = FALSE;
+static BOOLEAN gfFirstGuyDown = FALSE;
 
-UINT32		uiSoundSample;
-INT16			gsGridNoSweetSpot;
-INT16			gsHeliXPos;
-INT16			gsHeliYPos;
-FLOAT			gdHeliZPos;
-INT16			gsHeliScript;
-UINT8			gubHeliState;
-UINT32		guiHeliLastUpdate;
-INT8			gbCurDrop;
-INT8			gbExitCount;
-INT8			gbHeliRound;
+static UINT32 uiSoundSample;
+static INT16  gsGridNoSweetSpot;
+static INT16  gsHeliXPos;
+static INT16  gsHeliYPos;
+static FLOAT  gdHeliZPos;
+static INT16  gsHeliScript;
+static UINT8  gubHeliState;
+static UINT32 guiHeliLastUpdate;
+static INT8   gbCurDrop;
+static INT8   gbExitCount;
+static INT8   gbHeliRound;
 
-BOOLEAN		fFadingHeliIn = FALSE;
-BOOLEAN		fFadingHeliOut = FALSE;
+static BOOLEAN fFadingHeliIn = FALSE;
+static BOOLEAN fFadingHeliOut = FALSE;
 
 BOOLEAN		gfIngagedInDrop = FALSE;
 
-ANITILE		*gpHeli;
+static ANITILE* gpHeli;
 BOOLEAN		gfFirstHeliRun;
-
-
-void HandleFirstHeliDropOfGame( );
-
-
-
 
 
 void ResetHeliSeats( )
@@ -442,6 +436,9 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 }
+
+
+static void HandleFirstHeliDropOfGame(void);
 
 
 void HandleHeliDrop( )
@@ -779,7 +776,7 @@ void HandleHeliDrop( )
 }
 
 
-void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+static void BeginMercEntering(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	ResetHeliSeats( );
 
@@ -793,7 +790,7 @@ void BeginMercEntering( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-void HandleFirstHeliDropOfGame( )
+static void HandleFirstHeliDropOfGame(void)
 {
 	// Are we in the first heli drop?
 	if ( gfFirstHeliRun )

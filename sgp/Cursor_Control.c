@@ -21,29 +21,27 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN gfCursorDatabaseInit = FALSE;
+static BOOLEAN gfCursorDatabaseInit = FALSE;
 
-CursorFileData *gpCursorFileDatabase;
-CursorData		 *gpCursorDatabase;
+static CursorFileData* gpCursorFileDatabase;
+static CursorData*     gpCursorDatabase;
 INT16					 gsGlobalCursorYOffset = 0;
 INT16					 gsCurMouseOffsetX = 0;
 INT16 				 gsCurMouseOffsetY = 0;
 UINT16				 gsCurMouseHeight = 0;
 UINT16				 gsCurMouseWidth = 0;
-UINT16				 gusNumDataFiles = 0;
+static UINT16 gusNumDataFiles = 0;
 UINT32				 guiExternVo;
 UINT16				 gusExternVoSubIndex;
 UINT32				 guiExtern2Vo;
 UINT16				 gusExtern2VoSubIndex;
-UINT32				 guiOldSetCursor = 0;
-UINT32				 guiDelayTimer = 0;
+static UINT32 guiOldSetCursor = 0;
+static UINT32 guiDelayTimer = 0;
+
+static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
 
-MOUSEBLT_HOOK				gMouseBltOverride = NULL;
-
-
-
-BOOLEAN BltToMouseCursorFromVObject( HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
+static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
   BOOLEAN      ReturnValue;
 
@@ -52,7 +50,8 @@ BOOLEAN BltToMouseCursorFromVObject( HVOBJECT hVObject, UINT16 usVideoObjectSubI
   return ReturnValue;
 }
 
-BOOLEAN BltToMouseCursorFromVObjectWithOutline( HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
+
+static BOOLEAN BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
   BOOLEAN      ReturnValue;
   ETRLEObject	 *pTrav;
@@ -95,7 +94,7 @@ void InitCursorDatabase( CursorFileData *pCursorFileData, CursorData *pCursorDat
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
+static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 {
 	// Load cursor data will load all data required for the cursor specified by this index
 	CursorData		*pCurData;
@@ -261,9 +260,8 @@ BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 	return TRUE;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void UnLoadCursorData(UINT32 uiCursorIndex)
+static void UnLoadCursorData(UINT32 uiCursorIndex)
 {
 	// This function will unload add data used for this cursor
 	//

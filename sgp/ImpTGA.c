@@ -48,10 +48,10 @@
 //
 //**************************************************************************
 
-BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents );
-BOOLEAN ReadUncompRGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents );
-BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents );
-BOOLEAN ReadRLERGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents );
+static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 //BOOLEAN	ConvertTGAToSystemBPPFormat( HIMAGE hImage );
 
 //**************************************************************************
@@ -119,8 +119,7 @@ end:
 //		20nov96:HJH		-> creation
 //
 //**************************************************************************
-
-BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
+static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );
 }
@@ -138,8 +137,7 @@ BOOLEAN ReadUncompColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8
 //		20nov96:HJH		-> creation
 //
 //**************************************************************************
-
-BOOLEAN ReadUncompRGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
+static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	UINT8		*pBMData;
 	UINT8		*pBMPtr;
@@ -321,8 +319,7 @@ freeEnd:
 //		20nov96:HJH		-> creation
 //
 //**************************************************************************
-
-BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
+static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );
 }
@@ -340,8 +337,7 @@ BOOLEAN ReadRLEColMapImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 ui
 //		20nov96:HJH		-> creation
 //
 //**************************************************************************
-
-BOOLEAN ReadRLERGBImage( HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents )
+static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );
 }

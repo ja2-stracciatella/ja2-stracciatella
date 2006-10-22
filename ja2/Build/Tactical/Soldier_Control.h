@@ -986,10 +986,7 @@ typedef struct ANIM_PROF
 //////////
 
 // VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
-UINT32									guiNumPaletteSubRanges;
 UINT8										*gubpNumReplacementsPerRange;
-PaletteSubRangeType			*gpPaletteSubRanges;
-UINT32									guiNumReplacements;
 PaletteReplacementType	*gpPalRep;
 
 extern UINT8	bHealthStrRanges[];
@@ -1070,7 +1067,7 @@ INT8 CalcActionPoints(SOLDIERTYPE *pSold );
 BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
-BOOLEAN MercInWater( SOLDIERTYPE *pSoldier );
+BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier);
 UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );
 void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
@@ -1127,7 +1124,6 @@ void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier );
 
 void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
 
-void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
 
 //reset soldier timers

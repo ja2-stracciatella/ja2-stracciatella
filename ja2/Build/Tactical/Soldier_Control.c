@@ -123,7 +123,7 @@ enum
 } ExtendedWorldDirections;
 
 // LUT for conversion from 8-direction to extended direction
-UINT8 ubExtDirection[] =
+static const UINT8 ubExtDirection[] =
 {
 	EX_NORTH,
 	EX_NORTHEAST,
@@ -136,7 +136,7 @@ UINT8 ubExtDirection[] =
 };
 
 
-UINT8 gExtOneCDirection[ EX_NUM_WORLD_DIRECTIONS ] =
+static const UINT8 gExtOneCDirection[EX_NUM_WORLD_DIRECTIONS] =
 {
 	4,
 	5,
@@ -192,7 +192,7 @@ typedef struct
 } BATTLESNDS_STRUCT;
 
 
-BATTLESNDS_STRUCT	 gBattleSndsData[] =
+static const BATTLESNDS_STRUCT gBattleSndsData[] =
 {
 	"ok1",			2,				1,			1,		1,		2,
 	"ok2",			0,				1,			1,		1,		2,
@@ -232,7 +232,7 @@ UINT8	bHealthStrRanges[] =
 };
 
 
-INT16 gsTerrainTypeSpeedModifiers[] =
+static const INT16 gsTerrainTypeSpeedModifiers[] =
 {
 	 5,						// Flat ground
 	 5,						// Floor
@@ -253,7 +253,7 @@ INT16 gsTerrainTypeSpeedModifiers[] =
 BOOLEAN gfCalcTranslucency = FALSE;
 
 
-INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
+static const INT16 gsFullTileDirections[MAX_FULLTILE_DIRECTIONS] =
 {
 	-1, -WORLD_COLS - 1, -WORLD_COLS
 
@@ -261,11 +261,12 @@ INT16		gsFullTileDirections[ MAX_FULLTILE_DIRECTIONS ] =
 
 
 // Palette ranges
-UINT32									guiNumPaletteSubRanges;
-PaletteSubRangeType			*guipPaletteSubRanges = NULL;
+static UINT32 guiNumPaletteSubRanges;
+static PaletteSubRangeType* guipPaletteSubRanges = NULL;
+static PaletteSubRangeType* gpPaletteSubRanges;
 // Palette replacements
-UINT32									guiNumReplacements;
-PaletteReplacementType	*guipPaletteReplacements = NULL;
+static UINT32 guiNumReplacements;
+static PaletteReplacementType* guipPaletteReplacements = NULL;
 
 extern BOOLEAN fReDrawFace;
 extern UINT8 gubWaitingForAllMercsToExitCode;
@@ -292,9 +293,6 @@ UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss );
 void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
 void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
 
-UINT16 *CreateEnemyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen );
-UINT16 *CreateEnemyGreyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen );
-
 void SoldierBleed( SOLDIERTYPE *pSoldier, BOOLEAN fBandagedBleed );
 INT32 CheckBleeding( SOLDIERTYPE *pSoldier );
 
@@ -305,11 +303,6 @@ extern void ValidatePlayersAreInOneGroupOnly();
 extern void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
 void SAIReportError( STR16 wErrorString );
 #endif
-
-UINT32 SleepDartSuccumbChance( SOLDIERTYPE * pSoldier );
-
-void	EnableDisableSoldierLightEffects( BOOLEAN fEnableLights );
-void	SetSoldierPersonalLightLevel( SOLDIERTYPE *pSoldier );
 
 
 void HandleVehicleMovementSound( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
@@ -392,7 +385,8 @@ void HandleCrowShadowVisibility( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void HandleCrowShadowNewGridNo( SOLDIERTYPE *pSoldier )
+
+static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
 {
 	ANITILE_PARAMS	AniParams;
 
@@ -431,7 +425,7 @@ void HandleCrowShadowNewGridNo( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleCrowShadowRemoveGridNo( SOLDIERTYPE *pSoldier )
+static void HandleCrowShadowRemoveGridNo(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubBodyType == CROW )
 	{
@@ -447,7 +441,7 @@ void HandleCrowShadowRemoveGridNo( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleCrowShadowNewDirection( SOLDIERTYPE *pSoldier )
+static void HandleCrowShadowNewDirection(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubBodyType == CROW )
 	{
@@ -461,7 +455,8 @@ void HandleCrowShadowNewDirection( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void HandleCrowShadowNewPosition( SOLDIERTYPE *pSoldier )
+
+static void HandleCrowShadowNewPosition(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubBodyType == CROW )
 	{
@@ -3286,6 +3281,9 @@ extern SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID );
 extern SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID );
 
 
+static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
+
+
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
 void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGrid )
 {
@@ -3812,6 +3810,9 @@ void DoGenericHit( SOLDIERTYPE *pSoldier, UINT8 ubSpecial, INT16 bDirection )
 
 	}
 }
+
+
+static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection);
 
 
 void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
@@ -5283,7 +5284,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 }
 
 
-UINT8	gRedGlowR[]=
+static const UINT8 gRedGlowR[]=
 {
 	0,			// Normal shades
 	25,
@@ -5311,7 +5312,7 @@ UINT8	gRedGlowR[]=
 
 
 #if 0
-UINT8	gOrangeGlowR[]=
+static const UINT8 gOrangeGlowR[]=
 {
 	0,			// Normal shades
 	20,
@@ -5337,7 +5338,7 @@ UINT8	gOrangeGlowR[]=
 };
 #endif
 
-UINT8	gOrangeGlowR[]=
+static const UINT8 gOrangeGlowR[]=
 {
 	0,			// Normal shades
 	25,
@@ -5365,7 +5366,7 @@ UINT8	gOrangeGlowR[]=
 
 
 #if 0
-UINT8	gOrangeGlowG[]=
+static const UINT8 gOrangeGlowG[]=
 {
 	0,			// Normal shades
 	5,
@@ -5391,7 +5392,7 @@ UINT8	gOrangeGlowG[]=
 };
 #endif
 
-UINT8	gOrangeGlowG[]=
+static const UINT8 gOrangeGlowG[]=
 {
 	0,			// Normal shades
 	20,
@@ -5416,6 +5417,10 @@ UINT8	gOrangeGlowG[]=
 	180,
 
 };
+
+
+static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen);
+static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen);
 
 
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
@@ -5574,8 +5579,7 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
 }
 
 
-
-void AdjustAniSpeed( SOLDIERTYPE *pSoldier )
+static void AdjustAniSpeed(SOLDIERTYPE* pSoldier)
 {
 	if ( ( gTacticalStatus.uiFlags & SLOW_ANIMATION ) )
 	{
@@ -5594,7 +5598,7 @@ void AdjustAniSpeed( SOLDIERTYPE *pSoldier )
 }
 
 
-void CalculateSoldierAniSpeed( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pStatsSoldier )
+static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsSoldier)
 {
 	UINT32 uiTerrainDelay;
 	UINT32 uiSpeed = 0;
@@ -6114,7 +6118,8 @@ void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
 
 }
 
-UINT32 SleepDartSuccumbChance( SOLDIERTYPE * pSoldier )
+
+static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier)
 {
 	UINT32		uiChance;
 	INT8			bEffectiveStrength;
@@ -7873,7 +7878,8 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 	}
 }
 
-BOOLEAN MercInWater( SOLDIERTYPE *pSoldier )
+
+BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier)
 {
 	// Our water texture , for now is of a given type
 	if ( pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == MED_WATER || pSoldier->bOverTerrainType == DEEP_WATER )
@@ -9119,8 +9125,7 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 }
 
 
-
-UINT16 *CreateEnemyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen )
+static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt;
@@ -9175,7 +9180,7 @@ UINT16 *CreateEnemyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscale, U
 }
 
 
-UINT16 *CreateEnemyGreyGlow16BPPPalette( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen )
+static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;
@@ -10320,7 +10325,7 @@ void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier )
 }
 
 
-void ChangeToFlybackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
+static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 {
 	UINT16 usNewGridNo;
 
@@ -10824,7 +10829,8 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 	}
 }
 
-void InternalPlaySoldierFootstepSound( SOLDIERTYPE * pSoldier )
+
+static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 {
 	UINT8					ubRandomSnd;
 	INT8					bVolume = MIDVOLUME;
@@ -11057,6 +11063,10 @@ void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldierToSet )
 	pSoldierToSet->uiStatusFlags |= SOLDIER_UNDERAICONTROL;
 }
 
+
+static void EnableDisableSoldierLightEffects(BOOLEAN fEnableLights);
+
+
 void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue )
 {
 	if( fToggleValue )
@@ -11072,7 +11082,10 @@ void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue )
 }
 
 
-void EnableDisableSoldierLightEffects( BOOLEAN fEnableLights )
+static void SetSoldierPersonalLightLevel(SOLDIERTYPE* pSoldier);
+
+
+static void EnableDisableSoldierLightEffects(BOOLEAN fEnableLights)
 {
 	SOLDIERTYPE *pSoldier=NULL;
 	INT32 cnt;
@@ -11102,7 +11115,8 @@ void EnableDisableSoldierLightEffects( BOOLEAN fEnableLights )
 	}
 }
 
-void SetSoldierPersonalLightLevel( SOLDIERTYPE *pSoldier )
+
+static void SetSoldierPersonalLightLevel(SOLDIERTYPE* pSoldier)
 {
 	if( pSoldier == NULL )
 	{

@@ -56,8 +56,8 @@
 extern "C" {
 #endif
 
-BOOLEAN gfRecordToFile     = FALSE;
-BOOLEAN gfRecordToDebugger = TRUE;
+static BOOLEAN gfRecordToFile     = FALSE;
+static BOOLEAN gfRecordToDebugger = TRUE;
 
 // moved from header file: 24mar98:HJH
 UINT32	guiProfileStart, guiExecutions, guiProfileTime;
@@ -70,8 +70,8 @@ INT32		giProfileCount;
 UINT8 gubAssertString[128];
 
 #define MAX_MSG_LENGTH2 512
-UINT8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
-UINT8		gubStringIndex = 0;
+static UINT8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
+static UINT8		gubStringIndex = 0;
 
 #ifdef SGP_DEBUG
 
@@ -120,10 +120,7 @@ BOOLEAN		gfDebugTopics[MAX_TOPICS_ALLOTED];
 UINT16 		*gpDbgTopicPtrs[MAX_TOPICS_ALLOTED];
 
 
-// remove debug .txt file
-void RemoveDebugText( void );
-
-STRING512 gpcDebugLogFileName;
+static STRING512 gpcDebugLogFileName;
 
 #ifdef __cplusplus
 }
@@ -156,6 +153,9 @@ static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 #endif
 	return TRUE;
 }
+
+
+static void RemoveDebugText(void);
 
 
 //**************************************************************************
@@ -282,8 +282,7 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 //
 //
 // *************************************************************************
-
-void RemoveDebugText( void )
+static void RemoveDebugText(void)
 {
 	FileDelete( gpcDebugLogFileName );
 }

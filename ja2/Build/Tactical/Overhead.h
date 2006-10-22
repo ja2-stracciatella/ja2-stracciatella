@@ -197,8 +197,6 @@ extern CHAR8	  gzDirectionStr[][ 30 ];
 
 // TEMP FOR E3
 UINT8				gubCurrentScene;
-CHAR8				*GetSceneFilename(  );
-INT8			  ubLevelMoveLink[ 10 ];
 
 // Soldier List used for all soldier overhead interaction
 SOLDIERTYPE	 Menptr[ TOTAL_SOLDIERS ];

@@ -11,12 +11,13 @@
 
 // mem allocation functions for ZLIB's purposes
 
-voidpf ZAlloc( voidpf opaque, uInt items, uInt size )
+static voidpf ZAlloc(voidpf opaque, uInt items, uInt size)
 {
   return( MemAlloc( items * size ) );
 }
 
-void ZFree( voidpf opaque, voidpf address )
+
+static void ZFree(voidpf opaque, voidpf address)
 {
 	MemFree( address );
 }

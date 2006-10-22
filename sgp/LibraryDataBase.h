@@ -161,24 +161,16 @@ extern "C" {
 extern DatabaseManagerHeaderStruct gFileDataBase;
 
 
-BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibheader, BOOLEAN fCanBeOnCDrom );
-
 BOOLEAN InitializeFileDatabase( );
 BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
-INT16 GetLibraryIDFromFileName(const char *pFileName);
 HWFILE OpenFileFromLibrary(const char *pName);
 HWFILE CreateRealFileHandle(FILE* hFile);
 BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID );
 BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );
 BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileIndex, PTR pData, UINT32 uiBytesToRead, UINT32 *pBytesRead );
 BOOLEAN LibraryFileSeek( INT16 sLibraryID, UINT32 uiFileNum, UINT32 uiDistance, UINT8 uiHowToSeek );
-
-
-//used to open and close libraries during the game
-BOOLEAN CloseLibrary( INT16 sLibraryID );
-BOOLEAN OpenLibrary( INT16 sLibraryID );
 
 BOOLEAN IsLibraryOpened( INT16 sLibraryID );
 

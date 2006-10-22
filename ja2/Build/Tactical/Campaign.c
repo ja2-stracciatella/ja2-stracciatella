@@ -47,7 +47,7 @@ extern	UINT8	gbPlayerNum;
 #endif
 
 #ifdef STAT_CHANGE_DEBUG
-STR16 wDebugStatStrings[]={
+const wchar_t* const  wDebugStatStrings[] = {
 	L"",
 	L"Life (Max)",
   L"Agility",
@@ -64,9 +64,8 @@ STR16 wDebugStatStrings[]={
 #endif
 
 
-// local prototypes
-UINT8 CalcImportantSectorControl( void );
-
+static void UpdateStats(SOLDIERTYPE* pSoldier);
+static void ProcessStatChange(MERCPROFILESTRUCT* pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason);
 
 
 // give pSoldier usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
@@ -112,9 +111,12 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 }
 
 
+static void ProfileUpdateStats(MERCPROFILESTRUCT* pProfile);
+
+
 // this is the equivalent of StatChange(), but for use with mercs not currently on player's team
 // give pProfile usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
+static void ProfileStatChange(MERCPROFILESTRUCT* pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
 	// dead guys don't do nuthin' !
 	if ( pProfile->bMercStatus == MERC_IS_DEAD )
@@ -130,7 +132,10 @@ void ProfileStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 }
 
 
-void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
+static UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel);
+
+
+static void ProcessStatChange(MERCPROFILESTRUCT* pProfile, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
 {
   UINT32 uiCnt,uiEffLevel;
   INT16 sSubPointChange = 0;
@@ -403,18 +408,24 @@ void ProcessStatChange(MERCPROFILESTRUCT *pProfile, UINT8 ubStat, UINT16 usNumCh
 }
 
 
+static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldier);
+
+
 // convert hired mercs' stats subpoint changes into actual point changes where warranted
-void UpdateStats( SOLDIERTYPE *pSoldier )
+static void UpdateStats(SOLDIERTYPE* pSoldier)
 {
 	ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
 }
 
 
 // UpdateStats version for mercs not currently on player's team
-void ProfileUpdateStats( MERCPROFILESTRUCT *pProfile )
+static void ProfileUpdateStats(MERCPROFILESTRUCT* pProfile)
 {
 	ProcessUpdateStats( pProfile, NULL );
 }
+
+
+static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit);
 
 
 void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubStat, INT16 sPtsChanged )
@@ -753,9 +764,8 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 }
 
 
-
 // pSoldier may be NULL!
-void ProcessUpdateStats( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier )
+static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldier)
 {
 	// this function will run through the soldier's profile and update their stats based on any accumulated gain pts.
 	UINT8 ubStat = 0;
@@ -992,7 +1002,10 @@ void HandleAnyStatChangesAfterAttack( void )
 }
 
 
-UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
+static UINT32 RoundOffSalary(UINT32 uiSalary);
+
+
+static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 {
   UINT32 uiNewSalary;
 
@@ -1026,7 +1039,7 @@ UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 }
 
 
-UINT32 RoundOffSalary(UINT32 uiSalary)
+static UINT32 RoundOffSalary(UINT32 uiSalary)
 {
 	UINT32 uiMultiple;
 
@@ -1055,7 +1068,7 @@ UINT32 RoundOffSalary(UINT32 uiSalary)
 }
 
 
-UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
+static UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 {
 	UINT16 usSubpointsPerPoint;
 
@@ -1231,6 +1244,9 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 		}
 	}
 }
+
+
+static UINT8 CalcImportantSectorControl(void);
 
 
 // These HAVE to total 100% at all times!!!
@@ -1532,8 +1548,7 @@ void BuildStatChangeString( STR16 wString, size_t Length, STR16 wName, BOOLEAN f
 }
 
 
-
-UINT8 CalcImportantSectorControl( void )
+static UINT8 CalcImportantSectorControl(void)
 {
 	UINT8 ubMapX, ubMapY;
 	UINT8	ubSectorControlPts = 0;

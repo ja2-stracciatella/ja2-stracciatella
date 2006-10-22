@@ -516,7 +516,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 // Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
-BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
+static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
 {
 	BYTE *pOffsetSrc;
 	BYTE *pOffsetDst;
@@ -558,7 +558,7 @@ BOOLEAN do_copy(void *pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 
 // Nov 26th 1996 -> modified for use by Wizardry
 //
 //*****************************************************************************
-BOOLEAN do_copy_data(void *pmem_void, void *data, UINT32 uiSrcOfst, UINT32 uiSize)
+static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT32 uiSize)
 {
 	BYTE *pOffsetSrc;
 	void *pvoid_src;

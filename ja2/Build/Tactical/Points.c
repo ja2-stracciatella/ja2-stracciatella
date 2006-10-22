@@ -1047,7 +1047,8 @@ UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCos
 	return( (UINT8)sAPCost );
 }
 
-INT8 CalcAimSkill( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
+
+static INT8 CalcAimSkill(const SOLDIERTYPE* pSoldier, UINT16 usWeapon)
 {
 	INT8 bAimSkill;
 

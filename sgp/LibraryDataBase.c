@@ -44,13 +44,13 @@ INT16	gsCurrentLibrary = -1;
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
-INT			CompareFileNames( CHAR8 **arg1, FileHeaderStruct **arg2 );
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, FileHeaderStruct **pFileHeader);
+static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader);
 void		AddSlashToPath( STR pName );
-HWFILE	CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum );
+static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
 static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
-INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 );
+
+static BOOLEAN OpenLibrary(INT16 sLibraryID);
 
 
 //************************************************************************
@@ -125,6 +125,9 @@ BOOLEAN InitializeFileDatabase( )
 
 	return(TRUE);
 }
+
+
+static BOOLEAN CloseLibrary(INT16 sLibraryID);
 
 
 //*****************************************************************************************
@@ -204,7 +207,7 @@ static int CompareFileHeader(const void* a, const void* b)
 }
 
 
-BOOLEAN InitializeLibrary( STR pLibraryName, LibraryHeaderStruct *pLibHeader, BOOLEAN fCanBeOnCDrom )
+static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader, BOOLEAN fCanBeOnCDrom)
 {
 	FIXME
 	FILE*	hFile;
@@ -411,6 +414,10 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	return( TRUE );
 }
 
+
+static INT16 GetLibraryIDFromFileName(const char* pFileName);
+
+
 //************************************************************************
 //
 // CheckIfFileExistInLibrary() determines if a file exists in a library.
@@ -444,7 +451,7 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 //	( eg. File is  Laptop\Test.sti, if the Laptop\ library is open, it returns true
 //
 //************************************************************************
-INT16 GetLibraryIDFromFileName(const char *pFileName)
+static INT16 GetLibraryIDFromFileName(const char* pFileName)
 {
 INT16 sLoop1, sBestMatch=-1;
 
@@ -484,6 +491,9 @@ INT16 sLoop1, sBestMatch=-1;
 }
 
 
+static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2);
+
+
 //************************************************************************
 //
 //	GetFileHeaderFromLibrary() performsperforms a binary search of the
@@ -492,8 +502,7 @@ INT16 sLoop1, sBestMatch=-1;
 //	searching for.
 //
 //************************************************************************
-
-BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, FileHeaderStruct **pFileHeader)
+static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader)
 {
 	FileHeaderStruct **ppFileHeader;
 	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
@@ -525,8 +534,7 @@ BOOLEAN	GetFileHeaderFromLibrary( INT16 sLibraryID,const char *pstrFileName, Fil
 //	CompareFileNames() gets called by the binary search function.
 //
 //************************************************************************
-
-INT CompareFileNames( CHAR8 *arg1[], FileHeaderStruct **arg2 )
+static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2)
 {
 	CHAR8		sSearchKey[ FILENAME_SIZE ];
 	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
@@ -683,9 +691,7 @@ HWFILE OpenFileFromLibrary(const char *pName)
 }
 
 
-
-
-HWFILE CreateLibraryFileHandle( INT16 sLibraryID, UINT32 uiFileNum )
+static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum)
 {
 	HWFILE hLibFile;
 
@@ -838,8 +844,7 @@ BOOLEAN LibraryFileSeek( INT16 sLibraryID, UINT32 uiFileNum, UINT32 uiDistance, 
 //	library.
 //
 //************************************************************************
-
-BOOLEAN OpenLibrary( INT16 sLibraryID )
+static BOOLEAN OpenLibrary(INT16 sLibraryID)
 {
 	//if the library is already opened, report an error
 	if( gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen )
@@ -858,9 +863,7 @@ BOOLEAN OpenLibrary( INT16 sLibraryID )
 }
 
 
-
-
-BOOLEAN CloseLibrary( INT16 sLibraryID )
+static BOOLEAN CloseLibrary(INT16 sLibraryID)
 {
 	UINT32	uiLoop1;
 
@@ -976,6 +979,9 @@ static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 }
 
 
+static INT32 CompareDirEntryFileNames(CHAR8* arg1[], DIRENTRY** arg2);
+
+
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
 {
 #if 1 // XXX TODO
@@ -1064,8 +1070,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 //	CompareFileNames() gets called by the binary search function.
 //
 //************************************************************************
-
-INT32 CompareDirEntryFileNames( CHAR8 *arg1[], DIRENTRY **arg2 )
+static INT32 CompareDirEntryFileNames(CHAR8* arg1[], DIRENTRY** arg2)
 {
 	CHAR8				sSearchKey[ FILENAME_SIZE ];
 	CHAR8				sFileNameWithPath[ FILENAME_SIZE ];

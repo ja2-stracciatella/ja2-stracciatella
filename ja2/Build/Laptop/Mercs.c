@@ -970,11 +970,9 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 void InitMercVideoFace()
 {
 	//Alocates space, and loads the sti for SPECK
-//	giVideoSpeckFaceIndex = InternalInitFace( NO_PROFILE, NOBODY, 0, MERC_VIDEO_MERC_ID_FOR_SPECKS, 3000, 2000 );
 		giVideoSpeckFaceIndex = InitFace( MERC_VIDEO_MERC_ID_FOR_SPECKS, NOBODY, 0 );
 
 	// Sets up the eyes blinking and the mouth moving
-//	InternalSetAutoFaceActive( guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giVideoSpeckFaceIndex, 0, 0, 8, 9, 7, 25 );
 		SetAutoFaceActive( guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giVideoSpeckFaceIndex, 0, 0);
 
 

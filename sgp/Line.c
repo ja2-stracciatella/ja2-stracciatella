@@ -25,16 +25,15 @@
 //
 //**************************************************************************
 
-int giImageWidth=0;
-int giClipXMin=0;
-int giClipXMax=0;
-int giClipYMin=0;
-int giClipYMax=0;
+static int giImageWidth = 0;
+static int giClipXMin   = 0;
+static int giClipXMax   = 0;
+static int giClipYMin   = 0;
+static int giClipYMax   = 0;
 
-void DrawHorizontalRun(char **ScreenPtr, int XAdvance, int RunLength,
-                       int Color, int ScreenWidth);
-void DrawVerticalRun(char **ScreenPtr, int XAdvance, int RunLength,
-                       int Color, int ScreenWidth);
+
+static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth);
+static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth);
 
 
 void SetClippingRegionAndImageWidth(
@@ -52,7 +51,8 @@ void SetClippingRegionAndImageWidth(
 	giClipYMax = iClipStartY + iClipHeight-1;
 }
 
-BOOL Clipt( FLOAT denom, FLOAT num, FLOAT *tE, FLOAT *tL )
+
+static BOOL Clipt(FLOAT denom, FLOAT num, FLOAT* tE, FLOAT* tL)
 {
 	FLOAT	t;
 	BOOL	accept;
@@ -81,13 +81,15 @@ BOOL Clipt( FLOAT denom, FLOAT num, FLOAT *tE, FLOAT *tL )
 	return(accept);
 }
 
-BOOL ClipPoint( int x, int y )
+
+static BOOL ClipPoint(int x, int y)
 {
 	return( x <= giClipXMax && x >= giClipXMin &&
 			y <= giClipYMax && y >= giClipYMin );
 }
 
-BOOL Clip2D( int *ix0, int *iy0, int *ix1, int *iy1 )
+
+static BOOL Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 {
 	BOOL	visible;
 	FLOAT	te, tl;
@@ -364,10 +366,10 @@ void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8 *pScreen )
 	pScreen[ 1 ] = col2;
 }
 
+
 /* Draws a horizontal run of pixels, then advances the bitmap pointer to
    the first pixel of the next run. */
-void DrawHorizontalRun(char **ScreenPtr, int XAdvance,
-   int RunLength, int Color, int ScreenWidth)
+static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth)
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;
@@ -385,10 +387,10 @@ void DrawHorizontalRun(char **ScreenPtr, int XAdvance,
 	*ScreenPtr = WorkingScreenPtr;
 }
 
+
 /* Draws a vertical run of pixels, then advances the bitmap pointer to
    the first pixel of the next run. */
-void DrawVerticalRun(char **ScreenPtr, int XAdvance,
-   int RunLength, int Color, int ScreenWidth)
+static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth)
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;

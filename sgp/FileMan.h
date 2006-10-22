@@ -151,10 +151,6 @@ FILE* GetRealFileHandleFromFileManFileHandle(HWFILE hFile);
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
 UINT32		GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
 
-//Gets the free hard drive space from the drive letter passed in.  It has to be the root dir.  ( eg. c:\ )
-UINT32		GetFreeSpaceOnHardDrive( STR pzDriveLetter );
-
-
 #ifdef __cplusplus
 }
 #endif

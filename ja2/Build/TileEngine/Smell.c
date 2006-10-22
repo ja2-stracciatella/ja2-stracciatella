@@ -467,7 +467,7 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 }
 
 
-void DropBlood( SOLDIERTYPE * pSoldier, UINT8 ubStrength, INT8 bVisible )
+void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible)
 {
 	UINT8						ubType;
 	UINT8						ubOldStrength=0;

@@ -36,9 +36,8 @@ extern BOOLEAN gfApplicationActive;
 // the interface.
 
 BOOLEAN   gfKeyState[256];			// TRUE = Pressed, FALSE = Not Pressed
-BOOLEAN   fCursorWasClipped = FALSE;
-RECT      gCursorClipRect;
-
+static BOOLEAN fCursorWasClipped = FALSE;
+static RECT    gCursorClipRect;
 
 
 // The gsKeyTranslationTables basically translates scan codes to our own key value table. Please note that the table is 2 bytes
@@ -52,14 +51,14 @@ UINT16   gfCtrlState;						// TRUE = Pressed, FALSE = Not Pressed
 
 BOOLEAN   gfTrackDblClick;
 UINT32    guiDoubleClkDelay;		// Current delay in milliseconds for a delay
-UINT32		guiSingleClickTimer;
+static UINT32 guiSingleClickTimer;
 UINT32		guiRecordedWParam;
 UINT32		guiRecordedLParam;
 UINT16		gusRecordedKeyState;
 BOOLEAN		gfRecordedLeftButtonUp;
 
-UINT32		guiLeftButtonRepeatTimer;
-UINT32		guiRightButtonRepeatTimer;
+static UINT32 guiLeftButtonRepeatTimer;
+static UINT32 guiRightButtonRepeatTimer;
 
 BOOLEAN   gfTrackMousePos;			// TRUE = queue mouse movement events, FALSE = don't
 BOOLEAN   gfLeftButtonState;		// TRUE = Pressed, FALSE = Not Pressed
@@ -69,16 +68,16 @@ UINT16    gusMouseYPos;					// y position of the mouse on screen
 
 // The queue structures are used to track input events using queued events
 
-InputAtom gEventQueue[256];
-UINT16    gusQueueCount;
-UINT16    gusHeadIndex;
-UINT16    gusTailIndex;
+static InputAtom gEventQueue[256];
+static UINT16    gusQueueCount;
+static UINT16    gusHeadIndex;
+static UINT16    gusTailIndex;
 
 // This is the WIN95 hook specific data and defines used to handle the keyboard and
 // mouse hook
 
-HHOOK ghKeyboardHook;
-HHOOK ghMouseHook;
+static HHOOK ghKeyboardHook;
+static HHOOK ghMouseHook;
 
 // If the following pointer is non NULL then input characters are redirected to
 // the related string
@@ -90,7 +89,6 @@ StringInput *gpCurrentStringDescriptor;
 
 void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 void    RedirectToString(UINT16 uiInputCharacter);
-void		HandleSingleClicksAndButtonRepeats( void );
 void		AdjustMouseForWindowOrigin(void);
 
 // These are the hook functions for both keyboard and mouse
@@ -518,6 +516,10 @@ BOOLEAN DequeueSpecificEvent(InputAtom *Event, UINT32 uiMaskFlags )
 
 	return( FALSE );
 }
+
+
+static void HandleSingleClicksAndButtonRepeats(void);
+
 
 BOOLEAN DequeueEvent(InputAtom *Event)
 {
@@ -1619,8 +1621,7 @@ void DequeueAllKeyBoardEvents()
 }
 
 
-
-void HandleSingleClicksAndButtonRepeats( void )
+static void HandleSingleClicksAndButtonRepeats(void)
 {
   UINT32 uiTimer;
 
