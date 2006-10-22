@@ -1310,11 +1310,11 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 										if ( pSoldier->fBeginFade )
 										{
-											pShadeTable = pSoldier->pCurrentShade = pSoldier->pShades[ pSoldier->ubFadeLevel ];
+											pShadeTable = pSoldier->pShades[pSoldier->ubFadeLevel];
 										}
 										else
 										{
-											pShadeTable = pSoldier->pCurrentShade = pSoldier->pShades[ ubShadeLevel];
+											pShadeTable = pSoldier->pShades[ubShadeLevel];
 										}
 
 									}

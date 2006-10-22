@@ -3663,11 +3663,6 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 		CreateSoldierShadedPalette(pSoldier, 32, LightPal);
 	}
 
-	// build neutral palette as well!
-	// Set current shade table to neutral color
-	pSoldier->pCurrentShade=pSoldier->pShades[4];
-	//pSoldier->pGlow=pSoldier->pShades[0];
-
 	return(TRUE);
 
 }

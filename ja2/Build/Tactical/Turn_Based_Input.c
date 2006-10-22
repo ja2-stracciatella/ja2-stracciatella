@@ -993,9 +993,6 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		// Handle highlighting stuff
-		HandleObjectHighlighting( );
-
 		// Check if we have an item in our hands...
 		if ( gpItemPointer != NULL )
 		{

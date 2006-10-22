@@ -2724,51 +2724,6 @@ UINT8 GetAdjustedAnimHeight( UINT8 ubAnimHeight, INT8 bChange )
 	return( ubNewAnimHeight );
 }
 
-void HandleObjectHighlighting( )
-{
-	SOLDIERTYPE				*pSoldier;
-	UINT16						usMapPos;
-
-	if( !GetMouseMapPos( &usMapPos) )
-	{
-		return;
-	}
-
-	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	if ( gfUIFullTargetFound )
-	{
-		// Get Soldier
-		GetSoldier( &pSoldier, gusUIFullTargetID );
-
-		// If an enemy, and in a given mode, highlight
-		if ( guiUIFullTargetFlags & ENEMY_MERC  )
-		{
-			switch( gCurrentUIMode )
-			{
-
-				case CONFIRM_MOVE_MODE:
-				case MENU_MODE:
-
-					break;
-
-				case MOVE_MODE:
-				case CONFIRM_ACTION_MODE:
-				//case ACTION_MODE:
-				case IDLE_MODE:
-
-					// Set as selected
-					//pSoldier->pCurrentShade = pSoldier->pShades[ 1 ];
-					break;
-			}
-		}
-		else if ( guiUIFullTargetFlags & OWNED_MERC )
-		{
-			// Check for selected
-			pSoldier->pCurrentShade = pSoldier->pShades[ 0 ];
-		}
-	}
-
-}
 
 void AdjustSoldierCreationStartValues( )
 {

@@ -518,7 +518,7 @@ typedef struct
 	UINT16											*p16BPPPalette;
 	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 	UINT16											*pGlowShades[ 20 ]; //
-	UINT16											*pCurrentShade;
+	UINT16											*pCurrentShade; // XXX unused, but keep for savegame compatibility
 	INT8												bMedical;
 	BOOLEAN											fBeginFade;
 	UINT8												ubFadeLevel;

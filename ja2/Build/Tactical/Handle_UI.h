@@ -254,7 +254,6 @@ BOOLEAN		gRubberBandActive;
 
 void EndMenuEvent( UINT32	uiEvent );
 void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc );
-void HandleObjectHighlighting( );
 
 BOOLEAN		gfUIForceReExamineCursorData;
 
