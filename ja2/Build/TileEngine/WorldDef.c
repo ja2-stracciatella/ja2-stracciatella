@@ -3205,7 +3205,7 @@ BOOLEAN NewWorld( void )
 	UINT16				NewIndex;
 	INT32					cnt;
 
-	gusSelectedSoldier = gusOldSelectedSoldier = NO_SOLDIER;
+	gusSelectedSoldier = NO_SOLDIER;
 
 	AdjustSoldierCreationStartValues( );
 

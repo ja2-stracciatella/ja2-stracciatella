@@ -49,13 +49,8 @@ UINT16   gfCtrlState;						// TRUE = Pressed, FALSE = Not Pressed
 
 // These data structure are used to track the mouse while polling
 
-BOOLEAN   gfTrackDblClick;
-UINT32    guiDoubleClkDelay;		// Current delay in milliseconds for a delay
 static UINT32 guiSingleClickTimer;
-UINT32		guiRecordedWParam;
-UINT32		guiRecordedLParam;
 UINT16		gusRecordedKeyState;
-BOOLEAN		gfRecordedLeftButtonUp;
 
 static UINT32 guiLeftButtonRepeatTimer;
 static UINT32 guiRightButtonRepeatTimer;
@@ -88,7 +83,6 @@ StringInput *gpCurrentStringDescriptor;
 // Local function headers
 
 void    RedirectToString(UINT16 uiInputCharacter);
-void		AdjustMouseForWindowOrigin(void);
 
 // These are the hook functions for both keyboard and mouse
 
@@ -310,10 +304,7 @@ BOOLEAN InitializeInputManager(void)
   gfAltState   = FALSE;
   gfCtrlState  = FALSE;
   // Initialize variables pertaining to DOUBLE CLIK stuff
-  gfTrackDblClick = TRUE;
-  guiDoubleClkDelay = DBL_CLK_TIME;
   guiSingleClickTimer = 0;
-  gfRecordedLeftButtonUp = FALSE;
   // Initialize variables pertaining to the button states
   gfLeftButtonState  = FALSE;
   gfRightButtonState = FALSE;

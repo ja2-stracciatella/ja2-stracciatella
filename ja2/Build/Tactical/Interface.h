@@ -126,9 +126,6 @@ INT16		gsInterfaceLevel;
 BOOLEAN	gfInMovementMenu;
 
 
-
-void PopupPositionMenu( UI_EVENT *pUIEvent );
-void PopDownPositionMenu( );
 void PopupMovementMenu( UI_EVENT *pUIEvent );
 void PopDownMovementMenu( );
 void RenderMovementMenu( );
@@ -209,7 +206,6 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );
 
 
-void GetLaunchItemParamsFromUI( );
 void RenderAimCubeUI( );
 void ResetAimCubeAI( );
 void SetupAimCubeAI( );

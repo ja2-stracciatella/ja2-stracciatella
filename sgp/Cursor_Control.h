@@ -79,8 +79,6 @@ typedef struct
 extern INT16					 gsGlobalCursorYOffset;
 
 // Globals for cursor database offset values
-extern INT16					 gsCurMouseOffsetX;
-extern INT16 				 gsCurMouseOffsetY;
 extern UINT16				 gsCurMouseHeight;
 extern UINT16				 gsCurMouseWidth;
 

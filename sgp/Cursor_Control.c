@@ -26,8 +26,6 @@ static BOOLEAN gfCursorDatabaseInit = FALSE;
 static CursorFileData* gpCursorFileDatabase;
 static CursorData*     gpCursorDatabase;
 INT16					 gsGlobalCursorYOffset = 0;
-INT16					 gsCurMouseOffsetX = 0;
-INT16 				 gsCurMouseOffsetY = 0;
 UINT16				 gsCurMouseHeight = 0;
 UINT16				 gsCurMouseWidth = 0;
 static UINT16 gusNumDataFiles = 0;
@@ -225,9 +223,6 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 		pCurData->sOffsetY = 0;
 	}
 
-
-	gsCurMouseOffsetX	= pCurData->sOffsetX;
-	gsCurMouseOffsetY	= pCurData->sOffsetY;
 	gsCurMouseHeight	= pCurData->usHeight;
 	gsCurMouseWidth		= pCurData->usWidth;
 

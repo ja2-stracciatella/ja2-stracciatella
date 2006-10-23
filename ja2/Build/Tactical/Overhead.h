@@ -188,7 +188,6 @@ typedef struct
 UINT8		gbPlayerNum;
 
 UINT16  gusSelectedSoldier;
-UINT16  gusOldSelectedSoldier;
 
 extern CHAR8		gzAlertStr[][ 30 ];
 extern CHAR8		gzActionStr[][ 30 ];
@@ -204,8 +203,6 @@ SOLDIERTYPE	 *MercPtrs[ TOTAL_SOLDIERS ];
 // MERC SLOTS - A LIST OF ALL ACTIVE MERCS
 SOLDIERTYPE	 *MercSlots[ TOTAL_SOLDIERS ];
 UINT32			 guiNumMercSlots;
-
-BOOLEAN									gfMovingAnimation;
 
 
 TacticalStatusType	gTacticalStatus;

@@ -262,11 +262,9 @@ static const INT16 gsFullTileDirections[MAX_FULLTILE_DIRECTIONS] =
 
 // Palette ranges
 static UINT32 guiNumPaletteSubRanges;
-static PaletteSubRangeType* guipPaletteSubRanges = NULL;
 static PaletteSubRangeType* gpPaletteSubRanges;
 // Palette replacements
 static UINT32 guiNumReplacements;
-static PaletteReplacementType* guipPaletteReplacements = NULL;
 
 extern BOOLEAN fReDrawFace;
 extern UINT8 gubWaitingForAllMercsToExitCode;

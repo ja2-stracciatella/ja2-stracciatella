@@ -155,13 +155,6 @@ BOOLEAN DestroyImage( HIMAGE hImage );
 // This function will run the appropriate copy function based on the type of HIMAGE object
 BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
 
-// The following blitters are used by the function above as well as clients
-#ifndef NO_ZLIB_COMPRESSION
-	// This function will extract a compressed image into a non-compressed buffer
-	BOOLEAN Extract8BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf );
-	BOOLEAN Extract16BPPCompressedImageToBuffer( HIMAGE hImage, BYTE *pDestBuf );
-#endif
-
 
 // This function will create a buffer in memory of ETRLE data, excluding palette
 BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer );

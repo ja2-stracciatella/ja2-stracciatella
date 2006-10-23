@@ -106,8 +106,6 @@ extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, 
 static MOUSE_REGION gMenuOverlayRegion;
 
 
-UINT16				gusOldSelectedSoldier		= NO_SOLDIER;
-
 // OVerlay ID
 static INT32        giPopupSlideMessageOverlay = -1;
 static UINT16       gusOverlayPopupBoxWidth;
@@ -233,7 +231,6 @@ static UINT32 giDownArrowRect;
 BOOLEAN fFirstTimeInGameScreen  = TRUE;
 BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
 INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
-INT16		gsCurrentSoldierGridNo	= 0;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
 
 
@@ -596,24 +593,6 @@ static void HandleUpDownArrowBackgrounds(void);
 void HandleInterfaceBackgrounds( )
 {
 	HandleUpDownArrowBackgrounds( );
-}
-
-
-void PopupPositionMenu( UI_EVENT *pUIEvent )
-{
-
-}
-
-void PopDownPositionMenu( )
-{
-
-}
-
-
-void BtnPositionCallback(GUI_BUTTON *btn,INT32 reason)
-{
-
-
 }
 
 
@@ -3723,12 +3702,6 @@ void RenderAimCubeUI( )
 		}
 
 	}
-
-}
-
-void GetLaunchItemParamsFromUI( )
-{
-
 
 }
 

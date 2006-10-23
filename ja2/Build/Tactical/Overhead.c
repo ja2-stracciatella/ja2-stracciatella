@@ -182,21 +182,6 @@ static const char* const gzLevelFilenames[] =
 };
 
 
-static const INT8 ubLevelMoveLink[10] =
-{
-	1,
-	2,
-	3,
-	4,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0
-};
-
-
 // Soldier List used for all soldier overhead interaction
 SOLDIERTYPE      Menptr[ TOTAL_SOLDIERS ];
 SOLDIERTYPE      *MercPtrs[ TOTAL_SOLDIERS ];
@@ -212,8 +197,6 @@ UINT8                            gbPlayerNum = 0;
 
 // Global for current selected soldier
 UINT16                                                                  gusSelectedSoldier = NO_SOLDIER;
-
-BOOLEAN                                                                 gfMovingAnimation = FALSE;
 
 CHAR8                   gzAlertStr[][ 30 ] =
 {
@@ -860,8 +843,6 @@ BOOLEAN ExecuteOverhead( )
 	static INT32                                    iTimerTest = 0;
 	static INT32                                    iTimerVal = 0;
 
-
-	gfMovingAnimation = FALSE;
 
 	if(GetSoldier(&pSoldier, gusSelectedSoldier))
 	{

@@ -8,7 +8,6 @@ UINT16	IntensityTable[65536];
 UINT16	ShadeTable[65536];
 UINT16	White16BPPPalette[ 256 ];
 static FLOAT guiShadePercent = 0.48;
-FLOAT   guiBrightPercent = (FLOAT)1.1;
 
 
 /**********************************************************************************************
