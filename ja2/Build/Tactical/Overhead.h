@@ -186,7 +186,6 @@ typedef struct
 
 
 UINT8		gbPlayerNum;
-INT8		gbShowEnemies;
 
 UINT16  gusSelectedSoldier;
 UINT16  gusOldSelectedSoldier;

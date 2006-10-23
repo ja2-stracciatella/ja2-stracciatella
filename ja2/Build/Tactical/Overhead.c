@@ -212,7 +212,6 @@ UINT8                            gbPlayerNum = 0;
 
 // Global for current selected soldier
 UINT16                                                                  gusSelectedSoldier = NO_SOLDIER;
-INT8                                                                            gbShowEnemies = FALSE;
 
 BOOLEAN                                                                 gfMovingAnimation = FALSE;
 

@@ -55,6 +55,10 @@
 
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 
+
+static const BOOLEAN gbShowEnemies = FALSE; // XXX seems to be a debug switch
+
+
 extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void MakeBloodcatsHostile( void );
 
