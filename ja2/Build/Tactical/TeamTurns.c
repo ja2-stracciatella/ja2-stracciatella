@@ -51,7 +51,6 @@
 #endif
 
 extern void DecayPublicOpplist(INT8 bTeam);
-extern void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier);
 void EndInterrupt( BOOLEAN fMarkInterruptOccurred );
 void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate);
 

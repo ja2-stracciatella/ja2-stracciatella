@@ -68,7 +68,6 @@ extern UINT8 gubPublicNoiseVolume[MAXTEAMS];
 extern INT16 gsPublicNoiseGridno[MAXTEAMS];
 extern INT8 gbPublicNoiseLevel[MAXTEAMS];
 extern UINT8 gubKnowledgeValue[10][10];
-extern INT8 gbLookDistance[8][8];
 extern INT8 gfKnowAboutOpponents;
 
 extern BOOLEAN   gfPlayerTeamSawJoey;
@@ -86,22 +85,13 @@ extern BOOLEAN		gfWatchedLocReset[ TOTAL_SOLDIERS ][ NUM_WATCHED_LOCS ];
 #define BEST_SIGHTING_ARRAY_SIZE_INCOMBAT 0
 extern UINT8 gubBestToMakeSightingSize;
 
-INT16 AdjustMaxSightRangeForEnvEffects( SOLDIERTYPE *pSoldier, INT8 bLightLevel, INT16 sDistVisible );
-INT16 ManLooksForMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubCaller);
+INT16 AdjustMaxSightRangeForEnvEffects(INT8 bLightLevel, INT16 sDistVisible);
 void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags);
 void AllTeamsLookForAll(UINT8 ubAllowInterrupts);
 void GloballyDecideWhoSeesWho(void);
 UINT16 GetClosestMerc( UINT16 usSoldierIndex );
-void ManLooksForOtherTeams(SOLDIERTYPE *pSoldier);
-void OtherTeamsLookForMan(SOLDIERTYPE *pOpponent);
-void ManSeesMan(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2);
-void DecideTrueVisibility(SOLDIERTYPE *pSoldier, UINT8 ubLocate);
-void AddOneOpponent(SOLDIERTYPE *pSoldier);
-void RemoveOneOpponent(SOLDIERTYPE *pSoldier);
-void UpdatePersonal(SOLDIERTYPE *pSoldier, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel);
 INT16 MaxDistanceVisible( void );
-INT16 DistanceVisible( SOLDIERTYPE *pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel );
-void ResetLastKnownLocs(SOLDIERTYPE *ptr);
+INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel);
 void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier );
 
 
@@ -109,9 +99,7 @@ void InitOpponentKnowledgeSystem(void);
 void InitSoldierOppList(SOLDIERTYPE *pSoldier);
 void BetweenTurnsVisibilityAdjustments(void);
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier);
-void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel );
 void RadioSightings(SOLDIERTYPE *pSoldier, UINT8 ubAbout, UINT8 ubTeamToRadioTo );
-void OurTeamRadiosRandomlyAbout(UINT8 ubAbout);
 void DebugSoldierPage1( );
 void DebugSoldierPage2( );
 void DebugSoldierPage3( );

@@ -1032,7 +1032,7 @@ UINT32 MoneySlotLimit( INT8 bSlot )
 }
 
 
-INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
+INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem)
 {
 	INT8 bLoop;
 

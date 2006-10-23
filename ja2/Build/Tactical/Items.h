@@ -9,7 +9,7 @@ extern UINT8 SlotToPocket[7];
 
 extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
 
-extern INT8 FindObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
+INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
 
 extern INT8 FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );

@@ -368,7 +368,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	{
     range = pSoldier->bViewRange;
 		// balance item viewing range between normal and the limit set by opplist-type functions -- CJC
-		range = (AdjustMaxSightRangeForEnvEffects( pSoldier, LightTrueLevel( pSoldier->sGridNo, pSoldier->bLevel), range ) + range) / 2;
+		range = (AdjustMaxSightRangeForEnvEffects(LightTrueLevel(pSoldier->sGridNo, pSoldier->bLevel), range) + range) / 2;
 	}
 
 

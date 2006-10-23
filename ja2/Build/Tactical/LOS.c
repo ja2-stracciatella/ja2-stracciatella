@@ -1363,7 +1363,8 @@ INT32 LineOfSightTest( FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX,
 	return( (iDistance + (iSightLimit - iAdjSightLimit)) * (MaxDistanceVisible() * CELL_X_SIZE) / iSightLimit );
 }
 
-BOOLEAN CalculateSoldierZPos( SOLDIERTYPE * pSoldier, UINT8 ubPosType, FLOAT * pdZPos )
+
+BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos)
 {
 	UINT8		ubHeight;
 
@@ -1549,7 +1550,8 @@ BOOLEAN CalculateSoldierZPos( SOLDIERTYPE * pSoldier, UINT8 ubPosType, FLOAT * p
 	return( TRUE );
 }
 
-INT32 SoldierToSoldierLineOfSightTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware )
+
+INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	FLOAT			dStartZPos, dEndZPos;
 	BOOLEAN		fOk;
@@ -1718,7 +1720,8 @@ BOOLEAN SoldierToSoldierLineOfSightTimingTest( SOLDIERTYPE * pStartSoldier, SOLD
 	return( TRUE );
 }
 
-INT32 SoldierTo3DLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware )
+
+INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sXPos, sYPos;
