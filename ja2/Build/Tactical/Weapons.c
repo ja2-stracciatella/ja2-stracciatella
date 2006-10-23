@@ -82,8 +82,6 @@ extern void TeamChangesSides( UINT8 ubTeam, INT8 bSide );
 
 extern BOOLEAN	gfNextFireJam;
 
-INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BOOLEAN fBladeAttack );
-
 BOOLEAN gfNextShotKills = FALSE;
 BOOLEAN gfReportHitChances = FALSE;
 

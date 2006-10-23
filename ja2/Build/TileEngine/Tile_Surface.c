@@ -17,6 +17,7 @@
 	#include "TileDat.h"
 	#include "FileMan.h"
 	#include "MemMan.h"
+	#include "Tile_Cache.h"
 #endif
 
 
@@ -157,9 +158,6 @@ void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 	DeleteVideoObject( pTileSurf->vo );
 	MemFree( pTileSurf );
 }
-
-
-extern void GetRootName( INT8 *pDestStr, INT8 *pSrcStr );
 
 
 void SetRaisedObjectFlag( char *cFilename, TILE_IMAGERY *pTileSurf )

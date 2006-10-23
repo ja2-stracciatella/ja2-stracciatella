@@ -33,6 +33,8 @@
 	#include "Overhead.h"
 	#include "Button_System.h"
 	#include "Video.h"
+	#include "MapScreen.h"
+	#include "Map_Screen_Interface_Map_Inventory.h"
 #endif
 
 #ifdef JA2BETAVERSION
@@ -40,17 +42,11 @@
 #endif
 
 
-extern INT16 gsVIEWPORT_END_Y;
 extern void PrintDate( void );
 extern void PrintNumberOnTeam( void );
 extern void PrintBalance( void );
 extern		BOOLEAN fMapScreenBottomDirty;
-extern		BOOLEAN fCharacterInfoPanelDirty;
-extern		BOOLEAN fTeamPanelDirty;
-extern		BOOLEAN fMapScreenBottomDirty;
-extern		BOOLEAN fMapPanelDirty;
 extern		BOOLEAN	gfGamePaused;
-extern		BOOLEAN fShowMapInventoryPool;
 
 extern		BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
 

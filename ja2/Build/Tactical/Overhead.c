@@ -139,9 +139,6 @@ extern BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID );
 extern  INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
-void ResetAllMercSpeeds( );
-
-
 void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSelected );
 void HandleEndDemoInCreatureLevel( );
 void DeathTimerCallback( void );

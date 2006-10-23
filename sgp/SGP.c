@@ -27,8 +27,6 @@ extern UINT32 MemDebugCounter;
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
-extern  void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
-
 // Prototype Declarations
 
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam);

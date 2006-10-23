@@ -88,7 +88,6 @@ static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
 
 extern	UINT8		gubWaitingForAllMercsToExitCode;
-extern BOOLEAN fFoundTixa;
 void	DoneFadeOutActionSex( void );
 
 
@@ -176,7 +175,6 @@ static SOLDIERTYPE* gpPendingDestSoldier;
 static SOLDIERTYPE* gpPendingSrcSoldier;
 static INT8         gbPendingApproach;
 static UINT32       guiPendingApproachData;
-extern BOOLEAN			fMapPanelDirty;
 
 INT32 giHospitalTempBalance; // stores amount of money for current doctoring
 INT32 giHospitalRefund; // stores amount of money given to hospital for doctoring that wasn't used

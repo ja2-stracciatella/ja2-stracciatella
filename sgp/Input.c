@@ -87,7 +87,6 @@ StringInput *gpCurrentStringDescriptor;
 
 // Local function headers
 
-void    QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 void    RedirectToString(UINT16 uiInputCharacter);
 void		AdjustMouseForWindowOrigin(void);
 

@@ -63,6 +63,7 @@
 	#include "LightEffects.h"
 	#include "MemMan.h"
 	#include "JAScreens.h"
+	#include "Tile_Cache.h"
 #endif
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
@@ -121,7 +122,6 @@ BOOLEAN IsRoofVisibleForWireframe( INT16 sMapPos );
 
 INT8 IsHiddenTileMarkerThere( INT16 sGridNo );
 extern void SetInterfaceHeightLevel( );
-extern void GetRootName( INT8 *pDestStr, INT8 *pSrcStr );
 
 
 void SaveMapLights( HWFILE hfile );
