@@ -3,7 +3,6 @@
 
 #include "Types.h"
 
-#define AILCALLBACK
 #define CALLBACK
 #define FAR
 #define PASCAL

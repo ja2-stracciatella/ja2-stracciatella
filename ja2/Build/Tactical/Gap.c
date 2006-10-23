@@ -14,36 +14,6 @@
 	#include "MemMan.h"
 #endif
 
-#if 0
-static void AILCALLBACK timer_func( UINT32 user )
-{
-	AudioGapList	*pGapList;
-
-	pGapList = (AudioGapList*)user;
-
-  pGapList->gap_monitor_timer += GAP_TIMER_INTERVAL;
-
-  if ( pGapList->audio_gap_active )
-  {
-   if ( (pGapList->gap_monitor_timer / 1000) > pGapList->end[ pGapList->gap_monitor_current] )
-    {
-      pGapList->audio_gap_active = 0;
-      pGapList->gap_monitor_current++;
-    }
-  }
-  else
-	{
-    if ( pGapList->gap_monitor_current < pGapList->count )
-		{
-      if ( ( pGapList->gap_monitor_timer / 1000) >= pGapList->start[ pGapList->gap_monitor_current ])
-      {
-				pGapList->audio_gap_active = 1;
-      }
-		}
-	}
-}
-#endif
-
 
 void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 {
