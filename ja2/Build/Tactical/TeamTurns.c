@@ -8,7 +8,6 @@
 	#include "Animation_Control.h"
 	#include "Points.h"
 	#include "OppList.h"
-	#include "Timer.h"
 	#include "Event_Pump.h"
 	#include "Sound_Control.h"
 	#include "Interface.h"

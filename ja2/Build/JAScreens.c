@@ -12,7 +12,6 @@
 	#include "WCheck.h"
 	#include "Input.h"
 	#include "Font.h"
-	#include "Timer.h"
 	#include "MouseSystem.h"
 	#include "ScreenIDs.h"
 	#include "Screens.h"

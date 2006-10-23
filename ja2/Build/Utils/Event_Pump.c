@@ -6,7 +6,6 @@
 	#include "SGP.h"
 	#include "WCheck.h"
 	#include "Event_Pump.h"
-	#include "Timer.h"
 	#include "Soldier_Control.h"
 	#include "Sound_Control.h"
 	#include "Overhead.h"

@@ -14,7 +14,6 @@
 #include "SGP.h"
 #include "Stubs.h"
 #include "SoundMan.h"
-#include "Timer.h"
 #include "Utilities.h"
 #include "Video.h"
 #include "VSurface.h"
@@ -396,10 +395,6 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 		InitJA2SplashScreen();
 	#endif
 
-  // Make sure we start up our local clock (in milliseconds)
-  // We don't need to check for a return value here since so far its always TRUE
-  InitializeClockManager();  // must initialize after VideoManager, 'cause it uses ghWindow
-
 	// Initialize Font Manager
 	FastDebugMsg("Initializing the Font Manager");
 	// Init the manager and copy the TransTable stuff into it.
@@ -478,8 +473,6 @@ static void ShutdownStandardGamingPlatform(void)
 
 	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
   ShutdownFontManager();
-
-  ShutdownClockManager();   // must shutdown before VideoManager, 'cause it uses ghWindow
 
 #ifdef SGP_VIDEO_DEBUGGING
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
