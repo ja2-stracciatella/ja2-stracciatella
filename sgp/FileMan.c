@@ -24,6 +24,7 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Types.h"
+#include <glob.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,24 +76,18 @@ static char* PathBackslash(const char* path, const char* caller, int line)
 DatabaseManagerHeaderStruct gFileDataBase;
 
 
-WIN32_FIND_DATA Win32FindInfo[20];
+struct Glob
+{
+	glob_t Glob;
+	UINT32 Index;
+};
+typedef struct Glob Glob;
+
+static Glob Win32FindInfo[20];
 BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 															FALSE,FALSE,FALSE,FALSE,FALSE,
 															FALSE,FALSE,FALSE,FALSE,FALSE,
 															FALSE,FALSE,FALSE,FALSE,FALSE };
-HANDLE hFindInfoHandle[20] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE,
-															INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
-
-
-void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct );
 
 
 static char start_path[512];
@@ -1140,16 +1135,13 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 }
 
 
+static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct);
+
+
 BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 {
 	BACKSLASH(pSpec);
 
-#if 1 // XXX TODO
-	FIXME
-	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\", %p)\n", __FILE__, __LINE__, __func__, pSpec, pGFStruct);
-	return FALSE;
-	UNIMPLEMENTED();
-#else
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
 
@@ -1171,67 +1163,54 @@ BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 
 	pGFStruct->iFindHandle = iWhich;
 
-	hFindInfoHandle[iWhich] = FindFirstFile( pSpec, &Win32FindInfo[iWhich] );
+	if (glob(pSpec, 0, NULL, &Win32FindInfo[iWhich].Glob) != 0)
+	{
+		globfree(&Win32FindInfo[iWhich].Glob);
+		return FALSE;
+	}
 
-	if ( hFindInfoHandle[iWhich] == INVALID_HANDLE_VALUE )
-		return(FALSE);
+	Win32FindInfo[iWhich].Index = 0;
 	fFindInfoInUse[iWhich] = TRUE;
 
 	W32toSGPFileFind( pGFStruct, &Win32FindInfo[iWhich] );
 
 	return(TRUE);
-#endif
 }
+
 
 BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	CHECKF( pGFStruct != NULL );
 
-	if ( FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo[pGFStruct->iFindHandle]) )
-	{
-		W32toSGPFileFind( pGFStruct, &Win32FindInfo[pGFStruct->iFindHandle] );
-		return(TRUE);
-	}
-	return(FALSE);
-#endif
+	Glob* g = &Win32FindInfo[pGFStruct->iFindHandle];
+	if (g->Index >= g->Glob.gl_pathc) return FALSE;
+	W32toSGPFileFind(pGFStruct, g);
+	return TRUE;
 }
 
 void GetFileClose( GETFILESTRUCT *pGFStruct )
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	if ( pGFStruct == NULL )
 		return;
 
-	FindClose( hFindInfoHandle[pGFStruct->iFindHandle] );
-	hFindInfoHandle[pGFStruct->iFindHandle] = INVALID_HANDLE_VALUE;
+	globfree(&Win32FindInfo[pGFStruct->iFindHandle].Glob);
 	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
-
-	return;
-#endif
 }
 
-void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
+
+static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	UINT32 uiAttribMask;
 
 	// Copy the filename
-	strcpy(pGFStruct->zFileName, pW32Struct->cFileName);
-
-	// Get file size
-	if ( pW32Struct->nFileSizeHigh != 0 )
-		pGFStruct->uiFileSize = 0xffffffff;
-	else
-		pGFStruct->uiFileSize = pW32Struct->nFileSizeLow;
+	const char* Start = strrchr(pW32Struct->Glob.gl_pathv[pW32Struct->Index], '/');
+	Start = (Start != NULL ? Start + 1 : pW32Struct->Glob.gl_pathv[pW32Struct->Index]);
+	strcpy(pGFStruct->zFileName, Start);
 
 	// Copy the file attributes
+#if 1 // XXX TODO
+	pGFStruct->uiFileAttribs = FILE_IS_NORMAL;
+#else
 	pGFStruct->uiFileAttribs = 0;
 
 	for( uiAttribMask = 0x80000000; uiAttribMask > 0; uiAttribMask >>= 1)
@@ -1276,6 +1255,7 @@ void W32toSGPFileFind( GETFILESTRUCT *pGFStruct, WIN32_FIND_DATA *pW32Struct )
 		}
 	}
 #endif
+	++pW32Struct->Index;
 }
 
 
