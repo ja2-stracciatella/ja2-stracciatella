@@ -162,7 +162,6 @@ extern DatabaseManagerHeaderStruct gFileDataBase;
 
 
 BOOLEAN InitializeFileDatabase( );
-BOOLEAN ReopenCDLibraries(void);
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 HWFILE OpenFileFromLibrary(const char *pName);

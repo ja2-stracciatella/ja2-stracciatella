@@ -45,7 +45,6 @@ CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
 static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader);
-void		AddSlashToPath( STR pName );
 static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
 static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
@@ -129,33 +128,6 @@ BOOLEAN InitializeFileDatabase( )
 
 static BOOLEAN CloseLibrary(INT16 sLibraryID);
 
-
-//*****************************************************************************************
-// ReopenCDLibraries
-//
-// Closes all CD libraries, then reopens them. This function needs to be called when CDs
-// are changed.
-//
-// Returns BOOLEAN            - TRUE, always
-//
-// Created:  3/21/00 Derek Beland
-//*****************************************************************************************
-BOOLEAN ReopenCDLibraries(void)
-{
-INT16 i;
-
-	//Load up each library
-	for(i=0; i < NUMBER_OF_LIBRARIES; i++ )
-	{
-		if(gFileDataBase.pLibraries[ i ].fLibraryOpen && gGameLibaries[i].fOnCDrom)
-			CloseLibrary(i);
-
-		if(gGameLibaries[i].fOnCDrom)
-			OpenLibrary( i );
-	}
-
-	return(TRUE);
-}
 
 //************************************************************************
 //
@@ -549,38 +521,6 @@ static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2)
    /* Compare all of both strings: */
    return strcasecmp(sSearchKey, sFileNameWithPath);
 }
-
-
-
-
-void AddSlashToPath( STR pName )
-{
-	UINT32	uiLoop, uiCounter;
-	BOOLEAN	fDone = FALSE;
-	BOOLEAN fFound = FALSE;
-	CHAR8		sNewName[ FILENAME_SIZE ];
-
-	//find out if there is a '\' in the file name
-
-	uiCounter=0;
-	for( uiLoop=0; uiLoop < strlen( pName ) && !fDone; uiLoop++)
-	{
-		if( pName[ uiLoop ] == '\\' )
-		{
-			sNewName[ uiCounter ] = pName[ uiLoop ];
-			uiCounter++;
-			sNewName[ uiCounter ] = '\\';
-		}
-		else
-			sNewName[ uiCounter ] = pName[ uiLoop ];
-
-		uiCounter++;
-	}
-	sNewName[ uiCounter ] = '\0';
-
-	strcpy( pName, sNewName );
-}
-
 
 
 //************************************************************************
