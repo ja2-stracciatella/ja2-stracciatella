@@ -117,8 +117,6 @@ extern	void		DbgShutdown(void);
 
 // public interface to debug methods:
 extern	void		DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *Str);
-extern	BOOLEAN	DbgSetDebugLevel(UINT16 TopicId, UINT8 uiDebugLevel);
-extern	void		DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine );
 //extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
 extern void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage);
 extern	void		DbgClearAllTopics( void );

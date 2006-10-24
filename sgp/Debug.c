@@ -350,57 +350,6 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const
 
 }
 
-//**************************************************************************
-//
-// DbgSetDebugLevel
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		11nov96:HJH		-> creation
-//
-//**************************************************************************
-
-BOOLEAN DbgSetDebugLevel(UINT16 uiTopicId, UINT8 uiDebugLevel)
-{
-	return(TRUE);
-}
-
-//**************************************************************************
-//
-// DbgFailedAssertion
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		xxnov96:HJH		-> creation
-//
-//**************************************************************************
-
-void DbgFailedAssertion( BOOLEAN fExpression, char *szFile, int nLine )
-{
-#ifndef _NO_DEBUG_TXT
-  FILE *OutFile;
-
-	if ( fExpression == FALSE )
-	{
-		if ((OutFile = fopen(gpcDebugLogFileName, "a+t")) != NULL)
-		{
-		  fprintf(OutFile, "Assertion Failed at:\n    line %i\n    %s\n", nLine, szFile);
-	    fclose(OutFile);
-		}
-	}
-#endif
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void			_DebugRecordToFile(BOOLEAN gfState)
 {
