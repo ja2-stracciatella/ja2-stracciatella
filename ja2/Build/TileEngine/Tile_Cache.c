@@ -32,6 +32,8 @@ TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
 
 BOOLEAN InitTileCache(  )
 {
+	const char* const TilecacheFilePattern = "TILECACHE\\*.[Jj][Ss][Dd]";
+
 	UINT32				cnt;
 	GETFILESTRUCT FileInfo;
 	INT16					sFiles = 0;
@@ -50,7 +52,7 @@ BOOLEAN InitTileCache(  )
 
 	// OK, look for JSD files in the tile cache directory and
 	// load any we find....
-	if( GetFileFirst("TILECACHE\\*.jsd", &FileInfo) )
+	if (GetFileFirst(TilecacheFilePattern, &FileInfo))
 	{
 		while( GetFileNext(&FileInfo) )
 		{
@@ -69,7 +71,7 @@ BOOLEAN InitTileCache(  )
 		gpTileCacheStructInfo = MemAlloc( sizeof( TILE_CACHE_STRUCT ) * sFiles );
 
 		// Loop through and set filenames
-		if( GetFileFirst("TILECACHE\\*.jsd", &FileInfo) )
+		if (GetFileFirst(TilecacheFilePattern, &FileInfo))
 		{
 			while( GetFileNext(&FileInfo) )
 			{
