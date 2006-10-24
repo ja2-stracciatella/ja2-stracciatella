@@ -51,22 +51,20 @@
 #endif
 
 extern void DecayPublicOpplist(INT8 bTeam);
-void EndInterrupt( BOOLEAN fMarkInterruptOccurred );
-void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate);
 
 #define END_OF_INTERRUPTS 255
 
-UINT8 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
+static UINT8 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
 UINT8 gubOutOfTurnPersons = 0;
 
 #define LATEST_INTERRUPT_GUY (gubOutOfTurnOrder[gubOutOfTurnPersons])
 #define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
-INT16 InterruptOnlyGuynum = NOBODY;
-BOOLEAN InterruptsAllowed = TRUE;
+static INT16 InterruptOnlyGuynum = NOBODY;
+static BOOLEAN InterruptsAllowed = TRUE;
 BOOLEAN gfHiddenInterrupt = FALSE;
-UINT8		gubLastInterruptedGuy = 0;
+static UINT8 gubLastInterruptedGuy = 0;
 
 extern INT16 gsWhoThrewRock;
 extern UINT8 gubSightFlags;
@@ -93,7 +91,8 @@ void ClearIntList( void )
 	gubOutOfTurnPersons = 0;
 }
 
-BOOLEAN BloodcatsPresent( void )
+
+static BOOLEAN BloodcatsPresent(void)
 {
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;
@@ -213,7 +212,8 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	HandleTacticalUI( );
 }
 
-void FreezeInterfaceForEnemyTurn( void )
+
+static void FreezeInterfaceForEnemyTurn(void)
 {
 	// Reset flags
 	gfPlotNewMovement = TRUE;
@@ -230,6 +230,9 @@ void FreezeInterfaceForEnemyTurn( void )
 		EndUIMessage( );
 	}
 }
+
+
+static void EndInterrupt(BOOLEAN fMarkInterruptOccurred);
 
 
 void EndTurn( UINT8 ubNextTeam )
@@ -342,7 +345,8 @@ void EndAllAITurns( void )
 	}
 }
 
-void EndTurnEvents( void )
+
+static void EndTurnEvents(void)
 {
 	// HANDLE END OF TURN EVENTS
 	// handle team services like healing
@@ -559,7 +563,8 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	FreezeInterfaceForEnemyTurn();
 }
 
-BOOLEAN EveryoneInInterruptListOnSameTeam( void )
+
+static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 {
 	UINT8 ubLoop;
 	UINT8	ubTeam = 255;
@@ -581,7 +586,11 @@ BOOLEAN EveryoneInInterruptListOnSameTeam( void )
 	return( TRUE );
 }
 
-void StartInterrupt( void )
+
+static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
+
+
+static void StartInterrupt(void)
 {
 	UINT8						ubFirstInterrupter;
 	INT8						bTeam;
@@ -799,7 +808,8 @@ void StartInterrupt( void )
 	}
 }
 
-void EndInterrupt( BOOLEAN fMarkInterruptOccurred )
+
+static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 {
 	UINT8						ubInterruptedSoldier;
 	SOLDIERTYPE *		pSoldier;
@@ -1543,7 +1553,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 }
 
 
-void DeleteFromIntList( UINT8 ubIndex, BOOLEAN fCommunicate)
+static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate)
 {
 	UINT8 ubLoop;
 	UINT8 ubID;
@@ -1644,7 +1654,8 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 	}
 }
 
-void VerifyOutOfTurnOrderArray()
+
+static void VerifyOutOfTurnOrderArray(void)
 {
 	UINT8		ubTeamHighest[ MAXTEAMS ] = { 0 };
 	UINT8		ubTeamsInList;
