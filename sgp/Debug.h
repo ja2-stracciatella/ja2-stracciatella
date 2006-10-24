@@ -89,7 +89,6 @@ extern	void		DbgShutdown(void);
 // Debug Mode
 //*******************************************************************************************
 
-extern BOOLEAN		gfDebugTopics[MAX_TOPICS_ALLOTED];
 // These are the debug macros (the ones the use will use). The user should never call
 // the actual debug functions directly
 
