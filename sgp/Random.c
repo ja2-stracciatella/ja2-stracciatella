@@ -79,7 +79,11 @@ UINT32 PreRandom( UINT32 uiRange )
 	if( !uiRange )
 		return 0;
 	//Extract the current pregenerated number
-	uiNum = guiPreRandomNums[ guiPreRandomIndex ] * uiRange / RAND_MAX % uiRange;
+	/* HACK0007 Stop PreRandom always returning 0 or 1
+	 * without ensuring an equal distribution, which
+	 * would be a rather complex task with pregenerated randoms
+	 */
+	uiNum = guiPreRandomNums[ guiPreRandomIndex ] % uiRange;
 	//Replace the current pregenerated number with a new one.
 
 	//This was removed in the name of optimization.  Uncomment if you hate recycling.
