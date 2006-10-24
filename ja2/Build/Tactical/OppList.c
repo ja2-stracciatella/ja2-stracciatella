@@ -63,11 +63,6 @@ extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
 
 //#define TESTOPPLIST
 
-// for ManSeesMan()
-#define MANLOOKSFORMAN		0
-#define HEARNOISE		1
-#define NOTICEUNSEENATTACKER	2
-
 
 // for ManLooksForMan()
 #define MANLOOKSFOROTHERTEAMS   0
@@ -1564,7 +1559,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 }
 
 
-static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2);
+static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller2);
 
 
 static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8 ubCaller)
@@ -1762,7 +1757,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
    // must use the REAL opplist value here since we may or may not know of him
    if (SoldierToSoldierLineOfSightTest(pSoldier,pOpponent,(UINT8)sDistVisible,bAware))
     {
-			ManSeesMan(pSoldier,pOpponent,pOpponent->sGridNo,pOpponent->bLevel,MANLOOKSFORMAN,ubCaller);
+			ManSeesMan(pSoldier, pOpponent, pOpponent->sGridNo, pOpponent->bLevel, ubCaller);
 			bSuccess = TRUE;
     }
 #ifdef TESTOPPLIST
@@ -1834,7 +1829,7 @@ static void AddOneOpponent(SOLDIERTYPE* pSoldier);
 static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel);
 
 
-static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller, UINT8 ubCaller2)
+static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOppGridno, INT8 bOppLevel, UINT8 ubCaller2)
 {
  INT8 bDoLocate = FALSE;
  BOOLEAN fNewOpponent = FALSE;
@@ -2940,7 +2935,7 @@ void BetweenTurnsVisibilityAdjustments(void)
 }
 
 
-static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN fVirginSector, BOOLEAN fSeenJoey)
+static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN fVirginSector)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	UINT8				ubNumEnemies = 0;
@@ -3096,7 +3091,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 		DeleteTalkingMenu( );
 
 		// Say quote!
-		SaySeenQuote( pSoldier, gfPlayerTeamSawCreatures, TRUE, gfPlayerTeamSawJoey );
+		SaySeenQuote( pSoldier, gfPlayerTeamSawCreatures, TRUE);
 
 		HaultSoldierFromSighting( pSoldier, TRUE );
 
@@ -3119,7 +3114,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 			}
 			else
 			{
-				SaySeenQuote( pSoldier, gfPlayerTeamSawCreatures, FALSE, gfPlayerTeamSawJoey );
+				SaySeenQuote( pSoldier, gfPlayerTeamSawCreatures, FALSE);
 			}
 
 			HaultSoldierFromSighting( pSoldier, TRUE );
@@ -5623,7 +5618,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 
 		if (bSourceSeen)
 		{
-			ManSeesMan(pSoldier,MercPtrs[ubNoiseMaker],Menptr[ubNoiseMaker].sGridNo,Menptr[ubNoiseMaker].bLevel,HEARNOISE,CALLER_UNKNOWN);
+			ManSeesMan(pSoldier, MercPtrs[ubNoiseMaker], Menptr[ubNoiseMaker].sGridNo, Menptr[ubNoiseMaker].bLevel, CALLER_UNKNOWN);
 
 			// if it's an AI soldier, he is not allowed to automatically radio any
 			// noise heard, but manSeesMan has set his newOppCnt, so clear it here
@@ -6414,7 +6409,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 
 	if (fSeesAttacker)
 	{
-		ManSeesMan( pDefender, pAttacker, pAttacker->sGridNo, pAttacker->bLevel, NOTICEUNSEENATTACKER, CALLER_UNKNOWN );
+		ManSeesMan(pDefender, pAttacker, pAttacker->sGridNo, pAttacker->bLevel, CALLER_UNKNOWN);
 
 		// newOppCnt not needed here (no radioing), must get reset right away
 		// CJC: Huh? well, leave it in for now
