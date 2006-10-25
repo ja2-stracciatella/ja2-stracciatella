@@ -1646,12 +1646,12 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	if( bUIHandlerID == DIALOGUE_EXTERNAL_NPC_UI )
 	{
 		// external NPC
-		SetFaceTalking(  iFaceIndex , zSoundString, gzQuoteStr, RATE_11025, 30, 1, MIDDLEPAN );
+		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
 	}
 	else
 	{
 		// start "talking" system (portrait animation and start wav sample)
-		SetFaceTalking( iFaceIndex, zSoundString, gzQuoteStr, RATE_11025, 30, 1, MIDDLEPAN );
+		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
 	}
 	// pSoldier can be null here... ( if NOT from an alive soldier )
 	CreateTalkingUI( bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr, lengthof(gzQuoteStr));
