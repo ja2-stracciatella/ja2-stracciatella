@@ -17,6 +17,7 @@ low prio
 - HACK0006 Implement a zoom blitter
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
   distribution, which would be a rather complex task with pregenerated randoms
+- HACK0008 mark keyboad-input in SGP.c slated for return to Input.c
 
 cosmetic
 - massive code duplication for ROT-1 "encrypted" data (r65, r113)
