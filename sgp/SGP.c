@@ -326,6 +326,11 @@ static void SGPExit(void);
 
 static BOOLEAN InitializeStandardGamingPlatform(void)
 {
+	BOOLEAN video_fullscreen = FALSE;
+
+	if (strcasecmp(gzCommandLine,"-FULLSCREEN")==0)
+		video_fullscreen = TRUE;
+
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
 
@@ -367,7 +372,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing Video Manager");
 	// Initialize DirectDraw (DirectX 2)
-	if (!InitializeVideoManager())
+	if (!InitializeVideoManager(video_fullscreen))
 	{ // We were unable to initialize the video manager
 		FastDebugMsg("FAILED : Initializing Video Manager");
 		return FALSE;

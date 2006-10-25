@@ -23,7 +23,7 @@ extern HWND										ghWindow;
 extern "C" {
 #endif
 
-extern BOOLEAN              InitializeVideoManager(void);
+extern BOOLEAN              InitializeVideoManager(BOOLEAN);
 extern void                 ShutdownVideoManager(void);
 extern void                 SuspendVideoManager(void);
 extern BOOLEAN              RestoreVideoManager(void);

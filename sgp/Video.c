@@ -111,12 +111,18 @@ static SDL_Surface* ScreenBuffer;
 static BOOLEAN GetRGBDistribution(void);
 
 
-BOOLEAN InitializeVideoManager(void)
+BOOLEAN InitializeVideoManager(BOOLEAN video_fullscreen)
 {
+	UINT32 video_flags;
+
 	RegisterDebugTopic(TOPIC_VIDEO, "Video");
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE | SDL_HWPALETTE);
+	video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
+
+	if (video_fullscreen)
+		video_flags |= SDL_FULLSCREEN;
+	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, video_flags);
 	if (ScreenBuffer == NULL)
 	{
 		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to set up video mode");
