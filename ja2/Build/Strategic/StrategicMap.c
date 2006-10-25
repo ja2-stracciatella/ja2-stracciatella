@@ -2010,27 +2010,27 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
 			if( bMineIndex != -1 )
 			{
-				swprintf( zString, Length, L"%c%d: %s %s", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
+				swprintf( zString, Length, L"%c%d: %S %S", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
 			}
 			else switch( SECTOR( sSectorX, sSectorY ) )
 			{
 				case SEC_A10:
-					swprintf( zString, Length, L"A10: %s", pLandTypeStrings[ REBEL_HIDEOUT ] );
+					swprintf( zString, Length, L"A10: %S", pLandTypeStrings[ REBEL_HIDEOUT ] );
 					break;
 				case SEC_J9:
-					swprintf( zString, Length, L"J9: %s", pLandTypeStrings[ TIXA_DUNGEON ] );
+					swprintf( zString, Length, L"J9: %S", pLandTypeStrings[ TIXA_DUNGEON ] );
 					break;
 				case SEC_K4:
-					swprintf( zString, Length, L"K4: %s", pLandTypeStrings[ ORTA_BASEMENT ] );
+					swprintf( zString, Length, L"K4: %S", pLandTypeStrings[ ORTA_BASEMENT ] );
 					break;
 				case SEC_O3:
-					swprintf( zString, Length, L"O3: %s", pLandTypeStrings[ TUNNEL ] );
+					swprintf( zString, Length, L"O3: %S", pLandTypeStrings[ TUNNEL ] );
 					break;
 				case SEC_P3:
-					swprintf( zString, Length, L"P3: %s", pLandTypeStrings[ SHELTER ] );
+					swprintf( zString, Length, L"P3: %S", pLandTypeStrings[ SHELTER ] );
 					break;
 				default:
-					swprintf( zString, Length, L"%c%d: %s", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
+					swprintf( zString, Length, L"%c%d: %S", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
 					break;
 			}
 		}
