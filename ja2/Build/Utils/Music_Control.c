@@ -14,6 +14,7 @@
 	#include "Fade_Screen.h"
 	#include "Debug.h"
 	#include "ScreenIDs.h"
+	#include "Stubs.h" // XXX
 #endif
 
 

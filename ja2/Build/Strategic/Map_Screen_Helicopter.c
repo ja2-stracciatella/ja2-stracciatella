@@ -37,6 +37,7 @@
 	#include "Isometric_Utils.h"
 	#include "Scheduling.h"
 	#include "Debug.h"
+	#include "Stubs.h" // XXX
 #endif
 
 

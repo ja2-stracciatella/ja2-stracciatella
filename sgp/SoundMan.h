@@ -1,7 +1,6 @@
 #ifndef __SOUNDMAN_
 #define __SOUNDMAN_
 
-#include "Stubs.h"
 #include "Types.h"
 
 #ifdef __cplusplus
@@ -50,9 +49,6 @@ typedef struct {
 // Global startup/shutdown functions
 extern BOOLEAN	InitializeSoundManager(void);
 extern void			ShutdownSoundManager(void);
-
-// Configuration functions
-extern HDIGDRIVER SoundGetDriverHandle(void);
 
 // Cache control functions
 extern UINT32		SoundLoadSample(const char *pFilename);

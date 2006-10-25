@@ -53,6 +53,4 @@ void SmackBufferClose(SmackBuf* SBuf);
 
 UINT32 SmackUseMMX(UINT32 Flag);
 
-UINT8 SmackSoundUseMSS(void* DigDriver);
-
 #endif

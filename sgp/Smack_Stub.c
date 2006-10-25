@@ -49,9 +49,3 @@ UINT32 SmackUseMMX(UINT32 Flag)
 {
 	return 0;
 }
-
-
-UINT8 SmackSoundUseMSS(void* DigDriver)
-{
-	return 0;
-}

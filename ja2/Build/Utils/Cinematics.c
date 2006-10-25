@@ -99,8 +99,6 @@ BOOLEAN fFlicStatus=FALSE;
 
 void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 {
-	HDIGDRIVER pSoundDriver = NULL;
-
 	// Wipe the flic list clean
 	memset(SmkList, 0, sizeof(SMKFLIC)*SMK_NUM_FLICS);
 
@@ -109,13 +107,6 @@ void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
 
 	// Use MMX acceleration, if available
 	SmackUseMMX(1);
-
-	//Get the sound Driver handle
-	pSoundDriver = SoundGetDriverHandle();
-
-	//if we got the sound handle, use sound during the intro
-	if( pSoundDriver )
-		SmackSoundUseMSS( pSoundDriver );
 }
 
 

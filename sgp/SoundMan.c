@@ -1634,17 +1634,6 @@ UINT32 uiSample;
 #endif
 }
 
-//*******************************************************************************
-// SoundGetDriverHandle
-//
-//	Returns:	Pointer to the current sound driver
-//
-//*******************************************************************************
-HDIGDRIVER SoundGetDriverHandle(void)
-{
-	return(hSoundDriver);
-}
-
 
 void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags )
 {
