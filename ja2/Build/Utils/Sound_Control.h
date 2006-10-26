@@ -428,11 +428,6 @@ UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume );
 INT8	 SoundDir( INT16 sGridNo );
 INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 
-// ATE: Warning! Use this sparingly! NOT very robust - can
-// have only 1 delayed sound at a time, and uses the global custom
-// timer, again, of which can only be one
-void PlayDelayedJA2Sample(UINT32 uiDelay, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
-
 
 #define POSITION_SOUND_FROM_SOLDIER   0x00000001
 

@@ -399,11 +399,6 @@ UINT8 AmbientVols[NUM_AMBIENTS]={
 };
 
 
-SOUNDPARMS gDelayedSoundParms;
-UINT32		 guiDelayedSoundNum;
-void DelayedSoundTimerCallback( void );
-
-
 BOOLEAN InitJA2Sound( )
 {
 	return( TRUE );
@@ -701,34 +696,6 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 
 	return( bInitialVolume );
 }
-
-
-void PlayDelayedJA2Sample(UINT32 uiDelay, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
-{
-
-	memset(&gDelayedSoundParms, 0xff, sizeof(SOUNDPARMS));
-
-	gDelayedSoundParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	gDelayedSoundParms.uiLoop = ubLoops;
-	gDelayedSoundParms.uiPan = uiPan;
-	gDelayedSoundParms.uiPriority=GROUP_PLAYER;
-
-	guiDelayedSoundNum = usNum;
-
-	//return(SoundPlay(szSoundEffects[usNum], &spParms));
-
-	// Setup multipurpose timer....
-	SetCustomizableTimerCallbackAndDelay( uiDelay, DelayedSoundTimerCallback, FALSE );
-
-}
-
-void DelayedSoundTimerCallback( void )
-{
-	SoundPlay( szSoundEffects[ guiDelayedSoundNum ], &gDelayedSoundParms );
-}
-
-
-
 
 
 /////////////////////////////////////////////////////////
