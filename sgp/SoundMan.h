@@ -49,9 +49,6 @@ typedef struct {
 extern BOOLEAN	InitializeSoundManager(void);
 extern void			ShutdownSoundManager(void);
 
-// Cache control functions
-extern UINT32		SoundLoadSample(const char *pFilename);
-
 // Play/service sample functions
 extern UINT32		SoundPlay(const char *pFilename, SOUNDPARMS *pParms);
 extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms );
