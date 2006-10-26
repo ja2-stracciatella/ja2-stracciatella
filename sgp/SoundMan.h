@@ -53,7 +53,7 @@ extern void			ShutdownSoundManager(void);
 extern UINT32		SoundPlay(const char *pFilename, SOUNDPARMS *pParms);
 extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms );
 
-extern UINT32		SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms);
+UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms);
 extern BOOLEAN	SoundServiceStreams(void);
 
 // Sound instance manipulation functions

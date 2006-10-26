@@ -327,7 +327,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 //						SOUND_ERROR is returned.
 //
 //*******************************************************************************
-UINT32 SoundPlayRandom(STR pFilename, RANDOMPARMS *pParms)
+UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 {
 UINT32 uiSample, uiTicks;
 

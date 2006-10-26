@@ -21,10 +21,10 @@ UINT32 MIDVOLUME								START_MIDVOLUME;
 UINT32 HIGHVOLUME								START_HIGHVOLUME;
 */
 
-UINT32	guiSpeechVolume = MIDVOLUME;
-UINT32	guiSoundEffectsVolume = MIDVOLUME;
+static UINT32 guiSpeechVolume       = MIDVOLUME;
+static UINT32 guiSoundEffectsVolume = MIDVOLUME;
 
-char szSoundEffects[NUM_SAMPLES][255] =
+static const char* szSoundEffects[NUM_SAMPLES] =
 {
 		"SOUNDS\\RICOCHET 01.WAV",
 		"SOUNDS\\RICOCHET 02.WAV",
@@ -363,7 +363,7 @@ char szSoundEffects[NUM_SAMPLES][255] =
     "SOUNDS\\fence open.wav",
 };
 
-char szAmbientEffects[NUM_AMBIENTS][255] =
+static const char* szAmbientEffects[NUM_AMBIENTS] =
 {
 		"SOUNDS\\storm1.wav",
 		"SOUNDS\\storm2.wav",
@@ -381,7 +381,7 @@ char szAmbientEffects[NUM_AMBIENTS][255] =
 		"SOUNDS\\night_bird3.wav"
 };
 
-UINT8 AmbientVols[NUM_AMBIENTS]={
+static const UINT8 AmbientVols[NUM_AMBIENTS] = {
 	25,		// lightning 1
 	25,		// lightning 2
 	10,		// rain 1
@@ -720,17 +720,12 @@ typedef struct
 
 
 // GLOBAL FOR SMOKE LISTING
-POSITIONSND				gPositionSndData[ NUM_POSITION_SOUND_EFFECT_SLOTS ];
-UINT32						guiNumPositionSnds = 0;
-BOOLEAN           gfPositionSoundsActive = FALSE;
+static POSITIONSND gPositionSndData[NUM_POSITION_SOUND_EFFECT_SLOTS];
+static UINT32      guiNumPositionSnds     = 0;
+static BOOLEAN     gfPositionSoundsActive = FALSE;
 
 
-INT32 GetFreePositionSnd( void );
-void RecountPositionSnds( void );
-
-
-
-INT32 GetFreePositionSnd( void )
+static INT32 GetFreePositionSnd(void)
 {
 	UINT32 uiCount;
 
@@ -746,7 +741,8 @@ INT32 GetFreePositionSnd( void )
 	return( -1 );
 }
 
-void RecountPositionSnds( void )
+
+static void RecountPositionSnds(void)
 {
 	INT32 uiCount;
 
@@ -884,7 +880,8 @@ void SetPositionSndsInActive( )
   }
 }
 
-INT8 PositionSoundDir( INT16 sGridNo )
+
+static INT8 PositionSoundDir(INT16 sGridNo)
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
@@ -938,7 +935,7 @@ INT8 PositionSoundDir( INT16 sGridNo )
 }
 
 
-INT8 PositionSoundVolume( INT8 bInitialVolume, INT16 sGridNo )
+static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
 {
 	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
