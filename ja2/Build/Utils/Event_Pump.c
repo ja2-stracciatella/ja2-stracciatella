@@ -357,7 +357,7 @@ BOOLEAN ExecuteGameEvent( EVENT *pEvent )
 				memcpy( &EPlaySound, pEvent->pData, pEvent->uiDataSize );
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Play Sound");
-				PlayJA2Sample( EPlaySound.usIndex, EPlaySound.usRate, EPlaySound.ubVolume, EPlaySound.ubLoops, EPlaySound.uiPan );
+				PlayJA2Sample(EPlaySound.usIndex, EPlaySound.ubVolume, EPlaySound.ubLoops, EPlaySound.uiPan);
 				break;
 
 			case S_CHANGESTATE:

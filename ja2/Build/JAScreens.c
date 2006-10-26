@@ -860,7 +860,7 @@ UINT32 SexScreenHandle(void)
 	// if we are animation smile...
 	if ( ubCurrentScreen == 1 )
 	{
-		PlayJA2StreamingSampleFromFile( "Sounds\\Sex.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN, NULL );
+		PlayJA2StreamingSampleFromFile("Sounds\\Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 		if ( ( uiTime - uiTimeOfLastUpdate ) > SMILY_DELAY )
 		{
 			uiTimeOfLastUpdate = uiTime;
@@ -1238,7 +1238,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( uiCharsToPrint > uiCharsPrinted )
 		{
 			uiCharsPrinted = uiCharsToPrint;
-			PlayJA2Sample( ENTERING_TEXT, RATE_11025, MIDVOLUME, 1, 39 + iPercentage/2 );
+			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[0] );
 			str[ uiCharsToPrint ] = L'\0';
 			mprintf( usCenter - 10 - uiWidthString, 5, str );
@@ -1281,7 +1281,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( uiCharsToPrint > uiCharsPrinted )
 		{
 			uiCharsPrinted = uiCharsToPrint;
-			PlayJA2Sample( ENTERING_TEXT, RATE_11025, MIDVOLUME, 1, 39 + iPercentage/2 );
+			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[1] );
 			str[ uiCharsToPrint ] = L'\0';
 			mprintf( usCenter + 10, 5, str );
@@ -1329,7 +1329,7 @@ UINT32 DemoExitScreenHandle(void)
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-			PlayJA2SampleFromFile( "DemoAds\\Swoosh.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2SampleFromFile("DemoAds\\Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1390,7 +1390,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( iPercentage == 100 )
 		{
 			SetMusicMode( MUSIC_MAIN_MENU );
-			PlayJA2SampleFromFile( "DemoAds\\Hit.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2SampleFromFile("DemoAds\\Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			gbFadeSpeed = (INT8)50;
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			ubCurrentScreen = 4;
@@ -1514,7 +1514,7 @@ UINT32 DemoExitScreenHandle(void)
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-			PlayJA2SampleFromFile( "DemoAds\\Swoosh.wav", RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+			PlayJA2SampleFromFile("DemoAds\\Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1574,7 +1574,7 @@ UINT32 DemoExitScreenHandle(void)
 		}
 		if( iPercentage == 100 )
 		{
-			PlayJA2SampleFromFile( "DemoAds\\Hit.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2SampleFromFile("DemoAds\\Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			ubCurrentScreen = 6;
 			DeleteVideoSurfaceFromIndex( uiCollageID );
@@ -1626,7 +1626,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( uiCharsToPrint > uiCharsPrinted )
 		{
 			uiCharsPrinted = uiCharsToPrint;
-			PlayJA2Sample( ENTERING_TEXT, RATE_11025, MIDVOLUME, 1, 39 + iPercentage/2 );
+			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[40] );
 			str[ uiCharsToPrint ] = L'\0';
 			#ifdef GERMAN

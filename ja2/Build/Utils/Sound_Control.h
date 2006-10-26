@@ -16,9 +16,6 @@
 #define HIGHVOLUME			127
 
 
-#define	RATE_11025			0xffffffff
-
-
 #define LOOPING					0
 
 // sound group priorities (higher = more important)
@@ -401,16 +398,16 @@ char szSoundEffects[NUM_SAMPLES][255];
 
 BOOLEAN InitJA2Sound( );
 BOOLEAN ShutdownJA2Sound( );
-UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan );
-UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan );
+UINT32 PlayJA2Sample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
+UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
-UINT32 PlayJA2SampleFromFile( const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan );
-UINT32 PlayJA2StreamingSampleFromFile( const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback );
+UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
+UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback);
 
 UINT32	PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops);
 UINT32	PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax);
 
-UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck );
+UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck);
 
 
 
@@ -434,7 +431,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 // ATE: Warning! Use this sparingly! NOT very robust - can
 // have only 1 delayed sound at a time, and uses the global custom
 // timer, again, of which can only be one
-void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan );
+void PlayDelayedJA2Sample(UINT32 uiDelay, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
 
 #define POSITION_SOUND_FROM_SOLDIER   0x00000001

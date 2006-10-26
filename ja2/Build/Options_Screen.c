@@ -872,7 +872,7 @@ void		GetOptionsScreenUserInput()
 					{
 					static	UINT32	uiTest2 = NO_SAMPLE;
 					if( !SoundIsPlaying( uiTest2 ) )
-						uiTest2 = PlayJA2SampleFromFile( "Sounds\\RAID Dive.wav", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
+						uiTest2 = PlayJA2SampleFromFile("Sounds\\RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					break;
 
@@ -1083,12 +1083,12 @@ void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN 
 		if( fDown )
 		{
 		//				case BTN_SND_CLICK_OFF:
-			PlayJA2Sample( BIG_SWITCH3_IN, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(BIG_SWITCH3_IN, BTNVOLUME, 1, MIDDLEPAN);
 		}
 		else
 		{
 		//		case BTN_SND_CLICK_ON:
-			PlayJA2Sample( BIG_SWITCH3_OUT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(BIG_SWITCH3_OUT, BTNVOLUME, 1, MIDDLEPAN);
 		}
 	}
 }
@@ -1208,7 +1208,7 @@ void HandleSliderBarMovementSounds()
 			HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
 
 		if( !SoundIsPlaying( uiLastPlayingSoundID ) )
-			uiLastPlayingSoundID = PlayJA2SampleFromFile( "Sounds\\Weapons\\LMG Reload.wav", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
+			uiLastPlayingSoundID = PlayJA2SampleFromFile("Sounds\\Weapons\\LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
 	}
 	else
 		uiLastSoundFxTime = GetJA2Clock();
@@ -1219,7 +1219,7 @@ void HandleSliderBarMovementSounds()
 		guiSpeechSliderMoving = 0xffffffff;
 
 		if( !SoundIsPlaying( uiLastPlayingSpeechID ) )
-			uiLastPlayingSpeechID = PlayJA2GapSample( "BattleSnds\\m_cool.wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN, NULL );
+			uiLastPlayingSpeechID = PlayJA2GapSample("BattleSnds\\m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 	}
 	else
 		uiLastSpeechTime = GetJA2Clock();

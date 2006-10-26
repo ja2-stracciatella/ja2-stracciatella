@@ -792,7 +792,7 @@ void DoTransitionFromMapscreenToPreBattleInterface()
 
 	//hide the prebattle interface
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 261, 359 );
-	PlayJA2SampleFromFile( "SOUNDS\\Laptop power up (8-11).wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+	PlayJA2SampleFromFile("SOUNDS\\Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	InvalidateScreen();
 	RefreshScreen();
 
@@ -1263,7 +1263,7 @@ void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason )
 					{
 						return;
 					}
-					PlayJA2Sample( EXPLOSION_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
 					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
 					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
@@ -1299,7 +1299,7 @@ void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason )
 					{
 						return;
 					}
-					PlayJA2Sample( EXPLOSION_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
 					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
 					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );

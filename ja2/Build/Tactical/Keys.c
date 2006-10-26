@@ -264,7 +264,7 @@ BOOLEAN DoUnlockDoor( DOOR * pDoor, UINT8 ubKeyID )
 	if ( (pDoor->fLocked) && ValidKey( pDoor, ubKeyID ))
 	{
 		// Play lockpicking
-		PlayJA2Sample( ( (UINT8)UNLOCK_DOOR_1 ), RATE_11025, SoundVolume( MIDVOLUME, pDoor->sGridNo ), 1, SoundDir( pDoor->sGridNo ) );
+		PlayJA2Sample(UNLOCK_DOOR_1, SoundVolume(MIDVOLUME, pDoor->sGridNo), 1, SoundDir(pDoor->sGridNo));
 
 		pDoor->fLocked = FALSE;
 		return( TRUE );
@@ -298,7 +298,7 @@ BOOLEAN AttemptToUnlockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 
 	// drat, couldn't find the key
-	PlayJA2Sample( KEY_FAILURE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+	PlayJA2Sample(KEY_FAILURE, MIDVOLUME, 1, MIDDLEPAN);
 
 	return( FALSE );
 }
@@ -353,7 +353,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// award experience points?
 
 		// Play lock busted sound
-		PlayJA2Sample( ( (UINT8)BREAK_LOCK ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+		PlayJA2Sample(BREAK_LOCK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 		return( TRUE );
 	}
@@ -391,7 +391,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		RemoveDoorInfoFromTable( pDoor->sGridNo );
 
 		// Play lock busted sound
-		PlayJA2Sample( ( (UINT8)BREAK_LOCK ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+		PlayJA2Sample(BREAK_LOCK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 		return( TRUE );
 	}
@@ -435,7 +435,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// award experience points?
 
 		// Play lock busted sound
-		PlayJA2Sample( ( (UINT8)BREAK_LOCK ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+		PlayJA2Sample(BREAK_LOCK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 		return( TRUE );
 	}
@@ -469,7 +469,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		// award experience points?
 
 		// Play lock busted sound
-		PlayJA2Sample( ( (UINT8)BREAK_LOCK ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+		PlayJA2Sample(BREAK_LOCK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 		return( TRUE );
 	}
@@ -518,7 +518,7 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 	// Play lockpicking
 	// ATE: Moved to animation
-	//PlayJA2Sample( ( (UINT8)PICKING_LOCK ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+	//PlayJA2Sample(PICKING_LOCK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 	// See if we measure up to the task.
 	// The difficulty is negated here to make it a skill adjustment
@@ -662,14 +662,14 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
  		case SIREN:
 			// play siren sound effect but otherwise treat as silent alarm, calling
 			// available enemies to this location
-			PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, pDoor->sGridNo ), 5, SoundDir( pDoor->sGridNo ) );
+			PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, pDoor->sGridNo), 5, SoundDir(pDoor->sGridNo));
 		case SILENT_ALARM:
 			// Get all available enemies running here
 			CallAvailableEnemiesTo( pDoor->sGridNo );
 			break;
 
 		case BROTHEL_SIREN:
-			PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, pDoor->sGridNo ), 5, SoundDir( pDoor->sGridNo ) );
+			PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, pDoor->sGridNo), 5, SoundDir(pDoor->sGridNo));
 			CallAvailableKingpinMenTo( pDoor->sGridNo );
 			// no one is authorized any more!
 			gMercProfiles[ MADAME ].bNPCData = 0;
@@ -677,7 +677,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		case ELECTRIC:
 			// insert electrical sound effect here
-			PlayJA2Sample( DOOR_ELECTRICITY, RATE_11025, SoundVolume( MIDVOLUME, pDoor->sGridNo ), 1, SoundDir( pDoor->sGridNo ) );
+			PlayJA2Sample(DOOR_ELECTRICITY, SoundVolume(MIDVOLUME, pDoor->sGridNo), 1, SoundDir(pDoor->sGridNo));
 
 	    // Set attacker's ID
 	    pSoldier->ubAttackerID = pSoldier->ubID;
@@ -691,7 +691,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		case SUPER_ELECTRIC:
 			// insert electrical sound effect here
-			PlayJA2Sample( DOOR_ELECTRICITY, RATE_11025, SoundVolume( MIDVOLUME, pDoor->sGridNo ), 1, SoundDir( pDoor->sGridNo ) );
+			PlayJA2Sample(DOOR_ELECTRICITY, SoundVolume(MIDVOLUME, pDoor->sGridNo), 1, SoundDir(pDoor->sGridNo));
 
 	    // Set attacker's ID
 	    pSoldier->ubAttackerID = pSoldier->ubID;
@@ -755,7 +755,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 			CreateAnimationTile( &AniParams );
 
-			PlayJA2Sample( SMALL_EXPLODE_1 , RATE_11025, SoundVolume( (INT8)HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+			PlayJA2Sample(SMALL_EXPLODE_1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 
 			// Remove the explosive.....
 			bSlot = FindObj( pSoldier, SHAPED_CHARGE );

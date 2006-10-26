@@ -425,7 +425,7 @@ void BeginLoadScreen( )
 		iLastShadePercentage = 0;
 		uiStartTime = GetJA2Clock();
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-		PlayJA2SampleFromFile( "SOUNDS\\Final Psionic Blast 01 (16-44).wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+		PlayJA2SampleFromFile("SOUNDS\\Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
 			uiCurrTime = GetJA2Clock();

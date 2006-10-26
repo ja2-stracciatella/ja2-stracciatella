@@ -2136,7 +2136,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 		  }
 			*/
 
-    	PlayJA2Sample( BLOODCAT_ROAR, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+    	PlayJA2Sample(BLOODCAT_ROAR, HIGHVOLUME, 1, MIDDLEPAN);
     }
     else
     {
@@ -2144,7 +2144,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
       {
         if ( Random( 2 ) == 0 )
         {
-    	    PlayJA2Sample( BLOODCAT_ROAR, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+    	    PlayJA2Sample(BLOODCAT_ROAR, HIGHVOLUME, 1, MIDDLEPAN);
         }
       }
     }

@@ -332,20 +332,22 @@ SOLDIERCELL *gpMercs = NULL;
 SOLDIERCELL *gpCivs = NULL;
 SOLDIERCELL *gpEnemies = NULL;
 
+
 //Simple wrappers for autoresolve sounds that are played.
-void PlayAutoResolveSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
 	if( gpAR->fSound )
 	{
-		PlayJA2Sample( usNum, usRate, ubVolume, ubLoops, uiPan );
+		PlayJA2Sample(usNum, ubVolume, ubLoops, uiPan);
 	}
 }
 
-void  PlayAutoResolveSampleFromFile( STR8 szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+
+static void PlayAutoResolveSampleFromFile(STR8 szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
 	if( gpAR->fSound )
 	{
-		PlayJA2SampleFromFile( szFileName, usRate, ubVolume, ubLoops, uiPan );
+		PlayJA2SampleFromFile(szFileName, ubVolume, ubLoops, uiPan);
 	}
 }
 
@@ -528,7 +530,7 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 	//hide the autoresolve
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)SrcRect.iLeft, (UINT16)SrcRect.iTop, (UINT16)SrcRect.iRight, (UINT16)SrcRect.iBottom );
 
-	PlayJA2SampleFromFile( "SOUNDS\\Laptop power up (8-11).wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+	PlayJA2SampleFromFile("SOUNDS\\Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetJA2Clock();
@@ -2363,7 +2365,7 @@ void FinishButtonCallback( GUI_BUTTON *btn, INT32 reason )
 		gpAR->uiTimeSlice = 0xffffffff;
 		gpAR->fSound = FALSE;
 		gpAR->fPaused = FALSE;
-		PlayJA2StreamingSample( AUTORESOLVE_FINISHFX, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+		PlayJA2StreamingSample(AUTORESOLVE_FINISHFX, HIGHVOLUME, 1, MIDDLEPAN);
 	}
 }
 
@@ -2939,7 +2941,7 @@ void HandleAutoResolveInput()
 						{
 							if ( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 							{
-								PlayAutoResolveSample( EXPLOSION_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+								PlayAutoResolveSample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
 								EliminateAllFriendlies();
 							}
 						}
@@ -2952,7 +2954,7 @@ void HandleAutoResolveInput()
 						{
 							if ( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 							{
-								PlayAutoResolveSample( EXPLOSION_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+								PlayAutoResolveSample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
 								EliminateAllMercs();
 							}
 						}
@@ -2965,7 +2967,7 @@ void HandleAutoResolveInput()
 						{
 							if ( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 							{
-								PlayAutoResolveSample( EXPLOSION_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+								PlayAutoResolveSample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
 								// this is not very accurate, any enemies already dead will be counted as killed twice
 								gStrategicStatus.usPlayerKills += NumEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 								EliminateAllEnemies( gpAR->ubSectorX, gpAR->ubSectorY );
@@ -3613,7 +3615,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 
 	if( pAttacker->uiFlags & CELL_MALECREATURE )
 	{
-		PlayAutoResolveSample( ACR_SPIT, RATE_11025, 50, 1, MIDDLEPAN );
+		PlayAutoResolveSample(ACR_SPIT, 50, 1, MIDDLEPAN);
 		pAttacker->bWeaponSlot = SECONDHANDPOS;
 		return TRUE;
 	}
@@ -3626,7 +3628,7 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 			pAttacker->bWeaponSlot = (INT8)i;
 			if( gpAR->fUnlimitedAmmo )
 			{
-				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );
+				PlayAutoResolveSample(Weapon[pItem->usItem].sSound, 50, 1, MIDDLEPAN);
 				return TRUE;
 			}
 			if( !pItem->ubGunShotsLeft )
@@ -3634,12 +3636,12 @@ BOOLEAN FireAShot( SOLDIERCELL *pAttacker )
 				AutoReload( pSoldier );
 				if ( pItem->ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
 				{
-					PlayAutoResolveSample( Weapon[ pItem->usItem ].sLocknLoadSound, RATE_11025, 50, 1, MIDDLEPAN );
+					PlayAutoResolveSample(Weapon[pItem->usItem].sLocknLoadSound, 50, 1, MIDDLEPAN);
 				}
 			}
 			if( pItem->ubGunShotsLeft )
 			{
-				PlayAutoResolveSample( Weapon[ pItem->usItem ].sSound, RATE_11025, 50, 1, MIDDLEPAN );
+				PlayAutoResolveSample(Weapon[pItem->usItem].sSound, 50, 1, MIDDLEPAN);
 				if( pAttacker->uiFlags & CELL_MERC )
 				{
 					gMercProfiles[ pAttacker->pSoldier->ubProfile ].usShotsFired++;
@@ -3772,20 +3774,20 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 			if( fMelee )
 			{
 				if( fKnife )
-					PlayAutoResolveSample( MISS_KNIFE, RATE_11025, 50, 1, MIDDLEPAN );
+					PlayAutoResolveSample(MISS_KNIFE, 50, 1, MIDDLEPAN);
 				else if( fClaw )
 				{
 					if( Chance( 50 ) )
 					{
-						PlayAutoResolveSample( ACR_SWIPE, RATE_11025, 50, 1, MIDDLEPAN );
+						PlayAutoResolveSample(ACR_SWIPE, 50, 1, MIDDLEPAN);
 					}
 					else
 					{
-						PlayAutoResolveSample( ACR_LUNGE, RATE_11025, 50, 1, MIDDLEPAN );
+						PlayAutoResolveSample(ACR_LUNGE, 50, 1, MIDDLEPAN);
 					}
 				}
 				else
-					PlayAutoResolveSample( SWOOSH_1 + PreRandom( 6 ), RATE_11025, 50, 1, MIDDLEPAN );
+					PlayAutoResolveSample(SWOOSH_1 + PreRandom(6), 50, 1, MIDDLEPAN);
 				if( pTarget->uiFlags & CELL_MERC )
 					// AGILITY GAIN: Target "dodged" an attack
 					StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
@@ -3822,7 +3824,7 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 	{
 		OBJECTTYPE *pItem;
 		OBJECTTYPE tempItem;
-		PlayAutoResolveSample( (UINT8)(BULLET_IMPACT_1+PreRandom(3)), RATE_11025, 50, 1, MIDDLEPAN );
+		PlayAutoResolveSample(BULLET_IMPACT_1 + PreRandom(3), 50, 1, MIDDLEPAN);
 		if( !pTarget->pSoldier->bLife )
 		{ //Soldier already dead (can't kill him again!)
 			return;
@@ -3873,7 +3875,7 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 		}
 		if( !(pTarget->uiFlags & CELL_CREATURE) && iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
 		{ //the hit caused the merc to fall.  Play the falling sound
-			PlayAutoResolveSample( (UINT8)FALL_1, RATE_11025, 50, 1, MIDDLEPAN );
+			PlayAutoResolveSample(FALL_1, 50, 1, MIDDLEPAN);
 			pTarget->uiFlags &= ~CELL_RETREATING;
 		}
 		if( iNewLife <= 0 )
@@ -3889,8 +3891,8 @@ void AttackTarget( SOLDIERCELL *pAttacker, SOLDIERCELL *pTarget )
 			}
 			if( pTarget->uiFlags & CELL_MERC && gpAR->fSound )
 			{
-				PlayAutoResolveSample( (UINT8)DOORCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-				PlayAutoResolveSample( (UINT8)HEADCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+				PlayAutoResolveSample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+				PlayAutoResolveSample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 			}
 		}
 		//Adjust the soldiers stats based on the damage.
@@ -3978,7 +3980,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 		if( pTarget->uiFlags & CELL_MERC )
 			// AGILITY GAIN: Target "dodged" an attack
 			StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
-		PlayAutoResolveSample( MISS_1 + PreRandom(8), RATE_11025, 50, 1, MIDDLEPAN );
+		PlayAutoResolveSample(MISS_1 + PreRandom(8), 50, 1, MIDDLEPAN);
 		return;
 	}
 
@@ -3996,7 +3998,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 	}
 
 	//bullet hit -- play an impact sound and a merc hit sound
-	PlayAutoResolveSample( (UINT8)(BULLET_IMPACT_1+PreRandom(3)), RATE_11025, 50, 1, MIDDLEPAN );
+	PlayAutoResolveSample(BULLET_IMPACT_1 + PreRandom(3), 50, 1, MIDDLEPAN);
 
 	if( pTarget->pSoldier->bLife >= CONSCIOUSNESS )
 	{
@@ -4005,7 +4007,7 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 	}
 	if( iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
 	{ //the hit caused the merc to fall.  Play the falling sound
-		PlayAutoResolveSample( (UINT8)FALL_1, RATE_11025, 50, 1, MIDDLEPAN );
+		PlayAutoResolveSample(FALL_1, 50, 1, MIDDLEPAN);
 		pTarget->uiFlags &= ~CELL_RETREATING;
 	}
 	if( iNewLife <= 0 )
@@ -4061,17 +4063,17 @@ void TargetHitCallback( SOLDIERCELL *pTarget, INT32 index )
 		}
 		if( pTarget->uiFlags & CELL_MERC && gpAR->fSound )
 		{
-			PlayAutoResolveSample( (UINT8)DOORCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-			PlayAutoResolveSample( (UINT8)HEADCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayAutoResolveSample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+			PlayAutoResolveSample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 		}
 		if( iNewLife < -60 && !(pTarget->uiFlags & CELL_CREATURE) )
 		{ //High damage death
 			if( gpAR->fSound )
 			{
 				if( PreRandom( 3 ) )
-					PlayAutoResolveSample( (UINT8)BODY_SPLAT_1, RATE_11025, 50, 1, MIDDLEPAN );
+					PlayAutoResolveSample(BODY_SPLAT_1, 50, 1, MIDDLEPAN);
 				else
-					PlayAutoResolveSample( (UINT8)HEADSPLAT_1, RATE_11025, 50, 1, MIDDLEPAN );
+					PlayAutoResolveSample(HEADSPLAT_1, 50, 1, MIDDLEPAN);
 			}
 		}
 		else
@@ -4208,7 +4210,7 @@ BOOLEAN IsBattleOver()
 				}
 				else
 				{
-					PlayJA2Sample( ACR_EATFLESH, RATE_11025, 50, 1, MIDDLEPAN );
+					PlayJA2Sample(ACR_EATFLESH, 50, 1, MIDDLEPAN);
 				}
 				break;
 			}
@@ -4591,7 +4593,7 @@ void ProcessBattleFrame()
 				{
 					pTarget = ChooseTarget( pAttacker );
 					if( pAttacker->uiFlags & CELL_CREATURE && PreRandom( 100 ) < 7 )
-						PlayAutoResolveSample( ACR_SMELL_THREAT + PreRandom( 2 ), RATE_11025, 50, 1, MIDDLEPAN );
+						PlayAutoResolveSample(ACR_SMELL_THREAT + PreRandom(2), 50, 1, MIDDLEPAN);
 					else
 						AttackTarget( pAttacker, pTarget );
 					ResetNextAttackCounter( pAttacker );

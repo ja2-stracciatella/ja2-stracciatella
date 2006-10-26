@@ -2294,7 +2294,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 		if ( usReloadSound != 0 && !IsAutoResolveActive() )
 		{
-			PlayJA2Sample( usReloadSound, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
 		}
 	}
 
@@ -2340,7 +2340,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 
 		if ( usReloadSound != 0 )
 		{
-			PlayJA2Sample( usReloadSound, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		pWeapon->ubWeight = CalculateObjectWeight( pWeapon );
@@ -2665,15 +2665,15 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					// attachment sounds
 					if ( Item[ pTargetObj->usItem ].usItemClass & IC_WEAPON )
 					{
-						PlayJA2Sample( ATTACH_TO_GUN, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+						PlayJA2Sample(ATTACH_TO_GUN, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 					}
 					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_ARMOUR )
 					{
-						PlayJA2Sample( ATTACH_CERAMIC_PLATES, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+						PlayJA2Sample(ATTACH_CERAMIC_PLATES, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 					}
 					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_BOMB )
 					{
-						PlayJA2Sample( ATTACH_DETONATOR, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+						PlayJA2Sample(ATTACH_DETONATOR, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 					}
 				}
 			}
@@ -4712,7 +4712,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 				DamageItem( &(pSoldier->inv[bSlot]), iDamage, FALSE );
 				if ( !fPlayedGlassBreak && (ubNumberOfObjects != pSoldier->inv[bSlot].ubNumberOfObjects) )
 				{
-					PlayJA2Sample( GLASS_CRACK, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+					PlayJA2Sample(GLASS_CRACK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 					fPlayedGlassBreak = TRUE;
 					// only dirty once
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
@@ -4973,11 +4973,11 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
   {
     if ( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
     {
-		  PlayJA2Sample( DRINK_CANTEEN_MALE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+		  PlayJA2Sample(DRINK_CANTEEN_MALE, MIDVOLUME, 1, MIDDLEPAN);
     }
     else
     {
-		  PlayJA2Sample( DRINK_CANTEEN_FEMALE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+		  PlayJA2Sample(DRINK_CANTEEN_FEMALE, MIDVOLUME, 1, MIDDLEPAN);
     }
   }
 

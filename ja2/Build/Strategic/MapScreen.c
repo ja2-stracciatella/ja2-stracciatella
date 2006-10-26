@@ -6137,7 +6137,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		UINT32 uiLaptopOn;
 
 		//Load a tiny graphic of the on screen and draw it to the buffer.
-		PlayJA2SampleFromFile( "SOUNDS\\Initial Power Up (8-11).wav", RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+		PlayJA2SampleFromFile("SOUNDS\\Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 		sprintf( VObjectDesc.ImageFile, "INTERFACE\\LaptopOn.sti" );
 		if( !AddVideoObject( &VObjectDesc, &uiLaptopOn ) )

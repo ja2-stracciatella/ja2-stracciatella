@@ -423,7 +423,7 @@ void GenerateExplosionFromExplosionPointer( EXPLOSIONTYPE *pExplosion )
      }
   }
 
-	PlayJA2Sample( uiSoundID, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+	PlayJA2Sample(uiSoundID, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 
 }
 
@@ -2663,7 +2663,7 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 			*/
 			break;
 		case ACTION_ITEM_KINGPIN_ALARM:
-			PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
+			PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, sGridNo), 5, SoundDir(sGridNo));
 			CallAvailableKingpinMenTo( sGridNo );
 
 			gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_HOSTILE;
@@ -2792,10 +2792,10 @@ void PerformItemAction( INT16 sGridNo, OBJECTTYPE * pObj )
 			CallAvailableTeamEnemiesTo( sGridNo, CREATURE_TEAM );
 			break;
 		case ACTION_ITEM_KLAXON:
-			PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
+			PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, sGridNo), 5, SoundDir(sGridNo));
 			break;
 		case ACTION_ITEM_MUSEUM_ALARM:
-			PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
+			PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, sGridNo), 5, SoundDir(sGridNo));
 			CallEldinTo( sGridNo );
 			break;
 		default:
@@ -2861,7 +2861,7 @@ void HandleExplosionQueue( void )
 			}
 			else if ( pObj->usBombItem == TRIP_KLAXON )
 			{
-				PlayJA2Sample( KLAXON_ALARM, RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 5, SoundDir( sGridNo ) );
+				PlayJA2Sample(KLAXON_ALARM, SoundVolume(MIDVOLUME, sGridNo), 5, SoundDir(sGridNo));
 				CallAvailableEnemiesTo( sGridNo );
 				//RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, 0 );
 			}

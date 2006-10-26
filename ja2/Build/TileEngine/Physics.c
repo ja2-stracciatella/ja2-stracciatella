@@ -446,7 +446,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 
 			if ( !pObject->fTestObject && pObject->iOldCollisionCode == COLLISION_GROUND )
 			{
-				PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pObject->sGridNo ), 1, SoundDir( pObject->sGridNo ) );
+				PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pObject->sGridNo), 1, SoundDir(pObject->sGridNo));
 			}
 
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off") );
@@ -478,7 +478,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 						break;
 				}
 
-				PlayJA2Sample( CATCH_OBJECT, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+				PlayJA2Sample(CATCH_OBJECT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 			}
 		}
@@ -526,7 +526,7 @@ BOOLEAN	PhysicsIntegrate( REAL_OBJECT *pObject, real DeltaTime )
     {
       if ( pObject->iSoundID == NO_SAMPLE )
       {
-        pObject->iSoundID =	PlayJA2Sample( MORTAR_WHISTLE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+        pObject->iSoundID =	PlayJA2Sample(MORTAR_WHISTLE, HIGHVOLUME, 1, MIDDLEPAN);
       }
     }
   }
@@ -894,7 +894,7 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 
 			if ( !pObject->fTestObject && !pObject->fHaveHitGround )
 			{
-				PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pObject->sGridNo ), 1, SoundDir( pObject->sGridNo ) );
+				PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pObject->sGridNo), 1, SoundDir(pObject->sGridNo));
 			}
 
 			pObject->fHaveHitGround = TRUE;
@@ -2279,7 +2279,7 @@ BOOLEAN DoCatchObject( REAL_OBJECT *pObject )
 			break;
 	}
 
-	PlayJA2Sample( CATCH_OBJECT, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+	PlayJA2Sample(CATCH_OBJECT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 	pObject->fCatchAnimOn = FALSE;
 

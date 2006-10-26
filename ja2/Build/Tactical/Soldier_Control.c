@@ -311,7 +311,7 @@ void HandleVehicleMovementSound( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	{
 		if ( pVehicle->iMovementSoundID == NO_SAMPLE )
 		{
-			pVehicle->iMovementSoundID = PlayJA2Sample( pVehicle->iMoveSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+			pVehicle->iMovementSoundID = PlayJA2Sample(pVehicle->iMoveSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 		}
 	}
 	else
@@ -686,7 +686,6 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		// Play sound!
 		memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-		spParms.uiSpeed = RATE_11025;
 		spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
 
 		// If we are an enemy.....reduce due to volume
@@ -2061,7 +2060,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			case BODYEXPLODING:
 
 				// Merc on fire!
-				pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample( pSoldier->ubID, ( FIRE_ON_MERC ), RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 5, SoundDir( pSoldier->sGridNo ), TRUE );
+				pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample(pSoldier->ubID, FIRE_ON_MERC, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 5, SoundDir(pSoldier->sGridNo), TRUE);
 				break;
 		}
 	}
@@ -2567,7 +2566,7 @@ void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRe
 				// Update sound...
 				if ( fInWaterValue )
 				{
-					PlaySoldierJA2Sample( pSoldier->ubID, ENTER_WATER_1, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+					PlaySoldierJA2Sample(pSoldier->ubID, ENTER_WATER_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 				}
 				else
 				{
@@ -2594,7 +2593,7 @@ void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRe
 					EVENT_InitNewSoldierAnim( pSoldier, LOW_TO_DEEP_WATER, 0 , FALSE );
 					pSoldier->usPendingAnimation = DEEP_WATER_SWIM;
 
-					PlayJA2Sample( ENTER_DEEP_WATER_1, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+					PlayJA2Sample(ENTER_DEEP_WATER_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 				}
 			}
@@ -3498,11 +3497,11 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 
 	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
   {
-	  PlayJA2Sample( (UINT32)( KNIFE_IMPACT ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+	  PlayJA2Sample(KNIFE_IMPACT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
   }
   else
   {
-	  PlayJA2Sample( (UINT32)( BULLET_IMPACT_1 + Random(3) ), RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+	  PlayJA2Sample(BULLET_IMPACT_1 + Random(3), SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
   }
 
 	// PLAY RANDOM GETTING HIT SOUND
@@ -3512,7 +3511,7 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 		if ( pSoldier->ubBodyType == CROW )
 		{
 			// Exploding crow...
-			PlayJA2Sample( CROW_EXPLODE_1, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+			PlayJA2Sample(CROW_EXPLODE_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 		}
 		else
 		{
@@ -5086,7 +5085,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
        SoundStop( pSoldier->iTuringSoundID );
        pSoldier->iTuringSoundID = NO_SAMPLE;
 
-			 PlaySoldierJA2Sample( pSoldier->ubID, TURRET_STOP, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+			 PlaySoldierJA2Sample(pSoldier->ubID, TURRET_STOP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
      }
    }
 
@@ -5211,7 +5210,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
      {
        if ( pSoldier->iTuringSoundID == NO_SAMPLE )
        {
-			   pSoldier->iTuringSoundID = PlaySoldierJA2Sample( pSoldier->ubID, TURRET_MOVE, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 100, SoundDir( pSoldier->sGridNo ), TRUE );
+			   pSoldier->iTuringSoundID = PlaySoldierJA2Sample(pSoldier->ubID, TURRET_MOVE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 100, SoundDir(pSoldier->sGridNo), TRUE);
        }
      }
 	}
@@ -6295,8 +6294,8 @@ void HandleTakeDamageDeath( SOLDIERTYPE *pSoldier, UINT8 bOldLife, UINT8 ubReaso
       		pSoldier->fDeadSoundPlayed = TRUE;
 
           // ATE: DO death sound
-					PlayJA2Sample( (UINT8)DOORCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-					PlayJA2Sample( (UINT8)HEADCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+					PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 				}
 			}
 			break;
@@ -6916,7 +6915,7 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 
 				fDoSub = TRUE;
 				uiSubSoundID = (UINT32)( EXPLOSION_1 );
-  			PlayJA2Sample( ROBOT_DEATH, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+  			PlayJA2Sample(ROBOT_DEATH, HIGHVOLUME, 1, MIDDLEPAN);
 				break;
 
 		}
@@ -6940,11 +6939,11 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	{
 		if( guiCurrentScreen != GAME_SCREEN )
 		{
-			PlayJA2Sample( uiSubSoundID, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(uiSubSoundID, HIGHVOLUME, 1, MIDDLEPAN);
 		}
 		else
 		{
-			PlayJA2Sample( uiSubSoundID, RATE_11025, SoundVolume( (UINT8)CalculateSpeechVolume( HIGHVOLUME ), pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+			PlayJA2Sample(uiSubSoundID, SoundVolume(CalculateSpeechVolume(HIGHVOLUME), pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 		}
 		return( TRUE );
 	}
@@ -7081,7 +7080,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	// Play sound!
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiSpeed = RATE_11025;
 	//spParms.uiVolume = CalculateSpeechVolume( pSoldier->bVocalVolume );
 
 	spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
@@ -10846,7 +10844,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 
 	  if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	  {
-			PlaySoldierJA2Sample( pSoldier->ubID, ROBOT_BEEP, RATE_11025, SoundVolume( bVolume, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+			PlaySoldierJA2Sample(pSoldier->ubID, ROBOT_BEEP, SoundVolume(bVolume, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
       return;
     }
 
@@ -10895,7 +10893,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 				bVolume = LOWVOLUME;
 			}
 
-			PlaySoldierJA2Sample( pSoldier->ubID, ubSoundBase + pSoldier->ubLastFootPrintSound, RATE_11025, SoundVolume( bVolume, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+			PlaySoldierJA2Sample(pSoldier->ubID, ubSoundBase + pSoldier->ubLastFootPrintSound, SoundVolume(bVolume, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 		}
 	}
 }

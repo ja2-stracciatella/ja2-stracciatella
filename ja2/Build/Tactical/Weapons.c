@@ -898,7 +898,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					sprintf( zBurstString, "SOUNDS\\WEAPONS\\SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( zBurstString, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 				}
 				else
 				{
@@ -906,13 +906,13 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					sprintf( zBurstString, "SOUNDS\\WEAPONS\\%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile( zBurstString, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 				}
 
 				if ( pSoldier->iBurstSoundID == NO_SAMPLE )
 				{
 					// If failed, play normal default....
-					pSoldier->iBurstSoundID = PlayJA2Sample( Weapon[ usItemNum ].sBurstSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+					pSoldier->iBurstSoundID = PlayJA2Sample(Weapon[usItemNum].sBurstSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 				}
 			}
 
@@ -954,12 +954,12 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					uiSound = S_SILENCER_2;
 				}
 
-				PlayJA2Sample( uiSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+				PlayJA2Sample(uiSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 			}
 			else
 			{
-				PlayJA2Sample( Weapon[ usItemNum ].sSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+				PlayJA2Sample(Weapon[usItemNum].sSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 			}
 		}
 	}
@@ -1818,7 +1818,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	if ( Weapon[ usItemNum ].sSound != NO_WEAPON_SOUND  )
 	{
-		PlayJA2Sample( Weapon[ usItemNum ].sSound, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+		PlayJA2Sample(Weapon[usItemNum].sSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 	}
 
 	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
@@ -1904,11 +1904,11 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 
 		if ( sGridNo != NOWHERE )
 		{
-			PlayJA2Sample( SMALL_EXPLODE_1 , RATE_11025, SoundVolume( (INT8)HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+			PlayJA2Sample(SMALL_EXPLODE_1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 		}
 		else
 		{
-			PlayJA2Sample( SMALL_EXPLODE_1 , RATE_11025, MIDVOLUME, 1, MIDDLE );
+			PlayJA2Sample(SMALL_EXPLODE_1, MIDVOLUME, 1, MIDDLE);
 		}
 
 		return( TRUE );
@@ -1919,7 +1919,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 	  // gTacticalStatus.ubAttackBusyCount++;
 	  // DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
 
-		PlayJA2Sample( CREATURE_GAS_NOISE, RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+		PlayJA2Sample(CREATURE_GAS_NOISE, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 
     // Do Spread effect.......
     switch( usItem )
@@ -2122,7 +2122,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - monster attack hit structure") );
 			FreeUpAttacker( (UINT8) ubAttackerID );
 
-			//PlayJA2Sample( SPIT_RICOCHET , RATE_11025, uiMissVolume, 1, SoundDir( sGridNo ) );
+			//PlayJA2Sample(SPIT_RICOCHET, uiMissVolume, 1, SoundDir(sGridNo));
 			break;
 
 		case KNIFECLASS:
@@ -2146,7 +2146,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 
 				if ( !fHitSameStructureAsBefore )
 				{
-					PlayJA2Sample( MISS_KNIFE, RATE_11025, uiMissVolume, 1, SoundDir( sGridNo ) );
+					PlayJA2Sample(MISS_KNIFE, uiMissVolume, 1, SoundDir(sGridNo));
 				}
 
 				RemoveBullet( iBullet );
@@ -2189,11 +2189,11 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			{
 				if ( sZPos == 0 )
 				{
-					PlayJA2Sample( MISS_G2 , RATE_11025, uiMissVolume, 1, SoundDir( sGridNo ) );
+					PlayJA2Sample(MISS_G2, uiMissVolume, 1, SoundDir(sGridNo));
 				}
 				else
 				{
-					PlayJA2Sample( MISS_1 + Random(8), RATE_11025, uiMissVolume, 1, SoundDir( sGridNo ) );
+					PlayJA2Sample(MISS_1 + Random(8), uiMissVolume, 1, SoundDir(sGridNo));
 				}
 
 				// Default hit is the ground
@@ -2395,7 +2395,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 
 	pNode = CreateAnimationTile( &AniParams );
 
-	PlayJA2Sample( GLASS_SHATTER1 + Random(2), RATE_11025, MIDVOLUME, 1, SoundDir( sGridNo ) );
+	PlayJA2Sample(GLASS_SHATTER1 + Random(2), MIDVOLUME, 1, SoundDir(sGridNo));
 
 }
 
@@ -3721,7 +3721,7 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 			break;
 
 		case MONSTERCLASS:
-			PlayJA2Sample( SPIT_RICOCHET, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(SPIT_RICOCHET, HIGHVOLUME, 1, MIDDLEPAN);
 			break;
 	}
 
@@ -3732,7 +3732,7 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 
 		if ( !DoSpecialEffectAmmoMiss( ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, 0 ) )
 		{
-			PlayJA2Sample( MISS_1 + Random(8), RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		// ATE: Show misses...( if our team )

@@ -25,7 +25,6 @@ extern "C" {
 // Structure definition for sound parameters being passed down to
 //		the sample playing function
 typedef struct {
-				UINT32			uiSpeed;
 				UINT32			uiVolume;
 				UINT32			uiPan;
 				UINT32			uiLoop;

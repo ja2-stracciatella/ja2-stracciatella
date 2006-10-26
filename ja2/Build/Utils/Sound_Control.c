@@ -416,13 +416,12 @@ BOOLEAN ShutdownJA2Sound( )
 	return( TRUE );
 }
 
-UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+UINT32 PlayJA2Sample( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
   SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiSpeed = usRate;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
@@ -432,13 +431,12 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoo
 }
 
 
-UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
   SOUNDPARMS spParms;
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiSpeed = usRate;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
@@ -448,7 +446,7 @@ UINT32 PlayJA2StreamingSample( UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UIN
 }
 
 
-UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
@@ -457,7 +455,6 @@ UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVol
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiSpeed = usRate;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
@@ -467,7 +464,7 @@ UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVol
 }
 
 
-UINT32 PlayJA2StreamingSampleFromFile(const char *szFileName, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback )
+UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback)
 {
 
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
@@ -476,7 +473,6 @@ UINT32 PlayJA2StreamingSampleFromFile(const char *szFileName, UINT32 usRate, UIN
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiSpeed = usRate;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
@@ -517,7 +513,7 @@ RANDOMPARMS rpParms;
 
 
 
-UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck )
+UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck)
 {
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
@@ -525,7 +521,7 @@ UINT32 PlaySoldierJA2Sample( UINT16 usID, UINT32 usNum, UINT32 usRate, UINT32 ub
 	  // CHECK IF GUY IS ON SCREEN BEFORE PLAYING!
 	  if ( ( MercPtrs[ usID ]->bVisible != -1 ) || !fCheck )
 	  {
-		  return( PlayJA2Sample( usNum, usRate, CalculateSoundEffectsVolume( ubVolume ), ubLoops, uiPan ) );
+		  return PlayJA2Sample(usNum, CalculateSoundEffectsVolume(ubVolume), ubLoops, uiPan);
 	  }
   }
 
@@ -707,12 +703,11 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 }
 
 
-void PlayDelayedJA2Sample( UINT32 uiDelay, UINT32 usNum, UINT32 usRate, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan )
+void PlayDelayedJA2Sample(UINT32 uiDelay, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
 
 	memset(&gDelayedSoundParms, 0xff, sizeof(SOUNDPARMS));
 
-	gDelayedSoundParms.uiSpeed = usRate;
 	gDelayedSoundParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	gDelayedSoundParms.uiLoop = ubLoops;
 	gDelayedSoundParms.uiPan = uiPan;
@@ -890,7 +885,7 @@ void SetPositionSndsActive( )
 
         // Begin sound effect
         // Volume 0
-        pPositionSnd->iSoundSampleID = PlayJA2Sample( pPositionSnd->iSoundToPlay, RATE_11025, 0, 0, MIDDLEPAN );
+        pPositionSnd->iSoundSampleID = PlayJA2Sample(pPositionSnd->iSoundToPlay, 0, 0, MIDDLEPAN);
       }
     }
   }

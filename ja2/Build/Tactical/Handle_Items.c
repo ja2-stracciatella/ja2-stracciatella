@@ -305,7 +305,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 						// this could be an NPC (Krott)
 						if (pSoldier->bTeam == gbPlayerNum)
 						{
-							PlayJA2Sample( RG_ID_IMPRINTED, RATE_11025, HIGHVOLUME, 1, MIDDLE );
+							PlayJA2Sample(RG_ID_IMPRINTED, HIGHVOLUME, 1, MIDDLE);
 
       			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%S\"", TacticalStr[ GUN_GOT_FINGERPRINT ] );
 
@@ -317,7 +317,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 						// access denied!
 						if (pSoldier->bTeam == gbPlayerNum)
 						{
-							PlayJA2Sample( RG_ID_INVALID, RATE_11025, HIGHVOLUME, 1, MIDDLE );
+							PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
 
 							//if (Random( 100 ) < (UINT32) pSoldier->bWisdom)
 							//{
@@ -1042,7 +1042,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			DeductPoints( pSoldier, sAPCost, 0 );
 			if ( usHandItem == XRAY_DEVICE )
 			{
-  			PlayJA2Sample( USE_X_RAY_MACHINE, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+  			PlayJA2Sample(USE_X_RAY_MACHINE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 
 				ActivateXRayDevice( pSoldier );
 				return( ITEM_HANDLE_OK );
@@ -1359,7 +1359,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 	{
 		if ( pSoldier->bVisible != -1 )
 		{
-			PlayJA2Sample( THROW_IMPACT_2, RATE_11025, SoundVolume( MIDVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ) );
+			PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
 		}
 
 		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
@@ -4047,7 +4047,7 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 			*/
 
       // PLay sound....
-      PlayJA2Sample( USE_STATUE_REMOTE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+      PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
 
 
 			// Check what sector we are in....
@@ -4231,7 +4231,7 @@ void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	SoldierTakeDamage( pSoldier, 0, ubPtsDmg, ubPtsDmg, TAKE_DAMAGE_EXPLOSION, NOBODY, NOWHERE, 0, TRUE );
 
 	// play the sound
-	PlayJA2Sample( EXPLOSION_1, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+	PlayJA2Sample(EXPLOSION_1, BTNVOLUME, 1, MIDDLEPAN);
 
 }
 
@@ -5161,7 +5161,7 @@ BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
 			    // access denied!
 			    if (pSoldier->bTeam == gbPlayerNum)
 			    {
-				    PlayJA2Sample( RG_ID_INVALID, RATE_11025, HIGHVOLUME, 1, MIDDLE );
+				    PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
 
             if ( fDisplay )
             {

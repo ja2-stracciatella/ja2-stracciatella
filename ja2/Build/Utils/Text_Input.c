@@ -733,7 +733,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 		return FALSE;
 	if( Event->usParam == ENTER )
 	{
-		PlayJA2Sample( REMOVING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+		PlayJA2Sample(REMOVING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 		return FALSE;
 	}
 	//For any number of reasons, these ALT and CTRL combination key presses
@@ -873,7 +873,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			//CTRL+DEL will delete the entire text field, regardless of hilighting.
 			//DEL will either delete the selected text, or the character to the right
 			//of the cursor if applicable.
-			PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 			if( Event->usKeyState & CTRL_DOWN )
 			{
 				gubStartHilite = 0;
@@ -882,7 +882,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 				DeleteHilitedText();
 			}
 			else if( gfHiliteMode )
-				PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 			else
 				RemoveChar( gubCursorPos );
 			break;
@@ -890,12 +890,12 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			//Will delete the selected text, or the character to the left of the cursor if applicable.
 			if( gfHiliteMode)
 			{
-				PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 				DeleteHilitedText();
 			}
 			else if( gubCursorPos > 0 )
 			{
-				PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 				RemoveChar( --gubCursorPos );
 			}
 			break;
@@ -1040,7 +1040,7 @@ void HandleExclusiveInput( UINT32 uiKey )
 
 void AddChar( UINT32 uiKey )
 {
-	PlayJA2Sample( ENTERING_TEXT, RATE_11025, BTNVOLUME, 1, MIDDLEPAN );
+	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 	if( gpActive->ubStrLen >= gpActive->ubMaxChars )
 	{	//max length reached.  Just replace the last character with new one.
 		gpActive->ubStrLen = gpActive->ubMaxChars;

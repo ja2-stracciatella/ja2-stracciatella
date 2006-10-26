@@ -944,7 +944,7 @@ void PlayGlowRegionSound( void )
 	}
 
 	// otherwise no sound playing, play one
-	uiSoundId = PlayJA2SampleFromFile( "Sounds\\glowclick.wav", RATE_11025, MIDVOLUME, 1 , MIDDLEPAN );
+	uiSoundId = PlayJA2SampleFromFile("Sounds\\glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
 
 	return;
 }
@@ -5126,7 +5126,7 @@ void CreateDestroyTheUpdateBox( void )
 		DisplaySoldierUpdateBox( );
 
 		// Do beep
-		PlayJA2SampleFromFile( "Sounds\\newbeep.wav", RATE_11025, MIDVOLUME, 1 , MIDDLEPAN );
+		PlayJA2SampleFromFile("Sounds\\newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 	}
 	else if( ( fCreated == TRUE ) && ( fShowUpdateBox == FALSE ) )
 	{

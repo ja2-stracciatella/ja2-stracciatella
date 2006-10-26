@@ -2105,7 +2105,7 @@ BOOLEAN SetFaceTalking(INT32 iFaceIndex, CHAR8* zSoundFile, STR16 zTextString)
 
 	// Play sample
 	if( gGameSettings.fOptions[ TOPTION_SPEECH ] )
-		pFace->uiSoundID = PlayJA2GapSample( zSoundFile, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN, &(pFace->GapList ) );
+		pFace->uiSoundID = PlayJA2GapSample(zSoundFile, HIGHVOLUME, 1, MIDDLEPAN, &pFace->GapList);
 	else
 		pFace->uiSoundID = SOUND_ERROR;
 

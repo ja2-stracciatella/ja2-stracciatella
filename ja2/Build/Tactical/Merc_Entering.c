@@ -427,7 +427,7 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 	guiHeliLastUpdate		= GetJA2Clock( );
 
 	// Start sound
-	uiSoundSample = PlayJA2Sample( HELI_1, RATE_11025, 0, 10000, MIDDLEPAN );
+	uiSoundSample = PlayJA2Sample(HELI_1, 0, 10000, MIDDLEPAN);
 	fFadingHeliIn				= TRUE;
 
 	gfHandleHeli			= TRUE;

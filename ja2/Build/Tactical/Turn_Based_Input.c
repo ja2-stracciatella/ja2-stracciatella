@@ -3720,7 +3720,7 @@ void TestExplosion()
 
 		GenerateExplosion( &ExpParams );
 
-		PlayJA2Sample( EXPLOSION_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+		PlayJA2Sample(EXPLOSION_1, MIDVOLUME, 1, MIDDLEPAN);
 	}
 }
 
@@ -3981,7 +3981,7 @@ void ObliterateSector()
 				//	AniParams.uiFlags							= ANITILE_FORWARD;
 
 				//	CreateAnimationTile( &AniParams );
-					//PlayJA2Sample( EXPLOSION_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+					//PlayJA2Sample(EXPLOSION_1, MIDVOLUME, 1, MIDDLEPAN);
 
 					EVENT_SoldierGotHit( pTSoldier, 0, 400, 0, pTSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, 0, NOWHERE );
 		}

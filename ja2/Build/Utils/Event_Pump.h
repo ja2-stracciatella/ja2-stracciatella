@@ -49,7 +49,6 @@ enum
 typedef struct
 {
 	UINT16		usIndex;
-	UINT16		usRate;
 	UINT8			ubVolume;
 	UINT8			ubLoops;
 	UINT32		uiPan;

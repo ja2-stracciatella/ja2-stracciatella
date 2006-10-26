@@ -1194,7 +1194,7 @@ BOOLEAN ExecuteOverhead( )
                     // If we are a robot, play stop sound...
                     if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
                     {
-             					PlaySoldierJA2Sample( pSoldier->ubID, ROBOT_STOP, RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+             					PlaySoldierJA2Sample(pSoldier->ubID, ROBOT_STOP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
                     }
 
 										// Update to middle if we're on destination
@@ -5374,7 +5374,7 @@ void CommonEnterCombatModeCode( )
 	SyncStrategicTurnTimes( );
 
 	// Play tune..
-	PlayJA2Sample( ENDTURN_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+	PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 
 	// Say quote.....
 

@@ -2141,7 +2141,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
         {
           if ( Random( 2 ) == 0 )
           {
-            PlaySoldierJA2Sample( pSoldier->ubID, ( BLOODCAT_GROWL_1 + Random( 4 ) ), RATE_11025, SoundVolume( HIGHVOLUME, pSoldier->sGridNo ), 1, SoundDir( pSoldier->sGridNo ), TRUE );
+            PlaySoldierJA2Sample(pSoldier->ubID, BLOODCAT_GROWL_1 + Random(4), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
           }
         }
       }

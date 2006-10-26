@@ -412,7 +412,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	{
 		UINT8 str[ 40 ];
 		sprintf( str, "Sounds\\\\cowmoo%d.wav", Random( 3 ) + 1 );
-		PlayJA2SampleFromFile( str, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+		PlayJA2SampleFromFile(str, MIDVOLUME, 1, MIDDLEPAN);
 	}
 	return TRUE;
 }

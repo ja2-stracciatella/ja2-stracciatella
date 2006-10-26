@@ -391,7 +391,7 @@ void TryToStartRaid( )
 void AirRaidStart( )
 {
 	// Begin ambient sound....
-	guiSoundSample = PlayJA2Sample( S_RAID_AMBIENT, RATE_11025, 0, 10000, MIDDLEPAN );
+	guiSoundSample = PlayJA2Sample(S_RAID_AMBIENT, 0, 10000, MIDDLEPAN);
 
 	gfFadingRaidIn = TRUE;
 
@@ -543,7 +543,7 @@ void BeginBombing( )
 	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
 		// Start diving sound...
-		PlayJA2Sample( S_RAID_WHISTLE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+		PlayJA2Sample(S_RAID_WHISTLE, HIGHVOLUME, 1, MIDDLEPAN);
 	}
 
 	gubAirRaidMode = AIR_RAID_BOMBING;
@@ -594,7 +594,7 @@ void BeginDive( )
 	UINT32	iSoundStartDelay;
 
 	// Start diving sound...
-	PlayJA2Sample( S_RAID_DIVE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+	PlayJA2Sample(S_RAID_DIVE, HIGHVOLUME, 1, MIDDLEPAN);
 
 	gubAirRaidMode = AIR_RAID_DIVING;
 
@@ -1187,12 +1187,12 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 				case AIR_RAID_BOMBING:
 
 					// Start diving sound...
-					PlayJA2Sample( S_RAID_TB_BOMB, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(S_RAID_TB_BOMB, HIGHVOLUME, 1, MIDDLEPAN);
 					break;
 
 				case AIR_RAID_BEGIN_DIVE:
 
-					PlayJA2Sample( S_RAID_TB_DIVE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(S_RAID_TB_DIVE, HIGHVOLUME, 1, MIDDLEPAN);
 					break;
 			}
 	}

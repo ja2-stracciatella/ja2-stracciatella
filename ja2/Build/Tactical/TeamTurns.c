@@ -138,7 +138,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 		// Are we in combat already?
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{
-			PlayJA2Sample( ENDTURN_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+			PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 		}
 
 		// Remove deadlock message
@@ -708,7 +708,7 @@ static void StartInterrupt(void)
 		InitPlayerUIBar( TRUE );
 		//AddTopMessage( PLAYER_INTERRUPT_MESSAGE, Message[STR_INTERRUPT] );
 
-		PlayJA2Sample( ENDTURN_1, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 
 		// report any close call quotes for us here
 		for ( iCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; iCounter <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iCounter++ )

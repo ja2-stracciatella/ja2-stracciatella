@@ -4502,7 +4502,7 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->fClosePanelToDie )
 					{
 						pSoldier->fDeadPanel = TRUE;
-						//PlayJA2Sample( (UINT8)HEADCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+						//PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					else
 					{
@@ -4537,8 +4537,8 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 				{
 					ScreenMsg( FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString[ 0 ], pSoldier->name );
 
-					PlayJA2Sample( (UINT8)DOORCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
-					PlayJA2Sample( (UINT8)HEADCR_1, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+					PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+					PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 				}
 
 				if ( pSoldier->ubDeadPanelFrame > 5 )

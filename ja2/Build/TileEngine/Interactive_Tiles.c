@@ -235,12 +235,12 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
 	{
 		// Play Opening sound...
-		PlayJA2Sample( GetStructureOpenSound( pStructure, FALSE ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+		PlayJA2Sample(GetStructureOpenSound(pStructure, FALSE), SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 	}
 	else
 	{
 		// Play Opening sound...
-		PlayJA2Sample( ( GetStructureOpenSound( pStructure, TRUE ) ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+		PlayJA2Sample(GetStructureOpenSound(pStructure, TRUE), SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 	}
 
 	// ATE: Don't handle switches!

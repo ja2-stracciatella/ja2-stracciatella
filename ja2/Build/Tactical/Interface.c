@@ -3143,7 +3143,7 @@ void HandleTopMessages( )
 										gTopMessage.uiTimeSinceLastBeep = GetJA2Clock( );
 
 										// Start sample....
-										PlayJA2SampleFromFile( "SOUNDS/TURN_NEAR_END.WAV", RATE_11025, HIGHVOLUME, 1 , MIDDLEPAN );
+										PlayJA2SampleFromFile("SOUNDS/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
 									}
 								}
 

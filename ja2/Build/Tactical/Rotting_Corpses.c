@@ -1446,7 +1446,7 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 	}
 
 	// PLay a sound....
-	PlayJA2Sample( (UINT32)( BULLET_IMPACT_2 ), RATE_11025, SoundVolume( MIDVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+	PlayJA2Sample(BULLET_IMPACT_2, SoundVolume(MIDVOLUME, sGridNo), 1, SoundDir(sGridNo));
 
 #endif
 }
@@ -1511,7 +1511,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 	}
 
 	// PLay a sound....
-	PlayJA2Sample( (UINT32)( BODY_EXPLODE_1 ), RATE_11025, SoundVolume( HIGHVOLUME, sGridNo ), 1, SoundDir( sGridNo ) );
+	PlayJA2Sample(BODY_EXPLODE_1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
 
 }
 

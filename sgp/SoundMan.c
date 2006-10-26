@@ -1378,15 +1378,6 @@ CHAR8 AILString[200];
 	// Store the natural playback rate before we modify it below
 	pSampleList[uiSample].uiSpeed=AIL_sample_playback_rate(pSoundList[uiChannel].hMSS);
 
-	if (!(pSampleList[uiSample].uiFlags & SAMPLE_RANDOM))
-	{
-		if((pParms!=NULL) && (pParms->uiSpeed!=SOUND_PARMS_DEFAULT))
-		{
-			Assert((pParms->uiSpeed > 0) && (pParms->uiSpeed <= 60000));
-			AIL_set_sample_playback_rate(pSoundList[uiChannel].hMSS, pParms->uiSpeed);
-		}
-	}
-
 	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
 		AIL_set_sample_volume(pSoundList[uiChannel].hMSS, pParms->uiVolume);
 	else
@@ -1453,7 +1444,7 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
 #else
-UINT32 uiSoundID, uiSpeed;
+UINT32 uiSoundID;
 CHAR8	AILString[200];
 
 	if(!fSoundSystemInit)
@@ -1471,13 +1462,6 @@ CHAR8	AILString[200];
 		DbgMessage(TOPIC_GAME, DBG_LEVEL_0, AILString);
 		return(SOUND_ERROR);
 	}
-
-	if((pParms!=NULL) && (pParms->uiSpeed!=SOUND_PARMS_DEFAULT))
-		uiSpeed=pParms->uiSpeed;
-	else
-		uiSpeed=AIL_stream_playback_rate(pSoundList[uiChannel].hMSSStream);
-
-	AIL_set_stream_playback_rate(pSoundList[uiChannel].hMSSStream, uiSpeed);
 
 	if((pParms!=NULL) && (pParms->uiVolume!=SOUND_PARMS_DEFAULT))
 		AIL_set_stream_volume(pSoundList[uiChannel].hMSSStream, pParms->uiVolume);

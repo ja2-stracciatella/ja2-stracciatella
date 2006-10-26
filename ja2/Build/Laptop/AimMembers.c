@@ -2572,7 +2572,7 @@ void HandleVideoDistortion()
 		//if it is time to start playing another sound
 		if( uiStaticNoiseSound == NO_SAMPLE )
 		{
-			uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static4.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+			uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static4.wav", LOWVOLUME, 1, MIDDLEPAN);
 		}
 	}
 	else
@@ -2625,7 +2625,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static1.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static1.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2635,7 +2635,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static5.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static5.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2645,7 +2645,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static6.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static6.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2655,7 +2655,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static3.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static3.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2665,7 +2665,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static5.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static5.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2675,7 +2675,7 @@ void HandleVideoDistortion()
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile( "LAPTOP\\static4.wav", RATE_11025, LOWVOLUME, 1, MIDDLEPAN );
+					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP\\static4.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 		}

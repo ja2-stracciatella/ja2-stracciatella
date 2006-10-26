@@ -1621,7 +1621,7 @@ UINT32 UIHandleAOnTerrain( UI_EVENT *pUIEvent )
 							// Display
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ OUT_OF_RANGE_STRING ] );
 
-             //PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+             //PlayJA2Sample(TARGET_OUT_OF_RANGE, MIDVOLUME, 1, MIDDLEPAN);
 
 							// Set
 							gsOutOfRangeGridNo = MercPtrs[ gusUIFullTargetID ]->sGridNo;

@@ -1466,7 +1466,7 @@ void UpdateFlashingCursorFrames( UINT32 uiCursorIndex )
       {
          if ( pCurData->bFlashIndex )
          {
-            PlayJA2Sample( TARGET_OUT_OF_RANGE, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+            PlayJA2Sample(TARGET_OUT_OF_RANGE, MIDVOLUME, 1, MIDDLEPAN);
          }
       }
 		}

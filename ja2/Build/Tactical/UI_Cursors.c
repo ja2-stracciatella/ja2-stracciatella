@@ -407,7 +407,7 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 						{
 							if ( pSoldier->bShownAimTime % 2 )
 							{
-								PlayJA2Sample( TARG_REFINE_BEEP, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+								PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 							}
 						}
 					}
@@ -1136,7 +1136,7 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 					if ( pSoldier->bShownAimTime == REFINE_KNIFE_1 )
 					{
-						PlayJA2Sample( TARG_REFINE_BEEP, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+						PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 					}
 
 					pSoldier->bShownAimTime = REFINE_KNIFE_2;
@@ -1264,7 +1264,7 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 					if ( pSoldier->bShownAimTime == REFINE_PUNCH_1 )
 					{
-						PlayJA2Sample( TARG_REFINE_BEEP, RATE_11025, MIDVOLUME, 1, MIDDLEPAN );
+						PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 					}
 
 					pSoldier->bShownAimTime = REFINE_PUNCH_2;

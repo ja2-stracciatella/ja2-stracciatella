@@ -101,7 +101,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 		GetTileIndexFromTypeSubIndex( EIGHTOSTRUCT, (INT8)( 8 ), &usTileIndex );
 		// Play sound...
 
-    PlayJA2Sample( OPEN_STATUE, RATE_11025, HIGHVOLUME, 1, MIDDLEPAN );
+    PlayJA2Sample(OPEN_STATUE, HIGHVOLUME, 1, MIDDLEPAN);
 
 	}
 	AddStructToHead( 13830, usTileIndex );
