@@ -1871,13 +1871,6 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 //#endif
 
-  // get speech if applicable
-	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
-  {
-		// Load it into memory!
-		SoundLoadSample(pFilename);
-  }
-
  return(TRUE);
 }
 
