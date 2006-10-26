@@ -1535,13 +1535,12 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 }
 
 
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, UINT32* puiSoundID, CHAR8* zSoundString);
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
 BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
 {
 	CHAR8		zSoundString[ 164 ];
-	UINT32	uiSoundID;
 	SOLDIERTYPE *pSoldier;
 
 	// Check if we are dead now or not....( if from a soldier... )
@@ -1637,8 +1636,7 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 	// Check face index
 	CHECKF( iFaceIndex != -1 );
 
-  if ( !GetDialogue( ubCharacterNum,
-                    usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), &uiSoundID, zSoundString) )
+  if (!GetDialogue(ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
   {
     return( FALSE );
   }
@@ -1819,7 +1817,7 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 }
 
 
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, UINT32* puiSoundID, CHAR8* zSoundString)
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
 {
   UINT8 *pFilename;
 
@@ -1877,8 +1875,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
   {
 		// Load it into memory!
-		*puiSoundID = SoundLoadSample( pFilename );
-
+		SoundLoadSample(pFilename);
   }
 
  return(TRUE);
