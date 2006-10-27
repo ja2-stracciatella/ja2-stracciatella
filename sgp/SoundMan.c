@@ -11,6 +11,7 @@
 #include "LibraryDataBase.h"
 #include "Random.h"
 #include "SoundMan.h"
+#include <SDL.h>
 #include <string.h>
 
 // Uncomment this to disable the startup of sound hardware
@@ -97,9 +98,7 @@ static UINT32 SoundLoadDisk(const char* pFilename);
 static UINT32 SoundGetEmptySample(void);
 static UINT32 SoundFreeSampleIndex(UINT32 uiSample);
 static UINT32 SoundGetIndexByID(UINT32 uiSoundID);
-static HDIGDRIVER SoundInitDriver(UINT32 uiRate, UINT16 uiBits, UINT16 uiChans);
 static BOOLEAN SoundInitHardware(void);
-static BOOLEAN SoundGetDriverName(HDIGDRIVER DIG, CHAR8 *cBuf);
 static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetFreeChannel(void);
 static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPARMS* pParms);
@@ -118,8 +117,6 @@ static const UINT32 guiSoundDefaultVolume = 127;
 static UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 static UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
-
-static HDIGDRIVER hSoundDriver; // Sound driver handle
 
 // Local module variables
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called T/F
@@ -423,7 +420,8 @@ UINT32 uiSound;
 static BOOLEAN SoundIndexIsPlaying(UINT32 uiSound)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return FALSE;
 #else
 INT32 iStatus=SMP_DONE;
 
@@ -1210,188 +1208,39 @@ UINT32 uiCount;
 	return(NO_SAMPLE);
 }
 
-//*******************************************************************************
-// SoundInitHardware
-//
-//		Initializes the sound hardware through Windows/DirectX. THe highest possible
-//	mixing rate and capabilities set are searched out and used.
-//
-//	Returns:	TRUE if the hardware was initialized, FALSE otherwise.
-//
-//*******************************************************************************
+
+static void SoundCallback(void* userdata, Uint8* stream, int len)
+{
+	// TODO
+}
+
+
 static BOOLEAN SoundInitHardware(void)
 {
-#if 1 // XXX TODO
-	FIXME
-	return FALSE;
-#else
-UINT32 uiCount;
-CHAR8	cDriverName[128];
+	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	// Try to start up the Miles Sound System
-	if(!AIL_startup())
-		return(FALSE);
+	SDL_AudioSpec spec;
+	spec.freq     = 22050;
+	spec.format   = AUDIO_S16SYS;
+	spec.channels = 2;
+	spec.samples  = 1024;
+	spec.callback = SoundCallback;
+	spec.userdata = NULL;
 
-	// Initialize the driver handle
-	hSoundDriver = NULL;
+	if (SDL_OpenAudio(&spec, NULL) != 0) return FALSE;
 
-	// Set up preferences, to try to use DirectSound and to set the
-	// maximum number of handles that we are allowed to allocate. Note
-	// that this is not the number we may have playing at one time--
-	// that number is set by SOUND_MAX_CHANNELS
-	AIL_set_preference(DIG_MIXER_CHANNELS, SOUND_MAX_CHANNELS);
-
-	AIL_set_preference(DIG_USE_WAVEOUT,NO);
-	// startup with DirectSound
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(44100, 16, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(44100, 8, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(22050, 8, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(11025, 8, 1);
-
-
-	if(hSoundDriver)
-	{
-		// Detect if the driver is emulated or not
-		SoundGetDriverName(hSoundDriver, cDriverName);
-		_strlwr(cDriverName);
-		// If it is, we don't want to use it, since the extra
-		// code layer can slow us down by up to 40% under NT
-		if(strstr(cDriverName, "emulated"))
-		{
-			AIL_waveOutClose(hSoundDriver);
-			hSoundDriver=NULL;
-		}
-	}
-
-	// nothing in DirectSound worked, so try waveOut
-	if (hSoundDriver == NULL)
-	{
-		AIL_set_preference(DIG_USE_WAVEOUT,YES);
-	}
-
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(44100, 16, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(44100, 8, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(22050, 8, 2);
-	if (hSoundDriver == NULL)
-		hSoundDriver = SoundInitDriver(11025, 8, 1);
-
-	if (hSoundDriver!=NULL)
-	{
-		for(uiCount = 0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
-			memset(&pSoundList[uiCount], 0, sizeof(SOUNDTAG));
-
-		return(TRUE);
-	}
-
-	return(FALSE);
-
-/*
-	// midi startup
-	if (hSoundDriver!=NULL)
-	{
-		soundMDI = MIDI_init_driver();
-		if (soundMDI==NULL)
-		{
-			_RPT1(_CRT_WARN, "MIDI: %s", AIL_last_error());
-		}
-		else
-		{
-			soundSEQ = MIDI_load_sequence(soundMDI, "SOUNDS\\DEMO.XMI");
-			if (soundSEQ==NULL)
-  			_RPT1(_CRT_WARN, "MIDI: %s", AIL_last_error());
-		}
-	}
-*/
-#endif
+	memset(pSoundList, 0, sizeof(pSoundList));
+	SDL_PauseAudio(0);
+	return TRUE;
 }
 
-//*******************************************************************************
-// SoundShutdownHardware
-//
-//		Shuts down the system hardware.
-//
-//	Returns:	TRUE always.
-//
-//*******************************************************************************
+
 static BOOLEAN SoundShutdownHardware(void)
 {
-#if 1 // XXX TODO
-	FIXME
-	return FALSE;
-#else
-	if(fSoundSystemInit)
-		AIL_shutdown();
-
-	return(TRUE);
-#endif
+	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	return TRUE;
 }
 
-//*******************************************************************************
-// SoundInitDriver
-//
-//		Tries to initialize the sound driver using the specified settings.
-//
-//	Returns:	Pointer to the driver if successful, NULL otherwise.
-//
-//*******************************************************************************
-static HDIGDRIVER SoundInitDriver(UINT32 uiRate, UINT16 uiBits, UINT16 uiChans)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-static PCMWAVEFORMAT	sPCMWF;
-HDIGDRIVER						DIG;
-CHAR8									cBuf[128];
-
-	memset(&sPCMWF, 0, sizeof(PCMWAVEFORMAT));
-  sPCMWF.wf.wFormatTag      = WAVE_FORMAT_PCM;
-  sPCMWF.wf.nChannels       = uiChans;
-  sPCMWF.wf.nSamplesPerSec  = uiRate;
-  sPCMWF.wf.nAvgBytesPerSec = uiRate * (uiBits / 8) * uiChans;
-  sPCMWF.wf.nBlockAlign     =        (uiBits / 8) * uiChans;
-  sPCMWF.wBitsPerSample     = uiBits;
-
-  if(AIL_waveOutOpen(&DIG, NULL, 0, (LPWAVEFORMAT) &sPCMWF))
-		return(NULL);
-
-  memset(cBuf, 0, 128);
-  AIL_digital_configuration(DIG,0,0,cBuf);
-	FastDebugMsg(String("Sound Init: %dKHz, %d uiBits, %s %s\n", uiRate, uiBits, (uiChans==1)? "Mono": "Stereo", cBuf));
-
-	return(DIG);
-#endif
-}
-
-//*******************************************************************************
-// SoundGetDriverName
-//
-//		Returns the name of the AIL device.
-//
-//	Returns:	TRUE or FALSE if the string was filled.
-//
-//*******************************************************************************
-static BOOLEAN SoundGetDriverName(HDIGDRIVER DIG, CHAR8 *cBuf)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	if(DIG)
-	{
-		cBuf[0]='\0';
-		AIL_digital_configuration(DIG, NULL, NULL, cBuf);
-		return(TRUE);
-	}
-	else
-		return(FALSE);
-#endif
-}
 
 //*******************************************************************************
 // SoundGetFreeChannel
@@ -1526,7 +1375,8 @@ CHAR8 AILString[200];
 static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SOUNDPARMS* pParms)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return SOUND_ERROR;
 #else
 UINT32 uiSoundID;
 CHAR8	AILString[200];
@@ -1648,7 +1498,8 @@ static BOOLEAN SoundSampleIsInUse(UINT32 uiSample);
 static BOOLEAN SoundStopIndex(UINT32 uiChannel)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	FIXME
+	return FALSE;
 #else
 UINT32 uiSample;
 
