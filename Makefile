@@ -412,7 +412,7 @@ ja2/Build/Utils/JA25GermanText.c ja2/Build/Utils/GermanText.c:
 
 Data:
 	@echo "===> LN $(DATA)"
-	@mkdir Data Data/TILECACHE
+	@mkdir Data Data/TILECACHE Data/STSOUNDS Data/stsounds
 	@ln -s $(DATA)/AMBIENT.SLF                Data/Ambient.slf
 	@ln -s $(DATA)/ANIMS.SLF                  Data/Anims.slf
 	@ln -s $(DATA)/BATTLESNDS.SLF             Data/BattleSnds.slf
@@ -573,3 +573,5 @@ Data:
 	@ln -s $(DATA)/TILECACHE/s_expld.JSD      Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/tk_wrek.jsd      Data/TILECACHE/
 	@ln -s $(DATA)/TILECACHE/tk_wrek_nb.jsd   Data/TILECACHE/
+	@ln -s $(DATA)/stsounds/BLAH.WAV          Data/STSOUNDS/BLAH.WAV
+	@ln -s $(DATA)/stsounds/BLAH2.WAV         Data/stsounds/blah2.wav
