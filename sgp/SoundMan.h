@@ -55,6 +55,7 @@ extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 
 UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms);
 extern BOOLEAN	SoundServiceStreams(void);
+extern BOOLEAN	SoundServiceRandom(void);
 
 // Sound instance manipulation functions
 extern BOOLEAN	SoundStopAll(void);

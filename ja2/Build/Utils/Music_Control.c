@@ -300,6 +300,7 @@ BOOLEAN MusicPoll( BOOLEAN fForce )
 	INT32 iVol;
 
 	SoundServiceStreams();
+	SoundServiceRandom();
 
 	// Handle Sound every sound overhead time....
 	if ( COUNTERDONE( MUSICOVERHEAD )  )
