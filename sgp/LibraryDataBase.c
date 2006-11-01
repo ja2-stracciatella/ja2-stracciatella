@@ -463,7 +463,7 @@ INT16 sLoop1, sBestMatch=-1;
 }
 
 
-static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2);
+static int CompareFileNames(const void* key, const void* member);
 
 
 //************************************************************************
@@ -476,28 +476,18 @@ static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2);
 //************************************************************************
 static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader)
 {
-	FileHeaderStruct **ppFileHeader;
-	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
-
-	//combine the library path to the file name (need it for the search of the library )
-	strcpy( sFileNameWithPath, pstrFileName);
-
 	gsCurrentLibrary = sLibraryID;
 
-	 /* try to find the filename using a binary search algorithm: */
-	 ppFileHeader = (FileHeaderStruct **) bsearch( (char *) &sFileNameWithPath, (FileHeaderStruct *) gFileDataBase.pLibraries[ sLibraryID ].pFileHeader, gFileDataBase.pLibraries[ sLibraryID ].usNumberOfEntries,
-															sizeof( FileHeaderStruct ), (int (*)(const void*, const void*))CompareFileNames );
+	FileHeaderStruct* ppFileHeader = bsearch(
+		pstrFileName,
+		gFileDataBase.pLibraries[sLibraryID].pFileHeader,
+		gFileDataBase.pLibraries[sLibraryID].usNumberOfEntries,
+		sizeof(*gFileDataBase.pLibraries[sLibraryID].pFileHeader),
+		CompareFileNames
+	);
 
-	 if( ppFileHeader )
-	 {
-			*pFileHeader = ( FileHeaderStruct * ) ppFileHeader;
-			return( TRUE );
-	 }
-	 else
-	 {
-			pFileHeader = NULL;
-			return( FALSE );
-	 }
+	*pFileHeader = ppFileHeader;
+	return ppFileHeader != NULL;
 }
 
 
@@ -506,20 +496,15 @@ static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileNa
 //	CompareFileNames() gets called by the binary search function.
 //
 //************************************************************************
-static INT CompareFileNames(CHAR8* arg1[], FileHeaderStruct** arg2)
+static int CompareFileNames(const void* key, const void* member)
 {
-	CHAR8		sSearchKey[ FILENAME_SIZE ];
-	CHAR8		sFileNameWithPath[ FILENAME_SIZE ];
-	FileHeaderStruct *TempFileHeader;
+	const char* sSearchKey = key;
+	const FileHeaderStruct* TempFileHeader = member;
+	char sFileNameWithPath[FILENAME_SIZE];
 
-	TempFileHeader = ( FileHeaderStruct * ) arg2;
+	sprintf(sFileNameWithPath, "%s%s", gFileDataBase.pLibraries[gsCurrentLibrary].sLibraryPath, TempFileHeader->pFileName);
 
-	sprintf( sSearchKey, "%s", arg1);
-
-	sprintf( sFileNameWithPath, "%s%s", gFileDataBase.pLibraries[ gsCurrentLibrary ].sLibraryPath, TempFileHeader->pFileName );
-
-   /* Compare all of both strings: */
-   return strcasecmp(sSearchKey, sFileNameWithPath);
+	return strcasecmp(sSearchKey, sFileNameWithPath);
 }
 
 
@@ -919,7 +904,7 @@ static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 }
 
 
-static INT32 CompareDirEntryFileNames(CHAR8* arg1[], DIRENTRY** arg2);
+static int CompareDirEntryFileNames(const void* key, const void* member);
 
 
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
@@ -929,13 +914,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 #else
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
-	DIRENTRY *pDirEntry;
 	LIBHEADER	LibFileHeader;
 	BOOLEAN fDone = FALSE;
 //	UINT32	cnt;
 	INT32	iFilePos=0;
-
-	DIRENTRY **ppDirEntry;
 
 	DIRENTRY *pAllEntries;
 
@@ -979,18 +961,15 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 		return( FALSE );
 	}
 
+	DIRENTRY* pDirEntry = bsearch(
+		gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->pFileName,
+		pAllEntries,
+		LibFileHeader.iEntries,
+		sizeof(*pAllEntries),
+		CompareDirEntryFileNames
+	);
 
-
-	 /* try to find the filename using a binary search algorithm: */
-	 ppDirEntry = (DIRENTRY **) bsearch( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->pFileName,
-																			(DIRENTRY *) pAllEntries,
-																			LibFileHeader.iEntries,
-																			sizeof( DIRENTRY ), (int (*)(const void*, const void*))CompareDirEntryFileNames );
-
-	 if( ppDirEntry )
-		pDirEntry = ( DIRENTRY * ) ppDirEntry;
-	 else
-		return( FALSE );
+	if (pDirEntry == NULL) return FALSE;
 
 	//Copy the dir entry time over to the passed in time
 	memcpy( pLastWriteTime, &pDirEntry->sFileTime, sizeof( SGP_FILETIME ) );
@@ -1004,24 +983,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 }
 
 
-
-//************************************************************************
-//
-//	CompareFileNames() gets called by the binary search function.
-//
-//************************************************************************
-static INT32 CompareDirEntryFileNames(CHAR8* arg1[], DIRENTRY** arg2)
+static int CompareDirEntryFileNames(const void* key, const void* member)
 {
-	CHAR8				sSearchKey[ FILENAME_SIZE ];
-	CHAR8				sFileNameWithPath[ FILENAME_SIZE ];
-	DIRENTRY		*TempDirEntry;
+	const char* sSearchKey = key;
+	const DIRENTRY* TempDirEntry = member;
 
-	TempDirEntry = ( DIRENTRY * ) arg2;
-
-	sprintf( sSearchKey, "%s", arg1);
-
-	sprintf( sFileNameWithPath, "%s", TempDirEntry->sFileName );
-
-   /* Compare all of both strings: */
-   return strcasecmp(sSearchKey, sFileNameWithPath);
+	return strcasecmp(sSearchKey, TempDirEntry->sFileName);
 }
