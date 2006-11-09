@@ -372,10 +372,12 @@ OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
 
 all: ja
 
+ifndef NO_DEPS
 depend: $(DEPS)
 
 ifeq ($(findstring $(MAKECMDGOALS), clean depend Data),)
 -include $(DEPS)
+endif
 endif
 
 ja: $(OBJS)
