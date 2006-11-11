@@ -264,11 +264,16 @@ void InitGameOptions()
 }
 
 
+#ifndef DATADIR
+#	error No DATADIR specified
+#endif
+
+
 BOOLEAN GetCDLocation( )
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(gzCdDirectory, ".");
+	strcpy(gzCdDirectory, DATADIR "/Data/");
 	return TRUE;
 #else
 	UINT32	uiStrngLength = 0;

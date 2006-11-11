@@ -32,7 +32,7 @@ TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
 
 BOOLEAN InitTileCache(  )
 {
-	const char* const TilecacheFilePattern = "TILECACHE\\*.[Jj][Ss][Dd]";
+	const char* const TilecacheFilePattern = DATADIR "/Data/TILECACHE\\*.[Jj][Ss][Dd]";
 
 	UINT32				cnt;
 	GETFILESTRUCT FileInfo;
@@ -75,7 +75,7 @@ BOOLEAN InitTileCache(  )
 		{
 			while( GetFileNext(&FileInfo) )
 			{
-				sprintf( gpTileCacheStructInfo[ cnt ].Filename, "TILECACHE\\%s", FileInfo.zFileName );
+				sprintf(gpTileCacheStructInfo[cnt].Filename, DATADIR "/Data/TILECACHE\\%s", FileInfo.zFileName);
 
 				// Get root name
 				GetRootName( gpTileCacheStructInfo[ cnt ].zRootName, gpTileCacheStructInfo[ cnt ].Filename );

@@ -19,6 +19,11 @@ endif
 endif
 
 
+ifndef DATADIR
+$(error No DATADIR specified)
+endif
+
+
 ICONV = iconv
 
 SDL_CONFIG = sdl-config
@@ -90,6 +95,8 @@ endif
 ifdef RUSSIAN
 CFLAGS += -DRUSSIAN
 endif
+
+CFLAGS += -DDATADIR=\"$(DATADIR)\"
 
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
