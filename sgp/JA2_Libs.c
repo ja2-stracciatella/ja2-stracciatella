@@ -2,56 +2,56 @@ LibraryInitHeader gGameLibaries[ ] =
 {
 		//Library Name					Can be	Init at start
 //													on cd
-	{ "Data.slf",							FALSE, TRUE },
-	{ "Ambient.slf",					FALSE, TRUE },
-	{ "Anims.slf",						FALSE, TRUE },
-	{ "BattleSnds.slf",				FALSE, TRUE },
-	{ "BigItems.slf",					FALSE, TRUE },
-	{ "BinaryData.slf",				FALSE, TRUE },
-	{ "Cursors.slf",					FALSE, TRUE },
-	{ "Faces.slf",						FALSE, TRUE },
-	{ "Fonts.slf",						FALSE, TRUE },
-	{ "InterFace.slf",				FALSE, TRUE },
-	{ "Laptop.slf",						FALSE, TRUE },
-	{ "Maps.slf",							TRUE,  TRUE },
-	{ "MercEdt.slf",					FALSE, TRUE },
-	{ "Music.slf",						TRUE,  TRUE },
-	{ "Npc_Speech.slf",				TRUE,	 TRUE },
-	{ "NpcData.slf",					FALSE, TRUE },
-	{ "RadarMaps.slf",				FALSE, TRUE },
-	{ "Sounds.slf",						FALSE, TRUE },
-	{ "Speech.slf",						TRUE,  TRUE },
-//	{ "TileCache.slf",				FALSE, TRUE },
-	{ "TileSets.slf",					TRUE,  TRUE },
-	{ "LoadScreens.slf",			TRUE,  TRUE },
-	{ "Intro.slf",						TRUE,  TRUE },
+	{ "Data.slf",							TRUE, TRUE },
+	{ "Ambient.slf",					TRUE, TRUE },
+	{ "Anims.slf",						TRUE, TRUE },
+	{ "BattleSnds.slf",				TRUE, TRUE },
+	{ "BigItems.slf",					TRUE, TRUE },
+	{ "BinaryData.slf",				TRUE, TRUE },
+	{ "Cursors.slf",					TRUE, TRUE },
+	{ "Faces.slf",						TRUE, TRUE },
+	{ "Fonts.slf",						TRUE, TRUE },
+	{ "InterFace.slf",				TRUE, TRUE },
+	{ "Laptop.slf",						TRUE, TRUE },
+	{ "Maps.slf",							TRUE, TRUE },
+	{ "MercEdt.slf",					TRUE, TRUE },
+	{ "Music.slf",						TRUE, TRUE },
+	{ "Npc_Speech.slf",				TRUE,	TRUE },
+	{ "NpcData.slf",					TRUE, TRUE },
+	{ "RadarMaps.slf",				TRUE, TRUE },
+	{ "Sounds.slf",						TRUE, TRUE },
+	{ "Speech.slf",						TRUE, TRUE },
+//	{ "TileCache.slf",				TRUE, TRUE },
+	{ "TileSets.slf",					TRUE, TRUE },
+	{ "LoadScreens.slf",			TRUE, TRUE },
+	{ "Intro.slf",						TRUE, TRUE },
 
 #ifdef JA2DEMO
-	{ "DemoAds.slf",					FALSE, TRUE },
+	{ "DemoAds.slf",					TRUE, TRUE },
 #endif
 
 #ifdef GERMAN
-	{ "German.slf",						FALSE, TRUE },
+	{ "German.slf",						TRUE, TRUE },
 #endif
 
 #ifdef POLISH
-	{ "Polish.slf",						FALSE, TRUE },
+	{ "Polish.slf",						TRUE, TRUE },
 #endif
 
 #ifdef DUTCH
-	{ "Dutch.slf",						FALSE, TRUE },
+	{ "Dutch.slf",						TRUE, TRUE },
 #endif
 
 #ifdef ITALIAN
-	{ "Italian.slf",					FALSE, TRUE },
+	{ "Italian.slf",					TRUE, TRUE },
 #endif
 
 #ifdef RUSSIAN
-	{ "Russian.slf",					FALSE, TRUE },
+	{ "Russian.slf",					TRUE, TRUE },
 #endif
 
 #ifdef JA2EDITOR
-	{ "Editor.slf",           FALSE, TRUE }
+	{ "Editor.slf",           TRUE, TRUE }
 #endif
 
 };
