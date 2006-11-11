@@ -24,7 +24,9 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Types.h"
+#include <errno.h>
 #include <glob.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -90,7 +92,7 @@ BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 															FALSE,FALSE,FALSE,FALSE,FALSE };
 
 
-static char start_path[512];
+static char LocalPath[512];
 
 
 //**************************************************************************
@@ -109,7 +111,36 @@ static char start_path[512];
 
 BOOLEAN	InitializeFileManager( STR strIndexFilename )
 {
-	getcwd(start_path, sizeof(start_path)); // XXX HACK0002
+	char DataPath[512];
+	const char* Home;
+
+	Home = getenv("HOME");
+	if (Home == NULL)
+	{
+		const struct passwd* passwd = getpwuid(getuid());
+
+		if (passwd == NULL || passwd->pw_dir == NULL)
+		{
+			fprintf(stderr, "Unable to locate home directory\n");
+			return FALSE;
+		}
+
+		Home = passwd->pw_dir;
+	}
+
+	snprintf(LocalPath, lengthof(LocalPath), "%s/.ja2", Home);
+	if (mkdir(LocalPath, 0700) != 0 && errno != EEXIST)
+	{
+		fprintf(stderr, "Unable to create directory \"%s\"\n", LocalPath);
+		return FALSE;
+	}
+
+	snprintf(DataPath, lengthof(DataPath), "%s/Data", LocalPath);
+	if (mkdir(DataPath, 0700) != 0 && errno != EEXIST)
+	{
+		fprintf(stderr, "Unable to create directory \"%s\"\n", DataPath);
+		return FALSE;
+	}
 
 	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
@@ -1107,7 +1138,7 @@ BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(pcDirectory, start_path);
+	strcpy(pcDirectory, LocalPath);
 	return TRUE;
 #else
 	SGPFILENAME	ModuleFilename;
