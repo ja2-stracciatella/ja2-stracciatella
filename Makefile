@@ -49,6 +49,20 @@ CFLAGS += -Wwrite-strings
 CFLAGS += -DJA2
 #CFLAGS += -D_DEBUG
 
+
+ifdef JA2BETAVERSION
+CFLAGS += -DJA2BETAVERSION
+endif
+
+ifdef JA2TESTVERSION
+CFLAGS += -DJA2TESTVERSION
+endif
+
+ifdef JA2EDITOR
+CFLAGS += -DJA2EDITOR
+endif
+
+
 ifdef DUTCH
 CFLAGS += -DDUTCH
 endif
@@ -92,6 +106,8 @@ LDFLAGS += -lz
 SRCS :=
 SRCS += ja2/Build/AniViewScreen.c
 SRCS += ja2/Build/Credits.c
+
+ifdef JA2EDITOR
 SRCS += ja2/Build/Editor/Cursor_Modes.c
 SRCS += ja2/Build/Editor/EditScreen.c
 SRCS += ja2/Build/Editor/Edit_Sys.c
@@ -116,6 +132,8 @@ SRCS += ja2/Build/Editor/SelectWin.c
 SRCS += ja2/Build/Editor/SmartMethod.c
 SRCS += ja2/Build/Editor/Smooth.c
 SRCS += ja2/Build/Editor/Smoothing_Utils.c
+endif
+
 SRCS += ja2/Build/Fade_Screen.c
 SRCS += ja2/Build/GameInitOptionsScreen.c
 SRCS += ja2/Build/GameLoop.c

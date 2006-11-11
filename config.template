@@ -6,3 +6,7 @@
 #ITALIAN := yes
 #POLISH  := yes
 #RUSSIAN := yes # Broken
+
+#JA2BETAVERSION := yes
+#JA2TESTVERSION := yes
+#JA2EDITOR      := yes
