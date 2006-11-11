@@ -3,13 +3,14 @@
 #else
 	#include "Language_Defines.h"
 	#ifdef ENGLISH
-		#include "Text.h"
 		#include "FileMan.h"
 		#include "JA2_Demo_Ads.h"
 	#endif
 #endif
 
-#ifdef ENGLISH
+#if defined(DUTCH) || defined(ENGLISH) || defined(FRENCH) || defined(ITALIAN) || defined(POLISH)
+
+#include "Text.h"
 
 // VERY TRUNCATED FILE COPIED FROM JA2.5 FOR ITS FEATURES FOR JA2 GOLD
 

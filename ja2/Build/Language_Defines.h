@@ -1,13 +1,9 @@
 #ifndef __LANGUAGE_DEFINES_H
 #define __LANGUAGE_DEFINES_H
 
-//ONLY ONE OF THESE CAN BE DEFINED AT A TIME!
-
-//#define ENGLISH
-#define GERMAN
-//#define RUSSIAN
-//#define DUTCH
-//#define POLISH
+#if defined(DUTCH) + defined(ENGLISH) + defined(FRENCH) + defined(GERMAN) + defined(ITALIAN) + defined(POLISH) + defined(RUSSIAN) != 1
+#	error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN must be defined
+#endif
 
 #define BLOOD_N_GORE_ENABLED
 

@@ -3838,7 +3838,7 @@ const wchar_t *gzCreditNames[]=
 {
 	L"Chris Camfield",
 	L"Shaun Lyng",
-	L"Kris Maernes", /* XXX L"Kris Märnes" */
+	L"Kris Märnes",
 	L"Ian Currie",
 	L"Linda Currie",
 	L"Eric \"WTF\" Cheng",

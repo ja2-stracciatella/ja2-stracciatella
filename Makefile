@@ -1,3 +1,24 @@
+CONFIG ?= config.default
+-include $(CONFIG)
+
+
+ifndef DUTCH
+ifndef ENGLISH
+ifndef FRENCH
+ifndef GERMAN
+ifndef ITALIAN
+ifndef POLISH
+ifndef RUSSIAN
+$(error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN must be defined. Copy config.template to config.default and uncomment one of the languages)
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+
 ICONV = iconv
 
 SDL_CONFIG = sdl-config
@@ -27,6 +48,34 @@ CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
 #CFLAGS += -D_DEBUG
+
+ifdef DUTCH
+CFLAGS += -DDUTCH
+endif
+
+ifdef ENGLISH
+CFLAGS += -DENGLISH
+endif
+
+ifdef FRENCH
+CFLAGS += -DFRENCH
+endif
+
+ifdef GERMAN
+CFLAGS += -DGERMAN
+endif
+
+ifdef ITALIAN
+CFLAGS += -DITALIAN
+endif
+
+ifdef POLISH
+CFLAGS += -DPOLISH
+endif
+
+ifdef RUSSIAN
+CFLAGS += -DRUSSIAN
+endif
 
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
@@ -325,14 +374,6 @@ SRCS += ja2/Build/Utils/Text_Utils.c
 SRCS += ja2/Build/Utils/Timer_Control.c
 SRCS += ja2/Build/Utils/Utilities.c
 SRCS += ja2/Build/Utils/WordWrap.c
-SRCS += ja2/Build/Utils/_DutchText.c
-SRCS += ja2/Build/Utils/_EnglishText.c
-SRCS += ja2/Build/Utils/_FrenchText.c
-SRCS += ja2/Build/Utils/GermanText.c
-SRCS += ja2/Build/Utils/_ItalianText.c
-SRCS += ja2/Build/Utils/_JA25EnglishText.c
-SRCS += ja2/Build/Utils/JA25GermanText.c
-SRCS += ja2/Build/Utils/_PolishText.c
 SRCS += ja2/Build/Utils/_RussianText.c
 SRCS += sgp/Button_Sound_Control.c
 SRCS += sgp/Button_System.c
@@ -363,6 +404,18 @@ SRCS += sgp/VObject.c
 SRCS += sgp/VObject_Blitters.c # inline assembler
 SRCS += sgp/VSurface.c
 SRCS += sgp/Video.c
+
+LNGS :=
+LNGS += ja2/Build/Utils/DutchText.c
+LNGS += ja2/Build/Utils/EnglishText.c
+LNGS += ja2/Build/Utils/FrenchText.c
+LNGS += ja2/Build/Utils/GermanText.c
+LNGS += ja2/Build/Utils/ItalianText.c
+LNGS += ja2/Build/Utils/JA25EnglishText.c
+LNGS += ja2/Build/Utils/JA25GermanText.c
+LNGS += ja2/Build/Utils/PolishText.c
+
+SRCS += $(LNGS)
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
@@ -402,14 +455,30 @@ ja: $(OBJS)
 
 clean:
 	@echo '===> CLEAN'
-	@rm -fr $(DEPS) $(OBJS) ja2/Build/Utils/JA25GermanText.c ja2/Build/Utils/GermanText.c
+	@rm -fr $(DEPS) $(OBJS) $(LNGS)
 
-ja2/Build/Utils/JA25GermanText.c: ja2/Build/Utils/_JA25GermanText.c
-ja2/Build/Utils/GermanText.c: ja2/Build/Utils/_GermanText.c
+ja2/Build/Utils/DutchText.c:       ja2/Build/Utils/_DutchText.c
+ja2/Build/Utils/EnglishText.c:     ja2/Build/Utils/_EnglishText.c
+ja2/Build/Utils/FrenchText.c:      ja2/Build/Utils/_FrenchText.c
+ja2/Build/Utils/GermanText.c:      ja2/Build/Utils/_GermanText.c
+ja2/Build/Utils/ItalianText.c:     ja2/Build/Utils/_ItalianText.c
+ja2/Build/Utils/JA25EnglishText.c: ja2/Build/Utils/_JA25EnglishText.c
+ja2/Build/Utils/JA25GermanText.c:  ja2/Build/Utils/_JA25GermanText.c
+ja2/Build/Utils/PolishText.c:      ja2/Build/Utils/_PolishText.c
 
-ja2/Build/Utils/JA25GermanText.c ja2/Build/Utils/GermanText.c:
+ja2/Build/Utils/DutchText.c        \
+ja2/Build/Utils/EnglishText.c      \
+ja2/Build/Utils/FrenchText.c       \
+ja2/Build/Utils/GermanText.c       \
+ja2/Build/Utils/ItalianText.c      \
+ja2/Build/Utils/JA25EnglishText.c  \
+ja2/Build/Utils/JA25GermanText.c:
 	@echo '===> ICONV $<'
 	@$(ICONV) -f ISO8859-15 -t UTF-8 < $< > $@
+
+ja2/Build/Utils/PolishText.c:
+	@echo '===> ICONV $<'
+	@$(ICONV) -f CP1250 -t UTF-8 < $< > $@
 
 
 Data:

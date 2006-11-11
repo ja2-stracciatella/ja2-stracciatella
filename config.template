@@ -1,0 +1,8 @@
+# Uncomment exactly ONE of these
+#DUTCH   := yes
+#ENGLISH := yes
+#FRENCH  := yes
+#GERMAN  := yes
+#ITALIAN := yes
+#POLISH  := yes
+#RUSSIAN := yes # Broken
