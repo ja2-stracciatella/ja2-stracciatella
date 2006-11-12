@@ -212,6 +212,18 @@ BOOLEAN FileExists(const char *strFilename)
 		fclose( file );
 		//CloseHandle( hRealFile );
 	}
+	else
+	{
+		char Path[512];
+
+		snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
+		file = fopen(Path, "r");
+		if (file != NULL)
+		{
+			fclose(file);
+			return TRUE;
+		}
+	}
 
 	//if the file wasnt on disk, check to see if its in a library
 	if( fExists == FALSE )
@@ -263,6 +275,18 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 		fExists = TRUE;
 		fclose( file );
 		//CloseHandle( hRealFile );
+	}
+	else
+	{
+		char Path[512];
+
+		snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
+		file = fopen(Path, "r");
+		if (file != NULL)
+		{
+			fclose(file);
+			return TRUE;
+		}
 	}
 
 	return( fExists );
@@ -361,7 +385,15 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 		hRealFile = fopen(strFilename, dwAccess);
 		if (hRealFile == NULL)
 		{
-			return(0);
+			char Path[512];
+
+			snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
+			hRealFile = fopen(Path, dwAccess);
+
+			if (hRealFile == NULL)
+			{
+				return 0;
+			}
 		}
 
 		//create a file handle for the 'real file'
