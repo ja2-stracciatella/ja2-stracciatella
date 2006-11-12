@@ -30,8 +30,6 @@ SDL_CONFIG = sdl-config
 CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
 
-CFLAGS += -g
-
 CFLAGS += $(CFLAGS_SDL)
 CFLAGS += -I ja2/Build
 CFLAGS += -I ja2/Build/Tactical
@@ -46,7 +44,6 @@ CFLAGS += -I sgp
 
 #CFLAGS += -Wall
 #CFLAGS += -W
-CFLAGS += -Werror
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
 CFLAGS += -Wwrite-strings
