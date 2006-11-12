@@ -751,7 +751,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			AniParams.sY									= sY;
 			AniParams.sZ									= sZ;
 
-			strcpy( AniParams.zCachedFile, "TILECACHE\\MINIBOOM.STI" );
+			strcpy( AniParams.zCachedFile, "TILECACHE\\miniboom.sti" );
 
 			CreateAnimationTile( &AniParams );
 

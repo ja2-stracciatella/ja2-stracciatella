@@ -337,17 +337,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
       if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
       {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.STI" );
+			   strcpy( AniParams.zCachedFile, "TILECACHE\\smkechze.sti" );
       }
       else
       {
         if ( fDissipating )
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalsmke.sti" );
         }
         else
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\SMOKE.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\smoke.sti" );
         }
       }
 			break;
@@ -356,17 +356,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
       if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
       {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.STI" );
+			   strcpy( AniParams.zCachedFile, "TILECACHE\\tearchze.sti" );
       }
       else
       {
         if ( fDissipating )
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\smaltear.sti" );
         }
         else
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\TEARGAS.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\teargas.sti" );
         }
       }
 			break;
@@ -375,17 +375,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
       if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
       {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.STI" );
+			   strcpy( AniParams.zCachedFile, "TILECACHE\\mustchze.sti" );
       }
       else
       {
         if ( fDissipating )
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\smalmust.sti" );
         }
         else
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\MUSTARD2.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\mustard2.sti" );
         }
       }
 			break;
@@ -394,17 +394,17 @@ void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8
 
       if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
       {
-			   strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
+			   strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.sti" );
       }
       else
       {
         if ( fDissipating )
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.sti" );
         }
         else
         {
-			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.STI" );
+			    strcpy( AniParams.zCachedFile, "TILECACHE\\spit_gas.sti" );
         }
       }
 			break;

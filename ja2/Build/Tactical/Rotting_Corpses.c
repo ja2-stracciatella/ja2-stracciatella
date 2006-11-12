@@ -1496,7 +1496,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		AniParams.sY									= CenterY( sBaseGridNo );
 		AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
 
-		strcpy( AniParams.zCachedFile, "TILECACHE\\GEN_BLOW.STI" );
+		strcpy( AniParams.zCachedFile, "TILECACHE\\gen_blow.sti" );
 		CreateAnimationTile( &AniParams );
 
 		// Remove....

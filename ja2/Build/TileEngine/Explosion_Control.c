@@ -124,14 +124,14 @@ UINT32	uiExplosionSoundID[ NUM_EXP_TYPES ] =
 CHAR8	zBlastFilenames[][70] =
 {
 	"",
-	"TILECACHE\\ZGRAV_D.STI",
-	"TILECACHE\\ZGRAV_C.STI",
-	"TILECACHE\\ZGRAV_B.STI",
-	"TILECACHE\\shckwave.STI",
-	"TILECACHE\\WAT_EXP.STI",
-	"TILECACHE\\TEAR_EXP.STI",
-	"TILECACHE\\TEAR_EXP.STI",
-	"TILECACHE\\MUST_EXP.STI",
+	"TILECACHE\\zgrav_d.sti",
+	"TILECACHE\\zgrav_c.sti",
+	"TILECACHE\\zgrav_b.sti",
+	"TILECACHE\\shckwave.sti",
+	"TILECACHE\\wat_exp.sti",
+	"TILECACHE\\tear_exp.sti",
+	"TILECACHE\\tear_exp.sti",
+	"TILECACHE\\must_exp.sti",
 };
 
 CHAR8	sBlastSpeeds[] =
