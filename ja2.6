@@ -1,0 +1,54 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" Please adjust this date whenever revising the manpage.
+.Dd November 14, 2006
+.Dt JA2 6
+.Sh NAME
+.Nm ja2
+.Nd Jagged Alliance 2
+.Sh SYNOPSIS
+.Nm
+.Op Fl fullscreen
+.Sh DESCRIPTION
+Jagged Alliance 2 is a game, in which the player controls mercenaries to
+liberate the small country of Arulco.
+.Sh OPTIONS
+.Bl -tag -width ".Fl fullscreen"
+.It Fl fullscreen
+Start the game in fullscreen mode
+.El
+.Sh FILES
+.Bl -tag -width ".Fl fullscreen"
+.It Pa ~/.ja2/
+Directory for configuration files, savegames and temporary files
+.El
+.Sh SEE ALSO
+http://ja2.dragonriders.de/
+.Sh HISTORY
+Jagged Alliance 2 was developed by Sir-tech Canada Ltd.
+This is a source port using SDL.
+.Sh BUGS
+The port is still in an early stage of development and produces many debug
+messages.
+Some parts are not fully ported and the game may terminate unexpectedly,
+so better save often!
+.Pp
+There is no sound, yet.
+.Pp
+There are some graphical glitches due to missing blitters, especially
+there is no zooming blitter.
+.Pp
+It will probably not run on anything besides x86, because there are many
+assumptions made about data sizes and endianness.
+.Pp
+If you hit a yet unknown problem or want to contribute a fix please contact
+us.
+.Sh AUTHORS
+.An -nosplit
+The
+.Nm
+port was created by
+.An Christoph Mallon
+.Aq christoph.mallon@gmx.de
+and
+.An Wolf-Christian Gantert
+.Aq parias@dragonriders.de .
