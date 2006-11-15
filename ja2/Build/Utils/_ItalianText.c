@@ -3576,10 +3576,10 @@ const wchar_t* pMessageStrings[] =
 	L"Nessuna descrizione", //Save slots that don't have a description.
 	L"Partita salvata.",
 	L"Partita salvata.",
-	L"Salvataggio rapido", //The name of the quicksave file (filename, text reference)
-	L"Partita salvata",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
-	L"salv.",				//The 3 character dos extension (represents sav)
-	L"..\\Partite salvate", //The name of the directory where games are saved.
+	L"QuickSave", //The name of the quicksave file (filename, text reference)
+	L"SaveGame",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
+	L"sav",				//The 3 character dos extension (represents sav)
+	L"..\\SavedGames", //The name of the directory where games are saved.
 	L"Giorno",
 	L"Mercenari",
 	L"Slot vuoto", //An empty save game slot
