@@ -3307,8 +3307,8 @@ const wchar_t *gzGIOScreenText[] =
 	L"Ok",
 	L"Abbrechen",
 	L"Extraschwer",
-	L"Ohne Zeitlimit",
-	L"Mit Zeitlimit",
+	L"Speichern jederzeit möglich",
+	L"Iron Man",
 	L"Option nicht verfügbar",
 };
 
