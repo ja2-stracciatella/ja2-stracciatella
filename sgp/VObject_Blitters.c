@@ -641,75 +641,73 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
-	// Skip lines
-	while (TopSkip-- > 0)
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
 	{
 		for (;;)
 		{
-			UINT8 data = *SrcPtr++;
-			if (data == 0) break;
-			if (data & 0x80) continue;
-			SrcPtr += data;
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
 		}
+		TopSkip--;
 	}
 
-	for (;;)
+	do
 	{
-		UINT32 skip = LeftSkip;
-		UINT32 count;
-		UINT8 data;
-
-		for (;;)
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
 		{
-			data = *SrcPtr++;
-			if (data & 0x80)
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
 			{
-				data &= 0x7F;
-				if (skip > data)
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
 				{
-					data -= skip;
-				}
-				else
-				{
-					DestPtr += 2 * (data - skip);
-					break;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
 				}
 			}
 			else
 			{
-				if (skip >= data)
+				if (PxCount > LSCount)
 				{
-					SrcPtr += data;
-					skip -= data;
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
 				}
-				else
-				{
-					SrcPtr += skip;
-					data -= skip;
-					count = BlitLength;
-					goto blit_pixels;
-					break;
-				}
+				SrcPtr += PxCount;
 			}
 		}
 
-		for (;;)
+		LSCount = BlitLength;
+		while (LSCount > 0)
 		{
-			count = BlitLength;
-			data = *SrcPtr++;
-			if (data == 0) goto next_line;
-			if (data & 0x80)
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
 			{
-				data &= 0x7F;
-				DestPtr += 2 * data;
-				if (count <= data) break;
-				count -= data;
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
 			}
 			else
 			{
-				UINT32 n;
-blit_pixels:
-				n = (count > data ? data : count);
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
 
 				do
 				{
@@ -721,36 +719,15 @@ blit_pixels:
 					}
 					DestPtr += 2;
 				}
-				while (--n > 0);
-
-				if (count <= data)
-				{
-					SrcPtr  += data - count;
-					DestPtr += 2 * (data - count);
-					break;
-				}
+				while (--PxCount > 0);
+				SrcPtr += Unblitted;
 			}
 		}
 
-		for (;;)
-		{
-			data = *SrcPtr++;
-			if (data == 0) break;
-			if (data & 0x80)
-			{
-				data &= 0x7F;
-			}
-			else
-			{
-				SrcPtr += data;
-			}
-			DestPtr += 2 * data;
-		}
-
-next_line:
-		if (--BlitHeight == 0) break;
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
 		DestPtr += LineSkip;
 	}
+	while (--BlitHeight > 0);
 #else
 	__asm {
 
