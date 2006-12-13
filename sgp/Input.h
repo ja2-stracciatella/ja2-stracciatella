@@ -100,8 +100,6 @@ extern void         RestoreCursorClipRect( void );
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2, UINT32 uiY2);
 
-INT16 GetMouseWheelDeltaValue( UINT32 wParam );
-
 extern void DequeueAllKeyBoardEvents();
 
 

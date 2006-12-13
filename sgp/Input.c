@@ -1657,15 +1657,3 @@ static void HandleSingleClicksAndButtonRepeats(void)
     guiRightButtonRepeatTimer = 0;
   }
 }
-
-
-INT16 GetMouseWheelDeltaValue( UINT32 wParam )
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	INT16 sDelta = HIWORD( wParam );
-
-	return( sDelta / WHEEL_DELTA );
-#endif
-}

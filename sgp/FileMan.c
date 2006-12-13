@@ -967,43 +967,6 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 }
 
 
-BOOLEAN DirectoryExists( STRING512 pcDirectory )
-{
-	BACKSLASH(pcDirectory);
-
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	UINT32	uiAttribs;
-	DWORD		uiLastError;
-
-	uiAttribs = GetFileAttributes( pcDirectory );
-
-	if ( uiAttribs == 0xFFFFFFFF )
-	{
-		// an error, make sure it's the right error
-		uiLastError =	GetLastError();
-
-		if (uiLastError != ERROR_FILE_NOT_FOUND)
-		{
-   		FastDebugMsg(String("DirectoryExists: ERROR - GetFileAttributes failed, error #%d on file %s", uiLastError, pcDirectory));
-		}
-	}
-	else
-	{
-		// something's there, make sure it's a directory
-		if ( uiAttribs & FILE_ATTRIBUTE_DIRECTORY )
-		{
-			return TRUE;
-		}
-	}
-
-	// this could also mean that the name given is that of a file, or that an error occurred
-	return FALSE;
-#endif
-}
-
-
 BOOLEAN MakeFileManDirectory(const char *pcDirectory)
 {
 	BACKSLASH(pcDirectory);

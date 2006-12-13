@@ -348,75 +348,6 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 #endif
 
 
-PTR *MemAllocLocked( UINT32 uiSize )
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	PTR	ptr;
-
-	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked: Warning -- Memory manager not initialized!!! ") );
-
-
-	ptr = VirtualAlloc( NULL, uiSize, MEM_COMMIT, PAGE_READWRITE );
-
-	if ( ptr )
-	{
-    VirtualLock( ptr, uiSize );
-
-		guiMemTotal   += uiSize;
-		guiMemAlloced += uiSize;
-		MemDebugCounter++;
-  }
-  else
-	{
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAllocLocked failed: %d bytes", uiSize) );
-	}
-
-#ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAllocLocked %p: %d bytes", ptr, uiSize) );
-#endif
-
-	return( ptr );
-#endif
-}
-
-
-void MemFreeLocked( PTR ptr, UINT32 uiSize )
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked: Warning -- Memory manager not initialized!!! ") );
-
-
-  if (ptr != NULL)
-  {
-	  VirtualUnlock( ptr, uiSize );
-	  VirtualFree( ptr, uiSize, MEM_RELEASE );
-
-		guiMemTotal -= uiSize;
-		guiMemFreed += uiSize;
-  }
-  else
-  {
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFreeLocked ERROR: NULL ptr received, size %d", uiSize) );
-  }
-
-  // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
-  // is not noticed.
-  MemDebugCounter--;
-
-#ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFreeLocked  %p", ptr) );
-#endif
-#endif
-}
-
-
 //**************************************************************************
 //
 // MemGetFree
@@ -443,35 +374,6 @@ UINT32 MemGetFree( void )
 	GlobalMemoryStatus( &ms );
 
 	return( ms.dwAvailPhys );
-#endif
-}
-
-
-//**************************************************************************
-//
-// MemGetTotalSystem
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		May98:HJH		-> Carter
-//
-//**************************************************************************
-
-UINT32 MemGetTotalSystem( void )
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
-	MEMORYSTATUS ms;
-
-	ms.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus( &ms );
-
-	return( ms.dwTotalPhys );
 #endif
 }
 

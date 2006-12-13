@@ -87,15 +87,8 @@ extern void		ShutdownMemoryManager( void );
 #endif
 
 
-
-extern PTR     *MemAllocLocked( UINT32 size );
-extern void		MemFreeLocked( PTR, UINT32 size );
-
 // get total free on the system at this moment
 extern UINT32	MemGetFree( void );
-
-// get the total on the system
-extern UINT32 MemGetTotalSystem( void );
 
 extern BOOLEAN	MemCheckPool( void );
 

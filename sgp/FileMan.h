@@ -103,7 +103,6 @@ BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory);
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
 BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
 
-BOOLEAN DirectoryExists( STRING512 pcDirectory );
 BOOLEAN MakeFileManDirectory(const char *pcDirectory);
 
 // WARNING: THESE DELETE ALL FILES IN THE DIRECTORY ( and all subdirectories if fRecursive is TRUE!! )
