@@ -1676,7 +1676,6 @@ BOOLEAN ValidItemLaunchable( OBJECTTYPE * pObj, UINT16 usAttachment )
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
 	INT32 iLoop = 0;
-	UINT16 usItem = NOTHING;
 
 	// look for the section of the array pertaining to this launchable item...
 	while( 1 )
@@ -3546,7 +3545,6 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
 {
 	// swap keys in keyring slot and keys in pocket
-	UINT8 ubNumberNotAdded = 0;
 	OBJECTTYPE	TempObj;
 
 	// create temp object to hold keys currently in key ring slot

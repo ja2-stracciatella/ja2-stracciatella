@@ -1212,7 +1212,6 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime )
 {
 	INT32			iLoop;
-	BOOLEAN		fFoundTime = FALSE;
 
 	*puiTime = 100000;
 

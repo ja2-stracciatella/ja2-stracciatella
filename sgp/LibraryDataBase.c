@@ -202,12 +202,8 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 			//look on the cdrom
 			hFile = fopen(zTempPath, "rb");
-			if (hFile == NULL)
-			{
-				return FALSE;
-			}
-			else
-				FastDebugMsg( String("CD Library %s opened.", zTempPath));
+			if (hFile == NULL) return FALSE;
+			FastDebugMsg(String("CD Library %s opened.", zTempPath));
 		}
 		else
 		{

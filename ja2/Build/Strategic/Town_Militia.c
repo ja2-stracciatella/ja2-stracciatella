@@ -79,7 +79,6 @@ void VerifyTownTrainingIsPaidFor( void );
 
 void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY )
 {
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	UINT8 ubMilitiaTrained = 0;
 	BOOLEAN fFoundOne;
 	INT16 sNeighbourX, sNeighbourY;

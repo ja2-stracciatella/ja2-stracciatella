@@ -490,8 +490,6 @@ void GenerateMapEdgepoints()
 	INT32 i=-1;
 	INT16 sGridNo=-1;
 	INT16 sVGridNo[400];
-	UINT8 gubSaveNPCAPBudget=0;
-	UINT8 gubSaveNPCDistLimit=0;
 
 	//Get rid of the current edgepoint lists.
 	TrashMapEdgepoints();
@@ -1045,7 +1043,6 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 {
 	INT16 *psArray=NULL;
 	UINT16 usArraySize=0;
-	static INT32 randomVal=0;
 
 	//First validate and get access to the correct array based on strategic direction.
 	//We will use the selected array to choose insertion gridno's.
@@ -1269,30 +1266,22 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 		case INSERTION_CODE_NORTH:
 			psArray = gps1stNorthEdgepointArray;
 			usArraySize = gus1stNorthEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any north mapedgepoints. LC:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any north mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_EAST:
 			psArray = gps1stEastEdgepointArray;
 			usArraySize = gus1stEastEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any east mapedgepoints. LC:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any east mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_SOUTH:
 			psArray = gps1stSouthEdgepointArray;
 			usArraySize = gus1stSouthEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any south mapedgepoints. LC:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any south mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_WEST:
 			psArray = gps1stWestEdgepointArray;
 			usArraySize = gus1stWestEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any west mapedgepoints. LC:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any west mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 	}
 	if( !usArraySize )
@@ -1396,30 +1385,22 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 		case INSERTION_CODE_NORTH:
 			psArray = gps2ndNorthEdgepointArray;
 			usArraySize = gus2ndNorthEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_EAST:
 			psArray = gps2ndEastEdgepointArray;
 			usArraySize = gus2ndEastEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_SOUTH:
 			psArray = gps2ndSouthEdgepointArray;
 			usArraySize = gus2ndSouthEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 		case INSERTION_CODE_WEST:
 			psArray = gps2ndWestEdgepointArray;
 			usArraySize = gus2ndWestEdgepointArraySize;
-			if( !usArraySize )
-				AssertMsg( 0, String( "Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1",
-									 gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
+			AssertMsg(usArraySize != 0, String("Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			break;
 	}
 	if( !usArraySize )

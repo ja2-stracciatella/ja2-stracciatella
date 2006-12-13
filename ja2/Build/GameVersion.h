@@ -24,7 +24,7 @@ extern	wchar_t		zTrackingNumber[16];
 //	you will invalidate the saved game file
 //
 
-const extern	UINT32	guiSavedGameVersion;
+extern const UINT32 guiSavedGameVersion;
 
 #ifdef __cplusplus
 }

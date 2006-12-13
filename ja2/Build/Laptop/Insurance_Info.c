@@ -188,7 +188,6 @@ void HandleInsuranceInfo()
 void RenderInsuranceInfo()
 {
 	wchar_t		sText[800];
-	UINT16 usNewLineOffset = 0;
 	UINT16		usPosX;
 
 	DisableArrowButtonsIfOnLastOrFirstPage();

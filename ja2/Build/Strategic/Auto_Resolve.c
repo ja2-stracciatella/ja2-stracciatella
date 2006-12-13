@@ -1495,10 +1495,7 @@ void RenderAutoResolve()
 	INT32 i;
 	HVSURFACE hVSurface;
 	INT32 xp, yp;
-	SOLDIERCELL *pCell = NULL;
-	INT32 index = 0;
 	wchar_t str[100];
-	UINT8 bTownId = 0;
 	UINT8 ubGood, ubBad;
 
 	if( gpAR->fExpanding )
@@ -3237,7 +3234,6 @@ UINT8 GetUnusedMercProfileID()
 void CreateTempPlayerMerc()
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	static INT32       iSoldierCount=0;
 	UINT8							ubID;
 
 	//Init the merc create structure with basic information

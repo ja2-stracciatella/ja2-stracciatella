@@ -458,8 +458,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 
 
 	gpRevealedMap = MemAlloc( NUM_REVEALED_BYTES );
-	if( gpRevealedMap == NULL )
-		AssertMsg( 0, "Failed allocating memory for the revealed map" );
+	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
 
 	//Loop though all the map elements
@@ -653,8 +652,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 	//Allocate memory
 	Assert( gpRevealedMap == NULL );
 	gpRevealedMap = MemAlloc( NUM_REVEALED_BYTES );
-	if( gpRevealedMap == NULL )
-		AssertMsg( 0, "Failed allocating memory for the revealed map" );
+	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
 
 
@@ -699,9 +697,7 @@ void SetMapRevealedStatus()
 	UINT8		ubBitCnt;
 	UINT16	usMapIndex;
 
-	if( gpRevealedMap == NULL )
-		AssertMsg( 0, "gpRevealedMap is NULL.  DF 1" );
-
+	AssertMsg(gpRevealedMap != NULL, "gpRevealedMap is NULL.  DF 1");
 
 	ClearSlantRoofs( );
 
@@ -738,7 +734,6 @@ void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 	INT8			bLevel;
 	UINT8			ubWallOrientation;
 	UINT8			ubBitToSet = 0x80;
-	UINT8			ubHitPoints=0;
 	UINT8			ubType=0;
 
 
@@ -1098,7 +1093,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	UINT32	uiNumBytesWritten;
 	UINT32	uiFileSize;
 	UINT32	uiNumberOfElements;
-	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
 	MODIFY_MAP *pTempArrayOfMaps=NULL;

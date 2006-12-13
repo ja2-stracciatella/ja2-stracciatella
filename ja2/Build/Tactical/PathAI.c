@@ -403,7 +403,6 @@ static UINT32 guiPlottedPath[256];
 UINT32 guiPathingData[256];
 static INT32 giPathDataSize;
 static INT32 giPlotCnt;
-static UINT32 guiEndPlotGridNo;
 
 static INT32 dirDelta[8]=
 {

@@ -365,8 +365,7 @@ UINT32 InitScreenHandle(void)
 		strcpy( vs_desc.ImageFile, "ja2_logo.STI" );
 
 		hVSurface = CreateVideoSurface( &vs_desc );
-		if( !hVSurface )
-			AssertMsg( 0, "Failed to load ja2_logo.sti!" );
+		AssertMsg(hVSurface != NULL, "Failed to load ja2_logo.sti!");
 
 		//BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, VS_BLT_FAST, NULL );
 		ubCurrentScreen = 1;

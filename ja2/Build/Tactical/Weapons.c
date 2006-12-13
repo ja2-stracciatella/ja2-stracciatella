@@ -1667,7 +1667,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32		uiHitChance, uiDiceRoll;
-	INT16			sAPCost = 0;
 	INT8			bLoop;
 	UINT8			ubTargetID;
 	SOLDIERTYPE	*	pTargetSoldier;

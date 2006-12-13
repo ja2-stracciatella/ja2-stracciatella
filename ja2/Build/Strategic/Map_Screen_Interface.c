@@ -2702,7 +2702,6 @@ void DisplayUserDefineHelpTextRegions( FASTHELPREGION *pRegion )
 {
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
-	INT32 iNumberOfLines = 1;
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
@@ -3059,7 +3058,7 @@ void DeselectSquadForMovement( INT32 iSquadNumber )
 
 BOOLEAN AllSoldiersInSquadSelected( INT32 iSquadNumber )
 {
-	INT32 iCounter = 0, iCount = 0;
+	INT32 iCounter = 0;
 
 	// is everyone on this squad moving?
 	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
@@ -4695,10 +4694,6 @@ void DisplaySoldierUpdateBox( )
 	HVOBJECT hBackGroundHandle;
 	INT32 iCounter = 0;
 	CHAR16 sString[ 32 ];
-	INT16 sX = 0, sY = 0;
-	INT32 iHeightOfString = 0;
-	INT32 iCounterB = 0;
-	INT32 iOrigNumberHigh = 0, iOrigY = 0;
 	INT32 iUpperLimit = 0;
 
 
@@ -5658,7 +5653,6 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 
 BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber )
 {
-	BOOLEAN fCanMove = TRUE;
 	INT16 sSector = 0;
 	BOOLEAN fProblemExists = FALSE;
 

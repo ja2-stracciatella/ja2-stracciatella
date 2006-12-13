@@ -842,7 +842,6 @@ void RebuildCurrentSquad( void )
 {
 	// rebuilds current squad to reset faces in tactical
 	INT32 iCounter = 0;
-	INT32 iCount = 0;
 	SOLDIERTYPE *pDeadSoldier = NULL;
 
 	// check if valid value passed
@@ -1541,7 +1540,6 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 {
 	SOLDIERTYPE *pSoldier;
 	INT8 bCounter = 0;
-	INT8 bSquadCount = 0;
 
 	if( bSquadValue == NO_CURRENT_SQUAD )
 	{

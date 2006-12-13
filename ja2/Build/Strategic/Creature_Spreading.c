@@ -1177,7 +1177,6 @@ BOOLEAN PrepareCreaturesForBattle()
 	UINT8 ubNumYoungFemales = 0;
 	UINT8 ubNumAdultMales = 0;
 	UINT8 ubNumAdultFemales = 0;
-	UINT8 ubPercentage = 0;
 	UINT8 ubNumCreatures;
 
 	if( !gubCreatureBattleCode )
@@ -1512,7 +1511,6 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 	INT32 i;
 	INT16 sSectorX, sSectorY;
 	INT8 bSectorZ;
-	BOOLEAN fPlayerInSector = FALSE;
 
 	if( giLairID <= 0 )
 	{ //Creature quest inactive

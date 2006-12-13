@@ -1943,8 +1943,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	//Allocate space for the door status array
 	gpDoorStatus = MemAlloc( sizeof( DOOR_STATUS ) * gubNumDoorStatus );
-	if( gpDoorStatus == NULL )
-		AssertMsg( 0, "Error Allocating memory for the gpDoorStatus" );
+	AssertMsg(gpDoorStatus != NULL , "Error Allocating memory for the gpDoorStatus");
 	memset( gpDoorStatus, 0, sizeof( DOOR_STATUS ) * gubNumDoorStatus );
 
 

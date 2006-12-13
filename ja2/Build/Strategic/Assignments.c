@@ -117,9 +117,9 @@ typedef struct REPAIR_PASS_SLOTS_TYPE
 
 REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
 {					// pass					# choices												slots repaired in this pass
-	{ /* hands and armor */			5,	HANDPOS, SECONDHANDPOS, VESTPOS, HELMETPOS, LEGPOS, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* headgear */						2,	HEAD1POS, HEAD2POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-	{ /* pockets */						 12,	BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS },
+	{ /* hands and armor */  5, { HANDPOS, SECONDHANDPOS, VESTPOS, HELMETPOS, LEGPOS, -1, -1, -1, -1, -1, -1, -1 } },
+	{ /* headgear */         2, { HEAD1POS, HEAD2POS, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 } },
+	{ /* pockets */         12, { BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS } }
 };
 
 extern STR16 sRepairsDoneString[];
@@ -926,9 +926,6 @@ BOOLEAN CanCharacterRepairButDoesntHaveARepairkit( SOLDIERTYPE *pSoldier )
 // check that character is alive, oklife, has repair skill, and equipment, etc.
 BOOLEAN CanCharacterRepair( SOLDIERTYPE *pSoldier )
 {
-	INT8 bPocket = 0;
-	BOOLEAN fToolKitFound = FALSE;
-
 	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
 	{
 		return( FALSE );
@@ -1556,9 +1553,6 @@ BOOLEAN CanCharacterPractise( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 {
-	INT32 cnt = 0;
-	SOLDIERTYPE *pTeamSoldier = NULL;
-
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
 	{
@@ -1579,8 +1573,6 @@ BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CanCharacterBeTrainedByOther( SOLDIERTYPE *pSoldier )
 {
-	INT32 iCounter = 0;
-
 	// can character train at all
 	if( CanCharacterPractise( pSoldier ) == FALSE )
 	{
@@ -2053,7 +2045,6 @@ UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment )
 	// run thought list of characters find number with this assignment
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
-	INT32 iCounter=0;
 	INT8 bNumberOfPeople = 0;
 
 	// set psoldier as first in merc ptrs
@@ -2280,7 +2271,6 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
-	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];
@@ -2533,8 +2523,6 @@ BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient )
 
 BOOLEAN CanSoldierBeHealedByDoctor( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck )
 {
-	INT16 sDistance = 0;
-
 	// must be an active guy
 	if (pSoldier -> bActive == FALSE)
 	{
@@ -2876,7 +2864,6 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
-	INT32 iCounter=0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];
@@ -3153,8 +3140,6 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 {
 	UINT16 usMax=0;
 	UINT8 ubRepairPtsLeft =0;
-	UINT8 ubItemsInPocket = 0;
-	UINT8 ubObjectInPocketCounter = 0;
 	UINT8 ubInitialRepairPts = 0;
 	UINT8 ubRepairPtsUsed = 0;
 	INT8 bPocket =0;
@@ -4118,8 +4103,6 @@ BOOLEAN TrainTownInSector( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY, INT1
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 	UINT8 ubTownId = 0;
-	INT16 sCnt = 0;
-	INT8 bChance = 0;
 	BOOLEAN fSamSiteInSector = FALSE;
 
 
@@ -4375,8 +4358,6 @@ void HandleNaturalHealing( void )
 {
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
-	INT32 iCounter=0;
-	INT8 bNumberOfPeople = 0;
 
 	// set psoldier as first in merc ptrs
 	pSoldier = MercPtrs[0];
@@ -5501,8 +5482,6 @@ void MakeSureToolKitIsInHand( SOLDIERTYPE *pSoldier )
 BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 {
 	INT8 bPocket = 0;
-	BOOLEAN fFoundOne = FALSE;
-
 
 	fTeamPanelDirty = TRUE;
 
@@ -10008,8 +9987,6 @@ BOOLEAN HandleShowingOfMovementBox( void )
 void HandleShadingOfLinesForTrainingMenu( void )
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iCounter = 0;
-
 
 	// check if valid
 	if( ( fShowTrainingMenu == FALSE ) || ( ghTrainingBox == - 1 ) )
@@ -10137,7 +10114,6 @@ void HandleShadingOfLinesForAttributeMenus( void )
 
 void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSoldier )
 {
-	INT16 sSectorX  = 0, sSectorY = 0;
 	INT32 iNumberOnTeam = 0, iCounter = 0;
 	SOLDIERTYPE *pCurSoldier = NULL;
 
@@ -10167,8 +10143,6 @@ void ReportTrainersTraineesWithoutPartners( void )
 {
 	SOLDIERTYPE *pTeamSoldier = NULL;
 	INT32 iCounter = 0, iNumberOnTeam = 0;
-	BOOLEAN fFound =FALSE;
-
 
 	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
@@ -11062,7 +11036,6 @@ BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound( SOLDIERTYPE *pTargetS
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
-	BOOLEAN fFound = FALSE;
 	INT16 sTrainingPts = 0;
 	BOOLEAN fAtGunRange = FALSE;
 	UINT16 usMaxPts;

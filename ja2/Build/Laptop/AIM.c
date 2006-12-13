@@ -835,7 +835,6 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 {
 	static UINT32 uiLastTime;
-	static UINT8	ubSubImage=0;
 	UINT32 uiCurTime = GetJA2Clock();
 
 
@@ -1207,7 +1206,6 @@ UINT8 GetNextAimAd( UINT8 ubCurrentAd )
 {
 	UINT8 ubNextAd;
 	UINT32	uiDay = GetWorldDay();
-	BOOLEAN	fSkip=FALSE;
 
 	if( ubCurrentAd == AIM_AD_WARNING_BOX )
 	{

@@ -159,7 +159,6 @@ void FindPanicBombsAndTriggers( void )
 	OBJECTTYPE *		pObj;
 	STRUCTURE *			pSwitch;
 	INT16						sGridNo = NOWHERE;
-	BOOLEAN					fPanicTriggerIsAlarm = FALSE;
 	INT8						bPanicIndex;
 
 	for (uiBombIndex = 0; uiBombIndex < guiNumWorldBombs; uiBombIndex++)
@@ -387,7 +386,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 	// Start loading itmes...
 
 	UINT32			i;
-	UINT32			uiLevelItems = 0;
 	WORLDITEM		dummyItem;
 	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;

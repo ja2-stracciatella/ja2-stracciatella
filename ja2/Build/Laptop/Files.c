@@ -151,7 +151,6 @@ void OpenAndReadFilesFile( void );
 BOOLEAN OpenAndWriteFilesFile( void );
 void ClearFilesList( void );
 void DrawFilesTitleText( void );
-void DrawFilesListBackGround( void );
 void DisplayFilesList( void );
 BOOLEAN OpenAndWriteFilesFile( void );
 void DisplayFileMessage( void );
@@ -300,9 +299,6 @@ void RenderFiles()
 	// draw the title bars text
   DrawFilesTitleText( );
 
-	// the columns
-  DrawFilesListBackGround( );
-
 	// display the list of senders
   DisplayFilesList( );
 
@@ -324,7 +320,6 @@ void RenderFilesBackGround( void )
 {
 	// render generic background for file system
   HVOBJECT hHandle;
-  INT32 iCounter=0;
 
 	// get title bar object
 	GetVideoObject(&hHandle, guiTITLE);
@@ -564,7 +559,6 @@ BOOLEAN OpenAndWriteFilesFile( void )
 {
   // this procedure will open and write out data from the finance list
   HWFILE hFileHandle;
-  INT32 iBytesWritten=0;
   FilesUnitPtr pFilesList=pFilesListHead;
 	CHAR8 pFirstFilePath[128];
   CHAR8 pSecondFilePath[128];
@@ -646,20 +640,6 @@ void ClearFilesList( void )
 	}
   pFilesListHead=NULL;
 	return;
-}
-
-void DrawFilesListBackGround( void )
-{
-	// proceudre will draw the background for the list of files
-  INT32 iCounter=7;
- // HVOBJECT hHandle;
-
-	// now the columns
-
-
-
-	return;
-
 }
 
 
@@ -790,7 +770,6 @@ BOOLEAN DisplayFormattedText( void )
 	UINT16 usFirstHeight = 0;
   UINT16 usSecondWidth;
 	UINT16 usSecondHeight;
-	INT16 sTextWidth = 0;
 	INT32 iCounter=0;
   INT32 iLength=0;
 	INT32 iHeight=0;
@@ -802,7 +781,6 @@ BOOLEAN DisplayFormattedText( void )
 	UINT32 uiSecondTempPicture;
   VOBJECT_DESC    VObjectDesc;
   INT16 usFreeSpace = 0;
-	static INT32 iOldMessageCode = 0;
 
 	fWaitAFrame = FALSE;
 
@@ -1110,7 +1088,6 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
   wchar_t sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
-	INT32 iTotalYPosition = 0;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
@@ -1682,7 +1659,6 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
   wchar_t sString[2048];
 	FileStringPtr pTempString = NULL ;
 	FileStringPtr pLocatorString = NULL;
-	INT32 iTotalYPosition = 0;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;

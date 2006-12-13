@@ -862,9 +862,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
 	UINT32	uiLoop;
-	UINT16	closestConscious = NOWHERE,closestUnconscious = NOWHERE;
 	INT32		iShortestPath = 1000;
-	INT32		iShortestPathConscious = 1000,iShortestPathUnconscious = 1000;
 	UINT8		*pubNoiseVolume;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;

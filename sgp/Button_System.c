@@ -1196,8 +1196,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT32 Type, INT
 {
 	INT32 ButPic,ButNum;
 
-	if( !filename || !strlen(filename) )
-		AssertMsg( 0, "Attempting to CreateSimpleButton with null filename." );
+	AssertMsg(filename != NULL && strlen(filename) != 0, "Attempting to CreateSimpleButton with null filename.");
 
 	if( ( ButPic = LoadButtonImage( filename, -1, 1, 2, 3, 4 ) ) == -1)
 	{
@@ -2522,7 +2521,7 @@ static void DrawTextOnButton(const GUI_BUTTON *b)
 static void DrawGenericButton(const GUI_BUTTON *b)
 {
 	INT32 NumChunksWide,NumChunksHigh,cx,cy,width,height,hremain,wremain;
-	INT32 q,ImgNum,ox,oy;
+	INT32 q, ImgNum;
 	INT32 iBorderHeight, iBorderWidth;
 	HVOBJECT BPic;
 	UINT32			uiDestPitchBYTES;

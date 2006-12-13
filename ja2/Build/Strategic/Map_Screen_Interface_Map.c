@@ -2148,10 +2148,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 
 BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath )
 {
- PathStPtr pCurrentNode=NULL;
  BOOLEAN fSpeedFlag=FALSE;
- BOOLEAN fUpDate=FALSE;
- INT32 iDifference=0;
  INT32 iArrow=-1;
  INT32 iX, iY;
  INT16 sX, sY;
@@ -2159,12 +2156,9 @@ BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath
  INT32 iDeltaA, iDeltaB, iDeltaB1;
  INT32 iDirection = 0;
  BOOLEAN fUTurnFlag=FALSE;
- BOOLEAN fNextNode=FALSE;
- PathStPtr pTempNode=NULL;
  PathStPtr pNode=NULL;
  PathStPtr pPastNode=NULL;
  PathStPtr pNextNode=NULL;
- UINT ubCounter = 1;
  HVOBJECT hMapHandle;
 
 
@@ -2951,14 +2945,12 @@ void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY,
 BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate )
 {
  static PathStPtr pCurrentNode=NULL;
- static INT8 bCurrentChar=-1;
  static BOOLEAN fUpDateFlag=FALSE;
  static BOOLEAN fPauseFlag=TRUE;
  static UINT8 ubCounter=1;
 
  HVOBJECT hMapHandle;
  BOOLEAN fSpeedFlag=FALSE;
- BOOLEAN fUpDate=FALSE;
  INT32 iDifference=0;
  INT32 iArrow=-1;
  INT32 iX = 0, iY = 0;
@@ -7036,8 +7028,6 @@ BOOLEAN CanRedistributeMilitiaInSector( INT16 sClickedSectorX, INT16 sClickedSec
 	INT32 iCounter = 0;
 	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
-	INT32 iTotalTroopsInTown = 0;
-
 
 	// if no world is loaded, we can't be in combat (PBI/Auto-resolve locks out normal mapscreen interface for this)
 	if( !gfWorldLoaded )

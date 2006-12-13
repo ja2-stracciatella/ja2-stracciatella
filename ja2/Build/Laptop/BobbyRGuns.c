@@ -600,7 +600,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	UINT16	i;
 	UINT8		ubCount=0;
 	UINT16	PosY, usTextPosY;
-	UINT16		ubFirstIndex=0;
 	UINT16	usItemIndex;
 	wchar_t	sDollarTemp[60];
 	wchar_t	sTemp[60];
@@ -784,7 +783,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -821,7 +819,6 @@ BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 
 BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -848,7 +845,6 @@ BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed
 BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -910,7 +906,6 @@ BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
 BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -933,7 +928,6 @@ BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT
 BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
-	UINT32	uiStartLoc=0;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -1216,7 +1210,6 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 	UINT16 i;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
-	UINT8	ubPages=0;
 	UINT8	ubNumItems=0;
 
 	gubCurPage = 0;
@@ -1259,7 +1252,6 @@ void SetFirstLastPagesForUsed()
 	UINT16 i;
 	INT16	sFirst = -1;
 	INT16	sLast = -1;
-	UINT8	ubPages=0;
 	UINT8	ubNumItems=0;
 
 	gubCurPage = 0;

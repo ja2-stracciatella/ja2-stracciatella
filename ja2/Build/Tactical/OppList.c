@@ -4844,7 +4844,6 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 
 void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
 {
-	INT8 bSendNoise = FALSE;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -6559,7 +6558,6 @@ static BOOLEAN ArmyKnowsOfPlayersPresence(void)
 
 BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
 {
-	BOOLEAN					fSeesCreature = FALSE;
 	UINT8						ubID;
 
 	if (pSoldier->bOppCnt > 0)

@@ -819,7 +819,6 @@ INT32 EnterLaptop()
   VOBJECT_DESC    VObjectDesc;
   INT32 iCounter=0;
 
-	static BOOLEAN fEnteredFromGameStartup = TRUE;
 	// we are re entering due to message box, leave NOW!
 	if( fExitDueToMessageBox  == TRUE )
 	{
@@ -2853,7 +2852,6 @@ void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2872,7 +2870,6 @@ void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2897,7 +2894,6 @@ void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2915,7 +2911,6 @@ void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2936,7 +2931,6 @@ void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2954,7 +2948,6 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-	INT32 iDifference=0;
   HVOBJECT hLapTopIconHandle;
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -3626,8 +3619,6 @@ BOOLEAN DisplayLoadPending( void )
 	HVOBJECT hLapTopIconHandle;
   INT32 iLoadTime;
 	INT32 iUnitTime;
-  UINT32 uiTempLaptopMode = 0;
-  UINT32 uiTempWWWMode = 0;
 	INT16 sXPosition = 0, sYPosition = 0;
 
 	// if merc webpage, make it longer
@@ -6104,8 +6095,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 	//if there is memory allocated for life insurance payouts
 	if( LaptopSaveInfo.ubNumberLifeInsurancePayouts )
 	{
-		if( !LaptopSaveInfo.pLifeInsurancePayouts )
-			Assert( 0 );	//Should never happen
+		Assert(LaptopSaveInfo.pLifeInsurancePayouts != NULL); //Should never happen
 
 		//Free the memory
 		MemFree( LaptopSaveInfo.pLifeInsurancePayouts );

@@ -238,8 +238,7 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 		pSoldier->ubDesiredSquadAssignment = curr->pSoldier->ubDesiredSquadAssignment;
 		while( curr->next )
 		{
-			if( curr->ubProfileID == pSoldier->ubProfile )
-				AssertMsg( 0, String( "Attempting to add an already existing merc to group (ubProfile=%d).", pSoldier->ubProfile ) );
+			AssertMsg(curr->ubProfileID != pSoldier->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", pSoldier->ubProfile));
 			curr = curr->next;
 		}
 		curr->next = pPlayer;
@@ -986,7 +985,6 @@ BOOLEAN CheckConditionsForBattle( GROUP *pGroup )
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fBattlePending = FALSE;
-	BOOLEAN fPossibleQueuedBattle = FALSE;
 	BOOLEAN fAliveMerc = FALSE;
 	BOOLEAN fMilitiaPresent = FALSE;
 	BOOLEAN fCombatAbleMerc = FALSE;
@@ -1296,7 +1294,7 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversals )
 {
 	GROUP *curr = NULL;
-	SOLDIERTYPE *pSoldier = NULL, *pCharacter = NULL;
+	SOLDIERTYPE* pSoldier = NULL;
 	PLAYERGROUP *pPlayer = NULL;
 	BOOLEAN fSuccess = FALSE;
 	#ifdef JA2BETAVERSION
@@ -1577,7 +1575,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 	BOOLEAN fExceptionQueue = FALSE;
 	BOOLEAN fFirstTimeInSector = FALSE;
 	BOOLEAN fGroupDestroyed = FALSE;
-	BOOLEAN fVehicleStranded = FALSE;
 
 	// reset
 	gfWaitingForInput = FALSE;
@@ -2345,8 +2342,7 @@ void InitiateGroupMovementToNextSector( GROUP *pGroup )
 		AssertMsg( 0, String("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
 			pGroup->ubSectorX, pGroup->ubSectorY, wp->x, wp->y ) );
 	}
-	if( !dx && !dy ) //Can't move to position currently at!
-		AssertMsg( 0, String("Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y ) );
+	AssertMsg(dx != 0 || dy != 0, String("Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y));
 	//Clip dx/dy value so that the move is for only one sector.
 	if( dx >= 1 )
 	{
@@ -2755,8 +2751,6 @@ INT32 CalculateTravelTimeOfGroup( GROUP *pGroup )
 	UINT32 uiEtaTime = 0;
 	WAYPOINT *pNode = NULL;
 	WAYPOINT pCurrent, pDest;
-	INT8 ubCurrentSector = 0;
-
 
 	// check if valid group
 	if( pGroup == NULL )
@@ -3239,7 +3233,6 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	INT16 sBattleSector = -1;
 	BOOLEAN fMayRetreatFromBattle = FALSE;
 	BOOLEAN fRetreatingFromBattle = FALSE;
-	BOOLEAN fHandleRetreats = FALSE;
 	BOOLEAN fHelicopterGroup = FALSE;
 	UINT8 ubMercsInGroup = 0;
 
@@ -3724,7 +3717,6 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 
 BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 {
-	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
 	PLAYERGROUP		*pHead=NULL;
 	UINT32	uiNumberOfNodes=0;

@@ -137,10 +137,10 @@ typedef struct
 
 CONTITION_FOR_MERC_AVAILABLE gConditionsForMercAvailability[ NUM_MERC_ARRIVALS ] =
 {
-	 5000, 8,  6,	//BUBBA
-	10000, 15, 7,	//Larry
-	15000, 20, 9,	//Numb
-	20000, 25, 10,	//Cougar
+	{  5000,  8,  6 }, // BUBBA
+	{ 10000, 15,  7 }, // Larry
+	{ 15000, 20,  9 }, // Numb
+	{ 20000, 25, 10 }  // Cougar
 };
 
 
@@ -1525,7 +1525,6 @@ void CheatToGetAll5Merc()
 BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
-	UINT8	ubRandom=0;
 	UINT8	ubCnt;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
 	BOOLEAN fCanUseIdleTag = FALSE;

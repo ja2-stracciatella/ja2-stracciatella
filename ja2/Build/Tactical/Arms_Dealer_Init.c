@@ -712,9 +712,6 @@ void GuaranteeAtLeastOneItemOfType( UINT8 ubArmsDealer, UINT32 uiDealerItemType 
 {
 	UINT16 usItemIndex;
 	UINT8 ubChance;
-	BOOLEAN fFoundEligibleItemOfSameType = FALSE;
-	BOOLEAN fItemHasBeenAdded = FALSE;
-	BOOLEAN fFailedOnce = FALSE;
 	UINT16	usAvailableItem[ MAXITEMS ] = { NOTHING };
 	UINT8		ubChanceForAvailableItem[ MAXITEMS ] = { 0 };
 	UINT32	uiTotalChances = 0;

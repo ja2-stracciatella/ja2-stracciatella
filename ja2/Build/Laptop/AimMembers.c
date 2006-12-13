@@ -1060,7 +1060,6 @@ void SelectFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN	UpdateMercInfo(void)
 {
-	UINT16					PosY = 300;
   wchar_t					MercInfoString[ SIZE_MERC_BIO_INFO ];
   wchar_t					AdditionalInfoString[ SIZE_MERC_BIO_INFO ];
 
@@ -1786,7 +1785,6 @@ BOOLEAN DisplayVideoConferencingDisplay()
 BOOLEAN DisplayMercsVideoFace()
 {
   HVOBJECT	hTerminalHandle;
-	const char *sFaceLoc = "FACES\\";
 
 	// Get and Blt Terminal Frame
 	GetVideoObject(&hTerminalHandle, guiVideoConfTerminal);

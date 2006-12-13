@@ -450,7 +450,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	BOOLEAN	fTrapFound = FALSE;
 	BOOLEAN	fDoAction = TRUE;
 	BOOLEAN	fDoor     = FALSE;
-	INT8		bItemIn		= FALSE;
 
 	// Are we a door?
 	if (pStructure->fFlags & STRUCTURE_ANYDOOR)

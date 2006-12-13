@@ -6557,7 +6557,6 @@ BOOLEAN CheckForLosingEndOfBattle( )
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	INT8				bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
 	BOOLEAN			fMadeCorpse;
 	BOOLEAN			fDoCapture = FALSE;
@@ -6725,7 +6724,6 @@ BOOLEAN KillIncompacitatedEnemyInSector( )
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
-	UINT8				ubNumEnemies = 0;
 	BOOLEAN			fReturnVal = FALSE;
 
 	// Check if the battle is won!

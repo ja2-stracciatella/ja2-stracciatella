@@ -1029,7 +1029,6 @@ void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound )
 {
 	static UINT32	uiOptionToggleSound = NO_SAMPLE;
-	UINT32	uiSideToPlaySoundOn = MIDDLEPAN;
 //	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
 
 	if( fState )
@@ -1195,7 +1194,6 @@ void HandleSliderBarMovementSounds()
 {
 	static UINT32	uiLastSoundFxTime=0;
 	static UINT32	uiLastSpeechTime=0;
-	UINT32	uiCurTime = GetJA2Clock();
 	static UINT32	uiLastPlayingSoundID = NO_SAMPLE;
 	static UINT32	uiLastPlayingSpeechID = NO_SAMPLE;
 

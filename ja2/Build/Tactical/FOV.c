@@ -296,7 +296,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  INT32 Inc[6],Dir[6];
  INT8	itemVisible = FALSE;
  INT8 Blocking,twoMoreTiles,markerDir;
- INT8 nextDir=0,AlreadySawItem=FALSE;
+	INT8 nextDir = 0;
  UINT8 who; //,itemIndex; // for each square checked
  UINT8 dir,range,Path2;
  UINT8	ubRoomNo;

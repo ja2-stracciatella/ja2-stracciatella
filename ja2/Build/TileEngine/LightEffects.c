@@ -424,7 +424,6 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );

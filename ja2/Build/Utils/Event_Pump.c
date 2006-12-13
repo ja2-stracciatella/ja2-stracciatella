@@ -310,7 +310,6 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute )
 {
 	EVENT					*pEvent;
-	BOOLEAN				fCompleteLoop = FALSE;
 
 	// Dequeue all events on the demand queue (only)
 

@@ -772,7 +772,6 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldie
 	INT16 *psStatGainPtr = NULL;
 	INT8 *pbStatPtr = NULL;
 	INT8 *pbSoldierStatPtr = NULL;
-	INT8 *pbStatDeltaPtr = NULL;
 	INT8 bMinStatValue;
 	INT8 bMaxStatValue;
 	UINT16 usSubpointsPerPoint;

@@ -114,7 +114,6 @@ static UINT32        guiOldScreen;
 static NPC_SAVE_INFO gNPCSaveData[MAX_MEANWHILE_PROFILES];
 static UINT32        guiNumNPCSaves = 0;
 static BOOLEAN       gfReloadingScreenFromMeanwhile = FALSE;
-static INT16         gsOldCurInterfacePanel = 0;
 static BOOLEAN       gfWorldWasLoaded = FALSE;
 static UINT8         ubCurrentMeanWhileId = 0;
 
@@ -429,7 +428,6 @@ static void DoneFadeOutMeanwhile(void);
 static void StartMeanwhile(void)
 {
 	INT32 iIndex;
-	INT8	bNumDone = 0;
 
 	// OK, save old position...
 	if ( gfWorldLoaded )
@@ -1105,7 +1103,6 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( FLOWERS ) )
@@ -1140,7 +1137,6 @@ void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( OUTSKIRTS_MEDUNA ) )
@@ -1165,7 +1161,6 @@ void HandleKillChopperMeanwhileScene( void )
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( KILL_CHOPPER ) )
@@ -1190,7 +1185,6 @@ void HandleScientistAWOLMeanwhileScene( void )
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( AWOL_SCIENTIST ) )
@@ -1215,7 +1209,6 @@ void HandleInterrogationMeanwhileScene( void )
 {
 		UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( INTERROGATION ) )

@@ -849,7 +849,6 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 	UINT32 uiOffsetSrc;
 	UINT32 uiOffsetDst;
 	UINT32 uiFinalLoc = 0;
-	BOOLEAN fTail_check=FALSE;
 
 	// check for invalid handle = 0
 	if (hList == NULL)

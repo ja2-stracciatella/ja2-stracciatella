@@ -419,8 +419,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 	//Create the 3 buttons
 	iPBButtonImage[0] = LoadButtonImage( "INTERFACE\\PreBattleButton.sti", -1, 0, -1, 1, -1 );
-	if( iPBButtonImage[ 0 ] == -1 )
-		AssertMsg( 0, "Failed to load interface\\PreBattleButton.sti" );
+	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface\\PreBattleButton.sti");
 	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButton[0] = QuickCreateButton( iPBButtonImage[0], 27, 54, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, DEFAULT_MOVE_CALLBACK, AutoResolveBattleCallback );

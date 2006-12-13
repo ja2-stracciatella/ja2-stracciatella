@@ -477,7 +477,7 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLE
 
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 {
-	INT16 sNewAP = 0, sNewBP = 0;
+	INT16 sNewAP = 0;
 	INT8	bNewBreath;
 
 
@@ -641,7 +641,6 @@ INT16 AdjustBreathPts(SOLDIERTYPE *pSold, INT16 sBPCost)
 void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 {
 	INT16 sUnusedAPs, sBreathPerAP = 0, sBreathChange, sRTBreathMod;
-	BOOLEAN	fAnimTypeFound = FALSE;
 
 	// Note to Andrew (or whomever else it may concern):
 

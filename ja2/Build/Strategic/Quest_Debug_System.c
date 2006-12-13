@@ -2926,7 +2926,6 @@ void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void InitQuestDebugTextInputBoxes()
 {
-	UINT32	uiStartLoc=0;
 	wchar_t	sTemp[ 640 ];
 //	wchar_t	sText[ 640 ];
 
@@ -3446,7 +3445,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 
 void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 {
-	static BOOLEAN	fFirstTimeIn = TRUE;
 //	static UINT32		uiLineNumber = 1;
 //	static UINT32		uiRecordNumber = 1;
 	HWFILE		hFile;
@@ -3639,7 +3637,6 @@ void IncrementActiveDropDownBox( INT16 sIncrementValue )
 INT16	IsMercInTheSector( UINT16 usMercID )
 {
 	UINT8					cnt;
-	UINT8					ubCount=0;
 
 	if( usMercID == (UINT16)-1 ) /* XXX */
 		return( FALSE );

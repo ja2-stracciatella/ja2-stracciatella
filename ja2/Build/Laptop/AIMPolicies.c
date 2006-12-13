@@ -499,7 +499,6 @@ BOOLEAN InitAimPolicyTocMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT16			usHeight;
-	UINT32			uiStartLoc=0;
 
 	if(gfInPolicyToc)
 		return(TRUE);

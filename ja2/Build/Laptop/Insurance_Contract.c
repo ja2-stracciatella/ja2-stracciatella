@@ -340,7 +340,6 @@ void RenderInsuranceContract()
 	INT16			sMercID;
 	INT16			sNextMercID;
 	UINT16		usPosX;
-	BOOLEAN		fIsThereAnyAimMercs = FALSE;
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -976,8 +975,6 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 
 void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
 {
-	INT32	iAmountOfMoneyTransfer = -1;
-
 	//passed in either 1,2,3 should be 0,1,2
 	ubFormID--;
 
@@ -1491,8 +1488,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 {
 	INT32	iAmountOfMoneyTransfer = -1;
 
-	if( pSoldier == NULL )
-		AssertMsg( 0, "Soldier pointer is NULL!" );
+	AssertMsg(pSoldier != NULL, "Soldier pointer is NULL!");
 
 	//if the user doesnt have insruance already,
 	if( !(pSoldier->usLifeInsurance ) )

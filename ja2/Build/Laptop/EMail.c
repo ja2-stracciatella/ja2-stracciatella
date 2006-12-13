@@ -611,7 +611,6 @@ void DisplayEmailHeaders( void )
 void RenderEmail( void )
 {
   HVOBJECT hHandle;
-  INT32 iCounter=0;
 
 	// get and blt the email list background
   GetVideoObject( &hHandle, guiEmailBackground );
@@ -667,8 +666,6 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
-	INT32 iPosition=0;
-	INT32 iCounter=1;
 	Email	FakeEmail;
 
 
@@ -702,9 +699,6 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
-	INT32 iPosition=0;
-	INT32 iCounter=1;
-
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
 	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
@@ -729,9 +723,6 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 	//MessagePtr pMessageList;
 	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
-	INT32 iPosition=0;
-	INT32 iCounter=1;
-
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
 	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
@@ -1093,7 +1084,6 @@ void SortMessages(INT32 iCriteria)
 	EmailPtr pB=pEmailList;
 	CHAR16 pSubjectA[256];
 	CHAR16 pSubjectB[256];
-  INT32 iId=0;
 
 	// no messages to sort?
 	if( ( pA == NULL) ||( pB == NULL ) )
@@ -1556,7 +1546,6 @@ void EmailBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
  INT32 iCount;
  PagePtr pPage=pPageList;
  INT32 iId=0;
- EmailPtr pEmail=NULL;
  if (iReason & MSYS_CALLBACK_REASON_INIT)
  {
 	return;
@@ -1752,19 +1741,13 @@ static RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, 
 INT32 DisplayEmailMessage(EmailPtr pMail)
 {
   HVOBJECT hHandle;
-	INT32 iCnt=0;
 	INT32 iHeight=0;
 	INT32 iCounter=1;
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
 	wchar_t pString[MAIL_STRING_SIZE];
 	INT32 iOffSet=0;
-	INT32 iHeightTemp=0;
-  INT32 iHeightSoFar = 0;
 	RecordPtr pTempRecord;
-	INT32 iPageSize = 0;
-  INT32 iPastHeight=0;
 	INT32 iYPositionOnPage = 0;
-	INT32 iTotalYPosition = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	BOOLEAN fDonePrintingMessage = FALSE;
 
@@ -3210,16 +3193,11 @@ BOOLEAN HandleMailSpecialMessages( UINT16 usMessageId, INT32 *iResults, EmailPtr
 void HandleIMPCharProfileResultsMessage( void)
 {
   // special case, IMP profile return
-	INT32 iTotalHeight=0;
-	INT32 iCnt=0;
 	INT32 iHeight=0;
 	INT32 iCounter=0;
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
 	wchar_t pString[MAIL_STRING_SIZE];
 	INT32 iOffSet=0;
-	INT32 iViewerY=0;
-	INT32 iHeightTemp=0;
-  INT32 iHeightSoFar = 0;
 	RecordPtr pTempRecord;
   INT32 iEndOfSection =0;
 	INT32 iRand = 0;
@@ -4518,9 +4496,6 @@ void OpenMostRecentUnreadEmail( void )
 BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 {
 	// display the indent for the display of pages to this email..along with the current page/number of pages
-
-
-  INT32 iCounter=0;
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 32 ];
 

@@ -6676,8 +6676,6 @@ void ItemPickupAll( GUI_BUTTON *btn, INT32 reason )
 
 void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 {
-	INT32 cnt = 0;
-
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
@@ -6700,8 +6698,6 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 
 void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason )
 {
-	INT32 cnt = 0;
-
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;

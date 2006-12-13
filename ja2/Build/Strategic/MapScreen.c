@@ -463,25 +463,25 @@ SGPPoint gMapSortButtons[ MAX_SORT_METHODS ]={
 // map screen's inventory panel pockets - top right corner coordinates
 INV_REGION_DESC gMapScreenInvPocketXY[] =
 {
-	204,116,			// HELMETPOS
-	204,145,			// VESTPOS
-	204,205,			// LEGPOS,
-	21,	116,			// HEAD1POS
-	21,	140,			// HEAD2POS
-	21,	194,			// HANDPOS,
-	21,	218,			// SECONDHANDPOS
-	98,	251,			// BIGPOCK1
-	98,	275,			// BIGPOCK2
-	98,	299,			// BIGPOCK3
-	98,	323,			// BIGPOCK4
-	22,	251,			// SMALLPOCK1
-	22,	275,			// SMALLPOCK2
-	22,	299,			// SMALLPOCK3
-	22,	323,			// SMALLPOCK4
-	60,	251,			// SMALLPOCK5
-	60,	275,			// SMALLPOCK6
-	60,	299,			// SMALLPOCK7
-	60,	323				// SMALLPOCK8
+	{ 204,116 }, // HELMETPOS
+	{ 204,145 }, // VESTPOS
+	{ 204,205 }, // LEGPOS,
+	{ 21,	116 }, // HEAD1POS
+	{ 21,	140 }, // HEAD2POS
+	{ 21,	194 }, // HANDPOS,
+	{ 21,	218 }, // SECONDHANDPOS
+	{ 98,	251 }, // BIGPOCK1
+	{ 98,	275 }, // BIGPOCK2
+	{ 98,	299 }, // BIGPOCK3
+	{ 98,	323 }, // BIGPOCK4
+	{ 22,	251 }, // SMALLPOCK1
+	{ 22,	275 }, // SMALLPOCK2
+	{ 22,	299 }, // SMALLPOCK3
+	{ 22,	323 }, // SMALLPOCK4
+	{ 60,	251 }, // SMALLPOCK5
+	{ 60,	275 }, // SMALLPOCK6
+	{ 60,	299 }, // SMALLPOCK7
+	{ 60,	323 }  // SMALLPOCK8
 };
 
 INV_REGION_DESC gSCamoXY =
@@ -1224,8 +1224,6 @@ void GlowFace( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
- INT16 usY = 0;
-
 
 	// not glowing right now, leave
 	if( fShowFaceHightLight == FALSE )
@@ -1283,8 +1281,6 @@ void GlowItem( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
- INT16 usY = 0;
-
 
 	// not glowing right now, leave
 	if( fShowItemHighLight == FALSE )
@@ -1345,8 +1341,6 @@ void GlowTrashCan( void )
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
- INT16 usY = 0;
-
 
 	if( fShowInventoryFlag == FALSE )
 	{
@@ -1949,7 +1943,6 @@ void DrawCharacterInfo(INT16 sCharNumber)
 	UINT16 usX, usY;
 	INT16 usMercProfileID;
 	INT32 iTimeRemaining=0;
-	INT8 bMorale =0;
 	INT32 iDailyCost = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiArrivalTime;
@@ -3013,17 +3006,10 @@ UINT32 MapScreenShutdown(void)
 UINT32 MapScreenHandle(void)
 {
 	UINT32 uiNewScreen;
-	INT32 found=FALSE;
-	UINT32 uiMins=0;
-	UINT32 uiHours=0;
-	UINT32 uiDays=0;
 	VSURFACE_DESC	vs_desc;
 	VOBJECT_DESC VObjectDesc;
 //	static BOOLEAN fSecondFrame = FALSE;
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
@@ -4497,9 +4483,6 @@ UINT32 HandleMapUI( )
 	INT16 sMapX = 0, sMapY = 0;
 	INT8 bMapZ = 0;
 	INT16 sX, sY;
-	UINT8 ubCount=0;
-	PathStPtr pNode=NULL;
-	BOOLEAN fVehicle=FALSE;
 	POINT MousePos;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
@@ -6677,8 +6660,6 @@ void BltCharInvPanel()
 	SOLDIERTYPE	*pSoldier;
 	CHAR16 sString[ 32 ];
 	UINT16 usX, usY;
-	INT32 iCounter = 0;
-
 
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
@@ -7449,8 +7430,6 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(  )
 
 void BlitBackgroundToSaveBuffer( void )
 {
-	INT8 bTempDestChar = -1;
-
 	// render map
   RenderMapRegionBackground( );
 
@@ -10735,7 +10714,6 @@ void SortListOfMercsInTeamPanel( BOOLEAN fRetainSelectedMercs )
 	INT32 iCounter = 0, iCounterA = 0;
 	INT16 sEndSectorA, sEndSectorB;
 	INT32 iExpiryTime, iExpiryTimeA;
-	BOOLEAN fEntrySelected = FALSE;
 	SOLDIERTYPE *pSelectedSoldier[ MAX_CHARACTER_COUNT ];
 	SOLDIERTYPE *pCurrentSoldier = NULL;
 	SOLDIERTYPE *pPreviousSelectedInfoChar = NULL;

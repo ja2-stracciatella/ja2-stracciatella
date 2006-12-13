@@ -255,7 +255,6 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 	UINT32 cnt;
   ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
-	LEVELNODE					*pNode = NULL;
 	BOOLEAN						fSaidItemSeenQuote = FALSE;
 
 //	STRUCTURE					*pStructure;//, *pBase;

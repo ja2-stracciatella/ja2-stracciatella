@@ -513,8 +513,7 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 	{
 		if( curr->ubID == ubField )
 		{
-			if( curr->fUserField )
-				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
+			AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
 			if( iNumber < 0 ) //negative number converts to blank string
 				swprintf( curr->szString, curr->ubMaxChars + 1, L"" );
 			else
@@ -1616,8 +1615,7 @@ void ExecuteCutCommand()
 //calls.
 void SaveAndRemoveCurrentTextInputMode()
 {
-	if( pSavedHead )
-		AssertMsg( 0, "Attempting to save text input stack head, when one already exists.");
+	AssertMsg(pSavedHead == NULL, "Attempting to save text input stack head, when one already exists.");
 	pSavedHead = gpTextInputHead;
 	pSavedColors = pColors;
 	if( pInputStack )
@@ -1634,8 +1632,7 @@ void SaveAndRemoveCurrentTextInputMode()
 
 void RestoreSavedTextInputMode()
 {
-	if( !pSavedHead )
-		AssertMsg( 0, "Attempting to restore saved text input stack head, when one doesn't exist.");
+	AssertMsg(pSavedHead != NULL, "Attempting to restore saved text input stack head, when one doesn't exist.");
   gpTextInputHead = pSavedHead;
 	pColors = pSavedColors;
 	pSavedHead = NULL;
@@ -1733,8 +1730,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	{
 		if( curr->ubID == ubField )
 		{
-			if( curr->fUserField )
-				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
+			AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID ));
 			curr->szString[0] = (usTime / 600) + 0x30;			//10 hours
 			curr->szString[1] = (usTime / 60 % 10) + 0x30;	//1 hour
 			usTime %= 60;																		//truncate the hours

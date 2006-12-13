@@ -178,7 +178,6 @@ void MercDailyUpdate()
 	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiChance;
 	INT32 iOffset = 0;
-	BOOLEAN fFoundSomeOneForMenuShowing = FALSE;
 
 	//if its the first day, leave
 	if( GetWorldDay() == 1 )

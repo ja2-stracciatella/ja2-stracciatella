@@ -184,7 +184,6 @@ void TrashUndergroundSectorInfo()
 void BuildUndergroundSectorInfoList()
 {
 	UNDERGROUND_SECTORINFO *curr;
-	SECTORINFO			   *pSector = NULL;
 
 	TrashUndergroundSectorInfo();
 

@@ -2603,7 +2603,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
 	INT16				sCenX, sCenY;
-	UINT8				sItemCount=0;
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
@@ -2685,7 +2684,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		else // UNDER REPAIR
 		{
 			UINT8		ubElement;
-			UINT32	uiTimeInMinutesToFixItem=0;
 
 			//display the length of time needed to repair the item
 			uiItemCost = 0;
@@ -3062,14 +3060,14 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 	SGPRect ClipRect;
 	static UINT8 Pattern[8][8] =
 	{
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1
+		{ 1, 0, 1, 0, 1, 0, 1, 0 },
+		{ 0, 1, 0, 1, 0, 1, 0, 1 },
+		{ 1, 0, 1, 0, 1, 0, 1, 0 },
+		{ 0, 1, 0, 1, 0, 1, 0, 1 },
+		{ 1, 0, 1, 0, 1, 0, 1, 0 },
+		{ 0, 1, 0, 1, 0, 1, 0, 1 },
+		{ 1, 0, 1, 0, 1, 0, 1, 0 },
+		{ 0, 1, 0, 1, 0, 1, 0, 1 }
 	};
 	ClipRect.iLeft = usPosX;
 	ClipRect.iRight = usPosX + usWidth;
@@ -3946,7 +3944,6 @@ void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea( )
 {
 	//for all items in the dealers items offer area
 	UINT32	uiCnt;
-	UINT32	uiTotal=0;
 	INT8		bSlotID=0;
 
 	//loop through all the slots in the shopkeeper's offer area
@@ -3977,16 +3974,14 @@ void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea( )
 			if( !RemoveItemFromArmsDealerOfferArea( (UINT8)uiCnt, FALSE ) )//ArmsDealerOfferArea[uiCnt].bSlotIdInOtherLocation
 				Assert( 0 );
 
-			if( ArmsDealerOfferArea[uiCnt].fActive )
-				Assert(0);
+			Assert(!ArmsDealerOfferArea[uiCnt].fActive);
 		}
 	}
 
 	//loop through all the slots in the shopkeeper's offer area
 	for( uiCnt=0; uiCnt<SKI_NUM_TRADING_INV_SLOTS; uiCnt++)
 	{
-		if( ArmsDealerOfferArea[uiCnt].fActive )
-			Assert(0);
+		Assert(!ArmsDealerOfferArea[uiCnt].fActive);
 	}
 
 }
@@ -5684,8 +5679,7 @@ BOOLEAN IsMoneyTheOnlyItemInThePlayersOfferArea( )
 		}
 	}
 
-	if ( fFoundMoney )
-		Assert(	CalculateHowMuchMoneyIsInPlayersOfferArea() > 0 );
+	Assert(!fFoundMoney || CalculateHowMuchMoneyIsInPlayersOfferArea() > 0);
 
 	// only return TRUE if there IS money in the POA
 	return( fFoundMoney );
@@ -6276,7 +6270,7 @@ INT16 GetNumberOfItemsInPlayerOfferArea( void )
 void HandleCheckIfEnoughOnTheTable( void )
 {
 	static INT32 iLastTime = 0;
-	INT32 iTime = 0, iDifference = 0, iRand = 0;
+	INT32 iDifference = 0, iRand = 0;
 	UINT32	uiPlayersOfferAreaValue = CalculateTotalPlayersValue();
 	UINT32	uiArmsDealersItemsCost = CalculateTotalArmsDealerCost();
 
@@ -7187,7 +7181,6 @@ void ResetAllQuoteSaidFlags()
 
 void DealWithItemsStillOnTheTable()
 {
-	BOOLEAN fAddedCorrectly = FALSE;
 	UINT8	ubCnt;
 	SOLDIERTYPE *pDropSoldier;
 

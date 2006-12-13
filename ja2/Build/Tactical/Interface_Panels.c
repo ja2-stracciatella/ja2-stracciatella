@@ -3378,7 +3378,6 @@ BOOLEAN InitializeTEAMPanel(  )
 	VSURFACE_DESC		vs_desc;
   VOBJECT_DESC    VObjectDesc;
 	UINT32					cnt, posIndex;
-	static BOOLEAN	fFirstTime = TRUE;
 
 	// INit viewport region
 	// Set global mouse regions

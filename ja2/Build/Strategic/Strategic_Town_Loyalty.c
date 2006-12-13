@@ -958,7 +958,6 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 {
 	INT8 bTownId = 0;
 	UINT32 uiLoyaltyValue = 0;
-	INT32 iRating = 0;
 
 	// get town id civilian
 	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
@@ -1537,8 +1536,6 @@ INT32 GetNumberOfWholeTownsUnderControlButExcludeCity( INT8 bCityToExclude )
 // is the ENTIRE town under player control?
 INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 {
-	INT32 iNumber = 0;
-
 	if( GetTownSectorSize( bTownId ) == GetTownSectorsUnderControl( bTownId ) )
 	{
 		return( TRUE );
@@ -1550,8 +1547,6 @@ INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 // is the ENTIRE town under enemy control?
 INT32 IsTownUnderCompleteControlByEnemy( INT8 bTownId )
 {
-	INT32 iNumber = 0;
-
 	if ( GetTownSectorsUnderControl( bTownId ) == 0 )
 	{
 		return( TRUE );

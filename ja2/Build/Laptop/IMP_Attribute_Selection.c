@@ -282,8 +282,7 @@ void HandleIMPAttributeSelection( void )
       if ( iNewValue - iCurrentAttributeValue > 0)
 			{
 				// positive, increment stat
-        iCounter = iNewValue - iCurrentAttributeValue;
-				for( iCounter; iCounter > 0; iCounter--)
+				for (iCounter = iNewValue - iCurrentAttributeValue; iCounter > 0; iCounter--)
 				{
 					IncrementStat( giCurrentlySelectedStat );
 				}
@@ -291,8 +290,7 @@ void HandleIMPAttributeSelection( void )
 			else
 			{
 				// negative, decrement stat
-        iCounter = iCurrentAttributeValue - iNewValue;
-				for( iCounter; iCounter > 0; iCounter--)
+				for (iCounter = iCurrentAttributeValue - iNewValue; iCounter > 0; iCounter--)
 				{
 					DecrementStat( giCurrentlySelectedStat );
 				}
@@ -923,8 +921,6 @@ void RenderAttributeBoxes( void )
   INT32 iCnt=STRENGTH_ATTRIBUTE;
   INT16 sX = 0;
   INT16 sY = 0;
-	INT16 sTempY = 0;
-	INT16 sTempX = 0;
   CHAR16 sString[3];
 
 	// set last char to null
@@ -1307,7 +1303,6 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	static INT16 sOldY = -1;
 	static INT32 iAttribute = -1;
 	INT32 iNewValue = 0;
-	INT32 iCurrentValue = 0;
   INT16 sNewX = -1;
 
 
@@ -1373,8 +1368,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
       if ( iNewValue - iCurrentAttributeValue > 0)
 			{
 				// positive, increment stat
-        iCounter = iNewValue - iCurrentAttributeValue;
-				for( iCounter; iCounter > 0; iCounter--)
+				for (iCounter = iNewValue - iCurrentAttributeValue; iCounter > 0; iCounter--)
 				{
 					IncrementStat( iAttribute );
 				}
@@ -1382,8 +1376,7 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			else
 			{
 				// negative, decrement stat
-        iCounter = iCurrentAttributeValue - iNewValue;
-				for( iCounter; iCounter > 0; iCounter--)
+				for (iCounter = iCurrentAttributeValue - iNewValue; iCounter > 0; iCounter--)
 				{
 					DecrementStat( iAttribute );
 				}

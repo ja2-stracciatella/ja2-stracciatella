@@ -101,11 +101,11 @@ UINT32 guiMinimumMineProduction[]={
 HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =
 {
 	//	Profile #		running out		creatures!		all dead!		creatures again!		external face graphic
-	{			FRED,					17,						18,						27,						26,					MINER_FRED_EXTERNAL_FACE		},
-	{			MATT,					-1,						18,						32,						31,					MINER_MATT_EXTERNAL_FACE		},
-	{			OSWALD,				14,						15,						24,						23,					MINER_OSWALD_EXTERNAL_FACE	},
-	{			CALVIN,				14,						15,						24,						23,					MINER_CALVIN_EXTERNAL_FACE	},
-	{			CARL,					14,						15,						24,						23,					MINER_CARL_EXTERNAL_FACE		},
+	{     FRED,   {     17,           18,          27,             26      }, MINER_FRED_EXTERNAL_FACE   },
+	{     MATT,   {     -1,           18,          32,             31      }, MINER_MATT_EXTERNAL_FACE   },
+	{     OSWALD, {     14,           15,          24,             23      }, MINER_OSWALD_EXTERNAL_FACE },
+	{     CALVIN, {     14,           15,          24,             23      }, MINER_CALVIN_EXTERNAL_FACE },
+	{     CARL,   {     14,           15,          24,             23      }, MINER_CARL_EXTERNAL_FACE   }
 };
 
 
@@ -404,7 +404,6 @@ UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
 {
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
-	UINT32 uiOreRunningOutPoint = 0;
 	INT16 sSectorX, sSectorY;
 
 

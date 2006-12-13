@@ -4513,8 +4513,6 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	FLOAT						dTargetZMax;
 	BOOLEAN					fIntended;
 
-	UINT32					uiTileInc = 0;
-
 	//INT8						iImpactReduction;
 
 	INT16						sX, sY, sZ;
@@ -4868,9 +4866,9 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 
 INT16 gsLOSDirLUT[3][3] =
 {
-	315,		0,		45,
-	270,		0,		90,
-	225,	180,		135
+	{ 315,   0,  45 },
+	{ 270,   0,  90 },
+	{ 225, 180, 135 }
 };
 
 

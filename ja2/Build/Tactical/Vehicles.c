@@ -474,7 +474,7 @@ BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
 		// We have now a guy on a squad group, remove him!
 		RemovePlayerFromGroup( SquadMovementGroups[ pVehicleSoldier->bAssignment ], pVehicleSoldier  );
 
-    // I really have vehicles.\
+    // I really have vehicles.
     // ONLY add to vehicle group once!
     if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
     {
@@ -1445,8 +1445,6 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 
 BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 {
-	INT16 sOldGridNo = 0;
-
 	// TEST IF IT'S VALID...
 	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
 	{
@@ -1573,8 +1571,6 @@ void AddPassangersToTeamPanel( INT32 iId )
 
 void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, UINT8 ubAttackerID )
 {
-	INT16 sOldDmgValue = 0;
-
   if ( ubReason != TAKE_DAMAGE_GAS )
   {
   	PlayJA2Sample(S_METAL_IMPACT3, SoundVolume(MIDVOLUME, sGridNo), 1, SoundDir(sGridNo));
@@ -1606,11 +1602,8 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
-	INT16 sOrigValue = 0, sCurrValue = 0;
-	FLOAT fChance = 0.0;
 	INT32 iRand = 0, iCrit = 0;
 	SOLDIERTYPE *pSoldier;
-	BOOLEAN	fDestroyVehicle = FALSE;
 	BOOLEAN	fMadeCorpse = FALSE;
 
 #if 0
@@ -2159,7 +2152,6 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 BOOLEAN SaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 {
 	UINT32	uiNumBytesWritten = 0;
-	UINT32	uiSaveSize=0;
 
 	//Save all the vehicle movement id's
 	FileWrite( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * 5, &uiNumBytesWritten );
@@ -2177,7 +2169,6 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize=0;
 
 	//Load in the Squad movement id's
 	FileRead( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * 5, &uiNumBytesRead );
@@ -2203,7 +2194,6 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 {
 	UINT32	uiNumBytesWritten = 0;
-	UINT32	uiSaveSize=0;
 
 	//Save all the vehicle movement id's
 	FileWrite( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * MAX_VEHICLES, &uiNumBytesWritten );
@@ -2219,7 +2209,6 @@ BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 {
 	UINT32	uiNumBytesRead=0;
-	UINT32	uiSaveSize=0;
 
 	//Load in the Squad movement id's
 	FileRead( hFile, gubVehicleMovementGroups, sizeof( INT8 ) * MAX_VEHICLES, &uiNumBytesRead );
