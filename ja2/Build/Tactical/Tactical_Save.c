@@ -1290,7 +1290,10 @@ static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 b
 
 	//Load the World Items from the file
 	if( !LoadWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, pWorldItems ) )
+	{
+		MemFree(pWorldItems);
 		return( FALSE );
+	}
 
 
 	//If we have already been to the sector
@@ -1340,6 +1343,7 @@ static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 b
 		}
 	}
 
+	MemFree(pWorldItems);
 	return( TRUE );
 }
 
