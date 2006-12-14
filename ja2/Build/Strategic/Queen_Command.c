@@ -60,7 +60,6 @@ extern void BuildUndergroundSectorInfoList();
 extern void EndCreatureQuest();
 
 extern GARRISON_GROUP *gGarrisonGroup;
-extern INT32 giGarrisonArraySize;
 
 #ifdef JA2TESTVERSION
 extern BOOLEAN gfOverrideSector;

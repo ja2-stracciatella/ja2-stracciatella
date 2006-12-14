@@ -2617,7 +2617,6 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 }
 #endif
 
-extern UINT8 GetCurrentSummaryVersion();
 extern void LoadShadeTablesFromTextFile();
 
 BOOLEAN LoadWorld(const char *puiFilename)

@@ -22,7 +22,6 @@
 #include <string.h>
 
 
-extern UINT32 MemDebugCounter;
 #ifdef JA2
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif

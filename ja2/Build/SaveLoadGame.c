@@ -132,7 +132,6 @@ extern void TrashAllSoldiers( );
 extern void ResetJA2ClockGlobalTimers( void );
 
 extern void BeginLoadScreen();
-extern void EndLoadScreen();
 
 //Global variable used
 #ifdef JA2BETAVERSION
@@ -160,10 +159,6 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 #endif
 
 BOOLEAN				gMusicModeToPlay = FALSE;
-
-#ifdef JA2BETAVERSION
-BOOLEAN		gfDisplaySaveGamesNowInvalidatedMsg = FALSE;
-#endif
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
 UINT32	guiCurrentQuickSaveNumber = 0;
@@ -1376,10 +1371,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
 
-#ifdef JA2BETAVERSION
-	gfDisplaySaveGamesNowInvalidatedMsg = FALSE;
-#endif
-
 	uiRelStartPerc = uiRelEndPerc =0;
 
   TrashAllSoldiers( );
@@ -1475,9 +1466,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//if the player is loading up an older version of the game, and the person DOESNT have the cheats on,
 	if( SaveGameHeader.uiSavedGameVersion < 65 && !CHEATER_CHEAT_LEVEL( ) )
 	{
-#ifdef JA2BETAVERSION
-		gfDisplaySaveGamesNowInvalidatedMsg = TRUE;
-#endif
 		//Fail loading the save
 		FileClose( hFile );
 		guiSaveGameVersion=0;

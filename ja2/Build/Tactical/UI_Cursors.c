@@ -49,7 +49,6 @@ extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDI
 
 
 static BOOLEAN gfCannotGetThrough = FALSE;
-extern UINT32	guiUITargetSoldierId;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
 
 

@@ -118,7 +118,6 @@ BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 #endif
 
 extern void PauseAITemporarily( void );
-extern void PayOffSkyriderDebtIfAny( );
 //
 // NPC QUOTE LOW LEVEL ROUTINES
 //

@@ -319,7 +319,6 @@ void HandlePotentialMoraleHitForSkimmingSectors( GROUP *pGroup );
 
 extern void InitializeTacticalStatusAtBattleStart();
 
-extern HVSURFACE ghFrameBuffer;
 extern BOOLEAN gfOverrideSector;
 
 extern STR16 pBullseyeStrings[];
@@ -504,7 +503,8 @@ void BeginLoadScreen( )
 
 }
 
-void EndLoadScreen( )
+
+static void EndLoadScreen(void)
 {
 #ifdef JA2TESTVERSION
 	//Report the time it took to load the map.  This is temporary until we are satisfied with the time

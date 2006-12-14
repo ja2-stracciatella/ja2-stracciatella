@@ -59,8 +59,6 @@ extern BOOLEAN gfTransitionMapscreenToAutoResolve;
 extern BOOLEAN gfExitViewer;
 #endif
 
-// zoom flag
-extern BOOLEAN fZoomFlag;
 extern BOOLEAN fMapScreenBottomDirty;
 
 
@@ -143,11 +141,6 @@ extern MOUSE_REGION gCharInfoHandRegion;
 
 extern INT32 giMapContractButton;
 extern INT32 giCharInfoButton[ 2 ];
-extern void CreateDestroyMapCharacterScrollButtons( void );
-extern void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void );
-
-// were we showing the mapscreen inventory when the prebattle interface came up
-extern BOOLEAN fShowInventoryFlag;
 
 UINT32 guiNumInvolved;
 UINT32 guiNumUninvolved;

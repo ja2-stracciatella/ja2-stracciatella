@@ -64,7 +64,6 @@
 #endif
 
 
-extern UIKEYBOARD_HOOK					gUIKeyboardHook;
 extern BOOLEAN	fRightButtonDown;
 extern BOOLEAN	fLeftButtonDown;
 extern BOOLEAN fIgnoreLeftUp;

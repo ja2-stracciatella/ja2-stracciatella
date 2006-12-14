@@ -99,8 +99,6 @@ typedef struct
 	BOOLEAN fPauseTime;
 } DIALOGUE_Q_STRUCT, *DIALOGUE_Q_STRUCT_PTR;
 
-extern INT32 giMapInvPrev;
-extern INT32 giMapInvNext;
 extern BOOLEAN gfSKIScreenExit;
 extern SOLDIERTYPE *pProcessingSoldier;
 extern BOOLEAN fProcessingAMerc;
@@ -172,9 +170,7 @@ void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter );
 void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter );
 
 
-extern BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
 extern void HandlePendingInitConv( );
-extern BOOLEAN WillMercRenew( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote );
 extern void DrawFace( INT16 sCharNumber );
 
 // the next said quote will pause time

@@ -126,9 +126,6 @@ UINT8 gubMonsterMineInfestation[]={
 
 // the static NPC dialogue faces
 extern UINT32 uiExternalStaticNPCFaces[];
-extern FACETYPE	*gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
-
 
 
 void InitializeMines( void )

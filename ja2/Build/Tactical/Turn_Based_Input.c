@@ -152,7 +152,6 @@ extern UINT32 guiVSurfaceSize;
 
 extern BOOLEAN gfNextShotKills;
 
-UINT32 guiSoldierFlags;
 UINT32 guiUITargetSoldierId = NOBODY;
 
 void HandleTalkingMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
@@ -169,7 +168,6 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
 
 
 extern SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier );
-extern SOLDIERTYPE *FindPrevActiveSquad( SOLDIERTYPE *pSoldier );
 extern void ToggleItemGlow( BOOLEAN fOn );
 extern void HandleTalkingMenuBackspace( void );
 extern void BeginKeyPanelFromKeyShortcut( );

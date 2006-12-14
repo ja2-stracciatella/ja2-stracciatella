@@ -1492,7 +1492,7 @@ void RemoveCursorFlags( UINT32 uiCursor, UINT8 ubFlags )
 }
 
 
-HVOBJECT GetCursorFileVideoObject( UINT32 uiCursorFile )
+static HVOBJECT GetCursorFileVideoObject(UINT32 uiCursorFile)
 {
 	return( CursorFileDatabase[ uiCursorFile ].hVObject );
 }

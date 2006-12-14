@@ -138,9 +138,7 @@ UINT8 gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 UINT8 gubSectorIDOfCreatureAttack = 0;
 
 extern UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
-extern UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 extern void BuildUndergroundSectorInfoList();
-void DeleteCreatureDirectives();
 
 extern MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 
@@ -260,9 +258,6 @@ void InitLairGrumm()
 	curr->next = NewDirective( SEC_H3, 1, MINE_EXIT );
 }
 
-#ifdef JA2BETAVERSION
-extern BOOLEAN gfExitViewer;
-#endif
 
 void InitCreatureQuest()
 {

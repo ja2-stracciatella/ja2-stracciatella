@@ -66,8 +66,6 @@ enum{
 	DIALOG_DELETE
 };
 
-extern UINT16 Counter;
-
 //Hook into the text input code.  These callbacks help give back control, so we
 //can use the dialog interface in conjunction with the
 void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason );
@@ -126,8 +124,7 @@ enum{
 INT8 gbCurrentFileIOStatus;  //1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 UINT32 ProcessFileIO();
 
-//BOOLEAN fSavingFile;
-extern UINT16 gusLightLevel, gusSavedLightLevel;
+extern UINT16 gusLightLevel;
 UINT32 LoadSaveScreenInit(void)
 {
 	gfUpdateSummaryInfo = TRUE;

@@ -79,8 +79,6 @@
 // JA2 GOLD: for weapons and attachments, give penalties only for status values below 85
 #define WEAPON_STATUS_MOD( x ) ( (x) >= 85 ? 100 : (((x) * 100) / 85) )
 
-extern void TeamChangesSides( UINT8 ubTeam, INT8 bSide );
-
 extern BOOLEAN	gfNextFireJam;
 
 BOOLEAN gfNextShotKills = FALSE;

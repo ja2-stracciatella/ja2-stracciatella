@@ -48,7 +48,6 @@ UINT32 uiVoiceSound = 0;
 
 // image handle
 UINT32 guiCHARACTERPORTRAIT;
-extern INT32 iCurrentPortrait;
 extern INT32 iCurrentVoices;
 
 // function definitions

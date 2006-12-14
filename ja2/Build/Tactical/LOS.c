@@ -54,7 +54,6 @@ UINT16 gusLOSStartGridNo = 0;
 UINT16 gusLOSEndGridNo = 0;
 UINT16 gusLOSStartSoldier = NOBODY;
 UINT16 gusLOSEndSoldier = NOBODY;
-extern UINT32 guiSoldierFlags;
 extern INT16 DirIncrementer[8];
 
 static FIXEDPT gqStandardWallHeight = INT32_TO_FIXEDPT( WALL_HEIGHT_UNITS );

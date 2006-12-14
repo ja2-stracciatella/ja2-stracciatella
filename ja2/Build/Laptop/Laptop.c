@@ -343,7 +343,7 @@ extern BOOLEAN fShowAtmPanelStartButton;
 
 
 //TEMP!	Disables the loadpending delay when switching b/n www pages
-BOOLEAN	gfTemporaryDisablingOfLoadPendingFlag=FALSE;
+static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
 
 
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
@@ -568,7 +568,6 @@ void PostButtonRendering( void );
 void ShouldNewMailBeDisplayed( void );
 void DisplayPlayersBalanceToDate( void );
 void CheckIfNewWWWW( void );
-void HandleLapTopESCKey( void );
 BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex );
 void RemoveTitleBarMaximizeGraphics();
 BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX );
@@ -599,8 +598,8 @@ void HandleWWWSubSites( void );
 void UpdateStatusOfDisplayingBookMarks( void );
 void InitalizeSubSitesList( void );
 void SetSubSiteAsVisted( void );
-void HandleAltTabKeyInLaptop( void );
-void HandleShiftAltTabKeyInLaptop( void );
+static void HandleAltTabKeyInLaptop(void);
+static void HandleShiftAltTabKeyInLaptop(void);
 
 // display bookmark notify
 void DisplayWebBookMarkNotify( void );
@@ -4043,7 +4042,7 @@ void CheckIfNewWWWW( void )
 }
 
 
-void HandleLapTopESCKey( void )
+static void HandleLapTopESCKey(void)
 {
 
 	// will handle esc key events, since handling depends on state of laptop
@@ -5774,7 +5773,7 @@ void SetSubSiteAsVisted( void )
 }
 
 
-void HandleShiftAltTabKeyInLaptop( void )
+static void HandleShiftAltTabKeyInLaptop(void)
 {
 	// will handle the alt tab keying in laptop
 
@@ -5816,7 +5815,7 @@ void HandleShiftAltTabKeyInLaptop( void )
 }
 
 
-void HandleAltTabKeyInLaptop( void )
+static void HandleAltTabKeyInLaptop(void)
 {
 	// will handle the alt tab keying in laptop
 

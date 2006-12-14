@@ -396,11 +396,9 @@ BOOLEAN gfCommonQuoteUsedThisSession[ NUM_COMMON_SK_QUOTES ];
 
 
 extern		SOLDIERTYPE			*gpSMCurrentMerc;
-extern		SOLDIERTYPE			*gpItemDescSoldier;
 extern		MOUSE_REGION		gItemDescAttachmentRegions[MAX_ATTACHMENTS];
 extern		MOUSE_REGION		gInvDesc;
 extern		BOOLEAN					gfSMDisableForItems;
-extern		OBJECTTYPE			*gpItemDescObject;
 extern		void						HandleShortCutExitState( void );
 extern		UINT8						gubSelectSMPanelToMerc;
 extern		INT32						giItemDescAmmoButton;

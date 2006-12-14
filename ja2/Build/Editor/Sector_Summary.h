@@ -29,7 +29,5 @@ extern UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
 
 extern BOOLEAN gfUpdateSummaryInfo;
 
-extern UINT8 GetCurrentSummaryVersion();
-
 #endif
 #endif

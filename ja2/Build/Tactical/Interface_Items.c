@@ -279,7 +279,7 @@ UINT8				gubItemDescStatusIndex;
 INT32				giItemDescAmmoButtonImages;
 INT32				giItemDescAmmoButton;
 BOOLEAN			gfItemAmmoDown = FALSE;
-SOLDIERTYPE *gpItemDescSoldier;
+static SOLDIERTYPE* gpItemDescSoldier;
 BOOLEAN			fItemDescDelete = FALSE;
 MOUSE_REGION		gItemDescAttachmentRegions[4];
 MOUSE_REGION		gProsAndConsRegions[2];

@@ -49,7 +49,6 @@
 	#include "JAScreens.h"
 #endif
 
-void RenderEditorInfo();
 
 extern ITEM_POOL *gpItemPool;
 
@@ -861,7 +860,8 @@ void RenderSelectedItemBlownUp()
 	}
 }
 
-void RenderEditorInfo( )
+
+static void RenderEditorInfo(void)
 {
 	wchar_t					FPSText[ 50 ];
 	static INT32		iSpewWarning = 0;

@@ -209,12 +209,9 @@ INT32 iViewerButton[ NUM_VIEWER_BUTTONS ];
 
 extern BOOLEAN gfQueenAIAwake;
 extern INT32 giReinforcementPool;
-extern UINT32 guiEventListCurrNodes, guiEventListPeekNodes;
 extern INT32 giReinforcementPoints, giRequestPoints;
 extern ARMY_COMPOSITION gArmyComp[ NUM_ARMY_COMPOSITIONS ];
 extern GARRISON_GROUP *gGarrisonGroup;
-extern INT32 giGarrisonArraySize;
-
 
 
 static const wchar_t *gwGroupTypeString[NUM_ENEMY_INTENTIONS] =

@@ -44,7 +44,6 @@
 extern "C" {
 #endif
 
-extern UINT32	MemDebugCounter;
 extern UINT32 guiMemTotal;
 extern UINT32 guiMemAlloced;
 extern UINT32 guiMemFreed;

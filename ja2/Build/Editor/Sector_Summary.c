@@ -3060,7 +3060,8 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	FileClose( hfile );
 }
 
-UINT8 GetCurrentSummaryVersion()
+
+static UINT8 GetCurrentSummaryVersion()
 {
 	if( gpCurrentSectorSummary )
 	{

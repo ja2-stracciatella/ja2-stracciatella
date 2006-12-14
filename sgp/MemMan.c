@@ -101,7 +101,7 @@ static BOOLEAN gfMemDebug = TRUE;
 UINT32	guiMemTotal = 0;
 UINT32  guiMemAlloced = 0;
 UINT32  guiMemFreed = 0;
-UINT32	MemDebugCounter = 0;
+static UINT32 MemDebugCounter = 0;
 BOOLEAN fMemManagerInit = FALSE;
 
 //**************************************************************************

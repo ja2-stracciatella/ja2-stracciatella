@@ -92,7 +92,7 @@ INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 };
 
 
-UINT8			gubBasicInventoryPositions[] = {
+static const UINT8 gubBasicInventoryPositions[] = {
 							HELMETPOS,
 							VESTPOS,
 							LEGPOS,

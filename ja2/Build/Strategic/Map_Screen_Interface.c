@@ -133,7 +133,6 @@ BOOLEAN fLockOutMapScreenInterface = FALSE;
 extern INT32 giMercPanelImage;
 extern BOOLEAN fShowDescriptionFlag;
 extern BOOLEAN fInMapMode;
-extern GROUP *gpBattleGroup;
 
 CHAR16 gsCustomErrorString[ 128 ];
 
@@ -217,8 +216,6 @@ MOUSE_REGION gMoveBoxScreenMask;
 extern UINT32 guiSAVEBUFFER;
 
 extern BOOLEAN fShowInventoryFlag;
-extern FACETYPE *gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
 extern BOOLEAN fMapScreenBottomDirty;
 extern MOUSE_REGION    gMPanelRegion;
 

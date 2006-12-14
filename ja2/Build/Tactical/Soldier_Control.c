@@ -3765,7 +3765,7 @@ UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss )
 }
 
 
-void DoGenericHit( SOLDIERTYPE *pSoldier, UINT8 ubSpecial, INT16 bDirection )
+static void DoGenericHit(SOLDIERTYPE* pSoldier, UINT8 ubSpecial, INT16 bDirection)
 {
   // Based on stance, select generic hit animation
 	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )

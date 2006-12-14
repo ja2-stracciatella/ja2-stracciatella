@@ -49,7 +49,7 @@ INT8 bCurrentTownMineSectorZ = 0;
 
 // inventory button
 UINT32 guiMapButtonInventoryImage[2];
-UINT32 guiMapButtonInventory[2];
+static UINT32 guiMapButtonInventory[2];
 
 UINT16 sTotalButtonWidth = 0;
 

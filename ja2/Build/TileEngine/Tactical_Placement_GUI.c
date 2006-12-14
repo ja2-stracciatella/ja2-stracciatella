@@ -65,7 +65,6 @@ enum
 };
 UINT32 iTPButtons[ NUM_TP_BUTTONS ];
 
-extern BOOLEAN gfOverheadMapDirty;
 extern BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
 
 UINT8	gubDefaultButton = CLEAR_BUTTON;

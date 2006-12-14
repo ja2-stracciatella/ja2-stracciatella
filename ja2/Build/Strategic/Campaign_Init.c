@@ -18,12 +18,11 @@
 #endif
 
 extern void	InitStrategicMovementCosts();
-void InitKnowFacilitiesFlags( );
 
 UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 
 
-UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
+static UNDERGROUND_SECTORINFO* NewUndergroundNode(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ)
 {
 	UNDERGROUND_SECTORINFO *curr;
 	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );
@@ -47,8 +46,9 @@ UNDERGROUND_SECTORINFO* NewUndergroundNode( UINT8 ubSectorX, UINT8 ubSectorY, UI
 	return curr;
 }
 
+
 // setup which know facilities are in which cities
-void InitKnowFacilitiesFlags( )
+static void InitKnowFacilitiesFlags(void)
 {
 	SECTORINFO *pSector;
 

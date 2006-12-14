@@ -391,8 +391,6 @@ void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 }
 
 
-extern INT32 iInterfaceDialogueBox;
-
 #ifdef JA2BETAVERSION
 	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 	extern BOOLEAN gfDoDialogOnceGameScreenFadesIn;

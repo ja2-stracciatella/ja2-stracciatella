@@ -29,7 +29,6 @@
 #include "WordWrap.h"
 
 extern STR16	gzIntroScreen[];
-extern HVSURFACE ghFrameBuffer;
 
 enum
 {

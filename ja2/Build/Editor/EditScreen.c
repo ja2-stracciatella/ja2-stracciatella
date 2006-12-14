@@ -89,8 +89,6 @@ extern void RemoveMercsInSector();
 extern void ReverseSchedules();
 extern void ClearAllSchedules();
 
-extern UINT32 guiCurUICursor;
-
 void DrawObjectsBasedOnSelectionRegion();
 UINT32 ProcessEditscreenMessageBoxResponse();
 
@@ -135,7 +133,7 @@ INT16				gusCurrentRoofType = ONELEVELTYPEONEROOF;
 
 UINT16			gusLightLevel = 0;
 UINT16			gusGameLightLevel = 0;
-UINT16			gusSavedLightLevel = 0;
+static UINT16 gusSavedLightLevel = 0;
 BOOLEAN			gfFakeLights = FALSE;
 
 INT16				gsLightRadius = 5;
@@ -172,7 +170,6 @@ void EnsureStatusOfEditorButtons();
 
 
 extern BOOLEAN fAllDone;
-extern DisplayList Selection;
 
 void UpdateLastActionBeforeLeaving();
 
@@ -3401,9 +3398,6 @@ BOOLEAN DoIRenderASpecialMouseCursor()
 	return FALSE;
 }
 
-
-extern INT32 iEditorToolbarState;
-extern INT32 iEditorToolbarLastWallState;
 
 void ShowEntryPoints()
 {

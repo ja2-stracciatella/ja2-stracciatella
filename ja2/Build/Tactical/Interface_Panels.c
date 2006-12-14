@@ -322,14 +322,12 @@ UINT8		gubSelectSMPanelToMerc   = NOBODY;
 BOOLEAN	gfReEvaluateDisabledINVPanelButtons = FALSE;
 
 UINT32 guiBrownBackgroundForTeamPanel;
-UINT32 guiGoldBackgroundForTeamPanel;
 
 extern BOOLEAN gfRerenderInterfaceFromHelpText;
 extern BOOLEAN							gfInKeyRingPopup;
 extern UINT32	 guiVEHINV;
 extern INT32 giMapInvDoneButton;
 extern BOOLEAN	gfBeginEndTurn;
-extern	SOLDIERTYPE			*gpItemDescSoldier;
 extern	BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern	BOOLEAN	gfInItemPickupMenu;
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );

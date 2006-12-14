@@ -53,7 +53,6 @@ extern void ValidateGameEvents();
 extern void HandleHourlyUpdate();
 extern void HandleQuarterHourUpdate();
 extern void HandleMinuteUpdate();
-extern BOOLEAN gfProcessingGameEvents;
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
 

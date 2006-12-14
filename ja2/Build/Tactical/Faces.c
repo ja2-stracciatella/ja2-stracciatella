@@ -49,9 +49,6 @@
 FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
 static UINT32 guiNumFaces = 0;
 
-extern BOOLEAN	gfInItemPickupMenu;
-
-
 
 typedef struct
 {

@@ -50,7 +50,6 @@ BOOLEAN fContractOverMeTooFlag = FALSE;
 BOOLEAN fContractOverAndIWontRenewMeTooFlag = FALSE;
 BOOLEAN fProcessingAMerc = FALSE;
 SOLDIERTYPE *pProcessingSoldier = NULL;
-BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat = FALSE;
 
 // build a list of mercs based on departure time
 void BuildMercQuitList( SOLDIERTYPE *pMercList );

@@ -160,7 +160,7 @@ BOOLEAN gfAutoAIAware = FALSE;
 //Saved vars
 INT8		gbPadding2[3]						= {0, 0, 0};	//NOT USED
 BOOLEAN gfExtraElites						= 0;	//Set when queen compositions are augmented with bonus elites.
-INT32		giGarrisonArraySize			= 0;
+static INT32 giGarrisonArraySize = 0;
 INT32		giPatrolArraySize				= 0;
 INT32		giForcePercentage				= 0;	//Modifies the starting group sizes relative by percentage
 INT32		giArmyAlertness					= 0;	//The chance the group will spot an adjacent player/militia

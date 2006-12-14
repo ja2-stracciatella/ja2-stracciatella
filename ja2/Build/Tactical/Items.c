@@ -56,8 +56,6 @@
 void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
 void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
 
-extern	SOLDIERTYPE *gpItemDescSoldier;
-
 // weight units are 100g each
 
 ////////////////////////////////////////////////////////////////////////////
@@ -3663,14 +3661,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 	}
 
 #else
-
-	#ifdef AI_TIMING_TESTS
-	extern UINT32 guiGreenTimeTotal, guiYellowTimeTotal, guiRedTimeTotal, guiBlackTimeTotal;
-	extern UINT32 guiGreenCounter, guiYellowCounter, guiRedCounter, guiBlackCounter;
-	extern UINT32 guiRedSeekTimeTotal, guiRedHelpTimeTotal, guiRedHideTimeTotal;
-	extern UINT32 guiRedSeekCounter, guiRedHelpCounter; guiRedHideCounter;
-	#endif
-
 	void DoChrisTest( SOLDIERTYPE * pSoldier )
 	{
 		/*

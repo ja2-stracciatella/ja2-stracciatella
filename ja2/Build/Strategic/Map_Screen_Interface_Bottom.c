@@ -119,7 +119,7 @@ BOOLEAN gfDontStartTransitionFromLaptop = FALSE;
 // exiting to laptop?
 BOOLEAN fLapTop = FALSE;
 
-BOOLEAN gfOneFramePauseOnExit = FALSE;
+static BOOLEAN gfOneFramePauseOnExit = FALSE;
 
 // we've just scrolled to a new message (for autoscrolling only)
 //BOOLEAN gfNewScrollMessage = FALSE;

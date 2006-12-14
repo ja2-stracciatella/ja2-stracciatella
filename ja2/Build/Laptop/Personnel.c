@@ -241,12 +241,6 @@ enum
 	PRSNL_TXT_NOSKILLS,
 };
 
-extern BOOLEAN gfTemporaryDisablingOfLoadPendingFlag;
-extern BOOLEAN fExitingLaptopFlag;
-extern void HandleLapTopESCKey( void );
-extern void HandleAltTabKeyInLaptop( void );
-extern void HandleShiftAltTabKeyInLaptop( void );
-
 //BOOLEAN fShowInventory = FALSE;
 UINT8 uiCurrentInventoryIndex = 0;
 

@@ -108,11 +108,10 @@ void ValidateGameEvents();
 STRATEGICEVENT									*gpEventList = NULL;
 
 extern UINT32 guiGameClock;
-extern BOOLEAN gfTimeInterruptPause;
 BOOLEAN gfPreventDeletionOfAnyEvent = FALSE;
 BOOLEAN gfEventDeletionPending = FALSE;
 
-BOOLEAN gfProcessingGameEvents = FALSE;
+static BOOLEAN gfProcessingGameEvents = FALSE;
 UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
 
 //Determines if there are any events that will be processed between the current global time,

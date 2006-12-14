@@ -62,11 +62,9 @@ UINT32 uiContractTimeMode = 0;
 SOLDIERTYPE *pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
-extern BOOLEAN fOneFrame;
 extern BOOLEAN fPausedTimeDuringQuote;
 UINT8 ubQuitType = 0;
 BOOLEAN gfFirstMercSayQuote  = FALSE;
-extern BOOLEAN gfFirstMercSayingQuoteWillLeaveNoMatterWhat;
 
 extern CHAR16		gzUserDefinedButton1[ 128 ];
 extern CHAR16		gzUserDefinedButton2[ 128 ];

@@ -35,13 +35,6 @@
 
 extern INT8 gDebugStr[128];
 
-extern INT16 gsVIEWPORT_START_X;
-extern INT16 gsVIEWPORT_START_Y;
-extern INT16 gsVIEWPORT_END_Y;
-extern INT16 gsVIEWPORT_WINDOW_END_Y;
-extern INT16 gsVIEWPORT_WINDOW_START_Y;
-extern INT16 gsVIEWPORT_END_X;
-
 UINT16 *gpZBuffer=NULL;
 
 static INT16 gsCurrentGlowFrame = 0;

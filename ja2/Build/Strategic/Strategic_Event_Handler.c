@@ -40,9 +40,6 @@
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_Z		0
 
 
-extern INT16 gsRobotGridNo;
-
-
 UINT32 guiPabloExtraDaysBribed = 0;
 
 UINT8		gubCambriaMedicalObjects;

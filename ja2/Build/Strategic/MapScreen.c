@@ -509,7 +509,7 @@ BOOLEAN fShowDescriptionFlag=FALSE;
 BOOLEAN fPreLoadedMapGraphics = FALSE;
 
 BOOLEAN gfHotKeyEnterSector = FALSE;
-BOOLEAN fOneFrame = FALSE;
+static BOOLEAN fOneFrame = FALSE;
 BOOLEAN fShowFaceHightLight = FALSE;
 BOOLEAN fShowItemHighLight = FALSE;
 BOOLEAN gfAllowSkyriderTooFarQuote = FALSE;
@@ -588,8 +588,8 @@ INT32 giPotCharPathBaseTime = 0;
 
 /*
 // next and prev
-INT32 giMapInvPrev;
-INT32 giMapInvNext;
+static INT32 giMapInvPrev;
+static INT32 giMapInvNext;
 INT32 giMapInvPrevImage;
 INT32 giMapInvNextImage;
 */
@@ -641,16 +641,11 @@ PathStPtr gpHelicopterPreviousMercPath = NULL;
 // GLOBAL VARIABLES (EXTERNAL)
 
 
-extern BOOLEAN fHoveringHelicopter;
 extern BOOLEAN fDeletedNode;
 extern BOOLEAN gfRenderPBInterface;
 extern BOOLEAN fMapScreenBottomDirty;
 extern BOOLEAN fResetTimerForFirstEntryIntoMapScreen;
 extern BOOLEAN gfStartedFromMapScreen;
-
-extern BOOLEAN gfUsePersistantPBI;
-
-extern BOOLEAN gfOneFramePauseOnExit;
 
 // the selected list of mercs
 extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
@@ -664,7 +659,6 @@ extern UINT32 guiBrownBackgroundForTeamPanel;
 extern INT32 ghTownMineBox;
 // border and bottom buttons
 extern INT32 giMapBorderButtons[];
-extern UINT32 guiMapButtonInventory[];
 
 // the mine icon
 extern UINT32 guiMINEICON;
@@ -684,8 +678,6 @@ extern STR16 pContractButtonString[];
 extern STR16 pBullseyeStrings[];
 
 extern OBJECTTYPE	*gpItemDescObject;
-
-extern SOLDIERTYPE *pProcessingSoldier;
 
 
 // faces stuff
@@ -797,7 +789,7 @@ void UpdatePausedStatesDueToTimeCompression( void );
 
 // handle pre battle interface in relation to inventory
 void HandlePreBattleInterfaceWithInventoryPanelUp( void );
-void CreateDestroyMapCharacterScrollButtons( void );
+static void CreateDestroyMapCharacterScrollButtons(void);
 
 
 // sort buttons for team list
@@ -923,7 +915,7 @@ BOOLEAN CheckIfClickOnLastSectorInPath( INT16 sX, INT16 sY );
 void UpdateBadAssignments( void );
 
 // hwo many on team, if less than 2, disable prev/next merc buttons
-void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void );
+static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void);
 
 
 // inventory
@@ -10430,8 +10422,7 @@ BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed( INT8 bC
 }
 
 
-
-void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons( void )
+static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 {
 	if( gfPreBattleInterfaceActive )
 	{
@@ -10491,7 +10482,7 @@ static void NextInventoryMapBtnCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void CreateDestroyMapCharacterScrollButtons( void )
+static void CreateDestroyMapCharacterScrollButtons(void)
 {
 	static BOOLEAN fCreated = FALSE;
 

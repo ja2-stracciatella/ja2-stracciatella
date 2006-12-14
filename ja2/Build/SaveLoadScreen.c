@@ -211,14 +211,6 @@ BOOLEAN		gfHadToMakeBasementLevels = FALSE;
 
 BOOLEAN		gfGettingNameFromSaveLoadScreen = FALSE;
 
-#ifdef JA2BETAVERSION
-extern	BOOLEAN		gfDisplaySaveGamesNowInvalidatedMsg;
-#endif
-//ggg
-
-
-
-
 
 //
 //Buttons
@@ -277,7 +269,7 @@ void			ConfirmLoadSavedGameMessageBoxCallBack( UINT8 bExitValue );
 void			FailedLoadingGameCallBack( UINT8 bExitValue );
 void			SetSaveLoadExitScreen( UINT32 uiScreen );
 
-void			NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack( UINT8 bExitValue );
+static void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack(UINT8 bExitValue);
 void			NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack( UINT8 bExitValue );
 
 void			RedrawSaveLoadScreenAfterMessageBox( UINT8 bExitValue );
@@ -2391,7 +2383,8 @@ BOOLEAN IsThereAnySavedGameFiles()
 	return( FALSE );
 }
 
-void	NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack( UINT8 bExitValue )
+
+static void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack(UINT8 bExitValue)
 {
 	if( !SaveGame( 0, gzGameDescTextField ) )
 	{
