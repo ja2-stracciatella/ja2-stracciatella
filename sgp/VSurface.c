@@ -942,6 +942,8 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 	// Assertions
 	CHECKF( hVSurface != NULL );
 
+	SDL_FreeSurface(hVSurface->surface);
+
 	// Release palette
 	if ( hVSurface->pPalette != NULL )
 	{
