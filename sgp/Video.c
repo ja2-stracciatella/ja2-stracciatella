@@ -185,8 +185,6 @@ void ShutdownVideoManager(void)
   // down
   //
 
-	SDL_FreeSurface(MouseCursor);
-	SDL_FreeSurface(FrameBuffer);
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 
   guiVideoManagerState = VIDEO_OFF;
