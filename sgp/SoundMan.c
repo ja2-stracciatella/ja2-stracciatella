@@ -451,7 +451,7 @@ BOOLEAN SoundStop(UINT32 uiSoundID)
 //*******************************************************************************
 BOOLEAN SoundStopAll(void)
 {
-	if (fSoundSystemInit) return TRUE;
+	if (!fSoundSystemInit) return TRUE;
 
 	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
 	{
@@ -502,7 +502,7 @@ static BOOLEAN SoundSetVolumeIndex(UINT32 uiChannel, UINT32 uiVolume)
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
 #else
-	if (fSoundSystemInit) return FALSE;
+	if (!fSoundSystemInit) return FALSE;
 
 	UINT32 uiVolCap = __min(uiVolume, 127);
 
