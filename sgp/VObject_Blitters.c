@@ -10386,7 +10386,98 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr < usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						if (uiLineFlag != (((uintptr_t)DestPtr & 2) != 0)) continue;
+					}
+					*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
 #else
 	__asm {
 
