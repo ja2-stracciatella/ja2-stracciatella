@@ -1015,7 +1015,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 		return NO_SAMPLE;
 	}
 
-	SOUNDTAG* Sample = &pSampleList[uiSample];
+	SAMPLETAG* Sample = &pSampleList[uiSample];
 	memset(Sample, 0, sizeof(SAMPLETAG));
 
 	Sample->pData = AIL_mem_alloc_lock(uiSize);
@@ -1055,7 +1055,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
 	{
-		SOUNDTAG* Sample = &pSampleList[uiCount];
+		SAMPLETAG* Sample = &pSampleList[uiCount];
 		if ((Sample->uiFlags & SAMPLE_ALLOCATED) && !(Sample->uiFlags & SAMPLE_LOCKED))
 		{
 			if (uiLowestHits == NO_SAMPLE || uiLowestHitsCount < Sample->uiCacheHits)
