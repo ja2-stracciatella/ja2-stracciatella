@@ -3647,6 +3647,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip( UINT16 *pBuffer, UIN
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
 #if 1 // XXX TODO
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
 	UINT32 PxCount;
 
 	while (TopSkip > 0)
@@ -3746,6 +3748,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
 		DestPtr += LineSkip;
 		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
 	}
 	while (--BlitHeight > 0);
 #else
