@@ -2517,14 +2517,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		if (gRemoveMoney.uiTotalAmount <   10) DisableButton(guiMoneyButtonBtn[M_10]);
 
 		//Create the Done button
-		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
-		{
-			guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, -1, 4, -1);
-		}
-		else
-		{
-			guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, 6, 4, 5);
-		}
+		guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, -1, 4, -1);
 		guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
 			guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
 			5, DEFAULT_SHADOW,
