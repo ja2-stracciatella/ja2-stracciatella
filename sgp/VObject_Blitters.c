@@ -10389,6 +10389,8 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
 	UINT32 PxCount;
 
 	while (TopSkip > 0)
