@@ -51,6 +51,7 @@
 	#include "ScreenIDs.h"
 	#include "Font_Control.h"
 	#include "FileMan.h"
+	#include "Encrypted_File.h"
 #endif
 
 #include "Strategic_Town_Loyalty.h"
@@ -1107,113 +1108,10 @@ BOOLEAN	UpdateMercInfo(void)
 
 BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 {
-	UINT16 strbio[SIZE_MERC_BIO_INFO / 2];
-	UINT16 stradd[SIZE_MERC_ADDITIONAL_INFO / 2];
-	HWFILE		hFile;
-	UINT32		uiBytesRead;
-	UINT16		i;
-	UINT32		uiStartSeekAmount;
-
-
-	hFile = FileOpen(MERCBIOSFILENAME, FILE_ACCESS_READ, FALSE);
-	if ( !hFile )
-	{
-		return( FALSE );
-	}
-
-
-	// Get current mercs bio info
-	uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-
-	if ( FileSeek( hFile, uiStartSeekAmount, FILE_SEEK_FROM_START ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	if (!FileRead(hFile, strbio, sizeof(strbio), &uiBytesRead))
-	{
-		return( FALSE );
-	}
-
-	// Decrement, by 1, any value > 32
-	for (i = 0; i < SIZE_MERC_BIO_INFO / 2 - 1 && strbio[i] != 0; i++ )
-	{
-		pInfoString[i] = (strbio[i] > 33 ? strbio[i] - 1 : strbio[i]);
-		#ifdef POLISH
-			switch( pInfoString[ i ] )
-			{
-				case 260:		pInfoString[ i ] = 165;		break;
-				case 262:		pInfoString[ i ] = 198;		break;
-				case 280:		pInfoString[ i ] = 202;		break;
-				case 321:		pInfoString[ i ] = 163;		break;
-				case 323:		pInfoString[ i ] = 209;		break;
-				case 211:		pInfoString[ i ] = 211;		break;
-
-				case 346:		pInfoString[ i ] = 338;		break;
-				case 379:		pInfoString[ i ] = 175;		break;
-				case 377:		pInfoString[ i ] = 143;		break;
-				case 261:		pInfoString[ i ] = 185;		break;
-				case 263:		pInfoString[ i ] = 230;		break;
-				case 281:		pInfoString[ i ] = 234;		break;
-
-				case 322:		pInfoString[ i ] = 179;		break;
-				case 324:		pInfoString[ i ] = 241;		break;
-				case 243:		pInfoString[ i ] = 243;		break;
-				case 347:		pInfoString[ i ] = 339;		break;
-				case 380:		pInfoString[ i ] = 191;		break;
-				case 378:		pInfoString[ i ] = 376;		break;
-			}
-		#endif
-	}
-	pInfoString[i] = L'\0';
-
-
-	// Get the additional info
-	uiStartSeekAmount = ((SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex )+ SIZE_MERC_BIO_INFO ;
-	if ( FileSeek( hFile, uiStartSeekAmount, FILE_SEEK_FROM_START ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	if (!FileRead(hFile, stradd, sizeof(stradd), &uiBytesRead))
-	{
-		return( FALSE );
-	}
-
-	// Decrement, by 1, any value > 32
-	for (i = 0; i < SIZE_MERC_ADDITIONAL_INFO / 2 - 1 && stradd[i] != 0; i++ )
-	{
-		pAddInfo[i] = (stradd[i] > 33 ? stradd[i] - 1 : stradd[i]);
-		#ifdef POLISH
-			switch( pAddInfo[ i ] )
-			{
-				case 260:		pAddInfo[ i ] = 165;		break;
-				case 262:		pAddInfo[ i ] = 198;		break;
-				case 280:		pAddInfo[ i ] = 202;		break;
-				case 321:		pAddInfo[ i ] = 163;		break;
-				case 323:		pAddInfo[ i ] = 209;		break;
-				case 211:		pAddInfo[ i ] = 211;		break;
-
-				case 346:		pAddInfo[ i ] = 338;		break;
-				case 379:		pAddInfo[ i ] = 175;		break;
-				case 377:		pAddInfo[ i ] = 143;		break;
-				case 261:		pAddInfo[ i ] = 185;		break;
-				case 263:		pAddInfo[ i ] = 230;		break;
-				case 281:		pAddInfo[ i ] = 234;		break;
-
-				case 322:		pAddInfo[ i ] = 179;		break;
-				case 324:		pAddInfo[ i ] = 241;		break;
-				case 243:		pAddInfo[ i ] = 243;		break;
-				case 347:		pAddInfo[ i ] = 339;		break;
-				case 380:		pAddInfo[ i ] = 191;		break;
-				case 378:		pAddInfo[ i ] = 376;		break;
-			}
-		#endif
-	}
-	pAddInfo[i] = L'\0';
-
-	FileClose(hFile);
-	return(TRUE);
+	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
+	return
+		LoadEncryptedDataFromFile(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO) &&
+		LoadEncryptedDataFromFile(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 

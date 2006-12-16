@@ -20,6 +20,5 @@ low prio
 - HACK0008 mark keyboad-input in SGP.c slated for return to Input.c
 
 cosmetic
-- massive code duplication for ROT-1 "encrypted" data (r65, r113)
 - FileCheckEndOfFile() complicated
 - Use FileExistsNoDB() in FileExists()
