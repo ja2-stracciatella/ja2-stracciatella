@@ -300,9 +300,9 @@ typedef struct
 	UINT16 y;
 } MoneyLoc;
 
-MoneyLoc			gMoneyButtonLoc =			{ 343, 351 };
-MoneyLoc			gMoneyButtonOffsets[] = { 0,0,  34,0,  0,32, 34,32, 8,22 };
-MoneyLoc			gMapMoneyButtonLoc =	{ 174, 115 };
+static const MoneyLoc gMoneyButtonLoc = { 343, 351 };
+static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
+static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
 // show the description
 extern BOOLEAN fShowDescriptionFlag;
@@ -2498,66 +2498,42 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 		//Create buttons for the money
 //		if (guiCurrentScreen ==  MAP_SCREEN )
-		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		guiMoneyButtonImage = LoadButtonImage("INTERFACE\\Info_bil.sti", -1, 1, -1, 2, -1);
+		const MoneyLoc* Loc = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
+		for (cnt = 0; cnt < MAX_ATTACHMENTS - 1; cnt++)
 		{
-			guiMoneyButtonImage = LoadButtonImage("INTERFACE\\Info_bil.sti", -1,1,-1,2,-1 );
-			for(cnt=0; cnt<MAX_ATTACHMENTS-1; cnt++)
-			{
-				guiMoneyButtonBtn[cnt] = CreateIconAndTextButton( guiMoneyButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
-																 5, DEFAULT_SHADOW,
-																 5, DEFAULT_SHADOW,
-																 TEXT_CJUSTIFIED,
-																 (UINT16)(gMapMoneyButtonLoc.x + gMoneyButtonOffsets[cnt].x), (UINT16)(gMapMoneyButtonLoc.y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-																 DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback );
-				MSYS_SetBtnUserData( guiMoneyButtonBtn[cnt], 0, cnt);
-				if( cnt == M_1000 && gRemoveMoney.uiTotalAmount < 1000 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-				else if( cnt == M_100 && gRemoveMoney.uiTotalAmount < 100 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-				else if( cnt == M_10 && gRemoveMoney.uiTotalAmount < 10 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-			}
-			//Create the Done button
-			guiMoneyDoneButtonImage = UseLoadedButtonImage( guiMoneyButtonImage, -1,3,-1,4,-1 );
-			guiMoneyButtonBtn[cnt] = CreateIconAndTextButton( guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
-															 5, DEFAULT_SHADOW,
-															 5, DEFAULT_SHADOW,
-															 TEXT_CJUSTIFIED,
-															 (UINT16)(gMapMoneyButtonLoc.x + gMoneyButtonOffsets[cnt].x), (UINT16)(gMapMoneyButtonLoc.y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback );
-			MSYS_SetBtnUserData( guiMoneyButtonBtn[cnt], 0, cnt);
+			guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
+				guiMoneyButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
+				5, DEFAULT_SHADOW,
+				5, DEFAULT_SHADOW,
+				TEXT_CJUSTIFIED,
+				(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
+				DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
+			);
+			MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], 0, cnt);
+		}
+		if (gRemoveMoney.uiTotalAmount < 1000) DisableButton(guiMoneyButtonBtn[M_1000]);
+		if (gRemoveMoney.uiTotalAmount <  100) DisableButton(guiMoneyButtonBtn[M_100]);
+		if (gRemoveMoney.uiTotalAmount <   10) DisableButton(guiMoneyButtonBtn[M_10]);
 
+		//Create the Done button
+		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
+		{
+			guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, -1, 4, -1);
 		}
 		else
 		{
-			guiMoneyButtonImage = LoadButtonImage("INTERFACE\\Info_bil.sti", -1,1,-1,2,-1 );
-			for(cnt=0; cnt<MAX_ATTACHMENTS-1; cnt++)
-			{
-				guiMoneyButtonBtn[cnt] = CreateIconAndTextButton( guiMoneyButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
-																 5, DEFAULT_SHADOW,
-																 5, DEFAULT_SHADOW,
-																 TEXT_CJUSTIFIED,
-																 (UINT16)(gMoneyButtonLoc.x + gMoneyButtonOffsets[cnt].x), (UINT16)(gMoneyButtonLoc.y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-																 DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback );
-				MSYS_SetBtnUserData( guiMoneyButtonBtn[cnt], 0, cnt);
-				if( cnt == M_1000 && gRemoveMoney.uiTotalAmount < 1000 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-				else if( cnt == M_100 && gRemoveMoney.uiTotalAmount < 100 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-				else if( cnt == M_10 && gRemoveMoney.uiTotalAmount < 10 )
-					DisableButton( guiMoneyButtonBtn[cnt] );
-			}
-
-			//Create the Done button
-			guiMoneyDoneButtonImage = UseLoadedButtonImage( guiMoneyButtonImage, -1,3,6,4,5 );
-			guiMoneyButtonBtn[cnt] = CreateIconAndTextButton( guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
-															 5, DEFAULT_SHADOW,
-															 5, DEFAULT_SHADOW,
-															 TEXT_CJUSTIFIED,
-															 (UINT16)(gMoneyButtonLoc.x + gMoneyButtonOffsets[cnt].x), (UINT16)(gMoneyButtonLoc.y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback );
-			MSYS_SetBtnUserData( guiMoneyButtonBtn[cnt], 0, cnt);
+			guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, 6, 4, 5);
 		}
+		guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
+			guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
+			5, DEFAULT_SHADOW,
+			5, DEFAULT_SHADOW,
+			TEXT_CJUSTIFIED,
+			(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
+			DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
+		);
+		MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], 0, cnt);
 	}
 
 
