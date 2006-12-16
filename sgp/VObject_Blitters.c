@@ -90,7 +90,95 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr =
+							((p16BPPPalette[*SrcPtr] >> 1) & guiTranslucentMask) +
+							((*(UINT16*)DestPtr      >> 1) & guiTranslucentMask);
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
 #else
 	__asm {
 
@@ -459,7 +547,38 @@ ETRLEObject *pTrav;
 	uiLineFlag=(iTempY&1);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
+
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+				ZPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)DestPtr =
+							((p16BPPPalette[*SrcPtr] >> 1) & guiTranslucentMask) +
+							((*(UINT16*)DestPtr      >> 1) & guiTranslucentMask);
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+			}
+		}
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--usHeight > 0);
 #else
 	__asm {
 
