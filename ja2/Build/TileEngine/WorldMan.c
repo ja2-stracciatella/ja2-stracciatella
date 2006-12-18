@@ -3616,7 +3616,6 @@ LEVELNODE * FindShadow( INT16 sGridNo, UINT16 usStructIndex )
 void WorldHideTrees( )
 {
 LEVELNODE *pNode;
-BOOLEAN fRerender=FALSE;
 UINT32	fTileFlags;
 UINT32 cnt;
 
@@ -3633,8 +3632,6 @@ UINT32 cnt;
 				{
 					pNode->uiFlags |= ( LEVELNODE_REVEALTREES  );
 				}
-
-				fRerender=TRUE;
 			}
 			pNode=pNode->pNext;
 		}
@@ -3647,7 +3644,6 @@ UINT32 cnt;
 void WorldShowTrees( )
 {
 LEVELNODE *pNode;
-BOOLEAN fRerender=FALSE;
 UINT32	fTileFlags;
 UINT32 cnt;
 
@@ -3665,8 +3661,6 @@ UINT32 cnt;
 				{
 					pNode->uiFlags  &=(~( LEVELNODE_REVEALTREES ) );
 				}
-
-				fRerender=TRUE;
 			}
 			pNode=pNode->pNext;
 		}

@@ -3373,7 +3373,6 @@ void BtnPositionShowCallback(GUI_BUTTON *btn,INT32 reason)
 // TEAM PANEL!!!!!!!!!!!!!!
 BOOLEAN InitializeTEAMPanel(  )
 {
-	VSURFACE_DESC		vs_desc;
   VOBJECT_DESC    VObjectDesc;
 	UINT32					cnt, posIndex;
 
@@ -3384,11 +3383,6 @@ BOOLEAN InitializeTEAMPanel(  )
 						 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 	// Add region
 	MSYS_AddRegion( &gViewportRegion );
-
-
-
-	// Load interface panels
-	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("INTERFACE\\bottom_bar.sti", VObjectDesc.ImageFile);

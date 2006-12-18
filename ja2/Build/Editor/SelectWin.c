@@ -162,7 +162,6 @@ INT32				iCurBank = 0;
 
 DisplayList *pDispList;
 INT16 iTopWinCutOff,iBotWinCutOff;
-DisplayList Selection;
 
 UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
