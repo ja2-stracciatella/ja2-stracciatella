@@ -1809,7 +1809,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 			b->ClickCallback(b, reason);
 		gfDelayButtonDeletion = FALSE;
 	}
-	else if((reason & MSYS_CALLBACK_REASON_LBUTTON_DWN) && !(b->uiFlags & BUTTON_IGNORE_CLICKS))
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// Otherwise, do default action with this button.
 		b->uiFlags^=BUTTON_CLICKED_ON;
