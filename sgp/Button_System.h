@@ -29,7 +29,7 @@ extern "C" {
 //effects how the button is rendered.
 #define BUTTON_TYPES						( BUTTON_QUICK | BUTTON_GENERIC | BUTTON_HOT_SPOT | BUTTON_CHECKBOX )
 //effects how the button is processed
-#define BUTTON_TYPE_MASK				(BUTTON_NO_TOGGLE| BUTTON_ALLOW_DISABLED_CALLBACK | BUTTON_CHECKBOX | BUTTON_IGNORE_CLICKS )
+#define BUTTON_TYPE_MASK (BUTTON_NO_TOGGLE | BUTTON_CHECKBOX | BUTTON_IGNORE_CLICKS)
 
 //button flags
 #define BUTTON_TOGGLE										0x00000000
@@ -41,13 +41,11 @@ extern "C" {
 #define BUTTON_HOT_SPOT									0x00000040
 #define BUTTON_SELFDELETE_IMAGE					0x00000080
 #define BUTTON_DELETION_PENDING					0x00000100
-#define BUTTON_ALLOW_DISABLED_CALLBACK	0x00000200
 #define BUTTON_DIRTY										0x00000400
 #define BUTTON_CHECKBOX									0x00001000
 #define BUTTON_NEWTOGGLE								0x00002000
 #define BUTTON_FORCE_UNDIRTY						0x00004000 // no matter what happens this buttons does NOT get marked dirty
 #define BUTTON_IGNORE_CLICKS						0x00008000 // Ignore any clicks on this button
-#define BUTTON_DISABLED_CALLBACK				0x80000000
 
 #define BUTTON_SOUND_NONE										0x00
 #define BUTTON_SOUND_CLICKED_ON							0x01

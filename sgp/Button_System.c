@@ -1795,18 +1795,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 
 	// If this button is disabled, and no callbacks allowed when disabled
 	// callback
-	if(!(b->uiFlags & BUTTON_ENABLED) && !(b->uiFlags & BUTTON_ALLOW_DISABLED_CALLBACK))
-		return;
-
-	// Button not enabled but allowed to use callback, then do that!
-	if(!(b->uiFlags & BUTTON_ENABLED) && (b->uiFlags & BUTTON_ALLOW_DISABLED_CALLBACK))
-	{
-		if (b->ClickCallback != BUTTON_NO_CALLBACK)
-		{
-			b->ClickCallback(b, reason | BUTTON_DISABLED_CALLBACK );
-		}
-		return;
-	}
+	if (!(b->uiFlags & BUTTON_ENABLED)) return;
 
 	// If there is a callback function with this button, call it
 	if (b->ClickCallback != BUTTON_NO_CALLBACK)
