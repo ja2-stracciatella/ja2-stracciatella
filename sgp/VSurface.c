@@ -1454,18 +1454,29 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPR
 	if( (hDestVSurface->ubBitDepth != 16) && (hSrcVSurface->ubBitDepth != 16) )
 		return(FALSE);
 
-	// XXX HACK0006 this should zoom the source to the destination size, just blit unzoomed for now
-	SDL_Rect src;
-	src.x = SrcRect->iLeft;
-	src.y = SrcRect->iTop;
-	src.w = min(SrcRect->iRight  - SrcRect->iLeft, DestRect->iRight  - DestRect->iLeft);
-	src.h = min(SrcRect->iBottom - SrcRect->iTop,  DestRect->iBottom - DestRect->iTop);
+	const UINT16* os = (const UINT16*)hSrcVSurface->surface->pixels + (hSrcVSurface->surface->pitch >> 1) * SrcRect->iTop + SrcRect->iLeft;
+	UINT16* d = (UINT16*)hDestVSurface->surface->pixels + (hDestVSurface->surface->pitch >> 1) * DestRect->iTop + DestRect->iLeft;
 
-	SDL_Rect dst;
-	dst.x = DestRect->iLeft;
-	dst.y = DestRect->iTop;
+	const UINT width  = DestRect->iRight  - DestRect->iLeft;
+	const UINT height = DestRect->iBottom - DestRect->iTop;
+	const UINT dx = SrcRect->iRight  - SrcRect->iLeft;
+	const UINT dy = SrcRect->iBottom - SrcRect->iTop;
+	UINT py = 0;
+	for (UINT iy = 0; iy < height; ++iy)
+	{
+		const UINT16* s = os;
+		UINT px = 0;
+		for (UINT ix = 0; ix < width; ++ix)
+		{
+			*d++ = *s;
+			px += dx;
+			for (; px >= width; px -= width) ++s;
+		}
+		d += (hDestVSurface->surface->pitch >> 1) - width;
+		py += dy;
+		for (; py >= height; py -= height) os += hSrcVSurface->surface->pitch >> 1;
+	}
 
-	SDL_BlitSurface(hSrcVSurface->surface, &src, hDestVSurface->surface, &dst);
 	return TRUE;
 }
 
