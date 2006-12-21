@@ -139,11 +139,7 @@ INT16 FindCacheStructDataIndex( INT8 *cFilename )
 
 	for ( cnt = 0; cnt < guiNumTileCacheStructs; cnt++ )
 	{
-		#if 0 /* XXX */
-		if ( _stricmp( gpTileCacheStructInfo[ cnt ].zRootName, cFilename ) == 0 )
-		#else
 		if (strcasecmp(gpTileCacheStructInfo[cnt].zRootName, cFilename) == 0)
-		#endif
 		{
 			return(	 (INT16)cnt );
 		}
@@ -164,11 +160,7 @@ INT32 GetCachedTile( INT8 *cFilename )
 	{
 		if ( gpTileCache[ cnt ].pImagery != NULL )
 		{
-			#if 0 /* XXX */
-			if ( _stricmp( gpTileCache[ cnt ].zName, cFilename ) == 0 )
-			#else
 			if (strcasecmp(gpTileCache[cnt].zName, cFilename) == 0)
-			#endif
 			{
 				 // Found surface, return
 				 gpTileCache[ cnt ].sHits++;

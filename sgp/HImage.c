@@ -51,9 +51,9 @@ static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents);
 
 HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 {
+	const char* const ExtensionSep = ".";
 	HIMAGE			hImage = NULL;
-	SGPFILENAME	Extension;
-	CHAR8				ExtensionSep[] = ".";
+	const char* Extension;
 	STR					StrPtr;
 	UINT32			iFileLoader;
 
@@ -66,11 +66,11 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 		// No extension given, use default internal loader extension
 		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "No extension given, using default" );
 		strcat( ImageFile, ".PCX" );
-		strcpy( Extension, ".PCX" );
+		Extension = ".PCX";
 	}
 	else
 	{
-		strcpy( Extension, StrPtr+1 );
+		Extension = StrPtr + 1;
 	}
 
 	// Determine type from Extension
@@ -78,31 +78,19 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 	{
 		iFileLoader = UNKNOWN_FILE_READER;
 
-		#if 0 /* XXX */
-		if ( _stricmp( Extension, "PCX" ) == 0 )
-		#else
 		if (strcasecmp( Extension, "PCX" ) == 0)
-		#endif
 		{
 			iFileLoader = PCX_FILE_READER;
 			break;
 		}
 
-		#if 0 /* XXX */
-		if ( _stricmp( Extension, "TGA" ) == 0 )
-		#else
 		if (strcasecmp( Extension, "TGA" ) == 0)
-		#endif
 		{
 			iFileLoader = TGA_FILE_READER;
 			break;
 		}
 
-		#if 0 /* XXX */
-		if ( _stricmp( Extension, "STI" ) == 0 )
-		#else
 		if (strcasecmp( Extension, "STI" ) == 0)
-		#endif
 		{
 			iFileLoader = STCI_FILE_READER;
 			break;
