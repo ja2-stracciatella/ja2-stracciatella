@@ -1072,7 +1072,7 @@ void BuildInterfaceBuffer()
 	//selected item graphic in it's inventory size version.  This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
+	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = gpAR->sWidth;
 	vs_desc.usHeight = gpAR->sHeight;
 	vs_desc.ubBitDepth = ubBitDepth;

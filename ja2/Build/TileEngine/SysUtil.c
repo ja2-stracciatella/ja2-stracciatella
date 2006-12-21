@@ -19,7 +19,7 @@ BOOLEAN	InitializeGameVideoObjects( )
 
 	// Create render buffer
 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
+	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = usWidth;
 	vs_desc.usHeight = usHeight;
 	vs_desc.ubBitDepth = ubBitDepth;

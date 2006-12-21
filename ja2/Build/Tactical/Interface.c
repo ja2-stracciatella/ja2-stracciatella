@@ -392,7 +392,7 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// Alocate message surfaces
-	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
+	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = 640;
 	vs_desc.usHeight = 20;
 	vs_desc.ubBitDepth = 16;

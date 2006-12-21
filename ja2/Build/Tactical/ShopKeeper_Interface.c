@@ -826,7 +826,7 @@ BOOLEAN EnterShopKeeperInterface()
 
 
 	// Create a video surface to blt corner of the tactical screen that still shines through
-	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
+	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = SKI_TACTICAL_BACKGROUND_START_WIDTH;
 	vs_desc.usHeight = SKI_TACTICAL_BACKGROUND_START_HEIGHT;
 	vs_desc.ubBitDepth = 16;

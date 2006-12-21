@@ -312,7 +312,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	eInfo.sHeight = 80;
 	// Create item buffer
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	vs_desc.fCreateFlags = VSURFACE_CREATE_DEFAULT | VSURFACE_SYSTEM_MEM_USAGE;
+	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = eInfo.sWidth;
 	vs_desc.usHeight = eInfo.sHeight;
 	vs_desc.ubBitDepth = ubBitDepth;

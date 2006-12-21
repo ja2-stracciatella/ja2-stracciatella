@@ -38,7 +38,6 @@
 // Used in the VSurface_DESC structure to describe creation flags
 //
 
-#define VSURFACE_CREATE_DEFAULT			  0x00000020		// Creates and empty Surface of given width, height and BPP
 #define VSURFACE_CREATE_FROMFILE			 0x00000040		// Creates a video Surface from a file ( using HIMAGE )
 
 
