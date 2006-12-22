@@ -236,8 +236,6 @@ INT16		gsCurInterfacePanel			= TEAM_PANEL;
 
 BOOLEAN InitializeTacticalInterface(  )
 {
-	VSURFACE_DESC		vs_desc;
-
 	// Load button Interfaces
 	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE/newicons3.sti", -1,3,4,5,-1 );
 	iIconImages[ SNEAK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 6, 7, 8, -1 );
@@ -343,11 +341,7 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// Alocate message surfaces
-	vs_desc.usWidth = 640;
-	vs_desc.usHeight = 20;
-	vs_desc.ubBitDepth = 16;
-	CHECKF( AddVideoSurface( &vs_desc, &(gTopMessage.uiSurface) ) );
-
+	CHECKF( AddVideoSurface(640, 20, 16, &gTopMessage.uiSurface));
 
 	InitItemInterface( );
 

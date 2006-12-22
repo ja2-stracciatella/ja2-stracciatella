@@ -594,13 +594,8 @@ void EnterInitAimMembers()
 
 BOOLEAN EnterAIMMembers()
 {
-	VSURFACE_DESC		vs_desc;
-
 	// Create a background video surface to blt the face onto
-	vs_desc.usWidth = AIM_MEMBER_VIDEO_FACE_WIDTH;
-	vs_desc.usHeight = AIM_MEMBER_VIDEO_FACE_HEIGHT;
-	vs_desc.ubBitDepth = 16;
-	CHECKF( AddVideoSurface( &vs_desc, &guiVideoFaceBackground) );
+	CHECKF(AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, 16, &guiVideoFaceBackground));
 
 	// load the stats graphic and add it
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\stats.sti", &guiStats));
@@ -2772,7 +2767,6 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 	static BOOLEAN	fVideoConferenceCreated = FALSE;
 	UINT8	i;
 	UINT16	usPosX, usPosY;
-	VSURFACE_DESC		vs_desc;
 
 	//remove the face help text
 	gfAimMemberDisplayFaceHelpText = FALSE;
@@ -2869,10 +2863,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 			CHECKF(AddVideoObjectFromFile("LAPTOP\\VideoTitleBar.sti", &uiVideoBackgroundGraphic));
 
 			// Create a background video surface to blt the face onto
-			vs_desc.usWidth = AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH;
-			vs_desc.usHeight = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
-			vs_desc.ubBitDepth = 16;
-			CHECKF( AddVideoSurface( &vs_desc, &guiVideoTitleBar) );
+			CHECKF(AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, 16, &guiVideoTitleBar));
 
 
 			gfAimMemberCanMercSayOpeningQuote = TRUE;
@@ -3122,11 +3113,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\VideoTitleBar.sti", &uiVideoBackgroundGraphic));
 
 		// Create a background video surface to blt the face onto
-		vs_desc.usWidth = AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH;
-		vs_desc.usHeight = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
-		vs_desc.ubBitDepth = 16;
-		CHECKF( AddVideoSurface( &vs_desc, &guiVideoTitleBar) );
-
+		CHECKF(AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, 16, &guiVideoTitleBar));
 
 		GetVideoObject(&hImageHandle, uiVideoBackgroundGraphic);
 		BltVideoObject(guiVideoTitleBar, hImageHandle, 0,0,0);

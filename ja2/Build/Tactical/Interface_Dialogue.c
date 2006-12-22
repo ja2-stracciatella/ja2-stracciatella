@@ -355,7 +355,6 @@ static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason);
 BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 {
 	INT32	iFaceIndex, cnt;
-	VSURFACE_DESC			vs_desc;
 	FACETYPE				*pFace;
 	UINT16						usWidth;
 	UINT16						usHeight;
@@ -486,10 +485,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	// Build save buffer
 	// Create a buffer for him to go!
 	// OK, ignore screen widths, height, only use BPP
-	vs_desc.usWidth = pFace->usFaceWidth;
-	vs_desc.usHeight = pFace->usFaceHeight;
-	vs_desc.ubBitDepth = 16;
-	CHECKF( AddVideoSurface( &vs_desc, &(gTalkPanel.uiSaveBuffer ) ) );
+	CHECKF(AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, 16, &gTalkPanel.uiSaveBuffer));
 
 	// Set face to auto
 	SetAutoFaceActive( gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );

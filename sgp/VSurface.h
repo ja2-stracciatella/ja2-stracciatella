@@ -36,17 +36,6 @@ typedef struct
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 } SGPVSurface, *HVSURFACE;
 
-//
-// This structure describes the creation parameters for a Video Surface
-//
-
-typedef struct
-{
-	UINT16 usWidth;
-	UINT16 usHeight;
-	UINT8  ubBitDepth;
-} VSURFACE_DESC;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Video Surface Manager Functions
@@ -65,13 +54,13 @@ BOOLEAN InitializeVideoSurfaceManager( );
 // Deletes any video Surface placed into list
 BOOLEAN ShutdownVideoSurfaceManager( );
 
-BOOLEAN AddVideoSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index);
+BOOLEAN AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index);
 BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index);
 
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend);
-	extern BOOLEAN AddAndRecordVSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index, UINT32 LineNum, const char* SourceFile);
+	extern BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile);
 	extern BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile);
 	#define AddVideoSurface(a, b) AddAndRecordVSurface(a, b, __LINE__, __FILE__)
 	#define AddVideoSurfaceFromFile(a, b) AddAndRecordVSurfaceFromFile(a, b, c, __FILE__)

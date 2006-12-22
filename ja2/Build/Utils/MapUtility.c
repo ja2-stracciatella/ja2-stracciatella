@@ -65,7 +65,6 @@ UINT32	MapUtilScreenHandle( )
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
 	INT8		zFilename[ 260 ], zFilename2[ 260 ];
-	VSURFACE_DESC		vs_desc;
 	UINT16					usWidth;
 	UINT16					usHeight;
 	UINT8						ubBitDepth;
@@ -103,11 +102,8 @@ UINT32	MapUtilScreenHandle( )
 
 		// Create render buffer
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		vs_desc.usWidth = 88;
-		vs_desc.usHeight = 44;
-		vs_desc.ubBitDepth = ubBitDepth;
 
-		if ( AddVideoSurface( &vs_desc, &giMiniMap ) == FALSE )
+		if (!AddVideoSurface(88, 44, ubBitDepth, &giMiniMap))
 		{
 			return( ERROR_SCREEN );
 		}
@@ -133,11 +129,7 @@ UINT32	MapUtilScreenHandle( )
 
 
 		//Allocate 8-bit surface
-		vs_desc.usWidth = 88;
-		vs_desc.usHeight = 44;
-		vs_desc.ubBitDepth = 8;
-
-		if ( AddVideoSurface( &vs_desc, &gi8BitMiniMap ) == FALSE )
+		if (!AddVideoSurface(88, 44, 8, &gi8BitMiniMap))
 		{
 			return( ERROR_SCREEN );
 		}

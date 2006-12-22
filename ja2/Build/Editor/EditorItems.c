@@ -208,7 +208,6 @@ void EntryInitEditorItemsInfo()
 
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
-	VSURFACE_DESC		vs_desc;
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
@@ -312,12 +311,9 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	eInfo.sHeight = 80;
 	// Create item buffer
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	vs_desc.usWidth = eInfo.sWidth;
-	vs_desc.usHeight = eInfo.sHeight;
-	vs_desc.ubBitDepth = ubBitDepth;
 
 	//!!!Memory check.  Create the item buffer
-	if(!AddVideoSurface( &vs_desc, &eInfo.uiBuffer ))
+	if (!AddVideoSurface(eInfo.sWidth, eInfo.sHeight, ubBitDepth, &eInfo.uiBuffer))
 	{
 		eInfo.fKill = TRUE;
 		eInfo.fActive = FALSE;

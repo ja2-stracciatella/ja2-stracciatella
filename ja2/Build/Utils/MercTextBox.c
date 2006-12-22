@@ -309,7 +309,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	UINT16 i;
   HVOBJECT	hImageHandle;
 	UINT16 usPosY, usPosX;
-	VSURFACE_DESC		vs_desc;
 	UINT16 usStringPixLength;
 	SGPRect DestRect;
   HVSURFACE hSrcVSurface;
@@ -425,11 +424,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		return( -1 );
 	}
 	// Create a background video surface to blt the face onto
-	memset( &vs_desc, 0, sizeof( VSURFACE_DESC ) );
-	vs_desc.usWidth = usWidth;
-	vs_desc.usHeight = usHeight;
-	vs_desc.ubBitDepth = 16;
-	CHECKF( AddVideoSurface( &vs_desc, &pPopUpTextBox->uiSourceBufferIndex) );
+	CHECKF(AddVideoSurface(usWidth, usHeight, 16, &pPopUpTextBox->uiSourceBufferIndex));
 	pPopUpTextBox->fMercTextPopupSurfaceInitialized = TRUE;
 
 	pPopUpTextBox->sWidth = usWidth;

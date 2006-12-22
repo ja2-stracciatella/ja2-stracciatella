@@ -175,12 +175,12 @@ static BOOLEAN AddStandardVideoSurface(HVSURFACE hVSurface, UINT32* puiIndex)
 }
 
 
-static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc);
+static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth);
 
 
-BOOLEAN AddVideoSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index)
+BOOLEAN AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index)
 {
-	HVSURFACE hVSurface = CreateVideoSurface(VSurfaceDesc);
+	HVSURFACE hVSurface = CreateVideoSurface(Width, Height, BitDepth);
 	return AddStandardVideoSurface(hVSurface, Index);
 }
 
@@ -538,23 +538,16 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc)
+static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
 {
 	HVSURFACE						hVSurface;
 	HIMAGE							hImage;
 	SGPRect							tempRect;
-	UINT16							usHeight;
-	UINT16							usWidth;
-	UINT8								ubBitDepth;
 	UINT32							uiRBitMask;
 	UINT32							uiGBitMask;
 	UINT32							uiBBitMask;
 	SDL_Surface* surface;
 	Uint32 surface_flags;
-
-	usHeight   = VSurfaceDesc->usHeight;
-	usWidth    = VSurfaceDesc->usWidth;
-	ubBitDepth = VSurfaceDesc->ubBitDepth;
 
 	Assert(usHeight > 0);
 	Assert(usWidth  > 0);
@@ -621,11 +614,7 @@ HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
 		return NULL;
 	}
 
-	VSURFACE_DESC VSDesc;
-	VSDesc.usWidth      = hImage->usWidth;
-	VSDesc.usHeight     = hImage->usHeight;
-	VSDesc.ubBitDepth   = hImage->ubBitDepth;
-	HVSURFACE hVSurface = CreateVideoSurface(&VSDesc);
+	HVSURFACE hVSurface = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
 	if (hVSurface != NULL)
 	{
 		SGPRect tempRect;
@@ -1611,9 +1600,9 @@ static BOOLEAN RecordVSurface(const char* Filename, UINT32* Index, UINT32 LineNu
 #undef AddVideoSurfaceFromFile
 
 
-BOOLEAN AddAndRecordVSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile)
 {
-	if (!AddVideoSurface(VSurfaceDesc, Index)) return FALSE;
+	if (!AddVideoSurface(Width, Height, BitDepth, Index)) return FALSE;
 	return RecordVSurface("<EMPTY>", Index, LineNum, SourceFile);
 }
 
