@@ -417,7 +417,6 @@ BOOLEAN EnterMercs()
 	//
 
 	// Create a background video surface to blt the face onto
-	vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	vs_desc.usWidth = MERC_VIDEO_FACE_WIDTH;
 	vs_desc.usHeight = MERC_VIDEO_FACE_HEIGHT;
 	vs_desc.ubBitDepth = 16;

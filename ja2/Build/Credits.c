@@ -852,7 +852,6 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 		VSURFACE_DESC		vs_desc;
 
 		// Create a background video surface to blt the face onto
-		vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = CRDT_WIDTH_OF_TEXT_AREA;
 		vs_desc.usHeight = pNodeToAdd->sHeightOfString;
 		vs_desc.ubBitDepth = 16;

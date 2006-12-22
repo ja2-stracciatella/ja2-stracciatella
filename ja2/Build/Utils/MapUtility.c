@@ -103,7 +103,6 @@ UINT32	MapUtilScreenHandle( )
 
 		// Create render buffer
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = 88;
 		vs_desc.usHeight = 44;
 		vs_desc.ubBitDepth = ubBitDepth;
@@ -134,7 +133,6 @@ UINT32	MapUtilScreenHandle( )
 
 
 		//Allocate 8-bit surface
-		vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = 88;
 		vs_desc.usHeight = 44;
 		vs_desc.ubBitDepth = 8;

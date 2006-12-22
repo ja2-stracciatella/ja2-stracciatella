@@ -582,27 +582,8 @@ static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc)
 			return FALSE;
 	}
 
-	// Do memory description, based on specified flags
-	do
-	{
-		if (VSurfaceDesc->fCreateFlags & VSURFACE_VIDEO_MEM_USAGE)
-		{
-			surface_flags = SDL_HWSURFACE;
-			break;
-		}
-
-		if (VSurfaceDesc->fCreateFlags & VSURFACE_SYSTEM_MEM_USAGE)
-		{
-			surface_flags = SDL_SWSURFACE;
-			break;
-		}
-
-		// Once here, no mem flags were given, use default
-		surface_flags = 0;
-	} while (FALSE);
-
 	surface = SDL_CreateRGBSurface(
-		surface_flags,
+		SDL_SWSURFACE,
 		usWidth, usHeight, ubBitDepth,
 		uiRBitMask, uiGBitMask, uiBBitMask, 0
 	);
@@ -618,23 +599,6 @@ static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc)
 	hVSurface->ubBitDepth         = ubBitDepth;
 	hVSurface->pPalette           = NULL;
 	hVSurface->p16BPPPalette      = NULL;
-
-	// Determine memory and other attributes of newly created surface
-
-	// Fail if create tried for video but it's in system
-	if (VSurfaceDesc->fCreateFlags & VSURFACE_VIDEO_MEM_USAGE &&
-			!(surface->flags & SDL_HWSURFACE))
-	{
-		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String("Failed to create Video Surface in video memory"));
-		SDL_FreeSurface(surface);
-		MemFree(hVSurface);
-		return NULL;
-	}
-
-  //
-	// All is well
-  //
-
 	hVSurface->usHeight					= usHeight;
 	hVSurface->usWidth						= usWidth;
 	hVSurface->ubBitDepth				= ubBitDepth;
@@ -661,7 +625,6 @@ HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
 	}
 
 	VSURFACE_DESC VSDesc;
-	VSDesc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 	VSDesc.usWidth      = hImage->usWidth;
 	VSDesc.usHeight     = hImage->usHeight;
 	VSDesc.ubBitDepth   = hImage->ubBitDepth;

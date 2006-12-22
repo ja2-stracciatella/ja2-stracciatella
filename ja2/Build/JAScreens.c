@@ -1298,7 +1298,6 @@ UINT32 DemoExitScreenHandle(void)
 
 			//Create render buffer
 			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 			vs_desc.usWidth = 263;
 			vs_desc.usHeight = 210;
 			vs_desc.ubBitDepth = ubBitDepth;
@@ -1484,7 +1483,6 @@ UINT32 DemoExitScreenHandle(void)
 
 			//Create render buffer
 			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 			vs_desc.usWidth = 331;
 			vs_desc.usHeight = 148;
 			vs_desc.ubBitDepth = ubBitDepth;

@@ -573,7 +573,6 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 		// BUILD A BUFFER
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 		// OK, ignore screen widths, height, only use BPP
-		vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = pFace->usFaceWidth;
 		vs_desc.usHeight = pFace->usFaceHeight;
 		vs_desc.ubBitDepth = ubBitDepth;
@@ -593,7 +592,6 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 		// BUILD A BUFFER
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 		// OK, ignore screen widths, height, only use BPP
-		vs_desc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
 		vs_desc.usWidth = pFace->usFaceWidth;
 		vs_desc.usHeight = pFace->usFaceHeight;
 		vs_desc.ubBitDepth = ubBitDepth;

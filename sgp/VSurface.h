@@ -25,20 +25,6 @@
 
 #define VS_BLT_FAST															0x000000004
 
-//
-// Video Surface Flags
-// Used to describe the memory usage of a video Surface
-//
-
-#define	VSURFACE_VIDEO_MEM_USAGE			0x00000002			// Will force surface into video memory and will fail if it can't
-#define	VSURFACE_SYSTEM_MEM_USAGE			0x00000004			// Will force surface into system memory and will fail if it can't
-
-//
-// Video Surface creation flags
-// Used in the VSurface_DESC structure to describe creation flags
-//
-
-
 
 typedef struct
 {
@@ -56,7 +42,6 @@ typedef struct
 
 typedef struct
 {
-	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
 	UINT16 usWidth;
 	UINT16 usHeight;
 	UINT8  ubBitDepth;
