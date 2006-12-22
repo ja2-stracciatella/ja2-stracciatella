@@ -63,11 +63,6 @@ typedef struct TAG_HVOBJECT
 
 	UINT16								usNumberOfObjects;	// Total number of objects
 	UINT8									ubBitDepth;						// BPP
-
-	// Reserved for added room and 32-byte boundaries
-	BYTE													bReserved[ 1 ];
-
-
 } SGPVObject, *HVOBJECT;
 
 
@@ -77,16 +72,9 @@ typedef struct
 	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
 	union
 	{
-		struct
-		{
-			SGPFILENAME		ImageFile;							// Filename of image data to use
-		};
-		struct
-		{
-			HIMAGE				hImage;
-		};
+		SGPFILENAME ImageFile;							// Filename of image data to use
+		HIMAGE      hImage;
 	};
-	UINT8					ubBitDepth;							// BPP, ignored if given from file
 } VOBJECT_DESC;
 
 // **********************************************************************************
