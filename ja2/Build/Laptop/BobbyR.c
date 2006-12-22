@@ -382,7 +382,8 @@ void RenderBobbyR()
 BOOLEAN InitBobbyRWoodBackground()
 {
 	// load the Wood bacground graphic and add it
-	return AddVideoObjectFromFile("LAPTOP\\BobbyWood.sti", &guiWoodBackground);
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyWood.sti", &guiWoodBackground));
+	return TRUE;
 }
 
 BOOLEAN DeleteBobbyRWoodBackground()
