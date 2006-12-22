@@ -36,13 +36,6 @@ typedef struct
 // From RGB to COLORVAL
 #define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
 
-
-// Video object creation flags
-// Used in the VOBJECT_DESC structure to describe creation flags
-
-#define VOBJECT_CREATE_FROMFILE			  0x00000040		// Creates a video object from a file ( using HIMAGE )
-#define VOBJECT_CREATE_FROMHIMAGE		  0x00000080		// Creates a video object from a pre-loaded hImage
-
 // VOBJECT FLAGS
 #define	VOBJECT_FLAG_SHADETABLE_SHARED 0x00000100
 
@@ -66,17 +59,6 @@ typedef struct TAG_HVOBJECT
 } SGPVObject, *HVOBJECT;
 
 
-// This structure describes the creation parameters for a Video Object
-typedef struct
-{
-	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
-	union
-	{
-		SGPFILENAME ImageFile;							// Filename of image data to use
-		HIMAGE      hImage;
-	};
-} VOBJECT_DESC;
-
 // **********************************************************************************
 //
 // Video Object Manager Functions
@@ -96,13 +78,17 @@ BOOLEAN ShutdownVideoObjectManager( );
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend);
-	BOOLEAN _AddAndRecordVObject(VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile);
-	#define AddVideoObject( a, b )			_AddAndRecordVObject( a, b, __LINE__, __FILE__ )
+	BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
+	BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
+	#define AddVideoObjectFromHImage(a, b) AddAndRecordVObject(a, b, __LINE__, __FILE__)
+	#define AddVideoObjectFromFile(a, b) AddAndRecordVObjectFromFile(a, b, __LINE__, __FILE__)
 #else
-	#define AddVideoObject( a, b )			AddStandardVideoObject( a, b )
+	#define AddVideoObjectFromHImage(a, b) AddStandardVideoObjectFromHImage(a, b)
+	#define AddVideoObjectFromFile(a, b) AddStandardVideoObjectFromFile(a, b)
 #endif
 
-BOOLEAN AddStandardVideoObject( VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex );
+BOOLEAN AddStandardVideoObjectFromHImage(HIMAGE hImage, UINT32* uiIndex);
+BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex);
 
 // Removes a video object
 BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  );

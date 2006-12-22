@@ -128,27 +128,10 @@ static UINT32 CountVideoObjectNodes(void)
 #endif
 
 
-BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
+static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 {
-
-	HVOBJECT hVObject;
-
 	// Assertions
 	Assert( puiIndex );
-	Assert( pVObjectDesc );
-
-	if (pVObjectDesc->fCreateFlags & VOBJECT_CREATE_FROMFILE)
-	{
-		hVObject = CreateVideoObjectFromFile(pVObjectDesc->ImageFile);
-	}
-	else if (pVObjectDesc->fCreateFlags & VOBJECT_CREATE_FROMHIMAGE)
-	{
-		hVObject = CreateVideoObject(pVObjectDesc->hImage);
-	}
-	else
-	{
-		hVObject = NULL;
-	}
 
 	if( !hVObject )
 	{
@@ -192,6 +175,18 @@ BOOLEAN AddStandardVideoObject( VOBJECT_DESC *pVObjectDesc, UINT32 *puiIndex )
 	#endif
 
 	return TRUE ;
+}
+
+
+BOOLEAN AddStandardVideoObjectFromHImage(HIMAGE hImage, UINT32* uiIndex)
+{
+	return AddStandardVideoObject(CreateVideoObject(hImage), uiIndex);
+}
+
+
+BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex)
+{
+	return AddStandardVideoObject(CreateVideoObjectFromFile(ImageFile), uiIndex);
 }
 
 
@@ -1102,21 +1097,18 @@ static void DumpVObjectInfoIntoFile(const char *filename, BOOLEAN fAppend)
 	fclose( fp );
 }
 
+
 //Debug wrapper for adding vObjects
-BOOLEAN _AddAndRecordVObject(VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
+static void RecordVObject(const char* Filename, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
 {
 	UINT16 usLength;
 	UINT8 str[256];
-	if( !AddStandardVideoObject( VObjectDesc, uiIndex ) )
-	{
-		return FALSE;
-	}
 
 	//record the filename of the vObject (some are created via memory though)
-	usLength = strlen( VObjectDesc->ImageFile ) + 1;
+	usLength = strlen(Filename) + 1;
 	gpVObjectTail->pName = (UINT8*)MemAlloc( usLength );
 	memset( gpVObjectTail->pName, 0, usLength );
-	strcpy( gpVObjectTail->pName, VObjectDesc->ImageFile );
+	strcpy(gpVObjectTail->pName, Filename);
 
 	//record the code location of the calling creating function.
 	sprintf( str, "%s -- line(%d)", pSourceFile, uiLineNum );
@@ -1124,9 +1116,24 @@ BOOLEAN _AddAndRecordVObject(VOBJECT_DESC *VObjectDesc, UINT32 *uiIndex, UINT32 
 	gpVObjectTail->pCode = (UINT8*)MemAlloc( usLength );
 	memset( gpVObjectTail->pCode, 0, usLength );
 	strcpy( gpVObjectTail->pCode, str );
-
-	return TRUE;
 }
+
+
+BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
+{
+	BOOLEAN Res = AddStandardVideoObjectFromHImage(hImage, uiIndex);
+	if (Res) RecordVObject("<IMAGE>", uiIndex, uiLineNum, pSourceFile);
+	return Res;
+}
+
+
+BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
+{
+	BOOLEAN Res = AddStandardVideoObjectFromFile(ImageFile, uiIndex);
+	if (Res) RecordVObject(ImageFile, uiIndex, uiLineNum, pSourceFile);
+	return Res;
+}
+
 
 void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend)
 {

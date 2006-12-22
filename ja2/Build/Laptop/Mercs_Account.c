@@ -103,19 +103,15 @@ void GameInitMercsAccount()
 
 BOOLEAN EnterMercsAccount()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	InitMercBackGround();
 
 	// load the Arrow graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_ORDERGRID );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMercOrderGrid));
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_ORDERGRID);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMercOrderGrid));
 
 	// load the Arrow graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/AccountNumber.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiAccountNumberGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/AccountNumber.sti", &guiAccountNumberGrid));
 
 
 	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );

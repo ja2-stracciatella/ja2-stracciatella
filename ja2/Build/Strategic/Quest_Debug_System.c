@@ -853,7 +853,6 @@ BOOLEAN	EnterQuestDebugSystem()
 //	UINT16	zItemDesc[ SIZE_ITEM_INFO ];
 
 	UINT16 usFontHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
-  VOBJECT_DESC    VObjectDesc;
 
 	if( gfExitQdsDueToMessageBox )
 	{
@@ -1014,14 +1013,9 @@ BOOLEAN	EnterQuestDebugSystem()
 
 
 	// load Scroll Horizontal Arrow graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Qd_ScrollArrows.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiQdScrollArrowImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Qd_ScrollArrows.sti", &guiQdScrollArrowImage));
 
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Bars.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &guiBrownBackgroundForTeamPanel ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Bars.sti", &guiBrownBackgroundForTeamPanel));
 
 
 	gfRedrawQuestDebugSystem = TRUE;

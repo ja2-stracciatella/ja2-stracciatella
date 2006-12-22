@@ -797,47 +797,22 @@ void GenerateConsString( wchar_t * zItemCons, OBJECTTYPE * pObject, UINT32 uiPix
 BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity )
 {
 	INT32 cnt;
-  VOBJECT_DESC    VObjectDesc;
 
 	// Load all four body type images
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_figure_large_male.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 1 ][ 0 ] ) ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_large_male.sti", &guiBodyInvVO[1][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_large_male_H.sti", &guiBodyInvVO[1][1]));
 
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_figure_large_male_H.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 1 ][ 1 ] ) ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[0][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male_H.sti", &guiBodyInvVO[0][1]));
 
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[2][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[2][1]));
 
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_normal_male.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 0 ][ 0 ] ) ) );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_normal_male_H.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 0 ][ 1 ] ) ) );
-
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_normal_male.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 2 ][ 0 ] ) ) );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_normal_male.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 2 ][ 1 ] ) ) );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_figure_female.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 3 ][ 0 ] ) ) );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\inventory_figure_female_H.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(guiBodyInvVO[ 3 ][ 1 ] ) ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_female.sti", &guiBodyInvVO[3][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_female_H.sti", &guiBodyInvVO[3][1]));
 
 	// add gold key graphic
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\gold_key_button.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &guiGoldKeyVO ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\gold_key_button.sti", &guiGoldKeyVO));
 
 	// Add cammo region
 	MSYS_DefineRegion( &gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, (INT16)(pCamoRegion->sX + CAMO_REGION_WIDTH ), (INT16)(pCamoRegion->sY + CAMO_REGION_HEIGHT ), MSYS_PRIORITY_HIGH,
@@ -2245,7 +2220,6 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
-	VOBJECT_DESC    VObjectDesc;
 	UINT8 ubString[48];
 	INT32		cnt;
 	wchar_t	pStr[10];
@@ -2443,18 +2417,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	}
 
 	// Load graphic
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy( VObjectDesc.ImageFile, "INTERFACE\\infobox.sti" );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiItemDescBox) );
-
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy( VObjectDesc.ImageFile, "INTERFACE\\iteminfoc.STI" );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiMapItemDescBox) );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy( VObjectDesc.ImageFile, "INTERFACE\\bullet.STI" );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiBullet) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\infobox.sti", &guiItemDescBox));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\iteminfoc.STI", &guiMapItemDescBox));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\bullet.STI", &guiBullet));
 
 	if ( gpItemDescObject->usItem != MONEY  )
 	{
@@ -2492,9 +2457,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		strcpy( VObjectDesc.ImageFile, "INTERFACE\\info_bil.sti" );
-		CHECKF( AddVideoObject( &VObjectDesc, &guiMoneyGraphicsForDescBox) );
+		CHECKF(AddVideoObjectFromFile("INTERFACE\\info_bil.sti", &guiMoneyGraphicsForDescBox));
 
 		//Create buttons for the money
 //		if (guiCurrentScreen ==  MAP_SCREEN )
@@ -5010,7 +4973,6 @@ BOOLEAN InKeyRingPopup( )
 
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
-	VOBJECT_DESC    VObjectDesc;
 	INT16						sX, sY, sCenX, sCenY;
 	SGPRect					aRect;
 	UINT8						ubLimit;
@@ -5050,9 +5012,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
   }
 
 	// Load graphics
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy( VObjectDesc.ImageFile, "INTERFACE\\extra_inventory.STI" );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiItemPopupBoxes) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -5244,7 +5204,6 @@ void DeleteItemStackPopup( )
 
 BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
-	VOBJECT_DESC    VObjectDesc;
 	SGPRect			aRect;
   ETRLEObject	*pTrav;
 	HVOBJECT		hVObject;
@@ -5277,9 +5236,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	gpItemPopupSoldier = pSoldier;
 
 	// Load graphics
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy( VObjectDesc.ImageFile, "INTERFACE\\extra_inventory.STI" );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiItemPopupBoxes) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
 	GetVideoObject( &hVObject, guiItemPopupBoxes );
@@ -5520,7 +5477,6 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 {
 	CHAR8	 zName[ 100 ];
 	UINT32	uiVo;
-	VOBJECT_DESC    VObjectDesc;
 	UINT8		ubGraphic;
 
 	// CHECK SUBCLASS
@@ -5575,9 +5531,9 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 	}
 
 	//Load item
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( VObjectDesc.ImageFile, "BIGITEMS\\%s", zName );
-	CHECKF( AddVideoObject( &VObjectDesc, &uiVo) );
+	SGPFILENAME ImageFile;
+	sprintf(ImageFile, "BIGITEMS\\%s", zName);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &uiVo));
 
 	*puiVo = uiVo;
 
@@ -5894,7 +5850,6 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT8						ubString[48];
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
@@ -5951,9 +5906,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		gItemPickupMenu.bNumSlotsPerPage = gItemPickupMenu.ubTotalItems;
 	}
 
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\itembox.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &(gItemPickupMenu.uiPanelVo) ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\itembox.sti", &gItemPickupMenu.uiPanelVo));
 
 	// Memalloc selection array...
 	 gItemPickupMenu.pfSelectedArray = MemAlloc(( sizeof( UINT8 ) * gItemPickupMenu.ubTotalItems ) );

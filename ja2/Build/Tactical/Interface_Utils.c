@@ -75,7 +75,6 @@ const char *pbCarPortraitFileNames[] = {
 BOOLEAN LoadCarPortraitValues( void )
 {
 	INT32 iCounter = 0;
-	VOBJECT_DESC     VObjectDesc;
 
 	if( giCarPortraits[ 0 ] != -1 )
 	{
@@ -83,9 +82,7 @@ BOOLEAN LoadCarPortraitValues( void )
 	}
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		sprintf( VObjectDesc.ImageFile, pbCarPortraitFileNames[ iCounter ] );
-		CHECKF( AddVideoObject( &VObjectDesc, &giCarPortraits[ iCounter ] ) );
+		CHECKF(AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter], &giCarPortraits[iCounter]));
 	}
 	return( TRUE );
 }

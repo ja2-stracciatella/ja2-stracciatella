@@ -95,7 +95,6 @@ BOOLEAN InitRadarScreen( )
 
 BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 {
-  VOBJECT_DESC    VObjectDesc;
 	CHAR8						zFilename[ 260 ];
 	INT32						cnt;
 	HVOBJECT				hVObject;
@@ -125,10 +124,9 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 		 }
 
 		 // Grab the Map image
-		 VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		 sprintf( VObjectDesc.ImageFile, "RADARMAPS\\%s.STI", zFilename );
-
-		 CHECKF(AddVideoObject(&VObjectDesc, &gusRadarImage));
+		 SGPFILENAME ImageFile;
+		 sprintf(ImageFile, "RADARMAPS\\%s.STI", zFilename);
+		 CHECKF(AddVideoObjectFromFile(ImageFile, &gusRadarImage));
 
 		 fImageLoaded = TRUE;
 
@@ -611,7 +609,6 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
 	INT16 sCounter = 0;
-	VOBJECT_DESC    VObjectDesc;
 	HVOBJECT hHandle;
 	UINT32 uiHandle;
 
@@ -619,9 +616,7 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 	{
 		// create regions
 		// load graphics
-	  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP("INTERFACE\\squadpanel.sti", VObjectDesc.ImageFile);
-	  CHECKF(AddVideoObject(&VObjectDesc, &uiHandle));
+	  CHECKF(AddVideoObjectFromFile("INTERFACE\\squadpanel.sti", &uiHandle));
 
 	  GetVideoObject(&hHandle, uiHandle);
 		BltVideoObject( guiSAVEBUFFER , hHandle, 0,538, 0 + gsVIEWPORT_END_Y);

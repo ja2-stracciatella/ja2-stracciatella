@@ -450,17 +450,9 @@ UINT32	CreditScreenShutdown( void )
 BOOLEAN		EnterCreditsScreen()
 {
 	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
 
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Credits.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiCreditBackGroundImage ));
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Credit Faces.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiCreditFaces ));
-
-
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Credits.sti", &guiCreditBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Credit Faces.sti", &guiCreditFaces));
 
 	//Initialize the root credit node
 	InitCreditNode( );

@@ -360,7 +360,6 @@ void GameInitBobbyRMailOrder()
 
 BOOLEAN EnterBobbyRMailOrder()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16					i;
 
 	gfReDrawBobbyOrder = FALSE;
@@ -370,44 +369,30 @@ BOOLEAN EnterBobbyRMailOrder()
 	gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 
 	// load the Order Grid graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BobbyOrderGrid.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyROrderGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyOrderGrid.sti", &guiBobbyROrderGrid));
 
 	// load the Location graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BobbyLocationBox.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRLocationGraphic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyLocationBox.sti", &guiBobbyRLocationGraphic));
 
 	// load the delivery speed graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BobbyDeliverySpeed.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDeliverySpeedGraphic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyDeliverySpeed.sti", &guiDeliverySpeedGraphic));
 
 	// load the delivery speed graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_CONFIRMORDER );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiConfirmGraphic));
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_CONFIRMORDER);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiConfirmGraphic));
 
 	// load the delivery speed graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\TotalSaveArea.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTotalSaveArea));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\TotalSaveArea.sti", &guiTotalSaveArea));
 
   // border
-  VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "INTERFACE\\TactPopUp.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiDropDownBorder ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\TactPopUp.sti", &guiDropDownBorder));
 
   // Gold Arrow for the scroll area
-  VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "LAPTOP\\GoldArrows.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiGoldArrowImages ) );
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\GoldArrows.sti", &guiGoldArrowImages));
 
   // Package Weight Graphic
-  VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "LAPTOP\\PackageWeight.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiPackageWeightImage	 ) );
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\PackageWeight.sti", &guiPackageWeightImage));
 
 
 	InitBobbyRWoodBackground();
@@ -2234,12 +2219,8 @@ void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON *btn,INT32 reason)
 
 BOOLEAN CreateBobbyRayOrderTitle()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 		// load BobbyRayTitle graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BobbyRayTitle.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRayTitle));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyRayTitle.sti", &guiBobbyRayTitle));
 
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,

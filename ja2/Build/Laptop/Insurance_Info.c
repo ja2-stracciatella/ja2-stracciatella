@@ -108,15 +108,12 @@ void EnterInitInsuranceInfo()
 
 BOOLEAN EnterInsuranceInfo()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16					usPosX;
 
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\bullet.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\bullet.sti", &guiBulletImage));
 
 
 	//left arrow

@@ -70,7 +70,7 @@ void GameInitAimLinks()
 
 BOOLEAN EnterAimLinks()
 {
-  VOBJECT_DESC    VObjectDesc;
+	SGPFILENAME ImageFile;
 	UINT16					usPosY;
 	INT16						i;
 
@@ -78,19 +78,16 @@ BOOLEAN EnterAimLinks()
 	InitAimMenuBar();
 
 	// load the Bobby link graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_BOBBYRAYLINK );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyLink));
+	GetMLGFilename(ImageFile, MLG_BOBBYRAYLINK);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBobbyLink));
 
 	// load the Funeral graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_MORTUARYLINK );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFuneralLink));
+	GetMLGFilename(ImageFile, MLG_MORTUARYLINK);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiFuneralLink));
 
 	// load the Insurance graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_INSURANCELINK );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceLink));
+	GetMLGFilename(ImageFile, MLG_INSURANCELINK);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceLink));
 
 	usPosY = AIM_LINK_BOBBY_LINK_Y;
 	for(i=0; i<AIM_LINK_NUM_LINKS; i++)

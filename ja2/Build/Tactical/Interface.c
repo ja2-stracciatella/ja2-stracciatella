@@ -237,7 +237,6 @@ INT16		gsCurInterfacePanel			= TEAM_PANEL;
 BOOLEAN InitializeTacticalInterface(  )
 {
 	VSURFACE_DESC		vs_desc;
-  VOBJECT_DESC    VObjectDesc;
 
 	// Load button Interfaces
 	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE/newicons3.sti", -1,3,4,5,-1 );
@@ -275,115 +274,71 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// LOAD CLOSE ANIM
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/p_close.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiCLOSE ) )
+	if (!AddVideoObjectFromFile("INTERFACE/p_close.sti", &guiCLOSE))
 		AssertMsg(0, "Missing INTERFACE/p_close.sti" );
 
 	// LOAD DEAD ANIM
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/p_dead.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiDEAD ) )
+	if (!AddVideoObjectFromFile("INTERFACE/p_dead.sti", &guiDEAD))
 		AssertMsg(0, "Missing INTERFACE/p_dead.sti" );
 
 	// LOAD HATCH
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/hatch.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiHATCH ) )
+	if (!AddVideoObjectFromFile("INTERFACE/hatch.sti", &guiHATCH))
 		AssertMsg(0, "Missing INTERFACE/hatch.sti" );
 
 	// LOAD INTERFACE GUN PICTURES
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/mdguns.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiGUNSM ) )
+	if (!AddVideoObjectFromFile("INTERFACE/mdguns.sti", &guiGUNSM))
 		AssertMsg(0, "Missing INTERFACE/mdguns.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/mdp1items.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiP1ITEMS ) )
+	if (!AddVideoObjectFromFile("INTERFACE/mdp1items.sti", &guiP1ITEMS))
 		AssertMsg(0, "Missing INTERFACE/mdplitems.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/mdp2items.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiP2ITEMS ) )
+	if (!AddVideoObjectFromFile("INTERFACE/mdp2items.sti", &guiP2ITEMS))
 		AssertMsg(0, "Missing INTERFACE/mdp2items.sti" );
 
 	// LOAD INTERFACE ITEM PICTURES
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/mdp3items.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiP3ITEMS ) )
+	if (!AddVideoObjectFromFile("INTERFACE/mdp3items.sti", &guiP3ITEMS))
 		AssertMsg(0, "Missing INTERFACE/mdp3items.sti" );
 
 	// LOAD INTERFACE BUTTON BORDER
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/button_frame.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiBUTTONBORDER ) )
+	if (!AddVideoObjectFromFile("INTERFACE/button_frame.sti", &guiBUTTONBORDER))
 		AssertMsg(0, "Missing INTERFACE/button_frame.sti" );
 
 	// LOAD AIM CUBES
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/aimcubes.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiAIMCUBES ) )
+	if (!AddVideoObjectFromFile("INTERFACE/aimcubes.sti", &guiAIMCUBES))
 		AssertMsg(0, "Missing INTERFACE/aimcubes.sti" );
 
 	// LOAD AIM BARS
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/aimbars.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiAIMBARS ) )
+	if (!AddVideoObjectFromFile("INTERFACE/aimbars.sti", &guiAIMBARS))
 		AssertMsg(0, "Missing INTERFACE/aimbars.sti" );
 
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/inventor.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiVEHINV ) )
+	if (!AddVideoObjectFromFile("INTERFACE/inventor.sti", &guiVEHINV))
 		AssertMsg(0, "Missing INTERFACE/inventor.sti" );
 
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/burst1.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiBURSTACCUM ) )
+	if (!AddVideoObjectFromFile("INTERFACE/burst1.sti", &guiBURSTACCUM))
 		AssertMsg(0, "Missing INTERFACE/burst1.sti" );
 
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/portraiticons.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiPORTRAITICONS ) )
+	if (!AddVideoObjectFromFile("INTERFACE/portraiticons.sti", &guiPORTRAITICONS))
 		AssertMsg(0, "Missing INTERFACE/portraiticons.sti" );
 
-
-
 	// LOAD RADIO
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/radio.sti", VObjectDesc.ImageFile);
-
-	if( !AddVideoObject( &VObjectDesc, &guiRADIO ) )
-	//	AssertMsg(0, "Missing INTERFACE/bracket.sti" );
+	if (!AddVideoObjectFromFile("INTERFACE/radio.sti", &guiRADIO))
 		AssertMsg(0, "Missing INTERFACE/radio.sti" );
 
 	// LOAD RADIO2
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/radio2.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiRADIO2 ) )
+	if (!AddVideoObjectFromFile("INTERFACE/radio2.sti", &guiRADIO2))
 		AssertMsg(0, "Missing INTERFACE/radio2.sti" );
 
 	// LOAD com panel 2
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/communicationpopup.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiCOMPANEL ) )
+	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup.sti", &guiCOMPANEL))
 		AssertMsg(0, "Missing INTERFACE/communicationpopup.sti" );
 
 	// LOAD ITEM GRIDS....
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/itemgrid.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiITEMPOINTERHATCHES ) )
+	if (!AddVideoObjectFromFile("INTERFACE/itemgrid.sti", &guiITEMPOINTERHATCHES))
 		AssertMsg(0, "Missing INTERFACE/itemgrid.sti" );
 
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE/communicationpopup_2.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiCOMPANELB ) )
+	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti", &guiCOMPANELB))
 		AssertMsg(0, "Missing INTERFACE/communicationpopup_2.sti" );
 
 
@@ -2831,7 +2786,6 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString)
 {
 	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
-  VOBJECT_DESC    VObjectDesc;
 	INT16		sX, sY;
 	INT32		cnt2;
 	INT16		sBarX = 0;
@@ -2840,24 +2794,16 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 
 	FLOAT		dNumStepsPerEnemy, dLength, dCurSize;
 
-
-	memset( &VObjectDesc, 0, sizeof( VObjectDesc ) );
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-
-	FilenameForBPP("INTERFACE/rect.sti", VObjectDesc.ImageFile);
-
-	if( !AddVideoObject( &VObjectDesc, &uiBAR ) )
+	if (!AddVideoObjectFromFile("INTERFACE/rect.sti", &uiBAR))
 		AssertMsg(0, "Missing INTERFACE/rect.sti" );
 
 	//if ( gGameOptions.fTurnTimeLimit )
 	{
-		FilenameForBPP("INTERFACE/timebargreen.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &uiPLAYERBAR ) )
+		if (!AddVideoObjectFromFile("INTERFACE/timebargreen.sti", &uiPLAYERBAR))
 			AssertMsg(0, "Missing INTERFACE/timebargreen.sti" );
 	}
 
-	FilenameForBPP("INTERFACE/timebaryellow.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &uiINTBAR ) )
+	if (!AddVideoObjectFromFile("INTERFACE/timebaryellow.sti", &uiINTBAR))
 		AssertMsg(0, "Missing INTERFACE/timebaryellow.sti" );
 
 	// Change dest buffer

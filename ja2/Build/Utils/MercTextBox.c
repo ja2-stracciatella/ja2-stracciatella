@@ -128,7 +128,6 @@ BOOLEAN ResetOverrideMercPopupBox( )
 BOOLEAN InitMercPopupBox( )
 {
 	INT32 iCounter = 0;
-  VOBJECT_DESC    VObjectDesc;
 
 	// init the pop up box list
 	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES; iCounter++ )
@@ -138,15 +137,11 @@ BOOLEAN InitMercPopupBox( )
 	}
 
 	// LOAD STOP ICON...
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\msgboxicons.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiBoxIcons ) )
+	if (!AddVideoObjectFromFile("INTERFACE\\msgboxicons.sti", &guiBoxIcons))
 		AssertMsg(0, "Missing INTERFACE\\msgboxicons.sti" );
 
 	// LOAD SKULL ICON...
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\msgboxiconskull.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &guiSkullIcons ) )
+	if (!AddVideoObjectFromFile("INTERFACE\\msgboxiconskull.sti", &guiSkullIcons))
 		AssertMsg(0, "Missing INTERFACE\\msgboxiconskull.sti" );
 
 
@@ -174,8 +169,6 @@ void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UIN
 // Tactical Popup
 BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 {
-	VOBJECT_DESC    VObjectDesc;
-
   // this function will load the graphics associated with the background and border index values
 
 	// the background
@@ -186,9 +179,7 @@ BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 	));
 
   // border
-  VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( zMercBorderPopupFilenames[ ubBorderIndex ], VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &gPopUpTextBox->uiMercTextPopUpBorder ) );
+	CHECKF(AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex], &gPopUpTextBox->uiMercTextPopUpBorder));
 
 	gPopUpTextBox->fMercTextPopupInitialized = TRUE;
 

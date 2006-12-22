@@ -67,15 +67,12 @@ void GameInitFloristCards()
 BOOLEAN EnterFloristCards()
 {
 	UINT16 i, j, usPosX, usPosY;
-  VOBJECT_DESC    VObjectDesc;
 	UINT8						ubCount;
 
 	InitFloristDefaults();
 
 	// load the Flower Account Box graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\CardBlank.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiCardBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\CardBlank.sti", &guiCardBackground));
 
 	ubCount = 0;
 	usPosY = FLORIST_CARD_FIRST_POS_Y;

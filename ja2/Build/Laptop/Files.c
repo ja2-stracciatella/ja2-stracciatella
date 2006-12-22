@@ -355,29 +355,20 @@ void DrawFilesTitleText( void )
 
 BOOLEAN LoadFiles( void )
 {
-  VOBJECT_DESC    VObjectDesc;
   // load files video objects into memory
 
 	// title bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
 
 	// top portion of the screen background
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\fileviewer.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\fileviewer.sti", &guiTOP));
 
 
 	// the highlight
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\highlight.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiHIGHLIGHT));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\highlight.sti", &guiHIGHLIGHT));
 
   	// top portion of the screen background
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\fileviewerwhite.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFileBack));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\fileviewerwhite.sti", &guiFileBack));
 
 	return (TRUE);
 }
@@ -779,7 +770,6 @@ BOOLEAN DisplayFormattedText( void )
   HVOBJECT hHandle;
   UINT32 uiFirstTempPicture;
 	UINT32 uiSecondTempPicture;
-  VOBJECT_DESC    VObjectDesc;
   INT16 usFreeSpace = 0;
 
 	fWaitAFrame = FALSE;
@@ -855,9 +845,7 @@ BOOLEAN DisplayFormattedText( void )
 			 // second format, one picture, all text below
 
        // load graphic
-			 VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	     FilenameForBPP( pFilesList->pPicFileNameList[ 0 ], VObjectDesc.ImageFile );
-	     CHECKF(AddVideoObject( &VObjectDesc, &uiFirstTempPicture ) );
+	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[0], &uiFirstTempPicture));
 
        GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
 
@@ -893,14 +881,10 @@ BOOLEAN DisplayFormattedText( void )
 			 // third format, two pictures, side by side with all text below
 
 			 // load first graphic
-			 VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	     FilenameForBPP( pFilesList->pPicFileNameList[ 0 ], VObjectDesc.ImageFile );
-	     CHECKF(AddVideoObject( &VObjectDesc, &uiFirstTempPicture));
+	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[0], &uiFirstTempPicture));
 
 			 // load second graphic
-			 VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	     FilenameForBPP( pFilesList->pPicFileNameList[ 1 ] , VObjectDesc.ImageFile );
-	     CHECKF(AddVideoObject( &VObjectDesc, &uiSecondTempPicture ) );
+	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[1], &uiSecondTempPicture));
 
        GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
 			 GetVideoObjectETRLESubregionProperties( uiSecondTempPicture, 0, &usSecondWidth,  &usSecondHeight );
@@ -1099,8 +1083,6 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 	UINT32 uiPicture;
 	HVOBJECT hHandle;
-	VOBJECT_DESC VObjectDesc;
-
 
 	ClearFileStringList( );
 
@@ -1260,9 +1242,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("LAPTOP\\ArucoFilesMap.sti", VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP\\ArucoFilesMap.sti", &uiPicture));
 
 		// get title bar object
 	  GetVideoObject(&hHandle, uiPicture);
@@ -1276,9 +1256,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("LAPTOP\\Enrico_Y.sti", VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_Y.sti", &uiPicture));
 
 		// get title bar object
 	  GetVideoObject(&hHandle, uiPicture);
@@ -1294,9 +1272,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 
 			// wedding pic
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("LAPTOP\\Enrico_W.sti", VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_W.sti", &uiPicture));
 
 		// get title bar object
 	  GetVideoObject(&hHandle, uiPicture);
@@ -1669,7 +1645,6 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 	INT32 iOffset = 0;
 	UINT32 uiPicture;
 	HVOBJECT hHandle;
-	VOBJECT_DESC VObjectDesc;
 	CHAR sTemp[ 128 ];
 
 	iOffset = ubFileOffsets[ iFileNumber ] ;
@@ -1787,10 +1762,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 					sprintf(sTemp, "%s%03d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[ iFileNumber + 1 ]);
 				}
 
-
-				VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-				FilenameForBPP(sTemp, VObjectDesc.ImageFile);
-				CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
+				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
 
 				//Blt face to screen to
 				GetVideoObject(&hHandle, uiPicture);
@@ -1801,9 +1773,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 
 				DeleteVideoObjectFromIndex( uiPicture );
 
-				VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-				FilenameForBPP("LAPTOP\\InterceptBorder.sti", VObjectDesc.ImageFile);
-				CHECKF(AddVideoObject(&VObjectDesc, &uiPicture));
+				CHECKF(AddVideoObjectFromFile("LAPTOP\\InterceptBorder.sti", &uiPicture));
 
 				//Blt face to screen to
 				GetVideoObject(&hHandle, uiPicture);

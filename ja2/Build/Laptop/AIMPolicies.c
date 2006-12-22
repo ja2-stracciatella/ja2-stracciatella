@@ -210,8 +210,6 @@ void EnterInitAimPolicies()
 
 BOOLEAN EnterAimPolicies()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	InitAimDefaults();
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
@@ -225,18 +223,11 @@ BOOLEAN EnterAimPolicies()
 	gfInPolicyToc = FALSE;
 
 	// load the Bottom Buttons graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BottomButton.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBottomButton));
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BottomButton2.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBottomButton2));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton.sti", &guiBottomButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton2.sti", &guiBottomButton2));
 
 	// load the Content Buttons graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\ContentButton.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiContentButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\ContentButton.sti", &guiContentButton));
 
 	RenderAimPolicies();
 	return(TRUE);

@@ -632,23 +632,14 @@ void HandlePersonnel( void )
 BOOLEAN LoadPersonnelGraphics( void )
 {
 	// load graphics needed for personnel screen
-  VOBJECT_DESC    VObjectDesc;
-
-	// load graphics
 
   // title bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
 
 	// the background grpahics
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\personnelwindow.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiSCREEN));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\personnelwindow.sti", &guiSCREEN));
 
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\personnel_inventory.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiPersonnelInventory));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\personnel_inventory.sti", &guiPersonnelInventory));
 
 	return(TRUE);
 }
@@ -856,7 +847,6 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 {
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
 
 	// draw face to soldier iId in slot iSlot
 
@@ -899,9 +889,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 		}
 	}
 
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP(sTemp, VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFACE));
+	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
 	//Blt face to screen to
 	GetVideoObject(&hFaceHandle, guiFACE);
@@ -1923,18 +1911,12 @@ void RenderPersonnelScreenBackground( void )
 BOOLEAN LoadPersonnelScreenBackgroundGraphics( void )
 {
 	// will load the graphics for the personeel screen background
-	VOBJECT_DESC    VObjectDesc;
 
 	// departed bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\departed.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDEPARTEDTEAM));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\departed.sti", &guiDEPARTEDTEAM));
 
 	// current bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\CurrentTeam.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiCURRENTTEAM));
-
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\CurrentTeam.sti", &guiCURRENTTEAM));
 
 	return ( TRUE );
 }
@@ -2059,7 +2041,6 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 	INT32 iTotalOnTeam = 0;
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
 	SOLDIERTYPE *pSoldier;
 	INT32 iId = 0;
 	INT32 iCnt = 0;
@@ -2103,9 +2084,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 				}
 			}
 
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP(sTemp, VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &guiFACE));
+		CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
 		//Blt face to screen to
 		GetVideoObject(&hFaceHandle, guiFACE);
@@ -4796,9 +4775,6 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 
 	char sTemp[100];
 	HVOBJECT hFaceHandle;
-  VOBJECT_DESC    VObjectDesc;
-
-
 
 	if( ( 50 < 	iId   )&&( 57 > 	iId   ) )
 	{
@@ -4816,9 +4792,7 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 		}
 	}
 
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP(sTemp, VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFACE));
+	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
 
 	//Blt face to screen to
@@ -5196,7 +5170,6 @@ void DisplayPersonnelTextOnTitleBar( void )
 BOOLEAN DisplayHighLightBox( void )
 {
 	// will display highlight box around selected merc
-	 VOBJECT_DESC VObjectDesc;
 	 UINT32 uiBox = 0;
 	 HVOBJECT hHandle;
 
@@ -5210,9 +5183,7 @@ BOOLEAN DisplayHighLightBox( void )
 	}
 
   // bounding
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\PicBorde.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &uiBox));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\PicBorde.sti", &uiBox));
 
 	// blit it
 	GetVideoObject(&hHandle, uiBox);
@@ -5414,8 +5385,6 @@ INT32 GetIdOfThisSlot( INT32 iSlot )
 
 BOOLEAN RenderAtmPanel( void )
 {
-
-	 VOBJECT_DESC VObjectDesc;
 	 UINT32 uiBox = 0;
 	 HVOBJECT hHandle;
 
@@ -5423,9 +5392,7 @@ BOOLEAN RenderAtmPanel( void )
 	// render the ATM panel
 	if( fShowAtmPanel )
 	{
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("LAPTOP\\AtmButtons.sti", VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &uiBox));
+		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
 
 		// blit it
 		GetVideoObject(&hHandle, uiBox);
@@ -5454,9 +5421,7 @@ BOOLEAN RenderAtmPanel( void )
 	{
 		// just show basic panel
 		// bounding
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("LAPTOP\\AtmButtons.sti", VObjectDesc.ImageFile);
-		CHECKF(AddVideoObject(&VObjectDesc, &uiBox));
+		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
 
 		GetVideoObject(&hHandle, uiBox);
 		BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( ATM_UL_X ), ( INT16 ) ( ATM_UL_Y ));

@@ -549,7 +549,6 @@ void HelpScreenHandler()
 
 BOOLEAN EnterHelpScreen()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16 usPosX, usPosY;//, usWidth, usHeight;
 //	INT32	iStartLoc;
 //	CHAR16 zText[1024];
@@ -640,9 +639,7 @@ BOOLEAN EnterHelpScreen()
 */
 
 	// load the help screen background graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\HelpScreen.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiHelpScreenBackGround));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\HelpScreen.sti", &guiHelpScreenBackGround));
 
 
 	//create the text buffer

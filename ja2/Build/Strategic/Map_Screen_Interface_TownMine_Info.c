@@ -763,7 +763,6 @@ void AddInventoryButtonForMapPopUpBox( void )
 	INT16 sX, sY;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
-	VOBJECT_DESC VObjectDesc;
 	UINT32 uiObject;
 	ETRLEObject	*pTrav;
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
@@ -771,9 +770,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 
 
 	// load the button
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mapinvbtns.sti", VObjectDesc.ImageFile);
-	AddVideoObject( &VObjectDesc, &uiObject );
+	AddVideoObjectFromFile("INTERFACE\\mapinvbtns.sti", &uiObject);
 
 	// Calculate smily face positions...
 	GetVideoObject( &hHandle, uiObject );
@@ -876,14 +873,11 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 void MinWidthOfTownMineInfoBox( void )
 {
 	HVOBJECT hHandle;
-	VOBJECT_DESC VObjectDesc;
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
 	UINT32 uiObject;
 	ETRLEObject	*pTrav;
 
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\mapinvbtns.sti", VObjectDesc.ImageFile);
-	AddVideoObject( &VObjectDesc, &uiObject );
+	AddVideoObjectFromFile("INTERFACE\\mapinvbtns.sti", &uiObject);
 
 	// Calculate smily face positions...
 	GetVideoObject( &hHandle, uiObject );

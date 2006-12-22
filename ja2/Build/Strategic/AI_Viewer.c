@@ -237,7 +237,6 @@ static void StringFromValue(wchar_t *str, size_t n, INT32 iValue, UINT32 uiMax)
 
 BOOLEAN CreateAIViewer()
 {
-  VOBJECT_DESC    VObjectDesc;
 	wchar_t str[6];
 
 	//Check to see if data exists.
@@ -255,11 +254,9 @@ BOOLEAN CreateAIViewer()
 	giSaveTCMode = giTimeCompressMode;
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( VObjectDesc.ImageFile, "DevTools\\arulco.sti" );
-	if( !AddVideoObject( &VObjectDesc, &guiMapGraphicID ) )
+	if (!AddVideoObjectFromFile("DevTools\\arulco.sti", &guiMapGraphicID))
 		AssertMsg( 0, "Failed to load data\\DevTools\\arulco.sti" );
-	sprintf( VObjectDesc.ImageFile, "DevTools\\icons.sti" );
-	if( !AddVideoObject( &VObjectDesc, &guiMapIconsID ) )
+	if (!AddVideoObjectFromFile("DevTools\\icons.sti", &guiMapIconsID))
 		AssertMsg( 0, "Failed to load data\\DevTools\\icons.sti" );
 
 	gfRenderViewer = TRUE;

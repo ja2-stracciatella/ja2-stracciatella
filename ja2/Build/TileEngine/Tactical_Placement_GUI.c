@@ -212,7 +212,6 @@ void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 
 void InitTacticalPlacementGUI()
 {
-	VOBJECT_DESC VObjectDesc;
 	INT32 i, xp, yp;
 	UINT8 ubFaceIndex;
 	gfTacticalPlacementGUIActive = TRUE;
@@ -229,14 +228,11 @@ void InitTacticalPlacementGUI()
 	GoIntoOverheadMap();
 
 	//Load the images
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( VObjectDesc.ImageFile, "Interface\\OverheadInterface.sti" );
-	if( !AddVideoObject( &VObjectDesc, &giOverheadPanelImage ) )
+	if (!AddVideoObjectFromFile("Interface\\OverheadInterface.sti", &giOverheadPanelImage))
 	{
 		AssertMsg( 0, "Failed to load Interface\\OverheadInterface.sti" );
 	}
-	sprintf( VObjectDesc.ImageFile, "Interface\\panels.sti" );
-	if( !AddVideoObject( &VObjectDesc, &giMercPanelImage ) )
+	if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
 	{
 		AssertMsg( 0, "Failed to load Interface\\panels.sti" );
 	}
@@ -353,21 +349,19 @@ void InitTacticalPlacementGUI()
 	//add all the faces now
 	for( i = 0; i < giPlacements; i++ )
 	{
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-
 		//Load the faces
+		SGPFILENAME ImageFile;
 		{
 			ubFaceIndex = gMercProfiles[ gMercPlacement[ i ].pSoldier->ubProfile ].ubFaceIndex;
 			if( ubFaceIndex < 100 )
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%02d.sti", ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", ubFaceIndex);
 			else
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%03d.sti", ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", ubFaceIndex);
 		}
 
-		if( !AddVideoObject( &VObjectDesc, &gMercPlacement[ i ].uiVObjectID ) )
+		if (!AddVideoObjectFromFile(ImageFile, &gMercPlacement[i].uiVObjectID))
 		{
-			sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\speck.sti" );
-			if( !AddVideoObject( &VObjectDesc, &gMercPlacement[ i ].uiVObjectID ) )
+			if (!AddVideoObjectFromFile("Faces\\65Face\\speck.sti", &gMercPlacement[i].uiVObjectID))
 			{
 				AssertMsg( 0, String("Failed to load %Faces\\65Face\\%03d.sti or it's placeholder, speck.sti", gMercProfiles[ gMercPlacement[ i ].pSoldier->ubProfile ].ubFaceIndex) );
 			}

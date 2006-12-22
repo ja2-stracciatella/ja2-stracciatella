@@ -483,7 +483,6 @@ void SetIntroType( INT8 bIntroType )
 void DisplaySirtechSplashScreen()
 {
   HVOBJECT hPixHandle;
-  VOBJECT_DESC    VObjectDesc;
 	UINT32 uiLogoID;
 
 	UINT32										 uiDestPitchBYTES;
@@ -497,15 +496,10 @@ void DisplaySirtechSplashScreen()
 	memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
 	UnLockVideoSurface( FRAME_BUFFER );
 
-
-	memset( &VObjectDesc, 0, sizeof( VOBJECT_DESC ) );
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\SirtechSplash.sti", VObjectDesc.ImageFile);
-
-//	FilenameForBPP("INTERFACE\\TShold.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject(&VObjectDesc, &uiLogoID) )
+	const char* const ImageFile = "INTERFACE\\SirtechSplash.sti";
+	if (!AddVideoObjectFromFile(ImageFile, &uiLogoID))
 	{
-		AssertMsg( 0, String( "Failed to load %s", VObjectDesc.ImageFile ) );
+		AssertMsg(0, String("Failed to load %s", ImageFile));
 		return;
 	}
 

@@ -57,16 +57,13 @@ void GameInitInsuranceComments()
 
 BOOLEAN EnterInsuranceComments()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT8 i;
 	UINT16 usPosX;
 
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\bullet.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsCmntBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\bullet.sti", &guiInsCmntBulletImage));
 
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)

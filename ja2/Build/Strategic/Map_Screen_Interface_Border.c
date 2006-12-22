@@ -119,18 +119,11 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 BOOLEAN LoadMapBorderGraphics( void )
 {
   // this procedure will load the graphics needed for the map border
-	VOBJECT_DESC    VObjectDesc;
-
-	// will load map border
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "INTERFACE\\MBS.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiMapBorder ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\MBS.sti", &guiMapBorder));
 
 /* corner was removed along with the Zoom feature
 	// will load map border corner
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "INTERFACE\\map_screen_cutout.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiMapBorderCorner ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_screen_cutout.sti", &guiMapBorderCorner));
 
 	fCursorIsOnMapScrollButtons = FALSE;
 */

@@ -4615,12 +4615,8 @@ void ShowUpdateBox( void )
 void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 {
 	INT32 iCounter = 0;
-	VOBJECT_DESC VObjectDesc;
-
-
 
 	// going to load face
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 
 	if( pSoldier->bLife == 0 )
 	{
@@ -4635,8 +4631,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 	// if update
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
 	{
-		sprintf( VObjectDesc.ImageFile, "Interface\\panels.sti" );
-		if( !AddVideoObject( &VObjectDesc, &giMercPanelImage ) )
+		if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
 		{
 			AssertMsg( 0, "Failed to load Interface\\panels.sti" );
 		}
@@ -4651,19 +4646,20 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 			// add to box
 			pUpdateSoldierBox[ iCounter ] = pSoldier;
 
+			SGPFILENAME ImageFile;
 			if( gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex < 100 )
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
 			}
 			else
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
 			}
 
 			// load the face
-			AddVideoObject( &VObjectDesc, &giUpdateSoldierFaces[ iCounter ] );
+			AddVideoObjectFromFile(ImageFile, &giUpdateSoldierFaces[iCounter]);
 
 			return;
 		}

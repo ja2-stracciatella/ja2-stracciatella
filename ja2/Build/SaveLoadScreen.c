@@ -459,7 +459,6 @@ void SetSaveLoadExitScreen( UINT32 uiScreen )
 BOOLEAN		EnterSaveLoadScreen()
 {
 	INT8	i;
-  VOBJECT_DESC    VObjectDesc;
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
 	UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y;
 
@@ -502,15 +501,12 @@ BOOLEAN		EnterSaveLoadScreen()
 	}
 
 	// load Main background  graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\LoadScreen.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiSlgBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\LoadScreen.sti", &guiSlgBackGroundImage));
 
 	// load Load Screen Add ons graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_LOADSAVEHEADER );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBackGroundAddOns));
-
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_LOADSAVEHEADER);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBackGroundAddOns));
 
 	guiSlgButtonImage = LoadButtonImage("INTERFACE\\LoadScreenAddOns.sti", -1,6,-1,9,-1 );
 //	guiSlgButtonImage = UseLoadedButtonImage( guiBackGroundAddOns, -1,9,-1,6,-1 );

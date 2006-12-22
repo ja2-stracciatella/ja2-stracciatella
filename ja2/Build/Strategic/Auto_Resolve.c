@@ -1774,7 +1774,6 @@ void RenderAutoResolve()
 
 void CreateAutoResolveInterface()
 {
-	VOBJECT_DESC    VObjectDesc;
 	INT32 i, index;
 	HVOBJECT hVObject;
 	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
@@ -1785,9 +1784,7 @@ void CreateAutoResolveInterface()
 	gpAR->fExitAutoResolve = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( VObjectDesc.ImageFile, "Interface\\AutoResolve.sti" );
-	if( !AddVideoObject( &VObjectDesc, &gpAR->iPanelImages ) )
+	if (!AddVideoObjectFromFile("Interface\\AutoResolve.sti", &gpAR->iPanelImages))
 	{
 		AssertMsg( 0, "Failed to load Interface\\AutoResolve.sti" );
 	}
@@ -1827,8 +1824,7 @@ void CreateAutoResolveInterface()
 	gpAR->iButtonImage[ DONELOSE_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 16, -1, 17, -1 );
 
 	//Load the generic faces for civs and enemies
-	sprintf( VObjectDesc.ImageFile, "Interface\\SmFaces.sti" );
-	if( !AddVideoObject( &VObjectDesc, &gpAR->iFaces ) )
+	if (!AddVideoObjectFromFile("Interface\\SmFaces.sti", &gpAR->iFaces))
 	{
 		AssertMsg( 0, "Failed to load Interface\\SmFaces.sti" );
 	}
@@ -1839,8 +1835,7 @@ void CreateAutoResolveInterface()
 	}
 
 	//Add the battle over panels
-	sprintf( VObjectDesc.ImageFile, "Interface\\indent.sti" );
-	if( !AddVideoObject( &VObjectDesc, &gpAR->iIndent	) )
+	if (!AddVideoObjectFromFile("Interface\\indent.sti", &gpAR->iIndent))
 	{
 		AssertMsg( 0, "Failed to load Interface\\indent.sti" );
 	}
@@ -1848,14 +1843,12 @@ void CreateAutoResolveInterface()
 	//add all the faces now
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		VOBJECT_DESC VObjectDesc;
 		//Load the face
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex );
-		if( !AddVideoObject( &VObjectDesc, &gpMercs[ i ].uiVObjectID ) )
+		SGPFILENAME ImageFile;
+		sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
+		if (!AddVideoObjectFromFile(ImageFile, &gpMercs[i].uiVObjectID))
 		{
-			sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\speck.sti" );
-			if( !AddVideoObject( &VObjectDesc, &gpMercs[ i ].uiVObjectID ) )
+			if (!AddVideoObjectFromFile("Faces\\65Face\\speck.sti", &gpMercs[i].uiVObjectID))
 			{
 				AssertMsg( 0, String("Failed to load %Faces\\65Face\\%02d.sti or it's placeholder, speck.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex) );
 			}
@@ -2580,7 +2573,6 @@ void MercCellMouseClickCallback( MOUSE_REGION *reg, INT32 reason )
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 void CalculateAutoResolveInfo()
 {
-	VOBJECT_DESC VObjectDesc;
 	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
 	Assert( gpAR->ubSectorX >= 1 && gpAR->ubSectorX <= 16 );
@@ -2611,7 +2603,6 @@ void CalculateAutoResolveInfo()
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 	gpAR->ubMercs = 0;
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 	pGroup = gpGroupList;
 	while( pGroup )
 	{

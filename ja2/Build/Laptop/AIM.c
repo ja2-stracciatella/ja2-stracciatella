@@ -222,7 +222,7 @@ void GameInitAIM()
 
 BOOLEAN EnterAIM()
 {
-  VOBJECT_DESC    VObjectDesc;
+	SGPFILENAME ImageFile;
 
 	gubWarningTimer = 0;
 	gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
@@ -231,55 +231,40 @@ BOOLEAN EnterAIM()
 	InitAimDefaults();
 
 	// load the MemberShipcard graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\membercard.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMemberCard));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\membercard.sti", &guiMemberCard));
 
 	// load the Policies graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Policies.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiPolicies));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Policies.sti", &guiPolicies));
 
 	// load the Links graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Links.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLinks));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Links.sti", &guiLinks));
 
 	// load the History graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_HISTORY );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiHistory));
+	GetMLGFilename(ImageFile, MLG_HISTORY);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiHistory));
 
 	// load the Wanring graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_WARNING );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiWarning));
+	GetMLGFilename(ImageFile, MLG_WARNING);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiWarning));
 
 	// load the flower advertisment and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\flowerad_16.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFlowerAdvertisement));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\flowerad_16.sti", &guiFlowerAdvertisement));
 
 	// load the your ad advertisment and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_YOURAD13 );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiAdForAdsImages));
+	GetMLGFilename(ImageFile, MLG_YOURAD13);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiAdForAdsImages));
 
 	// load the insurance advertisment and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_INSURANCEAD10 );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceAdImages));
+	GetMLGFilename(ImageFile, MLG_INSURANCEAD10);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceAdImages));
 
 	// load the funeral advertisment and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_FUNERALAD9 );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFuneralAdImages));
+	GetMLGFilename(ImageFile, MLG_FUNERALAD9);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiFuneralAdImages));
 
 	// load the funeral advertisment and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_BOBBYRAYAD21 );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRAdImages ));
-
+	GetMLGFilename(ImageFile, MLG_BOBBYRAYAD21);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBobbyRAdImages));
 
 
 	//** Mouse Regions **
@@ -471,17 +456,13 @@ void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN InitAimDefaults()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	// load the Rust bacground graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\rustbackground.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiRustBackGround));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\rustbackground.sti", &guiRustBackGround));
 
 	// load the Aim Symbol graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_AIMSYMBOL );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiAimSymbol));
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_AIMSYMBOL);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiAimSymbol));
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y, AIM_SYMBOL_X+AIM_SYMBOL_WIDTH, AIM_SYMBOL_Y+AIM_SYMBOL_HEIGHT, MSYS_PRIORITY_HIGH,

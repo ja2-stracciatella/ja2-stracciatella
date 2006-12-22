@@ -60,14 +60,10 @@ void GameInitMercsNoAccount()
 
 BOOLEAN EnterMercsNoAccount()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\NoAccountBox.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiNoAccountImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\NoAccountBox.sti", &guiNoAccountImage));
 
 
 	// Open Accouint button

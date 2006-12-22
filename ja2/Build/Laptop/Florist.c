@@ -89,16 +89,12 @@ void GameInitFlorist()
 
 BOOLEAN EnterFlorist()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	SetBookMark( FLORIST_BOOKMARK );
 
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\HandBullet.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiHandBullet));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\HandBullet.sti", &guiHandBullet));
 
 	guiGalleryButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
 
@@ -185,27 +181,23 @@ void RenderFlorist()
 
 BOOLEAN InitFloristDefaults()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	// load the Florist background graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\leafback.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiFloristBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\leafback.sti", &guiFloristBackground));
 
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
 		// load the small title graphic and add it
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		GetMLGFilename( VObjectDesc.ImageFile, MLG_LARGEFLORISTSYMBOL );
-		CHECKF(AddVideoObject(&VObjectDesc, &guiLargeTitleSymbol));
+		SGPFILENAME ImageFile;
+		GetMLGFilename(ImageFile, MLG_LARGEFLORISTSYMBOL);
+		CHECKF(AddVideoObjectFromFile(ImageFile, &guiLargeTitleSymbol));
 	}
 	else
 	{
 		// load the leaf back graphic and add it
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		GetMLGFilename( VObjectDesc.ImageFile, MLG_SMALLFLORISTSYMBOL );
-		CHECKF(AddVideoObject(&VObjectDesc, &guiSmallTitleSymbol));
+		SGPFILENAME ImageFile;
+		GetMLGFilename(ImageFile, MLG_SMALLFLORISTSYMBOL);
+		CHECKF(AddVideoObjectFromFile(ImageFile, &guiSmallTitleSymbol));
 
 
 		//flower title homepage link

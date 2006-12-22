@@ -5132,24 +5132,11 @@ BOOLEAN DropAPersonInASector( UINT8 ubType, INT16 sX, INT16 sY )
 
 BOOLEAN LoadMilitiaPopUpBox( void )
 {
-	VOBJECT_DESC     VObjectDesc;
-
 	// load the militia pop up box
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Militia.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMilitia));
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\Militiamaps.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMilitiaMaps));
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\MilitiamapsectorOutline2.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMilitiaSectorHighLight));
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\MilitiamapsectorOutline.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMilitiaSectorOutline ));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Militia.sti", &guiMilitia));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\Militiamaps.sti", &guiMilitiaMaps));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\MilitiamapsectorOutline2.sti", &guiMilitiaSectorHighLight));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\MilitiamapsectorOutline.sti", &guiMilitiaSectorOutline));
 
 	return( TRUE );
 }
@@ -6361,13 +6348,10 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 
 BOOLEAN DrawMapForDemo( void )
 {
-	VOBJECT_DESC     VObjectDesc;
 	UINT32 uiTempObject;
 	HVOBJECT hHandle;
 
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\map_1.sti", VObjectDesc.ImageFile);
-	CHECKF( AddVideoObject( &VObjectDesc, &uiTempObject ) );
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_1.sti", &uiTempObject));
 
 	GetVideoObject(&hHandle, uiTempObject );
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0,290, 26);

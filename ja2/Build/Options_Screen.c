@@ -342,7 +342,6 @@ UINT32	OptionsScreenShutdown()
 
 BOOLEAN		EnterOptionsScreen()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16 usPosY;
 	UINT8	cnt;
 	UINT16	usTextWidth, usTextHeight;
@@ -394,14 +393,12 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	gfExitOptionsDueToMessageBox = FALSE;
 
 	// load the options screen background graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\OptionScreenBase.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiOptionBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE\\OptionScreenBase.sti", &guiOptionBackGroundImage));
 
 	// load button, title graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_OPTIONHEADER );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiOptionsAddOnImages));
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_OPTIONHEADER);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiOptionsAddOnImages));
 
 	//Save game button
 	giOptionsButtonImages = LoadButtonImage("INTERFACE\\OptionScreenAddons.sti", -1,2,-1,3,-1 );

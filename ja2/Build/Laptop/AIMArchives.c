@@ -166,7 +166,6 @@ void EnterInitAimArchives()
 
 BOOLEAN EnterAimArchives()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16	usPosX, i;
 
 
@@ -181,34 +180,22 @@ BOOLEAN EnterAimArchives()
 	gubPageNum = (UINT8)giCurrentSubPage;
 
 	// load the Alumni Frame and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\AlumniFrame.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiAlumniFrame));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\AlumniFrame.sti", &guiAlumniFrame));
 
 	// load the 1st set of faces and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Old_Aim.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiOldAim));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Old_Aim.sti", &guiOldAim));
 
 	// load the Bottom Buttons graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BottomButton.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiPageButtons));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton.sti", &guiPageButtons));
 
 	// load the PopupPic graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\PopupPicFrame.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiPopUpPic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\PopupPicFrame.sti", &guiPopUpPic));
 
 		// load the AlumniPopUp graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\AlumniPopUp.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiAlumniPopUp));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\AlumniPopUp.sti", &guiAlumniPopUp));
 
 		// load the Done Button graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\DoneButton.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDoneButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\DoneButton.sti", &guiDoneButton));
 
 	InitAlumniFaceRegions();
 

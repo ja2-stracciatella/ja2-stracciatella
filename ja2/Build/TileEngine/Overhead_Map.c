@@ -525,7 +525,6 @@ BOOLEAN InOverheadMap( )
 
 void GoIntoOverheadMap( )
 {
-  VOBJECT_DESC    VObjectDesc;
 	HVOBJECT				hVObject;
 
 #ifdef JA2DEMO
@@ -551,16 +550,12 @@ void GoIntoOverheadMap( )
 	MSYS_AddRegion( &OverheadRegion );
 
 	// LOAD CLOSE ANIM
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\MAP_BORD.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &uiOVERMAP ) )
+	if (!AddVideoObjectFromFile("INTERFACE\\MAP_BORD.sti", &uiOVERMAP))
 		AssertMsg(0, "Missing INTERFACE\\MAP_BORD.sti" );
 
 
 	// LOAD PERSONS
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("INTERFACE\\PERSONS.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject( &VObjectDesc, &uiPERSONS ) )
+	if (!AddVideoObjectFromFile("INTERFACE\\PERSONS.sti", &uiPERSONS))
 		AssertMsg(0, "Missing INTERFACE\\PERSONS.sti" );
 
 	// Add shades to persons....

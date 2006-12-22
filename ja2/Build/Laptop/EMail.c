@@ -385,35 +385,24 @@ void GameInitEmail()
 
 BOOLEAN EnterEmail()
 {
-  VOBJECT_DESC    VObjectDesc;
   // load graphics
 
 	iCurrentPage = LaptopSaveInfo.iCurrentEmailPage;
 
 	// title bar
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/programtitlebar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailTitle));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiEmailTitle));
 
 	// the list background
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/Mailwindow.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Mailwindow.sti", &guiEmailBackground));
 
 	// the indication/notification box
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/MailIndicator.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailIndicator));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/MailIndicator.sti", &guiEmailIndicator));
 
 	// the message background
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/emailviewer.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiEmailMessage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/emailviewer.sti", &guiEmailMessage));
 
   // the message background
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP/maillistdivider.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMAILDIVIDER));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/maillistdivider.sti", &guiMAILDIVIDER));
 
   //AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ) );
 	// initialize mouse regions
@@ -4502,9 +4491,7 @@ BOOLEAN DisplayNumberOfPagesToThisEmail( INT32 iViewerY )
 
 	// get and blt the email list background
    // load, blt and delete graphics
-	//VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-//	FilenameForBPP( "LAPTOP/mailindent.sti", VObjectDesc.ImageFile );
-	//CHECKF( AddVideoObject( &VObjectDesc, &uiMailIndent ) );
+	//CHECKF(AddVideoObjectFromFile("LAPTOP/mailindent.sti", &uiMailIndent));
  // GetVideoObject( &hHandle, uiMailIndent );
  // BltVideoObject( FRAME_BUFFER, hHandle, 0,VIEWER_X + INDENT_X_OFFSET, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 10);
  // DeleteVideoObjectFromIndex( uiMailIndent );

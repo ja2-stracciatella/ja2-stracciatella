@@ -226,12 +226,8 @@ void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 void HandleLoadOfMapBottomGraphics( void )
 {
 	// will load the graphics needed for the mapscreen interface bottom
-	VOBJECT_DESC    VObjectDesc;
-
 	// will create buttons for interface bottom
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "INTERFACE\\map_screen_bottom.sti", VObjectDesc.ImageFile );
-	if( !AddVideoObject( &VObjectDesc, &guiMAPBOTTOMPANEL ) )
+	if (!AddVideoObjectFromFile("INTERFACE\\map_screen_bottom.sti", &guiMAPBOTTOMPANEL))
 		return;
 
 	// load slider bar icon
@@ -835,12 +831,7 @@ void RemoveCompressModePause( void )
 void LoadMessageSliderBar( void )
 {
   // this function will load the message slider bar
-	VOBJECT_DESC    VObjectDesc;
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "INTERFACE\\map_screen_bottom_arrows.sti", VObjectDesc.ImageFile );
-	if( !AddVideoObject( &VObjectDesc, &guiSliderBar ) )
-		return;
+	AddVideoObjectFromFile("INTERFACE\\map_screen_bottom_arrows.sti", &guiSliderBar);
 }
 
 void DeleteMessageSliderBar( void )

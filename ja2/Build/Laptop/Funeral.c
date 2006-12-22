@@ -124,43 +124,32 @@ void GameInitFuneral()
 
 BOOLEAN EnterFuneral()
 {
-  VOBJECT_DESC    VObjectDesc;
+	SGPFILENAME ImageFile;
 	UINT16					usPosX, i;
 
 	// load the Closed graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_CLOSED );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiClosedSign));
+	GetMLGFilename(ImageFile, MLG_CLOSED);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiClosedSign));
 
 	// load the Left column graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\LeftColumn.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLeftColumn));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\LeftColumn.sti", &guiLeftColumn));
 
 	// load the Link carving graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\LinkCarving.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLinkCarving));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\LinkCarving.sti", &guiLinkCarving));
 
 	// load the Marble graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Marble.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMarbleBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Marble.sti", &guiMarbleBackground));
 
 	// load the McGillicuttys sign graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_MCGILLICUTTYS );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMcGillicuttys));
+	GetMLGFilename(ImageFile, MLG_MCGILLICUTTYS);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMcGillicuttys));
 
 	// load the Mortuary  graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_MORTUARY );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMortuary));
+	GetMLGFilename(ImageFile, MLG_MORTUARY);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMortuary));
 
 	// load the right column graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\RightColumn.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiRightColumn));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\RightColumn.sti", &guiRightColumn));
 
 
 	usPosX = FUNERAL_LINK_1_X;

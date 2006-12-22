@@ -114,7 +114,6 @@ void HandleIMPPortraits( void )
 BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 {
   // render the portrait of the current picture
-  VOBJECT_DESC    VObjectDesc;
 	HVOBJECT hHandle;
 	UINT32 uiGraphicHandle;
 
@@ -122,9 +121,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 	{
 
 		// load it
-    VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait ] , VObjectDesc.ImageFile);
-	  CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
+	  CHECKF(AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait], &uiGraphicHandle));
 
 	  // show it
     GetVideoObject(&hHandle, uiGraphicHandle);
@@ -139,9 +136,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 	else
 	{
     	// load it
-    VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	  FilenameForBPP( pPlayerSelectedBigFaceFileNames[ iCurrentPortrait + 8 ] , VObjectDesc.ImageFile);
-	  CHECKF(AddVideoObject(&VObjectDesc, &uiGraphicHandle));
+	  CHECKF(AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait + 8], &uiGraphicHandle));
 
 	  // show it
     GetVideoObject(&hHandle, uiGraphicHandle);

@@ -77,16 +77,13 @@ void GameInitAimFacialIndex()
 
 BOOLEAN EnterAimFacialIndex()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
 	const char *sFaceLoc = "FACES\\";
 	char			sTemp[100];
 
 	// load the Portait graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\MugShotBorder3.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiMugShotBorder));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\MugShotBorder3.sti", &guiMugShotBorder));
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;
@@ -103,11 +100,7 @@ BOOLEAN EnterAimFacialIndex()
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
 			sprintf(sTemp, "%s%02d.sti", sFaceLoc, AimMercArray[i]);
-			VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-			FilenameForBPP(sTemp, VObjectDesc.ImageFile);
-			if( !AddVideoObject(&VObjectDesc, &guiAimFiFace[i]) )
-				return( FALSE );
-
+			if (!AddVideoObjectFromFile(sTemp, &guiAimFiFace[i])) return FALSE;
 
 			usPosX += AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X;
 			i++;

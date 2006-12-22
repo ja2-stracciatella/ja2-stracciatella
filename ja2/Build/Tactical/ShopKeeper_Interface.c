@@ -814,7 +814,6 @@ UINT32	ShopKeeperScreenShutdown()
 
 BOOLEAN EnterShopKeeperInterface()
 {
-	VOBJECT_DESC		VObjectDesc;
 	UINT8						ubCnt;
 	CHAR8						zTemp[32];
 	VSURFACE_DESC		vs_desc;
@@ -857,9 +856,7 @@ BOOLEAN EnterShopKeeperInterface()
 	SetSMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
 
 	// load the Main trade screen backgroiund image
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("InterFace\\TradeScreen.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject(&VObjectDesc, &guiMainTradeScreenImage ))
+	if (!AddVideoObjectFromFile("InterFace\\TradeScreen.sti", &guiMainTradeScreenImage))
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load TradeScreen.sti" );
@@ -870,9 +867,7 @@ BOOLEAN EnterShopKeeperInterface()
 
 
 	// load the Main trade screen background image
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("InterFace\\itemcrossout.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject(&VObjectDesc, &guiItemCrossOut ))
+	if (!AddVideoObjectFromFile("InterFace\\itemcrossout.sti", &guiItemCrossOut))
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load itemcrossout.sti" );
@@ -885,9 +880,7 @@ BOOLEAN EnterShopKeeperInterface()
 /*
 ATM:
 	// load the Main trade screen backgroiund image
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("InterFace\\TradeScreenAtm.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiSkiAtmImage ));
+	CHECKF(AddVideoObjectFromFile("InterFace\\TradeScreenAtm.sti", &guiSkiAtmImage));
 */
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
@@ -907,9 +900,7 @@ ATM:
 			sprintf( zTemp, "FACES\\33FACE\\%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
 
 			//While we are at it, add their small face
-			VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-			FilenameForBPP( zTemp, VObjectDesc.ImageFile);
-			if(!AddVideoObject(&VObjectDesc, &guiSmallSoldiersFace[ gubNumberMercsInArray ] ))
+			if (!AddVideoObjectFromFile(zTemp, &guiSmallSoldiersFace[gubNumberMercsInArray]))
 			{
 				#ifdef JA2BETAVERSION
 						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %s", zTemp );

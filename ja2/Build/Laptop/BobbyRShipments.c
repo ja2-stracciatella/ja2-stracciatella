@@ -119,14 +119,10 @@ void GameInitBobbyRShipments()
 
 BOOLEAN EnterBobbyRShipments()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BobbyRay_OnOrder.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBobbyRShipmentGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyRay_OnOrder.sti", &guiBobbyRShipmentGrid));
 
 
 	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP\\CatalogueButton.sti", -1,0,-1,1,-1 );

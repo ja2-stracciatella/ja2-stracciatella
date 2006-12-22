@@ -95,7 +95,6 @@ void GameInitInsurance()
 
 BOOLEAN EnterInsurance()
 {
-  VOBJECT_DESC    VObjectDesc;
 	UINT16					usPosX, i;
 
 	SetBookMark( INSURANCE_BOOKMARK );
@@ -103,14 +102,12 @@ BOOLEAN EnterInsurance()
 	InitInsuranceDefaults();
 
 	// load the Insurance title graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	GetMLGFilename( VObjectDesc.ImageFile, MLG_INSURANCETITLE );
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceTitleImage));
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_INSURANCETITLE);
+	CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceTitleImage));
 
 	// load the red bar on the side of the page and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Bullet.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Bullet.sti", &guiInsuranceBulletImage));
 
 	usPosX = INSURANCE_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<3; i++)
@@ -225,30 +222,22 @@ void RenderInsurance()
 
 BOOLEAN InitInsuranceDefaults()
 {
-  VOBJECT_DESC    VObjectDesc;
-
 	// load the Flower Account Box graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\BackGroundTile.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceBackGround));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\BackGroundTile.sti", &guiInsuranceBackGround));
 
 	// load the red bar on the side of the page and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\LeftTile.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceRedBarImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\LeftTile.sti", &guiInsuranceRedBarImage));
 
 	// load the red bar on the side of the page and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\LargeBar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceBigRedLineImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\LargeBar.sti", &guiInsuranceBigRedLineImage));
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
 		// load the small title for the every page other then the first page
-		VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-		GetMLGFilename( VObjectDesc.ImageFile, MLG_SMALLTITLE );
-		CHECKF(AddVideoObject(&VObjectDesc, &guiInsuranceSmallTitleImage));
+		SGPFILENAME ImageFile;
+		GetMLGFilename(ImageFile, MLG_SMALLTITLE);
+		CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceSmallTitleImage));
 
 		//create the link to the home page on the small titles
 		MSYS_DefineRegion( &gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85, INSURANCE_SMALL_TITLE_Y, (UINT16)(INSURANCE_SMALL_TITLE_X + INSURANCE_SMALL_TITLE_WIDTH), (UINT16)(INSURANCE_SMALL_TITLE_Y+INSURANCE_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,

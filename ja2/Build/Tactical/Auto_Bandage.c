@@ -1030,32 +1030,29 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 {
 	INT32 iCounter = 0;
 	INT32 iNumberOfDoctors = 0;
-	VOBJECT_DESC     VObjectDesc;
-
 
 	// reset
 	memset( &giAutoBandagesSoldierFaces, -1, 2 * MAX_CHARACTER_COUNT );
-
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		// find a free slot
 		if( iDoctorList[ iCounter ] != -1 )
 		{
+			SGPFILENAME ImageFile;
 			if( gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex < 100 )
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
 			}
 			else
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
 			}
 
 			// load the face
-			AddVideoObject( &VObjectDesc, &giAutoBandagesSoldierFaces[ iCounter ] );
+			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter]);
 			iNumberOfDoctors++;
 
 		}
@@ -1066,27 +1063,26 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 		// find a free slot
 		if( iPatientList[ iCounter ] != -1 )
 		{
+			SGPFILENAME ImageFile;
 			if( gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex < 100 )
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
 			}
 			else
 			{
 				// grab filename of face
-				sprintf( VObjectDesc.ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
+				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
 			}
 
 			// load the face
-			AddVideoObject( &VObjectDesc, &giAutoBandagesSoldierFaces[ iCounter + iNumberOfDoctors ] );
+			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors]);
 
 		}
 	}
 
 		// grab panels
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( VObjectDesc.ImageFile, "Interface\\panels.sti" );
-	if( !AddVideoObject( &VObjectDesc, &giMercPanelImage ) )
+	if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
 	{
 		AssertMsg( 0, "Failed to load Interface\\panels.sti" );
 	}

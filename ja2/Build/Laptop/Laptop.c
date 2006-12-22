@@ -814,8 +814,6 @@ UINT32 LaptopScreenShutdown()
 INT32 EnterLaptop()
 {
 	//Create, load, initialize data -- just entered the laptop.
-
-  VOBJECT_DESC    VObjectDesc;
   INT32 iCounter=0;
 
 	// we are re entering due to message box, leave NOW!
@@ -892,35 +890,22 @@ INT32 EnterLaptop()
 	giCurrentRegion=EMAIL_REGION;
 
 	// load the laptop graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\laptop3.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLAPTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\laptop3.sti", &guiLAPTOP));
 
 	// background for panel
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\taskbar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLaptopBACKGROUND));
-
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\taskbar.sti", &guiLaptopBACKGROUND));
 
 	// background for panel
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLEBARLAPTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLEBARLAPTOP));
 
 	// lights for power and HD
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\lights.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiLIGHTS));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\lights.sti", &guiLIGHTS));
 
 	// icons for title bars
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\ICONS.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiTITLEBARICONS));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\ICONS.sti", &guiTITLEBARICONS));
 
 	// load, blt and delete graphics
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP( "LAPTOP\\NewMailWarning.sti", VObjectDesc.ImageFile );
-	CHECKF( AddVideoObject( &VObjectDesc, &guiEmailWarning ) );
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\NewMailWarning.sti", &guiEmailWarning));
 	// load background
 	LoadDesktopBackground( );
 
@@ -3069,49 +3054,15 @@ BOOLEAN RemoveBookMark( INT32 iBookId )
 
 BOOLEAN LoadBookmark()
 {
-  VOBJECT_DESC    VObjectDesc;
-
-
 		// grab download bars too
-
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\downloadtop.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDOWNLOADTOP));
-
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\downloadmid.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDOWNLOADMID));
-
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\downloadbot.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiDOWNLOADBOT));
-
-
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\bookmarktop.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBOOKTOP));
-
-
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\bookmarkmiddle.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBOOKMID));
-
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\webpages.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBOOKMARK));
-
-
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\hilite.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBOOKHIGH));
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\Bookmarkbottom.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiBOOKBOT));
-
-
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadtop.sti",    &guiDOWNLOADTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadmid.sti",    &guiDOWNLOADMID));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadbot.sti",    &guiDOWNLOADBOT));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\bookmarktop.sti",    &guiBOOKTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\bookmarkmiddle.sti", &guiBOOKMID));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\webpages.sti",       &guiBOOKMARK));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\hilite.sti",         &guiBOOKHIGH));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\Bookmarkbottom.sti", &guiBOOKBOT));
 	return( TRUE );
 }
 
@@ -3594,16 +3545,8 @@ BOOLEAN LoadLoadPending( void )
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
-  VOBJECT_DESC    VObjectDesc;
-
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\graphwindow.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiGRAPHWINDOW));
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\graphsegment.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &guiGRAPHBAR));
-
-
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\graphwindow.sti", &guiGRAPHWINDOW));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\graphsegment.sti", &guiGRAPHBAR));
 	return (TRUE);
 }
 
@@ -5448,14 +5391,11 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	// will render the title bar for the www program
   UINT32 uiTITLEFORWWW;
 	HVOBJECT hHandle;
-  VOBJECT_DESC VObjectDesc;
 	INT32 iIndex = 0;
 	CHAR16 sString[256];
 
 	 // title bar - load
-  VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\programtitlebar.sti", VObjectDesc.ImageFile);
-	CHECKF(AddVideoObject(&VObjectDesc, &uiTITLEFORWWW));
+	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &uiTITLEFORWWW));
 
 	// blit title
   GetVideoObject(&hHandle, uiTITLEFORWWW);

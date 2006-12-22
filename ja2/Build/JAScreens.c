@@ -812,7 +812,6 @@ UINT32 SexScreenInit(void)
 UINT32 SexScreenHandle(void)
 {
 	static UINT8					ubCurrentScreen = 0;
-  VOBJECT_DESC					VObjectDesc;
 	static UINT32					guiSMILY;
 	static INT8						bCurFrame = 0;
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
@@ -829,9 +828,7 @@ UINT32 SexScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		// Load face....
-		VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-		FilenameForBPP("INTERFACE\\luckysmile.sti", VObjectDesc.ImageFile);
-		if( !AddVideoObject( &VObjectDesc, &guiSMILY ) )
+		if (!AddVideoObjectFromFile("INTERFACE\\luckysmile.sti", &guiSMILY))
 			AssertMsg(0, "Missing INTERFACE\\luckysmile.sti" );
 
 		// Init screen
@@ -936,7 +933,6 @@ void DoneFadeOutForDemoExitScreen( void )
 void DoDemoIntroduction()
 {
 	MSG Message;
-	VOBJECT_DESC    vo_desc;
 	UINT32 uiTempID;
 	UINT16 yp, height;
 	UINT32 uiStartTime = 0xffffffff;
@@ -950,9 +946,7 @@ void DoDemoIntroduction()
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( vo_desc.ImageFile, "DemoAds\\DemoScreen1.sti" );
-	if( !AddVideoObject( &vo_desc, &uiTempID ) )
+	if (!AddVideoObjectFromFile("DemoAds\\DemoScreen1.sti", &uiTempID))
 	{
 		AssertMsg( 0, "Failed to load DemoAds\\DemoScreen1.sti" );
 		return;
@@ -1056,16 +1050,13 @@ extern INT8 gbFadeSpeed;
 #ifdef GERMAN
 void DisplayTopwareGermanyAddress()
 {
-	VOBJECT_DESC		vo_desc;
 	UINT32					uiTempID;
 	UINT8 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
 
 	//bring up the Topware address screen
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	sprintf( vo_desc.ImageFile, "German\\topware_germany.sti" );
-	if( !AddVideoObject( &vo_desc, &uiTempID ) )
+	if (!AddVideoObjectFromFile("German\\topware_germany.sti", &uiTempID))
 	{
 		AssertMsg( 0, "Failed to load German\\topware_germany.sti" );
 		return;
@@ -1291,7 +1282,6 @@ UINT32 DemoExitScreenHandle(void)
 		if( ubPreviousScreen == 2 )
 		{
 			VSURFACE_DESC		vs_desc;
-			VOBJECT_DESC		vo_desc;
 			UINT8						ubBitDepth;
 			UINT32					uiTempID;
 			UINT16 usWidth, usHeight;
@@ -1305,9 +1295,7 @@ UINT32 DemoExitScreenHandle(void)
 
 
 			//bring up the collage screen
-			vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-			sprintf( vo_desc.ImageFile, "Interface\\ja2logo.sti" );
-			if( !AddVideoObject( &vo_desc, &uiTempID ) )
+			if (!AddVideoObjectFromFile("Interface\\ja2logo.sti", &uiTempID))
 			{
 				AssertMsg( 0, "Failed to load Interface\\ja2logo.sti" );
 				ubCurrentScreen = 8;
@@ -1476,7 +1464,6 @@ UINT32 DemoExitScreenHandle(void)
 		if( ubPreviousScreen == 4 )
 		{
 			VSURFACE_DESC		vs_desc;
-			VOBJECT_DESC		vo_desc;
 			UINT8						ubBitDepth;
 			UINT32					uiTempID;
 			UINT16 usWidth, usHeight;
@@ -1489,9 +1476,9 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF( AddVideoSurface( &vs_desc, &uiCollageID ) );
 
 			//bring up the collage screen
-			vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-			GetMLGFilename( vo_desc.ImageFile, MLG_AVAILABLE );
-			if( !AddVideoObject( &vo_desc, &uiTempID ) )
+			SGPFILENAME ImageFile;
+			GetMLGFilename(ImageFile, MLG_AVAILABLE);
+			if (!AddVideoObjectFromFile(ImageFile, &uiTempID))
 			{
 				AssertMsg( 0, "Failed to load DemoAds\\available.sti" );
 				ubCurrentScreen = 8;
