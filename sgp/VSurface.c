@@ -593,15 +593,12 @@ static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc)
 	memset(hVSurface, 0, sizeof(SGPVSurface));
 	CHECKF(hVSurface != NULL);
 
-	hVSurface->surface            = surface;
-	hVSurface->usHeight           = usHeight;
-	hVSurface->usWidth            = usWidth;
-	hVSurface->ubBitDepth         = ubBitDepth;
-	hVSurface->pPalette           = NULL;
-	hVSurface->p16BPPPalette      = NULL;
-	hVSurface->usHeight					= usHeight;
-	hVSurface->usWidth						= usWidth;
-	hVSurface->ubBitDepth				= ubBitDepth;
+	hVSurface->surface       = surface;
+	hVSurface->usHeight      = usHeight;
+	hVSurface->usWidth       = usWidth;
+	hVSurface->ubBitDepth    = ubBitDepth;
+	hVSurface->pPalette      = NULL;
+	hVSurface->p16BPPPalette = NULL;
 
 	giMemUsedInSurfaces += ( hVSurface->usHeight * hVSurface->usWidth * ( hVSurface->ubBitDepth / 8 ) );
 
