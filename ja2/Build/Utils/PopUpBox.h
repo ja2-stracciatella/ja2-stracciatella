@@ -28,7 +28,7 @@ struct popupstring{
 typedef struct popupstring POPUPSTRING;
 typedef POPUPSTRING* POPUPSTRINGPTR;
 
-struct popupbox{
+typedef struct PopUpBox {
 	SGPRect  Dimensions;
 	SGPPoint Position;
 	UINT32 uiLeftMargin;
@@ -48,12 +48,9 @@ struct popupbox{
 
 	POPUPSTRINGPTR Text[ MAX_POPUP_BOX_STRING_COUNT ];
 	POPUPSTRINGPTR pSecondColumnString[ MAX_POPUP_BOX_STRING_COUNT ];
-};
+} PopUpBox;
 
-typedef struct popupbox PopUpBo;
-typedef PopUpBo *PopUpBoxPt;
-
-static PopUpBoxPt PopUpBoxList[MAX_POPUP_BOX_COUNT];
+static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
 static UINT32 guiCurrentBox;
 
 // functions

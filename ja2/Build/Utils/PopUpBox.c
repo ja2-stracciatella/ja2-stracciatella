@@ -32,7 +32,7 @@ void RemoveCurrentBoxSecondaryText( INT32 hStringHandle );
 
 void InitPopUpBoxList()
 {
- memset(&PopUpBoxList, 0, sizeof(PopUpBoxPt));
+ memset(PopUpBoxList, 0, sizeof(PopUpBoxList));
  return;
 }
 
@@ -43,7 +43,7 @@ void InitPopUpBox(INT32 hBoxHandle)
 		return;
 
 	Assert( PopUpBoxList[ hBoxHandle ] );
-	memset(PopUpBoxList[hBoxHandle], 0, sizeof(PopUpBo));
+	memset(PopUpBoxList[hBoxHandle], 0, sizeof(*PopUpBoxList[hBoxHandle]));
 }
 
 
@@ -94,8 +94,6 @@ BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position
 {
 	INT32 iCounter=0;
 	INT32 iCount=0;
-	PopUpBoxPt pBox=NULL;
-
 
 	// find first free box
 	for(iCounter=0; ( iCounter < MAX_POPUP_BOX_COUNT ) && ( PopUpBoxList[iCounter] != NULL ); iCounter++);
@@ -110,7 +108,7 @@ BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position
 	iCount=iCounter;
 	*phBoxHandle=iCount;
 
-  pBox=MemAlloc(sizeof(PopUpBo));
+	PopUpBox* pBox = MemAlloc(sizeof(*pBox));
 	if (pBox == NULL)
 	{
 		return FALSE;
@@ -518,14 +516,13 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
 void ResizeBoxForSecondStrings( INT32 hBoxHandle )
 {
 	INT32 iCounter = 0;
-	PopUpBoxPt pBox;
 	UINT32 uiBaseWidth, uiThisWidth;
 
 
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
 
-	pBox = ( PopUpBoxList[ hBoxHandle ] );
+	PopUpBox* pBox = PopUpBoxList[hBoxHandle];
 	Assert( pBox );
 
 	uiBaseWidth = pBox->uiLeftMargin + pBox->uiSecondColumnMinimunOffset;

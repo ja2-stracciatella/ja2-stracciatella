@@ -400,9 +400,6 @@ struct popbox
  struct popbox *pNext;
 };
 
-typedef struct popbox PopUpBox;
-typedef PopUpBox *PopUpBoxPtr;
-
 
 // TABLES
 
