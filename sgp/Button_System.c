@@ -158,7 +158,6 @@ static INT32 FindFreeButtonSlot(void)
 // Load images for use with QuickButtons.
 INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
-	VOBJECT_DESC	vo_desc;
 	UINT32				UseSlot;
 	ETRLEObject		*pTrav;
 	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
@@ -182,12 +181,9 @@ INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32
 		return(-1);
 	}
 
-	// Load the image
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, filename);
-
 	MemBefore = MemGetFree();
-	if((ButtonPictures[UseSlot].vobj = CreateVideoObject(&vo_desc)) == NULL)
+	ButtonPictures[UseSlot].vobj = CreateVideoObjectFromFile(filename);
+	if (ButtonPictures[UseSlot].vobj == NULL)
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s",filename));
 		return(-1);
@@ -512,7 +508,6 @@ BOOLEAN DisableButton(INT32 iButtonID )
 // InitButtonSystem.
 static BOOLEAN InitializeButtonImageManager(void)
 {
-	VOBJECT_DESC	vo_desc;
 	UINT8 Pix;
 	int x;
 
@@ -543,19 +538,15 @@ static BOOLEAN InitializeButtonImageManager(void)
 		GenericButtonIcons[x]=NULL;
 
 	// Load the default generic button images
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, DEFAULT_GENERIC_BUTTON_OFF);
-
-	if((GenericButtonOffNormal[0] = CreateVideoObject(&vo_desc)) == NULL)
+	GenericButtonOffNormal[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
+	if (GenericButtonOffNormal[0] == NULL)
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_OFF);
 		return(FALSE);
 	}
 
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, DEFAULT_GENERIC_BUTTON_ON);
-
-	if((GenericButtonOnNormal[0] = CreateVideoObject(&vo_desc)) == NULL)
+	GenericButtonOnNormal[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
+	if (GenericButtonOnNormal[0] == NULL)
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_ON);
 		return(FALSE);
@@ -564,13 +555,8 @@ static BOOLEAN InitializeButtonImageManager(void)
 	// Load up the off hilite and on hilite images. We won't check for errors because if the file
 	// doesn't exists, the system simply ignores that file. These are only here as extra images, they
 	// aren't required for operation (only OFF Normal and ON Normal are required).
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, DEFAULT_GENERIC_BUTTON_OFF_HI);
-	GenericButtonOffHilite[0] = CreateVideoObject(&vo_desc);
-
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, DEFAULT_GENERIC_BUTTON_ON_HI);
-	GenericButtonOnHilite[0] = CreateVideoObject(&vo_desc);
+	GenericButtonOffHilite[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
+	GenericButtonOnHilite[0]  = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
 
 	Pix=0;
 	if(!GetETRLEPixelValue(&Pix,GenericButtonOffNormal[0],8,0,0))
@@ -617,10 +603,8 @@ INT16 LoadGenericButtonIcon(const char* filename)
 	}
 
 	// Load the icon
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, filename);
-
-	if((GenericButtonIcons[ImgSlot] = CreateVideoObject(&vo_desc)) == NULL)
+	GenericButtonIcons[ImgSlot] = CreateVideoObjectFromFile(filename);
+	if (GenericButtonIcons[ImgSlot] == NULL)
 	{
 		DbgMessage(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonIcon: Couldn't create VOBJECT for %s",filename));
 		return(-1);

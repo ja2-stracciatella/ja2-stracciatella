@@ -29,7 +29,6 @@ TILE_IMAGERY *LoadTileSurface( char * cFilename )
 {
 	// Add tile surface
 	PTILE_IMAGERY  pTileSurf = NULL;
-	VOBJECT_DESC   VObjectDesc;
 	HVOBJECT		   hVObject;
 	HIMAGE				 hImage;
 	SGPFILENAME						cStructureFilename;
@@ -46,11 +45,7 @@ TILE_IMAGERY *LoadTileSurface( char * cFilename )
 		return( NULL );
 	}
 
-	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMHIMAGE;
-	VObjectDesc.hImage = hImage;
-
-	hVObject = CreateVideoObject( &VObjectDesc );
-
+	hVObject = CreateVideoObject(hImage);
 	if ( hVObject == NULL )
 	{
 		// Report error

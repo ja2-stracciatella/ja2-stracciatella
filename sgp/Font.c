@@ -197,7 +197,6 @@ int count;
 //*****************************************************************************
 INT32 LoadFontFile(const char *filename)
 {
-VOBJECT_DESC		vo_desc;
 UINT32					LoadIndex;
 
 	Assert(filename!=NULL);
@@ -212,10 +211,8 @@ UINT32					LoadIndex;
 			return(-1);
 	}
 
-	vo_desc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	strcpy(vo_desc.ImageFile, filename);
-
-	if((FontObjs[LoadIndex]=CreateVideoObject(&vo_desc))==NULL)
+	FontObjs[LoadIndex] = CreateVideoObjectFromFile(filename);
+	if (FontObjs[LoadIndex] == NULL)
 	{
 		  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
 #ifdef JA2
