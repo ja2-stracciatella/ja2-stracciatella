@@ -6312,15 +6312,6 @@ BlitLine2:
 	return(TRUE);
 }
 
-//KM:  Modified Nov. 23, 1998
-//Original prototype (this function) didn't have a color field.  I've added the color field to
-//Blt16BPPBufferPixelateRectWithColor(), moved the previous implementation of this function there, and added
-//the modification to allow a specific color.
-BOOLEAN Blt16BPPBufferPixelateRect(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area, UINT8 Pattern[8][8] )
-{
-	return Blt16BPPBufferPixelateRectWithColor( pBuffer, uiDestPitchBYTES, area, Pattern, 0 );
-}
-
 
 //Uses black hatch color
 BOOLEAN Blt16BPPBufferHatchRect(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area )

@@ -3055,24 +3055,13 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
-	static UINT8 Pattern[8][8] =
-	{
-		{ 1, 0, 1, 0, 1, 0, 1, 0 },
-		{ 0, 1, 0, 1, 0, 1, 0, 1 },
-		{ 1, 0, 1, 0, 1, 0, 1, 0 },
-		{ 0, 1, 0, 1, 0, 1, 0, 1 },
-		{ 1, 0, 1, 0, 1, 0, 1, 0 },
-		{ 0, 1, 0, 1, 0, 1, 0, 1 },
-		{ 1, 0, 1, 0, 1, 0, 1, 0 },
-		{ 0, 1, 0, 1, 0, 1, 0, 1 }
-	};
 	ClipRect.iLeft = usPosX;
 	ClipRect.iRight = usPosX + usWidth;
 	ClipRect.iTop = usPosY;
 	ClipRect.iBottom = usPosY + usHeight;
 
 	pDestBuf = LockVideoSurface( uiSurface, &uiDestPitchBYTES );
-	Blt16BPPBufferPixelateRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect, Pattern );
+	Blt16BPPBufferHatchRect((UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect);
 	UnLockVideoSurface( uiSurface );
 }
 
