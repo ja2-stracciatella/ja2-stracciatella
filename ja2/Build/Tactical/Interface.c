@@ -267,13 +267,9 @@ BOOLEAN InitializeTacticalInterface(  )
 	iIconImages[ EXPLOSIVE_DOOR_IMAGES ]	= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 15, 16, 17, -1 );
 
 	// Load interface panels
-	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-
 	// failing the CHECKF after this will cause you to lose your mouse
 
-	strcpy(vs_desc.ImageFile, "INTERFACE/IN_TEXT.STI");
-
-	if( !AddVideoSurface( &vs_desc, &guiINTEXT ) )
+	if (!AddVideoSurfaceFromFile("INTERFACE/IN_TEXT.STI", &guiINTEXT))
 		AssertMsg( 0, "Missing INTERFACE/In_text.sti");
 	SetVideoSurfaceTransparency( guiINTEXT, FROMRGB( 255, 0, 0 ) );
 

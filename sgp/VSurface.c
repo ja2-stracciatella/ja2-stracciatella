@@ -133,17 +133,9 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 }
 
 
-BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex )
+static BOOLEAN AddStandardVideoSurface(HVSURFACE hVSurface, UINT32* puiIndex)
 {
-
-	HVSURFACE hVSurface;
-
-	// Assertions
-	Assert( puiIndex );
-	Assert( pVSurfaceDesc );
-
-	// Create video object
-	hVSurface = CreateVideoSurface( pVSurfaceDesc );
+	Assert(puiIndex);
 
 	if( !hVSurface )
 	{
@@ -180,6 +172,23 @@ BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *pVSurfaceDesc, UINT32 *puiIndex 
 	guiVSurfaceSize++;
 
 	return TRUE ;
+}
+
+
+static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc);
+
+
+BOOLEAN AddVideoSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index)
+{
+	HVSURFACE hVSurface = CreateVideoSurface(VSurfaceDesc);
+	return AddStandardVideoSurface(hVSurface, Index);
+}
+
+
+BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index)
+{
+	HVSURFACE hVSurface = CreateVideoSurfaceFromFile(Filename);
+	return AddStandardVideoSurface(hVSurface, Index);
 }
 
 
@@ -529,10 +538,7 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect* pSrcRect);
-
-
-HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
+static HVSURFACE CreateVideoSurface(VSURFACE_DESC* VSurfaceDesc)
 {
 	HVSURFACE						hVSurface;
 	HIMAGE							hImage;
@@ -546,32 +552,9 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	SDL_Surface* surface;
 	Uint32 surface_flags;
 
-	// Check creation options
-	do
-	{
-		if (VSurfaceDesc->fCreateFlags & VSURFACE_CREATE_FROMFILE)
-		{
-			hImage = CreateImage(VSurfaceDesc->ImageFile, IMAGE_ALLIMAGEDATA);
-
-			if (hImage == NULL)
-			{
-					DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
-					return NULL;
-			}
-
-			// Set values from himage
-			usHeight   = hImage->usHeight;
-			usWidth    = hImage->usWidth;
-			ubBitDepth = hImage->ubBitDepth;
-			break;
-		}
-
-		// If here, no special options given,
-		// Set values from given description structure
-		usHeight   = VSurfaceDesc->usHeight;
-		usWidth    = VSurfaceDesc->usWidth;
-		ubBitDepth = VSurfaceDesc->ubBitDepth;
-	}	while (FALSE);
+	usHeight   = VSurfaceDesc->usHeight;
+	usWidth    = VSurfaceDesc->usWidth;
+	ubBitDepth = VSurfaceDesc->ubBitDepth;
 
 	Assert(usHeight > 0);
 	Assert(usWidth  > 0);
@@ -649,34 +632,6 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
 	}
 
   //
-	// Initialize surface with hImage , if given
-  //
-
-	if ( VSurfaceDesc->fCreateFlags & VSURFACE_CREATE_FROMFILE )
-	{
-		tempRect.iLeft = 0;
-		tempRect.iTop = 0;
-		tempRect.iRight = hImage->usWidth-1;
-		tempRect.iBottom = hImage->usHeight-1;
-		SetVideoSurfaceDataFromHImage( hVSurface, hImage, 0, 0, &tempRect );
-
-    //
-		// Set palette from himage
-    //
-
-		if ( hImage->ubBitDepth == 8 )
-		{
-			SetVideoSurfacePalette( hVSurface, hImage->pPalette );
-		}
-
-    //
-		// Delete himage object
-    //
-
-		DestroyImage( hImage );
-	}
-
-  //
 	// All is well
   //
 
@@ -689,6 +644,45 @@ HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc )
   DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_3, String("Success in Creating Video Surface" ) );
 
 	return( hVSurface );
+}
+
+
+static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, SGPRect* pSrcRect);
+
+
+HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
+{
+	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
+
+	if (hImage == NULL)
+	{
+		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
+		return NULL;
+	}
+
+	VSURFACE_DESC VSDesc;
+	VSDesc.fCreateFlags = VSURFACE_SYSTEM_MEM_USAGE;
+	VSDesc.usWidth      = hImage->usWidth;
+	VSDesc.usHeight     = hImage->usHeight;
+	VSDesc.ubBitDepth   = hImage->ubBitDepth;
+	HVSURFACE hVSurface = CreateVideoSurface(&VSDesc);
+	if (hVSurface != NULL)
+	{
+		SGPRect tempRect;
+		tempRect.iLeft   = 0;
+		tempRect.iTop    = 0;
+		tempRect.iRight  = hImage->usWidth  - 1;
+		tempRect.iBottom = hImage->usHeight - 1;
+		SetVideoSurfaceDataFromHImage(hVSurface, hImage, 0, 0, &tempRect);
+
+		if (hImage->ubBitDepth == 8)
+		{
+			SetVideoSurfacePalette(hVSurface, hImage->pPalette);
+		}
+	}
+
+	DestroyImage(hImage);
+	return hVSurface;
 }
 
 
@@ -1636,30 +1630,38 @@ void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
 	fclose( fp );
 }
 
-//Debug wrapper for adding vsurfaces
-BOOLEAN _AddAndRecordVSurface(VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
-{
-	UINT16 usLength;
-	UINT8 str[256];
-	if( !AddStandardVideoSurface( VSurfaceDesc, uiIndex ) )
-	{
-		return FALSE;
-	}
 
+static BOOLEAN RecordVSurface(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+{
 	//record the filename of the vsurface (some are created via memory though)
-	usLength = strlen( VSurfaceDesc->ImageFile ) + 1;
-	gpVSurfaceTail->pName = (UINT8*)MemAlloc( usLength );
-	memset( gpVSurfaceTail->pName, 0, usLength );
-	strcpy( gpVSurfaceTail->pName, VSurfaceDesc->ImageFile );
+	gpVSurfaceTail->pName = MemAlloc(strlen(Filename) + 1);
+	strcpy(gpVSurfaceTail->pName, Filename);
 
 	//record the code location of the calling creating function.
-	sprintf( str, "%s -- line(%d)", pSourceFile, uiLineNum );
-	usLength = strlen( str ) + 1;
-	gpVSurfaceTail->pCode = (UINT8*)MemAlloc( usLength );
-	memset( gpVSurfaceTail->pCode, 0, usLength );
-	strcpy( gpVSurfaceTail->pCode, str );
+	char str[256];
+	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
+	gpVSurfaceTail->pCode = MemAlloc(strlen(str) + 1);
+	strcpy(gpVSurfaceTail->pCode, str);
 
 	return TRUE;
+}
+
+
+#undef AddVideoSurface
+#undef AddVideoSurfaceFromFile
+
+
+BOOLEAN AddAndRecordVSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+{
+	if (!AddVideoSurface(VSurfaceDesc, Index)) return FALSE;
+	return RecordVSurface("<EMPTY>", Index, LineNum, SourceFile);
+}
+
+
+BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+{
+	if (!AddVideoSurfaceFromFile(Filename, Index)) return FALSE;
+	return RecordVSurface(Filename, Index, LineNum, SourceFile);
 }
 
 #endif

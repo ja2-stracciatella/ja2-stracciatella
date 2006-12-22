@@ -57,7 +57,7 @@ const char *zMercBorderPopupFilenames[ ] = {
 };
 
 // filenames for background popup .pcx's
-const char *zMercBackgroundPopupFilenames[ ] = {
+static const char* const zMercBackgroundPopupFilenames[ ] = {
   "INTERFACE\\TactPopupBackground.pcx",
   "INTERFACE\\TactPopupWhiteBackground.pcx",
   "INTERFACE\\TactPopupGreyBackground.pcx",
@@ -174,15 +174,16 @@ void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UIN
 // Tactical Popup
 BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 {
-	VSURFACE_DESC		vs_desc;
 	VOBJECT_DESC    VObjectDesc;
 
   // this function will load the graphics associated with the background and border index values
 
 	// the background
-  vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-	strcpy(vs_desc.ImageFile,  zMercBackgroundPopupFilenames [ ubBackgroundIndex ]);
-	CHECKF(AddVideoSurface(&vs_desc, &gPopUpTextBox->uiMercTextPopUpBackground));
+	CHECKF(AddVideoSurfaceFromFile
+	(
+		zMercBackgroundPopupFilenames[ubBackgroundIndex],
+		&gPopUpTextBox->uiMercTextPopUpBackground
+	));
 
   // border
   VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;

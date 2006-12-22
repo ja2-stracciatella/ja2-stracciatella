@@ -38,7 +38,6 @@
 // Used in the VSurface_DESC structure to describe creation flags
 //
 
-#define VSURFACE_CREATE_FROMFILE			 0x00000040		// Creates a video Surface from a file ( using HIMAGE )
 
 
 typedef struct
@@ -58,11 +57,9 @@ typedef struct
 typedef struct
 {
 	UINT32				fCreateFlags;						// Specifies creation flags like from file or not
-	SGPFILENAME		ImageFile;							// Filename of image data to use
-	UINT16				usWidth;								// Width, ignored if given from file
-	UINT16				usHeight;								// Height, ignored if given from file
-	UINT8					ubBitDepth;							// BPP, ignored if given from file
-
+	UINT16 usWidth;
+	UINT16 usHeight;
+	UINT8  ubBitDepth;
 } VSURFACE_DESC;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,16 +80,17 @@ BOOLEAN InitializeVideoSurfaceManager( );
 // Deletes any video Surface placed into list
 BOOLEAN ShutdownVideoSurfaceManager( );
 
+BOOLEAN AddVideoSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index);
+BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index);
+
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend);
-	extern BOOLEAN _AddAndRecordVSurface(VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile);
-	#define AddVideoSurface( a, b )			_AddAndRecordVSurface( a, b, __LINE__, __FILE__ )
-#else
-	#define AddVideoSurface( a, b )			AddStandardVideoSurface( a, b )
+	extern BOOLEAN AddAndRecordVSurface(VSURFACE_DESC* VSurfaceDesc, UINT32* Index, UINT32 LineNum, const char* SourceFile);
+	extern BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile);
+	#define AddVideoSurface(a, b) AddAndRecordVSurface(a, b, __LINE__, __FILE__)
+	#define AddVideoSurfaceFromFile(a, b) AddAndRecordVSurfaceFromFile(a, b, c, __FILE__)
 #endif
-
-BOOLEAN AddStandardVideoSurface( VSURFACE_DESC *VSurfaceDesc, UINT32 *uiIndex );
 
 // Returns a HVSurface for the specified index
 BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex );
@@ -114,8 +112,7 @@ BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor );
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Created from a VSurface_DESC structure. Can be from a file via HIMAGE or empty.
-HVSURFACE CreateVideoSurface( VSURFACE_DESC *VSurfaceDesc );
+HVSURFACE CreateVideoSurfaceFromFile(const char* Filename);
 
 // Gets the RGB palette entry values
 BOOLEAN GetVSurfacePaletteEntries( HVSURFACE hVSurface, SGPPaletteEntry *pPalette );

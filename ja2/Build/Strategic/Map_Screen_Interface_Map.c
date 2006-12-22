@@ -1639,13 +1639,10 @@ BOOLEAN InitializePalettesForMap( void )
 	// init palettes
 	HVSURFACE hSrcVSurface;
 	SGPPaletteEntry pPalette[ 256 ];
-	VSURFACE_DESC		vs_desc;
 	UINT32 uiTempMap;
 
 	// load image
-	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
- 	strcpy(vs_desc.ImageFile, "INTERFACE\\b_map.pcx");
-  CHECKF(AddVideoSurface(&vs_desc, &uiTempMap));
+	CHECKF(AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx", &uiTempMap));
 
 	// get video surface
 	CHECKF( GetVideoSurface( &hSrcVSurface, uiTempMap) );

@@ -49,7 +49,7 @@ typedef union
 static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents);
 
 
-HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
+HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 {
 	const char* const ExtensionSep = ".";
 	HIMAGE			hImage = NULL;
@@ -63,10 +63,14 @@ HIMAGE CreateImage( SGPFILENAME ImageFile, UINT16 fContents )
 
 	if ( StrPtr == NULL )
 	{
+#if 1
+		UNIMPLEMENTED();
+#else
 		// No extension given, use default internal loader extension
 		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "No extension given, using default" );
 		strcat( ImageFile, ".PCX" );
-		Extension = ".PCX";
+		Extension = ".PCX"; // XXX all comparisions below will fail because of leading period, probably unintended
+#endif
 	}
 	else
 	{

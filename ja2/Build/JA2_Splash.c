@@ -29,7 +29,6 @@ void InitJA2SplashScreen()
 	STRING512			CurrentDir;
 	STRING512			DataDir;
 	HVSURFACE hVSurface;
-	VSURFACE_DESC VSurfaceDesc;
 	INT32 i = 0;
 
 	InitializeJA2Clock();
@@ -48,10 +47,7 @@ void InitJA2SplashScreen()
 	InitializeFileDatabase( gGameLibaries, NUMBER_OF_LIBRARIES );
 
 #if !defined( ENGLISH ) && defined( JA2TESTVERSION )
-	memset( &VSurfaceDesc, 0, sizeof( VSURFACE_DESC ) );
-	VSurfaceDesc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-	sprintf( VSurfaceDesc.ImageFile, "LOADSCREENS\\Notification.sti" );
-	if( !AddVideoSurface( &VSurfaceDesc, &uiLogoID ) )
+	if (!AddVideoSurfaceFromFile("LOADSCREENS\\Notification.sti", &uiLogoID))
 	{
 		AssertMsg( 0, String( "Failed to load %s", VSurfaceDesc.ImageFile ) );
 		return;
@@ -78,13 +74,11 @@ void InitJA2SplashScreen()
 		ClearMainMenu();
 	#else
 		{
-
-			memset( &VSurfaceDesc, 0, sizeof( VSURFACE_DESC ) );
-			VSurfaceDesc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-			GetMLGFilename( VSurfaceDesc.ImageFile, MLG_SPLASH );
-			if( !AddVideoSurface( &VSurfaceDesc, &uiLogoID ) )
+			SGPFILENAME ImageFile;
+			GetMLGFilename(ImageFile, MLG_SPLASH);
+			if (!AddVideoSurfaceFromFile(ImageFile, &uiLogoID))
 			{
-				AssertMsg( 0, String( "Failed to load %s", VSurfaceDesc.ImageFile ) );
+				AssertMsg(0, String("Failed to load %s", ImageFile));
 				return;
 			}
 

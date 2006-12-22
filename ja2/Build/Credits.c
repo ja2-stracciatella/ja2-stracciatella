@@ -366,14 +366,6 @@ void			InitCreditEyeBlinking();
 //ppp
 
 
-
-
-
-
-
-
-
-//	VSURFACE_DESC		vs_desc;
 //	HVSURFACE hVSurface;
 
 
@@ -459,19 +451,6 @@ BOOLEAN		EnterCreditsScreen()
 {
 	UINT32 uiCnt;
   VOBJECT_DESC    VObjectDesc;
-/*
-
-	VSURFACE_DESC		vs_desc;
-
-	vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-
-	strcpy(vs_desc.ImageFile, "INTERFACE\\Credits.sti");
-
-	if( !AddVideoSurface( &vs_desc, &guiCreditBackGroundImage ) )
-	{
-		return( FALSE );
-	}
-*/
 
 	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
 	FilenameForBPP("INTERFACE\\Credits.sti", VObjectDesc.ImageFile);

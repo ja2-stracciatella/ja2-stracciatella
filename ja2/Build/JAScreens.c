@@ -333,7 +333,6 @@ UINT32 InitScreenInitialize(void)
 
 UINT32 InitScreenHandle(void)
 {
-	VSURFACE_DESC					vs_desc;
 	static HVSURFACE			hVSurface;
 	static UINT8					ubCurrentScreen = 255;
 
@@ -357,11 +356,7 @@ UINT32 InitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		// Load init screen and blit!
-		vs_desc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-
-		strcpy( vs_desc.ImageFile, "ja2_logo.STI" );
-
-		hVSurface = CreateVideoSurface( &vs_desc );
+		hVSurface = CreateVideoSurfaceFromFile("ja2_logo.STI");
 		AssertMsg(hVSurface != NULL, "Failed to load ja2_logo.sti!");
 
 		//BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, VS_BLT_FAST, NULL );
@@ -1116,7 +1111,6 @@ UINT32 DemoExitScreenHandle(void)
 	static UINT16					usCenter = 320;
 	static UINT32					uiCollageID = 0;
 	HVSURFACE hVSurface;
-	VSURFACE_DESC    VSurfaceDesc;
 	static BOOLEAN gfFastAnim = FALSE;
 	static BOOLEAN gfPrevFastAnim = FALSE;
 
@@ -1152,9 +1146,9 @@ UINT32 DemoExitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		//bring up the collage screen
-		VSurfaceDesc.fCreateFlags = VSURFACE_CREATE_FROMFILE | VSURFACE_SYSTEM_MEM_USAGE;
-		GetMLGFilename( VSurfaceDesc.ImageFile, MLG_COLLAGE );
-		if( !AddVideoSurface( &VSurfaceDesc, &uiCollageID ) )
+		SGPFILENAME ImageFile;
+		GetMLGFilename(VSurfaceDesc.ImageFile, MLG_COLLAGE);
+		if (!AddVideoSurfaceFromFile(ImageFile, &uiCollageID))
 		{
 			AssertMsg( 0, "Failed to load DemoAds\\collage.sti" );
 			ubCurrentScreen = 8;
