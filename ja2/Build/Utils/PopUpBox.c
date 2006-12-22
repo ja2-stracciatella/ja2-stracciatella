@@ -372,7 +372,6 @@ void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
 void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 {
  STR16 pLocalString=NULL;
- POPUPSTRINGPTR pStringSt=NULL;
  INT32 iCounter=0;
 
 
@@ -391,7 +390,7 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 	return;
  }
 
- pStringSt=(MemAlloc(sizeof(POPUPSTRING)));
+ PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
  if (pStringSt == NULL)
 	return;
 
@@ -422,7 +421,6 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 {
 	STR16 pLocalString=NULL;
-	POPUPSTRINGPTR pStringSt=NULL;
 	INT32 iCounter=0;
 
 
@@ -441,7 +439,7 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 		return;
 	}
 
-  pStringSt=(MemAlloc(sizeof(POPUPSTRING)));
+  PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
 	if (pStringSt == NULL)
 		return;
 
@@ -469,7 +467,6 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 void AddColorString(INT32 *hStringHandle, STR16 pString)
 {
  STR16 pLocalString;
- POPUPSTRINGPTR pStringSt=NULL;
  INT32 iCounter=0;
 
 
@@ -488,7 +485,7 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
 	return;
  }
 
- pStringSt=(MemAlloc(sizeof(POPUPSTRING)));
+ PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
  if (pStringSt == NULL)
 	return;
 

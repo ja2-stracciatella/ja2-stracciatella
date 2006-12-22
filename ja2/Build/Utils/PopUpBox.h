@@ -11,7 +11,7 @@
 #define POPUP_BOX_FLAG_CENTER_TEXT 2
 #define POPUP_BOX_FLAG_RESIZE 4
 #define POPUP_BOX_FLAG_CAN_HIGHLIGHT_SHADED_LINES 8
-struct popupstring{
+typedef struct PopUpString {
 	STR16 pString;
 	UINT8 ubForegroundColor;
 	UINT8 ubBackgroundColor;
@@ -23,10 +23,8 @@ struct popupstring{
 	BOOLEAN fHighLightFlag;
 	BOOLEAN fShadeFlag;
 	BOOLEAN fSecondaryShadeFlag;
-} popupstring;
+} PopUpString;
 
-typedef struct popupstring POPUPSTRING;
-typedef POPUPSTRING* POPUPSTRINGPTR;
 
 typedef struct PopUpBox {
 	SGPRect  Dimensions;
@@ -46,8 +44,8 @@ typedef struct PopUpBox {
 	BOOLEAN fUpdated;
 	BOOLEAN fShowBox;
 
-	POPUPSTRINGPTR Text[ MAX_POPUP_BOX_STRING_COUNT ];
-	POPUPSTRINGPTR pSecondColumnString[ MAX_POPUP_BOX_STRING_COUNT ];
+	PopUpString* Text[MAX_POPUP_BOX_STRING_COUNT];
+	PopUpString* pSecondColumnString[MAX_POPUP_BOX_STRING_COUNT];
 } PopUpBox;
 
 static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
