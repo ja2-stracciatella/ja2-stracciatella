@@ -2538,8 +2538,6 @@ void SetWayPointsAsCanceled( UINT8 ubGroupID )
 	Assert( pGroup );
 
 	//pGroup -> fWaypointsCancelled = TRUE;
-
-	return;
 }
 
 
@@ -3397,9 +3395,6 @@ void GetGroupPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ub
 	*ubPrevY = pGroup->ubPrevY;
 	*uiTraverseTime = pGroup->uiTraverseTime;
 	*uiArriveTime = pGroup->uiArrivalTime;
-
-
-	return;
 }
 
 
@@ -3441,9 +3436,6 @@ void SetGroupPosition( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrev
 			pPlayer = pPlayer->next;
 		}
 	}
-
-
-	return;
 }
 
 BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
@@ -5058,8 +5050,6 @@ void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback( UINT8 ubExitVa
 
 	fMapPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
-
-	return;
 }
 
 

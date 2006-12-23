@@ -232,8 +232,6 @@ void HandleLoadOfMapBottomGraphics( void )
 
 	// load slider bar icon
 	LoadMessageSliderBar( );
-
-	return;
 }
 
 BOOLEAN LoadMapScreenInterfaceBottom( void )
@@ -253,8 +251,6 @@ void DeleteMapBottomGraphics( void )
 
 	// delete slider bar icon
 	DeleteMessageSliderBar( );
-
-	return;
 }
 
 void DeleteMapScreenInterfaceBottom( void )
@@ -266,8 +262,6 @@ void DeleteMapScreenInterfaceBottom( void )
 
 	// remove comrpess mode pause
 	RemoveCompressModePause( );
-
-	return;
 }
 
 
@@ -336,7 +330,6 @@ void RenderMapScreenInterfaceBottom( void )
 	EnableDisableBottomButtonsAndRegions( );
 
 	fMapBottomDirtied = FALSE;
-	return;
 }
 
 
@@ -487,8 +480,6 @@ void DestroyButtonsForMapScreenInterfaceBottom( void )
 
 	// reset dirty flag
 	fMapScreenBottomDirty = TRUE;
-
-	return;
 }
 
 
@@ -808,9 +799,6 @@ void DisplayCompressMode( void )
 	SetFontBackground( FONT_BLACK );
   FindFontCenterCoordinates( 489, 456, 522 - 489, 467 - 454, sString, COMPFONT, &sX, &sY );
 	mprintf( sX, sY, sString );
-
-
-	return;
 }
 
 
@@ -1005,9 +993,6 @@ void CheckForAndHandleAutoMessageScroll( void )
 			iBaseScrollDelay = GetJA2Clock( );
 		}
 	}
-
-
-	return;
 }
 */
 
@@ -1248,7 +1233,6 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 
 	// ste the font buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
-	return;
 }
 
 void DisplayCurrentBalanceForMapBottom( void )
@@ -1277,8 +1261,6 @@ void DisplayCurrentBalanceForMapBottom( void )
 
 	// print it
 	mprintf( sFontX, sFontY, L"%S", sString );
-
-	return;
 }
 
 void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
@@ -1375,8 +1357,6 @@ void DisplayProjectedDailyMineIncome( void )
 
 	// print it
 	mprintf( sFontX, sFontY, L"%S", sString );
-
-	return;
 }
 
 
@@ -1511,8 +1491,6 @@ void BuildDemoMouseRegionsForHelpText( void )
 		swprintf( sString, L"%s %d", zMarksMapScreenText[ 0 ], iCounter + 1 );
 		SetRegionFastHelpText( &MapButtonScreenMasks[ iCounter + 10 ], sString );
   }
-
-	return;
 }
 
 
@@ -1524,7 +1502,6 @@ void RemoveDemoMouseRegionsForHelpText( void )
 	{
 		MSYS_RemoveRegion( &MapButtonScreenMasks[ iCounter ] );
 	}
-	return;
 }
 
 // invnetory screen mask btn callback

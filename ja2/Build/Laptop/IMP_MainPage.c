@@ -97,8 +97,6 @@ void EnterIMPMainPage( void )
 
 	// entry into IMP about us page
 	RenderIMPMainPage( );
-
-	return;
 }
 
 
@@ -109,8 +107,6 @@ void ExitIMPMainPage( void )
 	// delete Buttons
 	DeleteIMPMainPageButtons( );
 	DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( );
-
-	return;
 }
 
 
@@ -125,8 +121,6 @@ void RenderIMPMainPage( void )
 	//RenderIMPSymbol( 106, 1 );
   // indent
 	RenderMainIndentFrame( 164, 74 );
-
-	return;
 }
 
 
@@ -140,7 +134,6 @@ void HandleIMPMainPage( void )
 	}
 	// shade out buttons that should be shaded/unselectable
 	//ShadeUnSelectableButtons( );
-	return;
 }
 
 
@@ -286,7 +279,6 @@ void CreateIMPMainPageButtons( void )
 	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 3 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
 	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 4 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
 	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 5 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
-	return;
 }
 
 
@@ -317,9 +309,6 @@ void DeleteIMPMainPageButtons( void )
 	// begin voice button
 	RemoveButton(giIMPMainPageButton[5] );
   UnloadButtonImage(giIMPMainPageButtonImage[5] );
-
-
-	return;
 }
 
 
@@ -456,8 +445,6 @@ void NextProfilingMode( void )
 	// if less than done
   if(iCurrentProfileMode < 5)
     iCurrentProfileMode++;
-
-	return;
 }
 
 BOOLEAN CheckIfFinishedCharacterGeneration( void )
@@ -491,7 +478,6 @@ void ShadeUnSelectableButtons( void )
 	}
 
 	fMarkButtonsDirtyFlag = FALSE;
-  return;
 }
 
 
@@ -547,8 +533,6 @@ void UpDateIMPMainPageButtons( void )
 	   EnableButton( giIMPMainPageButton[5] );
 		break;
 	}
-
-	return;
 }
 
 void BeginMessageBoxCallBack( UINT8 bExitValue )
@@ -564,7 +548,6 @@ void BeginMessageBoxCallBack( UINT8 bExitValue )
 	{
 		// if ok, then we are coming from financial warning, allow continue
 	}
-	return;
 }
 
 
@@ -593,13 +576,6 @@ void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 	// mask for voice page button
 	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 3 ],LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),  LAPTOP_SCREEN_UL_X + 373  + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
 						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
-
-
-
-
-
-
-	return;
 }
 
 
@@ -616,10 +592,6 @@ void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 2 ]);
 
 	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 3 ]);
-
-
-
-	return;
 }
 
 void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
@@ -635,8 +607,6 @@ void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
   {
    	DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 4 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, BeginMessageBoxCallBack);
   }
-
-	return;
 }
 
 

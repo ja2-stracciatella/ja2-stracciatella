@@ -84,8 +84,6 @@ void InitSquads( void )
 	}
 
 	memset( sDeadMercs, -1, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
-
-	return;
 }
 
 BOOLEAN IsThisSquadFull( INT8 bSquadValue )
@@ -1003,8 +1001,6 @@ void SetDefaultSquadOnSectorEntry( BOOLEAN fForce )
 
 	// If here, set to no current squad
 	SetCurrentSquad( NO_CURRENT_SQUAD, FALSE );
-
-	return;
 }
 
 INT32 GetLastSquadActive( void )
@@ -1045,8 +1041,6 @@ void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ub
 
 	// grab this squads mvt position
 	GetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, SquadMovementGroups[ ubSquadValue ] );
-
-	return;
 }
 
 
@@ -1059,8 +1053,6 @@ void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX
 		return;
 	}
 	SetGroupPosition(  ubNextX,  ubNextY,  ubPrevX,  ubPrevY,  uiTraverseTime,  uiArriveTime,   SquadMovementGroups[ ubSquadValue ] );
-
-	return;
 }
 
 
@@ -1181,8 +1173,6 @@ void GetLocationOfSquad( INT16 *sX, INT16 *sY, INT8 *bZ, INT8 bSquadValue )
 			*bZ = Squad[ bSquadValue ][ iCounter ]->bSectorZ;
 		}
 	}
-
-	return;
 }
 
 BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
@@ -1219,8 +1209,6 @@ void RebuildSquad( INT8 bSquadValue )
 			}
 		}
 	}
-
-	return;
 }
 
 void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
@@ -1250,8 +1238,6 @@ void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 			SetCurrentInterfacePanel( TEAM_PANEL );
 		}
 	}
-
-	return;
 }
 
 

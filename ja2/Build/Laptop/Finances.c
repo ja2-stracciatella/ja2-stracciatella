@@ -497,7 +497,6 @@ void EnterFinances()
 
 
   //InvalidateRegion(0,0,640,480);
-  return;
 }
 
 void ExitFinances( void )
@@ -517,8 +516,6 @@ void ExitFinances( void )
 
 	// remove graphics
 	RemoveFinances( );
-	return;
-
 }
 
 void HandleFinances( void )
@@ -555,10 +552,6 @@ void RenderFinances( void )
 
 	// title bar icon
 	BlitTitleBarIcons(  );
-
-
-
-	return;
 }
 
 
@@ -594,9 +587,6 @@ static void RemoveFinances(void)
   DeleteVideoObjectFromIndex(guiLISTCOLUMNS);
 	DeleteVideoObjectFromIndex(guiTOP);
 	DeleteVideoObjectFromIndex(guiTITLE);
-
-
-	return;
 }
 
 
@@ -613,7 +603,6 @@ static void RenderBackGround(void)
   GetVideoObject(&hHandle, guiTOP);
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
 	DrawFinanceTitleText( );
-	return;
 }
 
 
@@ -623,7 +612,6 @@ static void DrawSummary(void)
   DrawSummaryLines( );
 	DrawSummaryText( );
 	DrawFinanceTitleText( );
-	return;
 }
 
 
@@ -642,9 +630,6 @@ static void DrawSummaryLines(void)
   BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y);
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y2);
   //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y2);
-
-
-	return;
 }
 
 
@@ -664,7 +649,6 @@ static void DrawAPageOfRecords(void)
 	// current page is found, render  from here
 	DrawRecordsText( );
   DisplayFinancePageNumberAndDateRange( );
-	return;
 }
 
 
@@ -697,9 +681,6 @@ static void DrawRecordsBackGround(void)
 
 	// the header text
   DrawRecordsColumnHeadersText( );
-
-	return;
-
 }
 
 
@@ -735,7 +716,6 @@ static void DrawRecordsColumnHeadersText(void)
 	mprintf(usX, RECORD_HEADER_Y, pFinanceHeaders[3]);
 
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -870,7 +850,6 @@ static void DrawRecordsText(void)
 
 	// restore shadow
   SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -885,9 +864,6 @@ static void DrawFinanceTitleText(void)
 
 	// draw the pages title
 	mprintf(TITLE_X,TITLE_Y,pFinanceTitle[0]);
-
-
-	return;
 }
 
 
@@ -1096,8 +1072,6 @@ static void DrawSummaryText(void)
 
 	// reset the shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -1157,8 +1131,6 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 
   // close file
 	FileClose( hFileHandle );
-
-	return;
 }
 
 
@@ -1182,7 +1154,6 @@ static void ClearFinanceList(void)
 	}
   pCurrentFinance = NULL;
   pFinanceListHead = NULL;
-	return;
 }
 
 
@@ -1274,7 +1245,6 @@ static void CreateFinanceButtons(void)
   SetButtonCursor(giFinanceButton[1], CURSOR_LAPTOP_SCREEN);
   SetButtonCursor(giFinanceButton[2], CURSOR_LAPTOP_SCREEN);
   SetButtonCursor(giFinanceButton[3], CURSOR_LAPTOP_SCREEN);
-	return;
 }
 
 
@@ -1407,8 +1377,6 @@ static void IncrementCurrentPageFinancialDisplay(void) // XXX unused
 		iCurrentPage++;
 
 	}
-
-	return;
 }
 
 
@@ -1626,8 +1594,6 @@ static void GetBalanceFromDisk(void)
 
 	// close file
   FileClose( hFileHandle );
-
-	return;
 }
 
 
@@ -1725,8 +1691,6 @@ static void SetLastPageInRecords(void)
 	FileClose( hFileHandle );
 
 	guiLastPageInRecordsList = ( ReadInLastElementOfFinanceListAndReturnIdNumber( ) - 1 )/ NUM_RECORDS_PER_PAGE;
-
-	return;
 }
 
 
@@ -1931,9 +1895,6 @@ void InsertCommasForDollarFigure( STR16 pString )
 		// decrement counter
 		sCounter--;
 	}
-
-	return;
-
 }
 
 
@@ -1957,8 +1918,6 @@ void InsertDollarSignInToString( STR16 pString )
 	}
 
 	pString[ 0 ] = L'$';
-
-	return;
 }
 
 
@@ -2556,7 +2515,4 @@ static void LoadCurrentBalance(void) // XXX unused
 	AssertMsg( iBytesRead, "Failed To Read Data Entry");
 	 // close file
 	FileClose( hFileHandle );
-
-
-	return;
 }

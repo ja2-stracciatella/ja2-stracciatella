@@ -564,8 +564,6 @@ void HandleEmail( void )
 		fOpenMostRecentUnReadFlag = FALSE;
 
 	}
-
-	return;
 }
 
 void DisplayEmailHeaders( void )
@@ -592,9 +590,6 @@ void DisplayEmailHeaders( void )
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-
-	return;
 }
 
 void RenderEmail( void )
@@ -646,7 +641,6 @@ void RenderEmail( void )
 
 	InvalidateRegion(0,0,640,480);
 	 // invalidate region to force update
-	 return;
 }
 
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
@@ -678,8 +672,6 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 	  // redraw icons, might be new mail
 	  DrawLapTopIcons();
 	}
-
-	return;
 }
 
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
@@ -702,8 +694,6 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 	  // redraw icons, might be new mail
 	  DrawLapTopIcons();
 	}
-
-	return;
 }
 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
@@ -726,8 +716,6 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 	  // redraw icons, might be new mail
 	  DrawLapTopIcons();
 	}
-
-	return;
 }
 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData )
@@ -827,7 +815,6 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, 
 
 	 // set fact this message is new
 	pTempEmail->fNew=TRUE;
-	return;
 }
 
 
@@ -981,8 +968,6 @@ void AddEmailPage()
     pPageList=pPage;
 	}
 	iLastPage++;
-	return;
-
 }
 
 
@@ -1058,13 +1043,11 @@ void AddMessageToPages(INT32 iMessageId)
   {
 		AddEmailPage();
 		AddMessageToPages(iMessageId);
-	  return;
 	}
   else
 	{
 		pPage->iIds[iCounter]=iMessageId;
 	}
-	return;
 }
 
 void SortMessages(INT32 iCriteria)
@@ -1255,7 +1238,6 @@ void SwapMessages(INT32 iIdA, INT32 iIdB)
  // free up memory
  MemFree(pTemp -> pSubject);
  MemFree( pTemp );
- return;
 }
 
 void ClearPages()
@@ -1278,8 +1260,6 @@ void ClearPages()
    MemFree(pPage);
 	pPageList=NULL;
 	iLastPage=-1;
-
-	return;
 }
 
 void PlaceMessagesinPages()
@@ -1295,7 +1275,6 @@ void PlaceMessagesinPages()
 	}
 	if(iCurrentPage >iLastPage)
 		iCurrentPage=iLastPage;
-	return;
 }
 
 void DisplayMessageList(INT32 iPageNum)
@@ -1309,7 +1288,6 @@ void DisplayMessageList(INT32 iPageNum)
 			return;
 	}
 	// found page show it
-	return;
 }
 
 void DrawLetterIcon(INT32 iCounter, BOOLEAN fRead)
@@ -1325,7 +1303,6 @@ void DrawLetterIcon(INT32 iCounter, BOOLEAN fRead)
 	 BltVideoObject(FRAME_BUFFER, hHandle, 0,INDIC_X, (MIDDLE_Y+iCounter*MIDDLE_WIDTH+2));
 	else
    BltVideoObject(FRAME_BUFFER, hHandle, 1,INDIC_X, (MIDDLE_Y+iCounter*MIDDLE_WIDTH+2));
-	return;
 }
 
 void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
@@ -1370,8 +1347,6 @@ void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 	SetFontShadow(DEFAULT_SHADOW);
 	// reset font dest buffer
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE  );
-
-	return;
 }
 
 void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
@@ -1397,7 +1372,6 @@ void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
 
 	SetFont( MESSAGE_FONT );
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
@@ -1422,7 +1396,6 @@ void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 
 	SetFont( MESSAGE_FONT );
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 void DisplayEmailList()
@@ -1497,7 +1470,6 @@ void DisplayEmailList()
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y);
 
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -1526,8 +1498,6 @@ void LookForUnread()
 		//Since there is no new email, get rid of the hepl text
 		CreateFileAndNewEmailIconFastHelpText( LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_MAIL, (BOOLEAN )!fUnReadMailFlag );
 	}
-
-	return;
 }
 
 void EmailBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
@@ -1667,7 +1637,6 @@ SetUnNewMessages()
 		pEmail->fNew=FALSE;
 		pEmail=pEmail->Next;
 	}
-	return;
 }
 
 
@@ -2233,8 +2202,6 @@ void SwitchEmailPages( void )
 	// set to last page
 	if( iCurrentPage < 0 )
 		iCurrentPage=iLastPage;
-	return;
-
 }
 
 
@@ -2489,8 +2456,9 @@ void CreateDestroyDeleteNoticeMailButton()
 	 fReDrawScreenFlag=TRUE;
 
  }
-	return;
 }
+
+
 BOOLEAN DisplayDeleteNotice(EmailPtr pMail)
 {
 
@@ -2733,8 +2701,6 @@ void DestroyMailScreenButtons( void )
   UnloadButtonImage( giSortButtonImage[2] );
   RemoveButton( giSortButton[3] );
   UnloadButtonImage( giSortButtonImage[3] );
-
-	return;
 }
 
 void CreateMailScreenButtons( void )
@@ -2782,9 +2748,6 @@ void CreateMailScreenButtons( void )
 	SpecifyFullButtonTextAttributes( giSortButton[3], pEmailHeaders[RECD_HEADER], EMAIL_WARNING_FONT,
 																		  FONT_BLACK, FONT_BLACK,
 																			FONT_BLACK, FONT_BLACK, TEXT_CJUSTIFIED );
-
-
-	return;
 }
 
 
@@ -2834,7 +2797,6 @@ void DisplayEmailMessageSubjectDateFromLines( EmailPtr pMail , INT32 iViewerY)
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -2849,8 +2811,6 @@ void DrawEmailMessageDisplayTitleText( INT32 iViewerY )
 
 	// dsiplay mail viewer title on message viewer
   mprintf( VIEWER_X + 30, VIEWER_Y + 8 + (UINT16) iViewerY, pEmailTitleText[0] );
-
-  return;
 }
 
 void DrawLineDividers( void )
@@ -2864,9 +2824,6 @@ void DrawLineDividers( void )
    GetVideoObject( &hHandle, guiMAILDIVIDER );
 	 BltVideoObject(FRAME_BUFFER, hHandle, 0,INDIC_X-10, (MIDDLE_Y+iCounter*MIDDLE_WIDTH - 1));
   }
-
-
-	return;
 }
 
 
@@ -2896,8 +2853,6 @@ void ClearOutEmailMessageRecordsList( void )
 
 	// null out list
 	pMessageRecordList = NULL;
-
-	return;
 }
 
 void AddEmailRecordToList( STR16 pString )
@@ -2934,11 +2889,6 @@ void AddEmailRecordToList( STR16 pString )
 
 	// copy in string
   wcscpy( pTempRecord -> pRecord, pString );
-
-	// done return
-
-	return;
-
 }
 
 
@@ -4319,25 +4269,12 @@ void HandleEmailViewerButtonStates( void )
 	{
 		EnableButton( giMailMessageButtons[ 1 ] );
 	}
-
-	return;
-
 }
 
 
 void SetUpIconForButton( )
 {
 	// if we just got in, return, don't set any
-
-	if( fJustStartedEmail == TRUE )
-	{
-		return;
-	}
-
-
-
-
-	return;
 }
 
 
@@ -4369,8 +4306,6 @@ void DeleteCurrentMessage( void )
 
   // rerender email
 	RenderEmail();
-
-	return;
 }
 
 
@@ -4398,8 +4333,6 @@ void CreateNextPreviousEmailPageButtons( void )
   SpecifyDisabledButtonStyle( giMailPageButtons[1], DISABLED_STYLE_SHADED );
   SpecifyDisabledButtonStyle( giMailPageButtons[0], DISABLED_STYLE_SHADED );
 */
-
-	return;
 }
 
 
@@ -4445,8 +4378,6 @@ void DisplayWhichPageOfEmailProgramIsDisplayed( void )
 
 	// restore shadow
 	SetFontShadow( DEFAULT_SHADOW );
-
-	return;
 }
 
 void OpenMostRecentUnreadEmail( void )
@@ -4477,8 +4408,6 @@ void OpenMostRecentUnreadEmail( void )
 	{
 		fDisplayMessageFlag = TRUE;
 	}
-
-	return;
 }
 
 

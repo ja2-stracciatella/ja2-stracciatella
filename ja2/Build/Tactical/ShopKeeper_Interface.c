@@ -3908,8 +3908,6 @@ void PerformTransaction( UINT32 uiMoneyFromPlayersAccount )
 
 
 	gfResetShopKeepIdleQuote = TRUE;
-
-	return;
 }
 
 
@@ -6078,8 +6076,6 @@ void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue )
 
 	// done, re-enable calls to PerformTransaction()
 	gfPerformTransactionInProgress = FALSE;
-
-	return;
 }
 
 
@@ -6151,8 +6147,6 @@ void CheckAndHandleClearingOfPlayerOfferArea( void )
 		ResetAllQuoteSaidFlags();
 		gfRemindedPlayerToPickUpHisStuff = FALSE;
 	}
-
-	return;
 }
 
 
@@ -6217,8 +6211,6 @@ void CrossOutUnwantedItems( void )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -6272,8 +6264,6 @@ void HandleCheckIfEnoughOnTheTable( void )
 
 		gfResetShopKeepIdleQuote = TRUE;
 	}
-
-	return;
 }
 
 

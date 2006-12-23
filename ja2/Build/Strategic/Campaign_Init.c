@@ -81,8 +81,6 @@ static void InitKnowFacilitiesFlags(void)
 	pSector->uiFacilitiesFlags |= SFCF_AIRPORT;
 	pSector = &SectorInfo[SEC_O4];
 	pSector->uiFacilitiesFlags |= SFCF_AIRPORT;
-
-	return;
 }
 
 

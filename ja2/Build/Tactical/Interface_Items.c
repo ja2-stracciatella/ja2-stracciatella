@@ -872,7 +872,6 @@ void EnableKeyRing( BOOLEAN fEnable )
 void ShutdownKeyRingInterface( void )
 {
 	MSYS_RemoveRegion( &gKeyRingPanel );
-	return;
 }
 
 void DisableInvRegions( BOOLEAN fDisable )
@@ -6231,8 +6230,6 @@ void CalculateItemPickupMenuDimensions( )
 void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel )
 {
 	gItemPickupMenu.fDirtyLevel = fDirtyLevel;
-
-	return;
 }
 
 

@@ -476,8 +476,6 @@ void InitSectorsWithSoldiersList( void )
 {
 	// init list of sectors
 	memset( &fSectorsWithSoldiers, 0, sizeof( fSectorsWithSoldiers ) );
-
-	return;
 }
 
 
@@ -2310,7 +2308,6 @@ void HandleDoctorsInSector( INT16 sX, INT16 sY, INT8 bZ )
 	}
 
 	// total healing pts for this sector, now heal people
-	return;
 }
 
 
@@ -2334,7 +2331,6 @@ void UpdatePatientsWhoAreDoneHealing( void )
 			}
 		}
 	}
-	return;
 }
 
 void HealCharacters( SOLDIERTYPE *pDoctor, INT16 sX, INT16 sY, INT8 bZ )
@@ -2889,8 +2885,6 @@ void HandleRepairmenInSector( INT16 sX, INT16 sY, INT8 bZ )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -3279,8 +3273,6 @@ void HandleRepairBySoldier( SOLDIERTYPE *pSoldier )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -3376,8 +3368,6 @@ void RestCharacter( SOLDIERTYPE *pSoldier )
 	{
 		pSoldier->fComplainedThatTired = FALSE;
 	}
-
-	return;
 }
 
 
@@ -3452,8 +3442,6 @@ void FatigueCharacter( SOLDIERTYPE *pSoldier )
 	{
 		pSoldier -> bBreath = pSoldier -> bBreathMax;
 	}
-
-	return;
 }
 
 
@@ -4374,8 +4362,6 @@ void HandleNaturalHealing( void )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -4450,8 +4436,6 @@ void HandleHealingByNaturalCauses( SOLDIERTYPE *pSoldier )
 
 	// now update the real life values
 	UpDateSoldierLife( pSoldier );
-
-	return;
 }
 
 
@@ -4470,7 +4454,6 @@ void UpDateSoldierLife( SOLDIERTYPE *pSoldier )
 		pSoldier -> bLife = pSoldier -> bLifeMax;
 		pSoldier -> sFractLife = 0;
 	}
-	return;
 }
 
 
@@ -4558,8 +4541,6 @@ void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier )
 			ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
 		}
 	}
-
-	return;
 }
 
 
@@ -4815,8 +4796,6 @@ void CreateDestroyMouseRegionForVehicleMenu( void )
 			UnHighLightBox( ghAssignmentBox );
 		}
 	}
-
-	return;
 }
 
 
@@ -5122,9 +5101,6 @@ void HandleShadingOfLinesForRepairMenu( void )
 	}
 
 	iCount++;
-
-
-	return;
 }
 
 
@@ -5279,8 +5255,6 @@ void CreateDestroyMouseRegionForRepairMenu( void )
 			UnHighLightBox( ghAssignmentBox );
 		}
 	}
-
-	return;
 }
 
 
@@ -5700,8 +5674,6 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 
 	// training attributes submenu
 	HandleShadingOfLinesForAttributeMenus( );
-
-	return;
 }
 
 
@@ -5933,8 +5905,6 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 	}
 
 	CreateDestroyMouseRegionForVehicleMenu( );
-
-	return;
 }
 
 
@@ -5968,8 +5938,6 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 		// not created
 		fCreated = FALSE;
 	}
-
-	return;
 }
 
 
@@ -6010,7 +5978,6 @@ void AssignmentScreenMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 		SetRenderFlags( RENDER_FLAG_FULL );
 
 	}
-	return;
 }
 
 void ClearScreenMaskForMapScreenExit( void )
@@ -6034,8 +6001,6 @@ void ClearScreenMaskForMapScreenExit( void )
 	CreateDestroyMouseRegionsForAttributeMenu( );
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
 	CreateDestroyMouseRegionForRepairMenu(  );
-
-	return;
 }
 
 void CreateDestroyMouseRegions( void )
@@ -7107,9 +7072,6 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fCharacterInfoPanelDirty = TRUE;
 	  gfRenderPBInterface = TRUE;
 	}
-
-
-	return;
 }
 
 
@@ -7318,8 +7280,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// set this assignment for the list too
 		SetAssignmentForList( ( INT8 ) iValue, 0 );
 	}
-
-	return;
 }
 
 
@@ -7925,8 +7885,6 @@ void RestorePopUpBoxes( void )
   AssignmentPosition.iX = OrigAssignmentPosition.iX ;
   TrainPosition.iX = OrigTrainPosition.iX;
   VehiclePosition.iX = OrigVehiclePosition.iX;
-
-	return;
 }
 
 
@@ -8138,8 +8096,6 @@ void PostContractMessage( SOLDIERTYPE *pCharacter, INT32 iContract )
 
 	// send a message stating that offer of contract extension made
 	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %s's contract by another %s.", pCharacter -> name, pContractExtendStrings[ iContract ] );
-
-	return;
 }
 
 void PostTerminateMessage( SOLDIERTYPE *pCharacter )
@@ -8744,8 +8700,6 @@ void DetermineBoxPositions( void )
 			SetBoxPosition( ghAttributeBox, pNewPoint );
 		}
 	}
-
-	return;
 }
 
 
@@ -8788,8 +8742,6 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 	{
 		gsAssignmentBoxesY = 190;
 	}
-
-	return;
 }
 
 
@@ -9223,8 +9175,6 @@ void HandleRestFatigueAndSleepStatus( void )
 		AddDisplayBoxToWaitingQueue( );
 		fBoxSetUp = FALSE;
 	}
-
-	return;
 }
 
 
@@ -9734,8 +9684,6 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			}
 		break;
 	}
-
-	return;
 }
 
 
@@ -10041,8 +9989,6 @@ void HandleShadingOfLinesForTrainingMenu( void )
 	{
 		UnShadeStringInBox( ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER );
 	}
-
-	return;
 }
 
 
@@ -10099,8 +10045,6 @@ void HandleShadingOfLinesForAttributeMenus( void )
 			ShadeStringInBox( ghAttributeBox, bAttrib );
 		}
 	}
-
-	return;
 }
 
 
@@ -10126,8 +10070,6 @@ void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSol
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -10165,8 +10107,6 @@ void ReportTrainersTraineesWithoutPartners( void )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -10298,8 +10238,6 @@ void SetTimeOfAssignmentChangeForMerc( SOLDIERTYPE *pSoldier )
 	// assigning new PATIENTs gives a DOCTOR something to do, etc., so set flag to recheck them all.
 	// CAN'T DO IT RIGHT AWAY IN HERE 'CAUSE WE TYPICALLY GET CALLED *BEFORE* bAssignment GETS SET TO NEW VALUE!!
 	gfReEvaluateEveryonesNothingToDo = TRUE;
-
-	return;
 }
 
 // have we spent enough time on assignment for it to count?
@@ -11006,8 +10944,6 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 
 	// check if we should start/stop flashing any mercs' assignment strings after these changes
 	gfReEvaluateEveryonesNothingToDo = TRUE;
-
-	return;
 }
 
 

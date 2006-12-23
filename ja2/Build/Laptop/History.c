@@ -269,8 +269,6 @@ void EnterHistory()
 
 	// set inital states
 	SetHistoryButtonStates( );
-
-  return;
 }
 
 void ExitHistory()
@@ -291,9 +289,6 @@ void ExitHistory()
 	DestroyHistoryButtons( );
 
 	ClearHistoryList( );
-
-
-  return;
 }
 
 void HandleHistory()
@@ -325,8 +320,6 @@ void RenderHistory( void )
 
 	 // title bar icon
 	 BlitTitleBarIcons(  );
-
-	 return;
 }
 
 
@@ -362,8 +355,6 @@ void RemoveHistory( void )
 	DeleteVideoObjectFromIndex(guiTOP);
 	DeleteVideoObjectFromIndex(guiTITLE);
 	DeleteVideoObjectFromIndex(guiSHADELINE);
-
-	return;
 }
 
 
@@ -385,7 +376,6 @@ void RenderHistoryBackGround( void )
 
   // display background for history list
   DisplayHistoryListBackground( );
-		return;
 }
 
 void DrawHistoryTitleText( void )
@@ -398,8 +388,6 @@ void DrawHistoryTitleText( void )
 
 	// draw the pages title
 	mprintf(TITLE_X,TITLE_Y,pHistoryTitle[0]);
-
-	return;
 }
 
 void CreateHistoryButtons( void )
@@ -421,8 +409,6 @@ void CreateHistoryButtons( void )
 	// set buttons
 	SetButtonCursor(giHistoryButton[0], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giHistoryButton[1], CURSOR_LAPTOP_SCREEN);
-
-	return;
 }
 
 
@@ -438,8 +424,6 @@ void DestroyHistoryButtons( void )
 	// prev page button
 	RemoveButton(giHistoryButton[0] );
 	UnloadButtonImage(giHistoryButtonImage[0] );
-
-	return;
 }
 
 void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
@@ -682,8 +666,6 @@ void OpenAndReadHistoryFile( void )
 
   // close file
 	FileClose( hFileHandle );
-
-	return;
 }
 
 BOOLEAN OpenAndWriteHistoryFile( void )
@@ -754,8 +736,6 @@ void ClearHistoryList( void )
 		MemFree(pHistoryNode);
 	}
   pHistoryListHead=NULL;
-
-	return;
 }
 
 void DisplayHistoryListHeaders( void )
@@ -782,7 +762,6 @@ void DisplayHistoryListHeaders( void )
 	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[4]);
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -806,9 +785,6 @@ void DisplayHistoryListBackground( void )
   GetVideoObject(&hHandle, guiLONGLINE);
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y ));
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11  ));
-
-
-	return;
 }
 
 void DrawHistoryRecordsText( void )
@@ -888,7 +864,6 @@ void DrawHistoryRecordsText( void )
 
 	// restore shadow
   SetFontShadow(DEFAULT_SHADOW);
-	return;
 }
 
 
@@ -921,8 +896,6 @@ void DrawAPageofHistoryRecords( void )
 
 	// update page numbers, and date ranges
 	DisplayPageNumberAndDateRange( );
-
-	return;
 }
 
 void DisplayPageNumberAndDateRange( void )
@@ -1001,8 +974,6 @@ void DisplayPageNumberAndDateRange( void )
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -1178,9 +1149,6 @@ void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPt
 void DrawHistoryLocation( INT16 sSectorX, INT16 sSectorY )
 {
   // will draw the location of the history event
-
-
-	return;
 }
 
 
@@ -1493,8 +1461,6 @@ void SetLastPageInHistoryRecords( void )
 	FileClose( hFileHandle );
 
 	guiLastPageInHistoryRecordsList = ReadInLastElementOfHistoryListAndReturnIdNumber( ) / NUM_RECORDS_PER_PAGE;
-
-	return;
 }
 
 UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
@@ -1626,7 +1592,6 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 	}
 
 	SetHistoryFact( HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY );
-	return;
 }
 
 

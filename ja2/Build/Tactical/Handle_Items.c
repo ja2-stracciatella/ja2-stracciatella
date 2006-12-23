@@ -1485,12 +1485,6 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 			// Set target as engaged!
 			pTargetSoldier->uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
-
-			return;
-	 }
-	 else
-	 {
-			return;
 	 }
 }
 

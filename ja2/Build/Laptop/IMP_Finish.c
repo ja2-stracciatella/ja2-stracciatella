@@ -86,9 +86,6 @@ void EnterIMPFinish( void )
 
 	// note that we are in fact done char generation
 	fFinishedCharGeneration = TRUE;
-
-
-	return;
 }
 
 void RenderIMPFinish( void )
@@ -101,8 +98,6 @@ void RenderIMPFinish( void )
 
 		// indent for text
   RenderBeginIndent( 110, 50 );
-
-	return;
 }
 
 void ExitIMPFinish( void )
@@ -113,16 +108,11 @@ void ExitIMPFinish( void )
 
 	// get rid of graphic for portrait
 	DestroyCharacterPortrait( );
-
-	return;
 }
 
 
 void HandleIMPFinish( void )
 {
-
-
-  return;
 }
 
 
@@ -233,11 +223,6 @@ void CreateIMPFinishButtons( void )
 	SetButtonCursor(giIMPFinishButton[3], CURSOR_WWW);
 	SetButtonCursor(giIMPFinishButton[4], CURSOR_WWW);
 	SetButtonCursor(giIMPFinishButton[5], CURSOR_WWW);
-
-
-
-
-	return;
 }
 
 
@@ -269,9 +254,6 @@ void DeleteIMPFinishButtons( void )
 	// begin voice button
 	RemoveButton(giIMPFinishButton[5] );
   UnloadButtonImage(giIMPFinishButtonImage[5] );
-
-
-	return;
 }
 
 
@@ -553,7 +535,6 @@ void RenderCharFullName( void )
 
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
   mprintf( sX, LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString );
-	return;
 }
 
 
@@ -570,9 +551,6 @@ void DestroyCharacterPortrait( void )
 {
 	// remove the portrait that was loaded by loadcharacterportrait
 	DeleteVideoObjectFromIndex( guiCHARACTERPORTRAIT );
-
-
-	return;
 }
 
 
@@ -592,6 +570,4 @@ void FinishMessageBoxCallBack( UINT8 bExitValue )
 	{
 		MarkButtonsDirty( );
 	}
-
-	return;
 }

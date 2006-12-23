@@ -408,8 +408,6 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 	{
 		ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, 0 );
 	}
-
-	return;
 }
 
 

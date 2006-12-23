@@ -535,10 +535,6 @@ void RenderRadarScreen( )
 										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
 										gsRadarY + RADAR_WINDOW_HEIGHT );
 	}
-
-	return;
-
-
 }
 
 
@@ -589,19 +585,16 @@ void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
 void DisableRadarScreenRender( void )
 {
 	fRenderRadarScreen = FALSE;
-	return;
 }
 
 void EnableRadarScreenRender( void )
 {
 	fRenderRadarScreen = TRUE;
-	return;
 }
 
 void ToggleRadarScreenRender( void )
 {
 	fRenderRadarScreen = ! fRenderRadarScreen;
-	return;
 }
 
 BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
@@ -771,9 +764,6 @@ void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		sSelectedSquadLine = -1;
 	}
-
-	return;
-
 }
 
 
@@ -796,6 +786,4 @@ void TacticalSquadListBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 			fRenderRadarScreen = TRUE;
 		}
 	}
-
-	return;
 }

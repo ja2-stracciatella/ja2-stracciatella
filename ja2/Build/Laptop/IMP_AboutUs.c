@@ -34,8 +34,6 @@ void EnterIMPAboutUs( void )
 
 	// entry into IMP about us page
 	RenderIMPAboutUs( );
-
-	return;
 }
 
 
@@ -45,8 +43,6 @@ void ExitIMPAboutUs( void )
 
 	// delete Buttons
 	DeleteIMPAboutUsButtons( );
-
-	return;
 }
 
 
@@ -64,16 +60,12 @@ void RenderIMPAboutUs( void )
 	RenderAboutUsIndentFrame( 8, 130 );
   // about us indent
 	RenderAboutUsIndentFrame( 258, 130 );
-
-	return;
 }
 
 
 void HandleIMPAboutUs( void )
 {
   // handles the IMP about us page
-
-	return;
 }
 
 
@@ -95,8 +87,6 @@ void CreateIMPAboutUsButtons( void )
 														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPBackCallback);
 
 	 SetButtonCursor(giIMPAboutUsButton[0], CURSOR_WWW);
-
-	 return;
 }
 
 
@@ -107,9 +97,6 @@ void DeleteIMPAboutUsButtons( void )
   // the about back button
   RemoveButton(giIMPAboutUsButton[0] );
   UnloadButtonImage(giIMPAboutUsButtonImage[0] );
-
-
-	return;
 }
 
 

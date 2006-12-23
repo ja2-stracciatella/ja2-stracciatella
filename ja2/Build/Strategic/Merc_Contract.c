@@ -1221,8 +1221,6 @@ void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 	StrategicRemoveMerc( pLeaveSoldier );
 
 	pLeaveSoldier = NULL;
-
-	return;
 }
 
 
@@ -1298,8 +1296,6 @@ void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
 	CheckIfSalaryIncreasedAndSayQuote( pSoldier, TRUE );
 
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0 ,MAP_SCREEN, 0, 0, 0 );
-
-	return;
 }
 
 
@@ -1434,8 +1430,6 @@ void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength
 
 	// now pop up the message box
 	DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, ExtendMercInsuranceContractCallBack );
-
-	return;
 }
 
 void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )

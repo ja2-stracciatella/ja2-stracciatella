@@ -759,8 +759,6 @@ void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubSta
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -980,8 +978,6 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldie
 			ChangeStat( pProfile, pSoldier, ubStat, sPtsChanged );
 		}
 	}
-
-	return;
 }
 
 

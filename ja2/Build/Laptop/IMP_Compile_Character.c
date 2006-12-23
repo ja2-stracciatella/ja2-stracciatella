@@ -174,9 +174,6 @@ void CreateACharacterFromPlayerEnteredStats( void )
 
 	// face
 	 SelectMercFace( );
-
-	 return;
-
 }
 
 
@@ -316,8 +313,6 @@ void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 		// increment attitude list counter
 		iLastElementInAttitudeList++;
 	}
-
-	return;
 }
 
 
@@ -333,8 +328,6 @@ void AddSkillToSkillList( INT8 bSkill )
 		// increment attitude list counter
 		iLastElementInSkillsList++;
 	}
-
-	return;
 }
 
 void RemoveSkillFromSkillsList( INT32 iIndex )
@@ -494,9 +487,6 @@ void CreatePlayerSkills( void )
 	{
     iSkillB = NO_SKILLTRAIT;
 	}
-	return;
-
-
 	*/
 }
 
@@ -522,8 +512,6 @@ void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 		// increment attitude list counter
 		iLastElementInPersonalityList++;
 	}
-
-	return;
 }
 
 void CreatePlayerPersonality( void )
@@ -574,8 +562,6 @@ void CreatePlayerPersonality( void )
 			}
 		}
 	}
-
-	return;
 */
 }
 
@@ -593,8 +579,6 @@ void CreatePlayersPersonalitySkillsAndAttitude( void )
 
 	// attitude
 	CreatePlayerAttitude( );
-
-	return;
 }
 
 
@@ -652,7 +636,6 @@ void SelectMercFace( void )
 
 	// set merc skins and hair color
 	SetMercSkinAndHairColors( );
-	return;
 }
 
 void SetMercSkinAndHairColors( void )

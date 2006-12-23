@@ -387,8 +387,6 @@ void SetAutoBandageComplete( void )
 {
 	// this will set the fact autobandage is complete
 	fAutoBandageComplete = TRUE;
-
-	return;
 }
 
 void AutoBandage( BOOLEAN fStart )
@@ -595,8 +593,6 @@ void SetUpAutoBandageUpdatePanel( void )
 	AddFacesToAutoBandageBox( );
 
 	fAutoBandageComplete = FALSE;
-
-	return;
 }
 
 void DisplayAutoBandageUpdatePanel( void )
@@ -940,8 +936,6 @@ void DisplayAutoBandageUpdatePanel( void )
 
 	// now make sure it goes to the screen
 	InvalidateRegion( sXPosition - 4, sYPosition - 18, ( INT16 )( sXPosition + iTotalPixelsWide + 4), ( INT16 )( sYPosition + iTotalPixelsHigh  ) );
-
-	return;
 }
 
 
@@ -986,8 +980,6 @@ void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
 	SpecifyButtonFont( iEndAutoBandageButton[ 1 ], MAP_SCREEN_FONT );
 	SpecifyButtonUpTextColors( iEndAutoBandageButton[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
 	SpecifyButtonDownTextColors( iEndAutoBandageButton[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-
-	return;
 }
 
 
@@ -1019,8 +1011,6 @@ void DestroyTerminateAutoBandageButton( void )
 	// unload image
 	UnloadButtonImage( iEndAutoBandageButtonImage[ 0 ] );
 	UnloadButtonImage( iEndAutoBandageButtonImage[ 1 ] );
-
-	return;
 }
 
 

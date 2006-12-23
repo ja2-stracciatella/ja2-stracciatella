@@ -219,8 +219,6 @@ void RemoveInventoryPoolGraphic( void )
 		DeleteVideoObjectFromIndex( guiMapInventoryPoolBackground );
 		guiMapInventoryPoolBackground = 0;
 	}
-
-	return;
 }
 
 // blit the background panel for the inventory
@@ -258,8 +256,6 @@ void BlitInventoryPoolGraphic( void )
 
 	// which buttons will be active and which ones not
 	HandleButtonStatesWhileMapInventoryActive( );
-
-	return;
 }
 
 void RenderItemsForCurrentPageOfInventoryPool( void )
@@ -271,8 +267,6 @@ void RenderItemsForCurrentPageOfInventoryPool( void )
 	{
 		RenderItemInPoolSlot( iCounter, ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) );
 	}
-
-	return;
 }
 
 
@@ -437,8 +431,6 @@ void UpdateHelpTextForInvnentoryStashSlots( void )
 				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), L"" );
 			}
 	}
-
-	return;
 }
 
 
@@ -551,8 +543,6 @@ void ClearUpTempUnSeenList( void )
 	// build the list based on this
 	pSaveList = pUnSeenItems;
 	pUnSeenItems = NULL;
-
-	return;
 }
 
 void SaveSeenAndUnseenItems( void )
@@ -660,8 +650,6 @@ void MapInvenPoolScreenMaskCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		fShowMapInventoryPool = FALSE;
 	}
-
-	return;
 }
 
 
@@ -949,8 +937,6 @@ void CreateMapInventoryButtons( void )
 
 	//reset the current inventory page to be the first page
 	iCurrentInventoryPoolPage = 0;
-
-	return;
 }
 
 
@@ -963,7 +949,6 @@ void DestroyMapInventoryButtons( void )
 
 	UnloadButtonImage( guiMapInvenButtonImage[ 0 ] );
 	UnloadButtonImage( guiMapInvenButtonImage[ 1 ] );
-	return;
 }
 
 
@@ -1207,8 +1192,6 @@ void ReBuildWorldItemStashForLoadedSector( INT32 iNumberSeenItems, INT32 iNumber
 
 	// reset total list
 	pTotalList = NULL;
-
-	return;
 }
 
 void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
@@ -1240,8 +1223,6 @@ void ReSizeStashListByThisAmount( INT32 iNumberOfItems )
 
 	// free memeory
 	MemFree( pOldList );
-
-	return;
 }
 
 void DestroyStash( void )
@@ -1682,9 +1663,6 @@ void DrawNumberOfIventoryPoolItems( void )
 	mprintf( sX, sY, sString );
 
 	SetFontDestBuffer( FRAME_BUFFER, 0,0, 640, 480, FALSE );
-
-
-	return;
 }
 
 
@@ -1695,8 +1673,6 @@ void CreateMapInventoryPoolDoneButton( void )
   guiMapInvenButton[ 2 ] = QuickCreateButton( guiMapInvenButtonImage[ 2 ], 587 , 333,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MapInventoryPoolDoneBtn );
-
-	return;
 }
 
 void DestroyInventoryPoolDoneButton( void )
@@ -1705,9 +1681,6 @@ void DestroyInventoryPoolDoneButton( void )
 
 	RemoveButton( guiMapInvenButton[ 2 ] );
 	UnloadButtonImage( guiMapInvenButtonImage[ 2 ] );
-
-
-	return;
 }
 
 
@@ -1753,8 +1726,6 @@ void CheckAndUnDateSlotAllocation( void )
 	}
 
 	iLastInventoryPoolPage = ( ( iTotalNumberOfSlots  - 1 ) / MAP_INVENTORY_POOL_SLOT_COUNT );
-
-	return;
 }
 
 void DrawTextOnMapInventoryBackground( void )
@@ -1780,8 +1751,6 @@ void DrawTextOnMapInventoryBackground( void )
 	DrawTextOnSectorInventory( );
 
 	SetFontDestBuffer( FRAME_BUFFER, 0,0, 640, 480, FALSE );
-
-	return;
 }
 
 
@@ -1977,9 +1946,6 @@ void HandleMouseInCompatableItemForMapSectorInventory( INT32 iCurrentSlot )
 			giCompatibleItemBaseTime = 0;
 		}
 	}
-
-
-	return;
 }
 
 void ResetMapSectorInventoryPoolHighLights( void )
@@ -1994,15 +1960,11 @@ void ResetMapSectorInventoryPoolHighLights( void )
 			fMapInventoryItemCompatable[ iCounter ] = FALSE;
 		}
 	}
-
-	return;
 }
 void HandleMapSectorInventory( void )
 {
 	// handle mouse in compatable item map sectors inventory
 	HandleMouseInCompatableItemForMapSectorInventory( iCurrentlyHighLightedItem );
-
-	return;
 }
 
 

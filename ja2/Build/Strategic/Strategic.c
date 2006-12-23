@@ -125,7 +125,4 @@ void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
 				}
 			}
 		}
-
-
-	return;
 }

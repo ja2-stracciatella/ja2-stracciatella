@@ -80,8 +80,6 @@ void RemoveProfileBackGround( void )
 
   // remove background
 	DeleteVideoObjectFromIndex( guiBACKGROUND );
-
-	return;
 }
 
 
@@ -112,8 +110,6 @@ void RenderProfileBackGround( void )
 
 	// force refresh of screen
   InvalidateRegion( LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, 640, 480 );
-
-	return;
 }
 
 BOOLEAN LoadIMPSymbol( void )
@@ -133,8 +129,6 @@ void DeleteIMPSymbol( void )
 
   // remove IMP symbol
 	DeleteVideoObjectFromIndex( guiIMPSYMBOL );
-
-	return;
 }
 
 void RenderIMPSymbol(INT16 sX, INT16 sY)
@@ -146,8 +140,6 @@ void RenderIMPSymbol(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -168,8 +160,6 @@ void DeleteBeginIndent( void )
   // remove indent symbol
 
 	DeleteVideoObjectFromIndex( guiBEGININDENT );
-
-	return;
 }
 
 void RenderBeginIndent(INT16 sX, INT16 sY)
@@ -181,9 +171,6 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -205,8 +192,6 @@ void DeleteActivationIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiACTIVATIONINDENT );
-
-	return;
 }
 
 void RenderActivationIndent(INT16 sX, INT16 sY)
@@ -218,9 +203,6 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -238,8 +220,6 @@ void DeleteFrontPageIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFRONTPAGEINDENT );
-
-	return;
 }
 
 void RenderFrontPageIndent(INT16 sX, INT16 sY)
@@ -251,9 +231,6 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -273,8 +250,6 @@ void DeleteAnalyse( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiANALYSE );
-
-	return;
 }
 
 void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
@@ -287,9 +262,6 @@ void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -309,8 +281,6 @@ void DeleteAttributeGraph( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
-
-	return;
 }
 
 void RenderAttributeGraph(INT16 sX, INT16 sY)
@@ -324,9 +294,6 @@ void RenderAttributeGraph(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -345,8 +312,6 @@ void DeleteAttributeBarGraph( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPHBAR );
-
-	return;
 }
 
 void RenderAttributeBarGraph(INT16 sX, INT16 sY)
@@ -358,9 +323,6 @@ void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -381,8 +343,6 @@ void DeleteFullNameIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiFULLNAMEINDENT );
-
-	return;
 }
 
 void RenderFullNameIndent(INT16 sX, INT16 sY)
@@ -396,9 +356,6 @@ void RenderFullNameIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -415,8 +372,6 @@ void DeleteNickNameIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNICKNAMEINDENT );
-
-	return;
 }
 
 void RenderNickNameIndent(INT16 sX, INT16 sY)
@@ -430,9 +385,6 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 BOOLEAN LoadNameIndent( void )
@@ -448,8 +400,6 @@ void DeleteNameIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiNAMEINDENT );
-
-	return;
 }
 
 void RenderNameIndent(INT16 sX, INT16 sY)
@@ -463,9 +413,6 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -484,8 +431,6 @@ void DeleteGenderIndent( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiGENDERINDENT );
-
-	return;
 }
 
 void RenderGenderIndent(INT16 sX, INT16 sY)
@@ -498,9 +443,6 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-	return;
 }
 
 
@@ -518,8 +460,6 @@ void DeleteSmallFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLFRAME );
-
-	return;
 }
 
 void RenderSmallFrame(INT16 sX, INT16 sY)
@@ -532,8 +472,6 @@ void RenderSmallFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -552,8 +490,6 @@ void DeleteSmallSilhouette( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
-
-	return;
 }
 
 void RenderSmallSilhouette(INT16 sX, INT16 sY)
@@ -566,8 +502,6 @@ void RenderSmallSilhouette(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -585,8 +519,6 @@ void DeleteLargeSilhouette( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLARGESILHOUETTE );
-
-	return;
 }
 
 void RenderLargeSilhouette(INT16 sX, INT16 sY)
@@ -599,8 +531,6 @@ void RenderLargeSilhouette(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -617,8 +547,6 @@ void DeleteAttributeFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEFRAME );
-
-	return;
 }
 
 void RenderAttributeFrame(INT16 sX, INT16 sY)
@@ -646,9 +574,6 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 	}
 
 	BltVideoObject(FRAME_BUFFER, hHandle, 4, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
-
-
-	return;
 }
 
 void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
@@ -679,9 +604,6 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 	RenderAttributeBoxes( );
 
 	InvalidateRegion( LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY, LAPTOP_SCREEN_UL_X + sX + 400, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY + 21 );
-
-
-	return;
 }
 
 
@@ -698,8 +620,6 @@ void DeleteSliderBar( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSLIDERBAR );
-
-	return;
 }
 
 void RenderSliderBar(INT16 sX, INT16 sY)
@@ -712,8 +632,6 @@ void RenderSliderBar(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -732,8 +650,6 @@ void DeleteButton2Image( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON2IMAGE );
-
-	return;
 }
 
 void RenderButton2Image(INT16 sX, INT16 sY)
@@ -746,8 +662,6 @@ void RenderButton2Image(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadButton4Image( void )
@@ -763,8 +677,6 @@ void DeleteButton4Image( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON4IMAGE );
-
-	return;
 }
 
 void RenderButton4Image(INT16 sX, INT16 sY)
@@ -777,8 +689,6 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -795,8 +705,6 @@ void DeleteButton1Image( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiBUTTON1IMAGE );
-
-	return;
 }
 
 void RenderButton1Image(INT16 sX, INT16 sY)
@@ -809,8 +717,6 @@ void RenderButton1Image(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -827,8 +733,6 @@ void DeletePortraitFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiPORTRAITFRAME );
-
-	return;
 }
 
 void RenderPortraitFrame(INT16 sX, INT16 sY)
@@ -841,8 +745,6 @@ void RenderPortraitFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -860,8 +762,6 @@ void DeleteMainIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiMAININDENT );
-
-	return;
 }
 
 void RenderMainIndentFrame(INT16 sX, INT16 sY)
@@ -874,8 +774,6 @@ void RenderMainIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -892,8 +790,6 @@ void DeleteQtnLongIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGINDENT );
-
-	return;
 }
 
 void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
@@ -906,8 +802,6 @@ void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadQtnShortIndentFrame( void )
@@ -923,8 +817,6 @@ void DeleteQtnShortIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTINDENT );
-
-	return;
 }
 
 void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
@@ -937,8 +829,6 @@ void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadQtnLongIndentHighFrame( void )
@@ -954,8 +844,6 @@ void DeleteQtnLongIndentHighFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiLONGHINDENT );
-
-	return;
 }
 
 void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
@@ -968,8 +856,6 @@ void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadQtnShortIndentHighFrame( void )
@@ -985,8 +871,6 @@ void DeleteQtnShortIndentHighFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORTHINDENT );
-
-	return;
 }
 
 void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
@@ -999,8 +883,6 @@ void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -1017,8 +899,6 @@ void DeleteQtnIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiQINDENT );
-
-	return;
 }
 
 void RenderQtnIndentFrame(INT16 sX, INT16 sY)
@@ -1031,8 +911,6 @@ void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -1049,8 +927,6 @@ void DeleteAttrib1IndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA1INDENT );
-
-	return;
 }
 
 void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
@@ -1063,8 +939,6 @@ void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadAttrib2IndentFrame( void )
@@ -1080,8 +954,6 @@ void DeleteAttrib2IndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiA2INDENT );
-
-	return;
 }
 
 void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
@@ -1094,8 +966,6 @@ void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadAvgMercIndentFrame( void )
@@ -1111,8 +981,6 @@ void DeleteAvgMercIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiAVGMERCINDENT );
-
-	return;
 }
 
 void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
@@ -1125,8 +993,6 @@ void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -1144,8 +1010,6 @@ void DeleteAboutUsIndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiABOUTUSINDENT );
-
-	return;
 }
 
 void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
@@ -1158,8 +1022,6 @@ void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 
@@ -1176,8 +1038,6 @@ void DeleteQtnShort2IndentFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2INDENT );
-
-	return;
 }
 
 void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
@@ -1190,8 +1050,6 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }
 
 BOOLEAN LoadQtnShort2IndentHighFrame( void )
@@ -1207,8 +1065,6 @@ void DeleteQtnShort2IndentHighFrame( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSHORT2HINDENT );
-
-	return;
 }
 
 void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
@@ -1221,6 +1077,4 @@ void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-	return;
 }

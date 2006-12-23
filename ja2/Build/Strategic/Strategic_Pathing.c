@@ -808,8 +808,6 @@ void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 s
 		RemovePlayerFromTeamSlotGivenMercID( pSoldier->ubID );
 
 	}
-
-	return;
 }
 */
 
@@ -1382,7 +1380,6 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 		}
 		pNode = pNode -> pNext;
 	}
-	return;
 }
 */
 
@@ -1473,8 +1470,6 @@ void MoveTeamOnFoot( void )
 			MoveCharacterOnPath( pTeamSoldier );
 		}
 	}
-
-	return;
 }
 */
 

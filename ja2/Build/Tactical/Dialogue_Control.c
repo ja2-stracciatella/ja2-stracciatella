@@ -218,16 +218,12 @@ extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 u
 void UnPauseGameDuringNextQuote( void )
 {
 	fPausedTimeDuringQuote = FALSE;
-
-	return;
 }
 
 
 void PauseTimeDuringNextQuote( void )
 {
 	fPausedTimeDuringQuote = TRUE;
-
-	return;
 }
 
 BOOLEAN DialogueActive( )
@@ -298,8 +294,6 @@ void InitalizeStaticExternalNPCFaces( void )
 	{
 		uiExternalStaticNPCFaces[ iCounter ] = ( UINT32 )InitFace( ( UINT8 )( uiExternalFaceProfileIds[ iCounter ] ), NOBODY, FACE_FORCE_SMALL );
 	}
-
-	return;
 }
 
 void ShutdownStaticExternalNPCFaces( void )
@@ -1920,9 +1914,6 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
   }
 
 	ExecuteTacticalTextBox( sLeft, gTalkPanel.zQuoteStr );
-
-	return;
-
 }
 
 
@@ -2059,8 +2050,6 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 	}
 
 	gfFacePanelActive = TRUE;
-
-	return;
 }
 
 
@@ -2838,14 +2827,12 @@ void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 void PauseDialogueQueue( void )
 {
 	gfDialogueQueuePaused = TRUE;
-	return;
 }
 
 // unpause the dialogue queue
 void UnPauseDialogueQueue( void )
 {
 	gfDialogueQueuePaused = FALSE;
-	return;
 }
 
 

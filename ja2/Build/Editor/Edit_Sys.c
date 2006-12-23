@@ -1121,8 +1121,6 @@ void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
 
 		}
 	}
-
-	return;
 }
 
 

@@ -1409,8 +1409,6 @@ void DrawFace( INT16 sCharNumber )
 
 	// render their face
 	RenderSoldierFace( pSoldier, SOLDIER_PIC_X, SOLDIER_PIC_Y, TRUE );
-
-	return;
 }
 
 
@@ -1573,8 +1571,6 @@ void DrawCharBars( void )
 			DrawMoraleUIBarEx( pSoldier, BAR_INFO_X + 12, BAR_INFO_Y,3,42, TRUE, FRAME_BUFFER );
 		}
 	}
-
-	return;
 }
 
 
@@ -1825,8 +1821,6 @@ void DrawCharStats( INT16 sCharNum )
  	DrawString(sString,usX, MED_Y,CHAR_FONT );
 
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
-
-	return;
 }
 
 
@@ -2252,9 +2246,6 @@ void DrawCharacterInfo(INT16 sCharNumber)
 
 	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX,CHAR_MORALE_Y, CHAR_FONT);
-
-
-	return;
 }
 
 
@@ -2794,17 +2785,13 @@ void AddCharacter( SOLDIERTYPE *pCharacter )
 
 	// valid character
 	gCharactersList[usCount].fValid = TRUE;
-
-	return;
 }
 
 
 /*
 void MoveCharacter(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 {
-	if (!gCharactersList[uiInitialPosition].fValid)
-		return;
-	else
+	if (gCharactersList[uiInitialPosition].fValid)
 		memcpy(&gCharactersList[uiFinalPosition], &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt));
 }
 
@@ -2936,8 +2923,6 @@ void DisplayCharacterList()
 
 	// mark all pop ups as dirty, so that any open assigment menus get reblitted over top of the team list
 	MarkAllBoxesAsAltered( );
-
-	return;
 }
 
 
@@ -7047,7 +7032,6 @@ void HandleMapInventoryCursor()
 {
 	if(fMapInventoryItem)
    MSYS_SetCurrentCursor( EXTERN_CURSOR );
-	return;
 }
 
 
@@ -7152,8 +7136,6 @@ void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(
 		giPotCharPathBaseTime = GetJA2Clock( );
 		fTempPathAlreadyDrawn = TRUE;
 	}
-
-	return;
 }
 
 
@@ -7301,8 +7283,6 @@ void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(  )
 	{
 		fInArea = TRUE;
 	}
-
-	return;
 }
 
 
@@ -7401,8 +7381,6 @@ void CreateMouseRegionsForTeamList( void )
 		SetRegionFastHelpText( &gTeamListDestinationRegion[sCounter], pMapScreenMouseRegionHelpText[ 2 ] );
 		SetRegionFastHelpText( &gTeamListContractRegion[sCounter], pMapScreenMouseRegionHelpText[ 3 ] );
 	}
-
-	return;
 }
 
 
@@ -8402,8 +8380,6 @@ void RenderMapRegionBackground( void )
 	fMapPanelDirty = FALSE;
 
 	gfMapPanelWasRedrawn = TRUE;
-
-	return;
 }
 
 
@@ -8468,8 +8444,6 @@ void RenderTeamRegionBackground( void )
 #endif
 
 	MapscreenMarkButtonsDirty();
-
-	return;
 }
 
 
@@ -8861,8 +8835,6 @@ void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter )
 
 	// recreate
 	CreateContractBox( pCharacter );
-
-	return;
 }
 
 
@@ -8875,8 +8847,6 @@ void TestMessageSystem( void )
 	  MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%d", iCounter );
 	}
 	MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%d", iCounter );
-
-	return;
 }
 
 
@@ -9005,8 +8975,6 @@ void ResetAllSelectedCharacterModes( void )
   {
 	  SetUpCursorForStrategicMap( );
   }
-
-	return;
 }
 
 
@@ -9038,8 +9006,6 @@ void UpdatePausedStatesDueToTimeCompression( void )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -9114,8 +9080,6 @@ void HandleSpontanousTalking(  )
 			ContinueDialogue( ( &Menptr[gCharactersList[bSelectedInfoChar].usSolID] ), TRUE );
 		}
 	}
-
-	return;
 }
 
 
@@ -9350,9 +9314,6 @@ void UpdateCursorIfInLastSector( void )
 			}
 		}
 	}
-
-	return;
-
 }
 
 
@@ -9525,8 +9486,6 @@ void UpDateStatusOfContractBox( void )
 			ForceUpDateOfBox( ghRemoveMercAssignBox );
 		}
 	}
-
-	return;
 }
 
 
@@ -9961,8 +9920,6 @@ void UpdateBadAssignments( void )
 			CheckIfSoldierUnassigned( &Menptr[ gCharactersList[ iCounter ].usSolID ] );
 		}
 	}
-
-	return;
 }
 
 void InterruptTimeForMenus( void )
@@ -9977,8 +9934,6 @@ void InterruptTimeForMenus( void )
 		InterruptTime( );
 		PauseTimeForInterupt( );
 	}
-
-	return;
 }
 
 
@@ -10152,8 +10107,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 		// get rid of border stuff
 		DeleteMapBorderGraphics( );
 	}
-
-	return;
 }
 
 
@@ -10413,8 +10366,6 @@ void MapScreenDefaultOkBoxCallback( UINT8 bExitValue )
 		fTeamPanelDirty = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 	}
-
-	return;
 }
 
 
@@ -10430,8 +10381,6 @@ void MapScreenDemoOkBoxCallback( UINT8 bExitValue )
 		fShowingMapDisableBox = FALSE;
 		//SetPendingNewScreen( GAME_SCREEN );
 	}
-
-	return;
 }
 */
 #endif
@@ -10479,7 +10428,6 @@ void AddTeamPanelSortButtonsForMapScreen( void )
 
 		SetButtonFastHelpText( giMapSortButton[ iCounter ], wMapScreenSortButtonHelpText[ iCounter ] );
 	}
-	return;
 }
 
 
@@ -10773,7 +10721,6 @@ void RemoveTeamPanelSortButtonsForMapScreen( void )
 		giMapSortButtonImage[ iCounter ] = -1;
 		giMapSortButton[ iCounter ] = -1;
 	}
-	return;
 }
 
 
@@ -10871,7 +10818,6 @@ void DisplayIconsForMercsAsleep( void )
 			}
 		}
 	}
-	return;
 }
 
 #ifdef JA2DEMO

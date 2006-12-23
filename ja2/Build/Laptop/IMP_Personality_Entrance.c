@@ -34,9 +34,6 @@ void EnterIMPPersonalityEntrance( void )
 {
   // create buttons needed
 	CreateIMPPersonalityEntranceButtons( );
-
-
-  return;
 }
 
 void RenderIMPPersonalityEntrance( void )
@@ -49,26 +46,17 @@ void RenderIMPPersonalityEntrance( void )
 
 	// indent
   RenderAvgMercIndentFrame(90, 40 );
-	return;
 }
 
 void ExitIMPPersonalityEntrance( void )
 {
   // destroy buttons needed
 	DestroyIMPPersonalityEntranceButtons( );
-
-
-
-	return;
 }
 
 
 void HandleIMPPersonalityEntrance( void )
 {
-
-
-
-  return;
 }
 
 
@@ -91,8 +79,6 @@ void CreateIMPPersonalityEntranceButtons( void )
 
 
 	SetButtonCursor(giIMPPersonalityEntranceButton[0], CURSOR_WWW);
-
-	return;
 }
 
 void DestroyIMPPersonalityEntranceButtons( void )
@@ -102,8 +88,6 @@ void DestroyIMPPersonalityEntranceButtons( void )
 	// the begin button
   RemoveButton(giIMPPersonalityEntranceButton[0] );
   UnloadButtonImage(giIMPPersonalityEntranceButtonImage[0] );
-
-	return;
 }
 
 

@@ -1119,8 +1119,6 @@ void UpdatePositionOfMercsInVehicle( INT32 iId )
 			pVehicleList[ iId ].pPassengers[ iCounter ]->fBetweenSectors = FALSE;
 		}
 	}
-
-	return;
 }
 
 
@@ -1680,8 +1678,6 @@ void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridN
     KillAllInVehicle( ubID );
 
 	}
-
-	return;
 }
 
 
@@ -1826,8 +1822,6 @@ void SetUpArmorForVehicle( UINT8 ubID )
 
 	// for armour type, store the index into the armour table itself
 	pVehicleList[ ubID ].sArmourType = Item[ sVehicleArmourType[ pVehicleList[ ubID ].ubVehicleType ] ].ubClassIndex;
-
-	return;
 }
 
 void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )

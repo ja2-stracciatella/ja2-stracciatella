@@ -35,8 +35,6 @@ void EnterIMPAttributeEntrance( void )
 {
 
 	CreateIMPAttributeEntranceButtons( );
-
-	return;
 }
 
 void RenderIMPAttributeEntrance( void )
@@ -46,25 +44,17 @@ void RenderIMPAttributeEntrance( void )
 
 	// avg merc indent
 	RenderAvgMercIndentFrame(90, 40 );
-
-	return;
 }
 
 void ExitIMPAttributeEntrance( void )
 {
   // destroy the finish buttons
 	DestroyIMPAttributeEntranceButtons( );
-
-	return;
 }
 
 
 void HandleIMPAttributeEntrance( void )
 {
-
-
-
-  return;
 }
 
 
@@ -86,7 +76,6 @@ void CreateIMPAttributeEntranceButtons( void )
 														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeBeginCallback);
 
 	SetButtonCursor(giIMPAttributeEntranceButton[0], CURSOR_WWW);
-	return;
 }
 
 
@@ -97,10 +86,6 @@ void DestroyIMPAttributeEntranceButtons( void )
 	// the begin  button
   RemoveButton(giIMPAttributeEntranceButton[ 0 ] );
   UnloadButtonImage(giIMPAttributeEntranceButtonImage[ 0 ] );
-
-
-
-	return;
 }
 
 

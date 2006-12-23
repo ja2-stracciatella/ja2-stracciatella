@@ -734,8 +734,6 @@ void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length
 {
 	// OK, build string id like J11
 	swprintf( sString, Length, L"%s%s",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
-
-	return;
 }
 
 
@@ -789,7 +787,6 @@ void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEA
 		sprintf(bString, "H10.DAT",pVertStrings[sMapY],pHortStrings[sMapX]);
 		ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"Using PLACEHOLDER map!");
 	}
-	return;
 }
 
 void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
@@ -1974,8 +1971,6 @@ void InitializeStrategicMapSectorTownNames( void )
 	StrategicMap[11+12*MAP_WORLD_X].bNameId= 	StrategicMap[12+12*MAP_WORLD_X].bNameId = BALIME;
 	StrategicMap[3+14*MAP_WORLD_X].bNameId=StrategicMap[4+14*MAP_WORLD_X].bNameId=StrategicMap[5+14*MAP_WORLD_X].bNameId=StrategicMap[3+15*MAP_WORLD_X].bNameId=StrategicMap[4+15*MAP_WORLD_X].bNameId= StrategicMap[3+16*MAP_WORLD_X].bNameId = MEDUNA;
 	//StrategicMap[3+16*MAP_WORLD_X].bNameId=PALACE;
-	return;
-
 }
 
 
@@ -2565,8 +2560,6 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	  ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( UINT8 )pSoldier->sSectorX, ( UINT8 )pSoldier->sSectorY );
 	  AddPlayerToGroup( ubGroupId , pSoldier );
 	}
-
-	return;
 }
 
 void AllMercsWalkedToExitGrid()

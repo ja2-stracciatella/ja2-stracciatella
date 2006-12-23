@@ -102,7 +102,6 @@ void UnLoadCarPortraits( void )
 		DeleteVideoObjectFromIndex( giCarPortraits[ iCounter ] );
 		giCarPortraits[ iCounter ] = -1;
 	}
-	return;
 }
 
 

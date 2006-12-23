@@ -1140,8 +1140,6 @@ void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
 	// now move bottom right based on topleft + width or height
   region -> RegionBottomRightX = sX + sWidth;
 	region -> RegionBottomRightY = sY + sHeight;
-
-	return;
 }
 
 
@@ -1577,8 +1575,6 @@ void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBAC
 
 	// now set the region help text
 	region-> HelpDoneCallback = CallbackFxn;
-
-	return;
 }
 
 
@@ -1602,6 +1598,4 @@ void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region )
 	// we have a callback, excecute
 	// ATE: Disable these!
 	//( *( region->HelpDoneCallback ) )( );
-
-	return;
 }

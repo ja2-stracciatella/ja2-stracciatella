@@ -2803,33 +2803,24 @@ void HandleLapTopScreenMouseUi()
 void
 DrawHighLightRegionBox()
 {
-
-	return;
 }
 
 void
 RestoreOldRegion(INT32 iOldRegion)
 {
-
-	return;
 }
 
 void HighLightRegion(INT32 iCurrentRegion)
 {
-
-	return;
 }
 
 void HandleAnimatedButtons()
 {
-
-	return;
-
-
 }
+
+
 void AnimateButton( UINT32 uiIconID, UINT16 usX, UINT16 usY )
 {
-  return;
 }
 
 void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
@@ -2979,7 +2970,6 @@ void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 void ReDrawHighLight()
 {
   HighLightRegion(giCurrentRegion);
-	return;
 }
 
 
@@ -2994,14 +2984,12 @@ void DrawButtonText()
 			DisplayEmailHeaders( );
 			break;
 	}
-	return;
 }
 
 void InitBookMarkList()
 {
 	// sets bookmark list to -1
 	memset( LaptopSaveInfo.iBookMarkList, -1, sizeof( LaptopSaveInfo.iBookMarkList ) );
-	return;
 }
 
 void SetBookMark(INT32 iBookId)
@@ -3022,7 +3010,6 @@ void SetBookMark(INT32 iBookId)
 	 }
 	 LaptopSaveInfo.iBookMarkList[iCounter]=iBookId;
 	}
-	return;
 }
 
 
@@ -3357,7 +3344,6 @@ void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason )
    iCount=MSYS_GetRegionUserData(pRegion, 0);
 
  }
- return;
 }
 
 
@@ -3524,7 +3510,6 @@ void GoToWebPage(INT32 iPageId )
 
   gfShowBookmarks=FALSE;
 	fReDrawScreenFlag=TRUE;
-	return;
 }
 
 void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
@@ -3735,7 +3720,6 @@ void DeleteLoadPending( void )
 	// reuse bookmark
   DeleteVideoObjectFromIndex(guiGRAPHBAR);
   DeleteVideoObjectFromIndex(guiGRAPHWINDOW);
-	return;
 }
 
 
@@ -3786,7 +3770,6 @@ void CreateDestroyErrorButton( void )
 	 fReDrawScreenFlag=TRUE;
 
  }
-	return;
 }
 
 
@@ -3836,8 +3819,6 @@ void DisplayErrorBox( void )
 	DisplayWrappedString(ERROR_X+ERROR_TEXT_X,(UINT16)(ERROR_Y+ERROR_TEXT_Y+DisplayWrappedString(ERROR_X+ERROR_TEXT_X, ERROR_Y+ERROR_TEXT_Y, BOOK_WIDTH, 2,ERROR_FONT,FONT_BLACK, pErrorStrings[1],FONT_BLACK,FALSE,CENTER_JUSTIFIED)), BOOK_WIDTH, 2,ERROR_FONT,FONT_BLACK, pErrorStrings[2],FONT_BLACK,FALSE,CENTER_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -3852,7 +3833,6 @@ void DrawTextOnErrorButton()
 	SetFontShadow(DEFAULT_SHADOW);
 
 	InvalidateRegion(ERROR_X, ERROR_Y, ERROR_X+BOOK_WIDTH, ERROR_Y+6*BOOK_HEIGHT);
-	return;
 }
 
 // This function is called every time the laptop is FIRST initialized, ie whenever the laptop is loaded.  It calls
@@ -3883,8 +3863,6 @@ void CheckMarkButtonsDirtyFlag( void )
 		MarkButtonsDirty( );
 		fMarkButtonsDirtyFlag = FALSE;
 	}
-
-  return;
 }
 
 
@@ -3903,7 +3881,6 @@ void PostButtonRendering( void )
 		break;
 
 	}
-	return;
 }
 
 void ShouldNewMailBeDisplayed()
@@ -3963,8 +3940,6 @@ void DisplayPlayersBalanceToDate( void )
 
 	// reset shadow
   SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -3980,8 +3955,6 @@ void CheckIfNewWWWW( void )
 	{
     fNewWWW = FALSE;
 	}
-
-	return;
 }
 
 
@@ -4038,10 +4011,6 @@ static void HandleLapTopESCKey(void)
 		fExitingLaptopFlag = TRUE;
 		HandleExit( );
 	}
-
-
-
-	return;
 }
 
 
@@ -4148,8 +4117,6 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
     HandleRightButtonUpEvent( );
 		return;
   }
-
-	return;
 }
 
 
@@ -4635,8 +4602,6 @@ void FlickerHDLight( void )
 		}
 		InvalidateRegion(88, 466, 102, 477 );
 	}
-
-	return;
 }
 
 
@@ -4725,8 +4690,6 @@ void CreateDestroyMinimizeButtonForCurrentMode( void )
 	{
 		// do nothing
 	}
-
-	return;
 }
 
 
@@ -4739,7 +4702,6 @@ void CreateMinimizeButtonForCurrentMode( void )
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LaptopMinimizeProgramButtonCallback);
 
 	SetButtonCursor(gLaptopMinButton[0], CURSOR_LAPTOP_SCREEN);
-	return;
 }
 
 void DestroyMinimizeButtonForCurrentMode( void )
@@ -4835,8 +4797,6 @@ void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram )
 	}
 
 	gLaptopProgramQueueList[ iOpenedProgram ] = 1;
-
-	return;
 }
 
 
@@ -4850,8 +4810,6 @@ void InitLaptopOpenQueue( void )
 	{
 			gLaptopProgramQueueList[ iCounter ] = 1;
 	}
-
-	return;
 }
 
 void SetCurrentToLastProgramOpened( void )
@@ -4980,7 +4938,6 @@ void DeleteDesktopBackground( void )
 	// delete desktop
 
 	DeleteVideoSurfaceFromIndex(guiDESKTOP);
-	return;
 }
 
 
@@ -5104,7 +5061,6 @@ void PrintDate( void )
 
 	SetFontShadow( DEFAULT_SHADOW );
 */
-	return;
 }
 
 
@@ -5377,8 +5333,6 @@ void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 us
 		}
 	}
 #endif
-
-		return;
 }
 
 
@@ -5448,8 +5402,6 @@ void HandleDefaultWebpageForLaptop( void )
 		  GoToWebPage( LaptopSaveInfo.iBookMarkList[ 0 ] );
 		}
 	}
-
-	return;
 }
 
 
@@ -5459,8 +5411,6 @@ void CreateMinimizeRegionsForLaptopProgramIcons( void )
 
 	 MSYS_DefineRegion( &gLapTopProgramMinIcon,LAPTOP_PROGRAM_ICON_X, LAPTOP_PROGRAM_ICON_Y ,LAPTOP_PROGRAM_ICON_X + LAPTOP_PROGRAM_ICON_WIDTH ,LAPTOP_PROGRAM_ICON_Y + LAPTOP_PROGRAM_ICON_HEIGHT, MSYS_PRIORITY_NORMAL+1,
 							CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LaptopProgramIconMinimizeCallback );
-
-	return;
 }
 
 
@@ -5470,8 +5420,6 @@ void DestroyMinimizeRegionsForLaptopProgramIcons( void )
 	// displayed on the top of the laptop program bar
 
 	MSYS_RemoveRegion( &gLapTopProgramMinIcon);
-
-	return;
 }
 
 
@@ -5531,7 +5479,6 @@ void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				break;
 			}
 	}
-	return;
 }
 
 
@@ -5567,8 +5514,6 @@ void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 	DisplayTaskBarIcons( );
 
 	//InvalidateRegion( 0,0, 640, 480 );
-
-	return;
 }
 
 
@@ -5658,8 +5603,6 @@ void HandleWWWSubSites( void )
 		gfWWWaitSubSitesVisitedFlags[ LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX - ( LAPTOP_MODE_WWW + 1 ) ] = TRUE;
 		gfWWWaitSubSitesVisitedFlags[ LAPTOP_MODE_AIM_MEMBERS - ( LAPTOP_MODE_WWW + 1 ) ] = TRUE;
 	}
-
-	return;
 }
 
 
@@ -5670,8 +5613,6 @@ void UpdateStatusOfDisplayingBookMarks( void )
 	{
 		gfShowBookmarks = FALSE;
 	}
-
-	return;
 }
 
 
@@ -5684,7 +5625,6 @@ void InitalizeSubSitesList( void )
 	{
 			gfWWWaitSubSitesVisitedFlags[ iCounter - ( LAPTOP_MODE_WWW + 1 ) ] = FALSE;
 	}
-	return;
 }
 
 
@@ -5846,8 +5786,6 @@ void DisplayWebBookMarkNotify( void )
 	}
 
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 void HandleWebBookMarkNotifyTimer( void )
@@ -5910,8 +5848,6 @@ void HandleWebBookMarkNotifyTimer( void )
 		iBaseTime = 0;
 		fShowBookmarkInfo = FALSE;
 	}
-
-	return;
 }
 
 

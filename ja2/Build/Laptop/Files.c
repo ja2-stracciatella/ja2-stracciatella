@@ -330,10 +330,6 @@ void RenderFilesBackGround( void )
   // get and blt the top part of the screen, video object and blt to screen
   GetVideoObject( &hHandle, guiTOP );
   BltVideoObject( FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
-
-
-
-		return;
 }
 
 void DrawFilesTitleText( void )
@@ -347,9 +343,6 @@ void DrawFilesTitleText( void )
 
 	// draw the pages title
 	mprintf(TITLE_X,TITLE_Y,pFilesTitle[0]);
-
-
-	return;
 }
 
 
@@ -383,9 +376,6 @@ void RemoveFiles( void )
 	DeleteVideoObjectFromIndex(guiTITLE);
   DeleteVideoObjectFromIndex(guiHIGHLIGHT);
   DeleteVideoObjectFromIndex(guiFileBack);
-
-
-	return;
 }
 
 UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat ,STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead )
@@ -541,8 +531,6 @@ void OpenAndReadFilesFile( void )
 
   // close file
 	FileClose( hFileHandle );
-
-	return;
 }
 
 
@@ -630,7 +618,6 @@ void ClearFilesList( void )
 		MemFree(pFilesNode);
 	}
   pFilesListHead=NULL;
-	return;
 }
 
 
@@ -665,9 +652,6 @@ void DisplayFilesList( void )
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
-
 }
 
 
@@ -692,8 +676,6 @@ void DisplayFileMessage( void )
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -708,9 +690,6 @@ void InitializeFilesMouseRegions( void )
 	  MSYS_AddRegion(&pFilesRegions[iCounter]);
 		MSYS_SetRegionUserData(&pFilesRegions[iCounter],0,iCounter);
 	}
-
-
-	return;
 }
 
 void RemoveFilesMouseRegions( void )
@@ -1317,9 +1296,6 @@ void AddStringToFilesList( STR16 pString )
 		}
 		pTempString->Next = pFileString;
 	}
-
-
-	return;
 }
 
 
@@ -1365,8 +1341,6 @@ void CreateButtonsForFilesPage( void )
 
 	SetButtonCursor(giFilesPageButtons[ 0 ], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giFilesPageButtons[ 1 ], CURSOR_LAPTOP_SCREEN);
-
-	return;
 }
 
 
@@ -1381,8 +1355,6 @@ void DeleteButtonsForFilesPage( void )
 
 	RemoveButton(giFilesPageButtons[ 1 ] );
 	UnloadButtonImage( giFilesPageButtonsImage[ 1 ] );
-
-	return;
 }
 
 
@@ -1460,9 +1432,6 @@ void HandleFileViewerButtonStates( void )
 	{
 		EnableButton( giFilesPageButtons[ 1 ] );
 	}
-
-	return;
-
 }
 
 
@@ -1567,9 +1536,6 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 
 	// null out passed ptr
 	pFileRecordWidthList = NULL;
-
-
-	return;
 }
 
 
@@ -1595,8 +1561,6 @@ void OpenFirstUnreadFile( void )
 		 // increment counter
 		 iCounter++;
 	 }
-
-	return;
 }
 
 

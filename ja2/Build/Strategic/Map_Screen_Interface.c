@@ -410,8 +410,6 @@ void InitalizeVehicleAndCharacterList( void )
 {
 	// will init the vehicle and character lists to zero
 	memset(&gCharactersList, 0, sizeof( gCharactersList ));
-
-	return;
 }
 
 
@@ -421,8 +419,6 @@ void SetEntryInSelectedCharacterList( INT8 bEntry )
 
 	// set this entry to selected
 	fSelectedListOfMercsForMapScreen[ bEntry ] = TRUE ;
-
-	return;
 }
 
 void ResetEntryForSelectedList( INT8 bEntry )
@@ -431,8 +427,6 @@ void ResetEntryForSelectedList( INT8 bEntry )
 
 	// set this entry to selected
 	fSelectedListOfMercsForMapScreen[ bEntry ] = FALSE;
-
-	return;
 }
 
 void ResetSelectedListForMapScreen( void )
@@ -446,8 +440,6 @@ void ResetSelectedListForMapScreen( void )
 		// then keep him selected
 		SetEntryInSelectedCharacterList( bSelectedInfoChar );
 	}
-
-	return;
 }
 
 
@@ -468,8 +460,6 @@ void ToggleEntryInSelectedList( INT8 bEntry )
 
 	// toggle the value in the selected list
 	fSelectedListOfMercsForMapScreen[ bEntry ] = !( fSelectedListOfMercsForMapScreen[ bEntry ] );
-
-	return;
 }
 
 void BuildSelectedListFromAToB( INT8 bA, INT8 bB )
@@ -495,8 +485,6 @@ void BuildSelectedListFromAToB( INT8 bA, INT8 bB )
 	{
 		SetEntryInSelectedCharacterList( bStart );
 	}
-
-	return;
 }
 
 
@@ -699,8 +687,6 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy( SOLDIERTYPE *pSoldier )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -830,9 +816,6 @@ void RestoreBackgroundForAssignmentGlowRegionList( void )
 		// set old to current
 		iOldAssignmentLine = giAssignHighLine;
 	}
-
-	// leave
-	return;
 }
 
 void RestoreBackgroundForDestinationGlowRegionList( void )
@@ -858,9 +841,6 @@ void RestoreBackgroundForDestinationGlowRegionList( void )
 		// set old to current
 		iOldDestinationLine = giDestHighLine;
 	}
-
-	// leave
-	return;
 }
 
 void RestoreBackgroundForContractGlowRegionList( void )
@@ -889,9 +869,6 @@ void RestoreBackgroundForContractGlowRegionList( void )
 		// reset color rotation
 		fResetContractGlow = TRUE;
 	}
-
-	// leave
-	return;
 }
 
 
@@ -921,9 +898,6 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 		// reset color rotation
 		fResetContractGlow = TRUE;
 	}
-
-	// leave
-	return;
 }
 
 void PlayGlowRegionSound( void )
@@ -942,8 +916,6 @@ void PlayGlowRegionSound( void )
 
 	// otherwise no sound playing, play one
 	uiSoundId = PlayJA2SampleFromFile("Sounds\\glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
-
-	return;
 }
 
 
@@ -1066,8 +1038,6 @@ void DisableTeamInfoPanels( void )
 {
 	// disable team info panel
 	fDisableDueToBattleRoster = TRUE;
-
-	return;
 }
 
 
@@ -1075,8 +1045,6 @@ void EnableTeamInfoPanels( void )
 {
 	// enable team info panel
 	fDisableDueToBattleRoster = FALSE;
-
-	return;
 }
 
 
@@ -1345,7 +1313,6 @@ void HandleDisplayOfSelectedMercArrows( void )
 			}
 		}
 	}
-	return;
 }
 
 
@@ -1398,9 +1365,6 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		SetPickUpMenuDirtyLevel( DIRTYLEVEL2 );
 		RenderItemPickupMenu( );
 	}
-
-
-	return;
 }
 
 
@@ -1862,8 +1826,6 @@ void HandleGroupAboutToArrive( void )
 	// ARM - commented out - don't see why this is needed
 //	fTeamPanelDirty = TRUE;
 //	fCharacterInfoPanelDirty = TRUE;
-
-	return;
 }
 
 
@@ -1978,8 +1940,6 @@ void CreateMapStatusBarsRegion( void )
 	// create the status region over the bSelectedCharacter info region, to get quick rundown of merc's status
 	MSYS_DefineRegion( &gMapStatusBarsRegion, BAR_INFO_X - 3, BAR_INFO_Y - 42,(INT16)( BAR_INFO_X + 17), (INT16)(BAR_INFO_Y ), MSYS_PRIORITY_HIGH + 5,
 							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-
-	return;
 }
 
 
@@ -1988,8 +1948,6 @@ void RemoveMapStatusBarsRegion( void )
 
 	// remove the bSelectedInfoCharacter helath, breath and morale bars info region
 	MSYS_RemoveRegion( &gMapStatusBarsRegion );
-
-	return;
 }
 
 void UpdateCharRegionHelpText( void )
@@ -2124,7 +2082,6 @@ void HandleMAPUILoseCursorFromOtherScreen( void )
 	{
 		RenderMapRegionBackground( );
 	}
-	return;
 }
 
 
@@ -2211,10 +2168,6 @@ void UpdateMapScreenAssignmentPositions( void )
 
 		SetBoxPosition( ghRepairBox, pPoint );
 	}
-
-
-
-	return;
 }
 
 
@@ -2656,8 +2609,6 @@ void HandleShowingOfTacticalInterfaceFastHelpText( void )
 		// shut down
 		ShutDownUserDefineHelpTextRegions( );
 	}
-
-	return;
 }
 
 // start showing fast help text
@@ -2690,8 +2641,6 @@ void DisplayFastHelpRegions( FASTHELPREGION *pRegion, INT32 iSize )
 	{
 		DisplayUserDefineHelpTextRegions( &( pRegion[ iCounter ] ) );
 	}
-
-	return;
 }
 
 // show one region
@@ -2782,8 +2731,6 @@ void DisplayFastHelpForInitialTripInToMapScreen(  FASTHELPREGION *pRegion )
 	}
 
 	SetUpShutDownMapScreenHelpTextScreenMask( );
-
-	return;
 }
 
 
@@ -2792,8 +2739,6 @@ void DisplayMapScreenFastHelpList( void )
 	INT32 iCounter = 0;
 
 	DisplayFastHelpForInitialTripInToMapScreen( &pFastHelpMapScreenList[ iCounter ] );
-
-	return;
 }
 
 
@@ -2817,7 +2762,6 @@ void SetUpMapScreenFastHelpText( void )
 	pFastHelpMapScreenList[ 9 ].iW = pMapScreenFastHelpWidthList[ 9 ];
 	wcscpy( pFastHelpMapScreenList[ 9 ].FastHelpText, pMapScreenFastHelpTextList[ 9 ] );
 */
-	return;
 }
 
 void StopMapScreenHelpText( void )
@@ -2829,7 +2773,6 @@ void StopMapScreenHelpText( void )
 	fMapScreenBottomDirty = TRUE;
 
 	SetUpShutDownMapScreenHelpTextScreenMask( );
-	return;
 }
 
 BOOLEAN IsMapScreenHelpTextUp( void )
@@ -3226,7 +3169,6 @@ void AddSoldierToMovingLists( SOLDIERTYPE *pSoldier )
 			return;
 		}
 	}
-	return;
 }
 
 
@@ -3258,7 +3200,6 @@ void AddSquadToMovingLists( INT32 iSquadNumber )
 			return;
 		}
 	}
-	return;
 }
 
 
@@ -3290,7 +3231,6 @@ void AddVehicleToMovingLists( INT32 iVehicleId )
 			return;
 		}
 	}
-	return;
 }
 
 
@@ -3331,8 +3271,6 @@ void InitializeMovingLists( void )
 		// turn it off
 		fVehicleIsMoving[ iCounter ] = FALSE;
 	}
-
-	return;
 }
 
 
@@ -3705,8 +3643,6 @@ void AddStringsToMoveBox( void )
 	// add cancel line
 	swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 2 ] );
 	AddMonoString(&hStringHandle, sString );
-
-	return;
 }
 
 
@@ -3899,8 +3835,6 @@ void ClearMouseRegionsForMoveBox( void )
 		// remove this region
 		MSYS_RemoveRegion( &gMoveMenuRegion[ iCounter ] );
 	}
-
-	return;
 }
 
 
@@ -4100,8 +4034,6 @@ void MoveMenuBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 			MarkAllBoxesAsAltered( );
 		}
 	}
-
-	return;
 }
 
 
@@ -4271,8 +4203,6 @@ void HandleMoveoutOfSectorMovementTroops( void )
 
 	// now actually set the list
 	HandleSettingTheSelectedListOfMercs( );
-
-	return;
 }
 
 
@@ -4508,8 +4438,6 @@ void MoveScreenMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 			fShowUpdateBox = FALSE;
 		}
 	}
-
-	return;
 }
 
 void ResetSoldierUpdateBox( void )
@@ -4535,9 +4463,6 @@ void ResetSoldierUpdateBox( void )
 	{
 		pUpdateSoldierBox[ iCounter ] = NULL;
 	}
-
-
-	return;
 }
 
 
@@ -4586,23 +4511,18 @@ void AddSoldierToWaitingListQueue( SOLDIERTYPE *pSoldier )
 	iSoldierId = pSoldier->ubID;
 
 	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, iSoldierId, 0, 0, 0 );
-	return;
 }
 
 
 void AddReasonToWaitingListQueue( INT32 iReason )
 {
  	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, 0, 0 );
-	return;
 }
 
 
 void AddDisplayBoxToWaitingQueue( void )
 {
 	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, 0, 0 );
-
-
-	return;
 }
 
 
@@ -4664,15 +4584,12 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 			return;
 		}
 	}
-	return;
 }
 
 void SetSoldierUpdateBoxReason( INT32 iReason )
 {
 	//set the reason for the update
 	iReasonForSoldierUpDate = iReason;
-
-	return;
 }
 
 
@@ -4899,7 +4816,6 @@ void DisplaySoldierUpdateBox( )
 	CreateDestroyUpdatePanelButtons( iX, ( iY + iUpdatePanelHeight - 18 ), fFourWideMode );
 	MarkAButtonDirty( guiUpdatePanelButtons[ 0 ] );
 	MarkAButtonDirty( guiUpdatePanelButtons[ 1 ] );
-	return;
 }
 
 
@@ -5021,8 +4937,6 @@ void CreateUpdateBox( void )
  CreateScreenMaskForMoveBox( );
 
  ShowBox( ghUpdateBox );
-
-	return;
 }
 
 
@@ -5081,7 +4995,6 @@ void DisplayUpdateBox( void )
 		ShowBox( ghUpdateBox );
 		PauseTime( TRUE );
 	}
-	return;
 }
 */
 
@@ -5155,8 +5068,6 @@ void UpdateButtonsDuringCharacterDialogueSubTitles( void )
 	{
 		UnMarkButtonDirty( giMapContractButton );
 	}
-
-	return;
 }
 
 
@@ -5206,9 +5117,6 @@ void RenderSoldierSmallFaceForUpdatePanel( INT32 iIndex, INT32 iX, INT32 iY )
 	iStartY = iY + 29 - 27*pSoldier->bMorale/100;
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+42, iStartY, iX+43, iY+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+43, iStartY, iX+44, iY+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
-
-
-	return;
 }
 
 
@@ -5252,7 +5160,6 @@ void SetUpdateBoxFlag( BOOLEAN fFlag )
 {
 	// set the flag
 	fShowUpdateBox = fFlag;
-	return;
 }
 
 
@@ -5387,8 +5294,6 @@ void HandlePlayerEnteringMapScreenBeforeGoingToTactical( void )
 		SetUpShutDownMapScreenHelpTextScreenMask( );
 		fShowMapScreenHelpText = TRUE;
 	}
-
-	return;
 }
 
 
@@ -5492,9 +5397,6 @@ void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen( void )
 		fCharacterInfoPanelDirty = TRUE;
 		giExitToTactBaseTime = 0;
 	}
-
-
-	return;
 }
 
 

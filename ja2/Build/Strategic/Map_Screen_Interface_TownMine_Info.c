@@ -238,9 +238,6 @@ void CreateDestroyTownInfoBox( void )
 
 		fCreated = FALSE;
 	}
-
-
-	return;
 }
 
 
@@ -266,8 +263,6 @@ void CreateTownInfoBox( void )
 
  // set current box to this one
  SetCurrentBox( ghTownMineBox );
-
- return;
 }
 
 
@@ -753,8 +748,6 @@ void PositionTownMineInfoBox( void )
 
 	// reset position
 	SetBoxPosition( ghTownMineBox, pPosition );
-
-	return;
 }
 
 
@@ -821,8 +814,6 @@ void AddInventoryButtonForMapPopUpBox( void )
 		DisableButton( guiMapButtonInventory[ 0 ] );
 	}
 */
-
-	return;
 }
 
 void RemoveInventoryButtonForMapPopUpBox( void )
@@ -834,8 +825,6 @@ void RemoveInventoryButtonForMapPopUpBox( void )
 
 	RemoveButton( guiMapButtonInventory[1] );
   UnloadButtonImage( guiMapButtonInventoryImage[1] );
-
-	return;
 }
 
 
@@ -893,6 +882,4 @@ void MinWidthOfTownMineInfoBox( void )
 
 	// delete video object
 	DeleteVideoObjectFromIndex( uiObject );
-
-	return;
 }

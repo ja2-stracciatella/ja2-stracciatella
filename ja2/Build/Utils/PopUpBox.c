@@ -73,7 +73,6 @@ void RemoveCurrentBoxSecondaryText( INT32 hStringHandle );
 void InitPopUpBoxList()
 {
  memset(PopUpBoxList, 0, sizeof(PopUpBoxList));
- return;
 }
 
 
@@ -95,7 +94,6 @@ void SetLineSpace(INT32 hBoxHandle, UINT32 uiLineSpace)
 
  Assert( PopUpBoxList[ hBoxHandle ] );
  PopUpBoxList[hBoxHandle]->uiLineSpace=uiLineSpace;
- return;
 }
 
 
@@ -125,8 +123,6 @@ void SpecifyBoxMinWidth( INT32 hBoxHandle, INT32 iMinWidth )
 	{
 		PopUpBoxList[hBoxHandle]->Dimensions.iRight = iMinWidth;
 	}
-
-	return;
 }
 
 
@@ -186,8 +182,6 @@ void SetBoxFlags( INT32 hBoxHandle, UINT32 uiFlags)
 
   PopUpBoxList[hBoxHandle]->uiFlags=uiFlags;
   PopUpBoxList[hBoxHandle]->fUpdated = FALSE;
-
- return;
 }
 
 
@@ -204,8 +198,6 @@ void SetMargins(INT32 hBoxHandle, UINT32 uiLeft, UINT32 uiTop, UINT32 uiBottom, 
   PopUpBoxList[hBoxHandle]->uiBottomMargin=uiBottom;
 
   PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -239,8 +231,6 @@ void ShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 		// shade line
 		PopUpBoxList[hBoxHandle]->Text[iLineNumber]->fShadeFlag = TRUE;
 	}
-
-	return;
 }
 
 void UnShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
@@ -260,8 +250,6 @@ void UnShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 		// shade line
 		PopUpBoxList[hBoxHandle]->Text[iLineNumber]->fShadeFlag = FALSE;
 	}
-
-	return;
 }
 
 
@@ -282,8 +270,6 @@ void SecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 		// shade line
 		PopUpBoxList[hBoxHandle]->Text[iLineNumber]->fSecondaryShadeFlag = TRUE;
 	}
-
-	return;
 }
 
 void UnSecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
@@ -303,8 +289,6 @@ void UnSecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 		// shade line
 		PopUpBoxList[hBoxHandle]->Text[iLineNumber]->fSecondaryShadeFlag = FALSE;
 	}
-
-	return;
 }
 
 
@@ -319,8 +303,6 @@ void SetBoxBuffer(INT32 hBoxHandle, UINT32 uiBuffer)
  PopUpBoxList[hBoxHandle]->uiBuffer=uiBuffer;
 
  PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -335,8 +317,6 @@ void SetBoxPosition( INT32 hBoxHandle,SGPPoint Position )
  PopUpBoxList[hBoxHandle]->Position.iY=Position.iY;
 
  PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -349,8 +329,6 @@ void GetBoxPosition( INT32 hBoxHandle, SGPPoint *Position )
 
 	Position -> iX = PopUpBoxList[hBoxHandle]->Position.iX;
 	Position -> iY = PopUpBoxList[hBoxHandle]->Position.iY;
-
-	return;
 }
 
 void SetBoxSize(INT32 hBoxHandle,SGPRect Dimensions)
@@ -366,8 +344,6 @@ void SetBoxSize(INT32 hBoxHandle,SGPRect Dimensions)
  PopUpBoxList[hBoxHandle]->Dimensions.iTop=Dimensions.iTop;
 
  PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -382,8 +358,6 @@ void GetBoxSize( INT32 hBoxHandle, SGPRect *Dimensions )
 	Dimensions -> iBottom = PopUpBoxList[hBoxHandle]->Dimensions.iBottom;
 	Dimensions -> iRight = PopUpBoxList[hBoxHandle]->Dimensions.iRight;
 	Dimensions -> iTop = PopUpBoxList[hBoxHandle]->Dimensions.iTop;
-
-	return;
 }
 
 
@@ -394,7 +368,6 @@ void SetBorderType(INT32 hBoxHandle, INT32 iBorderObjectIndex)
 
  Assert( PopUpBoxList[ hBoxHandle ] );
  PopUpBoxList[hBoxHandle]->iBorderObjectIndex=iBorderObjectIndex;
- return;
 }
 
 void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
@@ -404,7 +377,6 @@ void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
 
  Assert( PopUpBoxList[ hBoxHandle ] );
  PopUpBoxList[hBoxHandle]->iBackGroundSurface=iBackGroundSurfaceIndex;
- return;
 }
 
 
@@ -452,8 +424,6 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
  *hStringHandle=iCounter;
 
  PopUpBoxList[guiCurrentBox]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -498,8 +468,6 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
   PopUpBoxList[guiCurrentBox]->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
 
   *hStringHandle=iCounter;
-
-	return;
 }
 
 
@@ -544,8 +512,6 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
  *hStringHandle=iCounter;
 
  PopUpBoxList[guiCurrentBox]-> fUpdated = FALSE;
-
- return;
 }
 
 
@@ -622,8 +588,6 @@ void SetBoxFont(INT32 hBoxHandle, UINT32 uiFont)
  SetBoxSecondColumnFont( hBoxHandle, uiFont );
 
  PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 void SetBoxSecondColumnMinimumOffset( INT32 hBoxHandle, UINT32 uiWidth )
@@ -632,7 +596,6 @@ void SetBoxSecondColumnMinimumOffset( INT32 hBoxHandle, UINT32 uiWidth )
 		return;
 
 	PopUpBoxList[hBoxHandle]->uiSecondColumnMinimunOffset = uiWidth;
-	return;
 }
 
 void SetBoxSecondColumnCurrentOffset( INT32 hBoxHandle, UINT32 uiCurrentOffset )
@@ -641,7 +604,6 @@ void SetBoxSecondColumnCurrentOffset( INT32 hBoxHandle, UINT32 uiCurrentOffset )
 		return;
 
 	PopUpBoxList[hBoxHandle]->uiSecondColumnCurrentOffset = uiCurrentOffset;
-	return;
 }
 
 void SetBoxSecondColumnFont(INT32 hBoxHandle, UINT32 uiFont)
@@ -660,8 +622,6 @@ void SetBoxSecondColumnFont(INT32 hBoxHandle, UINT32 uiFont)
  }
 
  PopUpBoxList[hBoxHandle]-> fUpdated = FALSE;
-
- return;
 }
 
 UINT32 GetBoxFont( INT32 hBoxHandle )
@@ -687,7 +647,6 @@ void SetBoxLineForeground( INT32 iBox, INT32 iStringValue, UINT8 ubColor )
 	Assert( PopUpBoxList[ iBox ]->Text[iStringValue] );
 
 	PopUpBoxList[iBox]->Text[iStringValue]->ubForegroundColor=ubColor;
-	return;
 }
 
 void SetBoxSecondaryShade( INT32 iBox, UINT8 ubColor )
@@ -706,7 +665,6 @@ void SetBoxSecondaryShade( INT32 iBox, UINT8 ubColor )
 			PopUpBoxList[iBox]->Text[uiCounter]->ubSecondaryShade=ubColor;
 		}
 	}
-	return;
 }
 
 
@@ -721,7 +679,6 @@ void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->uiFont=uiFont;
- return;
 }
 
 
@@ -734,7 +691,6 @@ void SetPopUpSecondColumnStringFont(INT32 hStringHandle, UINT32 uiFont)
  Assert( PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->uiFont=uiFont;
- return;
 }
 
 
@@ -748,7 +704,6 @@ void SetStringSecondaryShade(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->ubSecondaryShade=ubColor;
- return;
 }
 
 void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
@@ -760,7 +715,6 @@ void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->ubForegroundColor=ubColor;
- return;
 }
 
 void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
@@ -772,7 +726,6 @@ void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->ubBackgroundColor=ubColor;
- return;
 }
 
 void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
@@ -784,7 +737,6 @@ void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->ubHighLight=ubColor;
- return;
 }
 
 
@@ -797,7 +749,6 @@ void SetStringShade(INT32 hStringHandle, UINT8 ubShade)
  Assert( PopUpBoxList[guiCurrentBox]->Text[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->ubShade=ubShade;
- return;
 }
 
 void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
@@ -809,7 +760,6 @@ void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->ubForegroundColor=ubColor;
- return;
 }
 
 void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
@@ -821,7 +771,6 @@ void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->ubBackgroundColor=ubColor;
- return;
 }
 
 void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
@@ -833,7 +782,6 @@ void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
  Assert( PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->ubHighLight=ubColor;
- return;
 }
 
 
@@ -846,7 +794,6 @@ void SetStringSecondColumnShade(INT32 hStringHandle, UINT8 ubShade)
  Assert( PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle] );
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->ubShade=ubShade;
- return;
 }
 
 
@@ -867,7 +814,6 @@ void SetBoxForeground(INT32 hBoxHandle, UINT8 ubColor)
 		  PopUpBoxList[hBoxHandle]->Text[uiCounter]->ubForegroundColor=ubColor;
 		}
 	}
-	return;
 }
 
 void SetBoxBackground(INT32 hBoxHandle, UINT8 ubColor)
@@ -886,7 +832,6 @@ void SetBoxBackground(INT32 hBoxHandle, UINT8 ubColor)
 		  PopUpBoxList[hBoxHandle]->Text[uiCounter]->ubBackgroundColor=ubColor;
 		}
 	}
-	return;
 }
 
 void SetBoxHighLight(INT32 hBoxHandle, UINT8 ubColor)
@@ -905,7 +850,6 @@ void SetBoxHighLight(INT32 hBoxHandle, UINT8 ubColor)
 		  PopUpBoxList[hBoxHandle]->Text[uiCounter]->ubHighLight=ubColor;
 		}
 	}
-	return;
 }
 
 void SetBoxShade(INT32 hBoxHandle, UINT8 ubColor)
@@ -924,7 +868,6 @@ void SetBoxShade(INT32 hBoxHandle, UINT8 ubColor)
 		  PopUpBoxList[hBoxHandle]->Text[uiCounter]->ubShade=ubColor;
 		}
 	}
-	return;
 }
 
 void SetBoxSecondColumnForeground(INT32 hBoxHandle, UINT8 ubColor)
@@ -943,8 +886,6 @@ void SetBoxSecondColumnForeground(INT32 hBoxHandle, UINT8 ubColor)
 		 PopUpBoxList[hBoxHandle]->pSecondColumnString[iCounter]->ubForegroundColor=ubColor;
 	 }
  }
-
- return;
 }
 
 void SetBoxSecondColumnBackground(INT32 hBoxHandle, UINT8 ubColor)
@@ -963,8 +904,6 @@ void SetBoxSecondColumnBackground(INT32 hBoxHandle, UINT8 ubColor)
 		 PopUpBoxList[hBoxHandle]->pSecondColumnString[iCounter]->ubBackgroundColor=ubColor;
 	 }
  }
-
- return;
 }
 
 void SetBoxSecondColumnHighLight(INT32 hBoxHandle, UINT8 ubColor)
@@ -983,8 +922,6 @@ void SetBoxSecondColumnHighLight(INT32 hBoxHandle, UINT8 ubColor)
 			PopUpBoxList[hBoxHandle]->pSecondColumnString[iCounter]->ubHighLight=ubColor;
 	 }
  }
-
- return;
 }
 
 void SetBoxSecondColumnShade(INT32 hBoxHandle, UINT8 ubColor)
@@ -1003,7 +940,6 @@ void SetBoxSecondColumnShade(INT32 hBoxHandle, UINT8 ubColor)
 			PopUpBoxList[hBoxHandle]->pSecondColumnString[iCounter]->ubShade=ubColor;
 	 }
  }
- return;
 }
 
 
@@ -1017,7 +953,6 @@ void HighLightLine(INT32 hStringHandle)
  if(!PopUpBoxList[guiCurrentBox]->Text[hStringHandle])
 	 return;
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->fHighLightFlag=TRUE;
- return;
 }
 
 BOOLEAN GetShadeFlag( INT32 hStringHandle )
@@ -1062,8 +997,6 @@ void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber )
 		// highlight line
 		HighLightLine( iLineNumber );
 	}
-
-	return;
 }
 
 BOOLEAN GetBoxShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
@@ -1104,7 +1037,6 @@ void UnHighLightLine(INT32 hStringHandle)
  if(!PopUpBoxList[guiCurrentBox]->Text[hStringHandle])
 	 return;
  PopUpBoxList[guiCurrentBox]->Text[hStringHandle]->fHighLightFlag=FALSE;
- return;
 }
 
 void UnHighLightBox(INT32 hBoxHandle)
@@ -1132,7 +1064,6 @@ void UnHighLightSecondColumnLine(INT32 hStringHandle)
 	 return;
 
  PopUpBoxList[guiCurrentBox]->pSecondColumnString[hStringHandle]->fHighLightFlag=FALSE;
- return;
 }
 
 void UnHighLightSecondColumnBox(INT32 hBoxHandle)
@@ -1207,8 +1138,6 @@ void RemoveBox(INT32 hBoxHandle)
 
  if(hOldBoxHandle !=hBoxHandle)
   SetCurrentBox(hOldBoxHandle);
-
- return;
 }
 
 
@@ -1269,7 +1198,6 @@ void DisplayBoxes(UINT32 uiBuffer)
 	{
 		DisplayOnePopupBox( uiCounter, uiBuffer );
   }
-  return;
 }
 
 
@@ -1621,8 +1549,6 @@ void MarkAllBoxesAsAltered( void )
 	{
 		ForceUpDateOfBox( iCounter );
 	}
-
-	return;
 }
 
 

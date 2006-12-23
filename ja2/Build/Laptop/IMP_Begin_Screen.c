@@ -187,8 +187,6 @@ void EnterIMPBeginScreen( void )
 
 	// create buttons needed for begin screen
 	CreateIMPBeginScreenButtons( );
-
-  return;
 }
 
 void RenderIMPBeginScreen( void )
@@ -228,8 +226,6 @@ void RenderIMPBeginScreen( void )
 
 	// the gender itself
 	RenderGender( );
-
-	return;
 }
 
 void ExitIMPBeginScreen( void )
@@ -255,8 +251,6 @@ void ExitIMPBeginScreen( void )
 
 	// set gender
 	fCharacterIsMale = bGenderFlag;
-
-	return;
 }
 
 
@@ -297,8 +291,6 @@ void HandleIMPBeginScreen( void )
 		// the gender itself
 	  RenderGender( );
 	}
-
-  return;
 }
 
 
@@ -321,8 +313,6 @@ void CreateIMPBeginScreenButtons( void )
 														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPBeginScreenDoneCallback);
 
 	SetButtonCursor(giIMPBeginScreenButton[0], CURSOR_WWW);
-	return;
-
 }
 
 
@@ -334,8 +324,6 @@ void RemoveIMPBeginScreenButtons( void )
   // the done button
   RemoveButton(giIMPBeginScreenButton[0] );
   UnloadButtonImage(giIMPBeginScreenButtonImage[0] );
-
-	return;
 }
 
 
@@ -491,7 +479,6 @@ void GetPlayerKeyBoardInputForIMPBeginScreen( void )
 			}
 		}
   }
-	return;
 }
 
 
@@ -649,7 +636,6 @@ void HandleBeginScreenTextEvent( UINT32 uiKey )
 			}
 		 break;
 	}
-	return;
 }
 
 
@@ -711,7 +697,6 @@ void DisplayFullNameStringCursor( void )
 
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
-	return;
 }
 
 
@@ -772,7 +757,6 @@ void DisplayNickNameStringCursor( void )
 
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
-	return;
 }
 
 
@@ -803,7 +787,6 @@ void DisplayPlayerFullNameString( void )
 
 	fNewCharInString = FALSE;
   fReDrawScreenFlag = TRUE;
-	return;
 }
 
 
@@ -834,7 +817,6 @@ void DisplayPlayerNickNameString( void )
 
 	fNewCharInString = FALSE;
   fReDrawScreenFlag = TRUE;
-	return;
 }
 
 
@@ -894,7 +876,6 @@ void DisplayMaleGlowCursor( void )
 
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
-	return;
 }
 
 
@@ -955,7 +936,6 @@ void DisplayFemaleGlowCursor( void )
 
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );
-	return;
 }
 
 
@@ -969,8 +949,6 @@ void CopyFirstNameIntoNickName( void )
 		pNickNameString[ iCounter ] = pFullNameString[ iCounter ];
 		iCounter++;
 	}
-
-	return;
 }
 
 
@@ -1074,8 +1052,6 @@ void CreateIMPBeginScreenMouseRegions( void )
 	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 1 ]);
 	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 2 ]);
 	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 3 ]);
-
-	return;
 }
 
 void DestroyIMPBeginScreenMouseRegions( void )
@@ -1091,9 +1067,6 @@ void DestroyIMPBeginScreenMouseRegions( void )
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 1 ]);
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 2 ]);
 	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 3 ]);
-
-
-	return;
 }
 
 

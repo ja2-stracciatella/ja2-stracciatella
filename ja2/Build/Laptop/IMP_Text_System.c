@@ -83,10 +83,6 @@ void InitializeImpRecordLengthList( void )
 {
 
 	// this procedure will setup the IMP records length list with the appropriate values
-
-
-	return;
-
 }
 
 
@@ -390,8 +386,6 @@ void PrintIMPPersonalityQuizQuestionAndAnsers( void )
 		break;
 
 	}
-
-	return;
 }
 
 void OffSetQuestionForFemaleSpecificQuestions( INT32 *iCurrentOffset )

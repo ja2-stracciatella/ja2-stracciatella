@@ -206,9 +206,6 @@ void RemoveTextMercPopupImages( )
 			gPopUpTextBox->fMercTextPopupInitialized = FALSE;
 		}
 	}
-
-	// done
-	return;
 }
 
 BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )

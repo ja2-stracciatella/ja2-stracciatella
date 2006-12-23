@@ -553,8 +553,6 @@ void EnterPersonnel( void )
 
 	// set states of en- dis able buttons
 	SetPersonnelButtonStates( );
-
-  return;
 }
 
 void ExitPersonnel( void )
@@ -598,10 +596,6 @@ void ExitPersonnel( void )
 	fCreateRegionsForPastCurrentToggle = FALSE;
 
 	CreateDestroyCurrentDepartedMouseRegions( );
-
-
-
-	return;
 }
 
 void HandlePersonnel( void )
@@ -625,8 +619,6 @@ void HandlePersonnel( void )
 
 	// handle timed modes for ATM
 	HandleTimedAtmModes( );
-
-	 return;
 }
 
 BOOLEAN LoadPersonnelGraphics( void )
@@ -651,9 +643,6 @@ void RemovePersonnelGraphics( void )
 	DeleteVideoObjectFromIndex(guiSCREEN);
 	DeleteVideoObjectFromIndex(guiTITLE);
 	DeleteVideoObjectFromIndex(guiPersonnelInventory);
-
-
-	return;
 }
 
 void RenderPersonnel( void )
@@ -742,8 +731,6 @@ void RenderPersonnel( void )
 
 	// en-dis-able start button
 	UpDateStateOfStartButton( );
-
-	return;
 }
 
 
@@ -1127,9 +1114,6 @@ void CreatePersonnelButtons( void )
 	SetButtonCursor(giPersonnelButton[1], CURSOR_LAPTOP_SCREEN);
 	//SetButtonCursor(giPersonnelButton[2], CURSOR_LAPTOP_SCREEN);
 	//SetButtonCursor(giPersonnelButton[3], CURSOR_LAPTOP_SCREEN);
-
-
-	return;
 }
 
 void DeletePersonnelButtons( void )
@@ -1144,7 +1128,6 @@ void DeletePersonnelButtons( void )
 	RemoveButton(giPersonnelButton[3] );
 	UnloadButtonImage( giPersonnelButtonImage[3] );
 	*/
-	return;
 }
 
 
@@ -1207,8 +1190,6 @@ void DisplayHeader( void )
 	SetFontBackground( 0 );
 
 	mprintf(pPersonnelScreenPoints[18].x,pPersonnelScreenPoints[18].y,pPersonnelTitle[0]);
-
-	return;
 }
 
 
@@ -1335,8 +1316,6 @@ Moved so the name of the town will be in the same line as the name
 		}
 	}
 */
-
-	return;
 }
 
 
@@ -1784,7 +1763,6 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 */
 		}
 	}
-	return;
 }
 
 
@@ -1839,8 +1817,6 @@ void DrawPageNumber( void )
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -1879,8 +1855,6 @@ void SetPersonnelButtonStates( void )
 //		EnableButton( giPersonnelButton[ 3 ] );
 		EnableButton( giPersonnelButton[ 1 ] );
 	}
-
-	return;
 }
 
 
@@ -1903,8 +1877,6 @@ void RenderPersonnelScreenBackground( void )
 	}
 
 	BltVideoObject( FRAME_BUFFER, hHandle, 0,DEPARTED_X, DEPARTED_Y);
-
-	return;
 }
 
 
@@ -1945,9 +1917,6 @@ void CreateDestroyButtonsForPersonnelDepartures( void )
 	{
 		fCreated = FALSE;
 	}
-
-
-	return;
 }
 
 
@@ -2031,7 +2000,6 @@ void  CreateDestroyMouseRegionsForPersonnelPortraits( void )
 
 		fCreated = FALSE;
 	}
-	return;
 }
 
 
@@ -2245,8 +2213,6 @@ void DisplayFaceOfDisplayedMerc( )
 
 
 	}
-
-	return;
 }
 
 void DisplayInventoryForSelectedChar( void )
@@ -2269,8 +2235,6 @@ void DisplayInventoryForSelectedChar( void )
 	{
 		RenderInventoryForCharacter( GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0 );
 	}
-
-	return;
 }
 
 
@@ -2435,10 +2399,6 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 			ubCounter = NUM_INV_SLOTS;
 		}
 	}
-
-
-
-	return;
 }
 
 
@@ -2500,9 +2460,6 @@ void EnableDisableInventoryScrollButtons( void )
 	{
 		EnableButton( giPersonnelInventoryButtons[ 1 ] );
 	}
-
-
-	return;
 }
 
 
@@ -2604,8 +2561,6 @@ void DisplayNumberOnCurrentTeam( void )
 
 	// now the cost of the current team, if applicable
 	DisplayCostOfCurrentTeam( );
-
-	return;
 }
 
 void DisplayNumberDeparted( void )
@@ -2632,9 +2587,6 @@ void DisplayNumberDeparted( void )
 	}
 
 	mprintf( sX, PERS_DEPART_TEAM_Y, sString );
-
-
-	return;
 }
 
 
@@ -2883,11 +2835,6 @@ void DisplayCostOfCurrentTeam( void )
 		mprintf( sX ,PERS_CURR_TEAM_LOWEST_Y, sString );
 
 
-	}
-	else
-	{
-		// do nothing
-		return;
 	}
 }
 
@@ -3813,8 +3760,6 @@ void DisplayAverageStatValuesForCurrentTeam( void )
 
 	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
-
-	return;
 }
 
 void DisplayLowestStatValuesForCurrentTeam( void )
@@ -4032,8 +3977,6 @@ void DisplayLowestStatValuesForCurrentTeam( void )
 
 	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
-
-	return;
 }
 
 
@@ -4247,8 +4190,6 @@ void DisplayHighestStatValuesForCurrentTeam( void )
 
 	  mprintf( sX, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), sString );
 	}
-
-	return;
 }
 
 
@@ -4280,9 +4221,6 @@ void DisplayPersonnelTeamStats( void )
 
 		mprintf( PERS_STAT_LIST_X, PERS_STAT_AVG_Y + ( iCounter + 1 ) * ( GetFontHeight( FONT10ARIAL ) + 3 ), pPersonnelTeamStatsStrings[ iCounter ] );
 	}
-
-
-	return;
 }
 
 
@@ -4311,8 +4249,6 @@ void InitPastCharactersList( void )
 	memset( &LaptopSaveInfo.ubDeadCharactersList, -1, sizeof( LaptopSaveInfo.ubDeadCharactersList ) );
 	memset( &LaptopSaveInfo.ubLeftCharactersList, -1, sizeof( LaptopSaveInfo.ubLeftCharactersList ) );
 	memset( &LaptopSaveInfo.ubOtherCharactersList, -1, sizeof( LaptopSaveInfo.ubOtherCharactersList ) );
-
-	return;
 }
 
 
@@ -4415,7 +4351,6 @@ void DisplayStateOfPastTeamMembers( void )
 	{
 		// do nothing
 	}
-	return;
 }
 
 
@@ -4452,8 +4387,6 @@ void CreateDestroyCurrentDepartedMouseRegions( void )
 		MSYS_RemoveRegion( &gTogglePastCurrentTeam[ 1 ] );
 		fCreated = FALSE;
 	}
-
-	return;
 }
 
 
@@ -4702,10 +4635,6 @@ void DisplayPastMercsPortraits( void )
 		// reset counter A for the next array, if applicable
 		iCounterA = 0;
 	}
-
-
-
-	return;
 }
 
 
@@ -4996,8 +4925,6 @@ void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 		 break;
 		}
 	}
-
-	return;
 }
 
 
@@ -5025,9 +4952,6 @@ void EnableDisableDeparturesButtons( void )
 		// enable down button
 		EnableButton( giPersonnelButton[ 5 ] );
 	}
-
-
-	return;
 }
 
 
@@ -5110,10 +5034,6 @@ void DisplayDepartedCharName( INT32 iId, INT32 iSlot, INT32 iState )
 	}
 
 	mprintf( sX + iSlot * IMAGE_BOX_WIDTH, CHAR_NAME_Y + 10 , sString );
-
-
-
-	return;
 }
 
 
@@ -6002,8 +5922,6 @@ void DisplayATMAmount( void )
 
 	// print string
 	mprintf( sX, sY, sTempString );
-
-	return;
 }
 
 
@@ -6346,8 +6264,6 @@ void DisplayAmountOnCurrentMerc( void )
 
 	// print string
 	mprintf( sX, sY, sString );
-
-	return;
 }
 
 void HandlePersonnelKeyboard( void )

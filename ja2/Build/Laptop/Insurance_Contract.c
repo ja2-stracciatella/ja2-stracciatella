@@ -1137,8 +1137,6 @@ void InsContractNoMercsPopupCallBack( UINT8 bExitValue )
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}
-
-	return;
 }
 
 void BuildInsuranceArray()

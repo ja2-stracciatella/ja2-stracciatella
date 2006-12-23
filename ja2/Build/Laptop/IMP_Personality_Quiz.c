@@ -124,8 +124,6 @@ void EnterIMPPersonalityQuiz( void )
 
 	// create other buttons
 	CreateIMPPersonalityQuizButtons( );
-
-	return;
 }
 
 void RenderIMPPersonalityQuiz( void )
@@ -141,10 +139,6 @@ void RenderIMPPersonalityQuiz( void )
 
 	// the current and last question numbers
 	PrintQuizQuestionNumber( );
-
-
-
-	return;
 }
 
 void ExitIMPPersonalityQuiz( void )
@@ -166,7 +160,6 @@ void ExitIMPPersonalityQuiz( void )
 		fStartOverFlag = FALSE;
 		giCurrentPersonalityQuizQuestion = 0;
 	}
-	return;
 }
 
 
@@ -183,8 +176,6 @@ void HandleIMPPersonalityQuiz( void )
 	{
 		DisableButton(	giIMPPersonalityQuizButton[0] );
 	}
-
-  return;
 }
 
 
@@ -252,8 +243,6 @@ void CreateIMPPersonalityQuizButtons( void )
 	SetButtonCursor( giIMPPersonalityQuizButton[1], CURSOR_WWW );
 	SetButtonCursor( giPreviousQuestionButton, CURSOR_WWW );
 	SetButtonCursor( giNextQuestionButton, CURSOR_WWW );
-
-	return;
 }
 
 void DestroyIMPersonalityQuizButtons( void )
@@ -275,9 +264,6 @@ void DestroyIMPersonalityQuizButtons( void )
 	// next button
 	RemoveButton( giNextQuestionButton );
 	UnloadButtonImage( giNextQuestionButtonImage );
-
-
-	return;
 }
 
 void CreateIMPPersonalityQuizAnswerButtons( void )
@@ -348,8 +334,6 @@ void CreateIMPPersonalityQuizAnswerButtons( void )
 
 	// title bar
 	RenderWWWProgramTitleBar( );
-
-	return;
 }
 
 
@@ -388,8 +372,6 @@ void DestroyPersonalityQuizButtons( void )
       DestroyIMPPersonalityQuizAnswerButtons( 4 );
 		break;
 	}
-
-	return;
 }
 
 void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
@@ -484,7 +466,6 @@ void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 
 	// previous is current
   giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
-	return;
 }
 
 
@@ -497,9 +478,6 @@ void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
      UnloadButtonImage(giIMPPersonalityQuizAnswerButtonImage[ iCounter ] );
 		 giIMPPersonalityQuizAnswerButton[ iCounter ] = -1;
 	}
-
-
-	return;
 }
 
 
@@ -740,8 +718,6 @@ void ResetQuizAnswerButtons( void )
 	{
 		ButtonList[ giIMPPersonalityQuizAnswerButton[ iCnt ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
 	}
-
-	return;
 }
 
 
@@ -1328,7 +1304,6 @@ void PrintQuizQuestionNumber( void )
 
   // total number of questions
   mprintf( LAPTOP_SCREEN_UL_X + 383 , LAPTOP_SCREEN_WEB_UL_Y + 370 , L"16");
-  return;
 }
 
 
@@ -1341,8 +1316,6 @@ void CheckStateOfTheConfirmButton( void )
 		// was disabled, enable
 		EnableButton( giIMPPersonalityQuizButton[0] );
 	}
-
-	return;
 }
 
 void HandleIMPQuizKeyBoard( void )
@@ -1457,7 +1430,6 @@ void HandleIMPQuizKeyBoard( void )
 		}
 		}
 	}
-	return;
 }
 
 
@@ -1512,7 +1484,6 @@ void MoveAheadAQuestion( void )
 		EnableButton( giNextQuestionButton );
 	}
 */
-	return;
 }
 
 void MoveBackAQuestion( void )
@@ -1540,7 +1511,6 @@ void MoveBackAQuestion( void )
 		EnableButton( giPreviousQuestionButton );
 	}
 */
-	return;
 }
 
 void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
@@ -1554,9 +1524,6 @@ void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
 		ButtonList[ giIMPPersonalityQuizAnswerButton[ iAnswerNumber ] ]->uiFlags |= (BUTTON_CLICKED_ON);
 		iCurrentAnswer = iAnswerNumber;
 	}
-
-	return;
-
 }
 
 

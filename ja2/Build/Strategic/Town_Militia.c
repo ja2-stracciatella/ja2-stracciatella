@@ -553,8 +553,6 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	{
 		DoMessageBox( MSG_BOX_BASIC_STYLE, sString, GAME_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback, &pCenteringRect );
 	}
-
-	return;
 }
 
 void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, wchar_t *str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
@@ -683,15 +681,12 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 
 		MilitiaTrainingRejected();
 	}
-
-	return;
 }
 
 
 void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue )
 {
 	MilitiaTrainingRejected();
-	return;
 }
 
 
@@ -884,9 +879,6 @@ void HandleCompletionOfTownTrainingByGroupWithTrainer( SOLDIERTYPE *pTrainer )
 			AssignmentDone( pSoldier, FALSE, FALSE );
 		}
 	}
-
-
-	return;
 }
 
 void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE *pSoldier )
@@ -920,8 +912,6 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE
 
 	// add merc to the list
 	giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] = pSoldier->ubID;
-
-	return;
 }
 
 // clear out the list of training sectors...should be done once the list is posted
@@ -933,8 +923,6 @@ void ClearSectorListForCompletedTrainingOfMilitia( void )
 	{
 		giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] = -1;
 	}
-
-	return;
 }
 
 
@@ -980,8 +968,6 @@ void HandleContinueOfTownTraining( void )
 		  ToggleShowMilitiaMode();
     }
 	}
-
-	return;
 }
 
 

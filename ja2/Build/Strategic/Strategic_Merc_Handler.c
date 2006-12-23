@@ -561,8 +561,6 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList )
 			}
 		}
 	}
-
-	return;
 }
 */
 /*

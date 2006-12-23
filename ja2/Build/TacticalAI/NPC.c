@@ -3267,8 +3267,6 @@ void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 			}
 		}
 	}
-
-	return;
 }
 
 BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )

@@ -93,7 +93,6 @@ void EnterImpHomePage( void )
 
 	 // render screen once
 	 RenderImpHomePage( );
-   return;
 }
 
 void RenderImpHomePage( void )
@@ -119,9 +118,6 @@ void RenderImpHomePage( void )
 
 	// render the  activation string
 	DisplayPlayerActivationString( );
-
-
-	return;
 }
 
 void ExitImpHomePage( void )
@@ -129,8 +125,6 @@ void ExitImpHomePage( void )
 
 	// remove buttons
   RemoveIMPHomePageButtons( );
-
-	return;
 }
 
 
@@ -149,8 +143,6 @@ void HandleImpHomePage( void )
 
 	// render the cursor
 	DisplayActivationStringCursor( );
-
-  return;
 }
 
 void DisplayPlayerActivationString( void )
@@ -180,7 +172,6 @@ void DisplayPlayerActivationString( void )
 
 	fNewCharInActivationString = FALSE;
   fReDrawScreenFlag = TRUE;
-	return;
 }
 
 
@@ -241,9 +232,6 @@ void DisplayActivationStringCursor( void )
 	UnLockVideoSurface( FRAME_BUFFER );
 
   InvalidateRegion((UINT16) uiCursorPosition , CURSOR_Y , (UINT16)uiCursorPosition + 1, CURSOR_Y + CURSOR_HEIGHT + 1);
-
-
-	return;
 }
 
 
@@ -300,8 +288,6 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -377,9 +363,6 @@ void HandleTextEvent( UINT32 uiKey )
 		break;
 
 	}
-
-
-	return;
 }
 
 
@@ -410,7 +393,6 @@ void ProcessPlayerInputActivationString( void )
 
 
 	}
-	return;
 }
 
 
@@ -435,9 +417,6 @@ void CreateIMPHomePageButtons( void )
 
 
 	SetButtonCursor(giIMPHomePageButton[ 0 ], CURSOR_WWW);
-
-	return;
-
 }
 
 
@@ -449,8 +428,6 @@ void RemoveIMPHomePageButtons( void )
   // the about us button
   RemoveButton(giIMPHomePageButton[0] );
   UnloadButtonImage(giIMPHomePageButtonImage[0] );
-
-	return;
 }
 
 

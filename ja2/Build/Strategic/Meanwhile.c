@@ -916,8 +916,6 @@ static void LocateMeanWhileGrid(void)
 	sGridNo = gusMeanWhileGridNo[ ubCurrentMeanWhileId ];
 
 	InternalLocateGridNo( sGridNo, TRUE );
-
-	return;
 }
 
 void LocateToMeanwhileCharacter( )
@@ -1325,8 +1323,6 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 	{
 		gfFirstBattleMeanwhileScenePending = TRUE;
 	}
-
-	return;
 }
 
 

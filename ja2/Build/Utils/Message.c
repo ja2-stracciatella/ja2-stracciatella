@@ -342,8 +342,6 @@ void ClearDisplayedListOfTacticalStrings( void )
 			gpDisplayList[ cnt ] = NULL;
 		}
   }
-
-	return;
 }
 
 
@@ -502,14 +500,12 @@ void DisableScrollMessages( void )
 	// will stop the scroll of messages in tactical and hide them during an NPC's dialogue
 	// disble video overlay for tatcitcal scroll messages
 	EnableDisableScrollStringVideoOverlay( FALSE );
-	return;
 }
 
 
 void EnableScrollMessages( void )
 {
 	EnableDisableScrollStringVideoOverlay( TRUE );
-	return;
 }
 
 void HideMessagesDuringNPCDialogue( void )
@@ -537,8 +533,6 @@ void HideMessagesDuringNPCDialogue( void )
 				UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
 			}
 	}
-
-	return;
 }
 
 
@@ -563,9 +557,6 @@ void UnHideMessagesDuringNPCDialogue( void )
 			UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
 		}
 	}
-
-
-	return;
 }
 
 // new screen message
@@ -644,8 +635,6 @@ void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 	{
 		fOkToBeepNewMessage = TRUE;
 	}
-
-	return;
 }
 
 void ClearWrappedStrings( WRAPPED_STRING *pStringWrapperHead )
@@ -1116,9 +1105,6 @@ void EnableDisableScrollStringVideoOverlay( BOOLEAN fEnable )
 			 EnableVideoOverlay( fEnable ,gpDisplayList[ bCounter ] -> iVideoOverlay );
 		}
 	}
-
-	return;
-
 }
 
 
@@ -1138,8 +1124,6 @@ void PlayNewMessageSound( void )
 
 	// otherwise no sound playing, play one
 	uiSoundId = PlayJA2SampleFromFile("Sounds\\newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
-
-	return;
 }
 
 
@@ -1412,8 +1396,6 @@ void ClearTacticalMessageQueue( void )
 	}
 
 	pStringS = NULL;
-
-	return;
 }
 
 void WriteMessageToFile( STR16 pString )
@@ -1450,8 +1432,6 @@ void InitGlobalMessageList( void )
 	gubStartOfMapScreenMessageList = 0;
 	gubCurrentMapMessageString = 0;
 //	ubTempPosition = 0;
-
-	return;
 }
 
 
@@ -1470,8 +1450,6 @@ void FreeGlobalMessageList( void )
 	}
 
 	InitGlobalMessageList( );
-
-	return;
 }
 
 
@@ -1565,7 +1543,6 @@ void SetCurrentMapScreenMessageString( UINT8 ubCurrentStringPosition )
 		ubCurrentStringPosition = ubCounter;
 
 	}
-	return;
 }
 
 
@@ -1642,8 +1619,6 @@ void ScrollToHereInMapScreenMessageList( UINT8 ubPosition )
 	}
 
 	ubTempPosition = ubTestPosition;
-
-	return;
 }
 
 
@@ -1845,8 +1820,6 @@ void DisplayLastMessage( void )
 		// execute text box
 		ExecuteTacticalTextBoxForLastQuote( ( INT16 )( ( 640 - gusSubtitleBoxWidth ) / 2 ),  sString );
 	}
-
-	return;
 }
 
 */

@@ -10314,9 +10314,6 @@ void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier )
 	pSoldier->uiChangeExplosivesTime= 0;
 	pSoldier->uiChangeMedicalTime= 0;
 	pSoldier->uiChangeMechanicalTime= 0;
-
-
-	return;
 }
 
 

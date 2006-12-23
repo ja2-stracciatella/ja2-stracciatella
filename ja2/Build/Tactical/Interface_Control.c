@@ -153,8 +153,6 @@ void HandlePausedTacticalRender( void )
 		fInterfacePanelDirty = gfPausedTacticalRenderInterfaceFlags;
 		gfPausedTacticalRenderInterfaceFlags = FALSE;
 	}
-
-	return;
 }
 
 

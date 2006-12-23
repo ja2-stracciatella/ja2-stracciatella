@@ -421,8 +421,6 @@ void EndGameMessageBoxCallBack( UINT8 bExitValue )
 		gfTacticalPlacementGUIDirty = TRUE;
 		gfValidLocationsChanged = TRUE;
 	}
-
-	return;
 }
 
 

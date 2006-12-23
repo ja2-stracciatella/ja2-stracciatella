@@ -176,10 +176,6 @@ void EnterIMPAttributeSelection( void )
 
 	// render background
   RenderIMPAttributeSelection( );
-
-
-
-	return;
 }
 
 void RenderIMPAlteredAttribute( void )
@@ -213,8 +209,6 @@ void RenderIMPAttributeSelection( void )
 
 	// amt of bonus pts
 	DrawBonusPointsRemaining( );
-
-	return;
 }
 
 void ExitIMPAttributeSelection( void )
@@ -230,8 +224,6 @@ void ExitIMPAttributeSelection( void )
   DestroyIMPAttributeSelectionButtons( );
 
 	fReturnStatus = FALSE;
-
-	return;
 }
 
 
@@ -350,7 +342,6 @@ void HandleIMPAttributeSelection( void )
 		fSkillAtZeroWarning = FALSE;
 
 	}
-	return;
 }
 
 
@@ -472,8 +463,6 @@ void ProcessAttributes( void )
 		// disable button too
 
 	}
-
-  return;
 }
 
 UINT8 IncrementStat( INT32 iStatToIncrement )
@@ -882,7 +871,6 @@ void CreateIMPAttributeSelectionButtons( void )
 
 
 	SetButtonCursor(giIMPAttributeSelectionButton[0], CURSOR_WWW);
-	return;
 }
 
 void DestroyIMPAttributeSelectionButtons( void )
@@ -892,8 +880,6 @@ void DestroyIMPAttributeSelectionButtons( void )
 	// the begin  button
   RemoveButton(giIMPAttributeSelectionButton[ 0 ] );
   UnloadButtonImage(giIMPAttributeSelectionButtonImage[ 0 ] );
-
- 	return;
 }
 
 
@@ -1129,8 +1115,6 @@ void RenderAttributeBoxes( void )
 
 		// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return;
 }
 
 
@@ -1183,8 +1167,6 @@ void DestroyAttributeSliderButtons( void )
      RemoveButton(giIMPAttributeSelectionSliderButton[ iCounter ] );
 
 	}
-
-	return;
 }
 
 
@@ -1232,8 +1214,6 @@ void CreateSlideRegionMouseRegions( void )
 		 // now add it
 		 MSYS_AddRegion(&pSliderRegions[ iCounter ]);
 	}
-
-  return;
 }
 
 void CreateSliderBarMouseRegions( void )
@@ -1256,8 +1236,6 @@ void CreateSliderBarMouseRegions( void )
 		 // now add it
 		 MSYS_AddRegion(&pSliderBarRegions[ iCounter ]);
 	}
-
-  return;
 }
 
 
@@ -1271,8 +1249,6 @@ void DestroySlideRegionMouseRegions( void )
 	{
 	 MSYS_RemoveRegion( &pSliderRegions[ iCounter ] );
 	}
-
-	return;
 }
 
 
@@ -1286,8 +1262,6 @@ void DestroySlideBarMouseRegions( void )
 	{
 	 MSYS_RemoveRegion( &pSliderBarRegions[ iCounter ] );
 	}
-
-	return;
 }
 
 
@@ -1596,8 +1570,6 @@ void SetAttributes( void )
 	iCurrentBonusPoints = 40;
 
 	ResetIncrementCharacterAttributes( );
-
-	return;
 }
 
 
@@ -1622,7 +1594,6 @@ void DrawBonusPointsRemaining( void )
 	mprintf( LAPTOP_SCREEN_UL_X + 425 ,LAPTOP_SCREEN_WEB_UL_Y + 51, sString );
 
 	InvalidateRegion( LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71 );
-	return;
 }
 
 
@@ -1641,9 +1612,6 @@ void SetGeneratedCharacterAttributes( void )
 		iMechanical = iCurrentMechanical;
 		iMedical = iCurrentMedical;
 		iExplosives = iCurrentExplosives;
-
-
-	return;
 }
 
 
@@ -1660,6 +1628,4 @@ void StatAtZeroBoxCallBack( UINT8 bExitValue )
 		fHasAnySlidingBarMoved = TRUE;
 		MarkButtonsDirty();
 	}
-
-	return;
 }

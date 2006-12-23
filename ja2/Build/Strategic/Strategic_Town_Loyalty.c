@@ -224,8 +224,6 @@ void InitTownLoyalty( void )
 //		gTownLoyalty[ ubTown ].ubRebelSentiment = gubTownRebelSentiment[ ubTown ];
 		gTownLoyalty[ ubTown ].fLiberatedAlready = FALSE;
 	}
-
-	return;
 }
 
 
@@ -277,8 +275,6 @@ void SetTownLoyalty( INT8 bTownId, UINT8 ubNewLoyaltyRating )
 		// this is just like starting the loyalty if it happens first
 		gTownLoyalty[ bTownId ].fStarted = TRUE;
 	}
-
-	return;
 }
 
 
@@ -316,8 +312,6 @@ void IncrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyIncrease )
 
 		uiRemainingIncrement -= sThisIncrement;
 	}
-
-	return;
 }
 
 // decrements the town's loyalty rating by that many HUNDREDTHS of loyalty pts
@@ -354,8 +348,6 @@ void DecrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyDecrease )
 
 		uiRemainingDecrement -= sThisDecrement;
 	}
-
-	return;
 }
 
 
@@ -428,8 +420,6 @@ void UpdateTownLoyaltyRating( INT8 bTownId )
 	{
 		fMapPanelDirty = TRUE;
 	}
-
-	return;
 }
 
 
@@ -464,8 +454,6 @@ void HandleTownLoyalty( void )
 		HandleTownTheft( );
 	}
 */
-
-	return;
 }
 
 
@@ -499,8 +487,6 @@ void UpdateLoyaltyBasedOnControl( INT8 bTownId )
 			DecrementTownLoyalty( bTownId, gTownLoyalty[ bTownId ].ubRating - iUnderControl );
 		}
 	}
-
-	return;
 }
 
 
@@ -608,8 +594,6 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 
 	// add loyalty gain due to militia
 	IncrementTownLoyalty( bTownId, iMilitiaValue * HOURLY_GAIN_PER_MILITIA_IN_TOWN );
-
-	return;
 }
 
 
@@ -974,8 +958,6 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 		// DESIGN QUESTION: How easy is it to abuse this bonus by repeatedly hiring the guy over & over
 		// (at worst daily? even more often if terminated & rehired?)  (ARM)
 	}
-
-	return;
 }
 
 
@@ -1057,8 +1039,6 @@ void HandleLoyaltyForDemolitionOfBuilding( SOLDIERTYPE *pSoldier, INT16 sPointsD
 		// we should have prevented it, we shall suffer
 		DecrementTownLoyalty( bTownId, sPolicingLoyalty );
 	}
-
-	return;
 }
 
 
@@ -1140,8 +1120,6 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 			}
 		}
 	}
-
-	return;
 }
 
 
@@ -1166,8 +1144,6 @@ void HandleTheftByCiviliansInSector( INT16 sX, INT16 sY, INT32 iLoyalty )
 			}
 		}
 	}
-
-	return;
 }
 
 void HandleTownTheft( void )
@@ -1194,8 +1170,6 @@ void HandleTownTheft( void )
 
 		iCounter++;
 	}
-
-	return;
 }
 */
 
@@ -1311,8 +1285,6 @@ void WriteOutDistancesBetweenTowns( void )
 
 	// close file
   FileClose( hFileHandle );
-
-	return;
 }
 
 
@@ -1897,8 +1869,6 @@ void SetTheFirstBattleSector( INT16 sSectorValue )
 	{
 		sWorldSectorLocationOfFirstBattle = sSectorValue;
 	}
-
-	return;
 }
 
 // did first battle take place here

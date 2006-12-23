@@ -67,8 +67,6 @@ void EnterIMPPersonalityFinish( void )
 
 	// create the buttons
 	CreateIMPPersonalityFinishButtons( );
-
-	return;
 }
 
 void RenderIMPPersonalityFinish( void )
@@ -94,7 +92,6 @@ void RenderIMPPersonalityFinish( void )
       PrintImpText( );
 		}
 	}
-	return;
 }
 
 void ExitIMPPersonalityFinish( void )
@@ -119,7 +116,6 @@ void ExitIMPPersonalityFinish( void )
 	fCreatedOkIMPButton = FALSE;
 	fOkToReturnIMPMainPageFromPersonalityFlag = FALSE;
 	fConfirmHasBeenSelectedFlag = FALSE;
-	return;
 }
 
 
@@ -128,9 +124,6 @@ void HandleIMPPersonalityFinish( void )
 
 	// check if confirm and delay
 	CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( );
-
-
-  return;
 }
 
 
@@ -171,8 +164,6 @@ void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 		fConfirmHasBeenSelectedFlag = FALSE;
 		fExitDueFrIMPPerFinToOkButton = TRUE;
 	}
-
-	return;
 }
 
 
@@ -208,9 +199,6 @@ void CreateIMPPersonalityFinishButtons( void )
 
 	 SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
 	 SetButtonCursor(giIMPPersonalityFinishButton[1], CURSOR_WWW);
-
-
-	return;
 }
 
 
@@ -225,8 +213,6 @@ void DestroyIMPersonalityFinishButtons( void )
   // the no button
 	RemoveButton(giIMPPersonalityFinishButton[ 1 ] );
   UnloadButtonImage(giIMPPersonalityFinishButtonImage[ 1 ] );
-
-	return;
 }
 
 
@@ -302,9 +288,6 @@ void CreatePersonalityFinishOkButton( void )
 														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishOkCallback);
 
 	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
-
-
-	return;
 }
 
 

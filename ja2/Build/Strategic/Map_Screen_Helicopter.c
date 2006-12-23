@@ -409,8 +409,6 @@ void AddSectorToHelicopterDistanceTravelled( void )
 
 	//reset hover time
 	uiStartHoverTime = 0;
-
-	return;
 }
 */
 
@@ -511,8 +509,6 @@ void ReFuelHelicopter( void )
 	// reset distance traveled
 	iTotalHeliDistanceSinceRefuel = 0;
 */
-
-	return;
 }
 
 
@@ -563,8 +559,6 @@ void SkyriderDestroyed( void )
 	// remove vehicle and reset
 	RemoveVehicleFromList( iHelicopterVehicleId );
 	iHelicopterVehicleId = -1;
-
-	return;
 }
 
 
@@ -688,8 +682,6 @@ void StartHoverTime( void )
 
 	// post event..to call handle hover
 	AddStrategicEvent( EVENT_HELICOPTER_HOVER_TOO_LONG, GetWorldTotalMin() + TIME_DELAY_FOR_HOVER_WAIT, 0 );
-
-	return;
 }
 
 void HandleHeliHoverLong( void )
@@ -955,8 +947,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 
 		gMercProfiles[ SKYRIDER ].fUseProfileInsertionInfo = FALSE;
 	}
-
-	return;
 }
 
 
@@ -1033,8 +1023,6 @@ void SkyRiderTalk( UINT16 usQuoteNum )
 	HeliCharacterDialogue( pSkyRider, usQuoteNum );
 
 	fTeamPanelDirty = TRUE;
-
-	return;
 }
 
 
@@ -1092,7 +1080,6 @@ void HandleSkyRiderMonologueAboutEstoniRefuel( UINT32 uiSpecialCode )
 			fShowEstoniRefuelHighLight = FALSE;
 			break;
 	}
-	return;
 }
 
 
@@ -1135,7 +1122,6 @@ void HandleSkyRiderMonologueAboutDrassenSAMSite( UINT32 uiSpecialCode )
 			fShowDrassenSAMHighLight = FALSE;
 			break;
 	}
-	return;
 }
 
 
@@ -1159,7 +1145,6 @@ void HandleSkyRiderMonologueAboutCambriaHospital( UINT32 uiSpecialCode )
 			fShowCambriaHospitalHighLight = FALSE;
 			break;
 	}
-	return;
 }
 
 
@@ -1196,7 +1181,6 @@ void HandleSkyRiderMonologueAboutOtherSAMSites( UINT32 uiSpecialCode )
 			fShowOtherSAMHighLight = FALSE;
 			break;
 	}
-	return;
 }
 
 
@@ -1322,8 +1306,6 @@ void HandleAnimationOfSectors( void )
 				break;
 		}
 	}
-
-	return;
 }
 
 INT16 LastSectorInHelicoptersPath( void )

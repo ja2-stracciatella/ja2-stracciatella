@@ -901,8 +901,6 @@ void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 	}
 
 	pDestString[ iDestCounter ] = L'\0';
-
-	return;
 }
 
 

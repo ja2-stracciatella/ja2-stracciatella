@@ -139,8 +139,6 @@ void DeleteMapBorderGraphics( void )
 
 	DeleteVideoObjectFromIndex( guiMapBorder );
 //	DeleteVideoObjectFromIndex( guiMapBorderCorner );
-
-	return;
 }
 
 
@@ -170,9 +168,6 @@ void RenderMapBorder( void )
 
 	// show the level marker
 	DisplayCurrentLevelMarker( );
-
-
-	return;
 }
 
 
@@ -198,8 +193,6 @@ void RenderMapBorderCorner( void )
 	BltVideoObject( FRAME_BUFFER , hHandle, 0,MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y);
 
 	InvalidateRegion( MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, 635, 315);
-
-	return;
 }
 */
 
@@ -232,8 +225,6 @@ void RenderMapBorderEtaPopUp( void )
 	BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + 215, 291);
 
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
-
-	return;
 }
 
 BOOLEAN CreateButtonsForMapBorder( void )
@@ -812,8 +803,6 @@ void ShowDestinationOfPlottedPath( STR16 pLoc )
 	VarFindFontCenterCoordinates( 461, 344,  70, 12,  COMPFONT, &sFontX, &sFontY, pLoc );
 	gprintfdirty(sFontX, sFontY, pLoc );
 	mprintf(sFontX, sFontY, pLoc  );
-
-	return;
 }
 */
 
@@ -1041,9 +1030,6 @@ void HandleMapScrollButtonStates( void )
 
 	// check mvt too
 	MapScrollButtonMvtCheck( );
-
-
-	return;
 }
 */
 
@@ -1082,8 +1068,6 @@ void DisplayCurrentLevelMarker( void )
 	// it's actually a white rectangle, not a green arrow!
 	GetVideoObject(&hHandle, guiLEVELMARKER );
 	BltVideoObject( guiSAVEBUFFER , hHandle, 0,	MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ));
-
-	return;
 }
 
 
@@ -1348,8 +1332,6 @@ void UpdateLevelButtonStates( void )
 	{
 		EnableButton( guiMapBorderLandRaiseButtons[ MAP_BORDER_LOWER_LEVEL ] );
 	}
-
-	return;
 }
 */
 

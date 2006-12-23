@@ -281,14 +281,12 @@ void AdvanceToNextDay()
 void SetFactTimeCompressHasOccured( void )
 {
 	fTimeCompressHasOccured = TRUE;
-	return;
 }
 
 //reset fact the time compress has occured
 void ResetTimeCompressHasOccured( void )
 {
 	fTimeCompressHasOccured = FALSE;
-	return;
 }
 
 // has time compress occured?
@@ -1105,8 +1103,6 @@ void HandlePlayerPauseUnPauseOfGame( void )
 		gfIgnoreScrolling = TRUE;
 		gfPauseDueToPlayerGamePause = TRUE;
 	}
-
-	return;
 }
 
 

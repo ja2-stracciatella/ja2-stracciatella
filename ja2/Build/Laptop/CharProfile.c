@@ -114,8 +114,6 @@ void GameInitCharProfile()
 	iCurrentPortrait = 0;
 	iCurrentVoices = 0;
 	iPortraitNumber = 0;
-
-	return;
 }
 
 void EnterCharProfile()
@@ -253,8 +251,6 @@ void HandleCharProfile()
 		   HandleIMPConfirm( );
 		 break;
 	 }
-
-	return;
 }
 
 void RenderCharProfile()
@@ -325,8 +321,6 @@ void RenderCharProfile()
 	 DisplayProgramBoundingBox( TRUE );
 
 	 //InvalidateRegion( 0, 0, 640, 480 );
-	 return;
-
 }
 
 
@@ -396,8 +390,6 @@ void ExitOldIMPMode( void )
 		   ExitIMPConfirm( );
 		 break;
 	 }
-
-	return;
 }
 
 
@@ -461,10 +453,6 @@ void EnterNewIMPMode( void )
 		   EnterIMPConfirm( );
 		 break;
 	 }
-
-
-
-	return;
 }
 
 
@@ -548,10 +536,6 @@ void LoadImpGraphics( void )
 	LoadAttrib2IndentFrame( );
   LoadAvgMercIndentFrame( );
 	LoadAboutUsIndentFrame( );
-
-
-	return;
-
 }
 
 void RemoveImpGraphics( void )
@@ -599,7 +583,6 @@ void RemoveImpGraphics( void )
 	DeleteAttrib2IndentFrame( );
   DeleteAvgMercIndentFrame( );
 	DeleteAboutUsIndentFrame( );
-	return;
 }
 
 void CreateIMPButtons( void )
@@ -621,8 +604,6 @@ void CreateIMPButtons( void )
 
 	// set up generic www cursor
 	SetButtonCursor(giIMPButton[ 0 ], CURSOR_WWW);
-
-	return;
 }
 
 void DestroyIMPButtons( void )
@@ -630,8 +611,6 @@ void DestroyIMPButtons( void )
   // destroy the buttons we created
 	RemoveButton(giIMPButton[0] );
   UnloadButtonImage(giIMPButtonImage[0] );
-
-	return;
 }
 
 
@@ -690,8 +669,6 @@ void InitIMPSubPageList( void )
 	{
 		fVisitedIMPSubPages[ iCounter ] = FALSE ;
 	}
-
-	return;
 }
 
 BOOLEAN HasTheCurrentIMPPageBeenVisited( void )

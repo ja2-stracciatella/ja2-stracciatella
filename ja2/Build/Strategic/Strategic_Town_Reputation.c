@@ -199,7 +199,5 @@ void HandleSpreadOfTownsOpinionForCurrentMercs( void )
 	{
 		HandleSpreadOfTownOpinionForMercForSoldier( MercPtrs[ iCounter ] );
 	}
-
-	return;
 }
 */

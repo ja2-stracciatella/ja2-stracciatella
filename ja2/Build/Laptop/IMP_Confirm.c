@@ -137,7 +137,6 @@ void EnterIMPConfirm( void )
 {
 	// create buttons
 	CreateConfirmButtons( );
-	return;
 }
 
 void RenderIMPConfirm( void )
@@ -151,8 +150,6 @@ void RenderIMPConfirm( void )
 
 	// highlight answer
   PrintImpText( );
-
-	return;
 }
 
 void ExitIMPConfirm( void )
@@ -160,12 +157,10 @@ void ExitIMPConfirm( void )
 
 	// destroy buttons
   DestroyConfirmButtons( );
-	return;
 }
 
 void HandleIMPConfirm( void )
 {
-	return;
 }
 
 void CreateConfirmButtons( void )
@@ -190,8 +185,6 @@ void CreateConfirmButtons( void )
 
  SetButtonCursor(giIMPConfirmButton[ 0 ], CURSOR_WWW);
  SetButtonCursor(giIMPConfirmButton[ 1 ], CURSOR_WWW);
-
-	return;
 }
 
 
@@ -205,7 +198,6 @@ void DestroyConfirmButtons( void )
 
 	RemoveButton(giIMPConfirmButton[ 1 ] );
   UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
-	return;
 }
 
 
@@ -533,8 +525,6 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 
 	// close file
 	FileClose(hFile);
-
-	return;
 }
 
 void LoadInCurrentImpCharacter( void )
@@ -592,8 +582,6 @@ void LoadInCurrentImpCharacter( void )
 	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
 	fPausedReDrawScreenFlag = TRUE;
 	fLoadingCharacterForPreviousImpProfile = FALSE;
-
-	return;
 }
 
 

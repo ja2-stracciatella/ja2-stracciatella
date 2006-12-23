@@ -673,8 +673,6 @@ void HandleShowingOfEnemiesWithMilitiaOn( void )
 			HandleShowingOfEnemyForcesInSector( sX, sY, ( INT8 )iCurrentMapSectorZ, CountAllMilitiaInSector( sX, sY ) );
 		}
 	}
-
-	return;
 }
 
 
@@ -1674,11 +1672,6 @@ void ShutDownPalettesForMap( void )
 	pMapDKRedPalette = NULL;
 	pMapLTGreenPalette = NULL;
 	pMapDKGreenPalette = NULL;
-
-
-
-
-	return;
 }
 
 void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal )
@@ -1757,8 +1750,6 @@ void PlotATemporaryPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY
 
 	// build path
 	pTempCharacterPath = BuildAStrategicPath( pTempCharacterPath, GetLastSectorIdInCharactersPath( pCharacter ) , ( INT16 )( sX + sY*( MAP_WORLD_X ) ), GetSoldierGroupId( pCharacter ), FALSE /*, TRUE */ );
-
-	return;
 }
 
 
@@ -1970,8 +1961,6 @@ void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
   // trace real route
 	TracePathRoute( FALSE, TRUE, pPath );
 	AnimateRoute( pPath );
-
-	return;
 }
 
 
@@ -1979,8 +1968,6 @@ void DisplaySoldierTempPath( SOLDIERTYPE *pCharacter )
 {
 	// now render temp route
 	TracePathRoute( FALSE, TRUE,  pTempCharacterPath );
-
-	return;
 }
 
 
@@ -1999,8 +1986,6 @@ void DisplayHelicopterPath( void )
 
 	// restore
 	RestoreClipRegionToFullScreen( );
-
-	return;
 }
 
 
@@ -2011,8 +1996,6 @@ void DisplayHelicopterTempPath( void )
 	{
 	  TracePathRoute( TRUE, TRUE, pTempHelicopterPath );
 	}
-
-	return;
 }
 
 
@@ -2047,8 +2030,6 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY )
 	pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
 
 	fMapPanelDirty = TRUE;
-
-	return;
 }
 
 void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
@@ -2064,8 +2045,6 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 
 	// build path
 	pTempHelicopterPath = BuildAStrategicPath( NULL, GetLastSectorOfHelicoptersPath( ), ( INT16 )( sX + sY*( MAP_WORLD_X ) ), pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, FALSE /*, TRUE */ );
-
-	return;
 }
 
 
@@ -2933,9 +2912,6 @@ void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY,
   RestoreExternBackgroundRect(((INT16)iX),((INT16)iY),DMAP_GRID_X/2 ,DMAP_GRID_Y/2 );
  else
   RestoreExternBackgroundRect(((INT16)iX), ((INT16)iY),DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
-
-
-	return;
 }
 
 
@@ -3826,8 +3802,6 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 		giPotHeliPathBaseTime = GetJA2Clock( );
 		fTempPathAlreadyDrawn = TRUE;
 	}
-
-	return;
 }
 
 
@@ -3885,7 +3859,6 @@ void SetUpBadSectorsList( void )
 	sBadSectorsList[ 14 ][ 16 ] = TRUE;
 
 	sBadSectorsList[ 13 ][ 14 ] = TRUE;
-	return;
 }
 
 
@@ -3955,16 +3928,12 @@ void ClipBlitsToMapViewRegionForRectangleAndABit( UINT32 uiDestPitchBYTES )
 		SetClippingRegionAndImageWidth( uiDestPitchBYTES, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight - MapScreenRect.iLeft, MapScreenRect.iBottom - MapScreenRect.iTop );
 	else
 		SetClippingRegionAndImageWidth( uiDestPitchBYTES, MapScreenRect.iLeft - 1, MapScreenRect.iTop - 1, MapScreenRect.iRight - MapScreenRect.iLeft + 3, MapScreenRect.iBottom - MapScreenRect.iTop + 2 );
-
-	return;
 }
 
 void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 {
 	// clip blits to map view region
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-	return;
 }
 
 
@@ -4379,7 +4348,6 @@ void DisplayDistancesForHelicopter( void )
 
 
 	InvalidateRegion( MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition,  MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT );
-	return;
 }
 
 
@@ -4527,8 +4495,6 @@ void DisplayPositionOfHelicopter( void )
 			sOldMapY = ( INT16 ) y;
 		}
 	}
-
-	return;
 }
 
 
@@ -4883,9 +4849,6 @@ void BlitTownGridMarkers( void )
 
 	// unlock surface
 	UnLockVideoSurface( guiSAVEBUFFER );
-
-
-	return;
 }
 
 
@@ -4937,9 +4900,6 @@ void BlitMineGridMarkers( void )
 
 	// unlock surface
 	UnLockVideoSurface( guiSAVEBUFFER );
-
-
-	return;
 }
 
 
@@ -4956,8 +4916,6 @@ void CheckIfAnyoneLeftInSector( INT16 sX, INT16 sY, INT16 sNewX, INT16 sNewY, IN
 			fMapScreenBottomDirty = TRUE;
 		}
 	}
-
-	return;
 }
 
 
@@ -5010,8 +4968,6 @@ void DisplayLevelString( void )
 	mprintf(  MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, sString  );
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
-
-	return;
 }
 
 
@@ -5149,8 +5105,6 @@ void RemoveMilitiaPopUpBox( void )
 	DeleteVideoObjectFromIndex( guiMilitiaMaps );
 	DeleteVideoObjectFromIndex( guiMilitiaSectorHighLight );
 	DeleteVideoObjectFromIndex( guiMilitiaSectorOutline );
-
-	return;
 }
 
 
@@ -5267,8 +5221,6 @@ void CreateDestroyMilitiaPopUPRegions( void )
 
 		gfMilitiaPopupCreated = FALSE;
 	}
-
-	return;
 }
 
 
@@ -5381,8 +5333,6 @@ void RenderIconsPerSectorForSelectedTown( void )
 		}
 
 	}
-
-	return;
 }
 
 
@@ -5431,8 +5381,6 @@ void ShowHighLightedSectorOnMilitiaMap( void )
 		// blt the object
 		BltVideoObject( FRAME_BUFFER, hVObject, 0, sX, sY);
 	}
-
-	return;
 }
 
 
@@ -5613,8 +5561,6 @@ void SetMilitiaMapButtonsText( void )
 	// the number of elites in this sector
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfElites );
 	SpecifyButtonText( giMapMilitiaButton[ 2 ], sString );
-
-	return;
 }
 
 
@@ -5722,8 +5668,6 @@ void DrawTownMilitiaName( void )
 	swprintf( sString, lengthof(sString), L"%S %S", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 1 ] );
 	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, GetFontHeight( FONT10ARIAL ), sString, FONT10ARIAL, &sX, &sY );
 	mprintf(  sX, sY, sString );
-
-	return;
 }
 
 
@@ -5817,8 +5761,6 @@ void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor( INT16 sTownValue  )
 	sGreensOnCursor = 0;
 	sRegularsOnCursor = 0;
 	sElitesOnCursor = 0;
-
-	return;
 }
 
 void HandleEveningOutOfTroopsAmongstSectors( void )
@@ -5943,8 +5885,6 @@ void HandleEveningOutOfTroopsAmongstSectors( void )
 	sGreensOnCursor = 0;
 	sRegularsOnCursor = 0;
 	sElitesOnCursor = 0;
-
-	return;
 }
 
 void CreateMilitiaPanelBottomButton( void )
@@ -5984,8 +5924,6 @@ void CreateMilitiaPanelBottomButton( void )
 		// disable the AUTO button
 		DisableButton( giMapMilitiaButton[ 3 ] );
 	}
-
-	return;
 }
 
 
@@ -6059,8 +5997,6 @@ void RenderShadingForUnControlledSectors( void )
 			ShadowVideoSurfaceRect( FRAME_BUFFER , sX, sY, sX + MILITIA_BOX_BOX_WIDTH - 1, sY + MILITIA_BOX_BOX_HEIGHT - 1 );
 		}
 	}
-
-	return;
 }
 
 
@@ -6176,8 +6112,6 @@ void DrawTownMilitiaForcesOnMap( void )
 	}
 	// restore clip blits
 	RestoreClipRegionToFullScreen( );
-
-	return;
 }
 
 
@@ -6240,9 +6174,6 @@ void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( void )
 	{
 		EnableButton( giMapMilitiaButton[ 2 ] );
 	}
-
-
-	return;
 }
 
 
@@ -6308,8 +6239,6 @@ void HandleLowerLevelMapBlit( void )
 
 	// handle shading of sublevels
 	ShadeSubLevelsNotVisited( );
-
-	return;
 }
 
 
@@ -6324,8 +6253,6 @@ void MilitiaBoxMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		sSectorMilitiaMapSector = -1;
 	}
-
-	return;
 }
 
 
@@ -6671,8 +6598,6 @@ void ShowSAMSitesOnStrategicMap( void )
 			RestoreClipRegionToFullScreen( );
 		}
 	}
-
-	return;
 }
 
 
@@ -6729,9 +6654,6 @@ void BlitSAMGridMarkers( void )
 
 	// unlock surface
 	UnLockVideoSurface( guiSAVEBUFFER );
-
-
-	return;
 }
 
 

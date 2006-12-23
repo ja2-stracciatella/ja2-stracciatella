@@ -43,9 +43,6 @@ void EnterIMPAttributeFinish( void )
 
 	// render screen
    RenderIMPAttributeFinish( );
-
-
-	return;
 }
 
 
@@ -56,8 +53,6 @@ void RenderIMPAttributeFinish( void )
 
 	// indent for text
   RenderBeginIndent( 110, 93 );
-
-	return;
 }
 
 
@@ -65,14 +60,10 @@ void ExitIMPAttributeFinish( void )
 {
   // destroy the buttons for this screen
 	DestroyAttributeFinishButtons( );
-
-	return;
 }
 
 void HandleIMPAttributeFinish( void )
 {
-
-	return;
 }
 
 
@@ -111,11 +102,6 @@ void CreateAttributeFinishButtons( void )
 
   SetButtonCursor(giIMPAttributeFinishButton[0], CURSOR_WWW);
 	SetButtonCursor(giIMPAttributeFinishButton[1], CURSOR_WWW);
-
-
-
-  return;
-
 }
 
 
@@ -131,8 +117,6 @@ void DestroyAttributeFinishButtons( void )
 	// the no  button
   RemoveButton(giIMPAttributeFinishButton[ 1 ] );
   UnloadButtonImage(giIMPAttributeFinishButtonImage[ 1 ] );
-
-	return;
 }
 
 

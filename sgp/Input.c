@@ -1056,8 +1056,6 @@ void GetMousePos(SGPPoint *Point)
 
   Point->iX = (UINT32) MousePos.x;
   Point->iY = (UINT32) MousePos.y;
-
-  return;
 }
 
 // These functions will be used for string input

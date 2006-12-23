@@ -59,9 +59,6 @@ void EnterIMPPortraits( void )
 
 	// render background
 	RenderIMPPortraits( );
-
-
-	return;
 }
 
 
@@ -83,8 +80,6 @@ void RenderIMPPortraits( void )
 
 	// text
 	PrintImpText( );
-
-	return;
 }
 
 
@@ -92,8 +87,6 @@ void ExitIMPPortraits( void )
 {
 	// destroy buttons for IMP portrait page
   DestroyIMPPortraitButtons( );
-
-	return;
 }
 
 void HandleIMPPortraits( void )
@@ -107,7 +100,6 @@ void HandleIMPPortraits( void )
 		// reset redraw flag
 		fReDrawPortraitScreenFlag = FALSE;
 	}
-	return;
 }
 
 
@@ -164,9 +156,6 @@ void IncrementPictureIndex( void )
 	{
 		iCurrentPortrait = 0;
 	}
-
-
-  return;
 }
 
 
@@ -181,8 +170,6 @@ void DecrementPicture( void )
 	{
     iCurrentPortrait = iLastPicture;
 	}
-
-	return;
 }
 
 
@@ -256,8 +243,6 @@ void DestroyIMPPortraitButtons( void )
 	// the done button
   RemoveButton(giIMPPortraitButton[ 2 ] );
   UnloadButtonImage(giIMPPortraitButtonImage[ 2 ] );
-
-	return;
 }
 
 

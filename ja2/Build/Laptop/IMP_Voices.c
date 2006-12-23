@@ -80,8 +80,6 @@ void EnterIMPVoices( void )
 
 	// play voice once
 	uiVocVoiceSound = PlayVoice( );
-
-	return;
 }
 
 
@@ -106,8 +104,6 @@ void RenderIMPVoices( void )
 
 	// text
 	PrintImpText( );
-
-	return;
 }
 
 
@@ -118,9 +114,6 @@ void ExitIMPVoices( void )
 
   // destroy mouse regions for this screen
 	DestroyIMPVoiceMouseRegions( );
-
-
-	return;
 }
 
 void HandleIMPVoices( void )
@@ -134,7 +127,6 @@ void HandleIMPVoices( void )
 		// reset redraw flag
 		fReDrawVoicesScreenFlag = FALSE;
 	}
-	return;
 }
 
 
@@ -151,9 +143,6 @@ void IncrementVoice( void )
 	{
 		iCurrentVoices = 0;
 	}
-
-
-  return;
 }
 
 
@@ -168,8 +157,6 @@ void DecrementVoice( void )
 	{
     iCurrentVoices = iLastVoice;
 	}
-
-	return;
 }
 
 
@@ -244,8 +231,6 @@ void DestroyIMPVoicesButtons( void )
 	// the done button
   RemoveButton(giIMPVoicesButton[ 2 ] );
   UnloadButtonImage(giIMPVoicesButtonImage[ 2 ] );
-
-	return;
 }
 
 
@@ -360,16 +345,12 @@ void CreateIMPVoiceMouseRegions( void )
 
 
 	MSYS_AddRegion( &gVoicePortraitRegion );
-
-	return;
 }
 
 void DestroyIMPVoiceMouseRegions( void )
 {
   // will destroy already created mouse reiogns for IMP voices page
   MSYS_RemoveRegion( &gVoicePortraitRegion );
-
-	return;
 }
 
 
@@ -389,8 +370,6 @@ void IMPPortraitRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason )
 		}
 
   }
-
-	return;
 }
 
 
@@ -410,6 +389,4 @@ void RenderVoiceIndex( void )
 	SetFontBackground( FONT_BLACK );
 
 	mprintf( sX, 320, sString );
-
-	return;
 }
