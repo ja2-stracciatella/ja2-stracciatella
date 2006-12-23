@@ -11,45 +11,6 @@
 #define POPUP_BOX_FLAG_CENTER_TEXT 2
 #define POPUP_BOX_FLAG_RESIZE 4
 #define POPUP_BOX_FLAG_CAN_HIGHLIGHT_SHADED_LINES 8
-typedef struct PopUpString {
-	STR16 pString;
-	UINT8 ubForegroundColor;
-	UINT8 ubBackgroundColor;
-	UINT8 ubHighLight;
-  UINT8 ubShade;
-	UINT8 ubSecondaryShade;
-	UINT32 uiFont;
-	BOOLEAN fColorFlag;
-	BOOLEAN fHighLightFlag;
-	BOOLEAN fShadeFlag;
-	BOOLEAN fSecondaryShadeFlag;
-} PopUpString;
-
-
-typedef struct PopUpBox {
-	SGPRect  Dimensions;
-	SGPPoint Position;
-	UINT32 uiLeftMargin;
-	UINT32 uiRightMargin;
-	UINT32 uiBottomMargin;
-	UINT32 uiTopMargin;
-  UINT32 uiLineSpace;
-	INT32 iBorderObjectIndex;
-	INT32 iBackGroundSurface;
-	UINT32 uiFlags;
-	UINT32 uiBuffer;
-	UINT32 uiSecondColumnMinimunOffset;
-	UINT32 uiSecondColumnCurrentOffset;
-	UINT32 uiBoxMinWidth;
-	BOOLEAN fUpdated;
-	BOOLEAN fShowBox;
-
-	PopUpString* Text[MAX_POPUP_BOX_STRING_COUNT];
-	PopUpString* pSecondColumnString[MAX_POPUP_BOX_STRING_COUNT];
-} PopUpBox;
-
-static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
-static UINT32 guiCurrentBox;
 
 // functions
 void InitPopUpBoxList();
