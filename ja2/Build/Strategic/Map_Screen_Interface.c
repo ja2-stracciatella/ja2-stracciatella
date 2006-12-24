@@ -4567,18 +4567,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 			pUpdateSoldierBox[ iCounter ] = pSoldier;
 
 			SGPFILENAME ImageFile;
-			if( gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex < 100 )
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
-			}
-			else
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
-			}
-
-			// load the face
+			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giUpdateSoldierFaces[iCounter]);
 
 			return;

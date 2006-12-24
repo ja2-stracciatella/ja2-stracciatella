@@ -2042,14 +2042,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 			}
 			else
 			{
-				if( Menptr[ iId + iCnt ].ubProfile < 100 )
-				{
-					sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR,	Menptr[ iId + iCnt ].ubProfile);
-				}
-				else
-				{
-					sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR,	Menptr[ iId + iCnt ].ubProfile);
-				}
+				sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR,	Menptr[iId + iCnt].ubProfile);
 			}
 
 		CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
@@ -4711,14 +4704,7 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 	}
 	else
 	{
-		if(  iId  < 100 )
-		{
-			 sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId );
-		}
-		else
-		{
-			sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR,	 iId  );
-		}
+		sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId);
 	}
 
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));

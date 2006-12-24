@@ -1030,18 +1030,7 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 		if( iDoctorList[ iCounter ] != -1 )
 		{
 			SGPFILENAME ImageFile;
-			if( gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex < 100 )
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
-			}
-			else
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iDoctorList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
-			}
-
-			// load the face
+			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[Menptr[iDoctorList[iCounter]].ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter]);
 			iNumberOfDoctors++;
 
@@ -1054,18 +1043,7 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 		if( iPatientList[ iCounter ] != -1 )
 		{
 			SGPFILENAME ImageFile;
-			if( gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex < 100 )
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
-			}
-			else
-			{
-				// grab filename of face
-				sprintf(ImageFile, "Faces\\65Face\\%03d.sti", gMercProfiles[ ( Menptr[ iPatientList[ iCounter ] ] ).ubProfile ].ubFaceIndex );
-			}
-
-			// load the face
+			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[Menptr[iPatientList[iCounter]].ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors]);
 
 		}

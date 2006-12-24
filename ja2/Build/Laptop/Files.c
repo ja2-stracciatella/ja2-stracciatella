@@ -1717,15 +1717,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 			// show picture
 			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
 			{
-				if( usProfileIdsForTerroristFiles[ iFileNumber + 1 ] < 100 )
-				{
-					sprintf(sTemp, "%s%02d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[ iFileNumber + 1 ]);
-				}
-				else
-				{
-					sprintf(sTemp, "%s%03d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[ iFileNumber + 1 ]);
-				}
-
+				sprintf(sTemp, "%s%02d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
 				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
 
 				//Blt face to screen to

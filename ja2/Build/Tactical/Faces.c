@@ -242,14 +242,7 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	if ( uiInitFlags & FACE_BIGFACE )
 	{
 		// The filename is the profile ID!
-		if( iFaceFileID < 100 )
-		{
-			sprintf(ImageFile, "FACES\\b%02d.sti", iFaceFileID);
-		}
-		else
-		{
-			sprintf(ImageFile, "FACES\\b%03d.sti", iFaceFileID);
-		}
+		sprintf(ImageFile, "FACES\\b%02d.sti", iFaceFileID);
 
     // ATE: Check for profile - if elliot , use special face :)
     if ( usMercProfileID == ELLIOT )
@@ -278,16 +271,7 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	}
 	else
 	{
-
-		if( iFaceFileID < 100 )
-		{
-			// The filename is the profile ID!
-			sprintf(ImageFile, "FACES\\%02d.sti", iFaceFileID);
-		}
-		else
-		{
-			sprintf(ImageFile, "FACES\\%03d.sti", iFaceFileID);
-		}
+		sprintf(ImageFile, "FACES\\%02d.sti", iFaceFileID);
 	}
 
 	// Load
