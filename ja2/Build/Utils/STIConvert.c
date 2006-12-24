@@ -60,41 +60,12 @@ BOOLEAN ConvertToETRLE( UINT8 ** ppDest, UINT32 * puiDestLen, UINT8 ** ppSubImag
 
 //#define JA2_OBJECT_DATA_SIZE	16
 
-// this funky union is used for fast 16-bit pixel format conversions
-typedef union
-{
-	struct
-	{
-		UINT16	usLower;
-		UINT16	usHigher;
-	};
-	UINT32	uiValue;
-} SplitUINT32;
-
-
 
 void ConvertRGBDistribution555To565( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
-	UINT16 *	pPixel;
-	UINT32		uiLoop;
-
-	SplitUINT32		Pixel;
-
-	pPixel = p16BPPData;
-	for (uiLoop = 0; uiLoop < uiNumberOfPixels; uiLoop++)
+	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
 	{
-		// we put the 16 pixel bits in the UPPER word of uiPixel, so that we can
-		// right shift the blue value (at the bottom) into the LOWER word to keep it
-		// out of the way
-		Pixel.usHigher = *pPixel;
-		Pixel.uiValue >>= 5;
-		// add a least significant bit to green
-		Pixel.usHigher <<= 1;
-		// now shift back into the upper word
-		Pixel.uiValue <<= 5;
-		// and copy back
-		*pPixel = Pixel.usHigher;
-		pPixel++;
+		*Px = ((*Px << 1) & ~0x003F) | (*Px & 0x001F);
 	}
 }
 

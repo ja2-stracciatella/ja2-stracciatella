@@ -34,18 +34,6 @@ INT16  gusBlueShift = 0;
 INT16  gusGreenShift = 0;
 
 
-// this funky union is used for fast 16-bit pixel format conversions
-typedef union
-{
-	struct
-	{
-		UINT16	usLower;
-		UINT16	usHigher;
-	};
-	UINT32	uiValue;
-} SplitUINT32;
-
-
 static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents);
 
 
@@ -934,82 +922,25 @@ BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
 
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
-	UINT16 *	pPixel;
-	UINT32		uiLoop;
-
-	SplitUINT32		Pixel;
-
-	pPixel = p16BPPData;
-	for (uiLoop = 0; uiLoop < uiNumberOfPixels; uiLoop++)
+	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
 	{
-		// If the pixel is completely black, don't bother converting it -- DB
-		if(*pPixel!=0)
-		{
-			// we put the 16 pixel bits in the UPPER word of uiPixel, so that we can
-			// right shift the blue value (at the bottom) into the LOWER word to protect it
-			Pixel.usHigher = *pPixel;
-			Pixel.uiValue >>= 5;
-			// get rid of the least significant bit of green
-			Pixel.usHigher >>= 1;
-			// now shift back into the upper word
-			Pixel.uiValue <<= 5;
-			// and copy back
-			*pPixel = Pixel.usHigher | gusAlphaMask;
-		}
-		pPixel++;
+		*Px = ((*Px >> 1) & ~0x001F) | (*Px & 0x001F) | gusAlphaMask;
 	}
 }
 
 void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
-	UINT16 *	pPixel;
-	UINT32		uiLoop;
-
-	SplitUINT32		Pixel;
-
-	pPixel = p16BPPData;
-	for (uiLoop = 0; uiLoop < uiNumberOfPixels; uiLoop++)
+	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
 	{
-		// we put the 16 pixel bits in the UPPER word of uiPixel, so that we can
-		// right shift the blue value (at the bottom) into the LOWER word to protect it
-		Pixel.usHigher = *pPixel;
-		Pixel.uiValue >>= 5;
-		// get rid of the least significant bit of green
-		Pixel.usHigher >>= 1;
-		// shift to the right some more...
-		Pixel.uiValue >>= 5;
-		// so we can left-shift the red value alone to give it an extra bit
-		Pixel.usHigher <<= 1;
-		// now shift back and copy
-		Pixel.uiValue <<= 10;
-		*pPixel = Pixel.usHigher;
-		pPixel++;
+		*Px = ((*Px >> 1) & 0x03E0) | (*Px & ~0x07E0);
 	}
 }
 
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
-	UINT16 *	pPixel;
-	UINT32		uiLoop;
-
-	SplitUINT32		Pixel;
-
-	pPixel = p16BPPData;
-	for (uiLoop = 0; uiLoop < uiNumberOfPixels; uiLoop++)
+	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
 	{
-		// we put the 16 pixel bits in the UPPER word of uiPixel, so that we can
-		// right shift the blue value (at the bottom) into the LOWER word to protect it
-		Pixel.usHigher = *pPixel;
-		Pixel.uiValue >>= 5;
-		// get rid of the least significant bit of green
-		Pixel.usHigher >>= 1;
-		// shift back into the upper word
-		Pixel.uiValue <<= 5;
-		// give blue an extra bit (blank in the least significant spot)
-		Pixel.usHigher <<= 1;
-		// copy back
-		*pPixel = Pixel.usHigher;
-		pPixel++;
+		*Px = (*Px & ~0x003F) | ((*Px << 1) & 0x003F);
 	}
 }
 
