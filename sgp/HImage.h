@@ -168,7 +168,6 @@ UINT16 Get16BPPColor( UINT32 RGBValue );
 UINT32 GetRGBColor( UINT16 Value16BPP );
 SGPPaletteEntry *ConvertRGBToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPalette);
 
-extern UINT16 gusAlphaMask;
 extern UINT16 gusRedMask;
 extern UINT16 gusGreenMask;
 extern UINT16 gusBlueMask;

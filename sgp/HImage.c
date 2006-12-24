@@ -25,7 +25,6 @@
 #define BLACK_SUBSTITUTE	0x0001
 
 
-UINT16 gusAlphaMask = 0;
 UINT16 gusRedMask = 0;
 UINT16 gusGreenMask = 0;
 UINT16 gusBlueMask = 0;
@@ -683,10 +682,8 @@ UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
 		if(usColor==0)
 		{
 			if((r+g+b)!=0)
-				usColor=BLACK_SUBSTITUTE | gusAlphaMask;
+				usColor = BLACK_SUBSTITUTE;
 		}
-		else
-			usColor |= gusAlphaMask;
 
 		p16BPPPalette[ cnt ] = usColor;
 	}
@@ -771,10 +768,8 @@ UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT
 		if(usColor==0)
 		{
 			if((r+g+b)!=0)
-				usColor=BLACK_SUBSTITUTE | gusAlphaMask;
+				usColor = BLACK_SUBSTITUTE;
 		}
-		else
-			usColor |= gusAlphaMask;
 
 		p16BPPPalette[ cnt ] = usColor;
 	}
@@ -816,10 +811,8 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 	if(usColor==0)
 	{
 		if(RGBValue!=0)
-			usColor=BLACK_SUBSTITUTE | gusAlphaMask;
+			usColor = BLACK_SUBSTITUTE;
 	}
-	else
-		usColor	|=	gusAlphaMask;
 
 	return(usColor);
 }
@@ -924,7 +917,7 @@ void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 {
 	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
 	{
-		*Px = ((*Px >> 1) & ~0x001F) | (*Px & 0x001F) | gusAlphaMask;
+		*Px = ((*Px >> 1) & ~0x001F) | (*Px & 0x001F);
 	}
 }
 
