@@ -195,7 +195,7 @@ void CreateEditorBuffers()
 	//create the nine buffers for the merc's inventory slots.
 	for( i = 0; i < 9; i++ )
 	{
-		if (!AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, &guiMercInvPanelBuffers[i]))
+		if (!AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, ubBitDepth, &guiMercInvPanelBuffers[i]))
 			AssertMsg( 0, "Failed to allocate memory for merc item[] buffers." );
 	}
 }
