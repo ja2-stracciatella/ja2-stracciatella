@@ -733,24 +733,16 @@ void CancelMapUIMessage( void );
 void MonitorMapUIMessage( void );
 
 void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary );
-void ShadeMapElem( INT16 sMapX, INT16 sMapY );
-void PopupText( wchar_t *pFontString, ... );
 void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
 
 // Clock
-void SetClock(STR16 pString);
 void SetClockMin(const wchar_t *, ...);
 void SetClockHour(const wchar_t *pStringA, ...);
 void SetHourAlternate(const wchar_t *pStringA, ...);
 void SetDayAlternate(const wchar_t *pStringA, ...);
 
-void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber );
-void RenderAttributeStringsForUpperLeftHandCorner( UINT32 uiBufferToRenderTo );
-
-void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface( INT16 sMapX, INT16 sMapY );
 void HandleCursorOverRifleAmmo( );
 
-void SetUpCursorForStrategicMap( void );
 void HandleAnimatedCursorsForMapScreen( );
 void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting( );
 
@@ -759,11 +751,6 @@ void HandleChangeOfInfoChar( void );
 
 // update town mine pop up
 void UpdateTownMinePopUpDisplay( void );
-
-// Map Buttons
-void GlowFace( void );
-
-void ResetMapButtons();
 
 //Drawing Strings
 void DrawName( STR16 pName, INT16 sRowIndex, INT32 iFont );
@@ -800,7 +787,6 @@ void RenderCharacterInfoBackground( void );
 void RenderTeamRegionBackground( void );
 void RenderMapRegionBackground( void );
 void HandleHighLightingOfLinesInTeamPanel( void );
-void ClearTeamPanel();
 void PlotTemporaryPaths( void );
 void PlotPermanentPaths( void );
 void RenderHandPosItem( void );
@@ -813,16 +799,10 @@ void RebuildWayPointsForAllSelectedCharsGroups( void );
 
 extern BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem );
 
-BOOLEAN CharacterIsInTransitAndHasItemPickedUp( INT8 bCharacterNumber );
-
 void InterruptTimeForMenus( void );
 
 // Pop Up Boxes
-void CreateAttributeBox( void );
-void CreateVehicleBox( void );
 void CreateContractBox( SOLDIERTYPE *pCharacter );
-void CreateAssignmentsBox( void );
-void CreateTrainingBox( void );
 void CreateMercRemoveAssignBox( void );
 
 void DetermineWhichAssignmentMenusCanBeShown( void );
@@ -901,11 +881,6 @@ extern void CreateDestroyMilitiaSectorButtons( void );
 // mouse position test
 BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBottom );
 
-// pop up boxes
-void CreateVehicleBox( );
-
-void TestMessageSystem( void );
-
 BOOLEAN CheckIfClickOnLastSectorInPath( INT16 sX, INT16 sY );
 
 //update any bad assignments..error checking
@@ -938,16 +913,7 @@ void UpdateCursorIfInLastSector( void );
 static void ContractButtonCallback(GUI_BUTTON *btn,INT32 reason);
 void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
 
-// blt inventory panel
-void BltCharInvPanel();
-
-// show character information
-void DrawCharacterInfo(INT16 sCharNumber);
-void DisplayCharacterInfo( void );
 void UpDateStatusOfContractBox( void );
-
-// get which index in the mapscreen character list is this guy
-INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier );
 
 void CheckForAndRenderNewMailOverlay();
 
@@ -3289,9 +3255,6 @@ UINT32 MapScreenHandle(void)
 
 		// create merc remove box
 		CreateMercRemoveAssignBox( );
-
-		// test message
-	 // TestMessageSystem( );
 
 		// fill in
 		ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 640, 480, Get16BPPColor( RGB_NEAR_BLACK ) );
@@ -6394,39 +6357,6 @@ void PollRightButtonInMapView( UINT32 *puiNewEvent )
 }
 
 
-
-void PopupText( wchar_t *pFontString, ...  )
-{
-	UINT8	 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-	va_list argptr;
-	INT16 sX, sY;
-	wchar_t	PopupString[512];
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(PopupString, lengthof(PopupString), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-
-	FindFontCenterCoordinates( 0, 0, SCREEN_WIDTH, INTERFACE_START_Y, PopupString, LARGEFONT1, &sX, &sY );
-
-	BltVideoSurface(FRAME_BUFFER, guiINTEXT, 0, 85, 160, VS_BLT_FAST, NULL);
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
-
-	SetFont( LARGEFONT1 );
-	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_DKGRAY );
-
-	mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, PopupString);
-
-	UnLockVideoSurface( FRAME_BUFFER );
-
-	InvalidateScreen( );
-
-}
-
-
 /*
 void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
 {
@@ -8166,32 +8096,6 @@ void TeamListContractRegionMvtCallBack(MOUSE_REGION *pRegion, INT32 iReason )
 }
 
 
-
-INT32 GetIndexForThisSoldier( SOLDIERTYPE *pSoldier )
-{
-	INT32 iLastGuy;
-	INT32 iIndex = 0;
-	INT32 iCounter = 0;
-
-	// get the index into the characters list for this soldier type
-	iLastGuy = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-	for( iCounter = 0; iCounter < iLastGuy; iCounter++ )
-	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
-		{
-			if( ( &Menptr[ gCharactersList[ iCounter ].usSolID ] ) == pSoldier )
-			{
-				iIndex = iCounter;
-				iCounter = iLastGuy;
-			}
-		}
-	}
-	return( iIndex );
-}
-
-
-
 BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBottom )
 {
 	POINT MousePos;
@@ -8836,19 +8740,6 @@ void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter )
 	// recreate
 	CreateContractBox( pCharacter );
 }
-
-
-void TestMessageSystem( void )
-{
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < 300; iCounter++ )
-	{
-	  MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%d", iCounter );
-	}
-	MapScreenMessage( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%d", iCounter );
-}
-
 
 
 void EnableDisableTeamListRegionsAndHelpText( void )
