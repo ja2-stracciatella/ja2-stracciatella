@@ -212,43 +212,14 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 }
 
 
-static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-
 BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
 {
-	UINT16               *pBuffer;
-	UINT32								uiPitch;
-	HVOBJECT							hSrcVObject;
-
-	// Lock video surface
-	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
-
-	if ( pBuffer == NULL )
-	{
-		return( FALSE );
-	}
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTFROMINDEX;
-	#endif
-	if( !GetVideoObject( &hSrcVObject, uiSrcVObject ) )
-	{
-		UnLockVideoSurface( uiDestVSurface );
-		return FALSE;
-	}
-
-	// Now we have the video object and surface, call the VO blitter function
-	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY))
-	{
-    UnLockVideoSurface( uiDestVSurface );
-		// VO Blitter will set debug messages for error conditions
-		return FALSE;
-	}
-
-	UnLockVideoSurface( uiDestVSurface );
-	return( TRUE );
+#ifdef _DEBUG
+	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTFROMINDEX;
+#endif
+	HVOBJECT hSrcVObject;
+	if (!GetVideoObject(&hSrcVObject, uiSrcVObject)) return FALSE;
+	return BltVideoObject(uiDestVSurface, hSrcVObject, usRegionIndex, iDestX, iDestY);
 }
 
 
@@ -310,6 +281,8 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 	return FALSE;
 }
 
+
+static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 
 // Given an index to the dest and src vobject contained in ghVideoObjects
@@ -831,38 +804,14 @@ BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObjec
 
 BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
-	UINT16               *pBuffer;
-	UINT32								uiPitch;
-	HVOBJECT							hSrcVObject;
-
-	// Lock video surface
-	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
-
-	if ( pBuffer == NULL )
-	{
-		return( FALSE );
-	}
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX;
-	#endif
-	CHECKF( GetVideoObject( &hSrcVObject, uiSrcVObject ) );
-
-	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
-	{
-		 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect );
-	}
-	else
-	{
-		 Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
-	}
-
-	// Now we have the video object and surface, call the VO blitter function
-
-	UnLockVideoSurface( uiDestVSurface );
-	return( TRUE );
+#ifdef _DEBUG
+	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX;
+#endif
+	HVOBJECT hSrcVObject;
+	CHECKF(GetVideoObject(&hSrcVObject, uiSrcVObject));
+	return BltVideoObjectOutline(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY, s16BPPColor, fDoOutline);
 }
+
 
 BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline )
 {
@@ -895,38 +844,14 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 
 BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
-	UINT16               *pBuffer;
-	UINT32								uiPitch;
-	HVOBJECT							hSrcVObject;
-
-	// Lock video surface
-	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
-
-	if ( pBuffer == NULL )
-	{
-		return( FALSE );
-	}
-
-	// Get video object
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX;
-	#endif
-	CHECKF( GetVideoObject( &hSrcVObject, uiSrcVObject ) );
-
-	if( BltIsClipped( hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect) )
-	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadowClip((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect );
-	}
-	else
-	{
-		 Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
-	}
-
-	// Now we have the video object and surface, call the VO blitter function
-
-	UnLockVideoSurface( uiDestVSurface );
-	return( TRUE );
+#ifdef _DEBUG
+	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX;
+#endif
+	HVOBJECT hSrcVObject;
+	CHECKF(GetVideoObject(&hSrcVObject, uiSrcVObject));
+	return BltVideoObjectOutlineShadow(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY);
 }
+
 
 BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY )
 {
