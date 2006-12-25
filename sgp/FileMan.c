@@ -197,43 +197,12 @@ BOOLEAN FileExists(const char *strFilename)
 {
 	BACKSLASH(strFilename);
 
-	BOOLEAN	fExists = FALSE;
-	FILE		*file;
-	//HANDLE	hRealFile;
-
-	//open up the file to see if it exists on the disk
-	file = fopen( strFilename, "r" );
-	//hRealFile = CreateFile( strFilename, GENERIC_READ, 0, NULL, OPEN_EXISTING,
-	//								FILE_FLAG_RANDOM_ACCESS, NULL );
-	if ( file )
-	//if ( hRealFile != INVALID_HANDLE_VALUE )
+	BOOLEAN fExists = FileExistsNoDB(strFilename);
+	if (!fExists && gFileDataBase.fInitialized)
 	{
-		fExists = TRUE;
-		fclose( file );
-		//CloseHandle( hRealFile );
+		fExists = CheckIfFileExistInLibrary(strFilename);
 	}
-	else
-	{
-		char Path[512];
-
-		snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
-		file = fopen(Path, "r");
-		if (file != NULL)
-		{
-			fclose(file);
-			return TRUE;
-		}
-	}
-
-	//if the file wasnt on disk, check to see if its in a library
-	if( fExists == FALSE )
-	{
-		//if the database is initialized
-		if( gFileDataBase.fInitialized )
-			fExists = CheckIfFileExistInLibrary( strFilename );
-	}
-
-	return( fExists );
+	return fExists;
 }
 
 //**************************************************************************

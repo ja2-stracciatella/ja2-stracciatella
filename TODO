@@ -20,4 +20,3 @@ low prio
 
 cosmetic
 - FileCheckEndOfFile() complicated
-- Use FileExistsNoDB() in FileExists()
