@@ -1089,7 +1089,7 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 	// clear out the old list
 	ClearFinanceList( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return;
@@ -1556,7 +1556,7 @@ static BOOLEAN WriteBalanceToDisk(void)
   HWFILE hFileHandle;
 
 	// open file
- 	hFileHandle=FileOpen( FINANCES_DATA_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	// write balance to disk
   FileWrite( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), NULL );
@@ -1577,7 +1577,7 @@ static void GetBalanceFromDisk(void)
   HWFILE hFileHandle;
   INT32 iBytesRead=0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -1603,7 +1603,7 @@ static BOOLEAN AppendFinanceToEndOfFile(FinanceUnitPtr pFinance)
   HWFILE hFileHandle;
   FinanceUnitPtr pFinanceList=pFinanceListHead;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if (!hFileHandle)
 	{
     return FALSE;
@@ -1641,7 +1641,7 @@ static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void)
   HWFILE hFileHandle;
   INT32 iFileSize = 0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1671,7 +1671,7 @@ static void SetLastPageInRecords(void)
 	// grabs the size of the file and interprets number of pages it will take up
    HWFILE hFileHandle;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -1764,7 +1764,7 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 		return ( FALSE );
 	}
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return FALSE;
@@ -1930,7 +1930,7 @@ static INT32 GetPreviousBalanceToDate(void) // XXX unused
   INT32 iBytesRead=0;
   INT32 iBalanceToDate=0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1972,7 +1972,7 @@ static INT32 GetPreviousDaysBalance(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( ) - ( 60 * 24 );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2053,7 +2053,7 @@ static INT32 GetTodaysBalance(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2122,7 +2122,7 @@ static INT32 GetPreviousDaysIncome(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2211,7 +2211,7 @@ static INT32 GetTodaysDaysIncome(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2331,7 +2331,7 @@ static INT32 GetTodaysOtherDeposits(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2416,7 +2416,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -2502,7 +2502,7 @@ static void LoadCurrentBalance(void) // XXX unused
 	HWFILE hFileHandle;
   INT32 iBytesRead=0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;

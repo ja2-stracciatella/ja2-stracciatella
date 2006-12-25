@@ -144,7 +144,7 @@ void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 
 
 	//open the file
-	hFile = FileOpen( QUEST_DEBUG_FILE, FILE_ACCESS_WRITE, FALSE);
+	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
 		FileClose(hFile);

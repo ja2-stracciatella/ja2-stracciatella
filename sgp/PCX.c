@@ -90,7 +90,8 @@ static PcxObject* LoadPcx(const char* pFilename)
   UINT8     *pPcxBuffer;
 
   // Open and read in the file
-  if ((hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE)) == 0)
+	hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+  if (hFileHandle == 0)
   { // damn we failed to open the file
     return NULL;
   }

@@ -1279,7 +1279,7 @@ void WriteOutDistancesBetweenTowns( void )
 {
 	HWFILE hFileHandle;
 
-	hFileHandle = FileOpen( "BinaryData\\TownDistances.dat", FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE );
+	hFileHandle = FileOpen("BinaryData\\TownDistances.dat", FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 
 	FileWrite( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
 
@@ -1343,7 +1343,7 @@ void ReadInDistancesBetweenTowns( void )
 {
 	HWFILE hFileHandle;
 
-	hFileHandle = FileOpen( "BinaryData\\TownDistances.dat", FILE_ACCESS_READ, FALSE );
+	hFileHandle = FileOpen("BinaryData\\TownDistances.dat", FILE_ACCESS_READ);
 
 	FileRead( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
 

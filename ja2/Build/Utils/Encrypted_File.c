@@ -16,7 +16,7 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 	UINT32		uiBytesRead;
 
 
-	hFile = FileOpen(pFileName, FILE_ACCESS_READ, FALSE);
+	hFile = FileOpen(pFileName, FILE_ACCESS_READ);
 	if ( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed to FileOpen");

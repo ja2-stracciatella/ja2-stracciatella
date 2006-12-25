@@ -491,7 +491,7 @@ void OpenAndReadFilesFile( void )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( FILES_DAT_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -558,7 +558,7 @@ BOOLEAN OpenAndWriteFilesFile( void )
 	}
 
 	// open file
- 	hFileHandle=FileOpen( FILES_DAT_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)

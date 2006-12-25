@@ -3395,7 +3395,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 
 
 	//open the file
-	hFile = FileOpen( QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE, FALSE);
+	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
 		FileClose(hFile);
@@ -3465,7 +3465,7 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 
 
 	//open the file
-	hFile = FileOpen( QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE, FALSE);
+	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
 		FileClose(hFile);

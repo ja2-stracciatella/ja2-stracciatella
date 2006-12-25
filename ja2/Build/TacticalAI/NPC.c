@@ -163,7 +163,7 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 
 	CHECKN( FileExists( zFileName ) );
 
-	hFile = FileOpen( zFileName, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );
 
 	uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
@@ -377,7 +377,7 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 
 	CHECKN( FileExists( zFileName ) );
 
-	hFile = FileOpen( zFileName, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );
 
 	uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;

@@ -986,7 +986,7 @@ BOOLEAN LoadAnimationProfiles( )
 	UINT32			uiBytesRead;
 
 //	pInput = fopen( ANIMPROFILEFILENAME, "rb" );
-	pInput = FileOpen( ANIMPROFILEFILENAME, FILE_ACCESS_READ, FALSE );
+	pInput = FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ);
 
 	if ( !pInput )
 	{

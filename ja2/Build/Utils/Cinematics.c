@@ -164,7 +164,8 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	}
 
 	// Attempt opening the filename
-	if(!(pSmack->hFileHandle=FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE)))
+	pSmack->hFileHandle = FileOpen(cFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	if (!pSmack->hFileHandle)
 	{
 		ErrorMsg("SMK ERROR: Can't open the SMK file");
 		return(NULL);

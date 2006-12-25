@@ -67,7 +67,7 @@ BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, IN
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -125,7 +125,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	}
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -588,7 +588,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -642,7 +642,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 	}
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -923,7 +923,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1115,7 +1115,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -1170,7 +1170,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Open the file for writing
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,

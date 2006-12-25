@@ -3013,7 +3013,7 @@ BOOLEAN LoadAnimationStateInstructions( )
 		UINT32		uiBytesRead;
 
 		// Open ani file
-		hFile = FileOpen( ANIMFILENAME, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(ANIMFILENAME, FILE_ACCESS_READ);
 
 		if ( !hFile )
 		{

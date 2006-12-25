@@ -249,7 +249,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 	if (uiChannel == SOUND_ERROR) return SOUND_ERROR;
 
 	//Open the file
-	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE);
+	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if (!hFile)
 	{
 		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt open '%s' in SoundPlayStreamedFile()\n", pFilename ) );
@@ -982,7 +982,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 #else
 	Assert(pFilename != NULL);
 
-	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ, FALSE);
+	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
 	if (hFile == 0) return NO_SAMPLE;
 
 	UINT32 uiSize = FileGetSize(hFile);
@@ -1445,7 +1445,7 @@ static UINT32 SoundGetUniqueID(void)
 //*******************************************************************************
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
 {
-	HWFILE hDisk = FileOpen(pFilename, FILE_ACCESS_READ, FALSE);
+	HWFILE hDisk = FileOpen(pFilename, FILE_ACCESS_READ);
 	if (hDisk == 0) return FALSE;
 
 	UINT32 uiFilesize = FileGetSize(hDisk);

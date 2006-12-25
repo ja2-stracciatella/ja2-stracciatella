@@ -615,7 +615,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	}
 
 	// create the save game file
-	hFile = FileOpen( zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hFile = FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hFile )
 	{
 		goto FAILED_TO_SAVE;
@@ -1435,7 +1435,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	CreateSavedGameFileNameFromNumber( ubSavedGameID, zSaveGameName );
 
 	// open the save game file
-	hFile = FileOpen( zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -3312,7 +3312,7 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 
 	//open the file
-	hSrcFile = FileOpen( pSrcFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hSrcFile )
 	{
 		return( FALSE );
@@ -3405,7 +3405,7 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 	#endif
 
 	//open the destination file to write to
-	hSrcFile = FileOpen( pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hSrcFile )
 	{
 		//error, we cant open the saved game file
@@ -4228,7 +4228,7 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 	sprintf( zFileName, "%S\\SaveGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -4274,7 +4274,7 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 	sprintf( zFileName, "%S\\LoadGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -4902,7 +4902,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 	else
 	{
 		// create the save game file
-		hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( !hFile )
 		{
 			FileClose( hFile );
@@ -4941,7 +4941,7 @@ static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, 
 	sprintf( zFileName, "%S\\%s.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gzNameOfMapTempFile );
 
 	// create the save game file
-	hFile = FileOpen( zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		FileClose( hFile );
@@ -5269,7 +5269,7 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName1 ) )
 	{
-		hFile = FileOpen( zFileName1, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+		hFile = FileOpen(zFileName1, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 
@@ -5280,7 +5280,7 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName2 ) )
 	{
-		hFile = FileOpen( zFileName2, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+		hFile = FileOpen(zFileName2, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 

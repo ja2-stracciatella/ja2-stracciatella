@@ -71,7 +71,7 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 
 	CHECKF( FileExists( hImage->ImageFile ) );
 
-	hFile = FileOpen( hImage->ImageFile, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(hImage->ImageFile, FILE_ACCESS_READ);
 	CHECKF( hFile );
 
 	if ( !FileRead( hFile, &uiImgID, sizeof(UINT8), &uiBytesRead ) )

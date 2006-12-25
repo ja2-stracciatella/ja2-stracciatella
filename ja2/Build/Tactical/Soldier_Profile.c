@@ -425,7 +425,7 @@ BOOLEAN LoadMercProfiles(void)
 	UINT32	uiNumBytesRead;
 
 
-	fptr = FileOpen(pFileName, FILE_ACCESS_READ, FALSE );
+	fptr = FileOpen(pFileName, FILE_ACCESS_READ);
 	if( !fptr )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName) );

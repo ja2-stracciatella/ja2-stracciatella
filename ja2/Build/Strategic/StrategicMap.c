@@ -1125,7 +1125,7 @@ BOOLEAN MapExists(const char *szFilename )
 	UINT8 str[50];
 	HWFILE fp;
 	sprintf( str, "MAPS\\%s", szFilename );
-	fp = FileOpen( str, FILE_ACCESS_READ, FALSE );
+	fp = FileOpen(str, FILE_ACCESS_READ);
 	if( !fp )
 		return FALSE;
 	FileClose( fp );

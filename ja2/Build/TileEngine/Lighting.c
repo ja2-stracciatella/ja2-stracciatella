@@ -3007,7 +3007,8 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 		else
 			pName=pFilename;
 
-		if((hFile=FileOpen(pName, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE))!=0)
+		hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+		if (hFile != 0)
 		{
 			FileWrite(hFile, &usTemplateSize[iLight], sizeof(UINT16), NULL);
 			FileWrite(hFile, pLightList[iLight], sizeof(LIGHT_NODE)*usTemplateSize[iLight], NULL);
@@ -3038,7 +3039,8 @@ INT32 iLight;
 		return(-1);
 	else
 	{
-		if((hFile=FileOpen(pFilename, FILE_ACCESS_READ, FALSE))!=0)
+		hFile = FileOpen(pFilename, FILE_ACCESS_READ);
+		if (hFile != 0)
 		{
 			FileRead(hFile, &usTemplateSize[iLight], sizeof(UINT16), NULL);
 			if((pLightList[iLight]=MemAlloc(usTemplateSize[iLight]*sizeof(LIGHT_NODE)))==NULL)

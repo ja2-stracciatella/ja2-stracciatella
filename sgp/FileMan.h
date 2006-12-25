@@ -86,7 +86,7 @@ extern void		ShutdownFileManager( void );
 extern BOOLEAN	FileExists( const char *strFilename );
 extern BOOLEAN	FileExistsNoDB(const char *strFilename);
 extern BOOLEAN	FileDelete( const char *strFilename );
-extern HWFILE	FileOpen( const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose );
+extern HWFILE	FileOpen(const char* strFilename, UINT32 uiOptions);
 extern void		FileClose( HWFILE );
 
 extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );

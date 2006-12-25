@@ -503,7 +503,7 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 	UINT32 uiBytesWritten = 0;
 
 	// open the file for writing
-	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE);
+	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	// write out the profile id
 	if (!FileWrite(hFile, &iProfileId, sizeof( INT32 ), &uiBytesWritten))
@@ -534,7 +534,7 @@ void LoadInCurrentImpCharacter( void )
 	UINT32 uiBytesRead = 0;
 
 	// open the file for writing
-	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ, FALSE);
+	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ);
 
 	// valid file?
 	if( hFile == -1 )

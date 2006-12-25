@@ -156,7 +156,7 @@ BOOLEAN LoadLockTable( void )
 
 	// Load the Lock Table
 
-	hFile = FileOpen( pFileName, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(pFileName, FILE_ACCESS_READ);
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadLockTable from file %s", pFileName) );
@@ -975,7 +975,7 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1043,7 +1043,7 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	TrashDoorTable();
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -1860,7 +1860,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1918,7 +1918,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	TrashDoorStatusArray( );
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,

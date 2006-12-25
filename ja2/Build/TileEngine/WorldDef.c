@@ -538,7 +538,7 @@ void BuildTileShadeTables(  )
 	{
 		AssertMsg( 0, "Can't set the directory to Data\\ShadeTable.  Kris' big problem!" );
 	}
-	hfile = FileOpen( "IgnoreShadeTables.txt", 	FILE_ACCESS_READ, FALSE );
+	hfile = FileOpen("IgnoreShadeTables.txt", FILE_ACCESS_READ);
 	if( hfile )
 	{
 		FileClose( hfile );
@@ -1654,7 +1654,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	sprintf( aFilename, "MAPS\\%s", puiFilename );
 
 	// Open file
-	hfile = FileOpen( aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hfile = FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	if ( !hfile )
 	{
@@ -2262,7 +2262,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		SaveWorld( szFilename );
 	}
 
-	hfile = FileOpen( szDirFilename, FILE_ACCESS_READ, FALSE );
+	hfile = FileOpen(szDirFilename, FILE_ACCESS_READ);
 	if( !hfile )
 		return FALSE;
 
@@ -2666,7 +2666,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	gfCaves = FALSE;
 
 	// Open file
-	hfile = FileOpen( aFilename, FILE_ACCESS_READ, FALSE );
+	hfile = FileOpen(aFilename, FILE_ACCESS_READ);
 
 	if ( !hfile )
 	{
@@ -3555,7 +3555,7 @@ BOOLEAN SaveMapTileset( INT32 iTilesetID )
 	sprintf( zTilesetName, "TSET%04d.SET", iTilesetID );
 
 	// Open file
-	hTSet = FileOpen( zTilesetName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hTSet = FileOpen(zTilesetName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 
 	if ( !hTSet )

@@ -304,7 +304,6 @@ BOOLEAN FileDelete(const char *strFilename)
 //
 //		STR	   -> filename
 //		UIN32		-> access - read or write, or both
-//		BOOLEAN	-> delete on close
 //
 // Return Value :
 //
@@ -318,7 +317,7 @@ BOOLEAN FileDelete(const char *strFilename)
 //
 //**************************************************************************
 
-HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClose )
+HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 {
 	BACKSLASH(strFilename);
 
@@ -372,12 +371,6 @@ HWFILE FileOpen(const char *strFilename, UINT32 uiOptions, BOOLEAN fDeleteOnClos
 	// if the file did not exist, try to open it from the database
 	else if ( gFileDataBase.fInitialized )
 	{
-		//if the file is to be opened for writing, return an error cause you cant write a file that is in the database library
-		if( fDeleteOnClose )
-		{
-			return( 0 );
-		}
-
 		//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
 		if( uiOptions & FILE_ACCESS_WRITE )
 		{
@@ -698,7 +691,7 @@ BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiB
 	UINT32	uiNumBytesRead;
 	BOOLEAN	fRet;
 
-	hFile = FileOpen( strFilename, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(strFilename, FILE_ACCESS_READ);
 	if ( hFile )
 	{
 		fRet = FileRead( hFile, pDest, uiBytesToRead, &uiNumBytesRead );
@@ -1477,7 +1470,8 @@ UINT32 FileSize(const char *strFilename)
 HWFILE hFile;
 UINT32 uiSize;
 
-	if((hFile=FileOpen(strFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ, FALSE))==0)
+	hFile = FileOpen(strFilename, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	if (hFile == 0)
 		return(0);
 
 	uiSize=FileGetSize(hFile);

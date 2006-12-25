@@ -38,7 +38,8 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 	}
 
 	// Open and read in the file
-  if ( ( hFileHandle = FileOpen( ColFile, FILE_ACCESS_READ, FALSE)) == 0)
+	hFileHandle = FileOpen(ColFile, FILE_ACCESS_READ);
+	if (hFileHandle == 0)
 	{
 		// Return FALSE w/ debug
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot open COL file");
@@ -191,7 +192,7 @@ BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation )
 		// OK, build filename
 		sprintf( zCdFile, "%s%s", zCdLocation, gCheckFilenames[ cnt ] );
 
-		hFile = FileOpen( zCdFile, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+		hFile = FileOpen(zCdFile, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 
 		// Check if it exists...
 		if ( !hFile )

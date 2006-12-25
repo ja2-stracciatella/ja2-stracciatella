@@ -469,7 +469,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT3
 	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -528,7 +528,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 	}
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -580,7 +580,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 			UINT32		uiNumBytesWritten=0;
 
 			//If the file doesnt exists, create a file that has an initial amount of Items
-			hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+			hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 			if( hFile == 0 )
 			{
 				//Error opening item modification file
@@ -621,7 +621,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 
 
 	//Open the file for reading, if it exists
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1437,7 +1437,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1550,7 +1550,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 	}
 
 	//Open the file for reading
-	hFile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -2039,7 +2039,7 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 
 
 	//Open the temp npc file
-	hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
@@ -2091,7 +2091,7 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 	if( gpNPCQuoteInfoArray[ ubNpcId ] )
 	{
 
-		hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( hFile == 0 )
 		{
 			//Error opening temp npc quote info
@@ -2153,7 +2153,7 @@ static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId)
 	}
 
 
-	hFile = FileOpen( NPC_TEMP_QUOTE_FILE, FILE_ACCESS_READ | FILE_OPEN_ALWAYS, FALSE );
+	hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_READ | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
@@ -2243,7 +2243,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	if( FileExists( zMapName ) )
 	{
 		//Open the file for reading
-		hFile = FileOpen( zMapName, FILE_ACCESS_READWRITE | FILE_OPEN_EXISTING, FALSE );
+		hFile = FileOpen(zMapName, FILE_ACCESS_READWRITE | FILE_OPEN_EXISTING);
 		if( hFile == 0 )
 		{
 			//Error opening map modification file,
@@ -2262,7 +2262,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	else
 	{
 		//the file doesnt exists, create a new one
-		hFile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( hFile == 0 )
 		{
 			//Error opening map modification file

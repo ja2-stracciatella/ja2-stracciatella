@@ -267,7 +267,7 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 
 	CHECKF( szFileName );
 	CHECKF( pFileRef );
-	hInput = FileOpen( szFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hInput = FileOpen(szFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if (hInput == 0)
 	{
 		return( FALSE );

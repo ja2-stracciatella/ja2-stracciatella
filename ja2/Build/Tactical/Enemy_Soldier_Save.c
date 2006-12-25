@@ -116,7 +116,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -580,7 +580,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	if( fAppendToFile )
 	{
 		//Open the file for writing, Create it if it doesnt exist
-		hfile = FileOpen( zMapName, FILE_ACCESS_READ	 | FILE_OPEN_ALWAYS, FALSE );
+		hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_ALWAYS);
 		if( hfile == 0 )
 		{	//Error opening map modification file
 			return FALSE;
@@ -598,7 +598,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		FileClose( hfile );
 
 		//Open the file for writing, Create it if it doesnt exist
-		hfile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( hfile == 0 )
 		{	//Error opening map modification file
 			return FALSE;
@@ -619,7 +619,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	else
 	{
 		//Open the file for writing, Create it if it doesnt exist
-		hfile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+		hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( hfile == 0 )
 		{	//Error opening map modification file
 			return FALSE;
@@ -834,7 +834,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 
 	//Open the file for reading
-	hfile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -1217,7 +1217,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -1676,7 +1676,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	}
 
 	//Open the file for writing, Create it if it doesnt exist
-	hfile = FileOpen( zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS, FALSE );
+	hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -1869,7 +1869,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen( zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;

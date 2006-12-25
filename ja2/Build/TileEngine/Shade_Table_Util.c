@@ -70,7 +70,7 @@ void DetermineRGBDistributionSettings()
 		}
 		else
 		{
-			hfile = FileOpen( "RGBDist.dat", FILE_ACCESS_READ, FALSE );
+			hfile = FileOpen("RGBDist.dat", FILE_ACCESS_READ);
 			if( !hfile )
 			{
 				AssertMsg( 0, "Couldn't open RGBDist.dat, even though it exists!" );
@@ -108,7 +108,7 @@ void DetermineRGBDistributionSettings()
 	{ //The RGB distribution is going to be saved in a tiny file for future reference.  As long as the
 		//RGB distribution never changes, the shade table will grow until eventually, all tilesets are loaded,
 		//shadetables generated and saved in this directory.
-		hfile = FileOpen( "RGBDist.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+		hfile = FileOpen("RGBDist.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 		if( !hfile )
 		{
 			AssertMsg( 0, "Couldn't create RGBDist.dat for writing!" );
@@ -144,7 +144,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	ptr++;
 	sprintf( ptr, "sha" );
 
-	hfile = FileOpen( ShadeFileName, FILE_ACCESS_READ, FALSE );
+	hfile = FileOpen(ShadeFileName, FILE_ACCESS_READ);
 	if( !hfile )
 	{ //File doesn't exist, so generate it
 		FileClose( hfile );
@@ -191,7 +191,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	ptr++;
 	sprintf( ptr, "sha" );
 
-	hfile = FileOpen( ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS, FALSE );
+	hfile = FileOpen(ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hfile )
 	{
 		FileClose( hfile );

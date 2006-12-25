@@ -2251,7 +2251,7 @@ void LoadGlobalSummary()
 			//main ground level
 			sprintf( szFilename, "%c%d.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2268,7 +2268,7 @@ void LoadGlobalSummary()
 			//main B1 level
 			sprintf( szFilename, "%c%d_b1.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2285,7 +2285,7 @@ void LoadGlobalSummary()
 			//main B2 level
 			sprintf( szFilename, "%c%d_b2.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2302,7 +2302,7 @@ void LoadGlobalSummary()
 			//main B3 level
 			sprintf( szFilename, "%c%d_b3.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2319,7 +2319,7 @@ void LoadGlobalSummary()
 			//alternate ground level
 			sprintf( szFilename, "%c%d_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2336,7 +2336,7 @@ void LoadGlobalSummary()
 			//alternate B1 level
 			sprintf( szFilename, "%c%d_b1_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2353,7 +2353,7 @@ void LoadGlobalSummary()
 			//alternate B2 level
 			sprintf( szFilename, "%c%d_b2_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2370,7 +2370,7 @@ void LoadGlobalSummary()
 			//alternate B3 level
 			sprintf( szFilename, "%c%d_b3_a.dat", 'A' + y, x + 1 );
 			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+			hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
@@ -2900,7 +2900,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	}
 	//Open the original map for the sector
 	sprintf( szFilename, "MAPS\\%S", gszFilename );
-	hfile = FileOpen( szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING, FALSE );
+	hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hfile )
 	{ //The file couldn't be found!
 		return;

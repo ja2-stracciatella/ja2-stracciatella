@@ -494,7 +494,7 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen( HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -625,7 +625,7 @@ void OpenAndReadHistoryFile( void )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -677,7 +677,7 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_CREATE_ALWAYS, FALSE);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1212,7 +1212,7 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1310,7 +1310,7 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 		return( FALSE );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_WRITE ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_WRITE);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1439,7 +1439,7 @@ void SetLastPageInHistoryRecords( void )
 		return;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1476,7 +1476,7 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 		return 0;
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1511,7 +1511,7 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_WRITE|FILE_OPEN_ALWAYS, FALSE);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
@@ -1676,7 +1676,7 @@ INT32 GetNumberOfHistoryPages()
 		return( 0 );
 
 	// open file
- 	hFileHandle=FileOpen( HISTORY_DATA_FILE,( FILE_OPEN_EXISTING |  FILE_ACCESS_READ ), FALSE );
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)

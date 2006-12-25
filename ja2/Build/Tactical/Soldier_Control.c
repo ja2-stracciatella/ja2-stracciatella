@@ -5791,7 +5791,7 @@ BOOLEAN LoadPaletteData( )
 	HWFILE		hFile;
 	UINT32			cnt, cnt2;
 
-	hFile = FileOpen( PALETTEFILENAME, FILE_ACCESS_READ, FALSE );
+	hFile = FileOpen(PALETTEFILENAME, FILE_ACCESS_READ);
 
 	// Read # of types
 	if ( !FileRead( hFile, &guiNumPaletteSubRanges, sizeof( guiNumPaletteSubRanges ), NULL ) )

@@ -59,7 +59,7 @@ void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 	pDestFileName[counter+3]='p';
 	pDestFileName[counter+4]='\0';
 
-	pFile = FileOpen(pDestFileName, FILE_ACCESS_READ, FALSE );
+	pFile = FileOpen(pDestFileName, FILE_ACCESS_READ);
 	if( pFile )
 	{
 			counter=0;
