@@ -93,7 +93,6 @@ typedef struct
 	UINT8						ubBitDepth;
 	UINT16					fFlags;
 	SGPFILENAME			ImageFile;
-	UINT32					iFileLoader;
 	SGPPaletteEntry *pPalette;
 	UINT16					*pui16BPPPalette;
 	UINT8 *					pAppData;

@@ -33,7 +33,7 @@ INT16  gusBlueShift = 0;
 INT16  gusGreenShift = 0;
 
 
-static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents);
+static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader);
 
 
 HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
@@ -117,9 +117,8 @@ HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 
 	// Set filename and loader
 	strcpy( hImage->ImageFile, ImageFile );
-	hImage->iFileLoader = iFileLoader;
 
-	if ( !LoadImageData( hImage, fContents ) )
+	if (!LoadImageData(hImage, fContents, iFileLoader))
 	{
 		return( NULL );
 	}
@@ -199,14 +198,14 @@ static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents)
 }
 
 
-static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents)
+static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader)
 {
 	BOOLEAN fReturnVal = FALSE;
 
 	Assert( hImage != NULL );
 
 	// Switch on file loader
-	switch( hImage->iFileLoader )
+	switch (iFileLoader)
 	{
 		case TGA_FILE_READER:
 
