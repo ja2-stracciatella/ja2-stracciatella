@@ -283,7 +283,6 @@ INT32 guiUpdatePanelButtonsImage[ 2 ];
 INT32 guiUpdatePanelButtons[ 2 ];
 
 // the update panel
-UINT32 guiUpdatePanel;
 UINT32 guiUpdatePanelTactical;
 
 // the leave item list

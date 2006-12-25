@@ -241,7 +241,6 @@ extern INT32 giDestHighLine;
 extern INT32 giContractHighLine;
 extern INT32 giSleepHighLine;
 
-extern UINT32 guiUpdatePanel;
 extern UINT32 guiUpdatePanelTactical;
 extern BOOLEAN fShowUpdateBox;
 

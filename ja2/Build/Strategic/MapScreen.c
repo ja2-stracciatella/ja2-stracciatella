@@ -2910,7 +2910,6 @@ UINT32 MapScreenInit(void)
 	// set up leave list arrays for dismissed mercs
 	InitLeaveList( );
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\group_confirm.sti", &guiUpdatePanel));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\group_confirm_tactical.sti", &guiUpdatePanelTactical));
 
 	return TRUE;
@@ -2928,7 +2927,6 @@ UINT32 MapScreenShutdown(void)
 	// free memory for leave list arrays for dismissed mercs
 	ShutDownLeaveList( );
 
-	DeleteVideoObjectFromIndex(guiUpdatePanel );
 	DeleteVideoObjectFromIndex(guiUpdatePanelTactical);
 
 	return TRUE;
