@@ -128,16 +128,6 @@ typedef struct
 } TILE_ELEMENT, *PTILE_ELEMENT;
 
 
-typedef struct
-{
-		INT32		iMapIndex;
-		UINT8		ubNumLayers;
-		UINT16	*pIndexValues;
-
-}	land_undo_struct;
-
-
-
 // Globals used
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
 UINT16					gTileDatabaseSize;
