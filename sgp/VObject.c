@@ -1024,7 +1024,7 @@ static void DumpVObjectInfoIntoFile(const char *filename, BOOLEAN fAppend)
 
 
 //Debug wrapper for adding vObjects
-static void RecordVObject(const char* Filename, UINT32 *uiIndex, UINT32 uiLineNum, const char *pSourceFile)
+static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
 {
 	UINT16 usLength;
 	UINT8 str[256];
@@ -1047,7 +1047,7 @@ static void RecordVObject(const char* Filename, UINT32 *uiIndex, UINT32 uiLineNu
 BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
 {
 	BOOLEAN Res = AddStandardVideoObjectFromHImage(hImage, uiIndex);
-	if (Res) RecordVObject("<IMAGE>", uiIndex, uiLineNum, pSourceFile);
+	if (Res) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
 	return Res;
 }
 
@@ -1055,7 +1055,7 @@ BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiL
 BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
 {
 	BOOLEAN Res = AddStandardVideoObjectFromFile(ImageFile, uiIndex);
-	if (Res) RecordVObject(ImageFile, uiIndex, uiLineNum, pSourceFile);
+	if (Res) RecordVObject(ImageFile, uiLineNum, pSourceFile);
 	return Res;
 }
 

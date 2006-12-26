@@ -1546,7 +1546,7 @@ void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
 }
 
 
-static BOOLEAN RecordVSurface(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+static BOOLEAN RecordVSurface(const char* Filename, UINT32 LineNum, const char* SourceFile)
 {
 	//record the filename of the vsurface (some are created via memory though)
 	gpVSurfaceTail->pName = MemAlloc(strlen(Filename) + 1);
@@ -1565,14 +1565,14 @@ static BOOLEAN RecordVSurface(const char* Filename, UINT32* Index, UINT32 LineNu
 BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile)
 {
 	if (!AddVideoSurface(Width, Height, BitDepth, Index)) return FALSE;
-	return RecordVSurface("<EMPTY>", Index, LineNum, SourceFile);
+	return RecordVSurface("<EMPTY>", LineNum, SourceFile);
 }
 
 
 BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile)
 {
 	if (!AddVideoSurfaceFromFile(Filename, Index)) return FALSE;
-	return RecordVSurface(Filename, Index, LineNum, SourceFile);
+	return RecordVSurface(Filename, LineNum, SourceFile);
 }
 
 #endif
