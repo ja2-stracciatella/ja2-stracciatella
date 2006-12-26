@@ -80,7 +80,7 @@ BOOLEAN ShutdownVideoObjectManager( );
 	void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend);
 	BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
 	BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
-	#define AddVideoObjectFromHImage(a, b) AddAndRecordVObject(a, b, __LINE__, __FILE__)
+	#define AddVideoObjectFromHImage(a, b) AddAndRecordVObjectFromHImage(a, b, __LINE__, __FILE__)
 	#define AddVideoObjectFromFile(a, b) AddAndRecordVObjectFromFile(a, b, __LINE__, __FILE__)
 #else
 	#define AddVideoObjectFromHImage(a, b) AddStandardVideoObjectFromHImage(a, b)

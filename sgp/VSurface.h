@@ -62,8 +62,8 @@ BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index);
 	void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend);
 	extern BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile);
 	extern BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile);
-	#define AddVideoSurface(a, b) AddAndRecordVSurface(a, b, __LINE__, __FILE__)
-	#define AddVideoSurfaceFromFile(a, b) AddAndRecordVSurfaceFromFile(a, b, c, __FILE__)
+	#define AddVideoSurface(a, b, c, d) AddAndRecordVSurface(a, b, c, d, __LINE__, __FILE__)
+	#define AddVideoSurfaceFromFile(a, b) AddAndRecordVSurfaceFromFile(a, b, __LINE__, __FILE__)
 #endif
 
 // Returns a HVSurface for the specified index

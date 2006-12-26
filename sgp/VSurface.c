@@ -178,6 +178,10 @@ static BOOLEAN AddStandardVideoSurface(HVSURFACE hVSurface, UINT32* puiIndex)
 static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth);
 
 
+#undef AddVideoSurface
+#undef AddVideoSurfaceFromFile
+
+
 BOOLEAN AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index)
 {
 	HVSURFACE hVSurface = CreateVideoSurface(Width, Height, BitDepth);
@@ -1594,10 +1598,6 @@ static BOOLEAN RecordVSurface(const char* Filename, UINT32* Index, UINT32 LineNu
 
 	return TRUE;
 }
-
-
-#undef AddVideoSurface
-#undef AddVideoSurfaceFromFile
 
 
 BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile)
