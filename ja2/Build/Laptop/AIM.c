@@ -150,8 +150,6 @@ UINT32		guiPolicies;
 UINT32		guiHistory;
 UINT32		guiLinks;
 UINT32		guiWarning;
-UINT32		guiBottomButton;
-UINT32		guiBottomButton2;
 UINT32		guiFlowerAdvertisement;
 UINT32		guiAdForAdsImages;
 UINT32		guiInsuranceAdImages;

@@ -107,7 +107,6 @@
 
 UINT32		guiAlumniFrame;
 UINT32		guiOldAim;
-UINT32		guiPageButtons;
 UINT32		guiAlumniPopUp;
 UINT32		guiPopUpPic;
 UINT32		guiDoneButton;
@@ -184,9 +183,6 @@ BOOLEAN EnterAimArchives()
 
 	// load the 1st set of faces and add it
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\Old_Aim.sti", &guiOldAim));
-
-	// load the Bottom Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton.sti", &guiPageButtons));
 
 	// load the PopupPic graphic and add it
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\PopupPicFrame.sti", &guiPopUpPic));
@@ -273,7 +269,6 @@ void RenderAimArchives()
 {
 	HVOBJECT	hFrameHandle;
 	HVOBJECT	hFaceHandle;
-//  HVOBJECT	hBottomButtonHandle;
 	UINT16		usPosX, usPosY,x,y,i=0;
 	UINT8			ubNumRows=0;
 	UINT32			uiStartLoc=0;
@@ -351,9 +346,6 @@ void RenderAimArchives()
 	}
 
 
-
-
-//	GetVideoObject(&hBottomButtonHandle, guiPageButtons);
 	usPosX = AIM_ALUMNI_PAGE1_X;
 
 	if( gfDrawPopUpBox )

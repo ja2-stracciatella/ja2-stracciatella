@@ -57,8 +57,6 @@
 
 #define	AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS	8
 
-UINT32		guiBottomButton;
-UINT32		guiBottomButton2;
 UINT32		guiContentButton;
 
 UINT8			gubCurPageNum;
@@ -241,10 +239,6 @@ void RenderAimHistory()
 BOOLEAN InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
-
-	// load the Bottom Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton.sti", &guiBottomButton));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton2.sti", &guiBottomButton2));
 
 	guiHistoryMenuButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
 	usPosX = AIM_HISTORY_MENU_X;

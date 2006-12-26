@@ -160,10 +160,6 @@ UINT32	guiPoliciesMenuButton[ AIM_POLICY_MENU_BUTTON_AMOUNT ];
 INT32		guiPoliciesMenuButtonImage;
 
 
-
-
-UINT32		guiBottomButton;
-UINT32		guiBottomButton2;
 UINT8			gubCurPageNum;
 BOOLEAN		gfInPolicyToc =  FALSE;
 BOOLEAN		gfInAgreementPage = FALSE;
@@ -222,10 +218,6 @@ BOOLEAN EnterAimPolicies()
 
 	gfInPolicyToc = FALSE;
 
-	// load the Bottom Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton.sti", &guiBottomButton));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BottomButton2.sti", &guiBottomButton2));
-
 	// load the Content Buttons graphic and add it
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\ContentButton.sti", &guiContentButton));
 
@@ -237,8 +229,6 @@ void ExitAimPolicies()
 {
 	gfExitingAimPolicy = TRUE;
 
-	DeleteVideoObjectFromIndex(guiBottomButton);
-	DeleteVideoObjectFromIndex(guiBottomButton2);
 	DeleteVideoObjectFromIndex(guiContentButton);
 
 	if( gfAimPolicyMenuBarLoaded )
