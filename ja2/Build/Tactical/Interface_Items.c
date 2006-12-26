@@ -5474,67 +5474,19 @@ UINT16 GetTileGraphicForItem( INVTYPE *pItem )
 
 BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 {
-	CHAR8	 zName[ 100 ];
-	UINT32	uiVo;
-	UINT8		ubGraphic;
-
-	// CHECK SUBCLASS
-	ubGraphic = pItem->ubGraphicNum;
-
-	if ( pItem->ubGraphicType == 0 )
+	const char* Prefix;
+	switch (pItem->ubGraphicType)
 	{
-		// CHECK SUBCLASS
-		//ubGraphic++;
-
-		if ( ubGraphic < 10 )
-		{
-			sprintf( zName, "gun0%d.sti", ubGraphic );
-		}
-		else
-		{
-			sprintf( zName, "gun%d.sti", ubGraphic );
-		}
-	}
-	else if ( pItem->ubGraphicType == 1 )
-	{
-		if ( ubGraphic < 10 )
-		{
-			sprintf( zName, "p1item0%d.sti", ubGraphic );
-		}
-		else
-		{
-			sprintf( zName, "p1item%d.sti", ubGraphic );
-		}
-	}
-	else if ( pItem->ubGraphicType == 2 )
-	{
-		if ( ubGraphic < 10 )
-		{
-			sprintf( zName, "p2item0%d.sti", ubGraphic );
-		}
-		else
-		{
-			sprintf( zName, "p2item%d.sti", ubGraphic );
-		}
-	}
-	else
-	{
-		if ( ubGraphic < 10 )
-		{
-			sprintf( zName, "p3item0%d.sti", ubGraphic );
-		}
-		else
-		{
-			sprintf( zName, "p3item%d.sti", ubGraphic );
-		}
+		case 0:  Prefix = "gun";    break;
+		case 1:  Prefix = "p1item"; break;
+		case 2:  Prefix = "p2item"; break;
+		default: Prefix = "p3item"; break;
 	}
 
 	//Load item
 	SGPFILENAME ImageFile;
-	sprintf(ImageFile, "BIGITEMS\\%s", zName);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &uiVo));
-
-	*puiVo = uiVo;
+	sprintf(ImageFile, "BIGITEMS\\%s%02d.sti", Prefix, pItem->ubGraphicNum);
+	CHECKF(AddVideoObjectFromFile(ImageFile, puiVo));
 
 	return( TRUE );
 }
