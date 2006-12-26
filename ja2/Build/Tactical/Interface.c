@@ -212,7 +212,6 @@ static UINT32 guiAIMCUBES;
 static UINT32 guiAIMBARS;
 UINT32					guiVEHINV;
 UINT32					guiBURSTACCUM;
-static UINT32   guiITEMPOINTERHATCHES;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
@@ -331,10 +330,6 @@ BOOLEAN InitializeTacticalInterface(  )
 	// LOAD com panel 2
 	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup.sti", &guiCOMPANEL))
 		AssertMsg(0, "Missing INTERFACE/communicationpopup.sti" );
-
-	// LOAD ITEM GRIDS....
-	if (!AddVideoObjectFromFile("INTERFACE/itemgrid.sti", &guiITEMPOINTERHATCHES))
-		AssertMsg(0, "Missing INTERFACE/itemgrid.sti" );
 
 	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti", &guiCOMPANELB))
 		AssertMsg(0, "Missing INTERFACE/communicationpopup_2.sti" );
