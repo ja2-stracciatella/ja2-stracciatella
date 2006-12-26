@@ -308,7 +308,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	UINT16 usPosY, usPosX;
 	UINT16 usStringPixLength;
 	SGPRect DestRect;
-  HVSURFACE hSrcVSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -457,11 +456,11 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 	else
 	{
-		if( !GetVideoSurface( &hSrcVSurface, pPopUpTextBox->uiMercTextPopUpBackground) )
-		{
-			AssertMsg( 0, String( "Failed to GetVideoSurface for PrepareMercPopupBox.  VSurfaceID:  %d",
-				pPopUpTextBox->uiMercTextPopUpBackground ) );
-		}
+		HVSURFACE hSrcVSurface = GetVideoSurface(pPopUpTextBox->uiMercTextPopUpBackground);
+		AssertMsg(
+			hSrcVSurface != NULL,
+			String("Failed to GetVideoSurface for PrepareMercPopupBox.  VSurfaceID:  %d", pPopUpTextBox->uiMercTextPopUpBackground)
+		);
 
 		pDestBuf = (UINT16*)LockVideoSurface( pPopUpTextBox->uiSourceBufferIndex, &uiDestPitchBYTES);
 		pSrcBuf = LockVideoSurface( pPopUpTextBox->uiMercTextPopUpBackground, &uiSrcPitchBYTES);

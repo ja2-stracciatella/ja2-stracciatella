@@ -304,8 +304,6 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 {
-	HVSURFACE hVSurface;
-
   //
 	// Get Video Surface
   //
@@ -313,7 +311,8 @@ BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_SETVIDEOSURFACETRANSPARENCY;
 	#endif
-	CHECKF( GetVideoSurface( &hVSurface, uiIndex ) );
+	HVSURFACE hVSurface = GetVideoSurface(uiIndex);
+	CHECKF(hVSurface != NULL);
 
   //
 	// Set transparency
@@ -325,7 +324,7 @@ BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 }
 
 
-BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex )
+HVSURFACE GetVideoSurface(UINT32 uiIndex)
 {
 	VSURFACE_NODE *curr;
 
@@ -333,35 +332,17 @@ BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex )
 		CheckValidVSurfaceIndex( uiIndex );
 	#endif
 
-  if ( uiIndex == BACKBUFFER )
-  {
-    *hVSurface = ghBackBuffer;
-		return TRUE;
-  }
-
-  if ( uiIndex == FRAME_BUFFER )
-  {
-    *hVSurface = ghFrameBuffer;
-		return TRUE;
-  }
-
-  if ( uiIndex == MOUSE_BUFFER )
-  {
-    *hVSurface = ghMouseBuffer;
-		return TRUE;
-  }
+  if (uiIndex == BACKBUFFER)   return ghBackBuffer;
+  if (uiIndex == FRAME_BUFFER) return ghFrameBuffer;
+  if (uiIndex == MOUSE_BUFFER) return ghMouseBuffer;
 
 	curr = gpVSurfaceHead;
 	while( curr )
 	{
-		if( curr->uiIndex == uiIndex )
-		{
-			*hVSurface = curr->hVSurface;
-			return TRUE;
-		}
+		if (curr->uiIndex == uiIndex) return curr->hVSurface;
 		curr = curr->next;
 	}
-  return FALSE;
+  return NULL;
 }
 
 
@@ -448,24 +429,16 @@ static void DeletePrimaryVideoSurfaces(void)
 
 BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect)
 {
-
-	HVSURFACE	hDestVSurface;
-	HVSURFACE	hSrcVSurface;
-
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTVIDEOSURFACE_DST;
 	#endif
-	if( !GetVideoSurface( &hDestVSurface, uiDestVSurface ) )
-	{
-		return FALSE;
-	}
+	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);
+	if (hDestVSurface == NULL) return FALSE;
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTVIDEOSURFACE_SRC;
 	#endif
-	if( !GetVideoSurface( &hSrcVSurface, uiSrcVSurface ) )
-	{
-		return FALSE;
-	}
+	HVSURFACE hSrcVSurface = GetVideoSurface(uiSrcVSurface);
+	if (hSrcVSurface == NULL) return FALSE;
 	if (!BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, usRegionIndex, iDestX, iDestY, fBltFlags, SrcRect))
 	{ // VO Blitter will set debug messages for error conditions
 		return FALSE ;
@@ -481,16 +454,13 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRe
 
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP)
 {
-	HVSURFACE	hDestVSurface;
 	SGPRect Clip;
 
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_COLORFILLVIDEOSURFACEAREA;
 	#endif
-	if( !GetVideoSurface( &hDestVSurface, uiDestVSurface ) )
-	{
-		return FALSE;
-	}
+	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);
+	if (hDestVSurface == NULL) return FALSE;
 
   //
 	// Clip fill region coords
@@ -1270,8 +1240,6 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 	UINT16 *pBuffer;
 	UINT32 uiPitch;
 	SGPRect   area;
-	HVSURFACE hVSurface;
-
 
 	// CLIP IT!
 	// FIRST GET SURFACE
@@ -1282,7 +1250,8 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_SHADOWVIDEOSURFACERECT;
 	#endif
-	CHECKF( GetVideoSurface( &hVSurface, uiDestVSurface ) );
+	HVSURFACE hVSurface = GetVideoSurface(uiDestVSurface);
+	CHECKF(hVSurface != NULL);
 
 	if ( X1 < 0 )
 			X1 = 0;
@@ -1379,23 +1348,16 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 //
 BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPRect* SrcRect, SGPRect* DestRect)
 {
-	HVSURFACE	hDestVSurface;
-	HVSURFACE	hSrcVSurface;
-
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTSTRETCHVIDEOSURFACE_DST;
 	#endif
-	if( !GetVideoSurface( &hDestVSurface, uiDestVSurface ) )
-	{
-		return FALSE;
-	}
+	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);
+	if (hDestVSurface == NULL) return FALSE;
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTSTRETCHVIDEOSURFACE_SRC;
 	#endif
-	if( !GetVideoSurface( &hSrcVSurface, uiSrcVSurface ) )
-	{
-		return FALSE;
-	}
+	HVSURFACE hSrcVSurface = GetVideoSurface(uiSrcVSurface);
+	if (hSrcVSurface == NULL) return FALSE;
 
 	//if the 2 images are not both 16bpp, return FALSE
 	if( (hDestVSurface->ubBitDepth != 16) && (hSrcVSurface->ubBitDepth != 16) )

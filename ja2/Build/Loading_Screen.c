@@ -211,7 +211,6 @@ extern BOOLEAN gfSchedulesHosed;
 //and refreshing the screen with it.
 void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 {
-	HVSURFACE hVSurface;
 	UINT32 uiLoadScreen;
 	const char* ImageFile;
 
@@ -273,7 +272,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	}
 	else if (AddVideoSurfaceFromFile(ImageFile, &uiLoadScreen))
 	{ //Blit the background image
-		GetVideoSurface( &hVSurface, uiLoadScreen );
+		HVSURFACE hVSurface = GetVideoSurface(uiLoadScreen);
 		BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, 0, NULL );
 		DeleteVideoSurfaceFromIndex( uiLoadScreen );
 	}

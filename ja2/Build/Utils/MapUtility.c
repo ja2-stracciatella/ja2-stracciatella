@@ -133,9 +133,7 @@ UINT32	MapUtilScreenHandle( )
 		{
 			return( ERROR_SCREEN );
 		}
-		GetVideoSurface( &ghvSurface, gi8BitMiniMap );
-
-
+		ghvSurface = GetVideoSurface(gi8BitMiniMap);
 	}
 
 	//OK, we are here, now loop through files

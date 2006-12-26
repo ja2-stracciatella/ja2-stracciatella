@@ -1488,7 +1488,6 @@ UINT32 AutoBandageMercs()
 void RenderAutoResolve()
 {
 	INT32 i;
-	HVSURFACE hVSurface;
 	INT32 xp, yp;
 	wchar_t str[100];
 	UINT8 ubGood, ubBad;
@@ -1547,7 +1546,7 @@ void RenderAutoResolve()
 	}
 	gpAR->fRenderAutoResolve = FALSE;
 
-	GetVideoSurface( &hVSurface, gpAR->iInterfaceBuffer );
+	HVSURFACE hVSurface = GetVideoSurface(gpAR->iInterfaceBuffer);
 	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, gpAR->Rect.iLeft, gpAR->Rect.iTop, 0, 0);
 
 	for( i = 0; i < gpAR->ubMercs; i++ )

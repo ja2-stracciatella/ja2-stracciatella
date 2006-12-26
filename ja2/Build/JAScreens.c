@@ -1101,7 +1101,6 @@ UINT32 DemoExitScreenHandle(void)
 	UINT16 str[150];
 	static UINT16					usCenter = 320;
 	static UINT32					uiCollageID = 0;
-	HVSURFACE hVSurface;
 	static BOOLEAN gfFastAnim = FALSE;
 	static BOOLEAN gfPrevFastAnim = FALSE;
 
@@ -1148,7 +1147,7 @@ UINT32 DemoExitScreenHandle(void)
 
 		SetMusicMode( MUSIC_NONE );
 
-		GetVideoSurface( &hVSurface, uiCollageID );
+		HVSURFACE hVSurface = GetVideoSurface(uiCollageID);
 		BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, 0, NULL );
 		DeleteVideoSurfaceFromIndex( uiCollageID );
 

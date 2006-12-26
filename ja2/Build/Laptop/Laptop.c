@@ -4895,7 +4895,6 @@ void BlitTitleBarIcons( void )
 
 BOOLEAN DrawDeskTopBackground( void )
 {
-	HVSURFACE hSrcVSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -4909,7 +4908,8 @@ BOOLEAN DrawDeskTopBackground( void )
 	 clip.iBottom=408 + 19;
 	// get surfaces
 	pDestBuf = (UINT16*)LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
-  CHECKF( GetVideoSurface( &hSrcVSurface, guiDESKTOP) );
+	HVSURFACE hSrcVSurface = GetVideoSurface(guiDESKTOP);
+  CHECKF(hSrcVSurface != NULL);
 	pSrcBuf = LockVideoSurface( guiDESKTOP, &uiSrcPitchBYTES);
 
 

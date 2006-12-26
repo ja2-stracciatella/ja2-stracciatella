@@ -2143,12 +2143,10 @@ void RenderCurrentHelpScreenTextToBuffer()
 
 void RenderTextBufferToScreen()
 {
-	HVSURFACE hDestVSurface, hSrcVSurface;
 	SGPRect		SrcRect;
 
-
-	GetVideoSurface( &hDestVSurface, guiRENDERBUFFER );
-	GetVideoSurface( &hSrcVSurface, guiHelpScreenTextBufferSurface );
+	HVSURFACE hDestVSurface = GetVideoSurface(guiRENDERBUFFER);
+	HVSURFACE hSrcVSurface  = GetVideoSurface(guiHelpScreenTextBufferSurface);
 
 	SrcRect.iLeft = 0;
 	SrcRect.iTop = gHelpScreen.iLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER;

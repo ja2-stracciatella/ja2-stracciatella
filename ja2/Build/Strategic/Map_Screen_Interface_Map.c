@@ -680,7 +680,6 @@ UINT32 DrawMap( void )
 {
 
 #ifndef JA2DEMO
-  HVSURFACE hSrcVSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -699,7 +698,8 @@ UINT32 DrawMap( void )
 	{
 		pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 
-		CHECKF( GetVideoSurface( &hSrcVSurface, guiBIGMAP) );
+		HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
+		CHECKF(hSrcVSurface != NULL);
 		pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
 
 		// clip blits to mapscreen region
@@ -1276,9 +1276,6 @@ void ShowTeamAndVehicles(INT32 fShowFlags)
 BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor )
 {
 	INT16	sScreenX, sScreenY;
-	HVSURFACE hSrcVSurface;
-	//HVSURFACE hSAMSurface;
-	//HVSURFACE hMineSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -1288,11 +1285,14 @@ BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor )
 
 
 	// get original video surface palette
-	CHECKF( GetVideoSurface( &hSrcVSurface, guiBIGMAP ) );
+	HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
+	CHECKF(hSrcVSurface != NULL);
 	// get original video surface palette
-	//CHECKF( GetVideoSurface( &hSAMSurface, guiSAMICON ) );
+	//HVSURFACE hSAMSurface = GetVideoSurface(guiSAMICON);
+	//CHECKF(hSAMSurface != NULL);
 	// get original video surface palette
-	//CHECKF( GetVideoSurface( &hMineSurface, guiMINEICON ) );
+	//HVSURFACE hMineSurface = GetVideoSurface(guiMINEICON);
+	//CHECKF(hMineSurface != NULL);
 	// get original video surface palette
 
 	pOriginalPallette = hSrcVSurface->p16BPPPalette;
@@ -1438,7 +1438,6 @@ BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor )
 {
 	INT16 sScreenX, sScreenY;
   INT32 iX, iY;
-	HVSURFACE hSrcVSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -1459,7 +1458,8 @@ BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor )
 	iX=(INT32)sScreenX-MAP_GRID_X;
 
 	// get original video surface palette
-	CHECKF( GetVideoSurface( &hSrcVSurface, guiBIGMAP) );
+	HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
+	CHECKF(hSrcVSurface != NULL );
 	pOriginalPallette = hSrcVSurface->p16BPPPalette;
 
 	if((iX >MapScreenRect.iLeft-MAP_GRID_X*2)&&(iX <MapScreenRect.iRight)&&(iY>MapScreenRect.iTop-MAP_GRID_Y*2)&&(iY < MapScreenRect.iBottom))
@@ -1608,7 +1608,6 @@ BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor )
 BOOLEAN InitializePalettesForMap( void )
 {
 	// init palettes
-	HVSURFACE hSrcVSurface;
 	SGPPaletteEntry pPalette[ 256 ];
 	UINT32 uiTempMap;
 
@@ -1616,7 +1615,8 @@ BOOLEAN InitializePalettesForMap( void )
 	CHECKF(AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx", &uiTempMap));
 
 	// get video surface
-	CHECKF( GetVideoSurface( &hSrcVSurface, uiTempMap) );
+	HVSURFACE hSrcVSurface = GetVideoSurface(uiTempMap);
+	CHECKF(hSrcVSurface != NULL);
 	GetVSurfacePaletteEntries( hSrcVSurface, pPalette );
 
 	// set up various palettes

@@ -67,7 +67,7 @@ BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index);
 #endif
 
 // Returns a HVSurface for the specified index
-BOOLEAN GetVideoSurface( HVSURFACE *hVSurface, UINT32 uiIndex );
+HVSURFACE GetVideoSurface(UINT32 uiIndex);
 
 BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *uiPitch );
 void UnLockVideoSurface( UINT32 uiVSurface );

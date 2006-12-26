@@ -1376,7 +1376,6 @@ BOOLEAN RenderShopKeeperInterface()
 {
 	HVOBJECT	hPixHandle;
 	CHAR16	zMoney[128];
-	HVSURFACE hDestVSurface, hSrcVSurface;
 	SGPRect		SrcRect;
 
 
@@ -1431,8 +1430,8 @@ BOOLEAN RenderShopKeeperInterface()
 	if( gfRenderScreenOnNextLoop )
 	{
 	//	BlitBufferToBuffer( guiRENDERBUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
-		GetVideoSurface( &hDestVSurface, guiCornerWhereTacticalIsStillSeenImage );
-		GetVideoSurface( &hSrcVSurface, guiSAVEBUFFER );
+		HVSURFACE hDestVSurface = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
+		HVSURFACE hSrcVSurface  = GetVideoSurface(guiSAVEBUFFER);
 
 		SrcRect.iLeft = SKI_TACTICAL_BACKGROUND_START_X;
 		SrcRect.iTop = SKI_TACTICAL_BACKGROUND_START_Y;
@@ -1473,7 +1472,6 @@ BOOLEAN RenderShopKeeperInterface()
 
 void RestoreTacticalBackGround()
 {
-	HVSURFACE hDestVSurface, hSrcVSurface;
 	SGPRect		SrcRect;
 
 	//Restore the background before blitting the text back on
@@ -1481,8 +1479,8 @@ void RestoreTacticalBackGround()
 
 //	BlitBufferToBuffer( guiCornerWhereTacticalIsStillSeenImage, guiRENDERBUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
 
-	GetVideoSurface( &hDestVSurface, guiRENDERBUFFER );
-	GetVideoSurface( &hSrcVSurface, guiCornerWhereTacticalIsStillSeenImage );
+	HVSURFACE hDestVSurface = GetVideoSurface(guiRENDERBUFFER);
+	HVSURFACE hSrcVSurface  = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
 
 	SrcRect.iLeft = 0;
 	SrcRect.iTop = 0;

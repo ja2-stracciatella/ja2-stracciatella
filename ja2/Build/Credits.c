@@ -600,9 +600,7 @@ BOOLEAN		RenderCreditScreen()
 	GetVideoObject(&hPixHandle, guiCreditBackGroundImage );
   BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0);
 /*
-	HVSURFACE hVSurface;
-
-	GetVideoSurface( &hVSurface, guiCreditBackGroundImage );
+	HVSURFACE hVSurface = GetVideoSurface(guiCreditBackGroundImage);
 	BltVideoSurfaceToVideoSurface( ghFrameBuffer, hVSurface, 0, 0, 0, 0, NULL );
 */
 	if( !gfCrdtHaveRenderedFirstFrameToSaveBuffer )
@@ -995,8 +993,6 @@ void HandleNode_Default( CRDT_NODE	*pCurrent )
 
 BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 {
-	HVSURFACE hVSurface;
-
 	//Currently, we have no need to display a node that doesnt have a string
 	if( pCurrent->pString == NULL )
 		return( FALSE );
@@ -1035,8 +1031,7 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 		}
 	}
 
-	GetVideoSurface( &hVSurface, pCurrent->uiVideoSurfaceImage );
-
+	HVSURFACE hVSurface = GetVideoSurface(pCurrent->uiVideoSurfaceImage);
 	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, pCurrent->sPosX, pCurrent->sPosY, 0, NULL);
 
 	return( TRUE );

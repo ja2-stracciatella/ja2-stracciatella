@@ -1239,7 +1239,6 @@ BOOLEAN DrawBox(UINT32 uiCounter)
 	UINT32 uiNumTilesHigh;
 	UINT32 uiCount=0;
   HVOBJECT hBoxHandle;
-  HVSURFACE hSrcVSurface;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -1296,7 +1295,8 @@ BOOLEAN DrawBox(UINT32 uiCounter)
 	// blit in texture first, then borders
   // blit in surface
   pDestBuf = (UINT16*)LockVideoSurface(PopUpBoxList[uiCounter]->uiBuffer, &uiDestPitchBYTES);
-  CHECKF( GetVideoSurface( &hSrcVSurface, PopUpBoxList[uiCounter]->iBackGroundSurface) );
+  HVSURFACE hSrcVSurface = GetVideoSurface(PopUpBoxList[uiCounter]->iBackGroundSurface);
+  CHECKF(hSrcVSurface != NULL);
 	pSrcBuf = LockVideoSurface( PopUpBoxList[uiCounter]->iBackGroundSurface, &uiSrcPitchBYTES);
   Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES,usTopX,usTopY, &clip);
 	UnLockVideoSurface( PopUpBoxList[uiCounter]->iBackGroundSurface);
