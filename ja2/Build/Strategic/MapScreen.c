@@ -9883,7 +9883,6 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\SAM.sti", &guiSAMICON));
 	// CHECKF(AddVideoObjectFromFile("INTERFACE\\s_map.sti", &guiMAP));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\sleepicon.sti", &guiSleepIcon));
 	//CHECKF(AddVideoObjectFromFile("INTERFACE\\addonslcp.sti", &guiCORNERADDONS));
 	//CHECKF(AddVideoObjectFromFile("INTERFACE\\mapborder.sti", &guiMAPBORDER));
@@ -9908,7 +9907,6 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	HandleLoadOfMapBottomGraphics( );
 
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_item.sti", &guiORTAICON));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_between_sector_icons.sti", &guiCHARBETWEENSECTORICONS));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_mvt_green_arrows.sti", &guiCHARBETWEENSECTORICONSCLOSE));
 
