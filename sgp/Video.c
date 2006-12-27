@@ -394,7 +394,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 {
 	UINT16 usWidth, usHeight;
 	UINT8	 ubBitDepth;
-	static RECT		 StripRegions[ 2 ];
 	UINT16				 usNumStrips = 0;
 	INT32					 cnt;
 	INT16					 sShiftX, sShiftY;
@@ -410,15 +409,15 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
  	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
 
-
-	StripRegions[ 0 ].left   = gsVIEWPORT_START_X;
-	StripRegions[ 0 ].right  = gsVIEWPORT_END_X;
-	StripRegions[ 0 ].top    = gsVIEWPORT_WINDOW_START_Y;
-	StripRegions[ 0 ].bottom = gsVIEWPORT_WINDOW_END_Y;
-	StripRegions[ 1 ].left   = gsVIEWPORT_START_X;
-	StripRegions[ 1 ].right  = gsVIEWPORT_END_X;
-	StripRegions[ 1 ].top    = gsVIEWPORT_WINDOW_START_Y;
-	StripRegions[ 1 ].bottom = gsVIEWPORT_WINDOW_END_Y;
+	SGPRect StripRegions[2];
+	StripRegions[0].iLeft   = gsVIEWPORT_START_X;
+	StripRegions[0].iRight  = gsVIEWPORT_END_X;
+	StripRegions[0].iTop    = gsVIEWPORT_WINDOW_START_Y;
+	StripRegions[0].iBottom = gsVIEWPORT_WINDOW_END_Y;
+	StripRegions[1].iLeft   = gsVIEWPORT_START_X;
+	StripRegions[1].iRight  = gsVIEWPORT_END_X;
+	StripRegions[1].iTop    = gsVIEWPORT_WINDOW_START_Y;
+	StripRegions[1].iBottom = gsVIEWPORT_WINDOW_END_Y;
 
 	switch (uiDirection)
 	{
@@ -439,8 +438,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 
 			}
 
-			StripRegions[ 0 ].right =(INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-
+			StripRegions[0].iRight = gsVIEWPORT_START_X + sScrollXIncrement;
 			usNumStrips = 1;
 			break;
 
@@ -468,7 +466,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			//					uiDestPitchBYTES-sScrollXIncrement*uiBPP);
 			//}
 
-			StripRegions[ 0 ].left =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[0].iLeft = gsVIEWPORT_END_X - sScrollXIncrement;
 			usNumStrips = 1;
 			break;
 
@@ -493,7 +491,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			//					pSrcBuf+((uiCountY-sScrollYIncrement)*uiDestPitchBYTES),
 			//					uiDestPitchBYTES);
 			//}
-			StripRegions[ 0 ].bottom =(INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
+			StripRegions[0].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			usNumStrips = 1;
 			break;
 
@@ -520,7 +518,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			//					uiDestPitchBYTES);
 			//}
 
-			StripRegions[ 0 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
+			StripRegions[0].iTop = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
 			usNumStrips = 1;
 			break;
 
@@ -546,10 +544,9 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 								1280);
 			}
 
-
-			StripRegions[ 0 ].right =  (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
-			StripRegions[ 1 ].left	 = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
+			StripRegions[0].iRight  = gsVIEWPORT_START_X        + sScrollXIncrement;
+			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			StripRegions[1].iLeft   = gsVIEWPORT_START_X        + sScrollXIncrement;
 			usNumStrips = 2;
 			break;
 
@@ -574,10 +571,9 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 								1280);
 			}
 
-
-			StripRegions[ 0 ].left =   (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-			StripRegions[ 1 ].bottom = (INT16)(gsVIEWPORT_WINDOW_START_Y+sScrollYIncrement);
-			StripRegions[ 1 ].right  = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[0].iLeft   = gsVIEWPORT_END_X          - sScrollXIncrement;
+			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+			StripRegions[1].iRight  = gsVIEWPORT_END_X          - sScrollXIncrement;
 			usNumStrips = 2;
 			break;
 
@@ -603,12 +599,9 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 								1280);
 			}
 
-
-			StripRegions[ 0 ].right =(INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
-
-
-			StripRegions[ 1 ].top		= (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
-			StripRegions[ 1 ].left  = (INT16)(gsVIEWPORT_START_X+sScrollXIncrement);
+			StripRegions[0].iRight = gsVIEWPORT_START_X      + sScrollXIncrement;
+			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
+			StripRegions[1].iLeft  = gsVIEWPORT_START_X      + sScrollXIncrement;
 			usNumStrips = 2;
 			break;
 
@@ -633,10 +626,9 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 								1280);
 			}
 
-
-			StripRegions[ 0 ].left =(INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
-			StripRegions[ 1 ].top = (INT16)(gsVIEWPORT_WINDOW_END_Y-sScrollYIncrement);
-			StripRegions[ 1 ].right = (INT16)(gsVIEWPORT_END_X-sScrollXIncrement);
+			StripRegions[0].iLeft  = gsVIEWPORT_END_X        - sScrollXIncrement;
+			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
+			StripRegions[1].iRight = gsVIEWPORT_END_X        - sScrollXIncrement;
 			usNumStrips = 2;
 			break;
 
@@ -650,14 +642,14 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 
 		for ( cnt = 0; cnt < usNumStrips; cnt++ )
 		{
-			RenderStaticWorldRect( (INT16)StripRegions[ cnt ].left, (INT16)StripRegions[ cnt ].top, (INT16)StripRegions[ cnt ].right, (INT16)StripRegions[ cnt ].bottom , TRUE );
+			RenderStaticWorldRect(StripRegions[cnt].iLeft, StripRegions[cnt].iTop, StripRegions[cnt].iRight, StripRegions[cnt].iBottom, TRUE);
 
-			SrcRect.x = StripRegions[cnt].left;
-			SrcRect.y = StripRegions[cnt].top;
-			SrcRect.w = StripRegions[cnt].right  - StripRegions[cnt].left;
-			SrcRect.h = StripRegions[cnt].bottom - StripRegions[cnt].top;
-			DstRect.x = StripRegions[cnt].left;
-			DstRect.y = StripRegions[cnt].top;
+			SrcRect.x = StripRegions[cnt].iLeft;
+			SrcRect.y = StripRegions[cnt].iTop;
+			SrcRect.w = StripRegions[cnt].iRight  - StripRegions[cnt].iLeft;
+			SrcRect.h = StripRegions[cnt].iBottom - StripRegions[cnt].iTop;
+			DstRect.x = StripRegions[cnt].iLeft;
+			DstRect.y = StripRegions[cnt].iTop;
 			SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
 		}
 
@@ -900,46 +892,39 @@ void RefreshScreen(void)
   	POINT MousePos;
   	GetCursorPos(&MousePos);
 
-		RECT Region;
-    Region.left   = MousePos.x - gsMouseCursorXOffset;
-    Region.top    = MousePos.y - gsMouseCursorYOffset;
-    Region.right  = Region.left + gusMouseCursorWidth;
-    Region.bottom = Region.top + gusMouseCursorHeight;
+		SGPRect Region;
+		Region.iLeft   = MousePos.x - gsMouseCursorXOffset;
+		Region.iTop    = MousePos.y - gsMouseCursorYOffset;
+		Region.iRight  = Region.iLeft + gusMouseCursorWidth;
+		Region.iBottom = Region.iTop + gusMouseCursorHeight;
 
-    if (Region.right > usScreenWidth)
-    {
-      Region.right = usScreenWidth;
-    }
+		if (Region.iRight  > usScreenWidth)  Region.iRight  = usScreenWidth;
+		if (Region.iBottom > usScreenHeight) Region.iBottom = usScreenHeight;
 
-    if (Region.bottom > usScreenHeight)
-    {
-      Region.bottom = usScreenHeight;
-    }
-
-    if (Region.right > Region.left && Region.bottom > Region.top)
+		if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
     {
       // Make sure the mouse background is marked for restore and coordinates are saved for the
       // future restore
 
       gMouseCursorBackground.fRestore = TRUE;
-      gMouseCursorBackground.usRight  = (UINT16)Region.right  - (UINT16)Region.left;
-      gMouseCursorBackground.usBottom = (UINT16)Region.bottom - (UINT16)Region.top;
-      if (Region.left < 0)
+			gMouseCursorBackground.usRight  = Region.iRight  - Region.iLeft;
+			gMouseCursorBackground.usBottom = Region.iBottom - Region.iTop;
+			if (Region.iLeft < 0)
       {
-        gMouseCursorBackground.usLeft = (UINT16)(0 - Region.left);
+				gMouseCursorBackground.usLeft = -Region.iLeft;
         gMouseCursorBackground.usMouseXPos = 0;
-        Region.left = 0;
+				Region.iLeft = 0;
       }
       else
       {
         gMouseCursorBackground.usMouseXPos = (UINT16)MousePos.x - gsMouseCursorXOffset;
         gMouseCursorBackground.usLeft = 0;
       }
-      if (Region.top < 0)
+			if (Region.iTop < 0)
       {
         gMouseCursorBackground.usMouseYPos = 0;
-        gMouseCursorBackground.usTop = (UINT16)(0 - Region.top);
-        Region.top = 0;
+				gMouseCursorBackground.usTop = -Region.iTop;
+				Region.iTop = 0;
       }
       else
       {
@@ -947,7 +932,7 @@ void RefreshScreen(void)
         gMouseCursorBackground.usTop = 0;
       }
 
-			if (Region.right > Region.left && Region.bottom > Region.top)
+			if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
 			{
 				SDL_Rect SrcRect;
 				SrcRect.x = gMouseCursorBackground.usLeft;

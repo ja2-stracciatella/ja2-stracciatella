@@ -403,8 +403,6 @@ extern		void						HandleShortCutExitState( void );
 extern		UINT8						gubSelectSMPanelToMerc;
 extern		INT32						giItemDescAmmoButton;
 
-extern		BOOLEAN BltVSurfaceUsingDD( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, RECT *SrcRect );
-
 extern		UINT8 gubLastSpecialItemAddedAtElement;
 
 
@@ -1438,7 +1436,7 @@ BOOLEAN RenderShopKeeperInterface()
 		SrcRect.iRight = SKI_TACTICAL_BACKGROUND_START_X + SKI_TACTICAL_BACKGROUND_START_WIDTH;
 		SrcRect.iBottom = SKI_TACTICAL_BACKGROUND_START_Y + SKI_TACTICAL_BACKGROUND_START_HEIGHT;
 
-		BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, 0, 0, (RECT*)&SrcRect);
+		BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, 0, 0, &SrcRect);
 
 		gfRenderScreenOnNextLoop = FALSE;
 	}
@@ -1488,7 +1486,7 @@ void RestoreTacticalBackGround()
 	SrcRect.iBottom = SKI_TACTICAL_BACKGROUND_START_HEIGHT;
 
 
-	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, (RECT*)&SrcRect);
+	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, &SrcRect);
 
 	InvalidateRegion( 0, 0, 640, 480 );
 }
