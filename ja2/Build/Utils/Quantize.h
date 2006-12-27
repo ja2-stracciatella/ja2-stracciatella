@@ -4,7 +4,7 @@
 #include "Stubs.h" // XXX
 
 typedef struct _NODE {
-    BOOL bIsLeaf;               // TRUE if node has no children
+    BOOLEAN bIsLeaf;            // TRUE if node has no children
     UINT nPixelCount;           // Number of pixels represented by this leaf
     UINT nRedSum;               // Sum of red components
     UINT nGreenSum;             // Sum of green components
@@ -25,7 +25,7 @@ protected:
 public:
     CQuantizer (UINT nMaxColors, UINT nColorBits);
     virtual ~CQuantizer ();
-    BOOL ProcessImage (BYTE *pData, int iWidth, int iHeight );
+    BOOLEAN ProcessImage(BYTE* pData, int iWidth, int iHeight);
     UINT GetColorCount ();
     void GetColorTable (RGBQUAD* prgb);
 

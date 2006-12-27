@@ -9,7 +9,6 @@
 
 typedef char CHAR;
 
-typedef int BOOL;
 typedef int HHOOK;
 typedef int HINSTANCE;
 typedef int HWND;

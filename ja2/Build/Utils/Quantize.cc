@@ -22,7 +22,7 @@ CQuantizer::~CQuantizer ()
         DeleteTree (&m_pTree);
 }
 
-BOOL CQuantizer::ProcessImage (BYTE *pData, int iWidth, int iHeight )
+BOOLEAN CQuantizer::ProcessImage(BYTE* pData, int iWidth, int iHeight)
 {
     BYTE* pbBits;
     BYTE r, g, b;

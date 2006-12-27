@@ -52,10 +52,10 @@ void SetClippingRegionAndImageWidth(
 }
 
 
-static BOOL Clipt(FLOAT denom, FLOAT num, FLOAT* tE, FLOAT* tL)
+static BOOLEAN Clipt(FLOAT denom, FLOAT num, FLOAT* tE, FLOAT* tL)
 {
 	FLOAT	t;
-	BOOL	accept;
+	BOOLEAN accept;
 
 	accept = TRUE;
 
@@ -82,16 +82,16 @@ static BOOL Clipt(FLOAT denom, FLOAT num, FLOAT* tE, FLOAT* tL)
 }
 
 
-static BOOL ClipPoint(int x, int y)
+static BOOLEAN ClipPoint(int x, int y)
 {
 	return( x <= giClipXMax && x >= giClipXMin &&
 			y <= giClipYMax && y >= giClipYMin );
 }
 
 
-static BOOL Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
+static BOOLEAN Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 {
-	BOOL	visible;
+	BOOLEAN visible;
 	FLOAT	te, tl;
 	FLOAT	dx, dy;
 	FLOAT	x0, y0, x1, y1;
@@ -145,7 +145,7 @@ static BOOL Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 }
 
 /* Draws a line between the specified endpoints in color Color. */
-void LineDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr)
+void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char* ScreenPtr)
 {
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
@@ -410,7 +410,7 @@ static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int C
 
 
 /* Draws a rectangle between the specified endpoints in color Color. */
-void RectangleDraw( BOOL fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char *ScreenPtr)
+void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char* ScreenPtr)
 {
   LineDraw( fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
   LineDraw( fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);
