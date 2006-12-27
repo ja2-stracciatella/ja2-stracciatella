@@ -73,7 +73,7 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *uiPitch );
 void UnLockVideoSurface( UINT32 uiVSurface );
 
 // Blits a video Surface to another video Surface
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect);
+BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect);
 
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2,	INT32 iDestY2, UINT16 Color16BPP);
 
@@ -107,7 +107,7 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
 // These blitting functions more-or less encapsolate all of the functionality of DirectDraw
 // Blitting, giving an API layer for portability.
 
-BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SrcRect);
+BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SrcRect);
 
 BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect);
 

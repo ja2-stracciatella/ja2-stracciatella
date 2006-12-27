@@ -426,7 +426,7 @@ static void DeletePrimaryVideoSurfaces(void)
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect)
+BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect)
 {
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTVIDEOSURFACE_DST;
@@ -438,11 +438,7 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, UINT16 usRe
 	#endif
 	HVSURFACE hSrcVSurface = GetVideoSurface(uiSrcVSurface);
 	if (hSrcVSurface == NULL) return FALSE;
-	if (!BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, usRegionIndex, iDestX, iDestY, fBltFlags, SrcRect))
-	{ // VO Blitter will set debug messages for error conditions
-		return FALSE ;
-	}
-	return TRUE ;
+	return BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, iDestX, iDestY, fBltFlags, SrcRect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -906,7 +902,7 @@ static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, SGPRect* pRect)
 // Blt  will use DD Blt or BltFast depending on flags.
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 
-BOOLEAN BltVideoSurfaceToVideoSurface( HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SRect)
+BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SRect)
 {
 	UINT8					*pSrcSurface8, *pDestSurface8;
 	UINT16				*pDestSurface16, *pSrcSurface16;

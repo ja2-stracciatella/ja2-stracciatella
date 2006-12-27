@@ -259,7 +259,7 @@ UINT32	MapUtilScreenHandle( )
 	UnLockVideoSurface(FRAME_BUFFER);
 
 	// RENDER!
-	BltVideoSurface(FRAME_BUFFER, giMiniMap, 0, 20, 360, VS_BLT_FAST, NULL);
+	BltVideoSurface(FRAME_BUFFER, giMiniMap, 20, 360, VS_BLT_FAST, NULL);
 
 
 	//QUantize!

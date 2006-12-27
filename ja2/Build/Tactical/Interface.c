@@ -1907,7 +1907,7 @@ void BlitPopupText( VIDEO_OVERLAY *pBlitter )
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 
-	BltVideoSurface(pBlitter->uiDestBuff, guiINTEXT, 0, pBlitter->pBackground->sLeft, pBlitter->pBackground->sTop, VS_BLT_FAST, NULL);
+	BltVideoSurface(pBlitter->uiDestBuff, guiINTEXT, pBlitter->pBackground->sLeft, pBlitter->pBackground->sTop, VS_BLT_FAST, NULL);
 
 	pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);
 
@@ -3125,13 +3125,13 @@ void HandleTopMessages( )
 			SrcRect.iTop    =  20 - gTopMessage.bYPos;
 			SrcRect.iRight  = 640;
 			SrcRect.iBottom =  20;
-			BltVideoSurface(FRAME_BUFFER, gTopMessage.uiSurface, 0, 0, 0, 0, &SrcRect);
+			BltVideoSurface(FRAME_BUFFER, gTopMessage.uiSurface, 0, 0, 0, &SrcRect);
 
 			SrcRect.iLeft   =   0;
 			SrcRect.iTop    =   0;
 			SrcRect.iRight  = 640;
 			SrcRect.iBottom =  20;
-			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, 0, &SrcRect);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, &SrcRect);
 
 			InvalidateRegion( 0, 0, 640, 20 );
 
@@ -3171,7 +3171,7 @@ void EndTopMessage( )
 			//SrcRect.iTop    =   0;
 			//SrcRect.iRight  = 640;
 			//SrcRect.iBottom =  20;
-			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, 0, &SrcRect);
+			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, 0, &SrcRect);
 		}
 		//else
 		//{
