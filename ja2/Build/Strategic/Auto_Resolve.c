@@ -1547,7 +1547,7 @@ void RenderAutoResolve()
 	gpAR->fRenderAutoResolve = FALSE;
 
 	HVSURFACE hVSurface = GetVideoSurface(gpAR->iInterfaceBuffer);
-	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, gpAR->Rect.iLeft, gpAR->Rect.iTop, 0, 0);
+	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, gpAR->Rect.iLeft, gpAR->Rect.iTop, 0);
 
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{

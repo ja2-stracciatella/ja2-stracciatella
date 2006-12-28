@@ -19,12 +19,6 @@
 #define FRAME_BUFFER                            0xFFFFFFF2
 #define MOUSE_BUFFER                            0xFFFFFFF3
 
-//
-// Defines for blitting
-//
-
-#define VS_BLT_FAST															0x000000004
-
 
 typedef struct
 {
@@ -73,7 +67,7 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *uiPitch );
 void UnLockVideoSurface( UINT32 uiVSurface );
 
 // Blits a video Surface to another video Surface
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect);
+BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
 
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2,	INT32 iDestY2, UINT16 Color16BPP);
 
@@ -107,9 +101,9 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
 // These blitting functions more-or less encapsolate all of the functionality of DirectDraw
 // Blitting, giving an API layer for portability.
 
-BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SrcRect);
+BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
 
-BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect);
+BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect);
 
 BOOLEAN ShadowVideoSurfaceRect(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 BOOLEAN ShadowVideoSurfaceImage( UINT32	uiDestVSurface, HVOBJECT hImageHandle, INT32 iPosX, INT32 iPosY);

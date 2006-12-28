@@ -426,7 +426,7 @@ static void DeletePrimaryVideoSurfaces(void)
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, UINT32 fBltFlags, const SGPRect* SrcRect)
+BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect)
 {
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_BLTVIDEOSURFACE_DST;
@@ -438,7 +438,7 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDest
 	#endif
 	HVSURFACE hSrcVSurface = GetVideoSurface(uiSrcVSurface);
 	if (hSrcVSurface == NULL) return FALSE;
-	return BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, iDestX, iDestY, fBltFlags, SrcRect);
+	return BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, iDestX, iDestY, SrcRect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -902,7 +902,7 @@ static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, SGPRect* pRect)
 // Blt  will use DD Blt or BltFast depending on flags.
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 
-BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, INT32 fBltFlags, const SGPRect* SRect)
+BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
 {
 	UINT8					*pSrcSurface8, *pDestSurface8;
 	UINT16				*pDestSurface16, *pSrcSurface16;
@@ -1001,7 +1001,7 @@ BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSu
 		return(TRUE);
 #endif
 
-		CHECKF( BltVSurfaceUsingDD( hDestVSurface, hSrcVSurface, fBltFlags, iDestX, iDestY, &SrcRect ) );
+		CHECKF(BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, iDestX, iDestY, &SrcRect));
 
 	}
 	else if ( hDestVSurface->ubBitDepth == 8 && hSrcVSurface->ubBitDepth == 8 )
@@ -1074,87 +1074,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 }
 
 
-// UTILITY FUNCTIONS FOR BLITTING
-
-static BOOLEAN ClipReleatedSrcAndDestRectangles(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, SGPRect* DestRect, SGPRect* SrcRect)
-{
-
-	Assert( hDestVSurface != NULL );
-	Assert( hSrcVSurface != NULL );
-
-	// Check for invalid start positions and clip by ignoring blit
-	if (DestRect->iLeft >= hDestVSurface->usWidth || DestRect->iTop >= hDestVSurface->usHeight)
-	{
-		return( FALSE );
-	}
-
-	if (SrcRect->iLeft >= hSrcVSurface->usWidth || SrcRect->iTop >= hSrcVSurface->usHeight)
-	{
-		return( FALSE );
-	}
-
-	// For overruns
-	// Clip destination rectangles
-	if (DestRect->iRight > hDestVSurface->usWidth)
-	{
-		// Both have to be modified or by default streching occurs
-		DestRect->iRight = hDestVSurface->usWidth;
-		SrcRect->iRight = SrcRect->iLeft + (DestRect->iRight - DestRect->iLeft);
-	}
-	if (DestRect->iBottom > hDestVSurface->usHeight)
-	{
-		// Both have to be modified or by default streching occurs
-		DestRect->iBottom = hDestVSurface->usHeight;
-		SrcRect->iBottom = SrcRect->iTop + (DestRect->iBottom - DestRect->iTop);
-	}
-
-	// Clip src rectangles
-	if (SrcRect->iRight > hSrcVSurface->usWidth)
-	{
-		// Both have to be modified or by default streching occurs
-		SrcRect->iRight = hSrcVSurface->usWidth;
-		DestRect->iRight = DestRect->iLeft + (SrcRect->iRight - SrcRect->iLeft);
-	}
-	if (SrcRect->iBottom > hSrcVSurface->usHeight)
-	{
-		// Both have to be modified or by default streching occurs
-		SrcRect->iBottom = hSrcVSurface->usHeight;
-		DestRect->iBottom = DestRect->iTop + (SrcRect->iBottom - SrcRect->iTop);
-	}
-
-	// For underruns
-	// Clip destination rectangles
-	if (DestRect->iLeft < 0)
-	{
-		// Both have to be modified or by default streching occurs
-		DestRect->iLeft = 0;
-		SrcRect->iLeft = SrcRect->iRight - (DestRect->iRight - DestRect->iLeft);
-	}
-	if (DestRect->iTop < 0)
-	{
-		// Both have to be modified or by default streching occurs
-		DestRect->iTop = 0;
-		SrcRect->iTop = SrcRect->iBottom - (DestRect->iBottom - DestRect->iTop);
-	}
-
-	// Clip src rectangles
-	if (SrcRect->iLeft < 0)
-	{
-		// Both have to be modified or by default streching occurs
-		SrcRect->iLeft = 0;
-		DestRect->iLeft = DestRect->iRight  - (SrcRect->iRight - SrcRect->iLeft);
-	}
-	if (SrcRect->iTop < 0)
-	{
-		// Both have to be modified or by default streching occurs
-		SrcRect->iTop = 0;
-		DestRect->iTop = DestRect->iBottom - (SrcRect->iBottom - SrcRect->iTop);
-	}
-
-	return( TRUE );
-}
-
-
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color)
 {
 	Assert( hDestVSurface != NULL );
@@ -1166,56 +1085,17 @@ static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 C
 }
 
 
-BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, UINT32 fBltFlags, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect)
+BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect)
 {
 	SDL_Rect srcrect;
+	srcrect.x = SrcRect->iLeft;
+	srcrect.y = SrcRect->iTop;
+	srcrect.w = SrcRect->iRight  - SrcRect->iLeft;
+	srcrect.h = SrcRect->iBottom - SrcRect->iTop;
+
 	SDL_Rect dstrect;
-
-  // Blit using the correct blitter
-	if ( fBltFlags & VS_BLT_FAST )
-	{
-		// Validations
-		CHECKF( iDestX >= 0 );
-		CHECKF( iDestY >= 0 );
-
-		srcrect.x = SrcRect->iLeft;
-		srcrect.y = SrcRect->iTop;
-		srcrect.w = SrcRect->iRight  - SrcRect->iLeft;
-		srcrect.h = SrcRect->iBottom - SrcRect->iTop;
-		dstrect.x = iDestX;
-		dstrect.y = iDestY;
-	}
-	else
-	{
-		// Normal, specialized blit for clipping, etc
-
-		// Setup dest rectangle
-		SGPRect DestRect;
-		DestRect.iTop    = iDestY;
-		DestRect.iLeft   = iDestX;
-		DestRect.iBottom = iDestY + SrcRect->iBottom - SrcRect->iTop;
-		DestRect.iRight  = iDestX + SrcRect->iRight  - SrcRect->iLeft;
-
-		// Do Clipping of rectangles
-		if ( !ClipReleatedSrcAndDestRectangles( hDestVSurface, hSrcVSurface, &DestRect, SrcRect ) )
-		{
-			// Returns false because dest start is > dest size
-			return( TRUE );
-		}
-
-		// Check values for 0 size
-		if (DestRect.iTop == DestRect.iBottom || DestRect.iRight == DestRect.iLeft)
-		{
-			return( TRUE );
-		}
-
-		srcrect.x = SrcRect->iLeft;
-		srcrect.y = SrcRect->iTop;
-		srcrect.w = SrcRect->iRight  - SrcRect->iLeft;
-		srcrect.h = SrcRect->iBottom - SrcRect->iTop;
-		dstrect.x = DestRect.iLeft;
-		dstrect.y = DestRect.iTop;
-	}
+	dstrect.x = iDestX;
+	dstrect.y = iDestY;
 
 	SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
 	return TRUE;

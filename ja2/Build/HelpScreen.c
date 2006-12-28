@@ -2150,7 +2150,7 @@ void RenderTextBufferToScreen()
 	SrcRect.iRight = HLP_SCRN__WIDTH_OF_TEXT_BUFFER;
 	SrcRect.iBottom = SrcRect.iTop + HLP_SCRN__HEIGHT_OF_TEXT_AREA - ( 2 * 8 );
 
-	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y, &SrcRect);
+	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y, &SrcRect);
 
 	DisplayHelpScreenTextBufferScrollBox();
 }

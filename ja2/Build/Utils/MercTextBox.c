@@ -238,7 +238,7 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 	// now lock it
 //	pSrcBuf = ( UINT16* )LockVideoSurface( gPopUpTextBox->uiSourceBufferIndex, &uiSrcPitchBYTES);
 
-	BltVideoSurface(uiBuffer, gPopUpTextBox->uiSourceBufferIndex, sDestX, sDestY, VS_BLT_FAST, NULL);
+	BltVideoSurface(uiBuffer, gPopUpTextBox->uiSourceBufferIndex, sDestX, sDestY, NULL);
 
 	// blt, and grab return value
 //	fReturnValue = Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, sDestX, sDestY, 0, 0, gPopUpTextBox->sWidth, gPopUpTextBox->sHeight);

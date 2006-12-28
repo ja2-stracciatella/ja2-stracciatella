@@ -359,7 +359,7 @@ UINT32 InitScreenHandle(void)
 		hVSurface = CreateVideoSurfaceFromFile("ja2_logo.STI");
 		AssertMsg(hVSurface != NULL, "Failed to load ja2_logo.sti!");
 
-		//BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, VS_BLT_FAST, NULL);
+		//BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
 		ubCurrentScreen = 1;
 
 		// Init screen
@@ -1148,7 +1148,7 @@ UINT32 DemoExitScreenHandle(void)
 		SetMusicMode( MUSIC_NONE );
 
 		HVSURFACE hVSurface = GetVideoSurface(uiCollageID);
-		BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, 0, NULL);
+		BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
 		DeleteVideoSurfaceFromIndex( uiCollageID );
 
 		InvalidateScreen( );
