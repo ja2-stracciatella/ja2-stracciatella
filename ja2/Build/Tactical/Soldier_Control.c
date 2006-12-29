@@ -916,12 +916,6 @@ BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
 			pSoldier->p8BPPPalette = NULL;
 		}
 
-		if ( pSoldier->p16BPPPalette != NULL )
-		{
-			MemFree( pSoldier->p16BPPPalette );
-			pSoldier->p16BPPPalette = NULL;
-		}
-
 		for ( cnt = 0; cnt < NUM_SOLDIER_SHADES; cnt++ )
 		{
 			if ( pSoldier->pShades[ cnt ] != NULL )
@@ -5487,15 +5481,6 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-
-	if ( pSoldier->p16BPPPalette != NULL )
-	{
-		MemFree( pSoldier->p16BPPPalette );
-		pSoldier->p16BPPPalette = NULL;
-	}
-
-	// -- BUILD 16BPP Palette from this
-	pSoldier->p16BPPPalette = Create16BPPPalette( pSoldier->p8BPPPalette );
 
 	for ( iWhich = 0; iWhich < NUM_SOLDIER_SHADES; iWhich++ )
 	{

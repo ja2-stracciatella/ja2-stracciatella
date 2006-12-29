@@ -3082,10 +3082,10 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 			SavedSoldierInfo.pTempObject	 = NULL;
 			SavedSoldierInfo.pKeyRing	 = NULL;
 			SavedSoldierInfo.p8BPPPalette	 = NULL;
-			SavedSoldierInfo.p16BPPPalette	 = NULL;
+			SavedSoldierInfo.p16BPPPalette_UNUSED = NULL;
 			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
 			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
-			SavedSoldierInfo.pCurrentShade	 = NULL;
+			SavedSoldierInfo.pCurrentShade_UNUSED = NULL;
 			SavedSoldierInfo.pThrowParams	 = NULL;
 			SavedSoldierInfo.pLevelNode	 = NULL;
 			SavedSoldierInfo.pExternShadowLevelNode	 = NULL;

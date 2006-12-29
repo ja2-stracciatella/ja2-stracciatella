@@ -650,7 +650,6 @@ static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 
 	// Free palettes
 	MemFree( pCorpse->p8BPPPalette );
-	MemFree( pCorpse->p16BPPPalette );
 
 	for ( cnt = 0; cnt < NUM_CORPSE_SHADES; cnt++ )
 	{
@@ -746,9 +745,6 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 			memcpy( pCorpse->p8BPPPalette, gpTileCache[ pCorpse->iCachedTileID ].pImagery->vo->pPaletteEntry, sizeof( pCorpse->p8BPPPalette ) * 256 );
 		}
 	}
-
-	// -- BUILD 16BPP Palette from this
-	pCorpse->p16BPPPalette = Create16BPPPalette( pCorpse->p8BPPPalette );
 
 	CreateCorpsePaletteTables( pCorpse );
 
