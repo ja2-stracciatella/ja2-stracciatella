@@ -851,38 +851,6 @@ UINT32 GetRGBColor( UINT16 Value16BPP )
 	return(val);
 }
 
-//*****************************************************************************
-//
-// ConvertToPaletteEntry
-//
-// Parameter List : Converts from RGB to SGPPaletteEntry
-//
-// Return Value  pointer to the SGPPaletteEntry
-//
-// Modification History :
-// Dec 15th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
-
-SGPPaletteEntry *ConvertRGBToPaletteEntry(UINT8 sbStart, UINT8 sbEnd, UINT8 *pOldPalette)
-{
-	UINT16 Index;
-  SGPPaletteEntry *pPalEntry;
-	SGPPaletteEntry *pInitEntry;
-
-	pPalEntry = (SGPPaletteEntry *)MemAlloc(sizeof(SGPPaletteEntry) * 256);
-	pInitEntry = pPalEntry;
-  DbgMessage(TOPIC_HIMAGE, DBG_LEVEL_0, "Converting RGB palette to SGPPaletteEntry");
-  for(Index=0; Index <= (sbEnd-sbStart);Index++)
-  {
-    pPalEntry->peRed = *(pOldPalette + (Index*3));
-	  pPalEntry->peGreen = *(pOldPalette + (Index*3) + 1);
- 	  pPalEntry->peBlue = *(pOldPalette + (Index*3) + 2);
-    pPalEntry->peFlags = 0;
-	  pPalEntry++;
-  }
-  return pInitEntry;
-}
 
 BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
 {

@@ -17,11 +17,6 @@ typedef UINT32 COLORVAL;
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48
 
-#define HVOBJECT_GLOW_GREEN											0
-#define HVOBJECT_GLOW_BLUE											1
-#define HVOBJECT_GLOW_YELLOW										2
-#define HVOBJECT_GLOW_RED												3
-
 
 // Z-buffer info structure for properly assigning Z values
 typedef struct
@@ -92,8 +87,6 @@ BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex);
 
 // Removes a video object
 BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  );
-
-UINT16 CreateObjectPaletteTables(HVOBJECT pObj, UINT32 uiType);
 
 // Returns a HVOBJECT for the specified index
 BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
