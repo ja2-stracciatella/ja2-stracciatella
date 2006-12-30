@@ -40,29 +40,14 @@ HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 {
 	const char* const ExtensionSep = ".";
 	HIMAGE			hImage = NULL;
-	const char* Extension;
 	STR					StrPtr;
 	UINT32			iFileLoader;
 
 	// Depending on extension of filename, use different image readers
 	// Get extension
 	StrPtr = strstr( ImageFile, ExtensionSep );
-
-	if ( StrPtr == NULL )
-	{
-#if 1
-		UNIMPLEMENTED();
-#else
-		// No extension given, use default internal loader extension
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "No extension given, using default" );
-		strcat( ImageFile, ".PCX" );
-		Extension = ".PCX"; // XXX all comparisions below will fail because of leading period, probably unintended
-#endif
-	}
-	else
-	{
-		Extension = StrPtr + 1;
-	}
+	if (StrPtr == NULL) return NULL;
+	const char* Extension = StrPtr + 1;
 
 	// Determine type from Extension
 	do
