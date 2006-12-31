@@ -48,7 +48,6 @@ typedef struct
 	BOOLEAN fStereo;     // Stereo/Mono
 	UINT8   ubBits;      // 8/16 bits
 	PTR     pData;       // pointer to sample data memory
-	PTR     pSoundStart; // pointer to start of sound data
 	UINT32  uiCacheHits;
 
 	// Random sound data
@@ -58,9 +57,6 @@ typedef struct
 	UINT32  uiPanMin, uiPanMax;
 	UINT32  uiInstances;
 	UINT32  uiMaxInstances;
-
-	UINT32  uiAilWaveFormat;  // AIL wave sample type
-	UINT32  uiADPCMBlockSize; // Block size for compressed files
 } SAMPLETAG;
 
 
