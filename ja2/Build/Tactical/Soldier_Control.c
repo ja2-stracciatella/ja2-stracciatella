@@ -695,7 +695,6 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		}
 		spParms.uiLoop = 1;
 		spParms.uiPan = SoundDir( pSoldier->sGridNo );
-		spParms.uiPriority=GROUP_PLAYER;
 
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
@@ -7084,7 +7083,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 
 	spParms.uiLoop = 1;
 	spParms.uiPan = SoundDir( pSoldier->sGridNo );
-	spParms.uiPriority=GROUP_PLAYER;
 
 	if ( ( uiSoundID = SoundPlay( zFilename, &spParms ) ) == SOUND_ERROR )
 	{

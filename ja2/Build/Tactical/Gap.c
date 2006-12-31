@@ -231,7 +231,6 @@ UINT32 PlayJA2GapSample(const char *zSoundFile, UINT32 ubVolume, UINT32 ubLoops,
 	spParms.uiVolume =  (UINT32) (  ( ubVolume / (FLOAT) HIGHVOLUME ) * GetSpeechVolume( ) );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
 
 	// Setup Gap Detection, if it is not null
 	if( pData != NULL )

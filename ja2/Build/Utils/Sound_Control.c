@@ -420,7 +420,6 @@ UINT32 PlayJA2Sample( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPa
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
 
 	return(SoundPlay(szSoundEffects[usNum], &spParms));
 }
@@ -435,7 +434,6 @@ UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UIN
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
 
 	return(SoundPlayStreamedFile(szSoundEffects[usNum], &spParms));
 }
@@ -453,7 +451,6 @@ UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 ubVolume, UINT32 ubL
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
 
 	return(SoundPlay(szFileName, &spParms));
 }
@@ -471,7 +468,6 @@ UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, U
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
-	spParms.uiPriority=GROUP_PLAYER;
   spParms.EOSCallback=EndsCallback;
 
 	return( SoundPlayStreamedFile(szFileName, &spParms) );
@@ -486,7 +482,6 @@ SOUNDPARMS spParms;
 
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
-	spParms.uiPriority=GROUP_AMBIENT;
 
 	return(SoundPlay(szAmbientEffects[usNum], &spParms));
 }
@@ -501,7 +496,6 @@ RANDOMPARMS rpParms;
 	rpParms.uiTimeMax=uiTimeMax;
 	rpParms.uiVolMin = CalculateSoundEffectsVolume( AmbientVols[usNum] );
 	rpParms.uiVolMax = CalculateSoundEffectsVolume( AmbientVols[usNum] );
-	rpParms.uiPriority=GROUP_AMBIENT;
 
 	return(SoundPlayRandom(szAmbientEffects[usNum], &rpParms));
 }

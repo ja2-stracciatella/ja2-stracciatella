@@ -240,7 +240,6 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 	rpParms.uiTimeMax		=	gAmbData[ uiAmbientID ].uiMaxTime;
 	rpParms.uiVolMin		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
 	rpParms.uiVolMax		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
-	rpParms.uiPriority	=	GROUP_AMBIENT;
 
 	return SoundPlayRandom( gAmbData[ uiAmbientID ].zFilename, &rpParms );
 }
@@ -254,7 +253,6 @@ SOUNDPARMS spParms;
 
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
-	spParms.uiPriority=GROUP_AMBIENT;
 
 	return(SoundPlay( gSteadyStateAmbientTable[ gubCurrentSteadyStateAmbience ].zSoundNames[ gubCurrentSteadyStateSound ], &spParms ) );
 }

@@ -135,7 +135,6 @@ SOUNDPARMS spParms;
 		MusicStop();
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-	spParms.uiPriority=PRIORITY_MAX;
 	spParms.uiVolume=0;
 
 	spParms.EOSCallback = MusicStopCallback;

@@ -56,7 +56,6 @@ typedef struct
 	UINT32  uiTimeMin, uiTimeMax;
 	UINT32  uiVolMin, uiVolMax;
 	UINT32  uiPanMin, uiPanMax;
-	UINT32  uiPriority;
 	UINT32  uiInstances;
 	UINT32  uiMaxInstances;
 
@@ -75,7 +74,6 @@ typedef struct
 	HSTREAM    hMSSStream;
 	UINT32     uiFlags;
 	UINT32     uiSoundID;
-	UINT32     uiPriority;
 	void       (*EOSCallback)(void*);
 	void*      pCallbackData;
 	UINT32     uiTimeStamp;
@@ -353,11 +351,6 @@ UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 		Sample->uiMaxInstances = 1;
 	else
 		Sample->uiMaxInstances = pParms->uiMaxInstances;
-
-	if (pParms->uiPriority == SOUND_PARMS_DEFAULT)
-		Sample->uiPriority = PRIORITY_RANDOM;
-	else
-		Sample->uiPriority = pParms->uiPriority;
 
 	Sample->uiInstances = 0;
 
@@ -679,7 +672,6 @@ static UINT32 SoundStartRandom(UINT32 uiSample)
 	spParms.uiVolume   = Sample->uiVolMin + Random(Sample->uiVolMax - Sample->uiVolMin);
 	spParms.uiPan      = Sample->uiPanMin + Random(Sample->uiPanMax - Sample->uiPanMin);
 	spParms.uiLoop     = 1;
-	spParms.uiPriority = Sample->uiPriority;
 
 	UINT32 uiSoundID = SoundStartSample(uiSample, uiChannel, &spParms);
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
@@ -1298,15 +1290,6 @@ static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPAR
 		AIL_set_sample_pan(Sound->hMSS, pParms->uiPan);
 	}
 
-	if (pParms != NULL && pParms->uiPriority != SOUND_PARMS_DEFAULT))
-	{
-		Sound->uiPriority = pParms->uiPriority;
-	}
-	else
-	{
-		Sound->uiPriority = PRIORITY_MAX;
-	}
-
 	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
 	{
 		Sound->EOSCallback   = pParms->EOSCallback;
@@ -1390,14 +1373,6 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 
 	UINT32 uiSoundID=SoundGetUniqueID();
 	Sound->uiSoundID = uiSoundID;
-	if (pParms != NULL)
-	{
-		Sound->uiPriority = pParms->uiPriority;
-	}
-	else
-	{
-		Sound->uiPriority = SOUND_PARMS_DEFAULT;
-	}
 
 	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
 	{

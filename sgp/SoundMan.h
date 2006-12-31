@@ -17,10 +17,6 @@ extern "C" {
 #define		NO_SAMPLE							0xffffffff
 #define		SOUND_ERROR						0xffffffff
 
-// Maximum allowable priority value
-#define		PRIORITY_MAX					0xfffffffe
-#define		PRIORITY_RANDOM				PRIORITY_MAX-1
-
 
 // Structure definition for sound parameters being passed down to
 //		the sample playing function
@@ -28,7 +24,6 @@ typedef struct {
 				UINT32			uiVolume;
 				UINT32			uiPan;
 				UINT32			uiLoop;
-				UINT32			uiPriority;
 				void				(*EOSCallback)(void *);
 				void				*pCallbackData;
 				} SOUNDPARMS;
@@ -40,7 +35,6 @@ typedef struct {
 				UINT32			uiTimeMin, uiTimeMax;
 				UINT32			uiVolMin, uiVolMax;
 				UINT32			uiPanMin, uiPanMax;
-				UINT32			uiPriority;
 				UINT32			uiMaxInstances;
 				} RANDOMPARMS;
 

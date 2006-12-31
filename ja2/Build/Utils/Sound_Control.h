@@ -18,11 +18,6 @@
 
 #define LOOPING					0
 
-// sound group priorities (higher = more important)
-#define GROUP_PLAYER		1000
-#define GROUP_AMBIENT		0
-
-
 
 // SOUNDS ENUMERATION
 enum SoundDefines
