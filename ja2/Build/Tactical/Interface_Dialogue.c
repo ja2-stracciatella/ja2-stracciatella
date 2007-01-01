@@ -485,7 +485,8 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	// Build save buffer
 	// Create a buffer for him to go!
 	// OK, ignore screen widths, height, only use BPP
-	CHECKF(AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, 16, &gTalkPanel.uiSaveBuffer));
+	gTalkPanel.uiSaveBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, 16);
+	CHECKF(gTalkPanel.uiSaveBuffer != NO_VSURFACE);
 
 	// Set face to auto
 	SetAutoFaceActive( gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );

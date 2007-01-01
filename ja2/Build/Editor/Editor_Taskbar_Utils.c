@@ -189,14 +189,14 @@ void CreateEditorBuffers()
 	//selected item graphic in it's inventory size version.  This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	if (!AddVideoSurface(60, 25, ubBitDepth, &guiMercTempBuffer))
-		AssertMsg( 0, "Failed to allocate memory for merc tempitem buffer." );
+	guiMercTempBuffer = AddVideoSurface(60, 25, ubBitDepth);
+	AssertMsg(guiMercTempBuffer != NO_VSURFACE, "Failed to allocate memory for merc tempitem buffer.");
 
 	//create the nine buffers for the merc's inventory slots.
 	for( i = 0; i < 9; i++ )
 	{
-		if (!AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, ubBitDepth, &guiMercInvPanelBuffers[i]))
-			AssertMsg( 0, "Failed to allocate memory for merc item[] buffers." );
+		guiMercInvPanelBuffers[i] = AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, ubBitDepth);
+		AssertMsg(guiMercInvPanelBuffers[i] != NO_VSURFACE, "Failed to allocate memory for merc item[] buffers.");
 	}
 }
 

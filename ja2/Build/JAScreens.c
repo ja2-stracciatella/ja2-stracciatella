@@ -1138,7 +1138,8 @@ UINT32 DemoExitScreenHandle(void)
 		//bring up the collage screen
 		SGPFILENAME ImageFile;
 		GetMLGFilename(VSurfaceDesc.ImageFile, MLG_COLLAGE);
-		if (!AddVideoSurfaceFromFile(ImageFile, &uiCollageID))
+		uiCollageID = AddVideoSurfaceFromFile(ImageFile);
+		if (uiCollageID == NO_VSURFACE)
 		{
 			AssertMsg( 0, "Failed to load DemoAds\\collage.sti" );
 			ubCurrentScreen = 8;
@@ -1286,8 +1287,8 @@ UINT32 DemoExitScreenHandle(void)
 
 			//Create render buffer
 			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			CHECKF(AddVideoSurface(263, 210, ubBitDepth, &uiCollageID));
-
+			uiCollageID = AddVideoSurface(263, 210, ubBitDepth);
+			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
 			if (!AddVideoObjectFromFile("Interface\\ja2logo.sti", &uiTempID))
@@ -1464,7 +1465,8 @@ UINT32 DemoExitScreenHandle(void)
 
 			//Create render buffer
 			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			CHECKF(AddVideoSurface(331, 148, ubBitDepth, &uiCollageID));
+			uiCollageID = AddVideoSurface(331, 148, ubBitDepth);
+			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
 			SGPFILENAME ImageFile;

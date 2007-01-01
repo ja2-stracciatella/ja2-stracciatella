@@ -256,10 +256,8 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 	SetPendingNewScreen( MSG_BOX_SCREEN);
 
 	// Init save buffer
-	if (!AddVideoSurface(usTextBoxWidth, usTextBoxHeight, 16, &gMsgBox.uiSaveBuffer))
-	{
-		return( - 1 );
-	}
+	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, 16);
+	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return -1;
 
   //Save what we have under here...
 	pDestBuf = LockVideoSurface( gMsgBox.uiSaveBuffer, &uiDestPitchBYTES);

@@ -822,7 +822,8 @@ BOOLEAN EnterShopKeeperInterface()
 
 
 	// Create a video surface to blt corner of the tactical screen that still shines through
-	if (!AddVideoSurface(SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT, 16, &guiCornerWhereTacticalIsStillSeenImage))
+	guiCornerWhereTacticalIsStillSeenImage = AddVideoSurface(SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT, 16);
+	if (guiCornerWhereTacticalIsStillSeenImage == NO_VSURFACE)
 	{
 		#ifdef JA2BETAVERSION
 			ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to create Surface where tactical map shows through" );

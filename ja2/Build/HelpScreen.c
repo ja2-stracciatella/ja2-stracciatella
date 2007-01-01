@@ -2115,7 +2115,8 @@ INT8 HelpScreenDetermineWhichMapScreenHelpToShow()
 
 BOOLEAN CreateHelpScreenTextBuffer()
 {
-	CHECKF(AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, 16, &guiHelpScreenTextBufferSurface));
+	guiHelpScreenTextBufferSurface = AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, 16);
+	CHECKF(guiHelpScreenTextBufferSurface != NO_VSURFACE);
 
 	return( TRUE );
 }

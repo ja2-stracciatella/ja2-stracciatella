@@ -313,7 +313,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
 
 	//!!!Memory check.  Create the item buffer
-	if (!AddVideoSurface(eInfo.sWidth, eInfo.sHeight, ubBitDepth, &eInfo.uiBuffer))
+	eInfo.uiBuffer = AddVideoSurface(eInfo.sWidth, eInfo.sHeight, ubBitDepth);
+	if (eInfo.uiBuffer == NO_VSURFACE)
 	{
 		eInfo.fKill = TRUE;
 		eInfo.fActive = FALSE;

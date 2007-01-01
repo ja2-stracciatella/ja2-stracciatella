@@ -103,10 +103,8 @@ UINT32	MapUtilScreenHandle( )
 		// Create render buffer
 		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
 
-		if (!AddVideoSurface(88, 44, ubBitDepth, &giMiniMap))
-		{
-			return( ERROR_SCREEN );
-		}
+		giMiniMap = AddVideoSurface(88, 44, ubBitDepth);
+		if (giMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		if( GetFileFirst("MAPS\\*.dat", &FileInfo) )
@@ -129,10 +127,8 @@ UINT32	MapUtilScreenHandle( )
 
 
 		//Allocate 8-bit surface
-		if (!AddVideoSurface(88, 44, 8, &gi8BitMiniMap))
-		{
-			return( ERROR_SCREEN );
-		}
+		gi8BitMiniMap = AddVideoSurface(88, 44, 8);
+		if (gi8BitMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 		ghvSurface = GetVideoSurface(gi8BitMiniMap);
 	}
 

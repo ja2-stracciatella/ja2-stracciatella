@@ -265,8 +265,8 @@ BOOLEAN InitializeTacticalInterface(  )
 	// Load interface panels
 	// failing the CHECKF after this will cause you to lose your mouse
 
-	if (!AddVideoSurfaceFromFile("INTERFACE/IN_TEXT.STI", &guiINTEXT))
-		AssertMsg( 0, "Missing INTERFACE/In_text.sti");
+	guiINTEXT = AddVideoSurfaceFromFile("INTERFACE/IN_TEXT.STI");
+	AssertMsg(guiINTEXT != NOVSURFACE, "Missing INTERFACE/In_text.sti");
 	SetVideoSurfaceTransparency( guiINTEXT, FROMRGB( 255, 0, 0 ) );
 
 
@@ -336,7 +336,8 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// Alocate message surfaces
-	CHECKF( AddVideoSurface(640, 20, 16, &gTopMessage.uiSurface));
+	gTopMessage.uiSurface = AddVideoSurface(640, 20, 16);
+	CHECKF(gTopMessage.uiSurface != NO_VSURFACE);
 
 	InitItemInterface( );
 

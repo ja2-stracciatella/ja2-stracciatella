@@ -47,7 +47,8 @@ void InitJA2SplashScreen()
 	InitializeFileDatabase( gGameLibaries, NUMBER_OF_LIBRARIES );
 
 #if !defined( ENGLISH ) && defined( JA2TESTVERSION )
-	if (!AddVideoSurfaceFromFile("LOADSCREENS\\Notification.sti", &uiLogoID))
+	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS\\Notification.sti");
+	if (uiLogoID == NO_VSURFACE)
 	{
 		AssertMsg( 0, String( "Failed to load %s", VSurfaceDesc.ImageFile ) );
 		return;
@@ -76,7 +77,8 @@ void InitJA2SplashScreen()
 		{
 			SGPFILENAME ImageFile;
 			GetMLGFilename(ImageFile, MLG_SPLASH);
-			if (!AddVideoSurfaceFromFile(ImageFile, &uiLogoID))
+			uiLogoID = AddVideoSurfaceFromFile(ImageFile);
+			if (uiLogoID == NO_VSURFACE)
 			{
 				AssertMsg(0, String("Failed to load %s", ImageFile));
 				return;

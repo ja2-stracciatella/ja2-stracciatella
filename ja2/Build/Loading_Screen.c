@@ -211,7 +211,6 @@ extern BOOLEAN gfSchedulesHosed;
 //and refreshing the screen with it.
 void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 {
-	UINT32 uiLoadScreen;
 	const char* ImageFile;
 
 	switch (ubLoadScreenID)
@@ -270,19 +269,23 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
 		mprintf(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
-	else if (AddVideoSurfaceFromFile(ImageFile, &uiLoadScreen))
-	{ //Blit the background image
-		HVSURFACE hVSurface = GetVideoSurface(uiLoadScreen);
-		BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
-		DeleteVideoSurfaceFromIndex( uiLoadScreen );
-	}
 	else
-	{ //Failed to load the file, so use a black screen and print out message.
-		SetFont( FONT10ARIAL );
-		SetFontForeground( FONT_YELLOW );
-		SetFontShadow( FONT_NEARBLACK );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
-		mprintf(5, 5, L"%S loadscreen data file not found...", ImageFile);
+	{
+		UINT32 uiLoadScreen = AddVideoSurfaceFromFile(ImageFile);
+		if (uiLoadScreen != NO_VSURFACE)
+		{ //Blit the background image
+			HVSURFACE hVSurface = GetVideoSurface(uiLoadScreen);
+			BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
+			DeleteVideoSurfaceFromIndex( uiLoadScreen );
+		}
+		else
+		{ //Failed to load the file, so use a black screen and print out message.
+			SetFont( FONT10ARIAL );
+			SetFontForeground( FONT_YELLOW );
+			SetFontShadow( FONT_NEARBLACK );
+			ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
+			mprintf(5, 5, L"%S loadscreen data file not found...", ImageFile);
+		}
 	}
 
 	gubLastLoadingScreenID = ubLoadScreenID;

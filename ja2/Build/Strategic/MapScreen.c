@@ -3047,10 +3047,12 @@ UINT32 MapScreenHandle(void)
 		 // Grab the Map image
 
 #ifndef JA2DEMO
-		CHECKF(AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx", &guiBIGMAP));
+		guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx");
+		CHECKF(guiBIGMAP != NO_VSURFACE);
 #endif
 
-		CHECKF(AddVideoSurfaceFromFile("INTERFACE\\popupbackground.pcx", &guiPOPUPTEX));
+		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE\\popupbackground.pcx");
+		CHECKF(guiPOPUPTEX != NO_VSURFACE);
 
 #ifndef JA2DEMO
 			CHECKF(AddVideoObjectFromFile("INTERFACE\\SAM.sti", &guiSAMICON));
@@ -9879,7 +9881,8 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 
 	fPreLoadedMapGraphics = TRUE;
 
-	CHECKF(AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx", &guiBIGMAP));
+	guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx");
+	CHECKF(guiBIGMAP != NO_VSURFACE);
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\SAM.sti", &guiSAMICON));
 	// CHECKF(AddVideoObjectFromFile("INTERFACE\\s_map.sti", &guiMAP));

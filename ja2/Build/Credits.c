@@ -839,10 +839,8 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 	//if the node can have something to display, Create a surface for it
 	if( pNodeToAdd->uiType == CRDT_NODE_DEFAULT )
 	{
-		if (!AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, 16, &pNodeToAdd->uiVideoSurfaceImage))
-		{
-			return( FALSE );
-		}
+		pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, 16);
+		if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
 
 		//Set transparency
 		SetVideoSurfaceTransparency( pNodeToAdd->uiVideoSurfaceImage, 0 );

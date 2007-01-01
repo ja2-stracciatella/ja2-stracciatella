@@ -15,6 +15,7 @@
 // Defines for special video object handles given to blit function
 //
 
+#define NO_VSURFACE 0
 #define BACKBUFFER									            0xFFFFFFF1
 #define FRAME_BUFFER                            0xFFFFFFF2
 #define MOUSE_BUFFER                            0xFFFFFFF3
@@ -48,16 +49,16 @@ BOOLEAN InitializeVideoSurfaceManager( );
 // Deletes any video Surface placed into list
 BOOLEAN ShutdownVideoSurfaceManager( );
 
-BOOLEAN AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index);
-BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index);
+UINT32 AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
+UINT32 AddVideoSurfaceFromFile(const char* Filename);
 
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend);
-	extern BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile);
-	extern BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile);
-	#define AddVideoSurface(a, b, c, d) AddAndRecordVSurface(a, b, c, d, __LINE__, __FILE__)
-	#define AddVideoSurfaceFromFile(a, b) AddAndRecordVSurfaceFromFile(a, b, __LINE__, __FILE__)
+	extern UINT32 AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32 LineNum, const char* SourceFile);
+	extern UINT32 AddAndRecordVSurfaceFromFile(const char* Filename, UINT32 LineNum, const char* SourceFile);
+	#define AddVideoSurface(a, b, c) AddAndRecordVSurface(a, b, c, __LINE__, __FILE__)
+	#define AddVideoSurfaceFromFile(a) AddAndRecordVSurfaceFromFile(a, __LINE__, __FILE__)
 #endif
 
 // Returns a HVSurface for the specified index

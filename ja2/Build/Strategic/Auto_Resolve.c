@@ -1071,8 +1071,8 @@ void BuildInterfaceBuffer()
 	//selected item graphic in it's inventory size version.  This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	if (!AddVideoSurface(gpAR->sWidth, gpAR->sHeight, ubBitDepth, &gpAR->iInterfaceBuffer))
-		AssertMsg( 0, "Failed to allocate memory for autoresolve interface buffer." );
+	gpAR->iInterfaceBuffer = AddVideoSurface(gpAR->sWidth, gpAR->sHeight, ubBitDepth);
+	AssertMsg(gpAR->iInterfaceBuffer != NO_VSURFACE, "Failed to allocate memory for autoresolve interface buffer.");
 
 	GetClippingRect( &ClipRect );
 	SetClippingRect( &DestRect );

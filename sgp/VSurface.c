@@ -132,15 +132,9 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 }
 
 
-static BOOLEAN AddStandardVideoSurface(HVSURFACE hVSurface, UINT32* puiIndex)
+static UINT32 AddStandardVideoSurface(HVSURFACE hVSurface)
 {
-	Assert(puiIndex);
-
-	if( !hVSurface )
-	{
-		// Video Object will set error condition.
-		return FALSE ;
-	}
+	if (hVSurface == NULL) return NO_VSURFACE;
 
 	// Set into video object list
 	if( gpVSurfaceHead )
@@ -165,12 +159,11 @@ static BOOLEAN AddStandardVideoSurface(HVSURFACE hVSurface, UINT32* puiIndex)
 	//Set the hVSurface into the node.
 	gpVSurfaceTail->hVSurface = hVSurface;
 	gpVSurfaceTail->uiIndex = guiVSurfaceIndex+=2;
-	*puiIndex = gpVSurfaceTail->uiIndex;
 	Assert( guiVSurfaceIndex < 0xfffffff0 ); //unlikely that we will ever use 2 billion VSurfaces!
 	//We would have to create about 70 VSurfaces per second for 1 year straight to achieve this...
 	guiVSurfaceSize++;
 
-	return TRUE ;
+	return guiVSurfaceIndex;
 }
 
 
@@ -181,17 +174,17 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 #undef AddVideoSurfaceFromFile
 
 
-BOOLEAN AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index)
+UINT32 AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 {
 	HVSURFACE hVSurface = CreateVideoSurface(Width, Height, BitDepth);
-	return AddStandardVideoSurface(hVSurface, Index);
+	return AddStandardVideoSurface(hVSurface);
 }
 
 
-BOOLEAN AddVideoSurfaceFromFile(const char* Filename, UINT32* Index)
+UINT32 AddVideoSurfaceFromFile(const char* Filename)
 {
 	HVSURFACE hVSurface = CreateVideoSurfaceFromFile(Filename);
-	return AddStandardVideoSurface(hVSurface, Index);
+	return AddStandardVideoSurface(hVSurface);
 }
 
 
@@ -1431,17 +1424,19 @@ static BOOLEAN RecordVSurface(const char* Filename, UINT32 LineNum, const char* 
 }
 
 
-BOOLEAN AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+UINT32 AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32 LineNum, const char* SourceFile)
 {
-	if (!AddVideoSurface(Width, Height, BitDepth, Index)) return FALSE;
-	return RecordVSurface("<EMPTY>", LineNum, SourceFile);
+	UINT32 Index = AddVideoSurface(Width, Height, BitDepth);
+	if (Index != NO_VSURFACE) RecordVSurface("<EMPTY>", LineNum, SourceFile);
+	return Index;
 }
 
 
-BOOLEAN AddAndRecordVSurfaceFromFile(const char* Filename, UINT32* Index, UINT32 LineNum, const char* SourceFile)
+UINT32 AddAndRecordVSurfaceFromFile(const char* Filename, UINT32 LineNum, const char* SourceFile)
 {
-	if (!AddVideoSurfaceFromFile(Filename, Index)) return FALSE;
-	return RecordVSurface(Filename, LineNum, SourceFile);
+	UINT32 Index = AddVideoSurfaceFromFile(Filename);
+	if (Index != NO_VSURFACE) RecordVSurface(Filename, LineNum, SourceFile);
+	return Index;
 }
 
 #endif
