@@ -761,7 +761,6 @@ void RenderDoorLockInfo()
 void RenderSelectedItemBlownUp()
 {
 	UINT32 uiVideoObjectIndex;
-	HVOBJECT hVObject;
 	INT16 sScreenX, sScreenY, xp, yp;
 	ITEM_POOL	*pItemPool;
 	wchar_t szItemName[SIZE_ITEM_NAME];
@@ -775,7 +774,7 @@ void RenderSelectedItemBlownUp()
 
 	//Display the enlarged item graphic
 	uiVideoObjectIndex = GetInterfaceGraphicForItem( &Item[ gpItem->usItem ] );
-	GetVideoObject( &hVObject, uiVideoObjectIndex );
+	HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
 
 	sWidth = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].usWidth;
 	sOffsetX = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].sOffsetX;

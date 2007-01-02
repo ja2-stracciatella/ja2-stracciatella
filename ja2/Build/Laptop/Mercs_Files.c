@@ -339,8 +339,6 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 BOOLEAN DisplayMercFace( UINT8 ubMercID)
 {
-  HVOBJECT hFaceHandle;
-  HVOBJECT hPortraitHandle;
 	const char *sFaceLoc = "FACES/BIGFACES/";
 	char						sTemp[100];
 	MERCPROFILESTRUCT	*pMerc;
@@ -358,7 +356,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiMercFace));
 
 	//Blt face to screen
-	GetVideoObject(&hFaceHandle, guiMercFace);
+	HVOBJECT hFaceHandle = GetVideoObject(guiMercFace);
   BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y);
 
 	//if the merc is dead, shadow the face red and put text over top saying the merc is dead

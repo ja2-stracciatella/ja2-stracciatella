@@ -140,7 +140,6 @@ void RenderAccumulatedBurstLocations( )
 {
 	INT32			cnt;
 	INT16			sGridNo;
-	HVOBJECT	hVObject;
 
 	if ( !gfBeginBurstSpreadTracking )
 	{
@@ -153,7 +152,7 @@ void RenderAccumulatedBurstLocations( )
 	}
 
 	// Loop through each location...
-	GetVideoObject( &hVObject, guiBURSTACCUM );
+	HVOBJECT hVObject = GetVideoObject(guiBURSTACCUM);
 
 	// If on screen, render
 

@@ -303,8 +303,7 @@ void RenderBobbyR()
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// The undercontsruction graphic
-		HVOBJECT hPixHandle;
-		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
+		HVOBJECT hPixHandle = GetVideoObject(guiUnderConstructionImage);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y);
 	}
@@ -376,11 +375,9 @@ BOOLEAN DeleteBobbyRWoodBackground()
 
 BOOLEAN DrawBobbyRWoodBackground()
 {
-  HVOBJECT hWoodBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
-	// Blt the Wood background
-	GetVideoObject(&hWoodBackGroundHandle, guiWoodBackground);
+	HVOBJECT hWoodBackGroundHandle = GetVideoObject(guiWoodBackground);
 
 	uiPosY = BOBBY_WOOD_BACKGROUND_Y;
 	for(y=0; y<4; y++)
@@ -453,11 +450,9 @@ void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 /*
 BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackground)
 {
-  HVOBJECT hBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
-	// Blt the Wood background
-	GetVideoObject(&hBackGroundHandle, uiBackground);
+	HVOBJECT hBackGroundHandle = GetVideoObject(uiBackground);
 
 	uiPosY = LAPTOP_SCREEN_WEB_UL_Y;
 	for(y=0; y<ubNumY; y++)
@@ -477,7 +472,6 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 
 void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 {
-  HVOBJECT hPixHandle;
 	static UINT32	uiLastTime=1;
 	static UINT16	usCount=0;
 	UINT32	uiCurTime=GetJA2Clock();
@@ -497,7 +491,7 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 	if( ( ( uiCurTime - uiLastTime ) > BOBBYR_UNDERCONSTRUCTION_ANI_DELAY )||( fReDrawScreenFlag ) )
 	{
 		// The undercontsruction graphic
-		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
+		HVOBJECT hPixHandle = GetVideoObject(guiUnderConstructionImage);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y);
 
 		BltVideoObject( FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION1_Y);

@@ -816,7 +816,6 @@ UINT32 SexScreenHandle(void)
 	static INT8						bCurFrame = 0;
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
   ETRLEObject						*pTrav;
-	HVOBJECT							hVObject;
 	INT16									sX, sY;
 
 	// OK, Clear screen and show smily face....
@@ -885,7 +884,7 @@ UINT32 SexScreenHandle(void)
 	}
 
 	// Calculate smily face positions...
-	GetVideoObject( &hVObject, guiSMILY );
+	HVOBJECT hVObject = GetVideoObject(guiSMILY);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 
 	sX = (INT16)(( 640 - pTrav->usWidth ) / 2);

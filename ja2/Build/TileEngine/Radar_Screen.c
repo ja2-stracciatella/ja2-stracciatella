@@ -97,7 +97,6 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 {
 	CHAR8						zFilename[ 260 ];
 	INT32						cnt;
-	HVOBJECT				hVObject;
 
 	strcpy( zFilename, aFilename );
 
@@ -130,7 +129,8 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 
 		 fImageLoaded = TRUE;
 
-		 if( GetVideoObject( &hVObject, gusRadarImage ) )
+		HVOBJECT hVObject = GetVideoObject(gusRadarImage);
+		if (hVObject != NULL)
 		 {
 				// ATE: Add a shade table!
 		 		hVObject->pShades[ 0 ]	= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );

@@ -143,11 +143,10 @@ void HandleFlorist()
 
 void RenderFlorist()
 {
-  HVOBJECT hPixHandle;
 	UINT16 i, usPosY;
 	UINT8 ubTextCounter;
 
-	GetVideoObject(&hPixHandle, guiHandBullet);
+	HVOBJECT hPixHandle = GetVideoObject(guiHandBullet);
 
 	DisplayFloristDefaults();
 

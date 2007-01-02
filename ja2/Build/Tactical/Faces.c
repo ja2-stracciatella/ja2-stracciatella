@@ -223,7 +223,6 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	UINT32						uiVideoObject;
 	INT32							iFaceIndex;
 	ETRLEObject				ETRLEObject;
-	HVOBJECT					hVObject;
 	UINT32						uiCount;
 	SGPPaletteEntry		Pal[256];
 
@@ -320,7 +319,8 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 
 
 	// Set palette
-	if( GetVideoObject( &hVObject, uiVideoObject ) )
+	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
+	if (hVObject != NULL)
 	{
 		// Build a grayscale palette! ( for testing different looks )
 		for(uiCount=0; uiCount < 256; uiCount++)
@@ -1141,11 +1141,9 @@ static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 s
 	INT16 sX, sY;
 	UINT16 usWidth, usHeight;
   ETRLEObject						*pTrav;
-	HVOBJECT							hVObject;
-
 
 	// Get height, width of icon...
-	GetVideoObject( &hVObject, guiPORTRAITICONS );
+	HVOBJECT hVObject = GetVideoObject(guiPORTRAITICONS);
 	pTrav = &(hVObject->pETRLEObject[ ubIndex ] );
 	usHeight				= pTrav->usHeight;
 	usWidth					= pTrav->usWidth;
@@ -1163,11 +1161,9 @@ static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, IN
 	INT16 sX, sY;
 	UINT16 usWidth, usHeight;
   ETRLEObject						*pTrav;
-	HVOBJECT							hVObject;
-
 
 	// Get height, width of icon...
-	GetVideoObject( &hVObject, guiPORTRAITICONS );
+	HVOBJECT hVObject = GetVideoObject(guiPORTRAITICONS);
 	pTrav = &(hVObject->pETRLEObject[ ubIndex ] );
 	usHeight				= pTrav->usHeight;
 	usWidth					= pTrav->usWidth;

@@ -89,7 +89,7 @@ BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex);
 BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  );
 
 // Returns a HVOBJECT for the specified index
-BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex );
+HVOBJECT GetVideoObject(UINT32 uiIndex);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);

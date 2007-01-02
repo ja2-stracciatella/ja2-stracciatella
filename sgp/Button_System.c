@@ -2272,7 +2272,7 @@ static void DrawIconOnButton(const GUI_BUTTON *b)
 			pTrav = &(GenericButtonIcons[b->iIconID]->pETRLEObject[b->usIconIndex]);
 		else
 		{
-			GetVideoObject( &hvObject, b->iIconID );
+			hvObject = GetVideoObject(b->iIconID);
 			pTrav = &(hvObject->pETRLEObject[b->usIconIndex] );
 		}
 		IconH = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);

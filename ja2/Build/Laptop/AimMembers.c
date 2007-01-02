@@ -865,7 +865,6 @@ BOOLEAN RenderAIMMembersTopLevel()
 
 BOOLEAN RenderAIMMembers()
 {
-  HVOBJECT	hWeaponBoxHandle;
 	UINT16		x, uiPosX;
 	wchar_t		wTemp[50];
 
@@ -874,8 +873,7 @@ BOOLEAN RenderAIMMembers()
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiStats, 0, STATS_X, STATS_Y);
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiPrice, 0, PRICE_X, PRICE_Y);
 
-	// WeaponBox
-	GetVideoObject(&hWeaponBoxHandle, guiWeaponBox);
+	HVOBJECT hWeaponBoxHandle = GetVideoObject(guiWeaponBox);
 
 	uiPosX = WEAPONBOX_X;
 	for(x=0; x<WEAPONBOX_NUMBER; x++)
@@ -1086,7 +1084,6 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 	INT16				PosX, PosY, sCenX, sCenY;
 	UINT16			usItem;
 	INVTYPE			*pItem;
-	HVOBJECT		hVObject;
 	UINT32			usHeight, usWidth;
   ETRLEObject	*pTrav;
 	wchar_t			gzItemName[ SIZE_ITEM_NAME ];
@@ -1111,7 +1108,7 @@ BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 			ubItemCount++;
 
 			pItem = &Item[ usItem ];
-			GetVideoObject( &hVObject, GetInterfaceGraphicForItem( pItem ) );
+			HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
 			pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
 
 			usHeight				= (UINT32)pTrav->usHeight;
@@ -1207,7 +1204,6 @@ static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 BOOLEAN DisplayMercsFace()
 {
-  HVOBJECT hFaceHandle;
 	const char *sFaceLoc = "FACES\\BIGFACES\\";
 	char						sTemp[100];
 	SOLDIERTYPE			*pSoldier=NULL;
@@ -1222,8 +1218,7 @@ BOOLEAN DisplayMercsFace()
   sprintf(sTemp, "%s%02d.sti", sFaceLoc, gbCurrentSoldier);
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiFace));
 
-	//Blt face to screen
-	GetVideoObject(&hFaceHandle, guiFace);
+	HVOBJECT hFaceHandle = GetVideoObject(guiFace);
   BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,FACE_X, FACE_Y);
 
 	//if the merc is dead
@@ -1638,10 +1633,7 @@ BOOLEAN DisplayVideoConferencingDisplay()
 
 BOOLEAN DisplayMercsVideoFace()
 {
-  HVOBJECT	hTerminalHandle;
-
-	// Get and Blt Terminal Frame
-	GetVideoObject(&hTerminalHandle, guiVideoConfTerminal);
+	HVOBJECT hTerminalHandle = GetVideoObject(guiVideoConfTerminal);
 	ShadowVideoSurfaceImage( FRAME_BUFFER, hTerminalHandle, AIM_MEMBER_VIDEO_CONF_TERMINAL_X, AIM_MEMBER_VIDEO_CONF_TERMINAL_Y);
   BltVideoObject(FRAME_BUFFER, hTerminalHandle, 0,AIM_MEMBER_VIDEO_CONF_TERMINAL_X, AIM_MEMBER_VIDEO_CONF_TERMINAL_Y);
 

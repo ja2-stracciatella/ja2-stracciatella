@@ -85,16 +85,12 @@ void RemoveProfileBackGround( void )
 
 void RenderProfileBackGround( void )
 {
-
-	HVOBJECT hHandle;
   INT32 iCounter = 0;
 
   // this procedure will render the generic backgound to the screen
 
-	// get the video object
-  GetVideoObject(&hHandle, guiBACKGROUND);
-
 	// render each row 5 times wide, 5 tiles high
+	HVOBJECT hHandle = GetVideoObject(guiBACKGROUND);
   for(iCounter = 0; iCounter < 4; iCounter++)
 	{
 
@@ -454,13 +450,10 @@ void DeleteAttributeFrame( void )
 
 void RenderAttributeFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
 	INT32 iCounter = 0;
 	INT16 sCurrentY = 0;
 
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
+	HVOBJECT hHandle = GetVideoObject(guiATTRIBUTEFRAME);
 
   // blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);

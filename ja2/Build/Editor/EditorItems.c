@@ -212,7 +212,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
 	SGPRect	SaveRect, NewRect;
-	HVOBJECT hVObject;
 	UINT32 uiVideoObjectIndex;
 	UINT16 usUselessWidth, usUselessHeight;
 	INT16 sWidth, sOffset, sStart;
@@ -349,7 +348,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		{
 			item = &Item[ KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem ];
 			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			GetVideoObject( &hVObject, uiVideoObjectIndex );
+			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex );
 
 			//Store these item pointers for later when rendering selected items.
 			eInfo.pusItemIndex[i] = KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem;
@@ -449,7 +448,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			{
 
 				uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-				GetVideoObject( &hVObject, uiVideoObjectIndex );
+				HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
 
 				//Store these item pointers for later when rendering selected items.
 				eInfo.pusItemIndex[i] = usCounter;
@@ -549,7 +548,6 @@ void RenderEditorItemsInfo()
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INVTYPE *item;
-	HVOBJECT hVObject;
 	UINT32 uiVideoObjectIndex;
 	INT16 i;
 	INT16 minIndex, maxIndex;
@@ -587,7 +585,7 @@ void RenderEditorItemsInfo()
 		{
 			item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
 			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			GetVideoObject( &hVObject, uiVideoObjectIndex );
+			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
 			x = (eInfo.sHilitedItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
 			y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -606,7 +604,7 @@ void RenderEditorItemsInfo()
 		{
 			item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
 			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			GetVideoObject( &hVObject, uiVideoObjectIndex );
+			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
 			x = (eInfo.sSelItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
 			y = 360 + (eInfo.sSelItemIndex % 2) * 40;
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;

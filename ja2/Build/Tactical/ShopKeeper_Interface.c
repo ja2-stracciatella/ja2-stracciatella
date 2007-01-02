@@ -2575,7 +2575,6 @@ void DisplayArmsDealerCurrentInventoryPage( )
 UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE	*pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea )
 {
 	CHAR16			zTemp[64];
-	HVOBJECT		hVObject;
 	INVTYPE			*pItem;
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
@@ -2597,7 +2596,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 
 	//Display the item graphic, and price
 	pItem = &Item[ usItemIndex ];
-	GetVideoObject( &hVObject, GetInterfaceGraphicForItem( pItem ) );
+	HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
 	pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
 
 	usHeight				= (UINT32)pTrav->usHeight;
@@ -6161,14 +6160,11 @@ BOOLEAN CanShopkeeperOverrideDialogue( void )
 
 void CrossOutUnwantedItems( void )
 {
-	HVOBJECT hHandle;
 	INT8 bSlotId = 0;
 	INT16 sBoxStartX = 0, sBoxStartY = 0;
 	INT16 sBoxWidth = 0, sBoxHeight = 0;
 
-
-	// load the "cross out" graphic
-	GetVideoObject( &hHandle, guiItemCrossOut );
+	HVOBJECT hHandle = GetVideoObject(guiItemCrossOut);
 
 	// get the box height and width
 	sBoxWidth = SKI_INV_SLOT_WIDTH;

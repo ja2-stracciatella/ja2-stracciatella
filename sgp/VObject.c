@@ -190,7 +190,7 @@ BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex)
 }
 
 
-BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
+HVOBJECT GetVideoObject(UINT32 uiIndex)
 {
 	VOBJECT_NODE *curr;
 
@@ -201,14 +201,10 @@ BOOLEAN GetVideoObject( HVOBJECT *hVObject, UINT32 uiIndex )
 	curr = gpVObjectHead;
 	while( curr )
 	{
-		if( curr->uiIndex == uiIndex )
-		{
-			*hVObject = curr->hVObject;
-			return TRUE;
-		}
+		if (curr->uiIndex == uiIndex) return curr->hVObject;
 		curr = curr->next;
 	}
-	return FALSE;
+	return NULL;
 }
 
 
@@ -217,8 +213,8 @@ BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT
 #ifdef _DEBUG
 	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTFROMINDEX;
 #endif
-	HVOBJECT hSrcVObject;
-	if (!GetVideoObject(&hSrcVObject, uiSrcVObject)) return FALSE;
+	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
+	if (hSrcVObject == NULL) return FALSE;
 	return BltVideoObject(uiDestVSurface, hSrcVObject, usRegionIndex, iDestX, iDestY);
 }
 
@@ -576,12 +572,11 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 
 UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 {
-	HVOBJECT hObj;
-
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_SETOBJECTHANDLESHADE;
 	#endif
-	if(!GetVideoObject(&hObj, uiHandle))
+	HVOBJECT hObj = GetVideoObject(uiHandle);
+	if (hObj == NULL)
 	{
 	  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid object handle for setting shade level"));
 		return(FALSE);
@@ -685,14 +680,14 @@ static BOOLEAN GetVideoObjectETRLEProperties(HVOBJECT hVObject, ETRLEObject* pET
 
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight )
 {
-	HVOBJECT							hVObject;
 	ETRLEObject						ETRLEObject;
 
 	// Get video object
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES;
 	#endif
-	CHECKF( GetVideoObject( &hVObject, uiVideoObject ) );
+	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
+	CHECKF(hVObject != NULL);
 
 	CHECKF( GetVideoObjectETRLEProperties( hVObject, &ETRLEObject, usIndex ) );
 
@@ -705,13 +700,12 @@ BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usI
 
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
-	HVOBJECT							hVObject;
-
 	// Get video object
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX;
 	#endif
-	CHECKF( GetVideoObject( &hVObject, uiVideoObject ) );
+	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
+	CHECKF(hVObject != NULL);
 
 	CHECKF( GetVideoObjectETRLEProperties( hVObject, pETRLEObject, usIndex ) );
 
@@ -724,8 +718,8 @@ BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObjec
 #ifdef _DEBUG
 	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX;
 #endif
-	HVOBJECT hSrcVObject;
-	CHECKF(GetVideoObject(&hSrcVObject, uiSrcVObject));
+	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
+	CHECKF(hSrcVObject != NULL);
 	return BltVideoObjectOutline(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY, s16BPPColor, fDoOutline);
 }
 
@@ -764,8 +758,8 @@ BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrc
 #ifdef _DEBUG
 	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX;
 #endif
-	HVOBJECT hSrcVObject;
-	CHECKF(GetVideoObject(&hSrcVObject, uiSrcVObject));
+	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
+	CHECKF(hSrcVObject != NULL);
 	return BltVideoObjectOutlineShadow(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY);
 }
 

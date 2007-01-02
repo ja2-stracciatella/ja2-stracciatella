@@ -446,7 +446,6 @@ static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 
 BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 {
-  HVOBJECT hPixHandle;
 	UINT16	usPosX, usPosY;
 	UINT32	uiInsMercFaceImage;
 	INT32		iCostOfContract=0;
@@ -494,8 +493,7 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 	sprintf(sTemp, "FACES\\%02d.sti", ubMercID);
 	CHECKF(AddVideoObjectFromFile(sTemp, &uiInsMercFaceImage));
 
-	//Get the merc's face
-	GetVideoObject(&hPixHandle, uiInsMercFaceImage );
+	HVOBJECT hPixHandle = GetVideoObject(uiInsMercFaceImage);
 
 	//if the merc is dead, shade the face red
 	if( IsMercDead( ubMercID ) )

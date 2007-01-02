@@ -160,8 +160,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 				DestroyImage( hImage );
 
 				// Save hVObject....
-				GetVideoObject( &(gpCursorFileDatabase[ pCurImage->uiFileIndex ].hVObject), gpCursorFileDatabase[ pCurImage->uiFileIndex ].uiIndex );
-
+				gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject = GetVideoObject(gpCursorFileDatabase[pCurImage->uiFileIndex].uiIndex);
 			}
 
 			gpCursorFileDatabase[ pCurImage->uiFileIndex ].fLoaded = TRUE;
@@ -316,7 +315,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 	CursorImage		*pCurImage;
 	UINT32				cnt;
 	INT16					sCenterValX, sCenterValY;
-	HVOBJECT			hVObject;
   ETRLEObject *pTrav;
 	UINT16				usEffHeight, usEffWidth;
 
@@ -337,7 +335,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 			if ( uiCursorIndex == EXTERN_CURSOR || uiCursorIndex == EXTERN2_CURSOR  )
 			{
 				INT16 sSubX, sSubY;
-				HVOBJECT			hVObjectTemp;
 				ETRLEObject *pTravTemp;
 
 				// Erase old cursor
@@ -346,13 +343,13 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 				if ( uiCursorIndex == EXTERN2_CURSOR )
 				{
 					// Get ETRLE values
-					GetVideoObject( &hVObject, guiExtern2Vo );
+					HVOBJECT hVObject = GetVideoObject(guiExtern2Vo);
 					pTrav = &(hVObject->pETRLEObject[ gusExtern2VoSubIndex ] );
 				}
 				else
 				{
 					// Get ETRLE values
-					GetVideoObject( &hVObject, guiExternVo );
+					HVOBJECT hVObject = GetVideoObject(guiExternVo);
 					pTrav = &(hVObject->pETRLEObject[ gusExternVoSubIndex ] );
 				}
 
@@ -371,7 +368,7 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 					BltVideoObjectOutlineFromIndex( MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, 0, FALSE );
 
 					// Get ETRLE values
-					GetVideoObject( &hVObjectTemp, guiExternVo );
+					HVOBJECT hVObjectTemp = GetVideoObject(guiExternVo);
 					pTravTemp = &(hVObjectTemp->pETRLEObject[ gusExternVoSubIndex ] );
 
 					sSubX = ( pTrav->usWidth - pTravTemp->usWidth - pTravTemp->sOffsetX ) / 2;

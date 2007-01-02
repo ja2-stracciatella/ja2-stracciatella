@@ -1045,11 +1045,9 @@ void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16
 INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 {
   UINT8 ubCounter = 0, ubIconPosition = 0;
-  HVOBJECT hIconHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
-
-  GetVideoObject(&hIconHandle, guiCHARICONS);
+	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 
   // run through list
 	while(gCharactersList[ubCounter].fValid)
@@ -1077,11 +1075,9 @@ INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
  	UINT8 ubCounter, ubIconPosition;
-  HVOBJECT hIconHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
-
-  GetVideoObject(&hIconHandle, guiCHARICONS);
+	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 	ubCounter=0;
 
   // run through list
@@ -1119,11 +1115,9 @@ INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
   UINT8 ubCounter, ubIconPosition;
-  HVOBJECT hIconHandle;
 	SOLDIERTYPE *pVehicleSoldier;
 
-
-  GetVideoObject(&hIconHandle, guiCHARICONS);
+	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 	ubCounter=0;
 
 	ubIconPosition = (UINT8) iCount;
@@ -1165,11 +1159,9 @@ INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 
 void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition )
 {
-	HVOBJECT hIconHandle;
 	UINT8 ubEnemy = 0;
 
-	// get the video object
-	GetVideoObject(&hIconHandle, guiCHARICONS);
+	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 
 	for( ubEnemy = 0; ubEnemy < sNumberOfEnemies; ubEnemy++ )
 	{
@@ -2103,8 +2095,6 @@ BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath
  PathStPtr pNode=NULL;
  PathStPtr pPastNode=NULL;
  PathStPtr pNextNode=NULL;
- HVOBJECT hMapHandle;
-
 
  if ( pPath==NULL )
  {
@@ -2129,7 +2119,7 @@ BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath
 	else
 		pPastNode=NULL;
 
-  GetVideoObject(&hMapHandle, guiMAPCURSORS);
+	HVOBJECT hMapHandle = GetVideoObject(guiMAPCURSORS);
 		// go through characters list and display arrows for path
  while(pNode)
 		{
@@ -2890,7 +2880,6 @@ BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fFo
  static BOOLEAN fPauseFlag=TRUE;
  static UINT8 ubCounter=1;
 
- HVOBJECT hMapHandle;
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iDifference=0;
  INT32 iArrow=-1;
@@ -3007,8 +2996,7 @@ BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fFo
 
  }
 
- // Grab Video Objects
- GetVideoObject(&hMapHandle, guiMAPCURSORS);
+	HVOBJECT hMapHandle = GetVideoObject(guiMAPCURSORS);
 
  // Handle drawing of arrow
  pNode=pCurrentNode;
@@ -3956,7 +3944,6 @@ void ShowPeopleInMotion( INT16 sX, INT16 sY )
 	INT16 iX = sX, iY = sY;
 	INT16 sXPosition = 0, sYPosition = 0;
 	INT32 iCounter = 0;
-	HVOBJECT hIconHandle;
 	BOOLEAN fAboutToEnter = FALSE;
 	CHAR16 sString[ 32 ];
 	INT16 sTextXOffset = 0;
@@ -4103,15 +4090,16 @@ void ShowPeopleInMotion( INT16 sX, INT16 sY )
 				swprintf( sString, lengthof(sString), L"%d", sExiting );
 
 				// about to enter
+				HVOBJECT hIconHandle;
 				if( !fAboutToEnter )
 				{
 					// draw blue arrows
-					GetVideoObject(&hIconHandle, guiCHARBETWEENSECTORICONS );
+					hIconHandle = GetVideoObject(guiCHARBETWEENSECTORICONS);
 				}
 				else
 				{
 					// draw yellow arrows
-					GetVideoObject(&hIconHandle, guiCHARBETWEENSECTORICONSCLOSE );
+					hIconHandle = GetVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
 				}
 
 				// zoomed in or not?
@@ -5067,7 +5055,6 @@ void RemoveMilitiaPopUpBox( void )
 
 BOOLEAN DrawMilitiaPopUpBox( void )
 {
-	HVOBJECT						hVObject;
 	ETRLEObject						*pTrav;
 
 
@@ -5111,7 +5098,7 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// draw the highlight last
 	ShowHighLightedSectorOnMilitiaMap( );
 
-	GetVideoObject( &hVObject, guiMilitia );
+	HVOBJECT hVObject = GetVideoObject(guiMilitia);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 
 	InvalidateRegion( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y, MAP_MILITIA_BOX_POS_X + pTrav->usWidth, MAP_MILITIA_BOX_POS_Y + pTrav->usHeight );
@@ -5185,7 +5172,6 @@ void RenderIconsPerSectorForSelectedTown( void )
 	INT32 iNumberOfElites = 0;
 	INT32 iTotalNumberOfTroops = 0;
 	INT32 iCurrentTroopIcon = 0;
-	HVOBJECT hVObject;
 	INT32 iCurrentIcon = 0;
 	INT16 sX, sY;
 	CHAR16 sString[ 32 ];
@@ -5195,8 +5181,7 @@ void RenderIconsPerSectorForSelectedTown( void )
 	// get the sector value for the upper left corner
 	sBaseSectorValue = GetBaseSectorForCurrentTown( );
 
-	// get militia video object
-	GetVideoObject( &hVObject, guiMilitia );
+	HVOBJECT hVObject = GetVideoObject(guiMilitia);
 
 	// render icons for map
 	for( iCounter = 0; iCounter < 9; iCounter++ )
@@ -5386,7 +5371,6 @@ void CreateDestroyMilitiaSectorButtons( void )
 	static INT16 sOldSectorValue = -1;
 	INT16 sX = 0, sY = 0;
 	INT32 iCounter = 0;
-	HVOBJECT						hVObject;
 	ETRLEObject						*pTrav;
 
 
@@ -5421,7 +5405,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 			SpecifyButtonUpTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
 			SpecifyButtonDownTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
 
-			GetVideoObject( &hVObject, guiMilitia );
+			HVOBJECT hVObject = GetVideoObject(guiMilitia);
 			pTrav = &(hVObject->pETRLEObject[ 0 ] );
 
 			SetButtonFastHelpText( giMapMilitiaButton[ iCounter ], pMilitiaButtonsHelpText[ iCounter ] );
@@ -5530,7 +5514,6 @@ void DisplayUnallocatedMilitia( void )
 	INT32 iTotalNumberOfTroops =0, iNumberOfGreens = 0, iNumberOfRegulars =0, iNumberOfElites = 0, iCurrentTroopIcon = 0;
 	INT32 iCurrentIcon = 0;
 	INT16 sX = 0, sY = 0;
-	HVOBJECT hVObject;
 
 	// get number of each
 	iNumberOfGreens = sGreensOnCursor;
@@ -5540,8 +5523,7 @@ void DisplayUnallocatedMilitia( void )
 	// get total
 	iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
 
-	// get militia video object
-	GetVideoObject( &hVObject, guiMilitia );
+	HVOBJECT hVObject = GetVideoObject(guiMilitia);
 
 	// now display
 	for( iCurrentTroopIcon = 0; iCurrentTroopIcon < iTotalNumberOfTroops; iCurrentTroopIcon++ )
@@ -5945,11 +5927,9 @@ void DrawTownMilitiaForcesOnMap( void )
 {
 	INT32 iCounter = 0, iCounterB = 0, iTotalNumberOfTroops = 0, iIconValue = 0;
 	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0,  iNumberOfElites = 0;
-	HVOBJECT hVObject;
 	INT16 sSectorX = 0, sSectorY = 0;
 
-	// get militia video object
-	GetVideoObject( &hVObject, guiMilitia );
+	HVOBJECT hVObject = GetVideoObject(guiMilitia);
 
 	// clip blits to mapscreen region
 	ClipBlitsToMapViewRegion( );

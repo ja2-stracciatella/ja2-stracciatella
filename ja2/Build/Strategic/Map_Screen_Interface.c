@@ -4585,7 +4585,6 @@ void DisplaySoldierUpdateBox( )
 	INT32 iX = 0, iY = 0;
 	INT32 iFaceX = 0, iFaceY = 0;
 	BOOLEAN fFourWideMode = FALSE;
-	HVOBJECT hBackGroundHandle;
 	INT32 iCounter = 0;
 	CHAR16 sString[ 32 ];
 	INT32 iUpperLimit = 0;
@@ -4683,8 +4682,7 @@ void DisplaySoldierUpdateBox( )
 	// Have the bottom of the box ALWAYS a set distance from the bottom of the map ( so user doesnt have to move mouse far )
 	iY = 280 - iUpdatePanelHeight;
 
-	GetVideoObject( &hBackGroundHandle, guiUpdatePanelTactical );
-
+	HVOBJECT hBackGroundHandle = GetVideoObject(guiUpdatePanelTactical);
 
 	//Display the 2 TOP corner pieces
 	BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 0, iX-4, iY - 4);
@@ -6234,7 +6232,6 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 	static UINT8  ubFrame = 0;
 	UINT8 ubBaseFrame = 0;
 	UINT32 uiTimer = 0;
-	HVOBJECT hHandle;
 	INT16 sScreenX, sScreenY;
 
 
@@ -6255,8 +6252,7 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 		return;
 	}
 
-
-	GetVideoObject( &hHandle, guiSectorLocatorGraphicID );
+	HVOBJECT hHandle = GetVideoObject(guiSectorLocatorGraphicID);
 
 	switch( ubLocatorID )
 	{

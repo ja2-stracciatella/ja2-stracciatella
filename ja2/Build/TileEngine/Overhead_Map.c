@@ -525,8 +525,6 @@ BOOLEAN InOverheadMap( )
 
 void GoIntoOverheadMap( )
 {
-	HVOBJECT				hVObject;
-
 #ifdef JA2DEMO
 
 	if ( gfCaves )
@@ -559,7 +557,7 @@ void GoIntoOverheadMap( )
 		AssertMsg(0, "Missing INTERFACE\\PERSONS.sti" );
 
 	// Add shades to persons....
-	GetVideoObject( &hVObject, uiPERSONS );
+	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
 	hVObject->pShades[ 0 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 256, 256, 256, FALSE );
 	hVObject->pShades[ 1 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 310, 310, 310, FALSE );
 	hVObject->pShades[ 2 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 0, 0, 0, FALSE );
@@ -693,13 +691,12 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	LEVELNODE		*pNode;
 	SMALL_TILE_DB	*pTile;
 	INT16				sHeight;
-	HVOBJECT hVObject;
 	INT16				sX1, sX2, sY1, sY2;
 
 	// Get video object for persons...
 	if ( !fFromMapUtility )
 	{
-		GetVideoObject( &hVObject, uiPERSONS );
+		HVOBJECT hVObject = GetVideoObject(uiPERSONS);
 	}
 
 	if ( gfOverheadMapDirty )
@@ -1101,7 +1098,6 @@ void RenderOverheadOverlays()
 	WORLDITEM		*pWorldItem;
 	UINT32				i;
 	SOLDIERTYPE	*pSoldier;
-	HVOBJECT		hVObject;
 	INT16				sX, sY;
 	UINT16			end;
 	UINT16			usLineColor=0;
@@ -1109,8 +1105,7 @@ void RenderOverheadOverlays()
 	UINT8				ubPassengers = 0;
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	GetVideoObject( &hVObject, uiPERSONS );
-
+	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
 
 	//SOLDIER OVERLAY
 	if( gfTacticalPlacementGUIActive )
@@ -1280,7 +1275,6 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 	UINT16			usLineColor;
 	INT16				sHeight;
 	SOLDIERTYPE	*pSoldier;
-	HVOBJECT hVObject;
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	// Begin Render Loop
 	sAnchorPosX_M = sStartPointX_M;
@@ -1291,7 +1285,7 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 	fEndRenderRow = FALSE;
 	fEndRenderCol = FALSE;
 
-	GetVideoObject( &hVObject, uiPERSONS );
+	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
 	do
 	{
 

@@ -1238,7 +1238,6 @@ BOOLEAN DrawBox(UINT32 uiCounter)
   UINT32 uiNumTilesWide;
 	UINT32 uiNumTilesHigh;
 	UINT32 uiCount=0;
-  HVOBJECT hBoxHandle;
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -1301,7 +1300,7 @@ BOOLEAN DrawBox(UINT32 uiCounter)
   Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES,usTopX,usTopY, &clip);
 	UnLockVideoSurface( PopUpBoxList[uiCounter]->iBackGroundSurface);
   UnLockVideoSurface(PopUpBoxList[uiCounter]->uiBuffer);
-	GetVideoObject(&hBoxHandle, PopUpBoxList[uiCounter]->iBorderObjectIndex);
+	HVOBJECT hBoxHandle = GetVideoObject(PopUpBoxList[uiCounter]->iBorderObjectIndex);
 
   // blit in 4 corners (they're 2x2 pixels)
 	BltVideoObject(PopUpBoxList[uiCounter]->uiBuffer, hBoxHandle, TOP_LEFT_CORNER,usTopX,usTopY);

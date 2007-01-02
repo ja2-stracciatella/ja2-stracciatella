@@ -603,7 +603,6 @@ void DisplayAutoBandageUpdatePanel( void )
 	INT32 iTotalPixelsHigh = 0, iTotalPixelsWide = 0;
 	INT32 iCurPixelY = 0;
 	INT16 sXPosition = 0, sYPosition = 0;
-	HVOBJECT hBackGroundHandle;
 	INT32 iCounterA = 0, iCounterB = 0;
 	INT32 iIndex = 0;
 	INT16 sCurrentXPosition = 0, sCurrentYPosition = 0;
@@ -729,10 +728,7 @@ void DisplayAutoBandageUpdatePanel( void )
 	sXPosition = ( 640 - iTotalPixelsWide ) / 2;
 	sYPosition = ( INV_INTERFACE_START_Y - iTotalPixelsHigh ) / 2;
 
-
-	// now blit down the background
-	GetVideoObject( &hBackGroundHandle, guiUpdatePanelTactical );
-
+	HVOBJECT hBackGroundHandle = GetVideoObject(guiUpdatePanelTactical);
 
 	// first the doctors on top
 	for( iCounterA = 0; iCounterA < iNumberDoctorsHigh; iCounterA++ )
@@ -1096,10 +1092,8 @@ BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentX
 	INT32 iStartY = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter = 0, iIndexCount = 0;
-	HVOBJECT hHandle;
 
-	// grab the video object
-	GetVideoObject( &hHandle, giAutoBandagesSoldierFaces[ iIndex ] );
+	HVOBJECT hHandle = GetVideoObject(giAutoBandagesSoldierFaces[iIndex]);
 
 	// fill the background for the info bars black
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, sCurrentYPosition+2, sCurrentXPosition+44,	sCurrentYPosition+30, 0 );

@@ -1886,7 +1886,6 @@ void DisplaySelectedListBox( )
 {
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	UINT16	usPosX, usPosY;
-  HVOBJECT	hImageHandle;
 
 	//DEBUG: make sure it wont go over array bounds
 	if( gpActiveListBox->usMaxArrayIndex == 0 )
@@ -1932,7 +1931,7 @@ void DisplaySelectedListBox( )
 
 
 	//get and display the up and down arrows
-	GetVideoObject(&hImageHandle, guiQdScrollArrowImage);
+	HVOBJECT hImageHandle = GetVideoObject(guiQdScrollArrowImage);
 	//top arrow
 	BltVideoObject(FRAME_BUFFER, hImageHandle, 0, usPosX-5, usPosY-1);
 

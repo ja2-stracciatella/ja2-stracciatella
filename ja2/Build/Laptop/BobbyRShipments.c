@@ -273,9 +273,7 @@ void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 
 void DisplayShipmentGrid()
 {
-  HVOBJECT hPixHandle;
-
-	GetVideoObject(&hPixHandle, guiBobbyRShipmentGrid);
+	HVOBJECT hPixHandle = GetVideoObject(guiBobbyRShipmentGrid);
 
 	// Shipment Order Grid
   BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_SHIPMENT_DELIVERY_GRID_X, BOBBYR_SHIPMENT_DELIVERY_GRID_Y);

@@ -2724,7 +2724,6 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 {
 	UINT32 uiVideoObjectIndex;
 	UINT32 uiSrcID, uiDstID;
-	HVOBJECT hVObject;
 	ETRLEObject *pObject;
 	INVTYPE *item;
 	SGPRect	SrcRect, DstRect;
@@ -2814,7 +2813,7 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	//now draw the fullsize item into the temp buffer
 	item = &Item[ gusMercsNewItemIndex ];
 	uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-	GetVideoObject( &hVObject, uiVideoObjectIndex );
+	HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
 	BltVideoObjectOutlineFromIndex( uiSrcID, uiVideoObjectIndex, item->ubGraphicNum, 0, 0, 0, FALSE );
 
 	//crop the source image

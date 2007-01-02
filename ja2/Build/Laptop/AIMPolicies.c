@@ -445,7 +445,6 @@ BOOLEAN DrawAimPolicyMenu()
 	UINT16			usHeight;
 	UINT32			uiStartLoc=0;
 	wchar_t			sText[400];
-  HVOBJECT		hContentButtonHandle;
 	UINT8				ubLocInFile[]=
 								{	DEFINITIONS,
 									LENGTH_OF_ENGAGEMENT,
@@ -457,7 +456,7 @@ BOOLEAN DrawAimPolicyMenu()
 									EQUIPMENT_AND_INVENTORY,
 									POLICY_MEDICAL};
 
-	GetVideoObject(&hContentButtonHandle, guiContentButton);
+	HVOBJECT	hContentButtonHandle = GetVideoObject(guiContentButton);
 
 	usHeight = GetFontHeight(AIM_POLICY_TOC_FONT);
 	usPosY = AIM_POLICY_TOC_Y;

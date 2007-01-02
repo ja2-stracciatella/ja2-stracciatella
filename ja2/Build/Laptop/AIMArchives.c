@@ -267,8 +267,6 @@ void HandleAimArchives()
 
 void RenderAimArchives()
 {
-	HVOBJECT	hFrameHandle;
-	HVOBJECT	hFaceHandle;
 	UINT16		usPosX, usPosY,x,y,i=0;
 	UINT8			ubNumRows=0;
 	UINT32			uiStartLoc=0;
@@ -282,8 +280,8 @@ void RenderAimArchives()
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_ALUMNI], AIM_ALUMNI_TITLE_X, AIM_ALUMNI_TITLE_Y, AIM_ALUMNI_TITLE_WIDTH, AIM_ALUMNI_TITLE_FONT, AIM_ALUMNI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	//Draw the mug shot border and face
-	GetVideoObject(&hFrameHandle, guiAlumniFrame);
-	GetVideoObject(&hFaceHandle, guiOldAim);
+	HVOBJECT hFrameHandle = GetVideoObject(guiAlumniFrame);
+	HVOBJECT hFaceHandle  = GetVideoObject(guiOldAim);
 
 	switch(gubPageNum)
 	{
@@ -438,7 +436,6 @@ void DisplayAlumniOldMercPopUp()
 	UINT8			i,ubNumLines=11; //17
 	UINT16		usPosY, usTextPosY;
 	UINT8			ubFontHeight, ubNumDescLines;
-	HVOBJECT	hAlumniPopUpHandle;
 //	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	usHeight = GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 	wchar_t	sName[AIM_ALUMNI_NAME_SIZE];
@@ -446,7 +443,7 @@ void DisplayAlumniOldMercPopUp()
 	UINT32		uiStartLoc;
 	UINT16	usStringPixLength;
 
-	GetVideoObject(&hAlumniPopUpHandle, guiAlumniPopUp);
+	HVOBJECT hAlumniPopUpHandle = GetVideoObject(guiAlumniPopUp);
 
 	ubFontHeight = (UINT8)GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 

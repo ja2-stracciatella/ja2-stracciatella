@@ -437,7 +437,6 @@ void ClearViewerRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 
 void RenderStationaryGroups()
 {
-	HVOBJECT hVObject;
 	SECTORINFO *pSector;
 	INT32 x, y, xp, yp;
 	wchar_t str[20];
@@ -449,7 +448,7 @@ void RenderStationaryGroups()
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 
-	GetVideoObject( &hVObject, guiMapIconsID );
+	HVOBJECT hVObject = GetVideoObject(guiMapIconsID);
 
 	//Render groups that are stationary...
 	for( y = 0; y < 16; y++ )
@@ -521,7 +520,6 @@ void RenderStationaryGroups()
 void RenderMovingGroupsAndMercs()
 {
 	GROUP *pGroup;
-	HVOBJECT hVObject;
 	INT32 x, y;
 	UINT8 ubNumTroops, ubNumAdmins, ubNumElites;
 	float ratio;
@@ -535,7 +533,7 @@ void RenderMovingGroupsAndMercs()
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 
-	GetVideoObject( &hVObject, guiMapIconsID );
+	HVOBJECT hVObject = GetVideoObject(guiMapIconsID);
 
 	//Render groups that are moving...
 	pGroup = gpGroupList;

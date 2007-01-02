@@ -944,7 +944,6 @@ void RenderPBHeader( INT32 *piX, INT32 *piWidth)
 void RenderPreBattleInterface()
 {
 	GROUP *pGroup;
-	HVOBJECT hVObject;
 	INT32 i, x, y, line, width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
@@ -990,7 +989,7 @@ void RenderPreBattleInterface()
 		}
 
 		gfRenderPBInterface = FALSE;
-		GetVideoObject( &hVObject, uiInterfaceImages );
+		HVOBJECT hVObject = GetVideoObject(uiInterfaceImages);
 		//main panel
 		BltVideoObject( guiSAVEBUFFER, hVObject, MAINPANEL, 0, 0);
 		//main title

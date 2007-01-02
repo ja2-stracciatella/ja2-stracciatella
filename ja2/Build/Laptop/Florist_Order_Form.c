@@ -980,7 +980,6 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 			UINT8 i;
 			UINT16 usPosY, usPosX;
 			UINT16 usFontHeight = GetFontHeight( FLOWER_ORDEER_DROP_DOWN_FONT );
-		  HVOBJECT	hImageHandle;
 
 			//Display the background for the drop down window
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X, FLOWER_ORDER_DROP_DOWN_LOCATION_Y, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DROP_DOWN_LOCATION_Y+usHeight, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -989,7 +988,7 @@ BOOLEAN CreateDestroyFlowerOrderDestDropDown( UINT8 ubDropDownMode )
 			// Place the border around the background
 			//
 
-			GetVideoObject(&hImageHandle, guiDropDownBorder);
+			HVOBJECT hImageHandle = GetVideoObject(guiDropDownBorder);
 
 			usPosX = usPosY = 0;
 			//blit top row of images

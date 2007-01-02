@@ -1678,7 +1678,6 @@ static RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, 
 
 INT32 DisplayEmailMessage(EmailPtr pMail)
 {
-  HVOBJECT hHandle;
 	INT32 iHeight=0;
 	INT32 iCounter=1;
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
@@ -1723,7 +1722,7 @@ INT32 DisplayEmailMessage(EmailPtr pMail)
 
   // blt in top line of message as a blank graphic
 	// get a handle to the bitmap of EMAIL VIEWER Background
-	GetVideoObject( &hHandle, guiEmailMessage );
+	HVOBJECT hHandle = GetVideoObject(guiEmailMessage);
 
 	// place the graphic on the frame buffer
 	BltVideoObject( FRAME_BUFFER, hHandle, 1,VIEWER_X, VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY);

@@ -1422,9 +1422,7 @@ void RenderHandPosItem( void )
 
 void RenderIconsForUpperLeftCornerPiece( INT8 bCharNumber )
 {
-	HVOBJECT hHandle;
-
-	GetVideoObject(&hHandle, guiULICONS);
+	HVOBJECT hHandle = GetVideoObject(guiULICONS);
 
 	// if merc is an AIM merc
 	if( Menptr[ gCharactersList[ bCharNumber ].usSolID ].ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
@@ -6452,7 +6450,6 @@ void BltCharInvPanel()
 {
 	UINT32 uiDestPitchBYTES;
 	UINT16  *pDestBuf;
-	HVOBJECT hCharListHandle;
 	SOLDIERTYPE	*pSoldier;
 	CHAR16 sString[ 32 ];
 	UINT16 usX, usY;
@@ -6464,7 +6461,7 @@ void BltCharInvPanel()
 
 
   pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-  GetVideoObject(&hCharListHandle, guiMAPINV);
+	HVOBJECT hCharListHandle = GetVideoObject(guiMAPINV);
   Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
   UnLockVideoSurface( guiSAVEBUFFER );
 
@@ -10677,7 +10674,6 @@ void HandleAssignmentsDoneAndAwaitingFurtherOrders( void )
 void DisplayIconsForMercsAsleep( void )
 {
 	// run throught he list of grunts to see who is asleep and who isn't
-	HVOBJECT hHandle;
 	INT32 iCounter;
 	SOLDIERTYPE *pSoldier;
 
@@ -10687,7 +10683,7 @@ void DisplayIconsForMercsAsleep( void )
 		return;
 	}
 
-	GetVideoObject(&hHandle, guiSleepIcon );
+	HVOBJECT hHandle = GetVideoObject(guiSleepIcon);
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{

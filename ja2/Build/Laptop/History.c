@@ -764,7 +764,7 @@ void DisplayHistoryListBackground( void )
 
 
 	// get shaded line object
-	GetVideoObject(&hHandle, guiSHADELINE);
+	hHandle = GetVideoObject(guiSHADELINE);
 	for(iCounter=0; iCounter <11; iCounter++)
 	{
     // blt title bar to screen
@@ -772,7 +772,7 @@ void DisplayHistoryListBackground( void )
 	}
 
 	// the long hortizontal line int he records list display region
-  GetVideoObject(&hHandle, guiLONGLINE);
+	hHandle = GetVideoObject(guiLONGLINE);
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y ));
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11  ));
 }

@@ -301,7 +301,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	UINT16 usNumberVerticalPixels, usNumberOfLines;
 	UINT16 usTextWidth, usHeight;
 	UINT16 i;
-  HVOBJECT	hImageHandle;
 	UINT16 usPosY, usPosX;
 	UINT16 usStringPixLength;
 	SGPRect DestRect;
@@ -469,7 +468,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		UnLockVideoSurface(pPopUpTextBox->uiSourceBufferIndex);
 	}
 
-	GetVideoObject(&hImageHandle, pPopUpTextBox->uiMercTextPopUpBorder );
+	HVOBJECT hImageHandle = GetVideoObject(pPopUpTextBox->uiMercTextPopUpBorder);
 
 	usPosX = usPosY = 0;
 	//blit top row of images

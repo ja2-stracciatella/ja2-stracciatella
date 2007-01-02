@@ -1369,10 +1369,9 @@ void InitCreditEyeBlinking()
 
 void HandleCreditEyeBlinking()
 {
-  HVOBJECT hPixHandle;
 	UINT8 ubCnt;
 
-	GetVideoObject(&hPixHandle, guiCreditFaces );
+	HVOBJECT hPixHandle = GetVideoObject(guiCreditFaces);
 
 	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
 	{

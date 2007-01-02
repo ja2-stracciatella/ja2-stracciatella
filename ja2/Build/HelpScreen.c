@@ -822,11 +822,9 @@ void ExitHelpScreen()
 
 BOOLEAN DrawHelpScreenBackGround()
 {
-  HVOBJECT hPixHandle;
 	UINT16 usPosX;
 
-	//Get and display the background image
-	GetVideoObject(&hPixHandle, guiHelpScreenBackGround );
+	HVOBJECT hPixHandle = GetVideoObject(guiHelpScreenBackGround);
 
 	usPosX = gHelpScreen.usScreenLocX;
 

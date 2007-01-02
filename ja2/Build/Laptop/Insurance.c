@@ -166,8 +166,7 @@ void RenderInsurance()
 	DrawTextToScreen( sText, INSURANCE_SUBTITLE_X, INSURANCE_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	//Display the bulleted text 1
-	HVOBJECT hPixHandle;
-	GetVideoObject(&hPixHandle, guiInsuranceBulletImage );
+	HVOBJECT hPixHandle = GetVideoObject(guiInsuranceBulletImage);
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_SUBTITLE_X, INSURANCE_BULLET_TEXT_1_Y);
 	GetInsuranceText( INS_MLTI_EMPLOY_HIGH_RISK, sText );
 	DrawTextToScreen( sText, INSURANCE_SUBTITLE_X+INSURANCE_BULLET_TEXT_OFFSET_X, INSURANCE_BULLET_TEXT_1_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
@@ -254,8 +253,7 @@ void DisplayInsuranceDefaults()
 
 	usPosY = INSURANCE_RED_BAR_Y;
 
-	HVOBJECT hPixHandle;
-	GetVideoObject(&hPixHandle, guiInsuranceRedBarImage );
+	HVOBJECT hPixHandle = GetVideoObject(guiInsuranceRedBarImage);
 	for(i=0; i<4; i++)
 	{
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_RED_BAR_X, usPosY);

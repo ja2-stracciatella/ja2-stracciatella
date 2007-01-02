@@ -269,7 +269,6 @@ void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
 {
-	HVOBJECT	hFaceHandle;
 	SOLDIERTYPE	*pSoldier=NULL;
 
 	pSoldier = FindSoldierByProfileID( AimMercArray[ubMercID], TRUE );
@@ -279,7 +278,7 @@ BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiMugShotBorder, ubImage,usPosX, usPosY);
 
 	//Blt face to screen
-	GetVideoObject(&hFaceHandle, guiAimFiFace[ubMercID]);
+	HVOBJECT hFaceHandle = GetVideoObject(guiAimFiFace[ubMercID]);
 	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET);
 
 	if( IsMercDead( AimMercArray[ubMercID] ) )

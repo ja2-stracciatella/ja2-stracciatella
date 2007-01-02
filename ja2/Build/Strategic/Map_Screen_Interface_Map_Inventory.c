@@ -270,7 +270,6 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 {
 	// render item in this slot of the list
 	INT16 sCenX, sCenY, usWidth, usHeight, sX, sY;
-	HVOBJECT hHandle;
 	ETRLEObject		*pTrav;
 	CHAR16 sString[ 64 ];
 	INT16 sWidth = 0, sHeight = 0;
@@ -283,7 +282,7 @@ BOOLEAN RenderItemInPoolSlot( INT32 iCurrentSlot, INT32 iFirstSlotOnPage )
 		return ( FALSE );
 	}
 
-	GetVideoObject( &hHandle, GetInterfaceGraphicForItem( &(Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ] ) ) );
+	HVOBJECT hHandle = GetVideoObject(GetInterfaceGraphicForItem(&(Item[pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage].o.usItem])));
 
 	pTrav = &( hHandle->pETRLEObject[ Item[pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ].ubGraphicNum] );
 	usHeight				= (UINT16)pTrav->usHeight;

@@ -467,11 +467,9 @@ BOOLEAN RemoveAimDefaults()
 
 BOOLEAN DrawAimDefaults()
 {
-  HVOBJECT hRustBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
-	// Blt the rust background
-	GetVideoObject(&hRustBackGroundHandle, guiRustBackGround);
+	HVOBJECT hRustBackGroundHandle = GetVideoObject(guiRustBackGround);
 
 	uiPosY = RUSTBACKGROUND_1_Y;
 	for(y=0; y<4; y++)
@@ -1068,8 +1066,7 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 			ubDuckImage++;
 		}
 
-		HVOBJECT hAdHandle;
-		GetVideoObject(&hAdHandle, guiBobbyRAdImages);
+		HVOBJECT hAdHandle = GetVideoObject(guiBobbyRAdImages);
 
 		if( ubDuckImage < AIM_AD_BOBBYR_AD_NUM_DUCK_SUBIMAGES * 2 )
 		{

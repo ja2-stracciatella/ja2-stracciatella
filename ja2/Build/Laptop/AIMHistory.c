@@ -342,9 +342,7 @@ BOOLEAN InitTocMenu()
 								 WORD_FROM_FOUNDER,
 								 INCORPORATION};
 
-  HVOBJECT		hContentButtonHandle;
-
-	GetVideoObject(&hContentButtonHandle, guiContentButton);
+	HVOBJECT hContentButtonHandle = GetVideoObject(guiContentButton);
 
 	usHeight = GetFontHeight(AIM_HISTORY_TOC_TEXT_FONT);
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;

@@ -856,14 +856,13 @@ BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
   ETRLEObject	*pTrav;
 	INVTYPE			*pItem;
 	UINT32		uiImage;
-  HVOBJECT	hPixHandle;
 
 	PosX = BOBBYR_GRID_PIC_X;
 
 	pItem = &Item[ usIndex ];
 	LoadTileGraphicForItem(pItem, &uiImage);
 
-	GetVideoObject(&hPixHandle, uiImage);
+	HVOBJECT hPixHandle = GetVideoObject(uiImage);
 	pTrav = &(hPixHandle->pETRLEObject[0]);
 
 	//center picture in frame

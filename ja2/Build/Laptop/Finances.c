@@ -605,10 +605,7 @@ static void DrawSummary(void)
 static void DrawSummaryLines(void)
 {
 	// draw divider lines on screen
-  HVOBJECT hHandle;
-
-	// the summary LINE object handle
-  GetVideoObject(&hHandle, guiLINE);
+	HVOBJECT hHandle = GetVideoObject(guiLINE);
 
 	// blit summary LINE object to screen
 	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y);

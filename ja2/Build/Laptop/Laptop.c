@@ -4122,11 +4122,9 @@ BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 
 //places a tileable pattern down
 BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackgroundIdentifier)
 {
-  HVOBJECT hBackGroundHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
-	// Blt the Wood background
-	GetVideoObject(&hBackGroundHandle, uiBackgroundIdentifier);
+	HVOBJECT hBackGroundHandle = GetVideoObject(uiBackgroundIdentifier);
 
 	uiPosY = LAPTOP_SCREEN_WEB_UL_Y;
 	for(y=0; y<ubNumY; y++)
@@ -4969,13 +4967,12 @@ void PrintDate( void )
 
 void DisplayTaskBarIcons()
 {
-	HVOBJECT hPixHandle;
 //	UINT16 usPosX;
 
 
 //	usPosX = 83;
 
-	GetVideoObject(&hPixHandle, guiTITLEBARICONS);
+	HVOBJECT hPixHandle = GetVideoObject(guiTITLEBARICONS);
 
 	if( fNewFilesInFileViewer )
 	{

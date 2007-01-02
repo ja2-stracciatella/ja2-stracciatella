@@ -615,11 +615,11 @@ void RenderMainMenu()
   HVOBJECT hPixHandle;
 
 	//Get and display the background image
-	GetVideoObject(&hPixHandle, guiMainMenuBackGroundImage );
+	hPixHandle = GetVideoObject(guiMainMenuBackGroundImage);
   BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0);
   BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0);
 
-	GetVideoObject(&hPixHandle, guiJa2LogoImage );
+	hPixHandle = GetVideoObject(guiJa2LogoImage);
   BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 188, 15);
   BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 188, 15);
 

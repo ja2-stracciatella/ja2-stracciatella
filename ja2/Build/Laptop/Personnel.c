@@ -826,7 +826,6 @@ void RenderPersonnelStats( INT32 iId, INT32 iSlot )
 BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther )
 {
 	char sTemp[100];
-	HVOBJECT hFaceHandle;
 
 	// draw face to soldier iId in slot iSlot
 
@@ -871,8 +870,7 @@ BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFire
 
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
-	//Blt face to screen to
-	GetVideoObject(&hFaceHandle, guiFACE);
+	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 	if( fCurrentTeamMode == TRUE )
 	{
@@ -1986,7 +1984,6 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 	INT32 iCounter = 0;
 	INT32 iTotalOnTeam = 0;
 	char sTemp[100];
-	HVOBJECT hFaceHandle;
 	SOLDIERTYPE *pSoldier;
 	INT32 iId = 0;
 	INT32 iCnt = 0;
@@ -2025,8 +2022,7 @@ BOOLEAN DisplayPicturesOfCurrentTeam( void )
 
 		CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
-		//Blt face to screen to
-		GetVideoObject(&hFaceHandle, guiFACE);
+		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 		if( Menptr[ iId + iCnt ].bLife <= 0 )
 		{
@@ -2265,8 +2261,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				sIndex = ( pSoldier->inv[ ubCounter ].usItem );
 				pItem = &Item[ sIndex ];
 
-				HVOBJECT hHandle;
-				GetVideoObject( &hHandle, GetInterfaceGraphicForItem( pItem ) );
+				HVOBJECT hHandle = GetVideoObject(GetInterfaceGraphicForItem(pItem));
 				pTrav = &(hHandle->pETRLEObject[ pItem->ubGraphicNum ] );
 
 				usHeight				= (UINT32)pTrav->usHeight;
@@ -4673,7 +4668,6 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 
 
 	char sTemp[100];
-	HVOBJECT hFaceHandle;
 
 	if( ( 50 < 	iId   )&&( 57 > 	iId   ) )
 	{
@@ -4686,9 +4680,7 @@ BOOLEAN DisplayPortraitOfPastMerc( INT32 iId , INT32 iCounter, BOOLEAN fDead, BO
 
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
 
-
-	//Blt face to screen to
-	GetVideoObject(&hFaceHandle, guiFACE);
+	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 	if( fDead )
 	{

@@ -214,8 +214,7 @@ void RenderFuneral()
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiRightColumn,   0, FUNERAL_RIGHT_COLUMN_X,      FUNERAL_RIGHT_COLUMN_Y);
 
 		// LinkCarving
-	HVOBJECT hPixHandle;
-	GetVideoObject(&hPixHandle, guiLinkCarving);
+	HVOBJECT hPixHandle = GetVideoObject(guiLinkCarving);
 
 	usPosX = FUNERAL_LINK_1_X;
 	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)

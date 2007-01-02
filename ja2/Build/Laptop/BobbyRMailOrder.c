@@ -1363,8 +1363,6 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			UINT8 i;
 			UINT16 usPosY, usPosX;
 			UINT16 usFontHeight = GetFontHeight( BOBBYR_DROPDOWN_FONT );
-		  HVOBJECT	hImageHandle;
-		  HVOBJECT	hArrowHandle;
 
 			//Display the background for the drop down window
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X, BOBBYR_CITY_START_LOCATION_Y, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH,	BOBBYR_CITY_START_LOCATION_Y+BOBBYR_SCROLL_AREA_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -1374,7 +1372,7 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 			//
 			usHeight = BOBBYR_SCROLL_AREA_HEIGHT;
 
-			GetVideoObject(&hImageHandle, guiDropDownBorder);
+			HVOBJECT hImageHandle = GetVideoObject(guiDropDownBorder);
 
 			usPosX = usPosY = 0;
 			//blit top & bottom row of images
@@ -1437,7 +1435,7 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 
 
 			//get and display the up and down arrows
-			GetVideoObject(&hArrowHandle, guiGoldArrowImages);
+			HVOBJECT hArrowHandle = GetVideoObject(guiGoldArrowImages);
 			//top arrow
 			BltVideoObject(FRAME_BUFFER, hArrowHandle, 1, BOBBYR_SCROLL_UP_ARROW_X, BOBBYR_SCROLL_UP_ARROW_Y);
 

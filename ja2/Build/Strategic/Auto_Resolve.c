@@ -1770,7 +1770,6 @@ void RenderAutoResolve()
 void CreateAutoResolveInterface()
 {
 	INT32 i, index;
-	HVOBJECT hVObject;
 	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
 	//Setup new autoresolve blanket interface.
 	MSYS_DefineRegion( &gpAR->AutoResolveRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH-1, 0,
@@ -1823,7 +1822,8 @@ void CreateAutoResolveInterface()
 	{
 		AssertMsg( 0, "Failed to load Interface\\SmFaces.sti" );
 	}
-	if( GetVideoObject( &hVObject, gpAR->iFaces ) )
+	HVOBJECT hVObject = GetVideoObject(gpAR->iFaces);
+	if (hVObject != NULL)
 	{
 		hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
 		hVObject->pShades[ 1 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
@@ -1848,7 +1848,8 @@ void CreateAutoResolveInterface()
 				AssertMsg( 0, String("Failed to load %Faces\\65Face\\%02d.sti or it's placeholder, speck.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex) );
 			}
 		}
-		if( GetVideoObject( &hVObject, gpMercs[ i ].uiVObjectID ) )
+		HVOBJECT hVObject = GetVideoObject(gpMercs[i].uiVObjectID);
+		if (hVObject != NULL)
 		{
 			hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
 			hVObject->pShades[ 1 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );

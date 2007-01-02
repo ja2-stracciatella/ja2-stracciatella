@@ -706,7 +706,6 @@ void			HandleOptionsScreen()
 
 void			RenderOptionsScreen()
 {
-  HVOBJECT hPixHandle;
 	UINT16	usPosY;
 	UINT8	cnt;
 	UINT16	usWidth=0;
@@ -714,7 +713,7 @@ void			RenderOptionsScreen()
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
 
 	//Get and display the titla image
-	GetVideoObject(&hPixHandle, guiOptionsAddOnImages);
+	HVOBJECT hPixHandle = GetVideoObject(guiOptionsAddOnImages);
   BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0);
   BltVideoObject(FRAME_BUFFER, hPixHandle, 1, 0, 434);
 

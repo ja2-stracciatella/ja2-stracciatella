@@ -197,7 +197,6 @@ void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 	UINT32										 uiDestPitchBYTES;
 	UINT8											 *pDestBuf;
 	UINT16										 usLineColor;
-	HVOBJECT hHandle;
 
 	// Erase what was there
 	if ( fErase )
@@ -219,7 +218,7 @@ void DrawBreathUIBarEx( SOLDIERTYPE *pSoldier, INT16 sXPos, INT16 sYPos, INT16 s
 	dStart			= sYPos;
 
 	// brown guy
-	GetVideoObject( &hHandle, guiBrownBackgroundForTeamPanel );
+	HVOBJECT hHandle = GetVideoObject(guiBrownBackgroundForTeamPanel);
 
 	// DO MAX BREATH
 	if( guiCurrentScreen != MAP_SCREEN )

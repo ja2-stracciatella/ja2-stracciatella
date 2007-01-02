@@ -1879,7 +1879,6 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
   ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
 	INT16									sCenX, sCenY, sNewY, sNewX;
-	HVOBJECT							hVObject;
 	BOOLEAN								fLineSplit = FALSE;
 	INT16									sFontX2, sFontY2;
 	INT16									sFontX, sFontY;
@@ -1903,7 +1902,7 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 	if ( fDirtyLevel == DIRTYLEVEL2 )
 	{
 		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		GetVideoObject( &hVObject, GetInterfaceGraphicForItem( pItem ) );
+		HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
 		pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
 		usHeight				= (UINT32)pTrav->usHeight;
 		usWidth					= (UINT32)pTrav->usWidth;
@@ -2863,7 +2862,6 @@ void RenderItemDescriptionBox( )
   ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
 	INT16									sCenX, sCenY, sStrX;
-	HVOBJECT							hVObject;
 	CHAR16								sTempString[ 128 ];
 
 	UINT16								uiStringLength, uiRightLength;
@@ -2878,7 +2876,7 @@ void RenderItemDescriptionBox( )
   if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
 	{
     	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		GetVideoObject( &hVObject, guiItemGraphic );
+		HVOBJECT hVObject = GetVideoObject(guiItemGraphic);
 		pTrav = &(hVObject->pETRLEObject[ 0 ] );
 		usHeight				= (UINT32)pTrav->usHeight;
 		usWidth					= (UINT32)pTrav->usWidth;
@@ -3351,7 +3349,7 @@ void RenderItemDescriptionBox( )
 	{
 
 		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		GetVideoObject( &hVObject, guiItemGraphic );
+		HVOBJECT hVObject = GetVideoObject(guiItemGraphic);
 		pTrav = &(hVObject->pETRLEObject[ 0 ] );
 		usHeight				= (UINT32)pTrav->usHeight;
 		usWidth					= (UINT32)pTrav->usWidth;
@@ -4976,7 +4974,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	SGPRect					aRect;
 	UINT8						ubLimit;
   ETRLEObject						*pTrav;
-	HVOBJECT							hVObject;
 	INT32						cnt;
 	UINT16				 usPopupWidth;
 	INT16					sItemSlotWidth, sItemSlotHeight;
@@ -5014,7 +5011,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
-	GetVideoObject( &hVObject, guiItemPopupBoxes );
+	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usPopupWidth = pTrav->usWidth;
 
@@ -5114,7 +5111,6 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 {
   ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
-	HVOBJECT							hVObject;
 	UINT32								cnt;
 	INT16									sX, sY, sNewX, sNewY;
 
@@ -5132,7 +5128,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 	}
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	GetVideoObject( &hVObject, guiItemPopupBoxes );
+	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
@@ -5205,7 +5201,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 {
 	SGPRect			aRect;
   ETRLEObject	*pTrav;
-	HVOBJECT		hVObject;
 	INT32				cnt;
 	UINT16			usPopupWidth, usPopupHeight;
 	UINT8				ubSlotSimilarToKeySlot = 10;
@@ -5238,7 +5233,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
-	GetVideoObject( &hVObject, guiItemPopupBoxes );
+	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usPopupWidth = pTrav->usWidth;
 	usPopupHeight = pTrav->usHeight;
@@ -5304,7 +5299,6 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 {
   ETRLEObject						*pTrav;
 	UINT32								usHeight, usWidth;
-	HVOBJECT							hVObject;
 	UINT32								cnt;
 	OBJECTTYPE						pObject;
 	INT16 sKeyRingItemWidth = 0;
@@ -5340,7 +5334,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 	pObject.bStatus[ 0 ] = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	GetVideoObject( &hVObject, guiItemPopupBoxes );
+	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
