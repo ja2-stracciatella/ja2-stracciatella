@@ -497,12 +497,9 @@ static void HandleGIOScreen(void)
 
 static BOOLEAN RenderGIOScreen(void)
 {
-	HVOBJECT	hPixHandle;
 	UINT16		usPosY;
 
-	//Get the main background screen graphic and blt it
-	GetVideoObject(&hPixHandle, guiGIOMainBackGroundImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,0,0);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, 0, 0);
 
 	//Shade the background
 	ShadowVideoSurfaceRect( FRAME_BUFFER, 48, 55, 592, 378 );	//358

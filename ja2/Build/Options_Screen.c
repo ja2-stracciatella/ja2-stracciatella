@@ -711,9 +711,7 @@ void			RenderOptionsScreen()
 	UINT8	cnt;
 	UINT16	usWidth=0;
 
-	//Get and display the background image
-	GetVideoObject(&hPixHandle, guiOptionBackGroundImage);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
 
 	//Get and display the titla image
 	GetVideoObject(&hPixHandle, guiOptionsAddOnImages);

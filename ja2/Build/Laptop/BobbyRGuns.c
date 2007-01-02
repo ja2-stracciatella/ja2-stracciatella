@@ -313,16 +313,12 @@ void HandleBobbyRGuns()
 
 void RenderBobbyRGuns()
 {
-  HVOBJECT hPixHandle;
-
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiGunBackground);
 
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	// GunForm
-	GetVideoObject(&hPixHandle, guiGunsGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiGunsGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 //	DeleteMouseRegionForBigImage();
 	DisplayItemInfo( IC_BOBBY_GUN );
@@ -336,11 +332,7 @@ void RenderBobbyRGuns()
 
 BOOLEAN DisplayBobbyRBrTitle()
 {
-  HVOBJECT hPixHandle;
-
-	// BR title
-	GetVideoObject(&hPixHandle, guiBrTitle);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBrTitle, 0, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y);
 
 	// To Order Text
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_TO_ORDER], BOBBYR_TO_ORDER_TITLE_X, BOBBYR_TO_ORDER_TITLE_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);

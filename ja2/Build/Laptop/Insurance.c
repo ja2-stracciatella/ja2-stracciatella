@@ -150,16 +150,12 @@ void HandleInsurance()
 void RenderInsurance()
 {
 	wchar_t		sText[800];
-  HVOBJECT hPixHandle;
 
 	DisplayInsuranceDefaults();
 
 	SetFontShadow( INS_FONT_SHADOW );
 
-	//Get and display the insurance title
-	GetVideoObject(&hPixHandle, guiInsuranceTitleImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_BIG_TITLE_X, INSURANCE_BIG_TITLE_Y);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsuranceTitleImage, 0, INSURANCE_BIG_TITLE_X, INSURANCE_BIG_TITLE_Y);
 
 	//Display the title slogan
 	GetInsuranceText( INS_SNGL_WERE_LISTENING, sText );
@@ -170,6 +166,7 @@ void RenderInsurance()
 	DrawTextToScreen( sText, INSURANCE_SUBTITLE_X, INSURANCE_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 
 	//Display the bulleted text 1
+	HVOBJECT hPixHandle;
 	GetVideoObject(&hPixHandle, guiInsuranceBulletImage );
 	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_SUBTITLE_X, INSURANCE_BULLET_TEXT_1_Y);
 	GetInsuranceText( INS_MLTI_EMPLOY_HIGH_RISK, sText );
@@ -250,7 +247,6 @@ BOOLEAN InitInsuranceDefaults()
 
 void DisplayInsuranceDefaults()
 {
-  HVOBJECT hPixHandle;
 	UINT8	i;
 	UINT16	usPosY;
 
@@ -258,6 +254,7 @@ void DisplayInsuranceDefaults()
 
 	usPosY = INSURANCE_RED_BAR_Y;
 
+	HVOBJECT hPixHandle;
 	GetVideoObject(&hPixHandle, guiInsuranceRedBarImage );
 	for(i=0; i<4; i++)
 	{
@@ -270,11 +267,7 @@ void DisplayInsuranceDefaults()
 	{
 		case LAPTOP_MODE_INSURANCE:
 			usPosY = INSURANCE_TOP_RED_BAR_Y;
-
-			//display the top red bar
-			GetVideoObject(&hPixHandle, guiInsuranceBigRedLineImage );
-			BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_TOP_RED_BAR_X, usPosY);
-
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiInsuranceBigRedLineImage, 0, INSURANCE_TOP_RED_BAR_X, usPosY);
 			break;
 
 		case LAPTOP_MODE_INSURANCE_INFO:
@@ -283,16 +276,12 @@ void DisplayInsuranceDefaults()
 			break;
 	}
 
-	//display the Bottom red bar
-	GetVideoObject(&hPixHandle, guiInsuranceBigRedLineImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_TOP_RED_BAR_X, INSURANCE_BOTTOM_RED_BAR_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsuranceBigRedLineImage, 0, INSURANCE_TOP_RED_BAR_X, INSURANCE_BOTTOM_RED_BAR_Y);
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
-		//display the small title bar
-		GetVideoObject(&hPixHandle, guiInsuranceSmallTitleImage );
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INSURANCE_SMALL_TITLE_X, INSURANCE_SMALL_TITLE_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiInsuranceSmallTitleImage, 0, INSURANCE_SMALL_TITLE_X, INSURANCE_SMALL_TITLE_Y);
 	}
 }
 

@@ -246,21 +246,11 @@ void HandleMercsFiles()
 
 void RenderMercsFiles()
 {
-  HVOBJECT hPixHandle;
-
 	DrawMecBackGround();
 
-	// Portrait Box
-	GetVideoObject(&hPixHandle, guiPortraitBox);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
-
-	// Stats Box
-	GetVideoObject(&hPixHandle, guiStatsBox);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_FILES_STATS_BOX_X, MERC_FILES_STATS_BOX_Y);
-
-	// bio box
-	GetVideoObject(&hPixHandle, guiBioBox);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_FILES_BIO_BOX_X+1, MERC_FILES_BIO_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
 	//Display the mercs face
 	DisplayMercFace( GetMercIDFromMERCArray( gubCurMercIndex ) );
@@ -356,9 +346,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	MERCPROFILESTRUCT	*pMerc;
 	SOLDIERTYPE			*pSoldier=NULL;
 
-	// Portrait Frame
-	GetVideoObject(&hPortraitHandle, guiPortraitBox);
-  BltVideoObject(FRAME_BUFFER, hPortraitHandle, 0,MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
 	pMerc = &gMercProfiles[ ubMercID ];
 
@@ -378,9 +366,6 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 	{
 		//shade the face red, (to signif that he is dead)
 		hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
-
-		//get the face object
-		GetVideoObject(&hFaceHandle, guiMercFace);
 
 		//set the red pallete to the face
 		SetObjectHandleShade( guiMercFace, 0 );

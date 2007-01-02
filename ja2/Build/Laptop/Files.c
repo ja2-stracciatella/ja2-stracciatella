@@ -290,9 +290,6 @@ void HandleFiles()
 
 void RenderFiles()
 {
-    HVOBJECT hHandle;
-
-
 	// render the background
 	RenderFilesBackGround(  );
 
@@ -308,28 +305,15 @@ void RenderFiles()
 	// title bar icon
 	BlitTitleBarIcons(  );
 
-
-	// display border
-	GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 }
 
 
 void RenderFilesBackGround( void )
 {
 	// render generic background for file system
-  HVOBJECT hHandle;
-
-	// get title bar object
-	GetVideoObject(&hHandle, guiTITLE);
-
-	// blt title bar to screen
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y - 2);
-
-  // get and blt the top part of the screen, video object and blt to screen
-  GetVideoObject( &hHandle, guiTOP );
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
 void DrawFilesTitleText( void )
@@ -626,8 +610,6 @@ void DisplayFilesList( void )
   // this function will run through the list of files of files and display the 'sender'
 	FilesUnitPtr pFilesList=pFilesListHead;
   INT32 iCounter=0;
-  HVOBJECT hHandle;
-
 
 	// font stuff
   SetFont(FILES_TEXT_FONT);
@@ -640,10 +622,7 @@ void DisplayFilesList( void )
 	{
 		if (iCounter==iHighLightFileLine)
 		{
-       // render highlight
-      GetVideoObject(&hHandle, guiHIGHLIGHT);
-      BltVideoObject(FRAME_BUFFER, hHandle, 0, FILES_SENDER_TEXT_X - 5, ( ( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 4);
-
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 4);
 		}
     mprintf(FILES_SENDER_TEXT_X, ( ( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 2 ,pFilesSenderList[pFilesList->ubCode]);
 		iCounter++;
@@ -746,7 +725,6 @@ BOOLEAN DisplayFormattedText( void )
 	INT32 iOffSet=0;
 	INT32 iMessageCode;
 	wchar_t sString[2048];
-  HVOBJECT hHandle;
   UINT32 uiFirstTempPicture;
 	UINT32 uiSecondTempPicture;
   INT16 usFreeSpace = 0;
@@ -767,12 +745,7 @@ BOOLEAN DisplayFormattedText( void )
   // set file as read
 	pFilesList->fRead = TRUE;
 
-	// clear the file string structure list
-  // get file background object
-	GetVideoObject(&hHandle, guiFileBack);
-
-	// blt background to screen
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiFileBack, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4);
 
   // get the offset in the file
   while( iCounter < iMessageCode)
@@ -828,12 +801,7 @@ BOOLEAN DisplayFormattedText( void )
 
        GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
 
-
-			 // get file background object
-	     GetVideoObject(&hHandle, uiFirstTempPicture);
-
-	     // blt background to screen
-	     BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + 4 + ( FILE_VIEWER_WIDTH - usFirstWidth ) / 2, FILE_VIEWER_Y + 10);
+	     BltVideoObjectFromIndex(FRAME_BUFFER, uiFirstTempPicture, 0, FILE_VIEWER_X + 4 + (FILE_VIEWER_WIDTH - usFirstWidth) / 2, FILE_VIEWER_Y + 10);
 
 			 iHeight = usFirstHeight + 20;
 
@@ -872,24 +840,14 @@ BOOLEAN DisplayFormattedText( void )
 			 usFreeSpace = FILE_VIEWER_WIDTH - usFirstWidth - usSecondWidth;
 
 			 usFreeSpace /= 3;
-        // get file background object
-	     GetVideoObject(&hHandle, uiFirstTempPicture);
 
-
-	     // blt background to screen
-	     BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
-
-        // get file background object
-	     GetVideoObject(&hHandle, uiSecondTempPicture);
+	     BltVideoObjectFromIndex(FRAME_BUFFER, uiFirstTempPicture, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
 
 			 // get position for second picture
 			 usFreeSpace *= 2;
 			 usFreeSpace += usFirstWidth;
 
-			 // blt background to screen
-	     BltVideoObject(FRAME_BUFFER, hHandle, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
-
-
+	     BltVideoObjectFromIndex(FRAME_BUFFER, uiSecondTempPicture, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
 
        // delete video object
 			 DeleteVideoObjectFromIndex(uiFirstTempPicture);
@@ -1061,7 +1019,6 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 
 	UINT32 uiPicture;
-	HVOBJECT hHandle;
 
 	ClearFileStringList( );
 
@@ -1222,29 +1179,15 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	{
 		// title bar
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\ArucoFilesMap.sti", &uiPicture));
-
-		// get title bar object
-	  GetVideoObject(&hHandle, uiPicture);
-
-	  // blt title bar to screen
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,300, 270);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 300, 270);
 		DeleteVideoObjectFromIndex( uiPicture );
-
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_Y.sti", &uiPicture));
-
-		// get title bar object
-	  GetVideoObject(&hHandle, uiPicture);
-
-	  // blt title bar to screen
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,260, 225);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 225);
 		DeleteVideoObjectFromIndex( uiPicture );
-
 	}
 	else if( giFilesPage == 5 )
 	{
@@ -1252,13 +1195,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 			// wedding pic
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_W.sti", &uiPicture));
-
-		// get title bar object
-	  GetVideoObject(&hHandle, uiPicture);
-
-	  // blt title bar to screen
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,260, 85);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 85);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 
@@ -1608,7 +1545,6 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 	FileRecordWidthPtr WidthList = NULL;
 	INT32 iOffset = 0;
 	UINT32 uiPicture;
-	HVOBJECT hHandle;
 	CHAR sTemp[ 128 ];
 
 	iOffset = ubFileOffsets[ iFileNumber ] ;
@@ -1719,23 +1655,13 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 			{
 				sprintf(sTemp, "%s%02d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
 				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
-
-				//Blt face to screen to
-				GetVideoObject(&hHandle, uiPicture);
-
 //def: 3/24/99
-//				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  30 ), ( INT16 ) ( iYPositionOnPage + 5));
-				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  30 ), ( INT16 ) ( iYPositionOnPage + 21));
-
+//				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
+				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
 				DeleteVideoObjectFromIndex( uiPicture );
 
 				CHECKF(AddVideoObjectFromFile("LAPTOP\\InterceptBorder.sti", &uiPicture));
-
-				//Blt face to screen to
-				GetVideoObject(&hHandle, uiPicture);
-
-				BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) (  FILE_VIEWER_X +  25 ), ( INT16 ) ( iYPositionOnPage + 16 ));
-
+				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
 				DeleteVideoObjectFromIndex( uiPicture );
 			}
 

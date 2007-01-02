@@ -192,13 +192,9 @@ void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
 {
 	wchar_t		sText[800];
-  HVOBJECT	hPixHandle;
 	UINT16		sNumPixels=0;
 
-
-	//Get and display the insurance bullet
-	GetVideoObject(&hPixHandle, guiInsCmntBulletImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INS_CMNT_FIRST_BULLET_X, usPosY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsCmntBulletImage, 0, INS_CMNT_FIRST_BULLET_X, usPosY);
 
 	//Display the commenters comment
 	GetInsuranceText( ubComment, sText );			//+INS_CMNT_COMMENT_OFFSET_Y

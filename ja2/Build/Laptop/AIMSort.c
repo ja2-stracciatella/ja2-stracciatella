@@ -335,28 +335,11 @@ void HandleAimSort()
 
 void RenderAimSort()
 {
-  HVOBJECT	hSortByHandle;
-  HVOBJECT	hToAlumniHandle;
-  HVOBJECT	hToMugShotHandle;
-  HVOBJECT	hToStatsHandle;
-
 	DrawAimDefaults();
-	// SortBy
-	GetVideoObject(&hSortByHandle, guiSortByBox);
-  BltVideoObject(FRAME_BUFFER, hSortByHandle, 0,AIM_SORT_SORT_BY_X, AIM_SORT_SORT_BY_Y);
-
-	// To MugShots
-	GetVideoObject(&hToMugShotHandle, guiToMugShots);
-  BltVideoObject(FRAME_BUFFER, hToMugShotHandle, 0,AIM_SORT_TO_MUGSHOTS_X, AIM_SORT_TO_MUGSHOTS_Y);
-
-	// To stats
-	GetVideoObject(&hToStatsHandle, guiToStats);
-  BltVideoObject(FRAME_BUFFER, hToStatsHandle, 0,AIM_SORT_TO_STATS_X, AIM_SORT_TO_STATS_Y);
-
-	// To Alumni
-	GetVideoObject(&hToAlumniHandle, guiToAlumni);
-  BltVideoObject(FRAME_BUFFER, hToAlumniHandle, 0,AIM_SORT_TO_ALUMNI_X, AIM_SORT_TO_ALUMNI_Y);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSortByBox, 0, AIM_SORT_SORT_BY_X, AIM_SORT_SORT_BY_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiToMugShots, 0, AIM_SORT_TO_MUGSHOTS_X, AIM_SORT_TO_MUGSHOTS_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiToStats, 0, AIM_SORT_TO_STATS_X, AIM_SORT_TO_STATS_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiToAlumni, 0, AIM_SORT_TO_ALUMNI_X, AIM_SORT_TO_ALUMNI_Y);
 
 	// Draw the aim slogan under the symbol
 	DisplayAimSlogan();
@@ -634,12 +617,9 @@ void SelectDescendBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 {
-	HVOBJECT	hSelectLightHandle;
-
 	ubMode *= 2;
 
-	GetVideoObject(&hSelectLightHandle, guiSelectLight);
-  BltVideoObject(FRAME_BUFFER, hSelectLightHandle, ubImage, (AimSortCheckBoxLoc[ubMode] ), ( AimSortCheckBoxLoc[ubMode + 1] ));
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSelectLight, ubImage, AimSortCheckBoxLoc[ubMode], AimSortCheckBoxLoc[ubMode + 1]);
 
 //  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 

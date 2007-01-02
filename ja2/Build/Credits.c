@@ -594,11 +594,7 @@ void			HandleCreditScreen()
 //rrr
 BOOLEAN		RenderCreditScreen()
 {
-
-  HVOBJECT hPixHandle;
-
-	GetVideoObject(&hPixHandle, guiCreditBackGroundImage );
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0);
+  BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
 /*
 	HVSURFACE hVSurface = GetVideoSurface(guiCreditBackGroundImage);
 	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);

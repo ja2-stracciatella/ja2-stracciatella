@@ -171,17 +171,11 @@ void HandleMercsAccount()
 void RenderMercsAccount()
 {
 	wchar_t		sText[100];
-  HVOBJECT hPixHandle;
 
 	DrawMecBackGround();
 
-	// Account Number Grid
-	GetVideoObject(&hPixHandle, guiMercOrderGrid);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_AC_ORDER_GRID_X, MERC_AC_ORDER_GRID_Y);
-
-	// Merc Order Grid
-	GetVideoObject(&hPixHandle, guiAccountNumberGrid);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_AC_ACCOUNT_NUMBER_X, MERC_AC_ACCOUNT_NUMBER_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercOrderGrid,     0, MERC_AC_ORDER_GRID_X,     MERC_AC_ORDER_GRID_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiAccountNumberGrid, 0, MERC_AC_ACCOUNT_NUMBER_X, MERC_AC_ACCOUNT_NUMBER_Y);
 
 	//Display Players account number
 	swprintf(sText, lengthof(sText), L"%S %05d", MercAccountText[MERC_ACCOUNT_ACCOUNT], LaptopSaveInfo.guiPlayersMercAccountNumber);

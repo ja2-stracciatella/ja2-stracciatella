@@ -482,7 +482,6 @@ void SetIntroType( INT8 bIntroType )
 
 void DisplaySirtechSplashScreen()
 {
-  HVOBJECT hPixHandle;
 	UINT32 uiLogoID;
 
 	UINT32										 uiDestPitchBYTES;
@@ -503,8 +502,7 @@ void DisplaySirtechSplashScreen()
 		return;
 	}
 
-	GetVideoObject(&hPixHandle, uiLogoID);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,0, 0);
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiLogoID, 0, 0, 0);
 	DeleteVideoObjectFromIndex(uiLogoID);
 
 

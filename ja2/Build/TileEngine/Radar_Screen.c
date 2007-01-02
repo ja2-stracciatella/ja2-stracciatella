@@ -602,7 +602,6 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
 	INT16 sCounter = 0;
-	HVOBJECT hHandle;
 	UINT32 uiHandle;
 
 	if( ( fRenderRadarScreen == FALSE ) && ( fCreated == FALSE ) )
@@ -611,8 +610,7 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 		// load graphics
 	  CHECKF(AddVideoObjectFromFile("INTERFACE\\squadpanel.sti", &uiHandle));
 
-	  GetVideoObject(&hHandle, uiHandle);
-		BltVideoObject( guiSAVEBUFFER , hHandle, 0,538, 0 + gsVIEWPORT_END_Y);
+		BltVideoObjectFromIndex(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
 
 		RestoreExternBackgroundRect( 538, gsVIEWPORT_END_Y, ( 640 - 538 ),( INT16 ) ( 480 - gsVIEWPORT_END_Y ) );
 

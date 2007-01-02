@@ -211,22 +211,18 @@ BOOLEAN InitFloristDefaults()
 
 void DisplayFloristDefaults()
 {
-  HVOBJECT hPixHandle;
-
 	WebPageTileBackground(4, 4, FLORIST_BACKGROUND_WIDTH, FLORIST_BACKGROUND_HEIGHT, guiFloristBackground);
 
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
 		gfHomePageActive = TRUE;
-		GetVideoObject(&hPixHandle, guiLargeTitleSymbol);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiLargeTitleSymbol, 0, FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y);
 	}
 	else
 	{
 		gfHomePageActive = FALSE;
-		GetVideoObject(&hPixHandle, guiSmallTitleSymbol);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiSmallTitleSymbol, 0, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y);
 	}
 }
 

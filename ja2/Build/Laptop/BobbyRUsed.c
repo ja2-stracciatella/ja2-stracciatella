@@ -64,16 +64,12 @@ void HandleBobbyRUsed()
 
 void RenderBobbyRUsed()
 {
-  HVOBJECT hPixHandle;
-
 	WebPageTileBackground(BOBBYR_NUM_HORIZONTAL_TILES, BOBBYR_NUM_VERTICAL_TILES, BOBBYR_BACKGROUND_WIDTH, BOBBYR_BACKGROUND_HEIGHT, guiUsedBackground);
 
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	// GunForm
-	GetVideoObject(&hPixHandle, guiUsedGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiUsedGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(BOBBYR_USED_ITEMS);
 

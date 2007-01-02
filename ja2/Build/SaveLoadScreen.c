@@ -778,16 +778,13 @@ void			ExitSaveLoadScreen()
 
 void			RenderSaveLoadScreen()
 {
-  HVOBJECT hPixHandle;
-
 	//if we are going to be instantly leaving the screen, dont draw the numbers
 	if( gfLoadGameUponEntry )
 	{
 		return;
 	}
 
-	GetVideoObject(&hPixHandle, guiSlgBackGroundImage);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSlgBackGroundImage, 0, 0, 0);
 
 	if( gfSaveGame )
 	{
@@ -795,17 +792,14 @@ void			RenderSaveLoadScreen()
 
 		//Display the Title
 //		DrawTextToScreen( zSaveLoadText[SLG_SAVE_GAME], 0, 10, 639, SAVE_LOAD_TITLE_FONT, SAVE_LOAD_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
-		GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 	else
 	{
 		// If we are Loading a game
 
 		//Display the Title
-		GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 
 	DisplaySaveGameList();
@@ -1193,7 +1187,6 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 	CHAR16		zNumMercsString[128];
 	CHAR16		zBalanceString[128];
 	SAVED_GAME_HEADER SaveGameHeader;
-  HVOBJECT hPixHandle;
 	UINT16		usPosX=SLG_FIRST_SAVED_SPOT_X;
 	UINT32		uiFont= SAVE_LOAD_TITLE_FONT;
 	UINT8			ubFontColor=SAVE_LOAD_TITLE_COLOR;
@@ -1213,8 +1206,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 		return( TRUE );
 
 	//background
-	GetVideoObject(&hPixHandle, guiBackGroundAddOns);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, gbSaveGameSelectedLocation[ bEntryID ], usPosX, usPosY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[bEntryID], usPosX, usPosY);
 
 
 	//

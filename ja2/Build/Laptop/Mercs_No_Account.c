@@ -113,13 +113,9 @@ void HandleMercsNoAccount()
 
 void RenderMercsNoAccount()
 {
-  HVOBJECT hPixHandle;
-
 	DrawMecBackGround();
 
-	// Title
-	GetVideoObject(&hPixHandle, guiNoAccountImage);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_NO_ACCOUNT_IMAGE_X, MERC_NO_ACCOUNT_IMAGE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiNoAccountImage, 0,MERC_NO_ACCOUNT_IMAGE_X, MERC_NO_ACCOUNT_IMAGE_Y);
 
 	//Display the sentence
 	DisplayWrappedString(MERC_NA_SENTENCE_X, MERC_NA_SENTENCE_Y, MERC_NA_SENTENCE_WIDTH, 2, MERC_NA_TEXT_FONT, MERC_NA_TEXT_COLOR, MercNoAccountText[MERC_NO_ACC_NO_ACCOUNT_OPEN_ONE], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);

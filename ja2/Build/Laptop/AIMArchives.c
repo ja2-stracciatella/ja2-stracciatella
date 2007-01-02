@@ -439,9 +439,6 @@ void DisplayAlumniOldMercPopUp()
 	UINT16		usPosY, usTextPosY;
 	UINT8			ubFontHeight, ubNumDescLines;
 	HVOBJECT	hAlumniPopUpHandle;
-	HVOBJECT	hDoneHandle;
-	HVOBJECT	hFacePaneHandle;
-	HVOBJECT	hFaceHandle;
 //	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	usHeight = GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 	wchar_t	sName[AIM_ALUMNI_NAME_SIZE];
@@ -450,9 +447,6 @@ void DisplayAlumniOldMercPopUp()
 	UINT16	usStringPixLength;
 
 	GetVideoObject(&hAlumniPopUpHandle, guiAlumniPopUp);
-	GetVideoObject(&hDoneHandle, guiDoneButton);
-	GetVideoObject(&hFacePaneHandle, guiPopUpPic);
-	GetVideoObject(&hFaceHandle, guiOldAim);
 
 	ubFontHeight = (UINT8)GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 
@@ -482,14 +476,14 @@ void DisplayAlumniOldMercPopUp()
 	//draw the bottom line and done button
 	ShadowVideoSurfaceRect( FRAME_BUFFER, AIM_POPUP_X+AIM_POPUP_SHADOW_GAP, usPosY+AIM_POPUP_SHADOW_GAP, AIM_POPUP_X + AIM_POPUP_WIDTH+AIM_POPUP_SHADOW_GAP, usPosY + AIM_POPUP_SECTION_HEIGHT+AIM_POPUP_SHADOW_GAP-1);
 	BltVideoObject(FRAME_BUFFER, hAlumniPopUpHandle, 2,AIM_POPUP_X, usPosY);
-	BltVideoObject(FRAME_BUFFER, hDoneHandle, 0,AIM_ALUMNI_DONE_X, usPosY-AIM_ALUMNI_DONE_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiDoneButton, 0, AIM_ALUMNI_DONE_X, usPosY - AIM_ALUMNI_DONE_HEIGHT);
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_DONE], (UINT16)(AIM_ALUMNI_DONE_X+1), (UINT16)(usPosY-AIM_ALUMNI_DONE_HEIGHT+3), AIM_ALUMNI_DONE_WIDTH, AIM_ALUMNI_POPUP_NAME_FONT, AIM_ALUMNI_POPUP_NAME_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	CreateDestroyDoneMouseRegion(usPosY);
 
 	///blt face panale and the mecs fce
-	BltVideoObject(FRAME_BUFFER, hFacePaneHandle, 0,AIM_ALUMNI_FACE_PANEL_X, AIM_ALUMNI_FACE_PANEL_Y);
-	BltVideoObject(FRAME_BUFFER, hFaceHandle, gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X+1, AIM_ALUMNI_FACE_PANEL_Y+1);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPopUpPic, 0,AIM_ALUMNI_FACE_PANEL_X, AIM_ALUMNI_FACE_PANEL_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiOldAim, gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
 //	uiStartLoc = AIM_ALUMNI_NAME_SIZE * gubDrawOldMerc;

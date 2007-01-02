@@ -647,17 +647,11 @@ void RemovePersonnelGraphics( void )
 
 void RenderPersonnel( void )
 {
-  HVOBJECT hHandle;
   // re-renders personnel screen
 	// render main background
 
-  // blit title
-  GetVideoObject(&hHandle, guiTITLE);
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
-
-	// blit screen
-	GetVideoObject(&hHandle, guiSCREEN);
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y -  2);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSCREEN, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
 
   // render pictures of mercs on scnree
  	//RenderPersonnelPictures( );
@@ -669,8 +663,7 @@ void RenderPersonnel( void )
 	//DrawPageNumber( );
 
 		// display border
-	//GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-	//BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23);
+	//BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 
 
 	// invalidte the region we blitted to
@@ -1860,23 +1853,8 @@ void SetPersonnelButtonStates( void )
 
 void RenderPersonnelScreenBackground( void )
 {
-
-	HVOBJECT hHandle;
-
 	// this fucntion will render the background for the personnel screen
-	if( fCurrentTeamMode == TRUE )
-	{
-		// blit title
-    GetVideoObject(&hHandle, guiCURRENTTEAM);
-
-	}
-	else
-	{
-			// blit title
-    GetVideoObject(&hHandle, guiDEPARTEDTEAM);
-	}
-
-	BltVideoObject( FRAME_BUFFER, hHandle, 0,DEPARTED_X, DEPARTED_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, fCurrentTeamMode ? guiCURRENTTEAM : guiDEPARTEDTEAM, 0, DEPARTED_X, DEPARTED_Y);
 }
 
 
@@ -2236,7 +2214,6 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 	UINT8 ubCounter = 0;
 	SOLDIERTYPE *pSoldier;
 	INT16 sIndex;
-	HVOBJECT hHandle;
 	ETRLEObject	*pTrav;
 	INVTYPE			*pItem;
 	INT16				PosX, PosY, sCenX, sCenY;
@@ -2248,8 +2225,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 	INT32 cnt = 0;
 	INT32 iTotalAmmo = 0;
 
-	GetVideoObject(&hHandle, guiPersonnelInventory);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( 397 ), ( INT16 ) ( 200 ));
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
 
 	if( fCurrentTeamMode == FALSE )
 	{
@@ -2289,6 +2265,7 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				sIndex = ( pSoldier->inv[ ubCounter ].usItem );
 				pItem = &Item[ sIndex ];
 
+				HVOBJECT hHandle;
 				GetVideoObject( &hHandle, GetInterfaceGraphicForItem( pItem ) );
 				pTrav = &(hHandle->pETRLEObject[ pItem->ubGraphicNum ] );
 
@@ -5077,7 +5054,6 @@ BOOLEAN DisplayHighLightBox( void )
 {
 	// will display highlight box around selected merc
 	 UINT32 uiBox = 0;
-	 HVOBJECT hHandle;
 
 	// load graphics
 
@@ -5090,13 +5066,7 @@ BOOLEAN DisplayHighLightBox( void )
 
   // bounding
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\PicBorde.sti", &uiBox));
-
-	// blit it
-	GetVideoObject(&hHandle, uiBox);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( SMALL_PORTRAIT_START_X+ ( iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_WIDTH - 2 ), ( INT16 ) ( SMALL_PORTRAIT_START_Y + ( iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH ) * SMALL_PORT_HEIGHT - 3 ));
-
-
-	// deleteit
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH - 2, SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3);
 	DeleteVideoObjectFromIndex( uiBox );
 
 
@@ -5292,18 +5262,12 @@ INT32 GetIdOfThisSlot( INT32 iSlot )
 BOOLEAN RenderAtmPanel( void )
 {
 	 UINT32 uiBox = 0;
-	 HVOBJECT hHandle;
-
 
 	// render the ATM panel
 	if( fShowAtmPanel )
 	{
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
-
-		// blit it
-		GetVideoObject(&hHandle, uiBox);
-		BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( ATM_UL_X ), ( INT16 ) ( ATM_UL_Y ));
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X, ATM_UL_Y);
 		DeleteVideoObjectFromIndex( uiBox );
 
 		// show amount
@@ -5328,15 +5292,8 @@ BOOLEAN RenderAtmPanel( void )
 		// just show basic panel
 		// bounding
 		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
-
-		GetVideoObject(&hHandle, uiBox);
-		BltVideoObject(FRAME_BUFFER, hHandle, 0,( INT16 ) ( ATM_UL_X ), ( INT16 ) ( ATM_UL_Y ));
-
-		// blit it
-		GetVideoObject(&hHandle, uiBox);
-		BltVideoObject(FRAME_BUFFER, hHandle, 1,( INT16 ) ( ATM_UL_X + 1 ), ( INT16 ) ( ATM_UL_Y + 18));
-
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X    , ATM_UL_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 		DeleteVideoObjectFromIndex( uiBox );
 
 		// display strings for ATM
@@ -5523,12 +5480,8 @@ void HandleSliderBarClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 
 void RenderSliderBarForPersonnelInventory( void )
 {
-	HVOBJECT hHandle;
-
 	// render slider bar for personnel
-	GetVideoObject(&hHandle, guiPersonnelInventory );
-	BltVideoObject( FRAME_BUFFER, hHandle, 5,( INT16 ) ( X_OF_PERSONNEL_SCROLL_REGION ), ( INT16 ) ( guiSliderPosition + Y_OF_PERSONNEL_SCROLL_REGION));
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPersonnelInventory, 5, X_OF_PERSONNEL_SCROLL_REGION, guiSliderPosition + Y_OF_PERSONNEL_SCROLL_REGION);
 }
 
 void CreateDestroyATMButton( void )

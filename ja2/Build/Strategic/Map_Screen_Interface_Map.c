@@ -1183,15 +1183,10 @@ void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies
 void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	INT16 sXPosition = 0, sYPosition = 0;
-	HVOBJECT hIconHandle;
-
 
 	// grab the x and y postions
 	sXPosition = sSectorX;
 	sYPosition = sSectorY;
-
-	// get the video object
-	GetVideoObject(&hIconHandle, guiCHARICONS);
 
 	// check if we are zoomed in...need to offset in case for scrolling purposes
 	if(!fZoomFlag)
@@ -1201,7 +1196,7 @@ void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		sYPosition -= 2;
 
 		// small question mark
-		BltVideoObject(guiSAVEBUFFER, hIconHandle, SMALL_QUESTION_MARK, sXPosition, sYPosition);
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCHARICONS, SMALL_QUESTION_MARK, sXPosition, sYPosition);
 		InvalidateRegion( sXPosition ,sYPosition, sXPosition + DMAP_GRID_X, sYPosition + DMAP_GRID_Y );
 	}
 /*
@@ -1221,7 +1216,7 @@ void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		ClipBlitsToMapViewRegion( );
 
 		// large question mark
-		BltVideoObject(guiSAVEBUFFER, hIconHandle, BIG_QUESTION_MARK, sXPosition, sYPosition);
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCHARICONS, BIG_QUESTION_MARK, sXPosition, sYPosition);
 
 		// restore clip blits
 		RestoreClipRegionToFullScreen( );
@@ -4199,7 +4194,6 @@ void DisplayDistancesForHelicopter( void )
 	INT16 sDistanceToGo = 0;//, sDistanceSoFar = 0, sTotalCanTravel = 0;
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 32 ];
-	HVOBJECT hHandle;
 	INT16 sTotalOfTrip = 0;
 	INT32 iTime = 0;
 	INT16 sMapX, sMapY;
@@ -4226,10 +4220,7 @@ void DisplayDistancesForHelicopter( void )
 
 	sOldYPosition = sYPosition;
 
-	// blit in background
-	GetVideoObject( &hHandle, guiMapBorderHeliSectors );
-	BltVideoObject( FRAME_BUFFER, hHandle, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
 
 //	sTotalCanTravel = ( INT16 )GetTotalDistanceHelicopterCanTravel( );
 	sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
@@ -4446,8 +4437,7 @@ void DisplayPositionOfHelicopter( void )
 			// clip blits to mapscreen region
 			ClipBlitsToMapViewRegion( );
 
-			GetVideoObject( &hHandle, guiHelicopterIcon );
-			BltVideoObject( FRAME_BUFFER, hHandle, HELI_ICON, x, y);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			// now get number of people and blit that too
 			iNumberOfPeopleInHelicopter =  GetNumberOfPassengersInHelicopter( );
@@ -4477,8 +4467,6 @@ void DisplayDestinationOfHelicopter( void )
 	INT16 sSector;
 	INT16 sMapX, sMapY;
 	UINT32 x,y;
-	HVOBJECT hHandle;
-
 
 	AssertMsg( ( sOldMapX >= 0 ) && ( sOldMapX < 640 ), String( "DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX ) );
 	AssertMsg( ( sOldMapY >= 0 ) && ( sOldMapY < 480 ), String( "DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY ) );
@@ -4507,8 +4495,7 @@ void DisplayDestinationOfHelicopter( void )
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );
 
-		GetVideoObject( &hHandle, guiHelicopterIcon );
-		BltVideoObject( FRAME_BUFFER, hHandle, HELI_SHADOW_ICON, x, y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiHelicopterIcon, HELI_SHADOW_ICON, x, y);
 		InvalidateRegion( x, y, x + HELI_SHADOW_ICON_WIDTH, y + HELI_SHADOW_ICON_HEIGHT );
 
 		RestoreClipRegionToFullScreen( );
@@ -4600,13 +4587,9 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 
 void BlitMineIcon( INT16 sMapX, INT16 sMapY )
 {
-	HVOBJECT hHandle;
 	UINT32 uiDestPitchBYTES;
 	UINT8 *pDestBuf2;
 	INT16 sScreenX, sScreenY;
-
-
-	GetVideoObject( &hHandle, guiMINEICON );
 
 	pDestBuf2 = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X - 1, MAP_VIEW_START_Y+MAP_GRID_Y - 1, MAP_VIEW_WIDTH+1,MAP_VIEW_HEIGHT-9 );
@@ -4616,13 +4599,13 @@ void BlitMineIcon( INT16 sMapX, INT16 sMapY )
 	{
 		GetScreenXYFromMapXYStationary( ( INT16 )( sMapX ), ( INT16 )( sMapY ) , &sScreenX, &sScreenY );
 		// when zoomed, the x,y returned is the CENTER of the map square in question
-		BltVideoObject( guiSAVEBUFFER, hHandle, 0, sScreenX - MAP_GRID_ZOOM_X / 4, sScreenY - MAP_GRID_ZOOM_Y / 4);
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMINEICON, 0, sScreenX - MAP_GRID_ZOOM_X / 4, sScreenY - MAP_GRID_ZOOM_Y / 4);
 	}
 	else
 	{
 		GetScreenXYFromMapXY( ( INT16 )( sMapX ), ( INT16 )( sMapY ), &sScreenX, &sScreenY );
 		// when not zoomed, the x,y returned is the top left CORNER of the map square in question
-		BltVideoObject( guiSAVEBUFFER, hHandle, 1, sScreenX + MAP_GRID_X / 4, sScreenY + MAP_GRID_Y / 4);
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMINEICON, 1, sScreenX + MAP_GRID_X / 4, sScreenY + MAP_GRID_Y / 4);
 	}
 }
 
@@ -5107,13 +5090,8 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// update states of militia selected sector buttons
 	CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( );
 
-	// get the properties of the militia object
-	GetVideoObject( &hVObject, guiMilitia );
-
-	BltVideoObject( FRAME_BUFFER, hVObject, 0, MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y);
-
-	GetVideoObject( &hVObject, guiMilitiaMaps );
-	BltVideoObject( FRAME_BUFFER, hVObject, ( UINT16 )( sSelectedMilitiaTown - 1 ), MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitia, 0, MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaMaps, sSelectedMilitiaTown - 1, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y);
 
 	// set font color for labels and "total militia" counts
 	SetFontForeground(FONT_WHITE);
@@ -5335,24 +5313,14 @@ void ShowHighLightedSectorOnMilitiaMap( void )
 	{
 		sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( sSectorMilitiaMapSector % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
 		sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( sSectorMilitiaMapSector / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
-
-		// get the object
-		GetVideoObject( &hVObject, guiMilitiaSectorHighLight );
-
-		// blt the object
-		BltVideoObject( FRAME_BUFFER, hVObject, 0, sX, sY);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaSectorHighLight, 0, sX, sY);
 	}
 
 	if( sSectorMilitiaMapSectorOutline != -1 )
 	{
 		sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( sSectorMilitiaMapSectorOutline % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
 		sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( sSectorMilitiaMapSectorOutline / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
-
-		// get the object
-		GetVideoObject( &hVObject, guiMilitiaSectorOutline );
-
-		// blt the object
-		BltVideoObject( FRAME_BUFFER, hVObject, 0, sX, sY);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaSectorOutline, 0, sX, sY);
 	}
 }
 
@@ -6191,24 +6159,17 @@ void ShadeSubLevelsNotVisited( void )
 
 void HandleLowerLevelMapBlit( void )
 {
-	HVOBJECT hHandle;
-
 	// blits the sub level maps
+	UINT32 VOIdx;
 	switch( iCurrentMapSectorZ )
 	{
-		case( 1 ):
-			GetVideoObject( &hHandle, guiSubLevel1 );
-			break;
-		case( 2 ):
-			GetVideoObject( &hHandle, guiSubLevel2 );
-			break;
-		case( 3 ):
-			GetVideoObject( &hHandle, guiSubLevel3 );
-			break;
+		case 1: VOIdx = guiSubLevel1; break;
+		case 2: VOIdx = guiSubLevel2; break;
+		case 3: VOIdx = guiSubLevel3; break;
 	}
 
 	// handle the blt of the sublevel
-	BltVideoObject( guiSAVEBUFFER, hHandle, 0,MAP_VIEW_START_X + 21, MAP_VIEW_START_Y + 17);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, VOIdx, 0, MAP_VIEW_START_X + 21, MAP_VIEW_START_Y + 17);
 
 	// handle shading of sublevels
 	ShadeSubLevelsNotVisited( );
@@ -6249,12 +6210,9 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 BOOLEAN DrawMapForDemo( void )
 {
 	UINT32 uiTempObject;
-	HVOBJECT hHandle;
 
 	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_1.sti", &uiTempObject));
-
-	GetVideoObject(&hHandle, uiTempObject );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,290, 26);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
 	DeleteVideoObjectFromIndex( uiTempObject );
 
 	return( TRUE );
@@ -6477,7 +6435,6 @@ void ShowSAMSitesOnStrategicMap( void )
 	INT32 iCounter = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT16 sX = 0, sY = 0;
-	HVOBJECT hHandle;
 	INT8 ubVidObjIndex = 0;
 	UINT8 *pDestBuf2;
 	UINT32 uiDestPitchBYTES;
@@ -6520,10 +6477,7 @@ void ShowSAMSitesOnStrategicMap( void )
 			ubVidObjIndex = 1;
 		}
 
-		// draw SAM site icon
-		GetVideoObject( &hHandle, guiSAMICON);
-		BltVideoObject( guiSAVEBUFFER, hHandle, ubVidObjIndex, sX, sY);
-
+		BltVideoObjectFromIndex(guiSAVEBUFFER, guiSAMICON, ubVidObjIndex, sX, sY);
 
 		if( fShowAircraftFlag )
 		{
@@ -6795,8 +6749,6 @@ void DrawOrta()
   UINT32 uiDestPitchBYTES;
 	INT16 sX, sY;
 	UINT8 ubVidObjIndex;
-	HVOBJECT hHandle;
-
 
 	if( fZoomFlag )
 	{
@@ -6817,9 +6769,7 @@ void DrawOrta()
 		ubVidObjIndex = 1;
 	}
 
-	// draw Orta in its sector
-	GetVideoObject( &hHandle, guiORTAICON);
-	BltVideoObject( guiSAVEBUFFER, hHandle, ubVidObjIndex, sX, sY);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiORTAICON, ubVidObjIndex, sX, sY);
 }
 
 
@@ -6829,8 +6779,6 @@ void DrawTixa()
   UINT32 uiDestPitchBYTES;
 	INT16 sX, sY;
 	UINT8 ubVidObjIndex;
-	HVOBJECT hHandle;
-
 
 	if( fZoomFlag )
 	{
@@ -6850,9 +6798,7 @@ void DrawTixa()
 		ubVidObjIndex = 1;
 	}
 
-	// draw Tixa in its sector
-	GetVideoObject( &hHandle, guiTIXAICON);
-	BltVideoObject( guiSAVEBUFFER, hHandle, ubVidObjIndex, sX, sY);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiTIXAICON, ubVidObjIndex, sX, sY);
 }
 
 
@@ -6860,14 +6806,11 @@ void DrawTixa()
 void DrawBullseye()
 {
 	INT16 sX, sY;
-	HVOBJECT hHandle;
 
 	GetScreenXYFromMapXY( gsMercArriveSectorX, gsMercArriveSectorY, &sX, &sY );
 	sY -= 2;
 
-	// draw the bullseye in that sector
-	GetVideoObject( &hHandle, guiBULLSEYE);
-	BltVideoObject( guiSAVEBUFFER, hHandle, 0, sX, sY);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
 }
 
 

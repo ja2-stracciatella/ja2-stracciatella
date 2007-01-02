@@ -1373,7 +1373,6 @@ void HandleShopKeeperInterface()
 
 BOOLEAN RenderShopKeeperInterface()
 {
-	HVOBJECT	hPixHandle;
 	CHAR16	zMoney[128];
 	SGPRect		SrcRect;
 
@@ -1390,9 +1389,7 @@ BOOLEAN RenderShopKeeperInterface()
 	// Render view window
 //	RenderRadarScreen( );
 
-	//Get the main background screen graphic and blt it
-	GetVideoObject(&hPixHandle, guiMainTradeScreenImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,SKI_MAIN_BACKGROUND_X, SKI_MAIN_BACKGROUND_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMainTradeScreenImage, 0, SKI_MAIN_BACKGROUND_X, SKI_MAIN_BACKGROUND_Y);
 
 	//Display the Title
 	DrawTextToScreen( SKI_Text[ SKI_TEXT_MERCHADISE_IN_STOCK ], SKI_MAIN_TITLE_X, SKI_MAIN_TITLE_Y, SKI_MAIN_TITLE_WIDTH, SKI_TITLE_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
@@ -2579,7 +2576,6 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 {
 	CHAR16			zTemp[64];
 	HVOBJECT		hVObject;
-	HVOBJECT		hPixHandle;
 	INVTYPE			*pItem;
 	ETRLEObject	*pTrav;
 	UINT32			usHeight, usWidth;
@@ -2729,9 +2725,7 @@ UINT32 DisplayInvSlot( UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT1
 		// if still in player's employ
 		if ( iFaceSlot != -1 )
 		{
-			//Get and blit the face
-			GetVideoObject(&hPixHandle, guiSmallSoldiersFace[ iFaceSlot ] );
-			BltVideoObject(FRAME_BUFFER, hPixHandle, 0,(UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY));//SKI_SMALL_FACE_OFFSET_Y
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiSmallSoldiersFace[iFaceSlot], 0, usPosX + SKI_SMALL_FACE_OFFSET_X, usPosY);//SKI_SMALL_FACE_OFFSET_Y
 		}
 	}
 
@@ -4902,11 +4896,7 @@ INT8 GetSlotNumberForMerc( UINT8 ubProfile )
 
 void RenderSkiAtmPanel()
 {
-//	HVOBJECT	hPixHandle;
-
-	//Get the Atm background panel graphic and blt it
-//	GetVideoObject(&hPixHandle, guiSkiAtmImage );
-//	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y);
+//	BltVideoObjectFromIndex(FRAME_BUFFER, guiSkiAtmImage, 0, SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y);
 }
 
 void CreateSkiAtmButtons()

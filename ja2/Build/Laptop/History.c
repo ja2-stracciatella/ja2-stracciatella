@@ -361,18 +361,8 @@ void RemoveHistory( void )
 void RenderHistoryBackGround( void )
 {
 	// render generic background for history system
-  HVOBJECT hHandle;
-
-	// get title bar object
-	GetVideoObject(&hHandle, guiTITLE);
-
-	// blt title bar to screen
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y -2);
-
-
-	// get and blt the top part of the screen, video object and blt to screen
-  GetVideoObject(&hHandle, guiTOP);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 
   // display background for history list
   DisplayHistoryListBackground( );

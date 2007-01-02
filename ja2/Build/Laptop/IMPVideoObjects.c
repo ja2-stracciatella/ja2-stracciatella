@@ -133,13 +133,7 @@ void DeleteIMPSymbol( void )
 
 void RenderIMPSymbol(INT16 sX, INT16 sY)
 {
-  HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiIMPSYMBOL);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiIMPSYMBOL, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -164,13 +158,7 @@ void DeleteBeginIndent( void )
 
 void RenderBeginIndent(INT16 sX, INT16 sY)
 {
-  HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiBEGININDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBEGININDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -196,13 +184,7 @@ void DeleteActivationIndent( void )
 
 void RenderActivationIndent(INT16 sX, INT16 sY)
 {
-  HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiACTIVATIONINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiACTIVATIONINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -224,13 +206,7 @@ void DeleteFrontPageIndent( void )
 
 void RenderFrontPageIndent(INT16 sX, INT16 sY)
 {
-  HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiFRONTPAGEINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiFRONTPAGEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -254,14 +230,7 @@ void DeleteAnalyse( void )
 
 void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiANALYSE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiANALYSE, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -285,15 +254,7 @@ void DeleteAttributeGraph( void )
 
 void RenderAttributeGraph(INT16 sX, INT16 sY)
 {
-
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEGRAPH);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPH, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -316,13 +277,7 @@ void DeleteAttributeBarGraph( void )
 
 void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 {
-  HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEGRAPHBAR);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPHBAR, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -347,15 +302,7 @@ void DeleteFullNameIndent( void )
 
 void RenderFullNameIndent(INT16 sX, INT16 sY)
 {
-
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiFULLNAMEINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiFULLNAMEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -376,15 +323,7 @@ void DeleteNickNameIndent( void )
 
 void RenderNickNameIndent(INT16 sX, INT16 sY)
 {
-
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiNICKNAMEINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiNICKNAMEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadNameIndent( void )
@@ -404,15 +343,7 @@ void DeleteNameIndent( void )
 
 void RenderNameIndent(INT16 sX, INT16 sY)
 {
-
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiNAMEINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiNAMEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -435,14 +366,7 @@ void DeleteGenderIndent( void )
 
 void RenderGenderIndent(INT16 sX, INT16 sY)
 {
-	HVOBJECT hHandle;
-
-
-  // get the video object
-  GetVideoObject(&hHandle, guiGENDERINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiGENDERINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -464,14 +388,7 @@ void DeleteSmallFrame( void )
 
 void RenderSmallFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSMALLFRAME);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLFRAME, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -494,14 +411,7 @@ void DeleteSmallSilhouette( void )
 
 void RenderSmallSilhouette(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSMALLSILHOUETTE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLSILHOUETTE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -523,14 +433,7 @@ void DeleteLargeSilhouette( void )
 
 void RenderLargeSilhouette(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiLARGESILHOUETTE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLARGESILHOUETTE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -579,7 +482,6 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 {
 	INT16 sCurrentY = 0;
-	HVOBJECT hHandle;
 
 	// valid index?
 	if( iIndex == -1 )
@@ -589,11 +491,7 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 
 	sCurrentY = ( INT16 )( 10 + ( iIndex * 20 ) );
 
-	 // get the video object
-  GetVideoObject(&hHandle, guiATTRIBUTEFRAME);
-
-	// blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 2, LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEFRAME, 2, LAPTOP_SCREEN_UL_X + sX + 134, LAPTOP_SCREEN_WEB_UL_Y + sY + sCurrentY);
 
 	RenderAttrib2IndentFrame(350, 42 );
 
@@ -624,14 +522,7 @@ void DeleteSliderBar( void )
 
 void RenderSliderBar(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSLIDERBAR);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSLIDERBAR, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -654,14 +545,7 @@ void DeleteButton2Image( void )
 
 void RenderButton2Image(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON2IMAGE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON2IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadButton4Image( void )
@@ -681,14 +565,7 @@ void DeleteButton4Image( void )
 
 void RenderButton4Image(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON4IMAGE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON4IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -709,14 +586,7 @@ void DeleteButton1Image( void )
 
 void RenderButton1Image(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiBUTTON1IMAGE);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON1IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -737,14 +607,7 @@ void DeletePortraitFrame( void )
 
 void RenderPortraitFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiPORTRAITFRAME);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPORTRAITFRAME, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -766,14 +629,7 @@ void DeleteMainIndentFrame( void )
 
 void RenderMainIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiMAININDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMAININDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -794,14 +650,7 @@ void DeleteQtnLongIndentFrame( void )
 
 void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiLONGINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadQtnShortIndentFrame( void )
@@ -821,14 +670,7 @@ void DeleteQtnShortIndentFrame( void )
 
 void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORTINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSHORTINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadQtnLongIndentHighFrame( void )
@@ -848,14 +690,7 @@ void DeleteQtnLongIndentHighFrame( void )
 
 void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiLONGHINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGHINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadQtnShortIndentHighFrame( void )
@@ -875,14 +710,7 @@ void DeleteQtnShortIndentHighFrame( void )
 
 void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORTHINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSHORTHINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -903,14 +731,7 @@ void DeleteQtnIndentFrame( void )
 
 void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiQINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiQINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -931,14 +752,7 @@ void DeleteAttrib1IndentFrame( void )
 
 void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiA1INDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiA1INDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadAttrib2IndentFrame( void )
@@ -958,14 +772,7 @@ void DeleteAttrib2IndentFrame( void )
 
 void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiA2INDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiA2INDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadAvgMercIndentFrame( void )
@@ -985,14 +792,7 @@ void DeleteAvgMercIndentFrame( void )
 
 void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiAVGMERCINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiAVGMERCINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -1014,14 +814,7 @@ void DeleteAboutUsIndentFrame( void )
 
 void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiABOUTUSINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiABOUTUSINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -1042,14 +835,7 @@ void DeleteQtnShort2IndentFrame( void )
 
 void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORT2INDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSHORT2INDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 BOOLEAN LoadQtnShort2IndentHighFrame( void )
@@ -1069,12 +855,5 @@ void DeleteQtnShort2IndentHighFrame( void )
 
 void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
 {
-
-	HVOBJECT hHandle;
-
-  // get the video object
-  GetVideoObject(&hHandle, guiSHORT2HINDENT);
-
-  // blt to sX, sY relative to upper left corner
-	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSHORT2HINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }

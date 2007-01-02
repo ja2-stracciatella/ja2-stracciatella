@@ -8289,9 +8289,6 @@ void RenderMapRegionBackground( void )
 
 void RenderTeamRegionBackground( void )
 {
-	HVOBJECT hHandle;
-
-
 	// renders to save buffer when dirty flag set
 	if( fTeamPanelDirty == FALSE )
 	{
@@ -8302,8 +8299,7 @@ void RenderTeamRegionBackground( void )
 	// show inventory or the team list?
 	if(fShowInventoryFlag == FALSE )
 	{
-		GetVideoObject(&hHandle, guiCHARLIST);
-		BltVideoObject( guiSAVEBUFFER , hHandle, 0,PLAYER_INFO_X, PLAYER_INFO_Y);
+		BltVideoObjectFromIndex(guiSAVEBUFFER , guiCHARLIST, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 	}
 	else
 	{
@@ -8353,9 +8349,6 @@ void RenderTeamRegionBackground( void )
 
 void RenderCharacterInfoBackground( void )
 {
-	HVOBJECT hHandle;
-
-
 	// will render the background for the character info panel
 
 	if( fCharacterInfoPanelDirty == FALSE )
@@ -8366,8 +8359,7 @@ void RenderCharacterInfoBackground( void )
 
 
 	// the upleft hand corner character info panel
-	GetVideoObject(&hHandle, guiCHARINFO);
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,TOWN_INFO_X, TOWN_INFO_Y);
+	BltVideoObjectFromIndex(guiSAVEBUFFER , guiCHARINFO, 0, TOWN_INFO_X, TOWN_INFO_Y);
 
 	UpdateHelpTextForMapScreenMercIcons( );
 

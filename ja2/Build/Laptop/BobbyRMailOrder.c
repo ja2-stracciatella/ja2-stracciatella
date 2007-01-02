@@ -573,13 +573,10 @@ void HandleBobbyRMailOrder()
 
 	if(	gfDrawConfirmOrderGrpahic )
 	{
-		HVOBJECT hPixHandle;
-
 		// Bobbyray title
-		GetVideoObject(&hPixHandle, guiConfirmGraphic);
 		BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X+3, BOBBYR_CONFIRM_ORDER_Y+3);
 
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_CONFIRM_ORDER_X, BOBBYR_CONFIRM_ORDER_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X, BOBBYR_CONFIRM_ORDER_Y);
 	  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 
 		gfDrawConfirmOrderGrpahic = FALSE;
@@ -608,7 +605,6 @@ void HandleBobbyRMailOrder()
 void RenderBobbyRMailOrder()
 {
 	UINT16 usPosY;
-  HVOBJECT hPixHandle;
 	UINT16 usHeight;//usWidth,
 	CHAR16	sTemp[ 128 ];
 
@@ -616,22 +612,10 @@ void RenderBobbyRMailOrder()
 
 	DrawBobbyROrderTitle();
 
-	// Order Grid
-	GetVideoObject(&hPixHandle, guiBobbyROrderGrid);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y);
-
-	// Location graphic
-	GetVideoObject(&hPixHandle, guiBobbyRLocationGraphic);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_LOCATION_BOX_X, BOBBYR_LOCATION_BOX_Y);
-
-	// DeliverySpeedGraphic
-	GetVideoObject(&hPixHandle, guiDeliverySpeedGraphic);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_DELIVERYSPEED_X, BOBBYR_DELIVERYSPEED_Y);
-
-	//Package Weight
-	GetVideoObject(&hPixHandle, guiPackageWeightImage);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_PACKAXGE_WEIGHT_X, BOBBYR_PACKAXGE_WEIGHT_Y);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyROrderGrid,       0, BOBBYR_ORDERGRID_X,       BOBBYR_ORDERGRID_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRLocationGraphic, 0, BOBBYR_LOCATION_BOX_X,    BOBBYR_LOCATION_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiDeliverySpeedGraphic,  0, BOBBYR_DELIVERYSPEED_X,   BOBBYR_DELIVERYSPEED_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPackageWeightImage,    0, BOBBYR_PACKAXGE_WEIGHT_X, BOBBYR_PACKAXGE_WEIGHT_Y);
 
 	//
 	// Display the STATIC text
@@ -1045,7 +1029,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16 usGridX, UINT16 usGridY, INT32 iOrderNum )
 {
 	wchar_t	sTemp[20];
-	HVOBJECT hPixHandle;
 	INT32	iShippingCost = 0;
 //	INT32 iTotal;
 
@@ -1091,8 +1074,7 @@ void DisplayShippingCosts( BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16
 	// bli the total Saved area onto the grid
 	if( fCalledFromOrderPage )
 	{
-		GetVideoObject(&hPixHandle, guiTotalSaveArea);
-	  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_TOTAL_SAVED_AREA_X, BOBBYR_TOTAL_SAVED_AREA_Y);
+	  BltVideoObjectFromIndex(FRAME_BUFFER, guiTotalSaveArea, 0, BOBBYR_TOTAL_SAVED_AREA_X, BOBBYR_TOTAL_SAVED_AREA_Y);
 	}
 
 
@@ -2238,11 +2220,7 @@ void DestroyBobbyROrderTitle()
 
 void DrawBobbyROrderTitle()
 {
-  HVOBJECT hPixHandle;
-
-	// Bobbyray title
-	GetVideoObject(&hPixHandle, guiBobbyRayTitle);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRayTitle, 0, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y);
 }
 
 

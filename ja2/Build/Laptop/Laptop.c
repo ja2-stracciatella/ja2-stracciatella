@@ -1091,21 +1091,13 @@ void ExitLaptop()
 void
 RenderLapTopImage()
 {
-  HVOBJECT hLapTopHandle;
-
-
 	if( ( fMaximizingProgram == TRUE ) ||( fMinizingProgram == TRUE) )
 	{
 		return;
 	}
 
-	GetVideoObject(&hLapTopHandle, guiLAPTOP);
-  BltVideoObject(FRAME_BUFFER, hLapTopHandle, 0,LAPTOP_X, LAPTOP_Y);
-
-
-	GetVideoObject(&hLapTopHandle, guiLaptopBACKGROUND);
-  BltVideoObject(FRAME_BUFFER, hLapTopHandle, 1,25, 23);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLAPTOP, 0, LAPTOP_X, LAPTOP_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
 
 	MarkButtonsDirty( );
 
@@ -2827,13 +2819,12 @@ void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
-    GetVideoObject(&hLapTopIconHandle, guiWWWICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X, LAPTOP_ICONS_WWW_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiWWWICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_WWW_Y);
 	  DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
@@ -2845,18 +2836,16 @@ void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
     DrawLapTopText();
-	  GetVideoObject(&hLapTopIconHandle, guiMAILICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X, LAPTOP_ICONS_MAIL_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiMAILICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_MAIL_Y);
 		if(fUnReadMailFlag)
 		{
-	   GetVideoObject(&hLapTopIconHandle, guiUNREAD);
-	   BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,LAPTOP_ICONS_X+CHECK_X, LAPTOP_ICONS_MAIL_Y+CHECK_Y);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiUNREAD, 0, LAPTOP_ICONS_X + CHECK_X, LAPTOP_ICONS_MAIL_Y + CHECK_Y);
 		}
 		DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
@@ -2869,13 +2858,12 @@ void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
-    GetVideoObject(&hLapTopIconHandle, guiFINANCIALICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X-4, LAPTOP_ICONS_FINANCIAL_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiFINANCIALICON, iFrame, LAPTOP_ICONS_X - 4, LAPTOP_ICONS_FINANCIAL_Y);
 	 	DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
@@ -2886,14 +2874,13 @@ void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
 
-		GetVideoObject(&hLapTopIconHandle, guiHISTORYICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X, LAPTOP_ICONS_HISTORY_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiHISTORYICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_HISTORY_Y);
    	DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
@@ -2906,13 +2893,12 @@ void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
-   	GetVideoObject(&hLapTopIconHandle, guiFILESICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X, LAPTOP_ICONS_FILES_Y+7);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiFILESICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_FILES_Y + 7);
 		DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
@@ -2923,14 +2909,12 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
-  HVOBJECT hLapTopIconHandle;
+
 	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		iBaseTime=0;
 		iFrame=0;
-
-		GetVideoObject(&hLapTopIconHandle, guiPERSICON);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, (UINT16)iFrame,LAPTOP_ICONS_X, LAPTOP_ICONS_PERSONNEL_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiPERSICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_PERSONNEL_Y);
  		DrawLapTopText();
 		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
@@ -3059,8 +3043,6 @@ void DisplayBookMarks( void )
 {
 	// will look at bookmarklist and set accordingly
 	INT32 iCounter=1;
-	// load images
-  HVOBJECT hLapTopIconHandle;
    // laptop icons
 	INT16 sX, sY;
 
@@ -3092,13 +3074,11 @@ void DisplayBookMarks( void )
 
    if(iHighLightBookLine==iCounter-1)
 	 {
-		 GetVideoObject(&hLapTopIconHandle, guiBOOKHIGH);
-     BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,BOOK_X, BOOK_TOP_Y+ ( iCounter*( BOOK_HEIGHT + 6 ) )+ 6);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKHIGH, 0, BOOK_X, BOOK_TOP_Y + iCounter * (BOOK_HEIGHT + 6) + 6);
 	 }
 	 else
 	 {
-     GetVideoObject(&hLapTopIconHandle, guiBOOKMARK);
-     BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,BOOK_X, BOOK_TOP_Y+ ( iCounter*( BOOK_HEIGHT + 6 ) )+ 6);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMARK, 0, BOOK_X, BOOK_TOP_Y+ iCounter * (BOOK_HEIGHT + 6) + 6);
 	 }
 
 	 if( iHighLightBookLine==iCounter-1 )
@@ -3125,13 +3105,11 @@ void DisplayBookMarks( void )
 
 	 if(iHighLightBookLine==iCounter-1)
 	 {
-			GetVideoObject(&hLapTopIconHandle, guiBOOKHIGH);
-			BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,BOOK_X, BOOK_TOP_Y+ ( iCounter*( BOOK_HEIGHT + 6 ) )+ 6);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKHIGH, 0, BOOK_X, BOOK_TOP_Y + iCounter * (BOOK_HEIGHT + 6) + 6);
 	 }
 	 else
 	 {
-     GetVideoObject(&hLapTopIconHandle, guiBOOKMARK);
-     BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,BOOK_X, BOOK_TOP_Y+ ( iCounter*( BOOK_HEIGHT + 6 ) )+ 6);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMARK, 0, BOOK_X, BOOK_TOP_Y + iCounter * (BOOK_HEIGHT + 6) + 6);
 	 }
 
 	 if( iHighLightBookLine==iCounter-1 )
@@ -3152,8 +3130,7 @@ void DisplayBookMarks( void )
 
 	 SetFontDestBuffer(FRAME_BUFFER,0,0,640,480, FALSE);
 
-	//GetVideoObject(&hLapTopIconHandle, guiBOOKBOT);
-	//BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,BOOK_X, 6+BOOK_TOP_Y+(iCounter)*BOOK_HEIGHT);
+	//BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKBOT, 0, BOOK_X, 6 + BOOK_TOP_Y + iCounter * BOOK_HEIGHT);
 
 	/*if(fNewWWWDisplay)
    ScrollDisplayText(BOOK_TOP_Y+2+((iCounter)*BOOK_HEIGHT)+6);
@@ -3543,7 +3520,6 @@ BOOLEAN DisplayLoadPending( void )
 	INT32 iTempTime=0;
 	INT32 iCounter=0;
 	INT32 iDifference=0;
-	HVOBJECT hLapTopIconHandle;
   INT32 iLoadTime;
 	INT32 iUnitTime;
 	INT16 sXPosition = 0, sYPosition = 0;
@@ -3647,14 +3623,10 @@ BOOLEAN DisplayLoadPending( void )
 
 
 	// display top middle and bottom of box
-  GetVideoObject(&hLapTopIconHandle, guiDOWNLOADTOP);
-	BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y);
-  GetVideoObject(&hLapTopIconHandle, guiDOWNLOADMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y+DOWN_HEIGHT);
-  GetVideoObject(&hLapTopIconHandle, guiDOWNLOADBOT);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y+2*DOWN_HEIGHT);
-  GetVideoObject(&hLapTopIconHandle, guiTITLEBARICONS);
-	BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADTOP,   0, DOWNLOAD_X,     DOWNLOAD_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADMID,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADBOT,   0, DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 1, DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
 
   // font stuff
@@ -3679,9 +3651,7 @@ BOOLEAN DisplayLoadPending( void )
 		mprintf( sXPosition, DOWN_STRING_Y,pDownloadString[0]);
 	}
 
-	// get and blt the window video object
-	GetVideoObject(&hLapTopIconHandle, guiGRAPHWINDOW);
-	BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
 
 	// check to see if we are only updating screen, but not passed a new element in the load pending display
 
@@ -3690,8 +3660,7 @@ BOOLEAN DisplayLoadPending( void )
 	// decide how many time units are to be displayed, based on amount of time passed
 	while(iTempTime >0)
 	{
-    GetVideoObject(&hLapTopIconHandle, guiGRAPHBAR);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,LAPTOP_BAR_X+(UNIT_WIDTH*iCounter), LAPTOP_BAR_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiGRAPHBAR, 0, LAPTOP_BAR_X + UNIT_WIDTH * iCounter, LAPTOP_BAR_Y);
 		iTempTime-=iUnitTime;
 		iCounter++;
 
@@ -3776,33 +3745,16 @@ void CreateDestroyErrorButton( void )
 void DisplayErrorBox( void )
 {
 	// this function will display the error graphic
-  HVOBJECT hLapTopIconHandle;
   if(!fErrorFlag)
 		return;
 
-	// get and blt top portion
-	GetVideoObject(&hLapTopIconHandle, guiBOOKTOP);
-	BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y);
-
-	// middle * 5
-	GetVideoObject(&hLapTopIconHandle, guiBOOKMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+BOOK_HEIGHT);
-
-	GetVideoObject(&hLapTopIconHandle, guiBOOKMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+2*BOOK_HEIGHT);
-
-	GetVideoObject(&hLapTopIconHandle, guiBOOKMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+3*BOOK_HEIGHT);
-
-	GetVideoObject(&hLapTopIconHandle, guiBOOKMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+4*BOOK_HEIGHT);
-
-	GetVideoObject(&hLapTopIconHandle, guiBOOKMID);
-  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+5*BOOK_HEIGHT);
-
-	// the bottom
-	GetVideoObject(&hLapTopIconHandle, guiBOOKBOT);
-	BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,ERROR_X, ERROR_Y+6*BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKTOP, 0, ERROR_X, ERROR_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y +     BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 2 * BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 3 * BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 4 * BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 5 * BOOK_HEIGHT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKBOT, 0, ERROR_X, ERROR_Y + 6 * BOOK_HEIGHT);
 
 	// font stuff
 	SetFont(ERROR_TITLE_FONT);
@@ -4193,21 +4145,14 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 
 BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex )
 {
-  HVOBJECT	hImageHandle;
-
 	Assert( uiBackgroundGraphic );
 
 	// Create a background video surface to blt the title bar onto
 	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, 16);
 	CHECKF(guiTitleBarSurface != NO_VSURFACE);
 
-	//blit the toolbar grapgucs onto the surface
-	GetVideoObject(&hImageHandle, uiBackgroundGraphic);
-	BltVideoObject(guiTitleBarSurface, hImageHandle, 0,0,0);
-
-	//blit th icon onto the tool bar
-	GetVideoObject(&hImageHandle, uiIconGraphic);
-	BltVideoObject(guiTitleBarSurface, hImageHandle, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
+	BltVideoObjectFromIndex(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
+	BltVideoObjectFromIndex(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
 
 	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, FALSE);
 	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
@@ -4521,31 +4466,8 @@ void HandleSlidingTitleBar( void )
 void ShowLights( void )
 {
 	// will show lights depending on state
-  HVOBJECT hHandle;
-
-	if( fPowerLightOn == TRUE )
-	{
-		GetVideoObject( &hHandle, guiLIGHTS);
-		BltVideoObject(FRAME_BUFFER, hHandle, 0,44, 466);
-	}
-	else
-	{
-		GetVideoObject( &hHandle, guiLIGHTS);
-		BltVideoObject(FRAME_BUFFER, hHandle, 1,44, 466);
-	}
-
-  if( fHardDriveLightOn == TRUE )
-	{
-		GetVideoObject( &hHandle, guiLIGHTS);
-		BltVideoObject(FRAME_BUFFER, hHandle, 0,88, 466);
-	}
-	else
-	{
-		GetVideoObject( &hHandle, guiLIGHTS);
-		BltVideoObject(FRAME_BUFFER, hHandle, 1,88, 466);
-	}
-
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, 44, 466);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, 88, 466);
 }
 
 
@@ -4856,41 +4778,19 @@ void SetCurrentToLastProgramOpened( void )
 
 void BlitTitleBarIcons( void )
 {
-
-	HVOBJECT hHandle;
 	// will blit the icons for the title bar of the program we are in
+	UINT32 Index;
 	switch( guiCurrentLaptopMode )
 	{
-		case( LAPTOP_MODE_HISTORY ):
-				GetVideoObject(&hHandle, guiTITLEBARICONS);
-	      BltVideoObject(FRAME_BUFFER, hHandle, 4,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-		case( LAPTOP_MODE_EMAIL ):
-			  GetVideoObject(&hHandle, guiTITLEBARICONS);
-	      BltVideoObject(FRAME_BUFFER, hHandle, 0,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-		case( LAPTOP_MODE_PERSONNEL ):
-			 GetVideoObject(&hHandle, guiTITLEBARICONS);
-	     BltVideoObject(FRAME_BUFFER, hHandle, 3,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-		case( LAPTOP_MODE_FINANCES ):
-			 GetVideoObject(&hHandle, guiTITLEBARICONS);
-	     BltVideoObject(FRAME_BUFFER, hHandle, 5,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-		case( LAPTOP_MODE_FILES ):
-			 GetVideoObject(&hHandle, guiTITLEBARICONS);
-	     BltVideoObject(FRAME_BUFFER, hHandle, 2,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-		case( LAPTOP_MODE_NONE ):
-		  // do nothing
-		break;
-		default:
-			// www pages
-			GetVideoObject(&hHandle, guiTITLEBARICONS);
-	    BltVideoObject(FRAME_BUFFER, hHandle, 1,LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
-		break;
-
+		case LAPTOP_MODE_HISTORY:   Index = 4; break;
+		case LAPTOP_MODE_EMAIL:     Index = 0; break;
+		case LAPTOP_MODE_PERSONNEL: Index = 3; break;
+		case LAPTOP_MODE_FINANCES:  Index = 5; break;
+		case LAPTOP_MODE_FILES:     Index = 2; break;
+		case LAPTOP_MODE_NONE:      return; // do nothing
+		default:                    Index = 1; break; // www pages
 	}
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, Index, LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
 }
 
 
@@ -5342,17 +5242,13 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 {
 	// will render the title bar for the www program
   UINT32 uiTITLEFORWWW;
-	HVOBJECT hHandle;
 	INT32 iIndex = 0;
 	CHAR16 sString[256];
 
 	 // title bar - load
 	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &uiTITLEFORWWW));
 
-	// blit title
-  GetVideoObject(&hHandle, uiTITLEFORWWW);
-  BltVideoObject( FRAME_BUFFER, hHandle, 0,LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now delete
 	DeleteVideoObjectFromIndex( uiTITLEFORWWW );
@@ -5487,16 +5383,12 @@ void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason )
 void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 {
 		// the border fot eh program
-	HVOBJECT hHandle;
-
-	GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-  BltVideoObject(FRAME_BUFFER, hHandle, 1,25, 23);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
 
 // no laptop mode, no border around the program
 	if( guiCurrentLaptopMode != LAPTOP_MODE_NONE )
 	{
-	  GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
  	}
 
 	if( fMarkButtons || fLoadPendingFlag )
@@ -5733,8 +5625,6 @@ static void HandleAltTabKeyInLaptop(void)
 void DisplayWebBookMarkNotify( void )
 {
 	static BOOLEAN fOldShow = FALSE;
-	HVOBJECT hLapTopIconHandle;
-
 
 	// handle the timer for this thing
 	HandleWebBookMarkNotifyTimer( );
@@ -5746,14 +5636,10 @@ void DisplayWebBookMarkNotify( void )
 		fReDrawBookMarkInfo = FALSE;
 
 		// show background objects
-		GetVideoObject(&hLapTopIconHandle, guiDOWNLOADTOP);
-	  BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y);
-    GetVideoObject(&hLapTopIconHandle, guiDOWNLOADMID);
-		BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y+DOWN_HEIGHT);
-		GetVideoObject(&hLapTopIconHandle, guiDOWNLOADBOT);
-		BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 0,DOWNLOAD_X, DOWNLOAD_Y+2*DOWN_HEIGHT);
-		GetVideoObject(&hLapTopIconHandle, guiTITLEBARICONS);
-		BltVideoObject(FRAME_BUFFER, hLapTopIconHandle, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADTOP,   0,DOWNLOAD_X,     DOWNLOAD_Y);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADMID,   0,DOWNLOAD_X,     DOWNLOAD_Y +     DOWN_HEIGHT);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADBOT,   0,DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
 	//	MSYS_DefineRegion( &gLapTopScreenRegion, ( UINT16 )( LaptopScreenRect.iLeft ),( UINT16 )( LaptopScreenRect.iTop ),( UINT16 ) ( LaptopScreenRect.iRight ),( UINT16 )( LaptopScreenRect.iBottom ), MSYS_PRIORITY_NORMAL+1,
 		//					CURSOR_LAPTOP_SCREEN, ScreenRegionMvtCallback, LapTopScreenCallBack );

@@ -338,29 +338,14 @@ void HandleAIM()
 
 void RenderAIM()
 {
-  HVOBJECT hMemberCardHandle;
-  HVOBJECT hPoliciesHandle;
-  HVOBJECT hLinksHandle;
-  HVOBJECT hHistoryHandle;
 //	UINT16	x,y, uiPosX, uiPosY;
 
 	DrawAimDefaults();
 
-	//MemberCard
-	GetVideoObject(&hMemberCardHandle, guiMemberCard);
-  BltVideoObject(FRAME_BUFFER, hMemberCardHandle, 0,MEMBERCARD_X, MEMBERCARD_Y);
-
-	//Policies
-	GetVideoObject(&hPoliciesHandle, guiPolicies);
-  BltVideoObject(FRAME_BUFFER, hPoliciesHandle, 0,POLICIES_X, POLICIES_Y);
-
-	//Links
-	GetVideoObject(&hLinksHandle, guiLinks);
-  BltVideoObject(FRAME_BUFFER, hLinksHandle, 0,LINKS_X, LINKS_Y);
-
-	//History
-	GetVideoObject(&hHistoryHandle, guiHistory);
-  BltVideoObject(FRAME_BUFFER, hHistoryHandle, 0,HISTORY_X, HISTORY_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMemberCard, 0, MEMBERCARD_X, MEMBERCARD_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPolicies,   0, POLICIES_X,   POLICIES_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLinks,      0, LINKS_X,      LINKS_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiHistory,    0, HISTORY_X,    HISTORY_Y);
 
 	// Draw the aim slogan under the symbol
 	DisplayAimSlogan();
@@ -483,7 +468,6 @@ BOOLEAN RemoveAimDefaults()
 BOOLEAN DrawAimDefaults()
 {
   HVOBJECT hRustBackGroundHandle;
-  HVOBJECT hAimSymbolHandle;
 	UINT16	x,y, uiPosX, uiPosY;
 
 	// Blt the rust background
@@ -501,9 +485,7 @@ BOOLEAN DrawAimDefaults()
 		uiPosY += RUSTBACKGROUND_SIZE_Y;
 	}
 
-	// Aim Symbol
-	GetVideoObject(&hAimSymbolHandle, guiAimSymbol);
-  BltVideoObject(FRAME_BUFFER, hAimSymbolHandle, 0,AIM_SYMBOL_X, AIM_SYMBOL_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiAimSymbol, 0, AIM_SYMBOL_X, AIM_SYMBOL_Y);
 
 	return(TRUE);
 }
@@ -758,15 +740,11 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 	if( ((uiCurTime - uiLastTime) > AIM_FLOWER_AD_DELAY) || fRedraw)
 	{
-		HVOBJECT hAdHandle;
-
 		if( ubSubImage == AIM_FLOWER_NUM_SUBIMAGES)
 		{
 			if(ubCount == 0 || fRedraw)
 			{
-				//Blit the blue sky frame with text on top
-				GetVideoObject(&hAdHandle, guiFlowerAdvertisement);
-				BltVideoObject(FRAME_BUFFER, hAdHandle, 0,WARNING_X, WARNING_Y);
+				BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerAdvertisement, 0, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
@@ -795,8 +773,7 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 		}
 		else
 		{
-			GetVideoObject(&hAdHandle, guiFlowerAdvertisement);
-			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerAdvertisement, ubSubImage, WARNING_X, WARNING_Y);
 
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
@@ -822,12 +799,8 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 		wchar_t			sText[400];
 		UINT32	uiStartLoc=0;
 		UINT16	usLocY = AIM_WARNING_TEXT_Y + (GetFontHeight(AIM_WARNING_FONT) + 2) * 2;
-		HVOBJECT hWarningHandle;
 
-		//Warning
-		GetVideoObject(&hWarningHandle, guiWarning);
-		BltVideoObject(FRAME_BUFFER, hWarningHandle, 0,WARNING_X, WARNING_Y);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiWarning, 0,WARNING_X, WARNING_Y);
 
 		uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_WARNING_1;
 		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
@@ -895,15 +868,12 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 
 	if( ((uiCurTime - uiLastTime) > usDelay) || fRedraw)
 	{
-		HVOBJECT hAdHandle;
-
 		if( ubSubImage == 0 )
 		{
 			if(ubCount == 0 || fRedraw)
 			{
 				//Blit the ad
-				GetVideoObject(&hAdHandle, uiAdImageIdentifier);
-				BltVideoObject(FRAME_BUFFER, hAdHandle, 0,WARNING_X, WARNING_Y);
+				BltVideoObjectFromIndex(FRAME_BUFFER, uiAdImageIdentifier, 0, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
@@ -929,8 +899,7 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 			if(ubCount == 0 || fRedraw)
 			{
 				//Blit the ad
-				GetVideoObject(&hAdHandle, uiAdImageIdentifier);
-				BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
+				BltVideoObjectFromIndex(FRAME_BUFFER, uiAdImageIdentifier, ubSubImage, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
@@ -949,8 +918,7 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 		}
 		else
 		{
-			GetVideoObject(&hAdHandle, uiAdImageIdentifier);
-			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
+			BltVideoObjectFromIndex(FRAME_BUFFER, uiAdImageIdentifier, ubSubImage, WARNING_X, WARNING_Y);
 
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;
@@ -1041,16 +1009,11 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 	if( ((uiCurTime - uiLastTime) > usDelay) || fRedraw)
 	{
-		HVOBJECT hAdHandle;
-
 		//Loop through the first 6 images twice, then start into the later ones
-		GetVideoObject(&hAdHandle, guiBobbyRAdImages);
-
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRAdImages, ubSubImage, WARNING_X, WARNING_Y);
 		//if we are still looping through the first 6 animations
 		if( ubDuckCount < 2 )
 		{
-			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage, WARNING_X, WARNING_Y);
-
 			ubSubImage ++;
 
 			InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);
@@ -1070,9 +1033,6 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 
 		else
 		{
-			//Blit the ad
-			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
-
 			ubSubImage ++;
 
 			if( ubSubImage >= AIM_AD_BOBBYR_AD__NUM_SUBIMAGES-1 )
@@ -1108,6 +1068,7 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 			ubDuckImage++;
 		}
 
+		HVOBJECT hAdHandle;
 		GetVideoObject(&hAdHandle, guiBobbyRAdImages);
 
 		if( ubDuckImage < AIM_AD_BOBBYR_AD_NUM_DUCK_SUBIMAGES * 2 )
@@ -1146,9 +1107,7 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 		{
 			if(ubCount == 0 || fRedraw)
 			{
-				//Blit the ad
-				GetVideoObject(&hAdHandle, guiBobbyRAdImages);
-				BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
+				BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRAdImages, ubSubImage, WARNING_X, WARNING_Y);
 
 				// redraw new mail warning, and create new mail button, if nessacary
 				fReDrawNewMailFlag = TRUE;
@@ -1167,8 +1126,7 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 		}
 		else
 		{
-			GetVideoObject(&hAdHandle, guiBobbyRAdImages);
-			BltVideoObject(FRAME_BUFFER, hAdHandle, ubSubImage,WARNING_X, WARNING_Y);
+			BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRAdImages, ubSubImage, WARNING_X, WARNING_Y);
 
 			// redraw new mail warning, and create new mail button, if nessacary
 			fReDrawNewMailFlag = TRUE;

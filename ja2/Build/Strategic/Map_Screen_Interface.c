@@ -1261,7 +1261,6 @@ void CheckAndUpdateBasedOnContractTimes( void )
 void HandleDisplayOfSelectedMercArrows( void )
 {
 	INT16 sYPosition = 0;
-	HVOBJECT hHandle;
 	UINT8 ubCount = 0;
 	// blit an arrow by the name of each merc in a selected list
 	if( bSelectedInfoChar == -1 )
@@ -1288,9 +1287,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 		sYPosition += 6;
 	}
 
-
-	GetVideoObject( &hHandle, guiSelectedCharArrow );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,SELECTED_CHAR_ARROW_X, sYPosition);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, sYPosition);
 
 	// now run through the selected list of guys, an arrow for each
 	for( ubCount = 0; ubCount < MAX_CHARACTER_COUNT; ubCount++ )
@@ -1307,8 +1304,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 					sYPosition += 6;
 				}
 
-				GetVideoObject( &hHandle, guiSelectedCharArrow );
-				BltVideoObject( guiSAVEBUFFER , hHandle, 0,SELECTED_CHAR_ARROW_X, sYPosition);
+				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
 			}
 		}
 	}

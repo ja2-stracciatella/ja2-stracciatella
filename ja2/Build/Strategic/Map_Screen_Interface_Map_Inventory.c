@@ -224,11 +224,7 @@ void RemoveInventoryPoolGraphic( void )
 // blit the background panel for the inventory
 void BlitInventoryPoolGraphic( void )
 {
-	HVOBJECT hHandle;
-
-	// blit inventory pool graphic to the screen
-	GetVideoObject(&hHandle, guiMapInventoryPoolBackground);
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,INVEN_POOL_X, INVEN_POOL_Y);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, INVEN_POOL_X, INVEN_POOL_Y);
 
 	// resize list
 	CheckAndUnDateSlotAllocation( );

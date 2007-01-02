@@ -329,7 +329,6 @@ void HandleInsuranceContract()
 
 void RenderInsuranceContract()
 {
-  HVOBJECT	hPixHandle;
 	wchar_t		sText[800];
 	UINT8			ubCount=0;
 	INT16			sMercID;
@@ -364,19 +363,13 @@ void RenderInsuranceContract()
 	GetInsuranceText( INS_SNGL_ENTERING_REVIEWING_CLAIM, sText );
 	DrawTextToScreen( sText, LAPTOP_SCREEN_UL_X, INS_CTRCT_TITLE_Y, LAPTOP_SCREEN_LR_X-LAPTOP_SCREEN_UL_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
-
-	//Get and display the insurance bullet
-	GetVideoObject(&hPixHandle, guiInsOrderBulletImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_FIRST_BULLET_TEXT_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_FIRST_BULLET_TEXT_Y);
 
 	//Display the first instruction sentence
 	GetInsuranceText( INS_MLTI_TO_PURCHASE_INSURANCE, sText );
 	DisplayWrappedString( INS_CTRCT_FIRST_BULLET_TEXT_X+INSURANCE_BULLET_TEXT_OFFSET_X, INS_CTRCT_FIRST_BULLET_TEXT_Y, INS_CTRCT_INTSRUCTION_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,  sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
-
-	//Get and display the insurance bullet
-	GetVideoObject(&hPixHandle, guiInsOrderBulletImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_SECOND_BULLET_TEXT_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_SECOND_BULLET_TEXT_Y);
 
 	//Display the second instruction sentence
 	GetInsuranceText( INS_MLTI_ONCE_SATISFIED_CLICK_ACCEPT, sText );
@@ -495,10 +488,7 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 			break;
 	}
 
-	//Get and display the insurance order grid #1
-	GetVideoObject(&hPixHandle, guiInsOrderGridImage );
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, usPosX, INS_CTRCT_ORDER_GRID1_Y);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderGridImage, 0, usPosX, INS_CTRCT_ORDER_GRID1_Y);
 
 	// load the mercs face graphic and add it
 	sprintf(sTemp, "FACES\\%02d.sti", ubMercID);

@@ -525,8 +525,6 @@ void HandleFinances( void )
 
 void RenderFinances( void )
 {
-  HVOBJECT hHandle;
-
 	// draw background
   RenderBackGround();
 
@@ -544,11 +542,7 @@ void RenderFinances( void )
 	// draw pages and dates
   DisplayFinancePageNumberAndDateRange( );
 
-
-		// display border
-	GetVideoObject(&hHandle, guiLaptopBACKGROUND);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,108, 23);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 
 	// title bar icon
 	BlitTitleBarIcons(  );
@@ -593,15 +587,8 @@ static void RemoveFinances(void)
 static void RenderBackGround(void)
 {
 	// render generic background for Finance system
-  HVOBJECT hHandle;
-
-	// get title bar object
-	GetVideoObject(&hHandle, guiTITLE);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y - 2);
-
-	// get and blt the top part of the screen, video object and blt to screen
-  GetVideoObject(&hHandle, guiTOP);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X, TOP_Y + 22);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 	DrawFinanceTitleText( );
 }
 
@@ -656,7 +643,6 @@ static void DrawRecordsBackGround(void)
 {
 	// proceudre will draw the background for the list of financial records
   INT32 iCounter;
-  HVOBJECT hHandle;
 
 	// render the generic background
 	RenderBackGround( );
@@ -665,19 +651,13 @@ static void DrawRecordsBackGround(void)
 	// now the columns
 	for (iCounter = 6; iCounter < 35; iCounter++)
 	{
-		// get and blt middle background to screen
-    GetVideoObject(&hHandle, guiLISTCOLUMNS);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, TOP_X + 10, TOP_Y + 18 + ( iCounter * BLOCK_HEIGHT ) + 1);
+    BltVideoObjectFromIndex(FRAME_BUFFER, guiLISTCOLUMNS, 0, TOP_X + 10, TOP_Y + 18 + iCounter * BLOCK_HEIGHT + 1);
 	}
 
 	// the divisorLines
-  GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 17 + ( 6 * ( BLOCK_HEIGHT ) ));
-  GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( 6 * ( BLOCK_HEIGHT ) ));
-  GetVideoObject(&hHandle, guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 10, TOP_Y + 19 + ( ( iCounter  ) * ( BLOCK_HEIGHT ) ));
-
+  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 17 + 6 * BLOCK_HEIGHT);
+  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + 6 * BLOCK_HEIGHT);
+  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + iCounter * BLOCK_HEIGHT);
 
 	// the header text
   DrawRecordsColumnHeadersText( );

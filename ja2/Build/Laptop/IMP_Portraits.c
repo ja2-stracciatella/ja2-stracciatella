@@ -106,38 +106,19 @@ void HandleIMPPortraits( void )
 BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 {
   // render the portrait of the current picture
-	HVOBJECT hHandle;
 	UINT32 uiGraphicHandle;
 
   if( fCharacterIsMale  )
 	{
-
-		// load it
 	  CHECKF(AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait], &uiGraphicHandle));
-
-	  // show it
-    GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-    // and kick it's sorry ..umm never mind, outta here
+    BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
     DeleteVideoObjectFromIndex( uiGraphicHandle );
-
-
 	}
 	else
 	{
-    	// load it
 	  CHECKF(AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait + 8], &uiGraphicHandle));
-
-	  // show it
-    GetVideoObject(&hHandle, uiGraphicHandle);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-
-
-    // and kick it's sorry ..umm never mind, outta here
+    BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
     DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 	}
 
 	return ( TRUE );

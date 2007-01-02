@@ -399,7 +399,6 @@ BOOLEAN RenderCharProfileFinishFace( void )
 {
 
 // render the portrait of the current picture
-	HVOBJECT hHandle;
 	UINT32 uiGraphicHandle;
 
   if( fCharacterIsMale == TRUE )
@@ -407,50 +406,19 @@ BOOLEAN RenderCharProfileFinishFace( void )
 	  switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\00.sti", &uiGraphicHandle));
-
-			  // show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-  			// and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 		  break;
       case( 1 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\01.sti", &uiGraphicHandle));
-
-			  // show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-			  // and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 		  break;
 		  case( 2 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\02.sti", &uiGraphicHandle));
-
-		  	// show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-			  // and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
-
 		  break;
 		}
 
@@ -460,49 +428,19 @@ BOOLEAN RenderCharProfileFinishFace( void )
     switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\03.sti", &uiGraphicHandle));
-
-			  // show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-  			// and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 		  break;
       case( 1 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\04.sti", &uiGraphicHandle));
-
-			  // show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-			  // and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 		  break;
 		  case( 2 ):
-        // first portrait
-
-			  // load it
 	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\05.sti", &uiGraphicHandle));
-
-		  	// show it
-        GetVideoObject(&hHandle, uiGraphicHandle);
-        BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-
-
-			  // and kick it's sorry ..umm never mind, outta here
+        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
-
 		  break;
 		}
 	}

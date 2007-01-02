@@ -204,29 +204,17 @@ void HandleFuneral()
 
 void RenderFuneral()
 {
-  HVOBJECT hPixHandle;
 	UINT16 i, usPosX, usStringHeight;
 
 	WebPageTileBackground(4, 4, FUNERAL_MARBLE_WIDTH, FUNERAL_MARBLE_HEIGHT, guiMarbleBackground);
 
-	// LeftColumn
-	GetVideoObject(&hPixHandle, guiLeftColumn);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_LEFT_COLUMN_X, FUNERAL_LEFT_COLUMN_Y);
-
-	// Mcgillicuttys
-	GetVideoObject(&hPixHandle, guiMcGillicuttys);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y);
-
-	// Mortuary
-	GetVideoObject(&hPixHandle, guiMortuary);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_MORTUARY_SIGN_X, FUNERAL_MORTUARY_SIGN_Y);
-
-	// right column
-	GetVideoObject(&hPixHandle, guiRightColumn);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,FUNERAL_RIGHT_COLUMN_X, FUNERAL_RIGHT_COLUMN_Y);
-
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiLeftColumn,    0, FUNERAL_LEFT_COLUMN_X,       FUNERAL_LEFT_COLUMN_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMcGillicuttys, 0, FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMortuary,      0, FUNERAL_MORTUARY_SIGN_X,     FUNERAL_MORTUARY_SIGN_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiRightColumn,   0, FUNERAL_RIGHT_COLUMN_X,      FUNERAL_RIGHT_COLUMN_Y);
 
 		// LinkCarving
+	HVOBJECT hPixHandle;
 	GetVideoObject(&hPixHandle, guiLinkCarving);
 
 	usPosX = FUNERAL_LINK_1_X;
@@ -274,12 +262,9 @@ void RenderFuneral()
 
 void DisplayFuneralRipTombStone()
 {
-  HVOBJECT hPixHandle;
-
 	// rip tombstone
-	GetVideoObject(&hPixHandle, guiClosedSign);
 	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X+5, FUNERAL_CLOSED_RIP_SIGN_Y+5);
-	BltVideoObject( FRAME_BUFFER, hPixHandle, 0,FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y);
 
 	SetFontShadow( FUNERAL_RIP_SHADOW_COLOR );
 

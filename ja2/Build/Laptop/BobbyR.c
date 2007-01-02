@@ -290,39 +290,20 @@ void HandleBobbyR()
 
 void RenderBobbyR()
 {
-  HVOBJECT hPixHandle;
-	HVOBJECT hStorePlaqueHandle;
-
 	DrawBobbyRWoodBackground();
 
-	// Bobby's Name
-	GetVideoObject(&hPixHandle, guiBobbyName);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBY_RAYS_NAME_X, BOBBY_RAYS_NAME_Y);
-
-	// Plaque
-	GetVideoObject(&hPixHandle, guiPlaque);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBYS_PLAQUES_X, BOBBYS_PLAQUES_Y);
-
-	// Top Hinge
-	GetVideoObject(&hPixHandle, guiTopHinge);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_TOPHINGE_X, BOBBIES_TOPHINGE_Y);
-
-	// Bottom Hinge
-	GetVideoObject(&hPixHandle, guiBottomHinge);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_BOTTOMHINGE_X, BOBBIES_BOTTOMHINGE_Y);
-
-	// StorePlaque
-	GetVideoObject(&hStorePlaqueHandle, guiStorePlaque);
-  BltVideoObject(FRAME_BUFFER, hStorePlaqueHandle, 0,BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y);
-
-	// Handle
-	GetVideoObject(&hPixHandle, guiHandle);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_HANDLE_X, BOBBIES_HANDLE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyName,   0, BOBBY_RAYS_NAME_X,      BOBBY_RAYS_NAME_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiPlaque,      0, BOBBYS_PLAQUES_X,       BOBBYS_PLAQUES_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiTopHinge,    0, BOBBIES_TOPHINGE_X,     BOBBIES_TOPHINGE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiBottomHinge, 0, BOBBIES_BOTTOMHINGE_X,  BOBBIES_BOTTOMHINGE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiStorePlaque, 0, BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiHandle,      0, BOBBIES_HANDLE_X,       BOBBIES_HANDLE_Y);
 
 /*
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// The undercontsruction graphic
+		HVOBJECT hPixHandle;
 		GetVideoObject(&hPixHandle, guiUnderConstructionImage );
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y);
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y);

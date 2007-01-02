@@ -554,25 +554,12 @@ void HandleMercs()
 
 void RenderMercs()
 {
-  HVOBJECT hPixHandle;
-
 	DrawMecBackGround();
 
-	// Title
-	GetVideoObject(&hPixHandle, guiMercSymbol);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_TITLE_X, MERC_TITLE_Y);
-
-	// Speck Portrait
-	GetVideoObject(&hPixHandle, guiSpecPortrait);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_PORTRAIT_X, MERC_PORTRAIT_Y);
-
-	// Account Box
-	GetVideoObject(&hPixHandle, guiAccountBox);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_ACCOUNT_BOX_X, MERC_ACCOUNT_BOX_Y);
-
-	// Files Box
-	GetVideoObject(&hPixHandle, guiFilesBox);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, MERC_FILE_BOX_X, MERC_FILE_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercSymbol,   0, MERC_TITLE_X,       MERC_TITLE_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiSpecPortrait, 0, MERC_PORTRAIT_X,    MERC_PORTRAIT_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiAccountBox,   0, MERC_ACCOUNT_BOX_X, MERC_ACCOUNT_BOX_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiFilesBox,     0, MERC_FILE_BOX_X,    MERC_FILE_BOX_Y);
 
 	//Text on the Speck Portrait
 	DisplayWrappedString(MERC_PORTRAIT_TEXT_X, MERC_PORTRAIT_TEXT_Y, MERC_PORTRAIT_TEXT_WIDTH, 2, MERC_TEXT_FONT, MERC_TEXT_COLOR, MercHomePageText[MERC_SPECK_OWNER], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
@@ -2195,10 +2182,7 @@ void GetMercSiteBackOnline()
 
 void DrawMercVideoBackGround()
 {
-	HVOBJECT hPixHandle;
-
-	GetVideoObject(&hPixHandle, guiMercVideoPopupBackground);
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0,MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercVideoPopupBackground, 0, MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y);
 
 	//put the title on the window
 	DrawTextToScreen(MercHomePageText[MERC_SPECK_COM], MERC_X_VIDEO_TITLE_X, MERC_X_VIDEO_TITLE_Y, 0, MERC_VIDEO_TITLE_FONT, MERC_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);

@@ -269,7 +269,6 @@ void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
 
 BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
 {
-  HVOBJECT	hMugShotBorderHandle;
 	HVOBJECT	hFaceHandle;
 	SOLDIERTYPE	*pSoldier=NULL;
 
@@ -277,8 +276,7 @@ BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT
 
 
 	//Blt the portrait background
-	GetVideoObject(&hMugShotBorderHandle, guiMugShotBorder);
-	BltVideoObject(FRAME_BUFFER, hMugShotBorderHandle, ubImage,usPosX, usPosY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMugShotBorder, ubImage,usPosX, usPosY);
 
 	//Blt face to screen
 	GetVideoObject(&hFaceHandle, guiAimFiFace[ubMercID]);
@@ -286,9 +284,6 @@ BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT
 
 	if( IsMercDead( AimMercArray[ubMercID] ) )
 	{
-		//get the face object
-		GetVideoObject(&hFaceHandle, guiAimFiFace[ubMercID]);
-
 		//if the merc is dead
 		//shade the face red, (to signif that he is dead)
 		hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );

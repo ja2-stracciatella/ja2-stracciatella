@@ -268,16 +268,13 @@ void DeleteMapScreenInterfaceBottom( void )
 void RenderMapScreenInterfaceBottom( void )
 {
 	// will render the map screen bottom interface
-	HVOBJECT hHandle;
 	CHAR8 bFilename[ 32 ];
 
 
 	// render whole panel
 	if( fMapScreenBottomDirty == TRUE )
 	{
-		// get and blt panel
-	  GetVideoObject(&hHandle, guiMAPBOTTOMPANEL );
-	  BltVideoObject( guiSAVEBUFFER , hHandle, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
+	  BltVideoObjectFromIndex(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
 
 		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
 		{
@@ -916,8 +913,6 @@ void DisplayScrollBarSlider( )
 	// will display the scroll bar icon
 	UINT8 ubNumMessages;
 	UINT8 ubSliderOffset;
-	HVOBJECT hHandle;
-
 
   ubNumMessages = GetRangeOfMapScreenMessages();
 
@@ -927,8 +922,7 @@ void DisplayScrollBarSlider( )
 		// calculate where slider should be positioned
 		ubSliderOffset = ( SLIDER_BAR_RANGE * gubFirstMapscreenMessageIndex ) / ( ubNumMessages - MAX_MESSAGES_ON_MAP_BOTTOM );
 
-		GetVideoObject( &hHandle, guiSliderBar );
-		BltVideoObject( FRAME_BUFFER, hHandle, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBar, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
 	}
 }
 

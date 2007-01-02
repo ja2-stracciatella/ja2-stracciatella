@@ -146,8 +146,6 @@ void DeleteMapBorderGraphics( void )
 void RenderMapBorder( void )
 {
 	// renders the actual border to the guiSAVEBUFFER
-  HVOBJECT hHandle;
-
 /*
 	if( fDisabledMapBorder )
 	{
@@ -162,9 +160,7 @@ void RenderMapBorder( void )
 		return;
 	}
 
-	// get and blt border
-	GetVideoObject(&hHandle, guiMapBorder );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,MAP_BORDER_X, MAP_BORDER_Y);
+	BltVideoObjectFromIndex(guiSAVEBUFFER , guiMapBorder, 0, MAP_BORDER_X, MAP_BORDER_Y);
 
 	// show the level marker
 	DisplayCurrentLevelMarker( );
@@ -175,8 +171,6 @@ void RenderMapBorder( void )
 void RenderMapBorderCorner( void )
 {
 	// renders map border corner to the FRAME_BUFFER
-	HVOBJECT hHandle;
-
 	if( fDisabledMapBorder )
 	{
 		return;
@@ -187,10 +181,7 @@ void RenderMapBorderCorner( void )
 		return;
 	}
 
-
-	// get and blt corner
-	GetVideoObject(&hHandle, guiMapBorderCorner );
-	BltVideoObject( FRAME_BUFFER , hHandle, 0,MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderCorner, 0, MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y);
 
 	InvalidateRegion( MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, 635, 315);
 }
@@ -200,8 +191,6 @@ void RenderMapBorderCorner( void )
 void RenderMapBorderEtaPopUp( void )
 {
 	// renders map border corner to the FRAME_BUFFER
-	HVOBJECT hHandle;
-
 /*
 	if( fDisabledMapBorder )
 	{
@@ -220,9 +209,7 @@ void RenderMapBorderEtaPopUp( void )
 		return;
 	}
 
-	// get and blt ETA box
-	GetVideoObject(&hHandle, guiMapBorderEtaPopUp );
-	BltVideoObject( FRAME_BUFFER , hHandle, 0, MAP_BORDER_X + 215, 291);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, 291);
 
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
 }
@@ -1055,9 +1042,6 @@ BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 void DisplayCurrentLevelMarker( void )
 {
 	// display the current level marker on the map border
-
-	HVOBJECT hHandle;
-
 /*
 	if( fDisabledMapBorder )
 	{
@@ -1066,8 +1050,7 @@ void DisplayCurrentLevelMarker( void )
 */
 
 	// it's actually a white rectangle, not a green arrow!
-	GetVideoObject(&hHandle, guiLEVELMARKER );
-	BltVideoObject( guiSAVEBUFFER , hHandle, 0,	MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( INT16 )iCurrentMapSectorZ ));
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiLEVELMARKER, 0, MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + MAP_LEVEL_MARKER_DELTA * iCurrentMapSectorZ);
 }
 
 
