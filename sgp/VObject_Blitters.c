@@ -8754,7 +8754,111 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, U
 
 
 #if 1 // XXX TODO
-	FIXME // XXX TODO0001
+	uiLineFlag = (iTempY + TopSkip) & 1;
+
+	UINT32 PxCount;
+
+	while (TopSkip > 0)
+	{
+		for (;;)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80) continue;
+			if (PxCount == 0) break;
+			SrcPtr += PxCount;
+		}
+		TopSkip--;
+	}
+
+	do
+	{
+		for (LSCount = LeftSkip; LSCount > 0; LSCount -= PxCount)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+				PxCount &= 0x7F;
+				if (PxCount > LSCount)
+				{
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitTransparent;
+				}
+			}
+			else
+			{
+				if (PxCount > LSCount)
+				{
+					SrcPtr += LSCount;
+					PxCount -= LSCount;
+					LSCount = BlitLength;
+					goto BlitNonTransLoop;
+				}
+				SrcPtr += PxCount;
+			}
+		}
+
+		LSCount = BlitLength;
+		while (LSCount > 0)
+		{
+			PxCount = *SrcPtr++;
+			if (PxCount & 0x80)
+			{
+BlitTransparent: // skip transparent pixels
+				PxCount &= 0x7F;
+				if (PxCount > LSCount) PxCount = LSCount;
+				LSCount -= PxCount;
+				DestPtr += 2 * PxCount;
+				ZPtr    += 2 * PxCount;
+			}
+			else
+			{
+BlitNonTransLoop: // blit non-transparent pixels
+				if (PxCount > LSCount)
+				{
+					Unblitted = PxCount - LSCount;
+					PxCount = LSCount;
+				}
+				else
+				{
+					Unblitted = 0;
+				}
+				LSCount -= PxCount;
+
+				do
+				{
+					if (*(UINT16*)ZPtr <= usZValue)
+					{
+						*(UINT16*)ZPtr = usZValue;
+					}
+					else
+					{
+						// XXX original code updates Z value in one of two cases on this path, seems wrong
+						if (uiLineFlag != (((uintptr_t)DestPtr & 2) != 0)) continue;
+					}
+
+					UINT8 px = *SrcPtr;
+					if (px == 254)
+					{
+						if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+					}
+					else
+					{
+						// XXX original code writes garbage (lower 8 bit are the colour index) into the Z buffer at this point
+						*(UINT16*)DestPtr = p16BPPPalette[px];
+					}
+				}
+				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --PxCount > 0);
+				SrcPtr += Unblitted;
+			}
+		}
+
+		while (*SrcPtr++ != 0) {} // skip along until we hit and end-of-line marker
+		DestPtr += LineSkip;
+		ZPtr += LineSkip;
+		uiLineFlag ^= 1;
+	}
+	while (--BlitHeight > 0);
 #else
 	__asm {
 
