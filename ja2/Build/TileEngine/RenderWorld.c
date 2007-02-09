@@ -1638,13 +1638,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								// ATE: Check here for a lot of conditions!
 								else if ( ( ( uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT ) ) && !( uiFlags&TILES_DIRTY ) )
 								{
-										BOOLEAN bItemOutline = TRUE;
-
-										if ( uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT )
-										{
-											bItemOutline = FALSE;
-										}
-
 										BOOLEAN bBlitClipVal = BltIsClippedOrOffScreen(hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 
 										if ( fShadowBlitter )
@@ -1662,11 +1655,11 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										{
 											if ( bBlitClipVal == FALSE )
 											{
-												 Blt8BPPDataTo16BPPBufferOutlineZNB((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline );
+												 Blt8BPPDataTo16BPPBufferOutlineZNB((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, FALSE );
 											}
 											else if ( bBlitClipVal == TRUE )
 											{
-												 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, bItemOutline, &gClippingRect );
+												 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, FALSE, &gClippingRect );
 											}
 										}
 								}
