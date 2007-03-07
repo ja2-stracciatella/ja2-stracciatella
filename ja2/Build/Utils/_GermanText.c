@@ -1181,7 +1181,7 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 
 	// In the next string, %s is a name
 
-	L"%S wird eskortiert von Trupp %d.",
+	L"%S wurde rekrutiert.",
 
 	// Here %s is a name and %d is a number
 
