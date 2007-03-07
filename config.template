@@ -1,11 +1,11 @@
 # Uncomment exactly ONE of these
-#DUTCH   := yes
-#ENGLISH := yes
-#FRENCH  := yes
-#GERMAN  := yes
-#ITALIAN := yes
-#POLISH  := yes
-#RUSSIAN := yes # Broken
+#LNG := DUTCH
+#LNG := ENGLISH
+#LNG := FRENCH
+#LNG := GERMAN
+#LNG := ITALIAN
+#LNG := POLISH
+#LNG := RUSSIAN # Broken
 
 #JA2BETAVERSION := yes
 #JA2TESTVERSION := yes

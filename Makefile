@@ -2,21 +2,10 @@ CONFIG ?= config.default
 -include $(CONFIG)
 
 
-ifndef DUTCH
-ifndef ENGLISH
-ifndef FRENCH
-ifndef GERMAN
-ifndef ITALIAN
-ifndef POLISH
-ifndef RUSSIAN
-$(error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN must be defined. Copy config.template to config.default and uncomment one of the languages)
+ifeq ($(findstring $(LNG), DUTCH ENGLISH FRENCH GERMAN ITALIAN POLISH RUSSIAN),)
+$(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN. Copy config.template to config.default and uncomment one of the languages)
 endif
-endif
-endif
-endif
-endif
-endif
-endif
+
 
 
 ifndef DATADIR
@@ -64,34 +53,7 @@ ifdef JA2EDITOR
 CFLAGS += -DJA2EDITOR
 endif
 
-
-ifdef DUTCH
-CFLAGS += -DDUTCH
-endif
-
-ifdef ENGLISH
-CFLAGS += -DENGLISH
-endif
-
-ifdef FRENCH
-CFLAGS += -DFRENCH
-endif
-
-ifdef GERMAN
-CFLAGS += -DGERMAN
-endif
-
-ifdef ITALIAN
-CFLAGS += -DITALIAN
-endif
-
-ifdef POLISH
-CFLAGS += -DPOLISH
-endif
-
-ifdef RUSSIAN
-CFLAGS += -DRUSSIAN
-endif
+CFLAGS += -D$(LNG)
 
 CFLAGS += -DDATADIR=\"$(DATADIR)\"
 
