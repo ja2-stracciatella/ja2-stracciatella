@@ -107,7 +107,7 @@ BOOLEAN EnterInsurance()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceTitleImage));
 
 	// load the red bar on the side of the page and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Bullet.sti", &guiInsuranceBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Bullet.sti", &guiInsuranceBulletImage));
 
 	usPosX = INSURANCE_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<3; i++)
@@ -219,13 +219,13 @@ void RenderInsurance()
 BOOLEAN InitInsuranceDefaults()
 {
 	// load the Flower Account Box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BackGroundTile.sti", &guiInsuranceBackGround));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BackGroundTile.sti", &guiInsuranceBackGround));
 
 	// load the red bar on the side of the page and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\LeftTile.sti", &guiInsuranceRedBarImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/LeftTile.sti", &guiInsuranceRedBarImage));
 
 	// load the red bar on the side of the page and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\LargeBar.sti", &guiInsuranceBigRedLineImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/LargeBar.sti", &guiInsuranceBigRedLineImage));
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )

@@ -240,9 +240,9 @@ BOOLEAN CreateAIViewer()
 	wchar_t str[6];
 
 	//Check to see if data exists.
-	if( !FileExists( "DevTools\\arulco.sti" )			||
-			!FileExists( "DevTools\\icons.sti" )			||
-			!FileExists( "DevTools\\SmCheckbox.sti" ) )
+	if( !FileExists( "DevTools/arulco.sti" )			||
+			!FileExists( "DevTools/icons.sti" )			||
+			!FileExists( "DevTools/SmCheckbox.sti" ) )
 	{
 		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.  Aborted." );
 		gfExitViewer = FALSE;
@@ -254,10 +254,10 @@ BOOLEAN CreateAIViewer()
 	giSaveTCMode = giTimeCompressMode;
 
 	VObjectDesc.fCreateFlags = VOBJECT_CREATE_FROMFILE;
-	if (!AddVideoObjectFromFile("DevTools\\arulco.sti", &guiMapGraphicID))
-		AssertMsg( 0, "Failed to load data\\DevTools\\arulco.sti" );
-	if (!AddVideoObjectFromFile("DevTools\\icons.sti", &guiMapIconsID))
-		AssertMsg( 0, "Failed to load data\\DevTools\\icons.sti" );
+	if (!AddVideoObjectFromFile("DevTools/arulco.sti", &guiMapGraphicID))
+		AssertMsg( 0, "Failed to load data/DevTools/arulco.sti" );
+	if (!AddVideoObjectFromFile("DevTools/icons.sti", &guiMapIconsID))
+		AssertMsg( 0, "Failed to load data/DevTools/icons.sti" );
 
 	gfRenderViewer = TRUE;
 

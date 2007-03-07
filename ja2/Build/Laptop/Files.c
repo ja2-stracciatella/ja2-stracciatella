@@ -234,9 +234,9 @@ void EnterFiles()
 	// load grpahics for files system
 	LoadFiles( );
 
-	//AddFilesToPlayersLog(1, 0, 0,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
-	//AddFilesToPlayersLog(0, 0, 3,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
-  //AddFilesToPlayersLog(2, 0, 1,"LAPTOP\\portrait.sti", "LAPTOP\\portrait.sti");
+	//AddFilesToPlayersLog(1, 0, 0,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
+	//AddFilesToPlayersLog(0, 0, 3,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
+  //AddFilesToPlayersLog(2, 0, 1,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
   // in files mode now, set the fact
 	fInFilesMode=TRUE;
 
@@ -335,17 +335,17 @@ BOOLEAN LoadFiles( void )
   // load files video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\fileviewer.sti", &guiTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/fileviewer.sti", &guiTOP));
 
 
 	// the highlight
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\highlight.sti", &guiHIGHLIGHT));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/highlight.sti", &guiHIGHLIGHT));
 
   	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\fileviewerwhite.sti", &guiFileBack));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti", &guiFileBack));
 
 	return (TRUE);
 }
@@ -763,7 +763,7 @@ BOOLEAN DisplayFormattedText( void )
 	if( pFilesList->ubFormat < ENRICO_BACKGROUND )
 	{
 
-	  LoadEncryptedDataFromFile("BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * (iOffSet) * 2, FILE_STRING_SIZE * iLength * 2);
+	  LoadEncryptedDataFromFile("BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * (iOffSet) * 2, FILE_STRING_SIZE * iLength * 2);
 	}
 	#endif
 
@@ -782,7 +782,7 @@ BOOLEAN DisplayFormattedText( void )
 			 while(iLength > iCounter)
 			 {
          // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
 
 		     // display string and get height
 	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
@@ -810,7 +810,7 @@ BOOLEAN DisplayFormattedText( void )
 			 {
 
          // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
 
 		     // display string and get height
 	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
@@ -861,7 +861,7 @@ BOOLEAN DisplayFormattedText( void )
 			 {
 
          // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA\\Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
 
 		     // display string and get height
 	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
@@ -1031,7 +1031,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 			WidthList = CreateWidthRecordsForAruloIntelFile( );
 		  while( iCounter < LENGTH_OF_ENRICO_FILE )
 			{
-			  LoadEncryptedDataFromFile( "BINARYDATA\\RIS.EDT", sString, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
+			  LoadEncryptedDataFromFile( "BINARYDATA/RIS.EDT", sString, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
 				AddStringToFilesList( sString );
 				iCounter++;
 			}
@@ -1178,14 +1178,14 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\ArucoFilesMap.sti", &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti", &uiPicture));
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 300, 270);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_Y.sti", &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti", &uiPicture));
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 225);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
@@ -1194,7 +1194,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 
 
 			// wedding pic
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\Enrico_W.sti", &uiPicture));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/Enrico_W.sti", &uiPicture));
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 85);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
@@ -1266,12 +1266,12 @@ void ClearFileStringList( void )
 void CreateButtonsForFilesPage( void )
 {
 	// will create buttons for the files page
-	giFilesPageButtonsImage[0]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
+	giFilesPageButtonsImage[0]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
 	giFilesPageButtons[0] = QuickCreateButton( giFilesPageButtonsImage[0], PREVIOUS_FILE_PAGE_BUTTON_X,  PREVIOUS_FILE_PAGE_BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnPreviousFilePageCallback );
 
-	giFilesPageButtonsImage[ 1 ]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
+	giFilesPageButtonsImage[ 1 ]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
 	giFilesPageButtons[ 1 ] = QuickCreateButton( giFilesPageButtonsImage[ 1 ], NEXT_FILE_PAGE_BUTTON_X,  NEXT_FILE_PAGE_BUTTON_Y ,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNextFilePageCallback );
@@ -1555,7 +1555,7 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 
 	while( iCounter < ubFileRecordsLength[ iFileNumber ] )
 	{
-		LoadEncryptedDataFromFile( "BINARYDATA\\files.EDT", sString, FILE_STRING_SIZE * ( iOffset + iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		LoadEncryptedDataFromFile( "BINARYDATA/files.EDT", sString, FILE_STRING_SIZE * ( iOffset + iCounter ) * 2, FILE_STRING_SIZE * 2 );
 		AddStringToFilesList( sString );
 		iCounter++;
 	}
@@ -1653,14 +1653,14 @@ BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
 			// show picture
 			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
 			{
-				sprintf(sTemp, "%s%02d.sti", "FACES\\BIGFACES\\",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
+				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
 				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
 //def: 3/24/99
 //				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
 				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
 				DeleteVideoObjectFromIndex( uiPicture );
 
-				CHECKF(AddVideoObjectFromFile("LAPTOP\\InterceptBorder.sti", &uiPicture));
+				CHECKF(AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti", &uiPicture));
 				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
 				DeleteVideoObjectFromIndex( uiPicture );
 			}

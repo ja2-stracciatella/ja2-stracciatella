@@ -9,7 +9,7 @@
 //
 
 
-#define	AIMHISTORYFILE		"BINARYDATA\\AimHist.edt"
+#define	AIMHISTORYFILE		"BINARYDATA/AimHist.edt"
 #define AIM_HISTORY_LINE_SIZE 400 * 2
 
 

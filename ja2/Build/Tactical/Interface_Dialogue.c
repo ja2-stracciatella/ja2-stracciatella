@@ -375,7 +375,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.fHandled		=		FALSE;
 	gTalkPanel.fOnName		=		FALSE;
 
-	if (!AddVideoObjectFromFile("INTERFACE\\talkbox1.sti", &gTalkPanel.uiPanelVO))
+	if (!AddVideoObjectFromFile("INTERFACE/talkbox1.sti", &gTalkPanel.uiPanelVO))
 	{
 		return( 0 );
 	}
@@ -493,7 +493,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
   gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
-	sprintf( ubString, "INTERFACE\\talkbox2.sti" );
+	sprintf( ubString, "INTERFACE/talkbox2.sti" );
 	gTalkPanel.iButtonImages			= LoadButtonImage( ubString, -1,3,-1,4,-1 );
 
 

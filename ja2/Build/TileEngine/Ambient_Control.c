@@ -38,114 +38,114 @@ STEADY_STATE_AMBIENCE   gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
    "",
   // COUNTRYSIZE
   // DAY
-  "SOUNDS\\SSA\\insects Day 01.wav",
+  "SOUNDS/SSA/insects Day 01.wav",
   "",
   "",
   "",
   // NIGHT
-  "SOUNDS\\SSA\\night_crickets_01D.wav",
-  "SOUNDS\\SSA\\night_crickets_01B.wav",
-  "SOUNDS\\SSA\\night_crickets_01C.wav",
-  "SOUNDS\\SSA\\night_crickets_01A.wav",
+  "SOUNDS/SSA/night_crickets_01D.wav",
+  "SOUNDS/SSA/night_crickets_01B.wav",
+  "SOUNDS/SSA/night_crickets_01C.wav",
+  "SOUNDS/SSA/night_crickets_01A.wav",
   // NEAR WATER
   // DAY
-  "SOUNDS\\SSA\\swamp_day_01a.wav",
-  "SOUNDS\\SSA\\swamp_day_01b.wav",
-  "SOUNDS\\SSA\\swamp_day_01c.wav",
-  "SOUNDS\\SSA\\swamp_day_01d.wav",
+  "SOUNDS/SSA/swamp_day_01a.wav",
+  "SOUNDS/SSA/swamp_day_01b.wav",
+  "SOUNDS/SSA/swamp_day_01c.wav",
+  "SOUNDS/SSA/swamp_day_01d.wav",
   //NIGHT
-  "SOUNDS\\SSA\\marsh_at_night_01a.wav",
-  "SOUNDS\\SSA\\marsh_at_night_01b.wav",
-  "SOUNDS\\SSA\\marsh_at_night_01c.wav",
-  "SOUNDS\\SSA\\marsh_at_night_01d.wav",
+  "SOUNDS/SSA/marsh_at_night_01a.wav",
+  "SOUNDS/SSA/marsh_at_night_01b.wav",
+  "SOUNDS/SSA/marsh_at_night_01c.wav",
+  "SOUNDS/SSA/marsh_at_night_01d.wav",
   //INWATER
   //DAY
-  "SOUNDS\\SSA\\middle_of_water_01d.wav",
-  "SOUNDS\\SSA\\middle_of_water_01c.wav",
-  "SOUNDS\\SSA\\middle_of_water_01b.wav",
-  "SOUNDS\\SSA\\middle_of_water_01a.wav",
+  "SOUNDS/SSA/middle_of_water_01d.wav",
+  "SOUNDS/SSA/middle_of_water_01c.wav",
+  "SOUNDS/SSA/middle_of_water_01b.wav",
+  "SOUNDS/SSA/middle_of_water_01a.wav",
   // night
-  "SOUNDS\\SSA\\middle_of_water_01d.wav",
-  "SOUNDS\\SSA\\middle_of_water_01c.wav",
-  "SOUNDS\\SSA\\middle_of_water_01b.wav",
-  "SOUNDS\\SSA\\middle_of_water_01a.wav",
+  "SOUNDS/SSA/middle_of_water_01d.wav",
+  "SOUNDS/SSA/middle_of_water_01c.wav",
+  "SOUNDS/SSA/middle_of_water_01b.wav",
+  "SOUNDS/SSA/middle_of_water_01a.wav",
   // HEAVY FOREST
   // day
-  "SOUNDS\\SSA\\JUNGLE_DAY_01a.wav",
-  "SOUNDS\\SSA\\JUNGLE_DAY_01b.wav",
-  "SOUNDS\\SSA\\JUNGLE_DAY_01c.wav",
-  "SOUNDS\\SSA\\JUNGLE_DAY_01d.wav",
+  "SOUNDS/SSA/JUNGLE_DAY_01a.wav",
+  "SOUNDS/SSA/JUNGLE_DAY_01b.wav",
+  "SOUNDS/SSA/JUNGLE_DAY_01c.wav",
+  "SOUNDS/SSA/JUNGLE_DAY_01d.wav",
   // night
-  "SOUNDS\\SSA\\night_crickets_03a.wav",
-  "SOUNDS\\SSA\\night_crickets_03b.wav",
-  "SOUNDS\\SSA\\night_crickets_03c.wav",
-  "SOUNDS\\SSA\\night_crickets_03d.wav",
+  "SOUNDS/SSA/night_crickets_03a.wav",
+  "SOUNDS/SSA/night_crickets_03b.wav",
+  "SOUNDS/SSA/night_crickets_03c.wav",
+  "SOUNDS/SSA/night_crickets_03d.wav",
   // PINE FOREST
   // DAY
-  "SOUNDS\\SSA\\pine_forest_01a.wav",
-  "SOUNDS\\SSA\\pine_forest_01b.wav",
-  "SOUNDS\\SSA\\pine_forest_01c.wav",
-  "SOUNDS\\SSA\\pine_forest_01d.wav",
+  "SOUNDS/SSA/pine_forest_01a.wav",
+  "SOUNDS/SSA/pine_forest_01b.wav",
+  "SOUNDS/SSA/pine_forest_01c.wav",
+  "SOUNDS/SSA/pine_forest_01d.wav",
   // NIGHT
-  "SOUNDS\\SSA\\night_crickets_02a.wav",
-  "SOUNDS\\SSA\\night_crickets_02b.wav",
-  "SOUNDS\\SSA\\night_crickets_02c.wav",
-  "SOUNDS\\SSA\\night_crickets_02d.wav",
+  "SOUNDS/SSA/night_crickets_02a.wav",
+  "SOUNDS/SSA/night_crickets_02b.wav",
+  "SOUNDS/SSA/night_crickets_02c.wav",
+  "SOUNDS/SSA/night_crickets_02d.wav",
    // ABANDANDED
    // DAY
-   "SOUNDS\\SSA\\metal_wind_01a.wav",
-   "SOUNDS\\SSA\\metal_wind_01b.wav",
-   "SOUNDS\\SSA\\metal_wind_01c.wav",
-   "SOUNDS\\SSA\\metal_wind_01d.wav",
+   "SOUNDS/SSA/metal_wind_01a.wav",
+   "SOUNDS/SSA/metal_wind_01b.wav",
+   "SOUNDS/SSA/metal_wind_01c.wav",
+   "SOUNDS/SSA/metal_wind_01d.wav",
     // NIGHT
-   "SOUNDS\\SSA\\night_insects_01a.wav",
-   "SOUNDS\\SSA\\night_insects_01b.wav",
-   "SOUNDS\\SSA\\night_insects_01c.wav",
-   "SOUNDS\\SSA\\night_insects_01d.wav",
+   "SOUNDS/SSA/night_insects_01a.wav",
+   "SOUNDS/SSA/night_insects_01b.wav",
+   "SOUNDS/SSA/night_insects_01c.wav",
+   "SOUNDS/SSA/night_insects_01d.wav",
    // AIRPORT
    // DAY
-   "SOUNDS\\SSA\\rotating radar dish.wav",
+   "SOUNDS/SSA/rotating radar dish.wav",
    "",
    "",
    "",
    // NIGHT
-   "SOUNDS\\SSA\\rotating radar dish.wav",
+   "SOUNDS/SSA/rotating radar dish.wav",
    "",
    "",
    "",
    // WASTE LAND
    // DAY
-   "SOUNDS\\SSA\\gentle_wind.wav",
+   "SOUNDS/SSA/gentle_wind.wav",
    "",
    "",
    "",
    // NIGHT
-   "SOUNDS\\SSA\\insects_at_night_04.wav",
+   "SOUNDS/SSA/insects_at_night_04.wav",
    "",
    "",
    "",
    // UNDERGROUND
    // DAY
-   "SOUNDS\\SSA\\low ominous ambience.wav",
+   "SOUNDS/SSA/low ominous ambience.wav",
    "",
    "",
    "",
    // NIGHT
-   "SOUNDS\\SSA\\low ominous ambience.wav",
+   "SOUNDS/SSA/low ominous ambience.wav",
    "",
    "",
    "",
    // OCEAN
    // DAY
-   "SOUNDS\\SSA\\sea_01a.wav",
-   "SOUNDS\\SSA\\sea_01b.wav",
-   "SOUNDS\\SSA\\sea_01c.wav",
-   "SOUNDS\\SSA\\sea_01d.wav",
+   "SOUNDS/SSA/sea_01a.wav",
+   "SOUNDS/SSA/sea_01b.wav",
+   "SOUNDS/SSA/sea_01c.wav",
+   "SOUNDS/SSA/sea_01d.wav",
    // NIGHT
-   "SOUNDS\\SSA\\ocean_waves_01a.wav",
-   "SOUNDS\\SSA\\ocean_waves_01b.wav",
-   "SOUNDS\\SSA\\ocean_waves_01c.wav",
-   "SOUNDS\\SSA\\ocean_waves_01d.wav",
+   "SOUNDS/SSA/ocean_waves_01a.wav",
+   "SOUNDS/SSA/ocean_waves_01b.wav",
+   "SOUNDS/SSA/ocean_waves_01c.wav",
+   "SOUNDS/SSA/ocean_waves_01d.wav",
 };
 
 
@@ -158,7 +158,7 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 
 
 	// BUILD FILENAME
-	sprintf( zFilename, "AMBIENT\\%d.bad", ubAmbientID );
+	sprintf( zFilename, "AMBIENT/%d.bad", ubAmbientID );
 
 	// OPEN, LOAD
 	hFile = FileOpen(zFilename, FILE_ACCESS_READ);
@@ -181,7 +181,7 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 			return( FALSE );
 		}
 
-		sprintf( zFilename, "AMBIENT\\%s", gAmbData[ cnt ].zFilename );
+		sprintf( zFilename, "AMBIENT/%s", gAmbData[ cnt ].zFilename );
 		strcpy( gAmbData[ cnt ].zFilename, zFilename );
 	}
 

@@ -328,21 +328,21 @@ BOOLEAN LoadHistory( void )
   // load History video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\historywindow.sti", &guiTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/historywindow.sti", &guiTOP));
 
   // shaded line
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\historylines.sti", &guiSHADELINE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/historylines.sti", &guiSHADELINE));
 
 /*
 Not being used???  DF commented out
   // vert  line
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\historyvertline.sti", &guiVERTLINE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/historyvertline.sti", &guiVERTLINE));
 */
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\divisionline480.sti", &guiLONGLINE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline480.sti", &guiLONGLINE));
 
 	return (TRUE);
 }
@@ -384,13 +384,13 @@ void CreateHistoryButtons( void )
 {
 
 	// the prev page button
-  giHistoryButtonImage[PREV_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
+  giHistoryButtonImage[PREV_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
 	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayPrevPageCallBack);
 
 	// the next page button
-	giHistoryButtonImage[NEXT_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
+	giHistoryButtonImage[NEXT_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
 	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayNextPageCallBack);
@@ -1631,14 +1631,14 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ubQuestValue * 2  ), 160 );
+	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ubQuestValue * 2  ), 160 );
 }
 
 
 void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile( "BINARYDATA\\quests.edt", sQuestString, 160 * ( ( ubQuestValue  * 2 ) + 1), 160 );
+	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ( ubQuestValue  * 2 ) + 1), 160 );
 }
 
 

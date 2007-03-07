@@ -1598,7 +1598,7 @@ BOOLEAN InitializePalettesForMap( void )
 	SGPPaletteEntry pPalette[ 256 ];
 
 	// load image
-	UINT32 uiTempMap = AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx");
+	UINT32 uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 	CHECKF(uiTempMap != NO_VSURFACE);
 
 	// get video surface
@@ -5033,10 +5033,10 @@ BOOLEAN DropAPersonInASector( UINT8 ubType, INT16 sX, INT16 sY )
 BOOLEAN LoadMilitiaPopUpBox( void )
 {
 	// load the militia pop up box
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Militia.sti", &guiMilitia));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Militiamaps.sti", &guiMilitiaMaps));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\MilitiamapsectorOutline2.sti", &guiMilitiaSectorHighLight));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\MilitiamapsectorOutline.sti", &guiMilitiaSectorOutline));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Militia.sti", &guiMilitia));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Militiamaps.sti", &guiMilitiaMaps));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti", &guiMilitiaSectorHighLight));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti", &guiMilitiaSectorOutline));
 
 	return( TRUE );
 }
@@ -5392,7 +5392,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 			sY += ( iCounter * ( MILITIA_BTN_HEIGHT ) + 2 );
 
 			// set the button image
-			giMapMilitiaButtonImage[ iCounter ]=  LoadButtonImage( "INTERFACE\\militia.sti" ,-1,3,-1,4,-1 );
+			giMapMilitiaButtonImage[ iCounter ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,3,-1,4,-1 );
 
 			// set the button value
 			giMapMilitiaButton[ iCounter ] = QuickCreateButton( giMapMilitiaButtonImage[ iCounter ], sX, sY,
@@ -5813,8 +5813,8 @@ void HandleEveningOutOfTroopsAmongstSectors( void )
 void CreateMilitiaPanelBottomButton( void )
 {
 	// set the button image
-	giMapMilitiaButtonImage[ 3 ]=  LoadButtonImage( "INTERFACE\\militia.sti" ,-1,1,-1,2,-1 );
-	giMapMilitiaButtonImage[ 4 ]=  LoadButtonImage( "INTERFACE\\militia.sti" ,-1,1,-1,2,-1 );
+	giMapMilitiaButtonImage[ 3 ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,1,-1,2,-1 );
+	giMapMilitiaButtonImage[ 4 ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,1,-1,2,-1 );
 
 
 	giMapMilitiaButton[ 3 ] = QuickCreateButton( giMapMilitiaButtonImage[ 3 ], MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_AUTO_BOX_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y,
@@ -6191,7 +6191,7 @@ BOOLEAN DrawMapForDemo( void )
 {
 	UINT32 uiTempObject;
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_1.sti", &uiTempObject));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/map_1.sti", &uiTempObject));
 	BltVideoObjectFromIndex(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
 	DeleteVideoObjectFromIndex( uiTempObject );
 

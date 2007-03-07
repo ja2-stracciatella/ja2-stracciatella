@@ -530,7 +530,7 @@ void DoTransitionFromPreBattleInterfaceToAutoResolve()
 	//hide the autoresolve
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)SrcRect.iLeft, (UINT16)SrcRect.iTop, (UINT16)SrcRect.iRight, (UINT16)SrcRect.iBottom );
 
-	PlayJA2SampleFromFile("SOUNDS\\Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetJA2Clock();
@@ -1778,17 +1778,17 @@ void CreateAutoResolveInterface()
 	gpAR->fExitAutoResolve = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	if (!AddVideoObjectFromFile("Interface\\AutoResolve.sti", &gpAR->iPanelImages))
+	if (!AddVideoObjectFromFile("Interface/AutoResolve.sti", &gpAR->iPanelImages))
 	{
-		AssertMsg( 0, "Failed to load Interface\\AutoResolve.sti" );
+		AssertMsg( 0, "Failed to load Interface/AutoResolve.sti" );
 	}
 
 	//Load the button images file, and assign it to the first button.
 	/* OLD BEFORE THE MEDICAL BUTTON WAS ADDED
-	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface\\AutoBtns.sti", -1, 0, -1, 6, -1 );
+	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface/AutoBtns.sti", -1, 0, -1, 6, -1 );
 	if( gpAR->iButtonImage[ PAUSE_BUTTON ] == -1 )
 	{
-		AssertMsg( 0, "Failed to load Interface\\AutoBtns.sti" );
+		AssertMsg( 0, "Failed to load Interface/AutoBtns.sti" );
 	}
 
 	//Have the other buttons hook into the first button containing the images.
@@ -1800,10 +1800,10 @@ void CreateAutoResolveInterface()
 	gpAR->iButtonImage[ RETREAT_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 12, -1, 13, -1 );
 	gpAR->iButtonImage[ DONE_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 14, -1, 15, -1 );
 	*/
-	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface\\AutoBtns.sti", -1, 0, -1, 7, -1 );
+	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface/AutoBtns.sti", -1, 0, -1, 7, -1 );
 	if( gpAR->iButtonImage[ PAUSE_BUTTON ] == -1 )
 	{
-		AssertMsg( 0, "Failed to load Interface\\AutoBtns.sti" );
+		AssertMsg( 0, "Failed to load Interface/AutoBtns.sti" );
 	}
 
 	//Have the other buttons hook into the first button containing the images.
@@ -1818,9 +1818,9 @@ void CreateAutoResolveInterface()
 	gpAR->iButtonImage[ DONELOSE_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 16, -1, 17, -1 );
 
 	//Load the generic faces for civs and enemies
-	if (!AddVideoObjectFromFile("Interface\\SmFaces.sti", &gpAR->iFaces))
+	if (!AddVideoObjectFromFile("Interface/SmFaces.sti", &gpAR->iFaces))
 	{
-		AssertMsg( 0, "Failed to load Interface\\SmFaces.sti" );
+		AssertMsg( 0, "Failed to load Interface/SmFaces.sti" );
 	}
 	HVOBJECT hVObject = GetVideoObject(gpAR->iFaces);
 	if (hVObject != NULL)
@@ -1830,9 +1830,9 @@ void CreateAutoResolveInterface()
 	}
 
 	//Add the battle over panels
-	if (!AddVideoObjectFromFile("Interface\\indent.sti", &gpAR->iIndent))
+	if (!AddVideoObjectFromFile("Interface/indent.sti", &gpAR->iIndent))
 	{
-		AssertMsg( 0, "Failed to load Interface\\indent.sti" );
+		AssertMsg( 0, "Failed to load Interface/indent.sti" );
 	}
 
 	//add all the faces now
@@ -1840,12 +1840,12 @@ void CreateAutoResolveInterface()
 	{
 		//Load the face
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
+		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
 		if (!AddVideoObjectFromFile(ImageFile, &gpMercs[i].uiVObjectID))
 		{
-			if (!AddVideoObjectFromFile("Faces\\65Face\\speck.sti", &gpMercs[i].uiVObjectID))
+			if (!AddVideoObjectFromFile("Faces/65Face/speck.sti", &gpMercs[i].uiVObjectID))
 			{
-				AssertMsg( 0, String("Failed to load %Faces\\65Face\\%02d.sti or it's placeholder, speck.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex) );
+				AssertMsg( 0, String("Failed to load %Faces/65Face/%02d.sti or it's placeholder, speck.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex) );
 			}
 		}
 		HVOBJECT hVObject = GetVideoObject(gpMercs[i].uiVObjectID);

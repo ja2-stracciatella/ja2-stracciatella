@@ -163,7 +163,7 @@ void LoadSaveScreenEntry()
 		TrashFDlgList( FileList );
 
 	iTopFileShown = iTotalFiles = 0;
-	if( GetFileFirst("MAPS\\*.dat", &FileInfo) )
+	if( GetFileFirst("MAPS/*.dat", &FileInfo) )
 	{
 		FileList = AddToFDlgList( FileList, &FileInfo );
 		iTotalFiles++;
@@ -342,7 +342,7 @@ UINT32 LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-	  mprintf( 226, 126, L"NO FILES IN \\MAPS DIRECTORY" );
+	  mprintf( 226, 126, L"NO FILES IN /MAPS DIRECTORY" );
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
@@ -374,7 +374,7 @@ UINT32 LoadSaveScreenHandle(void)
 			fEnteringLoadSaveScreen = TRUE;
 			return EDIT_SCREEN;
 		case DIALOG_DELETE:
-			sprintf( gszCurrFilename, "MAPS\\%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS/%S", gzFilename );
 			if( GetFileFirst(gszCurrFilename, &FileInfo) )
 			{
 				wchar_t str[40];
@@ -397,7 +397,7 @@ UINT32 LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			sprintf( gszCurrFilename, "MAPS\\%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS/%S", gzFilename );
 			if ( FileExists( gszCurrFilename ) )
 			{
 				gfFileExists = TRUE;

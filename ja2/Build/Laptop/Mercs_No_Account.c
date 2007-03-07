@@ -63,11 +63,11 @@ BOOLEAN EnterMercsNoAccount()
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\NoAccountBox.sti", &guiNoAccountImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti", &guiNoAccountImage));
 
 
 	// Open Accouint button
-	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP\\BigButtons.sti", -1,0,-1,1,-1 );
+	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
 
 	guiOpenAccountBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT],
 													 FONT12ARIAL,

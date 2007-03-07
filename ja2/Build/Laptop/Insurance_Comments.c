@@ -63,7 +63,7 @@ BOOLEAN EnterInsuranceComments()
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\bullet.sti", &guiInsCmntBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/bullet.sti", &guiInsCmntBulletImage));
 
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)

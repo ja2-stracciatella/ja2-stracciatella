@@ -697,7 +697,7 @@ void HandleHeliDrop( )
 					AniParams.sX									= gsHeliXPos;
 					AniParams.sY									= gsHeliYPos;
 					AniParams.sZ									= (INT16)gdHeliZPos;
-					strcpy( AniParams.zCachedFile, "TILECACHE\\heli_sh.sti" );
+					strcpy( AniParams.zCachedFile, "TILECACHE/heli_sh.sti" );
 
 					gpHeli = CreateAnimationTile( &AniParams );
 					break;

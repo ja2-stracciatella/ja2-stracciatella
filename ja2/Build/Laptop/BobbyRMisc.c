@@ -29,10 +29,10 @@ void GameInitBobbyRMisc()
 BOOLEAN EnterBobbyRMisc()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\miscbackground.sti", &guiMiscBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/miscbackground.sti", &guiMiscBackground));
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\miscgrid.sti", &guiMiscGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/miscgrid.sti", &guiMiscGrid));
 
 	InitBobbyBrTitle();
 	//Draw menu bar

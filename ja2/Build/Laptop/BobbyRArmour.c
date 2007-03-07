@@ -29,10 +29,10 @@ void GameInitBobbyRArmour()
 BOOLEAN EnterBobbyRArmour()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Armourbackground.sti", &guiArmourBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Armourbackground.sti", &guiArmourBackground));
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Armourgrid.sti", &guiArmourGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Armourgrid.sti", &guiArmourGrid));
 
 	InitBobbyBrTitle();
 	//Draw menu bar

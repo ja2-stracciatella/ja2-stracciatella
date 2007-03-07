@@ -64,7 +64,7 @@ enum
 };
 
 //Specifies where the master english file is located relative to the exe directory
-#define LCG_WORKINGDIRECTORY				"build\\utils"
+#define LCG_WORKINGDIRECTORY				"build/utils"
 #define LCG_ENGLISHMASTERFILE				"_EnglishText.c"
 
 //The commandline argument (add different one for each language supported
@@ -98,7 +98,7 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( UINT8 *str )
 	GetFileManCurrentDirectory( CurrDir );
 
 	//Build the working directory name
-	sprintf( Dir, "%s\\%s", ExecDir, LCG_WORKINGDIRECTORY );
+	sprintf( Dir, "%s/%s", ExecDir, LCG_WORKINGDIRECTORY );
 
 	//Set the working directory
 	if( !SetFileManCurrentDirectory( Dir ) )

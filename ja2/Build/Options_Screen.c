@@ -393,7 +393,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	gfExitOptionsDueToMessageBox = FALSE;
 
 	// load the options screen background graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\OptionScreenBase.sti", &guiOptionBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/OptionScreenBase.sti", &guiOptionBackGroundImage));
 
 	// load button, title graphic and add it
 	SGPFILENAME ImageFile;
@@ -401,7 +401,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiOptionsAddOnImages));
 
 	//Save game button
-	giOptionsButtonImages = LoadButtonImage("INTERFACE\\OptionScreenAddons.sti", -1,2,-1,3,-1 );
+	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1,2,-1,3,-1 );
 	guiOptGotoSaveGameBtn = CreateIconAndTextButton( giOptionsButtonImages, zOptionsText[OPT_SAVE_GAME], OPT_BUTTON_FONT,
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
@@ -468,7 +468,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		}
 		//Check box to toggle tracking mode
 		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_FIRST_COLUMN_X, usPosY,
-																		"INTERFACE\\OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnOptionsTogglesCallback );
 		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
 
@@ -511,7 +511,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	{
 		//Check box to toggle tracking mode
 		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_SECOND_COLUMN_X, usPosY,
-																		"INTERFACE\\OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnOptionsTogglesCallback );
 		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
 
@@ -866,7 +866,7 @@ void		GetOptionsScreenUserInput()
 					{
 					static	UINT32	uiTest2 = NO_SAMPLE;
 					if( !SoundIsPlaying( uiTest2 ) )
-						uiTest2 = PlayJA2SampleFromFile("Sounds\\RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
+						uiTest2 = PlayJA2SampleFromFile("Sounds/RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					break;
 
@@ -1200,7 +1200,7 @@ void HandleSliderBarMovementSounds()
 			HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
 
 		if( !SoundIsPlaying( uiLastPlayingSoundID ) )
-			uiLastPlayingSoundID = PlayJA2SampleFromFile("Sounds\\Weapons\\LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			uiLastPlayingSoundID = PlayJA2SampleFromFile("Sounds/Weapons/LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
 	}
 	else
 		uiLastSoundFxTime = GetJA2Clock();
@@ -1211,7 +1211,7 @@ void HandleSliderBarMovementSounds()
 		guiSpeechSliderMoving = 0xffffffff;
 
 		if( !SoundIsPlaying( uiLastPlayingSpeechID ) )
-			uiLastPlayingSpeechID = PlayJA2GapSample("BattleSnds\\m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+			uiLastPlayingSpeechID = PlayJA2GapSample("BattleSnds/m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 	}
 	else
 		uiLastSpeechTime = GetJA2Clock();

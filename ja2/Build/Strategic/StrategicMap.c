@@ -424,7 +424,7 @@ void BeginLoadScreen( )
 		iLastShadePercentage = 0;
 		uiStartTime = GetJA2Clock();
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-		PlayJA2SampleFromFile("SOUNDS\\Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile("SOUNDS/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
 			uiCurrTime = GetJA2Clock();
@@ -535,7 +535,7 @@ static void EndLoadScreen(void)
 	if( fStartNewFile )
 	{ //start new file
 		fp = fopen( "TimeResults.txt", "w" );
-		ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, L"See JA2\\Data\\TimeResults.txt for more detailed timings." );
+		ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, L"See JA2/Data/TimeResults.txt for more detailed timings." );
 		fStartNewFile = FALSE;
 	}
 	else
@@ -777,7 +777,7 @@ void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEA
 	sprintf( bString, "%s%s%s.DAT", pVertStrings[sMapY], pHortStrings[sMapX], bExtensionString );
 
 	// We will test against this string
-	sprintf( bTestString, "MAPS\\%s", bString );
+	sprintf( bTestString, "MAPS/%s", bString );
 
 	if( fUsePlaceholder && !FileExists( bTestString ) )
 	{
@@ -1124,7 +1124,7 @@ BOOLEAN MapExists(const char *szFilename )
 {
 	UINT8 str[50];
 	HWFILE fp;
-	sprintf( str, "MAPS\\%s", szFilename );
+	sprintf( str, "MAPS/%s", szFilename );
 	fp = FileOpen(str, FILE_ACCESS_READ);
 	if( !fp )
 		return FALSE;

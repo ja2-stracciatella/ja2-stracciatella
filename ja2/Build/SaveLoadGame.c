@@ -4047,19 +4047,19 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 		{
 			//if we are loading a game, and the user hasnt saved any consecutinve saves, load the defualt save
 			if( guiCurrentQuickSaveNumber == 0 )
-				sprintf( pzNewFileName , "%S\\%S.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
+				sprintf( pzNewFileName , "%S/%S.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
 			else
-				sprintf( pzNewFileName , "%S\\%S%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber, pMessageStrings[ MSG_SAVEEXTENSION ] );
+				sprintf( pzNewFileName , "%S/%S%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber, pMessageStrings[ MSG_SAVEEXTENSION ] );
 		}
 		else
 #endif
-			sprintf( pzNewFileName , "%S\\%S.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
+			sprintf( pzNewFileName , "%S/%S.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
 	}
 //#ifdef JA2BETAVERSION
 	else if( ubSaveGameID == SAVE__END_TURN_NUM )
 	{
 		//The name of the file
-		sprintf( pzNewFileName , "%S\\Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], guiLastSaveGameNum, pMessageStrings[ MSG_SAVEEXTENSION ] );
+		sprintf( pzNewFileName , "%S/Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], guiLastSaveGameNum, pMessageStrings[ MSG_SAVEEXTENSION ] );
 
 		//increment end turn number
 		guiLastSaveGameNum++;
@@ -4073,7 +4073,7 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 //#endif
 
 	else
-		sprintf( pzNewFileName , "%S\\%S%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_SAVE_NAME ], ubSaveGameID, pMessageStrings[ MSG_SAVEEXTENSION ] );
+		sprintf( pzNewFileName , "%S/%S%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_SAVE_NAME ], ubSaveGameID, pMessageStrings[ MSG_SAVEEXTENSION ] );
 }
 
 
@@ -4211,7 +4211,7 @@ void InitSaveGameFilePosition()
 {
 	CHAR8		zFileName[128];
 
-	sprintf( zFileName, "%S\\SaveGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
+	sprintf( zFileName, "%S/SaveGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	FileDelete( zFileName );
 }
@@ -4225,7 +4225,7 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 	UINT32	uiStrLen=0;
 	CHAR8		zFileName[128];
 
-	sprintf( zFileName, "%S\\SaveGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
+	sprintf( zFileName, "%S/SaveGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	// create the save game file
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -4256,7 +4256,7 @@ void InitLoadGameFilePosition()
 {
 	CHAR8		zFileName[128];
 
-	sprintf( zFileName, "%S\\LoadGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
+	sprintf( zFileName, "%S/LoadGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	FileDelete( zFileName );
 }
@@ -4271,7 +4271,7 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 
 	CHAR8		zFileName[128];
 
-	sprintf( zFileName, "%S\\LoadGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
+	sprintf( zFileName, "%S/LoadGameFilePos%2d.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gubSaveGameLoc );
 
 	// create the save game file
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -4887,7 +4887,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 	//strcpy( gzNameOfMapTempFile, pNameOfFile);
 	sprintf( gzNameOfMapTempFile, "%s%d", pNameOfFile, ubSaveGameID );
 
-	sprintf( zFileName, "%S\\%s.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gzNameOfMapTempFile );
+	sprintf( zFileName, "%S/%s.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gzNameOfMapTempFile );
 
 	if( fInit )
 	{
@@ -4938,7 +4938,7 @@ static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, 
 
 	guiSizeOfTempFiles += uiSizeOfFile;
 
-	sprintf( zFileName, "%S\\%s.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gzNameOfMapTempFile );
+	sprintf( zFileName, "%S/%s.txt", pMessageStrings[ MSG_SAVEDIRECTORY ], gzNameOfMapTempFile );
 
 	// create the save game file
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -5264,8 +5264,8 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 
 	//The name of the file
-	sprintf( zFileName1, "%S\\Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 0, pMessageStrings[ MSG_SAVEEXTENSION ] );
-	sprintf( zFileName2, "%S\\Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 1, pMessageStrings[ MSG_SAVEEXTENSION ] );
+	sprintf( zFileName1, "%S/Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 0, pMessageStrings[ MSG_SAVEEXTENSION ] );
+	sprintf( zFileName2, "%S/Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 1, pMessageStrings[ MSG_SAVEEXTENSION ] );
 
 	if( FileExists( zFileName1 ) )
 	{

@@ -581,7 +581,7 @@ BOOLEAN EnterHelpScreen()
 	usPosY = gHelpScreen.usScreenLocY + HELP_SCREEN_EXIT_BTN_LOC_Y;
 
 	//Create the exit buttons
-	giExitBtnImage = LoadButtonImage("INTERFACE\\HelpScreen.sti", -1,0,4,2,6 );
+	giExitBtnImage = LoadButtonImage("INTERFACE/HelpScreen.sti", -1,0,4,2,6 );
 
 	guiHelpScreenExitBtn = CreateIconAndTextButton( giExitBtnImage, L"", HELP_SCREEN_BTN_FONT,
 														 HELP_SCREEN_BTN_FONT_ON_COLOR, DEFAULT_SHADOW,
@@ -609,7 +609,7 @@ BOOLEAN EnterHelpScreen()
 	if( !gHelpScreen.fForceHelpScreenToComeUp)
 	{
 		gHelpScreenDontShowHelpAgainToggle = CreateCheckBoxButton( usPosX, (UINT16)(usPosY-3),
-																		"INTERFACE\\OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGHEST,
+																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGHEST,
 																		BtnHelpScreenDontShowHelpAgainCallback );
 
 		SetButtonCursor( gHelpScreenDontShowHelpAgainToggle, gHelpScreen.usCursor );
@@ -636,7 +636,7 @@ BOOLEAN EnterHelpScreen()
 */
 
 	// load the help screen background graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\HelpScreen.sti", &guiHelpScreenBackGround));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/HelpScreen.sti", &guiHelpScreenBackGround));
 
 
 	//create the text buffer
@@ -2316,7 +2316,7 @@ void CreateScrollAreaButtons()
 							 gHelpScreen.usCursor, SelectHelpScrollAreaMovementCallBack, SelectHelpScrollAreaCallBack );
   MSYS_AddRegion( &gHelpScreenScrollArea );
 
-	guiHelpScreenScrollArrowImage[ 0 ] = LoadButtonImage( "INTERFACE\\HelpScreen.sti", 14,10, 11, 12 ,13 );
+	guiHelpScreenScrollArrowImage[ 0 ] = LoadButtonImage( "INTERFACE/HelpScreen.sti", 14,10, 11, 12 ,13 );
 	guiHelpScreenScrollArrowImage[ 1 ] = UseLoadedButtonImage( guiHelpScreenScrollArrowImage[ 0 ] ,19,15,16,17,18 );
 
 	if( gHelpScreen.bNumberOfButtons != 0 )

@@ -108,7 +108,7 @@ BOOLEAN EnterFloristGallery()
 	InitFloristDefaults();
 
 	//the next previous buttons
-	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
+	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiFloralGalleryButton[0] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_PREV], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
@@ -241,7 +241,7 @@ BOOLEAN InitFlowerButtons()
 	for(i=0; i<gubCurNumberOfFlowers; i++)
 	{
 		// load the handbullet graphic and add it
-		sprintf( sTemp, "LAPTOP\\Flower_%d.sti", count);
+		sprintf( sTemp, "LAPTOP/Flower_%d.sti", count);
 		CHECKF(AddVideoObjectFromFile(sTemp, &guiFlowerImages[i]));
 		count++;
 	}
@@ -250,7 +250,7 @@ BOOLEAN InitFlowerButtons()
 	usPosY = FLOR_GALLERY_FLOWER_BUTTON_Y;
 //	usPosX = FLOR_GALLERY_FLOWER_BUTTON_X;
 	count = gubCurFlowerIndex;
-	guiGalleryButtonImage	= LoadButtonImage("LAPTOP\\GalleryButtons.sti", -1,0,-1,1,-1 );
+	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/GalleryButtons.sti", -1,0,-1,1,-1 );
 	for(j=0; j<gubCurNumberOfFlowers; j++)
 	{
 		guiGalleryButton[j] = QuickCreateButton( guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY,

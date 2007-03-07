@@ -20,7 +20,7 @@
 
 #define	NUM_AIM_POLICY_PAGES				11
 #define	NUM_AIM_POLICY_TOC_BUTTONS	9
-#define	AIMPOLICYFILE		"BINARYDATA\\AimPol.edt"
+#define	AIMPOLICYFILE		"BINARYDATA/AimPol.edt"
 #define AIM_POLICY_LINE_SIZE 80 * 5 * 2 // 80 columns of 5 lines that are wide chars, 800 bytes total
 
 #define AIM_POLICY_TITLE_FONT				FONT14ARIAL
@@ -219,7 +219,7 @@ BOOLEAN EnterAimPolicies()
 	gfInPolicyToc = FALSE;
 
 	// load the Content Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\ContentButton.sti", &guiContentButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/ContentButton.sti", &guiContentButton));
 
 	RenderAimPolicies();
 	return(TRUE);
@@ -386,7 +386,7 @@ BOOLEAN InitAimPolicyMenuBar(void)
 		return(TRUE);
 
 	//Load graphic for buttons
-	guiPoliciesMenuButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesMenuButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -586,7 +586,7 @@ BOOLEAN InitAgreementRegion(void)
 	gfExitingPolicesAgreeButton = FALSE;
 
 	//Load graphic for buttons
-	guiPoliciesButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)

@@ -72,7 +72,7 @@ BOOLEAN EnterFloristCards()
 	InitFloristDefaults();
 
 	// load the Flower Account Box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\CardBlank.sti", &guiCardBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/CardBlank.sti", &guiCardBackground));
 
 	ubCount = 0;
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
@@ -92,7 +92,7 @@ BOOLEAN EnterFloristCards()
 	}
 
 
-	guiFlowerCardsButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
+	guiFlowerCardsButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiFlowerCardsBackButton = CreateIconAndTextButton( guiFlowerCardsButtonImage, sFloristCards[FLORIST_CARDS_BACK], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,

@@ -113,11 +113,11 @@ BOOLEAN EnterInsuranceInfo()
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\bullet.sti", &guiBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/bullet.sti", &guiBulletImage));
 
 
 	//left arrow
-	guiInsPrevButtonImage	= LoadButtonImage("LAPTOP\\InsLeftButton.sti", 2,0,-1,1,-1 );
+	guiInsPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
 	guiInsPrevBackButton = CreateIconAndTextButton( guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
@@ -129,7 +129,7 @@ BOOLEAN EnterInsuranceInfo()
 
 
 	//Right arrow
-	guiInsNextButtonImage	= LoadButtonImage("LAPTOP\\InsRightButton.sti", 2,0,-1,1,-1 );
+	guiInsNextButtonImage	= LoadButtonImage("LAPTOP/InsRightButton.sti", 2,0,-1,1,-1 );
 	guiInsNextBackButton = CreateIconAndTextButton( guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,

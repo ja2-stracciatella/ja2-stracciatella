@@ -227,19 +227,19 @@ void InitTacticalPlacementGUI()
 	GoIntoOverheadMap();
 
 	//Load the images
-	if (!AddVideoObjectFromFile("Interface\\OverheadInterface.sti", &giOverheadPanelImage))
+	if (!AddVideoObjectFromFile("Interface/OverheadInterface.sti", &giOverheadPanelImage))
 	{
-		AssertMsg( 0, "Failed to load Interface\\OverheadInterface.sti" );
+		AssertMsg( 0, "Failed to load Interface/OverheadInterface.sti" );
 	}
-	if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
+	if (!AddVideoObjectFromFile("Interface/panels.sti", &giMercPanelImage))
 	{
-		AssertMsg( 0, "Failed to load Interface\\panels.sti" );
+		AssertMsg( 0, "Failed to load Interface/panels.sti" );
 	}
 
-	giOverheadButtonImages[ DONE_BUTTON ] = LoadButtonImage( "Interface\\OverheadUIButtons.sti", -1, 0, -1, 1, -1 );
+	giOverheadButtonImages[ DONE_BUTTON ] = LoadButtonImage( "Interface/OverheadUIButtons.sti", -1, 0, -1, 1, -1 );
 	if( giOverheadButtonImages[ DONE_BUTTON ] == -1 )
 	{
-		AssertMsg( 0, "Failed to load Interface\\OverheadUIButtons.sti" );
+		AssertMsg( 0, "Failed to load Interface/OverheadUIButtons.sti" );
 	}
 	giOverheadButtonImages[ SPREAD_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );
 	giOverheadButtonImages[ GROUP_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );
@@ -350,12 +350,12 @@ void InitTacticalPlacementGUI()
 	{
 		//Load the faces
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
+		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
 		if (!AddVideoObjectFromFile(ImageFile, &gMercPlacement[i].uiVObjectID))
 		{
-			if (!AddVideoObjectFromFile("Faces\\65Face\\speck.sti", &gMercPlacement[i].uiVObjectID))
+			if (!AddVideoObjectFromFile("Faces/65Face/speck.sti", &gMercPlacement[i].uiVObjectID))
 			{
-				AssertMsg( 0, String("Failed to load %Faces\\65Face\\%03d.sti or it's placeholder, speck.sti", gMercProfiles[ gMercPlacement[ i ].pSoldier->ubProfile ].ubFaceIndex) );
+				AssertMsg( 0, String("Failed to load %Faces/65Face/%03d.sti or it's placeholder, speck.sti", gMercProfiles[ gMercPlacement[ i ].pSoldier->ubProfile ].ubFaceIndex) );
 			}
 		}
 		xp = 91 + (i / 2) * 54;

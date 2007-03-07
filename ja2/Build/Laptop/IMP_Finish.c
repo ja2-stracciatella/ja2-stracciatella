@@ -123,7 +123,7 @@ void CreateIMPFinishButtons( void )
 
   // this function will create the buttons needed for th IMP about us page
   // the start over button button
-  giIMPFinishButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+  giIMPFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
 	/*giIMPFinishButton[0] = QuickCreateButton( giIMPFinishButtonImage[0], LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 114 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishStartOverCallback);
@@ -136,7 +136,7 @@ void CreateIMPFinishButtons( void )
 														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishStartOverCallback);
 
 	// the done button
-	giIMPFinishButtonImage[1]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+	giIMPFinishButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
 /*	giIMPFinishButton[1] = QuickCreateButton( giIMPFinishButtonImage[1], LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishDoneCallback);
@@ -149,7 +149,7 @@ void CreateIMPFinishButtons( void )
 														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishDoneCallback);
 
 	// the personality button
-	giIMPFinishButtonImage[2]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPFinishButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 
 /*	giIMPFinishButton[2] = QuickCreateButton( giIMPFinishButtonImage[2], LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
@@ -167,7 +167,7 @@ void CreateIMPFinishButtons( void )
 
 
 	// the attribs button
-	giIMPFinishButtonImage[3]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPFinishButtonImage[3]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 /*	giIMPFinishButton[3] = QuickCreateButton( giIMPFinishButtonImage[3], LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishAttributesCallback);
@@ -183,7 +183,7 @@ void CreateIMPFinishButtons( void )
 													 25, 25, FALSE );
 
   // the portrait button
-	giIMPFinishButtonImage[4]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPFinishButtonImage[4]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 /*	giIMPFinishButton[4] = QuickCreateButton( giIMPFinishButtonImage[4], LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishPortraitCallback);
@@ -201,7 +201,7 @@ void CreateIMPFinishButtons( void )
 	swprintf( sString, lengthof(sString), pImpButtonText[ 5 ], iCurrentVoices + 1 );
 
 	// the voice button
-	giIMPFinishButtonImage[5]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPFinishButtonImage[5]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 	/* giIMPFinishButton[5] = QuickCreateButton( giIMPFinishButtonImage[5], LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPFinishVoiceCallback);
@@ -406,17 +406,17 @@ BOOLEAN RenderCharProfileFinishFace( void )
 	  switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\00.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/00.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\01.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/01.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\02.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/02.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
@@ -428,17 +428,17 @@ BOOLEAN RenderCharProfileFinishFace( void )
     switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\03.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/03.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\04.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/04.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
-	      CHECKF(AddVideoObjectFromFile("Faces\\SmallFaces\\05.sti", &uiGraphicHandle));
+	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/05.sti", &uiGraphicHandle));
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;

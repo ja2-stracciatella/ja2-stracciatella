@@ -270,10 +270,10 @@ static BOOLEAN EnterGIOScreen(void)
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
 	// load the Main trade screen backgroiund image
-	CHECKF(AddVideoObjectFromFile("InterFace\\OptionsScreenBackGround.sti", &guiGIOMainBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti", &guiGIOMainBackGroundImage));
 
 	//Ok button
-	giGIODoneBtnImage = LoadButtonImage("INTERFACE\\PreferencesButtons.sti", -1,0,-1,2,-1 );
+	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );
 	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT,
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
@@ -299,7 +299,7 @@ static BOOLEAN EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
 	{
 		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnDifficultyTogglesCallback );
 		MSYS_SetBtnUserData( guiDifficultySettingsToggles[ cnt ], 0, cnt );
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -318,7 +318,7 @@ static BOOLEAN EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
 	{
 		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameStyleTogglesCallback );
 		MSYS_SetBtnUserData( guiGameStyleToggles[ cnt ], 0, cnt );
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -333,7 +333,7 @@ static BOOLEAN EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
 	{
 		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameSaveTogglesCallback );
 		MSYS_SetBtnUserData( guiGameSaveToggles[ cnt ], 0, cnt );
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -348,7 +348,7 @@ static BOOLEAN EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
 	{
 		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGunOptionsTogglesCallback);
 		MSYS_SetBtnUserData( guiGunOptionToggles[ cnt ], 0, cnt );
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -380,7 +380,7 @@ static BOOLEAN EnterGIOScreen(void)
 	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
 		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE\\OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnTimedTurnsTogglesCallback );
 		MSYS_SetBtnUserData( guiTimedTurnToggles[ cnt ], 0, cnt );
 		usPosY += GIO_GAP_BN_SETTINGS;

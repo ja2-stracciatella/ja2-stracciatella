@@ -402,7 +402,7 @@ void CreateIMPHomePageButtons( void )
   // this procedure will create the buttons needed for the IMP homepage
 
 	// ths about us button
-   giIMPHomePageButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_1.sti" ,-1,0,-1,1,-1 );
+   giIMPHomePageButtonImage[0]=  LoadButtonImage( "LAPTOP/button_1.sti" ,-1,0,-1,1,-1 );
 	/*  giIMPHomePageButton[0] = QuickCreateButton( giIMPHomePageButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 286 - 106 ), LAPTOP_SCREEN_WEB_UL_Y + ( 248 - 48 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAboutUsCallback);

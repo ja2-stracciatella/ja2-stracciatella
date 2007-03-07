@@ -82,8 +82,8 @@
 
 
 
-#define	FACES_DIR "FACES\\BIGFACES\\"
-#define	SMALL_FACES_DIR "FACES\\"
+#define	FACES_DIR "FACES/BIGFACES/"
+#define	SMALL_FACES_DIR "FACES/"
 
 #define NEXT_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 448
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150
@@ -626,12 +626,12 @@ BOOLEAN LoadPersonnelGraphics( void )
 	// load graphics needed for personnel screen
 
   // title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
 
 	// the background grpahics
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\personnelwindow.sti", &guiSCREEN));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/personnelwindow.sti", &guiSCREEN));
 
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\personnel_inventory.sti", &guiPersonnelInventory));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti", &guiPersonnelInventory));
 
 	return(TRUE);
 }
@@ -1062,13 +1062,13 @@ void CreatePersonnelButtons( void )
 {
 
 	// left button
-	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,0,-1,1,-1 );
+	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP/personnelbuttons.sti" ,-1,0,-1,1,-1 );
 	giPersonnelButton[0] = QuickCreateButton( giPersonnelButtonImage[0], PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftButtonCallBack);
 
 	// right button
-	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP\\personnelbuttons.sti" ,-1,2,-1,3,-1 );
+	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP/personnelbuttons.sti" ,-1,2,-1,3,-1 );
 	giPersonnelButton[1] = QuickCreateButton( giPersonnelButtonImage[1], NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightButtonCallBack);
@@ -1077,25 +1077,25 @@ void CreatePersonnelButtons( void )
 
 	/*
 	// left button
-	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1 );
+	giPersonnelButtonImage[0]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
 	giPersonnelButton[0] = QuickCreateButton( giPersonnelButtonImage[0], LEFT_BUTTON_X, BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftButtonCallBack);
 
 	// right button
-	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,6,-1,7,-1 );
+	giPersonnelButtonImage[1]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
 	giPersonnelButton[1] = QuickCreateButton( giPersonnelButtonImage[1], RIGHT_BUTTON_X, BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightButtonCallBack);
 
 	// left FF button
-	giPersonnelButtonImage[2]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,3,-1,4,-1 );
+	giPersonnelButtonImage[2]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,3,-1,4,-1 );
 	giPersonnelButton[2] = QuickCreateButton( giPersonnelButtonImage[2], LEFT_BUTTON_X, BUTTON_Y + 22,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LeftFFButtonCallBack);
 
 	// right ff button
-	giPersonnelButtonImage[3]=  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,9,-1,10,-1 );
+	giPersonnelButtonImage[3]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,9,-1,10,-1 );
 	giPersonnelButton[3] = QuickCreateButton( giPersonnelButtonImage[3], RIGHT_BUTTON_X, BUTTON_Y + 22,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)RightFFButtonCallBack);
@@ -1861,10 +1861,10 @@ BOOLEAN LoadPersonnelScreenBackgroundGraphics( void )
 	// will load the graphics for the personeel screen background
 
 	// departed bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\departed.sti", &guiDEPARTEDTEAM));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/departed.sti", &guiDEPARTEDTEAM));
 
 	// current bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\CurrentTeam.sti", &guiCURRENTTEAM));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti", &guiCURRENTTEAM));
 
 	return ( TRUE );
 }
@@ -2464,12 +2464,12 @@ void CreateDestroyPersonnelInventoryScrollButtons( void )
 	if( ( gubPersonnelInfoState == PRSNL_INV ) && ( fCreated == FALSE ) )
 	{
 		// create buttons
-		giPersonnelInventoryButtonsImages[ 0 ]=  LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,1,-1,2,-1 );
+		giPersonnelInventoryButtonsImages[ 0 ]=  LoadButtonImage( "LAPTOP/personnel_inventory.sti" ,-1,1,-1,2,-1 );
 	  giPersonnelInventoryButtons[ 0 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[0], 176 + 397, 2 + 200,
 	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)InventoryUpButtonCallback);
 
-		giPersonnelInventoryButtonsImages[ 1 ]=  LoadButtonImage( "LAPTOP\\personnel_inventory.sti" ,-1,3,-1,4,-1 );
+		giPersonnelInventoryButtonsImages[ 1 ]=  LoadButtonImage( "LAPTOP/personnel_inventory.sti" ,-1,3,-1,4,-1 );
 	  giPersonnelInventoryButtons[ 1 ] = QuickCreateButton( giPersonnelInventoryButtonsImages[1], 397 + 176, 200 + 223,
 	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)InventoryDownButtonCallback);
@@ -4418,13 +4418,13 @@ void CreateDestroyButtonsForDepartedTeamList( void )
 	if( ( fCurrentTeamMode == FALSE ) && ( fCreated == FALSE ) )
 	{
 		// not created. create
-		giPersonnelButtonImage[ 4 ]=  LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,0,-1,2,-1 );
+		giPersonnelButtonImage[ 4 ]=  LoadButtonImage( "LAPTOP/departuresbuttons.sti" ,-1,0,-1,2,-1 );
 	  giPersonnelButton[ 4 ] = QuickCreateButton( giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,
 	                    BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DepartedUpCallBack);
 
 		// right button
-		giPersonnelButtonImage[ 5 ]=  LoadButtonImage( "LAPTOP\\departuresbuttons.sti" ,-1,1,-1,3,-1 );
+		giPersonnelButtonImage[ 5 ]=  LoadButtonImage( "LAPTOP/departuresbuttons.sti" ,-1,1,-1,3,-1 );
 		giPersonnelButton[ 5 ] = QuickCreateButton( giPersonnelButtonImage[5], PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 											BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DepartedDownCallBack);
@@ -5057,7 +5057,7 @@ BOOLEAN DisplayHighLightBox( void )
 	}
 
   // bounding
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\PicBorde.sti", &uiBox));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/PicBorde.sti", &uiBox));
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH - 2, SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3);
 	DeleteVideoObjectFromIndex( uiBox );
 
@@ -5258,7 +5258,7 @@ BOOLEAN RenderAtmPanel( void )
 	// render the ATM panel
 	if( fShowAtmPanel )
 	{
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti", &uiBox));
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X, ATM_UL_Y);
 		DeleteVideoObjectFromIndex( uiBox );
 
@@ -5283,7 +5283,7 @@ BOOLEAN RenderAtmPanel( void )
 	{
 		// just show basic panel
 		// bounding
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\AtmButtons.sti", &uiBox));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti", &uiBox));
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X    , ATM_UL_Y);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 		DeleteVideoObjectFromIndex( uiBox );
@@ -5313,7 +5313,7 @@ void CreateDestroyStartATMButton( void )
 
 		/*
 		// the ATM start button
-		giPersonnelATMStartButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ 0 ] = QuickCreateButton( giPersonnelATMStartButtonImage[ 0 ] , 519,87,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ATMStartButtonCallback );
@@ -5325,7 +5325,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ 0 ], CURSOR_LAPTOP_SCREEN);
 */
 		// the stats button
-		giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ] , 519, 80,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)PersonnelStatStartButtonCallback );
@@ -5337,7 +5337,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ], CURSOR_LAPTOP_SCREEN);
 
 		// the Employment selection button
-		giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_EMPLOYMENT_BTN ] , 519, 110,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)EmployementInfoButtonCallback );
@@ -5349,7 +5349,7 @@ void CreateDestroyStartATMButton( void )
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ], CURSOR_LAPTOP_SCREEN);
 
 		// the inventory selection button
-		giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,2,-1,3,-1 );
+		giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_INV_BTN ] , 519, 140,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										MSYS_NO_CALLBACK, (GUI_CALLBACK)PersonnelINVStartButtonCallback );
@@ -5494,12 +5494,12 @@ void CreateDestroyATMButton( void )
 		{
 			if( iCounter != 9 )
 			{
-				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,4,-1,6,-1 );
+				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,4,-1,6,-1 );
 				swprintf( sString, L"%d", iCounter+1 );
 			}
 			else
 			{
-				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,7,-1,9,-1 );
+				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,7,-1,9,-1 );
 				swprintf( sString, L"%d", iCounter - 9 );
 			}
 
@@ -5528,11 +5528,11 @@ void CreateDestroyATMButton( void )
 		{
 			if( iCounter == OK_ATM )
 			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,7,-1,9,-1 );
+				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,7,-1,9,-1 );
 			}
 			else
 			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP\\AtmButtons.sti" ,-1,10,-1,12,-1 );
+				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,10,-1,12,-1 );
 			}
 
 			if( ( iCounter != DEPOSIT_ATM ) && ( iCounter != WIDTHDRAWL_ATM ) )

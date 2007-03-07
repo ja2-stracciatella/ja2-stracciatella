@@ -501,14 +501,14 @@ BOOLEAN		EnterSaveLoadScreen()
 	}
 
 	// load Main background  graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\LoadScreen.sti", &guiSlgBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/LoadScreen.sti", &guiSlgBackGroundImage));
 
 	// load Load Screen Add ons graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_LOADSAVEHEADER);
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBackGroundAddOns));
 
-	guiSlgButtonImage = LoadButtonImage("INTERFACE\\LoadScreenAddOns.sti", -1,6,-1,9,-1 );
+	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1,6,-1,9,-1 );
 //	guiSlgButtonImage = UseLoadedButtonImage( guiBackGroundAddOns, -1,9,-1,6,-1 );
 
 

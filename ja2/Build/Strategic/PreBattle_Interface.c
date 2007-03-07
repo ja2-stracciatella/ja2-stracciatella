@@ -407,11 +407,11 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_PREBATTLEPANEL);
 	if (!AddVideoObjectFromFile(ImageFile, &uiInterfaceImages))
-		AssertMsg( 0, "Failed to load interface\\PreBattlePanel.sti" );
+		AssertMsg( 0, "Failed to load interface/PreBattlePanel.sti" );
 
 	//Create the 3 buttons
-	iPBButtonImage[0] = LoadButtonImage( "INTERFACE\\PreBattleButton.sti", -1, 0, -1, 1, -1 );
-	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface\\PreBattleButton.sti");
+	iPBButtonImage[0] = LoadButtonImage( "INTERFACE/PreBattleButton.sti", -1, 0, -1, 1, -1 );
+	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface/PreBattleButton.sti");
 	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButton[0] = QuickCreateButton( iPBButtonImage[0], 27, 54, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, DEFAULT_MOVE_CALLBACK, AutoResolveBattleCallback );
@@ -783,7 +783,7 @@ void DoTransitionFromMapscreenToPreBattleInterface()
 
 	//hide the prebattle interface
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 261, 359 );
-	PlayJA2SampleFromFile("SOUNDS\\Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	InvalidateScreen();
 	RefreshScreen();
 

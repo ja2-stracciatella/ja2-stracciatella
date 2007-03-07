@@ -41,7 +41,7 @@
 #endif
 
 
-#define	MAINMENU_TEXT_FILE						"LoadScreens\\MainMenu.edt"
+#define	MAINMENU_TEXT_FILE						"LoadScreens/MainMenu.edt"
 #define MAINMENU_RECORD_SIZE					80 * 2
 
 //#define TESTFOREIGNFONTS
@@ -281,10 +281,10 @@ BOOLEAN InitMainMenu( )
 	CreateDestroyMainMenuButtons( TRUE );
 
 	// load background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LOADSCREENS\\MainMenuBackGround.sti", &guiMainMenuBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("LOADSCREENS/MainMenuBackGround.sti", &guiMainMenuBackGroundImage));
 
 	// load ja2 logo graphic and add it
-	CHECKF(AddVideoObjectFromFile("LOADSCREENS\\Ja2Logo.sti", &guiJa2LogoImage));
+	CHECKF(AddVideoObjectFromFile("LOADSCREENS/Ja2Logo.sti", &guiJa2LogoImage));
 
 /*
 	// Gray out some buttons based on status of game!

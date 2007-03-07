@@ -64,10 +64,10 @@ INT32 giCarPortraits[ 4 ] = { -1, -1, -1, -1 };
 
 // the car portrait file names
 const char *pbCarPortraitFileNames[] = {
-	"INTERFACE\\eldorado.sti",
-	"INTERFACE\\Hummer.sti",
-	"INTERFACE\\ice Cream Truck.sti",
-	"INTERFACE\\Jeep.sti",
+	"INTERFACE/eldorado.sti",
+	"INTERFACE/Hummer.sti",
+	"INTERFACE/ice Cream Truck.sti",
+	"INTERFACE/Jeep.sti",
 };
 
 

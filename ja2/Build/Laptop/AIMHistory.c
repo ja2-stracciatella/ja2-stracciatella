@@ -133,7 +133,7 @@ BOOLEAN EnterAimHistory()
 	InitAimHistoryMenuBar();
 
 	// load the Content Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\ContentButton.sti", &guiContentButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/ContentButton.sti", &guiContentButton));
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 	RenderAimHistory();
@@ -240,7 +240,7 @@ BOOLEAN InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
 
-	guiHistoryMenuButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiHistoryMenuButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 	usPosX = AIM_HISTORY_MENU_X;
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{

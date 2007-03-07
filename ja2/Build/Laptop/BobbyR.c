@@ -219,20 +219,20 @@ BOOLEAN EnterBobbyR()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBobbyName));
 
 	// load the plaque graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyPlaques.sti", &guiPlaque));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyPlaques.sti", &guiPlaque));
 
 	// load the TopHinge graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyTopHinge.sti", &guiTopHinge));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyTopHinge.sti", &guiTopHinge));
 
 	// load the BottomHinge graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyBottomHinge.sti", &guiBottomHinge));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyBottomHinge.sti", &guiBottomHinge));
 
 	// load the Store Plaque graphic and add it
 	GetMLGFilename(ImageFile, MLG_STOREPLAQUE);
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiStorePlaque));
 
 	// load the Handle graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyHandle.sti", &guiHandle));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyHandle.sti", &guiHandle));
 
 
 	InitBobbiesMouseRegion(BOBBIES_NUMBER_SIGNS, usMouseRegionPosArray, gSelectedBobbiesSignMenuRegion);
@@ -241,7 +241,7 @@ BOOLEAN EnterBobbyR()
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// load the Handle graphic and add it
-		CHECKF(AddVideoObjectFromFile("LAPTOP\\UnderConstruction.sti", &guiUnderConstructionImage));
+		CHECKF(AddVideoObjectFromFile("LAPTOP/UnderConstruction.sti", &guiUnderConstructionImage));
 
 		for(i=0; i<BOBBIES_NUMBER_SIGNS; i++)
 		{
@@ -362,7 +362,7 @@ void RenderBobbyR()
 BOOLEAN InitBobbyRWoodBackground()
 {
 	// load the Wood bacground graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyWood.sti", &guiWoodBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyWood.sti", &guiWoodBackground));
 	return TRUE;
 }
 

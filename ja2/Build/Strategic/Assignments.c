@@ -8572,8 +8572,8 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fCreated == FALSE ) )
 	{
-		CHECKF(AddVideoObjectFromFile("INTERFACE\\popup.sti", &guiPOPUPBORDERS));
-		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE\\popupbackground.pcx");
+		CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
+		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
 		CHECKF(guiPOPUPTEX != NO_VSURFACE);
 
 		// these boxes are always created while in mapscreen...

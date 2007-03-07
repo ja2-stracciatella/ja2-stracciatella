@@ -851,7 +851,7 @@ BOOLEAN EnterShopKeeperInterface()
 	SetSMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
 
 	// load the Main trade screen backgroiund image
-	if (!AddVideoObjectFromFile("InterFace\\TradeScreen.sti", &guiMainTradeScreenImage))
+	if (!AddVideoObjectFromFile("InterFace/TradeScreen.sti", &guiMainTradeScreenImage))
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load TradeScreen.sti" );
@@ -862,7 +862,7 @@ BOOLEAN EnterShopKeeperInterface()
 
 
 	// load the Main trade screen background image
-	if (!AddVideoObjectFromFile("InterFace\\itemcrossout.sti", &guiItemCrossOut))
+	if (!AddVideoObjectFromFile("InterFace/itemcrossout.sti", &guiItemCrossOut))
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load itemcrossout.sti" );
@@ -875,7 +875,7 @@ BOOLEAN EnterShopKeeperInterface()
 /*
 ATM:
 	// load the Main trade screen backgroiund image
-	CHECKF(AddVideoObjectFromFile("InterFace\\TradeScreenAtm.sti", &guiSkiAtmImage));
+	CHECKF(AddVideoObjectFromFile("InterFace/TradeScreenAtm.sti", &guiSkiAtmImage));
 */
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
@@ -892,7 +892,7 @@ ATM:
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
 
 			//Create the string for the face file name
-			sprintf( zTemp, "FACES\\33FACE\\%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
+			sprintf( zTemp, "FACES/33FACE/%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
 
 			//While we are at it, add their small face
 			if (!AddVideoObjectFromFile(zTemp, &guiSmallSoldiersFace[gubNumberMercsInArray]))
@@ -908,7 +908,7 @@ ATM:
 	}
 
 	//Load the graphic for the arrow button
-	guiSKI_InvPageUpButtonImage = LoadButtonImage("INTERFACE\\TradeScrollArrows.sti", -1,0,-1,1,-1 );
+	guiSKI_InvPageUpButtonImage = LoadButtonImage("INTERFACE/TradeScrollArrows.sti", -1,0,-1,1,-1 );
 	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage( guiSKI_InvPageUpButtonImage, -1,2,-1,3,-1 );
 
 
@@ -927,9 +927,9 @@ ATM:
 
 
 //Evaluate:
-	//	guiSKI_EvaluateButtonImage = LoadButtonImage("INTERFACE\\TradeButtons.sti", -1,0,-1,1,-1 );
+	//	guiSKI_EvaluateButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );
 //	guiSKI_TransactionButtonImage = UseLoadedButtonImage( guiSKI_EvaluateButtonImage, -1,0,-1,1,-1 );
-	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE\\TradeButtons.sti", -1,0,-1,1,-1 );
+	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );
 	guiSKI_DoneButtonImage = UseLoadedButtonImage( guiSKI_TransactionButtonImage, -1,0,-1,1,-1 );
 
 /*
@@ -4904,7 +4904,7 @@ void CreateSkiAtmButtons()
 	UINT8		ubCount=0;
 	UINT8		ubCnt;
 
-	guiSKI_AtmNumButtonImage			= LoadButtonImage("INTERFACE\\TradeScreenAtm.sti", 1,2,-1,3,-1 );
+	guiSKI_AtmNumButtonImage			= LoadButtonImage("INTERFACE/TradeScreenAtm.sti", 1,2,-1,3,-1 );
 	guiSKI_AtmOkButtonImage				= UseLoadedButtonImage( guiSKI_AtmNumButtonImage, 4,5,-1,6,-1 );
 	guiSKI_AtmSideMenuButtonImage	= UseLoadedButtonImage( guiSKI_AtmNumButtonImage, 7,8,-1,9,-1 );
 

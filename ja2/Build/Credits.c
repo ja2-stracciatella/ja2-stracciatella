@@ -81,8 +81,8 @@ enum
 #define		CRDT_FLAG__END_SECTION				0x00000004
 
 
-//#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA\\Credits.txt"
-#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA\\Credits.edt"
+//#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.txt"
+#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.edt"
 
 #define		CREDITS_LINESIZE								80 * 2
 
@@ -451,8 +451,8 @@ BOOLEAN		EnterCreditsScreen()
 {
 	UINT32 uiCnt;
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Credits.sti", &guiCreditBackGroundImage));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Credit Faces.sti", &guiCreditFaces));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Credits.sti", &guiCreditBackGroundImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Credit Faces.sti", &guiCreditFaces));
 
 	//Initialize the root credit node
 	InitCreditNode( );

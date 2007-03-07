@@ -120,7 +120,7 @@ void CalculateNewSliderIncrement( UINT32 uiSliderID, UINT16 usPosX );
 BOOLEAN InitSlider()
 {
 	// load Slider Box Graphic graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\SliderBox.sti", &guiSliderBoxImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/SliderBox.sti", &guiSliderBoxImage));
 
 	gfSliderInited = TRUE;
 

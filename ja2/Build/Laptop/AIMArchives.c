@@ -19,8 +19,8 @@
 
 
 
-#define		AIM_ALUMNI_NAME_FILE		"BINARYDATA\\AlumName.edt"
-#define		AIM_ALUMNI_FILE					"BINARYDATA\\Alumni.edt"
+#define		AIM_ALUMNI_NAME_FILE		"BINARYDATA/AlumName.edt"
+#define		AIM_ALUMNI_FILE					"BINARYDATA/Alumni.edt"
 
 
 #define		AIM_ALUMNI_TITLE_FONT					FONT14ARIAL
@@ -179,24 +179,24 @@ BOOLEAN EnterAimArchives()
 	gubPageNum = (UINT8)giCurrentSubPage;
 
 	// load the Alumni Frame and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\AlumniFrame.sti", &guiAlumniFrame));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti", &guiAlumniFrame));
 
 	// load the 1st set of faces and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Old_Aim.sti", &guiOldAim));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Old_Aim.sti", &guiOldAim));
 
 	// load the PopupPic graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\PopupPicFrame.sti", &guiPopUpPic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti", &guiPopUpPic));
 
 		// load the AlumniPopUp graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\AlumniPopUp.sti", &guiAlumniPopUp));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti", &guiAlumniPopUp));
 
 		// load the Done Button graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\DoneButton.sti", &guiDoneButton));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/DoneButton.sti", &guiDoneButton));
 
 	InitAlumniFaceRegions();
 
 	//Load graphic for buttons
-	guiAlumniPageButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiAlumniPageButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = AIM_ALUMNI_PAGE1_X;
 	for(i=0; i<3; i++)

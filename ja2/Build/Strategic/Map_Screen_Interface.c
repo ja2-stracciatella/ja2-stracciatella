@@ -914,7 +914,7 @@ void PlayGlowRegionSound( void )
 	}
 
 	// otherwise no sound playing, play one
-	uiSoundId = PlayJA2SampleFromFile("Sounds\\glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
+	uiSoundId = PlayJA2SampleFromFile("Sounds/glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
 }
 
 
@@ -4546,9 +4546,9 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 	// if update
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
 	{
-		if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
+		if (!AddVideoObjectFromFile("Interface/panels.sti", &giMercPanelImage))
 		{
-			AssertMsg( 0, "Failed to load Interface\\panels.sti" );
+			AssertMsg( 0, "Failed to load Interface/panels.sti" );
 		}
 	}
 
@@ -4562,7 +4562,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 			pUpdateSoldierBox[ iCounter ] = pSoldier;
 
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
+			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giUpdateSoldierFaces[iCounter]);
 
 			return;
@@ -4813,10 +4813,10 @@ void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWideMode )
 		fShowAssignmentMenu = FALSE;
 		fShowContractMenu = FALSE;
 
-//		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE\\group_confirm.sti" ,-1,7,-1,8,-1 );
-//		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE\\group_confirm.sti" ,-1,7,-1,8,-1 );
-		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE\\group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
-		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE\\group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
+//		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE/group_confirm.sti" ,-1,7,-1,8,-1 );
+//		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm.sti" ,-1,7,-1,8,-1 );
+		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
+		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
 
 		if( fFourWideMode )
 		{
@@ -5009,7 +5009,7 @@ void CreateDestroyTheUpdateBox( void )
 		DisplaySoldierUpdateBox( );
 
 		// Do beep
-		PlayJA2SampleFromFile("Sounds\\newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile("Sounds/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 	}
 	else if( ( fCreated == TRUE ) && ( fShowUpdateBox == FALSE ) )
 	{

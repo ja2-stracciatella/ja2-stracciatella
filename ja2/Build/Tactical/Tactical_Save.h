@@ -9,7 +9,7 @@
 #include "Soldier_Profile_Type.h"
 
 
-#define		MAPS_DIR		"Temp\\"
+#define		MAPS_DIR		"Temp/"
 
 
 

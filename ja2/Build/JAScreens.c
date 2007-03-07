@@ -827,8 +827,8 @@ UINT32 SexScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		// Load face....
-		if (!AddVideoObjectFromFile("INTERFACE\\luckysmile.sti", &guiSMILY))
-			AssertMsg(0, "Missing INTERFACE\\luckysmile.sti" );
+		if (!AddVideoObjectFromFile("INTERFACE/luckysmile.sti", &guiSMILY))
+			AssertMsg(0, "Missing INTERFACE/luckysmile.sti" );
 
 		// Init screen
 		bCurFrame = 0;
@@ -847,7 +847,7 @@ UINT32 SexScreenHandle(void)
 	// if we are animation smile...
 	if ( ubCurrentScreen == 1 )
 	{
-		PlayJA2StreamingSampleFromFile("Sounds\\Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+		PlayJA2StreamingSampleFromFile("Sounds/Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 		if ( ( uiTime - uiTimeOfLastUpdate ) > SMILY_DELAY )
 		{
 			uiTimeOfLastUpdate = uiTime;
@@ -945,9 +945,9 @@ void DoDemoIntroduction()
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	if (!AddVideoObjectFromFile("DemoAds\\DemoScreen1.sti", &uiTempID))
+	if (!AddVideoObjectFromFile("DemoAds/DemoScreen1.sti", &uiTempID))
 	{
-		AssertMsg( 0, "Failed to load DemoAds\\DemoScreen1.sti" );
+		AssertMsg( 0, "Failed to load DemoAds/DemoScreen1.sti" );
 		return;
 	}
 	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 0, 0);
@@ -1055,9 +1055,9 @@ void DisplayTopwareGermanyAddress()
 	SGPRect ClipRect;
 
 	//bring up the Topware address screen
-	if (!AddVideoObjectFromFile("German\\topware_germany.sti", &uiTempID))
+	if (!AddVideoObjectFromFile("German/topware_germany.sti", &uiTempID))
 	{
-		AssertMsg( 0, "Failed to load German\\topware_germany.sti" );
+		AssertMsg( 0, "Failed to load German/topware_germany.sti" );
 		return;
 	}
 
@@ -1140,7 +1140,7 @@ UINT32 DemoExitScreenHandle(void)
 		uiCollageID = AddVideoSurfaceFromFile(ImageFile);
 		if (uiCollageID == NO_VSURFACE)
 		{
-			AssertMsg( 0, "Failed to load DemoAds\\collage.sti" );
+			AssertMsg( 0, "Failed to load DemoAds/collage.sti" );
 			ubCurrentScreen = 8;
 			return DEMO_EXIT_SCREEN;
 		}
@@ -1290,9 +1290,9 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			if (!AddVideoObjectFromFile("Interface\\ja2logo.sti", &uiTempID))
+			if (!AddVideoObjectFromFile("Interface/ja2logo.sti", &uiTempID))
 			{
-				AssertMsg( 0, "Failed to load Interface\\ja2logo.sti" );
+				AssertMsg( 0, "Failed to load Interface/ja2logo.sti" );
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 3;
 				return DEMO_EXIT_SCREEN;
@@ -1301,7 +1301,7 @@ UINT32 DemoExitScreenHandle(void)
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-			PlayJA2SampleFromFile("DemoAds\\Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1362,7 +1362,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( iPercentage == 100 )
 		{
 			SetMusicMode( MUSIC_MAIN_MENU );
-			PlayJA2SampleFromFile("DemoAds\\Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			gbFadeSpeed = (INT8)50;
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			ubCurrentScreen = 4;
@@ -1472,7 +1472,7 @@ UINT32 DemoExitScreenHandle(void)
 			GetMLGFilename(ImageFile, MLG_AVAILABLE);
 			if (!AddVideoObjectFromFile(ImageFile, &uiTempID))
 			{
-				AssertMsg( 0, "Failed to load DemoAds\\available.sti" );
+				AssertMsg( 0, "Failed to load DemoAds/available.sti" );
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 4;
 				return DEMO_EXIT_SCREEN;
@@ -1481,7 +1481,7 @@ UINT32 DemoExitScreenHandle(void)
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-			PlayJA2SampleFromFile("DemoAds\\Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1541,7 +1541,7 @@ UINT32 DemoExitScreenHandle(void)
 		}
 		if( iPercentage == 100 )
 		{
-			PlayJA2SampleFromFile("DemoAds\\Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			ubCurrentScreen = 6;
 			DeleteVideoSurfaceFromIndex( uiCollageID );

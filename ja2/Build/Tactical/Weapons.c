@@ -893,7 +893,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, "SOUNDS\\WEAPONS\\SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
+					sprintf( zBurstString, "SOUNDS/WEAPONS/SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
@@ -901,7 +901,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				else
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, "SOUNDS\\WEAPONS\\%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
+					sprintf( zBurstString, "SOUNDS/WEAPONS/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
@@ -1887,7 +1887,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 			AniParams.sY									= sYPos;
 			AniParams.sZ									= sZPos;
 
-			strcpy( AniParams.zCachedFile, "TILECACHE\\miniboom.sti" );
+			strcpy( AniParams.zCachedFile, "TILECACHE/miniboom.sti" );
 
 			CreateAnimationTile( &AniParams );
 

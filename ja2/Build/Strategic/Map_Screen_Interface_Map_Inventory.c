@@ -203,7 +203,7 @@ extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *ps
 BOOLEAN LoadInventoryPoolGraphic( void )
 {
 	// add to V-object index
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\sector_inventory.sti", &guiMapInventoryPoolBackground));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/sector_inventory.sti", &guiMapInventoryPoolBackground));
 
 	return( TRUE );
 }
@@ -918,13 +918,13 @@ void MapInvenPoolSlots(MOUSE_REGION * pRegion, INT32 iReason )
 
 void CreateMapInventoryButtons( void )
 {
-	guiMapInvenButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" , 10, 1, -1, 3, -1 );
+	guiMapInvenButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" , 10, 1, -1, 3, -1 );
   guiMapInvenButton[ 0 ] = QuickCreateButton( guiMapInvenButtonImage[ 0 ], 559 , 336,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MapInventoryPoolNextBtn );
 
 
-	guiMapInvenButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,9, 0, -1, 2, -1 );
+	guiMapInvenButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,9, 0, -1, 2, -1 );
   guiMapInvenButton[ 1 ] = QuickCreateButton( guiMapInvenButtonImage[ 1 ], 487, 336,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MapInventoryPoolPrevBtn );
@@ -1664,7 +1664,7 @@ void DrawNumberOfIventoryPoolItems( void )
 void CreateMapInventoryPoolDoneButton( void )
 {
 	// create done button
-	guiMapInvenButtonImage[ 2 ]=  LoadButtonImage( "INTERFACE\\done_button.sti" , -1, 0, -1, 1, -1 );
+	guiMapInvenButtonImage[ 2 ]=  LoadButtonImage( "INTERFACE/done_button.sti" , -1, 0, -1, 1, -1 );
   guiMapInvenButton[ 2 ] = QuickCreateButton( guiMapInvenButtonImage[ 2 ], 587 , 333,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MapInventoryPoolDoneBtn );

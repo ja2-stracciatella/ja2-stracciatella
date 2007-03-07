@@ -7,7 +7,7 @@ void ExitFinances();
 void HandleFinances();
 void RenderFinances();
 
-#define	FINANCES_DATA_FILE					"Temp\\finances.dat"
+#define	FINANCES_DATA_FILE					"Temp/finances.dat"
 
 enum
 {

@@ -1312,11 +1312,11 @@ UINT16 GetSMPanelCurrentMerc( )
 BOOLEAN InitializeSMPanel(  )
 {
 	// failing the CHECKF after this will cause you to lose your mouse
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_bottom_panel.STI", &guiSMPanel));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_gold_front.sti", &guiSMObjects));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inv_frn.sti", &guiSMObjects2));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\secondary_gun_hidden.sti", &guiSecItemHiddenVO));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Bars.sti", &guiBrownBackgroundForTeamPanel));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI", &guiSMPanel));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti", &guiSMObjects));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inv_frn.sti", &guiSMObjects2));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti", &guiSecItemHiddenVO));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
 
 	// Clear inv display stuff
 	memset( gfSM_HandInvDispText, 0, sizeof( gfSM_HandInvDispText ) );
@@ -1412,7 +1412,7 @@ UINT8 ubString[48];
 	gfUIStanceDifferent = TRUE;
 	gfAllDisabled	= FALSE;
 
-	FilenameForBPP("INTERFACE\\inventory_buttons.sti", ubString);
+	FilenameForBPP("INTERFACE/inventory_buttons.sti", ubString);
 	// Load button Graphics
 	iSMPanelImages[ STANCEUP_IMAGES  ]			= LoadButtonImage(ubString,-1,0,-1,10,-1 );
 
@@ -1432,11 +1432,11 @@ UINT8 ubString[48];
 	iBurstButtonImages[ WM_BURST ]					= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES  ], -1, 17, -1, -1, -1 );
 	iBurstButtonImages[ WM_ATTACHED ]				= UseLoadedButtonImage( iSMPanelImages[ STANCEUP_IMAGES  ], -1, 26, -1, -1, -1 );
 
-	FilenameForBPP("INTERFACE\\invadd-ons.sti", ubString);
+	FilenameForBPP("INTERFACE/invadd-ons.sti", ubString);
 	// Load button Graphics
 	iSMPanelImages[ STANCE_IMAGES  ]				= LoadButtonImage(ubString,0,0,-1,2,-1 );
 
-	FilenameForBPP("INTERFACE\\inventory_buttons_2.sti", ubString);
+	FilenameForBPP("INTERFACE/inventory_buttons_2.sti", ubString);
 	// Load button Graphics
 	iSMPanelImages[ DONE_IMAGES  ]					= LoadButtonImage(ubString,-1,1,-1,3,-1 );
 	iSMPanelImages[ MAPSCREEN_IMAGES  ]			= UseLoadedButtonImage( iSMPanelImages[ DONE_IMAGES  ] ,-1,0,-1,2,-1 );
@@ -3293,7 +3293,7 @@ void BtnMapScreenCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 /*
-uiTempVObject[0] = LoadButtonImage( "Interface\\InventoryButtons.sti", -1, 7, -1, -1, -1 );
+uiTempVObject[0] = LoadButtonImage( "Interface/InventoryButtons.sti", -1, 7, -1, -1, -1 );
 uiTempVObject[1] = UseLoadedButtonImage( uiTempVObject[0], -1, 17, -1, -1, -1 );
 uiTempVObject[2] = UseLoadedButtonImage( uiTempVObject[0], -1, 26, -1, -1, -1 );
 iButtonID = QuickCreateButton( uiTempVObject[0], 0, 0, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, CycleCallback );
@@ -3365,9 +3365,9 @@ BOOLEAN InitializeTEAMPanel(  )
 	// Add region
 	MSYS_AddRegion( &gViewportRegion );
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\bottom_bar.sti", &guiTEAMPanel));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\gold_front.sti", &guiTEAMObjects));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Bars.sti", &guiBrownBackgroundForTeamPanel));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/bottom_bar.sti", &guiTEAMPanel));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/gold_front.sti", &guiTEAMObjects));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
 
 	// Clear inv display stuff
 	memset( gfTEAM_HandInvDispText, 0, sizeof( gfTEAM_HandInvDispText ) );
@@ -3779,7 +3779,7 @@ BOOLEAN CreateTEAMPanelButtons( )
 {
 UINT8	ubString[48];
 
-	FilenameForBPP("INTERFACE\\bottom_bar_buttons.sti", ubString);
+	FilenameForBPP("INTERFACE/bottom_bar_buttons.sti", ubString);
 
 	// Load button Graphics
 	iTEAMPanelImages[ ENDTURN_IMAGES  ]			= LoadButtonImage(ubString,-1,0,-1, 3,-1 );

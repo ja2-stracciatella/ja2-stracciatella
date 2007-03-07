@@ -8,7 +8,7 @@ void HandleHistory();
 void RenderHistory();
 
 
-#define		HISTORY_DATA_FILE						"Temp\\History.dat"
+#define		HISTORY_DATA_FILE						"Temp/History.dat"
 
 // the financial structure
 struct history{

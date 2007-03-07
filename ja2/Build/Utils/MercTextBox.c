@@ -47,23 +47,23 @@ MercPopUpBox * GetPopUpBoxIndex( INT32 iId );
 
 // filenames for border popup .sti's
 const char *zMercBorderPopupFilenames[ ] = {
- "INTERFACE\\TactPopUp.sti",
- "INTERFACE\\TactRedPopUp.sti",
- "INTERFACE\\TactBluePopUp.sti",
- "INTERFACE\\TactPopUpMain.sti",
- "INTERFACE\\LaptopPopup.sti",
+ "INTERFACE/TactPopUp.sti",
+ "INTERFACE/TactRedPopUp.sti",
+ "INTERFACE/TactBluePopUp.sti",
+ "INTERFACE/TactPopUpMain.sti",
+ "INTERFACE/LaptopPopup.sti",
 
 
 };
 
 // filenames for background popup .pcx's
 static const char* const zMercBackgroundPopupFilenames[ ] = {
-  "INTERFACE\\TactPopupBackground.pcx",
-  "INTERFACE\\TactPopupWhiteBackground.pcx",
-  "INTERFACE\\TactPopupGreyBackground.pcx",
-  "INTERFACE\\TactPopupBackgroundMain.pcx",
-  "INTERFACE\\LaptopPopupBackground.pcx",
-	"INTERFACE\\imp_popup_background.pcx",
+  "INTERFACE/TactPopupBackground.pcx",
+  "INTERFACE/TactPopupWhiteBackground.pcx",
+  "INTERFACE/TactPopupGreyBackground.pcx",
+  "INTERFACE/TactPopupBackgroundMain.pcx",
+  "INTERFACE/LaptopPopupBackground.pcx",
+	"INTERFACE/imp_popup_background.pcx",
 };
 
 
@@ -137,12 +137,12 @@ BOOLEAN InitMercPopupBox( )
 	}
 
 	// LOAD STOP ICON...
-	if (!AddVideoObjectFromFile("INTERFACE\\msgboxicons.sti", &guiBoxIcons))
-		AssertMsg(0, "Missing INTERFACE\\msgboxicons.sti" );
+	if (!AddVideoObjectFromFile("INTERFACE/msgboxicons.sti", &guiBoxIcons))
+		AssertMsg(0, "Missing INTERFACE/msgboxicons.sti" );
 
 	// LOAD SKULL ICON...
-	if (!AddVideoObjectFromFile("INTERFACE\\msgboxiconskull.sti", &guiSkullIcons))
-		AssertMsg(0, "Missing INTERFACE\\msgboxiconskull.sti" );
+	if (!AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti", &guiSkullIcons))
+		AssertMsg(0, "Missing INTERFACE/msgboxiconskull.sti" );
 
 
 	return( TRUE );

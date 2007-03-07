@@ -877,7 +877,7 @@ BOOLEAN	EnterQuestDebugSystem()
 
 	//Check box to toggle between all and local npc's
 	guiQuestDebugAllOrSectorNPCToggle =
-		CreateCheckBoxButton(	QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, "INTERFACE\\checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAllOrSectorNPCToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAllOrSectorNPCToggleCallback );
 //	ButtonList[ iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
 
@@ -969,14 +969,14 @@ BOOLEAN	EnterQuestDebugSystem()
 
 	//checkbox for weather to add the merc to the players team
 	guiQuestDebugAddNpcToTeamToggle =
-		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, "INTERFACE\\checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
 	if( gfAddNpcToTeam )
 		ButtonList[ guiQuestDebugAddNpcToTeamToggle ]->uiFlags |= BUTTON_CLICKED_ON;
 
 
 	//checkbox for weather have rpc say the sector description
 	guiQuestDebugRPCSaySectorDescToggle =
-		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, "INTERFACE\\checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
 	if( gfRpcToSaySectorDesc )
 		ButtonList[ guiQuestDebugRPCSaySectorDescToggle ]->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -1013,9 +1013,9 @@ BOOLEAN	EnterQuestDebugSystem()
 
 
 	// load Scroll Horizontal Arrow graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Qd_ScrollArrows.sti", &guiQdScrollArrowImage));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti", &guiQdScrollArrowImage));
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Bars.sti", &guiBrownBackgroundForTeamPanel));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
 
 
 	gfRedrawQuestDebugSystem = TRUE;

@@ -223,10 +223,10 @@ BOOLEAN EnterInsuranceContract()
 
 
 	// load the Insurance title graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\InsOrderGrid.sti", &guiInsOrderGridImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/InsOrderGrid.sti", &guiInsOrderGridImage));
 
 	// load the Insurance bullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\bullet.sti", &guiInsOrderBulletImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/bullet.sti", &guiInsOrderBulletImage));
 
 
 	usPosX = INS_CTRCT_BOTTOM_LINK_RED_BAR_X;
@@ -242,7 +242,7 @@ BOOLEAN EnterInsuranceContract()
 
 
 	//left arrow
-	guiInsContractPrevButtonImage	= LoadButtonImage("LAPTOP\\InsLeftButton.sti", 2,0,-1,1,-1 );
+	guiInsContractPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
 	guiInsContractPrevBackButton = CreateIconAndTextButton( guiInsContractPrevButtonImage, InsContractText[INS_CONTRACT_PREVIOUS], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
@@ -254,7 +254,7 @@ BOOLEAN EnterInsuranceContract()
 
 
 	//Right arrow
-	guiInsContractNextButtonImage	= LoadButtonImage("LAPTOP\\InsRightButton.sti", 2,0,-1,1,-1 );
+	guiInsContractNextButtonImage	= LoadButtonImage("LAPTOP/InsRightButton.sti", 2,0,-1,1,-1 );
 	guiInsContractNextBackButton = CreateIconAndTextButton( guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
@@ -490,7 +490,7 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderGridImage, 0, usPosX, INS_CTRCT_ORDER_GRID1_Y);
 
 	// load the mercs face graphic and add it
-	sprintf(sTemp, "FACES\\%02d.sti", ubMercID);
+	sprintf(sTemp, "FACES/%02d.sti", ubMercID);
 	CHECKF(AddVideoObjectFromFile(sTemp, &uiInsMercFaceImage));
 
 	HVOBJECT hPixHandle = GetVideoObject(uiInsMercFaceImage);
@@ -874,7 +874,7 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 		//place the 3 accept buttons for the different forms
 
 		//The accept button image
-		guiInsuranceAcceptClearForm1ButtonImage	= LoadButtonImage("LAPTOP\\AcceptClearBox.sti", -1,0,-1,1,-1 );
+		guiInsuranceAcceptClearForm1ButtonImage	= LoadButtonImage("LAPTOP/AcceptClearBox.sti", -1,0,-1,1,-1 );
 
 		if( gubNumberofDisplayedInsuranceGrids >= 1 )
 		{

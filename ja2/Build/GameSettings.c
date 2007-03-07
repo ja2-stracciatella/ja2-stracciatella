@@ -32,11 +32,11 @@
 
 #include	"Text.h"
 
-#define				GAME_SETTINGS_FILE		"..\\Ja2.set"
+#define				GAME_SETTINGS_FILE		"../Ja2.set"
 
-#define				GAME_INI_FILE					"..\\Ja2.ini"
+#define				GAME_INI_FILE					"../Ja2.ini"
 
-#define				CD_ROOT_DIR						"DATA\\"
+#define				CD_ROOT_DIR						"DATA/"
 
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;

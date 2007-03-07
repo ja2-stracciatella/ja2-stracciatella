@@ -84,7 +84,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(VSM_SWITCH1_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -98,7 +98,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(VSM_SWITCH2_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -112,7 +112,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(SM_SWITCH1_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -126,7 +126,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(SM_SWITCH2_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -140,7 +140,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(SM_SWITCH3_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -154,7 +154,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(BIG_SWITCH3_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -168,7 +168,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(COMPUTER_BEEP2_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;
@@ -182,7 +182,7 @@ void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
 					PlayJA2Sample(COMPUTER_SWITCH1_OUT, 15, 1, MIDDLEPAN);
 					break;
 				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds\\Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					break;
 			}
 			break;

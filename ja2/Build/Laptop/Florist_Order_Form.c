@@ -288,29 +288,29 @@ BOOLEAN EnterFloristOrderForm()
 
 
 	// load the DeliveryLocation graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\DeliveryLocation.sti", &guiDeliveryLocation));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/DeliveryLocation.sti", &guiDeliveryLocation));
 
 	// load the Flower frame graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\FlowerFrame.sti", &guiFlowerFrame));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/FlowerFrame.sti", &guiFlowerFrame));
 
 	// load the Personel sentiments graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\PersonalSentiments.sti", &guiPersonalSentiments));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/PersonalSentiments.sti", &guiPersonalSentiments));
 
 	// load the Name Box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\NameBox.sti", &guiNameBox));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/NameBox.sti", &guiNameBox));
 
 	// load the Check Box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\OrderCheckBox.sti", &guiFlowerOrderCheckBoxButtonImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/OrderCheckBox.sti", &guiFlowerOrderCheckBoxButtonImage));
 
 	// load the currently selected flower bouquet
-	sprintf( sTemp, "LAPTOP\\Flower_%d.sti", guiCurrentlySelectedFlower);
+	sprintf( sTemp, "LAPTOP/Flower_%d.sti", guiCurrentlySelectedFlower);
 	CHECKF(AddVideoObjectFromFile(sTemp, &guiCurrentlySelectedFlowerImage));
 
   // border
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\TactPopUp.sti", &guiDropDownBorder));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/TactPopUp.sti", &guiDropDownBorder));
 
 
-	guiFlowerOrderButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
+	guiFlowerOrderButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiFlowerOrderBackButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_BACK], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,

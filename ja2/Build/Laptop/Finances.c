@@ -554,19 +554,19 @@ static BOOLEAN LoadFinances(void)
   // load Finance video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Financeswindow.sti", &guiTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Financeswindow.sti", &guiTOP));
 
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\divisionline480.sti", &guiLONGLINE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline480.sti", &guiLONGLINE));
 
 	// the records columns
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\recordcolumns.sti", &guiLISTCOLUMNS));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/recordcolumns.sti", &guiLISTCOLUMNS));
 
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\divisionline.sti", &guiLINE));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline.sti", &guiLINE));
 
 	return (TRUE);
 }
@@ -1188,7 +1188,7 @@ static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 
 
 static void CreateFinanceButtons(void)
 {
-  giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP\\arrows.sti" ,-1,0,-1,1,-1  );
+  giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1  );
 	giFinanceButton[PREV_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnFinanceDisplayPrevPageCallBack);

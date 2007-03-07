@@ -869,7 +869,7 @@ void RefreshScreen(void)
 
     gfPrintFrameBuffer = FALSE;
 
-		strcat( ExecDir, "\\Data" );
+		strcat( ExecDir, "/Data" );
 		SetFileManCurrentDirectory( ExecDir );
   }
 
@@ -1380,6 +1380,6 @@ static void RefreshMovieCache(void)
 
 	giNumFrames = 0;
 
-	strcat( ExecDir, "\\Data" );
+	strcat( ExecDir, "/Data" );
 	SetFileManCurrentDirectory( ExecDir );
 }

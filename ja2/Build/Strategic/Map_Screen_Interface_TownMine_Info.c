@@ -761,7 +761,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
 
 	// load the button
-	AddVideoObjectFromFile("INTERFACE\\mapinvbtns.sti", &uiObject);
+	AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti", &uiObject);
 
 	// Calculate smily face positions...
 	HVOBJECT hHandle = GetVideoObject(uiObject);
@@ -780,7 +780,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 	sX = pPosition.iX + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
 	sY = pPosition.iY + pDimensions.iBottom - ( (  BOX_BUTTON_HEIGHT + 5 ) );
 
-	guiMapButtonInventoryImage[0] =  LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,0,-1,2,-1 );
+	guiMapButtonInventoryImage[0] =  LoadButtonImage( "INTERFACE/mapinvbtns.sti" ,-1,0,-1,2,-1 );
 
 	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2,
 														 FONT_WHITE, FONT_BLACK,
@@ -793,7 +793,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 	sX = sX + sWidthA + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
 	sY = pPosition.iY + pDimensions.iBottom - ( ( BOX_BUTTON_HEIGHT + 5) );
 
-	guiMapButtonInventoryImage[1] =  LoadButtonImage( "INTERFACE\\mapinvbtns.sti" ,-1,1,-1,3,-1 );
+	guiMapButtonInventoryImage[1] =  LoadButtonImage( "INTERFACE/mapinvbtns.sti" ,-1,1,-1,3,-1 );
 
 	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2,
 														 FONT_WHITE, FONT_BLACK,
@@ -863,7 +863,7 @@ void MinWidthOfTownMineInfoBox( void )
 	UINT32 uiObject;
 	ETRLEObject	*pTrav;
 
-	AddVideoObjectFromFile("INTERFACE\\mapinvbtns.sti", &uiObject);
+	AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti", &uiObject);
 
 	// Calculate smily face positions...
 	HVOBJECT hHandle = GetVideoObject(uiObject);

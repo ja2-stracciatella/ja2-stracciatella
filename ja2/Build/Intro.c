@@ -81,21 +81,21 @@ INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 const char *gpzSmackerFileNames[] =
 {
 	//begining of the game
-	"INTRO\\Rebel_cr.smk",
-	"INTRO\\Omerta.smk",
-	"INTRO\\Prague_cr.smk",
-	"INTRO\\Prague.smk",
+	"INTRO/Rebel_cr.smk",
+	"INTRO/Omerta.smk",
+	"INTRO/Prague_cr.smk",
+	"INTRO/Prague.smk",
 
 
 	//endgame
-	"INTRO\\Throne_Mig.smk",
-	"INTRO\\Throne_NoMig.smk",
-	"INTRO\\Heli_FlyBy.smk",
-	"INTRO\\Heli_Sky.smk",
-	"INTRO\\Heli_NoSky.smk",
+	"INTRO/Throne_Mig.smk",
+	"INTRO/Throne_NoMig.smk",
+	"INTRO/Heli_FlyBy.smk",
+	"INTRO/Heli_Sky.smk",
+	"INTRO/Heli_NoSky.smk",
 
-	"INTRO\\SplashScreen.smk",
-	"INTRO\\TalonSoftid_endhold.smk",
+	"INTRO/SplashScreen.smk",
+	"INTRO/TalonSoftid_endhold.smk",
 };
 
 
@@ -180,7 +180,7 @@ BOOLEAN EnterIntroScreen()
 	SetMusicMode( MUSIC_NONE );
 
 #ifdef JA2BETAVERSION
-	if( FileExists( "..\\NoIntro.txt" ) )
+	if( FileExists( "../NoIntro.txt" ) )
 	{
 		PrepareToExitIntroScreen();
 		return( TRUE );
@@ -495,7 +495,7 @@ void DisplaySirtechSplashScreen()
 	memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
 	UnLockVideoSurface( FRAME_BUFFER );
 
-	const char* const ImageFile = "INTERFACE\\SirtechSplash.sti";
+	const char* const ImageFile = "INTERFACE/SirtechSplash.sti";
 	if (!AddVideoObjectFromFile(ImageFile, &uiLogoID))
 	{
 		AssertMsg(0, String("Failed to load %s", ImageFile));

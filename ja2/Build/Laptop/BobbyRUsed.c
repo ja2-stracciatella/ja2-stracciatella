@@ -28,10 +28,10 @@ void GameInitBobbyRUsed()
 BOOLEAN EnterBobbyRUsed()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\usedbackground.sti", &guiUsedBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/usedbackground.sti", &guiUsedBackground));
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\usedgrid.sti", &guiUsedGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/usedgrid.sti", &guiUsedGrid));
 
 	InitBobbyBrTitle();
 

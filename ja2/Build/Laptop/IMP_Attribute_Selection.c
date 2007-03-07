@@ -856,7 +856,7 @@ void CreateIMPAttributeSelectionButtons( void )
 {
 
 	// the finished button
-  giIMPAttributeSelectionButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+  giIMPAttributeSelectionButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
 /*	giIMPAttributeSelectionButton[0] = QuickCreateButton( giIMPAttributeSelectionButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAttributeFinishCallback );
@@ -1125,8 +1125,8 @@ void CreateAttributeSliderButtons( void )
   // the finished button
   INT32 iCounter =0;
 
-	giIMPAttributeSelectionSliderButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,0,-1,1,-1 );
-  giIMPAttributeSelectionSliderButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\AttributeArrows.sti" ,-1,3,-1,4,-1 );
+	giIMPAttributeSelectionSliderButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP/AttributeArrows.sti" ,-1,0,-1,1,-1 );
+  giIMPAttributeSelectionSliderButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/AttributeArrows.sti" ,-1,3,-1,4,-1 );
 
 	for(iCounter = 0; iCounter < 20; iCounter+=2 )
 	{

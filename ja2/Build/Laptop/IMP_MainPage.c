@@ -145,7 +145,7 @@ void CreateIMPMainPageButtons( void )
 
 
 	// the back button button
-  giIMPMainPageButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_3.sti" ,-1,0,-1,1,-1 );
+  giIMPMainPageButtonImage[0]=  LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
 
 
 	/* giIMPMainPageButton[0] = QuickCreateButton( giIMPMainPageButtonImage[0], LAPTOP_SCREEN_UL_X + 10 , LAPTOP_SCREEN_WEB_UL_Y + ( 360 ),
@@ -164,7 +164,7 @@ void CreateIMPMainPageButtons( void )
 		 SpecifyButtonTextSubOffsets( giIMPMainPageButton[0], 0, -1, FALSE );
 
 	// the begin profiling button
-	giIMPMainPageButtonImage[1]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+	giIMPMainPageButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
 	/*giIMPMainPageButton[1] = QuickCreateButton( giIMPMainPageButtonImage[1], LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBeginCallback);
@@ -188,7 +188,7 @@ void CreateIMPMainPageButtons( void )
 														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageBeginCallback);
 	}
 	// the personality button
-	giIMPMainPageButtonImage[2]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPMainPageButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 
 	/*
 	giIMPMainPageButton[2] = QuickCreateButton( giIMPMainPageButtonImage[2], LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
@@ -204,7 +204,7 @@ void CreateIMPMainPageButtons( void )
 
 
 	// the attribs button
-	giIMPMainPageButtonImage[3]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPMainPageButtonImage[3]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 
 	/*
 	giIMPMainPageButton[3] = QuickCreateButton( giIMPMainPageButtonImage[3], LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
@@ -220,7 +220,7 @@ void CreateIMPMainPageButtons( void )
 
 
   // the portrait button
-	giIMPMainPageButtonImage[4]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPMainPageButtonImage[4]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 
 	/*giIMPMainPageButton[4] = QuickCreateButton( giIMPMainPageButtonImage[4], LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
@@ -237,7 +237,7 @@ void CreateIMPMainPageButtons( void )
 
 
 	// the voice button
-	giIMPMainPageButtonImage[5]=  LoadButtonImage( "LAPTOP\\button_8.sti" ,-1,0,-1,1,-1 );
+	giIMPMainPageButtonImage[5]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
 	/*giIMPMainPageButton[5] = QuickCreateButton( giIMPMainPageButtonImage[5], LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPMainPageVoiceCallback);

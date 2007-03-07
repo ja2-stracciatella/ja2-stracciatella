@@ -332,7 +332,7 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 	MSYS_DefineRegion( &(gExitDialog.BackRegion), 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST-1,
 																			CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback );
 
-	gExitDialog.iButtonImages				= LoadButtonImage( "INTERFACE\\popupbuttons.sti", -1,0,-1,1,-1 );
+	gExitDialog.iButtonImages				= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
 
 
 	MSYS_DefineRegion( &gExitDialog.SingleRegion, (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 37), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 37 + 12), MSYS_PRIORITY_HIGHEST,
@@ -352,11 +352,11 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 																			CURSOR_NORMAL, LoadRegionMoveCallback, LoadRegionCallback );
 	MSYS_AllowDisabledRegionFastHelp( &gExitDialog.LoadRegion, TRUE );
 
-	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), "INTERFACE\\popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
+	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), "INTERFACE/popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
 
-	gExitDialog.uiSingleMoveButton	=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ), "INTERFACE\\popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, SingleMoveCallback );
+	gExitDialog.uiSingleMoveButton	=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ), "INTERFACE/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, SingleMoveCallback );
 
-	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), "INTERFACE\\popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
+	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), "INTERFACE/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
 
 	gExitDialog.uiOKButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ OK_BUTTON_TEXT_STR ], FONT12ARIAL,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,

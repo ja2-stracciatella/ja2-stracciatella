@@ -194,7 +194,7 @@ BOOLEAN EnterAimSort()
 	InitAimDefaults();
 
 	// load the SortBy box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\SortBy.sti", &guiSortByBox));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/SortBy.sti", &guiSortByBox));
 
 	// load the ToAlumni graphic and add it
 	GetMLGFilename(ImageFile, MLG_TOALUMNI);
@@ -209,7 +209,7 @@ BOOLEAN EnterAimSort()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiToStats));
 
 	// load the SelectLight graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\SelectLight.sti", &guiSelectLight));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/SelectLight.sti", &guiSelectLight));
 
 
 	//** Mouse Regions **

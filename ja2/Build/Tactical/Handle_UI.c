@@ -1149,7 +1149,7 @@ UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent )
 	}
 	else
 	{
-		if( FileExists( "..\\AutoSave.pls" ) && CanGameBeSaved() )
+		if( FileExists( "../AutoSave.pls" ) && CanGameBeSaved() )
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;

@@ -172,7 +172,7 @@ void CreateIMPPersonalityFinishButtons( void )
   // this function will create the buttons needed for the IMP personality Finish Page
 
 	// ths Yes button
-  giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+  giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
 /*	giIMPPersonalityFinishButton[0] = QuickCreateButton( giIMPPersonalityFinishButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishYesCallback);
@@ -185,7 +185,7 @@ void CreateIMPPersonalityFinishButtons( void )
 														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishYesCallback);
 
   // the no Button
-	giIMPPersonalityFinishButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	giIMPPersonalityFinishButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
 /*	giIMPPersonalityFinishButton[ 1 ] = QuickCreateButton( giIMPPersonalityFinishButtonImage[1], LAPTOP_SCREEN_UL_X +  ( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityFinishNoCallback);
@@ -279,7 +279,7 @@ void CreatePersonalityFinishOkButton( void )
 {
 
 	// create personality button finish button
-	giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+	giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
   giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 24 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

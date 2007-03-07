@@ -4,7 +4,7 @@
 
 #include "Encrypted_File.h"
 
-#define		HELPSCREEN_FILE		"BINARYDATA\\Help.edt"
+#define		HELPSCREEN_FILE		"BINARYDATA/Help.edt"
 
 #define		HELPSCREEN_RECORD_SIZE	80 * 8 * 2
 

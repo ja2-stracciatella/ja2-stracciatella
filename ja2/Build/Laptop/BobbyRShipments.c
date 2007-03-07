@@ -122,10 +122,10 @@ BOOLEAN EnterBobbyRShipments()
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyRay_OnOrder.sti", &guiBobbyRShipmentGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti", &guiBobbyRShipmentGrid));
 
 
-	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP\\CatalogueButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRShipmetBack = CreateIconAndTextButton( guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,

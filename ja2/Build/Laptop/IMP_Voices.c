@@ -165,7 +165,7 @@ void CreateIMPVoicesButtons( void )
   // will create buttons need for the IMP Voices screen
 
 	// next button
-  giIMPVoicesButtonImage[0]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,1,-1,3,-1 );
+  giIMPVoicesButtonImage[0]=  LoadButtonImage( "LAPTOP/voicearrows.sti" ,-1,1,-1,3,-1 );
 	/*giIMPVoicesButton[0] = QuickCreateButton( giIMPVoicesButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 184 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesNextCallback );
@@ -179,7 +179,7 @@ void CreateIMPVoicesButtons( void )
 
 
 	// previous button
-	giIMPVoicesButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP\\voicearrows.sti" ,-1,0,-1,2,-1 );
+	giIMPVoicesButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/voicearrows.sti" ,-1,0,-1,2,-1 );
 /*	giIMPVoicesButton[ 1 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 18 ), LAPTOP_SCREEN_WEB_UL_Y + ( 254 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesPreviousCallback );
@@ -193,7 +193,7 @@ void CreateIMPVoicesButtons( void )
 
 
 	// done button
-  giIMPVoicesButtonImage[ 2 ]=  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
+  giIMPVoicesButtonImage[ 2 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
 	/* giIMPVoicesButton[ 2 ] = QuickCreateButton( giIMPVoicesButtonImage[ 1 ], LAPTOP_SCREEN_UL_X +  ( 349 ), LAPTOP_SCREEN_WEB_UL_Y + ( 220 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPVoicesDoneCallback );
@@ -304,13 +304,13 @@ UINT32 PlayVoice( void )
 				//fVoiceAVisited = TRUE;
 				//swprintf( sString, L"Voice # %d is not done yet", iCurrentVoices + 1 );
 				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-	     return PlayJA2SampleFromFile("Speech\\051_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+	     return PlayJA2SampleFromFile("Speech/051_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 		  break;
 			case( 1 ):
-	     return PlayJA2SampleFromFile("Speech\\052_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+	     return PlayJA2SampleFromFile("Speech/052_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 		  break;
 			case( 2 ):
-				return PlayJA2SampleFromFile("Speech\\053_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+				return PlayJA2SampleFromFile("Speech/053_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 		  break;
 		}
 	}
@@ -321,14 +321,14 @@ UINT32 PlayVoice( void )
 		  case( 0 ):
 				//	swprintf( sString, L"Voice # %d is not done yet", iCurrentVoices + 1 );
 				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				return PlayJA2SampleFromFile("Speech\\054_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+				return PlayJA2SampleFromFile("Speech/054_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 
 		  break;
 			case( 1 ):
-	    	return PlayJA2SampleFromFile("Speech\\055_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+	    	return PlayJA2SampleFromFile("Speech/055_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 		  break;
 			case( 2 ):
-				return PlayJA2SampleFromFile("Speech\\056_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+				return PlayJA2SampleFromFile("Speech/056_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 		  break;
 		}
 

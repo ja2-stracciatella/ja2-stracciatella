@@ -229,13 +229,13 @@ BOOLEAN EnterAIM()
 	InitAimDefaults();
 
 	// load the MemberShipcard graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\membercard.sti", &guiMemberCard));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/membercard.sti", &guiMemberCard));
 
 	// load the Policies graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Policies.sti", &guiPolicies));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Policies.sti", &guiPolicies));
 
 	// load the Links graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Links.sti", &guiLinks));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Links.sti", &guiLinks));
 
 	// load the History graphic and add it
 	GetMLGFilename(ImageFile, MLG_HISTORY);
@@ -246,7 +246,7 @@ BOOLEAN EnterAIM()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiWarning));
 
 	// load the flower advertisment and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\flowerad_16.sti", &guiFlowerAdvertisement));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/flowerad_16.sti", &guiFlowerAdvertisement));
 
 	// load the your ad advertisment and add it
 	GetMLGFilename(ImageFile, MLG_YOURAD13);
@@ -440,7 +440,7 @@ void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 BOOLEAN InitAimDefaults()
 {
 	// load the Rust bacground graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\rustbackground.sti", &guiRustBackGround));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/rustbackground.sti", &guiRustBackGround));
 
 	// load the Aim Symbol graphic and add it
 	SGPFILENAME ImageFile;
@@ -548,7 +548,7 @@ BOOLEAN InitAimMenuBar(void)
 	UINT8	i;
 	UINT16	usPosX;
 
-	guiBottomButtonImage =  LoadButtonImage("LAPTOP\\BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiBottomButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 
 	usPosX = BOTTOM_BUTTON_START_X;
 	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)

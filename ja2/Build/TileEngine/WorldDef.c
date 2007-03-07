@@ -337,11 +337,11 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 
 	// Adjust Current Dir
 	// CHECK IF DEFAULT INI OVERRIDE FILE EXISTS
-	sprintf( INIFile, "%s\\engine.ini", ExeDir );
+	sprintf( INIFile, "%s/engine.ini", ExeDir );
 	if ( !FileExists( INIFile )	)
 	{
 		// USE PER TILESET BASIS
-		sprintf( INIFile, "%s\\engine%d.ini", ExeDir, ubTilesetID );
+		sprintf( INIFile, "%s/engine%d.ini", ExeDir, ubTilesetID );
 	}
 
 	// If no Tileset filenames are given, return error
@@ -474,7 +474,7 @@ BOOLEAN AddTileSurface( char * cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOL
 	if ( !fGetFromRoot )
 	{
 		// Adjust for tileset position
-		sprintf( cAdjustedFile, "TILESETS\\%d\\%s", ubTilesetID, cFileBPP );
+		sprintf( cAdjustedFile, "TILESETS/%d/%s", ubTilesetID, cFileBPP );
 	}
 	else
 	{
@@ -533,10 +533,10 @@ void BuildTileShadeTables(  )
 
 	//Set the directory to the shadetable directory
 	GetFileManCurrentDirectory( DataDir );
-	sprintf( ShadeTableDir, "%s\\ShadeTables", DataDir );
+	sprintf( ShadeTableDir, "%s/ShadeTables", DataDir );
 	if( !SetFileManCurrentDirectory( ShadeTableDir ) )
 	{
-		AssertMsg( 0, "Can't set the directory to Data\\ShadeTable.  Kris' big problem!" );
+		AssertMsg( 0, "Can't set the directory to Data/ShadeTable.  Kris' big problem!" );
 	}
 	hfile = FileOpen("IgnoreShadeTables.txt", FILE_ACCESS_READ);
 	if( hfile )
@@ -1651,7 +1651,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	UINT8			ubCombine;
 	UINT8			bCounts[ WORLD_MAX ][8];
 
-	sprintf( aFilename, "MAPS\\%s", puiFilename );
+	sprintf( aFilename, "MAPS/%s", puiFilename );
 
 	// Open file
 	hfile = FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
@@ -2252,7 +2252,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		strcat( szFilename, "_a" );
 	}
 	strcat( szFilename, ".dat" );
-	sprintf( szDirFilename, "MAPS\\%s", szFilename );
+	sprintf( szDirFilename, "MAPS/%s", szFilename );
 
 	if( gfMajorUpdate )
 	{
@@ -2654,11 +2654,11 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	// Append exension to filename!
 	if ( gfForceLoad )
 	{
-		sprintf( aFilename, "MAPS\\%s", gzForceLoadFile );
+		sprintf( aFilename, "MAPS/%s", gzForceLoadFile );
 	}
 	else
 	{
-		sprintf( aFilename, "MAPS\\%s", puiFilename );
+		sprintf( aFilename, "MAPS/%s", puiFilename );
 	}
 
 	// RESET FLAGS FOR OUTDOORS/INDOORS
@@ -3971,7 +3971,7 @@ void ReloadTileset( UINT8 ubID )
 	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
-	sprintf( aFilename, "MAPS\\%s", TEMP_FILE_FOR_TILESET_CHANGE );
+	sprintf( aFilename, "MAPS/%s", TEMP_FILE_FOR_TILESET_CHANGE );
 
 	FileDelete( aFilename );
 

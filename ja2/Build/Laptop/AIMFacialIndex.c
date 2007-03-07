@@ -79,11 +79,11 @@ BOOLEAN EnterAimFacialIndex()
 {
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
-	const char *sFaceLoc = "FACES\\";
+	const char *sFaceLoc = "FACES/";
 	char			sTemp[100];
 
 	// load the Portait graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\MugShotBorder3.sti", &guiMugShotBorder));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/MugShotBorder3.sti", &guiMugShotBorder));
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;

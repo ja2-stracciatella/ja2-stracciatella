@@ -950,7 +950,7 @@ void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
 	// the continue button
 
 	// grab the image
-	iEndAutoBandageButtonImage[ 0 ] = LoadButtonImage( "INTERFACE\\group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
+	iEndAutoBandageButtonImage[ 0 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
 
 	// grab the button
 	iEndAutoBandageButton[ 0 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 0 ], sX, sY,
@@ -960,7 +960,7 @@ void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
 
 	//the cancel button
 	// grab the image
-	iEndAutoBandageButtonImage[ 1 ] = LoadButtonImage( "INTERFACE\\group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
+	iEndAutoBandageButtonImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
 
 	// grab the button
 	iEndAutoBandageButton[ 1 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 1 ], ( INT16 )( sX + 70 ) , sY,
@@ -1026,7 +1026,7 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 		if( iDoctorList[ iCounter ] != -1 )
 		{
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[Menptr[iDoctorList[iCounter]].ubProfile].ubFaceIndex);
+			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iDoctorList[iCounter]].ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter]);
 			iNumberOfDoctors++;
 
@@ -1039,16 +1039,16 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 		if( iPatientList[ iCounter ] != -1 )
 		{
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces\\65Face\\%02d.sti", gMercProfiles[Menptr[iPatientList[iCounter]].ubProfile].ubFaceIndex);
+			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iPatientList[iCounter]].ubProfile].ubFaceIndex);
 			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors]);
 
 		}
 	}
 
 		// grab panels
-	if (!AddVideoObjectFromFile("Interface\\panels.sti", &giMercPanelImage))
+	if (!AddVideoObjectFromFile("Interface/panels.sti", &giMercPanelImage))
 	{
-		AssertMsg( 0, "Failed to load Interface\\panels.sti" );
+		AssertMsg( 0, "Failed to load Interface/panels.sti" );
 	}
 
 	return( TRUE );

@@ -369,13 +369,13 @@ BOOLEAN EnterBobbyRMailOrder()
 	gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 
 	// load the Order Grid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyOrderGrid.sti", &guiBobbyROrderGrid));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyOrderGrid.sti", &guiBobbyROrderGrid));
 
 	// load the Location graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyLocationBox.sti", &guiBobbyRLocationGraphic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyLocationBox.sti", &guiBobbyRLocationGraphic));
 
 	// load the delivery speed graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyDeliverySpeed.sti", &guiDeliverySpeedGraphic));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyDeliverySpeed.sti", &guiDeliverySpeedGraphic));
 
 	// load the delivery speed graphic and add it
 	SGPFILENAME ImageFile;
@@ -383,16 +383,16 @@ BOOLEAN EnterBobbyRMailOrder()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiConfirmGraphic));
 
 	// load the delivery speed graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\TotalSaveArea.sti", &guiTotalSaveArea));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/TotalSaveArea.sti", &guiTotalSaveArea));
 
   // border
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\TactPopUp.sti", &guiDropDownBorder));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/TactPopUp.sti", &guiDropDownBorder));
 
   // Gold Arrow for the scroll area
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\GoldArrows.sti", &guiGoldArrowImages));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/GoldArrows.sti", &guiGoldArrowImages));
 
   // Package Weight Graphic
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\PackageWeight.sti", &guiPackageWeightImage));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/PackageWeight.sti", &guiPackageWeightImage));
 
 
 	InitBobbyRWoodBackground();
@@ -402,7 +402,7 @@ BOOLEAN EnterBobbyRMailOrder()
 	//
 
 	// Clear Order button
-	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP\\EraseOrderButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP/EraseOrderButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRClearOrder = CreateIconAndTextButton( guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_ORDER_TITLE_TEXT_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
@@ -415,7 +415,7 @@ BOOLEAN EnterBobbyRMailOrder()
 
 
 	// Accept Order button
-	guiBobbyRAcceptOrderImage = LoadButtonImage("LAPTOP\\AcceptOrderButton.sti", 2,0,-1,1,-1 );
+	guiBobbyRAcceptOrderImage = LoadButtonImage("LAPTOP/AcceptOrderButton.sti", 2,0,-1,1,-1 );
 	guiBobbyRAcceptOrder = CreateIconAndTextButton( guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ORDER_TITLE_TEXT_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
@@ -437,7 +437,7 @@ BOOLEAN EnterBobbyRMailOrder()
 	}
 
 
-	guiBobbyRBackImage =  LoadButtonImage("LAPTOP\\CatalogueButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRBack = CreateIconAndTextButton( guiBobbyRBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
@@ -2200,7 +2200,7 @@ void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON *btn,INT32 reason)
 BOOLEAN CreateBobbyRayOrderTitle()
 {
 		// load BobbyRayTitle graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\BobbyRayTitle.sti", &guiBobbyRayTitle));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyRayTitle.sti", &guiBobbyRayTitle));
 
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,

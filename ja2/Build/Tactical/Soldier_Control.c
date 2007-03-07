@@ -95,7 +95,7 @@
 
 extern INT16 DirIncrementer[8];
 
-#define		PALETTEFILENAME							"BINARYDATA\\ja2pal.dat"
+#define		PALETTEFILENAME							"BINARYDATA/ja2pal.dat"
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35
 
@@ -410,7 +410,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
 				AniParams.sX									= pSoldier->sX;
 				AniParams.sY									= pSoldier->sY;
 				AniParams.sZ									= 0;
-				strcpy( AniParams.zCachedFile, "TILECACHE\\fly_shdw.sti" );
+				strcpy( AniParams.zCachedFile, "TILECACHE/fly_shdw.sti" );
 
 				AniParams.uiUserData3					= pSoldier->bDirection;
 
@@ -698,17 +698,17 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
-			uiSoundID = SoundPlay( "BATTLESNDS\\033_CHOP2.WAV", &spParms );
+			uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP2.WAV", &spParms );
 		}
 		else
 		{
 			if ( Random( 2 ) == 0 )
 			{
-				uiSoundID = SoundPlay( "BATTLESNDS\\033_CHOP3.WAV", &spParms );
+				uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP3.WAV", &spParms );
 			}
 			else
 			{
-				uiSoundID = SoundPlay( "BATTLESNDS\\033_CHOP1.WAV", &spParms );
+				uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP1.WAV", &spParms );
 			}
 		}
 
@@ -7014,18 +7014,18 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	// OK, build file and play!
 	if ( pSoldier->ubProfile != NO_PROFILE )
 	{
-		sprintf( zFilename, "BATTLESNDS\\%03d_%s.wav", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
+		sprintf( zFilename, "BATTLESNDS/%03d_%s.wav", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
 
 		if ( !FileExists( zFilename ) )
 		{
 			// OK, temp build file...
 			if ( pSoldier->ubBodyType == REGFEMALE )
 			{
-				sprintf( zFilename, "BATTLESNDS\\f_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS/f_%s.wav", gBattleSndsData[ ubSoundID ].zName );
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\m_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS/m_%s.wav", gBattleSndsData[ ubSoundID ].zName );
 			}
 		}
 	}
@@ -7041,22 +7041,22 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 		{
 			if ( ubSoundID == BATTLE_SOUND_DIE1 )
 			{
-				sprintf( zFilename, "BATTLESNDS\\kid%d_dying.wav", pSoldier->ubBattleSoundID );
+				sprintf( zFilename, "BATTLESNDS/kid%d_dying.wav", pSoldier->ubBattleSoundID );
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\kid%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS/kid%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
 			}
 		}
 		else
 		{
 			if ( ubSoundID == BATTLE_SOUND_DIE1 )
 			{
-				sprintf( zFilename, "BATTLESNDS\\bad%d_die.wav", pSoldier->ubBattleSoundID );
+				sprintf( zFilename, "BATTLESNDS/bad%d_die.wav", pSoldier->ubBattleSoundID );
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS\\bad%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
+				sprintf( zFilename, "BATTLESNDS/bad%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
 			}
 		}
 	}

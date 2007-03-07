@@ -149,17 +149,17 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t *zQuote )
 	{
     if ( gbWorldSectorZ > 0 )
     {
-		  //sprintf( zFileName, "NPCData\\miners.edt" );
-  		sprintf( zFileName,"NPCDATA\\CIV%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER );
+		  //sprintf( zFileName, "NPCData/miners.edt" );
+  		sprintf( zFileName,"NPCDATA/CIV%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER );
     }
     else
     {
-		  sprintf( zFileName, "NPCData\\%c%d.edt", 'A' + (gWorldSectorY - 1) , gWorldSectorX );
+		  sprintf( zFileName, "NPCData/%c%d.edt", 'A' + (gWorldSectorY - 1) , gWorldSectorX );
     }
 	}
 	else
 	{
-		sprintf( zFileName,"NPCDATA\\CIV%02d.edt",ubCivQuoteID );
+		sprintf( zFileName,"NPCDATA/CIV%02d.edt",ubCivQuoteID );
 	}
 
 	CHECKF( FileExists( zFileName ) );

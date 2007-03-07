@@ -339,18 +339,18 @@ void CreateSummaryWindow()
 		MAP_LEFT+55, MAP_BOTTOM+45, 50, 26, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK,
 		SummarySaveMapCallback );
 	iSummaryButton[ SUMMARY_OVERRIDE ] =
-		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), "EDITOR\\smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
+		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
 
 
 #if 0
 	iSummaryButton[ SUMMARY_NEW_GROUNDLEVEL ] =
-		CreateSimpleButton( MAP_LEFT, MAP_BOTTOM+58, "EDITOR\\new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewGroundLevelCallback );
+		CreateSimpleButton( MAP_LEFT, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewGroundLevelCallback );
 	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_GROUNDLEVEL ], L"New map" );
 	iSummaryButton[ SUMMARY_NEW_BASEMENTLEVEL ] =
-		CreateSimpleButton( MAP_LEFT+32, MAP_BOTTOM+58, "EDITOR\\new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewBasementLevelCallback );
+		CreateSimpleButton( MAP_LEFT+32, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewBasementLevelCallback );
 	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_BASEMENTLEVEL ], L"New basement" );
 	iSummaryButton[ SUMMARY_NEW_CAVELEVEL ] =
-		CreateSimpleButton( MAP_LEFT+64, MAP_BOTTOM+58, "EDITOR\\new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewCaveLevelCallback );
+		CreateSimpleButton( MAP_LEFT+64, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewCaveLevelCallback );
 	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_CAVELEVEL ], L"New cave level" );
 #endif
 
@@ -361,11 +361,11 @@ void CreateSummaryWindow()
 		SummaryUpdateCallback );
 
 	iSummaryButton[ SUMMARY_REAL ] =
-		CreateCheckBoxButton( 350, 47, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );
+		CreateCheckBoxButton( 350, 47, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );
 	iSummaryButton[ SUMMARY_SCIFI ] =
-		CreateCheckBoxButton( 376, 47, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_HIGH, SummarySciFiCallback );
+		CreateCheckBoxButton( 376, 47, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummarySciFiCallback );
 	iSummaryButton[ SUMMARY_ENEMY ] =
-		CreateCheckBoxButton( 350, 60, "EDITOR\\radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
+		CreateCheckBoxButton( 350, 60, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
 
 	//SetButtonFastHelpText( iSummaryButton[ SUMMARY_SCIFI ], L"Display items that appear in SciFi mode." );
 	//SetButtonFastHelpText( iSummaryButton[ SUMMARY_REAL ], L"Display items that appear in Realistic mode." );
@@ -1294,7 +1294,7 @@ void RenderSummaryWindow()
 			SetFontForeground( FONT_GRAY1 );
 			mprintf( 10, 20, L"You currently have no summary data.  By creating one, you will be able to keep track" );
 			mprintf( 10, 30, L"of information pertaining to all of the sectors you edit and save.  The creation process" );
-			mprintf( 10, 40, L"will analyse all maps in your \\MAPS directory, and generate a new one.  This could" );
+			mprintf( 10, 40, L"will analyse all maps in your /MAPS directory, and generate a new one.  This could" );
 			mprintf( 10, 50, L"take a few minutes depending on how many valid maps you have.  Valid maps are" );
 			mprintf( 10, 60, L"maps following the proper naming convention from a1.dat - p16.dat.  Underground maps" );
 			mprintf( 10, 70, L"are signified by appending _b1 to _b3 before the .dat (ex:  a9_b1.dat). ");
@@ -1877,15 +1877,15 @@ void CreateGlobalSummary()
 	OutputDebugString( "Generating GlobalSummary Information...\n" );
 
 	gfGlobalSummaryExists = FALSE;
-	//Set current directory to JA2\DevInfo which contains all of the summary data
+	//Set current directory to JA2/DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%s/DevInfo", ExecDir );
 
 	//Directory doesn't exist, so create it, and continue.
 	if( !MakeFileManDirectory( Dir ) )
-		AssertMsg( 0, "Can't create new directory, JA2\\DevInfo for summary information." );
+		AssertMsg( 0, "Can't create new directory, JA2/DevInfo for summary information." );
 	if( !SetFileManCurrentDirectory( Dir ) )
-		AssertMsg( 0, "Can't set to new directory, JA2\\DevInfo for summary information." );
+		AssertMsg( 0, "Can't set to new directory, JA2/DevInfo for summary information." );
 	//Generate a simple readme file.
 	fp = fopen( "readme.txt", "w" );
 	Assert( fp );
@@ -1893,7 +1893,7 @@ void CreateGlobalSummary()
 		"This directory or it's contents shouldn't be included with final release." );
 	fclose( fp );
 
-	sprintf( Dir, "%s\\Data", ExecDir );
+	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
 
 	LoadGlobalSummary();
@@ -2127,7 +2127,7 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 			if( gubOverrideStatus == READONLY )
 			{
 				UINT8 filename[40];
-				sprintf( filename, "MAPS\\%S", gszDisplayName );
+				sprintf( filename, "MAPS/%S", gszDisplayName );
 				FileClearAttributes( filename );
 			}
 			if(	ExternalSaveMap( gszDisplayName ) )
@@ -2166,7 +2166,7 @@ void CalculateOverrideStatus()
 	if( gfTempFile )
 	{
 		UINT8 *ptr;
-		sprintf( szFilename, "MAPS\\%S", gszTempFilename );
+		sprintf( szFilename, "MAPS/%S", gszTempFilename );
 		if( strlen( szFilename ) == 5 )
 			strcat( szFilename, "test.dat" );
 		ptr = strstr( szFilename, "." );
@@ -2176,7 +2176,7 @@ void CalculateOverrideStatus()
 			sprintf( ptr, ".dat" );
 	}
 	else
-		sprintf( szFilename, "MAPS\\%S", gszFilename );
+		sprintf( szFilename, "MAPS/%S", gszFilename );
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%s", szFilename + 5);
 	if( GetFileFirst( szFilename, &FileInfo) )
 	{
@@ -2220,10 +2220,10 @@ void LoadGlobalSummary()
 	gfMustForceUpdateAllMaps = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 	gfGlobalSummaryExists = FALSE;
-	//Set current directory to JA2\DevInfo which contains all of the summary data
+	//Set current directory to JA2/DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( DevInfoDir, "%s\\DevInfo", ExecDir );
-	sprintf( MapsDir, "%s\\Data\\Maps", ExecDir );
+	sprintf( DevInfoDir, "%s/DevInfo", ExecDir );
+	sprintf( MapsDir, "%s/Data/Maps", ExecDir );
 
 	//Check to make sure we have a DevInfo directory.  If we don't create one!
 	if( !SetFileManCurrentDirectory( DevInfoDir ) )
@@ -2388,7 +2388,7 @@ void LoadGlobalSummary()
 		OutputDebugString( String("Sector Row %c complete... \n", y + 'A') );
 	}
 
-	sprintf( MapsDir, "%s\\Data", ExecDir );
+	sprintf( MapsDir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( MapsDir );
 
 	if( gfMustForceUpdateAllMaps )
@@ -2406,16 +2406,16 @@ void GenerateSummaryList()
 	STRING512			ExecDir;
 	STRING512			Dir;
 
-	//Set current directory to JA2\DevInfo which contains all of the summary data
+	//Set current directory to JA2/DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%s/DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
 	{
 		//Directory doesn't exist, so create it, and continue.
 		if( !MakeFileManDirectory( Dir ) )
-			AssertMsg( 0, "Can't create new directory, JA2\\DevInfo for summary information." );
+			AssertMsg( 0, "Can't create new directory, JA2/DevInfo for summary information." );
 		if( !SetFileManCurrentDirectory( Dir ) )
-			AssertMsg( 0, "Can't set to new directory, JA2\\DevInfo for summary information." );
+			AssertMsg( 0, "Can't set to new directory, JA2/DevInfo for summary information." );
 		//Generate a simple readme file.
 		fp = fopen( "readme.txt", "w" );
 		Assert( fp );
@@ -2426,7 +2426,7 @@ void GenerateSummaryList()
 
 
 	//Set current directory back to data directory!
-	sprintf( Dir, "%s\\Data", ExecDir );
+	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
 }
 
@@ -2438,11 +2438,11 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	UINT8					*ptr;
 	INT8 x, y;
 
-	//Set current directory to JA2\DevInfo which contains all of the summary data
+	//Set current directory to JA2/DevInfo which contains all of the summary data
 	GetExecutableDirectory( ExecDir );
-	sprintf( Dir, "%s\\DevInfo", ExecDir );
+	sprintf( Dir, "%s/DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
-		AssertMsg( 0, "JA2\\DevInfo folder not found and should exist!");
+		AssertMsg( 0, "JA2/DevInfo folder not found and should exist!");
 
 	ptr = strstr( puiFilename, ".dat" );
 	if( !ptr )
@@ -2471,7 +2471,7 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	gpSectorSummary[x][y][ubLevel] = pSummaryFileInfo;
 
 	//Set current directory back to data directory!
-	sprintf( Dir, "%s\\Data", ExecDir );
+	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
 }
 
@@ -2899,7 +2899,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
-	sprintf( szFilename, "MAPS\\%S", gszFilename );
+	sprintf( szFilename, "MAPS/%S", gszFilename );
 	hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hfile )
 	{ //The file couldn't be found!

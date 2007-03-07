@@ -1811,7 +1811,7 @@ BOOLEAN HandleSAMSiteAttackOfHelicopterInSector( INT16 sSectorX, INT16 sSectorY 
 
 			// everyone die die die
 			// play sound
-			if (PlayJA2StreamingSampleFromFile("stsounds\\blah2.wav", HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback) == SOUND_ERROR)
+			if (PlayJA2StreamingSampleFromFile("stsounds/blah2.wav", HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback) == SOUND_ERROR)
       {
         // Destroy here if we cannot play streamed sound sample....
   			SkyriderDestroyed( );

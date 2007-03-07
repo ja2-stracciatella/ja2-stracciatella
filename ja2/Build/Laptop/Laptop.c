@@ -890,22 +890,22 @@ INT32 EnterLaptop()
 	giCurrentRegion=EMAIL_REGION;
 
 	// load the laptop graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\laptop3.sti", &guiLAPTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/laptop3.sti", &guiLAPTOP));
 
 	// background for panel
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\taskbar.sti", &guiLaptopBACKGROUND));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/taskbar.sti", &guiLaptopBACKGROUND));
 
 	// background for panel
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &guiTITLEBARLAPTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLEBARLAPTOP));
 
 	// lights for power and HD
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\lights.sti", &guiLIGHTS));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/lights.sti", &guiLIGHTS));
 
 	// icons for title bars
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\ICONS.sti", &guiTITLEBARICONS));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/ICONS.sti", &guiTITLEBARICONS));
 
 	// load, blt and delete graphics
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\NewMailWarning.sti", &guiEmailWarning));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/NewMailWarning.sti", &guiEmailWarning));
 	// load background
 	LoadDesktopBackground( );
 
@@ -1810,7 +1810,7 @@ UINT32 LaptopScreenHandle()
 		uiStartTime = GetJA2Clock();
 		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
-		PlayJA2SampleFromFile("SOUNDS\\Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iRealPercentage < 100  )
 		{
 			uiCurrTime = GetJA2Clock();
@@ -2236,7 +2236,7 @@ CreateLaptopButtons()
 {
  memset( giLapTopButton, -1, sizeof( giLapTopButton ) );
 
- /*giLapTopButtonImage[ON_BUTTON]=  LoadButtonImage( "LAPTOP\\button.sti" ,-1,1,-1,0,-1 );
+ /*giLapTopButtonImage[ON_BUTTON]=  LoadButtonImage( "LAPTOP/button.sti" ,-1,1,-1,0,-1 );
  giLapTopButton[ON_BUTTON] = QuickCreateButton( giLapTopButtonImage[ON_BUTTON], ON_X, ON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOnCallback);
@@ -2246,7 +2246,7 @@ CreateLaptopButtons()
  // the program buttons
 
 
- gLaptopButtonImage[0]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,0,-1,8,-1 );
+ gLaptopButtonImage[0]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,0,-1,8,-1 );
  gLaptopButton[0] = QuickCreateButton( gLaptopButtonImage[0], 29, 66,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)EmailRegionButtonCallback);
@@ -2258,7 +2258,7 @@ CreateLaptopButtons()
  SpecifyButtonDownTextColors( gLaptopButton[0], 2, 0 );
  SpecifyButtonUpTextColors( gLaptopButton[0], 2, 0 );
 
- gLaptopButtonImage[1]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,1,-1,9,-1 );
+ gLaptopButtonImage[1]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,1,-1,9,-1 );
  gLaptopButton[1] = QuickCreateButton( gLaptopButtonImage[1], 29, 98,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)WWWRegionButtonCallback);
@@ -2270,7 +2270,7 @@ CreateLaptopButtons()
  SpecifyButtonUpTextColors( gLaptopButton[1], 2, 0 );
  SpecifyButtonDownTextColors( gLaptopButton[1], 2, 0 );
 
- gLaptopButtonImage[2]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,2,-1,10,-1 );
+ gLaptopButtonImage[2]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,2,-1,10,-1 );
  gLaptopButton[2] = QuickCreateButton( gLaptopButtonImage[2], 29, 130,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FilesRegionButtonCallback);
@@ -2283,7 +2283,7 @@ CreateLaptopButtons()
  SpecifyButtonDownTextColors( gLaptopButton[2], 2, 0 );
 
 
- gLaptopButtonImage[3]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,3,-1,11,-1 );
+ gLaptopButtonImage[3]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,3,-1,11,-1 );
  gLaptopButton[3] = QuickCreateButton( gLaptopButtonImage[3], 29, 194,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PersonnelRegionButtonCallback);
@@ -2296,7 +2296,7 @@ CreateLaptopButtons()
  SpecifyButtonDownTextColors( gLaptopButton[3], 2, 0 );
 
 
- gLaptopButtonImage[4]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,4,-1,12,-1 );
+ gLaptopButtonImage[4]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,4,-1,12,-1 );
  gLaptopButton[4] = QuickCreateButton( gLaptopButtonImage[4], 29, 162,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)HistoryRegionButtonCallback);
@@ -2309,7 +2309,7 @@ CreateLaptopButtons()
  SpecifyButtonDownTextColors( gLaptopButton[4], 2, 0 );
 
 
- gLaptopButtonImage[5]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,5,-1,13,-1 );
+ gLaptopButtonImage[5]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,5,-1,13,-1 );
  gLaptopButton[5] = QuickCreateButton( gLaptopButtonImage[5], 29, 226 + 15,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FinancialRegionButtonCallback);
@@ -2322,7 +2322,7 @@ CreateLaptopButtons()
  SpecifyButtonDownTextColors( gLaptopButton[5], 2, 0 );
 
 
- gLaptopButtonImage[6]=  LoadButtonImage( "LAPTOP\\buttonsforlaptop.sti" ,-1,6,-1,14,-1 );
+ gLaptopButtonImage[6]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,6,-1,14,-1 );
  gLaptopButton[6] = QuickCreateButton( gLaptopButtonImage[6], 29, 371 + 7, //DEF: was 19
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOnCallback);
@@ -2457,7 +2457,7 @@ BOOLEAN LeaveLapTopScreen( void )
 			iPercentage = iRealPercentage = 100;
 			uiStartTime = GetJA2Clock();
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-			PlayJA2SampleFromFile("SOUNDS\\Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile("SOUNDS/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 			while( iRealPercentage > 0  )
 			{
 				BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
@@ -3026,14 +3026,14 @@ BOOLEAN RemoveBookMark( INT32 iBookId )
 BOOLEAN LoadBookmark()
 {
 		// grab download bars too
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadtop.sti",    &guiDOWNLOADTOP));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadmid.sti",    &guiDOWNLOADMID));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\downloadbot.sti",    &guiDOWNLOADBOT));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\bookmarktop.sti",    &guiBOOKTOP));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\bookmarkmiddle.sti", &guiBOOKMID));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\webpages.sti",       &guiBOOKMARK));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\hilite.sti",         &guiBOOKHIGH));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Bookmarkbottom.sti", &guiBOOKBOT));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadtop.sti",    &guiDOWNLOADTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadmid.sti",    &guiDOWNLOADMID));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadbot.sti",    &guiDOWNLOADBOT));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/bookmarktop.sti",    &guiBOOKTOP));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/bookmarkmiddle.sti", &guiBOOKMID));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/webpages.sti",       &guiBOOKMARK));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/hilite.sti",         &guiBOOKHIGH));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Bookmarkbottom.sti", &guiBOOKBOT));
 	return( TRUE );
 }
 
@@ -3507,8 +3507,8 @@ BOOLEAN LoadLoadPending( void )
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\graphwindow.sti", &guiGRAPHWINDOW));
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\graphsegment.sti", &guiGRAPHBAR));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/graphwindow.sti", &guiGRAPHWINDOW));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/graphsegment.sti", &guiGRAPHBAR));
 	return (TRUE);
 }
 
@@ -3710,7 +3710,7 @@ void CreateDestroyErrorButton( void )
   fOldErrorFlag=TRUE;
 
 	// load image and create error confirm button
-	giErrorButtonImage[0]=LoadButtonImage( "LAPTOP\\errorbutton.sti" ,-1,0,-1,1,-1 );
+	giErrorButtonImage[0]=LoadButtonImage( "LAPTOP/errorbutton.sti" ,-1,0,-1,1,-1 );
   giErrorButton[0]= QuickCreateButton( giErrorButtonImage[0], ERROR_X+ERROR_BTN_X, ERROR_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnErrorCallback);
@@ -4617,7 +4617,7 @@ void CreateDestroyMinimizeButtonForCurrentMode( void )
 void CreateMinimizeButtonForCurrentMode( void )
 {
 	// create minimize button
-  gLaptopMinButtonImage[0]=  LoadButtonImage( "LAPTOP\\x.sti" ,-1,0,-1,1,-1 );
+  gLaptopMinButtonImage[0]=  LoadButtonImage( "LAPTOP/x.sti" ,-1,0,-1,1,-1 );
   gLaptopMinButton[0] = QuickCreateButton( gLaptopMinButtonImage[0], 590, 30,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LaptopMinimizeProgramButtonCallback);
@@ -5243,7 +5243,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	CHAR16 sString[256];
 
 	 // title bar - load
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\programtitlebar.sti", &uiTITLEFORWWW));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &uiTITLEFORWWW));
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 

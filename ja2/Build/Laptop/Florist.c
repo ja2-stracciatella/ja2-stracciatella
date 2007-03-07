@@ -94,9 +94,9 @@ BOOLEAN EnterFlorist()
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\HandBullet.sti", &guiHandBullet));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/HandBullet.sti", &guiHandBullet));
 
-	guiGalleryButtonImage	= LoadButtonImage("LAPTOP\\FloristButtons.sti", -1,0,-1,1,-1 );
+	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
 
 	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
@@ -181,7 +181,7 @@ void RenderFlorist()
 BOOLEAN InitFloristDefaults()
 {
 	// load the Florist background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\leafback.sti", &guiFloristBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/leafback.sti", &guiFloristBackground));
 
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )

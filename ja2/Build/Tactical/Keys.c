@@ -151,7 +151,7 @@ BOOLEAN LoadLockTable( void )
 {
 	UINT32	uiNumBytesRead = 0;
 	UINT32	uiBytesToRead;
-	const char *pFileName = "BINARYDATA\\Locks.bin";
+	const char *pFileName = "BINARYDATA/Locks.bin";
 	HWFILE	hFile;
 
 	// Load the Lock Table
@@ -751,7 +751,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			AniParams.sY									= sY;
 			AniParams.sZ									= sZ;
 
-			strcpy( AniParams.zCachedFile, "TILECACHE\\miniboom.sti" );
+			strcpy( AniParams.zCachedFile, "TILECACHE/miniboom.sti" );
 
 			CreateAnimationTile( &AniParams );
 

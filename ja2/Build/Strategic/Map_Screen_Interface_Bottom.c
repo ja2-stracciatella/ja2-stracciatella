@@ -227,7 +227,7 @@ void HandleLoadOfMapBottomGraphics( void )
 {
 	// will load the graphics needed for the mapscreen interface bottom
 	// will create buttons for interface bottom
-	if (!AddVideoObjectFromFile("INTERFACE\\map_screen_bottom.sti", &guiMAPBOTTOMPANEL))
+	if (!AddVideoObjectFromFile("INTERFACE/map_screen_bottom.sti", &guiMAPBOTTOMPANEL))
 		return;
 
 	// load slider bar icon
@@ -342,13 +342,13 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 
 
 	// laptop
-	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_LAPTOP ]=  LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,6,-1,15,-1 );
+	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_LAPTOP ]=  LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,6,-1,15,-1 );
   guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] = QuickCreateButton( guiMapBottomExitButtonsImage[ MAP_EXIT_TO_LAPTOP ], 456, 410,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnLaptopCallback);
 
 	// tactical
-	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_TACTICAL ]=  LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,7,-1,16,-1 );
+	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_TACTICAL ]=  LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,7,-1,16,-1 );
 
 #ifndef JA2DEMO
 	guiMapBottomExitButtons[ MAP_EXIT_TO_TACTICAL ] = QuickCreateButton( guiMapBottomExitButtonsImage[ MAP_EXIT_TO_TACTICAL ], 496, 410,
@@ -356,7 +356,7 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnTacticalCallback);
 
 	// options
-	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ]=  LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,18,-1,19,-1 );
+	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ]=  LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,18,-1,19,-1 );
   guiMapBottomExitButtons[ MAP_EXIT_TO_OPTIONS ] = QuickCreateButton( guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ], 458, 372,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOptionsFromMapScreenCallback);
@@ -368,7 +368,7 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnTacticalCallback);
 
 	// options
-	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ]=  LoadButtonImage( "INTERFACE\\map_border_buttons.sti" ,-1,18,-1,19,-1 );
+	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ]=  LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,18,-1,19,-1 );
   guiMapBottomExitButtons[ MAP_EXIT_TO_OPTIONS ] = QuickCreateButton( guiMapBottomExitButtonsImage[ MAP_EXIT_TO_OPTIONS ], 458, 372,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOptionsFromMapScreenCallback);
@@ -387,12 +387,12 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 
 
 	// time compression buttons
-	guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_MORE ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,10,1,-1,3,-1 );
+	guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_MORE ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,10,1,-1,3,-1 );
   guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_MORE ] = QuickCreateButton( guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_MORE ], 528, 456,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2 ,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnTimeCompressMoreMapScreenCallback);
 
-	guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_LESS ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,9,0,-1,2,-1 );
+	guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_LESS ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,9,0,-1,2,-1 );
   guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_LESS ] = QuickCreateButton( guiMapBottomTimeButtonsImage[ MAP_TIME_COMPRESS_LESS ], 466, 456,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
                    (GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnTimeCompressLessMapScreenCallback);
@@ -408,12 +408,12 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
  // scroll buttons
 #ifndef JA2DEMO
 
-  guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
+  guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ], 331, 371,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageUpMapScreenCallback);
 
-	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
+	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ], 331, 452,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageDownMapScreenCallback);
@@ -422,12 +422,12 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 
 #else
 
-	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
+	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_UP ], 331, 371,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageUpMapScreenCallback);
 
-	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
+	guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
   guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] = QuickCreateButton( guiMapMessageScrollButtonsImage[ MAP_SCROLL_MESSAGE_DOWN ], 331, 452,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageDownMapScreenCallback);
@@ -816,7 +816,7 @@ void RemoveCompressModePause( void )
 void LoadMessageSliderBar( void )
 {
   // this function will load the message slider bar
-	AddVideoObjectFromFile("INTERFACE\\map_screen_bottom_arrows.sti", &guiSliderBar);
+	AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti", &guiSliderBar);
 }
 
 void DeleteMessageSliderBar( void )

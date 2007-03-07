@@ -172,11 +172,11 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidt
 
 SGPFILENAME	gCheckFilenames[] =
 {
-  "DATA\\INTRO.SLF",
-  "DATA\\LOADSCREENS.SLF",
-  "DATA\\MAPS.SLF",
-	"DATA\\NPC_SPEECH.SLF",
-	"DATA\\SPEECH.SLF",
+  "DATA/INTRO.SLF",
+  "DATA/LOADSCREENS.SLF",
+  "DATA/MAPS.SLF",
+	"DATA/NPC_SPEECH.SLF",
+	"DATA/SPEECH.SLF",
 };
 
 

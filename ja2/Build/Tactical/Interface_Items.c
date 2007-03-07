@@ -799,20 +799,20 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
 	INT32 cnt;
 
 	// Load all four body type images
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_large_male.sti", &guiBodyInvVO[1][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_large_male_H.sti", &guiBodyInvVO[1][1]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male.sti", &guiBodyInvVO[1][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male_H.sti", &guiBodyInvVO[1][1]));
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[0][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male_H.sti", &guiBodyInvVO[0][1]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[0][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male_H.sti", &guiBodyInvVO[0][1]));
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[2][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_normal_male.sti", &guiBodyInvVO[2][1]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[2][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[2][1]));
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_female.sti", &guiBodyInvVO[3][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\inventory_figure_female_H.sti", &guiBodyInvVO[3][1]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_female.sti", &guiBodyInvVO[3][0]));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti", &guiBodyInvVO[3][1]));
 
 	// add gold key graphic
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\gold_key_button.sti", &guiGoldKeyVO));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/gold_key_button.sti", &guiGoldKeyVO));
 
 	// Add cammo region
 	MSYS_DefineRegion( &gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, (INT16)(pCamoRegion->sX + CAMO_REGION_WIDTH ), (INT16)(pCamoRegion->sY + CAMO_REGION_HEIGHT ), MSYS_PRIORITY_HIGH,
@@ -2247,7 +2247,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	 					 CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback );
 		 	MSYS_AddRegion( &gInvDesc);
 
-			giMapInvDescButtonImage=  LoadButtonImage( "INTERFACE\\itemdescdonebutton.sti" ,-1,0,-1,1,-1 );
+			giMapInvDescButtonImage=  LoadButtonImage( "INTERFACE/itemdescdonebutton.sti" ,-1,0,-1,1,-1 );
 
 			// create button
 			giMapInvDescButton= QuickCreateButton( giMapInvDescButtonImage, (UINT16)( gsInvDescX + 204 ), (UINT16)( gsInvDescY + 107 ),
@@ -2271,7 +2271,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		 swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubGunShotsLeft, Weapon[ gpItemDescObject->usItem ].ubMagSize );
-		 FilenameForBPP("INTERFACE\\infobox.sti", ubString);
+		 FilenameForBPP("INTERFACE/infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
 		switch( pObject->ubGunAmmoType )
@@ -2415,9 +2415,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	}
 
 	// Load graphic
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\infobox.sti", &guiItemDescBox));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\iteminfoc.STI", &guiMapItemDescBox));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\bullet.STI", &guiBullet));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/infobox.sti", &guiItemDescBox));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/iteminfoc.STI", &guiMapItemDescBox));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/bullet.STI", &guiBullet));
 
 	if ( gpItemDescObject->usItem != MONEY  )
 	{
@@ -2455,11 +2455,11 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
-		CHECKF(AddVideoObjectFromFile("INTERFACE\\info_bil.sti", &guiMoneyGraphicsForDescBox));
+		CHECKF(AddVideoObjectFromFile("INTERFACE/info_bil.sti", &guiMoneyGraphicsForDescBox));
 
 		//Create buttons for the money
 //		if (guiCurrentScreen ==  MAP_SCREEN )
-		guiMoneyButtonImage = LoadButtonImage("INTERFACE\\Info_bil.sti", -1, 1, -1, 2, -1);
+		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
 		const MoneyLoc* Loc = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
 		for (cnt = 0; cnt < MAX_ATTACHMENTS - 1; cnt++)
 		{
@@ -5008,7 +5008,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
   }
 
 	// Load graphics
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
 	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
@@ -5230,7 +5230,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	gpItemPopupSoldier = pSoldier;
 
 	// Load graphics
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\extra_inventory.STI", &guiItemPopupBoxes));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/extra_inventory.STI", &guiItemPopupBoxes));
 
 	// Get size
 	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
@@ -5479,7 +5479,7 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 
 	//Load item
 	SGPFILENAME ImageFile;
-	sprintf(ImageFile, "BIGITEMS\\%s%02d.sti", Prefix, pItem->ubGraphicNum);
+	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
 	CHECKF(AddVideoObjectFromFile(ImageFile, puiVo));
 
 	return( TRUE );
@@ -5851,7 +5851,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		gItemPickupMenu.bNumSlotsPerPage = gItemPickupMenu.ubTotalItems;
 	}
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\itembox.sti", &gItemPickupMenu.uiPanelVo));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/itembox.sti", &gItemPickupMenu.uiPanelVo));
 
 	// Memalloc selection array...
 	 gItemPickupMenu.pfSelectedArray = MemAlloc(( sizeof( UINT8 ) * gItemPickupMenu.ubTotalItems ) );
@@ -5916,7 +5916,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	gItemPickupMenu.fAllSelected	= FALSE;
 
 	//Load images for buttons
-	FilenameForBPP("INTERFACE\\itembox.sti", ubString );
+	FilenameForBPP("INTERFACE/itembox.sti", ubString );
 	gItemPickupMenu.iUpButtonImages			= LoadButtonImage( ubString, -1,5,-1,10,-1 );
 	gItemPickupMenu.iDownButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 7, -1, 12, -1 );
 	gItemPickupMenu.iAllButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 6, -1,11, -1 );

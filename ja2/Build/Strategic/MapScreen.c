@@ -2908,7 +2908,7 @@ UINT32 MapScreenInit(void)
 	// set up leave list arrays for dismissed mercs
 	InitLeaveList( );
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\group_confirm_tactical.sti", &guiUpdatePanelTactical));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/group_confirm_tactical.sti", &guiUpdatePanelTactical));
 
 	return TRUE;
 }
@@ -3045,57 +3045,57 @@ UINT32 MapScreenHandle(void)
 		 // Grab the Map image
 
 #ifndef JA2DEMO
-		guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx");
+		guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 		CHECKF(guiBIGMAP != NO_VSURFACE);
 #endif
 
-		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE\\popupbackground.pcx");
+		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
 		CHECKF(guiPOPUPTEX != NO_VSURFACE);
 
 #ifndef JA2DEMO
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\SAM.sti", &guiSAMICON));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/SAM.sti", &guiSAMICON));
 #endif
-			// CHECKF(AddVideoObjectFromFile("INTERFACE\\s_map.sti", &guiMAP));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
+			// CHECKF(AddVideoObjectFromFile("INTERFACE/s_map.sti", &guiMAP));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/mapcursr.sti", &guiMAPCURSORS));
 
 #ifndef JA2DEMO
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_1.sti", &guiSubLevel1));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_2.sti", &guiSubLevel2));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_3.sti", &guiSubLevel3));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_1.sti", &guiSubLevel1));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_2.sti", &guiSubLevel2));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_3.sti", &guiSubLevel3));
 #endif
-			//CHECKF(AddVideoObjectFromFile("INTERFACE\\addonslcp.sti", &guiCORNERADDONS));
-			//CHECKF(AddVideoObjectFromFile("INTERFACE\\mapborder.sti", &guiMAPBORDER));
+			//CHECKF(AddVideoObjectFromFile("INTERFACE/addonslcp.sti", &guiCORNERADDONS));
+			//CHECKF(AddVideoObjectFromFile("INTERFACE/mapborder.sti", &guiMAPBORDER));
 
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\sleepicon.sti", &guiSleepIcon));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\charinfo.sti", &guiCHARINFO));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\newgoldpiece3.sti", &guiCHARLIST));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/sleepicon.sti", &guiSleepIcon));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/charinfo.sti", &guiCHARINFO));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti", &guiCHARLIST));
 
-			//CHECKF(AddVideoObjectFromFile("INTERFACE\\mapbordercorner.sti", &guiMAPCORNER));
-			//CHECKF(AddVideoObjectFromFile("INTERFACE\\popup.sti", &guiPOPUPBORDERS));
+			//CHECKF(AddVideoObjectFromFile("INTERFACE/mapbordercorner.sti", &guiMAPCORNER));
+			//CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
 
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\boxes.sti", &guiCHARICONS));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\incross.sti", &guiCROSS));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\mapinv.sti", &guiMAPINV));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\map_inv_2nd_gun_cover.sti", &guiMapInvSecondHandBlockout));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/boxes.sti", &guiCHARICONS));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/incross.sti", &guiCROSS));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/mapinv.sti", &guiMAPINV));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti", &guiMapInvSecondHandBlockout));
 
 		 // the upper left corner piece icons
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\top_left_corner_icons.sti", &guiULICONS));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\map_item.sti", &guiORTAICON));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\prison.sti", &guiTIXAICON));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_between_sector_icons.sti", &guiCHARBETWEENSECTORICONS));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_mvt_green_arrows.sti", &guiCHARBETWEENSECTORICONSCLOSE));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti", &guiULICONS));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/map_item.sti", &guiORTAICON));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/prison.sti", &guiTIXAICON));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/merc_between_sector_icons.sti", &guiCHARBETWEENSECTORICONS));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/merc_mvt_green_arrows.sti", &guiCHARBETWEENSECTORICONSCLOSE));
 
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\GreenArr.sti", &guiLEVELMARKER));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\Helicop.sti", &guiHelicopterIcon));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\eta_pop_up.sti", &guiMapBorderEtaPopUp));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\pos2.sti", &guiMapBorderHeliSectors));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/GreenArr.sti", &guiLEVELMARKER));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/Helicop.sti", &guiHelicopterIcon));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti", &guiMapBorderEtaPopUp));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/pos2.sti", &guiMapBorderHeliSectors));
 
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\secondary_gun_hidden.sti", &guiSecItemHiddenVO));
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\selectedchararrow.sti", &guiSelectedCharArrow));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti", &guiSecItemHiddenVO));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti", &guiSelectedCharArrow));
 
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\mine.sti", &guiMINEICON));
-			AddVideoObjectFromFile("INTERFACE\\hilite.sti", &guiSectorLocatorGraphicID);
-			CHECKF(AddVideoObjectFromFile("INTERFACE\\BullsEye.sti", &guiBULLSEYE));
+			CHECKF(AddVideoObjectFromFile("INTERFACE/mine.sti", &guiMINEICON));
+			AddVideoObjectFromFile("INTERFACE/hilite.sti", &guiSectorLocatorGraphicID);
+			CHECKF(AddVideoObjectFromFile("INTERFACE/BullsEye.sti", &guiBULLSEYE));
 
 			HandleLoadOfMapBottomGraphics( );
 
@@ -3106,7 +3106,7 @@ UINT32 MapScreenHandle(void)
 				LoadInventoryPoolGraphic( );
 
 			//Kris:  Added this because I need to blink the icons button.
-			AddVideoObjectFromFile("INTERFACE\\newemail.sti", &guiNewMailIcons);
+			AddVideoObjectFromFile("INTERFACE/newemail.sti", &guiNewMailIcons);
 		}
 
 
@@ -3138,7 +3138,7 @@ UINT32 MapScreenHandle(void)
 			}
 		}
 
-		CHECKF(AddVideoObjectFromFile("INTERFACE\\Bars.sti", &guiBrownBackgroundForTeamPanel));
+		CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
 
 		// we are in fact in the map, do not repeat this sequence
 		fInMapMode = TRUE;
@@ -3208,7 +3208,7 @@ UINT32 MapScreenHandle(void)
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButtonImage = LoadButtonImage( "INTERFACE\\contractbutton.sti" ,-1,0,-1,1,-1 );
+		giMapContractButtonImage = LoadButtonImage( "INTERFACE/contractbutton.sti" ,-1,0,-1,1,-1 );
 
 		// buttonmake
 		giMapContractButton= QuickCreateButton( giMapContractButtonImage, CONTRACT_X + 5, CONTRACT_Y - 1,
@@ -5949,9 +5949,9 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		UINT32 uiLaptopOn;
 
 		//Load a tiny graphic of the on screen and draw it to the buffer.
-		PlayJA2SampleFromFile("SOUNDS\\Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-		if (!AddVideoObjectFromFile("INTERFACE\\LaptopOn.sti", &uiLaptopOn))
-			AssertMsg( 0, "Failed to load data\\Interface\\LaptopOn.sti" );
+		PlayJA2SampleFromFile("SOUNDS/Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		if (!AddVideoObjectFromFile("INTERFACE/LaptopOn.sti", &uiLaptopOn))
+			AssertMsg( 0, "Failed to load data/Interface/LaptopOn.sti" );
 		BltVideoObjectFromIndex( FRAME_BUFFER, uiLaptopOn, 0, 465, 417);
 		InvalidateRegion( 465, 417, 480, 427 );
 		ExecuteBaseDirtyRectQueue( );
@@ -6407,7 +6407,7 @@ void CreateDestroyMapInvButton()
  {
 	 // create inventory button
   fOldShowInventoryFlag=TRUE;
-  //giMapInvButtonImage=  LoadButtonImage( "INTERFACE\\mapinv.sti" ,-1,1,-1,2,-1 );
+  //giMapInvButtonImage=  LoadButtonImage( "INTERFACE/mapinv.sti" ,-1,1,-1,2,-1 );
   //giMapInvButton= QuickCreateButton( giMapInvButtonImage, INV_BTN_X-1, INV_BTN_Y,
 						//				BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 						//				BUTTON_NO_CALLBACK, (GUI_CALLBACK)BtnINVCallback);
@@ -9652,7 +9652,7 @@ void CreateDestroyTrashCanRegion( void )
 							 MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
 
 		// done inventory button define
-		giMapInvButtonDoneImage = LoadButtonImage( "INTERFACE\\done_button2.sti" ,-1,0,-1,1,-1 );
+		giMapInvButtonDoneImage = LoadButtonImage( "INTERFACE/done_button2.sti" ,-1,0,-1,1,-1 );
     giMapInvDoneButton = QuickCreateButton( giMapInvButtonDoneImage, INV_BTN_X, INV_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)DoneInventoryMapBtnCallback );
@@ -9662,13 +9662,13 @@ void CreateDestroyTrashCanRegion( void )
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
 /*
-		giMapInvNextImage=  LoadButtonImage( "INTERFACE\\inventory_buttons.sti" ,-1,20,-1,22,-1 );
+		giMapInvNextImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,20,-1,22,-1 );
     giMapInvNext= QuickCreateButton( giMapInvNextImage, ( 2 ), ( 79 ) ,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)NextInventoryMapBtnCallback );
 
 
-		giMapInvPrevImage=  LoadButtonImage( "INTERFACE\\inventory_buttons.sti" ,-1,21,-1,23,-1 );
+		giMapInvPrevImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,21,-1,23,-1 );
     giMapInvPrev= QuickCreateButton( giMapInvPrevImage, ( 30 ) , ( 79 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)PrevInventoryMapBtnCallback );
@@ -9870,51 +9870,51 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 
 	fPreLoadedMapGraphics = TRUE;
 
-	guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE\\b_map.pcx");
+	guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 	CHECKF(guiBIGMAP != NO_VSURFACE);
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapcursr.sti", &guiMAPCURSORS));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\SAM.sti", &guiSAMICON));
-	// CHECKF(AddVideoObjectFromFile("INTERFACE\\s_map.sti", &guiMAP));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\sleepicon.sti", &guiSleepIcon));
-	//CHECKF(AddVideoObjectFromFile("INTERFACE\\addonslcp.sti", &guiCORNERADDONS));
-	//CHECKF(AddVideoObjectFromFile("INTERFACE\\mapborder.sti", &guiMAPBORDER));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\charinfo.sti", &guiCHARINFO));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\newgoldpiece3.sti", &guiCHARLIST));
-	//CHECKF(AddVideoObjectFromFile("INTERFACE\\mapbordercorner.sti", &guiMAPCORNER));
-	// CHECKF(AddVideoObjectFromFile("INTERFACE\\popup.sti", &guiPOPUPBORDERS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/mapcursr.sti", &guiMAPCURSORS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/SAM.sti", &guiSAMICON));
+	// CHECKF(AddVideoObjectFromFile("INTERFACE/s_map.sti", &guiMAP));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/sleepicon.sti", &guiSleepIcon));
+	//CHECKF(AddVideoObjectFromFile("INTERFACE/addonslcp.sti", &guiCORNERADDONS));
+	//CHECKF(AddVideoObjectFromFile("INTERFACE/mapborder.sti", &guiMAPBORDER));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/charinfo.sti", &guiCHARINFO));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti", &guiCHARLIST));
+	//CHECKF(AddVideoObjectFromFile("INTERFACE/mapbordercorner.sti", &guiMAPCORNER));
+	// CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
 
 	// the sublevels
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_1.sti", &guiSubLevel1));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_2.sti", &guiSubLevel2));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Mine_3.sti", &guiSubLevel3));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\boxes.sti", &guiCHARICONS));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\incross.sti", &guiCROSS));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\mapinv.sti", &guiMAPINV));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_inv_2nd_gun_cover.sti", &guiMapInvSecondHandBlockout));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_1.sti", &guiSubLevel1));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_2.sti", &guiSubLevel2));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Mine_3.sti", &guiSubLevel3));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/boxes.sti", &guiCHARICONS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/incross.sti", &guiCROSS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/mapinv.sti", &guiMAPINV));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti", &guiMapInvSecondHandBlockout));
 
 	// the upper left corner piece icons
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\top_left_corner_icons.sti", &guiULICONS));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\prison.sti", &guiTIXAICON));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti", &guiULICONS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/prison.sti", &guiTIXAICON));
 
 	HandleLoadOfMapBottomGraphics( );
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\map_item.sti", &guiORTAICON));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_between_sector_icons.sti", &guiCHARBETWEENSECTORICONS));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\merc_mvt_green_arrows.sti", &guiCHARBETWEENSECTORICONSCLOSE));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/map_item.sti", &guiORTAICON));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/merc_between_sector_icons.sti", &guiCHARBETWEENSECTORICONS));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/merc_mvt_green_arrows.sti", &guiCHARBETWEENSECTORICONSCLOSE));
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\GreenArr.sti", &guiLEVELMARKER));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\Helicop.sti", &guiHelicopterIcon));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\eta_pop_up.sti", &guiMapBorderEtaPopUp));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\pos2.sti", &guiMapBorderHeliSectors));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\secondary_gun_hidden.sti", &guiSecItemHiddenVO));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\selectedchararrow.sti", &guiSelectedCharArrow));
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\mine.sti", &guiMINEICON));
-	AddVideoObjectFromFile("INTERFACE\\hilite.sti", &guiSectorLocatorGraphicID );
+	CHECKF(AddVideoObjectFromFile("INTERFACE/GreenArr.sti", &guiLEVELMARKER));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/Helicop.sti", &guiHelicopterIcon));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti", &guiMapBorderEtaPopUp));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/pos2.sti", &guiMapBorderHeliSectors));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti", &guiSecItemHiddenVO));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti", &guiSelectedCharArrow));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/mine.sti", &guiMINEICON));
+	AddVideoObjectFromFile("INTERFACE/hilite.sti", &guiSectorLocatorGraphicID );
 
 	//Kris:  Added this because I need to blink the icons button.
-	AddVideoObjectFromFile("INTERFACE\\newemail.sti", &guiNewMailIcons);
+	AddVideoObjectFromFile("INTERFACE/newemail.sti", &guiNewMailIcons);
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE\\BullsEye.sti", &guiBULLSEYE));
+	CHECKF(AddVideoObjectFromFile("INTERFACE/BullsEye.sti", &guiBULLSEYE));
 
 	// graphic for pool inventory
 	LoadInventoryPoolGraphic( );
@@ -10105,7 +10105,7 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 	if( ( fInMapMode == TRUE ) && ( fCreated == FALSE ) )
 	{
 		// set the button image
-		giCharInfoButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
+		giCharInfoButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
 
 #ifndef JA2DEMO
 
@@ -10122,7 +10122,7 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 
 #endif
 			// set the button image
-		giCharInfoButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE\\map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
+		giCharInfoButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
 
 #ifndef JA2DEMO
 		// set the button value

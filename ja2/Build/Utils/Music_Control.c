@@ -42,21 +42,21 @@ INT8		gbFadeSpeed = 1;
 
 const char *szMusicList[NUM_MUSIC]=
 {
-	"MUSIC\\marimbad 2.wav",
-	"MUSIC\\menumix1.wav",
-	"MUSIC\\nothing A.wav",
-	"MUSIC\\nothing B.wav",
-	"MUSIC\\nothing A.wav",
-	"MUSIC\\nothing B.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\triumph.wav",
-	"MUSIC\\death.wav",
-	"MUSIC\\battle A.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\creepy.wav",
-	"MUSIC\\creature battle.wav",
+	"MUSIC/marimbad 2.wav",
+	"MUSIC/menumix1.wav",
+	"MUSIC/nothing A.wav",
+	"MUSIC/nothing B.wav",
+	"MUSIC/nothing A.wav",
+	"MUSIC/nothing B.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/triumph.wav",
+	"MUSIC/death.wav",
+	"MUSIC/battle A.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/creepy.wav",
+	"MUSIC/creature battle.wav",
 };
 
 
@@ -64,21 +64,21 @@ const char *szMusicList[NUM_MUSIC]=
 
 const char *szMusicList[NUM_MUSIC]=
 {
-	"MUSIC\\marimbad 2.wav",
-	"MUSIC\\menumix1.wav",
-	"MUSIC\\nothing A.wav",
-	"MUSIC\\nothing B.wav",
-	"MUSIC\\nothing C.wav",
-	"MUSIC\\nothing D.wav",
-	"MUSIC\\tensor A.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\tensor C.wav",
-	"MUSIC\\triumph.wav",
-	"MUSIC\\death.wav",
-	"MUSIC\\battle A.wav",
-	"MUSIC\\tensor B.wav",
-	"MUSIC\\creepy.wav",
-	"MUSIC\\creature battle.wav",
+	"MUSIC/marimbad 2.wav",
+	"MUSIC/menumix1.wav",
+	"MUSIC/nothing A.wav",
+	"MUSIC/nothing B.wav",
+	"MUSIC/nothing C.wav",
+	"MUSIC/nothing D.wav",
+	"MUSIC/tensor A.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/tensor C.wav",
+	"MUSIC/triumph.wav",
+	"MUSIC/death.wav",
+	"MUSIC/battle A.wav",
+	"MUSIC/tensor B.wav",
+	"MUSIC/creepy.wav",
+	"MUSIC/creature battle.wav",
 };
 
 #endif

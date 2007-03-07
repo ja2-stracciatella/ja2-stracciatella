@@ -132,13 +132,13 @@ BOOLEAN EnterFuneral()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiClosedSign));
 
 	// load the Left column graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\LeftColumn.sti", &guiLeftColumn));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/LeftColumn.sti", &guiLeftColumn));
 
 	// load the Link carving graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\LinkCarving.sti", &guiLinkCarving));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/LinkCarving.sti", &guiLinkCarving));
 
 	// load the Marble graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\Marble.sti", &guiMarbleBackground));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/Marble.sti", &guiMarbleBackground));
 
 	// load the McGillicuttys sign graphic and add it
 	GetMLGFilename(ImageFile, MLG_MCGILLICUTTYS);
@@ -149,7 +149,7 @@ BOOLEAN EnterFuneral()
 	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMortuary));
 
 	// load the right column graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP\\RightColumn.sti", &guiRightColumn));
+	CHECKF(AddVideoObjectFromFile("LAPTOP/RightColumn.sti", &guiRightColumn));
 
 
 	usPosX = FUNERAL_LINK_1_X;

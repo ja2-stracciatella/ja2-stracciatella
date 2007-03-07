@@ -107,7 +107,7 @@ UINT32	MapUtilScreenHandle( )
 		if (giMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
-		if( GetFileFirst("MAPS\\*.dat", &FileInfo) )
+		if( GetFileFirst("MAPS/*.dat", &FileInfo) )
 		{
 			FileList = AddToFDlgList( FileList, &FileInfo );
 			sFiles++;
@@ -295,7 +295,7 @@ UINT32	MapUtilScreenHandle( )
 		}
 	}
 
-	sprintf( zFilename2, "RADARMAPS\\%s.STI", zFilename );
+	sprintf( zFilename2, "RADARMAPS/%s.STI", zFilename );
 	WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
 
 	UnLockVideoSurface(gi8BitMiniMap);

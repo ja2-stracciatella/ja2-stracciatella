@@ -119,7 +119,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\popupbuttons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
 			ubFontColor	= FONT_MCOLOR_WHITE;
 			ubFontShadowColor = DEFAULT_SHADOW;
 			usCursor = CURSOR_NORMAL;
@@ -131,7 +131,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= RED_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\msgboxRedButtons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxRedButtons.sti", -1,0,-1,1,-1 );
 
 			ubFontColor	= 2;
 			ubFontShadowColor = NO_SHADOW;
@@ -143,7 +143,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= BLUE_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\msgboxGreyButtons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxGreyButtons.sti", -1,0,-1,1,-1 );
 
 			ubFontColor	= 2;
 			ubFontShadowColor = FONT_MCOLOR_WHITE;
@@ -154,7 +154,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\msgboxGreyButtons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxGreyButtons.sti", -1,0,-1,1,-1 );
 
 			ubFontColor	= 2;
 			ubFontShadowColor = FONT_MCOLOR_WHITE;
@@ -166,7 +166,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\popupbuttons.sti", -1,2,-1,3,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,2,-1,3,-1 );
 			ubFontColor	= FONT_MCOLOR_WHITE;
 			ubFontShadowColor = DEFAULT_SHADOW;
 			usCursor = CURSOR_NORMAL;
@@ -178,7 +178,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= LAPTOP_POP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\popupbuttons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
 			ubFontColor	= FONT_MCOLOR_WHITE;
 			ubFontShadowColor = DEFAULT_SHADOW;
 			usCursor = CURSOR_LAPTOP_SCREEN;
@@ -189,7 +189,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 			ubMercBoxBorder			= BASIC_MERC_POPUP_BORDER;
 
 			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE\\msgboxbuttons.sti", -1,0,-1,1,-1 );
+			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxbuttons.sti", -1,0,-1,1,-1 );
 			ubFontColor	= FONT_MCOLOR_WHITE;
 			ubFontShadowColor = DEFAULT_SHADOW;
 			usCursor = CURSOR_NORMAL;

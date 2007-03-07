@@ -62,7 +62,7 @@ void CreateIMPAttributeEntranceButtons( void )
 {
 
 	// the begin button
-  giIMPAttributeEntranceButtonImage[0]=  LoadButtonImage( "LAPTOP\\button_2.sti" ,-1,0,-1,1,-1 );
+  giIMPAttributeEntranceButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
 	/*
 	giIMPAttributeEntranceButton[0] = QuickCreateButton( giIMPAttributeEntranceButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,

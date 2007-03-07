@@ -36,7 +36,7 @@ void InitJA2SplashScreen()
 	GetExecutableDirectory( CurrentDir );
 
 	// Adjust Current Dir
-	sprintf( DataDir, "%s\\Data", CurrentDir );
+	sprintf( DataDir, "%s/Data", CurrentDir );
 	if ( !SetFileManCurrentDirectory( DataDir ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
@@ -47,7 +47,7 @@ void InitJA2SplashScreen()
 	InitializeFileDatabase( gGameLibaries, NUMBER_OF_LIBRARIES );
 
 #if !defined( ENGLISH ) && defined( JA2TESTVERSION )
-	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS\\Notification.sti");
+	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS/Notification.sti");
 	if (uiLogoID == NO_VSURFACE)
 	{
 		AssertMsg( 0, String( "Failed to load %s", VSurfaceDesc.ImageFile ) );

@@ -133,15 +133,15 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
 		// use a copy of Herve's data file instead!
-		sprintf( zFileName, "NPCData\\%03d.npc", HERVE );
+		sprintf( zFileName, "NPCData/%03d.npc", HERVE );
 	}
 	else if ( ubNPC < FIRST_RPC || (ubNPC < FIRST_NPC && gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )
 	{
-		sprintf( zFileName, "NPCData\\000.npc", ubNPC );
+		sprintf( zFileName, "NPCData/000.npc", ubNPC );
 	}
 	else
 	{
-		sprintf( zFileName, "NPCData\\%03d.npc", ubNPC );
+		sprintf( zFileName, "NPCData/%03d.npc", ubNPC );
 	}
 
 	// ATE: Put some stuff i here to use a different NPC file if we are in a meanwhile.....
@@ -150,13 +150,13 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 		// If we are the queen....
 		if ( ubNPC == QUEEN )
 		{
-			sprintf( zFileName, "NPCData\\%03d.npc", gubAlternateNPCFileNumsForQueenMeanwhiles[ GetMeanwhileID( ) ] );
+			sprintf( zFileName, "NPCData/%03d.npc", gubAlternateNPCFileNumsForQueenMeanwhiles[ GetMeanwhileID( ) ] );
 		}
 
 		// If we are elliot....
 		if ( ubNPC == ELLIOT )
 		{
-			sprintf( zFileName, "NPCData\\%03d.npc", gubAlternateNPCFileNumsForElliotMeanwhiles[ GetMeanwhileID( ) ] );
+			sprintf( zFileName, "NPCData/%03d.npc", gubAlternateNPCFileNumsForElliotMeanwhiles[ GetMeanwhileID( ) ] );
 		}
 
 	}
@@ -368,11 +368,11 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 
   if ( ubIndex == MINERS_CIV_QUOTE_INDEX )
   {
-	  sprintf( zFileName, "NPCData\\miners.npc" );
+	  sprintf( zFileName, "NPCData/miners.npc" );
   }
   else
   {
-	  sprintf( zFileName, "NPCData\\%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
+	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
   }
 
 	CHECKN( FileExists( zFileName ) );
