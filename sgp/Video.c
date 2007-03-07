@@ -814,15 +814,14 @@ void RefreshScreen(void)
   if (gfPrintFrameBuffer)
   {
     FILE                  *OutputFile;
-    UINT8                  FileName[64];
     INT32                  iIndex;
 		STRING512			         ExecDir;
     UINT16                 *p16BPPData;
 
 		GetExecutableDirectory( ExecDir );
-		SetFileManCurrentDirectory( ExecDir );
 
-    sprintf(FileName, "SCREEN%03d.TGA", guiPrintFrameBufferIndex++);
+    char FileName[2048];
+    sprintf(FileName, "%s/SCREEN%03d.TGA", ExecDir, guiPrintFrameBufferIndex++);
     if ((OutputFile = fopen(FileName, "wb")) != NULL)
     {
       fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x02, 0xe0, 0x01, 0x10, 0);
@@ -868,9 +867,6 @@ void RefreshScreen(void)
     }
 
     gfPrintFrameBuffer = FALSE;
-
-		strcat( ExecDir, "/Data" );
-		SetFileManCurrentDirectory( ExecDir );
   }
 
 	if (guiMouseBufferState == BUFFER_DIRTY)
@@ -1344,11 +1340,10 @@ static void RefreshMovieCache(void)
 	PauseTime( TRUE );
 
 	GetExecutableDirectory( ExecDir );
-	SetFileManCurrentDirectory( ExecDir );
 
 	for ( cnt = 0; cnt < giNumFrames; cnt++ )
 	{
-		sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
+		sprintf(cFilename, "%s/JA%5.5d.TGA", ExecDir, uiPicNum++);
 
 		if( ( disk = fopen(cFilename, "wb"))==NULL )
 			return;
@@ -1379,7 +1374,4 @@ static void RefreshMovieCache(void)
 	PauseTime( FALSE );
 
 	giNumFrames = 0;
-
-	strcat( ExecDir, "/Data" );
-	SetFileManCurrentDirectory( ExecDir );
 }
