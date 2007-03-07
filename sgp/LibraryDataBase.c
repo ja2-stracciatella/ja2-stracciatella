@@ -179,6 +179,13 @@ static int CompareFileHeader(const void* a, const void* b)
 }
 
 
+// Replace all \ in a string by /
+static void Slashify(char* s)
+{
+	for (; *s != '\0'; s++) if (*s == '\\') *s = '/';
+}
+
+
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader, BOOLEAN fCanBeOnCDrom)
 {
 	FIXME
@@ -278,8 +285,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 			//copy the file name, offset and length into the header
 			strcpy( pLibHeader->pFileHeader[ uiCount ].pFileName, DirEntry.sFileName);
-			// XXX HACK0000
-			for (char* s = pLibHeader->pFileHeader[uiCount].pFileName; *s != '\0'; s++) if (*s == '\\') *s = '/';
+			Slashify(pLibHeader->pFileHeader[uiCount].pFileName);
 			pLibHeader->pFileHeader[ uiCount ].uiFileOffset = DirEntry.uiOffset;
 			pLibHeader->pFileHeader[ uiCount ].uiFileLength = DirEntry.uiLength;
 
@@ -303,8 +309,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 	{
 		pLibHeader->sLibraryPath = MemAlloc( strlen( LibFileHeader.sPathToLibrary ) + 1 );
 		strcpy( pLibHeader->sLibraryPath, LibFileHeader.sPathToLibrary );
-		// XXX HACK0000
-		for (char* s = pLibHeader->sLibraryPath; *s != '\0'; s++) if (*s == '\\') *s = '/';
+		Slashify(pLibHeader->sLibraryPath);
 	}
 	else
 	{
@@ -433,7 +438,7 @@ INT16 sLoop1, sBestMatch=-1;
 			if( strlen( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath ) == 0 )
 			{
 				//determine if there is a directory in the file name
-				if (strchr(pFileName, '\\') == NULL && strchr(pFileName, '/') == NULL)
+				if (strchr(pFileName, '/') == NULL)
 				{
 					//There is no directory in the file name
 					return( sLoop1 );
@@ -875,15 +880,8 @@ static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 {
 	UINT16 usLoop1=0;
 
-	const char* sTempName;
-	const char* sName;
-
-	FIXME
-	sName = pFileName;
-	while ((sTempName = strpbrk(sName, "/\\")) != NULL)
-	{
-		sName = sTempName + 1;
-	}
+	const char* sTempName = strrchr(pFileName, '/');
+	const char* sName = sTempName == NULL ? pFileName : sTempName + 1;
 
 	//loop through all the open files to see if 'new' file to open is already open
 	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
