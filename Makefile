@@ -471,5 +471,5 @@ lowercase:
 		"$(DATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
 		"$(DATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
 	do \
-		mv -n "$$i" "`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
+		mv "$$i" "`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
 	done
