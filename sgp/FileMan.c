@@ -35,40 +35,6 @@
 #include <unistd.h>
 
 
-// XXX HACK0000
-static char* PathBackslash(const char* path, const char* caller, int line)
-{
-	static char fixed[512];
-
-	const char* src = path;
-	char* dst = fixed;
-	int warn = 0;
-
-	do
-	{
-		if (*src == '\\')
-		{
-			warn = 1;
-			*dst++ = '/';
-		}
-		else
-		{
-			*dst++ = *src;
-		}
-	}
-	while (*src++ != '\0');
-
-	if (warn)
-	{
-		fprintf(stderr, "!!!> WARNING: Found \\ in path \"%s\" used in %s:%d\n", path, caller, line);
-	}
-
-	return fixed;
-}
-
-#define BACKSLASH(path) (path = PathBackslash(path, __func__, __LINE__))
-
-
 #define FILENAME_LENGTH					600
 
 #define CHECKF(exp)  if (!(exp)) { return(FALSE); }
@@ -195,8 +161,6 @@ void ShutdownFileManager( void )
 
 BOOLEAN FileExists(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 	BOOLEAN fExists = FileExistsNoDB(strFilename);
 	if (!fExists && gFileDataBase.fInitialized)
 	{
@@ -228,8 +192,6 @@ BOOLEAN FileExists(const char *strFilename)
 
 BOOLEAN FileExistsNoDB(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 	BOOLEAN	fExists = FALSE;
 	FILE		*file;
 	//HANDLE	hRealFile;
@@ -285,8 +247,6 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 
 BOOLEAN FileDelete(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 #if 1 // XXX TODO
 	return unlink(strFilename) == 0;
 #else
@@ -319,8 +279,6 @@ BOOLEAN FileDelete(const char *strFilename)
 
 HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 {
-	BACKSLASH(strFilename);
-
 	HWFILE	hFile;
 	FILE*	hRealFile;
 	const char* dwAccess;
@@ -685,8 +643,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 
 BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
 {
-	BACKSLASH(strFilename);
-
 	HWFILE	hFile;
 	UINT32	uiNumBytesRead;
 	BOOLEAN	fRet;
@@ -904,8 +860,6 @@ UINT32 FileGetSize( HWFILE hFile )
 
 BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory )
 {
-	BACKSLASH(pcDirectory);
-
 #if 1 // XXX TODO
 	return chdir(pcDirectory) == 0;
 #else
@@ -931,8 +885,6 @@ BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 
 BOOLEAN MakeFileManDirectory(const char *pcDirectory)
 {
-	BACKSLASH(pcDirectory);
-
 	return mkdir(pcDirectory, 0755) == 0;
 }
 
@@ -943,8 +895,6 @@ BOOLEAN MakeFileManDirectory(const char *pcDirectory)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
 {
-	BACKSLASH(pcDirectory);
-
 #if 1 // XXX TODO
 	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\", %s)\n", __FILE__, __LINE__, __func__, pcDirectory, fRecursive ? "TRUE" : "FALSE");
 	return FALSE;
@@ -1036,8 +986,6 @@ BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory(const char *pcDirectory)
 {
-	BACKSLASH(pcDirectory);
-
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
 #else
@@ -1127,8 +1075,6 @@ static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct);
 
 BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 {
-	BACKSLASH(pSpec);
-
 	INT32 x,iWhich=0;
 	BOOLEAN fFound;
 
@@ -1248,8 +1194,6 @@ static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct)
 
 UINT32 FileGetAttributes(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 #if 1 // XXX TODO
 	FIXME
 	UINT32 uiFileAttrib = 0;
@@ -1304,8 +1248,6 @@ UINT32 FileGetAttributes(const char *strFilename)
 
 BOOLEAN FileClearAttributes(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 #if 1 // XXX TODO
 	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\")\n", __FILE__, __LINE__, __func__, strFilename);
 	return FALSE;
@@ -1464,8 +1406,6 @@ INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFi
 
 UINT32 FileSize(const char *strFilename)
 {
-	BACKSLASH(strFilename);
-
 HWFILE hFile;
 UINT32 uiSize;
 

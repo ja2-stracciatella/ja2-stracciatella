@@ -2,7 +2,6 @@ high prio
 - TODO0001 implement blitters and related functions
 
 med prio
-- HACK0000 find a clean solution for the \ problem, convert all pathes to /
 - TODO0002 Investigate why ScrollJA2Background() does not work correctly
 
 low prio
