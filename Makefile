@@ -407,6 +407,8 @@ OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
 .SUFFIXES:
 .SUFFIXES: .c .cc .d .o
 
+Q ?= @
+
 all: ja
 
 ifndef NO_DEPS
@@ -419,27 +421,27 @@ endif
 
 ja: $(OBJS)
 	@echo '===> LD $@'
-	@$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
+	$(Q)$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
-	@$(CC) $(CCFLAGS) -c $< -o $@
+	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
 
 .cc.o:
 	@echo '===> CXX $<'
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .c.d:
 	@echo '===> DEP $<'
-	@$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+	$(Q)$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 .cc.d:
 	@echo '===> DEP $<'
-	@$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean:
 	@echo '===> CLEAN'
-	@rm -fr $(DEPS) $(OBJS) $(LNGS)
+	$(Q)rm -fr $(DEPS) $(OBJS) $(LNGS)
 
 ja2/Build/Utils/DutchText.c:       ja2/Build/Utils/_DutchText.c
 ja2/Build/Utils/EnglishText.c:     ja2/Build/Utils/_EnglishText.c
@@ -458,15 +460,15 @@ ja2/Build/Utils/ItalianText.c      \
 ja2/Build/Utils/JA25EnglishText.c  \
 ja2/Build/Utils/JA25GermanText.c:
 	@echo '===> ICONV $<'
-	@$(ICONV) -f ISO8859-15 -t UTF-8 < $< > $@
+	$(Q)$(ICONV) -f ISO8859-15 -t UTF-8 < $< > $@
 
 ja2/Build/Utils/PolishText.c:
 	@echo '===> ICONV $<'
-	@$(ICONV) -f CP1250 -t UTF-8 < $< > $@
+	$(Q)$(ICONV) -f CP1250 -t UTF-8 < $< > $@
 
 
 lowercase:
-	@for i in \
+	$(Q)for i in \
 		"$(DATADIR)"/Data/*.[Ss][Ll][Ff] \
 		"$(DATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
 		"$(DATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
