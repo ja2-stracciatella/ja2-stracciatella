@@ -329,11 +329,9 @@ BOOLEAN LoadTileSurfaces( char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID )
 	UINT32					uiPercentage;
 	//UINT32					uiLength;
 	//UINT16					uiFillColor;
-	STRING512				ExeDir;
 	STRING512				INIFile;
 
-	// Get Executable Directory
-	GetExecutableDirectory( ExeDir );
+	const char* ExeDir = GetExecutableDirectory();
 
 	// Adjust Current Dir
 	// CHECK IF DEFAULT INI OVERRIDE FILE EXISTS

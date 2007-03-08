@@ -81,7 +81,6 @@ static UINT32 CountDoubleByteStringsInFile(const char *filename);
 //the above define, searches for the files, and processes them automatically.
 BOOLEAN ProcessIfMultilingualCmdLineArgDetected( UINT8 *str )
 {
-	STRING512			ExecDir;
 	STRING512			CurrDir;
 	STRING512			Dir;
 	UINT32 uiEnglishStrings, uiForeignStrings;
@@ -92,13 +91,11 @@ BOOLEAN ProcessIfMultilingualCmdLineArgDetected( UINT8 *str )
 		return FALSE;
 	}
 
-	//Record the exe directory
-	GetExecutableDirectory( ExecDir );
 	//Record the curr directory used (we will restore before leaving)
 	GetFileManCurrentDirectory( CurrDir );
 
 	//Build the working directory name
-	sprintf( Dir, "%s/%s", ExecDir, LCG_WORKINGDIRECTORY );
+	sprintf(Dir, "%s/%s", GetExecutableDirectory(), LCG_WORKINGDIRECTORY);
 
 	//Set the working directory
 	if( !SetFileManCurrentDirectory( Dir ) )

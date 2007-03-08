@@ -1091,12 +1091,11 @@ BOOLEAN EraseDirectory(const char *pcDirectory)
 }
 
 
-BOOLEAN GetExecutableDirectory( STRING512 pcDirectory )
+const char* GetExecutableDirectory(void)
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(pcDirectory, LocalPath);
-	return TRUE;
+	return LocalPath;
 #else
 	SGPFILENAME	ModuleFilename;
 	UINT32 cnt;
@@ -1518,7 +1517,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 	FIXME
 	return 1024 * 1024 * 1024; // XXX TODO return an arbitrary number for now
 #else
-  STRING512		zExecDir;
   STRING512		zDrive;
 	STRING512		zDir;
 	STRING512		zFileName;
@@ -1526,10 +1524,8 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 
 	UINT32 uiFreeSpace = 0;
 
-	GetExecutableDirectory( zExecDir );
-
 	//get the drive letter from the exec dir
-	_splitpath( zExecDir, zDrive, zDir, zFileName, zExt);
+	_splitpath(GetExecutableDirectory(), zDrive, zDir, zFileName, zExt);
 
 	sprintf( zDrive, "%s\\", zDrive );
 

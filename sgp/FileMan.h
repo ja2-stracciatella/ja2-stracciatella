@@ -101,7 +101,7 @@ extern UINT32 FileSize(const char *strFilename);
 
 BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory);
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
-BOOLEAN GetExecutableDirectory( STRING512 pcDirectory );
+const char* GetExecutableDirectory(void);
 
 BOOLEAN MakeFileManDirectory(const char *pcDirectory);
 

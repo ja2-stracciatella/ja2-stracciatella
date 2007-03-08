@@ -815,11 +815,9 @@ void RefreshScreen(void)
   {
     FILE                  *OutputFile;
     INT32                  iIndex;
-		STRING512			         ExecDir;
     UINT16                 *p16BPPData;
 
-		GetExecutableDirectory( ExecDir );
-
+		const char* ExecDir = GetExecutableDirectory();
     char FileName[2048];
     sprintf(FileName, "%s/SCREEN%03d.TGA", ExecDir, guiPrintFrameBufferIndex++);
     if ((OutputFile = fopen(FileName, "wb")) != NULL)
@@ -1335,11 +1333,10 @@ static void RefreshMovieCache(void)
 	static UINT32 uiPicNum=0;
 	UINT16 *pDest;
 	INT32	cnt;
-	STRING512			ExecDir;
 
 	PauseTime( TRUE );
 
-	GetExecutableDirectory( ExecDir );
+	const char* ExecDir = GetExecutableDirectory();
 
 	for ( cnt = 0; cnt < giNumFrames; cnt++ )
 	{

@@ -1872,13 +1872,12 @@ void CreateGlobalSummary()
 {
 	FILE *fp;
 	STRING512			Dir;
-	STRING512			ExecDir;
 
 	OutputDebugString( "Generating GlobalSummary Information...\n" );
 
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2/DevInfo which contains all of the summary data
-	GetExecutableDirectory( ExecDir );
+	const char* ExecDir = GetExecutableDirectory();
 	sprintf( Dir, "%s/DevInfo", ExecDir );
 
 	//Directory doesn't exist, so create it, and continue.
@@ -2206,7 +2205,6 @@ void CalculateOverrideStatus()
 void LoadGlobalSummary()
 {
 	HWFILE	hfile;
-	STRING512			ExecDir;
 	STRING512			DevInfoDir;
 	STRING512			MapsDir;
 	UINT32 uiNumBytesRead;
@@ -2221,7 +2219,7 @@ void LoadGlobalSummary()
 	gusNumberOfMapsToBeForceUpdated = 0;
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2/DevInfo which contains all of the summary data
-	GetExecutableDirectory( ExecDir );
+	const char* ExecDir = GetExecutableDirectory();
 	sprintf( DevInfoDir, "%s/DevInfo", ExecDir );
 	sprintf( MapsDir, "%s/Data/Maps", ExecDir );
 
@@ -2403,11 +2401,10 @@ void LoadGlobalSummary()
 void GenerateSummaryList()
 {
 	FILE *fp;
-	STRING512			ExecDir;
 	STRING512			Dir;
 
 	//Set current directory to JA2/DevInfo which contains all of the summary data
-	GetExecutableDirectory( ExecDir );
+	const char* ExecDir = GetExecutableDirectory();
 	sprintf( Dir, "%s/DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
 	{
@@ -2433,13 +2430,12 @@ void GenerateSummaryList()
 void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
 {
 	FILE *fp;
-	STRING512			ExecDir;
 	STRING512			Dir;
 	UINT8					*ptr;
 	INT8 x, y;
 
 	//Set current directory to JA2/DevInfo which contains all of the summary data
-	GetExecutableDirectory( ExecDir );
+	const char* ExecDir = GetExecutableDirectory();
 	sprintf( Dir, "%s/DevInfo", ExecDir );
 	if( !SetFileManCurrentDirectory( Dir ) )
 		AssertMsg( 0, "JA2/DevInfo folder not found and should exist!");

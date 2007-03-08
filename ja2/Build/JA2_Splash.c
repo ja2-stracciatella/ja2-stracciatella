@@ -26,17 +26,14 @@ extern HVSURFACE ghFrameBuffer;
 void InitJA2SplashScreen()
 {
 	UINT32 uiLogoID = 0;
-	STRING512			CurrentDir;
 	STRING512			DataDir;
 	HVSURFACE hVSurface;
 	INT32 i = 0;
 
 	InitializeJA2Clock();
-	// Get Executable Directory
-	GetExecutableDirectory( CurrentDir );
 
 	// Adjust Current Dir
-	sprintf( DataDir, "%s/Data", CurrentDir );
+	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
 	if ( !SetFileManCurrentDirectory( DataDir ) )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
