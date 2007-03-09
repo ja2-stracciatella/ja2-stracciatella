@@ -118,6 +118,8 @@ BOOLEAN InitializeVideoManager(BOOLEAN video_fullscreen)
 	RegisterDebugTopic(TOPIC_VIDEO, "Video");
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
+	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
+
 	video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
 
 	if (video_fullscreen)
