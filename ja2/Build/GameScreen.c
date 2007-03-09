@@ -6,6 +6,7 @@
 	#include <stdio.h>
 	#include <stdarg.h>
 	#include <time.h>
+	#include "Local.h"
 	#include "SGP.h"
 	#include "Gameloop.h"
 	#include "VObject.h"
