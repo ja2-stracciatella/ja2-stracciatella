@@ -159,7 +159,7 @@ UINT32 MainGameScreenInit(void)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
-	gpZBuffer=InitZBuffer(1280, 480);
+	gpZBuffer=InitZBuffer(SCREEN_WIDTH * 2, 480);
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);

@@ -7,6 +7,7 @@
 #include "Handle_UI.h"
 #include "Interactive_Tiles.h"
 #include "Interface_Control.h"
+#include "Local.h"
 #include "Overhead.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
@@ -2109,7 +2110,7 @@ static void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 
 	if ( !gfDoVideoScroll )
 	{
 		// Clear z-buffer
-		memset(gpZBuffer, LAND_Z_LEVEL, 1280* gsVIEWPORT_END_Y );
+		memset(gpZBuffer, LAND_Z_LEVEL, gsVIEWPORT_END_Y * SCREEN_WIDTH * 2);
 
 		RenderStaticWorldRect( gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, FALSE );
 
@@ -2417,7 +2418,7 @@ static void RenderStaticWorld(void)
 	CalcRenderParameters( gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
 
 	// Clear z-buffer
-	memset(gpZBuffer, LAND_Z_LEVEL, 1280* gsVIEWPORT_END_Y );
+	memset(gpZBuffer, LAND_Z_LEVEL, gsVIEWPORT_END_Y * SCREEN_WIDTH * 2);
 
 	FreeBackgroundRectType(BGND_FLAG_ANIMATED);
 	InvalidateBackgroundRects();
@@ -7196,9 +7197,9 @@ static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
-	ZPtr = (UINT8 *)pZBuffer + (1280*iTempY) + (iTempX*2);
+	ZPtr = (UINT8*)(pZBuffer + iTempY * SCREEN_WIDTH + iTempX);
 	p16BPPPalette = hSrcVObject->pShadeCurrent;
-	LineSkip=(1280-(usWidth*2));
+	LineSkip = (SCREEN_WIDTH - usWidth) * 2;
 
 #if 1 // XXX TODO
 	do
