@@ -1463,7 +1463,6 @@ BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
 		hFile = FileOpen(zSavedGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 		if( !hFile )
 		{
-			FileClose( hFile );
 			gbSaveGameArray[ bEntry ] = FALSE;
 			return(FALSE);
 		}

@@ -3397,7 +3397,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
 		return;
 	}
@@ -3467,7 +3466,6 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
 		return;
 	}

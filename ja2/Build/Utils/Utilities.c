@@ -198,7 +198,6 @@ BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation )
 		if ( !hFile )
 		{
 			fFailed = TRUE;
-			FileClose( hFile );
       break;
 		}
 		FileClose( hFile );

@@ -1438,7 +1438,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	hFile = FileOpen(zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hFile )
 	{
-		FileClose( hFile );
 		guiSaveGameVersion=0;
 		return(FALSE);
 	}
@@ -4231,7 +4230,6 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
-		FileClose( hFile );
 		return;
 	}
 
@@ -4277,7 +4275,6 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
-		FileClose( hFile );
 		return;
 	}
 
@@ -4905,7 +4902,6 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 		hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 		if( !hFile )
 		{
-			FileClose( hFile );
 			return;
 		}
 
@@ -4944,7 +4940,6 @@ static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, 
 	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
-		FileClose( hFile );
 		return;
 	}
 

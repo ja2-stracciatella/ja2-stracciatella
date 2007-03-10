@@ -146,7 +146,6 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	hfile = FileOpen(ShadeFileName, FILE_ACCESS_READ);
 	if( !hfile )
 	{ //File doesn't exist, so generate it
-		FileClose( hfile );
 		return FALSE;
 	}
 
@@ -193,7 +192,6 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	hfile = FileOpen(ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hfile )
 	{
-		FileClose( hfile );
 		AssertMsg( 0, String( "Can't create %s", ShadeFileName ) );
 		return FALSE;
 	}

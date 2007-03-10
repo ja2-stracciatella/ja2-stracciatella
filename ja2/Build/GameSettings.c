@@ -75,7 +75,6 @@ BOOLEAN LoadGameSettings()
 		hFile = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 		if( !hFile )
 		{
-			FileClose( hFile );
 			InitGameSettings();
 			return(FALSE);
 		}
@@ -167,7 +166,6 @@ BOOLEAN	SaveGameSettings()
 	hFile = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hFile )
 	{
-		FileClose( hFile );
 		return(FALSE);
 	}
 

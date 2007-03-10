@@ -147,7 +147,6 @@ void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_WRITE);
 	if( !hFile )
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
 		return;
 	}
