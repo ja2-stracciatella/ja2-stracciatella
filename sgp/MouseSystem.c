@@ -1347,7 +1347,7 @@ static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 
 				SetFont( FONT10ARIAL );
 				SetFontForeground( FONT_BEIGE );
 			}
-			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(FONT10ARIAL)+1), L"%c", pToken[ i ] );
+			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(FONT10ARIAL)+1), L"%C", pToken[ i ] );
 		}
 		pToken = wcstok( NULL, L"\n", &Context);
 		iCounter++;
@@ -1491,7 +1491,7 @@ void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
 				SetFont( ghTinyMonoFont );
 				SetFontForeground( 2 );
 			}
-			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(ghTinyMonoFont)+1), L"%c", pToken[ i ] );
+			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(ghTinyMonoFont)+1), L"%C", pToken[ i ] );
 		}
 		pToken = wcstok( NULL, L"\n" );
 		iCounter++;
