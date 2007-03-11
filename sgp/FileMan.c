@@ -620,53 +620,6 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 	return(fRet);
 }
 
-//**************************************************************************
-//
-// FileLoad
-//
-//		To open, read, and close a file.
-//
-// Parameter List :
-//
-//
-// Return Value :
-//
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
-//
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//		08Dec97:ARM		-> return FALSE if bytes to read != bytes read (CHECKF is inappropriate?)
-//
-//**************************************************************************
-
-BOOLEAN FileLoad( STR strFilename, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
-{
-	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
-	BOOLEAN	fRet;
-
-	hFile = FileOpen(strFilename, FILE_ACCESS_READ);
-	if ( hFile )
-	{
-		fRet = FileRead( hFile, pDest, uiBytesToRead, &uiNumBytesRead );
-		FileClose( hFile );
-
-		if (uiBytesToRead != uiNumBytesRead)
-			fRet = FALSE;
-
-		if ( puiBytesRead )
-			*puiBytesRead = uiNumBytesRead;
-
-		CHECKF( uiNumBytesRead == uiBytesToRead );
-	}
-	else
-		fRet = FALSE;
-
-	return(fRet);
-}
-
 
 //**************************************************************************
 //
