@@ -30,7 +30,6 @@
 #include "OppList.h"
 #include "AI.h"
 #include "Interface.h"
-#include "Lighting.h"
 #include "Faces.h"
 #include "Soldier_Profile.h"
 #include "Gap.h"

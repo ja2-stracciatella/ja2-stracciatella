@@ -35,7 +35,6 @@
 #include "ScreenIDs.h"
 #include "Interface_Cursors.h"
 #include "Weapons.h"
-#include "Lighting.h"
 #include "Handle_UI_Plan.h"
 #include "Structure.h"
 #include "Interface_Panels.h"

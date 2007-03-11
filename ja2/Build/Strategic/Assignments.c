@@ -49,7 +49,6 @@
 #include "Town_Militia.h"
 #include "Map_Screen_Interface_Border.h"
 #include "math.h"
-#include "SkillCheck.h"
 #include "Strategic_Pathing.h"
 #include "Game_Event_Hook.h"
 #include "Strategic_Event_Handler.h"

@@ -9,7 +9,6 @@
 #include "MouseSystem.h"
 #include "Button_System.h"
 #include "WCheck.h"
-#include "VSurface.h"
 #include "Input.h"
 #include "SysUtil.h"
 #include "Font.h"

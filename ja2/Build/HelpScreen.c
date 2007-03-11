@@ -11,8 +11,6 @@
 #include "Text.h"
 #include "Utilities.h"
 #include "WordWrap.h"
-#include "Font_Control.h"
-#include "Text.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "HelpScreen.h"
 #include "HelpScreenText.h"

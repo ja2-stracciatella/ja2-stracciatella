@@ -11,7 +11,6 @@
 #include "Isometric_Utils.h"
 #include "Font_Control.h"
 #include "AI.h"
-#include "Interface.h"
 #include "Message.h"
 #include "Text.h"
 #include "TeamTurns.h"
@@ -35,9 +34,6 @@
 #include "SkillCheck.h"
 #include "AIInternals.h"
 #include "AIList.h"
-#ifdef DEBUG_INTERRUPTS
-#	include "Debug.h"
-#endif
 #include "RenderWorld.h"
 #include "Rotting_Corpses.h"
 #include "Squads.h"

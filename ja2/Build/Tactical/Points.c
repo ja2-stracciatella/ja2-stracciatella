@@ -6,7 +6,6 @@
 #include "Interface.h"
 #include "Isometric_Utils.h"
 #include "PathAI.h"
-#include "Interface.h"
 #include "Message.h"
 #include "Animation_Control.h"
 #include "Weapons.h"

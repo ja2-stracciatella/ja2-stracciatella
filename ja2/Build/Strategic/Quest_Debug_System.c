@@ -20,7 +20,6 @@
 #include "Soldier_Add.h"
 #include "OppList.h"
 #include "Handle_Items.h"
-#include "Game_Clock.h"
 #include "Environment.h"
 #include "Dialogue_Control.h"
 #include "Soldier_Control.h"

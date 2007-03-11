@@ -1,7 +1,6 @@
 #include "Types.h"
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdarg.h>
 #include <wchar.h>
 #include "SGP.h"
 #include "PCX.h"

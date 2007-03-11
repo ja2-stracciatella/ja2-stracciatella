@@ -14,7 +14,6 @@
 #include "Interface_Cursors.h"
 #include "Interface.h"
 #include "Isometric_Utils.h"
-#include "Cursors.h"
 #include "Sys_Globals.h"
 #include "Overhead.h"
 #include "Interface_Items.h"

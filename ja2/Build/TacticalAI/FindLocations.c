@@ -18,7 +18,6 @@
 #include "Text.h"
 #include "Structure_Wrap.h"
 #ifdef _DEBUG
-#	include "RenderWorld.h"
 #	include "Video.h"
 #endif
 #include "WorldMan.h"

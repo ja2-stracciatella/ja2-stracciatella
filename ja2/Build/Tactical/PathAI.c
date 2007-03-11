@@ -36,7 +36,6 @@
 #include "GameSettings.h"
 #include "Buildings.h"
 #include "Stubs.h" // XXX
-#include "PathAIDebug.h"
 
 
 //extern UINT8 gubDiagCost[20];

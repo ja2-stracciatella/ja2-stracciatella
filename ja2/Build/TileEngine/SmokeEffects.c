@@ -10,7 +10,6 @@
 #include "WorldMan.h"
 #include "Animation_Control.h"
 #include "Tile_Animation.h"
-#include "Handle_Items.h"
 #include "SmokeEffects.h"
 #include "Message.h"
 #include "Isometric_Utils.h"

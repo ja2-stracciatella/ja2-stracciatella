@@ -62,7 +62,6 @@
 #include "Scheduling.h"
 #include "Road_Smoothing.h"
 #include "StrategicMap.h"
-#include "Message.h"
 #include "Pits.h"
 #include "Inventory_Choosing.h"
 #include "Music_Control.h"

@@ -23,7 +23,6 @@
 #include "Game_Init.h"
 #include "Utilities.h"
 #include "WordWrap.h"
-#include "Font_Control.h"
 #include "Text.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Encrypted_File.h"

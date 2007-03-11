@@ -3,7 +3,6 @@
 #include "Soldier_Profile.h"
 #include "Drugs_And_Alcohol.h"
 #include "Items.h"
-#include "Drugs_And_Alcohol.h"
 #include "Morale.h"
 #include "Points.h"
 #include "Message.h"

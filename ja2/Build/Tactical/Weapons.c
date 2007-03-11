@@ -33,7 +33,6 @@
 #include "Bullets.h"
 #include "Morale.h"
 #include "Meanwhile.h"
-#include "SkillCheck.h"
 #include "GameSettings.h"
 #include "SaveLoadMap.h"
 #include "Soldier_Macros.h"

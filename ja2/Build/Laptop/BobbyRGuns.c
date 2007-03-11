@@ -13,7 +13,6 @@
 #include "Finances.h"
 #include "AIMMembers.h"
 #include "Overhead.h"
-#include "Text.h"
 #include "Weapons.h"
 #include "Button_System.h"
 #include "Video.h"

@@ -5,7 +5,6 @@
 #include "WorldMan.h"
 #include "Structure_Wrap.h"
 #include "Isometric_Utils.h"
-#include "WorldMan.h"
 #include "Overhead.h"
 #include "RenderWorld.h"
 #include "StrategicMap.h"

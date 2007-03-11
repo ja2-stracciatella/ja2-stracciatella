@@ -8,7 +8,6 @@
 #include "Music_Control.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
-#include "Text.h"
 #include "PopUpBox.h"
 #include "Cursors.h"
 #include "Strategic_Exit_GUI.h"

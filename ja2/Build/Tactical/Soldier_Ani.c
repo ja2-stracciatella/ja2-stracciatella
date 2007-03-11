@@ -27,7 +27,6 @@
 #include "Physics.h"
 #include "Soldier_Create.h"
 #include "Dialogue_Control.h"
-#include "Soldier_Functions.h"
 #include "Rotting_Corpses.h"
 #include "Merc_Entering.h"
 #include "Soldier_Add.h"

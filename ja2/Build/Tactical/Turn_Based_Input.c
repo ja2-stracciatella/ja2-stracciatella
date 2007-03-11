@@ -43,7 +43,6 @@
 #include "Interface_Items.h"
 #include "Physics.h"
 #include "UI_Cursors.h"
-#include "WorldMan.h"
 #include "StrategicMap.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Create.h"
@@ -51,7 +50,6 @@
 #include "Dialogue_Control.h"
 #include "Interface_Dialogue.h"
 #include "OppList.h"
-#include "Interactive_Tiles.h"
 #include "MessageBoxScreen.h"
 #include "Gameloop.h"
 #include "GameScreen.h"
@@ -76,7 +74,6 @@
 #include "Game_Events.h"
 #include "English.h"
 #include "Random.h"
-#include "Assignments.h"
 #include "Map_Screen_Interface.h"
 #include "RenderWorld.h"
 #include "Quest_Debug_System.h"
@@ -104,7 +101,6 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Items.h"
-#include "Quest_Debug_System.h"
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"

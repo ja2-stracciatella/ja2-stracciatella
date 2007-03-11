@@ -9,7 +9,6 @@
 #include "Interface_Control.h"
 #include "SysUtil.h"
 #include "Faces.h"
-#include "Render_Dirty.h"
 #include "Weapons.h"
 #include "Overhead.h"
 #include "Soldier_Macros.h"

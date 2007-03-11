@@ -35,7 +35,6 @@
 #include "Tile_Cache.h"
 #include "StrategicMap.h"
 #include "Map_Information.h"
-#include "Laptop.h"
 #include "Shade_Table_Util.h"
 #include "Exit_Grids.h"
 #include "Summary_Info.h"

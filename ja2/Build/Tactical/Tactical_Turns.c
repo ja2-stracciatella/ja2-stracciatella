@@ -5,7 +5,6 @@
 #include "Timer_Control.h"
 #include "Overhead.h"
 #include "Environment.h"
-#include "Game_Clock.h"
 #include "Message.h"
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"

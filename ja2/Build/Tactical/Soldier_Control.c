@@ -73,7 +73,6 @@
 #include "Morale.h"
 #include "Meanwhile.h"
 #include "Drugs_And_Alcohol.h"
-#include "SkillCheck.h"
 #include "Boxing.h"
 #include "Overhead_Map.h"
 #include "Map_Information.h"

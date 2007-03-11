@@ -7,8 +7,6 @@
 #include "Text_Input.h"
 #include "WordWrap.h"
 #include "SaveLoadScreen.h"
-#include "Render_Dirty.h"
-#include "WordWrap.h"
 #include "WCheck.h"
 #include "Utilities.h"
 #include "Slider.h"

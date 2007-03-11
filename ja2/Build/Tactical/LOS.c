@@ -12,7 +12,6 @@
 #include "Overhead.h"
 #include "Weapons.h"
 #include "OppList.h"
-#include "Soldier_Control.h"
 #include "Bullets.h"
 #include "Phys_Math.h"
 #include "Items.h"

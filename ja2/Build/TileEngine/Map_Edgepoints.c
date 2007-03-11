@@ -1704,7 +1704,6 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 }
 
 #ifdef JA2BETAVERSION
-#include "WorldMan.h"
 #include "Message.h"
 void ShowMapEdgepoints()
 {

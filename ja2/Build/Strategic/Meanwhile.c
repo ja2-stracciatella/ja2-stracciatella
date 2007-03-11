@@ -14,7 +14,6 @@
 #include "Overhead.h"
 #include "Dialogue_Control.h"
 #include "Gameloop.h"
-#include "NPC.h"
 #include "Assignments.h"
 #include "Strategic.h"
 #include "Text.h"

@@ -36,7 +36,6 @@
 #include "Rotting_Corpses.h"
 #include "Keys.h"
 #include "Map_Information.h"
-#include "Exit_Grids.h"
 #include "Summary_Info.h"
 #include "Animated_ProgressBar.h"
 #include "PathAI.h"

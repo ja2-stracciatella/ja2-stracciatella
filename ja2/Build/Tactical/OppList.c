@@ -33,7 +33,6 @@
 #include "Campaign.h"
 #include "Soldier_Init_List.h"
 #include "Music_Control.h"
-#include "Soldier_Profile.h"
 #include "StrategicMap.h"
 #include "Quests.h"
 #include "Meanwhile.h"

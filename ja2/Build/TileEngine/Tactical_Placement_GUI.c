@@ -10,7 +10,6 @@
 #include "Line.h"
 #include "Tactical_Placement_GUI.h"
 #include "Overhead_Map.h"
-#include "StrategicMap.h"
 #include "Interface.h"
 #include "Font_Control.h"
 #include "Overhead.h"

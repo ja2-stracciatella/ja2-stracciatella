@@ -8,7 +8,6 @@
 #include <math.h>
 #include <time.h>
 #include "JAScreens.h"
-#include "WorldDef.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Interface_Panels.h"
@@ -49,7 +48,6 @@
 #include "Animation_Control.h"
 #include "Squads.h"
 #include "WorldMan.h"
-#include "Overhead.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Queen_Command.h"
 #include "Cursor_Control.h"
@@ -68,7 +66,6 @@
 #include "Event_Pump.h"
 #include "Meanwhile.h"
 #include "Air_Raid.h"
-#include "Strategic_Mines.h"
 #include "Creature_Spreading.h"
 #include "SaveLoadMap.h"
 #include "Militia_Control.h"
@@ -351,7 +348,6 @@ void CrippledVersionFailureToLoadMapCheck();
 	UINT32 uiNumTablesSaved;
 	UINT32 uiNumTablesLoaded;
 	UINT32 uiNumImagesReloaded;
-	#include "Render_Dirty.h"
 	#include "TileDat.h"
 #endif
 

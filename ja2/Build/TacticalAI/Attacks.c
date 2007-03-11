@@ -1,5 +1,4 @@
 #include "AI.h"
-#include "Weapons.h"
 #include "OppList.h"
 #include "AIInternals.h"
 #include "LOS.h"

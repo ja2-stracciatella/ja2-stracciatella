@@ -18,7 +18,6 @@
 #include "Tactical_Save.h"
 #include "Campaign_Types.h"
 #include "LOS.h"
-#include "OppList.h"
 #include "TileDat.h"
 #include "Overhead.h"
 #include "Structure.h"

@@ -17,7 +17,6 @@
 #include "Tactical_Save.h"
 #include "Interface.h"
 #include "GameSettings.h"
-#include "MapScreen.h"
 #include "Interface_Control.h"
 #include "Fade_Screen.h"
 #include "JA2_Demo_Ads.h"

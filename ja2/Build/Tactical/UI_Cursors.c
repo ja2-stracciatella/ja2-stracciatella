@@ -14,7 +14,6 @@
 #include "UI_Cursors.h"
 #include "LOS.h"
 #include "Interface.h"
-#include "UI_Cursors.h"
 #include "Cursors.h"
 #include "Cursor_Control.h"
 #include "Structure_Wrap.h"

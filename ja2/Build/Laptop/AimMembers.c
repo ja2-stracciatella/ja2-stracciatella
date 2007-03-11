@@ -16,7 +16,6 @@
 #include "VSurface.h"
 #include "VObject.h"
 #include "Game_Clock.h"
-#include "Overhead.h"
 #include "Faces.h"
 #include "Dialogue_Control.h"
 #include "Text.h"

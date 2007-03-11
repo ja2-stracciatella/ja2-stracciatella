@@ -37,7 +37,6 @@
 #include "Interface_Control.h"
 #include "Interface_Utils.h"
 #include "Game_Clock.h"
-#include "MapScreen.h"
 #include "Soldier_Macros.h"
 #include "StrategicMap.h"
 #include "Soldier_Functions.h"

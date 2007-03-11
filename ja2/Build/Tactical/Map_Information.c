@@ -612,7 +612,6 @@ void ValidateAndUpdateMapVersionIfNecessary()
 }
 
 #ifdef JA2EDITOR
-#include "Exit_Grids.h"
 #include "Summary_Info.h"
 //This function is used to avoid conflicts between minor version updates and sector summary info.
 //By updating the summary info in conjunction with minor version updates, we can avoid these conflicts

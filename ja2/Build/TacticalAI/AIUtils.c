@@ -12,7 +12,6 @@
 #include "LOS.h"
 #include "Assignments.h"
 #include "Soldier_Functions.h"
-#include "Points.h"
 #include "GameSettings.h"
 #include "Buildings.h"
 #include "Soldier_Macros.h"
