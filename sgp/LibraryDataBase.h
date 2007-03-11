@@ -6,9 +6,6 @@
 
 #define	FILENAME_SIZE									256
 
-//#define	FILENAME_SIZE									40 + PATH_SIZE
-#define	PATH_SIZE											80
-
 
 #define NUM_FILES_TO_ADD_AT_A_TIME		20
 #define INITIAL_NUM_HANDLES						20
@@ -48,8 +45,6 @@ typedef struct
 extern LibraryInitHeader gGameLibaries[];
 extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
-
-#define		REAL_LIBRARY_FILE	"RealFiles.slf"
 
 typedef struct
 {
@@ -117,13 +112,6 @@ typedef struct
 	BOOLEAN	fInitialized;
 	RealFileHeaderStruct RealFiles;
 } DatabaseManagerHeaderStruct;
-
-
-
-
-
-//typedef UINT32	HLIBFILE;
-
 
 
 //*************************************************************************
