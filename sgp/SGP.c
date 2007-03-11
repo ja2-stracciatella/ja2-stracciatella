@@ -43,11 +43,6 @@ BOOLEAN						gfCapturingVideo = FALSE;
 #endif
 
 
-// Global Variable Declarations
-#ifdef WINDOWED_MODE
-RECT				rcWindow;
-#endif
-
 BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 static BOOLEAN gfGameInitialized = FALSE;
@@ -74,14 +69,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 			}
 
 #ifdef JA2
-#ifdef WINDOWED_MODE
-    case WM_MOVE:
-
-        GetClientRect(hWindow, &rcWindow);
-        ClientToScreen(hWindow, (LPPOINT)&rcWindow);
-        ClientToScreen(hWindow, (LPPOINT)&rcWindow+1);
-        break;
-#endif
 #else
 		case WM_MOUSEMOVE:
 			break;
