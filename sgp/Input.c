@@ -37,7 +37,7 @@ extern BOOLEAN gfApplicationActive;
 
 BOOLEAN   gfKeyState[256];			// TRUE = Pressed, FALSE = Not Pressed
 static BOOLEAN fCursorWasClipped = FALSE;
-static RECT    gCursorClipRect;
+static SGPRect gCursorClipRect;
 
 
 // The gsKeyTranslationTables basically translates scan codes to our own key value table. Please note that the table is 2 bytes
@@ -1503,7 +1503,7 @@ void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 void RestrictMouseCursor(SGPRect *pRectangle)
 {
   // Make a copy of our rect....
-  memcpy( &gCursorClipRect, pRectangle, sizeof( gCursorClipRect ) );
+	gCursorClipRect = *pRectangle;
 #if 1 // XXX TODO0000 Should probably removed completly. Confining the mouse cursor is The Wrong Thing(tm)
 #else
   ClipCursor((RECT *)pRectangle);
