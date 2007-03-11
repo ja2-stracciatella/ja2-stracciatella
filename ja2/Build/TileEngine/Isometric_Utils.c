@@ -1,25 +1,21 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include <stdio.h>
-	#include "Debug.h"
-	#include "WCheck.h"
-	#include "MouseSystem.h"
-	#include "JAScreens.h"
-	#include "WorldDef.h"
-	#include "RenderWorld.h"
-	#include "Isometric_Utils.h"
-	#include "Interface.h"
-	#include "math.h"
-	#include "WorldMan.h"
-	#include "Structure_Wrap.h"
-	#include "Sys_Globals.h"
-	#include "Overhead.h"
-	#include "Random.h"
-	#include "PathAI.h"
-	#include <stdlib.h>
-	#include "Stubs.h" // XXX
-#endif
+#include <stdio.h>
+#include "Debug.h"
+#include "WCheck.h"
+#include "MouseSystem.h"
+#include "JAScreens.h"
+#include "WorldDef.h"
+#include "RenderWorld.h"
+#include "Isometric_Utils.h"
+#include "Interface.h"
+#include "math.h"
+#include "WorldMan.h"
+#include "Structure_Wrap.h"
+#include "Sys_Globals.h"
+#include "Overhead.h"
+#include "Random.h"
+#include "PathAI.h"
+#include <stdlib.h>
+#include "Stubs.h" // XXX
 
 
 UINT32 guiForceRefreshMousePositionCalculation = 0;

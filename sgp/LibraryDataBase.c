@@ -1,26 +1,18 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include "FileMan.h"
-	#include "LibraryDataBase.h"
-	#include "MemMan.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include <string.h>
-#endif
+#include "Types.h"
+#include "FileMan.h"
+#include "LibraryDataBase.h"
+#include "MemMan.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include <string.h>
+
 
 //NUMBER_OF_LIBRARIES
 #ifdef JA2
-	#include	"JA2_Libs.c"
-	#include	"GameSettings.h"
+#	include "JA2_Libs.c"
+#	include "GameSettings.h"
 #elif defined(UTIL)
 	LibraryInitHeader gGameLibaries[ ] = { 0 };
-#else
-// We link it as an .obj file
-//	#include "WizLibs.c"
 #endif
 
 

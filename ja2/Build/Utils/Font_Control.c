@@ -1,15 +1,12 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "HImage.h"
-	#include "VSurface.h"
-	#include "WCheck.h"
-	#include "Font_Control.h"
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "SGP.h"
+#include "HImage.h"
+#include "VSurface.h"
+#include "WCheck.h"
+#include "Font_Control.h"
+#include "MemMan.h"
 
 
 // Global variables for video objects

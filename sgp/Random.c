@@ -1,12 +1,7 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Random.h"
-	#include <stdlib.h>
-	#include <time.h>
-#endif
+#include "Random.h"
+#include <stdlib.h>
+#include <time.h>
+
 
 #ifdef PRERANDOM_GENERATOR
 

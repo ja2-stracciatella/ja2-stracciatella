@@ -1,18 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include <stdio.h>
-	#include "Types.h"
-	#include "Game_Events.h"
-	#include "Game_Clock.h"
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include "Font_Control.h"
-	#include "Message.h"
-	#include "Text.h"
-	#include <string.h>
-	#include "FileMan.h"
-#endif
+#include <stdio.h>
+#include "Types.h"
+#include "Game_Events.h"
+#include "Game_Clock.h"
+#include "MemMan.h"
+#include "Debug.h"
+#include "Font_Control.h"
+#include "Message.h"
+#include "Text.h"
+#include <string.h>
+#include "FileMan.h"
+
 
 #ifdef JA2TESTVERSION
 

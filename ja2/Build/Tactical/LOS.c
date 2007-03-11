@@ -1,47 +1,41 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <stdio.h>
+#include <stdio.h>
+#include <memory.h>
+#include <math.h>
+#include "WCheck.h"
+#include "Isometric_Utils.h"
+#include "Debug.h"
+#include "LOS.h"
+#include "Animation_Control.h"
+#include "Random.h"
+#include "Soldier_Control.h"
+#include "Event_Pump.h"
+#include "Overhead.h"
+#include "Weapons.h"
+#include "OppList.h"
+#include "Soldier_Control.h"
+#include "Bullets.h"
+#include "Phys_Math.h"
+#include "Items.h"
+#include "Soldier_Profile.h"
+#include "WorldMan.h"
+#include "Rotting_Corpses.h"
+#include "GameSettings.h"
+#include "Keys.h"
+#include "Message.h"
+#include "Structure_Wrap.h"
+#include "Campaign.h"
+#include "Environment.h"
+#include "PathAI.h"
+#include "Soldier_Macros.h"
+#include "StrategicMap.h"
+#include "Quests.h"
+#include "Interface.h"
+#include "Points.h"
+#include "Smell.h"
+#include "Text.h"
+#include <stdlib.h>
+#include "Stubs.h" // XXX
 
-	#include <memory.h>
-	#include <math.h>
-	#include "WCheck.h"
-	#include "Isometric_Utils.h"
-	#include "Debug.h"
-	#include "LOS.h"
-	#include "Animation_Control.h"
-	#include "Random.h"
-	#include "Soldier_Control.h"
-	#include "Event_Pump.h"
-	#include "Overhead.h"
-	#include "Weapons.h"
-
-	#include "OppList.h"
-	#include "Soldier_Control.h"
-	#include "Bullets.h"
-
-	#include "Phys_Math.h"
-	#include "Items.h"
-	#include "Soldier_Profile.h"
-	#include "WorldMan.h"
-	#include "Rotting_Corpses.h"
-	#include "GameSettings.h"
-	#include "Keys.h"
-	#include "Message.h"
-	#include "Structure_Wrap.h"
-	#include "Campaign.h"
-	#include "Environment.h"
-	#include "PathAI.h"
-	#include "Soldier_Macros.h"
-	#include "StrategicMap.h"
-	#include "Quests.h"
-	#include "Interface.h"
-	#include "Points.h"
-	#include "Smell.h"
-	#include "Text.h"
-	#include <stdlib.h>
-	#include "Stubs.h" // XXX
-#endif
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5

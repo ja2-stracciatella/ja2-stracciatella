@@ -1,10 +1,6 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Encrypted_File.h"
-	#include "FileMan.h"
-	#include "Debug.h"
-#endif
-
+#include "Encrypted_File.h"
+#include "FileMan.h"
+#include "Debug.h"
 #include "Language_Defines.h"
 
 

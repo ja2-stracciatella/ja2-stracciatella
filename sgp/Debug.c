@@ -19,38 +19,29 @@
 #define SGP_DEBUG
 
 
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	//#include <ddeml.h>
-	#include <stdio.h>
-	#include "Debug.h"
-	#include "WCheck.h"
-	#include "TopicIDs.h"
-	#include "TopicOps.h"
-	#include <string.h>
-	#include <stdarg.h>
-	#include <stdlib.h>
-
-	//Kris addition
-	#ifdef JA2
-		#include "ScreenIDs.h"
-		#include "Sys_Globals.h"
-		#include "JAScreens.h"
-		#include "Gameloop.h"
-		#include "Input.h"
-	#endif
-
-	// CJC added
-	#ifndef _NO_DEBUG_TXT
-		#include "FileMan.h"
-	#endif
-
-	#include "VObject.h"
+#include "Types.h"
+#include <stdio.h>
+#include "Debug.h"
+#include "WCheck.h"
+#include "TopicIDs.h"
+#include "TopicOps.h"
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+//Kris addition
+#ifdef JA2
+#	include "ScreenIDs.h"
+#	include "Sys_Globals.h"
+#	include "JAScreens.h"
+#	include "Gameloop.h"
+#	include "Input.h"
 #endif
+// CJC added
+#ifndef _NO_DEBUG_TXT
+#	include "FileMan.h"
+#endif
+#include "VObject.h"
+
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,32 +1,29 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "WorldDef.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "time.h"
-	#include "Debug.h"
-	#include "Smooth.h"
-	#include "WorldMan.h"
-	#include "Lighting.h"
-	#include "RenderWorld.h"
-	#include "Overhead.h"
-	#include "AI.h"
-	#include "Sound_Control.h"
-	#include "Animation_Control.h"
-	#include "Isometric_Utils.h"
-	#include "Font_Control.h"
-	#include "Message.h"
-	#include "Tile_Cache.h"
-	#include "Smoothing_Utils.h"
-	#include "SaveLoadMap.h"
-	#include "Random.h"
-	#include "Render_Fun.h"
-	#include "GameSettings.h"
-	#include "MemMan.h"
-#endif
+#include "WorldDef.h"
+#include <stdio.h>
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "time.h"
+#include "Debug.h"
+#include "Smooth.h"
+#include "WorldMan.h"
+#include "Lighting.h"
+#include "RenderWorld.h"
+#include "Overhead.h"
+#include "AI.h"
+#include "Sound_Control.h"
+#include "Animation_Control.h"
+#include "Isometric_Utils.h"
+#include "Font_Control.h"
+#include "Message.h"
+#include "Tile_Cache.h"
+#include "Smoothing_Utils.h"
+#include "SaveLoadMap.h"
+#include "Random.h"
+#include "Render_Fun.h"
+#include "GameSettings.h"
+#include "MemMan.h"
+
 
 extern BOOLEAN	gfBasement;
 

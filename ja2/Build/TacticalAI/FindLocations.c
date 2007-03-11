@@ -1,37 +1,33 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include <stdlib.h>
-	#include "Stubs.h" // XXX
-	#include "Isometric_Utils.h"
-	#include "AI.h"
-	#include "AIInternals.h"
-	#include "LOS.h"
-	#include "Weapons.h"
-	#include "OppList.h"
-	#include "PathAI.h"
-	#include "Items.h"
-	#include "World_Items.h"
-	#include "Points.h"
-	#include "Message.h"
-	#include "Map_Edgepoints.h"
-	#include "RenderWorld.h"
-	#include "Render_Fun.h"
-	#include "Boxing.h"
-	#include "Text.h"
-	#include "Structure_Wrap.h"
-	#ifdef _DEBUG
-		#include "RenderWorld.h"
-		#include "Video.h"
-	#endif
-	#include "WorldMan.h"
-	#include "StrategicMap.h"
-	#include "Environment.h"
-	#include "Lighting.h"
-	#include "Debug.h"
+#include <stdlib.h>
+#include "Stubs.h" // XXX
+#include "Isometric_Utils.h"
+#include "AI.h"
+#include "AIInternals.h"
+#include "LOS.h"
+#include "Weapons.h"
+#include "OppList.h"
+#include "PathAI.h"
+#include "Items.h"
+#include "World_Items.h"
+#include "Points.h"
+#include "Message.h"
+#include "Map_Edgepoints.h"
+#include "RenderWorld.h"
+#include "Render_Fun.h"
+#include "Boxing.h"
+#include "Text.h"
+#include "Structure_Wrap.h"
+#ifdef _DEBUG
+#	include "RenderWorld.h"
+#	include "Video.h"
 #endif
-
+#include "WorldMan.h"
+#include "StrategicMap.h"
+#include "Environment.h"
+#include "Lighting.h"
+#include "Debug.h"
 #include "PathAIDebug.h"
+
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];

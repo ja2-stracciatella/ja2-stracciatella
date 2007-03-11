@@ -1,31 +1,27 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "BobbyR.h"
-	#include "BobbyRGuns.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Interface_Items.h"
-	#include "Weapons.h"
-	#include "Store_Inventory.h"
-	#include "Game_Event_Hook.h"
-	#include "Game_Clock.h"
-	#include "LaptopSave.h"
-	#include "Random.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include <string.h>
-	#include "ArmsDealerInvInit.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include <stdlib.h>
-	#include "Debug.h"
-	#include "Font_Control.h"
-	#include "Items.h"
-#endif
+#include "Laptop.h"
+#include "BobbyR.h"
+#include "BobbyRGuns.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Interface_Items.h"
+#include "Weapons.h"
+#include "Store_Inventory.h"
+#include "Game_Event_Hook.h"
+#include "Game_Clock.h"
+#include "LaptopSave.h"
+#include "Random.h"
+#include "Text.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include <string.h>
+#include "ArmsDealerInvInit.h"
+#include "Video.h"
+#include "VSurface.h"
+#include <stdlib.h>
+#include "Debug.h"
+#include "Font_Control.h"
+#include "Items.h"
 
 
 #ifdef JA2TESTVERSION

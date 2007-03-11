@@ -1,29 +1,26 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "CharProfile.h"
-	#include "IMP_Personality_Quiz.h"
-	#include "IMP_MainPage.h"
-	#include "IMP_HomePage.h"
-	#include "IMPVideoObjects.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Render_Dirty.h"
-	#include "Encrypted_File.h"
-	#include "Cursors.h"
-	#include "Laptop.h"
-	#include "IMP_Compile_Character.h"
-	#include "Soldier_Profile_Type.h"
-	#include "IMP_Text_System.h"
-	#include "Input.h"
-	#include "English.h"
-	#include <string.h>
-	#include "Button_System.h"
-	#include "Stubs.h" // XXX
-	#include "Font_Control.h"
-#endif
+#include "CharProfile.h"
+#include "IMP_Personality_Quiz.h"
+#include "IMP_MainPage.h"
+#include "IMP_HomePage.h"
+#include "IMPVideoObjects.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Encrypted_File.h"
+#include "Cursors.h"
+#include "Laptop.h"
+#include "IMP_Compile_Character.h"
+#include "Soldier_Profile_Type.h"
+#include "IMP_Text_System.h"
+#include "Input.h"
+#include "English.h"
+#include <string.h>
+#include "Button_System.h"
+#include "Stubs.h" // XXX
+#include "Font_Control.h"
+
 
 UINT32 giIMPPersonalityQuizButton[ 2 ];
 UINT32 giIMPPersonalityQuizButtonImage[ 2 ];

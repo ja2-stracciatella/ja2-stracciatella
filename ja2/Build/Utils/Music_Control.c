@@ -1,21 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Types.h"
-	#include "Music_Control.h"
-	#include "SoundMan.h"
-	#include "Random.h"
-	#include "GameScreen.h"
-	#include "JAScreens.h"
-	#include "Creature_Spreading.h"
-	#include "Soldier_Control.h"
-	#include "Overhead.h"
-	#include "Timer_Control.h"
-	#include "StrategicMap.h"
-	#include "Fade_Screen.h"
-	#include "Debug.h"
-	#include "ScreenIDs.h"
-	#include "Stubs.h" // XXX
-#endif
+#include "Types.h"
+#include "Music_Control.h"
+#include "SoundMan.h"
+#include "Random.h"
+#include "GameScreen.h"
+#include "JAScreens.h"
+#include "Creature_Spreading.h"
+#include "Soldier_Control.h"
+#include "Overhead.h"
+#include "Timer_Control.h"
+#include "StrategicMap.h"
+#include "Fade_Screen.h"
+#include "Debug.h"
+#include "ScreenIDs.h"
+#include "Stubs.h" // XXX
 
 
 UINT32 uiMusicHandle=NO_SAMPLE;

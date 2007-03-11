@@ -1,20 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "BobbyRUsed.h"
-	#include "BobbyR.h"
-	#include "BobbyRGuns.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Text.h"
-	#include "LaptopSave.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-#endif
+#include "Laptop.h"
+#include "BobbyRUsed.h"
+#include "BobbyR.h"
+#include "BobbyRGuns.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Text.h"
+#include "LaptopSave.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+
 
 UINT32		guiUsedBackground;
 UINT32		guiUsedGrid;

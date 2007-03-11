@@ -1,41 +1,37 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "Gameloop.h"
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "VObject_Blitters.h"
-	#include "WCheck.h"
-	#include "WorldDef.h"
-	#include "RenderWorld.h"
-	#include "Input.h"
-	#include "Font.h"
-	#include "ScreenIDs.h"
-	#include "Overhead.h"
-	#include "Isometric_Utils.h"
-	#include "SysUtil.h"
-	#include "Font_Control.h"
-	#include "Radar_Screen.h"
-	#include "Soldier_Control.h"
-	#include "Animation_Control.h"
-	#include "Animation_Data.h"
-	#include "Event_Pump.h"
-	#include "Timer_Control.h"
-	#include "Render_Dirty.h"
-	#include "Sys_Globals.h"
-	#include "Interface.h"
-	#include "Soldier_Ani.h"
-	#include <wchar.h>
-	#include "English.h"
-	#include "FileMan.h"
-	#include "MessageBoxScreen.h"
-	#include "Video.h"
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "SGP.h"
+#include "Gameloop.h"
+#include "HImage.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "WCheck.h"
+#include "WorldDef.h"
+#include "RenderWorld.h"
+#include "Input.h"
+#include "Font.h"
+#include "ScreenIDs.h"
+#include "Overhead.h"
+#include "Isometric_Utils.h"
+#include "SysUtil.h"
+#include "Font_Control.h"
+#include "Radar_Screen.h"
+#include "Soldier_Control.h"
+#include "Animation_Control.h"
+#include "Animation_Data.h"
+#include "Event_Pump.h"
+#include "Timer_Control.h"
+#include "Render_Dirty.h"
+#include "Sys_Globals.h"
+#include "Interface.h"
+#include "Soldier_Ani.h"
+#include <wchar.h>
+#include "English.h"
+#include "FileMan.h"
+#include "MessageBoxScreen.h"
+#include "Video.h"
+#include "MemMan.h"
 
 
 void BuildListFile( );

@@ -1,25 +1,20 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "Types.h"
-	#include "stdlib.h"
-	#include "Arms_Dealer_Init.h"
-	#include <string.h>
-	#include "Debug.h"
-	#include "Random.h"
-	#include "Weapons.h"
-	#include "FileMan.h"
-	#include "Game_Clock.h"
-	#include "ArmsDealerInvInit.h"
-	#include "Message.h"
-	#include "Soldier_Profile.h"
-	#include "Handle_Items.h"
-	#include "Quests.h"
-	#include "Scheduling.h"
-	#include "MemMan.h"
-	#include "Items.h"
-#endif
-
+#include "Types.h"
+#include "stdlib.h"
+#include "Arms_Dealer_Init.h"
+#include <string.h>
+#include "Debug.h"
+#include "Random.h"
+#include "Weapons.h"
+#include "FileMan.h"
+#include "Game_Clock.h"
+#include "ArmsDealerInvInit.h"
+#include "Message.h"
+#include "Soldier_Profile.h"
+#include "Handle_Items.h"
+#include "Quests.h"
+#include "Scheduling.h"
+#include "MemMan.h"
+#include "Items.h"
 
 
 // To reduce memory fragmentation from frequent MemRealloc(), we allocate memory for more than one special slot each

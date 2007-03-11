@@ -1,24 +1,20 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "WorldDef.h"
-	#include "WorldDat.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include <strings.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "time.h"
-	#include "Debug.h"
-	#include "Smooth.h"
-	#include "WorldMan.h"
-	#include "MouseSystem.h"
-	#include "Sys_Globals.h"
-	#include "TileDat.h"
-	#include "FileMan.h"
-	#include "MemMan.h"
-	#include "Tile_Cache.h"
-#endif
+#include "WorldDef.h"
+#include "WorldDat.h"
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "time.h"
+#include "Debug.h"
+#include "Smooth.h"
+#include "WorldMan.h"
+#include "MouseSystem.h"
+#include "Sys_Globals.h"
+#include "TileDat.h"
+#include "FileMan.h"
+#include "MemMan.h"
+#include "Tile_Cache.h"
 
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];

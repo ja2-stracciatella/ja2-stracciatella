@@ -1,23 +1,18 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include <math.h>
-	#include <stdlib.h>
-	#include "Types.h"
-	#include "string.h"
-	#include "Debug.h"
-	#include "FileMan.h"
-	#include "HImage.h"
-	#include "ImpTGA.h"
-	#include "PCX.h"
-	#include "STCI.h"
-	#include "WCheck.h"
-	#include "Compression.h"
-	#include "VObject.h"
-	#include "MemMan.h"
-#endif
+#include <math.h>
+#include <stdlib.h>
+#include "Types.h"
+#include "string.h"
+#include "Debug.h"
+#include "FileMan.h"
+#include "HImage.h"
+#include "ImpTGA.h"
+#include "PCX.h"
+#include "STCI.h"
+#include "WCheck.h"
+#include "Compression.h"
+#include "VObject.h"
+#include "MemMan.h"
+
 
 // This is the color substituted to keep a 24bpp -> 16bpp color
 // from going transparent (0x0000) -- DB

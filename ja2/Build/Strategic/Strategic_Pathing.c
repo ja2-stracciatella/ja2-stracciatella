@@ -1,36 +1,32 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "Types.h"
-	#include "WorldDef.h"
-	#include "SGP.h"
-	#include "Strategic.h"
-	#include "MapScreen.h"
-	#include "Overhead.h"
-	#include "Interface_Panels.h"
-	#include "WorldMan.h"
-	#include "StrategicMap.h"
-	#include "Strategic_Pathing.h"
-	#include "Map_Screen_Interface_Border.h"
-	#include "Game_Clock.h"
-	#include "Strategic_Movement.h"
-	#include "Campaign_Types.h"
-	#include "Assignments.h"
-	#include "Squads.h"
-	#include "Vehicles.h"
-	#include "Map_Screen_Helicopter.h"
-	#include "Input.h"
-	#include "English.h"
-	#include "Map_Screen_Interface.h"
-	#include "Game_Event_Hook.h"
-	#include "Strategic_AI.h"
-	#include "Debug.h"
-	#include "MemMan.h"
-	#include <stdlib.h>
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "Types.h"
+#include "WorldDef.h"
+#include "SGP.h"
+#include "Strategic.h"
+#include "MapScreen.h"
+#include "Overhead.h"
+#include "Interface_Panels.h"
+#include "WorldMan.h"
+#include "StrategicMap.h"
+#include "Strategic_Pathing.h"
+#include "Map_Screen_Interface_Border.h"
+#include "Game_Clock.h"
+#include "Strategic_Movement.h"
+#include "Campaign_Types.h"
+#include "Assignments.h"
+#include "Squads.h"
+#include "Vehicles.h"
+#include "Map_Screen_Helicopter.h"
+#include "Input.h"
+#include "English.h"
+#include "Map_Screen_Interface.h"
+#include "Game_Event_Hook.h"
+#include "Strategic_AI.h"
+#include "Debug.h"
+#include "MemMan.h"
+#include <stdlib.h>
 
 
 void AddSectorToFrontOfMercPath( PathStPtr *ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY );

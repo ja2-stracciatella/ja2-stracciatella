@@ -1,20 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include	"Types.h"
-	#include	"WordWrap.h"
-	#include	"Render_Dirty.h"
-	#include	"Utilities.h"
-	#include	"Cursors.h"
-	#include	"WCheck.h"
-	#include	"Slider.h"
-	#include	"SysUtil.h"
-	#include	"Line.h"
-	#include	"Debug.h"
-	#include	"Video.h"
-	#include	"MemMan.h"
-	#include	"Button_System.h"
-	#include	"VSurface.h"
-#endif
+#include "Types.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Utilities.h"
+#include "Cursors.h"
+#include "WCheck.h"
+#include "Slider.h"
+#include "SysUtil.h"
+#include "Line.h"
+#include "Debug.h"
+#include "Video.h"
+#include "MemMan.h"
+#include "Button_System.h"
+#include "VSurface.h"
 
 
 #define		DEFUALT_SLIDER_SIZE					7

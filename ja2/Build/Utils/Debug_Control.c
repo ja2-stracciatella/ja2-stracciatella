@@ -1,10 +1,6 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Types.h"
-	#include "Debug_Control.h"
-	#include "stdio.h"
-#endif
-
+#include "Types.h"
+#include "Debug_Control.h"
+#include "stdio.h"
 
 
 #ifdef _ANIMSUBSYSTEM_DEBUG

@@ -1,16 +1,9 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include "PCX.h"
-	#include "MemMan.h"
-	#include "FileMan.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include "PCX.h"
+#include "MemMan.h"
+#include "FileMan.h"
 
-// Local typedefs
 
 #define PCX_NORMAL         1
 #define PCX_RLE            2

@@ -1,29 +1,26 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "MouseSystem.h"
-	#include "VSurface.h"
-	#include "WCheck.h"
-	#include "Input.h"
-	#include "Handle_UI.h"
-	#include "Cursors.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "Render_Dirty.h"
-	#include "Interface_Cursors.h"
-	#include "Interface.h"
-	#include "Isometric_Utils.h"
-	#include "Cursors.h"
-	#include "Sys_Globals.h"
-	#include "Overhead.h"
-	#include "Interface_Items.h"
-	#include "GameSettings.h"
-	#include "Video.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "SGP.h"
+#include "MouseSystem.h"
+#include "VSurface.h"
+#include "WCheck.h"
+#include "Input.h"
+#include "Handle_UI.h"
+#include "Cursors.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "Render_Dirty.h"
+#include "Interface_Cursors.h"
+#include "Interface.h"
+#include "Isometric_Utils.h"
+#include "Cursors.h"
+#include "Sys_Globals.h"
+#include "Overhead.h"
+#include "Interface_Items.h"
+#include "GameSettings.h"
+#include "Video.h"
+
 
 #define DISPLAY_AP_INDEX					MOCKFLOOR1
 

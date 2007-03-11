@@ -1,32 +1,23 @@
-// font.c
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
+#include "Types.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdarg.h>
+#include <wchar.h>
+#include "SGP.h"
+#include "PCX.h"
+#include "MemMan.h"
+#include "FileMan.h"
+#include "Font.h"
+#include "Debug.h"
+#if defined( JA2 ) || defined( UTIL )
+#	include "Video.h"
 #else
-	#include "Types.h"
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <stdarg.h>
-	#include <wchar.h>
-	#include "SGP.h"
-	#include "PCX.h"
-	#include "MemMan.h"
-	#include "FileMan.h"
-	#include "Font.h"
-	#include "Debug.h"
-
-	#if defined( JA2 ) || defined( UTIL )
-	#include "Video.h"
-	#else
-	#include "video2.h"
-	#endif
-
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "VObject_Blitters.h"
-	#include <string.h>
+#	include "video2.h"
 #endif
+#include "HImage.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include <string.h>
 
 
 #define MAX_FONTS				 25

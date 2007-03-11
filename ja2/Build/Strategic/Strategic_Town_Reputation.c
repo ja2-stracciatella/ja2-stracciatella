@@ -1,17 +1,13 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include "Types.h"
-	#include "Strategic_Town_Reputation.h"
-	#include "Soldier_Profile_Type.h"
-	#include "Game_Event_Hook.h"
-	#include "Soldier_Profile.h"
-	#include "Overhead.h"
-	#include "Game_Clock.h"
-	#include "Strategic_Town_Loyalty.h"
-	#include "Debug.h"
-	#include "Message.h"
-#endif
+#include "Types.h"
+#include "Strategic_Town_Reputation.h"
+#include "Soldier_Profile_Type.h"
+#include "Game_Event_Hook.h"
+#include "Soldier_Profile.h"
+#include "Overhead.h"
+#include "Game_Clock.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Debug.h"
+#include "Message.h"
 
 
 // init for town reputation at game start

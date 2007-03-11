@@ -1,32 +1,29 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Game_Clock.h"
-#else
-	#include "SGP.h"
-	#include "Font.h"
-	#include "Types.h"
-	#include "Font_Control.h"
-	#include "Message.h"
-	#include "memory.h"
-	#include "Timer_Control.h"
-	#include "Render_Dirty.h"
-	#include "RenderWorld.h"
-	#include "Local.h"
-	#include "Interface.h"
-	#include "Map_Screen_Interface_Bottom.h"
-	#include "WordWrap.h"
-	#include "Sound_Control.h"
-	#include "SoundMan.h"
-	#include "BuildDefines.h"
-	#include "Dialogue_Control.h"
-	#include <stdio.h>
-	#include "Game_Clock.h"
-	#include <stdarg.h>
-	#include "VSurface.h"
-	#include "MemMan.h"
-	#include "JAScreens.h"
-	#include "ScreenIDs.h"
-	#include "FileMan.h"
-#endif
+#include "SGP.h"
+#include "Font.h"
+#include "Types.h"
+#include "Font_Control.h"
+#include "Message.h"
+#include "memory.h"
+#include "Timer_Control.h"
+#include "Render_Dirty.h"
+#include "RenderWorld.h"
+#include "Local.h"
+#include "Interface.h"
+#include "Map_Screen_Interface_Bottom.h"
+#include "WordWrap.h"
+#include "Sound_Control.h"
+#include "SoundMan.h"
+#include "BuildDefines.h"
+#include "Dialogue_Control.h"
+#include <stdio.h>
+#include "Game_Clock.h"
+#include <stdarg.h>
+#include "VSurface.h"
+#include "MemMan.h"
+#include "JAScreens.h"
+#include "ScreenIDs.h"
+#include "FileMan.h"
+
 
 typedef struct
 {

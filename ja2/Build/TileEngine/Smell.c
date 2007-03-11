@@ -1,20 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "WorldDef.h"
-	#include "Random.h"
-	#include "Smell.h"
-	#include "WorldMan.h"
-	#include "RenderWorld.h"
-	#include "SaveLoadMap.h"
-	#include "GameSettings.h"
-	#include "Message.h"
-	#include "Isometric_Utils.h"
-	#include "Map_Information.h"
-	#include "Game_Clock.h"
-	#include "Overhead.h"
-	#include "Stubs.h" // XXX
-#endif
+#include "WorldDef.h"
+#include "Random.h"
+#include "Smell.h"
+#include "WorldMan.h"
+#include "RenderWorld.h"
+#include "SaveLoadMap.h"
+#include "GameSettings.h"
+#include "Message.h"
+#include "Isometric_Utils.h"
+#include "Map_Information.h"
+#include "Game_Clock.h"
+#include "Overhead.h"
+#include "Stubs.h" // XXX
+
 
 /*
  * Smell & Blood system

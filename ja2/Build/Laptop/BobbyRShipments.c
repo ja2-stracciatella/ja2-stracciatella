@@ -1,23 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-	#include "BobbyRShipments.h"
-#else
-	#include "Laptop.h"
-	#include "BobbyRShipments.h"
-	#include "BobbyR.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Text.h"
-	#include "BobbyRGuns.h"
-	#include "Cursors.h"
-	#include "BobbyRMailOrder.h"
-	#include "WordWrap.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
-
+#include "Laptop.h"
+#include "BobbyRShipments.h"
+#include "BobbyR.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Text.h"
+#include "BobbyRGuns.h"
+#include "Cursors.h"
+#include "BobbyRMailOrder.h"
+#include "WordWrap.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		BOBBYR_SHIPMENT_TITLE_TEXT_FONT			FONT14ARIAL

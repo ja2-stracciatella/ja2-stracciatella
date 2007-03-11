@@ -1,20 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Types.h"
-	#include <stdio.h>
-	#include "SGP.h"
-	#include "time.h"
-	#include "VObject.h"
-	#include "FileMan.h"
-	#include "Utilities.h"
-	#include "Font_Control.h"
-	#include "Overhead.h"
-	#include "Overhead_Types.h"
-	#include "WCheck.h"
-	#include "Sys_Globals.h"
-	#include "Debug.h"
-	#include "VSurface.h"
-#endif
+#include "Types.h"
+#include <stdio.h>
+#include "SGP.h"
+#include "time.h"
+#include "VObject.h"
+#include "FileMan.h"
+#include "Utilities.h"
+#include "Font_Control.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "WCheck.h"
+#include "Sys_Globals.h"
+#include "Debug.h"
+#include "VSurface.h"
 
 
 void FilenameForBPP(const char *pFilename, STR pDestination)

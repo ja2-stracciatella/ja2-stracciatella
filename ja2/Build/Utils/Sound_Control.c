@@ -1,17 +1,15 @@
 // MODULE FOR SOUND SYSTEM
 
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "SGP.h"
-	#include "Sound_Control.h"
-	#include "SoundMan.h"
-	#include "Overhead.h"
-	#include "Isometric_Utils.h"
-	#include "RenderWorld.h"
-	#include "Stubs.h" // XXX
-	#include <math.h>
-	#include <stdlib.h>
-#endif
+#include "SGP.h"
+#include "Sound_Control.h"
+#include "SoundMan.h"
+#include "Overhead.h"
+#include "Isometric_Utils.h"
+#include "RenderWorld.h"
+#include "Stubs.h" // XXX
+#include <math.h>
+#include <stdlib.h>
+
 
 #define		SOUND_FAR_VOLUME_MOD		25
 

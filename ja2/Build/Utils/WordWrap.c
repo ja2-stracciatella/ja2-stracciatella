@@ -1,18 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "WordWrap.h"
-	#include "SGP.h"
-	#include "Render_Dirty.h"
-	#include "Font_Control.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include <stdarg.h>
-	#include "Debug.h"
-	#include "Stubs.h" // XXX
-	#include "Video.h"
-	#include "MemMan.h"
-	#include "VSurface.h"
-#endif
+#include "WordWrap.h"
+#include "SGP.h"
+#include "Render_Dirty.h"
+#include "Font_Control.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include "Debug.h"
+#include "Stubs.h" // XXX
+#include "Video.h"
+#include "MemMan.h"
+#include "VSurface.h"
 
 
 WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)

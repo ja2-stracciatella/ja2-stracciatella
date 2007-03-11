@@ -1,33 +1,27 @@
-
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include <stdio.h>
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "Debug.h"
-	#include "Soldier_Control.h"
-	#include "Weapons.h"
-	#include "Handle_Items.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "Animation_Control.h"
-	#include "Tile_Animation.h"
-	#include "Handle_Items.h"
-	#include "SmokeEffects.h"
-	#include "Message.h"
-	#include "Isometric_Utils.h"
-	#include "RenderWorld.h"
-	#include "Explosion_Control.h"
-	#include "Random.h"
-	#include "Game_Clock.h"
-	#include "OppList.h"
-	#include "Tactical_Save.h"
-	#include "Campaign_Types.h"
-	#include "FileMan.h"
-#endif
-
+#include <stdio.h>
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "Debug.h"
+#include "Soldier_Control.h"
+#include "Weapons.h"
+#include "Handle_Items.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "Animation_Control.h"
+#include "Tile_Animation.h"
+#include "Handle_Items.h"
+#include "SmokeEffects.h"
+#include "Message.h"
+#include "Isometric_Utils.h"
+#include "RenderWorld.h"
+#include "Explosion_Control.h"
+#include "Random.h"
+#include "Game_Clock.h"
+#include "OppList.h"
+#include "Tactical_Save.h"
+#include "Campaign_Types.h"
+#include "FileMan.h"
 #include "SaveLoadGame.h"
 
 

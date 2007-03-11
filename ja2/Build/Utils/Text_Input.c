@@ -1,26 +1,24 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include <math.h>
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include <wchar.h>
-	#include "Input.h"
-	#include "Font.h"
-	#include "English.h"
-	#include "VSurface.h"
-	#include "Video.h"
-	#include "Debug.h"
-	#include "Cursors.h"
-	#include "Text_Input.h"
-	#include "Timer_Control.h"
-	#include "VObject_Blitters.h"
-	#include "Font_Control.h"
-	#include "Sound_Control.h"
-	#include <string.h>
-	#include "MemMan.h"
-	#include "MouseSystem.h"
-#endif
+#include <math.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include <wchar.h>
+#include "Input.h"
+#include "Font.h"
+#include "English.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "Debug.h"
+#include "Cursors.h"
+#include "Text_Input.h"
+#include "Timer_Control.h"
+#include "VObject_Blitters.h"
+#include "Font_Control.h"
+#include "Sound_Control.h"
+#include <string.h>
+#include "MemMan.h"
+#include "MouseSystem.h"
+
 
 UINT16 *szClipboard;
 BOOLEAN gfNoScroll = FALSE;

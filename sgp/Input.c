@@ -1,22 +1,17 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
+#include "Types.h"
+#include <stdio.h>
+#include <memory.h>
+#include "Debug.h"
+#include "Input.h"
+#include "MemMan.h"
+#include "English.h"
+#if defined( JA2 ) || defined( UTIL )
+#	include "Video.h"
 #else
-	#include "Types.h"
-	#include <stdio.h>
-	#include <memory.h>
-	#include "Debug.h"
-	#include "Input.h"
-	#include "MemMan.h"
-	#include "English.h"
-	#if defined( JA2 ) || defined( UTIL )
-		#include "Video.h"
-	#else
-		#include "video2.h"
-	#endif
-	#include "Local.h"
+#	include "video2.h"
 #endif
+#include "Local.h"
+
 
 // Make sure to refer to the translation table which is within one of the following files (depending
 // on the language used). ENGLISH.C, JAPANESE.C, FRENCH.C, GERMAN.C, SPANISH.C, etc...

@@ -1,24 +1,21 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <stdio.h>
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "Debug.h"
-	#include "Animation_Data.h"
-	#include "Animation_Control.h"
-	#include "Soldier_Control.h"
-	#include "JAScreens.h"
-	#include "TileDef.h"
-	#include "Sys_Globals.h"
-	#include "Debug_Control.h"
-	#include "Utilities.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "FileMan.h"
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "Debug.h"
+#include "Animation_Data.h"
+#include "Animation_Control.h"
+#include "Soldier_Control.h"
+#include "JAScreens.h"
+#include "TileDef.h"
+#include "Sys_Globals.h"
+#include "Debug_Control.h"
+#include "Utilities.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "FileMan.h"
+#include "MemMan.h"
+
 
 #define EMPTY_SLOT		-1
 #define TO_INIT				0

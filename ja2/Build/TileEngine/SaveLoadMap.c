@@ -1,24 +1,21 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "Types.h"
-	#include "SaveLoadMap.h"
-	#include "Overhead.h"
-	#include "FileMan.h"
-	#include "Tactical_Save.h"
-	#include "Debug.h"
-	#include "WorldMan.h"
-	#include "StrategicMap.h"
-	#include "Campaign_Types.h"
-	#include "Render_Fun.h"
-	#include "FOV.h"
-	#include "WorldDef.h"
-	#include "Exit_Grids.h"
-	#include "Message.h"
-	#include "GameSettings.h"
-	#include "Smell.h"
-	#include "MemMan.h"
-#endif
+#include "Types.h"
+#include "SaveLoadMap.h"
+#include "Overhead.h"
+#include "FileMan.h"
+#include "Tactical_Save.h"
+#include "Debug.h"
+#include "WorldMan.h"
+#include "StrategicMap.h"
+#include "Campaign_Types.h"
+#include "Render_Fun.h"
+#include "FOV.h"
+#include "WorldDef.h"
+#include "Exit_Grids.h"
+#include "Message.h"
+#include "GameSettings.h"
+#include "Smell.h"
+#include "MemMan.h"
+
 
 #define			NUM_REVEALED_BYTES			3200
 

@@ -1,13 +1,10 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "Types.h"
-	#include "Fog_Of_War.h"
-	#include "Isometric_Utils.h"
-	#include "WorldMan.h"
-	#include "Simple_Render_Utils.h"
-	#include "Lighting.h"
-#endif
+#include "Types.h"
+#include "Fog_Of_War.h"
+#include "Isometric_Utils.h"
+#include "WorldMan.h"
+#include "Simple_Render_Utils.h"
+#include "Lighting.h"
+
 
 //When line of sight reaches a gridno, and there is a light there, it turns it on.
 //This is only done in the cave levels.

@@ -14,47 +14,44 @@
 * Written by Derek Beland, April 14, 1997
 *
 ***************************************************************************************/
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
 
-	#include "WorldDef.h"
-	#include "RenderWorld.h"
-	#include "VSurface.h"
-	#include "Input.h"
-	#include "SysUtil.h"
-	#include "wchar.h"
-	#include "VObject_Blitters.h"
-	#include "Debug.h"
-	#include "WCheck.h"
-	#include "WorldMan.h"
-	#include "JAScreens.h"
-	#include "Edit_Sys.h"
-	#include "Isometric_Utils.h"
-	#include "Line.h"
-	#include "Animation_Control.h"
-	#include "Animation_Data.h"
-	#include "Timer_Control.h"
-	#include "Radar_Screen.h"
-	#include "Render_Dirty.h"
-	#include "Font_Control.h"
-	#include "Sys_Globals.h"
-	#include "Render_Dirty.h"
-	#include "TileDef.h"
-	#include "Lighting.h"
-	#include "Structure_Internals.h"
-	#include "Structure_Wrap.h"
-	#include "Shade_Table_Util.h"
-	#include "Rotting_Corpses.h"
-	#include "FileMan.h"
-	#include "Environment.h"
-	#include "PathAI.h"
-	#include "MemMan.h"
-	#include <stdlib.h>
-#endif
+#include "math.h"
+#include <stdio.h>
+#include <errno.h>
+#include "WorldDef.h"
+#include "RenderWorld.h"
+#include "VSurface.h"
+#include "Input.h"
+#include "SysUtil.h"
+#include "wchar.h"
+#include "VObject_Blitters.h"
+#include "Debug.h"
+#include "WCheck.h"
+#include "WorldMan.h"
+#include "JAScreens.h"
+#include "Edit_Sys.h"
+#include "Isometric_Utils.h"
+#include "Line.h"
+#include "Animation_Control.h"
+#include "Animation_Data.h"
+#include "Timer_Control.h"
+#include "Radar_Screen.h"
+#include "Render_Dirty.h"
+#include "Font_Control.h"
+#include "Sys_Globals.h"
+#include "Render_Dirty.h"
+#include "TileDef.h"
+#include "Lighting.h"
+#include "Structure_Internals.h"
+#include "Structure_Wrap.h"
+#include "Shade_Table_Util.h"
+#include "Rotting_Corpses.h"
+#include "FileMan.h"
+#include "Environment.h"
+#include "PathAI.h"
+#include "MemMan.h"
+#include <stdlib.h>
+
 
 #define LVL1_L1_PER			(50)
 #define LVL1_L2_PER			(50)

@@ -1,20 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "Types.h"
-	#include "ArmsDealerInvInit.h"
-	#include "Item_Types.h"
-	#include "Arms_Dealer_Init.h"
-	#include "Debug.h"
-	#include "Weapons.h"
-	#include "Campaign.h"
-	#include "BobbyR.h"
-	#include "LaptopSave.h"
-	#include "ShopKeeper_Interface.h"
-	#include "Random.h"
-	#include "Stubs.h" // XXX
-	#include "Items.h"
-#endif
+#include "Types.h"
+#include "ArmsDealerInvInit.h"
+#include "Item_Types.h"
+#include "Arms_Dealer_Init.h"
+#include "Debug.h"
+#include "Weapons.h"
+#include "Campaign.h"
+#include "BobbyR.h"
+#include "LaptopSave.h"
+#include "ShopKeeper_Interface.h"
+#include "Random.h"
+#include "Stubs.h" // XXX
+#include "Items.h"
 
 
 extern INT8	gbSelectedArmsDealerID;

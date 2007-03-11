@@ -8,36 +8,31 @@
 //supported.  Just remove the commented line of code (search for UNCOMMENT), and it's fixed -- it is
 //currently disabled.
 
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "TileDef.h"
-	#include "SysUtil.h"
-	#include "Font.h"
-	#include "Font_Control.h"
-	#include "Line.h"
-	#include "WorldDat.h"
-	#include "SelectWin.h"
-	#include "PopupMenu.h"
-	#include "EditorDefines.h"
-	#include "Render_Dirty.h"
-	#include "Debug.h"
-	#include "MouseSystem.h"
-	#include "Cursors.h"
-	#include "Overhead_Types.h"
-	#include "EditorMercs.h"
-	#include "Scheduling.h"
-	#include "English.h"
-	#include "Item_Statistics.h"
-	#include "Video.h"
-	#include "VSurface.h"
-#endif
+#include "TileDef.h"
+#include "SysUtil.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "Line.h"
+#include "WorldDat.h"
+#include "SelectWin.h"
+#include "PopupMenu.h"
+#include "EditorDefines.h"
+#include "Render_Dirty.h"
+#include "Debug.h"
+#include "MouseSystem.h"
+#include "Cursors.h"
+#include "Overhead_Types.h"
+#include "EditorMercs.h"
+#include "Scheduling.h"
+#include "English.h"
+#include "Item_Statistics.h"
+#include "Video.h"
+#include "VSurface.h"
+
 
 CurrentPopupMenuInformation gPopup;
 

@@ -1,18 +1,13 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "Debug.h"
-	#include "Types.h"
-	//#include "mssw.h"
-	#include "Gap.h"
-	#include "Sound_Control.h"
-	#include "SoundMan.h"
-	#include "Timer_Control.h"
-	#include <stdio.h>
-	#include "FileMan.h"
-	#include <string.h>
-	#include "MemMan.h"
-#endif
+#include "Debug.h"
+#include "Types.h"
+#include "Gap.h"
+#include "Sound_Control.h"
+#include "SoundMan.h"
+#include "Timer_Control.h"
+#include <stdio.h>
+#include "FileMan.h"
+#include <string.h>
+#include "MemMan.h"
 
 
 void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )

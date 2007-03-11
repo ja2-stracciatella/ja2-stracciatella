@@ -1,25 +1,22 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include "Assignments.h"
-	#include "Strategic_Town_Loyalty.h"
-	#include "Strategic_Merc_Handler.h"
-	#include "Strategic_Mines.h"
-	#include "Campaign.h"
-	#include "Morale.h"
-	#include "Quests.h"
-	#include "Game_Clock.h"
-	#include "Overhead.h"
-	#include "Boxing.h"
-	#include "JAScreens.h"
-	#include "Items.h"
-	#include "Random.h"
-	#include "Finances.h"
-	#include "History.h"
-	#include "Dialogue_Control.h"
-	#include "ScreenIDs.h"
-	#include "Stubs.h" // XXX
-#endif
+#include "Assignments.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Strategic_Merc_Handler.h"
+#include "Strategic_Mines.h"
+#include "Campaign.h"
+#include "Morale.h"
+#include "Quests.h"
+#include "Game_Clock.h"
+#include "Overhead.h"
+#include "Boxing.h"
+#include "JAScreens.h"
+#include "Items.h"
+#include "Random.h"
+#include "Finances.h"
+#include "History.h"
+#include "Dialogue_Control.h"
+#include "ScreenIDs.h"
+#include "Stubs.h" // XXX
+
 
 void HourlyQuestUpdate( void );
 void HourlyLarryUpdate( void );

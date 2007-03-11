@@ -1,19 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "Handle_UI_Plan.h"
-	#include "Overhead.h"
-	#include "Isometric_Utils.h"
-	#include "PathAI.h"
-	#include "Handle_UI.h"
-	#include "Points.h"
-	#include "Weapons.h"
-	#include "RenderWorld.h"
-	#include "Animation_Control.h"
-	#include "Message.h"
-	#include "Soldier_Create.h"
-	#include "Interface.h"
-#endif
+#include "Handle_UI_Plan.h"
+#include "Overhead.h"
+#include "Isometric_Utils.h"
+#include "PathAI.h"
+#include "Handle_UI.h"
+#include "Points.h"
+#include "Weapons.h"
+#include "RenderWorld.h"
+#include "Animation_Control.h"
+#include "Message.h"
+#include "Soldier_Create.h"
+#include "Interface.h"
+
 
 UINT8						gubNumUIPlannedMoves			= 0;
 SOLDIERTYPE			*gpUIPlannedSoldier			  = NULL;

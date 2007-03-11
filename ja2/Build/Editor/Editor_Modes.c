@@ -1,30 +1,24 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
-
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "Types.h"
-	#include "Editor_Modes.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "EditorDefines.h"
-	#include "EditorItems.h"
-	#include "EditorBuildings.h"
-	#include "EditorTerrain.h"
-	#include "Cursor_Modes.h"
-	#include "Map_Information.h"
-	#include "EditScreen.h"
-	#include "SelectWin.h"
-	#include "Environment.h"
-	#include "WorldDef.h"
-	#include "Exit_Grids.h"
-	#include "WorldMan.h"
-	#include "Debug.h"
-#endif
+#include "Types.h"
+#include "Editor_Modes.h"
+#include "Editor_Taskbar_Utils.h"
+#include "EditorDefines.h"
+#include "EditorItems.h"
+#include "EditorBuildings.h"
+#include "EditorTerrain.h"
+#include "Cursor_Modes.h"
+#include "Map_Information.h"
+#include "EditScreen.h"
+#include "SelectWin.h"
+#include "Environment.h"
+#include "WorldDef.h"
+#include "Exit_Grids.h"
+#include "WorldMan.h"
+#include "Debug.h"
+
 
 BOOLEAN gfShowExitGrids = FALSE;
 

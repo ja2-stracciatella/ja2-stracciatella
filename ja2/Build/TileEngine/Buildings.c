@@ -1,18 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "Types.h"
-	#include "Buildings.h"
-	#include "Isometric_Utils.h"
-	#include "PathAI.h"
-	#include "Structure_Wrap.h"
-	#include "Random.h"
-	#include "Overhead.h"
-	#include "Render_Fun.h"
-	#include "StrategicMap.h"
-	#include "Sys_Globals.h"
-	#include "WorldMan.h"
-#endif
+#include "Types.h"
+#include "Buildings.h"
+#include "Isometric_Utils.h"
+#include "PathAI.h"
+#include "Structure_Wrap.h"
+#include "Random.h"
+#include "Overhead.h"
+#include "Render_Fun.h"
+#include "StrategicMap.h"
+#include "Sys_Globals.h"
+#include "WorldMan.h"
+
 
 #define ROOF_LOCATION_CHANCE 8
 

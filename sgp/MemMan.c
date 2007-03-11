@@ -12,18 +12,13 @@
 //
 //**************************************************************************
 
-//#ifdef JA2_PRECOMPILED_HEADERS
-//	#include "JA2 SGP ALL.H"
-//#elif defined( WIZ8_PRECOMPILED_HEADERS )
-//	#include "WIZ8 SGP ALL.H"
-//#else
-	#include "Types.h"
-	#include <stdlib.h>
-	#include <string.h>
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include <stdio.h>
-//#endif
+#include "Types.h"
+#include <stdlib.h>
+#include <string.h>
+#include "MemMan.h"
+#include "Debug.h"
+#include <stdio.h>
+
 
 #undef _DEBUG // XXX TODO
 

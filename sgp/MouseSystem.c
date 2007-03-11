@@ -11,49 +11,36 @@
 //
 //=================================================================================================
 
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
+#include "Types.h"
+#include <stdio.h>
+#include <memory.h>
+#include "Debug.h"
+#include "Input.h"
+#include "MemMan.h"
+#include "Line.h"
+#if (defined( JA2 ) || defined( UTIL ))
+#	include "Video.h"
+#	define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
 #else
-	#include "Types.h"
-	#include <stdio.h>
-	#include <memory.h>
-	#include "Debug.h"
-	#include "Input.h"
-	#include "MemMan.h"
-	#include "Line.h"
-	#if (defined( JA2 ) || defined( UTIL ))
-		#include "Video.h"
-		#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
-	#else
-		#include "video2.h"
-		#define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
-	#endif
-	#ifdef _JA2_RENDER_DIRTY
-		#include "Render_Dirty.h"
-		#include "Font_Control.h"
-	#endif
-	#include "English.h"
-	// Include mouse system defs and macros
-	#include "MouseSystem.h"
-	#include "Cursor_Control.h"
-	#include "Button_System.h"
-	#include "Timer.h"
-	#include "Font_Control.h"
-	#include "JAScreens.h"
-	#include "Local.h"
-	#include "Render_Dirty.h"
-	#include "VSurface.h"
-	#include "ScreenIDs.h"
+#	include "video2.h"
+#	define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
 #endif
-
-#ifdef JA2_PRECOMPILED_HEADERS
-	#define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
+#ifdef _JA2_RENDER_DIRTY
+#	include "Render_Dirty.h"
+#	include "Font_Control.h"
 #endif
-
+#include "English.h"
+// Include mouse system defs and macros
+#include "MouseSystem.h"
+#include "Cursor_Control.h"
+#include "Button_System.h"
+#include "Timer.h"
+#include "Font_Control.h"
+#include "JAScreens.h"
+#include "Local.h"
+#include "Render_Dirty.h"
+#include "VSurface.h"
+#include "ScreenIDs.h"
 
 
 //Kris:	Nov 31, 1999 -- Added support for double clicking

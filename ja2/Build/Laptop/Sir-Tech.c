@@ -1,9 +1,6 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Sir-Tech.h"
-#endif
+#include "Laptop.h"
+#include "Sir-Tech.h"
+
 
 void GameInitSirTech()
 {

@@ -1,37 +1,32 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include <memory.h>
-	#include <stdio.h>
-	#include "Types.h"
-	#include "MouseSystem.h"
-	#include "Button_System.h"
-	#include "Font_Control.h"
-	#include "EditorDefines.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "EditorMercs.h"
-	#include "EditorItems.h"
-	#include "Item_Statistics.h"
-	#include "Text_Input.h"
-	#include "Action_Items.h"
-	#include "Item_Types.h"
-	#include "Video.h"
-	#include "Simple_Render_Utils.h"
-	#include "Weapons.h"
-	#include "Items.h"
-	#include "EditScreen.h"
-	#include "Random.h"
-	#include "Handle_Items.h"
-	#include "World_Items.h"
-	#include "PopupMenu.h"
-	#include "Pits.h"
-#endif
+#include <memory.h>
+#include <stdio.h>
+#include "Types.h"
+#include "MouseSystem.h"
+#include "Button_System.h"
+#include "Font_Control.h"
+#include "EditorDefines.h"
+#include "Editor_Taskbar_Utils.h"
+#include "EditorMercs.h"
+#include "EditorItems.h"
+#include "Item_Statistics.h"
+#include "Text_Input.h"
+#include "Action_Items.h"
+#include "Item_Types.h"
+#include "Video.h"
+#include "Simple_Render_Utils.h"
+#include "Weapons.h"
+#include "Items.h"
+#include "EditScreen.h"
+#include "Random.h"
+#include "Handle_Items.h"
+#include "World_Items.h"
+#include "PopupMenu.h"
+#include "Pits.h"
+
 
 INT32 giBothCheckboxButton = -1;
 INT32 giRealisticCheckboxButton = -1;

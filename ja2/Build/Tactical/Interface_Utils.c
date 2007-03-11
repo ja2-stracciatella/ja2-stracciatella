@@ -1,29 +1,26 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include "SGP.h"
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "Interface_Utils.h"
-	#include "Render_Dirty.h"
-	#include "Interface.h"
-	#include "Interface_Control.h"
-	#include "SysUtil.h"
-	#include "Faces.h"
-	#include "Render_Dirty.h"
-	#include "Weapons.h"
-	#include "Overhead.h"
-	#include "Soldier_Macros.h"
-	#include "Line.h"
-	#include "WCheck.h"
-	#include "Vehicles.h"
-	#include "JAScreens.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "ScreenIDs.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include "SGP.h"
+#include "HImage.h"
+#include "VObject.h"
+#include "Interface_Utils.h"
+#include "Render_Dirty.h"
+#include "Interface.h"
+#include "Interface_Control.h"
+#include "SysUtil.h"
+#include "Faces.h"
+#include "Render_Dirty.h"
+#include "Weapons.h"
+#include "Overhead.h"
+#include "Soldier_Macros.h"
+#include "Line.h"
+#include "WCheck.h"
+#include "Vehicles.h"
+#include "JAScreens.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "ScreenIDs.h"
+
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )
 #define			LIFE_BAR										FROMRGB( 200, 0, 0 )

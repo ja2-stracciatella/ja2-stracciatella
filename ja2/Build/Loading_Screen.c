@@ -1,19 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-	#include "Loading_Screen.h"
-#else
-	#include "VSurface.h"
-	#include "Loading_Screen.h"
-	#include "Campaign_Types.h"
-	#include "Game_Clock.h"
-	#include "Random.h"
-	#include <string.h>
-	#include "Font.h"
-	#include "Font_Control.h"
-	#include "Video.h"
-	#include "Render_Dirty.h"
-	#include "Debug.h"
-#endif
+#include "VSurface.h"
+#include "Loading_Screen.h"
+#include "Campaign_Types.h"
+#include "Game_Clock.h"
+#include "Random.h"
+#include <string.h>
+#include "Font.h"
+#include "Font_Control.h"
+#include "Video.h"
+#include "Render_Dirty.h"
+#include "Debug.h"
+
 
 extern HVSURFACE ghFrameBuffer;
 

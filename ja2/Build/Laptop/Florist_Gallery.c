@@ -1,23 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Florist.h"
-	#include "Florist_Gallery.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "stdio.h"
-	#include "Encrypted_File.h"
-	#include "Text.h"
-	#include <string.h>
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "Font_Control.h"
-#endif
-
-
+#include "Laptop.h"
+#include "Florist.h"
+#include "Florist_Gallery.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "stdio.h"
+#include "Encrypted_File.h"
+#include "Text.h"
+#include <string.h>
+#include "Button_System.h"
+#include "Video.h"
+#include "Font_Control.h"
 
 
 #define	FLOR_GALLERY_TITLE_FONT								FONT10ARIAL

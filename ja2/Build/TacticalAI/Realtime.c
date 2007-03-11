@@ -1,22 +1,19 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include "AI.h"
-	#include "AIInternals.h"
-	#include "Isometric_Utils.h"
-	#include "Points.h"
-	#include "Overhead.h"
-	#include "OppList.h"
-	#include "Rotting_Corpses.h"
-	#include "Soldier_Add.h"
-	#include "Soldier_Profile_Type.h"
-	#include "Items.h"
-	#include "Weapons.h"
-	#include "Soldier_Macros.h"
-	#include "NPC.h"
-	#include "Render_Fun.h"
-	#include "Quests.h"
-#endif
+#include "AI.h"
+#include "AIInternals.h"
+#include "Isometric_Utils.h"
+#include "Points.h"
+#include "Overhead.h"
+#include "OppList.h"
+#include "Rotting_Corpses.h"
+#include "Soldier_Add.h"
+#include "Soldier_Profile_Type.h"
+#include "Items.h"
+#include "Weapons.h"
+#include "Soldier_Macros.h"
+#include "NPC.h"
+#include "Render_Fun.h"
+#include "Quests.h"
+
 
 INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 {

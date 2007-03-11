@@ -1,35 +1,29 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
-
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "Smooth.h"
-	#include "NewSmooth.h"
-	#include "Edit_Sys.h"
-	#include "EditScreen.h"
-	#include "SelectWin.h"
-	#include "EditorTerrain.h"
-	#include "EditorBuildings.h"
-	#include "EditorMercs.h"
-	#include "EditorDefines.h"
-	#include "Smoothing_Utils.h"
-	#include "Cursor_Modes.h"
-	#include "Render_Fun.h"
-	#include "Isometric_Utils.h"
-	#include "Editor_Undo.h"
-	#include "Exit_Grids.h"
-	#include "Environment.h"
-	#include "Simple_Render_Utils.h"
-	#include "Road_Smoothing.h"
-	#include "MemMan.h"
-#endif
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "Smooth.h"
+#include "NewSmooth.h"
+#include "Edit_Sys.h"
+#include "EditScreen.h"
+#include "SelectWin.h"
+#include "EditorTerrain.h"
+#include "EditorBuildings.h"
+#include "EditorMercs.h"
+#include "EditorDefines.h"
+#include "Smoothing_Utils.h"
+#include "Cursor_Modes.h"
+#include "Render_Fun.h"
+#include "Isometric_Utils.h"
+#include "Editor_Undo.h"
+#include "Exit_Grids.h"
+#include "Environment.h"
+#include "Simple_Render_Utils.h"
+#include "Road_Smoothing.h"
+#include "MemMan.h"
+
 
 BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius );
 BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex );

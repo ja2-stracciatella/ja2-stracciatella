@@ -1,17 +1,11 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-	#include "BrokenLink.h"
-#else
-	#include "BrokenLink.h"
-	#include "Font.h"
-	#include "WordWrap.h"
-	#include "Laptop.h"
-	#include "Text.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
-
+#include "BrokenLink.h"
+#include "Font.h"
+#include "WordWrap.h"
+#include "Laptop.h"
+#include "Text.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		BROKEN_LINK__FONT									FONT12ARIAL

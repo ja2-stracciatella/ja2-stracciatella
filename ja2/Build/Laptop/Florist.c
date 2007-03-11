@@ -1,22 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Florist.h"
-	#include "Florist_Order_Form.h"
-	#include "Florist_Gallery.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Florist_Cards.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
+#include "Laptop.h"
+#include "Florist.h"
+#include "Florist_Order_Form.h"
+#include "Florist_Gallery.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Florist_Cards.h"
+#include "Text.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		FLORIST_SENTENCE_FONT							FONT12ARIAL

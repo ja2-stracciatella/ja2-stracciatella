@@ -1,21 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Insurance_Info.h"
-	#include "Insurance.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Insurance_Text.h"
-	#include "Text.h"
-	#include <string.h>
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
+#include "Laptop.h"
+#include "Insurance_Info.h"
+#include "Insurance.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Insurance_Text.h"
+#include "Text.h"
+#include <string.h>
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		INS_INFO_FRAUD_TEXT_COLOR					FONT_MCOLOR_RED

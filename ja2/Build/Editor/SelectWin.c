@@ -1,24 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "TileDef.h"
-	#include "VSurface.h"
-	#include "WorldDat.h"
-	#include "Random.h"
-	#include "SysUtil.h"
-	#include "Font_Control.h"
-	#include "SelectWin.h"
-	#include "EditorDefines.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "MemMan.h"
-	#include "Stubs.h" // XXX
-#endif
+#include "TileDef.h"
+#include "VSurface.h"
+#include "WorldDat.h"
+#include "Random.h"
+#include "SysUtil.h"
+#include "Font_Control.h"
+#include "SelectWin.h"
+#include "EditorDefines.h"
+#include "Editor_Taskbar_Utils.h"
+#include "MemMan.h"
+#include "Stubs.h" // XXX
 
 
 extern BOOLEAN gfOverheadMapDirty;

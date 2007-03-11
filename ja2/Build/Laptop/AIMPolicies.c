@@ -1,21 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "AIMPolicies.h"
-	#include "AIM.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Encrypted_File.h"
-	#include "Text.h"
-	#include <string.h>
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
-
+#include "Laptop.h"
+#include "AIMPolicies.h"
+#include "AIM.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Encrypted_File.h"
+#include "Text.h"
+#include <string.h>
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define	NUM_AIM_POLICY_PAGES				11

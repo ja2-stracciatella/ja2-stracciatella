@@ -1,14 +1,11 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "PopUpBox.h"
-	#include "SysUtil.h"
-	#include "Debug.h"
-	#include "Video.h"
-	#include "MemMan.h"
-	#include "VSurface.h"
-	#include "VObject_Blitters.h"
-	#include "WCheck.h"
-#endif
+#include "PopUpBox.h"
+#include "SysUtil.h"
+#include "Debug.h"
+#include "Video.h"
+#include "MemMan.h"
+#include "VSurface.h"
+#include "VObject_Blitters.h"
+#include "WCheck.h"
 
 
 typedef struct PopUpString {

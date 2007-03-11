@@ -1,10 +1,5 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include "Types.h"
-	#include "Quests.h"
-#endif
-
+#include "Types.h"
+#include "Quests.h"
 
 
 const wchar_t *QuestDescText[] =

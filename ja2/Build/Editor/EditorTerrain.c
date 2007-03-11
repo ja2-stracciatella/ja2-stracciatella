@@ -1,37 +1,32 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "TileDef.h"
-	#include "Edit_Sys.h"
-	#include "VSurface.h"
-	#include "VObject.h"
-	#include "MouseSystem.h"
-	#include "Button_System.h"
-	#include "WCheck.h"
-	#include "VSurface.h"
-	#include "Input.h"
-	#include "SysUtil.h"
-	#include "Font.h"
-	#include "Font_Control.h"
-	#include "EditScreen.h"
-	#include "SelectWin.h"
-	#include "Video.h"
-	#include "VObject_Blitters.h"
-	#include "Interface_Panels.h"
-	#include "Utilities.h"
-	#include "World_Items.h"
-	#include "EditorDefines.h"
-	#include "EditorTerrain.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "Cursor_Modes.h"
-	#include "English.h"
-#endif
+#include "TileDef.h"
+#include "Edit_Sys.h"
+#include "VSurface.h"
+#include "VObject.h"
+#include "MouseSystem.h"
+#include "Button_System.h"
+#include "WCheck.h"
+#include "VSurface.h"
+#include "Input.h"
+#include "SysUtil.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "EditScreen.h"
+#include "SelectWin.h"
+#include "Video.h"
+#include "VObject_Blitters.h"
+#include "Interface_Panels.h"
+#include "Utilities.h"
+#include "World_Items.h"
+#include "EditorDefines.h"
+#include "EditorTerrain.h"
+#include "Editor_Taskbar_Utils.h"
+#include "Cursor_Modes.h"
+#include "English.h"
+
 
 BOOLEAN gfShowTerrainTileButtons;
 UINT8 ubTerrainTileButtonWeight[NUM_TERRAIN_TILE_REGIONS];

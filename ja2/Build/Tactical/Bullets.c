@@ -1,29 +1,24 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
-
-	#include "WorldDef.h"
-	#include "VSurface.h"
-	#include "Render_Dirty.h"
-	#include "SysUtil.h"
-	#include "WCheck.h"
-	#include "VObject_Blitters.h"
-	#include "Faces.h"
-	#include "Utilities.h"
-	#include "Overhead.h"
-	#include "Gap.h"
-	#include "Soldier_Profile.h"
-	#include "Bullets.h"
-	#include "LOS.h"
-	#include "WorldMan.h"
-	#include "Random.h"
-	#include "GameSettings.h"
-	#include "FileMan.h"
-	#include "Debug.h"
-#endif
+#include "math.h"
+#include <stdio.h>
+#include <errno.h>
+#include "WorldDef.h"
+#include "VSurface.h"
+#include "Render_Dirty.h"
+#include "SysUtil.h"
+#include "WCheck.h"
+#include "VObject_Blitters.h"
+#include "Faces.h"
+#include "Utilities.h"
+#include "Overhead.h"
+#include "Gap.h"
+#include "Soldier_Profile.h"
+#include "Bullets.h"
+#include "LOS.h"
+#include "WorldMan.h"
+#include "Random.h"
+#include "GameSettings.h"
+#include "FileMan.h"
+#include "Debug.h"
 
 
 // Defines

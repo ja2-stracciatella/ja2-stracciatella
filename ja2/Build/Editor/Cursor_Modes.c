@@ -1,29 +1,23 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "Types.h"
-	#include "Cursor_Modes.h"
-	#include "RenderWorld.h"
-	#include "Random.h"
-	#include "WorldMan.h"
-	#include "Interface.h"
-	#include "Isometric_Utils.h"
-	#include "EditScreen.h"
-	#include "EditorDefines.h"
-	#include "Input.h"
-	#include "English.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "Overhead.h"
-	#include "EditorMercs.h"
-	#include "EditorBuildings.h"
-	#include "Debug.h"
-#endif
+#include "Types.h"
+#include "Cursor_Modes.h"
+#include "RenderWorld.h"
+#include "Random.h"
+#include "WorldMan.h"
+#include "Interface.h"
+#include "Isometric_Utils.h"
+#include "EditScreen.h"
+#include "EditorDefines.h"
+#include "Input.h"
+#include "English.h"
+#include "Editor_Taskbar_Utils.h"
+#include "Overhead.h"
+#include "EditorMercs.h"
+#include "EditorBuildings.h"
+#include "Debug.h"
 
 
 SGPRect gSelectRegion;

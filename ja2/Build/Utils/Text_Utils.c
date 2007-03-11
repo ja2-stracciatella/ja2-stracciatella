@@ -1,12 +1,10 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Language_Defines.h"
-	#include "Text.h"
-	#include "FileMan.h"
-	#include "JA2_Demo_Ads.h"
-	#include "GameSettings.h"
-	#include "Encrypted_File.h"
-#endif
+#include "Language_Defines.h"
+#include "Text.h"
+#include "FileMan.h"
+#include "JA2_Demo_Ads.h"
+#include "GameSettings.h"
+#include "Encrypted_File.h"
+
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 {

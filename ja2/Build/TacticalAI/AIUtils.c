@@ -1,31 +1,28 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include "Stubs.h" // XXX
-	#include "AI.h"
-	#include "Weapons.h"
-	#include "OppList.h"
-	#include "Points.h"
-	#include "PathAI.h"
-	#include "WorldMan.h"
-	#include "AIInternals.h"
-	#include "Items.h"
-	#include "WCheck.h"
-	#include "Message.h"
-	#include "LOS.h"
-	#include "Assignments.h"
-	#include "Soldier_Functions.h"
-	#include "Points.h"
-	#include "GameSettings.h"
-	#include "Buildings.h"
-	#include "Soldier_Macros.h"
-	#include "Render_Fun.h"
-	#include "StrategicMap.h"
-	#include "Environment.h"
-	#include "Lighting.h"
-	#include "Soldier_Create.h"
-	#include <stdlib.h>
-#endif
+#include "Stubs.h" // XXX
+#include "AI.h"
+#include "Weapons.h"
+#include "OppList.h"
+#include "Points.h"
+#include "PathAI.h"
+#include "WorldMan.h"
+#include "AIInternals.h"
+#include "Items.h"
+#include "WCheck.h"
+#include "Message.h"
+#include "LOS.h"
+#include "Assignments.h"
+#include "Soldier_Functions.h"
+#include "Points.h"
+#include "GameSettings.h"
+#include "Buildings.h"
+#include "Soldier_Macros.h"
+#include "Render_Fun.h"
+#include "StrategicMap.h"
+#include "Environment.h"
+#include "Lighting.h"
+#include "Soldier_Create.h"
+#include <stdlib.h>
+
 
 //
 // CJC's DG->JA2 conversion notes

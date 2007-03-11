@@ -1,21 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Strategic All.h"
-#else
-	#include "Types.h"
-	#include "Campaign_Init.h"
-	#include "Random.h"
-	#include "Campaign_Types.h"
-	#include "Queen_Command.h"
-	#include "Overhead.h"
-	#include "Strategic_Movement.h"
-	#include "Strategic_Status.h"
-	#include "GameSettings.h"
-	#include "Creature_Spreading.h"
-	#include "Strategic_AI.h"
-	#include "Tactical_Save.h"
-	#include "MemMan.h"
-	#include "Debug.h"
-#endif
+#include "Types.h"
+#include "Campaign_Init.h"
+#include "Random.h"
+#include "Campaign_Types.h"
+#include "Queen_Command.h"
+#include "Overhead.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Status.h"
+#include "GameSettings.h"
+#include "Creature_Spreading.h"
+#include "Strategic_AI.h"
+#include "Tactical_Save.h"
+#include "MemMan.h"
+#include "Debug.h"
+
 
 extern void	InitStrategicMovementCosts();
 

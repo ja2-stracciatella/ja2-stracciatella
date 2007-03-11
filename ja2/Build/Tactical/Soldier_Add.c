@@ -1,29 +1,26 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include "SGP.h"
-	#include "Soldier_Control.h"
-	#include "Overhead.h"
-	#include "Overhead_Types.h"
-	#include "Isometric_Utils.h"
-	#include "Interface_Panels.h"
-	#include "Soldier_Macros.h"
-	#include "StrategicMap.h"
-	#include "Strategic.h"
-	#include "Animation_Control.h"
-	#include "Soldier_Create.h"
-	#include "Soldier_Init_List.h"
-	#include "Soldier_Add.h"
-	#include "Map_Information.h"
-	#include "FOV.h"
-	#include "PathAI.h"
-	#include "Random.h"
-	#include "Render_Fun.h"
-	#include "Meanwhile.h"
-	#include "Exit_Grids.h"
-	#include "Debug.h"
-	#include <stdlib.h>
-#endif
+#include "SGP.h"
+#include "Soldier_Control.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "Isometric_Utils.h"
+#include "Interface_Panels.h"
+#include "Soldier_Macros.h"
+#include "StrategicMap.h"
+#include "Strategic.h"
+#include "Animation_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Init_List.h"
+#include "Soldier_Add.h"
+#include "Map_Information.h"
+#include "FOV.h"
+#include "PathAI.h"
+#include "Random.h"
+#include "Render_Fun.h"
+#include "Meanwhile.h"
+#include "Exit_Grids.h"
+#include "Debug.h"
+#include <stdlib.h>
+
 
 // Adds a soldier to a world gridno and set's direction
 void AddSoldierToSectorGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );

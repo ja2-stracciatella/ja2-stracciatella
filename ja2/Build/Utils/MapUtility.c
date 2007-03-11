@@ -1,26 +1,24 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "SGP.h"
-	#ifdef JA2EDITOR
-		#include "Screens.h"
-		#include "MapUtility.h"
-		#include "WorldDef.h"
-		#include "Overhead.h"
-		#include "FileMan.h"
-		#include "LoadScreen.h"
-		#include "Overhead_Map.h"
-		#include "Radar_Screen.h"
-		#include "VObject_Blitters.h"
-		#include "STIConvert.h"
-		#include "Font_Control.h"
-		#include "WorldDat.h"
-		#include "English.h"
-		#include "Map_Information.h"
-		#include "Line.h"
-		#include "MemMan.h"
-		#include "Video.h"
-	#endif
+#include "SGP.h"
+#ifdef JA2EDITOR
+#	include "Screens.h"
+#	include "MapUtility.h"
+#	include "WorldDef.h"
+#	include "Overhead.h"
+#	include "FileMan.h"
+#	include "LoadScreen.h"
+#	include "Overhead_Map.h"
+#	include "Radar_Screen.h"
+#	include "VObject_Blitters.h"
+#	include "STIConvert.h"
+#	include "Font_Control.h"
+#	include "WorldDat.h"
+#	include "English.h"
+#	include "Map_Information.h"
+#	include "Line.h"
+#	include "MemMan.h"
+#	include "Video.h"
 #endif
+
 
 #ifdef JA2EDITOR
 

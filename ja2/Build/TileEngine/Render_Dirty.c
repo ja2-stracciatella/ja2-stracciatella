@@ -1,29 +1,25 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "math.h"
-	#include <stdio.h>
-	#include <errno.h>
-
-	#include "WorldDef.h"
-	#include "RenderWorld.h"
-	#include "VSurface.h"
-	#include "Render_Dirty.h"
-	#include "SysUtil.h"
-	#include "WCheck.h"
-	#include "Video.h"
-	#include "VObject_Blitters.h"
-	#include <stdarg.h>
-	#include "Font_Control.h"
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include "SGP.h"
-#endif
+#include "math.h"
+#include <stdio.h>
+#include <errno.h>
+#include "WorldDef.h"
+#include "RenderWorld.h"
+#include "VSurface.h"
+#include "Render_Dirty.h"
+#include "SysUtil.h"
+#include "WCheck.h"
+#include "Video.h"
+#include "VObject_Blitters.h"
+#include <stdarg.h>
+#include "Font_Control.h"
+#include "MemMan.h"
+#include "Debug.h"
+#include "SGP.h"
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
-#include "Message.h"
+#	include "Message.h"
 #endif
+
 
 #define		DIRTY_QUEUES				200
 #define		BACKGROUND_BUFFERS	500

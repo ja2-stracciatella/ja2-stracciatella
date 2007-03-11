@@ -1,22 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <memory.h>
-	#include "Inventory_Choosing.h"
-	#include "Animation_Data.h"
-	#include "Items.h"
-	#include "Random.h"
-	#include "Weapons.h"
-	#include "Strategic_Status.h"
-	#include "Campaign.h"
-	#include "GameSettings.h"
-	#include "StrategicMap.h"
-	#include "Auto_Resolve.h"
-	#include "Map_Screen_Interface_Map.h"
-	#include "Strategic.h"
-	#include "Debug.h"
-	#include "Stubs.h" // XXX
-#endif
+#include <memory.h>
+#include "Inventory_Choosing.h"
+#include "Animation_Data.h"
+#include "Items.h"
+#include "Random.h"
+#include "Weapons.h"
+#include "Strategic_Status.h"
+#include "Campaign.h"
+#include "GameSettings.h"
+#include "StrategicMap.h"
+#include "Auto_Resolve.h"
+#include "Map_Screen_Interface_Map.h"
+#include "Strategic.h"
+#include "Debug.h"
+#include "Stubs.h" // XXX
 
 
 #define ENEMYAMMODROPRATE       50      // % of time enemies drop ammunition

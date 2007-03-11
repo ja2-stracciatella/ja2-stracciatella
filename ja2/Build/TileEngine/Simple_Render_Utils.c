@@ -1,10 +1,7 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "Types.h"
-	#include "Isometric_Utils.h"
-	#include "RenderWorld.h"
-#endif
+#include "Types.h"
+#include "Isometric_Utils.h"
+#include "RenderWorld.h"
+
 
 void MarkMapIndexDirty( INT32 iMapIndex )
 {

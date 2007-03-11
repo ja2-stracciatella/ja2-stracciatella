@@ -1,19 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "BobbyRArmour.h"
-	#include "BobbyRGuns.h"
-	#include "BobbyR.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Text.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-#endif
+#include "Laptop.h"
+#include "BobbyRArmour.h"
+#include "BobbyRGuns.h"
+#include "BobbyR.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Text.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
 
 
 UINT32		guiArmourBackground;

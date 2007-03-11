@@ -1,24 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include "TileDef.h"
-	#include "WorldDef.h"
-	#include <stdio.h>
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "time.h"
-	#include "Debug.h"
-	#include "WorldMan.h"
-	#include "Gameloop.h"
-	#include "Edit_Sys.h"
-	#include "PathAI.h"
-	#include "Tile_Surface.h"
-	#include "Tactical_Save.h"
-	#include "MemMan.h"
-#endif
-
-//#include "EditScreen.h"
+#include "TileDef.h"
+#include "WorldDef.h"
+#include <stdio.h>
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "time.h"
+#include "Debug.h"
+#include "WorldMan.h"
+#include "Gameloop.h"
+#include "Edit_Sys.h"
+#include "PathAI.h"
+#include "Tile_Surface.h"
+#include "Tactical_Save.h"
+#include "MemMan.h"
 
 
 // GLobals

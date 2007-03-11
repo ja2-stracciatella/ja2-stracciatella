@@ -8,41 +8,36 @@
 	Date            :       1997-NOV
 */
 
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-#else
-	#include <stdio.h>
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "Debug.h"
-	#include "MemMan.h"
-	#include "Overhead_Types.h"
-	#include "Soldier_Control.h"
-	#include "Animation_Cache.h"
-	#include "Animation_Data.h"
-	#include "Animation_Control.h"
-	#include "Interface.h"
-	#include <math.h>
-
-	#include "Input.h"
-	#include "English.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "PathAI.h"
-	#include "PathAIDebug.h"
-	#include "Points.h"
-	#include "AI.h"
-	#include "Random.h"
-	#include "Message.h"
-	#include "Structure_Wrap.h"
-	#include "Keys.h"
-	#include "GameSettings.h"
-	#include "Buildings.h"
-	#include "Stubs.h" // XXX
-#endif
-
+#include <stdio.h>
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "Debug.h"
+#include "MemMan.h"
+#include "Overhead_Types.h"
+#include "Soldier_Control.h"
+#include "Animation_Cache.h"
+#include "Animation_Data.h"
+#include "Animation_Control.h"
+#include "Interface.h"
+#include <math.h>
+#include "Input.h"
+#include "English.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "PathAI.h"
 #include "PathAIDebug.h"
+#include "Points.h"
+#include "AI.h"
+#include "Random.h"
+#include "Message.h"
+#include "Structure_Wrap.h"
+#include "Keys.h"
+#include "GameSettings.h"
+#include "Buildings.h"
+#include "Stubs.h" // XXX
+#include "PathAIDebug.h"
+
 
 //extern UINT8 gubDiagCost[20];
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for

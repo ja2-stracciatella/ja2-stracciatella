@@ -1,15 +1,11 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Types.h"
-	#include "Store_Inventory.h"
-	#include "Random.h"
-	#include "Weapons.h"
-	#include "Debug.h"
-	#include "LaptopSave.h"
-	#include "ShopKeeper_Interface.h"
-	#include "ArmsDealerInvInit.h"
-#endif
+#include "Types.h"
+#include "Store_Inventory.h"
+#include "Random.h"
+#include "Weapons.h"
+#include "Debug.h"
+#include "LaptopSave.h"
+#include "ShopKeeper_Interface.h"
+#include "ArmsDealerInvInit.h"
 
 
 UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS] =

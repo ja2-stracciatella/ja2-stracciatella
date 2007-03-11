@@ -1,40 +1,31 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-	#include "Enemy_Soldier_Save.h"
-#else
-	#include <stdio.h>
-	#include <memory.h>
+#include <stdio.h>
+#include <memory.h>
+#include "Types.h"
+#include "StrategicMap.h"
+#include "Overhead.h"
+#include "Isometric_Utils.h"
+#include "Soldier_Add.h"
+#include "Soldier_Create.h"
+#include "Soldier_Init_List.h"
+#include "Debug.h"
+#include "Random.h"
+#include "Items.h"
+#include "Cursors.h"
+#include "Map_Information.h"
+#include "Soldier_Profile.h"
+#include "Sys_Globals.h"
+#include "EditorMercs.h"
+#include "Animation_Data.h"
+#include "Message.h"
+#include "Font_Control.h"
+#include "Tactical_Save.h"
+#include "Campaign_Types.h"
+#include "Game_Clock.h"
+#include "Queen_Command.h"
+#include "Scheduling.h"
+#include "MemMan.h"
+#include "FileMan.h"
 
-	#include "Types.h"
-
-	#include "StrategicMap.h"
-	#include "Overhead.h"
-	#include "Isometric_Utils.h"
-
-	#include "Soldier_Add.h"
-	#include "Soldier_Create.h"
-	#include "Soldier_Init_List.h"
-	#include "Debug.h"
-	#include "Random.h"
-	#include "Items.h"
-
-	#include "Cursors.h"
-
-	#include "Map_Information.h"
-	#include "Soldier_Profile.h"
-	#include "Sys_Globals.h"
-	#include "EditorMercs.h"
-	#include "Animation_Data.h"
-	#include "Message.h"
-	#include "Font_Control.h"
-	#include "Tactical_Save.h"
-	#include "Campaign_Types.h"
-	#include "Game_Clock.h"
-	#include "Queen_Command.h"
-	#include "Scheduling.h"
-	#include "MemMan.h"
-	#include "FileMan.h"
-#endif
 
 extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );
 

@@ -1,12 +1,10 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Language_Defines.h"
-	#ifdef ENGLISH
-		#include "Text.h"
-		#include "FileMan.h"
-		#include "JA2_Demo_Ads.h"
-	#endif
+#include "Language_Defines.h"
+#ifdef ENGLISH
+#	include "Text.h"
+#	include "FileMan.h"
+#	include "JA2_Demo_Ads.h"
 #endif
+
 
 #ifdef ENGLISH
 

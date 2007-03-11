@@ -1,17 +1,13 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-#else
-	#include "Types.h"
-	#include "VSurface.h"
-	#include "Timer_Control.h"
-	#include <stdio.h>
-	#include "TopicIDs.h"
-	#include "LibraryDataBase.h"
-	#include "TopicOps.h"
-	#include "Debug.h"
-	#include "MainMenuScreen.h"
-	#include "Video.h"
-#endif
+#include "Types.h"
+#include "VSurface.h"
+#include "Timer_Control.h"
+#include <stdio.h>
+#include "TopicIDs.h"
+#include "LibraryDataBase.h"
+#include "TopicOps.h"
+#include "Debug.h"
+#include "MainMenuScreen.h"
+#include "Video.h"
 
 #ifndef ENGLISH
 #	include "Multi_Language_Graphic_Utils.h"

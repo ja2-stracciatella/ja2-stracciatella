@@ -1,14 +1,10 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-#else
-	#include <stdarg.h>
-	#include <stdio.h>
-	#include <wchar.h>
-	#include "Types.h"
-	#include "ScreenIDs.h"
-	#include "Sys_Globals.h"
-	#include "Gameloop.h"
-#endif
+#include <stdarg.h>
+#include <stdio.h>
+#include <wchar.h>
+#include "Types.h"
+#include "ScreenIDs.h"
+#include "Sys_Globals.h"
+#include "Gameloop.h"
 
 
 // External globals

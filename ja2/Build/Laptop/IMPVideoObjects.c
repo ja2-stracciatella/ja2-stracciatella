@@ -1,24 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "IMPVideoObjects.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Render_Dirty.h"
-	#include "Encrypted_File.h"
-	#include "Cursors.h"
-	#include "IMP_HomePage.h"
-	#include "Laptop.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "IMP_Attribute_Selection.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-#endif
-
-// globals
+#include "IMPVideoObjects.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Encrypted_File.h"
+#include "Cursors.h"
+#include "IMP_HomePage.h"
+#include "Laptop.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "IMP_Attribute_Selection.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
 
 
 // video object handles

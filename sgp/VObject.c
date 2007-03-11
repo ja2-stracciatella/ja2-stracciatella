@@ -1,18 +1,13 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include <stdio.h>
-	#include "Debug.h"
-	#include "HImage.h"
-	#include "VObject.h"
-	#include "WCheck.h"
-	#include "VObject_Blitters.h"
-	#include "SGP.h"
-	#include <string.h>
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include "Debug.h"
+#include "HImage.h"
+#include "VObject.h"
+#include "WCheck.h"
+#include "VObject_Blitters.h"
+#include "SGP.h"
+#include <string.h>
+#include "MemMan.h"
+
 
 // ******************************************************************************
 //

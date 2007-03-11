@@ -1,16 +1,13 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include "Types.h"
-	#include "Soldier_Control.h"
-	#include "AI.h"
-	#include "AIInternals.h"
-	#include "OppList.h"
-	#include "Items.h"
-	#include "Rotting_Corpses.h"
-	#include "Soldier_Add.h"
-	#include "Debug.h"
-#endif
+#include "Types.h"
+#include "Soldier_Control.h"
+#include "AI.h"
+#include "AIInternals.h"
+#include "OppList.h"
+#include "Items.h"
+#include "Rotting_Corpses.h"
+#include "Soldier_Add.h"
+#include "Debug.h"
+
 
 #define CAN_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER && s->ubBodyType != INFANT_MONSTER)
 #define CAN_LISTEN_TO_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER)

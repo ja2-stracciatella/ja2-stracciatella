@@ -1,18 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "Types.h"
-	#include "Animated_ProgressBar.h"
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include "Font_Control.h"
-	#include "VSurface.h"
-	#include "Video.h"
-	#include "Render_Dirty.h"
-	#include "Music_Control.h"
-	#include <string.h>
-	#include "Timer_Control.h"
-	#include "SysUtil.h"
-#endif
+#include "Types.h"
+#include "Animated_ProgressBar.h"
+#include "MemMan.h"
+#include "Debug.h"
+#include "Font_Control.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "Render_Dirty.h"
+#include "Music_Control.h"
+#include <string.h>
+#include "Timer_Control.h"
+#include "SysUtil.h"
+
 
 double rStart, rEnd;
 double rActual;

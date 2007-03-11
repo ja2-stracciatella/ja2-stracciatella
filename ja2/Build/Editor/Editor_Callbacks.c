@@ -1,36 +1,28 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "Types.h"
-	#include "Button_System.h"
-	#include "EditorDefines.h"
+#include "Types.h"
+#include "Button_System.h"
+#include "EditorDefines.h"
+#include "Editor_Taskbar_Utils.h"
+#include "EditorItems.h"
+#include "Editor_Callback_Prototypes.h"
+#include "Editor_Modes.h"
+#include "EditorBuildings.h"
+#include "EditorMercs.h"
+#include "EditScreen.h"
+#include "Item_Statistics.h"
+#include "Cursor_Modes.h"
+#include "PopupMenu.h"
+#include "Simple_Render_Utils.h"
+#include "Soldier_Init_List.h"
+#include "Overhead.h"
+#include "Scheduling.h"
+#include "Input.h"
+#include "Map_Information.h"
+#include "EditorMapInfo.h"
 
-	#include "Editor_Taskbar_Utils.h"
-	#include "EditorItems.h"
-
-	#include "Editor_Callback_Prototypes.h"
-	#include "Editor_Modes.h"
-
-	#include "EditorBuildings.h"
-	#include "EditorMercs.h"
-	#include "EditScreen.h"
-	#include "Item_Statistics.h"
-	#include "Cursor_Modes.h"
-	#include "PopupMenu.h"
-	#include "Simple_Render_Utils.h"
-	#include "Soldier_Init_List.h"
-	#include "Overhead.h"
-	#include "Scheduling.h"
-	#include "Input.h"
-	#include "Map_Information.h"
-	#include "EditorMapInfo.h"
-#endif
 
 extern SOLDIERINITNODE *gpSelected;
 extern SCHEDULENODE gCurrSchedule;

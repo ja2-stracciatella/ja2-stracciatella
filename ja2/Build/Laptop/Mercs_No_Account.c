@@ -1,24 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Mercs_No_Account.h"
-	#include "Mercs.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "LaptopSave.h"
-	#include "Random.h"
-	#include "Text.h"
-	#include "Speck_Quotes.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
-
-
+#include "Laptop.h"
+#include "Mercs_No_Account.h"
+#include "Mercs.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "LaptopSave.h"
+#include "Random.h"
+#include "Text.h"
+#include "Speck_Quotes.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		MERC_NA_TEXT_FONT									FONT12ARIAL

@@ -1,18 +1,14 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include "AIInternals.h"
-	#include "AI.h"
-	#include "PathAI.h"
-	#include "Items.h"
-	#include "World_Items.h"
-	#include "StrategicMap.h"
-	#include "Map_Screen_Interface_Map.h"
-	#include "Soldier_Profile.h"
-	#include "Quests.h"
-#endif
-
+#include "AIInternals.h"
+#include "AI.h"
+#include "PathAI.h"
+#include "Items.h"
+#include "World_Items.h"
+#include "StrategicMap.h"
+#include "Map_Screen_Interface_Map.h"
+#include "Soldier_Profile.h"
+#include "Quests.h"
 #include "Queen_Command.h"
+
 
 void MakeClosestEnemyChosenOne()
 {

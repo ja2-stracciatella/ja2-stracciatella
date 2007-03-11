@@ -1,30 +1,26 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-	#include "Edit_Sys.h"
-#else
-	#include <stdio.h>
-	#include "FileMan.h"
-	#include "Types.h"
-	#include "Map_Information.h"
-	#include "Soldier_Init_List.h"
-	#include "Random.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "RenderWorld.h"
-	#include "EditorMercs.h"
-	#include "Exit_Grids.h"
-	#include "Isometric_Utils.h"
-	#include "JA2.h"
-	#include "Animation_Data.h"
-	#include "Road_Smoothing.h"
-	#include "Sys_Globals.h"
-	#include "Message.h"
-	#include "Weapons.h"
-	#include "Environment.h"
-	#include "Lighting.h"
-	#include "Animated_ProgressBar.h"
-	#include "Debug.h"
-#endif
+#include <stdio.h>
+#include "FileMan.h"
+#include "Types.h"
+#include "Map_Information.h"
+#include "Soldier_Init_List.h"
+#include "Random.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "RenderWorld.h"
+#include "EditorMercs.h"
+#include "Exit_Grids.h"
+#include "Isometric_Utils.h"
+#include "JA2.h"
+#include "Animation_Data.h"
+#include "Road_Smoothing.h"
+#include "Sys_Globals.h"
+#include "Message.h"
+#include "Weapons.h"
+#include "Environment.h"
+#include "Lighting.h"
+#include "Animated_ProgressBar.h"
+#include "Debug.h"
+
 
 //Don't mess with this value, unless you want to force update all maps in the game!
 #ifdef RUSSIAN

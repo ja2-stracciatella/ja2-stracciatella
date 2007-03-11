@@ -10,19 +10,13 @@
 //
 //**************************************************************************
 
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "Types.h"
-	#include "FileMan.h"
-	#include "MemMan.h"
-	#include "WCheck.h"
-	#include "HImage.h"
-	#include "string.h"
-	#include "Debug.h"
-#endif
+#include "Types.h"
+#include "FileMan.h"
+#include "MemMan.h"
+#include "WCheck.h"
+#include "HImage.h"
+#include "string.h"
+#include "Debug.h"
 
 
 static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);

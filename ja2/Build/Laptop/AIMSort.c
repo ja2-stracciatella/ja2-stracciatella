@@ -1,24 +1,19 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "AIMSort.h"
-	#include "AIM.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Soldier_Profile.h"
-	#include "stdlib.h"
-	#include "Game_Clock.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Debug.h"
-	#include "Font_Control.h"
-#endif
-
+#include "Laptop.h"
+#include "AIMSort.h"
+#include "AIM.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Soldier_Profile.h"
+#include "stdlib.h"
+#include "Game_Clock.h"
+#include "Text.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Debug.h"
+#include "Font_Control.h"
 
 
 //#define

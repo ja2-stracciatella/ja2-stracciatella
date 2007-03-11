@@ -1,23 +1,19 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include <stdio.h>
-	#include <string.h>
-	#include <strings.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "Debug.h"
-	#include "TileDef.h"
-	#include "Animation_Cache.h"
-	#include "Animation_Data.h"
-	#include "Animation_Control.h"
-	#include "Sys_Globals.h"
-	#include "Debug_Control.h"
-	#include "Tile_Surface.h"
-	#include "Tile_Cache.h"
-	#include "FileMan.h"
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "Debug.h"
+#include "TileDef.h"
+#include "Animation_Cache.h"
+#include "Animation_Data.h"
+#include "Animation_Control.h"
+#include "Sys_Globals.h"
+#include "Debug_Control.h"
+#include "Tile_Surface.h"
+#include "Tile_Cache.h"
+#include "FileMan.h"
+#include "MemMan.h"
 
 
 UINT32	guiNumTileCacheStructs = 0;

@@ -1,21 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "IMP_AboutUs.h"
-	#include "CharProfile.h"
-	#include "IMPVideoObjects.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Render_Dirty.h"
-	#include "Encrypted_File.h"
-	#include "Cursors.h"
-	#include "Laptop.h"
-	#include "IMP_Text_System.h"
-	#include "Button_System.h"
-	#include "Font_Control.h"
-#endif
+#include "IMP_AboutUs.h"
+#include "CharProfile.h"
+#include "IMPVideoObjects.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Encrypted_File.h"
+#include "Cursors.h"
+#include "Laptop.h"
+#include "IMP_Text_System.h"
+#include "Button_System.h"
+#include "Font_Control.h"
+
 
 // IMP AboutUs buttons
 INT32 giIMPAboutUsButton[1];

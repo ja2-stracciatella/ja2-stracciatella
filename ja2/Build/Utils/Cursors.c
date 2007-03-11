@@ -1,22 +1,18 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Interface_Items.h"
-#else
-	#include <wchar.h>
-	#include "SGP.h"
-	#include "Cursors.h"
-	#include "Timer_Control.h"
-	#include "JAScreens.h"
-	#include "Font.h"
-	#include "Font_Control.h"
-	#include "Sys_Globals.h"
-	#include "Handle_UI.h"
-	#include "Interface.h"
-	#include "Overhead.h"
-	#include "Cursor_Control.h"
-	#include "Sound_Control.h"
-	#include "Video.h"
-	#include "VSurface.h"
-#endif
+#include <wchar.h>
+#include "SGP.h"
+#include "Cursors.h"
+#include "Timer_Control.h"
+#include "JAScreens.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "Sys_Globals.h"
+#include "Handle_UI.h"
+#include "Interface.h"
+#include "Overhead.h"
+#include "Cursor_Control.h"
+#include "Sound_Control.h"
+#include "Video.h"
+#include "VSurface.h"
 
 
 #define NUM_MOUSE_LEVELS		2

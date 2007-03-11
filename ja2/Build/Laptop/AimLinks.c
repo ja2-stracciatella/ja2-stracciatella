@@ -1,19 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "AIMLinks.h"
-	#include "AIM.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "WordWrap.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
+#include "Laptop.h"
+#include "AIMLinks.h"
+#include "AIM.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "WordWrap.h"
+#include "Text.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
+
 
 #define		AIM_LINK_TITLE_FONT						FONT14ARIAL
 #define		AIM_LINK_TITLE_COLOR					AIM_GREEN

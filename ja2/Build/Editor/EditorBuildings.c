@@ -1,34 +1,29 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "TileDef.h"
-	#include "Edit_Sys.h"
-	#include "SysUtil.h"
-	#include "Font_Control.h"
-	#include "WorldMan.h"			//HideStructOfGivenType()
-	#include "EditorDefines.h"
-	#include "EditorBuildings.h"
-	#include "EditorTerrain.h" //for access to TerrainTileDrawMode
-	#include "Render_Fun.h"
-	#include "NewSmooth.h"
-	#include "Editor_Undo.h"
-	#include "Editor_Taskbar_Utils.h"
-	#include "Editor_Modes.h"
-	#include "Smoothing_Utils.h"
-	#include "Text_Input.h"
-	#include "Keys.h"
-	#include "Environment.h"
-	#include "SelectWin.h"
-	#include "Simple_Render_Utils.h"
-	#include "Debug.h"
-	#include "MemMan.h"
-#endif
+#include "TileDef.h"
+#include "Edit_Sys.h"
+#include "SysUtil.h"
+#include "Font_Control.h"
+#include "WorldMan.h"			//HideStructOfGivenType()
+#include "EditorDefines.h"
+#include "EditorBuildings.h"
+#include "EditorTerrain.h" //for access to TerrainTileDrawMode
+#include "Render_Fun.h"
+#include "NewSmooth.h"
+#include "Editor_Undo.h"
+#include "Editor_Taskbar_Utils.h"
+#include "Editor_Modes.h"
+#include "Smoothing_Utils.h"
+#include "Text_Input.h"
+#include "Keys.h"
+#include "Environment.h"
+#include "SelectWin.h"
+#include "Simple_Render_Utils.h"
+#include "Debug.h"
+#include "MemMan.h"
+
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 UINT16 usCurrentMode;

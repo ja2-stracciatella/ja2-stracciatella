@@ -1,19 +1,17 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include "Types.h"
-	#include "Compression.h"
-	#include "Debug.h"
-	#include "FileMan.h"
-	#include "ImgFmt.h"
-	#include "HImage.h"
-	#include "PCX.h"
-	#include "ImpTGA.h"
-	#include "WCheck.h"
-	#include "MemMan.h"
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "Types.h"
+#include "Compression.h"
+#include "Debug.h"
+#include "FileMan.h"
+#include "ImgFmt.h"
+#include "HImage.h"
+#include "PCX.h"
+#include "ImpTGA.h"
+#include "WCheck.h"
+#include "MemMan.h"
+
 
 //CONVERT_TO_16_BIT
 BOOLEAN ConvertToETRLE( UINT8 ** ppDest, UINT32 * puiDestLen, UINT8 ** ppSubImageBuffer, UINT16 * pusNumberOfSubImages, UINT8 * p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags );

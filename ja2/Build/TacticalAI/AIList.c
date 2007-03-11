@@ -10,18 +10,15 @@
  *
  */
 
-#ifdef PRECOMPILEDHEADERS
-	#include "AI All.h"
-#else
-	#include "AIList.h"
-	#include "Overhead.h"
-	#include "Debug.h"
-	#include "AIInternals.h"
-	#include "AI.h"
-	#include "OppList.h"
-	#include "Interface.h"
-	#include "Tactical_Save.h"
-#endif
+#include "AIList.h"
+#include "Overhead.h"
+#include "Debug.h"
+#include "AIInternals.h"
+#include "AI.h"
+#include "OppList.h"
+#include "Interface.h"
+#include "Tactical_Save.h"
+
 
 #define AI_LIST_SIZE TOTAL_SOLDIERS
 

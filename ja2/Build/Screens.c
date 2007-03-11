@@ -1,9 +1,5 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-#else
-	#include "Screens.h"
-	#include "JAScreens.h"
-#endif
+#include "Screens.h"
+#include "JAScreens.h"
 
 
 Screens GameScreens[MAX_SCREENS] =

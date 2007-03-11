@@ -1,25 +1,23 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "WCheck.h"
-	#include "Event_Pump.h"
-	#include "Soldier_Control.h"
-	#include "Sound_Control.h"
-	#include "Overhead.h"
-	#include "Weapons.h"
-	#include "Animation_Control.h"
-	#include "OppList.h"
-	#include "Tactical_Save.h"
-	#include "Debug.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "SGP.h"
+#include "WCheck.h"
+#include "Event_Pump.h"
+#include "Soldier_Control.h"
+#include "Sound_Control.h"
+#include "Overhead.h"
+#include "Weapons.h"
+#include "Animation_Control.h"
+#include "OppList.h"
+#include "Tactical_Save.h"
+#include "Debug.h"
 
 #ifdef NETWORKED
-#include "Networking.h"
-#include "NetworkEvent.h"
+#	include "Networking.h"
+#	include "NetworkEvent.h"
 #endif
+
 
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons

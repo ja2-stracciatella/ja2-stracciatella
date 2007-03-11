@@ -1,40 +1,36 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Tactical All.h"
-	#include "language defines.h"
-#else
-	#include <stdio.h>
-	#include <stdarg.h>
-	#include <time.h>
-	#include "SGP.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "RenderWorld.h"
-	#include "Structure.h"
-	#include "Animation_Control.h"
-	#include "Points.h"
-	#include "Overhead.h"
-	#include "Structure_Wrap.h"
-	#include "Tile_Animation.h"
-	#include "Interactive_Tiles.h"
-	#include "Handle_Doors.h"
-	#include "Sound_Control.h"
-	#include "Interface.h"
-	#include "Keys.h"
-	#include "Message.h"
-	#include "Text.h"
-	#include "Random.h"
-	#include "SkillCheck.h"
-	#include "Dialogue_Control.h"
-	#include "Render_Fun.h"
-	#include "Quests.h"
-	#include "StrategicMap.h"
-	#include "Map_Screen_Interface_Map.h"
-	#include "Soldier_Profile.h"
-	#include "Isometric_Utils.h"
-	#include "AI.h"
-	#include "Soldier_Macros.h"
-	#include "Debug.h"
-#endif
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include "SGP.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "RenderWorld.h"
+#include "Structure.h"
+#include "Animation_Control.h"
+#include "Points.h"
+#include "Overhead.h"
+#include "Structure_Wrap.h"
+#include "Tile_Animation.h"
+#include "Interactive_Tiles.h"
+#include "Handle_Doors.h"
+#include "Sound_Control.h"
+#include "Interface.h"
+#include "Keys.h"
+#include "Message.h"
+#include "Text.h"
+#include "Random.h"
+#include "SkillCheck.h"
+#include "Dialogue_Control.h"
+#include "Render_Fun.h"
+#include "Quests.h"
+#include "StrategicMap.h"
+#include "Map_Screen_Interface_Map.h"
+#include "Soldier_Profile.h"
+#include "Isometric_Utils.h"
+#include "AI.h"
+#include "Soldier_Macros.h"
+#include "Debug.h"
+
 
 BOOLEAN gfSetPerceivedDoorState = FALSE;
 

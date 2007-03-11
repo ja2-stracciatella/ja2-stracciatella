@@ -1,44 +1,33 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "TileEngine All.h"
-#else
-	#include <string.h>
-	#include "Types.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "FileMan.h"
-	#include "MemMan.h"
-	#include "Structure.h"
-	#include "TileDef.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-
-	#include "Interface.h"
-
-	#include "Isometric_Utils.h"
-	#include "Font.h"
-	#include "Font_Control.h"
-	#include "LOS.h"
-
-	#include "Lighting.h"
-	#include "Smell.h"
-	#include "SaveLoadMap.h"
-	#include "StrategicMap.h"
-
-
-	#include "Sys_Globals.h"	//for access to gfEditMode flag
-
-	//Kris:
-	#ifdef JA2EDITOR
-	#include "Editor_Undo.h"	//for access to AddToUndoList( iMapIndex )
-	#endif
-
-	#include "Explosion_Control.h"
-	#include "Sound_Control.h"
-
-	#include "Buildings.h"
-	#include "Random.h"
-	#include "Tile_Animation.h"
+#include <string.h>
+#include "Types.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "FileMan.h"
+#include "MemMan.h"
+#include "Structure.h"
+#include "TileDef.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "Interface.h"
+#include "Isometric_Utils.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "LOS.h"
+#include "Lighting.h"
+#include "Smell.h"
+#include "SaveLoadMap.h"
+#include "StrategicMap.h"
+#include "Sys_Globals.h"	//for access to gfEditMode flag
+//Kris:
+#ifdef JA2EDITOR
+#	include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
 #endif
+#include "Explosion_Control.h"
+#include "Sound_Control.h"
+#include "Buildings.h"
+#include "Random.h"
+#include "Tile_Animation.h"
+
 
 #ifdef COUNT_PATHS
 	extern UINT32 guiSuccessfulPathChecks;

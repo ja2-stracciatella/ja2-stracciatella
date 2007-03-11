@@ -1,17 +1,14 @@
-#ifdef PRECOMPILEDHEADERS
-#else
-	#include "MercTextBox.h"
-	#include "WCheck.h"
-	#include "Font_Control.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "VObject_Blitters.h"
-	#include "Render_Dirty.h"
-	#include "Message.h"
-	#include "Debug.h"
-	#include "Video.h"
-	#include "MemMan.h"
-#endif
+#include "MercTextBox.h"
+#include "WCheck.h"
+#include "Font_Control.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "VObject_Blitters.h"
+#include "Render_Dirty.h"
+#include "Message.h"
+#include "Debug.h"
+#include "Video.h"
+#include "MemMan.h"
 
 
 #define		TEXT_POPUP_WINDOW_TEXT_OFFSET_X		8

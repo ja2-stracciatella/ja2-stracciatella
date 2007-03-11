@@ -1,19 +1,15 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "Funeral.h"
-	#include "WCheck.h"
-	#include "Utilities.h"
-	#include "WordWrap.h"
-	#include "Cursors.h"
-	#include "Text.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Button_System.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Font_Control.h"
-#endif
+#include "Laptop.h"
+#include "Funeral.h"
+#include "WCheck.h"
+#include "Utilities.h"
+#include "WordWrap.h"
+#include "Cursors.h"
+#include "Text.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Button_System.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Font_Control.h"
 
 
 #define		FUNERAL_SENTENCE_FONT							FONT12ARIAL

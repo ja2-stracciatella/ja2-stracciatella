@@ -1,25 +1,20 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "Laptop.h"
-	#include "AIM.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Timer_Control.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Encrypted_File.h"
-	#include "EMail.h"
-	#include "Game_Clock.h"
-	#include "Text.h"
-	#include "LaptopSave.h"
-	#include "Multi_Language_Graphic_Utils.h"
-	#include "Video.h"
-	#include "VSurface.h"
-	#include "Button_System.h"
-	#include "Font_Control.h"
-#endif
-
+#include "Laptop.h"
+#include "AIM.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Timer_Control.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Encrypted_File.h"
+#include "EMail.h"
+#include "Game_Clock.h"
+#include "Text.h"
+#include "LaptopSave.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Video.h"
+#include "VSurface.h"
+#include "Button_System.h"
+#include "Font_Control.h"
 
 
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];

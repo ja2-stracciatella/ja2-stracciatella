@@ -1,19 +1,16 @@
-#ifdef PRECOMPILEDHEADERS
-  #include "Interface_Control.h"
-#else
-	#include <string.h>
-	#include "WCheck.h"
-	#include "stdlib.h"
-	#include "Debug.h"
-	#include "Soldier_Control.h"
-	#include "Timer_Control.h"
-	#include "Overhead.h"
-	#include "Handle_Items.h"
-	#include "WorldDef.h"
-	#include "Interface_Control.h"
-	#include <SDL.h>
-	#include "Stubs.h"
-#endif
+#include <string.h>
+#include "WCheck.h"
+#include "stdlib.h"
+#include "Debug.h"
+#include "Soldier_Control.h"
+#include "Timer_Control.h"
+#include "Overhead.h"
+#include "Handle_Items.h"
+#include "WorldDef.h"
+#include "Interface_Control.h"
+#include <SDL.h>
+#include "Stubs.h"
+
 
 INT32	giClockTimer = -1;
 INT32	giTimerDiag = 0;

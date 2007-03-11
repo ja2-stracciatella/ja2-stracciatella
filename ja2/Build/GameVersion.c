@@ -1,9 +1,5 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "JA2 All.h"
-#else
-	#include "Types.h"
-	#include "GameVersion.h"
-#endif
+#include "Types.h"
+#include "GameVersion.h"
 
 
 //

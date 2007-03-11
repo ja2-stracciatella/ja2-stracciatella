@@ -1,12 +1,6 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
-#else
-	#include "MemMan.h"
-	#include "Debug.h"
-	#include "zlib.h"
-#endif
+#include "MemMan.h"
+#include "Debug.h"
+#include "zlib.h"
 
 
 // mem allocation functions for ZLIB's purposes

@@ -1,26 +1,23 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include <stdio.h>
-	#include "Laptop.h"
-	#include "Files.h"
-	#include "Game_Clock.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Render_Dirty.h"
-	#include "Encrypted_File.h"
-	#include "Cursors.h"
-	#include "EMail.h"
-	#include "Text.h"
-	#include <string.h>
-	#include "Button_System.h"
-	#include "VSurface.h"
-	#include "MemMan.h"
-	#include "Font_Control.h"
-	#include "FileMan.h"
-#endif
+#include <stdio.h>
+#include "Laptop.h"
+#include "Files.h"
+#include "Game_Clock.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Encrypted_File.h"
+#include "Cursors.h"
+#include "EMail.h"
+#include "Text.h"
+#include <string.h>
+#include "Button_System.h"
+#include "VSurface.h"
+#include "MemMan.h"
+#include "Font_Control.h"
+#include "FileMan.h"
+
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X
 #define TOP_Y														LAPTOP_SCREEN_UL_Y

@@ -1,19 +1,13 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Editor All.h"
-#else
-	#include "BuildDefines.h"
-#endif
+#include "BuildDefines.h"
 
 #ifdef JA2EDITOR
 
-#ifndef PRECOMPILEDHEADERS
-	#include "Types.h"
-	#include "Road_Smoothing.h"
-	#include "TileDat.h"
-	#include "WorldDef.h"
-	#include "WorldMan.h"
-	#include "Editor_Undo.h"
-#endif
+#include "Types.h"
+#include "Road_Smoothing.h"
+#include "TileDat.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "Editor_Undo.h"
 
 
 typedef struct MACROSTRUCT

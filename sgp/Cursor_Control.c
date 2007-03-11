@@ -1,19 +1,12 @@
-#ifdef JA2_PRECOMPILED_HEADERS
-	#include "JA2 SGP ALL.H"
-#elif defined( WIZ8_PRECOMPILED_HEADERS )
-	#include "WIZ8 SGP ALL.H"
+#include "Cursor_Control.h"
+#if defined( JA2 ) || defined( UTIL )
+#	include "Video.h"
 #else
-	#include "Cursor_Control.h"
-
-	#if defined( JA2 ) || defined( UTIL )
-	#include "Video.h"
-	#else
-	#include "video2.h"
-	#endif
-
-	#include "WCheck.h"
-	#include "VSurface.h"
+#	include "video2.h"
 #endif
+#include "WCheck.h"
+#include "VSurface.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

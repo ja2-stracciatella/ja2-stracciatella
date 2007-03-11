@@ -1,23 +1,20 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-#else
-	#include "CharProfile.h"
-	#include "IMP_Attribute_Entrance.h"
-	#include "IMP_MainPage.h"
-	#include "IMP_HomePage.h"
-	#include "IMPVideoObjects.h"
-	#include "Utilities.h"
-	#include "WCheck.h"
-	#include "Debug.h"
-	#include "WordWrap.h"
-	#include "Render_Dirty.h"
-	#include "Encrypted_File.h"
-	#include "Cursors.h"
-	#include "Laptop.h"
-	#include "IMP_Text_System.h"
-	#include "Button_System.h"
-	#include "Font_Control.h"
-#endif
+#include "CharProfile.h"
+#include "IMP_Attribute_Entrance.h"
+#include "IMP_MainPage.h"
+#include "IMP_HomePage.h"
+#include "IMPVideoObjects.h"
+#include "Utilities.h"
+#include "WCheck.h"
+#include "Debug.h"
+#include "WordWrap.h"
+#include "Render_Dirty.h"
+#include "Encrypted_File.h"
+#include "Cursors.h"
+#include "Laptop.h"
+#include "IMP_Text_System.h"
+#include "Button_System.h"
+#include "Font_Control.h"
+
 
 // the buttons
 UINT32 giIMPAttributeEntranceButtonImage[ 1 ];
