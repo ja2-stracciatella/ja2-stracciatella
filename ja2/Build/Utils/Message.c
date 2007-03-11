@@ -754,7 +754,7 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf( DestString, lengthof(DestString), L"Debug: %s", DestStringA );
+		swprintf(DestString, lengthof(DestString), L"Debug: %S", DestStringA);
 		WriteMessageToFile( DestStringA );
 	}
 
@@ -898,7 +898,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
-		swprintf( DestStringA, lengthof(DestStringA), L"DEBUG: %s", DestString );
+		swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %S", DestString);
 
 		BeginUIMessage( DestStringA );
 		WriteMessageToFile( DestStringA );
@@ -947,7 +947,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf( DestString, lengthof(DestString), L"Debug: %s", DestStringA );
+		swprintf(DestString, lengthof(DestString), L"Debug: %S", DestStringA);
 	}
 
 	if ( ubPriority == MSG_DIALOG )
