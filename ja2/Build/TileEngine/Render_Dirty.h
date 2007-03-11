@@ -95,11 +95,6 @@ typedef struct
 SGPRect		gDirtyClipRect;
 
 
-
-// FUNCTIONS
-////////////
-
-
 // DIRTY QUEUE
 BOOLEAN InitializeBaseDirtyRectQueue( );
 void ShutdownBaseDirtyRectQueue( );

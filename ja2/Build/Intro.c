@@ -35,10 +35,7 @@ enum
 	INTRO_TXT__CANT_FIND_INTRO,
 };
 
-//ddd
 
-
-//ggg
 BOOLEAN		gfIntroScreenEntry;
 BOOLEAN		gfIntroScreenExit;
 
@@ -114,9 +111,6 @@ void	PrepareToExitIntroScreen();
 INT32 GetNextIntroVideo( UINT32 uiCurrentVideo );
 void	StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay );
 void	DisplaySirtechSplashScreen();
-
-
-//ppp
 
 
 UINT32	IntroScreenInit( void )

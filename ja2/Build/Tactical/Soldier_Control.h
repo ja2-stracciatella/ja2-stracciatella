@@ -981,19 +981,12 @@ typedef struct ANIM_PROF
 } ANIM_PROF;
 
 
-
-// Globals
-//////////
-
 // VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
 UINT8										*gubpNumReplacementsPerRange;
 PaletteReplacementType	*gpPalRep;
 
 extern UINT8	bHealthStrRanges[];
 
-
-// Functions
-////////////
 
 // CREATION FUNCTIONS
 BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );

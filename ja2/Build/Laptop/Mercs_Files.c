@@ -135,12 +135,6 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackButton;
 
 
-//****************************
-//
-//  Function Prototypes
-//
-//****************************
-
 BOOLEAN DisplayMercFace( UINT8 ubMercID);
 void LoadAndDisplayMercBio( UINT8 ubMercID );
 void DisplayMercsStats( UINT8 ubMercID );

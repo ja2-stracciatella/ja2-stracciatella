@@ -207,9 +207,6 @@ UINT8		GetNextAimAd( UINT8 ubCurrentAd );
 
 BOOLEAN		fFirstTimeIn=TRUE;
 
-//
-// ***********************  Functions		*************************
-//
 
 void GameInitAIM()
 {

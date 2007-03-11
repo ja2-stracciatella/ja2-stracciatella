@@ -57,11 +57,6 @@
 #include "Strategic_Town_Loyalty.h"
 
 
-//
-//******  Defines  ******
-//
-
-
 #define	MERCBIOSFILENAME		"BINARYDATA/aimbios.edt"
 
 
@@ -436,11 +431,6 @@ BOOLEAN		gfAimMemberDisplayFaceHelpText = FALSE;
 
 BOOLEAN		gfAimMemberCanMercSayOpeningQuote = TRUE;
 
-////////////////////////////////////////////////////////////////
-//
-//	Mouse and Buttons
-//
-////////////////////////////////////////////////////////////////
 
 //Graphic for following
 INT32		guiPreviousContactNextButtonImage;
@@ -498,12 +488,6 @@ MOUSE_REGION    gSelectedShutUpMercRegion;
 void SelectShutUpMercRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-//*******************************************
-//
-//	Function Prototypes
-//
-//*******************************************
-
 BOOLEAN	UpdateMercInfo(void);
 BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo);
 BOOLEAN DisplayMercsInventory(UINT8 ubMercID);
@@ -545,7 +529,6 @@ void		DelayMercSpeech( UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEA
 void		DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack( UINT8 bExitValue );
 void		DisplayAimMemberClickOnFaceHelpText();
 
-//ppp
 
 UINT8	GetStatColor( INT8 bStat );
 
@@ -560,12 +543,6 @@ UINT8	GetStatColor( INT8 bStat );
 
 void WaitForMercToFinishTalkingOrUserToClick();
 
-
-//*******************************************
-//
-//	FUNCTIONS
-//
-//*******************************************
 
 void GameInitAIMMembers()
 {

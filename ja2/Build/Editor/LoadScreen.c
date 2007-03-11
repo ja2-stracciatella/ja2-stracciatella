@@ -50,7 +50,6 @@
 	#include "WorldDef.h"
 #endif
 
-//===========================================================================
 
 BOOLEAN gfErrorCatch = FALSE;
 wchar_t gzErrorCatchString[256] = L"";

@@ -221,7 +221,6 @@ enum
 
 };
 
-//ddd
 
 
 HELP_SCREEN_STRUCT gHelpScreen;
@@ -342,13 +341,6 @@ UINT32	guiHelpScreenScrollArrowImage[2];
 void		BtnHelpScreenScrollArrowsCallback(GUI_BUTTON *btn,INT32 reason);
 
 
-
-//ggg
-
-
-
-
-
 BOOLEAN EnterHelpScreen();
 void HandleHelpScreen();
 void RenderHelpScreen();
@@ -391,10 +383,6 @@ void CreateScrollAreaButtons();
 void DeleteScrollArrowButtons();
 void ChangeToHelpScreenSubPage( INT8 bNewPage );
 BOOLEAN AreWeClickingOnScrollBar( INT32 usMousePosY );
-
-
-//ppp
-
 
 
 void InitHelpScreenSystem()

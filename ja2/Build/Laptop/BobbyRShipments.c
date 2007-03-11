@@ -94,22 +94,13 @@ MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SH
 void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-//
-// Function Prototypes
-//
-
 void DisplayShipmentGrid();
 void DisplayPreviousShipments();
 void DisplayShipmentTitles();
 void RemovePreviousShipmentsMouseRegions();
 void CreatePreviousShipmentsMouseRegions();
 INT32	CountNumberValidShipmentForTheShipmentsPage();
-//ppp
 
-
-//
-// Function
-//
 
 void GameInitBobbyRShipments()
 {

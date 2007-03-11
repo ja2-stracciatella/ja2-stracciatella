@@ -611,7 +611,6 @@ void CreateBookMarkHelpText( MOUSE_REGION *pRegion, UINT32 uiBookMarkID );
 
 void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText );
 void CreateLaptopButtonHelpText( INT32 iButtonIndex, UINT32 uiButtonHelpTextID );
-//ppp
 
 //Used to determine delay if its raining
 BOOLEAN IsItRaining();

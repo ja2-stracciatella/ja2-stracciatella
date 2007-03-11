@@ -241,11 +241,6 @@ void BobbyrRGunsHelpTextDoneCallBack( void );
 	void ReportBobbyROrderError( UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing );
 #endif
 
-//ppp
-
-
-
-
 
 void GameInitBobbyRGuns()
 {

@@ -10,22 +10,10 @@
 //
 // *****************************************************************************
 
-// *****************************************************************************
-//
-//				Includes
-//
-// *****************************************************************************
-
 #include "MouseSystem_Macros.h"
 
 #ifndef _MOUSE_SYSTEM_H_
 #define _MOUSE_SYSTEM_H_
-
-// *****************************************************************************
-//
-//				Typedefs
-//
-// *****************************************************************************
 
 #ifdef JA2
 #define _JA2_RENDER_DIRTY		// Undef this if not using the JA2 Dirty Rectangle System.
@@ -64,12 +52,6 @@ typedef struct _MOUSE_REGION {
 	struct _MOUSE_REGION	*prev;
 } MOUSE_REGION;
 
-
-// *****************************************************************************
-//
-//				Defines
-//
-// *****************************************************************************
 
 // Mouse Region Flags
 #define MSYS_NO_FLAGS										0x00000000
@@ -151,18 +133,10 @@ typedef struct _MOUSE_REGION {
 #define MSYS_ALREADY_GRABBED			1
 #define MSYS_REGION_NOT_IN_LIST		2
 
-// *****************************************************************************
-//
-//				Prototypes
-//
-// *****************************************************************************
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// *****************************************************************************
-
 
 // Note:
 //		The prototype for MSYS_SGP_Mouse_Handler_Hook() is defined in mousesystem_macros.h

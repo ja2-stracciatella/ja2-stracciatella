@@ -90,13 +90,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 };
 
 
-
-////////////////////////////////////////////
-//
-//	global defines
-//
-///////////////////////////////////////////
-
 #define		SKI_BUTTON_FONT										MILITARYFONT1//FONT14ARIAL
 #define		SKI_BUTTON_COLOR									73
 
@@ -283,13 +276,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		REPAIR_DELAY_IN_HOURS							6
 
 #define		FLO_DISCOUNT_PERCENTAGE						10
-
-
-////////////////////////////////////////////
-//
-//	Global Variables
-//
-///////////////////////////////////////////
 
 
 UINT32		guiMainTradeScreenImage;
@@ -533,12 +519,6 @@ void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION * pRegion, INT
 void SelectArmsDealersDropItemToGroundMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-////////////////////////////////////////////
-//
-//	Local Function Prototypes
-//
-///////////////////////////////////////////
-
 BOOLEAN		EnterShopKeeperInterface();
 BOOLEAN		ExitShopKeeperInterface();
 void			HandleShopKeeperInterface();
@@ -677,9 +657,6 @@ BOOLEAN gfTestDisplayDealerCash = FALSE;
 void DisplayAllDealersCash();
 #endif
 
-//ppp
-
-
 
 //
 // screen handler functions
@@ -797,17 +774,6 @@ UINT32	ShopKeeperScreenShutdown()
 
 	return( TRUE );
 }
-
-
-
-
-
-//
-//
-//
-
-
-
 
 
 BOOLEAN EnterShopKeeperInterface()
@@ -2020,7 +1986,7 @@ void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 
 			return;
 
 		gpHighLightedItemObject = NULL;
-		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;	//ddd
+		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, -1, FALSE );
 	}
 }
@@ -2048,7 +2014,7 @@ void SelectDealersOfferSlotsMovementRegionCallBack(MOUSE_REGION * pRegion, INT32
 			return;
 
 		gpHighLightedItemObject = NULL;
-		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;//ddd
+		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, -1, FALSE );
 	}
 }
@@ -2076,7 +2042,7 @@ void SelectPlayersOfferSlotsMovementRegionCallBack(MOUSE_REGION * pRegion, INT32
 			return;
 
 		gpHighLightedItemObject = NULL;
-		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;//ddd
+		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, -1, FALSE );
 	}
 }

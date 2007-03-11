@@ -46,12 +46,6 @@
 #include		"WorldMan.h"
 
 
-/////////////////////////////////
-//
-//	Defines
-//
-/////////////////////////////////
-
 #define		OPTIONS_TITLE_FONT										FONT14ARIAL
 #define		OPTIONS_TITLE_COLOR										FONT_MCOLOR_WHITE
 
@@ -141,13 +135,6 @@
 #define		OPT_FIRST_COLUMN_TOGGLE_CUT_OFF			10//8
 
 
-/////////////////////////////////
-//
-//	Global Variables
-//
-/////////////////////////////////
-
-
 UINT32		guiOptionBackGroundImage;
 UINT32		guiOptionsAddOnImages;
 
@@ -221,13 +208,6 @@ MOUSE_REGION    gSelectedToggleBoxAreaRegion;
 void		SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason );
 
 
-/////////////////////////////////
-//
-//	Function ProtoTypes
-//
-/////////////////////////////////
-
-
 BOOLEAN		EnterOptionsScreen();
 void			RenderOptionsScreen();
 void			ExitOptionsScreen();
@@ -248,14 +228,6 @@ void			HandleHighLightedText( BOOLEAN fHighLight );
 
 extern	void ToggleItemGlow( BOOLEAN fOn );
 
-
-//ppp
-
-/////////////////////////////////
-//
-//	Code
-//
-/////////////////////////////////
 
 UINT32	OptionsScreenInit()
 {

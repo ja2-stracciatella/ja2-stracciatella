@@ -40,10 +40,6 @@ void SetSectorsRevealedBit( UINT16	usMapIndex );
 void SetMapRevealedStatus();
 void DamageStructsFromMapTempFile( MODIFY_MAP * pMap );
 BOOLEAN ModifyWindowStatus( UINT32 uiMapIndex );
-//ppp
-
-
-
 
 
 void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
@@ -759,9 +755,6 @@ void DamageStructsFromMapTempFile( MODIFY_MAP * pMap )
 		gpWorldLevelData[ pCurrent->sGridNo ].uiFlags |= MAPELEMENT_STRUCTURE_DAMAGED;
 	}
 }
-
-
-//////////////
 
 
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )

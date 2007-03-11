@@ -28,8 +28,6 @@
 	#include "Items.h"
 #endif
 
-//*******  Local Defines **************************************************
-
 
 #define		DC_MAX_COVER_RANGE						31
 
@@ -67,8 +65,6 @@ enum
 	DC__SEE_3_STANCE,
 };
 
-//******  Global Variables  *****************************************
-
 
 BEST_COVER_STRUCT gCoverRadius[ DC_MAX_COVER_RANGE ][ DC_MAX_COVER_RANGE ];
 INT16	gsLastCoverGridNo=NOWHERE;
@@ -79,7 +75,6 @@ INT8	gbLastStance=-1;
 VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[ DC__SOLDIER_VISIBLE_RANGE ][ DC__SOLDIER_VISIBLE_RANGE ];
 INT16	gsLastVisibleToSoldierGridNo=NOWHERE;
 
-//*******  Function Prototypes ***************************************
 
 INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridno, INT8 bStance );
 void	CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange );
@@ -93,10 +88,6 @@ void	CalculateVisibleToSoldierAroundGridno( INT16 sGridNo, INT8 bSearchRange );
 void	AddVisibleToSoldierToEachGridNo();
 INT8	CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof );
 BOOLEAN IsTheRoofVisible( INT16 sGridNo );
-
-//ppp
-
-//*******  Functions **************************************************
 
 
 void DisplayCoverOfSelectedGridNo( )

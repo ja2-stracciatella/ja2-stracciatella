@@ -13,20 +13,9 @@
 #ifndef _FILEMAN_H
 #define _FILEMAN_H
 
-//**************************************************************************
-//
-//				Includes
-//
-//**************************************************************************
-
 #include "Stubs.h"
 #include "Types.h"
 
-//**************************************************************************
-//
-//				Defines
-//
-//**************************************************************************
 
 #define MAX_FILENAME_LEN        48
 
@@ -69,11 +58,6 @@
 
 typedef	FILETIME				SGP_FILETIME;
 
-//**************************************************************************
-//
-//				Function Prototypes
-//
-//**************************************************************************
 
 #ifdef __cplusplus
 extern "C" {
@@ -126,11 +110,7 @@ BOOLEAN FileClearAttributes( const char *filename );
 BOOLEAN	FileCheckEndOfFile( HWFILE hFile );
 
 
-
 BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime );
-
-
-
 
 
 // CompareSGPFileTimes() returns...

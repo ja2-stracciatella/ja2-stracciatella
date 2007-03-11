@@ -50,13 +50,6 @@
 BOOLEAN gfSchedulesHosed = FALSE;
 extern UINT32 guiBrokenSaveGameVersion;
 
-//////////////////////////////////////////////////////
-//
-//  Defines
-//
-//////////////////////////////////////////////////////
-
-
 
 #define		SAVE_LOAD_TITLE_FONT								FONT14ARIAL
 #define		SAVE_LOAD_TITLE_COLOR								FONT_MCOLOR_WHITE
@@ -142,16 +135,6 @@ enum
 };
 
 
-
-//ddd
-
-
-//////////////////////////////////////////////////////
-//
-//  Global Variables
-//
-//////////////////////////////////////////////////////
-
 extern void NextLoopCheckForEnoughFreeHardDriveSpace();
 
 
@@ -236,12 +219,6 @@ MOUSE_REGION		gSLSEntireScreenRegion;
 void		SelectedSLSEntireRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-//////////////////////////////////////////////////////
-//
-//  Function Prototypes
-//
-//////////////////////////////////////////////////////
-
 BOOLEAN		EnterSaveLoadScreen();
 void			RenderSaveLoadScreen();
 void			ExitSaveLoadScreen();
@@ -277,17 +254,6 @@ void			ClearSelectedSaveSlot();
 void			MoveSelectionUpOrDown( BOOLEAN fUp );
 void			SaveGameToSlotNum();
 void			StartFadeOutForSaveLoadScreen();
-
-//ppp
-
-
-
-
-//////////////////////////////////////////////////////
-//
-//  Code
-//
-//////////////////////////////////////////////////////
 
 
 UINT32	SaveLoadScreenInit()

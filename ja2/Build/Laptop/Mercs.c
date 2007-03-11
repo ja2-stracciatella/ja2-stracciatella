@@ -264,14 +264,6 @@ MOUSE_REGION		gMercSiteSubTitleMouseRegion;
 void MercSiteSubTitleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-
-
-//*******************************
-//
-//   Function Prototypes
-//
-//*******************************
-
 BOOLEAN		StartSpeckTalking(UINT16 usQuoteNum);
 void			InitMercVideoFace();
 BOOLEAN		HandleSpeckTalking( BOOLEAN fReset );
@@ -305,8 +297,6 @@ BOOLEAN		AreAnyOfTheNewMercsAvailable();
 void			ShouldAnyNewMercMercBecomeAvailable();
 BOOLEAN		CanMercBeAvailableYet( UINT8 ubMercToCheck );
 UINT32		CalcMercDaysServed();
-//ppp
-
 
 
 void GameInitMercs()

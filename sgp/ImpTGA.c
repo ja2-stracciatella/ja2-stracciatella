@@ -10,12 +10,6 @@
 //
 //**************************************************************************
 
-//**************************************************************************
-//
-//				Includes
-//
-//**************************************************************************
-
 #ifdef JA2_PRECOMPILED_HEADERS
 	#include "JA2 SGP ALL.H"
 #elif defined( WIZ8_PRECOMPILED_HEADERS )
@@ -30,23 +24,6 @@
 	#include "Debug.h"
 #endif
 
-//**************************************************************************
-//
-//				Defines
-//
-//**************************************************************************
-
-//**************************************************************************
-//
-//				Typedefs
-//
-//**************************************************************************
-
-//**************************************************************************
-//
-//				Function Prototypes
-//
-//**************************************************************************
 
 static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
@@ -54,11 +31,6 @@ static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UI
 static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 //BOOLEAN	ConvertTGAToSystemBPPFormat( HIMAGE hImage );
 
-//**************************************************************************
-//
-//				Function Definitions
-//
-//**************************************************************************
 
 BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 {

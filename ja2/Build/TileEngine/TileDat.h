@@ -3117,7 +3117,6 @@ enum TileTypeDefines
 };
 
 
-//==========================================================================
 // Quick defines for finding last type entry in tile types
 #define LASTTEXTURE				(DEEPWATERTEXTURE - 1)
 #define LASTBANKS					(FIRSTCLIFFSHADOW - 1)
@@ -3144,7 +3143,6 @@ enum TileTypeDefines
 #define LASTUIELEM				(WIREFRAMES  - 1)		// Change this entry if adding new types to the end
 #define LASTTIELSETELEM		(GUNS - 1)
 
-//===========================================================================
 
 // DEFINES FOR SPECIFIC SPECIAL TILE SLOTS
 #define			WALL_AFRAME_START				31

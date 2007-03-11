@@ -156,11 +156,6 @@ UINT32	guiInsuranceAcceptClearForm2Button;
 UINT32	guiInsuranceAcceptClearForm3Button;
 
 
-
-
-//
-//	Function Prototypes
-//
 BOOLEAN		DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID );
 INT8			GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID );
 //INT32			CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance );
@@ -183,9 +178,6 @@ INT32			CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier );
 INT32			CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier );
 
 BOOLEAN		AreAnyAimMercsOnTeam( );
-//ppp
-
-
 
 
 void GameInitInsuranceContract()

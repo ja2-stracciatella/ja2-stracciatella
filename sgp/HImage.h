@@ -134,11 +134,6 @@ typedef struct
 #define SGPGetBValue(rgb)   ((BYTE) ((rgb) >> 16))
 #define SGPGetGValue(rgb)   ((BYTE) (((UINT16) (rgb)) >> 8))
 
-// *****************************************************************************
-//
-// Function prototypes
-//
-// *****************************************************************************
 
 #ifdef __cplusplus
 extern "C" {

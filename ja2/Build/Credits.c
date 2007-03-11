@@ -26,8 +26,6 @@
 #endif
 
 
-
-//externals
 extern HVSURFACE ghFrameBuffer;
 
 
@@ -40,7 +38,6 @@ enum
 };
 
 
-//nnn
 typedef struct	_CRDT_NODE
 {
 	UINT32	uiType;			//the type of node
@@ -152,13 +149,6 @@ enum
 #define		CRDT_EYE_HEIGHT									12
 
 #define		CRDT_EYES_CLOSED_TIME						150
-//ddd
-
-
-
-
-
-
 
 
 typedef struct
@@ -283,8 +273,6 @@ STR16	gzCreditNameFunny[]=
 */
 
 
-//Global Variables
-
 MOUSE_REGION	gCrdtMouseRegions[ NUM_PEOPLE_IN_CREDITS ];
 void			SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void			SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
@@ -333,14 +321,6 @@ BOOLEAN		gfPauseCreditScreen = FALSE;
 
 HWFILE		ghFile;
 
-//ggg
-
-
-
-
-
-//Function Prototypes
-
 
 BOOLEAN		EnterCreditsScreen();
 BOOLEAN		ExitCreditScreen();
@@ -363,16 +343,6 @@ STR16			GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode );
 void			HandleCreditFlags( UINT32 uiFlags );
 void			HandleCreditEyeBlinking();
 void			InitCreditEyeBlinking();
-//ppp
-
-
-//	HVSURFACE hVSurface;
-
-
-
-
-
-
 
 
 UINT32	CreditScreenInit( void )

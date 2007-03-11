@@ -51,12 +51,6 @@
 //#ifdef JA2BETAVERSION
 
 
-//*******************************
-//
-//	Defines
-//
-//*******************************
-
 typedef void ( *DROP_DOWN_DISPLAY_CALLBACK )	(STR16);
 typedef void ( *DROP_DOWN_SELECT_CALLBACK )	(STR16);
 
@@ -370,13 +364,6 @@ const wchar_t *PocketText[] = {
 };
 
 
-
-//*******************************
-//
-//	Global Variables
-//
-//*******************************
-
 extern UINT32 guiGameClock;
 extern UINT32 guiBrownBackgroundForTeamPanel;
 
@@ -589,16 +576,6 @@ UINT32	guiQDPgDownButtonButton;
 void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 
-
-
-
-
-//*******************************
-//
-//	Function Prototypes
-//
-//*******************************
-
 BOOLEAN		EnterQuestDebugSystem();
 void			RenderQuestDebugSystem();
 void			ExitQuestDebugSystem();
@@ -649,14 +626,6 @@ void			DisableFactMouseRegions();
 INT32			GetMaxNumberOfQuotesToPlay( );
 void			GetDebugLocationString( UINT16 usProfileID, STR16 pzText, size_t Length);
 
-//ppp
-
-
-//*******************************
-//
-//	Code
-//
-//*******************************
 
 UINT32	QuestDebugScreenInit()
 {
@@ -4049,8 +4018,5 @@ void GetDebugLocationString( UINT16 usProfileID, STR16 pzText, size_t Length)
 		GetShortSectorString( gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY, pzText, Length);
 	}
 }
-
-
-
 
 //#endif

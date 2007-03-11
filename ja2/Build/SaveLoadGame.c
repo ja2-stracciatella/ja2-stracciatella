@@ -118,12 +118,6 @@
 #include "BobbyRMailOrder.h"
 #include "Mercs.h"
 
-/////////////////////////////////////////////////////
-//
-// Local Defines
-//
-/////////////////////////////////////////////////////
-
 
 void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *pbSectorZ );
 extern void NextLoopCheckForEnoughFreeHardDriveSpace();
@@ -381,12 +375,6 @@ typedef struct
 UINT32	guiSaveGameVersion=0;
 
 
-/////////////////////////////////////////////////////
-//
-// Global Variables
-//
-/////////////////////////////////////////////////////
-
 //CHAR8		gsSaveGameNameWithPath[ 512 ];
 
 UINT8			gubSaveGameLoc=0;
@@ -397,12 +385,6 @@ extern		EmailPtr	pEmailList;
 extern		UINT32		guiCurrentUniqueSoldierId;
 extern		BOOLEAN		gfHavePurchasedItemsFromTony;
 
-
-/////////////////////////////////////////////////////
-//
-// Function Prototypes
-//
-/////////////////////////////////////////////////////
 
 BOOLEAN		SaveMercProfiles( HWFILE hFile );
 BOOLEAN		LoadSavedMercProfiles( HWFILE hwFile );
@@ -443,7 +425,6 @@ void	PauseBeforeSaveGame( void );
 void	UnPauseAfterSaveGame( void );
 void	UpdateMercMercContractInfo();
 void	HandleOldBobbyRMailOrders();
-//ppp
 
 
 #ifdef JA2BETAVERSION
@@ -461,12 +442,6 @@ void	HandleOldBobbyRMailOrders();
 	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 #endif
 	void TruncateStrategicGroupSizes();
-
-	/////////////////////////////////////////////////////
-//
-// Functions
-//
-/////////////////////////////////////////////////////
 
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
@@ -497,7 +472,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 #endif
 
 	if( ubSaveGameID >= NUM_SAVE_GAMES && ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
-		return( FALSE );		//ddd
+		return( FALSE );
 
 	//clear out the save game header
 	memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );

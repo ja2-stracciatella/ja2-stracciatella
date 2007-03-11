@@ -347,7 +347,6 @@ void PurchaseBobbyOrder();
 UINT32	CalcPackageTotalWeight();
 void DisplayPackageWeight( );
 void ShutDownBobbyRNewMailOrders();
-//ppp
 
 
 void GameInitBobbyRMailOrder()
