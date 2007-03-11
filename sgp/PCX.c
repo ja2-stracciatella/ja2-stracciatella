@@ -28,6 +28,36 @@
 #define PCX_OUTOFMEMORY    8
 
 
+typedef struct PcxHeader
+{
+	UINT8  ubManufacturer;
+	UINT8  ubVersion;
+	UINT8  ubEncoding;
+	UINT8  ubBitsPerPixel;
+	UINT16 usLeft;
+	UINT16 usTop;
+	UINT16 usRight;
+	UINT16 usBottom;
+	UINT16 usHorRez;
+	UINT16 usVerRez;
+	UINT8  ubEgaPalette[48];
+	UINT8  ubReserved;
+	UINT8  ubColorPlanes;
+	UINT16 usBytesPerLine;
+	UINT16 usPaletteType;
+	UINT8  ubFiller[58];
+} PcxHeader;
+
+typedef struct PcxObject
+{
+	UINT8* pPcxBuffer;
+	UINT8  ubPalette[768];
+	UINT16 usWidth, usHeight;
+	UINT32 uiBufferSize;
+	UINT16 usPcxFlags;
+} PcxObject;
+
+
 static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
 static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
 static PcxObject* LoadPcx(const char* pFilename);
