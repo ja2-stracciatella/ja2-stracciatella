@@ -1129,25 +1129,23 @@ void RenderPreBattleInterface()
 					//NAME
 					wcscpy( str, MercPtrs[ i ]->name );
 					x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf( x , y, str );
+					mprintf(x, y, L"%S", str);
 					//ASSIGN
 					GetMapscreenMercAssignmentString( MercPtrs[ i ], str );
 					x = 72 + (54-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf( x, y, str );
+					mprintf(x, y, L"%S", str);
 					//COND
 					GetSoldierConditionInfo( MercPtrs[ i ], str, lengthof(str), &ubHPPercent, &ubBPPercent );
 					x = 129 + (58-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf( x, y, str );
+					mprintf(x, y, L"%S", str);
 					//HP
 					swprintf( str, lengthof(str), L"%d%%", ubHPPercent );
 					x = 189 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					wcscat( str, L"%" );
-					mprintf( x, y, str );
+					mprintf(x, y, L"%S", str);
 					//BP
 					swprintf( str, lengthof(str), L"%d%%", ubBPPercent );
 					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					wcscat( str, L"%" );
-					mprintf( x, y, str );
+					mprintf(x, y, L"%S", str);
 
 					line++;
 					y += ROW_HEIGHT;

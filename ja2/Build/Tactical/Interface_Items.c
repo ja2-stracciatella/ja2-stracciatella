@@ -3094,11 +3094,9 @@ void RenderItemDescriptionBox( )
 
 			SetFontForeground( 5 );
 			//Status
-			// This is gross, but to get the % to work out right...
 			swprintf( pStr, lengthof(pStr), L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
 			FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-			wcscat( pStr, L"%%" );
-			mprintf( usX, usY, pStr );
+			mprintf(usX, usY, L"%S", pStr);
 
 			// Values
 			if (fWeight <= (EXCEPTIONAL_WEIGHT / 10))
@@ -3301,8 +3299,7 @@ void RenderItemDescriptionBox( )
 				uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 	//			sStrX =  gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 1 ].sX + gsInvDescX + gMapWeaponStats[ 1 ].sValDx + 6), (INT16)(gMapWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &sStrX, &usY);
-				wcscat( pStr, L"%%" );
-				mprintf( sStrX, gMapWeaponStats[ 1 ].sY + gsInvDescY, pStr );
+				mprintf(sStrX, gMapWeaponStats[1].sY + gsInvDescY, L"%S", pStr);
 			}
 
 			//Weight
@@ -3553,13 +3550,12 @@ void RenderItemDescriptionBox( )
 			//Status
 			swprintf( pStr, lengthof(pStr), L"%2d%%", gpItemDescObject->bGunStatus );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-			wcscat( pStr, L"%%" );
-			mprintf( usX, usY, pStr );
+			mprintf(usX, usY, L"%S", pStr);
 
 			//Wieght
 			swprintf( pStr, lengthof(pStr), L"%1.1f", fWeight );
 			FindFontRightCoordinates( (INT16)(gWeaponStats[ 0 ].sX + gsInvDescX + gWeaponStats[ 0 ].sValDx), (INT16)(gWeaponStats[ 0 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY, pStr );
+			mprintf(usX, usY, L"%S", pStr);
 
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER) )
 			{
@@ -3747,15 +3743,14 @@ void RenderItemDescriptionBox( )
 				//Status
 				swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubShotsLeft[0], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 2 ].sX + gsInvDescX + gWeaponStats[ 2 ].sValDx), (INT16)(gWeaponStats[ 2 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-				mprintf( usX, usY, pStr );
+				mprintf(usX, usY, L"%S", pStr);
 			}
 			else
 			{
 				//Status
 				swprintf( pStr, lengthof(pStr), L"%2d%%", gpItemDescObject->bStatus[ gubItemDescStatusIndex ] );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 1 ].sX + gsInvDescX + gWeaponStats[ 1 ].sValDx), (INT16)(gWeaponStats[ 1 ].sY + gsInvDescY ), ITEM_STATS_WIDTH ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-				wcscat( pStr, L"%%" );
-				mprintf( usX, usY, pStr );
+				mprintf(usX, usY, L"%S", pStr);
 			}
 
 			if( ( InKeyRingPopup() == TRUE ) || ( Item[ gpItemDescObject->usItem ].usItemClass & IC_KEY ) )

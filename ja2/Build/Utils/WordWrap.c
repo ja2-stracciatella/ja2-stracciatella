@@ -315,11 +315,11 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 	}
 	else if( ulFlags & CENTER_JUSTIFIED )
 	{
-		VarFindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr);
+		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
 	}
 	else if( ulFlags & RIGHT_JUSTIFIED )
 	{
-  	VarFindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), ulFont, &usPosX, &usPosY, pStr);
+  	FindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
 	}
 
 	SetFont(ulFont);
@@ -330,8 +330,8 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-	if (fDirty) gprintfdirty(usPosX, usPosY, pStr);
-	mprintf(usPosX, usPosY, pStr);
+	if (fDirty) gprintfdirty(usPosX, usPosY, L"%S", pStr);
+	mprintf(usPosX, usPosY, L"%S", pStr);
 
 	if( IAN_WRAP_NO_SHADOW & ulFlags )
 	{

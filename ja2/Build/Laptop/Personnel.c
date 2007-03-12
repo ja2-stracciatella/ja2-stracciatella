@@ -1622,10 +1622,9 @@ void DisplayCharStats(INT32 iId, INT32 iSlot)
 			}
 
 
-			swprintf(sString, lengthof(sString), L"%d %%%%",uiHits);
+			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
       FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      sX += StringPixLength( L"%",  PERS_FONT );
-			mprintf(sX,pPersonnelScreenPoints[23].y,sString);
+			mprintf(sX, pPersonnelScreenPoints[23].y, L"%S", sString);
 		 break;
 		  case 17:
 			// battles
@@ -2312,16 +2311,12 @@ void RenderInventoryForCharacter( INT32 iId, INT32 iSlot )
 				}
 				else
 				{
-						swprintf( sString, lengthof(sString), L"%2d%%%%", pSoldier->inv[ ubCounter ].bStatus[0] );
+					swprintf(sString, lengthof(sString), L"%2d%%", pSoldier->inv[ ubCounter ].bStatus[0]);
 						FindFontRightCoordinates( ( INT16 )( PosX + 65 ), ( INT16 ) ( PosY + 15 ), ( INT16 ) ( 171 - 75 ),
 							( INT16 )( GetFontHeight( FONT10ARIAL ) ), sString, FONT10ARIAL, &sX, &sY );
-
-						sX += StringPixLength( L"%", FONT10ARIAL );
 				}
 
-
-
-				mprintf( sX, sY, sString );
+				mprintf(sX, sY, L"%S", sString);
 
 				if ( Item[pSoldier->inv[ ubCounter ].usItem ].usItemClass & IC_GUN )
 				{
@@ -4854,10 +4849,9 @@ void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 				uiHits = 0;
 			}
 
-			swprintf(sString, lengthof(sString), L"%d %%%%",uiHits);
+			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
       FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-      sX += StringPixLength( L"%",  PERS_FONT );
-			mprintf(sX,pPersonnelScreenPoints[23].y,sString);
+			mprintf(sX, pPersonnelScreenPoints[23].y, L"%S", sString);
 		 break;
 		  case 17:
 			// battles

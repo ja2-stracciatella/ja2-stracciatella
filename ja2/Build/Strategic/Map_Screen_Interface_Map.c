@@ -951,7 +951,7 @@ void ShowTownText( void )
 			// don't show loyalty string until loyalty tracking for that town has been started
 			if( gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
-				swprintf( sStringA, lengthof(sStringA), L"%d%%%% %S", gTownLoyalty[ bTown ].ubRating, gsLoyalString[ 0 ]);
+				swprintf(sStringA, lengthof(sStringA), L"%d%% %S", gTownLoyalty[bTown].ubRating, gsLoyalString[0]);
 
 				// if loyalty is too low to train militia, and militia training is allowed here
 				if ( ( gTownLoyalty[ bTown ].ubRating < MIN_RATING_TO_TRAIN_TOWN ) && MilitiaTrainingAllowedInTown( bTown ) )
@@ -1010,12 +1010,12 @@ void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16
 	usFirstX -= StringPixLength( pString, MAP_FONT) / 2;
 
 	// print first string
-	gprintfdirty( usFirstX, usFirstY, pString);
-  mprintf(usFirstX, usFirstY, pString);
+	gprintfdirty(usFirstX, usFirstY, L"%S", pString);
+	mprintf(usFirstX, usFirstY, L"%S", pString);
 
 
 	// calculate starting coordinates for the second string
-	VarFindFontCenterCoordinates(( INT16 )( usFirstX ), ( INT16 )usFirstY, StringPixLength( pString, MAP_FONT), 0, MAP_FONT, &sSecondX, &sSecondY, pStringA);
+	FindFontCenterCoordinates(usFirstX, usFirstY, StringPixLength(pString, MAP_FONT), 0, pStringA, MAP_FONT, &sSecondX, &sSecondY);
 
 	// make sure we don't go past left edge (Grumm)
 	if( !fZoomFlag )
@@ -1028,8 +1028,8 @@ void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16
 
 	// print second string beneath first
 	sSecondY = ( INT16 )( usFirstY + GetFontHeight( MAP_FONT ) );
-	gprintfdirty( sSecondX, sSecondY, pStringA );
-	mprintf( sSecondX, sSecondY, pStringA );
+	gprintfdirty(sSecondX, sSecondY, L"%S", pStringA);
+	mprintf(sSecondX, sSecondY, L"%S", pStringA);
 
 	// restore clip blits
 	RestoreClipRegionToFullScreen( );
@@ -4684,12 +4684,12 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 		// if potential is not nil, show percentage of the two
 		if (GetMaxPeriodicRemovalFromMine(ubMineIndex) > 0)
 		{
-			swprintf( wSubString, lengthof(wSubString), L" (%d%%%%)", (PredictDailyIncomeFromAMine(ubMineIndex) * 100 ) / GetMaxDailyRemovalFromMine(ubMineIndex) );
+			swprintf(wSubString, lengthof(wSubString), L" (%d%%)", PredictDailyIncomeFromAMine(ubMineIndex) * 100 / GetMaxDailyRemovalFromMine(ubMineIndex));
 			wcscat( wString, wSubString );
 		}
 
 		AdjustXForLeftMapEdge(wString, &sScreenX);
-		mprintf( ( sScreenX - StringPixLengthArg( MAP_FONT, wcslen(wString), wString ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ), wString );
+		mprintf(sScreenX - StringPixLength(wString, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), L"%S", wString);
 		ubLineCnt++;
 	}
 
@@ -4707,7 +4707,7 @@ void AdjustXForLeftMapEdge(STR16 wString, INT16 *psX)
 		// it's ok to cut strings off in zoomed mode
 		return;
 
-	sStartingX = *psX - (StringPixLengthArg( MAP_FONT, wcslen(wString), wString ) / 2);
+	sStartingX = *psX - StringPixLength(wString, MAP_FONT) / 2;
 	sPastEdge = (MAP_VIEW_START_X + 23) - sStartingX;
 
 	if (sPastEdge > 0)

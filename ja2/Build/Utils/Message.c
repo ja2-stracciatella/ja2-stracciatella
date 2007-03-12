@@ -119,9 +119,6 @@ void AddStringToMapScreenMessageList( STR16 pString, UINT16 usColor, UINT32 uiFo
 void ClearWrappedStrings( WRAPPED_STRING *pStringWrapperHead );
 void WriteMessageToFile( STR16 pString );
 
-// tactical screen message
-void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... );
-
 // play bee when new message is added
 void PlayNewMessageSound( void );
 
@@ -556,6 +553,10 @@ void UnHideMessagesDuringNPCDialogue( void )
 	}
 }
 
+
+static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...);
+
+
 // new screen message
 void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 {
@@ -616,11 +617,11 @@ void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 	va_end(argptr);
 
 	// pass onto tactical message and mapscreen message
-	TacticalScreenMsg( usColor, ubPriority, DestString );
+	TacticalScreenMsg(usColor, ubPriority, L"%S", DestString);
 
 //	if( ( ubPriority != MSG_DEBUG ) && ( ubPriority != MSG_TESTVERSION ) )
 	{
-		MapScreenMessage( usColor, ubPriority, DestString );
+		MapScreenMessage(usColor, ubPriority, L"%S", DestString);
 	}
 
 
@@ -675,7 +676,7 @@ void ClearWrappedStrings( WRAPPED_STRING *pStringWrapperHead )
 
 
 // new tactical and mapscreen message system
-void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
+static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
   // this function sets up the string into several single line structures
 
@@ -770,7 +771,7 @@ void TacticalScreenMsg( UINT16 usColor, UINT8 ubPriority, STR16 pStringA, ... )
 
 
 
-	pStringWrapperHead=LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, DestString);
+	pStringWrapperHead=LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, L"%S", DestString);
   pStringWrapper=pStringWrapperHead;
 	if(!pStringWrapper)
     return;

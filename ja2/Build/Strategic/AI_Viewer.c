@@ -1627,7 +1627,7 @@ void PrintEnemyPopTable()
 			// an exclusive OR operator, how often do ya see that, huh?  :-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubEnemyType == ENEMY_TYPE_PERCENT ) )
 			{
-				wcscpy( wPrintSpec, L"%3d%%%%" );
+				wcscpy(wPrintSpec, L"%3d%%");
 			}
 			else
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) && ( ubEnemyType == ENEMY_TYPE_PERCENT ) )
@@ -1766,7 +1766,7 @@ void PrintEnemiesKilledTable()
 			// an exclusive OR operator, how often do ya see that, huh?  :-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubKillType == ENEMIES_KILLED_PERCENT ) )
 			{
-				wcscpy( wPrintSpec, L"%3d%%%%" );
+				wcscpy(wPrintSpec, L"%3d%%");
 			}
 			else
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) && ( ubKillType == ENEMIES_KILLED_PERCENT ) )

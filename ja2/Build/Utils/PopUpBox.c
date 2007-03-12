@@ -1407,8 +1407,8 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 		}
 
 		// print
-	  //gprintfdirty(uX,uY,PopUpBoxList[uiCounter]->Text[uiCount]->pString );
-    mprintf(uX,uY,PopUpBoxList[uiCounter]->Text[uiCount]->pString);
+		//gprintfdirty(uX, uY, L"%S", PopUpBoxList[uiCounter]->Text[uiCount]->pString);
+		mprintf(uX, uY, L"%S", PopUpBoxList[uiCounter]->Text[uiCount]->pString);
 	}
 
 
@@ -1455,8 +1455,8 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 		}
 
 		// print
-	  //gprintfdirty(uX,uY,PopUpBoxList[uiCounter]->Text[uiCount]->pString );
-    mprintf(uX,uY,PopUpBoxList[uiCounter]->pSecondColumnString[uiCount]->pString);
+		//gprintfdirty(uX, uY, L"%S", PopUpBoxList[uiCounter]->Text[uiCount]->pString);
+		mprintf(uX, uY, L"%S", PopUpBoxList[uiCounter]->pSecondColumnString[uiCount]->pString);
 	}
  }
 
