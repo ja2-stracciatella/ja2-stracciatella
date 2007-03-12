@@ -724,12 +724,6 @@ void MonitorMapUIMessage( void );
 void RenderMapHighlight( INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary );
 void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
 
-// Clock
-void SetClockMin(const wchar_t *, ...);
-void SetClockHour(const wchar_t *pStringA, ...);
-void SetHourAlternate(const wchar_t *pStringA, ...);
-void SetDayAlternate(const wchar_t *pStringA, ...);
-
 void HandleCursorOverRifleAmmo( );
 
 void HandleAnimatedCursorsForMapScreen( );
@@ -2407,17 +2401,21 @@ void DisplayGroundEta( void )
 	mprintf( CLOCK_ETA_X, CLOCK_Y_START, pEtaString[ 0 ] );
 
 	// if less than one day
-	if( ( iTotalTime / ( 60 * 24 ) ) < 1 )
+	if (iTotalTime < 60 * 24)
 	{
 		// show hours and minutes
-		SetClockMin( L"%d", iTotalTime % 60 );
-		SetClockHour(L"%d", iTotalTime / 60);
+		UINT Minutes = iTotalTime % 60;
+		UINT Hours   = iTotalTime / 60;
+		mprintf(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, L"%2u%S", Minutes, gsTimeStrings[1]);
+		mprintf(CLOCK_HOUR_X_START - 8, CLOCK_Y_START, L"%2u%S", Hours,   gsTimeStrings[0]);
 	}
 	else
 	{
 		// show days and hours
-		SetHourAlternate(L"%d", ( iTotalTime / 60 ) % 24 );
-		SetDayAlternate( L"%d", iTotalTime / ( 60 * 24 ) );
+		UINT Hours = iTotalTime / 60 % 24;
+		UINT Days  = iTotalTime / (60 * 24);
+		mprintf(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, L"%2u%S", Hours, gsTimeStrings[0]);
+		mprintf(CLOCK_HOUR_X_START - 9, CLOCK_Y_START, L"%2u%S", Days,  gsTimeStrings[3]);
 	}
 }
 
@@ -3893,136 +3891,6 @@ void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
 	SetFont(uiFont);
 	gprintfdirty(uiX,uiY,pString);
 	mprintf(uiX,uiY,pString);
-}
-
-
-
-void SetDayAlternate(const wchar_t *pStringA, ...)
-{
- // this sets the clock counter, unwind loop
- UINT16 uiX=0;
- UINT16 uiY=0;
- wchar_t String[80];
- va_list argptr;
-
-	va_start(argptr, pStringA);						// Set up variable argument pointer
-	vswprintf(String, lengthof(String), pStringA, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	if (String[1]==0)
-	{
-		String[1]=String[0];
-		String[0]=L' ';
-	}
-	String[2]=gsTimeStrings[ 3 ][ 0 ];
-	String[3]=L' ';
-	String[4]=0;
-
-	uiX=CLOCK_HOUR_X_START-9;
-	uiY=CLOCK_Y_START;
-
-	SetFont( ETA_FONT );
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
-
-	//RestoreExternBackgroundRect( uiX, uiY, 20 ,GetFontHeight( ETA_FONT ) );
-	mprintf( uiX, uiY, String );
-
-}
-
-
-void SetHourAlternate(const wchar_t *pStringA, ...)
-{
- // this sets the clock counter, unwind loop
- UINT16 uiX=0;
- UINT16 uiY=0;
- wchar_t String[80];
- va_list argptr;
-
-	va_start(argptr, pStringA);						// Set up variable argument pointer
-	vswprintf(String, lengthof(String), pStringA, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	if (String[1]==0)
-	{
-		String[1]=String[0];
-		String[0]=L' ';
-	}
-
-	String[2]=gsTimeStrings[ 0 ][ 0 ];
-	String[3]=L' ';
-	String[4]= 0;
-	uiX=CLOCK_MIN_X_START-5;
-	uiY=CLOCK_Y_START;
-	DrawString(String, uiX, uiY, ETA_FONT);
-
-	SetFont( ETA_FONT );
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
-
-	//RestoreExternBackgroundRect( uiX, uiY, 20 ,GetFontHeight( ETA_FONT ) );
-	mprintf( uiX, uiY, String );
-
-}
-
-
-
-void SetClockHour(const wchar_t *pStringA, ...)
-{
- // this sets the clock counter, unwind loop
- UINT16 uiX=0;
- UINT16 uiY=0;
- wchar_t String[80];
- va_list argptr;
-
-	va_start(argptr, pStringA);						// Set up variable argument pointer
-	vswprintf(String, lengthof(String), pStringA, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-	if (String[1]==0)
-	{
-		String[1]=String[0];
-		String[0]=L' ';
-	}
-	String[2]=gsTimeStrings[ 0 ][ 0 ];
-	String[3]=L' ';
-	String[4]=0;
-	uiX=CLOCK_HOUR_X_START-8;
-	uiY=CLOCK_Y_START;
-
-
-	SetFont( ETA_FONT );
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
-
-	//RestoreExternBackgroundRect( uiX, uiY, 20 ,GetFontHeight( ETA_FONT ) );
-	mprintf( uiX, uiY, String );
-}
-
-void SetClockMin(const wchar_t *pStringA, ...)
-{
- // this sets the clock counter, unwind loop
- wchar_t String[10];
- va_list argptr;
-
- va_start(argptr, pStringA);					// Set up variable argument pointer
- vswprintf(String, lengthof(String), pStringA, argptr);	// process gprintf string (get output str)
- va_end(argptr);
-
-	if (String[1]==0)
-	{
-		String[1]=String[0];
-		String[0]=L' ';
-	}
-	String[2]=gsTimeStrings[ 1 ][ 0 ];
-	String[3]=L' ';
-	String[4]=0;
-
-	SetFont( ETA_FONT );
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
-
-	//RestoreExternBackgroundRect( CLOCK_MIN_X_START - 5, CLOCK_Y_START, 20 ,GetFontHeight( ETA_FONT ) );
-	mprintf( CLOCK_MIN_X_START-5, CLOCK_Y_START, String );
 }
 
 
