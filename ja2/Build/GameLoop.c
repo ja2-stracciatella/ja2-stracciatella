@@ -40,8 +40,6 @@ UINT32 guiCurrentScreen;
 UINT32 guiPendingScreen = NO_PENDING_SCREEN;
 UINT32 guiPreviousScreen = NO_PENDING_SCREEN;
 
-INT32	 giStartingMemValue = 0;
-
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 UINT8		gubCheckForFreeSpaceOnHardDriveCount=DONT_CHECK_FOR_FREE_SPACE;
 
@@ -84,9 +82,6 @@ void ReportMapscreenErrorLock()
 BOOLEAN InitializeGame(void)
 {
 	UINT32				uiIndex;
-
-	giStartingMemValue = MemGetFree( );
-
 
 	ClearAllDebugTopics();
 	RegisterJA2DebugTopic( TOPIC_JA2OPPLIST, "Reg" );

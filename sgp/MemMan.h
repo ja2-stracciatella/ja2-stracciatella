@@ -61,12 +61,6 @@ extern void		ShutdownMemoryManager( void );
 	#endif
 #endif
 
-
-// get total free on the system at this moment
-extern UINT32	MemGetFree( void );
-
-extern BOOLEAN	MemCheckPool( void );
-
 #ifdef __cplusplus
 }
 #endif

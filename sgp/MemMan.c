@@ -319,64 +319,6 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 #endif
 
 
-//**************************************************************************
-//
-// MemGetFree
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		??sep96:HJH		-> modified for use by Wizardry
-//
-//**************************************************************************
-
-UINT32 MemGetFree( void )
-{
-#if 1 // XXX TODO
-	FIXME
-	return 0;
-#else
-	MEMORYSTATUS ms;
-
-	ms.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus( &ms );
-
-	return( ms.dwAvailPhys );
-#endif
-}
-
-
-//**************************************************************************
-//
-// MemCheckPool
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		23sep96:HJH		-> modified for use by Wizardry
-//
-//**************************************************************************
-
-BOOLEAN MemCheckPool( void )
-{
-	BOOLEAN fRet = TRUE;
-
-#ifdef _DEBUG
-
-	fRet = _CrtCheckMemory();
-	Assert( fRet );
-
-#endif
-
-	return(fRet);
-}
-
 #ifdef EXTREME_MEMORY_DEBUGGING
 
 PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void *pSpecial )

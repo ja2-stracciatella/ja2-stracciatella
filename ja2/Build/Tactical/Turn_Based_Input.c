@@ -122,9 +122,6 @@ extern INT16 gsOverItemsGridNo;
 extern INT16 gsOverItemsLevel;
 extern BOOLEAN	gfUIShowExitSouth;
 
-extern INT32	 giStartingMemValue;
-
-
 extern BOOLEAN gfBeginBurstSpreadTracking;
 extern BOOLEAN gfRTClickLeftHoldIntercepted;
 
@@ -2721,14 +2718,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							CountLevelNodes();
 						}
 					}
-					else if( fCtrl )
-					{
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Memory Used: %d + %d = %d vs: %d", guiMemTotal, giMemUsedInSurfaces, ( guiMemTotal + giMemUsedInSurfaces), ( giStartingMemValue - MemGetFree() ) );
-						}
-					}
-					else
+					else if (!fCtrl)
 					{
 						// nothing in hand and the Map Screen button for whichever panel we're in must be enabled
 						if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
