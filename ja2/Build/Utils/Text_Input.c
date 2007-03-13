@@ -32,8 +32,6 @@ void AddChar( UINT32 uiKey );
 void RemoveChar( UINT8 ubArrayIndex );
 void DeleteHilitedText();
 
-void DoublePercentileCharacterFromStringIntoString( wchar_t *pSrcString, wchar_t *pDstString );
-
 //All exclusive input types are handled in this function.
 void HandleExclusiveInput( UINT32 uiKey );
 
@@ -1240,7 +1238,6 @@ void RenderActiveTextField()
 {
 	UINT32 uiCursorXPos;
 	UINT16 usOffset;
-	wchar_t str[ 256 ];
 	if( !gpActive || !gpActive->szString )
 		return;
 
@@ -1294,14 +1291,12 @@ void RenderActiveTextField()
 		SetFontForeground( pColors->ubForeColor );
 		SetFontShadow( pColors->ubShadowColor );
 		SetFontBackground( 0 );
-		DoublePercentileCharacterFromStringIntoString( gpActive->szString, str );
-		mprintf( gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, str );
+		mprintf(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, L"%S", gpActive->szString);
 	}
 	//Draw the cursor in the correct position.
 	if( gfEditingText && gpActive->szString )
 	{
-		DoublePercentileCharacterFromStringIntoString( gpActive->szString, str );
-		uiCursorXPos = StringPixLengthArg( pColors->usFont, gubCursorPos, str ) + 2;
+		uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%S", gpActive->szString) + 2;
 		if( GetJA2Clock()%1000 < 500 )
 		{	//draw the blinking ibeam cursor during the on blink period.
 			ColorFillVideoSurfaceArea(FRAME_BUFFER,
@@ -1318,7 +1313,6 @@ void RenderInactiveTextField( UINT8 ubID )
 {
 	UINT16 usOffset;
 	TEXTINPUTNODE* pNode, *curr;
-	wchar_t str[ 256 ];
 	curr = gpTextInputHead;
 	pNode = NULL;
 	while( curr )
@@ -1338,15 +1332,13 @@ void RenderInactiveTextField( UINT8 ubID )
 	SetFontShadow( pColors->ubShadowColor );
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	DoublePercentileCharacterFromStringIntoString( pNode->szString, str );
-	mprintf( pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, str );
+	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%S", pNode->szString);
 	RestoreFontSettings();
 }
 
 void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
 {
 	UINT16 usOffset;
-	wchar_t str[ 256 ];
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
@@ -1364,8 +1356,7 @@ void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
 	usOffset = (UINT16)(( pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	DoublePercentileCharacterFromStringIntoString( pNode->szString, str );
-	mprintf( pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, str );
+	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%S", pNode->szString);
 	RestoreFontSettings();
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{
@@ -1740,20 +1731,4 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 		}
 		curr = curr->next;
 	}
-}
-
-void DoublePercentileCharacterFromStringIntoString( wchar_t *pSrcString, wchar_t *pDstString )
-{
-	INT32 iSrcIndex = 0, iDstIndex = 0;
-	while( pSrcString[ iSrcIndex ] != 0 )
-	{
-		if( pSrcString[ iSrcIndex ] == '%' )
-		{
-			pDstString[ iDstIndex ] = '%';
-			iDstIndex++;
-		}
-		pDstString[ iDstIndex ] = pSrcString[ iSrcIndex ];
-		iSrcIndex++, iDstIndex++;
-	}
-	pDstString[ iDstIndex ] = 0;
 }
