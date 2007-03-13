@@ -1156,12 +1156,12 @@ void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 			iClickX = gusMouseXPos - reg->RegionTopLeftX;
 			iCurrCharPos = 0;
 			gubCursorPos = 0;
-			iNextCharPos = StringPixLengthArg( pColors->usFont, 1, gpActive->szString ) / 2;
+			iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%S", gpActive->szString) / 2;
 			while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
 			{
 				gubCursorPos++;
 				iCurrCharPos = iNextCharPos;
-				iNextCharPos = StringPixLengthArg( pColors->usFont, gubCursorPos + 1, gpActive->szString );
+				iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%S", gpActive->szString);
 			}
 			gubEndHilite = gubCursorPos;
 			if( gubEndHilite != gubStartHilite )
@@ -1199,12 +1199,12 @@ void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 		iClickX = gusMouseXPos - reg->RegionTopLeftX;
 		iCurrCharPos = 0;
 		gubCursorPos = 0;
-		iNextCharPos = StringPixLengthArg( pColors->usFont, 1, gpActive->szString ) / 2;
+		iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%S", gpActive->szString) / 2;
 		while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
 		{
 			gubCursorPos++;
 			iCurrCharPos = iNextCharPos;
-			iNextCharPos = StringPixLengthArg( pColors->usFont, gubCursorPos + 1, gpActive->szString );
+			iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%S", gpActive->szString);
 		}
 		gubStartHilite = gubCursorPos;  //This value is the anchor
 		gubEndHilite = gubCursorPos;		//The end will move with the cursor as long as it's down.
@@ -1266,7 +1266,7 @@ void RenderActiveTextField()
 		//Traverse the string one character at a time, and draw the highlited part differently.
 		for( i = 0; i < gpActive->ubStrLen; i++ )
 		{
-			uiCursorXPos = StringPixLengthArg( pColors->usFont, i, gpActive->szString ) + 3;
+			uiCursorXPos = StringPixLengthArg(pColors->usFont, i, L"%S", gpActive->szString) + 3;
 			if( i >= usStart && i < usEnd )
 			{ //in highlighted part of text
 				SetFontForeground( pColors->ubHiForeColor );
