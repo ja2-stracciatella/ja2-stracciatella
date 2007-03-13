@@ -3,11 +3,11 @@ high prio
 
 med prio
 - TODO0002 Investigate why ScrollJA2Background() does not work correctly
+- TODO0003 Implement sound streaming
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
 - r80
-- sound
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
 - HACK0003 load data in a cleaner way, especially wide strings
