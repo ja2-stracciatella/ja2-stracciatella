@@ -1737,7 +1737,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 			gfAnchoredState = StateBefore;
 			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
-		else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP && b->uiFlags & BUTTON_NO_TOGGLE )
+		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
 			b->uiFlags &= (~BUTTON_CLICKED_ON);
 		}
