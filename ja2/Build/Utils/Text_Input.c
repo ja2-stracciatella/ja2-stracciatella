@@ -1276,14 +1276,7 @@ void RenderActiveTextField()
 				SetFontShadow( pColors->ubShadowColor );
 				SetFontBackground( 0 );
 			}
-			if( gpActive->szString[i] != '%' )
-			{
-				mprintf( uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%C", gpActive->szString[i] );
-			}
-			else
-			{
-				mprintf( uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%%" );
-			}
+			mprintf(uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%C", gpActive->szString[i]);
 		}
 	}
 	else
