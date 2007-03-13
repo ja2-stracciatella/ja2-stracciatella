@@ -8,11 +8,7 @@
 #include "FileMan.h"
 #include "Font.h"
 #include "Debug.h"
-#if defined( JA2 ) || defined( UTIL )
-#	include "Video.h"
-#else
-#	include "video2.h"
-#endif
+#include "Video.h"
 #include "HImage.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"

@@ -18,13 +18,7 @@
 #include "Input.h"
 #include "MemMan.h"
 #include "Line.h"
-#if (defined( JA2 ) || defined( UTIL ))
-#	include "Video.h"
-#	define BASE_REGION_FLAGS		(MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
-#else
-#	include "video2.h"
-#	define BASE_REGION_FLAGS		MSYS_REGION_ENABLED				// Wiz doesn't ever want MSYS_SET_CURSOR to be on...
-#endif
+#include "Video.h"
 #include "English.h"
 // Include mouse system defs and macros
 #include "MouseSystem.h"
@@ -37,6 +31,9 @@
 #include "Render_Dirty.h"
 #include "VSurface.h"
 #include "ScreenIDs.h"
+
+
+#define BASE_REGION_FLAGS (MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
 
 
 //Kris:	Nov 31, 1999 -- Added support for double clicking

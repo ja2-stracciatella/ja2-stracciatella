@@ -5,11 +5,7 @@
 #include "Input.h"
 #include "MemMan.h"
 #include "English.h"
-#if defined( JA2 ) || defined( UTIL )
-#	include "Video.h"
-#else
-#	include "video2.h"
-#endif
+#include "Video.h"
 #include "Local.h"
 
 

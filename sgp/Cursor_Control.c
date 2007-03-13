@@ -1,9 +1,5 @@
 #include "Cursor_Control.h"
-#if defined( JA2 ) || defined( UTIL )
-#	include "Video.h"
-#else
-#	include "video2.h"
-#endif
+#include "Video.h"
 #include "WCheck.h"
 #include "VSurface.h"
 
