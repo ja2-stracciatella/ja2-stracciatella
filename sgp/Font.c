@@ -265,7 +265,7 @@ UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 // evaluate to is 512.
 //    'uiCharCount' specifies how many characters of the string are counted.
 //*****************************************************************************
-INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, wchar_t *pFontString, ...)
+INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFontString, ...)
 {
 va_list argptr;
 wchar_t	string[512];
@@ -303,7 +303,7 @@ wchar_t	string[512];
 // 'uiCharCount' specifies how many characters of the string are counted.
 // YOU HAVE TO PREBUILD THE FAST HELP STRING!
 //*****************************************************************************
-INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, wchar_t *pFontString )
+INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, const wchar_t* pFontString)
 {
 	wchar_t	string[512];
 	UINT32 i, index;
@@ -778,7 +778,7 @@ UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, I
 }
 
 
-UINT32 mprintf_coded( INT32 x, INT32 y, wchar_t *pFontString, ...)
+UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);

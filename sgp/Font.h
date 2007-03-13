@@ -84,7 +84,7 @@ extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 extern UINT32		 mprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...);
 UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...);
-UINT32 mprintf_coded( INT32 x, INT32 y, wchar_t *pFontString, ...);
+UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...);
 
 
 extern BOOLEAN	 SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2, BOOLEAN wrap);
@@ -99,8 +99,8 @@ extern void			 UnloadFont(UINT32 FontIndex);
 extern INT16 GetIndex(UINT16 siChar);
 extern UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex);
 
-extern INT16 StringPixLengthArgFastHelp( INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, wchar_t *pFontString );
-extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, wchar_t *pFontString, ...);
+extern INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, const wchar_t* pFontString);
+extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFontString, ...);
 extern INT16 StringPixLength(const wchar_t *string,INT32 UseFont);
 extern void SaveFontSettings(void);
 extern void RestoreFontSettings(void);
