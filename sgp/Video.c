@@ -709,6 +709,56 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 }
 
 
+static void TakeScreenshot(void)
+{
+	const char* ExecDir = GetExecutableDirectory();
+	char FileName[2048];
+	sprintf(FileName, "%s/SCREEN%03d.TGA", ExecDir, guiPrintFrameBufferIndex++);
+	FILE* OutputFile = fopen(FileName, "wb");
+	if (OutputFile == NULL) return;
+
+	fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x02, 0xe0, 0x01, 0x10, 0);
+
+	// Copy 16 bit buffer to file
+
+	// 5/6/5.. create buffer...
+	UINT16* p16BPPData;
+	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
+	{
+		p16BPPData = MemAlloc(640 * 2);
+	}
+
+	for (INT32 iIndex = 479; iIndex >= 0; iIndex--)
+	{
+		// ATE: OK, fix this such that it converts pixel format to 5/5/5
+		// if current settings are 5/6/5....
+		if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
+		{
+			// Read into a buffer...
+			memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2);
+
+			// Convert....
+			ConvertRGBDistribution565To555(p16BPPData, 640);
+
+			// Write
+			fwrite(p16BPPData, 640 * 2, 1, OutputFile);
+		}
+		else
+		{
+			fwrite((UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2, 1, OutputFile);
+		}
+	}
+
+	// 5/6/5.. Delete buffer...
+	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
+	{
+		MemFree(p16BPPData);
+	}
+
+	fclose(OutputFile);
+}
+
+
 static void SnapshotSmall(void);
 
 
@@ -795,57 +845,7 @@ void RefreshScreen(void)
 
   if (gfPrintFrameBuffer)
   {
-    FILE                  *OutputFile;
-    INT32                  iIndex;
-    UINT16                 *p16BPPData;
-
-		const char* ExecDir = GetExecutableDirectory();
-    char FileName[2048];
-    sprintf(FileName, "%s/SCREEN%03d.TGA", ExecDir, guiPrintFrameBufferIndex++);
-    if ((OutputFile = fopen(FileName, "wb")) != NULL)
-    {
-      fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x02, 0xe0, 0x01, 0x10, 0);
-
-      //
-      // Copy 16 bit buffer to file
-      //
-
-      // 5/6/5.. create buffer...
-			if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-      {
-        p16BPPData = MemAlloc( 640 * 2 );
-      }
-
-      for (iIndex = 479; iIndex >= 0; iIndex--)
-      {
-        // ATE: OK, fix this such that it converts pixel format to 5/5/5
-        // if current settings are 5/6/5....
-				if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-        {
-          // Read into a buffer...
-					memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2);
-
-          // Convert....
-          ConvertRGBDistribution565To555( p16BPPData, 640 );
-
-          // Write
-          fwrite( p16BPPData, 640 * 2, 1, OutputFile);
-        }
-        else
-        {
-					fwrite((UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2, 1, OutputFile);
-        }
-      }
-
-      // 5/6/5.. Delete buffer...
-			if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-      {
-        MemFree( p16BPPData );
-      }
-
-      fclose(OutputFile);
-    }
-
+		TakeScreenshot();
     gfPrintFrameBuffer = FALSE;
   }
 
