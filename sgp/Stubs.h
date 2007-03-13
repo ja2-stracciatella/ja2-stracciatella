@@ -21,9 +21,6 @@ typedef int WPARAM;
 typedef long long FILETIME;
 
 typedef void* HANDLE;
-typedef void* HDIGDRIVER;
-typedef void* HSAMPLE;
-typedef void* HSTREAM;
 
 typedef unsigned int UINT;
 
