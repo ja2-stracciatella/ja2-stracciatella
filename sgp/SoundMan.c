@@ -1182,7 +1182,7 @@ static BOOLEAN SoundCleanCache(void)
 		SAMPLETAG* Sample = &pSampleList[uiCount];
 		if ((Sample->uiFlags & SAMPLE_ALLOCATED) && !(Sample->uiFlags & SAMPLE_LOCKED))
 		{
-			if (uiLowestHits == NO_SAMPLE || uiLowestHitsCount < Sample->uiCacheHits)
+			if (uiLowestHits == NO_SAMPLE || uiLowestHitsCount > Sample->uiCacheHits)
 			{
 				if (!SoundSampleIsPlaying(uiCount))
 				{
