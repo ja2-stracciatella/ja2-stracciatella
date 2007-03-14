@@ -1438,7 +1438,7 @@ static UINT32 SoundGetFreeChannel(void)
 //*******************************************************************************
 static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPARMS* pParms)
 {
-	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", uiSample, uiChannel, pSampleList[uiSample].pName);
+	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", uiChannel, uiSample, pSampleList[uiSample].pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
