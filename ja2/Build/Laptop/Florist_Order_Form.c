@@ -1087,15 +1087,10 @@ void InitFlowerOrderTextInputBoxes()
 		LoadEncryptedDataFromFile( FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 		CleanOutControlCodesFromString(sTemp, sText);
 
-		wcsncpy( gsSentimentTextField, sText, FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS - 1 );
+		wcslcpy(gsSentimentTextField, sText, lengthof(gsSentimentTextField));
 
 		gbCurrentlySelectedCard = -1;
 
-	}
-
-	if( wcslen( gsSentimentTextField ) >= FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS - 2 )
-	{
-		gsSentimentTextField[ FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS - 1] = L'\0';
 	}
 
 	//personal sentiment box

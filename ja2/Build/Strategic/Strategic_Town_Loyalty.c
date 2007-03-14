@@ -1289,7 +1289,6 @@ void DumpDistancesBetweenTowns(void)
   CHAR8 zPrintFileName[60];
   FILE *FDump;
 	UINT8 ubTownA, ubTownB;
-	CHAR16 wHeading[4];
 
   // open output file
  	strcpy(zPrintFileName, "TownDistances.txt");
@@ -1304,10 +1303,7 @@ void DumpDistancesBetweenTowns(void)
 	fprintf(FDump, "            ");
 	for( ubTownB = FIRST_TOWN; ubTownB < NUM_TOWNS; ubTownB++ )
 	{
-		wcsncpy(wHeading, pTownNames[ubTownB], 3);
-		wHeading[3] = '\0';
-
-    fprintf(FDump, " %ls", wHeading);
+		fprintf(FDump, " %.3ls", pTownNames[ubTownB]);
 	}
 	fprintf(FDump, "\n");
 

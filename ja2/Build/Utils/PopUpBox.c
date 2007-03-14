@@ -1456,8 +1456,6 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 {
 	UINT32 uiCount = 0;
 	INT16 uX, uY;
-	wchar_t sString[100];
-
 
 	if ( ( uiCounter < 0 ) || ( uiCounter >= MAX_POPUP_BOX_COUNT ) )
 		return(FALSE);
@@ -1512,9 +1510,6 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 			// set background
 			SetFontBackground(Box->Text[uiCount]->ubBackgroundColor);
 
-			// copy string
-			wcsncpy(sString, Box->Text[uiCount]->pString, wcslen(Box->Text[uiCount]->pString) + 1);
-
 			// cnetering?
 			if (Box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
@@ -1524,7 +1519,7 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 					(INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace),
 					(INT16)(Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2)),
 					(INT16)GetFontHeight(Box->Text[uiCount]->uiFont),
-					sString,
+					Box->Text[uiCount]->pString,
 					(INT32)Box->Text[uiCount]->uiFont,
 					&uX, &uY
 				);
@@ -1567,9 +1562,6 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 			// set background
 			SetFontBackground(Box->pSecondColumnString[uiCount]->ubBackgroundColor);
 
-			// copy string
-			wcsncpy(sString, Box->pSecondColumnString[uiCount]->pString, wcslen(Box->pSecondColumnString[uiCount]->pString) + 1);
-
 			// cnetering?
 			if (Box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
@@ -1579,7 +1571,7 @@ BOOLEAN DrawBoxText(UINT32 uiCounter)
 					(INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace),
 					(INT16)(Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2)),
 					(INT16)GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont),
-					sString,
+					Box->pSecondColumnString[uiCount]->pString,
 					(INT32)Box->pSecondColumnString[uiCount]->uiFont,
 					&uX, &uY
 				);

@@ -2933,14 +2933,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// NOW overwrite name with true name in profile
 				// copy new nickname into soldier structure
 				{
-					//INT16	zTemp[ NICKNAME_LENGTH ];
-					//wcsncpy( zTemp, gMercProfiles[ ubTargetNPC ].zNickname, NICKNAME_LENGTH );
-					wcsncpy( gMercProfiles[ ubTargetNPC ].zNickname, gMercProfiles[ ubTargetNPC ].zName, NICKNAME_LENGTH );
-					//wcsncpy( gMercProfiles[ ubTargetNPC ].zName, zTemp, NICKNAME_LENGTH );
+					wcslcpy(gMercProfiles[ubTargetNPC].zNickname, gMercProfiles[ubTargetNPC].zName, lengthof(gMercProfiles[ubTargetNPC].zNickname));
 					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if ( pSoldier )
 					{
-						wcsncpy( pSoldier->name, gMercProfiles[ ubTargetNPC ].zNickname, 10 );
+						wcslcpy(pSoldier->name, gMercProfiles[ubTargetNPC].zNickname, lengthof(pSoldier->name));
 					}
 				}
 				break;
