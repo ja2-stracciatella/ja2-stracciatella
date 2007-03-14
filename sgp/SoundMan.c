@@ -341,6 +341,8 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 //*******************************************************************************
 UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 {
+	SNDDBG("RAND \"%s\"\n", pFilename);
+
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
 	UINT32 uiSample = SoundLoadSample(pFilename);
@@ -909,6 +911,8 @@ static UINT32 SoundLoadSample(const char* pFilename)
 //*******************************************************************************
 static UINT32 SoundGetCached(const char* pFilename)
 {
+	if (pFilename[0] == '\0') return SOUND_ERROR; // XXX HACK0009
+
 	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
 	{
 		if (strcasecmp(pSampleList[uiCount].pName, pFilename) == 0) return uiCount;
@@ -1434,7 +1438,7 @@ static UINT32 SoundGetFreeChannel(void)
 //*******************************************************************************
 static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPARMS* pParms)
 {
-	SNDDBG("PLAY sample %u channel %u\n", uiSample, uiChannel);
+	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", uiSample, uiChannel, pSampleList[uiSample].pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
