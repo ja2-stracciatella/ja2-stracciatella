@@ -396,7 +396,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 	INT16					 sShiftX, sShiftY;
 	INT32					 uiCountY;
 
-	// XXX TODO0002 does not work correctly, causes graphic artifacts
 	SDL_Surface* Frame  = FrameBuffer;
 	SDL_Surface* Source = ScreenBuffer; // Primary
 	SDL_Surface* Dest   = ScreenBuffer; // Back
@@ -701,6 +700,14 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
 	}
 
+	SDL_UpdateRect
+	(
+		Dest,
+		gsVIEWPORT_START_X,
+		gsVIEWPORT_WINDOW_START_Y,
+		gsVIEWPORT_END_X - gsVIEWPORT_START_X,
+		gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y
+	);
 
 	//InvalidateRegion( sLeftDraw, sTopDraw, sRightDraw, sBottomDraw );
 
