@@ -41,8 +41,6 @@ typedef struct
 extern "C" {
 #endif
 
-extern	INT32	giMemUsedInSurfaces;
-
 // Creates a list to contain video Surfaces
 BOOLEAN InitializeVideoSurfaceManager( );
 

@@ -58,8 +58,6 @@ static UINT8 gubVSDebugCode = 0;
 static void CheckValidVSurfaceIndex(UINT32 uiIndex);
 #endif
 
-INT32				giMemUsedInSurfaces;
-
 
 static HVSURFACE ghBackBuffer = NULL;
 HVSURFACE   ghFrameBuffer = NULL;
@@ -77,8 +75,6 @@ BOOLEAN InitializeVideoSurfaceManager( )
 	Assert( !gpVSurfaceTail );
 	RegisterDebugTopic(TOPIC_VIDEOSURFACE, "Video Surface Manager");
 	gpVSurfaceHead = gpVSurfaceTail = NULL;
-
-	giMemUsedInSurfaces = 0;
 
 	// Create primary and backbuffer from globals
 	if ( !SetPrimaryVideoSurfaces( ) )
@@ -544,8 +540,6 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
-	giMemUsedInSurfaces += ( hVSurface->usHeight * hVSurface->usWidth * ( hVSurface->ubBitDepth / 8 ) );
-
   DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_3, String("Success in Creating Video Surface" ) );
 
 	return( hVSurface );
@@ -851,8 +845,6 @@ BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface )
 		MemFree( hVSurface->p16BPPPalette );
 		hVSurface->p16BPPPalette = NULL;
 	}
-
-	giMemUsedInSurfaces -= ( hVSurface->usHeight * hVSurface->usWidth * ( hVSurface->ubBitDepth / 8 ) );
 
 	// Release object
 	MemFree( hVSurface );
