@@ -1212,8 +1212,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	#endif
 
 
-	//sss
-
 	//Close the saved game file
 	FileClose( hFile );
 
@@ -2490,11 +2488,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		HandleOldBobbyRMailOrders();
 	}
-
-
-	///lll
-
-
 
 
 	uiRelEndPerc += 1;

@@ -294,7 +294,6 @@ BOOLEAN	gfHaveRenderedFirstFrameToSaveBuffer=FALSE;
 //It does this cause that region loses it focus so it draws the button again.
 UINT8		gubRenderHelpScreenTwiceInaRow=0;
 
-//mmm
 
 // region to mask the background
 MOUSE_REGION    gHelpScreenFullScreenMask;
@@ -688,8 +687,6 @@ void HandleHelpScreen()
 
 void RenderHelpScreen()
 {
-//rrr
-
 	if( gfHaveRenderedFirstFrameToSaveBuffer )
 	{
 		//Restore the background before blitting the text back on

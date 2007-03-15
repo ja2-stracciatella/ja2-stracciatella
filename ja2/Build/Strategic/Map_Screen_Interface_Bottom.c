@@ -153,8 +153,6 @@ MOUSE_REGION gTimeCompressionMask[ 3 ];
 #endif
 
 
-// EXTERNS
-
 extern UINT8 gubStartOfMapScreenMessageList;
 
 extern INT32 giMapInvDoneButton;
@@ -164,10 +162,6 @@ extern BOOLEAN fShowInventoryFlag;
 extern BOOLEAN fShowDescriptionFlag;
 
 extern MOUSE_REGION gMPanelRegion;
-
-
-
-// PROTOTYPES
 
 
 void LoadMessageSliderBar( void );
@@ -212,11 +206,6 @@ void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 #endif
 
 //void CheckForAndHandleAutoMessageScroll( void );
-
-
-
-// FUNCTIONS
-
 
 
 void HandleLoadOfMapBottomGraphics( void )

@@ -1101,9 +1101,6 @@ void		HandleQuestDebugSystem()
 {
 	CHAR16	zTemp[512];
 
-	//hhh
-
-
 	HandleQDSTalkingMerc();
 
 
@@ -1182,7 +1179,6 @@ void		RenderQuestDebugSystem()
 
 
 	DisplayCurrentGridNo();
-//rr
 
 	if( gfTextEntryActive )
 	{
@@ -2053,7 +2049,7 @@ void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-		gpActiveListBox->ubCurScrollBoxAction	= QD_DROP_DOWN_DESTROY;//qq
+		gpActiveListBox->ubCurScrollBoxAction	= QD_DROP_DOWN_DESTROY;
 		gpActiveListBox->sCurSelectedItem			=	ubSelected + gpActiveListBox->usItemDisplayedOnTopOfList;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
@@ -2816,8 +2812,6 @@ void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 		gubCurQuestSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-
-//qqq
 		swprintf(String, lengthof(String), L"%S %S %d \"%S\" ( %S )", QuestDebugText[QUEST_DBS_ENTER_NEW_VALUE], QuestDebugText[QUEST_DBS_QUEST_NUM], gubCurQuestSelected, QuestDescText[gubCurQuestSelected], QuestDebugText[QUEST_DBS_0_1_2]);
 
 		TextEntryBox( String, ChangeQuestState );

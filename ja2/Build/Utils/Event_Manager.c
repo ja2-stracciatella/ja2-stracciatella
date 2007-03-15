@@ -17,7 +17,6 @@ HLIST		hDemandEventQueue = NULL;
 
 #define QUEUE_RESIZE		20
 
-// LOCAL FUNCTIONS
 HLIST GetQueue( UINT8 ubQueueID );
 void SetQueue( UINT8 ubQueueID, HLIST hQueue );
 

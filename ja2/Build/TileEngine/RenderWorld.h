@@ -94,7 +94,6 @@ DOUBLE	gdScaleX, gdScaleY;
 BOOLEAN	gfIgnoreScrollDueToCenterAdjust;
 
 
-// FUNCTIONS
 void ScrollWorld( );
 void InitRenderParams( UINT8 ubRestrictionID );
 void RenderWorld( );

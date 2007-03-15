@@ -243,7 +243,6 @@ typedef struct
 } EV_S_UPDATENETWORKSOLDIER;
 
 
-// FUNCTIONS
 BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );
 BOOLEAN AddGameEventFromNetwork( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );
 BOOLEAN DequeAllGameEvents( BOOLEAN fExecute );

@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "Soldier_Control.h"
 
-// DEFINES
+
 #define		UIEVENT_SINGLEEVENT					0x00000002
 #define		UIEVENT_SNAPMOUSE						0x00000008
 

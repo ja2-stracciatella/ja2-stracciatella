@@ -555,7 +555,6 @@ void			HandleCreditScreen()
 }
 
 
-//rrr
 BOOLEAN		RenderCreditScreen()
 {
   BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);

@@ -5,8 +5,7 @@
 #include "Soldier_Control.h"
 #include "Animation_Data.h"
 
-// Defines
-// #######################################################
+
 #define MAX_ANIMATIONS									320
 #define MAX_FRAMES_PER_ANIM							100
 #define	MAX_RANDOM_ANIMS_PER_BODYTYPE		7
@@ -78,13 +77,6 @@
 
 #define MAX_ANIM_STR_SIZE			30
 
-
-
-// Enumerations
-// #######################################################
-
-// STRUCTURES
-// ###################################################################
 
 typedef struct
 {
@@ -552,7 +544,6 @@ RANDOM_ANI_DEF	gRandomAnimDefs[ TOTALBODYTYPES ][ MAX_RANDOM_ANIMS_PER_BODYTYPE 
 extern UINT16 gubAnimSurfaceCorpseID[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
 
 
-//FUNCTIONS
 BOOLEAN LoadAnimationStateInstructions( );
 void	InitAnimationSurfacesPerBodytype( );
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );

@@ -3,7 +3,7 @@
 
 #include "WorldDef.h"
 
-//DEFINES
+
 #define MAXCOL					WORLD_COLS
 #define MAXROW					WORLD_ROWS
 #define GRIDSIZE        (MAXCOL * MAXROW)
@@ -46,7 +46,6 @@ INT16 DirectionInc(INT16 sDirection);
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 
 
-// Functions
 BOOLEAN GetMouseCell( INT32 *piMouseMapPos );
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );

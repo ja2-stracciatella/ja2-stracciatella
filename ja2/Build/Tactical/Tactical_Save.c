@@ -238,9 +238,6 @@ BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile )
 			AddTempFileToSavedGame( hFile, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ );
 		}
 
-		//ttt
-
-
 		TempNode = TempNode->next;
 	}
 
@@ -451,7 +448,6 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 
 		TempNode = TempNode->next;
 	}
-//ttt
 	return( TRUE );
 }
 
@@ -852,8 +848,6 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 	}
 
 
-//ttt
-
 	//Save any other info here
 
 
@@ -1146,8 +1140,6 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 		if( !LoadLightEffectsFromMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 			return( FALSE );
 	}
-
-//ttt
 
 	// Check to see if any npc are in this sector, if so load up some saved data for them
 	LoadNPCInformationFromProfileStruct();

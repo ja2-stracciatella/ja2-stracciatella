@@ -28,7 +28,6 @@ typedef struct
 } matrix_3x3;
 
 
-// DEFINES
 #define RADIANS_FROM( d )						( ( d * PI2 ) / 180 )
 #define DEGREES_FROM( r )						( ( r * 180 ) / PI2 )
 

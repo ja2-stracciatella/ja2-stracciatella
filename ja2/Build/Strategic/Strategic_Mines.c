@@ -36,8 +36,6 @@
 #define MINE_PRODUCTION_PERIOD						(3 * 60)		// time seperating daily mine production events (in minutes)
 
 
-// PRIVATE PROTOTYPES
-
 // mine this mine
 INT32 MineAMine( INT8 bMineIndex );
 
@@ -56,8 +54,6 @@ INT32 GetCurrentWorkRateOfMineForPlayer( INT8 bMineIndex );
 // how fast is workforce working for the enemy
 INT32 GetCurrentWorkRateOfMineForEnemy( INT8 bMineIndex );
 
-
-// DATA TABLES
 
 // this table holds mine values that change during the course of the game and must be saved
 MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];

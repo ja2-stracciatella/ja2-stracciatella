@@ -107,7 +107,6 @@ void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 
 BOOLEAN gfInitAnimateLoading = FALSE;
 
-// Local Functions
 BOOLEAN LoadTileSurfaces( char pTileSurfaceFilenames[][32], UINT8 ubTilesetID );
 BOOLEAN AddTileSurface( SGPFILENAME cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot );
 void DestroyTileSurfaces( void );

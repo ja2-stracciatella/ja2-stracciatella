@@ -66,7 +66,6 @@ INT32		giTimerDiag;
 INT32		giTimerTeamTurnUpdate;
 
 
-// Functions
 BOOLEAN InitializeJA2Clock( void );
 void    ShutdownJA2Clock( void );
 

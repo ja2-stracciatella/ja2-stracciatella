@@ -265,7 +265,6 @@ extern BOOLEAN fReDrawFace;
 extern UINT8 gubWaitingForAllMercsToExitCode;
 BOOLEAN	gfGetNewPathThroughPeople = FALSE;
 
-// LOCAL FUNCTIONS
 // DO NOT CALL UNLESS THROUGH EVENT_SetSoldierPosition
 UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
 BOOLEAN CheckForFullStruct( INT16 sGridNo, UINT16 *pusIndex  );

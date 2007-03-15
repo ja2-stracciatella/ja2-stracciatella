@@ -79,8 +79,7 @@
 #define SWATCOST					0
 #define CRAWLCOST					1
 
-// defines
-// ######################################################
+
 #define MAX_PATH_LIST_SIZE		30
 #define NUM_SOLDIER_SHADES		48
 #define NUM_SOLDIER_EFFECTSHADES		2

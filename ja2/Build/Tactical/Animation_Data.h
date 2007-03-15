@@ -22,7 +22,6 @@
 
 #define		ANIM_DATA_FLAG_NOFRAMES	0x01
 
-// ENUMERATIONS
 
 // BODY TYPES
 // RGM = Regular Male
@@ -72,7 +71,6 @@ enum
 } SoldierBodyTypes;
 
 
-// Enumerations
 // This enumeration defines the graphic image file per animation
 
 // RGM = Regular Male
@@ -548,7 +546,6 @@ AnimationSurfaceType		gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ];
 AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS ];
 
 
-// Functions
 BOOLEAN InitAnimationSystem( );
 BOOLEAN DeInitAnimationSystem( );
 BOOLEAN LoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );

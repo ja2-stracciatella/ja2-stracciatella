@@ -218,7 +218,6 @@ UINT16				gusCurMousePos;
 UINT16				gusTargetDropPos;
 BOOLEAN				gfTargetDropPos = FALSE;
 
-// LOCAL FUNCTIONS
 void EraseSnappingCursor( );
 void DrawSnappingCursor( );
 

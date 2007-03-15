@@ -248,7 +248,6 @@ extern INT16		gsRecompileAreaLeft;
 extern INT16		gsRecompileAreaRight;
 extern INT16		gsRecompileAreaBottom;
 
-// Functions
 BOOLEAN InitializeWorld( );
 void DeinitializeWorld( );
 

@@ -109,9 +109,6 @@
 #endif
 
 
-// DEFINES
-
-
 #define MAX_SORT_METHODS					6
 
 // Cursors
@@ -336,9 +333,6 @@
 #define RGB_NEAR_BLACK	( FROMRGB(   0,   0,   1 ) )
 
 
-// ENUMS
-
-
 // ARM: NOTE that these map "events" are never actually saved in a player's game in any way
 enum
 {
@@ -351,11 +345,6 @@ enum
 	MAP_EVENT_VIEWAI
 #endif
 };
-
-
-
-
-// STRUCTURES / TYPEDEFS
 
 
 struct rgbcolor
@@ -388,9 +377,6 @@ struct popbox
  LineTextPtr pBoxText;
  struct popbox *pNext;
 };
-
-
-// TABLES
 
 
 RGBCOLOR GlowColorsA[]={
@@ -692,13 +678,6 @@ extern BOOLEAN gfMilitiaPopupCreated;
 	extern INT16 MSYS_CurrentMX;
 	extern INT16 MSYS_CurrentMY;
 #endif
-
-
-
-
-
-
-// PROTOTYPES
 
 
 // basic input

@@ -148,8 +148,6 @@ UINT16 CivLastNames[MAXCIVLASTNAMES][10];
 // amount of time a stats is to be displayed differently, due to change
 #define CHANGE_STAT_RECENTLY_DURATION		60000
 
-// MACROS
-// #######################################################
 
 #define NO_PENDING_ACTION			255
 #define NO_PENDING_ANIMATION	32001

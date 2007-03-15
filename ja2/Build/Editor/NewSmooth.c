@@ -322,7 +322,6 @@ INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 
 #define FLOOR_VARIANTS					8
 
-//PRIVATELY "ENCAPSULATED" FUNCTIONS
 
 //These construction functions do all the smoothing.
 //NOTE:  passing null for wall/roof type will force the function to search for the nearest
@@ -336,9 +335,6 @@ void EraseBuilding( UINT32 iMapIndex );
 void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex );
 void ConsiderEffectsOfNewWallPiece( UINT32 iMapIndex, UINT8 usWallOrientation );
 
-//----------------------------------------------------------------------------------------------------
-//BEGIN IMPLEMENTATION OF PRIVATE FUNCTIONS
-//----------------------------------------------------------------------------------------------------
 
 void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical )
 {
