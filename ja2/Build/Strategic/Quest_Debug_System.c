@@ -813,10 +813,6 @@ BOOLEAN	EnterQuestDebugSystem()
 	wchar_t	zName[ 128 ];
 //	UINT16	usListBoxFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
-
-//	UINT16	zItemName[ SIZE_ITEM_NAME ];
-//	UINT16	zItemDesc[ SIZE_ITEM_INFO ];
-
 	UINT16 usFontHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
 
 	if( gfExitQdsDueToMessageBox )
@@ -1020,12 +1016,9 @@ BOOLEAN	EnterQuestDebugSystem()
 
 	if( giHaveSelectedItem != -1 )
 	{
-		wchar_t	zItemName[ SIZE_ITEM_NAME ];
 		wchar_t	zItemDesc[ SIZE_ITEM_INFO ];
 
-		wcscpy( zItemName, ShortItemNames[ giHaveSelectedItem ] );
-
-		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %S", giHaveSelectedItem, zItemName);
+		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %S", giHaveSelectedItem, ShortItemNames[giHaveSelectedItem]);
 		SpecifyButtonText( guiQuestDebugCurItemButton, zItemDesc );
 
 		gItemListBox.sCurSelectedItem = (INT16)giHaveSelectedItem;
@@ -2008,8 +2001,6 @@ void DisplaySelectedItem()
 	UINT16	i;
 	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
-	wchar_t	zItemName[ SIZE_ITEM_NAME ];
-//	UINT16	zItemDesc[ SIZE_ITEM_INFO ];
 
 	wchar_t	zButtonName[ 256 ];
 
@@ -2020,15 +2011,10 @@ void DisplaySelectedItem()
 		// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-//		if ( !LoadItemInfo( i, zItemName, zItemDesc ) )
-//			Assert(0);
-		wcscpy( zItemName, ShortItemNames[ i ] );
+		const wchar_t* ItemName = ShortItemNames[i];
+		if (ItemName[0] == L'\0') ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
-
-		if( zItemName[0] == '\0' )
-			wcscpy( zItemName, QuestDebugText[ QUEST_DBS_NO_ITEM ] );
-
-		DrawTextToScreen( zItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 		usPosY += usFontHeight;
 	}
 
@@ -2042,18 +2028,13 @@ void DisplaySelectedItem()
 
 		SetFontShadow(NO_SHADOW);
 
-//		if ( !LoadItemInfo( gpActiveListBox->sCurSelectedItem, zItemName, zItemDesc ) )
-//			Assert(0);
-		wcscpy( zItemName, ShortItemNames[ gpActiveListBox->sCurSelectedItem ] );
+		const wchar_t* ItemName = ShortItemNames[gpActiveListBox->sCurSelectedItem];
+		if (ItemName[0] == L'\0') ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
-		if( zItemName[0] == '\0' )
-			wcscpy( zItemName, QuestDebugText[ QUEST_DBS_NO_ITEM ] );
-
-
-		DrawTextToScreen( zItemName, gpActiveListBox->usScrollPosX, (UINT16)(usPosY), 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 		SetFontShadow(DEFAULT_SHADOW);
 
-		swprintf(zButtonName, lengthof(zButtonName), L"%d - %S", gpActiveListBox->sCurSelectedItem, zItemName);
+		swprintf(zButtonName, lengthof(zButtonName), L"%d - %S", gpActiveListBox->sCurSelectedItem, ItemName);
 
 		SpecifyButtonText( guiQuestDebugCurItemButton, zButtonName );
 	}
@@ -2406,16 +2387,9 @@ void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		CHAR16	zTemp[512];
-		wchar_t	zItemName[ SIZE_ITEM_NAME ];
-//		UINT16	zItemDesc[ SIZE_ITEM_INFO ];
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
-//		if ( !LoadItemInfo( gItemListBox.sCurSelectedItem, zItemName, zItemDesc ) )
-//			Assert(0);
-		wcscpy( zItemName, ShortItemNames[ gItemListBox.sCurSelectedItem ] );
-
-
-		swprintf(zTemp, lengthof(zTemp), L"%S where the %S will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], zItemName);
+		swprintf(zTemp, lengthof(zTemp), L"%S where the %S will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], ShortItemNames[gItemListBox.sCurSelectedItem]);
 		TextEntryBox( zTemp, AddItemToGridNo );
 
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
@@ -3082,8 +3056,6 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 
 		case QD_DROP_DOWN_DISPLAY:
 		{
-			wchar_t	zItemName[ SIZE_ITEM_NAME ];
-//			UINT16	zItemDesc[ SIZE_ITEM_INFO ];
 			UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
 
@@ -3111,16 +3083,18 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
 				for( i=0; i<NUM_INV_SLOTS; i++)
 				{
-//					if ( !LoadItemInfo( pSoldier->inv[ i ].usItem, zItemName, zItemDesc ) )
-//						Assert(0);
-						wcscpy( zItemName, ShortItemNames[ pSoldier->inv[ i ].usItem ] );
-
-
 					//Display Name of the pocket
 					DrawTextToScreen( PocketText[ i ], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
 					//Display the contents of the pocket
-					DrawTextToScreen( zItemName, QUEST_DBS_NPC_INV_POPUP_X+140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+					DrawTextToScreen
+					(
+						ShortItemNames[pSoldier->inv[i].usItem],
+						QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY,
+						0, QUEST_DBS_FONT_DYNAMIC_TEXT,
+						QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK,
+						FALSE, LEFT_JUSTIFIED
+					);
 					usPosY += usFontHeight;
 				}
 			}
