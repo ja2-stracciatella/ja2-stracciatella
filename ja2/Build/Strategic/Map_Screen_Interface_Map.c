@@ -4308,7 +4308,6 @@ void DisplayPositionOfHelicopter( void )
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
 	GROUP *pGroup;
-	HVOBJECT hHandle;
 	INT32 iNumberOfPeopleInHelicopter = 0;
 	CHAR16 sString[ 4 ];
 
@@ -5285,10 +5284,7 @@ INT16 GetBaseSectorForCurrentTown( void )
 void ShowHighLightedSectorOnMilitiaMap( void )
 {
 	// show the highlighted sector on the militia map
-	HVOBJECT hVObject;
 	INT16 sX = 0, sY = 0;
-
-
 
 	if( sSectorMilitiaMapSector != -1 )
 	{

@@ -488,13 +488,10 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
 {
 	HVSURFACE						hVSurface;
-	HIMAGE							hImage;
-	SGPRect							tempRect;
 	UINT32							uiRBitMask;
 	UINT32							uiGBitMask;
 	UINT32							uiBBitMask;
 	SDL_Surface* surface;
-	Uint32 surface_flags;
 
 	Assert(usHeight > 0);
 	Assert(usWidth  > 0);

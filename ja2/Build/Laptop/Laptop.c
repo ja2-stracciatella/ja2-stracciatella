@@ -3175,7 +3175,6 @@ void ScrollDisplayText(INT32 iY)
 {
 	static INT32 iBaseTime=0;
 	static INT16 sCurX;
-	INT16 sY=(INT16)iY;
 
 	// if we are just enetering, set basetime to current clock value
 	if(iBaseTime==0)

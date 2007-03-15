@@ -1357,7 +1357,6 @@ BOOLEAN CreateDestroyBobbyRDropDown( UINT8 ubDropDownAction )
 		{
 			UINT8 i;
 			UINT16 usPosY, usPosX;
-			UINT16 usFontHeight = GetFontHeight( BOBBYR_DROPDOWN_FONT );
 
 			//Display the background for the drop down window
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X, BOBBYR_CITY_START_LOCATION_Y, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH,	BOBBYR_CITY_START_LOCATION_Y+BOBBYR_SCROLL_AREA_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );

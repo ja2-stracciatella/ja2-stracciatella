@@ -1588,8 +1588,6 @@ static UINT8 HandleTinCanCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, UINT32 ui
 
 static UINT8 HandleRemoteCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags)
 {
-	BOOLEAN						fEnoughPoints = TRUE;
-
 	// Calculate action points
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{

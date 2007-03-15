@@ -388,8 +388,6 @@ void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 UINT32  MainGameScreenHandle(void)
 {
 	UINT32		uiNewScreen = GAME_SCREEN;
-	BOOLEAN		fEnterDemoMode = FALSE;
-
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active

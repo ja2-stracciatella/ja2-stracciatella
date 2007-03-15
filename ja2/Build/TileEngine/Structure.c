@@ -1976,7 +1976,6 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 						usHeight = hVObject->pETRLEObject[uiLoop].usHeight;
 						if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE) )
 						{
-							UINT32 i = 0;
 							// adjust for the difference between the animation and structure base tile
 
 							//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )

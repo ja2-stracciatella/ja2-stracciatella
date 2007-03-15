@@ -2912,7 +2912,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 void ScrollWorld( )
 {
 	UINT32		ScrollFlags = 0;
-	BOOLEAN		fDoScroll = FALSE, fMovedPos=FALSE, fAGoodMove = FALSE;
+	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
 	INT16	sTempRenderCenterX, sTempRenderCenterY;
 	INT8	bDirection;
 	INT16	sScrollXStep=-1;

@@ -432,7 +432,6 @@ void DisplayAlumniOldMercPopUp()
 	UINT16		usPosY, usTextPosY;
 	UINT8			ubFontHeight, ubNumDescLines;
 //	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
-	UINT16	usHeight = GetFontHeight(AIM_ALUMNI_POPUP_FONT);
 	wchar_t	sName[AIM_ALUMNI_NAME_SIZE];
 	wchar_t	sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	UINT32		uiStartLoc;

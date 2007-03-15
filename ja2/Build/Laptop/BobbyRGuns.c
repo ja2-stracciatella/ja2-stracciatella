@@ -1079,7 +1079,6 @@ void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, 
 	UINT32	uiStartLoc=0;
 
 	UINT8	ubPurchaseNumber;
-	UINT16 usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
 		//Display Items Name
 	uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;

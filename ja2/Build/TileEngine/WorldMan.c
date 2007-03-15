@@ -2591,7 +2591,6 @@ BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 
 BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex )
 {
 	LEVELNODE	*pRoof		 = NULL;
-	LEVELNODE	*pOldRoof	 = NULL;
 
 	pRoof = gpWorldLevelData[ sGridNo ].pRoofHead;
 
