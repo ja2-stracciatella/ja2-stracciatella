@@ -10,7 +10,6 @@
 #include "EditorMercs.h"
 #include "Exit_Grids.h"
 #include "Isometric_Utils.h"
-#include "JA2.h"
 #include "Animation_Data.h"
 #include "Road_Smoothing.h"
 #include "Sys_Globals.h"
