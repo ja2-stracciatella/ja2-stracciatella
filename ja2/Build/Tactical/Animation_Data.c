@@ -827,7 +827,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
-		sprintf( gSystemDebugStr, "Cache Load" );
+		strcpy(gSystemDebugStr, "Cache Load");
 
 	  // Create video object
 		FilenameForBPP(gAnimSurfaceDatabase[ usSurfaceIndex ].Filename, sFilename);

@@ -350,8 +350,6 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	UINT16						usWidth;
 	UINT16						usHeight;
 	INT16							sCenterYVal, sCenterXVal;
-	UINT8							ubString[48];
-
 
 	// disable scroll messages
 	HideMessagesDuringNPCDialogue( );
@@ -484,9 +482,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
   gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
-	sprintf( ubString, "INTERFACE/talkbox2.sti" );
-	gTalkPanel.iButtonImages			= LoadButtonImage( ubString, -1,3,-1,4,-1 );
-
+	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", -1, 3, -1, 4, -1);
 
 	gTalkPanel.uiCancelButton = CreateIconAndTextButton( gTalkPanel.iButtonImages, zDialogActions[ DIALOG_DONE ], MILITARYFONT1,
 														 33, DEFAULT_SHADOW,

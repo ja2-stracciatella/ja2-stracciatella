@@ -802,33 +802,33 @@ static void CheckValidVObjectIndex(UINT32 uiIndex)
 
 	if( fAssertError )
 	{
-		UINT8 str[60];
+		const char* str;
 		switch( gubVODebugCode )
 		{
 			case DEBUGSTR_BLTVIDEOOBJECTFROMINDEX:
-				sprintf( str, "BltVideoObjectFromIndex" );
+				str = "BltVideoObjectFromIndex";
 				break;
 			case DEBUGSTR_SETOBJECTHANDLESHADE:
-				sprintf( str, "SetObjectHandleShade" );
+				str = "SetObjectHandleShade";
 				break;
 			case DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES:
-				sprintf( str, "GetVideoObjectETRLESubRegionProperties" );
+				str = "GetVideoObjectETRLESubRegionProperties";
 				break;
 			case DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX:
-				sprintf( str, "GetVideoObjectETRLEPropertiesFromIndex" );
+				str = "GetVideoObjectETRLEPropertiesFromIndex";
 				break;
 			case DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX:
-				sprintf( str, "BltVideoObjectOutlineFromIndex" );
+				str = "BltVideoObjectOutlineFromIndex";
 				break;
 			case DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX:
-				sprintf( str, "BltVideoObjectOutlineShadowFromIndex" );
+				str = "BltVideoObjectOutlineShadowFromIndex";
 				break;
 			case DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX:
-				sprintf( str, "DeleteVideoObjectFromIndex" );
+				str = "DeleteVideoObjectFromIndex";
 				break;
 			case DEBUGSTR_NONE:
 			default:
-				sprintf( str, "GetVideoObject" );
+				str = "GetVideoObject";
 				break;
 		}
 		if( uiIndex == 0xffffffff )

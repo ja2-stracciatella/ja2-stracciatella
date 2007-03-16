@@ -361,7 +361,7 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 
   if ( ubIndex == MINERS_CIV_QUOTE_INDEX )
   {
-	  sprintf( zFileName, "NPCData/miners.npc" );
+	  strcpy(zFileName, "NPCData/miners.npc");
   }
   else
   {

@@ -1256,36 +1256,36 @@ void CheckValidVSurfaceIndex( UINT32 uiIndex )
 
 	if( fAssertError )
 	{
-		UINT8 str[60];
+		const char* str;
 		switch( gubVSDebugCode )
 		{
 			case DEBUGSTR_SETVIDEOSURFACETRANSPARENCY:
-				sprintf( str, "SetVideoSurfaceTransparency" );
+				str = "SetVideoSurfaceTransparency";
 				break;
 			case DEBUGSTR_BLTVIDEOSURFACE_DST:
-				sprintf( str, "BltVideoSurface (dest)" );
+				str = "BltVideoSurface (dest)";
 				break;
 			case DEBUGSTR_BLTVIDEOSURFACE_SRC:
-				sprintf( str, "BltVideoSurface (src)" );
+				str = "BltVideoSurface (src)";
 				break;
 			case DEBUGSTR_COLORFILLVIDEOSURFACEAREA:
-				sprintf( str, "ColorFillVideoSurfaceArea" );
+				str = "ColorFillVideoSurfaceArea";
 				break;
 			case DEBUGSTR_SHADOWVIDEOSURFACERECT:
-				sprintf( str, "ShadowVideoSurfaceRect" );
+				str = "ShadowVideoSurfaceRect";
 				break;
 			case DEBUGSTR_BLTSTRETCHVIDEOSURFACE_DST:
-				sprintf( str, "BltStretchVideoSurface (dest)" );
+				str = "BltStretchVideoSurface (dest)";
 				break;
 			case DEBUGSTR_BLTSTRETCHVIDEOSURFACE_SRC:
-				sprintf( str, "BltStretchVideoSurface (src)" );
+				str = "BltStretchVideoSurface (src)";
 				break;
 			case DEBUGSTR_DELETEVIDEOSURFACEFROMINDEX:
-				sprintf( str, "DeleteVideoSurfaceFromIndex" );
+				str = "DeleteVideoSurfaceFromIndex";
 				break;
 			case DEBUGSTR_NONE:
 			default:
-				sprintf( str, "GetVideoSurface" );
+				str = "GetVideoSurface";
 				break;
 		}
 		if( uiIndex == 0xffffffff )

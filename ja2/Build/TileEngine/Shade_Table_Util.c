@@ -136,7 +136,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 		return FALSE;
 	}
 	ptr++;
-	sprintf( ptr, "sha" );
+	strcpy(ptr, "sha");
 
 	hfile = FileOpen(ShadeFileName, FILE_ACCESS_READ);
 	if( !hfile )
@@ -182,7 +182,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 		return FALSE;
 	}
 	ptr++;
-	sprintf( ptr, "sha" );
+	strcpy(ptr, "sha");
 
 	hfile = FileOpen(ShadeFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hfile )

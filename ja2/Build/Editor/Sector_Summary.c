@@ -2166,7 +2166,7 @@ void CalculateOverrideStatus()
 		if( !ptr )
 			strcat( szFilename, ".dat" );
 		else
-			sprintf( ptr, ".dat" );
+			strcpy(ptr, ".dat");
 	}
 	else
 		sprintf( szFilename, "MAPS/%S", gszFilename );
@@ -2437,7 +2437,7 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	ptr = strstr( puiFilename, ".dat" );
 	if( !ptr )
 		AssertMsg( 0, "Illegal sector summary filename.");
-	sprintf( ptr, ".sum" );
+	strcpy(ptr, ".sum");
 
 	//write the summary information
 	fp = fopen( puiFilename, "wb" );
@@ -2504,7 +2504,7 @@ void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 	SUMMARYFILE temp;
 	INT32 x, y;
 	FILE *fp;
-	sprintf( filename, pSector );
+	strcpy(filename, pSector);
 	if( ubLevel % 4 )
 	{
 		UINT8 str[4];

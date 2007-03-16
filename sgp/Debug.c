@@ -399,10 +399,7 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 #endif
 	//Build the output strings
 	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
-	if( pString )
-		sprintf( gubAssertString, pString );
-	else
-		sprintf( gubAssertString, "" );
+	strlcpy(gubAssertString, pString != NULL ? pString : "", lengthof(gubAssertString));
 
 	//Output to debugger
 	if (gfRecordToDebugger)
@@ -482,7 +479,7 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	// Build the output string
 	sprintf( ubOutputString, "{ %ld } Assertion Failure: %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
 	if( pString )
-		sprintf( gubAssertString, pString );
+		strlcpy(gubAssertString, pString, lengthof(gubAssertString));
 	// Output to debugger
 	if (gfRecordToDebugger)
 	{

@@ -145,7 +145,7 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t *zQuote )
 	{
     if ( gbWorldSectorZ > 0 )
     {
-		  //sprintf( zFileName, "NPCData/miners.edt" );
+		  //strcpy(zFileName, "NPCData/miners.edt");
   		sprintf( zFileName,"NPCDATA/CIV%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER );
     }
     else

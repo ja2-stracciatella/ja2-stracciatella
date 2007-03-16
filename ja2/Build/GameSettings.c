@@ -295,7 +295,7 @@ BOOLEAN GetCDLocation( )
 		else
 		{
 			//put in a default location
-			sprintf( zCdLocation, "c" );
+			strcpy(zCdLocation, "c");
 		}
 
 		//Now create a new file

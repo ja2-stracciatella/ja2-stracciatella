@@ -119,16 +119,16 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorY.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- sSectorY mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -139,43 +139,43 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorX.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- sSectorX mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &slots,		4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading slots.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading slots.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -189,9 +189,9 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	if( gbWorldSectorZ != bSectorZ )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- bSectorZ mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -383,16 +383,16 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- ubSectorID mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -527,11 +527,11 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 
 					//copy colors for soldier based on the body type.
-					sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
-					sprintf( curr->pDetailedPlacement->VestPal,		pSoldier->VestPal );
-					sprintf( curr->pDetailedPlacement->SkinPal,		pSoldier->SkinPal );
-					sprintf( curr->pDetailedPlacement->PantsPal,  pSoldier->PantsPal );
-					sprintf( curr->pDetailedPlacement->MiscPal,		pSoldier->MiscPal );
+					strcpy(curr->pDetailedPlacement->HeadPal,  pSoldier->HeadPal);
+					strcpy(curr->pDetailedPlacement->VestPal,  pSoldier->VestPal);
+					strcpy(curr->pDetailedPlacement->SkinPal,  pSoldier->SkinPal);
+					strcpy(curr->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
+					strcpy(curr->pDetailedPlacement->MiscPal,  pSoldier->MiscPal);
 
 					//copy soldier's inventory
 					memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
@@ -837,16 +837,16 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorY.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorY.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorY mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- sSectorY mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -858,50 +858,50 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading sSectorX.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorX.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- sSectorX mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- sSectorX mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &slots,		4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading slots.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading slots.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gbWorldSectorZ != bSectorZ )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- bSectorZ mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- bSectorZ mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1093,16 +1093,16 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- ubSectorID mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "EnemySoldier -- ubSectorID mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1220,16 +1220,16 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading sSectorY.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading sSectorY.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- sSectorY mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- sSectorY mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1241,34 +1241,34 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading sSectorX.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading sSectorX.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- sSectorX mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- sSectorX mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &slots,		4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading slots.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading slots.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading uiTimeStamp.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading uiTimeStamp.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1277,16 +1277,16 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading bSectorZ.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading bSectorZ.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gbWorldSectorZ != bSectorZ )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- bSectorZ mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- bSectorZ mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1462,18 +1462,18 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- EOF while reading ubSectorID.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- EOF while reading ubSectorID.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	/*
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Civilian -- ubSectorID mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Civilian -- ubSectorID mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	*/
@@ -1609,11 +1609,11 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
 
 						//copy colors for soldier based on the body type.
-						sprintf( curr->pDetailedPlacement->HeadPal,		pSoldier->HeadPal );
-						sprintf( curr->pDetailedPlacement->VestPal,		pSoldier->VestPal );
-						sprintf( curr->pDetailedPlacement->SkinPal,		pSoldier->SkinPal );
-						sprintf( curr->pDetailedPlacement->PantsPal,  pSoldier->PantsPal );
-						sprintf( curr->pDetailedPlacement->MiscPal,		pSoldier->MiscPal );
+						strcpy(curr->pDetailedPlacement->HeadPal,  pSoldier->HeadPal);
+						strcpy(curr->pDetailedPlacement->VestPal,  pSoldier->VestPal);
+						strcpy(curr->pDetailedPlacement->SkinPal,  pSoldier->SkinPal);
+						strcpy(curr->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
+						strcpy(curr->pDetailedPlacement->MiscPal,  pSoldier->MiscPal);
 
 						//copy soldier's inventory
 						memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
@@ -1872,16 +1872,16 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorY.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading sSectorY.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorY != sSectorY )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- sSectorY mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- sSectorY mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1893,34 +1893,34 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
 	if( uiNumBytesRead != 2 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading sSectorX.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading sSectorX.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 	if( gWorldSectorX != sSectorX )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- sSectorX mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- sSectorX mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &slots,		4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading slots.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading slots.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
 	if( uiNumBytesRead != 4 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading uiTimeStamp.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading uiTimeStamp.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -1928,17 +1928,17 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading bSectorZ.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading bSectorZ.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	if( gbWorldSectorZ != bSectorZ )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- bSectorZ mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- bSectorZ mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
@@ -2136,17 +2136,17 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
 	if( uiNumBytesRead != 1 )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- EOF while reading ubSectorID.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- EOF while reading ubSectorID.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 
 	if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
 	{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "Check EnemySoldier -- ubSectorID mismatch.  KM" );
-		#endif
+#ifdef JA2TESTVERSION
+		strcpy(zReason, "Check EnemySoldier -- ubSectorID mismatch.  KM");
+#endif
 		goto FAIL_LOAD;
 	}
 

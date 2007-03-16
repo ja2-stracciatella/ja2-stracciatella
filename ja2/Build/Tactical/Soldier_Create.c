@@ -996,10 +996,10 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 
 	if( pCreateStruct->fVisible )
 	{
-		sprintf( pSoldier->HeadPal, pCreateStruct->HeadPal );
-		sprintf( pSoldier->PantsPal, pCreateStruct->PantsPal );
-		sprintf( pSoldier->VestPal, pCreateStruct->VestPal );
-		sprintf( pSoldier->SkinPal, pCreateStruct->SkinPal );
+		strcpy(pSoldier->HeadPal,  pCreateStruct->HeadPal);
+		strcpy(pSoldier->PantsPal, pCreateStruct->PantsPal);
+		strcpy(pSoldier->VestPal,  pCreateStruct->VestPal);
+		strcpy(pSoldier->SkinPal,  pCreateStruct->SkinPal);
 	}
 
 	//KM:  March 25, 1999
@@ -1752,10 +1752,10 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	pp->fVisible = spp->fVisible;
 	if( spp->fVisible )
 	{
-		sprintf( pp->HeadPal, spp->HeadPal );
-		sprintf( pp->PantsPal, spp->PantsPal );
-		sprintf( pp->VestPal, spp->VestPal );
-		sprintf( pp->SkinPal, spp->SkinPal );
+		strcpy(pp->HeadPal,  spp->HeadPal);
+		strcpy(pp->PantsPal, spp->PantsPal);
+		strcpy(pp->VestPal,  spp->VestPal);
+		strcpy(pp->SkinPal,  spp->SkinPal);
 	}
 
 	//This isn't perfect, however, it blindly brings over the items from the static

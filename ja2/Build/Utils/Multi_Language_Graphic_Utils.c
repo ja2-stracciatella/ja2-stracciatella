@@ -1,6 +1,7 @@
 #include "Language_Defines.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include <stdio.h>
+#include <string.h>
 
 BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 {
@@ -8,103 +9,103 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		switch( usMLGGraphicID )
 		{
 			case MLG_AIMSYMBOL:
-				sprintf( filename, "LAPTOP/AimSymbol.sti" );
+				strcpy(filename, "LAPTOP/AimSymbol.sti");
 				return TRUE;
 			case MLG_BOBBYNAME:
-				sprintf( filename, "LAPTOP/BobbyName.sti" );
+				strcpy(filename, "LAPTOP/BobbyName.sti");
 				return TRUE;
 			case MLG_BOBBYRAYAD21:
-				sprintf( filename, "LAPTOP/BobbyRayAd_21.sti" );
+				strcpy(filename, "LAPTOP/BobbyRayAd_21.sti");
 				return TRUE;
 			case MLG_BOBBYRAYLINK:
-				sprintf( filename, "LAPTOP/BobbyRayLink.sti" );
+				strcpy(filename, "LAPTOP/BobbyRayLink.sti");
 				return TRUE;
 			case MLG_CLOSED:
-				sprintf( filename, "LAPTOP/Closed.sti" );
+				strcpy(filename, "LAPTOP/Closed.sti");
 				return TRUE;
 			case MLG_CONFIRMORDER:
-				sprintf( filename, "LAPTOP/ConfirmOrder.sti" );
+				strcpy(filename, "LAPTOP/ConfirmOrder.sti");
 				return TRUE;
 			case MLG_DESKTOP:
-				sprintf( filename, "LAPTOP/desktop.pcx" );
+				strcpy(filename, "LAPTOP/desktop.pcx");
 				return TRUE;
 			case MLG_FUNERALAD9:
-				sprintf( filename, "LAPTOP/FuneralAd_9.sti" );
+				strcpy(filename, "LAPTOP/FuneralAd_9.sti");
 				return TRUE;
 			case MLG_GOLDPIECEBUTTONS:
-				sprintf( filename, "INTERFACE/goldpiecebuttons.sti" );
+				strcpy(filename, "INTERFACE/goldpiecebuttons.sti");
 				return TRUE;
 			case MLG_HISTORY:
-				sprintf( filename, "LAPTOP/history.sti" );
+				strcpy(filename, "LAPTOP/history.sti");
 				return TRUE;
 			case MLG_INSURANCEAD10:
-				sprintf( filename, "LAPTOP/insurancead_10.sti" );
+				strcpy(filename, "LAPTOP/insurancead_10.sti");
 				return TRUE;
 			case MLG_INSURANCELINK:
-				sprintf( filename, "LAPTOP/insurancelink.sti" );
+				strcpy(filename, "LAPTOP/insurancelink.sti");
 				return TRUE;
 			case MLG_INSURANCETITLE:
-				sprintf( filename, "LAPTOP/largetitle.sti" );
+				strcpy(filename, "LAPTOP/largetitle.sti");
 				return TRUE;
 			case MLG_LARGEFLORISTSYMBOL:
-				sprintf( filename, "LAPTOP/LargeSymbol.sti" );
+				strcpy(filename, "LAPTOP/LargeSymbol.sti");
 				return TRUE;
 			case MLG_SMALLFLORISTSYMBOL:
-				sprintf( filename, "LAPTOP/SmallSymbol.sti" );
+				strcpy(filename, "LAPTOP/SmallSymbol.sti");
 				return TRUE;
 			case MLG_MCGILLICUTTYS:
-				sprintf( filename, "LAPTOP/McGillicuttys.sti" );
+				strcpy(filename, "LAPTOP/McGillicuttys.sti");
 				return TRUE;
 			case MLG_MORTUARY:
-				sprintf( filename, "LAPTOP/Mortuary.sti" );
+				strcpy(filename, "LAPTOP/Mortuary.sti");
 				return TRUE;
 			case MLG_MORTUARYLINK:
-				sprintf( filename, "LAPTOP/MortuaryLink.sti" );
+				strcpy(filename, "LAPTOP/MortuaryLink.sti");
 				return TRUE;
 			case MLG_ORDERGRID:
-				sprintf( filename, "LAPTOP/OrderGrid.sti" );
+				strcpy(filename, "LAPTOP/OrderGrid.sti");
 				return TRUE;
 			case MLG_PREBATTLEPANEL:
-				sprintf( filename, "INTERFACE/PreBattlePanel.sti" );
+				strcpy(filename, "INTERFACE/PreBattlePanel.sti");
 				return TRUE;
 			case MLG_SMALLTITLE:
-				sprintf( filename, "LAPTOP/SmallTitle.sti" );
+				strcpy(filename, "LAPTOP/SmallTitle.sti");
 				return TRUE;
 			case MLG_STATSBOX:
-				sprintf( filename, "LAPTOP/StatsBox.sti" );
+				strcpy(filename, "LAPTOP/StatsBox.sti");
 				return TRUE;
 			case MLG_STOREPLAQUE:
-				sprintf( filename, "LAPTOP/BobbyStorePlaque.sti" );
+				strcpy(filename, "LAPTOP/BobbyStorePlaque.sti");
 				return TRUE;
 			case MLG_TITLETEXT:
-				sprintf( filename, "LOADSCREENS/titletext.sti" );
+				strcpy(filename, "LOADSCREENS/titletext.sti");
 				return TRUE;
 			case MLG_TOALUMNI:
-				sprintf( filename, "LAPTOP/ToAlumni.sti" );
+				strcpy(filename, "LAPTOP/ToAlumni.sti");
 				return TRUE;
 			case MLG_TOMUGSHOTS:
-				sprintf( filename, "LAPTOP/ToMugShots.sti" );
+				strcpy(filename, "LAPTOP/ToMugShots.sti");
 				return TRUE;
 			case MLG_TOSTATS:
-				sprintf( filename, "LAPTOP/ToStats.sti" );
+				strcpy(filename, "LAPTOP/ToStats.sti");
 				return TRUE;
 			case MLG_WARNING:
-				sprintf( filename, "LAPTOP/Warning.sti" );
+				strcpy(filename, "LAPTOP/Warning.sti");
 				return TRUE;
 			case MLG_YOURAD13:
-				sprintf( filename, "LAPTOP/YourAd_13.sti" );
+				strcpy(filename, "LAPTOP/YourAd_13.sti");
 				return TRUE;
 			case MLG_OPTIONHEADER:
-				sprintf( filename, "INTERFACE/optionscreenaddons.sti" );
+				strcpy(filename, "INTERFACE/optionscreenaddons.sti");
 				return TRUE;
 			case MLG_LOADSAVEHEADER:
-				sprintf( filename, "INTERFACE/loadscreenaddons.sti" );
+				strcpy(filename, "INTERFACE/loadscreenaddons.sti");
 				return TRUE;
 			case MLG_SPLASH:
-				sprintf( filename, "INTERFACE/splash.sti" );
+				strcpy(filename, "INTERFACE/splash.sti");
 				return TRUE;
 			case MLG_IMPSYMBOL:
-				sprintf( filename, "LAPTOP/IMPSymbol.sti" );
+				strcpy(filename, "LAPTOP/IMPSymbol.sti");
 				return TRUE;
 		}
 
@@ -113,113 +114,111 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		{
 			case MLG_AIMSYMBOL:
 				//Same graphic (no translation needed)
-				sprintf( filename, "LAPTOP/AimSymbol.sti" );
+				strcpy(filename, "LAPTOP/AimSymbol.sti");
 				return TRUE;
 			case MLG_BOBBYNAME:
 				//Same graphic (no translation needed)
-				sprintf( filename, "LAPTOP/BobbyName.sti" );
+				strcpy(filename, "LAPTOP/BobbyName.sti");
 				return TRUE;
 			case MLG_BOBBYRAYAD21:
 				//Same graphic (no translation needed)
-				sprintf( filename, "LAPTOP/BobbyRayAd_21.sti" );
+				strcpy(filename, "LAPTOP/BobbyRayAd_21.sti");
 				return TRUE;
 			case MLG_BOBBYRAYLINK:
-				sprintf( filename, "GERMAN/BobbyRayLink_german.sti" );
+				strcpy(filename, "GERMAN/BobbyRayLink_german.sti");
 				return TRUE;
 			case MLG_CLOSED:
-				sprintf( filename, "GERMAN/Closed_german.sti" );
+				strcpy(filename, "GERMAN/Closed_german.sti");
 				return TRUE;
 			case MLG_CONFIRMORDER:
-				sprintf( filename, "GERMAN/ConfirmOrder_german.sti" );
+				strcpy(filename, "GERMAN/ConfirmOrder_german.sti");
 				return TRUE;
 			case MLG_DESKTOP:
-				sprintf( filename, "GERMAN/desktop_german.pcx" );
+				strcpy(filename, "GERMAN/desktop_german.pcx");
 				return TRUE;
 			case MLG_FUNERALAD9:
-				sprintf( filename, "GERMAN/FuneralAd_12_german.sti" );
+				strcpy(filename, "GERMAN/FuneralAd_12_german.sti");
 				return TRUE;
 			case MLG_GOLDPIECEBUTTONS:
-				sprintf( filename, "GERMAN/goldpiecebuttons_german.sti" );
+				strcpy(filename, "GERMAN/goldpiecebuttons_german.sti");
 				return TRUE;
 			case MLG_HISTORY:
-				sprintf( filename, "GERMAN/history_german.sti" );
+				strcpy(filename, "GERMAN/history_german.sti");
 				return TRUE;
 			case MLG_IMPSYMBOL:
-				sprintf( filename, "German/IMPSymbol_german.sti" );
+				strcpy(filename, "German/IMPSymbol_german.sti");
 				return TRUE;
 			case MLG_INSURANCEAD10:
-				sprintf( filename, "GERMAN/insurancead_10_german.sti" );
+				strcpy(filename, "GERMAN/insurancead_10_german.sti");
 				return TRUE;
 			case MLG_INSURANCELINK:
-				sprintf( filename, "GERMAN/insurancelink_german.sti" );
+				strcpy(filename, "GERMAN/insurancelink_german.sti");
 				return TRUE;
 			case MLG_INSURANCETITLE:
-				sprintf( filename, "GERMAN/largetitle_german.sti" );
+				strcpy(filename, "GERMAN/largetitle_german.sti");
 				return TRUE;
 			case MLG_LARGEFLORISTSYMBOL:
-				sprintf( filename, "GERMAN/LargeSymbol_german.sti" );
+				strcpy(filename, "GERMAN/LargeSymbol_german.sti");
 				return TRUE;
 			case MLG_SMALLFLORISTSYMBOL:
-				sprintf( filename, "GERMAN/SmallSymbol_german.sti" );
+				strcpy(filename, "GERMAN/SmallSymbol_german.sti");
 				return TRUE;
 			case MLG_MCGILLICUTTYS:
-				sprintf( filename, "GERMAN/McGillicuttys_german.sti" );
+				strcpy(filename, "GERMAN/McGillicuttys_german.sti");
 				return TRUE;
 			case MLG_MORTUARY:
-				sprintf( filename, "GERMAN/Mortuary_german.sti" );
+				strcpy(filename, "GERMAN/Mortuary_german.sti");
 				return TRUE;
 			case MLG_MORTUARYLINK:
-				sprintf( filename, "GERMAN/MortuaryLink_german.sti" );
+				strcpy(filename, "GERMAN/MortuaryLink_german.sti");
 				return TRUE;
 			case MLG_PREBATTLEPANEL:
-				sprintf( filename, "GERMAN/PreBattlePanel_german.sti" );
+				strcpy(filename, "GERMAN/PreBattlePanel_german.sti");
 				return TRUE;
 			case MLG_SMALLTITLE:
-				sprintf( filename, "GERMAN/SmallTitle_german.sti" );
+				strcpy(filename, "GERMAN/SmallTitle_german.sti");
 				return TRUE;
 			case MLG_STATSBOX:
 				//Same file
-				sprintf( filename, "LAPTOP/StatsBox.sti" );
+				strcpy(filename, "LAPTOP/StatsBox.sti");
 				return TRUE;
 			case MLG_STOREPLAQUE:
-				sprintf( filename, "GERMAN/StorePlaque_german.sti" );
+				strcpy(filename, "GERMAN/StorePlaque_german.sti");
 				return TRUE;
 			case MLG_TITLETEXT:
-				sprintf( filename, "GERMAN/titletext_german.sti" );
+				strcpy(filename, "GERMAN/titletext_german.sti");
 				return TRUE;
 			case MLG_TOALUMNI:
-				sprintf( filename, "GERMAN/ToAlumni_german.sti" );
+				strcpy(filename, "GERMAN/ToAlumni_german.sti");
 				return TRUE;
 			case MLG_TOMUGSHOTS:
-				sprintf( filename, "GERMAN/ToMugShots_german.sti" );
+				strcpy(filename, "GERMAN/ToMugShots_german.sti");
 				return TRUE;
 			case MLG_TOSTATS:
-				sprintf( filename, "GERMAN/ToStats_german.sti" );
+				strcpy(filename, "GERMAN/ToStats_german.sti");
 				return TRUE;
 			case MLG_WARNING:
-				sprintf( filename, "GERMAN/Warning_german.sti" );
+				strcpy(filename, "GERMAN/Warning_german.sti");
 				return TRUE;
 			case MLG_YOURAD13:
-				sprintf( filename, "GERMAN/YourAd_13_german.sti" );
+				strcpy(filename, "GERMAN/YourAd_13_german.sti");
 				return TRUE;
 			case MLG_OPTIONHEADER:
-				sprintf( filename, "GERMAN/optionscreenaddons_german.sti" );
+				strcpy(filename, "GERMAN/optionscreenaddons_german.sti");
 				return TRUE;
 			case MLG_LOADSAVEHEADER:
-				sprintf( filename, "GERMAN/loadscreenaddons_german.sti" );
+				strcpy(filename, "GERMAN/loadscreenaddons_german.sti");
 				return TRUE;
 			case MLG_ORDERGRID:
 				//Same file
-				sprintf( filename, "LAPTOP/OrderGrid.sti" );
+				strcpy(filename, "LAPTOP/OrderGrid.sti");
 				return TRUE;
 			case MLG_SPLASH:
-				sprintf( filename, "German/splash_german.sti" );
+				strcpy(filename, "German/splash_german.sti");
 				return TRUE;
 		}
 
 	#else
-
-		UINT8 zLanguage[64];
 
 		//The foreign language defined determines the name of the directory and filename.
 		//For example, the German version of:
@@ -230,25 +229,26 @@ BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID )
 		//
 		//		"GERMAN/IMPSymbol_German.sti"
 
-		#if   defined( DUTCH )
-		  sprintf( zLanguage, "DUTCH" );
-		#elif defined( FRENCH )
-		  sprintf( zLanguage, "FRENCH" );
-		#elif defined( GERMAN )
-		  sprintf( zLanguage, "GERMAN" );
-		#elif defined( ITALIAN )
-		  sprintf( zLanguage, "ITALIAN" );
-		#elif defined( JAPANESE )
-		  sprintf( zLanguage, "JAPANESE" );
-		#elif defined( KOREAN )
-		  sprintf( zLanguage, "KOREAN" );
-		#elif defined( POLISH )
-		  sprintf( zLanguage, "POLISH" );
-		#elif defined( RUSSIAN )
-		  sprintf( zLanguage, "RUSSIAN" );
-		#elif defined( SPANISH )
-		  sprintf( zLanguage, "SPANISH" );
-		#endif
+		const char* zLanguage;
+#if   defined( DUTCH )
+	  zLanguage = "DUTCH";
+#elif defined( FRENCH )
+	  zLanguage = "FRENCH";
+#elif defined( GERMAN )
+	  zLanguage = "GERMAN";
+#elif defined( ITALIAN )
+	  zLanguage = "ITALIAN";
+#elif defined( JAPANESE )
+	  zLanguage = "JAPANESE";
+#elif defined( KOREAN )
+	  zLanguage = "KOREAN";
+#elif defined( POLISH )
+	  zLanguage = "POLISH";
+#elif defined( RUSSIAN )
+	  zLanguage = "RUSSIAN";
+#elif defined( SPANISH )
+	  zLanguage = "SPANISH";
+#endif
 
 		switch( usMLGGraphicID )
 		{

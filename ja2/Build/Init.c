@@ -175,7 +175,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			sprintf( gubFilename, "none");
+			strcpy(gubFilename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;
@@ -188,7 +188,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			sprintf( gubFilename, "none");
+			strcpy(gubFilename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;
