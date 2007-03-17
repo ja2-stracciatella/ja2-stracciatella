@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Local.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"
 #include "VSurface.h"
@@ -207,13 +208,11 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	INVTYPE *item;
 	SGPRect	SaveRect, NewRect;
 	UINT32 uiVideoObjectIndex;
-	UINT16 usUselessWidth, usUselessHeight;
 	INT16 sWidth, sOffset, sStart;
 	INT16 i, x, y;
 	UINT16 usCounter;
 	wchar_t pStr[100];//, pStr2[ 100 ];
 	wchar_t pItemName[SIZE_ITEM_NAME];
-	UINT8						ubBitDepth;
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
 
@@ -303,10 +302,9 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	eInfo.sWidth = (eInfo.sNumItems > 12) ? ((eInfo.sNumItems+1)/2)*60 : 360;
 	eInfo.sHeight = 80;
 	// Create item buffer
-	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
 
 	//!!!Memory check.  Create the item buffer
-	eInfo.uiBuffer = AddVideoSurface(eInfo.sWidth, eInfo.sHeight, ubBitDepth);
+	eInfo.uiBuffer = AddVideoSurface(eInfo.sWidth, eInfo.sHeight, PIXEL_DEPTH);
 	if (eInfo.uiBuffer == NO_VSURFACE)
 	{
 		eInfo.fKill = TRUE;

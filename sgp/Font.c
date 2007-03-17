@@ -802,12 +802,11 @@ BOOLEAN InitializeFontManager(void)
 {
 int count;
 UINT16 uiRight, uiBottom;
-UINT8 uiPixelDepth;
 
 	FontDefault=(-1);
 	FontDestBuffer=BACKBUFFER;
 
-	GetCurrentVideoSettings( &uiRight, &uiBottom, &uiPixelDepth );
+	GetCurrentVideoSettings(&uiRight, &uiBottom);
 	FontDestRegion.iLeft = 0;
 	FontDestRegion.iTop = 0;
 	FontDestRegion.iRight=(INT32)uiRight;

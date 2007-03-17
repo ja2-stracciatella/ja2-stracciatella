@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SysUtil.h"
 #include "VSurface.h"
 #include "Video.h"
@@ -14,15 +15,14 @@ BOOLEAN	InitializeGameVideoObjects( )
 {
 	UINT16					usWidth;
 	UINT16					usHeight;
-	UINT8						ubBitDepth;
 
 	// Create render buffer
-	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
+	GetCurrentVideoSettings(&usWidth, &usHeight);
 
-	guiSAVEBUFFER = AddVideoSurface(usWidth, usHeight, ubBitDepth);
+	guiSAVEBUFFER = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
 	CHECKF(guiSAVEBUFFER != NO_VSURFACE);
 
-	guiEXTRABUFFER = AddVideoSurface(usWidth, usHeight, ubBitDepth);
+	guiEXTRABUFFER = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
 	CHECKF(guiEXTRABUFFER != NO_VSURFACE);
 	gfExtraBuffer = TRUE;
 

@@ -1,5 +1,6 @@
 #include "SGP.h"
 #ifdef JA2EDITOR
+#	include "Local.h"
 #	include "Screens.h"
 #	include "MapUtility.h"
 #	include "WorldDef.h"
@@ -63,9 +64,6 @@ UINT32	MapUtilScreenHandle( )
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
 	INT8		zFilename[ 260 ], zFilename2[ 260 ];
-	UINT16					usWidth;
-	UINT16					usHeight;
-	UINT8						ubBitDepth;
 	UINT32					uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT16						*pDestBuf, *pSrcBuf;
 	UINT8						*pDataPtr;
@@ -98,10 +96,7 @@ UINT32	MapUtilScreenHandle( )
 	{
 		fNewMap = FALSE;
 
-		// Create render buffer
-		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-
-		giMiniMap = AddVideoSurface(88, 44, ubBitDepth);
+		giMiniMap = AddVideoSurface(88, 44, PIXEL_DEPTH);
 		if (giMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....

@@ -229,11 +229,10 @@ BOOLEAN RestoreVideoManager(void)
 }
 
 
-void GetCurrentVideoSettings( UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth )
+void GetCurrentVideoSettings(UINT16* usWidth, UINT16* usHeight)
 {
 	*usWidth = (UINT16) gusScreenWidth;
 	*usHeight = (UINT16) gusScreenHeight;
-	*ubBitDepth = 16;
 }
 
 
@@ -390,7 +389,6 @@ void InvalidateScreen(void)
 static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	UINT16 usWidth, usHeight;
-	UINT8	 ubBitDepth;
 	UINT16				 usNumStrips = 0;
 	INT32					 cnt;
 	INT16					 sShiftX, sShiftY;
@@ -402,7 +400,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 	SDL_Rect SrcRect;
 	SDL_Rect DstRect;
 
- 	GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
+ 	GetCurrentVideoSettings(&usWidth, &usHeight);
 	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
 
 	SGPRect StripRegions[2];

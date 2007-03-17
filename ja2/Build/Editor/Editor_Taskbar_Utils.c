@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include <stdio.h>
+#include "Local.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
@@ -171,22 +172,18 @@ void DeleteEditorImages()
 
 void CreateEditorBuffers()
 {
-
 	INT32						i;
-	UINT16					usUselessWidth, usUselessHeight;
-	UINT8						ubBitDepth;
 
 	//create buffer for the transition slot for merc items.  This slot contains the newly
 	//selected item graphic in it's inventory size version.  This buffer is then scaled down
 	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
-	GetCurrentVideoSettings( &usUselessWidth, &usUselessHeight, &ubBitDepth );
-	guiMercTempBuffer = AddVideoSurface(60, 25, ubBitDepth);
+	guiMercTempBuffer = AddVideoSurface(60, 25, PIXEL_DEPTH);
 	AssertMsg(guiMercTempBuffer != NO_VSURFACE, "Failed to allocate memory for merc tempitem buffer.");
 
 	//create the nine buffers for the merc's inventory slots.
 	for( i = 0; i < 9; i++ )
 	{
-		guiMercInvPanelBuffers[i] = AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, ubBitDepth);
+		guiMercInvPanelBuffers[i] = AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, PIXEL_DEPTH);
 		AssertMsg(guiMercInvPanelBuffers[i] != NO_VSURFACE, "Failed to allocate memory for merc item[] buffers.");
 	}
 }

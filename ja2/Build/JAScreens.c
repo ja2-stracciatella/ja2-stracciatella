@@ -1272,13 +1272,10 @@ UINT32 DemoExitScreenHandle(void)
 		uiTime = GetJA2Clock();
 		if( ubPreviousScreen == 2 )
 		{
-			UINT8						ubBitDepth;
 			UINT32					uiTempID;
-			UINT16 usWidth, usHeight;
 
 			//Create render buffer
-			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			uiCollageID = AddVideoSurface(263, 210, ubBitDepth);
+			uiCollageID = AddVideoSurface(263, 210, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
@@ -1450,13 +1447,10 @@ UINT32 DemoExitScreenHandle(void)
 		uiTime = GetJA2Clock();
 		if( ubPreviousScreen == 4 )
 		{
-			UINT8						ubBitDepth;
 			UINT32					uiTempID;
-			UINT16 usWidth, usHeight;
 
 			//Create render buffer
-			GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-			uiCollageID = AddVideoSurface(331, 148, ubBitDepth);
+			uiCollageID = AddVideoSurface(331, 148, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen

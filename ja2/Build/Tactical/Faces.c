@@ -1,6 +1,7 @@
 #include "math.h"
 #include <stdio.h>
 #include <errno.h>
+#include "Local.h"
 #include "WorldDef.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"
@@ -519,9 +520,6 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 {
 	UINT16						usMercProfileID;
 	FACETYPE					*pFace;
-	UINT16						usWidth;
-	UINT16						usHeight;
-	UINT8							ubBitDepth;
 
 	// Check face index
 	CHECKV( iFaceIndex != -1 );
@@ -544,13 +542,8 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 
 	if ( uiRestoreBuffer == FACE_AUTO_RESTORE_BUFFER )
 	{
-		// BUILD A BUFFER
-		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		// OK, ignore screen widths, height, only use BPP
-
 		pFace->fAutoRestoreBuffer  = TRUE;
-
-		pFace->uiAutoRestoreBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, ubBitDepth);
+		pFace->uiAutoRestoreBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
 		CHECKV(pFace->uiAutoRestoreBuffer != NO_VSURFACE);
 	}
 	else
@@ -561,13 +554,8 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 
 	if ( uiDisplayBuffer == FACE_AUTO_DISPLAY_BUFFER )
 	{
-		// BUILD A BUFFER
-		GetCurrentVideoSettings( &usWidth, &usHeight, &ubBitDepth );
-		// OK, ignore screen widths, height, only use BPP
-
 		pFace->fAutoDisplayBuffer  = TRUE;
-
-		pFace->uiAutoDisplayBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, ubBitDepth);
+		pFace->uiAutoDisplayBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
 		CHECKV(pFace->uiAutoDisplayBuffer != NO_VSURFACE);
 	}
 	else

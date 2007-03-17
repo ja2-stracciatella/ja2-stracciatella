@@ -27,7 +27,7 @@ extern BOOLEAN              InitializeVideoManager(BOOLEAN);
 extern void                 ShutdownVideoManager(void);
 extern void                 SuspendVideoManager(void);
 extern BOOLEAN              RestoreVideoManager(void);
-extern void                 GetCurrentVideoSettings(UINT16 *usWidth, UINT16 *usHeight, UINT8 *ubBitDepth);
+extern void                 GetCurrentVideoSettings(UINT16* usWidth, UINT16* usHeight);
 extern void                 InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 extern void                 InvalidateScreen(void);
 extern SDL_Surface* GetBackBufferObject(void);
