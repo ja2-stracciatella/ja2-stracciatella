@@ -10,14 +10,6 @@ extern "C" {
 extern BOOLEAN		gfProgramIsRunning; // Turn this to FALSE to exit program
 extern CHAR8			gzCommandLine[100];	// Command line given
 
-#if !defined(JA2) && !defined(UTILS)
-extern BOOLEAN		gfLoadAtStartup;
-extern CHAR8		*gzStringDataOverride;
-extern BOOLEAN		gfUsingBoundsChecker;
-extern BOOLEAN		gfCapturingVideo;
-
-#endif
-
 void ShutdownWithErrorBox(CHAR8 *pcMessage);
 
 #ifdef __cplusplus
