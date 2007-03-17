@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "Types.h"
 #include "Credits.h"
 #include "VSurface.h"
@@ -798,7 +799,7 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 	//if the node can have something to display, Create a surface for it
 	if( pNodeToAdd->uiType == CRDT_NODE_DEFAULT )
 	{
-		pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, 16);
+		pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
 		if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
 
 		//Set transparency

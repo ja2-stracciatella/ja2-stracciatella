@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "Local.h"
 #include "Video.h"
 #include "SGP.h"
 #include "Soldier_Control.h"
@@ -474,7 +475,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	// Build save buffer
 	// Create a buffer for him to go!
 	// OK, ignore screen widths, height, only use BPP
-	gTalkPanel.uiSaveBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, 16);
+	gTalkPanel.uiSaveBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
 	CHECKF(gTalkPanel.uiSaveBuffer != NO_VSURFACE);
 
 	// Set face to auto

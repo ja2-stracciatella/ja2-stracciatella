@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"
@@ -252,7 +253,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 	SetPendingNewScreen( MSG_BOX_SCREEN);
 
 	// Init save buffer
-	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, 16);
+	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
 	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return -1;
 
   //Save what we have under here...

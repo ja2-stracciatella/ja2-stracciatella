@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "Sys_Globals.h"
 #include "SysUtil.h"
@@ -2089,7 +2090,7 @@ INT8 HelpScreenDetermineWhichMapScreenHelpToShow()
 
 BOOLEAN CreateHelpScreenTextBuffer()
 {
-	guiHelpScreenTextBufferSurface = AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, 16);
+	guiHelpScreenTextBufferSurface = AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, PIXEL_DEPTH);
 	CHECKF(guiHelpScreenTextBufferSurface != NO_VSURFACE);
 
 	return( TRUE );

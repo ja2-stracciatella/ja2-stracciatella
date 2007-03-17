@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "MercTextBox.h"
 #include "WCheck.h"
 #include "Font_Control.h"
@@ -413,7 +414,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		return( -1 );
 	}
 	// Create a background video surface to blt the face onto
-	pPopUpTextBox->uiSourceBufferIndex = AddVideoSurface(usWidth, usHeight, 16);
+	pPopUpTextBox->uiSourceBufferIndex = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
 	CHECKF(pPopUpTextBox->uiSourceBufferIndex != NO_VSURFACE);
 	pPopUpTextBox->fMercTextPopupSurfaceInitialized = TRUE;
 

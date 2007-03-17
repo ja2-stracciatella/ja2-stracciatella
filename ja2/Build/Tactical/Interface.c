@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
+#include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
@@ -333,7 +334,7 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// Alocate message surfaces
-	gTopMessage.uiSurface = AddVideoSurface(640, 20, 16);
+	gTopMessage.uiSurface = AddVideoSurface(640, 20, PIXEL_DEPTH);
 	CHECKF(gTopMessage.uiSurface != NO_VSURFACE);
 
 	InitItemInterface( );

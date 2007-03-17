@@ -1,4 +1,5 @@
 #include "Laptop.h"
+#include "Local.h"
 #include "Mercs.h"
 #include "Utilities.h"
 #include "WCheck.h"
@@ -389,7 +390,7 @@ BOOLEAN EnterMercs()
 	//
 
 	// Create a background video surface to blt the face onto
-	guiMercVideoFaceBackground = AddVideoSurface(MERC_VIDEO_FACE_WIDTH, MERC_VIDEO_FACE_HEIGHT, 16);
+	guiMercVideoFaceBackground = AddVideoSurface(MERC_VIDEO_FACE_WIDTH, MERC_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiMercVideoFaceBackground != NO_VSURFACE);
 
 	RenderMercs();

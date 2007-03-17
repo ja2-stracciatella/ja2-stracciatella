@@ -132,12 +132,12 @@ BOOLEAN InitializeVideoManager(BOOLEAN video_fullscreen)
 	Uint32 Amask = ScreenBuffer->format->Amask;
 
 	FrameBuffer = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 16,
+		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
 		Rmask, Gmask, Bmask, Amask
 	);
 
 	MouseCursor = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, 16,
+		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
 		Rmask, Gmask, Bmask, Amask
 	);
 	SDL_SetColorKey(MouseCursor, SDL_SRCCOLORKEY, 0);

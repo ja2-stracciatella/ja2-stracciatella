@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "AIMMembers.h"
 #include "AIM.h"
+#include "Local.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -565,7 +566,7 @@ void EnterInitAimMembers()
 BOOLEAN EnterAIMMembers()
 {
 	// Create a background video surface to blt the face onto
-	guiVideoFaceBackground = AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, 16);
+	guiVideoFaceBackground = AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiVideoFaceBackground != NO_VSURFACE);
 
 	// load the stats graphic and add it
@@ -2793,7 +2794,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 			CHECKF(AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti", &uiVideoBackgroundGraphic));
 
 			// Create a background video surface to blt the face onto
-			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, 16);
+			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 			CHECKF(guiVideoTitleBar != NO_VSURFACE);
 
 			gfAimMemberCanMercSayOpeningQuote = TRUE;
@@ -3041,7 +3042,7 @@ BOOLEAN InitDeleteVideoConferencePopUp( )
 		CHECKF(AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti", &uiVideoBackgroundGraphic));
 
 		// Create a background video surface to blt the face onto
-		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, 16);
+		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 		CHECKF(guiVideoTitleBar != NO_VSURFACE);
 
 		BltVideoObjectFromIndex(guiVideoTitleBar, uiVideoBackgroundGraphic, 0, 0, 0);

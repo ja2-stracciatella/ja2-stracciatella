@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "Utilities.h"
 #include "WCheck.h"
@@ -4137,7 +4138,7 @@ BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t 
 	Assert( uiBackgroundGraphic );
 
 	// Create a background video surface to blt the title bar onto
-	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, 16);
+	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiTitleBarSurface != NO_VSURFACE);
 
 	BltVideoObjectFromIndex(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
