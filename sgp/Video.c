@@ -387,7 +387,7 @@ void InvalidateScreen(void)
 
 //#define SCROLL_TEST
 
-static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement, BOOLEAN fRenderStrip)
+static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	UINT16 usWidth, usHeight;
 	UINT8	 ubBitDepth;
@@ -615,90 +615,87 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 
 	}
 
-	if ( fRenderStrip )
-	{
 #ifdef SCROLL_TEST
-		SDL_FillRect(Dest, NULL, 0);
+	SDL_FillRect(Dest, NULL, 0);
 #endif
 
-		for ( cnt = 0; cnt < usNumStrips; cnt++ )
-		{
-			RenderStaticWorldRect(StripRegions[cnt].iLeft, StripRegions[cnt].iTop, StripRegions[cnt].iRight, StripRegions[cnt].iBottom, TRUE);
+	for ( cnt = 0; cnt < usNumStrips; cnt++ )
+	{
+		RenderStaticWorldRect(StripRegions[cnt].iLeft, StripRegions[cnt].iTop, StripRegions[cnt].iRight, StripRegions[cnt].iBottom, TRUE);
 
-			SrcRect.x = StripRegions[cnt].iLeft;
-			SrcRect.y = StripRegions[cnt].iTop;
-			SrcRect.w = StripRegions[cnt].iRight  - StripRegions[cnt].iLeft;
-			SrcRect.h = StripRegions[cnt].iBottom - StripRegions[cnt].iTop;
-			DstRect.x = StripRegions[cnt].iLeft;
-			DstRect.y = StripRegions[cnt].iTop;
-			SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
-		}
-
-		sShiftX = 0;
-		sShiftY = 0;
-
-		switch (uiDirection)
-		{
-			case SCROLL_LEFT:
-
-				sShiftX = sScrollXIncrement;
-				sShiftY = 0;
-				break;
-
-			case SCROLL_RIGHT:
-
-				sShiftX = -sScrollXIncrement;
-				sShiftY = 0;
-				break;
-
-			case SCROLL_UP:
-
-				sShiftX = 0;
-				sShiftY = sScrollYIncrement;
-				break;
-
-			case SCROLL_DOWN:
-
-				sShiftX = 0;
-				sShiftY = -sScrollYIncrement;
-				break;
-
-			case SCROLL_UPLEFT:
-
-				sShiftX = sScrollXIncrement;
-				sShiftY = sScrollYIncrement;
-				break;
-
-			case SCROLL_UPRIGHT:
-
-				sShiftX = -sScrollXIncrement;
-				sShiftY = sScrollYIncrement;
-				break;
-
-			case SCROLL_DOWNLEFT:
-
-				sShiftX = sScrollXIncrement;
-				sShiftY = -sScrollYIncrement;
-				break;
-
-			case SCROLL_DOWNRIGHT:
-
-				sShiftX = -sScrollXIncrement;
-				sShiftY = -sScrollYIncrement;
-				break;
-
-
-		}
-
-		// RESTORE SHIFTED
-		RestoreShiftedVideoOverlays( sShiftX, sShiftY );
-
-		// SAVE NEW
-		SaveVideoOverlaysArea( BACKBUFFER );
-
-		// BLIT NEW
-		ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
+		SrcRect.x = StripRegions[cnt].iLeft;
+		SrcRect.y = StripRegions[cnt].iTop;
+		SrcRect.w = StripRegions[cnt].iRight  - StripRegions[cnt].iLeft;
+		SrcRect.h = StripRegions[cnt].iBottom - StripRegions[cnt].iTop;
+		DstRect.x = StripRegions[cnt].iLeft;
+		DstRect.y = StripRegions[cnt].iTop;
+		SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
 	}
+
+	sShiftX = 0;
+	sShiftY = 0;
+
+	switch (uiDirection)
+	{
+		case SCROLL_LEFT:
+
+			sShiftX = sScrollXIncrement;
+			sShiftY = 0;
+			break;
+
+		case SCROLL_RIGHT:
+
+			sShiftX = -sScrollXIncrement;
+			sShiftY = 0;
+			break;
+
+		case SCROLL_UP:
+
+			sShiftX = 0;
+			sShiftY = sScrollYIncrement;
+			break;
+
+		case SCROLL_DOWN:
+
+			sShiftX = 0;
+			sShiftY = -sScrollYIncrement;
+			break;
+
+		case SCROLL_UPLEFT:
+
+			sShiftX = sScrollXIncrement;
+			sShiftY = sScrollYIncrement;
+			break;
+
+		case SCROLL_UPRIGHT:
+
+			sShiftX = -sScrollXIncrement;
+			sShiftY = sScrollYIncrement;
+			break;
+
+		case SCROLL_DOWNLEFT:
+
+			sShiftX = sScrollXIncrement;
+			sShiftY = -sScrollYIncrement;
+			break;
+
+		case SCROLL_DOWNRIGHT:
+
+			sShiftX = -sScrollXIncrement;
+			sShiftY = -sScrollYIncrement;
+			break;
+
+
+	}
+
+	// RESTORE SHIFTED
+	RestoreShiftedVideoOverlays( sShiftX, sShiftY );
+
+	// SAVE NEW
+	SaveVideoOverlaysArea( BACKBUFFER );
+
+	// BLIT NEW
+	ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
 
 	SDL_UpdateRect
 	(
@@ -834,7 +831,7 @@ void RefreshScreen(void)
 		}
 		if (gfRenderScroll)
 		{
-			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement, TRUE);
+			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement);
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 		guiFrameBufferState = BUFFER_READY;
