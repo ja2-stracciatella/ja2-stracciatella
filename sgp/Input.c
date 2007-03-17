@@ -46,7 +46,6 @@ UINT16		gusRecordedKeyState;
 static UINT32 guiLeftButtonRepeatTimer;
 static UINT32 guiRightButtonRepeatTimer;
 
-BOOLEAN   gfTrackMousePos;			// TRUE = queue mouse movement events, FALSE = don't
 BOOLEAN   gfLeftButtonState;		// TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN   gfRightButtonState;		// TRUE = Pressed, FALSE = Not Pressed
 UINT16    gusMouseXPos;					// X position of the mouse on screen
@@ -161,14 +160,6 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
     : // Update the current mouse position
       gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
       gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
-      uiParam = gusMouseYPos;
-      uiParam = uiParam << 16;
-      uiParam = uiParam | gusMouseXPos;
-      // Trigger an input event
-      if (gfTrackMousePos == TRUE)
-      {
-        QueueEvent(MOUSE_POS, 0, uiParam);
-      }
       break;
   }
   return TRUE;
@@ -255,10 +246,6 @@ LRESULT Result;
       gfRightButtonState = FALSE;
       QueueEvent(RIGHT_BUTTON_UP, 0, uiParam);
       break;
-    case WM_MOUSEMOVE:
-      if(gfTrackMousePos)
-        QueueEvent(MOUSE_POS, 0, uiParam);
-      break;
   }
 
   return(TRUE);
@@ -279,8 +266,6 @@ BOOLEAN InitializeInputManager(void)
   gusQueueCount = 0;
   gusHeadIndex  = 0;
   gusTailIndex  = 0;
-  // By default, we will not queue mousemove events
-  gfTrackMousePos = FALSE;
   // Initialize other variables
   gfShiftState = FALSE;
   gfAltState   = FALSE;
