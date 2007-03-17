@@ -417,8 +417,6 @@ BOOLEAN LoadMercProfiles(void)
 	const char *pFileName = "BINARYDATA/Prof.dat";
 	UINT32 uiLoop, uiLoop2, uiLoop3;
 	UINT16 usItem, usNewGun, usAmmo, usNewAmmo;
-	UINT32	uiNumBytesRead;
-
 
 	fptr = FileOpen(pFileName, FILE_ACCESS_READ);
 	if( !fptr )
@@ -433,7 +431,7 @@ BOOLEAN LoadMercProfiles(void)
 		MERCPROFILESTRUCT_ON_DISK tempprof;
 		UINT32 i;
 
-		if (JA2EncryptedFileRead(fptr, &tempprof, sizeof(tempprof), &uiNumBytesRead) != 1)
+		if (!JA2EncryptedFileRead(fptr, &tempprof, sizeof(tempprof)))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );
@@ -455,7 +453,7 @@ UNIMPLEMENTED();
 			sizeof(gMercProfiles[uiLoop]) - sizeof(gMercProfiles[uiLoop].zName) - sizeof(gMercProfiles[uiLoop].zNickname)
 		);
 #else
-		if( JA2EncryptedFileRead( fptr, &gMercProfiles[uiLoop], sizeof( MERCPROFILESTRUCT ), &uiNumBytesRead )  != 1)
+		if (!JA2EncryptedFileRead(fptr, &gMercProfiles[uiLoop], sizeof(MERCPROFILESTRUCT)))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );

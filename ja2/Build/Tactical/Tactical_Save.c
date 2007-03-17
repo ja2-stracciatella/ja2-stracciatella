@@ -2705,22 +2705,21 @@ static const UINT8* GetRotationArray(void)
 	}
 }
 
-BOOLEAN NewJA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
+BOOLEAN NewJA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
 	UINT32	uiLoop;
 	UINT8		ubArrayIndex = 0;
 	UINT8		ubLastByte = 0;
 	UINT8		ubLastByteForNextLoop;
-	BOOLEAN	fRet;
 	UINT8 *	pMemBlock;
 
 	const UINT8* pubRotationArray = GetRotationArray();
 
-	fRet = FileRead( hFile, pDest, uiBytesToRead, puiBytesRead );
+	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead, NULL);
 	if ( fRet )
 	{
 		pMemBlock = pDest;
-		for ( uiLoop = 0; uiLoop < *puiBytesRead; uiLoop++ )
+		for (uiLoop = 0; uiLoop < uiBytesToRead; uiLoop++)
 		{
 			ubLastByteForNextLoop = pMemBlock[ uiLoop ];
 			pMemBlock[ uiLoop ] -= (ubLastByte + pubRotationArray[ ubArrayIndex ]);
@@ -2737,7 +2736,7 @@ BOOLEAN NewJA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, 
 }
 
 
-BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
+BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 {
 	UINT32	uiLoop;
 	UINT8		ubArrayIndex = 0;
@@ -2767,7 +2766,7 @@ BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite
 		ubLastByte = pMemBlock[ uiLoop ];
 	}
 
-	fRet = FileWrite( hFile, pMemBlock, uiBytesToWrite, puiBytesWritten );
+	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite, NULL);
 
 	MemFree( pMemBlock );
 
@@ -2779,21 +2778,20 @@ BOOLEAN NewJA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite
 #define ROTATION_ARRAY_SIZE 46
 static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
-BOOLEAN JA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
+BOOLEAN JA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
 	UINT32	uiLoop;
 	UINT8		ubArrayIndex = 0;
 	//UINT8		ubLastNonBlank = 0;
 	UINT8		ubLastByte = 0;
 	UINT8		ubLastByteForNextLoop;
-	BOOLEAN	fRet;
 	UINT8 *	pMemBlock;
 
-	fRet = FileRead( hFile, pDest, uiBytesToRead, puiBytesRead );
+	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead, NULL);
 	if ( fRet )
 	{
 		pMemBlock = pDest;
-		for ( uiLoop = 0; uiLoop < *puiBytesRead; uiLoop++ )
+		for (uiLoop = 0; uiLoop < uiBytesToRead; uiLoop++)
 		{
 			ubLastByteForNextLoop = pMemBlock[ uiLoop ];
 			pMemBlock[ uiLoop ] -= (ubLastByte + ubRotationArray[ ubArrayIndex ]);
@@ -2810,7 +2808,7 @@ BOOLEAN JA2EncryptedFileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UIN
 }
 
 
-BOOLEAN JA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
+BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 {
 	UINT32	uiLoop;
 	UINT8		ubArrayIndex = 0;
@@ -2864,7 +2862,7 @@ BOOLEAN JA2EncryptedFileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, U
 		*/
 	}
 
-	fRet = FileWrite( hFile, pMemBlock, uiBytesToWrite, puiBytesWritten );
+	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite, NULL);
 
 	MemFree( pMemBlock );
 

@@ -2778,25 +2778,22 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 BOOLEAN SaveMercProfiles( HWFILE hFile )
 {
 	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
 	UINT32	uiSaveSize = sizeof( MERCPROFILESTRUCT );
 
 	//Lopp through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
 		gMercProfiles[ cnt ].uiProfileChecksum = ProfileChecksum( &(gMercProfiles[ cnt ]) );
+		BOOLEAN Ret;
 		if ( guiSavedGameVersion < 87 )
 		{
-			JA2EncryptedFileWrite( hFile, &gMercProfiles[cnt], uiSaveSize, &uiNumBytesWritten );
+			Ret = JA2EncryptedFileWrite(hFile, &gMercProfiles[cnt], uiSaveSize);
 		}
 		else
 		{
-			NewJA2EncryptedFileWrite( hFile, &gMercProfiles[cnt], uiSaveSize, &uiNumBytesWritten );
+			Ret = NewJA2EncryptedFileWrite(hFile, &gMercProfiles[cnt], uiSaveSize);
 		}
-		if( uiNumBytesWritten != uiSaveSize )
-		{
-			return(FALSE);
-		}
+		if (!Ret) return FALSE;
 	}
 
 	return( TRUE );
@@ -2807,23 +2804,20 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 {
 	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
 
 	//Lopp through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
+		BOOLEAN Ret;
 		if ( guiSaveGameVersion < 87 )
 		{
-			JA2EncryptedFileRead( hFile, &gMercProfiles[cnt], sizeof( MERCPROFILESTRUCT ), &uiNumBytesRead );
+			Ret = JA2EncryptedFileRead(hFile, &gMercProfiles[cnt], sizeof(MERCPROFILESTRUCT));
 		}
 		else
 		{
-			NewJA2EncryptedFileRead( hFile, &gMercProfiles[cnt], sizeof( MERCPROFILESTRUCT ), &uiNumBytesRead );
+			Ret = NewJA2EncryptedFileRead(hFile, &gMercProfiles[cnt], sizeof(MERCPROFILESTRUCT));
 		}
-		if( uiNumBytesRead != sizeof( MERCPROFILESTRUCT ) )
-		{
-			return(FALSE);
-		}
+		if (!Ret) return FALSE;
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
 		{
 			return( FALSE );
@@ -2894,19 +2888,16 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 			// calculate checksum for soldier
 			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
 			// Save the soldier structure
+			BOOLEAN Ret;
 			if ( guiSavedGameVersion < 87 )
 			{
-				JA2EncryptedFileWrite( hFile, &Menptr[ cnt ], uiSaveSize, &uiNumBytesWritten );
+				Ret = JA2EncryptedFileWrite(hFile, &Menptr[cnt], uiSaveSize);
 			}
 			else
 			{
-				NewJA2EncryptedFileWrite( hFile, &Menptr[ cnt ], uiSaveSize, &uiNumBytesWritten );
+				Ret = NewJA2EncryptedFileWrite(hFile, &Menptr[cnt], uiSaveSize);
 			}
-			if( uiNumBytesWritten != uiSaveSize )
-			{
-				return(FALSE);
-			}
-
+			if (!Ret) return FALSE;
 
 
 			//
@@ -3005,18 +2996,16 @@ BOOLEAN LoadSoldierStructure( HWFILE hFile )
 		else
 		{
 			//Read in the saved soldier info into a Temp structure
+			BOOLEAN Ret;
 			if ( guiSaveGameVersion < 87 )
 			{
-				JA2EncryptedFileRead( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
+				Ret = JA2EncryptedFileRead(hFile, &SavedSoldierInfo, uiSaveSize);
 			}
 			else
 			{
-				NewJA2EncryptedFileRead( hFile, &SavedSoldierInfo, uiSaveSize, &uiNumBytesRead );
+				Ret = NewJA2EncryptedFileRead(hFile, &SavedSoldierInfo, uiSaveSize);
 			}
-			if( uiNumBytesRead != uiSaveSize )
-			{
-				return(FALSE);
-			}
+			if (!Ret) return FALSE;
 			// check checksum
 			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
 			{
