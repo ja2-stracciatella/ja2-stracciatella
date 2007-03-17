@@ -44,22 +44,6 @@ typedef struct
 #define GETXPOS(a) LOWORD(((a)->uiParam))
 
 
-typedef struct StringInput
-{
-         UINT16      *pString;
-         UINT16      *pOriginalString;
-         UINT16      *pFilter;
-         UINT16       usMaxStringLength;
-         UINT16       usCurrentStringLength;
-         UINT16       usStringOffset;
-         UINT16       usLastCharacter;
-         BOOLEAN      fInsertMode;
-         BOOLEAN      fFocus;
-  struct StringInput *pPreviousString;
-  struct StringInput *pNextString;
-
-} StringInput;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -76,17 +60,6 @@ extern void					EnableDoubleClk(void);
 extern void					DisableDoubleClk(void);
 extern void					GetMousePos(SGPPoint *Point);
 
-extern StringInput *InitStringInput(UINT16 *pInputString, UINT16 usLength, UINT16 *pFilter);
-extern void         LinkPreviousString(StringInput *pCurrentString, StringInput *pPreviousString);
-extern void         LinkNextString(StringInput *pCurrentString, StringInput *pNextString);
-extern UINT16       GetStringLastInput(void);
-extern BOOLEAN      StringInputHasFocus(void);
-extern BOOLEAN      SetStringFocus(StringInput *pStringDescriptor);
-extern UINT16       GetCursorPositionInString(StringInput *pStringDescriptor);
-extern UINT16       GetStringInputState(void);
-extern BOOLEAN      StringHasFocus(StringInput *pStringDescriptor);
-extern UINT16      *GetString(StringInput *pStringDescriptor);
-extern void         EndStringInput(StringInput *pStringDescriptor);
 extern BOOLEAN DequeueSpecificEvent(InputAtom *Event, UINT32 uiMaskFlags );
 
 extern void					RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2);
