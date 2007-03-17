@@ -27,53 +27,45 @@
 
 typedef struct
 {
-  BOOLEAN                 fRestore;
-  UINT16                  usMouseXPos, usMouseYPos;
-  UINT16                  usLeft, usTop, usRight, usBottom;
+	BOOLEAN fRestore;
+	UINT16  usMouseXPos;
+	UINT16  usMouseYPos;
+	UINT16  usLeft;
+	UINT16  usTop;
+	UINT16  usRight;
+	UINT16  usBottom;
 } MouseCursorBackground;
 
 
-static UINT16                 gusScreenWidth;
-static UINT16                 gusScreenHeight;
+static UINT16 gusScreenWidth;
+static UINT16 gusScreenHeight;
 
-#define			MAX_NUM_FRAMES			25
+#define MAX_NUM_FRAMES 25
 
 static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
 static UINT32  guiLastFrame;
 static UINT16* gpFrameData[MAX_NUM_FRAMES];
-INT32													giNumFrames = 0;
+INT32 giNumFrames = 0;
 
 
-//
 // Globals for mouse cursor
-//
-
-static UINT16                 gusMouseCursorWidth;
-static UINT16                 gusMouseCursorHeight;
-static INT16                  gsMouseCursorXOffset;
-static INT16                  gsMouseCursorYOffset;
+static UINT16 gusMouseCursorWidth;
+static UINT16 gusMouseCursorHeight;
+static INT16  gsMouseCursorXOffset;
+static INT16  gsMouseCursorYOffset;
 
 static MouseCursorBackground  gMouseCursorBackground;
 
-//
 // Make sure we record the value of the hWindow (main window frame for the application)
-//
+HWND ghWindow;
 
-HWND                          ghWindow;
-
-//
 // Refresh thread based variables
-//
-
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
 static UINT32 guiMouseBufferState;  // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
 
-//
 // Dirty rectangle management variables
-//
-
 static SGPRect gListOfDirtyRegions[MAX_DIRTY_REGIONS];
 static UINT32  guiDirtyRegionCount;
 static BOOLEAN gfForceFullScreenRefresh;
@@ -82,10 +74,7 @@ static BOOLEAN gfForceFullScreenRefresh;
 static SGPRect gDirtyRegionsEx[MAX_DIRTY_REGIONS];
 static UINT32  guiDirtyRegionExCount;
 
-//
 // Screen output stuff
-//
-
 static BOOLEAN gfPrintFrameBuffer;
 static UINT32  guiPrintFrameBufferIndex;
 
@@ -106,20 +95,16 @@ static SDL_Surface* ScreenBuffer;
 static BOOLEAN GetRGBDistribution(void);
 
 
-BOOLEAN InitializeVideoManager(BOOLEAN video_fullscreen)
+BOOLEAN InitializeVideoManager(BOOLEAN Fullscreen)
 {
-	UINT32 video_flags;
-
 	RegisterDebugTopic(TOPIC_VIDEO, "Video");
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
 
-	video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
-
-	if (video_fullscreen)
-		video_flags |= SDL_FULLSCREEN;
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, video_flags);
+	UINT32 VideoFlags = SDL_SWSURFACE | SDL_HWPALETTE;
+	if (Fullscreen) VideoFlags |= SDL_FULLSCREEN;
+	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, VideoFlags);
 	if (ScreenBuffer == NULL)
 	{
 		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to set up video mode");
@@ -158,13 +143,13 @@ BOOLEAN InitializeVideoManager(BOOLEAN video_fullscreen)
 	gMouseCursorBackground.fRestore = FALSE;
 
 	// Initialize state variables
-	guiFrameBufferState          = BUFFER_DIRTY;
-	guiMouseBufferState          = BUFFER_DISABLED;
-	guiVideoManagerState         = VIDEO_ON;
-	guiDirtyRegionCount          = 0;
-	gfForceFullScreenRefresh     = TRUE;
-	gfPrintFrameBuffer           = FALSE;
-	guiPrintFrameBufferIndex     = 0;
+	guiFrameBufferState      = BUFFER_DIRTY;
+	guiMouseBufferState      = BUFFER_DISABLED;
+	guiVideoManagerState     = VIDEO_ON;
+	guiDirtyRegionCount      = 0;
+	gfForceFullScreenRefresh = TRUE;
+	gfPrintFrameBuffer       = FALSE;
+	guiPrintFrameBufferIndex = 0;
 
 	// This function must be called to setup RGB information
 	GetRGBDistribution();
@@ -177,26 +162,23 @@ void ShutdownVideoManager(void)
 {
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
 
-  //
-  // Toggle the state of the video manager to indicate to the refresh thread that it needs to shut itself
-  // down
-  //
+	/* Toggle the state of the video manager to indicate to the refresh thread
+	 * that it needs to shut itself down */
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 
-  guiVideoManagerState = VIDEO_OFF;
+	guiVideoManagerState = VIDEO_OFF;
 
-  // ATE: Release mouse cursor!
-  FreeMouseCursor( );
+	// ATE: Release mouse cursor!
+	FreeMouseCursor();
 
-  UnRegisterDebugTopic(TOPIC_VIDEO, "Video");
+	UnRegisterDebugTopic(TOPIC_VIDEO, "Video");
 }
 
 
 void SuspendVideoManager(void)
 {
-  guiVideoManagerState = VIDEO_SUSPENDED;
-
+	guiVideoManagerState = VIDEO_SUSPENDED;
 }
 
 
@@ -205,93 +187,69 @@ BOOLEAN RestoreVideoManager(void)
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
 #else
-  //
-  // Make sure the video manager is indeed suspended before moving on
-  //
+	// Make sure the video manager is indeed suspended before moving on
 
-  if (guiVideoManagerState == VIDEO_SUSPENDED)
-  {
-    //
-    // Set the video state to VIDEO_ON
-    //
+	if (guiVideoManagerState == VIDEO_SUSPENDED)
+	{
+		// Set the video state to VIDEO_ON
 
-    guiFrameBufferState = BUFFER_DIRTY;
-    guiMouseBufferState = BUFFER_DIRTY;
-    gfForceFullScreenRefresh = TRUE;
-    guiVideoManagerState = VIDEO_ON;
-    return TRUE;
+		guiFrameBufferState = BUFFER_DIRTY;
+		guiMouseBufferState = BUFFER_DIRTY;
+		gfForceFullScreenRefresh = TRUE;
+		guiVideoManagerState = VIDEO_ON;
+		return TRUE;
 	}
-  else
-  {
-    return FALSE;
-  }
+	else
+	{
+		return FALSE;
+	}
 #endif
 }
 
 
 void GetCurrentVideoSettings(UINT16* usWidth, UINT16* usHeight)
 {
-	*usWidth = (UINT16) gusScreenWidth;
-	*usHeight = (UINT16) gusScreenHeight;
+	*usWidth  = gusScreenWidth;
+	*usHeight = gusScreenHeight;
 }
 
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
-  if (gfForceFullScreenRefresh == TRUE)
-  {
-    //
-    // There's no point in going on since we are forcing a full screen refresh
-    //
+	if (gfForceFullScreenRefresh)
+	{
+		// There's no point in going on since we are forcing a full screen refresh
+		return;
+	}
 
-    return;
-  }
-
-  if (guiDirtyRegionCount < MAX_DIRTY_REGIONS)
-  {
-    //
-    // Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
-    //
+	if (guiDirtyRegionCount < MAX_DIRTY_REGIONS)
+	{
+		// Well we haven't broken the MAX_DIRTY_REGIONS limit yet, so we register the new region
 
 		// DO SOME PREMIMARY CHECKS FOR VALID RECTS
-		if ( iLeft < 0 )
-				iLeft = 0;
+		if (iLeft < 0) iLeft = 0;
+		if (iTop  < 0) iTop  = 0;
 
-		if ( iTop < 0 )
-				iTop = 0;
+		if (iRight  > SCREEN_WIDTH)  iRight  = SCREEN_WIDTH;
+		if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
 
-		if ( iRight > SCREEN_WIDTH )
-				iRight = SCREEN_WIDTH;
+		if (iRight - iLeft <= 0) return;
+		if (iBottom - iTop <= 0) return;
 
-		if ( iBottom > SCREEN_HEIGHT )
-				iBottom = SCREEN_HEIGHT;
-
-		if (  ( iRight - iLeft ) <= 0 )
-				return;
-
-		if (  ( iBottom - iTop ) <= 0 )
-				return;
-
-    gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = iLeft;
-    gListOfDirtyRegions[guiDirtyRegionCount].iTop    = iTop;
-    gListOfDirtyRegions[guiDirtyRegionCount].iRight  = iRight;
-    gListOfDirtyRegions[guiDirtyRegionCount].iBottom = iBottom;
-
-//		gDirtyRegionFlags[ guiDirtyRegionCount ] = TRUE;
-
-    guiDirtyRegionCount++;
-
-  }
-  else
-  {
-    //
-    // The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
-    // screen and force a full screen refresh
-    //
-    guiDirtyRegionExCount = 0;
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;
-  }
+		gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = iLeft;
+		gListOfDirtyRegions[guiDirtyRegionCount].iTop    = iTop;
+		gListOfDirtyRegions[guiDirtyRegionCount].iRight  = iRight;
+		gListOfDirtyRegions[guiDirtyRegionCount].iBottom = iBottom;
+		guiDirtyRegionCount++;
+	}
+	else
+	{
+		// The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
+		// screen and force a full screen refresh
+		guiDirtyRegionExCount = 0;
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = TRUE;
+	}
 }
 
 
@@ -300,87 +258,63 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
-	INT32 iOldBottom;
-
-	iOldBottom = iBottom;
-
 	// Check if we are spanning the rectangle - if so slit it up!
-	if ( iTop <= gsVIEWPORT_WINDOW_END_Y && iBottom > gsVIEWPORT_WINDOW_END_Y )
+	if (iTop <= gsVIEWPORT_WINDOW_END_Y && iBottom > gsVIEWPORT_WINDOW_END_Y)
 	{
-			// Add new top region
-			iBottom				= gsVIEWPORT_WINDOW_END_Y;
-			AddRegionEx(iLeft, iTop, iRight, iBottom);
+		// Add new top region
+		AddRegionEx(iLeft, iTop, iRight, gsVIEWPORT_WINDOW_END_Y);
 
-			// Add new bottom region
-			iTop   = gsVIEWPORT_WINDOW_END_Y;
-			iBottom	= iOldBottom;
-			AddRegionEx(iLeft, iTop, iRight, iBottom);
-
+		// Add new bottom region
+		AddRegionEx(iLeft, gsVIEWPORT_WINDOW_END_Y, iRight, iBottom);
 	}
 	else
 	{
-		 AddRegionEx(iLeft, iTop, iRight, iBottom);
+		AddRegionEx(iLeft, iTop, iRight, iBottom);
 	}
 }
 
 
 static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
+	if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
+	{
+		// DO SOME PRELIMINARY CHECKS FOR VALID RECTS
+		if (iLeft < 0) iLeft = 0;
+		if (iTop  < 0) iTop  = 0;
 
-  if (guiDirtyRegionExCount < MAX_DIRTY_REGIONS)
-  {
+		if (iRight  > SCREEN_WIDTH)  iRight  = SCREEN_WIDTH;
+		if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
 
-		// DO SOME PREMIMARY CHECKS FOR VALID RECTS
-		if ( iLeft < 0 )
-				iLeft = 0;
+		if (iRight - iLeft <= 0) return;
+		if (iBottom - iTop <= 0) return;
 
-		if ( iTop < 0 )
-				iTop = 0;
-
-		if ( iRight > SCREEN_WIDTH )
-				iRight = SCREEN_WIDTH;
-
-		if ( iBottom > SCREEN_HEIGHT )
-				iBottom = SCREEN_HEIGHT;
-
-		if (  ( iRight - iLeft ) <= 0 )
-				return;
-
-		if (  ( iBottom - iTop ) <= 0 )
-				return;
-
-
-
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iLeft   = iLeft;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iTop    = iTop;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iRight  = iRight;
-    gDirtyRegionsEx[ guiDirtyRegionExCount ].iBottom = iBottom;
-    guiDirtyRegionExCount++;
-  }
+		gDirtyRegionsEx[guiDirtyRegionExCount].iLeft   = iLeft;
+		gDirtyRegionsEx[guiDirtyRegionExCount].iTop    = iTop;
+		gDirtyRegionsEx[guiDirtyRegionExCount].iRight  = iRight;
+		gDirtyRegionsEx[guiDirtyRegionExCount].iBottom = iBottom;
+		guiDirtyRegionExCount++;
+	}
 	else
 	{
-    guiDirtyRegionExCount = 0;
-    guiDirtyRegionCount = 0;
-    gfForceFullScreenRefresh = TRUE;
-
+		guiDirtyRegionExCount = 0;
+		guiDirtyRegionCount = 0;
+		gfForceFullScreenRefresh = TRUE;
 	}
 }
 
 
 void InvalidateScreen(void)
 {
-  //
-  // W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
-  //
-  // This function is intended to be called by a thread which has already locked the
-  // FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
-  // yack
-  //
+	// W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ---- W A R N I N G ----
+	//
+	// This function is intended to be called by a thread which has already locked the
+	// FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
+	// yack
 
-  guiDirtyRegionCount = 0;
-  guiDirtyRegionExCount = 0;
-  gfForceFullScreenRefresh = TRUE;
-  guiFrameBufferState = BUFFER_DIRTY;
+	guiDirtyRegionCount = 0;
+	guiDirtyRegionExCount = 0;
+	gfForceFullScreenRefresh = TRUE;
+	guiFrameBufferState = BUFFER_DIRTY;
 }
 
 
@@ -388,20 +322,16 @@ void InvalidateScreen(void)
 
 static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
-	UINT16 usWidth, usHeight;
-	UINT16				 usNumStrips = 0;
-	INT32					 cnt;
-	INT16					 sShiftX, sShiftY;
-	INT32					 uiCountY;
-
 	SDL_Surface* Frame  = FrameBuffer;
 	SDL_Surface* Source = ScreenBuffer; // Primary
 	SDL_Surface* Dest   = ScreenBuffer; // Back
 	SDL_Rect SrcRect;
 	SDL_Rect DstRect;
 
- 	GetCurrentVideoSettings(&usWidth, &usHeight);
-	usHeight=(gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y );
+	UINT16 usWidth;
+	UINT16 usHeight;
+	GetCurrentVideoSettings(&usWidth, &usHeight);
+	usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
 	SGPRect StripRegions[2];
 	StripRegions[0].iLeft   = gsVIEWPORT_START_X;
@@ -413,6 +343,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 	StripRegions[1].iTop    = gsVIEWPORT_WINDOW_START_Y;
 	StripRegions[1].iBottom = gsVIEWPORT_WINDOW_END_Y;
 
+	UINT16 usNumStrips = 0;
 	switch (uiDirection)
 	{
 		case SCROLL_LEFT:
@@ -533,7 +464,7 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 	SDL_FillRect(Dest, NULL, 0);
 #endif
 
-	for ( cnt = 0; cnt < usNumStrips; cnt++ )
+	for (UINT cnt = 0; cnt < usNumStrips; cnt++)
 	{
 		UINT x = StripRegions[cnt].iLeft;
 		UINT y = StripRegions[cnt].iTop;
@@ -555,70 +486,60 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 		SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
 	}
 
-	sShiftX = 0;
-	sShiftY = 0;
+	INT16 sShiftX = 0;
+	INT16 sShiftY = 0;
 
 	switch (uiDirection)
 	{
 		case SCROLL_LEFT:
-
 			sShiftX = sScrollXIncrement;
 			sShiftY = 0;
 			break;
 
 		case SCROLL_RIGHT:
-
 			sShiftX = -sScrollXIncrement;
 			sShiftY = 0;
 			break;
 
 		case SCROLL_UP:
-
 			sShiftX = 0;
 			sShiftY = sScrollYIncrement;
 			break;
 
 		case SCROLL_DOWN:
-
 			sShiftX = 0;
 			sShiftY = -sScrollYIncrement;
 			break;
 
 		case SCROLL_UPLEFT:
-
 			sShiftX = sScrollXIncrement;
 			sShiftY = sScrollYIncrement;
 			break;
 
 		case SCROLL_UPRIGHT:
-
 			sShiftX = -sScrollXIncrement;
 			sShiftY = sScrollYIncrement;
 			break;
 
 		case SCROLL_DOWNLEFT:
-
 			sShiftX = sScrollXIncrement;
 			sShiftY = -sScrollYIncrement;
 			break;
 
 		case SCROLL_DOWNRIGHT:
-
 			sShiftX = -sScrollXIncrement;
 			sShiftY = -sScrollYIncrement;
 			break;
-
-
 	}
 
 	// RESTORE SHIFTED
-	RestoreShiftedVideoOverlays( sShiftX, sShiftY );
+	RestoreShiftedVideoOverlays(sShiftX, sShiftY);
 
 	// SAVE NEW
-	SaveVideoOverlaysArea( BACKBUFFER );
+	SaveVideoOverlaysArea(BACKBUFFER);
 
 	// BLIT NEW
-	ExecuteVideoOverlaysToAlternateBuffer( BACKBUFFER );
+	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
 
 	SDL_UpdateRect
 	(
@@ -628,11 +549,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 		gsVIEWPORT_END_X - gsVIEWPORT_START_X,
 		gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y
 	);
-
-	//InvalidateRegion( sLeftDraw, sTopDraw, sRightDraw, sBottomDraw );
-
-	//UpdateSaveBuffer();
-	//SaveBackgroundRects();
 }
 
 
@@ -770,30 +686,30 @@ void RefreshScreen(void)
 		}
 	}
 
-  if (gfPrintFrameBuffer)
-  {
+	if (gfPrintFrameBuffer)
+	{
 		TakeScreenshot();
-    gfPrintFrameBuffer = FALSE;
-  }
+		gfPrintFrameBuffer = FALSE;
+	}
 
 	if (guiMouseBufferState == BUFFER_DIRTY)
 	{
 		guiMouseBufferState = BUFFER_READY;
 	}
 
-  if (!fShowMouse)
-  {
-    fShowMouse = (guiMouseBufferState == BUFFER_READY);
-  }
-  else
-  {
-    fShowMouse = (guiMouseBufferState != BUFFER_DISABLED);
-  }
+	if (!fShowMouse)
+	{
+		fShowMouse = (guiMouseBufferState == BUFFER_READY);
+	}
+	else
+	{
+		fShowMouse = (guiMouseBufferState != BUFFER_DISABLED);
+	}
 
-  if (fShowMouse)
-  {
-  	POINT MousePos;
-  	GetCursorPos(&MousePos);
+	if (fShowMouse)
+	{
+		POINT MousePos;
+		GetCursorPos(&MousePos);
 
 		SGPRect Region;
 		Region.iLeft   = MousePos.x - gsMouseCursorXOffset;
@@ -805,35 +721,35 @@ void RefreshScreen(void)
 		if (Region.iBottom > usScreenHeight) Region.iBottom = usScreenHeight;
 
 		if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
-    {
-      // Make sure the mouse background is marked for restore and coordinates are saved for the
-      // future restore
+		{
+			/* Make sure the mouse background is marked for restore and coordinates
+			 * are saved for the future restore */
 
-      gMouseCursorBackground.fRestore = TRUE;
+			gMouseCursorBackground.fRestore = TRUE;
 			gMouseCursorBackground.usRight  = Region.iRight  - Region.iLeft;
 			gMouseCursorBackground.usBottom = Region.iBottom - Region.iTop;
 			if (Region.iLeft < 0)
-      {
+			{
 				gMouseCursorBackground.usLeft = -Region.iLeft;
-        gMouseCursorBackground.usMouseXPos = 0;
+				gMouseCursorBackground.usMouseXPos = 0;
 				Region.iLeft = 0;
-      }
-      else
-      {
-        gMouseCursorBackground.usMouseXPos = (UINT16)MousePos.x - gsMouseCursorXOffset;
-        gMouseCursorBackground.usLeft = 0;
-      }
+			}
+			else
+			{
+				gMouseCursorBackground.usMouseXPos = (UINT16)MousePos.x - gsMouseCursorXOffset;
+				gMouseCursorBackground.usLeft = 0;
+			}
 			if (Region.iTop < 0)
-      {
-        gMouseCursorBackground.usMouseYPos = 0;
+			{
+				gMouseCursorBackground.usMouseYPos = 0;
 				gMouseCursorBackground.usTop = -Region.iTop;
 				Region.iTop = 0;
-      }
-      else
-      {
-        gMouseCursorBackground.usMouseYPos = (UINT16)MousePos.y - gsMouseCursorYOffset;
-        gMouseCursorBackground.usTop = 0;
-      }
+			}
+			else
+			{
+				gMouseCursorBackground.usMouseYPos = (UINT16)MousePos.y - gsMouseCursorYOffset;
+				gMouseCursorBackground.usTop = 0;
+			}
 
 			if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
 			{
@@ -852,16 +768,16 @@ void RefreshScreen(void)
 			{
 				gMouseCursorBackground.fRestore = FALSE;
 			}
-    }
-    else
-    {
-      gMouseCursorBackground.fRestore = FALSE;
-    }
-  }
-  else
-  {
-    gMouseCursorBackground.fRestore = FALSE;
-  }
+		}
+		else
+		{
+			gMouseCursorBackground.fRestore = FALSE;
+		}
+	}
+	else
+	{
+		gMouseCursorBackground.fRestore = FALSE;
+	}
 
 	if (UndrawMouse)
 	{
@@ -991,31 +907,31 @@ static BOOLEAN GetRGBDistribution(void)
 		guiTranslucentMask=0x7bef;
 
 
-  usBit = 0x8000;
-  gusRedShift = 8;
+	usBit = 0x8000;
+	gusRedShift = 8;
 	while(!(gusRedMask & usBit))
 	{
 		usBit >>= 1;
 		gusRedShift--;
 	}
 
-  usBit = 0x8000;
-  gusGreenShift = 8;
+	usBit = 0x8000;
+	gusGreenShift = 8;
 	while(!(gusGreenMask & usBit))
 	{
 		usBit >>= 1;
 		gusGreenShift--;
 	}
 
-  usBit = 0x8000;
-  gusBlueShift = 8;
+	usBit = 0x8000;
+	gusBlueShift = 8;
 	while(!(gusBlueMask & usBit))
 	{
 		usBit >>= 1;
 		gusBlueShift--;
 	}
 
-  return TRUE;
+	return TRUE;
 }
 
 
@@ -1029,44 +945,39 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 }
 
 
-BOOLEAN EraseMouseCursor( )
+BOOLEAN EraseMouseCursor(void)
 {
-  PTR          pTmpPointer;
-  UINT32       uiPitch;
+	// Erase cursor background
 
-  //
-  // Erase cursor background
-  //
-
-  pTmpPointer = LockMouseBuffer(&uiPitch);
-  memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-  UnlockMouseBuffer();
+	UINT32 uiPitch;
+	PTR pTmpPointer = LockMouseBuffer(&uiPitch);
+	memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
+	UnlockMouseBuffer();
 
 	// Don't set dirty
-	return( TRUE );
+	return TRUE;
 }
 
-BOOLEAN SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth )
+
+BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
 {
-  gsMouseCursorXOffset = sOffsetX;
-  gsMouseCursorYOffset = sOffsetY;
-  gusMouseCursorWidth	 = usCursorWidth;
-  gusMouseCursorHeight = usCursorHeight;
-	return( TRUE );
+	gsMouseCursorXOffset = sOffsetX;
+	gsMouseCursorYOffset = sOffsetY;
+	gusMouseCursorWidth  = usCursorWidth;
+	gusMouseCursorHeight = usCursorHeight;
+	return TRUE;
 }
 
-BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos )
+
+BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
-  BOOLEAN      ReturnValue;
-
-  ReturnValue = BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos);
-
-  return ReturnValue;
+	return BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos);
 }
 
-void DirtyCursor( )
+
+void DirtyCursor(void)
 {
-  guiMouseBufferState = BUFFER_DIRTY;
+	guiMouseBufferState = BUFFER_DIRTY;
 }
 
 
@@ -1077,62 +988,56 @@ void StartFrameBufferRender(void)
 
 void EndFrameBufferRender(void)
 {
-
-  guiFrameBufferState = BUFFER_DIRTY;
+	guiFrameBufferState = BUFFER_DIRTY;
 }
 
 
 void PrintScreen(void)
 {
-  gfPrintFrameBuffer = TRUE;
+	gfPrintFrameBuffer = TRUE;
 }
 
 
 void FatalError(const char *pError, ...)
 {
-	char gFatalErrorString[512];
-
-	va_list argptr;
-
-	va_start(argptr, pError);       	// Set up variable argument pointer
-	vsprintf(gFatalErrorString, pError, argptr);
-	va_end(argptr);
-
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 
 	gfProgramIsRunning = FALSE;
 
+	char gFatalErrorString[512];
+	va_list argptr;
+	va_start(argptr, pError);
+	vsprintf(gFatalErrorString, pError, argptr);
+	va_end(argptr);
 	fprintf(stderr, "FATAL ERROR: %s\n", gFatalErrorString);
 }
 
 
-/*********************************************************************************
-* SnapshotSmall
-*
-*		Grabs a screen from the [rimary surface, and stuffs it into a 16-bit (RGB 5,5,5),
-* uncompressed Targa file. Each time the routine is called, it increments the
-* file number by one. The files are create in the current directory, usually the
-* EXE directory. This routine produces 1/4 sized images.
-*
-*********************************************************************************/
+/*******************************************************************************
+ * SnapshotSmall
+ *
+ * Grabs a screen from the primary surface, and stuffs it into a 16-bit
+ * (RGB 5,5,5), uncompressed Targa file. Each time the routine is called, it
+ * increments the file number by one. The files are create in the current
+ * directory, usually the EXE directory. This routine produces 1/4 sized images.
+ *
+ ******************************************************************************/
 
 #pragma pack (push, 1)
 
 typedef struct {
-
-		UINT8		ubIDLength;
-		UINT8		ubColorMapType;
-		UINT8		ubTargaType;
-		UINT16	usColorMapOrigin;
-		UINT16	usColorMapLength;
-		UINT8		ubColorMapEntrySize;
-		UINT16	usOriginX;
-		UINT16	usOriginY;
-		UINT16	usImageWidth;
-		UINT16	usImageHeight;
-		UINT8		ubBitsPerPixel;
-		UINT8		ubImageDescriptor;
-
+	UINT8  ubIDLength;
+	UINT8  ubColorMapType;
+	UINT8  ubTargaType;
+	UINT16 usColorMapOrigin;
+	UINT16 usColorMapLength;
+	UINT8  ubColorMapEntrySize;
+	UINT16 usOriginX;
+	UINT16 usOriginY;
+	UINT16 usImageWidth;
+	UINT16 usImageHeight;
+	UINT8  ubBitsPerPixel;
+	UINT8  ubImageDescriptor;
 } TARGA_HEADER;
 
 #pragma pack (pop)
@@ -1143,139 +1048,90 @@ static void RefreshMovieCache(void);
 
 static void SnapshotSmall(void)
 {
-	INT32 iCountX, iCountY;
-	UINT16 *pVideo, *pDest;
+	// Get the write pointer
+	const UINT16* pVideo = (UINT16*)ScreenBuffer->pixels;
 
-//	sprintf( cFilename, "JA%5.5d.TGA", uiPicNum++ );
+	UINT16* pDest = gpFrameData[giNumFrames];
 
-//	if( ( disk = fopen(cFilename, "wb"))==NULL )
-//		return;
-
-//	memset(&Header, 0, sizeof(TARGA_HEADER));
-
-//	Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
-//	Header.usImageWidth=320;
-//	Header.usImageHeight=240;
-//	Header.ubBitsPerPixel=16;
-
-//	fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
-
-		// Get the write pointer
-	pVideo = (UINT16*)ScreenBuffer->pixels;
-
-	pDest = gpFrameData[ giNumFrames ];
-
-	for(iCountY=SCREEN_HEIGHT-1; iCountY >=0 ; iCountY-=1)
+	for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY--)
 	{
-		for(iCountX=0; iCountX < SCREEN_WIDTH; iCountX+= 1)
+		for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX++)
 		{
-	//		uiData=(UINT16)*(pVideo+(iCountY*640*2)+ ( iCountX * 2 ) );
-
-//				1111 1111 1100 0000
-//				f		 f		c
-	//		usPixel555=	(UINT16)(uiData&0xffff);
-//			usPixel555= ((usPixel555 & 0xffc0) >> 1) | (usPixel555 & 0x1f);
-
-	//		usPixel555=	(UINT16)(uiData);
-
-		//	fwrite( &usPixel555, sizeof(UINT16), 1, disk);
-	//		fwrite(	(void *)(((UINT8 *)ScreenBuffer->pixels) + ( iCountY * 640 * 2) + ( iCountX * 2 ) ), 2 * sizeof( BYTE ), 1, disk );
-
-		 *( pDest + ( iCountY * 640 ) + ( iCountX ) ) = *( pVideo + ( iCountY * 640 ) + ( iCountX ) );
+			pDest[iCountY * 640 + iCountX] = pVideo[iCountY * 640 + iCountX];
 		}
-
 	}
 
 	giNumFrames++;
 
-	if ( giNumFrames == MAX_NUM_FRAMES )
-	{
-		RefreshMovieCache( );
-	}
-
-//	fclose(disk);
+	if (giNumFrames == MAX_NUM_FRAMES) RefreshMovieCache();
 }
 
 
 void VideoCaptureToggle(void)
 {
 #ifdef JA2TESTVERSION
-	INT32 cnt;
-
 	gfVideoCapture = !gfVideoCapture;
 	if (gfVideoCapture)
 	{
-		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
+		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
 		{
-			gpFrameData[ cnt ] = MemAlloc( 640 * 480 * 2 );
+			gpFrameData[cnt] = MemAlloc(640 * 480 * 2);
 		}
-
-		giNumFrames = 0;
-
-		guiLastFrame=GetTickCount();
+		guiLastFrame = GetTickCount();
 	}
 	else
 	{
-		RefreshMovieCache( );
+		RefreshMovieCache();
 
-		for ( cnt = 0; cnt < MAX_NUM_FRAMES; cnt++ )
+		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
 		{
-			if ( gpFrameData[ cnt ] != NULL )
-			{
-				MemFree( gpFrameData[ cnt ] );
-			}
+			if (gpFrameData[cnt] != NULL) MemFree(gpFrameData[cnt]);
 		}
-		giNumFrames = 0;
 	}
+	giNumFrames = 0;
 #endif
 }
 
 
 static void RefreshMovieCache(void)
 {
-	TARGA_HEADER Header;
-	INT32 iCountX, iCountY;
-	FILE *disk;
-	CHAR8 cFilename[2048];
-	static UINT32 uiPicNum=0;
-	UINT16 *pDest;
-	INT32	cnt;
+	static UINT32 uiPicNum = 0;
 
-	PauseTime( TRUE );
+	PauseTime(TRUE);
 
 	const char* ExecDir = GetExecutableDirectory();
 
-	for ( cnt = 0; cnt < giNumFrames; cnt++ )
+	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{
+		CHAR8 cFilename[2048];
 		sprintf(cFilename, "%s/JA%5.5d.TGA", ExecDir, uiPicNum++);
 
-		if( ( disk = fopen(cFilename, "wb"))==NULL )
-			return;
+		FILE* disk = fopen(cFilename, "wb");
+		if (disk == NULL) return;
 
+		TARGA_HEADER Header;
 		memset(&Header, 0, sizeof(TARGA_HEADER));
-
-		Header.ubTargaType=2;			// Uncompressed 16/24/32 bit
-		Header.usImageWidth=640;
-		Header.usImageHeight=480;
-		Header.ubBitsPerPixel=16;
+		Header.ubTargaType    = 2; // Uncompressed 16/24/32 bit
+		Header.usImageWidth   = 640;
+		Header.usImageHeight  = 480;
+		Header.ubBitsPerPixel = 16;
 
 		fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
 
-		pDest = gpFrameData[ cnt ];
+		UINT16* pDest = gpFrameData[cnt];
 
-		for(iCountY=480-1; iCountY >=0 ; iCountY-=1)
+		for (INT32 iCountY = 480 - 1; iCountY >= 0; iCountY -= 1)
 		{
-			for(iCountX=0; iCountX < 640; iCountX ++ )
+			for (INT32 iCountX = 0; iCountX < 640; iCountX ++)
 			{
-				 fwrite( ( pDest + ( iCountY * 640 ) + iCountX ), sizeof(UINT16), 1, disk);
+				fwrite(pDest + iCountY * 640 + iCountX, sizeof(UINT16), 1, disk);
 			}
-
 		}
 
 		fclose(disk);
 	}
 
-	PauseTime( FALSE );
+	PauseTime(FALSE);
 
 	giNumFrames = 0;
 }
