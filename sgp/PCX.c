@@ -141,7 +141,7 @@ static PcxObject* LoadPcx(const char* pFilename)
 	}
 
   // Ok we now have a file handle, so let's read in the data
-  FileRead(hFileHandle, &Header, sizeof(PcxHeader), NULL);
+  FileRead(hFileHandle, &Header, sizeof(PcxHeader));
   if ((Header.ubManufacturer != 10)||(Header.ubEncoding != 1))
   { // We have an invalid pcx format
     // Delete the object
@@ -165,10 +165,10 @@ static PcxObject* LoadPcx(const char* pFilename)
   // We are ready to read in the pcx buffer data. Therefore we must lock the buffer
   pPcxBuffer = pCurrentPcxObject->pPcxBuffer;
 
-  FileRead(hFileHandle, pPcxBuffer, pCurrentPcxObject->uiBufferSize, NULL);
+  FileRead(hFileHandle, pPcxBuffer, pCurrentPcxObject->uiBufferSize);
 
   // Read in the palette
-  FileRead(hFileHandle, &(pCurrentPcxObject->ubPalette[0]), 768, NULL);
+  FileRead(hFileHandle, pCurrentPcxObject->ubPalette, 768);
 
 	// Close file
 	FileClose( hFileHandle );

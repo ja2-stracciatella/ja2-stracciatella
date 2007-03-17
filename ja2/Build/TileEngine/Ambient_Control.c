@@ -165,18 +165,12 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 	}
 
 	// READ #
-	if( !FileRead( hFile, &gsNumAmbData, sizeof( INT16 ), NULL ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) return FALSE;
 
 	// LOOP FOR OTHERS
 	for ( cnt = 0; cnt < gsNumAmbData; cnt++ )
 	{
-		if( !FileRead( hFile, &(gAmbData[ cnt ]), sizeof( AMBIENTDATA_STRUCT ), NULL ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) return FALSE;
 
 		sprintf( zFilename, "AMBIENT/%s", gAmbData[ cnt ].zFilename );
 		strcpy( gAmbData[ cnt ].zFilename, zFilename );

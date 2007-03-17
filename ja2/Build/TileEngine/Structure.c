@@ -250,7 +250,6 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 { // Loads a structure file's data as a honking chunk o' memory
 	HWFILE										hInput;
 	STRUCTURE_FILE_HEADER			Header;
-	UINT32										uiBytesRead;
 	UINT32										uiDataSize;
 	BOOLEAN										fOk;
 
@@ -261,8 +260,8 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 	{
 		return( FALSE );
 	}
-	fOk = FileRead( hInput, &Header, sizeof( STRUCTURE_FILE_HEADER ), &uiBytesRead );
-	if (!fOk || uiBytesRead != sizeof( STRUCTURE_FILE_HEADER ) || strncmp( Header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN ) != 0 || Header.usNumberOfStructures == 0)
+	fOk = FileRead(hInput, &Header, sizeof(STRUCTURE_FILE_HEADER));
+	if (!fOk || strncmp(Header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 || Header.usNumberOfStructures == 0)
 	{
 		FileClose( hInput );
 		return( FALSE );
@@ -277,8 +276,8 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 			FileClose( hInput );
 			return( FALSE );
 		}
-		fOk = FileRead( hInput, pFileRef->pAuxData, uiDataSize, &uiBytesRead );
-		if (!fOk || uiBytesRead != uiDataSize)
+		fOk = FileRead(hInput, pFileRef->pAuxData, uiDataSize);
+		if (!fOk)
 		{
 			MemFree( pFileRef->pAuxData );
 			FileClose( hInput );
@@ -294,8 +293,8 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 				FileClose( hInput );
 				return( FALSE );
 			}
-			fOk = FileRead( hInput, pFileRef->pTileLocData, uiDataSize, &uiBytesRead );
-			if (!fOk || uiBytesRead != uiDataSize)
+			fOk = FileRead(hInput, pFileRef->pTileLocData, uiDataSize);
+			if (!fOk)
 			{
 				MemFree( pFileRef->pAuxData );
 				FileClose( hInput );
@@ -323,8 +322,8 @@ BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32
 			}
 			return( FALSE );
 		}
-		fOk = FileRead( hInput, pFileRef->pubStructureData, uiDataSize, &uiBytesRead );
-		if (!fOk || uiBytesRead != uiDataSize)
+		fOk = FileRead(hInput, pFileRef->pubStructureData, uiDataSize);
+		if (!fOk)
 		{
 			MemFree( pFileRef->pubStructureData );
 			if (pFileRef->pAuxData != NULL)

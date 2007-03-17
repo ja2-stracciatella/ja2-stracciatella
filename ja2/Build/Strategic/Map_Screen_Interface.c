@@ -6085,7 +6085,6 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 	MERC_LEAVE_ITEM *pCurrentItem;
 	MERC_LEAVE_ITEM *pItem;
 	UINT32 uiCount=0;
-	UINT32	uiNumBytesRead = 0;
 	BOOLEAN	fNodeExists = FALSE;
 	UINT32	uiSubItem;
 
@@ -6099,21 +6098,13 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
 		// load the flag that specifis that a node DOES exist
-		FileRead( hFile, &fNodeExists, sizeof(BOOLEAN), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof(BOOLEAN) )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
 
 		// if a root node is supposed to exist
 		if( fNodeExists )
 		{
 			// load the number specifing how many items there are in the list
-			FileRead( hFile, &uiCount, sizeof(UINT32), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof(UINT32) )
-			{
-				return(FALSE);
-			}
+			if (!FileRead(hFile, &uiCount, sizeof(UINT32))) return FALSE;
 
 			// allocate space
 			gpLeaveListHead[ iCounter ] = MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
@@ -6136,12 +6127,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 				memset( pItem, 0, sizeof( MERC_LEAVE_ITEM ) );
 
 				// Load the items
-				FileRead( hFile, pItem, sizeof( MERC_LEAVE_ITEM ), &uiNumBytesRead );
-				if( uiNumBytesRead != sizeof( MERC_LEAVE_ITEM ) )
-				{
-					return(FALSE);
-				}
-
+				if (!FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;
 
 				pItem->pNext = NULL;
 
@@ -6163,11 +6149,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 	//Load the leave list profile id's
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
-		FileRead( hFile, &guiLeaveListOwnerProfileId[ iCounter ], sizeof(UINT32), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof(UINT32) )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32))) return FALSE;
 	}
 
 	return( TRUE );

@@ -980,7 +980,6 @@ BOOLEAN LoadAnimationProfiles( )
 	INT32				iProfileCount, iDirectionCount, iTileCount;
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDirs;
-	UINT32			uiBytesRead;
 
 //	pInput = fopen( ANIMPROFILEFILENAME, "rb" );
 	pInput = FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ);
@@ -992,10 +991,7 @@ BOOLEAN LoadAnimationProfiles( )
 
 	// Writeout profile data!
 //	if ( fread( &gubNumAnimProfiles, sizeof( gubNumAnimProfiles ), 1, pInput ) != 1 )
-	if ( FileRead(  pInput, &gubNumAnimProfiles, sizeof( gubNumAnimProfiles ), &uiBytesRead ) != 1 )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(pInput, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) return FALSE;
 
 	// Malloc profile data!
 	gpAnimProfiles = MemAlloc( gubNumAnimProfiles * sizeof( ANIM_PROF ) );
@@ -1014,10 +1010,7 @@ BOOLEAN LoadAnimationProfiles( )
 
 			// Read # tiles
 //			if ( fread( &pProfileDirs->ubNumTiles, sizeof( UINT8 ), 1, pInput ) != 1 )
-			if ( FileRead( pInput, &pProfileDirs->ubNumTiles, sizeof( UINT8 ), &uiBytesRead ) != 1 )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(pInput, &pProfileDirs->ubNumTiles, sizeof(UINT8))) return FALSE;
 
 			// Malloc space for tiles!
 			pProfileDirs->pTiles = MemAlloc( sizeof( ANIM_PROF_TILE ) * pProfileDirs->ubNumTiles );
@@ -1026,23 +1019,13 @@ BOOLEAN LoadAnimationProfiles( )
 			for ( iTileCount = 0; iTileCount < pProfileDirs->ubNumTiles; iTileCount++ )
 			{
 //				if ( fread( &pProfileDirs->pTiles[ iTileCount ].usTileFlags, sizeof( UINT16 ), 1, pInput ) != 1 )
-				if ( FileRead( pInput, &pProfileDirs->pTiles[ iTileCount ].usTileFlags, sizeof( UINT16 ), &uiBytesRead ) != 1 )
-				{
-					return( FALSE );
-				}
+				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].usTileFlags, sizeof(UINT16))) return FALSE;
 
 //				if ( fread( &pProfileDirs->pTiles[ iTileCount ].bTileX, sizeof( INT8 ), 1, pInput ) != 1 )
-				if ( FileRead( pInput, &pProfileDirs->pTiles[ iTileCount ].bTileX, sizeof( INT8 ), &uiBytesRead ) != 1 )
-				{
-					return( FALSE );
-				}
+				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].bTileX, sizeof(INT8))) return FALSE;
 
 //				if ( fread( &pProfileDirs->pTiles[ iTileCount ].bTileY, sizeof( INT8 ), 1, pInput ) != 1 )
-				if ( FileRead( pInput, &pProfileDirs->pTiles[ iTileCount ].bTileY, sizeof( INT8 ), &uiBytesRead ) != 1 )
-				{
-					return( FALSE );
-				}
-
+				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].bTileY, sizeof(INT8))) return FALSE;
 			}
 
 		}

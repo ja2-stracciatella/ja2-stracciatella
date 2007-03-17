@@ -80,7 +80,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
-	UINT32 uiNumBytesRead;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
@@ -116,8 +115,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
-	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorY, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorY.  KM");
@@ -136,8 +134,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	//STEP THREE:  read the data
 
-	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorX, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorX.  KM");
@@ -152,8 +149,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &slots,		4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &slots, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading slots.  KM");
@@ -161,8 +157,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &uiTimeStamp, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM");
@@ -170,8 +165,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &bSectorZ, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM");
@@ -251,8 +245,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		FileRead( hfile, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -291,8 +284,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
-						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
-						if( uiNumBytesRead != 2 )
+						if (!FileRead(hfile, &usCheckSum, 2))
 						{
 							#ifdef JA2TESTVERSION
 								sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
@@ -380,8 +372,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		}
 	}
 
-	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &ubSectorID, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM");
@@ -580,11 +571,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		//advance for bytes and read the #of slots already used
 		FileSeek( hfile, 4, FILE_SEEK_FROM_START );
 
-		FileRead( hfile, &iSlotsAlreadyInUse, 4, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 4 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileRead(hfile, &iSlotsAlreadyInUse, 4)) goto FAIL_SAVE;
 
 		FileClose( hfile );
 
@@ -752,7 +739,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
-	UINT32 uiNumBytesRead;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
@@ -834,8 +820,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
-	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorY, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorY.  KM");
@@ -855,8 +840,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	//STEP THREE:  read the data
 
-	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorX, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading sSectorX.  KM");
@@ -871,8 +855,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &slots,		4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead( hfile, &slots, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading slots.  KM");
@@ -880,8 +863,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &uiTimeStamp, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading uiTimeStamp.  KM");
@@ -889,8 +871,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &bSectorZ, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading bSectorZ.  KM");
@@ -971,8 +952,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		FileRead( hfile, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -1009,8 +989,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
-					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
-					if( uiNumBytesRead != 2 )
+					if (!FileRead(hfile, &usCheckSum, 2))
 					{
 						#ifdef JA2TESTVERSION
 							sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
@@ -1090,8 +1069,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		}
 	}
 
-	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &ubSectorID, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "EnemySoldier -- EOF while reading ubSectorID.  KM");
@@ -1180,7 +1158,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
-	UINT32 uiNumBytesRead;
 	UINT32 uiTimeStamp;
 	UINT32 uiTimeSinceLastLoaded;
 	HWFILE hfile;
@@ -1217,8 +1194,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
-	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorY, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading sSectorY.  KM");
@@ -1238,8 +1214,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 
 	//STEP THREE:  read the data
-	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorX, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading sSectorX.  KM");
@@ -1254,8 +1229,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &slots,		4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &slots, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading slots.  KM");
@@ -1263,8 +1237,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &uiTimeStamp, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading uiTimeStamp.  KM");
@@ -1274,8 +1247,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	uiTimeSinceLastLoaded = GetWorldTotalMin() - uiTimeStamp;
 
-	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &bSectorZ, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading bSectorZ.  KM");
@@ -1323,8 +1295,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		FileRead( hfile, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -1365,8 +1336,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
-						FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
-						if( uiNumBytesRead != 2 )
+						if (!FileRead(hfile, &usCheckSum, 2))
 						{
 							#ifdef JA2TESTVERSION
 								sprintf( zReason, "Civilian -- EOF while reading usCheckSum %d.  KM", i );
@@ -1459,8 +1429,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 		}
 	}
 
-	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &ubSectorID, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Civilian -- EOF while reading ubSectorID.  KM");
@@ -1825,7 +1794,6 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
-	UINT32 uiNumBytesRead;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
@@ -1869,8 +1837,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
 
-	FileRead( hfile, &sSectorY, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorY, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading sSectorY.  KM");
@@ -1890,8 +1857,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	//STEP THREE:  read the data
 
-	FileRead( hfile, &sSectorX, 2, &uiNumBytesRead );
-	if( uiNumBytesRead != 2 )
+	if (!FileRead(hfile, &sSectorX, 2))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading sSectorX.  KM");
@@ -1906,8 +1872,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &slots,		4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &slots, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading slots.  KM");
@@ -1915,8 +1880,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		goto FAIL_LOAD;
 	}
 
-	FileRead( hfile, &uiTimeStamp, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &uiTimeStamp, 4))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading uiTimeStamp.  KM");
@@ -1925,8 +1889,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 	}
 
 
-	FileRead( hfile, &bSectorZ, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &bSectorZ, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading bSectorZ.  KM");
@@ -1987,8 +1950,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 
 	for( i = 0; i < slots; i++ )
 	{
-		FileRead( hfile, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -2014,8 +1976,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 		}
 
 
-		FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
-		if( uiNumBytesRead != 2 )
+		if (!FileRead(hfile, &usCheckSum, 2))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
@@ -2052,8 +2013,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
-					FileRead( hfile, &usCheckSum, 2, &uiNumBytesRead );
-					if( uiNumBytesRead != 2 )
+					if (!FileRead(hfile, &usCheckSum, 2))
 					{
 						#ifdef JA2TESTVERSION
 							sprintf( zReason, "EnemySoldier -- EOF while reading usCheckSum %d.  KM", i );
@@ -2133,8 +2093,7 @@ BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( 
 */
 	}
 
-	FileRead( hfile, &ubSectorID, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
+	if (!FileRead(hfile, &ubSectorID, 1))
 	{
 #ifdef JA2TESTVERSION
 		strcpy(zReason, "Check EnemySoldier -- EOF while reading ubSectorID.  KM");

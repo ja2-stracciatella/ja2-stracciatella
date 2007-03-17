@@ -73,7 +73,7 @@ extern BOOLEAN	FileDelete( const char *strFilename );
 extern HWFILE	FileOpen(const char* strFilename, UINT32 uiOptions);
 extern void		FileClose( HWFILE );
 
-extern BOOLEAN	FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead );
+extern BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead);
 extern BOOLEAN	FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten );
 
 extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );

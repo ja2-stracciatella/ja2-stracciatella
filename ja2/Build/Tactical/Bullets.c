@@ -449,27 +449,18 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	UINT16	usCnt;
 
 	//make sure the bullets are not allocated
 	memset( gBullets, 0, NUM_BULLET_SLOTS * sizeof( BULLET ) );
 
 	//Load the number of Bullets in the array
-	FileRead( hFile, &guiNumBullets, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &guiNumBullets, sizeof(UINT32))) return FALSE;
 
 	for( usCnt=0; usCnt<guiNumBullets; usCnt++ )
 	{
 		//Load the the Bullet structure
-		FileRead( hFile, &gBullets[usCnt], sizeof( BULLET ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( BULLET ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &gBullets[usCnt], sizeof(BULLET))) return FALSE;
 
 		//Set some parameters
 		gBullets[usCnt].uiLastUpdate = 0;

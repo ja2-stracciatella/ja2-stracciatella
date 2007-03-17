@@ -1265,16 +1265,9 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 {
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
-	UINT32	uiNumBytesRead;
-
 
 	//Load the number of REAL_OBJECTs in the array
-	FileRead( hFile, &sAirRaidSaveStruct, sizeof( AIR_RAID_SAVE_STRUCT ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( AIR_RAID_SAVE_STRUCT ) )
-	{
-		return( FALSE );
-	}
-
+	if (!FileRead(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT))) return FALSE;
 
 	// Put all the globals into the save struct
 	gfInAirRaid = sAirRaidSaveStruct.fInAirRaid;

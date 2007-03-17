@@ -3038,15 +3038,15 @@ INT32 iLight;
 		hFile = FileOpen(pFilename, FILE_ACCESS_READ);
 		if (hFile != 0)
 		{
-			FileRead(hFile, &usTemplateSize[iLight], sizeof(UINT16), NULL);
+			FileRead(hFile, &usTemplateSize[iLight], sizeof(UINT16));
 			if((pLightList[iLight]=MemAlloc(usTemplateSize[iLight]*sizeof(LIGHT_NODE)))==NULL)
 			{
 				usTemplateSize[iLight]=0;
 				return(-1);
 			}
-			FileRead(hFile, pLightList[iLight], sizeof(LIGHT_NODE)*usTemplateSize[iLight], NULL);
+			FileRead(hFile, pLightList[iLight], sizeof(LIGHT_NODE) * usTemplateSize[iLight]);
 
-			FileRead(hFile, &usRaySize[iLight], sizeof(UINT16), NULL);
+			FileRead(hFile, &usRaySize[iLight], sizeof(UINT16));
 			if((pLightRayList[iLight]=MemAlloc(usRaySize[iLight]*sizeof(UINT16)))==NULL)
 			{
 				usTemplateSize[iLight]=0;
@@ -3054,7 +3054,7 @@ INT32 iLight;
 				MemFree(pLightList[iLight]);
 				return(-1);
 			}
-			FileRead(hFile, pLightRayList[iLight], sizeof(UINT16)*usRaySize[iLight], NULL);
+			FileRead(hFile, pLightRayList[iLight], sizeof(UINT16) * usRaySize[iLight]);
 
 			FileClose(hFile);
 

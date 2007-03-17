@@ -400,13 +400,11 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	SCHEDULENODE temp;
 	UINT8 ubNum;
 	UINT32 ubRealNum;
-
-	UINT32	uiNumBytesRead, uiNumBytesToRead;
+	UINT32 uiNumBytesToRead;
 
 	//LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
 	uiNumBytesToRead = sizeof( UINT8 );
-	FileRead( hFile, &ubNum, uiNumBytesToRead, &uiNumBytesRead );
-	if( uiNumBytesRead != uiNumBytesToRead )
+	if (!FileRead(hFile, &ubNum, uiNumBytesToRead))
 	{
 		FileClose( hFile );
 		return( FALSE);
@@ -419,8 +417,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	while( ubRealNum )
 	{
 		uiNumBytesToRead = sizeof( SCHEDULENODE );
-		FileRead( hFile, &temp, uiNumBytesToRead, &uiNumBytesRead );
-		if( uiNumBytesRead != uiNumBytesToRead )
+		if (!FileRead(hFile, &temp, uiNumBytesToRead))
 		{
 			FileClose( hFile );
 			return( FALSE);

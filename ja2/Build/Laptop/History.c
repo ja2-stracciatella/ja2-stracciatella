@@ -598,7 +598,6 @@ void OpenAndReadHistoryFile( void )
   INT16 sSectorX, sSectorY;
 	INT8 bSectorZ = 0;
 	UINT8 ubColor;
-  INT32 iBytesRead=0;
   UINT32 uiByteCount=0;
 
 	// clear out the old list
@@ -628,13 +627,13 @@ void OpenAndReadHistoryFile( void )
   while( FileGetSize( hFileHandle ) > uiByteCount)
 	{
 		// read in other data
-    FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-    FileRead( hFileHandle, &sSectorX, sizeof(INT16), &iBytesRead );
-    FileRead( hFileHandle, &sSectorY, sizeof(INT16), &iBytesRead );
-		FileRead( hFileHandle, &bSectorZ, sizeof(INT8), &iBytesRead );
-		FileRead( hFileHandle, &ubColor, sizeof( UINT8 ), &iBytesRead );
+    FileRead(hFileHandle, &ubCode,       sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode, sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,       sizeof(UINT32));
+    FileRead(hFileHandle, &sSectorX,     sizeof(INT16));
+    FileRead(hFileHandle, &sSectorY,     sizeof(INT16));
+		FileRead(hFileHandle, &bSectorZ,     sizeof(INT8));
+		FileRead(hFileHandle, &ubColor,      sizeof(UINT8));
 
 		#ifdef JA2TESTVERSION
 		//perform a check on the data to see if it is pooched
@@ -1182,7 +1181,6 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 	INT8  bSectorZ;
 	UINT32 uiDate;
 	UINT8 ubColor;
-  INT32 iBytesRead=0;
   UINT32 uiByteCount=0;
 
 	// check if bad page
@@ -1227,13 +1225,13 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 	{
 
 		// read in other data
-    FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-    FileRead( hFileHandle, &sSectorX, sizeof(INT16), &iBytesRead );
-    FileRead( hFileHandle, &sSectorY, sizeof(INT16), &iBytesRead );
-		FileRead( hFileHandle, &bSectorZ, sizeof(INT8), &iBytesRead );
-		FileRead( hFileHandle, &ubColor, sizeof(UINT8), &iBytesRead );
+    FileRead(hFileHandle, &ubCode,       sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode, sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,       sizeof(UINT32));
+    FileRead(hFileHandle, &sSectorX,     sizeof(INT16));
+    FileRead(hFileHandle, &sSectorY,     sizeof(INT16));
+		FileRead(hFileHandle, &bSectorZ,     sizeof(INT8));
+		FileRead(hFileHandle, &ubColor,      sizeof(UINT8));
 
 		#ifdef JA2TESTVERSION
 		//perform a check on the data to see if it is pooched

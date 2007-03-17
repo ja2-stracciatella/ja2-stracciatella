@@ -1425,37 +1425,14 @@ BOOLEAN SaveCreatureDirectives( HWFILE hFile )
 
 BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion )
 {
-	UINT32 uiNumBytesRead;
-	FileRead( hFile, &giHabitatedDistance, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-
-	FileRead( hFile, &giPopulationModifier, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-	FileRead( hFile, &giLairID, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-
-	FileRead( hFile, &gfUseCreatureMusic, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( BOOLEAN ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &giHabitatedDistance,  4)) return FALSE;
+	if (!FileRead(hFile, &giPopulationModifier, 4)) return FALSE;
+	if (!FileRead(hFile, &giLairID,             4)) return FALSE;
+	if (!FileRead(hFile, &gfUseCreatureMusic,   1)) return FALSE;
 
 	if( uiSavedGameVersion >= 82 )
 	{
-		FileRead( hFile, &giDestroyedLairID, 4, &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( INT32 ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &giDestroyedLairID, 4)) return FALSE;
 	}
 	else
 	{

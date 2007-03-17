@@ -44,14 +44,14 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 	}
 
 	// Skip header
-  FileRead( hFileHandle, bColHeader, sizeof( bColHeader ) , NULL);
+  FileRead(hFileHandle, bColHeader, sizeof(bColHeader));
 
 	// Read in a palette entry at a time
 	for ( cnt = 0; cnt < 256; cnt++ )
 	{
-	  FileRead( hFileHandle, &pPalette[ cnt ].peRed, sizeof( UINT8 ) , NULL);
-	  FileRead( hFileHandle, &pPalette[ cnt ].peGreen, sizeof( UINT8 ) , NULL);
-	  FileRead( hFileHandle, &pPalette[ cnt ].peBlue, sizeof( UINT8 ) , NULL);
+	  FileRead(hFileHandle, &pPalette[cnt].peRed,   sizeof(UINT8));
+	  FileRead(hFileHandle, &pPalette[cnt].peGreen, sizeof(UINT8));
+	  FileRead(hFileHandle, &pPalette[cnt].peBlue,  sizeof(UINT8));
 	}
 
 	// Close file

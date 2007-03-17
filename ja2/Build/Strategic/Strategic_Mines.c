@@ -832,14 +832,8 @@ BOOLEAN SaveMineStatusToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadMineStatusFromSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
-
 	//Load the MineStatus
-	FileRead( hFile, gMineStatus, sizeof( MINE_STATUS_TYPE ) * MAX_NUMBER_OF_MINES, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( MINE_STATUS_TYPE ) * MAX_NUMBER_OF_MINES )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES)) return FALSE;
 
 	return( TRUE );
 }

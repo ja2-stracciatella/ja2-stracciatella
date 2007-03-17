@@ -24,7 +24,6 @@ void InitEngineTilesets( )
 //	FILE					*hfile;
 	HWFILE			hfile;
 	CHAR8			zName[32];
-	UINT32		uiNumBytesRead;
 
 	//OPEN FILE
 //	hfile = fopen( "BINARYDATA/JA2SET.DAT", "rb" );
@@ -38,7 +37,7 @@ void InitEngineTilesets( )
 
 	// READ # TILESETS and compare
 //	fread( &ubNumSets, sizeof( ubNumSets ), 1, hfile );
-	FileRead( hfile, &ubNumSets, sizeof( ubNumSets ), &uiNumBytesRead );
+	FileRead(hfile, &ubNumSets, sizeof(ubNumSets));
 	// CHECK
 	if ( ubNumSets != NUM_TILESETS )
 	{
@@ -49,7 +48,7 @@ void InitEngineTilesets( )
 
 	// READ #files
 //	fread( &uiNumFiles, sizeof( uiNumFiles ), 1, hfile );
-	FileRead( hfile, &uiNumFiles, sizeof( uiNumFiles ), &uiNumBytesRead );
+	FileRead(hfile, &uiNumFiles, sizeof(uiNumFiles));
 
 	// COMPARE
 	if ( uiNumFiles != NUMBEROFTILETYPES )
@@ -65,11 +64,11 @@ void InitEngineTilesets( )
 	{
 		//Read name
 //		fread( &zName, sizeof( zName ), 1, hfile );
-		FileRead( hfile, &zName, sizeof( zName ), &uiNumBytesRead );
+		FileRead( hfile, &zName, sizeof(zName));
 
 		// Read ambience value
 //		fread( &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8), 1, hfile );
-		FileRead( hfile, &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8 ), &uiNumBytesRead );
+		FileRead(hfile, &gTilesets[cnt].ubAmbientID, sizeof(UINT8));
 
 		// Set into tileset
 		swprintf(gTilesets[cnt].zName, lengthof(gTilesets[cnt].zName), L"%S", zName);
@@ -79,7 +78,7 @@ void InitEngineTilesets( )
 		{
 			// Read file name
 //			fread( &zName, sizeof( zName ), 1, hfile );
-			FileRead( hfile, &zName, sizeof( zName ), &uiNumBytesRead );
+			FileRead(hfile, &zName, sizeof(zName));
 
 			// Set into database
 			strcpy( gTilesets[ cnt ].TileSurfaceFilenames[ cnt2 ], zName );

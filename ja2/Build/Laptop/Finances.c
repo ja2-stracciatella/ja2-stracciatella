@@ -1056,7 +1056,6 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 	UINT32 uiDate;
 	INT32 iAmount;
 	INT32 iBalanceToDate;
-  INT32 iBytesRead=0;
   UINT32 uiByteCount=0;
 
 	// clear out the old list
@@ -1077,7 +1076,7 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 
 	// read in balance
 	// write balance to disk first
-  FileRead( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), &iBytesRead );
+  FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance,  sizeof(INT32));
 	uiByteCount += sizeof( INT32 );
 
 	AssertMsg( iBytesRead, "Failed To Read Data Entry");
@@ -1087,11 +1086,11 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 	{
 
 		// read in other data
-    FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+    FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 
@@ -1548,7 +1547,6 @@ static void GetBalanceFromDisk(void)
 	// assuming file already openned
   // this procedure will open and read in data to the finance list
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
 
 	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
@@ -1561,7 +1559,7 @@ static void GetBalanceFromDisk(void)
 	FileSeek( hFileHandle, 0, FILE_SEEK_FROM_START);
 
 	// get balance from disk first
-  FileRead( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), &iBytesRead );
+  FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
 	AssertMsg( iBytesRead, "Failed To Read Data Entry");
 
@@ -1728,7 +1726,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 	INT32 iBalanceToDate;
 	UINT32 uiDate;
 	INT32 iAmount;
-  INT32 iBytesRead=0;
   UINT32 uiByteCount=0;
 
 	// check if bad page
@@ -1766,11 +1763,11 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 	{
 
 		// read in data
-    FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+    FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 
@@ -1900,7 +1897,6 @@ static INT32 GetPreviousBalanceToDate(void) // XXX unused
 	// will grab balance to date of previous record
 	// grabs the size of the file and interprets number of pages it will take up
    HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   INT32 iBalanceToDate=0;
 
 	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
@@ -1918,7 +1914,7 @@ static INT32 GetPreviousBalanceToDate(void) // XXX unused
   FileSeek( hFileHandle,  ( sizeof( INT32 ) ) , FILE_SEEK_FROM_END );
 
 	// get balnce to date
-  FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+  FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 	FileClose( hFileHandle );
 
@@ -1930,7 +1926,6 @@ static INT32 GetPreviousDaysBalance(void)
 {
 	// find out what today is, then go back 2 days, get balance for that day
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	UINT32 iByteCount = 0;
@@ -1961,11 +1956,11 @@ static INT32 GetPreviousDaysBalance(void)
     // incrment byte count
     iByteCount += RECORD_SIZE;
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
@@ -2009,7 +2004,6 @@ static INT32 GetTodaysBalance(void)
 {
 	// find out what today is, then go back 2 days, get balance for that day
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	UINT32 iByteCount = 0;
@@ -2043,11 +2037,11 @@ static INT32 GetTodaysBalance(void)
     // incrment byte count
     iByteCount += RECORD_SIZE;
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
@@ -2078,7 +2072,6 @@ static INT32 GetPreviousDaysIncome(void)
   // will return the income from the previous day
   // which is todays starting balance - yesterdays starting balance
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	BOOLEAN fOkToIncrement = FALSE;
@@ -2116,11 +2109,11 @@ static INT32 GetPreviousDaysIncome(void)
 
     FileGetPos( hFileHandle );
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
@@ -2167,7 +2160,6 @@ static INT32 GetTodaysDaysIncome(void)
   // will return the income from the previous day
   // which is todays starting balance - yesterdays starting balance
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	BOOLEAN fOkToIncrement = FALSE;
@@ -2201,11 +2193,11 @@ static INT32 GetTodaysDaysIncome(void)
     // incrment byte count
     iByteCount += RECORD_SIZE;
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
@@ -2287,7 +2279,6 @@ static INT32 GetTodaysOtherDeposits(void)
 {
 	// grab todays other deposits
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	BOOLEAN fOkToIncrement = FALSE;
@@ -2321,11 +2312,11 @@ static INT32 GetTodaysOtherDeposits(void)
     // incrment byte count
     iByteCount += RECORD_SIZE;
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
@@ -2372,7 +2363,6 @@ static INT32 GetTodaysOtherDeposits(void)
 static INT32 GetYesterdaysOtherDeposits(void)
 {
   HWFILE hFileHandle;
-  INT32 iBytesRead=0;
   UINT32 iDateInMinutes = 0;
 	BOOLEAN fOkToContinue = FALSE;
 	BOOLEAN fOkToIncrement = FALSE;
@@ -2406,11 +2396,11 @@ static INT32 GetYesterdaysOtherDeposits(void)
     // incrment byte count
     iByteCount += RECORD_SIZE;
 
-		FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &ubSecondCode, sizeof(UINT8), &iBytesRead );
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-	  FileRead( hFileHandle, &iAmount, sizeof(INT32), &iBytesRead );
-    FileRead( hFileHandle, &iBalanceToDate, sizeof(INT32), &iBytesRead );
+		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
+		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
+	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
+    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
 		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
@@ -2473,7 +2463,6 @@ static void LoadCurrentBalance(void) // XXX unused
 {
 	// will load the current balance from finances.dat file
 	HWFILE hFileHandle;
-  INT32 iBytesRead=0;
 
 	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
 	if (!hFileHandle)
@@ -2483,7 +2472,7 @@ static void LoadCurrentBalance(void) // XXX unused
 	}
 
 	FileSeek( hFileHandle,  0 , FILE_SEEK_FROM_START );
-	FileRead( hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof( INT32 ), &iBytesRead );
+	FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
 	AssertMsg( iBytesRead, "Failed To Read Data Entry");
 	 // close file

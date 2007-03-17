@@ -526,7 +526,6 @@ void LoadInCurrentImpCharacter( void )
 {
 	INT32 iProfileId = 0;
 	HWFILE hFile;
-	UINT32 uiBytesRead = 0;
 
 	// open the file for writing
 	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ);
@@ -538,22 +537,13 @@ void LoadInCurrentImpCharacter( void )
 	}
 
 	// read in the profile
-	if (!FileRead(hFile, &iProfileId,sizeof( INT32 ), &uiBytesRead))
-	{
-		return;
-	}
+	if (!FileRead(hFile, &iProfileId, sizeof(INT32))) return;
 
 	// read in the portrait
-	if (!FileRead(hFile, &iPortraitNumber ,sizeof( INT32 ), &uiBytesRead))
-	{
-		return;
-	}
+	if (!FileRead(hFile, &iPortraitNumber, sizeof(INT32))) return;
 
 	// read in the profile
-	if (!FileRead(hFile, &gMercProfiles[ iProfileId ] ,sizeof( MERCPROFILESTRUCT ), &uiBytesRead))
-	{
-		return;
-	}
+	if (!FileRead(hFile, &gMercProfiles[iProfileId], sizeof(MERCPROFILESTRUCT))) return;
 
 	// close file
 	FileClose(hFile);

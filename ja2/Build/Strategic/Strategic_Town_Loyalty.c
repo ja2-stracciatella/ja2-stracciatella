@@ -1337,7 +1337,7 @@ void ReadInDistancesBetweenTowns( void )
 
 	hFileHandle = FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_READ);
 
-	FileRead( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
+	FileRead(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
 
 	// close file
   FileClose( hFileHandle );
@@ -1420,14 +1420,8 @@ BOOLEAN SaveStrategicTownLoyaltyToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadStrategicTownLoyaltyFromSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
-
 	//Restore the Town Loyalty
-	FileRead( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * NUM_TOWNS, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( TOWN_LOYALTY ) * NUM_TOWNS )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS)) return FALSE;
 
 	return( TRUE );
 }

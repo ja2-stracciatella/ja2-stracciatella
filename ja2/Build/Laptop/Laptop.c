@@ -5818,7 +5818,6 @@ BOOLEAN SaveLaptopInfoToSavedGame( HWFILE hFile )
 
 BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead=0;
 	UINT32	uiSize;
 
 
@@ -5845,14 +5844,8 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 	}
 
 
-
 	// Load The laptop information
-	FileRead( hFile, &LaptopSaveInfo, sizeof( LaptopSaveInfoStruct ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( LaptopSaveInfoStruct ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileRead(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct))) return FALSE;
 
 
 	//If there is anything in the Bobby Ray Orders on Delivery
@@ -5865,11 +5858,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 		Assert( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray );
 
 		// Load The laptop information
-		FileRead( hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize, &uiNumBytesRead );
-		if( uiNumBytesRead != uiSize )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize)) return FALSE;
 	}
 	else
 	{
@@ -5888,11 +5877,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 		Assert( LaptopSaveInfo.pLifeInsurancePayouts );
 
 		// Load The laptop information
-		FileRead( hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize, &uiNumBytesRead );
-		if( uiNumBytesRead != uiSize )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize)) return FALSE;
 	}
 	else
 	{

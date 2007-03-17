@@ -2201,7 +2201,6 @@ void LoadGlobalSummary()
 	HWFILE	hfile;
 	STRING512			DevInfoDir;
 	STRING512			MapsDir;
-	UINT32 uiNumBytesRead;
 	FLOAT	dMajorVersion;
   INT32 x,y;
 	UINT8 szFilename[40];
@@ -2248,7 +2247,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= GROUND_LEVEL_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 0, dMajorVersion );
 			}
@@ -2265,7 +2264,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= BASEMENT1_LEVEL_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 1, dMajorVersion );
 			}
@@ -2282,7 +2281,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= BASEMENT2_LEVEL_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 2, dMajorVersion );
 			}
@@ -2299,7 +2298,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= BASEMENT3_LEVEL_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 3, dMajorVersion );
 			}
@@ -2316,7 +2315,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= ALTERNATE_GROUND_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 4, dMajorVersion );
 			}
@@ -2333,7 +2332,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 5, dMajorVersion );
 			}
@@ -2350,7 +2349,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= ALTERNATE_B2_MASK;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 6, dMajorVersion );
 			}
@@ -2367,7 +2366,7 @@ void LoadGlobalSummary()
 			if( hfile )
 			{
 				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;;
-				FileRead( hfile, &dMajorVersion, sizeof( FLOAT ), &uiNumBytesRead );
+				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 7, dMajorVersion );
 			}
@@ -2851,7 +2850,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 {
 	HWFILE hfile;
-	UINT32 uiNumBytesRead;
 	UINT32 uiNumItems;
 	UINT8 szFilename[40];
 	BASIC_SOLDIERCREATE_STRUCT basic;
@@ -2902,8 +2900,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 		return;
 	}
 	//Now load the number of world items from the map.
-	FileRead( hfile, &uiNumItems, 4, &uiNumBytesRead );
-	if( uiNumBytesRead != 4 )
+	if (!FileRead(hfile, &uiNumItems, 4))
 	{ //Invalid situation.
 		FileClose( hfile );
 		return;
@@ -2924,7 +2921,7 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	ShowButton( iSummaryButton[ SUMMARY_ENEMY ] );
 	gpWorldItemsSummaryArray = (WORLDITEM*)MemAlloc( sizeof( WORLDITEM ) * uiNumItems );
 	gusWorldItemsSummaryArraySize = gpCurrentSectorSummary->usNumItems;
-	FileRead( hfile, gpWorldItemsSummaryArray, sizeof( WORLDITEM ) * uiNumItems, &uiNumBytesRead );
+	FileRead(hfile, gpWorldItemsSummaryArray, sizeof(WORLDITEM) * uiNumItems);
 
 	//NOW, do the enemy's items!
 	//We need to do two passes.  The first pass simply processes all the enemies and counts all the droppable items
@@ -2941,16 +2938,14 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	}
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		FileRead( hfile, &basic, sizeof( BASIC_SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( BASIC_SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
 		{ //Invalid situation.
 			FileClose( hfile );
 			return;
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			FileRead( hfile, &priority, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+			if (!FileRead(hfile, &priority, sizeof(SOLDIERCREATE_STRUCT)))
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3005,16 +3000,14 @@ void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
 	}
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		FileRead( hfile, &basic, sizeof( BASIC_SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( BASIC_SOLDIERCREATE_STRUCT ) )
+		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
 		{ //Invalid situation.
 			FileClose( hfile );
 			return;
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			FileRead( hfile, &priority, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( SOLDIERCREATE_STRUCT ) )
+			if (!FileRead(hfile, &priority, sizeof(SOLDIERCREATE_STRUCT)))
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;

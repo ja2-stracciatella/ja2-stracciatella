@@ -457,7 +457,6 @@ void OpenAndReadFilesFile( void )
   HWFILE hFileHandle;
   UINT8 ubCode;
 	UINT32 uiDate;
-  INT32 iBytesRead=0;
   UINT32 uiByteCount=0;
   CHAR8 pFirstFilePath[128];
   CHAR8 pSecondFilePath[128];
@@ -492,17 +491,12 @@ void OpenAndReadFilesFile( void )
 	{
 
 		// read in data
-    FileRead( hFileHandle, &ubCode, sizeof(UINT8), &iBytesRead );
-
-		FileRead( hFileHandle, &uiDate, sizeof(UINT32), &iBytesRead );
-
-    FileRead( hFileHandle, &pFirstFilePath,  128, &iBytesRead );
-
-    FileRead( hFileHandle, &pSecondFilePath,  128, &iBytesRead );
-
-		FileRead( hFileHandle, &ubFormat,  sizeof(UINT8), &iBytesRead );
-
-		FileRead( hFileHandle, &fRead,  sizeof(UINT8), &iBytesRead );
+    FileRead(hFileHandle, &ubCode,          sizeof(UINT8));
+		FileRead(hFileHandle, &uiDate,          sizeof(UINT32));
+    FileRead(hFileHandle, &pFirstFilePath,  128);
+    FileRead(hFileHandle, &pSecondFilePath, 128);
+		FileRead(hFileHandle, &ubFormat,        sizeof(UINT8));
+		FileRead(hFileHandle, &fRead,           sizeof(UINT8));
 		// add transaction
 	  ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat,pFirstFilePath, pSecondFilePath, fRead);
 

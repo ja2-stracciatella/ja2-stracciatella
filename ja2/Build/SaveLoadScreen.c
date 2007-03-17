@@ -1407,7 +1407,6 @@ BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
 {
 	HWFILE hFile;
 	CHAR8		zSavedGameName[512];
-	UINT32	uiNumBytesRead;
 
 	//make sure the entry is valid
 	if( bEntry < 0 || bEntry > NUM_SAVE_GAMES )
@@ -1430,8 +1429,7 @@ BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
 		}
 
 		//Load the Save Game header file
-		FileRead( hFile, pSaveGameHeader, sizeof( SAVED_GAME_HEADER ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SAVED_GAME_HEADER ) )
+		if (!FileRead(hFile, pSaveGameHeader, sizeof(SAVED_GAME_HEADER)))
 		{
 			FileClose( hFile );
 			gbSaveGameArray[ bEntry ] = FALSE;

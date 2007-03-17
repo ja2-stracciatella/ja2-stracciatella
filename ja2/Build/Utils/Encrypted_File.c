@@ -9,8 +9,6 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 	UINT16 str[uiSeekAmount / 2];
 	HWFILE		hFile;
 	UINT16		i;
-	UINT32		uiBytesRead;
-
 
 	hFile = FileOpen(pFileName, FILE_ACCESS_READ);
 	if ( !hFile )
@@ -26,7 +24,7 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 		return( FALSE );
 	}
 
-	if (!FileRead(hFile, str, sizeof(str), &uiBytesRead))
+	if (!FileRead(hFile, str, sizeof(str)))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed FileRead");

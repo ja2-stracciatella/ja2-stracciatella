@@ -1205,7 +1205,6 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiSizeOfString;
 	StringSaveStruct StringSave;
@@ -1219,45 +1218,25 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile )
 	gubCurrentMapMessageString = 0;
 
 	//	Read to the begining of the message list
-	FileRead( hFile, &gubEndOfMapScreenMessageList, sizeof( UINT8 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
 
 	//	Read the current message string
-	FileRead( hFile, &gubStartOfMapScreenMessageList, sizeof( UINT8 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
 
 	//	Read the current message string
-	FileRead( hFile, &gubCurrentMapMessageString, sizeof( UINT8 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
 
 	//Loopthrough all the messages
 	for( uiCount=0; uiCount<256; uiCount++)
 	{
 		//	Read to the file the size of the message
-		FileRead( hFile, &uiSizeOfString, sizeof( UINT32 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT32 ) )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, &uiSizeOfString, sizeof(UINT32))) return FALSE;
 
 		//if there is a message
 		if( uiSizeOfString )
 		{
 			//	Read the message from the file
-			FileRead( hFile, SavedString, uiSizeOfString, &uiNumBytesRead );
-			if( uiNumBytesRead != uiSizeOfString )
-			{
-				return(FALSE);
-			}
+			if (!FileRead(hFile, SavedString, uiSizeOfString)) return FALSE;
 
 			//if there is an existing string,delete it
 			if( gMapScreenMessageList[ uiCount ] )
@@ -1295,11 +1274,7 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile )
 
 
 			//Read the rest of the message information to the saved game file
-			FileRead( hFile, &StringSave, sizeof( StringSaveStruct ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( StringSaveStruct ) )
-			{
-				return(FALSE);
-			}
+			if (!FileRead(hFile, &StringSave, sizeof(StringSaveStruct))) return FALSE;
 
 			// Create  the saved string struct
 			gMapScreenMessageList[ uiCount ]->uiFont = StringSave.uiFont;

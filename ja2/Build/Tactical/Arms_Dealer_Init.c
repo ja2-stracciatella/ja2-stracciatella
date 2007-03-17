@@ -259,7 +259,6 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
 {
-	UINT32	uiNumBytesRead;
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
 
@@ -274,16 +273,10 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 		// info for all dealers is in the save file
 
 		//Load the arms dealers status
-		if ( !FileRead( hFile, gArmsDealerStatus, sizeof( gArmsDealerStatus ), &uiNumBytesRead ))
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus))) return FALSE;
 
 		//load the dealers inventory item headers (all at once)
-		if ( !FileRead( hFile, gArmsDealersInventory, sizeof( gArmsDealersInventory ), &uiNumBytesRead ))
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory))) return FALSE;
 	}
 	else
 	{
@@ -306,7 +299,7 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 				if ( !AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced ))
 					return(FALSE);
 
-				if (!FileRead( hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof( DEALER_SPECIAL_ITEM ) * gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced, &uiNumBytesRead ))
+				if (!FileRead(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced))
 				{
 					return( FALSE );
 				}
@@ -2614,7 +2607,6 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 BOOLEAN LoadIncompleteArmsDealersStatus( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
 {
 	UINT32  uiDealersSaved;
-	UINT32	uiNumBytesRead;
 
 	Assert( !fIncludesElgin || !fIncludesManny );
 
@@ -2631,16 +2623,10 @@ BOOLEAN LoadIncompleteArmsDealersStatus( HWFILE hFile, BOOLEAN fIncludesElgin, B
 
 
 	// read in all other dealer's status
-	if (!FileRead( hFile, gArmsDealerStatus, uiDealersSaved * sizeof( ARMS_DEALER_STATUS ), &uiNumBytesRead ))
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, gArmsDealerStatus, uiDealersSaved * sizeof(ARMS_DEALER_STATUS))) return FALSE;
 
 	// read in all other dealer's inventory
-	if (!FileRead( hFile, gArmsDealersInventory, uiDealersSaved * sizeof( DEALER_ITEM_HEADER ) * MAXITEMS, &uiNumBytesRead ))
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, gArmsDealersInventory, uiDealersSaved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS)) return FALSE;
 
 	if ( !fIncludesElgin )
 	{

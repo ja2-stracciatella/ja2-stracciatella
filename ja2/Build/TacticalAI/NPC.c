@@ -120,7 +120,6 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
 	NPCQuoteInfo	* pFileData;
-	UINT32					uiBytesRead;
 	UINT32					uiFileSize;
 
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
@@ -163,7 +162,7 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	pFileData = MemAlloc( uiFileSize );
 	if (pFileData)
 	{
-		if (!FileRead( hFile, pFileData, uiFileSize, &uiBytesRead ) || uiBytesRead != uiFileSize )
+		if (!FileRead(hFile, pFileData, uiFileSize))
 		{
 			MemFree( pFileData );
 			pFileData = NULL;
@@ -356,7 +355,6 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
 	NPCQuoteInfo	* pFileData;
-	UINT32					uiBytesRead;
 	UINT32					uiFileSize;
 
   if ( ubIndex == MINERS_CIV_QUOTE_INDEX )
@@ -377,7 +375,7 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 	pFileData = MemAlloc( uiFileSize );
 	if (pFileData)
 	{
-		if (!FileRead( hFile, pFileData, uiFileSize, &uiBytesRead ) || uiBytesRead != uiFileSize )
+		if (!FileRead(hFile, pFileData, uiFileSize))
 		{
 			MemFree( pFileData );
 			pFileData = NULL;
@@ -2814,7 +2812,6 @@ BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 {
-	UINT32		uiNumBytesRead=0;
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
 	UINT32		uiNumberToLoad=0;
@@ -2831,11 +2828,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 	for( cnt=0; cnt<uiNumberToLoad; cnt++ )
 	{
 		//Load a byte specify that there is an npc quote Loadd
-		FileRead( hFile, &ubLoadQuote, sizeof( UINT8 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT8 ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
 
 		//if there is an existing quote
 		if( gpNPCQuoteInfoArray[ cnt ] )
@@ -2859,11 +2852,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 			}
 
 			//Load the NPC quote entry
-			FileRead( hFile, gpNPCQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS, &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 		}
 		else
 		{
@@ -2874,11 +2863,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 	{
 		for( cnt = 0; cnt < NUM_CIVQUOTE_SECTORS; cnt++)
 		{
-			FileRead( hFile, &ubLoadQuote, sizeof( UINT8 ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
 
 			//if there is an existing quote
 			if( gpCivQuoteInfoArray[ cnt ] )
@@ -2902,11 +2887,7 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 				}
 
 				//Load the civ quote entry
-				FileRead( hFile, gpCivQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS, &uiNumBytesRead );
-				if( uiNumBytesRead != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-				{
-					return( FALSE );
-				}
+				if (!FileRead(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 			}
 		}
 	}
@@ -3026,7 +3007,6 @@ BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 {
-	UINT32		uiNumBytesRead=0;
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
 	UINT32		uiNumberOfProfilesToLoad=0;
@@ -3037,11 +3017,7 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 	for( cnt=0; cnt<uiNumberOfProfilesToLoad; cnt++ )
 	{
 		//Load a byte specify that there is an npc quote Loadd
-		FileRead( hFile, &ubLoadQuote, sizeof( UINT8 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT8 ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
 
 		//if there is an existing quote
 		if( gpBackupNPCQuoteInfoArray[ cnt ] )
@@ -3065,11 +3041,7 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 			}
 
 			//Load the NPC quote entry
-			FileRead( hFile, gpBackupNPCQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS, &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 		}
 		else
 		{

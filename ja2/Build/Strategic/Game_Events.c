@@ -682,21 +682,14 @@ BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
 	UINT32		uiNumGameEvents;
 	STRATEGICEVENT sGameEvent;
 	UINT32		cnt;
-	UINT32		uiNumBytesRead=0;
 	STRATEGICEVENT *pTemp = NULL;
 
 
 	//erase the old Game Event queue
 	DeleteAllStrategicEvents();
 
-
 	//Read the number of strategic events
-	FileRead( hFile, &uiNumGameEvents, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileRead(hFile, &uiNumGameEvents, sizeof(UINT32))) return FALSE;
 
 	pTemp = NULL;
 
@@ -711,12 +704,7 @@ BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
 			return( FALSE );
 
 		//Read the current strategic event
-		FileRead( hFile, &sGameEvent, sizeof( STRATEGICEVENT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( STRATEGICEVENT ) )
-		{
-			return(FALSE);
-		}
-
+		if (!FileRead(hFile, &sGameEvent, sizeof(STRATEGICEVENT))) return FALSE;
 
 		memcpy( pTempEvent, &sGameEvent, sizeof( STRATEGICEVENT ) );
 

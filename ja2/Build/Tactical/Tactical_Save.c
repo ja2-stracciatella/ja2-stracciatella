@@ -504,7 +504,6 @@ BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT3
 
 BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WORLDITEM *pData )
 {
-	UINT32	uiNumBytesRead=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 	UINT32 uiNumberOfItems=0;
@@ -529,8 +528,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 
 
 	// Load the size of the World ITem table
-	FileRead( hFile, &uiNumberOfItems, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfItems, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -538,8 +536,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 	}
 
 	// Load the World ITem table
-	FileRead( hFile, pData, uiNumberOfItems * sizeof( WORLDITEM ), &uiNumBytesRead );
-	if( uiNumBytesRead != uiNumberOfItems * sizeof( WORLDITEM ) )
+	if (!FileRead(hFile, pData, uiNumberOfItems * sizeof(WORLDITEM)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -554,7 +551,6 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 
 BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pSizeOfData, BOOLEAN fIfEmptyCreate )
 {
-	UINT32	uiNumBytesRead=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfItems=0;
@@ -622,8 +618,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 
 
 	// Load the size of the World ITem table
-	FileRead( hFile, &uiNumberOfItems, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfItems, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -1509,7 +1504,6 @@ static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead=0;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
@@ -1546,8 +1540,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 	}
 
 	// Load the number of Rotting corpses
-	FileRead( hFile, &uiNumberOfCorpses, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -1562,8 +1555,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
     fDontAddCorpse = FALSE;
 
 		// Load the Rotting corpses info
-		FileRead( hFile, &def, sizeof( ROTTING_CORPSE_DEFINITION ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( ROTTING_CORPSE_DEFINITION ) )
+		if (!FileRead(hFile, &def, sizeof(ROTTING_CORPSE_DEFINITION)))
 		{
 			//Error Writing size of array to disk
 			FileClose( hFile );
@@ -2120,7 +2112,6 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 
 static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId)
 {
-	UINT32	uiNumBytesRead;
 	UINT8		ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
@@ -2152,8 +2143,7 @@ static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId)
 	FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
 
 	//Save the array to a temp file
-	FileRead( hFile, TempNpcQuote, uiSizeOfTempArray, &uiNumBytesRead );
-	if( uiNumBytesRead != uiSizeOfTempArray )
+	if (!FileRead(hFile, TempNpcQuote, uiSizeOfTempArray))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -2215,7 +2205,6 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	UINT32	uiNumberOfCorpses;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumBytesRead;
 	UINT32	uiNumBytesWritten;
 
 /*
@@ -2239,8 +2228,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 		}
 
 		// Load the number of Rotting corpses
-		FileRead( hFile, &uiNumberOfCorpses, sizeof( UINT32 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT32 ) )
+		if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
 		{
 			//Error Writing size of array to disk
 			FileClose( hFile );
@@ -2715,7 +2703,7 @@ BOOLEAN NewJA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 
 	const UINT8* pubRotationArray = GetRotationArray();
 
-	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead, NULL);
+	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead);
 	if ( fRet )
 	{
 		pMemBlock = pDest;
@@ -2787,7 +2775,7 @@ BOOLEAN JA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 	UINT8		ubLastByteForNextLoop;
 	UINT8 *	pMemBlock;
 
-	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead, NULL);
+	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead);
 	if ( fRet )
 	{
 		pMemBlock = pDest;

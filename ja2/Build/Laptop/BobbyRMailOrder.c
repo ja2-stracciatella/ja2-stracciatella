@@ -2355,15 +2355,13 @@ BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 {
 	INT32		iCnt;
-	UINT32	uiNumBytesRead;
 
 	//clear out the old list
 	ShutDownBobbyRNewMailOrders();
 
 
 	//Read the number of orders
-	FileRead( hFile, &giNumberOfNewBobbyRShipment, sizeof( INT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( INT32 ) )
+	if (!FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -2387,8 +2385,7 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 		{
 			//Read the order
-			FileRead( hFile, &gpNewBobbyrShipments[iCnt], sizeof( NewBobbyRayOrderStruct ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( NewBobbyRayOrderStruct ) )
+			if (!FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct)))
 			{
 				FileClose( hFile );
 				return( FALSE );

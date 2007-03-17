@@ -1410,7 +1410,6 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 
 BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
 	UNDERGROUND_SECTORINFO *TempNode = NULL;
@@ -1420,11 +1419,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 	TrashUndergroundSectorInfo();
 
 	//Read in the number of nodes stored
-	FileRead( hFile, &uiNumOfRecords, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, &uiNumOfRecords, sizeof(UINT32))) return FALSE;
 
 	for( cnt = 0; cnt< uiNumOfRecords; cnt ++)
 	{
@@ -1436,11 +1431,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 
 
 		//read in the new node
-		FileRead( hFile, TempNode, sizeof( UNDERGROUND_SECTORINFO ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UNDERGROUND_SECTORINFO ) )
-		{
-			return(FALSE);
-		}
+		if (!FileRead(hFile, TempNode, sizeof(UNDERGROUND_SECTORINFO))) return FALSE;
 
 		//If its the first time in, assign the node to the list
 		if( cnt == 0 )

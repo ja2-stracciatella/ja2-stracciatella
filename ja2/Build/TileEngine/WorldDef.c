@@ -2219,7 +2219,6 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	INT8 *pBuffer, *pBufferHead;
 	UINT32					uiFileSize;
 	UINT32 uiFlags;
-	UINT32 uiBytesRead;
 	INT32 cnt;
 	INT32 i;
 	INT32 iTilesetID;
@@ -2261,7 +2260,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	uiFileSize = FileGetSize( hfile );
 	pBuffer = (INT8*)MemAlloc( uiFileSize );
 	pBufferHead = pBuffer;
-	FileRead( hfile, pBuffer, uiFileSize, &uiBytesRead );
+	FileRead(hfile, pBuffer, uiFileSize);
 	FileClose( hfile );
 
 	swprintf(str, lengthof(str), L"Analyzing map %s", szFilename);
@@ -2616,7 +2615,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	HWFILE					hfile;
 	FLOAT						dMajorMapVersion;
 	UINT32					uiFlags;
-	UINT32					uiBytesRead;
 	UINT32					uiSoldierSize;
 	UINT32					uiFileSize;
 	UINT32					fp, offset;
@@ -2684,7 +2682,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	uiFileSize = FileGetSize( hfile );
 	pBuffer = (INT8*)MemAlloc( uiFileSize );
 	pBufferHead = pBuffer;
-	FileRead( hfile, pBuffer, uiFileSize, &uiBytesRead );
+	FileRead(hfile, pBuffer, uiFileSize);
 	FileClose( hfile );
 
 	// Read JA2 Version ID

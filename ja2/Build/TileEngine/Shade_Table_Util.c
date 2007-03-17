@@ -69,9 +69,9 @@ void DetermineRGBDistributionSettings()
 			{
 				AssertMsg( 0, "Couldn't open RGBDist.dat, even though it exists!" );
 			}
-			FileRead( hfile, &uiPrevRBitMask, sizeof( UINT32 ), &uiNumBytesRead );
-			FileRead( hfile, &uiPrevGBitMask, sizeof( UINT32 ), &uiNumBytesRead );
-			FileRead( hfile, &uiPrevBBitMask, sizeof( UINT32 ), &uiNumBytesRead );
+			FileRead(hfile, &uiPrevRBitMask, sizeof(UINT32));
+			FileRead(hfile, &uiPrevGBitMask, sizeof(UINT32));
+			FileRead(hfile, &uiPrevBBitMask, sizeof(UINT32));
 			fLoadedPrevRGBDist = TRUE;
 			FileClose( hfile );
 		}
@@ -122,7 +122,6 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
 	HWFILE hfile;
 	INT32 i;
-	UINT32 uiNumBytesRead;
 	UINT8 ShadeFileName[ 100 ];
 	UINT8 *ptr;
 	//ASSUMPTIONS:
@@ -150,7 +149,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	{
 		pObj->pShades[ i ] = MemAlloc( 512 );
 		Assert( pObj->pShades[ i ] );
-		FileRead( hfile, pObj->pShades[ i ], 512, &uiNumBytesRead );
+		FileRead(hfile, pObj->pShades[i], 512);
 	}
 
 	//The file exists, now make sure the

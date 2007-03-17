@@ -495,7 +495,7 @@ void FileClose( HWFILE hFile )
 	#include "Timer_Control.h"
 #endif
 
-BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiBytesRead )
+BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
 	FILE* hRealFile;
 	UINT32 dwNumBytesToRead, dwNumBytesRead;
@@ -523,9 +523,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
 			fRet = (fread(pDest, dwNumBytesToRead, 1, hRealFile) == 1);
-
-			if ( puiBytesRead )
-				*puiBytesRead = (UINT32)dwNumBytesToRead;
 		}
 	}
 	else
@@ -541,10 +538,6 @@ BOOLEAN FileRead( HWFILE hFile, PTR pDest, UINT32 uiBytesToRead, UINT32 *puiByte
 				{
 					//read the data from the library
 					fRet = LoadDataFromLibrary( sLibraryID, uiFileNum, pDest, dwNumBytesToRead, &dwNumBytesRead );
-					if ( puiBytesRead )
-					{
-						*puiBytesRead = (UINT32)dwNumBytesRead;
-					}
 				}
 			}
 		}

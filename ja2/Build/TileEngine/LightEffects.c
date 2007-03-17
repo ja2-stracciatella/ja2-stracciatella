@@ -290,7 +290,6 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 
 	//no longer need to load Light effects.  They are now in temp files
@@ -299,11 +298,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
 
 		//Load the Number of Light Effects
-		FileRead( hFile, &guiNumLightEffects, sizeof( UINT32 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT32 ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32))) return FALSE;
 
 		//if there are lights saved.
 		if( guiNumLightEffects != 0 )
@@ -312,11 +307,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 			for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
 			{
 				//Load the Light effect Data
-				FileRead( hFile, &gLightEffectData[ uiCount ], sizeof( LIGHTEFFECT ), &uiNumBytesRead );
-				if( uiNumBytesRead != sizeof( LIGHTEFFECT ) )
-				{
-					return( FALSE );
-				}
+				if (!FileRead(hFile, &gLightEffectData[uiCount], sizeof(LIGHTEFFECT))) return FALSE;
 			}
 		}
 
@@ -414,7 +405,6 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
@@ -435,8 +425,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 	//Load the Number of Light Effects
-	FileRead( hFile, &guiNumLightEffects, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -446,8 +435,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)
 	{
 		//Load the Light effect Data
-		FileRead( hFile, &gLightEffectData[ uiCnt ], sizeof( LIGHTEFFECT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( LIGHTEFFECT ) )
+		if (!FileRead(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT)))
 		{
 			FileClose( hFile );
 			return( FALSE );

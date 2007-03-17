@@ -639,7 +639,6 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
   INT8    bLevel;
@@ -651,21 +650,13 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
 
 		//Load the Number of Smoke Effects
-		FileRead( hFile, &guiNumSmokeEffects, sizeof( UINT32 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT32 ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32))) return FALSE;
 
 		//This is a TEMP hack to allow us to use the saves
 		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
 		{
 			//Load the Smoke effect Data
-			FileRead( hFile, gSmokeEffectData, sizeof( SMOKEEFFECT ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( SMOKEEFFECT ) )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(hFile, gSmokeEffectData, sizeof(SMOKEEFFECT))) return FALSE;
 		}
 
 
@@ -673,11 +664,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 		{
 			//Load the Smoke effect Data
-			FileRead( hFile, &gSmokeEffectData[ uiCnt ], sizeof( SMOKEEFFECT ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( SMOKEEFFECT ) )
-			{
-				return( FALSE );
-			}
+			if (!FileRead(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT))) return FALSE;
 			//This is a TEMP hack to allow us to use the saves
 			if( guiSaveGameVersion < 37 )
 				break;
@@ -788,7 +775,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	UINT32	uiNumBytesRead;
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
@@ -810,8 +796,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 	//Load the Number of Smoke Effects
-	FileRead( hFile, &guiNumSmokeEffects, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -821,8 +806,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 	{
 		//Load the Smoke effect Data
-		FileRead( hFile, &gSmokeEffectData[ uiCnt ], sizeof( SMOKEEFFECT ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( SMOKEEFFECT ) )
+		if (!FileRead(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT)))
 		{
 			FileClose( hFile );
 			return( FALSE );

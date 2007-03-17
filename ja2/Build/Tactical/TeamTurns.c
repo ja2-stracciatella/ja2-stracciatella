@@ -1999,23 +1999,13 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 
 BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
 	//Load the gubTurn Order Array
-	FileRead( hFile, gubOutOfTurnOrder, sizeof( UINT8 ) * MAXMERCS, &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT8 ) * MAXMERCS )
-	{
-		return( FALSE );
-	}
-
+	if (!FileRead(hFile, gubOutOfTurnOrder, sizeof(UINT8) * MAXMERCS)) return FALSE;
 
 	//Load the Team turn save structure
-	FileRead( hFile, &TeamTurnStruct, sizeof( TEAM_TURN_SAVE_STRUCT ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( TEAM_TURN_SAVE_STRUCT ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT))) return FALSE;
 
 	gubOutOfTurnPersons = TeamTurnStruct.ubOutOfTurnPersons;
 

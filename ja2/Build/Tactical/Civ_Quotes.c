@@ -846,13 +846,7 @@ BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
-
-	FileRead( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( gCivQuotes ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &gCivQuotes, sizeof(gCivQuotes))) return FALSE;
 
 	CopyNumEntriesIntoQuoteStruct( );
 

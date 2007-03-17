@@ -3733,43 +3733,24 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 
 BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 {
-	UINT32		uiNumBytesRead=0;
 	UINT32		uiSize = sizeof( StrategicMapElement ) * ( MAP_WORLD_X * MAP_WORLD_Y );
 
-
 	// Load the strategic map information
-	FileRead( hFile, StrategicMap, uiSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, StrategicMap, uiSize)) return FALSE;
 
 	// Load the Sector Info
 	uiSize = sizeof( SECTORINFO ) * 256;
-	FileRead( hFile, SectorInfo, uiSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, SectorInfo, uiSize)) return FALSE;
 
 	// Load the SAM Controlled Sector Information
 	uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
-	FileRead( hFile, ubSAMControlledSectors, uiSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileRead(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
 */
 	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
 
 	// Load the fFoundOrta
-	FileRead( hFile, &fFoundOrta, sizeof( BOOLEAN ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( BOOLEAN ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileRead(hFile, &fFoundOrta, sizeof(BOOLEAN))) return FALSE;
 
 	return( TRUE );
 }

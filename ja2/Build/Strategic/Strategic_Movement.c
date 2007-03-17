@@ -3524,7 +3524,6 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	GROUP	*pTemp=NULL;
 	UINT32	uiNumberOfGroups=0;
 //UINT32	uiNumBytesWritten=0;
-	UINT32	uiNumBytesRead=0;
 	UINT32	cnt;
 	UINT32 bit, index, mask;
 	UINT8  ubNumPlayerGroupsEmpty = 0;
@@ -3540,8 +3539,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 
 
 	//load the number of nodes in the list
-	FileRead( hFile, &uiNumberOfGroups, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfGroups, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3559,8 +3557,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 		memset( pTemp, 0, sizeof( GROUP ) );
 
 		//Read in the node
-		FileRead( hFile, pTemp, sizeof( GROUP ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( GROUP ) )
+		if (!FileRead(hFile, pTemp, sizeof(GROUP)))
 		{
 			//Error Writing size of L.L. to disk
 			return( FALSE );
@@ -3608,7 +3605,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	}
 
 	// Load the unique id mask
-	FileRead( hFile, uniqueIDMask, sizeof( UINT32 ) * 8, &uiNumBytesRead );
+	BOOLEAN Ret = FileRead(hFile, uniqueIDMask, sizeof(UINT32) * 8);
 
 	//@@@ TEMP!
 	//Rebuild the uniqueIDMask as a very old bug broke the uniqueID assignments in extremely rare cases.
@@ -3649,12 +3646,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 		pGroup = pGroup->next;
 	}
 
-	if( uiNumBytesRead != sizeof( UINT32 ) * 8 )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return Ret;
 }
 
 
@@ -3710,7 +3702,6 @@ BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 	PLAYERGROUP		*pHead=NULL;
 	UINT32	uiNumberOfNodes=0;
 	UINT32	uiProfileID=0;
-	UINT32	uiNumBytesRead;
 	UINT32	cnt=0;
 	INT16		sTempID;
 	GROUP		*pTempGroup = *pGroup;
@@ -3720,8 +3711,7 @@ BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 //	pHead = *pGroup->pPlayerList;
 
 	// Load the number of nodes in the player list
-	FileRead( hFile, &uiNumberOfNodes, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfNodes, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3738,8 +3728,7 @@ BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 
 
 		// Load the ubProfile ID for this node
-		FileRead( hFile, &uiProfileID, sizeof( UINT32 ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( UINT32 ) )
+		if (!FileRead(hFile, &uiProfileID, sizeof(UINT32)))
 		{
 			//Error Writing size of L.L. to disk
 			return( FALSE );
@@ -3796,7 +3785,6 @@ BOOLEAN SaveEnemyGroupStruct( HWFILE hFile, GROUP *pGroup )
 //Loads the enemy group struct from the saved game file
 BOOLEAN LoadEnemyGroupStructFromSavedGame( HWFILE hFile, GROUP *pGroup )
 {
-	UINT32	uiNumBytesRead = 0;
 	ENEMYGROUP *pEnemyGroup=NULL;
 
 	//Alllocate memory for the enemy struct
@@ -3806,8 +3794,7 @@ BOOLEAN LoadEnemyGroupStructFromSavedGame( HWFILE hFile, GROUP *pGroup )
 	memset( pEnemyGroup, 0, sizeof( ENEMYGROUP ) );
 
 	//Load the enemy struct
-	FileRead( hFile, pEnemyGroup, sizeof( ENEMYGROUP ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( ENEMYGROUP ) )
+	if (!FileRead(hFile, pEnemyGroup, sizeof(ENEMYGROUP)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3921,14 +3908,12 @@ BOOLEAN LoadWayPointList(HWFILE hFile, GROUP *pGroup )
 {
 	UINT32	cnt=0;
 	UINT32	uiNumberOfWayPoints=0;
-	UINT32	uiNumBytesRead=0;
 	WAYPOINT *pWayPoints = pGroup->pWaypoints;
 	WAYPOINT *pTemp=NULL;
 
 
 	//Load the number of waypoints
-	FileRead( hFile, &uiNumberOfWayPoints, sizeof( UINT32 ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( UINT32 ) )
+	if (!FileRead(hFile, &uiNumberOfWayPoints, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3947,8 +3932,7 @@ BOOLEAN LoadWayPointList(HWFILE hFile, GROUP *pGroup )
 			memset( pTemp, 0, sizeof( WAYPOINT ) );
 
 			//Load the waypoint node
-			FileRead( hFile, pTemp, sizeof( WAYPOINT ), &uiNumBytesRead );
-			if( uiNumBytesRead != sizeof( WAYPOINT ) )
+			if (!FileRead(hFile, pTemp, sizeof(WAYPOINT)))
 			{
 				//Error Writing size of L.L. to disk
 				return( FALSE );

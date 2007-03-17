@@ -25,8 +25,6 @@ void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 	UINT8 counter=0;
 	AUDIO_GAP *pCurrentGap, *pPreviousGap;
 	UINT32 Start;
-	UINT32	uiNumBytesRead;
-
 	UINT32 End;
 
 
@@ -62,7 +60,7 @@ void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 		 // now read in the AUDIO_GAPs
 
 		 //fread(&Start,sizeof(UINT32), 1, pFile);
-		 FileRead( pFile, &Start,sizeof(UINT32), &uiNumBytesRead );
+		FileRead(pFile, &Start, sizeof(UINT32));
 
 
 		//	while ( !feof(pFile) )
@@ -70,7 +68,7 @@ void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 			{
 				 // can read the first element, there exists a second
 					//fread(&End, sizeof(UINT32),1,pFile);
-				 FileRead( pFile, &End, sizeof(UINT32), &uiNumBytesRead );
+				FileRead(pFile, &End, sizeof(UINT32));
 
 				 // allocate space for AUDIO_GAP
 				 pCurrentGap = MemAlloc( sizeof(AUDIO_GAP) );
@@ -93,7 +91,7 @@ void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
 				 pPreviousGap=pCurrentGap;
 
 				//	fread(&Start,sizeof(UINT32), 1, pFile);
-				 FileRead( pFile, &Start, sizeof(UINT32), &uiNumBytesRead );
+				FileRead(pFile, &Start, sizeof(UINT32));
 			}
 
 			pGapList->audio_gap_active=FALSE;

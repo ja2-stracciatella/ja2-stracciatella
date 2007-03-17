@@ -172,13 +172,13 @@ void LoadExitGrids( INT8 **hBuffer )
 	UINT16 usMapIndex;
 	gfLoadingExitGrids = TRUE;
 	LOADDATA( &usNumSaved, *hBuffer, 2 );
-	//FileRead( hfile, &usNumSaved, 2, NULL);
+	//FileRead(hfile, &usNumSaved, 2);
 	for( x = 0; x < usNumSaved; x++ )
 	{
 		LOADDATA( &usMapIndex, *hBuffer, 2 );
-		//FileRead( hfile, &usMapIndex, 2, NULL);
+		//FileRead(hfile, &usMapIndex, 2);
 		LOADDATA( &exitGrid, *hBuffer, 5 );
-		//FileRead( hfile, &exitGrid, 5, NULL);
+		//FileRead(hfile, &exitGrid, 5);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;

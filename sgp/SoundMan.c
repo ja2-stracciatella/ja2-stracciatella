@@ -1000,8 +1000,8 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 		UINT32 Tag;
 		UINT32 Size;
 
-		if (!FileRead(hFile, &Tag, sizeof(Tag), NULL)) goto error_out;
-		if (!FileRead(hFile, &Size, sizeof(Size), NULL)) goto error_out;
+		if (!FileRead(hFile, &Tag, sizeof(Tag)))   goto error_out;
+		if (!FileRead(hFile, &Size, sizeof(Size))) goto error_out;
 
 		switch (Tag)
 		{
@@ -1011,12 +1011,12 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 				UINT32 Rate;
 				UINT16 BitsPerSample;
 
-				if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag),     NULL)) goto error_out;
-				if (!FileRead(hFile, &Channels,      sizeof(Channels),      NULL)) goto error_out;
-				if (!FileRead(hFile, &Rate,          sizeof(Rate),          NULL)) goto error_out;
-				if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT)) goto error_out;
-				if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign),    NULL)) goto error_out;
-				if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample), NULL)) goto error_out;
+				if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag)))     goto error_out;
+				if (!FileRead(hFile, &Channels,      sizeof(Channels)))      goto error_out;
+				if (!FileRead(hFile, &Rate,          sizeof(Rate)))          goto error_out;
+				if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT))            goto error_out;
+				if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    goto error_out;
+				if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) goto error_out;
 				SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, uiSample);
 				switch (FormatTag)
 				{
@@ -1038,7 +1038,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 			case FOURCC('f', 'a', 'c', 't'):
 			{
 				UINT32 Samples;
-				if (!FileRead(hFile, &Samples, sizeof(Samples), NULL)) goto error_out;
+				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
 				Sample->uiSoundSize = Samples * (Sample->fStereo ? 2 : 1) * 2;
 				break;
 			}
@@ -1051,7 +1051,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 					{
 						void* Data = malloc(Size);
 						if (Data == NULL) goto error_out;
-						if (!FileRead(hFile, Data, Size, NULL))
+						if (!FileRead(hFile, Data, Size))
 						{
 							free(Data);
 							goto error_out;
@@ -1072,10 +1072,10 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 						for (;;)
 						{
 							INT16 CurSample_;
-							if (!FileRead(hFile, &CurSample_, sizeof(CurSample_), NULL)) goto error_out;
+							if (!FileRead(hFile, &CurSample_, sizeof(CurSample_))) goto error_out;
 
 							UINT8 StepIndex_;
-							if (!FileRead(hFile, &StepIndex_, sizeof(StepIndex_), NULL)) goto error_out;
+							if (!FileRead(hFile, &StepIndex_, sizeof(StepIndex_))) goto error_out;
 
 							if (!FileSeek(hFile, 1 , FILE_SEEK_FROM_CURRENT)) goto error_out; // reserved byte
 
@@ -1094,7 +1094,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 							while (--DataCount != 0)
 							{
 								UINT32 DataWord;
-								if (!FileRead(hFile, &DataWord, sizeof(DataWord), NULL)) goto error_out;
+								if (!FileRead(hFile, &DataWord, sizeof(DataWord))) goto error_out;
 								for (uint i = 0; i < 8; i++)
 								{
 									static const INT16 StepTable[] =

@@ -3007,7 +3007,6 @@ void	InitAnimationSurfacesPerBodytype( )
 BOOLEAN LoadAnimationStateInstructions( )
 {
 		HWFILE		hFile;
-		UINT32		uiBytesRead;
 
 		// Open ani file
 	hFile = FileOpen(ANIMFILENAME, FILE_ACCESS_READ);
@@ -3018,10 +3017,7 @@ BOOLEAN LoadAnimationStateInstructions( )
 		}
 
 		//Read in block
-		if ( !FileRead( hFile, gusAnimInst, sizeof( gusAnimInst ), &uiBytesRead ) )
-		{
-			return( FALSE );
-		}
+		if (!FileRead(hFile, gusAnimInst, sizeof(gusAnimInst))) return FALSE;
 
 		FileClose( hFile );
 

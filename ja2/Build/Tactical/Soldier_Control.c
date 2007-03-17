@@ -5772,7 +5772,7 @@ BOOLEAN LoadPaletteData( )
 	hFile = FileOpen(PALETTEFILENAME, FILE_ACCESS_READ);
 
 	// Read # of types
-	if ( !FileRead( hFile, &guiNumPaletteSubRanges, sizeof( guiNumPaletteSubRanges ), NULL ) )
+	if (!FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges)))
 	{
 		return( FALSE );
 	}
@@ -5784,7 +5784,7 @@ BOOLEAN LoadPaletteData( )
 	// Read # of types for each!
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		if ( !FileRead( hFile, &gubpNumReplacementsPerRange[ cnt ], sizeof( UINT8 ), NULL ) )
+		if (!FileRead(hFile, &gubpNumReplacementsPerRange[cnt], sizeof(UINT8)))
 		{
 			return( FALSE );
 		}
@@ -5793,11 +5793,11 @@ BOOLEAN LoadPaletteData( )
 	// Loop for each one, read in data
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		if ( !FileRead( hFile, &gpPaletteSubRanges[ cnt ].ubStart, sizeof( UINT8 ), NULL ) )
+		if (!FileRead(hFile, &gpPaletteSubRanges[cnt].ubStart, sizeof(UINT8)))
 		{
 			return( FALSE );
 		}
-		if ( !FileRead( hFile, &gpPaletteSubRanges[ cnt ].ubEnd, sizeof( UINT8 ), NULL ) )
+		if (!FileRead(hFile, &gpPaletteSubRanges[cnt].ubEnd, sizeof(UINT8)))
 		{
 			return( FALSE );
 		}
@@ -5805,7 +5805,7 @@ BOOLEAN LoadPaletteData( )
 
 
 	// Read # of palettes
-	if ( !FileRead( hFile, &guiNumReplacements, sizeof( guiNumReplacements ), NULL ) )
+	if (!FileRead(hFile, &guiNumReplacements, sizeof(guiNumReplacements)))
 	{
 		return( FALSE );
 	}
@@ -5817,18 +5817,18 @@ BOOLEAN LoadPaletteData( )
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
 	{
 		// type
-		if ( !FileRead( hFile, &gpPalRep[ cnt ].ubType, sizeof( gpPalRep[ cnt ].ubType ), NULL ) )
+		if (!FileRead(hFile, &gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType)))
 		{
 			return( FALSE );
 		}
 
-		if ( !FileRead( hFile, &gpPalRep[ cnt ].ID, sizeof( gpPalRep[ cnt ].ID ), NULL ) )
+		if (!FileRead(hFile, &gpPalRep[cnt].ID, sizeof(gpPalRep[cnt].ID)))
 		{
 			return( FALSE );
 		}
 
 		// # entries
-		if ( !FileRead( hFile, &gpPalRep[ cnt ].ubPaletteSize, sizeof( gpPalRep[ cnt ].ubPaletteSize ), NULL ) )
+		if (!FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize)))
 		{
 			return( FALSE );
 		}
@@ -5843,15 +5843,15 @@ BOOLEAN LoadPaletteData( )
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
-			if ( !FileRead( hFile, &gpPalRep[ cnt ].r[ cnt2 ], sizeof( UINT8 ), NULL ) )
+			if (!FileRead(hFile, &gpPalRep[cnt].r[cnt2], sizeof(UINT8)))
 			{
 				return( FALSE );
 			}
-			if ( !FileRead( hFile, &gpPalRep[ cnt ].g[ cnt2 ], sizeof( UINT8 ), NULL ) )
+			if (!FileRead(hFile, &gpPalRep[cnt].g[cnt2], sizeof(UINT8)))
 			{
 				return( FALSE );
 			}
-			if ( !FileRead( hFile, &gpPalRep[ cnt ].b[ cnt2 ], sizeof( UINT8 ), NULL ) )
+			if (!FileRead(hFile, &gpPalRep[cnt].b[cnt2], sizeof(UINT8)))
 			{
 				return( FALSE );
 			}

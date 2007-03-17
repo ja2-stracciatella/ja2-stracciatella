@@ -51,8 +51,6 @@ void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 BOOLEAN LoadGameSettings()
 {
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
-
 
 	//if the game settings file does NOT exist, or if it is smaller then what it should be
 	if( !FileExists( GAME_SETTINGS_FILE ) || FileSize( GAME_SETTINGS_FILE ) != sizeof( GAME_SETTINGS ) )
@@ -72,8 +70,7 @@ BOOLEAN LoadGameSettings()
 			return(FALSE);
 		}
 
-		FileRead( hFile, &gGameSettings, sizeof( GAME_SETTINGS ), &uiNumBytesRead );
-		if( uiNumBytesRead != sizeof( GAME_SETTINGS ) )
+		if (!FileRead(hFile, &gGameSettings, sizeof(GAME_SETTINGS)))
 		{
 			FileClose( hFile );
 			InitGameSettings();

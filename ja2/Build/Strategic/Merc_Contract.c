@@ -109,19 +109,9 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesRead;
+	if (!FileRead(hFile, ContractRenewalList, sizeof(ContractRenewalList))) return FALSE;
 
-	FileRead( hFile, ContractRenewalList, sizeof( ContractRenewalList ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( ContractRenewalList ) )
-	{
-		return( FALSE );
-	}
-
-	FileRead( hFile, &ubNumContractRenewals, sizeof( ubNumContractRenewals ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( ubNumContractRenewals ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals))) return FALSE;
 
   return( TRUE );
 }

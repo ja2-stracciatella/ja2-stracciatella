@@ -92,7 +92,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
 	UINT32	uiFileSize;
 	UINT32	uiNumberOfElements;
 	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
@@ -139,8 +138,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	}
 
 	//Read the map temp file into a buffer
-	FileRead( hFile, pTempArrayOfMaps, uiFileSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiFileSize )
+	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -615,9 +613,6 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
-
-
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -651,11 +646,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 
 
 	// Load the Reveal map array structure
-	FileRead( hFile, gpRevealedMap, NUM_REVEALED_BYTES, &uiNumBytesRead );
-	if( uiNumBytesRead != NUM_REVEALED_BYTES )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
 
 	FileClose( hFile );
 
@@ -932,8 +923,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	}
 
 	//Read the map temp file into a buffer
-	FileRead( hFile, pTempArrayOfMaps, uiFileSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiFileSize )
+	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -1125,8 +1115,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Read the map temp file into a buffer
-	FileRead( hFile, pTempArrayOfMaps, uiFileSize, &uiNumBytesRead );
-	if( uiNumBytesRead != uiFileSize )
+	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
 	{
 		FileClose( hFile );
 		return( FALSE );

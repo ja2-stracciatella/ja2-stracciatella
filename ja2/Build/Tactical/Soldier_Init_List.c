@@ -1862,27 +1862,14 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 {
-	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	FileRead( hfile, &ubSlots, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
-	{
-		return FALSE;
-	}
+	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
 	while( ubSlots-- )
 	{
-		FileRead( hfile, &ubNodeID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
-		FileRead( hfile, &ubSoldierID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
+		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
+		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -2230,27 +2217,14 @@ BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
 
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 {
-	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	FileRead( hfile, &ubSlots, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
-	{
-		return FALSE;
-	}
+	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
 	while( ubSlots-- )
 	{
-		FileRead( hfile, &ubNodeID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
-		FileRead( hfile, &ubSoldierID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
+		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
+		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -2276,27 +2250,14 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 {
-	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	FileRead( hfile, &ubSlots, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
-	{
-		return FALSE;
-	}
+	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
 	while( ubSlots-- )
 	{
-		FileRead( hfile, &ubNodeID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
-		FileRead( hfile, &ubSoldierID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
+		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
+		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -2322,27 +2283,14 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 
 BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 {
-	UINT32 uiNumBytesRead;
 	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	FileRead( hfile, &ubSlots, 1, &uiNumBytesRead );
-	if( uiNumBytesRead != 1 )
-	{
-		return FALSE;
-	}
+	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
 	while( ubSlots-- )
 	{
-		FileRead( hfile, &ubNodeID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
-		FileRead( hfile, &ubSoldierID, 1, &uiNumBytesRead );
-		if( uiNumBytesRead != 1 )
-		{
-			return FALSE;
-		}
+		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
+		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{

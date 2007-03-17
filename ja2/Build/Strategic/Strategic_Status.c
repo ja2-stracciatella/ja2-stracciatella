@@ -41,14 +41,8 @@ BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
 {
-	UINT32	 uiNumBytesRead;
-
 	//Load the Strategic Status structure from the saved game file
-	FileRead( hFile, &gStrategicStatus, sizeof( STRATEGIC_STATUS ), &uiNumBytesRead );
-	if( uiNumBytesRead != sizeof( STRATEGIC_STATUS ) )
-	{
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS))) return FALSE;
 
 	return( TRUE );
 }
