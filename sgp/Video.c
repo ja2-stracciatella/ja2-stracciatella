@@ -426,12 +426,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
-			// memset z-buffer
-			for(uiCountY = gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, sScrollXIncrement * 2);
-			}
-
 			StripRegions[0].iRight = gsVIEWPORT_START_X + sScrollXIncrement;
 			usNumStrips = 1;
 			break;
@@ -444,20 +438,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.x = 0;
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			// memset z-buffer
-			for(uiCountY= gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH + gsVIEWPORT_END_X - sScrollXIncrement, 0, sScrollXIncrement * 2);
-			}
-
-
-			//for(uiCountY=0; uiCountY < usHeight; uiCountY++)
-			//{
-			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-			//					pSrcBuf+(uiCountY*uiDestPitchBYTES)+sScrollXIncrement*uiBPP,
-			//					uiDestPitchBYTES-sScrollXIncrement*uiBPP);
-			//}
 
 			StripRegions[0].iLeft = gsVIEWPORT_END_X - sScrollXIncrement;
 			usNumStrips = 1;
@@ -472,17 +452,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
-			for(uiCountY=sScrollYIncrement-1+gsVIEWPORT_WINDOW_START_Y; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
-
-			//for(uiCountY=usHeight-1; uiCountY >= sScrollYIncrement; uiCountY--)
-			//{
-			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-			//					pSrcBuf+((uiCountY-sScrollYIncrement)*uiDestPitchBYTES),
-			//					uiDestPitchBYTES);
-			//}
 			StripRegions[0].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			usNumStrips = 1;
 			break;
@@ -496,19 +465,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
-			// Zero out z
-			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement ); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
-
-			//for(uiCountY=0; uiCountY < (usHeight-sScrollYIncrement); uiCountY++)
-			//{
-			//	memcpy(pDestBuf+(uiCountY*uiDestPitchBYTES),
-			//					pSrcBuf+((uiCountY+sScrollYIncrement)*uiDestPitchBYTES),
-			//					uiDestPitchBYTES);
-			//}
-
 			StripRegions[0].iTop = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
 			usNumStrips = 1;
 			break;
@@ -521,16 +477,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.x = sScrollXIncrement;
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			// memset z-buffer
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, sScrollXIncrement * 2);
-			}
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
 
 			StripRegions[0].iRight  = gsVIEWPORT_START_X        + sScrollXIncrement;
 			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
@@ -547,16 +493,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
-			// memset z-buffer
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH + gsVIEWPORT_END_X - sScrollXIncrement, 0, sScrollXIncrement * 2);
-			}
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement-1; uiCountY >= gsVIEWPORT_WINDOW_START_Y; uiCountY--)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
-
 			StripRegions[0].iLeft   = gsVIEWPORT_END_X          - sScrollXIncrement;
 			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
 			StripRegions[1].iRight  = gsVIEWPORT_END_X          - sScrollXIncrement;
@@ -571,16 +507,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.x = sScrollXIncrement;
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			// memset z-buffer
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, sScrollXIncrement * 2);
-			}
-			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
 
 			StripRegions[0].iRight = gsVIEWPORT_START_X      + sScrollXIncrement;
 			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
@@ -597,16 +523,6 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
 			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
-			// memset z-buffer
-			for(uiCountY=gsVIEWPORT_WINDOW_START_Y; uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH + gsVIEWPORT_END_X - sScrollXIncrement, 0, sScrollXIncrement * 2);
-			}
-			for(uiCountY=(gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement); uiCountY < gsVIEWPORT_WINDOW_END_Y; uiCountY++)
-			{
-				memset(gpZBuffer + uiCountY * SCREEN_WIDTH, 0, SCREEN_WIDTH * 2);
-			}
-
 			StripRegions[0].iLeft  = gsVIEWPORT_END_X        - sScrollXIncrement;
 			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
 			StripRegions[1].iRight = gsVIEWPORT_END_X        - sScrollXIncrement;
@@ -621,6 +537,15 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 
 	for ( cnt = 0; cnt < usNumStrips; cnt++ )
 	{
+		UINT x = StripRegions[cnt].iLeft;
+		UINT y = StripRegions[cnt].iTop;
+		UINT w = StripRegions[cnt].iRight - StripRegions[cnt].iLeft;
+		UINT b = StripRegions[cnt].iBottom;
+		for (; y < b; y++)
+		{
+			memset(gpZBuffer + y * SCREEN_WIDTH + x, 0, w * sizeof(*gpZBuffer));
+		}
+
 		RenderStaticWorldRect(StripRegions[cnt].iLeft, StripRegions[cnt].iTop, StripRegions[cnt].iRight, StripRegions[cnt].iBottom, TRUE);
 
 		SrcRect.x = StripRegions[cnt].iLeft;
