@@ -62,8 +62,6 @@ static HHOOK ghMouseHook;
 
 LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
 {
-  UINT32 uiParam;
-
   if (Code < 0)
   { // Do not handle this message, pass it on to another window
     return CallNextHookEx(ghMouseHook, Code, wParam, lParam);
@@ -75,49 +73,37 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
     : // Update the current mouse position
       gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
       gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
-      uiParam = gusMouseYPos;
-      uiParam = uiParam << 16;
-      uiParam = uiParam | gusMouseXPos;
       // Update the button state
 			gfLeftButtonState = TRUE;
       // Trigger an input event
-      QueueEvent(LEFT_BUTTON_DOWN, 0, uiParam);
+      QueueEvent(LEFT_BUTTON_DOWN, 0);
 	    break;
     case WM_LBUTTONUP
     : // Update the current mouse position
       gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
       gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
-      uiParam = gusMouseYPos;
-      uiParam = uiParam << 16;
-      uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfLeftButtonState = FALSE;
       // Trigger an input event
-      QueueEvent(LEFT_BUTTON_UP, 0, uiParam);
+      QueueEvent(LEFT_BUTTON_UP, 0);
       break;
     case WM_RBUTTONDOWN
     : // Update the current mouse position
       gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
       gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
-      uiParam = gusMouseYPos;
-      uiParam = uiParam << 16;
-      uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfRightButtonState = TRUE;
       // Trigger an input event
-      QueueEvent(RIGHT_BUTTON_DOWN, 0, uiParam);
+      QueueEvent(RIGHT_BUTTON_DOWN, 0);
       break;
     case WM_RBUTTONUP
     : // Update the current mouse position
       gusMouseXPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).x;
       gusMouseYPos = (UINT16)(((MOUSEHOOKSTRUCT *)lParam)->pt).y;
-      uiParam = gusMouseYPos;
-      uiParam = uiParam << 16;
-      uiParam = uiParam | gusMouseXPos;
       // Update the button state
       gfRightButtonState = FALSE;
       // Trigger an input event
-      QueueEvent(RIGHT_BUTTON_UP, 0, uiParam);
+      QueueEvent(RIGHT_BUTTON_UP, 0);
       break;
     case WM_MOUSEMOVE
     : // Update the current mouse position
@@ -181,7 +167,7 @@ void ShutdownInputManager(void)
 }
 
 
-void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
+void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 {
   UINT32 uiTimer;
   UINT16 usKeyState;
@@ -227,7 +213,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
 				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState;
 				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_UP;
 				gEventQueue[gusTailIndex].usParam = usParam;
-				gEventQueue[gusTailIndex].uiParam = uiParam;
 
 				// Increment the number of items on the input queue
 				gusQueueCount++;
@@ -248,7 +233,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
 				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState ;
 				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_DBL_CLK;
 				gEventQueue[gusTailIndex].usParam = usParam;
-				gEventQueue[gusTailIndex].uiParam = uiParam;
 
 				// Increment the number of items on the input queue
 				gusQueueCount++;
@@ -277,7 +261,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
   gEventQueue[gusTailIndex].usKeyState = usKeyState;
   gEventQueue[gusTailIndex].usEvent = ubInputEvent;
   gEventQueue[gusTailIndex].usParam = usParam;
-  gEventQueue[gusTailIndex].uiParam = uiParam;
 
   // Increment the number of items on the input queue
   gusQueueCount++;
@@ -351,8 +334,6 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 {
   UINT32 ubKey;
   UINT16 ubChar;
-  POINT  MousePos;
-  UINT32 uiTmpLParam;
 
 #if 1 // XXX HACK0008
 	SDLKey Key = KeySym->sym;
@@ -438,20 +419,17 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
   }
 #endif
 
-  GetCursorPos(&MousePos);
-  uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
-
   if (Pressed)
   { // Key has been PRESSED
     // Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
     if (gfKeyState[ubKey] == FALSE)
     { // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = TRUE;
-			QueueEvent(KEY_DOWN, ubChar, uiTmpLParam);
+			QueueEvent(KEY_DOWN, ubChar);
     }
     else
     { // Well the key gets repeated
-			QueueEvent(KEY_REPEAT, ubChar, uiTmpLParam);
+			QueueEvent(KEY_REPEAT, ubChar);
     }
   }
   else
@@ -460,7 +438,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
     if (gfKeyState[ubKey] == TRUE)
     { // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
       gfKeyState[ubKey] = FALSE;
-      QueueEvent(KEY_UP, ubChar, uiTmpLParam);
+      QueueEvent(KEY_UP, ubChar);
     }
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed
@@ -686,12 +664,7 @@ static void HandleSingleClicksAndButtonRepeats(void)
   {
     if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
     {
-      UINT32 uiTmpLParam;
-      POINT  MousePos;
-
-      GetCursorPos(&MousePos);
-      uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
-      QueueEvent(LEFT_BUTTON_REPEAT, 0, uiTmpLParam);
+      QueueEvent(LEFT_BUTTON_REPEAT, 0);
       guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
     }
   }
@@ -706,12 +679,7 @@ static void HandleSingleClicksAndButtonRepeats(void)
   {
     if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
     {
-      UINT32 uiTmpLParam;
-      POINT  MousePos;
-
-      GetCursorPos(&MousePos);
-      uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
-      QueueEvent(RIGHT_BUTTON_REPEAT, 0, uiTmpLParam);
+      QueueEvent(RIGHT_BUTTON_REPEAT, 0);
       guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
     }
   }

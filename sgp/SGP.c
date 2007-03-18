@@ -48,7 +48,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
   {
 		case WM_MOUSEWHEEL:
 			{
-				QueueEvent(MOUSE_WHEEL, wParam, lParam);
+				QueueEvent(MOUSE_WHEEL, wParam);
 				break;
 			}
 
@@ -325,48 +325,38 @@ int main(int argc, char* argv[])
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
 
 				case SDL_MOUSEBUTTONDOWN:
-				{
-					UINT32 pos = event.button.y << 16 | event.button.x;
-
 					gusMouseXPos = event.button.x;
 					gusMouseYPos = event.button.y;
-
 					switch (event.button.button)
 					{
 						case SDL_BUTTON_LEFT:
 							gfLeftButtonState = TRUE;
-							QueueEvent(LEFT_BUTTON_DOWN, 0, pos);
+							QueueEvent(LEFT_BUTTON_DOWN, 0);
 							break;
 
 						case SDL_BUTTON_RIGHT:
 							gfRightButtonState = TRUE;
-							QueueEvent(RIGHT_BUTTON_DOWN, 0, pos);
+							QueueEvent(RIGHT_BUTTON_DOWN, 0);
 							break;
 					}
 					break;
-				}
 
 				case SDL_MOUSEBUTTONUP:
-				{
-					UINT32 pos = event.button.y << 16 | event.button.x;
-
 					gusMouseXPos = event.button.x;
 					gusMouseYPos = event.button.y;
-
 					switch (event.button.button)
 					{
 						case SDL_BUTTON_LEFT:
 							gfLeftButtonState = FALSE;
-							QueueEvent(LEFT_BUTTON_UP, 0, pos);
+							QueueEvent(LEFT_BUTTON_UP, 0);
 							break;
 
 						case SDL_BUTTON_RIGHT:
 							gfRightButtonState = FALSE;
-							QueueEvent(RIGHT_BUTTON_UP, 0, pos);
+							QueueEvent(RIGHT_BUTTON_UP, 0);
 							break;
 					}
 					break;
-				}
 
 				case SDL_MOUSEMOTION:
 					gusMouseXPos = event.motion.x;

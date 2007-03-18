@@ -36,13 +36,7 @@ typedef struct
   UINT16 usKeyState;
   UINT16 usEvent;
   UINT32 usParam;
-  UINT32 uiParam;
-
 } InputAtom;
-
-//Mouse pos extracting macros from InputAtom
-#define GETYPOS(a) HIWORD(((a)->uiParam))
-#define GETXPOS(a) LOWORD(((a)->uiParam))
 
 
 #ifdef __cplusplus
@@ -52,7 +46,7 @@ extern "C" {
 extern BOOLEAN			InitializeInputManager(void);
 extern void					ShutdownInputManager(void);
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
-extern void					QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
+void QueueEvent(UINT16 ubInputEvent, UINT32 usParam);
 
 void KeyDown(const SDL_keysym*);
 void KeyUp(  const SDL_keysym*);
@@ -94,8 +88,6 @@ extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 #define _EvType(a)         ((InputAtom *)(a))->usEvent
 #define _EvTimeStamp(a)    ((InputAtom *)(a))->uiTimeStamp
 #define _EvKey(a)          ((InputAtom *)(a))->usParam
-#define _EvMouseX(a)       (UINT16)(((InputAtom *)(a))->uiParam & 0x0000ffff)
-#define _EvMouseY(a)       (UINT16)((((InputAtom *)(a))->uiParam & 0xffff0000) >> 16)
 #define _EvShiftDown(a)    (((InputAtom *)(a))->usKeyState & SHIFT_DOWN)
 #define _EvCtrlDown(a)     (((InputAtom *)(a))->usKeyState & CTRL_DOWN)
 #define _EvAltDown(a)      (((InputAtom *)(a))->usKeyState & ALT_DOWN)
