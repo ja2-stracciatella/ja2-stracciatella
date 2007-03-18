@@ -149,14 +149,13 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 	EXITGRID exitGrid;
 	UINT16 usNumSaved = 0;
 	UINT16 x;
-	UINT32	uiBytesWritten;
-	FileWrite( fp, &usNumExitGrids, 2, &uiBytesWritten );
+	FileWrite(fp, &usNumExitGrids, 2);
 	for( x = 0; x < WORLD_MAX; x++ )
 	{
 		if( GetExitGrid( x, &exitGrid ) )
 		{
-			FileWrite( fp, &x, 2, &uiBytesWritten );
-			FileWrite( fp, &exitGrid, 5, &uiBytesWritten );
+			FileWrite(fp, &x, 2);
+			FileWrite(fp, &exitGrid, 5);
 			usNumSaved++;
 		}
 	}

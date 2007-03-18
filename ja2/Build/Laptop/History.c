@@ -677,13 +677,13 @@ BOOLEAN OpenAndWriteHistoryFile( void )
 		#endif
 
     	// now write date and amount, and code
-    FileWrite( hFileHandle, &(pHistoryList->ubCode ),  sizeof ( UINT8 ), NULL );
-    FileWrite( hFileHandle, &(pHistoryList->ubSecondCode ),  sizeof ( UINT8 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->uiDate ),  sizeof ( UINT32 ), NULL );
-    FileWrite( hFileHandle, &(pHistoryList->sSectorX ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->sSectorY ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->bSectorZ ),  sizeof ( INT8 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->ubColor ),  sizeof ( UINT8 ), NULL );
+		FileWrite(hFileHandle, &pHistoryList->ubCode,       sizeof(UINT8));
+		FileWrite(hFileHandle, &pHistoryList->ubSecondCode, sizeof(UINT8));
+		FileWrite(hFileHandle, &pHistoryList->uiDate,       sizeof(UINT32));
+		FileWrite(hFileHandle, &pHistoryList->sSectorX,     sizeof(INT16));
+		FileWrite(hFileHandle, &pHistoryList->sSectorY,     sizeof(INT16));
+		FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
+		FileWrite(hFileHandle, &pHistoryList->ubColor,      sizeof(UINT8));
 
 		// next element in list
 		pHistoryList = pHistoryList->Next;
@@ -1334,13 +1334,13 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 		PerformCheckOnHistoryRecord( 4, pList->sSectorX, pList->sSectorY, pList->bSectorZ );
 		#endif
 
-		FileWrite( hFileHandle, &(pList->ubCode ),  sizeof ( UINT8 ), NULL );
-    FileWrite( hFileHandle, &(pList->ubSecondCode ),  sizeof ( UINT8 ), NULL );
-		FileWrite( hFileHandle, &(pList->uiDate ),  sizeof ( UINT32 ), NULL );
-    FileWrite( hFileHandle, &(pList->sSectorX ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pList->sSectorY ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pList->bSectorZ ),  sizeof ( INT8 ), NULL );
-		FileWrite( hFileHandle, &(pList->ubColor ),  sizeof ( UINT8 ), NULL );
+		FileWrite(hFileHandle, &pList->ubCode,       sizeof(UINT8));
+		FileWrite(hFileHandle, &pList->ubSecondCode, sizeof(UINT8));
+		FileWrite(hFileHandle, &pList->uiDate,       sizeof(UINT32));
+		FileWrite(hFileHandle, &pList->sSectorX,     sizeof(INT16));
+		FileWrite(hFileHandle, &pList->sSectorY,     sizeof(INT16));
+		FileWrite(hFileHandle, &pList->bSectorZ,     sizeof(INT8));
+		FileWrite(hFileHandle, &pList->ubColor,      sizeof(UINT8));
 
 		pList = pList->Next;
 
@@ -1516,14 +1516,13 @@ BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
 
 
 	 	// now write date and amount, and code
-    FileWrite( hFileHandle, &(pHistoryList->ubCode ),  sizeof ( UINT8 ), NULL );
-    FileWrite( hFileHandle, &(pHistoryList->ubSecondCode ),  sizeof ( UINT8 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->uiDate ),  sizeof ( UINT32 ), NULL );
-    FileWrite( hFileHandle, &(pHistoryList->sSectorX ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->sSectorY ),  sizeof ( INT16 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->bSectorZ ),  sizeof ( INT8 ), NULL );
-		FileWrite( hFileHandle, &(pHistoryList->ubColor ),  sizeof ( UINT8 ), NULL );
-
+	FileWrite(hFileHandle, &pHistoryList->ubCode,       sizeof(UINT8));
+	FileWrite(hFileHandle, &pHistoryList->ubSecondCode, sizeof(UINT8));
+	FileWrite(hFileHandle, &pHistoryList->uiDate,       sizeof(UINT32));
+	FileWrite(hFileHandle, &pHistoryList->sSectorX,     sizeof(INT16));
+	FileWrite(hFileHandle, &pHistoryList->sSectorY,     sizeof(INT16));
+	FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
+	FileWrite(hFileHandle, &pHistoryList->ubColor,      sizeof(UINT8));
 
 		// close file
   FileClose( hFileHandle );

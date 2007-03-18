@@ -3290,7 +3290,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	static BOOLEAN	fFirstTimeIn = TRUE;
 
 	HWFILE		hFile;
-	UINT32		uiByteWritten;
   char			DestString[1024];
 //	char			MercName[ NICKNAME_LENGTH ];
 //	char			NpcName[ NICKNAME_LENGTH ];
@@ -3345,7 +3344,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%S' against Merc: %d '%S'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
 //	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
 
-	if( !FileWrite( hFile, DestString, strlen(DestString), &uiByteWritten ) )
+	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
@@ -3356,7 +3355,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	sprintf( DestString, "\n\tTesting Record #: %d", ubQuoteNum );
 
 	//append to file
-	if( !FileWrite( hFile, DestString, strlen(DestString), &uiByteWritten ) )
+	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
@@ -3372,7 +3371,6 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 //	static UINT32		uiLineNumber = 1;
 //	static UINT32		uiRecordNumber = 1;
 	HWFILE		hFile;
-	UINT32		uiByteWritten;
   va_list		argptr;
   char		TempString[1024];
   char		DestString[1024];
@@ -3412,7 +3410,7 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	sprintf( DestString, "\n\t\t%s", TempString );
 
 	//append to file
-	if( !FileWrite( hFile, DestString, strlen(DestString), &uiByteWritten ) )
+	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );

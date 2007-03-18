@@ -196,7 +196,6 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 BOOLEAN SaveSoldiersToMap( HWFILE fp )
 {
 	UINT32 i;
-	UINT32 uiBytesWritten;
 	SOLDIERINITNODE *curr;
 
 	if( !fp )
@@ -223,14 +222,13 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		if( !curr )
 			return FALSE;
 		curr->ubNodeID = (UINT8)i;
-		FileWrite( fp, curr->pBasicPlacement, sizeof( BASIC_SOLDIERCREATE_STRUCT ), &uiBytesWritten );
+		FileWrite(fp, curr->pBasicPlacement, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 
 		if( curr->pBasicPlacement->fDetailedPlacement )
 		{
 			if( !curr->pDetailedPlacement )
 				return FALSE;
-			FileWrite( fp, curr->pDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiBytesWritten );
-
+			FileWrite(fp, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT));
 		}
 		curr = curr->next;
 	}
@@ -1821,7 +1819,6 @@ void RemoveDetailedPlacementInfo( UINT8 ubNodeID )
 BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 {
 	SOLDIERINITNODE *curr;
-	UINT32 uiNumBytesWritten;
 	UINT8 ubSlots = 0;
 
 	//count the number of soldier init nodes...
@@ -1832,11 +1829,7 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 		curr = curr->next;
 	}
 	//...and save it.
-	FileWrite( hfile, &ubSlots, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-	{
-		return FALSE;
-	}
+	if (!FileWrite(hfile, &ubSlots, 1)) return FALSE;
 	//Now, go through each node, and save just the ubSoldierID, if that soldier is alive.
 	curr = gSoldierInitHead;
 	while( curr )
@@ -1845,16 +1838,8 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 		{
 			curr->ubSoldierID = 0;
 		}
-		FileWrite( hfile, &curr->ubNodeID, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
-		{
-			return FALSE;
-		}
-		FileWrite( hfile, &curr->ubSoldierID, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
-		{
-			return FALSE;
-		}
+		if (!FileWrite(hfile, &curr->ubNodeID, 1)) return FALSE;
+		if (!FileWrite(hfile, &curr->ubSoldierID, 1)) return FALSE;
 		curr = curr->next;
 	}
 	return TRUE;

@@ -3157,7 +3157,6 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 
 BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
 	UINT32	uiExplosionCount=0;
 	UINT32	uiCnt;
 
@@ -3168,8 +3167,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 
 	//Write the number of explosion queues
-	FileWrite( hFile, &gubElementsOnExplosionQueue, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -3179,8 +3177,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	//loop through and add all the explosions
 	for( uiCnt=0; uiCnt< MAX_BOMB_QUEUE; uiCnt++)
 	{
-		FileWrite( hFile, &gExplosionQueue[ uiCnt ], sizeof( ExplosionQueueElement ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( ExplosionQueueElement ) )
+		if (!FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement)))
 		{
 			FileClose( hFile );
 			return( FALSE );
@@ -3203,8 +3200,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	}
 
 	//Save the number of explosions
-	FileWrite( hFile, &uiExplosionCount, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiExplosionCount, sizeof(UINT32)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -3217,8 +3213,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	{
 		if( gExplosionData[ uiCnt ].fAllocated )
 		{
-			FileWrite( hFile, &gExplosionData[ uiCnt ], sizeof( EXPLOSIONTYPE ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( EXPLOSIONTYPE ) )
+			if (!FileWrite(hFile, &gExplosionData[uiCnt], sizeof(EXPLOSIONTYPE)))
 			{
 				FileClose( hFile );
 				return( FALSE );

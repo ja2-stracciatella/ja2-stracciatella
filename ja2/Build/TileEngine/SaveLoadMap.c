@@ -49,7 +49,6 @@ BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, IN
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten;
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
@@ -71,8 +70,7 @@ BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, IN
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 
-	FileWrite( hFile, pMap, sizeof( MODIFY_MAP ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( MODIFY_MAP ) )
+	if (!FileWrite(hFile, pMap, sizeof(MODIFY_MAP)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -565,7 +563,6 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten;
 
 	Assert( gpRevealedMap != NULL );
 
@@ -588,8 +585,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 
 	//Write the revealed array to the Revealed temp file
-	FileWrite( hFile, gpRevealedMap, NUM_REVEALED_BYTES, &uiNumBytesWritten );
-	if( uiNumBytesWritten != NUM_REVEALED_BYTES )
+	if (!FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -876,7 +872,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
 	MODIFY_MAP *pTempArrayOfMaps=NULL;
 	MODIFY_MAP *pMap;
 	UINT32	uiFileSize;
@@ -1069,8 +1064,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 //	MODIFY_MAP Map;
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesRead;
-	UINT32	uiNumBytesWritten;
 	UINT32	uiFileSize;
 	UINT32	uiNumberOfElements;
 	UINT32	cnt;
@@ -1157,8 +1150,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Write the map temp file into a buffer
-	FileWrite( hFile, pTempArrayOfMaps, uiFileSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiFileSize )
+	if (!FileWrite(hFile, pTempArrayOfMaps, uiFileSize))
 	{
 		FileClose( hFile );
 		return( FALSE );

@@ -7115,7 +7115,6 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 {
 	UINT32	uiSaveSize=0;
-	UINT32	uiNumBytesWritten=0;
 
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
@@ -7148,11 +7147,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 
 	// save locations of watched points
 	uiSaveSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	FileWrite( hFile, &SaveStruct, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &SaveStruct, uiSaveSize)) return FALSE;
 
 	// All done...
 

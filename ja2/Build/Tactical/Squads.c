@@ -1056,7 +1056,6 @@ void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX
 BOOLEAN SaveSquadInfoToSavedGameFile( HWFILE hFile )
 {
 	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
-	UINT32	uiNumBytesWritten = 0;
 	UINT32	uiSaveSize=0;
 	//Reset the current squad info
 	INT32 iCounterB = 0;
@@ -1077,21 +1076,10 @@ BOOLEAN SaveSquadInfoToSavedGameFile( HWFILE hFile )
 	//Save the squad info to the Saved Game File
 	uiSaveSize = sizeof( SAVE_SQUAD_INFO_STRUCT ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD;
 
-	FileWrite( hFile, sSquadSaveStruct, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, sSquadSaveStruct, uiSaveSize)) return FALSE;
 
 	//Save all the squad movement id's
-	FileWrite( hFile, SquadMovementGroups, sizeof( INT8 ) * NUMBER_OF_SQUADS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT8 ) * NUMBER_OF_SQUADS )
-	{
-		return(FALSE);
-	}
-
-
+	if (!FileWrite(hFile, SquadMovementGroups, sizeof(INT8) * NUMBER_OF_SQUADS)) return FALSE;
 
 	return( TRUE );
 }

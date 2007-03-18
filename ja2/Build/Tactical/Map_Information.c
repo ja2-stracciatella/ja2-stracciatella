@@ -114,10 +114,8 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 
 void SaveMapInformation( HWFILE fp )
 {
-	UINT32 uiBytesWritten;
-
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
-	FileWrite( fp, &gMapInformation, sizeof( MAPCREATE_STRUCT ), &uiBytesWritten );
+	FileWrite(fp, &gMapInformation, sizeof(MAPCREATE_STRUCT));
 }
 
 void LoadMapInformation( INT8 **hBuffer )

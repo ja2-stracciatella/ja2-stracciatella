@@ -361,18 +361,18 @@ void TrashWorldItems()
 
 void SaveWorldItemsToMap( HWFILE fp )
 {
-	UINT32 i, uiBytesWritten;
+	UINT32 i;
 	UINT32		uiActualNumWorldItems;
 
 
 	uiActualNumWorldItems = GetNumUsedWorldItems( );
 
-	FileWrite( fp, &uiActualNumWorldItems, 4, &uiBytesWritten );
+	FileWrite(fp, &uiActualNumWorldItems, 4);
 
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
 		if( gWorldItems[ i ].fExists )
-			FileWrite( fp, &gWorldItems[ i ], sizeof( WORLDITEM ), &uiBytesWritten );
+			FileWrite(fp, &gWorldItems[i], sizeof(WORLDITEM));
 	}
 }
 

@@ -1372,7 +1372,6 @@ void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ub
 
 BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
 	UINT32	uiNumOfRecords=0;
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
 
@@ -1385,22 +1384,14 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 
 
 	//Write how many nodes there are
-	FileWrite( hFile, &uiNumOfRecords, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &uiNumOfRecords, sizeof(UINT32))) return FALSE;
 
 	TempNode = gpUndergroundSectorInfoHead;
 
 	//Go through each node and save it.
 	while( TempNode )
 	{
-		FileWrite( hFile, TempNode, sizeof( UNDERGROUND_SECTORINFO ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( UNDERGROUND_SECTORINFO ) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, TempNode, sizeof(UNDERGROUND_SECTORINFO))) return FALSE;
 
 		TempNode = TempNode->next;
 	}

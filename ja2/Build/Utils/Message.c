@@ -1127,32 +1127,18 @@ void PlayNewMessageSound( void )
 
 BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
 	UINT32	uiCount;
 	UINT32	uiSizeOfString;
 	StringSaveStruct StringSave;
 
 
 	//	write to the begining of the message list
-	FileWrite( hFile, &gubEndOfMapScreenMessageList, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
 
-	FileWrite( hFile, &gubStartOfMapScreenMessageList, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
 
 	//	write the current message string
-	FileWrite( hFile, &gubCurrentMapMessageString, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
 
 	//Loopthrough all the messages
 	for( uiCount=0; uiCount<256; uiCount++)
@@ -1165,21 +1151,13 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 			uiSizeOfString = 0;
 
 		//	write to the file the size of the message
-		FileWrite( hFile, &uiSizeOfString, sizeof( UINT32 ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( UINT32 ) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, &uiSizeOfString, sizeof(UINT32))) return FALSE;
 
 		//if there is a message
 		if( uiSizeOfString )
 		{
 			//	write the message to the file
-			FileWrite( hFile, gMapScreenMessageList[ uiCount ]->pString16, uiSizeOfString, &uiNumBytesWritten );
-			if( uiNumBytesWritten != uiSizeOfString )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, gMapScreenMessageList[uiCount]->pString16, uiSizeOfString)) return FALSE;
 
 			// Create  the saved string struct
 			StringSave.uiFont = gMapScreenMessageList[ uiCount ]->uiFont;
@@ -1190,11 +1168,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 
 
 			//Write the rest of the message information to the saved game file
-			FileWrite( hFile, &StringSave, sizeof( StringSaveStruct ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( StringSaveStruct ) )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &StringSave, sizeof(StringSaveStruct))) return FALSE;
 		}
 
 	}

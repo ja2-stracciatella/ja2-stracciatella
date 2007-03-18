@@ -473,7 +473,6 @@ void FileClose( HWFILE hFile )
 //		HWFILE		-> handle to file to read from
 //		void	*	-> source buffer
 //		UINT32	-> num bytes to read
-//		UINT32	-> num bytes read
 //
 // Return Value :
 //
@@ -562,7 +561,6 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 //		HWFILE		-> handle to file to write to
 //		void	*	-> destination buffer
 //		UINT32	-> num bytes to write
-//		UINT32	-> num bytes written
 //
 // Return Value :
 //
@@ -578,7 +576,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 //
 //**************************************************************************
 
-BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBytesWritten )
+BOOLEAN FileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 {
 	FILE* hRealFile;
 	DWORD		dwNumBytesToWrite;
@@ -598,15 +596,10 @@ BOOLEAN FileWrite( HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite, UINT32 *puiBy
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
 		fRet = (fwrite(pDest, dwNumBytesToWrite, 1, hRealFile) == 1);
-
-		if ( puiBytesWritten )
-			*puiBytesWritten = (UINT32)dwNumBytesToWrite;
 	}
 	else
 	{
 		//we cannot write to a library file
-		if ( puiBytesWritten )
-			*puiBytesWritten = 0;
 		return(FALSE);
 	}
 

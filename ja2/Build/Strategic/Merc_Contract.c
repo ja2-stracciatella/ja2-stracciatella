@@ -88,20 +88,8 @@ BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 
 BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
-	FileWrite( hFile, ContractRenewalList, sizeof( ContractRenewalList ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( ContractRenewalList ) )
-	{
-		return( FALSE );
-	}
-
-	FileWrite( hFile, &ubNumContractRenewals, sizeof( ubNumContractRenewals ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( ubNumContractRenewals ) )
-	{
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, ContractRenewalList,    sizeof(ContractRenewalList)))   return FALSE;
+	if (!FileWrite(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals))) return FALSE;
 
   return( TRUE );
 }

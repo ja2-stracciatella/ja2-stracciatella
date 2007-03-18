@@ -3006,10 +3006,10 @@ BOOLEAN LightSave(INT32 iLight, STR pFilename)
 		hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 		if (hFile != 0)
 		{
-			FileWrite(hFile, &usTemplateSize[iLight], sizeof(UINT16), NULL);
-			FileWrite(hFile, pLightList[iLight], sizeof(LIGHT_NODE)*usTemplateSize[iLight], NULL);
-			FileWrite(hFile, &usRaySize[iLight], sizeof(UINT16), NULL);
-			FileWrite(hFile, pLightRayList[iLight], sizeof(UINT16)*usRaySize[iLight], NULL);
+			FileWrite(hFile, &usTemplateSize[iLight], sizeof(UINT16));
+			FileWrite(hFile, pLightList[iLight],      sizeof(LIGHT_NODE) * usTemplateSize[iLight]);
+			FileWrite(hFile, &usRaySize[iLight],      sizeof(UINT16));
+			FileWrite(hFile, pLightRayList[iLight],  sizeof(UINT16) * usRaySize[iLight]);
 
 			FileClose(hFile);
 		}

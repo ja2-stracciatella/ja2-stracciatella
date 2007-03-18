@@ -1198,7 +1198,6 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 
 BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
 	// Put all the globals into the save struct
@@ -1252,11 +1251,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 
 	//Save the Air Raid Save Struct
-	FileWrite( hFile, &sAirRaidSaveStruct, sizeof( AIR_RAID_SAVE_STRUCT ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( AIR_RAID_SAVE_STRUCT ) )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT))) return FALSE;
 
 	return( TRUE );
 }

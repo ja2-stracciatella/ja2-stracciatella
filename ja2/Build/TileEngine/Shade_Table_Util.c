@@ -28,7 +28,6 @@ void DetermineRGBDistributionSettings()
 	STRING512			ShadeTableDir;
 	UINT32				uiRBitMask, uiGBitMask, uiBBitMask;
 	UINT32				uiPrevRBitMask, uiPrevGBitMask, uiPrevBBitMask;
-	UINT32				uiNumBytesRead;
 	HWFILE				hfile;
 	BOOLEAN				fSaveRGBDist = FALSE;
 	BOOLEAN				fCleanShadeTable = FALSE;
@@ -107,9 +106,9 @@ void DetermineRGBDistributionSettings()
 		{
 			AssertMsg( 0, "Couldn't create RGBDist.dat for writing!" );
 		}
-		FileWrite( hfile, &uiRBitMask, sizeof( UINT32 ), &uiNumBytesRead );
-		FileWrite( hfile, &uiGBitMask, sizeof( UINT32 ), &uiNumBytesRead );
-		FileWrite( hfile, &uiBBitMask, sizeof( UINT32 ), &uiNumBytesRead );
+		FileWrite(hfile, &uiRBitMask, sizeof(UINT32));
+		FileWrite(hfile, &uiGBitMask, sizeof(UINT32));
+		FileWrite(hfile, &uiBBitMask, sizeof(UINT32));
 		FileClose( hfile );
 	}
 
@@ -164,7 +163,6 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
 	HWFILE hfile;
 	INT32 i;
-	UINT32 uiNumBytesWritten;
 	UINT8 ShadeFileName[ 100 ];
 	UINT8 *ptr;
 	#ifdef JA2TESTVERSION
@@ -191,7 +189,7 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	}
 	for( i = 0; i < 16; i++ )
 	{
-		FileWrite( hfile, pObj->pShades[ i ], 512, &uiNumBytesWritten );
+		FileWrite(hfile, pObj->pShades[i], 512);
 	}
 
 	FileClose( hfile );

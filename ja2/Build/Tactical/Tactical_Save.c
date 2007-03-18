@@ -455,7 +455,6 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData)
 {
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
@@ -469,8 +468,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT3
 	}
 
 	//Save the size of the ITem table
-	FileWrite( hFile, &uiNumberOfItems, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfItems, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -482,8 +480,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT3
 	if( uiNumberOfItems != 0 )
 	{
 		//Save the ITem array
-		FileWrite( hFile, pData, uiNumberOfItems * sizeof( WORLDITEM ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiNumberOfItems * sizeof( WORLDITEM ) )
+		if (!FileWrite(hFile, pData, uiNumberOfItems * sizeof(WORLDITEM)))
 		{
 			//Error Writing size of array to disk
 			FileClose( hFile );
@@ -565,7 +562,6 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 		{
 			WORLDITEM TempWorldItems[ 10 ];
 			UINT32		uiNumberOfItems = 10;
-			UINT32		uiNumBytesWritten=0;
 
 			//If the file doesnt exists, create a file that has an initial amount of Items
 			hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -578,8 +574,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 			memset( TempWorldItems, 0, ( sizeof( WORLDITEM ) * 10 ) );
 
 			//write the the number of item in the maps item file
-			FileWrite( hFile, &uiNumberOfItems, sizeof( UINT32 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT32 ) )
+			if (!FileWrite(hFile, &uiNumberOfItems, sizeof(UINT32)))
 			{
 				//Error Writing size of array to disk
 				FileClose( hFile );
@@ -587,8 +582,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 			}
 
 			//write the the number of item in the maps item file
-			FileWrite( hFile, TempWorldItems, uiNumberOfItems * sizeof( WORLDITEM ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != uiNumberOfItems * sizeof( WORLDITEM ) )
+			if (!FileWrite(hFile, TempWorldItems, uiNumberOfItems * sizeof(WORLDITEM)))
 			{
 				//Error Writing size of array to disk
 				FileClose( hFile );
@@ -1402,7 +1396,6 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
@@ -1437,8 +1430,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 
 	//Save the number of the Rotting Corpses array table
-	FileWrite( hFile, &uiNumberOfCorpses, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -1451,8 +1443,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 		if( gRottingCorpse[iCount].fActivated == TRUE )
 		{
 			//Save the RottingCorpse info array
-			FileWrite( hFile, &gRottingCorpse[iCount].def, sizeof( ROTTING_CORPSE_DEFINITION ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( ROTTING_CORPSE_DEFINITION ) )
+			if (!FileWrite(hFile, &gRottingCorpse[iCount].def, sizeof(ROTTING_CORPSE_DEFINITION)))
 			{
 				//Error Writing size of array to disk
 				FileClose( hFile );
@@ -2010,7 +2001,6 @@ static INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
 //Initializes the NPC temp array
 static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 {
-	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
@@ -2045,8 +2035,7 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 		}
 
 		//Save the array to a temp file
-		FileWrite( hFile, TempNpcQuote, uiSizeOfTempArray, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiSizeOfTempArray )
+		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray))
 		{
 			FileClose( hFile );
 			return( FALSE );
@@ -2060,7 +2049,6 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 
 static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 {
-	UINT32	uiNumBytesWritten;
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
@@ -2092,8 +2080,7 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 		FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
 
 		//Save the array to a temp file
-		FileWrite( hFile, TempNpcQuote, uiSizeOfTempArray, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiSizeOfTempArray )
+		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray))
 		{
 			FileClose( hFile );
 			return( FALSE );
@@ -2205,7 +2192,6 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	UINT32	uiNumberOfCorpses;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumBytesWritten;
 
 /*
 	//Convert the current sector location into a file name
@@ -2253,8 +2239,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	//Add on to the number and save it back to disk
 	uiNumberOfCorpses++;
 
-	FileWrite( hFile, &uiNumberOfCorpses, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -2266,8 +2251,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 	//Append the new rotting corpse def to the end of the file
-	FileWrite( hFile, pRottingCorpseDef, sizeof( ROTTING_CORPSE_DEFINITION ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( ROTTING_CORPSE_DEFINITION ) )
+	if (!FileWrite(hFile, pRottingCorpseDef, sizeof(ROTTING_CORPSE_DEFINITION)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -2754,7 +2738,7 @@ BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 		ubLastByte = pMemBlock[ uiLoop ];
 	}
 
-	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite, NULL);
+	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite);
 
 	MemFree( pMemBlock );
 
@@ -2850,7 +2834,7 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 		*/
 	}
 
-	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite, NULL);
+	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite);
 
 	MemFree( pMemBlock );
 

@@ -423,7 +423,6 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	INT32 i;
 	INT32 slots = 0;
 	INT32	iSlotsAlreadyInUse=0;
-	UINT32 uiNumBytesWritten;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	SCHEDULENODE *pSchedule;
@@ -586,11 +585,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 
 		//advance for bytes and read the #of slots already used
 		FileSeek( hfile, 4, FILE_SEEK_FROM_START );
-		FileWrite( hfile, &slots, 4, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 4 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &slots, 4)) goto FAIL_SAVE;
 
 		FileSeek( hfile, 0, FILE_SEEK_FROM_END );
 	}
@@ -607,20 +602,12 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	//if we are to append to the file
 	if( !fAppendToFile )
 	{
-		FileWrite( hfile, &sSectorY, 2, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 2 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &sSectorY, 2)) goto FAIL_SAVE;
 
 		//STEP THREE:  Save the data
 		SaveSoldierInitListLinks( hfile );
 
-		FileWrite( hfile, &sSectorX, 2, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 2 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &sSectorX, 2)) goto FAIL_SAVE;
 
 		//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only
 		//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
@@ -630,24 +617,12 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			slots = 0;
 		}
 
-		FileWrite( hfile, &slots,		4, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 4 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &slots, 4)) goto FAIL_SAVE;
 
 		uiTimeStamp = GetWorldTotalMin();
-		FileWrite( hfile, &uiTimeStamp, 4, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 4 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &uiTimeStamp, 4)) goto FAIL_SAVE;
 
-		FileWrite( hfile, &bSectorZ, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &bSectorZ, 1)) goto FAIL_SAVE;
 	}
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -672,11 +647,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{ //found a match.
-				FileWrite( hfile, curr->pDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( SOLDIERCREATE_STRUCT ) )
-				{
-					goto FAIL_SAVE;
-				}
+				if (!FileWrite(hfile, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT))) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
 				usCheckSum =
 					curr->pDetailedPlacement->bLife									* 7		+
@@ -702,12 +673,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 					curr->pDetailedPlacement->fOnRoof								* 17	+
 					curr->pDetailedPlacement->sInsertionGridNo			* 1		+
 					3;
-				FileWrite( hfile, &usCheckSum, 2, &uiNumBytesWritten );
-				if( uiNumBytesWritten != 2 )
-				{
-					goto FAIL_SAVE;
-
-				}
+				if (!FileWrite(hfile, &usCheckSum, 2)) goto FAIL_SAVE;
 			}
 		}
 	}
@@ -716,11 +682,7 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 	if( !fAppendToFile )
 	{
 		ubSectorID = SECTOR( sSectorX, sSectorY );
-		FileWrite( hfile, &ubSectorID, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
-		{
-			goto FAIL_SAVE;
-		}
+		if (!FileWrite(hfile, &ubSectorID, 1)) goto FAIL_SAVE;
 	}
 
 	FileClose( hfile );
@@ -1471,7 +1433,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	INT32 slots = 0;
-	UINT32 uiNumBytesWritten;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 //	CHAR8		zTempName[ 128 ];
@@ -1642,22 +1603,14 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		return FALSE;
 	}
 
-	FileWrite( hfile, &sSectorY, 2, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 2 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &sSectorY, 2)) goto FAIL_SAVE;
 
 	//STEP THREE:  Save the data
 
 	//this works for both civs and enemies
 	SaveSoldierInitListLinks( hfile );
 
-	FileWrite( hfile, &sSectorX, 2, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 2 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &sSectorX, 2)) goto FAIL_SAVE;
 
 	//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only
 	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
@@ -1667,24 +1620,12 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		slots = 0;
 	}
 
-	FileWrite( hfile, &slots,		4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &slots, 4)) goto FAIL_SAVE;
 
 	uiTimeStamp = GetWorldTotalMin();
-	FileWrite( hfile, &uiTimeStamp, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &uiTimeStamp, 4)) goto FAIL_SAVE;
 
-	FileWrite( hfile, &bSectorZ, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &bSectorZ, 1)) goto FAIL_SAVE;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
@@ -1719,11 +1660,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{
 				//found a match.
-				FileWrite( hfile, curr->pDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( SOLDIERCREATE_STRUCT ) )
-				{
-					goto FAIL_SAVE;
-				}
+				if (!FileWrite(hfile, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT))) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
 				usCheckSum =
 					curr->pDetailedPlacement->bLife									* 7		+
@@ -1749,22 +1686,13 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 					curr->pDetailedPlacement->fOnRoof								* 17	+
 					curr->pDetailedPlacement->sInsertionGridNo			* 1		+
 					3;
-				FileWrite( hfile, &usCheckSum, 2, &uiNumBytesWritten );
-				if( uiNumBytesWritten != 2 )
-				{
-					goto FAIL_SAVE;
-
-				}
+				if (!FileWrite(hfile, &usCheckSum, 2)) goto FAIL_SAVE;
 			}
 		}
 	}
 
 	ubSectorID = SECTOR( sSectorX, sSectorY );
-	FileWrite( hfile, &ubSectorID, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-	{
-		goto FAIL_SAVE;
-	}
+	if (!FileWrite(hfile, &ubSectorID, 1)) goto FAIL_SAVE;
 
 	FileClose( hfile );
 

@@ -88,7 +88,6 @@ void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 	static BOOLEAN	fFirstTimeIn = TRUE;
 	static UINT32		uiLineNumber = 1;
 	HWFILE		hFile;
-	UINT32		uiByteWritten;
   va_list		argptr;
   char			TempString[1024];
   char			DestString[1024];
@@ -152,7 +151,7 @@ void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 	sprintf( DestString, "#%5d. P%d:\n\t%s\n\n", uiLineNumber, ubPriority, TempString );
 
 	//open the file and append to it
-	if( !FileWrite( hFile, DestString, strlen(DestString), &uiByteWritten ) )
+	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
 		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );

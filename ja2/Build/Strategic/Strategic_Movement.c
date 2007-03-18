@@ -3439,7 +3439,6 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 {
 	GROUP *pGroup=NULL;
 	UINT32	uiNumberOfGroups=0;
-	UINT32	uiNumBytesWritten=0;
 
 	pGroup = gpGroupList;
 
@@ -3452,8 +3451,7 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 
 
 	// Save the number of movement groups to the saved game file
-	FileWrite( hFile, &uiNumberOfGroups, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfGroups, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3466,8 +3464,7 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 	while( pGroup )
 	{
 		// Save each node in the LL
-		FileWrite( hFile, pGroup, sizeof( GROUP ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( GROUP ) )
+		if (!FileWrite(hFile, pGroup, sizeof(GROUP)))
 		{
 			//Error Writing group node to disk
 			return( FALSE );
@@ -3505,8 +3502,7 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 	}
 
 	// Save the unique id mask
-	FileWrite( hFile, uniqueIDMask, sizeof( UINT32 ) * 8, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) * 8 )
+	if (!FileWrite(hFile, uniqueIDMask, sizeof(UINT32) * 8))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3523,7 +3519,6 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	GROUP *pGroup=NULL;
 	GROUP	*pTemp=NULL;
 	UINT32	uiNumberOfGroups=0;
-//UINT32	uiNumBytesWritten=0;
 	UINT32	cnt;
 	UINT32 bit, index, mask;
 	UINT8  ubNumPlayerGroupsEmpty = 0;
@@ -3655,7 +3650,6 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 {
 	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
-	UINT32	uiNumBytesWritten=0;
 	UINT32	uiProfileID;
 
 	pTemp = pGroup->pPlayerList;
@@ -3667,8 +3661,7 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 	}
 
 	//Save the number of nodes in the list
-	FileWrite( hFile, &uiNumberOfNodesInList, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfNodesInList, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3681,8 +3674,7 @@ BOOLEAN SavePlayerGroupList( HWFILE hFile, GROUP *pGroup )
 	{
 		// Save the ubProfile ID for this node
 		uiProfileID = pTemp->ubProfileID;
-		FileWrite( hFile, &uiProfileID, sizeof( UINT32 ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( UINT32 ) )
+		if (!FileWrite(hFile, &uiProfileID, sizeof(UINT32)))
 		{
 			//Error Writing size of L.L. to disk
 			return( FALSE );
@@ -3768,11 +3760,8 @@ BOOLEAN LoadPlayerGroupList( HWFILE hFile, GROUP **pGroup )
 //Saves the enemy group struct to the saved game struct
 BOOLEAN SaveEnemyGroupStruct( HWFILE hFile, GROUP *pGroup )
 {
-	UINT32 uiNumBytesWritten=0;
-
 	//Save the enemy struct info to the saved game file
-	FileWrite( hFile, pGroup->pEnemyGroup, sizeof( ENEMYGROUP ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( ENEMYGROUP ) )
+	if (!FileWrite(hFile, pGroup->pEnemyGroup, sizeof(ENEMYGROUP)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3862,7 +3851,6 @@ BOOLEAN SaveWayPointList( HWFILE hFile, GROUP *pGroup )
 {
 	UINT32	cnt=0;
 	UINT32	uiNumberOfWayPoints=0;
-	UINT32	uiNumBytesWritten=0;
 	WAYPOINT *pWayPoints = pGroup->pWaypoints;
 
 	//loop trhough and count all the node in the waypoint list
@@ -3873,8 +3861,7 @@ BOOLEAN SaveWayPointList( HWFILE hFile, GROUP *pGroup )
 	}
 
 	//Save the number of waypoints
-	FileWrite( hFile, &uiNumberOfWayPoints, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumberOfWayPoints, sizeof(UINT32)))
 	{
 		//Error Writing size of L.L. to disk
 		return( FALSE );
@@ -3887,8 +3874,7 @@ BOOLEAN SaveWayPointList( HWFILE hFile, GROUP *pGroup )
 		for(cnt=0; cnt<uiNumberOfWayPoints; cnt++)
 		{
 			//Save the waypoint node
-			FileWrite( hFile, pWayPoints, sizeof( WAYPOINT ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( WAYPOINT ) )
+			if (!FileWrite(hFile, pWayPoints, sizeof(WAYPOINT)))
 			{
 				//Error Writing size of L.L. to disk
 				return( FALSE );

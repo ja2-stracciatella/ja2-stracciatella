@@ -594,7 +594,6 @@ void DecaySmokeEffects( UINT32 uiTime )
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 {
 /*
-	UINT32	uiNumBytesWritten;
 	UINT32	uiCnt=0;
 	UINT32	uiNumSmokeEffects=0;
 
@@ -608,12 +607,7 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 
 
 	//Save the Number of Smoke Effects
-	FileWrite( hFile, &uiNumSmokeEffects, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32))) return FALSE;
 
 	if( uiNumSmokeEffects != 0 )
 	{
@@ -624,11 +618,7 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 			if( gSmokeEffectData[ uiCnt ].fAllocated )
 			{
 				//Save the Smoke effect Data
-				FileWrite( hFile, &gSmokeEffectData[ uiCnt ], sizeof( SMOKEEFFECT ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( SMOKEEFFECT ) )
-				{
-					return( FALSE );
-				}
+				if (!FileWrite(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT))) return FALSE;
 			}
 		}
 	}
@@ -699,7 +689,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32	uiNumSmokeEffects=0;
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiCnt;
 
@@ -735,8 +724,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 	//Save the Number of Smoke Effects
-	FileWrite( hFile, &uiNumSmokeEffects, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32)))
 	{
 		//Close the file
 		FileClose( hFile );
@@ -752,8 +740,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		if( gSmokeEffectData[ uiCnt ].fAllocated )
 		{
 			//Save the Smoke effect Data
-			FileWrite( hFile, &gSmokeEffectData[ uiCnt ], sizeof( SMOKEEFFECT ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( SMOKEEFFECT ) )
+			if (!FileWrite(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT)))
 			{
 				//Close the file
 				FileClose( hFile );

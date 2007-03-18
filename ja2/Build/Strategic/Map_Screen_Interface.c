@@ -6002,7 +6002,6 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
 	UINT32 uiCount=0;
-	UINT32	uiNumBytesWritten = 0;
 	BOOLEAN	fNodeExists = FALSE;
 	UINT32	uiCnt;
 
@@ -6014,11 +6013,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			fNodeExists = TRUE;
 
 			// Save the to specify that a node DOES exist
-			FileWrite( hFile, &fNodeExists, sizeof(BOOLEAN), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof(BOOLEAN) )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
 
 			uiCount = 1;
 			pCurrentItem = gpLeaveListHead[ iCounter ];
@@ -6031,11 +6026,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			}
 
 			// Save the number specifing how many items there are in the list
-			FileWrite( hFile, &uiCount, sizeof(UINT32), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof(UINT32) )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &uiCount, sizeof(UINT32))) return FALSE;
 
 			pCurrentItem = gpLeaveListHead[ iCounter ];
 
@@ -6043,11 +6034,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			for( uiCnt=0; uiCnt<uiCount; uiCnt++)
 			{
 				// Save the items
-				FileWrite( hFile, pCurrentItem, sizeof( MERC_LEAVE_ITEM ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( MERC_LEAVE_ITEM ) )
-				{
-					return(FALSE);
-				}
+				if (!FileWrite(hFile, pCurrentItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;
 
 				pCurrentItem = pCurrentItem->pNext;
 			}
@@ -6056,22 +6043,14 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 		{
 			fNodeExists = FALSE;
 			// Save the to specify that a node DOENST exist
-			FileWrite( hFile, &fNodeExists, sizeof(BOOLEAN), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof(BOOLEAN) )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
 		}
 	}
 
 	//Save the leave list profile id's
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
-		FileWrite( hFile, &guiLeaveListOwnerProfileId[ iCounter ], sizeof(UINT32), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof(UINT32) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32))) return FALSE;
 	}
 
 	return( TRUE );

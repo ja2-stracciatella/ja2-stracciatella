@@ -506,7 +506,6 @@ void ClearAllSchedules()
 BOOLEAN SaveSchedules( HWFILE hFile )
 {
 	SCHEDULENODE *curr;
-	UINT32 uiBytesWritten;
 	UINT8 ubNum, ubNumFucker;
 	INT32 iNum;
 	//Now, count the number of schedules in the list
@@ -523,11 +522,7 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 	}
 	ubNum = (UINT8)(( iNum >= 32 ) ? 32 : iNum);
 
-	FileWrite( hFile, &ubNum, sizeof( UINT8 ), &uiBytesWritten );
-	if ( uiBytesWritten != sizeof( UINT8 ) )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &ubNum, sizeof(UINT8))) return FALSE;
 	//Now, save each schedule
 	curr = gpScheduleList;
 	ubNumFucker = 0;
@@ -542,12 +537,7 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 			{
 				return( TRUE );
 			}
-			FileWrite( hFile, curr, sizeof( SCHEDULENODE ), &uiBytesWritten );
-			if ( uiBytesWritten != sizeof( SCHEDULENODE ) )
-			{
-				return( FALSE );
-			}
-
+			if (!FileWrite(hFile, curr, sizeof(SCHEDULENODE))) return FALSE;
 		}
 		curr = curr->next;
 	}

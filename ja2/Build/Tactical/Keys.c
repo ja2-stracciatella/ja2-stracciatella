@@ -807,7 +807,6 @@ void LoadDoorTableFromMap( INT8 **hBuffer )
 void SaveDoorTableToMap( HWFILE fp )
 {
 	INT32 i = 0;
-	UINT32	uiBytesWritten;
 
 	while( i < gubNumDoors )
 	{
@@ -816,8 +815,8 @@ void SaveDoorTableToMap( HWFILE fp )
 		else
 			i++;
 	}
-	FileWrite( fp, &gubNumDoors, 1, &uiBytesWritten );
-	FileWrite( fp, DoorTable, sizeof( DOOR )*gubNumDoors, &uiBytesWritten );
+	FileWrite(fp, &gubNumDoors, 1);
+	FileWrite(fp, DoorTable, sizeof(DOOR) * gubNumDoors);
 }
 
 //The editor adds locks to the world.  If the gridno already exists, then the currently existing door
@@ -931,7 +930,6 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 
 BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	UINT32	uiNumBytesWritten;
 	UINT32	uiSizeToSave=0;
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
@@ -971,8 +969,7 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 
 	//Save the number of doors
-	FileWrite( hFile, &gubNumDoors, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
+	if (!FileWrite(hFile, &gubNumDoors, sizeof(UINT8)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -983,8 +980,7 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 	if( uiSizeToSave != 0 )
 	{
 		//Save the door table
-		FileWrite( hFile, DoorTable, uiSizeToSave, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiSizeToSave )
+		if (!FileWrite(hFile, DoorTable, uiSizeToSave))
 		{
 			FileClose( hFile );
 			return( FALSE );
@@ -1824,7 +1820,6 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten;
 	UINT8		ubCnt;
 
 	// Turn off any DOOR BUSY flags....
@@ -1853,8 +1848,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 
 
 	//Save the number of elements in the door array
-	FileWrite( hFile, &gubNumDoorStatus, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
+	if (!FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8)))
 	{
 		//Error Writing size of array to disk
 		FileClose( hFile );
@@ -1865,8 +1859,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 	if( gubNumDoorStatus != 0 )
 	{
 		//Save the door array
-		FileWrite( hFile, gpDoorStatus, ( sizeof( DOOR_STATUS ) * gubNumDoorStatus ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != ( sizeof( DOOR_STATUS ) * gubNumDoorStatus ) )
+		if (!FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus))
 		{
 			//Error Writing size of array to disk
 			FileClose( hFile );
@@ -1954,15 +1947,8 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten=0;
-
-
 	// Save the KeyTable
-	FileWrite( hFile, KeyTable, sizeof( KEY ) * NUM_KEYS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( KEY ) * NUM_KEYS )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, KeyTable, sizeof(KEY) * NUM_KEYS)) return FALSE;
 
 	return( TRUE );
 }

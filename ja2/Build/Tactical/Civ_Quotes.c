@@ -832,13 +832,7 @@ void InitCivQuoteSystem( )
 
 BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
-	FileWrite( hFile, &gCivQuotes, sizeof( gCivQuotes ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( gCivQuotes ) )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &gCivQuotes, sizeof(gCivQuotes))) return FALSE;
 
 	return( TRUE );
 }

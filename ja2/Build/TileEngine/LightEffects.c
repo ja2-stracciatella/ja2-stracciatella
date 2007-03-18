@@ -245,7 +245,6 @@ void DecayLightEffects( UINT32 uiTime )
 BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 {
 	/*
-	UINT32	uiNumBytesWritten;
 	UINT32	uiNumberOfLights=0;
 	UINT32	uiCnt;
 
@@ -259,12 +258,7 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 	}
 
 	//Save the Number of Light Effects
-	FileWrite( hFile, &uiNumberOfLights, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, &uiNumberOfLights, sizeof(UINT32))) return FALSE;
 
 	//if there are lights to save
 	if( uiNumberOfLights != 0 )
@@ -275,11 +269,7 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 			if( gLightEffectData[ uiCnt ].fAllocated )
 			{
 				//Save the Light effect Data
-				FileWrite( hFile, &gLightEffectData[ uiCnt ], sizeof( LIGHTEFFECT ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != sizeof( LIGHTEFFECT ) )
-				{
-					return( FALSE );
-				}
+				if (!FileWrite(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT))) return FALSE;
 			}
 		}
 	}
@@ -329,7 +319,6 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32	uiNumLightEffects=0;
 	HWFILE	hFile;
-	UINT32	uiNumBytesWritten=0;
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiCnt;
 
@@ -365,8 +354,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 	//Save the Number of Light Effects
-	FileWrite( hFile, &uiNumLightEffects, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
+	if (!FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32)))
 	{
 		//Close the file
 		FileClose( hFile );
@@ -382,8 +370,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		if( gLightEffectData[ uiCnt ].fAllocated )
 		{
 			//Save the Light effect Data
-			FileWrite( hFile, &gLightEffectData[ uiCnt ], sizeof( LIGHTEFFECT ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( LIGHTEFFECT ) )
+			if (!FileWrite(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT)))
 			{
 				//Close the file
 				FileClose( hFile );

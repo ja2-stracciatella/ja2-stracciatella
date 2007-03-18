@@ -1335,22 +1335,11 @@ void CheckForQuests( UINT32 uiDay )
 
 BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
 	//Save all the states if the Quests
-	FileWrite( hFile, gubQuest, MAX_QUESTS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != MAX_QUESTS )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, gubQuest, MAX_QUESTS)) return FALSE;
 
 	//Save all the states for the facts
-	FileWrite( hFile, gubFact, NUM_FACTS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != NUM_FACTS )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, gubFact, NUM_FACTS)) return FALSE;
 
 	return( TRUE );
 }

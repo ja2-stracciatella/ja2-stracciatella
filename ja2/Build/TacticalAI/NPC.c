@@ -2739,7 +2739,6 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 
 BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 {
-	UINT32		uiNumBytesWritten=0;
 	UINT32		cnt;
 	UINT8			ubOne = 1;
 	UINT8			ubZero = 0;
@@ -2752,27 +2751,15 @@ BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 		if( gpNPCQuoteInfoArray[ cnt ] )
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubOne, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubOne, sizeof(UINT8))) return FALSE;
 
 			//Save the NPC quote entry
-			FileWrite( hFile, gpNPCQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS, &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 		}
 		else
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubZero, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubZero, sizeof(UINT8))) return FALSE;
 		}
 	}
 
@@ -2782,27 +2769,15 @@ BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 		if( gpCivQuoteInfoArray[ cnt ] )
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubOne, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubOne, sizeof(UINT8))) return FALSE;
 
 			//Save the NPC quote entry
-			FileWrite( hFile, gpCivQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS, &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 		}
 		else
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubZero, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubZero, sizeof(UINT8))) return FALSE;
 		}
 	}
 
@@ -2965,7 +2940,6 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 
 BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 {
-	UINT32		uiNumBytesWritten=0;
 	UINT32		cnt;
 	UINT8			ubOne = 1;
 	UINT8			ubZero = 0;
@@ -2978,27 +2952,15 @@ BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 		if( gpBackupNPCQuoteInfoArray[ cnt ] )
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubOne, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubOne, sizeof(UINT8))) return FALSE;
 
 			//Save the NPC quote entry
-			FileWrite( hFile, gpBackupNPCQuoteInfoArray[ cnt ], sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS, &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
 		}
 		else
 		{
 			//save a byte specify that there is an npc quote saved
-			FileWrite( hFile, &ubZero, sizeof( UINT8 ), &uiNumBytesWritten );
-			if( uiNumBytesWritten != sizeof( UINT8 ) )
-			{
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &ubZero, sizeof(UINT8))) return FALSE;
 		}
 	}
 

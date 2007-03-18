@@ -2979,121 +2979,58 @@ BOOLEAN SaveStrategicAI( HWFILE hFile )
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
 	ARMY_COMPOSITION gTempArmyComp;
-	UINT32 uiNumBytesWritten;
 	INT32 i;
 
 	memset( &gTempPatrolGroup, 0, sizeof( PATROL_GROUP ) );
 	memset( &gTempArmyComp, 0, sizeof( ARMY_COMPOSITION ) );
 
-	FileWrite( hFile, gbPadding2,							3, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 3 )
-		return FALSE;
-	FileWrite( hFile, &gfExtraElites,					1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &giGarrisonArraySize,		4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giPatrolArraySize,			4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giReinforcementPool,		4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giForcePercentage,			4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giArmyAlertness,				4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giArmyAlertnessDecay,	4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &gfQueenAIAwake,				1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &giReinforcementPoints, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &giRequestPoints,				4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 4 )
-		return FALSE;
-	FileWrite( hFile, &gubNumAwareBattles,		1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gubSAIVersion,					1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gubQueenPriorityPhase,	1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gfFirstBattleMeanwhileScenePending,	1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gfMassFortificationOrdered,	1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gubMinEnemyGroupSize,	1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gubHoursGracePeriod, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, &gusPlayerBattleVictories, 2, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 2 )
-		return FALSE;
-	FileWrite( hFile, &gfUseAlternateQueenPosition, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != 1 )
-		return FALSE;
-	FileWrite( hFile, gbPadding, SAI_PADDING_BYTES, &uiNumBytesWritten );
-	if( uiNumBytesWritten != SAI_PADDING_BYTES )
-		return FALSE;
+	if (!FileWrite(hFile, gbPadding2,                          3)) return FALSE;
+	if (!FileWrite(hFile, &gfExtraElites,                      1)) return FALSE;
+	if (!FileWrite(hFile, &giGarrisonArraySize,                4)) return FALSE;
+	if (!FileWrite(hFile, &giPatrolArraySize,                  4)) return FALSE;
+	if (!FileWrite(hFile, &giReinforcementPool,                4)) return FALSE;
+	if (!FileWrite(hFile, &giForcePercentage,                  4)) return FALSE;
+	if (!FileWrite(hFile, &giArmyAlertness,                    4)) return FALSE;
+	if (!FileWrite(hFile, &giArmyAlertnessDecay,               4)) return FALSE;
+	if (!FileWrite(hFile, &gfQueenAIAwake,                     1)) return FALSE;
+	if (!FileWrite(hFile, &giReinforcementPoints,              4)) return FALSE;
+	if (!FileWrite(hFile, &giRequestPoints,                    4)) return FALSE;
+	if (!FileWrite(hFile, &gubNumAwareBattles,                 1)) return FALSE;
+	if (!FileWrite(hFile, &gubSAIVersion,                      1)) return FALSE;
+	if (!FileWrite(hFile, &gubQueenPriorityPhase,              1)) return FALSE;
+	if (!FileWrite(hFile, &gfFirstBattleMeanwhileScenePending, 1)) return FALSE;
+	if (!FileWrite(hFile, &gfMassFortificationOrdered,         1)) return FALSE;
+	if (!FileWrite(hFile, &gubMinEnemyGroupSize,               1)) return FALSE;
+	if (!FileWrite(hFile, &gubHoursGracePeriod,                1)) return FALSE;
+	if (!FileWrite(hFile, &gusPlayerBattleVictories,           2)) return FALSE;
+	if (!FileWrite(hFile, &gfUseAlternateQueenPosition,        1)) return FALSE;
+	if (!FileWrite(hFile, gbPadding,           SAI_PADDING_BYTES)) return FALSE;
 	//Save the army composition (which does get modified)
-	FileWrite( hFile, gArmyComp, NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != NUM_ARMY_COMPOSITIONS * sizeof( ARMY_COMPOSITION ) )
-		return FALSE;
+	if (!FileWrite(hFile, gArmyComp, NUM_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION))) return FALSE;
 	i = SAVED_ARMY_COMPOSITIONS - NUM_ARMY_COMPOSITIONS;
 	while( i-- )
 	{
-		FileWrite( hFile, &gTempArmyComp, sizeof( ARMY_COMPOSITION ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( ARMY_COMPOSITION ) )
-			return FALSE;
+		if (!FileWrite(hFile, &gTempArmyComp, sizeof(ARMY_COMPOSITION))) return FALSE;
 	}
 	//Save the patrol group definitions
-	FileWrite( hFile, gPatrolGroup, giPatrolArraySize * sizeof( PATROL_GROUP ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != giPatrolArraySize * sizeof( PATROL_GROUP ) )
-		return FALSE;
+	if (!FileWrite(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP))) return FALSE;
 	i = SAVED_PATROL_GROUPS - giPatrolArraySize;
 	while( i-- )
 	{
-		FileWrite( hFile, &gTempPatrolGroup, sizeof( PATROL_GROUP ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( PATROL_GROUP ) )
-			return FALSE;
+		if (!FileWrite(hFile, &gTempPatrolGroup, sizeof(PATROL_GROUP))) return FALSE;
 	}
 	//Save the garrison information!
 	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
-	FileWrite( hFile, gGarrisonGroup, giGarrisonArraySize * sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != giGarrisonArraySize * sizeof( GARRISON_GROUP ) )
-		return FALSE;
+	if (!FileWrite(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP))) return FALSE;
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
 	{
-		FileWrite( hFile, &gTempGarrisonGroup, sizeof( GARRISON_GROUP ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( GARRISON_GROUP ) )
-			return FALSE;
+		if (!FileWrite(hFile, &gTempGarrisonGroup, sizeof(GARRISON_GROUP))) return FALSE;
 	}
 
-	FileWrite( hFile, gubPatrolReinforcementsDenied, giPatrolArraySize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != (UINT32)giPatrolArraySize )
-	{
-		return FALSE;
-	}
+	if (!FileWrite(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize)) return FALSE;
 
-	FileWrite( hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != (UINT32)giGarrisonArraySize )
-	{
-		return FALSE;
-	}
+	if (!FileWrite(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize)) return FALSE;
 
 	#ifdef JA2BETAVERSION
 		ValidatePlayersAreInOneGroupOnly();

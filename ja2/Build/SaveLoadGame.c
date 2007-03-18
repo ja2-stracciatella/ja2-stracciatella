@@ -424,7 +424,6 @@ void	HandleOldBobbyRMailOrders();
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 {
-	UINT32	uiNumBytesWritten=0;
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ 512 ];
@@ -696,11 +695,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	//
 
 
-	FileWrite( hFile, &SaveGameHeader, sizeof( SAVED_GAME_HEADER ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( SAVED_GAME_HEADER ) )
-	{
-		goto FAILED_TO_SAVE;
-	}
+	if (!FileWrite(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER))) goto FAILED_TO_SAVE;
 
 	#ifdef JA2BETAVERSION
 		SaveGameFilePosition( FileGetPos( hFile ), "Save Game Header" );
@@ -2851,7 +2846,6 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 BOOLEAN SaveSoldierStructure( HWFILE hFile )
 {
 	UINT16	cnt;
-	UINT32	uiNumBytesWritten=0;
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
 
@@ -2867,21 +2861,13 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 		if( !Menptr[ cnt ].bActive )
 		{
 			// Save the byte specifing to NOT load the soldiers
-			FileWrite( hFile, &ubZero, 1, &uiNumBytesWritten );
-			if( uiNumBytesWritten != 1 )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &ubZero, 1)) return FALSE;
 		}
 
 		else
 		{
 			// Save the byte specifing to load the soldiers
-			FileWrite( hFile, &ubOne, 1, &uiNumBytesWritten );
-			if( uiNumBytesWritten != 1 )
-			{
-				return(FALSE);
-			}
+			if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
 
 			// calculate checksum for soldier
 			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
@@ -2916,27 +2902,15 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 			if( Menptr[ cnt ].pKeyRing != NULL )
 			{
 				// write to the file saying we have the ....
-				FileWrite( hFile, &ubOne, 1, &uiNumBytesWritten );
-				if( uiNumBytesWritten != 1 )
-				{
-					return(FALSE);
-				}
+				if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
 
 				// Now save the ....
-				FileWrite( hFile, Menptr[ cnt ].pKeyRing, NUM_KEYS * sizeof( KEY_ON_RING ), &uiNumBytesWritten );
-				if( uiNumBytesWritten != NUM_KEYS * sizeof( KEY_ON_RING ) )
-				{
-					return(FALSE);
-				}
+				if (!FileWrite(hFile, Menptr[cnt].pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING))) return FALSE;
 			}
 			else
 			{
 				// write to the file saying we DO NOT have the Key ring
-				FileWrite( hFile, &ubZero, 1, &uiNumBytesWritten );
-				if( uiNumBytesWritten != 1 )
-				{
-					return(FALSE);
-				}
+				if (!FileWrite(hFile, &ubZero, 1)) return FALSE;
 			}
 		}
 	}
@@ -2949,7 +2923,6 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 BOOLEAN LoadSoldierStructure( HWFILE hFile )
 {
 	UINT16	cnt;
-	UINT32	uiNumBytesRead=0;
 	SOLDIERTYPE SavedSoldierInfo;
 	UINT32	uiSaveSize = sizeof( SOLDIERTYPE );
 	UINT8		ubId;
@@ -3142,21 +3115,18 @@ BOOLEAN SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 {
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
-	UINT32	uiNumBytesWritten;
 
 	if( pData != NULL )
 	{
 		// write to the file saying we have the ....
-		FileWrite( hFile, &ubOne, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
+		if (!FileWrite(hFile, &ubOne, 1))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
 			return(FALSE);
 		}
 
 		// Now save the ....
-		FileWrite( hFile, pData, uiSizeOfObject, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiSizeOfObject )
+		if (!FileWrite(hFile, pData, uiSizeOfObject))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
 			return(FALSE);
@@ -3165,8 +3135,7 @@ BOOLEAN SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 	else
 	{
 		// write to the file saying we DO NOT have the ...
-		FileWrite( hFile, &ubZero, 1, &uiNumBytesWritten );
-		if( uiNumBytesWritten != 1 )
+		if (!FileWrite(hFile, &ubZero, 1))
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
 			return(FALSE);
@@ -3225,7 +3194,6 @@ BOOLEAN LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
-	UINT32	uiNumBytesWritten=0;
 	HWFILE	hSrcFile;
 	UINT8		*pData;
 
@@ -3247,13 +3215,7 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 		return( FALSE );
 
 	// Write the the size of the file to the saved game file
-	FileWrite( hFile, &uiFileSize, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
-
-
+	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) return FALSE;
 
 	//Allocate a buffer to read the data into
 	pData = MemAlloc( uiFileSize );
@@ -3273,8 +3235,7 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 
 	// Write the buffer to the saved game file
-	FileWrite( hFile, pData, uiFileSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiFileSize )
+	if (!FileWrite(hFile, pData, uiFileSize))
 	{
 		//Free the buffer
 		MemFree( pData );
@@ -3300,7 +3261,6 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
-	UINT32	uiNumBytesWritten=0;
 	HWFILE	hSrcFile;
 	UINT8		*pData;
 
@@ -3366,8 +3326,7 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 
 	// Write the buffer to the new file
-	FileWrite( hSrcFile, pData, uiFileSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiFileSize )
+	if (!FileWrite(hSrcFile, pData, uiFileSize))
 	{
 		FileClose( hSrcFile );
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write to the %s File", pSrcFileName ) );
@@ -3397,7 +3356,6 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	EmailPtr	pEmail = pEmailList;
 	UINT32	cnt;
 	UINT32	uiStringLength=0;
-	UINT32	uiNumBytesWritten=0;
 
 	SavedEmailStruct SavedEmail;
 
@@ -3411,12 +3369,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 	uiSizeOfEmails = sizeof( Email ) * uiNumOfEmails;
 
 	//write the number of email messages
-	FileWrite( hFile, &uiNumOfEmails, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
 
 	//loop trhough all the emails, add each one individually
 	pEmail = pEmailList;
@@ -3426,19 +3379,10 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 		uiStringLength = (wcslen(pEmail->pSubject) + 1) * sizeof(*pEmail->pSubject);
 
 		//write the length of the current emails subject to the saved game file
-		FileWrite( hFile, &uiStringLength, sizeof( UINT32 ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( UINT32 ) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, &uiStringLength, sizeof(UINT32))) return FALSE;
 
 		//write the subject of the current email to the saved game file
-		FileWrite( hFile, pEmail->pSubject, uiStringLength, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiStringLength )
-		{
-			return(FALSE);
-		}
-
+		if (!FileWrite(hFile, pEmail->pSubject, uiStringLength)) return FALSE;
 
 		//Get the current emails data and asign it to the 'Saved email' struct
 		SavedEmail.usOffset = pEmail->usOffset;
@@ -3457,11 +3401,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 
 
 		// write the email header to the saved game file
-		FileWrite( hFile, &SavedEmail, sizeof( SavedEmailStruct ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( SavedEmailStruct ) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
 
 		//advance to the next email
 		pEmail = pEmail->Next;
@@ -3572,41 +3512,21 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 
 BOOLEAN SaveTacticalStatusToSavedGame( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
 	//write the gTacticalStatus to the saved game file
-	FileWrite( hFile, &gTacticalStatus, sizeof( TacticalStatusType ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( TacticalStatusType ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &gTacticalStatus, sizeof(TacticalStatusType))) return FALSE;
 
 	//
 	//Save the current sector location to the saved game file
 	//
 
 	// save gWorldSectorX
-	FileWrite( hFile, &gWorldSectorX, sizeof( gWorldSectorX ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( gWorldSectorX ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, &gWorldSectorX, sizeof(gWorldSectorX))) return FALSE;
 
 	// save gWorldSectorY
-	FileWrite( hFile, &gWorldSectorY, sizeof( gWorldSectorY ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( gWorldSectorY ) )
-	{
-		return(FALSE);
-	}
-
+	if (!FileWrite(hFile, &gWorldSectorY, sizeof(gWorldSectorY))) return FALSE;
 
 	// save gbWorldSectorZ
-	FileWrite( hFile, &gbWorldSectorZ, sizeof( gbWorldSectorZ ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( gbWorldSectorZ ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ))) return FALSE;
 
 	return( TRUE );
 }
@@ -3681,78 +3601,38 @@ BOOLEAN SetMercsInsertionGridNo( )
 BOOLEAN SaveOppListInfoToSavedGame( HWFILE hFile )
 {
 	UINT32	uiSaveSize=0;
-	UINT32	uiNumBytesWritten=0;
-
 
 	// Save the Public Opplist
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gbPublicOpplist, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gbPublicOpplist, uiSaveSize)) return FALSE;
 
 	// Save the Seen Oppenents
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gbSeenOpponents, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
-
-
+	if (!FileWrite(hFile, gbSeenOpponents, uiSaveSize)) return FALSE;
 
 	// Save the Last Known Opp Locations
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gsLastKnownOppLoc, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gsLastKnownOppLoc, uiSaveSize)) return FALSE;
 
 	// Save the Last Known Opp Level
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gbLastKnownOppLevel, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, gbLastKnownOppLevel, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Known Opp Locations
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gsPublicLastKnownOppLoc, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gsPublicLastKnownOppLoc, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Known Opp Level
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
-	FileWrite( hFile, gbPublicLastKnownOppLevel, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, gbPublicLastKnownOppLevel, uiSaveSize)) return FALSE;
 
 	// Save the Public Noise Volume
 	uiSaveSize = MAXTEAMS;
-	FileWrite( hFile, gubPublicNoiseVolume, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gubPublicNoiseVolume, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Noise Gridno
 	uiSaveSize = MAXTEAMS;
-	FileWrite( hFile, gsPublicNoiseGridno, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
-
-
+	if (!FileWrite(hFile, gsPublicNoiseGridno, uiSaveSize)) return FALSE;
 
 	return( TRUE );
 }
@@ -3801,37 +3681,20 @@ BOOLEAN SaveWatchedLocsToSavedGame( HWFILE hFile )
 {
 	UINT32	uiArraySize;
 	UINT32	uiSaveSize=0;
-	UINT32	uiNumBytesWritten=0;
 
 	uiArraySize = TOTAL_SOLDIERS * NUM_WATCHED_LOCS;
 
 	// save locations of watched points
 	uiSaveSize = uiArraySize * sizeof( INT16 );
-	FileWrite( hFile, gsWatchedLoc, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gsWatchedLoc, uiSaveSize)) return FALSE;
 
 	uiSaveSize = uiArraySize * sizeof( INT8 );
 
-	FileWrite( hFile, gbWatchedLocLevel, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gbWatchedLocLevel, uiSaveSize)) return FALSE;
 
-	FileWrite( hFile, gubWatchedLocPoints, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gubWatchedLocPoints, uiSaveSize)) return FALSE;
 
-	FileWrite( hFile, gfWatchedLocReset, uiSaveSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSaveSize )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gfWatchedLocReset, uiSaveSize)) return FALSE;
 
 	return( TRUE );
 }
@@ -3904,8 +3767,6 @@ BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
 {
 	UINT32	uiNumOfNodes=0;
 	PathStPtr	pTempPath = Menptr[ ubID ].pMercPath;
-	UINT32	uiNumBytesWritten=0;
-
 
 	//loop through to get all the nodes
 	while( pTempPath )
@@ -3916,11 +3777,7 @@ BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
 
 
 	//Save the number of the nodes
-	FileWrite( hFile, &uiNumOfNodes, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, &uiNumOfNodes, sizeof(UINT32))) return FALSE;
 
 	//loop through all the nodes and add them
 	pTempPath = Menptr[ ubID ].pMercPath;
@@ -3930,11 +3787,7 @@ BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
 	while( pTempPath )
 	{
 		//Save the number of the nodes
-		FileWrite( hFile, pTempPath, sizeof( PathSt ), &uiNumBytesWritten );
-		if( uiNumBytesWritten != sizeof( PathSt ) )
-		{
-			return(FALSE);
-		}
+		if (!FileWrite(hFile, pTempPath, sizeof(PathSt))) return FALSE;
 
 		pTempPath = pTempPath->pNext;
 	}
@@ -4030,7 +3883,6 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
-	UINT32	uiNumBytesWritten;
 	UINT32	uiStrLen=0;
 	CHAR8		zFileName[128];
 
@@ -4048,8 +3900,7 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 	sprintf( zTempString, "%8d     %s\n", iPos, pMsg );
 	uiStrLen = strlen( zTempString );
 
-	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiStrLen )
+	if (!FileWrite(hFile, zTempString, uiStrLen))
 	{
 		FileClose( hFile );
 		return;
@@ -4074,7 +3925,6 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
-	UINT32	uiNumBytesWritten;
 	UINT32	uiStrLen=0;
 
 	CHAR8		zFileName[128];
@@ -4093,8 +3943,7 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 	sprintf( zTempString, "%8d     %s\n", iPos, pMsg );
 	uiStrLen = strlen( zTempString );
 
-	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiStrLen )
+	if (!FileWrite(hFile, zTempString, uiStrLen))
 	{
 		FileClose( hFile );
 		return;
@@ -4110,8 +3959,6 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 
 BOOLEAN SaveGeneralInfo( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
 
@@ -4319,8 +4166,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 
 	//Setup the
 	//Save the current music mode
-	FileWrite( hFile, &sGeneralInfo, sizeof( GENERAL_SAVE_INFO ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( GENERAL_SAVE_INFO ) )
+	if (!FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO)))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -4580,21 +4426,11 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 
 BOOLEAN SavePreRandomNumbersToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
+	//Save the Prerandom number index
+	if (!FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32))) return FALSE;
 
 	//Save the Prerandom number index
-	FileWrite( hFile, &guiPreRandomIndex, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-	{
-		return( FALSE );
-	}
-
-	//Save the Prerandom number index
-	FileWrite( hFile, guiPreRandomNums, sizeof( UINT32 ) * MAX_PREGENERATED_NUMS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) * MAX_PREGENERATED_NUMS )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS)) return FALSE;
 
 	return( TRUE );
 }
@@ -4630,14 +4466,8 @@ BOOLEAN LoadMeanwhileDefsFromSaveGameFile( HWFILE hFile )
 
 BOOLEAN SaveMeanwhileDefsFromSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
 	//Save the array of meanwhile defs
-	FileWrite( hFile, &gMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) * NUM_MEANWHILES, &uiNumBytesWritten );
-	if ( uiNumBytesWritten != sizeof( MEANWHILE_DEFINITION ) * NUM_MEANWHILES )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES)) return FALSE;
 
 	return( TRUE );
 }
@@ -4665,7 +4495,6 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen;
-	UINT32	uiNumBytesWritten;
 
 	//strcpy( gzNameOfMapTempFile, pNameOfFile);
 	sprintf( gzNameOfMapTempFile, "%s%d", pNameOfFile, ubSaveGameID );
@@ -4696,8 +4525,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
 
-		FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
-		if( uiNumBytesWritten != uiStrLen )
+		if (!FileWrite(hFile, zTempString, uiStrLen))
 		{
 			FileClose( hFile );
 			return;
@@ -4713,7 +4541,6 @@ static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, 
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
-	UINT32	uiNumBytesWritten;
 	UINT32	uiStrLen=0;
 
 	CHAR8		zFileName[128];
@@ -4734,8 +4561,7 @@ static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, 
 	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );
 
-	FileWrite( hFile, zTempString, uiStrLen, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiStrLen )
+	if (!FileWrite(hFile, zTempString, uiStrLen))
 	{
 		FileClose( hFile );
 		return;

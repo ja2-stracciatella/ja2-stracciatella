@@ -1531,7 +1531,7 @@ static BOOLEAN WriteBalanceToDisk(void)
 	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
 	// write balance to disk
-  FileWrite( hFileHandle, &(LaptopSaveInfo.iCurrentBalance),  sizeof ( INT32 ), NULL );
+	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
 	// close file
   FileClose( hFileHandle );
@@ -1591,11 +1591,11 @@ static BOOLEAN AppendFinanceToEndOfFile(FinanceUnitPtr pFinance)
 
 	// write finance to disk
   // now write date and amount, and code
-  FileWrite( hFileHandle, &(pFinanceList->ubCode),  sizeof ( UINT8 ), NULL );
-  FileWrite( hFileHandle, &(pFinanceList->ubSecondCode),  sizeof ( UINT8 ), NULL );
-  FileWrite( hFileHandle, &(pFinanceList->uiDate),  sizeof ( UINT32 ), NULL );
-  FileWrite( hFileHandle, &(pFinanceList->iAmount),  sizeof ( INT32 ), NULL );
-	FileWrite( hFileHandle, &(pFinanceList->iBalanceToDate),  sizeof ( INT32 ), NULL );
+	FileWrite(hFileHandle, &pFinanceList->ubCode,         sizeof(UINT8));
+	FileWrite(hFileHandle, &pFinanceList->ubSecondCode,   sizeof(UINT8));
+	FileWrite(hFileHandle, &pFinanceList->uiDate,         sizeof(UINT32));
+	FileWrite(hFileHandle, &pFinanceList->iAmount,        sizeof(INT32));
+	FileWrite(hFileHandle, &pFinanceList->iBalanceToDate, sizeof(INT32));
 
 		// close file
   FileClose( hFileHandle );

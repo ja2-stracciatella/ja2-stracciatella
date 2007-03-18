@@ -843,84 +843,26 @@ void UpdateClock()
 
 BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseState )
 {
-	UINT32	uiNumBytesWritten=0;
+	if (!FileWrite(hFile, &giTimeCompressMode,                sizeof(INT32)))   return FALSE;
+	if (!FileWrite(hFile, &gubClockResolution,                sizeof(UINT8)))   return FALSE;
+	if (!FileWrite(hFile, &fGamePaused,                       sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &gfTimeInterrupt,                   sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &fSuperCompression,                 sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &guiGameClock,                      sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &guiGameSecondsPerRealSecond,       sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &ubAmbientLightLevel,               sizeof(UINT8)))   return FALSE;
+	if (!FileWrite(hFile, &guiEnvTime,                        sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &guiEnvDay,                         sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &gubEnvLightValue,                  sizeof(UINT8)))   return FALSE;
+	if (!FileWrite(hFile, &guiTimeOfLastEventQuery,           sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &fLockPauseState,                   sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &gfTimeCompressionOn,               sizeof(BOOLEAN))) return FALSE;
+	if (!FileWrite(hFile, &guiPreviousGameClock,              sizeof(UINT32)))  return FALSE;
+	if (!FileWrite(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32)))  return FALSE;
 
-	FileWrite( hFile, &giTimeCompressMode, sizeof( INT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gubClockResolution, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &fGamePaused, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gfTimeInterrupt, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &fSuperCompression, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiGameClock, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiGameSecondsPerRealSecond, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &ubAmbientLightLevel, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiEnvTime, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiEnvDay, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gubEnvLightValue, sizeof( UINT8 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT8 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiTimeOfLastEventQuery, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &fLockPauseState, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gfPauseDueToPlayerGamePause, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &gfTimeCompressionOn, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiPreviousGameClock, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-	FileWrite( hFile, &guiLockPauseStateLastReasonId, sizeof( UINT32 ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( UINT32 ) )
-		return(FALSE);
-
-
-	FileWrite( hFile, gubUnusedTimePadding, TIME_PADDINGBYTES, &uiNumBytesWritten );
-	if( uiNumBytesWritten != TIME_PADDINGBYTES )
-		return(FALSE);
+	if (!FileWrite(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES)) return FALSE;
 	return( TRUE );
 }
 

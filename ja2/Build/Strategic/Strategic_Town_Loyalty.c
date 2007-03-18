@@ -1277,7 +1277,7 @@ void WriteOutDistancesBetweenTowns( void )
 
 	hFileHandle = FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 
-	FileWrite( hFileHandle, &( iTownDistances ),  ( sizeof( INT32 ) * NUM_TOWNS * NUM_TOWNS ), NULL );
+	FileWrite(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
 
 	// close file
   FileClose( hFileHandle );
@@ -1406,14 +1406,8 @@ UINT32 BuildLoyaltyEventValue( INT8 bTownValue, UINT32 uiValue, BOOLEAN fIncreme
 
 BOOLEAN SaveStrategicTownLoyaltyToSaveGameFile( HWFILE hFile )
 {
-	UINT32	uiNumBytesWritten;
-
 	//Save the Town Loyalty
-	FileWrite( hFile, gTownLoyalty, sizeof( TOWN_LOYALTY ) * NUM_TOWNS, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( TOWN_LOYALTY ) * NUM_TOWNS )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS)) return FALSE;
 
 	return( TRUE );
 }

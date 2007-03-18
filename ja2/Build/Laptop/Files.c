@@ -544,12 +544,12 @@ BOOLEAN OpenAndWriteFilesFile( void )
   while(pFilesList)
 	{
     	// now write date and amount, and code
-    FileWrite( hFileHandle, &(pFilesList->ubCode),  sizeof ( UINT8 ), NULL );
-		FileWrite( hFileHandle, &(pFilesList->uiDate),  sizeof ( UINT32 ), NULL );
-    FileWrite( hFileHandle, &(pFirstFilePath),  128, NULL );
-    FileWrite( hFileHandle, &(pSecondFilePath),  128, NULL );
-    FileWrite( hFileHandle, &(pFilesList->ubFormat), sizeof(UINT8), NULL );
-		FileWrite( hFileHandle, &(pFilesList->fRead), sizeof(UINT8), NULL );
+		FileWrite(hFileHandle, &pFilesList->ubCode,   sizeof(UINT8));
+		FileWrite(hFileHandle, &pFilesList->uiDate,   sizeof(UINT32));
+		FileWrite(hFileHandle, &pFirstFilePath,       128);
+		FileWrite(hFileHandle, &pSecondFilePath,      128);
+		FileWrite(hFileHandle, &pFilesList->ubFormat, sizeof(UINT8));
+		FileWrite(hFileHandle, &pFilesList->fRead,    sizeof(UINT8));
 
 		// next element in list
 		pFilesList = pFilesList->Next;

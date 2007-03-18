@@ -3687,44 +3687,24 @@ BOOLEAN SectorIsPartOfTown( INT8 bTownId, INT16 sSectorX, INT16 sSectorY )
 
 BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 {
-	UINT32		uiNumBytesWritten=0;
 	UINT32		uiSize = sizeof( StrategicMapElement ) * ( MAP_WORLD_X * MAP_WORLD_Y );
 
-
 	// Save the strategic map information
-	FileWrite( hFile, StrategicMap, uiSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, StrategicMap, uiSize)) return FALSE;
 
 	// Save the Sector Info
 	uiSize = sizeof( SECTORINFO ) * 256;
-	FileWrite( hFile, SectorInfo, uiSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, SectorInfo, uiSize)) return FALSE;
 
 	// Save the SAM Controlled Sector Information
 	uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
-	FileWrite( hFile, ubSAMControlledSectors, uiSize, &uiNumBytesWritten );
-	if( uiNumBytesWritten != uiSize)
-	{
-		return(FALSE);
-	}
+	if (!FileWrite(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
 */
 	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
 
 	// Save the fFoundOrta
-	FileWrite( hFile, &fFoundOrta, sizeof( BOOLEAN ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-	{
-		return(FALSE);
-	}
-
-
+	if (!FileWrite(hFile, &fFoundOrta, sizeof(BOOLEAN))) return FALSE;
 
 	return( TRUE );
 }

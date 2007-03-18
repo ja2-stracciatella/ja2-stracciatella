@@ -1391,34 +1391,11 @@ void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, 
 
 BOOLEAN SaveCreatureDirectives( HWFILE hFile )
 {
-	UINT32 uiNumBytesWritten;
-
-	FileWrite( hFile, &giHabitatedDistance, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-
-	FileWrite( hFile, &giPopulationModifier, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-	FileWrite( hFile, &giLairID, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
-	FileWrite( hFile, &gfUseCreatureMusic, 1, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( BOOLEAN ) )
-	{
-		return( FALSE );
-	}
-	FileWrite( hFile, &giDestroyedLairID, 4, &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( INT32 ) )
-	{
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &giHabitatedDistance,  4)) return FALSE;
+	if (!FileWrite(hFile, &giPopulationModifier, 4)) return FALSE;
+	if (!FileWrite(hFile, &giLairID,             4)) return FALSE;
+	if (!FileWrite(hFile, &gfUseCreatureMusic,   1)) return FALSE;
+	if (!FileWrite(hFile, &giDestroyedLairID,    4)) return FALSE;
 
 	return( TRUE );
 }

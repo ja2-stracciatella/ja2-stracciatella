@@ -148,9 +148,6 @@ BOOLEAN LoadGameSettings()
 BOOLEAN	SaveGameSettings()
 {
 	HWFILE		hFile;
-	UINT32	uiNumBytesWritten;
-
-
 
 	//create the file
 	hFile = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
@@ -172,8 +169,7 @@ BOOLEAN	SaveGameSettings()
 	gGameSettings.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
 	//Write the game settings to disk
-	FileWrite( hFile, &gGameSettings, sizeof( GAME_SETTINGS ), &uiNumBytesWritten );
-	if( uiNumBytesWritten != sizeof( GAME_SETTINGS ) )
+	if (!FileWrite(hFile, &gGameSettings, sizeof(GAME_SETTINGS)))
 	{
 		FileClose( hFile );
 		return(FALSE);
