@@ -180,40 +180,6 @@ void ShutdownInputManager(void)
 #endif
 }
 
-void QueuePureEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
-{
-  UINT32 uiTimer;
-  UINT16 usKeyState;
-
-  uiTimer = GetTickCount();
-  usKeyState = gfShiftState | gfCtrlState | gfAltState;
-
-  // Can we queue up one more event, if not, the event is lost forever
-  if (gusQueueCount == 256)
-  { // No more queue space
-    return;
-  }
-
-  // Okey Dokey, we can queue up the event, so we do it
-  gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
-  gEventQueue[gusTailIndex].usKeyState = usKeyState;
-  gEventQueue[gusTailIndex].usEvent = ubInputEvent;
-  gEventQueue[gusTailIndex].usParam = usParam;
-  gEventQueue[gusTailIndex].uiParam = uiParam;
-
-  // Increment the number of items on the input queue
-  gusQueueCount++;
-
-  // Increment the gusTailIndex pointer
-  if (gusTailIndex == 255)
-  { // The gusTailIndex is about to wrap around the queue ring
-    gusTailIndex = 0;
-  }
-  else
-  { // We simply increment the gusTailIndex
-    gusTailIndex++;
-  }
-}
 
 void QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam)
 {
