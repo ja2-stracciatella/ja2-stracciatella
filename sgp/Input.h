@@ -32,7 +32,6 @@
 
 typedef struct
 {
-  UINT32 uiTimeStamp;
   UINT16 usKeyState;
   UINT16 usEvent;
   UINT32 usParam;

@@ -209,7 +209,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 				guiSingleClickTimer = 0;
 
 				// Add a button up first...
-				gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
 				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState;
 				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_UP;
 				gEventQueue[gusTailIndex].usParam = usParam;
@@ -229,7 +228,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 
 
 				// Now do double click
-				gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
 				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState ;
 				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_DBL_CLK;
 				gEventQueue[gusTailIndex].usParam = usParam;
@@ -257,7 +255,6 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
   }
 
   // Okey Dokey, we can queue up the event, so we do it
-  gEventQueue[gusTailIndex].uiTimeStamp = uiTimer;
   gEventQueue[gusTailIndex].usKeyState = usKeyState;
   gEventQueue[gusTailIndex].usEvent = ubInputEvent;
   gEventQueue[gusTailIndex].usParam = usParam;
