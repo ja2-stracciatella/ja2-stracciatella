@@ -111,7 +111,6 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 {
 	UINT32					uiLoop;
 	HVOBJECT		   hVObject;
-	CHAR8	cFileBPP[128];
 	CHAR8	cAdjustedFile[ 128 ];
 	UINT32					cnt1, cnt2;
 	SMALL_TILE_SURF	s;
@@ -121,23 +120,16 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 
 	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
 	{
-
-		// Create video object
-
-		// Adjust for BPP
-		FilenameForBPP( gTilesets[ ubTilesetID ].TileSurfaceFilenames[ uiLoop ], cFileBPP);
-
 		// Adjust for tileset position
-		sprintf( cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, cFileBPP );
+		sprintf(cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, gTilesets[ubTilesetID].TileSurfaceFilenames[uiLoop]);
 
 		hVObject = CreateVideoObjectFromFile(cAdjustedFile);
 
 		if ( hVObject == NULL )
 		{
 			// TRY loading from default directory
-			FilenameForBPP( gTilesets[ GENERIC_1 ].TileSurfaceFilenames[ uiLoop ], cFileBPP);
 			// Adjust for tileset position
-			sprintf( cAdjustedFile, "TILESETS/0/T/%s", cFileBPP );
+			sprintf(cAdjustedFile, "TILESETS/0/T/%s", gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
 
 			// LOAD ONE WE KNOW ABOUT!
 			hVObject = CreateVideoObjectFromFile(cAdjustedFile);

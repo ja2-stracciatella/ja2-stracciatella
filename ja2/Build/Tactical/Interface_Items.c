@@ -2211,7 +2211,6 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubString[48];
 	INT32		cnt;
 	wchar_t	pStr[10];
 	UINT16	usX, usY;
@@ -2264,24 +2263,24 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //    if( guiCurrentScreen != MAP_SCREEN )
 		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 		 swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubGunShotsLeft, Weapon[ gpItemDescObject->usItem ].ubMagSize );
-		 FilenameForBPP("INTERFACE/infobox.sti", ubString);
 		 sForeColour = ITEMDESC_AMMO_FORE;
 
+		const char* Filename = "INTERFACE/infobox.sti";
 		switch( pObject->ubGunAmmoType )
 		{
 			case AMMO_AP:
 			case AMMO_SUPER_AP:
 			 //sForeColour = ITEMDESC_FONTAPFORE;
-			 giItemDescAmmoButtonImages			= LoadButtonImage(ubString,8,5,-1,7,-1 );
+				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 8, 5, -1, 7, -1);
 			 break;
 			case AMMO_HP:
 			 //sForeColour = ITEMDESC_FONTHPFORE;
 
-			 giItemDescAmmoButtonImages			= LoadButtonImage(ubString,12,9,-1,11,-1 );
+				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 12, 9, -1, 11, -1);
 			 break;
 			default:
 			 //sForeColour = FONT_MCOLOR_WHITE;
-			 giItemDescAmmoButtonImages			= LoadButtonImage(ubString,4,1,-1,3,-1 );
+				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 4, 1, -1, 3, -1);
 			 break;
 
 		}
@@ -5783,7 +5782,6 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
 {
-	UINT8						ubString[48];
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
 	INT16						sCenX, sCenY, sX, sY, sCenterYVal;
@@ -5904,8 +5902,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	gItemPickupMenu.fAllSelected	= FALSE;
 
 	//Load images for buttons
-	FilenameForBPP("INTERFACE/itembox.sti", ubString );
-	gItemPickupMenu.iUpButtonImages			= LoadButtonImage( ubString, -1,5,-1,10,-1 );
+	gItemPickupMenu.iUpButtonImages     = LoadButtonImage("INTERFACE/itembox.sti", -1, 5, -1, 10, -1);
 	gItemPickupMenu.iDownButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 7, -1, 12, -1 );
 	gItemPickupMenu.iAllButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 6, -1,11, -1 );
 	gItemPickupMenu.iCancelButtonImages	=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 8, -1, 13, -1 );

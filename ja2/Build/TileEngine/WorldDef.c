@@ -447,7 +447,6 @@ BOOLEAN AddTileSurface( char * cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOL
 {
 	// Add tile surface
 	PTILE_IMAGERY  TileSurf;
-	CHAR8	cFileBPP[128];
 	CHAR8	cAdjustedFile[ 128 ];
 
 	// Delete the surface first!
@@ -460,17 +459,14 @@ BOOLEAN AddTileSurface( char * cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOL
 	// Adjust flag for same as default used...
 	gbSameAsDefaultSurfaceUsed[ ubType ] = FALSE;
 
-	// Adjust for BPP
-	FilenameForBPP(cFilename, cFileBPP);
-
 	if ( !fGetFromRoot )
 	{
 		// Adjust for tileset position
-		sprintf( cAdjustedFile, "TILESETS/%d/%s", ubTilesetID, cFileBPP );
+		sprintf(cAdjustedFile, "TILESETS/%d/%s", ubTilesetID, cFilename);
 	}
 	else
 	{
-		sprintf( cAdjustedFile, "%s", cFileBPP );
+		sprintf(cAdjustedFile, "%s", cFilename);
 	}
 
 	TileSurf = LoadTileSurface( cAdjustedFile );

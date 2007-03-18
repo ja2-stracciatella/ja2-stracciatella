@@ -822,20 +822,18 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 		// Load into memory
 		HVOBJECT							hVObject;
 		HIMAGE								hImage;
-		CHAR8									sFilename[48];
 		STRUCTURE_FILE_REF		*pStructureFileRef;
 
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
 		strcpy(gSystemDebugStr, "Cache Load");
 
-	  // Create video object
-		FilenameForBPP(gAnimSurfaceDatabase[ usSurfaceIndex ].Filename, sFilename);
-		hImage = CreateImage(/*gAnimSurfaceDatabase[ usSurfaceIndex ].Filename*/sFilename, IMAGE_ALLDATA );
+		const char* Filename = gAnimSurfaceDatabase[usSurfaceIndex].Filename;
+		hImage = CreateImage(Filename, IMAGE_ALLDATA);
 
 	  if (hImage == NULL)
 	  {
-			 return( SET_ERROR( "Error: Could not load animation file %s", sFilename ) );
+			 return SET_ERROR("Error: Could not load animation file %s", Filename);
 	  }
 
 		hVObject = CreateVideoObject(hImage);
@@ -885,7 +883,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 			{
 				DestroyImage( hImage );
 				DeleteVideoObject( hVObject );
-				SET_ERROR(  "Animation structure ZStrip creation error: %s", sFilename );
+				SET_ERROR("Animation structure ZStrip creation error: %s", Filename);
 				return( FALSE );
 			}
 

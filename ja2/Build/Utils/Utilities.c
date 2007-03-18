@@ -14,12 +14,6 @@
 #include "VSurface.h"
 
 
-void FilenameForBPP(const char *pFilename, STR pDestination)
-{
-	// no processing for 16 bit names
-	strcpy(pDestination, pFilename);
-}
-
 BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
 {
   HWFILE     hFileHandle;
