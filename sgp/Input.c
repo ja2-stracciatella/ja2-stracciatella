@@ -17,7 +17,7 @@ extern UINT16 gsKeyTranslationTable[1024];
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
-BOOLEAN   gfKeyState[256];			// TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfKeyState[256]; // TRUE = Pressed, FALSE = Not Pressed
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
@@ -25,22 +25,22 @@ static SGPRect gCursorClipRect;
 // The gsKeyTranslationTables basically translates scan codes to our own key value table. Please note that the table is 2 bytes
 // wide per entry. This will be used since we will use 2 byte characters for translation purposes.
 
-UINT16   gfShiftState;					// TRUE = Pressed, FALSE = Not Pressed
-UINT16   gfAltState;						// TRUE = Pressed, FALSE = Not Pressed
-UINT16   gfCtrlState;						// TRUE = Pressed, FALSE = Not Pressed
+UINT16 gfShiftState; // TRUE = Pressed, FALSE = Not Pressed
+UINT16 gfAltState;   // TRUE = Pressed, FALSE = Not Pressed
+UINT16 gfCtrlState;  // TRUE = Pressed, FALSE = Not Pressed
 
 // These data structure are used to track the mouse while polling
 
 static UINT32 guiSingleClickTimer;
-UINT16		gusRecordedKeyState;
+UINT16 gusRecordedKeyState;
 
 static UINT32 guiLeftButtonRepeatTimer;
 static UINT32 guiRightButtonRepeatTimer;
 
-BOOLEAN   gfLeftButtonState;		// TRUE = Pressed, FALSE = Not Pressed
-BOOLEAN   gfRightButtonState;		// TRUE = Pressed, FALSE = Not Pressed
-UINT16    gusMouseXPos;					// X position of the mouse on screen
-UINT16    gusMouseYPos;					// y position of the mouse on screen
+BOOLEAN gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
+UINT16  gusMouseXPos;       // X position of the mouse on screen
+UINT16  gusMouseYPos;       // y position of the mouse on screen
 
 // The queue structures are used to track input events using queued events
 
@@ -52,7 +52,6 @@ static UINT16    gusTailIndex;
 // This is the WIN95 hook specific data and defines used to handle the keyboard and
 // mouse hook
 
-static HHOOK ghKeyboardHook;
 static HHOOK ghMouseHook;
 
 
@@ -121,173 +120,170 @@ LRESULT CALLBACK MouseHandler(int Code, WPARAM wParam, LPARAM lParam)
 
 BOOLEAN InitializeInputManager(void)
 {
-  // Link to debugger
-  RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
-  // Initialize the gfKeyState table to FALSE everywhere
-  memset(gfKeyState, FALSE, 256);
-  // Initialize the Event Queue
-  gusQueueCount = 0;
-  gusHeadIndex  = 0;
-  gusTailIndex  = 0;
-  // Initialize other variables
-  gfShiftState = FALSE;
-  gfAltState   = FALSE;
-  gfCtrlState  = FALSE;
-  // Initialize variables pertaining to DOUBLE CLIK stuff
-  guiSingleClickTimer = 0;
-  // Initialize variables pertaining to the button states
-  gfLeftButtonState  = FALSE;
-  gfRightButtonState = FALSE;
-  // Initialize variables pertaining to the repeat mechanism
-  guiLeftButtonRepeatTimer = 0;
+	// Link to debugger
+	RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
+	// Initialize the gfKeyState table to FALSE everywhere
+	memset(gfKeyState, FALSE, 256);
+	// Initialize the Event Queue
+	gusQueueCount = 0;
+	gusHeadIndex  = 0;
+	gusTailIndex  = 0;
+	// Initialize other variables
+	gfShiftState = FALSE;
+	gfAltState   = FALSE;
+	gfCtrlState  = FALSE;
+	// Initialize variables pertaining to DOUBLE CLIK stuff
+	guiSingleClickTimer = 0;
+	// Initialize variables pertaining to the button states
+	gfLeftButtonState  = FALSE;
+	gfRightButtonState = FALSE;
+	// Initialize variables pertaining to the repeat mechanism
+	guiLeftButtonRepeatTimer = 0;
 	guiRightButtonRepeatTimer = 0;
-  // Set the mouse to the center of the screen
-  gusMouseXPos = 320;
-  gusMouseYPos = 240;
+	// Set the mouse to the center of the screen
+	gusMouseXPos = 320;
+	gusMouseYPos = 240;
 #if 1 // XXX TODO
 	FIXME
 #else
-  ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC) MouseHandler, (HINSTANCE) 0, GetCurrentThreadId());
-  DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
+	ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC)MouseHandler, (HINSTANCE)0, GetCurrentThreadId());
+	DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
 #endif
-  return TRUE;
+	return TRUE;
 }
+
 
 void ShutdownInputManager(void)
 {
 	// There's very little to do when shutting down the input manager. In the future, this is where the keyboard and
-  // mouse hooks will be destroyed
-  UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
+	// mouse hooks will be destroyed
+	UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
 #if 1 // XXX TODO
 	FIXME
 #else
-  UnhookWindowsHookEx(ghKeyboardHook);
-  UnhookWindowsHookEx(ghMouseHook);
+	UnhookWindowsHookEx(ghMouseHook);
 #endif
 }
 
 
 void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 {
-  UINT32 uiTimer;
-  UINT16 usKeyState;
+	UINT32 uiTimer = GetTickCount();
+	UINT16 usKeyState = gfShiftState | gfCtrlState | gfAltState;
 
-  uiTimer = GetTickCount();
-  usKeyState = gfShiftState | gfCtrlState | gfAltState;
+	// Can we queue up one more event, if not, the event is lost forever
+	if (gusQueueCount == 256)
+	{ // No more queue space
+		return;
+	}
 
-  // Can we queue up one more event, if not, the event is lost forever
-  if (gusQueueCount == 256)
-  { // No more queue space
-    return;
-  }
+	if (ubInputEvent == LEFT_BUTTON_DOWN)
+	{
+		guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
+	}
 
-  if (ubInputEvent == LEFT_BUTTON_DOWN)
-  {
-    guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
-  }
+	if (ubInputEvent == RIGHT_BUTTON_DOWN)
+	{
+		guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
+	}
 
-  if (ubInputEvent == RIGHT_BUTTON_DOWN)
-  {
-    guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIMEOUT;
-  }
+	if (ubInputEvent == LEFT_BUTTON_UP)
+	{
+		guiLeftButtonRepeatTimer = 0;
+	}
 
-  if (ubInputEvent == LEFT_BUTTON_UP)
-  {
-    guiLeftButtonRepeatTimer = 0;
-  }
+	if (ubInputEvent == RIGHT_BUTTON_UP)
+	{
+		guiRightButtonRepeatTimer = 0;
+	}
 
-  if (ubInputEvent == RIGHT_BUTTON_UP)
-  {
-    guiRightButtonRepeatTimer = 0;
-  }
-
-  if ( (ubInputEvent == LEFT_BUTTON_UP) )
-  {
+	if (ubInputEvent == LEFT_BUTTON_UP)
+	{
 		// Do we have a double click
-		if ( ( uiTimer - guiSingleClickTimer ) < DBL_CLK_TIME )
+		if (uiTimer - guiSingleClickTimer < DBL_CLK_TIME)
 		{
-				guiSingleClickTimer = 0;
+			guiSingleClickTimer = 0;
 
-				// Add a button up first...
-				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState;
-				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_UP;
-				gEventQueue[gusTailIndex].usParam = usParam;
+			// Add a button up first...
+			gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState;
+			gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_UP;
+			gEventQueue[gusTailIndex].usParam = usParam;
 
-				// Increment the number of items on the input queue
-				gusQueueCount++;
+			// Increment the number of items on the input queue
+			gusQueueCount++;
 
-				// Increment the gusTailIndex pointer
-				if (gusTailIndex == 255)
-				{ // The gusTailIndex is about to wrap around the queue ring
-					gusTailIndex = 0;
-				}
-				else
-				{ // We simply increment the gusTailIndex
-					gusTailIndex++;
-				}
+			// Increment the gusTailIndex pointer
+			if (gusTailIndex == 255)
+			{ // The gusTailIndex is about to wrap around the queue ring
+				gusTailIndex = 0;
+			}
+			else
+			{ // We simply increment the gusTailIndex
+				gusTailIndex++;
+			}
 
+			// Now do double click
+			gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState ;
+			gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_DBL_CLK;
+			gEventQueue[gusTailIndex].usParam = usParam;
 
-				// Now do double click
-				gEventQueue[gusTailIndex].usKeyState = gusRecordedKeyState ;
-				gEventQueue[gusTailIndex].usEvent = LEFT_BUTTON_DBL_CLK;
-				gEventQueue[gusTailIndex].usParam = usParam;
+			// Increment the number of items on the input queue
+			gusQueueCount++;
 
-				// Increment the number of items on the input queue
-				gusQueueCount++;
+			// Increment the gusTailIndex pointer
+			if (gusTailIndex == 255)
+			{ // The gusTailIndex is about to wrap around the queue ring
+				gusTailIndex = 0;
+			}
+			else
+			{ // We simply increment the gusTailIndex
+				gusTailIndex++;
+			}
 
-				// Increment the gusTailIndex pointer
-				if (gusTailIndex == 255)
-				{ // The gusTailIndex is about to wrap around the queue ring
-					gusTailIndex = 0;
-				}
-				else
-				{ // We simply increment the gusTailIndex
-					gusTailIndex++;
-				}
-
-				return;
+			return;
 		}
 		else
 		{
 			// Save time
 			guiSingleClickTimer = uiTimer;
 		}
-  }
+	}
 
-  // Okey Dokey, we can queue up the event, so we do it
-  gEventQueue[gusTailIndex].usKeyState = usKeyState;
-  gEventQueue[gusTailIndex].usEvent = ubInputEvent;
-  gEventQueue[gusTailIndex].usParam = usParam;
+	// Okey Dokey, we can queue up the event, so we do it
+	gEventQueue[gusTailIndex].usKeyState = usKeyState;
+	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
+	gEventQueue[gusTailIndex].usParam = usParam;
 
-  // Increment the number of items on the input queue
-  gusQueueCount++;
+	// Increment the number of items on the input queue
+	gusQueueCount++;
 
-  // Increment the gusTailIndex pointer
-  if (gusTailIndex == 255)
-  { // The gusTailIndex is about to wrap around the queue ring
-    gusTailIndex = 0;
-  }
-  else
-  { // We simply increment the gusTailIndex
-    gusTailIndex++;
-  }
+	// Increment the gusTailIndex pointer
+	if (gusTailIndex == 255)
+	{ // The gusTailIndex is about to wrap around the queue ring
+		gusTailIndex = 0;
+	}
+	else
+	{ // We simply increment the gusTailIndex
+		gusTailIndex++;
+	}
 }
 
-BOOLEAN DequeueSpecificEvent(InputAtom *Event, UINT32 uiMaskFlags )
+
+BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 {
-  // Is there an event to dequeue
-  if (gusQueueCount > 0)
-  {
-		memcpy( Event, &( gEventQueue[gusHeadIndex] ), sizeof( InputAtom ) );
+	// Is there an event to dequeue
+	if (gusQueueCount > 0)
+	{
+		memcpy(Event, &gEventQueue[gusHeadIndex], sizeof(InputAtom));
 
 		// Check if it has the masks!
-		if ( ( Event->usEvent & uiMaskFlags ) )
+		if (Event->usEvent & uiMaskFlags)
 		{
-			return( DequeueEvent( Event) );
+			return DequeueEvent(Event);
 		}
 	}
 
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -296,13 +292,13 @@ static void HandleSingleClicksAndButtonRepeats(void);
 
 BOOLEAN DequeueEvent(InputAtom *Event)
 {
-	HandleSingleClicksAndButtonRepeats( );
+	HandleSingleClicksAndButtonRepeats();
 
-  // Is there an event to dequeue
-  if (gusQueueCount > 0)
-  {
+	// Is there an event to dequeue
+	if (gusQueueCount > 0)
+	{
 		// We have an event, so we dequeue it
-		memcpy( Event, &( gEventQueue[gusHeadIndex] ), sizeof( InputAtom ) );
+		memcpy(Event, &gEventQueue[gusHeadIndex], sizeof(InputAtom));
 
 		if (gusHeadIndex == 255)
 		{
@@ -318,7 +314,7 @@ BOOLEAN DequeueEvent(InputAtom *Event)
 
 		// dequeued an event, return TRUE
 		return TRUE;
-  }
+	}
 	else
 	{
 		// No events to dequeue, return FALSE
@@ -329,8 +325,8 @@ BOOLEAN DequeueEvent(InputAtom *Event)
 
 static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 {
-  UINT32 ubKey;
-  UINT16 ubChar;
+	UINT32 ubKey;
+	UINT16 ubChar;
 
 #if 1 // XXX HACK0008
 	SDLKey Key = KeySym->sym;
@@ -384,13 +380,13 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	ubChar = ubKey;
 #else
 	// Find ucChar by translating ubKey using the gsKeyTranslationTable. If the SHIFT, ALT or CTRL key are down, then
-  // the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
-  if (gfShiftState == TRUE)
-  { // SHIFT is pressed, hence we add 256 to ubKey before translation to ubChar
-    ubChar = gsKeyTranslationTable[ubKey+256];
-  }
-  else
-  {
+	// the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
+	if (gfShiftState == TRUE)
+	{ // SHIFT is pressed, hence we add 256 to ubKey before translation to ubChar
+		ubChar = gsKeyTranslationTable[ubKey + 256];
+	}
+	else
+	{
 		//
 		// Even though gfAltState is checked as if it was a BOOLEAN, it really contains 0x02, which
 		// is NOT == to true.  This is broken, however to fix it would break Ja2 and Wizardry.
@@ -398,52 +394,52 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		// Just something i found, and thought u should know about.  DF.
 		//
 
-    if( gfAltState == TRUE )
-    { // ALT is pressed, hence ubKey is multiplied by 3 before translation to ubChar
-      ubChar = gsKeyTranslationTable[ubKey+512];
-    }
-    else
-    {
-      if (gfCtrlState == TRUE)
-      { // CTRL is pressed, hence ubKey is multiplied by 4 before translation to ubChar
-        ubChar = gsKeyTranslationTable[ubKey+768];
-      }
-      else
-      { // None of the SHIFT, ALT or CTRL are pressed hence we have a default translation of ubKey
-        ubChar = gsKeyTranslationTable[ubKey];
-      }
-    }
-  }
+		if( gfAltState == TRUE )
+		{ // ALT is pressed, hence ubKey is multiplied by 3 before translation to ubChar
+			ubChar = gsKeyTranslationTable[ubKey + 512];
+		}
+		else
+		{
+			if (gfCtrlState == TRUE)
+			{ // CTRL is pressed, hence ubKey is multiplied by 4 before translation to ubChar
+				ubChar = gsKeyTranslationTable[ubKey + 768];
+			}
+			else
+			{ // None of the SHIFT, ALT or CTRL are pressed hence we have a default translation of ubKey
+				ubChar = gsKeyTranslationTable[ubKey];
+			}
+		}
+	}
 #endif
 
-  if (Pressed)
-  { // Key has been PRESSED
-    // Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
-    if (gfKeyState[ubKey] == FALSE)
-    { // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
+	if (Pressed)
+	{ // Key has been PRESSED
+		// Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
+		if (gfKeyState[ubKey] == FALSE)
+		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = TRUE;
 			QueueEvent(KEY_DOWN, ubChar);
-    }
-    else
-    { // Well the key gets repeated
+		}
+		else
+		{ // Well the key gets repeated
 			QueueEvent(KEY_REPEAT, ubChar);
-    }
-  }
-  else
-  { // Key has been RELEASED
-    // Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
-    if (gfKeyState[ubKey] == TRUE)
-    { // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
-      gfKeyState[ubKey] = FALSE;
-      QueueEvent(KEY_UP, ubChar);
-    }
+		}
+	}
+	else
+	{ // Key has been RELEASED
+		// Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
+		if (gfKeyState[ubKey] == TRUE)
+		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
+			gfKeyState[ubKey] = FALSE;
+			QueueEvent(KEY_UP, ubChar);
+		}
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed
-		else if( ubChar == TAB && gfAltState )
+		else if (ubChar == TAB && gfAltState)
 		{
 			// therefore minimize the application
-			ShowWindow( ghWindow, SW_MINIMIZE );
-      gfKeyState[ ALT ] = FALSE;
+			ShowWindow(ghWindow, SW_MINIMIZE);
+			gfKeyState[ALT] = FALSE;
 			gfAltState = FALSE;
 		}
 #endif
@@ -452,7 +448,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 
 
 void KeyDown(const SDL_keysym* KeySym)
-{ // Are we PRESSING down one of SHIFT, ALT or CTRL ???
+{
 	switch (KeySym->sym)
 	{
 		case SDLK_LSHIFT:
@@ -485,7 +481,7 @@ void KeyDown(const SDL_keysym* KeySym)
 
 
 void KeyUp(const SDL_keysym* KeySym)
-{ // Are we RELEASING one of SHIFT, ALT or CTRL ???
+{
 	switch (KeySym->sym)
 	{
 		case SDLK_LSHIFT:
@@ -525,66 +521,62 @@ void KeyUp(const SDL_keysym* KeySym)
 }
 
 
-void GetMousePos(SGPPoint *Point)
+void GetMousePos(SGPPoint* Point)
 {
-  POINT MousePos;
-
-  GetCursorPos(&MousePos);
-
-  Point->iX = (UINT32) MousePos.x;
-  Point->iY = (UINT32) MousePos.y;
+	POINT MousePos;
+	GetCursorPos(&MousePos);
+	Point->iX = MousePos.x;
+	Point->iY = MousePos.y;
 }
 
-
-//
-// Miscellaneous input-related utility functions:
-//
 
 void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 {
 	SGPRect TempRect;
-
 	TempRect.iLeft   = usX1;
 	TempRect.iTop    = usY1;
 	TempRect.iRight  = usX2;
 	TempRect.iBottom = usY2;
-
 	RestrictMouseCursor(&TempRect);
 }
 
+
 void RestrictMouseCursor(SGPRect *pRectangle)
 {
-  // Make a copy of our rect....
+	// Make a copy of our rect....
 	gCursorClipRect = *pRectangle;
 #if 1 // XXX TODO0000 Should probably removed completly. Confining the mouse cursor is The Wrong Thing(tm)
 #else
-  ClipCursor((RECT *)pRectangle);
+	ClipCursor((RECT*)pRectangle);
 #endif
 	fCursorWasClipped = TRUE;
 }
+
 
 void FreeMouseCursor(void)
 {
 #if 1 // XXX TODO0000
 #else
-  ClipCursor(NULL);
+	ClipCursor(NULL);
 #endif
 	fCursorWasClipped = FALSE;
 }
 
-void RestoreCursorClipRect( void )
+
+void RestoreCursorClipRect(void)
 {
 #if 1 // XXX TODO0000
 	UNIMPLEMENTED();
 #else
-  if ( fCursorWasClipped )
-  {
-    ClipCursor( &gCursorClipRect );
-  }
+	if (fCursorWasClipped)
+	{
+		ClipCursor(&gCursorClipRect);
+	}
 #endif
 }
 
-void GetRestrictedClipCursor( SGPRect *pRectangle )
+
+void GetRestrictedClipCursor(SGPRect* pRectangle)
 {
 #if 1 // XXX TODO0000
 	pRectangle->iLeft   = 0;
@@ -596,15 +588,15 @@ void GetRestrictedClipCursor( SGPRect *pRectangle )
 #endif
 }
 
-BOOLEAN IsCursorRestricted( void )
+
+BOOLEAN IsCursorRestricted(void)
 {
-	return( fCursorWasClipped );
+	return fCursorWasClipped;
 }
+
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
-	FLOAT flNewXPos, flNewYPos;
-
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
 	// mouse_event() uses your current Windows resolution to calculate the resulting x,y coordinates.  So in order to get
 	// the right coordinates, you'd have to find out the current Windows resolution through a system call, and then do:
@@ -620,28 +612,26 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	SDL_WarpMouse(uiNewXPos, uiNewYPos);
 #else
 	// Adjust coords based on our resolution
-	flNewXPos = ( (FLOAT)uiNewXPos / SCREEN_WIDTH ) * 65536;
-	flNewYPos = ( (FLOAT)uiNewYPos / SCREEN_HEIGHT ) * 65536;
+	FLOAT flNewXPos = (FLOAT)uiNewXPos / SCREEN_WIDTH  * 65536;
+	FLOAT flNewYPos = (FLOAT)uiNewYPos / SCREEN_HEIGHT * 65536;
 
-	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
+	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0);
 #endif
 }
 
 
-void DequeueAllKeyBoardEvents()
+void DequeueAllKeyBoardEvents(void)
 {
 #if 1 // XXX TODO
 	FIXME
 #else
-	InputAtom  InputEvent;
-	MSG				 KeyMessage;
-
-
 	//dequeue all the events waiting in the windows queue
-	while( PeekMessage( &KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE ) );
+	MSG KeyMessage;
+	while (PeekMessage(&KeyMessage, ghWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE));
 
 	//Deque all the events waiting in the SGP queue
-	while (DequeueEvent(&InputEvent) == TRUE)
+	InputAtom InputEvent;
+	while (DequeueEvent(&InputEvent))
   {
 		//dont do anything
 	}
@@ -651,37 +641,34 @@ void DequeueAllKeyBoardEvents()
 
 static void HandleSingleClicksAndButtonRepeats(void)
 {
-  UINT32 uiTimer;
+	UINT32 uiTimer = GetTickCount();
 
-
-  uiTimer = GetTickCount();
-
-  // Is there a LEFT mouse button repeat
-  if (gfLeftButtonState)
-  {
-    if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
-    {
-      QueueEvent(LEFT_BUTTON_REPEAT, 0);
-      guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-    }
-  }
-  else
-  {
-    guiLeftButtonRepeatTimer = 0;
-  }
+	// Is there a LEFT mouse button repeat
+	if (gfLeftButtonState)
+	{
+		if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
+		{
+			QueueEvent(LEFT_BUTTON_REPEAT, 0);
+			guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+		}
+	}
+	else
+	{
+		guiLeftButtonRepeatTimer = 0;
+	}
 
 
 	// Is there a RIGHT mouse button repeat
 	if (gfRightButtonState)
-  {
-    if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
-    {
-      QueueEvent(RIGHT_BUTTON_REPEAT, 0);
-      guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
-    }
-  }
-  else
-  {
-    guiRightButtonRepeatTimer = 0;
-  }
+	{
+		if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
+		{
+			QueueEvent(RIGHT_BUTTON_REPEAT, 0);
+			guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+		}
+	}
+	else
+	{
+		guiRightButtonRepeatTimer = 0;
+	}
 }
