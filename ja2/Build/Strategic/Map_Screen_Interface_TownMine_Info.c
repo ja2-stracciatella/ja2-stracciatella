@@ -782,7 +782,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 														 FONT_WHITE, FONT_BLACK,
 														 TEXT_CJUSTIFIED,
 														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineInventoryButtonCallBack );
+														 DEFAULT_MOVE_CALLBACK, MapTownMineInventoryButtonCallBack );
 
 
 	sX = sX + sWidthA + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
@@ -795,7 +795,7 @@ void AddInventoryButtonForMapPopUpBox( void )
 														 FONT_WHITE, FONT_BLACK,
 														 TEXT_CJUSTIFIED,
 														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)MapTownMineExitButtonCallBack );
+														 DEFAULT_MOVE_CALLBACK, MapTownMineExitButtonCallBack );
 
 	// delete video object
 	DeleteVideoObjectFromIndex( uiObject );

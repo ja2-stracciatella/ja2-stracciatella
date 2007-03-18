@@ -1260,12 +1260,12 @@ void CreateButtonsForFilesPage( void )
 	giFilesPageButtonsImage[0]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
 	giFilesPageButtons[0] = QuickCreateButton( giFilesPageButtonsImage[0], PREVIOUS_FILE_PAGE_BUTTON_X,  PREVIOUS_FILE_PAGE_BUTTON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnPreviousFilePageCallback );
+										BtnGenericMouseMoveButtonCallback, BtnPreviousFilePageCallback );
 
 	giFilesPageButtonsImage[ 1 ]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
 	giFilesPageButtons[ 1 ] = QuickCreateButton( giFilesPageButtonsImage[ 1 ], NEXT_FILE_PAGE_BUTTON_X,  NEXT_FILE_PAGE_BUTTON_Y ,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNextFilePageCallback );
+										BtnGenericMouseMoveButtonCallback, BtnNextFilePageCallback );
 
 	SetButtonCursor(giFilesPageButtons[ 0 ], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giFilesPageButtons[ 1 ], CURSOR_LAPTOP_SCREEN);

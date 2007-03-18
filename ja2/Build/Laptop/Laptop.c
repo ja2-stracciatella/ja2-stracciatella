@@ -2232,7 +2232,7 @@ CreateLaptopButtons()
  /*giLapTopButtonImage[ON_BUTTON]=  LoadButtonImage( "LAPTOP/button.sti" ,-1,1,-1,0,-1 );
  giLapTopButton[ON_BUTTON] = QuickCreateButton( giLapTopButtonImage[ON_BUTTON], ON_X, ON_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOnCallback);
+										BtnGenericMouseMoveButtonCallback, BtnOnCallback);
   */
 
 
@@ -2242,7 +2242,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[0]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,0,-1,8,-1 );
  gLaptopButton[0] = QuickCreateButton( gLaptopButtonImage[0], 29, 66,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)EmailRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, EmailRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[0], LAPTOP_BN_HLP_TXT_VIEW_EMAIL );
 
  SpecifyButtonText(  gLaptopButton[0], pLaptopIcons[ 0 ] );
@@ -2254,7 +2254,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[1]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,1,-1,9,-1 );
  gLaptopButton[1] = QuickCreateButton( gLaptopButtonImage[1], 29, 98,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)WWWRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, WWWRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[1], LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES );
 
  SpecifyButtonText(  gLaptopButton[1], pLaptopIcons[1 ] );
@@ -2266,7 +2266,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[2]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,2,-1,10,-1 );
  gLaptopButton[2] = QuickCreateButton( gLaptopButtonImage[2], 29, 130,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FilesRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, FilesRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[2], LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS );
 
  SpecifyButtonText(  gLaptopButton[2], pLaptopIcons[ 5 ] );
@@ -2279,7 +2279,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[3]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,3,-1,11,-1 );
  gLaptopButton[3] = QuickCreateButton( gLaptopButtonImage[3], 29, 194,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PersonnelRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, PersonnelRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[3], LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO );
 
  SpecifyButtonText(  gLaptopButton[3], pLaptopIcons[ 3] );
@@ -2292,7 +2292,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[4]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,4,-1,12,-1 );
  gLaptopButton[4] = QuickCreateButton( gLaptopButtonImage[4], 29, 162,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)HistoryRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, HistoryRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[4], LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS );
 
  SpecifyButtonText(  gLaptopButton[4], pLaptopIcons[ 4 ] );
@@ -2305,7 +2305,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[5]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,5,-1,13,-1 );
  gLaptopButton[5] = QuickCreateButton( gLaptopButtonImage[5], 29, 226 + 15,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FinancialRegionButtonCallback);
+										BtnGenericMouseMoveButtonCallback, FinancialRegionButtonCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[5], LAPTOP_BN_HLP_TXT_VIEW_FINANCIAL_SUMMARY_AND_HISTORY );
 
  SpecifyButtonText(  gLaptopButton[5], pLaptopIcons[ 2 ] );
@@ -2318,7 +2318,7 @@ CreateLaptopButtons()
  gLaptopButtonImage[6]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,6,-1,14,-1 );
  gLaptopButton[6] = QuickCreateButton( gLaptopButtonImage[6], 29, 371 + 7, //DEF: was 19
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnOnCallback);
+										BtnGenericMouseMoveButtonCallback, BtnOnCallback);
 	CreateLaptopButtonHelpText( gLaptopButton[6], LAPTOP_BN_HLP_TXT_CLOSE_LAPTOP );
 
  SpecifyButtonText(  gLaptopButton[6], pLaptopIcons[ 6 ] );
@@ -3705,7 +3705,7 @@ void CreateDestroyErrorButton( void )
 	giErrorButtonImage[0]=LoadButtonImage( "LAPTOP/errorbutton.sti" ,-1,0,-1,1,-1 );
   giErrorButton[0]= QuickCreateButton( giErrorButtonImage[0], ERROR_X+ERROR_BTN_X, ERROR_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnErrorCallback);
+										BtnGenericMouseMoveButtonCallback, BtnErrorCallback);
 
 	// define the cursor
 	SetButtonCursor(giErrorButton[0], CURSOR_LAPTOP_SCREEN);
@@ -4612,7 +4612,7 @@ void CreateMinimizeButtonForCurrentMode( void )
   gLaptopMinButtonImage[0]=  LoadButtonImage( "LAPTOP/x.sti" ,-1,0,-1,1,-1 );
   gLaptopMinButton[0] = QuickCreateButton( gLaptopMinButtonImage[0], 590, 30,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)LaptopMinimizeProgramButtonCallback);
+										BtnGenericMouseMoveButtonCallback, LaptopMinimizeProgramButtonCallback);
 
 	SetButtonCursor(gLaptopMinButton[0], CURSOR_LAPTOP_SCREEN);
 }

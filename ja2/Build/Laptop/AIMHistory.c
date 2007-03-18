@@ -241,7 +241,7 @@ BOOLEAN InitAimHistoryMenuBar(void)
 	{
 //		guiHistoryMenuButton[i] = QuickCreateButton(guiHistoryMenuButtonImage, usPosX, AIM_HISTORY_MENU_Y,
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-//																	DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnHistoryMenuButtonCallback);
+//																	DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
 //		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
 //		MSYS_SetBtnUserData( guiHistoryMenuButton[i], 0, i+1);
 

@@ -1186,20 +1186,20 @@ static void CreateFinanceButtons(void)
   giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1  );
 	giFinanceButton[PREV_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnFinanceDisplayPrevPageCallBack);
+										BtnGenericMouseMoveButtonCallback, BtnFinanceDisplayPrevPageCallBack);
 
 
 	giFinanceButtonImage[NEXT_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON] ,-1,6,-1,7,-1 );
 	giFinanceButton[NEXT_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnFinanceDisplayNextPageCallBack);
+										BtnGenericMouseMoveButtonCallback, BtnFinanceDisplayNextPageCallBack);
 
 
 	//button to go to the first page
   giFinanceButtonImage[FIRST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,3,-1,4,-1  );
 	giFinanceButton[FIRST_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[FIRST_PAGE_BUTTON], FIRST_PAGE_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnFinanceFirstLastPageCallBack);
+										BtnGenericMouseMoveButtonCallback, BtnFinanceFirstLastPageCallBack);
 
 	MSYS_SetBtnUserData( giFinanceButton[FIRST_PAGE_BUTTON], 0, 0 );
 
@@ -1207,7 +1207,7 @@ static void CreateFinanceButtons(void)
   giFinanceButtonImage[LAST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,9,-1,10,-1  );
 	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnFinanceFirstLastPageCallBack);
+										BtnGenericMouseMoveButtonCallback, BtnFinanceFirstLastPageCallBack);
 	MSYS_SetBtnUserData( giFinanceButton[LAST_PAGE_BUTTON], 0, 1 );
 
 

@@ -593,7 +593,7 @@ void CreateIMPButtons( void )
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPCancelCallback);
+														 BtnGenericMouseMoveButtonCallback, BtnIMPCancelCallback);
 
 	SpecifyButtonTextSubOffsets( giIMPButton[0], 0, -1, FALSE );
 

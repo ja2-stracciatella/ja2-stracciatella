@@ -249,7 +249,7 @@ BOOLEAN InitFlowerButtons()
 	{
 		guiGalleryButton[j] = QuickCreateButton( guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY,
 																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																	DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnGalleryFlowerButtonCallback);
+																	DEFAULT_MOVE_CALLBACK, BtnGalleryFlowerButtonCallback);
 		SetButtonCursor( guiGalleryButton[j], CURSOR_WWW);
 		MSYS_SetBtnUserData( guiGalleryButton[j], 0, count);
 

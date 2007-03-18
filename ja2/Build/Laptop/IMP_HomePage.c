@@ -402,7 +402,7 @@ void CreateIMPHomePageButtons( void )
    giIMPHomePageButtonImage[0]=  LoadButtonImage( "LAPTOP/button_1.sti" ,-1,0,-1,1,-1 );
 	/*  giIMPHomePageButton[0] = QuickCreateButton( giIMPHomePageButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 286 - 106 ), LAPTOP_SCREEN_WEB_UL_Y + ( 248 - 48 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAboutUsCallback);
+										BtnGenericMouseMoveButtonCallback, BtnIMPAboutUsCallback);
   */
 
 	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL,
@@ -410,7 +410,7 @@ void CreateIMPHomePageButtons( void )
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 286 - 106 ), LAPTOP_SCREEN_WEB_UL_Y + ( 248 - 48), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPAboutUsCallback);
+														 	BtnGenericMouseMoveButtonCallback, BtnIMPAboutUsCallback);
 
 
 	SetButtonCursor(giIMPHomePageButton[ 0 ], CURSOR_WWW);

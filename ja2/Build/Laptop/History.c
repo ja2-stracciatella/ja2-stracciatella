@@ -381,13 +381,13 @@ void CreateHistoryButtons( void )
   giHistoryButtonImage[PREV_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
 	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayPrevPageCallBack);
+										BtnGenericMouseMoveButtonCallback, BtnHistoryDisplayPrevPageCallBack);
 
 	// the next page button
 	giHistoryButtonImage[NEXT_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
 	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnHistoryDisplayNextPageCallBack);
+											BtnGenericMouseMoveButtonCallback, BtnHistoryDisplayNextPageCallBack);
 
 
 	// set buttons

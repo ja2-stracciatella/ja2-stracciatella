@@ -490,7 +490,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 														 33, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 (INT16)(gTalkPanel.sX + TALK_PANEL_BUTTON_X), (INT16)(gTalkPanel.sY + TALK_PANEL_BUTTON_Y), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-														 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)DoneTalkingButtonClickCallback );
+														 DEFAULT_MOVE_CALLBACK, DoneTalkingButtonClickCallback );
 
 	SpecifyButtonHilitedTextColors( gTalkPanel.uiCancelButton, FONT_MCOLOR_WHITE, DEFAULT_SHADOW );
 

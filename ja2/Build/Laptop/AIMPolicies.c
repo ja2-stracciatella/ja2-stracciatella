@@ -389,7 +389,7 @@ BOOLEAN InitAimPolicyMenuBar(void)
 
 //		guiPoliciesMenuButton[i] = QuickCreateButton(guiPoliciesMenuButtonImage, usPosX, AIM_POLICY_MENU_Y,
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-//																	DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnPoliciesMenuButtonCallback);
+//																	DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
 //		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
 //		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
 
@@ -588,7 +588,7 @@ BOOLEAN InitAgreementRegion(void)
 	{
 //		guiPoliciesAgreeButton[i] = QuickCreateButton(guiPoliciesButtonImage, usPosX, AIM_POLICY_AGREEMENT_Y,
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-//																	BUTTON_NO_CALLBACK, (GUI_CALLBACK)BtnPoliciesAgreeButtonCallback);
+//																	BUTTON_NO_CALLBACK, BtnPoliciesAgreeButtonCallback);
 //		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
 //		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
 

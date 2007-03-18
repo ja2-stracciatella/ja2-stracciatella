@@ -4819,21 +4819,21 @@ void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWideMode )
 		{
 			guiUpdatePanelButtons[ 0 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 0 ], ( INT16 )( iX - 4 + TACT_UPDATE_MERC_FACE_X_WIDTH + 4), (INT16)iY,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ContinueUpdateButtonCallback );
+											BtnGenericMouseMoveButtonCallback, ContinueUpdateButtonCallback );
 
 			guiUpdatePanelButtons[ 1 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 1 ], ( INT16 ) ( iX - 4 + 2 * TACT_UPDATE_MERC_FACE_X_WIDTH + 4 ), (INT16)iY,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)StopUpdateButtonCallback);
+											BtnGenericMouseMoveButtonCallback, StopUpdateButtonCallback);
 		}
 		else
 		{
 			guiUpdatePanelButtons[ 0 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 0 ], ( INT16 )( iX), (INT16)iY,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST -1,
-											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ContinueUpdateButtonCallback);
+											BtnGenericMouseMoveButtonCallback, ContinueUpdateButtonCallback);
 
 			guiUpdatePanelButtons[ 1 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 1 ], ( INT16 )( iX + TACT_UPDATE_MERC_FACE_X_WIDTH ), (INT16)iY,
 											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)StopUpdateButtonCallback);
+											BtnGenericMouseMoveButtonCallback, StopUpdateButtonCallback);
 
 		}
 

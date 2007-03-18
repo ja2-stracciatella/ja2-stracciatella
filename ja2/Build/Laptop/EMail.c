@@ -1906,7 +1906,7 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
     giMessageButtonImage[0]=  LoadButtonImage( "LAPTOP/X.sti" ,-1,0,-1,1,-1 );
 	  giMessageButton[0] = QuickCreateButton( giMessageButtonImage[0], BUTTON_X + 2,(INT16) ( BUTTON_Y + ( INT16 )iViewerY + 1),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnMessageXCallback );
+										BtnGenericMouseMoveButtonCallback, BtnMessageXCallback );
 	  SetButtonCursor(giMessageButton[0], CURSOR_LAPTOP_SCREEN);
 
 		if( giNumberOfPagesToCurrentEmail > 2 )
@@ -1915,12 +1915,12 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 			giMailMessageButtonsImage[0]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,0,-1,3,-1 );
 			giMailMessageButtons[0] = QuickCreateButton( giMailMessageButtonsImage[0], PREVIOUS_PAGE_BUTTON_X,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnPreviousEmailPageCallback );
+										BtnGenericMouseMoveButtonCallback, BtnPreviousEmailPageCallback );
 
 			giMailMessageButtonsImage[1]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,1,-1,4,-1 );
 			giMailMessageButtons[1] = QuickCreateButton( giMailMessageButtonsImage[1], NEXT_PAGE_BUTTON_X ,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNextEmailPageCallback );
+										BtnGenericMouseMoveButtonCallback, BtnNextEmailPageCallback );
 
 			gfPageButtonsWereCreated = TRUE;
 
@@ -1929,7 +1929,7 @@ void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
     giMailMessageButtonsImage[2]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,2,-1,5,-1 );
 		giMailMessageButtons[2] = QuickCreateButton( giMailMessageButtonsImage[2], DELETE_BUTTON_X,(INT16) ( BUTTON_LOWER_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteCallback );
+										BtnGenericMouseMoveButtonCallback, BtnDeleteCallback );
 /*
 		// set up disable methods
 		SpecifyDisabledButtonStyle( giMailMessageButtons[1], DISABLED_STYLE_SHADED );
@@ -1990,7 +1990,7 @@ void CreateDestroyNewMailButton()
 	giNewMailButtonImage[0]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,0,-1,1,-1 );
   giNewMailButton[0]= QuickCreateButton( giNewMailButtonImage[0], NEW_BTN_X+10, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST-2,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnNewOkback);
+										BtnGenericMouseMoveButtonCallback, BtnNewOkback);
 
 	// set cursor
 	SetButtonCursor(giNewMailButton[0], CURSOR_LAPTOP_SCREEN);
@@ -2357,13 +2357,13 @@ void CreateDestroyDeleteNoticeMailButton()
 	giDeleteMailButtonImage[0]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,0,-1,1,-1 );
   giDeleteMailButton[0]= QuickCreateButton( giDeleteMailButtonImage[0], NEW_BTN_X+1, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteYesback);
+										BtnGenericMouseMoveButtonCallback, BtnDeleteYesback);
 
 	// NO button
 	giDeleteMailButtonImage[1]=LoadButtonImage( "LAPTOP/YesNoButtons.sti" ,-1,2,-1,3,-1 );
   giDeleteMailButton[1]= QuickCreateButton( giDeleteMailButtonImage[1], NEW_BTN_X+40, NEW_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnDeleteNoback);
+										BtnGenericMouseMoveButtonCallback, BtnDeleteNoback);
 
 	// set up cursors
 	SetButtonCursor(giDeleteMailButton[0], CURSOR_LAPTOP_SCREEN);
@@ -2641,7 +2641,7 @@ void CreateMailScreenButtons( void )
 	giSortButtonImage[0]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,0,-1,4,-1 );
 	giSortButton[0] = QuickCreateButton( giSortButtonImage[0], ENVELOPE_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ReadCallback);
+										BtnGenericMouseMoveButtonCallback, ReadCallback);
 	SetButtonCursor(giSortButton[0], CURSOR_LAPTOP_SCREEN);
 
 
@@ -2649,7 +2649,7 @@ void CreateMailScreenButtons( void )
 	giSortButtonImage[1]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,1,-1,5,-1 );
 	giSortButton[1] = QuickCreateButton( giSortButtonImage[1], FROM_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)FromCallback);
+										BtnGenericMouseMoveButtonCallback, FromCallback);
 	SetButtonCursor(giSortButton[1], CURSOR_LAPTOP_SCREEN);
    SpecifyFullButtonTextAttributes( giSortButton[1], pEmailHeaders[FROM_HEADER], EMAIL_WARNING_FONT,
 																		  FONT_BLACK, FONT_BLACK,
@@ -2660,7 +2660,7 @@ void CreateMailScreenButtons( void )
 	giSortButtonImage[2]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,2,-1,6,-1 );
 	giSortButton[2] = QuickCreateButton( giSortButtonImage[2], SUBJECT_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)SubjectCallback );
+										BtnGenericMouseMoveButtonCallback, SubjectCallback );
 	SetButtonCursor(giSortButton[2], CURSOR_LAPTOP_SCREEN);
 	SpecifyFullButtonTextAttributes( giSortButton[2], pEmailHeaders[SUBJECT_HEADER], EMAIL_WARNING_FONT,
 																		  FONT_BLACK, FONT_BLACK,
@@ -2672,7 +2672,7 @@ void CreateMailScreenButtons( void )
   giSortButtonImage[3]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,3,-1,7,-1 );
 	giSortButton[3] = QuickCreateButton( giSortButtonImage[3], DATE_BOX_X, FROM_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)DateCallback);
+										BtnGenericMouseMoveButtonCallback, DateCallback);
 	SetButtonCursor(giSortButton[3], CURSOR_LAPTOP_SCREEN);
 	SpecifyFullButtonTextAttributes( giSortButton[3], pEmailHeaders[RECD_HEADER], EMAIL_WARNING_FONT,
 																		  FONT_BLACK, FONT_BLACK,
@@ -4245,14 +4245,14 @@ void CreateNextPreviousEmailPageButtons( void )
 	giMailPageButtonsImage[0]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,1,-1,4,-1 );
 	giMailPageButtons[0] = QuickCreateButton( giMailPageButtonsImage[0],NEXT_PAGE_X, NEXT_PAGE_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextRegionButtonCallback );
+										BtnGenericMouseMoveButtonCallback, NextRegionButtonCallback );
 	SetButtonCursor(giMailPageButtons[0], CURSOR_LAPTOP_SCREEN);
 
 	// previous button
 	giMailPageButtonsImage[1]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,0,-1,3,-1 );
 	giMailPageButtons[1] = QuickCreateButton( giMailPageButtonsImage[1],PREVIOUS_PAGE_X, NEXT_PAGE_Y,
 									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-									(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PreviousRegionButtonCallback );
+									BtnGenericMouseMoveButtonCallback, PreviousRegionButtonCallback );
 	SetButtonCursor(giMailPageButtons[1], CURSOR_LAPTOP_SCREEN);
 
 	/*

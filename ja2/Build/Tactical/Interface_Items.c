@@ -2244,7 +2244,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			// create button
 			giMapInvDescButton= QuickCreateButton( giMapInvDescButtonImage, (UINT16)( gsInvDescX + 204 ), (UINT16)( gsInvDescY + 107 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ItemDescDoneButtonCallback );
+										BtnGenericMouseMoveButtonCallback, ItemDescDoneButtonCallback );
 
 			fShowDescriptionFlag = TRUE;
 	}
@@ -2293,7 +2293,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 TEXT_CJUSTIFIED,
 															 (INT16)(ITEMDESC_AMMO_X + 18), (INT16)(ITEMDESC_AMMO_Y - 5), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemDescAmmoCallback );
+															 DEFAULT_MOVE_CALLBACK, ItemDescAmmoCallback );
 
 		}
 		else
@@ -2305,7 +2305,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 TEXT_CJUSTIFIED,
 															 (INT16)(ITEMDESC_AMMO_X), (INT16)(ITEMDESC_AMMO_Y), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemDescAmmoCallback );
+															 DEFAULT_MOVE_CALLBACK, ItemDescAmmoCallback );
 
 		 //if we are being called from the
 		}
@@ -5928,14 +5928,14 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	{
 		gItemPickupMenu.iUpButton	= QuickCreateButton( gItemPickupMenu.iUpButtonImages, (INT16)(sX + ITEMPICK_UP_X), (INT16)(sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_UP_Y),
 	 									 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-	 									 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemPickupScrollUp );
+	 									 DEFAULT_MOVE_CALLBACK, ItemPickupScrollUp );
 
 		SetButtonFastHelpText( gItemPickupMenu.iUpButton, ItemPickupHelpPopup[ 1 ] );
 
 
 		gItemPickupMenu.iDownButton	= QuickCreateButton( gItemPickupMenu.iDownButtonImages, (INT16)(sX + ITEMPICK_DOWN_X), (INT16)(sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_DOWN_Y),
 	 									 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-	 									 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemPickupScrollDown );
+	 									 DEFAULT_MOVE_CALLBACK, ItemPickupScrollDown );
 
 		SetButtonFastHelpText( gItemPickupMenu.iDownButton, ItemPickupHelpPopup[ 3 ] );
 
@@ -5944,18 +5944,18 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 
 	gItemPickupMenu.iOKButton	= QuickCreateButton( gItemPickupMenu.iOKButtonImages, (INT16)(sX + ITEMPICK_OK_X), (INT16)(sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_OK_Y),
 	 									 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-	 									 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemPickupOK );
+	 									 DEFAULT_MOVE_CALLBACK, ItemPickupOK );
 	SetButtonFastHelpText( gItemPickupMenu.iOKButton, ItemPickupHelpPopup[ 0 ] );
 
 
 	gItemPickupMenu.iAllButton	= QuickCreateButton( gItemPickupMenu.iAllButtonImages, (INT16)(sX + ITEMPICK_ALL_X), (INT16)(sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_ALL_Y),
 	 									 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-	 									 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemPickupAll );
+	 									 DEFAULT_MOVE_CALLBACK, ItemPickupAll );
 	SetButtonFastHelpText( gItemPickupMenu.iAllButton, ItemPickupHelpPopup[ 2 ] );
 
 	gItemPickupMenu.iCancelButton	= QuickCreateButton( gItemPickupMenu.iCancelButtonImages, (INT16)(sX + ITEMPICK_CANCEL_X), (INT16)(sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_CANCEL_Y),
 	 									 BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-	 									 DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)ItemPickupCancel );
+	 									 DEFAULT_MOVE_CALLBACK, ItemPickupCancel );
 	SetButtonFastHelpText( gItemPickupMenu.iCancelButton, ItemPickupHelpPopup[ 4 ] );
 
 

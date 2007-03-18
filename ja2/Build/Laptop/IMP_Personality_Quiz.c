@@ -189,21 +189,21 @@ void CreateIMPPersonalityQuizButtons( void )
 
 /* giIMPPersonalityQuizButton[0] = QuickCreateButton( giIMPPersonalityQuizButtonImage[0], LAPTOP_SCREEN_UL_X +  ( 197 ), LAPTOP_SCREEN_WEB_UL_Y + ( 310 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswerConfirmCallback);
+										BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityQuizAnswerConfirmCallback);
 */
 	giIMPPersonalityQuizButton[0] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[0], pImpButtonText[ 8 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 197 ), LAPTOP_SCREEN_WEB_UL_Y + ( 302 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswerConfirmCallback);
+														 	BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityQuizAnswerConfirmCallback);
 
   // start over
 	giIMPPersonalityQuizButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
 
 	/* giIMPPersonalityQuizButton[ 1 ] = QuickCreateButton( giIMPPersonalityQuizButtonImage[1], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 310 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityQuizStartOverCallback);
+										BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityQuizStartOverCallback);
 */
 
 	giIMPPersonalityQuizButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[ 1 ], pImpButtonText[ 7 ], FONT12ARIAL,
@@ -211,7 +211,7 @@ void CreateIMPPersonalityQuizButtons( void )
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 302 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPPersonalityQuizStartOverCallback);
+														 	BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityQuizStartOverCallback);
 
 	giPreviousQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
 	giPreviousQuestionButton = CreateIconAndTextButton( giPreviousQuestionButtonImage, pImpButtonText[ 12 ], FONT12ARIAL,
@@ -219,7 +219,7 @@ void CreateIMPPersonalityQuizButtons( void )
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 197 ), LAPTOP_SCREEN_WEB_UL_Y + ( 361 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PreviousQuestionButtonCallback);
+														 	BtnGenericMouseMoveButtonCallback, PreviousQuestionButtonCallback);
 
 	giNextQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
 	giNextQuestionButton = CreateIconAndTextButton( giNextQuestionButtonImage, pImpButtonText[ 13 ], FONT12ARIAL,
@@ -227,7 +227,7 @@ void CreateIMPPersonalityQuizButtons( void )
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 417 ), LAPTOP_SCREEN_WEB_UL_Y + ( 361 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextQuestionButtonCallback);
+														 	BtnGenericMouseMoveButtonCallback, NextQuestionButtonCallback);
 
 
 	SpecifyButtonTextSubOffsets( giNextQuestionButton, 0, -1, FALSE );
@@ -385,70 +385,70 @@ void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 			  giIMPPersonalityQuizAnswerButtonImage[0]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[0] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[0], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 97 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer0Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer0Callback);
 
 			break;
 		case ( 1 ):
 			  giIMPPersonalityQuizAnswerButtonImage[1]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[1] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[1], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer1Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer1Callback);
 
 			break;
 		case ( 2 ):
 			  giIMPPersonalityQuizAnswerButtonImage[2]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[2] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[2], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 197 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer2Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer2Callback);
 
 			break;
 		case ( 3 ):
 			  giIMPPersonalityQuizAnswerButtonImage[3]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[3] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[3], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 247 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer3Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer3Callback);
 
 			break;
 		case ( 4 ):
 			  giIMPPersonalityQuizAnswerButtonImage[4]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[4] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[4], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 97 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer4Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer4Callback);
 
 			break;
 		case ( 5 ):
 			  giIMPPersonalityQuizAnswerButtonImage[5]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[5] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[5], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer5Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer5Callback);
 
 			break;
 		case ( 6 ):
 			  giIMPPersonalityQuizAnswerButtonImage[6]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[6] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[6], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 197 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer6Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer6Callback);
 
 			break;
 		case ( 7 ):
 			  giIMPPersonalityQuizAnswerButtonImage[7]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[7] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[7], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 247 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer7Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer7Callback);
 
 			break;
 		case ( 8 ):
 			  giIMPPersonalityQuizAnswerButtonImage[8]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[8] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[8], LAPTOP_SCREEN_UL_X +  ( ( BTN_SECOND_COLUMN_X )  ), LAPTOP_SCREEN_WEB_UL_Y + ( 268 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer8Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer8Callback);
 
 			break;
 		case ( 9 ):
 			  giIMPPersonalityQuizAnswerButtonImage[9]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
 	      giIMPPersonalityQuizAnswerButton[9] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[9], LAPTOP_SCREEN_UL_X +  ( ( 276 - 46 ) / 2 ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPPersonalityQuizAnswer9Callback);
+										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer9Callback);
 
 			break;
 		}

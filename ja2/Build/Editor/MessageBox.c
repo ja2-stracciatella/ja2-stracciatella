@@ -52,11 +52,11 @@ void CreateMessageBox(const wchar_t* wzString)
 
 	iMsgBoxOk = QuickCreateButton(iMsgBoxOkImg, (INT16)(sStartX + (sPixLen/2) - 35), (INT16)(sStartY + 58),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BUTTON_NO_CALLBACK, (GUI_CALLBACK)MsgBoxOkClkCallback);
+										BUTTON_NO_CALLBACK, MsgBoxOkClkCallback);
 
 	iMsgBoxCancel = QuickCreateButton(iMsgBoxCancelImg, (INT16)(sStartX + (sPixLen/2) + 5), (INT16)(sStartY + 58),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BUTTON_NO_CALLBACK, (GUI_CALLBACK)MsgBoxCnclClkCallback);
+										BUTTON_NO_CALLBACK, MsgBoxCnclClkCallback);
 
 	MsgBoxRect.iLeft = sStartX;
 	MsgBoxRect.iTop = sStartY;

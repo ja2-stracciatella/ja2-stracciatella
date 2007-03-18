@@ -219,25 +219,25 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_UP ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
   guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_UP ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_UP ], 602, 303,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollNorthMapScreenCallback);
+										BtnGenericMouseMoveButtonCallback, BtnScrollNorthMapScreenCallback);
 
 	// dwn button
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_DWN ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
   guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_DWN ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_DWN ], 602, 338,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollSouthMapScreenCallback);
+										BtnGenericMouseMoveButtonCallback, BtnScrollSouthMapScreenCallback);
 
 	// left button
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,9,0,-1,2,-1 );
   guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_LEFT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ], 584, 322,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollWestMapScreenCallback);
+										BtnGenericMouseMoveButtonCallback, BtnScrollWestMapScreenCallback);
 
 	// right button
 	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,10,1,-1,3,-1 );
   guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_RIGHT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ], 619, 322,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnScrollEastMapScreenCallback);
+										BtnGenericMouseMoveButtonCallback, BtnScrollEastMapScreenCallback);
 
 	// set up fast help text
 	SetButtonFastHelpText( guiMapBorderScrollButtons[ 0 ], pMapScreenBorderButtonHelpText[ 6 ] );
@@ -251,38 +251,38 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	giMapBorderButtonsImage[ MAP_BORDER_TOWN_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,5,-1,14,-1 );
   giMapBorderButtons[ MAP_BORDER_TOWN_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TOWN_BTN ], 299, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnTownCallback);
+										MSYS_NO_CALLBACK, BtnTownCallback);
 
 
 	// mines
 	giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,4,-1,13,-1 );
   giMapBorderButtons[ MAP_BORDER_MINE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ], 342, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnMineCallback);
+										MSYS_NO_CALLBACK, BtnMineCallback);
 
 	// people
 	giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,3,-1,12,-1 );
   giMapBorderButtons[ MAP_BORDER_TEAMS_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ], 385, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnTeamCallback);
+										MSYS_NO_CALLBACK, BtnTeamCallback);
 
 	// militia
 	giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,8,-1,17,-1 );
   giMapBorderButtons[ MAP_BORDER_MILITIA_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ], 428, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnMilitiaCallback);
+										MSYS_NO_CALLBACK, BtnMilitiaCallback);
 
 	// airspace
 	giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,2,-1,11,-1 );
   giMapBorderButtons[ MAP_BORDER_AIRSPACE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ], 471, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnAircraftCallback);
+										MSYS_NO_CALLBACK, BtnAircraftCallback);
 
 	// items
 	giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,1,-1,10,-1 );
   giMapBorderButtons[ MAP_BORDER_ITEM_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ], 514, 323,
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnItemCallback);
+										MSYS_NO_CALLBACK, BtnItemCallback);
 
 
 	// raise and lower view level
@@ -292,13 +292,13 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_RAISE_LEVEL ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
 	guiMapBorderLandRaiseButtons[ MAP_BORDER_RAISE_LEVEL ] = QuickCreateButton( guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_RAISE_LEVEL ], MAP_BORDER_X + 264, 322,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnRaiseLevelBtnCallback);
+										MSYS_NO_CALLBACK, BtnRaiseLevelBtnCallback);
 
 	// lower
 	guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_LOWER_LEVEL ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1  );
 	guiMapBorderLandRaiseButtons[ MAP_BORDER_LOWER_LEVEL ] = QuickCreateButton( guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_LOWER_LEVEL ], MAP_BORDER_X + 264, 340,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										(GUI_CALLBACK)MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnLowerLevelBtnCallback);
+										MSYS_NO_CALLBACK, BtnLowerLevelBtnCallback);
 
 */
 	// set up fast help text

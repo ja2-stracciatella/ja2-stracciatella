@@ -5389,7 +5389,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 			// set the button value
 			giMapMilitiaButton[ iCounter ] = QuickCreateButton( giMapMilitiaButtonImage[ iCounter ], sX, sY,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MilitiaButtonCallback);
+										BtnGenericMouseMoveButtonCallback, MilitiaButtonCallback);
 
 			// set button user data
 			MSYS_SetBtnUserData( 	giMapMilitiaButton[ iCounter ], 0, iCounter );
@@ -5811,11 +5811,11 @@ void CreateMilitiaPanelBottomButton( void )
 
 	giMapMilitiaButton[ 3 ] = QuickCreateButton( giMapMilitiaButtonImage[ 3 ], MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_AUTO_BOX_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK) MilitiaAutoButtonCallback );
+										BtnGenericMouseMoveButtonCallback, MilitiaAutoButtonCallback );
 
 	giMapMilitiaButton[ 4 ] = QuickCreateButton( giMapMilitiaButtonImage[ 4 ], MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_DONE_BOX_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK) MilitiaDoneButtonCallback );
+										BtnGenericMouseMoveButtonCallback, MilitiaDoneButtonCallback );
 
 
 	SpecifyButtonFont( giMapMilitiaButton[ 3 ], FONT10ARIAL );

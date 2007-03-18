@@ -596,7 +596,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ RUN_ICON ] = QuickCreateButton( iIconImages[ RUN_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ RUN_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -613,7 +613,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
   iActionIcons[ WALK_ICON ] = QuickCreateButton( iIconImages[ WALK_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY  ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ WALK_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -643,7 +643,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ SNEAK_ICON ] = QuickCreateButton( iIconImages[ SNEAK_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ SNEAK_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -661,7 +661,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ CRAWL_ICON ] = QuickCreateButton( iIconImages[ CRAWL_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ CRAWL_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -680,7 +680,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ LOOK_ICON ] = QuickCreateButton( iIconImages[ LOOK_IMAGES ], (INT16)(iMenuAnchorX ), (INT16)(iMenuAnchorY ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ LOOK_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -775,7 +775,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ ACTIONC_ICON ] = QuickCreateButton( iIconImages[ uiActionImages ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ ACTIONC_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -793,7 +793,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ TALK_ICON ] = QuickCreateButton( iIconImages[ TALK_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ TALK_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -811,7 +811,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ HAND_ICON ] = QuickCreateButton( iIconImages[ HAND_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ HAND_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -828,7 +828,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	iActionIcons[ CANCEL_ICON ] = QuickCreateButton( iIconImages[ CANCEL_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnMovementCallback );
+										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
 	if ( iActionIcons[ CANCEL_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2042,7 +2042,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ USE_KEYRING_ICON ] = QuickCreateButton( iIconImages[ USE_KEYRING_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ USE_KEYRING_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2073,7 +2073,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ USE_CROWBAR_ICON ] = QuickCreateButton( iIconImages[ CROWBAR_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY  ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ USE_CROWBAR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2103,7 +2103,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ LOCKPICK_DOOR_ICON ] = QuickCreateButton( iIconImages[ LOCKPICK_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ LOCKPICK_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2135,7 +2135,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ EXPLOSIVE_DOOR_ICON ] = QuickCreateButton( iIconImages[ EXPLOSIVE_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ EXPLOSIVE_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2167,7 +2167,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ OPEN_DOOR_ICON ] = QuickCreateButton( iIconImages[ OPEN_DOOR_IMAGES ], (INT16)(iMenuAnchorX ), (INT16)(iMenuAnchorY ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ OPEN_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2207,7 +2207,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	// Create button based on what is in our hands at the moment!
 	iActionIcons[ EXAMINE_DOOR_ICON ] = QuickCreateButton( iIconImages[ EXAMINE_DOOR_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ EXAMINE_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2231,7 +2231,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ BOOT_DOOR_ICON ] = QuickCreateButton( iIconImages[ BOOT_DOOR_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ BOOT_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2256,7 +2256,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ UNTRAP_DOOR_ICON ] = QuickCreateButton( iIconImages[ UNTRAP_DOOR_ICON ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 40 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ UNTRAP_DOOR_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
@@ -2280,7 +2280,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	iActionIcons[ CANCEL_ICON ] = QuickCreateButton( iIconImages[ CANCEL_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 20 ),
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, (GUI_CALLBACK)BtnDoorMenuCallback );
+										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
 	if ( iActionIcons[ CANCEL_ICON ] == -1 )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );

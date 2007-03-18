@@ -3179,7 +3179,7 @@ UINT32 MapScreenHandle(void)
 		// buttonmake
 		giMapContractButton= QuickCreateButton( giMapContractButtonImage, CONTRACT_X + 5, CONTRACT_Y - 1,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)ContractButtonCallback);
+										BtnGenericMouseMoveButtonCallback, ContractButtonCallback);
 
 		SpecifyButtonText( giMapContractButton, pContractButtonString[ 0 ] );
 		SpecifyButtonFont( giMapContractButton, MAP_SCREEN_FONT );
@@ -6246,7 +6246,7 @@ void CreateDestroyMapInvButton()
   //giMapInvButtonImage=  LoadButtonImage( "INTERFACE/mapinv.sti" ,-1,1,-1,2,-1 );
   //giMapInvButton= QuickCreateButton( giMapInvButtonImage, INV_BTN_X-1, INV_BTN_Y,
 						//				BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-						//				BUTTON_NO_CALLBACK, (GUI_CALLBACK)BtnINVCallback);
+						//				BUTTON_NO_CALLBACK, BtnINVCallback);
   // disable allmouse regions in this space
   fTeamPanelDirty=TRUE;
 
@@ -9491,7 +9491,7 @@ void CreateDestroyTrashCanRegion( void )
 		giMapInvButtonDoneImage = LoadButtonImage( "INTERFACE/done_button2.sti" ,-1,0,-1,1,-1 );
     giMapInvDoneButton = QuickCreateButton( giMapInvButtonDoneImage, INV_BTN_X, INV_BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)DoneInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, DoneInventoryMapBtnCallback );
 
 		SetButtonFastHelpText( giMapInvDoneButton ,pMiscMapScreenMouseRegionHelpText[ 2 ] );
 		SetRegionFastHelpText( &gTrashCanRegion, pMiscMapScreenMouseRegionHelpText[ 1 ] );
@@ -9501,13 +9501,13 @@ void CreateDestroyTrashCanRegion( void )
 		giMapInvNextImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,20,-1,22,-1 );
     giMapInvNext= QuickCreateButton( giMapInvNextImage, ( 2 ), ( 79 ) ,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)NextInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
 
 
 		giMapInvPrevImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,21,-1,23,-1 );
     giMapInvPrev= QuickCreateButton( giMapInvPrevImage, ( 30 ) , ( 79 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										( GUI_CALLBACK )BtnGenericMouseMoveButtonCallback, ( GUI_CALLBACK)PrevInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
 
 	*/
 
@@ -9948,13 +9948,13 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 		// set the button value
 		giCharInfoButton[ 0 ] = QuickCreateButton( giCharInfoButtonImage[ 0 ], 67, 69,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PrevInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
 #else
 
 		// set the button value
 		giCharInfoButton[ 0 ] = QuickCreateButton( giCharInfoButtonImage[ 0 ], 67, 69,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)PrevInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
 
 #endif
 			// set the button image
@@ -9964,13 +9964,13 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 		// set the button value
 		giCharInfoButton[ 1 ] = QuickCreateButton( giCharInfoButtonImage[ 1 ], 67, 87,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
 
 #else
 		// set the button value
 		giCharInfoButton[ 1 ] = QuickCreateButton( giCharInfoButtonImage[ 1 ], 67, 87,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)NextInventoryMapBtnCallback );
+										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
 
 #endif
 
@@ -10137,7 +10137,7 @@ void AddTeamPanelSortButtonsForMapScreen( void )
 		// buttonmake
 		giMapSortButton[ iCounter ]= QuickCreateButton( giMapSortButtonImage[ iCounter ], ( INT16 )( gMapSortButtons[ iCounter ].iX ), ( INT16 )( gMapSortButtons[ iCounter ].iY ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)MapSortBtnCallback );
+										BtnGenericMouseMoveButtonCallback, MapSortBtnCallback );
 
 		MSYS_SetBtnUserData(giMapSortButton[ iCounter ], 0, iCounter );
 

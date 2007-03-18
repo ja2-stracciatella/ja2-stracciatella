@@ -951,7 +951,7 @@ void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
 	// grab the button
 	iEndAutoBandageButton[ 0 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 0 ], sX, sY,
 														BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-														(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)StopAutoBandageButtonCallback );
+														BtnGenericMouseMoveButtonCallback, StopAutoBandageButtonCallback );
 
 
 	//the cancel button
@@ -961,7 +961,7 @@ void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
 	// grab the button
 	iEndAutoBandageButton[ 1 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 1 ], ( INT16 )( sX + 70 ) , sY,
 														BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-														(GUI_CALLBACK)BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)StopAutoBandageButtonCallback );
+														BtnGenericMouseMoveButtonCallback, StopAutoBandageButtonCallback );
 
 	SpecifyButtonText( iEndAutoBandageButton[ 0 ], zMarksMapScreenText[ 15 ] );
 	SpecifyButtonFont( iEndAutoBandageButton[ 0 ], MAP_SCREEN_FONT );
