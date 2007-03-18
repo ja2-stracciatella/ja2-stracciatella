@@ -583,15 +583,6 @@ void KeyUp(const SDL_keysym* KeySym)
 	}
 }
 
-void EnableDoubleClk(void)
-{
-	// Obsolete
-}
-
-void DisableDoubleClk(void)
-{
-	// Obsolete
-}
 
 void GetMousePos(SGPPoint *Point)
 {
@@ -693,18 +684,6 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 
 	mouse_event( MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0 );
 #endif
-}
-
-
-
-BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2, UINT32 uiY2)
-{
-  UINT32 uiEventX, uiEventY;
-
-  uiEventX = _EvMouseX(Event);
-  uiEventY = _EvMouseY(Event);
-
-  return((uiEventX >= uiX1) && (uiEventX <= uiX2) && (uiEventY >= uiY1) && (uiEventY <= uiY2));
 }
 
 

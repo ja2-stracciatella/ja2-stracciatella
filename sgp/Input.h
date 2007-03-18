@@ -57,8 +57,6 @@ extern void					QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 void KeyDown(const SDL_keysym*);
 void KeyUp(  const SDL_keysym*);
 
-extern void					EnableDoubleClk(void);
-extern void					DisableDoubleClk(void);
 extern void					GetMousePos(SGPPoint *Point);
 
 extern BOOLEAN DequeueSpecificEvent(InputAtom *Event, UINT32 uiMaskFlags );
@@ -72,7 +70,6 @@ extern void         RestoreCursorClipRect( void );
 
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
-BOOLEAN InputEventInside(InputAtom *Event, UINT32 uiX1, UINT32 uiY1, UINT32 uiX2, UINT32 uiY2);
 
 extern void DequeueAllKeyBoardEvents();
 
