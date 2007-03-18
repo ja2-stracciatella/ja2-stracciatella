@@ -85,7 +85,6 @@ extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 #define _gusMouseInside(x1,y1,x2,y2)   ((gusMouseXPos >= x1) && (gusMouseXPos <= x2) && (gusMouseYPos >= y1) && (gusMouseYPos <= y2))
 
 #define _EvType(a)         ((InputAtom *)(a))->usEvent
-#define _EvTimeStamp(a)    ((InputAtom *)(a))->uiTimeStamp
 #define _EvKey(a)          ((InputAtom *)(a))->usParam
 #define _EvShiftDown(a)    (((InputAtom *)(a))->usKeyState & SHIFT_DOWN)
 #define _EvCtrlDown(a)     (((InputAtom *)(a))->usKeyState & CTRL_DOWN)
