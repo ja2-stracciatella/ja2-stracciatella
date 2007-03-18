@@ -615,7 +615,6 @@ void			SetQDSMercProfile();
 void			HandleQDSTalkingMerc();
 void			DisplayQDSCurrentlyQuoteNum( );
 void			SetTalkingMercPauseState( BOOLEAN fState );
-UINT8			WhichPanelShouldTalkingMercUse( );
 void			EndMercTalking();
 void			EnableFactMouseRegions();
 void			DisableFactMouseRegions();
@@ -701,6 +700,10 @@ UINT32	QuestDebugScreenInit()
 
 	return( TRUE );
 }
+
+
+static UINT8 WhichPanelShouldTalkingMercUse(void);
+
 
 UINT32	QuestDebugScreenHandle()
 {
@@ -1215,8 +1218,7 @@ void		GetUserInput()
 {
 	InputAtom Event;
 	POINT  MousePos;
-	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse( giSelectedMercCurrentQuote );
-
+	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse();
 
 	GetCursorPos(&MousePos);
 
@@ -3690,7 +3692,7 @@ void HandleQDSTalkingMerc()
 		//Call this function to enable or disable the flags in the faces struct ( without modifing the pause state )
 		SetTalkingMercPauseState( gfPauseTalkingMercPopup );
 
-		ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse( giSelectedMercCurrentQuote );
+		ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse();
 
 		//find out if the merc is talking
 		if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
@@ -3869,7 +3871,7 @@ void BtnQuestDebugRPCSaySectorDescToggleCallback( GUI_BUTTON *btn, INT32 reason 
 }
 
 
-UINT8	WhichPanelShouldTalkingMercUse( )
+static UINT8 WhichPanelShouldTalkingMercUse(void)
 {
 	if ( gTalkingMercSoldier == NULL )
 	{
