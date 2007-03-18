@@ -643,89 +643,7 @@ INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 {
-	switch( ubDealerID )
-	{
-		case ARMS_DEALER_TONY:
-			return( GetMaxItemAmount( gTonyInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_FRANK:
-			return( GetMaxItemAmount( gFrankInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_MICKY:
-			return( GetMaxItemAmount( gMickyInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_ARNIE:
-			return( GetMaxItemAmount( gArnieInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_PERKO:
-			return( GetMaxItemAmount( gPerkoInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_KEITH:
-			return( GetMaxItemAmount( gKeithInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_1:
-			return( GetMaxItemAmount( gHerveInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_2:
-			return( GetMaxItemAmount( gPeterInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_3:
-			return( GetMaxItemAmount( gAlbertoInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_4:
-			return( GetMaxItemAmount( gCarloInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_JAKE:
-			return( GetMaxItemAmount( gJakeInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_FRANZ:
-			return( GetMaxItemAmount( gFranzInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_HOWARD:
-			return( GetMaxItemAmount( gHowardInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_SAM:
-			return( GetMaxItemAmount( gSamInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_FREDO:
-			return( GetMaxItemAmount( gFredoInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_GABBY:
-			return( GetMaxItemAmount( gGabbyInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_DEVIN:
-			return( GetMaxItemAmount( gDevinInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_ELGIN:
-			return( GetMaxItemAmount( gElginInventory, usItemIndex ) );
-			break;
-
-		case ARMS_DEALER_MANNY:
-			return( GetMaxItemAmount( gMannyInventory, usItemIndex ) );
-			break;
-
-		default:
-			Assert( FALSE );
-			return( 0 );
-			break;
-	}
+	return GetMaxItemAmount(GetPointerToDealersPossibleInventory(ubDealerID), usItemIndex);
 }
 
 
@@ -750,86 +668,28 @@ INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
 
 DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
 {
-	switch( ubArmsDealerID )
+	switch (ubArmsDealerID)
 	{
-		case ARMS_DEALER_TONY:
-			return( gTonyInventory );
-			break;
-
-		case ARMS_DEALER_FRANK:
-			return( gFrankInventory );
-			break;
-
-		case ARMS_DEALER_MICKY:
-			return( gMickyInventory );
-			break;
-
-		case ARMS_DEALER_ARNIE:
-			return( gArnieInventory );
-			break;
-
-		case ARMS_DEALER_PERKO:
-			return( gPerkoInventory );
-			break;
-
-		case ARMS_DEALER_KEITH:
-			return( gKeithInventory );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_1:
-			return( gHerveInventory );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_2:
-			return( gPeterInventory );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_3:
-			return( gAlbertoInventory );
-			break;
-
-		case ARMS_DEALER_BAR_BRO_4:
-			return( gCarloInventory );
-			break;
-
-		case ARMS_DEALER_JAKE:
-			return( gJakeInventory );
-			break;
-
-		case ARMS_DEALER_FRANZ:
-			return( gFranzInventory );
-			break;
-
-		case ARMS_DEALER_HOWARD:
-			return( gHowardInventory );
-			break;
-
-		case ARMS_DEALER_SAM:
-			return( gSamInventory );
-			break;
-
-		case ARMS_DEALER_FREDO:
-			return( gFredoInventory );
-			break;
-
-		case ARMS_DEALER_GABBY:
-			return( gGabbyInventory );
-			break;
-
-		case ARMS_DEALER_DEVIN:
-			return( gDevinInventory );
-			break;
-
-		case ARMS_DEALER_ELGIN:
-			return( gElginInventory );
-			break;
-
-		case ARMS_DEALER_MANNY:
-			return( gMannyInventory );
-			break;
-
-		default:
-			return( NULL );
+		case ARMS_DEALER_TONY:      return gTonyInventory;
+		case ARMS_DEALER_FRANK:     return gFrankInventory;
+		case ARMS_DEALER_MICKY:     return gMickyInventory;
+		case ARMS_DEALER_ARNIE:     return gArnieInventory;
+		case ARMS_DEALER_PERKO:     return gPerkoInventory;
+		case ARMS_DEALER_KEITH:     return gKeithInventory;
+		case ARMS_DEALER_BAR_BRO_1: return gHerveInventory;
+		case ARMS_DEALER_BAR_BRO_2: return gPeterInventory;
+		case ARMS_DEALER_BAR_BRO_3: return gAlbertoInventory;
+		case ARMS_DEALER_BAR_BRO_4: return gCarloInventory;
+		case ARMS_DEALER_JAKE:      return gJakeInventory;
+		case ARMS_DEALER_FRANZ:     return gFranzInventory;
+		case ARMS_DEALER_HOWARD:    return gHowardInventory;
+		case ARMS_DEALER_SAM:       return gSamInventory;
+		case ARMS_DEALER_FREDO:     return gFredoInventory;
+		case ARMS_DEALER_GABBY:     return gGabbyInventory;
+		case ARMS_DEALER_DEVIN:     return gDevinInventory;
+		case ARMS_DEALER_ELGIN:     return gElginInventory;
+		case ARMS_DEALER_MANNY:     return gMannyInventory;
+		default:                    return NULL;
 	}
 }
 
