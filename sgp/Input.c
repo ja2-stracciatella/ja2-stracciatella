@@ -533,6 +533,7 @@ void KeyDown(const SDL_keysym* KeySym)
 			break;
 
 		case SDLK_PRINT:
+		case SDLK_SCROLLOCK:
 			break;
 
 		default:
@@ -566,6 +567,14 @@ void KeyUp(const SDL_keysym* KeySym)
 
 		case SDLK_PRINT:
 			if (_KeyDown(CTRL)) VideoCaptureToggle(); else PrintScreen();
+			break;
+
+		case SDLK_SCROLLOCK:
+			SDL_WM_GrabInput
+			(
+				SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF ?
+					SDL_GRAB_ON : SDL_GRAB_OFF
+			);
 			break;
 
 		default:
