@@ -460,7 +460,14 @@ AnimationSurfaceType	gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ] =
 };
 
 
-AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS ] =
+typedef struct
+{
+	const char* Filename;
+	STRUCTURE_FILE_REF* pStructureFileRef;
+} AnimationStructureType;
+
+
+static AnimationStructureType gAnimStructureDatabase[TOTALBODYTYPES][NUM_STRUCT_IDS] =
 {
 	// Normal Male
 	"ANIMS/STRUCTDATA/M_STAND.JSD",			NULL,
@@ -694,8 +701,6 @@ AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS 
 BOOLEAN InitAnimationSystem( )
 {
 	INT32									cnt1, cnt2;
-	CHAR8									sFilename[50];
-	STRUCTURE_FILE_REF		*pStructureFileRef;
 
 	CHECKF( LoadAnimationStateInstructions( ) );
 
@@ -711,14 +716,14 @@ BOOLEAN InitAnimationSystem( )
 	{
 		for ( cnt2 = 0; cnt2 < NUM_STRUCT_IDS; cnt2++ )
 		{
-			strcpy( sFilename, gAnimStructureDatabase[ cnt1 ][ cnt2 ].Filename );
+			const char* Filename = gAnimStructureDatabase[cnt1][cnt2].Filename;
 
-			if (FileExists( sFilename ) )
+			if (FileExists(Filename))
 			{
-				pStructureFileRef = LoadStructureFile( sFilename );
+				STRUCTURE_FILE_REF* pStructureFileRef = LoadStructureFile(Filename);
 				if (pStructureFileRef == NULL)
 				{
-					SET_ERROR(  "Animation structure file load failed - %s", sFilename );
+					SET_ERROR("Animation structure file load failed - %s", Filename);
 				}
 				gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = pStructureFileRef;
 			}

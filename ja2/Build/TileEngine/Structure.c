@@ -245,7 +245,8 @@ BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
 	return( TRUE );
 }
 
-BOOLEAN LoadStructureData( STR szFileName, STRUCTURE_FILE_REF *	pFileRef, UINT32 * puiStructureDataSize )
+
+static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFileRef, UINT32* puiStructureDataSize)
 //UINT8 **ppubStructureData, UINT32 * puiDataSize, STRUCTURE_FILE_HEADER * pHeader )
 { // Loads a structure file's data as a honking chunk o' memory
 	HWFILE										hInput;
@@ -413,7 +414,7 @@ BOOLEAN CreateFileStructureArrays( STRUCTURE_FILE_REF * pFileRef, UINT32 uiDataS
 	return( TRUE );
 }
 
-STRUCTURE_FILE_REF * LoadStructureFile( STR szFileName )
+STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 { // NB should be passed in expected number of structures so we can check equality
 	UINT32								uiDataSize = 0;
 	BOOLEAN								fOk;

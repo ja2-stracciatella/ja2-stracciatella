@@ -534,16 +534,7 @@ typedef struct
 } AnimationSurfaceType;
 
 
-typedef struct
-{
-	CHAR8										Filename[ 50 ];
-	STRUCTURE_FILE_REF *		pStructureFileRef;
-
-} AnimationStructureType;
-
-
 AnimationSurfaceType		gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ];
-AnimationStructureType	gAnimStructureDatabase[ TOTALBODYTYPES ][ NUM_STRUCT_IDS ];
 
 
 BOOLEAN InitAnimationSystem( );
