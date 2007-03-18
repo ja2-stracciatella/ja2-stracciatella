@@ -273,9 +273,7 @@ static void ShutdownStandardGamingPlatform(void)
 
 
 static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine);
-extern UINT16 gfShiftState;
-extern UINT16 gfCtrlState;
-extern UINT16 gfAltState;
+
 
 int main(int argc, char* argv[])
 {
@@ -322,105 +320,9 @@ int main(int argc, char* argv[])
 						break;
 					}
 					break;
-				/* HACK0008: keyhandling should be done in
-				 * Input.c. This was hacked to give us
-				 * keyhandling in r71 and extended in r340
-				 * to handle special keys (Shift/alt/ctrl/
-				 * pgup/pgdown). Slated for return to Input.c
-				 */
-				case SDL_KEYDOWN:
-				{
-					int x;
-					int y;
 
-					SDL_GetMouseState(&x, &y);
-					UINT32 pos = y << 16 | x;
-
-					SDLKey key = event.key.keysym.sym; // XXX mapping
-					switch (key)
-					{
-						case SDLK_RSHIFT:
-						case SDLK_LSHIFT:
-							gfShiftState = SHIFT_DOWN;
-							gfKeyState[16] = TRUE;
-							break;
-						case SDLK_RCTRL:
-						case SDLK_LCTRL:
-							gfCtrlState = CTRL_DOWN;
-							gfKeyState[17] = TRUE;
-							break;
-						case SDLK_RALT:
-						case SDLK_LALT:
-							gfAltState = ALT_DOWN;
-							gfKeyState[18] = TRUE;
-							break;
-						default:
-							if ((gfShiftState) && ((key >= SDLK_a) && key <= SDLK_z))
-								key -= 32;
-							if (key == SDLK_PAGEUP)
-								key = 254;
-							if (key == SDLK_PAGEDOWN)
-								key = 249;
-							if (key < lengthof(gfKeyState))
-							{
-								if (!gfKeyState[key])
-								{
-									gfKeyState[key] = TRUE;
-									QueueEvent(KEY_DOWN, key, pos);
-								}
-								else
-								{
-									QueueEvent(KEY_REPEAT, key, pos);
-								}
-							}
-					}
-					break;
-				}
-
-				case SDL_KEYUP:
-				{
-					SDLKey key = event.key.keysym.sym;
-
-					switch (key)
-					{
-						case SDLK_PRINT:
-							PrintScreen();
-							break;
-						case SDLK_RSHIFT:
-						case SDLK_LSHIFT:
-							gfShiftState = FALSE;
-							gfKeyState[16] = FALSE;
-							break;
-						case SDLK_RCTRL:
-						case SDLK_LCTRL:
-							gfCtrlState = FALSE;
-							gfKeyState[17] = FALSE;
-							break;
-						case SDLK_RALT:
-						case SDLK_LALT:
-							gfAltState = FALSE;
-							gfKeyState[18] = FALSE;
-							break;
-
-						default:
-							if (key == SDLK_PAGEUP)
-								key = 254;
-							if (key == SDLK_PAGEDOWN)
-								key = 249;
-							if (key < lengthof(gfKeyState)) // XXX mapping
-							{
-								int x;
-								int y;
-								SDL_GetMouseState(&x, &y);
-								UINT32 pos = y << 16 | x;
-
-								gfKeyState[key] = FALSE;
-								QueueEvent(KEY_UP, key, pos);
-							}
-							break;
-					}
-					break;
-				}
+				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
+				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
 
 				case SDL_MOUSEBUTTONDOWN:
 				{

@@ -2,6 +2,7 @@
 #define __INPUT_
 
 #include "Types.h"
+#include "SDL_keyboard.h"
 
 #define SCAN_CODE_MASK						0xff0000
 #define EXT_CODE_MASK							0x01000000
@@ -53,8 +54,8 @@ extern void					ShutdownInputManager(void);
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
 extern void					QueueEvent(UINT16 ubInputEvent, UINT32 usParam, UINT32 uiParam);
 
-extern void					KeyDown(UINT32 usParam, UINT32 uiParam);
-extern void					KeyUp(UINT32 usParam, UINT32 uiParam);
+void KeyDown(const SDL_keysym*);
+void KeyUp(  const SDL_keysym*);
 
 extern void					EnableDoubleClk(void);
 extern void					DisableDoubleClk(void);

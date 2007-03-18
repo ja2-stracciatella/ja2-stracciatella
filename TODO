@@ -3,6 +3,7 @@ high prio
 
 med prio
 - TODO0003 Implement sound streaming
+- HACK0008 Overhaul keyboard handling to properly map keys to chars
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
@@ -14,7 +15,6 @@ low prio
   (happens when entering a sector and being immediatly in combat)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
   distribution, which would be a rather complex task with pregenerated randoms
-- HACK0008 mark keyboad-input in SGP.c slated for return to Input.c
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
 
 cosmetic

@@ -56,27 +56,7 @@ static HHOOK ghKeyboardHook;
 static HHOOK ghMouseHook;
 
 
-// These are the hook functions for both keyboard and mouse
-
 #if 0 // XXX TODO
-LRESULT CALLBACK KeyboardHandler(int Code, WPARAM wParam, LPARAM lParam)
-{
-  if (Code < 0)
-  { // Do not handle this message, pass it on to another window
-    return CallNextHookEx(ghKeyboardHook, Code, wParam, lParam);
-  }
-
-  if (lParam & TRANSITION_MASK)
-  { // The key has been released
-    KeyUp(wParam, lParam);
-  }
-  else
-  { // Key was up
-    KeyDown(wParam, lParam);
-  }
-
-  return TRUE;
-}
 
 #ifdef JA2
 
@@ -181,10 +161,6 @@ BOOLEAN InitializeInputManager(void)
 #if 1 // XXX TODO
 	FIXME
 #else
-  // Activate the hook functions for both keyboard and Mouse
-  ghKeyboardHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC) KeyboardHandler, (HINSTANCE) 0, GetCurrentThreadId());
-  DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set keyboard hook returned %d", ghKeyboardHook));
-
   ghMouseHook = SetWindowsHookEx(WH_MOUSE, (HOOKPROC) MouseHandler, (HINSTANCE) 0, GetCurrentThreadId());
   DbgMessage(TOPIC_INPUT, DBG_LEVEL_2, String("Set mouse hook returned %d", ghMouseHook));
 #endif
@@ -404,331 +380,65 @@ BOOLEAN DequeueEvent(InputAtom *Event)
 	}
 }
 
-void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
+
+static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
   UINT32 ubKey;
   UINT16 ubChar;
   POINT  MousePos;
   UINT32 uiTmpLParam;
 
-  if ((usParam >= 96)&&(usParam <= 110))
-  { // Well this could be a NUMPAD character imitating the center console characters (when NUMLOCK is OFF). Well we
-    // gotta find out what was pressed and translate it to the actual physical key (i.e. if we think that HOME was
-    // pressed but NUM_7 was pressed, the we translate the key into NUM_7
-    switch(usParam)
-    { case 96 // NUM_0
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 82)
-        { // Well its the NUM_9 key and not actually the PGUP key
-          ubKey = 223;
-        }
-        else
-        { // NOP, its the PGUP key all right
-          ubKey = usParam;
-        }
-        break;
-      case 110 // NUM_PERIOD
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 83)
-        { // Well its the NUM_3 key and not actually the PGDN key
-          ubKey = 224;
-        }
-        else
-        { // NOP, its the PGDN key all right
-          ubKey = usParam;
-        }
-        break;
-      case 97 // NUM_1
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 79)
-        { // Well its the NUM_1 key and not actually the END key
-          ubKey = 225;
-        }
-        else
-        { // NOP, its the END key all right
-          ubKey = usParam;
-        }
-        break;
-      case 98 // NUM_2
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 80)
-        { // Well its the NUM_7 key and not actually the HOME key
-          ubKey = 226;
-        }
-        else
-        { // NOP, its the HOME key all right
-          ubKey = usParam;
-        }
-        break;
-      case 99 // NUM_3
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 81)
-        { // Well its the NUM_4 key and not actually the LARROW key
-          ubKey = 227;
-        }
-        else
-        { // NOP, it's the LARROW key all right
-          ubKey = usParam;
-        }
-        break;
-      case 100 // NUM_4
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 75)
-        { // Well its the NUM_8 key and not actually the UPARROW key
-          ubKey = 228;
-        }
-        else
-        { // NOP, it's the UPARROW key all right
-          ubKey = usParam;
-        }
-        break;
-      case 101 // NUM_5
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 76)
-        { // Well its the NUM_6 key and not actually the RARROW key
-          ubKey = 229;
-        }
-        else
-        { // NOP, it's the RARROW key all right
-          ubKey = usParam;
-        }
-        break;
-      case 102 // NUM_6
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 77)
-        { // Well its the NUM_2 key and not actually the DNARROW key
-          ubKey = 230;
-        }
-        else
-        { // NOP, it's the DNARROW key all right
-          ubKey = usParam;
-        }
-        break;
-      case 103 // NUM_7
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 71)
-        { // Well its the NUM_0 key and not actually the INSERT key
-          ubKey = 231;
-        }
-        else
-        { // NOP, it's the INSERT key all right
-          ubKey = usParam;
-        }
-        break;
-      case 104 // NUM_8
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 72)
-        { // Well its the NUM_PERIOD key and not actually the DELETE key
-          ubKey = 232;
-        }
-        else
-        { // NOP, it's the DELETE key all right
-          ubKey = usParam;
-        }
-        break;
-      case 105 // NUM_9
-      : if (((uiParam & SCAN_CODE_MASK) >> 16) == 73)
-        { // Well its the NUM_PERIOD key and not actually the DELETE key
-          ubKey = 233;
-        }
-        else
-        { // NOP, it's the DELETE key all right
-          ubKey = usParam;
-        }
-        break;
-      default
-      : ubKey = usParam;
-        break;
-    }
-  }
-  else
-  {
-    if ((usParam >= 33)&&(usParam <= 46))
-    { // Well this could be a NUMPAD character imitating the center console characters (when NUMLOCK is OFF). Well we
-      // gotta find out what was pressed and translate it to the actual physical key (i.e. if we think that HOME was
-      // pressed but NUM_7 was pressed, the we translate the key into NUM_7
-      switch(usParam)
-      { case 45 // NUM_0
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 82)
-          { // Is it the NUM_0 key or the INSERT key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the INSERT key
-              ubKey = 245;
-            }
-            else
-            { // Is the NUM_0 key with NUM lock off
-              ubKey = 234;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 46 // NUM_PERIOD
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 83)
-          { // Is it the NUM_PERIOD key or the DEL key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the DELETE key
-              ubKey = 246;
-            }
-            else
-            { // Is the NUM_PERIOD key with NUM lock off
-              ubKey = 235;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 35 // NUM_1
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 79)
-          { // Is it the NUM_1 key or the END key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the END key
-              ubKey = 247;
-            }
-            else
-            { // Is the NUM_1 key with NUM lock off
-              ubKey = 236;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 40 // NUM_2
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 80)
-          { // Is it the NUM_2 key or the DOWN key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the DOWN key
-              ubKey = 248;
-            }
-            else
-            { // Is the NUM_2 key with NUM lock off
-              ubKey = 237;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 34 // NUM_3
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 81)
-          { // Is it the NUM_3 key or the PGDN key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the PGDN key
-              ubKey = 249;
-            }
-            else
-            { // Is the NUM_3 key with NUM lock off
-              ubKey = 238;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 37 // NUM_4
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 75)
-          { // Is it the NUM_4 key or the LEFT key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the LEFT key
-              ubKey = 250;
-            }
-            else
-            { // Is the NUM_4 key with NUM lock off
-              ubKey = 239;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 39 // NUM_6
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 77)
-          { // Is it the NUM_6 key or the RIGHT key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the RIGHT key
-              ubKey = 251;
-            }
-            else
-            { // Is the NUM_6 key with NUM lock off
-              ubKey = 241;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 36 // NUM_7
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 71)
-          { // Is it the NUM_7 key or the HOME key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the HOME key
-              ubKey = 252;
-            }
-            else
-            { // Is the NUM_7 key with NUM lock off
-              ubKey = 242;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 38 // NUM_8
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 72)
-          { // Is it the NUM_8 key or the UP key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the UP key
-              ubKey = 253;
-            }
-            else
-            { // Is the NUM_8 key with NUM lock off
-              ubKey = 243;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        case 33 // NUM_9
-        : if (((uiParam & SCAN_CODE_MASK) >> 16) == 73)
-          { // Is it the NUM_9 key or the PGUP key
-            if (((uiParam & EXT_CODE_MASK) >> 17) != 0)
-            { // It's the PGUP key
-              ubKey = 254;
-            }
-            else
-            { // Is the NUM_9 key with NUM lock off
-              ubKey = 244;
-            }
-          }
-          else
-          {
-            ubKey = usParam;
-          }
-          break;
-        default
-        : ubKey = usParam;
-          break;
-      }
-    }
-    else
-    {
-      if (usParam == 12)
-      { // NUM_5 with NUM_LOCK off
-        ubKey = 240;
-      }
-      else
-      { // Normal key
-        ubKey = usParam;
-      }
-    }
-  }
+#if 1 // XXX HACK0008
+	SDLKey Key = KeySym->sym;
+	if (Key >= SDLK_a && Key <= SDLK_z)
+	{
+		ubKey = gfShiftState ? Key - 32 : Key;
+	}
+	else if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
+	{
+		if (KeySym->mod & KMOD_NUM)
+		{
+			ubKey = Key - SDLK_KP0 + SDLK_0;
+		}
+		else
+		{
+			switch (Key)
+			{
+				case SDLK_KP0: ubKey = INSERT;     break;
+				case SDLK_KP1: ubKey = END;        break;
+				case SDLK_KP2: ubKey = DNARROW;    break;
+				case SDLK_KP3: ubKey = PGDN;       break;
+				case SDLK_KP4: ubKey = LEFTARROW;  break;
+				case SDLK_KP5: return;
+				case SDLK_KP6: ubKey = RIGHTARROW; break;
+				case SDLK_KP7: ubKey = HOME;       break;
+				case SDLK_KP8: ubKey = UPARROW;    break;
+				case SDLK_KP9: ubKey = DNARROW;    break;
+			}
+		}
+	}
+	else
+	{
+		switch (Key)
+		{
+			case SDLK_DELETE:   ubKey = DEL;        break;
+			case SDLK_UP:       ubKey = UPARROW;    break;
+			case SDLK_DOWN:     ubKey = DNARROW;    break;
+			case SDLK_RIGHT:    ubKey = RIGHTARROW; break;
+			case SDLK_LEFT:     ubKey = LEFTARROW;  break;
+			case SDLK_HOME:     ubKey = HOME;       break;
+			case SDLK_END:      ubKey = END;        break;
+			case SDLK_PAGEUP:   ubKey = PGUP;       break;
+			case SDLK_PAGEDOWN: ubKey = PGDN;       break;
 
+			default:
+				if (Key >= lengthof(gfKeyState)) return;
+				ubKey = Key;
+				break;
+		}
+	}
+	ubChar = ubKey;
+#else
 	// Find ucChar by translating ubKey using the gsKeyTranslationTable. If the SHIFT, ALT or CTRL key are down, then
   // the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
   if (gfShiftState == TRUE)
@@ -760,11 +470,12 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
       }
     }
   }
+#endif
 
   GetCursorPos(&MousePos);
   uiTmpLParam = ((MousePos.y << 16) & 0xffff0000) | (MousePos.x & 0x0000ffff);
 
-  if (ufKeyState == TRUE)
+  if (Pressed)
   { // Key has been PRESSED
     // Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
     if (gfKeyState[ubKey] == FALSE)
@@ -785,6 +496,7 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
       gfKeyState[ubKey] = FALSE;
       QueueEvent(KEY_UP, ubChar, uiTmpLParam);
     }
+#if 0 // XXX TODO
 		//else if the alt tab key was pressed
 		else if( ubChar == TAB && gfAltState )
 		{
@@ -793,94 +505,73 @@ void KeyChange(UINT32 usParam, UINT32 uiParam, UINT8 ufKeyState)
       gfKeyState[ ALT ] = FALSE;
 			gfAltState = FALSE;
 		}
-  }
 #endif
+	}
 }
 
-void KeyDown(UINT32 usParam, UINT32 uiParam)
+
+void KeyDown(const SDL_keysym* KeySym)
 { // Are we PRESSING down one of SHIFT, ALT or CTRL ???
-  if (usParam == 16)
-  { // SHIFT key is PRESSED
-    gfShiftState = SHIFT_DOWN;
-    gfKeyState[16] = TRUE;
-  }
-  else
-  {
-    if (usParam == 17)
-    { // CTRL key is PRESSED
-      gfCtrlState = CTRL_DOWN;
-      gfKeyState[17] = TRUE;
-    }
-    else
-    {
-      if (usParam == 18)
-      { // ALT key is pressed
-        gfAltState = ALT_DOWN;
-        gfKeyState[18] = TRUE;
-      }
-      else
-      {
-        if (usParam == SNAPSHOT)
-        {
-          //PrintScreen();
-					// DB Done in the KeyUp function
-					// this used to be keyed to SCRL_LOCK
-					// which I believe Luis gave the wrong value
-        }
-        else
-        {
-          // No special keys have been pressed
-          // Call KeyChange() and pass TRUE to indicate key has been PRESSED and not RELEASED
-          KeyChange(usParam, uiParam, TRUE);
-        }
-      }
-    }
-  }
+	switch (KeySym->sym)
+	{
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+			gfShiftState = SHIFT_DOWN;
+			gfKeyState[SHIFT] = TRUE;
+			break;
+
+		case SDLK_LCTRL:
+		case SDLK_RCTRL:
+			gfCtrlState = CTRL_DOWN;
+			gfKeyState[CTRL] = TRUE;
+			break;
+
+		case SDLK_LALT:
+		case SDLK_RALT:
+			gfAltState = ALT_DOWN;
+			gfKeyState[ALT] = TRUE;
+			break;
+
+		case SDLK_PRINT:
+			break;
+
+		default:
+			KeyChange(KeySym, TRUE);
+			break;
+	}
 }
 
-void KeyUp(UINT32 usParam, UINT32 uiParam)
+
+void KeyUp(const SDL_keysym* KeySym)
 { // Are we RELEASING one of SHIFT, ALT or CTRL ???
-  if (usParam == 16)
-  { // SHIFT key is RELEASED
-    gfShiftState = FALSE;
-    gfKeyState[16] = FALSE;
-  }
-  else
-  {
-    if (usParam == 17)
-    { // CTRL key is RELEASED
-      gfCtrlState = FALSE;
-      gfKeyState[17] = FALSE;
-    }
-    else
-    {
-      if (usParam == 18)
-      { // ALT key is RELEASED
-        gfAltState = FALSE;
-        gfKeyState[18] = FALSE;
-      }
-      else
-      {
-        if (usParam == SNAPSHOT)
-        {
-					// DB this used to be keyed to SCRL_LOCK
-					// which I believe Luis gave the wrong value
-					//#ifndef JA2
-					if (_KeyDown(CTRL))
-						VideoCaptureToggle();
-					else
-					//#endif
-						PrintScreen();
-        }
-        else
-        {
-					// No special keys have been pressed
-					// Call KeyChange() and pass FALSE to indicate key has been PRESSED and not RELEASED
-					KeyChange(usParam, uiParam, FALSE);
-        }
-      }
-    }
-  }
+	switch (KeySym->sym)
+	{
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+			gfShiftState = FALSE;
+			gfKeyState[SHIFT] = FALSE;
+			break;
+
+		case SDLK_LCTRL:
+		case SDLK_RCTRL:
+			gfCtrlState = FALSE;
+			gfKeyState[CTRL] = FALSE;
+			break;
+
+		case SDLK_LALT:
+		case SDLK_RALT:
+			gfAltState = FALSE;
+			gfKeyState[ALT] = FALSE;
+			break;
+
+		case SDLK_PRINT:
+			if (_KeyDown(CTRL)) VideoCaptureToggle(); else PrintScreen();
+			break;
+
+		default:
+			KeyChange(KeySym, FALSE);
+			break;
+	}
 }
 
 void EnableDoubleClk(void)
