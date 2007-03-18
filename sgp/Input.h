@@ -4,10 +4,6 @@
 #include "Types.h"
 #include "SDL_keyboard.h"
 
-#define SCAN_CODE_MASK						0xff0000
-#define EXT_CODE_MASK							0x01000000
-#define TRANSITION_MASK						0x80000000
-
 #define KEY_DOWN									0x0001
 #define KEY_UP										0x0002
 #define KEY_REPEAT								0x0004
@@ -25,7 +21,6 @@
 #define CTRL_DOWN									0x02
 #define ALT_DOWN									0x04
 
-#define MAX_STRING_INPUT					64
 #define DBL_CLK_TIME							300     // Increased by Alex, Jun-10-97, 200 felt too short
 #define BUTTON_REPEAT_TIMEOUT			250
 #define BUTTON_REPEAT_TIME				50
