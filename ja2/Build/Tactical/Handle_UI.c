@@ -3206,10 +3206,10 @@ UINT32 UIHandleILoadLevel( UI_EVENT *pUIEvent )
 UINT32 UIHandleISoldierDebug( UI_EVENT *pUIEvent )
 {
 	 // Use soldier display pages
-	 SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage1, 0 );
-	 SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage2, 1 );
-	 SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage3, 2 );
-	 SetDebugRenderHook( (RENDER_HOOK)DebugSoldierPage4, 3 );
+	 SetDebugRenderHook(DebugSoldierPage1, 0);
+	 SetDebugRenderHook(DebugSoldierPage2, 1);
+	 SetDebugRenderHook(DebugSoldierPage3, 2);
+	 SetDebugRenderHook(DebugSoldierPage4, 3);
 	 gCurDebugPage = 1;
 
 	 return( DEBUG_SCREEN );
@@ -3217,13 +3217,13 @@ UINT32 UIHandleISoldierDebug( UI_EVENT *pUIEvent )
 
 UINT32 UIHandleILOSDebug( UI_EVENT *pUIEvent )
 {
-	 SetDebugRenderHook( (RENDER_HOOK)DebugStructurePage1, 0 );
+	 SetDebugRenderHook(DebugStructurePage1, 0);
 	 return( DEBUG_SCREEN );
 }
 
 UINT32 UIHandleILevelNodeDebug( UI_EVENT *pUIEvent )
 {
-	 SetDebugRenderHook( (RENDER_HOOK)DebugLevelNodePage, 0 );
+	 SetDebugRenderHook(DebugLevelNodePage, 0);
 	 return( DEBUG_SCREEN );
 }
 

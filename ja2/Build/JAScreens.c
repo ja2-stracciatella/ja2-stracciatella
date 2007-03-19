@@ -95,8 +95,12 @@ void DefaultDebugPage2( );
 void DefaultDebugPage3( );
 void DefaultDebugPage4( );
 RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
-{ (RENDER_HOOK)DefaultDebugPage1, (RENDER_HOOK)DefaultDebugPage2,
-  (RENDER_HOOK)DefaultDebugPage3, (RENDER_HOOK)DefaultDebugPage4 };
+{
+	DefaultDebugPage1,
+	DefaultDebugPage2,
+	DefaultDebugPage3,
+	DefaultDebugPage4
+};
 
 extern HVSURFACE ghFrameBuffer;
 
@@ -448,8 +452,8 @@ UINT32 PalEditScreenHandle(void)
 		gfExitPalEditScreen = FALSE;
 		FirstTime = TRUE;
 		FreeBackgroundRect( guiBackgroundRect );
-		SetRenderHook( (RENDER_HOOK)NULL );
-		SetUIKeyboardHook( (UIKEYBOARD_HOOK)NULL );
+		SetRenderHook(NULL);
+		SetUIKeyboardHook(NULL);
 		return( GAME_SCREEN );
 	}
 
@@ -457,8 +461,8 @@ UINT32 PalEditScreenHandle(void)
 	{
 		FirstTime = FALSE;
 
-		SetRenderHook( (RENDER_HOOK)PalEditRenderHook );
-		SetUIKeyboardHook( (UIKEYBOARD_HOOK)PalEditKeyboardHook );
+		SetRenderHook(PalEditRenderHook);
+		SetUIKeyboardHook(PalEditKeyboardHook);
 
 		guiBackgroundRect = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, 50, 10, 600 , 400);
 
@@ -656,8 +660,8 @@ BOOLEAN CheckForAndExitTacticalDebug( )
 		gfInitRect = TRUE;
 		gfExitDebugScreen = FALSE;
 		FreeBackgroundRect( guiBackgroundRect );
-		SetRenderHook( (RENDER_HOOK)NULL );
-		SetUIKeyboardHook( (UIKEYBOARD_HOOK)NULL );
+		SetRenderHook(NULL);
+		SetUIKeyboardHook(NULL);
 
 		return( TRUE );
 	}
@@ -694,9 +698,8 @@ UINT32 DebugScreenHandle(void)
 	{
 		FirstTime = FALSE;
 
-		SetRenderHook( (RENDER_HOOK)DebugRenderHook );
-		SetUIKeyboardHook( (UIKEYBOARD_HOOK)DebugKeyboardHook );
-
+		SetRenderHook(DebugRenderHook);
+		SetUIKeyboardHook(DebugKeyboardHook);
 	}
 	else
 	{
