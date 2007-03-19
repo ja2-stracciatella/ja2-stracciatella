@@ -917,8 +917,8 @@ static INT32 CreateIconTextButton(const wchar_t *string, UINT32 uiFont, INT16 sF
 		(UINT16)(yloc + h),
 		(INT8)Priority,
 		MSYS_STARTING_CURSORVAL,
-		(MOUSE_CALLBACK)QuickButtonCallbackMMove,
-		(MOUSE_CALLBACK)QuickButtonCallbackMButn
+		QuickButtonCallbackMMove,
+		QuickButtonCallbackMButn
 	);
 
 	MSYS_SetRegionUserData(&b->Area, 0, ButtonNum);
@@ -998,7 +998,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 
 	// define a MOUSE_REGION for this hotspot
 	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,(UINT16)(xloc+Width),(UINT16)(yloc+Height),
-				(INT8)Priority, MSYS_STARTING_CURSORVAL, (MOUSE_CALLBACK)QuickButtonCallbackMMove, (MOUSE_CALLBACK)QuickButtonCallbackMButn);
+		(INT8)Priority, MSYS_STARTING_CURSORVAL, QuickButtonCallbackMMove, QuickButtonCallbackMButn);
 
 	// Link the MOUSE_REGION to this hotspot
 	MSYS_SetRegionUserData(&b->Area,0,ButtonNum);
@@ -1132,8 +1132,8 @@ INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Prio
 			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
 				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
 				(INT8)Priority, MSYS_STARTING_CURSORVAL,
-				(MOUSE_CALLBACK)QuickButtonCallbackMMove,
-				(MOUSE_CALLBACK)QuickButtonCallbackMButn);
+				QuickButtonCallbackMMove,
+				QuickButtonCallbackMButn);
 
 	// Link the MOUSE_REGION with this QuickButton
 	MSYS_SetRegionUserData(&b->Area,0,ButtonNum);
@@ -1288,8 +1288,8 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
 				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
 				(INT8)Priority, MSYS_STARTING_CURSORVAL,
-				(MOUSE_CALLBACK)QuickButtonCallbackMMove,
-				(MOUSE_CALLBACK)QuickButtonCallbackMButn);
+				QuickButtonCallbackMMove,
+				QuickButtonCallbackMButn);
 
 	// Link the MOUSE_REGION with this QuickButton
 	MSYS_SetRegionUserData(&b->Area,0,iButtonID);

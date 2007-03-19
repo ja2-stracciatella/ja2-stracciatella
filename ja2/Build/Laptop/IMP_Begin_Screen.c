@@ -1028,20 +1028,20 @@ void CreateIMPBeginScreenMouseRegions( void )
 
 	// full name region
   MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 0 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 135,  LAPTOP_SCREEN_UL_X + 196 + FULL_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 135 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MSYS_NO_CALLBACK, (MOUSE_CALLBACK)SelectFullNameRegionCallBack );
+		MSYS_NO_CALLBACK, SelectFullNameRegionCallBack);
 
 
 	// nick name region
 	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 1 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 195,  LAPTOP_SCREEN_UL_X + 196 + NICK_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 195 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MSYS_NO_CALLBACK, (MOUSE_CALLBACK)SelectNickNameRegionCallBack );
+		MSYS_NO_CALLBACK, SelectNickNameRegionCallBack);
 
 	// IMP_MALE gender area
   MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,   MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		(MOUSE_CALLBACK)MvtOnMaleRegionCallBack, (MOUSE_CALLBACK)SelectMaleRegionCallBack );
+		MvtOnMaleRegionCallBack, SelectMaleRegionCallBack);
 
 	// IMP_FEMALE gender region
 	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 3 ] , FEMALE_BOX_X, MALE_BOX_Y,   FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		(MOUSE_CALLBACK)MvtOnFemaleRegionCallBack, (MOUSE_CALLBACK)SelectFemaleRegionCallBack );
+		MvtOnFemaleRegionCallBack, SelectFemaleRegionCallBack);
 
 
 	// add regions

@@ -119,7 +119,7 @@ void InitEditorRegions()
 	for( x = 0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
 	{
 		MSYS_DefineRegion(&TerrainTileButtonRegion[x],(INT16)(261+x*42),369,(INT16)(303+x*42),391,
-			MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK,(MOUSE_CALLBACK)TerrainTileButtonRegionCallback);
+			MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, TerrainTileButtonRegionCallback);
 		MSYS_SetRegionUserData( &TerrainTileButtonRegion[x], 0, x );
 		MSYS_DisableRegion( &TerrainTileButtonRegion[x] );
 	}
@@ -127,7 +127,7 @@ void InitEditorRegions()
 
 	//Create the region for the items selection window.
 	MSYS_DefineRegion( &ItemsRegion, 100, 360, 540, 440, MSYS_PRIORITY_NORMAL, 0,
-		(MOUSE_CALLBACK)MouseMovedInItemsRegion, (MOUSE_CALLBACK)MouseClickedInItemsRegion );
+		MouseMovedInItemsRegion, MouseClickedInItemsRegion);
 	MSYS_DisableRegion( &ItemsRegion );
 
 	//Create the region for the merc inventory panel.
