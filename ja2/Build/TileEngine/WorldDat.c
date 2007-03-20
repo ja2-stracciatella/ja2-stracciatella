@@ -92,19 +92,18 @@ void InitEngineTilesets( )
 
 
 	// SET CALLBACK FUNTIONS!!!!!!!!!!!!!
-	gTilesets[ CAVES_1 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetTwoTerrainValues;
-	gTilesets[ AIRSTRIP ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ DEAD_AIRSTRIP ].MovementCostFnc	= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_14 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_18 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_19 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_26 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_27 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_28 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-	gTilesets[ TEMP_29 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetThreeTerrainValues;
-
-	gTilesets[ TROPICAL_1 ].MovementCostFnc			= (TILESET_CALLBACK)SetTilesetFourTerrainValues;
-	gTilesets[ TEMP_20 ].MovementCostFnc				= (TILESET_CALLBACK)SetTilesetFourTerrainValues;
+	gTilesets[CAVES_1      ].MovementCostFnc = SetTilesetTwoTerrainValues;
+	gTilesets[AIRSTRIP     ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[DEAD_AIRSTRIP].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_14      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_18      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_19      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_26      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_27      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_28      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TEMP_29      ].MovementCostFnc = SetTilesetThreeTerrainValues;
+	gTilesets[TROPICAL_1   ].MovementCostFnc = SetTilesetFourTerrainValues;
+	gTilesets[TEMP_20      ].MovementCostFnc = SetTilesetFourTerrainValues;
 }
 
 
