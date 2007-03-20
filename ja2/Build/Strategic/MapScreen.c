@@ -2399,8 +2399,7 @@ void DisplayGroundEta( void )
 }
 
 
-
-void HighLightAssignLine()
+static void HighLightAssignLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
@@ -2491,7 +2490,7 @@ void HighLightAssignLine()
 }
 
 
-void HighLightDestLine()
+static void HighLightDestLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
@@ -2574,8 +2573,7 @@ void HighLightDestLine()
 }
 
 
-
-void HighLightSleepLine()
+static void HighLightSleepLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
@@ -7964,9 +7962,9 @@ void HandleHighLightingOfLinesInTeamPanel( void )
 	RestoreBackgroundForContractGlowRegionList( );
 	RestoreBackgroundForSleepGlowRegionList( );
 
-	HighLightAssignLine((UINT16)giAssignHighLine );
-	HighLightDestLine((UINT16)giDestHighLine );
-	HighLightSleepLine((UINT16)giSleepHighLine );
+	HighLightAssignLine();
+	HighLightDestLine();
+	HighLightSleepLine();
 
 	// contracts?
 	if( giContractHighLine != -1 )
