@@ -98,11 +98,9 @@ BOOLEAN InitializeBaseDirtyRectQueue( );
 void ShutdownBaseDirtyRectQueue( );
 void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom );
 BOOLEAN ExecuteBaseDirtyRectQueue( );
-BOOLEAN EmptyDirtyRectQueue( );
 
 
 // BACKGROUND RECT BUFFERING STUFF
-void DisableBackgroundRect( INT32 iIndex, BOOLEAN fDisabled );
 BOOLEAN InitializeBackgroundRects(void);
 BOOLEAN ShutdownBackgroundRects(void);
 INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 *pSaveArea, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
@@ -125,8 +123,6 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 
 // VIDEO OVERLAY STUFF
-INT32 GetFreeVideoOverlay(void);
-void RecountVideoOverlays(void);
 INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc );
 void ExecuteVideoOverlays( );
 BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterIndex, BOOLEAN fForceAll );
@@ -136,7 +132,6 @@ void AllocateVideoOverlaysArea( );
 void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer );
 void RemoveVideoOverlay( INT32 iVideoOverlay );
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
-BOOLEAN SetOverlayUserData( INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData );
 void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex );
 
 

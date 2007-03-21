@@ -245,7 +245,8 @@ void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 	}
 }
 
-void ShowExitGrids()
+
+static void ShowExitGrids(void)
 {
 	UINT16 i;
 	LEVELNODE *pLevelNode;

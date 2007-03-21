@@ -45,7 +45,6 @@
 extern BOOLEAN gfMercsNeverQuit;
 #endif
 
-extern void ValidateGameEvents();
 extern void HandleHourlyUpdate();
 extern void HandleQuarterHourUpdate();
 extern void HandleMinuteUpdate();
@@ -59,8 +58,7 @@ void CrippledVersionEndGameCheck();
 #endif
 
 
-
-BOOLEAN DelayEventIfBattleInProgress( STRATEGICEVENT *pEvent )
+static BOOLEAN DelayEventIfBattleInProgress(STRATEGICEVENT* pEvent)
 {
 	STRATEGICEVENT *pNewEvent;
 	if( gTacticalStatus.fEnemyInSector )

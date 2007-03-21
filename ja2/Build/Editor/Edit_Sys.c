@@ -25,15 +25,6 @@
 #include "MemMan.h"
 
 
-BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius );
-BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius );
-BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace );
-
-void PasteTextureEx( INT16 sGridNo, UINT16 usType );
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius );
-
-
 BOOLEAN			gfWarning = FALSE;
 
 BOOLEAN			gfDoFill = FALSE;
@@ -250,6 +241,9 @@ void PasteDebris( UINT32 iMapIndex )
 }
 
 
+static void PasteSingleWallCommon(UINT32 iMapIndex);
+
+
 void PasteSingleWall( UINT32 iMapIndex )
 {
 	pSelList = SelSingleWall;
@@ -334,13 +328,10 @@ void PasteSingleToilet( UINT32 iMapIndex )
 	PasteSingleWallCommon( iMapIndex );
 }
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteSingleWallCommon
-//
+
 //	Common paste routine for PasteSingleWall, PasteSingleDoor, PasteSingleDecoration, and
 //	PasteSingleDecor (above).
-//
-void PasteSingleWallCommon( UINT32 iMapIndex )
+static void PasteSingleWallCommon(UINT32 iMapIndex)
 {
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
@@ -465,7 +456,8 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 	return ( usNumInPickList ) ? usPickList[ rand() % usNumInPickList ] : 0xffff;
 }
 
-UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
+
+static UINT16 GetRandomTypeByRange(UINT16 usRangeStart, UINT16 usRangeEnd)
 {
 	UINT16	usPickList[50];
 	UINT16	usNumInPickList;
@@ -486,6 +478,9 @@ UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 	}
 	return ( usNumInPickList ) ? usPickList[ rand() % usNumInPickList ] : 0xffff;
 }
+
+
+static void PasteStructureCommon(UINT32 iMapIndex);
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -528,13 +523,9 @@ void PasteStructure2( UINT32 iMapIndex )
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteStructureCommon
-//
 //	This is the main (common) structure pasting function. The above three wrappers are only required because they
 //	each use different selection lists. Other than that, they are COMPLETELY identical.
-//
-void PasteStructureCommon( UINT32 iMapIndex )
+static void PasteStructureCommon(UINT32 iMapIndex)
 {
 	BOOLEAN				fDoPaste = FALSE;
 	UINT32				fHeadType;
@@ -677,6 +668,11 @@ void PasteTexture( UINT32 iMapIndex )
 	PasteTextureCommon( iMapIndex );
 }
 
+
+static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType);
+static void PasteTextureEx(INT16 sGridNo, UINT16 usType);
+
+
 //---------------------------------------------------------------------------------------------------------------
 //	PasteTextureCommon
 //
@@ -740,13 +736,12 @@ void PasteTextureCommon( UINT32 iMapIndex )
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteHigherTexture
-//
+static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace);
+
+
 //	Some ground textures should be placed "above" others. That is, grass needs to be placed "above" sand etc.
 //	This function performs the appropriate actions.
-//
-void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
+static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 {
 	 UINT16					NewTile;
 	 UINT8					ubLastHighLevel;
@@ -804,12 +799,8 @@ void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType )
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteHigherTextureFromRadius
-//
 //	Like above function except it performs it's operation on a redial area.
-//
-BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius )
+static BOOLEAN PasteHigherTextureFromRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -855,10 +846,7 @@ BOOLEAN PasteHigherTextureFromRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 u
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteExistingTexture
-//
-BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
+static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 {
 	UINT32					uiNewType;
 	UINT16					usNewIndex;
@@ -900,12 +888,8 @@ BOOLEAN PasteExistingTexture( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	PasteExistingTextureFromRadius
-//
 //	As above, but on a radial area
-//
-BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius )
+static BOOLEAN PasteExistingTextureFromRadius(INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -945,12 +929,8 @@ BOOLEAN PasteExistingTextureFromRadius( INT32 iMapIndex, UINT16 usIndex, UINT8 u
 }
 
 
-//---------------------------------------------------------------------------------------------------------------
-//	SetLowerLandIndexWithRadius
-//
 //	Puts a land index "under" an existing ground texture. Affects a radial area.
-//
-BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
+static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
 {
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
@@ -1053,8 +1033,9 @@ BOOLEAN SetLowerLandIndexWithRadius( INT32 iMapIndex, UINT32 uiNewType, UINT8 ub
 	return( TRUE );
 }
 
+
 // ATE FIXES
-void PasteTextureEx( INT16 sGridNo, UINT16 usType )
+static void PasteTextureEx(INT16 sGridNo, UINT16 usType)
 {
 	UINT16 usIndex;
 	UINT8	 ubTypeLevel;
@@ -1084,7 +1065,7 @@ void PasteTextureEx( INT16 sGridNo, UINT16 usType )
 }
 
 
-void PasteTextureFromRadiusEx( INT16 sGridNo, UINT16 usType, UINT8 ubRadius )
+static void PasteTextureFromRadiusEx(INT16 sGridNo, UINT16 usType, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -1382,7 +1363,8 @@ void RaiseWorldLand( )
 
 }
 
-void EliminateObjectLayerRedundancy()
+
+static void EliminateObjectLayerRedundancy(void)
 {
 	INT32 i, numRoads, numAnothers;
 	UINT32 uiType;

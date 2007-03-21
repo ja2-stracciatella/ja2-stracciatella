@@ -267,26 +267,10 @@ BOOLEAN	gfGetNewPathThroughPeople = FALSE;
 
 // DO NOT CALL UNLESS THROUGH EVENT_SetSoldierPosition
 UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
-BOOLEAN CheckForFullStruct( INT16 sGridNo, UINT16 *pusIndex  );
-void SetSoldierLocatorOffsets( SOLDIERTYPE *pSoldier );
-void CheckForFullStructures( SOLDIERTYPE *pSoldier );
 BOOLEAN InitNewSoldierState( SOLDIERTYPE *pSoldier, UINT8 ubNewState, UINT16 usStartingAniCode );
-UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
-void AdjustForFastTurnAnimation( SOLDIERTYPE *pSoldier );
-UINT16 SelectFireAnimation( SOLDIERTYPE *pSoldier, UINT8 ubHeight );
-void SelectFallAnimation( SOLDIERTYPE *pSoldier );
-BOOLEAN FullStructAlone( INT16 sGridNo, UINT8 ubRadius );
-void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial , UINT8 ubHitLocation);
-void SoldierGotHitBlade( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation );
-void SoldierGotHitPunch( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation );
-void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation );
-UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss );
 void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
 void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
-
-void SoldierBleed( SOLDIERTYPE *pSoldier, BOOLEAN fBandagedBleed );
-INT32 CheckBleeding( SOLDIERTYPE *pSoldier );
 
 void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState );
 
@@ -297,7 +281,7 @@ void SAIReportError( STR16 wErrorString );
 #endif
 
 
-void HandleVehicleMovementSound( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
+static void HandleVehicleMovementSound(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
 {
 	VEHICLETYPE *pVehicle = &( pVehicleList[ pSoldier->bVehicleID ] );
 
@@ -971,7 +955,8 @@ BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
 	return( TRUE );
 }
 
-BOOLEAN CreateSoldierLight( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
@@ -1059,7 +1044,7 @@ BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ReCreateSelectedSoldierLight(  )
+static BOOLEAN ReCreateSelectedSoldierLight(void)
 {
 	SOLDIERTYPE *pSoldier;
 
@@ -1182,7 +1167,7 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 }
 
 
-void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32 uiNewAnimFlags, UINT16 usOldAniState, UINT16 usNewState )
+static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, UINT32 uiNewAnimFlags, UINT16 usOldAniState, UINT16 usNewState)
 {
 	// THIS COULD POTENTIALLY CALL EVENT_INITNEWAnim() if the GUY was SUPPRESSED
 	// CHECK IF THE OLD ANIMATION WAS A HIT START THAT WAS NOT FOLLOWED BY A HIT FINISH
@@ -1232,6 +1217,10 @@ void CheckForFreeupFromHit( SOLDIERTYPE *pSoldier, UINT32 uiOldAnimFlags, UINT32
 		}
 	}
 }
+
+
+static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove);
+static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 
 // THIS IS CALLED FROM AN EVENT ( S_CHANGESTATE )!
@@ -2185,7 +2174,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 }
 
 
-void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce )
+static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* pSoldier, BOOLEAN fForce)
 {
 	INT8 bDir;
 	INT32 iGridNo;
@@ -2225,6 +2214,9 @@ void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier )
 {
   InternalRemoveSoldierFromGridNo( pSoldier, FALSE );
 }
+
+
+static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove);
 
 
 void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceRemove )
@@ -2288,7 +2280,8 @@ void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos,
 	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,TRUE, TRUE, TRUE );
 }
 
-void EVENT_SetSoldierPositionAndMaybeFinalDest( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest )
+
+static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest)
 {
 	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,TRUE, fUpdateFinalDest, FALSE );
 }
@@ -2299,7 +2292,7 @@ void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYP
 }
 
 
-void InternalSetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight, BOOLEAN fUpdateLevel )
+static void InternalSetSoldierHeight(SOLDIERTYPE* pSoldier, FLOAT dNewHeight, BOOLEAN fUpdateLevel)
 {
 
 	INT8	bOldLevel = pSoldier->bLevel;
@@ -2355,7 +2348,7 @@ void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight )
 }
 
 
-void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove )
+static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove)
 {
 	BOOLEAN	fInWaterValue;
 	INT8		bDir;
@@ -2664,6 +2657,9 @@ void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRe
 }
 
 
+static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight);
+
+
 void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
 	INT16 sTargetXPos, sTargetYPos;
@@ -2794,7 +2790,8 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 //gAnimControl[ pSoldier->usAnimState ].ubEndHeight
 //					ChangeSoldierState( pSoldier, SHOOT_RIFLE_STAND, 0 , FALSE );
 
-UINT16 SelectFireAnimation( SOLDIERTYPE *pSoldier, UINT8 ubHeight )
+
+static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 {
 	INT16 sDist;
 	UINT16 usItem;
@@ -3046,7 +3043,7 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 }
 
 
-void SelectFallAnimation( SOLDIERTYPE *pSoldier )
+static void SelectFallAnimation(SOLDIERTYPE* pSoldier)
 {
 	// Determine which animation to do...depending on stance and gun in hand...
 	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
@@ -3265,7 +3262,12 @@ extern SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID );
 extern SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID );
 
 
+static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss);
 static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
+static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
@@ -3710,10 +3712,10 @@ void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDa
 	{
 		SoldierGotHitPunch( pSoldier, usWeaponIndex, sDamage, bDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation );
 	}
-
 }
 
-UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss )
+
+static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss)
 {
 	// NB explosions are so loud they should drown out screams
 	UINT8 ubVolume;
@@ -3750,6 +3752,9 @@ UINT8 CalcScreamVolume( SOLDIERTYPE * pSoldier, UINT8 ubCombinedLoss )
 
 	return( ubVolume );
 }
+
+
+static BOOLEAN SoldierCarriesTwoHandedWeapon(SOLDIERTYPE* pSoldier);
 
 
 static void DoGenericHit(SOLDIERTYPE* pSoldier, UINT8 ubSpecial, INT16 bDirection)
@@ -3799,7 +3804,7 @@ static void DoGenericHit(SOLDIERTYPE* pSoldier, UINT8 ubSpecial, INT16 bDirectio
 static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection);
 
 
-void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
+static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
 	UINT16	usNewGridNo;
 	BOOLEAN	fBlownAway = FALSE;
@@ -3910,10 +3915,10 @@ void SoldierGotHitGunFire( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sD
 	}
 
   DoGenericHit( pSoldier, ubSpecial, bDirection );
-
 }
 
-void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
+
+static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
 	INT16 sNewGridNo;
 
@@ -3991,13 +3996,11 @@ void SoldierGotHitExplosion( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 
 			SoldierCollapse( pSoldier );
 			break;
 	}
-
 }
 
 
-void SoldierGotHitBlade( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
+static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
-
 	// IF HERE AND GUY IS DEAD, RETURN!
 	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 	{
@@ -4029,11 +4032,10 @@ void SoldierGotHitBlade( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDam
 			EVENT_InitNewSoldierAnim( pSoldier, GENERIC_HIT_PRONE, 0 , FALSE );
 			break;
 	}
-
 }
 
 
-void SoldierGotHitPunch( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation )
+static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
 
 	// IF HERE AND GUY IS DEAD, RETURN!
@@ -4349,6 +4351,9 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier )
 }
 
 
+static UINT16 GetNewSoldierStateFromNewStance(SOLDIERTYPE* pSoldier, UINT8 ubDesiredStance);
+
+
 void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
 {
 	UINT16 usNewState;
@@ -4434,7 +4439,7 @@ void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 
 
 // function to determine which direction a creature can turn in
-INT8 MultiTiledTurnDirection( SOLDIERTYPE * pSoldier, INT8 bStartDirection, INT8 bDesiredDirection )
+static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection, INT8 bDesiredDirection)
 {
 	INT8										bTurningIncrement;
 	INT8										bCurrentDirection;
@@ -4629,6 +4634,9 @@ void EVENT_SetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirect
 }
 
 
+static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier);
+
+
 void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 {
 	 // Remove old location data
@@ -4665,6 +4673,9 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 	 SetSoldierLocatorOffsets( pSoldier );
 
 }
+
+
+static INT32 CheckBleeding(SOLDIERTYPE* pSoldier);
 
 
 void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iRealTimeCounter )
@@ -5953,7 +5964,8 @@ BOOLEAN GetPaletteRepIndexFromID( PaletteRepID aPalRep, UINT8 *pubPalIndex )
 	return( FALSE );
 }
 
-UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance )
+
+static UINT16 GetNewSoldierStateFromNewStance(SOLDIERTYPE* pSoldier, UINT8 ubDesiredStance)
 {
 	UINT16 usNewState;
 	INT8	bCurrentHeight;
@@ -6045,8 +6057,11 @@ void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMo
 	}
 
 	MoveMerc( pSoldier, dMovementDist, dAngle, FALSE );
-
 }
+
+
+static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEAN fPlayEndAnim);
+
 
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 {
@@ -6214,7 +6229,7 @@ void BeginSoldierGetup( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleTakeDamageDeath( SOLDIERTYPE *pSoldier, UINT8 bOldLife, UINT8 ubReason )
+static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 ubReason)
 {
 	switch( ubReason )
 	{
@@ -6288,6 +6303,9 @@ void HandleTakeDamageDeath( SOLDIERTYPE *pSoldier, UINT8 bOldLife, UINT8 ubReaso
     }
 	}
 }
+
+
+static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier);
 
 
 UINT8 SoldierTakeDamage( SOLDIERTYPE *pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, INT16 sSubsequent, BOOLEAN fShowDamage )
@@ -7479,7 +7497,7 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 }
 
 
-UINT8 atan8FromAngle( DOUBLE angle )
+static UINT8 atan8FromAngle(DOUBLE angle)
 {
 	UINT8	  mFacing = WEST;
 
@@ -7541,7 +7559,10 @@ UINT8 atan8FromAngle( DOUBLE angle )
 }
 
 
-void CheckForFullStructures( SOLDIERTYPE *pSoldier )
+static BOOLEAN CheckForFullStruct(INT16 sGridNo, UINT16* pusIndex);
+
+
+static void CheckForFullStructures(SOLDIERTYPE* pSoldier)
 {
 	// This function checks to see if we are near a specific structure type which requires us to blit a
 	// small obscuring peice
@@ -7576,7 +7597,10 @@ void CheckForFullStructures( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CheckForFullStruct( INT16 sGridNo, UINT16 *pusIndex  )
+static BOOLEAN FullStructAlone(INT16 sGridNo, UINT8 ubRadius);
+
+
+static BOOLEAN CheckForFullStruct(INT16 sGridNo, UINT16* pusIndex)
 {
 	LEVELNODE	*pStruct		 = NULL;
 	LEVELNODE	*pOldStruct		 = NULL;
@@ -7631,7 +7655,7 @@ BOOLEAN CheckForFullStruct( INT16 sGridNo, UINT16 *pusIndex  )
 }
 
 
-BOOLEAN FullStructAlone( INT16 sGridNo, UINT8 ubRadius )
+static BOOLEAN FullStructAlone(INT16 sGridNo, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -7675,7 +7699,7 @@ BOOLEAN FullStructAlone( INT16 sGridNo, UINT8 ubRadius )
 }
 
 
-void AdjustForFastTurnAnimation( SOLDIERTYPE *pSoldier )
+static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier)
 {
 
  // CHECK FOR FASTTURN ANIMATIONS
@@ -7695,7 +7719,8 @@ void AdjustForFastTurnAnimation( SOLDIERTYPE *pSoldier )
 
 }
 
-BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN IsActionInterruptable(SOLDIERTYPE* pSoldier)
 {
 	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_NONINTERRUPT )
 	{
@@ -7704,8 +7729,9 @@ BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier )
 	return( TRUE );
 }
 
+
 // WRAPPER FUNCTIONS FOR SOLDIER EVENTS
-void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos )
+static void SendSoldierPositionEvent(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos)
 {
 	// Sent event for position update
 	EV_S_SETPOSITION	SSetPosition;
@@ -7717,10 +7743,10 @@ void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNew
 	SSetPosition.dNewYPos = dNewYPos;
 
 	AddGameEvent( S_SETPOSITION, 0, &SSetPosition );
-
 }
 
-void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination )
+
+static void SendSoldierDestinationEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDestination)
 {
 	// Sent event for position update
 	EV_S_CHANGEDEST	SChangeDest;
@@ -7733,7 +7759,8 @@ void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination
 
 }
 
-void SendSoldierSetDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDirection )
+
+static void SendSoldierSetDirectionEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDirection)
 {
 	// Sent event for position update
 	EV_S_SETDIRECTION	SSetDirection;
@@ -7866,7 +7893,7 @@ BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier)
 }
 
 
-void RevivePlayerTeam( )
+static void RevivePlayerTeam(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -7879,7 +7906,6 @@ void RevivePlayerTeam( )
 	{
 		ReviveSoldier( pSoldier );
 	}
-
 }
 
 
@@ -7920,7 +7946,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN fRemove )
+static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove)
 {
 //#if 0
 	ANIM_PROF					*pProfile;
@@ -8018,7 +8044,7 @@ LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **p
 }
 
 
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16 *usFlags )
+static BOOLEAN GetProfileFlagsFromGridno(SOLDIERTYPE* pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16* usFlags)
 {
 	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;
@@ -8771,7 +8797,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 }
 
 
-void InternalReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim )
+static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEAN fPlayEndAnim)
 {
 	SOLDIERTYPE	*pTSoldier;
 	INT32		cnt;
@@ -9453,7 +9479,7 @@ void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier )
 }
 
 
-void GetActualSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth )
+static void GetActualSoldierAnimDims(SOLDIERTYPE* pSoldier, INT16* psHeight, INT16* psWidth)
 {
 	UINT16											 usAnimSurface;
 	ETRLEObject *pTrav;
@@ -9490,7 +9516,8 @@ void GetActualSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *ps
 	*psWidth					= (INT16)pTrav->usWidth;
 }
 
-void GetActualSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 *sOffsetY )
+
+static void GetActualSoldierAnimOffsets(SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
 {
 	UINT16											 usAnimSurface;
 	ETRLEObject *pTrav;
@@ -9519,7 +9546,7 @@ void GetActualSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 
 }
 
 
-void SetSoldierLocatorOffsets( SOLDIERTYPE *pSoldier )
+static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier)
 {
 	INT16 sHeight, sWidth;
 	INT16 sOffsetX, sOffsetY;
@@ -9539,7 +9566,8 @@ void SetSoldierLocatorOffsets( SOLDIERTYPE *pSoldier )
 
 }
 
-BOOLEAN SoldierCarriesTwoHandedWeapon( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN SoldierCarriesTwoHandedWeapon(SOLDIERTYPE* pSoldier)
 {
 	UINT16 usItem;
 
@@ -9551,12 +9579,13 @@ BOOLEAN SoldierCarriesTwoHandedWeapon( SOLDIERTYPE *pSoldier )
 	}
 
 	return( FALSE );
-
 }
 
 
+static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed);
 
-INT32 CheckBleeding( SOLDIERTYPE *pSoldier )
+
+static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 {
  INT8		bBandaged; //,savedOurTurn;
  INT32	iBlood = NOBLOOD;
@@ -9658,7 +9687,7 @@ INT32 CheckBleeding( SOLDIERTYPE *pSoldier )
 }
 
 
-void SoldierBleed( SOLDIERTYPE *pSoldier, BOOLEAN fBandagedBleed )
+static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 {
 	INT8 bOldLife;
 
@@ -9812,7 +9841,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 }
 
 
-FLOAT CalcSoldierNextBleed( SOLDIERTYPE *pSoldier )
+static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 {
 	INT8		bBandaged;
 
@@ -9826,7 +9855,8 @@ FLOAT CalcSoldierNextBleed( SOLDIERTYPE *pSoldier )
 	return( (FLOAT)1 + (FLOAT)( (pSoldier->bLife + bBandaged / 2) / (10 + pSoldier->bTilesMoved) ) );  // min = 1
 }
 
-FLOAT CalcSoldierNextUnmovingBleed( SOLDIERTYPE *pSoldier )
+
+static FLOAT CalcSoldierNextUnmovingBleed(SOLDIERTYPE* pSoldier)
 {
 	INT8		bBandaged;
 
@@ -10277,8 +10307,7 @@ void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 }
 
 
-
-void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier )
+static void ResetSoldierChangeStatTimer(SOLDIERTYPE* pSoldier)
 {
 	pSoldier->uiChangeLevelTime = 0;
 	pSoldier->uiChangeHealthTime = 0;

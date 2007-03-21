@@ -67,25 +67,17 @@ static const wchar_t* const gszVersionType[5] = { L"Pre-Alpha", L"Alpha", L"Demo
 #define ALTERNATE_B3_MASK			0x80
 #define ALTERNATE_LEVELS_MASK	0xf0
 
-void ExtractTempFilename();
-
 INT32 giCurrLevel;
 
 BOOLEAN gfOutdatedDenied;
 UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
 
-void UpdateMasterProgress();
 BOOLEAN gfUpdatingNow;
 UINT16 gusTotal, gusCurrent;
 
 BOOLEAN gfMustForceUpdateAllMaps = FALSE;
 UINT16 gusNumberOfMapsToBeForceUpdated = 0;
 BOOLEAN gfMajorUpdate = FALSE;
-
-void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion );
-void RegenerateSummaryInfoForAllOutdatedMaps();
-
-void SetupItemDetailsMode( BOOLEAN fAllowRecursion );
 
 INT32 giCurrentViewLevel = ALL_LEVELS_MASK;
 
@@ -100,24 +92,6 @@ MOUSE_REGION MapRegion;
 extern INT8 gbMercSlotTypes[9];
 
 extern void UpdateSummaryInfo( SUMMARYFILE *pSummary );
-
-void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason );
-void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason );
-void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason );
-void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason );
-void MapMoveCallback( MOUSE_REGION *reg, INT32 reason );
-void MapClickCallback( MOUSE_REGION *reg, INT32 reason );
 
 //Set if there is an existing global summary.  The first time this is run on your computer, it
 //will not exist, and will have to be generated before this will be set.
@@ -211,8 +185,6 @@ static wchar_t gszFilename[40];
 static wchar_t gszTempFilename[21];
 static wchar_t gszDisplayName[21];
 
-void CalculateOverrideStatus();
-
 enum{
 	SUMMARY_BACKGROUND,
 	SUMMARY_OKAY,
@@ -239,6 +211,25 @@ enum{
 	NUM_SUMMARY_BUTTONS
 };
 INT32 iSummaryButton[ NUM_SUMMARY_BUTTONS ];
+
+
+static void LoadGlobalSummary(void);
+static void MapClickCallback(MOUSE_REGION* reg, INT32 reason);
+static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason);
+static void ReleaseSummaryWindow(void);
+static void SummaryEnemyCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryOkayCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryRealCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummarySciFiCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryToggleGridCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryToggleLevelCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryToggleProgressCallback(GUI_BUTTON* btn, INT32 reason);
+static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason);
+
 
 void CreateSummaryWindow()
 {
@@ -419,7 +410,8 @@ void AutoLoadMap()
 	gfConfirmExitFirst = TRUE;
 }
 
-void ReleaseSummaryWindow()
+
+static void ReleaseSummaryWindow(void)
 {
 	INT32 i;
 	UINT32 uiCurrTimer;
@@ -489,7 +481,8 @@ void DestroySummaryWindow()
 	}
 }
 
-void RenderSectorInformation()
+
+static void RenderSectorInformation(void)
 {
 	//UINT16 str[ 100 ];
 	MAPCREATE_STRUCT *m;
@@ -663,8 +656,9 @@ void RenderSectorInformation()
 	}
 }
 
+
 //2)  CODE TRIGGER/ACTION NAMES
-void RenderItemDetails()
+static void RenderItemDetails(void)
 {
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
@@ -959,6 +953,12 @@ void RenderItemDetails()
 		mprintf( 5, 50, L"ERROR:  Can't load the items for this map.  Reason unknown." );
 	}
 }
+
+
+static void CalculateOverrideStatus(void);
+static void ExtractTempFilename(void);
+static void SetupItemDetailsMode(BOOLEAN fAllowRecursion);
+
 
 void RenderSummaryWindow()
 {
@@ -1633,7 +1633,8 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
 }
 
-void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryOkayCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1641,7 +1642,8 @@ void SummaryOkayCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryToggleGridCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1650,7 +1652,8 @@ void SummaryToggleGridCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1668,7 +1671,8 @@ void SummaryToggleAlternateCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummarySciFiCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1682,7 +1686,8 @@ void SummarySciFiCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryRealCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1696,7 +1701,8 @@ void SummaryRealCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryEnemyCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1710,7 +1716,8 @@ void SummaryEnemyCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryToggleProgressCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1720,7 +1727,7 @@ void SummaryToggleProgressCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void PerformTest()
+static void PerformTest(void)
 {
 #if 0
 	OutputDebugString( "PERFORMING A NEW TEST -------------------------------------------------\n" );
@@ -1740,6 +1747,10 @@ void PerformTest()
 	}
 #endif
 }
+
+
+static void CreateGlobalSummary(void);
+static void RegenerateSummaryInfoForAllOutdatedMaps(void);
 
 
 BOOLEAN HandleSummaryInput( InputAtom *pEvent )
@@ -1862,7 +1873,10 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 	return TRUE;
 }
 
-void CreateGlobalSummary()
+
+//This function can be very time consuming as it loads every map file with a valid
+//coordinate name, analyses it, and builds a new global summary file.
+static void CreateGlobalSummary(void)
 {
 	FILE *fp;
 	STRING512			Dir;
@@ -1896,7 +1910,8 @@ void CreateGlobalSummary()
 	OutputDebugString( "GlobalSummary Information generated successfully.\n" );
 }
 
-void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
+
+static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	static INT16 gsPrevX = 0, gsPrevY = 0;
 	//calc current sector highlighted.
@@ -1917,7 +1932,8 @@ void MapMoveCallback( MOUSE_REGION *reg, INT32 reason )
 	}
 }
 
-void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
+
+static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	static INT16 sLastX = -1, sLastY = -1;
 	static INT32 iLastClickTime = 0;
@@ -2018,7 +2034,8 @@ void MapClickCallback( MOUSE_REGION *reg, INT32 reason )
 	}
 }
 
-void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryToggleLevelCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT8 i;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -2059,7 +2076,8 @@ void SummaryToggleLevelCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2110,7 +2128,8 @@ void SummaryLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2137,7 +2156,8 @@ void SummarySaveMapCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2150,7 +2170,8 @@ void SummaryOverrideCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void CalculateOverrideStatus()
+
+static void CalculateOverrideStatus(void)
 {
 	GETFILESTRUCT FileInfo;
 	UINT8 szFilename[40];
@@ -2196,7 +2217,11 @@ void CalculateOverrideStatus()
 	}
 }
 
-void LoadGlobalSummary()
+
+static void LoadSummary(UINT8* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion);
+
+
+static void LoadGlobalSummary(void)
 {
 	HWFILE	hfile;
 	STRING512			DevInfoDir;
@@ -2391,7 +2416,8 @@ void LoadGlobalSummary()
 	OutputDebugString( "LoadGlobalSummary() finished...\n" );
 }
 
-void GenerateSummaryList()
+
+static void GenerateSummaryList(void)
 {
 	FILE *fp;
 	STRING512			Dir;
@@ -2419,6 +2445,10 @@ void GenerateSummaryList()
 	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
 }
+
+
+static void UpdateMasterProgress(void);
+
 
 void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
 {
@@ -2464,7 +2494,8 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	SetFileManCurrentDirectory( Dir );
 }
 
-void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryNewGroundLevelCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2481,23 +2512,8 @@ void SummaryNewGroundLevelCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SummaryNewBasementLevelCallback( GUI_BUTTON *btn, INT32 reason )
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
 
-	}
-}
-
-void SummaryNewCaveLevelCallback( GUI_BUTTON *btn, INT32 reason )
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-
-	}
-}
-
-void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
+static void LoadSummary(UINT8* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion)
 {
 	UINT8 filename[40];
 	SUMMARYFILE temp;
@@ -2554,7 +2570,8 @@ void LoadSummary( UINT8 *pSector, UINT8 ubLevel, FLOAT dMajorMapVersion )
 
 double MasterStart, MasterEnd;
 
-void UpdateMasterProgress()
+
+static void UpdateMasterProgress(void)
 {
 	if( gfUpdatingNow && gusTotal )
 	{
@@ -2571,7 +2588,8 @@ void UpdateMasterProgress()
 	}
 }
 
-void ReportError( UINT8 *pSector, UINT8 ubLevel )
+
+static void ReportError(UINT8* pSector, UINT8 ubLevel)
 {
 	static INT32 yp = 180;
 	wchar_t str[40];
@@ -2590,7 +2608,7 @@ void ReportError( UINT8 *pSector, UINT8 ubLevel )
 }
 
 
-void RegenerateSummaryInfoForAllOutdatedMaps()
+static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 {
 	INT32 x, y;
 	UINT8 str[40];
@@ -2673,7 +2691,8 @@ void RegenerateSummaryInfoForAllOutdatedMaps()
 	gfUpdatingNow = FALSE;
 }
 
-void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -2700,7 +2719,8 @@ void SummaryUpdateCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ExtractTempFilename()
+
+static void ExtractTempFilename(void)
 {
 	wchar_t str[40];
 	Get16BitStringFromField(1, str, lengthof(str));
@@ -2847,7 +2867,8 @@ void ApologizeOverrideAndForceUpdateEverything()
 	gusNumberOfMapsToBeForceUpdated = 0;
 }
 
-void SetupItemDetailsMode( BOOLEAN fAllowRecursion )
+
+static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 {
 	HWFILE hfile;
 	UINT32 uiNumItems;

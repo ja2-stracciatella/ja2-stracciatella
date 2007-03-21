@@ -94,7 +94,8 @@ void DisableEditorRegion( INT8	bRegionID )
 	}
 }
 
-void RemoveEditorRegions()
+
+static void RemoveEditorRegions(void)
 {
 	INT32 x;
 	MSYS_RemoveRegion( &EditorRegion );
@@ -106,7 +107,8 @@ void RemoveEditorRegions()
 	MSYS_RemoveRegion( &MercRegion );
 }
 
-void InitEditorRegions()
+
+static void InitEditorRegions(void)
 {
 	INT32 x;
 
@@ -136,7 +138,8 @@ void InitEditorRegions()
 	MSYS_DisableRegion( &MercRegion );
 }
 
-void LoadEditorImages()
+
+static void LoadEditorImages(void)
 {
 	//Set up the merc inventory panel
 	if (!AddVideoObjectFromFile("EDITOR/InvPanel.sti", &guiMercInventoryPanel))
@@ -157,7 +160,8 @@ void LoadEditorImages()
 		AssertMsg( 0, "Failed to load data/editor/KeyImage.sti" );
 }
 
-void DeleteEditorImages()
+
+static void DeleteEditorImages(void)
 {
 	//The merc inventory panel
 	DeleteVideoObjectFromIndex( guiMercInventoryPanel );
@@ -170,7 +174,8 @@ void DeleteEditorImages()
 	UnloadButtonImage( giEditMercImage[1] );
 }
 
-void CreateEditorBuffers()
+
+static void CreateEditorBuffers(void)
 {
 	INT32						i;
 
@@ -188,7 +193,8 @@ void CreateEditorBuffers()
 	}
 }
 
-void DeleteEditorBuffers()
+
+static void DeleteEditorBuffers(void)
 {
 	INT32 i;
 	DeleteVideoSurfaceFromIndex( guiMercTempBuffer );
@@ -198,7 +204,8 @@ void DeleteEditorBuffers()
 	}
 }
 
-void ShowEditorToolbar( INT32 iNewTaskMode )
+
+static void ShowEditorToolbar(INT32 iNewTaskMode)
 {
 	switch( iNewTaskMode )
 	{
@@ -212,7 +219,8 @@ void ShowEditorToolbar( INT32 iNewTaskMode )
 	}
 }
 
-void HideEditorToolbar( INT32 iOldTaskMode )
+
+static void HideEditorToolbar(INT32 iOldTaskMode)
 {
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
@@ -528,7 +536,8 @@ void EnableEditorButton( INT32 iEditorButtonID )
 	EnableButton( iEditorButton[ iEditorButtonID ] );
 }
 
-void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
+
+static void ClickEditorButtons(INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID)
 {
 	INT32 i;
 	GUI_BUTTON *b;
@@ -582,7 +591,8 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 		EnableButton( iEditorButton[ i ] );
 }
 
-void RenderMapEntryPointsAndLights()
+
+static void RenderMapEntryPointsAndLights(void)
 {
 	INT16 sGridNo;
 	INT16 sScreenX, sScreenY;
@@ -695,7 +705,8 @@ static void BuildTriggerName(OBJECTTYPE* pItem, wchar_t* szItemName, size_t leng
 	}
 }
 
-void RenderDoorLockInfo()
+
+static void RenderDoorLockInfo(void)
 {
 	INT16 i, xp, yp;
 	INT16 sScreenX, sScreenY;
@@ -746,7 +757,8 @@ void RenderDoorLockInfo()
 	}
 }
 
-void RenderSelectedItemBlownUp()
+
+static void RenderSelectedItemBlownUp(void)
 {
 	UINT32 uiVideoObjectIndex;
 	INT16 sScreenX, sScreenY, xp, yp;

@@ -259,42 +259,6 @@ INT32		guiXToCloseMercVideoButtonImage;
 
 //Mouse region for the subtitles region when the merc is talking
 MOUSE_REGION		gMercSiteSubTitleMouseRegion;
-void MercSiteSubTitleRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
-
-BOOLEAN		StartSpeckTalking(UINT16 usQuoteNum);
-void			InitMercVideoFace();
-BOOLEAN		HandleSpeckTalking( BOOLEAN fReset );
-//BOOLEAN	PixelateVideoMercImage();
-BOOLEAN		PixelateVideoMercImage( BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight);
-BOOLEAN		InitDestroyXToCloseVideoWindow( BOOLEAN fCreate );
-BOOLEAN		DisplayMercVideoIntro( UINT16 usTimeTillFinish );
-void			HandleCurrentMercDistortion();
-void			HandleTalkingSpeck();
-//BOOLEAN DistortVideoMercImage();
-BOOLEAN		DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight );
-BOOLEAN		IsAnyMercMercsHired( );
-BOOLEAN		IsAnyMercMercsDead();
-UINT8			CountNumberOfMercMercsHired();
-UINT8			CountNumberOfMercMercsWhoAreDead();
-BOOLEAN		GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen );
-void			RemoveSpeckPopupTextBox();
-BOOLEAN		ShouldSpeckStartTalkingDueToActionOnSubPage();
-BOOLEAN		ShouldSpeckSayAQuote();
-void			HandleSpeckIdleConversation( BOOLEAN fReset );
-INT16			GetRandomQuoteThatHasBeenSaidTheLeast( );
-void			StopSpeckFromTalking( );
-BOOLEAN		HasLarryRelapsed();
-void			IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue );
-BOOLEAN		ShouldTheMercSiteServerGoDown();
-void			DrawMercVideoBackGround();
-BOOLEAN		CanMercQuoteBeSaid( UINT32 uiQuoteID );
-UINT8			NumberOfMercMercsDead();
-void			MakeBiffAwayForCoupleOfDays();
-BOOLEAN		AreAnyOfTheNewMercsAvailable();
-void			ShouldAnyNewMercMercBecomeAvailable();
-BOOLEAN		CanMercBeAvailableYet( UINT8 ubMercToCheck );
-UINT32		CalcMercDaysServed();
 
 
 void GameInitMercs()
@@ -333,6 +297,12 @@ void GameInitMercs()
 	}
 */
 }
+
+
+static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen);
+static void HandleSpeckIdleConversation(BOOLEAN fReset);
+static BOOLEAN HandleSpeckTalking(BOOLEAN fReset);
+static BOOLEAN ShouldSpeckSayAQuote(void);
 
 
 BOOLEAN EnterMercs()
@@ -434,6 +404,11 @@ BOOLEAN EnterMercs()
 }
 
 
+static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate);
+static void RemoveSpeckPopupTextBox(void);
+static void StopSpeckFromTalking(void);
+
+
 void ExitMercs()
 {
 	StopSpeckFromTalking( );
@@ -486,6 +461,12 @@ void ExitMercs()
 	//Empty the Queue cause Speck could still have a quote in waiting
 	EmptyDialogueQueue( );
 }
+
+
+static void DrawMercVideoBackGround(void);
+static void HandleTalkingSpeck(void);
+static void InitMercVideoFace(void);
+
 
 void HandleMercs()
 {
@@ -630,6 +611,10 @@ static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		guiCurrentLaptopMode = LAPTOP_MODE_MERC_FILES;
 	}
 }
+
+
+static void ShouldAnyNewMercMercBecomeAvailable(void);
+static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 
 
 void DailyUpdateOfMercSite( UINT16 usDate)
@@ -855,6 +840,9 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 }
 
 
+static BOOLEAN HasLarryRelapsed(void);
+
+
 //Gets the actual merc id from the array
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 {
@@ -918,7 +906,8 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 }
 */
 
-void InitMercVideoFace()
+
+static void InitMercVideoFace(void)
 {
 	//Alocates space, and loads the sti for SPECK
 		giVideoSpeckFaceIndex = InitFace( MERC_VIDEO_MERC_ID_FOR_SPECKS, NOBODY, 0 );
@@ -936,7 +925,7 @@ void InitMercVideoFace()
 }
 
 
-BOOLEAN  StartSpeckTalking(UINT16 usQuoteNum)
+static BOOLEAN StartSpeckTalking(UINT16 usQuoteNum)
 {
 	if( usQuoteNum == MERC_VIDEO_SPECK_SPEECH_NOT_TALKING || usQuoteNum == MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET )
 		return( FALSE );
@@ -956,8 +945,9 @@ BOOLEAN  StartSpeckTalking(UINT16 usQuoteNum)
 	return(TRUE);
 }
 
+
 // Performs the frame by frame update
-BOOLEAN HandleSpeckTalking( BOOLEAN fReset )
+static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 {
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
@@ -1021,7 +1011,11 @@ BOOLEAN HandleSpeckTalking( BOOLEAN fReset )
 }
 
 
-void HandleCurrentMercDistortion()
+static BOOLEAN DistortVideoMercImage(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight);
+static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight);
+
+
+static void HandleCurrentMercDistortion(void)
 {
 	static UINT8 ubCurrentMercDistortionMode = MERC_DISTORTION_NO_DISTORTION;
 	BOOLEAN fReturnStatus;
@@ -1074,7 +1068,7 @@ void HandleCurrentMercDistortion()
 }
 
 
-BOOLEAN PixelateVideoMercImage( BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight)
+static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight)
 {
 	static UINT32	uiLastTime;
 	UINT32	uiCurTime = GetJA2Clock();
@@ -1161,11 +1155,7 @@ BOOLEAN PixelateVideoMercImage( BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY, UINT1
 }
 
 
-
-
-
-
-BOOLEAN DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight )
+static BOOLEAN DistortVideoMercImage(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight)
 {
 	UINT32 uiPitch;
 	UINT16 i, j;
@@ -1227,9 +1217,7 @@ BOOLEAN DistortVideoMercImage( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 }
 
 
-
-
-BOOLEAN InitDestroyXToCloseVideoWindow( BOOLEAN fCreate )
+static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 {
 	static BOOLEAN fButtonCreated=FALSE;
 
@@ -1277,7 +1265,7 @@ static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-BOOLEAN DisplayMercVideoIntro( UINT16 usTimeTillFinish )
+static BOOLEAN DisplayMercVideoIntro(UINT16 usTimeTillFinish)
 {
 	UINT32	uiCurTime = GetJA2Clock();
 	static UINT32	uiLastTime=0;
@@ -1300,7 +1288,10 @@ BOOLEAN DisplayMercVideoIntro( UINT16 usTimeTillFinish )
 }
 
 
-void HandleTalkingSpeck()
+static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void);
+
+
+static void HandleTalkingSpeck(void)
 {
 	BOOLEAN fIsSpeckTalking = TRUE;
 
@@ -1412,6 +1403,9 @@ void HandleTalkingSpeck()
 }
 
 
+static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 void DisplayTextForSpeckVideoPopUp( STR16 pString )
 {
 	UINT16	usActualHeight;
@@ -1473,7 +1467,18 @@ void CheatToGetAll5Merc()
 }
 
 
-BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
+static BOOLEAN AreAnyOfTheNewMercsAvailable(void);
+static UINT32 CalcMercDaysServed(void);
+static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck);
+static UINT8 CountNumberOfMercMercsHired(void);
+static UINT8 CountNumberOfMercMercsWhoAreDead(void);
+static BOOLEAN IsAnyMercMercsDead(void);
+static BOOLEAN IsAnyMercMercsHired(void);
+static void MakeBiffAwayForCoupleOfDays(void);
+static UINT8 NumberOfMercMercsDead(void);
+
+
+static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 	UINT8	ubCnt;
@@ -1747,9 +1752,7 @@ BOOLEAN	GetSpeckConditionalOpening( BOOLEAN fJustEnteredScreen )
 }
 
 
-
-
-BOOLEAN IsAnyMercMercsHired( )
+static BOOLEAN IsAnyMercMercsHired(void)
 {
 	UINT8	ubMercID;
 	UINT8	i;
@@ -1767,7 +1770,8 @@ BOOLEAN IsAnyMercMercsHired( )
 	return( FALSE );
 }
 
-BOOLEAN IsAnyMercMercsDead()
+
+static BOOLEAN IsAnyMercMercsDead(void)
 {
 	UINT8	i;
 
@@ -1782,7 +1786,7 @@ BOOLEAN IsAnyMercMercsDead()
 }
 
 
-UINT8 NumberOfMercMercsDead()
+static UINT8 NumberOfMercMercsDead(void)
 {
 	UINT8	i;
 	UINT8	ubNumDead = 0;
@@ -1798,8 +1802,7 @@ UINT8 NumberOfMercMercsDead()
 }
 
 
-
-UINT8	CountNumberOfMercMercsHired()
+static UINT8 CountNumberOfMercMercsHired(void)
 {
 	UINT8	ubMercID;
 	UINT8	i;
@@ -1819,7 +1822,7 @@ UINT8	CountNumberOfMercMercsHired()
 }
 
 
-UINT8	CountNumberOfMercMercsWhoAreDead()
+static UINT8 CountNumberOfMercMercsWhoAreDead(void)
 {
 	UINT8	i;
 	UINT8	ubCount=0;
@@ -1837,10 +1840,8 @@ UINT8	CountNumberOfMercMercsWhoAreDead()
 }
 
 
-
-
 //Mouse Call back for the pop up text box
-void MercSiteSubTitleRegionCallBack( MOUSE_REGION * pRegion, INT32 iReason )
+static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -1852,7 +1853,7 @@ void MercSiteSubTitleRegionCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void RemoveSpeckPopupTextBox()
+static void RemoveSpeckPopupTextBox(void)
 {
 	if( iMercPopUpBox == -1 )
 		return;
@@ -1870,8 +1871,10 @@ void RemoveSpeckPopupTextBox()
 }
 
 
+static BOOLEAN IsMercMercAvailable(UINT8 ubMercID);
 
-void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
+
+static void HandlePlayerHiringMerc(UINT8 ubHiredMercID)
 {
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
@@ -1930,7 +1933,7 @@ void HandlePlayerHiringMerc( UINT8 ubHiredMercID )
 }
 
 
-BOOLEAN IsMercMercAvailable( UINT8 ubMercID )
+static BOOLEAN IsMercMercAvailable(UINT8 ubMercID)
 {
 	UINT8	cnt;
 
@@ -1950,7 +1953,8 @@ BOOLEAN IsMercMercAvailable( UINT8 ubMercID )
 	return( FALSE );
 }
 
-BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage()
+
+static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void)
 {
 	//if the merc came from the hire screen
 	if( gfJustHiredAMercMerc )
@@ -1970,14 +1974,11 @@ BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage()
 		return( TRUE );
 	}
 
-
-
 	return( FALSE );
 }
 
 
-
-BOOLEAN ShouldSpeckSayAQuote()
+static BOOLEAN ShouldSpeckSayAQuote(void)
 {
 	//if we are entering from anywhere except a sub page, and we should say the opening quote
 	if( gfJustEnteredMercSite && gubArrivedFromMercSubSite == MERC_CAME_FROM_OTHER_PAGE )
@@ -2025,7 +2026,12 @@ BOOLEAN ShouldSpeckSayAQuote()
 	return( FALSE );
 }
 
-void HandleSpeckIdleConversation( BOOLEAN fReset )
+
+static INT16 GetRandomQuoteThatHasBeenSaidTheLeast(void);
+static void IncreaseMercRandomQuoteValue(UINT8 ubQuoteID, UINT8 ubValue);
+
+
+static void HandleSpeckIdleConversation(BOOLEAN fReset)
 {
 	static UINT32	uiLastTime=0;
 	UINT32	uiCurTime = GetJA2Clock();
@@ -2065,8 +2071,10 @@ void HandleSpeckIdleConversation( BOOLEAN fReset )
 }
 
 
+static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID);
 
-INT16	GetRandomQuoteThatHasBeenSaidTheLeast( )
+
+static INT16 GetRandomQuoteThatHasBeenSaidTheLeast(void)
 {
 	UINT8	cnt;
 	INT16	sSmallestNumber=255;
@@ -2090,7 +2098,8 @@ INT16	GetRandomQuoteThatHasBeenSaidTheLeast( )
 		return( gNumberOfTimesQuoteSaid[ sSmallestNumber ].ubQuoteID );
 }
 
-void IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue )
+
+static void IncreaseMercRandomQuoteValue(UINT8 ubQuoteID, UINT8 ubValue)
 {
 	UINT8	cnt;
 
@@ -2108,7 +2117,7 @@ void IncreaseMercRandomQuoteValue( UINT8 ubQuoteID, UINT8 ubValue )
 }
 
 
-void StopSpeckFromTalking( )
+static void StopSpeckFromTalking(void)
 {
 	if( giVideoSpeckFaceIndex == -1 )
 		return;
@@ -2121,7 +2130,8 @@ void StopSpeckFromTalking( )
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 }
 
-BOOLEAN	HasLarryRelapsed()
+
+static BOOLEAN HasLarryRelapsed(void)
 {
 	return( CheckFact( FACT_LARRY_CHANGED, 0 ) );
 }
@@ -2135,8 +2145,7 @@ void EnterInitMercSite()
 }
 
 
-
-BOOLEAN ShouldTheMercSiteServerGoDown()
+static BOOLEAN ShouldTheMercSiteServerGoDown(void)
 {
 	UINT32	uiDay = GetWorldDay();
 
@@ -2168,7 +2177,8 @@ void GetMercSiteBackOnline()
 	LaptopSaveInfo.fFirstVisitSinceServerWentDown = TRUE;
 }
 
-void DrawMercVideoBackGround()
+
+static void DrawMercVideoBackGround(void)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercVideoPopupBackground, 0, MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y);
 
@@ -2185,7 +2195,8 @@ void DisableMercSiteButton()
 	}
 }
 
-BOOLEAN CanMercQuoteBeSaid( UINT32 uiQuoteID )
+
+static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID)
 {
 	BOOLEAN fRetVal = TRUE;
 
@@ -2259,13 +2270,13 @@ void InitializeNumDaysMercArrive()
 }
 
 
-void MakeBiffAwayForCoupleOfDays()
+static void MakeBiffAwayForCoupleOfDays(void)
 {
 	gMercProfiles[ BIFF ].uiDayBecomesAvailable = Random( 2 ) + 2;
 }
 
 
-BOOLEAN AreAnyOfTheNewMercsAvailable()
+static BOOLEAN AreAnyOfTheNewMercsAvailable(void)
 {
 	UINT8	i;
 	UINT8	ubMercID;
@@ -2285,7 +2296,8 @@ BOOLEAN AreAnyOfTheNewMercsAvailable()
 	return( FALSE );
 }
 
-void ShouldAnyNewMercMercBecomeAvailable()
+
+static void ShouldAnyNewMercMercBecomeAvailable(void)
 {
 	BOOLEAN fNewMercAreAvailable = FALSE;
 
@@ -2335,7 +2347,8 @@ void ShouldAnyNewMercMercBecomeAvailable()
 	}
 }
 
-BOOLEAN CanMercBeAvailableYet( UINT8 ubMercToCheck )
+
+static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck)
 {
 	//if the merc is already available
 	if( gConditionsForMercAvailability[ ubMercToCheck ].ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex )
@@ -2425,8 +2438,9 @@ void CalcAproximateAmountPaidToSpeck()
 	}
 }
 
+
 // CJC Dec 1 2002: calculate whether any MERC characters have been used at all
-UINT32 CalcMercDaysServed()
+static UINT32 CalcMercDaysServed(void)
 {
 	UINT8	i, ubMercID;
 	UINT32 uiDaysServed = 0;

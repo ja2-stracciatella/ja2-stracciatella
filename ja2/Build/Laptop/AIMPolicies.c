@@ -142,7 +142,6 @@ enum
 
 //Toc menu mouse regions
 MOUSE_REGION    gSelectedPolicyTocMenuRegion[ NUM_AIM_POLICY_TOC_BUTTONS ];
-void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Agree/Disagree menu Buttons regions
 static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason);
@@ -150,7 +149,6 @@ UINT32	guiPoliciesAgreeButton[ 2 ];
 INT32		guiPoliciesButtonImage;
 
 //Bottom Menu Buttons
-static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiPoliciesMenuButton[ AIM_POLICY_MENU_BUTTON_AMOUNT ];
 INT32		guiPoliciesMenuButtonImage;
 
@@ -165,29 +163,6 @@ BOOLEAN		gfExitingAimPolicy;
 BOOLEAN		AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
 
-
-
-BOOLEAN InitAimPolicyMenuBar(void);
-BOOLEAN ExitAimPolicyMenuBar(void);
-BOOLEAN InitAimPolicyTocMenu(void);
-BOOLEAN ExitAimPolicyTocMenu(void);
-BOOLEAN DrawAimPolicyMenu();
-BOOLEAN  DisplayAimPolicyStatement(void);
-BOOLEAN  DisplayAimPolicyTitleText(void);
-BOOLEAN InitAgreementRegion(void);
-BOOLEAN ExitAgreementButton(void);
-void DisableAimPolicyButton();
-void ResetAimPolicyButtons();
-void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber );
-
-
-
-BOOLEAN  DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
-UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
-UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber);
-
-
-
 void GameInitAimPolicies()
 {
 
@@ -197,6 +172,9 @@ void EnterInitAimPolicies()
 {
 	memset( &AimPoliciesSubPagesVisitedFlag, 0, NUM_AIM_POLICY_PAGES);
 }
+
+
+static BOOLEAN InitAimPolicyMenuBar(void);
 
 
 BOOLEAN EnterAimPolicies()
@@ -219,6 +197,12 @@ BOOLEAN EnterAimPolicies()
 	RenderAimPolicies();
 	return(TRUE);
 }
+
+
+static BOOLEAN ExitAgreementButton(void);
+static BOOLEAN ExitAimPolicyMenuBar(void);
+static BOOLEAN ExitAimPolicyTocMenu(void);
+
 
 void ExitAimPolicies()
 {
@@ -250,6 +234,18 @@ void HandleAimPolicies()
 	}
 
 }
+
+
+static void DisableAimPolicyButton(void);
+static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
+static BOOLEAN DisplayAimPolicyStatement(void);
+static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
+static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
+static BOOLEAN DisplayAimPolicyTitleText(void);
+static BOOLEAN DrawAimPolicyMenu(void);
+static BOOLEAN InitAgreementRegion(void);
+static BOOLEAN InitAimPolicyTocMenu(void);
+
 
 void RenderAimPolicies()
 {
@@ -372,8 +368,10 @@ void RenderAimPolicies()
 }
 
 
+static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
-BOOLEAN InitAimPolicyMenuBar(void)
+
+static BOOLEAN InitAimPolicyMenuBar(void)
 {
 	UINT16					i, usPosX;
 
@@ -415,7 +413,8 @@ BOOLEAN InitAimPolicyMenuBar(void)
 	return(TRUE);
 }
 
-BOOLEAN ExitAimPolicyMenuBar(void)
+
+static BOOLEAN ExitAimPolicyMenuBar(void)
 {
 	int i;
 
@@ -433,8 +432,7 @@ BOOLEAN ExitAimPolicyMenuBar(void)
 }
 
 
-
-BOOLEAN DrawAimPolicyMenu()
+static BOOLEAN DrawAimPolicyMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT16			usHeight;
@@ -470,7 +468,11 @@ BOOLEAN DrawAimPolicyMenu()
 	return(TRUE);
 }
 
-BOOLEAN InitAimPolicyTocMenu(void)
+
+static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static BOOLEAN InitAimPolicyTocMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT16			usHeight;
@@ -496,8 +498,7 @@ BOOLEAN InitAimPolicyTocMenu(void)
 }
 
 
-
-BOOLEAN ExitAimPolicyTocMenu()
+static BOOLEAN ExitAimPolicyTocMenu(void)
 {
 	UINT16 i;
 
@@ -509,8 +510,11 @@ BOOLEAN ExitAimPolicyTocMenu()
 }
 
 
+static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber);
+static void ResetAimPolicyButtons(void);
 
-void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if(gfInPolicyToc)
 	{
@@ -534,7 +538,7 @@ void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN  DisplayAimPolicyTitleText(void)
+static BOOLEAN DisplayAimPolicyTitleText(void)
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc = 0;
@@ -552,7 +556,7 @@ BOOLEAN  DisplayAimPolicyTitleText(void)
 }
 
 
-BOOLEAN  DisplayAimPolicyStatement(void)
+static BOOLEAN DisplayAimPolicyStatement(void)
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc = 0;
@@ -572,9 +576,7 @@ BOOLEAN  DisplayAimPolicyStatement(void)
 }
 
 
-
-
-BOOLEAN InitAgreementRegion(void)
+static BOOLEAN InitAgreementRegion(void)
 {
 	UINT16	usPosX,i;
 
@@ -609,7 +611,8 @@ BOOLEAN InitAgreementRegion(void)
 	return(TRUE);
 }
 
-BOOLEAN ExitAgreementButton(void)
+
+static BOOLEAN ExitAgreementButton(void)
 {
 	UINT8 i;
 
@@ -626,8 +629,7 @@ BOOLEAN ExitAgreementButton(void)
 }
 
 
-
-BOOLEAN  DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
+static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc = 0;
@@ -641,7 +643,7 @@ BOOLEAN  DisplayAimPolicyTitle(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 }
 
 
-UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
+static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
 	wchar_t	sText[400];
 	wchar_t	sTemp[20];
@@ -664,7 +666,8 @@ UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
 	return(usNumPixels);
 }
 
-UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8	ubPageNum, FLOAT fNumber)
+
+static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
 	wchar_t	sText[400];
 	wchar_t	sTemp[20];
@@ -768,7 +771,7 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void ResetAimPolicyButtons()
+static void ResetAimPolicyButtons(void)
 {
 	int i=0;
 
@@ -779,7 +782,7 @@ void ResetAimPolicyButtons()
 }
 
 
-void DisableAimPolicyButton()
+static void DisableAimPolicyButton(void)
 {
 	if( gfExitingAimPolicy == TRUE || gfAimPolicyMenuBarLoaded == FALSE )
 		return;
@@ -796,7 +799,7 @@ void DisableAimPolicyButton()
 }
 
 
-void ChangingAimPoliciesSubPage( UINT8 ubSubPageNumber )
+static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 

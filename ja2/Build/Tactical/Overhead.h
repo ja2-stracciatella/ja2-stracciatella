@@ -226,11 +226,9 @@ extern BOOLEAN FlatRoofAboveGridNo( INT32 iMapIndex );
 
 
 BOOLEAN ExecuteOverhead( );
-BOOLEAN ResetAllAnimationCache(  );
 
 void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
-void EndTacticalDemo( );
 
 void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
 
@@ -244,16 +242,12 @@ void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo );
 
 void RebuildAllSoldierShadeTables( );
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
-UINT8 LastActiveTeamMember( UINT8 ubTeam );
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
 
 UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
 UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
 
-BOOLEAN CheckForPlayerTeamInMissionExit( );
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
-
-void StopMercAnimation( BOOLEAN fStop );
 
 UINT32 EnterTacticalDemoMode();
 
@@ -268,11 +262,7 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
 BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID );
 
 
-
-
 // FUNCTIONS FOR MANIPULATING MERC SLOTS - A LIST OF ALL ACTIVE MERCS
-INT32 GetFreeMercSlot(void);
-void RecountMercSlots(void);
 INT32	AddMercSlot( SOLDIERTYPE *pSoldier );
 BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier  );
 
@@ -340,7 +330,6 @@ void UnPauseAI( void );
 
 void DoPOWPathChecks( void );
 
-BOOLEAN HostileCiviliansWithGunsPresent( void );
 BOOLEAN HostileCiviliansPresent( void );
 BOOLEAN HostileBloodcatsPresent( void );
 UINT8 NumPCsInSector( void );

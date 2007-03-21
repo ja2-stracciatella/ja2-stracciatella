@@ -73,33 +73,21 @@ BOOLEAN		gfBobbyRShipmentsDirty = FALSE;
 INT32			giBobbyRShipmentSelectedShipment = -1;
 
 //Back Button
-void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRShipmetBack;
 INT32		guiBobbyRShipmentBackImage;
 
 //Home Button
-void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRShipmentHome;
 INT32		giBobbyRShipmentHomeImage;
 
 
 
 MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
-void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-void DisplayShipmentGrid();
-void DisplayPreviousShipments();
-void DisplayShipmentTitles();
-void RemovePreviousShipmentsMouseRegions();
-void CreatePreviousShipmentsMouseRegions();
-INT32	CountNumberValidShipmentForTheShipmentsPage();
-
-
-void GameInitBobbyRShipments()
-{
-
-}
+static void CreatePreviousShipmentsMouseRegions(void);
 
 
 BOOLEAN EnterBobbyRShipments()
@@ -151,6 +139,10 @@ BOOLEAN EnterBobbyRShipments()
 	return( TRUE );
 }
 
+
+static void RemovePreviousShipmentsMouseRegions(void);
+
+
 void ExitBobbyRShipments()
 {
 	DeleteBobbyRWoodBackground();
@@ -175,6 +167,12 @@ void HandleBobbyRShipments()
 		RenderBobbyRShipments();
 	}
 }
+
+
+static void DisplayPreviousShipments(void);
+static void DisplayShipmentGrid(void);
+static void DisplayShipmentTitles(void);
+
 
 void RenderBobbyRShipments()
 {
@@ -210,7 +208,8 @@ void RenderBobbyRShipments()
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
-void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -233,7 +232,7 @@ void BtnBobbyRShipmentBackCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -256,7 +255,7 @@ void BtnBobbyRShipmentHomeCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void DisplayShipmentGrid()
+static void DisplayShipmentGrid(void)
 {
 	HVOBJECT hPixHandle = GetVideoObject(guiBobbyRShipmentGrid);
 
@@ -268,8 +267,7 @@ void DisplayShipmentGrid()
 }
 
 
-
-void DisplayShipmentTitles()
+static void DisplayShipmentTitles(void)
 {
 	//output the order #
 	DrawTextToScreen( gzBobbyRShipmentText[BOBBYR_SHIPMENT__ORDERED_ON], BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_X, BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_Y, BOBBYR_SHIPMENT_ORDER_NUM_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, BOBBYR_SHIPMENT_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
@@ -278,7 +276,11 @@ void DisplayShipmentTitles()
 	DrawTextToScreen( gzBobbyRShipmentText[BOBBYR_SHIPMENT__NUM_ITEMS], BOBBYR_SHIPMENT_NUM_ITEMS_X, BOBBYR_SHIPMENT_NUM_ITEMS_Y, BOBBYR_SHIPMENT_NUM_ITEMS_WIDTH, BOBBYR_SHIPMENT_STATIC_TEXT_FONT, BOBBYR_SHIPMENT_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 }
 
-void DisplayPreviousShipments()
+
+static INT32 CountNumberValidShipmentForTheShipmentsPage(void);
+
+
+static void DisplayPreviousShipments(void)
 {
 	UINT32 uiCnt;
 	CHAR16	zText[512];
@@ -325,7 +327,11 @@ void DisplayPreviousShipments()
 	}
 }
 
-void CreatePreviousShipmentsMouseRegions()
+
+static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreatePreviousShipmentsMouseRegions(void)
 {
 	UINT32 uiCnt;
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
@@ -344,7 +350,8 @@ void CreatePreviousShipmentsMouseRegions()
 	}
 }
 
-void RemovePreviousShipmentsMouseRegions()
+
+static void RemovePreviousShipmentsMouseRegions(void)
 {
 	UINT32 uiCnt;
 	UINT32	uiNumItems = CountNumberOfBobbyPurchasesThatAreInTransit();
@@ -356,7 +363,8 @@ void RemovePreviousShipmentsMouseRegions()
 	}
 }
 
-void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -392,7 +400,8 @@ void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 	}
 }
 
-INT32	CountNumberValidShipmentForTheShipmentsPage()
+
+static INT32 CountNumberValidShipmentForTheShipmentsPage(void)
 {
 	if( giNumberOfNewBobbyRShipment > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS )
 		return( BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS );

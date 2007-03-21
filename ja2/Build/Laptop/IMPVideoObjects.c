@@ -218,13 +218,11 @@ void DeleteAnalyse( void )
 	DeleteVideoObjectFromIndex( guiANALYSE );
 }
 
-void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
+
+static void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiANALYSE, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
-
-
-
 
 
 BOOLEAN LoadAttributeGraph( void )
@@ -242,12 +240,11 @@ void DeleteAttributeGraph( void )
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
 }
 
-void RenderAttributeGraph(INT16 sX, INT16 sY)
+
+static void RenderAttributeGraph(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPH, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
-
-
 
 
 BOOLEAN LoadAttributeGraphBar( void )
@@ -265,14 +262,11 @@ void DeleteAttributeBarGraph( void )
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPHBAR );
 }
 
-void RenderAttributeBarGraph(INT16 sX, INT16 sY)
+
+static void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPHBAR, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
-
-
-
-
 
 
 BOOLEAN LoadFullNameIndent( void )
@@ -290,7 +284,8 @@ void DeleteFullNameIndent( void )
 	DeleteVideoObjectFromIndex( guiFULLNAMEINDENT );
 }
 
-void RenderFullNameIndent(INT16 sX, INT16 sY)
+
+static void RenderFullNameIndent(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiFULLNAMEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
@@ -360,8 +355,7 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 }
 
 
-
-BOOLEAN LoadSmallFrame( void )
+static BOOLEAN LoadSmallFrame(void)
 {
 	// this procedure will load the activation indent into memory
 	CHECKF(AddVideoObjectFromFile("LAPTOP/SmallFrame.sti", &guiSMALLFRAME));
@@ -369,19 +363,17 @@ BOOLEAN LoadSmallFrame( void )
 }
 
 
-void DeleteSmallFrame( void )
+static void DeleteSmallFrame(void)
 {
-
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLFRAME );
 }
 
-void RenderSmallFrame(INT16 sX, INT16 sY)
+
+static void RenderSmallFrame(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLFRAME, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
-
-
 
 
 BOOLEAN LoadSmallSilhouette( void )
@@ -399,11 +391,11 @@ void DeleteSmallSilhouette( void )
 	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
 }
 
-void RenderSmallSilhouette(INT16 sX, INT16 sY)
+
+static void RenderSmallSilhouette(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLSILHOUETTE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
-
 
 
 BOOLEAN LoadLargeSilhouette( void )
@@ -571,7 +563,8 @@ void DeleteButton1Image( void )
 	DeleteVideoObjectFromIndex( guiBUTTON1IMAGE );
 }
 
-void RenderButton1Image(INT16 sX, INT16 sY)
+
+static void RenderButton1Image(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON1IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }

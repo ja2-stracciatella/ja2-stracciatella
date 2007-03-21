@@ -9,8 +9,6 @@
 #define	FLOR_GALLERY_TEXT_TOTAL_SIZE					6 * 80 * 2
 
 
-
-void GameInitFloristGallery();
 BOOLEAN EnterFloristGallery();
 void ExitFloristGallery();
 void HandleFloristGallery();

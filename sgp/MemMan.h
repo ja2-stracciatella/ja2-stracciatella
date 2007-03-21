@@ -25,7 +25,6 @@ extern UINT32 guiMemAlloced;
 extern UINT32 guiMemFreed;
 
 extern BOOLEAN	InitializeMemoryManager( void );
-extern void		MemDebug( BOOLEAN f );
 extern void		ShutdownMemoryManager( void );
 
 // Creates and adds a video object to list

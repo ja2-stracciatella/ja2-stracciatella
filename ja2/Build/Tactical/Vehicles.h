@@ -105,18 +105,9 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier );
 // is this vehicle in the same sector (not between sectors), and accesible
 BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId );
 
-// add soldier to Vehicle
-BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId );
-
-// remove soldier from vehicle
-BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId );
-
 // strategic mvt stuff
 // move character path to the vehicle
 BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
-
-// travel time at the startegic level
-INT32 GetTravelTimeOfVehicle( INT32 iId );
 
 // is this vehicle a valid one?
 BOOLEAN VehicleIdIsValid( INT32 iId );
@@ -124,31 +115,14 @@ BOOLEAN VehicleIdIsValid( INT32 iId );
 // set up vehicle mvt for this grunt involved
 BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier );
 
-// set up soldier mvt for vehicle
-BOOLEAN CopyVehiclePathToSoldier( SOLDIERTYPE *pSoldier );
-
 // update mercs position when vehicle arrives
 void UpdatePositionOfMercsInVehicle( INT32 iId );
 
 // find vehicle id of group with this vehicle
 INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId );
 
-// given vehicle id, add all peopel in vehicle to mvt group, after clearing mvt group out
-BOOLEAN AddVehicleMembersToMvtGroup( INT32 iId );
-
-// injure this person in the vehicle
-BOOLEAN InjurePersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier, UINT8 ubPointsOfDmg );
-
-// kill this person in the vehicle
-BOOLEAN KillPersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier );
-
 // kill everyone in vehicle
 BOOLEAN KillAllInVehicle( INT32 iId );
-
-#ifdef JA2TESTVERSION
-// test vehicle stuff
-void VehicleTest( void );
-#endif
 
 // grab number of occupants in vehicles
 INT32 GetNumberInVehicle( INT32 iId );
@@ -157,8 +131,6 @@ INT32 GetNumberInVehicle( INT32 iId );
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId );
 
 BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier );
-
-SOLDIERTYPE *GetDriver( INT32 iID );
 
 void SetVehicleName( SOLDIERTYPE *pVehicle );
 
@@ -176,12 +148,6 @@ void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints );
 
 // get orig armor values for vehicle in this location
 //INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocation );
-
-// handle crit hit to vehicle in this location
-void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID );
-
-// ste up armor values for this vehicle
-void SetUpArmorForVehicle( UINT8 ubID );
 
 // does it need fixing?
 BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId );
@@ -206,7 +172,6 @@ void SetVehicleSectorValues( INT32 iVehId, UINT8 ubSectorX, UINT8 ubSectorY );
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier );
 
-BOOLEAN SaveVehicleMovementInfoToSavedGameFile( HWFILE hFile );
 BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile );
 BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile );
 BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile );
@@ -217,9 +182,7 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId );
 
 void AddVehicleFuelToSave( );
 
-BOOLEAN CanSoldierDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fIgnoreAsleep );
 BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fTryingToTravel );
-BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId );
 
 BOOLEAN IsEnoughSpaceInVehicle( INT32 iID );
 
@@ -227,7 +190,6 @@ BOOLEAN IsSoldierInThisVehicleSquad( SOLDIERTYPE *pSoldier, INT8 bSquadNumber );
 
 SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier );
 
-BOOLEAN DoesVehicleHaveAnyPassengers( INT32 iVehicleID );
 BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup );
 
 void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId );

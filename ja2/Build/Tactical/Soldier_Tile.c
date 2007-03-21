@@ -58,7 +58,7 @@ extern UINT8	gubWaitingForAllMercsToExitCode;
 
 #ifdef JA2BETAVERSION
 
-void OutputDebugInfoForTurnBasedNextTileWaiting( SOLDIERTYPE * pSoldier )
+static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 {
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->usPathDataSize > 0) )
 	{
@@ -132,7 +132,7 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 }
 
 
-void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
+static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 {
 	// OK, If we were waiting for stuff, do it here...
 
@@ -161,7 +161,7 @@ void SetFinalTile( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fGivenUp )
 }
 
 
-void MarkMovementReserved( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+static void MarkMovementReserved(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	// Check if we have one reserrved already, and free it first!
 	if ( pSoldier->sReservedMovementGridNo != NOWHERE )
@@ -200,7 +200,8 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 	}
 }
 
-INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection,  INT16 sGridNo, INT8 bLevel )
+
+static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, INT8 bLevel)
 {
 	UINT8		ubPerson;
 	INT16		sTempDestGridNo;

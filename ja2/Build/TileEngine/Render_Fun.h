@@ -15,9 +15,6 @@ UINT8						gubWorldRoomInfo[ WORLD_MAX ];
 BOOLEAN InitRoomDatabase( );
 void ShutdownRoomDatabase( );
 
-void SetTileRoomNum( INT16 sGridNo, UINT8 ubRoomNum );
-void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum );
-
 void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier );
 BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo );
 BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo );

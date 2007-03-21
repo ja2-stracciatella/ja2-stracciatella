@@ -136,7 +136,6 @@ GROUP* GetGroup( UINT8 ubGroupID );
 //will automatically handle their updating as they arrive in sectors.
 void RemoveGroup( UINT8 ubGroupID );//takes a groupID
 void RemovePGroup( GROUP *pGroup ); //same function, but takes a GROUP*
-void RemoveGroupIdFromList( UINT8 ubId );
 
 //Clears a groups waypoints.  This is necessary when sending new orders such as different routes.
 void RemoveGroupWaypoints( UINT8 ubGroupID );
@@ -152,8 +151,6 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier);
 
 BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
 BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier );
-BOOLEAN RemoveAllPlayersFromGroup( UINT8 ubGroupId );
-BOOLEAN RemoveAllPlayersFromPGroup( GROUP *pGroup );
 
 // create a vehicle group, it is by itself,
 UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY , UINT32 uiVehicleId );
@@ -161,13 +158,10 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 
 //Appends a waypoint to the end of the list.  Waypoint MUST be on the
 //same horizontal xor vertical level as the last waypoint added.
-BOOLEAN AddWaypointToGroup( UINT8 ubGroupID, UINT8 ubSectorX, UINT8 ubSectorY );
 BOOLEAN AddWaypointToPGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 //Same, but uses a plain sectorID (0-255)
-BOOLEAN AddWaypointIDToGroup( UINT8 ubGroupID, UINT8 ubSectorID );
 BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID );
 //Same, but uses a strategic sectorID
-BOOLEAN AddWaypointStrategicIDToGroup( UINT8 ubGroupID, UINT32 uiSectorID );
 BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID );
 
 //Allows you to change any group's orders based on movement type, and when to rest
@@ -183,8 +177,6 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 //This function will first check to see if a battle should start, or if they
 //aren't at the final destination, they will move to the next sector.
 void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft );
-//Calculates and posts an event to move the group to the next sector.
-void InitiateGroupMovementToNextSector( GROUP *pGroup );
 void CalculateNextMoveIntention( GROUP *pGroup );
 
 
@@ -193,12 +185,8 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 
 void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 
-// set groups next sector x,y value..used ONLY for teleporting groups
-void SetGroupNextSectorValue( INT16 sSectorX, INT16 sSectorY, UINT8 ubGroupID );
-
 
 // calculate the eta time in world total mins of this group
-INT32 CalculateTravelTimeOfGroup( GROUP *pGroup );
 INT32 CalculateTravelTimeOfGroupId( UINT8 ubId );
 
 INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup );
@@ -209,9 +197,6 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 // is the player greoup with this id in motion
 BOOLEAN PlayerIDGroupInMotion( UINT8 ubID );
 
-// is this player group in motion?
-BOOLEAN PlayerGroupInMotion( GROUP *pGroup );
-
 // find if a path exists?
 INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection );
 
@@ -220,11 +205,6 @@ INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup );
 
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );
-
-// set this groups waypoints as cancelled
-void SetWayPointsAsCanceled( UINT8 ubGroupID );
-
-void SetGroupPrevSectors( UINT8 ubGroupID, UINT8 ubX, UINT8 ubY );
 
 void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 
@@ -241,12 +221,7 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile );
 //Load the strategic movement Group paths from the saved game file
 BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile );
 
-// check members of mvt group, if any are bleeding, complain before moving
-void CheckMembersOfMvtGroupAndComplainAboutBleeding( SOLDIERTYPE *pSoldier );
-
 void HandleArrivalOfReinforcements( GROUP *pGroup );
-
-void PlanSimultaneousGroupArrivalCallback( UINT8 bMessageValue );
 
 //When groups meet up, then it is possible that they may join up.  This only happens if
 //the groups were separated because of singular tactical/exitgrid traversal, and the timing
@@ -272,7 +247,6 @@ void RemoveGroupFromList( GROUP *pGroup );
 WAYPOINT *GetFinalWaypoint( GROUP *pGroup );
 
 void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY );
-void ResetMovementForEnemyGroup( GROUP *pGroup );
 
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and TREATS the pGroup->ubMoveType as ONE_WAY EVEN IF IT ISN'T.  If the
@@ -280,12 +254,7 @@ void ResetMovementForEnemyGroup( GROUP *pGroup );
 BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 
 
-//Vehicle fuel support functions
-INT16 CalculateFuelCostBetweenSectors( UINT8 ubSectorID1, UINT8 ubSectorID2 );
 BOOLEAN VehicleHasFuel( SOLDIERTYPE *pSoldier );
-INT16 VehicleFuelRemaining( SOLDIERTYPE *pSoldier );
-BOOLEAN SpendVehicleFuel( SOLDIERTYPE* pSoldier, INT16 sFuelSpent );
-void ReportVehicleOutOfGas( INT32 iVehicleID, UINT8 ubSectorX, UINT8 ubSectorY );
 
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );

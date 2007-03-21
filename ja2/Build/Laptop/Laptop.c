@@ -490,126 +490,14 @@ INT32 giOldRegion=NO_REGION;
 LaptopSaveInfoStruct LaptopSaveInfo;
 
 
-// function calls
-UINT32 RenderLaptopPanel();
-void RenderLapTopImage();
-void GetLaptopKeyboardInput();
-UINT32 ExitLaptopMode(UINT32 uiMode);
-
 UINT32 DrawLapTopText();
-static void BtnOnCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32 CreateLaptopButtons();
-void DeleteLapTopButtons();
-BOOLEAN DeleteLapTopMouseRegions();
-BOOLEAN CreateLapTopMouseRegions();
 BOOLEAN fReDrawScreenFlag=FALSE;
 BOOLEAN fPausedReDrawScreenFlag=FALSE;		//used in the handler functions to redraw the screen, after the current frame
-void HandleLapTopScreenMouseUi();
-void DrawHighLightRegionBox();
-void HandleLapTopCursorUpDate();
 void PrintBalance( void );
 
 
-static void FinancialRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void PersonnelRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void EmailRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void HistoryRegionButtonCallback(GUI_BUTTON *btn, INT32 reason);
-void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-
-
-void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void RestoreOldRegion(INT32 iOldRegion);
-void HighLightRegion(INT32 iCurrentRegion);
-void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason );
-
-
-static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn, INT32 reason);
-
-
-void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-
-void DisplayBookMarks();
-void InitBookMarkList();
-BOOLEAN LoadBookmark();
-void DeleteBookmark();
-void ScrollDisplayText(INT32 iY);
-void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void CreateBookMarkMouseRegions();
-void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void DeleteBookmarkRegions();
-void DeleteLoadPending( void );
-BOOLEAN LoadLoadPending( void );
-BOOLEAN DisplayLoadPending( void );
-void DisplayErrorBox( void );
-void CreateDestroyErrorButton( void );
-void DrawTextOnErrorButton();
-BOOLEAN LeaveLapTopScreen( );
-void HandleAnimatedButtons( void );
-void AnimateButton( UINT32 uiIconID, UINT16 usX, UINT16 usY );
-void CreateDestoryBookMarkRegions( void );
-void EnterLaptopInitLaptopPages();
-void CheckMarkButtonsDirtyFlag( void );
-void PostButtonRendering( void );
-void ShouldNewMailBeDisplayed( void );
-void DisplayPlayersBalanceToDate( void );
-void CheckIfNewWWWW( void );
-BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex );
-void RemoveTitleBarMaximizeGraphics();
-BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX );
-void HandleSlidingTitleBar( void );
-void ShowLights( void );
-void FlickerHDLight( void );
-BOOLEAN ExitLaptopDone( void );
-void CreateDestroyMinimizeButtonForCurrentMode( void );
-void CreateMinimizeButtonForCurrentMode( void );
-void DestroyMinimizeButtonForCurrentMode( void );
-void InitLaptopOpenQueue( void );
-void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram );
-INT32 FindLastProgramStillOpen( void );
-void SetCurrentToLastProgramOpened( void );
-static BOOLEAN HandleExit(void);
-void DeleteDesktopBackground( void );
-BOOLEAN LoadDesktopBackground( void );
-BOOLEAN DrawDeskTopBackground( void );
 void PrintDate( void );
-void DisplayTaskBarIcons();
 void PrintNumberOnTeam( void );
-void HandleDefaultWebpageForLaptop( void );
-void CreateMinimizeRegionsForLaptopProgramIcons( void );
-void DestroyMinimizeRegionsForLaptopProgramIcons( void );
-void CreateDestroyMouseRegionForNewMailIcon( void );
-void NewEmailIconCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void HandleWWWSubSites( void );
-void UpdateStatusOfDisplayingBookMarks( void );
-void InitalizeSubSitesList( void );
-void SetSubSiteAsVisted( void );
-static void HandleAltTabKeyInLaptop(void);
-static void HandleShiftAltTabKeyInLaptop(void);
-
-// display bookmark notify
-void DisplayWebBookMarkNotify( void );
-
-// handle timer for bookmark notify
-void HandleWebBookMarkNotifyTimer( void );
-
-void CreateBookMarkHelpText( MOUSE_REGION *pRegion, UINT32 uiBookMarkID );
-
-void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText );
-void CreateLaptopButtonHelpText( INT32 iButtonIndex, UINT32 uiButtonHelpTextID );
-
-//Used to determine delay if its raining
-BOOLEAN IsItRaining();
-INT32 WWaitDelayIncreasedIfRaining( INT32 iLoadTime );
-void		InternetRainDelayMessageBoxCallBack( UINT8 bExitValue );
 
 extern void ClearHistoryList( void );
 
@@ -635,7 +523,7 @@ void	SetLaptopNewGameFlag( )
 }
 
 
-void HandleLapTopCursorUpDate()
+static void HandleLapTopCursorUpDate(void)
 {
 	if(guiPreviousLapTopCursor==guiCurrentLapTopCursor)
 	 return;
@@ -652,10 +540,10 @@ void HandleLapTopCursorUpDate()
 		break;
 	}
   guiPreviousLapTopCursor=guiCurrentLapTopCursor;
-
 }
-void
-GetLaptopKeyboardInput()
+
+
+static void GetLaptopKeyboardInput(void)
 {
   InputAtom					InputEvent;
 	POINT  MousePos;
@@ -693,6 +581,10 @@ GetLaptopKeyboardInput()
 
 	}
 }
+
+
+static void InitBookMarkList(void);
+
 
 //This is called only once at game initialization.
 UINT32 LaptopScreenInit()
@@ -781,14 +673,14 @@ DrawLapTopIcons()
   return (TRUE);
 }
 
-UINT32
-DrawLapTopText()
-{
 
+static void DisplayPlayersBalanceToDate(void);
+
+
+UINT32 DrawLapTopText()
+{
 	// show balance
 	DisplayPlayersBalanceToDate( );
-
-
 	return (TRUE);
 }
 
@@ -804,7 +696,22 @@ UINT32 LaptopScreenShutdown()
   return TRUE;
 }
 
-INT32 EnterLaptop()
+
+static void CreateDestroyMouseRegionForNewMailIcon(void);
+static BOOLEAN CreateLapTopMouseRegions(void);
+static BOOLEAN DrawDeskTopBackground(void);
+static void EnterLaptopInitLaptopPages(void);
+static void HighLightRegion(INT32 iCurrentRegion);
+static void InitLaptopOpenQueue(void);
+static void InitalizeSubSitesList(void);
+static BOOLEAN IsItRaining(void);
+static BOOLEAN LoadBookmark(void);
+static BOOLEAN LoadDesktopBackground(void);
+static BOOLEAN LoadLoadPending(void);
+static void RenderLapTopImage(void);
+
+
+static INT32 EnterLaptop(void)
 {
 	//Create, load, initialize data -- just entered the laptop.
   INT32 iCounter=0;
@@ -971,6 +878,19 @@ INT32 EnterLaptop()
 	return( TRUE );
 }
 
+
+static void CreateDestoryBookMarkRegions(void);
+static void CreateDestroyErrorButton(void);
+static void CreateDestroyMinimizeButtonForCurrentMode(void);
+static void DeleteBookmark(void);
+static void DeleteDesktopBackground(void);
+static void DeleteLapTopButtons(void);
+static BOOLEAN DeleteLapTopMouseRegions(void);
+static void DeleteLoadPending(void);
+static UINT32 ExitLaptopMode(UINT32 uiMode);
+static void RemoveBookmark(INT32 iBookId);
+
+
 void ExitLaptop()
 {
 
@@ -1081,8 +1001,8 @@ void ExitLaptop()
 
 }
 
-void
-RenderLapTopImage()
+
+static void RenderLapTopImage(void)
 {
 	if( ( fMaximizingProgram == TRUE ) ||( fMinizingProgram == TRUE) )
 	{
@@ -1265,7 +1185,13 @@ void RenderLaptop()
   MarkButtonsDirty( );
 }
 
-void EnterNewLaptopMode()
+
+static BOOLEAN InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar_t* pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex);
+static void RestoreOldRegion(INT32 iOldRegion);
+static void SetSubSiteAsVisted(void);
+
+
+static void EnterNewLaptopMode(void)
 {
 	static BOOLEAN fOldLoadFlag=FALSE;
 
@@ -1614,7 +1540,8 @@ void EnterNewLaptopMode()
   //HandleDefaultWebpageForLaptop( );
 }
 
-void HandleLapTopHandles()
+
+static void HandleLapTopHandles(void)
 {
 	if(fLoadPendingFlag)
 		return;
@@ -1756,6 +1683,25 @@ void HandleLapTopHandles()
 }
 
 extern BOOLEAN gfPrintFrameBuffer;
+
+
+static void CheckIfNewWWWW(void);
+static void CheckMarkButtonsDirtyFlag(void);
+static UINT32 CreateLaptopButtons(void);
+static void DisplayBookMarks(void);
+static void DisplayErrorBox(void);
+static BOOLEAN DisplayLoadPending(void);
+static void DisplayTaskBarIcons(void);
+static void DisplayWebBookMarkNotify(void);
+static void DrawButtonText(void);
+static void FlickerHDLight(void);
+static void HandleSlidingTitleBar(void);
+static void HandleWWWSubSites(void);
+static void PostButtonRendering(void);
+static void ShouldNewMailBeDisplayed(void);
+static void ShowLights(void);
+static void UpdateStatusOfDisplayingBookMarks(void);
+
 
 UINT32 LaptopScreenHandle()
 {
@@ -2076,18 +2022,7 @@ UINT32 LaptopScreenHandle()
 }
 
 
-
-
-
-
-UINT32 RenderLaptopPanel()
-{
-
-	return 0;
-}
-
-
-UINT32 ExitLaptopMode(UINT32 uiMode)
+static UINT32 ExitLaptopMode(UINT32 uiMode)
 {
 		//Deallocate the previous mode that you were in.
 
@@ -2224,8 +2159,17 @@ UINT32 ExitLaptopMode(UINT32 uiMode)
 }
 
 
-UINT32
-CreateLaptopButtons()
+static void BtnOnCallback(GUI_BUTTON* btn, INT32 reason);
+static void CreateLaptopButtonHelpText(INT32 iButtonIndex, UINT32 uiButtonHelpTextID);
+static void EmailRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void FilesRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void FinancialRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void HistoryRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void PersonnelRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void WWWRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static UINT32 CreateLaptopButtons(void)
 {
  memset( giLapTopButton, -1, sizeof( giLapTopButton ) );
 
@@ -2342,8 +2286,8 @@ CreateLaptopButtons()
  return (TRUE);
 }
 
-void
-DeleteLapTopButtons()
+
+static void DeleteLapTopButtons(void)
 {
   UINT32 cnt;
 /*	for ( cnt = 0; cnt < MAX_BUTTON_COUNT; cnt++ )
@@ -2369,6 +2313,9 @@ DeleteLapTopButtons()
 }
 
 
+static BOOLEAN HandleExit(void);
+
+
 static void BtnOnCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -2379,6 +2326,9 @@ static void BtnOnCallback(GUI_BUTTON *btn, INT32 reason)
 		}
 	}
 }
+
+
+static BOOLEAN ExitLaptopDone(void);
 
 
 BOOLEAN LeaveLapTopScreen( void )
@@ -2569,8 +2519,10 @@ void HaventMadeImpMercEmailCallBack()
 }
 
 
-BOOLEAN
-CreateLapTopMouseRegions()
+static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static BOOLEAN CreateLapTopMouseRegions(void)
 {
  // define regions
 
@@ -2584,14 +2536,17 @@ CreateLapTopMouseRegions()
  return (TRUE);
 }
 
-BOOLEAN
-DeleteLapTopMouseRegions()
+
+static BOOLEAN DeleteLapTopMouseRegions(void)
 {
 
  MSYS_RemoveRegion( &gLapTopScreenRegion);
 
  return (TRUE);
 }
+
+
+static void UpdateListToReflectNewProgramOpened(INT32 iOpenedProgram);
 
 
 static void FinancialRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -2754,7 +2709,7 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void HandleLapTopScreenMouseUi()
+static void HandleLapTopScreenMouseUi(void)
 {
  if ( gEmailRegion.uiFlags & MSYS_MOUSE_IN_AREA )
  {
@@ -2782,33 +2737,20 @@ void HandleLapTopScreenMouseUi()
  }
  else
   giHighLightRegion=NO_REGION;
- DrawHighLightRegionBox();
 }
 
-void
-DrawHighLightRegionBox()
-{
-}
 
-void
-RestoreOldRegion(INT32 iOldRegion)
-{
-}
-
-void HighLightRegion(INT32 iCurrentRegion)
-{
-}
-
-void HandleAnimatedButtons()
+static void RestoreOldRegion(INT32 iOldRegion)
 {
 }
 
 
-void AnimateButton( UINT32 uiIconID, UINT16 usX, UINT16 usY )
+static void HighLightRegion(INT32 iCurrentRegion)
 {
 }
 
-void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void WWWRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2825,7 +2767,7 @@ void WWWRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void EmailRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2847,7 +2789,7 @@ void EmailRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void FinancialRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2863,7 +2805,8 @@ void FinancialRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void HistoryRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2881,8 +2824,7 @@ void HistoryRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void FilesRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2898,7 +2840,8 @@ void FilesRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void PersonnelRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static INT32 iBaseTime=0;
   static INT32 iFrame=0;
@@ -2915,9 +2858,7 @@ void PersonnelRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void
-CheckIfMouseLeaveScreen()
+static void CheckIfMouseLeaveScreen(void)
 {
  	POINT  MousePos;
   GetCursorPos(&MousePos);
@@ -2925,9 +2866,10 @@ CheckIfMouseLeaveScreen()
   {
    guiCurrentLapTopCursor=LAPTOP_PANEL_CURSOR;
   }
-
 }
-void ScreenRegionMvtCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+
+static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2950,7 +2892,10 @@ void ReDrawHighLight()
 }
 
 
-void DrawButtonText()
+static void DrawTextOnErrorButton(void);
+
+
+static void DrawButtonText(void)
 {
 
 	if(fErrorFlag)
@@ -2963,7 +2908,8 @@ void DrawButtonText()
 	}
 }
 
-void InitBookMarkList()
+
+static void InitBookMarkList(void)
 {
 	// sets bookmark list to -1
 	memset( LaptopSaveInfo.iBookMarkList, -1, sizeof( LaptopSaveInfo.iBookMarkList ) );
@@ -2990,7 +2936,7 @@ void SetBookMark(INT32 iBookId)
 }
 
 
-BOOLEAN RemoveBookMark( INT32 iBookId )
+static BOOLEAN RemoveBookMark(INT32 iBookId)
 {
   INT32 iCounter=0;
 
@@ -3015,8 +2961,7 @@ BOOLEAN RemoveBookMark( INT32 iBookId )
 }
 
 
-
-BOOLEAN LoadBookmark()
+static BOOLEAN LoadBookmark(void)
 {
 		// grab download bars too
 	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadtop.sti",    &guiDOWNLOADTOP));
@@ -3031,8 +2976,7 @@ BOOLEAN LoadBookmark()
 }
 
 
-
-void DisplayBookMarks( void )
+static void DisplayBookMarks(void)
 {
 	// will look at bookmarklist and set accordingly
 	INT32 iCounter=1;
@@ -3136,7 +3080,8 @@ void DisplayBookMarks( void )
 	return;
 }
 
-void RemoveBookmark(INT32 iBookId)
+
+static void RemoveBookmark(INT32 iBookId)
 {
   INT32 iCounter=0;
 	if(iBookId==-2)
@@ -3157,7 +3102,8 @@ void RemoveBookmark(INT32 iBookId)
 	return;
 }
 
-void DeleteBookmark()
+
+static void DeleteBookmark(void)
 {
   DeleteVideoObjectFromIndex(guiBOOKTOP);
 	DeleteVideoObjectFromIndex(guiBOOKMID);
@@ -3168,11 +3114,10 @@ void DeleteBookmark()
 	DeleteVideoObjectFromIndex(guiDOWNLOADTOP);
 	DeleteVideoObjectFromIndex(guiDOWNLOADMID);
 	DeleteVideoObjectFromIndex(guiDOWNLOADBOT);
-
-
 }
 
-void ScrollDisplayText(INT32 iY)
+
+static void ScrollDisplayText(INT32 iY)
 {
 	static INT32 iBaseTime=0;
 	static INT16 sCurX;
@@ -3210,7 +3155,14 @@ void ScrollDisplayText(INT32 iY)
 	 InvalidateRegion(BOOK_X,iY, BOOK_X+BOOK_WIDTH, iY+BOOK_HEIGHT);
 
 }
-void CreateBookMarkMouseRegions()
+
+
+static void BookmarkCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void CreateBookMarkHelpText(MOUSE_REGION* pRegion, UINT32 uiBookMarkID);
+
+
+static void CreateBookMarkMouseRegions(void)
 {
 	INT32 iCounter=0;
 	// creates regions based on number of entries
@@ -3236,7 +3188,8 @@ void CreateBookMarkMouseRegions()
    MSYS_SetRegionUserData(&gBookmarkMouseRegions[iCounter],1,CANCEL_STRING );
 }
 
-void DeleteBookmarkRegions()
+
+static void DeleteBookmarkRegions(void)
 {
 	INT32 iCounter=0;
 	//deletes bookmark regions
@@ -3253,7 +3206,8 @@ void DeleteBookmarkRegions()
 
 }
 
-void CreateDestoryBookMarkRegions( void )
+
+static void CreateDestoryBookMarkRegions(void)
 {
 	// checks to see if a bookmark needs to be created or destroyed
 	static BOOLEAN fOldShowBookmarks=FALSE;
@@ -3275,8 +3229,7 @@ void CreateDestoryBookMarkRegions( void )
 }
 
 
-
-void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void BookmarkCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
  INT32 iCount;
 
@@ -3315,6 +3268,8 @@ void BookmarkCallBack(MOUSE_REGION * pRegion, INT32 iReason )
  }
 }
 
+
+static void InternetRainDelayMessageBoxCallBack(UINT8 bExitValue);
 
 
 void GoToWebPage(INT32 iPageId )
@@ -3481,7 +3436,8 @@ void GoToWebPage(INT32 iPageId )
 	fReDrawScreenFlag=TRUE;
 }
 
-void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -3494,7 +3450,7 @@ void BookmarkMvtCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN LoadLoadPending( void )
+static BOOLEAN LoadLoadPending(void)
 {
 	// function will load the load pending graphics
 	// reuse bookmark
@@ -3504,7 +3460,11 @@ BOOLEAN LoadLoadPending( void )
 	return (TRUE);
 }
 
-BOOLEAN DisplayLoadPending( void )
+
+static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime);
+
+
+static BOOLEAN DisplayLoadPending(void)
 {
 	// this function will display the load pending and return if the load is done
   static INT32 iBaseTime=0;
@@ -3675,7 +3635,8 @@ BOOLEAN DisplayLoadPending( void )
 	return (FALSE);
 }
 
-void DeleteLoadPending( void )
+
+static void DeleteLoadPending(void)
 {
 	// this funtion will delete the load pending graphics
 	// reuse bookmark
@@ -3693,7 +3654,7 @@ static void BtnErrorCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void CreateDestroyErrorButton( void )
+static void CreateDestroyErrorButton(void)
 {
  static BOOLEAN fOldErrorFlag=FALSE;
  if((fErrorFlag)&&(!fOldErrorFlag))
@@ -3734,7 +3695,7 @@ void CreateDestroyErrorButton( void )
 }
 
 
-void DisplayErrorBox( void )
+static void DisplayErrorBox(void)
 {
 	// this function will display the error graphic
   if(!fErrorFlag)
@@ -3766,7 +3727,7 @@ void DisplayErrorBox( void )
 }
 
 
-void DrawTextOnErrorButton()
+static void DrawTextOnErrorButton(void)
 {
 	// draws text on error button
   SetFont(ERROR_TITLE_FONT);
@@ -3779,9 +3740,10 @@ void DrawTextOnErrorButton()
 	InvalidateRegion(ERROR_X, ERROR_Y, ERROR_X+BOOK_WIDTH, ERROR_Y+6*BOOK_HEIGHT);
 }
 
+
 // This function is called every time the laptop is FIRST initialized, ie whenever the laptop is loaded.  It calls
 // various init function in the laptop pages that need to be inited when the laptop is just loaded.
-void EnterLaptopInitLaptopPages()
+static void EnterLaptopInitLaptopPages(void)
 {
 	EnterInitAimMembers();
 	EnterInitAimArchives();
@@ -3798,7 +3760,7 @@ void EnterLaptopInitLaptopPages()
 }
 
 
-void CheckMarkButtonsDirtyFlag( void )
+static void CheckMarkButtonsDirtyFlag(void)
 {
   // this function checks the fMarkButtonsDirtyFlag, if true, mark buttons dirty
 	if( fMarkButtonsDirtyFlag )
@@ -3810,7 +3772,7 @@ void CheckMarkButtonsDirtyFlag( void )
 }
 
 
-void PostButtonRendering( void )
+static void PostButtonRendering(void)
 {
   // this function is in place to allow for post button rendering
 
@@ -3823,13 +3785,12 @@ void PostButtonRendering( void )
 	  case 	LAPTOP_MODE_AIM_MEMBERS:
 			RenderAIMMembersTopLevel();
 		break;
-
 	}
 }
 
-void ShouldNewMailBeDisplayed()
-{
 
+static void ShouldNewMailBeDisplayed(void)
+{
 	BOOLEAN fReDraw=FALSE;
 	switch( guiCurrentLaptopMode )
 	{
@@ -3848,7 +3809,7 @@ void ShouldNewMailBeDisplayed()
 }
 
 
-void DisplayPlayersBalanceToDate( void )
+static void DisplayPlayersBalanceToDate(void)
 {
   // print players balance to date
   CHAR16 sString[ 100 ];
@@ -3887,7 +3848,7 @@ void DisplayPlayersBalanceToDate( void )
 }
 
 
-void CheckIfNewWWWW( void )
+static void CheckIfNewWWWW(void)
 {
   // if no www mode, set new www flag..until new www mode that is not 0
 
@@ -4021,7 +3982,7 @@ void HandleRightButtonUpEvent( void )
 }
 
 
-void HandleLeftButtonUpEvent( void )
+static void HandleLeftButtonUpEvent(void)
 {
 
 	// will handle the left button up event
@@ -4133,7 +4094,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 }
 
 
-BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t *pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex )
+static BOOLEAN InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar_t* pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex)
 {
 	Assert( uiBackgroundGraphic );
 
@@ -4151,7 +4112,8 @@ BOOLEAN InitTitleBarMaximizeGraphics( UINT32 uiBackgroundGraphic, const wchar_t 
 	return( TRUE );
 }
 
-BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX )
+
+static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX)
 {
 	static 	INT8			ubCount;
 	INT16		sPosX, sPosY, sPosRightX, sPosBottomY, sWidth, sHeight;
@@ -4287,13 +4249,14 @@ BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 u
 	return(TRUE);
 }
 
-void RemoveTitleBarMaximizeGraphics()
+
+static void RemoveTitleBarMaximizeGraphics(void)
 {
 	DeleteVideoSurfaceFromIndex( guiTitleBarSurface );
 }
 
 
-void HandleSlidingTitleBar( void )
+static void HandleSlidingTitleBar(void)
 {
 	if( ( fMaximizingProgram == FALSE ) && ( fMinizingProgram == FALSE ) )
 	{
@@ -4453,7 +4416,7 @@ void HandleSlidingTitleBar( void )
 }
 
 
-void ShowLights( void )
+static void ShowLights(void)
 {
 	// will show lights depending on state
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, 44, 466);
@@ -4461,7 +4424,7 @@ void ShowLights( void )
 }
 
 
-void FlickerHDLight( void )
+static void FlickerHDLight(void)
 {
 	static INT32 iBaseTime = 0;
 	static INT32 iTotalDifference = 0;
@@ -4518,7 +4481,7 @@ void FlickerHDLight( void )
 }
 
 
-BOOLEAN ExitLaptopDone( void )
+static BOOLEAN ExitLaptopDone(void)
 {
 	// check if this is the first time, to reset counter
 
@@ -4555,7 +4518,13 @@ BOOLEAN ExitLaptopDone( void )
 }
 
 
-void CreateDestroyMinimizeButtonForCurrentMode( void )
+static void CreateMinimizeButtonForCurrentMode(void);
+static void CreateMinimizeRegionsForLaptopProgramIcons(void);
+static void DestroyMinimizeButtonForCurrentMode(void);
+static void DestroyMinimizeRegionsForLaptopProgramIcons(void);
+
+
+static void CreateDestroyMinimizeButtonForCurrentMode(void)
 {
 	// will create the minimize button
 
@@ -4606,7 +4575,10 @@ void CreateDestroyMinimizeButtonForCurrentMode( void )
 }
 
 
-void CreateMinimizeButtonForCurrentMode( void )
+static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
   gLaptopMinButtonImage[0]=  LoadButtonImage( "LAPTOP/x.sti" ,-1,0,-1,1,-1 );
@@ -4617,13 +4589,17 @@ void CreateMinimizeButtonForCurrentMode( void )
 	SetButtonCursor(gLaptopMinButton[0], CURSOR_LAPTOP_SCREEN);
 }
 
-void DestroyMinimizeButtonForCurrentMode( void )
+
+static void DestroyMinimizeButtonForCurrentMode(void)
 {
 	// destroy minimize button
 	RemoveButton( gLaptopMinButton[ 0 ] );
 	UnloadButtonImage( gLaptopMinButtonImage[ 0 ] );
 
 }
+
+
+static void SetCurrentToLastProgramOpened(void);
 
 
 static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -4674,7 +4650,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-INT32 FindLastProgramStillOpen( void )
+static INT32 FindLastProgramStillOpen(void)
 {
 	INT32 iLowestValue = 6;
 	INT32 iLowestValueProgram = 6;
@@ -4696,7 +4672,8 @@ INT32 FindLastProgramStillOpen( void )
 	return ( iLowestValueProgram );
 }
 
-void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram )
+
+static void UpdateListToReflectNewProgramOpened(INT32 iOpenedProgram)
 {
 	INT32 iCounter = 0;
 
@@ -4713,7 +4690,7 @@ void UpdateListToReflectNewProgramOpened( INT32 iOpenedProgram )
 }
 
 
-void InitLaptopOpenQueue( void )
+static void InitLaptopOpenQueue(void)
 {
 
 	INT32 iCounter = 0;
@@ -4725,7 +4702,8 @@ void InitLaptopOpenQueue( void )
 	}
 }
 
-void SetCurrentToLastProgramOpened( void )
+
+static void SetCurrentToLastProgramOpened(void)
 {
 	guiCurrentLaptopMode = LAPTOP_MODE_NONE;
 
@@ -4784,7 +4762,7 @@ void BlitTitleBarIcons( void )
 }
 
 
-BOOLEAN DrawDeskTopBackground( void )
+static BOOLEAN DrawDeskTopBackground(void)
 {
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
@@ -4816,7 +4794,7 @@ BOOLEAN DrawDeskTopBackground( void )
 }
 
 
-BOOLEAN LoadDesktopBackground( void )
+static BOOLEAN LoadDesktopBackground(void)
 {
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_DESKTOP);
@@ -4825,7 +4803,8 @@ BOOLEAN LoadDesktopBackground( void )
 	return( TRUE );
 }
 
-void DeleteDesktopBackground( void )
+
+static void DeleteDesktopBackground(void)
 {
 	// delete desktop
 
@@ -4956,8 +4935,7 @@ void PrintDate( void )
 }
 
 
-
-void DisplayTaskBarIcons()
+static void DisplayTaskBarIcons(void)
 {
 //	UINT16 usPosX;
 
@@ -4980,6 +4958,10 @@ void DisplayTaskBarIcons()
 	}
 
 }
+
+
+static void HandleAltTabKeyInLaptop(void);
+static void HandleShiftAltTabKeyInLaptop(void);
 
 
 void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 usKeyState )
@@ -5277,7 +5259,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 }
 
 
-void HandleDefaultWebpageForLaptop( void )
+static void HandleDefaultWebpageForLaptop(void)
 {
 
 	// go to first page in bookmark list
@@ -5292,7 +5274,10 @@ void HandleDefaultWebpageForLaptop( void )
 }
 
 
-void CreateMinimizeRegionsForLaptopProgramIcons( void )
+static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateMinimizeRegionsForLaptopProgramIcons(void)
 {
 	// will create the minizing region to lie over the icon for this particular laptop program
 
@@ -5301,7 +5286,7 @@ void CreateMinimizeRegionsForLaptopProgramIcons( void )
 }
 
 
-void DestroyMinimizeRegionsForLaptopProgramIcons( void )
+static void DestroyMinimizeRegionsForLaptopProgramIcons(void)
 {
 	// will destroy the minizmize regions to be placed over the laptop icons that will be
 	// displayed on the top of the laptop program bar
@@ -5310,7 +5295,7 @@ void DestroyMinimizeRegionsForLaptopProgramIcons( void )
 }
 
 
-void LaptopProgramIconMinimizeCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// callback handler for the minize region that is attatched to the laptop program icon
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -5400,7 +5385,11 @@ void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 }
 
 
-void CreateDestroyMouseRegionForNewMailIcon( void )
+static void NewEmailIconCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void NewFileIconCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateDestroyMouseRegionForNewMailIcon(void)
 {
 	static BOOLEAN fCreated = FALSE;
 
@@ -5426,7 +5415,7 @@ void CreateDestroyMouseRegionForNewMailIcon( void )
 }
 
 
-void NewEmailIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void NewEmailIconCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
@@ -5440,7 +5429,7 @@ void NewEmailIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void NewFileIconCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
@@ -5453,7 +5442,8 @@ void NewFileIconCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 }
 
-void HandleWWWSubSites( void )
+
+static void HandleWWWSubSites(void)
 {
 	// check to see if WW Wait is needed for a sub site within the Web Browser
 
@@ -5489,7 +5479,7 @@ void HandleWWWSubSites( void )
 }
 
 
-void UpdateStatusOfDisplayingBookMarks( void )
+static void UpdateStatusOfDisplayingBookMarks(void)
 {
 	// this function will disable showing of bookmarks if in process of download or if we miniming web browser
 	if( ( fLoadPendingFlag == TRUE ) || ( guiCurrentLaptopMode < LAPTOP_MODE_WWW )  )
@@ -5499,7 +5489,7 @@ void UpdateStatusOfDisplayingBookMarks( void )
 }
 
 
-void InitalizeSubSitesList( void )
+static void InitalizeSubSitesList(void)
 {
 	INT32 iCounter = 0;
 
@@ -5511,7 +5501,7 @@ void InitalizeSubSitesList( void )
 }
 
 
-void SetSubSiteAsVisted( void )
+static void SetSubSiteAsVisted(void)
 {
 	// sets a www sub site as visited
 	if( guiCurrentLaptopMode <= LAPTOP_MODE_WWW )
@@ -5609,9 +5599,11 @@ static void HandleAltTabKeyInLaptop(void)
 }
 
 
+static void HandleWebBookMarkNotifyTimer(void);
+
 
 // display the 2 second book mark instruction
-void DisplayWebBookMarkNotify( void )
+static void DisplayWebBookMarkNotify(void)
 {
 	static BOOLEAN fOldShow = FALSE;
 
@@ -5665,7 +5657,9 @@ void DisplayWebBookMarkNotify( void )
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
-void HandleWebBookMarkNotifyTimer( void )
+
+// handle timer for bookmark notify
+static void HandleWebBookMarkNotifyTimer(void)
 {
 	static INT32 iBaseTime = 0;
 	INT32 iDifference = 0;
@@ -5872,13 +5866,8 @@ BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile )
 	return( TRUE );
 }
 
-void LaptopSaveVariablesInit()
-{
-}
 
-
-
-INT32 WWaitDelayIncreasedIfRaining( INT32 iUnitTime )
+static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime)
 {
 	INT32	iRetVal = 0;
 
@@ -5895,7 +5884,8 @@ INT32 WWaitDelayIncreasedIfRaining( INT32 iUnitTime )
 }
 
 
-BOOLEAN IsItRaining()
+// Used to determine delay if its raining
+static BOOLEAN IsItRaining(void)
 {
 	if( guiEnvWeather & WEATHER_FORECAST_SHOWERS || guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS )
 		return( TRUE );
@@ -5904,7 +5894,7 @@ BOOLEAN IsItRaining()
 }
 
 
-void		InternetRainDelayMessageBoxCallBack( UINT8 bExitValue )
+static void InternetRainDelayMessageBoxCallBack(UINT8 bExitValue)
 {
 	GoToWebPage(	giRainDelayInternetSite );
 
@@ -5913,7 +5903,7 @@ void		InternetRainDelayMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void CreateBookMarkHelpText( MOUSE_REGION *pRegion, UINT32 uiBookMarkID )
+static void CreateBookMarkHelpText(MOUSE_REGION* pRegion, UINT32 uiBookMarkID)
 {
 	SetRegionFastHelpText( pRegion, gzLaptopHelpText[ BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + uiBookMarkID ] );
 }
@@ -5947,7 +5937,7 @@ void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearH
 }
 
 
-void CreateLaptopButtonHelpText( INT32 iButtonIndex, UINT32 uiButtonHelpTextID )
+static void CreateLaptopButtonHelpText(INT32 iButtonIndex, UINT32 uiButtonHelpTextID)
 {
 	SetButtonFastHelpText( iButtonIndex, gzLaptopHelpText[ uiButtonHelpTextID ] );
 }

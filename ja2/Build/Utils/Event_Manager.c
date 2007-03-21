@@ -17,9 +17,6 @@ HLIST		hDemandEventQueue = NULL;
 
 #define QUEUE_RESIZE		20
 
-HLIST GetQueue( UINT8 ubQueueID );
-void SetQueue( UINT8 ubQueueID, HLIST hQueue );
-
 
 BOOLEAN InitializeEventManager( )
 {
@@ -71,6 +68,9 @@ BOOLEAN ShutdownEventManager( )
 	return( TRUE );
 }
 
+
+static HLIST GetQueue(UINT8 ubQueueID);
+static void SetQueue(UINT8 ubQueueID, HQUEUE hQueue);
 
 
 BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID )
@@ -191,7 +191,7 @@ UINT32 EventQueueSize( UINT8 ubQueueID )
 }
 
 
-HLIST GetQueue( UINT8 ubQueueID )
+static HLIST GetQueue(UINT8 ubQueueID)
 {
 	switch( ubQueueID )
 	{
@@ -215,7 +215,8 @@ HLIST GetQueue( UINT8 ubQueueID )
 
 }
 
-void SetQueue( UINT8 ubQueueID, HQUEUE hQueue )
+
+static void SetQueue(UINT8 ubQueueID, HQUEUE hQueue)
 {
 	switch( ubQueueID )
 	{

@@ -47,24 +47,13 @@ UINT32 uiVoiceSound = 0;
 UINT32 guiCHARACTERPORTRAIT;
 extern INT32 iCurrentVoices;
 
-// function definitions
-void CreateIMPFinishButtons( void );
-void DeleteIMPFinishButtons( void );
-BOOLEAN RenderCharProfileFinishFace( void );
-void RenderCharFullName( void );
-BOOLEAN LoadCharacterPortrait( void );
-void DestroyCharacterPortrait( void );
+
+extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON* btn, INT32 reason);
+extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn, INT32 reason);
-void FinishMessageBoxCallBack( UINT8 bExitValue );
-extern void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason);
-extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason);
+static void CreateIMPFinishButtons(void);
+static BOOLEAN LoadCharacterPortrait(void);
 
 
 void EnterIMPFinish( void )
@@ -85,6 +74,10 @@ void EnterIMPFinish( void )
 	fFinishedCharGeneration = TRUE;
 }
 
+
+static void RenderCharFullName(void);
+
+
 void RenderIMPFinish( void )
 {
   // the background
@@ -96,6 +89,11 @@ void RenderIMPFinish( void )
 		// indent for text
   RenderBeginIndent( 110, 50 );
 }
+
+
+static void DeleteIMPFinishButtons(void);
+static void DestroyCharacterPortrait(void);
+
 
 void ExitIMPFinish( void )
 {
@@ -113,8 +111,15 @@ void HandleIMPFinish( void )
 }
 
 
+static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishPortraitCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPFinishVoiceCallback(GUI_BUTTON* btn, INT32 reason);
 
-void CreateIMPFinishButtons( void )
+
+static void CreateIMPFinishButtons(void)
 {
 	CHAR16 sString[ 128 ];
 
@@ -223,8 +228,7 @@ void CreateIMPFinishButtons( void )
 }
 
 
-
-void DeleteIMPFinishButtons( void )
+static void DeleteIMPFinishButtons(void)
 {
   // this function destroys the buttons needed for the IMP about Us Page
 
@@ -252,6 +256,9 @@ void DeleteIMPFinishButtons( void )
 	RemoveButton(giIMPFinishButton[5] );
   UnloadButtonImage(giIMPFinishButtonImage[5] );
 }
+
+
+static void FinishMessageBoxCallBack(UINT8 bExitValue);
 
 
 static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
@@ -392,7 +399,7 @@ static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-BOOLEAN RenderCharProfileFinishFace( void )
+static BOOLEAN RenderCharProfileFinishFace(void)
 {
 
 // render the portrait of the current picture
@@ -453,7 +460,8 @@ BOOLEAN RenderCharProfileFinishFace( void )
 
 }
 
-void RenderCharFullName( void )
+
+static void RenderCharFullName(void)
 {
 
 	CHAR16 sString[ 64 ];
@@ -473,7 +481,7 @@ void RenderCharFullName( void )
 }
 
 
-BOOLEAN LoadCharacterPortrait( void )
+static BOOLEAN LoadCharacterPortrait(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	// load it
@@ -482,14 +490,14 @@ BOOLEAN LoadCharacterPortrait( void )
 }
 
 
-void DestroyCharacterPortrait( void )
+static void DestroyCharacterPortrait(void)
 {
 	// remove the portrait that was loaded by loadcharacterportrait
 	DeleteVideoObjectFromIndex( guiCHARACTERPORTRAIT );
 }
 
 
-void FinishMessageBoxCallBack( UINT8 bExitValue )
+static void FinishMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )

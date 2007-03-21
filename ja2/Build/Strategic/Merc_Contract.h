@@ -64,13 +64,10 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void );
 
 void BeginContractRenewalSequence( );
 void HandleContractRenewalSequence( );
-void EndCurrentContractRenewal( );
 void HandleMercIsWillingToRenew( UINT8 ubID );
 void HandleMercIsNotWillingToRenew( UINT8 ubID );
 
-BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier );
 UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier );
-BOOLEAN ContractIsGoingToExpireSoon( SOLDIERTYPE *pSoldier );
 
 BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile );
 BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile );

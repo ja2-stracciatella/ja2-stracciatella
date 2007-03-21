@@ -160,6 +160,15 @@ INT16 iTopWinCutOff,iBotWinCutOff;
 UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
 
+
+static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint* pUpperLeft, SGPPoint* pBottomRight, SGPPoint* pSpacing, UINT16 fFlags);
+static void CnclClkCallback(GUI_BUTTON* button, INT32 reason);
+static void DwnClkCallback(GUI_BUTTON* button, INT32 reason);
+static void OkClkCallback(GUI_BUTTON* button, INT32 reason);
+static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason);
+static void UpClkCallback(GUI_BUTTON* button, INT32 reason);
+
+
 //----------------------------------------------------------------------------------------------
 //	CreateJA2SelectionWindow
 //
@@ -755,6 +764,9 @@ void InitJA2SelectionWindow( void )
 }
 
 
+static DisplayList* TrashList(DisplayList* pNode);
+
+
 //----------------------------------------------------------------------------------------------
 //	ShutdownJA2SelectionWindow
 //
@@ -802,12 +814,8 @@ void RemoveJA2SelectionWindow( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	TrashList
-//
 //	Free the current display list for the selection window.
-//
-DisplayList *TrashList( DisplayList *pNode )
+static DisplayList* TrashList(DisplayList* pNode)
 {
 	if (pNode == NULL)
 		return(NULL);
@@ -820,6 +828,9 @@ DisplayList *TrashList( DisplayList *pNode )
 
 	return(NULL);
 }
+
+
+static void DrawSelections(void);
 
 
 //----------------------------------------------------------------------------------------------
@@ -901,14 +912,14 @@ void RenderSelectionWindow( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	SelWinClkCallback
-//
+static void AddToSelectionList(DisplayList* pNode);
+static BOOLEAN RemoveFromSelectionList(DisplayList* pNode);
+
+
 //	Button callback function for the main selection window. Checks if user clicked on an image,
 //	if so selects or de-selects that object. Also handles the multi-object selection (left-click
 //	and drag to get the selection rectangle)
-//
-void SelWinClkCallback( GUI_BUTTON *button, INT32 reason )
+static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 {
 	DisplayList *pNode;
 	BOOLEAN fDone;
@@ -1074,7 +1085,7 @@ void DisplaySelectionWindowGraphicalInformation()
 //	Add an object in the display list to the selection list. If the object already exists in the
 //	selection list, then it's count is incremented.
 //
-void AddToSelectionList( DisplayList *pNode )
+static void AddToSelectionList(DisplayList* pNode)
 {
 	INT32 iIndex, iUseIndex;
 	BOOLEAN fDone;
@@ -1140,13 +1151,9 @@ BOOLEAN ClearSelectionList( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	RemoveFromSelectionList
-//
 //	Removes the object given n a display list from the selection list. If the objects count is
 //	greater than one, then the count is decremented and the object remains in the list.
-//
-BOOLEAN RemoveFromSelectionList( DisplayList *pNode )
+static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 {
 	INT32 iIndex, iUseIndex;
 	BOOLEAN fDone, fRemoved;
@@ -1223,12 +1230,8 @@ INT32 GetRandomSelection( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	IsInSelectionList
-//
 //	Verifies if a particular display list object exists in the current selection list.
-//
-BOOLEAN IsInSelectionList( DisplayList *pNode )
+static BOOLEAN IsInSelectionList(DisplayList* pNode)
 {
 	INT32 iIndex;
 	BOOLEAN fFound;
@@ -1247,14 +1250,10 @@ BOOLEAN IsInSelectionList( DisplayList *pNode )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	FindInSelectionList
-//
 //	Finds an occurance of a particular display list object in the current selection list.
 //	if found, returns the selection list's index where it can be found. otherwise it
 //	returns -1
-//
-INT32 FindInSelectionList( DisplayList *pNode )
+static INT32 FindInSelectionList(DisplayList* pNode)
 {
 	INT32 iIndex,iUseIndex;
 	BOOLEAN fFound;
@@ -1275,13 +1274,9 @@ INT32 FindInSelectionList( DisplayList *pNode )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	SaveSelectionList
-//
 //	Copies the current selection list to a save buffer. Used in case we want to cancel a
 //	selection window.
-//
-void SaveSelectionList( void )
+static void SaveSelectionList(void)
 {
 	INT32 iIndex;
 
@@ -1308,11 +1303,8 @@ void RestoreSelectionList( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	OkClkCallback
-//
 //	Button callback function for the selection window's OK button
-void OkClkCallback( GUI_BUTTON *button, INT32 reason )
+static void OkClkCallback(GUI_BUTTON* button, INT32 reason)
 {
 
 
@@ -1333,7 +1325,7 @@ void OkClkCallback( GUI_BUTTON *button, INT32 reason )
 //
 //	Button callback function for the selection window's CANCEL button
 //
-void CnclClkCallback( GUI_BUTTON *button, INT32 reason )
+static void CnclClkCallback(GUI_BUTTON* button, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1348,12 +1340,8 @@ void CnclClkCallback( GUI_BUTTON *button, INT32 reason )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	UpClkCallback
-//
 //	Button callback function for scrolling the selection window up
-//
-void UpClkCallback( GUI_BUTTON *button, INT32 reason )
+static void UpClkCallback(GUI_BUTTON* button, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1433,12 +1421,8 @@ void ScrollSelWinDown(void)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	DwnClkCallback
-//
 //	Button callback function to scroll the selection window down.
-//
-void DwnClkCallback( GUI_BUTTON *button, INT32 reason )
+static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -1452,13 +1436,11 @@ void DwnClkCallback( GUI_BUTTON *button, INT32 reason )
 }
 
 
+static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint* pUpperLeft, UINT16 fFlags);
 
-//----------------------------------------------------------------------------------------------
-//	DrawSelections
-//
+
 //	Displays the objects in the display list to the selection window.
-//
-void DrawSelections( void )
+static void DrawSelections(void)
 {
 	SGPRect					ClipRect, NewRect;
 
@@ -1489,9 +1471,7 @@ void DrawSelections( void )
 //	Creates a display list from a display specification list. It also sets variables up for
 //	properly scrolling the window etc.
 //
-BOOLEAN BuildDisplayWindow( DisplaySpec *pDisplaySpecs, UINT16 usNumSpecs, DisplayList **pDisplayList,
-														SGPPoint * pUpperLeft, SGPPoint * pBottomRight,
-														SGPPoint * pSpacing, UINT16 fFlags )
+static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint* pUpperLeft, SGPPoint* pBottomRight, SGPPoint* pSpacing, UINT16 fFlags)
 {
 	INT32						iCurrX = pUpperLeft->iX;
 	INT32						iCurrY = pUpperLeft->iY;
@@ -1584,7 +1564,7 @@ BOOLEAN BuildDisplayWindow( DisplaySpec *pDisplaySpecs, UINT16 usNumSpecs, Displ
 //	have been selected (in the selection list) are highlighted and the count placed in the upper
 //	left corner of the image.
 //
-BOOLEAN DisplayWindowFunc( DisplayList *pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint *pUpperLeft, UINT16 fFlags)
+static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint* pUpperLeft, UINT16 fFlags)
 {
 	INT16						iCurrY;
 	INT16						sTempOffsetX;

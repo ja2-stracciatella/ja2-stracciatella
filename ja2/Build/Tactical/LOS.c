@@ -55,7 +55,8 @@ static FIXEDPT gqStandardWindowTopHeight = INT32_TO_FIXEDPT( WINDOW_TOP_HEIGHT_U
 
 #define FIXEDPT_MULTIPLY( a, b ) ( (a / 256) * (b / 256) )
 
-UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
+
+static UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
 {
 	#if 0 /* XXX I hope that's correct */
 UINT32 uiResult;
@@ -211,8 +212,6 @@ STRUCTURE * gpLocalStructure[MAX_LOCAL_STRUCTURES];
 UINT32			guiLocalStructureCTH[MAX_LOCAL_STRUCTURES];
 UINT8				gubLocalStructureNumTimesHit[MAX_LOCAL_STRUCTURES];
 
-BOOLEAN CalculateLOSNormal( 	STRUCTURE *pStructure, INT8 bLOSX, INT8 bLOSY, INT8 bLOSZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, FLOAT *pdNormalX, FLOAT *pdNormalY, FLOAT *pdNormalZ );
-
 
 extern UINT8 gubMaterialArmour[];
 
@@ -220,7 +219,8 @@ extern UINT8 gubMaterialArmour[];
 LOSResults gLOSTestResults = {0};
 #endif
 
-FIXEDPT FloatToFixed( FLOAT dN )
+
+static FIXEDPT FloatToFixed(FLOAT dN)
 {
 	FIXEDPT		qN;
 	// verify that dN is within the range storable by FIXEDPT?
@@ -235,7 +235,8 @@ FIXEDPT FloatToFixed( FLOAT dN )
 	return( qN );
 }
 
-FLOAT FixedToFloat( FIXEDPT qN )
+
+static FLOAT FixedToFloat(FIXEDPT qN)
 {
 	return( ((FLOAT) qN)	/ FIXEDPT_FRACTIONAL_RESOLUTION );
 }
@@ -244,15 +245,18 @@ FLOAT FixedToFloat( FIXEDPT qN )
 // fixed-point arithmetic stuff ends here
 //
 
-FLOAT Distance3D( FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ )
+
+static FLOAT Distance3D(FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ)
 {
 	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ) ));
 }
 
-FLOAT Distance2D( FLOAT dDeltaX, FLOAT dDeltaY )
+
+static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 {
 	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY )));
 }
+
 
 //#define DEBUGLOS
 
@@ -284,7 +288,8 @@ enum
 }
 LocationCode;
 
-BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, DOUBLE ddHorizAngle )
+
+static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, DOUBLE ddHorizAngle)
 {
 	BOOLEAN				fNorthSouth, fEastWest;
 	BOOLEAN				fTopLeft, fTopRight;
@@ -616,9 +621,7 @@ BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX
 }
 
 
-
 /*
- *
  * The line of sight code is now used to simulate smelling through the air (for monsters);
  * It obeys the following rules:
  * - ignores trees and vegetation
@@ -633,9 +636,8 @@ BOOLEAN ResolveHitOnWall( STRUCTURE * pStructure, INT32 iGridNo, INT8 bLOSIndexX
  * - starts at height relative to stance
  * - ignores windows
  * - stops at other obstacles
- *
  */
-INT32 LineOfSightTest( FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16 * psWindowGridNo )
+static INT32 LineOfSightTest(FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16* psWindowGridNo)
 {
 	// Parameters...
 	// the X,Y,Z triplets should be obvious
@@ -1687,7 +1689,8 @@ INT16 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT16 sEndGridNo
 	return( sWindowGridNo );
 }
 
-BOOLEAN SoldierToSoldierLineOfSightTimingTest( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware )
+
+static BOOLEAN SoldierToSoldierLineOfSightTimingTest(SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	UINT32		uiLoopLimit = 100000;
 	UINT32		uiLoop;
@@ -1893,7 +1896,8 @@ INT32 BulletImpactReducedByRange( INT32 iImpact, INT32 iDistanceTravelled, INT32
 }
 */
 
-BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntended )
+
+static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIntended)
 {
 	INT32								iImpact, iDamage;
 	EV_S_WEAPONHIT			SWeaponHit;
@@ -2305,7 +2309,8 @@ BOOLEAN BulletHitMerc( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN fIntend
 	return( fStopped );
 }
 
-void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, SOLDIERTYPE * pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped )
+
+static void BulletHitStructure(BULLET* pBullet, UINT16 usStructureID, INT32 iImpact, SOLDIERTYPE* pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped)
 {
 	EV_S_STRUCTUREHIT		SStructureHit;
 
@@ -2322,17 +2327,20 @@ void BulletHitStructure( BULLET * pBullet, UINT16 usStructureID, INT32 iImpact, 
 	StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, fStopped );
 }
 
-void BulletHitWindow( BULLET *pBullet, INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth )
+
+static void BulletHitWindow(BULLET* pBullet, INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth)
 {
 	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, FALSE );
 }
 
-void BulletMissed( BULLET *pBullet, SOLDIERTYPE * pFirer )
+
+static void BulletMissed(BULLET* pBullet, SOLDIERTYPE* pFirer)
 {
 	ShotMiss( pFirer->ubID, pBullet->iBullet );
 }
 
-UINT32 ChanceOfBulletHittingStructure( INT32 iDistance, INT32 iDistanceToTarget, INT16 sHitBy )
+
+static UINT32 ChanceOfBulletHittingStructure(INT32 iDistance, INT32 iDistanceToTarget, INT16 sHitBy)
 {
 	INT32 iCloseToCoverPenalty;
 
@@ -2363,7 +2371,8 @@ UINT32 ChanceOfBulletHittingStructure( INT32 iDistance, INT32 iDistanceToTarget,
 	}
 }
 
-INT32 StructureResistanceIncreasedByRange( INT32 iImpactReduction, INT32 iGunRange, INT32 iDistance )
+
+static INT32 StructureResistanceIncreasedByRange(INT32 iImpactReduction, INT32 iGunRange, INT32 iDistance)
 {
 	return( iImpactReduction * ( 100 + PERCENT_BULLET_SLOWED_BY_RANGE * (iDistance - iGunRange) / iGunRange ) / 100 );
 	/*
@@ -2379,7 +2388,7 @@ INT32 StructureResistanceIncreasedByRange( INT32 iImpactReduction, INT32 iGunRan
 }
 
 
-INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure, BOOLEAN * pfHit )
+static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN* pfHit)
 {
 	DOOR		*pDoor;
 	INT16		sLockDamage;
@@ -2503,7 +2512,8 @@ INT32 HandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure
 	}
 }
 
-INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStructure )
+
+static INT32 CTGTHandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStructure)
 {
 	// returns reduction in impact for summing in CTGT
 
@@ -2562,7 +2572,7 @@ INT32 CTGTHandleBulletStructureInteraction( BULLET * pBullet, STRUCTURE * pStruc
 }
 
 
-UINT8 CalcChanceToGetThrough( BULLET * pBullet )
+static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 {
 	FIXEDPT	qLandHeight;
 	INT32		iCurrAboveLevelZ;
@@ -3017,7 +3027,11 @@ UINT8 CalcChanceToGetThrough( BULLET * pBullet )
 	return( (UINT8) iChanceToGetThrough );
 }
 
-UINT8 SoldierToSoldierChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier )
+
+static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ);;
+
+
+static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier)
 {
 	FLOAT			dEndZPos;
 	BOOLEAN		fOk;
@@ -3230,7 +3244,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 }
 
 
-void CalculateFiringIncrements( DOUBLE ddHorizAngle, DOUBLE ddVerticAngle, DOUBLE dd2DDistance, BULLET * pBullet, DOUBLE * pddNewHorizAngle, DOUBLE * pddNewVerticAngle )
+static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle, DOUBLE dd2DDistance, BULLET* pBullet, DOUBLE* pddNewHorizAngle, DOUBLE* pddNewVerticAngle)
 {
 	INT32 iMissedBy = - pBullet->sHitBy;
 	DOUBLE ddVerticPercentOfMiss;
@@ -3320,7 +3334,8 @@ void CalculateFiringIncrements( DOUBLE ddHorizAngle, DOUBLE ddVerticAngle, DOUBL
 	pBullet->qIncrZ = FloatToFixed( (FLOAT) ( sin( ddVerticAngle ) / sin( (PI/2) - ddVerticAngle ) * 2.56 ) );
 }
 
-INT8 FireBullet( SOLDIERTYPE * pFirer, BULLET * pBullet, BOOLEAN fFake )
+
+static INT8 FireBullet(SOLDIERTYPE* pFirer, BULLET* pBullet, BOOLEAN fFake)
 {
 	pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;
 	pBullet->iCurrTileY = FIXEDPT_TO_INT32( pBullet->qCurrY ) / CELL_Y_SIZE;
@@ -3638,7 +3653,8 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	return( TRUE );
 }
 
-INT8 ChanceToGetThrough( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ )
+
+static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ)
 {
 	if ( Item[pFirer->usAttackingWeapon].usItemClass == IC_GUN || Item[ pFirer->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE )
 	{
@@ -4864,7 +4880,7 @@ INT16 gsLOSDirLUT[3][3] =
 };
 
 
-BOOLEAN CalculateLOSNormal( 	STRUCTURE *pStructure, INT8 bLOSX, INT8 bLOSY, INT8 bLOSZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, FLOAT *pdNormalX, FLOAT *pdNormalY, FLOAT *pdNormalZ )
+static BOOLEAN CalculateLOSNormal(STRUCTURE* pStructure, INT8 bLOSX, INT8 bLOSY, INT8 bLOSZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, FLOAT* pdNormalX, FLOAT* pdNormalY, FLOAT* pdNormalZ)
 {
 	INT32		cntx, cnty;
 	INT8		bX, bY, tX, tY;

@@ -116,9 +116,6 @@ UINT32 GetMaxDailyRemovalFromMine( INT8 bMineIndex );
 // which town does this mine belong to?
 INT8 GetTownAssociatedWithMine( INT8 bMineIndex );
 
-// which mine belongs tot his town
-INT8 GetMineAssociatedWithThisTown( INT8 bTownValue );
-
 // posts the actual mine production events daily
 void PostEventsForMineProduction(void);
 
@@ -137,9 +134,6 @@ INT32 CalcMaxPlayerIncomeFromMines( void );
 // get index value of this mine in the mine list
 INT8 GetMineIndexForSector( INT16 sX, INT16 sY );
 
-// get the index of the mine associated with this town
-INT8 GetMineIndexForTown( INT8 bTownId );
-
 // get the sector value for the mine associated with this town
 INT16 GetMineSectorForTown( INT8 bTownId );
 
@@ -157,12 +151,8 @@ BOOLEAN PlayerControlsMine(INT8 bMineIndex);
 
 void ShutOffMineProduction( INT8 bMineIndex );
 void RestartMineProduction( INT8 bMineIndex );
-void MineShutdownIsPermanent( INT8 bMineIndex );
 
 BOOLEAN IsMineShutDown( INT8 bMineIndex );
-
-UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex );
-UINT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex );
 
 // Find the sector location of a mine
 void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY );
@@ -191,9 +181,6 @@ BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId );
 
 // given sector value, get mine id value
 INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
-
-// use this for miner (civilian) quotes when *underground* in a mine
-BOOLEAN PlayerForgotToTakeOverMine( UINT8 ubMineIndex );
 
 // use this to determine whether or not to place miners into a underground mine level
 BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex );

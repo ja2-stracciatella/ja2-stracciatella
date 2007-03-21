@@ -129,7 +129,8 @@ void DeleteTileCache( )
 	guiCurTileCacheSize = 0;
 }
 
-INT16 FindCacheStructDataIndex( INT8 *cFilename )
+
+static INT16 FindCacheStructDataIndex(INT8* cFilename)
 {
 	UINT32 cnt;
 
@@ -269,7 +270,7 @@ BOOLEAN RemoveCachedTile( INT32 iCachedTile )
 }
 
 
-HVOBJECT GetCachedTileVideoObject( INT32 iIndex )
+static HVOBJECT GetCachedTileVideoObject(INT32 iIndex)
 {
 	if ( iIndex == -1 )
 	{
@@ -285,7 +286,7 @@ HVOBJECT GetCachedTileVideoObject( INT32 iIndex )
 }
 
 
-STRUCTURE_FILE_REF *GetCachedTileStructureRef( INT32 iIndex )
+static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 iIndex)
 {
 	if ( iIndex == -1 )
 	{

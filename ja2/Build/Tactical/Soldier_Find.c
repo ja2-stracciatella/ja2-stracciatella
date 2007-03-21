@@ -51,9 +51,7 @@
 #include "UI_Cursors.h"
 
 
-BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect );
 BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
-void GetSoldierScreenRect( SOLDIERTYPE *pSoldier, SGPRect *pRect );
 
 // This value is used to keep a small static array of uBID's which are stacked
 #define				MAX_STACKED_MERCS		10
@@ -106,7 +104,8 @@ BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 	 return( FALSE );
 }
 
-BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
+
+static BOOLEAN SelectiveFindSoldierFromMouse(UINT16* pusSoldierIndex, UINT32* pMercFlags)
 {
 	INT16							sMapPos;
 
@@ -124,7 +123,7 @@ BOOLEAN SelectiveFindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFla
 }
 
 
-UINT32 GetSoldierFindFlags( UINT16 ubID )
+static UINT32 GetSoldierFindFlags(UINT16 ubID)
 {
 	UINT32 MercFlags = 0;
 	SOLDIERTYPE *pSoldier;
@@ -194,6 +193,9 @@ UINT32 GetSoldierFindFlags( UINT16 ubID )
 }
 
 extern BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
+
+
+static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect);
 
 
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
@@ -570,7 +572,7 @@ BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
 }
 
 
-BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect )
+static BOOLEAN IsGridNoInScreenRect(INT16 sGridNo, SGPRect* pRect)
 {
 	INT32 iXTrav, iYTrav;
 	INT16	sMapPos;
@@ -603,7 +605,7 @@ BOOLEAN IsGridNoInScreenRect( INT16 sGridNo, SGPRect *pRect )
 }
 
 
-void GetSoldierScreenRect( SOLDIERTYPE *pSoldier, SGPRect *pRect )
+static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect)
 {
 		INT16 sMercScreenX, sMercScreenY;
 		UINT16	usAnimSurface;

@@ -82,11 +82,6 @@ extern void RemoveMercsInSector();
 extern void ReverseSchedules();
 extern void ClearAllSchedules();
 
-void DrawObjectsBasedOnSelectionRegion();
-UINT32 ProcessEditscreenMessageBoxResponse();
-
-void ReloadMap();
-
 //defined in sector summary.c
 extern BOOLEAN HandleSummaryInput( InputAtom *pEvent );
 
@@ -157,14 +152,8 @@ INT32 giMusicID = 0;
 
 void EraseWorldData(  );
 
-BOOLEAN EditModeInit( void );
-BOOLEAN EditModeShutdown( void );
-void EnsureStatusOfEditorButtons();
-
 
 extern BOOLEAN fAllDone;
-
-void UpdateLastActionBeforeLeaving();
 
 BOOLEAN				gfEditorDirty = TRUE;
 
@@ -203,8 +192,6 @@ UINT16 gusEditorTaskbarColor;
 UINT16 gusEditorTaskbarHiColor;
 UINT16 gusEditorTaskbarLoColor;
 
-void CreateGotoGridNoUI();
-void RemoveGotoGridNoUI();
 BOOLEAN gfGotoGridNoUI = FALSE;
 INT32 guiGotoGridNoUIButtonID;
 MOUSE_REGION GotoGridNoUIRegion;
@@ -256,12 +243,8 @@ UINT32 EditScreenShutdown(void)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	EditModeInit
-//
 //	Editor's Init code. Called each time we enter edit mode from the game.
-//
-BOOLEAN EditModeInit( void )
+static BOOLEAN EditModeInit(void)
 {
 	UINT32 x;
 	INT32 i;
@@ -426,11 +409,14 @@ BOOLEAN EditModeInit( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	EditModeShutdown
-//
+static void HideEntryPoints(void);
+static void MapOptimize(void);
+static void RemoveLightPositionHandles(void);
+static void UpdateLastActionBeforeLeaving(void);
+
+
 //	The above function's counterpart. Called when exiting the editor back to the game.
-BOOLEAN EditModeShutdown( void )
+static BOOLEAN EditModeShutdown(void)
 {
 	if( gfConfirmExitFirst )
 	{
@@ -544,12 +530,9 @@ BOOLEAN EditModeShutdown( void )
 	return TRUE;
 }
 
-//----------------------------------------------------------------------------------------------
-//	SetBackgroundTexture
-//
+
 //	Forces all land on the map to have the same ground texture.
-//
-void SetBackgroundTexture( )
+static void SetBackgroundTexture(void)
 {
 	int						cnt;
 	UINT16				usIndex, Dummy;
@@ -574,12 +557,8 @@ void SetBackgroundTexture( )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	DoWindowSelection
-//
 //	Displays the selection window and handles it's exit condition. Used by WaitForSelectionWindow
-//
-BOOLEAN DoWindowSelection( void )
+static BOOLEAN DoWindowSelection(void)
 {
 	RenderSelectionWindow( );
 	RenderButtonsFastHelp( );
@@ -618,19 +597,19 @@ BOOLEAN DoWindowSelection( void )
 
 //Whenever the mouse attaches an object to the cursor, it has to be removed, so it doesn't stay
 //in the world.
-void RemoveTempMouseCursorObject( void )
+static void RemoveTempMouseCursorObject(void)
 {
 	if ( iCurBankMapIndex < 0x8000 )
 	{
 		ForceRemoveStructFromTail( iCurBankMapIndex );
 		gCursorNode = NULL;
 	}
-
 }
+
 
 //Whenever the editor wishes to show an object in the world, it will temporarily attach it to
 //the mouse cursor, to indicate what is about to be drawn.
-BOOLEAN DrawTempMouseCursorObject(void)
+static BOOLEAN DrawTempMouseCursorObject(void)
 {
 	INT16		sMouseX_M, sMouseY_M;
 	UINT16	usUseIndex;
@@ -1021,13 +1000,8 @@ void ShowCurrentDrawingMode( void )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	HandleJA2ToolbarSelection
-//
 //	Select action to be taken based on user's toolbar selection.
-//
-void HandleJA2ToolbarSelection( void )
+static void HandleJA2ToolbarSelection(void)
 {
 	BOOLEAN fPrevState;
 
@@ -1290,15 +1264,19 @@ void HandleJA2ToolbarSelection( void )
 	iEditorToolbarState = TBAR_MODE_NONE;
 }
 
-//----------------------------------------------------------------------------------------------
-//	HandleKeyboardShortcuts
-//
-//	Select action to be taken based on the user's current key press (if any)
-//
 
 extern INT8 gbCurrSelect;
 extern void DeleteSelectedMercsItem();
-void HandleKeyboardShortcuts( )
+
+
+static BOOLEAN CheckForSlantRoofs(void);
+static void CreateGotoGridNoUI(void);
+static void ReloadMap(void);
+static void RemoveGotoGridNoUI(void);
+
+
+// Select action to be taken based on the user's current key press (if any)
+static void HandleKeyboardShortcuts(void)
 {
 	static INT32 iSavedMode;
   static BOOLEAN fShowTrees = TRUE;
@@ -1859,13 +1837,8 @@ void HandleKeyboardShortcuts( )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	PerformSelectedAction
-//
 //	Perform the current user selected action, if any (or at least set things up for doing that)
-//
-UINT32 PerformSelectedAction( void )
+static UINT32 PerformSelectedAction(void)
 {
 	UINT32 uiRetVal;
 
@@ -2310,7 +2283,7 @@ void CreateNewMap()
 }
 
 
-UINT32 ProcessEditscreenMessageBoxResponse()
+static UINT32 ProcessEditscreenMessageBoxResponse(void)
 {
 	RemoveMessageBox();
 	gfRenderWorld = TRUE;
@@ -2366,12 +2339,8 @@ UINT32 ProcessEditscreenMessageBoxResponse()
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	WaitForHelpScreenResponse
-//
 //	Displays a help screen and waits for the user to wisk it away.
-//
-UINT32 WaitForHelpScreenResponse( void )
+static UINT32 WaitForHelpScreenResponse(void)
 {
   InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
@@ -2486,13 +2455,8 @@ UINT32 WaitForHelpScreenResponse( void )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	WaitForSelectionWindowResponse
-//
 //	Handles all keyboard input and display for a selection window.
-//
-UINT32 WaitForSelectionWindowResponse( void )
+static UINT32 WaitForSelectionWindowResponse(void)
 {
   InputAtom DummyEvent;
 
@@ -2554,34 +2518,9 @@ UINT32 WaitForSelectionWindowResponse( void )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	FindTilesetComments
-//
-//	Retrieves the file comments from the master list for the current tileset
-//
-void FindTilesetComments(void)
-{
-}
-
-
-//----------------------------------------------------------------------------------------------
-//	GetMasterList
-//
-//	Loads the master list for the tileset comments
-//
-void GetMasterList(void)
-{
-}
-
-
-//----------------------------------------------------------------------------------------------
-//	ShowCurrentSlotSurface
-//
 //	Displays the image of the currently highlighted tileset slot if it's a video surface.
 //	(usually a 16 bit image)
-//
-void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
+static void ShowCurrentSlotSurface(UINT32 vSurface, INT32 iWindow)
 {
 	SGPRect			ClipRect, WinRect;
 	INT32				iStartX;
@@ -2636,13 +2575,9 @@ void ShowCurrentSlotSurface( UINT32 vSurface, INT32 iWindow )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ShowCurrentSlotImage
-//
 //	Displays the image of the currently highlighted tileset slot image. Usually this is for
 //	8 bit image (.STI) files
-//
-void ShowCurrentSlotImage( HVOBJECT hVObj, INT32 iWindow )
+static void ShowCurrentSlotImage(HVOBJECT hVObj, INT32 iWindow)
 {
 	SGPRect			ClipRect, NewRect;
 	INT32				iStartX;
@@ -2881,12 +2816,8 @@ void ShowLightPositionHandles( void )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	RemoveLightPositionHandles
-//
 //	Scans through all light currently in the world and removes any light markers that may be present.
-//
-void RemoveLightPositionHandles( void )
+static void RemoveLightPositionHandles(void)
 {
 	INT32 iCount;
 	INT32 iMapIndex;
@@ -2936,7 +2867,7 @@ void RemoveLightPositionHandles( void )
 //	This function is used to determine if we should force the area selection of rooms to handle
 //	slant roofs (which require at least one side to be exactly 8 tiles wide)
 //
-BOOLEAN CheckForSlantRoofs( void )
+static BOOLEAN CheckForSlantRoofs(void)
 {
 	UINT16 usCheck;
 
@@ -2952,10 +2883,6 @@ BOOLEAN CheckForSlantRoofs( void )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	MapOptimize
-//
 //	Runs through all map locations, and if it's outside the visible world, then we remove
 //	EVERYTHING from it since it will never be seen!
 //
@@ -2964,8 +2891,7 @@ BOOLEAN CheckForSlantRoofs( void )
 //
 //	Doing the above has shown to free up about 1.1 Megs on the default map. Deletion of non-viewable
 //	land pieces alone gained us about 600 K of memory.
-//
-void MapOptimize(void)
+static void MapOptimize(void)
 {
 #if 0
 	INT16 gridno;
@@ -3053,7 +2979,7 @@ void MapOptimize(void)
 //	if ANY piece other than a fence piece exists in the selection list, then we want to keep
 //	random selections.
 //
-BOOLEAN CheckForFences( void )
+static BOOLEAN CheckForFences(void)
 {
 	UINT16 usCheck;
 	BOOLEAN fFence;
@@ -3076,7 +3002,8 @@ BOOLEAN CheckForFences( void )
 	return( fFence );
 }
 
-void EnsureStatusOfEditorButtons()
+
+static void EnsureStatusOfEditorButtons(void)
 {
 	if ( iDrawMode >= DRAW_MODE_ERASE )
 	{
@@ -3110,7 +3037,11 @@ void EnsureStatusOfEditorButtons()
 		UnclickEditorButton( MAPINFO_TOGGLE_FAKE_LIGHTS );
 }
 
-void HandleMouseClicksInGameScreen()
+
+static void DrawObjectsBasedOnSelectionRegion(void);
+
+
+static void HandleMouseClicksInGameScreen(void)
 {
 	EXITGRID dummy={0,0,0,0};
 	INT16 sX, sY;
@@ -3349,7 +3280,8 @@ void HandleMouseClicksInGameScreen()
 	}
 }
 
-BOOLEAN DoIRenderASpecialMouseCursor()
+
+static BOOLEAN DoIRenderASpecialMouseCursor(void)
 {
 	if ( iCurrentTaskbar != TASK_OPTIONS )
 	{
@@ -3404,7 +3336,8 @@ void ShowEntryPoints()
 	  AddTopmostToTail( gMapInformation.sWestGridNo, FIRSTPOINTERS2 );
 }
 
-void HideEntryPoints()
+
+static void HideEntryPoints(void)
 {
 	//remove entry point indicators
 	if( gMapInformation.sNorthGridNo != -1 )
@@ -3516,10 +3449,11 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 	}
 }
 
+
 //For any drawing modes that support large cursors, or even area selection, this function calls the
 //appropriate paste function for every gridno within the cursor.  This is not used for functions that
 //rely completely on selection areas, such as buildings.
-void DrawObjectsBasedOnSelectionRegion()
+static void DrawObjectsBasedOnSelectionRegion(void)
 {
 	INT32 x, y, iMapIndex;
 	BOOLEAN fSkipTest;
@@ -3719,7 +3653,8 @@ UINT32  EditScreenHandle( void )
 	return( uiRetVal );
 }
 
-void CreateGotoGridNoUI()
+
+static void CreateGotoGridNoUI(void)
 {
 	gfGotoGridNoUI = TRUE;
 	//Disable the rest of the editor
@@ -3738,7 +3673,8 @@ void CreateGotoGridNoUI()
 	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, L"", 6, INPUTTYPE_NUMERICSTRICT );
 }
 
-void RemoveGotoGridNoUI()
+
+static void RemoveGotoGridNoUI(void)
 {
 	INT32 iMapIndex;
 	gfGotoGridNoUI = FALSE;
@@ -3758,14 +3694,16 @@ void RemoveGotoGridNoUI()
 	}
 }
 
-void UpdateLastActionBeforeLeaving()
+
+static void UpdateLastActionBeforeLeaving(void)
 {
 	if( iCurrentTaskbar == TASK_MERCS )
 		IndicateSelectedMerc( SELECT_NO_MERC );
 	SpecifyItemToEdit( NULL, -1 );
 }
 
-void ReloadMap()
+
+static void ReloadMap(void)
 {
 	wchar_t szFilename[30];
 	swprintf(szFilename, lengthof(szFilename), L"%s", gubFilename);

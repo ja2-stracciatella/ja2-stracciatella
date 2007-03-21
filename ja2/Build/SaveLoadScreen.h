@@ -27,9 +27,6 @@ BOOLEAN		DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiE
 
 BOOLEAN		InitSaveGameArray();
 
-void			DoneFadeOutForSaveLoadScreen( void );
-void			DoneFadeInForSaveLoadScreen( void );
-
 
 BOOLEAN DoQuickSave();
 BOOLEAN DoQuickLoad();

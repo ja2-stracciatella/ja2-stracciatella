@@ -29,14 +29,11 @@
 
 extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );
 
-BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures );
-
 BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
 
-void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+static void RemoveEnemySoldierTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS ) )
@@ -55,7 +52,8 @@ void RemoveEnemySoldierTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 	}
 }
 
-void RemoveCivilianTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+
+static void RemoveCivilianTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	//CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
@@ -415,8 +413,9 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		return FALSE;
 }
 
+
 //OLD SAVE METHOD:  This is the older way of saving the civilian and the enemies placement into a temp file
-BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8	ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile )
+static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile)
 {
 	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
@@ -693,6 +692,9 @@ BOOLEAN SaveEnemySoldiersToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSecto
 		FileClose( hfile );
 		return FALSE;
 }
+
+
+static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* pubNumElites, UINT8* pubNumRegulars, UINT8* pubNumAdmins, UINT8* pubNumCreatures);
 
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
@@ -1713,10 +1715,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 }
 
 
-
-
-
-BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( UINT8 *pubNumElites, UINT8 *pubNumRegulars, UINT8 *pubNumAdmins, UINT8 *pubNumCreatures )
+static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* pubNumElites, UINT8* pubNumRegulars, UINT8* pubNumAdmins, UINT8* pubNumCreatures)
 {
 //	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;

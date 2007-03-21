@@ -10,7 +10,7 @@
 #include "MemMan.h"
 
 
-void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList )
+static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
 	// This procedure will load in the appropriate .gap file, corresponding
 	// to the .wav file in szSoundEffects indexed by uiSampleNum

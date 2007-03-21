@@ -159,48 +159,32 @@ BOOLEAN		gfInitAdArea;
 
 // MemberCard
 MOUSE_REGION    gSelectedMemberCardRegion;
-void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 // Policies
 MOUSE_REGION    gSelectedPoliciesRegion;
-void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //History
 MOUSE_REGION    gSelectedHistoryRegion;
-void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Links
 MOUSE_REGION    gSelectedLinksRegion;
-void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Bottom Buttons
-static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBottomButtons[ NUM_AIM_SCREENS ];
 INT32		guiBottomButtonImage;
 
 //Banner Area
 MOUSE_REGION    gSelectedBannerRegion;
-void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Aim logo click
 MOUSE_REGION    gSelectedAimLogo;
-void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
-
-
-BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw );
-BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw );
-void		HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw );
-void		LaptopInitAim();
-BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier );
-void		HandleTextOnAimAdd( UINT8 ubCurSubImage );
-BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw );
-UINT8		GetNextAimAd( UINT8 ubCurrentAd );
-
 
 
 BOOLEAN		fFirstTimeIn=TRUE;
+
+
+static void LaptopInitAim(void);
 
 
 void GameInitAIM()
@@ -208,6 +192,12 @@ void GameInitAIM()
 	LaptopInitAim();
 }
 
+
+static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterAIM()
@@ -293,10 +283,12 @@ BOOLEAN EnterAIM()
 	return( TRUE );
 }
 
-void LaptopInitAim()
+
+static void LaptopInitAim(void)
 {
 	gfInitAdArea = TRUE;
 }
+
 
 void ExitAIM()
 {
@@ -321,6 +313,10 @@ void ExitAIM()
   MSYS_RemoveRegion( &gSelectedHistoryRegion);
   MSYS_RemoveRegion( &gSelectedBannerRegion);
 }
+
+
+static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw);
+
 
 void HandleAIM()
 {
@@ -362,8 +358,7 @@ void RenderAIM()
 }
 
 
-
-void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -380,7 +375,7 @@ void SelectMemberCardRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -396,7 +391,7 @@ void SelectPoliciesRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -412,8 +407,7 @@ void SelectHistoryRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -427,6 +421,8 @@ void SelectLinksRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
+
+static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN InitAimDefaults()
@@ -481,7 +477,7 @@ BOOLEAN DrawAimDefaults()
 }
 
 
-void SelectAimLogoRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -534,6 +530,10 @@ BOOLEAN DisplayAimCopyright()
 	return(TRUE);
 }
 
+
+static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
+
+
 // Buttons
 BOOLEAN InitAimMenuBar(void)
 {
@@ -575,6 +575,9 @@ BOOLEAN ExitAimMenuBar(void)
 }
 
 
+static void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons);
+
+
 static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -586,7 +589,7 @@ static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
+static void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
 {
   UINT32 cnt;
 
@@ -607,7 +610,15 @@ void DisableAimButton()
 	}
 }
 
-void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
+
+static BOOLEAN DisplayAd(BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier);
+static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw);
+static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw);
+static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw);
+static UINT8 GetNextAimAd(UINT8 ubCurrentAd);
+
+
+static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 {
 	static UINT8 ubPreviousAdvertisment;
 
@@ -712,8 +723,7 @@ void HandleAdAndWarningArea( BOOLEAN fInit, BOOLEAN fRedraw )
 }
 
 
-
-BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
+static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 {
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
@@ -778,7 +788,7 @@ BOOLEAN DisplayFlowerAd( BOOLEAN fInit, BOOLEAN fRedraw )
 }
 
 
-BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
+static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 {
 	static UINT32 uiLastTime;
 	UINT32 uiCurTime = GetJA2Clock();
@@ -814,7 +824,8 @@ BOOLEAN	DrawWarningBox( BOOLEAN fInit, BOOLEAN fRedraw )
 	}
 }
 
-void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -838,9 +849,10 @@ void SelectBannerRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
+static void HandleTextOnAimAdd(UINT8 ubCurSubImage);
 
 
-BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier )
+static BOOLEAN DisplayAd(BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumberOfSubImages, UINT32 uiAdImageIdentifier)
 {
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
@@ -924,7 +936,8 @@ BOOLEAN DisplayAd( BOOLEAN fInit, BOOLEAN fRedraw, UINT16 usDelay, UINT16 usNumb
 	return( ubRetVal );
 }
 
-void HandleTextOnAimAdd( UINT8 ubCurSubImage )
+
+static void HandleTextOnAimAdd(UINT8 ubCurSubImage)
 {
 	switch( gubCurrentAdvertisment )
 	{
@@ -976,8 +989,7 @@ void HandleTextOnAimAdd( UINT8 ubCurSubImage )
 }
 
 
-
-BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
+static BOOLEAN DisplayBobbyRAd(BOOLEAN fInit, BOOLEAN fRedraw)
 {
 	static UINT32 uiLastTime;
 	static UINT8	ubSubImage=0;
@@ -1127,7 +1139,7 @@ BOOLEAN DisplayBobbyRAd( BOOLEAN fInit, BOOLEAN fRedraw )
 }
 
 
-UINT8 GetNextAimAd( UINT8 ubCurrentAd )
+static UINT8 GetNextAimAd(UINT8 ubCurrentAd)
 {
 	UINT8 ubNextAd;
 	UINT32	uiDay = GetWorldDay();

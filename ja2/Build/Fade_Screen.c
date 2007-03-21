@@ -36,21 +36,6 @@ FADE_HOOK		gFadeInDoneCallback	 = NULL;
 FADE_HOOK		gFadeOutDoneCallback = NULL;
 
 
-void FadeFrameBufferSquare(  );
-void FadeFrameBufferVersionOne(  );
-void FadeFrameBufferVersionFaster(INT8 bFadeValue);
-void FadeFrameBufferSide( );
-void FadeFrameBufferRealFade( );
-
-void FadeInBackBufferVersionOne( );
-void FadeInBackBufferSquare( );
-void FadeInFrameBufferRealFade( );
-
-
-extern BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
-BOOLEAN UpdateSaveBufferWithBackbuffer( void );
-
-
 BOOLEAN			gfFadeIn						 = FALSE;
 BOOLEAN			gfFadeOut            = FALSE;
 BOOLEAN			gfFadeOutDone				 = FALSE;
@@ -68,6 +53,9 @@ void FadeOutNextFrame( )
 	gfFadeOut			= TRUE;
 	gfFadeOutDone	= FALSE;
 }
+
+
+static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay);
 
 
 BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit )
@@ -143,7 +131,18 @@ BOOLEAN HandleFadeInCallback( )
 }
 
 
-void BeginFade( UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay )
+static void FadeFrameBufferRealFade(void);
+static void FadeFrameBufferSide(void);
+static void FadeFrameBufferSquare(void);
+static void FadeFrameBufferVersionFaster(INT8 bFadeValue);
+static void FadeFrameBufferVersionOne(void);
+static void FadeInBackBufferSquare(void);
+static void FadeInBackBufferVersionOne(void);
+static void FadeInFrameBufferRealFade(void);
+static BOOLEAN UpdateSaveBufferWithBackbuffer(void);
+
+
+static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay)
 {
 	//Init some paramters
 	guiExitScreen	= uiExitScreen;
@@ -329,7 +328,7 @@ UINT32	FadeScreenShutdown(  )
 }
 
 
-void FadeFrameBufferVersionOne( )
+static void FadeFrameBufferVersionOne(void)
 {
 	INT32		cX, cY;
 	UINT32	uiDestPitchBYTES;
@@ -377,7 +376,8 @@ void FadeFrameBufferVersionOne( )
 
 }
 
-void FadeInBackBufferVersionOne( )
+
+static void FadeInBackBufferVersionOne(void)
 {
 	INT32		cX, cY;
 	UINT32	uiDestPitchBYTES, uiSrcPitchBYTES;
@@ -428,7 +428,7 @@ void FadeInBackBufferVersionOne( )
 }
 
 
-void FadeFrameBufferVersionFaster( INT8 bFadeValue )
+static void FadeFrameBufferVersionFaster(INT8 bFadeValue)
 {
 	INT32		cX, cY, iStartX, iStartY;
 	UINT32	uiDestPitchBYTES;
@@ -489,7 +489,7 @@ void FadeFrameBufferVersionFaster( INT8 bFadeValue )
 }
 
 
-void FadeFrameBufferSide(  )
+static void FadeFrameBufferSide(void)
 {
 	INT32 iX1, iX2;
 	INT16	sFadeMove;
@@ -508,7 +508,8 @@ void FadeFrameBufferSide(  )
 
 }
 
-void FadeFrameBufferSquare(  )
+
+static void FadeFrameBufferSquare(void)
 {
 	INT32 iX1, iX2, iY1, iY2;
 	INT16	sFadeXMove, sFadeYMove;
@@ -541,7 +542,7 @@ void FadeFrameBufferSquare(  )
 }
 
 
-void FadeInBackBufferSquare(  )
+static void FadeInBackBufferSquare(void)
 {
 	INT32 iX1, iX2, iY1, iY2;
 	INT16	sFadeXMove, sFadeYMove;
@@ -623,7 +624,7 @@ void FadeInBackBufferSquare(  )
 }
 
 
-void FadeFrameBufferRealFade( )
+static void FadeFrameBufferRealFade(void)
 {
 	if ( gsFadeRealCount != gsFadeCount )
 	{
@@ -635,7 +636,7 @@ void FadeFrameBufferRealFade( )
 }
 
 
-void FadeInFrameBufferRealFade( )
+static void FadeInFrameBufferRealFade(void)
 {
 	INT32 cnt;
 
@@ -658,7 +659,7 @@ void FadeInFrameBufferRealFade( )
 }
 
 
-BOOLEAN UpdateSaveBufferWithBackbuffer(void)
+static BOOLEAN UpdateSaveBufferWithBackbuffer(void)
 {
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;

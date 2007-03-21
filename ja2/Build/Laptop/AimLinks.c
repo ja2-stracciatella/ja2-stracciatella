@@ -57,13 +57,15 @@ UINT8			gubLinkPages[]={
 
 //Clicking on guys Face
 MOUSE_REGION    gSelectedLinkRegion[ AIM_LINK_NUM_LINKS ] ;
-void SelectLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 void GameInitAimLinks()
 {
-
 }
+
+
+static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN EnterAimLinks()
 {
@@ -144,7 +146,8 @@ void RenderAimLinks()
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
-void SelectLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{

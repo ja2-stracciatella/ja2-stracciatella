@@ -43,8 +43,7 @@ EV_S_SENDPATHTONETWORK SUpdateNetworkSoldier;
 
 extern	BOOLEAN				gfAmINetworked;
 
-BOOLEAN AddGameEventToQueue( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID );
-BOOLEAN ExecuteGameEvent( EVENT *pEvent );
+static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID);
 
 
 BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData )
@@ -86,12 +85,14 @@ BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData )
 		return(FALSE);
 }
 
-BOOLEAN AddGameEventFromNetwork( UINT32 uiEvent, UINT16 usDelay, PTR pEventData )
+
+static BOOLEAN AddGameEventFromNetwork(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
 {
 		return( AddGameEventToQueue( uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE ) );
 }
 
-BOOLEAN AddGameEventToQueue( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID )
+
+static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID)
 {
 	 UINT32		uiDataSize;
 
@@ -211,6 +212,10 @@ BOOLEAN AddGameEventToQueue( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UIN
 	 // successful
 	 return( TRUE );
 }
+
+
+static BOOLEAN ExecuteGameEvent(EVENT* pEvent);
+
 
 BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 {
@@ -341,8 +346,7 @@ BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute )
 }
 
 
-
-BOOLEAN ExecuteGameEvent( EVENT *pEvent )
+static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 {
 	SOLDIERTYPE		*pSoldier;
 

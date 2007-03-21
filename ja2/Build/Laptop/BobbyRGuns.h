@@ -49,7 +49,6 @@ BOOLEAN DeleteBobbyMenuBar();
 BOOLEAN DisplayItemInfo(UINT32 uiItemClass);
 void DeleteMouseRegionForBigImage();
 void UpdateButtonText(UINT32	uiCurPage);
-void EnterInitBobbyRGuns();
 void DailyUpdateOfBobbyRaysUsedInventory();
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 //void CalculateFirstAndLastIndexs();

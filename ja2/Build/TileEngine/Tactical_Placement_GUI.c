@@ -84,29 +84,14 @@ SOLDIERTYPE *gpTacticalPlacementHilightedSoldier = NULL;
 
 BOOLEAN gfNorth, gfEast, gfSouth, gfWest;
 
-void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason );
-void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason );
-void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason );
-void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason );
-void MercMoveCallback( MOUSE_REGION *reg, INT32 reason );
-void MercClickCallback( MOUSE_REGION *reg, INT32 reason );
-void PlaceMercs();
-void FastHelpRemovedCallback();
-void FastHelpRemoved2Callback();
-void DialogRemoved( UINT8 ubResult );
-
-
-void PutDownMercPiece( INT32 iPlacement );
-void PickUpMercPiece( INT32 iPlacement );
-void SetCursorMerc( INT8 bPlacementID );
-void SelectNextUnplacedUnit();
 
 #ifdef JA2BETAVERSION
 
 BOOLEAN gfNorthValid, gfEastValid, gfSouthValid, gfWestValid;
 BOOLEAN gfChangedEntrySide = FALSE;
 
-void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
+
+static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 {
 	if( gMapInformation.sNorthGridNo == -1 &&
 			gMapInformation.sEastGridNo == -1 &&
@@ -175,7 +160,8 @@ void FindValidInsertionCode( UINT8 *pubStrategicInsertionCode )
 	}
 }
 
-void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
+
+static void CheckForValidMapEdge(UINT8* pubStrategicInsertionCode)
 {
 	switch( *pubStrategicInsertionCode )
 	{
@@ -199,6 +185,18 @@ void CheckForValidMapEdge( UINT8 *pubStrategicInsertionCode )
 }
 
 #endif
+
+
+static void ClearPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoneOverheadPlacementClickCallback(GUI_BUTTON* btn, INT32 reason);
+static void FastHelpRemoved2Callback(void);
+static void FastHelpRemovedCallback(void);
+static void GroupPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
+static void MercClickCallback(MOUSE_REGION* reg, INT32 reason);
+static void MercMoveCallback(MOUSE_REGION* reg, INT32 reason);
+static void PlaceMercs(void);
+static void SetCursorMerc(INT8 bPlacementID);
+static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 void InitTacticalPlacementGUI()
@@ -375,7 +373,8 @@ void InitTacticalPlacementGUI()
 	}
 }
 
-void RenderTacticalPlacementGUI()
+
+static void RenderTacticalPlacementGUI(void)
 {
 	INT32 i, xp, yp, width, height;
 	INT32 iStartY;
@@ -538,7 +537,8 @@ void RenderTacticalPlacementGUI()
 
 }
 
-void EnsureDoneButtonStatus()
+
+static void EnsureDoneButtonStatus(void)
 {
 	INT32 i;
 	//static BOOLEAN fInside = FALSE;
@@ -561,6 +561,10 @@ void EnsureDoneButtonStatus()
 		SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONEHELP ] );
 	}
 }
+
+
+static void KillTacticalPlacementGUI(void);
+
 
 void TacticalPlacementHandle()
 {
@@ -671,7 +675,11 @@ void TacticalPlacementHandle()
 	}
 }
 
-void KillTacticalPlacementGUI()
+
+static void PickUpMercPiece(INT32 iPlacement);
+
+
+static void KillTacticalPlacementGUI(void)
 {
 	INT32 i;
 
@@ -731,7 +739,11 @@ void KillTacticalPlacementGUI()
 	#endif
 }
 
-void ChooseRandomEdgepoints()
+
+static void PutDownMercPiece(INT32 iPlacement);
+
+
+static void ChooseRandomEdgepoints(void)
 {
 	INT32 i;
 	for( i = 0; i < giPlacements; i++ )
@@ -762,7 +774,8 @@ void ChooseRandomEdgepoints()
 	gfEveryonePlaced = TRUE;
 }
 
-void PlaceMercs()
+
+static void PlaceMercs(void)
 {
 	INT32 i;
 	switch( gubDefaultButton )
@@ -786,7 +799,8 @@ void PlaceMercs()
 	gfTacticalPlacementGUIDirty = TRUE;
 }
 
-void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void DoneOverheadPlacementClickCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -794,7 +808,8 @@ void DoneOverheadPlacementClickCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
+
+static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -808,7 +823,8 @@ void SpreadPlacementsCallback ( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void GroupPlacementsCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -830,7 +846,8 @@ void GroupPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void ClearPlacementsCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -841,7 +858,8 @@ void ClearPlacementsCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
+
+static void MercMoveCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	if( reg->uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -864,7 +882,8 @@ void MercMoveCallback( MOUSE_REGION *reg, INT32 reason )
 	}
 }
 
-void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
+
+static void MercClickCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -888,7 +907,8 @@ void MercClickCallback( MOUSE_REGION *reg, INT32 reason )
 	}
 }
 
-void SelectNextUnplacedUnit()
+
+static void SelectNextUnplacedUnit(void)
 {
 	INT32 i;
 	if( gbSelectedMercID == -1 )
@@ -931,6 +951,9 @@ void SelectNextUnplacedUnit()
 		gpTacticalPlacementSelectedSoldier = gMercPlacement[ i ].pSoldier;
 	}
 }
+
+
+static void DialogRemoved(UINT8 ubResult);
 
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
@@ -1022,7 +1045,8 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 	}
 }
 
-void SetCursorMerc( INT8 bPlacementID )
+
+static void SetCursorMerc(INT8 bPlacementID)
 {
 	if( gbCursorMercID != bPlacementID )
 	{
@@ -1034,7 +1058,7 @@ void SetCursorMerc( INT8 bPlacementID )
 }
 
 
-void PutDownMercPiece( INT32 iPlacement )
+static void PutDownMercPiece(INT32 iPlacement)
 {
 	INT16 sGridNo, sCellX, sCellY;
 	UINT8 ubDirection;
@@ -1076,25 +1100,29 @@ void PutDownMercPiece( INT32 iPlacement )
 	}
 }
 
-void PickUpMercPiece( INT32 iPlacement )
+
+static void PickUpMercPiece(INT32 iPlacement)
 {
 	RemoveSoldierFromGridNo( gMercPlacement[ iPlacement ].pSoldier );
 	gMercPlacement[ iPlacement ].fPlaced = FALSE;
 	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
 }
 
-void FastHelpRemovedCallback()
+
+static void FastHelpRemovedCallback(void)
 {
 	gfTacticalPlacementGUIDirty = TRUE;
 }
 
-void FastHelpRemoved2Callback()
+
+static void FastHelpRemoved2Callback(void)
 {
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = 2; //because fast help text covers it.
 }
 
-void DialogRemoved( UINT8 ubResult )
+
+static void DialogRemoved(UINT8 ubResult)
 {
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = TRUE;

@@ -146,7 +146,7 @@ STEADY_STATE_AMBIENCE   gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
 };
 
 
-BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
+static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 {
 	SGPFILENAME						zFilename;
 	HWFILE								hFile;
@@ -181,7 +181,8 @@ BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID )
 	return( TRUE );
 }
 
-void GetAmbientDataPtr( AMBIENTDATA_STRUCT **ppAmbData, UINT16 *pusNumData )
+
+static void GetAmbientDataPtr(AMBIENTDATA_STRUCT** ppAmbData, UINT16* pusNumData)
 {
 	*ppAmbData		= gAmbData;
 	*pusNumData		= gsNumAmbData;
@@ -236,7 +237,7 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 }
 
 
-UINT32 StartSteadyStateAmbient( UINT32 ubVolume, UINT32 ubLoops)
+static UINT32 StartSteadyStateAmbient(UINT32 ubVolume, UINT32 ubLoops)
 {
 SOUNDPARMS spParms;
 

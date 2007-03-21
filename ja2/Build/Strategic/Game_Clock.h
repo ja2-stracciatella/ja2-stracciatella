@@ -33,7 +33,6 @@
 //Pauses and unpauses the game.  It sets and clears a flag which preserves the time rate.
 extern void PauseGame();
 extern void UnPauseGame();
-extern void TogglePause();
 extern BOOLEAN GamePaused();
 extern void LockPauseState( UINT32 uiUniqueReasonId );
 extern void UnLockPauseState();
@@ -43,7 +42,6 @@ extern BOOLEAN PauseStateLocked();
 //Allows external code to change the time rate.
 void SetGameHoursPerSecond( UINT32 uiGameHoursPerSecond );
 void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond );
-void SetGameSecondsPerSecond( UINT32 uiGameSecondsPerSecond );
 //Allows access to the current time rate.
 UINT32 GetGameSecondsPerFrame();
 void RenderPausedGameBox( void );
@@ -63,17 +61,6 @@ BOOLEAN IsTimeCompressionOn( void );		// returns TRUE if the player currently wa
 void SetGameTimeCompressionLevel( UINT32 uiCompressionRate );
 void DecreaseGameTimeCompressionRate();
 void IncreaseGameTimeCompressionRate();
-
-//USING CLOCK RESOLUTION
-//Note, that changing the clock resolution doesn't effect the amount of game time that passes per
-//real second, but how many times per second the clock is updated.  This rate will break up the actual
-//time slices per second into smaller chunks.  This is useful for animating strategic movement under
-//fast time compression, so objects don't warp around.
-void SetClockResolutionToDefault();  //1 time per second
-//Valid range is 1 - 60 times per second.
-void SetClockResolutionPerSecond( UINT8 ubNumTimesPerSecond );
-//Function for accessing the current rate
-UINT8 ClockResolution();
 
 //time compression defines
 enum
@@ -164,8 +151,6 @@ void InitNewGameClock( );
 void GotoNextTimeOfDay( UINT32 uiTOD );
 
 void RenderClock( INT16 sX, INT16 sY );
-
-void ToggleSuperCompression();
 
 //IMPORTANT FUNCTION:  Used whenever an event or situation is deemed important enough to cancel the
 //further processing of time in this current time slice!  This can only be used inside of event callback

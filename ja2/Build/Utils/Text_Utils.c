@@ -23,7 +23,7 @@ BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
 }
 
 
-void LoadAllItemNames( void )
+static void LoadAllItemNames(void)
 {
 	UINT16 usLoop;
 

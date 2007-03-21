@@ -131,7 +131,6 @@ INT16		gsMaxPlayersOnTeam;
 
 //link to the varios pages
 MOUSE_REGION    gSelectedInsuranceContractLinkRegion[2];
-void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 INT32		guiInsContractPrevButtonImage;
 static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
@@ -153,37 +152,13 @@ UINT32	guiInsuranceAcceptClearForm2Button;
 UINT32	guiInsuranceAcceptClearForm3Button;
 
 
-BOOLEAN		DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID );
-INT8			GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID );
-//INT32			CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance );
-void			InsuranceContractUserTextFieldCallBack( UINT8 ubID, BOOLEAN fEntering );
-INT8			CountInsurableMercs();
-void			DisableInsuranceContractNextPreviousbuttons();
-void			CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate);
-void			HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID );
-FLOAT			DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue );
-void			InsContractNoMercsPopupCallBack( UINT8 bExitValue );
-void			BuildInsuranceArray();
-BOOLEAN		MercIsInsurable( SOLDIERTYPE *pSoldier );
-//UINT32		GetContractLengthForFormNumber( UINT8 ubFormID );
-void			EnableDisableInsuranceContractAcceptButtons();
-UINT32		GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier );
-UINT32		GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier );
-void			EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm1, UINT32 *puiAcceptButton );
-BOOLEAN		CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier );
-INT32			CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier );
-INT32			CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier );
-
-BOOLEAN		AreAnyAimMercsOnTeam( );
-
-
 void GameInitInsuranceContract()
 {
 	gsCurrentInsuranceMercIndex = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 }
 
 
-void EnterLaptopInitInsuranceContract()
+static void EnterLaptopInitInsuranceContract(void)
 {
 	wchar_t		zTextField[14];
 
@@ -194,6 +169,11 @@ void EnterLaptopInitInsuranceContract()
 
 }
 
+
+static void BuildInsuranceArray(void);
+static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate);
+static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID);
+static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterInsuranceContract()
@@ -285,6 +265,8 @@ void ExitInsuranceContract()
 }
 
 
+static void EnableDisableInsuranceContractAcceptButtons(void);
+
 
 void HandleInsuranceContract()
 {
@@ -314,6 +296,12 @@ void HandleInsuranceContract()
 	EnableDisableInsuranceContractAcceptButtons();
 }
 
+
+static BOOLEAN AreAnyAimMercsOnTeam(void);
+static void DisableInsuranceContractNextPreviousbuttons(void);
+static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID);
+static void InsContractNoMercsPopupCallBack(UINT8 bExitValue);
+static BOOLEAN MercIsInsurable(SOLDIERTYPE* pSoldier);
 
 
 void RenderInsuranceContract()
@@ -433,7 +421,13 @@ static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
+static INT32 CalculateSoldiersInsuranceContractLength(SOLDIERTYPE* pSoldier);
+static BOOLEAN CanSoldierExtendInsuranceContract(SOLDIERTYPE* pSoldier);
+static UINT32 GetTimeRemainingOnSoldiersContract(SOLDIERTYPE* pSoldier);
+static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier);
+
+
+static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 {
 	UINT16	usPosX, usPosY;
 	UINT32	uiInsMercFaceImage;
@@ -666,6 +660,9 @@ BOOLEAN DisplayOrderGrid( UINT8 ubGridNumber, UINT8 ubMercID )
 }
 
 
+static void HandleAcceptButton(UINT8 ubSoldierID, UINT8 ubFormID);
+
+
 static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -744,7 +741,7 @@ static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 re
 }
 
 
-INT8 GetNumberOfHireMercsStartingFromID( UINT8 ubStartMercID )
+static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID)
 {
 	UINT8	i;
 	UINT8	ubCount=0;
@@ -793,7 +790,8 @@ INT32 CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance )
 }
 */
 
-void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -812,7 +810,8 @@ void SelectInsuranceContractRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason
 	}
 }
 
-INT8 CountInsurableMercs()
+
+static INT8 CountInsurableMercs(void)
 {
 	INT16					cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -834,7 +833,8 @@ INT8 CountInsurableMercs()
 	return( bCount );
 }
 
-void DisableInsuranceContractNextPreviousbuttons()
+
+static void DisableInsuranceContractNextPreviousbuttons(void)
 {
 	//disable the next button if there is no more mercs to display
 	if( ( gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids ) < CountInsurableMercs() )
@@ -854,7 +854,8 @@ void DisableInsuranceContractNextPreviousbuttons()
 
 }
 
-void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
+
+static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 {
 	static BOOLEAN	fButtonsCreated = FALSE;
 
@@ -941,8 +942,7 @@ void CreateDestroyInsuranceContractFormButtons( BOOLEAN fCreate)
 }
 
 
-
-void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
+static void HandleAcceptButton(UINT8 ubSoldierID, UINT8 ubFormID)
 {
 	//passed in either 1,2,3 should be 0,1,2
 	ubFormID--;
@@ -951,13 +951,6 @@ void HandleAcceptButton( UINT8 ubSoldierID, UINT8 ubFormID )
 
 	RenderInsuranceContract();
 }
-
-
-
-
-
-
-
 
 
 // determines if a merc will run out of their insurance contract
@@ -1001,6 +994,9 @@ void DailyUpdateOfInsuredMercs()
 
 #define MIN_INSURANCE_RATIO		 0.1f
 #define MAX_INSURANCE_RATIO		10.0f
+
+
+static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
 
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
@@ -1078,7 +1074,7 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 
 
 // values passed in must be such that exceeding the normal value REDUCES insurance premiums
-FLOAT DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue )
+static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue)
 {
 	FLOAT flRatio;
 
@@ -1107,7 +1103,7 @@ FLOAT DiffFromNormRatio( INT16 sThisValue, INT16 sNormalValue )
 }
 
 
-void InsContractNoMercsPopupCallBack( UINT8 bExitValue )
+static void InsContractNoMercsPopupCallBack(UINT8 bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_OK )
@@ -1116,7 +1112,8 @@ void InsContractNoMercsPopupCallBack( UINT8 bExitValue )
 	}
 }
 
-void BuildInsuranceArray()
+
+static void BuildInsuranceArray(void)
 {
 	INT16					cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -1320,7 +1317,7 @@ void InsuranceContractEndGameShutDown()
 }
 
 
-BOOLEAN MercIsInsurable( SOLDIERTYPE *pSoldier )
+static BOOLEAN MercIsInsurable(SOLDIERTYPE* pSoldier)
 {
 	// only A.I.M. mercs currently on player's team
 	if( ( pSoldier->bActive ) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
@@ -1343,7 +1340,10 @@ BOOLEAN MercIsInsurable( SOLDIERTYPE *pSoldier )
 }
 
 
-void EnableDisableInsuranceContractAcceptButtons()
+static void EnableDisableIndividualInsuranceContractButton(UINT8 ubMercIDForMercInForm, UINT32* puiAcceptButton);
+
+
+static void EnableDisableInsuranceContractAcceptButtons(void)
 {
 	//If it is the first grid
 	if( gubNumberofDisplayedInsuranceGrids >= 1 )
@@ -1365,7 +1365,7 @@ void EnableDisableInsuranceContractAcceptButtons()
 }
 
 
-void EnableDisableIndividualInsuranceContractButton( UINT8 ubMercIDForMercInForm, UINT32 *puiAcceptButton )
+static void EnableDisableIndividualInsuranceContractButton(UINT8 ubMercIDForMercInForm, UINT32* puiAcceptButton)
 {
 	INT16	sSoldierID = 0;
 
@@ -1416,7 +1416,8 @@ UINT32	GetContractLengthForFormNumber( UINT8 ubFormID )
 }
 */
 
-UINT32	GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier )
+
+static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
 {
 	//if the soldier has life insurance
 	if( pSoldier->usLifeInsurance )
@@ -1431,7 +1432,8 @@ UINT32	GetTimeRemainingOnSoldiersInsuranceContract( SOLDIERTYPE *pSoldier )
 		return( 0 );
 }
 
-UINT32	GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier )
+
+static UINT32 GetTimeRemainingOnSoldiersContract(SOLDIERTYPE* pSoldier)
 {
 	INT32 iDayMercLeaves = ( pSoldier->iEndofContractTime / 1440 ) - 1;
 
@@ -1449,6 +1451,9 @@ UINT32	GetTimeRemainingOnSoldiersContract( SOLDIERTYPE *pSoldier )
 	return( iDayMercLeaves );
 //	return( ( pSoldier->iEndofContractTime - (INT32)GetWorldTotalMin( ) ) / 1440 );
 }
+
+
+static INT32 CalcStartDayOfInsurance(SOLDIERTYPE* pSoldier);
 
 
 void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsuranceLength )
@@ -1522,7 +1527,8 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 	}
 }
 
-BOOLEAN	CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN CanSoldierExtendInsuranceContract(SOLDIERTYPE* pSoldier)
 {
 	if( CalculateSoldiersInsuranceContractLength( pSoldier ) != 0 )
 		return( TRUE );
@@ -1531,7 +1537,7 @@ BOOLEAN	CanSoldierExtendInsuranceContract( SOLDIERTYPE *pSoldier )
 }
 
 
-INT32 CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier )
+static INT32 CalculateSoldiersInsuranceContractLength(SOLDIERTYPE* pSoldier)
 {
 	INT32 iInsuranceContractLength=0;
 	UINT32 uiTimeRemainingOnSoldiersContract = GetTimeRemainingOnSoldiersContract( pSoldier );
@@ -1577,7 +1583,8 @@ INT32 CalculateSoldiersInsuranceContractLength( SOLDIERTYPE *pSoldier )
 	return( iInsuranceContractLength );
 }
 
-INT32	CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier )
+
+static INT32 CalcStartDayOfInsurance(SOLDIERTYPE* pSoldier)
 {
 	UINT32	uiDayToStartInsurance=0;
 
@@ -1595,7 +1602,8 @@ INT32	CalcStartDayOfInsurance( SOLDIERTYPE *pSoldier )
 	return( uiDayToStartInsurance );
 }
 
-BOOLEAN AreAnyAimMercsOnTeam( )
+
+static BOOLEAN AreAnyAimMercsOnTeam(void)
 {
 	INT16	sNextMercID = 0;
 	BOOLEAN fIsThereAnyAimMercs = FALSE;

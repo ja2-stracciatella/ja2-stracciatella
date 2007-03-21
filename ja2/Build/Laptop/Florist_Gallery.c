@@ -80,21 +80,13 @@ static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiFloralGalleryButton[2];
 
 
-BOOLEAN InitFlowerButtons();
-void DeleteFlowerButtons();
-BOOLEAN DisplayFloralDescriptions();
-void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber );
-
-
-void GameInitFloristGallery()
-{
-
-}
-
 void EnterInitFloristGallery()
 {
 	memset( &FloristGallerySubPagesVisitedFlag, 0, 4);
 }
+
+
+static BOOLEAN InitFlowerButtons(void);
 
 
 BOOLEAN EnterFloristGallery()
@@ -127,6 +119,10 @@ BOOLEAN EnterFloristGallery()
 	return(TRUE);
 }
 
+
+static void DeleteFlowerButtons(void);
+
+
 void ExitFloristGallery()
 {
 	UINT16 i;
@@ -157,6 +153,10 @@ void HandleFloristGallery()
 
 }
 
+
+static BOOLEAN DisplayFloralDescriptions(void);
+
+
 void RenderFloristGallery()
 {
 	DisplayFloristDefaults();
@@ -170,6 +170,9 @@ void RenderFloristGallery()
 	RenderWWWProgramTitleBar( );
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
+
+
+static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber);
 
 
 static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -217,7 +220,7 @@ static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-BOOLEAN InitFlowerButtons()
+static BOOLEAN InitFlowerButtons(void)
 {
 	UINT16 i,j, count;
 	UINT16 usPosY;
@@ -275,7 +278,7 @@ BOOLEAN InitFlowerButtons()
 }
 
 
-void DeleteFlowerButtons()
+static void DeleteFlowerButtons(void)
 {
 	UINT16 i;
 
@@ -294,7 +297,7 @@ void DeleteFlowerButtons()
 }
 
 
-BOOLEAN DisplayFloralDescriptions()
+static BOOLEAN DisplayFloralDescriptions(void)
 {
 	wchar_t		sTemp[ 640 ];
 	UINT32	uiStartLoc=0, i;
@@ -332,7 +335,7 @@ BOOLEAN DisplayFloralDescriptions()
 }
 
 
-void ChangingFloristGallerySubPage( UINT8 ubSubPageNumber )
+static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 

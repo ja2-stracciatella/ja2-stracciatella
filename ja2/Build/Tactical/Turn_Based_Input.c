@@ -136,11 +136,6 @@ extern BOOLEAN gfNextShotKills;
 
 UINT32 guiUITargetSoldierId = NOBODY;
 
-void HandleTalkingMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
-void HandleMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
-void HandleItemMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
-void HandleOpenDoorMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
-void HandleSectorExitMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent );
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 
 extern BOOLEAN ValidQuickExchangePosition( );
@@ -169,52 +164,9 @@ BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
 BOOLEAN	gfNextFireJam = FALSE;
 
 
-//Little functions called by keyboard input
-void CreateRandomItem();
-void MakeSelectedSoldierTired();
-void ToggleRealTime( UINT32 *puiNewEvent );
-void ToggleViewAllMercs();
-void ToggleViewAllItems();
-void TestExplosion();
-void CycleSelectedMercsItem();
-void ToggleWireFrame();
-void RefreshSoldier();
-void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette );
-void TeleportSelectedSoldier();
-void ToggleTreeTops();
-void ToggleZBuffer();
-void TogglePlanningMode();
-void SetBurstMode();
-void ObliterateSector();
-void RandomizeMercProfile();
-void JumpFence();
-void CreateNextCivType();
-void ToggleCliffDebug();
-void CreateCow();
-void CreatePlayerControlledCow();
-void ToggleRealTimeConfirm();
-void GrenadeTest1();
-void GrenadeTest2();
-void GrenadeTest3();
-void TestMeanWhile( INT32 iID );
-void CreatePlayerControlledMonster();
-void ChangeCurrentSquad( INT32 iSquad );
-void HandleSelectMercSlot( UINT8 ubPanelSlot, INT8 bCode );
-void EscapeUILock( );
-void TestCapture( );
-
-#ifdef JA2BETAVERSION
-void ToggleMapEdgepoints();
-#endif
-#ifdef JA2TESTVERSION
-void ToggleMercsNeverQuit();
-#endif
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo( void );
 #endif
-
-void HandleStealthChangeFromUIKeys( );
-
 
 
 UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
@@ -223,13 +175,19 @@ UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
 
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 
+
+static void QueryTBLeftButton(UINT32* puiNewEvent);
+static void QueryTBRightButton(UINT32* puiNewEvent);
+
+
 void	GetTBMouseButtonInput( UINT32 *puiNewEvent )
 {
 	 QueryTBLeftButton( puiNewEvent );
 	 QueryTBRightButton( puiNewEvent );
 }
 
-void	QueryTBLeftButton( UINT32 *puiNewEvent )
+
+static void QueryTBLeftButton(UINT32* puiNewEvent)
 {
 	SOLDIERTYPE								 *pSoldier;
 	UINT16						usMapPos;
@@ -709,7 +667,8 @@ void	QueryTBLeftButton( UINT32 *puiNewEvent )
 
 }
 
-void	QueryTBRightButton( UINT32 *puiNewEvent )
+
+static void QueryTBRightButton(UINT32* puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
@@ -1382,6 +1341,42 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 
 extern	BOOLEAN		gfDisableRegionActive;
 extern	BOOLEAN		gfUserTurnRegionActive;
+
+
+static void ChangeCurrentSquad(INT32 iSquad);
+static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette);
+static void CreateNextCivType(void);
+static void CreatePlayerControlledMonster(void);
+static void CreateRandomItem(void);
+static void CycleSelectedMercsItem(void);
+static void EscapeUILock(void);
+static void GrenadeTest1(void);
+static void GrenadeTest2(void);
+static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode);
+static void HandleStealthChangeFromUIKeys(void);
+static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void ObliterateSector(void);
+static void RefreshSoldier(void);
+static void SetBurstMode(void);
+static void TeleportSelectedSoldier(void);
+static void TestCapture(void);
+static void TestMeanWhile(INT32 iID);
+static void ToggleCliffDebug(void);
+static void ToggleRealTimeConfirm(void);
+static void ToggleTreeTops(void);
+static void ToggleViewAllItems(void);
+static void ToggleViewAllMercs(void);
+static void ToggleWireFrame(void);
+static void ToggleZBuffer(void);
+
+#ifdef JA2BETAVERSION
+static void ToggleMapEdgepoints(void);
+#endif
+
 
 void GetKeyboardInput( UINT32 *puiNewEvent )
 {
@@ -3327,7 +3322,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 }
 
 
-void HandleTalkingMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
+static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
 	if ( pInputEvent->usEvent == KEY_UP )
@@ -3348,7 +3343,8 @@ void HandleTalkingMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 	}
 }
 
-void HandleSectorExitMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
+
+static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
@@ -3361,7 +3357,7 @@ void HandleSectorExitMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 }
 
 
-void HandleOpenDoorMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
+static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
@@ -3374,7 +3370,7 @@ void HandleOpenDoorMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 }
 
 
-void HandleMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
+static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
@@ -3386,7 +3382,8 @@ void HandleMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
 	}
 }
 
-void HandleItemMenuKeys( InputAtom *pInputEvent, UINT32 *puiNewEvent )
+
+static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
@@ -3575,7 +3572,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 
 //Simple function implementations called by keyboard input
 
-void CreateRandomItem()
+static void CreateRandomItem(void)
 {
 	OBJECTTYPE		Object;
 	UINT16 usMapPos;
@@ -3586,7 +3583,8 @@ void CreateRandomItem()
 	}
 }
 
-void MakeSelectedSoldierTired()
+
+static void MakeSelectedSoldierTired(void)
 {
 	// Key to make guy get tired!
 	SOLDIERTYPE				*pSoldier;
@@ -3610,7 +3608,8 @@ void MakeSelectedSoldierTired()
 	}
 }
 
-void ToggleRealTime( UINT32 *puiNewEvent )
+
+static void ToggleRealTime(UINT32* puiNewEvent)
 {
 	if ( gTacticalStatus.uiFlags & TURNBASED )
 	{
@@ -3635,7 +3634,8 @@ void ToggleRealTime( UINT32 *puiNewEvent )
 	gfPlotNewMovement = TRUE;
 }
 
-void ToggleViewAllMercs()
+
+static void ToggleViewAllMercs(void)
 {
 	// Set option to show all mercs
 	if ( gTacticalStatus.uiFlags&SHOW_ALL_MERCS )
@@ -3651,7 +3651,8 @@ void ToggleViewAllMercs()
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-void ToggleViewAllItems()
+
+static void ToggleViewAllItems(void)
 {
 	// Set option to show all mercs
 	if( gTacticalStatus.uiFlags & SHOW_ALL_ITEMS )
@@ -3676,7 +3677,8 @@ void ToggleViewAllItems()
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-void TestExplosion()
+
+static void TestExplosion(void)
 {
 	UINT16 usMapPos;
 	if ( GetMouseMapPos( &usMapPos ) )
@@ -3693,7 +3695,8 @@ void TestExplosion()
 	}
 }
 
-void CycleSelectedMercsItem()
+
+static void CycleSelectedMercsItem(void)
 {
 	UINT16 usOldItem;
 	SOLDIERTYPE *pSoldier;
@@ -3719,7 +3722,8 @@ void CycleSelectedMercsItem()
 	}
 }
 
-void ToggleWireFrame()
+
+static void ToggleWireFrame(void)
 {
 	if ( gGameSettings.fOptions[ TOPTION_TOGGLE_WIREFRAME ] )
 	{
@@ -3737,7 +3741,8 @@ void ToggleWireFrame()
 	SetRenderFlags(RENDER_FLAG_FULL );
 }
 
-void RefreshSoldier()
+
+static void RefreshSoldier(void)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT16 usMapPos;
@@ -3762,7 +3767,8 @@ void RefreshSoldier()
 			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
 }
 
-void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
+
+static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette)
 {
 	SOLDIERTYPE *pSoldier;
 	if( gusSelectedSoldier != NO_SOLDIER )
@@ -3811,7 +3817,8 @@ void ChangeSoldiersBodyType( UINT8 ubBodyType, BOOLEAN fCreateNewPalette )
 	}
 }
 
-void TeleportSelectedSoldier()
+
+static void TeleportSelectedSoldier(void)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT16 usMapPos;
@@ -3843,8 +3850,7 @@ void TeleportSelectedSoldier()
 }
 
 
-
-void ToggleTreeTops()
+static void ToggleTreeTops(void)
 {
 	if ( gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ] )
 	{
@@ -3864,7 +3870,8 @@ void ToggleTreeTops()
 	InvalidateWorldRedundency( );
 }
 
-void ToggleZBuffer()
+
+static void ToggleZBuffer(void)
 {
 	// Set option to show all mercs
 	if ( gTacticalStatus.uiFlags&SHOW_Z_BUFFER )
@@ -3878,7 +3885,8 @@ void ToggleZBuffer()
 	}
 }
 
-void TogglePlanningMode()
+
+static void TogglePlanningMode(void)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT16 usMapPos;
@@ -3915,7 +3923,8 @@ void TogglePlanningMode()
 	}
 }
 
-void SetBurstMode()
+
+static void SetBurstMode(void)
 {
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
@@ -3923,7 +3932,8 @@ void SetBurstMode()
 	}
 }
 
-void ObliterateSector()
+
+static void ObliterateSector(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pTSoldier;
@@ -3957,7 +3967,8 @@ void ObliterateSector()
 	}
 }
 
-void RandomizeMercProfile()
+
+static void RandomizeMercProfile(void)
 {
 	SOLDIERTYPE *pSoldier;
 	// Get selected soldier
@@ -3971,7 +3982,8 @@ void RandomizeMercProfile()
 	}
 }
 
-void JumpFence()
+
+static void JumpFence(void)
 {
 	SOLDIERTYPE *pSoldier;
 	INT8							bDirection;
@@ -3984,7 +3996,8 @@ void JumpFence()
 	}
 }
 
-void CreateNextCivType()
+
+static void CreateNextCivType(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -4025,7 +4038,8 @@ void CreateNextCivType()
 	}
 }
 
-void ToggleCliffDebug()
+
+static void ToggleCliffDebug(void)
 {
 	// Set option to show all mercs
 	if ( gTacticalStatus.uiFlags&DEBUGCLIFFS )
@@ -4043,7 +4057,8 @@ void ToggleCliffDebug()
 	}
 }
 
-void CreateCow()
+
+static void CreateCow(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -4075,7 +4090,8 @@ void CreateCow()
 	}
 }
 
-void CreatePlayerControlledCow()
+
+static void CreatePlayerControlledCow(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -4107,13 +4123,13 @@ void CreatePlayerControlledCow()
 	}
 }
 
-void ToggleRealTimeConfirm()
-{
 
+static void ToggleRealTimeConfirm(void)
+{
 }
 
 
-void GrenadeTest1()
+static void GrenadeTest1(void)
 {
 	// Get mousexy
 	INT16 sX, sY;
@@ -4127,7 +4143,8 @@ void GrenadeTest1()
 	}
 }
 
-void GrenadeTest2()
+
+static void GrenadeTest2(void)
 {
 	// Get mousexy
 	INT16 sX, sY;
@@ -4141,7 +4158,8 @@ void GrenadeTest2()
 	}
 }
 
-void GrenadeTest3()
+
+static void GrenadeTest3(void)
 {
 	// Get mousexy
 	INT16 sX, sY;
@@ -4155,7 +4173,8 @@ void GrenadeTest3()
 	}
 }
 
-void CreatePlayerControlledMonster()
+
+static void CreatePlayerControlledMonster(void)
 {
 	INT16							sWorldX, sWorldY;
 	UINT16 usMapPos;
@@ -4188,7 +4207,7 @@ void CreatePlayerControlledMonster()
 }
 
 
-INT8 CheckForAndHandleHandleVehicleInteractiveClick( SOLDIERTYPE *pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode )
+static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode)
 {
 	// Look for an item pool
 	INT16							sActionGridNo;
@@ -4410,7 +4429,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
 
 
-void ExchangeMessageBoxCallBack( UINT8 bExitValue )
+static void ExchangeMessageBoxCallBack(UINT8 bExitValue)
 {
 	if ( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -4614,7 +4633,8 @@ BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos )
 	return( FALSE );
 }
 
-void ChangeCurrentSquad( INT32 iSquad )
+
+static void ChangeCurrentSquad(INT32 iSquad)
 {
 	// only allow if nothing in hand and the Change Squad button for whichever panel we're in must be enabled
 	if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
@@ -4627,7 +4647,8 @@ void ChangeCurrentSquad( INT32 iSquad )
 	}
 }
 
-void HandleSelectMercSlot( UINT8 ubPanelSlot, INT8 bCode )
+
+static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 {
 	UINT8 ubID;
 
@@ -4640,7 +4661,8 @@ void HandleSelectMercSlot( UINT8 ubPanelSlot, INT8 bCode )
 	}
 }
 
-void TestMeanWhile( INT32 iID )
+
+static void TestMeanWhile(INT32 iID)
 {
 	MEANWHILE_DEFINITION MeanwhileDef;
 	INT32	cnt;
@@ -4682,7 +4704,8 @@ void TestMeanWhile( INT32 iID )
 #endif
 }
 
-void EscapeUILock( )
+
+static void EscapeUILock(void)
 {
 	//UNLOCK UI
 	UnSetUIBusy( (UINT8)gusSelectedSoldier );
@@ -4695,8 +4718,11 @@ void EscapeUILock( )
 }
 
 #ifdef JA2BETAVERSION
+
 #include "Map_Edgepoints.h"
-void ToggleMapEdgepoints()
+
+
+static void ToggleMapEdgepoints(void)
 {
 	#ifdef JA2EDITOR
 		static BOOLEAN fToggleEdgepointDisplay = FALSE;
@@ -4714,8 +4740,11 @@ void ToggleMapEdgepoints()
 #endif
 
 #ifdef JA2BETAVERSION
+
 BOOLEAN gfMercsNeverQuit = FALSE;
-void ToggleMercsNeverQuit()
+
+
+static void ToggleMercsNeverQuit(void)
 {
 	if( gfMercsNeverQuit )
 	{
@@ -4761,7 +4790,8 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	}
 }
 
-void ToggleStealthMode( SOLDIERTYPE *pSoldier )
+
+static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
 {
 	// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 	if ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ giSMStealthButton ]->uiFlags & BUTTON_ENABLED ) )
@@ -4788,7 +4818,7 @@ void ToggleStealthMode( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleStealthChangeFromUIKeys(  )
+static void HandleStealthChangeFromUIKeys(void)
 {
 	// If we have multiple guys selected, make all change stance!
 	SOLDIERTYPE *		pSoldier;
@@ -4824,8 +4854,7 @@ void HandleStealthChangeFromUIKeys(  )
 }
 
 
-
-void TestCapture( )
+static void TestCapture(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE				*pSoldier;

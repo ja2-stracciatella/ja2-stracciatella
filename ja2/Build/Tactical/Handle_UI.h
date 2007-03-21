@@ -266,16 +266,12 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent );
 
 void GetTBMouseButtonInput( UINT32 *puiNewEvent );
 void GetTBMousePositionInput( UINT32 *puiNewEvent );
-void QueryTBLeftButton( UINT32 *puiNewEvent );
-void QueryTBRightButton( UINT32 *puiNewEvent );
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 void HandleKeyInputOnEnemyTurn(  );
 
 
 void GetRTMouseButtonInput( UINT32 *puiNewEvent );
 void GetRTMousePositionInput( UINT32 *puiNewEvent );
-void QueryRTLeftButton( UINT32 *puiNewEvent );
-void QueryRTRightButton( UINT32 *puiNewEvent );
 
 void AdjustSoldierCreationStartValues( );
 

@@ -69,7 +69,6 @@ struct filerecordwidth{
 
 typedef struct filerecordwidth FileRecordWidth;
 typedef struct filerecordwidth *FileRecordWidthPtr;
-UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate , UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile );
 
 // add a file about this terrorist
 BOOLEAN AddFileAboutTerrorist( INT32 iProfileId );

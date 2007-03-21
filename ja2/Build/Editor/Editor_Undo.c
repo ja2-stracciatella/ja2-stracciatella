@@ -86,18 +86,6 @@ typedef struct TAG_undo_stack
 } undo_stack;
 undo_stack			*gpTileUndoStack = NULL;
 
-// Map tile element manipulation functions
-BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pMapTile, INT32 iMapIndex );
-BOOLEAN SwapMapElementWithWorld( INT32 iDestMapTileIndex, MAP_ELEMENT *pMapTile );
-
-// Undo structure functions
-BOOLEAN DeleteTopStackNode( void );
-undo_stack *DeleteThisStackNode( undo_stack *pThisNode );
-BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent );
-BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount );
-void CropStackToMaxLength( INT32 iMaxCmds );
-void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile );
-
 
 BOOLEAN fNewUndoCmd = TRUE;
 BOOLEAN gfIgnoreUndoCmdsForLights = FALSE;
@@ -112,14 +100,10 @@ typedef struct MapIndexBinaryTree
 }MapIndexBinaryTree;
 
 MapIndexBinaryTree *top = NULL;
-void ClearUndoMapIndexTree();
-BOOLEAN AddMapIndexToTree( UINT16 usMapIndex );
-void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex );
-void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node );
 
 
 //Recursively deletes all nodes below the node passed including itself.
-void DeleteTreeNode( MapIndexBinaryTree **node )
+static void DeleteTreeNode(MapIndexBinaryTree** node)
 {
 	if( (*node)->left )
 		DeleteTreeNode( &((*node)->left) );
@@ -129,14 +113,16 @@ void DeleteTreeNode( MapIndexBinaryTree **node )
 	*node = NULL;
 }
 
+
 //Recursively delete all nodes (from the top down).
-void ClearUndoMapIndexTree()
+static void ClearUndoMapIndexTree(void)
 {
 	if( top )
 		DeleteTreeNode( &top );
 }
 
-BOOLEAN AddMapIndexToTree( UINT16 usMapIndex )
+
+static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 {
 	MapIndexBinaryTree *curr, *parent;
 	if( !top )
@@ -182,7 +168,11 @@ BOOLEAN AddMapIndexToTree( UINT16 usMapIndex )
 //
 //*************************************************************************
 
-BOOLEAN DeleteTopStackNode( void )
+
+static BOOLEAN DeleteStackNodeContents(undo_stack* pCurrent);
+
+
+static BOOLEAN DeleteTopStackNode(void)
 {
 	undo_stack		*pCurrent;
 
@@ -198,7 +188,7 @@ BOOLEAN DeleteTopStackNode( void )
 }
 
 
-undo_stack *DeleteThisStackNode( undo_stack *pThisNode )
+static undo_stack* DeleteThisStackNode(undo_stack* pThisNode)
 {
 	undo_stack		*pCurrent;
 	undo_stack		*pNextNode;
@@ -214,7 +204,7 @@ undo_stack *DeleteThisStackNode( undo_stack *pThisNode )
 }
 
 
-BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
+static BOOLEAN DeleteStackNodeContents(undo_stack* pCurrent)
 {
 	undo_struct		*pData;
 	MAP_ELEMENT		*pMapTile;
@@ -322,7 +312,7 @@ BOOLEAN DeleteStackNodeContents( undo_stack *pCurrent )
 }
 
 
-void CropStackToMaxLength( INT32 iMaxCmds )
+static void CropStackToMaxLength(INT32 iMaxCmds)
 {
 	INT32				iCmdCount;
 	undo_stack	*pCurrent;
@@ -400,6 +390,10 @@ void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
 	CropStackToMaxLength( MAX_UNDO_COMMAND_LENGTH );
 }
 
+
+static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount);
+
+
 BOOLEAN AddToUndoList( INT32 iMapIndex )
 {
 	static INT32 iCount = 1;
@@ -426,7 +420,10 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 }
 
 
-BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
+static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex);
+
+
+static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 {
 	undo_stack		*pNode;
 	undo_struct		*pUndoInfo;
@@ -514,7 +511,7 @@ BOOLEAN AddToUndoListCmd( INT32 iMapIndex, INT32 iCmdCount )
 }
 
 
-void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex )
+static void CheckMapIndexForMultiTileStructures(UINT16 usMapIndex)
 {
 	STRUCTURE *		pStructure;
 	UINT8					ubLoop;
@@ -543,7 +540,8 @@ void CheckMapIndexForMultiTileStructures( UINT16 usMapIndex )
 	}
 }
 
-void CheckForMultiTilesInTreeAndAddToUndoList( MapIndexBinaryTree *node )
+
+static void CheckForMultiTilesInTreeAndAddToUndoList(MapIndexBinaryTree* node)
 {
 	CheckMapIndexForMultiTileStructures( node->usMapIndex );
 	if( node->left )
@@ -561,6 +559,9 @@ BOOLEAN RemoveAllFromUndoList( void )
 
 	return( TRUE );
 }
+
+
+static BOOLEAN SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapElement);
 
 
 BOOLEAN ExecuteUndoList( void )
@@ -640,7 +641,7 @@ BOOLEAN ExecuteUndoList( void )
 }
 
 
-void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
+static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 {
 	LEVELNODE	*pWorldLand;
 	LEVELNODE *pUndoLand;
@@ -724,10 +725,11 @@ void SmoothUndoMapTileTerrain( INT32 iWorldTile, MAP_ELEMENT *pUndoTile )
 	}
 }
 
+
 //Because of the potentially huge amounts of memory that can be allocated due to the inefficient
 //undo methods coded by Bret, it is feasible that it could fail.  Instead of using assertions to
 //terminate the program, destroy the memory allocated thusfar.
-void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
+static void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElement)
 {
 	LEVELNODE *pLevelNode;
 	STRUCTURE *pStructure;
@@ -777,7 +779,9 @@ void DeleteMapElementContentsAfterCreationFail( MAP_ELEMENT *pNewMapElement )
 		};
 	}; // ( 4 byte union )
 */
-BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pNewMapElement, INT32 iMapIndex )
+
+
+static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex)
 {
 	MAP_ELEMENT			*pOldMapElement;
 	LEVELNODE				*pOldLevelNode;
@@ -954,7 +958,7 @@ BOOLEAN CopyMapElementFromWorld( MAP_ELEMENT *pNewMapElement, INT32 iMapIndex )
 }
 
 
-BOOLEAN SwapMapElementWithWorld( INT32 iMapIndex, MAP_ELEMENT *pUndoMapElement )
+static BOOLEAN SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapElement)
 {
 	MAP_ELEMENT			*pCurrentMapElement;
 	MAP_ELEMENT			TempMapElement;

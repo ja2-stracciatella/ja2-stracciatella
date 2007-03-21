@@ -36,16 +36,6 @@
 
 extern INT32 iCurrentMapSectorZ;
 
-void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY );
-
-
-// render the squad list
-void RenderSquadList( void );
-
-// squad list mvt + btn callback
-void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void TacticalSquadListBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
 // the squad list font
 #define SQUAD_FONT COMPFONT
 
@@ -67,6 +57,11 @@ BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 
 
 MOUSE_REGION gRadarRegionSquadList[ NUMBER_OF_SQUADS ];
+
+
+static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN InitRadarScreen( )
 {
@@ -190,7 +185,10 @@ void MoveRadarScreen( )
 }
 
 
-void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY);
+
+
+static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT16 sRadarX, sRadarY;
 
@@ -216,7 +214,8 @@ void RadarRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT16 sRadarX, sRadarY;
 
@@ -254,6 +253,9 @@ void RadarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
+
+static BOOLEAN CreateDestroyMouseRegionsForSquadList(void);
+static void RenderSquadList(void);
 
 
 void RenderRadarScreen( )
@@ -535,7 +537,7 @@ void RenderRadarScreen( )
 }
 
 
-void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
+static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 {
 	const INT16 SCROLL_X_STEP = WORLD_TILE_X;
 	const INT16 SCROLL_Y_STEP = WORLD_TILE_Y * 2;
@@ -579,12 +581,14 @@ void AdjustWorldCenterFromRadarCoords( INT16 sRadarX, INT16 sRadarY )
 
 }
 
-void DisableRadarScreenRender( void )
+
+static void DisableRadarScreenRender(void)
 {
 	fRenderRadarScreen = FALSE;
 }
 
-void EnableRadarScreenRender( void )
+
+static void EnableRadarScreenRender(void)
 {
 	fRenderRadarScreen = TRUE;
 }
@@ -594,7 +598,13 @@ void ToggleRadarScreenRender( void )
 	fRenderRadarScreen = ! fRenderRadarScreen;
 }
 
-BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
+
+static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+// create destroy squad list regions as needed
+static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 {
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
@@ -677,7 +687,7 @@ BOOLEAN CreateDestroyMouseRegionsForSquadList( void )
 }
 
 
-void RenderSquadList( void )
+static void RenderSquadList(void)
 {
 	// show list of squads
 	INT16 sCounter = 0;
@@ -742,7 +752,8 @@ void RenderSquadList( void )
 	}
 }
 
-void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT32 iValue = -1;
 
@@ -762,7 +773,7 @@ void TacticalSquadListMvtCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void TacticalSquadListBtnCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for team list info region
 	INT32 iValue = 0;

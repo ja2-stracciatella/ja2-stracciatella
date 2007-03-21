@@ -41,7 +41,8 @@ UINT32 guiPabloExtraDaysBribed = 0;
 UINT8		gubCambriaMedicalObjects;
 
 
-void DropOffItemsInMeduna( UINT8 ubOrderNum );
+static void DropOffItemsInMeduna(UINT8 ubOrderNum);
+
 
 void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 {
@@ -388,8 +389,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 }
 
 
-
-void HandleDelayedItemsArrival( UINT32 uiReason )
+static void HandleDelayedItemsArrival(UINT32 uiReason)
 {
 	// This function moves all the items that Pablos has stolen
 	// (or items that were delayed) to the arrival location for new shipments,
@@ -505,7 +505,8 @@ void AddSecondAirportAttendant( void )
 	gMercProfiles[99].bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
 }
 
-void SetPabloToUnbribed( void )
+
+static void SetPabloToUnbribed(void)
 {
 	if (guiPabloExtraDaysBribed > 0)
 	{
@@ -519,7 +520,8 @@ void SetPabloToUnbribed( void )
 	}
 }
 
-void HandlePossiblyDamagedPackage( void )
+
+static void HandlePossiblyDamagedPackage(void)
 {
 	if (Random( 100 ) < 70)
 	{
@@ -1082,7 +1084,7 @@ void CheckForMissingHospitalSupplies( void )
 }
 
 
-void DropOffItemsInMeduna( UINT8 ubOrderNum )
+static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 {
 	BOOLEAN	fSectorLoaded = FALSE;
 	OBJECTTYPE		Object;

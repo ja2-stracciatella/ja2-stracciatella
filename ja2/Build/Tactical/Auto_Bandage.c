@@ -69,23 +69,14 @@ INT32 giAutoBandagesSoldierFaces[ 2 * MAX_CHARACTER_COUNT ];
 // has the button for autobandage end been setup yet
 BOOLEAN fAutoEndBandageButtonCreated = FALSE;
 
-void BeginAutoBandageCallBack( UINT8 bExitValue );
-void CancelAutoBandageCallBack( UINT8 bExitValue );
-
-// the update box for autobandaging mercs
-void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY );
-void DestroyTerminateAutoBandageButton( void );
-void DisplayAutoBandageUpdatePanel( void );
-void SetUpAutoBandageUpdatePanel( void );
-BOOLEAN AddFacesToAutoBandageBox( void );
-BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentXPosition, INT16 sCurrentYPosition );
-static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, INT32 reason);
-BOOLEAN RemoveFacesForAutoBandage( void );
-
 
 extern BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 extern BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
 extern UINT8 NumEnemyInSector( );
+
+
+static void BeginAutoBandageCallBack(UINT8 bExitValue);
+
 
 void BeginAutoBandage( )
 {
@@ -238,6 +229,9 @@ void ShouldBeginAutoBandage( )
 }
 
 
+static void DisplayAutoBandageUpdatePanel(void);
+
+
 BOOLEAN HandleAutoBandage( )
 {
   InputAtom					InputEvent;
@@ -304,7 +298,7 @@ BOOLEAN HandleAutoBandage( )
 }
 
 
-BOOLEAN CreateAutoBandageString( void )
+static BOOLEAN CreateAutoBandageString(void)
 {
 	INT32						cnt;
 	UINT8						ubDoctor[20], ubDoctors = 0;
@@ -384,6 +378,12 @@ void SetAutoBandageComplete( void )
 	// this will set the fact autobandage is complete
 	fAutoBandageComplete = TRUE;
 }
+
+
+static void DestroyTerminateAutoBandageButton(void);
+static BOOLEAN RemoveFacesForAutoBandage(void);
+static void SetUpAutoBandageUpdatePanel(void);
+
 
 void AutoBandage( BOOLEAN fStart )
 {
@@ -528,7 +528,7 @@ void AutoBandage( BOOLEAN fStart )
 }
 
 
-void BeginAutoBandageCallBack( UINT8 bExitValue )
+static void BeginAutoBandageCallBack(UINT8 bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -538,9 +538,12 @@ void BeginAutoBandageCallBack( UINT8 bExitValue )
 }
 
 
-void SetUpAutoBandageUpdatePanel( void )
-{
+static BOOLEAN AddFacesToAutoBandageBox(void);
 
+
+// the update box for autobandaging mercs
+static void SetUpAutoBandageUpdatePanel(void)
+{
 	INT32 iNumberDoctoring = 0;
 	INT32 iNumberPatienting = 0;
 	INT32 iNumberOnTeam = 0;
@@ -591,7 +594,12 @@ void SetUpAutoBandageUpdatePanel( void )
 	fAutoBandageComplete = FALSE;
 }
 
-void DisplayAutoBandageUpdatePanel( void )
+
+static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY);
+static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCurrentXPosition, INT16 sCurrentYPosition);
+
+
+static void DisplayAutoBandageUpdatePanel(void)
 {
 	INT32 iNumberDoctors = 0, iNumberPatients = 0;
 	INT32 iNumberDoctorsHigh = 0, iNumberPatientsHigh = 0;
@@ -931,8 +939,10 @@ void DisplayAutoBandageUpdatePanel( void )
 }
 
 
+static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
-void CreateTerminateAutoBandageButton( INT16 sX, INT16 sY )
+
+static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 {
 	// create the kill autobandage button
 	if( fAutoEndBandageButtonCreated )
@@ -984,7 +994,7 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void DestroyTerminateAutoBandageButton( void )
+static void DestroyTerminateAutoBandageButton(void)
 {
 
 	// destroy the kill autobandage button
@@ -1006,9 +1016,7 @@ void DestroyTerminateAutoBandageButton( void )
 }
 
 
-
-
-BOOLEAN AddFacesToAutoBandageBox( void )
+static BOOLEAN AddFacesToAutoBandageBox(void)
 {
 	INT32 iCounter = 0;
 	INT32 iNumberOfDoctors = 0;
@@ -1050,7 +1058,8 @@ BOOLEAN AddFacesToAutoBandageBox( void )
 	return( TRUE );
 }
 
-BOOLEAN RemoveFacesForAutoBandage( void )
+
+static BOOLEAN RemoveFacesForAutoBandage(void)
 {
 	INT32 iCounter = 0, iNumberOfDoctors = 0;
 
@@ -1082,7 +1091,8 @@ BOOLEAN RemoveFacesForAutoBandage( void )
 	return( TRUE );
 }
 
-BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel( INT32 iIndex, INT16 sCurrentXPosition, INT16 sCurrentYPosition )
+
+static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCurrentXPosition, INT16 sCurrentYPosition)
 {
 
 	INT32 iStartY = 0;

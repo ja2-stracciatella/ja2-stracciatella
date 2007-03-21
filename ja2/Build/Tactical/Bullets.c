@@ -30,7 +30,7 @@ BULLET	gBullets[ NUM_BULLET_SLOTS ];
 UINT32  guiNumBullets = 0;
 
 
-INT32 GetFreeBullet(void)
+static INT32 GetFreeBullet(void)
 {
 	UINT32 uiCount;
 
@@ -47,7 +47,7 @@ INT32 GetFreeBullet(void)
 }
 
 
-void RecountBullets(void)
+static void RecountBullets(void)
 {
 	INT32 uiCount;
 

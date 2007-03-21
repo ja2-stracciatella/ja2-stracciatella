@@ -78,38 +78,9 @@ real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESI
 #define					SCALE_VERT_VAL_TO_HORZ( f )				( ( f / HEIGHT_UNITS ) * CELL_X_SIZE )
 #define					SCALE_HORZ_VAL_TO_VERT( f )				( ( f / CELL_X_SIZE ) * HEIGHT_UNITS )
 
-void SimulateObject( REAL_OBJECT *pObject, real deltaT );
-
-void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID );
-
-
-BOOLEAN					PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime );
-BOOLEAN			 		PhysicsComputeForces( REAL_OBJECT *pObject );
-BOOLEAN					PhysicsIntegrate( REAL_OBJECT *pObject, real DeltaTime );
-BOOLEAN					PhysicsMoveObject( REAL_OBJECT *pObject );
-BOOLEAN					PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID );
-void						PhysicsResolveCollision( REAL_OBJECT *pObject, vector_3 *pVelocity, vector_3 *pNormal, real CoefficientOfRestitution );
-void						PhysicsDeleteObject( REAL_OBJECT *pObject );
-BOOLEAN					PhysicsHandleCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID, real DeltaTime );
-FLOAT						CalculateForceFromRange( INT16 sRange, FLOAT dDegrees );
-
-UINT16          RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius );
-
-
-void						HandleArmedObjectImpact( REAL_OBJECT *pObject );
-void ObjectHitWindow( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
-FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psFinalGridNo );
-vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT16 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT16 *psGridNo, FLOAT *pzMagForce );
-INT32 ChanceToGetThroughObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psFinalGridNo, INT8 *pbLevel, BOOLEAN fFromUI );
-FLOAT CalculateSoldierMaxForce( SOLDIERTYPE *pSoldier,  FLOAT dDegrees, OBJECTTYPE *pObject, BOOLEAN fArmed );
-BOOLEAN AttemptToCatchObject( REAL_OBJECT *pObject );
-BOOLEAN CheckForCatchObject( REAL_OBJECT *pObject );
-BOOLEAN DoCatchObject( REAL_OBJECT *pObject );
-BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID );
-
 
 /// OBJECT POOL FUNCTIONS
-INT32 GetFreeObjectSlot(void)
+static INT32 GetFreeObjectSlot(void)
 {
 	UINT32 uiCount;
 
@@ -126,7 +97,7 @@ INT32 GetFreeObjectSlot(void)
 }
 
 
-void RecountObjectSlots(void)
+static void RecountObjectSlots(void)
 {
 	INT32 uiCount;
 
@@ -221,7 +192,7 @@ INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, r
 }
 
 
-BOOLEAN RemoveObjectSlot( INT32 iObject )
+static BOOLEAN RemoveObjectSlot(INT32 iObject)
 {
 	CHECKF( iObject < NUM_OBJECT_SLOTS );
 
@@ -231,6 +202,9 @@ BOOLEAN RemoveObjectSlot( INT32 iObject )
 
 	return( TRUE );
 }
+
+
+static void SimulateObject(REAL_OBJECT* pObject, real deltaT);
 
 
 void SimulateWorld(  )
@@ -257,6 +231,10 @@ void SimulateWorld(  )
 	}
 }
 
+
+static void PhysicsDeleteObject(REAL_OBJECT* pObject);
+
+
 void RemoveAllPhysicsObjects( )
 {
 	UINT32					cnt;
@@ -272,7 +250,14 @@ void RemoveAllPhysicsObjects( )
 }
 
 
-void SimulateObject( REAL_OBJECT *pObject, real deltaT )
+static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject);
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime);
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime);
+static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject);
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime);
+
+
+static void SimulateObject(REAL_OBJECT* pObject, real deltaT)
 {
 	real DeltaTime	 = 0;
 	real CurrentTime = 0;
@@ -334,7 +319,7 @@ void SimulateObject( REAL_OBJECT *pObject, real deltaT )
 }
 
 
-BOOLEAN	PhysicsComputeForces( REAL_OBJECT *pObject )
+static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 {
 	vector_3			vTemp;
 
@@ -368,7 +353,11 @@ BOOLEAN	PhysicsComputeForces( REAL_OBJECT *pObject )
 	return( TRUE );
 }
 
-BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
+
+static void HandleArmedObjectImpact(REAL_OBJECT* pObject);
+
+
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 {
 	UINT8 bLevel = 0;
 
@@ -484,7 +473,7 @@ BOOLEAN	PhysicsUpdateLife( REAL_OBJECT *pObject, real DeltaTime )
 }
 
 
-BOOLEAN	PhysicsIntegrate( REAL_OBJECT *pObject, real DeltaTime )
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 {
 	vector_3			vTemp;
 
@@ -528,7 +517,11 @@ BOOLEAN	PhysicsIntegrate( REAL_OBJECT *pObject, real DeltaTime )
 }
 
 
-BOOLEAN	PhysicsHandleCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID, real DeltaTime )
+static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID);
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution);
+
+
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime)
 {
 	FLOAT					dDeltaX, dDeltaY, dDeltaZ;
 
@@ -619,7 +612,8 @@ BOOLEAN	PhysicsHandleCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID, rea
 	return( TRUE );
 }
 
-void PhysicsDeleteObject( REAL_OBJECT *pObject )
+
+static void PhysicsDeleteObject(REAL_OBJECT* pObject)
 {
 	if ( pObject->fAllocated )
 	{
@@ -639,7 +633,12 @@ void PhysicsDeleteObject( REAL_OBJECT *pObject )
 }
 
 
-BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
+static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID);
+static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID);
+static void ObjectHitWindow(INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce);
+
+
+static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID)
 {
 	vector_3			vTemp;
 	FLOAT					dDeltaX, dDeltaY, dDeltaZ, dX, dY, dZ;
@@ -1079,7 +1078,7 @@ BOOLEAN	PhysicsCheckForCollisions( REAL_OBJECT *pObject, INT32 *piCollisionID )
 }
 
 
-void PhysicsResolveCollision( REAL_OBJECT *pObject, vector_3 *pVelocity, vector_3 *pNormal, real CoefficientOfRestitution )
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution)
 {
 	real ImpulseNumerator, Impulse;
 	vector_3			vTemp;
@@ -1094,7 +1093,11 @@ void PhysicsResolveCollision( REAL_OBJECT *pObject, vector_3 *pVelocity, vector_
 
 }
 
-BOOLEAN PhysicsMoveObject( REAL_OBJECT *pObject )
+
+static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject);
+
+
+static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 {
 	LEVELNODE *pNode;
 	INT16			sNewGridNo, sTileIndex;
@@ -1293,7 +1296,8 @@ BOOLEAN PhysicsMoveObject( REAL_OBJECT *pObject )
 }
 #endif
 
-void ObjectHitWindow( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce )
+
+static void ObjectHitWindow(INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce)
 {
 	EV_S_WINDOWHIT	SWindowHit;
 	SWindowHit.sGridNo = sGridNo;
@@ -1307,7 +1311,10 @@ void ObjectHitWindow( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSo
 }
 
 
-vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT16 sGridNo,INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE *pItem, INT16 *psGridNo, real *pdMagForce )
+static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
+
+
+static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE* pItem, INT16* psGridNo, real* pdMagForce)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1401,7 +1408,7 @@ vector_3 FindBestForceForTrajectory( INT16 sSrcGridNo, INT16 sGridNo,INT16 sStar
 }
 
 
-INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem )
+static INT16 FindFinalGridNoGivenDirectionGridNoForceAngle(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE* pItem)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1443,7 +1450,7 @@ INT16 FindFinalGridNoGivenDirectionGridNoForceAngle( INT16 sSrcGridNo, INT16 sGr
 }
 
 
-real FindBestAngleForTrajectory( INT16 sSrcGridNo, INT16 sGridNo,INT16 sStartZ, INT16 sEndZ, real dForce, OBJECTTYPE *pItem, INT16 *psGridNo )
+static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1542,7 +1549,7 @@ real FindBestAngleForTrajectory( INT16 sSrcGridNo, INT16 sGridNo,INT16 sStartZ, 
 }
 
 
-void FindTrajectory( INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE *pItem, INT16 *psGridNo )
+static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1579,8 +1586,7 @@ void FindTrajectory( INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ
 
 // OK, this will, given a target Z, INVTYPE, source, target gridnos, initial force vector, will
 // return range
-
-FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psFinalGridNo )
+static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)
 {
 	INT32 iID;
 	REAL_OBJECT *pObject;
@@ -1634,7 +1640,7 @@ FLOAT CalculateObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vP
 }
 
 
-INT32 ChanceToGetThroughObjectTrajectory( INT16 sTargetZ, OBJECTTYPE *pItem, vector_3 *vPosition, vector_3 *vForce, INT16 *psNewGridNo, INT8 *pbLevel, BOOLEAN fFromUI )
+static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psNewGridNo, INT8* pbLevel, BOOLEAN fFromUI)
 {
 	INT32 iID;
 	REAL_OBJECT *pObject;
@@ -1708,8 +1714,11 @@ FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHe
 }
 
 
+static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees);
+static FLOAT CalculateSoldierMaxForce(SOLDIERTYPE* pSoldier, FLOAT dDegrees, OBJECTTYPE* pItem, BOOLEAN fArmed);
 
-void CalculateLaunchItemBasicParams( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT *pdMagForce, FLOAT *pdDegrees, INT16 *psFinalGridNo, BOOLEAN fArmed )
+
+static void CalculateLaunchItemBasicParams(SOLDIERTYPE* pSoldier, OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT* pdMagForce, FLOAT* pdDegrees, INT16* psFinalGridNo, BOOLEAN fArmed)
 {
 	INT16		sInterGridNo;
 	INT16		sStartZ;
@@ -1932,8 +1941,7 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE
 }
 
 
-
-FLOAT CalculateForceFromRange( INT16 sRange, FLOAT dDegrees )
+static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 {
 	FLOAT				dMagForce;
 	INT16				sSrcGridNo, sDestGridNo;
@@ -1954,7 +1962,7 @@ FLOAT CalculateForceFromRange( INT16 sRange, FLOAT dDegrees )
 }
 
 
-FLOAT CalculateSoldierMaxForce( SOLDIERTYPE *pSoldier, FLOAT dDegrees , OBJECTTYPE *pItem , BOOLEAN fArmed )
+static FLOAT CalculateSoldierMaxForce(SOLDIERTYPE* pSoldier, FLOAT dDegrees, OBJECTTYPE* pItem, BOOLEAN fArmed)
 {
 	INT32 uiMaxRange;
 	FLOAT	dMagForce;
@@ -1972,6 +1980,10 @@ FLOAT CalculateSoldierMaxForce( SOLDIERTYPE *pSoldier, FLOAT dDegrees , OBJECTTY
 #define MAX_MISS_BY		    30
 #define MIN_MISS_BY		    1
 #define MAX_MISS_RADIUS   5
+
+
+static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius);
+
 
 void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, OBJECTTYPE *pItem, INT8 bMissBy, UINT8 ubActionCode, UINT32 uiActionData )
 {
@@ -2113,7 +2125,10 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 }
 
 
-BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID )
+static BOOLEAN DoCatchObject(REAL_OBJECT* pObject);
+
+
+static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID)
 {
 	// Do we want to catch?
 	if ( pObject->fTestObject ==  NO_TEST_OBJECT )
@@ -2139,7 +2154,7 @@ BOOLEAN CheckForCatcher( REAL_OBJECT *pObject, UINT16 usStructureID )
 }
 
 
-void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
+static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID)
 {
 	SOLDIERTYPE *pSoldier;
   INT16       sDamage, sBreath;
@@ -2166,7 +2181,10 @@ void CheckForObjectHittingMerc( REAL_OBJECT *pObject, UINT16 usStructureID )
 }
 
 
-BOOLEAN CheckForCatchObject( REAL_OBJECT *pObject )
+static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject);
+
+
+static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT32			uiSpacesAway;
@@ -2216,9 +2234,7 @@ BOOLEAN CheckForCatchObject( REAL_OBJECT *pObject )
 }
 
 
-
-
-BOOLEAN AttemptToCatchObject( REAL_OBJECT *pObject )
+static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT8				ubChanceToCatch;
@@ -2247,7 +2263,7 @@ BOOLEAN AttemptToCatchObject( REAL_OBJECT *pObject )
 }
 
 
-BOOLEAN DoCatchObject( REAL_OBJECT *pObject )
+static BOOLEAN DoCatchObject(REAL_OBJECT* pObject)
 {
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN			fGoodCatch = FALSE;
@@ -2301,7 +2317,8 @@ BOOLEAN DoCatchObject( REAL_OBJECT *pObject )
 
 //#define TESTDUDEXPLOSIVES
 
-void HandleArmedObjectImpact( REAL_OBJECT *pObject )
+
+static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 {
 	INT16				sZ;
 	BOOLEAN			fDoImpact = FALSE;
@@ -2484,7 +2501,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 }
 
 
-UINT16 RandomGridFromRadius( INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius )
+static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius)
 {
 	INT16		sX, sY;
 	INT16		sGridNo;

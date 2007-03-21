@@ -167,7 +167,8 @@ void UpdateLastDayOfPlayerActivity( UINT16 usDay )
 	}
 }
 
-UINT8 LackOfProgressTolerance( void )
+
+static UINT8 LackOfProgressTolerance(void)
 {
 	if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_HARD )
 	{
@@ -178,7 +179,6 @@ UINT8 LackOfProgressTolerance( void )
 	{
 		return( 6 - gGameOptions.ubDifficultyLevel + gStrategicStatus.ubHighestProgress / 42 );
 	}
-
 }
 
 
@@ -331,6 +331,9 @@ void HandleEnricoEmail(void)
 }
 
 
+static INT8 SoldierClassToRankIndex(UINT8 ubSoldierClass);
+
+
 void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass )
 {
 	INT8 bRankIndex;
@@ -353,7 +356,7 @@ void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass )
 }
 
 
-INT8 SoldierClassToRankIndex( UINT8 ubSoldierClass )
+static INT8 SoldierClassToRankIndex(UINT8 ubSoldierClass)
 {
 	INT8 bRankIndex = -1;
 

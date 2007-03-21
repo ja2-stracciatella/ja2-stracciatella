@@ -395,17 +395,6 @@ void ShutDownLeaveList( void );
 // add item to leave equip index
 BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiIndex );
 
-// release memory for all items in this slot's leave item list
-void FreeLeaveListSlot( UINT32 uiSlotIndex );
-
-// first free slot in equip leave list
-INT32 FindFreeSlotInLeaveList( void );
-
-// set up drop list
-INT32 SetUpDropItemListForMerc( UINT32 uiMercId );
-// store owner's profile id for the items added to this leave slot index
-void SetUpMercAboutToLeaveEquipment( UINT32 ubProfileId, UINT32 uiSlotIndex );
-
 // remove item from leave index
 //BOOLEAN RemoveItemFromLeaveIndex( MERC_LEAVE_ITEM *pItem, UINT32 uiIndex );
 
@@ -449,9 +438,6 @@ void SetUpAnimationOfMineSectors( INT32 iEvent );
 // display map screen
 void DisplayMapScreenFastHelpList( void );
 
-// handle display of fast help
-void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen( void );
-
 // is the text up?
 BOOLEAN IsMapScreenHelpTextUp( void );
 
@@ -487,9 +473,6 @@ void HandleShowingOfTacticalInterfaceFastHelpText( void );
 // start showing the list
 void StartShowingInterfaceFastHelpText( void );
 
-// stop showing the list
-void StopShowingInterfaceFastHelpText( void );
-
 // is the list active?
 BOOLEAN IsTheInterfaceFastHelpTextActive( void );
 
@@ -497,23 +480,11 @@ BOOLEAN IsTheInterfaceFastHelpTextActive( void );
 BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], const wchar_t *sString[], INT32 iSize );
 
 
-// the alternate mapscreen movement system
-void InitializeMovingLists( void );
-
 // reset assignment for mercs trainign militia in this sector
 void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY );
 
 
 // the sector move box
-void DeselectSquadForMovement( INT32 iSquadNumber );
-void SelectedSquadForMovement( INT32 iSquadNumber );
-void DeselectSoldierForMovement( SOLDIERTYPE *pSoldier );
-void SelectSoldierForMovement( SOLDIERTYPE *pSoldier );
-void SelectVehicleForMovement( INT32 iVehicleId, BOOLEAN fAndAllOnBoard );
-void DeselectVehicleForMovement( INT32 iVehicleId );
-void AddVehicleToMovingLists( INT32 iVehicleId );
-void AddSquadToMovingLists( INT32 iSquadNumber );
-void AddSoldierToMovingLists( SOLDIERTYPE *pSoldier );
 void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 void ReBuildMoveBox( void );
@@ -524,16 +495,10 @@ BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
 void CreateDestroyTheUpdateBox( void );
 void SetSoldierUpdateBoxReason( INT32 iReason );
 void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier );
-void ResetSoldierUpdateBox( void );
 void DisplaySoldierUpdateBox( );
-BOOLEAN IsThePopUpBoxEmpty( void );
 
 
-// unmarking buttons dirty for dialogue
-void UpdateButtonsDuringCharacterDialogue( void );
-void UpdateButtonsDuringCharacterDialogueSubTitles( void );
 void SetUpdateBoxFlag( BOOLEAN fFlag );
-
 
 
 /// set the town of Tixa as found by the player
@@ -589,7 +554,6 @@ void RequestIncreaseInTimeCompression( void );
 void RequestDecreaseInTimeCompression( void );
 
 void SelectUnselectedMercsWhoMustMoveWithThisGuy( void );
-BOOLEAN AnyMercInSameSquadOrVehicleIsSelected( SOLDIERTYPE *pSoldier );
 
 BOOLEAN LoadLeaveItemList( HWFILE hFile );
 BOOLEAN SaveLeaveItemList( HWFILE hFile );
@@ -598,7 +562,6 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 
 void EndUpdateBox( BOOLEAN fContinueTimeCompression );
 
-extern BOOLEAN CanCharacterMoveInStrategic( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber );
 extern BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot );
 
 

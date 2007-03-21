@@ -128,21 +128,6 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackButton;
 
 
-BOOLEAN DisplayMercFace( UINT8 ubMercID);
-void LoadAndDisplayMercBio( UINT8 ubMercID );
-void DisplayMercsStats( UINT8 ubMercID );
-BOOLEAN MercFilesHireMerc(UINT8 ubMercID);
-void EnableDisableMercFilesNextPreviousButton( );
-
-
-
-
-
-void GameInitMercsFiles()
-{
-
-}
-
 BOOLEAN EnterMercsFiles()
 {
 	InitMercBackGround();
@@ -231,6 +216,13 @@ void HandleMercsFiles()
 
 }
 
+
+static BOOLEAN DisplayMercFace(UINT8 ubMercID);
+static void DisplayMercsStats(UINT8 ubMercID);
+static void EnableDisableMercFilesNextPreviousButton(void);
+static void LoadAndDisplayMercBio(UINT8 ubMercID);
+
+
 void RenderMercsFiles()
 {
 	DrawMecBackGround();
@@ -297,6 +289,9 @@ static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static BOOLEAN MercFilesHireMerc(UINT8 ubMercID);
+
+
 static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -324,7 +319,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-BOOLEAN DisplayMercFace( UINT8 ubMercID)
+static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 {
 	const char *sFaceLoc = "FACES/BIGFACES/";
 	char						sTemp[100];
@@ -394,7 +389,7 @@ BOOLEAN DisplayMercFace( UINT8 ubMercID)
 }
 
 
-void LoadAndDisplayMercBio( UINT8 ubMercID )
+static void LoadAndDisplayMercBio(UINT8 ubMercID)
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc = 0;
@@ -415,7 +410,7 @@ void LoadAndDisplayMercBio( UINT8 ubMercID )
 }
 
 
-void DisplayMercsStats( UINT8 ubMercID )
+static void DisplayMercsStats(UINT8 ubMercID)
 {
 	UINT16 usPosY, usPosX;
 	wchar_t sString[128];
@@ -487,8 +482,7 @@ void DisplayMercsStats( UINT8 ubMercID )
 }
 
 
-
-BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
+static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 {
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8	bReturnCode;
@@ -568,7 +562,7 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void EnableDisableMercFilesNextPreviousButton( )
+static void EnableDisableMercFilesNextPreviousButton(void)
 {
 	if( gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex-1 )
 		EnableButton( guiNextButton );

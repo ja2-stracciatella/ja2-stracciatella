@@ -69,37 +69,14 @@ INT32 giMapBorderButtonsImage[ 6 ] = { -1, -1, -1, -1, -1, -1 };
 //UINT32 guiMapBorderLandRaiseButtonsImage[ 2 ];
 
 
-
-void DeleteMapBorderButtons( void );
-BOOLEAN CreateButtonsForMapBorder( void );
-
-
 //void MapScrollButtonMvtCheck( void );
 //BOOLEAN ScrollButtonsDisplayingHelpMessage( void );
 //void UpdateScrollButtonStatesWhileScrolling( void );
 
-// set button states to match map flags
-void InitializeMapBorderButtonStates( void );
-
-// blit in the level marker
-void DisplayCurrentLevelMarker( void );
-
 extern void CancelMapUIMessage( void );
 
 
-
-// callbacks
-void BtnTownCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnMineCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnItemCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason);
-void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason);
 //void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason);
-
-void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
-
-void CommonBtnCallbackBtnDownChecks( void );
 
 
 /*
@@ -137,6 +114,8 @@ void DeleteMapBorderGraphics( void )
 //	DeleteVideoObjectFromIndex( guiMapBorderCorner );
 }
 
+
+static void DisplayCurrentLevelMarker(void);
 
 
 void RenderMapBorder( void )
@@ -209,6 +188,16 @@ void RenderMapBorderEtaPopUp( void )
 
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
 }
+
+
+static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason);
+static void InitializeMapBorderButtonStates(void);
+
 
 BOOLEAN CreateButtonsForMapBorder( void )
 {
@@ -437,7 +426,10 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 */
 
 
-void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
+static void CommonBtnCallbackBtnDownChecks(void);
+
+
+static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -451,7 +443,7 @@ void BtnMilitiaCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -465,7 +457,7 @@ void BtnTeamCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnTownCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -479,7 +471,7 @@ void BtnTownCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -493,7 +485,7 @@ void BtnMineCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
   {
@@ -508,7 +500,7 @@ void BtnAircraftCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnItemCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
   {
@@ -571,6 +563,10 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 */
+
+
+static void MapBorderButtonOff(UINT8 ubBorderButtonIndex);
+static void MapBorderButtonOn(UINT8 ubBorderButtonIndex);
 
 
 void ToggleShowTownsMode( void )
@@ -641,6 +637,9 @@ void ToggleShowMinesMode( void )
 
 	fMapPanelDirty = TRUE;
 }
+
+
+static BOOLEAN DoesPlayerHaveAnyMilitia(void);
 
 
 void ToggleShowMilitiaMode( void )
@@ -749,6 +748,9 @@ void ToggleAirspaceMode( void )
 		TurnOnAirSpaceMode();
 	}
 }
+
+
+static void TurnOnItemFilterMode(void);
 
 
 void ToggleItemsFilter( void )
@@ -1035,7 +1037,7 @@ BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 */
 
 
-void DisplayCurrentLevelMarker( void )
+static void DisplayCurrentLevelMarker(void)
 {
 	// display the current level marker on the map border
 /*
@@ -1048,6 +1050,9 @@ void DisplayCurrentLevelMarker( void )
 	// it's actually a white rectangle, not a green arrow!
 	BltVideoObjectFromIndex(guiSAVEBUFFER, guiLEVELMARKER, 0, MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + MAP_LEVEL_MARKER_DELTA * iCurrentMapSectorZ);
 }
+
+
+static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 void CreateMouseRegionsForLevelMarkers( void )
@@ -1081,7 +1086,8 @@ void DeleteMouseRegionsForLevelMarkers( void )
 	}
 }
 
-void LevelMarkerBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
@@ -1236,7 +1242,7 @@ void TurnOnAirSpaceMode( void )
 }
 
 
-void TurnOnItemFilterMode( void )
+static void TurnOnItemFilterMode(void)
 {
 	// if mode already on, leave, else set and redraw
 
@@ -1346,7 +1352,8 @@ void UpdateScrollButtonStatesWhileScrolling( void )
 */
 
 
-void InitializeMapBorderButtonStates( void )
+// set button states to match map flags
+static void InitializeMapBorderButtonStates(void)
 {
 	if( fShowItemsFlag )
 	{
@@ -1404,8 +1411,7 @@ void InitializeMapBorderButtonStates( void )
 }
 
 
-
-BOOLEAN DoesPlayerHaveAnyMilitia( void )
+static BOOLEAN DoesPlayerHaveAnyMilitia(void)
 {
 	INT16 sX, sY;
 
@@ -1428,8 +1434,7 @@ BOOLEAN DoesPlayerHaveAnyMilitia( void )
 }
 
 
-
-void CommonBtnCallbackBtnDownChecks( void )
+static void CommonBtnCallbackBtnDownChecks(void)
 {
 	if( IsMapScreenHelpTextUp() )
 	{
@@ -1459,8 +1464,7 @@ void InitMapScreenFlags( void )
 }
 
 
-
-void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
+static void MapBorderButtonOff(UINT8 ubBorderButtonIndex)
 {
 	Assert( ubBorderButtonIndex < 6 );
 
@@ -1481,7 +1485,7 @@ void MapBorderButtonOff( UINT8 ubBorderButtonIndex )
 }
 
 
-void MapBorderButtonOn( UINT8 ubBorderButtonIndex )
+static void MapBorderButtonOn(UINT8 ubBorderButtonIndex)
 {
 	Assert( ubBorderButtonIndex < 6 );
 

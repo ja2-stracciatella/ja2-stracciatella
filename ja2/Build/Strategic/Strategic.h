@@ -42,8 +42,6 @@ extern StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
 BOOLEAN InitStrategicEngine( );
 
-void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier );
-
 BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier );
 
 #endif

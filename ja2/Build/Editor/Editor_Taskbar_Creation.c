@@ -17,16 +17,7 @@
 #include "Overhead_Types.h"
 
 
-//Category tabs of the editor buttons
-void InitEditorTerrainToolbar();
-void InitEditorBuildingsToolbar();
-void InitEditorItemsToolbar();
-void InitEditorMercsToolbar();
-void InitEditorMapInfoToolbar();
-void InitEditorOptionsToolbar();
-void InitEditorItemStatsButtons();
-
-void InitEditorItemStatsButtons()
+static void InitEditorItemStatsButtons(void)
 {
 	iEditorButton[ ITEMSTATS_PANEL ] =
 		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, 480, 361, 160, 99, BUTTON_TOGGLE,
@@ -40,7 +31,8 @@ void InitEditorItemStatsButtons()
 		600, 441, 36, 16, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL+1, DEFAULT_MOVE_CALLBACK, ItemStatsDeleteCallback );
 }
 
-void InitEditorMercsToolbar()
+
+static void InitEditorMercsToolbar(void)
 {
 	const wchar_t* FaceDirs[8] = {L"north",L"northeast",L"east",L"southeast",L"south",L"southwest",L"west",L"northwest"};
 	INT32 x;
@@ -439,7 +431,8 @@ void InitEditorMercsToolbar()
 	MSYS_SetBtnUserData( iEditorButton[ MERCS_PACK4_SLOT ], 0, BIGPOCK4POS );
 }
 
-void InitEditorBuildingsToolbar()
+
+static void InitEditorBuildingsToolbar(void)
 {
 	iEditorButton[BUILDING_TOGGLE_ROOF_VIEW] =
 		CreateTextButton(L"ROOFS",(UINT16)SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -544,7 +537,8 @@ void InitEditorBuildingsToolbar()
 	SetButtonFastHelpText( iEditorButton[ BUILDING_CYCLE_BRUSHSIZE ], L"Cycle brush size");
 }
 
-void InitEditorItemsToolbar()
+
+static void InitEditorItemsToolbar(void)
 {
 	SetFontForeground( FONT_MCOLOR_LTRED );
 	iEditorButton[ITEMS_WEAPONS] =
@@ -591,7 +585,8 @@ void InitEditorItemsToolbar()
 
 }
 
-void InitEditorMapInfoToolbar()
+
+static void InitEditorMapInfoToolbar(void)
 {
 	iEditorButton[MAPINFO_ADD_LIGHT1_SOURCE] =
 		CreateEasyToggleButton( 10, 362, "EDITOR/light.sti", BtnDrawLightsCallback );
@@ -662,7 +657,8 @@ void InitEditorMapInfoToolbar()
 	SetButtonFastHelpText( iEditorButton[ MAPINFO_ISOLATED_POINT ], L"Specify isolated point for validation purposes.");
 }
 
-void InitEditorOptionsToolbar()
+
+static void InitEditorOptionsToolbar(void)
 {
 	iEditorButton[OPTIONS_NEW_MAP] =
 		CreateEasyNoToggleButton( 71,401,"EDITOR/new.sti",  BtnNewMapCallback);
@@ -697,7 +693,8 @@ void InitEditorOptionsToolbar()
 	SetButtonFastHelpText(iEditorButton[OPTIONS_QUIT_GAME],L"Exit game.");
 }
 
-void InitEditorTerrainToolbar()
+
+static void InitEditorTerrainToolbar(void)
 {
 	iEditorButton[TERRAIN_FGROUND_TEXTURES] =
 		CreateEasyToggleButton( 100,400,"EDITOR/downgrid.sti", BtnFgGrndCallback);

@@ -20,6 +20,8 @@ StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 extern BOOLEAN fReDrawFace;
 
 
+static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier);
+
 
 BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 {
@@ -87,7 +89,7 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleSoldierDeadComments( SOLDIERTYPE *pSoldier )
+static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier)
 {
 	INT32 cnt = 0;
 	SOLDIERTYPE *pTeamSoldier;

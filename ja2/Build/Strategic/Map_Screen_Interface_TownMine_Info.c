@@ -54,39 +54,12 @@ extern BOOLEAN fMapScreenBottomDirty;
 //extern UINT8 gubMonsterMineInfestation[];
 
 
-// create the town/mine info box
-void CreateTownInfoBox( void );
-
-// add town text to town info box
-void AddTextToTownBox( void );
-
-// add text to mine info box
-void AddTextToMineBox( void );
-
-// add text to non-town/non-mine the other boxes
-void AddTextToBlankSectorBox( void );
-
 // add "sector" line text to any popup box
-void AddSectorToBox(void);
-
-void AddCommonInfoToBox(void);
-
-void AddItemsInSectorToBox(void);
-
-// position town/mine info box on the screen
-void PositionTownMineInfoBox( void );
-
-// add the pop up button for the map inventory pop up activation
-void AddInventoryButtonForMapPopUpBox( void );
-
-// now remove the above button
-void RemoveInventoryButtonForMapPopUpBox( void );
+static void AddSectorToBox(void);
 
 // callback to turn on sector invneotry list
 static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason);
-void MinWidthOfTownMineInfoBox( void );
-
 
 
 void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -105,6 +78,19 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	CreateDestroyTownInfoBox( );
 
 }
+
+
+static void AddCommonInfoToBox(void);
+static void AddInventoryButtonForMapPopUpBox(void);
+static void AddItemsInSectorToBox(void);
+static void AddTextToBlankSectorBox(void);
+static void AddTextToMineBox(void);
+static void AddTextToTownBox(void);
+static void CreateTownInfoBox(void);
+static void MinWidthOfTownMineInfoBox(void);
+static void PositionTownMineInfoBox(void);
+static void RemoveInventoryButtonForMapPopUpBox(void);
+
 
 void CreateDestroyTownInfoBox( void )
 {
@@ -236,7 +222,7 @@ void CreateDestroyTownInfoBox( void )
 }
 
 
-void CreateTownInfoBox( void )
+static void CreateTownInfoBox(void)
 {
 	// create basic box
  CreatePopUpBox(&ghTownMineBox, TownMineDimensions, TownMinePosition, (POPUP_BOX_FLAG_CLIP_TEXT ));
@@ -262,7 +248,7 @@ void CreateTownInfoBox( void )
 
 
 // adds text to town info box
-void AddTextToTownBox( void )
+static void AddTextToTownBox(void)
 {
 	UINT32 hStringHandle = 0;
 	CHAR16 wString[ 64 ];
@@ -365,7 +351,7 @@ void AddTextToTownBox( void )
 
 
 // adds text to mine info box
-void AddTextToMineBox( void )
+static void AddTextToMineBox(void)
 {
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
@@ -495,7 +481,8 @@ void AddTextToMineBox( void )
 }
 
 
-void AddTextToBlankSectorBox( void )
+// add text to non-town/non-mine the other boxes
+static void AddTextToBlankSectorBox(void)
 {
 	UINT32 hStringHandle;
 	UINT16 usSectorValue = 0;
@@ -539,7 +526,7 @@ void AddTextToBlankSectorBox( void )
 }
 
 
-void AddSectorToBox(void)
+static void AddSectorToBox(void)
 {
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
@@ -560,8 +547,7 @@ void AddSectorToBox(void)
 }
 
 
-
-void AddCommonInfoToBox(void)
+static void AddCommonInfoToBox(void)
 {
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
@@ -671,7 +657,7 @@ void AddCommonInfoToBox(void)
 }
 
 
-void AddItemsInSectorToBox(void)
+static void AddItemsInSectorToBox(void)
 {
 	CHAR16 wString[ 64 ];
 	UINT32 hStringHandle = 0;
@@ -687,7 +673,8 @@ void AddItemsInSectorToBox(void)
 }
 
 
-void PositionTownMineInfoBox( void )
+// position town/mine info box on the screen
+static void PositionTownMineInfoBox(void)
 {
 	// position town mine info box
 	SGPRect pDimensions;
@@ -746,7 +733,7 @@ void PositionTownMineInfoBox( void )
 }
 
 
-void AddInventoryButtonForMapPopUpBox( void )
+static void AddInventoryButtonForMapPopUpBox(void)
 {
 	INT16 sX, sY;
 	SGPRect pDimensions;
@@ -809,7 +796,8 @@ void AddInventoryButtonForMapPopUpBox( void )
 */
 }
 
-void RemoveInventoryButtonForMapPopUpBox( void )
+
+static void RemoveInventoryButtonForMapPopUpBox(void)
 {
 
 	// get rid of button
@@ -852,7 +840,7 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 
 
 // get the min width of the town mine info pop up box
-void MinWidthOfTownMineInfoBox( void )
+static void MinWidthOfTownMineInfoBox(void)
 {
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
 	UINT32 uiObject;

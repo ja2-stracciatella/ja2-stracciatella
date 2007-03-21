@@ -24,13 +24,14 @@ INT32 giIMPAttributeFinishButtonImage[ 2 ];
 INT32 giIMPAttributeFinishButton[ 2 ];
 
 // function definitions
-void CreateAttributeFinishButtons( void );
-void DestroyAttributeFinishButtons( void );
 extern void SetGeneratedCharacterAttributes( void );
 
 
 static void BtnIMPAttributeFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPAttributeFinishNoCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateAttributeFinishButtons(void);
 
 
 void EnterIMPAttributeFinish( void )
@@ -53,6 +54,9 @@ void RenderIMPAttributeFinish( void )
 }
 
 
+static void DestroyAttributeFinishButtons(void);
+
+
 void ExitIMPAttributeFinish( void )
 {
   // destroy the buttons for this screen
@@ -64,8 +68,7 @@ void HandleIMPAttributeFinish( void )
 }
 
 
-
-void CreateAttributeFinishButtons( void )
+static void CreateAttributeFinishButtons(void)
 {
 
 	// this procedure will create the buttons needed for the attribute finish screen
@@ -102,7 +105,7 @@ void CreateAttributeFinishButtons( void )
 }
 
 
-void DestroyAttributeFinishButtons( void )
+static void DestroyAttributeFinishButtons(void)
 {
 
 	// this procedure will destroy the buttons for the attribute finish screen

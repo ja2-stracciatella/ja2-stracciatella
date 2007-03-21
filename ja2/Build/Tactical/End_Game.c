@@ -126,7 +126,11 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 
 }
 
-void DeidrannaTimerCallback( void )
+
+static void HandleDeidrannaDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel);
+
+
+static void DeidrannaTimerCallback(void)
 {
 	HandleDeidrannaDeath( gpKillerSoldier, gsGridNo, gbLevel );
 }
@@ -149,7 +153,8 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 
 }
 
-void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+
+static void HandleDeidrannaDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -201,7 +206,8 @@ void HandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLev
 
 }
 
-void DoneFadeInKilledQueen( void )
+
+static void DoneFadeInKilledQueen(void)
 {
 	SOLDIERTYPE *pNPCSoldier;
 
@@ -220,7 +226,8 @@ void DoneFadeInKilledQueen( void )
 
 }
 
-void DoneFadeOutKilledQueen( void )
+
+static void DoneFadeOutKilledQueen(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
@@ -361,7 +368,7 @@ void EndQueenDeathEndgame( )
 }
 
 
-void DoneFadeOutEndCinematic( void )
+static void DoneFadeOutEndCinematic(void)
 {
 	// DAVE PUT SMAKER STUFF HERE!!!!!!!!!!!!
 	// :)
@@ -389,8 +396,10 @@ void HandleDoneLastEndGameQuote( )
 }
 
 
+static void HandleQueenBitchDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel);
 
-void QueenBitchTimerCallback( void )
+
+static void QueenBitchTimerCallback(void)
 {
 	HandleQueenBitchDeath( gpKillerSoldier, gsGridNo, gbLevel );
 }
@@ -441,7 +450,8 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 }
 
-void HandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+
+static void HandleQueenBitchDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;

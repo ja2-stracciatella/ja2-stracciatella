@@ -7,8 +7,6 @@ typedef UINT8		AudioSample8;
 typedef INT16		AudioSample16;
 
 
-
-void AudioGapListInit(const char *zSoundFile, AudioGapList	*pGapList );
 void AudioGapListDone( AudioGapList	*pGapList );
 
 void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList );

@@ -38,7 +38,6 @@ typedef struct
 
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime );
-void HandleFirstBattleVictory( void );
 
 BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID );
 
@@ -85,9 +84,6 @@ void HandleScientistAWOLMeanwhileScene( void );
 
 // handle chopper used meanwhile
 void HandleKillChopperMeanwhileScene( void );
-
-// handle interrogation meanwhile
-void HandleInterrogationMeanwhileScene( void );
 
 extern	MEANWHILE_DEFINITION	gCurrentMeanwhileDef;
 extern	MEANWHILE_DEFINITION	gMeanwhileDef[NUM_MEANWHILES];

@@ -31,18 +31,14 @@ INT32 iIMPQuestionLengths[25]=
 };
 
 
-// function headers
 void PrintIMPPersonalityQuizQuestionAndAnsers( void );
-void OffSetQuestionForFemaleSpecificQuestions( INT32 *iCurrentOffset );
 
 
 #define QTN_FIRST_COLUMN_X 80
 #define QTN_SECOND_COLUMN_X 320
 
 
-
-
-void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, UINT32 uiFont, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
+static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, UINT32 uiFont, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
 {
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
 	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in font uiFont
@@ -73,13 +69,6 @@ void LoadAndDisplayIMPText( INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT
 	SetFontShadow( DEFAULT_SHADOW );
 
 
-}
-
-
-void InitializeImpRecordLengthList( void )
-{
-
-	// this procedure will setup the IMP records length list with the appropriate values
 }
 
 
@@ -271,16 +260,8 @@ void PrintImpText( void )
 	}
 }
 
-void PrintImpTextPostButtonRender( void )
-{
-	// prints any text after IMP buttons have been rendered
-  switch( iCurrentImpPage )
-	{
-		case ( IMP_HOME_PAGE ):
-			// about us button
-    break;
-	}
-}
+
+static void OffSetQuestionForFemaleSpecificQuestions(INT32* iCurrentOffset);
 
 
 void PrintIMPPersonalityQuizQuestionAndAnsers( void )
@@ -385,7 +366,8 @@ void PrintIMPPersonalityQuizQuestionAndAnsers( void )
 	}
 }
 
-void OffSetQuestionForFemaleSpecificQuestions( INT32 *iCurrentOffset )
+
+static void OffSetQuestionForFemaleSpecificQuestions(INT32* iCurrentOffset)
 {
 	INT32 iExtraOffSet = 0;
 	BOOLEAN fOffSet = TRUE;

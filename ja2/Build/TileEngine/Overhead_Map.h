@@ -8,13 +8,10 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 void HandleOverheadMap( );
 BOOLEAN InOverheadMap( );
 void GoIntoOverheadMap( );
-void HandleOverheadUI( );
 void KillOverheadMap();
 
 void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, INT16 *psX2, INT16 *psY2, INT16 sEndXS, INT16 sEndYS );
-void CalculateRestrictedScaleFactors( INT16 *pScaleX, INT16 *pScaleY );
 
 void TrashOverheadMap( );
-
 
 #endif

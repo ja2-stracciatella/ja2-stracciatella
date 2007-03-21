@@ -24,11 +24,6 @@
 #include "SaveLoadGame.h"
 
 
-INT8 FromWorldFlagsToSmokeType( UINT8 ubWorldFlags );
-UINT8 FromSmokeTypeToWorldFlags( INT8 bType );
-
-
-
 #define		NUM_SMOKE_EFFECT_SLOTS					25
 
 
@@ -37,12 +32,7 @@ SMOKEEFFECT				gSmokeEffectData[ NUM_SMOKE_EFFECT_SLOTS ];
 UINT32						guiNumSmokeEffects = 0;
 
 
-INT32 GetFreeSmokeEffect( void );
-void RecountSmokeEffects( void );
-
-
-
-INT32 GetFreeSmokeEffect( void )
+static INT32 GetFreeSmokeEffect(void)
 {
 	UINT32 uiCount;
 
@@ -58,7 +48,8 @@ INT32 GetFreeSmokeEffect( void )
 	return( -1 );
 }
 
-void RecountSmokeEffects( void )
+
+static void RecountSmokeEffects(void)
 {
 	INT32 uiCount;
 
@@ -73,6 +64,7 @@ void RecountSmokeEffects( void )
 }
 
 
+static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags);
 
 
 // Returns NO_SMOKE_EFFECT if none there...
@@ -93,7 +85,7 @@ INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 }
 
 
-INT8 FromWorldFlagsToSmokeType( UINT8 ubWorldFlags )
+static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
 {
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
@@ -118,7 +110,7 @@ INT8 FromWorldFlagsToSmokeType( UINT8 ubWorldFlags )
 }
 
 
-UINT8 FromSmokeTypeToWorldFlags( INT8 bType )
+static UINT8 FromSmokeTypeToWorldFlags(INT8 bType)
 {
 	switch( bType )
 	{

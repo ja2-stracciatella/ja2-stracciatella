@@ -36,22 +36,6 @@
 
 BOOLEAN		gfInSectorExitMenu = FALSE;
 
-void CheckLoadMapCallback( GUI_BUTTON *btn, INT32 reason );
-void SingleMoveCallback(GUI_BUTTON *btn, INT32 reason );
-void AllMoveCallback(GUI_BUTTON *btn, INT32 reason );
-
-void OKCallback(GUI_BUTTON *btn, INT32 reason );
-void CancelCallback(GUI_BUTTON *btn, INT32 reason );
-
-void SectorExitBackgroundCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-void SingleRegionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void AllRegionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void LoadRegionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void SingleRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void AllRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void LoadRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
 
 typedef struct
 {
@@ -110,9 +94,23 @@ INT8    gbWarpWorldZ;
 INT16   gsWarpGridNo;
 
 
+static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason);
+static void AllRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void CancelCallback(GUI_BUTTON* btn, INT32 reason);
+static void CheckLoadMapCallback(GUI_BUTTON* btn, INT32 reason);
+static void LoadRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void OKCallback(GUI_BUTTON* btn, INT32 reason);
+static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SingleMoveCallback(GUI_BUTTON* btn, INT32 reason);
+static void SingleRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct
 //		 and calculated upon entry to this function instead of passing in multiple arguments and calculating it prior.
-BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
+static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalData)
 {
 	UINT32 uiTraverseTimeInMinutes;
 	SOLDIERTYPE *pSoldier;
@@ -375,13 +373,13 @@ BOOLEAN InternalInitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 	return( TRUE );
 }
 
-void DoneFadeInWarp( void )
-{
 
+static void DoneFadeInWarp(void)
+{
 }
 
 
-void DoneFadeOutWarpCallback( void )
+static void DoneFadeOutWarpCallback(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pSoldier;
@@ -428,7 +426,7 @@ void DoneFadeOutWarpCallback( void )
 }
 
 
-void WarpToSurfaceCallback( UINT8 bExitValue )
+static void WarpToSurfaceCallback(UINT8 bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -463,7 +461,7 @@ BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
 }
 
 
-void UpdateSectorExitMenu( )
+static void UpdateSectorExitMenu(void)
 {
 	if ( gExitDialog.fGotoSector )
 	{
@@ -800,7 +798,7 @@ void RemoveSectorExitMenu( BOOLEAN fOk )
 }
 
 
-void CheckLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
+static void CheckLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -808,7 +806,8 @@ void CheckLoadMapCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SingleMoveAction()
+
+static void SingleMoveAction(void)
 {
 	//KM: New logic Mar2 '99
 	if( !gExitDialog.fMultipleSquadsInSector )
@@ -839,7 +838,8 @@ void SingleMoveAction()
 	*/
 }
 
-void AllMoveAction()
+
+static void AllMoveAction(void)
 {
 	//KM: New logic Mar2 '99
 	if( !gExitDialog.fMultipleSquadsInSector )
@@ -858,7 +858,8 @@ void AllMoveAction()
 	*/
 }
 
-void SingleMoveCallback(GUI_BUTTON *btn, INT32 reason )
+
+static void SingleMoveCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -867,7 +868,7 @@ void SingleMoveCallback(GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void AllMoveCallback(GUI_BUTTON *btn, INT32 reason )
+static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -876,7 +877,7 @@ void AllMoveCallback(GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void OKCallback(GUI_BUTTON *btn, INT32 reason )
+static void OKCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -893,7 +894,8 @@ void OKCallback(GUI_BUTTON *btn, INT32 reason )
 
 }
 
-void CancelCallback(GUI_BUTTON *btn, INT32 reason )
+
+static void CancelCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -910,7 +912,7 @@ void CancelCallback(GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void SectorExitBackgroundCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -918,7 +920,8 @@ void SectorExitBackgroundCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void SingleRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SingleRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -926,7 +929,8 @@ void SingleRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void AllRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void AllRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -934,7 +938,8 @@ void AllRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void LoadRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void LoadRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -943,8 +948,7 @@ void LoadRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void SingleRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
@@ -956,7 +960,8 @@ void SingleRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void AllRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{
@@ -968,7 +973,8 @@ void AllRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void LoadRegionMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void LoadRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_MOVE )
 	{

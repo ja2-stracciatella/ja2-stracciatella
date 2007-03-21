@@ -135,22 +135,17 @@ enum
 };
 UINT32 guiAttachmentButton[ NUM_ATTACHMENT_BUTTONS ];
 BOOLEAN gfAttachment[ NUM_ATTACHMENT_BUTTONS ];
-void ToggleAttachment( GUI_BUTTON *btn, INT32 reason );
 
 UINT32 guiCeramicPlatesButton;
 BOOLEAN gfCeramicPlates;
-void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason );
 
 UINT32 guiDetonatorButton;
 BOOLEAN gfDetonator;
-void ToggleDetonator( GUI_BUTTON *btn, INT32 reason );
 
 UINT32 guiActionItemButton;
-void ActionItemCallback( GUI_BUTTON *btn, INT32 reason );
+static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason);
 INT8 gbActionItemIndex = ACTIONITEM_MEDIUM;
 INT8 gbDefaultBombTrapLevel = 9;
-
-void RemoveBombFromWorldByItemIndex( INT32 iItemIndex );
 
 enum
 {
@@ -178,52 +173,6 @@ INT16				gsItemGridNo;
 ITEM_POOL		*gpEditingItemPool = NULL;
 extern ITEM_POOL *gpItemPool;
 
-void SetupGameTypeFlags();
-void RemoveGameTypeFlags();
-
-void SetupGunGUI();
-void ExtractAndUpdateGunGUI();
-void RemoveGunGUI();
-
-void SetupAmmoGUI();
-void ExtractAndUpdateAmmoGUI();
-void RemoveAmmoGUI();
-
-void SetupArmourGUI();
-void ExtractAndUpdateArmourGUI();
-void RemoveArmourGUI();
-
-void SetupEquipGUI();
-void ExtractAndUpdateEquipGUI();
-void RemoveEquipGUI();
-
-void SetupExplosivesGUI();
-void ExtractAndUpdateExplosivesGUI();
-void RemoveExplosivesGUI();
-
-void SetupTriggersGUI();
-void ExtractAndUpdateTriggersGUI();
-void RemoveTriggersGUI();
-
-void SetupActionItemsGUI();
-void ExtractAndUpdateActionItemsGUI();
-void RemoveActionItemsGUI();
-
-void SetupMoneyGUI();
-void ExtractAndUpdateMoneyGUI();
-void RemoveMoneyGUI();
-
-void SetupOwnershipGUI();
-void ExtractAndUpdateOwnershipGUI();
-void RemoveOwnershipGUI();
-void OwnershipGroupButtonCallback( GUI_BUTTON *btn, INT32 reason );
-
-void SetupKeysGUI();
-void ExtractAndUpdateKeysGUI();
-void RemoveKeysGUI();
-
-
-void ReEvaluateAttachmentStatii();
 
 void ShowItemStatsPanel()
 {
@@ -240,15 +189,18 @@ void HideItemStatsPanel()
 	gfShowItemStatsPanel = FALSE;
 }
 
-void EnableItemStatsPanel()
-{
 
-}
+static void ExtractAndUpdateActionItemsGUI(void);
+static void ExtractAndUpdateAmmoGUI(void);
+static void ExtractAndUpdateArmourGUI(void);
+static void ExtractAndUpdateEquipGUI(void);
+static void ExtractAndUpdateExplosivesGUI(void);
+static void ExtractAndUpdateGunGUI(void);
+static void ExtractAndUpdateKeysGUI(void);
+static void ExtractAndUpdateMoneyGUI(void);
+static void ExtractAndUpdateOwnershipGUI(void);
+static void ExtractAndUpdateTriggersGUI(void);
 
-void DisableItemStatsPanel()
-{
-
-}
 
 void ExecuteItemStatsCmd( UINT8 ubAction )
 {
@@ -298,7 +250,21 @@ void ExecuteItemStatsCmd( UINT8 ubAction )
 	}
 }
 
-void RemoveItemGUI()
+
+static void RemoveActionItemsGUI(void);
+static void RemoveAmmoGUI(void);
+static void RemoveArmourGUI(void);
+static void RemoveEquipGUI(void);
+static void RemoveExplosivesGUI(void);
+static void RemoveGameTypeFlags(void);
+static void RemoveGunGUI(void);
+static void RemoveKeysGUI(void);
+static void RemoveMoneyGUI(void);
+static void RemoveOwnershipGUI(void);
+static void RemoveTriggersGUI(void);
+
+
+static void RemoveItemGUI(void)
 {
 	if( !gpItem )
 		return;
@@ -329,6 +295,20 @@ void RemoveItemGUI()
 		case EDITING_KEYS:				RemoveKeysGUI();				break;
 	}
 }
+
+
+static void SetupActionItemsGUI(void);
+static void SetupAmmoGUI(void);
+static void SetupArmourGUI(void);
+static void SetupEquipGUI(void);
+static void SetupExplosivesGUI(void);
+static void SetupGameTypeFlags(void);
+static void SetupGunGUI(void);
+static void SetupKeysGUI(void);
+static void SetupMoneyGUI(void);
+static void SetupOwnershipGUI(void);
+static void SetupTriggersGUI(void);
+
 
 void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 {
@@ -551,7 +531,8 @@ void UpdateItemStatsPanel()
 	InvalidateRegion( 477, 362, 161, 97 );
 }
 
-void RealisticOnlyCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -565,7 +546,8 @@ void RealisticOnlyCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SciFiOnlyCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -579,7 +561,8 @@ void SciFiOnlyCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void BothModesCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -592,7 +575,8 @@ void BothModesCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SetupGameTypeFlags()
+
+static void SetupGameTypeFlags(void)
 {
 	if( gpEditingItemPool )
 	{
@@ -615,7 +599,8 @@ void SetupGameTypeFlags()
 	}
 }
 
-void RemoveGameTypeFlags()
+
+static void RemoveGameTypeFlags(void)
 {
 	if( giBothCheckboxButton != -1 )
 	{
@@ -634,7 +619,12 @@ void RemoveGameTypeFlags()
 	}
 }
 
-void SetupGunGUI()
+
+static void ReEvaluateAttachmentStatii(void);
+static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason);
+
+
+static void SetupGunGUI(void)
 {
 	wchar_t str[20];
 	INT16 yp;
@@ -734,7 +724,8 @@ void SetupGunGUI()
 	ReEvaluateAttachmentStatii();
 }
 
-void RemoveGunGUI()
+
+static void RemoveGunGUI(void)
 {
 	INT32 i;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
@@ -747,7 +738,8 @@ void RemoveGunGUI()
 	}
 }
 
-void ExtractAndUpdateGunGUI()
+
+static void ExtractAndUpdateGunGUI(void)
 {
 	INT32 i;
 	//Update the gun status
@@ -780,7 +772,8 @@ void ExtractAndUpdateGunGUI()
 	}
 }
 
-void SetupAmmoGUI()
+
+static void SetupAmmoGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
@@ -794,12 +787,14 @@ void SetupAmmoGUI()
 	}
 }
 
-void RemoveAmmoGUI()
+
+static void RemoveAmmoGUI(void)
 {
 	//nothing to remove
 }
 
-void ExtractAndUpdateAmmoGUI()
+
+static void ExtractAndUpdateAmmoGUI(void)
 {
 	INT32 i;
 	//Update the number of clips
@@ -825,7 +820,11 @@ void ExtractAndUpdateAmmoGUI()
 	}
 }
 
-void SetupArmourGUI()
+
+static void ToggleCeramicPlates(GUI_BUTTON* btn, INT32 reason);
+
+
+static void SetupArmourGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
@@ -852,7 +851,8 @@ void SetupArmourGUI()
 	}
 }
 
-void RemoveArmourGUI()
+
+static void RemoveArmourGUI(void)
 {
 	if( guiCeramicPlatesButton != -1 )
 	{
@@ -861,7 +861,8 @@ void RemoveArmourGUI()
 	}
 }
 
-void ExtractAndUpdateArmourGUI()
+
+static void ExtractAndUpdateArmourGUI(void)
 {
 	INT32 i;
 	//Update the armour status
@@ -886,7 +887,8 @@ void ExtractAndUpdateArmourGUI()
 	}
 }
 
-void SetupEquipGUI()
+
+static void SetupEquipGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
@@ -900,12 +902,14 @@ void SetupEquipGUI()
 	}
 }
 
-void RemoveEquipGUI()
+
+static void RemoveEquipGUI(void)
 {
 	//nothing to remove
 }
 
-void ExtractAndUpdateEquipGUI()
+
+static void ExtractAndUpdateEquipGUI(void)
 {
 	INT32 i;
 	//Update the equipment status
@@ -930,7 +934,11 @@ void ExtractAndUpdateEquipGUI()
 	}
 }
 
-void SetupExplosivesGUI()
+
+static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason);
+
+
+static void SetupExplosivesGUI(void)
 {
 	wchar_t str[20];
 	INT16 yp;
@@ -966,7 +974,8 @@ void SetupExplosivesGUI()
 	}
 }
 
-void RemoveExplosivesGUI()
+
+static void RemoveExplosivesGUI(void)
 {
 	if( guiDetonatorButton != -1 )
 	{
@@ -975,7 +984,8 @@ void RemoveExplosivesGUI()
 	}
 }
 
-void ExtractAndUpdateExplosivesGUI()
+
+static void ExtractAndUpdateExplosivesGUI(void)
 {
 	INT32 i;
 	//Update the explosives status
@@ -1012,7 +1022,8 @@ void ExtractAndUpdateExplosivesGUI()
 	}
 }
 
-void SetupMoneyGUI()
+
+static void SetupMoneyGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->uiMoneyAmount);
@@ -1024,7 +1035,8 @@ void SetupMoneyGUI()
 	}
 }
 
-void ExtractAndUpdateMoneyGUI()
+
+static void ExtractAndUpdateMoneyGUI(void)
 {
 	INT32 i;
 	//Update the amount of cash
@@ -1045,12 +1057,16 @@ void ExtractAndUpdateMoneyGUI()
 	}
 }
 
-void RemoveMoneyGUI()
-{
 
+static void RemoveMoneyGUI(void)
+{
 }
 
-void SetupOwnershipGUI()
+
+static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void SetupOwnershipGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->ubOwnerProfile);
@@ -1060,7 +1076,8 @@ void SetupOwnershipGUI()
 		485, 415, 80, 25, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, OwnershipGroupButtonCallback );
 }
 
-void OwnershipGroupButtonCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1074,7 +1091,8 @@ void SetOwnershipGroup( UINT8 ubNewGroup )
 	SpecifyButtonText( giOwnershipGroupButton, gszCivGroupNames[ ubNewGroup ] );
 }
 
-void ExtractAndUpdateOwnershipGUI()
+
+static void ExtractAndUpdateOwnershipGUI(void)
 {
 	INT32 i;
 	//Update the amount of cash
@@ -1087,7 +1105,8 @@ void ExtractAndUpdateOwnershipGUI()
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 }
 
-void RemoveOwnershipGUI()
+
+static void RemoveOwnershipGUI(void)
 {
 	if( giOwnershipGroupButton != -1 )
 	{
@@ -1096,7 +1115,8 @@ void RemoveOwnershipGUI()
 	}
 }
 
-void SetupKeysGUI()
+
+static void SetupKeysGUI(void)
 {
 	wchar_t str[20];
 	if( gpEditingItemPool )
@@ -1106,7 +1126,8 @@ void SetupKeysGUI()
 	}
 }
 
-void ExtractAndUpdateKeysGUI()
+
+static void ExtractAndUpdateKeysGUI(void)
 {
 	if( gpEditingItemPool )
 	{
@@ -1117,12 +1138,13 @@ void ExtractAndUpdateKeysGUI()
 	}
 }
 
-void RemoveKeysGUI()
-{
 
+static void RemoveKeysGUI(void)
+{
 }
 
-void SetupActionItemsGUI()
+
+static void SetupActionItemsGUI(void)
 {
 	wchar_t str[4];
 	const wchar_t* pStr;
@@ -1141,7 +1163,8 @@ void SetupActionItemsGUI()
 		510, 410, 100, 20, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ActionItemCallback );
 }
 
-void ExtractAndUpdateActionItemsGUI()
+
+static void ExtractAndUpdateActionItemsGUI(void)
 {
 	INT32 i;
 	//Update the equipment status
@@ -1169,7 +1192,8 @@ void ExtractAndUpdateActionItemsGUI()
 	}
 }
 
-void RemoveActionItemsGUI()
+
+static void RemoveActionItemsGUI(void)
 {
 	if( guiActionItemButton != -1 )
 	{
@@ -1178,7 +1202,8 @@ void RemoveActionItemsGUI()
 	}
 }
 
-void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1189,7 +1214,8 @@ void AlarmTriggerCheckboxCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void SetupTriggersGUI()
+
+static void SetupTriggersGUI(void)
 {
 	wchar_t str[4];
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
@@ -1211,7 +1237,8 @@ void SetupTriggersGUI()
 	}
 }
 
-void ExtractAndUpdateTriggersGUI()
+
+static void ExtractAndUpdateTriggersGUI(void)
 {
 	INT32 i;
 	//Update the trap level
@@ -1234,7 +1261,8 @@ void ExtractAndUpdateTriggersGUI()
 	}
 }
 
-void RemoveTriggersGUI()
+
+static void RemoveTriggersGUI(void)
 {
 	if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
 	{
@@ -1246,7 +1274,8 @@ void RemoveTriggersGUI()
 	}
 }
 
-void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
+
+static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1288,7 +1317,8 @@ void ToggleAttachment( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
+
+static void ToggleCeramicPlates(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1311,7 +1341,8 @@ void ToggleCeramicPlates( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
+
+static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1335,7 +1366,8 @@ void ToggleDetonator( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ActionItemCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1507,7 +1539,8 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	}
 }
 
-void ReEvaluateAttachmentStatii()
+
+static void ReEvaluateAttachmentStatii(void)
 {
 	INT32 i;
 	UINT16 usAttachment;

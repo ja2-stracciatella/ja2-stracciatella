@@ -30,7 +30,8 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
 //c an this grunt help anyone else out?
 BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 
-BOOLEAN FindAutobandageClimbPoint( INT16 sDesiredGridNo, BOOLEAN fClimbUp )
+
+static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 {
 	// checks for existance of location to climb up to building, not occupied by a medic
 	BUILDING *	pBuilding;
@@ -64,7 +65,8 @@ BOOLEAN FindAutobandageClimbPoint( INT16 sDesiredGridNo, BOOLEAN fClimbUp )
 	return( FALSE );
 }
 
-BOOLEAN FullPatientCheck( SOLDIERTYPE * pPatient )
+
+static BOOLEAN FullPatientCheck(SOLDIERTYPE* pPatient)
 {
 	UINT8						cnt;
 	SOLDIERTYPE *		pSoldier;
@@ -219,7 +221,8 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
 	return( FALSE );
 }
 
-INT8 FindBestPatient( SOLDIERTYPE * pSoldier, BOOLEAN * pfDoClimb )
+
+static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 {
 	UINT8						cnt, cnt2;
 	INT16						bBestPriority = 0, sBestAdjGridNo;

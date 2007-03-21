@@ -56,20 +56,16 @@ void    RemoveTEAMPanelButtons( );
 BOOLEAN InitializeTEAMPanel(  );
 BOOLEAN ShutdownTEAMPanel( );
 void RenderTEAMPanel( BOOLEAN fDirty );
-void UpdateTEAMPanel( );
 
 
 void SetSMPanelCurrentMerc( UINT8 ubNewID );
 void SetTEAMPanelCurrentMerc( UINT8 ubNewID );
 UINT16 GetSMPanelCurrentMerc(  );
-void UpdateSMPanel( );
 
 BOOLEAN InitTEAMSlots( );
 void AddPlayerToInterfaceTeamSlot( UINT8 ubID );
-BOOLEAN RemovePlayerFromInterfaceTeamSlot( UINT8 ubID );
 BOOLEAN GetPlayerIDFromInterfaceTeamSlot( UINT8 ubPanelSlot, UINT8 *pubID );
 void RemoveAllPlayersFromSlot( );
-	BOOLEAN PlayerExistsInSlot( UINT8 ubID );
 BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID );
 void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier );
 
@@ -112,7 +108,6 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 
 //
 void ReEvaluateDisabledINVPanelButtons( );
-void CheckForReEvaluateDisabledINVPanelButtons( );
 
 void CheckForDisabledForGiveItem( );
 void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fEnable );

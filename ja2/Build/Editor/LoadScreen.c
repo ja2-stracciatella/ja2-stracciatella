@@ -59,23 +59,6 @@ enum{
 	DIALOG_DELETE
 };
 
-//Hook into the text input code.  These callbacks help give back control, so we
-//can use the dialog interface in conjunction with the
-void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason );
-void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason );
-void FDlgUpCallback( GUI_BUTTON *butn, INT32 reason );
-void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason );
-void FDlgNamesCallback( GUI_BUTTON *butn, INT32 reason );
-void UpdateWorldInfoCallback( GUI_BUTTON *b, INT32 reason );
-void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering );
-
-UINT32 ProcessLoadSaveScreenMessageBoxResult();
-BOOLEAN RemoveFromFDlgList( FDLG_LIST **head, FDLG_LIST *node );
-
-void DrawFileDialog();
-void HandleMainKeyEvents( InputAtom *pEvent );
-void SetTopFileToLetter( UINT16 usLetter );
-
 INT32 iTotalFiles;
 INT32 iTopFileShown;
 INT32 iCurrFileShown;
@@ -115,7 +98,6 @@ enum{
 	LOADING_MAP
 };
 INT8 gbCurrentFileIOStatus;  //1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
-UINT32 ProcessFileIO();
 
 extern UINT16 gusLightLevel;
 UINT32 LoadSaveScreenInit(void)
@@ -132,9 +114,10 @@ UINT32 LoadSaveScreenShutdown(void)
 
 
 static void CreateFileDialog(const wchar_t* zTitle);
+static void TrashFDlgList(FDLG_LIST* pList);
 
 
-void LoadSaveScreenEntry()
+static void LoadSaveScreenEntry(void)
 {
 	fEnteringLoadSaveScreen = FALSE;
 	gbCurrentFileIOStatus	= IOSTATUS_NONE;
@@ -186,7 +169,13 @@ void LoadSaveScreenEntry()
 
 }
 
-UINT32 ProcessLoadSaveScreenMessageBoxResult()
+
+static void RemoveFileDialog(void);
+static BOOLEAN RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node);
+static BOOLEAN ValidFilename(void);
+
+
+static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
 {
 	FDLG_LIST *curr, *temp;
 	gfRenderWorld = TRUE;
@@ -283,6 +272,13 @@ UINT32 ProcessLoadSaveScreenMessageBoxResult()
 	Assert( 0 );
 	return LOADSAVE_SCREEN;
 }
+
+
+static void DrawFileDialog(void);
+static BOOLEAN ExtractFilenameFromFields(void);
+static void HandleMainKeyEvents(InputAtom* pEvent);
+static UINT32 ProcessFileIO(void);
+
 
 UINT32 LoadSaveScreenHandle(void)
 {
@@ -433,6 +429,15 @@ UINT32 LoadSaveScreenHandle(void)
 }
 
 
+static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason);
+static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason);
+static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering);
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason);
+
+
 static void CreateFileDialog(const wchar_t* zTitle)
 {
 
@@ -478,19 +483,20 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	AddTextInputField( /*233*/183, 195, 190, 20, MSYS_PRIORITY_HIGH, gzFilename, 30, INPUTTYPE_EXCLUSIVE_DOSFILENAME );
 	//field 2 -- user field that allows mouse/key interaction with the filename list
 	AddUserInputField( FileDialogModeCallback );
-
 }
 
-void UpdateWorldInfoCallback( GUI_BUTTON *b, INT32 reason )
+
+static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
 }
 
+
 //This is a hook into the text input code.  This callback is called whenever the user is currently
 //editing text, and presses Tab to transfer to the file dialog mode.  When this happens, we set the text
 //field to the currently selected file in the list which is already know.
-void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
+static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering)
 {
 	INT32 x;
 	FDLG_LIST *FListNode;
@@ -516,7 +522,8 @@ void FileDialogModeCallback( UINT8 ubID, BOOLEAN fEntering )
 	}
 }
 
-void RemoveFileDialog(void)
+
+static void RemoveFileDialog(void)
 {
 	INT32 x;
 
@@ -544,7 +551,8 @@ void RemoveFileDialog(void)
 	EndFrameBufferRender();
 }
 
-void DrawFileDialog(void)
+
+static void DrawFileDialog(void)
 {
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	179, 69, (179+281), 261, Get16BPPColor(FROMRGB(136, 138, 135)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	180, 70, (179+281), 261, Get16BPPColor(FROMRGB(24, 61, 81)) );
@@ -570,9 +578,10 @@ void DrawFileDialog(void)
 	}
 }
 
+
 //The callback calls this function passing the relative y position of where
 //the user clicked on the hot spot.
-void SelectFileDialogYPos( UINT16 usRelativeYPos )
+static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 {
 	INT16 sSelName;
 	INT32 x;
@@ -656,7 +665,8 @@ FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 	return(pList);
 }
 
-BOOLEAN RemoveFromFDlgList( FDLG_LIST **head, FDLG_LIST *node )
+
+static BOOLEAN RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node)
 {
 	FDLG_LIST *curr;
 	curr = *head;
@@ -679,7 +689,8 @@ BOOLEAN RemoveFromFDlgList( FDLG_LIST **head, FDLG_LIST *node )
 	return FALSE; //wasn't deleted
 }
 
-void TrashFDlgList(FDLG_LIST *pList)
+
+static void TrashFDlgList(FDLG_LIST* pList)
 {
 	FDLG_LIST *pNode;
 
@@ -691,7 +702,8 @@ void TrashFDlgList(FDLG_LIST *pList)
 	}
 }
 
-void SetTopFileToLetter( UINT16 usLetter )
+
+static void SetTopFileToLetter(UINT16 usLetter)
 {
 	UINT32 x;
 	FDLG_LIST *curr;
@@ -722,7 +734,8 @@ void SetTopFileToLetter( UINT16 usLetter )
 	}
 }
 
-void HandleMainKeyEvents( InputAtom *pEvent )
+
+static void HandleMainKeyEvents(InputAtom* pEvent)
 {
 	INT32 iPrevFileShown = iCurrFileShown;
 	//Replace Alt-x press with ESC.
@@ -818,6 +831,9 @@ void HandleMainKeyEvents( InputAtom *pEvent )
 }
 
 
+static BOOLEAN ValidCoordinate(void);
+
+
 //editor doesn't care about the z value.  It uses it's own methods.
 static void SetGlobalSectorValues(const wchar_t* szFilename)
 {
@@ -850,7 +866,8 @@ static void SetGlobalSectorValues(const wchar_t* szFilename)
 	}
 }
 
-void InitErrorCatchDialog()
+
+static void InitErrorCatchDialog(void)
 {
 	SGPRect CenteringRect= {0, 0, 639, 479 };
 
@@ -860,11 +877,12 @@ void InitErrorCatchDialog()
 	gfErrorCatch = FALSE;
 }
 
+
 //Because loading and saving the map takes a few seconds, we want to post a message
 //on the screen and then update it which requires passing the screen back to the main loop.
 //When we come back for the next frame, we then actually save or load the map.  So this
 //process takes two full screen cycles.
-UINT32 ProcessFileIO()
+static UINT32 ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
 	UINT8 ubNewFilename[50];
@@ -1012,8 +1030,9 @@ UINT32 ProcessFileIO()
 	return LOADSAVE_SCREEN;
 }
 
+
 //LOADSCREEN
-void FDlgNamesCallback( GUI_BUTTON *butn, INT32 reason )
+static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1022,7 +1041,7 @@ void FDlgNamesCallback( GUI_BUTTON *butn, INT32 reason )
 }
 
 
-void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason )
+static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1031,7 +1050,8 @@ void FDlgOkCallback( GUI_BUTTON *butn, INT32 reason )
 	}
 }
 
-void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason )
+
+static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1040,7 +1060,8 @@ void FDlgCancelCallback( GUI_BUTTON *butn, INT32 reason )
 	}
 }
 
-void FDlgUpCallback( GUI_BUTTON *butn, INT32 reason )
+
+static void FDlgUpCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1049,7 +1070,8 @@ void FDlgUpCallback( GUI_BUTTON *butn, INT32 reason )
 	}
 }
 
-void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason )
+
+static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
@@ -1058,13 +1080,15 @@ void FDlgDwnCallback( GUI_BUTTON *butn, INT32 reason )
 	}
 }
 
-BOOLEAN ExtractFilenameFromFields()
+
+static BOOLEAN ExtractFilenameFromFields(void)
 {
 	Get16BitStringFromField(0, gzFilename, lengthof(gzFilename));
 	return ValidFilename();
 }
 
-BOOLEAN ValidCoordinate()
+
+static BOOLEAN ValidCoordinate(void)
 {
 	if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' ||
 		gzFilename[0] >= 'a' && gzFilename[0] <='p' )
@@ -1093,7 +1117,8 @@ BOOLEAN ValidCoordinate()
 	return FALSE;
 }
 
-BOOLEAN ValidFilename()
+
+static BOOLEAN ValidFilename(void)
 {
 	const wchar_t* pDest;
 	if( gzFilename[0] != '\0' );

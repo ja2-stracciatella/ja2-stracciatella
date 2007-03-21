@@ -61,9 +61,6 @@ INT16 gsTRGridNo = 1043;
 INT16 gsBLGridNo = 24878;
 INT16 gsBRGridNo = 12635;
 
-BOOLEAN VerifyEdgepoint( SOLDIERTYPE *pSoldier, INT16 sEdgepoint );
-BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 );
-
 extern UINT8 gubTacticalDirection;
 
 void TrashMapEdgepoints()
@@ -112,10 +109,14 @@ void TrashMapEdgepoints()
 	gus2ndWestEdgepointMiddleIndex		= 0;
 }
 
+
+static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint);
+
+
 //This final step eliminates some edgepoints which actually don't path directly to the edge of the map.
 //Cases would include an area that is close to the edge, but a fence blocks it from direct access to the edge
 //of the map.
-void ValidateEdgepoints()
+static void ValidateEdgepoints(void)
 {
 	INT32 i;
 	UINT16 usValidEdgepoints;
@@ -282,7 +283,8 @@ void ValidateEdgepoints()
 
 }
 
-void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pusArraySize )
+
+static void CompactEdgepointArray(INT16** psArray, UINT16* pusMiddleIndex, UINT16* pusArraySize)
 {
 	INT32 i;
 	UINT16 usArraySize, usValidIndex = 0;
@@ -312,9 +314,11 @@ void CompactEdgepointArray( INT16 **psArray, UINT16 *pusMiddleIndex, UINT16 *pus
 	Assert( *psArray );
 }
 
-void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
-																	 INT16 **psArray1, UINT16 *pusMiddleIndex1, UINT16 *pusArraySize1,
-																	 INT16 **psArray2, UINT16 *pusMiddleIndex2, UINT16 *pusArraySize2 )
+
+static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2);
+
+
+static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT16** psArray1, UINT16* pusMiddleIndex1, UINT16* pusArraySize1, INT16** psArray2, UINT16* pusMiddleIndex2, UINT16* pusArraySize2)
 {
 	INT32 i;
 	UINT16 us1stBenchmarkID, us2ndBenchmarkID;
@@ -428,7 +432,8 @@ void InternallyClassifyEdgepoints( SOLDIERTYPE *pSoldier, INT16 sGridNo,
 	(*psArray2) = (INT16*)MemRealloc( (*psArray2), *pusArraySize2 * sizeof( INT16 ) );
 }
 
-void ClassifyEdgepoints()
+
+static void ClassifyEdgepoints(void)
 {
 	SOLDIERTYPE Soldier;
 	INT16 sGridNo = -1;
@@ -915,7 +920,8 @@ void SaveMapEdgepoints( HWFILE fp )
 		FileWrite(fp, gps2ndWestEdgepointArray, gus2ndWestEdgepointArraySize * sizeof(INT16));
 }
 
-void OldLoadMapEdgepoints( INT8 **hBuffer )
+
+static void OldLoadMapEdgepoints(INT8** hBuffer)
 {
 	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
@@ -1484,8 +1490,11 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 	return NOWHERE ;
 }
 
+
 #define EDGE_OF_MAP_SEARCH 5
-BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
+
+
+static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
@@ -1554,7 +1563,8 @@ BOOLEAN VerifyEdgepoint( SOLDIERTYPE * pSoldier, INT16 sEdgepoint )
 	return FALSE;
 }
 
-BOOLEAN EdgepointsClose( SOLDIERTYPE *pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2 )
+
+static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 sEdgepoint2)
 {
 	INT32		iSearchRange;
 	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;

@@ -39,12 +39,6 @@ extern	BOOLEAN			gfFadeOut;
 //These functions shouldn't be used anywhere else...
 extern BOOLEAN GameEventsPending( UINT32 uiAdjustment );
 extern void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode );
-void PauseOfClockBtnCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void ScreenMaskForGamePauseBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason );
-
-void CreateDestroyScreenMaskForPauseGame( void );
-
-void SetClockResolutionToCompressMode( INT32 iCompressMode );
 
 // is the clock pause region created currently?
 BOOLEAN fClockMouseRegionCreated = FALSE;
@@ -62,7 +56,6 @@ BOOLEAN gfJustFinishedAPause = FALSE;
 // clock mouse region
 MOUSE_REGION gClockMouseRegion;
 MOUSE_REGION gClockScreenMaskMouseRegion;
-void AdvanceClock( UINT8 ubWarpCode );
 
 extern BOOLEAN fMapScreenBottomDirty;
 
@@ -174,6 +167,10 @@ UINT32 GetMidnightOfFutureDayInMinutes( UINT32 uiDay )
 	return( GetWorldTotalMin() + ( uiDay * 1440 ) - GetWorldMinutesInDay( ) );
 }
 
+
+static void AdvanceClock(UINT8 ubWarpCode);
+
+
 // Not to be used too often by things other than internally
 void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode )
 {
@@ -185,7 +182,7 @@ void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode )
 }
 
 
-void AdvanceClock( UINT8 ubWarpCode )
+static void AdvanceClock(UINT8 ubWarpCode)
 {
 	UINT32 uiGameSecondsPerRealSecond = guiGameSecondsPerRealSecond;
 
@@ -335,7 +332,7 @@ void RenderClock( INT16 sX, INT16 sY )
 }
 
 
-void ToggleSuperCompression()
+static void ToggleSuperCompression(void)
 {
 	static UINT32 uiOldTimeCompressMode = 0;
 
@@ -373,6 +370,9 @@ BOOLEAN DidGameJustStart()
 	else
 		return(FALSE);
 }
+
+
+static void SetClockResolutionToCompressMode(INT32 iCompressMode);
 
 
 void StopTimeCompression( void )
@@ -539,7 +539,10 @@ void SetGameTimeCompressionLevel( UINT32 uiCompressionRate )
 }
 
 
-void SetClockResolutionToCompressMode( INT32 iCompressMode )
+static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond);
+
+
+static void SetClockResolutionToCompressMode(INT32 iCompressMode)
 {
 	guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ iCompressMode ] * SECONDS_PER_COMPRESSION;
 
@@ -593,7 +596,8 @@ void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond )
 	SetClockResolutionPerSecond( (UINT8)uiGameMinutesPerSecond );
 }
 
-void SetGameSecondsPerSecond( UINT32 uiGameSecondsPerSecond )
+
+static void SetGameSecondsPerSecond(UINT32 uiGameSecondsPerSecond)
 {
 	giTimeCompressMode = NOT_USING_TIME_COMPRESSION;
 	guiGameSecondsPerRealSecond = uiGameSecondsPerSecond;
@@ -606,7 +610,6 @@ void SetGameSecondsPerSecond( UINT32 uiGameSecondsPerSecond )
 	{
 		SetClockResolutionPerSecond( (UINT8) max( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
 	}
-
 }
 
 
@@ -662,7 +665,7 @@ void UnPauseGame()
 }
 
 
-void TogglePause()
+static void TogglePause(void)
 {
 	if ( gfGamePaused )
 	{
@@ -692,28 +695,34 @@ void PauseTimeForInterupt()
 	gfTimeInterruptPause = TRUE;
 }
 
+
 //USING CLOCK RESOLUTION
 //Note, that changing the clock resolution doesn't effect the amount of game time that passes per
 //real second, but how many times per second the clock is updated.  This rate will break up the actual
 //time slices per second into smaller chunks.  This is useful for animating strategic movement under
 //fast time compression, so objects don't warp around.
-void SetClockResolutionToDefault()
+static void SetClockResolutionToDefault(void)
 {
 	gubClockResolution = 1;
 }
 
+
 //Valid range is 0 - 60 times per second.
-void SetClockResolutionPerSecond( UINT8 ubNumTimesPerSecond )
+static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond)
 {
 	ubNumTimesPerSecond = (UINT8)(max( 0, min( 60, ubNumTimesPerSecond ) ));
 	gubClockResolution = ubNumTimesPerSecond;
 }
 
+
 //Function for accessing the current rate
-UINT8 ClockResolution()
+static UINT8 ClockResolution(void)
 {
 	return gubClockResolution;
 }
+
+
+static void CreateDestroyScreenMaskForPauseGame(void);
 
 
 //There are two factors that influence the flow of time in the game.
@@ -904,6 +913,9 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 }
 
 
+static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY )
 {
 	if( fClockMouseRegionCreated == FALSE )
@@ -938,7 +950,7 @@ void RemoveMouseRegionForPauseOfClock( void )
 }
 
 
-void PauseOfClockBtnCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -985,7 +997,10 @@ void HandlePlayerPauseUnPauseOfGame( void )
 }
 
 
-void CreateDestroyScreenMaskForPauseGame( void )
+static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateDestroyScreenMaskForPauseGame(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	INT16 sX = 0, sY = 0;
@@ -1031,7 +1046,7 @@ void CreateDestroyScreenMaskForPauseGame( void )
 }
 
 
-void ScreenMaskForGamePauseBtnCallBack( MOUSE_REGION * pRegion, INT32 iReason )
+static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

@@ -52,14 +52,16 @@ extern BOOLEAN	gfInMsgBox;
 
 // callback to confirm game is over
 void EndGameMessageBoxCallBack( UINT8 bExitValue );
-void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
 
 #ifdef JA2BETAVERSION
+
 BOOLEAN gubReportMapscreenLock = 0;
-void ReportMapscreenErrorLock()
+
+
+static void ReportMapscreenErrorLock(void)
 {
 	switch( gubReportMapscreenLock )
 	{
@@ -153,10 +155,12 @@ void    ShutdownGame(void)
 }
 
 
+static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
+
+
 // This is the main Gameloop. This should eventually by one big switch statement which represents
 // the state of the game (i.e. Main Menu, PC Generation, Combat loop, etc....)
 // This function exits constantly and reenters constantly
-
 void GameLoop(void)
 {
   InputAtom					InputEvent;
@@ -317,8 +321,9 @@ void SetPendingNewScreen( UINT32 uiNewScreen )
 	guiPendingScreen = uiNewScreen;
 }
 
+
 // Gets called when the screen changes, place any needed in code in here
-void HandleNewScreenChange( UINT32 uiNewScreen, UINT32 uiOldScreen )
+static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen)
 {
 	//if we are not going into the message box screen, and we didnt just come from it
 	if( ( uiNewScreen != MSG_BOX_SCREEN && uiOldScreen != MSG_BOX_SCREEN ) )

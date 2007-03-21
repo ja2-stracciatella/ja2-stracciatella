@@ -211,10 +211,6 @@ void SetAutoFaceInActive( INT32 iFaceIndex );
 // To set all currently allocated faces to either active or incactive, call these
 void SetAllAutoFacesInactive( );
 
-// To render an allocated face but one that is indipendent of it's active status, ant does not
-// require eye blinking or mouth movements, call
-BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY );
-
 // FUnctions usually not needed for most uses, but give a finer control over rendering if needed
 void HandleTalkingAutoFaces( );
 

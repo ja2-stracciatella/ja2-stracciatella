@@ -16,7 +16,6 @@ void ExtractAndUpdateBuildingInfo();
 
 //Initialization routines
 void GameInitEditorBuildingInfo();
-void InitEditorBuildingsToolbar();
 
 //Selection method callbacks
 //Building utility functions

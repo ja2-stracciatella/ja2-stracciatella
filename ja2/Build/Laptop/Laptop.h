@@ -4,18 +4,12 @@
 #include "MessageBoxScreen.h"
 #include "Types.h"
 
-INT32			EnterLaptop();
 void			ExitLaptop();
 void			RenderLaptop();
-UINT32		ExitLaptopMode(UINT32 uiMode);
-void			EnterNewLaptopMode();
 UINT32		DrawLapTopIcons();
 UINT32		DrawLapTopText();
 void			ReDrawHighLight();
-void			DrawButtonText();
-void			InitBookMarkList();
 void			SetBookMark(INT32 iBookId);
-void			RemoveBookmark(INT32 iBookId);
 BOOLEAN		LeaveLapTopScreen( );
 void			SetLaptopExitScreen( UINT32 uiExitScreen );
 void			SetLaptopNewGameFlag( );
@@ -30,7 +24,6 @@ void			HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 
 BOOLEAN		RenderWWWProgramTitleBar( void );
 void			DisplayProgramBoundingBox( BOOLEAN fMarkButtons );
 BOOLEAN		DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-BOOLEAN		RemoveBookMark( INT32 iBookId );
 void			CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText );
 BOOLEAN		InitLaptopAndLaptopScreens();
 

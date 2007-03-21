@@ -74,15 +74,6 @@ ITEM_POOL_LOCATOR				FlashItemSlots[ NUM_ITEM_FLASH_SLOTS ];
 UINT32									guiNumFlashItemSlots = 0;
 
 
-LEVELNODE *AddItemGraphicToWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel );
-INT8 GetListMouseHotSpot( INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 sFontX, INT16 sFontY, INT8 bCurStart );
-void RemoveItemGraphicFromWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, LEVELNODE *pLevelNode );
-
-ITEM_POOL * GetItemPoolForIndex( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
-
-INT32 GetFreeFlashItemSlot(void);
-void RecountFlashItemSlots(void);
-INT32	AddFlashItemSlot( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags );
 BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 // Disgusting hacks: have to keep track of these values for accesses in callbacks
@@ -90,25 +81,11 @@ static SOLDIERTYPE *	gpTempSoldier;
 static INT16					gsTempGridno;
 static INT8						bTempFrequency;
 
-void BombMessageBoxCallBack( UINT8 ubExitValue );
-void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue );
-void SwitchMessageBoxCallBack( UINT8 ubExitValue );
-void BoobyTrapDialogueCallBack( void );
-void MineSpottedDialogueCallBack( void );
-void MineSpottedLocatorCallback( void );
-void RemoveBlueFlagDialogueCallBack( UINT8 ubExitValue );
-void MineSpottedMessageBoxCallBack( UINT8 ubExitValue );
-void CheckForPickedOwnership( void );
-void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue );
 
-
-BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN *pfSaidQuote );
 extern BOOLEAN ItemIsCool( OBJECTTYPE * pObj );
 extern INT8	gbItemPointerSrcSlot;
 extern void MAPEndItemPointer( );
 extern BOOLEAN	gfResetUIMovementOptimization;
-
-BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 bZLevel );
 
 SOLDIERTYPE *		gpBoobyTrapSoldier;
 ITEM_POOL *			gpBoobyTrapItemPool;
@@ -119,7 +96,6 @@ extern BOOLEAN	gfDontChargeAPsToPickup;
 INT8						gbTrapDifficulty;
 BOOLEAN					gfJustFoundBoobyTrap = FALSE;
 
-void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo );
 
 BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel )
 {
@@ -182,6 +158,8 @@ BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE 
 }
 
 
+static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot);
+static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 
 INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
@@ -1543,11 +1521,10 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 		// DO ANIMATION OF PICKUP NOW!
 		PickPickupAnimation( pSoldier, pSoldier->uiPendingActionData1, (INT16)( pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
 	}
-
 }
 
 
-void HandleAutoPlaceFail( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo )
+static void HandleAutoPlaceFail(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 sGridNo)
 {
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
@@ -1569,6 +1546,15 @@ void HandleAutoPlaceFail( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo
 		}
 	}
 }
+
+
+static void CheckForPickedOwnership(void);
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
+static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
+static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, INT8 bZLevel);
+static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel);
+static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
+
 
 void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
 {
@@ -1797,6 +1783,12 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 }
 
 
+static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue);
+static BOOLEAN DoesItemPoolContainAllHiddenItems(ITEM_POOL* pItemPool);
+static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
+static INT16 GetNumOkForDisplayItemsInPool(ITEM_POOL* pItemPool, INT8 bZLevel);
+
+
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
 	ITEM_POOL		*pItemPool;
@@ -1898,7 +1890,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 }
 
 
-LEVELNODE *AddItemGraphicToWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel )
+static LEVELNODE* AddItemGraphicToWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLevel)
 {
 	UINT16			usTileIndex;
 	LEVELNODE		*pNode;
@@ -1931,7 +1923,7 @@ LEVELNODE *AddItemGraphicToWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel )
 }
 
 
-void RemoveItemGraphicFromWorld( INVTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, LEVELNODE *pLevelNode )
+static void RemoveItemGraphicFromWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, LEVELNODE* pLevelNode)
 {
 	LEVELNODE *pNode;
 
@@ -1987,6 +1979,10 @@ OBJECTTYPE * AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 
 {
 	return( InternalAddItemToPool( &sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, piItemIndex ) );
 }
+
+
+static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool);
+
 
 OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
 {
@@ -2272,7 +2268,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 }
 
 
-BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
+static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
 {
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
@@ -2325,8 +2321,7 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 }
 
 
-
-INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel )
+static INT32 GetItemOfClassTypeInPool(INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel)
 {
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
@@ -2350,7 +2345,8 @@ INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel
 	return( -1 );
 }
 
-ITEM_POOL * GetItemPoolForIndex( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
+
+static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
 {
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
@@ -2392,7 +2388,8 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool )
 	return( FALSE );
 }
 
-BOOLEAN DoesItemPoolContainAllHiddenItems( ITEM_POOL *pItemPool )
+
+static BOOLEAN DoesItemPoolContainAllHiddenItems(ITEM_POOL* pItemPool)
 {
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
@@ -2409,7 +2406,7 @@ BOOLEAN DoesItemPoolContainAllHiddenItems( ITEM_POOL *pItemPool )
 }
 
 
-BOOLEAN LookForHiddenItems( INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel )
+static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel)
 {
 	ITEM_POOL *pItemPool = NULL;
 	ITEM_POOL *pHeadItemPool = NULL;
@@ -2477,8 +2474,7 @@ INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool )
 }
 
 
-
-BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel( ITEM_POOL *pItemPool )
+static BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel(ITEM_POOL* pItemPool)
 {
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
@@ -2495,7 +2491,7 @@ BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel( ITEM_POOL *pItemPool )
 }
 
 
-BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel( ITEM_POOL *pItemPool )
+static BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel(ITEM_POOL* pItemPool)
 {
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
@@ -2512,7 +2508,7 @@ BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel( ITEM_POOL *pItemPool )
 }
 
 
-void RemoveItemPool( INT16 sGridNo, UINT8 ubLevel )
+static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 {
 	ITEM_POOL		*pItemPool;
 
@@ -2546,7 +2542,7 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 }
 
 
-void LoopLevelNodeForShowThroughFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLevel )
+static void LoopLevelNodeForShowThroughFlag(LEVELNODE* pNode, INT16 sGridNo, UINT8 ubLevel)
 {
 	while ( pNode != NULL )
 	{
@@ -2575,7 +2571,8 @@ void LoopLevelNodeForShowThroughFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubL
 	}
 }
 
-void HandleItemObscuredFlag( INT16 sGridNo, UINT8 ubLevel )
+
+static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel)
 {
 	LEVELNODE *pNode;
 
@@ -2590,6 +2587,9 @@ void HandleItemObscuredFlag( INT16 sGridNo, UINT8 ubLevel )
 		LoopLevelNodeForShowThroughFlag( pNode, sGridNo, ubLevel );
 	}
 }
+
+
+static void SetItemPoolLocator(ITEM_POOL* pItemPool);
 
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator )
@@ -2719,9 +2719,10 @@ void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool )
 	}
 }
 
+
 // This determines the overall initial visibility of the pool...
 // IF ANY are set to VISIBLE, MODIFY
-void AdjustItemPoolVisibility( ITEM_POOL *pItemPool )
+static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 {
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fAtLeastModified = FALSE;
@@ -2977,7 +2978,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 }
 
 
-INT16 GetNumOkForDisplayItemsInPool( ITEM_POOL *pItemPool, INT8 bZLevel )
+static INT16 GetNumOkForDisplayItemsInPool(ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	INT32						cnt;
 
@@ -3045,7 +3046,8 @@ BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel )
 	return( TRUE );
 }
 
-BOOLEAN ItemPoolOKForPickup( SOLDIERTYPE * pSoldier, ITEM_POOL *pItemPool, INT8 bZLevel )
+
+static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	if (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS)
 	{
@@ -3327,7 +3329,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 }
 
 
-INT8 GetListMouseHotSpot( INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 sFontX, INT16 sFontY, INT8 bCurStart )
+static INT8 GetListMouseHotSpot(INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 sFontX, INT16 sFontY, INT8 bCurStart)
 {
 	INT16	 cnt = 0;
 	INT16  sTestX1, sTestX2, sTestY1, sTestY2;
@@ -3371,7 +3373,10 @@ INT8 GetListMouseHotSpot( INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 s
 }
 
 
-void SetItemPoolLocator( ITEM_POOL *pItemPool )
+static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags);
+
+
+static void SetItemPoolLocator(ITEM_POOL* pItemPool)
 {
 	pItemPool->bFlashColor = 59;
 
@@ -3379,7 +3384,8 @@ void SetItemPoolLocator( ITEM_POOL *pItemPool )
 
 }
 
-void SetItemPoolLocatorWithCallback( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback )
+
+static void SetItemPoolLocatorWithCallback(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	pItemPool->bFlashColor = 59;
 
@@ -3388,25 +3394,10 @@ void SetItemPoolLocatorWithCallback( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOO
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// ITEM POOL INDICATOR FUNCTIONS
 
 
-
-INT32 GetFreeFlashItemSlot(void)
+static INT32 GetFreeFlashItemSlot(void)
 {
 	UINT32 uiCount;
 
@@ -3423,7 +3414,7 @@ INT32 GetFreeFlashItemSlot(void)
 }
 
 
-void RecountFlashItemSlots(void)
+static void RecountFlashItemSlots(void)
 {
 INT32 uiCount;
 
@@ -3438,7 +3429,7 @@ INT32 uiCount;
 }
 
 
-INT32	AddFlashItemSlot( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags )
+static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags)
 {
 	INT32			iFlashItemIndex;
 
@@ -3995,7 +3986,10 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
+static void BombMessageBoxCallBack(UINT8 ubExitValue);
+
+
+static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	UINT8 ubRoom;
 
@@ -4069,7 +4063,8 @@ void StartBombMessageBox( SOLDIERTYPE * pSoldier, INT16 sGridNo )
 	}
 }
 
-void BombMessageBoxCallBack( UINT8 ubExitValue )
+
+static void BombMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if (gpTempSoldier)
 	{
@@ -4139,7 +4134,7 @@ void BombMessageBoxCallBack( UINT8 ubExitValue )
 }
 
 
-BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
+static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 {
 	BOOLEAN							fItemJustBroke = FALSE, fItemWorks = TRUE;
 	OBJECTTYPE *				pObj;
@@ -4197,7 +4192,8 @@ BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot )
 }
 
 
-void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
+// set off the booby trap in mapscreen
+static void SetOffBoobyTrapInMapScreen(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObject)
 {
 	UINT8 ubPtsDmg = 0;
 
@@ -4218,11 +4214,10 @@ void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 	// play the sound
 	PlayJA2Sample(EXPLOSION_1, BTNVOLUME, 1, MIDDLEPAN);
-
 }
 
 
-void SetOffBoobyTrap( ITEM_POOL * pItemPool )
+static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 {
 	if ( pItemPool )
 	{
@@ -4232,10 +4227,14 @@ void SetOffBoobyTrap( ITEM_POOL * pItemPool )
 		IgniteExplosion( NOBODY, sX, sY, (INT16) (gpWorldLevelData[pItemPool->sGridNo].sHeight + pItemPool->bRenderZHeightAboveLevel), pItemPool->sGridNo, MINI_GRENADE, 0 );
 		RemoveItemFromPool( pItemPool->sGridNo, pItemPool->iItemIndex, pItemPool->ubLevel );
 	}
-
 }
 
-BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN *pfSaidQuote )
+
+static void BoobyTrapDialogueCallBack(void);
+static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue);
+
+
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote)
 {
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
@@ -4318,7 +4317,8 @@ BOOLEAN ContinuePastBoobyTrap( SOLDIERTYPE * pSoldier, INT16 sGridNo, INT8 bLeve
 	return( TRUE );
 }
 
-void BoobyTrapDialogueCallBack( void )
+
+static void BoobyTrapDialogueCallBack(void)
 {
 	gfJustFoundBoobyTrap = TRUE;
 
@@ -4333,7 +4333,11 @@ void BoobyTrapDialogueCallBack( void )
 	}
 }
 
-void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
+
+static void RemoveBlueFlagDialogueCallBack(UINT8 ubExitValue);
+
+
+static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if ( gfJustFoundBoobyTrap )
 	{
@@ -4445,7 +4449,8 @@ void BoobyTrapMessageBoxCallBack( UINT8 ubExitValue )
 	}
 }
 
-void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
+
+static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if ( gfJustFoundBoobyTrap )
 	{
@@ -4539,8 +4544,7 @@ void BoobyTrapInMapScreenMessageBoxCallBack( UINT8 ubExitValue )
 }
 
 
-
-void SwitchMessageBoxCallBack( UINT8 ubExitValue )
+static void SwitchMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -4550,6 +4554,10 @@ void SwitchMessageBoxCallBack( UINT8 ubExitValue )
 		SetOffBombsByFrequency( gpTempSoldier->ubID,  bTempFrequency );
 	}
 }
+
+
+static void AddBlueFlag(INT16 sGridNo, INT8 bLevel);
+
 
 BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo )
 {
@@ -4726,6 +4734,10 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 	}
 }
 
+
+static void MineSpottedLocatorCallback(void);
+
+
 void MineSpottedDialogueCallBack( void )
 {
 	ITEM_POOL * pItemPool;
@@ -4741,7 +4753,11 @@ void MineSpottedDialogueCallBack( void )
 	SetItemPoolLocatorWithCallback( pItemPool, MineSpottedLocatorCallback );
 }
 
-void MineSpottedLocatorCallback( void )
+
+static void MineSpottedMessageBoxCallBack(UINT8 ubExitValue);
+
+
+static void MineSpottedLocatorCallback(void)
 {
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 
@@ -4749,7 +4765,8 @@ void MineSpottedLocatorCallback( void )
 	DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ PLACE_BLUE_FLAG_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, MineSpottedMessageBoxCallBack, NULL );
 }
 
-void MineSpottedMessageBoxCallBack( UINT8 ubExitValue )
+
+static void MineSpottedMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
@@ -4758,7 +4775,8 @@ void MineSpottedMessageBoxCallBack( UINT8 ubExitValue )
 	}
 }
 
-void RemoveBlueFlagDialogueCallBack( UINT8 ubExitValue )
+
+static void RemoveBlueFlagDialogueCallBack(UINT8 ubExitValue)
 {
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
@@ -4766,7 +4784,8 @@ void RemoveBlueFlagDialogueCallBack( UINT8 ubExitValue )
 	}
 }
 
-void AddBlueFlag( INT16 sGridNo ,INT8 bLevel )
+
+static void AddBlueFlag(INT16 sGridNo, INT8 bLevel)
 {
 	LEVELNODE *pNode;
 
@@ -4842,7 +4861,7 @@ void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendi
 }
 
 
-void TestPotentialOwner( SOLDIERTYPE * pSoldier )
+static void TestPotentialOwner(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE )
 	{
@@ -4853,7 +4872,8 @@ void TestPotentialOwner( SOLDIERTYPE * pSoldier )
 	}
 }
 
-void CheckForPickedOwnership( void )
+
+static void CheckForPickedOwnership(void)
 {
 	ITEM_POOL *				pItemPool;
 	UINT8							ubProfile;
@@ -4902,8 +4922,7 @@ void CheckForPickedOwnership( void )
 }
 
 
-
-void LoopLevelNodeForItemGlowFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
+static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn)
 {
 	while ( pNode != NULL )
 	{
@@ -4923,7 +4942,7 @@ void LoopLevelNodeForItemGlowFlag( LEVELNODE *pNode, INT16 sGridNo, UINT8 ubLeve
 }
 
 
-void HandleItemGlowFlag( INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn )
+static void HandleItemGlowFlag(INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn)
 {
 	LEVELNODE *pNode;
 
@@ -5018,8 +5037,9 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 	return( TRUE );
 }
 
+
 // Well, clears all item pools
-void ClearAllItemPools( )
+static void ClearAllItemPools(void)
 {
 	UINT32 cnt;
 

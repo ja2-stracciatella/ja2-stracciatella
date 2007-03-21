@@ -8,11 +8,6 @@
 #define			MOVE_TILE_STATIONARY_BLOCKED		 -2
 
 
-
-INT8 TileIsClear( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT8 bLevel );
-
-void MarkMovementReserved( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-
 void UnMarkMovementReserved( SOLDIERTYPE *pSoldier );
 
 BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile );

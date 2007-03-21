@@ -395,7 +395,6 @@ UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubL
 UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback);
 
 UINT32	PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops);
-UINT32	PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax);
 
 UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck);
 

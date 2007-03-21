@@ -228,8 +228,6 @@ void ShutdownContainers( void )
 }
 
 
-//*****************************************************************************
-//
 // PeekQueue - gets the first item in queue without
 // actually deleting it.
 //
@@ -242,9 +240,7 @@ void ShutdownContainers( void )
 //
 // Modification History :
 // Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
-BOOLEAN PeekQueue(HQUEUE hQueue, void *pdata)
+static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 {
 	QueueHeader *pTemp_cont;
 	void *pvoid;

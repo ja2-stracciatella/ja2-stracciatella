@@ -108,13 +108,7 @@ const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 };
 
 
-// function declarations
-void SelectMercFace( void );
-void SetMercSkinAndHairColors( void );
-BOOLEAN ShouldThisMercHaveABigBody( void );
-
-
-
+static void SelectMercFace(void);
 
 
 void CreateACharacterFromPlayerEnteredStats( void )
@@ -174,7 +168,7 @@ void CreateACharacterFromPlayerEnteredStats( void )
 }
 
 
-BOOLEAN DoesCharacterHaveAnAttitude( void )
+static BOOLEAN DoesCharacterHaveAnAttitude(void)
 {
 
 	// simply checks if caracter has an attitude other than normal
@@ -193,7 +187,7 @@ BOOLEAN DoesCharacterHaveAnAttitude( void )
 }
 
 
-BOOLEAN DoesCharacterHaveAPersoanlity( void )
+static BOOLEAN DoesCharacterHaveAPersoanlity(void)
 {
 	// only one we can get is PSYCHO, and that is not much of a penalty
 	return( FALSE );
@@ -212,7 +206,8 @@ BOOLEAN DoesCharacterHaveAPersoanlity( void )
 	*/
 }
 
-void CreatePlayerAttitude( void )
+
+static void CreatePlayerAttitude(void)
 {
   // this function will 'roll a die' and decide if any attitude does exists
   INT32 iDiceValue = 0;
@@ -327,7 +322,8 @@ void AddSkillToSkillList( INT8 bSkill )
 	}
 }
 
-void RemoveSkillFromSkillsList( INT32 iIndex )
+
+static void RemoveSkillFromSkillsList(INT32 iIndex)
 {
 	INT32		iLoop;
 
@@ -354,7 +350,8 @@ void RemoveSkillFromSkillsList( INT32 iIndex )
 	}
 }
 
-INT32	FindSkillInSkillsList( INT32 iSkill )
+
+static INT32 FindSkillInSkillsList(INT32 iSkill)
 {
 	INT32		iLoop;
 
@@ -369,7 +366,8 @@ INT32	FindSkillInSkillsList( INT32 iSkill )
 	return( -1 );
 }
 
-void ValidateSkillsList( void )
+
+static void ValidateSkillsList(void)
 {
 	INT32	iIndex, iValue;
 	MERCPROFILESTRUCT * pProfile;
@@ -425,7 +423,8 @@ void ValidateSkillsList( void )
 	}
 }
 
-void CreatePlayerSkills( void )
+
+static void CreatePlayerSkills(void)
 {
 
   // this function will 'roll a die' and decide if any attitude does exists
@@ -511,7 +510,8 @@ void AddAPersonalityToPersonalityList( INT8 bPersonlity )
 	}
 }
 
-void CreatePlayerPersonality( void )
+
+static void CreatePlayerPersonality(void)
 {
 	// only psycho is available since we have no quotes
 	// SO if the array is not empty, give them psycho!
@@ -610,10 +610,13 @@ void ResetIncrementCharacterAttributes( void )
 	iAddExplosives = 0;
 	iAddMedical = 0;
 	iAddMechanical = 0;
-
 }
 
-void SelectMercFace( void )
+
+static void SetMercSkinAndHairColors(void);
+
+
+static void SelectMercFace(void)
 {
 	// this procedure will select the approriate face for the merc and save offsets
 
@@ -635,7 +638,8 @@ void SelectMercFace( void )
 	SetMercSkinAndHairColors( );
 }
 
-void SetMercSkinAndHairColors( void )
+
+static void SetMercSkinAndHairColors(void)
 {
 	enum{ PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
 	enum{ BROWNHEAD, BLACKHEAD, //black skin (only this line )
@@ -735,8 +739,10 @@ void SetMercSkinAndHairColors( void )
 	// now set them
 	strcpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].HAIR, sHairStrings[ sHairColor ] );
 	strcpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].SKIN, sSkinStrings[ sSkinColor ] );
-
 }
+
+
+static BOOLEAN ShouldThisMercHaveABigBody(void);
 
 
 void HandleMercStatsForChangesInFace( )
@@ -794,7 +800,8 @@ void HandleMercStatsForChangesInFace( )
 
 }
 
-BOOLEAN ShouldThisMercHaveABigBody( void )
+
+static BOOLEAN ShouldThisMercHaveABigBody(void)
 {
 	// should this merc be a big body typ
 	if ( ( iPortraitNumber == 0 ) || ( iPortraitNumber == 6 ) || ( iPortraitNumber == 7 ) )

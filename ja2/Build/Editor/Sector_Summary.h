@@ -4,12 +4,7 @@
 #ifndef __SECTOR_SUMMARY_H
 #define __SECTOR_SUMMARY_H
 
-//This function can be very time consuming as it loads every map file with a valid
-//coordinate name, analyses it, and builds a new global summary file.
-void CreateGlobalSummary();
-
 void CreateSummaryWindow();
-void ReleaseSummaryWindow();
 void DestroySummaryWindow();
 void RenderSummaryWindow();
 void LoadWorldInfo();
@@ -17,7 +12,6 @@ void LoadWorldInfo();
 void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate);
 
 void SaveGlobalSummary();
-void LoadGlobalSummary();
 
 extern BOOLEAN gfGlobalSummaryExists;
 

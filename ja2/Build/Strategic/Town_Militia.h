@@ -26,21 +26,14 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 
 // feed this a SOLDIER_CLASS_, it will return you a _MITILIA rank, or -1 if the guy's not militia
 INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass);
-// feed this a _MITILIA rank, it will return you a SOLDIER_CLASS_, or -1 if the guy's not militia
-INT8 MilitiaRankToSoldierClass(UINT8 ubRank);
 
-// these add, promote, and remove militias of a certain rank
-void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
-void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany);
+// remove militias of a certain rank
 void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
 
 // this will check for promotions and handle them for you
 UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubRecentKillPts);
 
 void BuildMilitiaPromotionsString( wchar_t *str, size_t Length);
-
-// call this if the player attacks his own militia
-void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY);
 
 UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY);
 UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank);
@@ -68,9 +61,6 @@ BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY );
 
 // now that town training is complete, handle the continue boxes
 void HandleContinueOfTownTraining( void );
-
-// handle completion of assignment byt his soldier too and inform the player
-void HandleCompletionOfTownTrainingByGroupWithTrainer( SOLDIERTYPE *pTrainer );
 
 // clear the list of training completed sectors
 void ClearSectorListForCompletedTrainingOfMilitia( void );

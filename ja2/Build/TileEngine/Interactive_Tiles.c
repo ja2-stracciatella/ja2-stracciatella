@@ -78,9 +78,7 @@ UINT16	gusINTOldMousePosX = 0;
 UINT16	gusINTOldMousePosY = 0;
 
 
-BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode );
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
-BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode );
 
 
 BOOLEAN InitInteractiveTileManagement( )
@@ -92,10 +90,6 @@ void ShutdownInteractiveTileManagement( )
 {
 }
 
-BOOLEAN AddInteractiveTile( INT16 sGridNo, LEVELNODE *pLevelNode, UINT32 uiFlags, UINT16 usType )
-{
-	return( TRUE );
-}
 
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
@@ -418,7 +412,7 @@ void SetActionModeDoorCursorText( )
 }
 
 
-void GetLevelNodeScreenRect( LEVELNODE *pNode, SGPRect *pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo )
+static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo)
 {
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
@@ -505,6 +499,10 @@ void CompileInteractiveTiles( )
 }
 
 
+static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode);
+static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE* pNode);
+
+
 void LogMouseOverInteractiveTile( INT16 sGridNo )
 {
 	SGPRect				aRect;
@@ -583,7 +581,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 }
 
 
-LEVELNODE *InternalGetCurInteractiveTile( BOOLEAN fRejectItemsOnTop )
+static LEVELNODE* InternalGetCurInteractiveTile(BOOLEAN fRejectItemsOnTop)
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE	*pStructure = NULL;
@@ -771,7 +769,7 @@ void EndCurInteractiveTileCheck( )
 }
 
 
-BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
+static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 {
 	TILE_ELEMENT *TileElem;
 	STRUCTURE		 *pStructure;
@@ -894,7 +892,7 @@ BOOLEAN RefineLogicOnStruct( INT16 sGridNo, LEVELNODE *pNode )
 }
 
 
-BOOLEAN RefinePointCollisionOnStruct( INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE *pNode )
+static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE* pNode)
 {
 	TILE_ELEMENT *TileElem;
 

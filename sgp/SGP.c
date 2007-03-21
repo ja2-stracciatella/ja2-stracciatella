@@ -414,7 +414,7 @@ static void SGPExit(void)
 }
 
 
-void ShutdownWithErrorBox(CHAR8 *pcMessage)
+static void ShutdownWithErrorBox(CHAR8* pcMessage)
 {
 	strncpy(gzErrorMsg, pcMessage, 255);
 	gzErrorMsg[255]='\0';

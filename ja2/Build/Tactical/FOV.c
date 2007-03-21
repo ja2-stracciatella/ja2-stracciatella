@@ -106,10 +106,7 @@ UINT8  ViewPath2[MAXVIEWPATHS][VIEWPATHLENGTH]= {
 			};
 
 
-
-
-
-void BuildSightDir(UINT32 dir, UINT32 *One, UINT32 *Two, UINT32 *Three, UINT32 *Four, UINT32 *Five)
+static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, UINT32* Four, UINT32* Five)
 {
  switch(dir)
  {
@@ -184,7 +181,8 @@ typedef struct
 SLANT_ROOF_FOV_TYPE		gSlantRoofData[ NUM_SLANT_ROOF_SLOTS ];
 UINT32								guiNumSlantRoofs = 0;
 
-INT32 GetFreeSlantRoof( void )
+
+static INT32 GetFreeSlantRoof(void)
 {
 	UINT32 uiCount;
 
@@ -200,7 +198,8 @@ INT32 GetFreeSlantRoof( void )
 	return( -1 );
 }
 
-void RecountSlantRoofs( void )
+
+static void RecountSlantRoofs(void)
 {
 	INT32 uiCount;
 
@@ -229,7 +228,8 @@ void ClearSlantRoofs( void )
 	guiNumSlantRoofs = 0;
 }
 
-BOOLEAN FindSlantRoofSlot( INT16 sGridNo )
+
+static BOOLEAN FindSlantRoofSlot(INT16 sGridNo)
 {
 	UINT32 uiCount;
 

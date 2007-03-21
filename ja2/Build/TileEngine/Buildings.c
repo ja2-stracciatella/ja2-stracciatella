@@ -17,7 +17,8 @@ UINT8						gubBuildingInfo[ WORLD_MAX ];
 BUILDING				gBuildings[ MAX_BUILDINGS ];
 UINT8						gubNumberOfBuildings;
 
-BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
+
+static BUILDING* CreateNewBuilding(UINT8* pubBuilding)
 {
 	if (gubNumberOfBuildings + 1 >= MAX_BUILDINGS)
 	{
@@ -32,7 +33,8 @@ BUILDING * CreateNewBuilding( UINT8 * pubBuilding )
 	return( &(gBuildings[ gubNumberOfBuildings ]) );
 }
 
-BUILDING * GenerateBuilding( INT16 sDesiredSpot )
+
+static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 {
 	UINT32	uiLoop;
 	INT16		sTempGridNo, sNextTempGridNo, sVeryTemporaryGridNo;
@@ -365,7 +367,8 @@ BUILDING * FindBuilding( INT16 sGridNo )
 	return( &(gBuildings[ ubBuildingID ]) );
 }
 
-BOOLEAN InBuilding( INT16 sGridNo )
+
+static BOOLEAN InBuilding(INT16 sGridNo)
 {
 	if ( FindBuilding( sGridNo ) == NULL )
 	{

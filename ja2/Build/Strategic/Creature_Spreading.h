@@ -4,14 +4,12 @@
 void InitCreatureQuest();
 void SpreadCreatures();
 void DecayCreatures();
-void ChooseCreatureQuestStartDay();
 void ClearCreatureQuest();
 void DeleteCreatureDirectives();
 
 BOOLEAN SaveCreatureDirectives( HWFILE hFile );
 BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion );
 
-UINT8 CreaturesInUndergroundSector( UINT8 ubSectorID, UINT8 ubSectorZ );
 BOOLEAN PrepareCreaturesForBattle();
 void CreatureNightPlanning();
 void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest );

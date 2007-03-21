@@ -90,8 +90,9 @@ INT16 gbSmoothWaterStruct[] =
 		-1
 };
 
-BOOLEAN HigherLevel( UINT32 gridno, UINT8 NewLevel  );
-BOOLEAN ContainsWater( UINT32 gridno );
+
+static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOLEAN fForceSmooth);
+
 
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
@@ -239,7 +240,11 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	*piNewTile = usTileIndex;
 }
 
-void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius )
+
+static void SmoothExitGrid(int gridno, UINT16* piNewTile, BOOLEAN fForceSmooth);
+
+
+static void SmoothExitGridRadius(INT16 sMapIndex, UINT8 ubRadius)
 {
 	LEVELNODE* pShadow;
 	INT16 x, y;
@@ -269,7 +274,8 @@ void SmoothExitGridRadius( INT16 sMapIndex, UINT8 ubRadius )
 	}
 }
 
-void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
+
+static void SmoothExitGrid(int gridno, UINT16* piNewTile, BOOLEAN fForceSmooth)
 {
 	int temp=0,type=0;
 	int FullTile = FALSE;
@@ -406,7 +412,8 @@ void SmoothExitGrid(int gridno, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 	*piNewTile = usTileIndex;
 }
 
-void SmoothTerrainWorld( UINT32 uiCheckType )
+
+static void SmoothTerrainWorld(UINT32 uiCheckType)
 {
 	 int						cnt;
 	 UINT16					usIndex;
@@ -535,7 +542,8 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 	}
 }
 
-void SmoothWaterTerrain( int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
+
+static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOLEAN fForceSmooth)
 {
 	// This procedure will calculate the approriate smooth texture for a water texture
 	// based on the surrounding water textures. This is done via masking bits within

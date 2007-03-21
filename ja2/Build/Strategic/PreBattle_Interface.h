@@ -47,10 +47,8 @@ extern BOOLEAN gfHighPotentialForAmbush;
 extern void ActivatePreBattleAutoresolveAction();
 extern void ActivatePreBattleEnterSectorAction();
 extern void ActivatePreBattleRetreatAction();
-extern void ActivateAutomaticAutoResolveStart();
 
 void CalculateNonPersistantPBIInfo();
-void ClearNonPersistantPBIInfo();
 
 //SAVE START
 
@@ -83,13 +81,10 @@ BOOLEAN gfCantRetreatInPBI;
 
 void WakeUpAllMercsInSectorUnderAttack( void );
 
-void ClearMovementForAllInvolvedPlayerGroups( void );
 void RetreatAllInvolvedPlayerGroups( void );
 
 BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup );
 BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier );
-
-BOOLEAN CurrentBattleSectorIs( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 
 enum
 {

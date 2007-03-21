@@ -46,21 +46,6 @@
 
 extern ITEM_POOL		*gpEditingItemPool;
 
-//Simply counts the number of items in the world.  This is used for display purposes.
-UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQuantity ); //wrapper for the next three
-UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity );
-UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency );
-UINT16 CountNumberOfPressureActionsInWorld();
-UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID );
-
-//Finds and selects the next item when right clicking on an item type.  Only works if the
-//item actually exists in the world.
-void FindNextItemOfSelectedType(); //wrapper for the next four
-void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency );
-void SelectNextItemOfType( UINT16 usItem );
-void SelectNextPressureAction();
-void SelectNextKeyOfType( UINT8 ubKeyID );
-
 INT32 giDefaultExistChance = 100;
 
 typedef struct IPListNode
@@ -73,6 +58,10 @@ IPListNode *pIPHead = NULL;
 
 IPListNode *gpCurrItemPoolNode = NULL;
 ITEM_POOL *gpItemPool = NULL;
+
+
+static void ShowItemCursor(INT32 iMapIndex);
+
 
 void BuildItemPoolList()
 {
@@ -104,6 +93,10 @@ void BuildItemPoolList()
 	gpCurrItemPoolNode = pIPHead;
 	SpecifyItemToEdit( NULL, -1 );
 }
+
+
+static void HideItemCursor(INT32 iMapIndex);
+
 
 void KillItemPoolList()
 {
@@ -535,6 +528,10 @@ void DetermineItemsScrolling()
 		EnableEditorButton( ITEMS_RIGHTSCROLL );
 }
 
+
+static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* pusQuantity);
+
+
 void RenderEditorItemsInfo()
 {
 	UINT8	 *pDestBuf, *pSrcBuf;
@@ -688,6 +685,10 @@ void ClearEditorItemsInfo()
 	}
 }
 
+
+static void FindNextItemOfSelectedType(void);
+
+
 void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 {
 	INT16 sIndex;
@@ -748,7 +749,8 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 	}
 }
 
-void ShowItemCursor( INT32 iMapIndex )
+
+static void ShowItemCursor(INT32 iMapIndex)
 {
 	LEVELNODE *pNode;
 	pNode = gpWorldLevelData[ iMapIndex ].pTopmostHead;
@@ -761,12 +763,14 @@ void ShowItemCursor( INT32 iMapIndex )
 	AddTopmostToTail( iMapIndex, SELRING1 );
 }
 
-void HideItemCursor( INT32 iMapIndex )
+
+static void HideItemCursor(INT32 iMapIndex)
 {
 	RemoveTopmost( iMapIndex, SELRING1 );
 }
 
-BOOLEAN TriggerAtGridNo( INT16 sGridNo )
+
+static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 {
 	ITEM_POOL *pItemPool;
 	if( !GetItemPool( sGridNo, &pItemPool, 0 ) )
@@ -1159,7 +1163,15 @@ void SelectPrevItemInPool()
 }
 
 
-void FindNextItemOfSelectedType()
+static void SelectNextItemOfType(UINT16 usItem);
+static void SelectNextKeyOfType(UINT8 ubKeyID);
+static void SelectNextPressureAction(void);
+static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency);
+
+
+/* Finds and selects the next item when right clicking on an item type.
+ * Only works if the item actually exists in the world. */
+static void FindNextItemOfSelectedType(void)
 {
 	UINT16 usItem;
 	usItem = eInfo.pusItemIndex[ eInfo.sSelItemIndex ];
@@ -1193,7 +1205,8 @@ void FindNextItemOfSelectedType()
 	}
 }
 
-void SelectNextItemOfType( UINT16 usItem )
+
+static void SelectNextItemOfType(UINT16 usItem)
 {
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
@@ -1257,7 +1270,8 @@ void SelectNextItemOfType( UINT16 usItem )
 	}
 }
 
-void SelectNextKeyOfType( UINT8 ubKeyID )
+
+static void SelectNextKeyOfType(UINT8 ubKeyID)
 {
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
@@ -1321,7 +1335,8 @@ void SelectNextKeyOfType( UINT8 ubKeyID )
 	}
 }
 
-void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
+
+static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 {
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
@@ -1385,7 +1400,8 @@ void SelectNextTriggerWithFrequency( UINT16 usItem, INT8 bFrequency )
 	}
 }
 
-void SelectNextPressureAction()
+
+static void SelectNextPressureAction(void)
 {
 	IPListNode *curr;
 	OBJECTTYPE *pObject;
@@ -1449,7 +1465,8 @@ void SelectNextPressureAction()
 	}
 }
 
-UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
+
+static UINT16 CountNumberOfItemPlacementsInWorld(UINT16 usItem, UINT16* pusQuantity)
 {
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
@@ -1473,7 +1490,8 @@ UINT16 CountNumberOfItemPlacementsInWorld( UINT16 usItem, UINT16 *pusQuantity )
 	return num;
 }
 
-UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
+
+static UINT16 CountNumberOfItemsWithFrequency(UINT16 usItem, INT8 bFrequency)
 {
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
@@ -1496,7 +1514,8 @@ UINT16 CountNumberOfItemsWithFrequency( UINT16 usItem, INT8 bFrequency )
 	return num;
 }
 
-UINT16 CountNumberOfPressureActionsInWorld()
+
+static UINT16 CountNumberOfPressureActionsInWorld(void)
 {
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;
@@ -1519,7 +1538,12 @@ UINT16 CountNumberOfPressureActionsInWorld()
 	return num;
 }
 
-UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQuantity )
+
+static UINT16 CountNumberOfKeysOfTypeInWorld(UINT8 ubKeyID);
+
+
+//Simply counts the number of items in the world.  This is used for display purposes.
+static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* pusQuantity)
 {
 	UINT16 usNumPlacements;
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_TRIGGERS )
@@ -1556,7 +1580,8 @@ UINT16 CountNumberOfEditorPlacementsInWorld( UINT16 usEInfoIndex, UINT16 *pusQua
 	return usNumPlacements;
 }
 
-UINT16 CountNumberOfKeysOfTypeInWorld( UINT8 ubKeyID )
+
+static UINT16 CountNumberOfKeysOfTypeInWorld(UINT8 ubKeyID)
 {
 	ITEM_POOL *pItemPool;
 	IPListNode *pIPCurr;

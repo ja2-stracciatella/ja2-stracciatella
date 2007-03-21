@@ -89,23 +89,16 @@ BOOLEAN						gfOverItemPool = FALSE;
 INT16							gsOveritemPoolGridNo;
 
 
-void HandleOverheadUI( );
-static void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
-void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason);
-void DeleteOverheadDB( );
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo );
-
-
 extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 
 //Isometric utilities (for overhead stuff only)
 BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY );
-void CopyOverheadDBShadetablesFromTileset( );
 
-void RenderOverheadOverlays();
+
+static void CopyOverheadDBShadetablesFromTileset(void);
+
 
 void InitNewOverheadDB( UINT8 ubTilesetID )
 {
@@ -204,7 +197,7 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 }
 
 
-void DeleteOverheadDB( )
+static void DeleteOverheadDB(void)
 {
 	INT32 cnt;
 
@@ -216,7 +209,7 @@ void DeleteOverheadDB( )
 }
 
 
-BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel )
+static BOOLEAN GetClosestItemPool(INT16 sSweetGridNo, ITEM_POOL** ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -266,7 +259,7 @@ BOOLEAN GetClosestItemPool( INT16 sSweetGridNo, ITEM_POOL **ppReturnedItemPool, 
 }
 
 
-BOOLEAN GetClosestMercInOverheadMap( INT16 sSweetGridNo, SOLDIERTYPE **ppReturnedSoldier, UINT8 ubRadius )
+static BOOLEAN GetClosestMercInOverheadMap(INT16 sSweetGridNo, SOLDIERTYPE** ppReturnedSoldier, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -315,7 +308,7 @@ BOOLEAN GetClosestMercInOverheadMap( INT16 sSweetGridNo, SOLDIERTYPE **ppReturne
 }
 
 
-void DisplayMercNameInOverhead( SOLDIERTYPE *pSoldier )
+static void DisplayMercNameInOverhead(SOLDIERTYPE* pSoldier)
 {
 	INT16		sWorldScreenX, sX;
 	INT16		sWorldScreenY, sY;
@@ -340,6 +333,11 @@ void DisplayMercNameInOverhead( SOLDIERTYPE *pSoldier )
 	gprintfdirty( sX, sY, pSoldier->name );
 	mprintf( sX, sY, pSoldier->name );
 }
+
+
+static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* psGridNo);
+static void HandleOverheadUI(void);
+static void RenderOverheadOverlays(void);
 
 
 void HandleOverheadMap( )
@@ -511,6 +509,11 @@ BOOLEAN InOverheadMap( )
 	return( gfInOverheadMap );
 }
 
+
+static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
+static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
+
+
 void GoIntoOverheadMap( )
 {
 #ifdef JA2DEMO
@@ -573,7 +576,8 @@ void GoIntoOverheadMap( )
 
 }
 
-void HandleOverheadUI( )
+
+static void HandleOverheadUI(void)
 {
   InputAtom					InputEvent;
 	INT16							sMousePos=0;
@@ -636,7 +640,7 @@ void KillOverheadMap()
 }
 
 
-INT16 GetOffsetLandHeight( INT32 sGridNo )
+static INT16 GetOffsetLandHeight(INT32 sGridNo)
 {
 	INT16 sTileHeight;
 
@@ -645,7 +649,8 @@ INT16 GetOffsetLandHeight( INT32 sGridNo )
 	return( sTileHeight );
 }
 
-INT16 GetModifiedOffsetLandHeight( INT32 sGridNo )
+
+static INT16 GetModifiedOffsetLandHeight(INT32 sGridNo)
 {
 	INT16 sTileHeight;
 	INT16 sModifiedTileHeight;
@@ -1079,7 +1084,11 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	}
 }
 
-void RenderOverheadOverlays()
+
+static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY);
+
+
+static void RenderOverheadOverlays(void)
 {
 	UINT32			uiDestPitchBYTES;
 	WORLDITEM		*pWorldItem;
@@ -1426,7 +1435,7 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 */
 
 
-static void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
+static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
@@ -1465,13 +1474,12 @@ static void ClickOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
 }
 
 
-void MoveOverheadRegionCallback(MOUSE_REGION *reg,INT32 reason)
+static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
 }
 
 
-
-void GetOverheadScreenXYFromGridNo( INT16 sGridNo, INT16 *psScreenX, INT16 *psScreenY )
+static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY)
 {
 	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY );
 	*psScreenX /= 5;
@@ -1520,7 +1528,7 @@ BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
 }
 
 
-BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo( INT16 *psGridNo )
+static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* psGridNo)
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
@@ -1596,13 +1604,7 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 }
 
 
-void CalculateRestrictedScaleFactors( INT16 *pScaleX, INT16 *pScaleY )
-{
-
-}
-
-
-void CopyOverheadDBShadetablesFromTileset( )
+static void CopyOverheadDBShadetablesFromTileset(void)
 {
 	UINT32					uiLoop, uiLoop2;
 	PTILE_IMAGERY   pTileSurf;

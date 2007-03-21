@@ -117,15 +117,11 @@ UINT16 uiMouthYPositions[]={
 
 BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
 
-void CreateConfirmButtons( void );
-void DestroyConfirmButtons( void );
-void GiveItemsToPC( UINT8 ubProfileId );
-void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem);
-
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateConfirmButtons(void);
 
 
 void EnterIMPConfirm( void )
@@ -147,6 +143,10 @@ void RenderIMPConfirm( void )
   PrintImpText( );
 }
 
+
+static void DestroyConfirmButtons(void);
+
+
 void ExitIMPConfirm( void )
 {
 
@@ -158,7 +158,8 @@ void HandleIMPConfirm( void )
 {
 }
 
-void CreateConfirmButtons( void )
+
+static void CreateConfirmButtons(void)
 {
 	// create buttons for confirm screen
 
@@ -183,7 +184,7 @@ void CreateConfirmButtons( void )
 }
 
 
-void DestroyConfirmButtons( void )
+static void DestroyConfirmButtons(void)
 {
   // destroy buttons for confirm screen
 
@@ -196,8 +197,10 @@ void DestroyConfirmButtons( void )
 }
 
 
+static void GiveItemsToPC(UINT8 ubProfileId);
 
-BOOLEAN AddCharacterToPlayersTeam( void )
+
+static BOOLEAN AddCharacterToPlayersTeam(void)
 {
 
 	MERC_HIRE_STRUCT HireMercStruct;
@@ -243,6 +246,9 @@ BOOLEAN AddCharacterToPlayersTeam( void )
 		return ( TRUE );
 	}
 }
+
+
+static void WriteOutCurrentImpCharacter(INT32 iProfileId);
 
 
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
@@ -322,7 +328,11 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason)
 #define PROFILE_HAS_SKILL_TRAIT( p, t ) ((p->bSkillTrait == t) || (p->bSkillTrait2 == t))
 
 
-void GiveItemsToPC( UINT8 ubProfileId )
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT* pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
+
+
+static void GiveItemsToPC(UINT8 ubProfileId)
 {
 	MERCPROFILESTRUCT *pProfile;
 
@@ -434,7 +444,10 @@ void GiveItemsToPC( UINT8 ubProfileId )
 }
 
 
-void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem);
+
+
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
 	INT32 iSlot;
 
@@ -451,7 +464,7 @@ void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT *pProfile, UINT16 usItem, UINT8
 }
 
 
-void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT* pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
 {
   pProfile->inv[uiPos]				= usItem;
   pProfile->bInvStatus[uiPos] = ubStatus;
@@ -459,7 +472,7 @@ void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT *pProfile, UINT32 uiPos, UINT1
 }
 
 
-INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem)
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem)
 {
 	UINT32 uiPos;
 
@@ -491,7 +504,7 @@ INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT *pProfile, UINT16 usItem)
 }
 
 
-void WriteOutCurrentImpCharacter( INT32 iProfileId )
+static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 {
 	// grab the profile number and write out what is contained there in
 	HWFILE hFile;
@@ -521,7 +534,8 @@ void WriteOutCurrentImpCharacter( INT32 iProfileId )
 	FileClose(hFile);
 }
 
-void LoadInCurrentImpCharacter( void )
+
+static void LoadInCurrentImpCharacter(void)
 {
 	INT32 iProfileId = 0;
 	HWFILE hFile;

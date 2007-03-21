@@ -68,18 +68,9 @@ VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[ DC__SOLDIER_VISIBLE_RANGE ][ 
 INT16	gsLastVisibleToSoldierGridNo=NOWHERE;
 
 
-INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridno, INT8 bStance );
-void	CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange );
-void	AddCoverTileToEachGridNo();
-void	AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof );
-void	RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof );
-INT8	GetCurrentMercForDisplayCoverStance();
-SOLDIERTYPE *GetCurrentMercForDisplayCover();
-
-void	CalculateVisibleToSoldierAroundGridno( INT16 sGridNo, INT8 bSearchRange );
-void	AddVisibleToSoldierToEachGridNo();
-INT8	CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof );
-BOOLEAN IsTheRoofVisible( INT16 sGridNo );
+static void AddCoverTileToEachGridNo(void);
+static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange);
+static INT8 GetCurrentMercForDisplayCoverStance(void);
 
 
 void DisplayCoverOfSelectedGridNo( )
@@ -146,7 +137,11 @@ void DisplayCoverOfSelectedGridNo( )
 	}
 }
 
-void AddCoverTileToEachGridNo()
+
+static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof);
+
+
+static void AddCoverTileToEachGridNo(void)
 {
 	UINT32 uiCntX, uiCntY;
 	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
@@ -204,6 +199,10 @@ void AddCoverTileToEachGridNo()
 		}
 	}
 }
+
+
+static void RemoveCoverObjectFromWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof);
+
 
 void RemoveCoverOfSelectedGridNo()
 {
@@ -279,7 +278,11 @@ void RemoveCoverOfSelectedGridNo()
 }
 
 
-void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange )
+static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance);
+static SOLDIERTYPE* GetCurrentMercForDisplayCover(void);
+
+
+static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
@@ -391,8 +394,7 @@ void CalculateCoverInRadiusAroundGridno( INT16 sTargetGridNo, INT8	bSearchRange 
 }
 
 
-
-INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, INT8 bStance )
+static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance)
 {
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
@@ -500,7 +502,7 @@ INT8	CalcCoverForGridNoBasedOnTeamKnownEnemies( SOLDIERTYPE *pSoldier, INT16 sTa
 }
 
 
-void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
+static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof)
 {
 	LEVELNODE *pNode;
 
@@ -525,7 +527,8 @@ void AddCoverObjectToWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
 	}
 }
 
-void RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof )
+
+static void RemoveCoverObjectFromWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof)
 {
 	if( fRoof )
 	{
@@ -537,7 +540,8 @@ void RemoveCoverObjectFromWorld( INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof 
 	}
 }
 
-SOLDIERTYPE *GetCurrentMercForDisplayCover()
+
+static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 {
 	SOLDIERTYPE *pSoldier=NULL;
 	//Get a soldier that is on the player team
@@ -552,7 +556,8 @@ SOLDIERTYPE *GetCurrentMercForDisplayCover()
 	return( pSoldier );
 }
 
-INT8 GetCurrentMercForDisplayCoverStance()
+
+static INT8 GetCurrentMercForDisplayCoverStance(void)
 {
 	INT8	bStance;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -630,6 +635,9 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 }
 
 
+static void AddVisibleToSoldierToEachGridNo(void);
+static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange);
+
 
 void DisplayGridNoVisibleToSoldierGrid( )
 {
@@ -689,7 +697,11 @@ void DisplayGridNoVisibleToSoldierGrid( )
 }
 
 
-void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRange )
+static INT8 CalcIfSoldierCanSeeGridNo(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof);
+static BOOLEAN IsTheRoofVisible(INT16 sGridNo);
+
+
+static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	SOLDIERTYPE *pSoldier=NULL;
@@ -785,7 +797,7 @@ void CalculateVisibleToSoldierAroundGridno( INT16 sTargetGridNo, INT8 bSearchRan
 }
 
 
-void AddVisibleToSoldierToEachGridNo()
+static void AddVisibleToSoldierToEachGridNo(void)
 {
 	UINT32 uiCntX, uiCntY;
 	INT8	bVisibleToSoldier=0;
@@ -900,7 +912,7 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 }
 
 
-INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof )
+static INT8 CalcIfSoldierCanSeeGridNo(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof)
 {
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
@@ -963,7 +975,8 @@ INT8 CalcIfSoldierCanSeeGridNo( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOL
 	return( bRetVal );
 }
 
-BOOLEAN IsTheRoofVisible( INT16 sGridNo )
+
+static BOOLEAN IsTheRoofVisible(INT16 sGridNo)
 {
 	UINT8 ubRoom;
 

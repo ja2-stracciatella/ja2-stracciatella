@@ -17,19 +17,9 @@ void ResetInterface( );
 void RenderTopmostTacticalInterface( );
 void RenderTacticalInterface( );
 
-void StartViewportOverlays( );
-void EndViewportOverlays( );
-
-void LockTacticalInterface( );
-void UnLockTacticalInterface( );
-
 void RenderTacticalInterfaceWhileScrolling( );
 
 void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock );
-
-// handle paused render of tactical panel, if flag set, OR it in with tactical render flags
-// then reset
-void HandlePausedTacticalRender( void );
 
 void ResetInterfaceAndUI( );
 

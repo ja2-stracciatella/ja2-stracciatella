@@ -83,12 +83,10 @@ const char *szMusicList[NUM_MUSIC]=
 BOOLEAN	gfForceMusicToTense = FALSE;
 BOOLEAN gfDontRestartSong   = FALSE;
 
-BOOLEAN StartMusicBasedOnMode( );
-void	DoneFadeOutDueToEndMusic( void );
 extern void HandleEndDemoInCreatureLevel( );
 
 
-BOOLEAN NoEnemiesInSight( )
+static BOOLEAN NoEnemiesInSight(void)
 {
 	SOLDIERTYPE             *pSoldier;
 	INT32										cnt;
@@ -112,7 +110,11 @@ BOOLEAN NoEnemiesInSight( )
 	return( TRUE );
 }
 
-void MusicStopCallback( void *pData );
+
+static BOOLEAN MusicFadeIn(void);
+static BOOLEAN MusicStop(void);
+static void MusicStopCallback(void* pData);
+
 
 //********************************************************************************
 // MusicPlay
@@ -151,6 +153,10 @@ SOUNDPARMS spParms;
 
 	return(FALSE);
 }
+
+
+static BOOLEAN StartMusicBasedOnMode(void);
+
 
 //********************************************************************************
 // MusicSetVolume
@@ -204,15 +210,11 @@ UINT32 MusicGetVolume(void)
 		return(uiMusicVolume);
 }
 
-//********************************************************************************
-// MusicStop
-//
+
 //		Stops the currently playing music.
 //
 //	Returns:	TRUE if the music was stopped, FALSE if an error occurred
-//
-//********************************************************************************
-BOOLEAN MusicStop(void)
+static BOOLEAN MusicStop(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
@@ -229,15 +231,11 @@ BOOLEAN MusicStop(void)
 	return(FALSE);
 }
 
-//********************************************************************************
-// MusicFadeOut
-//
+
 //		Fades out the current song.
 //
 //	Returns:	TRUE if the music has begun fading, FALSE if an error occurred
-//
-//********************************************************************************
-BOOLEAN MusicFadeOut(void)
+static BOOLEAN MusicFadeOut(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
@@ -247,15 +245,11 @@ BOOLEAN MusicFadeOut(void)
 	return(FALSE);
 }
 
-//********************************************************************************
-// MusicFadeIn
-//
+
 //		Fades in the current song.
 //
 //	Returns:	TRUE if the music has begun fading in, FALSE if an error occurred
-//
-//********************************************************************************
-BOOLEAN MusicFadeIn(void)
+static BOOLEAN MusicFadeIn(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
@@ -436,7 +430,7 @@ BOOLEAN SetMusicMode( UINT8 ubMusicMode )
 }
 
 
-BOOLEAN StartMusicBasedOnMode( )
+static BOOLEAN StartMusicBasedOnMode(void)
 {
 	static BOOLEAN fFirstTime = TRUE;
 
@@ -541,7 +535,7 @@ BOOLEAN StartMusicBasedOnMode( )
 }
 
 
-void MusicStopCallback( void *pData )
+static void MusicStopCallback(void* pData)
 {
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music EndCallback %d %d", uiMusicHandle, gubMusicMode  ) );
 
@@ -555,7 +549,8 @@ void SetMusicFadeSpeed( INT8 bFadeSpeed )
 	gbFadeSpeed = bFadeSpeed;
 }
 
-void FadeMusicForXSeconds( UINT32 uiDelay )
+
+static void FadeMusicForXSeconds(UINT32 uiDelay)
 {
 	INT16 sNumTimeSteps, sNumVolumeSteps;
 
@@ -570,7 +565,7 @@ void FadeMusicForXSeconds( UINT32 uiDelay )
 }
 
 
-void	DoneFadeOutDueToEndMusic( void )
+static void DoneFadeOutDueToEndMusic(void)
 {
 	// Quit game....
 	InternalLeaveTacticalScreen( MAINMENU_SCREEN );

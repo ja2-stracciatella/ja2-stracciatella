@@ -21,8 +21,9 @@ SGPRect MsgBoxRect;
 BOOLEAN gfMessageBoxResult = FALSE;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;
 
-void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason );
-void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason );
+
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason);
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
 
 
 void CreateMessageBox(const wchar_t* wzString)
@@ -120,11 +121,7 @@ void RemoveMessageBox( )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	Quick Message Box button callback functions.
-//----------------------------------------------------------------------------------------------
-
-void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
+static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -137,7 +134,8 @@ void MsgBoxOkClkCallback( GUI_BUTTON *butn, INT32 reason )
 	}
 }
 
-void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason )
+
+static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -149,10 +147,5 @@ void MsgBoxCnclClkCallback( GUI_BUTTON *butn, INT32 reason )
 		gfMessageBoxResult = FALSE;
 	}
 }
-
-//----------------------------------------------------------------------------------------------
-//	End of the quick message box callback functions
-//----------------------------------------------------------------------------------------------
-
 
 #endif

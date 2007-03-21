@@ -265,7 +265,6 @@ wchar_t			gzItemCons[ SIZE_ITEM_CONS ];
 wchar_t			gzFullItemPros[ SIZE_ITEM_PROS ];
 wchar_t			gzFullItemCons[ SIZE_ITEM_PROS ];
 wchar_t			gzFullItemTemp[ SIZE_ITEM_PROS ]; // necessary, unfortunately
-void ItemDescCallback( MOUSE_REGION * pRegion, INT32 iReason );
 INT16				gsInvDescX;
 INT16				gsInvDescY;
 UINT8				gubItemDescStatusIndex;
@@ -277,7 +276,7 @@ BOOLEAN			fItemDescDelete = FALSE;
 MOUSE_REGION		gItemDescAttachmentRegions[4];
 MOUSE_REGION		gProsAndConsRegions[2];
 
-void				BtnMoneyButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32			guiMoneyButtonBtn[MAX_ATTACHMENTS];
 INT32				guiMoneyButtonImage;
 INT32				guiMoneyDoneButtonImage;
@@ -300,9 +299,6 @@ static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 // show the description
 extern BOOLEAN fShowDescriptionFlag;
 extern BOOLEAN fShowInventoryFlag;
-
-void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason);
 
 
 // number of keys on keyring, temp for now
@@ -350,14 +346,7 @@ BOOLEAN	gfItemPopupRegionCallbackEndFix = FALSE;
 extern void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier );
 
 
-void	ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void ItemPopupFullRegionCallback( MOUSE_REGION * pRegion, INT32 iReason );
-BOOLEAN ReloadItemDesc( );
-
-
 extern void HelpTextDoneCallback( void );
-void RemoveMoney();
-BOOLEAN	CompatibleItemForApplyingOnMerc( OBJECTTYPE *pTestObject );
 
 extern BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern void	StartSKIDescriptionBox( void );
@@ -555,7 +544,8 @@ UINT32					guiBodyInvVO[ 4 ][ 2 ];
 UINT32					guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
-BOOLEAN AttemptToAddSubstring( STR16 zDest, const wchar_t *zTemp, UINT32 * puiStringLength, UINT32 uiPixLimit )
+
+static BOOLEAN AttemptToAddSubstring(STR16 zDest, const wchar_t* zTemp, UINT32* puiStringLength, UINT32 uiPixLimit)
 {
 	UINT32 uiRequiredStringLength, uiTempStringLength;
 
@@ -582,7 +572,8 @@ BOOLEAN AttemptToAddSubstring( STR16 zDest, const wchar_t *zTemp, UINT32 * puiSt
 	}
 }
 
-void GenerateProsString( wchar_t * zItemPros, OBJECTTYPE * pObject, UINT32 uiPixLimit )
+
+static void GenerateProsString(wchar_t* zItemPros, OBJECTTYPE* pObject, UINT32 uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;
@@ -688,7 +679,8 @@ void GenerateProsString( wchar_t * zItemPros, OBJECTTYPE * pObject, UINT32 uiPix
 	}
 }
 
-void GenerateConsString( wchar_t * zItemCons, OBJECTTYPE * pObject, UINT32 uiPixLimit )
+
+static void GenerateConsString(wchar_t* zItemCons, OBJECTTYPE* pObject, UINT32 uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;
@@ -849,7 +841,8 @@ void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback )
 		SetRegionFastHelpText( &(gKeyRingPanel), TacticalStr[ KEYRING_HELP_TEXT ] );
 }
 
-void EnableKeyRing( BOOLEAN fEnable )
+
+static void EnableKeyRing(BOOLEAN fEnable)
 {
 	if ( fEnable )
 	{
@@ -938,6 +931,9 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 }
 
 
+static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel);
+
+
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 {
 	INT32									cnt;
@@ -979,7 +975,7 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 }
 
 
-void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLevel )
+static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel)
 {
 	INT16 sX, sY;
 	INT16	sBarX, sBarY;
@@ -1110,7 +1106,7 @@ void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLe
 }
 
 
-BOOLEAN CompatibleAmmoForGun( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject )
+static BOOLEAN CompatibleAmmoForGun(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_AMMO ) )
 	{
@@ -1123,7 +1119,8 @@ BOOLEAN CompatibleAmmoForGun( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject )
 	return( FALSE );
 }
 
-BOOLEAN CompatibleGunForAmmo( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject )
+
+static BOOLEAN CompatibleGunForAmmo(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_GUN ) )
 	{
@@ -1136,7 +1133,8 @@ BOOLEAN CompatibleGunForAmmo( OBJECTTYPE *pTryObject, OBJECTTYPE *pTestObject )
 	return( FALSE );
 }
 
-BOOLEAN	CompatibleItemForApplyingOnMerc( OBJECTTYPE *pTestObject )
+
+static BOOLEAN CompatibleItemForApplyingOnMerc(OBJECTTYPE* pTestObject)
 {
 	UINT16 usItem = pTestObject->usItem;
 
@@ -1160,8 +1158,7 @@ BOOLEAN	CompatibleItemForApplyingOnMerc( OBJECTTYPE *pTestObject )
 }
 
 
-
-BOOLEAN SoldierContainsAnyCompatibleStuff( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject )
+static BOOLEAN SoldierContainsAnyCompatibleStuff(SOLDIERTYPE* pSoldier, OBJECTTYPE* pTestObject)
 {
 	INT32				cnt;
 	OBJECTTYPE  *pObject;
@@ -1731,13 +1728,15 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 
 }
 
-void GetSlotInvXY( UINT8 ubPos, INT16 *psX, INT16 *psY )
+
+static void GetSlotInvXY(UINT8 ubPos, INT16* psX, INT16* psY)
 {
 	*psX = gSMInvData[ ubPos ].sX;
 	*psY = gSMInvData[ ubPos ].sY;
 }
 
-void GetSlotInvHeightWidth( UINT8 ubPos, INT16 *psWidth, INT16 *psHeight )
+
+static void GetSlotInvHeightWidth(UINT8 ubPos, INT16* psWidth, INT16* psHeight)
 {
 	*psWidth	= gSMInvData[ ubPos ].sWidth;
 	*psHeight   = gSMInvData[ ubPos ].sHeight;
@@ -2209,6 +2208,13 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 	return( InternalInitItemDescriptionBox( pObject, sX, sY, ubStatusIndex, pSoldier ) );
 }
 
+
+static void ItemDescAmmoCallback(GUI_BUTTON* btn, INT32 reason);
+static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static BOOLEAN ReloadItemDesc(void);
+
+
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
 	INT32		cnt;
@@ -2546,7 +2552,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 }
 
 
-BOOLEAN ReloadItemDesc( )
+static BOOLEAN ReloadItemDesc(void)
 {
 	if ( !LoadTileGraphicForItem( &(Item[ gpItemDescObject->usItem ]), &guiItemGraphic ) )
 	{
@@ -2593,7 +2599,7 @@ BOOLEAN ReloadItemDesc( )
 }
 
 
-void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
+static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 {
 	static BOOLEAN fRightDown = FALSE;
 	wchar_t		pStr[10];
@@ -2675,7 +2681,7 @@ void ItemDescAmmoCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void DoAttachment( void )
+static void DoAttachment(void)
 {
 	if ( AttachObject( gpItemDescSoldier, gpItemDescObject, gpItemPointer ) )
 	{
@@ -2723,7 +2729,8 @@ void DoAttachment( void )
 	gfReEvaluateEveryonesNothingToDo = TRUE;
 }
 
-void PermanantAttachmentMessageBoxCallBack( UINT8 ubExitValue )
+
+static void PermanantAttachmentMessageBoxCallBack(UINT8 ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -2732,7 +2739,8 @@ void PermanantAttachmentMessageBoxCallBack( UINT8 ubExitValue )
 	// else do nothing
 }
 
-void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32					uiItemPos;
 	static BOOLEAN	fRightDown = FALSE;
@@ -4118,7 +4126,8 @@ void HideItemTileCursor( )
 
 }
 
-BOOLEAN SoldierCanSeeCatchComing( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo )
+
+static BOOLEAN SoldierCanSeeCatchComing(SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 {
 	return( TRUE );
 /*-
@@ -4456,7 +4465,7 @@ void DrawItemTileCursor( )
 }
 
 
-BOOLEAN IsValidAmmoToReloadRobot( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
+static BOOLEAN IsValidAmmoToReloadRobot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObject)
 {
 	if ( !CompatibleAmmoForGun( pObject, &( pSoldier->inv[ HANDPOS ] ) ) )
 	{
@@ -4928,7 +4937,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	return( TRUE );
 }
 
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos )
+
+static BOOLEAN ItemCursorInLobRange(UINT16 usMapPos)
 {
 	// Draw item depending on distance from buddy
 	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )
@@ -4954,6 +4964,11 @@ BOOLEAN InKeyRingPopup( )
 {
 	return( gfInKeyRingPopup );
 }
+
+
+static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
@@ -5086,7 +5101,11 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	return( TRUE );
 }
 
-void EndItemStackPopupWithItemInHand( )
+
+static void DeleteItemStackPopup(void);
+
+
+static void EndItemStackPopupWithItemInHand(void)
 {
 	if ( gpItemPointer != NULL )
 	{
@@ -5145,13 +5164,8 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 }
 
-void HandleItemStackPopup( )
-{
 
-}
-
-
-void DeleteItemStackPopup( )
+static void DeleteItemStackPopup(void)
 {
 	INT32			cnt;
 
@@ -5472,11 +5486,8 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 	return( TRUE );
 }
 
-void ItemDescMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
-{
-}
 
-void ItemDescCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static BOOLEAN fRightDown = FALSE, fLeftDown = FALSE;
 
@@ -5517,6 +5528,9 @@ void ItemDescCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
+static void RemoveMoney(void);
+
+
 static void ItemDescDoneButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -5532,7 +5546,7 @@ static void ItemDescDoneButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32					uiItemPos;
 
@@ -5650,7 +5664,8 @@ void ItemPopupRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void ItemPopupFullRegionCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32					uiItemPos;
 
@@ -5756,21 +5771,8 @@ typedef struct
 #define					ITEMPICK_TEXT_HEIGHT		17
 
 
-
-
 ITEM_PICKUP_MENU_STRUCT			gItemPickupMenu;
 BOOLEAN											gfInItemPickupMenu = FALSE;
-
-void ItemPickupScrollUp( GUI_BUTTON *btn, INT32 reason );
-void ItemPickupScrollDown( GUI_BUTTON *btn, INT32 reason );
-void ItemPickupAll( GUI_BUTTON *btn, INT32 reason );
-void ItemPickupOK( GUI_BUTTON *btn, INT32 reason );
-void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason );
-void SetupPickupPage( INT8 bPage );
-void ItemPickMenuMouseMoveCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void ItemPickMenuMouseClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void CalculateItemPickupMenuDimensions( );
-void ItemPickupBackgroundClick( MOUSE_REGION * pRegion, INT32 iReason );
 
 
 // STUFF FOR POPUP ITEM INFO BOX
@@ -5778,6 +5780,17 @@ void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel )
 {
 	gItemPickupMenu.fDirtyLevel = fDirtyLevel;
 }
+
+
+static void CalculateItemPickupMenuDimensions(void);
+static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason);
+static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason);
+static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason);
+static void ItemPickupScrollDown(GUI_BUTTON* btn, INT32 reason);
+static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason);
+static void SetupPickupPage(INT8 bPage);
 
 
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
@@ -5997,11 +6010,10 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 
 	//gfSMDisableForItems = TRUE;
 	return( TRUE );
-
 }
 
 
-void SetupPickupPage( INT8 bPage )
+static void SetupPickupPage(INT8 bPage)
 {
 	INT32 cnt, iStart, iEnd;
 	ITEM_POOL				*pTempItemPool;
@@ -6116,7 +6128,7 @@ void SetupPickupPage( INT8 bPage )
 }
 
 
-void CalculateItemPickupMenuDimensions( )
+static void CalculateItemPickupMenuDimensions(void)
 {
 	INT32			cnt;
 	INT16			sX, sY;
@@ -6446,7 +6458,7 @@ void RemoveItemPickupMenu( )
 }
 
 
-void ItemPickupScrollUp( GUI_BUTTON *btn, INT32 reason )
+static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -6461,11 +6473,10 @@ void ItemPickupScrollUp( GUI_BUTTON *btn, INT32 reason )
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
-
 }
 
 
-void ItemPickupScrollDown( GUI_BUTTON *btn, INT32 reason )
+static void ItemPickupScrollDown(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -6482,7 +6493,8 @@ void ItemPickupScrollDown( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ItemPickupAll( GUI_BUTTON *btn, INT32 reason )
+
+static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 cnt;
 
@@ -6524,7 +6536,7 @@ void ItemPickupAll( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
+static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -6546,7 +6558,8 @@ void ItemPickupOK( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason )
+
+static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -6566,7 +6579,7 @@ void ItemPickupCancel( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void ItemPickMenuMouseMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32					uiItemPos;
 	ITEM_POOL				*pTempItemPool;
@@ -6620,7 +6633,7 @@ void ItemPickMenuMouseMoveCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void ItemPickupBackgroundClick( MOUSE_REGION * pRegion, INT32 iReason )
+static void ItemPickupBackgroundClick(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -6630,8 +6643,7 @@ void ItemPickupBackgroundClick( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void ItemPickMenuMouseClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT32				  	uiItemPos;
 	UINT8						cnt;
@@ -6698,7 +6710,7 @@ BOOLEAN HandleItemPickupMenu( )
 }
 
 
-void BtnMoneyButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT8	i;
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -6827,7 +6839,8 @@ void BtnMoneyButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void RemoveMoney()
+
+static void RemoveMoney(void)
 {
 	if( gRemoveMoney.uiMoneyRemoving != 0 )
 	{
@@ -6911,12 +6924,6 @@ void RemoveMoney()
 
 //	if( gfAddingMoneyToMercFromPlayersAccount )
 //		gfAddingMoneyToMercFromPlayersAccount = FALSE;
-}
-
-
-BOOLEAN AttemptToApplyCamo( SOLDIERTYPE *pSoldier, UINT16 usItemIndex )
-{
-	return( FALSE );
 }
 
 
@@ -7005,7 +7012,7 @@ void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOL
 }
 
 
-UINT8 GetPrefferedItemSlotGraphicNum( UINT16 usItem )
+static UINT8 GetPrefferedItemSlotGraphicNum(UINT16 usItem)
 {
 	// Check for small item...
 	if ( Item[usItem].ubPerPocket >= 1 )

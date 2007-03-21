@@ -81,7 +81,7 @@ static void InitKnowFacilitiesFlags(void)
 }
 
 
-void InitMiningLocations()
+static void InitMiningLocations(void)
 {
 	SECTORINFO *pSector;
 	//Set up mining sites
@@ -112,8 +112,9 @@ void InitMiningLocations()
 //	pSector->ubIncomeValue = 100;
 }
 
+
 //Mobile groups are handled separately from sectors, because they are on the move.
-void GeneratePatrolGroups()
+static void GeneratePatrolGroups(void)
 {
 	GROUP *pGroup;
 	UINT8 ubNumTroops;

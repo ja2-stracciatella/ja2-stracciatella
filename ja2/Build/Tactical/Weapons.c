@@ -445,7 +445,8 @@ INT8 ArmourPercent( SOLDIERTYPE * pSoldier )
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 
-INT8 ExplosiveEffectiveArmour( OBJECTTYPE * pObj )
+
+static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 {
 	INT32		iValue;
 	INT8		bPlate;
@@ -515,7 +516,8 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	return( (INT8) (iHelmet + iVest + iLeg) );
 }
 
-void AdjustImpactByHitLocation( INT32 iImpact, UINT8 ubHitLocation, INT32 * piNewImpact, INT32 * piImpactForCrits )
+
+static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
 	switch( ubHitLocation )
 	{
@@ -1397,6 +1399,9 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	return( TRUE );
 }
+
+
+static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime);
 
 
 BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing )
@@ -3075,7 +3080,8 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 	return( iReduction );
 }
 
-INT32 ArmourProtection( SOLDIERTYPE * pTarget, UINT8 ubArmourType, INT8 * pbStatus, INT32 iImpact, UINT8 ubAmmoType )
+
+static INT32 ArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubArmourType, INT8* pbStatus, INT32 iImpact, UINT8 ubAmmoType)
 {
 	INT32		iProtection, iAppliedProtection, iFailure;
 
@@ -3745,7 +3751,8 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 	FreeUpAttacker( ubAttackerID );
 }
 
-UINT32 CalcChanceHTH( SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime, UINT8 ubMode )
+
+static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime, UINT8 ubMode)
 {
   UINT16 usInHand;
 	UINT8 ubBandaged;
@@ -4085,7 +4092,8 @@ UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 
 	return( CalcChanceHTH( pAttacker, pDefender, ubAimTime, HTH_MODE_PUNCH ) );
 }
 
-UINT32 CalcChanceToSteal(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime)
+
+static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime)
 {
 	return( CalcChanceHTH( pAttacker, pDefender, ubAimTime, HTH_MODE_STEAL ) );
 }

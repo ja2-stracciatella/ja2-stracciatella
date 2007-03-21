@@ -140,7 +140,6 @@ void ActionDone(SOLDIERTYPE *pSoldier);
 INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
-INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale);
 void CallAvailableEnemiesTo(INT16 sGridno);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
@@ -156,11 +155,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
 void DebugAI( STR szOutput );
 INT8	DecideAction(SOLDIERTYPE *pSoldier);
-INT8 DecideActionBlack(SOLDIERTYPE *pSoldier);
-INT8 DecideActionEscort(SOLDIERTYPE *pSoldier);
-INT8 DecideActionGreen(SOLDIERTYPE *pSoldier);
 INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK);
-INT8 DecideActionYellow(SOLDIERTYPE *pSoldier);
 
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier );
 
@@ -169,7 +164,6 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
 
-INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno);
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *pPercentBetter);
 INT16 FindClosestDoor( SOLDIERTYPE * pSoldier );
 INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection );
@@ -194,11 +188,9 @@ void FreeUpNPCFromAttacking(UINT8 ubID);
 void FreeUpNPCFromPendingAction( SOLDIERTYPE * pSoldier );
 void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook);
 void FreeUpNPCFromStanceChange(SOLDIERTYPE *pSoldier );
-void FreeUpNPCFromLoweringGun( SOLDIERTYPE *pSoldier );
 void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
 
 UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
-UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier );
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);
@@ -209,10 +201,8 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
 BOOLEAN InitAI( void );
 
 void MakeClosestEnemyChosenOne();
-void ManChecksOnFriends(SOLDIERTYPE *pSoldier);
 
 void NewDest(SOLDIERTYPE *pSoldier, UINT16 sGridno);
-INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
 void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);
@@ -221,7 +211,6 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier);
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier);
 INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 *pFromGridno);
 
-void SetCivilianDestination(UINT8 ubWho, INT16 sGridno);
 void SetNewSituation( SOLDIERTYPE * pSoldier );
 
 UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier );
@@ -234,10 +223,5 @@ BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection );
 
 BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier );
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly);
-
-
-
-
-
 
 #endif

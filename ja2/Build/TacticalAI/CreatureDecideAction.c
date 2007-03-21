@@ -139,7 +139,8 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 	}
 }
 
-INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
+
+static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 {
 	INT32		iChance, iSneaky = 10;
 	//INT8		bInWater;
@@ -427,7 +428,8 @@ INT8 CreatureDecideActionGreen( SOLDIERTYPE * pSoldier )
 	return(AI_ACTION_NONE);
 }
 
-INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
+
+static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 {
 	// monster AI - heard something
 	UINT8 ubNoiseDir;
@@ -586,7 +588,8 @@ INT8 CreatureDecideActionYellow( SOLDIERTYPE * pSoldier )
 	return(AI_ACTION_NONE);
 }
 
-INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
+
+static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK)
 {
  // monster AI - hostile mammals somewhere around!
  INT16 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
@@ -884,7 +887,7 @@ INT8 CreatureDecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 }
 
 
-INT8 CreatureDecideActionBlack( SOLDIERTYPE * pSoldier )
+static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 {
 	// monster AI - hostile mammals in sense range
 	INT16 sClosestOpponent;
@@ -1635,9 +1638,7 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 }
 
 
-
-
-INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
+static INT8 CrowDecideActionRed(SOLDIERTYPE* pSoldier)
 {
 	// OK, Fly away!
 	//HandleCrowFlyAway( pSoldier );
@@ -1653,7 +1654,7 @@ INT8 CrowDecideActionRed( SOLDIERTYPE * pSoldier )
 }
 
 
-INT8 CrowDecideActionGreen( SOLDIERTYPE * pSoldier )
+static INT8 CrowDecideActionGreen(SOLDIERTYPE* pSoldier)
 {
 	INT16 sCorpseGridNo;
 	UINT8 ubDirection;

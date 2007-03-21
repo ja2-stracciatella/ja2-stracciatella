@@ -80,22 +80,6 @@ UINT32						guiMainMenuExitScreen = MAINMENU_SCREEN;
 extern	BOOLEAN		gfLoadGameUponEntry;
 
 
-void ExitMainMenu( );
-void HandleMainMenuInput();
-void HandleMainMenuScreen();
-void DisplayAssignmentText();
-void ClearMainMenu();
-void HandleHelpScreenInput();
-void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void SetMainMenuExitScreen( UINT32 uiNewScreen );
-void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate );
-BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate );
-void RenderMainMenu();
-void RestoreButtonBackGrounds();
-
-
-
-
 UINT32	MainMenuScreenInit( )
 {
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %S", zVersionLabel ));
@@ -105,6 +89,12 @@ UINT32	MainMenuScreenInit( )
 	return( TRUE );
 }
 
+
+static void ExitMainMenu(void);
+static void HandleMainMenuInput(void);
+static void HandleMainMenuScreen(void);
+static void RenderMainMenu(void);
+static void RestoreButtonBackGrounds(void);
 
 
 UINT32	MainMenuScreenHandle( )
@@ -204,9 +194,7 @@ UINT32	MainMenuScreenShutdown(  )
 }
 
 
-
-
-void HandleMainMenuScreen()
+static void HandleMainMenuScreen(void)
 {
 	if ( gbHandledMainMenu != 0 )
 	{
@@ -261,6 +249,9 @@ void HandleMainMenuScreen()
 }
 
 
+static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate);
+static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
+
 
 BOOLEAN InitMainMenu( )
 {
@@ -313,7 +304,7 @@ BOOLEAN InitMainMenu( )
 }
 
 
-void ExitMainMenu( )
+static void ExitMainMenu(void)
 {
 //	UINT32										 uiDestPitchBYTES;
 //	UINT8											 *pDestBuf;
@@ -340,6 +331,9 @@ void ExitMainMenu( )
 }
 
 
+static void SetMainMenuExitScreen(UINT32 uiNewScreen);
+
+
 static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -358,7 +352,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void HandleMainMenuInput()
+static void HandleMainMenuInput(void)
 {
 	InputAtom  InputEvent;
 
@@ -410,7 +404,8 @@ void HandleMainMenuInput()
 	}
 }
 
-void HandleHelpScreenInput()
+
+static void HandleHelpScreenInput(void)
 {
 	InputAtom									InputEvent;
 
@@ -440,7 +435,7 @@ void ClearMainMenu()
 }
 
 
-void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -465,7 +460,8 @@ void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 	}
 }
 
-void SetMainMenuExitScreen( UINT32 uiNewScreen )
+
+static void SetMainMenuExitScreen(UINT32 uiNewScreen)
 {
 	guiMainMenuExitScreen = uiNewScreen;
 
@@ -476,7 +472,7 @@ void SetMainMenuExitScreen( UINT32 uiNewScreen )
 }
 
 
-void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
+static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate)
 {
 	static BOOLEAN fRegionCreated = FALSE;
 
@@ -504,7 +500,7 @@ void CreateDestroyBackGroundMouseMask( BOOLEAN fCreate )
 }
 
 
-BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
+static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 {
 	static BOOLEAN fButtonsCreated = FALSE;
 	INT32 cnt;
@@ -604,7 +600,7 @@ BOOLEAN CreateDestroyMainMenuButtons( BOOLEAN fCreate )
 }
 
 
-void RenderMainMenu()
+static void RenderMainMenu(void)
 {
   HVOBJECT hPixHandle;
 
@@ -646,7 +642,8 @@ void RenderMainMenu()
 	InvalidateRegion( 0, 0, 640, 480 );
 }
 
-void RestoreButtonBackGrounds()
+
+static void RestoreButtonBackGrounds(void)
 {
 	UINT8	cnt;
 

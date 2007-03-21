@@ -21,10 +21,10 @@ INT32 giIMPPersonalityEntranceButton[1];
 INT32 giIMPPersonalityEntranceButtonImage[1];
 
 
-// function definitions
-void CreateIMPPersonalityEntranceButtons( void );
-void DestroyIMPPersonalityEntranceButtons( void );
 static void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateIMPPersonalityEntranceButtons(void);
 
 
 void EnterIMPPersonalityEntrance( void )
@@ -45,6 +45,10 @@ void RenderIMPPersonalityEntrance( void )
   RenderAvgMercIndentFrame(90, 40 );
 }
 
+
+static void DestroyIMPPersonalityEntranceButtons(void);
+
+
 void ExitIMPPersonalityEntrance( void )
 {
   // destroy buttons needed
@@ -57,7 +61,7 @@ void HandleIMPPersonalityEntrance( void )
 }
 
 
-void CreateIMPPersonalityEntranceButtons( void )
+static void CreateIMPPersonalityEntranceButtons(void)
 {
   // this function will create the buttons needed for the IMP personality Page
 
@@ -78,7 +82,8 @@ void CreateIMPPersonalityEntranceButtons( void )
 	SetButtonCursor(giIMPPersonalityEntranceButton[0], CURSOR_WWW);
 }
 
-void DestroyIMPPersonalityEntranceButtons( void )
+
+static void DestroyIMPPersonalityEntranceButtons(void)
 {
 	// this function will destroy the buttons needed for the IMP personality page
 

@@ -208,7 +208,8 @@ void ChooseWeightedTerrainTile()
 UINT32 guiSearchType;
 UINT32 count, maxCount=0, calls=0;
 
-void Fill( INT32 x, INT32 y )
+
+static void Fill(INT32 x, INT32 y)
 {
 	INT32 iMapIndex;
 	UINT32 uiCheckType;

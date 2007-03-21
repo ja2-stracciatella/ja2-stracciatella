@@ -85,17 +85,18 @@ DOUBLE		gClimbUpRoofDistGoingLower[ NUMSOLDIERBODYTYPES ] = { 0.9, 0.1, 1, 1 };
 
 BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse );
 
-void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier );
-BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier );
-BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo );
-BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier );
-
 extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
 extern void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
 extern UINT8 NumCapableEnemyInSector( );
 extern BOOLEAN gfKillingGuysForLosingBattle;
 
 extern UINT8 gubInterruptProvoker;
+
+
+static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier);
+static BOOLEAN CheckForImproperFireGunEnd(SOLDIERTYPE* pSoldier);
+static BOOLEAN HandleUnjamAnimation(SOLDIERTYPE* pSoldier);
+
 
 BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 {
@@ -2760,7 +2761,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 #define MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE			20
 
-BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN ShouldMercSayHappyWithGunQuote(SOLDIERTYPE* pSoldier)
 {
 	// How do we do this....
 
@@ -2791,7 +2793,7 @@ BOOLEAN ShouldMercSayHappyWithGunQuote( SOLDIERTYPE *pSoldier )
 }
 
 
-void SayBuddyWitnessedQuoteFromKill( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	INT8	bBuddyIndex[ 20 ] = { -1 };
@@ -3332,7 +3334,7 @@ BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCor
 //#define TESTFALLBACK
 //#define TESTFALLFORWARD
 
-void CheckForAndHandleSoldierIncompacitated( SOLDIERTYPE *pSoldier )
+static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 {
 	INT16					sNewGridNo;
 
@@ -3628,7 +3630,7 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
+static BOOLEAN CheckForImproperFireGunEnd(SOLDIERTYPE* pSoldier)
 {
 
 	if ( AM_A_ROBOT( pSoldier ) )
@@ -3653,7 +3655,7 @@ BOOLEAN CheckForImproperFireGunEnd( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo )
+static BOOLEAN OKHeightDest(SOLDIERTYPE* pSoldier, INT16 sNewGridNo)
 {
 	if ( pSoldier->bLevel == 0 )
 	{
@@ -3670,7 +3672,7 @@ BOOLEAN OKHeightDest( SOLDIERTYPE *pSoldier, INT16 sNewGridNo )
 }
 
 
-BOOLEAN HandleUnjamAnimation( SOLDIERTYPE *pSoldier )
+static BOOLEAN HandleUnjamAnimation(SOLDIERTYPE* pSoldier)
 {
 	// OK, play intermediate animation here..... save in pending animation data, the current
 	// code we are at!

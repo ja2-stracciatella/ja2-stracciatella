@@ -10,6 +10,10 @@
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 
+
+static void RemoveMilitiaFromTactical(void);
+
+
 void ResetMilitia()
 {
 	if( gfStrategicMilitiaChangesMade || gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -20,7 +24,8 @@ void ResetMilitia()
 	}
 }
 
-void RemoveMilitiaFromTactical()
+
+static void RemoveMilitiaFromTactical(void)
 {
 	SOLDIERINITNODE *curr;
 	INT32 i;

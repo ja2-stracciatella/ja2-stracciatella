@@ -16,7 +16,8 @@
 
 UINT32 guiCacheSize		= MIN_CACHE_SIZE;
 
-void DetermineOptimumAnimationCacheSize( )
+
+static void DetermineOptimumAnimationCacheSize( )
 {
 	// If we have lots-a memory, adjust accordingly!
 	guiCacheSize = MIN_CACHE_SIZE;

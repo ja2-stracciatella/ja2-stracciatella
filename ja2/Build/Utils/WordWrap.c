@@ -264,7 +264,7 @@ UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8
 }
 
 
-UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
+static UINT16 DeleteWrappedString(WRAPPED_STRING* pWrappedString)
 {
 	WRAPPED_STRING *pTempWrappedString;
 	UINT16	uiCounter=0;
@@ -282,6 +282,9 @@ UINT16 DeleteWrappedString(WRAPPED_STRING *pWrappedString)
 	}
 	return(uiCounter);
 }
+
+
+static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY);
 
 
 // DrawTextToScreen	Parameters:
@@ -901,15 +904,10 @@ void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
 }
 
 
-//
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer (how many pixels wide for word wrapping)
 //					the gap in between the lines, the height of buffer and which page you want the text displayed for, and the total height to date
-//
-
-INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usPageHeight, UINT16 usTotalHeight, UINT16 usPageNumber,UINT8 ubGap,
-															 UINT32 uiFont, UINT8 ubColor, STR16 pString,
-															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags, BOOLEAN *fOnLastPageFlag)
+static INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usPageHeight, UINT16 usTotalHeight, UINT16 usPageNumber, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, STR16 pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags, BOOLEAN* fOnLastPageFlag)
 {
 	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
@@ -1550,7 +1548,7 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 }
 
 
-BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap, INT32 iPage )
+static BOOLEAN WillThisStringGetCutOff(INT32 iTotalYPosition, INT32 iBottomOfPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap, INT32 iPage)
 {
   BOOLEAN fGetCutOff = FALSE;
   INT32 iHeight;
@@ -1569,7 +1567,8 @@ BOOLEAN WillThisStringGetCutOff( INT32 iTotalYPosition, INT32 iBottomOfPage, INT
 	return( fGetCutOff );
 }
 
-BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
+
+static BOOLEAN IsThisStringBeforeTheCurrentPage(INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap)
 {
 	// check to see if the current string will appear on the current page
 	BOOLEAN fBeforeCurrentPage = FALSE;
@@ -1588,7 +1587,8 @@ BOOLEAN IsThisStringBeforeTheCurrentPage( INT32 iTotalYPosition, INT32 iPageSize
 	return ( fBeforeCurrentPage );
 }
 
-INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage ,INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap )
+
+static INT32 GetNewTotalYPositionOfThisString(INT32 iTotalYPosition, INT32 iPageSize, INT32 iCurrentPage, INT32 iWrapWidth, UINT32 uiFont, STR16 pString, INT32 iGap)
 {
 	INT32 iNewYPosition = 0;
   // will returnt he new total y value of this string
@@ -1600,7 +1600,9 @@ INT32 GetNewTotalYPositionOfThisString( INT32 iTotalYPosition, INT32 iPageSize, 
 	return( iNewYPosition );
 }
 
-void ShadowText(UINT32 uiDestVSurface, const wchar_t *pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY )
+
+// Places a shadow the width an height of the string, to PosX, posY
+static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY)
 {
 	UINT32 uiLength = StringPixLength( pString, uiFont);
 	UINT16 usFontHeight = GetFontHeight(uiFont);

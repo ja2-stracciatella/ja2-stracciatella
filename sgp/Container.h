@@ -31,8 +31,6 @@ extern void ShutdownContainers(void);
 // : returns handle to queue
 // RemfromQueue(handle to container returned from CreateQueue, variable where data is stored (must be void *))
 // : returns BOOLEAN
-// PeekQueue(handle to the queue, variable where peeked data is stored). Item is not deleted.
-// : returns BOOLEAN
 // QueueSize(handle to the queue) returns the queue size
 // DeleteQueue(handle to container) Delete the queue container
 // : returns BOOLEAN
@@ -40,7 +38,6 @@ extern void ShutdownContainers(void);
 extern HQUEUE  CreateQueue(UINT32 num_of_elem, UINT32 siz_of_each);
 extern HQUEUE AddtoQueue(HQUEUE hQueue, void *data);
 extern BOOLEAN RemfromQueue(HQUEUE hQueue,void *data);
-extern BOOLEAN PeekQueue(HQUEUE hQueue, void *data);
 extern UINT32  QueueSize(HQUEUE hQueue);
 extern BOOLEAN DeleteQueue(HQUEUE hQueue);
 

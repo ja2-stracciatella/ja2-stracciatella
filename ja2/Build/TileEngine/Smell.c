@@ -172,7 +172,7 @@ void DecaySmells( void )
 }
 
 
-void DecayBlood()
+static void DecayBlood(void)
 {
 	UINT32					uiLoop;
 	MAP_ELEMENT *		pMapElement;

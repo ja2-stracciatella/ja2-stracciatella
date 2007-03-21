@@ -30,10 +30,7 @@ extern	UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS];
 extern	INT16 WeaponROF[ MAX_WEAPONS ];
 
 
-
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed );
-BOOLEAN DoesGunOfSameClassExistInInventory( UINT8 ubItemIndex, UINT8 ubDealerID );
-STORE_INVENTORY *GetPtrToStoreInventory( UINT8 ubDealerID );
 //INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID );
 
 #endif

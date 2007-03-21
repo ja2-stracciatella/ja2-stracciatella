@@ -22,7 +22,5 @@ enum
 
 
 void ToggleQuestDebugModes( UINT8 ubType );
-void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...);
-
 
 #endif

@@ -46,18 +46,13 @@ extern	UINT8		gubNumUsedPages;
 extern	UINT32	guiLastBobbyRayPage;
 
 
-//BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackGround);
 BOOLEAN DrawBobbyRWoodBackground();
 BOOLEAN DeleteBobbyRWoodBackground();
 BOOLEAN InitBobbyRWoodBackground();
 void DailyUpdateOfBobbyRaysNewInventory();
 void DailyUpdateOfBobbyRaysUsedInventory();
-void OrderBobbyRItem(UINT16 usItemIndex);
 void AddFreshBobbyRayInventory( UINT16 usItemIndex );
 void InitBobbyRayInventory();
-BOOLEAN InitBobbyRayNewInventory();
-BOOLEAN InitBobbyRayUsedInventory();
-UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed);
 void CancelAllPendingBRPurchaseOrders(void);
 INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemIndex, BOOLEAN fUsed);
 

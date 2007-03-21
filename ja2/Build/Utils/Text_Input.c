@@ -23,18 +23,6 @@
 UINT16 *szClipboard;
 BOOLEAN gfNoScroll = FALSE;
 
-//The internal callback functions assigned to each text field.
-void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason);
-void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason);
-
-//Internal string manipulation functions.
-void AddChar( UINT32 uiKey );
-void RemoveChar( UINT8 ubArrayIndex );
-void DeleteHilitedText();
-
-//All exclusive input types are handled in this function.
-void HandleExclusiveInput( UINT32 uiKey );
-
 typedef struct TextInputColors
 {
 	//internal values that contain all of the colors for the text editing fields.
@@ -80,15 +68,6 @@ typedef struct STACKTEXTINPUTNODE
 
 STACKTEXTINPUTNODE *pInputStack = NULL;
 
-//Internal renderer of previous nodes
-void RenderBackgroundField( TEXTINPUTNODE *pNode );
-void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode );
-
-//Internal copy, cut, and paste functions
-void ExecuteCopyCommand();
-void ExecuteCutCommand();
-void ExecutePasteCommand();
-
 //Internal list vars.  active always points to the currently edited field.
 TEXTINPUTNODE *gpTextInputHead = NULL, *gpTextInputTail = NULL, *gpActive = NULL;
 
@@ -100,7 +79,7 @@ UINT16 gusTextInputCursor = CURSOR_IBEAM;
 
 //Saves the current text input mode by pushing it onto our stack, then starts a new
 //one.
-void PushTextInputLevel()
+static void PushTextInputLevel(void)
 {
 	STACKTEXTINPUTNODE *pNewLevel;
 	pNewLevel = (STACKTEXTINPUTNODE*)MemAlloc( sizeof( STACKTEXTINPUTNODE ) );
@@ -112,10 +91,11 @@ void PushTextInputLevel()
 	DisableAllTextFields();
 }
 
+
 //After the currently text input mode is removed, we then restore the previous one
 //automatically.  Assert failure in this function will expose cases where you are trigger
 //happy with killing non-existant text input modes.
-void PopTextInputLevel()
+static void PopTextInputLevel(void)
 {
 	STACKTEXTINPUTNODE *pLevel;
 	gpTextInputHead = pInputStack->head;
@@ -232,6 +212,11 @@ void KillAllTextInputModes()
 		KillTextInputMode();
 }
 
+
+static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
+static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
+
+
 //After calling InitTextInputMode, you want to define one or more text input fields.  The order
 //of calls to this function dictate the TAB order from traversing from one field to the next.  This
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
@@ -330,9 +315,10 @@ void AddUserInputField( INPUT_CALLBACK userFunction )
 	pNode->InputCallback = userFunction;
 }
 
+
 //Removes the specified field from the existing fields.  If it doesn't exist, then there will be an
 //assertion failure.
-void RemoveTextInputField( UINT8 ubField )
+static void RemoveTextInputField(UINT8 ubField)
 {
 	TEXTINPUTNODE *curr;
 	curr = gpTextInputHead;
@@ -438,8 +424,9 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
 	}
 }
 
+
 //Allows external functions to access the strings within the fields at anytime.
-void Get8BitStringFromField( UINT8 ubField, UINT8 *szString )
+static void Get8BitStringFromField(UINT8 ubField, UINT8* szString)
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -558,6 +545,10 @@ void SetActiveField( UINT8 ubField )
 	}
 }
 
+
+static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode);
+
+
 void SelectNextField()
 {
 	BOOLEAN fDone = FALSE;
@@ -602,7 +593,8 @@ void SelectNextField()
 	}
 }
 
-void SelectPrevField()
+
+static void SelectPrevField(void)
 {
 	BOOLEAN fDone = FALSE;
 	TEXTINPUTNODE *pStart;
@@ -673,7 +665,9 @@ void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ub
 	pColors->ubHiBackColor = ubBackColor;
 }
 
-void SetDisabledTextFieldColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 usTextFieldColor )
+
+// optional color setups
+static void SetDisabledTextFieldColors(UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 usTextFieldColor)
 {
 	pColors->fUseDisabledAutoShade = FALSE;
 	pColors->ubDisabledForeColor = ubForeColor;
@@ -692,6 +686,13 @@ void SetCursorColor( UINT16 usCursorColor )
 {
 	pColors->usCursorColor = usCursorColor;
 }
+
+
+static void AddChar(UINT32 uiKey);
+static void DeleteHilitedText(void);
+static void HandleExclusiveInput(UINT32 uiKey);
+static void RemoveChar(UINT8 ubArrayIndex);
+
 
 //All CTRL and ALT keys combinations, F1-F12 keys, ENTER and ESC are ignored allowing
 //processing to be done with your own input handler.  Otherwise, the keyboard event
@@ -959,7 +960,9 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 	return TRUE;
 }
 
-void HandleExclusiveInput( UINT32 uiKey )
+
+// All exclusive input types are handled in this function.
+static void HandleExclusiveInput(UINT32 uiKey)
 {
 	switch( gpActive->usInputType )
 	{
@@ -1033,7 +1036,8 @@ void HandleExclusiveInput( UINT32 uiKey )
 	}
 }
 
-void AddChar( UINT32 uiKey )
+
+static void AddChar(UINT32 uiKey)
 {
 	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 	if( gpActive->ubStrLen >= gpActive->ubMaxChars )
@@ -1065,7 +1069,8 @@ void AddChar( UINT32 uiKey )
 	}
 }
 
-void DeleteHilitedText()
+
+static void DeleteHilitedText(void)
 {
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
@@ -1093,7 +1098,8 @@ void DeleteHilitedText()
 	}
 }
 
-void RemoveChar( UINT8 ubArrayIndex )
+
+static void RemoveChar(UINT8 ubArrayIndex)
 {
 	BOOLEAN fDeleting = FALSE;
 	while( ubArrayIndex < gpActive->ubStrLen )
@@ -1107,8 +1113,9 @@ void RemoveChar( UINT8 ubArrayIndex )
 		gpActive->ubStrLen--;
 }
 
+
 //Internally used to continue highlighting text
-void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
+static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	TEXTINPUTNODE *curr;
 	if( gfLeftButtonState )
@@ -1168,8 +1175,9 @@ void MouseMovedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 	}
 }
 
+
 //Internally used to calculate where to place the cursor.
-void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
+static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	TEXTINPUTNODE *curr;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1211,7 +1219,8 @@ void MouseClickedInTextRegionCallback(MOUSE_REGION *reg, INT32 reason)
 	}
 }
 
-void RenderBackgroundField( TEXTINPUTNODE *pNode )
+
+static void RenderBackgroundField(TEXTINPUTNODE* pNode)
 {
 	UINT16 usColor;
 	if( pColors->fBevelling )
@@ -1234,7 +1243,10 @@ void RenderBackgroundField( TEXTINPUTNODE *pNode )
 
 }
 
-void RenderActiveTextField()
+
+/* Required in your screen loop to update the values, as well as blinking the
+ * cursor. */
+static void RenderActiveTextField(void)
 {
 	UINT32 uiCursorXPos;
 	UINT16 usOffset;
@@ -1329,7 +1341,8 @@ void RenderInactiveTextField( UINT8 ubID )
 	RestoreFontSettings();
 }
 
-void RenderInactiveTextFieldNode( TEXTINPUTNODE *pNode )
+
+static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 {
 	UINT16 usOffset;
 	if( !pNode || !pNode->szString )
@@ -1396,7 +1409,8 @@ void RenderAllTextFields()
 	}
 }
 
-void EnableTextField( UINT8 ubID )
+
+static void EnableTextField(UINT8 ubID)
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -1539,7 +1553,8 @@ void KillClipboard()
 	}
 }
 
-void ExecuteCopyCommand()
+
+static void ExecuteCopyCommand(void)
 {
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
@@ -1571,7 +1586,8 @@ void ExecuteCopyCommand()
 	}
 }
 
-void ExecutePasteCommand()
+
+static void ExecutePasteCommand(void)
 {
 	UINT8 ubCount;
 	if( !gpActive || !szClipboard )
@@ -1586,7 +1602,8 @@ void ExecutePasteCommand()
 	}
 }
 
-void ExecuteCutCommand()
+
+static void ExecuteCutCommand(void)
 {
 	ExecuteCopyCommand();
 	DeleteHilitedText();
@@ -1621,7 +1638,8 @@ void RestoreSavedTextInputMode()
 	pSavedColors = NULL;
 }
 
-UINT16 GetTextInputCursor()
+
+static UINT16 GetTextInputCursor(void)
 {
 	return gusTextInputCursor;
 }

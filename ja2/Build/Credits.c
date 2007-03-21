@@ -269,9 +269,6 @@ STR16	gzCreditNameFunny[]=
 
 
 MOUSE_REGION	gCrdtMouseRegions[ NUM_PEOPLE_IN_CREDITS ];
-void			SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void			SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
 
 
 UINT32		guiCreditBackGroundImage;
@@ -317,35 +314,17 @@ BOOLEAN		gfPauseCreditScreen = FALSE;
 HWFILE		ghFile;
 
 
-BOOLEAN		EnterCreditsScreen();
-BOOLEAN		ExitCreditScreen();
-void			HandleCreditScreen();
-BOOLEAN		RenderCreditScreen();
-void			GetCreditScreenUserInput();
-void			SetCreditsExitScreen( UINT32 uiScreenToGoTo );
-BOOLEAN		ShutDownCreditList();
-BOOLEAN		AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString );
-BOOLEAN		InitCreditNode( );
-BOOLEAN		DisplayCreditNode( CRDT_NODE	*pCurrent );
-void			HandleCreditNodes();
-void			HandleNode_Default( CRDT_NODE	*pCurrent );
-void			HandleCurrentCreditNode( CRDT_NODE	*pCurrent );
-BOOLEAN		DeleteNode( CRDT_NODE	*pNodeToDelete );
-UINT32		GetAndHandleCreditCodeFromCodeString( STR16 pzCode );
-BOOLEAN		GetNextCreditFromTextFile();
-UINT32		CountNumberOfCreditNodes();
-STR16			GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode );
-void			HandleCreditFlags( UINT32 uiFlags );
-void			HandleCreditEyeBlinking();
-void			InitCreditEyeBlinking();
-
-
 UINT32	CreditScreenInit( void )
 {
 	gfCreditsScreenEntry = TRUE;
 	return( 1 );
 }
 
+
+static BOOLEAN EnterCreditsScreen(void);
+static BOOLEAN ExitCreditScreen(void);
+static void GetCreditScreenUserInput(void);
+static void HandleCreditScreen(void);
 
 
 UINT32	CreditScreenHandle( void )
@@ -403,16 +382,13 @@ UINT32	CreditScreenShutdown( void )
 }
 
 
+static void InitCreditEyeBlinking(void);
+static BOOLEAN InitCreditNode(void);
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectCreditFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-
-
-
-
-
-
-//eee
-BOOLEAN		EnterCreditsScreen()
+static BOOLEAN EnterCreditsScreen(void)
 {
 	UINT32 uiCnt;
 
@@ -478,13 +454,14 @@ BOOLEAN		EnterCreditsScreen()
 
 	InitCreditEyeBlinking();
 
-
 	return( TRUE );
 }
 
 
+static BOOLEAN ShutDownCreditList(void);
 
-BOOLEAN		ExitCreditScreen()
+
+static BOOLEAN ExitCreditScreen(void)
 {
 	UINT32	uiCnt;
 
@@ -514,8 +491,14 @@ BOOLEAN		ExitCreditScreen()
 }
 
 
-//hhh
-void			HandleCreditScreen()
+static BOOLEAN GetNextCreditFromTextFile(void);
+static void HandleCreditEyeBlinking(void);
+static void HandleCreditNodes(void);
+static BOOLEAN RenderCreditScreen(void);
+static void SetCreditsExitScreen(UINT32 uiScreenToGoTo);
+
+
+static void HandleCreditScreen(void)
 {
 //	UINT32	uiTime = GetJA2Clock();
 
@@ -556,7 +539,7 @@ void			HandleCreditScreen()
 }
 
 
-BOOLEAN		RenderCreditScreen()
+static BOOLEAN RenderCreditScreen(void)
 {
   BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
 /*
@@ -578,7 +561,7 @@ BOOLEAN		RenderCreditScreen()
 }
 
 
-void			GetCreditScreenUserInput()
+static void GetCreditScreenUserInput(void)
 {
 	InputAtom Event;
 
@@ -624,7 +607,8 @@ void			GetCreditScreenUserInput()
 	}
 }
 
-void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
+
+static void SetCreditsExitScreen(UINT32 uiScreenToGoTo)
 {
 	gfCreditsScreenExit = TRUE;
 
@@ -632,8 +616,7 @@ void SetCreditsExitScreen( UINT32 uiScreenToGoTo )
 }
 
 
-
-BOOLEAN	InitCreditNode( )
+static BOOLEAN InitCreditNode(void)
 {
 	if( gCrdtRootNode != NULL )
 		Assert( 0 );
@@ -644,7 +627,10 @@ BOOLEAN	InitCreditNode( )
 }
 
 
-BOOLEAN ShutDownCreditList()
+static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete);
+
+
+static BOOLEAN ShutDownCreditList(void)
 {
 	CRDT_NODE	*pNodeToDelete=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -665,7 +651,8 @@ BOOLEAN ShutDownCreditList()
 	return( TRUE );
 }
 
-BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
+
+static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 {
 	CRDT_NODE	*pTempNode;
 
@@ -720,8 +707,7 @@ BOOLEAN	DeleteNode( CRDT_NODE	*pNodeToDelete )
 }
 
 
-//aaa
-BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
+static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, STR16 pString)
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -856,7 +842,10 @@ BOOLEAN	AddCreditNode( UINT32 uiType, UINT32 uiFlags, STR16 pString )
 }
 
 
-void HandleCreditNodes()
+static void HandleCurrentCreditNode(CRDT_NODE* pCurrent);
+
+
+static void HandleCreditNodes(void)
 {
 	CRDT_NODE	*pCurrent=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -897,7 +886,11 @@ void HandleCreditNodes()
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
 }
 
-void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
+
+static void HandleNode_Default(CRDT_NODE* pCurrent);
+
+
+static void HandleCurrentCreditNode(CRDT_NODE* pCurrent)
 {
 	//switch on the type of node
 	switch( pCurrent->uiType )
@@ -913,7 +906,11 @@ void HandleCurrentCreditNode( CRDT_NODE	*pCurrent )
 	}
 }
 
-void HandleNode_Default( CRDT_NODE	*pCurrent )
+
+static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent);
+
+
+static void HandleNode_Default(CRDT_NODE* pCurrent)
 {
 	UINT32	uiCurrentTime =GetJA2Clock();
 
@@ -947,8 +944,7 @@ void HandleNode_Default( CRDT_NODE	*pCurrent )
 }
 
 
-
-BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
+static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 {
 	//Currently, we have no need to display a node that doesnt have a string
 	if( pCurrent->pString == NULL )
@@ -994,8 +990,14 @@ BOOLEAN DisplayCreditNode( CRDT_NODE	*pCurrent )
 	return( TRUE );
 }
 
+
+static UINT32 GetAndHandleCreditCodeFromCodeString(STR16 pzCode);
+static STR16 GetNextCreditCode(STR16 pString, UINT32* pSizeOfCode);
+static void HandleCreditFlags(UINT32 uiFlags);
+
+
 //return false from this function when there are no more items in the text file
-BOOLEAN	GetNextCreditFromTextFile()
+static BOOLEAN GetNextCreditFromTextFile(void)
 {
 	CHAR16	zOriginalString[512];
 	CHAR16	zString[512];
@@ -1104,8 +1106,9 @@ BOOLEAN	GetNextCreditFromTextFile()
 	return( TRUE );
 }
 
+
 //return any flags that need to be set in the node
-UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
+static UINT32 GetAndHandleCreditCodeFromCodeString(STR16 pzCode)
 {
 //new codes:
 
@@ -1221,7 +1224,8 @@ UINT32	GetAndHandleCreditCodeFromCodeString( STR16 pzCode )
 	return( CRDT_NODE_NONE );
 }
 
-UINT32 CountNumberOfCreditNodes()
+
+static UINT32 CountNumberOfCreditNodes(void)
 {
 	UINT32	uiNumNodes = 0;
 	CRDT_NODE	*pTempNode = gCrdtRootNode;
@@ -1236,7 +1240,8 @@ UINT32 CountNumberOfCreditNodes()
 	return( uiNumNodes );
 }
 
-STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
+
+static STR16 GetNextCreditCode(STR16 pString, UINT32* pSizeOfCode)
 {
 	STR16	pzNewCode=NULL;
 	UINT32 uiSizeOfCode = 0;
@@ -1267,8 +1272,7 @@ STR16	GetNextCreditCode( STR16 pString, UINT32 *pSizeOfCode )
 }
 
 
-//Flags:
-void HandleCreditFlags( UINT32 uiFlags )
+static void HandleCreditFlags(UINT32 uiFlags)
 {
 	if( uiFlags & CRDT_FLAG__TITLE )
 	{
@@ -1288,8 +1292,7 @@ void HandleCreditFlags( UINT32 uiFlags )
 }
 
 
-
-void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectCreditFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -1302,7 +1305,8 @@ void SelectCreditFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1317,7 +1321,8 @@ void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION * pRegion, INT32 iReaso
 	}
 }
 
-void InitCreditEyeBlinking()
+
+static void InitCreditEyeBlinking(void)
 {
 	UINT8 ubCnt;
 
@@ -1327,7 +1332,8 @@ void InitCreditEyeBlinking()
 	}
 }
 
-void HandleCreditEyeBlinking()
+
+static void HandleCreditEyeBlinking(void)
 {
 	UINT8 ubCnt;
 

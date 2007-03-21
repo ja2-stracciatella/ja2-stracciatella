@@ -58,7 +58,7 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 }
 
 
-BOOLEAN	IsDoorPresentAtGridno( INT16 sGridNo )
+static BOOLEAN IsDoorPresentAtGridno(INT16 sGridNo)
 {
 	if ( FindStructure( sGridNo, STRUCTURE_ANYDOOR ) != NULL )
 	{
@@ -80,7 +80,7 @@ BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
 }
 
 
-LEVELNODE *IsWallPresentAtGridno( INT16 sGridNo )
+static LEVELNODE* IsWallPresentAtGridno(INT16 sGridNo)
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE * pStructure;
@@ -95,7 +95,10 @@ LEVELNODE *IsWallPresentAtGridno( INT16 sGridNo )
 	return( pNode );
 }
 
-LEVELNODE	*GetWallLevelNodeOfSameOrientationAtGridno( INT16 sGridNo, INT8 ubOrientation )
+
+// OK, THIS FUNCTION RETURNS A LEVELNODE POINTER TO A WALL OF THE SAME ORIENTATION
+// AS WAS GIVEN. RETURNS NULL IF NONE FOUND.
+static LEVELNODE* GetWallLevelNodeOfSameOrientationAtGridno(INT16 sGridNo, INT8 ubOrientation)
 {
 	LEVELNODE *pNode = NULL;
 	STRUCTURE * pStructure;
@@ -387,7 +390,8 @@ BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 	return( FALSE );
 }
 
-STRUCTURE	* FindCuttableWireFenceAtGridNo( INT16 sGridNo )
+
+static STRUCTURE* FindCuttableWireFenceAtGridNo(INT16 sGridNo)
 {
 	STRUCTURE * pStructure;
 
@@ -478,8 +482,7 @@ BOOLEAN IsRefuelableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
 }
 
 
-
-BOOLEAN IsCutWireFenceAtGridNo( INT16 sGridNo )
+static BOOLEAN IsCutWireFenceAtGridNo(INT16 sGridNo)
 {
 	STRUCTURE * pStructure;
 

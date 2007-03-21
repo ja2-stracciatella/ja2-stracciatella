@@ -9,7 +9,7 @@
 #endif
 
 
-void InitStrategicRowA()
+static void InitStrategicRowA(void)
 {
 	SECTORINFO *pSector;
 
@@ -142,7 +142,8 @@ void InitStrategicRowA()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowB()
+
+static void InitStrategicRowB(void)
 {
 	SECTORINFO *pSector;
 
@@ -275,7 +276,8 @@ void InitStrategicRowB()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = DENSE;
 }
 
-void InitStrategicRowC()
+
+static void InitStrategicRowC(void)
 {
 	SECTORINFO *pSector;
 
@@ -408,7 +410,8 @@ void InitStrategicRowC()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = SWAMP;
 }
 
-void InitStrategicRowD()
+
+static void InitStrategicRowD(void)
 {
 	SECTORINFO *pSector;
 
@@ -541,7 +544,8 @@ void InitStrategicRowD()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = DENSE;
 }
 
-void InitStrategicRowE()
+
+static void InitStrategicRowE(void)
 {
 	SECTORINFO *pSector;
 
@@ -674,7 +678,8 @@ void InitStrategicRowE()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowF()
+
+static void InitStrategicRowF(void)
 {
 	SECTORINFO *pSector;
 
@@ -807,7 +812,8 @@ void InitStrategicRowF()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowG()
+
+static void InitStrategicRowG(void)
 {
 	SECTORINFO *pSector;
 
@@ -940,7 +946,8 @@ void InitStrategicRowG()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = SWAMP;
 }
 
-void InitStrategicRowH()
+
+static void InitStrategicRowH(void)
 {
 	SECTORINFO *pSector;
 
@@ -1073,7 +1080,8 @@ void InitStrategicRowH()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = SPARSE;
 }
 
-void InitStrategicRowI()
+
+static void InitStrategicRowI(void)
 {
 	SECTORINFO *pSector;
 
@@ -1206,7 +1214,8 @@ void InitStrategicRowI()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = SPARSE;
 }
 
-void InitStrategicRowJ()
+
+static void InitStrategicRowJ(void)
 {
 	SECTORINFO *pSector;
 
@@ -1339,7 +1348,8 @@ void InitStrategicRowJ()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowK()
+
+static void InitStrategicRowK(void)
 {
 	SECTORINFO *pSector;
 
@@ -1472,7 +1482,8 @@ void InitStrategicRowK()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowL()
+
+static void InitStrategicRowL(void)
 {
 	SECTORINFO *pSector;
 
@@ -1605,7 +1616,8 @@ void InitStrategicRowL()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowM()
+
+static void InitStrategicRowM(void)
 {
 	SECTORINFO *pSector;
 
@@ -1738,7 +1750,8 @@ void InitStrategicRowM()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowN()
+
+static void InitStrategicRowN(void)
 {
 	SECTORINFO *pSector;
 
@@ -1871,7 +1884,8 @@ void InitStrategicRowN()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowO()
+
+static void InitStrategicRowO(void)
 {
 	SECTORINFO *pSector;
 
@@ -2004,7 +2018,8 @@ void InitStrategicRowO()
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicRowP()
+
+static void InitStrategicRowP(void)
 {
 	SECTORINFO *pSector;
 

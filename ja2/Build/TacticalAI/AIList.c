@@ -25,9 +25,8 @@
 AILIST		gAIList[ AI_LIST_SIZE ];
 AILIST *	gpFirstAIListEntry = NULL;
 
-BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks );
 
-void ClearAIList( void )
+static void ClearAIList(void)
 {
 	UINT8	ubLoop;
 
@@ -40,14 +39,16 @@ void ClearAIList( void )
 	gpFirstAIListEntry = NULL; // ??
 }
 
-void DeleteAIListEntry( AILIST *	pEntry )
+
+static void DeleteAIListEntry(AILIST* pEntry)
 {
 	pEntry->ubID = NOBODY;
 	pEntry->bPriority = 0;
 	pEntry->pNext = NULL;
 }
 
-UINT8	FindEmptyAIListEntry( void )
+
+static UINT8 FindEmptyAIListEntry(void)
 {
 	UINT8	ubLoop;
 
@@ -62,13 +63,18 @@ UINT8	FindEmptyAIListEntry( void )
 	return( AI_LIST_SIZE );
 }
 
-AILIST * CreateNewAIListEntry( UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority )
+
+static AILIST* CreateNewAIListEntry(UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority)
 {
 	gAIList[ ubNewEntry ].ubID = ubID;
 	gAIList[ ubNewEntry ].bPriority = bPriority;
 	gAIList[ ubNewEntry ].pNext = NULL;
 	return( &(gAIList[ ubNewEntry ]) );
 }
+
+
+static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks);
+
 
 UINT8 RemoveFirstAIListEntry( void )
 {
@@ -95,7 +101,8 @@ UINT8 RemoveFirstAIListEntry( void )
 	return( NOBODY );
 }
 
-void RemoveAIListEntryForID( UINT8 ubID )
+
+static void RemoveAIListEntryForID(UINT8 ubID)
 {
 	AILIST *	pEntry;
 	AILIST *	pPrevEntry;
@@ -124,7 +131,8 @@ void RemoveAIListEntryForID( UINT8 ubID )
 	// none found, that's okay
 }
 
-BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
+
+static BOOLEAN InsertIntoAIList(UINT8 ubID, INT8 bPriority)
 {
 	UINT8			ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
@@ -179,7 +187,8 @@ BOOLEAN InsertIntoAIList( UINT8 ubID, INT8 bPriority )
 	return( FALSE );
 }
 
-BOOLEAN SatisfiesAIListConditions( SOLDIERTYPE * pSoldier, UINT8 * pubDoneCount, BOOLEAN fDoRandomChecks )
+
+static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks)
 {
 	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
 	{

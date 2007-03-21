@@ -56,7 +56,8 @@ void PostEventsForSpreadOfTownOpinion( void )
 }
 
 
-UINT8 GetTownOpinionOfMerc( UINT8 ubProfileId, UINT8 ubTownId )
+// get the towns opinion of this merc...indexed by profile type
+static UINT8 GetTownOpinionOfMerc(UINT8 ubProfileId, UINT8 ubTownId)
 {
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
@@ -66,7 +67,7 @@ UINT8 GetTownOpinionOfMerc( UINT8 ubProfileId, UINT8 ubTownId )
 }
 
 
-UINT8 GetTownOpinionOfMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId )
+static UINT8 GetTownOpinionOfMercForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubTownId)
 {
 	// error check
 	if( pSoldier == NULL )
@@ -81,7 +82,8 @@ UINT8 GetTownOpinionOfMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId )
 }
 
 
-void UpdateTownOpinionOfThisMerc( UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmount )
+// update merc reputation for this town by this amount
+static void UpdateTownOpinionOfThisMerc(UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmount)
 {
 	Assert(ubProfileId < FIRST_NPC);
 	Assert(ubTownId < NUM_TOWNS);
@@ -105,7 +107,7 @@ void UpdateTownOpinionOfThisMerc( UINT8 ubProfileId, UINT8 ubTownId, INT8 bAmoun
 }
 
 
-void UpdateTownOpinionOfThisMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownId, INT8 bAmount )
+static void UpdateTownOpinionOfThisMercForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubTownId, INT8 bAmount)
 {
 	// error check
 	if( pSoldier == NULL )
@@ -118,6 +120,9 @@ void UpdateTownOpinionOfThisMercForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubTownI
 	// pass this on to the profile based function
 	UpdateTownOpinionOfThisMerc( pSoldier->ubProfile, ubTownId, bAmount );
 }
+
+
+static void HandleSpreadOfTownOpinionForMerc(UINT8 ubProfileId);
 
 
 void HandleSpreadOfAllTownsOpinion( void )
@@ -135,7 +140,11 @@ void HandleSpreadOfAllTownsOpinion( void )
 }
 
 
-void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
+static void HandleOpinionOfTownsAboutSoldier(INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT8 ubProfile);
+
+
+// handles the spread of town opinion for one merc
+static void HandleSpreadOfTownOpinionForMerc(UINT8 ubProfileId)
 {
 	// handle opinion spread for this grunt
 	INT32 iDistanceBetweenTowns;
@@ -163,7 +172,8 @@ void HandleSpreadOfTownOpinionForMerc( UINT8 ubProfileId )
 }
 
 
-void HandleOpinionOfTownsAboutSoldier( INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT8 ubProfile )
+// handles the opinion spread between these two towns about this merc at the distance between them
+static void HandleOpinionOfTownsAboutSoldier(INT8 bTownA, INT8 bTownB, INT32 iDistanceBetweenThem, UINT8 ubProfile)
 {
 	// ARM: System has been scrapped
 }

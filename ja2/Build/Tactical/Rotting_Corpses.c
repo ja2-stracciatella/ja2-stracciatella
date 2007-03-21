@@ -370,7 +370,7 @@ static INT32 GetFreeRottingCorpse(void)
 }
 
 
-void RecountRottingCorpses(void)
+static void RecountRottingCorpses(void)
 {
 INT32 uiCount;
 
@@ -659,6 +659,9 @@ static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 }
 
 
+static void RemoveCorpse(INT32 iCorpseID);
+
+
 void RemoveCorpses( )
 {
 	INT32 iCount;
@@ -674,7 +677,8 @@ void RemoveCorpses( )
 	giNumRottingCorpse = 0;
 }
 
-void RemoveCorpse( INT32 iCorpseID )
+
+static void RemoveCorpse(INT32 iCorpseID)
 {
 	// Remove!
 	gRottingCorpse[ iCorpseID ].fActivated = FALSE;
@@ -1176,7 +1180,7 @@ static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorp
 }
 
 
-void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
+static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
 {
 	INT32                    cnt;
 	SOLDIERTYPE							 *pSoldier;
@@ -1223,7 +1227,7 @@ void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam )
 }
 
 
-void MercLooksForCorpses( SOLDIERTYPE *pSoldier )
+static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 {
 	INT32                    cnt;
 	INT16										 sDistVisible;

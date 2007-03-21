@@ -1199,7 +1199,9 @@ void HandleScientistAWOLMeanwhileScene( void )
 	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
 }
 
-void HandleInterrogationMeanwhileScene( void )
+
+// handle interrogation meanwhile
+static void HandleInterrogationMeanwhileScene(void)
 {
 		UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;
@@ -1223,7 +1225,8 @@ void HandleInterrogationMeanwhileScene( void )
 	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
 }
 
-void HandleFirstBattleVictory( void )
+
+static void HandleFirstBattleVictory(void)
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;

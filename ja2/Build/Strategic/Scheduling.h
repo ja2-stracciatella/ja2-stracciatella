@@ -71,8 +71,6 @@ void LoadSchedules( INT8 **hBuffer );
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile );
 BOOLEAN SaveSchedules( HWFILE hFile );
 
-void PostSchedule( SOLDIERTYPE *pSoldier );
-void PostDefaultSchedule( SOLDIERTYPE *pSoldier );
 void PostNextSchedule( SOLDIERTYPE *pSoldier );
 
 //After the world is loaded and the temp modifications have been applied,
@@ -91,14 +89,9 @@ void PrepareSchedulesForEditorExit();
 //before saving the map, as this forces the IDs to align with the SOLDIERINITNODE->ubScheduleID's.
 void OptimizeSchedules();
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usMapIndex );
-
-BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEntryTime, UINT32 * puiExitTime );
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime );
 
 void ReconnectSchedules( void );
-
-void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot );
 
 BOOLEAN BumpAnyExistingMerc( INT16 sGridNo );
 

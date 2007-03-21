@@ -164,40 +164,15 @@ extern BOOLEAN fShowDescriptionFlag;
 extern MOUSE_REGION gMPanelRegion;
 
 
-void LoadMessageSliderBar( void );
-void DeleteMessageSliderBar( void );
-void DisplayScrollBarSlider( );
-
-void CreateMapScreenBottomMessageScrollBarRegion( void );
-void DeleteMapScreenBottomMessageScrollRegion( void );
-
-void DisplayCurrentBalanceForMapBottom( void );
-void DisplayCurrentBalanceTitleForMapBottom( void );
-void DisplayProjectedDailyMineIncome( void );
-void DrawNameOfLoadedSector( void );
-
-void EnableDisableBottomButtonsAndRegions( void );
-void EnableDisableTimeCompressButtons( void );
-void EnableDisableMessageScrollButtonsAndRegions( void );
-
-void DisplayCompressMode( void );
-void RemoveCompressModePause( void );
-void CreateCompressModePause( void );
-
 static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
-
-void CompressModeClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void CompressMaskClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
 static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
 
 static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
-
-void MapScreenMessageScrollBarCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 #ifdef JA2DEMO
 void BuildDemoMouseRegionsForHelpText( void );
@@ -206,6 +181,9 @@ void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 #endif
 
 //void CheckForAndHandleAutoMessageScroll( void );
+
+
+static void LoadMessageSliderBar(void);
 
 
 void HandleLoadOfMapBottomGraphics( void )
@@ -219,6 +197,12 @@ void HandleLoadOfMapBottomGraphics( void )
 	LoadMessageSliderBar( );
 }
 
+
+static BOOLEAN CreateButtonsForMapScreenInterfaceBottom(void);
+static void CreateCompressModePause(void);
+static void CreateMapScreenBottomMessageScrollBarRegion(void);
+
+
 BOOLEAN LoadMapScreenInterfaceBottom( void )
 {
 	CreateButtonsForMapScreenInterfaceBottom( );
@@ -230,6 +214,10 @@ BOOLEAN LoadMapScreenInterfaceBottom( void )
 	return( TRUE );
 }
 
+
+static void DeleteMessageSliderBar(void);
+
+
 void DeleteMapBottomGraphics( void )
 {
 	DeleteVideoObjectFromIndex( guiMAPBOTTOMPANEL );
@@ -237,6 +225,12 @@ void DeleteMapBottomGraphics( void )
 	// delete slider bar icon
 	DeleteMessageSliderBar( );
 }
+
+
+static void DeleteMapScreenBottomMessageScrollRegion(void);
+static void DestroyButtonsForMapScreenInterfaceBottom(void);
+static void RemoveCompressModePause(void);
+
 
 void DeleteMapScreenInterfaceBottom( void )
 {
@@ -248,6 +242,16 @@ void DeleteMapScreenInterfaceBottom( void )
 	// remove comrpess mode pause
 	RemoveCompressModePause( );
 }
+
+
+static void DisplayCompressMode(void);
+static void DisplayCurrentBalanceForMapBottom(void);
+static void DisplayCurrentBalanceTitleForMapBottom(void);
+static void DisplayProjectedDailyMineIncome(void);
+static void DisplayScrollBarSlider(void);
+static void DrawNameOfLoadedSector(void);
+static void EnableDisableBottomButtonsAndRegions(void);
+static void EnableDisableMessageScrollButtonsAndRegions(void);
 
 
 void RenderMapScreenInterfaceBottom( void )
@@ -315,7 +319,7 @@ void RenderMapScreenInterfaceBottom( void )
 }
 
 
-BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
+static BOOLEAN CreateButtonsForMapScreenInterfaceBottom(void)
 {
 
 
@@ -433,7 +437,7 @@ BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void )
 }
 
 
-void DestroyButtonsForMapScreenInterfaceBottom( void )
+static void DestroyButtonsForMapScreenInterfaceBottom(void)
 {
 	// will destroy the buttons for the mapscreen bottom interface
 
@@ -524,7 +528,7 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void DrawNameOfLoadedSector( void )
+static void DrawNameOfLoadedSector(void)
 {
 	wchar_t sString[ 128 ];
   INT16 sFontX, sFontY;
@@ -545,7 +549,7 @@ void DrawNameOfLoadedSector( void )
 }
 
 
-void CompressModeClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void CompressModeClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if( iReason & ( MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_LBUTTON_UP ) )
   {
@@ -695,7 +699,7 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void EnableDisableMessageScrollButtonsAndRegions( void )
+static void EnableDisableMessageScrollButtonsAndRegions(void)
 {
 	UINT8 ubNumMessages;
 
@@ -735,7 +739,7 @@ void EnableDisableMessageScrollButtonsAndRegions( void )
 }
 
 
-void DisplayCompressMode( void )
+static void DisplayCompressMode(void)
 {
 	INT16 sX, sY;
 	CHAR16 sString[ 128 ];
@@ -784,7 +788,7 @@ void DisplayCompressMode( void )
 }
 
 
-void CreateCompressModePause( void )
+static void CreateCompressModePause(void)
 {
 	MSYS_DefineRegion( &gMapPauseRegion, 487, 456, 522, 467, MSYS_PRIORITY_HIGH,
 							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressModeClickCallback );
@@ -792,26 +796,31 @@ void CreateCompressModePause( void )
 	SetRegionFastHelpText( &gMapPauseRegion, pMapScreenBottomFastHelp[ 7 ] );
 }
 
-void RemoveCompressModePause( void )
+
+static void RemoveCompressModePause(void)
 {
 	MSYS_RemoveRegion( &gMapPauseRegion );
 }
 
 
-void LoadMessageSliderBar( void )
+static void LoadMessageSliderBar(void)
 {
   // this function will load the message slider bar
 	AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti", &guiSliderBar);
 }
 
-void DeleteMessageSliderBar( void )
+
+static void DeleteMessageSliderBar(void)
 {
 	// this function will delete message slider bar
 	DeleteVideoObjectFromIndex( guiSliderBar );
 }
 
 
-void CreateMapScreenBottomMessageScrollBarRegion( void )
+static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateMapScreenBottomMessageScrollBarRegion(void)
 {
 	#ifdef JA2DEMO
 		MSYS_DefineRegion( &gMapMessageScrollBarRegion, MESSAGE_SCROLL_AREA_START_X, MESSAGE_SCROLL_AREA_START_Y,
@@ -825,14 +834,13 @@ void CreateMapScreenBottomMessageScrollBarRegion( void )
 }
 
 
-void DeleteMapScreenBottomMessageScrollRegion( void )
+static void DeleteMapScreenBottomMessageScrollRegion(void)
 {
   MSYS_RemoveRegion( &gMapMessageScrollBarRegion );
 }
 
 
-
-void MapScreenMessageScrollBarCallBack( MOUSE_REGION *pRegion, INT32 iReason )
+static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	POINT MousePos;
 	UINT8 ubMouseYOffset;
@@ -893,7 +901,7 @@ void MapScreenMessageScrollBarCallBack( MOUSE_REGION *pRegion, INT32 iReason )
 }
 
 
-void DisplayScrollBarSlider( )
+static void DisplayScrollBarSlider(void)
 {
 	// will display the scroll bar icon
 	UINT8 ubNumMessages;
@@ -976,8 +984,10 @@ void CheckForAndHandleAutoMessageScroll( void )
 */
 
 
+static void EnableDisableTimeCompressButtons(void);
 
-void EnableDisableBottomButtonsAndRegions( void )
+
+static void EnableDisableBottomButtonsAndRegions(void)
 {
 	INT8 iExitButtonIndex;
 
@@ -1022,7 +1032,7 @@ void EnableDisableBottomButtonsAndRegions( void )
 }
 
 
-void EnableDisableTimeCompressButtons( void )
+static void EnableDisableTimeCompressButtons(void)
 {
 	if( AllowedToTimeCompress( ) == FALSE )
 	{
@@ -1182,7 +1192,7 @@ BOOLEAN AllowedToTimeCompress( void )
 }
 
 
-void DisplayCurrentBalanceTitleForMapBottom( void )
+static void DisplayCurrentBalanceTitleForMapBottom(void)
 {
 	CHAR16 sString[ 128 ];
 	INT16 sFontX, sFontY;
@@ -1214,7 +1224,8 @@ void DisplayCurrentBalanceTitleForMapBottom( void )
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
 }
 
-void DisplayCurrentBalanceForMapBottom( void )
+
+static void DisplayCurrentBalanceForMapBottom(void)
 {
 	// show the current balance for the player on the map panel bottom
 	CHAR16 sString[ 128 ];
@@ -1241,6 +1252,10 @@ void DisplayCurrentBalanceForMapBottom( void )
 	// print it
 	mprintf( sFontX, sFontY, L"%S", sString );
 }
+
+
+static void CompressMaskClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
 {
@@ -1287,7 +1302,7 @@ void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
 }
 
 
-void CompressMaskClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void CompressMaskClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1296,7 +1311,7 @@ void CompressMaskClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void DisplayProjectedDailyMineIncome( void )
+static void DisplayProjectedDailyMineIncome(void)
 {
 	INT32 iRate = 0;
 	static INT32 iOldRate = -1;

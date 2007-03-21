@@ -42,7 +42,6 @@ enum
 } AIR_RAID_STATES;
 
 
-void ScheduleAirRaid( AIR_RAID_DEFINITION *pAirRaidDef );
 void HandleAirRaid( );
 
 BOOLEAN BeginAirRaid( );

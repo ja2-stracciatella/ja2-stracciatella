@@ -169,8 +169,7 @@ AIR_RAID_POS	ubXYTragetInvFromDirection[ ] =
 };
 
 
-
-void ScheduleAirRaid( AIR_RAID_DEFINITION *pAirRaidDef )
+static void ScheduleAirRaid(AIR_RAID_DEFINITION* pAirRaidDef)
 {
 	// Make sure only one is cheduled...
 	if ( gfAirRaidScheduled )
@@ -285,7 +284,7 @@ BOOLEAN BeginAirRaid( )
 }
 
 
-INT16 PickLocationNearAnyMercInSector( )
+static INT16 PickLocationNearAnyMercInSector(void)
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
@@ -320,7 +319,8 @@ INT16 PickLocationNearAnyMercInSector( )
 	return( NOWHERE );
 }
 
-INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 sRandomVar )
+
+static INT16 PickRandomLocationAtMinSpacesAway(INT16 sGridNo, INT16 sMinValue, INT16 sRandomVar)
 {
 	INT16 sNewGridNo = NOWHERE;
 
@@ -357,7 +357,8 @@ INT16 PickRandomLocationAtMinSpacesAway( INT16 sGridNo, INT16 sMinValue, INT16 s
 	return( sNewGridNo );
 }
 
-void TryToStartRaid( )
+
+static void TryToStartRaid(void)
 {
 	// OK, check conditions,
 
@@ -384,7 +385,8 @@ void TryToStartRaid( )
 
 }
 
-void AirRaidStart( )
+
+static void AirRaidStart(void)
 {
 	// Begin ambient sound....
 	guiSoundSample = PlayJA2Sample(S_RAID_AMBIENT, 0, 10000, MIDDLEPAN);
@@ -403,7 +405,8 @@ void AirRaidStart( )
 	}
 }
 
-void AirRaidLookForDive( )
+
+static void AirRaidLookForDive(void)
 {
 	BOOLEAN	fDoDive = FALSE;
 	BOOLEAN	fDoQuote = FALSE;
@@ -524,14 +527,14 @@ void AirRaidLookForDive( )
 }
 
 
-void 	AirRaidStartEnding( )
+static void AirRaidStartEnding(void)
 {
 	// Fade out sound.....
 	gfFadingRaidOut = TRUE;
 }
 
 
-void BeginBombing( )
+static void BeginBombing(void)
 {
 	INT16 sGridNo;
 	UINT32	iSoundStartDelay;
@@ -583,8 +586,7 @@ void BeginBombing( )
 }
 
 
-
-void BeginDive( )
+static void BeginDive()
 {
 	INT16 sGridNo;
 	UINT32	iSoundStartDelay;
@@ -636,7 +638,7 @@ void BeginDive( )
 }
 
 
-void MoveDiveAirplane( FLOAT dAngle )
+static void MoveDiveAirplane(FLOAT dAngle)
 {
 	FLOAT					dDeltaPos;
 
@@ -651,12 +653,10 @@ void MoveDiveAirplane( FLOAT dAngle )
 
 	// Find new pos
 	gsDiveY = (INT16)( gsDiveY + dDeltaPos );
-
-
 }
 
 
-void DoDive(  )
+static void DoDive(void)
 {
 	INT16		sRange;
 	INT16		sGridNo, sOldGridNo;
@@ -823,7 +823,7 @@ void DoDive(  )
 }
 
 
-void DoBombing(  )
+static void DoBombing(void)
 {
 	INT16		sRange;
 	INT16		sGridNo, sOldGridNo, sBombGridNo;

@@ -98,6 +98,10 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 	}
 }
 
+
+static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8 ubChanceToHit);
+
+
 void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 {
  UINT32 uiLoop;
@@ -338,8 +342,9 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
   }
 }
 
+
 // JA2Gold: added
-BOOLEAN CloseEnoughForGrenadeToss( INT16 sGridNo, INT16 sGridNo2 )
+static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 {
 	INT16	sTempGridNo;
 	INT8	bDirection;
@@ -402,7 +407,11 @@ BOOLEAN CloseEnoughForGrenadeToss( INT16 sGridNo, INT16 sGridNo2 )
 	return( TRUE );
 }
 
-void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
+
+static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIERTYPE* pOpponent, INT16 sGridno);
+
+
+static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 {
 	// September 9, 1998: added code for LAWs (CJC)
 	UINT8 ubLoop, ubLoop2;
@@ -1065,6 +1074,10 @@ void CalcBestThrow(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
 
 }
 
+
+static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8 ubChanceToHit, BOOLEAN fBladeAttack);
+
+
 void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAttack )
 {
  UINT32 uiLoop;
@@ -1428,7 +1441,8 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
   }
 }
 
-UINT8 NumMercsCloseTo( INT16 sGridNo, UINT8 ubMaxDist )
+
+static UINT8 NumMercsCloseTo(INT16 sGridNo, UINT8 ubMaxDist)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -1450,7 +1464,8 @@ UINT8 NumMercsCloseTo( INT16 sGridNo, UINT8 ubMaxDist )
 	return( bNumber );
 }
 
-INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ubChanceToHit)
+
+static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8 ubChanceToHit)
 {
  INT32 iRange,iMaxRange,iPowerLost;
  INT32 iDamage;
@@ -1583,7 +1598,8 @@ INT32 EstimateShotDamage(SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent, UINT8 ub
  return( iDamage );
 }
 
-INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *pOpponent, INT16 sGridno )
+
+static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIERTYPE* pOpponent, INT16 sGridno)
 {
 	UINT8	ubExplosiveIndex;
 	INT32 iExplosDamage, iBreathDamage, iArmourAmount, iDamage = 0;
@@ -1669,8 +1685,8 @@ INT32 EstimateThrowDamage( SOLDIERTYPE *pSoldier, UINT8 ubItemPos, SOLDIERTYPE *
 	return( iDamage);
 }
 
-INT32 EstimateStabDamage( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
-													UINT8 ubChanceToHit, BOOLEAN fBladeAttack )
+
+static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8 ubChanceToHit, BOOLEAN fBladeAttack)
 {
 	INT32 iImpact, iFluke, iBonus;
 
@@ -1730,7 +1746,8 @@ INT32 EstimateStabDamage( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pOpponent,
 	return( iImpact );
 }
 
-INT8 TryToReload( SOLDIERTYPE * pSoldier )
+
+static INT8 TryToReload(SOLDIERTYPE* pSoldier)
 {
 	INT8						bSlot;
 	WEAPONTYPE *		pWeapon;
@@ -1886,7 +1903,8 @@ void CheckIfTossPossible(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestThrow)
   }
 }
 
-INT8 CountAdjacentSpreadTargets( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetLevel )
+
+static INT8 CountAdjacentSpreadTargets(SOLDIERTYPE* pSoldier, INT16 sFirstTarget, INT8 bTargetLevel)
 {
 	// return the number of people next to this guy for burst-spread purposes
 

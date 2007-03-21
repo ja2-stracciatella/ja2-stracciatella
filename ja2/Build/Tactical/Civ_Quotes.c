@@ -124,7 +124,7 @@ UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
 
 
-void CopyNumEntriesIntoQuoteStruct( )
+static void CopyNumEntriesIntoQuoteStruct(void)
 {
 	INT32	cnt;
 
@@ -136,7 +136,7 @@ void CopyNumEntriesIntoQuoteStruct( )
 }
 
 
-BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t *zQuote )
+static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
 {
 	UINT8 zFileName[164];
 
@@ -171,7 +171,8 @@ BOOLEAN GetCivQuoteText( UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t *zQuote )
 	return( TRUE );
 }
 
-void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
+
+static void SurrenderMessageBoxCallBack(UINT8 ubExitValue)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -211,7 +212,8 @@ void SurrenderMessageBoxCallBack( UINT8 ubExitValue )
 	}
 }
 
-void ShutDownQuoteBox( BOOLEAN fForce )
+
+static void ShutDownQuoteBox(BOOLEAN fForce)
 {
 	if ( !gCivQuoteData.bActive )
 	{
@@ -321,7 +323,7 @@ INT8 GetCivType( SOLDIERTYPE *pCiv )
 }
 
 
-void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
+static void RenderCivQuoteBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	if ( gCivQuoteData.iVideoOverlay != -1 )
 	{
@@ -332,7 +334,7 @@ void RenderCivQuoteBoxOverlay( VIDEO_OVERLAY *pBlitter )
 }
 
 
-void QuoteOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -442,7 +444,8 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 
 }
 
-UINT8 DetermineCivQuoteEntry( SOLDIERTYPE *pCiv, UINT8 *pubCivHintToUse, BOOLEAN fCanUseHints )
+
+static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, BOOLEAN fCanUseHints)
 {
 	UINT8	ubCivType;
 	INT8	bTownId;

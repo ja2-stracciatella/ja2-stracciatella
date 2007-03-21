@@ -732,14 +732,12 @@ void UpdateAniTiles( )
 				pNode->pLevelNode->uiFlags |= (LEVELNODE_LASTDYNAMIC);
 				pNode->pLevelNode->uiFlags &= (~LEVELNODE_DYNAMIC );
 			}
-
 		}
-
 	}
-
 }
 
-void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame )
+
+static void SetAniTileFrame(ANITILE* pAniTile, INT16 sFrame)
 {
 	UINT8 ubTempDir;
 	INT16	sStartFrame = 0;
@@ -834,7 +832,8 @@ void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 	}
 }
 
-void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
+
+static void PauseAniTile(ANITILE* pAniTile, BOOLEAN fPause)
 {
 	if ( fPause )
 	{
@@ -847,7 +846,7 @@ void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause )
 }
 
 
-void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause )
+static void PauseAllAniTilesOfType(UINT32 uiType, BOOLEAN fPause)
 {
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
@@ -864,7 +863,5 @@ void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause )
 		{
       PauseAniTile( pNode, fPause );
 		}
-
 	}
-
 }

@@ -174,9 +174,6 @@ extern UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord );
 // total amount given to doctors
 extern UINT32 uiTotalAmountGivenToDoctors;
 
-// handle money being npc being
-extern BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPCId, UINT32 uiMoneyAmount, UINT8 *pQuoteValue );
-
 // given a victory in this sector, handle specific facts
 void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 

@@ -20,8 +20,6 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex );
 
 void ShowItemStatsPanel();
 void HideItemStatsPanel();
-void EnableItemStatsPanel();
-void DisableItemStatsPanel();
 
 //called from the taskbar renderer.
 void UpdateItemStatsPanel();

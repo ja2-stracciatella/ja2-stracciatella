@@ -94,37 +94,8 @@ typedef struct TOWN_TRAINER_TYPE
 // can character do this assignment?
 //BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment );
 
-// can this character be assigned as a doctor?
-BOOLEAN CanCharacterDoctor( SOLDIERTYPE *pCharacter );
-
-// can this character be assigned as a repairman?
-BOOLEAN CanCharacterRepair( SOLDIERTYPE *pCharacter );
-
-// can character be patient?
-BOOLEAN CanCharacterPatient( SOLDIERTYPE *pCharacter );
-
 // can character train militia?
 BOOLEAN CanCharacterTrainMilitia( SOLDIERTYPE *pCharacter );
-
-// can character train stat?..as train self or as trainer?
-BOOLEAN CanCharacterTrainStat( SOLDIERTYPE *pSoldier, INT8 bStat, BOOLEAN fTrainSelf, BOOLEAN fTrainTeammate );
-
-// is character capable of practising at all?
-BOOLEAN CanCharacterPractise( SOLDIERTYPE *pCharacter );
-
-// can this character train others?
-BOOLEAN CanCharacterTrainTeammates( SOLDIERTYPE *pSoldier );
-
-// put character on duty?
-BOOLEAN CanCharacterOnDuty( SOLDIERTYPE *pCharacter );
-
-// put character to sleep?
-BOOLEAN CanCharacterSleep( SOLDIERTYPE *pCharacter, BOOLEAN fExplainWhyNot );
-
-BOOLEAN CanCharacterBeAwakened( SOLDIERTYPE *pSoldier, BOOLEAN fExplainWhyNot );
-
-// put character in vehicle?
-BOOLEAN CanCharacterVehicle( SOLDIERTYPE *pCharacter );
 
 #define CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT -6
 #define CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING -5
@@ -135,21 +106,14 @@ BOOLEAN CanCharacterVehicle( SOLDIERTYPE *pCharacter );
 #define CHARACTER_CANT_JOIN_SQUAD 0
 #define CHARACTER_CAN_JOIN_SQUAD 1
 
-// can character be added to squad
-INT8 CanCharacterSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
-
 // if merc could train militia here, do they have sufficient loyalty?
 BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSoldier );
-BOOLEAN DoesTownHaveRatingToTrainMilitia( INT8 bTownId );
 
 // is the character in transit?
 BOOLEAN IsCharacterInTransit( SOLDIERTYPE *pCharacter );
 
 // handler for assignments -- called once per hour via event
 void UpdateAssignments();
-
-// how many people in this secotr have this assignment?
-UINT8 FindNumberInSectorWithAssignment( INT16 sX, INT16 sY, INT8 bAssignment );
 
 void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier );
 
@@ -190,9 +154,6 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 // pts for being a student for this soldier
 INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16 *pusMaxPts );
 
-// reset these soldiers
-void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown( SOLDIERTYPE *pSoldier );
-
 // Handle assignment done
 void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo );
 
@@ -215,8 +176,6 @@ extern BOOLEAN fShowRepairMenu;
 
 extern BOOLEAN fFirstClickInAssignmentScreenMask;
 
-extern void RestorePopUpBoxes( void );
-
 extern BOOLEAN fGlowContractRegion;
 
 extern BOOLEAN gfReEvaluateEveryonesNothingToDo;
@@ -225,7 +184,6 @@ extern BOOLEAN gfReEvaluateEveryonesNothingToDo;
 void CreateDestroyMouseRegionsForContractMenu( void );
 void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter );
 void HandleShadingOfLinesForAssignmentMenus( void );
-BOOLEAN IsCharacterAliveAndConscious( SOLDIERTYPE *pCharacter );
 void CreateDestroyScreenMaskForAssignmentAndContractMenus( void );
 
 
@@ -239,13 +197,8 @@ BOOLEAN SetMercAsleep( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning );
 BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier );
 BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier );
 
-BOOLEAN AssignMercToAMovementGroup( SOLDIERTYPE *pSoldier );
-
 // set what time this merc undertook this assignment
 void SetTimeOfAssignmentChangeForMerc( SOLDIERTYPE *pSoldier );
-
-// enough time on assignment for it to count?
-BOOLEAN EnoughTimeOnAssignment( SOLDIERTYPE *pSoldier );
 
 // check if any merc in group is too tired to keep moving
 BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup );

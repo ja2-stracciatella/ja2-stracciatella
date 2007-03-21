@@ -66,15 +66,6 @@
 #define MAX_PALACE_DISTANCE		20
 
 
-//Private functions used within TacticalCreateStruct()
-void InitSoldierStruct( SOLDIERTYPE *pSoldier );
-BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct );
-BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct );
-void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct );
-UINT8 GetLocationModifier( UINT8 ubSoldierClass );
-void ReduceHighExpLevels( INT8 *pbExpLevel );
-
-
 BOOLEAN gfProfiledEnemyAdded = FALSE;
 
 UINT32 guiCurrentUniqueSoldierId = 1;
@@ -126,6 +117,13 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 	pCreateStruct->bMorale								= 50;
 	pCreateStruct->bAIMorale							= MORALE_FEARLESS;
 }
+
+
+static void CopyProfileItems(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
+static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
+static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
+static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
+
 
 SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID )
 {
@@ -644,7 +642,8 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 	}
 }
 
-BOOLEAN TacticalCopySoldierFromProfile( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
+
+static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
 {
 	UINT8						ubProfileIndex;
 	MERCPROFILESTRUCT * pProfile;
@@ -711,7 +710,8 @@ enum {
 	NUMHEADS
 };
 
-INT32 ChooseHairColor( SOLDIERTYPE *pSoldier, INT32 skin )
+
+static INT32 ChooseHairColor(SOLDIERTYPE* pSoldier, INT32 skin)
 {
 	INT32 iRandom;
 	INT32 hair = 0;
@@ -804,7 +804,8 @@ INT32 ChooseHairColor( SOLDIERTYPE *pSoldier, INT32 skin )
 	return hair;
 }
 
-void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
+
+static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClass)
 {
 	INT32 skin, hair;
 	BOOLEAN fMercClothingScheme;
@@ -963,7 +964,8 @@ void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass )
 	}
 }
 
-BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
+
+static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
 {
 	pSoldier->ubProfile							= NO_PROFILE;
 
@@ -1103,7 +1105,7 @@ BOOLEAN TacticalCopySoldierFromCreateStruct( SOLDIERTYPE *pSoldier, SOLDIERCREAT
 }
 
 
-void InitSoldierStruct( SOLDIERTYPE *pSoldier )
+static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 {
 	// Memset values
 	memset( pSoldier, 0, sizeof( SOLDIERTYPE ) );
@@ -1270,6 +1272,9 @@ BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex )
 }
 
 
+static UINT8 GetLocationModifier(UINT8 ubSoldierClass);
+
+
 // returns a soldier difficulty modifier from 0 to 100 based on player's progress, distance from the Palace, mining income, and
 // playing difficulty level.  Used for generating soldier stats, equipment, and AI skill level.
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
@@ -1353,6 +1358,9 @@ INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 
 	return(bDiffModifier);
 }
+
+
+static void ReduceHighExpLevels(INT8* pbExpLevel);
 
 
 //When the editor modifies the soldier's relative attribute level,
@@ -1780,6 +1788,10 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	}
 }
 
+
+static void UpdateStaticDetailedPlacementWithProfileInformation(SOLDIERCREATE_STRUCT* spp, UINT8 ubProfile);
+
+
 //Used to update a existing soldier's attributes with the new static detailed placement info.  This is used
 //by the editor upon exiting the editor into the game, to update the existing soldiers with new information.
 //This gives flexibility of testing mercs.  Upon entering the editor again, this call will reset all the
@@ -1853,9 +1865,10 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 	memcpy( s->inv, spp->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 }
 
+
 //In the case of setting a profile ID in order to extract a soldier from the profile array, we
 //also want to copy that information to the static detailed placement, for editor viewing purposes.
-void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, UINT8 ubProfile )
+static void UpdateStaticDetailedPlacementWithProfileInformation(SOLDIERCREATE_STRUCT* spp, UINT8 ubProfile)
 {
 	UINT32					cnt;
 	MERCPROFILESTRUCT * pProfile;
@@ -1954,7 +1967,8 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 #define CENTRAL_GRIDNO 13202
 #define CENTRAL_RADIUS 30
 
-SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve( UINT8 ubSoldierClass )
+
+static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 {
 	INT32 i, iStart, iEnd;
 	SOLDIERTYPE *pSoldier;
@@ -2285,7 +2299,8 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	}
 }
 
-void CopyProfileItems( SOLDIERTYPE *pSoldier, SOLDIERCREATE_STRUCT *pCreateStruct )
+
+static void CopyProfileItems(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
 {
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
@@ -2481,8 +2496,7 @@ void TrashAllSoldiers( )
 }
 
 
-
-UINT8 GetLocationModifier( UINT8 ubSoldierClass )
+static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 {
 	UINT8 ubLocationModifier;
 	UINT8 ubPalaceDistance;
@@ -2559,8 +2573,7 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-
-void ReduceHighExpLevels( INT8 *pbExpLevel )
+static void ReduceHighExpLevels(INT8* pbExpLevel)
 {
 	UINT8 ubRoll;
 	// important: must reset these to 0 by default for logic to work!

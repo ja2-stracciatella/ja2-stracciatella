@@ -183,14 +183,6 @@ extern BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_X ][ 4 ];
 extern const wchar_t *pTownNames[];
 
 
-
-// update the loyalty rating of the passed town id
-void UpdateTownLoyaltyRating( INT8 bTownId );
-
-
-
-
-
 // update town loyalty based on number of friendlies in this town
 void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId );
 
@@ -274,6 +266,9 @@ void SetTownLoyalty( INT8 bTownId, UINT8 ubNewLoyaltyRating )
 }
 
 
+static void UpdateTownLoyaltyRating(INT8 bTownId);
+
+
 // increments the town's loyalty rating by that many HUNDREDTHS of loyalty pts
 void IncrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyIncrease )
 {
@@ -348,7 +343,7 @@ void DecrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyDecrease )
 
 
 // update town loyalty rating based on gain values
-void UpdateTownLoyaltyRating( INT8 bTownId )
+static void UpdateTownLoyaltyRating(INT8 bTownId)
 {
 	// check gain value and update loyaty
 	UINT8 ubOldLoyaltyRating = 0;
@@ -646,6 +641,8 @@ void UpdateTownLoyaltyBasedOnBadGuysInTown( INT8 bTownId )
 }
 */
 
+
+static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
@@ -957,7 +954,8 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN HandleLoyaltyAdjustmentForRobbery( SOLDIERTYPE *pSoldier )
+// handle loyalty adjustment for theft
+static BOOLEAN HandleLoyaltyAdjustmentForRobbery(SOLDIERTYPE* pSoldier)
 {
 	// not to be implemented at this time
 	return( FALSE );
@@ -983,7 +981,7 @@ BOOLEAN HandleLoyaltyAdjustmentForRobbery( SOLDIERTYPE *pSoldier )
 
 
 // handle loyalty adjustment for dmg inflicted on a building
-void HandleLoyaltyForDemolitionOfBuilding( SOLDIERTYPE *pSoldier, INT16 sPointsDmg )
+static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sPointsDmg)
 {
 	// find this soldier's team and decrement the loyalty rating for them and for the people who police the sector
 	// more penalty for the people who did it, a lesser one for those who should have stopped it
@@ -1496,8 +1494,9 @@ INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 	return( FALSE );
 }
 
+
 // is the ENTIRE town under enemy control?
-INT32 IsTownUnderCompleteControlByEnemy( INT8 bTownId )
+static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 {
 	if ( GetTownSectorsUnderControl( bTownId ) == 0 )
 	{
@@ -1632,7 +1631,7 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 }
 
 
-void AffectAllTownsLoyaltyByDistanceFrom( INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	INT16 sEventSector;
 	UINT8 ubTempGroupId;
@@ -1862,7 +1861,8 @@ BOOLEAN DidFirstBattleTakePlaceInThisTown( INT8 bTownId )
 	return( bTownId == bTownBattleId );
 }
 
-UINT32 PlayerStrength( void )
+
+static UINT32 PlayerStrength(void)
 {
 	UINT8						ubLoop;
 	SOLDIERTYPE *		pSoldier;
@@ -1884,7 +1884,8 @@ UINT32 PlayerStrength( void )
 	return( uiTotal );
 }
 
-UINT32 EnemyStrength( void )
+
+static UINT32 EnemyStrength(void)
 {
 	UINT8						ubLoop;
 	SOLDIERTYPE *		pSoldier;

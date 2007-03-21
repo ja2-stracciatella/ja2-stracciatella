@@ -156,8 +156,8 @@ BOOLEAN		gfDoLighting		 = FALSE;
 UINT8		gubDesertTemperature = 0;
 UINT8		gubGlobalTemperature = 0;
 
-// local prototypes
-void EnvDoLightning(void);
+
+static void EnvDoLightning(void);
 
 
 // polled by the game to handle time/atmosphere changes from gamescreen
@@ -409,18 +409,20 @@ void ForecastDayEvents( )
 
 }
 
-void EnvEnableTOD(void)
+
+static void EnvEnableTOD(void)
 {
 	fTimeOfDayControls=TRUE;
 }
 
-void EnvDisableTOD(void)
+
+static void EnvDisableTOD(void)
 {
 	fTimeOfDayControls=FALSE;
 }
 
 
-void EnvDoLightning(void)
+static void EnvDoLightning(void)
 {
 static UINT32 uiCount=0, uiIndex=0, uiStrike=0, uiFrameNext=1000;
 static UINT8 ubLevel=0, ubLastLevel=0;

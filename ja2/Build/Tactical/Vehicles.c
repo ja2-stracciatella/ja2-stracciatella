@@ -167,15 +167,6 @@ INT16 sVehicleInternalOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES ][ NUMBER_OF_
 //#define VEHICLE_MAX_INTERNAL 250
 
 
-// set the driver of the vehicle
-void SetDriver( INT32 iID, UINT8 ubID );
-
-//void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId );
-
-void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID );
-
-
-
 // Loop through and create a few soldier squad ID's for vehicles ( max # 3 )
 void InitVehicles( )
 {
@@ -206,6 +197,10 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
 
   pVehicle->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
 }
+
+
+static void SetUpArmorForVehicle(UINT8 ubID);
+
 
 INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 {
@@ -427,7 +422,10 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 }
 
 
-BOOLEAN AddSoldierToVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
+static void SetDriver(INT32 iID, UINT8 ubID);
+
+
+static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pVehicleSoldier = NULL;
@@ -611,7 +609,12 @@ void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId )
   }
 }
 
-BOOLEAN RemoveSoldierFromVehicle( SOLDIERTYPE *pSoldier, INT32 iId )
+
+static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID);
+
+
+// remove soldier from vehicle
+static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
 	// remove soldier from vehicle
 	INT32 iCounter = 0;
@@ -924,7 +927,9 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 	return( TRUE );
 }
 
-BOOLEAN CopyVehiclePathToSoldier( SOLDIERTYPE *pSoldier )
+
+// set up soldier mvt for vehicle
+static BOOLEAN CopyVehiclePathToSoldier(SOLDIERTYPE* pSoldier)
 {
 	INT32 iId;
 
@@ -1065,8 +1070,9 @@ BOOLEAN VehicleIdIsValid( INT32 iId )
 	return( TRUE );
 }
 
-// get travel time of vehicle
-INT32 GetTravelTimeOfVehicle( INT32 iId )
+
+// travel time at the startegic level
+static INT32 GetTravelTimeOfVehicle(INT32 iId)
 {
 	GROUP *pGroup;
 
@@ -1145,8 +1151,9 @@ INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId )
 	return( -1 );
 }
 
+
 // add all people in this vehicle to the mvt group for benifit of prebattle interface
-BOOLEAN AddVehicleMembersToMvtGroup( INT32 iId )
+static BOOLEAN AddVehicleMembersToMvtGroup(INT32 iId)
 {
 	INT32 iCounter = 0;
 
@@ -1171,7 +1178,11 @@ BOOLEAN AddVehicleMembersToMvtGroup( INT32 iId )
 }
 
 
-BOOLEAN InjurePersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier, UINT8 ubPointsOfDmg )
+static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier);
+
+
+// injure this person in the vehicle
+static BOOLEAN InjurePersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier, UINT8 ubPointsOfDmg)
 {
 	// find this person, see if they have this many pts left, if not, kill them
 
@@ -1209,7 +1220,9 @@ BOOLEAN InjurePersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier, UINT8 ubPointsO
 	return( TRUE );
 }
 
-BOOLEAN KillPersonInVehicle( INT32 iId, SOLDIERTYPE *pSoldier )
+
+// kill this person in the vehicle
+static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier)
 {
 	// find if vehicle is valid
 	if( VehicleIdIsValid( iId ) == FALSE )
@@ -1351,20 +1364,22 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 	return( FALSE );
 }
 
-SOLDIERTYPE *GetDriver( INT32 iID )
+
+static SOLDIERTYPE* GetDriver(INT32 iID)
 {
 	return( MercPtrs[ pVehicleList[ iID ].ubDriver ] );
 }
 
 
-void SetDriver( INT32 iID, UINT8 ubID )
+// set the driver of the vehicle
+static void SetDriver(INT32 iID, UINT8 ubID)
 {
 	pVehicleList[ iID ].ubDriver = ubID;
 }
 
 
 #ifdef JA2TESTVERSION
-void VehicleTest( void )
+static void VehicleTest(void)
 {
 	SetUpHelicopterForPlayer( 9,1 );
 }
@@ -1462,7 +1477,8 @@ BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
 	return( FALSE );
 }
 
-SOLDIERTYPE *GetVehicleSoldierPointerFromPassenger( SOLDIERTYPE *pSrcSoldier )
+
+static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldier)
 {
 	UINT32									cnt;
 	SOLDIERTYPE             *pSoldier;
@@ -1564,6 +1580,9 @@ void AddPassangersToTeamPanel( INT32 iId )
 }
 
 
+static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID);
+
+
 void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, UINT8 ubAttackerID )
 {
   if ( ubReason != TAKE_DAMAGE_GAS )
@@ -1593,7 +1612,8 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 }
 
 
-void HandleCriticalHitForVehicleInLocation( UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID )
+// handle crit hit to vehicle in this location
+static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID)
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
@@ -1799,7 +1819,8 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 }
 
 
-void SetUpArmorForVehicle( UINT8 ubID )
+// set up armor values for this vehicle
+static void SetUpArmorForVehicle(UINT8 ubID)
 {
 	INT32 iCounter = 0;
 
@@ -2097,7 +2118,7 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN SaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
+static BOOLEAN SaveVehicleMovementInfoToSavedGameFile(HWFILE hFile)
 {
 	//Save all the vehicle movement id's
 	if (!FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5)) return FALSE;
@@ -2168,8 +2189,7 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile )
 }
 
 
-
-void TeleportVehicleToItsClosestSector( INT32 iVehicleId, UINT8 ubGroupID )
+static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID)
 {
 	GROUP *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
@@ -2240,7 +2260,7 @@ void AddVehicleFuelToSave( )
 }
 
 
-BOOLEAN CanSoldierDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fIgnoreAsleep )
+static BOOLEAN CanSoldierDriveVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId, BOOLEAN fIgnoreAsleep)
 {
 	Assert( pSoldier );
 
@@ -2292,6 +2312,9 @@ BOOLEAN CanSoldierDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN
 }
 
 
+static BOOLEAN OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
+
+
 BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fTryingToTravel )
 {
 	Assert( pSoldier );
@@ -2324,8 +2347,7 @@ BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEA
 }
 
 
-
-BOOLEAN OnlyThisSoldierCanDriveVehicle( SOLDIERTYPE *pThisSoldier, INT32 iVehicleId )
+static BOOLEAN OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE* pThisSoldier, INT32 iVehicleId)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -2435,7 +2457,8 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
   return( NULL );
 }
 
-BOOLEAN DoesVehicleHaveAnyPassengers( INT32 iVehicleID )
+
+static BOOLEAN DoesVehicleHaveAnyPassengers(INT32 iVehicleID)
 {
 	if( !GetNumberInVehicle( iVehicleID ) )
 	{

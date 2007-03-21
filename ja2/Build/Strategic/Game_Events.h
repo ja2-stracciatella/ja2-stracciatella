@@ -28,9 +28,6 @@ enum
 	QUEUED_EVENT
 };
 
-void LockStrategicEventFromDeletion( STRATEGICEVENT *pEvent );
-void UnlockStrategicEventFromDeletion( STRATEGICEVENT *pEvent );
-
 //part of the game.sav files (not map files)
 BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile );
 BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile );
@@ -40,8 +37,6 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent );
 
 extern BOOLEAN gfEventDeletionPending;
-
-BOOLEAN DeleteEventsWithDeletionPending();
 
 extern STRATEGICEVENT *gpEventList;
 

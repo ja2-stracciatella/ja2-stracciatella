@@ -32,11 +32,7 @@ LIGHTEFFECT				gLightEffectData[ NUM_LIGHT_EFFECT_SLOTS ];
 UINT32						guiNumLightEffects = 0;
 
 
-INT32 GetFreeLightEffect( void );
-void RecountLightEffects( void );
-
-
-INT32 GetFreeLightEffect( void )
+static INT32 GetFreeLightEffect(void)
 {
 	UINT32 uiCount;
 
@@ -52,7 +48,8 @@ INT32 GetFreeLightEffect( void )
 	return( -1 );
 }
 
-void RecountLightEffects( void )
+
+static void RecountLightEffects(void)
 {
 	INT32 uiCount;
 
@@ -67,7 +64,7 @@ void RecountLightEffects( void )
 }
 
 
-void UpdateLightingSprite( LIGHTEFFECT *pLight )
+static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 {
 	CHAR8 LightName[20];
 	// Build light....
@@ -138,8 +135,7 @@ INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
 }
 
 
-
-void RemoveLightEffectFromTile( INT16 sGridNo )
+static void RemoveLightEffectFromTile(INT16 sGridNo)
 {
 	LIGHTEFFECT *pLight;
 	UINT32 cnt;

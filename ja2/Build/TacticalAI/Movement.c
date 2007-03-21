@@ -227,8 +227,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 }
 
 
-
-INT16 NextPatrolPoint(SOLDIERTYPE *pSoldier)
+static INT16 NextPatrolPoint(SOLDIERTYPE* pSoldier)
 {
  // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
  if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
@@ -851,7 +850,8 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 	}
 }
 
-void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
+
+static void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 {
  SOLDIERTYPE *pSoldier;
 

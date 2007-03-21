@@ -272,19 +272,14 @@ void RenderEmail();
 
 
 // message manipulation
-void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData );
-void RemoveEmailMessage(INT32 iId);
-EmailPtr GetEmailMessage(INT32 iId);
 void LookForUnread();
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
 BOOLEAN DisplayNewMailBox();
 void CreateDestroyNewMailButton();
 void CreateDestroyDeleteNoticeMailButton();
-void AddDeleteRegionsToMessageRegion();
 void DisplayEmailHeaders( void );
 void ReDrawNewMailBox( void );
-void ReDisplayBoxes( void );
 void ShutDownEmailList();
 void AddMessageToPages(INT32 iMessageId);
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData );

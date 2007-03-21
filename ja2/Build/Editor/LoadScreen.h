@@ -15,8 +15,6 @@ typedef struct _FDLG_LIST_TAG
 
 extern FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo);
 
-extern void TrashFDlgList(FDLG_LIST *pList);
-
 extern INT32 iFDlgState;
 extern INT32 iFDlgSelectedSlot;
 
@@ -25,16 +23,10 @@ extern BOOLEAN gfCreatedFDlg;
 extern BOOLEAN gfDestroyFDlg;
 
 UINT32 WaitForFileName( void );
-void RemoveFileDialog(void);
-
-void SelectFileDialogYPos( UINT16 usRelativeYPos );
 
 
 void BuildFilenameWithCoordinate();
 void BuildCoordinateWithFilename();
-BOOLEAN ExtractFilenameFromFields();
-BOOLEAN ValidCoordinate();
-BOOLEAN ValidFilename();
 
 BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
 BOOLEAN ExternalSaveMap(const wchar_t* szFilename);

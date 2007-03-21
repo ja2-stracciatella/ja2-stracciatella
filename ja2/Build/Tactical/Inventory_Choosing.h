@@ -54,33 +54,10 @@ void InitArmyGunTypes(void);
 //of equipment to choose from.
 void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8 bEquipmentRating);
 
-void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponClass,
-																				 INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment );
-
-void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher );
-
-void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetClass,
-																				 INT8 bArmourClass, INT8 bLeggingsClass );
-
-void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKnifeClass,
-																								 BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar );
-
-void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp );
-
-void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp );
-
-BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *pObject );
-
 void AssignCreatureInventory( SOLDIERTYPE *pSoldier );
 
 void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass );
 
-UINT16 SelectStandardArmyGun( UINT8 uiGunLevel );
-
-INT8 GetWeaponClass( UINT16 usGun );
-void MarkAllWeaponsOfSameGunClassAsDropped( UINT16 usWeapon );
-
 void ResetMortarsOnTeamCount( void );
-
 
 #endif

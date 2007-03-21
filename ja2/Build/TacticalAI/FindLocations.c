@@ -43,7 +43,8 @@ INT8	gubAIPathCosts[19][19];
 // FindBestNearbyCover - "Net" related stuff commented out
 extern BOOLEAN gfTurnBasedAI;
 
-INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale)
+
+static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale)
 {
  INT32 iValueChange,iScaleSum,iPercentBetter;//,loopCnt,tempInt;
 
@@ -99,7 +100,8 @@ INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32
  return(iPercentBetter);
 }
 
-void AICenterXY( INT16 sGridNo, FLOAT * pdX, FLOAT * pdY )
+
+static void AICenterXY(INT16 sGridNo, FLOAT* pdX, FLOAT* pdY)
 {
 	INT16		sXPos, sYPos;
 
@@ -110,7 +112,8 @@ void AICenterXY( INT16 sGridNo, FLOAT * pdX, FLOAT * pdY )
 	*pdY = (FLOAT) (sYPos * CELL_Y_SIZE + CELL_Y_SIZE / 2);
 }
 
-INT8 CalcWorstCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft )
+
+static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
@@ -149,7 +152,8 @@ INT8 CalcWorstCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sOpp
 	return( bWorstCTGT );
 }
 
-INT8 CalcAverageCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft )
+
+static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
@@ -183,7 +187,7 @@ INT8 CalcAverageCTGTForPosition( SOLDIERTYPE * pSoldier, UINT8 ubOppID, INT16 sO
 }
 
 
-INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft )
+static INT8 CalcBestCTGT(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
 {
 	// NOTE: CTGT stands for "ChanceToGetThrough..."
 
@@ -263,8 +267,7 @@ INT8 CalcBestCTGT( SOLDIERTYPE *pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 
 }
 
 
-INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft,
-											UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32 *iTotalScale)
+static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft, UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32* iTotalScale)
 {
 	// all 32-bit integers for max. speed
 	INT32	iMyPosValue, iHisPosValue, iCoverValue;
@@ -498,7 +501,7 @@ INT32 CalcCoverValue(SOLDIERTYPE *pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 i
 }
 
 
-UINT8 NumberOfTeamMatesAdjacent( SOLDIERTYPE * pSoldier, INT16 sGridNo )
+static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	UINT8	ubLoop, ubCount, ubWhoIsThere;
 	INT16	sTempGridNo;
@@ -2233,7 +2236,8 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	return( sClosestSpot );
 }
 
-INT16 FindRouteBackOntoMap( SOLDIERTYPE * pSoldier, INT16 sDestGridNo )
+
+static INT16 FindRouteBackOntoMap(SOLDIERTYPE* pSoldier, INT16 sDestGridNo)
 {
 	// the first thing to do is restore the soldier's gridno from the X and Y
 	// values

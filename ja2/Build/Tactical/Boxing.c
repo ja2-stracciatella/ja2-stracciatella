@@ -191,7 +191,11 @@ UINT8 CountPeopleInBoxingRing( void )
 	return( ubTotalInRing );
 }
 
-void CountPeopleInBoxingRingAndDoActions( void )
+
+static BOOLEAN PickABoxer(void);
+
+
+static void CountPeopleInBoxingRingAndDoActions(void)
 {
 	UINT32					uiLoop;
 	UINT8						ubTotalInRing = 0;
@@ -340,7 +344,8 @@ BOOLEAN BoxerExists( void )
 	return( FALSE );
 }
 
-BOOLEAN PickABoxer( void )
+
+static BOOLEAN PickABoxer(void)
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pBoxer;
@@ -406,9 +411,10 @@ BOOLEAN BoxerAvailable( void )
 	return( FALSE );
 }
 
+
 // NOTE THIS IS NOW BROKEN BECAUSE NPC.C ASSUMES THAT BOXERSAVAILABLE < 3 IS A
 // SEQUEL FIGHT.   Maybe we could check Kingpin's location instead!
-UINT8 BoxersAvailable( void )
+static UINT8 BoxersAvailable(void)
 {
 	UINT8			ubLoop;
 	UINT8			ubCount = 0;

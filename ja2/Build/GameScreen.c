@@ -130,15 +130,10 @@ RENDER_HOOK				gRenderOverride = NULL;
 #define	RESTART_DELAY								6000
 
 
-
-
-void TacticalScreenLocateToSoldier( );
-
 UINT32	guiTacticalLeaveScreenID;
 BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 
-void HandleModalTactical( );
 extern void CheckForDisabledRegionRemove( );
 extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
 
@@ -384,6 +379,11 @@ void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 	extern BOOLEAN gfDoDialogOnceGameScreenFadesIn;
 #endif
+
+
+static void HandleModalTactical(void);
+static void TacticalScreenLocateToSoldier(void);
+
 
 UINT32  MainGameScreenHandle(void)
 {
@@ -920,7 +920,7 @@ void DisableFPSOverlay( BOOLEAN fEnable )
 }
 
 
-void TacticalScreenLocateToSoldier( )
+static void TacticalScreenLocateToSoldier(void)
 {
 	INT32					cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -1031,7 +1031,7 @@ void EndModalTactical( )
 }
 
 
-void HandleModalTactical( )
+static void HandleModalTactical(void)
 {
 	StartFrameBufferRender( );
 

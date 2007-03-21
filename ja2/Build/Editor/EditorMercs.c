@@ -139,20 +139,6 @@ BOOLEAN gfUseScheduleData2 = FALSE;
 UINT8 gubCurrentScheduleActionIndex = 0;
 SCHEDULENODE gCurrSchedule;
 UINT8 gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
-void DetermineScheduleEditability();
-void RenderCurrentSchedule();
-void UpdateScheduleInfo();
-
-void ShowEditMercPalettes( SOLDIERTYPE *pSoldier );
-void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet );
-
-void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier );
-void AskDefaultDifficulty( void );
-
-//internal merc inventory functions
-void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate );
-void RenderMercInventoryPanel();
-void SetDroppableCheckboxesBasedOnMercsInventory();
 
 extern BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
@@ -170,19 +156,6 @@ INT8 gbMercSlotTypes[9] = { HELMETPOS, VESTPOS, LEGPOS, HANDPOS, SECONDHANDPOS,
 //values indicating which merc inventory slot is hilited and which slot is selected.
 INT8 gbCurrHilite = -1;
 INT8 gbCurrSelect = -1;
-//when a new merc is selected, this function sets up all of the information for the slots,
-//selections, and hilites.
-void UpdateMercItemSlots();
-
-//internal merc utility functions
-void SetupTextInputForMercAttributes();
-void SetupTextInputForMercProfile();
-void SetupTextInputForMercSchedule();
-void ExtractAndUpdateMercAttributes();
-void ExtractAndUpdateMercProfile();
-void ExtractAndUpdateMercSchedule();
-static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax);
-void ChangeBodyType( INT8 bOffset );  //+1 or -1 only
 
 //internal merc variables
 BASIC_SOLDIERCREATE_STRUCT gTempBasicPlacement;
@@ -563,6 +536,10 @@ void AddMercToWorld( INT32 iMapIndex )
 	}
 }
 
+
+static INT32 IsMercHere(INT32 iMapIndex);
+
+
 void HandleRightClickOnMerc( INT32 iMapIndex )
 {
 	SOLDIERINITNODE *pNode;
@@ -719,13 +696,9 @@ void EraseMercWaypoint()
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ChangeBaseSoldierStats
-//
 //	This functions changes the stats of a given merc (PC or NPC, though should only be used
 //	for NPC mercs) to reflect the base difficulty level selected.
-//
-void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier )
+static void ChangeBaseSoldierStats(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier == NULL )
 		return;
@@ -761,7 +734,7 @@ void ChangeBaseSoldierStats( SOLDIERTYPE *pSoldier )
 //	Displays the edit merc stat page while editing mercs. If the merc color editing page is
 //	to be displayed, this function will dispatch it instead.
 //
-void DisplayEditMercWindow( void )
+static void DisplayEditMercWindow(void)
 {
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	UINT16 usFillColorBack, usFillColorDark, usFillColorLight, usFillColorTextBk;
@@ -854,14 +827,9 @@ void DisplayEditMercWindow( void )
 }
 
 
-
-//----------------------------------------------------------------------------------------------
-//	IsMercHere
-//
 //	Checks for a soldier at the given map coordinates. If there is one, it returns it's ID number,
 //	otherwise it returns -1.
-//
-INT32 IsMercHere( INT32 iMapIndex )
+static INT32 IsMercHere(INT32 iMapIndex)
 {
 	INT32 IDNumber;
 	INT32 RetIDNumber;
@@ -892,7 +860,7 @@ INT32 IsMercHere( INT32 iMapIndex )
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
 
-void EditMercChangeToStatsPageCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercChangeToStatsPageCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -902,7 +870,7 @@ void EditMercChangeToStatsPageCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercChangeToColorPageCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercChangeToColorPageCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -911,7 +879,8 @@ void EditMercChangeToColorPageCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void EditMercDoneEditCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercDoneEditCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -921,7 +890,7 @@ void EditMercDoneEditCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercBkgrndCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercBkgrndCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
@@ -931,7 +900,7 @@ void EditMercBkgrndCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercPrevOrderCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercPrevOrderCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -942,7 +911,7 @@ void EditMercPrevOrderCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercNextOrderCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercNextOrderCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -952,7 +921,8 @@ void EditMercNextOrderCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void EditMercPrevAttCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercPrevAttCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -962,7 +932,8 @@ void EditMercPrevAttCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void EditMercNextAttCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercNextAttCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -972,7 +943,8 @@ void EditMercNextAttCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void EditMercStatUpCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercStatUpCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 iBtn;
 
@@ -1001,7 +973,8 @@ void EditMercStatUpCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void EditMercStatDwnCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercStatDwnCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 iBtn;
 
@@ -1031,7 +1004,7 @@ void EditMercStatDwnCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercSetDirCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercSetDirCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 iBtn;
 
@@ -1055,7 +1028,7 @@ void EditMercSetDirCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercCenterCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercCenterCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1067,7 +1040,7 @@ void EditMercCenterCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercColorDwnCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercColorDwnCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 iBtn;
 
@@ -1133,6 +1106,10 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
+
+static void ChangeBodyType(INT8 bOffset);
+
+
 void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
@@ -1145,7 +1122,8 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void EditMercDecDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void EditMercDecDifficultyCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1156,7 +1134,7 @@ void EditMercDecDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void EditMercIncDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
+static void EditMercIncDifficultyCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1167,15 +1145,11 @@ void EditMercIncDifficultyCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
+static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet);
 
 
-
-//----------------------------------------------------------------------------------------------
-//	ShowEditMercPalettes
-//
 //	Displays the palette of the given merc (used by the edit merc color page)
-//
-void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
+static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 {
 	UINT8  ubPaletteRep;
 	if( !pSoldier )
@@ -1219,12 +1193,8 @@ void ShowEditMercPalettes( SOLDIERTYPE *pSoldier )
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ShowEditMercColorSet
-//
 //	Displays a single palette set. (used by ShowEditMercPalettes)
-//
-void ShowEditMercColorSet( UINT8 ubPaletteRep, INT16 sSet )
+static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 {
 	UINT16 us16BPPColor, usFillColorDark, usFillColorLight;
 	UINT8 cnt1;
@@ -1345,7 +1315,7 @@ void DisplayWayPoints(void)
 }
 
 
-void CreateEditMercWindow( void )
+static void CreateEditMercWindow(void)
 {
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	INT32 x;
@@ -1476,6 +1446,11 @@ void SetMercRelativeAttributes( INT8 bLevel )
 	ClickEditorButton( FIRST_MERCS_REL_ATTRIBUTE_BUTTON + bLevel );
 	gbDefaultRelativeAttributeLevel = bLevel;
 }
+
+
+static void UpdateMercItemSlots(void);
+static void SetMercEditability(BOOLEAN fEditable);
+
 
 void IndicateSelectedMerc( INT16 sID )
 {
@@ -1708,7 +1683,11 @@ void DeleteSelectedMerc()
 	}
 }
 
-void SetupTextInputForMercProfile()
+
+static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax);
+
+
+static void SetupTextInputForMercProfile(void)
 {
 	wchar_t str[4];
 	INT16 sNum;
@@ -1721,10 +1700,10 @@ void SetupTextInputForMercProfile()
 	else
 		CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
 	AddTextInputField( 200, 430, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-
 }
 
-void SetupTextInputForMercAttributes()
+
+static void SetupTextInputForMercAttributes(void)
 {
 	wchar_t str[4];
 
@@ -1761,6 +1740,7 @@ void SetupTextInputForMercAttributes()
 		DisableAllTextFields();
 }
 
+
 //In the merc editing, all detailed placement values for generated attributes are set to -1.
 //When making a generated attribute static, we then set the value to its applicable value.
 //This function is similar to the itoa function except that -1 is converted to a null string.
@@ -1774,7 +1754,8 @@ static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32
 		swprintf(str, length, L"%d", iValue);
 }
 
-void ExtractAndUpdateMercAttributes()
+
+static void ExtractAndUpdateMercAttributes(void)
 {
 	//If we have just deleted the merc's detailed placement in the editor, we don't
 	//need to extract the information
@@ -1816,7 +1797,8 @@ void ExtractAndUpdateMercAttributes()
 	UpdateSoldierWithStaticDetailedInformation( gpSelected->pSoldier, gpSelected->pDetailedPlacement );
 }
 
-void ExtractAndUpdateMercProfile()
+
+static void ExtractAndUpdateMercProfile(void)
 {
 	INT16 sNum;
 	static INT16 sPrev = NO_PROFILE;
@@ -1853,7 +1835,8 @@ void ExtractAndUpdateMercProfile()
 	}
 }
 
-void SetupTextInputForMercSchedule()
+
+static void SetupTextInputForMercSchedule(void)
 {
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
@@ -1866,6 +1849,10 @@ void SetupTextInputForMercSchedule()
 	AddTextInputField( 268, 436, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
 	SetExclusive24HourTimeValue( 4, gCurrSchedule.usTime[3] );
 }
+
+
+static void UpdateScheduleInfo(void);
+
 
 void ExtractAndUpdateMercSchedule()
 {
@@ -1986,7 +1973,7 @@ void KillDetailedPlacementForMerc()
 }
 
 
-void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
+static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
 {
 	INT8 *pbArray;
 	INT32	iMax, x;
@@ -2081,7 +2068,8 @@ void ChangeBodyType( INT8 bOffset )  //+1 or -1 only
 	CreateSoldierPalettes( gpSelected->pSoldier );
 }
 
-void SetMercEditability( BOOLEAN fEditable )
+
+static void SetMercEditability(BOOLEAN fEditable)
 {
 	gfRenderMercInfo = TRUE;
 	if( fEditable == gfCanEditMercs )
@@ -2156,6 +2144,11 @@ void SpecifyEntryPoint( UINT32 iMapIndex )
 		iDrawMode += DRAW_MODE_ERASE;
 	}
 }
+
+
+static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate);
+static void DetermineScheduleEditability(void);
+
 
 void SetMercEditingMode( UINT8 ubNewMode )
 {
@@ -2377,7 +2370,8 @@ void SetMercEditingMode( UINT8 ubNewMode )
 	}
 }
 
-void DisplayBodyTypeInfo()
+
+static void DisplayBodyTypeInfo(void)
 {
 	const wchar_t* str;
 	switch( gpSelected->pBasicPlacement->bBodyType )
@@ -2413,6 +2407,10 @@ void DisplayBodyTypeInfo()
 	}
 	DrawEditorInfoBox( str, FONT10ARIAL, 490, 364, 70, 20 );
 }
+
+
+static void RenderMercInventoryPanel(void);
+
 
 void UpdateMercsInfo()
 {
@@ -2626,12 +2624,13 @@ SGPRect mercRects[9] =
 };
 
 
-BOOLEAN PointInRect( SGPRect *pRect, INT32 x, INT32 y )
+static BOOLEAN PointInRect(SGPRect* pRect, INT32 x, INT32 y)
 {
 	return( x >= pRect->iLeft && x <= pRect->iRight && y >= pRect->iTop && y <= pRect->iBottom );
 }
 
-void DrawRect( SGPRect *pRect, INT16 color )
+
+static void DrawRect(SGPRect* pRect, INT16 color)
 {
 	UINT32	uiDestPitchBYTES;
 	UINT8		*pDestBuf;
@@ -2642,7 +2641,8 @@ void DrawRect( SGPRect *pRect, INT16 color )
 	//InvalidateRegion( pRect->iLeft+175, pRect->iTop+361, pRect->iRight+176, pRect->iBottom+362 );
 }
 
-void RenderSelectedMercsInventory()
+
+static void RenderSelectedMercsInventory(void)
 {
 	INT32 i;
 	UINT8 *pSrc, *pDst;
@@ -2714,7 +2714,7 @@ void DeleteSelectedMercsItem()
 //		 in the editor are approximately 80% of that size.  This involves scaling calculations.  These
 //		 images are saved in individual slots are are blitted to the screen during rendering, not here.
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
-void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
+static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {
 	UINT32 uiVideoObjectIndex;
 	UINT32 uiSrcID, uiDstID;
@@ -2868,7 +2868,8 @@ void AddNewItemToSelectedMercsInventory( BOOLEAN fCreate )
 	gusMercsNewItemIndex = 0xffff;
 }
 
-void RenderMercInventoryPanel()
+
+static void RenderMercInventoryPanel(void)
 {
 	INT32 x;
 	//Draw the graphical panel
@@ -2949,7 +2950,13 @@ void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent )
 	}
 }
 
-void UpdateMercItemSlots()
+
+static void SetDroppableCheckboxesBasedOnMercsInventory(void);
+
+
+/* When a new merc is selected, this function sets up all of the information
+ * for the slots, selections, and hilites. */
+static void UpdateMercItemSlots(void)
 {
 	INT8 x;
 	if( !gpSelected->pDetailedPlacement )
@@ -2979,7 +2986,8 @@ void UpdateMercItemSlots()
 	gbCurrHilite = -1;
 }
 
-void SetDroppableCheckboxesBasedOnMercsInventory()
+
+static void SetDroppableCheckboxesBasedOnMercsInventory(void)
 {
 	OBJECTTYPE *pItem;
 	INT32 i;
@@ -3093,6 +3101,10 @@ void ChangeCivGroup( UINT8 ubNewCivGroup )
 	//Adjust the text on the button
 	SpecifyButtonText( iEditorButton[ MERCS_CIVILIAN_GROUP ], gszCivGroupNames[ gubCivGroup ] );
 }
+
+
+static void RenderCurrentSchedule(void);
+
 
 void RenderMercStrings()
 {
@@ -3240,7 +3252,8 @@ void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 	}
 }
 
-void DetermineScheduleEditability()
+
+static void DetermineScheduleEditability(void)
 {
 	INT32 i;
 	EnableEditorButtons( MERCS_SCHEDULE_ACTION1, MERCS_SCHEDULE_DATA4B );
@@ -3478,7 +3491,8 @@ void ClearCurrentSchedule()
 	MarkWorldDirty();
 }
 
-void RenderCurrentSchedule()
+
+static void RenderCurrentSchedule(void)
 {
 	FLOAT dOffsetX, dOffsetY;
 	FLOAT ScrnX, ScrnY;
@@ -3527,7 +3541,8 @@ void RenderCurrentSchedule()
 	}
 }
 
-void UpdateScheduleInfo()
+
+static void UpdateScheduleInfo(void)
 {
 	INT32 i;
 	SCHEDULENODE *pSchedule;

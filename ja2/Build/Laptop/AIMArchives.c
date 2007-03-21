@@ -117,30 +117,15 @@ BOOLEAN		gfReDrawScreen=FALSE;
 
 BOOLEAN		AimArchivesSubPagesVisitedFlag[3] = {0,0,0};
 
-	//Mouse Regions
-
 //Face regions
 MOUSE_REGION		gMercAlumniFaceMouseRegions[ MAX_NUMBER_OLD_MERCS_ON_PAGE ];
-void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Done region
 MOUSE_REGION		gDoneRegion;
-void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Previous Button
-static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiAlumniPageButton[3];
 INT32		guiAlumniPageButtonImage;
-
-
-void ResetAimArchiveButtons();
-void DisableAimArchiveButton();
-void DisplayAlumniOldMercPopUp();
-void DestroyPopUpBox();
-void InitAlumniFaceRegions();
-void RemoveAimAlumniFaceRegion();
-void CreateDestroyDoneMouseRegion(UINT16 usPosY);
-void ChangingAimArchiveSubPage( UINT8 ubSubPageNumber );
 
 
 void GameInitAimArchives()
@@ -156,6 +141,11 @@ void EnterInitAimArchives()
 	memset( &AimArchivesSubPagesVisitedFlag, 0, 3);
 	AimArchivesSubPagesVisitedFlag[0] = TRUE;
 }
+
+
+static void BtnAlumniPageButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void DisableAimArchiveButton(void);
+static void InitAlumniFaceRegions(void);
 
 
 BOOLEAN EnterAimArchives()
@@ -213,6 +203,11 @@ BOOLEAN EnterAimArchives()
 	return(TRUE);
 }
 
+
+static void CreateDestroyDoneMouseRegion(UINT16 usPosY);
+static void RemoveAimAlumniFaceRegion(void);
+
+
 void ExitAimArchives()
 {
 	UINT16 i;
@@ -259,6 +254,10 @@ void HandleAimArchives()
 		gfDestroyPopUpBox = FALSE;
 	}
 }
+
+
+static void DisplayAlumniOldMercPopUp(void);
+
 
 void RenderAimArchives()
 {
@@ -356,10 +355,7 @@ void RenderAimArchives()
 }
 
 
-
-
-
-void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectAlumniFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -375,6 +371,10 @@ void SelectAlumniFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	{
 	}
 }
+
+
+static void ChangingAimArchiveSubPage(UINT8 ubSubPageNumber);
+static void ResetAimArchiveButtons(void);
 
 
 static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -395,7 +395,7 @@ static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void ResetAimArchiveButtons()
+static void ResetAimArchiveButtons(void)
 {
 	int i=0;
 
@@ -406,7 +406,7 @@ void ResetAimArchiveButtons()
 }
 
 
-void DisableAimArchiveButton()
+static void DisableAimArchiveButton(void)
 {
 	if( gfExitingAimArchives == TRUE)
 		return;
@@ -426,7 +426,7 @@ void DisableAimArchiveButton()
 }
 
 
-void DisplayAlumniOldMercPopUp()
+static void DisplayAlumniOldMercPopUp(void)
 {
 	UINT8			i,ubNumLines=11; //17
 	UINT16		usPosY, usTextPosY;
@@ -491,15 +491,14 @@ void DisplayAlumniOldMercPopUp()
 }
 
 
-void DestroyPopUpBox()
+static void DestroyPopUpBox(void)
 {
 	gfDestroyPopUpBox = FALSE;
 	RenderAimArchives();
 }
 
 
-
-void InitAlumniFaceRegions()
+static void InitAlumniFaceRegions(void)
 {
 	UINT16	usPosX, usPosY,i,x,y, usNumRows;
 
@@ -547,7 +546,8 @@ void InitAlumniFaceRegions()
 	gfFaceMouseRegionsActive = TRUE;
 }
 
-void RemoveAimAlumniFaceRegion()
+
+static void RemoveAimAlumniFaceRegion(void)
 {
 	UINT16 i;
 	UINT16 usNumber=0;
@@ -578,9 +578,10 @@ void RemoveAimAlumniFaceRegion()
 }
 
 
+static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void CreateDestroyDoneMouseRegion(UINT16 usPosY)
+static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 {
 	static BOOLEAN DoneRegionCreated=FALSE;
 
@@ -603,7 +604,7 @@ void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 }
 
 
-void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -619,7 +620,8 @@ void SelectAlumniDoneRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void ChangingAimArchiveSubPage( UINT8 ubSubPageNumber )
+
+static void ChangingAimArchiveSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 

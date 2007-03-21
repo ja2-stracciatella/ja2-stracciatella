@@ -162,8 +162,6 @@ INT16 gsTopPosition = 20;
 
 
 INT32 iDialogueBox = -1;
-void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter );
-void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter );
 
 
 extern void HandlePendingInitConv( );
@@ -188,23 +186,6 @@ BOOLEAN fDialogueBoxDueToLastMessage = FALSE;
 UINT32 guiDialogueLastQuoteTime = 0;
 UINT32 guiDialogueLastQuoteDelay = 0;
 
-void CheckForStopTimeQuotes( UINT16 usQuoteNum );
-
-void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-
-// Handler functions for tactical ui diaplay
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr );
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr );
-void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex );
-void DisplayTextForExternalNPC(  UINT8 ubCharacterNum, STR16 zQuoteStr );
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr, size_t Length);
-
-
-void HandleExternNPCSpeechFace( INT32 iIndex );
-
-
 
 extern BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
 extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
@@ -217,7 +198,7 @@ void UnPauseGameDuringNextQuote( void )
 }
 
 
-void PauseTimeDuringNextQuote( void )
+static void PauseTimeDuringNextQuote(void)
 {
 	fPausedTimeDuringQuote = TRUE;
 }
@@ -394,6 +375,9 @@ void StopAnyCurrentlyTalkingSpeech( )
 }
 
 
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr, size_t Length);
+
+
 // ATE: Handle changes like when face goes from
 // 'external' to on the team panel...
 void HandleDialogueUIAdjustments( )
@@ -442,6 +426,10 @@ void HandleDialogueUIAdjustments( )
 	}
 }
 
+
+static void CheckForStopTimeQuotes(UINT16 usQuoteNum);
+static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier);
+static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex);
 
 
 void HandleDialogue( )
@@ -1236,6 +1224,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent( SOLDIERTYPE *pSoldier, UINT16
 	return( CharacterDialogueWithSpecialEvent( pSoldier->ubProfile, usQuoteNum, pSoldier->iFaceIndex, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2 ) );
 }
 
+
+static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
+
+
 BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
@@ -1391,7 +1383,9 @@ BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteN
 	return( TRUE );
 }
 
-BOOLEAN CharacterDialogueWithSpecialEventEx( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
+
+// Do special event as well as dialogue!
+static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3)
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1524,7 +1518,8 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
-BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier )
+// execute specific character dialogue
+static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier)
 {
 	CHAR8		zSoundString[ 164 ];
 	SOLDIERTYPE *pSoldier;
@@ -1649,7 +1644,13 @@ BOOLEAN ExecuteCharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32
 }
 
 
-void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr, size_t Length)
+static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, STR16 zQuoteStr);
+static void HandleExternNPCSpeechFace(INT32 iIndex);
+static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr);
+static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
+
+
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr, size_t Length)
 {
 
 	// Show text, if on
@@ -1707,7 +1708,7 @@ void CreateTalkingUI( INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum,
 }
 
 
-INT8 *GetDialogueDataFilename( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile )
+static INT8* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
 {
 	static UINT8 zFileName[164];
 	UINT8		ubFileNumID;
@@ -1862,7 +1863,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 
 // Handlers for tactical UI stuff
-void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
+static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr)
 {
 	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
 
@@ -1880,8 +1881,11 @@ void HandleTacticalNPCTextUI( UINT8 ubCharacterNum, wchar_t *zQuoteStr )
 }
 
 
+static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString);
+
+
 // Handlers for tactical UI stuff
-void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
+static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, STR16 zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
@@ -1913,7 +1917,7 @@ void DisplayTextForExternalNPC( UINT8 ubCharacterNum, STR16 zQuoteStr )
 }
 
 
-void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQuoteStr )
+static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
@@ -1935,7 +1939,7 @@ void HandleTacticalTextUI( INT32 iFaceIndex, SOLDIERTYPE *pSoldier, wchar_t *zQu
 }
 
 
-void ExecuteTacticalTextBoxForLastQuote( INT16 sLeftPosition, STR16 pString )
+static void ExecuteTacticalTextBoxForLastQuote(INT16 sLeftPosition, STR16 pString)
 {
 	UINT32 uiDelay = FindDelayForString( pString );
 
@@ -1949,7 +1953,12 @@ void ExecuteTacticalTextBoxForLastQuote( INT16 sLeftPosition, STR16 pString )
 	ExecuteTacticalTextBox(sLeftPosition, pString );
 }
 
-void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
+
+static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
+static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -1986,7 +1995,11 @@ void ExecuteTacticalTextBox( INT16 sLeftPosition, STR16 pString )
 }
 
 
-void HandleExternNPCSpeechFace( INT32 iIndex )
+static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
+
+
+static void HandleExternNPCSpeechFace(INT32 iIndex)
 {
 	INT32 iFaceIndex;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
@@ -2049,7 +2062,7 @@ void HandleExternNPCSpeechFace( INT32 iIndex )
 }
 
 
-void HandleTacticalSpeechUI( UINT8 ubCharacterNum, INT32 iFaceIndex  )
+static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	INT32									iFaceOverlay;
@@ -2253,8 +2266,7 @@ void HandleDialogueEnd( FACETYPE *pFace )
 }
 
 
-
-void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
+static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8	 *pDestBuf, *pSrcBuf;
@@ -2342,7 +2354,7 @@ void RenderFaceOverlay( VIDEO_OVERLAY *pBlitter )
 }
 
 
-void RenderSubtitleBoxOverlay( VIDEO_OVERLAY *pBlitter )
+static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	if ( giTextBoxOverlay != -1 )
 	{
@@ -2556,7 +2568,7 @@ void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQ
 }
 
 
-void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -2586,7 +2598,7 @@ void TextOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void FaceOverlayClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	static BOOLEAN fLButtonDown = FALSE;
 
@@ -2654,7 +2666,7 @@ void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN IsStopTimeQuote( UINT16 usQuoteNum )
+static BOOLEAN IsStopTimeQuote(UINT16 usQuoteNum)
 {
 	INT32 cnt;
 
@@ -2670,7 +2682,7 @@ BOOLEAN IsStopTimeQuote( UINT16 usQuoteNum )
 }
 
 
-void CheckForStopTimeQuotes( UINT16 usQuoteNum )
+static void CheckForStopTimeQuotes(UINT16 usQuoteNum)
 {
 	if ( IsStopTimeQuote( usQuoteNum ) )
 	{
@@ -2700,10 +2712,10 @@ BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
 }
 
 
+static BOOLEAN IsQuoteInPrecedentArray(UINT32 uiQuoteID);
 
 
-
-BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf( UINT8 ubMercID, UINT32 uiQuoteID )
+static BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf(UINT8 ubMercID, UINT32 uiQuoteID)
 {
 	UINT8	ubQuoteBit=0;
 
@@ -2748,8 +2760,7 @@ BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
 }
 
 
-
-BOOLEAN IsQuoteInPrecedentArray( UINT32 uiQuoteID )
+static BOOLEAN IsQuoteInPrecedentArray(UINT32 uiQuoteID)
 {
 	UINT8	ubCnt;
 

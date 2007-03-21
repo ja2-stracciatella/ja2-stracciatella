@@ -42,12 +42,6 @@ UINT8					gubNumDoorStatus=0;
 extern INT8 gbMercIsNewInThisSector[ MAX_NUM_SOLDIERS ];
 
 
-BOOLEAN InternalIsPerceivedDifferentThanReality( DOOR_STATUS *pDoorStatus );
-void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty );
-void InternalUpdateDoorsPerceivedValue( DOOR_STATUS *pDoorStatus );
-BOOLEAN	InternalSetDoorPerceivedOpenStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fPerceivedOpen );
-
-
 KEY KeyTable[NUM_KEYS] =
 {
 	// Item #			Flags		Sector, Date Found
@@ -165,6 +159,9 @@ BOOLEAN LoadLockTable( void )
 }
 
 
+static BOOLEAN KeyExistsInInventory(SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
+
+
 BOOLEAN SoldierHasKey( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 {
 	if ( KeyExistsInKeyRing( pSoldier, ubKeyID, NULL ) || KeyExistsInInventory( pSoldier, ubKeyID ) )
@@ -205,7 +202,8 @@ BOOLEAN KeyExistsInKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 * pubPos
 	return( FALSE );
 }
 
-BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
+
+static BOOLEAN KeyExistsInInventory(SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
 {
 	UINT8				ubLoop;
 
@@ -224,12 +222,13 @@ BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 }
 
 
-BOOLEAN ValidKey( DOOR * pDoor, UINT8 ubKeyID )
+static BOOLEAN ValidKey(DOOR* pDoor, UINT8 ubKeyID)
 {
 	return (pDoor->ubLockID == ubKeyID);
 }
 
-BOOLEAN DoLockDoor( DOOR * pDoor, UINT8 ubKeyID )
+
+static BOOLEAN DoLockDoor(DOOR* pDoor, UINT8 ubKeyID)
 {
 	// if the door is unlocked and this is the right key, lock the door and
 	// return true, otherwise return false
@@ -244,7 +243,8 @@ BOOLEAN DoLockDoor( DOOR * pDoor, UINT8 ubKeyID )
 	}
 }
 
-BOOLEAN DoUnlockDoor( DOOR * pDoor, UINT8 ubKeyID )
+
+static BOOLEAN DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
 {
 	// if the door is locked and this is the right key, unlock the door and
 	// return true, otherwise return false
@@ -1196,7 +1196,8 @@ void TrashDoorStatusArray( )
 }
 
 
-BOOLEAN	IsDoorOpen( INT16 sGridNo )
+// Returns true if the door is open, otherwise false
+static BOOLEAN IsDoorOpen(INT16 sGridNo)
 {
 	UINT8	ubCnt;
 	STRUCTURE * pStructure;
@@ -1286,6 +1287,9 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 }
 
 
+static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* pDoorStatus);
+
+
 BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 {
 	INT32                    cnt, cnt2;
@@ -1356,6 +1360,10 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 
 	return( FALSE );
 }
+
+
+static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus);
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty);
 
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
@@ -1432,7 +1440,8 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 	return( FALSE );
 }
 
-void SyncronizeDoorStatusToStructureData( DOOR_STATUS *pDoorStatus )
+
+static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
 {
 	STRUCTURE *pStructure, *pBaseStructure;
 	LEVELNODE * pNode;
@@ -1510,7 +1519,8 @@ void UpdateDoorGraphicsFromStatus( BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty )
 	}
 }
 
-void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty )
+
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty)
 {
 	STRUCTURE *pStructure, *pBaseStructure;
 	INT32			cnt;
@@ -1696,7 +1706,7 @@ void InternalUpdateDoorGraphicFromStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fUse
 }
 
 
-BOOLEAN InternalIsPerceivedDifferentThanReality( DOOR_STATUS *pDoorStatus )
+static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus)
 {
 	if ( ( pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ) )
 	{
@@ -1713,7 +1723,11 @@ BOOLEAN InternalIsPerceivedDifferentThanReality( DOOR_STATUS *pDoorStatus )
 	return( TRUE );
 }
 
-void InternalUpdateDoorsPerceivedValue( DOOR_STATUS *pDoorStatus )
+
+static BOOLEAN InternalSetDoorPerceivedOpenStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fPerceivedOpen);
+
+
+static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* pDoorStatus)
 {
 	// OK, look at door, set perceived value the same as actual....
 	if ( pDoorStatus->ubFlags & DOOR_OPEN )
@@ -1726,7 +1740,8 @@ void InternalUpdateDoorsPerceivedValue( DOOR_STATUS *pDoorStatus )
 	}
 }
 
-BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo )
+
+static BOOLEAN UpdateDoorStatusPerceivedValue(INT16 sGridNo)
 {
 	DOOR_STATUS	*pDoorStatus = NULL;
 
@@ -1739,7 +1754,8 @@ BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo )
 }
 
 
-BOOLEAN	IsDoorPerceivedOpen( INT16 sGridNo )
+//Returns true if the door is perceioved as open
+static BOOLEAN IsDoorPerceivedOpen(INT16 sGridNo)
 {
 	DOOR_STATUS	* pDoorStatus;
 
@@ -1763,7 +1779,7 @@ BOOLEAN	IsDoorPerceivedOpen( INT16 sGridNo )
 }
 
 
-BOOLEAN	InternalSetDoorPerceivedOpenStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fPerceivedOpen )
+static BOOLEAN InternalSetDoorPerceivedOpenStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fPerceivedOpen)
 {
 	if( fPerceivedOpen )
 		pDoorStatus->ubFlags |= DOOR_PERCEIVED_OPEN;
@@ -1777,7 +1793,8 @@ BOOLEAN	InternalSetDoorPerceivedOpenStatus( DOOR_STATUS *pDoorStatus, BOOLEAN fP
 }
 
 
-BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen )
+//Modify the doors perceived open status
+static BOOLEAN SetDoorPerceivedOpenStatus(INT16 sGridNo, BOOLEAN fPerceivedOpen)
 {
 	DOOR_STATUS	*pDoorStatus = NULL;
 
@@ -1786,11 +1803,11 @@ BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen )
 	CHECKF( pDoorStatus != NULL );
 
 	return( InternalSetDoorPerceivedOpenStatus( pDoorStatus, fPerceivedOpen ) );
-
 }
 
 
-BOOLEAN	SetDoorOpenStatus( INT16 sGridNo, BOOLEAN fOpen )
+//Modify the Doors open status
+static BOOLEAN SetDoorOpenStatus(INT16 sGridNo, BOOLEAN fOpen)
 {
 	DOOR_STATUS * pDoorStatus;
 
@@ -2019,7 +2036,8 @@ void ExamineDoorsOnEnteringSector( )
 	}
 }
 
-void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded( )
+
+static void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded(void)
 {
 	INT32                    cnt;
 	DOOR_STATUS							 *pDoorStatus;

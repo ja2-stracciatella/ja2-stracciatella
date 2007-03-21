@@ -44,21 +44,14 @@ extern void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallTy
 void RestoreWalls( UINT32 iMapIndex );
 UINT16 SearchForRoofType( UINT32 iMapIndex );
 UINT16 SearchForWallType( UINT32 iMapIndex );
-BOOLEAN RoofAtGridNo( UINT32 iMapIndex );
 BOOLEAN BuildingAtGridNo( UINT32 iMapIndex );
 LEVELNODE* GetHorizontalWall( UINT32 iMapIndex );
 LEVELNODE* GetVerticalWall( UINT32 iMapIndex );
-LEVELNODE* GetVerticalFence( UINT32 iMapIndex );
-LEVELNODE* GetHorizontalFence( UINT32 iMapIndex );
 UINT16 GetHorizontalWallType( UINT32 iMapIndex );
 UINT16 GetVerticalWallType( UINT32 iMapIndex );
 void EraseHorizontalWall( UINT32 iMapIndex );
 void EraseVerticalWall( UINT32 iMapIndex );
-void ChangeHorizontalWall( UINT32 iMapIndex, UINT16 usNewPiece );
 void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece );
-UINT16 GetWallClass( LEVELNODE *pWall );
-UINT16 GetVerticalWallClass( UINT16 iMapIndex );
-UINT16 GetHorizontalWallClass( UINT16 iMapIndex );
 BOOLEAN ValidDecalPlacement( UINT32 iMapIndex );
 
 #endif

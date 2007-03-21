@@ -80,10 +80,6 @@ BOOLEAN gfPersistantFastHelpMode;
 
 static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
-// help text is done, now execute callback, if there is one
-void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region );
-
-
 
 //Kris:
 //NOTE:  This doesn't really need to be here, however, it is a good indication that
@@ -1558,7 +1554,8 @@ void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBAC
 }
 
 
-void ExecuteMouseHelpEndCallBack( MOUSE_REGION *region )
+// help text is done, now execute callback, if there is one
+static void ExecuteMouseHelpEndCallBack(MOUSE_REGION* region)
 {
 	if( region == NULL )
 	{

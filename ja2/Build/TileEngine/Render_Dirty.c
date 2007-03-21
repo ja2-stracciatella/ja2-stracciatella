@@ -33,13 +33,6 @@ VIDEO_OVERLAY	gVideoOverlays[ VIDEO_OVERLAYS ];
 UINT32 guiNumVideoOverlays=0;
 
 
-void AllocateVideoOverlayArea( UINT32 uiCount );
-void SaveVideoOverlayArea( UINT32 uiSrcBuffer, UINT32 uiCount );
-
-//BACKGROUND_SAVE	gTopmostSaves[BACKGROUND_BUFFERS];
-//UINT32 guiNumTopmostSaves=0;
-
-
 SGPRect		gDirtyClipRect = { 0, 0, 640, 480 };
 
 
@@ -129,7 +122,6 @@ BOOLEAN ExecuteBaseDirtyRectQueue( )
 	{
 		//InvalidateRegion(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
 		InvalidateScreen( );
-		EmptyDirtyRectQueue();
 		gfViewportDirty=FALSE;
 		return(TRUE);
 	}
@@ -139,14 +131,8 @@ BOOLEAN ExecuteBaseDirtyRectQueue( )
 	return( TRUE );
 }
 
-BOOLEAN EmptyDirtyRectQueue( )
-{
 
-	return( TRUE );
-}
-
-
-INT32 GetFreeBackgroundBuffer(void)
+static INT32 GetFreeBackgroundBuffer(void)
 {
 UINT32 uiCount;
 
@@ -170,7 +156,8 @@ UINT32 uiCount;
 	return(-1);
 }
 
-void RecountBackgrounds(void)
+
+static void RecountBackgrounds(void)
 {
 INT32 uiCount;
 
@@ -494,7 +481,7 @@ BOOLEAN FreeBackgroundRectPending(INT32 iIndex)
 }
 
 
-BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
+static BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
 {
 	if(gBackSaves[uiCount].fFreeMemory==TRUE)
 	{
@@ -572,7 +559,8 @@ UINT32 uiCount;
 	return(TRUE);
 }
 
-void DisableBackgroundRect( INT32 iIndex, BOOLEAN fDisabled )
+
+static void DisableBackgroundRect(INT32 iIndex, BOOLEAN fDisabled)
 {
 	gBackSaves[iIndex].fDisabled = fDisabled;
 }
@@ -654,7 +642,7 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 }
 
 
-BOOLEAN CopyExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight )
+static BOOLEAN CopyExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight)
 {
 
 	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
@@ -761,7 +749,7 @@ UINT16 uiStringLength, uiStringHeight;
 
 
 // OVERLAY STUFF
-INT32 GetFreeVideoOverlay(void)
+static INT32 GetFreeVideoOverlay(void)
 {
   UINT32 uiCount;
 
@@ -778,7 +766,7 @@ INT32 GetFreeVideoOverlay(void)
 }
 
 
-void RecountVideoOverlays(void)
+static void RecountVideoOverlays(void)
 {
   INT32 uiCount;
 
@@ -856,17 +844,17 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 	//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Register Overlay %d %S", iBlitterIndex, gVideoOverlays[ iBlitterIndex ].zText ) );
 
 	return( iBlitterIndex );
-
 }
 
 
-void SetVideoOverlayPendingDelete( INT32 iVideoOverlay )
+static void SetVideoOverlayPendingDelete(INT32 iVideoOverlay)
 {
 	if ( iVideoOverlay != -1 )
 	{
 		gVideoOverlays[ iVideoOverlay ].fDeletionPending = TRUE;
 	}
 }
+
 
 void RemoveVideoOverlay( INT32 iVideoOverlay )
 {
@@ -1080,7 +1068,7 @@ void AllocateVideoOverlaysArea( )
 }
 
 
-void AllocateVideoOverlayArea( UINT32 uiCount )
+static void AllocateVideoOverlayArea(UINT32 uiCount)
 {
 	UINT32 uiBufSize;
 	UINT32 iBackIndex;
@@ -1143,7 +1131,7 @@ void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 }
 
 
-void SaveVideoOverlayArea( UINT32 uiSrcBuffer, UINT32 uiCount )
+static void SaveVideoOverlayArea(UINT32 uiSrcBuffer, UINT32 uiCount)
 {
 	UINT32 iBackIndex;
 	UINT32 uiSrcPitchBYTES;
@@ -1292,7 +1280,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 	return(TRUE);
 }
 
-BOOLEAN SetOverlayUserData( INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData )
+
+static BOOLEAN SetOverlayUserData(INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData)
 {
 	if ( !gVideoOverlays[ iVideoOverlay ].fAllocated )
 	{

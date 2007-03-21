@@ -19,9 +19,6 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldie
 // Finds a gridno near a sweetspot but a random one!
 UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
 
-// Finds a sweetspot but excluding this one!
-UINT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
-
 
 // Adds a soldier ( already created in mercptrs[] array )!
 // Finds a good placement based on data in the loaded sector and if they are enemy's or not, etc...

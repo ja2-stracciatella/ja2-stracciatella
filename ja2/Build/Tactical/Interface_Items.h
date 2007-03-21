@@ -48,11 +48,8 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
-void INVRenderINVPanelItem( SOLDIERTYPE *pSoldier, INT16 sPocket, UINT8 fDirtyLevel );
 BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity );
 void ShutdownInvSlotInterface( );
-void GetSlotInvXY( UINT8 ubPos, INT16 *psX, INT16 *psY );
-void GetSlotInvHeightWidth( UINT8 ubPos, INT16 *psWidth, INT16 *psHeight );
 void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel );
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
 void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY );
@@ -95,9 +92,6 @@ void DeleteItemDescriptionBox( );
 BOOLEAN InItemStackPopup( );
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight );
 void RenderItemStackPopup( BOOLEAN fFullRender );
-void HandleItemStackPopup( );
-void DeleteItemStackPopup( );
-void EndItemStackPopupWithItemInHand( );
 
 
 // keyring handlers
@@ -128,7 +122,6 @@ void DrawItemFreeCursor( );
 void DrawItemTileCursor( );
 void HideItemTileCursor( );
 void InitItemInterface( );
-BOOLEAN ItemCursorInLobRange( UINT16 usMapPos );
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
 UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
 UINT16 GetTileGraphicForItem( INVTYPE *pItem );
@@ -136,16 +129,10 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
 
 void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
 
-BOOLEAN AttemptToApplyCamo( SOLDIERTYPE *pSoldier, UINT16 usItemIndex );
-
-UINT8 GetPrefferedItemSlotGraphicNum( UINT16 usItem );
-
 void CancelItemPointer( );
 
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile );
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile );
-
-void EnableKeyRing( BOOLEAN fEnable );
 
 // handle compatable items for merc and map inventory
 BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc );

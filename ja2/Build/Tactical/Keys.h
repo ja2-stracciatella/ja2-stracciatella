@@ -130,7 +130,6 @@ extern DOORTRAP DoorTrapTable[NUM_DOOR_TRAPS];
 extern BOOLEAN AddKeysToKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 ubNumber );
 extern BOOLEAN RemoveKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
 extern BOOLEAN RemoveAllOfKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
-extern BOOLEAN KeyExistsInInventory( SOLDIERTYPE *pSoldier, UINT8 ubKeyID );
 extern BOOLEAN KeyExistsInKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 * pubPos );
 extern BOOLEAN SoldierHasKey( SOLDIERTYPE *pSoldier, UINT8 ubKeyID );
 
@@ -203,23 +202,11 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercie
 //Deletes the door status array
 void TrashDoorStatusArray( );
 
-// Returns true if the door is open, otherwise false
-BOOLEAN	IsDoorOpen( INT16 sGridNo );
-
-//Returns true if the door is perceioved as open
-BOOLEAN	IsDoorPerceivedOpen( INT16 sGridNo );
-
 // Saves the Door Status array to the MapTempfile
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 //Load the door status from the door status temp file
 BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile();
-
-//Modify the Doors open status
-BOOLEAN	SetDoorOpenStatus( INT16 sGridNo, BOOLEAN fOpen );
-
-//Modify the doors perceived open status
-BOOLEAN	SetDoorPerceivedOpenStatus( INT16 sGridNo, BOOLEAN fPerceivedOpen );
 
 
 //Save the key table to the saved game file
@@ -230,8 +217,6 @@ BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile );
 
 // Returns a doors status value, NULL if not found
 DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );
-
-BOOLEAN UpdateDoorStatusPerceivedValue( INT16 sGridNo );
 
 BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue );
 
@@ -244,8 +229,6 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN LoadLockTable( void );
 
 void ExamineDoorsOnEnteringSector( );
-
-void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded( );
 
 void AttachStringToDoor( INT16 sGridNo );
 

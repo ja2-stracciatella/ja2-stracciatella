@@ -69,8 +69,6 @@ extern BOOLEAN		gfFirstHeliRun;
 INT16	gsMercArriveSectorX = 9;
 INT16	gsMercArriveSectorY = 1;
 
-void CheckForValidArrivalSector( );
-
 
 INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 {
@@ -278,6 +276,9 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	gfAtLeastOneMercWasHired = TRUE;
 	return( MERC_HIRE_OK );
 }
+
+
+static void CheckForValidArrivalSector(void);
 
 
 void MercArrivesCallback(	UINT8	ubSoldierID )
@@ -584,7 +585,8 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 	}
 }
 
-INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
+
+static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
@@ -604,7 +606,7 @@ INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 // is valid
 // if there are enemies present, it's invalid
 // if so, search around for nearest non-occupied sector.
-void CheckForValidArrivalSector( )
+static void CheckForValidArrivalSector(void)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

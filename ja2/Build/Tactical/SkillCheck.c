@@ -176,8 +176,7 @@ INT8 EffectiveDexterity(const SOLDIERTYPE* pSoldier)
 }
 
 
-
-UINT8 GetPenaltyForFatigue( SOLDIERTYPE *pSoldier )
+static UINT8 GetPenaltyForFatigue(SOLDIERTYPE* pSoldier)
 {
 	UINT8 ubPercentPenalty;
 

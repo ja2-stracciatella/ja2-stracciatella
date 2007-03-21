@@ -72,28 +72,17 @@ INT32		giMercTotalContractCharge;
 BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
 
 // The Authorize button
-static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercAuthorizeBoxButton;
 INT32		guiMercAuthorizeButtonImage;
 
 
 // The Back button
-static void BtnMercBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackBoxButton;
 
 
+static void BtnMercAuthorizeButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnMercBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
-
-void DisplayHiredMercs();
-void SettleMercAccounts();
-void MercAuthorizePaymentMessageBoxCallBack( UINT8 bExitValue );
-
-
-
-void GameInitMercsAccount()
-{
-
-}
 
 BOOLEAN EnterMercsAccount()
 {
@@ -162,6 +151,10 @@ void HandleMercsAccount()
 	}
 }
 
+
+static void DisplayHiredMercs(void);
+
+
 void RenderMercsAccount()
 {
 	wchar_t		sText[100];
@@ -198,6 +191,9 @@ void RenderMercsAccount()
 }
 
 
+static void MercAuthorizePaymentMessageBoxCallBack(UINT8 bExitValue);
+
+
 static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -228,7 +224,7 @@ static void BtnMercBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void DisplayHiredMercs()
+static void DisplayHiredMercs(void)
 {
 	UINT16	usPosY;
 	UINT32	uiContractCharge;
@@ -285,8 +281,7 @@ void DisplayHiredMercs()
 }
 
 
-
-void SettleMercAccounts()
+static void SettleMercAccounts(void)
 {
 //	SOLDIERTYPE *pSoldier;
 	INT16	i;
@@ -452,7 +447,7 @@ void SettleMercAccounts()
 }
 
 
-void MercAuthorizePaymentMessageBoxCallBack( UINT8 bExitValue )
+static void MercAuthorizePaymentMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, clear the form
   if( bExitValue == MSG_BOX_RETURN_YES )

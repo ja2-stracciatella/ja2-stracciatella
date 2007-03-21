@@ -484,7 +484,8 @@ SOUNDPARMS spParms;
 	return(SoundPlay(szAmbientEffects[usNum], &spParms));
 }
 
-UINT32 PlayJA2AmbientRandom( UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
+
+static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 {
 RANDOMPARMS rpParms;
 

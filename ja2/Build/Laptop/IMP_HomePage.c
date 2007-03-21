@@ -23,15 +23,6 @@
 #include "Font_Control.h"
 
 
-void GetPlayerKeyBoardInputForIMPHomePage( void );
-void DisplayPlayerActivationString( void );
-void ProcessPlayerInputActivationString( void );
-void GetPlayerKeyBoardInputForIMPHomePage( void );
-void HandleTextEvent( UINT32 uiKey );
-void CreateIMPHomePageButtons( void );
-void RemoveIMPHomePageButtons( void );
-void DisplayActivationStringCursor( void );
-
 INT32 GlowColorsList[][3] ={
 	{ 0,0,0 },
 	{ 0,25,0 },
@@ -71,6 +62,10 @@ UINT16 uiCursorPosition = IMP_PLAYER_ACTIVATION_STRING_X;
 // has a new char been added or deleted?
 BOOLEAN fNewCharInActivationString = FALSE;
 
+
+static void CreateIMPHomePageButtons(void);
+
+
 void EnterImpHomePage( void )
 {
    // upon entry to Imp home page
@@ -91,6 +86,10 @@ void EnterImpHomePage( void )
 	 // render screen once
 	 RenderImpHomePage( );
 }
+
+
+static void DisplayPlayerActivationString(void);
+
 
 void RenderImpHomePage( void )
 {
@@ -117,12 +116,20 @@ void RenderImpHomePage( void )
 	DisplayPlayerActivationString( );
 }
 
+
+static void RemoveIMPHomePageButtons(void);
+
+
 void ExitImpHomePage( void )
 {
 
 	// remove buttons
   RemoveIMPHomePageButtons( );
 }
+
+
+static void DisplayActivationStringCursor(void);
+static void GetPlayerKeyBoardInputForIMPHomePage(void);
 
 
 void HandleImpHomePage( void )
@@ -142,7 +149,8 @@ void HandleImpHomePage( void )
 	DisplayActivationStringCursor( );
 }
 
-void DisplayPlayerActivationString( void )
+
+static void DisplayPlayerActivationString(void)
 {
 
 	// this function will grab the string that the player will enter for activation
@@ -172,7 +180,7 @@ void DisplayPlayerActivationString( void )
 }
 
 
-void DisplayActivationStringCursor( void )
+static void DisplayActivationStringCursor(void)
 {
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
   UINT32 uiDestPitchBYTES;
@@ -232,8 +240,11 @@ void DisplayActivationStringCursor( void )
 }
 
 
+static void HandleTextEvent(UINT32 uiKey);
+static void ProcessPlayerInputActivationString(void);
 
-void GetPlayerKeyBoardInputForIMPHomePage( void )
+
+static void GetPlayerKeyBoardInputForIMPHomePage(void)
 {
 	InputAtom					InputEvent;
 	POINT  MousePos;
@@ -288,7 +299,7 @@ void GetPlayerKeyBoardInputForIMPHomePage( void )
 }
 
 
-void HandleTextEvent( UINT32 uiKey )
+static void HandleTextEvent(UINT32 uiKey)
 {
    // this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	 // or delete it
@@ -363,13 +374,12 @@ void HandleTextEvent( UINT32 uiKey )
 }
 
 
-void ProcessPlayerInputActivationString( void )
+static void ProcessPlayerInputActivationString(void)
 {
   // prcess string to see if it matches activation string
   if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) )&&( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
 	{
 	  iCurrentImpPage = IMP_MAIN_PAGE;
-
 	}
 /*
 	else if( ( wcscmp(pPlayerActivationString, L"90210") == 0 ) && ( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) )
@@ -387,14 +397,11 @@ void ProcessPlayerInputActivationString( void )
 		{
 		   DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 6 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		}
-
-
 	}
 }
 
 
-
-void CreateIMPHomePageButtons( void )
+static void CreateIMPHomePageButtons(void)
 {
   // this procedure will create the buttons needed for the IMP homepage
 
@@ -417,8 +424,7 @@ void CreateIMPHomePageButtons( void )
 }
 
 
-
-void RemoveIMPHomePageButtons( void )
+static void RemoveIMPHomePageButtons(void)
 {
   // this procedure will destroy the already created buttosn for the IMP homepage
 

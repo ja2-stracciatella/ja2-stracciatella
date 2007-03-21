@@ -38,18 +38,10 @@ UINT32	guiInsCmntBulletImage;
 
 //link to the varios pages
 MOUSE_REGION    gSelectedInsuranceCommentLinkRegion[3];
-void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
+static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
-BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY );
-
-
-
-void GameInitInsuranceComments()
-{
-
-}
 
 BOOLEAN EnterInsuranceComments()
 {
@@ -94,6 +86,10 @@ void HandleInsuranceComments()
 {
 
 }
+
+
+static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY);
+
 
 void RenderInsuranceComments()
 {
@@ -163,7 +159,7 @@ void RenderInsuranceComments()
 }
 
 
-void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -185,7 +181,7 @@ void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRea
 }
 
 
-BOOLEAN DisplayComment( UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY )
+static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY)
 {
 	wchar_t		sText[800];
 	UINT16		sNumPixels=0;

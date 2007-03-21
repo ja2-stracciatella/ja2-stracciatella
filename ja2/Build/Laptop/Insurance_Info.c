@@ -75,32 +75,19 @@ UINT32	guiInsNextBackButton;
 
 //link to the varios pages
 MOUSE_REGION    gSelectedInsuranceInfoLinkRegion;
-void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 MOUSE_REGION    gSelectedInsuranceInfoHomeLinkRegion;
-void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
-
-
-void DisplaySubmitClaimPage();
-void DisplayPremiumPage();
-void DisplayRenewingPremiumPage();
-void DisplayCancelationPagePage();
-void DisableArrowButtonsIfOnLastOrFirstPage();
-void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber );
-void DisplayInfoTocPage();
-
-
-void GameInitInsuranceInfo()
-{
-
-}
 
 void EnterInitInsuranceInfo()
 {
 	memset( &InsuranceInfoSubPagesVisitedFlag, 0, INS_INFO_LAST_PAGE-1);
-
 }
+
+
+static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN EnterInsuranceInfo()
 {
@@ -178,6 +165,15 @@ void HandleInsuranceInfo()
 
 }
 
+
+static void DisableArrowButtonsIfOnLastOrFirstPage(void);
+static void DisplayCancelationPagePage(void);
+static void DisplayInfoTocPage(void);
+static void DisplayPremiumPage(void);
+static void DisplayRenewingPremiumPage(void);
+static void DisplaySubmitClaimPage(void);
+
+
 void RenderInsuranceInfo()
 {
 	wchar_t		sText[800];
@@ -238,6 +234,9 @@ void RenderInsuranceInfo()
 }
 
 
+static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber);
+
+
 static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -260,7 +259,7 @@ static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -274,7 +273,8 @@ void SelectInsuranceLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -289,7 +289,7 @@ void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iRe
 }
 
 
-void DisplaySubmitClaimPage()
+static void DisplaySubmitClaimPage(void)
 {
 	wchar_t		sText[800];
 	UINT16 usNewLineOffset = 0;
@@ -328,7 +328,8 @@ void DisplaySubmitClaimPage()
 
 }
 
-void DisplayPremiumPage()
+
+static void DisplayPremiumPage(void)
 {
 	wchar_t		sText[800];
 	UINT16 usNewLineOffset = 0;
@@ -364,8 +365,7 @@ void DisplayPremiumPage()
 }
 
 
-
-void DisplayRenewingPremiumPage()
+static void DisplayRenewingPremiumPage(void)
 {
 	wchar_t		sText[800];
 	UINT16 usNewLineOffset = 0;
@@ -399,9 +399,7 @@ void DisplayRenewingPremiumPage()
 }
 
 
-
-
-void DisplayCancelationPagePage()
+static void DisplayCancelationPagePage(void)
 {
 	wchar_t		sText[800];
 	UINT16 usNewLineOffset = 0;
@@ -425,7 +423,8 @@ void DisplayCancelationPagePage()
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 }
 
-void DisableArrowButtonsIfOnLastOrFirstPage()
+
+static void DisableArrowButtonsIfOnLastOrFirstPage(void)
 {
 	if( gubCurrentInsInfoSubPage == INS_INFO_INFO_TOC)
 		DisableButton( guiInsPrevBackButton);
@@ -439,8 +438,7 @@ void DisableArrowButtonsIfOnLastOrFirstPage()
 }
 
 
-
-void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
+static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
@@ -458,7 +456,8 @@ void ChangingInsuranceInfoSubPage( UINT8 ubSubPageNumber )
 	}
 }
 
-void DisplayInfoTocPage()
+
+static void DisplayInfoTocPage(void)
 {
 	wchar_t		sText[800];
 	UINT16 usNewLineOffset = 0;

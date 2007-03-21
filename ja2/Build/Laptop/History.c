@@ -95,45 +95,13 @@ HistoryUnitPtr pCurrentHistory=NULL;
 // last page in list
 UINT32 guiLastPageInHistoryRecordsList = 0;
 
-// function definitions
-BOOLEAN LoadHistory( void );
-void RenderHistoryBackGround( void );
-void RemoveHistory( void );
-void CreateHistoryButtons( void );
-void DestroyHistoryButtons( void );
-void CreateHistoryButtons( void );
-void DrawHistoryTitleText( void );
-UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor );
-void OpenAndReadHistoryFile( void );
-BOOLEAN OpenAndWriteHistoryFile( void );
 void ClearHistoryList( void );
-void DisplayHistoryListHeaders( void );
-void DisplayHistoryListBackground( void );
-void DrawAPageofHistoryRecords( void );
-BOOLEAN IncrementCurrentPageHistoryDisplay( void );
-void DisplayPageNumberAndDateRange( void );
-void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory);
-void SetHistoryButtonStates( void );
-BOOLEAN LoadInHistoryRecords( UINT32 uiPage );
-BOOLEAN LoadNextHistoryPage( void );
-BOOLEAN LoadPreviousHistoryPage( void );
-void SetLastPageInHistoryRecords( void );
-UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void );
-BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory );
-BOOLEAN WriteOutHistoryRecords( UINT32 uiPage );
-void		GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString );
-void		GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString );
-INT32		GetNumberOfHistoryPages();
 
 
-#ifdef JA2TESTVERSION
-void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
-#endif
+static BOOLEAN AppendHistoryToEndOfFile(HistoryUnitPtr pHistory);
+static BOOLEAN LoadNextHistoryPage(void);
+static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor);
 
-
-// callbacks
-void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason);
-void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason);
 
 UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
 {
@@ -229,6 +197,12 @@ void GameInitHistory()
 
 }
 
+
+static void CreateHistoryButtons(void);
+static BOOLEAN LoadHistory(void);
+static void SetHistoryButtonStates(void);
+
+
 void EnterHistory()
 {
 
@@ -265,6 +239,11 @@ void EnterHistory()
 	SetHistoryButtonStates( );
 }
 
+
+static void DestroyHistoryButtons(void);
+static void RemoveHistory(void);
+
+
 void ExitHistory()
 {
   LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
@@ -292,6 +271,15 @@ void HandleHistory()
 //  SetHistoryButtonStates( );
 }
 
+
+static void DisplayHistoryListBackground(void);
+static void DisplayHistoryListHeaders(void);
+static void DisplayPageNumberAndDateRange(void);
+static void DrawAPageofHistoryRecords(void);
+static void DrawHistoryTitleText(void);
+static void RenderHistoryBackGround(void);
+
+
 void RenderHistory( void )
 {
 	 //render the background to the display
@@ -317,7 +305,7 @@ void RenderHistory( void )
 }
 
 
-BOOLEAN LoadHistory( void )
+static BOOLEAN LoadHistory(void)
 {
   // load History video objects into memory
 
@@ -341,9 +329,9 @@ Not being used???  DF commented out
 	return (TRUE);
 }
 
-void RemoveHistory( void )
-{
 
+static void RemoveHistory(void)
+{
 	// delete history video objects from memory
   DeleteVideoObjectFromIndex(guiLONGLINE);
 	DeleteVideoObjectFromIndex(guiTOP);
@@ -352,7 +340,7 @@ void RemoveHistory( void )
 }
 
 
-void RenderHistoryBackGround( void )
+static void RenderHistoryBackGround(void)
 {
 	// render generic background for history system
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
@@ -362,7 +350,8 @@ void RenderHistoryBackGround( void )
   DisplayHistoryListBackground( );
 }
 
-void DrawHistoryTitleText( void )
+
+static void DrawHistoryTitleText(void)
 {
 	// setup the font stuff
 	SetFont(HISTORY_HEADER_FONT);
@@ -374,7 +363,12 @@ void DrawHistoryTitleText( void )
 	mprintf(TITLE_X,TITLE_Y,pHistoryTitle[0]);
 }
 
-void CreateHistoryButtons( void )
+
+static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason);
+static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateHistoryButtons(void)
 {
 
 	// the prev page button
@@ -396,7 +390,7 @@ void CreateHistoryButtons( void )
 }
 
 
-void DestroyHistoryButtons( void )
+static void DestroyHistoryButtons(void)
 {
 
 	// remove History buttons and images from memory
@@ -410,7 +404,11 @@ void DestroyHistoryButtons( void )
 	UnloadButtonImage(giHistoryButtonImage[0] );
 }
 
-void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
+
+static BOOLEAN LoadPreviousHistoryPage(void);
+
+
+static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 {
 	// force redraw
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -440,7 +438,8 @@ void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON *btn,INT32 reason)
 
 }
 
-void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 {
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -459,12 +458,10 @@ void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON *btn,INT32 reason)
 		SetHistoryButtonStates( );
 		fReDrawScreenFlag=TRUE;
 	}
-
-
-
 }
 
-BOOLEAN IncrementCurrentPageHistoryDisplay( void )
+
+static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 {
   // run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
   HistoryUnitPtr pTempHistory=pCurrentHistory;
@@ -534,7 +531,7 @@ BOOLEAN IncrementCurrentPageHistoryDisplay( void )
 }
 
 
-UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor )
+static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor)
 {
   UINT32 uiId=0;
   HistoryUnitPtr pHistory=pHistoryListHead;
@@ -588,7 +585,12 @@ UINT32 ProcessAndEnterAHistoryRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubSecon
 }
 
 
-void OpenAndReadHistoryFile( void )
+#ifdef JA2TESTVERSION
+static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+#endif
+
+
+static void OpenAndReadHistoryFile(void)
 {
   // this procedure will open and read in data to the History list
 
@@ -651,7 +653,8 @@ void OpenAndReadHistoryFile( void )
 	FileClose( hFileHandle );
 }
 
-BOOLEAN OpenAndWriteHistoryFile( void )
+
+static BOOLEAN OpenAndWriteHistoryFile(void)
 {
   // this procedure will open and write out data from the History list
 
@@ -721,7 +724,8 @@ void ClearHistoryList( void )
   pHistoryListHead=NULL;
 }
 
-void DisplayHistoryListHeaders( void )
+
+static void DisplayHistoryListHeaders(void)
 {
   // this procedure will display the headers to each column in History
   UINT16 usX, usY;
@@ -748,7 +752,7 @@ void DisplayHistoryListHeaders( void )
 }
 
 
-void DisplayHistoryListBackground( void )
+static void DisplayHistoryListBackground(void)
 {
   // this function will display the History list display background
   HVOBJECT hHandle;
@@ -770,7 +774,11 @@ void DisplayHistoryListBackground( void )
   BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11  ));
 }
 
-void DrawHistoryRecordsText( void )
+
+static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory);
+
+
+static void DrawHistoryRecordsText(void)
 {
   // draws the text of the records
   HistoryUnitPtr pCurHistory=pHistoryListHead;
@@ -850,7 +858,7 @@ void DrawHistoryRecordsText( void )
 }
 
 
-void DrawAPageofHistoryRecords( void )
+static void DrawAPageofHistoryRecords(void)
 {
 	// this procedure will draw a series of history records to the screen
   pCurrentHistory=pHistoryListHead;
@@ -881,7 +889,11 @@ void DrawAPageofHistoryRecords( void )
 	DisplayPageNumberAndDateRange( );
 }
 
-void DisplayPageNumberAndDateRange( void )
+
+static INT32 GetNumberOfHistoryPages(void);
+
+
+static void DisplayPageNumberAndDateRange(void)
 {
 	// this function will go through the list of 'histories' starting at current until end or
 	// MAX_PER_PAGE...it will get the date range and the page number
@@ -960,7 +972,11 @@ void DisplayPageNumberAndDateRange( void )
 }
 
 
-void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory)
+static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString);
+static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString);
+
+
+static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory)
 {
 	CHAR16 sString[ 128 ];
 
@@ -1129,13 +1145,7 @@ void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPt
 }
 
 
-void DrawHistoryLocation( INT16 sSectorX, INT16 sSectorY )
-{
-  // will draw the location of the history event
-}
-
-
-void SetHistoryButtonStates( void )
+static void SetHistoryButtonStates(void)
 {
 	// this function will look at what page we are viewing, enable and disable buttons as needed
 
@@ -1169,7 +1179,7 @@ void SetHistoryButtonStates( void )
 }
 
 
-BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
+static BOOLEAN LoadInHistoryRecords(UINT32 uiPage)
 {
 	// loads in records belogning, to page uiPage
   // no file, return
@@ -1271,7 +1281,7 @@ BOOLEAN LoadInHistoryRecords( UINT32 uiPage )
 }
 
 
-BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
+static BOOLEAN WriteOutHistoryRecords(UINT32 uiPage)
 {
 	// loads in records belogning, to page uiPage
   // no file, return
@@ -1362,7 +1372,8 @@ BOOLEAN WriteOutHistoryRecords( UINT32 uiPage )
 	return( TRUE );
 }
 
-BOOLEAN LoadNextHistoryPage( void )
+
+static BOOLEAN LoadNextHistoryPage(void)
 {
 
 	// clear out old list of records, and load in previous page worth of records
@@ -1385,7 +1396,7 @@ BOOLEAN LoadNextHistoryPage( void )
 }
 
 
-BOOLEAN LoadPreviousHistoryPage( void )
+static BOOLEAN LoadPreviousHistoryPage(void)
 {
 
 	// clear out old list of records, and load in previous page worth of records
@@ -1411,7 +1422,10 @@ BOOLEAN LoadPreviousHistoryPage( void )
 }
 
 
-void SetLastPageInHistoryRecords( void )
+static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void);
+
+
+static void SetLastPageInHistoryRecords(void)
 {
 	// grabs the size of the file and interprets number of pages it will take up
   HWFILE hFileHandle;
@@ -1445,7 +1459,8 @@ void SetLastPageInHistoryRecords( void )
 	guiLastPageInHistoryRecordsList = ReadInLastElementOfHistoryListAndReturnIdNumber( ) / NUM_RECORDS_PER_PAGE;
 }
 
-UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
+
+static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 {
 	// this function will read in the last unit in the history list, to grab it's id number
 
@@ -1485,7 +1500,7 @@ UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber( void )
 }
 
 
-BOOLEAN AppendHistoryToEndOfFile( HistoryUnitPtr pHistory )
+static BOOLEAN AppendHistoryToEndOfFile(HistoryUnitPtr pHistory)
 {
   	// will write the current finance to disk
   HWFILE hFileHandle;
@@ -1619,14 +1634,15 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 	return( uiTime );
 }
 
-void GetQuestStartedString( UINT8 ubQuestValue, STR16 sQuestString )
+
+static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString)
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ubQuestValue * 2  ), 160 );
 }
 
 
-void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
+static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString)
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ( ubQuestValue  * 2 ) + 1), 160 );
@@ -1634,7 +1650,7 @@ void GetQuestEndedString( UINT8 ubQuestValue, STR16 sQuestString )
 
 
 #ifdef JA2TESTVERSION
-void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	CHAR	zString[512];
 
@@ -1646,7 +1662,8 @@ void PerformCheckOnHistoryRecord( UINT32 uiErrorCode, INT16 sSectorX, INT16 sSec
 }
 #endif
 
-INT32 GetNumberOfHistoryPages()
+
+static INT32 GetNumberOfHistoryPages(void)
 {
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;

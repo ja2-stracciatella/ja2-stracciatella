@@ -350,12 +350,12 @@ BOOLEAN InitializeTacticalInterface(  )
 }
 
 
-BOOLEAN ShutdownTacticalInterface( )
+static BOOLEAN ShutdownTacticalInterface(void)
 {
 	ShutdownCurrentPanel( );
-
 	return( TRUE );
 }
+
 
 BOOLEAN InitializeCurrentPanel( )
 {
@@ -1699,7 +1699,7 @@ static void RenderOverlayMessage(VIDEO_OVERLAY* pBlitter)
 }
 
 
-void BeginOverlayMessage( UINT32 uiFont, wchar_t *pFontString, ... )
+static void BeginOverlayMessage(UINT32 uiFont, wchar_t* pFontString, ...)
 {
 	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
@@ -1737,7 +1737,8 @@ void BeginOverlayMessage( UINT32 uiFont, wchar_t *pFontString, ... )
 
 }
 
-void EndOverlayMessage( )
+
+static void EndOverlayMessage(void)
 {
 	if ( giPopupSlideMessageOverlay != -1 )
 	{
@@ -1901,7 +1902,7 @@ void RestoreInterface( )
 }
 
 
-void BlitPopupText( VIDEO_OVERLAY *pBlitter )
+static void BlitPopupText(VIDEO_OVERLAY* pBlitter)
 {
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
@@ -2972,7 +2973,8 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 
 }
 
-void TurnExpiredCallBack( UINT8 bExitValue )
+
+static void TurnExpiredCallBack(UINT8 bExitValue)
 {
 	// End turn...
 	UIHandleEndTurn( NULL );
@@ -3432,17 +3434,19 @@ static void CalculateAimCubeUIPhysics(void)
 }
 
 
-INT16 GetInAimCubeUIGridNo( )
+static INT16 GetInAimCubeUIGridNo(void)
 {
 	return( gCubeUIData.sGridNo );
 }
 
-BOOLEAN InAimCubeUI( )
+
+static BOOLEAN InAimCubeUI(void)
 {
 	return( gfInAimCubeUI );
 }
 
-BOOLEAN AimCubeUIClick( )
+
+static BOOLEAN AimCubeUIClick(void)
 {
 	if ( !gfInAimCubeUI )
 	{
@@ -3464,7 +3468,8 @@ BOOLEAN AimCubeUIClick( )
 	}
 }
 
-void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight )
+
+static void BeginAimCubeUI(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight)
 {
 	gfInAimCubeUI = TRUE;
 
@@ -3487,12 +3492,13 @@ void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 b
 }
 
 
-void EndAimCubeUI( )
+static void EndAimCubeUI(void)
 {
 	gfInAimCubeUI = FALSE;
 }
 
-void IncrementAimCubeUI( )
+
+static void IncrementAimCubeUI(void)
 {
 	if ( gCubeUIData.fActiveHeightBar )
 	{
@@ -3539,13 +3545,11 @@ void IncrementAimCubeUI( )
 		gCubeUIData.ubPowerIndex++;
 
 		CalculateAimCubeUIPhysics( );
-
 	}
-
 }
 
 
-void SetupAimCubeAI( )
+static void SetupAimCubeAI(void)
 {
 	if ( gfInAimCubeUI )
 	{
@@ -3556,12 +3560,11 @@ void SetupAimCubeAI( )
 		//AddTopmostToHead( gCubeUIData.sGridNo, FIRSTPOINTERS2 );
 		//gpWorldLevelData[ gCubeUIData.sGridNo ].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 		//gpWorldLevelData[ gCubeUIData.sGridNo ].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-
 	}
 }
 
 
-void ResetAimCubeAI( )
+static void ResetAimCubeAI(void)
 {
 	if ( gfInAimCubeUI )
 	{

@@ -118,12 +118,6 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional );
 // handle town loyalty adjustment for recruitment
 void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier );
 
-// handle loyalty adjustment for theft
-BOOLEAN HandleLoyaltyAdjustmentForRobbery( SOLDIERTYPE *pSoldier );
-
-// handle loyalty adjustments for dmg/destruction of buildings
-void HandleLoyaltyForDemolitionOfBuilding( SOLDIERTYPE *pSoldier, INT16 sPointsDmg );
-
 // remove random item from this sector
 void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubChance );
 
@@ -178,7 +172,6 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 void IncrementTownLoyaltyEverywhere( UINT32 uiLoyaltyIncrease );
 void DecrementTownLoyaltyEverywhere( UINT32 uiLoyaltyDecrease );
 void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
-void AffectAllTownsLoyaltyByDistanceFrom( INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // handle a town being liberated for the first time
 void CheckIfEntireTownHasBeenLiberated( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );

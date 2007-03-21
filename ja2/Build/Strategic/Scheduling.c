@@ -33,10 +33,6 @@
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 #endif
 
-BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime );
-INT8 GetEmptyScheduleEntry( SCHEDULENODE *pSchedule );
-BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule );
-
 #define FOURPM 960
 
 // waketime is the # of minutes in the day minus the sleep time
@@ -47,8 +43,6 @@ BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule );
 SCHEDULENODE *gpScheduleList = NULL;
 UINT8				gubScheduleID = 0;
 void ReverseSchedules();
-
-void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTime, UINT32 uiEndTime );
 
 //IMPORTANT:
 //This function adds a NEWLY allocated schedule to the list.  The pointer passed is totally
@@ -156,6 +150,10 @@ void DeleteSchedule( UINT8 ubScheduleID )
 		MemFree( temp );
 	}
 }
+
+
+static void PrepareScheduleForAutoProcessing(SCHEDULENODE* pSchedule, UINT32 uiStartTime, UINT32 uiEndTime);
+
 
 void ProcessTacticalSchedule( UINT8 ubScheduleID )
 {
@@ -631,7 +629,11 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 	return( TRUE );
 }
 
-void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
+
+static void PerformActionOnDoorAdjacentToGridNo(UINT8 ubScheduleAction, UINT16 usGridNo);
+
+
+static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 {
 	INT16						sCellX, sCellY, sGridNo;
 	INT8						bDirection;
@@ -755,7 +757,13 @@ void AutoProcessSchedule( SCHEDULENODE *pSchedule, INT32 index )
 	}
 }
 
-void PostSchedule( SOLDIERTYPE *pSoldier )
+
+static INT8 GetEmptyScheduleEntry(SCHEDULENODE* pSchedule);
+static BOOLEAN ScheduleHasMorningNonSleepEntries(SCHEDULENODE* pSchedule);
+static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot);
+
+
+static void PostSchedule(SOLDIERTYPE* pSoldier)
 {
 	UINT32 uiStartTime, uiEndTime;
 	INT32 i;
@@ -864,7 +872,8 @@ void PostSchedule( SOLDIERTYPE *pSoldier )
 	PrepareScheduleForAutoProcessing( pSchedule, uiStartTime, uiEndTime );
 }
 
-void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTime, UINT32 uiEndTime )
+
+static void PrepareScheduleForAutoProcessing(SCHEDULENODE* pSchedule, UINT32 uiStartTime, UINT32 uiEndTime)
 {
 	INT32 i;
 	BOOLEAN	fPostedNextEvent = FALSE;
@@ -931,9 +940,10 @@ void PrepareScheduleForAutoProcessing( SCHEDULENODE *pSchedule, UINT32 uiStartTi
 	}
 }
 
+
 //Leave at night, come back in the morning.  The time variances are a couple hours, so
 //the town doesn't turn into a ghost town in 5 minutes.
-void PostDefaultSchedule( SOLDIERTYPE *pSoldier )
+static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 {
 	INT32 i;
 	SCHEDULENODE *curr;
@@ -1026,7 +1036,8 @@ void PostSchedules()
 	}
 }
 
-void PerformActionOnDoorAdjacentToGridNo( UINT8 ubScheduleAction, UINT16 usGridNo )
+
+static void PerformActionOnDoorAdjacentToGridNo(UINT8 ubScheduleAction, UINT16 usGridNo)
 {
 	INT16			sDoorGridNo;
 	DOOR *		pDoor;
@@ -1103,8 +1114,7 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier )
 }
 
 
-
-BOOLEAN ExtractScheduleEntryAndExitInfo( SOLDIERTYPE * pSoldier, UINT32 * puiEntryTime, UINT32 * puiExitTime )
+static BOOLEAN ExtractScheduleEntryAndExitInfo(SOLDIERTYPE* pSoldier, UINT32* puiEntryTime, UINT32* puiExitTime)
 {
 	INT32			iLoop;
 	BOOLEAN		fFoundEntryTime = FALSE, fFoundExitTime = FALSE;
@@ -1193,7 +1203,7 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 }
 
 
-BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTime )
+static BOOLEAN GetEarliestMorningScheduleEvent(SCHEDULENODE* pSchedule, UINT32* puiTime)
 {
 	INT32			iLoop;
 
@@ -1217,7 +1227,8 @@ BOOLEAN GetEarliestMorningScheduleEvent( SCHEDULENODE *pSchedule, UINT32 * puiTi
 	}
 }
 
-BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule )
+
+static BOOLEAN ScheduleHasMorningNonSleepEntries(SCHEDULENODE* pSchedule)
 {
 	INT8			bLoop;
 
@@ -1234,7 +1245,8 @@ BOOLEAN ScheduleHasMorningNonSleepEntries( SCHEDULENODE *pSchedule )
 	return( FALSE );
 }
 
-INT8 GetEmptyScheduleEntry( SCHEDULENODE *pSchedule )
+
+static INT8 GetEmptyScheduleEntry(SCHEDULENODE* pSchedule)
 {
 	INT8			bLoop;
 
@@ -1278,7 +1290,8 @@ void ReconnectSchedules( void )
 }
 */
 
-UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
+
+static UINT16 FindSleepSpot(SCHEDULENODE* pSchedule)
 {
 	INT8			bLoop;
 
@@ -1292,7 +1305,8 @@ UINT16 FindSleepSpot( SCHEDULENODE * pSchedule )
 	return( NOWHERE );
 }
 
-void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
+
+static void ReplaceSleepSpot(SCHEDULENODE* pSchedule, UINT16 usNewSpot)
 {
 	INT8			bLoop;
 
@@ -1304,11 +1318,10 @@ void ReplaceSleepSpot( SCHEDULENODE * pSchedule, UINT16 usNewSpot )
 			break;
 		}
 	}
-
 }
 
 
-void SecureSleepSpot( SOLDIERTYPE * pSoldier, UINT16 usSleepSpot )
+static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
 {
 	SOLDIERTYPE *			pSoldier2;
 	UINT16						usSleepSpot2, usNewSleepSpot;

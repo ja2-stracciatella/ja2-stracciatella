@@ -9,10 +9,8 @@ BOOLEAN RenderAIMMembers();
 
 
 BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor);
-BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor);
 
 void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length);
-BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32	iFaceIndex);
 void EnterInitAimMembers();
 BOOLEAN RenderAIMMembersTopLevel();
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );

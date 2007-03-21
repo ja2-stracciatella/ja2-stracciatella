@@ -3,8 +3,6 @@
 
 #include "Ambient_Types.h"
 
-BOOLEAN LoadAmbientControlFile( UINT8 ubAmbientID );
-
 void HandleNewSectorAmbience( UINT8 ubAmbientID );
 UINT32 SetupNewAmbientSound( UINT32 uiAmbientID );
 

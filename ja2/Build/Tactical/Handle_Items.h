@@ -104,40 +104,27 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
 BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos );
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
-BOOLEAN ItemExistsAtLocation( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
-void SetItemPoolLocator( ITEM_POOL *pItemPool );
-void SetItemPoolLocatorWithCallback( ITEM_POOL *pItemPool, ITEM_POOL_LOCATOR_HOOK Callback );
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator );
-void AdjustItemPoolVisibility( ITEM_POOL *pItemPool );
 
 void SetItemPoolVisibilityHiddenInObject( ITEM_POOL *pItemPool );
 void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool );
 
-INT32 GetItemOfClassTypeInPool( INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel );
-void RemoveItemPool( INT16 sGridNo, UINT8 ubLevel );
 void RenderTopmostFlashingItems( );
 
 void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel );
 
 
 BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool );
-BOOLEAN DoesItemPoolContainAllHiddenItems( ITEM_POOL *pItemPool );
 
 
 void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 void HandleSoldierUseRemote( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
-BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel( ITEM_POOL *pItemPool );
-BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel( ITEM_POOL *pItemPool );
-
 BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel );
-INT16 GetNumOkForDisplayItemsInPool( ITEM_POOL *pItemPool, INT8 bZLevel );
 
 void SoldierHandleDropItem( SOLDIERTYPE *pSoldier );
-
-BOOLEAN LookForHiddenItems( INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel );
 
 INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE *pStructure );
 
@@ -148,18 +135,12 @@ void MineSpottedDialogueCallBack( void );
 
 extern INT16 gsBoobyTrapGridNo;
 extern SOLDIERTYPE * gpBoobyTrapSoldier;
-void AddBlueFlag( INT16 sGridNo, INT8 bLevel );
 void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel  );
 
 // check if item is booby trapped
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
 
-// set off the booby trap in mapscreen
-void SetOffBoobyTrapInMapScreen( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject );
-
 void RefreshItemPools( WORLDITEM* pItemList, INT32 iNumberOfItems );
-
-BOOLEAN HandItemWorks( SOLDIERTYPE *pSoldier, INT8 bSlot );
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex );
 

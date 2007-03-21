@@ -54,7 +54,8 @@ SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 	BOOLEAN gfDoDialogOnceGameScreenFadesIn = FALSE;
 #endif
 
-UINT32 CountNumberOfNodesWithSoldiers()
+
+static UINT32 CountNumberOfNodesWithSoldiers(void)
 {
 	SOLDIERINITNODE *curr;
 	UINT32 num = 0;
@@ -70,7 +71,6 @@ UINT32 CountNumberOfNodesWithSoldiers()
 	return num;
 }
 
-void SortSoldierInitList();
 
 void InitSoldierInitList()
 {
@@ -406,6 +406,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	return TRUE;
 }
 
+
 //Because soldiers, creatures, etc., maybe added to the game at anytime theoretically, the
 //list will need to be sorted to reflect this.  It is quite likely that this won't be needed,
 //but the flexibility is there just incase.  Now the list is sorted in the following manner:
@@ -419,7 +420,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 //								these, they are randomly filled based on the number needed.
 //NOTE:  This function is called by AddSoldierInitListTeamToWorld().  There is no other place it needs to
 //			 be called.
-void SortSoldierInitList()
+static void SortSoldierInitList(void)
 {
 	SOLDIERINITNODE *temp, *curr;
 
@@ -784,7 +785,8 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 	return FALSE;
 }
 
-void AddPlacementToWorldByProfileID( UINT8 ubProfile )
+
+static void AddPlacementToWorldByProfileID(UINT8 ubProfile)
 {
 	SOLDIERINITNODE * curr;
 
@@ -1703,9 +1705,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 }
 
 
-
-SOLDIERINITNODE* FindSoldierInitNodeWithProfileID( UINT16 usProfile );
-SOLDIERINITNODE* FindSoldierInitNodeWithProfileID( UINT16 usProfile )
+static SOLDIERINITNODE* FindSoldierInitNodeWithProfileID(UINT16 usProfile)
 {
 	SOLDIERINITNODE *curr;
 	curr = gSoldierInitHead;
@@ -1794,7 +1794,8 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void RemoveDetailedPlacementInfo( UINT8 ubNodeID )
+
+static void RemoveDetailedPlacementInfo(UINT8 ubNodeID)
 {
 	SOLDIERINITNODE *curr;
 	curr = gSoldierInitHead;
@@ -2024,7 +2025,7 @@ void AddSoldierInitListBloodcats()
 }
 
 
-SOLDIERINITNODE * FindSoldierInitListNodeByProfile( UINT8 ubProfile )
+static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 {
 	SOLDIERINITNODE * curr;
 

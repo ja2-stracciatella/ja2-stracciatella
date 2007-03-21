@@ -100,18 +100,10 @@ BOOLEAN		LightAddBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 BOOLEAN		LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 // Creates an omni (circular) light
 INT32			LightCreateOmni( UINT8 ubIntensity, INT16 iRadius);
-// Creates an oval-shaped light (two separate radii)
-INT32			LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2);
-// Creates a square light
-INT32			LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2);
 // Draws a light into the scene at X,Y
 BOOLEAN		LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite);
-// Reverts the tiles a light has affected back to normal
-BOOLEAN		LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite);
 // Save a light list into a file
 BOOLEAN		LightSave(INT32 uiLight, STR pFilename);
-// Load a light list from a file
-INT32			LightLoad(const char *pFilename);
 
 // Sets the RGB values and number of light colors (1/2)
 BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors);
@@ -129,8 +121,6 @@ BOOLEAN		LightSpriteDestroy(INT32 iSprite);
 BOOLEAN		LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY);
 // Makes a light "fake"
 BOOLEAN LightSpriteFake(INT32 iSprite);
-// Updates any change in position in lights
-BOOLEAN		LightSpriteRender();
 // Renders all lights
 BOOLEAN		LightSpriteRenderAll(void);
 // Turns on/off power to a light
@@ -138,19 +128,13 @@ BOOLEAN		LightSpritePower(INT32 iSprite, BOOLEAN fOn);
 // Moves light to/from roof position
 BOOLEAN		LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof);
 
-// Reveals translucent walls
-BOOLEAN		CalcTranslucentWalls(INT16 iX, INT16 iY);
 BOOLEAN		ApplyTranslucencyToWalls(INT16 iX, INT16 iY);
-// Makes trees translucent
-BOOLEAN		LightTranslucentTrees(INT16 iX, INT16 iY);
-BOOLEAN		LightHideTrees(INT16 iX, INT16 iY);
 BOOLEAN		LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset);
 BOOLEAN		LightHideRays(INT16 iX, INT16 iY);
 
 
 // makes the 16-bit palettes
 UINT16		CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiType, BOOLEAN fForce );
-BOOLEAN		CreateSoldierShadedPalette( SOLDIERTYPE *pSoldier, UINT32 uiBase, SGPPaletteEntry *pShadePal);
 UINT16		CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier);
 
 // returns the true light value at a tile (ignoring fake/merc lights)

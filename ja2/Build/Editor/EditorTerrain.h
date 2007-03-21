@@ -19,9 +19,6 @@ extern INT32 TerrainTileSelected, TerrainForegroundTile,TerrainBackgroundTile;
 extern INT32 TerrainTileDrawMode;
 
 void EntryInitEditorTerrainInfo();
-void InitEditorTerrainToolbar();
-void CreateTerrainTileButtons();
-void DeleteTerrainTileButtons();
 void RenderTerrainTileButtons();
 
 void ResetTerrainTileWeights();

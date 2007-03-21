@@ -113,7 +113,8 @@ INT8 GetMoraleModifier( SOLDIERTYPE * pSoldier )
 	}
 }
 
-void DecayTacticalMorale( SOLDIERTYPE * pSoldier )
+
+static void DecayTacticalMorale(SOLDIERTYPE* pSoldier)
 {
 	// decay the tactical morale modifier
 	if (pSoldier->bTacticalMoraleMod != 0)
@@ -130,7 +131,8 @@ void DecayTacticalMorale( SOLDIERTYPE * pSoldier )
 	}
 }
 
-void DecayStrategicMorale( SOLDIERTYPE * pSoldier )
+
+static void DecayStrategicMorale(SOLDIERTYPE* pSoldier)
 {
 	// decay the modifier!
 	if (pSoldier->bStrategicMoraleMod > 0)
@@ -243,7 +245,8 @@ void DecayTacticalMoraleModifiers( void )
 	}
 }
 
-void DecayStrategicMoraleModifiers( void )
+
+static void DecayStrategicMoraleModifiers(void)
 {
 	SOLDIERTYPE * pSoldier;
 	UINT8					ubLoop;
@@ -297,7 +300,7 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 }
 
 
-void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod )
+static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoraleMod)
 {
 	MERCPROFILESTRUCT *		pProfile;
 	INT32									iMoraleModTotal;
@@ -426,7 +429,7 @@ void UpdateSoldierMorale( SOLDIERTYPE * pSoldier, UINT8 ubType, INT8 bMoraleMod 
 }
 
 
-void HandleMoraleEventForSoldier( SOLDIERTYPE * pSoldier, INT8 bMoraleEvent )
+static void HandleMoraleEventForSoldier(SOLDIERTYPE* pSoldier, INT8 bMoraleEvent)
 {
 	UpdateSoldierMorale( pSoldier, gbMoraleEvent[bMoraleEvent].ubType, gbMoraleEvent[bMoraleEvent].bChange );
 }

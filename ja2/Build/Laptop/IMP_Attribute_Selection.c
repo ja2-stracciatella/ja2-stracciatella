@@ -107,31 +107,14 @@ INT32 uiBarToReRender = -1;
 // are we actually coming back to edit, or are we restarting?
 BOOLEAN fReturnStatus = FALSE;
 
-// function definition
-void ProcessAttributes( void );
-void DestroyIMPAttributeSelectionButtons( void );
-void CreateIMPAttributeSelectionButtons( void );
-UINT8 IncrementStat( INT32 iStatToIncrement );
-UINT8 DecrementStat( INT32 iStatToDecrement  );
-BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints );
-void CreateAttributeSliderButtons( void );
-void DestroyAttributeSliderButtons( void );
-void CreateSlideRegionMouseRegions( void );
-void DestroySlideRegionMouseRegions( void );
-INT32 GetCurrentAttributeValue( INT32 iAttribute );
-void CreateSliderBarMouseRegions( void );
-void DestroySlideBarMouseRegions( void );
 void SetAttributes( void );
 void DrawBonusPointsRemaining( void );
 void SetGeneratedCharacterAttributes( void );
 
-// callbacks
-static void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn, INT32 reason);
-void SliderRegionButtonCallback(MOUSE_REGION * pRegion, INT32 iReason );
-void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason );
-void StatAtZeroBoxCallBack( UINT8 bExitValue );
+
+static void CreateAttributeSliderButtons(void);
+static void CreateIMPAttributeSelectionButtons(void);
+static void CreateSlideRegionMouseRegions(void);
 
 
 void EnterIMPAttributeSelection( void )
@@ -175,10 +158,7 @@ void EnterIMPAttributeSelection( void )
   RenderIMPAttributeSelection( );
 }
 
-void RenderIMPAlteredAttribute( void )
-{
 
-}
 void RenderIMPAttributeSelection( void )
 {
    // the background
@@ -208,6 +188,12 @@ void RenderIMPAttributeSelection( void )
 	DrawBonusPointsRemaining( );
 }
 
+
+static void DestroyAttributeSliderButtons(void);
+static void DestroyIMPAttributeSelectionButtons(void);
+static void DestroySlideRegionMouseRegions(void);
+
+
 void ExitIMPAttributeSelection( void )
 {
   // get rid of slider buttons
@@ -222,6 +208,13 @@ void ExitIMPAttributeSelection( void )
 
 	fReturnStatus = FALSE;
 }
+
+
+static UINT8 DecrementStat(INT32 iStatToDecrement);
+static INT32 GetCurrentAttributeValue(INT32 iAttribute);
+static UINT8 IncrementStat(INT32 iStatToIncrement);
+static void ProcessAttributes(void);
+static void StatAtZeroBoxCallBack(UINT8 bExitValue);
 
 
 void HandleIMPAttributeSelection( void )
@@ -342,8 +335,7 @@ void HandleIMPAttributeSelection( void )
 }
 
 
-
-void ProcessAttributes( void )
+static void ProcessAttributes(void)
 {
 
 	// this function goes through and confirms thet state of attributes, ie not allowing attributes to
@@ -462,7 +454,11 @@ void ProcessAttributes( void )
 	}
 }
 
-UINT8 IncrementStat( INT32 iStatToIncrement )
+
+static BOOLEAN DoWeHaveThisManyBonusPoints(INT32 iBonusPoints);
+
+
+static UINT8 IncrementStat(INT32 iStatToIncrement)
 {
   // this function is responsable for incrementing a stat
 
@@ -673,7 +669,7 @@ UINT8 IncrementStat( INT32 iStatToIncrement )
 }
 
 
-UINT8 DecrementStat( INT32 iStatToDecrement  )
+static UINT8 DecrementStat(INT32 iStatToDecrement)
 {
 
 	// review mode, do not allow changes
@@ -831,7 +827,8 @@ UINT8 DecrementStat( INT32 iStatToDecrement  )
 	return( SLIDER_OK );
 }
 
-BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
+
+static BOOLEAN DoWeHaveThisManyBonusPoints(INT32 iBonusPoints)
 {
 
 	// returns if player has at least this many bonus points
@@ -848,8 +845,10 @@ BOOLEAN DoWeHaveThisManyBonusPoints( INT32 iBonusPoints )
 }
 
 
+static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason);
 
-void CreateIMPAttributeSelectionButtons( void )
+
+static void CreateIMPAttributeSelectionButtons(void)
 {
 
 	// the finished button
@@ -870,7 +869,8 @@ void CreateIMPAttributeSelectionButtons( void )
 	SetButtonCursor(giIMPAttributeSelectionButton[0], CURSOR_WWW);
 }
 
-void DestroyIMPAttributeSelectionButtons( void )
+
+static void DestroyIMPAttributeSelectionButtons(void)
 {
 	// this function will destroy the buttons needed for the IMP attrib enter page
 
@@ -1115,8 +1115,11 @@ void RenderAttributeBoxes( void )
 }
 
 
+static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason);
 
-void CreateAttributeSliderButtons( void )
+
+static void CreateAttributeSliderButtons(void)
 {
 	// this function will create the buttons for the attribute slider
   // the finished button
@@ -1148,8 +1151,7 @@ void CreateAttributeSliderButtons( void )
 }
 
 
-
-void DestroyAttributeSliderButtons( void )
+static void DestroyAttributeSliderButtons(void)
 {
   // this function will destroy the buttons used for attribute manipulation
   INT32 iCounter =0;
@@ -1195,7 +1197,10 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void CreateSlideRegionMouseRegions( void )
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateSlideRegionMouseRegions(void)
 {
 	// this function will create that mouse regions on the sliding area, that, if the player clicks on, the bar will automatically jump to
   INT32 iCounter = 0;
@@ -1213,7 +1218,11 @@ void CreateSlideRegionMouseRegions( void )
 	}
 }
 
-void CreateSliderBarMouseRegions( void )
+
+static void SliderBarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateSliderBarMouseRegions(void)
 {
 	// this function will create that mouse regions on the sliding bars, that, if the player clicks on, the bar will automatically jump to
   INT32 iCounter = 0;
@@ -1236,7 +1245,7 @@ void CreateSliderBarMouseRegions( void )
 }
 
 
-void DestroySlideRegionMouseRegions( void )
+static void DestroySlideRegionMouseRegions(void)
 {
   // this function will destroy the regions user for the slider ' jumping'
 	INT32 iCounter=0;
@@ -1249,7 +1258,7 @@ void DestroySlideRegionMouseRegions( void )
 }
 
 
-void DestroySlideBarMouseRegions( void )
+static void DestroySlideBarMouseRegions(void)
 {
   // this function will destroy the regions user for the slider ' jumping'
 	INT32 iCounter=0;
@@ -1262,7 +1271,7 @@ void DestroySlideBarMouseRegions( void )
 }
 
 
-void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
+static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
   INT32 iCurrentAttributeValue = 0;
   INT32 iNewAttributeValue = 0;
@@ -1462,13 +1471,11 @@ void SliderRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			fSlideIsActive =FALSE;
 		}
 	}
-
 }
 
-void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SliderBarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-
-
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
     fSlideIsActive = TRUE;
@@ -1478,10 +1485,10 @@ void SliderBarRegionButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		fSlideIsActive = FALSE;
 	}
-
 }
 
-INT32 GetCurrentAttributeValue( INT32 iAttribute )
+
+static INT32 GetCurrentAttributeValue(INT32 iAttribute)
 {
 	// this function will get the value of the attribute that was passed to this fucntion via iAttribute
   INT32 iValue =0;
@@ -1612,7 +1619,7 @@ void SetGeneratedCharacterAttributes( void )
 }
 
 
-void StatAtZeroBoxCallBack( UINT8 bExitValue )
+static void StatAtZeroBoxCallBack(UINT8 bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )

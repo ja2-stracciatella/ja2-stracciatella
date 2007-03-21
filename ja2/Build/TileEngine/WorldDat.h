@@ -27,8 +27,5 @@ void InitEngineTilesets( );
 
 // THESE FUNCTIONS WILL SET TERRAIN VALUES - CALL ONE FOR EACH TILESET
 void SetTilesetOneTerrainValues( );
-void SetTilesetTwoTerrainValues( );
-
-
 
 #endif

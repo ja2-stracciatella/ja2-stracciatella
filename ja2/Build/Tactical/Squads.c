@@ -41,15 +41,6 @@ extern void RemoveAllPlayersFromSlot( );
 extern INT32 iHelicopterVehicleId;
 
 
-// update current merc selected in tactical
-void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue );
-
-// is the passed squad between sectors?
-void RebuildSquad( INT8 bSquadValue );
-
-BOOLEAN AddDeadCharacterToSquadDeadGuys( SOLDIERTYPE *pSoldier, INT32 iSquadValue );
-BOOLEAN IsDeadGuyOnAnySquad( SOLDIERTYPE *pSoldier );
-
 INT32 iCurrentTacticalSquad = FIRST_SQUAD;
 
 void InitSquads( void )
@@ -118,6 +109,10 @@ INT8 GetFirstEmptySquad( void )
 	Assert( FALSE );
 	return( -1 );
 }
+
+
+static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadValue);
+
 
 BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 {
@@ -412,6 +407,10 @@ BOOLEAN SquadIsEmpty( INT8 bSquadValue )
 }
 
 
+static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSquadValue);
+static void RebuildSquad(INT8 bSquadValue);
+static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue);
+
 
 // find and remove characters from any squad
 BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
@@ -477,7 +476,8 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 	return ( FALSE );
 }
 
-BOOLEAN RemoveCharacterFromASquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+
+static BOOLEAN RemoveCharacterFromASquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
 
 	INT32 iCounter =0, iCounterA = 0;
@@ -516,8 +516,8 @@ BOOLEAN RemoveCharacterFromASquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 }
 
 
-
-BOOLEAN IsCharacterInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+// check if character is in this squad
+static BOOLEAN IsCharacterInSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
 	INT32 iCounter =0;
 		// find character in particular squad..return if successful
@@ -535,7 +535,9 @@ BOOLEAN IsCharacterInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 	return ( FALSE );
 }
 
-INT8 SlotCharacterIsInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+
+// what slot is character in in this squad?..-1 if not found in squad
+static INT8 SlotCharacterIsInSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
 	INT8 bCounter =0;
 
@@ -681,7 +683,7 @@ BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMa
 }
 
 
-BOOLEAN CopyPathOfSquadToCharacter(  SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
 	// copy path from squad to character
 	INT8 bCounter = 0;
@@ -918,8 +920,7 @@ void ExamineCurrentSquadLights( void )
 }
 
 
-
-BOOLEAN GetSoldiersInSquad( INT32 iCurrentSquad, SOLDIERTYPE *pSoldierArray[] )
+static BOOLEAN GetSoldiersInSquad(INT32 iCurrentSquad, SOLDIERTYPE* pSoldierArray[])
 {
 	INT32 iCounter = 0;
 	// will get the soldiertype pts for every merc in this squad
@@ -1020,7 +1021,8 @@ INT32 GetLastSquadActive( void )
 }
 
 
-void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, UINT8 ubSquadValue )
+// get squads between sector positions and times
+static void GetSquadPosition(UINT8* ubNextX, UINT8* ubNextY, UINT8* ubPrevX, UINT8* ubPrevY, UINT32* uiTraverseTime, UINT32* uiArriveTime, UINT8 ubSquadValue)
 {
 	// grab the mvt group for this squad and find all this information
 
@@ -1040,7 +1042,8 @@ void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ub
 }
 
 
-void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue  )
+// set squads between sector position
+static void SetSquadPositionBetweenSectors(UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue)
 {
 	// set mvt group position for squad for
 
@@ -1163,8 +1166,9 @@ BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 	return( FALSE );
 }
 
+
 // rebuild this squad after someone has been removed, to 'squeeze' together any empty spots
-void RebuildSquad( INT8 bSquadValue )
+static void RebuildSquad(INT8 bSquadValue)
 {
 	INT32 iCounter = 0, iCounterB = 0;
 
@@ -1184,7 +1188,9 @@ void RebuildSquad( INT8 bSquadValue )
 	}
 }
 
-void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
+
+// update current merc selected in tactical
+static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 {
 	UINT8	ubID;
 
@@ -1214,7 +1220,8 @@ void UpdateCurrentlySelectedMerc( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 }
 
 
-BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad )
+// is this squad in the same sector as soldier?
+static BOOLEAN IsSquadInSector(SOLDIERTYPE* pSoldier, UINT8 ubSquad)
 {
 
 	if( pSoldier == NULL )
@@ -1257,7 +1264,8 @@ BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad )
 }
 
 
-BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue )
+// is any merc on squad asleep?
+static BOOLEAN IsAnyMercOnSquadAsleep(UINT8 ubSquadValue)
 {
 	INT32 iCounter = 0;
 
@@ -1280,7 +1288,11 @@ BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue )
 	return( FALSE );
 }
 
-BOOLEAN AddDeadCharacterToSquadDeadGuys( SOLDIERTYPE *pSoldier, INT32 iSquadValue )
+
+static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier);
+
+
+static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSquadValue)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pTempSoldier = NULL;
@@ -1338,7 +1350,8 @@ BOOLEAN AddDeadCharacterToSquadDeadGuys( SOLDIERTYPE *pSoldier, INT32 iSquadValu
 	return( FALSE );
 }
 
-BOOLEAN IsDeadGuyOnAnySquad( SOLDIERTYPE *pSoldier )
+
+static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier)
 {
 	INT32 iCounterA = 0, iCounter = 0;
 
@@ -1358,7 +1371,9 @@ BOOLEAN IsDeadGuyOnAnySquad( SOLDIERTYPE *pSoldier )
 	return ( FALSE );
 }
 
-BOOLEAN IsDeadGuyInThisSquadSlot( INT8 bSlotId, INT8 bSquadValue , INT8 *bNumberOfDeadGuysSoFar )
+
+// is there a dead guy here
+static BOOLEAN IsDeadGuyInThisSquadSlot(INT8 bSlotId, INT8 bSquadValue, INT8* bNumberOfDeadGuysSoFar)
 {
 	INT32 iCounter = 0, iCount = 0;
 

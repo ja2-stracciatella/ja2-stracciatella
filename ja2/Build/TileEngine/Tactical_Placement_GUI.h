@@ -4,9 +4,7 @@
 #include "Soldier_Control.h"
 
 void InitTacticalPlacementGUI();
-void KillTacticalPlacementGUI();
 void TacticalPlacementHandle();
-void RenderTacticalPlacementGUI();
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason);
 

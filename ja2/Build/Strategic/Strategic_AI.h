@@ -33,7 +33,6 @@ void RecalculateSectorWeight( UINT8 ubSectorID );
 void RecalculateGroupWeight( GROUP *pGroup );
 
 BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID );
-BOOLEAN EnemyPermittedToAttackSector( GROUP **pGroup, UINT8 ubSectorID );
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 
@@ -51,13 +50,6 @@ GROUP* FindPendingGroupInSector( UINT8 ubSectorID );
 
 
 void RepollSAIGroup( GROUP *pGroup );
-
-//When an enemy AI group is eliminated by the player, apply a grace period in which the
-//group isn't allowed to be filled for several days.
-void TagSAIGroupWithGracePeriod( GROUP *pGroup );
-
-BOOLEAN PermittedToFillPatrolGroup( INT32 iPatrolID );
-
 
 
 extern BOOLEAN gfDisplayStrategicAILogs;

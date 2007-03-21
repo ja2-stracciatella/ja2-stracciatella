@@ -87,8 +87,6 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams );
 
 void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
 
-void AddBombToQueue( UINT32 uiWorldBombIndex, UINT32 uiTimeStamp );
-
 void DecayBombTimers( void );
 void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency );
 BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
@@ -106,7 +104,6 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile );
 
 BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile );
 
-INT32 FindActiveTimedBomb( void );
 BOOLEAN ActiveTimedBombExists( void );
 void RemoveAllActiveTimedBombs( void );
 

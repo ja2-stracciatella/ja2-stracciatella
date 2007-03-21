@@ -77,17 +77,19 @@ UINT32	guiInsuranceBulletImage;
 
 //link to the varios pages
 MOUSE_REGION    gSelectedInsuranceLinkRegion[3];
-void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //link to the home page by clicking on the small title
 MOUSE_REGION    gSelectedInsuranceTitleLinkRegion;
-void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 void GameInitInsurance()
 {
 
 }
+
+
+static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN EnterInsurance()
 {
@@ -212,6 +214,9 @@ void RenderInsurance()
 }
 
 
+static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 BOOLEAN InitInsuranceDefaults()
 {
 	// load the Flower Account Box graphic and add it
@@ -332,7 +337,7 @@ void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 }
 
 
-void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -353,7 +358,8 @@ void SelectInsuranceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{

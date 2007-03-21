@@ -39,20 +39,6 @@
 #include "FileMan.h"
 
 
-void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier );
-void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton );
-void MercDepartEquipmentBoxCallBack( UINT8 bExitValue );
-BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier );
-void HandleExtendMercsContract( SOLDIERTYPE *pSoldier );
-void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier );
-void HandleSoldierLeavingForAnotherContract( SOLDIERTYPE *pSoldier );
-//BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier );
-void HandleNotifyPlayerCantAffordInsurance( void );
-void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength, INT32 iCost );
-void ExtendMercInsuranceContractCallBack( UINT8 bExitValue );
-void HandleUniqueEventWhenPlayerLeavesTeam( SOLDIERTYPE *pSoldier );
-
-
 UINT32 uiContractTimeMode = 0;
 
 SOLDIERTYPE *pLeaveSoldier = NULL;
@@ -104,6 +90,10 @@ BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
   return( TRUE );
 }
 
+
+static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier);
+
+
 void BeginContractRenewalSequence( )
 {
 	INT32 cnt;
@@ -152,6 +142,9 @@ void BeginContractRenewalSequence( )
 		}
 	}
 }
+
+
+static void EndCurrentContractRenewal(void);
 
 
 void HandleContractRenewalSequence( )
@@ -229,7 +222,8 @@ void HandleContractRenewalSequence( )
 	}
 }
 
-void EndCurrentContractRenewal( )
+
+static void EndCurrentContractRenewal(void)
 {
 	// Are we in the requence?
 	if ( gfContractRenewalSquenceOn )
@@ -278,8 +272,11 @@ void HandleMercIsNotWillingToRenew( UINT8 ubID )
 
 	// Unlock now
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
-
 }
+
+
+static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ubLength, INT32 iCost);
+static void HandleNotifyPlayerCantAffordInsurance(void);
 
 
 // This is used only to EXTEND the contract of an AIM merc already on the team
@@ -677,7 +674,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 }
 
 
-void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier )
+static void HandleSoldierLeavingWithLowMorale(SOLDIERTYPE* pSoldier)
 {
 	if( MercThinksHisMoraleIsTooLow( pSoldier ) )
 	{
@@ -688,7 +685,7 @@ void HandleSoldierLeavingWithLowMorale( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleSoldierLeavingForAnotherContract( SOLDIERTYPE *pSoldier )
+static void HandleSoldierLeavingForAnotherContract(SOLDIERTYPE* pSoldier)
 {
 	if (pSoldier->fSignedAnotherContract)
 	{
@@ -804,6 +801,10 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 }
 
 
+static void HandleUniqueEventWhenPlayerLeavesTeam(SOLDIERTYPE* pSoldier);
+static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton);
+
+
 //for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED  )
 BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
 {
@@ -826,6 +827,10 @@ BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButto
 
 	return( TRUE );
 }
+
+
+static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier);
+
 
 BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 {
@@ -953,7 +958,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 }
 
 
-void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
+static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier)
 {
 	INT32		iRefundAmount=0;
 
@@ -996,8 +1001,10 @@ void CalculateMedicalDepositRefund( SOLDIERTYPE *pSoldier )
 }
 
 
+static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue);
 
-void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
+
+static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
 {
 	// will tell player this character is leaving and ask where they want the equipment left
 	CHAR16 sString[ 1024 ];
@@ -1140,10 +1147,13 @@ void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( SOLDIERTYPE *pSoldi
 	{
 		//fCurrentMercFired = FALSE;
 	}
-
 }
 
-void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
+
+static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier);
+
+
+static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 {
 	// gear left in current sector?
 	if( pLeaveSoldier == NULL )
@@ -1198,8 +1208,7 @@ void MercDepartEquipmentBoxCallBack( UINT8 bExitValue )
 }
 
 
-
-BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
+static BOOLEAN HandleFiredDeadMerc(SOLDIERTYPE* pSoldier)
 {
 	AddCharacterToDeadList( pSoldier );
 
@@ -1244,7 +1253,7 @@ BOOLEAN HandleFiredDeadMerc( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
+static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 {
 	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
@@ -1272,6 +1281,8 @@ void HandleExtendMercsContract( SOLDIERTYPE *pSoldier )
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0 ,MAP_SCREEN, 0, 0, 0 );
 }
 
+
+static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier);
 
 
 void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
@@ -1375,13 +1386,17 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	}
 }
 
-void HandleNotifyPlayerCantAffordInsurance( void )
+
+static void HandleNotifyPlayerCantAffordInsurance(void)
 {
 	DoScreenIndependantMessageBox( zMarksMapScreenText[ 9 ], MSG_BOX_FLAG_OK, NULL );
 }
 
 
-void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength, INT32 iCost )
+static void ExtendMercInsuranceContractCallBack(UINT8 bExitValue);
+
+
+static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ubLength, INT32 iCost)
 {
 	CHAR16 sString[ 128 ];
 	CHAR16 sStringA[ 32 ];
@@ -1406,7 +1421,8 @@ void HandleNotifyPlayerCanAffordInsurance( SOLDIERTYPE *pSoldier, UINT8 ubLength
 	DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, ExtendMercInsuranceContractCallBack );
 }
 
-void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )
+
+static void ExtendMercInsuranceContractCallBack(UINT8 bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -1422,7 +1438,8 @@ void ExtendMercInsuranceContractCallBack( UINT8 bExitValue )
 	gpInsuranceSoldier = NULL;
 }
 
-void HandleUniqueEventWhenPlayerLeavesTeam( SOLDIERTYPE *pSoldier )
+
+static void HandleUniqueEventWhenPlayerLeavesTeam(SOLDIERTYPE* pSoldier)
 {
 	switch( pSoldier->ubProfile )
 	{
@@ -1450,7 +1467,7 @@ UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier )
+static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier)
 {
 	UINT32	uiCheckHour;
 
@@ -1471,7 +1488,7 @@ BOOLEAN ContractIsExpiring( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ContractIsGoingToExpireSoon( SOLDIERTYPE *pSoldier )
+static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier)
 {
 	// get hour contract is going to expire....
 	UINT32 uiCheckHour;

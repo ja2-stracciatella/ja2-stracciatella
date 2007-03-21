@@ -58,10 +58,6 @@
 #include "ScreenIDs.h"
 
 
-// Temp function
-void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex );
-BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier );
-extern UINT32 guiExitScreen;
 extern UINT32 uiMeanWhileFlags;
 extern BOOLEAN gfGamePaused;
 
@@ -71,7 +67,8 @@ void InitVehicles(void); /* XXX shouldn't be here */
 
 UINT8			gubScreenCount=0;
 
-void InitNPCs( void )
+
+static void InitNPCs(void)
 {
 	MERCPROFILESTRUCT * pProfile;
 
@@ -568,7 +565,11 @@ BOOLEAN AnyMercsHired( )
 }
 
 
-void QuickStartGame( )
+static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier);
+static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex);
+
+
+static void QuickStartGame(void)
 {
 	INT32		cnt;
 	UINT16	usVal;
@@ -611,7 +612,7 @@ void QuickStartGame( )
 
 
 // TEMP FUNCTION!
-void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
+static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex)
 {
 	// Quickly give some guys we hire some items
 
@@ -729,7 +730,7 @@ void QuickSetupOfMercProfileItems( UINT32 uiCount, UINT8 ubProfileIndex )
 }
 
 
-BOOLEAN QuickGameMemberHireMerc( UINT8 ubCurrentSoldier )
+static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier)
 {
 	MERC_HIRE_STRUCT HireMercStruct;
 

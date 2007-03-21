@@ -9,11 +9,6 @@ void CalcSmartDoorDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartWindowDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 
-UINT16 CalcSmartWindowIndex( UINT16 usWallOrientation );
-UINT16 CalcSmartDoorIndex( UINT16 usWallOrientation );
-UINT16 CalcSmartBrokenWallIndex( UINT16 usWallOrientation );
-UINT16 CalcSmartDoorType();
-
 void IncSmartWallUIValue();
 void DecSmartWallUIValue();
 void IncSmartDoorUIValue();

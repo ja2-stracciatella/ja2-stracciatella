@@ -9,8 +9,6 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier );
 BOOLEAN IsValidStance( SOLDIERTYPE *pSoldier, INT8 bNewStance );
 void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier );
 BOOLEAN IsValidMovementMode( SOLDIERTYPE *pSoldier, INT16 usMovementMode );
-FLOAT CalcSoldierNextBleed( SOLDIERTYPE *pSoldier );
-FLOAT CalcSoldierNextUnmovingBleed( SOLDIERTYPE *pSoldier );
 void SoldierCollapse( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState );

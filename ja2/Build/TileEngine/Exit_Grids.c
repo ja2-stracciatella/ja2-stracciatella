@@ -27,7 +27,8 @@ EXITGRID		gExitGrid	= {0,1,1,0};
 
 BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
-INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
+
+static INT32 ConvertExitGridToINT32(EXITGRID* pExitGrid)
 {
 	INT32 iExitGridInfo;
 	iExitGridInfo  = (pExitGrid->ubGotoSectorX-1)<< 28;
@@ -37,7 +38,8 @@ INT32 ConvertExitGridToINT32( EXITGRID *pExitGrid )
 	return iExitGridInfo;
 }
 
-void ConvertINT32ToExitGrid( INT32 iExitGridInfo, EXITGRID *pExitGrid )
+
+static void ConvertINT32ToExitGrid(INT32 iExitGridInfo, EXITGRID* pExitGrid)
 {
 	//convert the int into 4 unsigned bytes.
 	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);

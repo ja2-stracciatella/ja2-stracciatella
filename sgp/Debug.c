@@ -322,17 +322,16 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const
 		}
 #endif
 	}
-
 }
 
 
-void			_DebugRecordToFile(BOOLEAN gfState)
+static void _DebugRecordToFile(BOOLEAN gfState)
 {
 	gfRecordToFile = gfState;
 }
 
 
-void			_DebugRecordToDebugger(BOOLEAN gfState)
+static void _DebugRecordToDebugger(BOOLEAN gfState)
 {
 	gfRecordToDebugger = gfState;
 }

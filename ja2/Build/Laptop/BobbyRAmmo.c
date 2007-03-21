@@ -17,8 +17,6 @@
 UINT32		guiAmmoBackground;
 UINT32		guiAmmoGrid;
 
-BOOLEAN DisplayAmmoInfo();
-
 
 void GameInitBobbyRAmmo()
 {

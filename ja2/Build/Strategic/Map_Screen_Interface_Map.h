@@ -11,7 +11,6 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 UINT32 DrawMap( void );
 
 void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
-void GetScreenXYFromMapXYStationary( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
 
 BOOLEAN InitializePalettesForMap( void );
 void ShutDownPalettesForMap( void );
@@ -22,14 +21,8 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY );
 // the temp path, where the helicopter could go
 void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY );
 
-// trace a route for a passed path...doesn't require dest char - most more general
-BOOLEAN TracePathRoute( BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath );
-
 // show arrows for this char
 void DisplayPathArrows(UINT16 usCharNum, HVOBJECT hMapHandle);
-
-// restore backgrounds for arrows
-void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY, BOOLEAN fZoom);
 
 // build path for character
 void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal );
@@ -51,7 +44,6 @@ UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, 
 // cancel path : clear the path completely and gives player feedback message that the route was canceled
 void CancelPathForCharacter( SOLDIERTYPE *pCharacter );
 void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed );
-void CancelPathForGroup( GROUP *pGroup );
 
 // check if we have waited long enought o update temp path
 void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
@@ -77,9 +69,6 @@ void ClipBlitsToMapViewRegionForRectangleAndABit( UINT32 uiDestPitchBYTES );
 void RestoreClipRegionToFullScreen( void );
 void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES );
 
-// show the icons for people in motion
-void ShowPeopleInMotion( INT16 sX, INT16 sY );
-
 // last sector in helicopter's path
 INT16 GetLastSectorOfHelicoptersPath( void );
 
@@ -91,9 +80,6 @@ void DisplayPositionOfHelicopter( void );
 
 // check for click
 BOOLEAN CheckForClickOverHelicopterIcon( INT16 sX, INT16 sY );
-
-// show town markers
-void BlitTownGridMarkers( void );
 
 // load and delete the graphics for the map screen map militia
 BOOLEAN LoadMilitiaPopUpBox( void );
@@ -123,8 +109,6 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 //a question mark is displayed to reflect that the player no longer knows.  This is the function that clears that
 //flag.
 void ClearAnySectorsFlashingNumberOfEnemies();
-
-void CopyPathToCharactersSquadIfInOne( SOLDIERTYPE *pCharacter );
 
 void InitMapSecrets( void );
 

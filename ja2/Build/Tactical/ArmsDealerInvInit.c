@@ -634,11 +634,7 @@ DEALER_POSSIBLE_INV gFredoInventory[] =
 };
 
 
-
-// prototypes
-
-INT8	GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex );
-
+static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV* pInv, UINT16 usItemIndex);
 
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
@@ -647,7 +643,7 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 }
 
 
-INT8 GetMaxItemAmount( DEALER_POSSIBLE_INV *pInv, UINT16 usItemIndex )
+static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV* pInv, UINT16 usItemIndex)
 {
 	UINT16	usCnt=0;
 
@@ -694,7 +690,7 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 }
 
 
-UINT8 GetCurrentSuitabilityForItem( INT8 bArmsDealer, UINT16 usItemIndex )
+static UINT8 GetCurrentSuitabilityForItem(INT8 bArmsDealer, UINT16 usItemIndex)
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
@@ -1086,6 +1082,8 @@ int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
 }
 
 
+static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex);
+
 
 int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
 {
@@ -1216,8 +1214,7 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 }
 
 
-
-UINT8 GetDealerItemCategoryNumber( UINT16 usItemIndex )
+static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex)
 {
 	UINT32	uiItemClass;
 	UINT8		ubWeaponClass;

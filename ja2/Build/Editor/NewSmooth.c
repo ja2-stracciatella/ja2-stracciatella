@@ -19,11 +19,7 @@
 #include "Debug.h"
 
 
-BOOLEAN CaveAtGridNo( INT32 iMapIndex );
-UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal );
-UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex );
-
-BOOLEAN CaveAtGridNo( INT32 iMapIndex )
+static BOOLEAN CaveAtGridNo(INT32 iMapIndex)
 {
 	STRUCTURE *pStruct;
 	LEVELNODE* pLevel;
@@ -51,7 +47,8 @@ BOOLEAN CaveAtGridNo( INT32 iMapIndex )
 	return FALSE;
 }
 
-UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
+
+static UINT16 GetCaveTileIndexFromPerimeterValue(UINT8 ubTotal)
 {
 	UINT16 usType = FIRSTWALL;
 	UINT16 usIndex;
@@ -229,7 +226,7 @@ UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal )
 //which piece to use for all of these combinations.  In many cases,
 //up to 16 combinations can share the same graphic image, as corners
 //may not effect the look of the piece.
-UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex )
+static UINT8 CalcNewCavePerimeterValue(INT32 iMapIndex)
 {
 	UINT8 ubTotal = 0;
 	if( CaveAtGridNo( iMapIndex - WORLD_COLS ) )
@@ -326,17 +323,7 @@ INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 //These construction functions do all the smoothing.
 //NOTE:  passing null for wall/roof type will force the function to search for the nearest
 //  existing respective type.
-void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical );
-
-void BulldozeNature( UINT32 iMapIndex );
-void EraseRoof( UINT32 iMapIndex );
-void EraseFloor( UINT32 iMapIndex );
-void EraseBuilding( UINT32 iMapIndex );
-void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex );
-void ConsiderEffectsOfNewWallPiece( UINT32 iMapIndex, UINT8 usWallOrientation );
-
-
-void BuildSlantRoof( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical )
+static void BuildSlantRoof(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical)
 {
 	INT32 i;
 	UINT16 usTileIndex;
@@ -593,6 +580,10 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 	AddWallToStructLayer( iMapIndex, usTileIndex, FALSE );
 }
 
+
+static void EraseRoof(UINT32 iMapIndex);
+
+
 void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 {
 	UINT16 usRoofIndex, usTileIndex;
@@ -671,7 +662,8 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 	}
 }
 
-void BulldozeNature( UINT32 iMapIndex )
+
+static void BulldozeNature(UINT32 iMapIndex)
 {
 	AddToUndoList( iMapIndex );
 	RemoveAllStructsOfTypeRange( iMapIndex, FIRSTISTRUCT,LASTISTRUCT );
@@ -683,7 +675,8 @@ void BulldozeNature( UINT32 iMapIndex )
 	RemoveAllObjectsOfTypeRange( iMapIndex, ANOTHERDEBRIS, ANOTHERDEBRIS );
 }
 
-void EraseRoof( UINT32 iMapIndex )
+
+static void EraseRoof(UINT32 iMapIndex)
 {
 	AddToUndoList( iMapIndex );
 	RemoveAllRoofsOfTypeRange( iMapIndex, FIRSTTEXTURE, LASTITEM );
@@ -691,7 +684,8 @@ void EraseRoof( UINT32 iMapIndex )
 	RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTROOF, LASTSLANTROOF );
 }
 
-void EraseFloor( UINT32 iMapIndex )
+
+static void EraseFloor(UINT32 iMapIndex)
 {
 	AddToUndoList( iMapIndex );
 	RemoveAllLandsOfTypeRange( iMapIndex, FIRSTFLOOR, LASTFLOOR );
@@ -717,10 +711,11 @@ void EraseBuilding( UINT32 iMapIndex )
 	gubWorldRoomInfo[ iMapIndex ] = 0;
 }
 
+
 //Specialized function that will delete only the TOP_RIGHT oriented wall in the gridno to the left
 //and the TOP_LEFT oriented wall in the gridno up one as well as the other building information at this
 //gridno.
-void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
+static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 {
 	LEVELNODE	*pStruct = NULL;
 	UINT32 uiTileType;
@@ -777,12 +772,6 @@ void EraseFloorOwnedBuildingPieces( UINT32 iMapIndex )
 	}
 }
 
-/*
-BOOLEAN CaveAtGridNo( INT32 iMapIndex );
-UINT16 GetCaveTileIndexFromPerimeterValue( UINT8 ubTotal );
-UINT8 CalcNewCavePerimeterValue( INT32 iMapIndex );
-void AddCave( INT32 iMapIndex, UINT16 usIndex );
-*/
 
 void RemoveCaveSectionFromWorld( SGPRect *pSelectRegion )
 {

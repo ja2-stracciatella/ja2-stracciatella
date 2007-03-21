@@ -61,13 +61,7 @@ ARMY_GUN_CHOICE_TYPE gExtendedArmyGunChoices[ARMY_GUN_LEVELS] =
 };
 
 
-void RandomlyChooseWhichItemsAreDroppable( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass );
-void EquipTank( SOLDIERCREATE_STRUCT *pp );
-
-void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass );
-void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass );
-void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass );
-
+static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 
 
 void InitArmyGunTypes(void)
@@ -112,8 +106,7 @@ void InitArmyGunTypes(void)
 }
 
 
-
-INT8 GetWeaponClass( UINT16 usGun )
+static INT8 GetWeaponClass(UINT16 usGun)
 {
 	UINT32		uiGunLevel, uiLoop;
 
@@ -132,8 +125,7 @@ INT8 GetWeaponClass( UINT16 usGun )
 }
 
 
-
-void MarkAllWeaponsOfSameGunClassAsDropped( UINT16 usWeapon )
+static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon)
 {
 	INT8 bGunClass;
 	UINT32 uiLoop;
@@ -155,6 +147,18 @@ void MarkAllWeaponsOfSameGunClassAsDropped( UINT16 usWeapon )
 	}
 }
 
+
+static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass);
+static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBombClass);
+static void ChooseFaceGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp);
+static void ChooseGrenadesForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher);
+static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKitClass);
+static void ChooseLocationSpecificGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp);
+static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bMiscClass);
+static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKnifeClass, BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar);
+static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bWeaponClass, INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment);
+static void EquipTank(SOLDIERCREATE_STRUCT* pp);
+static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 bSoldierClass);
 
 
 //Chooses equipment based on the relative equipment level (0-4) with best being 4.  It allocates a range
@@ -533,12 +537,14 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 }
 
 
+static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECTTYPE* pObject);
+static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel);
+
+
 //When using the class values, they should all range from 0-11, 0 meaning that there will be no
 //selection for that particular type of item, and 1-11 means to choose an item if possible.  1 is
 //the worst class of item, while 11 is the best.
-
-void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponClass,
-																				 INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment )
+static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bWeaponClass, INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment)
 {
 	INVTYPE *pItem;
 	OBJECTTYPE Object;
@@ -711,7 +717,8 @@ void ChooseWeaponForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bWeaponC
 	}
 }
 
-void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher )
+
+static void ChooseGrenadesForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bGrenades, INT8 bGrenadeClass, BOOLEAN fGrenadeLauncher)
 {
 	OBJECTTYPE Object;
 	INT16 sNumPoints;
@@ -948,7 +955,8 @@ void ChooseGrenadesForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bGrena
 
 }
 
-void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass )
+
+static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass)
 {
 	UINT16 i;
 	INVTYPE *pItem;
@@ -1116,8 +1124,8 @@ void ChooseArmourForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bHelmetC
 	}
 }
 
-void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKnifeClass,
-																								 BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar )
+
+static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKnifeClass, BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar)
 {
 	UINT16 i;
 	INVTYPE *pItem;
@@ -1196,7 +1204,7 @@ void ChooseSpecialWeaponsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 
 }
 
 
-void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
+static void ChooseFaceGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp)
 {
 	INT32 i;
 	INT8 bDifficultyRating = CalcDifficultyModifier( pp->ubSoldierClass );
@@ -1274,8 +1282,7 @@ void ChooseFaceGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
 }
 
 
-
-void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass )
+static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKitClass)
 {
 	UINT16 i;
 	INVTYPE *pItem;
@@ -1340,7 +1347,7 @@ void ChooseKitsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bKitClass 
 }
 
 
-void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscClass )
+static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bMiscClass)
 {
 	UINT16 i;
 	INVTYPE *pItem;
@@ -1418,7 +1425,7 @@ void ChooseMiscGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bMiscC
 }
 
 
-void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClass )
+static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBombClass)
 {
 	UINT16 i;
 	INVTYPE *pItem;
@@ -1461,8 +1468,7 @@ void ChooseBombsForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, INT8 bBombClas
 }
 
 
-
-void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp )
+static void ChooseLocationSpecificGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp)
 {
 	OBJECTTYPE		Object;
 
@@ -1476,8 +1482,7 @@ void ChooseLocationSpecificGearForSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp 
 }
 
 
-
-BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *pObject )
+static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECTTYPE* pObject)
 {
 	INT8 i;
 	if( !Item[ pObject->usItem ].ubPerPocket )
@@ -1517,7 +1522,8 @@ BOOLEAN PlaceObjectInSoldierCreateStruct( SOLDIERCREATE_STRUCT *pp, OBJECTTYPE *
 	return FALSE;
 }
 
-void RandomlyChooseWhichItemsAreDroppable( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
+
+static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 bSoldierClass)
 {
 	INT32 i;
 //	UINT16 usRandomNum;
@@ -2070,13 +2076,11 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				}
 			}
 		}
-
 	}
 }
 
 
-
-UINT16 SelectStandardArmyGun( UINT8 uiGunLevel )
+static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel)
 {
 	ARMY_GUN_CHOICE_TYPE *pGunChoiceTable;
 	UINT32 uiChoice;
@@ -2109,8 +2113,7 @@ UINT16 SelectStandardArmyGun( UINT8 uiGunLevel )
 }
 
 
-
-void EquipTank( SOLDIERCREATE_STRUCT *pp )
+static void EquipTank(SOLDIERCREATE_STRUCT* pp)
 {
 	OBJECTTYPE Object;
 

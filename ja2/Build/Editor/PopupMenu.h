@@ -91,10 +91,5 @@ extern UINT16 *popupMenuStrings[5];
 void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection );
 BOOLEAN ProcessPopupMenuIfActive();
 
-//Internal functions that handled by ProcessPopupMenuIfActive
-void RenderPopupMenu();
-void PopupMenuHandle();
-void ProcessPopupMenuSelection();
-
 #endif
 #endif

@@ -40,13 +40,7 @@ const wchar_t* const wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", 
 BOOLEAN gfAllowRightButtonSelections = FALSE;
 BOOLEAN gfCurrentSelectionWithRightButton = FALSE;
 
-void DrawBuildingLayout( INT32 iMapIndex );
 void RemoveBuildingLayout();
-
-void ValidateSelectionRegionBoundaries();
-void ForceAreaSelectionWidth();
-BOOLEAN HandleAreaSelection();
-void EnsureSelectionType();
 
 //Used for offseting cursor to show that it is on the roof rather than on the ground.
 //This can be conveniently executed by moving the cursor up and right 3 gridnos for a
@@ -120,7 +114,8 @@ void RemoveCursors()
 	gfUsingOffset = FALSE;
 }
 
-void RemoveBadMarker()
+
+static void RemoveBadMarker(void)
 {
 	LEVELNODE *pNode;
 	if( sBadMarker < 0 )
@@ -137,6 +132,14 @@ void RemoveBadMarker()
 		pNode = pNode->pNext;
 	}
 }
+
+
+static void DrawBuildingLayout(INT32 iMapIndex);
+static void EnsureSelectionType(void);
+static void ForceAreaSelectionWidth(void);
+static BOOLEAN HandleAreaSelection(void);
+static void ValidateSelectionRegionBoundaries(void);
+
 
 void UpdateCursorAreas()
 {
@@ -238,7 +241,7 @@ void UpdateCursorAreas()
 static SGPPoint gSelectAnchor;
 
 
-void ForceAreaSelectionWidth()
+static void ForceAreaSelectionWidth(void)
 {
 	UINT16 gusDecSelWidth;
 
@@ -278,7 +281,8 @@ void ForceAreaSelectionWidth()
 	}
 }
 
-BOOLEAN HandleAreaSelection()
+
+static BOOLEAN HandleAreaSelection(void)
 {
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
@@ -341,7 +345,8 @@ BOOLEAN HandleAreaSelection()
 	return TRUE;
 }
 
-void ValidateSelectionRegionBoundaries()
+
+static void ValidateSelectionRegionBoundaries(void)
 {
 	gSelectRegion.iLeft		= max( min( 159, gSelectRegion.iLeft	 ), 0 );
 	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight  ), 0 );
@@ -349,7 +354,8 @@ void ValidateSelectionRegionBoundaries()
 	gSelectRegion.iBottom = max( min( 159, gSelectRegion.iBottom ), 0 );
 }
 
-void EnsureSelectionType()
+
+static void EnsureSelectionType(void)
 {
 	BOOLEAN fPrevBrushEnabledState = gfBrushEnabled;
 
@@ -416,7 +422,8 @@ void EnsureSelectionType()
 	}
 }
 
-void DrawBuildingLayout( INT32 iMapIndex )
+
+static void DrawBuildingLayout(INT32 iMapIndex)
 {
 	BUILDINGLAYOUTNODE *curr;
 	INT32 iOffset;

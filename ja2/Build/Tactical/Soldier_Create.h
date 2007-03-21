@@ -205,18 +205,12 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 //mercs to their original states.
 void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_STRUCT *spp );
 
-//In the case of setting a profile ID in order to extract a soldier from the profile array, we
-//also want to copy that information to the static detailed placement, for editor viewing purposes.
-void UpdateStaticDetailedPlacementWithProfileInformation( SOLDIERCREATE_STRUCT *spp, UINT8 ubProfile );
-
 //When the editor modifies the soldier's relative attribute level,
 //this function is called to update that information.
 void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bLevel );
 
 // Force the soldier to be a different ID
 void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID );
-
-void GeneratePaletteForSoldier( SOLDIERTYPE *pSoldier, UINT8 ubSoldierClass );
 
 void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID );
 

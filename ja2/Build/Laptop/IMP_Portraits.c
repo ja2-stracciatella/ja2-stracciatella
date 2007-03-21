@@ -36,17 +36,8 @@ BOOLEAN fReDrawPortraitScreenFlag = FALSE;
 INT32 iPortraitNumber = 0;
 
 
-// function definitions
+static void CreateIMPPortraitButtons(void);
 
-void IncrementPictureIndex( void );
-void DecrementPicture( void );
-void CreateIMPPortraitButtons( void );
-void DestroyIMPPortraitButtons( void );
-
-
-static void BtnIMPPortraitNextCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPortraitPreviousCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPortraitDoneCallback(GUI_BUTTON *btn, INT32 reason);
 
 void EnterIMPPortraits( void )
 {
@@ -57,6 +48,9 @@ void EnterIMPPortraits( void )
 	// render background
 	RenderIMPPortraits( );
 }
+
+
+static BOOLEAN RenderPortrait(INT16 sX, INT16 sY);
 
 
 void RenderIMPPortraits( void )
@@ -80,6 +74,9 @@ void RenderIMPPortraits( void )
 }
 
 
+static void DestroyIMPPortraitButtons(void);
+
+
 void ExitIMPPortraits( void )
 {
 	// destroy buttons for IMP portrait page
@@ -100,7 +97,7 @@ void HandleIMPPortraits( void )
 }
 
 
-BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
+static BOOLEAN RenderPortrait(INT16 sX, INT16 sY)
 {
   // render the portrait of the current picture
 	UINT32 uiGraphicHandle;
@@ -122,8 +119,7 @@ BOOLEAN RenderPortrait( INT16 sX, INT16 sY )
 }
 
 
-
-void IncrementPictureIndex( void )
+static void IncrementPictureIndex(void)
 {
 	// cycle to next picture
 
@@ -137,7 +133,7 @@ void IncrementPictureIndex( void )
 }
 
 
-void DecrementPicture( void )
+static void DecrementPicture(void)
 {
   // cycle to previous picture
 
@@ -151,7 +147,12 @@ void DecrementPicture( void )
 }
 
 
-void CreateIMPPortraitButtons( void )
+static void BtnIMPPortraitDoneCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPPortraitNextCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPPortraitPreviousCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateIMPPortraitButtons(void)
 {
   // will create buttons need for the IMP portrait screen
 
@@ -204,8 +205,7 @@ void CreateIMPPortraitButtons( void )
 }
 
 
-
-void DestroyIMPPortraitButtons( void )
+static void DestroyIMPPortraitButtons(void)
 {
 
 	// will destroy buttons created for IMP Portrait screen

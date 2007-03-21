@@ -18,14 +18,8 @@
 #include "Stubs.h" // XXX
 
 
-void HourlyQuestUpdate( void );
-void HourlyLarryUpdate( void );
-
 extern INT32 GetCurrentBalance( void );
 extern void PayOffSkyriderDebtIfAny( );
-void HourlyCheckIfSlayAloneSoHeCanLeave();
-
-void UpdateRegenCounters( void );
 
 void HandleMinuteUpdate()
 {
@@ -35,10 +29,16 @@ void HandleMinuteUpdate()
 	#endif
 }
 
+
+static void HourlyCheckIfSlayAloneSoHeCanLeave(void);
+static void HourlyLarryUpdate(void);
+static void HourlyQuestUpdate(void);
+static void UpdateRegenCounters(void);
+
+
 // This function gets called every hour, on the hour.
 // It spawns the handling of all sorts of stuff:
 // Morale changes, assignment progress, town loyalties, etc.
-
 void HandleHourlyUpdate()
 {
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
@@ -84,7 +84,8 @@ void HandleHourlyUpdate()
 	}
 }
 
-void UpdateRegenCounters( void )
+
+static void UpdateRegenCounters(void)
 {
 	UINT8	ubID;
 
@@ -107,7 +108,7 @@ void HandleQuarterHourUpdate()
 }
 
 
-void HourlyQuestUpdate( void )
+static void HourlyQuestUpdate(void)
 {
 	UINT32 uiHour = GetWorldHour();
 
@@ -181,7 +182,8 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 
 #define LARRY_FALLS_OFF_WAGON 8
 
-void HourlyLarryUpdate( void )
+
+static void HourlyLarryUpdate(void)
 {
 	SOLDIERTYPE *			pSoldier;
 	INT8							bSlot, bBoozeSlot;
@@ -315,7 +317,8 @@ void HourlyLarryUpdate( void )
 
 }
 
-void HourlyCheckIfSlayAloneSoHeCanLeave()
+
+static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 {
 	SOLDIERTYPE *pSoldier;
 	pSoldier = FindSoldierByProfileID( SLAY, TRUE );

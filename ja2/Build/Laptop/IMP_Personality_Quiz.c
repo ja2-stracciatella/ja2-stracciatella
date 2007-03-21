@@ -61,39 +61,11 @@ INT32 iQuizAnswerList[MAX_NUMBER_OF_IMP_QUESTIONS];
 // current number of buttons being shown
 INT32 iNumberOfPersonaButtons = 0;
 
-// function definitions
-void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons );
-void CreateIMPPersonalityQuizAnswerButtons( void );
-void CreateIMPPersonalityQuizButtons( void );
-void DestroyIMPersonalityQuizButtons( void );
-void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons );
-void DestroyPersonalityQuizButtons( void );
-void ResetQuizAnswerButtons( );
-void CompileQuestionsInStatsAndWhatNot( void );
-void PrintQuizQuestionNumber( void );
-void CheckStateOfTheConfirmButton( void );
-void HandleIMPQuizKeyBoard( void );
-void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber );
-void MoveBackAQuestion( void );
-void MoveAheadAQuestion( void );
-void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void );
 
-
-static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason);
-
-static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
-static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
-static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+static void CreateIMPPersonalityQuizAnswerButtons(void);
+static void CreateIMPPersonalityQuizButtons(void);
+static void PrintQuizQuestionNumber(void);
+static void ResetQuizAnswerButtons(void);
 
 
 void EnterIMPPersonalityQuiz( void )
@@ -138,6 +110,11 @@ void RenderIMPPersonalityQuiz( void )
 	PrintQuizQuestionNumber( );
 }
 
+
+static void DestroyIMPersonalityQuizButtons(void);
+static void DestroyPersonalityQuizButtons(void);
+
+
 void ExitIMPPersonalityQuiz( void )
 {
 
@@ -160,6 +137,9 @@ void ExitIMPPersonalityQuiz( void )
 }
 
 
+static void HandleIMPQuizKeyBoard(void);
+
+
 void HandleIMPPersonalityQuiz( void )
 {
 
@@ -176,7 +156,13 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
-void CreateIMPPersonalityQuizButtons( void )
+static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
+static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
+
+
+static void CreateIMPPersonalityQuizButtons(void)
 {
   // this function will create the buttons needed for the IMP personality quiz Page
 
@@ -242,7 +228,8 @@ void CreateIMPPersonalityQuizButtons( void )
 	SetButtonCursor( giNextQuestionButton, CURSOR_WWW );
 }
 
-void DestroyIMPersonalityQuizButtons( void )
+
+static void DestroyIMPersonalityQuizButtons(void)
 {
 	// this function will destroy the buttons needed for the IMP personality quiz page
 
@@ -263,7 +250,12 @@ void DestroyIMPersonalityQuizButtons( void )
 	UnloadButtonImage( giNextQuestionButtonImage );
 }
 
-void CreateIMPPersonalityQuizAnswerButtons( void )
+
+static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons);
+static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber);
+
+
+static void CreateIMPPersonalityQuizAnswerButtons(void)
 {
   // this function will create the buttons for the personality quiz answer selections
 
@@ -334,7 +326,10 @@ void CreateIMPPersonalityQuizAnswerButtons( void )
 }
 
 
-void DestroyPersonalityQuizButtons( void )
+static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons);
+
+
+static void DestroyPersonalityQuizButtons(void)
 {
 
 	// this function will destroy the buttons used in the previous personality question
@@ -371,7 +366,20 @@ void DestroyPersonalityQuizButtons( void )
 	}
 }
 
-void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
+
+static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
   // will add iNumberofbuttons to the answer button list
    INT32 iCounter = 0;
@@ -466,7 +474,7 @@ void AddIMPPersonalityQuizAnswerButtons( INT32 iNumberOfButtons )
 }
 
 
-void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
+static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
   INT32 iCounter = 0;
 	for(iCounter = 0; iCounter < iNumberOfButtons; iCounter++)
@@ -476,6 +484,9 @@ void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons )
 		 giIMPPersonalityQuizAnswerButton[ iCounter ] = -1;
 	}
 }
+
+
+static void CheckStateOfTheConfirmButton(void);
 
 
 static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason)
@@ -626,6 +637,10 @@ static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void);
+static void CompileQuestionsInStatsAndWhatNot(void);
+
+
 static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -671,7 +686,7 @@ static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason
 }
 
 
-void ResetQuizAnswerButtons( void )
+static void ResetQuizAnswerButtons(void)
 {
 
 	INT32 iCounter = 0;
@@ -718,7 +733,7 @@ void ResetQuizAnswerButtons( void )
 }
 
 
-void CompileQuestionsInStatsAndWhatNot( void )
+static void CompileQuestionsInStatsAndWhatNot(void)
 {
   // one BIG case/switch statement to determine what values are added where
   INT32 iCurrentQuestion = 0;
@@ -1281,7 +1296,8 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 	}
 }
 
-void PrintQuizQuestionNumber( void )
+
+static void PrintQuizQuestionNumber(void)
 {
   // this function will print the number of the current question and the numebr of questions
 
@@ -1304,8 +1320,7 @@ void PrintQuizQuestionNumber( void )
 }
 
 
-
-void CheckStateOfTheConfirmButton( void )
+static void CheckStateOfTheConfirmButton(void)
 {
   // will check the state of the confirm button, should it be enabled or disabled?
 	if( iCurrentAnswer == -1 )
@@ -1315,7 +1330,12 @@ void CheckStateOfTheConfirmButton( void )
 	}
 }
 
-void HandleIMPQuizKeyBoard( void )
+
+static void MoveAheadAQuestion(void);
+static void MoveBackAQuestion(void);
+
+
+static void HandleIMPQuizKeyBoard(void)
 {
 	InputAtom					InputEvent;
 	POINT  MousePos;
@@ -1430,7 +1450,7 @@ void HandleIMPQuizKeyBoard( void )
 }
 
 
-void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void )
+static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void)
 {
 	if( giCurrentPersonalityQuizQuestion >= giMaxPersonalityQuizQuestion )
 	{
@@ -1452,7 +1472,7 @@ void CheckAndUpdateNextPreviousIMPQuestionButtonStates( void )
 }
 
 
-void MoveAheadAQuestion( void )
+static void MoveAheadAQuestion(void)
 {
 
 	// move ahead a question in the personality question list
@@ -1483,7 +1503,8 @@ void MoveAheadAQuestion( void )
 */
 }
 
-void MoveBackAQuestion( void )
+
+static void MoveBackAQuestion(void)
 {
 	if( giCurrentPersonalityQuizQuestion > 0 )
 	{
@@ -1510,7 +1531,8 @@ void MoveBackAQuestion( void )
 */
 }
 
-void ToggleQuestionNumberButtonOn( INT32 iAnswerNumber )
+
+static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber)
 {
 	if( ( giCurrentPersonalityQuizQuestion <= giMaxPersonalityQuizQuestion ) && ( iAnswerNumber != -1 ) )
 	{

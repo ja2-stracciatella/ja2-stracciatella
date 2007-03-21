@@ -16,9 +16,6 @@ BOOLEAN InitMercPopupBox( );
 INT32 PrepareMercPopupBox(  INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight);
 
 
-// remove the current box
-BOOLEAN RemoveMercPopupBox();
-
 // remove this box from the index
 BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 

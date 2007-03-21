@@ -22,7 +22,6 @@ void HandleStolenItemsReturned( void );
 
 void AddSecondAirportAttendant( void );
 
-void SetPabloToUnbribed( void );
 void HandleNPCSystemEvent( UINT32 uiEvent );
 void HandleEarlyMorningEvents( void );
 

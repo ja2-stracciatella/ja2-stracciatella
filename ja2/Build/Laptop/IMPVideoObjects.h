@@ -29,19 +29,15 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY);
 
 BOOLEAN LoadAnalyse( void );
 void DeleteAnalyse( void );
-void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber);
 
 BOOLEAN LoadAttributeGraph( void );
 void DeleteAttributeGraph( void );
-void RenderAttributeGraph(INT16 sX, INT16 sY);
 
 BOOLEAN LoadAttributeGraphBar( void );
 void DeleteAttributeBarGraph( void );
-void RenderAttributeBarGraph(INT16 sX, INT16 sY);
 
 BOOLEAN LoadFullNameIndent( void );
 void DeleteFullNameIndent( void );
-void RenderFullNameIndent(INT16 sX, INT16 sY);
 
 BOOLEAN LoadNameIndent( void );
 void DeleteNameIndent( void );
@@ -55,13 +51,8 @@ BOOLEAN LoadGenderIndent( void );
 void DeleteGenderIndent( void );
 void RenderGenderIndent(INT16 sX, INT16 sY);
 
-BOOLEAN LoadSmallFrame( void );
-void DeleteSmallFrame( void );
-void RenderSmallFrame(INT16 sX, INT16 sY);
-
 BOOLEAN LoadSmallSilhouette( void );
 void DeleteSmallSilhouette( void );
-void RenderSmallSilhouette(INT16 sX, INT16 sY);
 
 BOOLEAN LoadLargeSilhouette( void );
 void DeleteLargeSilhouette( void );
@@ -86,7 +77,6 @@ void RenderButton4Image(INT16 sX, INT16 sY);
 
 BOOLEAN LoadButton1Image( void );
 void DeleteButton1Image( void );
-void RenderButton1Image(INT16 sX, INT16 sY);
 
 BOOLEAN LoadPortraitFrame( void );
 void DeletePortraitFrame( void );

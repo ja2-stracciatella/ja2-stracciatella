@@ -34,9 +34,6 @@
 #include "MemMan.h"
 
 
-void BuildListFile( );
-
-
 BOOLEAN	gfAniEditMode = FALSE;
 static UINT16		usStartAnim = 0;
 static UINT8		ubStartHeight = 0;
@@ -47,7 +44,8 @@ static UINT8	 ubNumStates = 0;
 static UINT16   *pusStates = NULL;
 static INT8   ubCurLoadedState = 0;
 
-void CycleAnimations( )
+
+static void CycleAnimations(void)
 {
 	INT32 cnt;
 
@@ -82,6 +80,8 @@ UINT32 AniEditScreenShutdown(void)
 	return TRUE;
 }
 
+
+static void BuildListFile(void);
 
 
 UINT32  AniEditScreenHandle(void)
@@ -321,7 +321,7 @@ UINT32  AniEditScreenHandle(void)
 }
 
 
-UINT16 GetAnimStateFromName( INT8 *zName )
+static UINT16 GetAnimStateFromName(INT8* zName)
 {
 	INT32 cnt;
 
@@ -342,7 +342,7 @@ UINT16 GetAnimStateFromName( INT8 *zName )
 }
 
 
-void BuildListFile( )
+static void BuildListFile(void)
 {
 	FILE *infoFile;
 	char currFilename[128];

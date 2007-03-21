@@ -20,12 +20,11 @@
 UINT32 giIMPAttributeEntranceButtonImage[ 1 ];
 UINT32 giIMPAttributeEntranceButton[ 1 ];
 
-// function definitions
-void DestroyIMPAttributeEntranceButtons( void );
-void CreateIMPAttributeEntranceButtons( void );
-
 
 static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateIMPAttributeEntranceButtons(void);
 
 
 void EnterIMPAttributeEntrance( void )
@@ -43,6 +42,10 @@ void RenderIMPAttributeEntrance( void )
 	RenderAvgMercIndentFrame(90, 40 );
 }
 
+
+static void DestroyIMPAttributeEntranceButtons(void);
+
+
 void ExitIMPAttributeEntrance( void )
 {
   // destroy the finish buttons
@@ -55,7 +58,7 @@ void HandleIMPAttributeEntrance( void )
 }
 
 
-void CreateIMPAttributeEntranceButtons( void )
+static void CreateIMPAttributeEntranceButtons(void)
 {
 
 	// the begin button
@@ -76,7 +79,7 @@ void CreateIMPAttributeEntranceButtons( void )
 }
 
 
-void DestroyIMPAttributeEntranceButtons( void )
+static void DestroyIMPAttributeEntranceButtons(void)
 {
 	// this function will destroy the buttons needed for the IMP attrib enter page
 

@@ -148,7 +148,8 @@ void DeleteBuildingLayout()
 	gsBuildingLayoutAnchorGridNo = -1;
 }
 
-void BuildLayout( INT32 iMapIndex, INT32 iOffset )
+
+static void BuildLayout(INT32 iMapIndex, INT32 iOffset)
 {
 	BUILDINGLAYOUTNODE *curr;
 	//First, validate the gridno
@@ -286,7 +287,8 @@ static void SortBuildingLayout(INT32 iMapIndex)
 	gpBuildingLayoutList = head;
 }
 
-void PasteMapElementToNewMapElement( INT32 iSrcGridNo, INT32 iDstGridNo )
+
+static void PasteMapElementToNewMapElement(INT32 iSrcGridNo, INT32 iDstGridNo)
 {
 	MAP_ELEMENT			*pSrcMapElement;
 	LEVELNODE				*pNode;
@@ -412,7 +414,8 @@ typedef struct ROOFNODE
 
 ROOFNODE *gpRoofList = NULL;
 
-void ReplaceRoof( INT32 iMapIndex, UINT16 usRoofType )
+
+static void ReplaceRoof(INT32 iMapIndex, UINT16 usRoofType)
 {
 	ROOFNODE *curr;
 	//First, validate the gridno
@@ -492,11 +495,14 @@ enum{
 };
 INT32 iDoorButton[ NUM_DOOR_BUTTONS ];
 MOUSE_REGION DoorRegion;
-void DoorOkayCallback( GUI_BUTTON *btn, INT32 reason );
-void DoorCancelCallback( GUI_BUTTON *btn, INT32 reason );
-void DoorToggleLockedCallback( GUI_BUTTON *btn, INT32 reason );
 
 extern BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
+
+
+static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason);
+static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason);
+
 
 void InitDoorEditing( INT32 iMapIndex )
 {
@@ -665,7 +671,8 @@ void KillDoorEditing()
 	KillTextInputMode();
 }
 
-void DoorOkayCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -674,7 +681,8 @@ void DoorOkayCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void DoorCancelCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -682,7 +690,8 @@ void DoorCancelCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void DoorToggleLockedCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	//handled in ExtractAndUpdateDoorInfo();
 }

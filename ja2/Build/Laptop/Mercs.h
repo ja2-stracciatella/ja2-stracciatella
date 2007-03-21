@@ -65,9 +65,6 @@ void DailyUpdateOfMercSite( UINT16 usDate);
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
 void DisplayTextForSpeckVideoPopUp(STR16 pString);
 
-BOOLEAN IsMercMercAvailable( UINT8 ubMercID );
-
-void HandlePlayerHiringMerc( UINT8 ubHiredMercID );
 void EnterInitMercSite();
 
 void GetMercSiteBackOnline();

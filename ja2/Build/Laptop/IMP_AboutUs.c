@@ -17,10 +17,11 @@
 // IMP AboutUs buttons
 INT32 giIMPAboutUsButton[1];
 INT32 giIMPAboutUsButtonImage[1];
-void CreateIMPAboutUsButtons( void );
-void DeleteIMPAboutUsButtons( void );;
 
 static void BtnIMPBackCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateIMPAboutUsButtons(void);
 
 
 void EnterIMPAboutUs( void )
@@ -32,6 +33,9 @@ void EnterIMPAboutUs( void )
 	// entry into IMP about us page
 	RenderIMPAboutUs( );
 }
+
+
+static void DeleteIMPAboutUsButtons(void);
 
 
 void ExitIMPAboutUs( void )
@@ -66,7 +70,7 @@ void HandleIMPAboutUs( void )
 }
 
 
-void CreateIMPAboutUsButtons( void )
+static void CreateIMPAboutUsButtons(void)
 {
 
   // this function will create the buttons needed for th IMP about us page
@@ -87,7 +91,7 @@ void CreateIMPAboutUsButtons( void )
 }
 
 
-void DeleteIMPAboutUsButtons( void )
+static void DeleteIMPAboutUsButtons(void)
 {
   // this function destroys the buttons needed for the IMP about Us Page
 

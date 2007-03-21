@@ -696,6 +696,7 @@ static AnimationStructureType gAnimStructureDatabase[TOTALBODYTYPES][NUM_STRUCT_
 };
 
 
+static BOOLEAN LoadAnimationProfiles(void);
 
 
 BOOLEAN InitAnimationSystem( )
@@ -733,6 +734,10 @@ BOOLEAN InitAnimationSystem( )
 	return( TRUE );
 }
 
+
+static void DeleteAnimationProfiles(void);
+
+
 BOOLEAN DeInitAnimationSystem( )
 {
 	 INT32									cnt1, cnt2;
@@ -766,8 +771,7 @@ BOOLEAN DeInitAnimationSystem( )
 }
 
 
-
-STRUCTURE_FILE_REF	*InternalGetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute )
+static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute)
 {
 	INT8	bStructDataType;
 
@@ -802,7 +806,7 @@ STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfa
 }
 
 
-STRUCTURE_FILE_REF	*GetDefaultStructureRef( UINT16 usSoldierID )
+static STRUCTURE_FILE_REF* GetDefaultStructureRef(UINT16 usSoldierID)
 {
 	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ DEFAULT_STRUCT ].pStructureFileRef );
 }
@@ -976,7 +980,7 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 }
 
 
-BOOLEAN LoadAnimationProfiles( )
+static BOOLEAN LoadAnimationProfiles(void)
 {
 //	FILE *			pInput;
 	HWFILE			pInput;
@@ -1041,7 +1045,7 @@ BOOLEAN LoadAnimationProfiles( )
 }
 
 
-void DeleteAnimationProfiles( )
+static void DeleteAnimationProfiles(void)
 {
 	INT32				iProfileCount, iDirectionCount;
 	ANIM_PROF					*pProfile;

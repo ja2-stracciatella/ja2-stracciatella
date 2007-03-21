@@ -126,15 +126,10 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams );
 
 void DeleteAniTile( ANITILE *pAniTile );
 void UpdateAniTiles( );
-void SetAniTileFrame( ANITILE *pAniTile, INT16 sFrame );
 void DeleteAniTiles( );
 
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide );
-void PauseAniTile( ANITILE *pAniTile, BOOLEAN fPause );
 
 ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags );
-
-void PauseAllAniTilesOfType( UINT32 uiType, BOOLEAN fPause );
-
 
 #endif

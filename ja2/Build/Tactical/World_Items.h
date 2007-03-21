@@ -53,7 +53,6 @@ typedef struct
 extern WORLDBOMB * gWorldBombs;
 extern UINT32 guiNumWorldBombs;
 
-extern INT32 AddBombToWorld( INT32 iItemIndex );
 extern void FindPanicBombsAndTriggers( void );
 extern INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel);
 

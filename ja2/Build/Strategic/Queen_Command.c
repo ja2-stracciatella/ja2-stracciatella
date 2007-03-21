@@ -61,7 +61,8 @@ extern BOOLEAN gfOverrideSector;
 
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
-void ValidateEnemiesHaveWeapons()
+
+static void ValidateEnemiesHaveWeapons(void)
 {
 	#ifdef JA2BETAVERSION
 		SGPRect CenteringRect= {0, 0, 639, 479 };
@@ -247,7 +248,8 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	return ubNumTroops;
 }
 
-void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+
+static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
 	GROUP *pGroup;
 	SECTORINFO *pSector;
@@ -278,7 +280,8 @@ void GetNumberOfMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pu
 
 }
 
-void GetNumberOfStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+
+static void GetNumberOfStationaryEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
@@ -369,7 +372,8 @@ void EndTacticalBattleForEnemy()
 	}
 }
 
-UINT8 NumFreeEnemySlots()
+
+static UINT8 NumFreeEnemySlots(void)
 {
 	UINT8 ubNumFreeSlots = 0;
 	INT32 i;
@@ -383,6 +387,10 @@ UINT8 NumFreeEnemySlots()
 	}
 	return ubNumFreeSlots;
 }
+
+
+static BOOLEAN PrepareEnemyForUndergroundBattle(void);
+
 
 //Called when entering a sector so the campaign AI can automatically insert the
 //correct number of troops of each type based on the current number in the sector
@@ -654,7 +662,8 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	return TRUE;
 }
 
-BOOLEAN PrepareEnemyForUndergroundBattle()
+
+static BOOLEAN PrepareEnemyForUndergroundBattle(void)
 {
 	UNDERGROUND_SECTORINFO *pUnderground;
 	UINT8 ubTotalAdmins, ubTotalTroops, ubTotalElites;
@@ -1090,6 +1099,10 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 	}
 }
 
+
+static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared);
+
+
 //Rarely, there will be more enemies than supported by the engine.  In this case, these
 //soldier's are waiting for a slot to be free so that they can enter the battle.  This
 //essentially allows for an infinite number of troops, though only 32 at a time can fight.
@@ -1185,7 +1198,8 @@ void AddPossiblePendingEnemiesToBattle()
 	}
 }
 
-void NotifyPlayersOfNewEnemies()
+
+static void NotifyPlayersOfNewEnemies(void)
 {
 	INT32 iSoldiers, iChosenSoldier, i;
 	SOLDIERTYPE *pSoldier;
@@ -1241,7 +1255,8 @@ void NotifyPlayersOfNewEnemies()
 	}
 }
 
-void AddEnemiesToBattle( GROUP *pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared )
+
+static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared)
 {
 	SOLDIERTYPE *pSoldier;
 	MAPEDGEPOINTINFO MapEdgepointInfo;
@@ -1707,7 +1722,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap()
+static void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap(void)
 {
 	INT32 i;
 	BOOLEAN fMadeCorpse;

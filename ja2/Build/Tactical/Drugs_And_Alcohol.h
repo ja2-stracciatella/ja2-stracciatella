@@ -17,7 +17,6 @@
 #define REGEN_POINTS_PER_BOOSTER					4
 #define LIFE_GAIN_PER_REGEN_POINT					10
 
-UINT8 GetDrugType( UINT16 usItem );
 BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject );
 
 void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier );
@@ -26,7 +25,6 @@ void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPoints );
 
 
 INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType );
-INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType );
 INT8 GetDrunkLevel(const SOLDIERTYPE* pSoldier);
 INT32 EffectStatForBeingDrunk(const SOLDIERTYPE* pSoldier, INT32 iStat);
 BOOLEAN MercUnderTheInfluence( SOLDIERTYPE *pSoldier );

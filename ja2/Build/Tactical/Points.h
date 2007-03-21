@@ -280,7 +280,6 @@ BOOLEAN SelectedMercCanAffordMove(  );
 
 BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg );
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );
-INT16 AdjustBreathPts(SOLDIERTYPE *pSold, INT16 sBPCost);
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
 INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode);
 UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost);
@@ -293,11 +292,9 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
-UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
 UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
-UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
 
 UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier );
 UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
@@ -307,7 +304,6 @@ BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
 INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
 INT8 GetAPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown );
-INT16 GetBPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown );
 
 INT8 GetAPsToJumpFence( SOLDIERTYPE *pSoldier );
 INT8 GetBPsToJumpFence( SOLDIERTYPE *pSoldier );
@@ -324,10 +320,8 @@ UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos );
-INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier );

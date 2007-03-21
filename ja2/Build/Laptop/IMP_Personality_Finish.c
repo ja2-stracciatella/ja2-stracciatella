@@ -40,18 +40,12 @@ UINT32 giIMPPersonalityFinishButton[2];
 UINT32 giIMPPersonalityFinishButtonImage[2];
 
 
-
-// function definitions
-void CreateIMPPersonalityFinishButtons( void );
-void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void );
-void DestroyIMPersonalityFinishButtons( void );
-void CreatePersonalityFinishOkButton( void );
-void DestroyPersonalityFinishOkButton( void );
-
-
 static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityFinishOkCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateIMPPersonalityFinishButtons(void);
 
 
 void EnterIMPPersonalityFinish( void )
@@ -91,6 +85,11 @@ void RenderIMPPersonalityFinish( void )
 	}
 }
 
+
+static void DestroyIMPersonalityFinishButtons(void);
+static void DestroyPersonalityFinishOkButton(void);
+
+
 void ExitIMPPersonalityFinish( void )
 {
 
@@ -116,6 +115,9 @@ void ExitIMPPersonalityFinish( void )
 }
 
 
+static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void);
+
+
 void HandleIMPPersonalityFinish( void )
 {
 
@@ -124,7 +126,10 @@ void HandleIMPPersonalityFinish( void )
 }
 
 
-void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
+static void CreatePersonalityFinishOkButton(void);
+
+
+static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 {
 	// this function will check to see if player has in fact confirmed selection and delay to
 	// read text has occurred
@@ -164,7 +169,7 @@ void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed( void )
 }
 
 
-void CreateIMPPersonalityFinishButtons( void )
+static void CreateIMPPersonalityFinishButtons(void)
 {
   // this function will create the buttons needed for the IMP personality Finish Page
 
@@ -199,7 +204,7 @@ void CreateIMPPersonalityFinishButtons( void )
 }
 
 
-void DestroyIMPersonalityFinishButtons( void )
+static void DestroyIMPersonalityFinishButtons(void)
 {
 	// this function will destroy the buttons needed for the IMP personality Finish page
 
@@ -272,7 +277,7 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void CreatePersonalityFinishOkButton( void )
+static void CreatePersonalityFinishOkButton(void)
 {
 
 	// create personality button finish button
@@ -288,7 +293,7 @@ void CreatePersonalityFinishOkButton( void )
 }
 
 
-void DestroyPersonalityFinishOkButton( void )
+static void DestroyPersonalityFinishOkButton(void)
 {
 		// the ok button
   RemoveButton(giIMPPersonalityFinishButton[ 0 ] );

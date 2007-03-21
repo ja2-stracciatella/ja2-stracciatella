@@ -36,7 +36,6 @@ BOOLEAN TravelBetweenSectorsIsBlockedFromFoot( UINT16 sSourceSector, UINT16 sDes
 BOOLEAN CanThisMercMoveToThisSector( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY );
 void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY, UINT8 ubFromDirection);
 */
-BOOLEAN AddSectorToPathList( PathStPtr pPath ,UINT16 uiSectorNum );
 
 // build a stategic path
 PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ );
@@ -52,17 +51,8 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup );
 // move to beginning of list
 PathStPtr MoveToBeginningOfPathList( PathStPtr pList );
 
-// move to end of path list
-PathStPtr MoveToEndOfPathList( PathStPtr pList );
-
-// remove tail of list
-PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList );
-
 // remove head of list
 PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList );
-
-// remove node with this value.. starting at end and working it's way back
-PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 sY );
 
 // clear out path list after/including this sector sX, sY..will start at end of path and work it's way back till sector is found...removes most recent sectors first
 PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup );
@@ -109,9 +99,6 @@ BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID );
 INT32 GetLengthOfPath( PathStPtr pHeadPath );
 INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier );
 
-// is the path empty?
-BOOLEAN CheckIfPathIsEmpty( PathStPtr pHeadPath );
-
 PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier );
 PathStPtr GetGroupMercPathPtr( GROUP *pGroup );
 
@@ -119,8 +106,6 @@ UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier );
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup );
-
-void ClearPathForSoldier( SOLDIERTYPE *pSoldier );
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 

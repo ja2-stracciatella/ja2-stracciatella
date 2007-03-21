@@ -34,18 +34,14 @@
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
 
-void		InitGameSettings();
-
 extern BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation );
-
-BOOLEAN GetCDromDriveLetter( STR8	pString );
-BOOLEAN	IsDriveLetterACDromDrive( STR pDriveLetter );
-void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 
 
 //Change this number when we want any who gets the new build to reset the options
 #define				GAME_SETTING_CURRENT_VERSION		522
 
+
+static void InitGameSettings(void);
 
 
 BOOLEAN LoadGameSettings()
@@ -180,7 +176,8 @@ BOOLEAN	SaveGameSettings()
 	return( TRUE );
 }
 
-void InitGameSettings()
+
+static void InitGameSettings(void)
 {
 	memset( &gGameSettings, 0, sizeof( GAME_SETTINGS ) );
 
@@ -253,6 +250,10 @@ void InitGameOptions()
 #endif
 
 
+static BOOLEAN GetCDromDriveLetter(STR8 pString);
+static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter);
+
+
 BOOLEAN GetCDLocation( )
 {
 #if 1 // XXX TODO
@@ -321,8 +322,7 @@ BOOLEAN GetCDLocation( )
 }
 
 
-
-BOOLEAN GetCDromDriveLetter( STR8	pString )
+static BOOLEAN GetCDromDriveLetter(STR8 pString)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();
@@ -392,7 +392,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-BOOLEAN IsDriveLetterACDromDrive( STR pDriveLetter )
+static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();

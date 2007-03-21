@@ -165,58 +165,37 @@ BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
 BOOLEAN   gfSettingOfDontAnimateSmoke;
 
 // Goto save game Button
-void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiOptGotoSaveGameBtn;
 INT32		giOptionsButtonImages;
 
 // Goto load game button
-void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiOptGotoLoadGameBtn;
 INT32		giGotoLoadBtnImage;
 
 // QuitButton
-void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiQuitButton;
 INT32		giQuitBtnImage;
 
 // Done Button
-void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiDoneButton;
 INT32		giDoneBtnImage;
 
 
 //checkbox to toggle tracking mode on or off
 UINT32	guiOptionsToggles[ NUM_GAME_OPTIONS ];
-void BtnOptionsTogglesCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 //Mouse regions for the name of the option
 MOUSE_REGION    gSelectedOptionTextRegion[ NUM_GAME_OPTIONS ];
-void		SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void		SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason );
 
 
 //Mouse regions for the area around the toggle boxs
 MOUSE_REGION    gSelectedToggleBoxAreaRegion;
-void		SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason );
-
-
-BOOLEAN		EnterOptionsScreen();
-void			RenderOptionsScreen();
-void			ExitOptionsScreen();
-void			HandleOptionsScreen();
-void			GetOptionsScreenUserInput();
-void			SetOptionsExitScreen( UINT32 uiExitScreen );
-
-
-void			SoundFXSliderChangeCallBack( INT32 iNewValue );
-void			SpeechSliderChangeCallBack( INT32 iNewValue );
-void			MusicSliderChangeCallBack( INT32 iNewValue );
-//BOOLEAN		DoOptionsMessageBox( UINT8 ubStyle, INT16 *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue );
-void			HandleSliderBarMovementSounds();
-void			HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound );
-void			HandleHighLightedText( BOOLEAN fHighLight );
 
 
 extern	void ToggleItemGlow( BOOLEAN fOn );
@@ -231,6 +210,14 @@ UINT32	OptionsScreenInit()
 
 	return( TRUE );
 }
+
+
+static BOOLEAN EnterOptionsScreen(void);
+static void ExitOptionsScreen(void);
+static void GetOptionsScreenUserInput(void);
+static void HandleOptionsScreen(void);
+static void RenderOptionsScreen(void);
+
 
 UINT32	OptionsScreenHandle()
 {
@@ -300,12 +287,16 @@ UINT32	OptionsScreenShutdown()
 }
 
 
+static void MusicSliderChangeCallBack(INT32 iNewValue);
+static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SetOptionsScreenToggleBoxes(void);
+static void SoundFXSliderChangeCallBack(INT32 iNewValue);
+static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 
-
-
-
-BOOLEAN		EnterOptionsScreen()
+static BOOLEAN EnterOptionsScreen(void)
 {
 	UINT16 usPosY;
 	UINT8	cnt;
@@ -566,7 +557,10 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 }
 
 
-void			ExitOptionsScreen()
+static void GetOptionsScreenToggleBoxes(void);
+
+
+static void ExitOptionsScreen(void)
 {
 	UINT8	cnt;
 
@@ -658,8 +652,11 @@ void			ExitOptionsScreen()
 }
 
 
+static void HandleHighLightedText(BOOLEAN fHighLight);
+static void HandleSliderBarMovementSounds(void);
 
-void			HandleOptionsScreen()
+
+static void HandleOptionsScreen(void)
 {
 	HandleSliderBarMovementSounds();
 
@@ -667,9 +664,7 @@ void			HandleOptionsScreen()
 }
 
 
-
-
-void			RenderOptionsScreen()
+static void RenderOptionsScreen(void)
 {
 	UINT16	usPosY;
 	UINT8	cnt;
@@ -749,14 +744,10 @@ void			RenderOptionsScreen()
 }
 
 
+static void SetOptionsExitScreen(UINT32 uiExitScreen);
 
 
-
-
-
-
-
-void		GetOptionsScreenUserInput()
+static void GetOptionsScreenUserInput(void)
 {
 	InputAtom Event;
 	POINT  MousePos;
@@ -844,14 +835,15 @@ void		GetOptionsScreenUserInput()
 	}
 }
 
-void SetOptionsExitScreen( UINT32 uiExitScreen )
+
+static void SetOptionsExitScreen(UINT32 uiExitScreen)
 {
 	guiOptionsScreen = uiExitScreen;
 	gfOptionsScreenExit	= TRUE;
 }
 
 
-void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -874,7 +866,8 @@ void BtnOptGotoSaveGameCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -898,7 +891,11 @@ void BtnOptGotoLoadGameCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
+static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
+static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+
+
+static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -923,7 +920,8 @@ void BtnOptQuitCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -946,7 +944,10 @@ void BtnDoneCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
+static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound);
+
+
+static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 
@@ -985,7 +986,7 @@ void BtnOptionsTogglesCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound )
+static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound)
 {
 	static UINT32	uiOptionToggleSound = NO_SAMPLE;
 //	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
@@ -1051,7 +1052,8 @@ void HandleOptionToggle( UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN 
 	}
 }
 
-void SoundFXSliderChangeCallBack( INT32 iNewValue )
+
+static void SoundFXSliderChangeCallBack(INT32 iNewValue)
 {
 	SetSoundEffectsVolume( iNewValue );
 
@@ -1059,7 +1061,7 @@ void SoundFXSliderChangeCallBack( INT32 iNewValue )
 }
 
 
-void SpeechSliderChangeCallBack( INT32 iNewValue )
+static void SpeechSliderChangeCallBack(INT32 iNewValue)
 {
 	SetSpeechVolume( iNewValue );
 
@@ -1067,10 +1069,11 @@ void SpeechSliderChangeCallBack( INT32 iNewValue )
 }
 
 
-void MusicSliderChangeCallBack( INT32 iNewValue )
+static void MusicSliderChangeCallBack(INT32 iNewValue)
 {
 	MusicSetVolume( iNewValue );
 }
+
 
 BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
 {
@@ -1084,7 +1087,8 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT
 	return( ( giOptionsMessageBox != -1 ) );
 }
 
-BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+
+static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
   SGPRect CenteringRect= {0, 0, 639, 479 };
 
@@ -1099,8 +1103,7 @@ BOOLEAN DoOptionsMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExi
 }
 
 
-
-void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
+static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, Quit to main menu
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -1120,7 +1123,7 @@ void			ConfirmQuitToMainMenuMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void SetOptionsScreenToggleBoxes()
+static void SetOptionsScreenToggleBoxes(void)
 {
 	UINT8	cnt;
 
@@ -1134,9 +1137,7 @@ void SetOptionsScreenToggleBoxes()
 }
 
 
-
-
-void GetOptionsScreenToggleBoxes()
+static void GetOptionsScreenToggleBoxes(void)
 {
 	UINT8	cnt;
 
@@ -1149,7 +1150,8 @@ void GetOptionsScreenToggleBoxes()
 	}
 }
 
-void HandleSliderBarMovementSounds()
+
+static void HandleSliderBarMovementSounds(void)
 {
 	static UINT32	uiLastSoundFxTime=0;
 	static UINT32	uiLastSpeechTime=0;
@@ -1180,13 +1182,10 @@ void HandleSliderBarMovementSounds()
 	}
 	else
 		uiLastSpeechTime = GetJA2Clock();
-
 }
 
 
-
-
-void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT8	ubButton = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1212,7 +1211,7 @@ void SelectedOptionTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	INT8	bButton = (INT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -1234,7 +1233,7 @@ void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reas
 }
 
 
-void HandleHighLightedText( BOOLEAN fHighLight )
+static void HandleHighLightedText(BOOLEAN fHighLight)
 {
 	UINT16		usPosX=0;
 	UINT16		usPosY=0;
@@ -1330,8 +1329,7 @@ void HandleHighLightedText( BOOLEAN fHighLight )
 }
 
 
-
-void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{

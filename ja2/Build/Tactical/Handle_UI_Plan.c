@@ -18,9 +18,6 @@ SOLDIERTYPE			*gpUIStartPlannedSoldier = NULL;
 BOOLEAN					gfInUIPlanMode					  = FALSE;
 
 
-void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier );
-
-
 BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 {
 	gubNumUIPlannedMoves = 0;
@@ -34,6 +31,10 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 
 	return( TRUE );
 }
+
+
+static void SelectPausedFireAnimation(SOLDIERTYPE* pSoldier);
+
 
 BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 {
@@ -274,7 +275,7 @@ BOOLEAN InUIPlanMode( )
 }
 
 
-void SelectPausedFireAnimation( SOLDIERTYPE *pSoldier )
+static void SelectPausedFireAnimation(SOLDIERTYPE* pSoldier)
 {
 	// Determine which animation to do...depending on stance and gun in hand...
 

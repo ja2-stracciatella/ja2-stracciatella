@@ -75,7 +75,6 @@ UINT32	guiGalleryButton;
 
 //link to the flower home page by clicking on the flower title
 MOUSE_REGION    gSelectedFloristTitleHomeLinkRegion;
-void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 void GameInitFlorist()
@@ -174,6 +173,9 @@ void RenderFlorist()
 }
 
 
+static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
 BOOLEAN InitFloristDefaults()
 {
 	// load the Florist background graphic and add it
@@ -250,7 +252,7 @@ static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{

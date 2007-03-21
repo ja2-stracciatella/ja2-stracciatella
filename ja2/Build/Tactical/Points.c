@@ -27,11 +27,6 @@
 #include "Stubs.h" // XXX
 
 
-extern BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
-
-
-INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
-
 INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel )
 {
 		INT16	sAPCost = 0;
@@ -130,7 +125,7 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 }
 
 
-INT16 BreathPointAdjustmentForCarriedWeight( SOLDIERTYPE * pSoldier )
+static INT16 BreathPointAdjustmentForCarriedWeight(SOLDIERTYPE* pSoldier)
 {
 	UINT32	uiCarriedPercent;
 	UINT32	uiPercentCost;
@@ -470,6 +465,9 @@ BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLE
 }
 
 
+static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost);
+
+
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 {
 	INT16 sNewAP = 0;
@@ -561,9 +559,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 }
 
 
-
-
-INT16 AdjustBreathPts(SOLDIERTYPE *pSold, INT16 sBPCost)
+static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 {
  INT16 sBreathFactor = 100;
  UINT8 ubBandaged;
@@ -631,6 +627,8 @@ INT16 AdjustBreathPts(SOLDIERTYPE *pSold, INT16 sBPCost)
  return(sBPCost);
 }
 
+
+static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 
 
 void UnusedAPsToBreath(SOLDIERTYPE *pSold)
@@ -756,7 +754,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 }
 
 
-INT16 GetBreathPerAP( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 {
 	INT16 sBreathPerAP = 0;
 	BOOLEAN	fAnimTypeFound = FALSE;
@@ -995,6 +993,9 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 
 	return( (INT8)sAPCost );
 }
+
+
+static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
 
 
 UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost)
@@ -1285,7 +1286,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 }
 
 
-UINT8 MinAPsToPunch(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
+static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
  UINT8	bAPCost = 0;
  UINT16 usTargID;
@@ -1752,7 +1753,8 @@ UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight )
 	return( sAPCost );
 }
 
-UINT16 GetBPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight )
+
+static UINT16 GetBPsToChangeStance(SOLDIERTYPE* pSoldier, INT8 bDesiredHeight)
 {
 	UINT16						sBPCost = 0;
 	INT8							bCurrentHeight;
@@ -1928,7 +1930,7 @@ INT8 GetAPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown )
 }
 
 
-INT16 GetBPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown )
+static INT16 GetBPsToClimbRoof(SOLDIERTYPE* pSoldier, BOOLEAN fClimbDown)
 {
 	if ( !fClimbDown )
 	{
@@ -2107,7 +2109,8 @@ INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-INT8 GetBPsToStealItem( SOLDIERTYPE *pSoldier )
+
+static INT8 GetBPsToStealItem(SOLDIERTYPE* pSoldier)
 {
 	return( BP_STEAL_ITEM );
 }
@@ -2130,7 +2133,8 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-INT8 GetAPsToUseCan( SOLDIERTYPE *pSoldier, INT16 usMapPos )
+
+static INT8 GetAPsToUseCan(SOLDIERTYPE* pSoldier, INT16 usMapPos)
 {
 	UINT16						sAPCost = 0;
 

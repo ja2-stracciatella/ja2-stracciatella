@@ -138,7 +138,6 @@ UINT32	guiLastSaveGameNum;
 BOOLEAN DoesAutoSaveFileExist( BOOLEAN fLatestAutoSave );
 
 UINT32	guiJA2EncryptionSet = 0;
-UINT32 CalcJA2EncryptionSet( SAVED_GAME_HEADER * pSaveGameHeader );
 
 typedef struct
 {
@@ -364,62 +363,29 @@ extern		UINT32		guiCurrentUniqueSoldierId;
 extern		BOOLEAN		gfHavePurchasedItemsFromTony;
 
 
-BOOLEAN		SaveMercProfiles( HWFILE hFile );
-BOOLEAN		LoadSavedMercProfiles( HWFILE hwFile );
-
-BOOLEAN		SaveSoldierStructure( HWFILE hFile );
-BOOLEAN		LoadSoldierStructure( HWFILE hFile );
-
-//BOOLEAN		SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
-//BOOLEAN		LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile );
-
-BOOLEAN		SaveEmailToSavedGame( HWFILE hFile );
-BOOLEAN		LoadEmailFromSavedGame( HWFILE hFile );
-
-BOOLEAN		SaveTacticalStatusToSavedGame( HWFILE hFile );
-BOOLEAN		LoadTacticalStatusFromSavedGame( HWFILE hFile );
-
-
-BOOLEAN		SetMercsInsertionGridNo( );
-
-BOOLEAN		LoadOppListInfoFromSavedGame( HWFILE hFile );
-BOOLEAN		SaveOppListInfoToSavedGame( HWFILE hFile );
-
-BOOLEAN		LoadMercPathToSoldierStruct( HWFILE hFilem, UINT8	ubID );
-BOOLEAN		SaveMercPathFromSoldierStruct( HWFILE hFilem, UINT8	ubID );
-
-BOOLEAN		LoadGeneralInfo( HWFILE hFile );
-BOOLEAN		SaveGeneralInfo( HWFILE hFile );
-BOOLEAN		SavePreRandomNumbersToSaveGameFile( HWFILE hFile );
-BOOLEAN		LoadPreRandomNumbersFromSaveGameFile( HWFILE hFile );
-
-BOOLEAN SaveWatchedLocsToSavedGame( HWFILE hFile );
-BOOLEAN LoadWatchedLocsFromSavedGame( HWFILE hFile );
-
-BOOLEAN LoadMeanwhileDefsFromSaveGameFile( HWFILE hFile );
-BOOLEAN SaveMeanwhileDefsFromSaveGameFile( HWFILE hFile );
-
-void	PauseBeforeSaveGame( void );
-void	UnPauseAfterSaveGame( void );
-void	UpdateMercMercContractInfo();
-void	HandleOldBobbyRMailOrders();
-
-
-#ifdef JA2BETAVERSION
-	void			InitSaveGameFilePosition();
-	void			InitLoadGameFilePosition();
-	static void SaveGameFilePosition(INT32 iPos, const char *pMsg);
-	static void LoadGameFilePosition(INT32 iPos, const char *pMsg);
-
-
-	static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
-	static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, UINT8 ubSaveGameID);
-#endif
-
 #ifdef JA2BETAVERSION
 	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 #endif
-	void TruncateStrategicGroupSizes();
+
+
+static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);
+static void PauseBeforeSaveGame(void);
+static void UnPauseAfterSaveGame(void);
+static BOOLEAN SaveEmailToSavedGame(HWFILE hFile);
+static BOOLEAN SaveGeneralInfo(HWFILE hFile);
+static BOOLEAN SaveMeanwhileDefsFromSaveGameFile(HWFILE hFile);
+static BOOLEAN SaveMercProfiles(HWFILE hFile);
+static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile);
+static BOOLEAN SavePreRandomNumbersToSaveGameFile(HWFILE hFile);
+static BOOLEAN SaveSoldierStructure(HWFILE hFile);
+static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile);
+static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile);
+
+#ifdef JA2BETAVERSION
+static void InitSaveGameFilePosition(void);
+static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID);
+static void SaveGameFilePosition(INT32 iPos, const char* pMsg);
+#endif
 
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
@@ -1299,8 +1265,27 @@ FAILED_TO_SAVE:
 }
 
 
-
 UINT32 guiBrokenSaveGameVersion = 0;
+
+
+static void HandleOldBobbyRMailOrders(void);
+static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile);
+static BOOLEAN LoadGeneralInfo(HWFILE hFile);
+static BOOLEAN LoadMeanwhileDefsFromSaveGameFile(HWFILE hFile);
+static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile);
+static BOOLEAN LoadPreRandomNumbersFromSaveGameFile(HWFILE hFile);
+static BOOLEAN LoadSavedMercProfiles(HWFILE hFile);
+static BOOLEAN LoadSoldierStructure(HWFILE hFile);
+static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile);
+static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile);
+static void TruncateStrategicGroupSizes(void);
+static void UpdateMercMercContractInfo(void);
+
+#ifdef JA2BETAVERSION
+static void InitLoadGameFilePosition(void);
+static void LoadGameFilePosition(INT32 iPos, const char* pMsg);
+#endif
+
 
 BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 {
@@ -2763,12 +2748,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 }
 
 
-
-
-
-
-
-BOOLEAN SaveMercProfiles( HWFILE hFile )
+static BOOLEAN SaveMercProfiles(HWFILE hFile)
 {
 	UINT16	cnt;
 	UINT32	uiSaveSize = sizeof( MERCPROFILESTRUCT );
@@ -2793,8 +2773,7 @@ BOOLEAN SaveMercProfiles( HWFILE hFile )
 }
 
 
-
-BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
+static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 {
 	UINT16	cnt;
 
@@ -2821,11 +2800,10 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 }
 
 
-
+static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID);
 
 
 		//Not saving any of these in the soldier struct
-
 		//	struct TAG_level_node				*pLevelNode;
 		//	struct TAG_level_node				*pExternShadowLevelNode;
 		//	struct TAG_level_node				*pRoofUILevelNode;
@@ -2841,9 +2819,7 @@ BOOLEAN	LoadSavedMercProfiles( HWFILE hFile )
 		//	UINT16											*p16BPPPalette;
 		//	SGPPaletteEntry							*p8BPPPalette
 		//	OBJECTTYPE									*pTempObject;
-
-
-BOOLEAN SaveSoldierStructure( HWFILE hFile )
+static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
 	UINT8		ubOne = 1;
@@ -2919,8 +2895,10 @@ BOOLEAN SaveSoldierStructure( HWFILE hFile )
 }
 
 
+static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID);
 
-BOOLEAN LoadSoldierStructure( HWFILE hFile )
+
+static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
 	SOLDIERTYPE SavedSoldierInfo;
@@ -3191,6 +3169,12 @@ BOOLEAN LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 }
 */
 
+
+#ifdef JA2BETAVERSION
+static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
+#endif
+
+
 BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
@@ -3349,7 +3333,7 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 }
 
 
-BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
+static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 {
 	UINT32	uiNumOfEmails=0;
 	UINT32		uiSizeOfEmails=0;
@@ -3411,7 +3395,7 @@ BOOLEAN SaveEmailToSavedGame( HWFILE hFile )
 }
 
 
-BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
+static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 {
 	UINT32		uiNumOfEmails=0;
 	UINT32		uiSizeOfSubject=0;
@@ -3510,7 +3494,7 @@ BOOLEAN LoadEmailFromSavedGame( HWFILE hFile )
 }
 
 
-BOOLEAN SaveTacticalStatusToSavedGame( HWFILE hFile )
+static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
 {
 	//write the gTacticalStatus to the saved game file
 	if (!FileWrite(hFile, &gTacticalStatus, sizeof(TacticalStatusType))) return FALSE;
@@ -3532,8 +3516,7 @@ BOOLEAN SaveTacticalStatusToSavedGame( HWFILE hFile )
 }
 
 
-
-BOOLEAN LoadTacticalStatusFromSavedGame( HWFILE hFile )
+static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 {
 	//Read the gTacticalStatus to the saved game file
 	if (!FileRead(hFile, &gTacticalStatus, sizeof(TacticalStatusType))) return FALSE;
@@ -3569,7 +3552,7 @@ BOOLEAN CopySavedSoldierInfoToNewSoldier( SOLDIERTYPE *pDestSourceInfo, SOLDIERT
 }
 
 
-BOOLEAN SetMercsInsertionGridNo( )
+static BOOLEAN SetMercsInsertionGridNo(void)
 {
 	UINT16 cnt=0;
 
@@ -3598,7 +3581,7 @@ BOOLEAN SetMercsInsertionGridNo( )
 }
 
 
-BOOLEAN SaveOppListInfoToSavedGame( HWFILE hFile )
+static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 {
 	UINT32	uiSaveSize=0;
 
@@ -3638,7 +3621,7 @@ BOOLEAN SaveOppListInfoToSavedGame( HWFILE hFile )
 }
 
 
-BOOLEAN LoadOppListInfoFromSavedGame( HWFILE hFile )
+static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
 {
 	UINT32	uiLoadSize=0;
 
@@ -3677,7 +3660,8 @@ BOOLEAN LoadOppListInfoFromSavedGame( HWFILE hFile )
 	return( TRUE );
 }
 
-BOOLEAN SaveWatchedLocsToSavedGame( HWFILE hFile )
+
+static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile)
 {
 	UINT32	uiArraySize;
 	UINT32	uiSaveSize=0;
@@ -3700,7 +3684,7 @@ BOOLEAN SaveWatchedLocsToSavedGame( HWFILE hFile )
 }
 
 
-BOOLEAN LoadWatchedLocsFromSavedGame( HWFILE hFile )
+static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
 {
 	UINT32	uiArraySize;
 	UINT32	uiLoadSize=0;
@@ -3761,9 +3745,7 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 }
 
 
-
-
-BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
+static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
 	UINT32	uiNumOfNodes=0;
 	PathStPtr	pTempPath = Menptr[ ubID ].pMercPath;
@@ -3798,8 +3780,7 @@ BOOLEAN SaveMercPathFromSoldierStruct( HWFILE hFile, UINT8	ubID )
 }
 
 
-
-BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, UINT8	ubID )
+static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
 	UINT32	uiNumOfNodes=0;
 	PathStPtr	pTempPath = NULL;
@@ -3869,7 +3850,7 @@ BOOLEAN LoadMercPathToSoldierStruct( HWFILE hFile, UINT8	ubID )
 
 
 #ifdef JA2BETAVERSION
-void InitSaveGameFilePosition()
+static void InitSaveGameFilePosition(void)
 {
 	CHAR8		zFileName[128];
 
@@ -3879,7 +3860,7 @@ void InitSaveGameFilePosition()
 }
 
 
-static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
+static void SaveGameFilePosition(INT32 iPos, const char* pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -3910,8 +3891,7 @@ static void SaveGameFilePosition(INT32 iPos, const char *pMsg)
 }
 
 
-
-void InitLoadGameFilePosition()
+static void InitLoadGameFilePosition(void)
 {
 	CHAR8		zFileName[128];
 
@@ -3921,7 +3901,7 @@ void InitLoadGameFilePosition()
 }
 
 
-static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
+static void LoadGameFilePosition(INT32 iPos, const char* pMsg)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -3956,8 +3936,7 @@ static void LoadGameFilePosition(INT32 iPos, const char *pMsg)
 #endif
 
 
-
-BOOLEAN SaveGeneralInfo( HWFILE hFile )
+static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 {
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
@@ -4176,7 +4155,7 @@ BOOLEAN SaveGeneralInfo( HWFILE hFile )
 }
 
 
-BOOLEAN LoadGeneralInfo( HWFILE hFile )
+static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 {
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
@@ -4424,7 +4403,8 @@ BOOLEAN LoadGeneralInfo( HWFILE hFile )
 	return( TRUE );
 }
 
-BOOLEAN SavePreRandomNumbersToSaveGameFile( HWFILE hFile )
+
+static BOOLEAN SavePreRandomNumbersToSaveGameFile(HWFILE hFile)
 {
 	//Save the Prerandom number index
 	if (!FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32))) return FALSE;
@@ -4435,7 +4415,8 @@ BOOLEAN SavePreRandomNumbersToSaveGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
-BOOLEAN LoadPreRandomNumbersFromSaveGameFile( HWFILE hFile )
+
+static BOOLEAN LoadPreRandomNumbersFromSaveGameFile(HWFILE hFile)
 {
 	//Load the Prerandom number index
 	if (!FileRead(hFile, &guiPreRandomIndex, sizeof(UINT32))) return FALSE;
@@ -4446,7 +4427,8 @@ BOOLEAN LoadPreRandomNumbersFromSaveGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
-BOOLEAN LoadMeanwhileDefsFromSaveGameFile( HWFILE hFile )
+
+static BOOLEAN LoadMeanwhileDefsFromSaveGameFile(HWFILE hFile)
 {
 	if ( guiSaveGameVersion < 72 )
 	{
@@ -4464,7 +4446,8 @@ BOOLEAN LoadMeanwhileDefsFromSaveGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
-BOOLEAN SaveMeanwhileDefsFromSaveGameFile( HWFILE hFile )
+
+static BOOLEAN SaveMeanwhileDefsFromSaveGameFile(HWFILE hFile)
 {
 	//Save the array of meanwhile defs
 	if (!FileWrite(hFile, &gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES)) return FALSE;
@@ -4489,7 +4472,7 @@ BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 
 #ifdef JA2BETAVERSION
 
-static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, UINT8 ubSaveGameID)
+static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID)
 {
 	CHAR8		zFileName[128];
 	HWFILE	hFile;
@@ -4537,7 +4520,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char *pNameOfFile, 
 }
 
 
-static void WriteTempFileNameToFile(const char *pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile)
+static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile)
 {
 	HWFILE	hFile;
 	CHAR8		zTempString[512];
@@ -4651,7 +4634,7 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 }
 
 
-void PauseBeforeSaveGame( void )
+static void PauseBeforeSaveGame(void)
 {
 	//if we are not in the save load screen
 	if( guiCurrentScreen != SAVE_LOAD_SCREEN )
@@ -4661,7 +4644,8 @@ void PauseBeforeSaveGame( void )
 	}
 }
 
-void UnPauseAfterSaveGame( void )
+
+static void UnPauseAfterSaveGame(void)
 {
 	//if we are not in the save load screen
 	if( guiCurrentScreen != SAVE_LOAD_SCREEN )
@@ -4671,7 +4655,8 @@ void UnPauseAfterSaveGame( void )
 	}
 }
 
-void TruncateStrategicGroupSizes()
+
+static void TruncateStrategicGroupSizes(void)
 {
 	GROUP *pGroup;
 	SECTORINFO *pSector;
@@ -4838,7 +4823,7 @@ void TruncateStrategicGroupSizes()
 }
 
 
-void UpdateMercMercContractInfo()
+static void UpdateMercMercContractInfo(void)
 {
 	UINT8	ubCnt;
 	SOLDIERTYPE				*pSoldier;
@@ -4921,7 +4906,8 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	}
 }
 
-void HandleOldBobbyRMailOrders()
+
+static void HandleOldBobbyRMailOrders(void)
 {
 	INT32 iCnt;
 	INT32	iNewListCnt=0;
@@ -4969,7 +4955,7 @@ void HandleOldBobbyRMailOrders()
 }
 
 
-UINT32 CalcJA2EncryptionSet( SAVED_GAME_HEADER * pSaveGameHeader )
+static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader)
 {
 	UINT32	uiEncryptionSet = 0;
 

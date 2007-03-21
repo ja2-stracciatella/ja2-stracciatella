@@ -199,10 +199,7 @@ INT8 gbAssassinTown[NUM_ASSASSINS][NUM_ASSASSIN_POSSIBLE_TOWNS] =
 	{ CAMBRIA, BALIME, ALMA, GRUMM, DRASSEN },
 };
 
-UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile );
-INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile );
 extern void HandleEndDemoInCreatureLevel( );
-void DecideActiveTerrorists( void );
 
 extern SOLDIERTYPE			*gpSMCurrentMerc;
 extern BOOLEAN	gfRerenderInterfaceFromHelpText;
@@ -410,6 +407,11 @@ typedef struct
 extern int ASSERT_COMPILE[(sizeof(MERCPROFILESTRUCT) == sizeof(MERCPROFILESTRUCT_ON_DISK) + (NAME_LENGTH + NICKNAME_LENGTH) * (sizeof(wchar_t) - sizeof(UINT16))) * 2 - 1];
 
 
+static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile);
+static void DecideActiveTerrorists(void);
+static void StartSomeMercsOnAssignment(void);
+
+
 BOOLEAN LoadMercProfiles(void)
 {
 //	FILE *fptr;
@@ -605,7 +607,8 @@ UNIMPLEMENTED();
 
 #define MAX_ADDITIONAL_TERRORISTS 4
 
-void DecideActiveTerrorists( void )
+
+static void DecideActiveTerrorists(void)
 {
 	UINT8		ubLoop, ubLoop2;
 	UINT8		ubTerrorist;
@@ -931,7 +934,8 @@ void MakeRemainingAssassinsTougher( void )
 	}
 }
 
-void StartSomeMercsOnAssignment(void)
+
+static void StartSomeMercsOnAssignment(void)
 {
 	UINT32 uiCnt;
 	MERCPROFILESTRUCT *pProfile;
@@ -971,7 +975,8 @@ void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UIN
 	 gMercProfiles[ ubCharNum ].usMouthY		= usMouthY;
 }
 
-UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
+
+static UINT16 CalcCompetence(MERCPROFILESTRUCT* pProfile)
 {
 	UINT32 uiStats, uiSkills, uiActionPoints, uiSpecialSkills;
 	UINT16 usCompetence;
@@ -1003,7 +1008,8 @@ UINT16 CalcCompetence( MERCPROFILESTRUCT * pProfile )
 	return(usCompetence);
 }
 
-INT16 CalcMedicalDeposit( MERCPROFILESTRUCT * pProfile )
+
+static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile)
 {
 	UINT16 usDeposit;
 
@@ -1541,7 +1547,8 @@ BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
 	return( FALSE );
 }
 
-BOOLEAN MercIsHot( SOLDIERTYPE * pSoldier )
+
+static BOOLEAN MercIsHot(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == HEAT_INTOLERANT )
 	{

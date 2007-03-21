@@ -118,7 +118,6 @@ typedef enum
 
 
 BOOLEAN InitializeTacticalInterface( );
-BOOLEAN ShutdownTacticalInterface( );
 BOOLEAN	fInterfacePanelDirty;
 BOOLEAN gfPausedTacticalRenderFlags;
 BOOLEAN gfPausedTacticalRenderInterfaceFlags;
@@ -139,9 +138,6 @@ BOOLEAN HandleOpenDoorMenu( );
 void CancelOpenDoorMenu( );
 
 void HandleInterfaceBackgrounds( );
-
-void BeginOverlayMessage( UINT32 uiFont, wchar_t *pFontString, ... );
-void EndOverlayMessage( );
 
 
 void DrawSelectedUIAboveGuy( UINT16 usSoldierID );
@@ -207,12 +203,6 @@ const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );
 
 
 void RenderAimCubeUI( );
-void ResetAimCubeAI( );
-void SetupAimCubeAI( );
-void IncrementAimCubeUI( );
-void EndAimCubeUI( );
-void BeginAimCubeUI( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubLevel, UINT8 bStartPower, INT8 bStartHeight );
-BOOLEAN AimCubeUIClick( );
 
 void ResetPhysicsTrajectoryUI( );
 void SetupPhysicsTrajectoryUI( );
@@ -228,8 +218,5 @@ void DirtyTopMessage( );
 void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
 void HandleMultiPurposeLocator( );
 void RenderTopmostMultiPurposeLocator( );
-
-
-
 
 #endif

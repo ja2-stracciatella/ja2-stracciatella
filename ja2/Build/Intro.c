@@ -101,16 +101,6 @@ INT8	gbIntroScreenMode=-1;
 
 extern	void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
 
-void	GetIntroScreenUserInput();
-BOOLEAN	EnterIntroScreen();
-void	RenderIntroScreen();
-void	ExitIntroScreen();
-void	HandleIntroScreen();
-void	PrepareToExitIntroScreen();
-INT32 GetNextIntroVideo( UINT32 uiCurrentVideo );
-void	StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay );
-void	DisplaySirtechSplashScreen();
-
 
 UINT32	IntroScreenInit( void )
 {
@@ -125,6 +115,12 @@ UINT32	IntroScreenShutdown( void )
 {
 	return( 1 );
 }
+
+
+static BOOLEAN EnterIntroScreen(void);
+static void ExitIntroScreen(void);
+static void GetIntroScreenUserInput(void);
+static void HandleIntroScreen(void);
 
 
 UINT32	IntroScreenHandle( void )
@@ -160,7 +156,12 @@ UINT32	IntroScreenHandle( void )
 }
 
 
-BOOLEAN EnterIntroScreen()
+static INT32 GetNextIntroVideo(UINT32 uiCurrentVideo);
+static void PrepareToExitIntroScreen(void);
+static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay);
+
+
+static BOOLEAN EnterIntroScreen(void)
 {
 	INT32 iFirstVideoID = -1;
 
@@ -210,17 +211,15 @@ BOOLEAN EnterIntroScreen()
 	return( TRUE );
 }
 
-void RenderIntroScreen()
-{
-}
 
-void ExitIntroScreen()
+static void ExitIntroScreen(void)
 {
 	//shutdown smaker
 	SmkShutdown();
 }
 
-void HandleIntroScreen()
+
+static void HandleIntroScreen(void)
 {
 	BOOLEAN	fFlicStillPlaying = FALSE;
 
@@ -253,8 +252,7 @@ void HandleIntroScreen()
 }
 
 
-
-void		GetIntroScreenUserInput()
+static void GetIntroScreenUserInput(void)
 {
 	InputAtom Event;
 	POINT  MousePos;
@@ -322,7 +320,10 @@ void		GetIntroScreenUserInput()
 }
 
 
-void PrepareToExitIntroScreen()
+static void DisplaySirtechSplashScreen(void);
+
+
+static void PrepareToExitIntroScreen(void)
 {
 	//if its the intro at the begining of the game
 	if( gbIntroScreenMode == INTRO_BEGINING )
@@ -351,7 +352,7 @@ void PrepareToExitIntroScreen()
 }
 
 
-INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
+static INT32 GetNextIntroVideo(UINT32 uiCurrentVideo)
 {
 	INT32 iStringToUse = -1;
 
@@ -431,7 +432,7 @@ INT32 GetNextIntroVideo( UINT32 uiCurrentVideo )
 }
 
 
-void StartPlayingIntroFlic( INT32 iIndexOfFlicToPlay )
+static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay)
 {
 	if( iIndexOfFlicToPlay != -1 )
 	{
@@ -473,7 +474,7 @@ void SetIntroType( INT8 bIntroType )
 }
 
 
-void DisplaySirtechSplashScreen()
+static void DisplaySirtechSplashScreen(void)
 {
 	UINT32 uiLogoID;
 

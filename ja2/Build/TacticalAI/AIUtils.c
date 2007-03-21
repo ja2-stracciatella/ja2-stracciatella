@@ -111,7 +111,8 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 	return(TRUE);
 }
 
-BOOLEAN ConsiderProne( SOLDIERTYPE * pSoldier )
+
+static BOOLEAN ConsiderProne(SOLDIERTYPE* pSoldier)
 {
 	INT16		sOpponentGridNo;
 	INT8		bOpponentLevel;
@@ -1317,7 +1318,8 @@ INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
 	return( sGridNo );
 }
 
-INT16 FindClosestClimbPointAvailableToAI( SOLDIERTYPE * pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp )
+
+static INT16 FindClosestClimbPointAvailableToAI(SOLDIERTYPE* pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 {
 	INT16	sGridNo;
 	INT16	sRoamingOrigin;
@@ -1503,7 +1505,8 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 	return( sPathCost );
 }
 
-BOOLEAN GuySawEnemyThisTurnOrBefore( SOLDIERTYPE * pSoldier )
+
+static BOOLEAN GuySawEnemyThisTurnOrBefore(SOLDIERTYPE* pSoldier)
 {
 	UINT8		ubTeamLoop;
 	UINT8		ubIDLoop;

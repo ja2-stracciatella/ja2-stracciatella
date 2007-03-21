@@ -81,7 +81,8 @@ HVOBJECT				gvo14PointHumanist;
 
 BOOLEAN					gfFontsInit = FALSE;
 
-UINT16 CreateFontPaletteTables(HVOBJECT pObj );
+
+static UINT16 CreateFontPaletteTables(HVOBJECT pObj);
 
 
 BOOLEAN	InitializeFonts( )
@@ -243,7 +244,8 @@ BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 	return( TRUE );
 }
 
-UINT16 CreateFontPaletteTables(HVOBJECT pObj )
+
+static UINT16 CreateFontPaletteTables(HVOBJECT pObj)
 {
 	UINT32 count;
 	SGPPaletteEntry Pal[256];

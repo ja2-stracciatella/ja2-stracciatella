@@ -138,55 +138,13 @@ enum{
 MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 
 
-
-// function definitions
-void RenderFilesBackGround( void );
-BOOLEAN LoadFiles( void );
-void RemoveFiles( void );
-UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat,STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead );
-void OpenAndReadFilesFile( void );
-BOOLEAN OpenAndWriteFilesFile( void );
-void ClearFilesList( void );
-void DrawFilesTitleText( void );
-void DisplayFilesList( void );
-BOOLEAN OpenAndWriteFilesFile( void );
-void DisplayFileMessage( void );
-void InitializeFilesMouseRegions( void );
-void RemoveFilesMouseRegions( void );
-BOOLEAN DisplayFormattedText( void );
+static void CheckForUnreadFiles(void);
+static void OpenAndReadFilesFile(void);
+static BOOLEAN OpenAndWriteFilesFile(void);
+static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead);
 
 
-// buttons
-void CreateButtonsForFilesPage( void );
-void DeleteButtonsForFilesPage( void );
-void HandleFileViewerButtonStates( void );
-
-
-// open new files for viewing
-void OpenFirstUnreadFile( void );
-void CheckForUnreadFiles( void );
-
-
-
-// file string structure manipulations
-void ClearFileStringList( void );
-void AddStringToFilesList( STR16 pString );
-BOOLEAN HandleSpecialFiles( UINT8 ubFormat );
-BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName );
-
-
-static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason);
-
-// file width manipulation
-void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList );
-FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void );
-FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void );
-FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags );
-
-
-UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile )
+static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile)
 {
 	// adds Files item to player's log(Files List), returns unique id number of it
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
@@ -209,6 +167,11 @@ UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pF
 	// return unique id of this transaction
 	return uiId;
 }
+
+
+static void ClearFilesList(void);
+
+
 void GameInitFiles( )
 {
 
@@ -222,12 +185,18 @@ void GameInitFiles( )
 
 	// add background check by RIS
 	AddFilesToPlayersLog( ENRICO_BACKGROUND, 0,255, NULL, NULL );
-
 }
+
+
+static void CreateButtonsForFilesPage(void);
+static void HandleFileViewerButtonStates(void);
+static void InitializeFilesMouseRegions(void);
+static BOOLEAN LoadFiles(void);
+static void OpenFirstUnreadFile(void);
+
 
 void EnterFiles()
 {
-
 	// load grpahics for files system
 	LoadFiles( );
 
@@ -258,9 +227,13 @@ void EnterFiles()
 	  OpenFirstUnreadFile( );
 		fEnteredFileViewerFromNewFileIcon = FALSE;
 	}
-
-
 }
+
+
+static void DeleteButtonsForFilesPage(void);
+static void RemoveFiles(void);
+static void RemoveFilesMouseRegions(void);
+
 
 void ExitFiles()
 {
@@ -285,6 +258,13 @@ void HandleFiles()
 	CheckForUnreadFiles( );
 }
 
+
+static void DisplayFileMessage(void);
+static void DisplayFilesList(void);
+static void DrawFilesTitleText(void);
+static void RenderFilesBackGround(void);
+
+
 void RenderFiles()
 {
 	// render the background
@@ -306,14 +286,15 @@ void RenderFiles()
 }
 
 
-void RenderFilesBackGround( void )
+static void RenderFilesBackGround(void)
 {
 	// render generic background for file system
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
-void DrawFilesTitleText( void )
+
+static void DrawFilesTitleText(void)
 {
 	// setup the font stuff
 	SetFont(FILES_TITLE_FONT);
@@ -327,7 +308,7 @@ void DrawFilesTitleText( void )
 }
 
 
-BOOLEAN LoadFiles( void )
+static BOOLEAN LoadFiles(void)
 {
   // load files video objects into memory
 
@@ -347,19 +328,18 @@ BOOLEAN LoadFiles( void )
 	return (TRUE);
 }
 
-void RemoveFiles( void )
+
+static void RemoveFiles(void)
 {
-
 	// delete files video objects from memory
-
-
 	DeleteVideoObjectFromIndex(guiTOP);
 	DeleteVideoObjectFromIndex(guiTITLE);
   DeleteVideoObjectFromIndex(guiHIGHLIGHT);
   DeleteVideoObjectFromIndex(guiFileBack);
 }
 
-UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat ,STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead )
+
+static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead)
 {
   UINT32 uiId=0;
   FilesUnitPtr pFiles=pFilesListHead;
@@ -451,7 +431,8 @@ UINT32 ProcessAndEnterAFilesRecord( UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat 
 	return uiId;
 }
 
-void OpenAndReadFilesFile( void )
+
+static void OpenAndReadFilesFile(void)
 {
   // this procedure will open and read in data to the finance list
   HWFILE hFileHandle;
@@ -509,7 +490,7 @@ void OpenAndReadFilesFile( void )
 }
 
 
-BOOLEAN OpenAndWriteFilesFile( void )
+static BOOLEAN OpenAndWriteFilesFile(void)
 {
   // this procedure will open and write out data from the finance list
   HWFILE hFileHandle;
@@ -564,7 +545,8 @@ BOOLEAN OpenAndWriteFilesFile( void )
 	return ( TRUE );
 }
 
-void ClearFilesList( void )
+
+static void ClearFilesList(void)
 {
 	// remove each element from list of transactions
   FilesUnitPtr pFilesList=pFilesListHead;
@@ -596,7 +578,7 @@ void ClearFilesList( void )
 }
 
 
-void DisplayFilesList( void )
+static void DisplayFilesList(void)
 {
   // this function will run through the list of files of files and display the 'sender'
 	FilesUnitPtr pFilesList=pFilesListHead;
@@ -625,14 +607,11 @@ void DisplayFilesList( void )
 }
 
 
+static BOOLEAN DisplayFormattedText(void);
 
-void DisplayFileMessage( void )
+
+static void DisplayFileMessage(void)
 {
-
-
-
-
-
 	// get the currently selected message
   if(iHighLightFileLine!=-1)
   {
@@ -649,7 +628,10 @@ void DisplayFileMessage( void )
 }
 
 
-void InitializeFilesMouseRegions( void )
+static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void InitializeFilesMouseRegions(void)
 {
 	INT32 iCounter=0;
 	// init mouseregions
@@ -662,7 +644,8 @@ void InitializeFilesMouseRegions( void )
 	}
 }
 
-void RemoveFilesMouseRegions( void )
+
+static void RemoveFilesMouseRegions(void)
 {
   INT32 iCounter=0;
   for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
@@ -702,7 +685,11 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-BOOLEAN DisplayFormattedText( void )
+static BOOLEAN HandleSpecialFiles(UINT8 ubFormat);
+static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName);
+
+
+static BOOLEAN DisplayFormattedText(void)
 {
   FilesUnitPtr pFilesList=pFilesListHead;
 
@@ -994,7 +981,13 @@ static FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 
 }
 
 
-BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
+static void AddStringToFilesList(STR16 pString);
+static void ClearFileStringList(void);
+static void ClearOutWidthRecordsList(FileRecordWidthPtr pFileRecordWidthList);
+static FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile(void);
+
+
+static BOOLEAN HandleSpecialFiles(UINT8 ubFormat)
 {
 	INT32 iCounter = 0;
   wchar_t sString[2048];
@@ -1194,7 +1187,7 @@ BOOLEAN HandleSpecialFiles( UINT8 ubFormat )
 }
 
 
-void AddStringToFilesList( STR16 pString )
+static void AddStringToFilesList(STR16 pString)
 {
 
 	FileStringPtr pFileString;
@@ -1227,7 +1220,7 @@ void AddStringToFilesList( STR16 pString )
 }
 
 
-void ClearFileStringList( void )
+static void ClearFileStringList(void)
 {
 	FileStringPtr pFileString;
 	FileStringPtr pDeleteFileString;
@@ -1254,7 +1247,11 @@ void ClearFileStringList( void )
 }
 
 
-void CreateButtonsForFilesPage( void )
+static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason);
+static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason);
+
+
+static void CreateButtonsForFilesPage(void)
 {
 	// will create buttons for the files page
 	giFilesPageButtonsImage[0]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
@@ -1272,8 +1269,7 @@ void CreateButtonsForFilesPage( void )
 }
 
 
-
-void DeleteButtonsForFilesPage( void )
+static void DeleteButtonsForFilesPage(void)
 {
 
 	// destroy buttons for the files page
@@ -1321,7 +1317,7 @@ static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void HandleFileViewerButtonStates( void )
+static void HandleFileViewerButtonStates(void)
 {
 	// handle state of email viewer buttons
 
@@ -1363,7 +1359,7 @@ void HandleFileViewerButtonStates( void )
 }
 
 
-FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
+static FileRecordWidthPtr CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
 {
 	FileRecordWidthPtr pTempRecord = NULL;
 
@@ -1380,7 +1376,8 @@ FileRecordWidthPtr CreateRecordWidth( 	INT32 iRecordNumber, INT32 iRecordWidth, 
 	return ( pTempRecord );
 }
 
-FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
+
+static FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile(void)
 {
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
@@ -1408,7 +1405,8 @@ FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile( void )
 
 }
 
-FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
+
+static FileRecordWidthPtr CreateWidthRecordsForTerroristFile(void)
 {
 	// this fucntion will create the width list for the Arulco intelligence file
 	FileRecordWidthPtr pTempRecord = NULL;
@@ -1434,7 +1432,7 @@ FileRecordWidthPtr CreateWidthRecordsForTerroristFile( void )
 }
 
 
-void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
+static void ClearOutWidthRecordsList(FileRecordWidthPtr pFileRecordWidthList)
 {
 	FileRecordWidthPtr pTempRecord = NULL;
 	FileRecordWidthPtr pDeleteRecord = NULL;
@@ -1467,7 +1465,8 @@ void ClearOutWidthRecordsList( FileRecordWidthPtr pFileRecordWidthList )
 }
 
 
-void OpenFirstUnreadFile( void )
+// open new files for viewing
+static void OpenFirstUnreadFile(void)
 {
 	// open the first unread file in the list
 	INT32 iCounter = 0;
@@ -1492,7 +1491,7 @@ void OpenFirstUnreadFile( void )
 }
 
 
-void CheckForUnreadFiles( void )
+static void CheckForUnreadFiles(void)
 {
 	BOOLEAN	fStatusOfNewFileFlag = fNewFilesInFileViewer;
 
@@ -1520,7 +1519,8 @@ void CheckForUnreadFiles( void )
 	}
 }
 
-BOOLEAN HandleSpecialTerroristFile( INT32 iFileNumber, STR sPictureName )
+
+static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
 {
 
 	INT32 iCounter = 0;

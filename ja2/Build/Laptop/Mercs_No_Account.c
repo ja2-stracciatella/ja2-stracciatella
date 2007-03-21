@@ -46,12 +46,6 @@ static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiCancelBoxButton;
 
 
-
-void GameInitMercsNoAccount()
-{
-
-}
-
 BOOLEAN EnterMercsNoAccount()
 {
 	InitMercBackGround();

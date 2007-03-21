@@ -1560,6 +1560,9 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 }
 
 
+static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY);
+
+
 BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 sX, INT16 sY )
 {
 	// Check for valid soldier
@@ -1569,7 +1572,9 @@ BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 s
 }
 
 
-BOOLEAN ExternRenderFace( UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY )
+/* To render an allocated face, but one that is independent of its active
+ * status and does not require eye blinking or mouth movements, call */
+static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;

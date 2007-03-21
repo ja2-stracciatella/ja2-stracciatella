@@ -128,11 +128,12 @@ void LoadMapInformation( INT8 **hBuffer )
 	InitRenderParams( gMapInformation.ubRestrictedScrollID );
 }
 
+
 //This will automatically update obsolete map versions to the new ones.  This will even
 //work in the game itself, but would require conversion to happen every time.  This is completely
 //transparent to the rest of the game, but in the editor, obsolete versions will be updated upon
 //loading and won't be permanently updated until the map is saved, regardless of changes.
-void UpdateOldVersionMap()
+static void UpdateOldVersionMap(void)
 {
 #if 0 //This code is no longer needed since the major version update from 1.0 to 4.0
 			//However, I am keeping it in for reference.
@@ -560,7 +561,8 @@ void UpdateOldVersionMap()
 	}
 }
 
-void AutoCalculateItemNoOverwriteStatus()
+
+static void AutoCalculateItemNoOverwriteStatus(void)
 {
 	SOLDIERINITNODE *curr;
 	INT32 i;

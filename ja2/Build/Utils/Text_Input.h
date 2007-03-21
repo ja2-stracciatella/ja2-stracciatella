@@ -84,7 +84,6 @@ void SaveAndRemoveCurrentTextInputMode();
 void RestoreSavedTextInputMode();
 
 void SetTextInputCursor( UINT16 usNewCursor );
-UINT16 GetTextInputCursor();
 
 //After calling InitTextInputMode, you want to define one or more text input fields.  The order
 //of calls to this function dictate the TAB order from traversing from one field to the next.  This
@@ -105,10 +104,6 @@ void AddUserInputField( INPUT_CALLBACK userFunction );
 //ubFieldID contains the fieldID of that field
 //fEntering is true if you are entering the user field, false if exiting.
 
-//Removes the specified field from the existing fields.  If it doesn't exist, then there will be an
-//assertion failure.
-void RemoveTextInputField( UINT8 ubField );
-
 //This is a useful call made from an external user input field.  Using the previous file dialog example, this
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
@@ -116,7 +111,6 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText );
 
 //Allows external functions to access the strings within the fields at anytime.
-void Get8BitStringFromField( UINT8 ubField, UINT8 *szString );
 void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length);
 
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
@@ -134,7 +128,6 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber );
 //Sets the active field to the specified ID number.
 void SetActiveField( UINT8 ubField );
 void SelectNextField();
-void SelectPrevField();
 
 //Returns the active field ID number.  It'll return -1 if no field is active.
 INT16 GetActiveFieldID();
@@ -148,7 +141,6 @@ void Set16BPPTextFieldColor( UINT16 usTextFieldColor );
 void SetTextInputRegularColors( UINT8 ubForeColor, UINT8 ubShadowColor );
 void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ubBackColor );
 //optional color setups
-void SetDisabledTextFieldColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 usTextFieldColor );
 void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor );
 void SetCursorColor( UINT16 usCursorColor );
 
@@ -169,12 +161,9 @@ void SetCursorColor( UINT16 usCursorColor );
 //It is only necessary for event loops that contain text input fields.
 BOOLEAN HandleTextInput( InputAtom *Event );
 
-//Required in your screen loop to update the values, as well as blinking the cursor.
-void RenderActiveTextField();
 void RenderInactiveTextField( UINT8 ubID );
 void RenderAllTextFields();
 
-void EnableTextField( UINT8 ubID );
 void DisableTextField( UINT8 ubID );
 void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID );
 void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID );

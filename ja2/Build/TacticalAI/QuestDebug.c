@@ -80,10 +80,7 @@ void ToggleQuestDebugModes( UINT8 ubType )
 }
 
 
-
-
-
-void QuestDebugFileMsg( UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
+static void QuestDebugFileMsg(UINT8 ubQuoteType, UINT8 ubPriority, STR pStringA, ...)
 {
 	static BOOLEAN	fFirstTimeIn = TRUE;
 	static UINT32		uiLineNumber = 1;

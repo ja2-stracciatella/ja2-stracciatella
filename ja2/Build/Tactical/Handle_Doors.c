@@ -35,7 +35,8 @@
 BOOLEAN gfSetPerceivedDoorState = FALSE;
 
 
-BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations );
+static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations);
+
 
 void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations )
 {
@@ -265,7 +266,8 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 
 }
 
-BOOLEAN DoTrapCheckOnStartingMenu( SOLDIERTYPE * pSoldier, DOOR * pDoor )
+
+static BOOLEAN DoTrapCheckOnStartingMenu(SOLDIERTYPE* pSoldier, DOOR* pDoor)
 {
 	INT8	bDetectLevel;
 
@@ -399,7 +401,8 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 
 }
 
-void ProcessImplicationsOfPCMessingWithDoor( SOLDIERTYPE * pSoldier )
+
+static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 {
 	UINT8						ubRoom;
 	SOLDIERTYPE *		pGoon;
@@ -948,7 +951,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 }
 
 
-BOOLEAN HandleDoorsOpenClose( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE * pStructure, BOOLEAN fNoAnimations  )
+static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations)
 {
 	LEVELNODE	* pShadowNode;
 	LEVELNODE * pNode;

@@ -43,12 +43,14 @@ void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 	*pusObjIndex = FIRSTWALL;
 }
 
-UINT16 CalcSmartWindowIndex( UINT16 usWallOrientation )
+
+static UINT16 CalcSmartWindowIndex(UINT16 usWallOrientation)
 {
 	return (UINT16)(33 + usWallOrientation*3 + gubWindowUIValue);
 }
 
-UINT16 CalcSmartDoorIndex( UINT16 usWallOrientation )
+
+static UINT16 CalcSmartDoorIndex(UINT16 usWallOrientation)
 {
 	//convert the orientation values as the graphics are in reverse order
 	//orientation values:   INSIDE_TOP_LEFT=1,  INSIDE_TOP_RIGHT=2,  OUTSIDE_TOP_LEFT=3, OUTSIDE_TOP_RIGHT=4
@@ -58,12 +60,14 @@ UINT16 CalcSmartDoorIndex( UINT16 usWallOrientation )
 	return (UINT16)( 1 + usWallOrientation + 4 * (gubDoorUIValue % 2) );
 }
 
-UINT16 CalcSmartDoorType()
+
+static UINT16 CalcSmartDoorType(void)
 {
 	return (UINT16)( FIRSTDOOR + gubDoorUIValue / 2 );
 }
 
-UINT16 CalcSmartBrokenWallIndex( UINT16 usWallOrientation )
+
+static UINT16 CalcSmartBrokenWallIndex(UINT16 usWallOrientation)
 {
 	if( gubBrokenWallUIValue == 2 ) //the hole in the wall
 		return 0xffff;

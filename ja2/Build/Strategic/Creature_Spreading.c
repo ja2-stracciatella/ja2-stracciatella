@@ -138,7 +138,8 @@ extern void BuildUndergroundSectorInfoList();
 
 extern MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 
-CREATURE_DIRECTIVE* NewDirective( UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat )
+
+static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {
 	CREATURE_DIRECTIVE *curr;
 	UINT8 ubSectorX, ubSectorY;
@@ -160,7 +161,8 @@ CREATURE_DIRECTIVE* NewDirective( UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCre
 	return curr;
 }
 
-void InitLairDrassen()
+
+static void InitLairDrassen(void)
 {
 	CREATURE_DIRECTIVE *curr;
 	giLairID = 1;
@@ -184,7 +186,8 @@ void InitLairDrassen()
 	curr->next = NewDirective( SEC_D13, 1, MINE_EXIT );
 }
 
-void InitLairCambria()
+
+static void InitLairCambria(void)
 {
 	CREATURE_DIRECTIVE *curr;
 	giLairID = 2;
@@ -208,7 +211,8 @@ void InitLairCambria()
 	curr->next = NewDirective( SEC_H8, 1, MINE_EXIT );
 }
 
-void InitLairAlma()
+
+static void InitLairAlma(void)
 {
 	CREATURE_DIRECTIVE *curr;
 	giLairID = 3;
@@ -230,7 +234,8 @@ void InitLairAlma()
 	curr->next = NewDirective( SEC_I14, 1, MINE_EXIT );
 }
 
-void InitLairGrumm()
+
+static void InitLairGrumm(void)
 {
 	CREATURE_DIRECTIVE *curr;
 	giLairID = 4;
@@ -434,7 +439,8 @@ void InitCreatureQuest()
 	}
 }
 
-void AddCreatureToNode( CREATURE_DIRECTIVE *node )
+
+static void AddCreatureToNode(CREATURE_DIRECTIVE* node)
 {
 	node->pLevel->ubNumCreatures++;
 
@@ -446,7 +452,8 @@ void AddCreatureToNode( CREATURE_DIRECTIVE *node )
 	}
 }
 
-BOOLEAN PlaceNewCreature( CREATURE_DIRECTIVE *node, INT32 iDistance )
+
+static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 {
 	if( !node )
 		return FALSE;
@@ -592,7 +599,8 @@ void DecayCreatures()
 
 }
 
-void AddCreaturesToBattle( UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, UINT8 ubNumAdultFemales )
+
+static void AddCreaturesToBattle(UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, UINT8 ubNumAdultFemales)
 {
 	INT32 iRandom;
 	SOLDIERTYPE *pSoldier;
@@ -691,7 +699,8 @@ void AddCreaturesToBattle( UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8
 	AllTeamsLookForAll( FALSE );
 }
 
-void ChooseTownSectorToAttack( UINT8 ubSectorID, BOOLEAN fOverrideTest )
+
+static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
 {
 	INT32 iRandom;
 	UINT8 ubSectorX, ubSectorY;
@@ -913,8 +922,9 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 	LockPauseState( 2 );
 }
 
+
 //Called by campaign init.
-void ChooseCreatureQuestStartDay()
+static void ChooseCreatureQuestStartDay(void)
 {
 //	INT32 iRandom, iDay;
 	if( !gGameOptions.fSciFi )
@@ -935,7 +945,8 @@ void ChooseCreatureQuestStartDay()
 	}
 }
 
-void DeleteDirectiveNode( CREATURE_DIRECTIVE **node )
+
+static void DeleteDirectiveNode(CREATURE_DIRECTIVE** node)
 {
 	if( (*node)->next )
 		DeleteDirectiveNode( &((*node)->next) );
@@ -1000,7 +1011,8 @@ void EndCreatureQuest()
 	}
 }
 
-UINT8 CreaturesInUndergroundSector( UINT8 ubSectorID, UINT8 ubSectorZ )
+
+static UINT8 CreaturesInUndergroundSector(UINT8 ubSectorID, UINT8 ubSectorZ)
 {
 	UNDERGROUND_SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;

@@ -123,21 +123,11 @@ BOOLEAN InitializeMemoryManager( void )
 	return(TRUE);
 }
 
-//**************************************************************************
-//
-// MemDebug
-//
-//		To set whether or not we should print debug info.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		12sep96:HJH		-> modified for use by Wizardry
-//
-//**************************************************************************
 
-void MemDebug( BOOLEAN f )
+//		To set whether or not we should print debug info.
+// Modification history :
+//		12sep96:HJH		-> modified for use by Wizardry
+static void MemDebug(BOOLEAN f)
 {
 	gfMemDebug = f;
 }

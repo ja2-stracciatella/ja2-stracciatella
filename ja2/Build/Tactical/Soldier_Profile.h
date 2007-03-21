@@ -181,8 +181,6 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs );
 // Returns true if a buddy of the merc is on team
 BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID );
 
-void StartSomeMercsOnAssignment( void );
-
 void DecideOnAssassin( void );
 
 extern BOOLEAN gubNumTerrorists;

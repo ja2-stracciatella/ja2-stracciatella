@@ -93,9 +93,7 @@ extern		BOOLEAN							gfDontOverRideSaveBuffer;
 
 INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
 void DoScreenIndependantMessageBox( const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-void DoUpperScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-void DoScreenIndependantMessageBoxWithRect(const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
 
 //wrappers for other screens
 BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );

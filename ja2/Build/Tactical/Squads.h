@@ -60,18 +60,9 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter );
 // remove character from squads
 BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter );
 
-// remove character from a squad
-BOOLEAN RemoveCharacterFromASquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
-
-// check if character is in this squad
-BOOLEAN IsCharacterInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
-
 
 // return which squad character is in, -1 if none found
 INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter );
-
-// what slot is character in in this squad?..-1 if not found in squad
-INT8 SlotCharacterIsInSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
 
 // return number of people in this squad
 INT8 NumberOfPeopleInSquad( INT8 bSquadValue );
@@ -87,9 +78,6 @@ BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMa
 
 // rebuild current squad list
 void RebuildCurrentSquad( void );
-
-// copy path of squad to character
-BOOLEAN CopyPathOfSquadToCharacter(  SOLDIERTYPE *pCharacter, INT8 bSquadValue );
 
 // copy path from character back to squad
 BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
@@ -116,12 +104,6 @@ void SetDefaultSquadOnSectorEntry( BOOLEAN fForce );
 // get last squad that has active mercs
 INT32 GetLastSquadActive( void );
 
-// set squads between sector position
-void SetSquadPositionBetweenSectors( UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue  );
-
-// get squads between sector positions and times
-void GetSquadPosition( UINT8 *ubNextX, UINT8 *ubNextY, UINT8 *ubPrevX, UINT8 *ubPrevY, UINT32 *uiTraverseTime, UINT32 *uiArriveTime, UINT8 ubSquadValue );
-
 void ExamineCurrentSquadLights( void );
 
 // get location of this squad
@@ -136,15 +118,6 @@ BOOLEAN LoadSquadInfoFromSavedGameFile( HWFILE hFile );
 
 // get squad id of first free squad
 INT8 GetFirstEmptySquad( void );
-
-// is this squad in the same sector as soldier?
-BOOLEAN IsSquadInSector( SOLDIERTYPE *pSoldier, UINT8 ubSquad );
-
-// is any merc on squad asleep?
-BOOLEAN IsAnyMercOnSquadAsleep( UINT8 ubSquadValue );
-
-// is therea  dead guy here
-BOOLEAN IsDeadGuyInThisSquadSlot( INT8 bSlotId, INT8 bSquadValue , INT8 *bNumberOfDeadGuysSoFar );
 
 // dead soldier was on squad
 BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue );

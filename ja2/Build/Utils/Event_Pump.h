@@ -244,7 +244,6 @@ typedef struct
 
 
 BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );
-BOOLEAN AddGameEventFromNetwork( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );
 BOOLEAN DequeAllGameEvents( BOOLEAN fExecute );
 BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute );
 

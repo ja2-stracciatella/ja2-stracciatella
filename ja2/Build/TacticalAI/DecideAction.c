@@ -42,14 +42,16 @@ static UINT32 guiRedSeekCounter = 0, guiRedHelpCounter = 0; guiRedHideCounter = 
 
 #define CENTER_OF_RING 11237
 
-void DoneScheduleAction( SOLDIERTYPE * pSoldier )
+
+static void DoneScheduleAction(SOLDIERTYPE* pSoldier)
 {
 	pSoldier->fAIFlags &= (~AI_CHECK_SCHEDULE);
 	pSoldier->bAIScheduleProgress = 0;
 	PostNextSchedule( pSoldier );
 }
 
-INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
+
+static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 {
 	SCHEDULENODE *		pSchedule;
 	INT32							iScheduleIndex;
@@ -513,7 +515,8 @@ INT8 DecideActionSchedule( SOLDIERTYPE * pSoldier )
 	return( AI_ACTION_NONE );
 }
 
-INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
+
+static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 {
 	UINT8 ubRoom;
 	INT16	sDesiredMercLoc;
@@ -558,7 +561,8 @@ INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE *pSoldier)
 	return( AI_ACTION_ABSOLUTELY_NONE );
 }
 
-INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
+
+static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 {
 	INT16 sDesiredMercLoc;
 	UINT8	ubDesiredMercDir;
@@ -655,7 +659,7 @@ INT8 DecideActionNamedNPC( SOLDIERTYPE * pSoldier )
 }
 
 
-INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
+static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 {
  INT32 iChance, iSneaky = 10;
  INT8  bInWater,bInGas;
@@ -1109,7 +1113,8 @@ INT8 DecideActionGreen(SOLDIERTYPE *pSoldier)
 	return(AI_ACTION_NONE);
 }
 
-INT8 DecideActionYellow(SOLDIERTYPE *pSoldier)
+
+static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 {
  INT32 iDummy;
  UINT8 ubNoiseDir;
@@ -2613,7 +2618,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  return(AI_ACTION_NONE);
 }
 
-INT8 DecideActionBlack(SOLDIERTYPE *pSoldier)
+
+static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 {
  INT32	iCoverPercentBetter, iOffense, iDefense, iChance;
  INT16	sClosestOpponent,sBestCover = NOWHERE;
@@ -3988,7 +3994,8 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
  return(bAction);
 }
 
-INT8 DecideActionEscort(SOLDIERTYPE *pSoldier)
+
+static INT8 DecideActionEscort(SOLDIERTYPE* pSoldier)
 {
  // if he has a place to go, and isn't already there... go!
  if (pSoldier->usActionData != NOWHERE && (pSoldier->sGridNo != pSoldier->usActionData))

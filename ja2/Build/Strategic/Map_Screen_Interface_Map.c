@@ -478,75 +478,13 @@ INT32 giPotHeliPathBaseTime = 0;
 INT32 giClickHeliIconBaseTime = 0;
 
 
-// display the level string on the strategic map
-void DisplayLevelString( void );
-
-void ShowTownText( void );
-void DrawTownLabels(wchar_t *pString, wchar_t *pStringA,UINT16 usFirstX, UINT16 usFirstY);
-void ShowTeamAndVehicles(INT32 fShowFlags);
-BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor );
-BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor );
-void AdjustXForLeftMapEdge(STR16 wString, INT16 *psX);
-void BlitTownGridMarkers( void );
-void BlitMineGridMarkers( void );
-void BlitSAMGridMarkers( void );
-void BlitMineIcon( INT16 sMapX, INT16 sMapY );
-void BlitMineText( INT16 sMapX, INT16 sMapY );
 extern BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY );
-INT16 GetBaseSectorForCurrentTown( void );
-void RenderIconsPerSectorForSelectedTown( void );
-void MilitiaRegionClickCallback( MOUSE_REGION *pRegion, INT32 iReason );
-void MilitiaRegionMoveCallback( MOUSE_REGION *pRegion, INT32 iReason );
 void CreateDestroyMilitiaSectorButtons( void );
-void ShowHighLightedSectorOnMilitiaMap( void );
-void SetMilitiaMapButtonsText( void );
-static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason);
-void DisplayUnallocatedMilitia( void );
-BOOLEAN IsThisMilitiaTownSectorAllowable( INT16 sSectorIndexValue );
-void DrawTownMilitiaName( void );
-void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor( INT16 sTownValue );
-void HandleEveningOutOfTroopsAmongstSectors( void );
-void CreateMilitiaPanelBottomButton( void );
-void DeleteMilitiaPanelBottomButton( void );
-static void MilitiaDoneButtonCallback(GUI_BUTTON *btn, INT32 reason);
-static void MilitiaAutoButtonCallback(GUI_BUTTON *btn, INT32 reason);
-void RenderShadingForUnControlledSectors( void );
-void DrawTownMilitiaForcesOnMap( void );
-void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( void );
-void HandleLowerLevelMapBlit( void );
-void ShowSAMSitesOnStrategicMap( void );
-
-//UINT8 NumActiveCharactersInSector( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ );
-//UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ );
 
 
 #ifdef JA2DEMO
 BOOLEAN DrawMapForDemo( void );
 #endif
-
-// callbacks
-void MilitiaBoxMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
-
-// display potential path, yes or no?
-void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
-void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition );
-void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
-void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition );
-
-BOOLEAN CanMilitiaAutoDistribute( void );
-
-void ShowItemsOnMap( void );
-void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition );
-void DisplayDestinationOfHelicopter( void );
-void DrawOrta();
-void DrawTixa();
-void DrawBullseye();
-void HideExistenceOfUndergroundMapSector( UINT8 ubSectorX, UINT8 ubSectorY );
-
-BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
-
-BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate );
-void AnimateRoute( PathStPtr pPath );
 
 extern void EndConfirmMapMoveMode( void );
 extern BOOLEAN CanDrawSectorCursor( void );
@@ -652,7 +590,10 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 */
 
 
-void HandleShowingOfEnemiesWithMilitiaOn( void )
+static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition);
+
+
+static void HandleShowingOfEnemiesWithMilitiaOn(void)
 {
 	INT16 sX = 0, sY = 0;
 
@@ -670,6 +611,23 @@ void HandleShowingOfEnemiesWithMilitiaOn( void )
 		}
 	}
 }
+
+
+static void BlitMineGridMarkers(void);
+static void BlitMineIcon(INT16 sMapX, INT16 sMapY);
+static void BlitMineText(INT16 sMapX, INT16 sMapY);
+static void BlitTownGridMarkers(void);
+static void DisplayLevelString(void);
+static void DrawBullseye(void);
+static void DrawOrta(void);
+static void DrawTixa(void);
+static void DrawTownMilitiaForcesOnMap(void);
+static void HandleLowerLevelMapBlit(void);
+static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
+static void ShowItemsOnMap(void);
+static void ShowSAMSitesOnStrategicMap(void);
+static void ShowTeamAndVehicles(INT32 fShowFlags);
+static void ShowTownText(void);
 
 
 UINT32 DrawMap( void )
@@ -909,7 +867,8 @@ void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY )
 	}
 }
 
-void GetScreenXYFromMapXYStationary( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY )
+
+static void GetScreenXYFromMapXYStationary(INT16 sMapX, INT16 sMapY, INT16* psX, INT16* psY)
 {
 	INT16 sXTempOff=1;
 	INT16 sYTempOff=1;
@@ -920,7 +879,10 @@ void GetScreenXYFromMapXYStationary( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16
 }
 
 
-void ShowTownText( void )
+static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT16 usFirstX, UINT16 usFirstY);
+
+
+static void ShowTownText(void)
 {
 	wchar_t sString[ 32 ];
 	wchar_t sStringA[ 32 ];
@@ -981,7 +943,7 @@ void ShowTownText( void )
 }
 
 
-void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16 usFirstY)
+static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT16 usFirstX, UINT16 usFirstY)
 {
 	// this procedure will draw the given strings on the screen centered around the given x and at the given y
 
@@ -1031,9 +993,11 @@ void DrawTownLabels(wchar_t *pString, wchar_t *pStringA, UINT16 usFirstX, UINT16
 }
 
 
+static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition);
+
 
 // "on duty" includes mercs inside vehicles
-INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
+static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 {
   UINT8 ubCounter = 0, ubIconPosition = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -1063,7 +1027,7 @@ INT32 ShowOnDutyTeam( INT16 sMapX, INT16 sMapY )
 }
 
 
-INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
+static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
  	UINT8 ubCounter, ubIconPosition;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -1103,7 +1067,8 @@ INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 	return ubIconPosition;
 }
 
-INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
+
+static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
   UINT8 ubCounter, ubIconPosition;
 	SOLDIERTYPE *pVehicleSoldier;
@@ -1148,7 +1113,7 @@ INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
 }
 
 
-void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition )
+static void ShowEnemiesInSector(INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition)
 {
 	UINT8 ubEnemy = 0;
 
@@ -1162,8 +1127,7 @@ void ShowEnemiesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies
 }
 
 
-
-void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+static void ShowUncertainNumberEnemiesInSector(INT16 sSectorX, INT16 sSectorY)
 {
 	INT16 sXPosition = 0, sYPosition = 0;
 
@@ -1210,7 +1174,10 @@ void ShowUncertainNumberEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-void ShowTeamAndVehicles(INT32 fShowFlags)
+static void ShowPeopleInMotion(INT16 sX, INT16 sY);
+
+
+static void ShowTeamAndVehicles(INT32 fShowFlags)
 {
 	// go through each sector, display the on duty, assigned, and vehicles
   INT16 sMapX = 0;
@@ -1251,7 +1218,10 @@ void ShowTeamAndVehicles(INT32 fShowFlags)
 }
 
 
-BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor )
+static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
+
+
+static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 {
 	INT16	sScreenX, sScreenY;
   UINT32 uiDestPitchBYTES;
@@ -1412,7 +1382,7 @@ BOOLEAN ShadeMapElem( INT16 sMapX, INT16 sMapY, INT32 iColor )
 }
 
 
-BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor )
+static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
 {
 	INT16 sScreenX, sScreenY;
   INT32 iX, iY;
@@ -1625,6 +1595,10 @@ void ShutDownPalettesForMap( void )
 	pMapDKGreenPalette = NULL;
 }
 
+
+static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter);
+
+
 void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal )
 {
 	// will plot a path for this character
@@ -1835,7 +1809,7 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 }
 
 
-void CancelPathForGroup( GROUP *pGroup )
+static void CancelPathForGroup(GROUP* pGroup)
 {
 	INT32 iVehicleId;
 
@@ -1874,8 +1848,7 @@ void CancelPathForGroup( GROUP *pGroup )
 }
 
 
-
-void CopyPathToCharactersSquadIfInOne( SOLDIERTYPE *pCharacter )
+static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
 {
 	INT8 bSquad = 0;
 
@@ -1892,6 +1865,9 @@ void CopyPathToCharactersSquadIfInOne( SOLDIERTYPE *pCharacter )
 	}
 }
 
+
+static void AnimateRoute(PathStPtr pPath);
+static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath);
 
 
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
@@ -2073,7 +2049,8 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 }
 
 
-BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath )
+// trace a route for a passed path...doesn't require dest char - most more general
+static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath)
 {
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iArrow=-1;
@@ -2793,7 +2770,10 @@ BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath
 }
 
 
-void AnimateRoute( PathStPtr pPath )
+static BOOLEAN TraceCharAnimatedRoute(PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate);
+
+
+static void AnimateRoute(PathStPtr pPath)
 {
 	// set buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0,0,640, 480, FALSE );
@@ -2808,7 +2788,8 @@ void AnimateRoute( PathStPtr pPath )
 }
 
 
-void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY, BOOLEAN fZoom)
+// restore backgrounds for arrows
+static void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY, BOOLEAN fZoom)
 {
 	INT16 sArrow=0;
   INT32 iX = -1, iY = -1;
@@ -2864,7 +2845,7 @@ void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY,
 }
 
 
-BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate )
+static BOOLEAN TraceCharAnimatedRoute(PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate)
 {
  static PathStPtr pCurrentNode=NULL;
  static BOOLEAN fUpDateFlag=FALSE;
@@ -3699,6 +3680,7 @@ BOOLEAN TraceCharAnimatedRoute( PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fFo
 }
 
 
+// display potential path, yes or no?
 void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 {
 	// simply check if we want to refresh the screen to display path
@@ -3924,8 +3906,8 @@ void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 #define ICON_WIDTH 8
 
 
-
-void ShowPeopleInMotion( INT16 sX, INT16 sY )
+// show the icons for people in motion
+static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 {
 	INT32 sExiting = 0;
 	INT32 sEntering = 0;
@@ -4294,6 +4276,9 @@ void DisplayDistancesForHelicopter( void )
 }
 
 
+static void DisplayDestinationOfHelicopter(void);
+
+
 // grab position of helicopter and blt to screen
 void DisplayPositionOfHelicopter( void )
 {
@@ -4439,7 +4424,7 @@ void DisplayPositionOfHelicopter( void )
 }
 
 
-void DisplayDestinationOfHelicopter( void )
+static void DisplayDestinationOfHelicopter(void)
 {
 	static INT16 sOldMapX = 0, sOldMapY = 0;
 	INT16 sSector;
@@ -4563,7 +4548,7 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 }
 
 
-void BlitMineIcon( INT16 sMapX, INT16 sMapY )
+static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8 *pDestBuf2;
@@ -4588,7 +4573,10 @@ void BlitMineIcon( INT16 sMapX, INT16 sMapY )
 }
 
 
-void BlitMineText( INT16 sMapX, INT16 sMapY )
+static void AdjustXForLeftMapEdge(STR16 wString, INT16* psX);
+
+
+static void BlitMineText(INT16 sMapX, INT16 sMapY)
 {
 	INT16 sScreenX, sScreenY;
 	CHAR16 wString[ 32 ], wSubString[ 32 ];
@@ -4692,8 +4680,7 @@ void BlitMineText( INT16 sMapX, INT16 sMapY )
 }
 
 
-
-void AdjustXForLeftMapEdge(STR16 wString, INT16 *psX)
+static void AdjustXForLeftMapEdge(STR16 wString, INT16* psX)
 {
 	INT16 sStartingX, sPastEdge;
 
@@ -4709,7 +4696,7 @@ void AdjustXForLeftMapEdge(STR16 wString, INT16 *psX)
 }
 
 
-void BlitTownGridMarkers( void )
+static void BlitTownGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
 	UINT32										 uiDestPitchBYTES;
@@ -4786,7 +4773,7 @@ void BlitTownGridMarkers( void )
 }
 
 
-void BlitMineGridMarkers( void )
+static void BlitMineGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
 	UINT32										 uiDestPitchBYTES;
@@ -4878,7 +4865,7 @@ UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ )
 */
 
 
-void DisplayLevelString( void )
+static void DisplayLevelString(void)
 {
 	CHAR16 sString[ 32 ];
 
@@ -4906,11 +4893,8 @@ void DisplayLevelString( void )
 
 
 // function to manipulate the number of towns people on the cursor
-BOOLEAN PickUpATownPersonFromSector( UINT8 ubType, INT16 sX, INT16 sY )
+static BOOLEAN PickUpATownPersonFromSector(UINT8 ubType, INT16 sX, INT16 sY)
 {
-
-
-
 	// see if there are any militia of this type in this sector
 	if( !SectorInfo[ SECTOR( sX, sY ) ].ubNumberOfCivsAtLevel[ ubType ] )
 	{
@@ -4956,7 +4940,8 @@ BOOLEAN PickUpATownPersonFromSector( UINT8 ubType, INT16 sX, INT16 sY )
 	return( TRUE );
 }
 
-BOOLEAN DropAPersonInASector( UINT8 ubType, INT16 sX, INT16 sY )
+
+static BOOLEAN DropAPersonInASector(UINT8 ubType, INT16 sX, INT16 sY)
 {
 
 	// are they in the same town as they were pickedup from
@@ -5042,6 +5027,14 @@ void RemoveMilitiaPopUpBox( void )
 }
 
 
+static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void);
+static void DisplayUnallocatedMilitia(void);
+static void DrawTownMilitiaName(void);
+static void RenderIconsPerSectorForSelectedTown(void);
+static void RenderShadingForUnControlledSectors(void);
+static void SetMilitiaMapButtonsText(void);
+static void ShowHighLightedSectorOnMilitiaMap(void);
+
 
 BOOLEAN DrawMilitiaPopUpBox( void )
 {
@@ -5103,6 +5096,12 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 }
 
 
+static void CreateMilitiaPanelBottomButton(void);
+static void DeleteMilitiaPanelBottomButton(void);
+static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 sTownValue);
+static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 void CreateDestroyMilitiaPopUPRegions( void )
 {
@@ -5152,7 +5151,10 @@ void CreateDestroyMilitiaPopUPRegions( void )
 }
 
 
-void RenderIconsPerSectorForSelectedTown( void )
+static INT16 GetBaseSectorForCurrentTown(void);
+
+
+static void RenderIconsPerSectorForSelectedTown(void)
 {
 	INT16 sBaseSectorValue = 0;
 	INT16 sCurrentSectorValue = 0;
@@ -5262,7 +5264,7 @@ void RenderIconsPerSectorForSelectedTown( void )
 }
 
 
-INT16 GetBaseSectorForCurrentTown( void )
+static INT16 GetBaseSectorForCurrentTown(void)
 {
 	INT16 sBaseSector = 0;
 
@@ -5276,7 +5278,8 @@ INT16 GetBaseSectorForCurrentTown( void )
 	return( sBaseSector );
 }
 
-void ShowHighLightedSectorOnMilitiaMap( void )
+
+static void ShowHighLightedSectorOnMilitiaMap(void)
 {
 	// show the highlighted sector on the militia map
 	INT16 sX = 0, sY = 0;
@@ -5297,7 +5300,10 @@ void ShowHighLightedSectorOnMilitiaMap( void )
 }
 
 
-void MilitiaRegionClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
+static BOOLEAN IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue);
+
+
+static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -5329,7 +5335,7 @@ void MilitiaRegionClickCallback( MOUSE_REGION *pRegion, INT32 iReason )
 }
 
 
-void MilitiaRegionMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
+static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT32 iValue = 0;
 
@@ -5351,6 +5357,11 @@ void MilitiaRegionMoveCallback( MOUSE_REGION *pRegion, INT32 iReason )
 		sSectorMilitiaMapSectorOutline = -1;
 	}
 }
+
+
+static void MilitiaBoxMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MilitiaButtonCallback(GUI_BUTTON* btn, INT32 reason);
+
 
 void CreateDestroyMilitiaSectorButtons( void )
 {
@@ -5440,8 +5451,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 }
 
 
-
-void SetMilitiaMapButtonsText( void )
+static void SetMilitiaMapButtonsText(void)
 {
 	// now set the militia map button text
 	CHAR16 sString[ 64 ];
@@ -5495,7 +5505,7 @@ static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void DisplayUnallocatedMilitia( void )
+static void DisplayUnallocatedMilitia(void)
 {
 	// show the nunber on the cursor
 	INT32 iTotalNumberOfTroops =0, iNumberOfGreens = 0, iNumberOfRegulars =0, iNumberOfElites = 0, iCurrentTroopIcon = 0;
@@ -5536,7 +5546,8 @@ void DisplayUnallocatedMilitia( void )
 	}
 }
 
-BOOLEAN IsThisMilitiaTownSectorAllowable( INT16 sSectorIndexValue )
+
+static BOOLEAN IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue)
 {
 	INT16 sBaseSectorValue = 0, sGlobalMapSector = 0;
 	INT16 sSectorX, sSectorY;
@@ -5564,7 +5575,7 @@ BOOLEAN IsThisMilitiaTownSectorAllowable( INT16 sSectorIndexValue )
 }
 
 
-void DrawTownMilitiaName( void )
+static void DrawTownMilitiaName(void)
 {
 	CHAR16 sString[ 64 ];
 	INT16 sX, sY;
@@ -5581,7 +5592,7 @@ void DrawTownMilitiaName( void )
 }
 
 
-void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor( INT16 sTownValue  )
+static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 sTownValue)
 {
 	INT32 iCounter = 0, iCounterB = 0, iNumberUnderControl = 0, iNumberThatCanFitInSector= 0, iCount = 0;
 	BOOLEAN fLastOne = FALSE;
@@ -5673,7 +5684,8 @@ void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor( INT16 sTownValue  )
 	sElitesOnCursor = 0;
 }
 
-void HandleEveningOutOfTroopsAmongstSectors( void )
+
+static void HandleEveningOutOfTroopsAmongstSectors(void)
 {
 	// even out troops among the town
 	INT32 iCounter = 0, iNumberUnderControl = 0, iNumberOfGreens = 0, iNumberOfRegulars = 0, iNumberOfElites = 0, iTotalNumberOfTroops = 0;
@@ -5797,7 +5809,13 @@ void HandleEveningOutOfTroopsAmongstSectors( void )
 	sElitesOnCursor = 0;
 }
 
-void CreateMilitiaPanelBottomButton( void )
+
+static BOOLEAN CanMilitiaAutoDistribute(void);
+static void MilitiaAutoButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void MilitiaDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateMilitiaPanelBottomButton(void)
 {
 	// set the button image
 	giMapMilitiaButtonImage[ 3 ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,1,-1,2,-1 );
@@ -5837,7 +5855,7 @@ void CreateMilitiaPanelBottomButton( void )
 }
 
 
-void DeleteMilitiaPanelBottomButton( void )
+static void DeleteMilitiaPanelBottomButton(void)
 {
 
 	// delete militia panel bottom
@@ -5880,7 +5898,7 @@ static void MilitiaDoneButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void RenderShadingForUnControlledSectors( void )
+static void RenderShadingForUnControlledSectors(void)
 {
 	// now render shading over any uncontrolled sectors
 	// get the sector value for the upper left corner
@@ -5910,7 +5928,7 @@ void RenderShadingForUnControlledSectors( void )
 }
 
 
-void DrawTownMilitiaForcesOnMap( void )
+static void DrawTownMilitiaForcesOnMap(void)
 {
 	INT32 iCounter = 0, iCounterB = 0, iTotalNumberOfTroops = 0, iIconValue = 0;
 	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0,  iNumberOfElites = 0;
@@ -6023,7 +6041,7 @@ void DrawTownMilitiaForcesOnMap( void )
 }
 
 
-void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( void )
+static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void)
 {
 	// now set the militia map button text
 	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0, iNumberOfElites = 0;
@@ -6085,9 +6103,7 @@ void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( void )
 }
 
 
-
-
-BOOLEAN ShadeUndergroundMapElem( INT16 sSectorX, INT16 sSectorY )
+static BOOLEAN ShadeUndergroundMapElem(INT16 sSectorX, INT16 sSectorY)
 {
 	INT16 sScreenX, sScreenY;
 
@@ -6101,10 +6117,12 @@ BOOLEAN ShadeUndergroundMapElem( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-void ShadeSubLevelsNotVisited( void )
+static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY);
+
+
+static void ShadeSubLevelsNotVisited(void)
 {
 	UNDERGROUND_SECTORINFO *pNode = gpUndergroundSectorInfoHead;
-
 
 	// obtain the 16-bit version of the same color used in the mine STIs
  	gusUndergroundNearBlack = Get16BPPColor( FROMRGB( 2, 2, 0 ) );
@@ -6124,7 +6142,7 @@ void ShadeSubLevelsNotVisited( void )
 }
 
 
-void HandleLowerLevelMapBlit( void )
+static void HandleLowerLevelMapBlit(void)
 {
 	// blits the sub level maps
 	UINT32 VOIdx;
@@ -6143,7 +6161,7 @@ void HandleLowerLevelMapBlit( void )
 }
 
 
-void MilitiaBoxMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
+static void MilitiaBoxMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
@@ -6204,6 +6222,8 @@ void ClearAnySectorsFlashingNumberOfEnemies()
 }
 
 
+static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+
 
 UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
@@ -6260,7 +6280,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	INT32 iFirstId = 0, iLastId = 0;
 	INT32 iCounter = 0;
@@ -6322,8 +6342,7 @@ BOOLEAN CanMercsScoutThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-
-void HandleShowingOfEnemyForcesInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition )
+static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition)
 {
 	INT16 sNumberOfEnemies = 0;
 
@@ -6397,7 +6416,10 @@ UINT8 NumActiveCharactersInSector( INT16 sSectorX, INT16 sSectorY, INT16 bSector
 */
 
 
-void ShowSAMSitesOnStrategicMap( void )
+static void BlitSAMGridMarkers(void);
+
+
+static void ShowSAMSitesOnStrategicMap(void)
 {
 	INT32 iCounter = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
@@ -6495,8 +6517,7 @@ void ShowSAMSitesOnStrategicMap( void )
 }
 
 
-
-void BlitSAMGridMarkers( void )
+static void BlitSAMGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
 	UINT32										 uiDestPitchBYTES;
@@ -6551,7 +6572,7 @@ void BlitSAMGridMarkers( void )
 }
 
 
-BOOLEAN CanMilitiaAutoDistribute( void )
+static BOOLEAN CanMilitiaAutoDistribute(void)
 {
 	INT32 iTotalTroopsOnCursor = 0;
 	INT32 iCounter = 0;
@@ -6608,8 +6629,7 @@ BOOLEAN CanMilitiaAutoDistribute( void )
 }
 
 
-
-void ShowItemsOnMap( void )
+static void ShowItemsOnMap(void)
 {
 	INT16 sMapX, sMapY;
 	INT16 sXCorner, sYCorner;
@@ -6661,8 +6681,7 @@ void ShowItemsOnMap( void )
 }
 
 
-
-void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition )
+static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition)
 {
   INT32 iRowNumber, iColumnNumber;
 	INT32 iX, iY;
@@ -6709,8 +6728,7 @@ void DrawMapBoxIcon( HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 
 }
 
 
-
-void DrawOrta()
+static void DrawOrta(void)
 {
 	UINT8 *pDestBuf2;
   UINT32 uiDestPitchBYTES;
@@ -6740,7 +6758,7 @@ void DrawOrta()
 }
 
 
-void DrawTixa()
+static void DrawTixa(void)
 {
 	UINT8 *pDestBuf2;
   UINT32 uiDestPitchBYTES;
@@ -6769,8 +6787,7 @@ void DrawTixa()
 }
 
 
-
-void DrawBullseye()
+static void DrawBullseye(void)
 {
 	INT16 sX, sY;
 
@@ -6781,8 +6798,7 @@ void DrawBullseye()
 }
 
 
-
-void HideExistenceOfUndergroundMapSector( UINT8 ubSectorX, UINT8 ubSectorY )
+static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY)
 {
 	INT16 sScreenX;
 	INT16 sScreenY;

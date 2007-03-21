@@ -212,7 +212,8 @@ void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScre
 	*pdScreenY = dScreenY;
 }
 
-void FloatFromScreenToCellCoordinates( FLOAT dScreenX, FLOAT dScreenY, FLOAT *pdCellX, FLOAT *pdCellY )
+
+static void FloatFromScreenToCellCoordinates(FLOAT dScreenX, FLOAT dScreenY, FLOAT* pdCellX, FLOAT* pdCellY)
 {
 	FLOAT dCellX, dCellY;
 
@@ -391,7 +392,8 @@ BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *p
 	return( TRUE );
 }
 
-void GetScreenXYWorldCoords( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldX, INT16 *psWorldY )
+
+static void GetScreenXYWorldCoords(INT16 sScreenX, INT16 sScreenY, INT16* psWorldX, INT16* psWorldY)
 {
 	INT16 sOffsetX, sOffsetY;
 	INT16	sTempPosX_W, sTempPosY_W;
@@ -416,7 +418,7 @@ void GetScreenXYWorldCoords( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldX, IN
 }
 
 
-void GetScreenXYWorldCell( INT16 sScreenX, INT16 sScreenY, INT16 *psWorldCellX, INT16 *psWorldCellY )
+static void GetScreenXYWorldCell(INT16 sScreenX, INT16 sScreenY, INT16* psWorldCellX, INT16* psWorldCellY)
 {
 	INT16 sWorldX, sWorldY;
 
@@ -690,7 +692,8 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 	return( (INT16)( sRows + sCols ) );
 }
 
-INT8 FindNumTurnsBetweenDirs( INT8 sDir1, INT8 sDir2 )
+
+static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 {
 	INT16 sDirection;
 	INT16 sNumTurns = 0;
@@ -915,7 +918,7 @@ INT16 CenterY( INT16 sGridNo )
 }
 
 
-INT16 MapX( INT16 sGridNo )
+static INT16 MapX(INT16 sGridNo)
 {
 	INT16 sYPos, sXPos;
 
@@ -926,7 +929,7 @@ INT16 MapX( INT16 sGridNo )
 }
 
 
-INT16 MapY( INT16 sGridNo )
+static INT16 MapY(INT16 sGridNo)
 {
 	INT16 sYPos, sXPos;
 
@@ -963,7 +966,7 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 // This function is used when we care about astetics with the top Y portion of the
 // gma eplay area
 // mostly due to UI bar that comes down....
-BOOLEAN GridNoOnVisibleWorldTileGivenYLimits( INT16 sGridNo )
+static BOOLEAN GridNoOnVisibleWorldTileGivenYLimits(INT16 sGridNo)
 {
 	INT16 sWorldX;
 	INT16 sWorldY;

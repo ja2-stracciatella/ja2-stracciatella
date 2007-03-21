@@ -32,13 +32,6 @@
 // the max number of pop up boxes availiable to user
 #define MAX_NUMBER_OF_POPUP_BOXES 10
 
-// attempt to add box to pop up box list
-INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox );
-
-
-// grab box with this id value
-MercPopUpBox * GetPopUpBoxIndex( INT32 iId );
-
 
 // both of the below are index by the enum for thier types - background and border in
 // MercTextBox.h
@@ -84,7 +77,8 @@ UINT32	guiFlags = 0;
 UINT32	guiBoxIcons;
 UINT32	guiSkullIcons;
 
-BOOLEAN SetCurrentPopUpBox( UINT32 uiId )
+
+static BOOLEAN SetCurrentPopUpBox(UINT32 uiId)
 {
 	// given id of the box, find it in the list and set to current
 
@@ -147,7 +141,7 @@ BOOLEAN InitMercPopupBox( )
 }
 
 
-BOOLEAN ShutDownPopUpBoxes( )
+static BOOLEAN ShutDownPopUpBoxes(void)
 {
 
 	INT32 iCounter = 0;
@@ -161,11 +155,8 @@ BOOLEAN ShutDownPopUpBoxes( )
 }
 
 
-//Pass in the background index, and pointers to the font and shadow color
-void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UINT8 *pubFontShadowColor);
-
 // Tactical Popup
-BOOLEAN LoadTextMercPopupImages( UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
+static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 {
   // this function will load the graphics associated with the background and border index values
 
@@ -257,8 +248,7 @@ BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 }
 
 
-
-INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox )
+static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
 {
 	INT32 iCounter = 0;
 
@@ -288,11 +278,16 @@ INT32 AddPopUpBoxToList( MercPopUpBox *pPopUpTextBox )
 	return( -1 );
 }
 
+
 // get box with this id
-MercPopUpBox * GetPopUpBoxIndex( INT32 iId )
+static MercPopUpBox* GetPopUpBoxIndex(INT32 iId)
 {
 	return( gpPopUpBoxList[ iId ] );
 }
+
+
+static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
+
 
 INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight)
 {
@@ -539,8 +534,9 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 }
 
+
 //Deletes the surface thats contains the border, background and the text.
-BOOLEAN RemoveMercPopupBox()
+static BOOLEAN RemoveMercPopupBox(void)
 {
 
 	INT32 iCounter = 0;
@@ -600,7 +596,7 @@ BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId )
 
 
 //Pass in the background index, and pointers to the font and shadow color
-void	GetMercPopupBoxFontColor( UINT8 ubBackgroundIndex, UINT8 *pubFontColor, UINT8 *pubFontShadowColor)
+static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor)
 {
 	switch( ubBackgroundIndex )
 	{
@@ -638,8 +634,7 @@ BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags )
 }
 
 
-
-BOOLEAN SetPrepareMercPopUpFlagsFromIndex( UINT32 uiFlags, UINT32 uiId )
+static BOOLEAN SetPrepareMercPopUpFlagsFromIndex(UINT32 uiFlags, UINT32 uiId)
 {
 	// find this box, set it to current, and delete it
 	if( SetCurrentPopUpBox( uiId ) == FALSE )

@@ -49,10 +49,8 @@ void AddSoldierInitListBloodcats();
 
 void UseEditorOriginalList();
 void UseEditorAlternateList();
-void AddPlacementToWorldByProfileID( UINT8 ubProfile );
 
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier );
-void RemoveDetailedPlacementInfo( UINT8 ubNodeID );
 
 void AddProfilesUsingProfileInsertionData();
 void AddProfilesNotUsingProfileInsertionData();

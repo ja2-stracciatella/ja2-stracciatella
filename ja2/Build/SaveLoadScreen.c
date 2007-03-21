@@ -198,58 +198,19 @@ INT32		guiSlgButtonImage;
 
 
 // Cancel Button
-void BtnSlgCancelCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiSlgCancelBtn;
 
 // Save game Button
-void BtnSlgSaveLoadCallback(GUI_BUTTON *btn,INT32 reason);
 UINT32	guiSlgSaveLoadBtn;
 INT32		guiSaveLoadImage;
 
 //Mouse regions for the currently selected save game
 MOUSE_REGION    gSelectedSaveRegion[ NUM_SAVE_GAMES ];
-void		SelectedSaveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void		SelectedSaveRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason );
 
 MOUSE_REGION		gSLSEntireScreenRegion;
-void		SelectedSLSEntireRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
-BOOLEAN		EnterSaveLoadScreen();
-void			RenderSaveLoadScreen();
-void			ExitSaveLoadScreen();
-void			HandleSaveLoadScreen();
-void			GetSaveLoadScreenUserInput();
-void			SaveLoadGameNumber( INT8 bSaveGameID );
-BOOLEAN		LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader );
-BOOLEAN		DisplaySaveGameEntry( INT8 bEntryID );//, UINT16 usPosY );
-BOOLEAN		DisplaySaveGameList();
-void			InitSaveLoadScreenTextInputBoxes();
-void			DestroySaveLoadTextInputBoxes();
-void			SetSelection( UINT8 ubNewSelection );
-UINT8			CompareSaveGameVersion( INT8 bSaveGameID );
-void			LoadSavedGameWarningMessageBoxCallBack( UINT8 bExitValue );
-void			LoadSavedGameDeleteAllSaveGameMessageBoxCallBack( UINT8 bExitValue );
-void			DeleteAllSaveGameFile( );
-void			DisplayOnScreenNumber( BOOLEAN fErase );
-
-
-void			DisableSelectedSlot();
-
-void			ConfirmSavedGameMessageBoxCallBack( UINT8 bExitValue );
-void			ConfirmLoadSavedGameMessageBoxCallBack( UINT8 bExitValue );
-//void			FailedSavingGameCallBack( UINT8 bExitValue );
-void			FailedLoadingGameCallBack( UINT8 bExitValue );
-void			SetSaveLoadExitScreen( UINT32 uiScreen );
-
-static void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack(UINT8 bExitValue);
-void			NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack( UINT8 bExitValue );
-
-void			RedrawSaveLoadScreenAfterMessageBox( UINT8 bExitValue );
-void			ClearSelectedSaveSlot();
-void			MoveSelectionUpOrDown( BOOLEAN fUp );
-void			SaveGameToSlotNum();
-void			StartFadeOutForSaveLoadScreen();
+static void ClearSelectedSaveSlot(void);
 
 
 UINT32	SaveLoadScreenInit()
@@ -268,6 +229,13 @@ UINT32	SaveLoadScreenInit()
 	return( TRUE );
 }
 
+
+static BOOLEAN EnterSaveLoadScreen(void);
+static void ExitSaveLoadScreen(void);
+static void GetSaveLoadScreenUserInput(void);
+static void HandleSaveLoadScreen(void);
+static void RenderSaveLoadScreen(void);
+static void SaveLoadGameNumber(INT8 bSaveGameID);
 
 
 UINT32	SaveLoadScreenHandle()
@@ -378,16 +346,10 @@ UINT32	SaveLoadScreenShutdown()
 }
 
 
+static void DestroySaveLoadTextInputBoxes(void);
 
 
-
-
-
-
-
-
-
-void SetSaveLoadExitScreen( UINT32 uiScreen )
+static void SetSaveLoadExitScreen(UINT32 uiScreen)
 {
 	if( uiScreen == GAME_SCREEN )
 	{
@@ -417,8 +379,16 @@ void SetSaveLoadExitScreen( UINT32 uiScreen )
 }
 
 
+static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
+static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue);
+static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
+static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 
-BOOLEAN		EnterSaveLoadScreen()
+
+static BOOLEAN EnterSaveLoadScreen(void)
 {
 	INT8	i;
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
@@ -678,7 +648,7 @@ Removed so that the user can click on it and get displayed a message that the qu
 }
 
 
-void			ExitSaveLoadScreen()
+static void ExitSaveLoadScreen(void)
 {
 	INT8	i;
 
@@ -738,7 +708,10 @@ void			ExitSaveLoadScreen()
 }
 
 
-void			RenderSaveLoadScreen()
+static BOOLEAN DisplaySaveGameList(void);
+
+
+static void RenderSaveLoadScreen(void)
 {
 	//if we are going to be instantly leaving the screen, dont draw the numbers
 	if( gfLoadGameUponEntry )
@@ -770,8 +743,10 @@ void			RenderSaveLoadScreen()
 }
 
 
+static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue);
 
-void			HandleSaveLoadScreen()
+
+static void HandleSaveLoadScreen(void)
 {
 	//If the game failed when in a message box, pop up a message box stating this
 	if( gfFailedToSaveGameWhenInsideAMessageBox )
@@ -786,14 +761,18 @@ void			HandleSaveLoadScreen()
 //		for( i=0; i<NUM_SAVE_GAMES; i++)
 //			gbSaveGameSelectedLocation[i] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 		ClearSelectedSaveSlot();
-
 	}
 }
 
 
+static void DisplayOnScreenNumber(BOOLEAN fErase);
+static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
+static void MoveSelectionUpOrDown(BOOLEAN fUp);
+static void SetSelection(UINT8 ubNewSelection);
+static void StartFadeOutForSaveLoadScreen(void);
 
 
-void		GetSaveLoadScreenUserInput()
+static void GetSaveLoadScreenUserInput(void)
 {
 	InputAtom Event;
 	POINT  MousePos;
@@ -998,7 +977,14 @@ void		GetSaveLoadScreenUserInput()
 	}
 }
 
-void SaveLoadGameNumber( INT8 bSaveGameID )
+
+static UINT8 CompareSaveGameVersion(INT8 bSaveGameID);
+static void ConfirmSavedGameMessageBoxCallBack(UINT8 bExitValue);
+static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue);
+static void SaveGameToSlotNum(void);
+
+
+static void SaveLoadGameNumber(INT8 bSaveGameID)
 {
 //	CHAR16	zTemp[128];
 	UINT8		ubRetVal=0;
@@ -1122,7 +1108,7 @@ BOOLEAN InitSaveGameArray()
 }
 
 
-BOOLEAN DisplaySaveGameList()
+static BOOLEAN DisplaySaveGameList(void)
 {
 	INT8	bLoop1;
 //	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
@@ -1141,8 +1127,7 @@ BOOLEAN DisplaySaveGameList()
 }
 
 
-
-BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
+static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 {
 	CHAR16		zDateString[128];
 	CHAR16		zLocationString[128];
@@ -1402,8 +1387,7 @@ BOOLEAN DisplaySaveGameEntry( INT8 bEntryID )//, UINT16 usPosY )
 }
 
 
-
-BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
+static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader)
 {
 	HWFILE hFile;
 	CHAR8		zSavedGameName[512];
@@ -1470,7 +1454,7 @@ BOOLEAN LoadSavedGameHeader( INT8 bEntry, SAVED_GAME_HEADER *pSaveGameHeader )
 }
 
 
-void BtnSlgCancelCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1502,8 +1486,7 @@ void BtnSlgCancelCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-
-void BtnSlgSaveLoadCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1552,8 +1535,11 @@ void BtnSlgLoadCallback(GUI_BUTTON *btn,INT32 reason)
 */
 
 
+static void DisableSelectedSlot(void);
+static void InitSaveLoadScreenTextInputBoxes(void);
 
-void SelectedSaveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT8		bActiveTextField;
 
@@ -1716,7 +1702,7 @@ void SelectedSaveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectedSaveRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -1752,10 +1738,7 @@ void SelectedSaveRegionMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 }
 
 
-
-
-
-void InitSaveLoadScreenTextInputBoxes()
+static void InitSaveLoadScreenTextInputBoxes(void)
 {
 	UINT16	usPosY;
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -1810,7 +1793,8 @@ void InitSaveLoadScreenTextInputBoxes()
 	gfUserInTextInputMode = TRUE;
 }
 
-void DestroySaveLoadTextInputBoxes()
+
+static void DestroySaveLoadTextInputBoxes(void)
 {
 	gfUserInTextInputMode = FALSE;
 	KillAllTextInputModes();
@@ -1818,7 +1802,7 @@ void DestroySaveLoadTextInputBoxes()
 }
 
 
-void SetSelection( UINT8 ubNewSelection )
+static void SetSelection(UINT8 ubNewSelection)
 {
 //	CHAR16		zMouseHelpTextString[256];
 //	SAVED_GAME_HEADER SaveGameHeader;
@@ -1911,7 +1895,7 @@ void SetSelection( UINT8 ubNewSelection )
 }
 
 
-UINT8 CompareSaveGameVersion( INT8 bSaveGameID )
+static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
 {
 	UINT8 ubRetVal=SLS_HEADER_OK;
 
@@ -1938,7 +1922,10 @@ UINT8 CompareSaveGameVersion( INT8 bSaveGameID )
 }
 
 
-void LoadSavedGameWarningMessageBoxCallBack( UINT8 bExitValue )
+static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(UINT8 bExitValue);
+
+
+static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -1956,7 +1943,10 @@ void LoadSavedGameWarningMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack( UINT8 bExitValue )
+static void DeleteAllSaveGameFile(void);
+
+
+static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, Delete all the save game files
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -1972,7 +1962,8 @@ void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack( UINT8 bExitValue )
 	gbSelectedSaveLocation=-1;
 }
 
-void DeleteAllSaveGameFile( )
+
+static void DeleteAllSaveGameFile(void)
 {
 	UINT8	cnt;
 
@@ -1997,7 +1988,8 @@ void DeleteSaveGameNumber( UINT8 ubSaveGameSlotID )
 	FileDelete( zSaveGameName );
 }
 
-void DisplayOnScreenNumber( BOOLEAN fErase )
+
+static void DisplayOnScreenNumber(BOOLEAN fErase)
 {
 	wchar_t		zTempString[16];
 	UINT16		usPosX = 6;
@@ -2042,7 +2034,12 @@ void DisplayOnScreenNumber( BOOLEAN fErase )
 	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 #endif
 
-void DoneFadeOutForSaveLoadScreen( void )
+
+static void DoneFadeInForSaveLoadScreen(void);
+static void FailedLoadingGameCallBack(UINT8 bExitValue);
+
+
+static void DoneFadeOutForSaveLoadScreen(void)
 {
 	//Make sure we DONT reset the levels if we are loading a game
 	gfHadToMakeBasementLevels = FALSE;
@@ -2109,7 +2106,8 @@ void DoneFadeOutForSaveLoadScreen( void )
 	gfStartedFadingOut = FALSE;
 }
 
-void DoneFadeInForSaveLoadScreen( void )
+
+static void DoneFadeInForSaveLoadScreen(void)
 {
 	//Leave the screen
 	//if we are supposed to stay in tactical, due nothing,
@@ -2141,7 +2139,7 @@ void DoneFadeInForSaveLoadScreen( void )
 }
 
 
-void SelectedSLSEntireRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2152,7 +2150,8 @@ void SelectedSLSEntireRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void DisableSelectedSlot()
+
+static void DisableSelectedSlot(void)
 {
 	//reset selected slot
 	gbSelectedSaveLocation = -1;
@@ -2167,7 +2166,7 @@ void DisableSelectedSlot()
 }
 
 
-void			ConfirmSavedGameMessageBoxCallBack( UINT8 bExitValue )
+static void ConfirmSavedGameMessageBoxCallBack(UINT8 bExitValue)
 {
 	Assert( gbSelectedSaveLocation != -1 );
 
@@ -2179,7 +2178,7 @@ void			ConfirmSavedGameMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void			ConfirmLoadSavedGameMessageBoxCallBack( UINT8 bExitValue )
+static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue)
 {
 	Assert( gbSelectedSaveLocation != -1 );
 
@@ -2216,7 +2215,8 @@ void ErrorDetectedInSaveCallback( UINT8 bValue )
 }
 #endif
 
-void			FailedLoadingGameCallBack( UINT8 bExitValue )
+
+static void FailedLoadingGameCallBack(UINT8 bExitValue)
 {
 	// yes
   if( bExitValue == MSG_BOX_RETURN_OK )
@@ -2343,7 +2343,8 @@ static void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack(UINT8 bExitVal
 	}
 }
 
-void	NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack( UINT8 bExitValue )
+
+static void NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack(UINT8 bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
@@ -2364,13 +2365,13 @@ void	NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void RedrawSaveLoadScreenAfterMessageBox( UINT8 bExitValue )
+static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue)
 {
 	gfRedrawSaveLoadScreen = TRUE;
 }
 
 
-void MoveSelectionUpOrDown( BOOLEAN fUp )
+static void MoveSelectionUpOrDown(BOOLEAN fUp)
 {
 	INT32	i;
 
@@ -2448,8 +2449,7 @@ void MoveSelectionUpOrDown( BOOLEAN fUp )
 }
 
 
-
-void ClearSelectedSaveSlot()
+static void ClearSelectedSaveSlot(void)
 {
 	INT32	i;
 	for( i=0; i<NUM_SAVE_GAMES; i++)
@@ -2459,7 +2459,7 @@ void ClearSelectedSaveSlot()
 }
 
 
-void SaveGameToSlotNum()
+static void SaveGameToSlotNum(void)
 {
 /*
 	// Make sure the user has enough hard drive space
@@ -2506,7 +2506,7 @@ void SaveGameToSlotNum()
 }
 
 
-void StartFadeOutForSaveLoadScreen()
+static void StartFadeOutForSaveLoadScreen(void)
 {
 	//if the game is paused, and we are in tactical, unpause
 	if( guiPreviousOptionScreen == GAME_SCREEN )

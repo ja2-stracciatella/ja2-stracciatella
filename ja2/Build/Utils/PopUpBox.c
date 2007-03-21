@@ -59,21 +59,13 @@ static UINT32 guiCurrentBox;
 #define BOTTOM_RIGHT_CORNER 3
 
 
-BOOLEAN DrawBox(UINT32 uiCounter);
-BOOLEAN DrawBoxText(UINT32 uiCounter);
-
-void RemoveCurrentBoxPrimaryText( INT32 hStringHandle );
-void RemoveCurrentBoxSecondaryText( INT32 hStringHandle );
-
-
-
-void InitPopUpBoxList()
+static void InitPopUpBoxList(void)
 {
 	memset(PopUpBoxList, 0, sizeof(PopUpBoxList));
 }
 
 
-void InitPopUpBox(INT32 hBoxHandle)
+static void InitPopUpBox(INT32 hBoxHandle)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -131,6 +123,10 @@ void SpecifyBoxMinWidth( INT32 hBoxHandle, INT32 iMinWidth )
 }
 
 
+static void SetBoxFlags(INT32 hBoxHandle, UINT32 uiFlags);
+static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset);
+
+
 BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 {
 	INT32 iCounter=0;
@@ -178,7 +174,7 @@ BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position
 }
 
 
-void SetBoxFlags( INT32 hBoxHandle, UINT32 uiFlags)
+static void SetBoxFlags(INT32 hBoxHandle, UINT32 uiFlags)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -410,6 +406,9 @@ void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
 }
 
 
+static void RemoveCurrentBoxPrimaryText(INT32 hStringHandle);
+
+
 // adds a FIRST column string to the CURRENT popup box
 void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 {
@@ -456,6 +455,9 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 
 	Box->fUpdated = FALSE;
 }
+
+
+static void RemoveCurrentBoxSecondaryText(INT32 hStringHandle);
 
 
 // adds a SECOND column string to the CURRENT popup box
@@ -505,7 +507,7 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 
 
 // Adds a COLORED first column string to the CURRENT box
-void AddColorString(INT32 *hStringHandle, STR16 pString)
+static void AddColorString(INT32* hStringHandle, STR16 pString)
 {
 	STR16 pLocalString;
 	INT32 iCounter = 0;
@@ -549,8 +551,7 @@ void AddColorString(INT32 *hStringHandle, STR16 pString)
 }
 
 
-
-void ResizeBoxForSecondStrings( INT32 hBoxHandle )
+static void ResizeBoxForSecondStrings(INT32 hBoxHandle)
 {
 	INT32 iCounter = 0;
 	UINT32 uiBaseWidth, uiThisWidth;
@@ -634,7 +635,8 @@ void SetBoxSecondColumnMinimumOffset( INT32 hBoxHandle, UINT32 uiWidth )
 	PopUpBoxList[hBoxHandle]->uiSecondColumnMinimunOffset = uiWidth;
 }
 
-void SetBoxSecondColumnCurrentOffset( INT32 hBoxHandle, UINT32 uiCurrentOffset )
+
+static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -714,7 +716,7 @@ void SetBoxSecondaryShade( INT32 iBox, UINT8 ubColor )
 
 // The following functions operate on the CURRENT box
 
-void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont)
+static void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -728,7 +730,7 @@ void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont)
 }
 
 
-void SetPopUpSecondColumnStringFont(INT32 hStringHandle, UINT32 uiFont)
+static void SetPopUpSecondColumnStringFont(INT32 hStringHandle, UINT32 uiFont)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -742,8 +744,7 @@ void SetPopUpSecondColumnStringFont(INT32 hStringHandle, UINT32 uiFont)
 }
 
 
-
-void SetStringSecondaryShade(INT32 hStringHandle, UINT8 ubColor)
+static void SetStringSecondaryShade(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -756,7 +757,8 @@ void SetStringSecondaryShade(INT32 hStringHandle, UINT8 ubColor)
 	Box->Text[hStringHandle]->ubSecondaryShade = ubColor;
 }
 
-void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -769,7 +771,8 @@ void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
 	Box->Text[hStringHandle]->ubForegroundColor = ubColor;
 }
 
-void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -782,7 +785,8 @@ void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
 	Box->Text[hStringHandle]->ubBackgroundColor = ubColor;
 }
 
-void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -796,7 +800,7 @@ void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
 }
 
 
-void SetStringShade(INT32 hStringHandle, UINT8 ubShade)
+static void SetStringShade(INT32 hStringHandle, UINT8 ubShade)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -809,7 +813,8 @@ void SetStringShade(INT32 hStringHandle, UINT8 ubShade)
 	Box->Text[hStringHandle]->ubShade = ubShade;
 }
 
-void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -822,7 +827,8 @@ void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
 	Box->pSecondColumnString[hStringHandle]->ubForegroundColor = ubColor;
 }
 
-void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -835,7 +841,8 @@ void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
 	Box->pSecondColumnString[hStringHandle]->ubBackgroundColor = ubColor;
 }
 
-void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
+
+static void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -849,7 +856,7 @@ void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
 }
 
 
-void SetStringSecondColumnShade(INT32 hStringHandle, UINT8 ubShade)
+static void SetStringSecondColumnShade(INT32 hStringHandle, UINT8 ubShade)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -1025,7 +1032,7 @@ void SetBoxSecondColumnShade(INT32 hBoxHandle, UINT8 ubColor)
 }
 
 
-void HighLightLine(INT32 hStringHandle)
+static void HighLightLine(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -1039,7 +1046,9 @@ void HighLightLine(INT32 hStringHandle)
 	Box->Text[hStringHandle]->fHighLightFlag = TRUE;
 }
 
-BOOLEAN GetShadeFlag( INT32 hStringHandle )
+
+// is this line int he current boxed in a shaded state?
+static BOOLEAN GetShadeFlag(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return(FALSE);
@@ -1054,7 +1063,8 @@ BOOLEAN GetShadeFlag( INT32 hStringHandle )
 	return Box->Text[hStringHandle]->fShadeFlag;
 }
 
-BOOLEAN GetSecondaryShadeFlag( INT32 hStringHandle )
+
+static BOOLEAN GetSecondaryShadeFlag(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return(FALSE);
@@ -1103,7 +1113,8 @@ BOOLEAN GetBoxShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
 	return( FALSE );
 }
 
-BOOLEAN GetBoxSecondaryShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
+
+static BOOLEAN GetBoxSecondaryShadeFlag(INT32 hBoxHandle, INT32 iLineNumber)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return(FALSE);
@@ -1149,7 +1160,8 @@ void UnHighLightBox(INT32 hBoxHandle)
 	}
 }
 
-void UnHighLightSecondColumnLine(INT32 hStringHandle)
+
+static void UnHighLightSecondColumnLine(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -1164,7 +1176,8 @@ void UnHighLightSecondColumnLine(INT32 hStringHandle)
 	Box->pSecondColumnString[hStringHandle]->fHighLightFlag = FALSE;
 }
 
-void UnHighLightSecondColumnBox(INT32 hBoxHandle)
+
+static void UnHighLightSecondColumnBox(INT32 hBoxHandle)
 {
 	INT32 iCounter = 0;
 
@@ -1180,7 +1193,8 @@ void UnHighLightSecondColumnBox(INT32 hBoxHandle)
 	}
 }
 
-void RemoveOneCurrentBoxString(INT32 hStringHandle, BOOLEAN fFillGaps)
+
+static void RemoveOneCurrentBoxString(INT32 hStringHandle, BOOLEAN fFillGaps)
 {
 	UINT32 uiCounter=0;
 
@@ -1220,6 +1234,9 @@ void RemoveAllCurrentBoxStrings( void )
 	for(uiCounter=0; uiCounter <MAX_POPUP_BOX_STRING_COUNT; uiCounter++)
 		RemoveOneCurrentBoxString( uiCounter, FALSE );
 }
+
+
+static void GetCurrentBox(INT32 *hBoxHandle);
 
 
 void RemoveBox(INT32 hBoxHandle)
@@ -1288,7 +1305,7 @@ void SetCurrentBox(INT32 hBoxHandle)
 }
 
 
-void GetCurrentBox(INT32 *hBoxHandle)
+static void GetCurrentBox(INT32 *hBoxHandle)
 {
 	*hBoxHandle = guiCurrentBox;
 }
@@ -1304,6 +1321,10 @@ void DisplayBoxes(UINT32 uiBuffer)
 		DisplayOnePopupBox( uiCounter, uiBuffer );
 	}
 }
+
+
+static BOOLEAN DrawBox(UINT32 uiCounter);
+static BOOLEAN DrawBoxText(UINT32 uiCounter);
 
 
 void DisplayOnePopupBox( UINT32 uiIndex, UINT32 uiBuffer )
@@ -1340,8 +1361,7 @@ void ForceUpDateOfBox( UINT32 uiIndex )
 }
 
 
-
-BOOLEAN DrawBox(UINT32 uiCounter)
+static BOOLEAN DrawBox(UINT32 uiCounter)
 {
 	// will build pop up box in usTopX, usTopY with dimensions usWidth and usHeight
 	UINT32 uiNumTilesWide;
@@ -1451,8 +1471,7 @@ BOOLEAN DrawBox(UINT32 uiCounter)
 }
 
 
-
-BOOLEAN DrawBoxText(UINT32 uiCounter)
+static BOOLEAN DrawBoxText(UINT32 uiCounter)
 {
 	UINT32 uiCount = 0;
 	INT16 uX, uY;
@@ -1698,8 +1717,7 @@ void HideAllBoxes( void )
 }
 
 
-
-void RemoveCurrentBoxPrimaryText( INT32 hStringHandle )
+static void RemoveCurrentBoxPrimaryText(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -1722,7 +1740,8 @@ void RemoveCurrentBoxPrimaryText( INT32 hStringHandle )
 	}
 }
 
-void RemoveCurrentBoxSecondaryText( INT32 hStringHandle )
+
+static void RemoveCurrentBoxSecondaryText(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
 		return;

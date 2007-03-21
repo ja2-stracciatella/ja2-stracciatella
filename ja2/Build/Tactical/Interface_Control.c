@@ -100,6 +100,10 @@ void HandleTacticalPanelSwitch( )
 	}
 }
 
+
+static void HandlePausedTacticalRender(void);
+
+
 void RenderTacticalInterface( )
 {
 
@@ -135,7 +139,9 @@ void RenderTacticalInterface( )
 }
 
 
-void HandlePausedTacticalRender( void )
+/* handle paused render of tactical panel, if flag set, OR it in with tactical
+ * render flags then reset */
+static void HandlePausedTacticalRender(void)
 {
 
 	// for a one frame paused render of tactical
@@ -422,7 +428,8 @@ UINT32	guiColors[ 12 ] =
 	FROMRGB( 185, 150, 0 )
 };
 
-void RenderRubberBanding( )
+
+static void RenderRubberBanding(void)
 {
 	UINT16										 usLineColor;
 	UINT32										 uiDestPitchBYTES;
@@ -540,6 +547,11 @@ void RenderRubberBanding( )
 
 	UnLockVideoSurface( FRAME_BUFFER );
 }
+
+
+static void EndViewportOverlays(void);
+static void StartViewportOverlays(void);
+
 
 void RenderTopmostTacticalInterface( )
 {
@@ -906,10 +918,8 @@ void RenderTopmostTacticalInterface( )
 }
 
 
-
-void StartViewportOverlays( )
+static void StartViewportOverlays(void)
 {
-
 	// Set Clipping Rect to be the viewscreen
 	// Save old one
 	memcpy( &gOldClippingRect, &ClippingRect, sizeof( gOldClippingRect ) );
@@ -934,7 +944,8 @@ void StartViewportOverlays( )
 
 }
 
-void EndViewportOverlays( )
+
+static void EndViewportOverlays(void)
 {
 	// Reset clipping rect
 	memcpy( &ClippingRect, &gOldClippingRect, sizeof( gOldClippingRect ) );
@@ -943,7 +954,8 @@ void EndViewportOverlays( )
 
 }
 
-void LockTacticalInterface( )
+
+static void LockTacticalInterface(void)
 {
 	// OK, check and see if we are not locked, if so
 	// 1) create a mouse region over the entrie interface panel
@@ -960,7 +972,7 @@ void LockTacticalInterface( )
 }
 
 
-void UnLockTacticalInterface( )
+static void UnLockTacticalInterface(void)
 {
 	if ( (guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
 	{

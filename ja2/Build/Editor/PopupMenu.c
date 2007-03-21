@@ -62,6 +62,11 @@ static const wchar_t* GetPopupMenuString(UINT8 ubIndex)
 			return 0;
 	}
 }
+
+
+static void RenderPopupMenu(void);
+
+
 /*
 InitPopUpMenu
 ---------------
@@ -83,7 +88,6 @@ on a popup menu activation button.
 Returns 0 if nothing in menu was selected, else
 returns the menu entry number starting from 1.
 */
-
 void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 {
 	UINT16 usX, usY;
@@ -229,7 +233,8 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	RenderPopupMenu();
 }
 
-void RenderPopupMenu()
+
+static void RenderPopupMenu(void)
 {
 	UINT16 usX, usY;
 	UINT8 ubColumn, ubEntry, ubCounter;
@@ -296,10 +301,11 @@ void RenderPopupMenu()
 	}
 }
 
+
 //This private function of PopupMenuHandle determines which menu entry
 //is highlighted based on the mouse cursor position.  Returns 0 if the
 //mouse is out of the menu region.
-UINT8 GetPopupIndexFromMousePosition()
+static UINT8 GetPopupIndexFromMousePosition(void)
 {
 	UINT8 ubNumEntriesDown;
 	UINT16 usRelX;
@@ -329,7 +335,11 @@ UINT8 GetPopupIndexFromMousePosition()
 	return 0; //mouse not in valid region.
 }
 
-void PopupMenuHandle()
+
+static void ProcessPopupMenuSelection(void);
+
+
+static void PopupMenuHandle(void)
 {
 	InputAtom InputEvent;
 
@@ -440,7 +450,8 @@ void PopupMenuHandle()
   }
 }
 
-void ProcessPopupMenuSelection()
+
+static void ProcessPopupMenuSelection(void)
 {
 	switch( gPopup.ubPopupMenuID )
 	{

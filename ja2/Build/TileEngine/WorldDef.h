@@ -256,7 +256,6 @@ void DestroyTileShadeTables( );
 
 
 void TrashWorld(void);
-void TrashMapTile(INT16 MapTile);
 BOOLEAN NewWorld( void );
 BOOLEAN SaveWorld(const char *puiFilename);
 BOOLEAN LoadWorld(const char *puiFilename);
@@ -266,13 +265,10 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID );
-BOOLEAN SaveMapTileset( INT32 iTilesetID );
 
 void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoadName );
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
-void RemoveWorldWireFrameTiles( );
-void RemoveWireFrameTiles( INT16 sGridNo );
 
 
 LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );

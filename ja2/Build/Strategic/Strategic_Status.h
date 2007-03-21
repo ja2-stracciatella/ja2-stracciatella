@@ -125,7 +125,6 @@ void HandleEnricoEmail(void);
 
 void TrackEnemiesKilled( UINT8 ubKilledHow, UINT8 ubSoldierClass );
 
-INT8 SoldierClassToRankIndex( UINT8 ubSoldierClass );
 UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex );
 
 void UpdateLastDayOfPlayerActivity( UINT16 usDay );

@@ -29,9 +29,6 @@
 #include <stdlib.h>
 
 
-void AddSectorToFrontOfMercPath( PathStPtr *ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY );
-
-
 // mvt modifier
 //#define FOOT_MVT_MODIFIER 2
 
@@ -476,6 +473,9 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 }
 
 
+static BOOLEAN AddSectorToPathList(PathStPtr pPath, UINT16 uiSectorNu);
+
+
 PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ )
 {
 
@@ -610,10 +610,7 @@ PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEn
 }
 
 
-
-
-
-BOOLEAN AddSectorToPathList( PathStPtr pPath ,UINT16 uiSectorNum )
+static BOOLEAN AddSectorToPathList(PathStPtr pPath, UINT16 uiSectorNum)
 {
   PathStPtr pNode=NULL;
 	PathStPtr pTempNode=NULL;
@@ -897,6 +894,9 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 }
 
 
+static PathStPtr MoveToEndOfPathList(PathStPtr pList);
+
+
 PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup )
 {
 	// will clear out a strategic path and return head of list as NULL
@@ -1021,7 +1021,8 @@ PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 
 }
 
-PathStPtr MoveToEndOfPathList( PathStPtr pList )
+
+static PathStPtr MoveToEndOfPathList(PathStPtr pList)
 {
 	// move to end of list
 
@@ -1042,7 +1043,7 @@ PathStPtr MoveToEndOfPathList( PathStPtr pList )
 }
 
 
-PathStPtr RemoveTailFromStrategicPath( PathStPtr pHeadOfList )
+static PathStPtr RemoveTailFromStrategicPath(PathStPtr pHeadOfList)
 {
 	// remove the tail section from the strategic path
 	PathStPtr pNode = pHeadOfList;
@@ -1112,7 +1113,8 @@ PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 }
 
 
-PathStPtr RemoveSectorFromStrategicPathList( PathStPtr pList , INT16 sX, INT16 sY )
+// remove node with this value.. starting at end and working it's way back
+static PathStPtr RemoveSectorFromStrategicPathList(PathStPtr pList, INT16 sX, INT16 sY)
 {
 	// find sector sX, sY ...then remove it
 	INT16 sSector = 0;
@@ -1279,7 +1281,8 @@ PathStPtr CopyPaths( PathStPtr pSourcePath,  PathStPtr pDestPath )
 	return ( pDestNode );
 }
 
-INT32 GetStrategicMvtSpeed( SOLDIERTYPE *pCharacter )
+
+static INT32 GetStrategicMvtSpeed(SOLDIERTYPE* pCharacter)
 {
 	// will return the strategic speed of the character
 	INT32 iSpeed;
@@ -1691,7 +1694,7 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
+static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY)
 {
 	PathStPtr pNode = NULL;
 
@@ -1845,7 +1848,7 @@ INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CheckIfPathIsEmpty( PathStPtr pHeadPath )
+static BOOLEAN CheckIfPathIsEmpty(PathStPtr pHeadPath)
 {
 	// no path
 	if( pHeadPath == NULL )
@@ -1946,6 +1949,8 @@ UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
 }
 
 
+static void ClearPathForSoldier(SOLDIERTYPE* pSoldier);
+
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
@@ -1990,7 +1995,7 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 
 
 // clears the contents of the soldier's mercpPath, as well as his vehicle path if he is a / or is in a vehicle
-void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
+static void ClearPathForSoldier(SOLDIERTYPE* pSoldier)
 {
 	VEHICLETYPE *pVehicle = NULL;
 
@@ -2017,6 +2022,8 @@ void ClearPathForSoldier( SOLDIERTYPE *pSoldier )
 	}
 }
 
+
+static void AddSectorToFrontOfMercPath(PathStPtr* ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY);
 
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
@@ -2054,8 +2061,7 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 }
 
 
-
-void AddSectorToFrontOfMercPath( PathStPtr *ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY )
+static void AddSectorToFrontOfMercPath(PathStPtr* ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
 {
 	PathStPtr pNode = NULL;
 

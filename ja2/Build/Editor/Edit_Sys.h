@@ -36,7 +36,6 @@ void PasteDebris( UINT32 iMapIndex );
 void PasteStructure( UINT32 iMapIndex );
 void PasteStructure1( UINT32 iMapIndex );
 void PasteStructure2( UINT32 iMapIndex );
-void PasteStructureCommon( UINT32 iMapIndex );
 
 void PasteSingleWall( UINT32 iMapIndex );
 void PasteSingleDoor( UINT32 iMapIndex );
@@ -49,10 +48,7 @@ void PasteSingleFloor( UINT32 iMapIndex );
 void PasteSingleToilet( UINT32 iMapIndex );
 void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber );
 
-void PasteSingleWallCommon( UINT32 iMapIndex );
-
 UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd );
-UINT16 GetRandomTypeByRange( UINT16 usRangeStart, UINT16 usRangeEnd );
 
 void PasteFloor( UINT32 iMapIndex, UINT16 usFloorIndex , BOOLEAN fReplace);
 
@@ -63,12 +59,7 @@ void PasteCliffs( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace);
 void PasteTexture( UINT32 iMapIndex );
 void PasteTextureCommon( UINT32 iMapIndex );
 
-void PasteHigherTexture( UINT32 iMapIndex, UINT32 fNewType );
-
 void RaiseWorldLand();
-
-void EliminateObjectLayerRedundancy();
-
 
 #endif
 #endif

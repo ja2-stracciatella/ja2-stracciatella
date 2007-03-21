@@ -75,21 +75,11 @@ UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY );
 void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY );
 BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
-BOOLEAN EnterSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-void InitializeMapStructure();
-
 // get short sector name without town name
 void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length);
-
-//NEW!
-//Calculates the name of the sector based on the loaded sector values.
-//Examples:		A9
-//						A10_B1
-//						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-void GetLoadedSectorString( wchar_t *pString, size_t Length);
 
 // This will get an ID string like A9- OMERTA...
 void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed );
@@ -116,13 +106,7 @@ UINT8 GetTownSectorSize( INT8 bTownId );
 // get town sector size, that is under play control
 UINT8 GetTownSectorsUnderControl( INT8 bTownId );
 
-// is this sector part of this town
-BOOLEAN SectorIsPartOfTown( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
 
-//BOOLEAN IsThereAnyOneInThisTown( UINT8 ubTownId );
-
-
-BOOLEAN SoldierOKForSectorExit( SOLDIERTYPE * pSoldier, INT8 bExitDirection, UINT16 usAdditionalData );
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes );
 void SetupNewStrategicGame( );
 
@@ -134,7 +118,6 @@ void AllMercsHaveWalkedOffSector( );
 void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection );
 
 void AllMercsWalkedToExitGrid();
-UINT8 GetMilitiaCountAtLevelAnywhereInTown( UINT8 ubTownValue, UINT8 ubLevelValue );
 
 void PrepareLoadedSector();
 

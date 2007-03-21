@@ -88,7 +88,7 @@ extern UINT32 guiFlashCursorBaseTime;
 extern INT32 giPotCharPathBaseTime;
 
 
-UINT32 CALLBACK TimeProc(UINT32 interval, void * params	)
+static UINT32 CALLBACK TimeProc(UINT32 interval, void* params)
 {
 	static BOOLEAN fInFunction = FALSE;
 	//SOLDIERTYPE		*pSoldier;

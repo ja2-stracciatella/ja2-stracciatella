@@ -92,12 +92,7 @@ NPCQuoteInfo *	gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS] = { NULL };
 
 UINT8 gubTeamPenalty;
 
-BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC );
-NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC );
-UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo * pNPCQuoteInfoArray );
-UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj, NPCQuoteInfo * pNPCQuoteInfoArray, NPCQuoteInfo ** ppResultQuoteInfo, UINT8 *pubQuoteNum );
 void PCsNearNPC( UINT8 ubNPC );
-void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr );
 BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach );
 
 INT8	gbFirstApproachFlags[4] = { 0x01, 0x02, 0x04, 0x08 };
@@ -115,7 +110,8 @@ extern void PauseAITemporarily( void );
 // NPC QUOTE LOW LEVEL ROUTINES
 //
 
-NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
+
+static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 {
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
@@ -174,7 +170,8 @@ NPCQuoteInfo * LoadQuoteFile( UINT8 ubNPC )
 	return( pFileData );
 }
 
-void RevertToOriginalQuoteFile( UINT8 ubNPC )
+
+static void RevertToOriginalQuoteFile(UINT8 ubNPC)
 {
 	if ( gpBackupNPCQuoteInfoArray[ ubNPC ] && gpNPCQuoteInfoArray[ubNPC] )
 	{
@@ -184,13 +181,15 @@ void RevertToOriginalQuoteFile( UINT8 ubNPC )
 	}
 }
 
-void BackupOriginalQuoteFile( UINT8 ubNPC )
+
+static void BackupOriginalQuoteFile(UINT8 ubNPC)
 {
 	gpBackupNPCQuoteInfoArray[ ubNPC ] = gpNPCQuoteInfoArray[ ubNPC ];
 	gpNPCQuoteInfoArray[ubNPC] = NULL;
 }
 
-BOOLEAN EnsureQuoteFileLoaded( UINT8 ubNPC )
+
+static BOOLEAN EnsureQuoteFileLoaded(UINT8 ubNPC)
 {
 	BOOLEAN			fLoadFile = FALSE;
 
@@ -291,7 +290,8 @@ BOOLEAN ReloadQuoteFile( UINT8 ubNPC )
 	return( EnsureQuoteFileLoaded( ubNPC ) );
 }
 
-BOOLEAN ReloadQuoteFileIfLoaded( UINT8 ubNPC )
+
+static BOOLEAN ReloadQuoteFileIfLoaded(UINT8 ubNPC)
 {
 	if (gpNPCQuoteInfoArray[ubNPC] != NULL)
 	{
@@ -305,7 +305,8 @@ BOOLEAN ReloadQuoteFileIfLoaded( UINT8 ubNPC )
 	}
 }
 
-BOOLEAN RefreshNPCScriptRecord( UINT8 ubNPC, UINT8 ubRecord )
+
+static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 {
 	UINT8							ubLoop;
 	NPCQuoteInfo *		pNewArray;
@@ -350,7 +351,8 @@ BOOLEAN RefreshNPCScriptRecord( UINT8 ubNPC, UINT8 ubRecord )
 // CIV QUOTE LOW LEVEL ROUTINES
 //
 
-NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
+
+static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
 {
 	CHAR8						zFileName[255];
 	HWFILE					hFile;
@@ -388,7 +390,7 @@ NPCQuoteInfo * LoadCivQuoteFile( UINT8 ubIndex )
 }
 
 
-BOOLEAN EnsureCivQuoteFileLoaded( UINT8 ubIndex )
+static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 ubIndex)
 {
 	BOOLEAN			fLoadFile = FALSE;
 
@@ -409,7 +411,8 @@ BOOLEAN EnsureCivQuoteFileLoaded( UINT8 ubIndex )
 	return( TRUE );
 }
 
-BOOLEAN ReloadCivQuoteFile( UINT8 ubIndex )
+
+static BOOLEAN ReloadCivQuoteFile(UINT8 ubIndex)
 {
 	if (gpCivQuoteInfoArray[ubIndex] != NULL)
 	{
@@ -419,7 +422,8 @@ BOOLEAN ReloadCivQuoteFile( UINT8 ubIndex )
 	return( EnsureCivQuoteFileLoaded( ubIndex ) );
 }
 
-BOOLEAN ReloadCivQuoteFileIfLoaded( UINT8 ubIndex )
+
+static BOOLEAN ReloadCivQuoteFileIfLoaded(UINT8 ubIndex)
 {
 	if (gpCivQuoteInfoArray[ubIndex] != NULL)
 	{
@@ -505,7 +509,8 @@ void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord )
 	}
 }
 
-INT32 CalcThreateningEffectiveness( UINT8 ubMerc )
+
+static INT32 CalcThreateningEffectiveness(UINT8 ubMerc)
 {
 	SOLDIERTYPE * pSoldier;
 	INT32					iStrength, iDeadliness;
@@ -591,7 +596,8 @@ UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 	return( (UINT8) iWillingness );
 }
 
-void ApproachedForFirstTime( MERCPROFILESTRUCT * pNPCProfile, INT8 bApproach )
+
+static void ApproachedForFirstTime(MERCPROFILESTRUCT* pNPCProfile, INT8 bApproach)
 {
 	UINT8		ubLoop;
 	UINT32	uiTemp;
@@ -608,7 +614,11 @@ void ApproachedForFirstTime( MERCPROFILESTRUCT * pNPCProfile, INT8 bApproach )
 	}
 }
 
-UINT8 NPCConsiderTalking( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRecord, NPCQuoteInfo * pNPCQuoteInfoArray, NPCQuoteInfo ** ppResultQuoteInfo, UINT8 *pubQuoteNum )
+
+static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray);
+
+
+static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRecord, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
@@ -758,7 +768,11 @@ UINT8 NPCConsiderTalking( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRec
 	}
 }
 
-UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj, NPCQuoteInfo * pNPCQuoteInfoArray, NPCQuoteInfo ** ppResultQuoteInfo, UINT8 *pubQuoteNum )
+
+static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue);
+
+
+static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE* pObj, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
@@ -1136,7 +1150,9 @@ UINT8 NPCConsiderReceivingItemFromMerc( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * 
 	return( 0 );
 }
 
-BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8 *pQuoteValue )
+
+// handle money being npc being
+static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue)
 {
 	switch( ubNPC )
 	{
@@ -1237,7 +1253,8 @@ BOOLEAN HandleNPCBeingGivenMoneyByPlayer( UINT8 ubNPC, UINT32 uiMoneyAmount, UIN
 	return( TRUE );
 }
 
-UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo * pNPCQuoteInfoArray )
+
+static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray)
 {
 	//This function looks at a quote and determines if conditions for it have been met.
 	// Returns 0 if none , 1 if one is found
@@ -1433,7 +1450,7 @@ UINT8 NPCConsiderQuote( UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuo
 }
 
 
-void ReplaceLocationInNPCData( NPCQuoteInfo * pNPCQuoteInfoArray, INT16 sOldGridNo, INT16 sNewGridNo )
+static void ReplaceLocationInNPCData(NPCQuoteInfo* pNPCQuoteInfoArray, INT16 sOldGridNo, INT16 sNewGridNo)
 {
 	UINT8							ubFirstQuoteRecord, ubLastQuoteRecord, ubLoop;
 	NPCQuoteInfo *		pNPCQuoteInfo;
@@ -1471,7 +1488,7 @@ void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16
 }
 
 
-void ResetOncePerConvoRecords( NPCQuoteInfo * pNPCQuoteInfoArray )
+static void ResetOncePerConvoRecords(NPCQuoteInfo* pNPCQuoteInfoArray)
 {
 	UINT8									ubLoop;
 
@@ -1516,7 +1533,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
-void ReturnItemToPlayerIfNecessary( UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo * pQuotePtr )
+static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo* pQuotePtr)
 {
 	OBJECTTYPE  *		pObj;
 	SOLDIERTYPE *		pSoldier;
@@ -1538,6 +1555,10 @@ void ReturnItemToPlayerIfNecessary( UINT8 ubMerc, INT8 bApproach, UINT32 uiAppro
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 }
+
+
+static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr);
+
 
 void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData )
 {
@@ -2235,7 +2256,8 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	}
 }
 
-UINT8 NPCTryToInitiateConv( SOLDIERTYPE * pNPC )
+
+static UINT8 NPCTryToInitiateConv(SOLDIERTYPE* pNPC)
 { // assumes current action is ACTION_APPROACH_MERC
 	if (pNPC->bAction != AI_ACTION_APPROACH_MERC)
 	{
@@ -2496,7 +2518,8 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 	return( FALSE );
 }
 
-void TriggerClosestMercWhoCanSeeNPC( UINT8 ubNPC, NPCQuoteInfo *pQuotePtr )
+
+static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 {
 	// Loop through all mercs, gather closest mercs who can see and trigger one!
 	UINT8	ubMercsInSector[ 40 ] = { 0 };
@@ -3290,7 +3313,8 @@ BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord )
 	}
 }
 
-INT8 FindCivQuoteFileIndex( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+
+static INT8 FindCivQuoteFileIndex(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
 {
 	UINT8			ubLoop;
 

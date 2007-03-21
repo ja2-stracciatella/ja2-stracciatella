@@ -55,21 +55,20 @@ UINT32		guiAimFiFace[ MAX_NUMBER_MERCS ];
 
 //Face regions
 MOUSE_REGION		gMercFaceMouseRegions[ MAX_NUMBER_MERCS ];
-void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Screen region, used to right click to go back to previous page
 MOUSE_REGION		gScreenMouseRegions;
-void SelectScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
-
-BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
 
 
 void GameInitAimFacialIndex()
 {
-
 }
+
+
+static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN EnterAimFacialIndex()
 {
@@ -145,6 +144,10 @@ void HandleAimFacialIndex()
 
 }
 
+
+static BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
+
+
 BOOLEAN RenderAimFacialIndex()
 {
 	UINT16		usPosX, usPosY, x,y;
@@ -198,7 +201,8 @@ BOOLEAN RenderAimFacialIndex()
 	return(TRUE);
 }
 
-void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -215,7 +219,7 @@ void SelectMercFaceRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -227,7 +231,7 @@ void SelectScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	UINT8	ubMercNum;
 	UINT16 usPosX, usPosY;
@@ -263,7 +267,8 @@ void SelectMercFaceMoveRegionCallBack(MOUSE_REGION * pRegion, INT32 reason )
 	}
 }
 
-BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
+
+static BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
 {
 	SOLDIERTYPE	*pSoldier=NULL;
 

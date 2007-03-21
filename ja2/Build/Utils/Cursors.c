@@ -23,15 +23,9 @@ INT16 gsMouseGlobalYOffsets[ NUM_MOUSE_LEVELS ] =
 };
 
 
-void UpdateFlashingCursorFrames( UINT32 uiCursorIndex );
-
-
 extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
 
-void BltJA2CursorData( );
-
-void DrawMouseText( );
 
 CursorFileData CursorFileDatabase[] =
 {
@@ -111,7 +105,8 @@ CursorFileData CursorFileDatabase[] =
 
 };
 
-void RaiseMouseToLevel( INT8 bLevel )
+
+static void RaiseMouseToLevel(INT8 bLevel)
 {
 	gsGlobalCursorYOffset = gsMouseGlobalYOffsets[ bLevel ];
 }
@@ -1177,11 +1172,17 @@ CursorData CursorDatabase[] =
 };
 
 
+static void BltJA2CursorData(void);
+
+
 void InitCursors( )
 {
 		InitCursorDatabase( CursorFileDatabase, CursorDatabase, NUM_CURSOR_FILES );
 	SetMouseBltHook(BltJA2CursorData);
 }
+
+
+static void UpdateFlashingCursorFrames(UINT32 uiCursorIndex);
 
 
 void HandleAnimatedCursors( )
@@ -1228,7 +1229,11 @@ void HandleAnimatedCursors( )
 
 }
 
-void BltJA2CursorData( )
+
+static void DrawMouseText(void);
+
+
+static void BltJA2CursorData(void)
 {
 	if ( ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA  ) )
 	{
@@ -1238,7 +1243,7 @@ void BltJA2CursorData( )
 }
 
 
-void DrawMouseText( )
+static void DrawMouseText(void)
 {
 	wchar_t pStr[ 512 ];
 	INT16 sX, sY;
@@ -1444,7 +1449,7 @@ void UpdateAnimatedCursorFrames( UINT32 uiCursorIndex )
 }
 
 
-void UpdateFlashingCursorFrames( UINT32 uiCursorIndex )
+static void UpdateFlashingCursorFrames(UINT32 uiCursorIndex)
 {
 	CursorData		*pCurData;
 
@@ -1493,7 +1498,7 @@ static HVOBJECT GetCursorFileVideoObject(UINT32 uiCursorFile)
 }
 
 
-void SyncPairedCursorFrames( UINT32 uiSrcIndex, UINT32 uiDestIndex )
+static void SyncPairedCursorFrames(UINT32 uiSrcIndex, UINT32 uiDestIndex)
 {
 #if 0
 	CursorData		*pSrcCurData, *pDestCurData;

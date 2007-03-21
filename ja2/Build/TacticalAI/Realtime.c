@@ -15,7 +15,7 @@
 #include "Quests.h"
 
 
-INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
+static INT8 RTPlayerDecideAction(SOLDIERTYPE* pSoldier)
 {
 	INT8 bAction=AI_ACTION_NONE;
 
@@ -35,7 +35,8 @@ INT8 RTPlayerDecideAction( SOLDIERTYPE * pSoldier )
 	return(bAction);
 }
 
-INT8 RTDecideAction(SOLDIERTYPE *pSoldier)
+
+static INT8 RTDecideAction(SOLDIERTYPE* pSoldier)
 {
 	if (CREATURE_OR_BLOODCAT( pSoldier ) )
 	{

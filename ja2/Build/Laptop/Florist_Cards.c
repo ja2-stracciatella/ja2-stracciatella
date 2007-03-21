@@ -45,19 +45,15 @@ INT8			gbCurrentlySelectedCard;
 
 //link to the card gallery
 MOUSE_REGION    gSelectedFloristCardsRegion[9];
-void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 INT32		guiFlowerCardsButtonImage;
-static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiFlowerCardsBackButton;
 
 
+static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
-void GameInitFloristCards()
-{
-
-}
 
 BOOLEAN EnterFloristCards()
 {
@@ -176,8 +172,7 @@ void RenderFloristCards()
 }
 
 
-
-void SelectFloristCardsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{

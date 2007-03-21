@@ -419,7 +419,8 @@ UINT32 guiFailedPathChecks = 0;
 UINT32 guiUnsuccessfulPathChecks = 0;
 #endif
 
-INT8 RandomSkipListLevel( void )
+
+static INT8 RandomSkipListLevel(void)
 {
 	INT8 bLevel = 1;
 
@@ -454,7 +455,8 @@ void ShutDownPathAI( void )
 	MemFree( trailTree );
 }
 
-void ReconfigurePathAI( INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT32 iNewMaxPathQ )
+
+static void ReconfigurePathAI(INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT32 iNewMaxPathQ)
 {
 	// make sure the specified parameters are reasonable
 	iNewMaxSkipListLevel = __max( iNewMaxSkipListLevel, ABSMAX_SKIPLIST_LEVEL );
@@ -469,7 +471,8 @@ void ReconfigurePathAI( INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT3
 	memset( pClosedHead, 0, sizeof( path_t ) );
 }
 
-void RestorePathAIToDefaults( void )
+
+static void RestorePathAIToDefaults(void)
 {
 	iMaxSkipListLevel = MAX_SKIPLIST_LEVEL;
 	iMaxTrailTree = MAX_TRAIL_TREE;

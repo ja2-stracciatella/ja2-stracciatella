@@ -36,13 +36,15 @@ void ShutdownRoomDatabase( )
 
 }
 
-void SetTileRoomNum( INT16 sGridNo, UINT8 ubRoomNum )
+
+static void SetTileRoomNum(INT16 sGridNo, UINT8 ubRoomNum)
 {
 	// Add to global room list
 	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
 }
 
-void SetTileRangeRoomNum( SGPRect *pSelectRegion, UINT8 ubRoomNum )
+
+static void SetTileRangeRoomNum(SGPRect* pSelectRegion, UINT8 ubRoomNum)
 {
 	INT32 cnt1, cnt2;
 
@@ -303,14 +305,11 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 	InvalidateWorldRedundency();
 	SetRenderFlags(RENDER_FLAG_FULL );
 
-
 	CalculateWorldWireFrameTiles( FALSE );
-
 }
 
 
-
-BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
+static BOOLEAN AddSpecialTileRange(SGPRect* pSelectRegion)
 {
 	INT32 cnt1, cnt2;
 
@@ -326,7 +325,7 @@ BOOLEAN AddSpecialTileRange( SGPRect *pSelectRegion  )
 }
 
 
-BOOLEAN RemoveSpecialTileRange( SGPRect *pSelectRegion  )
+static BOOLEAN RemoveSpecialTileRange(SGPRect* pSelectRegion)
 {
 	INT32 cnt1, cnt2;
 

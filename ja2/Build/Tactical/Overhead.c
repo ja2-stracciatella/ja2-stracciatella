@@ -133,8 +133,6 @@ extern  INT8		gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
 void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSelected );
-void HandleEndDemoInCreatureLevel( );
-void DeathTimerCallback( void );
 void CaptureTimerCallback( void );
 
 
@@ -293,17 +291,8 @@ COLORVAL bDefaultTeamColors[ MAXTEAMS ] =
 };
 
 
-// UTILITY FUNCTIONS
-INT8	NumActiveAndConsciousTeamMembers( UINT8 ubTeam );
 UINT8 NumEnemyInSector( );
-UINT8 NumEnemyInSectorExceptCreatures();
 UINT8 NumCapableEnemyInSector( );
-
-BOOLEAN KillIncompacitatedEnemyInSector( );
-BOOLEAN CheckForLosingEndOfBattle( );
-void  EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue );
-UINT8 NumEnemyInSectorNotDeadOrDying( );
-UINT8 NumBloodcatsInSectorNotDeadOrDying( );
 
 
 UINT8		gubWaitingForAllMercsToExitCode			= 0;
@@ -312,7 +301,8 @@ UINT32	guiWaitingForAllMercsToExitData[3];
 UINT32	guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN	gfKillingGuysForLosingBattle = FALSE;
 
-INT32 GetFreeMercSlot(void)
+
+static INT32 GetFreeMercSlot(void)
 {
 	UINT32 uiCount;
 
@@ -329,7 +319,7 @@ INT32 GetFreeMercSlot(void)
 }
 
 
-void RecountMercSlots(void)
+static void RecountMercSlots(void)
 {
 	INT32 iCount;
 
@@ -383,7 +373,8 @@ BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier )
 	return( FALSE );
 }
 
-INT32 GetFreeAwaySlot(void)
+
+static INT32 GetFreeAwaySlot(void)
 {
 	UINT32 uiCount;
 
@@ -400,7 +391,7 @@ INT32 GetFreeAwaySlot(void)
 }
 
 
-void RecountAwaySlots(void)
+static void RecountAwaySlots(void)
 {
 	INT32 iCount;
 
@@ -714,7 +705,8 @@ BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
 
 }
 
-BOOLEAN	NextAIToHandle( UINT32 uiCurrAISlot )
+
+static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 {
 	UINT32	cnt;
 
@@ -1708,7 +1700,8 @@ BOOLEAN ExecuteOverhead( )
 
 }
 
-void HaltGuyFromNewGridNoBecauseOfNoAPs( SOLDIERTYPE *pSoldier )
+
+static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE* pSoldier)
 {
 	HaltMoveForSoldierOutOfPoints( pSoldier );
 	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
@@ -1731,7 +1724,7 @@ void HaltGuyFromNewGridNoBecauseOfNoAPs( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleLocateToGuyAsHeWalks( SOLDIERTYPE *pSoldier )
+static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 {
 	// Our guys if option set,
 	if ( pSoldier->bTeam == gbPlayerNum )
@@ -2242,7 +2235,8 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 	return( TRUE );
 }
 
-void HandleMaryArrival( SOLDIERTYPE * pSoldier )
+
+static void HandleMaryArrival(SOLDIERTYPE* pSoldier)
 {
 	INT16 sDist;
 
@@ -2275,10 +2269,10 @@ void HandleMaryArrival( SOLDIERTYPE * pSoldier )
 
 		TriggerNPCRecord( MARY, 13 );
 	}
-
 }
 
-void HandleJohnArrival( SOLDIERTYPE * pSoldier )
+
+static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 {
 	SOLDIERTYPE * pSoldier2 = NULL;
 	INT16 sDist;
@@ -2838,7 +2832,7 @@ void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceRese
 }
 
 
-BOOLEAN ResetAllAnimationCache(  )
+static BOOLEAN ResetAllAnimationCache(void)
 {
 	UINT32                          cnt;
 	SOLDIERTYPE             *pSoldier;
@@ -3431,7 +3425,8 @@ void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldierOld )
 	CheckForEndOfBattle( FALSE );
 }
 
-UINT8 LastActiveTeamMember( UINT8 ubTeam )
+
+static UINT8 LastActiveTeamMember(UINT8 ubTeam)
 {
 	INT32 cnt;
 	SOLDIERTYPE             *pSoldier;
@@ -3758,7 +3753,8 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 	*/
 }
 
-void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
+
+static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 {
 	INT32										cnt;
 	SOLDIERTYPE *						pSoldier;
@@ -3779,7 +3775,8 @@ void HickCowAttacked( SOLDIERTYPE * pNastyGuy, SOLDIERTYPE * pTarget )
 	}
 }
 
-void MilitiaChangesSides( void )
+
+static void MilitiaChangesSides(void)
 {
 	// make all the militia change sides
 
@@ -3820,7 +3817,8 @@ void MakePotentiallyHostileCivGroupsHostile( void )
 }
 */
 
-INT8 NumActiveAndConsciousTeamMembers( UINT8 ubTeam )
+
+static INT8 NumActiveAndConsciousTeamMembers(UINT8 ubTeam)
 {
 	INT32 cnt;
 	SOLDIERTYPE             *pSoldier;
@@ -4020,10 +4018,10 @@ UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKL
 	// none found,
 	// IF we are here, keep as we always were!
 	return( pSoldier->ubID );
-
 }
 
-BOOLEAN CheckForPlayerTeamInMissionExit( )
+
+static BOOLEAN CheckForPlayerTeamInMissionExit(void)
 {
 	INT32 cnt;
 	SOLDIERTYPE             *pSoldier;
@@ -4062,7 +4060,8 @@ BOOLEAN CheckForPlayerTeamInMissionExit( )
 	return( FALSE );
 }
 
-void EndTacticalDemo( )
+
+static void EndTacticalDemo(void)
 {
 	gTacticalStatus.uiFlags &= (~DEMOMODE );
 	gTacticalStatus.fGoingToEnterDemo = FALSE;
@@ -4112,7 +4111,7 @@ UINT32 EnterTacticalDemoMode()
 }
 
 
-const char* GetSceneFilename(void)
+static const char* GetSceneFilename(void)
 {
 	return( gzLevelFilenames[ gubCurrentScene ] );
 }
@@ -5557,7 +5556,8 @@ void SetEnemyPresence( )
 
 extern BOOLEAN gfLastMercTalkedAboutKillingID;
 
-BOOLEAN SoldierHasSeenEnemiesLastFewTurns( SOLDIERTYPE *pTeamSoldier )
+
+static BOOLEAN SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE* pTeamSoldier)
 {
 	INT32					cnt2;
 	SOLDIERTYPE		*pSoldier;
@@ -5593,7 +5593,8 @@ BOOLEAN SoldierHasSeenEnemiesLastFewTurns( SOLDIERTYPE *pTeamSoldier )
 	return( FALSE );
 }
 
-BOOLEAN WeSeeNoOne( void )
+
+static BOOLEAN WeSeeNoOne(void)
 {
 	UINT32		uiLoop;
 	SOLDIERTYPE * pSoldier;
@@ -5616,7 +5617,8 @@ BOOLEAN WeSeeNoOne( void )
 	return( TRUE );
 }
 
-BOOLEAN NobodyAlerted( void )
+
+static BOOLEAN NobodyAlerted(void)
 {
 	UINT32		uiLoop;
 	SOLDIERTYPE * pSoldier;
@@ -5637,7 +5639,7 @@ BOOLEAN NobodyAlerted( void )
 }
 
 
-BOOLEAN WeSawSomeoneThisTurn( void )
+static BOOLEAN WeSawSomeoneThisTurn(void)
 {
 	UINT32		uiLoop, uiLoop2;
 	SOLDIERTYPE * pSoldier;
@@ -5663,7 +5665,7 @@ BOOLEAN WeSawSomeoneThisTurn( void )
 }
 
 
-void SayBattleSoundFromAnyBodyInSector( INT32 iBattleSnd )
+static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
@@ -5696,6 +5698,10 @@ void SayBattleSoundFromAnyBodyInSector( INT32 iBattleSnd )
 	}
 
 }
+
+
+static UINT8 NumBloodcatsInSectorNotDeadOrDying(void);
+static UINT8 NumEnemyInSectorNotDeadOrDying(void);
 
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
@@ -5846,11 +5852,15 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 }
 
 
-void DeathNoMessageTimerCallback( void )
+static void DeathNoMessageTimerCallback(void)
 {
   CheckAndHandleUnloadingOfCurrentWorld();
 }
 
+
+static BOOLEAN CheckForLosingEndOfBattle(void);
+static BOOLEAN KillIncompacitatedEnemyInSector(void);
+static UINT8 NumEnemyInSectorExceptCreatures(void);
 
 
 //!!!!
@@ -6328,7 +6338,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 }
 
 
-INT8 CountNonVehiclesOnPlayerTeam( void )
+static INT8 CountNonVehiclesOnPlayerTeam(void)
 {
 	UINT32				cnt;
 	SOLDIERTYPE		 *pSoldier;
@@ -6407,7 +6417,8 @@ UINT8 NumEnemyInSector( )
 
 }
 
-UINT8 NumEnemyInSectorExceptCreatures()
+
+static UINT8 NumEnemyInSectorExceptCreatures(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6432,7 +6443,7 @@ UINT8 NumEnemyInSectorExceptCreatures()
 }
 
 
-UINT8 NumEnemyInSectorNotDeadOrDying( )
+static UINT8 NumEnemyInSectorNotDeadOrDying(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6467,7 +6478,8 @@ UINT8 NumEnemyInSectorNotDeadOrDying( )
 
 }
 
-UINT8 NumBloodcatsInSectorNotDeadOrDying( )
+
+static UINT8 NumBloodcatsInSectorNotDeadOrDying(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6546,7 +6558,10 @@ UINT8 NumCapableEnemyInSector( )
 }
 
 
-BOOLEAN CheckForLosingEndOfBattle( )
+static void DeathTimerCallback(void);
+
+
+static BOOLEAN CheckForLosingEndOfBattle(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6713,7 +6728,7 @@ BOOLEAN CheckForLosingEndOfBattle( )
 }
 
 
-BOOLEAN KillIncompacitatedEnemyInSector( )
+static BOOLEAN KillIncompacitatedEnemyInSector(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6738,8 +6753,7 @@ BOOLEAN KillIncompacitatedEnemyInSector( )
 }
 
 
-
-BOOLEAN AttackOnGroupWitnessed( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget )
+static BOOLEAN AttackOnGroupWitnessed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTarget)
 {
 	UINT32					uiSlot;
 	SOLDIERTYPE *		pGroupMember;
@@ -6764,7 +6778,8 @@ BOOLEAN AttackOnGroupWitnessed( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget )
 	return( FALSE );
 }
 
-INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
+
+static INT8 CalcSuppressionTolerance(SOLDIERTYPE* pSoldier)
 {
 	INT8		bTolerance;
 
@@ -6824,8 +6839,11 @@ INT8 CalcSuppressionTolerance( SOLDIERTYPE * pSoldier )
 	return( bTolerance );
 }
 
+
 #define MAX_APS_SUPPRESSED 8
-void HandleSuppressionFire( UINT8 ubTargetedMerc, UINT8 ubCausedAttacker )
+
+
+static void HandleSuppressionFire(UINT8 ubTargetedMerc, UINT8 ubCausedAttacker)
 {
 	INT8									bTolerance;
 	INT16									sClosestOpponent, sClosestOppLoc;
@@ -7175,7 +7193,8 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 	return( fEnterCombat );
 }
 
-SOLDIERTYPE *InternalReduceAttackBusyCount( UINT8 ubID, BOOLEAN fCalledByAttacker, UINT8 ubTargetID )
+
+static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker, UINT8 ubTargetID)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
@@ -7530,7 +7549,7 @@ SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID )
 }
 
 
-void StopMercAnimation( BOOLEAN fStop )
+static void StopMercAnimation(BOOLEAN fStop)
 {
 	static INT8 bOldRealtimeSpeed;
 
@@ -7748,14 +7767,15 @@ void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSele
 }
 
 
-void	DoneFadeOutDueToDeath( void )
+static void DoneFadeOutDueToDeath(void)
 {
 	// Quit game....
 	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
 	//SetPendingNewScreen( MAINMENU_SCREEN );
 }
 
-void EndBattleWithUnconsciousGuysCallback( UINT8 bExitValue )
+
+static void EndBattleWithUnconsciousGuysCallback(UINT8 bExitValue)
 {
 	// Enter mapscreen.....
 #ifdef JA2DEMO
@@ -7814,7 +7834,7 @@ void InitializeTacticalStatusAtBattleStart( void )
 }
 
 
-void	DoneFadeOutDemoCreatureLevel( void )
+static void DoneFadeOutDemoCreatureLevel(void)
 {
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector( 1, 16, 0 );
@@ -7823,7 +7843,7 @@ void	DoneFadeOutDemoCreatureLevel( void )
 }
 
 
-void DemoEndOKCallback( INT8 bExitCode )
+static void DemoEndOKCallback(INT8 bExitCode)
 {
 	#ifdef JA2DEMO
 	// Check if gabby is alive...
@@ -7860,7 +7880,7 @@ void HandleEndDemoInCreatureLevel( )
 }
 
 
-void DeathTimerCallback( void )
+static void DeathTimerCallback(void)
 {
 	if (gTacticalStatus.Team[ CREATURE_TEAM ].bMenInSector > gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector )
 	{
@@ -7949,7 +7969,8 @@ BOOLEAN HostileCiviliansPresent( void )
 	return( FALSE );
 }
 
-BOOLEAN HostileCiviliansWithGunsPresent( void )
+
+static BOOLEAN HostileCiviliansWithGunsPresent(void)
 {
 	INT32						iLoop;
 	SOLDIERTYPE *		pSoldier;

@@ -31,7 +31,7 @@ INT32	giDrunkModifier[] =
 #define HANGOVER_BP_REDUCE			200
 
 
-UINT8 GetDrugType( UINT16 usItem )
+static UINT8 GetDrugType(UINT16 usItem)
 {
 	if ( usItem == ADRENALINE_BOOSTER )
 	{
@@ -321,7 +321,7 @@ INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType  )
 }
 
 
-INT8 GetDrugSideEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType )
+static INT8 GetDrugSideEffect(SOLDIERTYPE* pSoldier, UINT8 ubDrugType)
 {
 	// If we have a o-positive effect
 	if ( pSoldier->bDrugEffect[ ubDrugType ] > 0 )

@@ -136,7 +136,6 @@ typedef struct
 
 INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef );
 
-void RemoveCorpse( INT32 iCorpseID );
 void RemoveCorpses( );
 
 
@@ -144,8 +143,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier );
 
-void AllMercsOnTeamLookForCorpse( ROTTING_CORPSE *pCorpse, INT8 bTeam );
-void MercLooksForCorpses( SOLDIERTYPE *pSoldier );
 void RebuildAllCorpseShadeTables( );
 
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );

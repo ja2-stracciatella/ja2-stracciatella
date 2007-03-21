@@ -84,13 +84,18 @@ BOOLEAN	gfRTHaveClickedRightWhileLeftDown = FALSE;
 extern BOOLEAN ValidQuickExchangePosition( );
 
 
+static void QueryRTLeftButton(UINT32* puiNewEvent);
+static void QueryRTRightButton(UINT32* puiNewEvent);
+
+
 void	GetRTMouseButtonInput( UINT32 *puiNewEvent )
 {
 	 QueryRTLeftButton( puiNewEvent );
 	 QueryRTRightButton( puiNewEvent );
 }
 
-void	QueryRTLeftButton( UINT32 *puiNewEvent )
+
+static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
 	UINT16	usSoldierIndex;
 	SOLDIERTYPE *pSoldier;
@@ -915,7 +920,8 @@ void	QueryRTLeftButton( UINT32 *puiNewEvent )
 	}
 }
 
-void	QueryRTRightButton( UINT32 *puiNewEvent )
+
+static void QueryRTRightButton(UINT32* puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;

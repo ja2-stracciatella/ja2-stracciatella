@@ -36,25 +36,6 @@
 #define MINE_PRODUCTION_PERIOD						(3 * 60)		// time seperating daily mine production events (in minutes)
 
 
-// mine this mine
-INT32 MineAMine( INT8 bMineIndex );
-
-// remove actual ore from mine
-UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount );
-
-// get available workforce for the mine
-INT32 GetAvailableWorkForceForMineForPlayer( INT8 bMineIndex );
-
-// get workforce conscripted by enemy for mine
-INT32 GetAvailableWorkForceForMineForEnemy( INT8 bMineIndex );
-
-// how fast is the mine's workforce working for you?
-INT32 GetCurrentWorkRateOfMineForPlayer( INT8 bMineIndex );
-
-// how fast is workforce working for the enemy
-INT32 GetCurrentWorkRateOfMineForEnemy( INT8 bMineIndex );
-
-
 // this table holds mine values that change during the course of the game and must be saved
 MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 
@@ -369,7 +350,8 @@ INT8 GetTownAssociatedWithMine( INT8 bMineIndex )
 }
 
 
-INT8 GetMineAssociatedWithThisTown( INT8 bTownId )
+// which mine belongs tot his town
+static INT8 GetMineAssociatedWithThisTown(INT8 bTownId)
 {
 	INT8 bCounter = 0;
 
@@ -389,7 +371,8 @@ INT8 GetMineAssociatedWithThisTown( INT8 bTownId )
 }
 
 
-UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
+// remove actual ore from mine
+static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 {
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
@@ -459,7 +442,9 @@ UINT32 ExtractOreFromMine( INT8 bMineIndex, UINT32 uiAmount )
 	return( uiAmountExtracted );
 }
 
-INT32 GetAvailableWorkForceForMineForPlayer( INT8 bMineIndex )
+
+// get available workforce for the mine
+static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 {
 	// look for available workforce in the town associated with the mine
 	INT32 iWorkForceSize = 0;
@@ -503,7 +488,9 @@ INT32 GetAvailableWorkForceForMineForPlayer( INT8 bMineIndex )
 	return ( iWorkForceSize );
 }
 
-INT32 GetAvailableWorkForceForMineForEnemy( INT8 bMineIndex )
+
+// get workforce conscripted by enemy for mine
+static INT32 GetAvailableWorkForceForMineForEnemy(INT8 bMineIndex)
 {
 	// look for available workforce in the town associated with the mine
 	INT32 iWorkForceSize = 0;
@@ -542,7 +529,9 @@ INT32 GetAvailableWorkForceForMineForEnemy( INT8 bMineIndex )
 	return ( iWorkForceSize );
 }
 
-INT32 GetCurrentWorkRateOfMineForPlayer( INT8 bMineIndex )
+
+// how fast is the mine's workforce working for you?
+static INT32 GetCurrentWorkRateOfMineForPlayer(INT8 bMineIndex)
 {
 	INT32 iWorkRate = 0;
 
@@ -552,7 +541,9 @@ INT32 GetCurrentWorkRateOfMineForPlayer( INT8 bMineIndex )
 	return( iWorkRate );
 }
 
-INT32 GetCurrentWorkRateOfMineForEnemy( INT8 bMineIndex )
+
+// how fast is workforce working for the enemy
+static INT32 GetCurrentWorkRateOfMineForEnemy(INT8 bMineIndex)
 {
 	INT32 iWorkRate = 0;
 
@@ -563,8 +554,8 @@ INT32 GetCurrentWorkRateOfMineForEnemy( INT8 bMineIndex )
 }
 
 
-
-INT32 MineAMine( INT8 bMineIndex )
+// mine this mine
+static INT32 MineAMine(INT8 bMineIndex)
 {
 	// will extract ore based on available workforce, and increment players income based on amount
 	INT8 bMineType = 0;
@@ -741,7 +732,7 @@ void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY )
 
 
 // get the index of the mine associated with this town
-INT8 GetMineIndexForTown( INT8 bTownId )
+static INT8 GetMineIndexForTown(INT8 bTownId)
 {
 	UINT8 ubMineIndex = 0;
 
@@ -860,7 +851,7 @@ void RestartMineProduction( INT8 bMineIndex )
 }
 
 
-void MineShutdownIsPermanent( INT8 bMineIndex )
+static void MineShutdownIsPermanent(INT8 bMineIndex)
 {
 	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < MAX_NUMBER_OF_MINES ) );
 
@@ -876,7 +867,7 @@ BOOLEAN IsMineShutDown( INT8 bMineIndex )
 }
 
 
-UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex )
+static UINT8 GetHeadMinerIndexForMine(INT8 bMineIndex)
 {
 	UINT8 ubMinerIndex = 0;
 	UINT16 usProfileId = 0;
@@ -901,7 +892,7 @@ UINT8 GetHeadMinerIndexForMine( INT8 bMineIndex )
 }
 
 
-UINT16 GetHeadMinerProfileIdForMine( INT8 bMineIndex )
+static UINT16 GetHeadMinerProfileIdForMine(INT8 bMineIndex)
 {
 	return(gHeadMinerData[ GetHeadMinerIndexForMine( bMineIndex ) ].usProfileId);
 }
@@ -1246,9 +1237,8 @@ INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-
 // use this for miner (civilian) quotes when *underground* in a mine
-BOOLEAN PlayerForgotToTakeOverMine( UINT8 ubMineIndex )
+static BOOLEAN PlayerForgotToTakeOverMine(UINT8 ubMineIndex)
 {
 	MINE_STATUS_TYPE *pMineStatus;
 

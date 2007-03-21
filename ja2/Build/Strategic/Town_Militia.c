@@ -49,29 +49,16 @@ INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
 extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 
 
-
-// private prototypes
-void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue );
-void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue );
-void MilitiaTrainingRejected( void );
-
-void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
-BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY );
-
-void BuildListOfUnpaidTrainableSectors( void );
-INT32 GetNumberOfUnpaidTrainableSectors( void );
-void ContinueTrainingInThisSector( void );
-void StartTrainingInAllUnpaidTrainableSectors();
-void PayForTrainingInSector( UINT8 ubSector );
-void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector );
-
-
 #ifdef JA2BETAVERSION
 void VerifyTownTrainingIsPaidFor( void );
 #endif
 
 
-
+static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
+static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
+static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbourY);
+static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
+static void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany);
 
 
 void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY )
@@ -228,7 +215,7 @@ INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass)
 
 
 // feed this a _MITILIA rank, it will return you a SOLDIER_CLASS_, or -1 if the guy's not militia
-INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
+static INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
 {
 	INT8 bSoldierClass = -1;
 
@@ -249,7 +236,8 @@ INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
 }
 
 
-void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
+// add militias of a certain rank
+static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
@@ -260,7 +248,8 @@ void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 u
 }
 
 
-void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany)
+// promote militias of a certain rank
+static void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany)
 {
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
@@ -350,7 +339,7 @@ UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank,
 
 
 // call this if the player attacks his own militia
-void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
+static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 {
 	UINT8 ubRank;
 	UINT8 ubMilitiaCnt;
@@ -440,7 +429,7 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY)
+static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY)
 {
 	// reset globals
 	gubTownSectorServerTownId = ubTownId;
@@ -454,7 +443,7 @@ void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSki
 // this feeds the X,Y of the next town sector on the town list for the town specified at initialization
 // it will skip an entry that matches the skip X/Y value if one was specified at initialization
 // MUST CALL InitFriendlyTownSectorServer() before using!!!
-BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY )
+static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbourY)
 {
 	INT32 iTownSector;
 	INT16 sMapX, sMapY;
@@ -502,6 +491,11 @@ BOOLEAN ServeNextFriendlySectorInTown( INT16 *sNeighbourX, INT16 *sNeighbourY )
 	// found & returning a valid sector
 	return(TRUE);
 }
+
+
+static void CantTrainMilitiaOkBoxCallback(UINT8 bExitValue);
+static INT32 GetNumberOfUnpaidTrainableSectors(void);
+static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue);
 
 
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
@@ -552,7 +546,8 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void DoContinueMilitiaTrainingMessageBox( INT16 sSectorX, INT16 sSectorY, wchar_t *str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+
+static void DoContinueMilitiaTrainingMessageBox(INT16 sSectorX, INT16 sSectorY, wchar_t* str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
 	{
@@ -632,10 +627,14 @@ void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 }
 
 
+static void ContinueTrainingInThisSector(void);
+static void MilitiaTrainingRejected(void);
+static void StartTrainingInAllUnpaidTrainableSectors(void);
+
 
 // IMPORTANT: This same callback is used both for initial training and for continue training prompt
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
-void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
+static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue)
 {
 	CHAR16 sString[ 128 ];
 
@@ -681,7 +680,7 @@ void PayMilitiaTrainingYesNoBoxCallback( UINT8 bExitValue )
 }
 
 
-void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue )
+static void CantTrainMilitiaOkBoxCallback(UINT8 bExitValue)
 {
 	MilitiaTrainingRejected();
 }
@@ -689,7 +688,7 @@ void CantTrainMilitiaOkBoxCallback( UINT8 bExitValue )
 
 // IMPORTANT: This same callback is used both for initial training and for continue training prompt
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
-void MilitiaTrainingRejected( void )
+static void MilitiaTrainingRejected(void)
 {
 	if( gfYesNoPromptIsForContinue )
 	{
@@ -839,7 +838,8 @@ BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-void HandleCompletionOfTownTrainingByGroupWithTrainer( SOLDIERTYPE *pTrainer )
+// handle completion of assignment by this soldier too and inform the player
+static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer)
 {
 
 	INT16 sSectorX = 0, sSectorY = 0;
@@ -968,8 +968,7 @@ void HandleContinueOfTownTraining( void )
 }
 
 
-
-void BuildListOfUnpaidTrainableSectors( void )
+static void BuildListOfUnpaidTrainableSectors(void)
 {
 	INT32 iCounter = 0, iCounterB = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -1033,8 +1032,7 @@ void BuildListOfUnpaidTrainableSectors( void )
 }
 
 
-
-INT32 GetNumberOfUnpaidTrainableSectors( void )
+static INT32 GetNumberOfUnpaidTrainableSectors(void)
 {
 	INT32 iCounter = 0;
 	INT32 iNumberOfSectors = 0;
@@ -1056,7 +1054,10 @@ INT32 GetNumberOfUnpaidTrainableSectors( void )
 }
 
 
-void StartTrainingInAllUnpaidTrainableSectors()
+static void PayForTrainingInSector(UINT8 ubSector);
+
+
+static void StartTrainingInAllUnpaidTrainableSectors(void)
 {
 	INT32 iCounter = 0;
 	UINT8 ubSector;
@@ -1079,7 +1080,7 @@ void StartTrainingInAllUnpaidTrainableSectors()
 }
 
 
-void ContinueTrainingInThisSector( void )
+static void ContinueTrainingInThisSector(void)
 {
 	UINT8 ubSector;
 
@@ -1091,7 +1092,10 @@ void ContinueTrainingInThisSector( void )
 }
 
 
-void PayForTrainingInSector( UINT8 ubSector )
+static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector);
+
+
+static void PayForTrainingInSector(UINT8 ubSector)
 {
 	Assert( SectorInfo[ ubSector ].fMilitiaTrainingPaid == FALSE );
 
@@ -1106,7 +1110,7 @@ void PayForTrainingInSector( UINT8 ubSector )
 }
 
 
-void ResetDoneFlagForAllMilitiaTrainersInSector( UINT8 ubSector )
+static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;

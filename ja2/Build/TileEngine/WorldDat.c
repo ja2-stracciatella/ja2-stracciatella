@@ -11,10 +11,12 @@
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
 
-void SetTilesetThreeTerrainValues();
-void SetTilesetFourTerrainValues();
-
 TILESET	 gTilesets[ NUM_TILESETS ];
+
+
+static void SetTilesetFourTerrainValues(void);
+static void SetTilesetThreeTerrainValues(void);
+static void SetTilesetTwoTerrainValues(void);
 
 
 void InitEngineTilesets( )
@@ -107,8 +109,6 @@ void InitEngineTilesets( )
 }
 
 
-
-
 void SetTilesetOneTerrainValues( )
 {
 		// FIRST TEXUTRES
@@ -137,7 +137,7 @@ void SetTilesetOneTerrainValues( )
 }
 
 
-void SetTilesetTwoTerrainValues( )
+static void SetTilesetTwoTerrainValues(void)
 {
 		// FIRST TEXUTRES
 		gTileSurfaceArray[ FIRSTTEXTURE ]->ubTerrainID = FLAT_GROUND;
@@ -164,7 +164,7 @@ void SetTilesetTwoTerrainValues( )
 }
 
 
-void SetTilesetThreeTerrainValues( )
+static void SetTilesetThreeTerrainValues(void)
 {
 		// DIFFERENCE FROM #1 IS THAT ROADS ARE PAVED
 
@@ -194,7 +194,8 @@ void SetTilesetThreeTerrainValues( )
 
 }
 
-void SetTilesetFourTerrainValues( )
+
+static void SetTilesetFourTerrainValues(void)
 {
 		// DIFFERENCE FROM #1 IS THAT FLOOR2 IS NOT FLAT_FLOOR BUT FLAT_GROUND
 

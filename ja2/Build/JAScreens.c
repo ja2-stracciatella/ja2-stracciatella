@@ -73,12 +73,6 @@ static BOOLEAN FirstTime = TRUE;
 BOOLEAN	gfDoneWithSplashScreen = FALSE;
 
 
-
-void PalEditRenderHook(  );
-BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent );
-
-void DebugRenderHook(  );
-BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent );
 INT8 gCurDebugPage = 0;
 
 
@@ -90,10 +84,12 @@ BOOLEAN				gfDoTitleAnimation = FALSE;
 BOOLEAN				gfStartTitleAnimation = FALSE;
 
 
-void DefaultDebugPage1( );
-void DefaultDebugPage2( );
-void DefaultDebugPage3( );
-void DefaultDebugPage4( );
+static void DefaultDebugPage1(void);
+static void DefaultDebugPage2(void);
+static void DefaultDebugPage3(void);
+static void DefaultDebugPage4(void);
+
+
 RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
 {
 	DefaultDebugPage1,
@@ -443,6 +439,11 @@ UINT32 PalEditScreenInit(void)
 	return( TRUE );
 }
 
+
+static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent);
+static void PalEditRenderHook(void);
+
+
 UINT32 PalEditScreenHandle(void)
 {
 	static BOOLEAN FirstTime = TRUE;
@@ -485,7 +486,7 @@ UINT32 PalEditScreenShutdown(void)
 }
 
 
-void PalEditRenderHook(  )
+static void PalEditRenderHook(void)
 {
 	SOLDIERTYPE		*pSoldier;
 
@@ -502,7 +503,8 @@ void PalEditRenderHook(  )
 	}
 }
 
-BOOLEAN PalEditKeyboardHook( InputAtom *pInputEvent )
+
+static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 {
 	UINT8					ubType;
 	SOLDIERTYPE		*pSoldier;
@@ -652,7 +654,7 @@ UINT32 DebugScreenInit(void)
 }
 
 
-BOOLEAN CheckForAndExitTacticalDebug( )
+static BOOLEAN CheckForAndExitTacticalDebug(void)
 {
 	if ( gfExitDebugScreen )
 	{
@@ -669,7 +671,8 @@ BOOLEAN CheckForAndExitTacticalDebug( )
 	return( FALSE );
 }
 
-void ExitDebugScreen( )
+
+static void ExitDebugScreen(void)
 {
 	if ( guiCurrentScreen == DEBUG_SCREEN )
 	{
@@ -678,6 +681,10 @@ void ExitDebugScreen( )
 
 	CheckForAndExitTacticalDebug( );
 }
+
+
+static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent);
+static void DebugRenderHook(void);
 
 
 UINT32 DebugScreenHandle(void)
@@ -719,12 +726,13 @@ UINT32 DebugScreenShutdown(void)
 }
 
 
-void DebugRenderHook(  )
+static void DebugRenderHook(void)
 {
 	gDebugRenderOverride[ gCurDebugPage ]( );
 }
 
-BOOLEAN DebugKeyboardHook( InputAtom *pInputEvent )
+
+static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 {
   if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
   {
@@ -771,25 +779,29 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 	gDebugRenderOverride[ ubPage ] = pDebugRenderOverride;
 }
 
-void DefaultDebugPage1( )
+
+static void DefaultDebugPage1(void)
 {
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE ONE" );
 }
 
-void DefaultDebugPage2( )
+
+static void DefaultDebugPage2(void)
 {
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE TWO" );
 }
 
-void DefaultDebugPage3( )
+
+static void DefaultDebugPage3(void)
 {
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE THREE" );
 }
 
-void DefaultDebugPage4( )
+
+static void DefaultDebugPage4(void)
 {
 	SetFont( LARGEFONT1 );
 	gprintf( 0,0,L"DEBUG PAGE FOUR" );
@@ -912,7 +924,7 @@ UINT32 DemoExitScreenInit(void)
 }
 
 
-void DoneFadeOutForDemoExitScreen( void )
+static void DoneFadeOutForDemoExitScreen(void)
 {
 	gfProgramIsRunning = FALSE;
 }
@@ -1041,8 +1053,9 @@ void DoDemoIntroduction()
 
 extern INT8 gbFadeSpeed;
 
+
 #ifdef GERMAN
-void DisplayTopwareGermanyAddress()
+static void DisplayTopwareGermanyAddress(void)
 {
 	UINT32					uiTempID;
 	UINT8 *pDestBuf;

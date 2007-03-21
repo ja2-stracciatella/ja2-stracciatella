@@ -42,8 +42,6 @@ vector_3	VAdd( vector_3 *a, vector_3 *b );
 vector_3	VMultScalar( vector_3 *a, real b );
 vector_3	VDivScalar( vector_3 *a, real b );
 real			VDotProduct( vector_3 *a, vector_3 *b );
-real			VPerpDotProduct( vector_3 *a, vector_3 *b );
-vector_3	VGetPerpendicular( vector_3 *a );
 real			VGetLength( vector_3 *a );
 vector_3	VGetNormal( vector_3 *a );
 vector_3	VCrossProduct( vector_3 *a, vector_3 *b );

@@ -1140,7 +1140,8 @@ INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 	return( NO_SLOT );
 }
 
-INT8 FindObjClassAfterSlot( SOLDIERTYPE * pSoldier, INT8 bStartAfter, UINT32 usItemClass )
+
+static INT8 FindObjClassAfterSlot(SOLDIERTYPE* pSoldier, INT8 bStartAfter, UINT32 usItemClass)
 {
 	INT8 bLoop;
 
@@ -1222,7 +1223,8 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 	return( ITEM_NOT_FOUND );
 }
 
-BOOLEAN GLGrenadeInSlot(SOLDIERTYPE *pSoldier, INT8 bSlot )
+
+static BOOLEAN GLGrenadeInSlot(SOLDIERTYPE* pSoldier, INT8 bSlot)
 {
 	switch (pSoldier->inv[bSlot].usItem)
 	{
@@ -1356,9 +1358,10 @@ BOOLEAN ItemHasAttachments( OBJECTTYPE * pObj )
 	return( TRUE );
 }
 
+
 // Determine if it is possible to add this attachment to the CLASS of this item
 // (i.e. to any item in the class)
-BOOLEAN ValidAttachmentClass( UINT16 usAttachment, UINT16 usItem )
+static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 {
 	INT32 iLoop = 0;
 	while( 1 )
@@ -1384,7 +1387,8 @@ BOOLEAN ValidAttachmentClass( UINT16 usAttachment, UINT16 usItem )
 	return( FALSE );
 }
 
-INT8 GetAttachmentInfoIndex( UINT16 usItem )
+
+static INT8 GetAttachmentInfoIndex(UINT16 usItem)
 {
 	INT32 iLoop = 0;
 
@@ -1606,7 +1610,7 @@ BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
 
 
 //Determines if this item is a two handed item.
-BOOLEAN TwoHandedItem( UINT16 usItem )
+static BOOLEAN TwoHandedItem(UINT16 usItem)
 {
 	if (Item[usItem].fFlags & ITEM_TWO_HANDED)
 	{
@@ -1650,7 +1654,8 @@ BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 	return( TRUE );
 }
 
-BOOLEAN ValidItemLaunchable( OBJECTTYPE * pObj, UINT16 usAttachment )
+
+static BOOLEAN ValidItemLaunchable(OBJECTTYPE* pObj, UINT16 usAttachment)
 {
 	if ( !ValidLaunchable( usAttachment, pObj->usItem ) )
 	{
@@ -1688,8 +1693,7 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 }
 
 
-
-BOOLEAN EvaluateValidMerge( UINT16 usMerge, UINT16 usItem, UINT16 * pusResult, UINT8 * pubType )
+static BOOLEAN EvaluateValidMerge(UINT16 usMerge, UINT16 usItem, UINT16* pusResult, UINT8* pubType)
 {
 	// NB "usMerge" is the object being merged with (e.g. compound 18)
 	// "usItem" is the item being merged "onto" (e.g. kevlar vest)
@@ -1918,7 +1922,8 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	}
 }
 
-void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 )
+
+static void SwapWithinObj(OBJECTTYPE* pObj, UINT8 ubIndex1, UINT8 ubIndex2)
 {
 	INT8 bTemp;
 
@@ -2509,7 +2514,8 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 	return( FALSE );
 }
 
-INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
+
+static INT8 GetAttachmentComboMerge(OBJECTTYPE* pObj)
 {
 	INT8		bIndex = 0;
 	INT8		bAttachLoop, bAttachPos;
@@ -2543,7 +2549,8 @@ INT8 GetAttachmentComboMerge( OBJECTTYPE * pObj )
 	return( -1 );
 }
 
-void PerformAttachmentComboMerge( OBJECTTYPE * pObj, INT8 bAttachmentComboMerge )
+
+static void PerformAttachmentComboMerge(OBJECTTYPE* pObj, INT8 bAttachmentComboMerge)
 {
 	INT8		bAttachLoop, bAttachPos;
 	UINT32	uiStatusTotal = 0;
@@ -2927,7 +2934,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 }
 
 
-BOOLEAN DropObjIfThereIsRoom( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
+static BOOLEAN DropObjIfThereIsRoom(SOLDIERTYPE* pSoldier, INT8 bPos, OBJECTTYPE* pObj)
 {
 	// try autoplacing item in bSlot elsewhere, then do a placement
 	BOOLEAN fAutoPlacedOld;
@@ -3178,7 +3185,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	return( TRUE );
 }
 
-BOOLEAN InternalAutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem, INT8 bExcludeSlot )
+
+static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN fNewItem, INT8 bExcludeSlot)
 {
 	INT8			bSlot;
 	INVTYPE	* pItem;
@@ -3790,7 +3798,7 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 #endif
 
 
-UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex)
+static UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex)
 {
 	UINT16				usLoop;
 
@@ -3835,7 +3843,8 @@ UINT16 DefaultMagazine( UINT16 usItem )
 	return( 0 );
 }
 
-UINT16 FindReplacementMagazine( UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType )
+
+static UINT16 FindReplacementMagazine(UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType)
 {
 	UINT8 ubLoop;
 	UINT16 usDefault;
@@ -3947,7 +3956,8 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	}
 }
 
-BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
+
+static BOOLEAN CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 {
 	UINT16 usAmmo;
 
@@ -4013,7 +4023,8 @@ BOOLEAN CreateGun( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	return( TRUE );
 }
 
-BOOLEAN CreateMagazine( UINT16 usItem, OBJECTTYPE * pObj )
+
+static BOOLEAN CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 {
 	if (pObj == NULL)
 	{
@@ -4205,7 +4216,8 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 	return( TRUE );
 }
 
-void RenumberAttachments( OBJECTTYPE * pObj )
+
+static void RenumberAttachments(OBJECTTYPE* pObj)
 {
 	// loop through attachment positions and make sure we don't have any empty
 	// attachment slots before filled ones
@@ -4393,6 +4405,10 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	return( fReturnVal );
 }
 
+
+static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem);
+
+
 BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	INT8 bLoop;
@@ -4480,7 +4496,8 @@ BOOLEAN ObjectExistsInSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 	return( bSlot != NO_SLOT );
 }
 
-void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem )
+
+static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 {
 	INT8 bInvPos;
 
@@ -4498,7 +4515,8 @@ void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem )
 
 }
 
-INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
+
+static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 {
 	INT8	bDamage = 0;
 
@@ -4524,7 +4542,8 @@ INT8 CheckItemForDamage( UINT16 usItem, INT32 iMaxDamage )
 	return( bDamage );
 }
 
-BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround )
+
+static BOOLEAN CheckForChainReaction(UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround)
 {
 	INT32 iChance;
 
@@ -4550,7 +4569,8 @@ BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEA
 	return( FALSE );
 }
 
-BOOLEAN DamageItem( OBJECTTYPE * pObject, INT32 iDamage, BOOLEAN fOnGround )
+
+static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 {
 	INT8		bLoop;
 	INT8		bDamage;
@@ -4773,7 +4793,8 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 	}
 }
 
-void SwapOutHandItem( SOLDIERTYPE * pSoldier )
+
+static void SwapOutHandItem(SOLDIERTYPE* pSoldier)
 {
 	BOOLEAN			fOk;
 
@@ -5012,12 +5033,14 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 	return( TRUE );
 }
 
-UINT32 ConvertProfileMoneyValueToObjectTypeMoneyValue( UINT8 ubStatus )
+
+static UINT32 ConvertProfileMoneyValueToObjectTypeMoneyValue(UINT8 ubStatus)
 {
 	return( ubStatus * 50 );
 }
 
-UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue( UINT32 uiMoneyAmount )
+
+static UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue(UINT32 uiMoneyAmount)
 {
 	return( (UINT8)( uiMoneyAmount / 50 ) );
 }

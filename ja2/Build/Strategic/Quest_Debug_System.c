@@ -479,147 +479,75 @@ MOUSE_REGION		gQuestDebugSysScreenRegions;
 
 
 UINT32	guiQuestDebugExitButton;
-void BtnQuestDebugExitButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 //checkbox for weather to show all npc or just npc in sector
 UINT32	guiQuestDebugAllOrSectorNPCToggle;
-void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON *btn,INT32 reason);
 
 
 UINT32	guiQuestDebugCurNPCButton;
-void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugCurItemButton;
-void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugAddNpcToLocationButton;
-void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugAddItemToLocationButton;
-void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugGiveItemToNPCButton;
-void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugChangeDayButton;
-void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugViewNPCInvButton;
-void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugRestoreNPCInvButton;
-void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugNPCLogButtonButton;
-void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugNPCRefreshButtonButton;
-void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQuestDebugStartMercTalkingButtonButton;
-void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 //checkbox for weather to add the merc to the players team
 UINT32	guiQuestDebugAddNpcToTeamToggle;
-void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON *btn,INT32 reason);
 
 //checkbox for weather have rpc say the sector description
 UINT32	guiQuestDebugRPCSaySectorDescToggle;
-void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON *btn,INT32 reason);
 
 
 
 MOUSE_REGION    gSelectedNpcListRegion[ QUEST_DBS_MAX_DISPLAYED_ENTRIES ];
-void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void SelectNpcListMovementCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 MOUSE_REGION    gScrollAreaRegion[ QUEST_DBS_NUM_INCREMENTS_IN_SCROLL_BAR ];
-void ScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void ScrollAreaMovementCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 MOUSE_REGION    gScrollArrowsRegion[2];
-void ScrollArrowsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 //Text entry Disable the screen
 MOUSE_REGION    gQuestTextEntryDebugDisableScreenRegion;
-void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Ok button on the text entry form
 UINT32	guiQuestDebugTextEntryOkBtn;
-void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 //Ok button on the NPC inventory form
 UINT32	guiQuestDebugNPCInventOkBtn;
-void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason);
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 //Mouse regions for the Quests
 MOUSE_REGION    gQuestListRegion[ QUEST_DBS_NUM_DISPLAYED_QUESTS ];
-void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Mouse regions for the Facts
 MOUSE_REGION    gFactListRegion[ QUEST_DBS_NUM_DISPLAYED_FACTS ];
-void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
 
 
 UINT32	guiQDPgUpButtonButton;
-void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 UINT32	guiQDPgDownButtonButton;
-void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason);
 
 
-BOOLEAN		EnterQuestDebugSystem();
-void			RenderQuestDebugSystem();
-void			ExitQuestDebugSystem();
-void			HandleQuestDebugSystem();
-void			GetUserInput();
-void			ColorFillQuestDebugScreenScreen( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom );
-void			QuestDebug_ExitTactical();
-void			QuestDebug_EnterTactical();
-void			DisplayQuestInformation();
-void			DisplayFactInformation();
-void			DisplaySectionLine( );
-void			DisplayQuestList();
-void			DisplayFactList();
-void			DisplayNPCInfo();
-BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( );
-void			DrawQdsScrollRectangle( );
-void			CalcPositionOfNewScrollBoxLocation();
-void			DisplaySelectedListBox( );
-void			DisplaySelectedNPC( );
-void			DisplaySelectedItem( );
-void			TextEntryBox(const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
-BOOLEAN		CreateDestroyDisplayTextEntryBox( UINT8 ubAction, const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack );
-void			InitQuestDebugTextInputBoxes();
-void			DestroyQuestDebugTextInputBoxes();
-void			AddNPCToGridNo( INT32 iGridNo );
-void			AddItemToGridNo( INT32 iGridNo );
-void			StartMercTalkingFromQuoteNum( INT32 iGridNo );
-void			AddKeyToGridNo( INT32 iGridNo );
-void			ChangeDayNumber( INT32 iDayToChangeTo );
-void			CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction );
-void			AddNPCsInSectorToArray();
-void			ChangeQuestState( INT32 iNumber );
-void			ChangeFactState( INT32 iNumber );
-void			DisplayCurrentGridNo();
-void			EnableQDSButtons();
-BOOLEAN		DoQDSMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-void			IncrementActiveDropDownBox( INT16 sIncrementValue );
-INT16			IsMercInTheSector( UINT16 usMercID );
-void			RefreshAllNPCInventory();
-void			SetQDSMercProfile();
-void			HandleQDSTalkingMerc();
-void			DisplayQDSCurrentlyQuoteNum( );
-void			SetTalkingMercPauseState( BOOLEAN fState );
-void			EndMercTalking();
-void			EnableFactMouseRegions();
-void			DisableFactMouseRegions();
-INT32			GetMaxNumberOfQuotesToPlay( );
-void			GetDebugLocationString( UINT16 usProfileID, STR16 pzText, size_t Length);
+static void DisplaySelectedItem(void);
+static void DisplaySelectedNPC(void);
 
 
 UINT32	QuestDebugScreenInit()
@@ -702,6 +630,12 @@ UINT32	QuestDebugScreenInit()
 }
 
 
+static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack);
+static BOOLEAN EnterQuestDebugSystem(void);
+static void ExitQuestDebugSystem(void);
+static void GetUserInput(void);
+static void HandleQuestDebugSystem(void);
+static void RenderQuestDebugSystem(void);
 static UINT8 WhichPanelShouldTalkingMercUse(void);
 
 
@@ -800,16 +734,30 @@ UINT32	QuestDebugScreenShutdown()
 }
 
 
+static void AddNPCsInSectorToArray(void);
+static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void EnableQDSButtons(void);
+static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-
-
-
-
-
-
-
-BOOLEAN	EnterQuestDebugSystem()
+static BOOLEAN EnterQuestDebugSystem(void)
 {
 	UINT8	i;
 	UINT16 usPosX, usPosY;
@@ -824,9 +772,6 @@ BOOLEAN	EnterQuestDebugSystem()
 		gfExitQdsDueToMessageBox = FALSE;
 		return( TRUE );
 	}
-
-
-	QuestDebug_ExitTactical();
 
 	MSYS_DefineRegion( &gQuestDebugSysScreenRegions, 0, 0, 640, 480, MSYS_PRIORITY_HIGH,
 				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
@@ -1034,7 +979,12 @@ BOOLEAN	EnterQuestDebugSystem()
 }
 
 
-void		ExitQuestDebugSystem()
+static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void);
+static void EndMercTalking(void);
+static void QuestDebug_EnterTactical(void);
+
+
+static void ExitQuestDebugSystem(void)
 {
 	UINT16 i;
 
@@ -1099,8 +1049,13 @@ void		ExitQuestDebugSystem()
 }
 
 
+static void AddKeyToGridNo(INT32 iKeyID);
+static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction);
+static void HandleQDSTalkingMerc(void);
+static void TextEntryBox(const wchar_t* pString, TEXT_ENTRY_CALLBACK TextEntryCallBack);
 
-void		HandleQuestDebugSystem()
+
+static void HandleQuestDebugSystem(void)
 {
 	CHAR16	zTemp[512];
 
@@ -1143,8 +1098,18 @@ void		HandleQuestDebugSystem()
 }
 
 
+static void ColorFillQuestDebugScreenScreen(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
+static void DisplayCurrentGridNo(void);
+static void DisplayFactInformation(void);
+static void DisplayFactList(void);
+static void DisplayNPCInfo(void);
+static void DisplayQDSCurrentlyQuoteNum(void);
+static void DisplayQuestInformation(void);
+static void DisplayQuestList(void);
+static void DisplaySectionLine(void);
 
-void		RenderQuestDebugSystem()
+
+static void RenderQuestDebugSystem(void)
 {
 	ColorFillQuestDebugScreenScreen( 0, 0, 640, 480 );
 
@@ -1200,7 +1165,7 @@ void		RenderQuestDebugSystem()
 }
 
 
-void DisplayCurrentGridNo()
+static void DisplayCurrentGridNo(void)
 {
 	if( gsQdsEnteringGridNo != 0 )
 	{
@@ -1212,9 +1177,12 @@ void DisplayCurrentGridNo()
 }
 
 
+static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+static void IncrementActiveDropDownBox(INT16 sIncrementValue);
+static void SetTalkingMercPauseState(BOOLEAN fState);
 
 
-void		GetUserInput()
+static void GetUserInput(void)
 {
 	InputAtom Event;
 	POINT  MousePos;
@@ -1421,25 +1389,19 @@ void		GetUserInput()
 }
 
 
-
-void ColorFillQuestDebugScreenScreen( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
+static void ColorFillQuestDebugScreenScreen(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusQuestDebugBlue );
 }
 
 
-void QuestDebug_ExitTactical()
-{
-}
-
-void QuestDebug_EnterTactical()
+static void QuestDebug_EnterTactical(void)
 {
 	EnterTacticalScreen( );
 }
 
 
-
-void DisplaySectionLine( )
+static void DisplaySectionLine(void)
 {
   UINT32 uiDestPitchBYTES;
   UINT8 *pDestBuf;
@@ -1475,9 +1437,7 @@ void DisplaySectionLine( )
 }
 
 
-
-
-void DisplayQuestInformation()
+static void DisplayQuestInformation(void)
 {
 	//Display Quests
 	DisplayWrappedString( 0, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_FIRST_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_QUESTS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -1493,8 +1453,7 @@ void DisplayQuestInformation()
 }
 
 
-
-void DisplayFactInformation()
+static void DisplayFactInformation(void)
 {
 	//Display Fact
 	DisplayWrappedString( QUEST_DBS_FIRST_SECTION_WIDTH, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_SECOND_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_FACTS ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
@@ -1510,7 +1469,7 @@ void DisplayFactInformation()
 }
 
 
-void BtnQuestDebugExitButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugExitButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1531,7 +1490,7 @@ void BtnQuestDebugExitButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void DisplayQuestList()
+static void DisplayQuestList(void)
 {
 	UINT16	usLoop1, usCount;
 	UINT16	usTextHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
@@ -1559,8 +1518,7 @@ void DisplayQuestList()
 }
 
 
-
-void DisplayFactList()
+static void DisplayFactList(void)
 {
 	UINT16	usLoop1, usCount;
 	UINT16	usTextHeight = GetFontHeight( QUEST_DBS_FONT_DYNAMIC_TEXT ) + 2;
@@ -1606,8 +1564,7 @@ void DisplayFactList()
 }
 
 
-
-void BtnQuestDebugCurNPCButtonCallback (GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugCurNPCButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1638,7 +1595,8 @@ void BtnQuestDebugCurNPCButtonCallback (GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -1672,17 +1630,23 @@ void BtnQuestDebugCurItemButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void DisplayNPCInfo()
+static void DisplayNPCInfo(void)
 {
 	//display section title
 	DisplayWrappedString( QUEST_DBS_THIRD_COL_TITLE_X, QUEST_DBS_SECTION_TITLE_Y, QUEST_DBS_THIRD_SECTION_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, QuestDebugText[ QUEST_DBS_NPC_INFO ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
-
-
-
 }
 
 
-BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
+static void DisplaySelectedListBox(void);
+static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 {
 	static	BOOLEAN fMouseRegionsCreated=FALSE;
 	UINT16	i;
@@ -1838,7 +1802,11 @@ BOOLEAN		CreateDestroyDisplaySelectNpcDropDownBox( )
 	return( TRUE );
 }
 
-void DisplaySelectedListBox( )
+
+static void DrawQdsScrollRectangle(void);
+
+
+static void DisplaySelectedListBox(void)
 {
 	UINT16	usPosX, usPosY;
 
@@ -1894,14 +1862,16 @@ void DisplaySelectedListBox( )
 	BltVideoObject(FRAME_BUFFER, hImageHandle, 1, usPosX, usPosY + gpActiveListBox->usScrollHeight - gpActiveListBox->usScrollArrowHeight);
 
 	//display the scroll rectangle
-	DrawQdsScrollRectangle( );//gpActiveListBox->sCurSelectedItem, usPosX, usPosY, (UINT16)(usPosY + gpActiveListBox->usScrollHeight), NUM_PROFILES-FIRST_RPC );
+	DrawQdsScrollRectangle();
 
 	InvalidateRegion( 0, 0, 640, 480 );
 }
 
 
+static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Length);
 
-void DisplaySelectedNPC()
+
+static void DisplaySelectedNPC(void)
 {
 	UINT16	i;
 	UINT16	usPosX, usPosY;
@@ -1992,8 +1962,7 @@ void DisplaySelectedNPC()
 }
 
 
-
-void DisplaySelectedItem()
+static void DisplaySelectedItem(void)
 {
 	UINT16	i;
 	UINT16	usPosX, usPosY;
@@ -2041,7 +2010,7 @@ void DisplaySelectedItem()
 }
 
 
-void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2059,11 +2028,10 @@ void SelectNpcListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 		CreateDestroyDisplaySelectNpcDropDownBox();
 		gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_NO_ACTION;
 	}
-
 }
 
 
-void SelectNpcListMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2110,7 +2078,7 @@ void SelectNpcListMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 }
 
 
-void DrawQdsScrollRectangle( ) //INT16 sSelectedEntry, UINT16 usStartPosX, UINT16 usStartPosY, UINT16 usScrollAreaHeight, UINT16 usNumEntries )
+static void DrawQdsScrollRectangle(void)
 {
   UINT32 uiDestPitchBYTES;
   UINT8	 *pDestBuf;
@@ -2161,8 +2129,7 @@ void DrawQdsScrollRectangle( ) //INT16 sSelectedEntry, UINT16 usStartPosX, UINT1
 }
 
 
-
-void ScrollArrowsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2200,7 +2167,10 @@ void ScrollArrowsRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void ScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void CalcPositionOfNewScrollBoxLocation(void);
+
+
+static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2222,8 +2192,7 @@ void ScrollAreaRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void ScrollAreaMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
+static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2251,7 +2220,7 @@ void ScrollAreaMovementCallBack(MOUSE_REGION * pRegion, INT32 reason )
 }
 
 
-void CalcPositionOfNewScrollBoxLocation()
+static void CalcPositionOfNewScrollBoxLocation(void)
 {
 	INT16 sMouseXPos, sMouseYPos;
 	INT16	sIncrementValue;
@@ -2346,9 +2315,10 @@ void CalcPositionOfNewScrollBoxLocation()
 }
 
 
+static void AddNPCToGridNo(INT32 iGridNo);
 
 
-void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2373,8 +2343,10 @@ void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
+static void AddItemToGridNo(INT32 iGridNo);
 
-void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2399,7 +2371,7 @@ void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2444,7 +2416,10 @@ void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void ChangeDayNumber(INT32 iDayToChangeTo);
+
+
+static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2472,7 +2447,7 @@ void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2495,7 +2470,10 @@ void BtnQuestDebugViewNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void RefreshAllNPCInventory(void);
+
+
+static void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2518,7 +2496,8 @@ void BtnQuestDebugRestoreNPCInvButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2555,8 +2534,7 @@ void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-
-void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2607,9 +2585,10 @@ void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
+static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom);
 
 
-void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2636,9 +2615,11 @@ void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON *btn,INT32 rea
 }
 
 
+static void DestroyQuestDebugTextInputBoxes(void);
+static void InitQuestDebugTextInputBoxes(void);
 
 
-BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, const wchar_t *pString, TEXT_ENTRY_CALLBACK EntryCallBack )
+static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack)
 {
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	static wchar_t	zString[ 256 ];
@@ -2750,8 +2731,7 @@ BOOLEAN	CreateDestroyDisplayTextEntryBox( UINT8 ubAction, const wchar_t *pString
 }
 
 
-
-void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2771,7 +2751,7 @@ void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION * pRegion, INT3
 }
 
 
-void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2794,15 +2774,17 @@ void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void TextEntryBox(const wchar_t *pString, TEXT_ENTRY_CALLBACK TextEntryCallBack )
+static void TextEntryBox(const wchar_t* pString, TEXT_ENTRY_CALLBACK TextEntryCallBack)
 {
 	CreateDestroyDisplayTextEntryBox( QD_DROP_DOWN_CREATE, pString, TextEntryCallBack );
 	gubTextEntryAction = QD_DROP_DOWN_DISPLAY;
 }
 
 
+static void ChangeQuestState(INT32 iNumber);
 
-void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2824,7 +2806,11 @@ void ScrollQuestListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void ChangeFactState(INT32 iNumber);
+
+
+static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -2850,8 +2836,7 @@ void ScrollFactListRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void InitQuestDebugTextInputBoxes()
+static void InitQuestDebugTextInputBoxes(void)
 {
 	wchar_t	sTemp[ 640 ];
 //	wchar_t	sText[ 640 ];
@@ -2881,14 +2866,13 @@ void InitQuestDebugTextInputBoxes()
 }
 
 
-void DestroyQuestDebugTextInputBoxes()
+static void DestroyQuestDebugTextInputBoxes(void)
 {
 	KillTextInputMode();
 }
 
 
-
-void AddNPCToGridNo( INT32 iGridNo )
+static void AddNPCToGridNo(INT32 iGridNo)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;
@@ -2921,8 +2905,7 @@ void AddNPCToGridNo( INT32 iGridNo )
 }
 
 
-
-void AddItemToGridNo( INT32 iGridNo )
+static void AddItemToGridNo(INT32 iGridNo)
 {
 	OBJECTTYPE		Object;
 
@@ -2945,7 +2928,7 @@ void AddItemToGridNo( INT32 iGridNo )
 }
 
 
-void AddKeyToGridNo( INT32 iKeyID )
+static void AddKeyToGridNo(INT32 iKeyID)
 {
 	OBJECTTYPE		Object;
 
@@ -2961,8 +2944,7 @@ void AddKeyToGridNo( INT32 iKeyID )
 }
 
 
-
-void ChangeDayNumber( INT32 iDayToChangeTo )
+static void ChangeDayNumber(INT32 iDayToChangeTo)
 {
 	INT32	 uiDiff;
 	UINT32 uiNewDayTimeInSec;
@@ -2983,9 +2965,7 @@ void ChangeDayNumber( INT32 iDayToChangeTo )
 }
 
 
-
-
-void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
+static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 {
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	UINT16	usPosY, i;
@@ -3101,7 +3081,7 @@ void CreateDestroyDisplayNPCInventoryPopup( UINT8 ubAction )
 }
 
 
-void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -3124,7 +3104,10 @@ void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON *btn,INT32 reason)
 }
 
 
-void BtnQuestDebugAllOrSectorNPCToggleCallback( GUI_BUTTON *btn, INT32 reason )
+static INT16 IsMercInTheSector(UINT16 usMercID);
+
+
+static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3184,7 +3167,8 @@ void BtnQuestDebugAllOrSectorNPCToggleCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void AddNPCsInSectorToArray()
+
+static void AddNPCsInSectorToArray(void)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT16 cnt,i;
@@ -3208,7 +3192,7 @@ void AddNPCsInSectorToArray()
 }
 
 
-void ChangeQuestState( INT32 iNumber )
+static void ChangeQuestState(INT32 iNumber)
 {
 	if( ( iNumber >= 0 ) && ( iNumber <= 2 ) )
 	{
@@ -3217,7 +3201,8 @@ void ChangeQuestState( INT32 iNumber )
 	}
 }
 
-void ChangeFactState( INT32 iNumber )
+
+static void ChangeFactState(INT32 iNumber)
 {
 	if( ( iNumber >= 0 ) && ( iNumber <= 1 ) )
 	{
@@ -3227,7 +3212,7 @@ void ChangeFactState( INT32 iNumber )
 }
 
 
-void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
+static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -3257,7 +3242,8 @@ void BtnQDPgUpButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
 	}
 }
 
-void BtnQDPgDownButtonButtonCallback(GUI_BUTTON *btn,INT32 reason)
+
+static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -3423,8 +3409,7 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 }
 
 
-
-void EnableQDSButtons()
+static void EnableQDSButtons(void)
 {
 	if( gNpcListBox.sCurSelectedItem != -1 )
 	{
@@ -3492,7 +3477,7 @@ void EnableQDSButtons()
 }
 
 
-BOOLEAN DoQDSMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
   SGPRect pCenteringRect= {0, 0, 639, 479 };
 
@@ -3507,7 +3492,8 @@ BOOLEAN DoQDSMessageBox( UINT8 ubStyle, wchar_t *zString, UINT32 uiExitScreen, U
 	return( ( giQdsMessageBox != -1 ) );
 }
 
-void IncrementActiveDropDownBox( INT16 sIncrementValue )
+
+static void IncrementActiveDropDownBox(INT16 sIncrementValue)
 {
 	if( sIncrementValue < 0 )
 		sIncrementValue = 0;
@@ -3557,7 +3543,7 @@ void IncrementActiveDropDownBox( INT16 sIncrementValue )
 }
 
 
-INT16	IsMercInTheSector( UINT16 usMercID )
+static INT16 IsMercInTheSector(UINT16 usMercID)
 {
 	UINT8					cnt;
 
@@ -3578,7 +3564,7 @@ INT16	IsMercInTheSector( UINT16 usMercID )
 }
 
 
-void RefreshAllNPCInventory()
+static void RefreshAllNPCInventory(void)
 {
 	UINT16	usCnt;
 	UINT16	usItemCnt;
@@ -3618,7 +3604,12 @@ void RefreshAllNPCInventory()
 }
 
 
-void StartMercTalkingFromQuoteNum( INT32 iQuoteToStartTalkingFrom )
+static void DisableFactMouseRegions(void);
+static INT32 GetMaxNumberOfQuotesToPlay(void);
+static void SetQDSMercProfile(void);
+
+
+static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 {
 	CHAR16	zTemp[512];
 	INT32		uiMaxNumberOfQuotes = GetMaxNumberOfQuotesToPlay( );
@@ -3653,7 +3644,11 @@ void StartMercTalkingFromQuoteNum( INT32 iQuoteToStartTalkingFrom )
 
 }
 
-void EndMercTalking()
+
+static void EnableFactMouseRegions(void);
+
+
+static void EndMercTalking(void)
 {
 	//remove the talking dialogue
 	if( gfNpcPanelIsUsedForTalkingMerc )
@@ -3678,7 +3673,8 @@ void EndMercTalking()
 	EnableFactMouseRegions();
 }
 
-void HandleQDSTalkingMerc()
+
+static void HandleQDSTalkingMerc(void)
 {
 //	static BOOLEAN	fWas
 	BOOLEAN fIsTheMercTalking=FALSE;
@@ -3752,7 +3748,8 @@ void HandleQDSTalkingMerc()
 	}
 }
 
-void SetTalkingMercPauseState( BOOLEAN fState )
+
+static void SetTalkingMercPauseState(BOOLEAN fState)
 {
 	if( fState )
 	{
@@ -3771,8 +3768,7 @@ void SetTalkingMercPauseState( BOOLEAN fState )
 }
 
 
-
-void SetQDSMercProfile()
+static void SetQDSMercProfile(void)
 {
 	// Get selected soldier
 	if	( GetSoldier( &gTalkingMercSoldier, gusSelectedSoldier ) )
@@ -3807,7 +3803,7 @@ void SetQDSMercProfile()
 }
 
 
-void DisplayQDSCurrentlyQuoteNum( )
+static void DisplayQDSCurrentlyQuoteNum(void)
 {
 	CHAR16	zTemp[512];
 	UINT16	usPosY;
@@ -3843,10 +3839,7 @@ void DisplayQDSCurrentlyQuoteNum( )
 }
 
 
-
-
-
-void BtnQuestDebugAddNpcToTeamToggleCallback( GUI_BUTTON *btn, INT32 reason )
+static void BtnQuestDebugAddNpcToTeamToggleCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3858,8 +3851,7 @@ void BtnQuestDebugAddNpcToTeamToggleCallback( GUI_BUTTON *btn, INT32 reason )
 }
 
 
-
-void BtnQuestDebugRPCSaySectorDescToggleCallback( GUI_BUTTON *btn, INT32 reason )
+static void BtnQuestDebugRPCSaySectorDescToggleCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3889,7 +3881,7 @@ static UINT8 WhichPanelShouldTalkingMercUse(void)
 }
 
 
-void DisableFactMouseRegions()
+static void DisableFactMouseRegions(void)
 {
 	UINT	i;
 
@@ -3899,7 +3891,8 @@ void DisableFactMouseRegions()
 	}
 }
 
-void EnableFactMouseRegions()
+
+static void EnableFactMouseRegions(void)
 {
 	UINT	i;
 
@@ -3910,7 +3903,7 @@ void EnableFactMouseRegions()
 }
 
 
-INT32	GetMaxNumberOfQuotesToPlay( )
+static INT32 GetMaxNumberOfQuotesToPlay(void)
 {
 	INT32	iNumberOfQuotes = 0;
 	UINT8	ubProfileID =(UINT8)gNpcListBox.sCurSelectedItem;
@@ -3949,7 +3942,7 @@ INT32	GetMaxNumberOfQuotesToPlay( )
 }
 
 
-void GetDebugLocationString( UINT16 usProfileID, STR16 pzText, size_t Length)
+static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Length)
 {
 	SOLDIERTYPE *pSoldier;
 

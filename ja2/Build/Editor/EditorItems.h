@@ -29,7 +29,6 @@ typedef struct{
 
 extern EditorItemsInfo eInfo;
 
-void InitEditorItemsToolbar();
 void EntryInitEditorItemsInfo();
 void InitEditorItemsInfo(UINT32 uiItemType);
 void RenderEditorItemsInfo();
@@ -49,9 +48,6 @@ void SelectPrevItemInPool();
 
 void KillItemPoolList();
 void BuildItemPoolList();
-
-void HideItemCursor( INT32 iMapIndex );
-void ShowItemCursor( INT32 iMapIndex );
 
 void SetEditorItemsTaskbarMode( UINT16 usNewMode );
 

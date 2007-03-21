@@ -988,7 +988,6 @@ extern UINT8	bHealthStrRanges[];
 
 // CREATION FUNCTIONS
 BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );
-BOOLEAN CreateSoldierLight( SOLDIERTYPE *pSoldier );
 BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier );
 
 BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usSoldierID, UINT16 usState );
@@ -1022,11 +1021,9 @@ void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight );
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier );
-void SetSoldierGridNo( SOLDIERTYPE *pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove );
 
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierGetup( SOLDIERTYPE *pSoldier );
-BOOLEAN ReCreateSelectedSoldierLight(  );
 
 // Soldier Management functions called by Overhead.c
 BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame );
@@ -1036,7 +1033,6 @@ void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 void ModifySoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void StopSoldier( SOLDIERTYPE *pSoldier );
 UINT8 SoldierTakeDamage( SOLDIERTYPE *pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathDeduct, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, INT16 sSubsequent, BOOLEAN fShowDamage );
-void RevivePlayerTeam( );
 void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 
@@ -1053,13 +1049,10 @@ void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMo
 INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
 INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
-UINT8 atan8FromAngle( DOUBLE dAngle );
 INT8 CalcActionPoints(SOLDIERTYPE *pSold );
-BOOLEAN IsActionInterruptable( SOLDIERTYPE *pSoldier );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier);
-UINT16 GetNewSoldierStateFromNewStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );
 void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
 BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier );
@@ -1072,22 +1065,14 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKitPts, INT16 sStatus );
 void ReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier );
 void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier );
-void InternalReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim );
 void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim );
 
 
-
 // WRAPPERS FOR SOLDIER EVENTS
-void SendSoldierPositionEvent( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
-void SendSoldierDestinationEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDestination );
 void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
-void SendSoldierSetDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usNewDirection );
 void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
 void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
-
-void HandleAnimationProfile( SOLDIERTYPE *pSoldier, UINT16	usAnimState, BOOLEAN fRemove );
-BOOLEAN GetProfileFlagsFromGridno( SOLDIERTYPE *pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16 *usFlags );
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
 void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );
@@ -1104,7 +1089,6 @@ void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier );
 
 void	DoNinjaAttack( SOLDIERTYPE *pSoldier );
 
-BOOLEAN SoldierCarriesTwoHandedWeapon( SOLDIERTYPE *pSoldier );
 BOOLEAN InternalSoldierReadyWeapon( SOLDIERTYPE *pSoldier, UINT8 sFacingDir, BOOLEAN fEndReady );
 
 void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier );
@@ -1117,9 +1101,6 @@ void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDir
 
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
 
-//reset soldier timers
-void ResetSoldierChangeStatTimer( SOLDIERTYPE *pSoldier );
-
 void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginUseDetonator( SOLDIERTYPE *pSoldier );
 void EVENT_SoldierBeginDropBomb( SOLDIERTYPE *pSoldier );
@@ -1131,10 +1112,6 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
 BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate );
 
 void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceDelete );
-
-void InternalRemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier, BOOLEAN fForce );
-
-void EVENT_SetSoldierPositionAndMaybeFinalDest( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest );
 
 void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
 

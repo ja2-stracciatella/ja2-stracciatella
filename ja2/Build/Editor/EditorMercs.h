@@ -97,13 +97,7 @@ void SetMercRelativeAttributes( INT8 bLevel );
 
 void DeleteSelectedMerc();
 
-void CreateEditMercWindow( void );
-void DisplayEditMercWindow( void );
-INT32 IsMercHere( INT32 iMapIndex );
-
 void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode );
-
-void SetMercEditability( BOOLEAN fEditable );
 
 void HandleMercInventoryPanel( INT16 sX, INT16 sY, INT8 bEvent );
 

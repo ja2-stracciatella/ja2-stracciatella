@@ -60,17 +60,9 @@ typedef struct
 // Call this function, to set whether the map changes will be added to the  map temp file
 void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap );
 
-BOOLEAN SaveModifiedMapStructToMapTempFile( MODIFY_MAP *pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
-
-
-
 
 //Applies a change TO THE MAP TEMP file
 void AddStructToMapTempFile( UINT32 iMapIndex, UINT16 usIndex );
-
-
-//Applies a change TO THE MAP from the temp file
-void AddStructFromMapTempFileToMap( UINT32 iMapIndex, UINT16 usIndex );
 
 
 void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
@@ -91,9 +83,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile();
 
 
-void AddRemoveObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void AddObjectToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
 
 //Adds the exit grid to
@@ -104,12 +94,8 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
 
 
-void SetOpenableStructStatusFromMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened );
-void AddOpenableStructStatusToMapTempFile( UINT32 uiMapIndex, BOOLEAN fOpened );
-
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex );
 
 BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen );
-
 
 #endif

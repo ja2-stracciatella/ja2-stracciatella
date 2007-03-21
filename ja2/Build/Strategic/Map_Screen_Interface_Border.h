@@ -80,7 +80,6 @@ void ToggleItemsFilter( void );
 
 void TurnOnShowTeamsMode( void );
 void TurnOnAirSpaceMode( void );
-void TurnOnItemFilterMode( void );
 
 /*
 // enable disable map border
@@ -94,7 +93,6 @@ BOOLEAN CreateButtonsForMapBorder( void );
 
 // render the pop up for eta  in path plotting in map screen
 void RenderMapBorderEtaPopUp( void );
-BOOLEAN DoesPlayerHaveAnyMilitia( void );
 
 //void UpdateLevelButtonStates( void );
 
@@ -103,10 +101,5 @@ void CreateMouseRegionsForLevelMarkers( void );
 void DeleteMouseRegionsForLevelMarkers( void );
 
 void InitMapScreenFlags( void );
-
-void MapBorderButtonOff( UINT8 ubBorderButtonIndex );
-void MapBorderButtonOn( UINT8 ubBorderButtonIndex );
-
-
 
 #endif

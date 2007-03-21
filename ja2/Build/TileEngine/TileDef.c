@@ -213,6 +213,10 @@ void CreateTileDatabase( )
 
 }
 
+
+static void FreeAnimTileData(TILE_ELEMENT* pTileElem);
+
+
 void DeallocateTileDatabase( )
 {
 	INT32 cnt;
@@ -293,7 +297,7 @@ BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN
 }
 
 
-BOOLEAN SetLandIndexWithRadius( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace )
+static BOOLEAN SetLandIndexWithRadius(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
 {
 	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
@@ -384,7 +388,7 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 }
 
 
-UINT8		GetLandLevelDepth( UINT32 iMapIndex )
+static UINT8 GetLandLevelDepth(UINT32 iMapIndex)
 {
 	UINT8					level = 0;
 	LEVELNODE		*pLand;
@@ -449,8 +453,7 @@ BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UIN
 }
 
 
-
-BOOLEAN MoveLandIndexToTop( UINT32 iMapIndex, UINT16 usIndex )
+static BOOLEAN MoveLandIndexToTop(UINT32 iMapIndex, UINT16 usIndex)
 {
 
 	// Remove, then add again
@@ -500,8 +503,7 @@ BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
 }
 
 
-
-BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
+static BOOLEAN LandTypeHeigher(UINT32 uiDestType, UINT32 uiSrcType)
 {
   UINT8					ubDestLogHeight;
   UINT8					ubSrcLogHeight;
@@ -511,7 +513,6 @@ BOOLEAN LandTypeHeigher( UINT32 uiDestType, UINT32 uiSrcType  )
 	GetTileTypeLogicalHeight( uiSrcType, &ubSrcLogHeight );
 
 	return( ubDestLogHeight > ubSrcLogHeight );
-
 }
 
 
@@ -560,10 +561,10 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 	// Could not find it, return FALSE
 	return( fFound );
-
 }
 
-BOOLEAN AnyLowerLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
+
+static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLevel)
 {
 	LEVELNODE		*pLand		 = NULL;
   UINT8					ubSrcLogHeight;
@@ -628,7 +629,8 @@ BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
 	return( TRUE );
 }
 
-BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8 *pubLevel )
+
+static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8* pubLevel)
 {
 	LEVELNODE	*pStruct = NULL;
 	UINT8					level = 0;
@@ -658,14 +660,14 @@ BOOLEAN ContainsWallOrientation( INT32 iMapIndex, UINT32 uiType, UINT16 usWallOr
 
 	// Could not find it, return FALSE
 	return( FALSE );
-
 }
+
 
 //Kris:  This function returns two special types if there are two walls
 //sharing the same tile.  This case only happens with the exterior and
 //interior bottom corners.  Otherwise, it returns the orientation of the
 //first wall encountered -- not that there should be duplicate walls...
-UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex )
+static UINT8 CalculateWallOrientationsAtGridNo(INT32 iMapIndex)
 {
 	UINT16 usCheckWallOrientation=0;
 	LEVELNODE *pStruct = NULL;
@@ -723,7 +725,8 @@ BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 	return( TRUE );
 }
 
-void FreeAnimTileData( TILE_ELEMENT *pTileElem )
+
+static void FreeAnimTileData(TILE_ELEMENT* pTileElem)
 {
 	if ( pTileElem->pAnimData != NULL )
 	{

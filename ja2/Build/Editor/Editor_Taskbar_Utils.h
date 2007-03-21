@@ -33,7 +33,6 @@ void ShowEditorButton( INT32 iEditorButtonID );
 void DisableEditorButton( INT32 iEditorButtonID );
 void EnableEditorButton( INT32 iEditorButtonID );
 
-void ClickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID );
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID );
 void HideEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID );
 void ShowEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID );

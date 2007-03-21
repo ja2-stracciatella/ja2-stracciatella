@@ -49,8 +49,6 @@
 void ForecastDayEvents( );
 
 void EnvironmentController( BOOLEAN fCheckForLights );
-void EnvEnableTOD(void);
-void EnvDisableTOD(void);
 
 void BuildDayAmbientSounds( );
 void BuildDayLightLevels();

@@ -34,10 +34,6 @@ static UINT32	 guiLooseCursorID		 = 0;
 static UINT32	 guiLooseCursorTimeOfLastUpdate = 0;
 
 
-void HandleLooseCursorDraw( );
-void HandleLooseCursorHide( );
-
-
 UICursor	gUICursors[ NUM_UI_CURSORS ] =
 {
 	NO_UICURSOR,												0,																								0,													0,
@@ -218,9 +214,6 @@ UINT16				gusCurMousePos;
 UINT16				gusTargetDropPos;
 BOOLEAN				gfTargetDropPos = FALSE;
 
-void EraseSnappingCursor( );
-void DrawSnappingCursor( );
-
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor )
 {
@@ -229,6 +222,11 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 
 	return( TRUE );
 }
+
+
+static void DrawSnappingCursor(void);
+static void HandleLooseCursorDraw(void);
+
 
 BOOLEAN DrawUICursor( )
 {
@@ -438,6 +436,11 @@ BOOLEAN DrawUICursor( )
 	return( TRUE );
 }
 
+
+static void EraseSnappingCursor(void);
+static void HandleLooseCursorHide(void);
+
+
 BOOLEAN HideUICursor( )
 {
 	HandleLooseCursorHide( );
@@ -499,7 +502,7 @@ BOOLEAN HideUICursor( )
 }
 
 
-void DrawSnappingCursor( )
+static void DrawSnappingCursor(void)
 {
 	LEVELNODE					*pNewUIElem;
 	SOLDIERTYPE								 *pSoldier;
@@ -670,24 +673,20 @@ void DrawSnappingCursor( )
 			gfUIDisplayActionPointsBlack = TRUE;
 		}
 	}
-
-
 }
 
-void EraseSnappingCursor( )
+
+static void EraseSnappingCursor(void)
 {
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, MOCKFLOOR, MOCKFLOOR );
 	RemoveAllTopmostsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllObjectsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllOnRoofsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllOnRoofsOfTypeRange( gusCurMousePos, MOCKFLOOR, MOCKFLOOR );
-
-
 }
 
 
-
-void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
+static void StartLooseCursor(INT16 sGridNo, UINT32 uiCursorID)
 {
 	gfLooseCursorOn		= TRUE;
 
@@ -699,7 +698,7 @@ void StartLooseCursor( INT16 sGridNo, UINT32 uiCursorID )
 }
 
 
-void HandleLooseCursorDraw( )
+static void HandleLooseCursorDraw(void)
 {
 	LEVELNODE					*pNewUIElem;
 
@@ -717,7 +716,7 @@ void HandleLooseCursorDraw( )
 }
 
 
-void HandleLooseCursorHide( )
+static void HandleLooseCursorHide(void)
 {
 	if ( gfLooseCursorOn )
 	{

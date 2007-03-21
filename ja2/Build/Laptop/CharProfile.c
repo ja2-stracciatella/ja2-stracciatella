@@ -92,14 +92,6 @@ extern int iCurrentVoices;
 extern	INT32 giMaxPersonalityQuizQuestion;
 extern	BOOLEAN fStartOverFlag;
 
-void ExitOldIMPMode( void );
-void EnterNewIMPMode( void );
-void LoadImpGraphics( void );
-void RemoveImpGraphics( void );
-void CreateIMPButtons( void );
-void DestroyIMPButtons( void );
-static void BtnIMPCancelCallback(GUI_BUTTON *btn, INT32 reason);
-BOOLEAN HasTheCurrentIMPPageBeenVisited( void );
 extern void SetAttributes( void );
 
 
@@ -111,6 +103,10 @@ void GameInitCharProfile()
 	iPortraitNumber = 0;
 }
 
+
+static void LoadImpGraphics(void);
+
+
 void EnterCharProfile()
 {
 	// reset previous page
@@ -120,6 +116,11 @@ void EnterCharProfile()
 	LoadImpGraphics( );
 }
 
+
+static void ExitOldIMPMode(void);
+static void RemoveImpGraphics(void);
+
+
 void ExitCharProfile()
 {
   // get rid of graphics
@@ -128,6 +129,11 @@ void ExitCharProfile()
 	// clean up past mode
 	ExitOldIMPMode( );
 }
+
+
+static void EnterNewIMPMode(void);
+static BOOLEAN HasTheCurrentIMPPageBeenVisited(void);
+
 
 void HandleCharProfile()
 {
@@ -319,7 +325,10 @@ void RenderCharProfile()
 }
 
 
-void ExitOldIMPMode( void )
+static void DestroyIMPButtons(void);
+
+
+static void ExitOldIMPMode(void)
 {
   // exit old mode
 
@@ -388,8 +397,10 @@ void ExitOldIMPMode( void )
 }
 
 
+static void CreateIMPButtons(void);
 
-void EnterNewIMPMode( void )
+
+static void EnterNewIMPMode(void)
 {
   // enter new mode
 
@@ -485,8 +496,7 @@ void ResetCharacterStats( void )
 }
 
 
-
-void LoadImpGraphics( void )
+static void LoadImpGraphics(void)
 {
 	// load all graphics needed for IMP
 
@@ -533,7 +543,8 @@ void LoadImpGraphics( void )
 	LoadAboutUsIndentFrame( );
 }
 
-void RemoveImpGraphics( void )
+
+static void RemoveImpGraphics(void)
 {
 	// remove all graphics needed for IMP
 
@@ -580,7 +591,11 @@ void RemoveImpGraphics( void )
 	DeleteAboutUsIndentFrame( );
 }
 
-void CreateIMPButtons( void )
+
+static void BtnIMPCancelCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateIMPButtons(void)
 {
   // create all the buttons global to the IMP system
 
@@ -601,7 +616,8 @@ void CreateIMPButtons( void )
 	SetButtonCursor(giIMPButton[ 0 ], CURSOR_WWW);
 }
 
-void DestroyIMPButtons( void )
+
+static void DestroyIMPButtons(void)
 {
   // destroy the buttons we created
 	RemoveButton(giIMPButton[0] );
@@ -666,7 +682,8 @@ void InitIMPSubPageList( void )
 	}
 }
 
-BOOLEAN HasTheCurrentIMPPageBeenVisited( void )
+
+static BOOLEAN HasTheCurrentIMPPageBeenVisited(void)
 {
 	// returns if we have vsisted the current IMP PageAlready
 

@@ -38,12 +38,10 @@ UINT32				guiNumWorldItems = 0;
 WORLDBOMB *		gWorldBombs = NULL;
 UINT32				guiNumWorldBombs = 0;
 
-void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void );
-void DeleteWorldItemsBelongingToQueenIfThere( void );
-
 extern UINT16 StandardGunListAmmoReplacement( UINT16 usAmmo );
 
-INT32 GetFreeWorldBombIndex( void )
+
+static INT32 GetFreeWorldBombIndex(void)
 {
 	UINT32 uiCount;
 	WORLDBOMB *newWorldBombs;
@@ -74,7 +72,7 @@ INT32 GetFreeWorldBombIndex( void )
 }
 
 
-UINT32 GetNumUsedWorldBombs( void )
+static UINT32 GetNumUsedWorldBombs(void)
 {
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
@@ -96,8 +94,7 @@ UINT32 GetNumUsedWorldBombs( void )
 }
 
 
-
-INT32 AddBombToWorld( INT32 iItemIndex )
+static INT32 AddBombToWorld(INT32 iItemIndex)
 {
 	UINT32	iBombIndex;
 
@@ -110,13 +107,15 @@ INT32 AddBombToWorld( INT32 iItemIndex )
 	return ( iBombIndex );
 }
 
-void RemoveBombFromWorld( INT32 iBombIndex )
+
+static void RemoveBombFromWorld(INT32 iBombIndex)
 {
 	//Remove the world bomb from the table.
 	gWorldBombs[ iBombIndex ].fExists										= FALSE;
 }
 
-void RemoveBombFromWorldByItemIndex( INT32 iItemIndex )
+
+static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 {
 	// Find the world bomb which corresponds with a particular world item, then
 	// remove the world bomb from the table.
@@ -226,7 +225,8 @@ void FindPanicBombsAndTriggers( void )
 	}
 }
 
-INT32 GetFreeWorldItemIndex( void )
+
+static INT32 GetFreeWorldItemIndex(void)
 {
 	UINT32 uiCount;
 	WORLDITEM *newWorldItems;
@@ -257,7 +257,7 @@ INT32 GetFreeWorldItemIndex( void )
 }
 
 
-UINT32 GetNumUsedWorldItems( void )
+static UINT32 GetNumUsedWorldItems(void)
 {
 	UINT32 uiCount, uiNumItems;
 	uiNumItems = 0;
@@ -375,6 +375,10 @@ void SaveWorldItemsToMap( HWFILE fp )
 			FileWrite(fp, &gWorldItems[i], sizeof(WORLDITEM));
 	}
 }
+
+
+static void DeleteWorldItemsBelongingToQueenIfThere(void);
+static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void);
 
 
 void LoadWorldItemsFromMap( INT8 **hBuffer )
@@ -498,7 +502,8 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 	}
 }
 
-void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
+
+static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 {
 	UINT32	uiLoop;
 	UINT32	uiLoop2;
@@ -540,7 +545,8 @@ void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere( void )
 	// else the terrorists haven't been placed yet!
 }
 
-void DeleteWorldItemsBelongingToQueenIfThere( void )
+
+static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
 	UINT32	uiLoop;
 	UINT32	uiLoop2;

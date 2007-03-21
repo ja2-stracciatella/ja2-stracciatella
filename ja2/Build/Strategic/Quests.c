@@ -66,7 +66,8 @@ void SetFactFalse( UINT16 usFact )
 	gubFact[usFact] = FALSE;
 }
 
-BOOLEAN CheckForNewShipment( void )
+
+static BOOLEAN CheckForNewShipment(void)
 {
 	ITEM_POOL *			pItemPool;
 
@@ -80,7 +81,8 @@ BOOLEAN CheckForNewShipment( void )
 	return( FALSE );
 }
 
-BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
+
+static BOOLEAN CheckNPCWounded(UINT8 ubProfileID, BOOLEAN fByPlayerOnly)
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -111,7 +113,8 @@ BOOLEAN CheckNPCWounded( UINT8 ubProfileID, BOOLEAN fByPlayerOnly )
 	}
 }
 
-BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCInOkayHealth(UINT8 ubProfileID)
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -127,7 +130,8 @@ BOOLEAN CheckNPCInOkayHealth( UINT8 ubProfileID )
 	}
 }
 
-BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCBleeding(UINT8 ubProfileID)
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -144,7 +148,8 @@ BOOLEAN CheckNPCBleeding( UINT8 ubProfileID )
 
 }
 
-BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance )
+
+static BOOLEAN CheckNPCWithin(UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance)
 {
 	SOLDIERTYPE * pFirstNPC, * pSecondNPC;
 
@@ -157,7 +162,8 @@ BOOLEAN CheckNPCWithin( UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance
 	return( PythSpacesAway( pFirstNPC->sGridNo, pSecondNPC->sGridNo ) <= ubMaxDistance );
 }
 
-BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
+
+static BOOLEAN CheckGuyVisible(UINT8 ubNPC, UINT8 ubGuy)
 {
 	// NB ONLY WORKS IF ON DIFFERENT TEAMS
 	SOLDIERTYPE * pNPC, * pGuy;
@@ -178,7 +184,8 @@ BOOLEAN CheckGuyVisible( UINT8 ubNPC, UINT8 ubGuy )
 	}
 }
 
-BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
+
+static BOOLEAN CheckNPCAt(UINT8 ubNPC, INT16 sGridNo)
 {
 	SOLDIERTYPE * pNPC;
 
@@ -190,7 +197,8 @@ BOOLEAN CheckNPCAt( UINT8 ubNPC, INT16 sGridNo )
 	return( pNPC->sGridNo == sGridNo );
 }
 
-BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 {
 	SOLDIERTYPE * pNPC;
 
@@ -217,7 +225,8 @@ BOOLEAN CheckNPCIsEnemy( UINT8 ubProfileID )
 	}
 }
 
-BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
+
+static BOOLEAN CheckIfMercIsNearNPC(SOLDIERTYPE* pMerc, UINT8 ubProfileId)
 {
 	SOLDIERTYPE *		pNPC;
 	INT16						sGridNo;
@@ -245,7 +254,7 @@ BOOLEAN CheckIfMercIsNearNPC( SOLDIERTYPE *pMerc, UINT8 ubProfileId )
 }
 
 
-INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
+static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -276,7 +285,8 @@ INT8 NumWoundedMercsNearby( UINT8 ubProfileID )
 	return( bNumber );
 }
 
-INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
+
+static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -307,7 +317,8 @@ INT8 NumMercsNear( UINT8 ubProfileID, UINT8 ubMaxDist )
 	return( bNumber );
 }
 
-BOOLEAN CheckNPCIsEPC( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCIsEPC(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -336,7 +347,8 @@ BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
 	return( TRUE );
 }
 
-BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
+
+static BOOLEAN NPCInRoomRange(UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -348,7 +360,8 @@ BOOLEAN NPCInRoomRange( UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2 )
 	return( TRUE );
 }
 
-BOOLEAN PCInSameRoom( UINT8 ubProfileID )
+
+static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 	UINT8						ubRoom;
@@ -378,7 +391,7 @@ BOOLEAN PCInSameRoom( UINT8 ubProfileID )
 }
 
 
-BOOLEAN CheckTalkerStrong( void )
+static BOOLEAN CheckTalkerStrong(void)
 {
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum)
 	{
@@ -391,7 +404,8 @@ BOOLEAN CheckTalkerStrong( void )
 	return( FALSE );
 }
 
-BOOLEAN CheckTalkerFemale( void )
+
+static BOOLEAN CheckTalkerFemale(void)
 {
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
@@ -404,7 +418,8 @@ BOOLEAN CheckTalkerFemale( void )
 	return( FALSE );
 }
 
-BOOLEAN CheckTalkerUnpropositionedFemale( void )
+
+static BOOLEAN CheckTalkerUnpropositionedFemale(void)
 {
 	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
@@ -423,7 +438,8 @@ BOOLEAN CheckTalkerUnpropositionedFemale( void )
 	return( FALSE );
 }
 
-INT8 NumMalesPresent( UINT8 ubProfileID )
+
+static INT8 NumMalesPresent(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
@@ -458,7 +474,7 @@ INT8 NumMalesPresent( UINT8 ubProfileID )
 }
 
 
-BOOLEAN FemalePresent( UINT8 ubProfileID )
+static BOOLEAN FemalePresent(UINT8 ubProfileID)
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pNPC;
@@ -492,7 +508,7 @@ BOOLEAN FemalePresent( UINT8 ubProfileID )
 }
 
 
-BOOLEAN CheckPlayerHasHead( void )
+static BOOLEAN CheckPlayerHasHead(void)
 {
 	INT8						bLoop;
 	SOLDIERTYPE *		pSoldier;
@@ -514,7 +530,8 @@ BOOLEAN CheckPlayerHasHead( void )
 
 }
 
-BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+
+static BOOLEAN CheckNPCSector(UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	SOLDIERTYPE * pSoldier;
 
@@ -540,7 +557,8 @@ BOOLEAN CheckNPCSector( UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 
 
 }
 
-BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
+
+static BOOLEAN AIMMercWithin(INT16 sGridNo, INT16 sDistance)
 {
 	UINT32					uiLoop;
 	SOLDIERTYPE *		pSoldier;
@@ -561,7 +579,8 @@ BOOLEAN AIMMercWithin( INT16 sGridNo, INT16 sDistance )
 	return( FALSE );
 }
 
-BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCCowering(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -573,7 +592,8 @@ BOOLEAN CheckNPCCowering( UINT8 ubProfileID )
 	return( ( (pNPC->uiStatusFlags & SOLDIER_COWERING) != 0) );
 }
 
-UINT8 CountBartenders( void )
+
+static UINT8 CountBartenders(void)
 {
 	UINT8		ubLoop;
 	UINT8		ubBartenders = 0;
@@ -588,7 +608,8 @@ UINT8 CountBartenders( void )
 	return( ubBartenders );
 }
 
-BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
+
+static BOOLEAN CheckNPCIsUnderFire(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -600,7 +621,8 @@ BOOLEAN CheckNPCIsUnderFire( UINT8 ubProfileID )
 	return( pNPC->bUnderFire != 0 );
 }
 
-BOOLEAN NPCHeardShot( UINT8 ubProfileID )
+
+static BOOLEAN NPCHeardShot(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 
@@ -612,7 +634,8 @@ BOOLEAN NPCHeardShot( UINT8 ubProfileID )
 	return( pNPC->ubMiscSoldierFlags & SOLDIER_MISC_HEARD_GUNSHOT );
 }
 
-BOOLEAN InTownSectorWithTrainingLoyalty( INT16 sSectorX, INT16 sSectorY )
+
+static BOOLEAN InTownSectorWithTrainingLoyalty(INT16 sSectorX, INT16 sSectorY)
 {
 	UINT8	ubTown;
 

@@ -97,27 +97,6 @@ UINT16 gusRetreatButtonLeft, gusRetreatButtonTop, gusRetreatButtonRight, gusRetr
 
 GROUP *gpBattleGroup = NULL;
 
-void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason );
-void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason );
-void RetreatMercsCallback( GUI_BUTTON *btn, INT32 reason );
-
-void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, wchar_t *szCondition, size_t Length, UINT8 *pubHPPercent, UINT8 *pubBPPercent );
-
-void CheckForRobotAndIfItsControlled( void );
-
-void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles );
-void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles );
-
-/*
-void InvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason );
-void InvolvedClickCallback( MOUSE_REGION *reg, INT32 reason );
-void UninvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason );
-void UninvolvedClickCallback( MOUSE_REGION *reg, INT32 reason );
-
-SOLDIERTYPE* InvolvedSoldier( INT32 index );
-SOLDIERTYPE* UninvolvedSoldier( INT32 index );
-*/
-
 
 MOUSE_REGION PBInterfaceBlanket;
 BOOLEAN gfPreBattleInterfaceActive = FALSE;
@@ -127,8 +106,6 @@ UINT32 uiInterfaceImages;
 BOOLEAN gfRenderPBInterface;
 BOOLEAN	gfPBButtonsHidden;
 BOOLEAN fDisableMapInterfaceDueToBattle = FALSE;
-
-void DoTransitionFromMapscreenToPreBattleInterface();
 
 BOOLEAN gfBlinkHeader;
 
@@ -179,8 +156,9 @@ extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
 
 #ifdef JA2BETAVERSION
+
 //The group is passed so we can extract the sector location
-void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
+static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 {
 	SECTORINFO *pSector;
 	GROUP *pGroup;
@@ -233,6 +211,14 @@ void ValidateAndCorrectInBattleCounters( GROUP *pLocGroup )
 	}
 }
 #endif
+
+
+static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason);
+static void CheckForRobotAndIfItsControlled(void);
+static void DoTransitionFromMapscreenToPreBattleInterface(void);
+static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason);
+static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason);
+
 
 void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 {
@@ -721,7 +707,8 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	DoTransitionFromMapscreenToPreBattleInterface();
 }
 
-void DoTransitionFromMapscreenToPreBattleInterface()
+
+static void DoTransitionFromMapscreenToPreBattleInterface(void)
 {
 	SGPRect DstRect, PBIRect;
 	UINT32 uiStartTime, uiCurrTime;
@@ -878,7 +865,7 @@ void KillPreBattleInterface()
 }
 
 
-void RenderPBHeader( INT32 *piX, INT32 *piWidth)
+static void RenderPBHeader(INT32* piX, INT32* piWidth)
 {
 	wchar_t str[100];
 	INT32 x, width;
@@ -937,6 +924,10 @@ void RenderPBHeader( INT32 *piX, INT32 *piWidth)
 	*piX = x;
 	*piWidth = width;
 }
+
+
+static void GetSoldierConditionInfo(SOLDIERTYPE* pSoldier, wchar_t* szCondition, size_t Length, UINT8* pubHPPercent, UINT8* pubBPPercent);
+
 
 void RenderPreBattleInterface()
 {
@@ -1232,7 +1223,8 @@ void RenderPreBattleInterface()
 
 }
 
-void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
@@ -1268,7 +1260,12 @@ void AutoResolveBattleCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void ClearMovementForAllInvolvedPlayerGroups(void);
+static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles);
+
+
+static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
@@ -1340,7 +1337,8 @@ void GoToSectorCallback( GUI_BUTTON *btn, INT32 reason )
 	}
 }
 
-void RetreatMercsCallback( GUI_BUTTON *btn, INT32 reason )
+
+static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( !gfIgnoreAllInput )
 	{
@@ -1390,7 +1388,8 @@ enum
 	COND_DEAD
 };
 
-void GetSoldierConditionInfo( SOLDIERTYPE *pSoldier, wchar_t *szCondition, size_t Length, UINT8 *pubHPPercent, UINT8 *pubBPPercent )
+
+static void GetSoldierConditionInfo(SOLDIERTYPE* pSoldier, wchar_t* szCondition, size_t Length, UINT8* pubHPPercent, UINT8* pubBPPercent)
 {
 	Assert( pSoldier );
 	*pubHPPercent = (UINT8)(pSoldier->bLife * 100 / pSoldier->bLifeMax);
@@ -1594,7 +1593,8 @@ void ActivatePreBattleRetreatAction()
 	}
 }
 
-void ActivateAutomaticAutoResolveStart()
+
+static void ActivateAutomaticAutoResolveStart()
 {
 	ButtonList[ iPBButton[0] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfIgnoreAllInput = FALSE;
@@ -1657,14 +1657,17 @@ void CalculateNonPersistantPBIInfo()
 	}
 }
 
-void ClearNonPersistantPBIInfo()
+
+static void ClearNonPersistantPBIInfo(void)
 {
 	gfBlitBattleSectorLocator = FALSE;
 }
 
 
+static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVehicles);
 
-void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles )
+
+static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 {
 	GROUP *pGroup, *pNextGroup;
 
@@ -1699,7 +1702,7 @@ void PutNonSquadMercsInBattleSectorOnSquads( BOOLEAN fExitVehicles )
 }
 
 
-void PutNonSquadMercsInPlayerGroupOnSquads( GROUP *pGroup, BOOLEAN fExitVehicles )
+static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVehicles)
 {
 	PLAYERGROUP *pPlayer, *pNextPlayer;
 	SOLDIERTYPE *pSoldier;
@@ -1797,7 +1800,7 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 
 
 // we are entering the sector, clear out all mvt orders for grunts
-void ClearMovementForAllInvolvedPlayerGroups( void )
+static void ClearMovementForAllInvolvedPlayerGroups(void)
 {
 	GROUP *pGroup;
 
@@ -1837,6 +1840,9 @@ void RetreatAllInvolvedPlayerGroups( void )
 		pGroup = pGroup->next;
 	}
 }
+
+
+static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ);
 
 
 BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier )
@@ -1888,7 +1894,7 @@ BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup )
 }
 
 
-BOOLEAN CurrentBattleSectorIs( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
 {
 	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
 	BOOLEAN fSuccess;
@@ -1909,8 +1915,7 @@ BOOLEAN CurrentBattleSectorIs( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 }
 
 
-
-void CheckForRobotAndIfItsControlled( void )
+static void CheckForRobotAndIfItsControlled(void)
 {
 	INT32 i;
 

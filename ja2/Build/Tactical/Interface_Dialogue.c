@@ -80,7 +80,6 @@ static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
 
 extern	UINT8		gubWaitingForAllMercsToExitCode;
-void	DoneFadeOutActionSex( void );
 
 
 #define		TALK_PANEL_FACE_X				6
@@ -232,6 +231,9 @@ void HandlePendingInitConv( )
 }
 
 
+static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
+
+
 static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData)
 {
 	// OK, init talking menu
@@ -311,7 +313,8 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 }
 
 
-BOOLEAN InitTalkingMenu( UINT8 ubCharacterNum, INT16 sGridNo )
+// This fuction will allocate and setup an NPCDiaogue structure. Loads the face for the character..
+static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo)
 {
 	INT16							sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16							sX, sY;
@@ -4756,7 +4759,8 @@ static void DoneFadeOutActionBasement(void)
 
 }
 
-void	DoneFadeOutActionSex( )
+
+static void DoneFadeOutActionSex(void)
 {
 	SetPendingNewScreen( SEX_SCREEN );
 }

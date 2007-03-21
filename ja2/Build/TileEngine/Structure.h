@@ -47,7 +47,6 @@ STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags );
 STRUCTURE * FindNextStructure( STRUCTURE * pStructure, UINT32 fFlags );
 STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID );
 STRUCTURE * FindBaseStructure( STRUCTURE * pStructure );
-STRUCTURE * FindNonBaseStructure( INT16 sGridNo, STRUCTURE * pStructure );
 
 //
 // functions related to interactive tiles
@@ -66,13 +65,10 @@ INT8 GetStructureTargetHeight( INT16 sGridNo, BOOLEAN fOnRoof );
 BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pubLevel1, UINT8 * pubLevel2, UINT8 * pubLevel3 );
 
 BOOLEAN FindAndSwapStructure( INT16 sGridNo );
-INT16 GetBaseTile( STRUCTURE * pStructure );
 //
 // functions to work with the editor undo code
 //
 struct MAP_ELEMENT;
-
-void DeleteStructureFromTile( struct MAP_ELEMENT* pMapElement, STRUCTURE * pStructure );
 
 void DebugStructurePage1( void );
 
@@ -121,7 +117,6 @@ enum
 extern INT32 guiMaterialHitSound[ NUM_MATERIAL_TYPES ];
 
 STRUCTURE		*FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel );
-UINT32			StructureTypeToFlag( UINT8 ubType );
 UINT8				StructureFlagToType( UINT32 uiFlag );
 
 UINT32 GetStructureOpenSound( STRUCTURE *pStructure, BOOLEAN fClose );

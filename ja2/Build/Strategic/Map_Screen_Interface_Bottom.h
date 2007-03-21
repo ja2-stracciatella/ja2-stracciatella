@@ -30,8 +30,6 @@ extern BOOLEAN gfStartMapScreenToLaptopTransition;
 
 BOOLEAN LoadMapScreenInterfaceBottom( void );
 void DeleteMapScreenInterfaceBottom( void );
-void DestroyButtonsForMapScreenInterfaceBottom( void );
-BOOLEAN CreateButtonsForMapScreenInterfaceBottom( void );
 void RenderMapScreenInterfaceBottom( void );
 
 // delete map bottom graphics

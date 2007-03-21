@@ -14,7 +14,6 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bE
 
 extern INT8 FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
 extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
-extern INT8 FindObjClassAfterSlot( SOLDIERTYPE * pSoldier, INT8 bStart, UINT32 usItemClass );
 extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
 extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
@@ -29,7 +28,6 @@ extern void DeleteObj(OBJECTTYPE * pObj );
 extern void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
 
-extern void SwapWithinObj( OBJECTTYPE * pObj, UINT8 ubIndex1, UINT8 ubIndex2 );
 extern void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex );
 //Returns true if swapped, false if added to end of stack
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
@@ -76,8 +74,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem );
 BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 
-void RemoveInvObject( SOLDIERTYPE *pSoldier, UINT16 usItem );
-
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
 
 // create a keyobject
@@ -109,15 +105,8 @@ BOOLEAN ItemHasAttachments( OBJECTTYPE *pItem );
 //it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
 BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment );
 
-// Determines if it is possible to merge an item with any item whose class
-// is the same as the indicated item
-BOOLEAN ValidAttachmentClass( UINT16 usAttachment, UINT16 usItem );
-
 //Determines if it is possible to equip this weapon with this ammo.
 BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
-
-//Determines if this item is a two handed item.
-BOOLEAN TwoHandedItem( UINT16 usItem );
 
 //Existing functions without header def's, added them here, just incase I'll need to call
 //them from the editor.
@@ -127,7 +116,6 @@ BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem );
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable );
 
 BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem );
-BOOLEAN EvaluateValidMerge( UINT16 usMerge, UINT16 usItem, UINT16 * pusResult, UINT8 * pubType );
 
 
 // is the item passed a medical/ first aid kit? and what type?
@@ -136,7 +124,6 @@ INT8 IsMedicalKitItem( OBJECTTYPE *pObject );
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier );
 INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );
 
-void SwapOutHandItem( SOLDIERTYPE * pSoldier );
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 
 INT8 FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
@@ -148,15 +135,9 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 
 BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 
-UINT32 ConvertProfileMoneyValueToObjectTypeMoneyValue( UINT8 ubStatus );
-UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue( UINT32 uiMoneyAmount );
-
-BOOLEAN CheckForChainReaction( UINT16 usItem, INT8 bStatus, INT8 bDamage, BOOLEAN fOnGround );
-
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
 BOOLEAN ExtendedGunListGun( UINT16 usGun );
 UINT16 StandardGunListReplacement( UINT16 usGun );
-UINT16 FindReplacementMagazine( UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType );
 UINT16 FindReplacementMagazineIfNecessary( UINT16 usOldGun, UINT16 usOldAmmo, UINT16 usNewGun );
 
 BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, UINT8 ubOwner );

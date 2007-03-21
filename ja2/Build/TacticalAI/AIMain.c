@@ -52,9 +52,6 @@ extern void UpdateEnemyUIBar( void );
 extern void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier );
 extern void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
 
-void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier);
-void HandleAITacticalTraversal( SOLDIERTYPE * pSoldier );
-
 extern UINT8 gubElementsOnExplosionQueue;
 
 extern BOOLEAN gfWaitingForTriggerTimer;
@@ -149,6 +146,11 @@ BOOLEAN AimingGun(SOLDIERTYPE *pSoldier)
 {
 	return(FALSE);
 }
+
+
+static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier);
+static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier);
+
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 {
@@ -862,8 +864,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 }
 
 
-
-BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT16 sGridno)
+static BOOLEAN DestNotSpokenFor(SOLDIERTYPE* pSoldier, INT16 sGridno)
 {
 	INT32 cnt;
 	SOLDIERTYPE *pOurTeam;
@@ -884,7 +885,7 @@ BOOLEAN DestNotSpokenFor(SOLDIERTYPE *pSoldier, INT16 sGridno)
 }
 
 
-INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno)
+static INT16 FindAdjacentSpotBeside(SOLDIERTYPE* pSoldier, INT16 sGridno)
 {
 	INT32 cnt;
 	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
@@ -913,7 +914,8 @@ INT16 FindAdjacentSpotBeside(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	return(sCheapestDest);
 }
 
-UINT8 GetMostThreateningOpponent( SOLDIERTYPE *pSoldier )
+
+static UINT8 GetMostThreateningOpponent(SOLDIERTYPE* pSoldier)
 {
 	UINT32				uiLoop;
 	INT32					iThreatVal,iMinThreat = 30000;
@@ -1067,7 +1069,8 @@ void FreeUpNPCFromAttacking(UINT8 ubID)
 	*/
 }
 
-void FreeUpNPCFromLoweringGun( SOLDIERTYPE *pSoldier )
+
+static void FreeUpNPCFromLoweringGun(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier && pSoldier->bAction == AI_ACTION_LOWER_GUN )
 	{
@@ -1246,8 +1249,7 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 }
 
 
-
-void NPCDoesNothing(SOLDIERTYPE *pSoldier)
+static void NPCDoesNothing(SOLDIERTYPE* pSoldier)
 {
 	// NPC, for whatever reason, did/could not start an action, so end his turn
 	//pSoldier->moved = TRUE;
@@ -1535,12 +1537,8 @@ void MarkDetectableMines(SOLDIERTYPE *pSoldier)
 */
 
 
-
-
-void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
+static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 {
-
-
 /*
  if (Status.gamePaused)
   {
@@ -1900,6 +1898,9 @@ void TurnBasedHandleNPCAI(SOLDIERTYPE *pSoldier)
 }
 
 
+static void ManChecksOnFriends(SOLDIERTYPE* pSoldie);
+
+
 void RefreshAI(SOLDIERTYPE *pSoldier)
 {
  // produce our own private "mine map" so we can avoid the ones we can detect
@@ -1941,7 +1942,7 @@ void RefreshAI(SOLDIERTYPE *pSoldier)
 }
 
 
-void AIDecideRadioAnimation( SOLDIERTYPE *pSoldier )
+static void AIDecideRadioAnimation(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubBodyType != REGMALE && pSoldier->ubBodyType != BIGMALE )
 	{
@@ -2690,7 +2691,8 @@ void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate)
 
 }
 
-void ManChecksOnFriends(SOLDIERTYPE *pSoldier)
+
+static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 {
  UINT32 uiLoop;
  SOLDIERTYPE *pFriend;
@@ -2785,7 +2787,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 }
 
 
-void HandleAITacticalTraversal( SOLDIERTYPE * pSoldier )
+static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier)
 {
 	HandleNPCChangesForTacticalTraversal( pSoldier );
 

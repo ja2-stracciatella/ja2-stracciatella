@@ -101,22 +101,20 @@ UINT32		guiRightColumn;
 
 //Clicking on Funeral link
 MOUSE_REGION    gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
-void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 //Clicking on rip sign to make it disappear
 MOUSE_REGION    gSelectedRipSignRegion;
-void SelectRipSignRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
-
-
-void DisplayFuneralRipTombStone();
-
 
 
 void GameInitFuneral()
 {
 
 }
+
+
+static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
 
 BOOLEAN EnterFuneral()
 {
@@ -255,7 +253,7 @@ void RenderFuneral()
 }
 
 
-void DisplayFuneralRipTombStone()
+static void DisplayFuneralRipTombStone(void)
 {
 	// rip tombstone
 	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X+5, FUNERAL_CLOSED_RIP_SIGN_Y+5);
@@ -279,7 +277,7 @@ void DisplayFuneralRipTombStone()
 }
 
 
-void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -305,7 +303,8 @@ void SelectFuneralLinkRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	}
 }
 
-void SelectRipSignRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{

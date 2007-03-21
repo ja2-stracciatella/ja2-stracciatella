@@ -60,26 +60,10 @@ BOOLEAN		gfExitingAimHistory;
 BOOLEAN		AimHistorySubPagesVisitedFlag[ NUM_AIM_HISTORY_PAGES ];
 
 
-
-void ResetAimHistoryButtons();
-void DisableAimHistoryButton();
-
-
 MOUSE_REGION    gSelectedHistoryTocMenuRegion[ NUM_AIM_HISTORY_PAGES ];
-void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
-static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 static UINT32 guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT];
 static INT32 guiHistoryMenuButtonImage;
-
-
-BOOLEAN DrawAimHistoryMenuBar(void);
-BOOLEAN ExitAimHistoryMenuBar(void);
-BOOLEAN InitAimHistoryMenuBar(void);
-BOOLEAN DisplayAimHistoryParagraph(UINT8	ubPageNum, UINT8 ubNumParagraphs);
-BOOLEAN InitTocMenu();
-BOOLEAN ExitTocMenu();
-void ChangingAimHistorySubPage( UINT8 ubSubPageNumber );
 
 
 // These enums represent which paragraph they are located in the AimHist.edt file
@@ -121,6 +105,10 @@ void EnterInitAimHistory()
 }
 
 
+static void DisableAimHistoryButton(void);
+static BOOLEAN InitAimHistoryMenuBar(void);
+
+
 BOOLEAN EnterAimHistory()
 {
 	gfExitingAimHistory = FALSE;
@@ -138,6 +126,11 @@ BOOLEAN EnterAimHistory()
 
 	return(TRUE);
 }
+
+
+static BOOLEAN ExitAimHistoryMenuBar(void);
+static BOOLEAN ExitTocMenu(void);
+
 
 void ExitAimHistory()
 {
@@ -157,6 +150,11 @@ void HandleAimHistory()
 {
 
 }
+
+
+static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs);
+static BOOLEAN InitTocMenu(void);
+
 
 void RenderAimHistory()
 {
@@ -229,9 +227,10 @@ void RenderAimHistory()
 }
 
 
+static void BtnHistoryMenuButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-BOOLEAN InitAimHistoryMenuBar(void)
+static BOOLEAN InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
 
@@ -263,7 +262,7 @@ BOOLEAN InitAimHistoryMenuBar(void)
 }
 
 
-BOOLEAN ExitAimHistoryMenuBar(void)
+static BOOLEAN ExitAimHistoryMenuBar(void)
 {
 	int i;
 
@@ -278,7 +277,7 @@ BOOLEAN ExitAimHistoryMenuBar(void)
 }
 
 
-BOOLEAN DisplayAimHistoryParagraph(UINT8	ubPageNum, UINT8 ubNumParagraphs)
+static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc=0;
@@ -322,8 +321,10 @@ BOOLEAN DisplayAimHistoryParagraph(UINT8	ubPageNum, UINT8 ubNumParagraphs)
 }
 
 
+static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
-BOOLEAN InitTocMenu()
+
+static BOOLEAN InitTocMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT16			usHeight;
@@ -369,10 +370,7 @@ BOOLEAN InitTocMenu()
 }
 
 
-
-
-
-BOOLEAN ExitTocMenu()
+static BOOLEAN ExitTocMenu(void)
 {
 	UINT16 i;
 
@@ -387,8 +385,11 @@ BOOLEAN ExitTocMenu()
 }
 
 
+static void ChangingAimHistorySubPage(UINT8 ubSubPageNumber);
+static void ResetAimHistoryButtons(void);
 
-void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if(gfInToc)
 	{
@@ -461,7 +462,7 @@ static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void ResetAimHistoryButtons()
+static void ResetAimHistoryButtons(void)
 {
 	int i=0;
 
@@ -471,7 +472,8 @@ void ResetAimHistoryButtons()
 	}
 }
 
-void DisableAimHistoryButton()
+
+static void DisableAimHistoryButton(void)
 {
 	if( gfExitingAimHistory == TRUE)
 		return;
@@ -487,8 +489,7 @@ void DisableAimHistoryButton()
 }
 
 
-
-void ChangingAimHistorySubPage( UINT8 ubSubPageNumber )
+static void ChangingAimHistorySubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 

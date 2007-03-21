@@ -104,7 +104,8 @@ UINT16 SearchForRoofType( UINT32 iMapIndex )
 	return 0xffff;
 }
 
-BOOLEAN RoofAtGridNo( UINT32 iMapIndex )
+
+static BOOLEAN RoofAtGridNo(UINT32 iMapIndex)
 {
 	LEVELNODE	*pRoof;
 	UINT32 uiTileType;
@@ -131,6 +132,11 @@ BOOLEAN BuildingAtGridNo( UINT32 iMapIndex )
 		return TRUE;
 	return FALSE;
 }
+
+
+static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex);
+static LEVELNODE* GetVerticalFence(UINT32 iMapIndex);
+
 
 BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
 {
@@ -222,7 +228,8 @@ UINT16 GetHorizontalWallType( UINT32 iMapIndex )
 	return 0;
 }
 
-LEVELNODE* GetVerticalFence( UINT32 iMapIndex )
+
+static LEVELNODE* GetVerticalFence(UINT32 iMapIndex)
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
@@ -247,7 +254,8 @@ LEVELNODE* GetVerticalFence( UINT32 iMapIndex )
 	return NULL;
 }
 
-LEVELNODE* GetHorizontalFence( UINT32 iMapIndex )
+
+static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex)
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
@@ -296,7 +304,8 @@ void EraseVerticalWall( UINT32 iMapIndex )
 	}
 }
 
-void ChangeHorizontalWall( UINT32 iMapIndex, UINT16 usNewPiece )
+
+static void ChangeHorizontalWall(UINT32 iMapIndex, UINT16 usNewPiece)
 {
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
@@ -424,7 +433,8 @@ void RestoreWalls( UINT32 iMapIndex )
 	}
 }
 
-UINT16 GetWallClass( LEVELNODE *pWall )
+
+static UINT16 GetWallClass(LEVELNODE* pWall)
 {
 	UINT16 row, col, rowVariants;
 	UINT16 usWallIndex;
@@ -445,7 +455,8 @@ UINT16 GetWallClass( LEVELNODE *pWall )
 	return 0xffff;
 }
 
-UINT16 GetVerticalWallClass( UINT16 iMapIndex )
+
+static UINT16 GetVerticalWallClass(UINT16 iMapIndex)
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )
@@ -453,7 +464,8 @@ UINT16 GetVerticalWallClass( UINT16 iMapIndex )
 	return 0xffff;
 }
 
-UINT16 GetHorizontalWallClass( UINT16 iMapIndex )
+
+static UINT16 GetHorizontalWallClass(UINT16 iMapIndex)
 {
 	LEVELNODE *pWall;
 	if( pWall = GetVerticalWall( iMapIndex ) )

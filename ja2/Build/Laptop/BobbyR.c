@@ -181,19 +181,15 @@ UINT8		gubBobbyRPages[]={
 
 //Bobby's Sign menu mouse regions
 MOUSE_REGION    gSelectedBobbiesSignMenuRegion[ BOBBIES_NUMBER_SIGNS ];
-void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-
-BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArray, MOUSE_REGION *MouseRegion);
-BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Region);
-void HandleBobbyRUnderConstructionAni( BOOLEAN fReset );
-
-void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed);
-
 
 
 void GameInitBobbyR()
 {
 }
+
+
+static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset);
+static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion);
 
 
 BOOLEAN EnterBobbyR()
@@ -255,6 +251,10 @@ BOOLEAN EnterBobbyR()
 
 	return( TRUE );
 }
+
+
+static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
+
 
 void ExitBobbyR()
 {
@@ -391,7 +391,10 @@ BOOLEAN DrawBobbyRWoodBackground()
 }
 
 
-BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArray, MOUSE_REGION *MouseRegion)
+static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion)
 {
 	UINT8 i,ubCount=0;
 
@@ -411,7 +414,7 @@ BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16 *usMouseRegionPosArr
 }
 
 
-BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Region)
+static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region)
 {
 	UINT8 i;
 
@@ -422,9 +425,7 @@ BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION *Mouse_Regi
 }
 
 
-
-
-void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
+static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -466,7 +467,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 */
 
 
-void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
+static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset)
 {
 	static UINT32	uiLastTime=1;
 	static UINT16	usCount=0;
@@ -507,6 +508,9 @@ void HandleBobbyRUnderConstructionAni( BOOLEAN fReset )
 }
 
 
+static BOOLEAN InitBobbyRayNewInventory(void);
+static BOOLEAN InitBobbyRayUsedInventory(void);
+
 
 void InitBobbyRayInventory()
 {
@@ -524,7 +528,7 @@ void InitBobbyRayInventory()
 }
 
 
-BOOLEAN InitBobbyRayNewInventory()
+static BOOLEAN InitBobbyRayNewInventory(void)
 {
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
@@ -559,7 +563,7 @@ BOOLEAN InitBobbyRayNewInventory()
 }
 
 
-BOOLEAN InitBobbyRayUsedInventory()
+static BOOLEAN InitBobbyRayUsedInventory(void)
 {
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
@@ -597,6 +601,10 @@ BOOLEAN InitBobbyRayUsedInventory()
 	return(TRUE);
 }
 
+
+static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed);
+static void OrderBobbyRItem(UINT16 usItemIndex);
+static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN fUsed);
 
 
 void DailyUpdateOfBobbyRaysNewInventory()
@@ -717,7 +725,7 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 
 
 //returns the number of items to order
-UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed )
+static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 ubBobbyRayNewUsed)
 {
 	UINT8	ubItemsOrdered = 0;
 
@@ -752,7 +760,7 @@ UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, UINT8 u
 }
 
 
-void OrderBobbyRItem(UINT16 usItemIndex)
+static void OrderBobbyRItem(UINT16 usItemIndex)
 {
 	UINT32 uiArrivalTime;
 
@@ -826,7 +834,7 @@ INT16 GetInventorySlotForItem(STORE_INVENTORY *pInventoryArray, UINT16 usItemInd
 }
 
 
-void SimulateBobbyRayCustomer(STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed)
+static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN fUsed)
 {
 	INT16 i;
 	UINT8 ubItemsSold;

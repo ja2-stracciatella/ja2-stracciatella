@@ -38,26 +38,9 @@ MOUSE_REGION pIMPMainPageMouseRegions[ 4 ];
 
 UINT32 guiCHARACTERPORTRAITFORMAINPAGE;
 
-// function definitions
-void CreateIMPMainPageButtons( void );
-void DeleteIMPMainPageButtons( void );
-static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON *btn, INT32 reason);
 void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPMainPageAttributesCallback(GUI_BUTTON *btn, INT32 reason);
 void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason);
-void ShadeUnSelectableButtons( void );
-void UpDateIMPMainPageButtons( void );
-void BeginMessageBoxCallBack( UINT8 bExitValue );
-void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void );
-void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void );
-void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
-BOOLEAN LoadCharacterPortraitForMainPage( void );
 
-
-
-BOOLEAN CheckIfFinishedCharacterGeneration( void );
 
 // this is the current state of profiling the player is in.
 /*
@@ -70,6 +53,11 @@ BOOLEAN CheckIfFinishedCharacterGeneration( void );
 	*/
 INT32 iCurrentProfileMode = 0;
 
+
+static void CreateIMPMainPageButtons(void);
+static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void);
+static BOOLEAN LoadCharacterPortraitForMainPage(void);
+static void UpDateIMPMainPageButtons(void);
 
 
 void EnterIMPMainPage( void )
@@ -96,6 +84,10 @@ void EnterIMPMainPage( void )
 }
 
 
+static void DeleteIMPMainPageButtons(void);
+static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void);
+
+
 void ExitIMPMainPage( void )
 {
   // exit from IMP About us page
@@ -120,6 +112,9 @@ void RenderIMPMainPage( void )
 }
 
 
+static BOOLEAN CheckIfFinishedCharacterGeneration(void);
+
+
 void HandleIMPMainPage( void )
 {
   // handles the IMP about main page
@@ -133,7 +128,13 @@ void HandleIMPMainPage( void )
 }
 
 
-void CreateIMPMainPageButtons( void )
+static void BtnIMPMainPageAttributesCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPMainPageBackCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPMainPageBeginCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static void CreateIMPMainPageButtons(void)
 {
 
   // this function will create the buttons needed for th IMP about us page
@@ -278,7 +279,7 @@ void CreateIMPMainPageButtons( void )
 }
 
 
-void DeleteIMPMainPageButtons( void )
+static void DeleteIMPMainPageButtons(void)
 {
   // this function destroys the buttons needed for the IMP about Us Page
 
@@ -321,6 +322,9 @@ static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, INT32 reason)
 		ResetCharacterStats();
 	}
 }
+
+
+static void BeginMessageBoxCallBack(UINT8 bExitValue);
 
 
 static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, INT32 reason)
@@ -434,7 +438,7 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void NextProfilingMode( void )
+static void NextProfilingMode(void)
 {
   // this function will change to mode the player is in for profiling
 
@@ -443,7 +447,8 @@ void NextProfilingMode( void )
     iCurrentProfileMode++;
 }
 
-BOOLEAN CheckIfFinishedCharacterGeneration( void )
+
+static BOOLEAN CheckIfFinishedCharacterGeneration(void)
 {
   // this function checks to see if character is done character generation
 
@@ -460,9 +465,9 @@ BOOLEAN CheckIfFinishedCharacterGeneration( void )
 	}
 }
 
-void ShadeUnSelectableButtons( void )
-{
 
+static void ShadeUnSelectableButtons(void)
+{
 	INT32 iCounter =0;
 	// this function looks at the status ofiCurrentProfileMode and decides which buttons
 	// should be shaded ( unselectable )
@@ -477,7 +482,7 @@ void ShadeUnSelectableButtons( void )
 }
 
 
-void UpDateIMPMainPageButtons( void )
+static void UpDateIMPMainPageButtons(void)
 {
 	// update mainpage button states
   INT32 iCount = 0;
@@ -531,7 +536,8 @@ void UpDateIMPMainPageButtons( void )
 	}
 }
 
-void BeginMessageBoxCallBack( UINT8 bExitValue )
+
+static void BeginMessageBoxCallBack(UINT8 bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -547,7 +553,10 @@ void BeginMessageBoxCallBack( UINT8 bExitValue )
 }
 
 
-void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
+static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+
+
+static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 {
   // this procedure will create masks for the char generation main page
 
@@ -575,8 +584,7 @@ void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 }
 
 
-
-void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
+static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 {
 	// will destroy button masks for the char gen pages
 
@@ -590,7 +598,8 @@ void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus( void )
 	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 3 ]);
 }
 
-void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
+
+static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 
   if (iReason & MSYS_CALLBACK_REASON_INIT)
@@ -606,7 +615,7 @@ void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-BOOLEAN LoadCharacterPortraitForMainPage( void )
+static BOOLEAN LoadCharacterPortraitForMainPage(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	if( iCurrentProfileMode >= 4 )

@@ -423,7 +423,7 @@ static void ProfileUpdateStats(MERCPROFILESTRUCT* pProfile)
 static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit);
 
 
-void ChangeStat( MERCPROFILESTRUCT *pProfile, SOLDIERTYPE *pSoldier, UINT8 ubStat, INT16 sPtsChanged )
+static void ChangeStat(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldier, UINT8 ubStat, INT16 sPtsChanged)
 {
 	// this function changes the stat a given amount...
 	INT16 *psStatGainPtr = NULL;
