@@ -1079,8 +1079,6 @@ static void OpenAndReadFinancesFile(void) // XXX unused
   FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance,  sizeof(INT32));
 	uiByteCount += sizeof( INT32 );
 
-	AssertMsg( iBytesRead, "Failed To Read Data Entry");
-
 	// file exists, read in data, continue until file end
   while( FileGetSize( hFileHandle ) > uiByteCount)
 	{
@@ -1091,8 +1089,6 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 
 		// add transaction
 	  ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, iBalanceToDate);
@@ -1561,8 +1557,6 @@ static void GetBalanceFromDisk(void)
 	// get balance from disk first
   FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
-	AssertMsg( iBytesRead, "Failed To Read Data Entry");
-
 	// close file
   FileClose( hFileHandle );
 }
@@ -1768,8 +1762,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 
 		// add transaction
 	  ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, iBalanceToDate);
@@ -2043,7 +2035,6 @@ static INT32 GetTodaysBalance(void)
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 1 )
 		{
@@ -2115,7 +2106,6 @@ static INT32 GetPreviousDaysIncome(void)
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) )== ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
 		{
@@ -2199,7 +2189,6 @@ static INT32 GetTodaysDaysIncome(void)
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 1 )
 		{
@@ -2318,7 +2307,6 @@ static INT32 GetTodaysOtherDeposits(void)
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 1 )
 		{
@@ -2402,7 +2390,6 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
     FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
 
-		AssertMsg( iBytesRead, "Failed To Read Data Entry");
 		// check to see if we are far enough
 		if( ( uiDate / ( 24 * 60 ) )== ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
 		{
@@ -2474,7 +2461,6 @@ static void LoadCurrentBalance(void) // XXX unused
 	FileSeek( hFileHandle,  0 , FILE_SEEK_FROM_START );
 	FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
-	AssertMsg( iBytesRead, "Failed To Read Data Entry");
 	 // close file
 	FileClose( hFileHandle );
 }

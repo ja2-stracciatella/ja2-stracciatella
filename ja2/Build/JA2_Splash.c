@@ -43,7 +43,7 @@ void InitJA2SplashScreen()
 	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS/Notification.sti");
 	if (uiLogoID == NO_VSURFACE)
 	{
-		AssertMsg( 0, String( "Failed to load %s", VSurfaceDesc.ImageFile ) );
+		AssertMsg(0, String("Failed to load LOADSCREENS/Notification.sti"));
 		return;
 	}
 	hVSurface = GetVideoSurface(uiLogoID);

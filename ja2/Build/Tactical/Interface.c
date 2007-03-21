@@ -264,7 +264,7 @@ BOOLEAN InitializeTacticalInterface(  )
 	// failing the CHECKF after this will cause you to lose your mouse
 
 	guiINTEXT = AddVideoSurfaceFromFile("INTERFACE/IN_TEXT.STI");
-	AssertMsg(guiINTEXT != NOVSURFACE, "Missing INTERFACE/In_text.sti");
+	AssertMsg(guiINTEXT != NO_VSURFACE, "Missing INTERFACE/In_text.sti");
 	SetVideoSurfaceTransparency( guiINTEXT, FROMRGB( 255, 0, 0 ) );
 
 

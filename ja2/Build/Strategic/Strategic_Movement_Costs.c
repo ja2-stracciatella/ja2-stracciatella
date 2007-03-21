@@ -5,6 +5,7 @@
 
 #ifdef JA2TESTVERSION
 #	include "Debug.h"
+#	include "Stubs.h"
 #endif
 
 
