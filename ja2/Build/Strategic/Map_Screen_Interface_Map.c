@@ -674,8 +674,9 @@ void HandleShowingOfEnemiesWithMilitiaOn( void )
 
 UINT32 DrawMap( void )
 {
-
-#ifndef JA2DEMO
+#ifdef JA2DEMO
+	DrawMapForDemo( );
+#else
   UINT32 uiDestPitchBYTES;
 	UINT32 uiSrcPitchBYTES;
   UINT16  *pDestBuf;
@@ -683,12 +684,6 @@ UINT32 DrawMap( void )
 	SGPRect clip;
   INT16 cnt, cnt2;
 	INT32 iCounter = 0;
-#else
-	DrawMapForDemo( );
-	return( TRUE );
-#endif
-
-#ifndef JA2DEMO
 
 	if( !iCurrentMapSectorZ )
 	{

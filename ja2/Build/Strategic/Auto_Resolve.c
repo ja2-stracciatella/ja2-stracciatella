@@ -4285,11 +4285,8 @@ BOOLEAN AttemptPlayerCapture()
 		}
 	}
 	else if( PreRandom( 100 ) < 25 )
-	{
-#else
-	{
 #endif
-
+	{
 		BeginCaptureSquence( );
 
 		gpAR->ubBattleStatus = BATTLE_CAPTURED;
