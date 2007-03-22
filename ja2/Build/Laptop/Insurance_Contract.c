@@ -16,7 +16,6 @@
 #include "History.h"
 #include "Game_Event_Hook.h"
 #include "LaptopSave.h"
-#include "English.h"
 #include "Text.h"
 #include "Random.h"
 #include "Strategic_Status.h"

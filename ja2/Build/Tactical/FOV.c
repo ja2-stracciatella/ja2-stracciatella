@@ -12,7 +12,6 @@
 #include "FOV.h"
 #include "Rotting_Corpses.h"
 #include "Keys.h"
-#include "English.h"
 #include "Random.h"
 #include "Input.h"
 #include "Exit_Grids.h"

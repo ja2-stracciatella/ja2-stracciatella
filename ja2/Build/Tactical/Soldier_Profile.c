@@ -23,7 +23,6 @@
 #include "AI.h"
 #include "Interactive_Tiles.h"
 #include "Soldier_Ani.h"
-#include "English.h"
 #include "Overhead.h"
 #include "Soldier_Profile.h"
 #include "Game_Clock.h"

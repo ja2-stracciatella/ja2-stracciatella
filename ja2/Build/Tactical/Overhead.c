@@ -25,7 +25,6 @@
 #include "AI.h"
 #include "Interactive_Tiles.h"
 #include "Soldier_Ani.h"
-#include "English.h"
 #include "Overhead.h"
 #include "OppList.h"
 #include "Sound_Control.h"

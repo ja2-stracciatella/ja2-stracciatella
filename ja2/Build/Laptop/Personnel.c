@@ -17,7 +17,6 @@
 #include "AIMMembers.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Input.h"
-#include "English.h"
 #include "Random.h"
 #include "Line.h"
 #include "Assignments.h"

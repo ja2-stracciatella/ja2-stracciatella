@@ -19,7 +19,6 @@
 #include "MemMan.h"
 #include "Line.h"
 #include "Video.h"
-#include "English.h"
 // Include mouse system defs and macros
 #include "MouseSystem.h"
 #include "Cursor_Control.h"

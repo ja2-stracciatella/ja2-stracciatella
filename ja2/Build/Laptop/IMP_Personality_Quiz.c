@@ -15,7 +15,6 @@
 #include "Soldier_Profile_Type.h"
 #include "IMP_Text_System.h"
 #include "Input.h"
-#include "English.h"
 #include <string.h>
 #include "Button_System.h"
 #include "Stubs.h" // XXX

@@ -30,7 +30,6 @@
 #include "Game_Clock.h"
 #include "Finances.h"
 #include "Line.h"
-#include "English.h"
 #include "PreBattle_Interface.h"
 #include "Utilities.h"
 #include "Town_Militia.h"

@@ -12,7 +12,6 @@
 #include "EditScreen.h"
 #include "EditorDefines.h"
 #include "Input.h"
-#include "English.h"
 #include "Editor_Taskbar_Utils.h"
 #include "Overhead.h"
 #include "EditorMercs.h"
