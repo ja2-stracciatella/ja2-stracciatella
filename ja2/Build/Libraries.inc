@@ -1,4 +1,4 @@
-const char* gGameLibaries[] =
+static const char* gGameLibaries[] =
 {
 	"data.slf",
 	"ambient.slf",
@@ -19,7 +19,6 @@ const char* gGameLibaries[] =
 	"radarmaps.slf",
 	"sounds.slf",
 	"speech.slf",
-//	"tilecache.slf",
 	"tilesets.slf",
 	"loadscreens.slf",
 	"intro.slf",

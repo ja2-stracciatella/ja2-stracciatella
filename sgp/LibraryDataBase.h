@@ -23,16 +23,6 @@
 #define DB_ADD_FILE_ID( exp )						( exp & 0xC00000 )
 
 
-#ifdef JA2
-	#include "JA2_Libs.h"
-#elif UTIL
-	#define NUMBER_OF_LIBRARIES 0
-	typedef	FILETIME				SGP_FILETIME;
-#else	//wizardry
-	#include "WizLibs.h"
-#endif
-
-extern const char* gGameLibaries[];
 extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
@@ -139,7 +129,7 @@ extern "C" {
 extern DatabaseManagerHeaderStruct gFileDataBase;
 
 
-BOOLEAN InitializeFileDatabase( );
+BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount);
 BOOLEAN ShutDownFileDatabase( );
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 HWFILE OpenFileFromLibrary(const char *pName);

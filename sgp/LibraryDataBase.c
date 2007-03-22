@@ -7,12 +7,8 @@
 #include <string.h>
 
 
-//NUMBER_OF_LIBRARIES
 #ifdef JA2
-#	include "JA2_Libs.c"
 #	include "GameSettings.h"
-#elif defined(UTIL)
-	const char* gGameLibaries[] = {};
 #endif
 
 
@@ -40,22 +36,12 @@ static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
 static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
 
-static BOOLEAN OpenLibrary(INT16 sLibraryID);
+static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename);
 
 
-//************************************************************************
-//
-//	 InitializeFileDatabase():  Call this function to initialize the file
-//	database.  It will use the gGameLibaries[] array for the list of libraries
-//	and the define NUMBER_OF_LIBRARIES for the number of libraries.  The gGameLibaries
-//	array is an array of structure, one of the fields determines if the library
-//	will be initialized and game start.
-//
-//************************************************************************
-BOOLEAN InitializeFileDatabase( )
+BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 {
 	INT16			i;
-	UINT32		uiSize;
 	BOOLEAN		fLibraryInited = FALSE;
 
 #ifdef JA2
@@ -65,10 +51,10 @@ BOOLEAN InitializeFileDatabase( )
 #endif
 
 	//if all the libraries exist, set them up
-	gFileDataBase.usNumberOfLibraries = NUMBER_OF_LIBRARIES;
+	gFileDataBase.usNumberOfLibraries = LibCount;
 
 	//allocate memory for the each of the library headers
-	uiSize = NUMBER_OF_LIBRARIES * sizeof( LibraryHeaderStruct );
+	UINT32 uiSize = LibCount * sizeof(LibraryHeaderStruct);
 	if( uiSize )
 	{
 		gFileDataBase.pLibraries = MemAlloc( uiSize );
@@ -79,16 +65,16 @@ BOOLEAN InitializeFileDatabase( )
 
 
 		//Load up each library
-		for( i=0; i< NUMBER_OF_LIBRARIES; i++ )
+		for (i = 0; i < LibCount; i++)
 		{
 			//if the library exists
-			if (OpenLibrary(i))
+			if (OpenLibrary(i, LibFilenames[i]))
 				fLibraryInited = TRUE;
 
 			//else the library doesnt exist
 			else
 			{
-				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, gGameLibaries[i].sLibraryName));
+				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
 				gFileDataBase.pLibraries[i].fLibraryOpen = FALSE;
 			}
 		}
@@ -652,12 +638,6 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 	*pFileNum = DB_EXTRACT_FILE_ID( hlibFile );
 	*pLibraryID = (UINT16)DB_EXTRACT_LIBRARY( hlibFile );
 
-//TEST: qq
-/*	if( *pLibraryID == LIBRARY_SOUNDS )
-	{
-		int q=5;
-	}
-*/
 	return( TRUE );
 }
 
@@ -728,16 +708,7 @@ BOOLEAN LibraryFileSeek( INT16 sLibraryID, UINT32 uiFileNum, UINT32 uiDistance, 
 }
 
 
-
-
-//************************************************************************
-//
-//	OpenLibrary() Opens a library from the 'array' of library names
-//	that was passd in at game initialization.  Pass in an enum for the
-//	library.
-//
-//************************************************************************
-static BOOLEAN OpenLibrary(INT16 sLibraryID)
+static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename)
 {
 	//if the library is already opened, report an error
 	if( gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen )
@@ -749,10 +720,7 @@ static BOOLEAN OpenLibrary(INT16 sLibraryID)
 
 
 	//if we cant open the library
-	if (!InitializeLibrary(gGameLibaries[sLibraryID], &gFileDataBase.pLibraries[sLibraryID]))
-		return( FALSE );
-
-	return( TRUE );
+	return InitializeLibrary(LibFilename, &gFileDataBase.pLibraries[sLibraryID]);
 }
 
 

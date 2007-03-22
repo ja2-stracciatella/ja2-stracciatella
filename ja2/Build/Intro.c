@@ -181,13 +181,6 @@ static BOOLEAN EnterIntroScreen(void)
 	}
 #endif
 
-	//if the library doesnt exist, exit
-	if( !IsLibraryOpened( LIBRARY_INTRO ) )
-	{
-		PrepareToExitIntroScreen();
-		return( TRUE );
-	}
-
 	//initialize smacker
 	SmkInitialize( ghWindow, 640, 480);
 

@@ -14,6 +14,9 @@
 #endif
 
 
+#include "Libraries.inc"
+
+
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
 extern HVSURFACE ghFrameBuffer;
@@ -36,8 +39,7 @@ void InitJA2SplashScreen()
 		return;
 	}
 
-	//Initialize the file database
-	InitializeFileDatabase( gGameLibaries, NUMBER_OF_LIBRARIES );
+	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
 
 #if !defined( ENGLISH ) && defined( JA2TESTVERSION )
 	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS/Notification.sti");
