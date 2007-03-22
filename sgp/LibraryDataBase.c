@@ -12,7 +12,7 @@
 #	include "JA2_Libs.c"
 #	include "GameSettings.h"
 #elif defined(UTIL)
-	LibraryInitHeader gGameLibaries[ ] = { 0 };
+	const char* gGameLibaries[] = {};
 #endif
 
 
@@ -81,19 +81,15 @@ BOOLEAN InitializeFileDatabase( )
 		//Load up each library
 		for( i=0; i< NUMBER_OF_LIBRARIES; i++ )
 		{
-			//if you want to init the library at the begining of the game
-			if( gGameLibaries[i].fInitOnStart )
-			{
-				//if the library exists
-				if( OpenLibrary( i ) )
-					fLibraryInited = TRUE;
+			//if the library exists
+			if (OpenLibrary(i))
+				fLibraryInited = TRUE;
 
-				//else the library doesnt exist
-				else
-				{
-					FastDebugMsg( String("Warning in InitializeFileDatabase( ): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, gGameLibaries[i].sLibraryName ));
-					gFileDataBase.pLibraries[ i ].fLibraryOpen = FALSE;
-				}
+			//else the library doesnt exist
+			else
+			{
+				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, gGameLibaries[i].sLibraryName));
+				gFileDataBase.pLibraries[i].fLibraryOpen = FALSE;
 			}
 		}
 		//signify that the database has been initialized ( only if there was a library loaded )
@@ -177,7 +173,7 @@ static void Slashify(char* s)
 }
 
 
-static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader, BOOLEAN fCanBeOnCDrom)
+static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader)
 {
 	FIXME
 	FILE*	hFile;
@@ -192,22 +188,13 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 	hFile = fopen(pLibraryName, "rb");
 	if (hFile == NULL)
 	{
-		//if it failed finding the file on the hard drive, and the file can be on the cdrom
-		if( fCanBeOnCDrom )
-		{
-			// Add the path of the cdrom to the path of the library file
-			sprintf( zTempPath, "%s%s", gzCdDirectory, pLibraryName );
+		// Add the path of the cdrom to the path of the library file
+		sprintf(zTempPath, "%s%s", gzCdDirectory, pLibraryName);
 
-			//look on the cdrom
-			hFile = fopen(zTempPath, "rb");
-			if (hFile == NULL) return FALSE;
-			FastDebugMsg(String("CD Library %s opened.", zTempPath));
-		}
-		else
-		{
-			//error opening the library
-			return(FALSE);
-		}
+		//look on the cdrom
+		hFile = fopen(zTempPath, "rb");
+		if (hFile == NULL) return FALSE;
+		FastDebugMsg(String("CD Library %s opened.", zTempPath));
 	}
 
 	// Read in the library header ( at the begining of the library )
@@ -762,7 +749,7 @@ static BOOLEAN OpenLibrary(INT16 sLibraryID)
 
 
 	//if we cant open the library
-	if( !InitializeLibrary( gGameLibaries[ sLibraryID ].sLibraryName, &gFileDataBase.pLibraries[ sLibraryID ], gGameLibaries[ sLibraryID ].fOnCDrom ) )
+	if (!InitializeLibrary(gGameLibaries[sLibraryID], &gFileDataBase.pLibraries[sLibraryID]))
 		return( FALSE );
 
 	return( TRUE );

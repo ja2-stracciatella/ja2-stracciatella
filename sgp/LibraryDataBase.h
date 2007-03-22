@@ -22,16 +22,6 @@
 #define DB_ADD_LIBRARY_ID( exp )				( exp << DB_BITS_FOR_FILE_ID )
 #define DB_ADD_FILE_ID( exp )						( exp & 0xC00000 )
 
-typedef struct
-{
-	CHAR8 sLibraryName[ FILENAME_SIZE ];					// The name of the library file on the disk
-	BOOLEAN fOnCDrom;															// A flag specifying if its a cdrom library ( not implemented yet )
-	BOOLEAN fInitOnStart;													// Flag specifying if the library is to Initialized at the begining of the game
-
-} LibraryInitHeader;
-
-
-
 
 #ifdef JA2
 	#include "JA2_Libs.h"
@@ -42,7 +32,7 @@ typedef struct
 	#include "WizLibs.h"
 #endif
 
-extern LibraryInitHeader gGameLibaries[];
+extern const char* gGameLibaries[];
 extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
