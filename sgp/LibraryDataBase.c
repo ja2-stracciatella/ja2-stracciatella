@@ -36,7 +36,6 @@ INT16	gsCurrentLibrary = -1;
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
-static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader);
 static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
 static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
@@ -380,6 +379,7 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 }
 
 
+static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName);
 static INT16 GetLibraryIDFromFileName(const char* pFileName);
 
 
@@ -392,7 +392,6 @@ static INT16 GetLibraryIDFromFileName(const char* pFileName);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 {
 	INT16 sLibraryID;
-	FileHeaderStruct *pFileHeader;
 
 	//get thelibrary that file is in
 	sLibraryID = GetLibraryIDFromFileName( pFileName );
@@ -402,10 +401,7 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 		return( FALSE );
 	}
 
-	if( GetFileHeaderFromLibrary( sLibraryID, pFileName, &pFileHeader ) )
-		return( TRUE );
-	else
-		return( FALSE );
+	return GetFileHeaderFromLibrary(sLibraryID, pFileName) != NULL;
 }
 
 
@@ -459,28 +455,20 @@ INT16 sLoop1, sBestMatch=-1;
 static int CompareFileNames(const void* key, const void* member);
 
 
-//************************************************************************
-//
-//	GetFileHeaderFromLibrary() performsperforms a binary search of the
-//	library.  It adds the libraries path to the file in the
-//	library and then string compared that to the name that we are
-//	searching for.
-//
-//************************************************************************
-static BOOLEAN GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName, FileHeaderStruct** pFileHeader)
+/* Performsperforms a binary search of the library.  It adds the libraries path
+ * to the file in the library and then string compared that to the name that we
+ * are searching for. */
+static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName)
 {
 	gsCurrentLibrary = sLibraryID;
 
-	FileHeaderStruct* ppFileHeader = bsearch(
+	return bsearch(
 		pstrFileName,
 		gFileDataBase.pLibraries[sLibraryID].pFileHeader,
 		gFileDataBase.pLibraries[sLibraryID].usNumberOfEntries,
 		sizeof(*gFileDataBase.pLibraries[sLibraryID].pFileHeader),
 		CompareFileNames
 	);
-
-	*pFileHeader = ppFileHeader;
-	return ppFileHeader != NULL;
 }
 
 
@@ -510,7 +498,6 @@ static int CompareFileNames(const void* key, const void* member)
 
 HWFILE OpenFileFromLibrary(const char *pName)
 {
-	FileHeaderStruct *pFileHeader;
 	HWFILE					hLibFile;
 	INT16							sLibraryID;
 	UINT16						uiLoop1;
@@ -536,7 +523,8 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			return( 0 );
 
 		//if the file is in a library, get the file
-		if( GetFileHeaderFromLibrary( sLibraryID, pName, &pFileHeader ) )
+		const FileHeaderStruct* pFileHeader = GetFileHeaderFromLibrary(sLibraryID, pName);
+		if (pFileHeader != NULL)
 		{
 			//increment the number of open files
 			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen ++;

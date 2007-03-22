@@ -66,7 +66,7 @@ typedef struct
 	UINT32	uiFileID;											// id of the file ( they start at 1 )
 	UINT32	uiFilePosInFile;							// current position in the file
 	UINT32	uiActualPositionInLibrary;		// Current File pointer position in actuall library
-	FileHeaderStruct *pFileHeader;
+	const FileHeaderStruct* pFileHeader;
 } FileOpenStruct;
 
 
