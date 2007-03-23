@@ -325,39 +325,8 @@ int main(int argc, char* argv[])
 				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
 
-				case SDL_MOUSEBUTTONDOWN:
-					gusMouseXPos = event.button.x;
-					gusMouseYPos = event.button.y;
-					switch (event.button.button)
-					{
-						case SDL_BUTTON_LEFT:
-							gfLeftButtonState = TRUE;
-							QueueEvent(LEFT_BUTTON_DOWN, 0);
-							break;
-
-						case SDL_BUTTON_RIGHT:
-							gfRightButtonState = TRUE;
-							QueueEvent(RIGHT_BUTTON_DOWN, 0);
-							break;
-					}
-					break;
-
-				case SDL_MOUSEBUTTONUP:
-					gusMouseXPos = event.button.x;
-					gusMouseYPos = event.button.y;
-					switch (event.button.button)
-					{
-						case SDL_BUTTON_LEFT:
-							gfLeftButtonState = FALSE;
-							QueueEvent(LEFT_BUTTON_UP, 0);
-							break;
-
-						case SDL_BUTTON_RIGHT:
-							gfRightButtonState = FALSE;
-							QueueEvent(RIGHT_BUTTON_UP, 0);
-							break;
-					}
-					break;
+				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
+				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
 
 				case SDL_MOUSEMOTION:
 					gusMouseXPos = event.motion.x;

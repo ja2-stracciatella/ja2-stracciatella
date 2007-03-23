@@ -2,6 +2,7 @@
 #define __INPUT_
 
 #include "Types.h"
+#include "SDL_events.h"
 #include "SDL_keyboard.h"
 
 #define KEY_DOWN									0x0001
@@ -41,7 +42,9 @@ extern "C" {
 extern BOOLEAN			InitializeInputManager(void);
 extern void					ShutdownInputManager(void);
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
-void QueueEvent(UINT16 ubInputEvent, UINT32 usParam);
+
+void MouseButtonDown(const SDL_MouseButtonEvent*);
+void MouseButtonUp(const SDL_MouseButtonEvent*);
 
 void KeyDown(const SDL_keysym*);
 void KeyUp(  const SDL_keysym*);
