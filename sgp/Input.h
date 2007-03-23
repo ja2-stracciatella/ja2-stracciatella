@@ -30,6 +30,7 @@ typedef struct
   UINT16 usKeyState;
   UINT16 usEvent;
   UINT32 usParam;
+	wchar_t Char;
 } InputAtom;
 
 

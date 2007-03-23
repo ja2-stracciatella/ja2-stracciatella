@@ -903,7 +903,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			else
 			{
 				//Use abbreviations
-				UINT32 key = Event->usParam;
+				UINT32 key = Event->Char;
 				UINT16 type = gpActive->usInputType;
 				//Handle space key
 				if( key == SPACE && type & INPUTTYPE_SPACES )

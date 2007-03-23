@@ -123,6 +123,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	atexit(SGPExit);
 
 	SDL_Init(SDL_INIT_VIDEO);
+	SDL_EnableUNICODE(SDL_ENABLE);
 
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();

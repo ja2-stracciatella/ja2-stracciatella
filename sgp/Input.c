@@ -9,11 +9,6 @@
 #include "Local.h"
 
 
-// Make sure to refer to the translation table which is within one of the following files (depending
-// on the language used). ENGLISH.C, JAPANESE.C, FRENCH.C, GERMAN.C, SPANISH.C, etc...
-
-extern UINT16 gsKeyTranslationTable[1024];
-
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
@@ -269,6 +264,23 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 }
 
 
+static void QueueKeyEvent(UINT16 ubInputEvent, UINT32 Key, wchar_t Char)
+{
+	// Can we queue up one more event, if not, the event is lost forever
+	if (gusQueueCount == lengthof(gEventQueue)) return;
+
+	UINT16 usKeyState = gfShiftState | gfCtrlState | gfAltState;
+	gEventQueue[gusTailIndex].usKeyState = usKeyState;
+	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
+	gEventQueue[gusTailIndex].usParam = Key;
+	gEventQueue[gusTailIndex].Char    = Char;
+
+	gusQueueCount++;
+
+	gusTailIndex = (gusTailIndex + 1) % lengthof(gEventQueue);
+}
+
+
 BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 {
 	// Is there an event to dequeue
@@ -328,7 +340,6 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	UINT32 ubKey;
 	UINT16 ubChar;
 
-#if 1 // XXX HACK0008
 	SDLKey Key = KeySym->sym;
 	if (Key >= SDLK_a && Key <= SDLK_z)
 	{
@@ -377,40 +388,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 				break;
 		}
 	}
-	ubChar = ubKey;
-#else
-	// Find ucChar by translating ubKey using the gsKeyTranslationTable. If the SHIFT, ALT or CTRL key are down, then
-	// the index into the translation table us changed from ubKey to ubKey+256, ubKey+512 and ubKey+768 respectively
-	if (gfShiftState == TRUE)
-	{ // SHIFT is pressed, hence we add 256 to ubKey before translation to ubChar
-		ubChar = gsKeyTranslationTable[ubKey + 256];
-	}
-	else
-	{
-		//
-		// Even though gfAltState is checked as if it was a BOOLEAN, it really contains 0x02, which
-		// is NOT == to true.  This is broken, however to fix it would break Ja2 and Wizardry.
-		// The same thing goes for gfCtrlState and gfShiftState, howver gfShiftState is assigned 0x01 which IS == to TRUE.
-		// Just something i found, and thought u should know about.  DF.
-		//
-
-		if( gfAltState == TRUE )
-		{ // ALT is pressed, hence ubKey is multiplied by 3 before translation to ubChar
-			ubChar = gsKeyTranslationTable[ubKey + 512];
-		}
-		else
-		{
-			if (gfCtrlState == TRUE)
-			{ // CTRL is pressed, hence ubKey is multiplied by 4 before translation to ubChar
-				ubChar = gsKeyTranslationTable[ubKey + 768];
-			}
-			else
-			{ // None of the SHIFT, ALT or CTRL are pressed hence we have a default translation of ubKey
-				ubChar = gsKeyTranslationTable[ubKey];
-			}
-		}
-	}
-#endif
+	ubChar = KeySym->unicode;
 
 	if (Pressed)
 	{ // Key has been PRESSED
@@ -418,11 +396,11 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		if (gfKeyState[ubKey] == FALSE)
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = TRUE;
-			QueueEvent(KEY_DOWN, ubChar);
+			QueueKeyEvent(KEY_DOWN, ubKey, ubChar);
 		}
 		else
 		{ // Well the key gets repeated
-			QueueEvent(KEY_REPEAT, ubChar);
+			QueueKeyEvent(KEY_REPEAT, ubKey, ubChar);
 		}
 	}
 	else
@@ -431,7 +409,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		if (gfKeyState[ubKey] == TRUE)
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = FALSE;
-			QueueEvent(KEY_UP, ubChar);
+			QueueEvent(KEY_UP, ubKey);
 		}
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed

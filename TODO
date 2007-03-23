@@ -3,7 +3,6 @@ high prio
 
 med prio
 - TODO0003 Implement sound streaming
-- HACK0008 Overhaul keyboard handling to properly map keys to chars
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
