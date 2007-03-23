@@ -17,8 +17,6 @@ static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
 
-static UINT ModifierState;
-
 // These data structure are used to track the mouse while polling
 
 static UINT32 guiSingleClickTimer;
@@ -49,8 +47,6 @@ BOOLEAN InitializeInputManager(void)
 	gusHeadIndex  = 0;
 	gusTailIndex  = 0;
 
-	ModifierState = 0;
-
 	// Initialize variables pertaining to DOUBLE CLIK stuff
 	guiSingleClickTimer = 0;
 	// Initialize variables pertaining to the button states
@@ -77,7 +73,6 @@ static void QueueMouseEvent(UINT16 ubInputEvent)
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
-	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 
 	gusQueueCount++;
@@ -86,11 +81,15 @@ static void QueueMouseEvent(UINT16 ubInputEvent)
 }
 
 
-static void QueueKeyEvent(UINT16 ubInputEvent, UINT32 Key, wchar_t Char)
+static void QueueKeyEvent(UINT16 ubInputEvent, SDLKey Key, SDLMod Mod, wchar_t Char)
 {
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
+	UINT16 ModifierState = 0;
+	if (Mod & KMOD_SHIFT) ModifierState |= SHIFT_DOWN;
+	if (Mod & KMOD_CTRL)  ModifierState |= CTRL_DOWN;
+	if (Mod & KMOD_ALT)   ModifierState |= ALT_DOWN;
 	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 	gEventQueue[gusTailIndex].usParam = Key;
@@ -265,11 +264,11 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		if (!gfKeyState[ubKey])
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = TRUE;
-			QueueKeyEvent(KEY_DOWN, ubKey, ubChar);
+			QueueKeyEvent(KEY_DOWN, ubKey, KeySym->mod, ubChar);
 		}
 		else
 		{ // Well the key gets repeated
-			QueueKeyEvent(KEY_REPEAT, ubKey, ubChar);
+			QueueKeyEvent(KEY_REPEAT, ubKey, KeySym->mod, ubChar);
 		}
 	}
 	else
@@ -278,16 +277,15 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		if (gfKeyState[ubKey])
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = FALSE;
-			QueueKeyEvent(KEY_UP, ubKey, ubChar);
+			QueueKeyEvent(KEY_UP, ubKey, KeySym->mod, ubChar);
 		}
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed
-		else if (ubChar == SDLK_TAB && ModifierState & ALT_DOWN)
+		else if (ubChar == SDLK_TAB && KeySym->mod & KMOD_ALT)
 		{
 			// therefore minimize the application
 			ShowWindow(ghWindow, SW_MINIMIZE);
 			gfKeyState[ALT] = FALSE;
-			ModifierState &= ~ALT_DOWN;
 		}
 #endif
 	}
@@ -300,19 +298,16 @@ void KeyDown(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			ModifierState |= SHIFT_DOWN;
 			gfKeyState[SHIFT] = TRUE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			ModifierState |= CTRL_DOWN;
 			gfKeyState[CTRL] = TRUE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			ModifierState |= ALT_DOWN;
 			gfKeyState[ALT] = TRUE;
 			break;
 
@@ -333,24 +328,21 @@ void KeyUp(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			ModifierState &= ~SHIFT_DOWN;
 			gfKeyState[SHIFT] = FALSE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			ModifierState &= ~CTRL_DOWN;
 			gfKeyState[CTRL] = FALSE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			ModifierState &= ~ALT_DOWN;
 			gfKeyState[ALT] = FALSE;
 			break;
 
 		case SDLK_PRINT:
-			if (_KeyDown(CTRL)) VideoCaptureToggle(); else PrintScreen();
+			if (KeySym->mod & KMOD_CTRL) VideoCaptureToggle(); else PrintScreen();
 			break;
 
 		case SDLK_SCROLLOCK:
