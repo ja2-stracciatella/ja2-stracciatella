@@ -762,10 +762,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 	{
 		return FALSE;
 	}
-	if( Event->usParam == '%' || Event->usParam == '\\' )
-	{ //Input system doesn't support strings that are format specifiers.
-		return FALSE;
-	}
 	//If we have met all of the conditions, we then have a valid key press
 	//which will be handled universally for all text input fields
 	switch( Event->usParam )
