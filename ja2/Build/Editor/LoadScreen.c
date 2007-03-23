@@ -787,12 +787,10 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 				iTopFileShown++;
 			break;
 		case HOME:
-		case CTRL_HOME:
 			iTopFileShown = 0;
 			iCurrFileShown = 0;
 			break;
 		case END:
-		case CTRL_END:
 			iTopFileShown = iTotalFiles-7;
 			iCurrFileShown = iTotalFiles-1;
 			break;

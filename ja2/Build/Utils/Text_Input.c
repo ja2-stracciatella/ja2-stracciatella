@@ -757,8 +757,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 	if( Event->usKeyState & ALT_DOWN || Event->usKeyState & CTRL_DOWN && Event->usParam != DEL )
 		return FALSE;
 	//F1-F12 regardless of state are processed externally as well.
-	if( Event->usParam >= F1			 && Event->usParam <= F12				||
-		  Event->usParam >= SHIFT_F1 && Event->usParam <= SHIFT_F12 )
+	if (Event->usParam >= F1 && Event->usParam <= F12)
 	{
 		return FALSE;
 	}
