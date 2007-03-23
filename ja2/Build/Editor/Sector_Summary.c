@@ -1853,12 +1853,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				if( gsSelSectorY > 16 )
 					gsSelSectorY = 1;
 				break;
-			case SHIFT_LEFTARROW:
-
-				break;
-			case SHIFT_RIGHTARROW:
-
-				break;
 		}
 	}
 	else if( pEvent->usEvent == KEY_UP )

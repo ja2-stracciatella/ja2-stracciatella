@@ -780,90 +780,104 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			break;
 
 		case LEFTARROW:
-			//Move the cursor to the left one position.  If there is selected text,
-			//the cursor moves to the left of the block, and clears the block.
 			gfNoScroll = TRUE;
-			if( gfHiliteMode )
+			if (Event->usKeyState & SHIFT_DOWN)
 			{
-				gfHiliteMode = FALSE;
-				gubCursorPos = gubStartHilite;
-				break;
+				//Initiates or continues hilighting to the left one position.  If the cursor
+				//is at the left end of the block, then the block decreases one position.
+				if (!gfHiliteMode)
+				{
+					gfHiliteMode = TRUE;
+					gubStartHilite = gubCursorPos;
+				}
+				if (gubCursorPos) gubCursorPos--;
+				gubEndHilite = gubCursorPos;
 			}
-			if( gubCursorPos )
-				gubCursorPos--;
+			else
+			{
+				//Move the cursor to the left one position.  If there is selected text,
+				//the cursor moves to the left of the block, and clears the block.
+				if (gfHiliteMode)
+				{
+					gfHiliteMode = FALSE;
+					gubCursorPos = gubStartHilite;
+					break;
+				}
+				if (gubCursorPos) gubCursorPos--;
+			}
 			break;
+
 		case RIGHTARROW:
-			//Move the cursor to the right one position.  If there is selected text,
-			//the block is cleared.
-			gfNoScroll = TRUE;
-			if( gfHiliteMode )
+			if (Event->usKeyState & SHIFT_DOWN)
 			{
-				gfHiliteMode = FALSE;
-				gubCursorPos = gubEndHilite;
-				break;
+				//Initiates or continues hilighting to the right one position.  If the cursor
+				//is at the right end of the block, then the block decreases one position.
+				gfNoScroll = TRUE;
+				if (!gfHiliteMode)
+				{
+					gfHiliteMode = TRUE;
+					gubStartHilite = gubCursorPos;
+				}
+				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
+				gubEndHilite = gubCursorPos;
 			}
-			if( gubCursorPos < gpActive->ubStrLen )
-				gubCursorPos++;
+			else
+			{
+				//Move the cursor to the right one position.  If there is selected text,
+				//the block is cleared.
+				gfNoScroll = TRUE;
+				if( gfHiliteMode )
+				{
+					gfHiliteMode = FALSE;
+					gubCursorPos = gubEndHilite;
+					break;
+				}
+				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
+			}
 			break;
+
 		case END:
-			//Any hilighting is cleared and the cursor moves to the end of the text.
-			gfHiliteMode = FALSE;
+			if (Event->usKeyState & SHIFT_DOWN)
+			{
+				/* From the location of the anchored cursor for hilighting, the cursor
+				 * goes to the end of the text, selecting all text from the anchor to
+				 * the end of the text. */
+				if (!gfHiliteMode)
+				{
+					gfHiliteMode = TRUE;
+					gubStartHilite = gubCursorPos;
+				}
+				gubEndHilite = gpActive->ubStrLen;
+			}
+			else
+			{
+				//Any hilighting is cleared and the cursor moves to the end of the text.
+				gfHiliteMode = FALSE;
+			}
 			gubCursorPos = gpActive->ubStrLen;
 			break;
+
 		case HOME:
-			//Any hilighting is cleared and the cursor moves to the beginning of the line.
-			gfHiliteMode = FALSE;
-			gubCursorPos = 0;
-			break;
-		case SHIFT_LEFTARROW:
-			//Initiates or continues hilighting to the left one position.  If the cursor
-			//is at the left end of the block, then the block decreases one position.
-			gfNoScroll = TRUE;
-			if( !gfHiliteMode )
+			if (Event->usKeyState & SHIFT_DOWN)
 			{
-				gfHiliteMode = TRUE;
-				gubStartHilite = gubCursorPos;
+				/* From the location of the anchored cursor for hilighting, the cursor
+				 * goes to the beginning of the text, selecting all text from the
+				 * anchor to the beginning of the text. */
+				if (!gfHiliteMode)
+				{
+					gfHiliteMode = TRUE;
+					gubStartHilite = gubCursorPos;
+				}
+				gubEndHilite = 0;
 			}
-			if( gubCursorPos )
-				gubCursorPos--;
-			gubEndHilite = gubCursorPos;
-			break;
-		case SHIFT_RIGHTARROW:
-			//Initiates or continues hilighting to the right one position.  If the cursor
-			//is at the right end of the block, then the block decreases one position.
-			gfNoScroll = TRUE;
-			if( !gfHiliteMode )
+			else
 			{
-				gfHiliteMode = TRUE;
-				gubStartHilite = gubCursorPos;
-			}
-			if( gubCursorPos < gpActive->ubStrLen )
-				gubCursorPos++;
-			gubEndHilite = gubCursorPos;
-			break;
-		case SHIFT_END:
-			//From the location of the anchored cursor for hilighting, the cursor goes to
-			//the end of the text, selecting all text from the anchor to the end of the text.
-			if( !gfHiliteMode )
-			{
-				gfHiliteMode = TRUE;
-				gubStartHilite = gubCursorPos;
-			}
-			gubCursorPos = gpActive->ubStrLen;
-			gubEndHilite = gubCursorPos;
-			break;
-		case SHIFT_HOME:
-			//From the location of the anchored cursor for hilighting, the cursor goes to
-			//the beginning of the text, selecting all text from the anchor to the beginning
-			//of the text.
-			if( !gfHiliteMode )
-			{
-				gfHiliteMode = TRUE;
-				gubStartHilite = gubCursorPos;
+				//Any hilighting is cleared and the cursor moves to the beginning of the line.
+				gfHiliteMode = FALSE;
 			}
 			gubCursorPos = 0;
-			gubEndHilite = gubCursorPos;
 			break;
+
 		case DEL:
 			//CTRL+DEL will delete the entire text field, regardless of hilighting.
 			//DEL will either delete the selected text, or the character to the right

@@ -1412,10 +1412,13 @@ static void HandleKeyboardShortcuts(void)
 					break;
 
 				//Select next/prev terrain tile to draw with.
-				case SHIFT_LEFTARROW:
+				case LEFTARROW:
+					if (!(EditorInputEvent.usKeyState & SHIFT_DOWN)) break;
 					CurrentPaste -= ( gfShowTerrainTileButtons && CurrentPaste > 0 ) ? 1 : 0;
 					break;
-				case SHIFT_RIGHTARROW:
+
+				case RIGHTARROW:
+					if (!(EditorInputEvent.usKeyState & SHIFT_DOWN)) break;
 					CurrentPaste += ( gfShowTerrainTileButtons && CurrentPaste < 8 ) ? 1 : 0;
 					break;
 
