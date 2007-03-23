@@ -38,8 +38,6 @@
 #define UPARROW             253
 #define PGUP                254
 
-#define SHIFT_TAB           265
-
 #define SHIFT_END           503
 #define SHIFT_LEFTARROW     506
 #define SHIFT_RIGHTARROW    507

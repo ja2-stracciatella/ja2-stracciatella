@@ -459,14 +459,17 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				break;
 				case (( TAB )):
 			    // tab hit, increment to next selection box
-          IncrementTextEnterMode( );
+					if (InputEvent.usKeyState & SHIFT_DOWN)
+					{
+						DecrementTextEnterMode();
+					}
+					else
+					{
+						IncrementTextEnterMode();
+					}
 		      fNewCharInString = TRUE;
 				  break;
-				case ( 265 ):
-				  // tab and shift
-					DecrementTextEnterMode( );
-					fNewCharInString = TRUE;
-				break;
+
 				default:
 					HandleBeginScreenTextEvent( InputEvent.usParam );
 				break;

@@ -717,8 +717,8 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 	gfNoScroll = FALSE;
 	if( !gfTextInputMode )
 		return FALSE;
-	//currently in a user field, so return unless TAB or SHIFT_TAB are pressed.
-	if( !gfEditingText && Event->usParam != TAB && Event->usParam != SHIFT_TAB )
+	//currently in a user field, so return unless TAB is pressed.
+	if (!gfEditingText && Event->usParam != TAB)
 		return FALSE;
 	//unless we are psycho typers, we only want to process these key events.
 	if( Event->usEvent != KEY_DOWN && Event->usEvent != KEY_REPEAT )
@@ -769,12 +769,16 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			//Always selects the next field, even when a user defined field is currently selected.
 			//The order in which you add your text and user fields dictates the cycling order when
 			//TAB is pressed.
-			SelectNextField();
+			if (Event->usKeyState & SHIFT_DOWN)
+			{
+				SelectPrevField();
+			}
+			else
+			{
+				SelectNextField();
+			}
 			break;
-		case SHIFT_TAB:
-			//Same as TAB, but selects fields in reverse order.
-			SelectPrevField();
-			break;
+
 		case LEFTARROW:
 			//Move the cursor to the left one position.  If there is selected text,
 			//the cursor moves to the left of the block, and clears the block.
