@@ -17,12 +17,7 @@ static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
 
-// The gsKeyTranslationTables basically translates scan codes to our own key value table. Please note that the table is 2 bytes
-// wide per entry. This will be used since we will use 2 byte characters for translation purposes.
-
-UINT16 gfShiftState; // TRUE = Pressed, FALSE = Not Pressed
-UINT16 gfAltState;   // TRUE = Pressed, FALSE = Not Pressed
-UINT16 gfCtrlState;  // TRUE = Pressed, FALSE = Not Pressed
+static UINT ModifierState;
 
 // These data structure are used to track the mouse while polling
 
@@ -122,10 +117,9 @@ BOOLEAN InitializeInputManager(void)
 	gusQueueCount = 0;
 	gusHeadIndex  = 0;
 	gusTailIndex  = 0;
-	// Initialize other variables
-	gfShiftState = FALSE;
-	gfAltState   = FALSE;
-	gfCtrlState  = FALSE;
+
+	ModifierState = 0;
+
 	// Initialize variables pertaining to DOUBLE CLIK stuff
 	guiSingleClickTimer = 0;
 	// Initialize variables pertaining to the button states
@@ -163,7 +157,6 @@ void ShutdownInputManager(void)
 void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 {
 	UINT32 uiTimer = GetTickCount();
-	UINT16 usKeyState = gfShiftState | gfCtrlState | gfAltState;
 
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == 256)
@@ -244,7 +237,7 @@ void QueueEvent(UINT16 ubInputEvent, UINT32 usParam)
 	}
 
 	// Okey Dokey, we can queue up the event, so we do it
-	gEventQueue[gusTailIndex].usKeyState = usKeyState;
+	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 	gEventQueue[gusTailIndex].usParam = usParam;
 
@@ -268,8 +261,7 @@ static void QueueKeyEvent(UINT16 ubInputEvent, UINT32 Key, wchar_t Char)
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
-	UINT16 usKeyState = gfShiftState | gfCtrlState | gfAltState;
-	gEventQueue[gusTailIndex].usKeyState = usKeyState;
+	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 	gEventQueue[gusTailIndex].usParam = Key;
 	gEventQueue[gusTailIndex].Char    = Char;
@@ -342,7 +334,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	SDLKey Key = KeySym->sym;
 	if (Key >= SDLK_a && Key <= SDLK_z)
 	{
-		ubKey = gfShiftState ? Key - 32 : Key;
+		ubKey = KeySym->mod & KMOD_SHIFT ? Key - 32 : Key;
 	}
 	else if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
 	{
@@ -402,12 +394,12 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		}
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed
-		else if (ubChar == SDLK_TAB && gfAltState)
+		else if (ubChar == SDLK_TAB && ModifierState & ALT_DOWN)
 		{
 			// therefore minimize the application
 			ShowWindow(ghWindow, SW_MINIMIZE);
 			gfKeyState[ALT] = FALSE;
-			gfAltState = FALSE;
+			ModifierState &= ~ALT_DOWN;
 		}
 #endif
 	}
@@ -420,19 +412,19 @@ void KeyDown(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			gfShiftState = SHIFT_DOWN;
+			ModifierState |= SHIFT_DOWN;
 			gfKeyState[SHIFT] = TRUE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			gfCtrlState = CTRL_DOWN;
+			ModifierState |= CTRL_DOWN;
 			gfKeyState[CTRL] = TRUE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			gfAltState = ALT_DOWN;
+			ModifierState |= ALT_DOWN;
 			gfKeyState[ALT] = TRUE;
 			break;
 
@@ -453,19 +445,19 @@ void KeyUp(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			gfShiftState = FALSE;
+			ModifierState &= ~SHIFT_DOWN;
 			gfKeyState[SHIFT] = FALSE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			gfCtrlState = FALSE;
+			ModifierState &= ~CTRL_DOWN;
 			gfKeyState[CTRL] = FALSE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			gfAltState = FALSE;
+			ModifierState &= ~ALT_DOWN;
 			gfKeyState[ALT] = FALSE;
 			break;
 
