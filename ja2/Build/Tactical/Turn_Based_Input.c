@@ -1272,7 +1272,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 	// Check realtime input!
 	if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 	{
-		//if ( _KeyDown( CAPS )  ) //&& !fShifted )
+		//if (_KeyDown(SDLK_CAPSLOCK)) //&& !fShifted)
 		//{
 		//	fShifted = TRUE;
 		//	if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE )
@@ -1280,7 +1280,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 		//		*puiNewEvent = CA_ON_TERRAIN;
 		//	}
 		//}
-		//if ( !(_KeyDown( CAPS ) ) && fShifted )
+		//if (!(_KeyDown(SDLK_CAPSLOCK)) && fShifted)
 		//{
 		//	fShifted = FALSE;
 		//	{
@@ -1308,28 +1308,28 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 
 	}
 
-		if( _KeyDown( DEL ) )
+	if (_KeyDown(SDLK_DELETE))
 	{
 		DisplayCoverOfSelectedGridNo( );
 
 		fDeleteDown = TRUE;
 	}
 
-	if( !_KeyDown( DEL ) && fDeleteDown )
+	if (!_KeyDown(SDLK_DELETE) && fDeleteDown)
 	{
 		RemoveCoverOfSelectedGridNo();
 
 		fDeleteDown = FALSE;
 	}
 
-	if( _KeyDown( END ) )
+	if (_KeyDown(SDLK_END))
 	{
 		DisplayGridNoVisibleToSoldierGrid( );
 
 		fEndDown = TRUE;
 	}
 
-	if( !_KeyDown( END ) && fEndDown )
+	if (!_KeyDown(SDLK_END) && fEndDown)
 	{
 		RemoveVisibleGridNoAtSelectedGridNo();
 
@@ -1472,7 +1472,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 		}
 		*/
 
-    if ((InputEvent.usEvent == KEY_UP )&& ( InputEvent.usParam == PAUSE ) && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV) )
+    if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_PAUSE && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
     {
 			// Pause game!
 			HandlePlayerPauseUnPauseOfGame( );
@@ -1485,7 +1485,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			//*puiNewEvent = I_EXIT;
     }
 
-		if ((InputEvent.usEvent == KEY_UP )&& ( InputEvent.usParam == ESC) )
+		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_ESCAPE)
 		{
 			if ( AreInMeanwhile() && gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION )
 			{
@@ -1497,7 +1497,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 		// Break of out IN CONV...
 		if ( CHEATER_CHEAT_LEVEL( ) )
 		{
-			if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & ALT_DOWN ) )
+			if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & ALT_DOWN)
 			{
 				if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
 				{
@@ -1514,7 +1514,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				{
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
-						if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & ALT_DOWN ) )
+						if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & ALT_DOWN)
 						{
 								// ESCAPE ENEMY'S TURN
 								EndAIDeadlock();
@@ -1526,7 +1526,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								UIHandleLUIEndLock( NULL );
 
 						}
-						if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & CTRL_DOWN ) )
+						if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & CTRL_DOWN)
 						{
 							EscapeUILock( );
 						}
@@ -1534,12 +1534,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 				else
 				{
-					if ( CHEATER_CHEAT_LEVEL( ) && (InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ENTER ) && ( InputEvent.usKeyState & CTRL_DOWN ) )
+					if (CHEATER_CHEAT_LEVEL() && InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN && InputEvent.usKeyState & CTRL_DOWN)
 					{
 							//UNLOCK UI
 							EscapeUILock( );
 					}
-					else if ( (InputEvent.usEvent == KEY_DOWN ) && InputEvent.usParam == ENTER  )
+					else if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN)
 					{
 							// Cycle through enemys
 							CycleThroughKnownEnemies( );
@@ -1579,7 +1579,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 
 		// CHECK ESC KEYS HERE....
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == ESC ))
+    if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
     {
 			//EscapeUILock( );
 #ifdef JA2TESTVERSION
@@ -1642,7 +1642,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
     }
 
 		// CHECK ESC KEYS HERE....
-    if ((InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == BACKSPACE ) )
+    if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_BACKSPACE)
     {
       StopAnyCurrentlyTalkingSpeech( );
     }
@@ -1746,8 +1746,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			fShift = InputEvent.usKeyState & SHIFT_DOWN ? TRUE : FALSE;
 			switch( InputEvent.usParam )
 			{
-				case SPACE:
-
+				case SDLK_SPACE:
 					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 					if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )  &&
 							 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ NEXTMERC_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
@@ -1800,7 +1799,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 					}
 					break;
-				case TAB:
+
+				case SDLK_TAB:
 					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 					if ( ( gpItemPointer == NULL ) &&
 							 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
@@ -1815,7 +1815,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-				case F1:
+				case SDLK_F1:
 					if( fShift )
 					{
 						HandleSelectMercSlot( 0, LOCATE_MERC_ONCE );
@@ -1833,7 +1833,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else
 						HandleSelectMercSlot( 0, LOCATEANDSELECT_MERC );
 					break;
-				case F2:
+
+				case SDLK_F2:
 					if( fShift )
 						HandleSelectMercSlot( 1, LOCATE_MERC_ONCE );
 #ifdef JA2TESTVERSION
@@ -1849,7 +1850,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else
 						HandleSelectMercSlot( 1, LOCATEANDSELECT_MERC );
 					break;
-				case F3:
+
+				case SDLK_F3:
 					if( fShift )
 						HandleSelectMercSlot( 2, LOCATE_MERC_ONCE );
 #ifdef JA2TESTVERSION
@@ -1865,7 +1867,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else
 						HandleSelectMercSlot( 2, LOCATEANDSELECT_MERC );
 					break;
-				case F4:
+
+				case SDLK_F4:
 					if( fShift )
 						HandleSelectMercSlot( 3, LOCATE_MERC_ONCE );
 #ifdef JA2TESTVERSION
@@ -1881,7 +1884,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else
 						HandleSelectMercSlot( 3, LOCATEANDSELECT_MERC );
 					break;
-				case F5:
+
+				case SDLK_F5:
 					if( fShift )
 						HandleSelectMercSlot( 4, LOCATE_MERC_ONCE );
 #ifdef JA2TESTVERSION
@@ -1897,7 +1901,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else
 						HandleSelectMercSlot( 4, LOCATEANDSELECT_MERC );
 					break;
-				case F6:
+
+				case SDLK_F6:
 					if( fShift )
 						HandleSelectMercSlot( 5, LOCATE_MERC_ONCE );
 #ifdef JA2TESTVERSION
@@ -1915,22 +1920,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 #ifdef JA2TESTVERSION
-				case F7:
-					if( fAlt )
-					{
-						TestMeanWhile( 16 );
-					}
-					break;
-				case F8:
+				case SDLK_F7: if (fAlt) TestMeanWhile(16); break;
+				case SDLK_F8: if (fAlt) TestMeanWhile( 7); break;
 
-					if( fAlt )
-					{
-						TestMeanWhile( 7 );
-					}
-					break;
-
-				case F9:
-
+				case SDLK_F9:
 					if( fCtrl )
 					{
 						TestMeanWhile( 8 );
@@ -1943,17 +1936,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						#endif
 					}
 					break;
-				case F10:
 
-					if( fAlt )
-					{
-						TestMeanWhile( 9 );
-					}
-					break;
+				case SDLK_F10: if (fAlt) TestMeanWhile(9); break;
 #endif
 
-				case F11:
-
+				case SDLK_F11:
 					if( fAlt )
 					{
 #ifdef JA2TESTVERSION
@@ -1989,8 +1976,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-				case F12:
-
+				case SDLK_F12:
 #ifdef JA2TESTVERSION
 					if( fAlt )
 					{
@@ -2615,13 +2601,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-				case INSERT:
+				case SDLK_INSERT: GoIntoOverheadMap(); break;
 
-						GoIntoOverheadMap();
-						break;
-
-				case END:
-
+				case SDLK_END:
 						if ( gusSelectedSoldier != NOBODY )
 						{
 							if ( CheckForMercContMove( MercPtrs[ gusSelectedSoldier ] ) )
@@ -2633,8 +2615,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 						break;
 
-				case HOME:
-
+				case SDLK_HOME:
 						if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
 						{
 							gGameSettings.fOptions[ TOPTION_3D_CURSOR ] = FALSE;
@@ -2729,8 +2710,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-				case PGDN:
-
+				case SDLK_PAGEDOWN:
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
 						if( fCtrl )
@@ -2750,9 +2730,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-
-				case PGUP:
-
+				case SDLK_PAGEUP:
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
 						if( fCtrl )
@@ -2988,12 +2966,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
         case '=':
 					//if the display cover or line of sight is being displayed
-					if( _KeyDown( END ) || _KeyDown( DEL ) )
+					if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
 					{
-						if( _KeyDown( DEL ) )
+						if (_KeyDown(SDLK_DELETE))
 							ChangeSizeOfDisplayCover( gGameSettings.ubSizeOfDisplayCover + 1 );
 
-						if( _KeyDown( END ) )
+						if (_KeyDown(SDLK_END))
 							ChangeSizeOfLOS( gGameSettings.ubSizeOfLOS + 1 );
 					}
 					else
@@ -3234,12 +3212,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case '-':
 				case '_':
 					//if the display cover or line of sight is being displayed
-					if( _KeyDown( END ) || _KeyDown( DEL ) )
+					if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
 					{
-						if( _KeyDown( DEL ) )
+						if (_KeyDown(SDLK_DELETE))
 							ChangeSizeOfDisplayCover( gGameSettings.ubSizeOfDisplayCover - 1 );
 
-						if( _KeyDown( END ) )
+						if (_KeyDown(SDLK_END))
 							ChangeSizeOfLOS( gGameSettings.ubSizeOfLOS - 1 );
 					}
 					else
@@ -3327,7 +3305,7 @@ static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 	// CHECK ESC KEYS HERE....
 	if ( pInputEvent->usEvent == KEY_UP )
 	{
-		if ( pInputEvent->usParam == ESC )
+		if (pInputEvent->usParam == SDLK_ESCAPE)
 		{
 			//Handle esc in talking menu
 			if ( HandleTalkingMenuEscape( TRUE, TRUE ) )
@@ -3335,7 +3313,7 @@ static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 				*puiNewEvent = A_CHANGE_TO_MOVE;
 			}
 		}
-		else if ( pInputEvent->usParam == BACKSPACE )
+		else if (pInputEvent->usParam == SDLK_BACKSPACE)
 		{
 			HandleTalkingMenuBackspace();
 		}
@@ -3347,7 +3325,7 @@ static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
-  if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
+  if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
   {
 		//Handle esc in talking menu
 		RemoveSectorExitMenu( FALSE );
@@ -3360,7 +3338,7 @@ static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent
 static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
-  if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
+  if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
   {
 		//Handle esc in talking menu
 		CancelOpenDoorMenu( );
@@ -3373,7 +3351,7 @@ static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
-  if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
+  if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
   {
 		//Handle esc in talking menu
 		CancelMovementMenu( );
@@ -3386,7 +3364,7 @@ static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
-  if ( ( pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == ESC ))
+  if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
   {
 		//Handle esc in talking menu
 		RemoveItemPickupMenu( );
@@ -4190,7 +4168,7 @@ static void CreatePlayerControlledMonster(void)
 		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
 
 		//Note:  only gets called if Alt and/or Ctrl isn't pressed!
-		if ( _KeyDown( INSERT ) )
+		if (_KeyDown(SDLK_INSERT))
 			MercCreateStruct.bBodyType		= QUEENMONSTER;
 			//MercCreateStruct.bBodyType		= LARVAE_MONSTER;
 		else

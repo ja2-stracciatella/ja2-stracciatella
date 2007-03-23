@@ -3819,9 +3819,7 @@ static void TempHandleAimMemberKeyBoardInput(void)
 			switch (InputEvent.usParam)
 			{
 #ifdef JA2TESTVERSION
-				case SPACE:
-					QuickHireMerc();
-					break;
+				case SDLK_SPACE: QuickHireMerc(); break;
 
 				case '~':
 					// to test going on other assignments, unhired merc improvements & deaths

@@ -364,9 +364,7 @@ static void HandleMainMenuInput(void)
 			switch( InputEvent.usParam )
 			{
 /*
-				case ESC:
-					gbHandledMainMenu = QUIT;
-					break;
+				case SDLK_ESCAPE: gbHandledMainMenu = QUIT; break;
 */
 
 #ifdef JA2TESTVERSION

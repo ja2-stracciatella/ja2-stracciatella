@@ -1763,7 +1763,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 		INT32 x;
 		switch( pEvent->usParam )
 		{
-			case ESC:
+			case SDLK_ESCAPE:
 				if( !gfWorldLoaded )
 				{
 					DestroySummaryWindow();
@@ -1772,23 +1772,17 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					gfOverheadMapDirty = TRUE;
 					return FALSE;
 				}
-			case ENTER:
+			case SDLK_RETURN:
 				if( GetActiveFieldID() == 1 )
 					SelectNextField();
 				else if( gfWorldLoaded )
 					DestroySummaryWindow();
 				break;
-			case F6:
-				PerformTest();
-				break;
-			case F7:
-				for( x = 0; x < 10; x++ )
-					PerformTest();
-				break;
-			case F8:
-				for( x = 0; x < 100; x++ )
-					PerformTest();
-				break;
+
+			case SDLK_F6: PerformTest(); break;
+			case SDLK_F7: for (x = 0; x <  10; x++) PerformTest(); break;
+			case SDLK_F8: for (x = 0; x < 100; x++) PerformTest(); break;
+
 			case 'y':case 'Y':
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
@@ -1821,7 +1815,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					return FALSE;
 				}
 				break;
-			case RIGHTARROW:
+
+			case SDLK_RIGHT:
 				gfRenderSummary = TRUE;
 				if( !gsSelSectorY )
 					gsSelSectorY = 1;
@@ -1829,7 +1824,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				if( gsSelSectorX > 16 )
 					gsSelSectorX = 1;
 				break;
-			case LEFTARROW:
+
+			case SDLK_LEFT:
 				gfRenderSummary = TRUE;
 				if( !gsSelSectorY )
 					gsSelSectorY = 1;
@@ -1837,7 +1833,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				if( gsSelSectorX < 1 )
 					gsSelSectorX = 16;
 				break;
-			case UPARROW:
+
+			case SDLK_UP:
 				gfRenderSummary = TRUE;
 				if( !gsSelSectorX )
 					gsSelSectorX = 1;
@@ -1845,7 +1842,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				if( gsSelSectorY < 1 )
 					gsSelSectorY = 16;
 				break;
-			case DNARROW:
+
+			case SDLK_DOWN:
 				gfRenderSummary = TRUE;
 				if( !gsSelSectorX )
 					gsSelSectorX = 1;
@@ -1859,9 +1857,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 	{ //for releasing modes requiring persistant state keys
 		switch( pEvent->usParam )
 		{
-			case F5:
-				ReleaseSummaryWindow();
-				break;
+			case SDLK_F5: ReleaseSummaryWindow(); break;
 		}
 	}
 	return TRUE;

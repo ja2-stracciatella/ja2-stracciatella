@@ -304,7 +304,7 @@ UINT32	MapUtilScreenHandle( )
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {
-      if ((InputEvent.usEvent == KEY_DOWN)&&(InputEvent.usParam == ESC))
+		if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
       { // Exit the program
         gfProgramIsRunning = FALSE;
       }

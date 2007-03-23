@@ -283,12 +283,8 @@ static void GetIntroScreenUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
-					PrepareToExitIntroScreen();
-					break;
-				case SPACE:
-					SmkCloseFlic( gpSmackFlic );
-					break;
+				case SDLK_ESCAPE: PrepareToExitIntroScreen(); break;
+				case SDLK_SPACE:  SmkCloseFlic(gpSmackFlic);  break;
 
 #ifdef JA2TESTVERSION
 

@@ -783,9 +783,7 @@ static void GetOptionsScreenUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
-					SetOptionsExitScreen( guiPreviousOptionScreen );
-					break;
+				case SDLK_ESCAPE: SetOptionsExitScreen(guiPreviousOptionScreen); break;
 
 				//Enter the save game screen
 				case 's':

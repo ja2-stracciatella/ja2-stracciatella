@@ -455,7 +455,7 @@ void HandleHeliDrop( )
 			guiPendingOverrideEvent = LU_BEGINUILOCK;
 		}
 
-		if ( _KeyDown( ESC ) )
+		if (_KeyDown(SDLK_ESCAPE))
 		{
 			// Loop through all mercs not yet placed
 			for ( cnt = gbCurDrop; cnt < gbNumHeliSeatsOccupied; cnt++ )

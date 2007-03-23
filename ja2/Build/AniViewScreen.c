@@ -178,7 +178,7 @@ UINT32  AniEditScreenHandle(void)
 
   if (DequeueEvent(&InputEvent) == TRUE)
   {
-    if ((InputEvent.usEvent == KEY_DOWN)&&(InputEvent.usParam == ESC))
+    if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
     {
 			 fFirstTime = TRUE;
 
@@ -198,7 +198,7 @@ UINT32  AniEditScreenHandle(void)
 			 return( GAME_SCREEN );
     }
 
-		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == SPACE ))
+		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_SPACE)
 		{
 			if ( !fToggle && !fToggle2 )
 			{
@@ -257,8 +257,7 @@ UINT32  AniEditScreenHandle(void)
 			fToggle2 = !fToggle2;
 		}
 
-
-		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == PGUP ))
+		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_PAGEUP)
 		{
 			 if ( fOKFiles && fToggle2 )
 			 {
@@ -274,8 +273,7 @@ UINT32  AniEditScreenHandle(void)
 			 }
 		}
 
-
-		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == PGDN ))
+		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_PAGEDOWN)
 		{
 			 if ( fOKFiles && fToggle2 )
 			 {
@@ -297,7 +295,7 @@ UINT32  AniEditScreenHandle(void)
 			EVENT_InitNewSoldierAnim( pSoldier, usStartAnim, 0 , TRUE );
 		}
 
-		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == ENTER ))
+		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_RETURN)
 		{
 			if ( ubStartHeight == ANIM_STAND )
 			{

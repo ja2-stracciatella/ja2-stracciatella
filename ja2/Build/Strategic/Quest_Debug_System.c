@@ -1196,7 +1196,7 @@ static void GetUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
+				case SDLK_ESCAPE:
 					gubTextEntryAction = QD_DROP_DOWN_CANCEL;
 
 					gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
@@ -1210,12 +1210,12 @@ static void GetUserInput(void)
 
 					break;
 
-				case SPACE:
+				case SDLK_SPACE:
 					if( giSelectedMercCurrentQuote != -1 )
 						SetTalkingMercPauseState( (BOOLEAN)!gfPauseTalkingMercPopup );
 					break;
 
-				case LEFTARROW:
+				case SDLK_LEFT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
 						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
@@ -1237,7 +1237,7 @@ static void GetUserInput(void)
 					}
 					break;
 
-				case RIGHTARROW:
+				case SDLK_RIGHT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
 						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
@@ -1254,9 +1254,7 @@ static void GetUserInput(void)
 					}
 					break;
 
-				case F11:
-					gfQuestDebugExit = TRUE;
-					break;
+				case SDLK_F11: gfQuestDebugExit = TRUE; break;
 
 				case 'x':
 					if( Event.usKeyState & ALT_DOWN )
@@ -1266,7 +1264,7 @@ static void GetUserInput(void)
 					}
 					break;
 
-				case ENTER:
+				case SDLK_RETURN:
 					if( gfTextEntryActive )
 						gubTextEntryAction = QD_DROP_DOWN_DESTROY;
 					else if( gfInDropDownBox )
@@ -1276,28 +1274,28 @@ static void GetUserInput(void)
 
 					break;
 
-				case PGDN:
+				case SDLK_PAGEDOWN:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)(gpActiveListBox->sCurSelectedItem + QUEST_DBS_MAX_DISPLAYED_ENTRIES ) );
 					}
 					break;
 
-				case PGUP:
+				case SDLK_PAGEUP:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)( gpActiveListBox->sCurSelectedItem - QUEST_DBS_MAX_DISPLAYED_ENTRIES ) );
 					}
 					break;
 
-				case DNARROW:
+				case SDLK_DOWN:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)(gpActiveListBox->sCurSelectedItem + 1 ) );
 					}
 					break;
 
-				case UPARROW:
+				case SDLK_UP:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)( gpActiveListBox->sCurSelectedItem - 1 ) );
@@ -1321,28 +1319,28 @@ static void GetUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case PGDN:
+				case SDLK_PAGEDOWN:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)(gpActiveListBox->sCurSelectedItem + QUEST_DBS_MAX_DISPLAYED_ENTRIES ) );
 					}
 					break;
 
-				case PGUP:
+				case SDLK_PAGEUP:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)( gpActiveListBox->sCurSelectedItem - QUEST_DBS_MAX_DISPLAYED_ENTRIES ) );
 					}
 					break;
 
-				case DNARROW:
+				case SDLK_DOWN:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)(gpActiveListBox->sCurSelectedItem + 1 ) );
 					}
 					break;
 
-				case UPARROW:
+				case SDLK_UP:
 					if( gfInDropDownBox )
 					{
 						IncrementActiveDropDownBox( (INT16)( gpActiveListBox->sCurSelectedItem - 1 ) );
@@ -1350,7 +1348,7 @@ static void GetUserInput(void)
 					break;
 
 
-				case LEFTARROW:
+				case SDLK_LEFT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
 						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
@@ -1371,7 +1369,7 @@ static void GetUserInput(void)
 					}
 					break;
 
-				case RIGHTARROW:
+				case SDLK_RIGHT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
 						DisplayQDSCurrentlyQuoteNum( );

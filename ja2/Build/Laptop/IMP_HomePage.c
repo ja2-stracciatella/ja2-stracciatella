@@ -275,7 +275,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 		{
 		  switch( InputEvent.usParam )
 			{
-			  case (( ENTER ) ):
+				case SDLK_RETURN:
 					if(( InputEvent.usEvent == KEY_UP ) )
 					{
 						// return hit, check to see if current player activation string is a valid one
@@ -284,9 +284,9 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 					  fNewCharInActivationString = TRUE;
 					}
 				break;
-				case (( ESC )):
-          LeaveLapTopScreen( );
-				break;
+
+				case SDLK_ESCAPE: LeaveLapTopScreen(); break;
+
 				default:
 					if(InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
 					{
@@ -306,8 +306,7 @@ static void HandleTextEvent(UINT32 uiKey)
 
   switch( uiKey )
 	{
-	  case ( BACKSPACE ):
-
+		case SDLK_BACKSPACE:
 			if( iStringPos >= 0 )
 			{
 

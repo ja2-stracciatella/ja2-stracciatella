@@ -605,9 +605,8 @@ static void HandleOverheadUI(void)
     {
 			switch( InputEvent.usParam )
 			{
-				case( ESC ):
-				case( INSERT ):
-
+				case SDLK_ESCAPE:
+				case SDLK_INSERT:
 					KillOverheadMap();
 				break;
 

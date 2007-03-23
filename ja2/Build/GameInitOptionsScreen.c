@@ -606,10 +606,7 @@ static void GetGIOScreenUserInput(void)
 		{
 			switch (Event.usParam)
 			{
-				case ESC:
-					//Exit out of the screen
-					gubGameOptionScreenHandler = GIO_CANCEL;
-					break;
+				case SDLK_ESCAPE: gubGameOptionScreenHandler = GIO_CANCEL; break;
 
 #ifdef JA2TESTVERSION
 				case 'r':
@@ -621,9 +618,7 @@ static void GetGIOScreenUserInput(void)
 					break;
 #endif
 
-				case ENTER:
-					gubGameOptionScreenHandler = GIO_EXIT;
-					break;
+				case SDLK_RETURN: gubGameOptionScreenHandler = GIO_EXIT; break;
 			}
 		}
 	}

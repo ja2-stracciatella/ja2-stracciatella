@@ -982,54 +982,30 @@ static void GetHelpScreenUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
-					PrepareToExitHelpScreen();
-					break;
+				case SDLK_ESCAPE: PrepareToExitHelpScreen(); break;
 
-				case DNARROW:
-				{
-					ChangeTopLineInTextBufferByAmount( 1 );
-				}
-				break;
+				case SDLK_DOWN: ChangeTopLineInTextBufferByAmount( 1); break;
+				case SDLK_UP:   ChangeTopLineInTextBufferByAmount(-1); break;
 
-				case UPARROW:
-				{
-					ChangeTopLineInTextBufferByAmount( -1 );
-				}
-				break;
-
-				case PGUP:
+				case SDLK_PAGEUP:
 				{
 					ChangeTopLineInTextBufferByAmount( -( HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER -1 ) );
 				}
 				break;
-				case PGDN:
+
+				case SDLK_PAGEDOWN:
 				{
 					ChangeTopLineInTextBufferByAmount( ( HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER -1 ) );
 				}
 				break;
 
-				case LEFTARROW:
+				case SDLK_LEFT:
 					ChangeToHelpScreenSubPage( (INT8)( gHelpScreen.bCurrentHelpScreenActiveSubPage - 1 ) );
 					break;
 
-				case RIGHTARROW:
+				case SDLK_RIGHT:
 					ChangeToHelpScreenSubPage( (INT8)( gHelpScreen.bCurrentHelpScreenActiveSubPage + 1 ) );
 					break;
-
-/*
-
-				case LEFTARROW:
-				{
-				}
-					break;
-
-				case RIGHTARROW:
-				{
-				}
-					break;
-*/
-
 
 #ifdef JA2TESTVERSION
 				//rerender the hepl screen
@@ -1052,24 +1028,16 @@ static void GetHelpScreenUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case DNARROW:
-				{
-					ChangeTopLineInTextBufferByAmount( 1 );
-				}
-				break;
+				case SDLK_DOWN: ChangeTopLineInTextBufferByAmount( 1); break;
+				case SDLK_UP:   ChangeTopLineInTextBufferByAmount(-1); break;
 
-				case UPARROW:
-				{
-					ChangeTopLineInTextBufferByAmount( -1 );
-				}
-				break;
-
-				case PGUP:
+				case SDLK_PAGEUP:
 				{
 					ChangeTopLineInTextBufferByAmount( -( HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER -1 ) );
 				}
 				break;
-				case PGDN:
+
+				case SDLK_PAGEDOWN:
 				{
 					ChangeTopLineInTextBufferByAmount( ( HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER -1 ) );
 				}

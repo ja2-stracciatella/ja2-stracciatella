@@ -2997,28 +2997,25 @@ void ScrollWorld( )
 		if ( !fIgnoreInput )
 		{
 			// Check keys
-			if ( _KeyDown( UPARROW )  )
+			if (_KeyDown(SDLK_UP))
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_UP;
 			}
 
-
-			if ( _KeyDown( DNARROW )  )
+			if (_KeyDown(SDLK_DOWN))
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_DOWN;
 			}
 
-
-			if ( _KeyDown( RIGHTARROW )  )
+			if (_KeyDown(SDLK_RIGHT))
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_RIGHT;
 			}
 
-
-			if ( _KeyDown( LEFTARROW )  )
+			if (_KeyDown(SDLK_LEFT))
 			{
 				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_LEFT;

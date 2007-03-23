@@ -408,7 +408,7 @@ static void PopupMenuHandle(void)
 			case KEY_DOWN:
 				switch( InputEvent.usParam )
 				{
-					case DNARROW:
+					case SDLK_DOWN:
 						gPopup.fUseKeyboardInfoUntilMouseMoves = TRUE;
 						gPopup.usLastMouseX = gusMouseXPos;
 						gPopup.usLastMouseY = gusMouseYPos;
@@ -418,7 +418,8 @@ static void PopupMenuHandle(void)
 							gPopup.ubSelectedIndex = 1;
 						}
 						break;
-					case UPARROW:
+
+					case SDLK_UP:
 						gPopup.fUseKeyboardInfoUntilMouseMoves = TRUE;
 						gPopup.usLastMouseX = gusMouseXPos;
 						gPopup.usLastMouseY = gusMouseYPos;
@@ -431,13 +432,15 @@ static void PopupMenuHandle(void)
 							gPopup.ubSelectedIndex--;
 						}
 						break;
-					case ESC:
+
+					case SDLK_ESCAPE:
 						gPopup.fActive = FALSE;
 						MSYS_RemoveRegion( &popupRegion );
 						gfRenderWorld = TRUE;
 						gfRenderTaskbar = TRUE;
 						break;
-					case ENTER:
+
+					case SDLK_RETURN:
 						ProcessPopupMenuSelection();
 						gPopup.fActive = FALSE;
 						MSYS_RemoveRegion( &popupRegion );

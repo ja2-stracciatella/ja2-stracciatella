@@ -274,7 +274,8 @@ BOOLEAN HandleAutoBandage( )
 		{
 			if ( InputEvent.usEvent == KEY_UP )
 			{
-				if( ( ( InputEvent.usParam == ESC ) && ( fAutoBandageComplete == FALSE ) )|| ( ( ( InputEvent.usParam == ENTER ) || ( InputEvent.usParam == SPACE ) ) && ( fAutoBandageComplete == TRUE ) ) )
+				if ((InputEvent.usParam == SDLK_ESCAPE && !fAutoBandageComplete) ||
+						((InputEvent.usParam == SDLK_RETURN || InputEvent.usParam == SDLK_SPACE) && fAutoBandageComplete))
 				{
 					AutoBandage( FALSE );
 				}

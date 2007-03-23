@@ -5764,7 +5764,7 @@ void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
 
 	AdjustAniSpeed( pSoldier );
 
-	if ( _KeyDown( SPACE ) )
+	if (_KeyDown(SDLK_SPACE))
 	{
 		//pSoldier->sAniDelay = 1000;
 	}

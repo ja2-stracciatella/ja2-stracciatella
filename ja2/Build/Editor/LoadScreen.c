@@ -740,20 +740,22 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 	INT32 iPrevFileShown = iCurrFileShown;
 	//Replace Alt-x press with ESC.
 	if( pEvent->usKeyState & ALT_DOWN && pEvent->usParam == 'x' )
-		pEvent->usParam = ESC;
+		pEvent->usParam = SDLK_ESCAPE;
 	switch( pEvent->usParam )
 	{
-		case ENTER:
+		case SDLK_RETURN:
 			if( gfNoFiles && iCurrentAction == ACTION_LOAD_MAP )
 				break;
 			gfDestroyFDlg = TRUE;
 			iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 			break;
-		case ESC:
+
+		case SDLK_ESCAPE:
 			gfDestroyFDlg = TRUE;
 			iFDlgState = DIALOG_CANCEL;
 			break;
-		case PGUP:
+
+		case SDLK_PAGEUP:
 			if( iTopFileShown > 7 )
 			{
 				iTopFileShown -= 7;
@@ -765,7 +767,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 				iCurrFileShown = 0;
 			}
 			break;
-		case PGDN:
+
+		case SDLK_PAGEDOWN:
 			iTopFileShown += 7;
 			iCurrFileShown += 7;
 			if( iTopFileShown > iTotalFiles-7 )
@@ -773,30 +776,34 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 			if( iCurrFileShown >= iTotalFiles )
 				iCurrFileShown = iTotalFiles - 1;
 			break;
-		case UPARROW:
+
+		case SDLK_UP:
 			if( iCurrFileShown > 0 )
 				iCurrFileShown--;
 			if( iTopFileShown > iCurrFileShown )
 				iTopFileShown = iCurrFileShown;
 			break;
-		case DNARROW:
+
+		case SDLK_DOWN:
 			iCurrFileShown++;
 			if( iCurrFileShown >= iTotalFiles )
 				iCurrFileShown = iTotalFiles - 1;
 			else if( iTopFileShown < iCurrFileShown-7 )
 				iTopFileShown++;
 			break;
-		case HOME:
+
+		case SDLK_HOME:
 			iTopFileShown = 0;
 			iCurrFileShown = 0;
 			break;
-		case END:
+
+		case SDLK_END:
 			iTopFileShown = iTotalFiles-7;
 			iCurrFileShown = iTotalFiles-1;
 			break;
-		case DEL:
-			iFDlgState = DIALOG_DELETE;
-			break;
+
+		case SDLK_DELETE: iFDlgState = DIALOG_DELETE; break;
+
 		default:
 			//This case handles jumping the file list to display the file with the letter pressed.
 			if( pEvent->usParam >= 'a' && pEvent->usParam <= 'z' ||

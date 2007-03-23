@@ -398,7 +398,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	 fStopRevealingItemsAfterThisTile = FALSE;
 
 #ifdef _DEBUG
-	 if ( _KeyDown( NUM_LOCK ) )
+		if (_KeyDown(SDLK_NUMLOCK))
 	 {
 		 memset( gubFOVDebugInfoInfo, 0, sizeof( gubFOVDebugInfoInfo ) );
 
@@ -493,7 +493,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 		 }
 
 #ifdef _DEBUG
-		 if ( _KeyDown( NUM_LOCK ) )
+			if (_KeyDown(SDLK_NUMLOCK))
 		 {
 			 int cnt = GetJA2Clock( );
 

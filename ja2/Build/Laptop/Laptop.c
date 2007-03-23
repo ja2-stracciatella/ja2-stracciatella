@@ -4968,12 +4968,12 @@ void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 us
 		return;
 	}
 
-	if ( (usEvent == KEY_DOWN ) && (usParam == ESC ) )
+	if (usEvent == KEY_DOWN && usParam == SDLK_ESCAPE)
 	{
 		// esc hit, check to see if boomark list is shown, if so, get rid of it, otherwise, leave
     HandleLapTopESCKey( );
 	}
-	else if( (usEvent == KEY_DOWN ) && ( usParam == TAB ) )
+	else if (usEvent == KEY_DOWN && usParam == SDLK_TAB)
 	{
 		if(usKeyState & CTRL_DOWN )
 		{

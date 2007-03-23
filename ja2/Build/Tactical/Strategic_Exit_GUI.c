@@ -620,12 +620,8 @@ void RenderSectorExitMenu( )
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
-					RemoveSectorExitMenu( FALSE );
-					return;
-				case ENTER:
-					RemoveSectorExitMenu( TRUE );
-					return;
+				case SDLK_ESCAPE: RemoveSectorExitMenu(FALSE); return;
+				case SDLK_RETURN: RemoveSectorExitMenu(TRUE);  return;
 			}
 		}
 	}

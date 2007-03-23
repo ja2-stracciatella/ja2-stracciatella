@@ -924,10 +924,9 @@ static void HandleViewerInput(void)
 		{
 			switch( Event.usParam )
 			{
-				case ESC:
-					gfExitViewer = TRUE;
-					break;
-				case ENTER:
+				case SDLK_ESCAPE: gfExitViewer = TRUE; break;
+
+				case SDLK_RETURN:
 					// this means GO! for doing overrides
 					ExtractAndUpdatePopulations();
 					break;

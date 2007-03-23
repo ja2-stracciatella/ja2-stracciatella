@@ -12,7 +12,7 @@
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
-BOOLEAN gfKeyState[256]; // TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfKeyState[SDLK_LAST]; // TRUE = Pressed, FALSE = Not Pressed
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
@@ -117,8 +117,7 @@ BOOLEAN InitializeInputManager(void)
 {
 	// Link to debugger
 	RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
-	// Initialize the gfKeyState table to FALSE everywhere
-	memset(gfKeyState, FALSE, 256);
+	memset(gfKeyState, FALSE, sizeof(gfKeyState));
 	// Initialize the Event Queue
 	gusQueueCount = 0;
 	gusHeadIndex  = 0;
@@ -355,16 +354,16 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 		{
 			switch (Key)
 			{
-				case SDLK_KP0: ubKey = INSERT;     break;
-				case SDLK_KP1: ubKey = END;        break;
-				case SDLK_KP2: ubKey = DNARROW;    break;
-				case SDLK_KP3: ubKey = PGDN;       break;
-				case SDLK_KP4: ubKey = LEFTARROW;  break;
+				case SDLK_KP0: ubKey = SDLK_INSERT;   break;
+				case SDLK_KP1: ubKey = SDLK_END;      break;
+				case SDLK_KP2: ubKey = SDLK_DOWN;     break;
+				case SDLK_KP3: ubKey = SDLK_PAGEDOWN; break;
+				case SDLK_KP4: ubKey = SDLK_LEFT;     break;
 				case SDLK_KP5: return;
-				case SDLK_KP6: ubKey = RIGHTARROW; break;
-				case SDLK_KP7: ubKey = HOME;       break;
-				case SDLK_KP8: ubKey = UPARROW;    break;
-				case SDLK_KP9: ubKey = DNARROW;    break;
+				case SDLK_KP6: ubKey = SDLK_RIGHT;    break;
+				case SDLK_KP7: ubKey = SDLK_HOME;     break;
+				case SDLK_KP8: ubKey = SDLK_UP;       break;
+				case SDLK_KP9: ubKey = SDLK_PAGEUP;   break;
 			}
 		}
 	}
@@ -372,16 +371,6 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	{
 		switch (Key)
 		{
-			case SDLK_DELETE:   ubKey = DEL;        break;
-			case SDLK_UP:       ubKey = UPARROW;    break;
-			case SDLK_DOWN:     ubKey = DNARROW;    break;
-			case SDLK_RIGHT:    ubKey = RIGHTARROW; break;
-			case SDLK_LEFT:     ubKey = LEFTARROW;  break;
-			case SDLK_HOME:     ubKey = HOME;       break;
-			case SDLK_END:      ubKey = END;        break;
-			case SDLK_PAGEUP:   ubKey = PGUP;       break;
-			case SDLK_PAGEDOWN: ubKey = PGDN;       break;
-
 			default:
 				if (Key >= lengthof(gfKeyState)) return;
 				ubKey = Key;
@@ -393,7 +382,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	if (Pressed)
 	{ // Key has been PRESSED
 		// Find out if the key is already pressed and if not, queue an event and update the gfKeyState array
-		if (gfKeyState[ubKey] == FALSE)
+		if (!gfKeyState[ubKey])
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = TRUE;
 			QueueKeyEvent(KEY_DOWN, ubKey, ubChar);
@@ -406,14 +395,14 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	else
 	{ // Key has been RELEASED
 		// Find out if the key is already pressed and if so, queue an event and update the gfKeyState array
-		if (gfKeyState[ubKey] == TRUE)
+		if (gfKeyState[ubKey])
 		{ // Well the key has just been pressed, therefore we queue up and event and update the gsKeyState
 			gfKeyState[ubKey] = FALSE;
 			QueueEvent(KEY_UP, ubKey);
 		}
 #if 0 // XXX TODO
 		//else if the alt tab key was pressed
-		else if (ubChar == TAB && gfAltState)
+		else if (ubChar == SDLK_TAB && gfAltState)
 		{
 			// therefore minimize the application
 			ShowWindow(ghWindow, SW_MINIMIZE);

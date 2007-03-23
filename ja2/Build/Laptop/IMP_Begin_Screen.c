@@ -421,7 +421,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 		{
 		  switch( InputEvent.usParam )
 			{
-			case (( ENTER )):
+				case SDLK_RETURN:
           // check to see if gender was highlighted..if so, select it
 			    if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
 					{
@@ -436,7 +436,8 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 			     IncrementTextEnterMode( );
 			     fNewCharInString = TRUE;
 				break;
-			case( SPACE ):
+
+				case SDLK_SPACE:
 				// handle space bar
 				if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
 				{
@@ -454,10 +455,10 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				}
 				fNewCharInString = TRUE;
 				break;
-		    case (( ESC )):
-          LeaveLapTopScreen( );
-				break;
-				case (( TAB )):
+
+		    case SDLK_ESCAPE: LeaveLapTopScreen(); break;
+
+				case SDLK_TAB:
 			    // tab hit, increment to next selection box
 					if (InputEvent.usKeyState & SHIFT_DOWN)
 					{
@@ -486,8 +487,7 @@ static void HandleBeginScreenTextEvent(UINT32 uiKey)
 
   switch( uiKey )
 	{
-	  case ( BACKSPACE ):
-
+		case SDLK_BACKSPACE:
 			switch( ubTextEnterMode )
 			{
 			case( FULL_NAME_MODE ):

@@ -587,12 +587,11 @@ void TacticalPlacementHandle()
 		{
 			switch( InputEvent.usParam )
 			{
-				#ifdef JA2TESTVERSION
-				case ESC:
-					KillTacticalPlacementGUI();
-					break;
-				#endif
-				case ENTER:
+#ifdef JA2TESTVERSION
+				case SDLK_ESCAPE: KillTacticalPlacementGUI(); break;
+#endif
+
+				case SDLK_RETURN:
 					if( ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED )
 					{
 						KillTacticalPlacementGUI();

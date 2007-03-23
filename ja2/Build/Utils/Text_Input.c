@@ -717,17 +717,16 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 	gfNoScroll = FALSE;
 	if( !gfTextInputMode )
 		return FALSE;
-	//currently in a user field, so return unless TAB is pressed.
-	if (!gfEditingText && Event->usParam != TAB)
-		return FALSE;
 	//unless we are psycho typers, we only want to process these key events.
 	if( Event->usEvent != KEY_DOWN && Event->usEvent != KEY_REPEAT )
 		return FALSE;
+	//currently in a user field, so return unless TAB is pressed.
+	if (!gfEditingText && Event->usParam != SDLK_TAB) return FALSE;
 	//ESC and ENTER must be handled externally, due to the infinite uses for it.
 	//When editing text, ESC is equivalent to cancel, and ENTER is to confirm.
-	if( Event->usParam == ESC )
+	if (Event->usParam == SDLK_ESCAPE)
 		return FALSE;
-	if( Event->usParam == ENTER )
+	if (Event->usParam == SDLK_RETURN)
 	{
 		PlayJA2Sample(REMOVING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 		return FALSE;
@@ -754,18 +753,15 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 		}
 	}
 #endif
-	if( Event->usKeyState & ALT_DOWN || Event->usKeyState & CTRL_DOWN && Event->usParam != DEL )
+	if (Event->usKeyState & ALT_DOWN || Event->usKeyState & CTRL_DOWN && Event->usParam != SDLK_DELETE)
 		return FALSE;
 	//F1-F12 regardless of state are processed externally as well.
-	if (Event->usParam >= F1 && Event->usParam <= F12)
-	{
-		return FALSE;
-	}
+	if (Event->usParam >= SDLK_F1 && Event->usParam <= SDLK_F12) return FALSE;
 	//If we have met all of the conditions, we then have a valid key press
 	//which will be handled universally for all text input fields
 	switch( Event->usParam )
 	{
-		case TAB:
+		case SDLK_TAB:
 			//Always selects the next field, even when a user defined field is currently selected.
 			//The order in which you add your text and user fields dictates the cycling order when
 			//TAB is pressed.
@@ -779,7 +775,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			}
 			break;
 
-		case LEFTARROW:
+		case SDLK_LEFT:
 			gfNoScroll = TRUE;
 			if (Event->usKeyState & SHIFT_DOWN)
 			{
@@ -807,7 +803,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			}
 			break;
 
-		case RIGHTARROW:
+		case SDLK_RIGHT:
 			if (Event->usKeyState & SHIFT_DOWN)
 			{
 				//Initiates or continues hilighting to the right one position.  If the cursor
@@ -836,7 +832,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			}
 			break;
 
-		case END:
+		case SDLK_END:
 			if (Event->usKeyState & SHIFT_DOWN)
 			{
 				/* From the location of the anchored cursor for hilighting, the cursor
@@ -857,7 +853,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			gubCursorPos = gpActive->ubStrLen;
 			break;
 
-		case HOME:
+		case SDLK_HOME:
 			if (Event->usKeyState & SHIFT_DOWN)
 			{
 				/* From the location of the anchored cursor for hilighting, the cursor
@@ -878,7 +874,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			gubCursorPos = 0;
 			break;
 
-		case DEL:
+		case SDLK_DELETE:
 			//CTRL+DEL will delete the entire text field, regardless of hilighting.
 			//DEL will either delete the selected text, or the character to the right
 			//of the cursor if applicable.
@@ -895,7 +891,8 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			else
 				RemoveChar( gubCursorPos );
 			break;
-		case BACKSPACE:
+
+		case SDLK_BACKSPACE:
 			//Will delete the selected text, or the character to the left of the cursor if applicable.
 			if( gfHiliteMode)
 			{
@@ -919,7 +916,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 				UINT32 key = Event->Char;
 				UINT16 type = gpActive->usInputType;
 				//Handle space key
-				if( key == SPACE && type & INPUTTYPE_SPACES )
+				if (key == L' ' && type & INPUTTYPE_SPACES)
 				{
 					AddChar( key );
 					return TRUE;

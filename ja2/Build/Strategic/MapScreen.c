@@ -4429,7 +4429,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 
 			switch( InputEvent.usParam )
 			{
-				case ESC:
+				case SDLK_ESCAPE:
 					gfDontStartTransitionFromLaptop = TRUE;
 
 
@@ -4569,77 +4569,37 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					}
 					break; // end of ESC
 
+				case SDLK_PAUSE: HandlePlayerPauseUnPauseOfGame(); break;
 
-				case PAUSE:
-					// Pause game!
-					HandlePlayerPauseUnPauseOfGame( );
-					break;
+				case SDLK_LEFT:  GoToPrevCharacterInList(); break;
+				case SDLK_RIGHT: GoToNextCharacterInList(); break;
 
-				case LEFTARROW:
-					// previous character
-					GoToPrevCharacterInList( );
-					break;
-				case RIGHTARROW:
-					// next character
-					GoToNextCharacterInList( );
-					break;
+				case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
+				case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
 
-				case UPARROW:
-					// up a line
-					MapScreenMsgScrollUp( 1 );
-					break;
-				case DNARROW:
-					// down a line
-					MapScreenMsgScrollDown( 1 );
-					break;
+				case SDLK_PAGEUP:   MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);   break;
+				case SDLK_PAGEDOWN: MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM); break;
 
-				case PGUP:
-					// up a page
-					MapScreenMsgScrollUp( MAX_MESSAGES_ON_MAP_BOTTOM );
-					break;
-				case PGDN:
-					// down a page
-					MapScreenMsgScrollDown( MAX_MESSAGES_ON_MAP_BOTTOM );
+				case SDLK_HOME: ChangeCurrentMapscreenMessageIndex(0); break;
+				case SDLK_END:  MoveToEndOfMapScreenMessageList();     break;
+
+				case SDLK_INSERT: GoUpOneLevelInMap();   break;
+				case SDLK_DELETE: GoDownOneLevelInMap(); break;
+
+				case SDLK_RETURN: RequestToggleMercInventoryPanel(); break;
+
+				case SDLK_BACKSPACE: StopAnyCurrentlyTalkingSpeech(); break;
+
+				case SDLK_F1:
+				case SDLK_F2:
+				case SDLK_F3:
+				case SDLK_F4:
+				case SDLK_F5:
+				case SDLK_F6:
+					ChangeCharacterListSortMethod(InputEvent.usParam - SDLK_F1);
 					break;
 
-				case HOME:
-					// jump to top of message list
-					ChangeCurrentMapscreenMessageIndex( 0 );
-					break;
-
-				case END:
-					// jump to bottom of message list
-					MoveToEndOfMapScreenMessageList();
-					break;
-
-				case INSERT:
-					// up one sublevel
-					GoUpOneLevelInMap( );
-					break;
-
-				case DEL:
-					// down one sublevel
-					GoDownOneLevelInMap( );
-					break;
-
-				case ENTER:
-					RequestToggleMercInventoryPanel();
-					break;
-
-				case BACKSPACE:
-          StopAnyCurrentlyTalkingSpeech( );
-					break;
-
-				case F1:
-				case F2:
-				case F3:
-				case F4:
-				case F5:
-				case F6:
-					ChangeCharacterListSortMethod( InputEvent.usParam - F1 );
-					break;
-
-				case F7:
+				case SDLK_F7:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
 						{
@@ -4666,7 +4626,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					#endif
 					break;
 
-				case F8:
+				case SDLK_F8:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
 						{
@@ -4676,7 +4636,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					#endif
 					break;
 
-				case F9:
+				case SDLK_F9:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
 						{
@@ -4691,7 +4651,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					#endif
 					break;
 
-				case F10:
+				case SDLK_F10:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
 						{
@@ -4705,7 +4665,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					break;
 
 /*
-				case F11:
+				case SDLK_F11:
 					#ifdef JA2TESTVERSION
 						if( fAlt )
 						{
@@ -4717,7 +4677,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					break;
 */
 
-				case F12:
+				case SDLK_F12:
 					#ifdef JA2BETAVERSION
 						*puiNewEvent = MAP_EVENT_VIEWAI;
 					#endif
@@ -4735,7 +4695,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						RequestDecreaseInTimeCompression();
 					break;
 
-				case SPACE:
+				case SDLK_SPACE:
 						if( fShowUpdateBox )
 						{
 							EndUpdateBox( TRUE );  // restart time compression
@@ -5350,33 +5310,14 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 		{
 			switch( InputEvent.usParam )
 			{
-				case LEFTARROW:
-					// previous character
-					GoToPrevCharacterInList( );
-					break;
-				case RIGHTARROW:
-					// next character
-					GoToNextCharacterInList( );
-					break;
+				case SDLK_LEFT:  GoToPrevCharacterInList(); break;
+				case SDLK_RIGHT: GoToNextCharacterInList(); break;
 
-				case UPARROW:
-					// up a line
-					MapScreenMsgScrollUp( 1 );
-					break;
-				case DNARROW:
-					// down a line
-					MapScreenMsgScrollDown( 1 );
-					break;
+				case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
+				case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
 
-				case PGUP:
-					// up a page
-					MapScreenMsgScrollUp( MAX_MESSAGES_ON_MAP_BOTTOM );
-					break;
-				case PGDN:
-					// down a page
-					MapScreenMsgScrollDown( MAX_MESSAGES_ON_MAP_BOTTOM );
-					break;
-
+				case SDLK_PAGEUP:   MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);   break;
+				case SDLK_PAGEDOWN: MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM); break;
 			}
 		}
 	}

@@ -1374,7 +1374,7 @@ static void HandleIMPQuizKeyBoard(void)
 				fSkipFrame = TRUE;
 			}
 		}
-		else if( ( iCurrentAnswer != -1 ) && ( InputEvent.usEvent == KEY_DOWN ) && ( InputEvent.usParam == ENTER ) )
+		else if (iCurrentAnswer != -1 && InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_RETURN)
 		{
 			// reset all the buttons
 			ResetQuizAnswerButtons( );

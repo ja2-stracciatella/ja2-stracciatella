@@ -571,11 +571,7 @@ static void GetCreditScreenUserInput(void)
 		{
 			switch( Event.usParam )
 			{
-
-				case ESC:
-					//Exit out of the screen
-					SetCreditsExitScreen( MAINMENU_SCREEN );
-					break;
+				case SDLK_ESCAPE: SetCreditsExitScreen(MAINMENU_SCREEN); break;
 
 #ifdef JA2TESTVERSION
 				case 'r':
@@ -586,16 +582,16 @@ static void GetCreditScreenUserInput(void)
 					InvalidateRegion( 0, 0, 640, 480 );
 					break;
 
-				case UPARROW:
+				case SDLK_UP:
 					guiCrdtNodeScrollSpeed+=5;
 					break;
-				case DNARROW:
+				case SDLK_DOWN:
 					if( guiCrdtNodeScrollSpeed > 5 )
 						guiCrdtNodeScrollSpeed-=5;
 					break;
 
-				case PAUSE:
-				case SPACE:
+				case SDLK_PAUSE:
+				case SDLK_SPACE:
 					if( gfPauseCreditScreen )
 						gfPauseCreditScreen = FALSE;
 					else

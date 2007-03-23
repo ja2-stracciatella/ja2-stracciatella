@@ -63,7 +63,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 extern void DequeueAllKeyBoardEvents();
 
 
-extern BOOLEAN   gfKeyState[256];    // TRUE = Pressed, FALSE = Not Pressed
+extern BOOLEAN gfKeyState[SDLK_LAST]; // TRUE = Pressed, FALSE = Not Pressed
 
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen

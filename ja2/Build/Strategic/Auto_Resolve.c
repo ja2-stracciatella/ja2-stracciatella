@@ -2882,7 +2882,7 @@ static void HandleAutoResolveInput(void)
 		{
 			switch( InputEvent.usParam )
 			{
-				case SPACE:
+				case SDLK_SPACE:
 					gpAR->fPaused ^= TRUE;
 					if( gpAR->fPaused )
 					{
@@ -2913,30 +2913,13 @@ static void HandleAutoResolveInput(void)
 						gpAR->fRenderAutoResolve = TRUE;
 					}
 					break;
-				case F5:
-					if( CHEATER_CHEAT_LEVEL() )
-					{
-						gpAR->fDebugInfo ^= TRUE;
-					}
-					break;
-				case F6:
-					if( CHEATER_CHEAT_LEVEL() )
-					{
-						gpAR->fSound ^= TRUE;
-					}
-					break;
-				case F7:
-					if( CHEATER_CHEAT_LEVEL() )
-					{
-						gpAR->fInstantFinish ^= TRUE;
-					}
-					break;
-				case BACKSPACE:
-					if( CHEATER_CHEAT_LEVEL() )
-					{
-						fResetAutoResolve = TRUE;
-					}
-					break;
+
+				case SDLK_F5: if (CHEATER_CHEAT_LEVEL()) gpAR->fDebugInfo     ^= TRUE; break;
+				case SDLK_F6: if (CHEATER_CHEAT_LEVEL()) gpAR->fSound         ^= TRUE; break;
+				case SDLK_F7: if (CHEATER_CHEAT_LEVEL()) gpAR->fInstantFinish ^= TRUE; break;
+
+				case SDLK_BACKSPACE: if (CHEATER_CHEAT_LEVEL()) fResetAutoResolve = TRUE; break;
+
 				case 'd':
 					if( CHEATER_CHEAT_LEVEL() )
 					{

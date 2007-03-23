@@ -1391,7 +1391,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 
 			switch( Event.usParam )
 			{
-				case ESC:
+				case SDLK_ESCAPE:
 					// clean exits - does quotes, shuts up shopkeeper, etc.
 					ExitSKIRequested();
 
@@ -1408,7 +1408,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 					}
 					break;
 
-				case SPACE:
+				case SDLK_SPACE:
 					{
 						UINT8	ubID;
 

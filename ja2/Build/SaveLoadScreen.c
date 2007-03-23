@@ -902,15 +902,10 @@ static void GetSaveLoadScreenUserInput(void)
 					}
 					break;
 
-				case UPARROW:
-					MoveSelectionUpOrDown( TRUE );
-					break;
+				case SDLK_UP:   MoveSelectionUpOrDown(TRUE);  break;
+				case SDLK_DOWN: MoveSelectionUpOrDown(FALSE); break;
 
-				case DNARROW:
-					MoveSelectionUpOrDown( FALSE );
-					break;
-
-				case ESC:
+				case SDLK_ESCAPE:
 					if( gbSelectedSaveLocation == -1 )
 					{
 
@@ -938,8 +933,7 @@ static void GetSaveLoadScreenUserInput(void)
 					break;
 
 
-				case ENTER:
-
+				case SDLK_RETURN:
 					if( gfSaveGame )
 					{
 						bActiveTextField = (INT8)GetActiveFieldID();

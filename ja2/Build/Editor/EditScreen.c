@@ -1288,13 +1288,13 @@ static void HandleKeyboardShortcuts(void)
 			{
 				switch( EditorInputEvent.usParam )
 				{
-					case ESC:
+					case SDLK_ESCAPE:
 						SetInputFieldStringWith16BitString( 0, L"" );
 						RemoveGotoGridNoUI();
 						break;
-					case ENTER:
-						RemoveGotoGridNoUI();
-						break;
+
+					case SDLK_RETURN: RemoveGotoGridNoUI(); break;
+
 					case 'x':
 						if( EditorInputEvent.usKeyState & ALT_DOWN )
 						{
@@ -1307,7 +1307,7 @@ static void HandleKeyboardShortcuts(void)
 			}
 			else switch( EditorInputEvent.usParam )
 			{
-				case HOME:
+				case SDLK_HOME:
 					gfFakeLights ^= TRUE;
 					if ( gfFakeLights )
 					{
@@ -1324,7 +1324,7 @@ static void HandleKeyboardShortcuts(void)
 					LightSpriteRenderAll();
 					break;
 
-				case SPACE:
+				case SDLK_SPACE:
 					if( iCurrentTaskbar == TASK_MERCS )
 						IndicateSelectedMerc( SELECT_NEXT_MERC );
 					else if( iCurrentTaskbar == TASK_ITEMS )
@@ -1335,7 +1335,7 @@ static void HandleKeyboardShortcuts(void)
 						LightSpriteRenderAll();
 					break;
 
-				case INSERT:
+				case SDLK_INSERT:
 					if ( iDrawMode == DRAW_MODE_GROUND )
 					{
 						iDrawMode += DRAW_MODE_FILL_AREA;
@@ -1349,7 +1349,8 @@ static void HandleKeyboardShortcuts(void)
 						iEditorToolbarState = TBAR_MODE_FILL_AREA_OFF;
 					}
 					break;
-				case ENTER:
+
+				case SDLK_RETURN:
 					if( gfEditingDoor )
 					{
 						ExtractAndUpdateDoorInfo();
@@ -1365,11 +1366,9 @@ static void HandleKeyboardShortcuts(void)
 						ExecuteItemStatsCmd( ITEMSTATS_APPLY );
 					break;
 
-				case BACKSPACE:
-					iCurrentAction = ACTION_UNDO;
-					break;
+				case SDLK_BACKSPACE: iCurrentAction = ACTION_UNDO; break;
 
-				case DEL:
+				case SDLK_DELETE:
 					if( iCurrentTaskbar == TASK_ITEMS )
 						DeleteSelectedItem();
 					else if( gsSelectedMercID != -1 )
@@ -1387,7 +1386,7 @@ static void HandleKeyboardShortcuts(void)
 						iCurrentAction = ACTION_QUICK_ERASE;
 					break;
 
-				case ESC:
+				case SDLK_ESCAPE:
 					if ( InOverheadMap() )
 					{
 						KillOverheadMap();
@@ -1412,17 +1411,17 @@ static void HandleKeyboardShortcuts(void)
 					break;
 
 				//Select next/prev terrain tile to draw with.
-				case LEFTARROW:
+				case SDLK_LEFT:
 					if (!(EditorInputEvent.usKeyState & SHIFT_DOWN)) break;
 					CurrentPaste -= ( gfShowTerrainTileButtons && CurrentPaste > 0 ) ? 1 : 0;
 					break;
 
-				case RIGHTARROW:
+				case SDLK_RIGHT:
 					if (!(EditorInputEvent.usKeyState & SHIFT_DOWN)) break;
 					CurrentPaste += ( gfShowTerrainTileButtons && CurrentPaste < 8 ) ? 1 : 0;
 					break;
 
-				case PGUP:
+				case SDLK_PAGEUP:
 					if( iCurrentTaskbar == TASK_MERCS && !fBuildingShowRoofs )
 					{
 						gfRoofPlacement = TRUE;
@@ -1441,7 +1440,8 @@ static void HandleKeyboardShortcuts(void)
 					}
 					gfRenderDrawingMode = TRUE;
 					break;
-				case PGDN:
+
+				case SDLK_PAGEDOWN:
 					if( iCurrentTaskbar == TASK_MERCS && fBuildingShowRoofs )
 					{
 						gfRoofPlacement = FALSE;
@@ -1461,19 +1461,19 @@ static void HandleKeyboardShortcuts(void)
 					gfRenderDrawingMode = TRUE;
 					break;
 
-				case F1:
+				case SDLK_F1:
 					gfRenderWorld = TRUE;
 					gfRenderTaskbar = TRUE;
 					break;
 
-				case F2:
+				case SDLK_F2:
 					if (EditorInputEvent.usKeyState & ALT_DOWN )
 					{
 						ReloadMap();
 					}
 					break;
 
-				case F3:
+				case SDLK_F3:
 					if( EditorInputEvent.usKeyState & CTRL_DOWN )
 					{
 						ReplaceObsoleteRoads();
@@ -1481,7 +1481,7 @@ static void HandleKeyboardShortcuts(void)
 					}
 					break;
 
-				case F4:
+				case SDLK_F4:
 					MusicPlay( giMusicID );
 					ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"%S", szMusicList[giMusicID] );
 					giMusicID++;
@@ -1489,15 +1489,15 @@ static void HandleKeyboardShortcuts(void)
 						giMusicID = 0;
 					break;
 
-				case F5:
+				case SDLK_F5:
 					UpdateLastActionBeforeLeaving();
 					CreateSummaryWindow();
 					break;
 
-				case F6:
+				case SDLK_F6:
 					break;
 
-				case F7:
+				case SDLK_F7:
 					if( gfBasement )
 					{
 						INT32 i;
@@ -1524,21 +1524,21 @@ static void HandleKeyboardShortcuts(void)
 					}
 					break;
 
-				case F8:
-					SmoothAllTerrainWorld();
-					break;
+				case SDLK_F8: SmoothAllTerrainWorld(); break;
 
-				case F9:
-					break;
-				case F10:
+				case SDLK_F9: break;
+
+				case SDLK_F10:
 					CreateMessageBox( L"Are you sure you wish to remove all lights?" );
 					gfRemoveLightsPending = TRUE;
 					break;
-				case F11:
+
+				case SDLK_F11:
 					CreateMessageBox( L"Are you sure you wish to reverse the schedules?" );
 					gfScheduleReversalPending = TRUE;
 					break;
-				case F12:
+
+				case SDLK_F12:
 					CreateMessageBox( L"Are you sure you wish to clear all of the schedules?" );
 					gfScheduleClearPending = TRUE;
 					break;
@@ -2429,10 +2429,10 @@ static UINT32 WaitForHelpScreenResponse(void)
 		{
 			switch( DummyEvent.usParam )
 			{
-				case SPACE:
-				case ESC:
-				case ENTER:
-				case F1:
+				case SDLK_SPACE:
+				case SDLK_ESCAPE:
+				case SDLK_RETURN:
+				case SDLK_F1:
 					fLeaveScreen = TRUE;
 					break;
 			}
@@ -2469,21 +2469,13 @@ static UINT32 WaitForSelectionWindowResponse(void)
 		{
 			switch( DummyEvent.usParam )
 			{
-				case SPACE:
-					ClearSelectionList();
-					break;
+				case SDLK_SPACE: ClearSelectionList(); break;
+				case SDLK_DOWN:  ScrollSelWinDown();   break;
+				case SDLK_UP:    ScrollSelWinUp();     break;
 
-				case DNARROW:
-					ScrollSelWinDown();
-					break;
-
-				case UPARROW:
-					ScrollSelWinUp();
-					break;
-
-				case ESC:
+				case SDLK_ESCAPE:
 					RestoreSelectionList();
-				case ENTER:
+				case SDLK_RETURN:
 					fAllDone = TRUE;
 					break;
 			}

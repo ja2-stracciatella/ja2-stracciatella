@@ -1120,8 +1120,7 @@ static void HandleFloristOrderKeyBoardInput(void)
 			UINT8 ubTextFieldID;
 			switch (InputEvent.usParam)
 			{
-				case ENTER:
-
+				case SDLK_RETURN:
 					ubTextFieldID = (UINT8) GetActiveFieldID();
 
 					//if its the personel sentiment field
@@ -1138,9 +1137,7 @@ static void HandleFloristOrderKeyBoardInput(void)
 					SetActiveField(0);
 					break;
 
-				case ESC:
-					SetActiveField(0);
-					break;
+				case SDLK_ESCAPE: SetActiveField(0); break;
 
 				default:
 					HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );

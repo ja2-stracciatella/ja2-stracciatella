@@ -298,7 +298,7 @@ UINT32 ErrorScreenHandle(void)
   {
       if( InputEvent.usEvent == KEY_DOWN )
 			{
-				if( InputEvent.usParam == ESC || InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN )
+				if (InputEvent.usParam == SDLK_ESCAPE || InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN)
 				{ // Exit the program
 					DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "GameLoop: User pressed ESCape, TERMINATING");
 
@@ -518,7 +518,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 		return( FALSE );
 	}
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == ESC ))
+  if (pInputEvent->usEvent == KEY_DOWN && pInputEvent->usParam == SDLK_ESCAPE)
   {
 		gfExitPalEditScreen = TRUE;
 		return( TRUE );
@@ -740,7 +740,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 		return( TRUE );
 	}
 
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGUP ))
+	if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_PAGEUP)
   {
 		// Page down
 		gCurDebugPage++;
@@ -755,7 +755,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 
   }
 
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == PGDN ))
+	if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_PAGEDOWN)
   {
 		// Page down
 		gCurDebugPage--;
@@ -1035,11 +1035,8 @@ void DoDemoIntroduction()
 			{
 				if( InputEvent.usEvent == KEY_DOWN )
 				{
-					if( InputEvent.usParam == ESC )
-					{
-						return;
-					}
-					else if( uiStartTime == 0xffffffff )
+					if (InputEvent.usParam == SDLK_ESCAPE) return;
+					if (uiStartTime == 0xffffffff)
 					{
 						uiStartTime = GetJA2Clock();
 					}
@@ -1115,7 +1112,7 @@ UINT32 DemoExitScreenHandle(void)
 	InputAtom InputEvent;
 
 	gfPrevFastAnim = gfFastAnim;
-	if( gfLeftButtonState || gfRightButtonState || _KeyDown( SPACE ) )
+	if (gfLeftButtonState || gfRightButtonState || _KeyDown(SDLK_SPACE))
 	{
 		gfFastAnim = TRUE;
 	}
@@ -1128,7 +1125,7 @@ UINT32 DemoExitScreenHandle(void)
 	{
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
-			if( InputEvent.usParam == ESC )
+			if (InputEvent.usParam == SDLK_ESCAPE)
 			{
 				gfProgramIsRunning = FALSE;
 			}

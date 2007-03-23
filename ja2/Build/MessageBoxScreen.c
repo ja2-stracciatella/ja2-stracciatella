@@ -1102,7 +1102,7 @@ UINT32	MessageBoxScreenHandle( )
   {
       if( InputEvent.usEvent == KEY_UP )
 			{
-				if( ( InputEvent.usParam == ESC ) || ( InputEvent.usParam == 'n') )
+				if (InputEvent.usParam == SDLK_ESCAPE || InputEvent.usParam == 'n')
 				{
           if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
           {
@@ -1111,7 +1111,7 @@ UINT32	MessageBoxScreenHandle( )
           }
 				}
 
-				if( InputEvent.usParam == ENTER )
+				if (InputEvent.usParam == SDLK_RETURN)
 				{
 					if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
 					{
