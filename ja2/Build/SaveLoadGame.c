@@ -107,9 +107,9 @@ extern void BeginLoadScreen();
 
 //Global variable used
 #ifdef JA2BETAVERSION
-UINT32		guiNumberOfMapTempFiles;		//Test purposes
-UINT32		guiSizeOfTempFiles;
-CHAR			gzNameOfMapTempFile[128];
+static UINT32 guiNumberOfMapTempFiles; // Test purposes
+static UINT32 guiSizeOfTempFiles;
+static CHAR   gzNameOfMapTempFile[128];
 #endif
 
 extern		SOLDIERTYPE		*gpSMCurrentMerc;
@@ -130,12 +130,11 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 	extern		UINT8					gubReportMapscreenLock;
 #endif
 
-BOOLEAN				gMusicModeToPlay = FALSE;
+static BOOLEAN gMusicModeToPlay = FALSE;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
-UINT32	guiCurrentQuickSaveNumber = 0;
+static UINT32 guiCurrentQuickSaveNumber = 0;
 UINT32	guiLastSaveGameNum;
-BOOLEAN DoesAutoSaveFileExist( BOOLEAN fLatestAutoSave );
 
 UINT32	guiJA2EncryptionSet = 0;
 
@@ -352,9 +351,7 @@ typedef struct
 UINT32	guiSaveGameVersion=0;
 
 
-//CHAR8		gsSaveGameNameWithPath[ 512 ];
-
-UINT8			gubSaveGameLoc=0;
+static UINT8 gubSaveGameLoc = 0;
 
 UINT32		guiScreenToGotoAfterLoadingSavedGame = 0;
 
