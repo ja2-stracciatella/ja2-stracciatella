@@ -1367,11 +1367,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	// open the save game file
 	hFile = FileOpen(zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
-	if( !hFile )
-	{
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!hFile) goto load_failed_no_close;
 
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Just Opened File" );
@@ -1379,11 +1375,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the Save Game header file
-	if (!FileRead(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER)))
-	{
-		FileClose( hFile );
-		return(FALSE);
-	}
+	if (!FileRead(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER))) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Save Game Header" );
 	#endif
@@ -1393,13 +1385,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	guiBrokenSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
 
 	//if the player is loading up an older version of the game, and the person DOESNT have the cheats on,
-	if( SaveGameHeader.uiSavedGameVersion < 65 && !CHEATER_CHEAT_LEVEL( ) )
-	{
-		//Fail loading the save
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (SaveGameHeader.uiSavedGameVersion < 65 && !CHEATER_CHEAT_LEVEL()) goto load_failed;
 
 	//Store the loading screenID that was saved
 	gubLastLoadingScreenID = SaveGameHeader.ubLoadScreenID;
@@ -1408,11 +1394,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	guiSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
 
 /*
-	if( !LoadGeneralInfo( hFile ) )
-	{
-		FileClose( hFile );
-		return(FALSE);
-	}
+	if (!LoadGeneralInfo(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Misc info" );
 	#endif
@@ -1421,12 +1403,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the gtactical status structure plus the current sector x,y,z
-	if( !LoadTacticalStatusFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadTacticalStatusFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Tactical Status" );
 	#endif
@@ -1437,12 +1414,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the game clock ingo
-	if( !LoadGameClock( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadGameClock(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Game Clock" );
 	#endif
@@ -1514,12 +1486,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 	//load the game events
-	if( !LoadStrategicEventsFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadStrategicEventsFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Strategic Events" );
 	#endif
@@ -1532,12 +1499,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadLaptopInfoFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadLaptopInfoFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Laptop Info" );
 	#endif
@@ -1552,12 +1514,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	// Load all the saved Merc profiles
 	//
-	if( !LoadSavedMercProfiles( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadSavedMercProfiles(hFile)) goto load_failed;
 
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Merc Profiles" );
@@ -1573,12 +1530,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	// Load the soldier structure info
 	//
-	if( !LoadSoldierStructure( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadSoldierStructure(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Soldier Structure" );
 	#endif
@@ -1594,12 +1546,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	// Load the Finances Data and write it to a new file
 	//
-	if( !LoadFilesFromSavedGame( FINANCES_DATA_FILE, hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadFilesFromSavedGame(FINANCES_DATA_FILE, hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Finances Data File" );
 	#endif
@@ -1616,12 +1563,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	// Load the History Data and write it to a new file
 	//
-	if( !LoadFilesFromSavedGame( HISTORY_DATA_FILE, hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadFilesFromSavedGame(HISTORY_DATA_FILE, hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "History File" );
 	#endif
@@ -1638,12 +1580,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//
 	// Load the Files Data and write it to a new file
 	//
-	if( !LoadFilesFromSavedGame( FILES_DAT_FILE, hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadFilesFromSavedGame(FILES_DAT_FILE, hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "The Laptop FILES file" );
 	#endif
@@ -1657,12 +1594,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	// Load the data for the emails
-	if( !LoadEmailFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadEmailFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Email" );
 	#endif
@@ -1677,12 +1609,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the strategic Information
-	if( !LoadStrategicInfoFromSavedFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadStrategicInfoFromSavedFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Strategic Information" );
 	#endif
@@ -1696,12 +1623,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the underground information
-	if( !LoadUnderGroundSectorInfoFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadUnderGroundSectorInfoFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "UnderGround Information" );
 	#endif
@@ -1714,12 +1636,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	// Load all the squad info from the saved game file
-	if( !LoadSquadInfoFromSavedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadSquadInfoFromSavedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Squad Info" );
 	#endif
@@ -1732,12 +1649,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	//Load the group linked list
-	if( !LoadStrategicMovementGroupsFromSavedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadStrategicMovementGroupsFromSavedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Strategic Movement Groups" );
 	#endif
@@ -1749,12 +1661,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	// Load all the map temp files from the saved game file into the maps\temp directory
-	if( !LoadMapTempFilesFromSavedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadMapTempFilesFromSavedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "All the Map Temp files" );
 	#endif
@@ -1767,13 +1674,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-
-	if( !LoadQuestInfoFromSavedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadQuestInfoFromSavedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Quest Info" );
 	#endif
@@ -1785,12 +1686,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-	if( !LoadOppListInfoFromSavedGame( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadOppListInfoFromSavedGame(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "OppList Info" );
 	#endif
@@ -1805,12 +1701,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadMapScreenMessagesFromSaveGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadMapScreenMessagesFromSaveGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "MapScreen Messages" );
 	#endif
@@ -1824,12 +1715,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadNPCInfoFromSavedGameFile(hFile, SaveGameHeader.uiSavedGameVersion)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "NPC Info" );
 	#endif
@@ -1843,12 +1729,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadKeyTableFromSaveedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadKeyTableFromSaveedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "KeyTable" );
 	#endif
@@ -1861,12 +1742,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-	if( !LoadTempNpcQuoteArrayToSaveGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadTempNpcQuoteArrayToSaveGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Npc Temp Quote File" );
 	#endif
@@ -1880,12 +1756,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-	if( !LoadPreRandomNumbersFromSaveGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadPreRandomNumbersFromSaveGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "PreGenerated Random Files" );
 	#endif
@@ -1899,13 +1770,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-
-	if( !LoadSmokeEffectsFromLoadGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadSmokeEffectsFromLoadGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Smoke Effect Structures" );
 	#endif
@@ -1919,12 +1784,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadArmsDealerInventoryFromSavedGameFile( hFile, ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 54 ), ( BOOLEAN )( SaveGameHeader.uiSavedGameVersion >= 55 ) ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return( FALSE );
-	}
+	if (!LoadArmsDealerInventoryFromSavedGameFile(hFile, SaveGameHeader.uiSavedGameVersion >= 54, SaveGameHeader.uiSavedGameVersion >= 55)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Arms Dealers Inventory" );
 	#endif
@@ -1940,12 +1800,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 
-	if( !LoadGeneralInfo( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadGeneralInfo(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Misc info" );
 	#endif
@@ -1959,13 +1814,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc;
 
 
-
-	if( !LoadMineStatusFromSavedGameFile( hFile ) )
-	{
-		FileClose( hFile );
-		guiSaveGameVersion=0;
-		return(FALSE);
-	}
+	if (!LoadMineStatusFromSavedGameFile(hFile)) goto load_failed;
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Mine Status" );
 	#endif
@@ -1983,12 +1832,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 21 )
 	{
-		if( !LoadStrategicTownLoyaltyFromSavedGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadStrategicTownLoyaltyFromSavedGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Town Loyalty" );
 		#endif
@@ -2007,12 +1851,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 22 )
 	{
-		if( !LoadVehicleInformationFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadVehicleInformationFromSavedGameFile(hFile, SaveGameHeader.uiSavedGameVersion)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Vehicle Information" );
 		#endif
@@ -2029,12 +1868,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 24 )
 	{
-		if( !LoadBulletStructureFromSavedGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadBulletStructureFromSavedGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Bullet Information" );
 		#endif
@@ -2053,12 +1887,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 24 )
 	{
-		if( !LoadPhysicsTableFromSavedGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadPhysicsTableFromSavedGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Physics table" );
 		#endif
@@ -2076,12 +1905,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 24 )
 	{
-		if( !LoadAirRaidInfoFromSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadAirRaidInfoFromSaveGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Air Raid Info" );
 		#endif
@@ -2098,12 +1922,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 24 )
 	{
-		if( !LoadTeamTurnsFromTheSavedGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadTeamTurnsFromTheSavedGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Team Turn Info" );
 		#endif
@@ -2121,12 +1940,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 25 )
 	{
-		if( !LoadExplosionTableFromSavedGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadExplosionTableFromSavedGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Explosion Table" );
 		#endif
@@ -2145,12 +1959,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 27 )
 	{
-		if( !LoadCreatureDirectives( hFile, SaveGameHeader.uiSavedGameVersion ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadCreatureDirectives(hFile, SaveGameHeader.uiSavedGameVersion)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Creature Spreading" );
 		#endif
@@ -2169,12 +1978,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 28 )
 	{
-		if( !LoadStrategicStatusFromSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadStrategicStatusFromSaveGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Strategic Status" );
 		#endif
@@ -2191,12 +1995,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 31 )
 	{
-		if( !LoadStrategicAI( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadStrategicAI(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Strategic AI" );
 		#endif
@@ -2213,12 +2012,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 37 )
 	{
-		if( !LoadLightEffectsFromLoadGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return(FALSE);
-		}
+		if (!LoadLightEffectsFromLoadGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Lighting Effects" );
 		#endif
@@ -2235,12 +2029,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 38 )
 	{
-		if ( !LoadWatchedLocsFromSavedGame( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadWatchedLocsFromSavedGame(hFile)) goto load_failed;
 	}
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Watched Locs Info" );
@@ -2258,12 +2047,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion	>= 39 )
 	{
-		if ( !LoadItemCursorFromSavedGame( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadItemCursorFromSavedGame(hFile)) goto load_failed;
 	}
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Item cursor Info" );
@@ -2280,12 +2064,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 51 )
 	{
-		if( !LoadCivQuotesFromLoadGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return FALSE;
-		}
+		if (!LoadCivQuotesFromLoadGameFile(hFile)) goto load_failed;
 	}
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Civ Quote System" );
@@ -2303,12 +2082,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 53 )
 	{
-		if( !LoadBackupNPCInfoFromSavedGameFile( hFile, SaveGameHeader.uiSavedGameVersion ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadBackupNPCInfoFromSavedGameFile(hFile, SaveGameHeader.uiSavedGameVersion)) goto load_failed;
 	}
 	#ifdef JA2BETAVERSION
 		LoadGameFilePosition( FileGetPos( hFile ), "Backed up NPC Info" );
@@ -2325,12 +2099,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 58 )
 	{
-		if( !LoadMeanwhileDefsFromSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadMeanwhileDefsFromSaveGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Meanwhile definitions" );
 		#endif
@@ -2354,12 +2123,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		// trash schedules loaded from map
 		DestroyAllSchedulesWithoutDestroyingEvents();
-		if ( !LoadSchedulesFromSave( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadSchedulesFromSave(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Schedules" );
 		#endif
@@ -2378,24 +2142,14 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 	  if( SaveGameHeader.uiSavedGameVersion < 84 )
 	  {
-		  if ( !LoadVehicleMovementInfoFromSavedGameFile( hFile ) )
-		  {
-			  FileClose( hFile );
-			  guiSaveGameVersion=0;
-			  return( FALSE );
-		  }
+		  if (!LoadVehicleMovementInfoFromSavedGameFile(hFile)) goto load_failed;
 		  #ifdef JA2BETAVERSION
 			  LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
 		  #endif
     }
     else
     {
-		  if ( !NewLoadVehicleMovementInfoFromSavedGameFile( hFile ) )
-		  {
-			  FileClose( hFile );
-			  guiSaveGameVersion=0;
-			  return( FALSE );
-		  }
+		  if (!NewLoadVehicleMovementInfoFromSavedGameFile(hFile)) goto load_failed;
 		  #ifdef JA2BETAVERSION
 			  LoadGameFilePosition( FileGetPos( hFile ), "Extra Vehicle Info" );
 		  #endif
@@ -2417,12 +2171,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 67 )
 	{
-		if ( !LoadContractRenewalDataFromSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadContractRenewalDataFromSaveGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Contract renweal sequence stuff" );
 		#endif
@@ -2431,12 +2180,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 70 )
 	{
-		if ( !LoadLeaveItemList( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!LoadLeaveItemList(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "Leave List" );
 		#endif
@@ -2451,12 +2195,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if( SaveGameHeader.uiSavedGameVersion >= 85 )
 	{
-		if ( !NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( hFile ) )
-		{
-			FileClose( hFile );
-			guiSaveGameVersion=0;
-			return( FALSE );
-		}
+		if (!NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(hFile)) goto load_failed;
 		#ifdef JA2BETAVERSION
 			LoadGameFilePosition( FileGetPos( hFile ), "New way of loading Bobby R mailorders" );
 		#endif
@@ -2746,6 +2485,12 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 	return( TRUE );
+
+load_failed:
+	FileClose(hFile);
+load_failed_no_close:
+	guiSaveGameVersion = 0;
+	return FALSE;
 }
 
 
