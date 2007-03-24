@@ -2375,11 +2375,7 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 
 
 	//Read the number of orders
-	if (!FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32))) return FALSE;
 
 	if ( giNumberOfNewBobbyRShipment == 0 )
 	{
@@ -2399,11 +2395,7 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 		{
 			//Read the order
-			if (!FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct)))
-			{
-				FileClose( hFile );
-				return( FALSE );
-			}
+			if (!FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct))) return FALSE;
 		}
 	}
 

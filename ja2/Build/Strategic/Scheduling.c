@@ -402,11 +402,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 
 	//LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
 	uiNumBytesToRead = sizeof( UINT8 );
-	if (!FileRead(hFile, &ubNum, uiNumBytesToRead))
-	{
-		FileClose( hFile );
-		return( FALSE);
-	}
+	if (!FileRead(hFile, &ubNum, uiNumBytesToRead)) return FALSE;
 
 	//Hack problem with schedules getting misaligned.
 	ubRealNum = gfSchedulesHosed ? ubNum + 256 : ubNum;
@@ -415,11 +411,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	while( ubRealNum )
 	{
 		uiNumBytesToRead = sizeof( SCHEDULENODE );
-		if (!FileRead(hFile, &temp, uiNumBytesToRead))
-		{
-			FileClose( hFile );
-			return( FALSE);
-		}
+		if (!FileRead(hFile, &temp, uiNumBytesToRead)) return FALSE;
 		//LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
 
 		if( gpScheduleList )

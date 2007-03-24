@@ -4155,11 +4155,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 
 	//Load the current music mode
-	if (!FileRead(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO))) return FALSE;
 
 	gMusicModeToPlay = sGeneralInfo.ubMusicMode;
 
