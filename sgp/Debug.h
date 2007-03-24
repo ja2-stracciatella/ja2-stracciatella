@@ -1,16 +1,3 @@
-//**************************************************************************
-//
-// Filename :	debug.h
-//
-//	Purpose :	prototypes for the debug manager
-//
-// Modification history :
-//
-//		xxxxx96:LH				- Creation
-//		xxnov96:HJH				- made it work
-//
-//**************************************************************************
-
 #ifndef __DEBUG_MANAGER_
 #define __DEBUG_MANAGER_
 
@@ -70,8 +57,8 @@ extern UINT8			gubAssertString[128];
 #define Assert(a)
 #define AssertMsg(a,b)
 
-//*******************************************************************************************
 #endif
+
 
 // Moved these out of the defines - debug mgr always initialized
 #define InitializeDebugManager()		DbgInitialize()
@@ -121,8 +108,6 @@ extern void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMe
 extern	void		DbgClearAllTopics( void );
 extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString);
 
-//*******************************************************************************************
-
 #else
 
 //*******************************************************************************************
@@ -147,7 +132,6 @@ extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString)
 #define DebugMsg(a)
 #endif
 
-//*******************************************************************************************
 #endif
 
 

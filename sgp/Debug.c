@@ -1,19 +1,3 @@
-
-// JA2
-
-//**************************************************************************
-//
-// Filename :	debug.c
-//
-//	Purpose :	debug manager implementation
-//
-// Modification history :
-//
-//		xxxxx96:LH				- Creation
-//		xxnov96:HJH				- made it work
-//
-//**************************************************************************
-
 // Because we're in a library, define SGP_DEBUG here - the client may not always
 // use the code to write text, because the header switches on the define
 #define SGP_DEBUG
@@ -102,19 +86,6 @@ static STRING512 gpcDebugLogFileName;
 #endif
 
 
-//**************************************************************************
-//
-// DbgGetLogFileName
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		xxjun98:CJC		-> creation
-//
-//**************************************************************************
 static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 {
 #ifndef _NO_DEBUG_TXT
@@ -126,20 +97,6 @@ static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 
 static void RemoveDebugText(void);
 
-
-//**************************************************************************
-//
-// DbgInitialize
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		xxnov96:HJH		-> creation
-//
-//**************************************************************************
 
 BOOLEAN DbgInitialize(void)
 {
@@ -168,38 +125,12 @@ BOOLEAN DbgInitialize(void)
 	return(TRUE);
 }
 
-//**************************************************************************
-//
-// DbgShutdown
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		xxnov96:HJH		-> creation
-//
-//**************************************************************************
 
 void DbgShutdown(void)
 {
 	DbgMessageReal( (UINT16)(-1), CLIENT_SHUTDOWN, 0, "SGP Going Down" );
 }
 
-
-//**************************************************************************
-//
-// DbgTopicRegistration
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		June 97: BR		-> creation
-//
-//**************************************************************************
 
 void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 {
@@ -235,7 +166,6 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 		DbgMessageReal( *usTopicID, TOPIC_MESSAGE, DBG_LEVEL_0, zMessage );
 		gfDebugTopics[ *usTopicID ] = FALSE;
 
-
 		if (gpDbgTopicPtrs[ *usTopicID ] != NULL )
 		{
 			gpDbgTopicPtrs[ *usTopicID ] = NULL;
@@ -246,29 +176,12 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 }
 
 
-// *************************************************************************
 // Clear the debug txt file out to prevent it from getting huge
-//
-//
-// *************************************************************************
 static void RemoveDebugText(void)
 {
 	FileDelete( gpcDebugLogFileName );
 }
 
-
-//**************************************************************************
-//
-// DbgClearAllTopics
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		June 97: BR		-> creation
-//
-//**************************************************************************
 
 void DbgClearAllTopics( void )
 {
@@ -285,20 +198,6 @@ void DbgClearAllTopics( void )
 	}
 }
 
-
-//**************************************************************************
-//
-// DbgMessageReal
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		xxnov96:HJH		-> creation
-//
-//**************************************************************************
 
 void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *strMessage)
 {
@@ -347,24 +246,12 @@ void			_DebugMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	FILE *DebugFile;
 #endif
 
-	//
-	// Build the output string
-	//
-
 	sprintf( ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
-
-	//
-	// Output to debugger
-	//
 
 	if (gfRecordToDebugger)
 	{
 		OutputDebugString( ubOutputString );
 	}
-
-	//
-	// Record to file if required
-	//
 
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)
@@ -467,7 +354,6 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	FILE *DebugFile;
 #endif
 
-
 	// Build the output string
 	sprintf( ubOutputString, "{ %ld } Assertion Failure: %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
 	if( pString )
@@ -524,5 +410,4 @@ UINT8 *String(const char *String, ...)
   va_end(ArgPtr);
 
   return gbTmpDebugString[usIndex];
-
 }
