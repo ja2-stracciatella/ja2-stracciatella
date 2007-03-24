@@ -2352,21 +2352,13 @@ BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	INT32		iCnt;
 
 	//Write the number of orders
-	if (!FileWrite(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32))) return FALSE;
 
 	//loop through and save all the mail order slots
 	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 	{
 		//Write the order
-		if (!FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct)))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct))) return FALSE;
 	}
 
 	return( TRUE );

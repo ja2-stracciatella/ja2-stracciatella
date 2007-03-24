@@ -3172,21 +3172,12 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 
 	//Write the number of explosion queues
-	if (!FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32))) return FALSE;
 
 	//loop through and add all the explosions
 	for( uiCnt=0; uiCnt< MAX_BOMB_QUEUE; uiCnt++)
 	{
-		if (!FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement)))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement))) return FALSE;
 	}
 
 
@@ -3205,29 +3196,16 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	}
 
 	//Save the number of explosions
-	if (!FileWrite(hFile, &uiExplosionCount, sizeof(UINT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-
+	if (!FileWrite(hFile, &uiExplosionCount, sizeof(UINT32))) return FALSE;
 
 	//loop through and count all the active explosions
 	for( uiCnt=0; uiCnt< NUM_EXPLOSION_SLOTS; uiCnt++)
 	{
 		if( gExplosionData[ uiCnt ].fAllocated )
 		{
-			if (!FileWrite(hFile, &gExplosionData[uiCnt], sizeof(EXPLOSIONTYPE)))
-			{
-				FileClose( hFile );
-				return( FALSE );
-			}
+			if (!FileWrite(hFile, &gExplosionData[uiCnt], sizeof(EXPLOSIONTYPE))) return FALSE;
 		}
 	}
-
-
-
 
 	return( TRUE );
 }

@@ -489,7 +489,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	if( !SaveCurrentSectorsInformationToTempItemFile() )
 	{
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_TESTVERSION, L"ERROR in SaveCurrentSectorsInformationToTempItemFile()");
-		goto FAILED_TO_SAVE;
+		goto FAILED_TO_SAVE_NO_CLOSE;
 	}
 
 	//if we are saving the quick save,
@@ -516,7 +516,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//ok the direcotry doesnt exist, create it
 		if( !MakeFileManDirectory( saveDir ) )
 		{
-			goto FAILED_TO_SAVE;
+			goto FAILED_TO_SAVE_NO_CLOSE;
 		}
 	}
 
@@ -528,7 +528,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	{
 		if( !FileDelete( zSaveGameName ) )
 		{
-			goto FAILED_TO_SAVE;
+			goto FAILED_TO_SAVE_NO_CLOSE;
 		}
 	}
 
@@ -536,7 +536,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	hFile = FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hFile )
 	{
-		goto FAILED_TO_SAVE;
+		goto FAILED_TO_SAVE_NO_CLOSE;
 	}
 
 	#ifdef JA2BETAVERSION
@@ -1236,6 +1236,7 @@ FAILED_TO_SAVE:
 
 	FileClose( hFile );
 
+FAILED_TO_SAVE_NO_CLOSE:
 	if ( fWePausedIt )
 	{
 		UnPauseAfterSaveGame();
@@ -4143,15 +4144,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
   sGeneralInfo.fPlayerTeamSawJoey             = gfPlayerTeamSawJoey;
 	sGeneralInfo.fMikeShouldSayHi								= gfMikeShouldSayHi;
 
-	//Setup the
-	//Save the current music mode
-	if (!FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return !FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
 }
 
 
