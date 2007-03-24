@@ -379,13 +379,6 @@ void			_DebugMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 }
 
 
-
-//////////////////////////////////////////////////////////////////////
-// This func is used by Assert()
-void _Null(void)
-{
-}
-
 extern HVOBJECT FontObjs[25];
 
 #ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY

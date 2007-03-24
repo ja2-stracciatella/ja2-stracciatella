@@ -36,7 +36,6 @@ extern INT32		giProfileCount;
 #define PROFILE_REPORT()		guiProfileTime=(GetTickCount()-guiProfileStart);	\
 														_RPT3(_CRT_WARN, "*** PROFILE REPORT: %d executions took %dms, average of %.2fms per iteration.\n", guiExecutions, guiProfileTime, (FLOAT)guiProfileTime/guiExecutions);
 
-extern void			_Null(void);
 extern	UINT8		*String(const char *String, ...);
 
 
@@ -60,8 +59,8 @@ extern	UINT8		*String(const char *String, ...);
 //with it.
 extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile);
 
-#define Assert(a)										(a) ? _Null() : _FailMessage( NULL, __LINE__, __FILE__ )
-#define AssertMsg(a,b)							(a) ? _Null() : _FailMessage(    b, __LINE__, __FILE__ )
+#define Assert(a)       (a) ? (void)0 : _FailMessage(NULL, __LINE__, __FILE__)
+#define AssertMsg(a, b) (a) ? (void)0 : _FailMessage(b   , __LINE__, __FILE__)
 
 extern UINT8			gubAssertString[128];
 
