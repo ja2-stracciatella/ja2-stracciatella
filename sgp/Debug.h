@@ -82,31 +82,30 @@ extern	void		DbgShutdown(void);
 #define DebugBreakpoint()						__asm { int 3 }
 
 
-#define DbgMessage(a, b, c)					DbgMessageReal( (UINT16)(a), (UINT8)(TOPIC_MESSAGE), (UINT8)(b), (CHAR8 *)(c) )
-#define FastDebugMsg(a)							_DebugMessage( (UINT8 *)(a), (UINT32)(__LINE__), (UINT8 *)(__FILE__) )
+#define DbgMessage(a, b, c) DbgMessageReal(a, TOPIC_MESSAGE, b, c)
+#define FastDebugMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
 
-#define UnRegisterDebugTopic(a, b)	DbgTopicRegistration( (UINT8)TOPIC_UNREGISTER, (UINT16 *)(&(a)), (CHAR8 *)(b) )
-#define ClearAllDebugTopics( )			DbgClearAllTopics( )
+#define UnRegisterDebugTopic(a, b) DbgTopicRegistration(TOPIC_UNREGISTER, &(a), b)
+#define ClearAllDebugTopics()      DbgClearAllTopics()
 
-#define ErrorMsg(a)									_DebugMessage( (UINT8 *)(a), (UINT32)(__LINE__), (UINT8 *)(__FILE__))
+#define ErrorMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
 // Enable the debug topic we want
 #if defined( JA2 ) || defined( UTIL )
-#define RegisterJA2DebugTopic(a, b)	DbgTopicRegistration( TOPIC_REGISTER, &(a), (b) )
+#define RegisterJA2DebugTopic(a, b) DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
 #define RegisterDebugTopic(a, b)
-#define DebugMsg(a, b, c)						DbgMessageReal( (a), TOPIC_MESSAGE, (b), (c) )
+#define DebugMsg(a, b, c)           DbgMessageReal(a, TOPIC_MESSAGE, b, c)
 #else
 #define RegisterJA2DebugTopic(a, b)
-#define RegisterDebugTopic(a, b)		DbgTopicRegistration( (UINT8)TOPIC_REGISTER, (UINT16 *)(&(a)), (CHAR8 *)(b) )
-#define DebugMsg(a)									_DebugMessage((UINT8 *)(a), (UINT32)(__LINE__), (UINT8 *)(__FILE__))
+#define RegisterDebugTopic(a, b)    DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
+#define DebugMsg(a)                 _DebugMessage(a, __LINE__, __FILE__)
 #endif
 
 // public interface to debug methods:
-extern	void		DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *Str);
-//extern	void		_FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile );
-extern void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage);
-extern	void		DbgClearAllTopics( void );
-extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString);
+extern void DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char* Str);
+extern void DbgTopicRegistration(UINT8 ubCmd, UINT16* usTopicID, const char* zMessage);
+extern void DbgClearAllTopics(void);
+extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
 
 #else
 
@@ -117,12 +116,12 @@ extern	void		_DebugMessage(UINT8 *pSourceFile, UINT32 uiLineNum, UINT8 *pString)
 
 #define RegisterDebugTopic(a, b)
 #define UnRegisterDebugTopic(a, b)
-#define ClearAllDebugTopics( )
+#define ClearAllDebugTopics()
 
 #define FastDebugMsg(a)
 #define ErrorMsg(a)
 
-#define DbgTopicRegistration(a, b, c);
+#define DbgTopicRegistration(a, b, c)
 #define DbgMessage(a, b, c)
 
 #if defined( JA2 ) || defined( UTIL )

@@ -239,7 +239,7 @@ static void _DebugRecordToDebugger(BOOLEAN gfState)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Wiz8 compatible debug messaging
 
-void			_DebugMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
+void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFile)
 {
 	UINT8 ubOutputString[512];
 #ifndef _NO_DEBUG_TXT
