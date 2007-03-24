@@ -786,8 +786,7 @@ static void GetOptionsScreenUserInput(void)
 				case SDLK_ESCAPE: SetOptionsExitScreen(guiPreviousOptionScreen); break;
 
 				//Enter the save game screen
-				case 's':
-				case 'S':
+				case SDLK_s:
 					//if the save game button isnt disabled
 					if( ButtonList[ guiOptGotoSaveGameBtn ]->uiFlags & BUTTON_ENABLED )
 					{
@@ -797,8 +796,7 @@ static void GetOptionsScreenUserInput(void)
 					break;
 
 				//Enter the Load game screen
-				case 'l':
-				case 'L':
+				case SDLK_l:
 					SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 					gfSaveGame = FALSE;
 					break;

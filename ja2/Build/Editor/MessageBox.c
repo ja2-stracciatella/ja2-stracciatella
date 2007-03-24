@@ -81,15 +81,13 @@ BOOLEAN MessageBoxHandled()
 			switch( DummyEvent.usParam )
 			{
 				case SDLK_RETURN:
-				case 'y':
-				case 'Y':
+				case SDLK_y:
 					gubMessageBoxStatus = MESSAGEBOX_DONE;
 					gfMessageBoxResult = TRUE;
 					break;
 
 				case SDLK_ESCAPE:
-				case 'n':
-				case 'N':
+				case SDLK_n:
 					gubMessageBoxStatus = MESSAGEBOX_DONE;
 					gfMessageBoxResult = FALSE;
 					break;

@@ -1762,31 +1762,36 @@ static void HandleKeyboardShortcuts(void)
 						iCurrentAction = ACTION_SAVE_MAP;
 					}
 					break;
-				case 't':	// Trees
-					if ( iCurrentTaskbar != TASK_TERRAIN )
+
+				case SDLK_t: // Trees
+				if (EditorInputEvent.usKeyState & SHIFT_DOWN)
 					{
-						iTaskMode = TASK_TERRAIN;
-						DoTaskbar();
-					}
-					iCurrentAction = ACTION_NULL;
-					iDrawMode = DRAW_MODE_OSTRUCTS;
-					ClickEditorButton( TERRAIN_PLACE_TREES );
-					iEditorToolbarState = TBAR_MODE_DRAW_OSTRUCTS;
-					break;
-				case 'T':
-					if ( fShowTrees )
-					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Removing Treetops" );
-						WorldHideTrees( );
+						if (fShowTrees)
+						{
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Removing Treetops");
+							WorldHideTrees();
+						}
+						else
+						{
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Showing Treetops");
+							WorldShowTrees();
+						}
+						fShowTrees = !fShowTrees;
 					}
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Showing Treetops" );
-						WorldShowTrees( );
+						if (iCurrentTaskbar != TASK_TERRAIN)
+						{
+							iTaskMode = TASK_TERRAIN;
+							DoTaskbar();
+						}
+						iCurrentAction = ACTION_NULL;
+						iDrawMode = DRAW_MODE_OSTRUCTS;
+						ClickEditorButton(TERRAIN_PLACE_TREES);
+						iEditorToolbarState = TBAR_MODE_DRAW_OSTRUCTS;
 					}
-					fShowTrees = !fShowTrees;
-
 					break;
+
 				case 'u':
 					RaiseWorldLand();
 					break;

@@ -690,7 +690,7 @@ void SetCursorColor( UINT16 usCursorColor )
 
 static void AddChar(UINT32 uiKey);
 static void DeleteHilitedText(void);
-static void HandleExclusiveInput(UINT32 uiKey);
+static void HandleExclusiveInput(wchar_t Char);
 static void RemoveChar(UINT8 ubArrayIndex);
 
 
@@ -736,17 +736,17 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 #if 0
 	if( Event->usKeyState & CTRL_DOWN  )
 	{
-		if( Event->usParam == 'c' || Event->usParam == 'C' )
+		if (Event->usParam == SDLK_c)
 		{
 			ExecuteCopyCommand();
 			return TRUE;
 		}
-		else if( Event->usParam == 'x' || Event->usParam == 'X' )
+		else if (Event->usParam == SDLK_x)
 		{
 			ExecuteCutCommand();
 			return TRUE;
 		}
-		else if( Event->usParam == 'v' || Event->usParam == 'V' )
+		else if (Event->usParam == SDLK_v)
 		{
 			ExecutePasteCommand();
 			return TRUE;
@@ -909,7 +909,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			if( gfHiliteMode )
 				DeleteHilitedText();
 			if( gpActive->usInputType >= INPUTTYPE_EXCLUSIVE_BASEVALUE )
-				HandleExclusiveInput( Event->usParam );
+				HandleExclusiveInput(Event->Char);
 			else
 			{
 				//Use abbreviations
@@ -972,50 +972,47 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 
 
 // All exclusive input types are handled in this function.
-static void HandleExclusiveInput(UINT32 uiKey)
+static void HandleExclusiveInput(wchar_t Char)
 {
 	switch( gpActive->usInputType )
 	{
 		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: //dos file names
-			if( uiKey >= 'A' && uiKey <= 'Z' ||
-					uiKey >= 'a' && uiKey <= 'z' ||
-					uiKey >= '0' && uiKey <= '9' ||
-					uiKey == '_' || uiKey == '.' )
+			if (Char >= 'A' && Char <= 'Z' ||
+					Char >= 'a' && Char <= 'z' ||
+					Char >= '0' && Char <= '9' ||
+					Char == '_' || Char == '.' )
 			{
-				if( !gubCursorPos && uiKey >= '0' && uiKey <= '9' )
+				if (!gubCursorPos && Char >= '0' && Char <= '9')
 				{	//can't begin a new filename with a number
 					return;
 				}
-				AddChar( uiKey );
+				AddChar(Char);
 			}
 			break;
 		case INPUTTYPE_EXCLUSIVE_COORDINATE:  //coordinates such as a9, z78, etc.
 			if( !gubCursorPos ) //first char is an lower case alpha
 			{
-				if( uiKey >= 'a' && uiKey <= 'z' )
-					AddChar( uiKey );
-				else if( uiKey >= 'A' && uiKey <= 'Z' )
-					AddChar( uiKey + 32 ); //convert to lowercase
+				if (Char >= 'a' && Char <= 'z')
+					AddChar(Char);
+				else if (Char >= 'A' && Char <= 'Z')
+					AddChar(Char + 32); //convert to lowercase
 			}
 			else //subsequent chars are numeric
 			{
-				if( uiKey >= '0' && uiKey <= '9' )
-					AddChar( uiKey );
+				if (Char >= '0' && Char <= '9') AddChar(Char);
 			}
 			break;
 		case INPUTTYPE_EXCLUSIVE_24HOURCLOCK:
 			if( !gubCursorPos )
 			{
-				if( uiKey >= '0' && uiKey <= '2' )
-					AddChar( uiKey );
+				if (Char >= '0' && Char <= '2') AddChar(Char);
 			}
 			else if( gubCursorPos == 1 )
 			{
-				if( uiKey >= '0' && uiKey <= '9' )
+				if (Char >= '0' && Char <= '9')
 				{
-					if( gpActive->szString[ 0 ] == '2' && uiKey > '3' )
-						break;
-					AddChar( uiKey );
+					if (gpActive->szString[0] == '2' && Char > '3') break;
+					AddChar(Char);
 				}
 				if( !gpActive->szString[ 2 ] )
 					AddChar( ':' );
@@ -1024,23 +1021,20 @@ static void HandleExclusiveInput(UINT32 uiKey)
 			}
 			else if( gubCursorPos == 2 )
 			{
-				if( uiKey == ':' )
-					AddChar( uiKey );
-				else if( uiKey >= '0' && uiKey <= '9' )
+				if (Char == ':') AddChar(Char);
+				else if (Char >= '0' && Char <= '9')
 				{
 					AddChar( ':' );
-					AddChar( uiKey );
+					AddChar(Char);
 				}
 			}
 			else if( gubCursorPos == 3 )
 			{
-				if( uiKey >= '0' && uiKey <= '5' )
-					AddChar( uiKey );
+				if (Char >= '0' && Char <= '5') AddChar(Char);
 			}
 			else if( gubCursorPos == 4 )
 			{
-				if( uiKey >= '0' && uiKey <= '9' )
-					AddChar( uiKey );
+				if (Char >= '0' && Char <= '9') AddChar(Char);
 			}
 			break;
 	}

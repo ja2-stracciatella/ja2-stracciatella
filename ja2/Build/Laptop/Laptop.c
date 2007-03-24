@@ -5049,7 +5049,7 @@ void HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 us
 	//help screen stuff
 	else
 #endif
-	if( (usEvent == KEY_DOWN ) && ( ( usParam == 'h' ) || ( usParam == 'H' ) ) )
+	if (usEvent == KEY_DOWN && usParam == SDLK_h)
 	{
 		ShouldTheHelpScreenComeUp( HELP_SCREEN_LAPTOP, TRUE );
 	}

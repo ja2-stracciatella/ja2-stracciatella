@@ -216,11 +216,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 {
 	SDLKey Key = KeySym->sym;
-	if (Key >= SDLK_a && Key <= SDLK_z)
-	{
-		if (KeySym->mod & KMOD_SHIFT) Key -= 32;
-	}
-	else if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
+	if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
 	{
 		if (KeySym->mod & KMOD_NUM)
 		{

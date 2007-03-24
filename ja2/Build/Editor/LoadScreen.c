@@ -806,11 +806,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 
 		default:
 			//This case handles jumping the file list to display the file with the letter pressed.
-			if( pEvent->usParam >= 'a' && pEvent->usParam <= 'z' ||
-					pEvent->usParam >= 'A' && pEvent->usParam <= 'Z' )
+			if (pEvent->usParam >= SDLK_a && pEvent->usParam <= SDLK_z)
 			{
-				if( pEvent->usParam >= 'A' && pEvent->usParam <= 'Z' ) //convert upper case to lower case
-					pEvent->usParam += 32;	// A = 65, a = 97 (difference of 32)
 				SetTopFileToLetter( (UINT16)pEvent->usParam );
 			}
 			break;

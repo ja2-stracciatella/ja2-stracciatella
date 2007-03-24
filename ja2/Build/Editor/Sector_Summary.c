@@ -1783,7 +1783,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 			case SDLK_F7: for (x = 0; x <  10; x++) PerformTest(); break;
 			case SDLK_F8: for (x = 0; x < 100; x++) PerformTest(); break;
 
-			case 'y':case 'Y':
+			case SDLK_y:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
 					gfRenderSummary = TRUE;
@@ -1796,7 +1796,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					gfRenderSummary = TRUE;
 				}
 				break;
-			case 'n':case 'N':
+
+			case SDLK_n:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
 				{
 					gfOutdatedDenied = TRUE;

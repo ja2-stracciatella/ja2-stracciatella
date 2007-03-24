@@ -2480,8 +2480,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						HandlePlayerTogglingLightEffects( TRUE );
 					}
 					break;
-				case 'H':
-				case 'h':
+
+				case SDLK_h:
 					if ( fAlt )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )
@@ -2630,61 +2630,56 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 						break;
 
-				#ifdef JA2BETAVERSION
-				case 'L':
-					gfDisplayStrategicAILogs ^= TRUE;
-					if( gfDisplayStrategicAILogs )
+				case SDLK_l:
+#ifdef JA2BETAVERSION
+					if (fShift)
 					{
-						ScreenMsg( FONT_LTKHAKI, MSG_INTERFACE, L"Strategic AI Log visually enabled." );
+						gfDisplayStrategicAILogs ^= TRUE;
+						const wchar_t* Msg = gfDisplayStrategicAILogs ?
+							L"Strategic AI Log visually enabled." :
+							L"Strategic AI Log visually disabled.";
+						ScreenMsg(FONT_LTKHAKI, MSG_INTERFACE, Msg);
 					}
 					else
+#endif
 					{
-						ScreenMsg( FONT_LTKHAKI, MSG_INTERFACE, L"Strategic AI Log visually disabled." );
-					}
-					break;
-				#endif
-
-				case 'l':
-
-					if( fAlt )
-          {
-	          if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-	          {
-              LeaveTacticalScreen( GAME_SCREEN );
-
-						  DoQuickLoad();
-            }
-          }
-
-					else if( fCtrl )
-					{
-	          if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-	          {
-
-						  gfSaveGame = FALSE;
-						  gfCameDirectlyFromGame = TRUE;
-
-						  guiPreviousOptionScreen = GAME_SCREEN;
-						  LeaveTacticalScreen( SAVE_LOAD_SCREEN );
-            }
+						if (fAlt)
+						{
+							if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+							{
+								LeaveTacticalScreen(GAME_SCREEN);
+								DoQuickLoad();
+							}
+						}
+						else if (fCtrl)
+						{
+							if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+							{
+								gfSaveGame = FALSE;
+								gfCameDirectlyFromGame = TRUE;
+								guiPreviousOptionScreen = GAME_SCREEN;
+								LeaveTacticalScreen(SAVE_LOAD_SCREEN);
+							}
 /*
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_LEVELNODEDEBUG;
-							CountLevelNodes();
-						}
+							if (INFORMATION_CHEAT_LEVEL())
+							{
+								*puiNewEvent = I_LEVELNODEDEBUG;
+								CountLevelNodes();
+							}
 */
-					}
-					else
-					{
-						// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-						if ( ( gpItemPointer == NULL ) &&
-								 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+						}
+						else
 						{
-							*puiNewEvent = LC_CHANGE_TO_LOOK;
+							// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+							if (gpItemPointer == NULL &&
+									(gsCurInterfacePanel != SM_PANEL || ButtonList[iSMPanelButtons[LOOK_BUTTON]]->uiFlags & BUTTON_ENABLED))
+							{
+								*puiNewEvent = LC_CHANGE_TO_LOOK;
+							}
 						}
 					}
 					break;
+
 				case 'm':
 					if( fAlt )
 					{
@@ -3078,9 +3073,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						DisplayGameSettings( );
 
 					break;
-				case 'w':
-				case 'W':
 
+				case SDLK_w:
 					if( fAlt )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )

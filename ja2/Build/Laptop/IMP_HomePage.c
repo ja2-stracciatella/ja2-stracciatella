@@ -240,7 +240,7 @@ static void DisplayActivationStringCursor(void)
 }
 
 
-static void HandleTextEvent(UINT32 uiKey);
+static void HandleTextEvent(const InputAtom* Inp);
 static void ProcessPlayerInputActivationString(void);
 
 
@@ -290,7 +290,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 				default:
 					if(InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
 					{
-						HandleTextEvent( InputEvent.usParam );
+						HandleTextEvent(&InputEvent);
 					}
 				break;
 			}
@@ -299,12 +299,12 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 }
 
 
-static void HandleTextEvent(UINT32 uiKey)
+static void HandleTextEvent(const InputAtom* Inp)
 {
    // this function checks to see if a letter or a backspace was pressed, if so, either put char to screen
 	 // or delete it
 
-  switch( uiKey )
+  switch (Inp->usParam)
 	{
 		case SDLK_BACKSPACE:
 			if( iStringPos >= 0 )
@@ -332,10 +332,12 @@ static void HandleTextEvent(UINT32 uiKey)
 		break;
 
 	  default:
-	    if( uiKey >= 'A' && uiKey <= 'Z' ||
-					uiKey >= 'a' && uiKey <= 'z' ||
-					uiKey >= '0' && uiKey <= '9' ||
-					uiKey == '_' || uiKey == '.' )
+		{
+			wchar_t Char = Inp->Char;
+			if (Char >= 'A' && Char <= 'Z' ||
+					Char >= 'a' && Char <= 'z' ||
+					Char >= '0' && Char <= '9' ||
+					Char == '_' || Char == '.')
 			{
 				// if the current string position is at max or great, do nothing
         if( iStringPos >= 6 )
@@ -349,7 +351,7 @@ static void HandleTextEvent(UINT32 uiKey)
 						iStringPos = 0;
 					}
           // valid char, capture and convert to CHAR16
-          pPlayerActivationString[iStringPos] = ( CHAR16 )uiKey;
+					pPlayerActivationString[iStringPos] = Char;
 
 					// null out next char position
 					pPlayerActivationString[iStringPos + 1] = 0;
@@ -362,13 +364,10 @@ static void HandleTextEvent(UINT32 uiKey)
 
 				  // string has been altered, redisplay
           fNewCharInActivationString = TRUE;
-
 				}
-
 			}
-
-		break;
-
+			break;
+		}
 	}
 }
 
