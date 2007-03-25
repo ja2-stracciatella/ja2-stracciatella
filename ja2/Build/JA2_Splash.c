@@ -22,41 +22,36 @@ UINT32 guiSplashStartTime = 0;
 extern HVSURFACE ghFrameBuffer;
 
 //Simply create videosurface, load image, and draw it to the screen.
-void InitJA2SplashScreen()
+void InitJA2SplashScreen(void)
 {
-	STRING512			DataDir;
-
 	InitializeJA2Clock();
 
-	// Adjust Current Dir
+	STRING512 DataDir;
 	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
-	if ( !SetFileManCurrentDirectory( DataDir ) )
+	if (!SetFileManCurrentDirectory(DataDir))
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
 		return;
 	}
 
 	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
 
-	#ifdef ENGLISH
-		ClearMainMenu();
-	#else
-		{
-			SGPFILENAME ImageFile;
-			GetMLGFilename(ImageFile, MLG_SPLASH);
-			UINT32 uiLogoID = AddVideoSurfaceFromFile(ImageFile);
-			if (uiLogoID == NO_VSURFACE)
-			{
-				AssertMsg(0, String("Failed to load %s", ImageFile));
-				return;
-			}
+#ifdef ENGLISH
+	ClearMainMenu();
+#else
+	SGPFILENAME ImageFile;
+	GetMLGFilename(ImageFile, MLG_SPLASH);
+	UINT32 uiLogoID = AddVideoSurfaceFromFile(ImageFile);
+	if (uiLogoID == NO_VSURFACE)
+	{
+		AssertMsg(0, String("Failed to load %s", ImageFile));
+		return;
+	}
 
-			HVSURFACE hVSurface = GetVideoSurface(uiLogoID);
-			BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
-			DeleteVideoSurfaceFromIndex( uiLogoID );
-		}
-	#endif
-
+	HVSURFACE hVSurface = GetVideoSurface(uiLogoID);
+	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
+	DeleteVideoSurfaceFromIndex(uiLogoID);
+#endif
 
 	InvalidateScreen();
 	RefreshScreen();
