@@ -172,9 +172,7 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 
-	// register debug topics
-	RegisterJA2DebugTopic( TOPIC_JA2, "Reg JA2 Debug" );
-  // MarkNote
+	RegisterDebugTopic(TOPIC_JA2, "Reg JA2 Debug");
 
   return TRUE;
 }

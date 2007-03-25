@@ -91,15 +91,8 @@ extern	void		DbgShutdown(void);
 #define ErrorMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
 // Enable the debug topic we want
-#if defined( JA2 ) || defined( UTIL )
-#define RegisterJA2DebugTopic(a, b) DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
-#define RegisterDebugTopic(a, b)
-#define DebugMsg(a, b, c)           DbgMessageReal(a, TOPIC_MESSAGE, b, c)
-#else
-#define RegisterJA2DebugTopic(a, b)
 #define RegisterDebugTopic(a, b)    DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
-#define DebugMsg(a)                 _DebugMessage(a, __LINE__, __FILE__)
-#endif
+#define DebugMsg(a, b, c)           DbgMessageReal(a, TOPIC_MESSAGE, b, c)
 
 // public interface to debug methods:
 extern void DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char* Str);
@@ -124,12 +117,7 @@ extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* Sou
 #define DbgTopicRegistration(a, b, c)
 #define DbgMessage(a, b, c)
 
-#if defined( JA2 ) || defined( UTIL )
-#define RegisterJA2DebugTopic(a, b)
 #define DebugMsg(a, b, c)
-#else
-#define DebugMsg(a)
-#endif
 
 #endif
 

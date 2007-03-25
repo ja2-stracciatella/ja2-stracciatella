@@ -86,9 +86,7 @@ BOOLEAN InitializeGame(void)
 	UINT32				uiIndex;
 
 	ClearAllDebugTopics();
-	RegisterJA2DebugTopic( TOPIC_JA2OPPLIST, "Reg" );
-	//RegisterJA2DebugTopic( TOPIC_MEMORY_MANAGER, "Reg" );
-
+	RegisterDebugTopic(TOPIC_JA2OPPLIST, "Reg");
 
 	// Initlaize mouse subsystems
 	MSYS_Init( );
