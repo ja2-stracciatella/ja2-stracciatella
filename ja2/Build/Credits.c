@@ -542,10 +542,6 @@ static void HandleCreditScreen(void)
 static BOOLEAN RenderCreditScreen(void)
 {
   BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
-/*
-	HVSURFACE hVSurface = GetVideoSurface(guiCreditBackGroundImage);
-	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
-*/
 	if( !gfCrdtHaveRenderedFirstFrameToSaveBuffer )
 	{
 		gfCrdtHaveRenderedFirstFrameToSaveBuffer = TRUE;
@@ -980,8 +976,7 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 		}
 	}
 
-	HVSURFACE hVSurface = GetVideoSurface(pCurrent->uiVideoSurfaceImage);
-	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, pCurrent->sPosX, pCurrent->sPosY, NULL);
+	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, pCurrent->sPosX, pCurrent->sPosY, NULL);
 
 	return( TRUE );
 }

@@ -270,8 +270,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		UINT32 uiLoadScreen = AddVideoSurfaceFromFile(ImageFile);
 		if (uiLoadScreen != NO_VSURFACE)
 		{ //Blit the background image
-			HVSURFACE hVSurface = GetVideoSurface(uiLoadScreen);
-			BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
+			BltVideoSurface(FRAME_BUFFER, uiLoadScreen, 0, 0, NULL);
 			DeleteVideoSurfaceFromIndex( uiLoadScreen );
 		}
 		else

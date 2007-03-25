@@ -1144,8 +1144,7 @@ UINT32 DemoExitScreenHandle(void)
 
 		SetMusicMode( MUSIC_NONE );
 
-		HVSURFACE hVSurface = GetVideoSurface(uiCollageID);
-		BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
+		BltVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, NULL);
 		DeleteVideoSurfaceFromIndex( uiCollageID );
 
 		InvalidateScreen( );

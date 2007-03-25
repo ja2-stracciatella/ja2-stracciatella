@@ -392,8 +392,11 @@ static void DeletePrimaryVideoSurfaces(void)
 		DeleteVideoSurface( ghMouseBuffer );
 		ghMouseBuffer = NULL;
 	}
-
 }
+
+
+static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect);
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -873,7 +876,7 @@ static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, SGPRect* pRect)
 // Blt  will use DD Blt or BltFast depending on flags.
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 
-BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
+static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
 {
 	UINT8					*pSrcSurface8, *pDestSurface8;
 	UINT16				*pDestSurface16, *pSrcSurface16;
