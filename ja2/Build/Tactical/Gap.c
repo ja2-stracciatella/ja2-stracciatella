@@ -132,7 +132,7 @@ void AudioGapListDone( AudioGapList	*pGapList )
  pGapList->pHead=0;
  pGapList->pCurrent=0;
  pGapList->size = 0;
- DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Audio Gap List Deleted") );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Audio Gap List Deleted");
 }
 
 

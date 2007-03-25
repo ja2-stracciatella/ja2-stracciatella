@@ -941,7 +941,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 	else
 	{
 		// Return warning that we have not actually loaded the surface previously
-		AnimDebugMsg( String( "Surface Database: WARNING!!! Soldier has tried to unlock surface that he has not locked." ) );
+		AnimDebugMsg("Surface Database: WARNING!!! Soldier has tried to unlock surface that he has not locked.");
 		return( FALSE );
 	}
 

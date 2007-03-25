@@ -769,7 +769,7 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 		// Create frame cache
 		if( InitAnimationCache( usSoldierID, &( pSoldier->AnimCache) ) == FALSE )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed animation cache creation" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed animation cache creation");
 			break;
 		}
 
@@ -814,14 +814,14 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 		// INIT ANIMATION DATA
 		//if((pSoldier->pBackGround=MemAlloc(SOLDIER_UNBLIT_SIZE))==NULL)
 		//{
-		//	DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed unblit memory allocation" ) );
+		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed unblit memory allocation");
 		//	break;
 		//}
 		//memset(pSoldier->pBackGround, 0, SOLDIER_UNBLIT_SIZE);
 
 		//if((pSoldier->pZBackground=MemAlloc(SOLDIER_UNBLIT_SIZE))==NULL)
 		//{
-		//	DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed unblit memory allocation" ) );
+		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed unblit memory allocation");
 		//	break;
 		//}
 		//memset(pSoldier->pZBackground, 0, SOLDIER_UNBLIT_SIZE);
@@ -829,7 +829,7 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 		// Init palettes
 		if( CreateSoldierPalettes( pSoldier ) == FALSE )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed in creating soldier palettes" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed in creating soldier palettes");
 			break;
 		}
 
@@ -972,7 +972,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 		{
 			if( ( pSoldier->iLight=LightSpriteCreate("Light3", 0 ) )==(-1))
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed loading light" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
 				return( FALSE );
 			}
 			else
@@ -985,7 +985,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 		{
 			if( ( pSoldier->iLight=LightSpriteCreate("Light4", 0 ) )==(-1))
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed loading light" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
 				return( FALSE );
 			}
 			else
@@ -997,7 +997,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 		{
 			if( ( pSoldier->iLight=LightSpriteCreate("Light2", 0 ) )==(-1))
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier: Failed loading light" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
 				return( FALSE );
 			}
 			else
@@ -1203,7 +1203,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 	if ( ( uiOldAnimFlags & ANIM_HITWHENDOWN ) && ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) || pSoldier->bLife != 0 ) )
 	{
 		// Release attacker
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, animation of kill on the ground ended") );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, animation of kill on the ground ended");
 		ReleaseSoldiersAttacker( pSoldier );
 
 		//FREEUP GETTING HIT FLAG
@@ -3883,7 +3883,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, IN
 	// IF HERE AND GUY IS DEAD, RETURN!
 	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker,Dead soldier hit" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker,Dead soldier hit");
 		ReleaseSoldiersAttacker( pSoldier );
 		return;
 	}
@@ -5149,7 +5149,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				pSoldier->uiStatusFlags &= (~SOLDIER_TURNINGFROMHIT );
 
 				// Release attacker
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, turning from hit animation ended") );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, turning from hit animation ended");
 				ReleaseSoldiersAttacker( pSoldier );
 
 				//FREEUP GETTING HIT FLAG
@@ -6298,7 +6298,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 	{
     if ( pSoldier->bLife >= OKLIFE )
     {
-    	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Freeing up attacker from electricity damage") );
+    	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Freeing up attacker from electricity damage");
 		  ReleaseSoldiersAttacker( pSoldier );
     }
 	}
@@ -8912,7 +8912,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 
 		// Decrement attack counter...
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending throw because saw something") );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something");
 		ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 
 		// ATE: Goto stationary stance......
@@ -8944,7 +8944,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 			// after turn is done - so set flag here to tell it not to...
 			pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
 
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something") );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
 			ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 		}
 
@@ -9026,7 +9026,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	{
 		pSoldier->fTurningToShoot = FALSE;
 		// Release attacker
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something") );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
 		ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 	}
 
@@ -10377,7 +10377,7 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
   // Robot's don't cower!
   if ( pSoldier->ubBodyType == ROBOTNOWEAPON )
   {
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ERROR: Robot was told to cower!" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "ERROR: Robot was told to cower!");
     return;
   }
 
@@ -10804,7 +10804,7 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 			    // things that can happen - 1 of them is that sLastTarget will get unset
 			    // after turn is done - so set flag here to tell it not to...
 			    pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
-			    DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION") );
+			    DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
 			    ReduceAttackBusyCount( pSoldier->ubID, FALSE );
         }
 
@@ -10818,7 +10818,7 @@ void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
 		      pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 
 		      // Decrement attack counter...
-		      DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION") );
+		      DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
 		      ReduceAttackBusyCount( pSoldier->ubID, FALSE );
 	      }
 

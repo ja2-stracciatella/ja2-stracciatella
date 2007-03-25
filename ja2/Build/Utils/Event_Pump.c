@@ -609,21 +609,21 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			case S_STRUCTUREHIT:
 
 				memcpy( &SStructureHit, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: StructureHit" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: StructureHit");
 				StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, TRUE );
 				break;
 
 			case S_WINDOWHIT:
 
 				memcpy( &SWindowHit, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: WindowHit" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: WindowHit");
 				WindowHit( SWindowHit.sGridNo, SWindowHit.usStructureID, SWindowHit.fBlowWindowSouth, SWindowHit.fLargeForce );
 				break;
 
 			case S_MISS:
 
 				memcpy( &SMiss, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: Shot Miss ( obsolete )" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Shot Miss ( obsolete )");
 				//ShotMiss( SMiss.ubAttackerID );
 				break;
 

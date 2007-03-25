@@ -776,63 +776,63 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 	//Save the Items to the the file
 	if( !SaveWorldItemsToTempItemFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, guiNumWorldItems, gWorldItems ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveWorldItemsToTempItemFile()" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveWorldItemsToTempItemFile()");
 		return( FALSE );
 	}
 
 	//Save the rotting corpse array to the temp rotting corpse file
 	if( !SaveRottingCorpsesToTempCorpseFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRottingCorpsesToTempCorpseFile()" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRottingCorpsesToTempCorpseFile()");
 		return( FALSE );
 	}
 
 	//save the Doortable array to the temp door map file
 	if( !SaveDoorTableToDoorTableTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorTableToDoorTableTempFile()" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorTableToDoorTableTempFile()");
 		return( FALSE );
 	}
 
 	//save the 'revealed'status of the tiles
 	if( !SaveRevealedStatusArrayToRevealedTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRevealedStatusArrayToRevealedTempFile()" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRevealedStatusArrayToRevealedTempFile()");
 		return( FALSE );
 	}
 
 	//save the door open status to the saved game file
 	if( !SaveDoorStatusArrayToDoorStatusTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorStatusArrayToDoorStatusTempFile()" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorStatusArrayToDoorStatusTempFile()");
 		return( FALSE );
 	}
 
 	//Save the enemies to the temp file
 	if( !NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, FALSE ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Enemy, Creature Team )" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Enemy, Creature Team )");
 		return( FALSE );
 	}
 
 	//Save the civilian info to the temp file
 	if( !NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, FALSE ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Civ Team )" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Civ Team )");
 		return( FALSE );
 	}
 
 	//Save the smoke effects info to the temp file
 	if( !SaveSmokeEffectsToMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveSmokeEffectsToMapTempFile" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveSmokeEffectsToMapTempFile");
 		return( FALSE );
 	}
 
 	//Save the smoke effects info to the temp file
 	if( !SaveLightEffectsToMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("SaveCurrentSectorsInformationToTempItemFile:  failed in SaveLightEffectsToMapTempFile" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveLightEffectsToMapTempFile");
 		return( FALSE );
 	}
 

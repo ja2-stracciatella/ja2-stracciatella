@@ -3249,8 +3249,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 #endif
 
 #ifdef TESTOPPLIST
-			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("RS: not heard or seen") );
+			DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: not heard or seen");
 #endif
 
      continue;                          // skip to the next opponent
@@ -3279,8 +3278,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 #endif
 
 #ifdef TESTOPPLIST
-		DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("RS: made it!") );
+		DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: made it!");
 #endif
 
 

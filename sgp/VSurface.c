@@ -79,7 +79,7 @@ BOOLEAN InitializeVideoSurfaceManager( )
 	// Create primary and backbuffer from globals
 	if ( !SetPrimaryVideoSurfaces( ) )
 	{
-    DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_1, String( "Could not create primary surfaces" ) );
+		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_1, "Could not create primary surfaces");
 		return FALSE;
 	}
 
@@ -540,7 +540,7 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
-  DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_3, String("Success in Creating Video Surface" ) );
+	DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Success in Creating Video Surface");
 
 	return( hVSurface );
 }
@@ -676,7 +676,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	// This HIMAGE function will transparently copy buffer
 	if ( !CopyImageToBuffer( hImage, fBufferBPP, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &aRect ) )
 	{
-    DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Error Occured Copying HIMAGE to HVSURFACE" ));
+		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
 		UnLockVideoSurfaceBuffer( hVSurface );
 		return( FALSE );
 	}
@@ -717,7 +717,7 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 	// Create 16BPP Palette
 	hVSurface->p16BPPPalette = Create16BPPPalette( pSrcPalette );
 
-  DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, String("Video Surface Palette change successfull" ));
+	DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Video Surface Palette change successfull");
 	return( TRUE );
 }
 
@@ -897,12 +897,12 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 		// Check Sizes, SRC size MUST be <= DEST size
 		if ( hDestVSurface->usHeight < hSrcVSurface->usHeight )
 		{
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Incompatible height size given in Video Surface blit" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 				return( FALSE );
 		}
 		if ( hDestVSurface->usWidth < hSrcVSurface->usWidth )
 		{
-				DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Incompatible height size given in Video Surface blit" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 				return( FALSE );
 		}
 
@@ -958,14 +958,14 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 #ifndef JA2
 		if((pSrcSurface16=(UINT16 *)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch))==NULL)
 		{
-			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP surface for blitting" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 16BPP surface for blitting");
 			return(FALSE);
 		}
 
 		if((pDestSurface16=(UINT16 *)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch))==NULL)
 		{
 			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 16BPP dest surface for blitting" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 16BPP dest surface for blitting");
 			return(FALSE);
 		}
 
@@ -982,14 +982,14 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 	{
 		if((pSrcSurface8=(UINT8 *)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch))==NULL)
 		{
-			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 8BPP surface for blitting" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 8BPP surface for blitting");
 			return(FALSE);
 		}
 
 		if((pDestSurface8=(UINT8 *)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch))==NULL)
 		{
 			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Failed on lock of 8BPP dest surface for blitting" ));
+			DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 8BPP dest surface for blitting");
 			return(FALSE);
 		}
 
@@ -1000,7 +1000,7 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 	}
 	else
 	{
-		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, String( "Incompatible BPP values with src and dest Video Surfaces for blitting" ));
+		DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 		return( FALSE );
 	}
 
@@ -1042,7 +1042,7 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	}
 
 	// All is well
-  DbgMessage( TOPIC_VIDEOSURFACE, DBG_LEVEL_0, String("Success in Creating Video Surface from DD Surface" ) );
+	DbgMessage(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Success in Creating Video Surface from DD Surface");
 
 	return hVSurface;
 }

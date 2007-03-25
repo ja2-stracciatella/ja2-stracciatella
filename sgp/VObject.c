@@ -404,7 +404,7 @@ static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, SGPPaletteEntry* pSrcPal
 	hVObject->p16BPPPalette = Create16BPPPalette( pSrcPalette );
 	hVObject->pShadeCurrent = hVObject->p16BPPPalette;
 
-//  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_3, String("Video Object Palette change successfull" ));
+//	DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_3, "Video Object Palette change successfull");
 	return( TRUE );
 }
 
@@ -557,7 +557,7 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 
 	if(pObj->pShades[uiShade]==NULL)
 	{
-	  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Attempt to set shade level to NULL table"));
+		DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Attempt to set shade level to NULL table");
 		return(FALSE);
 	}
 
@@ -573,7 +573,7 @@ UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 	HVOBJECT hObj = GetVideoObject(uiHandle);
 	if (hObj == NULL)
 	{
-	  DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid object handle for setting shade level"));
+		DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid object handle for setting shade level");
 		return(FALSE);
 	}
 	return(SetObjectShade(hObj, uiShade));

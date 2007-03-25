@@ -186,7 +186,7 @@ INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, r
 		pObject->EndedWithCollisionPosition.z += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ pObject->sGridNo ].sHeight );
 	}
 
-	PhysicsDebugMsg( String( "NewPhysics Object")  );
+	PhysicsDebugMsg("NewPhysics Object");
 
 	return( iObjectIndex );
 }
@@ -431,7 +431,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 				PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pObject->sGridNo), 1, SoundDir(pObject->sGridNo));
 			}
 
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off") );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
 			ReduceAttackBusyCount( pObject->ubOwner, FALSE );
 
 			// ATE: Handle end of animation...

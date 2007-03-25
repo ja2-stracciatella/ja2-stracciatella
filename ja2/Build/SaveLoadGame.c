@@ -2346,7 +2346,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 from load" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from load");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
@@ -2842,14 +2842,14 @@ BOOLEAN SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 		// write to the file saying we have the ....
 		if (!FileWrite(hFile, &ubOne, 1))
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "FAILED to Write Soldier Structure to File");
 			return(FALSE);
 		}
 
 		// Now save the ....
 		if (!FileWrite(hFile, pData, uiSizeOfObject))
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "FAILED to Write Soldier Structure to File");
 			return(FALSE);
 		}
 	}
@@ -2858,7 +2858,7 @@ BOOLEAN SavePtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 		// write to the file saying we DO NOT have the ...
 		if (!FileWrite(hFile, &ubZero, 1))
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "FAILED to Write Soldier Structure to File");
 			return(FALSE);
 		}
 	}
@@ -2876,7 +2876,7 @@ BOOLEAN LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 	// Read the file to see if we have to load the ....
 	if (!FileRead(hFile, &ubOne, 1))
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Soldier Structure from File" ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "FAILED to Read Soldier Structure from File");
 		return(FALSE);
 	}
 
@@ -2893,7 +2893,7 @@ BOOLEAN LoadPtrInfo( PTR *pData, UINT32 uiSizeOfObject, HWFILE hFile )
 		// Now Load the ....
 		if (!FileRead(hFile, pData, uiSizeOfObject))
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write Soldier Structure to File" ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "FAILED to Write Soldier Structure to File");
 			return(FALSE);
 		}
 	}

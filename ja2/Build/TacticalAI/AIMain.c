@@ -93,7 +93,7 @@ INT8 gbDiff[MAX_DIFF_PARMS][5] =
 void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 
-void DebugAI( STR szOutput )
+void DebugAI(const char* szOutput)
 {
 #ifdef JA2BETAVERSION
 	// Send regular debug msg AND AI debug message
@@ -724,7 +724,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 		}
 
 		// We are at the end, return control to next team
-		DebugAI( String("Ending AI turn\n" ) );
+		DebugAI("Ending AI turn\n");
 		EndAITurn();
 
 	}
@@ -761,7 +761,7 @@ void EndAIDeadlock(void)
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Number of bullets in the air is %ld", guiNumBullets ) );
 
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Setting attack busy count to 0 from deadlock break" ) );
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from deadlock break");
 				gTacticalStatus.ubAttackBusyCount = 0;
 
 				EndAIGuysTurn(pSoldier);
@@ -1153,7 +1153,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 		//if ( gTacticalStatus.ubAttackBusyCount )
 		//{
 		//	gTacticalStatus.ubAttackBusyCount = 0;
-		//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Setting attack busy count to 0 due to Action Done" ) );
+		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to Action Done");
 		//	pSoldier->bBulletsLeft = 0;
 		//}
 
@@ -1273,7 +1273,7 @@ void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
 {
 #ifdef DEBUGDECISIONS
 	if (SkipCoverCheck)
-		DebugAI( String( "CancelAIAction: SkipCoverCheck turned OFF\n" ) );
+		DebugAI("CancelAIAction: SkipCoverCheck turned OFF\n");
 #endif
 
 	// re-enable cover checking, something is new or something strange happened
@@ -2028,7 +2028,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-			DebugAI( String( "ExecuteAction: SkipCoverCheck ON\n" ) );
+			DebugAI("ExecuteAction: SkipCoverCheck ON\n");
 #endif
 
 //			pSoldier->bDesiredDirection = (UINT8) ;   // turn to face direction in actionData
@@ -2425,7 +2425,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			SkipCoverCheck = TRUE;
 
 #ifdef DEBUGDECISIONS
-			DebugAI( String( "ExecuteAction: SkipCoverCheck ON\n" ) );
+			DebugAI("ExecuteAction: SkipCoverCheck ON\n");
 #endif
 			SendChangeSoldierStanceEvent( pSoldier, (UINT8) pSoldier->usActionData );
 			break;

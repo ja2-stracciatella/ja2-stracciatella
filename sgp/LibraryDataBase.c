@@ -128,7 +128,7 @@ BOOLEAN ShutDownFileDatabase( )
 	//loop through all the 'opened files' ( there should be no files open )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
-		FastDebugMsg( String("ShutDownFileDatabase( ):  ERROR:  real file id still exists, wasnt closed") );
+		FastDebugMsg("ShutDownFileDatabase():  ERROR:  real file id still exists, wasnt closed");
 		fclose(gFileDataBase.RealFiles.pRealFilesOpen[sLoop1].hRealFileHandle);
 	}
 

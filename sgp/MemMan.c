@@ -150,22 +150,22 @@ void ShutdownMemoryManager( void )
 {
 	if ( MemDebugCounter != 0 )
 	{
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("  >>>>> MEMORY LEAK DETECTED!!! <<<<<  "));
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "  >>>>> MEMORY LEAK DETECTED!!! <<<<<  ");
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter ));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal ));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
 		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed", guiMemFreed));
 
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("***** WARNING - WARNING - WARNING *****"));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String(" "));
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
 
 		#ifndef EXTREME_MEMORY_DEBUGGING
 			#ifdef JA2BETAVERSION

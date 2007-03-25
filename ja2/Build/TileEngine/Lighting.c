@@ -238,7 +238,7 @@ UINT32 uiCount;
 
 	if(LightLoad("TRANSLUC.LHT")!=0)
 	{
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Failed to load translucency template"));
+		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
 		return(FALSE);
 	}
 
@@ -306,7 +306,7 @@ UINT32 uiCount;
 
 	if(LightLoad("TRANSLUC.LHT")!=0)
 	{
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Failed to load translucency template"));
+		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
 		return(FALSE);
 	}
 

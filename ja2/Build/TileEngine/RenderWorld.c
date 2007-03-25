@@ -3636,14 +3636,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 
 	if(hSrcVObject->ppZStripInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 	// setup for the z-column blitting stuff
 	pZInfo=hSrcVObject->ppZStripInfo[usIndex];
 	if(pZInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 
@@ -4167,14 +4167,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough( UINT16 *
 
 	if(hSrcVObject->ppZStripInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 	// setup for the z-column blitting stuff
 	pZInfo=hSrcVObject->ppZStripInfo[usIndex];
 	if(pZInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 
@@ -4704,14 +4704,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip( UINT16 *pBuffer, UI
 
 	if(hSrcVObject->ppZStripInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 	// setup for the z-column blitting stuff
 	pZInfo=hSrcVObject->ppZStripInfo[usIndex];
 	if(pZInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 
@@ -5254,14 +5254,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip( UINT16 *
 
 	if(hSrcVObject->ppZStripInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 	// setup for the z-column blitting stuff
 	pZInfo=hSrcVObject->ppZStripInfo[sZIndex];
 	if(pZInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 
@@ -5856,14 +5856,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip( UINT16 *pBuffer
 
 	if(hSrcVObject->ppZStripInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 	// setup for the z-column blitting stuff
 	pZInfo=hSrcVObject->ppZStripInfo[sZIndex];
 	if(pZInfo==NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, String("Missing Z-Strip info on multi-Z object"));
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
 		return(FALSE);
 	}
 

@@ -2569,7 +2569,7 @@ static void PerformAttachmentComboMerge(OBJECTTYPE* pObj, INT8 bAttachmentComboM
 		}
 
 		bAttachPos = FindAttachment( pObj, AttachmentComboMerge[ bAttachmentComboMerge ].usAttachment[ bAttachLoop ] );
-		AssertMsg( bAttachPos != -1, String( "Attachment combo merge couldn't find a necessary attachment" ) );
+		AssertMsg(bAttachPos != -1, "Attachment combo merge couldn't find a necessary attachment");
 
 		uiStatusTotal += pObj->bAttachStatus[ bAttachPos ];
 		bNumStatusContributors++;

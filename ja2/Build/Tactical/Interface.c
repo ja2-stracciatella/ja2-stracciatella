@@ -1743,7 +1743,7 @@ static void EndOverlayMessage(void)
 	if ( giPopupSlideMessageOverlay != -1 )
 	{
 
-//		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Removing Overlay message") );
+//		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Removing Overlay message");
 
 		RemoveVideoOverlay( giPopupSlideMessageOverlay );
 
@@ -2704,7 +2704,7 @@ void EndUIMessage( )
 			}
 		}
 
-//		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Removing Overlay message") );
+//		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Removing Overlay message");
 
 		RemoveVideoOverlay( giUIMessageOverlay );
 
