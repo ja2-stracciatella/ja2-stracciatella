@@ -325,7 +325,6 @@ UINT32 InitScreenInitialize(void)
 
 UINT32 InitScreenHandle(void)
 {
-	static HVSURFACE			hVSurface;
 	static UINT8					ubCurrentScreen = 255;
 
 	if ( ubCurrentScreen == 255 )
@@ -347,11 +346,6 @@ UINT32 InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 0 )
 	{
-		// Load init screen and blit!
-		hVSurface = CreateVideoSurfaceFromFile("ja2_logo.STI");
-		AssertMsg(hVSurface != NULL, "Failed to load ja2_logo.sti!");
-
-		//BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
 		ubCurrentScreen = 1;
 
 		// Init screen
@@ -387,8 +381,6 @@ UINT32 InitScreenHandle(void)
 
 		InvalidateScreen( );
 
-		// Delete video Surface
-		DeleteVideoSurface( hVSurface );
 		//ATE: Set to true to reset before going into main screen!
 
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
