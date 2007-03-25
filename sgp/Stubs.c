@@ -31,7 +31,7 @@ size_t GetPrivateProfileString(const char* app_name, const char* key_name, const
 
 void OutputDebugString(const char* str)
 {
-	fprintf(stderr, "%s: %s\n", __func__, str);
+	fputs(str, stderr);
 }
 
 #ifdef __linux__
