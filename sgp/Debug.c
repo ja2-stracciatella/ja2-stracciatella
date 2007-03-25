@@ -20,11 +20,8 @@
 #	include "Gameloop.h"
 #	include "Input.h"
 #endif
-// CJC added
-#ifndef _NO_DEBUG_TXT
-#	include "FileMan.h"
-#endif
 #include "VObject.h"
+#include "Stubs.h" // XXX
 
 
 #ifdef __cplusplus
@@ -86,16 +83,13 @@ static STRING512 gpcDebugLogFileName;
 #endif
 
 
+#ifndef _NO_DEBUG_TXT
 static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 {
-#ifndef _NO_DEBUG_TXT
 	strcpy(pcName, "debug.txt");
-#endif
 	return TRUE;
 }
-
-
-static void RemoveDebugText(void);
+#endif
 
 
 BOOLEAN DbgInitialize(void)
@@ -114,12 +108,8 @@ BOOLEAN DbgInitialize(void)
 	gubAssertString[0] = '\0';
 
 #ifndef _NO_DEBUG_TXT
-	if (! DbgGetLogFileName( gpcDebugLogFileName ) )
-	{
-		return( FALSE );
-	}
-	// clear debug text file out
-	RemoveDebugText( );
+	if (!DbgGetLogFileName(gpcDebugLogFileName)) return FALSE;
+	remove(gpcDebugLogFileName);
 #endif
 
 	return(TRUE);
@@ -176,13 +166,6 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 }
 
 
-// Clear the debug txt file out to prevent it from getting huge
-static void RemoveDebugText(void)
-{
-	FileDelete( gpcDebugLogFileName );
-}
-
-
 void DbgClearAllTopics( void )
 {
 	UINT16 usIndex;
@@ -201,10 +184,6 @@ void DbgClearAllTopics( void )
 
 void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *strMessage)
 {
-#ifndef _NO_DEBUG_TXT
-  FILE      *OutFile;
-#endif
-
 	// Check for a registered topic ID
 	if ( uiTopicId < MAX_TOPICS_ALLOTED && gfDebugTopics[uiTopicId] )
 	{
@@ -214,7 +193,8 @@ void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const
 //add _NO_DEBUG_TXT to your SGP preprocessor definitions to avoid this f**king huge file from
 //slowly growing behind the scenes!!!!
 #ifndef _NO_DEBUG_TXT
-		if ((OutFile = fopen(gpcDebugLogFileName, "a+t")) != NULL)
+		FILE* OutFile = fopen(gpcDebugLogFileName, "a+");
+		if (OutFile != NULL)
 		{
 			fprintf(OutFile, "%s\n", strMessage);
 			fclose(OutFile);
@@ -242,9 +222,6 @@ static void _DebugRecordToDebugger(BOOLEAN gfState)
 void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFile)
 {
 	UINT8 ubOutputString[512];
-#ifndef _NO_DEBUG_TXT
-	FILE *DebugFile;
-#endif
 
 	sprintf( ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
 
@@ -256,10 +233,11 @@ void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFil
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)
 	{
-		if ((DebugFile = fopen( gpcDebugLogFileName, "a+t" )) != NULL)
+		FILE* DebugFile = fopen(gpcDebugLogFileName, "a+");
+		if (DebugFile != NULL)
 		{
-			fputs( ubOutputString, DebugFile );
-			fclose( DebugFile );
+			fputs(ubOutputString, DebugFile);
+			fclose(DebugFile);
 		}
 	}
 #endif
@@ -273,9 +251,6 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 {
 	/*MSG Message;*/
 	UINT8 ubOutputString[512];
-#ifndef _NO_DEBUG_TXT
-	FILE *DebugFile;
-#endif
 	//Build the output strings
 	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
 	strlcpy(gubAssertString, pString != NULL ? pString : "", lengthof(gubAssertString));
@@ -288,10 +263,11 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)
 	{
-		if ((DebugFile = fopen( gpcDebugLogFileName, "a+t" )) != NULL)
+		FILE* DebugFile = fopen(gpcDebugLogFileName, "a+");
+		if (DebugFile != NULL)
 		{
-			fputs( ubOutputString, DebugFile );
-			fclose( DebugFile );
+			fputs(ubOutputString, DebugFile);
+			fclose(DebugFile);
 		}
 	}
 
@@ -350,10 +326,6 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 	UINT8 ubOutputString[512];
 	BOOLEAN fDone = FALSE;
 
-#ifndef _NO_DEBUG_TXT
-	FILE *DebugFile;
-#endif
-
 	// Build the output string
 	sprintf( ubOutputString, "{ %ld } Assertion Failure: %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
 	if( pString )
@@ -371,14 +343,15 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 #ifndef _NO_DEBUG_TXT
 	if (gfRecordToFile)
 	{
-		if ((DebugFile = fopen( gpcDebugLogFileName, "a+t" )) != NULL)
+		FILE* DebugFile = fopen(gpcDebugLogFileName, "a+");
+		if (DebugFile != NULL)
 		{
 			fputs( ubOutputString, DebugFile );
-			if( pString )
+			if (pString != NULL)
 			{ //tag on the assert message
-				fputs( gubAssertString, DebugFile );
+				fputs(gubAssertString, DebugFile);
 			}
-			fclose( DebugFile );
+			fclose(DebugFile);
 		}
 	}
 #endif
