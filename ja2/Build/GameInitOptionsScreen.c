@@ -8,6 +8,7 @@
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
 #include "Intro.h"
+#include "MainMenuScreen.h"
 #include "Music_Control.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
@@ -175,8 +176,6 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 static UINT32 guiGameSaveToggles[NUM_SAVE_OPTIONS];
 static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
-
-extern void ClearMainMenu(void);
 
 static BOOLEAN EnterGIOScreen(void);
 static BOOLEAN ExitGIOScreen(void);
