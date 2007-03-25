@@ -358,7 +358,7 @@ HVOBJECT CreateVideoObjectFromFile(const char* Filename)
 	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
 	if (hImage == NULL)
 	{
-		DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image Filename given");
+		DbgMessage(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", Filename));
 		return NULL;
 	}
 
