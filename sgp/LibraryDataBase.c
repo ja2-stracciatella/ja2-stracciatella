@@ -161,7 +161,6 @@ static void Slashify(char* s)
 
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader)
 {
-	FIXME
 	FILE*	hFile;
 	UINT16	usNumEntries=0;
 	UINT32	uiLoop;

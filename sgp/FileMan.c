@@ -810,7 +810,6 @@ BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory )
 BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory )
 {
 #if 1 // XXX TODO
-	FIXME
 	return getcwd(pcDirectory, sizeof(STRING512)) != NULL;
 #else
 	if (GetCurrentDirectory( 512, pcDirectory ) == 0)
@@ -980,32 +979,7 @@ BOOLEAN EraseDirectory(const char *pcDirectory)
 
 const char* GetExecutableDirectory(void)
 {
-#if 1 // XXX TODO
-	FIXME
 	return LocalPath;
-#else
-	SGPFILENAME	ModuleFilename;
-	UINT32 cnt;
-
-	if ( GetModuleFileName( NULL, ModuleFilename, sizeof( ModuleFilename ) ) == 0 )
-	{
-		return( FALSE );
-	}
-
-	// Now get directory
-	strcpy( pcDirectory, ModuleFilename );
-
-	for ( cnt = strlen( pcDirectory ) - 1; cnt >= 0; cnt -- )
-	{
-		if ( pcDirectory[ cnt ] == '\\' )
-		{
-			 pcDirectory[ cnt ] = '\0';
-			 break;
-		}
-	}
-
-	return( TRUE );
-#endif
 }
 
 

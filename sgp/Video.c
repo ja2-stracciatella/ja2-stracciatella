@@ -831,7 +831,6 @@ void RefreshScreen(void)
 
 SDL_Surface* GetBackBufferObject(void)
 {
-	FIXME
 	Assert(ScreenBuffer != NULL);
 	return ScreenBuffer;
 }
@@ -839,7 +838,6 @@ SDL_Surface* GetBackBufferObject(void)
 
 SDL_Surface* GetFrameBufferObject(void)
 {
-	FIXME
 	Assert(FrameBuffer != NULL);
 	return FrameBuffer;
 }
@@ -847,7 +845,6 @@ SDL_Surface* GetFrameBufferObject(void)
 
 SDL_Surface* GetMouseBufferObject(void)
 {
-	FIXME
 	Assert(MouseCursor != NULL);
 	return MouseCursor;
 }
@@ -855,7 +852,6 @@ SDL_Surface* GetMouseBufferObject(void)
 
 PTR LockBackBuffer(UINT32 *uiPitch)
 {
-	FIXME
 	*uiPitch = ScreenBuffer->pitch;
 	return ScreenBuffer->pixels;
 }
@@ -863,7 +859,6 @@ PTR LockBackBuffer(UINT32 *uiPitch)
 
 void UnlockBackBuffer(void)
 {
-	FIXME
 }
 
 
