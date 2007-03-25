@@ -24,10 +24,7 @@ extern HVSURFACE ghFrameBuffer;
 //Simply create videosurface, load image, and draw it to the screen.
 void InitJA2SplashScreen()
 {
-	UINT32 uiLogoID = 0;
 	STRING512			DataDir;
-	HVSURFACE hVSurface;
-	INT32 i = 0;
 
 	InitializeJA2Clock();
 
@@ -41,45 +38,20 @@ void InitJA2SplashScreen()
 
 	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
 
-#if !defined( ENGLISH ) && defined( JA2TESTVERSION )
-	uiLogoID = AddVideoSurfaceFromFile("LOADSCREENS/Notification.sti");
-	if (uiLogoID == NO_VSURFACE)
-	{
-		AssertMsg(0, String("Failed to load LOADSCREENS/Notification.sti"));
-		return;
-	}
-	hVSurface = GetVideoSurface(uiLogoID);
-	BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
-	DeleteVideoSurfaceFromIndex( uiLogoID );
-
-
-	InvalidateScreen();
-	RefreshScreen();
-
-	guiSplashStartTime = GetJA2Clock();
-	while( i < 60 * 15 )//guiSplashStartTime + 15000 > GetJA2Clock() )
-	{
-		//Allow the user to pick his bum.
-		InvalidateScreen();
-		RefreshScreen();
-		i++;
-	}
-#endif
-
 	#ifdef ENGLISH
 		ClearMainMenu();
 	#else
 		{
 			SGPFILENAME ImageFile;
 			GetMLGFilename(ImageFile, MLG_SPLASH);
-			uiLogoID = AddVideoSurfaceFromFile(ImageFile);
+			UINT32 uiLogoID = AddVideoSurfaceFromFile(ImageFile);
 			if (uiLogoID == NO_VSURFACE)
 			{
 				AssertMsg(0, String("Failed to load %s", ImageFile));
 				return;
 			}
 
-			hVSurface = GetVideoSurface(uiLogoID);
+			HVSURFACE hVSurface = GetVideoSurface(uiLogoID);
 			BltVideoSurfaceToVideoSurface(ghFrameBuffer, hVSurface, 0, 0, NULL);
 			DeleteVideoSurfaceFromIndex( uiLogoID );
 		}
