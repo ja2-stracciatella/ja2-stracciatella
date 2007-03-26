@@ -130,6 +130,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	// Now start up everything else.
 	RegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
+	RegisterDebugTopic(TOPIC_HIMAGE, "HImage");
 
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
 	FastDebugMsg("Initializing Memory Manager");
@@ -267,6 +268,7 @@ static void ShutdownStandardGamingPlatform(void)
 	//
   // Make sure we unregister the last remaining debug topic before shutting
   // down the debugging layer
+	UnRegisterDebugTopic(TOPIC_HIMAGE, "HImage");
   UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
 
   ShutdownDebugManager();
