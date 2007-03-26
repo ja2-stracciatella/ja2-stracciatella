@@ -72,7 +72,6 @@ UINT16 TOPIC_JA2OPPLIST = INVALID_TOPIC;
 UINT16 TOPIC_JA2AI = INVALID_TOPIC;
 
 
-static BOOLEAN gfDebugTopics[MAX_TOPICS_ALLOTED];
 static UINT16* gpDbgTopicPtrs[MAX_TOPICS_ALLOTED];
 
 
@@ -136,14 +135,13 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 		fFound = FALSE;
 		for( usIndex = 0; usIndex < MAX_TOPICS_ALLOTED && !fFound; usIndex++)
 		{
-			if ( !gfDebugTopics[usIndex] )
+			if (gpDbgTopicPtrs[usIndex] == NULL)
 			{
 				fFound = TRUE;
 				usUse = usIndex;
 			}
 		}
 
-		gfDebugTopics[ usUse ] = TRUE;
 		*usTopicID = usUse;
 		gpDbgTopicPtrs[usUse] = usTopicID;
 		DbgMessageReal(usUse, TOPIC_MESSAGE, DBG_LEVEL_0, zMessage );
@@ -154,13 +152,8 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 			return;
 
 		DbgMessageReal( *usTopicID, TOPIC_MESSAGE, DBG_LEVEL_0, zMessage );
-		gfDebugTopics[ *usTopicID ] = FALSE;
 
-		if (gpDbgTopicPtrs[ *usTopicID ] != NULL )
-		{
-			gpDbgTopicPtrs[ *usTopicID ] = NULL;
-		}
-
+		gpDbgTopicPtrs[*usTopicID] = NULL;
 		*usTopicID = INVALID_TOPIC;
 	}
 }
@@ -172,7 +165,6 @@ void DbgClearAllTopics( void )
 
 	for( usIndex = 0; usIndex < MAX_TOPICS_ALLOTED; usIndex++)
 	{
-		gfDebugTopics[ usIndex ] = FALSE;
 		if ( gpDbgTopicPtrs[ usIndex ] != NULL )
 		{
 			*gpDbgTopicPtrs[usIndex] = INVALID_TOPIC;
@@ -185,7 +177,7 @@ void DbgClearAllTopics( void )
 void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *strMessage)
 {
 	// Check for a registered topic ID
-	if ( uiTopicId < MAX_TOPICS_ALLOTED && gfDebugTopics[uiTopicId] )
+	if (uiTopicId < MAX_TOPICS_ALLOTED && gpDbgTopicPtrs[uiTopicId] != NULL)
 	{
 		OutputDebugString ( strMessage );
 		OutputDebugString ( "\n" );
