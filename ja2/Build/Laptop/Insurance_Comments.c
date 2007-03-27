@@ -132,8 +132,7 @@ void RenderInsuranceComments()
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 
 	//Display the first link text
-	swprintf( sText, lengthof(sText), L"%s", pMessageStrings[ MSG_HOMEPAGE ] );
-	DisplayWrappedString( usPosX, INS_CMNT_LINK_Y+13, INS_CMNT_LINK_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,  sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(usPosX, INS_CMNT_LINK_Y + 13, INS_CMNT_LINK_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, pMessageStrings[MSG_HOMEPAGE], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 	//Display the red bar under the link at the bottom
 	DisplaySmallRedLineWithShadow( usPosX, INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT, (UINT16)(usPosX+INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT);
 	usPosX += INS_CMNT_LINK_OFFSET_X;

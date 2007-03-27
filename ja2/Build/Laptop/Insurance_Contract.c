@@ -324,8 +324,7 @@ void RenderInsuranceContract()
 
 	//Display the red bar under the link at the bottom.  and the text
 	DisplaySmallRedLineWithShadow( usPosX, INS_CTRCT_BOTTON_LINK_RED_BAR_Y, (UINT16)(usPosX+INS_CTRCT_BOTTOM_LINK_RED_WIDTH), INS_CTRCT_BOTTON_LINK_RED_BAR_Y);
-	swprintf( sText, lengthof(sText), L"%s", pMessageStrings[ MSG_HOMEPAGE ] );
-	DisplayWrappedString( usPosX, INS_CTRCT_BOTTON_LINK_Y+18, INS_CTRCT_BOTTOM_LINK_RED_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR,  sText, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
+	DisplayWrappedString(usPosX, INS_CTRCT_BOTTON_LINK_Y + 18, INS_CTRCT_BOTTOM_LINK_RED_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, pMessageStrings[MSG_HOMEPAGE], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 	usPosX += INS_CTRCT_BOTTOM_LINK_RED_BAR_OFFSET;
 
@@ -566,7 +565,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 	//display the amount of time the merc has left on their Regular contract
 	if( IsMercDead( ubMercID ) )
-		swprintf( sText, lengthof(sText), L"%s", pMessageStrings[ MSG_LOWERCASE_NA ] );
+		wcslcpy(sText, pMessageStrings[MSG_LOWERCASE_NA], lengthof(sText));
 	else
 		swprintf( sText, lengthof(sText), L"%d", GetTimeRemainingOnSoldiersContract( pSoldier ) );
 
@@ -592,8 +591,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 	//if the soldier has insurance, disply the length of time the merc has left
 	if( IsMercDead( ubMercID ) )
-		swprintf( sText, lengthof(sText), L"%s", pMessageStrings[ MSG_LOWERCASE_NA ] );
-
+		wcslcpy(sText, pMessageStrings[MSG_LOWERCASE_NA], lengthof(sText));
 	else if( pSoldier->usLifeInsurance != 0 )
 		swprintf( sText, lengthof(sText), L"%d", GetTimeRemainingOnSoldiersInsuranceContract( pSoldier ) );
 
