@@ -636,8 +636,6 @@ static void StartTrainingInAllUnpaidTrainableSectors(void);
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
 static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue)
 {
-	CHAR16 sString[ 128 ];
-
 	Assert( giTotalCostOfTraining > 0 );
 
 	// yes
@@ -666,9 +664,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue)
 		else	// can't afford it
 		{
 			StopTimeCompression();
-
-			swprintf( sString, lengthof(sString), L"%S", pMilitiaConfirmStrings[ 2 ] );
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMilitiaConfirmStrings[2], MAP_SCREEN, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback);
 		}
 	}
 	else if( bExitValue == MSG_BOX_RETURN_NO )

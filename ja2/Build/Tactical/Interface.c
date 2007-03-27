@@ -1575,20 +1575,10 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
     if ( fDoName )
     {
-		  if ( fRaiseName )
-		  {
-			  swprintf( NameStr, lengthof(NameStr), L"%S", pSoldier->name );
-			  FindFontCenterCoordinates( sXPos, (INT16)( sYPos - 10 ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			  gprintfdirty( sX, sY, NameStr );
-			  mprintf( sX, sY, NameStr );
-		  }
-		  else
-		  {
-			  swprintf( NameStr, lengthof(NameStr), L"%S", pSoldier->name );
-			  FindFontCenterCoordinates( sXPos, sYPos, (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			  gprintfdirty( sX, sY, NameStr );
-			  mprintf( sX, sY, NameStr );
-		  }
+			const wchar_t* Name = pSoldier->name;
+			FindFontCenterCoordinates(sXPos, fRaiseName ? sYPos - 10 : sYPos, 80, 1, Name, TINYFONT1, &sX, &sY);
+			gprintfdirty(sX, sY, Name);
+			mprintf(sX, sY, Name);
     }
 
 		if ( pSoldier->ubProfile < FIRST_RPC || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )

@@ -1020,8 +1020,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString, lengthof(zShortTownIDString));
 
 	// Set string for generic button
-	swprintf( gzUserDefinedButton1, lengthof(gzUserDefinedButton1), L"%s", zShortTownIDString );
-
+	wcslcpy(gzUserDefinedButton1, zShortTownIDString, lengthof(gzUserDefinedButton1));
 
 	pLeaveSoldier = pSoldier;
 

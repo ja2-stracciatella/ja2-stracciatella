@@ -446,7 +446,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{
 					LoadItemInfo( usCounter, pItemName, NULL );
-					swprintf(pStr, lengthof(pStr), L"%S", pItemName);
+					wcslcpy(pStr, pItemName, lengthof(pStr));
 				}
 				else
 				{

@@ -742,20 +742,13 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 static void DisplayCompressMode(void)
 {
 	INT16 sX, sY;
-	CHAR16 sString[ 128 ];
 	static UINT8 usColor = FONT_LTGREEN;
 
 	// get compress speed
+	const wchar_t* Time; // XXX may be uninitialised
 	if( giTimeCompressMode != NOT_USING_TIME_COMPRESSION )
 	{
-		if( IsTimeBeingCompressed() )
-		{
-			swprintf( sString, lengthof(sString), L"%S", sTimeStrings[ giTimeCompressMode ] );
-		}
-		else
-		{
-			swprintf( sString, lengthof(sString), L"%S", sTimeStrings[ 0 ] );
-		}
+		Time = sTimeStrings[IsTimeBeingCompressed() ? giTimeCompressMode : 0];
 	}
 
 	RestoreExternBackgroundRect( 489, 456, 522 - 489, 467 - 454 );
@@ -783,8 +776,8 @@ static void DisplayCompressMode(void)
 
 	SetFontForeground( usColor );
 	SetFontBackground( FONT_BLACK );
-  FindFontCenterCoordinates( 489, 456, 522 - 489, 467 - 454, sString, COMPFONT, &sX, &sY );
-	mprintf( sX, sY, sString );
+	FindFontCenterCoordinates(489, 456, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
+	mprintf(sX, sY, Time);
 }
 
 
@@ -1194,7 +1187,7 @@ BOOLEAN AllowedToTimeCompress( void )
 
 static void DisplayCurrentBalanceTitleForMapBottom(void)
 {
-	CHAR16 sString[ 128 ];
+	const wchar_t* sString;
 	INT16 sFontX, sFontY;
 
 	// ste the font buffer
@@ -1204,20 +1197,12 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%S", pMapScreenBottomText[ 0 ] );
-
-	// center it
+	sString = pMapScreenBottomText[0];
 	VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
-
-	// print it
 	mprintf( sFontX, sFontY, L"%S", sString );
 
-	swprintf( sString, lengthof(sString), L"%S", zMarksMapScreenText[ 2 ] );
-
-	// center it
+	sString = zMarksMapScreenText[2];
 	VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
-
-	// print it
 	mprintf( sFontX, sFontY, L"%S", sString );
 
 	// ste the font buffer

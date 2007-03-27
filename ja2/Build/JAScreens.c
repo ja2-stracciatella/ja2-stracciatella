@@ -278,7 +278,7 @@ UINT32 ErrorScreenHandle(void)
 
 	  if( gubAssertString[0] )
 	  {
-		  swprintf(str, lengthof(str), L"%S", gubAssertString);
+		  swprintf(str, lengthof(str), L"%s", gubAssertString);
 		  DisplayWrappedString( 50, 270, 560, 2, FONT12ARIAL, FONT_RED, str, FONT_BLACK, TRUE, LEFT_JUSTIFIED );
 	  }
 #endif
@@ -1411,22 +1411,14 @@ UINT32 DemoExitScreenHandle(void)
 			switch( i )
 			{
 				case 38:
-					SetFontForeground( FONT_LTKHAKI );
-					swprintf( str, L"%s", gpDemoString[ i ] );
-					break;
-				case 39:
-					SetFontForeground( FONT_LTKHAKI );
-					wcscpy( str, gpDemoString[ i ] );
-					break;
-				default:
-					SetFontForeground( FONT_GRAY2 );
-					wcscpy( str, gpDemoString[ i ] );
-					break;
+				case 39: SetFontForeground(FONT_LTKHAKI); break;
+				default: SetFontForeground(FONT_GRAY2);   break;
 			}
-			width = StringPixLength( str, usFont );
+			const wchar_t* String = gpDemoString[i];
+			width = StringPixLength(String, usFont);
 			SetFont( usFont );
 
-			mprintf( 320 - width/2, yp + i * 17, str );
+			mprintf(320 - width / 2, yp + i * 17, String);
 		}
 		if( !fSetMusicToFade && iPercentage > 43000 )
 		{

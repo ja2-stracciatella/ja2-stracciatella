@@ -1032,13 +1032,13 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	//	if ammo is begin drawn
 	if( Item[ usIndex].usItemClass == IC_AMMO )
 	{
-		swprintf( zTemp, lengthof(zTemp), L"%S", BobbyRayAmmoCaliber[ Magazine[ Item[ usIndex ].ubClassIndex ].ubCalibre] );
+		wcslcpy(zTemp, BobbyRayAmmoCaliber[Magazine[Item[usIndex].ubClassIndex].ubCalibre], lengthof(zTemp));
 //		DrawTextToScreen( AmmoCaliber[ Magazine[ Item[ usIndex ].ubClassIndex ].ubCalibre], BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	}
 	else
 	{
 		//else a gun is being displayed
-		swprintf( zTemp, lengthof(zTemp), L"%S", BobbyRayAmmoCaliber[ Weapon[ Item[ usIndex ].ubClassIndex ].ubCalibre ] );
+		wcslcpy(zTemp, BobbyRayAmmoCaliber[Weapon[Item[usIndex].ubClassIndex].ubCalibre], lengthof(zTemp));
 //		DrawTextToScreen( AmmoCaliber[ Weapon[ Item[ usIndex ].ubClassIndex ].ubCalibre ], BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	}
 

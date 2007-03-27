@@ -3177,7 +3177,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ] );
+				wcslcpy(pStr, ShortItemNames[gWorldItems[pTempItemPool->iItemIndex].o.usItem], lengthof(pStr));
 			}
 
 			// Get Width
@@ -3284,7 +3284,7 @@ BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, I
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ] );
+				wcslcpy(pStr, ShortItemNames[gWorldItems[pItemPool->iItemIndex].o.usItem], lengthof(pStr));
 			}
 
 			gprintfdirty( sFontX, sY, pStr );

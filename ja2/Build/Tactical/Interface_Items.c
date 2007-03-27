@@ -2092,14 +2092,16 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 		if ( *pubHighlightCounter )
 		{
 			// Set string
+			const wchar_t* ItemName;
 			if ( ubStatusIndex < RENDER_ITEM_ATTACHMENT1 )
 			{
-				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ pObject->usItem ] );
+				ItemName = ShortItemNames[pObject->usItem];
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ pObject->usAttachItem[ ubStatusIndex - RENDER_ITEM_ATTACHMENT1 ] ] );
+				ItemName = ShortItemNames[pObject->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
 			}
+			wcslcpy(pStr, ItemName, lengthof(pStr));
 
 			fLineSplit = WrapString( pStr, pStr2, lengthof(pStr2), WORD_WRAP_INV_WIDTH, ITEM_FONT );
 
@@ -3321,17 +3323,14 @@ void RenderItemDescriptionBox( )
 				SetFontForeground( 6 );
 
 				// build description for keys .. the sector found
-				swprintf( pStr, lengthof(pStr), L"%S", sKeyDescriptionStrings[ 0 ] );
-				mprintf( gMapWeaponStats[ 4 ].sX + gsInvDescX, gMapWeaponStats[ 4 ].sY + gsInvDescY, pStr );
-				swprintf( pStr, lengthof(pStr), L"%S", sKeyDescriptionStrings[ 1 ] );
-				mprintf( gMapWeaponStats[ 4 ].sX + gsInvDescX, gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 , pStr );
+				mprintf(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, sKeyDescriptionStrings[0]);
+				mprintf(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
 
 
 				SetFontForeground( 5 );
 				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString, lengthof(sTempString));
-				swprintf( pStr, lengthof(pStr), L"%S", sTempString );
-				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-				mprintf( usX, usY, pStr );
+				FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
+				mprintf(usX, usY, sTempString);
 
 				swprintf( pStr, lengthof(pStr), L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gMapWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gMapWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
@@ -3765,17 +3764,14 @@ void RenderItemDescriptionBox( )
 				SetFontForeground( 6 );
 
 				// build description for keys .. the sector found
-				swprintf( pStr, lengthof(pStr), L"%S", sKeyDescriptionStrings[ 0 ] );
-				mprintf( gWeaponStats[ 4 ].sX + gsInvDescX, gWeaponStats[ 4 ].sY + gsInvDescY, pStr );
-				swprintf( pStr, lengthof(pStr), L"%S", sKeyDescriptionStrings[ 1 ] );
-				mprintf( gWeaponStats[ 4 ].sX + gsInvDescX, gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 , pStr );
+				mprintf(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, sKeyDescriptionStrings[0]);
+				mprintf(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
 
 
 				SetFontForeground( 5 );
 				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString, lengthof(sTempString));
-				swprintf( pStr, lengthof(pStr), L"%S", sTempString );
-				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
-				mprintf( usX, usY, pStr );
+				FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
+				mprintf(usX, usY, sTempString);
 
 				swprintf( pStr, lengthof(pStr), L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
 				FindFontRightCoordinates( (INT16)(gWeaponStats[ 4 ].sX + gsInvDescX ), (INT16)(gWeaponStats[ 4 ].sY + gsInvDescY + GetFontHeight( BLOCKFONT ) + 2 ), 110 ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
@@ -6354,7 +6350,7 @@ void RenderItemPickupMenu( )
 				}
 				else
 				{
-					swprintf( pStr, lengthof(pStr), L"%S", ShortItemNames[ pObject->usItem ] );
+					wcslcpy(pStr, ShortItemNames[pObject->usItem], lengthof(pStr));
 				}
 				VarFindFontCenterCoordinates( sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1 , ITEMDESC_FONT, &sFontX, &sFontY, pStr );
 				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
@@ -6938,8 +6934,7 @@ void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOL
 	{
 		if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 		{
-			swprintf( pStr, lengthof(pStr), L"" );
-			swprintf( pzStr, Length, L"%S", pStr );
+			wcslcpy(pzStr, L"", Length);
 			return;
 		}
 	}
@@ -6967,7 +6962,7 @@ void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOL
 		}
 		else
 		{
-			swprintf( pStr, lengthof(pStr), L"%S", ItemNames[ usItem ] );
+			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
 		}
 
 		if ( ( pObject->usItem == ROCKET_RIFLE || pObject->usItem == AUTO_ROCKET_RIFLE ) && pObject->ubImprintID < NO_PROFILE )
@@ -7004,11 +6999,11 @@ void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOL
 	}
 	else
 	{
-		swprintf( pStr, lengthof(pStr), L"" );
+		wcslcpy(pStr, L"", lengthof(pStr));
 	}
 
 	// Copy over...
-	swprintf( pzStr, Length, L"%S", pStr );
+	wcslcpy(pzStr, pStr, Length);
 }
 
 

@@ -883,7 +883,6 @@ static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT
 
 static void ShowTownText(void)
 {
-	wchar_t sString[ 32 ];
 	wchar_t sStringA[ 32 ];
 	INT8 bTown = 0;
 	UINT16 usX,usY;
@@ -900,8 +899,6 @@ static void ShowTownText(void)
 		// skip Orta/Tixa until found
 		if( ( ( fFoundOrta != FALSE ) || ( bTown != ORTA ) ) && ( ( bTown != TIXA ) || ( fFoundTixa != FALSE) ) )
 		{
-			swprintf( sString, lengthof(sString), L"%S", pTownNames[ bTown ] );
-
 			fLoyaltyTooLowToTrainMilitia = FALSE;
 
 			// don't show loyalty string until loyalty tracking for that town has been started
@@ -936,7 +933,7 @@ static void ShowTownText(void)
 			// red for low loyalty, green otherwise
 		  SetFontForeground( ( UINT8 ) ( fLoyaltyTooLowToTrainMilitia ? FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN ) );
 
-      DrawTownLabels(sString, sStringA, usX, usY);
+      DrawTownLabels(pTownNames[bTown], sStringA, usX, usY);
 		}
 	}
 }
@@ -4202,8 +4199,7 @@ void DisplayDistancesForHelicopter( void )
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 0 ] );
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, sString );
+	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, pHelicopterEtaStrings[0]);
 
 /*
   if ( IsSectorOutOfTheWay( sMapX, sMapY ) )
@@ -4222,22 +4218,19 @@ void DisplayDistancesForHelicopter( void )
 
 	SetFontForeground( FONT_LTGREEN );
 
-	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 1 ] );
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight( MAP_FONT ), sString );
+	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumSafeSectors );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 2 ] );
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight( MAP_FONT ), sString );
+	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[2]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumUnSafeSectors );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 2 * GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 3 ] );
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ), sString );
+	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[3]);
 
 
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
@@ -4249,8 +4242,7 @@ void DisplayDistancesForHelicopter( void )
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ) ), sString );
 
-	swprintf( sString, lengthof(sString), L"%S", pHelicopterEtaStrings[ 4 ] );
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ), sString );
+	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[4]);
 
 
 	// get travel time for the last path segment
@@ -4572,7 +4564,7 @@ static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
 }
 
 
-static void AdjustXForLeftMapEdge(STR16 wString, INT16* psX);
+static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX);
 
 
 static void BlitMineText(INT16 sMapX, INT16 sMapY)
@@ -4621,25 +4613,25 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	// check if mine is empty (abandoned) or running out
 	if (gMineStatus[ ubMineIndex ].fEmpty)
 	{
-		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 5 ] );
-		AdjustXForLeftMapEdge(wString, &sScreenX);
-		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
+		const wchar_t* String = pwMineStrings[5];
+		AdjustXForLeftMapEdge(String, &sScreenX);
+		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
 		ubLineCnt++;
 	}
 	else
 	if (gMineStatus[ ubMineIndex ].fShutDown)
 	{
-		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 6 ] );
-		AdjustXForLeftMapEdge(wString, &sScreenX);
-		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
+		const wchar_t* String = pwMineStrings[6];
+		AdjustXForLeftMapEdge(String, &sScreenX);
+		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
 		ubLineCnt++;
 	}
 	else
 	if (gMineStatus[ ubMineIndex ].fRunningOut)
 	{
-		swprintf( wString, lengthof(wString), L"%S", pwMineStrings[ 7 ] );
-		AdjustXForLeftMapEdge(wString, &sScreenX);
-		mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
+		const wchar_t* String = pwMineStrings[7];
+		AdjustXForLeftMapEdge(String, &sScreenX);
+		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
 		ubLineCnt++;
 	}
 
@@ -4679,7 +4671,7 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 }
 
 
-static void AdjustXForLeftMapEdge(STR16 wString, INT16* psX)
+static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX)
 {
 	INT16 sStartingX, sPastEdge;
 

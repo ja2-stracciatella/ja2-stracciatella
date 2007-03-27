@@ -293,8 +293,7 @@ static void AddTextToTownBox(void)
 			}
 			else
 			{ // town name
-				swprintf( wString, lengthof(wString), L"%S", pTownNames[ ubTownId ] );
-				AddMonoString( &hStringHandle, wString );
+				AddMonoString(&hStringHandle, pTownNames[ubTownId]);
 			}
 			break;
 	}
@@ -585,9 +584,7 @@ static void AddCommonInfoToBox(void)
 		AddMonoString( &hStringHandle, wString );
 
 		// No/Yes
-		swprintf( wString, lengthof(wString), L"%S", pwMiscSectorStrings[ ( StrategicMap[ CALCULATE_STRATEGIC_INDEX( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) ].fEnemyControlled ) ? 6 : 5 ] );
-		AddSecondColumnMonoString( &hStringHandle, wString );
-
+		AddSecondColumnMonoString(&hStringHandle, pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5 ]);
 
 		// militia - is there any?
 		swprintf( wString, lengthof(wString), L"%S:", pwTownInfoStrings[ 11 ] );

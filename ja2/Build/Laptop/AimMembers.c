@@ -1552,7 +1552,7 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 	//Title & Name
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
-		swprintf( sMercName, lengthof(sMercName), L"%S",  VideoConfercingText[AIM_MEMBER_CONNECTING]);
+		wcslcpy(sMercName, VideoConfercingText[AIM_MEMBER_CONNECTING], lengthof(sMercName));
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 	else
@@ -1721,7 +1721,7 @@ static UINT32 DisplayMercChargeAmount(void)
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
 			swprintf(wTemp, lengthof(wTemp), L"%S %S", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
 		else
-			swprintf(wTemp, lengthof(wTemp), L"%S", wDollarTemp );
+			wcslcpy(wTemp, wDollarTemp, lengthof(wTemp));
 
 		DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X+1, AIM_CONTRACT_CHARGE_AMOUNNT_Y+3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}

@@ -458,7 +458,7 @@ static BOOLEAN AddTileSurface(char* cFilename, UINT32 ubType, UINT8 ubTilesetID,
 	}
 	else
 	{
-		sprintf(cAdjustedFile, "%s", cFilename);
+		strcpy(cAdjustedFile, cFilename);
 	}
 
 	TileSurf = LoadTileSurface( cAdjustedFile );

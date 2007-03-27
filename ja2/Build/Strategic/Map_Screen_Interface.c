@@ -3512,14 +3512,7 @@ static void AddStringsToMoveBox(void)
 	for( iCount = 0; iCount < giNumberOfSquadsInSectorMoving; iCount++ )
 	{
 		// add this squad, now add all the grunts in it
-		if( fSquadIsMoving[ iCount ] )
-		{
-			swprintf( sString, lengthof(sString), L"*%S*", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
-		}
-		else
-		{
-			swprintf( sString, lengthof(sString), L"%S", pSquadMenuStrings[iSquadMovingList[ iCount ] ] );
-		}
+		swprintf(sString, lengthof(sString), fSquadIsMoving[iCount] ? L"*%S*" : L"%S", pSquadMenuStrings[iSquadMovingList[iCount]]);
 		AddMonoString(&hStringHandle, sString );
 
 		// now add all the grunts in it
@@ -3546,14 +3539,7 @@ static void AddStringsToMoveBox(void)
 	for( iCount = 0; iCount < giNumberOfVehiclesInSectorMoving; iCount++ )
 	{
 		// add this vehicle
-		if( fVehicleIsMoving[ iCount ] )
-		{
-			swprintf( sString, lengthof(sString), L"*%S*", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ] ].ubVehicleType ] );
-		}
-		else
-		{
-			swprintf( sString, lengthof(sString), L"%S", pVehicleStrings[ pVehicleList[ iVehicleMovingList[ iCount ]  ].ubVehicleType ] );
-		}
+		swprintf(sString, lengthof(sString), fVehicleIsMoving[iCount] ? L"*%S*" : L"%S", pVehicleStrings[pVehicleList[iVehicleMovingList[iCount]].ubVehicleType]);
 		AddMonoString(&hStringHandle, sString );
 
 		// now add all the grunts in it
@@ -3587,28 +3573,14 @@ static void AddStringsToMoveBox(void)
 			if ( fFirstOne )
 			{
 				// add OTHER header line
-				if( AllOtherSoldiersInListAreSelected( ) )
-				{
-					swprintf( sString, lengthof(sString), L"*%S*", pMovementMenuStrings[ 3 ] );
-				}
-				else
-				{
-					swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 3 ] );
-				}
+				swprintf(sString, lengthof(sString), AllOtherSoldiersInListAreSelected() ? L"*%S*" : L"%S", pMovementMenuStrings[3]);
 				AddMonoString(&hStringHandle, sString );
 
 				fFirstOne = FALSE;
 			}
 
 			// add OTHER soldiers (not on duty nor in a vehicle)
-			if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCount ] ) == TRUE )
-			{
-				swprintf( sString, lengthof(sString), L"  *%S ( %S )*", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
-			}
-			else
-			{
-				swprintf( sString, lengthof(sString), L"   %S ( %S )", pSoldierMovingList[ iCount ]->name, pAssignmentStrings[  pSoldierMovingList[ iCount ]->bAssignment ] );
-			}
+			swprintf(sString, lengthof(sString), IsSoldierSelectedForMovement(pSoldierMovingList[iCount]) ? L"  *%S ( %S )*" : L"  %S ( %S )", pSoldierMovingList[iCount]->name, pAssignmentStrings[pSoldierMovingList[iCount]->bAssignment]);
 			AddMonoString(&hStringHandle, sString );
 		}
 	}
@@ -3621,8 +3593,7 @@ static void AddStringsToMoveBox(void)
 	if ( IsAnythingSelectedForMoving() )
 	{
 		// add PLOT MOVE line
-		swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 1 ] );
-		AddMonoString(&hStringHandle, sString );
+		AddMonoString(&hStringHandle, pMovementMenuStrings[1]);
 	}
 	else
 	{
@@ -3630,10 +3601,8 @@ static void AddStringsToMoveBox(void)
 		AddMonoString(&hStringHandle, L"" );
 	}
 
-
 	// add cancel line
-	swprintf( sString, lengthof(sString), L"%S", pMovementMenuStrings[ 2 ] );
-	AddMonoString(&hStringHandle, sString );
+	AddMonoString(&hStringHandle, pMovementMenuStrings[2]);
 }
 
 
@@ -4602,9 +4571,7 @@ void DisplaySoldierUpdateBox( )
 	INT32 iFaceX = 0, iFaceY = 0;
 	BOOLEAN fFourWideMode = FALSE;
 	INT32 iCounter = 0;
-	CHAR16 sString[ 32 ];
 	INT32 iUpperLimit = 0;
-
 
 	if( fShowUpdateBox == FALSE )
 	{
@@ -4753,8 +4720,7 @@ void DisplaySoldierUpdateBox( )
 			RenderSoldierSmallFaceForUpdatePanel( iCounter, iFaceX, iFaceY );
 
 			// display the mercs name
-			swprintf( sString, lengthof(sString), L"%S", pUpdateSoldierBox[ iCounter ]->name );
-			DrawTextToScreen( sString, (UINT16)(iFaceX-5), (UINT16)(iFaceY + 31), 57, TINYFONT1, FONT_LTRED, FONT_BLACK, 0, CENTER_JUSTIFIED );
+			DrawTextToScreen(pUpdateSoldierBox[iCounter]->name, iFaceX - 5, iFaceY + 31, 57, TINYFONT1, FONT_LTRED, FONT_BLACK, 0, CENTER_JUSTIFIED);
 		}
 	}
 

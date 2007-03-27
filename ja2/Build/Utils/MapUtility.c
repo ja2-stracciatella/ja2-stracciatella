@@ -132,7 +132,7 @@ UINT32	MapUtilScreenHandle( )
 		return( MAPUTILITY_SCREEN );
 	}
 
-	sprintf( zFilename, "%s", FListNode->FileInfo.zFileName );
+	strcpy(zFilename, FListNode->FileInfo.zFileName);
 
 	// OK, load maps and do overhead shrinkage of them...
 	if ( !LoadWorld( zFilename ) )

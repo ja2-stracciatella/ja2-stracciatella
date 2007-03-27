@@ -1796,7 +1796,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	// dead?
 	if( pSoldier->bLife <= 0 )
 	{
-		swprintf( sString, lengthof(sString), L"%S", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 	}
 	// what kind of merc
 	else if(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || pSoldier->ubProfile == SLAY )
@@ -1867,7 +1867,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	}
 	else
 	{
-		swprintf( sString, lengthof(sString), L"%S", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 	}
 
 
@@ -11663,9 +11663,6 @@ void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] 
 
 void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length)
 {
-	wchar_t pTempString[32];
-
-
 	if( pSoldier->bAssignment == IN_TRANSIT )
 	{
 		// show blank
@@ -11676,22 +11673,13 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], s
 		if( pSoldier->bAssignment == ASSIGNMENT_POW )
 		{
 			// POW - location unknown
-			swprintf( sString, Length, L"%S", pPOWStrings[ 1 ] );
+			wcslcpy(sString, pPOWStrings[1], Length);
 		}
 		else
 		{
-			swprintf( pTempString, lengthof(pTempString), L"%S%S%S",
+			// put brackets around it when he's between sectors!
+			swprintf(sString, lengthof(sString), pSoldier->fBetweenSectors ? L"(%S%S%S)" : L"%S%S%S",
 						pMapVertIndex[ pSoldier->sSectorY ], pMapHortIndex[ pSoldier->sSectorX ], pMapDepthIndex[ pSoldier->bSectorZ ] );
-
-			if ( pSoldier->fBetweenSectors )
-			{
-				// put brackets around it when he's between sectors!
-				swprintf( sString, Length, L"(%S)", pTempString );
-			}
-			else
-			{
-				wcscpy( sString, pTempString );
-			}
 		}
 	}
 }
@@ -11764,7 +11752,7 @@ void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], 
 
 	if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && pSoldier->ubProfile != SLAY ) || pSoldier->bLife == 0 )
 	{
-		swprintf( sString, Length, L"%S", gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], Length);
 	}
 	else
 	{
