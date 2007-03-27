@@ -1278,7 +1278,6 @@ static void RemoveGotoGridNoUI(void);
 // Select action to be taken based on the user's current key press (if any)
 static void HandleKeyboardShortcuts(void)
 {
-	static INT32 iSavedMode;
   static BOOLEAN fShowTrees = TRUE;
 	while( DequeueEvent( &EditorInputEvent ) )
 	{
@@ -3043,7 +3042,6 @@ static void DrawObjectsBasedOnSelectionRegion(void);
 
 static void HandleMouseClicksInGameScreen(void)
 {
-	EXITGRID dummy={0,0,0,0};
 	INT16 sX, sY;
 	BOOLEAN fPrevState;
 	if( !GetMouseXY( &sGridX, &sGridY ) )

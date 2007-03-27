@@ -82,7 +82,6 @@ typedef struct trail_s trail_t;
 #define TRAILCELLTYPE UINT32
 
 static path_t pathQB[MAXpathQ];
-static UINT16 totAPCostB[MAXpathQ];
 static TRAILCELLTYPE trailCostB[MAP_LENGTH];
 static trail_t trailStratTreeB[MAXTRAILTREE];
 short trailStratTreedxB=0;
@@ -282,7 +281,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 		ndx				= pathQB[QHEADNDX].nextLink;
 		curLoc		= pathQB[ndx].location;
 		curCost		= pathQB[ndx].costSoFar;
-		// = totAPCostB[ndx];
 		DELQUENODE( (INT16)ndx );
 
 		if (trailCostB[curLoc] < curCost)

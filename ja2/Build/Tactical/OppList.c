@@ -3328,13 +3328,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 	     			revealedEnemies++;
 						fContactSeen = TRUE;
 					}
-					else
-					{
-						if ( MercPtrs[0]->bLife < 10 )
-						{
-							int i = 0;
-						}
-					}
 	  		}
 
 				if ( fContactSeen )

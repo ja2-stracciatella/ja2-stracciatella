@@ -481,11 +481,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
      marker = NewGridNo((INT16)marker,(INT16)Inc[markerDir]);
 
-     if ( marker == 12426 )
-     {
-      int i = 0;
-     }
-
 		 // End if this is a no view...
 		 if ( markerDir == NOVIEW && markercnt != 0 )
 		 {

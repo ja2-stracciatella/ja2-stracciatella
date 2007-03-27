@@ -1178,8 +1178,6 @@ static void Print8CharacterOnlyString(void)
 
 static BOOLEAN CheckCharacterInputForEgg(void)
 {
-	MERC_HIRE_STRUCT HireMercStruct;
-
 #ifndef JA2BETAVERSION
 	return( FALSE );
 #else
@@ -1390,6 +1388,7 @@ static BOOLEAN CheckCharacterInputForEgg(void)
 		iPortraitNumber = 2;
 
 		//DEF: temp
+		MERC_HIRE_STRUCT HireMercStruct;
 		HireMercStruct.sSectorX = gsMercArriveSectorX;
 		HireMercStruct.sSectorY = gsMercArriveSectorY;
 		HireMercStruct.bSectorZ = 0;

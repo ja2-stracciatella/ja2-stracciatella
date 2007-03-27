@@ -849,7 +849,6 @@ static void RenderSelectedItemBlownUp(void)
 static void RenderEditorInfo(void)
 {
 	wchar_t					FPSText[ 50 ];
-	static INT32		iSpewWarning = 0;
 	INT16						iMapIndex;
 
 	SetFont( FONT12POINT1 );

@@ -1116,8 +1116,6 @@ void RaiseWorldLand( )
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
 	UINT16 usIndex;
-	BOOLEAN fStopRaise = FALSE;
-	INT32 iCounterA = 0, iCounterB = 0;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;

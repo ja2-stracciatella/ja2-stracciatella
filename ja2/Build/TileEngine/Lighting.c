@@ -525,12 +525,6 @@ UINT8		ubTravelCost;
 	//bDirection = atan8( iX, iY, iSrcX, iSrcY );
 	bDirection = atan8( iSrcX, iSrcY, iX, iY );
 
-  if ( usTileNo == 20415 && bDirection == 3 )
-  {
-    int i = 0;
-  }
-
-
 	ubTravelCost = gubWorldMovementCosts[ usTileNo ][ bDirection ][ 0 ];
 
 	if ( ubTravelCost == TRAVELCOST_WALL  )

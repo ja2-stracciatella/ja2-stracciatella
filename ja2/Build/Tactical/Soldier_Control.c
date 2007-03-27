@@ -2671,12 +2671,6 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		return;
 	}
 
-  if ( pSoldier->ubID == 33 )
-  {
-    int i = 0;
-  }
-
-
 	// Increment the number of people busy doing stuff because of an attack
 	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	//{

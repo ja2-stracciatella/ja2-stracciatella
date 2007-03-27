@@ -70,7 +70,6 @@ void SetEditorItemsTaskbarMode( UINT16 usNewMode )
 
 void SetEditorBuildingTaskbarMode( UINT16 usNewMode )
 {
-	BOOLEAN fNewGroup = FALSE;
 	BOOLEAN fNewRoofs, fNewWalls, fNewRoomInfo;
 	if( usNewMode == usCurrentMode )
 	{

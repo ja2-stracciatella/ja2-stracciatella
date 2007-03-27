@@ -96,7 +96,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
-	int temp=0,type=0;
+	int temp = 0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
 	UINT16 usTempIndex;
@@ -277,7 +277,7 @@ static void SmoothExitGridRadius(INT16 sMapIndex, UINT8 ubRadius)
 
 static void SmoothExitGrid(int gridno, UINT16* piNewTile, BOOLEAN fForceSmooth)
 {
-	int temp=0,type=0;
+	int temp = 0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
 	UINT16 usTempIndex;
@@ -548,7 +548,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// This procedure will calculate the approriate smooth texture for a water texture
 	// based on the surrounding water textures. This is done via masking bits within
 	// a temp variable, then searching for the right texture and inserting it
-	int temp=0,type=0;
+	int temp = 0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
 	UINT16 usTempIndex;

@@ -143,7 +143,6 @@ static MOUSE_REGION gAttributeMenuRegion[MAX_ATTRIBUTE_STRING_COUNT];
 static MOUSE_REGION gSquadMenuRegion[MAX_SQUAD_MENU_STRING_COUNT];
 static MOUSE_REGION gContractMenuRegion[MAX_CONTRACT_MENU_STRING_COUNT];
 static MOUSE_REGION gRemoveMercAssignRegion[MAX_REMOVE_MERC_COUNT];
-static MOUSE_REGION gEpcMenuRegion[MAX_EPC_MENU_STRING_COUNT];
 static MOUSE_REGION gRepairMenuRegion[20];
 
 // mouse region for vehicle menu

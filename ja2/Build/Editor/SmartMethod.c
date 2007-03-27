@@ -268,8 +268,6 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 //		gridno with the respective position.
 void PasteSmartWall( UINT32 iMapIndex )
 {
-	static BOOLEAN fWallAlone = FALSE;
-	static UINT32 iAloneMapIndex = 0x8000;
 	UINT16 usWallType;
 
 	//These are the counters for the walls of each type

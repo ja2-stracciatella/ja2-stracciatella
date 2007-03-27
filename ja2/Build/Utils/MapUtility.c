@@ -57,7 +57,6 @@ UINT32	MapUtilScreenInit( )
 UINT32	MapUtilScreenHandle( )
 {
 	static INT16		fNewMap = TRUE;
-	static INT16		sFileNum = 0;
   InputAtom  InputEvent;
 	GETFILESTRUCT FileInfo;
 	static FDLG_LIST *FListNode;

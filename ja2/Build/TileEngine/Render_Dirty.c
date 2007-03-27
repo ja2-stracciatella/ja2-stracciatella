@@ -223,12 +223,6 @@ INT32	 iTempX, iTempY;
 	sTop   = sTop + (INT16)uiTopSkip;
 	sBottom = sBottom - (INT16)uiBottomSkip;
 
-
-if ( sLeft == 192 || sLeft == 188 )
-{
-  int i = 0;
-}
-
 	if((iBackIndex=GetFreeBackgroundBuffer())==(-1))
 		return(-1);
 

@@ -2561,11 +2561,6 @@ void RemoveGroup( UINT8 ubGroupID )
 	GROUP *pGroup;
 	pGroup = GetGroup( ubGroupID );
 
-	if ( ubGroupID == 51 )
-	{
-		int i = 0;
-	}
-
 	Assert( pGroup );
 	RemovePGroup( pGroup );
 }

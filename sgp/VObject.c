@@ -472,12 +472,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 
 	// Assertions
 	Assert( pBuffer != NULL );
-
-	if ( hSrcVObject == NULL )
-	{
-		int i=0;
-	}
-
 	Assert( hSrcVObject != NULL );
 
 	// Check For Flags and bit depths
