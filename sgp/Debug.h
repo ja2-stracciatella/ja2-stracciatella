@@ -82,7 +82,7 @@ extern	void		DbgShutdown(void);
 #define DebugBreakpoint()						__asm { int 3 }
 
 
-#define DbgMessage(a, b, c) DbgMessageReal(a, TOPIC_MESSAGE, b, c)
+#define DbgMessage(a, b, c) DbgMessageReal(a, b, c)
 #define FastDebugMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
 
 #define UnRegisterDebugTopic(a, b) DbgTopicRegistration(TOPIC_UNREGISTER, &(a), b)
@@ -92,10 +92,10 @@ extern	void		DbgShutdown(void);
 
 // Enable the debug topic we want
 #define RegisterDebugTopic(a, b)    DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
-#define DebugMsg(a, b, c)           DbgMessageReal(a, TOPIC_MESSAGE, b, c)
+#define DebugMsg(a, b, c)           DbgMessageReal(a, b, c)
 
 // public interface to debug methods:
-extern void DbgMessageReal(UINT16 TopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char* Str);
+extern void DbgMessageReal(UINT16 TopicId, UINT8 uiDebugLevel, const char* Str);
 extern void DbgTopicRegistration(UINT8 ubCmd, UINT16* usTopicID, const char* zMessage);
 extern void DbgClearAllTopics(void);
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);

@@ -116,7 +116,7 @@ BOOLEAN DbgInitialize(void)
 
 void DbgShutdown(void)
 {
-	DbgMessageReal( (UINT16)(-1), CLIENT_SHUTDOWN, 0, "SGP Going Down" );
+	DbgMessageReal((UINT16)(-1), 0, "SGP Going Down");
 }
 
 
@@ -143,14 +143,14 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 
 		*usTopicID = usUse;
 		gpDbgTopicPtrs[usUse] = usTopicID;
-		DbgMessageReal(usUse, TOPIC_MESSAGE, DBG_LEVEL_0, zMessage );
+		DbgMessageReal(usUse, DBG_LEVEL_0, zMessage);
 	}
 	else if( ubCmd == TOPIC_UNREGISTER )
 	{
 		if ( *usTopicID >= MAX_TOPICS_ALLOTED )
 			return;
 
-		DbgMessageReal( *usTopicID, TOPIC_MESSAGE, DBG_LEVEL_0, zMessage );
+		DbgMessageReal(*usTopicID, DBG_LEVEL_0, zMessage);
 
 		gpDbgTopicPtrs[*usTopicID] = NULL;
 		*usTopicID = INVALID_TOPIC;
@@ -173,7 +173,7 @@ void DbgClearAllTopics( void )
 }
 
 
-void DbgMessageReal(UINT16 uiTopicId, UINT8 uiCommand, UINT8 uiDebugLevel, const char *strMessage)
+void DbgMessageReal(UINT16 uiTopicId, UINT8 uiDebugLevel, const char* strMessage)
 {
 	// Check for a registered topic ID
 	if (uiTopicId < MAX_TOPICS_ALLOTED && gpDbgTopicPtrs[uiTopicId] != NULL)

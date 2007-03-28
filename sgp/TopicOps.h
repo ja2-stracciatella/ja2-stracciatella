@@ -12,14 +12,5 @@
 
 #define TOPIC_REGISTER    0
 #define TOPIC_UNREGISTER  1
-#define TOPIC_MESSAGE     2
-#define CLIENT_REGISTER	  3
-#define CLIENT_SHUTDOWN	  4
-
-// from server
-
-#define SYSTEM_SHUTDOWN   0
-#define MODULE_RESET		  1
-#define SET_DEBUG_LEVEL	  2
 
 #endif
