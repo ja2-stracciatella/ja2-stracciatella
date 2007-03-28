@@ -7,7 +7,6 @@
 
 /* #define TOPIC_MEMORY_MANAGER        0
 #define TOPIC_FILE_MANAGER          1
-#define TOPIC_DATABASE_MANAGER      2
 #define TOPIC_GAME                  3
 #define TOPIC_SGP                   4
 #define TOPIC_VIDEO                 5
@@ -30,7 +29,6 @@ extern "C" {
 
 extern UINT16 TOPIC_MEMORY_MANAGER;
 extern UINT16 TOPIC_FILE_MANAGER;
-extern UINT16 TOPIC_DATABASE_MANAGER;
 extern UINT16 TOPIC_GAME;
 extern UINT16 TOPIC_SGP;
 extern UINT16 TOPIC_VIDEO;
