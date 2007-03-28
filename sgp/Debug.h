@@ -38,9 +38,6 @@ extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSou
 #define Assert(a)       (a) ? (void)0 : _FailMessage(NULL, __LINE__, __FILE__)
 #define AssertMsg(a, b) (a) ? (void)0 : _FailMessage(b   , __LINE__, __FILE__)
 
-extern UINT8			gubAssertString[128];
-
-
 #else
 
 #define Assert(a)

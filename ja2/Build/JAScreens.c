@@ -274,15 +274,6 @@ UINT32 ErrorScreenHandle(void)
 	mprintf( 50, 255, L"%s", gubErrorText );
 	SetFontForeground( FONT_LTRED );
 
-#ifdef JA2BETAVERSION
-
-	  if( gubAssertString[0] )
-	  {
-		  swprintf(str, lengthof(str), L"%s", gubAssertString);
-		  DisplayWrappedString( 50, 270, 560, 2, FONT12ARIAL, FONT_RED, str, FONT_BLACK, TRUE, LEFT_JUSTIFIED );
-	  }
-#endif
-
 	if ( !fFirstTime )
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "Runtime Error: %s ", gubErrorText ) );

@@ -30,8 +30,6 @@ extern "C" {
 static BOOLEAN gfRecordToFile     = FALSE;
 static BOOLEAN gfRecordToDebugger = TRUE;
 
-UINT8 gubAssertString[128];
-
 #ifdef SGP_DEBUG
 
 
@@ -84,7 +82,6 @@ BOOLEAN DbgInitialize(void)
 
 	gfRecordToFile = TRUE;
 	gfRecordToDebugger = TRUE;
-	gubAssertString[0] = '\0';
 
 #ifndef _NO_DEBUG_TXT
 	if (!DbgGetLogFileName(gpcDebugLogFileName)) return FALSE;
@@ -200,10 +197,11 @@ void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFil
 
 void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile)
 {
-	UINT8 ubOutputString[512];
-	//Build the output strings
-	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
-	strlcpy(gubAssertString, pString != NULL ? pString : "", lengthof(gubAssertString));
+	char ubOutputString[512];
+	if (pString != NULL)
+		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]: %s\n", GetTickCount(), uiLineNum, pSourceFile, pString);
+	else
+		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile);
 
 	//Output to debugger
 	if (gfRecordToDebugger)
