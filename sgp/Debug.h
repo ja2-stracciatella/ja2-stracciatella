@@ -13,8 +13,7 @@ extern "C" {
 #define MAX_TOPICS_ALLOTED	1024
 
 
-extern	UINT8		*String(const char *String, ...);
-
+extern	const char* String(const char* String, ...);
 
 
 #if defined ( _DEBUG ) || defined ( FORCE_ASSERTS_ON )

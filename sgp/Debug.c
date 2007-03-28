@@ -31,15 +31,7 @@ extern "C" {
 static BOOLEAN gfRecordToFile     = FALSE;
 static BOOLEAN gfRecordToDebugger = TRUE;
 
-// Had to move these outside the ifdef SGP_DEBUG below, because
-// they are required for the String() function, which is NOT a
-// debug-mode only function, it's used in release-mode as well! -- DB
-
 UINT8 gubAssertString[128];
-
-#define MAX_MSG_LENGTH2 512
-static UINT8		gbTmpDebugString[8][MAX_MSG_LENGTH2];
-static UINT8		gubStringIndex = 0;
 
 #ifdef SGP_DEBUG
 
@@ -330,23 +322,20 @@ void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
 
 // This is NOT a _DEBUG only function! It is also needed in
 // release mode builds. -- DB
-UINT8 *String(const char *String, ...)
+const char* String(const char* String, ...)
 {
+	static char TmpDebugString[8][512];
+	static UINT StringIndex = 0;
 
-  va_list  ArgPtr;
-  UINT8    usIndex;
+	// Record string index. This index is used since we live in a multitasking environment.
+	// It is still not bulletproof, but it's better than a single string
+	char* ResultString = TmpDebugString[StringIndex];
+	StringIndex = (StringIndex + 1) % lengthof(TmpDebugString);
 
-  // Record string index. This index is used since we live in a multitasking environment.
-  // It is still not bulletproof, but it's better than a single string
-  usIndex = gubStringIndex++;
-  if (gubStringIndex == 8)
-  { // reset string pointer
-    gubStringIndex = 0;
-  }
+	va_list ArgPtr;
+	va_start(ArgPtr, String);
+	vsprintf(ResultString, String, ArgPtr);
+	va_end(ArgPtr);
 
-  va_start(ArgPtr, String);
-  vsprintf(gbTmpDebugString[usIndex], String, ArgPtr);
-  va_end(ArgPtr);
-
-  return gbTmpDebugString[usIndex];
+	return ResultString;
 }
