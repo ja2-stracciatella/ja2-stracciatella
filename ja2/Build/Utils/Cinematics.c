@@ -160,7 +160,7 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	if(!(pSmack=SmkGetFreeFlic()))
 	{
 		ErrorMsg("SMK ERROR: Out of flic slots, cannot open another");
-		return(NULL);
+		goto fail;
 	}
 
 	// Attempt opening the filename
@@ -168,7 +168,7 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	if (!pSmack->hFileHandle)
 	{
 		ErrorMsg("SMK ERROR: Can't open the SMK file");
-		return(NULL);
+		goto fail;
 	}
 
 	//Get the real file handle for the file man handle for the smacker file
@@ -178,14 +178,14 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	if(!(pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,640,480,0,0)))
 	{
 		ErrorMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
-		return(NULL);
+		goto fail_close;
 	}
 
 	if(!(pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA)))
 //	if(!(pSmack->SmackHandle=SmackOpen(cFilename, SMACKTRACKS, SMACKAUTOEXTRA)))
 	{
 		ErrorMsg("SMK ERROR: Smacker won't open the SMK file");
-		return(NULL);
+		goto fail_close;
 	}
 
 	// Make sure we have a video surface
@@ -195,6 +195,11 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	pSmack->uiFlags|=SMK_FLIC_OPEN;
 
 	return(pSmack);
+
+fail_close:
+	FileClose(pSmack->hFileHandle);
+fail:
+	return NULL;
 }
 
 
