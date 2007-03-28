@@ -2,7 +2,7 @@
 // use the code to write text, because the header switches on the define
 #define SGP_DEBUG
 
-
+#include <SDL.h>
 #include "Types.h"
 #include <stdio.h>
 #include "Debug.h"
@@ -173,9 +173,6 @@ static void _DebugRecordToDebugger(BOOLEAN gfState)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Wiz8 compatible debug messaging
-
 void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFile)
 {
 	UINT8 ubOutputString[512];
@@ -223,43 +220,9 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 			fclose(DebugFile);
 		}
 	}
+#endif
 
-	//Kris:
-	//NASTY HACK, THE GAME IS GOING TO DIE ANYWAY, SO WHO CARES WHAT WE DO.
-	//This will actually bring up a screen that prints out the assert message
-	//until the user hits esc or alt-x.
-	sprintf( gubErrorText, "Assertion Failure -- Line %d in %s", uiLineNum, pSourceFile );
-	SetPendingNewScreen( ERROR_SCREEN );
-	SetCurrentScreen( ERROR_SCREEN );
-	/* Using windows-COM-model - I don't think it is really necessary,
-	 * so I comment it out for the moment to make the file 
-	 * compile. We can add our own way of doing this later
-	 * - Wolf
-	 *
-	 * TODO: Repair this function and add something of our own
-	 * (if we need this at all)
-	 */
-#if 0
-	while (gfProgramIsRunning)
-	{
-		MSG Message;
-		if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
-		{ // We have a message on the WIN95 queue, let's get it
-			if (!GetMessage(&Message, NULL, 0, 0))
-			{ // It's quitting time
-				continue;
-			}
-			// Ok, now that we have the message, let's handle it
-			TranslateMessage(&Message);
-			DispatchMessage(&Message);
-		}
-		else
-		{ // Windows hasn't processed any messages, therefore we handle the rest
-			GameLoop();
-		}
-	}
-#endif
-#endif
+	SDL_Quit();
 	abort();
 }
 
