@@ -93,9 +93,9 @@ INT8 gbDiff[MAX_DIFF_PARMS][5] =
 void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 
+#ifdef JA2BETAVERSION
 void DebugAI(const char* szOutput)
 {
-#ifdef JA2BETAVERSION
 	// Send regular debug msg AND AI debug message
 	FILE *		DebugFile;
 
@@ -106,8 +106,8 @@ void DebugAI(const char* szOutput)
 		fputs( "\n", DebugFile );
 		fclose( DebugFile );
 	}
-#endif
 }
+#endif
 
 
 BOOLEAN InitAI( void )
