@@ -68,9 +68,6 @@ extern	void		DbgShutdown(void);
 // These are the debug macros (the ones the use will use). The user should never call
 // the actual debug functions directly
 
-// Force a breakpoint in the debugger
-#define DebugBreakpoint()						__asm { int 3 }
-
 
 #define DbgMessage(a, b, c) DbgMessageReal(a, b, c)
 #define FastDebugMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
@@ -95,7 +92,6 @@ extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* Sou
 //*******************************************************************************************
 // Release Mode
 //*******************************************************************************************
-#define DebugBreakpoint()
 
 #define RegisterDebugTopic(a, b)
 #define UnRegisterDebugTopic(a, b)
