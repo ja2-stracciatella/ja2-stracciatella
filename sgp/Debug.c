@@ -6,7 +6,6 @@
 #include "Types.h"
 #include <stdio.h>
 #include "Debug.h"
-#include "WCheck.h"
 #include "TopicIDs.h"
 #include "TopicOps.h"
 #include <string.h>
@@ -202,12 +201,8 @@ void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFil
 }
 
 
-extern HVOBJECT FontObjs[25];
-
-#ifdef JA2 //JAGGED ALLIANCE 2 VERSION ONLY
 void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile)
 {
-	/*MSG Message;*/
 	UINT8 ubOutputString[512];
 	//Build the output strings
 	sprintf( ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile );
@@ -229,16 +224,6 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 		}
 	}
 
-#if 0
-	if( !FontObjs[0] )
-	{ //Font manager hasn't yet been initialized so use the windows error system
-		sprintf( gubErrorText, "Assertion Failure -- Line %d in %s", uiLineNum, pSourceFile );
-		MessageBox( NULL, gubErrorText, "Jagged Alliance 2", MB_OK );
-		gfProgramIsRunning = FALSE;
-		return;
-	}
-#endif
-
 	//Kris:
 	//NASTY HACK, THE GAME IS GOING TO DIE ANYWAY, SO WHO CARES WHAT WE DO.
 	//This will actually bring up a screen that prints out the assert message
@@ -257,6 +242,7 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 #if 0
 	while (gfProgramIsRunning)
 	{
+		MSG Message;
 		if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
 		{ // We have a message on the WIN95 queue, let's get it
 			if (!GetMessage(&Message, NULL, 0, 0))
@@ -276,47 +262,6 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 #endif
 	abort();
 }
-
-#else //NOT JAGGED ALLIANCE 2
-
-void _FailMessage(UINT8 *pString, UINT32 uiLineNum, UINT8 *pSourceFile)
-{
-	UINT8 ubOutputString[512];
-	BOOLEAN fDone = FALSE;
-
-	// Build the output string
-	sprintf( ubOutputString, "{ %ld } Assertion Failure: %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
-	if( pString )
-		strlcpy(gubAssertString, pString, lengthof(gubAssertString));
-	// Output to debugger
-	if (gfRecordToDebugger)
-	{
-		OutputDebugString( ubOutputString );
-		if( pString )
-		{ //tag on the assert message
-			OutputDebugString( gubAssertString );
-		}
-	}
-	// Record to file if required
-#ifndef _NO_DEBUG_TXT
-	if (gfRecordToFile)
-	{
-		FILE* DebugFile = fopen(gpcDebugLogFileName, "a+");
-		if (DebugFile != NULL)
-		{
-			fputs( ubOutputString, DebugFile );
-			if (pString != NULL)
-			{ //tag on the assert message
-				fputs(gubAssertString, DebugFile);
-			}
-			fclose(DebugFile);
-		}
-	}
-#endif
-	exit( 0 );
-}
-
-#endif
 
 #endif
 
