@@ -31,10 +31,6 @@ extern "C" {
 static BOOLEAN gfRecordToFile     = FALSE;
 static BOOLEAN gfRecordToDebugger = TRUE;
 
-// moved from header file: 24mar98:HJH
-UINT32	guiProfileStart, guiExecutions, guiProfileTime;
-INT32		giProfileCount;
-
 // Had to move these outside the ifdef SGP_DEBUG below, because
 // they are required for the String() function, which is NOT a
 // debug-mode only function, it's used in release-mode as well! -- DB

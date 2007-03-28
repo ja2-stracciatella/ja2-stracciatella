@@ -13,16 +13,6 @@ extern "C" {
 #define MAX_TOPICS_ALLOTED	1024
 
 
-extern UINT32		guiProfileStart, guiExecutions, guiProfileTime;
-extern INT32		giProfileCount;
-
-#define	PROFILE(x)		guiProfileStart=GetTickCount();				\
-											guiExecutions=x;											\
-											for(giProfileCount=0; giProfileCount < x; giProfileCount++)
-
-#define PROFILE_REPORT()		guiProfileTime=(GetTickCount()-guiProfileStart);	\
-														_RPT3(_CRT_WARN, "*** PROFILE REPORT: %d executions took %dms, average of %.2fms per iteration.\n", guiExecutions, guiProfileTime, (FLOAT)guiProfileTime/guiExecutions);
-
 extern	UINT8		*String(const char *String, ...);
 
 
