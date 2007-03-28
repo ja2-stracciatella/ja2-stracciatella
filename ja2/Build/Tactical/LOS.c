@@ -1709,7 +1709,7 @@ static BOOLEAN SoldierToSoldierLineOfSightTimingTest(SOLDIERTYPE* pStartSoldier,
 	#ifdef _DEBUG
 		fprintf(OutFile, "DEBUG: " );
 	#endif
-	  fprintf(OutFile, String( "Time for %d calls is %d milliseconds\n", uiLoopLimit, uiEndTime - uiStartTime));
+		fprintf(OutFile, "Time for %d calls is %d milliseconds\n", uiLoopLimit, uiEndTime - uiStartTime);
 		fclose(OutFile);
 	}
 	return( TRUE );
