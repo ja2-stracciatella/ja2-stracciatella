@@ -91,8 +91,6 @@ BOOLEAN DbgInitialize(void)
 		gpDbgTopicPtrs[iX] = NULL;
 	}
 
-	DbgClearAllTopics();
-
 	gfRecordToFile = TRUE;
 	gfRecordToDebugger = TRUE;
 	gubAssertString[0] = '\0';
@@ -146,21 +144,6 @@ void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
 
 		gpDbgTopicPtrs[*usTopicID] = NULL;
 		*usTopicID = INVALID_TOPIC;
-	}
-}
-
-
-void DbgClearAllTopics( void )
-{
-	UINT16 usIndex;
-
-	for( usIndex = 0; usIndex < MAX_TOPICS_ALLOTED; usIndex++)
-	{
-		if ( gpDbgTopicPtrs[ usIndex ] != NULL )
-		{
-			*gpDbgTopicPtrs[usIndex] = INVALID_TOPIC;
-			gpDbgTopicPtrs[usIndex] = NULL;
-		}
 	}
 }
 

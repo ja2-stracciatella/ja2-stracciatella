@@ -73,7 +73,6 @@ extern	void		DbgShutdown(void);
 #define FastDebugMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
 
 #define UnRegisterDebugTopic(a, b) DbgTopicRegistration(TOPIC_UNREGISTER, &(a), b)
-#define ClearAllDebugTopics()      DbgClearAllTopics()
 
 #define ErrorMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
@@ -84,7 +83,6 @@ extern	void		DbgShutdown(void);
 // public interface to debug methods:
 extern void DbgMessageReal(UINT16 TopicId, UINT8 uiDebugLevel, const char* Str);
 extern void DbgTopicRegistration(UINT8 ubCmd, UINT16* usTopicID, const char* zMessage);
-extern void DbgClearAllTopics(void);
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
 
 #else
