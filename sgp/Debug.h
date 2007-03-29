@@ -65,8 +65,6 @@ typedef enum DebugLevel
 } DebugLevel;
 
 extern void DebugMsg(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
-
-#define ErrorMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
 #define FastDebugMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
@@ -78,8 +76,6 @@ extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* Sou
 //*******************************************************************************************
 
 #define DebugMsg(a, b, c)
-
-#define ErrorMsg(a)
 #define FastDebugMsg(a)
 
 #endif
