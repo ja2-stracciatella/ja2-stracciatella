@@ -78,7 +78,7 @@ HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 		//FatalError( "Resource file %s does not exist.", ImageFile );
 #endif
 #endif
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, String("Resource file %s does not exist.", ImageFile) );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, String("Resource file %s does not exist.", ImageFile) );
 		return( NULL );
 	}
 
@@ -203,13 +203,13 @@ static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader
 
 		default:
 
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "Unknown image loader was specified." );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Unknown image loader was specified." );
 
 	}
 
 	if ( !fReturnVal )
 	{
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "Error occured while reading image data." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Error occured while reading image data." );
 	}
 
 	return( fReturnVal );
@@ -238,13 +238,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		#ifndef NO_ZLIB_COMPRESSION
 			if ( hImage->fFlags & IMAGE_COMPRESSED )
 			{
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery." );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery." );
 				return( Copy8BPPCompressedImageTo8BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 			}
 		#endif
 
 		// Default do here
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery." );
 		return ( Copy8BPPImageTo8BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 
 	}
@@ -254,13 +254,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		#ifndef NO_ZLIB_COMPRESSION
 			if ( hImage->fFlags & IMAGE_COMPRESSED )
 			{
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer." );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer." );
 				return ( Copy8BPPCompressedImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 			}
 		#endif
 
 		// Default do here
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer." );
 		return ( Copy8BPPImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 
 	}
@@ -271,12 +271,12 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		#ifndef NO_ZLIB_COMPRESSION
 			if ( hImage->fFlags & IMAGE_COMPRESSED )
 			{
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery." );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery." );
 				return( Copy16BPPCompressedImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 			}
 		#endif
 
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
 		return( Copy16BPPImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
 	}
 
@@ -313,7 +313,7 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
 
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "8BPP to 8BPP Compressed Blitter Called!" );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "8BPP to 8BPP Compressed Blitter Called!" );
 	// determine where to start Copying and rectangle size
 	uiDestStart = usY * usDestWidth + usX;
 	uiNumLines = srcRect->iBottom - srcRect->iTop;
@@ -390,7 +390,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	// Assertions
 	Assert( hImage != NULL );
 	Assert( hImage->pCompressedImageData != NULL );
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Start check" );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Start check" );
 	// Validations
 	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
@@ -398,7 +398,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	CHECKF( usY < usDestHeight );
 	CHECKF( srcRect->iRight > srcRect->iLeft );
 	CHECKF( srcRect->iBottom > srcRect->iTop );
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "End check" );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "End check" );
 	p16BPPPalette = hImage->pui16BPPPalette;
 
 	// determine where to start Copying and rectangle size
@@ -411,7 +411,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 
 	pDest = (UINT16 *) pDestBuf;
 	pDest += uiDestStart;
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
 
 	// Copying a portion of a compressed image is rather messy
 	// because we have to decompress past all the data we want
@@ -433,12 +433,12 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	// go past all the scanlines we don't need to process
 	for (uiLine = 0; uiLine < (UINT32) srcRect->iTop; uiLine++)
 	{
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Skipping scanline" );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Skipping scanline" );
 		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
 		Assert( uiDecompressed == hImage->usWidth );
 	}
 
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Actually Copying" );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Actually Copying" );
 	// now we start Copying
 	for (uiLine = 0; uiLine < uiNumLines - 1; uiLine++)
 	{
@@ -458,7 +458,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 		pDest += usDestWidth;
 	}
 
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
 
 	DecompressFini( pDecompPtr );
 	return( TRUE );
@@ -468,7 +468,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
 	// 16BPP Compressed image has not been implemented yet
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
 	return( FALSE );
 }
 #endif //NO_ZLIB_COMPRESSION
@@ -599,7 +599,7 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 
 	// Convert to Pixel specification
 	pDest = ( UINT16*)pDestBuf + uiDestStart;
 	pSrc =  hImage->p8BPPData + uiSrcStart;
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
 
 	// For every entry, look up into 16BPP palette
 	for( rows = 0; rows < uiNumLines-1; rows++ )
@@ -618,7 +618,7 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 
 		pSrc  += hImage->usWidth;
 	}
 	// Do last line
-	DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
+	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
 
 	return( TRUE );
 

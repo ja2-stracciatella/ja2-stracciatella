@@ -190,7 +190,7 @@ UINT32					LoadIndex;
 
 	if((LoadIndex=FindFreeFont())==(-1))
 	{
-		  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Out of font slots (%s)", filename));
+		  DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Out of font slots (%s)", filename));
 #ifdef JA2
 			FatalError( "Cannot init FONT file %s", filename );
 #endif
@@ -200,7 +200,7 @@ UINT32					LoadIndex;
 	FontObjs[LoadIndex] = CreateVideoObjectFromFile(filename);
 	if (FontObjs[LoadIndex] == NULL)
 	{
-		  DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
+		  DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
 #ifdef JA2
 			FatalError( "Cannot init FONT file %s", filename );
 #endif
@@ -475,7 +475,7 @@ INT16 GetIndex(UINT16 siChar)
 	}
 
 	// If here, present warning and give the first index
-	DbgMessage(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given %d", siChar));
+	DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given %d", siChar));
 
 	// Return 0 here, NOT -1 - we should see A's here now...
 	return 0;

@@ -31,7 +31,7 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 
 	if (!FileRead(hFile, &Header, STCI_HEADER_SIZE) || memcmp(Header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
 	{
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header." );
 		FileClose( hFile );
 		return( FALSE );
 	}
@@ -41,7 +41,7 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 	{
 		if( !STCILoadRGB( &TempImage, fContents, hFile, &Header ) )
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image." );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image." );
 			FileClose( hFile );
 			return( FALSE );
 		}
@@ -50,14 +50,14 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 	{
 		if( !STCILoadIndexed( &TempImage, fContents, hFile, &Header ) )
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image." );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image." );
 			FileClose( hFile );
 			return( FALSE );
 		}
 	}
 	else
 	{	// unsupported type of data, or the right flags weren't set!
-		DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file." );
 		FileClose( hFile );
 		return( FALSE );
 	}
@@ -110,7 +110,7 @@ static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const 
 			if (gusRedMask != (UINT16) pHeader->RGB.uiRedMask || gusGreenMask != (UINT16) pHeader->RGB.uiGreenMask || gusBlueMask != (UINT16) pHeader->RGB.uiBlueMask )
 			{
 				// colour distribution of the file is different from hardware!  We have to change it!
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!" );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!" );
 				// Convert the image to the current hardware's specifications
 				if (gusRedMask > gusGreenMask && gusGreenMask > gusBlueMask)
 				{
@@ -167,14 +167,14 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 	{ // Allocate memory for reading in the palette
 		if (pHeader->Indexed.uiNumberOfColours != 256)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Palettized image has bad palette size." );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Palettized image has bad palette size." );
 			return( FALSE );
 		}
 		uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
 		pSTCIPalette = MemAlloc( uiFileSectionSize );
 		if (pSTCIPalette == NULL)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
 			return( FALSE );
 		}
 
@@ -184,13 +184,13 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		// Read in the palette
 		if (!FileRead(hFile, pSTCIPalette, uiFileSectionSize))
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palette!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palette!" );
 			MemFree( pSTCIPalette );
 			return( FALSE );
 		}
 		else if (!STCISetPalette( pSTCIPalette, hImage ))
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting hImage-format palette!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting hImage-format palette!" );
 			MemFree( pSTCIPalette );
 			return( FALSE );
 		}
@@ -203,7 +203,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
 		if (FileSeek( hFile, uiFileSectionSize, FILE_SEEK_FROM_CURRENT) == FALSE)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!" );
 			return( FALSE );
 		}
 	}
@@ -218,7 +218,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 			hImage->pETRLEObject = MemAlloc( uiFileSectionSize );
 			if (hImage->pETRLEObject == NULL)
 			{
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
 				if (fContents & IMAGE_PALETTE)
 				{
 					MemFree( hImage->pPalette );
@@ -227,7 +227,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 			}
 			if (!FileRead(hFile, hImage->pETRLEObject, uiFileSectionSize))
 			{
-				DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!" );
+				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!" );
 				if (fContents & IMAGE_PALETTE)
 				{
 					MemFree( hImage->pPalette );
@@ -242,7 +242,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		hImage->pImageData = MemAlloc( pHeader->uiStoredSize );
 		if (hImage->pImageData == NULL)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
 			if (fContents & IMAGE_PALETTE)
 			{
 				MemFree( hImage->pPalette );
@@ -255,7 +255,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		}
 		else if (!FileRead(hFile, hImage->pImageData, pHeader->uiStoredSize))
 		{ // Problem reading in the image data!
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!" );
 			MemFree( hImage->pImageData );
 			if (fContents & IMAGE_PALETTE)
 			{
@@ -273,7 +273,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 	{
 		if (FileSeek( hFile, pHeader->uiStoredSize, FILE_SEEK_FROM_CURRENT) == FALSE)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!" );
 			return( FALSE );
 		}
 	}
@@ -284,7 +284,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		hImage->pAppData = MemAlloc( pHeader->uiAppDataSize );
 		if (hImage->pAppData == NULL)
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
 			MemFree( hImage->pAppData );
 			if (fContents & IMAGE_PALETTE)
 			{
@@ -302,7 +302,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 		}
 		if (!FileRead(hFile, hImage->pAppData, pHeader->uiAppDataSize))
 		{
-			DbgMessage( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!" );
+			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!" );
 			MemFree( hImage->pAppData );
 			if (fContents & IMAGE_PALETTE)
 			{

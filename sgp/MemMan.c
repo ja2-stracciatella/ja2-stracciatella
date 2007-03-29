@@ -148,22 +148,22 @@ void ShutdownMemoryManager( void )
 {
 	if ( MemDebugCounter != 0 )
 	{
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "  >>>>> MEMORY LEAK DETECTED!!! <<<<<  ");
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter ));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal ));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed", guiMemFreed));
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "  >>>>> MEMORY LEAK DETECTED!!! <<<<<  ");
+		DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter ));
+		DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal ));
+		DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
+		DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed", guiMemFreed));
 
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DbgMessage(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
+		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
 
 		#ifndef EXTREME_MEMORY_DEBUGGING
 			#ifdef JA2BETAVERSION
@@ -204,7 +204,7 @@ PTR MemAllocReal( UINT32 uiSize, const char *pcFile, INT32 iLine )
 	}
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+    DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
 
 	ptr = _malloc_dbg( uiSize, _NORMAL_BLOCK, pcFile, iLine );
@@ -216,11 +216,11 @@ PTR MemAllocReal( UINT32 uiSize, const char *pcFile, INT32 iLine )
   }
   else
 	{
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile) );
+    DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile) );
 	}
 
 #ifdef DEBUG_MEM_LEAKS
-  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
+  DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
 #endif
 
 	return( ptr );
@@ -232,7 +232,7 @@ void MemFreeReal( PTR ptr, const char *pcFile, INT32 iLine )
 	UINT32 uiSize;
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+    DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
   if (ptr != NULL)
   {
@@ -242,16 +242,16 @@ void MemFreeReal( PTR ptr, const char *pcFile, INT32 iLine )
 		_free_dbg( ptr, _NORMAL_BLOCK );
 
 #ifdef DEBUG_MEM_LEAKS
-	  DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFree  %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
+	  DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFree  %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile) );
 #endif
   }
   else
   {
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile) );
+    DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile) );
   }
 
   // count even a NULL ptr as a MemFree, not because it's really a memory leak, but because it is still an error of some
-  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DbgMessage
+  // sort (nobody should ever be freeing NULL pointers), and this will help in tracking it down if the above DebugMsg
   // is not noticed.
   MemDebugCounter--;
 }
@@ -264,7 +264,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 
 
 	if ( !fMemManagerInit )
-    DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
+    DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile) );
 
   if(ptr != NULL)
 	{
@@ -278,7 +278,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
 	ptrNew = _realloc_dbg( ptr, uiSize, _NORMAL_BLOCK, pcFile, iLine );
   if (ptrNew == NULL)
   {
-		DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
+		DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile) );
 		if ( uiSize != 0 )
 		{
 			// ptr is left untouched, so undo the math above
@@ -290,7 +290,7 @@ PTR MemReallocReal( PTR ptr, UINT32 uiSize, const char *pcFile, INT32 iLine )
   else
   {
 #ifdef DEBUG_MEM_LEAKS
-  	DbgMessage( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew ) );
+  	DebugMsg( TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew ) );
 #endif
 
 		guiMemTotal   += uiSize;

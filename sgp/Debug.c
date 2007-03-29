@@ -61,7 +61,7 @@ BOOLEAN InitializeDebugManager(void)
 }
 
 
-void DbgMessageReal(TopicID uiTopicId, DebugLevel uiDebugLevel, const char* strMessage)
+void DebugMsg(TopicID uiTopicId, DebugLevel uiDebugLevel, const char* strMessage)
 {
 	OutputDebugString(strMessage);
 	OutputDebugString("\n");

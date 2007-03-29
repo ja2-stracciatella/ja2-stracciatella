@@ -1527,7 +1527,7 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 	{
 		char AILString[200];
 		sprintf(AILString, "Stream Error: %s", AIL_last_error());
-		DbgMessage(TOPIC_GAME, DBG_LEVEL_0, AILString);
+		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, AILString);
 		return SOUND_ERROR;
 	}
 

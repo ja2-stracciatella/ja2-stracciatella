@@ -64,14 +64,11 @@ typedef enum DebugLevel
 	DBG_LEVEL_3  // nitty gritty detail
 } DebugLevel;
 
-#define DbgMessage(a, b, c) DbgMessageReal(a, b, c)
-#define DebugMsg(a, b, c)   DbgMessageReal(a, b, c)
+extern void DebugMsg(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
 
 #define ErrorMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
 #define FastDebugMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
-// public interface to debug methods:
-extern void DbgMessageReal(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
 
 #else
@@ -80,7 +77,6 @@ extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* Sou
 // Release Mode
 //*******************************************************************************************
 
-#define DbgMessage(a, b, c)
 #define DebugMsg(a, b, c)
 
 #define ErrorMsg(a)

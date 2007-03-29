@@ -63,14 +63,14 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 		uiAmount = uiNum_items * uiSiz_each;
 	else
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Requested queue items and size have to be >0");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Requested queue items and size have to be >0");
 			return NULL;
 	}
 
 		// allocate the queue memory
 	if ((hQueue = MemAlloc(uiAmount + sizeof(QueueHeader))) == 0)
 	{
-			DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
+			DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
 		return NULL;
 		}
 
@@ -113,14 +113,14 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 		uiAmount = uiNum_items * uiSiz_each;
 	else
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Requested queue items and size have to be >0");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Requested queue items and size have to be >0");
 			return 0;
 	}
 
 		// allocate the list memory
 	if ((hList = MemAlloc(uiAmount + sizeof(ListHeader))) == 0)
 	{
-			DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
+			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
 		return 0;
 		}
 
@@ -155,7 +155,7 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
 		return FALSE;
 	}
 	// free the memory assigned to the handle
@@ -180,7 +180,7 @@ BOOLEAN DeleteList(HLIST hList)
 {
 	if (hList == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
 		return FALSE;
 	}
 	 // free the memory assigned to the list
@@ -210,12 +210,12 @@ static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 	// cannot check for invalid handle , only 0
 	if (hQueue == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
 		return FALSE;
 	}
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
 		return FALSE;
 	}
 
@@ -225,7 +225,7 @@ static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 	// if theres no elements to remove return error
 	if (pTemp_cont->uiTotal_items == 0)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue");
 		return FALSE;
 	}
 
@@ -266,12 +266,12 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 	// cannot check for invalid handle , only 0
 	if (hList == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
 		return FALSE;
 	}
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from list is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from list is NULL");
 		return FALSE;
 	}
 
@@ -281,12 +281,12 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 	// if theres no elements to peek return error
 	if (pTemp_cont->uiTotal_items == 0)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is nothing in the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is nothing in the list");
 		return FALSE;
 	}
 	if (uiPos >= pTemp_cont->uiTotal_items)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is no item at this position");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is no item at this position");
 		return FALSE;
 	}
 
@@ -328,12 +328,12 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 	// cannot check for invalid handle , only 0
 	if (hQueue == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
 		return FALSE;
 	}
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
 		return FALSE;
 	}
 
@@ -343,7 +343,7 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 	// if theres no elements to remove return error
 	if (pTemp_cont->uiTotal_items == 0)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue to remove");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue to remove");
 		return FALSE;
 	}
 
@@ -405,14 +405,14 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 	// check for invalid handle = 0
 	if (hQueue == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
 		return NULL;
 	}
 
 	// check for data = NULL
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Data to be added onto queue is NULL");
+		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Data to be added onto queue is NULL");
 		return NULL;
 	}
 
@@ -435,7 +435,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 		pTemp_cont->uiMax_size = uiNew_size;
 		if ((hQueue = MemRealloc(hQueue, uiNew_size)) == NULL)
 		{
-		 DbgMessage(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
+		 DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
 			 return NULL;
 		}
 		// copy memory from beginning of container to end of container
@@ -482,13 +482,13 @@ static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, 
 
 	if ((uiSourceOfst < 0) || (uiDestOfst < 0) || (uiSize < 0))
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy");
 		return FALSE;
 	}
 
 		if (pmem_void == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy");
 		return FALSE;
 	}
 		pOffsetSrc = (BYTE *)pmem_void;
@@ -522,13 +522,13 @@ static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT3
 
 	if ((uiSrcOfst < 0) || (uiSize < 0))
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy_data");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy_data");
 		return FALSE;
 	}
 
 		if (pmem_void == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy_data");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy_data");
 		return FALSE;
 	}
 		pOffsetSrc = (BYTE *)pmem_void;
@@ -557,7 +557,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 	QueueHeader *pTemp_cont;
 	if (hQueue == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Queue pointer is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Queue pointer is NULL");
 		return 0;
 	}
 	pTemp_cont = (QueueHeader *)hQueue;
@@ -583,7 +583,7 @@ UINT32 ListSize(HLIST hList)
 	ListHeader *pTemp_cont;
 	if (hList == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "List pointer is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "List pointer is NULL");
 		return 0;
 	}
 	pTemp_cont = (ListHeader *)hList;
@@ -626,20 +626,20 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 	// check for invalid handle = 0
 	if (hList == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
 		return NULL;
 	}
 
 	// check for data = NULL
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return NULL;
 	}
 	// check for a 0 or negative position passed in
 	if (uiPos < 0)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return NULL;
 	}
 
@@ -648,7 +648,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 	pTemp_cont = (ListHeader *)hList;
 	if (uiPos > pTemp_cont->uiTotal_items)
 	{
-			DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
+			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
 		return NULL;
 	}
 		uiTotal = pTemp_cont->uiTotal_items;
@@ -671,7 +671,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 		{
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{
-				 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 			 return NULL;
 			}
 		}
@@ -692,7 +692,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail-uiOffsetSrc) == FALSE)
 				{
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 					 return NULL;
 				}
 			uiFinalLoc = uiOffsetSrc;
@@ -702,7 +702,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 				{
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 					 return NULL;
 				}
 
@@ -710,14 +710,14 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = sizeof(ListHeader);
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each) == FALSE)
 				{
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 					 return NULL;
 				}
 				uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 				if (do_copy(hList, uiOffsetSrc, uiOffsetDst, (uiMax_size-uiSize_of_each) - uiOffsetSrc) == FALSE)
 				{
-					 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+					 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 					 return NULL;
 				}
 		}
@@ -735,13 +735,13 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 		pTemp_cont->uiMax_size = uiNew_size;
 		if ((hList = MemRealloc(hList, uiNew_size)) == NULL)
 		{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not resize list container memory");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not resize list container memory");
 				return NULL;
 			}
 		pTemp_cont = (ListHeader *)hList;
 		if (do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader)) == FALSE)
 		{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy list container memory");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy list container memory");
 				return NULL;
 			}
 		pTemp_cont->uiTail = uiMax_size + (uiHead-sizeof(ListHeader));
@@ -752,7 +752,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 				uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{
-				 DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 			 return NULL;
 			}
 				pTemp_cont->uiTail += uiSize_of_each;
@@ -765,7 +765,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 	pbyte = (BYTE *)hList;
 	if (uiFinalLoc == 0)
 	{
-			DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This should never happen! report this problem!");
+			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This should never happen! report this problem!");
 		return NULL;
 	}
 	pbyte += uiFinalLoc;
@@ -810,20 +810,20 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 	// check for invalid handle = 0
 	if (hList == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
 		return FALSE;
 	}
 
 	// check for data = NULL
 	if (pdata == NULL)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return FALSE;
 	}
 	// check for a 0 or negative position passed in
 	if (uiPos < 0)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return FALSE;
 	}
 
@@ -832,12 +832,12 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 
 	if (uiPos >= pTemp_cont->uiTotal_items)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Cannot delete at the specified position");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Cannot delete at the specified position");
 		return FALSE;
 	}
 	if (pTemp_cont->uiTotal_items == 0)
 	{
-		DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are no elements in the list to remove");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are no elements in the list to remove");
 		return FALSE;
 	}
 
@@ -854,12 +854,12 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 		uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
 		if (do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each) == FALSE)
 		{
-			DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
+			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 			return FALSE;
 		}
 		if (do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail-uiOffsetSrc) == FALSE)
 		{
-			DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not remove the data the list");
+			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not remove the data the list");
 			return FALSE;
 		}
 		pTemp_cont->uiTail -= uiSize_of_each;
@@ -877,12 +877,12 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 				return FALSE;
 			}
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 				return FALSE;
 			}
 			uiFinalLoc = uiOffsetSrc;
@@ -893,7 +893,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail-uiOffsetSrc) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 				return FALSE;
 			}
 
@@ -901,19 +901,19 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 			uiOffsetDst = sizeof(ListHeader);
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 				return FALSE;
 			}
 			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 				return FALSE;
 			}
 			if (do_copy(hList, uiOffsetSrc, uiOffsetDst, (uiMax_size-uiSize_of_each) - uiOffsetSrc) == FALSE)
 			{
-				DbgMessage(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
+				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
 				return FALSE;
 			}
 		}
