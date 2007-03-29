@@ -105,8 +105,6 @@ BOOLEAN fMemManagerInit = FALSE;
 
 BOOLEAN InitializeMemoryManager( void )
 {
-	// Register the memory manager with the debugger
-	RegisterDebugTopic(TOPIC_MEMORY_MANAGER, "Memory Manager");
 	MemDebugCounter = 0;
 	guiMemTotal = 0;
 	guiMemAlloced = 0;
@@ -189,9 +187,6 @@ void ShutdownMemoryManager( void )
 			#endif
 		#endif
 	}
-
-
-	UnRegisterDebugTopic( TOPIC_MEMORY_MANAGER, "Memory Manager Un-initialized" );
 
 	fMemManagerInit = FALSE;
 }

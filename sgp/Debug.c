@@ -6,8 +6,6 @@
 #include "Types.h"
 #include <stdio.h>
 #include "Debug.h"
-#include "TopicIDs.h"
-#include "TopicOps.h"
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -33,28 +31,6 @@ static BOOLEAN gfRecordToDebugger = TRUE;
 #ifdef SGP_DEBUG
 
 
-UINT16 TOPIC_MEMORY_MANAGER = INVALID_TOPIC;
-UINT16 TOPIC_FILE_MANAGER = INVALID_TOPIC;
-UINT16 TOPIC_GAME = INVALID_TOPIC;
-UINT16 TOPIC_SGP = INVALID_TOPIC;
-UINT16 TOPIC_VIDEO = INVALID_TOPIC;
-UINT16 TOPIC_INPUT = INVALID_TOPIC;
-UINT16 TOPIC_LIST_CONTAINERS = INVALID_TOPIC;
-UINT16 TOPIC_QUEUE_CONTAINERS = INVALID_TOPIC;
-UINT16 TOPIC_HIMAGE = INVALID_TOPIC;
-UINT16 TOPIC_VIDEOOBJECT = INVALID_TOPIC;
-UINT16 TOPIC_FONT_HANDLER = INVALID_TOPIC;
-UINT16 TOPIC_VIDEOSURFACE = INVALID_TOPIC;
-UINT16 TOPIC_MOUSE_SYSTEM = INVALID_TOPIC;
-UINT16 TOPIC_BUTTON_HANDLER = INVALID_TOPIC;
-UINT16 TOPIC_JA2 = INVALID_TOPIC;
-UINT16 TOPIC_JA2OPPLIST = INVALID_TOPIC;
-UINT16 TOPIC_JA2AI = INVALID_TOPIC;
-
-
-static UINT16* gpDbgTopicPtrs[MAX_TOPICS_ALLOTED];
-
-
 static STRING512 gpcDebugLogFileName;
 
 #ifdef __cplusplus
@@ -71,15 +47,8 @@ static BOOLEAN DbgGetLogFileName(STRING512 pcName)
 #endif
 
 
-BOOLEAN DbgInitialize(void)
+BOOLEAN InitializeDebugManager(void)
 {
-	INT32 iX;
-
-	for( iX = 0; iX < MAX_TOPICS_ALLOTED; iX++ )
-	{
-		gpDbgTopicPtrs[iX] = NULL;
-	}
-
 	gfRecordToFile = TRUE;
 	gfRecordToDebugger = TRUE;
 
@@ -92,69 +61,21 @@ BOOLEAN DbgInitialize(void)
 }
 
 
-void DbgShutdown(void)
+void DbgMessageReal(TopicID uiTopicId, DebugLevel uiDebugLevel, const char* strMessage)
 {
-	DbgMessageReal((UINT16)(-1), 0, "SGP Going Down");
-}
-
-
-void DbgTopicRegistration(UINT8 ubCmd, UINT16 *usTopicID, const char *zMessage)
-{
-	UINT16 usIndex,usUse;
-	BOOLEAN fFound;
-
-	if ( usTopicID == NULL )
-		return;
-
-	if( ubCmd == TOPIC_REGISTER )
-	{
-		usUse = INVALID_TOPIC;
-		fFound = FALSE;
-		for( usIndex = 0; usIndex < MAX_TOPICS_ALLOTED && !fFound; usIndex++)
-		{
-			if (gpDbgTopicPtrs[usIndex] == NULL)
-			{
-				fFound = TRUE;
-				usUse = usIndex;
-			}
-		}
-
-		*usTopicID = usUse;
-		gpDbgTopicPtrs[usUse] = usTopicID;
-		DbgMessageReal(usUse, DBG_LEVEL_0, zMessage);
-	}
-	else if( ubCmd == TOPIC_UNREGISTER )
-	{
-		if ( *usTopicID >= MAX_TOPICS_ALLOTED )
-			return;
-
-		DbgMessageReal(*usTopicID, DBG_LEVEL_0, zMessage);
-
-		gpDbgTopicPtrs[*usTopicID] = NULL;
-		*usTopicID = INVALID_TOPIC;
-	}
-}
-
-
-void DbgMessageReal(UINT16 uiTopicId, UINT8 uiDebugLevel, const char* strMessage)
-{
-	// Check for a registered topic ID
-	if (uiTopicId < MAX_TOPICS_ALLOTED && gpDbgTopicPtrs[uiTopicId] != NULL)
-	{
-		OutputDebugString ( strMessage );
-		OutputDebugString ( "\n" );
+	OutputDebugString(strMessage);
+	OutputDebugString("\n");
 
 //add _NO_DEBUG_TXT to your SGP preprocessor definitions to avoid this f**king huge file from
 //slowly growing behind the scenes!!!!
 #ifndef _NO_DEBUG_TXT
-		FILE* OutFile = fopen(gpcDebugLogFileName, "a+");
-		if (OutFile != NULL)
-		{
-			fprintf(OutFile, "%s\n", strMessage);
-			fclose(OutFile);
-		}
-#endif
+	FILE* OutFile = fopen(gpcDebugLogFileName, "a+");
+	if (OutFile != NULL)
+	{
+		fprintf(OutFile, "%s\n", strMessage);
+		fclose(OutFile);
 	}
+#endif
 }
 
 

@@ -696,8 +696,6 @@ BOOLEAN InitButtonSystem(void)
 	gfIgnoreShutdownAssertions = FALSE;
 	#endif
 
-	RegisterDebugTopic(TOPIC_BUTTON_HANDLER,"Button System & Button Image Manager");
-
 	// Clear out button list
 	for(x=0;x<MAX_BUTTONS;x++)
 	{
@@ -729,8 +727,6 @@ void ShutdownButtonSystem(void)
 			RemoveButton(x);
 	}
 	ShutdownButtonImageManager();
-
-	UnRegisterDebugTopic(TOPIC_BUTTON_HANDLER,"Button System & Button Image Manager");
 }
 
 

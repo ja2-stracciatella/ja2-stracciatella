@@ -108,31 +108,7 @@ BOOLEAN	InitializeFileManager( STR strIndexFilename )
 		return FALSE;
 	}
 
-	RegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 	return( TRUE );
-}
-
-
-
-//**************************************************************************
-//
-// FileSystemShutdown
-//
-//		Shuts down the file system.
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//		9 Feb 98	DEF - modified to work with the library system
-//
-//**************************************************************************
-
-void ShutdownFileManager( void )
-{
-	UnRegisterDebugTopic( TOPIC_FILE_MANAGER, "File Manager" );
 }
 
 

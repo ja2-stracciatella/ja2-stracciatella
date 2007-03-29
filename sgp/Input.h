@@ -40,7 +40,6 @@ extern "C" {
 #endif
 
 extern BOOLEAN			InitializeInputManager(void);
-extern void					ShutdownInputManager(void);
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
 
 void MouseButtonDown(const SDL_MouseButtonEvent*);

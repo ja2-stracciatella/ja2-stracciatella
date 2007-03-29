@@ -2,7 +2,6 @@
 #define __DEBUG_MANAGER_
 
 #include "Types.h"
-#include "TopicOps.h"
 #include "TopicIDs.h"
 
 #ifdef __cplusplus
@@ -47,11 +46,7 @@ extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSou
 
 
 // Moved these out of the defines - debug mgr always initialized
-#define InitializeDebugManager()		DbgInitialize()
-#define ShutdownDebugManager()			DbgShutdown()
-
-extern	BOOLEAN	DbgInitialize(void);
-extern	void		DbgShutdown(void);
+BOOLEAN	InitializeDebugManager(void);
 
 
 #ifdef SGP_DEBUG
@@ -64,21 +59,22 @@ extern	void		DbgShutdown(void);
 // These are the debug macros (the ones the use will use). The user should never call
 // the actual debug functions directly
 
+typedef enum DebugLevel
+{
+	DBG_LEVEL_0,
+	DBG_LEVEL_1, // for basic stuff
+	DBG_LEVEL_2, // for ordinary, I usually want to see them, messages
+	DBG_LEVEL_3  // nitty gritty detail
+} DebugLevel;
 
 #define DbgMessage(a, b, c) DbgMessageReal(a, b, c)
-#define FastDebugMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
+#define DebugMsg(a, b, c)   DbgMessageReal(a, b, c)
 
-#define UnRegisterDebugTopic(a, b) DbgTopicRegistration(TOPIC_UNREGISTER, &(a), b)
-
-#define ErrorMsg(a) _DebugMessage(a, __LINE__, __FILE__)
-
-// Enable the debug topic we want
-#define RegisterDebugTopic(a, b)    DbgTopicRegistration(TOPIC_REGISTER, &(a), b)
-#define DebugMsg(a, b, c)           DbgMessageReal(a, b, c)
+#define ErrorMsg(a)     _DebugMessage(a, __LINE__, __FILE__)
+#define FastDebugMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
 // public interface to debug methods:
-extern void DbgMessageReal(UINT16 TopicId, UINT8 uiDebugLevel, const char* Str);
-extern void DbgTopicRegistration(UINT8 ubCmd, UINT16* usTopicID, const char* zMessage);
+extern void DbgMessageReal(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
 
 #else
@@ -87,17 +83,11 @@ extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* Sou
 // Release Mode
 //*******************************************************************************************
 
-#define RegisterDebugTopic(a, b)
-#define UnRegisterDebugTopic(a, b)
-#define ClearAllDebugTopics()
-
-#define FastDebugMsg(a)
-#define ErrorMsg(a)
-
-#define DbgTopicRegistration(a, b, c)
 #define DbgMessage(a, b, c)
-
 #define DebugMsg(a, b, c)
+
+#define ErrorMsg(a)
+#define FastDebugMsg(a)
 
 #endif
 

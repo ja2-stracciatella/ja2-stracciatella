@@ -20,11 +20,6 @@ typedef void* HLIST;
 extern "C" {
 #endif
 
-// call these functions to initialize and shutdown the debug messages for
-// containers
-extern void InitializeContainers(void);
-extern void ShutdownContainers(void);
-
 // Queue Functions
 // CreateQueue(estimated number of items in queue, size of each item
 // AddtoQueue(handle to container returned from CreateQueue, data to be passed in (must be void *))

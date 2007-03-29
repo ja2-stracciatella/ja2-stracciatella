@@ -814,8 +814,6 @@ UINT16 uiRight, uiBottom;
 
 	FontDestWrap=FALSE;
 
-	RegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
-
 	CreateEnglishTransTable();
 
 	// Mark all font slots as empty
@@ -834,8 +832,6 @@ UINT16 uiRight, uiBottom;
 void ShutdownFontManager(void)
 {
   INT32 count;
-
-	UnRegisterDebugTopic(TOPIC_FONT_HANDLER, "Font Manager");
 
 	for(count=0; count < MAX_FONTS; count++)
 	{

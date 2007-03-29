@@ -189,45 +189,6 @@ BOOLEAN DeleteList(HLIST hList)
 }
 
 
-//*****************************************************************************
-//
-// InitializeContainers
-//
-// Parameter List : none
-//
-// Return Value	: void
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
-void InitializeContainers(void)
-{
-	// register the appropriate debug topics
-	RegisterDebugTopic(TOPIC_LIST_CONTAINERS, "List Container");
-	RegisterDebugTopic(TOPIC_QUEUE_CONTAINERS, "Queue Container");
-}
-
-
-//*****************************************************************************
-//
-// ShutdownContainers
-//
-// Parameter List : none
-//
-// Return Value	: void
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
-void ShutdownContainers( void )
-{
-	UnRegisterDebugTopic(TOPIC_LIST_CONTAINERS, "List Container");
-	UnRegisterDebugTopic(TOPIC_QUEUE_CONTAINERS, "Queue Container");
-}
-
-
 // PeekQueue - gets the first item in queue without
 // actually deleting it.
 //

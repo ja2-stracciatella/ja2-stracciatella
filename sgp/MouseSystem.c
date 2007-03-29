@@ -121,8 +121,6 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region);
 //
 INT32 MSYS_Init(void)
 {
-	RegisterDebugTopic(TOPIC_MOUSE_SYSTEM, "Mouse Region System");
-
 	#ifdef MOUSESYSTEM_DEBUGGING
 		gfIgnoreShutdownAssertions = FALSE;
 	#endif
@@ -197,7 +195,6 @@ void MSYS_Shutdown(void)
 	MSYS_SystemInitialized = FALSE;
 	MSYS_UseMouseHandlerHook = FALSE;
 	MSYS_TrashRegList();
-	UnRegisterDebugTopic(TOPIC_MOUSE_SYSTEM, "Mouse Region System");
 }
 
 

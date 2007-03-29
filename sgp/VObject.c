@@ -77,7 +77,6 @@ BOOLEAN InitializeVideoObjectManager( )
 	//Call shutdown first...
 	Assert( !gpVObjectHead );
 	Assert( !gpVObjectTail );
-	RegisterDebugTopic(TOPIC_VIDEOOBJECT, "Video Object Manager");
 	gpVObjectHead = gpVObjectTail = NULL;
 	return TRUE ;
 }
@@ -102,7 +101,6 @@ BOOLEAN ShutdownVideoObjectManager( )
 	gpVObjectTail = NULL;
 	guiVObjectIndex = 1;
 	guiVObjectSize = 0;
-	UnRegisterDebugTopic(TOPIC_VIDEOOBJECT, "Video Objects");
 	return TRUE;
 }
 

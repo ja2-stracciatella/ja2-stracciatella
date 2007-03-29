@@ -39,8 +39,6 @@ static UINT16    gusTailIndex;
 
 BOOLEAN InitializeInputManager(void)
 {
-	// Link to debugger
-	RegisterDebugTopic(TOPIC_INPUT, "Input Manager");
 	memset(gfKeyState, FALSE, sizeof(gfKeyState));
 	// Initialize the Event Queue
 	gusQueueCount = 0;
@@ -59,12 +57,6 @@ BOOLEAN InitializeInputManager(void)
 	gusMouseXPos = 320;
 	gusMouseYPos = 240;
 	return TRUE;
-}
-
-
-void ShutdownInputManager(void)
-{
-	UnRegisterDebugTopic(TOPIC_INPUT, "Input Manager");
 }
 
 

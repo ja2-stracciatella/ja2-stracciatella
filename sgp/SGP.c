@@ -128,10 +128,6 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();
 
-	// Now start up everything else.
-	RegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
-	RegisterDebugTopic(TOPIC_HIMAGE, "HImage");
-
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
 	FastDebugMsg("Initializing Memory Manager");
 	// Initialize the Memory Manager
@@ -148,9 +144,6 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 		FastDebugMsg("FAILED : Initializing File Manager");
 		return FALSE;
 	}
-
-	FastDebugMsg("Initializing Containers Manager");
-  InitializeContainers();
 
 	FastDebugMsg("Initializing Input Manager");
 	// Initialize the Input Manager
@@ -255,23 +248,11 @@ static void ShutdownStandardGamingPlatform(void)
   ShutdownVideoObjectManager();
   ShutdownVideoManager();
 
-  ShutdownInputManager();
-  ShutdownContainers();
-  ShutdownFileManager();
-
 #ifdef EXTREME_MEMORY_DEBUGGING
 	DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
 #endif
 
-  ShutdownMemoryManager();  // must go last (except for Debug), for MemDebugCounter to work right...
-
-	//
-  // Make sure we unregister the last remaining debug topic before shutting
-  // down the debugging layer
-	UnRegisterDebugTopic(TOPIC_HIMAGE, "HImage");
-  UnRegisterDebugTopic(TOPIC_SGP, "Standard Gaming Platform");
-
-  ShutdownDebugManager();
+  ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 }
 
 

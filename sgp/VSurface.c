@@ -73,7 +73,6 @@ BOOLEAN InitializeVideoSurfaceManager( )
 	//Call shutdown first...
 	Assert( !gpVSurfaceHead );
 	Assert( !gpVSurfaceTail );
-	RegisterDebugTopic(TOPIC_VIDEOSURFACE, "Video Surface Manager");
 	gpVSurfaceHead = gpVSurfaceTail = NULL;
 
 	// Create primary and backbuffer from globals
@@ -112,7 +111,6 @@ BOOLEAN ShutdownVideoSurfaceManager( )
 	gpVSurfaceTail = NULL;
 	guiVSurfaceIndex = 0;
 	guiVSurfaceSize = 0;
-	UnRegisterDebugTopic(TOPIC_VIDEOSURFACE, "Video Objects");
 	return TRUE;
 }
 

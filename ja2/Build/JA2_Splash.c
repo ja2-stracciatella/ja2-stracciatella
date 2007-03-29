@@ -2,9 +2,7 @@
 #include "VSurface.h"
 #include "Timer_Control.h"
 #include <stdio.h>
-#include "TopicIDs.h"
 #include "LibraryDataBase.h"
-#include "TopicOps.h"
 #include "Debug.h"
 #include "MainMenuScreen.h"
 #include "Video.h"

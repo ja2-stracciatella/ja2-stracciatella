@@ -65,7 +65,6 @@ extern "C" {
 
 
 extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
-extern void		ShutdownFileManager( void );
 
 extern BOOLEAN	FileExists( const char *strFilename );
 extern BOOLEAN	FileExistsNoDB(const char *strFilename);

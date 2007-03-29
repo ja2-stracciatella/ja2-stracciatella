@@ -97,7 +97,6 @@ static BOOLEAN GetRGBDistribution(void);
 
 BOOLEAN InitializeVideoManager(BOOLEAN Fullscreen)
 {
-	RegisterDebugTopic(TOPIC_VIDEO, "Video");
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
@@ -171,8 +170,6 @@ void ShutdownVideoManager(void)
 
 	// ATE: Release mouse cursor!
 	FreeMouseCursor();
-
-	UnRegisterDebugTopic(TOPIC_VIDEO, "Video");
 }
 
 
