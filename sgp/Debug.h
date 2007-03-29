@@ -8,9 +8,6 @@
 extern "C" {
 #endif
 
-#define INVALID_TOPIC		0xffff
-#define MAX_TOPICS_ALLOTED	1024
-
 
 extern	const char* String(const char* String, ...);
 
