@@ -1880,7 +1880,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 #ifdef JA2BETAVERSION
 				if ( gfDisplayScreenMsgOnRecordUsage )
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Using record %d for %s", ubRecordNum, gMercProfiles[ ubNPC ].zNickname );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Using record %d for %S", ubRecordNum, gMercProfiles[ubNPC].zNickname);
 				}
 #endif
 

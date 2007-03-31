@@ -1750,7 +1750,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 
 	pSoldier2 = NULL;
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %s, action %d at %ld", gMercProfiles[ ubTargetNPC ].zNickname, usActionCode, GetJA2Clock() );
+	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %S, action %d at %ld", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
 
 	// Switch on action code!
 	if (usActionCode > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && usActionCode < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE)

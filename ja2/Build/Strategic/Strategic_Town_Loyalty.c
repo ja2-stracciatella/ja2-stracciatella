@@ -539,7 +539,7 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 						if( iLocalNPCBonus > 0 )
 						{
 							// debug message
-							ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s influences loyalty in home town of %s, worth %d", pSoldier->name, pTownNames[ bTownId ], iLocalNPCBonus);
+							ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S influences loyalty in home town of %S, worth %d", pSoldier->name, pTownNames[bTownId], iLocalNPCBonus);
 
 							// increment town loyalty
 							IncrementTownLoyalty( bTownId, iLocalNPCBonus );
@@ -1084,7 +1084,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 					pItemList[ iCounter ].fExists = FALSE;
 
 					// debug message
-					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ pItemList[ iCounter ].o.usItem ], wSectorName );
+					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S stolen in %S!", ItemNames[pItemList[iCounter].o.usItem], wSectorName);
 				}
 			}
 		}
@@ -1109,7 +1109,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 				{
 					RemoveItemFromPool( gWorldItems[ iCounter ].sGridNo , iCounter, gWorldItems[ iCounter ].ubLevel );
 					// debug message
-					ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s stolen in %s!", ItemNames[ gWorldItems[ iCounter ].o.usItem ], wSectorName );
+					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S stolen in %S!", ItemNames[gWorldItems[iCounter].o.usItem], wSectorName);
 				}
 			}
 		}

@@ -1712,7 +1712,7 @@ static INT32 DisplayEmailMessage(EmailPtr pMail)
 	pMail->fRead=TRUE;
 
 	// draw text for title bar
-  //swprintf(pString, L"%s / %s", pSenderNameList[pMail->ubSender],pMail->pSubject);
+  //swprintf(pString, L"%S / %S", pSenderNameList[pMail->ubSender], pMail->pSubject);
 	//DisplayWrappedString(VIEWER_X+VIEWER_HEAD_X+4, VIEWER_Y+VIEWER_HEAD_Y+4, VIEWER_HEAD_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pString, 0,FALSE,0);
 
 	// increment height for size of one line

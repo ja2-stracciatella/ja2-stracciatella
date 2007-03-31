@@ -156,9 +156,9 @@ static void InitNPCs(void)
 			break;
 	}
 
-	#ifdef JA2TESTVERSION
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX );
-	#endif
+#ifdef JA2TESTVERSION
+	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+#endif
 
 	// use alternate map in this sector
 	//SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
@@ -190,9 +190,9 @@ static void InitNPCs(void)
 				break;
 		}
 
-		#ifdef JA2TESTVERSION
-			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"%s in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX );
-		#endif
+#ifdef JA2TESTVERSION
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+#endif
 
 		// use alternate map in this sector
 		SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;

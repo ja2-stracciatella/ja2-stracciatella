@@ -138,7 +138,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidt
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
-				swprintf( pStr2, Length, L"-%s", &(pStr[uiHyphenLet]) );
+				swprintf(pStr2, Length, L"-%S", &pStr[uiHyphenLet]);
 				#if 0 /* XXX typo? */
 				pStr[uiHyphenLet] = (INT16)'/0';
 				#else

@@ -1831,7 +1831,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg( FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %s -- substituting entrypoint.", pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %S -- substituting entrypoint.", pSoldier->name);
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -1848,7 +1848,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg( FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %s -- substituting entrypoint.", pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %S -- substituting entrypoint.", pSoldier->name);
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -1914,7 +1914,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				}
 				else
 				{
-					ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s has NO entrypoints -- using precise center of map for %s.", szSector, pSoldier->name );
+					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S has NO entrypoints -- using precise center of map for %S.", szSector, pSoldier->name);
 					pSoldier->sInsertionGridNo = 12880;
 					AddSoldierToSector( pSoldier->ubID );
 					return;
@@ -1923,19 +1923,19 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				switch( pSoldier->ubStrategicInsertionCode )
 				{
 					case INSERTION_CODE_NORTH:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a north entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a north entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_EAST:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a east entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a east entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_SOUTH:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a south entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a south entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_WEST:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a west entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a west entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_CENTER:
-						ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Sector %s doesn't have a center entrypoint -- substituting  %s entrypoint for %s.", szSector, szEntry, pSoldier->name );
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a center entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
 						break;
 				}
 			}
@@ -1988,7 +1988,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 
 	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 ) /* Empty? */
 	{
-		//swprintf( zString, L"%s", pErrorStrings[0] );
+		//swprintf(zString, L"%S", pErrorStrings[0]);
 	}
 	else if( bSectorZ != 0 )
 	{

@@ -1064,7 +1064,7 @@ void DisplaySelectionWindowGraphicalInformation()
 		//usIndex = pNode->uiIndex;
 		if( !gTilesets[ giCurrentTilesetID].TileSurfaceFilenames[ pNode->uiObjIndx ][0] )
 		{
-			mprintf( 2, 2, L"%S[%d] is from default tileset %s (%S)",
+			mprintf(2, 2, L"%s[%d] is from default tileset %S (%s)",
 				gTilesets[0].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTilesets[0].zName,
 				gTileSurfaceName[ pNode->uiObjIndx ] );
@@ -1076,7 +1076,7 @@ void DisplaySelectionWindowGraphicalInformation()
 				pNode->uiIndex, gTileSurfaceName[ pNode->uiObjIndx ] );
 		}
 	}
-	mprintf( 350, 2, L"Current Tileset:  %s",	gTilesets[ giCurrentTilesetID ].zName );
+	mprintf(350, 2, L"Current Tileset:  %S", gTilesets[giCurrentTilesetID].zName);
 }
 
 //----------------------------------------------------------------------------------------------

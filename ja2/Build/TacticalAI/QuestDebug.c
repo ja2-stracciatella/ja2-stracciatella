@@ -72,11 +72,11 @@ void ToggleQuestDebugModes( UINT8 ubType )
 
 	//Display a messasge to the screen
 	if( ubLevel == QD_OUTPUT_NONE )
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%s No Output", sType );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%S No Output", sType);
 	else if( ubLevel == QD_OUTPUT_LEVEL_ALL )
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%s All messages", sType );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%S All messages", sType);
 	else
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%s Level %d", sType, ubLevel );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%S Level %d", sType, ubLevel);
 }
 
 

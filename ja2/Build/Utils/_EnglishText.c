@@ -995,7 +995,7 @@ const wchar_t *gpStrategicString[] =
 	L"Creatures attack your militia in sector %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Creatures attack and kill %d civilians in sector %s.",
+	L"Creatures attack and kill %d civilians in sector %S.",
 	//%s is the sector location -- ex:  A9: Omerta
 	L"Enemies attack your mercs in sector %S.  None of your mercs are able to fight!",
 	//%s is the sector location -- ex:  A9: Omerta

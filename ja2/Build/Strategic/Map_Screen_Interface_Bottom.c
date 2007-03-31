@@ -1467,7 +1467,7 @@ void BuildDemoMouseRegionsForHelpText( void )
 		MSYS_DefineRegion(&MapButtonScreenMasks[ iCounter + 10 ] , MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * iCounter ) ),  MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( iCounter + 1 ) ) ), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR,
 			MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
 
-		swprintf( sString, L"%s %d", zMarksMapScreenText[ 0 ], iCounter + 1 );
+		swprintf(sString, L"%S %d", zMarksMapScreenText[0], iCounter + 1);
 		SetRegionFastHelpText( &MapButtonScreenMasks[ iCounter + 10 ], sString );
   }
 }

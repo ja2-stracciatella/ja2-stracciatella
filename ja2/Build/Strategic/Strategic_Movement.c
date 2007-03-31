@@ -4453,11 +4453,11 @@ void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
 	pItem = &pSoldier->inv[ HANDPOS ];
 	if( pItem->usItem != GAS_CAN )
 	{
-		#ifdef JA2BETAVERSION
-			wchar_t str[100];
-			swprintf(str, lengthof(str), L"%s is supposed to have gas can in hand.  ATE:0", pSoldier->name );
-			DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
-		#endif
+#ifdef JA2BETAVERSION
+		wchar_t str[100];
+		swprintf(str, lengthof(str), L"%S is supposed to have gas can in hand.  ATE:0", pSoldier->name);
+		DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, NULL);
+#endif
 		return;
 	}
 	//Soldier has gas can, so now add gas to vehicle while removing gas from the gas can.

@@ -1924,7 +1924,7 @@ static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_
 
 	//BUild text
 	// How do we do this with defines?
-	//swprintf( zText, L"\xb4\xa2 %s: \xb5 \"%s\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	//swprintf(zText, L"\xb4\xa2 %S: \xb5 \"%S\"", gMercProfiles[ubCharacterNum].zNickname, zQuoteStr);
 	swprintf( zText, lengthof(zText), L"\"%S\"", zQuoteStr );
 	sLeft	= 110;
 

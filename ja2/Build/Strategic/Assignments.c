@@ -4418,7 +4418,7 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-	//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s",  pMercFellAsleepString[ 0 ], pSoldier -> name );
+	//	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S", pMercFellAsleepString[0], pSoldier->name);
 	}
 
 
@@ -8049,7 +8049,7 @@ static void PostContractMessage(SOLDIERTYPE* pCharacter, INT32 iContract)
 	return;
 
 	// send a message stating that offer of contract extension made
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %s's contract by another %s.", pCharacter -> name, pContractExtendStrings[ iContract ] );
+	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %S's contract by another %S.", pCharacter->name, pContractExtendStrings[iContract]);
 }
 
 
@@ -8059,7 +8059,7 @@ static void PostTerminateMessage(SOLDIERTYPE* pCharacter)
 	return;
 
 	// send a message stating that termination of contract done
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%s's contract has been terminated.", pCharacter -> name );
+	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S's contract has been terminated.", pCharacter->name);
 }
 
 
@@ -8163,7 +8163,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 				 swprintf( sDollarString, L"%d", LaptopSaveInfo.iCurrentBalance);
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, L"%s %s",  pContractStrings[uiCounter], sDollarString );
+				 swprintf(sString, L"%S %S",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 */
 				 AddMonoString(&hStringHandle, pContractStrings[uiCounter]);

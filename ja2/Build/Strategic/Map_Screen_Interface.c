@@ -4914,7 +4914,7 @@ void CreateUpdateBoxStrings( void )
 	CHAR16 sString[ 64 ];
 	INT32 hStringHandle;
 
-	swprintf( sString, L"%s", pUpdateMercStrings[ iReasonForSoldierUpDate ] );
+	swprintf(sString, L"%S", pUpdateMercStrings[iReasonForSoldierUpDate]);
 	AddMonoString(&hStringHandle, sString );
 
 	for( iCounter = 0; iCounter < SIZE_OF_UPDATE_BOX; iCounter++ )
@@ -4922,7 +4922,7 @@ void CreateUpdateBoxStrings( void )
 		// find valid soldier, add name
 		if( pUpdateSoldierBox[ iCounter ] )
 		{
-			swprintf( sString, L"%s", pUpdateSoldierBox[ iCounter ]->name );
+			swprintf(sString, L"%S", pUpdateSoldierBox[iCounter]->name);
 			AddMonoString(&hStringHandle, sString );
 		}
 	}

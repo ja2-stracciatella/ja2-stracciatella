@@ -4919,7 +4919,7 @@ void PrintDate( void )
 
 	SetFontShadow( NO_SHADOW );
 
-	swprintf(pString, L"%s %d", pMessageStrings[ MSG_DAY ], GetWorldDay( ) );
+	swprintf(pString, L"%S %d", pMessageStrings[MSG_DAY], GetWorldDay());
 
 //	gprintfdirty(35, 413 + 19,pString);
 	mprintf(35, 413 + 19,pString);

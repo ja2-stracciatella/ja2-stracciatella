@@ -3992,7 +3992,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 	GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, zSectorIDString, lengthof(zSectorIDString), FALSE );
 
 	//create the string to display to the user, looks like....
-	//	L"%s should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %s.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	//	L"%S should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %S.",		//first %S is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 
 #ifdef GERMAN
 	//Germans version has a different argument order

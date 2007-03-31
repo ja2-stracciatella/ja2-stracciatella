@@ -671,7 +671,7 @@ static void CheckForValidArrivalSector(void)
 
 		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2, lengthof(zShortTownIDString2));
 
-		swprintf( sString, lengthof(sString), L"Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.", zShortTownIDString2, zShortTownIDString1 );
+		swprintf(sString, lengthof(sString), L"Arrival of new recruits is being rerouted to sector %S, as scheduled drop-off point of sector %S is enemy occupied.", zShortTownIDString2, zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 

@@ -511,7 +511,7 @@ static void RenderSectorInformation(void)
 		ePoints++;
 	//start at 10,35
 	SetFontForeground( FONT_ORANGE );
-	mprintf( 10, 32,		L"Tileset:  %s", gTilesets[ s->ubTilesetID ].zName );
+	mprintf(10, 32, L"Tileset:  %S", gTilesets[s->ubTilesetID].zName);
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
 	mprintf( 10, 42,    L"Version Info:  Summary:  1.%02d,  Map:  %d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
@@ -752,7 +752,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf(xp, yp, L"%S", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -796,12 +796,12 @@ static void RenderItemDetails(void)
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%s:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
+					mprintf(xp, yp, L"%S:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
 				}
 				else
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%s:  %3.02f", Type, dAvgExistChance);
+					mprintf(xp, yp, L"%S:  %3.02f", Type, dAvgExistChance);
 				}
 				yp += 10;
 				if( yp >= 355 )
@@ -858,7 +858,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf(xp, yp, L"%S", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -926,7 +926,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf( xp, yp, L"%s", str );
+				mprintf(xp, yp, L"%S", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -992,7 +992,7 @@ void RenderSummaryWindow()
 		SetFontBackground( 0 );
 		if( !gfItemDetailsMode )
 		{
-			mprintf( 10, 5, L"CAMPAIGN EDITOR -- %s Version 1.%02d",
+			mprintf(10, 5, L"CAMPAIGN EDITOR -- %S Version 1.%02d",
 				gszVersionType[ GLOBAL_SUMMARY_STATE ], GLOBAL_SUMMARY_VERSION );
 		}
 
@@ -1193,12 +1193,12 @@ void RenderSummaryWindow()
 								SetupItemDetailsMode( TRUE );
 								gfSetupItemDetailsMode = FALSE;
 							}
-							mprintf( 10, 5, L"ITEM DETAILS -- sector %s", str );
+							mprintf(10, 5, L"ITEM DETAILS -- sector %S", str);
 							RenderItemDetails();
 						}
 						else
 						{
-							mprintf( 10, 20, L"Summary Information for sector %s:", str );
+							mprintf(10, 20, L"Summary Information for sector %S:", str);
 							HideButton( iSummaryButton[ SUMMARY_REAL ] );
 							HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 							HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
@@ -1210,12 +1210,12 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_RED );
 						if( gfItemDetailsMode )
 						{
-							mprintf( 10, 5, L"Summary Information for sector %s" , str );
+							mprintf(10, 5, L"Summary Information for sector %S" , str);
 							mprintf( 10, 15, L"does not exist." );
 						}
 						else
 						{
-							mprintf( 10, 20, L"Summary Information for sector %s" , str );
+							mprintf(10, 20, L"Summary Information for sector %S" , str);
 							mprintf( 10, 30, L"does not exist." );
 						}
 						ShowButton( iSummaryButton[ SUMMARY_UPDATE ] );
@@ -1231,9 +1231,9 @@ void RenderSummaryWindow()
 						SetFontShadow( 0 );
 					}
 					if( gfItemDetailsMode )
-						mprintf( 10, 5, L"No information exists for sector %s.", str );
+						mprintf(10, 5, L"No information exists for sector %S.", str);
 					else
-						mprintf( 10, 20, L"No information exists for sector %s.", str );
+						mprintf(10, 20, L"No information exists for sector %S.", str);
 					SetFontShadow( FONT_NEARBLACK );
 
 					switch( giCurrentViewLevel )
@@ -1261,7 +1261,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+55, L"FILE:  %s", gszDisplayName );
+					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 55, L"FILE:  %S", gszDisplayName);
 				}
 				else //little higher to make room for the override checkbox and text.
 				{
@@ -1269,7 +1269,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf( MAP_LEFT+110, MAP_BOTTOM+46, L"FILE:  %s", gszDisplayName );
+					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 46, L"FILE:  %S", gszDisplayName);
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW : FONT_LTRED) );
@@ -2080,7 +2080,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		//swprintf( str, L"Loading map:  %s...", gszDisplayName );
+		//swprintf(str, L"Loading map:  %S...", gszDisplayName);
 		//mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
 		//InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
 
@@ -2593,7 +2593,7 @@ static void ReportError(UINT8* pSector, UINT8 ubLevel)
 		swprintf(temp, lengthof(temp), L"_b%d.dat", ubLevel % 4);
 		wcscat( str, temp );
 	}
-	mprintf( 10, yp, L"Skipping update for %s.  Probably due to tileset conflicts...", str );
+	mprintf(10, yp, L"Skipping update for %S.  Probably due to tileset conflicts...", str);
 	InvalidateScreen();
 	yp++;
 }

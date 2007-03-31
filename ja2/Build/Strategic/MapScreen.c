@@ -11045,8 +11045,8 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sStrin
 	uiMin	 = uiTimeInMin - ( ( uiDay * NUM_MIN_IN_DAY ) + ( uiHour * NUM_MIN_IN_HOUR ) );
 
 	// there ain't enough room to show both the day and ETA: and without ETA it's confused as the current time
-//	swprintf( sString, L"%s %s %d, %02d:%02d", pEtaString[ 0 ], pDayStrings[ 0 ], uiDay, uiHour, uiMin );
-//	swprintf( sString, L"%s %d, %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+//	swprintf(sString, L"%S %S %d, %02d:%02d", pEtaString[0], pDayStrings[0], uiDay, uiHour, uiMin);
+//	swprintf(sString, L"%S %d, %02d:%02d", pDayStrings[0], uiDay, uiHour, uiMin);
 	swprintf( sString, Length, L"%S %02d:%02d", pEtaString[ 0 ], uiHour, uiMin );
 }
 
@@ -11487,7 +11487,7 @@ void DumpSectorDifficultyInfo( void )
 	// NOTE: This operates on the selected map sector!
 	CHAR16 wSectorName[ 128 ];
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %s", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel ] );
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %S", gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel]);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
 

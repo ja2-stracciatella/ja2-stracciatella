@@ -1457,9 +1457,9 @@ BOOLEAN ExecuteOverhead( )
 										// ATE: Pop up warning....
 										if ( pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE )
 										{
-											#ifdef JA2BETAVERSION
-												ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %s ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID );
-											#endif
+#ifdef JA2BETAVERSION
+											ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %S ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID);
+#endif
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -7121,7 +7121,7 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 #ifdef JA2TESTVERSION
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%s is changing teams", pTarget->name );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%S is changing teams", pTarget->name);
 			}
 #endif
 			// member of a civ group, either recruited or neutral, so should

@@ -1040,7 +1040,7 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 			IF YOU UNCOMMENT THIS -- LOCALIZE IT!!!
 			CHAR16	sText[512];
 
-			swprintf( sText, L"%s%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID );
+			swprintf(sText, L"%S%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID);
 
 			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack );
 */
@@ -1871,7 +1871,7 @@ static void SetSelection(UINT8 ubNewSelection)
 		}
 	}
 
-	swprintf( zMouseHelpTextString, L"%s: %s\n%s: %s\n%s: %s\n%s: %s", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
+	swprintf(zMouseHelpTextString, L"%S: %S\n%S: %S\n%S: %S\n%S: %S", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
 		gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel + 1 ],
 
 		gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ],

@@ -2175,7 +2175,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					// Check if we were told to move by NPC stuff
 					if ( pSoldier->sAbsoluteFinalDestination != NOWHERE && !(gTacticalStatus.uiFlags & INCOMBAT) )
 					{
-						//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %s failed to get path for dialogue-related move!", pSoldier->name );
+						//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %S failed to get path for dialogue-related move!", pSoldier->name);
 
 						// Are we close enough?
 						if ( !ACTING_ON_SCHEDULE( pSoldier ) && SpacesAway( pSoldier->sGridNo, pSoldier->sAbsoluteFinalDestination ) < 4 )

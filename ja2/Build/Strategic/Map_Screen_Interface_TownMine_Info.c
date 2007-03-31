@@ -453,7 +453,7 @@ static void AddTextToMineBox(void)
 
 /* gradual monster infestation concept was ditched, now simply IN PRODUCTION or SHUT DOWN
 		// percentage of miners working
-		swprintf( wString, lengthof(wString), L"%s:", pwMineStrings[ 14 ]);
+		swprintf(wString, lengthof(wString), L"%S:", pwMineStrings[14]);
 		AddMonoString( &hStringHandle, wString );
 		swprintf(wString, lengthof(wString), L"%d%%", gubMonsterMineInfestation[gMineStatus[ubMineIndex].bMonsters]);
 		AddSecondColumnMonoString( &hStringHandle, wString );
