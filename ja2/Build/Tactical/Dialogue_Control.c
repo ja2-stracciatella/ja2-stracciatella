@@ -1836,28 +1836,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
 	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, TRUE );
-
-	// Copy
 	strcpy( zSoundString, pFilename );
-
-  // Double check it exists....
-
-//#ifndef JA2TESTVERSION
-
-/*
-  if ( !FileExists( pFilename ) )
-  {
-		CHAR8 sString[512];
-
-		sprintf( sString, "ERROR: Missing file for character # %d, quote # %d", ubCharacterNum, usQuoteNum );
-    ShowCursor(TRUE);
-    ShowCursor(TRUE);
-    ShutdownWithErrorBox( sString );
-  }
-*/
-
-//#endif
-
  return(TRUE);
 }
 

@@ -33,16 +33,10 @@ static BOOLEAN gfGameInitialized = FALSE;
 
 CHAR8		gzCommandLine[100];		// Command line given
 
-static char    gzErrorMsg[2048] = "";
-static BOOLEAN gfIgnoreMessages = FALSE;
-
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
 {
 	static BOOLEAN fRestore = FALSE;
-
-  if(gfIgnoreMessages)
-		return(DefWindowProc(hWindow, Message, wParam, lParam));
 
 	switch(Message)
   {
@@ -360,20 +354,6 @@ static void SGPExit(void)
 	gfProgramIsRunning = FALSE;
 
 	ShutdownStandardGamingPlatform();
-	if (gzErrorMsg[0] != '\0')
-  {
-		fprintf(stderr, "ERROR: %s\n", gzErrorMsg);
-  }
-}
-
-
-static void ShutdownWithErrorBox(CHAR8* pcMessage)
-{
-	strncpy(gzErrorMsg, pcMessage, 255);
-	gzErrorMsg[255]='\0';
-	gfIgnoreMessages=TRUE;
-
-	exit(0);
 }
 
 
