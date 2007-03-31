@@ -2657,7 +2657,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 	if ( !hfile )
 	{
-		SET_ERROR(  "Could not load map file %S", aFilename );
+		SET_ERROR("Could not load map file %s", aFilename);
 		return( FALSE );
 	}
 
