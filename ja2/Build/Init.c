@@ -255,8 +255,6 @@ void ShutdownJA2(void)
 
 	ShutdownEventManager( );
 
-	ShutdownBaseDirtyRectQueue( );
-
 	// Unload any text box images!
 	RemoveTextMercPopupImages( );
 

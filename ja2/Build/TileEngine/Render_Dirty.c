@@ -39,16 +39,6 @@ SGPRect		gDirtyClipRect = { 0, 0, 640, 480 };
 BOOLEAN		gfViewportDirty=FALSE;
 
 
-BOOLEAN InitializeBaseDirtyRectQueue( )
-{
-	return( TRUE );
-}
-
-void ShutdownBaseDirtyRectQueue( )
-{
-
-}
-
 void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 {
 	SGPRect aRect;

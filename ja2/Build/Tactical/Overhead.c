@@ -489,9 +489,6 @@ BOOLEAN InitTacticalEngine( )
 	// Init renderer
 	InitRenderParams( 0 );
 
-	// Init dirty queue system
-	InitializeBaseDirtyRectQueue( );
-
 	// Init Interface stuff
 	InitializeTacticalInterface(  );
 
