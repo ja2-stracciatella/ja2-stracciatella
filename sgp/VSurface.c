@@ -16,7 +16,7 @@ typedef struct VSURFACE_NODE
 {
 	HVSURFACE hVSurface;
 	UINT32 uiIndex;
-  struct VSURFACE_NODE *next, *prev;
+  struct VSURFACE_NODE* next;
 
 	#ifdef SGP_VIDEO_DEBUGGING
 		UINT8									*pName;
@@ -115,7 +115,6 @@ static UINT32 AddStandardVideoSurface(HVSURFACE hVSurface)
 	{ //Add node after tail
 		gpVSurfaceTail->next = (VSURFACE_NODE*)MemAlloc( sizeof( VSURFACE_NODE ) );
 		Assert( gpVSurfaceTail->next ); //out of memory?
-		gpVSurfaceTail->next->prev = gpVSurfaceTail;
 		gpVSurfaceTail->next->next = NULL;
 		gpVSurfaceTail = gpVSurfaceTail->next;
 	}
@@ -123,7 +122,7 @@ static UINT32 AddStandardVideoSurface(HVSURFACE hVSurface)
 	{ //new list
 		gpVSurfaceHead = (VSURFACE_NODE*)MemAlloc( sizeof( VSURFACE_NODE ) );
 		Assert( gpVSurfaceHead ); //out of memory?
-		gpVSurfaceHead->prev = gpVSurfaceHead->next = NULL;
+		gpVSurfaceHead->next = NULL;
 		gpVSurfaceTail = gpVSurfaceHead;
 	}
 	#ifdef SGP_VIDEO_DEBUGGING
@@ -699,6 +698,7 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 		CheckValidVSurfaceIndex( uiIndex );
 	#endif
 
+	VSURFACE_NODE* prev = NULL;
 	curr = gpVSurfaceHead;
 	while( curr )
 	{
@@ -714,18 +714,9 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 			}
 			if( curr == gpVSurfaceTail )
 			{ //Back up the tail, because we are going to remove the tail node.
-				gpVSurfaceTail = gpVSurfaceTail->prev;
+				gpVSurfaceTail = prev;
 			}
-			//Detach the node from the vsurface list
-			if( curr->next )
-			{ //Make the prev node point to the next
-				curr->next->prev = curr->prev;
-			}
-			if( curr->prev )
-			{ //Make the next node point to the prev
-				curr->prev->next = curr->next;
-			}
-			//The node is now detached.  Now deallocate it.
+			if (prev != NULL) prev->next = curr->next;
 
 			#ifdef SGP_VIDEO_DEBUGGING
 				if( curr->pName )
@@ -742,6 +733,7 @@ BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex )
 			guiVSurfaceSize--;
 			return TRUE;
 		}
+		prev = curr;
 		curr = curr->next;
 	}
 	return FALSE;

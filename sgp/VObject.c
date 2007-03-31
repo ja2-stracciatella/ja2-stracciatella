@@ -32,7 +32,7 @@ typedef struct VOBJECT_NODE
 {
 	HVOBJECT hVObject;
 	UINT32 uiIndex;
-  struct VOBJECT_NODE *next, *prev;
+  struct VOBJECT_NODE* next;
 
 	#ifdef SGP_VIDEO_DEBUGGING
 		UINT8									*pName;
@@ -128,7 +128,6 @@ static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 	{ //Add node after tail
 		gpVObjectTail->next = (VOBJECT_NODE*)MemAlloc( sizeof( VOBJECT_NODE ) );
 		Assert( gpVObjectTail->next ); //out of memory?
-		gpVObjectTail->next->prev = gpVObjectTail;
 		gpVObjectTail->next->next = NULL;
 		gpVObjectTail = gpVObjectTail->next;
 	}
@@ -136,7 +135,7 @@ static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 	{ //new list
 		gpVObjectHead = (VOBJECT_NODE*)MemAlloc( sizeof( VOBJECT_NODE ) );
 		Assert( gpVObjectHead ); //out of memory?
-		gpVObjectHead->prev = gpVObjectHead->next = NULL;
+		gpVObjectHead->next = NULL;
 		gpVObjectTail = gpVObjectHead;
 	}
 	#ifdef SGP_VIDEO_DEBUGGING
@@ -212,6 +211,7 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 		CheckValidVObjectIndex( uiVObject );
 	#endif
 
+	VOBJECT_NODE* prev = NULL;
 	curr = gpVObjectHead;
 	while( curr )
 	{
@@ -227,18 +227,10 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 			}
 			if( curr == gpVObjectTail )
 			{ //Back up the tail, because we are going to remove the tail node.
-				gpVObjectTail = gpVObjectTail->prev;
+				gpVObjectTail = prev;
 			}
-			//Detach the node from the vobject list
-			if( curr->next )
-			{ //Make the prev node point to the next
-				curr->next->prev = curr->prev;
-			}
-			if( curr->prev )
-			{ //Make the next node point to the prev
-				curr->prev->next = curr->next;
-			}
-			//The node is now detached.  Now deallocate it.
+			if (prev != NULL) prev->next = curr->next;
+
 			#ifdef SGP_VIDEO_DEBUGGING
 				if( curr->pName )
 					MemFree( curr->pName );
@@ -256,6 +248,7 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 			#endif
 			return TRUE;
 		}
+		prev = curr;
 		curr = curr->next;
 	}
 	return FALSE;
