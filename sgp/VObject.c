@@ -53,7 +53,6 @@ enum
 	DEBUGSTR_BLTVIDEOOBJECTFROMINDEX,
 	DEBUGSTR_SETOBJECTHANDLESHADE,
 	DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES,
-	DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX,
 	DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX,
 	DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX,
 	DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX
@@ -615,45 +614,19 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 }
 
 
-static BOOLEAN GetVideoObjectETRLEProperties(HVOBJECT hVObject, ETRLEObject* pETRLEObject, UINT16 usIndex)
-{
-	//CHECKF( usIndex >= 0 ); /* XXX unsigned < 0 ? */
-	CHECKF( usIndex < hVObject->usNumberOfObjects );
-
-	memcpy( pETRLEObject, &( hVObject->pETRLEObject[ usIndex ] ), sizeof( ETRLEObject ) );
-
-	return( TRUE );
-
-}
-
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight )
 {
-	ETRLEObject						ETRLEObject;
-
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES;
 	#endif
 	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
+
 	CHECKF(hVObject != NULL);
+	CHECKF(usIndex < hVObject->usNumberOfObjects);
+	const ETRLEObject* ETRLEObject = &hVObject->pETRLEObject[usIndex];
 
-	CHECKF( GetVideoObjectETRLEProperties( hVObject, &ETRLEObject, usIndex ) );
-
-	*pusWidth = ETRLEObject.usWidth;
-	*pusHeight = ETRLEObject.usHeight;
-
-	return( TRUE );
-}
-
-
-BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
-{
-	#ifdef _DEBUG
-		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX;
-	#endif
-	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
-	CHECKF(hVObject != NULL);
-
-	CHECKF( GetVideoObjectETRLEProperties( hVObject, pETRLEObject, usIndex ) );
+	*pusWidth  = ETRLEObject->usWidth;
+	*pusHeight = ETRLEObject->usHeight;
 
 	return( TRUE );
 }
@@ -760,9 +733,6 @@ static void CheckValidVObjectIndex(UINT32 uiIndex)
 				break;
 			case DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES:
 				str = "GetVideoObjectETRLESubRegionProperties";
-				break;
-			case DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX:
-				str = "GetVideoObjectETRLEPropertiesFromIndex";
 				break;
 			case DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX:
 				str = "BltVideoObjectOutlineFromIndex";

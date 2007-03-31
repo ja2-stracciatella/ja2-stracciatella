@@ -219,7 +219,6 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	FACETYPE					*pFace;
 	UINT32						uiVideoObject;
 	INT32							iFaceIndex;
-	ETRLEObject				ETRLEObject;
 	UINT32						uiCount;
 	SGPPaletteEntry		Pal[256];
 
@@ -345,13 +344,10 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 
 
 	// Get FACE height, width
-	if( GetVideoObjectETRLEPropertiesFromIndex( uiVideoObject, &ETRLEObject, 0 ) == FALSE )
+	if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 0, &pFace->usFaceWidth, &pFace->usFaceHeight))
 	{
-		return( -1 );
+		return -1;
 	}
-	pFace->usFaceWidth = ETRLEObject.usWidth;
-	pFace->usFaceHeight = ETRLEObject.usHeight;
-
 
 	// OK, check # of items
 	if ( hVObject->usNumberOfObjects == 8 )
@@ -359,21 +355,16 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 		pFace->fInvalidAnim = FALSE;
 
 		// Get EYE height, width
-		if( GetVideoObjectETRLEPropertiesFromIndex( uiVideoObject, &ETRLEObject, 1 ) == FALSE )
+		if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 1, &pFace->usEyesWidth, &pFace->usEyesHeight))
 		{
-			return( -1 );
+			return -1;
 		}
-		pFace->usEyesWidth = ETRLEObject.usWidth;
-		pFace->usEyesHeight = ETRLEObject.usHeight;
-
 
 		// Get Mouth height, width
-		if( GetVideoObjectETRLEPropertiesFromIndex( uiVideoObject, &ETRLEObject, 5 ) == FALSE )
+		if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 5, &pFace->usMouthWidth, &pFace->usMouthHeight))
 		{
-			return( -1 );
+			return -1;
 		}
-		pFace->usMouthWidth = ETRLEObject.usWidth;
-		pFace->usMouthHeight = ETRLEObject.usHeight;
 	}
 	else
 	{
