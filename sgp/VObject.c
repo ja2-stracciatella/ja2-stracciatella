@@ -372,14 +372,12 @@ static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, SGPPaletteEntry* pSrcPal
 		memcpy( hVObject->pPaletteEntry, pSrcPalette, sizeof( SGPPaletteEntry ) * 256 );
 	}
 
-	// Delete 16BPP Palette if one exists
 	if ( hVObject->p16BPPPalette != NULL )
 	{
 		MemFree( hVObject->p16BPPPalette );
 		hVObject->p16BPPPalette = NULL;
 	}
 
-	// Create 16BPP Palette
 	hVObject->p16BPPPalette = Create16BPPPalette( pSrcPalette );
 	hVObject->pShadeCurrent = hVObject->p16BPPPalette;
 
@@ -397,7 +395,6 @@ BOOLEAN DeleteVideoObject( HVOBJECT hVObject )
 
 	DestroyObjectPaletteTables(hVObject);
 
-	// Release palette
 	if ( hVObject->pPaletteEntry != NULL )
 	{
 		MemFree( hVObject->pPaletteEntry );

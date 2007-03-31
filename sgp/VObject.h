@@ -4,12 +4,6 @@
 #include "Types.h"
 #include "HImage.h"
 
-// ************************************************************************************
-//
-// Video Object SGP Module
-//
-// ************************************************************************************
-
 
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 typedef UINT32 COLORVAL;
@@ -54,12 +48,6 @@ typedef struct TAG_HVOBJECT
 } SGPVObject, *HVOBJECT;
 
 
-// **********************************************************************************
-//
-// Video Object Manager Functions
-//
-// **********************************************************************************
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -97,12 +85,6 @@ BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usReg
 BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 
-// **********************************************************************************
-//
-// Video Object manipulation functions
-//
-// **********************************************************************************
-
 HVOBJECT CreateVideoObject(HIMAGE hImage);
 HVOBJECT CreateVideoObjectFromFile(const char* Filename);
 
@@ -121,15 +103,6 @@ UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade);
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY );
 
-
-// ****************************************************************************
-//
-// Blt Functions
-//
-// ****************************************************************************
-
-// These blitting functions more-or less encapsolate all of the functionality of DirectDraw
-// Blitting, giving an API layer for portability.
 
 BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight );
 
