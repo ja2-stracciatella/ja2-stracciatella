@@ -34,6 +34,7 @@
 #include "EMail.h"
 #include "Items.h"
 #include "Soldier_Macros.h"
+#include "Stubs.h" // XXX
 
 
 #define NUM_BACKGROUND_REPS					40

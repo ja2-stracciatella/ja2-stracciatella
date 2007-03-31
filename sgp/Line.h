@@ -1,7 +1,6 @@
 #ifndef ___LINE___H
 #define ___LINE___H
 
-#include "Stubs.h" // XXX
 #include "Types.h"
 
 //**************************************************************************
