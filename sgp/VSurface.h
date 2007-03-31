@@ -5,15 +5,6 @@
 #include "VObject.h"
 #include <SDL.h>
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface SGP Module
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//
-// Defines for special video object handles given to blit function
-//
 
 #define NO_VSURFACE 0
 #define BACKBUFFER									            0xFFFFFFF1
@@ -31,11 +22,6 @@ typedef struct
 	UINT16					*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
 } SGPVSurface, *HVSURFACE;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface Manager Functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,11 +59,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 // Sets transparency
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor );
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface manipulation functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 HVSURFACE CreateVideoSurfaceFromFile(const char* Filename);
 
@@ -91,14 +72,6 @@ BOOLEAN SetVideoSurfacePalette( HVSURFACE hVSurface, SGPPaletteEntry *pSrcPalett
 BOOLEAN DeleteVideoSurface( HVSURFACE hVSurface );
 BOOLEAN DeleteVideoSurfaceFromIndex( UINT32 uiIndex );
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Blt Functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// These blitting functions more-or less encapsolate all of the functionality of DirectDraw
-// Blitting, giving an API layer for portability.
 
 BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect);
 

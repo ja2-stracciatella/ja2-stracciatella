@@ -8,15 +8,6 @@
 #include <string.h>
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface SGP Module
-//
-// Second Revision: Dec 10, 1996, Andrew Emmons
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 static void DeletePrimaryVideoSurfaces(void);
 
@@ -179,9 +170,6 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *puiPitch )
 {
 	VSURFACE_NODE *curr;
 
-  //
-  // Check if given backbuffer
-  //
 #ifdef JA2
   if ( uiVSurface == BACKBUFFER )
   {
@@ -199,10 +187,6 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *puiPitch )
     return LockMouseBuffer( puiPitch );
   }
 
-  //
-  // Otherwise, use list
-  //
-
 	curr = gpVSurfaceHead;
 	while( curr )
 	{
@@ -217,21 +201,13 @@ BYTE *LockVideoSurface( UINT32 uiVSurface, UINT32 *puiPitch )
 		return FALSE;
 	}
 
-  //
-	// Lock buffer
-  //
-
 	return LockVideoSurfaceBuffer( curr->hVSurface, puiPitch );
-
 }
 
 void UnLockVideoSurface( UINT32 uiVSurface )
 {
 	VSURFACE_NODE *curr;
 
-  //
-  // Check if given backbuffer
-  //
 #ifdef JA2
   if ( uiVSurface == BACKBUFFER )
   {
@@ -266,10 +242,6 @@ void UnLockVideoSurface( UINT32 uiVSurface )
     return;
   }
 
-  //
-	// unlock buffer
-  //
-
 	UnLockVideoSurfaceBuffer( curr->hVSurface );
 }
 
@@ -279,19 +251,11 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 
 BOOLEAN SetVideoSurfaceTransparency( UINT32 uiIndex, COLORVAL TransColor )
 {
-  //
-	// Get Video Surface
-  //
-
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_SETVIDEOSURFACETRANSPARENCY;
 	#endif
 	HVSURFACE hVSurface = GetVideoSurface(uiIndex);
 	CHECKF(hVSurface != NULL);
-
-  //
-	// Set transparency
-  //
 
 	SetVideoSurfaceTransparencyColor( hVSurface, TransColor );
 
@@ -332,30 +296,18 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 	DeletePrimaryVideoSurfaces( );
 
 #ifdef JA2
-  //
-	// Get Backbuffer surface
-  //
-
 	pSurface = GetBackBufferObject( );
 	CHECKF( pSurface != NULL );
 
 	ghBackBuffer = CreateVideoSurfaceFromDDSurface( pSurface );
 	CHECKF( ghBackBuffer != NULL );
 
-  //
-	// Get mouse buffer surface
-  //
 	pSurface = GetMouseBufferObject( );
 	CHECKF( pSurface != NULL );
 
 	ghMouseBuffer = CreateVideoSurfaceFromDDSurface( pSurface );
 	CHECKF( ghMouseBuffer != NULL );
-
 #endif
-
-  //
-	// Get frame buffer surface
-  //
 
 	pSurface = GetFrameBufferObject( );
 	CHECKF( pSurface != NULL );
@@ -369,10 +321,6 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 
 static void DeletePrimaryVideoSurfaces(void)
 {
-  //
-	// If globals are not null, delete them
-  //
-
 	if ( ghBackBuffer != NULL )
 	{
 		DeleteVideoSurface( ghBackBuffer );
@@ -396,15 +344,8 @@ static void DeletePrimaryVideoSurfaces(void)
 static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect);
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Given an index to the dest and src vobject contained in our private VSurface list
-// Based on flags, blit accordingly
-// There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
-// clipping lists
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
+/* Given an index to the dest and src vobject contained in our private VSurface
+ * list */
 BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect)
 {
 	#ifdef _DEBUG
@@ -420,12 +361,8 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDest
 	return BltVideoSurfaceToVideoSurface(hDestVSurface, hSrcVSurface, iDestX, iDestY, SrcRect);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Fills an rectangular area with a specified color value.
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* Fills an rectangular area with a specified color value. */
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP)
 {
 	SGPRect Clip;
@@ -435,10 +372,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 	#endif
 	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);
 	if (hDestVSurface == NULL) return FALSE;
-
-  //
-	// Clip fill region coords
-  //
 
 	GetClippingRect(&Clip);
 
@@ -477,13 +410,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 
 	return FillSurfaceRect(hDestVSurface, &Rect, Color16BPP);
 }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Video Surface Manipulation Functions
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
@@ -865,15 +791,7 @@ static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, SGPRect* pRect)
 }
 
 
-// *******************************************************************
-//
-// Blitting Functions
-//
-// *******************************************************************
-
-// Blt  will use DD Blt or BltFast depending on flags.
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
-
 static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
 {
 	UINT8					*pSrcSurface8, *pDestSurface8;
@@ -974,7 +892,6 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 #endif
 
 		CHECKF(BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, iDestX, iDestY, &SrcRect));
-
 	}
 	else if ( hDestVSurface->ubBitDepth == 8 && hSrcVSurface->ubBitDepth == 8 )
 	{
@@ -1008,7 +925,6 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 
 static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 {
-	// Create Video Surface
 	HVSURFACE						hVSurface;
 	SGPPaletteEntry			SGPPalette[ 256 ];
 
@@ -1039,7 +955,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 		hVSurface->p16BPPPalette = NULL;
 	}
 
-	// All is well
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Success in Creating Video Surface from DD Surface");
 
 	return hVSurface;
@@ -1082,12 +997,6 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 	UINT32 uiPitch;
 	SGPRect   area;
 
-	// CLIP IT!
-	// FIRST GET SURFACE
-
-  //
-	// Get Video Surface
-  //
 	#ifdef _DEBUG
 		gubVSDebugCode = DEBUGSTR_SHADOWVIDEOSURFACERECT;
 	#endif
@@ -1131,9 +1040,7 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 	area.iRight=X2;
 
 
-	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
- 	//UnLockVideoSurface( uiDestVSurface );
 
 	if ( pBuffer == NULL )
 	{
@@ -1142,10 +1049,8 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 
 	if ( !fLowPercentShadeTable )
 	{
-		// Now we have the video object and surface, call the shadow function
 		if(!Blt16BPPBufferShadowRect(pBuffer, uiPitch, &area))
 		{
-			// Blit has failed if false returned
 			return( FALSE );
 		}
 	}
@@ -1154,16 +1059,9 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 		// Now we have the video object and surface, call the shadow function
 		if(!Blt16BPPBufferShadowRectAlternateTable(pBuffer, uiPitch, &area))
 		{
-			// Blit has failed if false returned
 			return( FALSE );
 		}
 	}
-
-	// Mark as dirty if it's the backbuffer
-	//if ( uiDestVSurface == BACKBUFFER )
-	//{
-	//	InvalidateBackbuffer( );
-	//}
 
 	UnLockVideoSurface( uiDestVSurface );
 	return( TRUE );
@@ -1182,11 +1080,8 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(  UINT32	uiDestVSurface, INT3
 }
 
 
-//
-// This function will stretch the source image to the size of the dest rect.
-//
-// If the 2 images are not 16 Bpp, it returns false.
-//
+/* This function will stretch the source image to the size of the dest rect.
+ * If the 2 images are not 16 Bpp, it returns false. */
 BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPRect* SrcRect, SGPRect* DestRect)
 {
 	#ifdef _DEBUG
