@@ -64,12 +64,6 @@ static UINT8 gubVODebugCode = 0;
 static void CheckValidVObjectIndex(UINT32 uiIndex);
 #endif
 
-// **************************************************************
-//
-// Video Object Manager functions
-//
-// **************************************************************
-
 
 BOOLEAN InitializeVideoObjectManager( )
 {
@@ -123,12 +117,10 @@ static UINT32 CountVideoObjectNodes(void)
 
 static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 {
-	// Assertions
 	Assert( puiIndex );
 
 	if( !hVObject )
 	{
-		// Video Object will set error condition.
 		return FALSE ;
 	}
 
@@ -274,17 +266,13 @@ BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  )
 static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 
-// Given an index to the dest and src vobject contained in ghVideoObjects
-// Based on flags, blit accordingly
-// There are two types, a BltFast and a Blt. BltFast is 10% faster, uses no
-// clipping lists
+/* Given an index to the dest and src vobject contained in ghVideoObjects */
 BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
 {
 
 	UINT16								*pBuffer;
 	UINT32								uiPitch;
 
-	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
 
 	if ( pBuffer == NULL )
@@ -292,21 +280,15 @@ BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usReg
 		return( FALSE );
 	}
 
-	// Now we have the video object and surface, call the VO blitter function
 	if (!BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY))
 	{
 		UnLockVideoSurface( uiDestVSurface );
-		// VO Blitter will set debug messages for error conditions
 		return( FALSE );
 	}
 
 	UnLockVideoSurface( uiDestVSurface );
 	return( TRUE );
 }
-
-// *******************************************************************************
-// Video Object Manipulation Functions
-// *******************************************************************************
 
 
 static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, SGPPaletteEntry* pSrcPalette);
@@ -412,7 +394,6 @@ BOOLEAN DeleteVideoObject( HVOBJECT hVObject )
 {
 	UINT16			usLoop;
 
-	// Assertions
 	CHECKF( hVObject != NULL );
 
 	DestroyObjectPaletteTables(hVObject);
@@ -451,28 +432,18 @@ BOOLEAN DeleteVideoObject( HVOBJECT hVObject )
 //		hVObject->ppZStripInfo = NULL;
 	}
 
-	// Release object
 	MemFree( hVObject );
 
 	return( TRUE );
 }
 
 
-// *******************************************************************
-//
-// Blitting Functions
-//
-// *******************************************************************
-
 // High level blit function encapsolates ALL effects and BPP
 static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY)
 {
-
-	// Assertions
 	Assert( pBuffer != NULL );
 	Assert( hSrcVObject != NULL );
 
-	// Check For Flags and bit depths
 	switch( hSrcVObject->ubBitDepth )
 	{
 			case 16:
@@ -481,7 +452,6 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 				break;
 
 			case 8:
-				// Switch based on flags given
 				if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 					Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
 				else
@@ -494,14 +464,9 @@ static BOOLEAN BltVideoObjectToBuffer(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, 
 }
 
 
-/**********************************************************************************************
- DestroyObjectPaletteTables
-
-	Destroys the palette tables of a video object. All memory is deallocated, and
-	the pointers set to NULL. Be careful not to try and blit this object until new
-	tables are calculated, or things WILL go boom.
-
-**********************************************************************************************/
+/* Destroys the palette tables of a video object. All memory is deallocated, and
+ * the pointers set to NULL. Be careful not to try and blit this object until
+ * new tables are calculated, or things WILL go boom. */
 BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject)
 {
 UINT32 x;
@@ -540,7 +505,6 @@ BOOLEAN f16BitPal;
 }
 
 
-
 UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 {
 	Assert(pObj!=NULL);
@@ -557,6 +521,7 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 	return(TRUE);
 }
 
+
 UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 {
 	#ifdef _DEBUG
@@ -572,12 +537,9 @@ UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
 }
 
 
-/********************************************************************************************
-	GetETRLEPixelValue
-
-	Given a VOBJECT and ETRLE image index, retrieves the value of the pixel located at the
-	given image coordinates. The value returned is an 8-bit palette index
-********************************************************************************************/
+/* Given a VOBJECT and ETRLE image index, retrieves the value of the pixel
+ * located at the given image coordinates. The value returned is an 8-bit
+ * palette index */
 BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEIndex, UINT16 usX, UINT16 usY )
 {
 	UINT8 *					pCurrent;
@@ -586,7 +548,6 @@ BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETRLEInde
 	UINT16					ubRunLength;
 	ETRLEObject *		pETRLEObject;
 
-	// Do a bunch of checks
 	CHECKF( hVObject != NULL );
 	CHECKF( usETRLEIndex < hVObject->usNumberOfObjects );
 
@@ -669,7 +630,6 @@ BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usI
 {
 	ETRLEObject						ETRLEObject;
 
-	// Get video object
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES;
 	#endif
@@ -687,7 +647,6 @@ BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usI
 
 BOOLEAN GetVideoObjectETRLEPropertiesFromIndex( UINT32 uiVideoObject, ETRLEObject *pETRLEObject, UINT16 usIndex )
 {
-	// Get video object
 	#ifdef _DEBUG
 		gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLEPROPERTIESFROMINDEX;
 	#endif
@@ -715,7 +674,6 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 {
 	UINT16               *pBuffer;
 	UINT32								uiPitch;
-	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
 
 	if ( pBuffer == NULL )
@@ -731,8 +689,6 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 	{
 		 Blt8BPPDataTo16BPPBufferOutline((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline );
 	}
-
-	// Now we have the video object and surface, call the VO blitter function
 
 	UnLockVideoSurface( uiDestVSurface );
 	return( TRUE );
@@ -757,7 +713,6 @@ static BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcV
 {
 	UINT16               *pBuffer;
 	UINT32								uiPitch;
-	// Lock video surface
 	pBuffer = (UINT16*)LockVideoSurface( uiDestVSurface, &uiPitch );
 
 	if ( pBuffer == NULL )
@@ -773,8 +728,6 @@ static BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcV
 	{
 		 Blt8BPPDataTo16BPPBufferOutlineShadow((UINT16*)pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex );
 	}
-
-	// Now we have the video object and surface, call the VO blitter function
 
 	UnLockVideoSurface( uiDestVSurface );
 	return( TRUE );
