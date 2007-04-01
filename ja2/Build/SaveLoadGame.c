@@ -3886,7 +3886,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
   sGeneralInfo.fPlayerTeamSawJoey             = gfPlayerTeamSawJoey;
 	sGeneralInfo.fMikeShouldSayHi								= gfMikeShouldSayHi;
 
-	return !FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
+	return FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
 }
 
 
