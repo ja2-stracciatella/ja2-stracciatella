@@ -21,11 +21,6 @@
 #include "ScreenIDs.h"
 
 
-extern HVSURFACE ghFrameBuffer;
-
-
-
-//local Defines
 enum
 {
 	CRDT_RENDER_NONE,

@@ -98,7 +98,6 @@ RENDER_HOOK				gDebugRenderOverride[ MAX_DEBUG_PAGES ] =
 	DefaultDebugPage4
 };
 
-extern HVSURFACE ghFrameBuffer;
 
 void DisplayFrameRate( )
 {

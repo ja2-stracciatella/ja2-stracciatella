@@ -17,7 +17,7 @@
 
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
-extern HVSURFACE ghFrameBuffer;
+
 
 //Simply create videosurface, load image, and draw it to the screen.
 void InitJA2SplashScreen(void)

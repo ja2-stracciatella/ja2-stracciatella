@@ -11,10 +11,6 @@
 #include "Debug.h"
 
 
-extern HVSURFACE ghFrameBuffer;
-
-
-
 UINT8 gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 
 //returns the UINT8 ID for the specified sector.

@@ -68,7 +68,6 @@
 //#define INVULNERABILITY
 
 extern BOOLEAN AutoReload( SOLDIERTYPE *pSoldier );
-extern HVSURFACE ghFrameBuffer;
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
 
 //button images

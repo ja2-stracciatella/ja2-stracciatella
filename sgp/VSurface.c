@@ -51,7 +51,7 @@ static void CheckValidVSurfaceIndex(UINT32 uiIndex);
 
 
 static HVSURFACE ghBackBuffer = NULL;
-HVSURFACE   ghFrameBuffer = NULL;
+static HVSURFACE ghFrameBuffer = NULL;
 static HVSURFACE ghMouseBuffer = NULL;
 
 
