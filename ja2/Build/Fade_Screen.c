@@ -139,7 +139,6 @@ static void FadeFrameBufferVersionOne(void);
 static void FadeInBackBufferSquare(void);
 static void FadeInBackBufferVersionOne(void);
 static void FadeInFrameBufferRealFade(void);
-static BOOLEAN UpdateSaveBufferWithBackbuffer(void);
 
 
 static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay)
@@ -164,8 +163,7 @@ static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 u
 				gFadeFunction = (FADE_FUNCTION)FadeInFrameBufferRealFade;
 				gfFadeInVideo   = FALSE;
 
-				// Copy backbuffer to savebuffer
-				UpdateSaveBufferWithBackbuffer( );
+				BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
 
 				// Clear framebuffer
 				ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -656,21 +654,4 @@ static void FadeInFrameBufferRealFade(void)
 		gsFadeRealCount = gsFadeCount;
 	}
 
-}
-
-
-static BOOLEAN UpdateSaveBufferWithBackbuffer(void)
-{
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
-
-	pSrcBuf = LockVideoSurface(FRAME_BUFFER, &uiSrcPitchBYTES);
-	pDestBuf = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
-
-	Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES, 0, 0, 0, 0, 640, 480);
-
-	UnLockVideoSurface(FRAME_BUFFER);
-	UnLockVideoSurface(guiSAVEBUFFER);
-
-	return(TRUE);
 }

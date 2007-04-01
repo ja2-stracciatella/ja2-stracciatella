@@ -1063,23 +1063,10 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 		}
 
     // Update the save buffer
-    {
-	    UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	    UINT8	 *pDestBuf, *pSrcBuf;
-	    UINT16 usWidth, usHeight;
-
-	    // Update saved buffer - do for the viewport size ony!
-	    GetCurrentVideoSettings(&usWidth, &usHeight);
-
-	    pSrcBuf = LockVideoSurface(FRAME_BUFFER, &uiSrcPitchBYTES);
-	    pDestBuf = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
-
-			Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES, 0, 0, 0, 0, usWidth, usHeight);
-
-	    UnLockVideoSurface(FRAME_BUFFER);
-	    UnLockVideoSurface(guiSAVEBUFFER);
-
-    }
+		UINT16 usWidth;
+		UINT16 usHeight;
+		GetCurrentVideoSettings(&usWidth, &usHeight);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, usWidth, usHeight);
 	}
 }
 
