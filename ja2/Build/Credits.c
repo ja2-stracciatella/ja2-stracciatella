@@ -547,7 +547,7 @@ static BOOLEAN RenderCreditScreen(void)
 		gfCrdtHaveRenderedFirstFrameToSaveBuffer = TRUE;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
 
 		UnmarkButtonsDirty( );
 	}

@@ -233,7 +233,7 @@ UINT32	OptionsScreenHandle()
 		RenderOptionsScreen();
 
 		//Blit the background to the save buffer
-		BlitBufferToBuffer( guiRENDERBUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
 		InvalidateRegion( 0, 0, 640, 480 );
 	}
 

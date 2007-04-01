@@ -304,14 +304,14 @@ static void RenderSliderBox(SLIDER* pSlider)
 		if( !( pSlider->LastRect.iLeft == 0 && pSlider->LastRect.iRight == 0 ) )
 		{
 			//Restore the old rect
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)pSlider->LastRect.iLeft, (UINT16)pSlider->LastRect.iTop, pSlider->ubSliderWidth, pSlider->ubSliderHeight );
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, pSlider->LastRect.iLeft, pSlider->LastRect.iTop, pSlider->ubSliderWidth, pSlider->ubSliderHeight);
 
 			//invalidate the old area
 			InvalidateRegion( pSlider->LastRect.iLeft, pSlider->LastRect.iTop, pSlider->LastRect.iRight, pSlider->LastRect.iBottom );
 		}
 
 		//Blit the new rect
-		BlitBufferToBuffer( guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, pSlider->ubSliderWidth, pSlider->ubSliderHeight );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, pSlider->ubSliderWidth, pSlider->ubSliderHeight);
 	}
 	else
 	{
@@ -330,11 +330,11 @@ static void RenderSliderBox(SLIDER* pSlider)
 		if( !( pSlider->LastRect.iLeft == 0 && pSlider->LastRect.iRight == 0 ) )
 		{
 			//Restore the old rect
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)pSlider->LastRect.iLeft, (UINT16)pSlider->LastRect.iTop, 8, 15 );
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, pSlider->LastRect.iLeft, pSlider->LastRect.iTop, 8, 15);
 		}
 
 		//save the new rect
-		BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, 8, 15 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, 8, 15);
 	}
 
 

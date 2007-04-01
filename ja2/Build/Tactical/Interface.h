@@ -73,7 +73,6 @@ UINT8					gubNewPanelParam;
 INT16					gsCurInterfacePanel;
 
 
-UINT32					guiRENDERBUFFER;
 UINT32					guiCLOSE;
 UINT32					guiDEAD;
 UINT32					guiHATCH;

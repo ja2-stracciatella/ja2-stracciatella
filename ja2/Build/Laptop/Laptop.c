@@ -4176,7 +4176,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		{
 			sWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
 			sHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)LastRect.iLeft, (UINT16)LastRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, sWidth, sHeight);
 		}
 
 		//Save rectangle
@@ -4184,7 +4184,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		{
 			sWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
 			sHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
-			BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, sWidth, sHeight);
 		}
 	}
 	else
@@ -4194,7 +4194,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		{
 			sWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
 			sHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)LastRect.iLeft, (UINT16)LastRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, sWidth, sHeight);
 		}
 
 		//Save rectangle
@@ -4202,7 +4202,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		{
 			sWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
 			sHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
-			BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, sWidth, sHeight);
 		}
 	}
 

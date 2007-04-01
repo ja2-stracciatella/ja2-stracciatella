@@ -689,7 +689,7 @@ static void RenderHelpScreen(void)
 		gfHaveRenderedFirstFrameToSaveBuffer = TRUE;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, (UINT16)(gHelpScreen.usScreenLocX+gHelpScreen.usScreenWidth), (UINT16)(gHelpScreen.usScreenLocY+gHelpScreen.usScreenHeight) );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenLocX + gHelpScreen.usScreenWidth, gHelpScreen.usScreenLocY + gHelpScreen.usScreenHeight);
 
 		UnmarkButtonsDirty( );
 	}
@@ -2093,7 +2093,7 @@ static void RenderTextBufferToScreen(void)
 {
 	SGPRect		SrcRect;
 
-	HVSURFACE hDestVSurface = GetVideoSurface(guiRENDERBUFFER);
+	HVSURFACE hDestVSurface = GetVideoSurface(FRAME_BUFFER);
 	HVSURFACE hSrcVSurface  = GetVideoSurface(guiHelpScreenTextBufferSurface);
 
 	SrcRect.iLeft = 0;

@@ -3539,7 +3539,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 		{
 			usWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
 			usHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)LastRect.iLeft, (UINT16)LastRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
 		}
 
 		//Save rectangle
@@ -3547,7 +3547,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 		{
 			usWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
 			usHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
-			BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
 		}
 	}
 	else
@@ -3557,7 +3557,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 		{
 			usWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
 			usHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
-			BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, (UINT16)LastRect.iLeft, (UINT16)LastRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
 		}
 
 		//Save rectangle
@@ -3565,7 +3565,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 		{
 			usWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
 			usHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
-			BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, (UINT16)DestRect.iLeft, (UINT16)DestRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
 		}
 	}
 

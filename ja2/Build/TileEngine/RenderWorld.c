@@ -2303,7 +2303,7 @@ UINT32 cnt = 0;
 		UINT32	cnt;
 		INT16		zVal;
 
-		pDestBuf = (INT16*)LockVideoSurface(guiRENDERBUFFER, &uiDestPitchBYTES);
+		pDestBuf = (INT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 		for ( cnt = 0; cnt < ( 640 * 480 ); cnt++ )
 		{
@@ -2312,7 +2312,7 @@ UINT32 cnt = 0;
 			pDestBuf[cnt] = zVal;
 		}
 
-		UnLockVideoSurface(guiRENDERBUFFER);
+		UnLockVideoSurface(FRAME_BUFFER);
 	}
 
 }

@@ -4,7 +4,6 @@
 #include "Video.h"
 #include "WCheck.h"
 
-UINT32					guiRENDERBUFFER = 0;
 UINT32					guiSAVEBUFFER = 0;
 UINT32					guiEXTRABUFFER = 0;
 
@@ -26,8 +25,5 @@ BOOLEAN	InitializeGameVideoObjects( )
 	CHECKF(guiEXTRABUFFER != NO_VSURFACE);
 	gfExtraBuffer = TRUE;
 
-	guiRENDERBUFFER=FRAME_BUFFER;
-
 	return( TRUE );
-
 }

@@ -251,7 +251,7 @@ UINT32	SaveLoadScreenHandle()
 		PauseGame();
 
 		//save the new rect
-		BlitBufferToBuffer(guiRENDERBUFFER, guiSAVEBUFFER, 0, 0, 639, 439 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 639, 439);
 	}
 
 	RestoreBackgroundRects();
@@ -635,11 +635,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 		memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
 		UnLockVideoSurface( FRAME_BUFFER );
-
-		// CLEAR THE guiRENDERBUFFER
-		pDestBuf = LockVideoSurface( guiRENDERBUFFER, &uiDestPitchBYTES );
-		memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
-		UnLockVideoSurface( guiRENDERBUFFER );
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;
@@ -2002,7 +1997,7 @@ static void DisplayOnScreenNumber(BOOLEAN fErase)
 			continue;
 		}
 
-		BlitBufferToBuffer(guiSAVEBUFFER, guiRENDERBUFFER, usPosX, (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 10, 10 );
+		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, usPosX, usPosY + SLG_DATE_OFFSET_Y, 10, 10);
 
 		if( bLoopNum != 10 )
 		{

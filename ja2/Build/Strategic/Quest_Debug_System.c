@@ -654,8 +654,7 @@ UINT32	QuestDebugScreenHandle()
 		RenderQuestDebugSystem();
 
 		//At this point the background is pure, copy it to the save buffer
-		BlitBufferToBuffer( guiRENDERBUFFER, guiSAVEBUFFER, 0, 0, 639, 479 );
-
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 639, 479);
 	}
 	RestoreBackgroundRects();
 

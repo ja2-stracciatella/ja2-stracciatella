@@ -6,7 +6,6 @@
 #include "Interface.h"
 
 // Global variables for video objects
-extern UINT32					guiRENDERBUFFER;
 extern UINT32					guiSAVEBUFFER;
 extern UINT32					guiEXTRABUFFER;
 

@@ -1285,12 +1285,12 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	InsertDollarSignInToString( zMoney );
 	DrawTextToScreen( zMoney, SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, TRUE, CENTER_JUSTIFIED );
 
-	BlitBufferToBuffer( guiRENDERBUFFER, guiSAVEBUFFER, 0, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
 	//At this point the background is pure, copy it to the save buffer
 	if( gfRenderScreenOnNextLoop )
 	{
-	//	BlitBufferToBuffer( guiRENDERBUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
+	//	BlitBufferToBuffer(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 		HVSURFACE hDestVSurface = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
 		HVSURFACE hSrcVSurface  = GetVideoSurface(guiSAVEBUFFER);
 
@@ -1339,9 +1339,9 @@ static void RestoreTacticalBackGround(void)
 	//Restore the background before blitting the text back on
 //	RestoreExternBackgroundRect( SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
 
-//	BlitBufferToBuffer( guiCornerWhereTacticalIsStillSeenImage, guiRENDERBUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
+//	BlitBufferToBuffer(guiCornerWhereTacticalIsStillSeenImage, FRAME_BUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
-	HVSURFACE hDestVSurface = GetVideoSurface(guiRENDERBUFFER);
+	HVSURFACE hDestVSurface = GetVideoSurface(FRAME_BUFFER);
 	HVSURFACE hSrcVSurface  = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
 
 	SrcRect.iLeft = 0;
@@ -2517,7 +2517,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	BltVideoObjectOutlineFromIndex( FRAME_BUFFER, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX, sCenY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), fHighlighted );
 
 	//Display the status of the item
-	DrawItemUIBarEx( pItemObject, 0, (INT16)(usPosX+2), (INT16)(usPosY+2+20), 2, 20, 	Get16BPPColor( FROMRGB( 140, 136, 119 ) ), Get16BPPColor( FROMRGB( 140, 136, 119 ) ), TRUE, guiRENDERBUFFER );//guiSAVEBUFFER
+	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 2 + 20, 2, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), TRUE, FRAME_BUFFER);//guiSAVEBUFFER
 
 
 	//Display the Items Cost
@@ -7739,6 +7739,6 @@ static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY)
 	usSlotHeight = SKI_INV_SLOT_HEIGHT;
 
 	//Hatch it out
-	DrawHatchOnInventory( guiRENDERBUFFER, usSlotX, usSlotY, usSlotWidth, usSlotHeight );
+	DrawHatchOnInventory(FRAME_BUFFER, usSlotX, usSlotY, usSlotWidth, usSlotHeight);
 	InvalidateRegion( usSlotX, usSlotY, usSlotX + usSlotWidth, usSlotY + usSlotHeight );
 }
