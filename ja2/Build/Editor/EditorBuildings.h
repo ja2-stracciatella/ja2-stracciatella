@@ -5,7 +5,6 @@
 #define __EDITORBUILDINGS_H
 
 #include "Video.h"
-#include "VObject_Blitters.h"
 
 extern BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 extern UINT8 gubCurrRoomNumber;

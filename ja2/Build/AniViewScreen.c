@@ -5,7 +5,6 @@
 #include "Gameloop.h"
 #include "HImage.h"
 #include "VObject.h"
-#include "VObject_Blitters.h"
 #include "WCheck.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"

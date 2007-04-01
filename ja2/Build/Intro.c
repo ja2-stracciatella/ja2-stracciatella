@@ -23,7 +23,7 @@
 #include "Text.h"
 #include "Utilities.h"
 #include "Video.h"
-#include "VObject_Blitters.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 

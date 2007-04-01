@@ -2,7 +2,6 @@
 #include "SGP.h"
 #include "Sys_Globals.h"
 #include "SysUtil.h"
-#include "VObject_Blitters.h"
 #include "WCheck.h"
 #include "Cursors.h"
 #include "Font_Control.h"
@@ -28,6 +27,7 @@
 #include "Video.h"
 #include "MapScreen.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
+#include "VSurface.h"
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"

@@ -24,7 +24,6 @@
 #include "Input.h"
 #include "SysUtil.h"
 #include "wchar.h"
-#include "VObject_Blitters.h"
 #include "Debug.h"
 #include "WCheck.h"
 #include "WorldMan.h"

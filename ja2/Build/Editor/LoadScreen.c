@@ -42,6 +42,7 @@
 #include "MemMan.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
+#include "VSurface.h"
 #include "WorldDef.h"
 
 

@@ -70,6 +70,7 @@
 #include "JAScreens.h"
 #include "Shading.h"
 #include "Debug.h"
+#include "VObject_Blitters.h"
 
 
 extern CHAR8 *szMusicList[NUM_MUSIC];

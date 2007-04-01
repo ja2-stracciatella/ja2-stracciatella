@@ -3,7 +3,6 @@
 #include "Gameloop.h"
 #include "Screens.h"
 #include "WCheck.h"
-#include "VObject_Blitters.h"
 #include "RenderWorld.h"
 #include "MouseSystem.h"
 #include "WorldDef.h"
@@ -43,6 +42,7 @@
 #include "Strategic_Movement.h"
 #include "Vehicles.h"
 #include "Shading.h"
+#include "VSurface.h"
 
 #ifdef JA2BETAVERSION
 #	include "Multilingual_Text_Code_Generator.h"

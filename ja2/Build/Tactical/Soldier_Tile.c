@@ -23,7 +23,6 @@
 #include "Sound_Control.h"
 #include "Lighting.h"
 #include "Weapons.h"
-#include "VObject_Blitters.h"
 #include "Handle_UI.h"
 #include "Soldier_Ani.h"
 #include "Event_Pump.h"

@@ -4,7 +4,6 @@
 #include "Sys_Globals.h"
 #include "Fade_Screen.h"
 #include "SysUtil.h"
-#include "VObject_Blitters.h"
 #include "MercTextBox.h"
 #include "WCheck.h"
 #include "Cursors.h"
@@ -33,6 +32,7 @@
 #include "JAScreens.h"
 #include "Local.h"
 #include "GameVersion.h"
+#include "VSurface.h"
 
 
 #define	MAINMENU_TEXT_FILE						"LoadScreens/MainMenu.edt"

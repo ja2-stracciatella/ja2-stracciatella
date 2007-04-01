@@ -30,7 +30,6 @@
 #include "Lighting.h"
 #include "Interface_Panels.h"
 #include "PathAI.h"
-#include "VObject_Blitters.h"
 #include "Faces.h"
 #include "Handle_UI_Plan.h"
 #include "Interface_Control.h"

@@ -16,7 +16,6 @@
 #include "EditScreen.h"
 #include "SelectWin.h"
 #include "Video.h"
-#include "VObject_Blitters.h"
 #include "Interface_Panels.h"
 #include "Utilities.h"
 #include "World_Items.h"

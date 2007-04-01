@@ -6,7 +6,6 @@
 #include "Render_Dirty.h"
 #include "SysUtil.h"
 #include "WCheck.h"
-#include "VObject_Blitters.h"
 #include "Faces.h"
 #include "Utilities.h"
 #include "Overhead.h"
