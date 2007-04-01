@@ -4,8 +4,6 @@
 #ifndef __EDITORBUILDINGS_H
 #define __EDITORBUILDINGS_H
 
-#include "Video.h"
-
 extern BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 extern UINT8 gubCurrRoomNumber;
 extern UINT8 gubMaxRoomNumber;

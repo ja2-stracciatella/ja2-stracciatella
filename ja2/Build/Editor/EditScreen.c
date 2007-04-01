@@ -70,6 +70,7 @@
 #include "JAScreens.h"
 #include "Shading.h"
 #include "Debug.h"
+#include "Video.h"
 #include "VObject_Blitters.h"
 
 

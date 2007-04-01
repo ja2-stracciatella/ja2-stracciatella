@@ -43,6 +43,7 @@
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
+#include "Video.h"
 #include "WorldDef.h"
 
 

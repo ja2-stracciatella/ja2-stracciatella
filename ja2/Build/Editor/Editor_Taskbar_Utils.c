@@ -40,6 +40,7 @@
 #include "Keys.h"
 #include "Debug.h"
 #include "JAScreens.h"
+#include "Video.h"
 #include "VSurface.h"
 
 

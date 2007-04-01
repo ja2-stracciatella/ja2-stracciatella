@@ -22,6 +22,7 @@
 #include "Input.h"
 #include "Map_Information.h"
 #include "EditorMapInfo.h"
+#include "Stubs.h" // XXX
 
 
 extern SOLDIERINITNODE *gpSelected;

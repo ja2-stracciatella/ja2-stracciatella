@@ -16,7 +16,6 @@
 #include "Font_Control.h"
 #include "EditScreen.h"
 #include "SelectWin.h"
-#include "Video.h"
 #include "VObject_Blitters.h"
 #include "Interface_Panels.h"
 #include "Interface_Items.h"
@@ -39,6 +38,7 @@
 #include "Debug.h"
 #include "Items.h"
 #include "MemMan.h"
+#include "Stubs.h" // XXX
 
 
 #define NUMBER_TRIGGERS			27

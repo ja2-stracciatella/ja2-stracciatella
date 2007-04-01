@@ -23,6 +23,7 @@
 #include "Simple_Render_Utils.h"
 #include "Debug.h"
 #include "MemMan.h"
+#include "Video.h"
 
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;

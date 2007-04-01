@@ -16,7 +16,6 @@
 #include "Font_Control.h"
 #include "EditScreen.h"
 #include "SelectWin.h"
-#include "Video.h"
 #include "Interface_Panels.h"
 #include "Interface_Items.h"
 #include "Utilities.h"
@@ -48,6 +47,7 @@
 #include "EditorMapInfo.h"
 #include "Environment.h"
 #include "Simple_Render_Utils.h"
+#include "Stubs.h" // XXX
 
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;

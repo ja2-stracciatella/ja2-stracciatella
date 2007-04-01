@@ -17,6 +17,7 @@
 #include "EditorMercs.h"
 #include "EditorBuildings.h"
 #include "Debug.h"
+#include "Stubs.h" // XXX
 
 
 SGPRect gSelectRegion;
