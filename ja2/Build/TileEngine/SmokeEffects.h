@@ -31,9 +31,8 @@ typedef struct TAG_SMOKE_EFFECT
   UINT8   ubOwner;
   UINT8   ubPadding;
 	UINT32	uiTimeOfLastUpdate;
-
 } SMOKEEFFECT;
-
+CASSERT(sizeof(SMOKEEFFECT) == 16)
 
 
 // Returns NO_SMOKE_EFFECT if none there...

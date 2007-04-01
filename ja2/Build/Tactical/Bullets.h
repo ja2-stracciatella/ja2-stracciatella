@@ -61,6 +61,7 @@ typedef struct
 	UINT8		ubItemStatus;
 
 } BULLET;
+CASSERT(sizeof(BULLET) == 128)
 
 extern UINT32 guiNumBullets;
 

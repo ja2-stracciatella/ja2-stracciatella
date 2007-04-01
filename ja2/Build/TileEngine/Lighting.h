@@ -68,6 +68,8 @@ typedef struct light_p {
 					UINT8		uiFlags;
 					UINT8		ubLight;
 			} LIGHT_NODE;
+CASSERT(sizeof(LIGHT_NODE) == 6)
+
 
 // structure of light instance, or sprite (a copy of the template)
 typedef struct {
@@ -78,6 +80,7 @@ typedef struct {
 					UINT32	uiFlags;
 					UINT32	uiLightType;
 			} LIGHT_SPRITE;
+CASSERT(sizeof(LIGHT_SPRITE) == 24)
 
 
 // Initializes the lighting system

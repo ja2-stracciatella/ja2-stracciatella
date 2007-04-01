@@ -51,9 +51,8 @@ typedef struct
 	UINT32	uiRandom;
 
 	UINT8		ubFiller[110];
-
 } SAVED_GAME_HEADER;
-
+CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 
 
 extern	UINT32		guiScreenToGotoAfterLoadingSavedGame;

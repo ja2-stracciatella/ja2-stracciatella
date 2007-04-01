@@ -75,9 +75,8 @@ typedef struct
 	UINT8				ubSizeOfLOS;
 
 	UINT8		ubFiller[17];
-
 }	GAME_SETTINGS;
-
+CASSERT(sizeof(GAME_SETTINGS) == 76)
 
 
 //Enums for the difficulty levels

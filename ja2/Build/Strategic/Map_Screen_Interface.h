@@ -205,6 +205,8 @@ typedef struct MERC_LEAVE_ITEM{
 	OBJECTTYPE o;
 	struct MERC_LEAVE_ITEM *pNext;
 }MERC_LEAVE_ITEM;
+CASSERT(sizeof(MERC_LEAVE_ITEM) == 40)
+
 
 extern BOOLEAN fShowAssignmentMenu;
 extern BOOLEAN fShowTrainingMenu ;

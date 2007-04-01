@@ -76,9 +76,8 @@ typedef struct
  UINT8		 ubProfileID;
 
  BOOLEAN fValid;
-
 } VEHICLETYPE;
-
+CASSERT(sizeof(VEHICLETYPE) == 128)
 
 
 // the list of vehicles

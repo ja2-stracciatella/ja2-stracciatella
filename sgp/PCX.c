@@ -40,6 +40,8 @@ typedef struct PcxHeader
 	UINT16 usPaletteType;
 	UINT8  ubFiller[58];
 } PcxHeader;
+CASSERT(sizeof(PcxHeader) == 128)
+
 
 typedef struct PcxObject
 {

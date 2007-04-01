@@ -123,6 +123,7 @@ typedef	struct
 	UINT8					ubFiller[ 32 ];
 
 } AIR_RAID_SAVE_STRUCT;
+CASSERT(sizeof(AIR_RAID_SAVE_STRUCT) == 132)
 
 
 // END SERIALIZATION

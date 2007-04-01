@@ -33,8 +33,8 @@ typedef struct
 	UINT32	uiPadding[ 3 ];
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
-
 } StringSaveStruct;
+CASSERT(sizeof(StringSaveStruct) == 28)
 
 
 #define MAX_LINE_COUNT 6

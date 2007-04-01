@@ -73,8 +73,9 @@ typedef struct
 #if !defined( CRIPPLED_VERSION ) && !defined( RUSSIAN )
 	UINT8		ubUnused[4];
 #endif
-
 } NPCQuoteInfo;																									// 32 bytes
+CASSERT(sizeof(NPCQuoteInfo) == 32)
+
 
 typedef enum
 {

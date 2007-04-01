@@ -118,6 +118,7 @@ typedef struct
 	BOOLEAN	fContainsSubDirectories;
 	INT32		iReserved;
 } LIBHEADER;
+CASSERT(sizeof(LIBHEADER) == 532)
 
 
 #ifdef __cplusplus

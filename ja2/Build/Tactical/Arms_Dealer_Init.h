@@ -162,7 +162,7 @@ typedef struct
 	UINT8		ubPadding[ 8 ];
 
 } ARMS_DEALER_STATUS;
-
+CASSERT(sizeof(ARMS_DEALER_STATUS) == 20)
 
 
 typedef struct
@@ -198,7 +198,7 @@ typedef struct
 	UINT8		ubPadding[6];					// filler
 
 } DEALER_SPECIAL_ITEM;
-
+CASSERT(sizeof(DEALER_SPECIAL_ITEM) == 28)
 
 
 typedef struct
@@ -221,6 +221,7 @@ typedef struct
 	UINT8		ubPadding[2];					// filler
 
 } DEALER_ITEM_HEADER;
+CASSERT(sizeof(DEALER_ITEM_HEADER) == 16)
 
 
 extern ARMS_DEALER_INFO			ArmsDealerInfo[ NUM_ARMS_DEALERS ];

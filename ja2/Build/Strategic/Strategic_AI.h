@@ -105,6 +105,7 @@ typedef struct ARMY_COMPOSITION
 	INT8 bStartPopulation;
 	INT8 bPadding[10];
 }ARMY_COMPOSITION;
+CASSERT(sizeof(ARMY_COMPOSITION) == 20)
 
 //Defines the patrol groups -- movement groups.
 typedef struct PATROL_GROUP
@@ -118,6 +119,8 @@ typedef struct PATROL_GROUP
 	UINT8 ubPendingGroupID;
 	INT8  bPadding[10];
 }PATROL_GROUP;
+CASSERT(sizeof(PATROL_GROUP) == 20)
+
 
 //Defines all stationary defence forces.
 typedef struct GARRISON_GROUP
@@ -128,6 +131,7 @@ typedef struct GARRISON_GROUP
 	UINT8 ubPendingGroupID;
 	INT8 bPadding[10];
 }GARRISON_GROUP;
+CASSERT(sizeof(GARRISON_GROUP) == 14)
 
 
 #endif

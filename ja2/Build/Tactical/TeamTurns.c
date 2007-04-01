@@ -74,6 +74,8 @@ typedef struct
 
 	UINT8	ubFiller[16];
 } TEAM_TURN_SAVE_STRUCT;
+CASSERT(sizeof(TEAM_TURN_SAVE_STRUCT) == 26)
+
 
 #define MIN_APS_TO_INTERRUPT 4
 

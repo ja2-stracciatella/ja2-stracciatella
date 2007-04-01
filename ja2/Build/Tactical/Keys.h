@@ -10,6 +10,7 @@ typedef struct
 	UINT16		usSectorFound;		// where and
 	UINT16		usDateFound;			// when the key was found
 } KEY;
+CASSERT(sizeof(KEY) == 8)
 
 
 #define KEY_USED				0x01
@@ -69,6 +70,8 @@ typedef struct
 	INT8			bLockDamage;					// Damage to the lock
 	INT8			bPadding[4];					// extra bytes
 } DOOR;
+CASSERT(sizeof(DOOR) == 14)
+
 
 typedef enum
 {
@@ -109,7 +112,7 @@ typedef struct
 	UINT8		ubFlags;
 
 } DOOR_STATUS;
-
+CASSERT(sizeof(DOOR_STATUS) == 4)
 
 
 // This is the number of different types of doors we can have

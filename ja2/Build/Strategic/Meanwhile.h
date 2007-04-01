@@ -33,8 +33,8 @@ typedef struct
 
 	UINT8				ubMeanwhileID;
 	UINT8				ubNPCNumber;
-
 } MEANWHILE_DEFINITION;
+CASSERT(sizeof(MEANWHILE_DEFINITION) == 8)
 
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime );

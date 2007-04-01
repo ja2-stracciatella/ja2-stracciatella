@@ -21,9 +21,8 @@ typedef struct
 	INT8		bType;
 	INT32		iLight;
 	UINT32	uiTimeOfLastUpdate;
-
 } LIGHTEFFECT;
-
+CASSERT(sizeof(LIGHTEFFECT) == 16)
 
 
 // Decays all light effects...

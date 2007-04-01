@@ -403,7 +403,8 @@ typedef struct
 	UINT32	uiTotalCostToDate;			// The total amount of money that has been paid to the merc for their salary
 	UINT8		ubBuffer[4];
 } MERCPROFILESTRUCT_ON_DISK;
-extern int ASSERT_COMPILE[(sizeof(MERCPROFILESTRUCT) == sizeof(MERCPROFILESTRUCT_ON_DISK) + (NAME_LENGTH + NICKNAME_LENGTH) * (sizeof(wchar_t) - sizeof(UINT16))) * 2 - 1];
+CASSERT(sizeof(MERCPROFILESTRUCT_ON_DISK) == 716)
+CASSERT(sizeof(MERCPROFILESTRUCT) == sizeof(MERCPROFILESTRUCT_ON_DISK) + (NAME_LENGTH + NICKNAME_LENGTH) * (sizeof(wchar_t) - sizeof(UINT16)))
 
 
 static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile);

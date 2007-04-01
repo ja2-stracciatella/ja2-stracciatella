@@ -100,8 +100,8 @@ typedef struct STRATEGIC_STATUS
 	UINT8			ubNumberOfDaysOfInactivity;
 
 	INT8 bPadding[70];
-
 } STRATEGIC_STATUS;
+CASSERT(sizeof(STRATEGIC_STATUS) == 192)
 
 
 void InitStrategicStatus();

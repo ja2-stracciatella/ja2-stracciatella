@@ -190,7 +190,7 @@ typedef struct
 	BOOLEAN fRead;
 	BOOLEAN fNew;
 } SavedEmailStruct;
-
+CASSERT(sizeof(SavedEmailStruct) == 44)
 
 
 struct pagemessages{

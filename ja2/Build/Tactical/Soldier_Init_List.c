@@ -315,6 +315,7 @@ typedef struct
 
 	INT8 bPadding[115];
 } SOLDIERCREATE_STRUCT_ON_DISK;
+CASSERT(sizeof(SOLDIERCREATE_STRUCT_ON_DISK) == 1040)
 
 
 BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )

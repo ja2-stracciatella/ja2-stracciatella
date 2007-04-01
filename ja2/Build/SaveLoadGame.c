@@ -345,7 +345,7 @@ typedef struct
 	UINT8		ubFiller[550];		//This structure should be 1024 bytes
 
 } GENERAL_SAVE_INFO;
-
+CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
 
 UINT32	guiSaveGameVersion=0;

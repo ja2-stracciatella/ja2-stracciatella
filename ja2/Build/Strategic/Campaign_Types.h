@@ -261,6 +261,8 @@ typedef struct UNDERGROUND_SECTORINFO
 	INT8 bPadding[36];
 	//no padding left!
 }UNDERGROUND_SECTORINFO;
+CASSERT(sizeof(UNDERGROUND_SECTORINFO) == 72)
+
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.

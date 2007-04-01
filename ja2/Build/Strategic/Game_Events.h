@@ -17,6 +17,8 @@ typedef struct STRATEGICEVENT
 	UINT8										ubFlags;
 	INT8										bPadding[6];
 } STRATEGICEVENT;
+CASSERT(sizeof(STRATEGICEVENT) == 28)
+
 
 enum
 {

@@ -43,6 +43,8 @@ typedef struct WAYPOINT
 	UINT8 y;											//sector y position of waypoint
 	struct WAYPOINT *next;				//next waypoint in list
 }WAYPOINT;
+CASSERT(sizeof(WAYPOINT) == 8)
+
 
 #define PG_INDIVIDUAL_MERGED		0x01
 
@@ -69,6 +71,8 @@ typedef struct ENEMYGROUP
 	UINT8 ubElitesInBattle;				//number of elite soldiers currently in battle.
 	INT8  bPadding[20];
 }ENEMYGROUP;
+CASSERT(sizeof(ENEMYGROUP) == 29)
+
 
 //NOTE:  ALL FLAGS ARE CLEARED WHENEVER A GROUP ARRIVES IN A SECTOR, OR ITS WAYPOINTS ARE
 //       DELETED!!!
@@ -123,6 +127,8 @@ typedef struct GROUP
 	};
 	struct GROUP *next;						//next group
 }GROUP;
+CASSERT(sizeof(GROUP) == 84)
+
 
 extern GROUP *gpGroupList;
 

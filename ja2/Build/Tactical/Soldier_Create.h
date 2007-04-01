@@ -50,6 +50,7 @@ typedef struct
 	BOOLEAN fHasKeys;
 	INT8 PADDINGSLOTS[ 14 ];
 } BASIC_SOLDIERCREATE_STRUCT; //50 bytes
+CASSERT(sizeof(BASIC_SOLDIERCREATE_STRUCT) == 52)
 
 typedef struct
 {
@@ -129,9 +130,8 @@ typedef struct
 	BOOLEAN						fHasKeys;
 
 	INT8 bPadding[115];
-
-
 } SOLDIERCREATE_STRUCT;
+CASSERT(sizeof(SOLDIERCREATE_STRUCT) == 1060)
 
 
 //Original functions currently used throughout the game.

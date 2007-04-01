@@ -67,8 +67,8 @@ typedef struct
   INT32       iSoundID;
   UINT8       ubLastTargetTakenDamage;
 	UINT8				ubPadding[1];
-
 } REAL_OBJECT;
+CASSERT(sizeof(REAL_OBJECT) == 256)
 
 
 #define					NUM_OBJECT_SLOTS	50

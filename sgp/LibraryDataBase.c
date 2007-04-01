@@ -22,6 +22,7 @@ typedef struct
 	FILETIME sFileTime;
 	UINT16   usReserved2;
 } DIRENTRY;
+CASSERT(sizeof(DIRENTRY) == 280)
 
 
 //used when doing the binary search of the libraries

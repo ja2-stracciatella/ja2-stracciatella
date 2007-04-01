@@ -155,11 +155,8 @@ typedef struct
 
 	UINT8								ubLastMercAvailableId;
 	UINT8 bPadding[ 86 ];
-
 } LaptopSaveInfoStruct;
-
-
-
+CASSERT(sizeof(LaptopSaveInfoStruct) == 7440)
 
 
 extern	LaptopSaveInfoStruct LaptopSaveInfo;

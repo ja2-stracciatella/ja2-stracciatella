@@ -18,8 +18,8 @@ typedef struct
 {
 	UINT8 ubProfileID;
 	UINT8	ubFiller[ 3 ];
-
 } CONTRACT_NEWAL_LIST_NODE;
+CASSERT(sizeof(CONTRACT_NEWAL_LIST_NODE) == 4)
 
 
 extern CONTRACT_NEWAL_LIST_NODE	ContractRenewalList[ 20 ];

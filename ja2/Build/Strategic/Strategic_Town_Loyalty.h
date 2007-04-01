@@ -74,9 +74,8 @@ typedef struct TOWN_LOYALTY
 	UINT8			UNUSEDubRebelSentiment;		// current rebel sentiment.  Events could change the starting value...
 	BOOLEAN		fLiberatedAlready;
 	BYTE			filler[19];					// reserved for expansion
-
 } TOWN_LOYALTY;
-
+CASSERT(sizeof(TOWN_LOYALTY) == 26)
 
 
 // the loyalty variables for each town

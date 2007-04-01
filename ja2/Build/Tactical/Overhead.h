@@ -179,10 +179,8 @@ typedef struct
   UINT8               ubMorePadding;
   UINT16              sCreatureTenseQuoteDelay;
   UINT32              uiCreatureTenseQuoteLastUpdate;
-
-  // PADDING GONE!!!!!
-
 } TacticalStatusType;
+CASSERT(sizeof(TacticalStatusType) == 360)
 
 
 UINT8		gbPlayerNum;

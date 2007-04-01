@@ -18,6 +18,7 @@ typedef struct
 	UINT32				uiVol;
 
 } AMBIENTDATA_STRUCT;
+CASSERT(sizeof(AMBIENTDATA_STRUCT) == 116)
 
 
 #endif

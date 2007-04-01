@@ -237,7 +237,7 @@ struct path
 	struct path *pNext;
 	struct path *pPrev;
 };
-
+CASSERT(sizeof(struct path) == 20)
 
 
 typedef struct path PathSt;
@@ -293,6 +293,8 @@ typedef struct
 	UINT8			ubKeyID;
 	UINT8			ubNumber;
 } KEY_ON_RING;
+CASSERT(sizeof(KEY_ON_RING) == 2)
+
 
 typedef struct
 {

@@ -39,9 +39,8 @@ typedef struct
 	INT32								iID;
 	INT32								iLightID;
 	UINT8								ubUnsed[2];
-
-
 } EXPLOSIONTYPE;
+CASSERT(sizeof(EXPLOSIONTYPE) == 36)
 
 
 enum
@@ -66,6 +65,7 @@ typedef struct
 	UINT32	uiTimeStamp;
 	UINT8		fExists;
 } ExplosionQueueElement;
+CASSERT(sizeof(ExplosionQueueElement) == 12)
 
 
 #define	ERASE_SPREAD_EFFECT					2

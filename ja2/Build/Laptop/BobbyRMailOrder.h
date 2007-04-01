@@ -66,6 +66,7 @@ typedef struct
 
 	UINT8		ubFiller[7];
 } NewBobbyRayOrderStruct;
+CASSERT(sizeof(NewBobbyRayOrderStruct) == 104)
 
 
 extern	NewBobbyRayOrderStruct	*gpNewBobbyrShipments;

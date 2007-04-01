@@ -231,6 +231,8 @@ typedef struct TAG_STRUCTURE_FILE_HEADER
 	UINT8		bUnused[3];
 	UINT16	usNumberOfImageTileLocsStored;
 } STRUCTURE_FILE_HEADER; // 16 bytes
+CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
+
 
 // "J2SD" = Jagged 2 Structure Data
 #define STRUCTURE_FILE_ID "J2SD"

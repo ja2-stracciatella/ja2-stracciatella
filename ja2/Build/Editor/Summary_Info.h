@@ -94,6 +94,8 @@ typedef struct SUMMARYFILE
 	//																//-----
 	//																		400 total bytes
 }SUMMARYFILE;
+CASSERT(sizeof(SUMMARYFILE) == 408)
+
 
 extern BOOLEAN gfAutoLoadA9;
 

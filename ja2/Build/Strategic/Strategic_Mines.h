@@ -89,8 +89,9 @@ typedef struct MINE_STATUS_TYPE
 	UINT32   uiTimePlayerProductionStarted;		// time in minutes when 'fMineHasProducedForPlayer' was first set
 
 	BYTE     filler[11];					// reserved for expansion
-
 } MINE_STATUS_TYPE;
+CASSERT(sizeof(MINE_STATUS_TYPE) == 44)
+
 
 typedef struct HEAD_MINER_TYPE
 {

@@ -37,8 +37,9 @@ typedef struct
 {
 	UINT8	ubNumEntries;
 	UINT8	ubUnusedCurrentEntry;
-
 } CIV_QUOTE;
+CASSERT(sizeof(CIV_QUOTE) == 2)
+
 
 extern void CaptureTimerCallback( void );
 
