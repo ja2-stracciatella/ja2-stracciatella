@@ -294,17 +294,15 @@ HVOBJECT CreateVideoObject(HIMAGE hImage)
 		return NULL;
 	}
 
-	HVOBJECT hVObject = MemAlloc(sizeof(*hVObject));
-	CHECKF(hVObject != NULL);
-	memset(hVObject, 0, sizeof(*hVObject));
-
-	// Check if himage is TRLE compressed - return error if not
 	if (!(hImage->fFlags & IMAGE_TRLECOMPRESSED))
 	{
-		MemFree(hVObject);
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image format given.");
 		return NULL;
 	}
+
+	HVOBJECT hVObject = MemAlloc(sizeof(*hVObject));
+	CHECKF(hVObject != NULL);
+	memset(hVObject, 0, sizeof(*hVObject));
 
 	ETRLEData TempETRLEData;
 	CHECKF(GetETRLEImageData(hImage, &TempETRLEData));
