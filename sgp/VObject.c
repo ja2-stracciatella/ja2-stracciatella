@@ -303,7 +303,6 @@ HVOBJECT CreateVideoObject(HIMAGE hImage)
 	{
 		MemFree(hVObject);
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image format given.");
-		DestroyImage(hImage);
 		return NULL;
 	}
 
