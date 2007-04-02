@@ -624,7 +624,8 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 
 
 }
 
-UINT16 *Create16BPPPalette( SGPPaletteEntry *pPalette )
+
+UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt;

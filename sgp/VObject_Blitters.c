@@ -1197,15 +1197,15 @@ Blit3:
 	etc. to their unblit buffer, for later reblitting. Does NOT clip.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPTo8BPP(UINT8 *pDest, UINT32 uiDestPitch, UINT8 *pSrc, UINT32 uiSrcPitch, INT32 iDestXPos, INT32 iDestYPos, INT32 iSrcXPos, INT32 iSrcYPos, UINT32 uiWidth, UINT32 uiHeight)
+BOOLEAN Blt8BPPTo8BPP(UINT8* pDest, UINT32 uiDestPitch, const UINT8* pSrc, UINT32 uiSrcPitch, INT32 iDestXPos, INT32 iDestYPos, INT32 iSrcXPos, INT32 iSrcYPos, UINT32 uiWidth, UINT32 uiHeight)
 {
-UINT8 *pSrcPtr, *pDestPtr;
+	UINT8* pDestPtr;
 UINT32 uiLineSkipDest, uiLineSkipSrc;
 
 	Assert(pDest!=NULL);
 	Assert(pSrc!=NULL);
 
-	pSrcPtr=pSrc+(iSrcYPos*uiSrcPitch)+(iSrcXPos);
+	const UINT8* pSrcPtr = pSrc + iSrcYPos  * uiSrcPitch + iSrcXPos;
 	pDestPtr=pDest+(iDestYPos*uiDestPitch)+(iDestXPos);
 	uiLineSkipDest=uiDestPitch-(uiWidth);
 	uiLineSkipSrc=uiSrcPitch-(uiWidth);
