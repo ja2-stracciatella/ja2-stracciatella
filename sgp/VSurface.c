@@ -890,20 +890,20 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(uiDestVSurface, &uiPitch);
-
 	if (pBuffer == NULL) return FALSE;
 
+	BOOLEAN Ret;
 	if (!fLowPercentShadeTable)
 	{
-		if (!Blt16BPPBufferShadowRect(pBuffer, uiPitch, &area)) return FALSE;
+		Ret = Blt16BPPBufferShadowRect(pBuffer, uiPitch, &area);
 	}
 	else
 	{
-		if (!Blt16BPPBufferShadowRectAlternateTable(pBuffer, uiPitch, &area)) return FALSE;
+		Ret = Blt16BPPBufferShadowRectAlternateTable(pBuffer, uiPitch, &area);
 	}
 
 	UnLockVideoSurface(uiDestVSurface);
-	return TRUE;
+	return Ret;
 }
 
 
