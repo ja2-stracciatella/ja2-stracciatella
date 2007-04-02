@@ -107,32 +107,33 @@ static UINT32 AddStandardVideoSurface(HVSURFACE hVSurface)
 {
 	if (hVSurface == NULL) return NO_VSURFACE;
 
-	// Set into video object list
-	if (gpVSurfaceHead != NULL)
-	{ //Add node after tail
-		gpVSurfaceTail->next = MemAlloc(sizeof(VSURFACE_NODE));
-		Assert(gpVSurfaceTail->next != NULL); //out of memory?
-		gpVSurfaceTail->next->next = NULL;
-		gpVSurfaceTail = gpVSurfaceTail->next;
+	VSURFACE_NODE* Node = MemAlloc(sizeof(*Node));
+	Assert(Node != NULL); // out of memory?
+	Node->hVSurface = hVSurface;
+
+	guiVSurfaceIndex += 2;
+	/* Unlikely that we will ever use 2 billion VSurfaces! We would have to
+	 * create about 70 VSurfaces per second for 1 year straight to achieve this */
+	Assert(guiVSurfaceIndex < 0xFFFFFFF0);
+
+	Node->uiIndex   = guiVSurfaceIndex;
+	Node->next      = NULL;
+#ifdef SGP_VIDEO_DEBUGGING
+	Node->pName     = NULL;
+	Node->pCode     = NULL;
+#endif
+
+	if (gpVSurfaceTail == NULL)
+	{
+		gpVSurfaceHead = Node;
 	}
 	else
-	{ //new list
-		gpVSurfaceHead = MemAlloc(sizeof(VSURFACE_NODE));
-		Assert(gpVSurfaceHead != NULL); //out of memory?
-		gpVSurfaceHead->next = NULL;
-		gpVSurfaceTail = gpVSurfaceHead;
+	{
+		gpVSurfaceTail->next = Node;
 	}
-#ifdef SGP_VIDEO_DEBUGGING
-	gpVSurfaceTail->pName = NULL;
-	gpVSurfaceTail->pCode = NULL;
-#endif
-	//Set the hVSurface into the node.
-	gpVSurfaceTail->hVSurface = hVSurface;
-	gpVSurfaceTail->uiIndex = guiVSurfaceIndex+=2;
-	Assert(guiVSurfaceIndex < 0xfffffff0); //unlikely that we will ever use 2 billion VSurfaces!
-	//We would have to create about 70 VSurfaces per second for 1 year straight to achieve this...
-	guiVSurfaceSize++;
+	gpVSurfaceTail = Node;
 
+	guiVSurfaceSize++;
 	return guiVSurfaceIndex;
 }
 
