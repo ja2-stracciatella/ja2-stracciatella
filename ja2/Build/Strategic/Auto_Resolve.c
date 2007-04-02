@@ -67,7 +67,6 @@
 
 //#define INVULNERABILITY
 
-extern BOOLEAN AutoReload( SOLDIERTYPE *pSoldier );
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
 
 //button images
