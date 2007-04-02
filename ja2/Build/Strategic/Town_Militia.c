@@ -593,7 +593,7 @@ void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 		{
 			// wilderness SAM site
 			GetSectorIDString( sSectorX, sSectorY, 0, sStringB, lengthof(sStringB), TRUE );
-			swprintf( sString, lengthof(sString), pMilitiaConfirmStrings[ 10 ], sStringB, GetSectorIDString, MIN_RATING_TO_TRAIN_TOWN );
+			swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[10], sStringB);
 		}
 		else
 		{
