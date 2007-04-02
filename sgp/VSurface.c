@@ -935,7 +935,7 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPR
 	if (hSrcVSurface == NULL) return FALSE;
 
 	//if the 2 images are not both 16bpp, return FALSE
-	if (hDestVSurface->ubBitDepth != 16 && hSrcVSurface->ubBitDepth != 16) return FALSE;
+	if (hDestVSurface->ubBitDepth != 16 || hSrcVSurface->ubBitDepth != 16) return FALSE;
 
 	const UINT16* os = (const UINT16*)hSrcVSurface->surface->pixels  + (hSrcVSurface->surface->pitch  >> 1) * SrcRect->iTop  + SrcRect->iLeft;
 	UINT16*       d  =       (UINT16*)hDestVSurface->surface->pixels + (hDestVSurface->surface->pitch >> 1) * DestRect->iTop + DestRect->iLeft;
