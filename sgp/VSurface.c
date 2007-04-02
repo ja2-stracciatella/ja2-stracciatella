@@ -1013,13 +1013,15 @@ void CheckValidVSurfaceIndex(UINT32 uiIndex)
 
 
 #ifdef SGP_VIDEO_DEBUGGING
-typedef struct DUMPFILENAME
+typedef struct DUMPINFO
 {
-	char str[256];
-} DUMPFILENAME;
+	UINT32 Counter;
+	char Name[256];
+	char Code[256];
+} DUMPINFO;
 
 
-void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
+void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 {
 	if (!guiVSurfaceSize) return;
 
@@ -1027,37 +1029,30 @@ void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPFILENAME* pName = MemAlloc(sizeof(*pName) * guiVSurfaceSize);
-	DUMPFILENAME* pCode = MemAlloc(sizeof(*pName) * guiVSurfaceSize);
-	memset(pName, 0, sizeof(*pName) * guiVSurfaceSize);
-	memset(pCode, 0, sizeof(*pCode) * guiVSurfaceSize);
-	UINT32* puiCounter = MemAlloc(sizeof(*puiCounter) * guiVSurfaceSize);
-	memset(puiCounter, 0, sizeof(*puiCounter) * guiVSurfaceSize);
+	DUMPINFO* Info = MemAlloc(sizeof(*Info) * guiVSurfaceSize);
+	memset(Info, 0, sizeof(*Info) * guiVSurfaceSize);
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;
 	for (const VSURFACE_NODE* curr = gpVSurfaceHead; curr != NULL; curr = curr->next)
 	{
-		char tempName[256];
-		strcpy(tempName, curr->pName);
-		char tempCode[256];
-		strcpy(tempCode, curr->pCode);
+		const char* Name = curr->pName;
+		const char* Code = curr->pCode;
 		BOOLEAN fFound = FALSE;
-		UINT32 i;
-		for (i = 0; i < uiUniqueID; i++)
+		for (UINT32 i = 0; i < uiUniqueID; i++)
 		{
-			if (strcasecmp(tempName, pName[i].str) == 0 && strcasecmp(tempCode, pCode[i].str) == 0)
+			if (strcasecmp(Name, Info[i].Name) == 0 && strcasecmp(Code, Info[i].Code) == 0)
 			{ //same string
 				fFound = TRUE;
-				puiCounter[i]++;
+				Info[i].Counter++;
 				break;
 			}
 		}
 		if (!fFound)
 		{
-			strcpy(pName[i].str, tempName);
-			strcpy(pCode[i].str, tempCode);
-			puiCounter[i]++;
+			strcpy(Info[uiUniqueID].Name, Name);
+			strcpy(Info[uiUniqueID].Code, Code);
+			Info[uiUniqueID].Counter++;
 			uiUniqueID++;
 		}
 	}
@@ -1068,15 +1063,11 @@ void DumpVSurfaceInfoIntoFile(const char *filename, BOOLEAN fAppend)
 	fprintf(fp, "-----------------------------------------------\n\n");
 	for (UINT32 i = 0; i < uiUniqueID; i++)
 	{
-		fprintf(fp, "%d occurrences of %s\n", puiCounter[i], pName[i].str);
-		fprintf(fp, "%s\n\n", pCode[i].str);
+		fprintf(fp, "%d occurrences of %s\n%s\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
 	}
 	fprintf(fp, "\n-----------------------------------------------\n\n");
 
-	//Free all memory associated with this operation.
-	MemFree(pName);
-	MemFree(pCode);
-	MemFree(puiCounter);
+	MemFree(Info);
 	fclose(fp);
 }
 
