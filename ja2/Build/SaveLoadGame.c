@@ -3282,15 +3282,6 @@ static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 }
 
 
-
-BOOLEAN CopySavedSoldierInfoToNewSoldier( SOLDIERTYPE *pDestSourceInfo, SOLDIERTYPE *pSourceInfo )
-{
-	//Copy the old soldier information over to the new structure
-	*pDestSourceInfo = *pSourceInfo;
-	return( TRUE );
-}
-
-
 static BOOLEAN SetMercsInsertionGridNo(void)
 {
 	UINT16 cnt=0;

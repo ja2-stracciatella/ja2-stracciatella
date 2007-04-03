@@ -578,8 +578,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 	else
 	{
 		//Copy the data from the existing soldier struct to the new soldier struct
-		if( !CopySavedSoldierInfoToNewSoldier( &Soldier, pCreateStruct->pExistingSoldier ) )
-			return( FALSE );
+		Soldier = *pCreateStruct->pExistingSoldier;
 
 		//Reset the face index
 		Soldier.iFaceIndex = -1;
