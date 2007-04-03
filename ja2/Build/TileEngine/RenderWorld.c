@@ -6782,8 +6782,6 @@ static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPoin
 	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
 	UINT16			usTileIndex;
 	INT16				sX, sY, sWorldX, sZLevel;
-	UINT32			uiDestPitchBYTES;
-	UINT8				*pDestBuf;
 	TILE_ELEMENT *TileElem;
 	INT8			bBlitClipVal;
 	LEVELNODE		*pObject;
@@ -6794,8 +6792,6 @@ static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPoin
 	sAnchorPosY_M = sStartPointY_M;
 	sAnchorPosX_S = sStartPointX_S;
 	sAnchorPosY_S = sStartPointY_S;
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 
 	// Get VObject for firt land peice!
 	TileElem = &(gTileDatabase[ FIRSTTEXTURE1 ] );
@@ -6903,9 +6899,6 @@ ENDOFLOOP:
 
 	}
 	while( !fEndRenderCol );
-
-	UnLockVideoSurface( FRAME_BUFFER );
-
 }
 
 
