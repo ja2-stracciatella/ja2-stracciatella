@@ -98,10 +98,8 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 	// Is there an event to dequeue
 	if (gusQueueCount > 0)
 	{
-		memcpy(Event, &gEventQueue[gusHeadIndex], sizeof(InputAtom));
-
 		// Check if it has the masks!
-		if (Event->usEvent & uiMaskFlags)
+		if (gEventQueue[gusHeadIndex]->usEvent & uiMaskFlags)
 		{
 			return DequeueEvent(Event);
 		}
