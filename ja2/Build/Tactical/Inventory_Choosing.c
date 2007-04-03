@@ -2039,7 +2039,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 			if ( usNewGun != NOTHING )
 			{
 				// have to replace!  but first (ugh) must store backup (b/c of attachments)
-				CopyObj( &(pp->Inv[ uiLoop ]), &OldObj );
+				OldObj = pp->Inv[uiLoop];
 				CreateItem( usNewGun, OldObj.bGunStatus, &(pp->Inv[ uiLoop ]) );
 				pp->Inv[ uiLoop ].fFlags = OldObj.fFlags;
 

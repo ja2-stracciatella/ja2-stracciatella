@@ -25,7 +25,6 @@ extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
 
 extern void DeleteObj(OBJECTTYPE * pObj );
-extern void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
 
 extern void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex );

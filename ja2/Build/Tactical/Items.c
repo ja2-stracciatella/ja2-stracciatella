@@ -1817,10 +1817,6 @@ void DeleteObj(OBJECTTYPE * pObj )
 	memset( pObj, 0, sizeof(OBJECTTYPE) );
 }
 
-void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj )
-{
-	*pTargetObj = *pSourceObj;
-}
 
 void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 {
@@ -2708,7 +2704,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 			if ( TempObj.usItem != NOTHING )
 			{
 				// overwrite/swap!
-				CopyObj( &TempObj, pAttachment );
+				*pAttachment = TempObj;
 			}
 			else
 			{
@@ -2874,7 +2870,7 @@ BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos
 					if ( fDoingPlacement )
 					{
 						// otherwise move it.
-						CopyObj( &(pSoldier->inv[SECONDHANDPOS]), &(pSoldier->inv[bNewPos]) );
+						pSoldier->inv[bNewPos] = pSoldier->inv[SECONDHANDPOS];
 						DeleteObj( &(pSoldier->inv[SECONDHANDPOS]) );
 					}
 				}
@@ -3552,7 +3548,7 @@ UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE 
 	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->ubKeyID;
 
 	// swap params?
-	CopyObj( &TempObj, pObj );
+	*pObj = TempObj;
 
 	return( 1 );
 }

@@ -931,7 +931,7 @@ ATM:
 		else
 		{
 			//add the item back to the current PC into the slot it came from
-			CopyObj( &gItemToAdd.ItemObject, &Menptr[ gpSMCurrentMerc->ubID ].inv[ gItemToAdd.bPreviousInvPos ] );
+			Menptr[gpSMCurrentMerc->ubID].inv[gItemToAdd.bPreviousInvPos] = gItemToAdd.ItemObject;
 		}
 
 		//Clear the contents of the structure
@@ -4086,7 +4086,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			{
 				// store the current contents of the cursor in a temporary object structure.
 				// We have to do this before memsetting gMoveingItem, 'cause during swaps, gpItemPointer == &gMoveingItem.ItemObject!
-				CopyObj( gpItemPointer, &TempObject );
+				TempObject = *gpItemPointer;
 
 				//ARM: The memset was previously commented out, in order to preserve the owning merc's inv slot # during a swap of
 				// items in an inventory slot.  However, that leads to other bugs: if you picked the thing you're swapping in from
@@ -6545,7 +6545,7 @@ static void SplitComplexObjectIntoSubObjects(OBJECTTYPE* pComplexObject)
 	if ( pComplexObject->ubNumberOfObjects == 1 )
 	{
 		// make the main item into the very first subobject
-		CopyObj( pComplexObject, pNextObj );
+		*pNextObj = *pComplexObject;
 
 		// strip off any loaded ammo/payload
 		if ( Item [ pComplexObject->usItem ].usItemClass == IC_GUN )
@@ -6809,7 +6809,7 @@ static void IfMercOwnedCopyItemToMercInv(INVENTORY_IN_SLOT* pInv)
 		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
 
 		//Copy the object back into that merc's original inventory slot
-		CopyObj( &( pInv->ItemObject ), &( Menptr[ sSoldierID ].inv[ pInv->bSlotIdInOtherLocation ] ) );
+		Menptr[sSoldierID].inv[pInv->bSlotIdInOtherLocation] = pInv->ItemObject;
 	}
 }
 
