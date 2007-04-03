@@ -99,7 +99,7 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 	if (gusQueueCount > 0)
 	{
 		// Check if it has the masks!
-		if (gEventQueue[gusHeadIndex]->usEvent & uiMaskFlags)
+		if (gEventQueue[gusHeadIndex].usEvent & uiMaskFlags)
 		{
 			return DequeueEvent(Event);
 		}
