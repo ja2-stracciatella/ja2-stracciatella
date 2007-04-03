@@ -358,7 +358,6 @@ SRCS += ja2/Build/Utils/Text_Utils.c
 SRCS += ja2/Build/Utils/Timer_Control.c
 SRCS += ja2/Build/Utils/Utilities.c
 SRCS += ja2/Build/Utils/WordWrap.c
-SRCS += ja2/Build/Utils/_RussianText.c
 SRCS += sgp/Button_Sound_Control.c
 SRCS += sgp/Button_System.c
 SRCS += sgp/Compression.c
@@ -398,6 +397,7 @@ LNGS += ja2/Build/Utils/ItalianText.c
 LNGS += ja2/Build/Utils/JA25EnglishText.c
 LNGS += ja2/Build/Utils/JA25GermanText.c
 LNGS += ja2/Build/Utils/PolishText.c
+LNGS += ja2/Build/Utils/RussianText.c
 
 SRCS += $(LNGS)
 
@@ -451,6 +451,7 @@ ja2/Build/Utils/ItalianText.c:     ja2/Build/Utils/_ItalianText.c
 ja2/Build/Utils/JA25EnglishText.c: ja2/Build/Utils/_JA25EnglishText.c
 ja2/Build/Utils/JA25GermanText.c:  ja2/Build/Utils/_JA25GermanText.c
 ja2/Build/Utils/PolishText.c:      ja2/Build/Utils/_PolishText.c
+ja2/Build/Utils/RussianText.c:     ja2/Build/Utils/_RussianText.c
 
 ja2/Build/Utils/DutchText.c        \
 ja2/Build/Utils/EnglishText.c      \
@@ -465,6 +466,10 @@ ja2/Build/Utils/JA25GermanText.c:
 ja2/Build/Utils/PolishText.c:
 	@echo '===> ICONV $<'
 	$(Q)$(ICONV) -f CP1250 -t UTF-8 < $< > $@
+
+ja2/Build/Utils/RussianText.c:
+	@echo '===> ICONV $<'
+	$(Q)$(ICONV) -f CP1251 -t UTF-8 < $< > $@
 
 
 lowercase:

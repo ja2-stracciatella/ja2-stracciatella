@@ -5,7 +5,7 @@
 #endif
 
 
-#if defined(DUTCH) || defined(ENGLISH) || defined(FRENCH) || defined(ITALIAN) || defined(POLISH)
+#if defined(DUTCH) || defined(ENGLISH) || defined(FRENCH) || defined(ITALIAN) || defined(POLISH) || defined(RUSSIAN)
 
 #include "Text.h"
 
