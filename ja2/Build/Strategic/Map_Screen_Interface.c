@@ -1617,7 +1617,7 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	pItem = MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
 
 	// copy object
-	memcpy( &( pItem->o ), o, sizeof( OBJECTTYPE ) );
+	pItem->o = *o;
 
 	// nobody afterwards
 	pItem->pNext = NULL;

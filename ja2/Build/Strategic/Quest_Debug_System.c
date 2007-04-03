@@ -3591,7 +3591,7 @@ static void RefreshAllNPCInventory(void)
 						CreateItem( usItem, 100, &TempObject );
 
 						//copy the item into the soldiers inventory
-						memcpy( &Menptr[ usCnt ].inv[ usItemCnt ], &TempObject, sizeof( OBJECTTYPE ) );
+						Menptr[usCnt].inv[usItemCnt] = TempObject;
 					}
 				}
 

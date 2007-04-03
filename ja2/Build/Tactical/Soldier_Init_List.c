@@ -107,7 +107,7 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT 
 	}
 
 	//Copy memory for basic placement
-	memcpy( curr->pBasicPlacement, pBasicPlacement, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+	*curr->pBasicPlacement = *pBasicPlacement;
 
 	//It is impossible to set up detailed placement stuff now.
 	//If there is any detailed placement information during map load, it will be added

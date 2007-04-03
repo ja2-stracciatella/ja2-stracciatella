@@ -1260,7 +1260,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 			if (CurrStab.iAttackValue > BestStab.iAttackValue)
 			{
 				CurrStab.bWeaponIn = bWeaponIn;
-				memcpy(&BestStab,&CurrStab,sizeof(BestStab));
+				BestStab = CurrStab;
 			}
 
 		}
@@ -1292,14 +1292,8 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 		// copy the information on the best action selected into BestAttack struct
 		switch (ubBestAttackAction)
 		{
-			case AI_ACTION_FIRE_GUN:
-				memcpy(&BestAttack,&BestShot,sizeof(BestAttack));
-				break;
-
-		 case AI_ACTION_KNIFE_MOVE:
-			 memcpy(&BestAttack,&BestStab,sizeof(BestAttack));
-			 break;
-
+			case AI_ACTION_FIRE_GUN:   BestAttack = BestShot; break;
+			case AI_ACTION_KNIFE_MOVE: BestAttack = BestStab; break;
 		}
 
 		 // if necessary, swap the weapon into the hand position

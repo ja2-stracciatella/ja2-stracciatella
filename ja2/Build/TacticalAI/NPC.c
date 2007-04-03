@@ -340,7 +340,7 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 		pNewArray = LoadQuoteFile( ubNPC );
 		if ( pNewArray )
 		{
-			memcpy( &(gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ]), &(pNewArray[ ubRecord ]), sizeof( NPCQuoteInfo ) );
+			gpNPCQuoteInfoArray[ubNPC][ubRecord] = pNewArray[ubRecord];
 			MemFree( pNewArray );
 		}
 	}

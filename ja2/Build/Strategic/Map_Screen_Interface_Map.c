@@ -3834,14 +3834,14 @@ void ClipBlitsToMapViewRegion( void )
 		pRectToUse = &MapScreenRect;
 
 	SetClippingRect( pRectToUse );
-	memcpy( &gOldClipRect, &gDirtyClipRect, sizeof( gOldClipRect ) );
-	memcpy( &gDirtyClipRect, pRectToUse, sizeof( gDirtyClipRect ) );
+	gOldClipRect = gDirtyClipRect;
+	gDirtyClipRect = *pRectToUse;
 }
 
 void RestoreClipRegionToFullScreen( void )
 {
 	SetClippingRect( &FullScreenRect );
-	memcpy( &gDirtyClipRect, &gOldClipRect, sizeof( gDirtyClipRect ) );
+	gDirtyClipRect = gOldClipRect;
 }
 
 

@@ -3224,18 +3224,10 @@ bCanAttack = FALSE;
    // copy the information on the best action selected into BestAttack struct
    switch (ubBestAttackAction)
    {
-     case AI_ACTION_FIRE_GUN:
-       memcpy(&BestAttack,&BestShot,sizeof(BestAttack));
-       break;
-
-     case AI_ACTION_TOSS_PROJECTILE:
-       memcpy(&BestAttack,&BestThrow,sizeof(BestAttack));
-       break;
-
+     case AI_ACTION_FIRE_GUN:        BestAttack = BestShot;  break;
+     case AI_ACTION_TOSS_PROJECTILE: BestAttack = BestThrow; break;
 		 case AI_ACTION_THROW_KNIFE:
-     case AI_ACTION_KNIFE_MOVE:
-       memcpy(&BestAttack,&BestStab,sizeof(BestAttack));
-       break;
+     case AI_ACTION_KNIFE_MOVE:      BestAttack = BestStab;  break;
 
 		 default:
 			 // set to empty

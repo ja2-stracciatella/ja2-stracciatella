@@ -2398,7 +2398,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	//read the mapinformation
 	LOADDATA( &mapInfo, pBuffer, sizeof( MAPCREATE_STRUCT ) );
 
-	memcpy( &pSummary->MapInfo, &mapInfo, sizeof( MAPCREATE_STRUCT ) );
+	pSummary->MapInfo = mapInfo;
 
 	if( uiFlags & MAP_FULLSOLDIER_SAVED )
 	{

@@ -314,7 +314,7 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 	ubCurrentMeanWhileId = pMeanwhileDef->ubMeanwhileID;
 
 	// Copy definiaiotn structure into position in global array....
-	memcpy( &(gMeanwhileDef[pMeanwhileDef->ubMeanwhileID]), pMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
+	gMeanwhileDef[pMeanwhileDef->ubMeanwhileID] = *pMeanwhileDef;
 
   // A meanwhile.. poor elliot!
   // increment his slapped count...
@@ -334,7 +334,7 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 	INT32 cnt;
 
 	// copy meanwhile data from array to structure for current
-	memcpy( &gCurrentMeanwhileDef, &(gMeanwhileDef[ubMeanwhileID]), sizeof( MEANWHILE_DEFINITION ) );
+	gCurrentMeanwhileDef = gMeanwhileDef[ubMeanwhileID];
 
 	gfMeanwhileTryingToStart = TRUE;
 	PauseGame();

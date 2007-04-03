@@ -2551,7 +2551,7 @@ static void LoadSummary(UINT8* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion)
 	}
 	gpSectorSummary[x][y][ubLevel] = (SUMMARYFILE*)MemAlloc( sizeof( SUMMARYFILE ) );
 	if( gpSectorSummary[x][y][ubLevel] )
-		memcpy( gpSectorSummary[x][y][ubLevel], &temp, sizeof( SUMMARYFILE ) );
+		*gpSectorSummary[x][y][ubLevel] = temp;
 	if( gpSectorSummary[x][y][ubLevel]->ubSummaryVersion < GLOBAL_SUMMARY_VERSION )
 		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
 
@@ -3040,12 +3040,12 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 				{
 					if( basic.fPriorityExistance )
 					{
-						memcpy( &(gpPEnemyItemsSummaryArray[ usPEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpPEnemyItemsSummaryArray[usPEnemyIndex] = *pItem;
 						usPEnemyIndex++;
 					}
 					else
 					{
-						memcpy( &(gpNEnemyItemsSummaryArray[ usNEnemyIndex ]), pItem, sizeof( OBJECTTYPE ) );
+						gpNEnemyItemsSummaryArray[usNEnemyIndex] = *pItem;
 						usNEnemyIndex++;
 					}
 				}

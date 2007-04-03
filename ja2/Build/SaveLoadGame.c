@@ -573,7 +573,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	SaveGameHeader.ubMin = (UINT8)guiMin;
 
 	//copy over the initial game options
-	memcpy( &SaveGameHeader.sInitialGameOptions, &gGameOptions, sizeof( GAME_OPTIONS ) );
+	SaveGameHeader.sInitialGameOptions = gGameOptions;
 
 	//Get the sector value to save.
 	GetBestPossibleSectorXYZValues( &SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ );
@@ -2103,7 +2103,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	}
 	else
 	{
-		memcpy( &gMeanwhileDef[gCurrentMeanwhileDef.ubMeanwhileID], &gCurrentMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
+		gMeanwhileDef[gCurrentMeanwhileDef.ubMeanwhileID] = gCurrentMeanwhileDef;
 	}
 
 
@@ -3285,12 +3285,8 @@ static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 
 BOOLEAN CopySavedSoldierInfoToNewSoldier( SOLDIERTYPE *pDestSourceInfo, SOLDIERTYPE *pSourceInfo )
 {
-
-
 	//Copy the old soldier information over to the new structure
-	memcpy( pDestSourceInfo, pSourceInfo, sizeof( SOLDIERTYPE ) );
-
-
+	*pDestSourceInfo = *pSourceInfo;
 	return( TRUE );
 }
 
@@ -3753,7 +3749,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	else
 		sGeneralInfo.sContractRehireSoldierID = -1;
 
-	memcpy( &sGeneralInfo.GameOptions, &gGameOptions, sizeof( GAME_OPTIONS ) );
+	sGeneralInfo.GameOptions = gGameOptions;
 
 
 	#ifdef JA2BETAVERSION
@@ -3800,7 +3796,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 
 
 	//Meanwhile stuff
-	memcpy( &sGeneralInfo.gCurrentMeanwhileDef, &gCurrentMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
+	sGeneralInfo.gCurrentMeanwhileDef = gCurrentMeanwhileDef;
 	//sGeneralInfo.gfMeanwhileScheduled = gfMeanwhileScheduled;
 	sGeneralInfo.gfMeanwhileTryingToStart = gfMeanwhileTryingToStart;
 	sGeneralInfo.gfInMeanwhile = gfInMeanwhile;
@@ -3977,7 +3973,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	else
 		pContractReHireSoldier = &Menptr[ sGeneralInfo.sContractRehireSoldierID ];
 
-	memcpy( &gGameOptions, &sGeneralInfo.GameOptions, sizeof( GAME_OPTIONS ) );
+	gGameOptions = sGeneralInfo.GameOptions;
 
 	#ifdef JA2BETAVERSION
 	//Reset the random 'seed' number
@@ -4041,7 +4037,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 
 	//Meanwhile stuff
-	memcpy( &gCurrentMeanwhileDef, &sGeneralInfo.gCurrentMeanwhileDef, sizeof( MEANWHILE_DEFINITION ) );
+	gCurrentMeanwhileDef = sGeneralInfo.gCurrentMeanwhileDef;
 //	gfMeanwhileScheduled = sGeneralInfo.gfMeanwhileScheduled;
 	gfMeanwhileTryingToStart = sGeneralInfo.gfMeanwhileTryingToStart;
 	gfInMeanwhile = sGeneralInfo.gfInMeanwhile;

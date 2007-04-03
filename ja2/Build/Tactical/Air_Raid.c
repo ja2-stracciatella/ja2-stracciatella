@@ -179,7 +179,7 @@ static void ScheduleAirRaid(AIR_RAID_DEFINITION* pAirRaidDef)
 	}
 
 	// Copy definiaiotn structure into global struct....
-	memcpy( &gAirRaidDef, pAirRaidDef, sizeof( AIR_RAID_DEFINITION ) );
+	gAirRaidDef = *pAirRaidDef;
 
 	AddSameDayStrategicEvent( EVENT_BEGIN_AIR_RAID, ( GetWorldMinutesInDay() + pAirRaidDef->ubNumMinsFromCurrentTime ), 0 );
 
@@ -1248,7 +1248,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 		sAirRaidSaveStruct.sRaidSoldierID = -1;
 
 
-	memcpy( &sAirRaidSaveStruct.AirRaidDef, &gAirRaidDef, sizeof( AIR_RAID_DEFINITION	) );
+	sAirRaidSaveStruct.AirRaidDef = gAirRaidDef;
 
 
 	//Save the Air Raid Save Struct
@@ -1310,7 +1310,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 	else
 		gpRaidSoldier = NULL;
 
-	memcpy( &gAirRaidDef, &sAirRaidSaveStruct.AirRaidDef, sizeof( AIR_RAID_DEFINITION	) );
+	gAirRaidDef = sAirRaidSaveStruct.AirRaidDef;
 
 	return( TRUE );
 }

@@ -1492,7 +1492,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[i] = *pObject;
 				return TRUE;
 			}
 		}
@@ -1506,7 +1506,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 		{
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[i] = *pObject;
 				return TRUE;
 			}
 		}
@@ -1514,7 +1514,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 		{ //no space free in small pockets, so put it into a large pocket.
 			if( !(pp->Inv[ i ].usItem) && !(pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE) )
 			{
-				memcpy( &(pp->Inv[ i ]), pObject, sizeof( OBJECTTYPE ) );
+				pp->Inv[i] = *pObject;
 				return TRUE;
 			}
 		}

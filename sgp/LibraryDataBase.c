@@ -901,8 +901,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	if (pDirEntry == NULL) return FALSE;
 
 	//Copy the dir entry time over to the passed in time
-	memcpy( pLastWriteTime, &pDirEntry->sFileTime, sizeof( SGP_FILETIME ) );
-
+	*pLastWriteTime = pDirEntry->sFileTime;
 
 	MemFree( pAllEntries );
 	pAllEntries = NULL;

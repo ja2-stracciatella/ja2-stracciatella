@@ -128,7 +128,7 @@ INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, r
 	memset( pObject, 0, sizeof( REAL_OBJECT ) );
 
 	// OK, GET OBJECT DATA AND COPY
-	memcpy( &(pObject->Obj), pGameObj, sizeof( OBJECTTYPE ) );
+	pObject->Obj = *pGameObj;
 
 	// Get mass
 	mass =  CALCULATE_OBJECT_MASS( Item[pGameObj->usItem ].ubWeight );
@@ -2098,7 +2098,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 
 	pSoldier->pTempObject	 = MemAlloc( sizeof( OBJECTTYPE ) );
 
-	memcpy( pSoldier->pTempObject, pItem, sizeof( OBJECTTYPE ) );
+	*pSoldier->pTempObject = *pItem;
 	pSoldier->pThrowParams->dX = (float)sSrcX;
 	pSoldier->pThrowParams->dY = (float)sSrcY;
 

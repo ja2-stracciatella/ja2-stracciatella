@@ -828,14 +828,14 @@ void AddDoorInfoToTable( DOOR *pDoor )
 	{
 		if( DoorTable[ i ].sGridNo == pDoor->sGridNo )
 		{
-			memcpy( &DoorTable[ i ], pDoor, sizeof( DOOR ) );
+			DoorTable[i] = *pDoor;
 			return;
 		}
 	}
 	//no existing door found, so add a new one.
 	if( gubNumDoors < gubMaxDoors )
 	{
-		memcpy( &DoorTable[ gubNumDoors ], pDoor, sizeof( DOOR ) );
+		DoorTable[gubNumDoors] = *pDoor;
 		gubNumDoors++;
 	}
 	else
@@ -852,7 +852,7 @@ void AddDoorInfoToTable( DOOR *pDoor )
 		//Assign the new door table as the existing door table
 		DoorTable = NewDoorTable;
 		//Add the new door info to the table.
-		memcpy( &DoorTable[ gubNumDoors ], pDoor, sizeof( DOOR ) );
+		DoorTable[gubNumDoors] = *pDoor;
 		gubNumDoors++;
 	}
 }

@@ -417,14 +417,14 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 					if( !fSecondFaceItem )
 					{ //Don't check for compatibility...  automatically assume there are no head positions filled.
 						fSecondFaceItem = TRUE;
-						memcpy( &Soldier.inv[ HEAD1POS ], &Soldier.inv[ i ], sizeof( OBJECTTYPE ) );
+						Soldier.inv[HEAD1POS] = Soldier.inv[i];
 						memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
 					}
 					else
 					{ //if there is a second item, compare it to the first one we already added.
 						if( CompatibleFaceItem( Soldier.inv[ HEAD1POS ].usItem, Soldier.inv[ i ].usItem ) )
 						{
-							memcpy( &Soldier.inv[ HEAD2POS ], &Soldier.inv[ i ], sizeof( OBJECTTYPE ) );
+							Soldier.inv[HEAD2POS] = Soldier.inv[i];
 							memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
 							break;
 						}
@@ -570,7 +570,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 		{
 			// Copy into merc struct
-			memcpy( MercPtrs[ Soldier.ubID ], &Soldier, sizeof( SOLDIERTYPE ) );
+			*MercPtrs[Soldier.ubID] = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
 			CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, STANDING ) != FALSE );
 		}
@@ -594,7 +594,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
     }
 
 		// Copy into merc struct
-		memcpy( MercPtrs[ Soldier.ubID ], &Soldier, sizeof( SOLDIERTYPE ) );
+		*MercPtrs[Soldier.ubID] = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
 		CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, Menptr[ Soldier.ubID ].usAnimState ) != FALSE );
@@ -632,7 +632,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		pSoldier = (SOLDIERTYPE*)MemAlloc( sizeof( SOLDIERTYPE ) );
 		if( !pSoldier )
 			return NULL;
-		memcpy( pSoldier, &Soldier, sizeof( SOLDIERTYPE ) );
+		*pSoldier = Soldier;
 		pSoldier->ubID = 255;
 		pSoldier->sSectorX = (INT16)SECTORX( ubSectorID );
 		pSoldier->sSectorY = (INT16)SECTORY( ubSectorID );
@@ -1773,7 +1773,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		//copy over static items and empty slots that are droppable (signifies a forced empty slot)
 		if( spp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
 		{
-			memcpy( &pp->Inv[ i ], &spp->Inv[ i ], sizeof( OBJECTTYPE ) );
+			pp->Inv[i] = spp->Inv[i];
 			//memcpy( pp->Inv, spp->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
 			//return;
 		}
@@ -1999,7 +1999,7 @@ static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 				pSoldier = (SOLDIERTYPE*)MemAlloc( sizeof( SOLDIERTYPE ) );
 				if( !pSoldier )
 					return NULL;
-				memcpy( pSoldier, MercPtrs[ i ], sizeof( SOLDIERTYPE ) );
+				*pSoldier = *MercPtrs[i];
 
 				//Assign a bogus ID, then return it
 				pSoldier->ubID = 255;

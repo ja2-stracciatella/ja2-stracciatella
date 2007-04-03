@@ -368,7 +368,7 @@ static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine)
 	if(!pCopy)
 		return;
 
-	memcpy(pCopy, pCommandLine, strlen(pCommandLine)+1);
+	strcpy(pCopy, pCommandLine);
 
 	pToken=strtok(pCopy, cSeparators);
 	while(pToken)

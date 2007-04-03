@@ -792,7 +792,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 						if( BobbyRayPurchases[ i ].ubNumberPurchased )
 						{
 							//copy the purchases into the struct that will be added to the queue
-							memcpy(&LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[ ubCount ] , &BobbyRayPurchases[i],  sizeof(BobbyRayPurchaseStruct));
+							LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[ubCount] = BobbyRayPurchases[i];
 							ubCount ++;
 						}
 					}
@@ -2033,7 +2033,7 @@ static void PurchaseBobbyOrder(void)
 			if( BobbyRayPurchases[ i ].ubNumberPurchased )
 			{
 				//copy the purchases into the struct that will be added to the queue
-				memcpy(&LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[ ubCount ] , &BobbyRayPurchases[i],  sizeof(BobbyRayPurchaseStruct));
+				LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[ubCount] = BobbyRayPurchases[i];
 				ubCount ++;
 			}
 		}
@@ -2108,7 +2108,7 @@ void AddJohnsGunShipment()
 	Temp[0].usBobbyItemIndex = 0;// does this get used anywhere???
 	Temp[0].fUsed = FALSE;
 
-//	memcpy( &(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[0]), &Temp, sizeof(BobbyRayPurchaseStruct) );
+//	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[0] = Temp;
 
 	Temp[1].usItemIndex = CLIP762N_5_AP;
 	Temp[1].ubNumberPurchased = 2;
@@ -2117,7 +2117,7 @@ void AddJohnsGunShipment()
 	Temp[1].fUsed = FALSE;
 
 /*
-	memcpy( &(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[1]), &Temp, sizeof(BobbyRayPurchaseStruct) );
+	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[1] = Temp;
 
 
 	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].ubNumberPurchases = 2;
@@ -2305,10 +2305,10 @@ static BOOLEAN AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UIN
 		if( pPurchaseStruct[ i ].ubNumberPurchased )
 		{
 			// copy the new data into the order struct
-			memcpy( &gpNewBobbyrShipments[ iFoundSpot ].BobbyRayPurchase[ ubItemCount ], &pPurchaseStruct[i], sizeof( BobbyRayPurchaseStruct ) );
+			gpNewBobbyrShipments[iFoundSpot].BobbyRayPurchase[ubItemCount] = pPurchaseStruct[i];
 
 			//copy the purchases into the struct that will be added to the queue
-//			memcpy(&LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].BobbyRayPurchase[ ubCount ] , &BobbyRayPurchases[i],  sizeof(BobbyRayPurchaseStruct));
+//			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[ubCount] = BobbyRayPurchases[i];
 			ubItemCount++;
 		}
 	}

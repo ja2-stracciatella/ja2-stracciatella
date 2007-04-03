@@ -1235,8 +1235,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			wcscpy( SaveGameHeader.sSavedGameDesc, gzGameDescTextField );
 
 			//copy over the initial game options
-			memcpy( &SaveGameHeader.sInitialGameOptions, &gGameOptions, sizeof( GAME_OPTIONS ) );
-
+			SaveGameHeader.sInitialGameOptions = gGameOptions;
 		}
 		else
 		{
@@ -1855,7 +1854,7 @@ static void SetSelection(UINT8 ubNewSelection)
 	if( gfSaveGame && gbSelectedSaveLocation == ubNewSelection )
 	{
 		//copy over the initial game options
-		memcpy( &SaveGameHeader.sInitialGameOptions, &gGameOptions, sizeof( GAME_OPTIONS ) );
+		SaveGameHeader.sInitialGameOptions = gGameOptions;
 	}
 	else
 	{

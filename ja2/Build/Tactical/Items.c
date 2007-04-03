@@ -1819,16 +1819,14 @@ void DeleteObj(OBJECTTYPE * pObj )
 
 void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj )
 {
-	memcpy( pTargetObj, pSourceObj, sizeof( OBJECTTYPE ) );
+	*pTargetObj = *pSourceObj;
 }
 
 void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 {
-	OBJECTTYPE		Temp;
-
-	memcpy( &Temp, pObj1, sizeof( OBJECTTYPE ) );
-	memcpy( pObj1, pObj2, sizeof( OBJECTTYPE ) );
-	memcpy( pObj2, &Temp, sizeof( OBJECTTYPE ) );
+	OBJECTTYPE Temp = *pObj1;
+	*pObj1 = *pObj2;
+	*pObj2 = Temp;
 /*
 	//if we are in the shop keeper interface, switch the items
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -1908,7 +1906,7 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	}
 	if (pObj->ubNumberOfObjects == 1)
 	{
-		memcpy( pDest, pObj, sizeof( OBJECTTYPE ) );
+		*pDest = *pObj;
 		DeleteObj( pObj );
 	}
 	else
@@ -2244,7 +2242,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					else
 					{
 						// copy the old ammo to the cursor
-						memcpy( pAmmo, &OldAmmo, sizeof( OBJECTTYPE ) );
+						*pAmmo = OldAmmo;
 					}
 				}
 				break;
@@ -2384,7 +2382,7 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 	if (fOldAmmo)
 	{
 		// copy the old ammo back to the item in the cursor
-		memcpy( pAmmo, &OldAmmo, sizeof( OBJECTTYPE ) );
+		*pAmmo = OldAmmo;
 	}
 	else
 	{
@@ -3021,7 +3019,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		memcpy( pInSlot, pObj, sizeof( OBJECTTYPE ) );
+		*pInSlot = *pObj;
 /*
 		//if we are in the shopkeeper interface
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -3419,7 +3417,7 @@ BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 	}
 	else
 	{
-		memcpy( pObj, &(pSoldier->inv[bPos]), sizeof( OBJECTTYPE ) );
+		*pObj = pSoldier->inv[bPos];
 		DeleteObj( &(pSoldier->inv[bPos]) );
 		return( TRUE );
 	}
@@ -3437,7 +3435,7 @@ BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECT
 	}
 	else
 	{
-		//memcpy( pObj, &(pSoldier->inv[bPos]), sizeof( OBJECTTYPE ) );
+		//*pObj = pSoldier->inv[bPos];
 
 		// create an object
 		ubItem = pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID;
@@ -3473,7 +3471,7 @@ BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8
 	}
 	else
 	{
-		//memcpy( pObj, &(pSoldier->inv[bPos]), sizeof( OBJECTTYPE ) );
+		//*pObj = pSoldier->inv[bPos];
 
 		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber < ubNumberOfKeys )
 		{

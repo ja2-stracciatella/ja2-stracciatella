@@ -723,7 +723,7 @@ BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sG
 		}
 
 
-		memcpy( &(pWorldItems[ cnt ].o), &pObject[uiLoop1], sizeof( OBJECTTYPE ) );
+		pWorldItems[cnt].o = pObject[uiLoop1];
 	}
 
 	//Save the Items to the the file
@@ -2500,7 +2500,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 					pWorldItems[ bCount ].bVisible = TRUE;
 					pWorldItems[ bCount ].bRenderZHeightAboveLevel = 0;
 
-					memcpy( &(pWorldItems[ bCount ].o), &pSoldier->inv[i], sizeof( OBJECTTYPE ) );
+					pWorldItems[bCount].o = pSoldier->inv[i];
 					bCount++;
 				}
 			}

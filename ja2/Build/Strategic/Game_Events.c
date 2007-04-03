@@ -662,7 +662,7 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 	while( pTempEvent )
 	{
 		//save the current structure
-		memcpy( &sGameEvent, pTempEvent, sizeof( STRATEGICEVENT ) );
+		sGameEvent = *pTempEvent;
 
 		//write the current strategic event
 		if (!FileWrite(hFile, &sGameEvent, sizeof(STRATEGICEVENT))) return FALSE;
@@ -704,7 +704,7 @@ BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
 		//Read the current strategic event
 		if (!FileRead(hFile, &sGameEvent, sizeof(STRATEGICEVENT))) return FALSE;
 
-		memcpy( pTempEvent, &sGameEvent, sizeof( STRATEGICEVENT ) );
+		*pTempEvent = sGameEvent;
 
 		// Add the new node to the list
 

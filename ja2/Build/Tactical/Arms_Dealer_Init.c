@@ -1731,7 +1731,7 @@ static void AddSpecialItemToArmsDealerInventoryAtElement(UINT8 ubArmsDealer, UIN
 	//Store the special values in that element, and make it active
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive = TRUE;
 
-	memcpy( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) );
+	gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].Info = *pSpclItemInfo;
 
 	// increase the total items
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems++;

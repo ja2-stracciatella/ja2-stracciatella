@@ -478,7 +478,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	pCorpse = &gRottingCorpse[ iIndex ];
 
 	// Copy elements in
-	memcpy( pCorpse, pCorpseDef, sizeof( ROTTING_CORPSE_DEFINITION ) );
+	pCorpse->def = *pCorpseDef;
 
 	uiDirectionUseFlag = ANITILE_USE_DIRECTION_FOR_START_FRAME;
 
@@ -1705,7 +1705,7 @@ void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
 	{
 		// Decapitate.....
 		// Copy corpse definition...
-		memcpy( &CorpseDef, &(pCorpse->def), sizeof( ROTTING_CORPSE_DEFINITION ) );
+		CorpseDef = pCorpse->def;
 
 		// Add new one...
 		CorpseDef.ubType = gDecapitatedCorpse[ CorpseDef.ubType ];

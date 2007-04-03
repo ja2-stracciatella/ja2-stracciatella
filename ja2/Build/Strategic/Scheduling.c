@@ -53,7 +53,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
 	gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
-	memcpy( gpScheduleList, pSchedule, sizeof( SCHEDULENODE ) );
+	*gpScheduleList = *pSchedule;
 	gpScheduleList->next = curr;
 	gubScheduleID++;
 	//Assign all of the links
@@ -373,13 +373,13 @@ void LoadSchedules( INT8 **hBuffer )
 			pSchedule->next = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
 			Assert( pSchedule->next );
 			pSchedule = pSchedule->next;
-			memcpy( pSchedule, &temp, sizeof( SCHEDULENODE ) );
+			*pSchedule = temp;
 		}
 		else
 		{
 			gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
 			Assert( gpScheduleList );
-			memcpy( gpScheduleList, &temp, sizeof( SCHEDULENODE ) );
+			*gpScheduleList = temp;
 			pSchedule = gpScheduleList;
 		}
 		pSchedule->ubScheduleID = gubScheduleID;
@@ -419,13 +419,13 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 			pSchedule->next = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
 			Assert( pSchedule->next );
 			pSchedule = pSchedule->next;
-			memcpy( pSchedule, &temp, sizeof( SCHEDULENODE ) );
+			*pSchedule = temp;
 		}
 		else
 		{
 			gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
 			Assert( gpScheduleList );
-			memcpy( gpScheduleList, &temp, sizeof( SCHEDULENODE ) );
+			*gpScheduleList = temp;
 			pSchedule = gpScheduleList;
 		}
 

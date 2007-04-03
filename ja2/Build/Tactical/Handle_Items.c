@@ -1434,7 +1434,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 			pSoldier->bPendingActionData5 = bInvPos;
 			// Copy temp object
 			pSoldier->pTempObject	= MemAlloc( sizeof( OBJECTTYPE ) );
-			memcpy( pSoldier->pTempObject, pObject, sizeof( OBJECTTYPE ) );
+			*pSoldier->pTempObject = *pObject;
 
 
 			pSoldier->sPendingActionData2  = pTargetSoldier->sGridNo;
@@ -1471,7 +1471,7 @@ BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 		// OUT OF MEMORY! YIKES!
 		return( FALSE );
 	}
-	memcpy( pSoldier->pTempObject, pObj, sizeof( OBJECTTYPE ) );
+	*pSoldier->pTempObject = *pObj;
 	PickDropItemAnimation( pSoldier );
 	return( TRUE );
 }
@@ -1599,7 +1599,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 					{
 						// Make copy of item
-						memcpy( &Object, &(gWorldItems[ pItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+						Object = gWorldItems[pItemPool->iItemIndex].o;
 
 						if ( ItemIsCool( &Object ) )
 						{
@@ -1622,7 +1622,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 								if ( Object.usItem != gWorldItems[ pItemPool->iItemIndex ].o.usItem || Object.ubNumberOfObjects != gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects )
 								{
 									// copy back because item changed, and we must make sure the item pool reflects this.
-									memcpy( &(gWorldItems[ pItemPool->iItemIndex ].o), &Object, sizeof( OBJECTTYPE ) );
+									gWorldItems[pItemPool->iItemIndex].o = Object;
 								}
 
 								pItemPoolToDelete = pItemPool;
@@ -1692,7 +1692,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 			{
 
 				// Make copy of item
-				memcpy( &Object, &(gWorldItems[ iItemIndex ].o), sizeof( OBJECTTYPE ) );
+				Object = gWorldItems[iItemIndex].o;
 
 				if ( ItemIsCool( &Object ) )
 				{
@@ -2898,7 +2898,7 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	// While there is an existing pool
 	while( GetItemPool( sStartPos, &pItemPool, 0 ) )
 	{
-		memcpy( &TempWorldItem, &(gWorldItems[ pItemPool->iItemIndex ]), sizeof( WORLDITEM ) );
+		TempWorldItem = gWorldItems[pItemPool->iItemIndex];
 		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
 		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
@@ -3745,7 +3745,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
-	memcpy( &TempObject, pSoldier->pTempObject, sizeof( OBJECTTYPE ) );
+	TempObject = *pSoldier->pTempObject;
 	MemFree( pSoldier->pTempObject );
 	pSoldier->pTempObject = NULL;
 
@@ -4360,7 +4360,7 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 		{
 
 			// get the item
-			memcpy( &Object, &(gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o), sizeof( OBJECTTYPE ) );
+			Object = gWorldItems[gpBoobyTrapItemPool->iItemIndex].o;
 
 			// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in
 			// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
@@ -4480,7 +4480,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue)
 			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_COOL1 );
 
 			// get the item
-			memcpy( &Object, gpItemPointer, sizeof( OBJECTTYPE ) );
+			Object = *gpItemPointer;
 
 			if (gfDisarmingBuriedBomb)
 			{

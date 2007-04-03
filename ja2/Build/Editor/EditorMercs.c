@@ -1901,7 +1901,7 @@ void ExtractAndUpdateMercSchedule()
 			if( SortSchedule( &gCurrSchedule ) )
 				fScheduleNeedsUpdate = TRUE;
 			pNext = pSchedule->next;
-			memcpy( pSchedule, &gCurrSchedule, sizeof( SCHEDULENODE ) );
+			*pSchedule = gCurrSchedule;
 			pSchedule->next = pNext;
 		}
 		else
@@ -3584,7 +3584,7 @@ static void UpdateScheduleInfo(void)
 			ClickEditorButton( MERCS_SCHEDULE_VARIANCE4 );
 
 		//Copy the schedule over to the current global schedule used for editing purposes.
-		memcpy( &gCurrSchedule, pSchedule, sizeof( SCHEDULENODE ) );
+		gCurrSchedule = *pSchedule;
 		DetermineScheduleEditability();
 	}
 	else
@@ -3604,10 +3604,10 @@ void CopyMercPlacement( INT32 iMapIndex )
 		return;
 	}
 	gfSaveBuffer = TRUE;
-	memcpy( &gSaveBufferBasicPlacement, gpSelected->pBasicPlacement, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+	gSaveBufferBasicPlacement = *gpSelected->pBasicPlacement;
 	if( gSaveBufferBasicPlacement.fDetailedPlacement )
 	{
-		memcpy( &gSaveBufferDetailedPlacement, gpSelected->pDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+		gSaveBufferDetailedPlacement = *gpSelected->pDetailedPlacement;
 	}
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Placement copied." );
 }
@@ -3624,7 +3624,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		return;
 	}
 
-	memcpy( &gTempBasicPlacement, &gSaveBufferBasicPlacement, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+	gTempBasicPlacement = gSaveBufferBasicPlacement;
 
 	gTempBasicPlacement.bBodyType = -1;
 
@@ -3670,7 +3670,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		//Generate detailed placement information given the temp placement information.
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{
-			memcpy( &gTempDetailedPlacement, &gSaveBufferDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+			gTempDetailedPlacement = gSaveBufferDetailedPlacement;
 		}
 		else
 		{
@@ -3687,7 +3687,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		}
 		else
 		{
-			memcpy( &tempDetailedPlacement, &gTempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+			tempDetailedPlacement = gTempDetailedPlacement;
 		}
 
 		//Create the soldier, but don't place it yet.
@@ -3713,7 +3713,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 					return;
 				}
 				//copy the file information from temp var to node in list.
-				memcpy( pNode->pDetailedPlacement, &gSaveBufferDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+				*pNode->pDetailedPlacement = gSaveBufferDetailedPlacement;
 			}
 
 			//Add the soldier to physically appear on the map now.

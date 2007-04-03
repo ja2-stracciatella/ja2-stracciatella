@@ -5224,7 +5224,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				//InvSlot.sItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
 //			InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
 //			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].bGunStatus;
-				//memcpy( &InvSlot.ItemObject, &gpSMCurrentMerc->inv[ uiHandPos ], sizeof( OBJECTTYPE ) );
+				//InvSlot.ItemObject = gpSMCurrentMerc->inv[uiHandPos];
 				//InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 
 				//InvSlot.ubIdOfMercWhoOwnsTheItem = gpSMCurrentMerc->ubProfile;

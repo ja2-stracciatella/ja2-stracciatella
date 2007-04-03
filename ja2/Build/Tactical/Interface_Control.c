@@ -922,10 +922,10 @@ static void StartViewportOverlays(void)
 {
 	// Set Clipping Rect to be the viewscreen
 	// Save old one
-	memcpy( &gOldClippingRect, &ClippingRect, sizeof( gOldClippingRect ) );
+	gOldClippingRect = ClippingRect;
 
 	// Save old dirty clipping rect
-	memcpy( &gOldDirtyClippingRect, &ClippingRect, sizeof( gOldDirtyClippingRect ) );
+	gOldDirtyClippingRect = ClippingRect;
 
 	// Set bottom clipping value for blitter clipping rect
 	ClippingRect.iLeft = INTERFACE_START_X;
@@ -948,8 +948,8 @@ static void StartViewportOverlays(void)
 static void EndViewportOverlays(void)
 {
 	// Reset clipping rect
-	memcpy( &ClippingRect, &gOldClippingRect, sizeof( gOldClippingRect ) );
-	memcpy( &gDirtyClipRect, &gOldDirtyClippingRect, sizeof( gOldDirtyClippingRect ) );
+	ClippingRect = gOldClippingRect;
+	gDirtyClipRect = gOldDirtyClippingRect;
 	RestoreFontSettings( );
 
 }

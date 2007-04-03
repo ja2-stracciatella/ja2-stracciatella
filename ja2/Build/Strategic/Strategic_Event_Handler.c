@@ -231,7 +231,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			{
 				if ( j > 1 && !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + j) )
 				{
-					memcpy( &pStolenObject[ uiStolenCount ], &Object, sizeof( OBJECTTYPE ) );
+					pStolenObject[uiStolenCount] = Object;
 					uiStolenCount++;
 					fPablosStoleSomething = TRUE;
 					fPablosStoleLastItem = TRUE;
@@ -252,7 +252,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 						{
 							Object.bStatus[0] = 1;
 						}
-						memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+						pObject[uiCount] = Object;
 						uiCount++;
 					}
 					else
@@ -272,7 +272,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 			}
 			else
 			{
-				memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+				pObject[uiCount] = Object;
 				uiCount++;
 			}
 		}
@@ -291,7 +291,7 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 				}
 				else
 				{
-					memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+					pObject[uiCount] = Object;
 					uiCount++;
 				}
 
@@ -1157,7 +1157,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 			}
 			else
 			{
-				memcpy( &pObject[ uiCount ], &Object, sizeof( OBJECTTYPE ) );
+				pObject[uiCount] = Object;
 				uiCount++;
 			}
 

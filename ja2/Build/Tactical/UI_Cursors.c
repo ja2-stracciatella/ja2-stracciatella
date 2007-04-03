@@ -1438,7 +1438,7 @@ static UINT8 HandleNonActivatedTossCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo,
 		else
 		{
       // ATE: Find the object to use...
-      memcpy( &TempObject, &(pSoldier->inv[ HANDPOS ] ), sizeof( OBJECTTYPE ) );
+      TempObject = pSoldier->inv[HANDPOS];
 
       // Do we have a launcable?
 	    pObj = &(pSoldier->inv[HANDPOS]);

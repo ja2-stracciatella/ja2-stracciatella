@@ -265,7 +265,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 							curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 						}
 						//now replace the map pristine placement info with the temp map file version..
-						memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+						*curr->pDetailedPlacement = tempDetailedPlacement;
 
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -936,7 +936,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 						curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 					}
 					//now replace the map pristine placement info with the temp map file version..
-					memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+					*curr->pDetailedPlacement = tempDetailedPlacement;
 
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -1283,7 +1283,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 							curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 						}
 						//now replace the map pristine placement info with the temp map file version..
-						memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+						*curr->pDetailedPlacement = tempDetailedPlacement;
 
 						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
@@ -1923,7 +1923,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 						curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
 					}
 					//now replace the map pristine placement info with the temp map file version..
-					memcpy( curr->pDetailedPlacement, &tempDetailedPlacement, sizeof( SOLDIERCREATE_STRUCT ) );
+					*curr->pDetailedPlacement = tempDetailedPlacement;
 
 					curr->pBasicPlacement->fPriorityExistance	=	TRUE;
 					curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;

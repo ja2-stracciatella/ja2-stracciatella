@@ -547,7 +547,7 @@ static void SaveSeenAndUnseenItems(void)
 			if( pInventoryPoolList[ iCounter ].o.ubNumberOfObjects > 0 )
 			{
 				// copy object stuff
-				memcpy( &( pSeenItemsList[ iItemCount ] ), &( pInventoryPoolList[ iCounter ] ), sizeof( WORLDITEM ) );
+				pSeenItemsList[iItemCount] = pInventoryPoolList[iCounter];
 
 				// check if item actually lives at a gridno
 				// if not, check predicessor, iItemCount is not 0
@@ -1000,7 +1000,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 			if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
+				pInventoryPoolList[uiItemCount] = gWorldItems[iCounter];
 				uiItemCount++;
 			}
 		}
@@ -1025,8 +1025,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &gWorldItems[ iCounter ] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( gWorldItems[ iCounter ] ), sizeof( WORLDITEM ) );
-
+					pUnSeenItems[uiItemCount] = gWorldItems[iCounter];
 					uiItemCount++;
 				}
 			}
@@ -1079,8 +1078,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 			if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 			{
 				// one more item
-				memcpy( &( pInventoryPoolList[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
-
+				pInventoryPoolList[uiItemCount] = pTotalSectorList[iCounter];
 				uiItemCount++;
 			}
 		}
@@ -1105,8 +1103,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 				if( IsMapScreenWorldItemInvisibleInMapInventory( &pTotalSectorList[ iCounter] ) )
 				{
 					// one more item
-					memcpy( &( pUnSeenItems[ uiItemCount ] ), &( pTotalSectorList[ iCounter ] ), sizeof( WORLDITEM ) );
-
+					pUnSeenItems[uiItemCount] = pTotalSectorList[iCounter];
 					uiItemCount++;
 				}
 			}
@@ -1165,14 +1162,14 @@ static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 i
 	// place seen items in the world
 	for( iCounter = 0; iCounter < iNumberSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[iCurrentItem] = pSeenItemsList[iCounter];
 		iCurrentItem++;
 	}
 
 	// now store the unseen item list
 	for( iCounter = 0; iCounter < iNumberUnSeenItems; iCounter++ )
 	{
-		memcpy( &( pTotalList[ iCurrentItem ] ), &( pUnSeenItemsList[ iCounter ] ), sizeof( WORLDITEM ) );
+		pTotalList[iCurrentItem] = pUnSeenItemsList[iCounter];
 		iCurrentItem++;
 	}
 
@@ -1388,7 +1385,7 @@ static BOOLEAN GetObjFromInventoryStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTY
 	// if there are only one item in slot, just copy
 	if (pInventorySlot->ubNumberOfObjects == 1)
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		*pItemPtr = *pInventorySlot;
 		DeleteObj( pInventorySlot );
 	}
 	else
@@ -1420,7 +1417,7 @@ static BOOLEAN RemoveObjectFromStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTYPE*
 	}
 	else
 	{
-		memcpy( pItemPtr, pInventorySlot, sizeof( OBJECTTYPE ) );
+		*pItemPtr = *pInventorySlot;
 		DeleteObj( pInventorySlot );
 		return( TRUE );
 	}
@@ -1448,7 +1445,7 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
-		memcpy( pInventorySlot, pItemPtr, sizeof( OBJECTTYPE ) );
+		*pInventorySlot = *pItemPtr;
 
 		if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
 		{
@@ -1529,7 +1526,7 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 	// could be wrong type of object for slot... need to check...
 	// but assuming it isn't
-	memcpy( pInventorySlot, pItemPtr, sizeof( OBJECTTYPE ) );
+	*pInventorySlot = *pItemPtr;
 
 	if (ubNumberToDrop != pItemPtr->ubNumberOfObjects)
 	{

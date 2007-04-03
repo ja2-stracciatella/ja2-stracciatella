@@ -3972,7 +3972,7 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 	}
 
 	// Copy into cursor...
-	memcpy( &gItemPointer, pObject, sizeof( OBJECTTYPE ) );
+	gItemPointer = *pObject;
 
 	// Dirty interface
 	fInterfacePanelDirty = DIRTYLEVEL2;
@@ -4568,7 +4568,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 		// Place it back in our hands!
 
-		memcpy( &TempObject, gpItemPointer, sizeof( OBJECTTYPE ) );
+		TempObject = *gpItemPointer;
 
 		if ( gbItemPointerSrcSlot != NO_SLOT )
 		{
@@ -4611,7 +4611,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					 {
 							// Make a temp object for ammo...
 							gpItemPointerSoldier->pTempObject	 = MemAlloc( sizeof( OBJECTTYPE ) );
-							memcpy( gpItemPointerSoldier->pTempObject, &TempObject, sizeof( OBJECTTYPE ) );
+							*gpItemPointerSoldier->pTempObject = TempObject;
 
 							// Remove from soldier's inv...
 							RemoveObjs( &( gpItemPointerSoldier->inv[ gbItemPointerSrcSlot ] ), 1 );
@@ -4712,7 +4712,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						gpItemPointerSoldier->pTempObject = MemAlloc( sizeof( OBJECTTYPE ) );
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
-							memcpy( gpItemPointerSoldier->pTempObject, gpItemPointer, sizeof( OBJECTTYPE ) );
+							*gpItemPointerSoldier->pTempObject = *gpItemPointer;
 							gpItemPointerSoldier->sPendingActionData2 = usMapPos;
 
 	 						// Turn towards.....gridno
@@ -6589,7 +6589,7 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				// Show compatible ammo...
 				pTempItemPool = gItemPickupMenu.ItemPoolSlots[ gItemPickupMenu.bCurSelect - gItemPickupMenu.ubScrollAnchor ];
 
-				memcpy( &(gItemPickupMenu.CompAmmoObject), &( gWorldItems[ pTempItemPool->iItemIndex ].o ), sizeof( OBJECTTYPE ) );
+				gItemPickupMenu.CompAmmoObject = gWorldItems[pTempItemPool->iItemIndex].o;
 
 				// Turn off first...
 				HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
@@ -6860,9 +6860,9 @@ static void RemoveMoney(void)
 				AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, gpSMCurrentMerc->ubProfile, GetWorldTotalMin() , -(INT32)( gpItemDescObject->uiMoneyAmount ) );
 			}
 
-			memcpy( &gMoveingItem, &InvSlot, sizeof( INVENTORY_IN_SLOT ) );
+			gMoveingItem = InvSlot;
 
-			memcpy( &gItemPointer, &InvSlot.ItemObject, sizeof( OBJECTTYPE ) );
+			gItemPointer = InvSlot.ItemObject;
 			gpItemPointer = &gItemPointer;
 			gpItemPointerSoldier = gpSMCurrentMerc;
 
@@ -7072,7 +7072,7 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 
 	// Now set things up.....
 	// Copy object
-	memcpy( &gItemPointer, &(SaveStruct.ItemPointerInfo), sizeof( OBJECTTYPE ) );
+	gItemPointer = SaveStruct.ItemPointerInfo;
 
 	// Copy soldier ID
 	if ( SaveStruct.ubSoldierID == NOBODY )
@@ -7109,7 +7109,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 
 	// Setup structure;
 	memset( &SaveStruct, 0, sizeof( ITEM_CURSOR_SAVE_INFO ) );
-	memcpy( &(SaveStruct.ItemPointerInfo), &gItemPointer, sizeof( OBJECTTYPE ) );
+	SaveStruct.ItemPointerInfo = gItemPointer;
 
 	// Soldier
 	if ( gpItemPointerSoldier != NULL )

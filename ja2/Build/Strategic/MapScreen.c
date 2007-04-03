@@ -2502,16 +2502,16 @@ static void AddCharacter(SOLDIERTYPE* pCharacter)
 void MoveCharacter(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 {
 	if (gCharactersList[uiInitialPosition].fValid)
-		memcpy(&gCharactersList[uiFinalPosition], &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt));
+		gCharactersList[uiFinalPosition] = gCharactersList[uiInitialPosition];
 }
 
 
 void SwapCharacters(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
 {
 	MapScreenCharacterSt pTempChar;
-	memcpy(&pTempChar, &gCharactersList[uiInitialPosition], sizeof(MapScreenCharacterSt));
-	memcpy(&gCharactersList[uiInitialPosition], &gCharactersList[uiFinalPosition], sizeof(MapScreenCharacterSt));
-	memcpy(&gCharactersList[uiFinalPosition], &pTempChar, sizeof(MapScreenCharacterSt));
+	pTempChar = gCharactersList[uiInitialPosition];
+	gCharactersList[uiInitialPosition] = gCharactersList[uiFinalPosition];
+	gCharactersList[uiFinalPosition] = pTempChar;
 }
 
 

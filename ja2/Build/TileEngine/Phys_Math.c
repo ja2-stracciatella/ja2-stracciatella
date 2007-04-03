@@ -4,15 +4,9 @@
 
 vector_3	VSetEqual( vector_3 *a )
 {
-	vector_3 c;
-
-//	c.x = a->x;
-//	c.y = a->y;
-//	c.z = a->z;
-	memcpy( &c, a, sizeof( vector_3 ) );
-
-	return( c );
+	return *a;
 }
+
 
 vector_3 VSubtract( vector_3 *a, vector_3 *b )
 {

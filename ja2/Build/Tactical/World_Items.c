@@ -305,7 +305,7 @@ INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 
 	gWorldItems[ iItemIndex ].bVisible									= bVisible;
 	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel  = bRenderZHeightAboveLevel;
 
-	memcpy( &(gWorldItems[ iItemIndex ].o), pObject, sizeof( OBJECTTYPE ) );
+	gWorldItems[iItemIndex].o = *pObject;
 
 	// Add a bomb reference if needed
 	if (usFlags & WORLD_ITEM_ARMED_BOMB)
@@ -618,7 +618,7 @@ void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems
 	{
 		if( pItemList[ i ].fExists )
 		{
-			memcpy( &dummyItem, &( pItemList[ i ] ), sizeof( WORLDITEM ) );
+			dummyItem = pItemList[i];
 
 			AddItemToPool( dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
 		}

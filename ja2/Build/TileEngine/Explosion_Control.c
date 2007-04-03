@@ -280,7 +280,7 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 		memset( pExplosion, 0, sizeof( EXPLOSIONTYPE ) );
 
 		// Setup some data...
-		memcpy( &(pExplosion->Params), pExpParams, sizeof( EXPLOSION_PARAMS ) );
+		pExplosion->Params = *pExpParams;
 		pExplosion->fAllocated = TRUE;
 		pExplosion->iID = iIndex;
 

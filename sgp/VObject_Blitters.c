@@ -6298,17 +6298,16 @@ void SetClippingRect(SGPRect *clip)
 	Assert(clip!=NULL);
 	Assert(clip->iLeft < clip->iRight);
 	Assert(clip->iTop < clip->iBottom);
-
-	memcpy(&ClippingRect, clip, sizeof(SGPRect));
-
+	ClippingRect = *clip;
 }
+
 
 void GetClippingRect(SGPRect *clip)
 {
 	Assert(clip!=NULL);
-
-	memcpy(clip, &ClippingRect, sizeof(SGPRect));
+	*clip = ClippingRect;
 }
+
 
 /**********************************************************************************************
 	Blt16BPPBufferPixelateRectWithColor

@@ -5041,7 +5041,7 @@ static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 	gRubberBandRect.iBottom	= gusMouseYPos;
 
 	// Copy into temp rect
-	memcpy( &aRect, &gRubberBandRect, sizeof( gRubberBandRect ) );
+	aRect = gRubberBandRect;
 
 	if ( aRect.iRight < aRect.iLeft )
 	{

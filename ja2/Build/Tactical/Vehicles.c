@@ -1897,7 +1897,7 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 		{
 			// copy the node into the temp vehicle buffer ( need to do this because we cant save the pointers
 			// to the soldier, therefore save the soldier ubProfile
-			memcpy( &TempVehicle, &pVehicleList[cnt], sizeof( VEHICLETYPE ) );
+			TempVehicle = pVehicleList[cnt];
 
 			//loop through the passengers
 			for( ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)

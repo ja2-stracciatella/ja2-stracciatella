@@ -120,7 +120,7 @@ BOOLEAN DequeueEvent(InputAtom *Event)
 	if (gusQueueCount > 0)
 	{
 		// We have an event, so we dequeue it
-		memcpy(Event, &gEventQueue[gusHeadIndex], sizeof(InputAtom));
+		*Event = gEventQueue[gusHeadIndex];
 
 		if (gusHeadIndex == 255)
 		{

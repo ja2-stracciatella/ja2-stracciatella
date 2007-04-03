@@ -318,14 +318,14 @@ static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubI
 				printf( "\tWarning: no walls (subimage delimiters) found.\n" );
 			}
 
-			memcpy( &TempSubImage, pCurrSubImage, STCI_SUBIMAGE_SIZE );
+			TempSubImage = *pCurrSubImage;
 			if (DetermineSubImageUsedSize( p8BPPBuffer, usWidth, usHeight, &TempSubImage))
 			{
 				// image has nontransparent data; we definitely want to store it
 				fStore = TRUE;
 				if (!(fFlags & CONVERT_ETRLE_NO_SUBIMAGE_SHRINKING))
 				{
-					memcpy( pCurrSubImage, &TempSubImage, STCI_SUBIMAGE_SIZE );
+					*pCurrSubImage = TempSubImage;
 				}
 			}
 			else if (fFlags & CONVERT_ETRLE_DONT_SKIP_BLANKS)

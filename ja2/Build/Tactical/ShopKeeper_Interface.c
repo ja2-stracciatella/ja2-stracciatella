@@ -2039,7 +2039,6 @@ static void SelectDealersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 				else
 				{
 					//swap what is in the cursor with what is in the player offer slot
-					INVENTORY_IN_SLOT TempSlot;
 
 					// if the slot is overloaded (holds more objects than we have room for valid statuses of)
 					if ( ArmsDealerOfferArea[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
@@ -2052,9 +2051,9 @@ static void SelectDealersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 					IfMercOwnedCopyItemToMercInv( &gMoveingItem );
 
-					memcpy( &TempSlot, &ArmsDealerOfferArea[ ubSelectedInvSlot ], sizeof( INVENTORY_IN_SLOT ) );
-					memcpy( &ArmsDealerOfferArea[ ubSelectedInvSlot ], &gMoveingItem, sizeof( INVENTORY_IN_SLOT ) );
-					memcpy( &gMoveingItem, &TempSlot, sizeof( INVENTORY_IN_SLOT ) );
+					INVENTORY_IN_SLOT TempSlot = ArmsDealerOfferArea[ubSelectedInvSlot];
+					ArmsDealerOfferArea[ubSelectedInvSlot] = gMoveingItem;
+					gMoveingItem = TempSlot;
 
 					IfMercOwnedRemoveItemFromMercInv( &gMoveingItem );
 
@@ -2138,7 +2137,6 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 			if( PlayersOfferArea[ ubSelectedInvSlot ].fActive )
 			{
 				//swap what is in the cursor with what is in the player offer slot
-				INVENTORY_IN_SLOT TempSlot;
 
 				// if the slot is overloaded (holds more objects than we have room for valid statuses of)
 				if ( PlayersOfferArea[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
@@ -2151,9 +2149,9 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 				IfMercOwnedCopyItemToMercInv( &gMoveingItem );
 
-				memcpy( &TempSlot, &PlayersOfferArea[ ubSelectedInvSlot ], sizeof( INVENTORY_IN_SLOT ) );
-				memcpy( &PlayersOfferArea[ ubSelectedInvSlot ], &gMoveingItem, sizeof( INVENTORY_IN_SLOT ) );
-				memcpy( &gMoveingItem, &TempSlot, sizeof( INVENTORY_IN_SLOT ) );
+				INVENTORY_IN_SLOT TempSlot = PlayersOfferArea[ubSelectedInvSlot];
+				PlayersOfferArea[ubSelectedInvSlot] = gMoveingItem;
+				gMoveingItem = TempSlot;
 
 				IfMercOwnedRemoveItemFromMercInv( &gMoveingItem );
 
@@ -3229,7 +3227,7 @@ static INT8 AddItemToArmsDealerOfferArea(INVENTORY_IN_SLOT* pInvSlot, INT8 bSlot
 		if( ArmsDealerOfferArea[bCnt].fActive == FALSE )
 		{
 			//Copy the inventory items
-			memcpy( &ArmsDealerOfferArea[bCnt], pInvSlot, sizeof( INVENTORY_IN_SLOT ) );
+			ArmsDealerOfferArea[bCnt] = *pInvSlot;
 
 			//if the shift key is being pressed, add them all
 			if( gfKeyState[ SHIFT ] )
@@ -3356,7 +3354,7 @@ static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, INVENTORY_IN_SLOT* pInv
 		//if there are no items here, copy the data in
 		if( PlayersOfferArea[bCnt].fActive == FALSE )
 		{
-			memcpy( &PlayersOfferArea[bCnt], pInvSlot, sizeof( INVENTORY_IN_SLOT ) );
+			PlayersOfferArea[bCnt] = *pInvSlot;
 
 			PlayersOfferArea[bCnt].fActive = TRUE;
 
@@ -3977,7 +3975,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 
 		case ARMS_DEALER_OFFER_AREA:
 			//Get the item from the slot.
-			memcpy( &gMoveingItem, &ArmsDealerOfferArea[ bSlotNum ], sizeof( INVENTORY_IN_SLOT ) );
+			gMoveingItem = ArmsDealerOfferArea[bSlotNum];
 			IfMercOwnedRemoveItemFromMercInv( &gMoveingItem );
 
 			//remove the item from the slot
@@ -4014,7 +4012,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 
 		case PLAYERS_OFFER_AREA:
 			//Get the item from the slot.
-			memcpy( &gMoveingItem, &PlayersOfferArea[ bSlotNum ], sizeof( INVENTORY_IN_SLOT ) );
+			gMoveingItem = PlayersOfferArea[bSlotNum];
 
 			// if the slot is overloaded (holds more objects than we have room for valid statuses of)
 			if ( PlayersOfferArea[ bSlotNum ].ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
@@ -4097,7 +4095,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
 
 				//Get the item from the pointer
-				memcpy( &gMoveingItem.ItemObject, &TempObject, sizeof( OBJECTTYPE ) );
+				gMoveingItem.ItemObject = TempObject;
 
 				gMoveingItem.fActive = TRUE;
 				gMoveingItem.sItemIndex = TempObject.usItem;
@@ -4314,7 +4312,7 @@ static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocat
 			//If we can add the item into the slot that was clicked on
 			if( ArmsDealerOfferArea[ ubSpotLocation ].fActive == FALSE )
 			{
-				memcpy( &ArmsDealerOfferArea[ ubSpotLocation ], pInv, sizeof( INVENTORY_IN_SLOT ) );
+				ArmsDealerOfferArea[ubSpotLocation] = *pInv;
 				IfMercOwnedCopyItemToMercInv( pInv );
 
 				SetSkiRegionHelpText( &ArmsDealerOfferArea[ ubSpotLocation ], &gDealersOfferSlotsMouseRegions[ ubSpotLocation ], ARMS_DEALER_OFFER_AREA );
@@ -4334,7 +4332,7 @@ static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocat
 			if( PlayersOfferArea[ ubSpotLocation ].fActive == FALSE )
 			{
 				// put it down in that player offer area slot
-				memcpy( &PlayersOfferArea[ ubSpotLocation ], pInv, sizeof( INVENTORY_IN_SLOT ) );
+				PlayersOfferArea[ubSpotLocation] = *pInv;
 				IfMercOwnedCopyItemToMercInv( pInv );
 
 				//if the item is money
@@ -5585,7 +5583,7 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 void AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE	*pItemObject, INT8 bPreviousInvPos )
 {
 	gItemToAdd.fActive						= TRUE;
-	memcpy( &gItemToAdd.ItemObject, pItemObject, sizeof( OBJECTTYPE ) );
+	gItemToAdd.ItemObject = *pItemObject;
 	gItemToAdd.bPreviousInvPos	= bPreviousInvPos;
 }
 
@@ -6708,7 +6706,7 @@ static BOOLEAN AddObjectForEvaluation(OBJECTTYPE* pObject, UINT8 ubOwnerProfileI
 
 	// Make a new inv slot out of the subobject
 	memset( &InvSlot, 0, sizeof( INVENTORY_IN_SLOT ) );
-	memcpy( &InvSlot.ItemObject, pObject, sizeof( OBJECTTYPE ) );
+	InvSlot.ItemObject = *pObject;
 
 	InvSlot.sItemIndex = pObject->usItem;
 	InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
@@ -6740,7 +6738,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
-	memcpy( &CopyOfObject, pObject, sizeof( OBJECTTYPE ) );
+	CopyOfObject = *pObject;
 
 
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
@@ -6759,7 +6757,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 		}
 
 		// restore object properties from our backup copy
-		memcpy( pObject, &CopyOfObject, sizeof( OBJECTTYPE ) );
+		*pObject = CopyOfObject;
 	}
 
 	return( TRUE );
@@ -6775,7 +6773,7 @@ static void ShopkeeperAddItemToPool(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVi
 
 	// the entire pObj will get memset to 0 by RemoveObjs() if all the items are successfully placed,
 	// so we have to keep a copy to retrieve with every iteration of the loop
-	memcpy( &CopyOfObject, pObject, sizeof( OBJECTTYPE ) );
+	CopyOfObject = *pObject;
 
 	ubObjectsLeftToPlace = pObject->ubNumberOfObjects;
 
@@ -6788,7 +6786,7 @@ static void ShopkeeperAddItemToPool(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVi
 		AddItemToPool( sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel );
 
 		// restore object properties from our backup copy
-		memcpy( pObject, &CopyOfObject, sizeof( OBJECTTYPE ) );
+		*pObject = CopyOfObject;
 	}
 }
 
