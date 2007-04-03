@@ -21,7 +21,6 @@ extern "C" {
 
 // Some GUI_BUTTON system defines
 #define BUTTON_USE_DEFAULT		-1
-#define BUTTON_NO_FILENAME		NULL
 #define BUTTON_NO_CALLBACK		NULL
 #define BUTTON_NO_IMAGE				-1
 #define BUTTON_NO_SLOT				-1

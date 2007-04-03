@@ -155,115 +155,111 @@ static INT32 FindFreeButtonSlot(void)
 }
 
 
-// Load images for use with QuickButtons.
-INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
-	UINT32				UseSlot;
-	ETRLEObject		*pTrav;
-	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
-
-	AssertMsg(filename!=BUTTON_NO_FILENAME, "Attempting to LoadButtonImage() with null filename." );
-	AssertMsg(strlen(filename), "Attempting to LoadButtonImage() with empty filename string." );
-
-	// is there ANY file to open?
-	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for %s",filename));
-		return(-1);
-	}
-
-	// Get a button image slot
-	if((UseSlot=FindFreeButtonSlot()) == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for %s",filename));
-		return(-1);
-	}
-
-	ButtonPictures[UseSlot].vobj = CreateVideoObjectFromFile(filename);
-	if (ButtonPictures[UseSlot].vobj == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s",filename));
-		return(-1);
-	}
+	ButtonPictures[UseSlot].vobj = VObj;
 
 	// Init the QuickButton image structure with indexes to use
-	ButtonPictures[UseSlot].Grayed=Grayed;
-	ButtonPictures[UseSlot].OffNormal=OffNormal;
-	ButtonPictures[UseSlot].OffHilite=OffHilite;
-	ButtonPictures[UseSlot].OnNormal=OnNormal;
-	ButtonPictures[UseSlot].OnHilite=OnHilite;
-	ButtonPictures[UseSlot].fFlags = GUI_BTN_NONE;
+	ButtonPictures[UseSlot].Grayed    = Grayed;
+	ButtonPictures[UseSlot].OffNormal = OffNormal;
+	ButtonPictures[UseSlot].OffHilite = OffHilite;
+	ButtonPictures[UseSlot].OnNormal  = OnNormal;
+	ButtonPictures[UseSlot].OnHilite  = OnHilite;
+	ButtonPictures[UseSlot].fFlags    = Flags;
 
 	// Fit the button size to the largest image in the set
-	MaxWidth=MaxHeight=0;
-	if(Grayed != BUTTON_NO_IMAGE)
+	UINT32 MaxWidth  = 0;
+	UINT32 MaxHeight = 0;
+	if (Grayed != BUTTON_NO_IMAGE)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[Grayed]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
+		const ETRLEObject* pTrav = &VObj->pETRLEObject[Grayed];
+		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
+		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
+		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
 	}
 
-	if(OffNormal != BUTTON_NO_IMAGE)
+	if (OffNormal != BUTTON_NO_IMAGE)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
+		const ETRLEObject* pTrav = &VObj->pETRLEObject[OffNormal];
+		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
+		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
+		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
 	}
 
-	if(OffHilite != BUTTON_NO_IMAGE)
+	if (OffHilite != BUTTON_NO_IMAGE)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
+		const ETRLEObject* pTrav = &VObj->pETRLEObject[OffHilite];
+		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
+		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
+		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
 	}
 
-	if(OnNormal != BUTTON_NO_IMAGE)
+	if (OnNormal != BUTTON_NO_IMAGE)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
+		const ETRLEObject* pTrav = &VObj->pETRLEObject[OnNormal];
+		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
+		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
+		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
 	}
 
-	if(OnHilite != BUTTON_NO_IMAGE)
+	if (OnHilite != BUTTON_NO_IMAGE)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
+		const ETRLEObject* pTrav = &VObj->pETRLEObject[OnHilite];
+		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
+		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
+		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
 	}
 
 	// Set the width and height for this image set
-	ButtonPictures[UseSlot].MaxHeight=MaxHeight;
-	ButtonPictures[UseSlot].MaxWidth=MaxWidth;
+	ButtonPictures[UseSlot].MaxHeight = MaxHeight;
+	ButtonPictures[UseSlot].MaxWidth  = MaxWidth;
 
-	// return the image slot number
 	ButtonPicsLoaded++;
-	return(UseSlot);
+}
+
+
+// Load images for use with QuickButtons.
+INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+{
+	AssertMsg(filename != NULL, "Attempting to LoadButtonImage() with null filename.");
+	AssertMsg(strlen(filename), "Attempting to LoadButtonImage() with empty filename string.");
+
+	if (Grayed    == BUTTON_NO_IMAGE &&
+			OffNormal == BUTTON_NO_IMAGE &&
+			OffHilite == BUTTON_NO_IMAGE &&
+			OnNormal  == BUTTON_NO_IMAGE &&
+			OnHilite  == BUTTON_NO_IMAGE)
+	{
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for %s", filename));
+		return(-1);
+	}
+
+	UINT32 UseSlot = FindFreeButtonSlot();
+	if (UseSlot == BUTTON_NO_SLOT)
+	{
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for %s", filename));
+		return(-1);
+	}
+
+	HVOBJECT VObj = CreateVideoObjectFromFile(filename);
+	if (VObj == NULL)
+	{
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s", filename));
+		return(-1);
+	}
+
+	InitButtonImage(UseSlot, VObj, GUI_BTN_NONE, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
+	return UseSlot;
 }
 
 
@@ -271,111 +267,32 @@ INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32
 // The function simply duplicates the vobj!
 INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
-	UINT32				UseSlot;
-	ETRLEObject		*pTrav;
-	UINT32				MaxHeight,MaxWidth,ThisHeight,ThisWidth;
-
-
-	// Is button image index given valid?
-	if( ButtonPictures[LoadedImg].vobj == NULL )
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %d",LoadedImg));
-		return(-1);
-	}
-
-	// is there ANY file to open?
-	if((Grayed == BUTTON_NO_IMAGE) && (OffNormal == BUTTON_NO_IMAGE) && (OffHilite == BUTTON_NO_IMAGE) &&
-		 (OnNormal == BUTTON_NO_IMAGE) && (OnHilite == BUTTON_NO_IMAGE))
+	if (Grayed    == BUTTON_NO_IMAGE &&
+			OffNormal == BUTTON_NO_IMAGE &&
+			OffHilite == BUTTON_NO_IMAGE &&
+			OnNormal  == BUTTON_NO_IMAGE &&
+			OnHilite  == BUTTON_NO_IMAGE)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for pre-loaded button image %d",LoadedImg));
 		return(-1);
 	}
 
-	// Get a button image slot
-	if((UseSlot=FindFreeButtonSlot()) == BUTTON_NO_SLOT)
+	UINT32 UseSlot = FindFreeButtonSlot();
+	if (UseSlot == BUTTON_NO_SLOT)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for pre-loaded button image %d",LoadedImg));
 		return(-1);
 	}
 
-	// Init the QuickButton image structure with indexes to use
-	ButtonPictures[UseSlot].vobj = ButtonPictures[LoadedImg].vobj;
-	ButtonPictures[UseSlot].Grayed=Grayed;
-	ButtonPictures[UseSlot].OffNormal=OffNormal;
-	ButtonPictures[UseSlot].OffHilite=OffHilite;
-	ButtonPictures[UseSlot].OnNormal=OnNormal;
-	ButtonPictures[UseSlot].OnHilite=OnHilite;
-	ButtonPictures[UseSlot].fFlags = GUI_BTN_DUPLICATE_VOBJ;
-
-	// Fit the button size to the largest image in the set
-	MaxWidth=MaxHeight=0;
-	if(Grayed != BUTTON_NO_IMAGE)
+	// Is button image index given valid?
+	if (ButtonPictures[LoadedImg].vobj == NULL)
 	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[Grayed]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %d",LoadedImg));
+		return(-1);
 	}
 
-	if(OffNormal != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OffHilite != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OffHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OnNormal != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnNormal]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	if(OnHilite != BUTTON_NO_IMAGE)
-	{
-		pTrav = &(ButtonPictures[UseSlot].vobj->pETRLEObject[OnHilite]);
-		ThisHeight = (UINT32)(pTrav->usHeight+pTrav->sOffsetY);
-		ThisWidth = (UINT32)(pTrav->usWidth+pTrav->sOffsetX);
-
-		if(MaxWidth<ThisWidth)
-			MaxWidth=ThisWidth;
-		if(MaxHeight<ThisHeight)
-			MaxHeight=ThisHeight;
-	}
-
-	// Set the width and height for this image set
-	ButtonPictures[UseSlot].MaxHeight=MaxHeight;
-	ButtonPictures[UseSlot].MaxWidth=MaxWidth;
-
-	// return the image slot number
-	ButtonPicsLoaded++;
-	return(UseSlot);
+	InitButtonImage(UseSlot, ButtonPictures[LoadedImg].vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
+	return UseSlot;
 }
 
 
@@ -588,7 +505,7 @@ INT16 LoadGenericButtonIcon(const char* filename)
 {
 	INT16 ImgSlot;
 
-	AssertMsg(filename != BUTTON_NO_FILENAME, "Attempting to LoadGenericButtonIcon() with null filename.");
+	AssertMsg(filename != NULL, "Attempting to LoadGenericButtonIcon() with null filename.");
 
 	// Get slot for icon image
 	if((ImgSlot=FindFreeIconSlot()) == BUTTON_NO_SLOT)
