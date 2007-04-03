@@ -21,12 +21,6 @@ typedef struct
 
 } vector_3;
 
-typedef struct
-{
-	real aElements[3][3];
-
-} matrix_3x3;
-
 
 #define RADIANS_FROM( d )						( ( d * PI2 ) / 180 )
 #define DEGREES_FROM( r )						( ( r * 180 ) / PI2 )
