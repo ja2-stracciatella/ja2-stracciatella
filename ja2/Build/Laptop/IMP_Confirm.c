@@ -542,12 +542,7 @@ static void LoadInCurrentImpCharacter(void)
 
 	// open the file for writing
 	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ);
-
-	// valid file?
-	if( hFile == -1 )
-	{
-		return;
-	}
+	if (hFile == 0) return;
 
 	// read in the profile
 	if (!FileRead(hFile, &iProfileId, sizeof(INT32))) return;
