@@ -12,6 +12,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Button_System.h"
 #include "TileDef.h"
 #include "SysUtil.h"
 #include "Font.h"

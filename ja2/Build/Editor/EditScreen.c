@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include "SGP.h"
+#include "Button_System.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
@@ -86,8 +87,6 @@ extern void ClearAllSchedules();
 
 //defined in sector summary.c
 extern BOOLEAN HandleSummaryInput( InputAtom *pEvent );
-
-GUI_BUTTON *gpPersistantButton;
 
 // These are global variables used by the main game loop
 

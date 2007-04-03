@@ -4,13 +4,10 @@
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H
 
-#include "Button_System.h"
-
 #define EDITOR_LIGHT_MAX		(SHADE_MIN + SHADE_MAX)
 #define EDITOR_LIGHT_FAKE		(EDITOR_LIGHT_MAX - SHADE_MAX - 2)
 
 extern BOOLEAN gfFakeLights;
-extern GUI_BUTTON *gpPersistantButton;
 
 extern UINT16 GenericButtonFillColors[40];
 

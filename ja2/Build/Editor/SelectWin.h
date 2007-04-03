@@ -8,7 +8,6 @@
 #include "VObject.h"
 
 #include "MouseSystem.h"
-#include "Button_System.h"
 
 #define CANCEL_ICON		0
 #define UP_ICON				1

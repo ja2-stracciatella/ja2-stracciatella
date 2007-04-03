@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Button_System.h"
 #include "TileDef.h"
 #include "VSurface.h"
 #include "WorldDat.h"
