@@ -1072,7 +1072,7 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 }
 
 
-static BOOLEAN RecordVSurface(const char* Filename, UINT32 LineNum, const char* SourceFile)
+static void RecordVSurface(const char* Filename, UINT32 LineNum, const char* SourceFile)
 {
 	//record the filename of the vsurface (some are created via memory though)
 	gpVSurfaceTail->pName = MemAlloc(strlen(Filename) + 1);
@@ -1083,8 +1083,6 @@ static BOOLEAN RecordVSurface(const char* Filename, UINT32 LineNum, const char* 
 	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
 	gpVSurfaceTail->pCode = MemAlloc(strlen(str) + 1);
 	strcpy(gpVSurfaceTail->pCode, str);
-
-	return TRUE;
 }
 
 

@@ -15,10 +15,10 @@ typedef UINT32 COLORVAL;
 // Z-buffer info structure for properly assigning Z values
 typedef struct
 {
-	INT8			bInitialZChange;		// difference in Z value between the leftmost and base strips
-	UINT8			ubFirstZStripWidth;	// # of pixels in the leftmost strip
-	UINT8			ubNumberOfZChanges;	// number of strips (after the first)
-	INT8 *		pbZChange;			// change to the Z value in each strip (after the first)
+	INT8  bInitialZChange;    // difference in Z value between the leftmost and base strips
+	UINT8 ubFirstZStripWidth; // # of pixels in the leftmost strip
+	UINT8 ubNumberOfZChanges; // number of strips (after the first)
+	INT8* pbZChange;          // change to the Z value in each strip (after the first)
 } ZStripInfo;
 
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
@@ -32,19 +32,19 @@ typedef struct
 // The video object contains different data based on it's type, compressed or not
 typedef struct TAG_HVOBJECT
 {
-	UINT32							fFlags;								// Special flags
-	UINT32							uiSizePixData;			// ETRLE data size
-	SGPPaletteEntry			*pPaletteEntry;				// 8BPP Palette
-	UINT16							*p16BPPPalette;				// A 16BPP palette used for 8->16 blits
+	UINT32           fFlags;                         // Special flags
+	UINT32           uiSizePixData;                  // ETRLE data size
+	SGPPaletteEntry* pPaletteEntry;                  // 8BPP Palette
+	UINT16*          p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
 
-	PTR										pPixData;						// ETRLE pixel data
-	ETRLEObject						*pETRLEObject;				// Object offset data etc
-	UINT16								*pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
-	UINT16								*pShadeCurrent;
-	ZStripInfo						**ppZStripInfo;				// Z-value strip info arrays
+	PTR              pPixData;                       // ETRLE pixel data
+	ETRLEObject*     pETRLEObject;                   // Object offset data etc
+	UINT16*          pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+	UINT16*          pShadeCurrent;
+	ZStripInfo**     ppZStripInfo;                   // Z-value strip info arrays
 
-	UINT16								usNumberOfObjects;	// Total number of objects
-	UINT8									ubBitDepth;						// BPP
+	UINT16           usNumberOfObjects;              // Total number of objects
+	UINT8            ubBitDepth;                     // BPP
 } SGPVObject, *HVOBJECT;
 
 
@@ -53,14 +53,14 @@ extern "C" {
 #endif
 
 // Creates a list to contain video objects
-BOOLEAN InitializeVideoObjectManager( );
+BOOLEAN InitializeVideoObjectManager(void);
 
 // Deletes any video object placed into list
-BOOLEAN ShutdownVideoObjectManager( );
+BOOLEAN ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
-	void PerformVideoInfoDumpIntoFile(const char *filename, BOOLEAN fAppend);
+	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
 	BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
 	BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
 	#define AddVideoObjectFromHImage(a, b) AddAndRecordVObjectFromHImage(a, b, __LINE__, __FILE__)
@@ -74,7 +74,7 @@ BOOLEAN AddStandardVideoObjectFromHImage(HIMAGE hImage, UINT32* uiIndex);
 BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex);
 
 // Removes a video object
-BOOLEAN DeleteVideoObjectFromIndex( UINT32 uiVObject  );
+BOOLEAN DeleteVideoObjectFromIndex(UINT32 uiVObject);
 
 // Returns a HVOBJECT for the specified index
 HVOBJECT GetVideoObject(UINT32 uiIndex);
@@ -89,7 +89,7 @@ HVOBJECT CreateVideoObject(HIMAGE hImage);
 HVOBJECT CreateVideoObjectFromFile(const char* Filename);
 
 // Deletes all data
-BOOLEAN DeleteVideoObject( HVOBJECT hVObject );
+BOOLEAN DeleteVideoObject(HVOBJECT hVObject);
 
 // Deletes the 16-bit palette tables
 BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject);
@@ -101,14 +101,14 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);
 UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade);
 
 // Retrieves an HVOBJECT pixel value
-BOOLEAN GetETRLEPixelValue( UINT8 * pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY );
+BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
 
 
-BOOLEAN GetVideoObjectETRLESubregionProperties( UINT32 uiVideoObject, UINT16 usIndex, UINT16 *pusWidth, UINT16 *pusHeight );
+BOOLEAN GetVideoObjectETRLESubregionProperties(UINT32 uiVideoObject, UINT16 usIndex, UINT16* pusWidth, UINT16* pusHeight);
 
-BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
-BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline );
-BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY );
+BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
+BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
+BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 #ifdef __cplusplus
 }
