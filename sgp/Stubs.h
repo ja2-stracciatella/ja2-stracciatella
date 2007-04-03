@@ -18,8 +18,6 @@ typedef int LRESULT;
 typedef int WIN32_FIND_DATA;
 typedef int WPARAM;
 
-typedef long long FILETIME;
-
 typedef void* HANDLE;
 
 typedef unsigned int UINT;

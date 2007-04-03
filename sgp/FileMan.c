@@ -1227,9 +1227,9 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
 
-	FILETIME	sCreationUtcFileTime;
-	FILETIME	sLastAccessedUtcFileTime;
-	FILETIME	sLastWriteUtcFileTime;
+	SGP_FILETIME sCreationUtcFileTime;
+	SGP_FILETIME sLastAccessedUtcFileTime;
+	SGP_FILETIME sLastWriteUtcFileTime;
 
 	//Initialize the passed in variables
 	memset( pCreationTime, 0, sizeof( SGP_FILETIME ) );

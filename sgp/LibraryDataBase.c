@@ -14,13 +14,13 @@
 
 typedef struct
 {
-	CHAR8    sFileName[FILENAME_SIZE];
-	UINT32   uiOffset;
-	UINT32   uiLength;
-	UINT8    ubState;
-	UINT8    ubReserved;
-	FILETIME sFileTime;
-	UINT16   usReserved2;
+	CHAR8        sFileName[FILENAME_SIZE];
+	UINT32       uiOffset;
+	UINT32       uiLength;
+	UINT8        ubState;
+	UINT8        ubReserved;
+	SGP_FILETIME sFileTime;
+	UINT16       usReserved2;
 } DIRENTRY;
 CASSERT(sizeof(DIRENTRY) == 280)
 
