@@ -2,12 +2,6 @@
 #include <memory.h>
 
 
-vector_3	VSetEqual( vector_3 *a )
-{
-	return *a;
-}
-
-
 vector_3 VSubtract( vector_3 *a, vector_3 *b )
 {
 	vector_3 c;

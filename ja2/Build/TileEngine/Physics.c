@@ -324,7 +324,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 	vector_3			vTemp;
 
 	// Calculate forces
-	pObject->Force = VSetEqual( &(pObject->InitialForce ) );
+	pObject->Force = pObject->InitialForce;
 
 	// Note: Only apply gravity if we are not resting on some structure surface
 	if ( !pObject->fZOnRest )
@@ -478,8 +478,8 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 	vector_3			vTemp;
 
 	// Save old position
-	pObject->OldPosition = VSetEqual( &(pObject->Position) );
-	pObject->OldVelocity = VSetEqual( &(pObject->Velocity) );
+	pObject->OldPosition = pObject->Position;
+	pObject->OldVelocity = pObject->Velocity;
 
 	vTemp = VMultScalar( &(pObject->Velocity), DeltaTime );
 	pObject->Position = VAdd( &(pObject->Position), &vTemp );
@@ -487,7 +487,7 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 	// Save test TargetPosition
 	if ( pObject->fTestPositionNotSet )
 	{
-		pObject->TestTargetPosition	 = VSetEqual( &(pObject->Position) );
+		pObject->TestTargetPosition	 = pObject->Position;
 	}
 
 	vTemp = VMultScalar( &(pObject->Force), ( DeltaTime * pObject->OneOverMass ) );
@@ -560,7 +560,7 @@ static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionI
 		else
 		{
 			// Set position back to before collision
-			pObject->Position = VSetEqual( &(pObject->OldPosition) );
+			pObject->Position = pObject->OldPosition;
 			// Set old position!
 			pObject->OldPosition.x = pObject->Position.y - dDeltaX;
 			pObject->OldPosition.y = pObject->Position.x - dDeltaY;
@@ -755,7 +755,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					if ( !pObject->fEndedWithCollisionPositionSet )
 					{
 						pObject->fEndedWithCollisionPositionSet = TRUE;
-						pObject->EndedWithCollisionPosition = VSetEqual( &(pObject->Position) );
+						pObject->EndedWithCollisionPosition = pObject->Position;
 					}
 					iCollisionCode = COLLISION_NONE;
 				}
@@ -764,7 +764,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					if ( !pObject->fEndedWithCollisionPositionSet )
 					{
 						pObject->fEndedWithCollisionPositionSet = TRUE;
-						pObject->EndedWithCollisionPosition = VSetEqual( &(pObject->Position) );
+						pObject->EndedWithCollisionPosition = pObject->Position;
 					}
 				}
 				break;
@@ -774,7 +774,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 				if ( !pObject->fEndedWithCollisionPositionSet )
 				{
 					pObject->fEndedWithCollisionPositionSet = TRUE;
-					pObject->EndedWithCollisionPosition = VSetEqual( &(pObject->Position) );
+					pObject->EndedWithCollisionPosition = pObject->Position;
 				}
 				break;
 
@@ -1052,7 +1052,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 				pObject->iOldCollisionCode  = iCollisionCode;
 
 				// Save collision velocity
-				pObject->CollisionVelocity = VSetEqual( &(pObject->OldVelocity) );
+				pObject->CollisionVelocity = pObject->OldVelocity;
 
         if ( pObject->fPotentialForDebug )
         {
