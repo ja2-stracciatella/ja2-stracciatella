@@ -3453,7 +3453,6 @@ extern UINT32 guiNumBackSaves;
 
 void DebugSoldierPage1( )
 {
-	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
@@ -3461,8 +3460,7 @@ void DebugSoldierPage1( )
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 	{
-		// Get Soldier
-		GetSoldier( &pSoldier, usSoldierIndex );
+		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", pSoldier->sGridNo );
@@ -3636,7 +3634,6 @@ void DebugSoldierPage1( )
 
 void DebugSoldierPage2( )
 {
-	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
@@ -3646,8 +3643,7 @@ void DebugSoldierPage2( )
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 	{
-		// Get Soldier
-		GetSoldier( &pSoldier, usSoldierIndex );
+		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", pSoldier->sGridNo );
@@ -3907,7 +3903,6 @@ void DebugSoldierPage2( )
 
 void DebugSoldierPage3( )
 {
-	SOLDIERTYPE				*pSoldier;
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
@@ -3915,8 +3910,7 @@ void DebugSoldierPage3( )
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 	{
-		// Get Soldier
-		GetSoldier( &pSoldier, usSoldierIndex );
+		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", pSoldier->sGridNo );
@@ -4299,7 +4293,6 @@ static void WriteQuantityAndAttachments(const OBJECTTYPE* pObject, INT32 yp)
 
 void DebugSoldierPage4( )
 {
-	SOLDIERTYPE				*pSoldier;
 	UINT32						uiMercFlags;
 	wchar_t szOrders[20];
 	wchar_t szAttitude[20];
@@ -4308,8 +4301,7 @@ void DebugSoldierPage4( )
 
 	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
 	{
-		// Get Soldier
-		GetSoldier( &pSoldier, usSoldierIndex );
+		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", pSoldier->sGridNo );

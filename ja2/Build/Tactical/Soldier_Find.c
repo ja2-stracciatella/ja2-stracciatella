@@ -662,7 +662,8 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 	*psWidth					= (INT16)pSoldier->sBoundingBoxWidth;
 }
 
-void GetSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 *sOffsetY )
+
+void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
 {
 	UINT16											 usAnimSurface;
 
@@ -680,7 +681,8 @@ void GetSoldierAnimOffsets( SOLDIERTYPE *pSoldier, INT16 *sOffsetX, INT16 *sOffs
 	*sOffsetY					= (INT16)pSoldier->sBoundingBoxOffsetY;
 }
 
-void GetSoldierScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScreenY )
+
+void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY)
 {
 		INT16 sMercScreenX, sMercScreenY;
 		FLOAT dOffsetX, dOffsetY;
@@ -730,7 +732,7 @@ void GetSoldierScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScre
 }
 
 // THE TRUE SCREN RECT DOES NOT TAKE THE OFFSETS OF BUDDY INTO ACCOUNT!
-void GetSoldierTRUEScreenPos( SOLDIERTYPE *pSoldier, INT16 *psScreenX, INT16 *psScreenY )
+void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY)
 {
 		INT16 sMercScreenX, sMercScreenY;
 		FLOAT dOffsetX, dOffsetY;

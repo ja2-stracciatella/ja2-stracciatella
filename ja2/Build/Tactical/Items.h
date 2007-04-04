@@ -12,7 +12,7 @@ extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
 
-extern INT8 FindAttachment( OBJECTTYPE * pObj, UINT16 usItem );
+INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
 extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
@@ -36,7 +36,7 @@ extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OB
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
 extern UINT8	CalculateObjectWeight( OBJECTTYPE *pObject );
-extern UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier );
+UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier);
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
@@ -97,7 +97,7 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 //so feel free to correct me...
 
 //Simple check to see if the item has any attachments
-BOOLEAN ItemHasAttachments( OBJECTTYPE *pItem );
+BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj);
 
 //Determine if this item can receive this attachment.  This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on

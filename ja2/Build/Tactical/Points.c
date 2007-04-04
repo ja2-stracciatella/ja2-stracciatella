@@ -416,8 +416,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 }
 
 
-
-BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg )
+BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg)
 {
 	INT16 sNewAP = 0;
 
@@ -1397,7 +1396,8 @@ INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
 	return( (INT8)sCost );
 }
 
-INT8 MinAPsToStartMovement( SOLDIERTYPE * pSoldier, UINT16 usMovementMode )
+
+INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode)
 {
 	INT8	bAPs = 0;
 
@@ -1710,9 +1710,7 @@ UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
 }
 
 
-
-
-UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight )
+UINT16 GetAPsToChangeStance(const SOLDIERTYPE* pSoldier, INT8 bDesiredHeight)
 {
 	UINT16						sAPCost = 0;
 	INT8							bCurrentHeight;
@@ -1794,7 +1792,7 @@ static UINT16 GetBPsToChangeStance(SOLDIERTYPE* pSoldier, INT8 bDesiredHeight)
 }
 
 
-UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier )
+UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 {
 	// Set # of APs
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
@@ -2151,7 +2149,7 @@ static INT8 GetAPsToUseCan(SOLDIERTYPE* pSoldier, INT16 usMapPos)
 }
 
 
-INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier )
+INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier)
 {
 	return(  GetAPsToChangeStance( pSoldier, ANIM_STAND ) + AP_JUMP_OVER );
 }

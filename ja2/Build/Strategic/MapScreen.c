@@ -1083,17 +1083,17 @@ static void GlowTrashCan(void)
 
 void DrawFace( INT16 sCharNumber )
 {
-	SOLDIERTYPE	*pSoldier = NULL;
 	static INT16 sOldId = -1;
 
 	// draws the face of the currently selected merc, being displayed int he upper left hand corner
 
 	// grab the soldier
+	const SOLDIERTYPE* pSoldier = NULL;
 	if( bSelectedInfoChar != -1 )
 	{
 		if( gCharactersList[ bSelectedInfoChar ].fValid )
 		{
-			GetSoldier( &pSoldier, gCharactersList[ bSelectedInfoChar ].usSolID );
+			pSoldier = GetSoldier(gCharactersList[bSelectedInfoChar].usSolID);
 		}
 	}
 
@@ -1122,7 +1122,6 @@ void DrawFace( INT16 sCharNumber )
 
 static void RenderHandPosItem(void)
 {
-	SOLDIERTYPE	*pSoldier = NULL;
 	// renders the inventory item in char's right hand
 
 	// ARM: if already in the inventory panel, don't show the item again here, seeing it twice is confusing
@@ -1133,11 +1132,12 @@ static void RenderHandPosItem(void)
 
 
 	// grab the soldier
+	const SOLDIERTYPE* pSoldier = NULL;
 	if( bSelectedInfoChar != -1 )
 	{
 		if( gCharactersList[ bSelectedInfoChar ].fValid )
 		{
-			GetSoldier( &pSoldier, gCharactersList[ bSelectedInfoChar ].usSolID );
+			pSoldier = GetSoldier(gCharactersList[bSelectedInfoChar].usSolID);
 		}
 	}
 
@@ -1224,7 +1224,6 @@ static void DrawPay(INT16 sCharNumber)
 static void DrawCharBars(void)
 {
 	UINT16 usSoldierID;
-	SOLDIERTYPE	*pSoldier;
 
 	// will draw the heath, morale and breath bars for a character being displayed in the upper left hand corner
 
@@ -1246,8 +1245,7 @@ static void DrawCharBars(void)
 		}
 
 		// grab soldier's id number
-		GetSoldier( &pSoldier, usSoldierID );
-
+		const SOLDIERTYPE* pSoldier = GetSoldier(usSoldierID);
 		if( pSoldier == NULL )
 		{
 			// no soldier
@@ -6085,15 +6083,13 @@ static void BltCharInvPanel(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT16  *pDestBuf;
-	SOLDIERTYPE	*pSoldier;
 	CHAR16 sString[ 32 ];
 	UINT16 usX, usY;
 
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
 
-	GetSoldier( &pSoldier, gCharactersList[bSelectedInfoChar].usSolID );
-
+	const SOLDIERTYPE* pSoldier = GetSoldier(gCharactersList[bSelectedInfoChar].usSolID);
 
   pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
 	HVOBJECT hCharListHandle = GetVideoObject(guiMAPINV);
@@ -6217,9 +6213,7 @@ static void MAPInvMoveCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 // this is Map Screen's version of SMInvMoveCallback()
 static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	SOLDIERTYPE	*pSoldier;
 	UINT32 uiHandPos;
-
 
 	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
@@ -6229,7 +6223,7 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
 
-	GetSoldier( &pSoldier, gCharactersList[ bSelectedInfoChar ].usSolID );
+	const SOLDIERTYPE* pSoldier = GetSoldier(gCharactersList[bSelectedInfoChar].usSolID);
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -6281,7 +6275,6 @@ static void MAPBeginItemPointer(SOLDIERTYPE* pSoldier, UINT8 ubHandPos);
 // this is Map Screen's version of SMInvClickCallback()
 static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	SOLDIERTYPE	*pSoldier;
 	UINT32 uiHandPos;
 	UINT16	usOldItemIndex, usNewItemIndex;
 	static BOOLEAN	fRightDown = FALSE;
@@ -6295,7 +6288,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
 
-	GetSoldier( &pSoldier, gCharactersList[ bSelectedInfoChar ].usSolID );
+	SOLDIERTYPE* pSoldier = GetSoldier(gCharactersList[bSelectedInfoChar].usSolID);
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 

@@ -133,7 +133,7 @@ extern DOORTRAP DoorTrapTable[NUM_DOOR_TRAPS];
 extern BOOLEAN AddKeysToKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 ubNumber );
 extern BOOLEAN RemoveKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
 extern BOOLEAN RemoveAllOfKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
-extern BOOLEAN KeyExistsInKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 * pubPos );
+BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pubPos);
 extern BOOLEAN SoldierHasKey( SOLDIERTYPE *pSoldier, UINT8 ubKeyID );
 
 extern const wchar_t *sKeyDescriptionStrings[];

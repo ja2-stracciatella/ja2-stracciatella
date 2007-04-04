@@ -1040,7 +1040,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 // Palette functions for soldiers
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
-BOOLEAN GetPaletteRepIndexFromID( PaletteRepID aPalRep, UINT8 *pubPalIndex );
+BOOLEAN GetPaletteRepIndexFromID(const PaletteRepID aPalRep, UINT8* pubPalIndex);
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
 BOOLEAN LoadPaletteData( );
 BOOLEAN DeletePaletteData( );
@@ -1048,8 +1048,8 @@ BOOLEAN DeletePaletteData( );
 // UTILITY FUNCTUIONS
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );
 void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMovementDist );
-INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier );
-INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier );
+INT16 GetDirectionFromXY(INT16 sXPos, INT16 sYPos, const SOLDIERTYPE* pSoldier);
+INT16 GetDirectionFromGridNo(INT16 sGridNo, const SOLDIERTYPE* pSoldier);
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
 INT8 CalcActionPoints(SOLDIERTYPE *pSold );
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
@@ -1072,7 +1072,7 @@ void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEn
 
 // WRAPPERS FOR SOLDIER EVENTS
 void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
-void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection );
+void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usDesiredDirection);
 void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance );
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 
@@ -1127,7 +1127,7 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
 void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier );
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pSoldier );
 SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier );
-BOOLEAN CanRobotBeControlled( SOLDIERTYPE *pSoldier );
+BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier);
 BOOLEAN ControllingRobot( SOLDIERTYPE *pSoldier );
 
 void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, UINT8 ubMercSlot );

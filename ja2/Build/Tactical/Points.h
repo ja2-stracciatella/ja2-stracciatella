@@ -278,13 +278,13 @@ INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 u
 INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength );
 BOOLEAN SelectedMercCanAffordMove(  );
 
-BOOLEAN EnoughPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg );
+BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg);
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
 INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode);
 UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost);
 INT8  MinPtsToMove(SOLDIERTYPE *pSoldier);
-INT8 MinAPsToStartMovement( SOLDIERTYPE * pSoldier, UINT16 usMovementMode );
+INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode);
 INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection );
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost );
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
@@ -294,9 +294,9 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
 UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
-UINT16 GetAPsToChangeStance( SOLDIERTYPE *pSoldier, INT8 bDesiredHeight );
+UINT16 GetAPsToChangeStance(const SOLDIERTYPE* pSoldier, INT8 bDesiredHeight);
 
-UINT16 GetAPsToLook( SOLDIERTYPE *pSoldier );
+UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier);
 UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
@@ -324,7 +324,7 @@ INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
-INT8 GetAPsToJumpOver( SOLDIERTYPE *pSoldier );
+INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier);
 
 void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise );
 

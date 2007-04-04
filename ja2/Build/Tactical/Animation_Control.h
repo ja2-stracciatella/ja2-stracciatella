@@ -556,7 +556,6 @@ UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
 // This function could be wrapped in a debug marco, since it only returns pSoldier->ubAnimSurface but
 // Also does some debug checking
-UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
-
+UINT16 GetSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 
 #endif

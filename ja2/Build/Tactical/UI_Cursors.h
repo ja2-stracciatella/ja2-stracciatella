@@ -14,10 +14,10 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier );
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 
-UINT8 GetActionModeCursor( SOLDIERTYPE *pSoldier );
+UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier);
 
 void HandleUICursorRTFeedback( SOLDIERTYPE *pSoldier );
-void HandleEndConfirmCursor( SOLDIERTYPE *pSoldier );
+void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier);
 
 BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs );
 

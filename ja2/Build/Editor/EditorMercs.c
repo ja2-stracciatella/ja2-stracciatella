@@ -324,12 +324,11 @@ enum
 void ProcessMercEditing()
 {
 	UINT8 ubType, ubPaletteRep;
-	SOLDIERTYPE *pSoldier;
 	if ( iEditMercMode == EDIT_MERC_NONE )
 	{
 		return;
 	}
-	GetSoldier( &pSoldier, gsSelectedMercID );
+	SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
 
 	switch ( iEditMercMode )
 	{
@@ -740,7 +739,6 @@ static void DisplayEditMercWindow(void)
 	UINT16 usFillColorBack, usFillColorDark, usFillColorLight, usFillColorTextBk;
 	INT32 x, iXOff;
 	wchar_t TempString[30];
-	SOLDIERTYPE *pSoldier;
 	INT8 iEditStat[12];
 
 	usFillColorBack = 0;
@@ -752,8 +750,7 @@ static void DisplayEditMercWindow(void)
 		return;
 	}
 
-
-	GetSoldier( &pSoldier, (INT16)gsSelectedMercID );
+	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
 
 //	usFillColorBack = GenericButtonFillColors[0];
 	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
@@ -833,20 +830,17 @@ static INT32 IsMercHere(INT32 iMapIndex)
 {
 	INT32 IDNumber;
 	INT32 RetIDNumber;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierFound;
 
 	RetIDNumber = -1;
 	fSoldierFound = FALSE;
 	for ( IDNumber = 0; IDNumber < MAX_NUM_SOLDIERS && !fSoldierFound; IDNumber++ )
 	{
-		if ( GetSoldier( &pSoldier, (INT16)IDNumber ) )
+		const SOLDIERTYPE* pSoldier = GetSoldier(IDNumber);
+		if (pSoldier != NULL && pSoldier->sGridNo == (INT16)iMapIndex)
 		{
-			if ( pSoldier->sGridNo == (INT16)iMapIndex )
-			{
-				fSoldierFound = TRUE;
-				RetIDNumber = IDNumber;
-			}
+			fSoldierFound = TRUE;
+			RetIDNumber = IDNumber;
 		}
 	}
 
@@ -1256,14 +1250,13 @@ void DisplayWayPoints(void)
 	INT16 sScreenX,sScreenY;
 	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
-	SOLDIERTYPE *pSoldier;
 	INT16 sGridNo;
 
 
 	if ( gsSelectedMercID == -1 || (gsSelectedMercID <= (INT32)gTacticalStatus.Team[ OUR_TEAM ].bLastID) || gsSelectedMercID >= MAXMERCS )
 		return;
 
-	GetSoldier( &pSoldier, (UINT16)gsSelectedMercID );
+	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
 	if ( pSoldier == NULL || !pSoldier->bActive)
 		return;
 
@@ -1319,15 +1312,13 @@ static void CreateEditMercWindow(void)
 {
 	INT32 iXPos, iYPos, iHeight, iWidth;
 	INT32 x;
-	SOLDIERTYPE *pSoldier;
 
 	iWidth = 266;
 	iHeight = 360;
 	iYPos = 0;
 	iXPos = 0;
 
-
-	GetSoldier( &pSoldier, (INT16)gsSelectedMercID );
+	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
 	iEditMercLocation = (INT32)pSoldier->sGridNo;
 	gpWorldLevelData[ iEditMercLocation ].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 

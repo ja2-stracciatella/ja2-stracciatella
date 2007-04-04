@@ -671,34 +671,11 @@ BOOLEAN ShutdownOverhead( )
 }
 
 
-BOOLEAN GetSoldier( SOLDIERTYPE **ppSoldier, UINT16 usSoldierIndex )
+SOLDIERTYPE* GetSoldier(UINT16 usSoldierIndex)
 {
-	// Check range of index given
-	*ppSoldier = NULL;
-
-	#if 0 /* XXX */
-	if ( usSoldierIndex < 0 || usSoldierIndex > TOTAL_SOLDIERS-1 )
-	#else
-	if (usSoldierIndex > TOTAL_SOLDIERS - 1)
-	#endif
-	{
-		// Set debug message
-		return( FALSE );
-	}
-
-	// Check if a guy exists here
-	// Does another soldier exist here?
-	if ( MercPtrs[ usSoldierIndex ]->bActive )
-	{
-		// Set Existing guy
-		*ppSoldier = MercPtrs[ usSoldierIndex ];
-		return( TRUE);
-	}
-	else
-	{
-		return( FALSE );
-	}
-
+	if (usSoldierIndex >= TOTAL_SOLDIERS) return NULL; // XXX assert?
+	SOLDIERTYPE* Soldier = MercPtrs[usSoldierIndex];
+	return Soldier->bActive ? Soldier : NULL;
 }
 
 
@@ -807,7 +784,6 @@ BOOLEAN ExecuteOverhead( )
 {
 
 	UINT32                          cnt;
-	SOLDIERTYPE             *pSoldier;
 	INT16                                   sAPCost;
 	INT16                                   sBPCost;
 	FLOAT                                   dXPos , dYPos;
@@ -824,14 +800,10 @@ BOOLEAN ExecuteOverhead( )
 	static INT32                                    iTimerTest = 0;
 	static INT32                                    iTimerVal = 0;
 
-
-	if(GetSoldier(&pSoldier, gusSelectedSoldier))
+	const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+	if (pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_GREEN_RAY)
 	{
-		if(pSoldier->bActive)
-		{
-			if(pSoldier->uiStatusFlags&SOLDIER_GREEN_RAY)
-				LightShowRays((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE), FALSE);
-		}
+		LightShowRays(pSoldier->dXPos / CELL_X_SIZE, pSoldier->dYPos / CELL_Y_SIZE, FALSE);
 	}
 
 
@@ -879,7 +851,7 @@ BOOLEAN ExecuteOverhead( )
 
 		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 		{
-			pSoldier = MercSlots[ cnt ];
+			SOLDIERTYPE* pSoldier = MercSlots[cnt];
 
 			// Syncronize for upcoming soldier counters
 			SYNCTIMECOUNTER( );
@@ -1589,7 +1561,7 @@ BOOLEAN ExecuteOverhead( )
 
 		if ( guiNumAwaySlots > 0 && !gfPauseAllAI && !(gTacticalStatus.uiFlags & INCOMBAT) && guiAISlotToHandle == HANDLE_OFF_MAP_MERC && guiAIAwaySlotToHandle != RESET_HANDLE_OF_OFF_MAP_MERCS )
 		{
-			pSoldier = AwaySlots[ guiAIAwaySlotToHandle ];
+			SOLDIERTYPE* pSoldier = AwaySlots[guiAIAwaySlotToHandle];
 
 			// Syncronize for upcoming soldier counters
 			SYNCTIMECOUNTER( );
@@ -1629,7 +1601,7 @@ BOOLEAN ExecuteOverhead( )
 				// Reset all waitng codes
 				for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 				{
-					pSoldier = MercSlots[ cnt ];
+					SOLDIERTYPE* pSoldier = MercSlots[cnt];
 					if ( pSoldier != NULL )
 					{
 						pSoldier->ubWaitActionToDo = 0;
@@ -3835,7 +3807,7 @@ static INT8 NumActiveAndConsciousTeamMembers(UINT8 ubTeam)
 }
 
 
-UINT8 FindNextActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs )
+UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
 	UINT8   bLastTeamID;
 	INT32 cnt;
@@ -4115,8 +4087,9 @@ static const char* GetSceneFilename(void)
 
 extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
 
+
 // NB if making changes don't forget to update NewOKDestinationAndDirection
-INT16 NewOKDestination( SOLDIERTYPE * pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel )
+INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel)
 {
 	UINT8					bPerson;
 	STRUCTURE *		pStructure;
@@ -4468,7 +4441,8 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 	return(FALSE);
 }
 
-INT16 FindAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor )
+
+INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirection, INT16* psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor)
 {
 // psAdjustedGridNo gets the original gridno or the new one if updated
 	// It will ONLY be updated IF we were over a merc, ( it's updated to their gridno )
@@ -5054,7 +5028,7 @@ INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSold
 }
 
 
-BOOLEAN UIOKMoveDestination( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 {
 	BOOLEAN fVisible;
 

@@ -1643,8 +1643,7 @@ static UINT8 HandleBombCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAc
 }
 
 
-
-void HandleEndConfirmCursor( SOLDIERTYPE *pSoldier )
+void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier)
 {
 	UINT16				usInHand;
 	UINT8					ubItemCursor;
@@ -1963,7 +1962,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 }
 
 
-UINT8 GetActionModeCursor( SOLDIERTYPE *pSoldier )
+UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier)
 {
 	UINT8					ubCursor;
   UINT16				usInHand;

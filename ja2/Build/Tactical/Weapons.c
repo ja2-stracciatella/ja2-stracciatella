@@ -354,7 +354,7 @@ static const char* const gzBurstSndStrings[] =
 static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
 
 
-UINT16 GunRange( OBJECTTYPE * pObj )
+UINT16 GunRange(const OBJECTTYPE* pObj)
 {
 	INT8 bAttachPos;
 
@@ -380,7 +380,8 @@ UINT16 GunRange( OBJECTTYPE * pObj )
 	}
 }
 
-INT8 EffectiveArmour( OBJECTTYPE * pObj )
+
+INT8 EffectiveArmour(const OBJECTTYPE* pObj)
 {
 	INT32		iValue;
 	INT8		bPlate;
@@ -405,7 +406,8 @@ INT8 EffectiveArmour( OBJECTTYPE * pObj )
 	return( (INT8) iValue );
 }
 
-INT8 ArmourPercent( SOLDIERTYPE * pSoldier )
+
+INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iVest, iHelmet, iLeg;
 
@@ -2397,7 +2399,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 }
 
 
-BOOLEAN InRange( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	 INT16								sRange;
 	 UINT16								usInHand;
@@ -4136,7 +4138,7 @@ BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNot
 }
 
 
-INT32 CalcMaxTossRange( SOLDIERTYPE * pSoldier, UINT16 usItem, BOOLEAN fArmed )
+INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArmed)
 {
 	INT32 iRange;
 	UINT16	usSubItem;

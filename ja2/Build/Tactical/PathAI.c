@@ -484,7 +484,7 @@ static void RestorePathAIToDefaults(void)
 ///////////////////////////////////////////////////////////////////////
 //	FINDBESTPATH                                                   /
 ////////////////////////////////////////////////////////////////////////
-INT32 FindBestPath(SOLDIERTYPE *s , INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags )
+INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags)
 {
 	INT32 iDestination = sDestination, iOrigination;
 	INT32 iCnt=-1, iStructIndex;
@@ -2199,9 +2199,7 @@ void ErasePath(char bEraseOldOne)
 }
 
 
-
-
-INT16 PlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse , INT16 sAPBudget)
+INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT8 bStealth, INT8 bReverse, INT16 sAPBudget)
 {
  INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
@@ -2645,7 +2643,7 @@ INT16 EstimatePlotPath( SOLDIERTYPE *pSold, INT16 sDestGridno, INT8 bCopyRoute, 
 }
 
 
-UINT8 InternalDoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32 * piDoorGridNo, BOOLEAN fReturnDoorCost )
+UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo, BOOLEAN fReturnDoorCost)
 {
 	// This function will return either TRAVELCOST_DOOR (in place of closed door cost),
 	// TRAVELCOST_OBSTACLE, or the base ground terrain
@@ -2836,10 +2834,10 @@ UINT8 InternalDoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMov
 
 	}
 	return( ubMovementCost );
-
 }
 
-UINT8 DoorTravelCost( SOLDIERTYPE * pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32 * piDoorGridNo )
+
+UINT8 DoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 ubMovementCost, BOOLEAN fReturnPerceivedValue, INT32* piDoorGridNo)
 {
 	return( InternalDoorTravelCost( pSoldier, iGridNo, ubMovementCost, fReturnPerceivedValue, piDoorGridNo, FALSE ) );
 }

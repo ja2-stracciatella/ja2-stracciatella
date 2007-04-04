@@ -255,7 +255,7 @@ BOOLEAN ShutDownQuoteBoxIfActive( )
 }
 
 
-INT8 GetCivType( SOLDIERTYPE *pCiv )
+INT8 GetCivType(const SOLDIERTYPE* pCiv)
 {
 	if ( pCiv->ubProfile != NO_PROFILE )
 	{

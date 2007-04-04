@@ -20,7 +20,6 @@
 #include "Utilities.h"
 #include "World_Items.h"
 #include "WorldMan.h"
-#include "Overhead.h"	//GetSoldier
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Lighting.h"

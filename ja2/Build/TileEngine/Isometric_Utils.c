@@ -735,7 +735,7 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 }
 
 
-BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+BOOLEAN FindHeigherLevel(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8* pbDirection)
 {
 	INT32			cnt;
 	INT16			sNewGridNo;
@@ -784,7 +784,8 @@ BOOLEAN FindHeigherLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDi
 	return( FALSE );
 }
 
-BOOLEAN FindLowerLevel( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+
+BOOLEAN FindLowerLevel(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8* pbDirection)
 {
 	INT32			cnt;
 	INT16			sNewGridNo;
@@ -1006,7 +1007,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 }
 
 
-BOOLEAN FindFenceJumpDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8 *pbDirection )
+BOOLEAN FindFenceJumpDirection(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8* pbDirection)
 {
 	INT32			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;

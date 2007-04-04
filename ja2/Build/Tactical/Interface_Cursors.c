@@ -505,14 +505,7 @@ BOOLEAN HideUICursor( )
 static void DrawSnappingCursor(void)
 {
 	LEVELNODE					*pNewUIElem;
-	SOLDIERTYPE								 *pSoldier;
 	static BOOLEAN		fShowAP = TRUE;
-
-	if ( gusSelectedSoldier != NO_SOLDIER )
-	{
-			GetSoldier( &pSoldier, gusSelectedSoldier );
-
-	}
 
 	// If we are in draw item mode, do nothing here but call the fuctiuon
 	switch ( guiCurUICursor )

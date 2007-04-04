@@ -76,7 +76,7 @@ enum
 
 extern	UINT8			gubSkiDirtyLevel;
 
-extern	OBJECTTYPE					*gpHighLightedItemObject;
+extern const OBJECTTYPE* gpHighLightedItemObject;
 
 
 extern	INVENTORY_IN_SLOT		gMoveingItem;

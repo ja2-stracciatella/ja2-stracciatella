@@ -3765,34 +3765,34 @@ static void SetTalkingMercPauseState(BOOLEAN fState)
 static void SetQDSMercProfile(void)
 {
 	// Get selected soldier
-	if	( GetSoldier( &gTalkingMercSoldier, gusSelectedSoldier ) )
+	gTalkingMercSoldier = GetSoldier(gusSelectedSoldier);
+	if (gTalkingMercSoldier == NULL) return;
+
+	// Change guy!
+	ForceSoldierProfileID( gTalkingMercSoldier, (UINT8)gNpcListBox.sCurSelectedItem );
+
+	//if it is an rpc
+	if( gTalkingMercSoldier->ubProfile >= 57 && gTalkingMercSoldier->ubProfile <= 72 )
 	{
-		// Change guy!
-		ForceSoldierProfileID( gTalkingMercSoldier, (UINT8)gNpcListBox.sCurSelectedItem );
-
-		//if it is an rpc
-		if( gTalkingMercSoldier->ubProfile >= 57 && gTalkingMercSoldier->ubProfile <= 72 )
-		{
-			if( gfAddNpcToTeam )
-				gMercProfiles[ gTalkingMercSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
-			else
-				gMercProfiles[ gTalkingMercSoldier->ubProfile ].ubMiscFlags &= ~PROFILE_MISC_FLAG_RECRUITED;
-		}
+		if( gfAddNpcToTeam )
+			gMercProfiles[ gTalkingMercSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 		else
-		{
-		}
+			gMercProfiles[ gTalkingMercSoldier->ubProfile ].ubMiscFlags &= ~PROFILE_MISC_FLAG_RECRUITED;
+	}
+	else
+	{
+	}
 
-		if( WhichPanelShouldTalkingMercUse( ) == QDS_NPC_PANEL )
-		{
-			//remove the talking dialogue
-			if( gfNpcPanelIsUsedForTalkingMerc )
-				DeleteTalkingMenu( );
+	if( WhichPanelShouldTalkingMercUse( ) == QDS_NPC_PANEL )
+	{
+		//remove the talking dialogue
+		if( gfNpcPanelIsUsedForTalkingMerc )
+			DeleteTalkingMenu( );
 
-			gfNpcPanelIsUsedForTalkingMerc = TRUE;
+		gfNpcPanelIsUsedForTalkingMerc = TRUE;
 
-			InternalInitTalkingMenu( gTalkingMercSoldier->ubProfile, 10, 10 );
-			gpDestSoldier = &Menptr[21];
-		}
+		InternalInitTalkingMenu( gTalkingMercSoldier->ubProfile, 10, 10 );
+		gpDestSoldier = &Menptr[21];
 	}
 }
 

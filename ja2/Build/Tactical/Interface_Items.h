@@ -50,17 +50,16 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
 BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity );
 void ShutdownInvSlotInterface( );
-void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel );
+void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel);
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
-void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY );
+void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
 void DisableInvRegions( BOOLEAN fDisable );
 
 void DegradeNewlyAddedItems( );
 void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier );
 
 
-BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn );
-
+BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEAN fOn);
 
 
 // THIS FUNCTION IS CALLED TO RENDER AN ITEM.
@@ -74,8 +73,7 @@ BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn
 //	pubHighlightCounter - if not null, and == 2 - will display name above item
 //											-	if == 1 will only dirty the name space and then set counter to 0
 //  Last parameter used mainly for when mouse is over item
-
-void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor );
+void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8* pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor);
 
 
 BOOLEAN		gfInItemDescBox;
@@ -127,7 +125,7 @@ UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
 UINT16 GetTileGraphicForItem( INVTYPE *pItem );
 BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
 
-void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
+void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier);
 
 void CancelItemPointer( );
 
@@ -135,7 +133,7 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile );
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile );
 
 // handle compatable items for merc and map inventory
-BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc );
+BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc);
 BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInvPos, INT32 iStartSlotNumber, BOOLEAN fOn, BOOLEAN fFromMerc  );
 void ResetCompatibleItemArray( );
 

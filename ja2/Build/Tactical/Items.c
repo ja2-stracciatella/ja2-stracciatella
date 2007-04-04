@@ -1288,7 +1288,8 @@ INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
 	return( NO_SLOT );
 }
 
-INT8 FindAttachment( OBJECTTYPE * pObj, UINT16 usItem )
+
+INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 {
 	INT8	bLoop;
 
@@ -1346,9 +1347,8 @@ INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon )
 }
 
 
-
 //Simple check to see if the item has any attachments
-BOOLEAN ItemHasAttachments( OBJECTTYPE * pObj )
+BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj)
 {
 	if ((pObj->usAttachItem[0] == NOTHING) && (pObj->usAttachItem[1] == NOTHING) && (pObj->usAttachItem[2] == NOTHING) && (pObj->usAttachItem[3] == NOTHING))
 	{
@@ -1779,7 +1779,8 @@ UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
 	return( (UINT8) usWeight );
 }
 
-UINT32 CalculateCarriedWeight( SOLDIERTYPE * pSoldier )
+
+UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier)
 {
 	UINT32	uiTotalWeight = 0;
 	UINT32	uiPercent;

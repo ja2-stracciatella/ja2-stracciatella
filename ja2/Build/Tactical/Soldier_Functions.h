@@ -8,7 +8,7 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier );
 
 BOOLEAN IsValidStance( SOLDIERTYPE *pSoldier, INT8 bNewStance );
 void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier );
-BOOLEAN IsValidMovementMode( SOLDIERTYPE *pSoldier, INT16 usMovementMode );
+BOOLEAN IsValidMovementMode(const SOLDIERTYPE* pSoldier, INT16 usMovementMode);
 void SoldierCollapse( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState );

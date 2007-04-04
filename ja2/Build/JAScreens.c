@@ -470,18 +470,14 @@ UINT32 PalEditScreenShutdown(void)
 
 static void PalEditRenderHook(void)
 {
-	SOLDIERTYPE		*pSoldier;
-
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
 		// Set to current
-		GetSoldier( &pSoldier, gusSelectedSoldier );
-
+		const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 		DisplayPaletteRep( pSoldier->HeadPal, 50, 10, FRAME_BUFFER );
 		DisplayPaletteRep( pSoldier->PantsPal, 50, 50, FRAME_BUFFER );
 		DisplayPaletteRep( pSoldier->VestPal, 50, 90, FRAME_BUFFER );
 		DisplayPaletteRep( pSoldier->SkinPal, 50, 130, FRAME_BUFFER );
-
 	}
 }
 
@@ -489,7 +485,6 @@ static void PalEditRenderHook(void)
 static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 {
 	UINT8					ubType;
-	SOLDIERTYPE		*pSoldier;
 	UINT8					ubPaletteRep;
 	UINT32				cnt;
 	UINT8					ubStartRep = 0;
@@ -508,8 +503,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 
   if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'h' ))
   {
-			// Get Soldier
-			GetSoldier( &pSoldier, gusSelectedSoldier );
+			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 
 			// Get index of current
 			CHECKF( GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep ) );
@@ -539,8 +533,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 
   if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'v' ))
   {
-			// Get Soldier
-			GetSoldier( &pSoldier, gusSelectedSoldier );
+			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 
 			// Get index of current
 			CHECKF( GetPaletteRepIndexFromID( pSoldier->VestPal, &ubPaletteRep ) );
@@ -569,8 +562,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 
   if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'p' ))
   {
-			// Get Soldier
-			GetSoldier( &pSoldier, gusSelectedSoldier );
+			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 
 			// Get index of current
 			CHECKF( GetPaletteRepIndexFromID( pSoldier->PantsPal, &ubPaletteRep ) );
@@ -599,8 +591,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 
   if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 's' ))
   {
-			// Get Soldier
-			GetSoldier( &pSoldier, gusSelectedSoldier );
+			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 
 			// Get index of current
 			CHECKF( GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep ) );

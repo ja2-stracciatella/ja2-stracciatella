@@ -38,7 +38,6 @@ static void SelectPausedFireAnimation(SOLDIERTYPE* pSoldier);
 
 BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 {
-	SOLDIERTYPE				*pPlanSoldier;
 	INT16							sXPos, sYPos;
 	INT16							sAPCost = 0;
 	INT8							bDirection;
@@ -80,8 +79,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 			// Get Grid Corrdinates of mouse
 			if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
 			{
-				// Get pointer to soldier
-				GetSoldier( &pPlanSoldier, (UINT16)ubNewIndex );
+				SOLDIERTYPE* pPlanSoldier = GetSoldier(ubNewIndex);
 
 				pPlanSoldier->sPlannedTargetX = -1;
 				pPlanSoldier->sPlannedTargetY = -1;
@@ -162,8 +160,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 				// Get Grid Corrdinates of mouse
 				if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
 				{
-					// Get pointer to soldier
-					GetSoldier( &pPlanSoldier, (UINT16)ubNewIndex );
+					SOLDIERTYPE* pPlanSoldier = GetSoldier(ubNewIndex);
 
 					pPlanSoldier->sPlannedTargetX = -1;
 					pPlanSoldier->sPlannedTargetY = -1;

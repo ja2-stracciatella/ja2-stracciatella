@@ -286,7 +286,7 @@ void ToggleLookCursorMode( UINT32 *puiNewEvent );
 void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance );
 void GetCursorMovementFlags( UINT32 *puiCursorFlags );
 
-BOOLEAN HandleUIMovementCursor( SOLDIERTYPE *pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags );
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags);
 BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
@@ -325,9 +325,8 @@ BOOLEAN SelectedGuyInBusyAnimation( );
 void GotoLowerStance( SOLDIERTYPE *pSoldier );
 void GotoHeigherStance( SOLDIERTYPE *pSoldier );
 
-BOOLEAN IsValidJumpLocation( SOLDIERTYPE *pSoldier, INT16 sGridNo , BOOLEAN fCheckForPath);
+BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath);
 
-void PopupAssignmentMenuInTactical( SOLDIERTYPE *pSoldier );
-
+void PopupAssignmentMenuInTactical(const SOLDIERTYPE* pSoldier);
 
 #endif

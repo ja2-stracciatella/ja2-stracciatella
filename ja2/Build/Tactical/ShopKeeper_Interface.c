@@ -298,7 +298,7 @@ INT32			giShopKeepDialogueEventinProgress = - 1;
 //OBJECTTYPE				gpSkiItemPointer;
 INVENTORY_IN_SLOT		gMoveingItem;
 
-OBJECTTYPE					*gpHighLightedItemObject=NULL;
+const OBJECTTYPE* gpHighLightedItemObject = NULL;
 
 BOOLEAN gfResetShopKeepIdleQuote = FALSE;
 BOOLEAN gfDoEvaluationAfterOpening = FALSE;

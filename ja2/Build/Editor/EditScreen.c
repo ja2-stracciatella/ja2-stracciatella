@@ -2717,7 +2717,6 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
 	INT32 iCount;
 	UINT16 cnt;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 	BOOLEAN fRemovedLight;
 	INT32 iMapIndex;
@@ -2737,11 +2736,9 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 				fSoldierLight = FALSE;
 				for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
 				{
-					if ( GetSoldier( &pSoldier, cnt ) )
-					{
-						if ( pSoldier->iLight == iCount )
-							fSoldierLight = TRUE;
-					}
+					const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
+					if (pSoldier != NULL && pSoldier->iLight == iCount)
+						fSoldierLight = TRUE;
 				}
 
 				if ( !fSoldierLight )
@@ -2796,11 +2793,9 @@ void ShowLightPositionHandles( void )
 			fSoldierLight = FALSE;
 			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
 			{
-				if ( GetSoldier( &pSoldier, cnt ) )
-				{
-					if ( pSoldier->iLight == iCount )
-						fSoldierLight = TRUE;
-				}
+				const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
+				if (pSoldier != NULL && pSoldier->iLight == iCount)
+					fSoldierLight = TRUE;
 			}
 
 			if ( !fSoldierLight )
@@ -2835,11 +2830,9 @@ static void RemoveLightPositionHandles(void)
 			fSoldierLight = FALSE;
 			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
 			{
-				if ( GetSoldier( &pSoldier, cnt ) )
-				{
-					if ( pSoldier->iLight == iCount )
-						fSoldierLight = TRUE;
-				}
+				const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
+				if (pSoldier != NULL && pSoldier->iLight == iCount)
+					fSoldierLight = TRUE;
 			}
 
 			if ( !fSoldierLight )

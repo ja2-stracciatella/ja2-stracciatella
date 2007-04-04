@@ -181,7 +181,6 @@ void RenderTacticalInterfaceWhileScrolling( )
 
 void SetUpInterface( )
 {
-	SOLDIERTYPE								 *pSoldier;
 	LEVELNODE									 *pIntTile;
 
 	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -201,12 +200,6 @@ void SetUpInterface( )
 			EndUIMessage( );
 		}
 	}
-
-	if ( gusSelectedSoldier != NO_SOLDIER )
-	{
-			GetSoldier( &pSoldier, gusSelectedSoldier );
-	}
-
 
 	if ( gCurrentUIMode == OPENDOOR_MENU_MODE )
 	{
@@ -555,7 +548,6 @@ static void StartViewportOverlays(void);
 
 void RenderTopmostTacticalInterface( )
 {
-	SOLDIERTYPE								 *pSoldier;
 	UINT32											 cnt;
 	static UINT32				uiBogTarget = 0;
 	INT16			sX, sY;
@@ -694,7 +686,7 @@ void RenderTopmostTacticalInterface( )
 	// Loop through all mercs and make go
 	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 	{
-		pSoldier = MercSlots[ cnt ];
+		const SOLDIERTYPE* pSoldier = MercSlots[cnt];
 
 		if (pSoldier != NULL )
 		{
@@ -785,7 +777,8 @@ void RenderTopmostTacticalInterface( )
 	{
 		if ( gfUIOverItemPool )
 		{
-			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+			const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+			if (pSoldier != NULL)
 			{
 				// Check if we are over an item pool
 				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )

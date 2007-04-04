@@ -1735,7 +1735,6 @@ static void LoadNPCInformationFromProfileStruct(void)
 {
 	UINT32					cnt;
 	INT16						sSoldierID;
-	SOLDIERTYPE *		pSoldier;
 
 	// CJC: disabled this Dec 21, 1998 as unnecessary (and messing up quote files for recruited/escorted NPCs
 	return;
@@ -1755,8 +1754,8 @@ static void LoadNPCInformationFromProfileStruct(void)
 			continue;
 
 		//if we cant get a pointer to the soldier, continue
-		if( !GetSoldier( &pSoldier, sSoldierID ) )
-			continue;
+		SOLDIERTYPE* pSoldier = GetSoldier(sSoldierID);
+		if (pSoldier == NULL) continue;
 
 		// load quote info if it exists
 		if ( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS )

@@ -3551,7 +3551,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 }
 
 
-UINT16 GetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+UINT16 GetSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 {
 	UINT16 usAnimSurface;
 

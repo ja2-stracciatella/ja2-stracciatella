@@ -3965,7 +3965,6 @@ void ReloadTileset( UINT8 ubID )
 
 static void SaveMapLights(HWFILE hfile)
 {
-	SOLDIERTYPE *pSoldier;
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
 	BOOLEAN fSoldierLight;
@@ -3987,11 +3986,9 @@ static void SaveMapLights(HWFILE hfile)
 			fSoldierLight = FALSE;
 			for ( cnt2 = 0; cnt2 < MAX_NUM_SOLDIERS && !fSoldierLight; cnt2++ )
 			{
-				if( GetSoldier( &pSoldier, cnt2 ) )
-				{
-					if ( pSoldier->iLight == (INT32)cnt )
-						fSoldierLight = TRUE;
-				}
+				const SOLDIERTYPE* pSoldier = GetSoldier(cnt2);
+				if (pSoldier != NULL && pSoldier->iLight == (INT32)cnt)
+					fSoldierLight = TRUE;
 			}
 			if( !fSoldierLight )
 				usNumLights++;
@@ -4009,11 +4006,9 @@ static void SaveMapLights(HWFILE hfile)
 			fSoldierLight = FALSE;
 			for ( cnt2 = 0; cnt2 < MAX_NUM_SOLDIERS && !fSoldierLight; cnt2++ )
 			{
-				if ( GetSoldier( &pSoldier, cnt2 ) )
-				{
-					if ( pSoldier->iLight == (INT32)cnt )
-						fSoldierLight = TRUE;
-				}
+				const SOLDIERTYPE* pSoldier = GetSoldier(cnt2);
+				if (pSoldier != NULL && pSoldier->iLight == (INT32)cnt)
+					fSoldierLight = TRUE;
 			}
 			if( !fSoldierLight )
 			{ //save the light

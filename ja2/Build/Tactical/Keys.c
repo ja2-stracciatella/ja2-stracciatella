@@ -172,7 +172,8 @@ BOOLEAN SoldierHasKey( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
 	return( FALSE );
 }
 
-BOOLEAN KeyExistsInKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 * pubPos )
+
+BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pubPos)
 {
 	// returns the index into the key ring where the key can be found
 	UINT8		ubLoop;

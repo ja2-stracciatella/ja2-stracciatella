@@ -922,7 +922,8 @@ void ShutdownInvSlotInterface( )
 
 }
 
-void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
+
+void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 {
 	// Blit body inv, based on body type
 	INT8 bSubImageIndex = gbCompatibleApplyItem;
@@ -931,10 +932,10 @@ void RenderInvBodyPanel( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 }
 
 
-static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel);
+static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel);
 
 
-void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
+void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 {
 	INT32									cnt;
 	static wchar_t					pStr[ 150 ];
@@ -975,11 +976,10 @@ void HandleRenderInvSlots( SOLDIERTYPE *pSoldier, UINT8 fDirtyLevel )
 }
 
 
-static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel)
+static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel)
 {
 	INT16 sX, sY;
 	INT16	sBarX, sBarY;
-	OBJECTTYPE  *pObject;
 	BOOLEAN	fOutline = FALSE;
 	INT16		sOutlineColor = 0;
 	UINT8		fRenderDirtyLevel;
@@ -989,7 +989,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fD
 	//Assign the screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
 
-	pObject = &(pSoldier->inv[ sPocket ]);
+	const OBJECTTYPE* pObject = &pSoldier->inv[sPocket];
 
 	sX = gSMInvData[ sPocket ].sX;
 	sY = gSMInvData[ sPocket ].sY;
@@ -1106,7 +1106,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fD
 }
 
 
-static BOOLEAN CompatibleAmmoForGun(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObject)
+static BOOLEAN CompatibleAmmoForGun(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_AMMO ) )
 	{
@@ -1120,7 +1120,7 @@ static BOOLEAN CompatibleAmmoForGun(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObj
 }
 
 
-static BOOLEAN CompatibleGunForAmmo(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObject)
+static BOOLEAN CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_GUN ) )
 	{
@@ -1134,7 +1134,7 @@ static BOOLEAN CompatibleGunForAmmo(OBJECTTYPE* pTryObject, OBJECTTYPE* pTestObj
 }
 
 
-static BOOLEAN CompatibleItemForApplyingOnMerc(OBJECTTYPE* pTestObject)
+static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* pTestObject)
 {
 	UINT16 usItem = pTestObject->usItem;
 
@@ -1225,13 +1225,14 @@ void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject,
 
 }
 
-BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc   )
+
+BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc)
 {
 	BOOLEAN			fFound = FALSE;
 	INT32				cnt;
-	OBJECTTYPE  *pObject, *pTestObject ;
 	BOOLEAN			fFoundAttachment = FALSE;
 
+	const OBJECTTYPE* pTestObject;
 	if( fFromMerc == FALSE )
 	{
 		pTestObject = &( pInventoryPoolList[ bInvPos ].o );
@@ -1253,8 +1254,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
+			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 			if ( CompatibleItemForApplyingOnMerc( pObject ) )
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1302,7 +1302,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 		// First test attachments, which almost any type of item can have....
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
+			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 
 			if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
 			{
@@ -1334,8 +1334,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
+			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 			if ( CompatibleAmmoForGun( pObject, pTestObject ) )
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1353,8 +1352,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen( SOLDIERTYPE *pSoldier, INT32 bInvPos
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
+			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 			if ( CompatibleGunForAmmo( pObject, pTestObject ) )
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1474,11 +1472,10 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 }
 
 
-BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn  )
+BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn)
 {
 	BOOLEAN			fFound = FALSE;
 	INT32				cnt;
-	OBJECTTYPE  *pObject;
 	BOOLEAN			fFoundAttachment = FALSE;
 
 	// ATE: If pTest object is NULL, test only for existence of syringes, etc...
@@ -1486,8 +1483,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
+			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 			if ( CompatibleItemForApplyingOnMerc( pObject ) )
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1533,7 +1529,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 	// First test attachments, which almost any type of item can have....
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
-		pObject = &(pSoldier->inv[ cnt ]);
+		const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 
 		if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
 		{
@@ -1565,8 +1561,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 		{
 			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 			{
-				pObject = &(pSoldier->inv[ cnt ]);
-
+				const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 				if ( CompatibleAmmoForGun( pObject, pTestObject ) )
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1585,8 +1580,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTest
 		{
 			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 			{
-				pObject = &(pSoldier->inv[ cnt ]);
-
+				const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
 				if ( CompatibleGunForAmmo( pObject, pTestObject ) )
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
@@ -1654,13 +1648,14 @@ void ResetCompatibleItemArray( )
 	}
 }
 
-BOOLEAN HandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, INT8 bInvPos, BOOLEAN fOn )
+
+BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEAN fOn)
 {
 	INT32 cnt;
-	OBJECTTYPE  *pTestObject;
 	BOOLEAN			fFound = FALSE;
 
 	//if we are in the shopkeeper interface
+	const OBJECTTYPE* pTestObject;
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 	{
 		// if the inventory position is -1, this is a flag from the Shopkeeper interface screen
@@ -1864,7 +1859,7 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 *pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor )
+void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8* pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
@@ -6913,7 +6908,7 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem( wchar_t *pzStr, size_t Length, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier )
+void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier)
 {
 	wchar_t								pStr[ 250 ];
 	UINT16								usItem = pObject->usItem;

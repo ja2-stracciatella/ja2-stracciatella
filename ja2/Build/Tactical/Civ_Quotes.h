@@ -76,7 +76,7 @@ void InitCivQuoteSystem( );
 
 void StartCivQuote( SOLDIERTYPE *pCiv );
 
-INT8 GetCivType( SOLDIERTYPE *pCiv );
+INT8 GetCivType(const SOLDIERTYPE* pCiv);
 
 void HandleCivQuote( );
 

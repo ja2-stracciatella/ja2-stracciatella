@@ -546,7 +546,7 @@ static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 	//Get a soldier that is on the player team
 	if( gusSelectedSoldier != NOBODY )
 	{
-		GetSoldier( &pSoldier, gusSelectedSoldier );
+		pSoldier = GetSoldier(gusSelectedSoldier);
 	}
 	else
 	{

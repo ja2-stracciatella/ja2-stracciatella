@@ -1138,7 +1138,6 @@ void EraseRenderArrows( )
 
 static void GetArrowsBackground(void)
 {
-	SOLDIERTYPE								 *pSoldier;
 	INT16											 sMercScreenX, sMercScreenY;
 	UINT16										 sArrowHeight = ARROWS_HEIGHT, sArrowWidth = ARROWS_WIDTH;
 
@@ -1149,8 +1148,7 @@ static void GetArrowsBackground(void)
 
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
-		// Get selected soldier
-		GetSoldier( &pSoldier, gusSelectedSoldier );
+		const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 
 		// Get screen position of our guy
 		GetSoldierTRUEScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
@@ -1350,7 +1348,6 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 
 void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 {
-	SOLDIERTYPE								 *pSoldier;
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
 	INT32 iBack;
@@ -1361,8 +1358,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
   BOOLEAN                    fRaiseName = FALSE;
   BOOLEAN                    fDoName = TRUE;
 
-
-	GetSoldier( &pSoldier, usSoldierID );
+	SOLDIERTYPE* pSoldier = GetSoldier(usSoldierID);
 
 	if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
 	{

@@ -593,7 +593,6 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 {
 	//UINT32						uiMercFlags;
 	UINT16						usSoldierIndex;
-	SOLDIERTYPE				*pTSoldier;
 	UINT8							ubTDirection;
 	UINT8							ubTargetStance;
 
@@ -601,7 +600,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 	usSoldierIndex = WhoIsThere2( pSoldier->sTargetGridNo, pSoldier->bLevel );
 	if ( usSoldierIndex != NOBODY )
 	{
-		GetSoldier( &pTSoldier, usSoldierIndex );
+		const SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
 
 		// Look at stance of target
 		ubTargetStance = gAnimControl[ pTSoldier->usAnimState ].ubEndHeight;
@@ -5939,7 +5938,7 @@ BOOLEAN DeletePaletteData( )
 }
 
 
-BOOLEAN GetPaletteRepIndexFromID( PaletteRepID aPalRep, UINT8 *pubPalIndex )
+BOOLEAN GetPaletteRepIndexFromID(const PaletteRepID aPalRep, UINT8* pubPalIndex)
 {
 	UINT32 cnt;
 
@@ -7368,7 +7367,8 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 
 }
 
-INT16 GetDirectionFromGridNo( INT16 sGridNo, SOLDIERTYPE *pSoldier )
+
+INT16 GetDirectionFromGridNo(INT16 sGridNo, const SOLDIERTYPE* pSoldier)
 {
 	INT16 sXPos, sYPos;
 
@@ -7389,7 +7389,8 @@ INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc )
 
 }
 
-INT16 GetDirectionFromXY( INT16 sXPos, INT16 sYPos, SOLDIERTYPE *pSoldier )
+
+INT16 GetDirectionFromXY(INT16 sXPos, INT16 sYPos, const SOLDIERTYPE* pSoldier)
 {
 	INT16 sXPos2, sYPos2;
 
@@ -7766,7 +7767,8 @@ static void SendSoldierSetDirectionEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDire
 
 }
 
-void SendSoldierSetDesiredDirectionEvent( SOLDIERTYPE *pSoldier, UINT16 usDesiredDirection )
+
+void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usDesiredDirection)
 {
 	// Sent event for position update
 	EV_S_SETDESIREDDIRECTION	SSetDesiredDirection;
@@ -8114,7 +8116,6 @@ void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 
 void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	SOLDIERTYPE *pTSoldier;
 	//UINT32 uiMercFlags;
 	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
@@ -8179,7 +8180,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 		usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 		if ( usSoldierIndex != NOBODY )
 		{
-			GetSoldier( &pTSoldier, usSoldierIndex );
+			SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
 
 			// Look at stance of target
 			switch( gAnimControl[ pTSoldier->usAnimState ].ubEndHeight	)
@@ -8284,7 +8285,6 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	BOOLEAN			fMartialArtist = FALSE;
-	SOLDIERTYPE *pTSoldier;
 	//UINT32 uiMercFlags;
 	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
@@ -8305,16 +8305,11 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 	// get target.....
 	usSoldierIndex = WhoIsThere2( pSoldier->sTargetGridNo, pSoldier->bLevel );
-	if ( usSoldierIndex != NOBODY )
-	{
-		GetSoldier( &pTSoldier, usSoldierIndex );
+	if (usSoldierIndex == NOBODY) return;
 
-		fChangeDirection = TRUE;
-	}
-	else
-	{
-		return;
-	}
+	SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
+
+	fChangeDirection = TRUE;
 
 
 	if ( fChangeDirection )
@@ -9433,7 +9428,7 @@ BOOLEAN IsValidStance( SOLDIERTYPE *pSoldier, INT8 bNewStance )
 }
 
 
-BOOLEAN IsValidMovementMode( SOLDIERTYPE *pSoldier, INT16 usMovementMode )
+BOOLEAN IsValidMovementMode(const SOLDIERTYPE* pSoldier, INT16 usMovementMode)
 {
 	// Check, if dest is prone, we can actually do this!
 
@@ -10575,8 +10570,7 @@ BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier )
 }
 
 
-
-BOOLEAN CanRobotBeControlled( SOLDIERTYPE *pSoldier )
+BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier)
 {
 	SOLDIERTYPE *pController;
 

@@ -1601,13 +1601,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// ATE: Only do if we're not inspecial case...
 					if ( !( pSoldier->uiStatusFlags & SOLDIER_NPC_DOING_PUNCH ) )
 					{
-						SOLDIERTYPE *pTSoldier;
 						UINT32 uiMercFlags;
 						UINT16 usSoldierIndex;
 
 						if ( FindSoldier( pSoldier->sTargetGridNo, &usSoldierIndex, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
 						{
-							GetSoldier( &pTSoldier, usSoldierIndex );
+							SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
 
 							// IF WE ARE AN ANIMAL, CAR, MONSTER, DONT'T DODGE
 							if ( IS_MERC_BODY_TYPE( pTSoldier ) )

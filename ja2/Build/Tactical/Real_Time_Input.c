@@ -98,7 +98,6 @@ void	GetRTMouseButtonInput( UINT32 *puiNewEvent )
 static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
 	UINT16	usSoldierIndex;
-	SOLDIERTYPE *pSoldier;
 	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;
 	UINT16	usMapPos;
@@ -144,7 +143,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 								if ( gusSelectedSoldier != NOBODY )
 								{
-									if(	GetSoldier( &pSoldier, gusSelectedSoldier ) && gpItemPointer == NULL )
+									SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+									if (pSoldier != NULL && gpItemPointer == NULL)
 									{
 										// OK, check for needing ammo
 										if ( HandleUIReloading( pSoldier ) )
@@ -397,8 +397,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							{
 								case CONFIRM_ACTION_MODE:
 								case ACTION_MODE:
-
-									if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+								{
+									SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+									if (pSoldier != NULL)
 									{
 										if ( pSoldier->bDoBurst )
 										{
@@ -422,8 +423,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 										}
 									}
 									break;
-
 								}
+							}
 						}
 						//else
 						{
@@ -554,7 +555,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																		 if ( !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 																		 {
 																			 // Select guy
-																			 if(	GetSoldier( &pSoldier, gusUIFullTargetID ) && gpItemPointer == NULL )
+																			SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
+																			 if (pSoldier != NULL && gpItemPointer == NULL)
 																			 {
 																					if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 																					{
@@ -650,7 +652,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			{
 																			  INT16							sIntTileGridNo;
 
-																				if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+																				SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+																				if (pSoldier != NULL)
 																				{
 																					BeginDisplayTimedCursor( GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300 );
 
@@ -672,7 +675,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																		}
 																		else if ( bReturnCode == 0 )
 																		{
-																			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+																			const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+																			if (pSoldier != NULL)
 																			{
 																				// First check if we clicked on a guy, if so, make selected if it's ours
 																				if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) && ( uiMercFlags & OWNED_MERC ) )
@@ -911,10 +915,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 		// release mouse over another mouse region
 		if ( gfBeginBurstSpreadTracking )
 		{
-			if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
-			{
-				pSoldier->fDoSpread = FALSE;
-			}
+			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+			if (pSoldier != NULL) pSoldier->fDoSpread = FALSE;
 			gfBeginBurstSpreadTracking = FALSE;
 		}
 	}
@@ -929,7 +931,6 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 
-	SOLDIERTYPE *pSoldier;
 	UINT16	usMapPos;
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -1022,8 +1023,9 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 								case LOOKCURSOR_MODE:
 								case TALKCURSOR_MODE:
 								case MOVE_MODE:
-
-                  if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+								{
+									const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+									if (pSoldier != NULL)
                   {
 									  if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?  pSoldier->uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
 									  {
@@ -1047,8 +1049,9 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 										  *puiNewEvent = U_MOVEMENT_MENU;
 										  fClickHoldIntercepted = TRUE;
 									  }
-  									break;
-	  						}
+	  							}
+  								break;
+								}
               }
 
 							if ( gCurrentUIMode == ACTION_MODE || gCurrentUIMode == TALKCURSOR_MODE )
@@ -1173,13 +1176,15 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 											break;
 
 										case CONFIRM_ACTION_MODE:
-
-											if ( GetSoldier( &pSoldier, gusSelectedSoldier ) )
+										{
+											SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+											if (pSoldier != NULL)
 											{
 												HandleRightClickAdjustCursor( pSoldier, usMapPos );
 											}
 											fClickIntercepted = TRUE;
 											break;
+										}
 
 										case MENU_MODE:
 
@@ -1359,7 +1364,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				break;
 
 			case MOVE_MODE:
-
+			{
 				if ( usMapPos != usOldMapPos )
 				{
 					// Set off ALL move....
@@ -1369,7 +1374,8 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				uiMoveTargetSoldierId = NO_SOLDIER;
 
 				// Check for being on terrain
-				if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+				const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+				if (pSoldier != NULL)
 				{
 						UINT16 usItem;
 						UINT8					ubItemCursor;
@@ -1422,6 +1428,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				}
 				*puiNewEvent = M_ON_TERRAIN;
 				break;
+			}
 
 			case ACTION_MODE:
 
@@ -1476,9 +1483,10 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				break;
 
 			case CONFIRM_ACTION_MODE:
-
+			{
 				// DONOT CANCEL IF BURST
-				if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
+				SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+				if (pSoldier != NULL)
 				{
 					if ( pSoldier->bDoBurst )
 					{
@@ -1529,7 +1537,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 					}
 				}
 				break;
-
+			}
 		}
 
 		//if ( gCurrentUIMode != CONFIRM_ACTION_MODE )

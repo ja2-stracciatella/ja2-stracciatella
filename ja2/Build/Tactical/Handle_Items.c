@@ -3664,7 +3664,6 @@ void RenderTopmostFlashingItems( )
 
 BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 {
-	SOLDIERTYPE *pTSoldier;
 	UINT16 usSoldierIndex;
 	OBJECTTYPE	*pObject;
 
@@ -3692,12 +3691,9 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 			return( FALSE );
 		}
 
-		// Get soldier
-		GetSoldier( &pTSoldier, usSoldierIndex );
-
 		// Look for item in hand....
 
-		(*ppTargetSoldier) = pTSoldier;
+		*ppTargetSoldier = GetSoldier(usSoldierIndex);
 
 		return( TRUE );
 	}
