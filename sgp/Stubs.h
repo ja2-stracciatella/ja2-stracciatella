@@ -10,7 +10,6 @@
 typedef int HHOOK;
 typedef int HINSTANCE;
 typedef int HWND;
-typedef int INT;
 typedef int LPARAM;
 typedef int LRESULT;
 typedef int WIN32_FIND_DATA;

@@ -29,6 +29,7 @@
 #include <wchar.h>			// for wide-character strings
 
 
+typedef          int  INT;
 typedef unsigned int UINT;
 typedef unsigned int UINT32;
 typedef   signed int  INT32;
