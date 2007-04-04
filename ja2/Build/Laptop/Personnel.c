@@ -6174,9 +6174,6 @@ static void HandlePersonnelKeyboard(void)
 	CHAR16 sZero[ 2 ] = L"0";
 
 	InputAtom					InputEvent;
-	POINT  MousePos;
-
-	GetCursorPos(&MousePos);
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {

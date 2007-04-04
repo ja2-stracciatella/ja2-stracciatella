@@ -4000,7 +4000,6 @@ static UINT32 HandleMapUI(void)
 	INT16 sMapX = 0, sMapY = 0;
 	INT8 bMapZ = 0;
 	INT16 sX, sY;
-	POINT MousePos;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
 
@@ -4068,7 +4067,6 @@ static UINT32 HandleMapUI(void)
 							 {
 								 sX = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) % MAP_WORLD_X );
 								 sY = ( GetLastSectorIdInCharactersPath( &Menptr[gCharactersList[bSelectedDestChar].usSolID]  ) / MAP_WORLD_X );
-								 GetCursorPos(&MousePos);
 								 RestoreBackgroundForMapGrid( sX, sY );
 								// fMapPanelDirty = TRUE;
 							 }

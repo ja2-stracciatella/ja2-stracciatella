@@ -33,7 +33,6 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
-#include "Stubs.h" // XXX
 
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
@@ -391,33 +390,10 @@ static void IncrementTextEnterMode(void);
 static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 {
 	InputAtom					InputEvent;
-	POINT  MousePos;
-
-	// get the current curosr position, might just need it.
-	GetCursorPos(&MousePos);
 
 	// handle input events
   while( DequeueEvent(&InputEvent) )
   {
-	 /*
-		// HOOK INTO MOUSE HOOKS
-    switch(InputEvent.usEvent)
-		{
-
-	     case LEFT_BUTTON_DOWN:
-			  MouseSystemHook(LEFT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-		   break;
-		   case LEFT_BUTTON_UP:
-			   MouseSystemHook(LEFT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y ,_LeftButtonDown, _RightButtonDown);
-		   break;
-		   case RIGHT_BUTTON_DOWN:
-		  	 MouseSystemHook(RIGHT_BUTTON_DOWN, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-		   break;
-		   case RIGHT_BUTTON_UP:
-			   MouseSystemHook(RIGHT_BUTTON_UP, (INT16)MousePos.x, (INT16)MousePos.y,_LeftButtonDown, _RightButtonDown);
-		   break;
-		}
-		*/
     if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT) )
 		{
 		  switch( InputEvent.usParam )

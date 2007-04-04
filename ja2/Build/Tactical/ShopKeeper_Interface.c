@@ -56,7 +56,6 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "BuildDefines.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Soldier_Create.h"
@@ -1363,9 +1362,6 @@ static void ExitSKIRequested(void);
 static void GetShopKeeperInterfaceUserInput(void)
 {
 	InputAtom Event;
-	POINT MousePos;
-
-	GetCursorPos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{

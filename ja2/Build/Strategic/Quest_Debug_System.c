@@ -42,7 +42,6 @@
 #include "FileMan.h"
 #include "SGP.h"
 #include "Items.h"
-#include "Stubs.h" // XXX
 
 
 //#ifdef JA2BETAVERSION
@@ -1185,10 +1184,7 @@ static void SetTalkingMercPauseState(BOOLEAN fState);
 static void GetUserInput(void)
 {
 	InputAtom Event;
-	POINT  MousePos;
 	UINT8	ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse();
-
-	GetCursorPos(&MousePos);
 
 	while( DequeueEvent( &Event ) )
 	{
