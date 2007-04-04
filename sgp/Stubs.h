@@ -3,19 +3,7 @@
 
 #include "Types.h"
 
-#define CALLBACK
-#define FAR
-#define PASCAL
-
-typedef int HHOOK;
-typedef int HINSTANCE;
-typedef int HWND;
-typedef int LPARAM;
-typedef int LRESULT;
 typedef int WIN32_FIND_DATA;
-typedef int WPARAM;
-
-typedef void* HANDLE;
 
 typedef unsigned long DWORD;
 
@@ -37,16 +25,6 @@ typedef struct
   int y;
 } POINT;
 
-typedef struct
-{
-  int left;
-  int top;
-  int right;
-  int bottom;
-} RECT;
-
-typedef RECT* LPRECT;
-
 void GetCursorPos(POINT*);
 
 #define FILE_ATTRIBUTE_DIRECTORY 0 /* XXX */
@@ -63,9 +41,6 @@ int GetDriveType(const char*);
 
 size_t GetPrivateProfileString(const char* app_name, const char* key_name, const char* default_value, char* out_buf, size_t buf_size, const char* filename);
 
-
-int GetLastError(void);
-void ShowCursor(int);
 
 UINT32 GetTickCount(void);
 

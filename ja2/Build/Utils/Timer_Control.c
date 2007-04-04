@@ -9,7 +9,6 @@
 #include "WorldDef.h"
 #include "Interface_Control.h"
 #include <SDL.h>
-#include "Stubs.h" // XXX
 
 
 INT32	giClockTimer = -1;
@@ -88,7 +87,7 @@ extern UINT32 guiFlashCursorBaseTime;
 extern INT32 giPotCharPathBaseTime;
 
 
-static UINT32 CALLBACK TimeProc(UINT32 interval, void* params)
+static UINT32 TimeProc(UINT32 interval, void* params)
 {
 	static BOOLEAN fInFunction = FALSE;
 	//SOLDIERTYPE		*pSoldier;
