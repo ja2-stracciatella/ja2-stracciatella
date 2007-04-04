@@ -90,10 +90,19 @@ static SDL_Surface* FrameBuffer;
 static SDL_Surface* ScreenBuffer;
 
 
+static BOOLEAN Fullscreen = FALSE;
+
+
+void VideoSetFullScreen(BOOLEAN Enable)
+{
+	Fullscreen = Enable;
+}
+
+
 static BOOLEAN GetRGBDistribution(void);
 
 
-BOOLEAN InitializeVideoManager(BOOLEAN Fullscreen)
+BOOLEAN InitializeVideoManager(void)
 {
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 

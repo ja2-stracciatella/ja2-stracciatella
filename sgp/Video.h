@@ -18,7 +18,8 @@
 extern "C" {
 #endif
 
-extern BOOLEAN              InitializeVideoManager(BOOLEAN);
+void    VideoSetFullScreen(BOOLEAN Enable);
+BOOLEAN InitializeVideoManager(void);
 extern void                 ShutdownVideoManager(void);
 extern void                 SuspendVideoManager(void);
 extern BOOLEAN              RestoreVideoManager(void);

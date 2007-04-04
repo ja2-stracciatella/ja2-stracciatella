@@ -107,11 +107,6 @@ static void SGPExit(void);
 
 static BOOLEAN InitializeStandardGamingPlatform(void)
 {
-	BOOLEAN video_fullscreen = FALSE;
-
-	if (strcasecmp(gzCommandLine,"-FULLSCREEN")==0)
-		video_fullscreen = TRUE;
-
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
 
@@ -148,7 +143,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing Video Manager");
 	// Initialize DirectDraw (DirectX 2)
-	if (!InitializeVideoManager(video_fullscreen))
+	if (!InitializeVideoManager())
 	{ // We were unable to initialize the video manager
 		FastDebugMsg("FAILED : Initializing Video Manager");
 		return FALSE;
@@ -249,20 +244,13 @@ static void ShutdownStandardGamingPlatform(void)
 }
 
 
-static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine);
+static BOOLEAN ParseParameters(char* const argv[]);
 
 
 int main(int argc, char* argv[])
 {
-#if 1 // XXX TODO
-	FIXME
+	if (!ParseParameters(argv)) return EXIT_FAILURE;
 	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
-#else
-	strlcpy(gzCommandLine, pCommandLine, lengthof(gzCommandLine));
-
-	//Process the command line BEFORE initialization
-	ProcessJa2CommandLineBeforeInitialization( pCommandLine );
-#endif
 
   if (!InitializeStandardGamingPlatform())
   {
@@ -356,32 +344,26 @@ static void SGPExit(void)
 }
 
 
-static void ProcessJa2CommandLineBeforeInitialization(const char* pCommandLine)
+static BOOLEAN ParseParameters(char* const argv[])
 {
-	CHAR8 cSeparators[]="\t =";
-	CHAR8	*pCopy=NULL, *pToken;
+	if (*argv == NULL) return TRUE; // argv does not even contain the program name
 
-	pCopy=(CHAR8 *)MemAlloc(strlen(pCommandLine) + 1);
-
-	Assert(pCopy);
-	if(!pCopy)
-		return;
-
-	strcpy(pCopy, pCommandLine);
-
-	pToken=strtok(pCopy, cSeparators);
-	while(pToken)
+	while (*++argv != NULL)
 	{
-		//if its the NO SOUND option
-		if (strncasecmp(pToken, "/NOSOUND", 8) == 0)
+		if (strcmp(*argv, "-fullscreen") == 0)
 		{
-			//disable the sound
+			VideoSetFullScreen(TRUE);
+		}
+		else if (strcmp(*argv, "-nosound") == 0)
+		{
 			SoundEnableSound(FALSE);
 		}
-
-		//get the next token
-		pToken=strtok(NULL, cSeparators);
+		else
+		{
+			fprintf(stderr, "Unknown switch \"%s\"\n", *argv);
+			return FALSE;
+		}
 	}
 
-	MemFree(pCopy);
+	return TRUE;
 }
