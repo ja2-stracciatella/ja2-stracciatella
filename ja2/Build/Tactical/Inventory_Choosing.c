@@ -12,7 +12,6 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Strategic.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 #define ENEMYAMMODROPRATE       50      // % of time enemies drop ammunition

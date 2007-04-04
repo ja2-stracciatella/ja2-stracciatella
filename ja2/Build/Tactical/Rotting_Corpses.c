@@ -40,7 +40,6 @@
 #include "QArray.h"
 #include "Interface.h"
 #include "MemMan.h"
-#include "Stubs.h" // XXX
 
 
 #define CORPSE_WARNING_MAX 5

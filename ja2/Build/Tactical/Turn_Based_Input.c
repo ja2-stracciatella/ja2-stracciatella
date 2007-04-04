@@ -101,6 +101,7 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Items.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"

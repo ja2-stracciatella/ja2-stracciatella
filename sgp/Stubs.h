@@ -7,8 +7,6 @@
 #define FAR
 #define PASCAL
 
-typedef char CHAR;
-
 typedef int HHOOK;
 typedef int HINSTANCE;
 typedef int HWND;
@@ -19,8 +17,6 @@ typedef int WIN32_FIND_DATA;
 typedef int WPARAM;
 
 typedef void* HANDLE;
-
-typedef unsigned int UINT;
 
 typedef unsigned long DWORD;
 
@@ -55,11 +51,6 @@ typedef RECT* LPRECT;
 void GetCursorPos(POINT*);
 
 #define FILE_ATTRIBUTE_DIRECTORY 0 /* XXX */
-
-#define __max(a, b) ((a) > (b) ? (a) : (b))
-#define __min(a, b) ((a) < (b) ? (a) : (b))
-#define max(a, b) __max(a, b)
-#define min(a, b) __min(a, b)
 
 
 #if 0

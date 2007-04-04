@@ -17,7 +17,6 @@
 #include "Text.h"
 #include "StrategicMap.h"
 #include "Render_Fun.h"
-#include "Stubs.h" // XXX
 #include "Items.h"
 
 

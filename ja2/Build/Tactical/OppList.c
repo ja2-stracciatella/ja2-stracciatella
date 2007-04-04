@@ -45,7 +45,6 @@
 #include "Sound_Control.h"
 #include "Drugs_And_Alcohol.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 #include "Items.h"
 
 

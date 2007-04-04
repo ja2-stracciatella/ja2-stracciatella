@@ -26,7 +26,6 @@
 #include "Structure_Wrap.h"
 #include "History.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 #include "BobbyRMailOrder.h"
 
 

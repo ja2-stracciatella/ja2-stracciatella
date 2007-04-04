@@ -15,7 +15,6 @@
 #include "History.h"
 #include "Dialogue_Control.h"
 #include "ScreenIDs.h"
-#include "Stubs.h" // XXX
 
 
 extern INT32 GetCurrentBalance( void );

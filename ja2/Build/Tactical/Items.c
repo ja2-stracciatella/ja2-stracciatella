@@ -42,7 +42,6 @@
 #include "Soldier_Macros.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 #define ANY_MAGSIZE 255

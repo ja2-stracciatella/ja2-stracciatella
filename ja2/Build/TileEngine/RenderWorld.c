@@ -17,7 +17,6 @@
 #include "SGP.h"
 #include "Shading.h"
 #include "Sound_Control.h"
-#include "Stubs.h" // XXX
 #include "SysUtil.h"
 #include "Sys_Globals.h"
 #include "Tile_Cache.h"

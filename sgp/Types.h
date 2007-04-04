@@ -16,6 +16,12 @@
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 
 
+#define __max(a, b) ((a) > (b) ? (a) : (b))
+#define __min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) __max(a, b)
+#define min(a, b) __min(a, b)
+
+
 // build defines header....
 #include "BuildDefines.h"
 
@@ -23,8 +29,9 @@
 #include <wchar.h>			// for wide-character strings
 
 
-typedef unsigned int   UINT32;
-typedef signed int     INT32;
+typedef unsigned int UINT;
+typedef unsigned int UINT32;
+typedef   signed int  INT32;
 
 // integers
 typedef unsigned char   UINT8;
@@ -35,6 +42,7 @@ typedef signed short    INT16;
 typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
+typedef char            CHAR;
 typedef char			      CHAR8;
 typedef wchar_t					CHAR16;
 typedef char *			    STR;

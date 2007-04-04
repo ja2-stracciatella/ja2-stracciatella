@@ -9,7 +9,6 @@
 #include "Random.h"
 #include "Text.h"
 #include "Interface.h"
-#include "Stubs.h" // XXX
 
 
 UINT8 ubDrugTravelRate[]			= { 4,	2 };

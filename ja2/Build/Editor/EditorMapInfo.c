@@ -46,7 +46,6 @@
 #include "EditorMapInfo.h"
 #include "Environment.h"
 #include "Simple_Render_Utils.h"
-#include "Stubs.h" // XXX
 
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;

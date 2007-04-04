@@ -45,6 +45,7 @@
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
+#include "Stubs.h" // XXX
 
 
 static BOOLEAN gfWasInMeanwhile = FALSE;

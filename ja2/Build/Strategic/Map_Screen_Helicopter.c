@@ -34,7 +34,6 @@
 #include "Isometric_Utils.h"
 #include "Scheduling.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 // the amounts of time to wait for hover stuff

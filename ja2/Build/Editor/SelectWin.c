@@ -13,7 +13,6 @@
 #include "EditorDefines.h"
 #include "Editor_Taskbar_Utils.h"
 #include "MemMan.h"
-#include "Stubs.h" // XXX
 
 
 extern BOOLEAN gfOverheadMapDirty;

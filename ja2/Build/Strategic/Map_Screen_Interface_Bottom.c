@@ -48,6 +48,7 @@
 #include "Debug.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
+#include "Stubs.h" // XXX
 
 
 #define MAP_BOTTOM_X 0

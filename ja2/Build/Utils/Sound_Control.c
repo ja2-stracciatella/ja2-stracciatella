@@ -6,7 +6,6 @@
 #include "Overhead.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"
-#include "Stubs.h" // XXX
 #include <math.h>
 #include <stdlib.h>
 

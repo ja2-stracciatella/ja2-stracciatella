@@ -36,6 +36,7 @@
 #	include "ScreenIDs.h"
 #	include "Squads.h"
 #	include <stdarg.h>
+#	include "Stubs.h" // XXX
 #endif
 
 

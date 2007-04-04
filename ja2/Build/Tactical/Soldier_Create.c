@@ -46,7 +46,6 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
-#include "Stubs.h" // XXX
 
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!

@@ -41,7 +41,6 @@
 #include "SoundMan.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 #define MINCHANCETOHIT          1

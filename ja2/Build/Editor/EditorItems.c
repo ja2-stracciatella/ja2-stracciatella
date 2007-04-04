@@ -37,7 +37,6 @@
 #include "Debug.h"
 #include "Items.h"
 #include "MemMan.h"
-#include "Stubs.h" // XXX
 
 
 #define NUMBER_TRIGGERS			27

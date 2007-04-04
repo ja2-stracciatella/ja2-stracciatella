@@ -35,7 +35,6 @@
 #include "Keys.h"
 #include "GameSettings.h"
 #include "Buildings.h"
-#include "Stubs.h" // XXX
 
 
 //extern UINT8 gubDiagCost[20];

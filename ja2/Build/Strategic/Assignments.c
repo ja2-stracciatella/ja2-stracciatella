@@ -63,7 +63,6 @@
 #include "ScreenIDs.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "Stubs.h" // XXX
 
 
 // various reason an assignment can be aborted before completion

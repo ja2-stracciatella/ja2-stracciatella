@@ -59,6 +59,7 @@
 #include "MemMan.h"
 #include "JAScreens.h"
 #include "Tile_Cache.h"
+#include "Stubs.h" // XXX
 
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );

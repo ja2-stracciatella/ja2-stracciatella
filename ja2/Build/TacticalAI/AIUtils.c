@@ -1,4 +1,3 @@
-#include "Stubs.h" // XXX
 #include "AI.h"
 #include "Weapons.h"
 #include "OppList.h"

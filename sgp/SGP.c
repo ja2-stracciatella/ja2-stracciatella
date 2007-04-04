@@ -12,7 +12,6 @@
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
-#include "Stubs.h"
 #include "SoundMan.h"
 #include "Utilities.h"
 #include "Video.h"

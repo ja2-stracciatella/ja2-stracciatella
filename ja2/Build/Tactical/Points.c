@@ -24,7 +24,6 @@
 #include "WorldMan.h"
 #include "Interface_Items.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel )

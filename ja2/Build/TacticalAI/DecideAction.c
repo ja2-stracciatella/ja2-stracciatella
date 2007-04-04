@@ -1,4 +1,3 @@
-#include "Stubs.h" // XXX
 #include "AI.h"
 #include "AIInternals.h"
 #include "Isometric_Utils.h"

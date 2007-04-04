@@ -9,7 +9,7 @@
 #include "WorldDef.h"
 #include "Interface_Control.h"
 #include <SDL.h>
-#include "Stubs.h"
+#include "Stubs.h" // XXX
 
 
 INT32	giClockTimer = -1;

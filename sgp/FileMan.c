@@ -33,6 +33,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "Stubs.h" // XXX
 
 
 #define FILENAME_LENGTH					600
