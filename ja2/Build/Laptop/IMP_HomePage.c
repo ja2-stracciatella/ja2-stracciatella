@@ -21,6 +21,7 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "Stubs.h" // XXX
 
 
 INT32 GlowColorsList[][3] ={

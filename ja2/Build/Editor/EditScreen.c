@@ -73,6 +73,7 @@
 #include "Debug.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
+#include "Stubs.h" // XXX
 
 
 extern CHAR8 *szMusicList[NUM_MUSIC];

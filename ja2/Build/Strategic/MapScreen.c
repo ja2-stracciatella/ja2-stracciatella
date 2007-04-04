@@ -101,6 +101,7 @@
 #include "Local.h"
 #include "Button_System.h"
 #include "JAScreens.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Map_Information.h"

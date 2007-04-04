@@ -37,6 +37,7 @@
 #include "ScreenIDs.h"
 #include "VSurface.h"
 #include "WorldMan.h"
+#include "Stubs.h" // XXX
 
 
 #define		OPTIONS_TITLE_FONT										FONT14ARIAL

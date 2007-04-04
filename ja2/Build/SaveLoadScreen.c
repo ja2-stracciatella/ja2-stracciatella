@@ -41,6 +41,7 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 #include "Campaign_Init.h"
+#include "Stubs.h" // XXX
 
 
 BOOLEAN gfSchedulesHosed = FALSE;

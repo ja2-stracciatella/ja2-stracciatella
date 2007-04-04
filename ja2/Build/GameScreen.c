@@ -81,6 +81,7 @@
 
 #ifdef JA2EDITOR
 # include "EditScreen.h"
+# include "Stubs.h" // XXX
 #endif
 
 

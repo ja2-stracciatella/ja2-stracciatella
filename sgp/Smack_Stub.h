@@ -1,7 +1,6 @@
 #ifndef SMACK_STUB_H
 #define SMACK_STUB_H
 
-#include "Stubs.h"
 #include "Types.h"
 
 enum
@@ -48,7 +47,7 @@ void SmackClose(Smack* Smk);
 
 void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, const void* Buf, UINT32 Flags);
 
-SmackBuf* SmackBufferOpen(HWND Wnd, UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
+SmackBuf* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
 void SmackBufferClose(SmackBuf* SBuf);
 
 UINT32 SmackUseMMX(UINT32 Flag);

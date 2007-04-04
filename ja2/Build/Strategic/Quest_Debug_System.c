@@ -42,6 +42,7 @@
 #include "FileMan.h"
 #include "SGP.h"
 #include "Items.h"
+#include "Stubs.h" // XXX
 
 
 //#ifdef JA2BETAVERSION

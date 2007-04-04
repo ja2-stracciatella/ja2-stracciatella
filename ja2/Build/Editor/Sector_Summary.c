@@ -34,6 +34,7 @@
 #include "MemMan.h"
 #include "Soldier_Create.h"
 #include "Video.h"
+#include "Stubs.h" // XXX
 
 
 extern BOOLEAN gfOverheadMapDirty;

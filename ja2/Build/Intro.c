@@ -26,6 +26,8 @@
 #include "VSurface.h"
 #include "WCheck.h"
 #include "WordWrap.h"
+#include "Stubs.h" // XXX
+
 
 extern STR16	gzIntroScreen[];
 
@@ -181,8 +183,7 @@ static BOOLEAN EnterIntroScreen(void)
 	}
 #endif
 
-	//initialize smacker
-	SmkInitialize( ghWindow, 640, 480);
+	SmkInitialize(640, 480);
 
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );

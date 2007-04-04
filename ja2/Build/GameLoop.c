@@ -30,6 +30,7 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Font_Control.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2BETAVERSION
 #	include "PreBattle_Interface.h"

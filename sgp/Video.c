@@ -15,6 +15,7 @@
 #include <SDL.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "Stubs.h" // XXX
 
 
 #define MAX_DIRTY_REGIONS     128
@@ -56,9 +57,6 @@ static INT16  gsMouseCursorXOffset;
 static INT16  gsMouseCursorYOffset;
 
 static MouseCursorBackground  gMouseCursorBackground;
-
-// Make sure we record the value of the hWindow (main window frame for the application)
-HWND ghWindow;
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY

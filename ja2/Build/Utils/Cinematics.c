@@ -49,7 +49,6 @@ struct SMKFLIC
 //-Globals-------------------------------------------------------------------------
 static SMKFLIC SmkList[SMK_NUM_FLICS];
 
-static HWND hDisplayWindow = 0;
 static UINT32 guiSmackPixelFormat = SMACKBUFFER565;
 
 
@@ -97,13 +96,10 @@ BOOLEAN fFlicStatus=FALSE;
 }
 
 
-void SmkInitialize(HWND hWindow, UINT32 uiWidth, UINT32 uiHeight)
+void SmkInitialize(UINT32 uiWidth, UINT32 uiHeight)
 {
 	// Wipe the flic list clean
 	memset(SmkList, 0, sizeof(SMKFLIC)*SMK_NUM_FLICS);
-
-	// Set playback window properties
-	hDisplayWindow=hWindow;
 
 	// Use MMX acceleration, if available
 	SmackUseMMX(1);
@@ -175,7 +171,7 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	hFile = GetRealFileHandleFromFileManFileHandle( pSmack->hFileHandle );
 
 	// Allocate a Smacker buffer for video decompression
-	if(!(pSmack->SmackBuffer=SmackBufferOpen(hDisplayWindow,SMACKAUTOBLIT,640,480,0,0)))
+	if(!(pSmack->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, 640, 480, 0, 0)))
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		goto fail_close;

@@ -56,6 +56,7 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "BuildDefines.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Soldier_Create.h"

@@ -40,6 +40,7 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Debug.h"
+#include "Stubs.h" // XXX
 
 
 // zoom x and y coords for map scrolling

@@ -28,6 +28,7 @@
 #include "MapScreen.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "VSurface.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"

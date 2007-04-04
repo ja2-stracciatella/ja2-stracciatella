@@ -80,6 +80,7 @@
 #include "Debug.h"
 #include "Button_System.h"
 #include "JAScreens.h"
+#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Arms_Dealer_Init.h"
