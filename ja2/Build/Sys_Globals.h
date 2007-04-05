@@ -14,7 +14,6 @@ INT8					gDebugStr[128];
 BOOLEAN				gfMode;
 INT16					gsCurrentActionPoints;
 INT8					gbFPSDisplay;
-BOOLEAN				gfResetInputCheck;
 BOOLEAN				gfGlobalError;
 
 extern UINT32	guiGameCycleCounter;

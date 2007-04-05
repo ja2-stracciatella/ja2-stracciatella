@@ -12,7 +12,6 @@ UINT8					gubFilename[ 200 ];
 BOOLEAN				gfEditMode = FALSE;
 INT8					gDebugStr[128];
 INT8					gbFPSDisplay = SHOW_MIN_FPS;
-BOOLEAN				gfResetInputCheck = FALSE;
 BOOLEAN				gfGlobalError			= FALSE;
 
 UINT32	guiGameCycleCounter = 0;
