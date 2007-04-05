@@ -2301,11 +2301,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		  //reset the font dest buffer
 		  SetFontDestBuffer(FRAME_BUFFER, 0,0,640,480, FALSE);
 
-		  // Display bars
-		  DrawLifeUIBarEx( pSoldier, (INT16)( pBlitter->sX + 69 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
-		  DrawBreathUIBarEx( pSoldier, (INT16)( pBlitter->sX + 75 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
-		  DrawMoraleUIBarEx( pSoldier, (INT16)( pBlitter->sX + 81 ), (INT16)( pBlitter->sY + 47 ), 3, 42, FALSE, pBlitter->uiDestBuff );
-
+			DrawSoldierUIBars(pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
 		}
 		else
 		{

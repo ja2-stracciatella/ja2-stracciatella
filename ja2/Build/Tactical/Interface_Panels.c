@@ -88,20 +88,8 @@
 #define SM_SELMERC_AP_HEIGHT				12
 #define SM_SELMERC_AP_WIDTH					11
 
-#define SM_SELMERC_BREATH_X					75
-#define SM_SELMERC_BREATH_Y					387
-#define SM_SELMERC_BREATH_WIDTH			3
-#define SM_SELMERC_BREATH_HEIGHT		42
-
 #define SM_SELMERC_HEALTH_X					69
 #define SM_SELMERC_HEALTH_Y					387
-#define SM_SELMERC_HEALTH_WIDTH			3
-#define SM_SELMERC_HEALTH_HEIGHT		42
-
-#define SM_SELMERC_MORALE_X					81
-#define SM_SELMERC_MORALE_Y					387
-#define SM_SELMERC_MORALE_WIDTH			3
-#define SM_SELMERC_MORALE_HEIGHT		42
 
 #define SM_SELMERCNAME_X						7
 #define SM_SELMERCNAME_Y						395
@@ -234,7 +222,6 @@
 
 #define TM_NAME_WIDTH								60
 #define TM_NAME_HEIGHT							9
-#define	TM_LIFEBAR_WIDTH						3
 #define	TM_LIFEBAR_HEIGHT						42
 #define	TM_FACEHIGHTL_WIDTH					84
 #define	TM_FACEHIGHTL_HEIGHT				114
@@ -407,36 +394,6 @@ INT16					sTEAMFaceHighlXY[] =
 	253, ( 2 + INTERFACE_START_Y ),
 	336, ( 2 + INTERFACE_START_Y ),
 	419, ( 2 + INTERFACE_START_Y )
-};
-
-INT16					sTEAMLifeXY[] =
-{
-	69,	( 365 + TM_LIFEBAR_HEIGHT ),
-	152, ( 365 + TM_LIFEBAR_HEIGHT ),
-	235, ( 365 + TM_LIFEBAR_HEIGHT ),
-	318, ( 365 + TM_LIFEBAR_HEIGHT ),
-	401, ( 365 + TM_LIFEBAR_HEIGHT ),
-	484, ( 365 + TM_LIFEBAR_HEIGHT ),
-};
-
-INT16					sTEAMBreathXY[] =
-{
-	75,	( 365 + TM_LIFEBAR_HEIGHT ),
-	158, ( 365 + TM_LIFEBAR_HEIGHT ),
-	241, ( 365 + TM_LIFEBAR_HEIGHT ),
-	324, ( 365 + TM_LIFEBAR_HEIGHT ),
-	407, ( 365 + TM_LIFEBAR_HEIGHT ),
-	490, ( 365 + TM_LIFEBAR_HEIGHT ),
-};
-
-INT16					sTEAMMoraleXY[] =
-{
-	81,	( 365 + TM_LIFEBAR_HEIGHT ),
-	164, ( 365 + TM_LIFEBAR_HEIGHT ),
-	247, ( 365 + TM_LIFEBAR_HEIGHT ),
-	330, ( 365 + TM_LIFEBAR_HEIGHT ),
-	413, ( 365 + TM_LIFEBAR_HEIGHT ),
-	496, ( 365 + TM_LIFEBAR_HEIGHT ),
 };
 
 
@@ -1981,14 +1938,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 				mprintf( sFontX, SM_SELMERC_AP_Y, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
 			}
 
-			// Display bars
-			DrawLifeUIBarEx( gpSMCurrentMerc, SM_SELMERC_HEALTH_X, SM_SELMERC_HEALTH_Y, SM_SELMERC_HEALTH_WIDTH, SM_SELMERC_HEALTH_HEIGHT, TRUE , FRAME_BUFFER );
-
-      if ( !(gpSMCurrentMerc->uiStatusFlags & SOLDIER_ROBOT ) )
-      {
-			  DrawBreathUIBarEx( gpSMCurrentMerc, SM_SELMERC_BREATH_X, SM_SELMERC_BREATH_Y, SM_SELMERC_HEALTH_WIDTH, SM_SELMERC_HEALTH_HEIGHT, TRUE, FRAME_BUFFER );
-			  DrawMoraleUIBarEx( gpSMCurrentMerc, SM_SELMERC_MORALE_X, SM_SELMERC_MORALE_Y, SM_SELMERC_MORALE_WIDTH, SM_SELMERC_MORALE_HEIGHT, TRUE, FRAME_BUFFER );
-      }
+			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
 		}
 
 	}
@@ -3682,13 +3632,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 				if ( !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 				{
-					DrawLifeUIBarEx( pSoldier, sTEAMLifeXY[ posIndex ], sTEAMLifeXY[ posIndex + 1 ], TM_LIFEBAR_WIDTH, TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER );
-
-          if ( !( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
-          {
-					  DrawBreathUIBarEx( pSoldier, sTEAMBreathXY[ posIndex ], sTEAMBreathXY[ posIndex + 1 ], TM_LIFEBAR_WIDTH, TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER );
-					  DrawMoraleUIBarEx( pSoldier, sTEAMMoraleXY[ posIndex ], sTEAMMoraleXY[ posIndex + 1 ], TM_LIFEBAR_WIDTH, TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER );
-          }
+					DrawSoldierUIBars(pSoldier, 69 + 83 * cnt, 365 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
 
 					if ( gTacticalStatus.uiFlags & TURNBASED && pSoldier->bLife >= OKLIFE )
 					{
@@ -3730,10 +3674,6 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				}
 				else
 				{
-					//Erase!
-					//DrawUIBar( pSoldier->bBreath, sTEAMBreathXY[ posIndex ], sTEAMBreathXY[ posIndex + 1 ], TM_LIFEBAR_WIDTH, TM_LIFEBAR_HEIGHT, DRAW_ERASE_BAR );
-					//DrawUIBar( pSoldier->bLife, sTEAMLifeXY[ posIndex ], sTEAMLifeXY[ posIndex + 1 ], TM_LIFEBAR_WIDTH, TM_LIFEBAR_HEIGHT, DRAW_ERASE_BAR );
-
 					// Erase APs
 					RestoreExternBackgroundRect( sTEAMApXY[ posIndex ], sTEAMApXY[ posIndex + 1 ], TM_AP_WIDTH, TM_AP_HEIGHT );
 

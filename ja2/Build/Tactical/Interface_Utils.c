@@ -101,242 +101,119 @@ void UnLoadCarPortraits( void )
 }
 
 
-void DrawLifeUIBarEx(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer)
+static void DrawBar(UINT32 XPos, UINT32 YPos, UINT32 Height, UINT16 Color, UINT16 ShadowColor, UINT8* DestBuf)
 {
-	FLOAT											 dStart, dEnd, dPercentage;
-	//UINT16										 usLineColor;
+	LineDraw(TRUE, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
+	LineDraw(TRUE, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
+	LineDraw(TRUE, XPos + 2, YPos, XPos + 2, YPos - Height, ShadowColor, DestBuf);
+}
 
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	UINT16										 usLineColor;
-	INT8											 bBandage;
 
-	// Erase what was there
-	if( fErase )
-	{
-		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
-	}
-
-	if( pSoldier->bLife == 0 )
-	{
-		// are they dead?
-		return;
-	}
-
-	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
+static void DrawLifeUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPos, UINT32 MaxHeight, UINT8* pDestBuf)
+{
+	UINT32 Height;
 
 	// FIRST DO MAX LIFE
-	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
-
-	usLineColor = Get16BPPColor( LIFE_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( LIFE_BAR );
-	RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( LIFE_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
+	Height = MaxHeight * pSoldier->bLife / 100;
+	DrawBar(XPos, YPos, Height, Get16BPPColor(LIFE_BAR), Get16BPPColor(LIFE_BAR_SHADOW), pDestBuf);
 
 	// NOW DO BANDAGE
-
 	// Calculate bandage
-	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-
-	if ( bBandage )
+	UINT32 Bandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+	if (Bandage != 0)
 	{
-		dPercentage = (FLOAT)bBandage / (FLOAT)100;
-		dStart			= (FLOAT)( sYPos - dEnd );
-		dEnd				=	( dPercentage * sHeight );
-
-		usLineColor = Get16BPPColor( BANDAGE_BAR_SHADOW );
-		RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BANDAGE_BAR );
-		RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BANDAGE_BAR_SHADOW );
-		RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
+		YPos   -= Height;
+		Height  = MaxHeight * Bandage / 100;
+		DrawBar(XPos, YPos, Height, Get16BPPColor(BANDAGE_BAR), Get16BPPColor(BANDAGE_BAR_SHADOW), pDestBuf);
 	}
 
 	// NOW DO BLEEDING
-	if ( pSoldier->bBleeding )
+	if (pSoldier->bBleeding != 0)
 	{
-		dPercentage = (FLOAT)pSoldier->bBleeding / (FLOAT)100;
-		dStart			= (FLOAT)( dStart - dEnd );
-		dEnd				=	( dPercentage * sHeight );
-
-		usLineColor = Get16BPPColor( BLEEDING_BAR_SHADOW );
-		RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BLEEDING_BAR );
-		RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BLEEDING_BAR_SHADOW );
-		RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
+		YPos   -= Height;
+		Height  = MaxHeight * pSoldier->bBleeding / 100;
+		DrawBar(XPos, YPos, Height, Get16BPPColor(BLEEDING_BAR), Get16BPPColor(BLEEDING_BAR_SHADOW), pDestBuf);
 	}
-
-	UnLockVideoSurface( uiBuffer );
-
 }
 
 
-void DrawBreathUIBarEx(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer)
+static void DrawBreathUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 sYPos, UINT32 MaxHeight, UINT8* pDestBuf)
 {
-	FLOAT											 dStart, dEnd, dPercentage;
-	//UINT16										 usLineColor;
+	UINT32 Height;
 
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	UINT16										 usLineColor;
+	if (pSoldier->bBreathMax <= 97)
+	{
+		Height = MaxHeight * (pSoldier->bBreathMax + 3) / 100;
+		// the old background colors for breath max diff
+		DrawBar(XPos, sYPos, Height, Get16BPPColor(BREATH_BAR_SHAD_BACK), Get16BPPColor(BREATH_BAR_SHAD_BACK), pDestBuf);
+	}
+
+	Height = MaxHeight * pSoldier->bBreathMax / 100;
+	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_MAX_BREATH), Get16BPPColor(CURR_MAX_BREATH_SHADOW), pDestBuf);
+
+	// NOW DO BREATH
+	Height = MaxHeight * pSoldier->bBreath / 100;
+	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_BREATH_BAR), Get16BPPColor(CURR_BREATH_BAR_SHADOW), pDestBuf);
+}
+
+
+static void DrawMoraleUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPos, UINT32 MaxHeight, UINT8* pDestBuf)
+{
+	UINT32 Height = MaxHeight * pSoldier->bMorale / 100;
+	DrawBar(XPos, YPos, Height, Get16BPPColor(MORALE_BAR), Get16BPPColor(MORALE_BAR_SHADOW), pDestBuf);
+}
+
+
+void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BOOLEAN fErase, UINT32 uiBuffer)
+{
+	const UINT32 BarWidth  =  3;
+	const UINT32 BarHeight = 42; 
+	const UINT32 BreathOff =  6;
+	const UINT32 MoraleOff = 12;
 
 	// Erase what was there
-	if ( fErase )
+	if (fErase)
 	{
-		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
+		RestoreExternBackgroundRect(sXPos, sYPos - BarHeight, MoraleOff + BarWidth, BarHeight + 1);
 	}
 
-	if( pSoldier->bLife == 0 )
+	if (pSoldier->bLife == 0) return;
+
+	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
 	{
-		// are they dead?
-		return;
-	}
-
-
-
-	//  DO MAX MAX BREATH
-	dPercentage = 1.;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
-
-	// brown guy
-	HVOBJECT hHandle = GetVideoObject(guiBrownBackgroundForTeamPanel);
-
-	// DO MAX BREATH
-	if( guiCurrentScreen != MAP_SCREEN )
-	{
-		if( gusSelectedSoldier == pSoldier->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC( pSoldier ) )
+		// DO MAX BREATH
+		// brown guy
+		HVOBJECT hHandle = GetVideoObject(guiBrownBackgroundForTeamPanel);
+		UINT16 Region;
+		if (guiCurrentScreen != MAP_SCREEN &&
+				gusSelectedSoldier == pSoldier->ubID &&
+				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+				OK_INTERRUPT_MERC(pSoldier))
 		{
-			// gold, the second entry in the .sti
-		  BltVideoObject( uiBuffer , hHandle, 1, sXPos, ( INT16 )( sYPos - sHeight ));
-
+			Region = 1; // gold, the second entry in the .sti
 		}
 		else
 		{
-			// brown, first entry
-		  BltVideoObject( uiBuffer , hHandle, 0, sXPos, ( INT16 )( sYPos - sHeight ));
+			Region = 0; // brown, first entry
+		}
+		BltVideoObject(uiBuffer, hHandle, Region, sXPos + BreathOff, sYPos - BarHeight);
+	}
 
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(uiBuffer, &uiDestPitchBYTES);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+
+	DrawLifeUIBar(pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
+	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
+	{
+		DrawBreathUIBar(pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
+		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+		{
+			DrawMoraleUIBar(pSoldier, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
 		}
 	}
-	else
-	{
-		// brown, first entry
-	  BltVideoObject( uiBuffer , hHandle, 0, sXPos, ( INT16 )( sYPos - sHeight ));
 
-	}
-
-	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-	if( pSoldier->bBreathMax <= 97 )
-	{
-		dPercentage = (FLOAT)( ( pSoldier->bBreathMax + 3 ) )/ (FLOAT)100;
-		dEnd				=	dPercentage * sHeight;
-		dStart			= sYPos;
-
-		// the old background colors for breath max diff
-		usLineColor = Get16BPPColor( BREATH_BAR_SHAD_BACK );
-		RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BREATH_BAR_SHAD_BACK );
-		RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-		usLineColor = Get16BPPColor( BREATH_BAR_SHAD_BACK );
-		RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-	}
-
-
-
-
-	dPercentage = (FLOAT)pSoldier->bBreathMax / (FLOAT)100;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
-
-	usLineColor = Get16BPPColor( CURR_MAX_BREATH_SHADOW );
-	RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( CURR_MAX_BREATH );
-	RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( CURR_MAX_BREATH_SHADOW );
-	RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-
-	// NOW DO BREATH
-	dPercentage = (FLOAT)pSoldier->bBreath / (FLOAT)100;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
-
-	usLineColor = Get16BPPColor( CURR_BREATH_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( CURR_BREATH_BAR );
-	RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( CURR_BREATH_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-
-	UnLockVideoSurface( uiBuffer );
-
-}
-
-
-void DrawMoraleUIBarEx(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, BOOLEAN fErase, UINT32 uiBuffer)
-{
-	FLOAT											 dStart, dEnd, dPercentage;
-	//UINT16										 usLineColor;
-
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	UINT16										 usLineColor;
-
-	// Erase what was there
-	if ( fErase )
-	{
-		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
-	}
-
-	if( pSoldier->bLife == 0 )
-	{
-		// are they dead?
-		return;
-	}
-
-	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-
-	// FIRST DO BREATH
-	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
-
-	usLineColor = Get16BPPColor( MORALE_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( MORALE_BAR );
-	RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-	usLineColor = Get16BPPColor( MORALE_BAR_SHADOW );
-	RectangleDraw( TRUE, sXPos+ 2, (INT32)dStart, sXPos + 2, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-
-	UnLockVideoSurface( uiBuffer );
-
+	UnLockVideoSurface(uiBuffer);
 }
 
 

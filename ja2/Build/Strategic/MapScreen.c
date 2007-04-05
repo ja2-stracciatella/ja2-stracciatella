@@ -1260,22 +1260,7 @@ static void DrawCharBars(void)
 			return;
 		}
 
-		// current health
-		DrawLifeUIBarEx( pSoldier, BAR_INFO_X, BAR_INFO_Y,3,42, TRUE, FRAME_BUFFER );
-
-		// robot doesn't have energy/fuel
-		if ( !AM_A_ROBOT( pSoldier ) )
-		{
-			// current energy/fuel
-			DrawBreathUIBarEx( pSoldier, BAR_INFO_X + 6, BAR_INFO_Y,3,42, TRUE, FRAME_BUFFER );
-		}
-
-		// vehicles and robot don't have morale
-		if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
-		{
-			// draw morale bar
-			DrawMoraleUIBarEx( pSoldier, BAR_INFO_X + 12, BAR_INFO_Y,3,42, TRUE, FRAME_BUFFER );
-		}
+		DrawSoldierUIBars(pSoldier, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
 	}
 }
 

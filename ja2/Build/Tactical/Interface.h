@@ -61,10 +61,6 @@ enum
 	I_NUMLEVELS
 };
 
-#define		DRAW_RED_BAR		1
-#define		DRAW_BLUE_BAR		2
-#define		DRAW_ERASE_BAR	3
-
 
 BOOLEAN				gfSwitchPanel;
 BOOLEAN				gfUIStanceDifferent;
