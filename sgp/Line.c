@@ -27,8 +27,8 @@ static int giClipYMin   = 0;
 static int giClipYMax   = 0;
 
 
-static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth);
-static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth);
+static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color);
 
 
 void SetClippingRegionAndImageWidth(
@@ -144,7 +144,6 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 {
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
-	int ScreenWidth=giImageWidth/2;
 
 	if ( fClip )
 	{
@@ -255,7 +254,7 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
          ErrorTerm += YDelta;
       }
       /* Draw the first, partial run of pixels */
-      DrawHorizontalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color, ScreenWidth);
+      DrawHorizontalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
       /* Draw all full runs */
       for (i=0; i<(YDelta-1); i++)
       {
@@ -268,10 +267,10 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
             ErrorTerm -= AdjDown;   /* reset the error term */
          }
          /* Draw this scan line's run */
-         DrawHorizontalRun(&ScreenPtr, XAdvance, RunLength, Color, ScreenWidth);
+         DrawHorizontalRun(&ScreenPtr, XAdvance, RunLength, Color);
       }
       /* Draw the final run of pixels */
-      DrawHorizontalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color, ScreenWidth);
+      DrawHorizontalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
       return;
    }
    else
@@ -315,7 +314,7 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
          ErrorTerm += XDelta;
       }
       /* Draw the first, partial run of pixels */
-      DrawVerticalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color, ScreenWidth);
+      DrawVerticalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
 
       /* Draw all full runs */
       for (i=0; i<(XDelta-1); i++)
@@ -329,10 +328,10 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
             ErrorTerm -= AdjDown;   /* reset the error term */
          }
          /* Draw this scan line's run */
-         DrawVerticalRun(&ScreenPtr, XAdvance, RunLength, Color, ScreenWidth);
+         DrawVerticalRun(&ScreenPtr, XAdvance, RunLength, Color);
       }
       /* Draw the final run of pixels */
-      DrawVerticalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color, ScreenWidth);
+      DrawVerticalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
       return;
    }
 }
@@ -354,7 +353,7 @@ void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8 *pScreen )
 
 /* Draws a horizontal run of pixels, then advances the bitmap pointer to
    the first pixel of the next run. */
-static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth)
+static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color)
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;
@@ -372,7 +371,7 @@ static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int
 
 /* Draws a vertical run of pixels, then advances the bitmap pointer to
    the first pixel of the next run. */
-static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color, int ScreenWidth)
+static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color)
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;
