@@ -560,7 +560,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			 {
 																					if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 																					{
-																						PopupAssignmentMenuInTactical( pSoldier );
+																						PopupAssignmentMenuInTactical();
 																					}
 																					else
 																					{
@@ -1031,7 +1031,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 									  {
 										  //if( pSoldier->bAssignment >= ON_DUTY )
 										  {
-                        PopupAssignmentMenuInTactical( pSoldier );
+												PopupAssignmentMenuInTactical();
     										fClickHoldIntercepted = TRUE;
                       }
 										  break;

@@ -524,7 +524,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 														{
 											        if( pSoldier->bAssignment >= ON_DUTY )
 											        {
-                                PopupAssignmentMenuInTactical( pSoldier );
+																PopupAssignmentMenuInTactical();
                               }
 														}
                           }
@@ -726,7 +726,7 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 										{
 											//if( pSoldier->bAssignment >= ON_DUTY )
 											{
-                        PopupAssignmentMenuInTactical( pSoldier );
+												PopupAssignmentMenuInTactical();
     										fClickHoldIntercepted = TRUE;
                       }
                     }
@@ -4850,7 +4850,7 @@ static void TestCapture(void)
 }
 
 
-void PopupAssignmentMenuInTactical(const SOLDIERTYPE* pSoldier)
+void PopupAssignmentMenuInTactical(void)
 {
 #ifndef JA2DEMO
 	// do something

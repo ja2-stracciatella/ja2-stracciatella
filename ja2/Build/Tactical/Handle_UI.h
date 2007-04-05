@@ -327,6 +327,6 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier );
 
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath);
 
-void PopupAssignmentMenuInTactical(const SOLDIERTYPE* pSoldier);
+void PopupAssignmentMenuInTactical(void);
 
 #endif
