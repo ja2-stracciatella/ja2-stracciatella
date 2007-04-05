@@ -33,8 +33,6 @@
 ///////////////////////////
 
 
-extern INT8 gDebugStr[128];
-
 UINT16 *gpZBuffer=NULL;
 
 static INT16 gsCurrentGlowFrame = 0;

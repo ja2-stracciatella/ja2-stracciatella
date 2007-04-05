@@ -10,7 +10,7 @@
 // External globals
 UINT8					gubFilename[ 200 ];
 BOOLEAN				gfEditMode = FALSE;
-INT8					gDebugStr[128];
+char gDebugStr[128];
 INT8					gbFPSDisplay = SHOW_MIN_FPS;
 BOOLEAN				gfGlobalError			= FALSE;
 

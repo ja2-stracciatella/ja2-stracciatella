@@ -9,7 +9,7 @@ BOOLEAN				gfAniEditMode;
 BOOLEAN				gfEditMode;
 BOOLEAN				fFirstTimeInGameScreen;
 BOOLEAN				fDirtyRectangleMode;
-INT8					gDebugStr[128];
+extern char gDebugStr[128];
 
 BOOLEAN				gfMode;
 INT16					gsCurrentActionPoints;
