@@ -638,14 +638,6 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 
 	// add message to list
 	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, FALSE, iFirstData, uiSecondData );
-
-	// if we are in fact int he laptop, redraw icons, might be change in mail status
-
-	if( fCurrentlyInLaptop == TRUE )
-	{
-	  // redraw icons, might be new mail
-	  DrawLapTopIcons();
-	}
 }
 
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
@@ -660,14 +652,6 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 
 	// add message to list
 	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, FALSE, 0, 0 );
-
-	// if we are in fact int he laptop, redraw icons, might be change in mail status
-
-	if( fCurrentlyInLaptop == TRUE )
-	{
-	  // redraw icons, might be new mail
-	  DrawLapTopIcons();
-	}
 }
 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
@@ -682,14 +666,6 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 	// add message to list
 	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, TRUE, 0, 0 );
-
-	// if we are in fact int he laptop, redraw icons, might be change in mail status
-
-	if( fCurrentlyInLaptop == TRUE )
-	{
-	  // redraw icons, might be new mail
-	  DrawLapTopIcons();
-	}
 }
 
 
@@ -1599,9 +1575,6 @@ static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
 		// reset page being displayed
 		giMessagePage = 0;
 
-		// redraw icons
-		DrawLapTopIcons();
-
 		// force update of entire screen
 		fPausedReDrawScreenFlag = TRUE;
 	}
@@ -2093,7 +2066,6 @@ BOOLEAN DisplayNewMailBox( void )
 
 	// printf warning string
 	mprintf(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings[0] );
-	DrawLapTopIcons( );
 
 	// invalidate region
 	InvalidateRegion( EMAIL_WARNING_X, EMAIL_WARNING_Y, EMAIL_WARNING_X + 270, EMAIL_WARNING_Y + 200 );
@@ -2502,9 +2474,6 @@ static void DeleteEmail(void)
 
 	 // upadte list
    PlaceMessagesinPages();
-
-	 // redraw icons (if deleted message was last unread, remove checkmark)
-	 DrawLapTopIcons();
 
 	 // if all of a sudden we are beyond last page, move back one
 	 if(iCurrentPage > iLastPage)

@@ -642,14 +642,6 @@ BOOLEAN InitLaptopAndLaptopScreens()
 }
 
 
-UINT32
-DrawLapTopIcons()
-{
-
-  return (TRUE);
-}
-
-
 static void DisplayPlayersBalanceToDate(void);
 
 

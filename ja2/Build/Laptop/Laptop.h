@@ -6,14 +6,12 @@
 
 void			ExitLaptop();
 void			RenderLaptop();
-UINT32		DrawLapTopIcons();
 UINT32		DrawLapTopText();
 void			ReDrawHighLight();
 void			SetBookMark(INT32 iBookId);
 BOOLEAN		LeaveLapTopScreen( );
 void			SetLaptopExitScreen( UINT32 uiExitScreen );
 void			SetLaptopNewGameFlag( );
-UINT32		DrawLapTopIcons( );
 void			LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 void			HandleRightButtonUpEvent( void );
 BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
