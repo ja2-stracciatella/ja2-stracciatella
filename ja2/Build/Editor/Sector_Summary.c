@@ -116,12 +116,6 @@ BOOLEAN gfRenderGrid;
 BOOLEAN gfRenderProgress;
 //When set, only the map section is rerendered.
 BOOLEAN gfRenderMap;
-//Set whenever the ctrl key is held down.  This is used in conjunction with gfFileIO to determine whether the
-//selected sector is to be saved instead of loaded when clear.
-BOOLEAN gfCtrlPressed;
-//When set, it is time to load or save the selected sector.  If gfCtrlPressed is set, the the map is saved,
-//instead of loaded.  It is impossible to load a map that doesn't exist.
-BOOLEAN gfFileIO;
 //When set, then we are overriding the ability to use normal methods for selecting sectors for saving and
 //loading.  Immediately upon entering the text input mode; for the temp file; then we are assuming that
 //the user will type in a name that doesn't follow standard naming conventions for the purposes of the
@@ -1758,7 +1752,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 {
 	if( !gfSummaryWindowActive )
 		return FALSE;
-	gfCtrlPressed = pEvent->usKeyState & CTRL_DOWN;
 	if( !HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN || pEvent->usEvent == KEY_REPEAT )
 	{
 		INT32 x;
@@ -1928,7 +1921,6 @@ static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	static INT16 sLastX = -1, sLastY = -1;
-	static INT32 iLastClickTime = 0;
 	//calc current sector selected.
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -1944,7 +1936,6 @@ static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 			gfOverrideDirty = TRUE;
 			sLastX = gsSelSectorX;
 			sLastY = gsSelSectorY;
-			iLastClickTime = GetJA2Clock();
 			switch( giCurrentViewLevel )
 			{
 				case ALL_LEVELS_MASK:
@@ -2012,15 +2003,6 @@ static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 					gfSetupItemDetailsMode = TRUE;
 				}
 			}
-		}
-		else
-		{ //clicked in same sector, check for double click
-			INT32 iNewClickTime = GetJA2Clock();
-			if( iNewClickTime - iLastClickTime < 400 )
-			{
-				gfFileIO = TRUE;
-			}
-			iLastClickTime = iNewClickTime;
 		}
 		gfRenderSummary = TRUE;
 	}
