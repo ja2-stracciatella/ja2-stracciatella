@@ -2920,16 +2920,10 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
-	UINT32	uiFileSize;
-	HWFILE	hSrcFile;
-	UINT8		*pData;
+	BOOLEAN Ret = FALSE;
 
-	//open the file
-	hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
-	if( !hSrcFile )
-	{
-		return( FALSE );
-	}
+	HWFILE hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	if (!hSrcFile) goto ret_only;
 
 	#ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -2937,51 +2931,35 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 
 	//Get the file size of the source data file
-	uiFileSize = FileGetSize( hSrcFile );
-	if( uiFileSize == 0 )
-		return( FALSE );
+	UINT32 uiFileSize = FileGetSize( hSrcFile );
+	if (uiFileSize == 0) goto ret_close;
 
 	// Write the the size of the file to the saved game file
-	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) return FALSE;
+	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) goto ret_close;
 
 	//Allocate a buffer to read the data into
-	pData = MemAlloc( uiFileSize );
-	if( pData == NULL )
-		return( FALSE );
-	memset( pData, 0, uiFileSize);
+	UINT8* pData = MemAlloc( uiFileSize );
+	if (pData == NULL) goto ret_close;
 
 	// Read the saource file into the buffer
-	if (!FileRead(hSrcFile, pData, uiFileSize))
-	{
-		//Free the buffer
-		MemFree( pData );
-
-		return(FALSE);
-	}
-
-
+	if (!FileRead(hSrcFile, pData, uiFileSize)) goto ret_free;
 
 	// Write the buffer to the saved game file
-	if (!FileWrite(hFile, pData, uiFileSize))
-	{
-		//Free the buffer
-		MemFree( pData );
+	if (!FileWrite(hFile, pData, uiFileSize)) goto ret_free;
 
-		return(FALSE);
-	}
-
-	//Free the buffer
-	MemFree( pData );
-
-	//Clsoe the source data file
-	FileClose( hSrcFile );
-
-	#ifdef JA2BETAVERSION
+#ifdef JA2BETAVERSION
 	//Write out the name of the temp file so we can track whcih ones get loaded, and saved
-		WriteTempFileNameToFile( pSrcFileName, uiFileSize, hFile );
-	#endif
+	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
+#endif
 
-	return( TRUE );
+	Ret = TRUE;
+
+ret_free:
+	MemFree(pData);
+ret_close:
+	FileClose(hSrcFile);
+ret_only:
+	return Ret;
 }
 
 

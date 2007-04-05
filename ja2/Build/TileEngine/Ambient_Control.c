@@ -148,37 +148,32 @@ STEADY_STATE_AMBIENCE   gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
 
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 {
-	SGPFILENAME						zFilename;
-	HWFILE								hFile;
-	INT32								cnt;
+	BOOLEAN Ret = FALSE;
 
+	SGPFILENAME zFilename;
+	sprintf(zFilename, "AMBIENT/%d.bad", ubAmbientID);
 
-
-	// BUILD FILENAME
-	sprintf( zFilename, "AMBIENT/%d.bad", ubAmbientID );
-
-	// OPEN, LOAD
-	hFile = FileOpen(zFilename, FILE_ACCESS_READ);
-	if ( !hFile )
-	{
-		return( FALSE );
-	}
+	HWFILE hFile = FileOpen(zFilename, FILE_ACCESS_READ);
+	if (!hFile) goto ret_only;
 
 	// READ #
-	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) return FALSE;
+	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) goto ret_close;
 
 	// LOOP FOR OTHERS
-	for ( cnt = 0; cnt < gsNumAmbData; cnt++ )
+	for (INT32 cnt = 0; cnt < gsNumAmbData; cnt++)
 	{
-		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) return FALSE;
+		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) goto ret_close;
 
-		sprintf( zFilename, "AMBIENT/%s", gAmbData[ cnt ].zFilename );
-		strcpy( gAmbData[ cnt ].zFilename, zFilename );
+		sprintf(zFilename, "AMBIENT/%s", gAmbData[cnt].zFilename);
+		strcpy(gAmbData[cnt].zFilename, zFilename);
 	}
 
-	FileClose( hFile );
+	Ret = TRUE;
 
-	return( TRUE );
+ret_close:
+	FileClose(hFile);
+ret_only:
+	return Ret;
 }
 
 

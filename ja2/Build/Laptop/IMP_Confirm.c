@@ -507,30 +507,13 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem
 static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 {
 	// grab the profile number and write out what is contained there in
-	HWFILE hFile;
+	HWFILE hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 
-	// open the file for writing
-	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	// Write the profile id, portrait id and the profile itself. Abort on error
+	FileWrite(hFile, &iProfileId, sizeof(INT32)) &&
+	FileWrite(hFile, &iPortraitNumber, sizeof(INT32)) &&
+	FileWrite(hFile, &gMercProfiles[iProfileId], sizeof(MERCPROFILESTRUCT));
 
-	// write out the profile id
-	if (!FileWrite(hFile, &iProfileId, sizeof(INT32)))
-	{
-		return;
-	}
-
-	// write out the portrait id
-	if (!FileWrite(hFile, &iPortraitNumber, sizeof(INT32)))
-	{
-		return;
-	}
-
-	// write out the profile itself
-	if (!FileWrite(hFile, &gMercProfiles[iProfileId], sizeof(MERCPROFILESTRUCT)))
-	{
-		return;
-	}
-
-	// close file
 	FileClose(hFile);
 }
 
