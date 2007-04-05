@@ -254,12 +254,12 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 	{
 		pNode->ubStrLen = (UINT8)wcslen( szInitText );
 		Assert( pNode->ubStrLen <= ubMaxChars );
-		swprintf( pNode->szString, ubMaxChars + 1, szInitText );
+		wcslcpy(pNode->szString, szInitText, ubMaxChars + 1);
 	}
 	else
 	{
 		pNode->ubStrLen = 0;
-		swprintf( pNode->szString, ubMaxChars + 1, L"" );
+		pNode->szString[0] = L'\0';
 	}
 	pNode->ubMaxChars = ubMaxChars; //max string length
 
@@ -378,12 +378,12 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 			{
 				curr->ubStrLen = (UINT8)wcslen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				swprintf( curr->szString, curr->ubMaxChars + 1, szNewText );
+				wcslcpy(curr->szString, szNewText, curr->ubMaxChars + 1);
 			}
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
-				swprintf( curr->szString, curr->ubMaxChars + 1, L"");
+				curr->szString[0] = L'\0';
 			}
 			else
 			{
@@ -412,7 +412,7 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
 			else if( !curr->fUserField )
 			{
 				curr->ubStrLen = 0;
-				swprintf( curr->szString, curr->ubMaxChars + 1, L"" );
+				curr->szString[0] = L'\0';
 			}
 			else
 			{
@@ -450,12 +450,12 @@ void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length)
 	{
 		if( curr->ubID == ubField )
 		{
-			swprintf( szString, Length, curr->szString );
+			wcslcpy(szString, curr->szString, Length);
 			return;
 		}
 		curr = curr->next;
 	}
-	szString[0] = '\0';
+	szString[0] = L'\0';
 }
 
 //Converts the field's string into a number, then returns that number
@@ -498,7 +498,9 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 		{
 			AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
 			if( iNumber < 0 ) //negative number converts to blank string
-				swprintf( curr->szString, curr->ubMaxChars + 1, L"" );
+			{
+				curr->szString[0] = L'\0';
+			}
 			else
 			{
 				INT32 iMax = (INT32)pow( 10.0, curr->ubMaxChars );
