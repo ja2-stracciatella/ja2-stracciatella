@@ -193,13 +193,6 @@ void DisplayFrameRate( )
 			//mprintf( 0,345,L"DEBUG: %S",gDebugStr);
 		}
 
-		if (gSystemDebugStr[0] != '\0')
-		{
-			//gprintfdirty( 0, 345, L"%S",gSystemDebugStr);
-			//mprintf( 0,345,L"%S",gSystemDebugStr);
-			gSystemDebugStr[0] = '\0';
-		}
-
 		// Print Num tiles
 		//gprintfdirty( 0, 280, L"%d Tiles", gTileDatabaseSize );
 		//mprintf( 0, 280, L"%d Tiles", gTileDatabaseSize );

@@ -835,8 +835,6 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
-		strcpy(gSystemDebugStr, "Cache Load");
-
 		const char* Filename = gAnimSurfaceDatabase[usSurfaceIndex].Filename;
 		hImage = CreateImage(Filename, IMAGE_ALLDATA);
 
