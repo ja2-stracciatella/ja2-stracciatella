@@ -145,8 +145,6 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 	int Temp, AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 	int WholeStep, InitialPixelCount, FinalPixelCount, i, RunLength;
 	int ScreenWidth=giImageWidth/2;
-	char col2 = Color>>8;
-	char col1 = Color & 0x00FF;
 
 	if ( fClip )
 	{
@@ -189,8 +187,7 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Vertical line */
 		for (i=0; i<=YDelta; i++)
 		{
-			ScreenPtr[0] = col1;
-			ScreenPtr[1] = col2;
+			*(UINT16*)ScreenPtr = Color;
 			ScreenPtr += giImageWidth;
 		}
 		return;
@@ -200,8 +197,7 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Horizontal line */
 		for (i=0; i<=XDelta; i++)
 		{
-			ScreenPtr[0] = col1;
-			ScreenPtr[1] = col2;
+			*(UINT16*)ScreenPtr = Color;
 			ScreenPtr += XAdvance*2;
 		}
 		return;
@@ -211,8 +207,7 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Diagonal line */
 		for (i=0; i<=XDelta; i++)
 		{
-			ScreenPtr[0] = col1;
-			ScreenPtr[1] = col2;
+			*(UINT16*)ScreenPtr = Color;
 			ScreenPtr += (XAdvance*2) + giImageWidth;
 		}
 		return;
@@ -345,9 +340,6 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 //Draws a pixel in the specified color
 void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8 *pScreen )
 {
-	INT8 col2 = sColor >> 8;
-	INT8 col1 = sColor & 0x00ff;
-
 	if ( fClip )
 	{
 		if ( !ClipPoint( xp, yp ) )
@@ -356,9 +348,7 @@ void PixelDraw( BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8 *pScreen )
 
 	// point to the bitmap address first pixel to draw
 	pScreen += yp * giImageWidth + xp * 2;
-
-	pScreen[ 0 ] = col1;
-	pScreen[ 1 ] = col2;
+	*(UINT16*)pScreen = sColor;
 }
 
 
@@ -368,13 +358,10 @@ static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;
-	char col2 = Color>>8;
-	char col1 = Color & 0x00FF;
 
 	for (i=0; i<RunLength; i++)
 	{
-		WorkingScreenPtr[0] = col1;
-		WorkingScreenPtr[1] = col2;
+		*(UINT16*)WorkingScreenPtr = Color;
 		WorkingScreenPtr += XAdvance*2;
 	}
 	/* Advance to the next scan line */
@@ -389,13 +376,10 @@ static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int C
 {
 	int i;
 	char *WorkingScreenPtr = *ScreenPtr;
-	char col2 = Color>>8;
-	char col1 = Color & 0x00FF;
 
 	for (i=0; i<RunLength; i++)
 	{
-		WorkingScreenPtr[0] = col1;
-		WorkingScreenPtr[1] = col2;
+		*(UINT16*)WorkingScreenPtr = Color;
 		WorkingScreenPtr += giImageWidth;
 	}
 	/* Advance to the next column */
