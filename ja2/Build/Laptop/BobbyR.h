@@ -5,7 +5,6 @@
 #include "Store_Inventory.h"
 
 
-void GameInitBobbyR();
 BOOLEAN EnterBobbyR();
 void ExitBobbyR();
 void HandleBobbyR();

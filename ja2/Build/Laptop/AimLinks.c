@@ -59,11 +59,6 @@ UINT8			gubLinkPages[]={
 MOUSE_REGION    gSelectedLinkRegion[ AIM_LINK_NUM_LINKS ] ;
 
 
-void GameInitAimLinks()
-{
-}
-
-
 static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 

@@ -183,11 +183,6 @@ UINT8		gubBobbyRPages[]={
 MOUSE_REGION    gSelectedBobbiesSignMenuRegion[ BOBBIES_NUMBER_SIGNS ];
 
 
-void GameInitBobbyR()
-{
-}
-
-
 static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset);
 static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion);
 

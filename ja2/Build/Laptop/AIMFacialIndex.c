@@ -60,11 +60,6 @@ MOUSE_REGION		gMercFaceMouseRegions[ MAX_NUMBER_MERCS ];
 MOUSE_REGION		gScreenMouseRegions;
 
 
-void GameInitAimFacialIndex()
-{
-}
-
-
 static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason);
 static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);

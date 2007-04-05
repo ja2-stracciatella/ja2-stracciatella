@@ -2,11 +2,6 @@
 #include "Sir-Tech.h"
 
 
-void GameInitSirTech()
-{
-
-}
-
 void EnterSirTech()
 {
 

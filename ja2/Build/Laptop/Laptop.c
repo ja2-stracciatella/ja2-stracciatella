@@ -605,28 +605,13 @@ UINT32 LaptopScreenInit()
 	gfShowBookmarks=FALSE;
 	InitBookMarkList();
 	GameInitAIM();
-	GameInitAIMMembers();
-	GameInitAimFacialIndex();
 	GameInitAimSort();
-	GameInitAimArchives();
-	GameInitAimPolicies();
-	GameInitAimLinks();
-	GameInitAimHistory();
 	GameInitMercs();
-	GameInitBobbyR();
-	GameInitBobbyRAmmo();
-	GameInitBobbyRArmour();
 	GameInitBobbyRGuns();
 	GameInitBobbyRMailOrder();
-	GameInitBobbyRMisc();
-	GameInitBobbyRUsed();
 	GameInitEmail();
 	GameInitCharProfile();
-	GameInitFlorist();
-	GameInitInsurance();
 	GameInitInsuranceContract();
-	GameInitFuneral();
-	GameInitSirTech();
 	GameInitFiles();
 	GameInitPersonnel();
 

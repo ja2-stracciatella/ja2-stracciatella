@@ -16,12 +16,6 @@ UINT32		guiMiscBackground;
 UINT32		guiMiscGrid;
 
 
-
-void GameInitBobbyRMisc()
-{
-
-}
-
 BOOLEAN EnterBobbyRMisc()
 {
 	// load the background graphic and add it

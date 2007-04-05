@@ -18,10 +18,6 @@ UINT32		guiAmmoBackground;
 UINT32		guiAmmoGrid;
 
 
-void GameInitBobbyRAmmo()
-{
-}
-
 BOOLEAN EnterBobbyRAmmo()
 {
 	// load the background graphic and add it

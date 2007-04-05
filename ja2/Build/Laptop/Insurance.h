@@ -22,8 +22,6 @@
 #define		INS_INFO_RIGHT_ARROW_BUTTON_Y			INS_INFO_LEFT_ARROW_BUTTON_Y
 
 
-
-void GameInitInsurance();
 BOOLEAN EnterInsurance();
 void ExitInsurance();
 void HandleInsurance();

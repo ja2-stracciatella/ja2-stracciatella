@@ -16,12 +16,6 @@ UINT32		guiArmourBackground;
 UINT32		guiArmourGrid;
 
 
-
-void GameInitBobbyRArmour()
-{
-
-}
-
 BOOLEAN EnterBobbyRArmour()
 {
 	// load the background graphic and add it

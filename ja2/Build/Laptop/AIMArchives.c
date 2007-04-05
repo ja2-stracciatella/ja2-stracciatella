@@ -128,11 +128,6 @@ UINT32	guiAlumniPageButton[3];
 INT32		guiAlumniPageButtonImage;
 
 
-void GameInitAimArchives()
-{
-
-}
-
 void EnterInitAimArchives()
 {
 	gfDrawPopUpBox=FALSE;

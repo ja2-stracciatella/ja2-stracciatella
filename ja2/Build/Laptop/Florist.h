@@ -9,9 +9,6 @@
 #define		FLORIST_BUTTON_TEXT_SHADOW_COLOR	128
 
 
-
-
-void GameInitFlorist();
 BOOLEAN EnterFlorist();
 void ExitFlorist();
 void HandleFlorist();

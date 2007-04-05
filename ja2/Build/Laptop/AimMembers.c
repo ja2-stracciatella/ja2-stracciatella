@@ -479,10 +479,6 @@ MOUSE_REGION    gSelectedFaceRegion;
 MOUSE_REGION    gSelectedShutUpMercRegion;
 
 
-void GameInitAIMMembers()
-{
-}
-
 void EnterInitAimMembers()
 {
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;

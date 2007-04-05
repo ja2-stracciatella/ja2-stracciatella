@@ -106,12 +106,6 @@ MOUSE_REGION    gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
 MOUSE_REGION    gSelectedRipSignRegion;
 
 
-void GameInitFuneral()
-{
-
-}
-
-
 static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 

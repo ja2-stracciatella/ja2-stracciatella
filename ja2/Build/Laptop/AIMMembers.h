@@ -1,7 +1,6 @@
 #ifndef __AIMMEMBERS_H_
 #define __AIMMEMBERS_H_
 
-void GameInitAIMMembers();
 BOOLEAN EnterAIMMembers();
 void ExitAIMMembers();
 void HandleAIMMembers();

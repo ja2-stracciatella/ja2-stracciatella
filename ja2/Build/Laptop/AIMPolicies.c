@@ -163,11 +163,6 @@ BOOLEAN		gfExitingAimPolicy;
 BOOLEAN		AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
 
-void GameInitAimPolicies()
-{
-
-}
-
 void EnterInitAimPolicies()
 {
 	memset( &AimPoliciesSubPagesVisitedFlag, 0, NUM_AIM_POLICY_PAGES);

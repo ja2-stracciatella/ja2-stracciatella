@@ -93,12 +93,6 @@ enum
 } AimHistoryTextLocatoins;
 
 
-
-void GameInitAimHistory()
-{
-
-}
-
 void EnterInitAimHistory()
 {
 	memset( &AimHistorySubPagesVisitedFlag, 0, NUM_AIM_HISTORY_PAGES);

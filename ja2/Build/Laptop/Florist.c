@@ -77,11 +77,6 @@ UINT32	guiGalleryButton;
 MOUSE_REGION    gSelectedFloristTitleHomeLinkRegion;
 
 
-void GameInitFlorist()
-{
-
-}
-
 BOOLEAN EnterFlorist()
 {
 	SetBookMark( FLORIST_BOOKMARK );

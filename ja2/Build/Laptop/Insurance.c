@@ -82,12 +82,6 @@ MOUSE_REGION    gSelectedInsuranceLinkRegion[3];
 MOUSE_REGION    gSelectedInsuranceTitleLinkRegion;
 
 
-void GameInitInsurance()
-{
-
-}
-
-
 static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 

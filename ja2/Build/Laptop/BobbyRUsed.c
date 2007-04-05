@@ -17,11 +17,6 @@ UINT32		guiUsedBackground;
 UINT32		guiUsedGrid;
 
 
-void GameInitBobbyRUsed()
-{
-
-}
-
 BOOLEAN EnterBobbyRUsed()
 {
 	// load the background graphic and add it
