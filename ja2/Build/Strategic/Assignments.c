@@ -6902,9 +6902,6 @@ static void MercDismissConfirmCallBack(UINT8 bExitValue)
 }
 
 
-static void PostContractMessage(SOLDIERTYPE* pCharacter, INT32 iContract);
-
-
 static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for contract region
@@ -6968,17 +6965,14 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 		  case( CONTRACT_MENU_DAY ):
 				MercContractHandling( pSoldier, CONTRACT_EXTEND_1_DAY );
-				PostContractMessage( pSoldier, CONTRACT_EXTEND_1_DAY );
 				fOkToClose = TRUE;
 			break;
 			case( CONTRACT_MENU_WEEK ):
 				MercContractHandling( pSoldier, CONTRACT_EXTEND_1_WEEK );
-				PostContractMessage( pSoldier, CONTRACT_EXTEND_1_WEEK );
 				fOkToClose = TRUE;
 			break;
 			case( CONTRACT_MENU_TWO_WEEKS ):
 				MercContractHandling( pSoldier, CONTRACT_EXTEND_2_WEEK );
-				PostContractMessage( pSoldier, CONTRACT_EXTEND_2_WEEK );
 				fOkToClose = TRUE;
 			break;
 
@@ -8040,16 +8034,6 @@ static void HandleShadingOfLinesForSquadMenu(void)
 			}
 		}
 	}
-}
-
-
-static void PostContractMessage(SOLDIERTYPE* pCharacter, INT32 iContract)
-{
-	// do nothing
-	return;
-
-	// send a message stating that offer of contract extension made
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Offered to extend %S's contract by another %S.", pCharacter->name, pContractExtendStrings[iContract]);
 }
 
 

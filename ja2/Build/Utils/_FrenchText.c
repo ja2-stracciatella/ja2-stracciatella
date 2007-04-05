@@ -752,15 +752,6 @@ const wchar_t* pDoorTrapStrings[] =
 	L"une alarme silencieuse",
 };
 
-// Contract Extension. These are used for the contract extension with AIM mercenaries.
-
-const wchar_t* pContractExtendStrings[] =
-{
-	L"jour",
-	L"semaine",
-	L"2 semaines",
-};
-
 // On the map screen, there are four columns. This text is popup help text that identifies the individual columns.
 
 const wchar_t* pMapScreenMouseRegionHelpText[] =
