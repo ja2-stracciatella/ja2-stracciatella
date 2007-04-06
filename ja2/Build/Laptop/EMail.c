@@ -2185,24 +2185,10 @@ static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fDeleteMailFlag=FALSE;
-		 fReDrawScreenFlag=TRUE;
-		}
+		fDeleteMailFlag = FALSE;
+		fReDrawScreenFlag = TRUE;
 	}
 }
 
@@ -2212,25 +2198,10 @@ static void DeleteEmail(void);
 
 static void BtnDeleteYesback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
-		{
-		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 fReDrawScreenFlag=TRUE;
-		 DeleteEmail();
-
-		}
+		fReDrawScreenFlag = TRUE;
+		DeleteEmail();
 	}
 }
 
