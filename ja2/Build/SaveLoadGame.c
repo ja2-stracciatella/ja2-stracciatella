@@ -3122,7 +3122,6 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 	UINT32		uiSizeOfSubject=0;
 	EmailPtr	pEmail = pEmailList;
 	EmailPtr	pTempEmail = NULL;
-	UINT8			*pData = NULL;
 	UINT32		cnt;
 	SavedEmailStruct SavedEmail;
 
@@ -3147,27 +3146,15 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 		//get the length of the email subject
 		if (!FileRead(hFile, &uiSizeOfSubject, sizeof(UINT32))) return FALSE;
 
-		//allocate space for the subject
-		pData = MemAlloc( EMAIL_SUBJECT_LENGTH * sizeof( wchar_t ) );
-		if( pData == NULL )
-			return( FALSE );
-		memset( pData, 0, EMAIL_SUBJECT_LENGTH * sizeof( wchar_t ) );
+		pTempEmail = MemAlloc(sizeof(*pTempEmail));
+		if (pTempEmail == NULL) return FALSE;
+		memset(pTempEmail, 0, sizeof(*pTempEmail));
 
 		//Get the subject
-		if (!FileRead(hFile, pData, uiSizeOfSubject)) return FALSE;
+		if (!FileRead(hFile, pTempEmail->pSubject, uiSizeOfSubject)) return FALSE; // XXX potential buffer overflow
 
 		//get the rest of the data from the email
 		if (!FileRead(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
-
-		//
-		//add the email
-		//
-
-		//if we havent allocated space yet
-		pTempEmail = MemAlloc( sizeof( Email ) );
-		if( pTempEmail == NULL )
-			return( FALSE );
-		memset( pTempEmail, 0, sizeof( Email ) );
 
 		pTempEmail->usOffset = SavedEmail.usOffset;
 		pTempEmail->usLength = SavedEmail.usLength;
@@ -3176,7 +3163,6 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 		pTempEmail->iId = SavedEmail.iId;
 		pTempEmail->fRead = SavedEmail.fRead;
 		pTempEmail->fNew = SavedEmail.fNew;
-		pTempEmail->pSubject = (STR16) pData;
 		pTempEmail->iFirstData = SavedEmail.iFirstData;
 		pTempEmail->uiSecondData = SavedEmail.uiSecondData;
 		pTempEmail->iThirdData = SavedEmail.iThirdData;

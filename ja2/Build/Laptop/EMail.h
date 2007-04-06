@@ -147,7 +147,7 @@ typedef EmailMessage *MessagePtr;
 
 struct email
 {
-	STR16		pSubject;
+	wchar_t pSubject[128];
 	UINT16	usOffset;
 	UINT16	usLength;
 	UINT8		ubSender;
@@ -242,9 +242,6 @@ enum {
 	JOHN_KULBA,
 	AIM_SITE,
 };
-
-// the length of the subject in char
-#define EMAIL_SUBJECT_LENGTH 128
 
 extern BOOLEAN fUnReadMailFlag;
 extern BOOLEAN fNewMailFlag;

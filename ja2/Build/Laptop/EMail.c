@@ -711,16 +711,11 @@ static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSu
   //pTempEmail->pText[iCounter]=NULL;
 
 	// copy subject
-	pTempEmail->pSubject = MemAlloc(sizeof(*pTempEmail->pSubject) * 128);
-	memset(pTempEmail->pSubject, 0, sizeof(*pTempEmail->pSubject) * 128);
-	wcscpy(pTempEmail->pSubject,pSubject);
+	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
 
 	// copy offset and length of the actual message in email.edt
 	pTempEmail->usOffset =(UINT16)iMessageOffset;
 	pTempEmail->usLength =(UINT16)iMessageLength;
-
-	// null out last byte of subject
-  pTempEmail->pSubject[wcslen(pSubject)+1]=0;
 
 
 	// set date and sender, Id
@@ -800,7 +795,6 @@ static void RemoveEmailMessage(INT32 iId)
 		// in the middle of the list
 	 pEmail=pEmail->Prev;
 	 pTempEmail=pTempEmail->Next;
-	 MemFree(pEmail->Next->pSubject);
    //while(pEmail->Next->pText[iCounter])
 	 //{
    //MemFree(pEmail->Next->pText[iCounter]);
@@ -814,7 +808,6 @@ static void RemoveEmailMessage(INT32 iId)
 	{
 		// end of the list
 		pEmail=pEmail->Prev;
-	  MemFree(pEmail->Next->pSubject);
 		//while(pEmail->Next->pText[iCounter])
 		//{
      //MemFree(pEmail->Next->pText[iCounter]);
@@ -828,7 +821,6 @@ static void RemoveEmailMessage(INT32 iId)
 		// beginning of the list
 		pEmail=pTempEmail;
 		pTempEmail=pTempEmail->Next;
-	  MemFree(pEmail->pSubject);
     //while(pEmail->pText[iCounter])
 		//{
     //MemFree(pEmail->pText[iCounter]);
@@ -841,7 +833,6 @@ static void RemoveEmailMessage(INT32 iId)
 	else
 	{
 		// all alone
-    MemFree(pEmail->pSubject);
 	//	while(pEmail->pText[iCounter])
 		//{
      //MemFree(pEmail->pText[iCounter]);
@@ -1148,9 +1139,6 @@ static void SwapMessages(INT32 iIdA, INT32 iIdB)
  EmailPtr pB=pEmailList;
  EmailPtr pTemp=MemAlloc(sizeof(Email) );
 
- pTemp->pSubject = MemAlloc(sizeof(*pTemp->pSubject) * 128);
- memset(pTemp->pSubject, 0, sizeof(*pTemp->pSubject) * 128);
-
  if(!pA->Next)
 	 return;
  //find pA
@@ -1192,8 +1180,6 @@ static void SwapMessages(INT32 iIdA, INT32 iIdB)
  pB->ubSender=pTemp->ubSender;
  wcscpy(pB->pSubject, pTemp->pSubject);
 
- // free up memory
- MemFree(pTemp -> pSubject);
  MemFree( pTemp );
 }
 
@@ -4402,9 +4388,6 @@ void ShutDownEmailList()
 		pTempEmail = pEmail;
 
 		pEmail = pEmail->Next;
-
-		MemFree( pTempEmail->pSubject );
-		pTempEmail->pSubject = NULL;
 
 		MemFree( pTempEmail );
 		pTempEmail = NULL;
