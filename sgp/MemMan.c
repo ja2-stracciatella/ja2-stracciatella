@@ -352,7 +352,6 @@ PTR MemAllocXDebug( UINT32 size, const char *szCodeString, INT32 iLineNum, void 
 		sprintf( str, "%s -- line(%d)", pStr, iLineNum );
 		usLength = strlen( str ) + 1;
 		gpMemoryTail->pCode = (UINT8*)malloc( usLength );
-		memset( gpMemoryTail->pCode, 0, usLength );
 		strcpy( gpMemoryTail->pCode, str );
 
 		//record the size
@@ -453,7 +452,6 @@ PTR	MemReallocXDebug( PTR ptr, UINT32 size, const char *szCodeString, INT32 iLin
 				sprintf( str, "%s -- line(%d)", pStr, iLineNum );
 				usLength = strlen( str ) + 1;
 				curr->pCode = (UINT8*)malloc( usLength );
-				memset( curr->pCode, 0, usLength );
 				strcpy( curr->pCode, str );
 			}
 			else

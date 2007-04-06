@@ -177,9 +177,6 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 			return( FALSE );
 		}
 
-		// ATE: Memset: Jan 16/99
-		memset( pSTCIPalette, 0, uiFileSectionSize );
-
 		// Read in the palette
 		if (!FileRead(hFile, pSTCIPalette, uiFileSectionSize))
 		{
@@ -333,7 +330,6 @@ static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hIm
 {
 	// Allocate memory for palette
 	hImage->pPalette = MemAlloc( sizeof( SGPPaletteEntry ) * 256 );
-	memset( hImage->pPalette, 0, ( sizeof( SGPPaletteEntry ) * 256 ) );
 
 	if ( hImage->pPalette == NULL )
 	{

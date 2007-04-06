@@ -3524,7 +3524,6 @@ static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 		pTemp = MemAlloc( sizeof( PathSt ) );
 		if( pTemp == NULL )
 			return( FALSE );
-		memset( pTemp, 0 , sizeof( PathSt ) );
 
 		//Load the node
 		if (!FileRead(hFile, pTemp, sizeof(PathSt))) return FALSE;
