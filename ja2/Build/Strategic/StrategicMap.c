@@ -4,7 +4,6 @@
 #include "Types.h"
 #include "memory.h"
 #include <math.h>
-#include <time.h>
 #include "JAScreens.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"

@@ -1,4 +1,3 @@
-#include <time.h>
 #include "SGP.h"
 #include "Container.h"
 #include "WCheck.h"

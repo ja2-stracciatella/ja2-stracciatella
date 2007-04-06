@@ -1,4 +1,3 @@
-#include <time.h>
 #include "Types.h"
 #include "WorldDef.h"
 #include "SGP.h"

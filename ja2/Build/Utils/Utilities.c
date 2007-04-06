@@ -1,6 +1,5 @@
 #include "Types.h"
 #include "SGP.h"
-#include "time.h"
 #include "VObject.h"
 #include "FileMan.h"
 #include "Utilities.h"

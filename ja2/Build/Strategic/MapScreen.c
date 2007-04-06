@@ -1,5 +1,4 @@
 #include "MapScreen.h"
-#include <time.h>
 #include "Gameloop.h"
 #include "SGP.h"
 #include "VObject.h"

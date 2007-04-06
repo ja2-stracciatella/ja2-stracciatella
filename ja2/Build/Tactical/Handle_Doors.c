@@ -1,4 +1,3 @@
-#include <time.h>
 #include "SGP.h"
 #include "WorldDef.h"
 #include "WorldMan.h"

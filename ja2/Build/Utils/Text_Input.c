@@ -1,5 +1,4 @@
 #include <math.h>
-#include <time.h>
 #include "Input.h"
 #include "Font.h"
 #include "English.h"

@@ -1,4 +1,3 @@
-#include <time.h>
 #include "SGP.h"
 #include "WCheck.h"
 #include "Event_Pump.h"
