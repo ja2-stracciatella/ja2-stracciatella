@@ -1,18 +1,7 @@
 #ifndef __PHYS_MATH_H
 #define __PHYS_MATH_H
 
-
-// explicit dependencies
-#include <float.h>
-
 typedef float real;
-
-#define		 REAL_MAX				FLT_MAX
-#define		 REAL_MIN				FLT_MIN
-
-#define			PI2						3.14159265358979323846
-#define			Epsilon2 			0.00001
-
 
 typedef struct
 {
@@ -20,9 +9,6 @@ typedef struct
 
 } vector_3;
 
-
-#define RADIANS_FROM( d )						( ( d * PI2 ) / 180 )
-#define DEGREES_FROM( r )						( ( r * 180 ) / PI2 )
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,9 +27,5 @@ vector_3	VCrossProduct( vector_3 *a, vector_3 *b );
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
 
 #endif
