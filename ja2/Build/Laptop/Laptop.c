@@ -37,7 +37,6 @@
 #include "Insurance_Info.h"
 #include "Insurance_Comments.h"
 #include "Funeral.h"
-#include "Sir-Tech.h"
 #include "Finances.h"
 #include "Personnel.h"
 #include "History.h"
@@ -460,7 +459,7 @@ SGPRect LaptopScreenRect={ LAPTOP_UL_X,LAPTOP_UL_Y - 5,LAPTOP_SCREEN_LR_X + 2,LA
 
 
 // the sub pages vistsed or not status within the web browser
-BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_SIRTECH - LAPTOP_MODE_WWW ];
+BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
 
 //INT32 iBookMarkList[MAX_BOOKMARKS];
 
@@ -1092,9 +1091,6 @@ void RenderLaptop()
 		case LAPTOP_MODE_FUNERAL:
 			RenderFuneral();
 			break;
-		case LAPTOP_MODE_SIRTECH:
-			RenderSirTech();
-			break;
 		case LAPTOP_MODE_FINANCES:
 			RenderFinances();
 			break;
@@ -1451,9 +1447,6 @@ static void EnterNewLaptopMode(void)
 		case LAPTOP_MODE_FUNERAL:
 			EnterFuneral();
 			break;
-		case LAPTOP_MODE_SIRTECH:
-			EnterSirTech();
-			break;
 		case LAPTOP_MODE_FINANCES:
 			EnterFinances();
 			break;
@@ -1613,9 +1606,6 @@ static void HandleLapTopHandles(void)
 
 		case LAPTOP_MODE_FUNERAL:
 			HandleFuneral();
-			break;
-		case LAPTOP_MODE_SIRTECH:
-			HandleSirTech();
 			break;
 		case LAPTOP_MODE_FINANCES:
 			HandleFinances();
@@ -2085,9 +2075,6 @@ static UINT32 ExitLaptopMode(UINT32 uiMode)
 
 		case LAPTOP_MODE_FUNERAL:
 			ExitFuneral();
-			break;
-		case LAPTOP_MODE_SIRTECH:
-			ExitSirTech();
 			break;
 		case LAPTOP_MODE_FINANCES:
 			ExitFinances();
@@ -5456,7 +5443,7 @@ static void InitalizeSubSitesList(void)
 	INT32 iCounter = 0;
 
 	// init all subsites list to not visited
-	for( iCounter = LAPTOP_MODE_WWW + 1 ; iCounter <= LAPTOP_MODE_SIRTECH; iCounter++ )
+	for (iCounter = LAPTOP_MODE_WWW + 1; iCounter <= LAPTOP_MODE_FUNERAL; iCounter++)
 	{
 			gfWWWaitSubSitesVisitedFlags[ iCounter - ( LAPTOP_MODE_WWW + 1 ) ] = FALSE;
 	}
