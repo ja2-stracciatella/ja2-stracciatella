@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <memory.h>
 #include "Strategic_Movement.h"
 #include "MemMan.h"
 #include "Debug.h"

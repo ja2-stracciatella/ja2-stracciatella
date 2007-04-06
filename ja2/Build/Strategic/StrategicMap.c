@@ -2,7 +2,6 @@
 #include "Strategic.h"
 #include "Strategic_Mines.h"
 #include "Types.h"
-#include "memory.h"
 #include <math.h>
 #include "JAScreens.h"
 #include "Soldier_Control.h"

@@ -1,4 +1,3 @@
-#include <memory.h>
 #include "Map_Edgepoints.h"
 #include "Soldier_Control.h"
 #include "PathAI.h"

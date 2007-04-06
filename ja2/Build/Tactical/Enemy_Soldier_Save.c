@@ -1,4 +1,3 @@
-#include <memory.h>
 #include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"

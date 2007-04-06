@@ -1,4 +1,3 @@
-#include <memory.h>
 #include "Strategic_Status.h"
 #include "Inventory_Choosing.h"
 #include "FileMan.h"

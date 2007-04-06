@@ -1,5 +1,4 @@
 #include "Phys_Math.h"
-#include <memory.h>
 
 
 vector_3 VSubtract( vector_3 *a, vector_3 *b )
