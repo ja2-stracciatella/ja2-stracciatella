@@ -1,4 +1,3 @@
-#include <errno.h>
 #include "Local.h"
 #include "WorldDef.h"
 #include "VSurface.h"

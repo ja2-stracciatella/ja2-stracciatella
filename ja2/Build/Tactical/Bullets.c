@@ -1,4 +1,3 @@
-#include <errno.h>
 #include "WorldDef.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"
