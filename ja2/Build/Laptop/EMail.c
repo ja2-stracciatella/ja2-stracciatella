@@ -1137,7 +1137,6 @@ static void SwapMessages(INT32 iIdA, INT32 iIdB)
  // swaps locations of messages in the linked list
  EmailPtr pA=pEmailList;
  EmailPtr pB=pEmailList;
- EmailPtr pTemp=MemAlloc(sizeof(Email) );
 
  if(!pA->Next)
 	 return;
@@ -1148,39 +1147,17 @@ static void SwapMessages(INT32 iIdA, INT32 iIdB)
  while(pB->iId!=iIdB)
 	 pB=pB->Next;
 
- // swap
+	Email Temp = *pA;
+	*pA = *pB;
+	*pB = Temp;
 
- // pTemp becomes pA
- pTemp->iId=pA->iId;
- pTemp->fRead=pA->fRead;
- pTemp->fNew=pA->fNew;
- pTemp->usOffset=pA->usOffset;
- pTemp->usLength=pA->usLength;
- pTemp->iDate=pA->iDate;
- pTemp->ubSender=pA->ubSender;
- wcscpy(pTemp->pSubject,pA->pSubject);
+	Email* Next = pA->Next;
+	pA->Next = pB->Next;
+	pB->Next = Next;
 
- // pA becomes pB
- pA->iId=pB->iId;
- pA->fRead=pB->fRead;
- pA->fNew=pB->fNew;
- pA->usOffset=pB->usOffset;
- pA->usLength=pB->usLength;
- pA->iDate=pB->iDate;
- pA->ubSender=pB->ubSender;
- wcscpy(pA->pSubject, pB->pSubject);
-
-// pB becomes pTemp
- pB->iId=pTemp->iId;
- pB->fRead=pTemp->fRead;
- pB->fNew=pTemp->fNew;
- pB->usOffset=pTemp->usOffset;
- pB->usLength=pTemp->usLength;
- pB->iDate=pTemp->iDate;
- pB->ubSender=pTemp->ubSender;
- wcscpy(pB->pSubject, pTemp->pSubject);
-
- MemFree( pTemp );
+	Email* Prev = pA->Prev;
+	pA->Prev = pB->Prev;
+	pB->Prev = Prev;
 }
 
 
