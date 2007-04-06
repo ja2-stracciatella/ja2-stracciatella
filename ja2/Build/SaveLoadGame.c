@@ -3099,10 +3099,10 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 		SavedEmail.uiSecondData = pEmail->uiSecondData;
 		SavedEmail.fRead = pEmail->fRead;
 		SavedEmail.fNew = pEmail->fNew;
-		SavedEmail.iThirdData = pEmail->iThirdData;
-		SavedEmail.iFourthData = pEmail->iFourthData;
-		SavedEmail.uiFifthData = pEmail->uiFifthData;
-		SavedEmail.uiSixData = pEmail->uiSixData;
+		SavedEmail.iThirdData_UNUSED  = 0;
+		SavedEmail.iFourthData_UNUSED = 0;
+		SavedEmail.uiFifthData_UNUSED = 0;
+		SavedEmail.uiSixData_UNUSED   = 0;
 
 
 		// write the email header to the saved game file
@@ -3165,11 +3165,6 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 		pTempEmail->fNew = SavedEmail.fNew;
 		pTempEmail->iFirstData = SavedEmail.iFirstData;
 		pTempEmail->uiSecondData = SavedEmail.uiSecondData;
-		pTempEmail->iThirdData = SavedEmail.iThirdData;
-		pTempEmail->iFourthData = SavedEmail.iFourthData;
-		pTempEmail->uiFifthData = SavedEmail.uiFifthData;
-		pTempEmail->uiSixData = SavedEmail.uiSixData;
-
 
 		//add the current email in
 		pEmail->Next = pTempEmail;

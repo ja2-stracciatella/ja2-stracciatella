@@ -158,11 +158,6 @@ struct email
 	BOOLEAN fRead;
 	BOOLEAN fNew;
 
-	INT32		iThirdData;
-	INT32		iFourthData;
-	UINT32	uiFifthData;
-	UINT32	uiSixData;
-
 	struct	email *Next;
 	struct	email *Prev;
 };
@@ -182,10 +177,10 @@ typedef struct
 	INT32		iFirstData;
 	UINT32	uiSecondData;
 
-	INT32		iThirdData;
-	INT32		iFourthData;
-	UINT32	uiFifthData;
-	UINT32	uiSixData;
+	INT32  iThirdData_UNUSED;  // XXX unused, but keep for savegame compatibility
+	INT32  iFourthData_UNUSED; // XXX unused, but keep for savegame compatibility
+	UINT32 uiFifthData_UNUSED; // XXX unused, but keep for savegame compatibility
+	UINT32 uiSixData_UNUSED;   // XXX unused, but keep for savegame compatibility
 
 	BOOLEAN fRead;
 	BOOLEAN fNew;
