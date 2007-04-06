@@ -1,4 +1,3 @@
-#include <wchar.h>
 #include "SGP.h"
 #include "Cursors.h"
 #include "Timer_Control.h"

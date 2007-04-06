@@ -23,7 +23,6 @@
 #include "Debug.h"
 #include "MemMan.h"
 #include "Types.h"
-#include <string.h>
 
 
 typedef struct HeaderTag

@@ -1,6 +1,4 @@
 #include <stdarg.h>
-#include <stdio.h>
-#include <wchar.h>
 #include "Types.h"
 #include "ScreenIDs.h"
 #include "Sys_Globals.h"

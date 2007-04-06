@@ -4,7 +4,7 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WCheck.h"
-#include <string.h>
+
 
 SGPRect	ClippingRect={0, 0, 640, 480};
 													//555      565

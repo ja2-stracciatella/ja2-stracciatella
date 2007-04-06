@@ -4,9 +4,7 @@
 
 #include <SDL.h>
 #include "Types.h"
-#include <stdio.h>
 #include "Debug.h"
-#include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
 //Kris addition

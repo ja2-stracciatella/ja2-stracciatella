@@ -6,7 +6,6 @@
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
-#include "stdio.h"
 #include "SysUtil.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Control.h"
@@ -49,7 +48,6 @@
 #include "FileMan.h"
 #include "Encrypted_File.h"
 #include "Strategic_Town_Loyalty.h"
-
 
 #define	MERCBIOSFILENAME		"BINARYDATA/aimbios.edt"
 

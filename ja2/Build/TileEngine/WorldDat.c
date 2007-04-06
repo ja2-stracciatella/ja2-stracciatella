@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <wchar.h>
 #include "WorldDat.h"
 #include "WorldDef.h"
 #include "TileDef.h"

@@ -3,7 +3,6 @@
 #include "WordWrap.h"
 #include "Utilities.h"
 #include "WCheck.h"
-#include "stdio.h"
 #include "AIM.h"
 #include "Soldier_Profile.h"
 #include "EMail.h"

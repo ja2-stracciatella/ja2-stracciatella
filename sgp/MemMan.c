@@ -14,10 +14,8 @@
 
 #include "Types.h"
 #include <stdlib.h>
-#include <string.h>
 #include "MemMan.h"
 #include "Debug.h"
-#include <stdio.h>
 
 
 #undef _DEBUG // XXX TODO

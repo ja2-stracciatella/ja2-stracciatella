@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "Types.h"
 #include "Compression.h"
 #include "Debug.h"

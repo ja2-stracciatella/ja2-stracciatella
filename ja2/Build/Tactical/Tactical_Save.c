@@ -6,7 +6,6 @@
 #include "Handle_Items.h"
 #include "StrategicMap.h"
 #include "Tactical_Save.h"
-#include <stdio.h>
 #include "Campaign_Types.h"
 #include "SaveLoadGame.h"
 #include "WorldDef.h"

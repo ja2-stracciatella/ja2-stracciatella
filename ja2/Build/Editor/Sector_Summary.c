@@ -2,7 +2,6 @@
 
 #ifdef JA2EDITOR
 
-#include <stdio.h>
 #include "Types.h"
 #include "Sector_Summary.h"
 #include "Timer_Control.h"

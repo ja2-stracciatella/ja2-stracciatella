@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include "SGP.h"
 #include "VObject.h"
 #include "TileDef.h"

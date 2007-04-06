@@ -1,5 +1,4 @@
 #include "math.h"
-#include <stdio.h>
 #include <errno.h>
 #include "Render_Fun.h"
 #include "WorldDef.h"

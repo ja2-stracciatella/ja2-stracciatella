@@ -1,4 +1,3 @@
-#include <string.h>
 #include "WCheck.h"
 #include "stdlib.h"
 #include "Debug.h"

@@ -14,7 +14,6 @@
 #include "Video.h"
 #include <SDL.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include "Stubs.h" // XXX
 
 

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Laptop.h"
 #include "Files.h"
 #include "Game_Clock.h"
@@ -11,7 +10,6 @@
 #include "Cursors.h"
 #include "EMail.h"
 #include "Text.h"
-#include <string.h>
 #include "Button_System.h"
 #include "VSurface.h"
 #include "MemMan.h"

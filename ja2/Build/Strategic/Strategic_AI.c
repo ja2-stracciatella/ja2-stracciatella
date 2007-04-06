@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Types.h"
 #include "Strategic_Movement.h"
 #include "Queen_Command.h"

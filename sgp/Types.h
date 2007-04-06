@@ -1,8 +1,10 @@
 #ifndef __TYPES_
 #define __TYPES_
 
-#include <stdio.h>
 #include <stdlib.h>
+#include "SGPStrings.h"
+
+
 #define UNIMPLEMENTED() \
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();
@@ -24,9 +26,6 @@
 
 // build defines header....
 #include "BuildDefines.h"
-
-
-#include <wchar.h>			// for wide-character strings
 
 
 typedef          int  INT;

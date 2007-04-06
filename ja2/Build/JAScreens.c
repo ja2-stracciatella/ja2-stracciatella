@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include "SGP.h"
@@ -17,7 +16,6 @@
 #include "TileDef.h"
 #include "WorldDef.h"
 #include "EditScreen.h"
-#include <wchar.h>
 #include "Timer_Control.h"
 #include "Sys_Globals.h"
 #include "Interface.h"

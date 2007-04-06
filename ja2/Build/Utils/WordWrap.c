@@ -2,8 +2,6 @@
 #include "SGP.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
-#include <stdio.h>
-#include <string.h>
 #include <stdarg.h>
 #include "Debug.h"
 #include "Video.h"

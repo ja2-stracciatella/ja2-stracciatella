@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Button_System.h"
 #include "MouseSystem.h"
 #include "JAScreens.h"

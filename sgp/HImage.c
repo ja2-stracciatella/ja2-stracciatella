@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include "Types.h"
-#include "string.h"
 #include "Debug.h"
 #include "FileMan.h"
 #include "HImage.h"

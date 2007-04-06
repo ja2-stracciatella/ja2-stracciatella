@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <string.h>
 #include "Types.h"
 #include "WCheck.h"
 #include "stdlib.h"

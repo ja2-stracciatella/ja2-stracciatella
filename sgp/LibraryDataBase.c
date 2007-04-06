@@ -4,7 +4,6 @@
 #include "MemMan.h"
 #include "WCheck.h"
 #include "Debug.h"
-#include <string.h>
 
 
 #ifdef JA2

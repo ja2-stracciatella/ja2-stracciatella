@@ -2,7 +2,6 @@
 
 #ifdef JA2EDITOR
 
-#include <stdio.h>
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "RenderWorld.h"

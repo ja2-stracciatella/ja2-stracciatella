@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include "SGP.h"
 #include "Ambient_Types.h"
 #include "FileMan.h"
@@ -6,7 +5,6 @@
 #include "Sound_Control.h"
 #include "Game_Events.h"
 #include "Ambient_Control.h"
-#include <string.h>
 #include "Lighting.h"
 #include "Random.h"
 #include "WorldMan.h"

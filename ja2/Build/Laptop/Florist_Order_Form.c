@@ -6,7 +6,6 @@
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Florist_Gallery.h"
-#include "stdio.h"
 #include "Encrypted_File.h"
 #include "Florist_Cards.h"
 #include "Text_Input.h"

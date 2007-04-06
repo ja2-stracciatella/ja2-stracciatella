@@ -1,8 +1,6 @@
 #ifndef __OVERHEAD_H
 #define __OVERHEAD_H
 
-#include <string.h>
-#include <stdio.h>
 #include "Soldier_Control.h"
 #include "Overhead_Types.h"
 #include "Soldier_Find.h"

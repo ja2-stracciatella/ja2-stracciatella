@@ -5,10 +5,8 @@
 #include "Utilities.h"
 #include "WordWrap.h"
 #include "Cursors.h"
-#include "stdio.h"
 #include "Encrypted_File.h"
 #include "Text.h"
-#include <string.h>
 #include "Button_System.h"
 #include "Video.h"
 #include "Font_Control.h"

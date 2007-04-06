@@ -16,14 +16,12 @@
 ***************************************************************************************/
 
 #include "math.h"
-#include <stdio.h>
 #include <errno.h>
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "VSurface.h"
 #include "Input.h"
 #include "SysUtil.h"
-#include "wchar.h"
 #include "Debug.h"
 #include "WCheck.h"
 #include "WorldMan.h"

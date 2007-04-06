@@ -26,7 +26,6 @@
 #include "Strategic.h"
 #include "Game_Clock.h"
 #include "Text.h"
-#include <string.h>
 #include "LaptopSave.h"
 #include "Button_System.h"
 #include "Video.h"

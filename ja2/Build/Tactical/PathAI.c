@@ -8,8 +8,6 @@
 	Date            :       1997-NOV
 */
 
-#include <stdio.h>
-#include <string.h>
 #include "WCheck.h"
 #include "stdlib.h"
 #include "Debug.h"

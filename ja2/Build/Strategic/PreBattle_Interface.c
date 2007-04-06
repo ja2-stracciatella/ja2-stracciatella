@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "PreBattle_Interface.h"
 #include "Button_System.h"
 #include "MouseSystem.h"

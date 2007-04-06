@@ -1,8 +1,6 @@
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"
-#include <string.h>
-#include <stdio.h>
 #include "Debug.h"
 #include "Overhead.h"
 #include "Keys.h"

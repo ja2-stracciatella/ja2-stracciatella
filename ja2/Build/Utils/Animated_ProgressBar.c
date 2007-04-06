@@ -7,7 +7,6 @@
 #include "Video.h"
 #include "Render_Dirty.h"
 #include "Music_Control.h"
-#include <string.h>
 #include "Timer_Control.h"
 #include "SysUtil.h"
 

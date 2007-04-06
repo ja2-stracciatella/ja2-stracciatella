@@ -15,7 +15,6 @@
 #include "LaptopSave.h"
 #include "Line.h"
 #include "English.h"
-#include <string.h>
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"

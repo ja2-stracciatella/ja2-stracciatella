@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Local.h"
 #include "Video.h"
 #include "SGP.h"

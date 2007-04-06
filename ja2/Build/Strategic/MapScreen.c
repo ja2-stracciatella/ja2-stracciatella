@@ -1,5 +1,4 @@
 #include "MapScreen.h"
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include "Gameloop.h"
@@ -21,7 +20,6 @@
 #include "Interface_Items.h"
 #include "Interface_Utils.h"
 #include "Lighting.h"
-#include <wchar.h>
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "Interface_Cursors.h"

@@ -48,16 +48,4 @@ void OutputDebugString(const char*);
 
 #define INVALID_HANDLE_VALUE 0
 
-#ifdef __linux__
-/* Gcc lacks this function
- * in linux we need to add this function
- * (or my installation is lacking it nonetheless
- * it needs to be added)
- **/
-size_t wcslcpy(wchar_t *s1, const wchar_t *s2, size_t n);
-
-/* Another function which isn't present in glibc
- */
-size_t strlcpy(char*,const char*,size_t);
-#endif
 #endif

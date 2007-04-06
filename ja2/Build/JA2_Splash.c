@@ -1,7 +1,6 @@
 #include "Types.h"
 #include "VSurface.h"
 #include "Timer_Control.h"
-#include <stdio.h>
 #include "LibraryDataBase.h"
 #include "Debug.h"
 #include "MainMenuScreen.h"

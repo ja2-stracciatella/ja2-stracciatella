@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include "SGP.h"
@@ -25,7 +24,6 @@
 #include "Sys_Globals.h"
 #include "Interface.h"
 #include "Soldier_Ani.h"
-#include <wchar.h>
 #include "English.h"
 #include "FileMan.h"
 #include "MessageBoxScreen.h"

@@ -1,7 +1,6 @@
 #include "Civ_Quotes.h"
 #include "MouseSystem.h"
 #include "StrategicMap.h"
-#include <stdio.h>
 #include "WCheck.h"
 #include "Encrypted_File.h"
 #include "MessageBoxScreen.h"

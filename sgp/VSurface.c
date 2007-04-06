@@ -5,7 +5,6 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WCheck.h"
-#include <string.h>
 
 
 static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);

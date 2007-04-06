@@ -1,11 +1,9 @@
-#include <stdio.h>
 #include "Types.h"
 #include "Lighting.h"
 #include "Shade_Table_Util.h"
 #include "Video.h"
 #include "WorldDat.h"
 #include "FileMan.h"
-#include <string.h>
 #include "MemMan.h"
 #include "Debug.h"
 

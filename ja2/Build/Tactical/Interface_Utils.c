@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 #include "SGP.h"
 #include "HImage.h"

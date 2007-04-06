@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <memory.h>
 #include "Types.h"
 #include "Soldier_Control.h"

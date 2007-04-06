@@ -1,7 +1,6 @@
 #ifndef __RENDER_FUN_H
 #define __RENDER_FUN_H
 
-#include <stdio.h>
 #include "WorldDef.h"
 
 #define		NO_ROOM			0

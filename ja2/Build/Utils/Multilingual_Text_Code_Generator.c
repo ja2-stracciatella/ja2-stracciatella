@@ -29,12 +29,11 @@ CREATED:	Feb 16, 1999
 
 #ifdef _DEBUG
 
-#include <stdio.h>
 #include "Types.h"
 #include "Language_Defines.h"
 #include "Debug.h"
 #include "FileMan.h"
-#include <string.h>
+
 
 //Currently in JA2's _EnglishText, these tokens make up all of the
 //format specifiers that are actually used.  Feel free to add more,

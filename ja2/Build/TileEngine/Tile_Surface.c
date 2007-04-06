@@ -1,8 +1,5 @@
 #include "WorldDef.h"
 #include "WorldDat.h"
-#include <stdio.h>
-#include <string.h>
-#include <strings.h>
 #include "WCheck.h"
 #include "stdlib.h"
 #include "time.h"

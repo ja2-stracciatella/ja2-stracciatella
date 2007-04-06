@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "SGP.h"
 #include "Gameloop.h"
 #include "Screens.h"

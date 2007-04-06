@@ -1,4 +1,3 @@
-#include <string.h>
 #include "MemMan.h"
 #include "FileMan.h"
 #include "ImgFmt.h"

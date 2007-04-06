@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "FileMan.h"
 #include "Types.h"
 #include "Map_Information.h"

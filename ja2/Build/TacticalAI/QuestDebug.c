@@ -1,10 +1,8 @@
 #include "FileMan.h"
 #include "QuestDebug.h"
 #include "stdarg.h"
-#include "stdio.h"
 #include "Debug.h"
 #include "Message.h"
-#include <string.h>
 
 
 #define	QUEST_DEBUG_FILE			"QuestDebug.txt"

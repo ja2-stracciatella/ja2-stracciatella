@@ -1,5 +1,4 @@
 #include "Types.h"
-#include <stdio.h>
 #include "SGP.h"
 #include "time.h"
 #include "VObject.h"

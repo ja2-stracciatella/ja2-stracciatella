@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Debug.h"
 #include "WCheck.h"
 #include "MouseSystem.h"

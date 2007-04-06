@@ -4,9 +4,7 @@
 #include "Sound_Control.h"
 #include "SoundMan.h"
 #include "Timer_Control.h"
-#include <stdio.h>
 #include "FileMan.h"
-#include <string.h>
 #include "MemMan.h"
 
 

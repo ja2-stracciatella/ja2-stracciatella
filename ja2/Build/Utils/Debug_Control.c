@@ -1,6 +1,5 @@
 #include "Types.h"
 #include "Debug_Control.h"
-#include "stdio.h"
 
 
 #ifdef _ANIMSUBSYSTEM_DEBUG

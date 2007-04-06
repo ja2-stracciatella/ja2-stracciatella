@@ -1,6 +1,3 @@
-#include <wchar.h>
-#include <stdio.h>
-#include <string.h>
 #include "WCheck.h"
 #include "Render_Fun.h"
 #include "stdlib.h"

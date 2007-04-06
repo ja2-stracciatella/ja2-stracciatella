@@ -13,7 +13,6 @@
 #include "SoundMan.h"
 #include <SDL.h>
 #include <assert.h>
-#include <string.h>
 #include "Stubs.h" // XXX
 
 // Uncomment this to disable the startup of sound hardware

@@ -1,5 +1,4 @@
 #include "math.h"
-#include <stdio.h>
 #include <errno.h>
 #include "WorldDef.h"
 #include "VSurface.h"

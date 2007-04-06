@@ -381,6 +381,7 @@ SRCS += sgp/Shading.c # inline assembler
 SRCS += sgp/Smack_Stub.c
 SRCS += sgp/SoundMan.c
 SRCS += sgp/Stubs.c
+SRCS += sgp/SGPStrings.c
 SRCS += sgp/VObject.c
 SRCS += sgp/VObject_Blitters.c # inline assembler
 SRCS += sgp/VSurface.c

@@ -7,7 +7,7 @@
 #include "Quantize.h"
 #include "Quantize_Wrap.h"
 #include "Phys_Math.h"
-#include <string.h>
+
 
 typedef struct
 {

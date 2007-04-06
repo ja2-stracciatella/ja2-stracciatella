@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include "SGP.h"
@@ -6,7 +5,6 @@
 #include "WCheck.h"
 #include "Event_Manager.h"
 #include "Timer_Control.h"
-#include <string.h>
 #include "Debug.h"
 #include "MemMan.h"
 

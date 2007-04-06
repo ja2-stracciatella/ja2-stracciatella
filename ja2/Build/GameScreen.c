@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include "Local.h"
@@ -21,7 +20,6 @@
 #include "Render_Dirty.h"
 #include "Interface.h"
 #include "Handle_UI.h"
-#include <wchar.h>
 #include "Cursors.h"
 #include "VObject_Blitters.h"
 #include "Button_System.h"
@@ -33,7 +31,6 @@
 #include "Bullets.h"
 #include "Assignments.h"
 #include "Message.h"
-#include <string.h>
 #include "Overhead_Map.h"
 #include "Strategic_Exit_GUI.h"
 #include "Strategic_Movement.h"

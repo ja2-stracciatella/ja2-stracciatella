@@ -15,7 +15,6 @@
 #include "SoundMan.h"
 #include "BuildDefines.h"
 #include "Dialogue_Control.h"
-#include <stdio.h>
 #include "Game_Clock.h"
 #include <stdarg.h>
 #include "VSurface.h"

@@ -6,7 +6,6 @@
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"
-#include "stdio.h"
 #include "Encrypted_File.h"
 #include "AIMMembers.h"
 #include "Game_Clock.h"

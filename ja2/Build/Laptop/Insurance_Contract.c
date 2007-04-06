@@ -6,7 +6,6 @@
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Insurance_Text.h"
-#include "stdio.h"
 #include "Soldier_Profile.h"
 #include "Overhead.h"
 #include "Text_Input.h"

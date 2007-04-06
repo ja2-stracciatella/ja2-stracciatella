@@ -9,7 +9,6 @@
 #include "Interface.h"
 #include "Cursors.h"
 #include "Quests.h"
-#include "stdio.h"
 #include "QuestText.h"
 #include "Soldier_Profile.h"
 #include "Utilities.h"

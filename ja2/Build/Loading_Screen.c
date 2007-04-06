@@ -3,7 +3,6 @@
 #include "Campaign_Types.h"
 #include "Game_Clock.h"
 #include "Random.h"
-#include <string.h>
 #include "Font.h"
 #include "Font_Control.h"
 #include "Video.h"

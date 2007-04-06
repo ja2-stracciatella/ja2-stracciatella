@@ -24,7 +24,6 @@
 #include "VSurface.h"
 #include "WCheck.h"
 #include <math.h>
-#include <stdio.h>
 
 
 ///////////////////////////

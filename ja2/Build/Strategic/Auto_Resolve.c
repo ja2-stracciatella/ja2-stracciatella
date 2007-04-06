@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "Types.h"
 #include "Auto_Resolve.h"
 #include "Local.h"

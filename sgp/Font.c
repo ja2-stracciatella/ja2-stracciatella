@@ -1,7 +1,4 @@
-#include <stdio.h>
 #include <stdarg.h>
-#include <string.h>
-#include <wchar.h>
 #include "Types.h"
 #include "MemMan.h"
 #include "Font.h"

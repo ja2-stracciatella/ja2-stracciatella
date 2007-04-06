@@ -15,7 +15,6 @@
 #include "MemMan.h"
 #include "WCheck.h"
 #include "HImage.h"
-#include "string.h"
 #include "Debug.h"
 
 

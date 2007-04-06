@@ -1,8 +1,6 @@
 #include <math.h>
-#include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include <wchar.h>
 #include "Input.h"
 #include "Font.h"
 #include "English.h"
@@ -15,7 +13,6 @@
 #include "VObject_Blitters.h"
 #include "Font_Control.h"
 #include "Sound_Control.h"
-#include <string.h>
 #include "MemMan.h"
 #include "MouseSystem.h"
 

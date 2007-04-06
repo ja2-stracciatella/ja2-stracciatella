@@ -1,5 +1,4 @@
 #include "math.h"
-#include <stdio.h>
 #include <errno.h>
 #include "Local.h"
 #include "WorldDef.h"
