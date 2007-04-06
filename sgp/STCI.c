@@ -155,13 +155,12 @@ static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const 
 }
 
 
-static BOOLEAN STCISetPalette(PTR pSTCIPalette, HIMAGE hImage);
+static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hImage);
 
 
 static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
 {
 	UINT32			uiFileSectionSize;
-	PTR					pSTCIPalette;
 
 	if (fContents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
@@ -171,7 +170,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 			return( FALSE );
 		}
 		uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
-		pSTCIPalette = MemAlloc( uiFileSectionSize );
+		STCIPaletteElement* pSTCIPalette = MemAlloc(uiFileSectionSize);
 		if (pSTCIPalette == NULL)
 		{
 			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
@@ -330,13 +329,8 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 }
 
 
-static BOOLEAN STCISetPalette(PTR pSTCIPalette, HIMAGE hImage)
+static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hImage)
 {
-	UINT16								usIndex;
-	STCIPaletteElement *	pubPalette;
-
-	pubPalette = (STCIPaletteElement *) pSTCIPalette;
-
 	// Allocate memory for palette
 	hImage->pPalette = MemAlloc( sizeof( SGPPaletteEntry ) * 256 );
 	memset( hImage->pPalette, 0, ( sizeof( SGPPaletteEntry ) * 256 ) );
@@ -347,13 +341,12 @@ static BOOLEAN STCISetPalette(PTR pSTCIPalette, HIMAGE hImage)
 	}
 
   // Initialize the proper palette entries
-  for (usIndex = 0; usIndex < 256; usIndex++)
+  for (UINT i = 0; i < 256; i++)
   {
-		hImage->pPalette[ usIndex ].peRed   = pubPalette->ubRed;
-		hImage->pPalette[ usIndex ].peGreen = pubPalette->ubGreen;
-    hImage->pPalette[ usIndex ].peBlue  = pubPalette->ubBlue;
-    hImage->pPalette[ usIndex ].peFlags = 0;
-		pubPalette ++;
+		hImage->pPalette[i].peRed   = pSTCIPalette[i].ubRed;
+		hImage->pPalette[i].peGreen = pSTCIPalette[i].ubGreen;
+		hImage->pPalette[i].peBlue  = pSTCIPalette[i].ubBlue;
+		hImage->pPalette[i].peFlags = 0;
   }
   return TRUE;
 }
