@@ -18,10 +18,7 @@
 #include "SoundMan.h"
 #include "Types.h"
 #include "Video.h"
-#include <fcntl.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 
 struct SMKFLIC
