@@ -3,7 +3,6 @@
 #include "Strategic_Mines.h"
 #include "Types.h"
 #include "memory.h"
-#include <stdarg.h>
 #include <math.h>
 #include <time.h>
 #include "JAScreens.h"

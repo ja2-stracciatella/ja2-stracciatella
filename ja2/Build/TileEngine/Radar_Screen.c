@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include <time.h>
 #include "SGP.h"
 #include "Radar_Screen.h"

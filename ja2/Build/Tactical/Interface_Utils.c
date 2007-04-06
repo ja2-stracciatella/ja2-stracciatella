@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include "SGP.h"
 #include "HImage.h"
 #include "VObject.h"

@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include "PCX.h"
 #include "MemMan.h"
 #include "FileMan.h"

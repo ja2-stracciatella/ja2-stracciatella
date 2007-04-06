@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include <time.h>
 #include "Local.h"
 #include "SGP.h"
