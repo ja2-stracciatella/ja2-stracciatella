@@ -994,7 +994,7 @@ void AddMessageToPages(INT32 iMessageId)
 }
 
 
-static void SwapMessages(INT32 iIdA, INT32 iIdB);
+static void SwapMessages(Email* pA, Email* pB);
 
 
 static void SortMessages(INT32 iCriteria)
@@ -1029,14 +1029,12 @@ static void SortMessages(INT32 iCriteria)
 					if( fSortDateUpwards )
 					{
 							// if date is lesser, swap
-					  if(pA->iDate > pB->iDate)
-						  SwapMessages(pA->iId, pB->iId);
+						if (pA->iDate > pB->iDate) SwapMessages(pA, pB);
 					}
 					else
 					{
 						// if date is lesser, swap
-					  if(pA->iDate < pB->iDate)
-						  SwapMessages(pA->iId, pB->iId);
+						if (pA->iDate < pB->iDate) SwapMessages(pA, pB);
 					}
 
 
@@ -1059,12 +1057,12 @@ static void SortMessages(INT32 iCriteria)
 					if( fSortSenderUpwards )
 					{
 					   if(( wcscmp( pSenderNameList[pA->ubSender] , pSenderNameList[pB->ubSender] ) ) < 0 )
-						   SwapMessages(pA->iId, pB->iId);
+						   SwapMessages(pA, pB);
 					}
 					else
 					{
 						if(( wcscmp( pSenderNameList[pA->ubSender] , pSenderNameList[pB->ubSender] ) ) > 0 )
-						  SwapMessages(pA->iId, pB->iId);
+						  SwapMessages(pA, pB);
 					}
 					// next in B's list
 					pB=pB->Next;
@@ -1087,13 +1085,11 @@ static void SortMessages(INT32 iCriteria)
 					// lesser string?...need sorting
 					if( fSortSubjectUpwards )
 					{
-					  if( ( wcscmp( pA->pSubject ,pB->pSubject ) ) < 0)
-						  SwapMessages(pA->iId, pB->iId);
+						if (wcscmp(pA->pSubject, pB->pSubject) < 0) SwapMessages(pA, pB);
           }
 					else
 					{
-						if( ( wcscmp( pA->pSubject ,pB->pSubject ) ) > 0)
-						  SwapMessages(pA->iId, pB->iId);
+						if (wcscmp(pA->pSubject, pB->pSubject) > 0) SwapMessages(pA, pB);
 					}
 					// next in B's list
 					pB=pB->Next;
@@ -1111,8 +1107,7 @@ static void SortMessages(INT32 iCriteria)
 				while(pB)
 				{
 					// one read and another not?...need sorting
-					if( ( pA->fRead ) && ( ! ( pB -> fRead ) ) )
-						SwapMessages(pA->iId, pB->iId);
+					if (pA->fRead && !pB->fRead) SwapMessages(pA, pB);
 
 					// next in B's list
 					pB=pB->Next;
@@ -1132,20 +1127,9 @@ static void SortMessages(INT32 iCriteria)
 }
 
 
-static void SwapMessages(INT32 iIdA, INT32 iIdB)
+static void SwapMessages(Email* pA, Email* pB)
 {
  // swaps locations of messages in the linked list
- EmailPtr pA=pEmailList;
- EmailPtr pB=pEmailList;
-
- if(!pA->Next)
-	 return;
- //find pA
- while(pA->iId!=iIdA)
-	 pA=pA->Next;
- // find pB
- while(pB->iId!=iIdB)
-	 pB=pB->Next;
 
 	Email Temp = *pA;
 	*pA = *pB;
