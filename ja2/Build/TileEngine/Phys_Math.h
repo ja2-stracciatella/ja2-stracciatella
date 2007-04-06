@@ -3,7 +3,6 @@
 
 
 // explicit dependencies
-#include <math.h>		// for sqrt
 #include <float.h>
 
 typedef float real;

@@ -3,7 +3,6 @@
 #include "AI.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
-#include "math.h"
 #include "Event_Pump.h"
 #include "Overhead_Types.h"
 #include "Sys_Globals.h"

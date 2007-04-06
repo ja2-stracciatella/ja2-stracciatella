@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdlib.h>
 #include "Types.h"
 #include "Debug.h"

@@ -8,7 +8,6 @@
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
-#include <math.h>
 #include "PathAI.h"
 #include "Random.h"
 #include "WorldMan.h"

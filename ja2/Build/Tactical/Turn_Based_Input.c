@@ -1,7 +1,6 @@
 #include "WCheck.h"
 #include "stdlib.h"
 #include "Debug.h"
-#include "math.h"
 #include "JAScreens.h"
 #include "PathAI.h"
 #include "Soldier_Control.h"

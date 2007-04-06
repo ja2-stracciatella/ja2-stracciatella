@@ -18,7 +18,6 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Interface.h"
-#include <math.h>
 #include "Input.h"
 #include "English.h"
 #include "WorldDef.h"

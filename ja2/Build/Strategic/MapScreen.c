@@ -32,7 +32,6 @@
 #include "RenderWorld.h"
 #include "Finances.h"
 #include "Message.h"
-#include "math.h"
 #include "VSurface.h"
 #include "VObject_Blitters.h"
 #include "Faces.h"

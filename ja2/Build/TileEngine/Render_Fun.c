@@ -1,4 +1,3 @@
-#include "math.h"
 #include <errno.h>
 #include "Render_Fun.h"
 #include "WorldDef.h"

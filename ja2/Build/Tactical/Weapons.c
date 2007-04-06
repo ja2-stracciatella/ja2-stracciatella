@@ -10,7 +10,6 @@
 #include "Handle_UI.h"
 #include "Isometric_Utils.h"
 #include "WorldMan.h"
-#include "math.h"
 #include "Points.h"
 #include "AI.h"
 #include "LOS.h"
