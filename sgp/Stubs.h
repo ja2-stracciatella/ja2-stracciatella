@@ -3,8 +3,6 @@
 
 #include "Types.h"
 
-typedef int WIN32_FIND_DATA;
-
 typedef unsigned long DWORD;
 
 typedef long LONG;
@@ -30,22 +28,11 @@ void GetCursorPos(POINT*);
 #define FILE_ATTRIBUTE_DIRECTORY 0 /* XXX */
 
 
-#if 0
-void _splitpath(const char*, char*, char*, char*, char*);
-
-int WritePrivateProfileString(const char*, const char*, const char*, const char*);
-int GetLogicalDriveStrings(size_t, const char*);
-int GetDriveType(const char*);
-#define DRIVE_CDROM 0
-#endif
-
 size_t GetPrivateProfileString(const char* app_name, const char* key_name, const char* default_value, char* out_buf, size_t buf_size, const char* filename);
 
 
 UINT32 GetTickCount(void);
 
 void OutputDebugString(const char*);
-
-#define INVALID_HANDLE_VALUE 0
 
 #endif
