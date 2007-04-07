@@ -139,10 +139,10 @@ MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 static void CheckForUnreadFiles(void);
 static void OpenAndReadFilesFile(void);
 static BOOLEAN OpenAndWriteFilesFile(void);
-static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead);
+static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead);
 
 
-static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile)
+static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile)
 {
 	// adds Files item to player's log(Files List), returns unique id number of it
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
@@ -337,7 +337,7 @@ static void RemoveFiles(void)
 }
 
 
-static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, STR8 pFirstPicFile, STR8 pSecondPicFile, BOOLEAN fRead)
+static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
 {
   UINT32 uiId=0;
   FilesUnitPtr pFiles=pFilesListHead;
@@ -1534,7 +1534,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
 	FileRecordWidthPtr WidthList = NULL;
 	INT32 iOffset = 0;
 	UINT32 uiPicture;
-	CHAR sTemp[ 128 ];
 
 	iOffset = ubFileOffsets[ iFileNumber ] ;
 
@@ -1642,6 +1641,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
 			// show picture
 			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
 			{
+				char sTemp[128];
 				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
 				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
 //def: 3/24/99

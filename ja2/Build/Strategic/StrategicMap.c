@@ -713,7 +713,7 @@ void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length
 }
 
 
-void GetMapFileName(INT16 sMapX,INT16 sMapY, INT8 bSectorZ, STR8 bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter )
+void GetMapFileName(INT16 sMapX, INT16 sMapY, INT8 bSectorZ, char* bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter)
 {
 	CHAR8	 bTestString[ 150 ];
 	CHAR8	 bExtensionString[ 15 ];

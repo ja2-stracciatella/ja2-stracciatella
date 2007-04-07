@@ -187,8 +187,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			}
 			else
 			{
-				CHAR	zText[1024];
-
+				char zText[1024];
 				sprintf( zText, "LineWrap() Error!  The string ( %S ) has a word ( %S ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels  );
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zText );

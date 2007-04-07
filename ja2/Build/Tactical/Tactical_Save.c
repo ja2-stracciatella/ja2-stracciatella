@@ -2843,9 +2843,8 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 
 void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	CHAR	zTempName[512];
-
 	//Convert the current sector location into a file name
+	char zTempName[512];
 	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE, FALSE );
 
 	switch( uiType )

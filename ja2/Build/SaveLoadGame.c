@@ -107,7 +107,7 @@ extern void BeginLoadScreen();
 #ifdef JA2BETAVERSION
 static UINT32 guiNumberOfMapTempFiles; // Test purposes
 static UINT32 guiSizeOfTempFiles;
-static CHAR   gzNameOfMapTempFile[128];
+static char   gzNameOfMapTempFile[128];
 #endif
 
 extern		SOLDIERTYPE		*gpSMCurrentMerc;
@@ -4518,8 +4518,6 @@ static void UpdateMercMercContractInfo(void)
 
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
-	CHAR	zFileName1[256];
-	CHAR	zFileName2[256];
 	HWFILE	hFile;
 	BOOLEAN	fFile1Exist, fFile2Exist;
 	SGP_FILETIME	CreationTime1, LastAccessedTime1, LastWriteTime1;
@@ -4530,7 +4528,9 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 
 	//The name of the file
+	char zFileName1[256];
 	sprintf( zFileName1, "%S/Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 0, pMessageStrings[ MSG_SAVEEXTENSION ] );
+	char zFileName2[256];
 	sprintf( zFileName2, "%S/Auto%02d.%S", pMessageStrings[ MSG_SAVEDIRECTORY ], 1, pMessageStrings[ MSG_SAVEEXTENSION ] );
 
 	if( FileExists( zFileName1 ) )

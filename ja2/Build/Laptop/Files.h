@@ -17,7 +17,7 @@ struct files{
  UINT32 uiIdNumber; // unique id number
  UINT32 uiDate; // time in the world in global time (resolution, minutes)
  BOOLEAN fRead;
- STR8 pPicFileNameList[2];
+	char* pPicFileNameList[2];
 
  struct files *Next; // next unit in the list
 

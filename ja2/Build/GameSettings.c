@@ -250,7 +250,7 @@ void InitGameOptions()
 #endif
 
 
-static BOOLEAN GetCDromDriveLetter(STR8 pString);
+static BOOLEAN GetCDromDriveLetter(char* pString);
 static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter);
 
 
@@ -322,7 +322,7 @@ BOOLEAN GetCDLocation( )
 }
 
 
-static BOOLEAN GetCDromDriveLetter(STR8 pString)
+static BOOLEAN GetCDromDriveLetter(char* pString)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED();

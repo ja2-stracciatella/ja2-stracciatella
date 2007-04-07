@@ -42,11 +42,9 @@ typedef signed short    INT16;
 typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
-typedef char            CHAR;
 typedef char			      CHAR8;
 typedef wchar_t					CHAR16;
 typedef char *			    STR;
-typedef char *					STR8;
 typedef wchar_t *				STR16;
 // other
 typedef unsigned char		BOOLEAN;
