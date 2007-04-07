@@ -17,8 +17,13 @@
 # Specify here were the Jagged Alliance 2 data files are located
 #SGPDATADIR := /usr/local/share/ja2
 
-#ICONV := iconv
+
+# Below are some example variable overrides for MSys/MinGW
+# If you set CFLAGS_SDL and LDFLAGS_SDL explicitly, then SDL_CONFIG is ignored
+
+#ICONV := ../libiconv-1.9.2-1/bin/iconv
 
 #SDL_CONFIG  := sdl-config
-#CFLAGS_SDL  :=
-#LDFLAGS_SDL :=
+#SDL_PATH    := ../sdl-1.2.11
+#CFLAGS_SDL  := -I $(SDL_PATH)/include
+#LDFLAGS_SDL := -L $(SDL_PATH)/lib -lmingw32 -lSDLmain -lSDL
