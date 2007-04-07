@@ -1289,7 +1289,7 @@ static void RenderActiveTextField(void)
 				SetFontShadow( pColors->ubShadowColor );
 				SetFontBackground( 0 );
 			}
-			mprintf(uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%C", gpActive->szString[i]);
+			mprintf(uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%lc", gpActive->szString[i]);
 		}
 	}
 	else
