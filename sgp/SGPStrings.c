@@ -117,3 +117,36 @@ strlcpy(char *dst, const char *src, size_t siz)
 }
 
 #endif
+
+
+#ifdef _WIN32
+
+#include <stdarg.h>
+
+
+void WINsnprintf(char* restrict s, size_t n, const char* restrict format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	_snprintf(s, n, format, arg);
+	va_end(arg);
+	if (n != 0) s[n - 1] = L'\0'; // _snprintf() does not guarantee NUL termination
+}
+
+
+void WINswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	WINvswprintf(s, n, format, arg);
+	va_end(arg);
+}
+
+
+void WINvswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, va_list arg)
+{
+	_vsnwprintf(s, n, format, arg);
+	if (n != 0) s[n - 1] = L'\0'; // _vsnwprintf() does not guarantee NUL termination
+}
+
+#endif
