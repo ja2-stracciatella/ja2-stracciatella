@@ -192,7 +192,7 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 	//HANDLE	hRealFile;
 
 	//open up the file to see if it exists on the disk
-	file = fopen( strFilename, "r" );
+	file = fopen(strFilename, "rb");
 	//hRealFile = CreateFile( strFilename, GENERIC_READ, 0, NULL, OPEN_EXISTING,
 	//								FILE_FLAG_RANDOM_ACCESS, NULL );
 	if ( file )
@@ -207,7 +207,7 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 		char Path[512];
 
 		snprintf(Path, lengthof(Path), SGPDATADIR "/Data/%s", strFilename);
-		file = fopen(Path, "r");
+		file = fopen(Path, "rb");
 		if (file != NULL)
 		{
 			fclose(file);
@@ -290,11 +290,11 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 
 	dwAccess = 0;
 	if (uiOptions & FILE_ACCESS_READ && uiOptions & FILE_ACCESS_WRITE) {
-		dwAccess = "r+";
+		dwAccess = "r+b";
 	} else if (uiOptions & FILE_ACCESS_READ) {
-		dwAccess = "r";
+		dwAccess = "rb";
 	} else if (uiOptions & FILE_ACCESS_WRITE) {
-		dwAccess = "r+"; // XXX HACK do not truncate the file
+		dwAccess = "r+b"; // XXX HACK do not truncate the file
 	} else {
 		dwAccess = "";
 		abort(); // XXX something is fishy
@@ -356,7 +356,7 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 	{
 #if 1
 		FIXME
-		hRealFile = fopen(strFilename, "w");
+		hRealFile = fopen(strFilename, "wb");
 		if (hRealFile == NULL) return 0;
 #else
 		if ( uiOptions & FILE_CREATE_NEW )
