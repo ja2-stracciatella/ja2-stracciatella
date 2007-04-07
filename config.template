@@ -16,3 +16,9 @@
 
 # Specify here were the Jagged Alliance 2 data files are located
 #SGPDATADIR := /usr/local/share/ja2
+
+#ICONV := iconv
+
+#SDL_CONFIG  := sdl-config
+#CFLAGS_SDL  :=
+#LDFLAGS_SDL :=

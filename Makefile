@@ -6,18 +6,17 @@ ifeq ($(findstring $(LNG), DUTCH ENGLISH FRENCH GERMAN ITALIAN POLISH RUSSIAN),)
 $(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN. Copy config.template to config.default and uncomment one of the languages)
 endif
 
-
-
 ifndef SGPDATADIR
 $(error No SGPDATADIR specified)
 endif
 
 
-ICONV = iconv
+ICONV ?= iconv
 
-SDL_CONFIG = sdl-config
-CFLAGS_SDL := $(shell $(SDL_CONFIG) --cflags)
-LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
+SDL_CONFIG  ?= sdl-config
+CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
+LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
+
 
 CFLAGS += $(CFLAGS_SDL)
 CFLAGS += -I ja2/Build
@@ -420,7 +419,7 @@ endif
 
 ja: $(OBJS)
 	@echo '===> LD $@'
-	$(Q)$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
+	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
