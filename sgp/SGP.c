@@ -125,7 +125,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing File Manager");
 	// Initialize the File Manager
-	if (InitializeFileManager(NULL) == FALSE)
+	if (!InitializeFileManager())
 	{ // We were unable to initialize the file manager
 		FastDebugMsg("FAILED : Initializing File Manager");
 		return FALSE;

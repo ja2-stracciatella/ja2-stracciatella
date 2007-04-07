@@ -63,7 +63,7 @@ extern "C" {
 #endif
 
 
-extern BOOLEAN	InitializeFileManager(  STR strIndexFilename );
+BOOLEAN InitializeFileManager(void);
 
 extern BOOLEAN	FileExists( const char *strFilename );
 extern BOOLEAN	FileExistsNoDB(const char *strFilename);

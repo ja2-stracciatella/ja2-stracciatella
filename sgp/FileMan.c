@@ -24,6 +24,7 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Types.h"
+#include "WCheck.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -42,11 +43,6 @@
 #	include <sys/stat.h>
 #	include <sys/types.h>
 #endif
-
-
-#define FILENAME_LENGTH					600
-
-#define CHECKF(exp)  if (!(exp)) { return(FALSE); }
 
 
 //The FileDatabaseHeader
@@ -84,7 +80,7 @@ static char LocalPath[512];
 //
 //**************************************************************************
 
-BOOLEAN	InitializeFileManager( STR strIndexFilename )
+BOOLEAN InitializeFileManager(void)
 {
 	char DataPath[512];
 
