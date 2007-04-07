@@ -12,7 +12,11 @@
 	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
 
 
-#define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
+#if defined(_WIN32) && !defined(_WIN64) // XXX HACK000A
+#	define CASSERT(x)
+#else
+#	define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
+#endif
 
 
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))

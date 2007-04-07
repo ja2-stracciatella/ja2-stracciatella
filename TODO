@@ -3,13 +3,14 @@ high prio
 
 med prio
 - TODO0003 Implement sound streaming
+- HACK0003 load data in a cleaner way, especially wide strings
+- HACK000A Clean up system specific hacks, especially wrt. wchar_t
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
 - r80
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
-- HACK0003 load data in a cleaner way, especially wide strings
 - HACK0005 Set gusSelectedSoldier in EnterCombat() to 0 if it is NO_SOLDIER
   (happens when entering a sector and being immediatly in combat)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
