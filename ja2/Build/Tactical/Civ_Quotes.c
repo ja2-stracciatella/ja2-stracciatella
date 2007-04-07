@@ -373,11 +373,11 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		return;
 	}
 
-	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%S\"", zQuote );
+	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%ls\"", zQuote );
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
-		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  gzCivQuote );
+		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  gzCivQuote );
 	}
 
 	// Create video oeverlay....

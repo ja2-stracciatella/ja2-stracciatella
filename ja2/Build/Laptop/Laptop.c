@@ -4819,7 +4819,7 @@ void PrintNumberOnTeam( void )
 	}
 
 
-	swprintf( pString, lengthof(pString), L"%S %d",pPersonnelString[ 0 ], iCounter );
+	swprintf( pString, lengthof(pString), L"%ls %d",pPersonnelString[ 0 ], iCounter );
 
 	usFontHeight = GetFontHeight( FONT10ARIAL );
 	usStrLength = StringPixLength( pString, FONT10ARIAL );
@@ -4874,7 +4874,7 @@ void PrintDate( void )
 
 	SetFontShadow( NO_SHADOW );
 
-	swprintf(pString, L"%S %d", pMessageStrings[MSG_DAY], GetWorldDay());
+	swprintf(pString, L"%ls %d", pMessageStrings[MSG_DAY], GetWorldDay());
 
 //	gprintfdirty(35, 413 + 19,pString);
 	mprintf(35, 413 + 19,pString);
@@ -5192,7 +5192,7 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
 
-		swprintf( sString, lengthof(sString), L"%S  -  %S", pWebTitle[0], pWebPagesTitles[ iIndex ] );
+		swprintf( sString, lengthof(sString), L"%ls  -  %ls", pWebTitle[0], pWebPagesTitles[ iIndex ] );
 		mprintf(140 ,33 ,sString);
 	}
 

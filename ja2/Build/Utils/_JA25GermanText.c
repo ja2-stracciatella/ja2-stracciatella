@@ -32,9 +32,9 @@ L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich G
 	L"(Kann während Kampf nicht speichern)",
 	L"Der Name der aktuellen Kampagne enthält mehr als 30 Buchstaben.",
 	L"Die aktuelle Kampagne kann nicht gefunden werden.",
-	L"Kampagne: Standard ( %S )",
-	L"Kampagne: %S",
-	L"Sie haben die Kampagne %S gewählt. Diese ist eine vom Spieler modifizierte Version der Originalkampagne von JA2UB. Möchten Sie die Kampagne %S spielen?",
+	L"Kampagne: Standard ( %ls )",
+	L"Kampagne: %ls",
+	L"Sie haben die Kampagne %ls gewählt. Diese ist eine vom Spieler modifizierte Version der Originalkampagne von JA2UB. Möchten Sie die Kampagne %ls spielen?",
 	L"Um den Editor zu benutzen, müssen Sie eine andere als die Standardkampgane auswählen.",
 };
 

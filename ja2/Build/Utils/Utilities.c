@@ -81,7 +81,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 
 	}
 
-	gprintf( ubXPos + ( 16 * 20 ), ubYPos, L"%S", gpPalRep[ ubPaletteRep ].ID );
+	gprintf( ubXPos + ( 16 * 20 ), ubYPos, L"%ls", gpPalRep[ ubPaletteRep ].ID );
 
 	return( TRUE );
 }
@@ -136,7 +136,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidt
 			if( !fLineSplit)
 			{
 				//We completed the check for a space, but failed, so use the hyphen method.
-				swprintf(pStr2, Length, L"-%S", &pStr[uiHyphenLet]);
+				swprintf(pStr2, Length, L"-%ls", &pStr[uiHyphenLet]);
 				#if 0 /* XXX typo? */
 				pStr[uiHyphenLet] = (INT16)'/0';
 				#else

@@ -1292,7 +1292,7 @@ static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-  swprintf(sString, lengthof(sString), L"%S %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
+  swprintf(sString, lengthof(sString), L"%ls %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
   mprintf(DATE_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ),sString);
 
 	SetFont( MESSAGE_FONT );
@@ -1631,7 +1631,7 @@ static INT32 DisplayEmailMessage(EmailPtr pMail)
 	pMail->fRead=TRUE;
 
 	// draw text for title bar
-  //swprintf(pString, L"%S / %S", pSenderNameList[pMail->ubSender], pMail->pSubject);
+  //swprintf(pString, L"%ls / %ls", pSenderNameList[pMail->ubSender], pMail->pSubject);
 	//DisplayWrappedString(VIEWER_X+VIEWER_HEAD_X+4, VIEWER_Y+VIEWER_HEAD_Y+4, VIEWER_HEAD_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pString, 0,FALSE,0);
 
 	// increment height for size of one line
@@ -3010,7 +3010,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 			{
 				wchar_t	zTemp[512];
 
-				swprintf( zTemp, lengthof(zTemp), L" %S", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
+				swprintf( zTemp, lengthof(zTemp), L" %ls", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
 				wcscat( pString, zTemp );
 			}
 

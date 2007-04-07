@@ -3676,11 +3676,11 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 				}
 				if ( MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem != NOTHING )
 				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem ] ) );
+					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%ls", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem ] ) );
 				}
 				if ( MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem != NOTHING )
 				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%S", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem ] ) );
+					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%ls", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem ] ) );
 				}
 
 			}

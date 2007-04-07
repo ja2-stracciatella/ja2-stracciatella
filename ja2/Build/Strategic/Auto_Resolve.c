@@ -1732,7 +1732,7 @@ static void RenderAutoResolve(void)
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
-			swprintf(str, lengthof(str), L"%S:  %dm %02ds",
+			swprintf(str, lengthof(str), L"%ls:  %dm %02ds",
 				gpStrategicString[ STR_AR_TIME_ELAPSED ],
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				(gpAR->uiTotalElapsedBattleTimeInMilliseconds%60000)/1000 );

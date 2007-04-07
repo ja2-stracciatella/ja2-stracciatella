@@ -3311,7 +3311,7 @@ static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pReg
 	{
 		BuildItemHelpTextString( zTempText, lengthof(zTempText), pInv, ubScreenArea );
 		// add who owns it
-		swprintf( zHelpText, lengthof(zHelpText), L"%S%S %S", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
+		swprintf( zHelpText, lengthof(zHelpText), L"%ls%ls %ls", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
 	}
 	else
 	{
@@ -4634,7 +4634,7 @@ void InitShopKeeperSubTitledText( STR16 pString )
 	//Clear the contents of the subtitle text
 	memset( gsShopKeeperTalkingText, 0, SKI_SUBTITLE_TEXT_SIZE );
 
-	swprintf( gsShopKeeperTalkingText, lengthof(gsShopKeeperTalkingText), L"\"%S\"", pString );
+	swprintf( gsShopKeeperTalkingText, lengthof(gsShopKeeperTalkingText), L"\"%ls\"", pString );
 
 	//Now setup the popup box
 	if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
@@ -5362,7 +5362,7 @@ static void HandleCurrentModeText(UINT8 ubMode)
 			InsertCommasForDollarFigure( zMoney );
 			InsertDollarSignInToString( zMoney );
 
-			swprintf( zTemp, lengthof(zTemp), L"%S: %S", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
+			swprintf( zTemp, lengthof(zTemp), L"%ls: %ls", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
 			break;
 	}
 
@@ -7611,7 +7611,7 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubAr
 	// only show day if it's gonna take overnight
 	if ( GetWorldDay() != uiDay )
 	{
-		swprintf( sString, Length, L"%S %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+		swprintf( sString, Length, L"%ls %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
 	}
 	else
 	{
@@ -7634,7 +7634,7 @@ static void BuildItemHelpTextString(wchar_t sString[], size_t Length, INVENTORY_
 				 ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS ) )
 		{
 			BuildRepairTimeString( zRepairTime, lengthof(zRepairTime), CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
-			swprintf( sString, Length, L"%S\n(%S: %S)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
+			swprintf( sString, Length, L"%ls\n(%ls: %ls)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
 		}
 		else
 		{

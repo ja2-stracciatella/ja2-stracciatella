@@ -153,7 +153,7 @@ static void LoadSaveScreenEntry(void)
 		GetFileClose(&FileInfo);
 	}
 
-	swprintf(zOrigName, lengthof(zOrigName), L"%S Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load");
+	swprintf(zOrigName, lengthof(zOrigName), L"%ls Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load");
 
 	swprintf(gzFilename, lengthof(gzFilename), L"%s", gubFilename);
 
@@ -347,7 +347,7 @@ UINT32 LoadSaveScreenHandle(void)
 			SetFontForeground( FONT_BLACK );
 			SetFontBackground( 142 );
 		}
-		mprintf( 186,(73+ (x-iTopFileShown)*15 ), L"%S", FListNode->FileInfo.zFileName);
+		mprintf( 186,(73+ (x-iTopFileShown)*15 ), L"%ls", FListNode->FileInfo.zFileName);
 		FListNode = FListNode->pNext;
 	}
 
@@ -365,17 +365,17 @@ UINT32 LoadSaveScreenHandle(void)
 			fEnteringLoadSaveScreen = TRUE;
 			return EDIT_SCREEN;
 		case DIALOG_DELETE:
-			sprintf( gszCurrFilename, "MAPS/%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS/%ls", gzFilename );
 			if( GetFileFirst(gszCurrFilename, &FileInfo) )
 			{
 				wchar_t str[40];
 				if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_HIDDEN|FILE_IS_SYSTEM) )
 				{
-					swprintf(str, lengthof(str), L" Delete READ-ONLY file %S? ", gzFilename);
+					swprintf(str, lengthof(str), L" Delete READ-ONLY file %ls? ", gzFilename);
 					gfReadOnly = TRUE;
 				}
 				else
-					swprintf(str, lengthof(str), L" Delete file %S? ", gzFilename);
+					swprintf(str, lengthof(str), L" Delete file %ls? ", gzFilename);
 				gfDeleteFile = TRUE;
 				CreateMessageBox( str );
 			}
@@ -388,7 +388,7 @@ UINT32 LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			sprintf( gszCurrFilename, "MAPS/%S", gzFilename );
+			sprintf( gszCurrFilename, "MAPS/%ls", gzFilename );
 			if ( FileExists( gszCurrFilename ) )
 			{
 				gfFileExists = TRUE;
@@ -419,7 +419,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, 118, 183, 522, 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
-			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %S", gzFilename);
+			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %ls", gzFilename);
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -899,7 +899,7 @@ static UINT32 ProcessFileIO(void)
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
-			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %S", gzFilename);
+			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
 			usStartX = 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = 180 - GetFontHeight( LARGEFONT1 ) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
@@ -909,7 +909,7 @@ static UINT32 ProcessFileIO(void)
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map
-			sprintf( ubNewFilename, "%S", gzFilename );
+			sprintf( ubNewFilename, "%ls", gzFilename );
 			RaiseWorldLand();
 			if( gfShowPits )
 				RemoveAllPits();
@@ -954,7 +954,7 @@ static UINT32 ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			sprintf( ubNewFilename, "%S", gzFilename );
+			sprintf( ubNewFilename, "%ls", gzFilename );
 
 			RemoveMercsInSector( );
 

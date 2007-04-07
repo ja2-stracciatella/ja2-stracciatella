@@ -666,7 +666,7 @@ void RenderBobbyRMailOrder()
 
 	//Display the minimum weight disclaimer at the bottom of the page
 	usHeight = GetFontHeight( BOBBYR_DISCLAIMER_FONT ) + 2;
-	swprintf( sTemp, lengthof(sTemp), L"%S %2.1f %S.", BobbyROrderFormText[BOBBYR_MINIMUM_WEIGHT], GetWeightBasedOnMetricOption( MIN_SHIPPING_WEIGHT ) / 10.0, GetWeightUnitString() );
+	swprintf( sTemp, lengthof(sTemp), L"%ls %2.1f %ls.", BobbyROrderFormText[BOBBYR_MINIMUM_WEIGHT], GetWeightBasedOnMetricOption( MIN_SHIPPING_WEIGHT ) / 10.0, GetWeightUnitString() );
 	DrawTextToScreen( sTemp, BOBBYR_USED_WARNING_X, (UINT16)(BOBBYR_USED_WARNING_Y+usHeight+1), 0, BOBBYR_DISCLAIMER_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | TEXT_SHADOWED );
 
 
@@ -960,7 +960,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			if( pBobbyRayPurchase[i].fUsed )
 			{
 				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-				swprintf(sText, lengthof(sText), L"* %S", sBack);
+				swprintf(sText, lengthof(sText), L"* %ls", sBack);
 			}
 			else
 				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
@@ -978,7 +978,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 					usPixLength += StringPixLength(OneChar, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 				}
 				sBack[j] = 0;
-				swprintf(sText, lengthof(sText), L"%S...", sBack);
+				swprintf(sText, lengthof(sText), L"%ls...", sBack);
 			}
 
 			DrawTextToScreen(sText, (UINT16)(usGridX+BOBBYR_GRID_THIRD_COLUMN_X+2), usPosY, BOBBYR_GRID_THIRD_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
@@ -2188,8 +2188,8 @@ static void DisplayPackageWeight(void)
 	DrawTextToScreen(BobbyROrderFormText[ BOBBYR_PACKAGE_WEIGHT ], BOBBYR_PACKAXGE_WEIGHT_X+8, BOBBYR_PACKAXGE_WEIGHT_Y+4, BOBBYR_PACKAXGE_WEIGHT_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	//Display the weight
-//	swprintf(zTemp, L"%3.1f %S", fWeight, pMessageStrings[MSG_KILOGRAM_ABBREVIATION]);
-	swprintf( zTemp, lengthof(zTemp), L"%3.1f %S", ( GetWeightBasedOnMetricOption( uiTotalWeight ) / 10.0f ), GetWeightUnitString() );
+//	swprintf(zTemp, L"%3.1f %ls", fWeight, pMessageStrings[MSG_KILOGRAM_ABBREVIATION]);
+	swprintf( zTemp, lengthof(zTemp), L"%3.1f %ls", ( GetWeightBasedOnMetricOption( uiTotalWeight ) / 10.0f ), GetWeightUnitString() );
 	DrawTextToScreen( zTemp, BOBBYR_PACKAXGE_WEIGHT_X+3, BOBBYR_PACKAXGE_WEIGHT_Y+4, BOBBYR_PACKAXGE_WEIGHT_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 }
 

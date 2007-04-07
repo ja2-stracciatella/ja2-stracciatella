@@ -289,12 +289,12 @@ static void RenderPopupMenu(void)
 			{
 				//This is the highlighted menu entry.
 				SetFontForeground( FONT_MCOLOR_LTBLUE );
-				mprintf(usX, usY, L" %S ", GetPopupMenuString(ubCounter));
+				mprintf(usX, usY, L" %ls ", GetPopupMenuString(ubCounter));
 				SetFontForeground( FONT_MCOLOR_WHITE );
 			}
 			else
 			{
-				mprintf(usX, usY, L" %S ", GetPopupMenuString(ubCounter));
+				mprintf(usX, usY, L" %ls ", GetPopupMenuString(ubCounter));
 			}
 			ubCounter++;
 		}

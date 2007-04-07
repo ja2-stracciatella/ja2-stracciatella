@@ -24,7 +24,7 @@ GENERAL INSTRUCTIONS
 - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
 	have one space after a period, which is different than standard typing convention.  Never modify sections
 	of strings contain combinations of % characters.  These are special format characters and are always
-	used in conjunction with other characters.  For example, %S means string, and is commonly used for names,
+	used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
 	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
 	%% is how a single % character is built.  There are countless types, but strings containing these
 	special characters are usually commented to explain what they mean.  If it isn't commented, then
@@ -193,30 +193,30 @@ const wchar_t Message[][STRING_LENGTH] =
 {
 	L"",
 
-	// In the following 8 strings, the %S is the merc's name, and the %d (if any) is a number.
+	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
 
-	L"%S dosta≥(a) w g≥owÍ i traci 1 punkt inteligencji!",
-	L"%S dosta≥(a) w ramiÍ i traci 1 punkt zrÍcznoúci!",
-	L"%S dosta≥(a) w klatkÍ piersiowπ i traci 1 punkt si≥y!",
-	L"%S dosta≥(a) w nogi i traci 1 punkt zwinnoúci!",
-	L"%S dosta≥(a) w g≥owÍ i traci %d pkt. inteligencji!",
-	L"%S dosta≥(a) w ramiÍ i traci %d pkt. zrÍcznoúci!",
-	L"%S dosta≥(a) w klatkÍ piersiowπ i traci %d pkt. si≥y!",
-	L"%S dosta≥(a) w nogi i traci %d pkt. zwinnoúci!",
+	L"%ls dosta≥(a) w g≥owÍ i traci 1 punkt inteligencji!",
+	L"%ls dosta≥(a) w ramiÍ i traci 1 punkt zrÍcznoúci!",
+	L"%ls dosta≥(a) w klatkÍ piersiowπ i traci 1 punkt si≥y!",
+	L"%ls dosta≥(a) w nogi i traci 1 punkt zwinnoúci!",
+	L"%ls dosta≥(a) w g≥owÍ i traci %d pkt. inteligencji!",
+	L"%ls dosta≥(a) w ramiÍ i traci %d pkt. zrÍcznoúci!",
+	L"%ls dosta≥(a) w klatkÍ piersiowπ i traci %d pkt. si≥y!",
+	L"%ls dosta≥(a) w nogi i traci %d pkt. zwinnoúci!",
 	L"Przerwanie!",
 
-	// The first %S is a merc's name, the second is a string from pNoiseVolStr,
+	// The first %ls is a merc's name, the second is a string from pNoiseVolStr,
 	// the third is a string from pNoiseTypeStr, and the last is a string from pDirectionStr
 
 	L"", //OBSOLETE
 	L"Dotar≥y twoje posi≥ki!",
 
-	// In the following four lines, all %S's are merc names
+	// In the following four lines, all %ls's are merc names
 
-	L"%S prze≥adowuje.",
-	L"%S posiada za ma≥o PunktÛw Akcji!",
-	L"%S udziela pierwszej pomocy. (Naciúnij dowolny klawisz aby przerwaÊ.)",
-	L"%S i %S udzielajπ pierwszej pomocy. (Naciúnij dowolny klawisz aby przerwaÊ.)",
+	L"%ls prze≥adowuje.",
+	L"%ls posiada za ma≥o PunktÛw Akcji!",
+	L"%ls udziela pierwszej pomocy. (Naciúnij dowolny klawisz aby przerwaÊ.)",
+	L"%ls i %ls udzielajπ pierwszej pomocy. (Naciúnij dowolny klawisz aby przerwaÊ.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"niezawodna",
@@ -237,26 +237,26 @@ const wchar_t Message[][STRING_LENGTH] =
 	L"duøy magazynek",
 	L"ma≥y magazynek",
 
-	// In the following two lines, all %S's are merc names
+	// In the following two lines, all %ls's are merc names
 
-	L"%S: kamuflaø siÍ star≥.",
-	L"%S: kamuflaø siÍ zmy≥.",
+	L"%ls: kamuflaø siÍ star≥.",
+	L"%ls: kamuflaø siÍ zmy≥.",
 
-	// The first %S is a merc name and the second %S is an item name
+	// The first %ls is a merc name and the second %ls is an item name
 
 	L"Brak amunicji w dodatkowej broni!",
-	L"%S ukrad≥(a): %S.",
+	L"%ls ukrad≥(a): %ls.",
 
-	// The %S is a merc name
+	// The %ls is a merc name
 
-	L"%S ma broÒ bez funkcji ciπg≥ego ognia.",
+	L"%ls ma broÒ bez funkcji ciπg≥ego ognia.",
 
 	L"Juø masz coú takiego do≥πczone.",
 	L"Po≥πczyÊ przedmioty?",
 
-	// Both %S's are item names
+	// Both %ls's are item names
 
-	L"%S i %S nie pasujπ do siebie.",
+	L"%ls i %ls nie pasujπ do siebie.",
 
 	L"Brak",
 	L"Wyjmij amunicjÍ",
@@ -264,25 +264,25 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	L" %S i %S nie mogπ byÊ uøywane jednoczeúnie.",
+	L" %ls i %ls nie mogπ byÊ uøywane jednoczeúnie.",
 
 	L"Element, ktÛry masz na kursorze myszy moøe byÊ do≥πczony do pewnych przedmiotÛw, poprzez umieszczenie go w jednym z czterech slotÛw.",
 	L"Element, ktÛry masz na kursorze myszy moøe byÊ do≥πczony do pewnych przedmiotÛw, poprzez umieszczenie go w jednym z czterech slotÛw. (Jednak w tym przypadku, przedmioty do siebie nie pasujπ.)",
 	L"Ten sektor nie zosta≥ oczyszczony z wrogÛw!",
-	L"Wciπø musisz daÊ %S %S",
-	L"%S dosta≥(a) w g≥owÍ!",
+	L"Wciπø musisz daÊ %ls %ls",
+	L"%ls dosta≥(a) w g≥owÍ!",
 	L"PrzerwaÊ walkÍ?",
 	L"Ta zmiana bÍdzie trwa≥a. KontynuowaÊ?",
-	L"%S ma wiÍcej energii!",
-	L"%S poúlizgnπ≥(nÍ≥a) siÍ na kulkach!",
-	L"%S nie chwyci≥(a) - %S!",
-	L"%S naprawi≥(a) %S",
+	L"%ls ma wiÍcej energii!",
+	L"%ls poúlizgnπ≥(nÍ≥a) siÍ na kulkach!",
+	L"%ls nie chwyci≥(a) - %ls!",
+	L"%ls naprawi≥(a) %ls",
 	L"Przerwanie dla: ",
 	L"PoddaÊ siÍ?",
 	L"Ta osoba nie chce twojej pomocy.",
 	L"NIE S•DZ !",
   	L"Aby podrÛøowaÊ helikopterem Skyridera, musisz najpierw zmieniÊ przydzia≥ najemnikÛw na POJAZD/HELIKOPTER.",
-	L"%S mia≥(a) czas by prze≥adowaÊ tylko jednπ broÒ",
+	L"%ls mia≥(a) czas by prze≥adowaÊ tylko jednπ broÒ",
 	L"Tura dzikich kotÛw",
 };
 
@@ -856,8 +856,8 @@ const wchar_t* pLandTypeStrings[] =
 const wchar_t* gpStrategicString[] =
 {
 	L"",	//Unused
-	L"%S wykryto w sektorze %c%d, a inny oddzia≥ jest w drodze.",	//STR_DETECTED_SINGULAR
-	L"%S wykryto w sektorze %c%d, a inne oddzia≥y sπ w drodze.",	//STR_DETECTED_PLURAL
+	L"%ls wykryto w sektorze %c%d, a inny oddzia≥ jest w drodze.",	//STR_DETECTED_SINGULAR
+	L"%ls wykryto w sektorze %c%d, a inne oddzia≥y sπ w drodze.",	//STR_DETECTED_PLURAL
 	L"Chcesz skoordynowaÊ jednoczesne przybycie?",			//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -983,11 +983,11 @@ const wchar_t* gpStrategicString[] =
 	L"Stworzenia zaatakowa≥y oddzia≥y samoobrony w sektorze %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Stworzenia zatakowa≥y i zabi≥y %d cywili w sektorze %S.",
+	L"Stworzenia zatakowa≥y i zabi≥y %d cywili w sektorze %ls.",
 	//%c%d is the sector -- ex:  A9
-	L"Nieprzyjaciel zatakowa≥ twoich najemnikÛw w sektorze %S.  Øaden z twoich najemnikÛw nie moøe walczyÊ!",
+	L"Nieprzyjaciel zatakowa≥ twoich najemnikÛw w sektorze %ls.  Øaden z twoich najemnikÛw nie moøe walczyÊ!",
 	//%c%d is the sector -- ex:  A9
-	L"Stworzenia zatakowa≥y twoich najemnikÛw w sektorze %S.  Øaden z twoich najemnikÛw nie moøe walczyÊ!",
+	L"Stworzenia zatakowa≥y twoich najemnikÛw w sektorze %ls.  Øaden z twoich najemnikÛw nie moøe walczyÊ!",
 
 };
 
@@ -1009,7 +1009,7 @@ const wchar_t* sKeyDescriptionStrings[2] =
 
 const wchar_t gWeaponStatsDesc[][ 14 ] =
 {
-	L"Waga (%S):", // change kg to another weight unit if your standard is not kilograms, and TELL SIR-TECH!
+	L"Waga (%ls):", // change kg to another weight unit if your standard is not kilograms, and TELL SIR-TECH!
 	L"Stan:",
 	L"IloúÊ:", 		// Number of bullets left in a magazine
 	L"Zas.:",		// Range
@@ -1138,11 +1138,11 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	L"%S zauwaøy≥(a) øe dostawa jest niekompletna.",
+	L"%ls zauwaøy≥(a) øe dostawa jest niekompletna.",
 
-	// The %S is a string from pDoorTrapStrings
+	// The %ls is a string from pDoorTrapStrings
 
-	L"Zamek %S.",
+	L"Zamek %ls.",
 	L"Brak zamka.",
 	L"Sukces!",
 	L"Niepowodzenie.",
@@ -1150,8 +1150,8 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Niepowodzenie.",
 	L"Zamek nie ma pu≥apek.",
 	L"Sukces!",
-	// The %S is a merc name
-	L"%S nie posiada odpowiedniego klucza.",
+	// The %ls is a merc name
+	L"%ls nie posiada odpowiedniego klucza.",
 	L"Zamek zosta≥ rozbrojony.",
 	L"Zamek nie ma pu≥apek.",
 	L"ZamkniÍte.",
@@ -1166,15 +1166,15 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Nast...",
 	L"WiÍcej...",
 
-	// In the next 2 strings, %S is an item name
+	// In the next 2 strings, %ls is an item name
 
-	L"%S - po≥oøono na ziemi.",
-	L"%S - przekazano do - %S.",
+	L"%ls - po≥oøono na ziemi.",
+	L"%ls - przekazano do - %ls.",
 
-	// In the next 2 strings, %S is a name
+	// In the next 2 strings, %ls is a name
 
-	L"%S otrzyma≥(a) ca≥π zap≥atÍ.",
-	L"%S - naleønoúÊ wobec niej/niego wynosi jeszcze %d.",
+	L"%ls otrzyma≥(a) ca≥π zap≥atÍ.",
+	L"%ls - naleønoúÊ wobec niej/niego wynosi jeszcze %d.",
 	L"Wybierz czÍstotliwoúÊ sygna≥u detonujπcego:",  	//in this case, frequency refers to a radio signal
 	L"Ile tur do eksplozji:",	//how much time, in turns, until the bomb blows
 	L"Ustaw czÍstotliwoúÊ zdalnego detonatora:", 	//in this case, frequency refers to a radio signal
@@ -1183,53 +1183,53 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"UmieúciÊ tutaj niebieskπ flagÍ?",
 	L"KoÒczπca tura",
 
-	// In the next string, %S is a name. Stance refers to way they are standing.
+	// In the next string, %ls is a name. Stance refers to way they are standing.
 
-	L"Na pewno chcesz zaatakowaÊ - %S?",
+	L"Na pewno chcesz zaatakowaÊ - %ls?",
 	L"Pojazdy nie mogπ zmieniaÊ pozycji.",
 	L"Robot nie moøe zmieniaÊ pozycji.",
 
-	// In the next 3 strings, %S is a name
+	// In the next 3 strings, %ls is a name
 
-	L"%S nie moøe zmieniÊ pozycji w tym miejscu.",
-	L"%S nie moøe tu otrzymaÊ pierwszej pomocy.",
-	L"%S nie potrzebuje pierwszej pomocy.",
+	L"%ls nie moøe zmieniÊ pozycji w tym miejscu.",
+	L"%ls nie moøe tu otrzymaÊ pierwszej pomocy.",
+	L"%ls nie potrzebuje pierwszej pomocy.",
 	L"Nie moøna ruszyÊ w to miejsce.",
 	L"Oddzia≥ jest juø kompletny. Nie ma miejsca dla nowych rekrutÛw.",	//there's no room for a recruit on the player's team
 
-	// In the next string, %S is a name
+	// In the next string, %ls is a name
 
-	L"%S pracuje juø dla ciebie.",
+	L"%ls pracuje juø dla ciebie.",
 
-	// Here %S is a name and %d is a number
+	// Here %ls is a name and %d is a number
 
-	L"%S - naleønoúÊ wobec niej/niego wynosi %d$.",
+	L"%ls - naleønoúÊ wobec niej/niego wynosi %d$.",
 
-	// In the next string, %S is a name
+	// In the next string, %ls is a name
 
-	L"%S - EskortowaÊ tπ osobÍ?",
+	L"%ls - EskortowaÊ tπ osobÍ?",
 
-	// In the next string, the first %S is a name and the second %S is an amount of money (including $ sign)
+	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
 
-	L"%S - ZatrudniÊ tπ osobÍ za %S dziennie?",
+	L"%ls - ZatrudniÊ tπ osobÍ za %ls dziennie?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
 	L"Chcesz walczyÊ?",
 
-	// In the next string, the first %S is an item name and the
-	// second %S is an amount of money (including $ sign)
+	// In the next string, the first %ls is an item name and the
+	// second %ls is an amount of money (including $ sign)
 
-	L"%S - KupiÊ to za %S?",
+	L"%ls - KupiÊ to za %ls?",
 
-	// In the next string, %S is a name
+	// In the next string, %ls is a name
 
-	L"%S jest pod eskortπ oddzia≥u %d.",
+	L"%ls jest pod eskortπ oddzia≥u %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
 	L"ZACI TA",					//weapon is jammed.
-	L"Robot potrzebuje amunicji kaliber %S.",		//Robot is out of ammo
+	L"Robot potrzebuje amunicji kaliber %ls.",		//Robot is out of ammo
 	L"RzuciÊ tam? To niemoøliwe.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
@@ -1249,11 +1249,11 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"|Opcje",
 	L"Ciπg≥y ogieÒ (|B)",
 	L"SpÛjrz/ObrÛÊ siÍ (|L)",
-	L"Zdrowie: %d/%d\nEnergia: %d/%d\nMorale: %S",
+	L"Zdrowie: %d/%d\nEnergia: %d/%d\nMorale: %ls",
 	L"Co?",					//this means "what?"
 	L"Kont",					//an abbrieviation for "Continued"
-	L"%S ma w≥πczone potwierdzenia g≥osowe.",
-	L"%S ma wy≥πczone potwierdzenia g≥osowe.",
+	L"%ls ma w≥πczone potwierdzenia g≥osowe.",
+	L"%ls ma wy≥πczone potwierdzenia g≥osowe.",
 	L"Stan: %d/%d\nPaliwo: %d/%d",
 	L"Wysiπdü z pojazdu" ,
 	L"ZmieÒ oddzia≥ ( |S|h|i|f|t |S|p|a|c|j|a )",
@@ -1267,12 +1267,12 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"(£ap)",
 	L"(Prze≥aduj)",
 	L"(Daj)",
-	L"%S - pu≥apka zosta≥a uruchomiona.",
-	L"%S przyby≥(a) na miejsce.",
-	L"%S straci≥(a) wszystkie Punkty Akcji.",
-	L"%S jest nieosiπgalny(na).",
-	L"%S ma juø za≥oøone opatrunki.",
-	L"%S nie ma bandaøy.",
+	L"%ls - pu≥apka zosta≥a uruchomiona.",
+	L"%ls przyby≥(a) na miejsce.",
+	L"%ls straci≥(a) wszystkie Punkty Akcji.",
+	L"%ls jest nieosiπgalny(na).",
+	L"%ls ma juø za≥oøone opatrunki.",
+	L"%ls nie ma bandaøy.",
 	L"WrÛg w sektorze!",
 	L"Nie ma wroga w zasiÍgu wzroku.",
 	L"Zbyt ma≥o PunktÛw Akcji.",
@@ -1290,7 +1290,7 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Idü do sektora",
 	L"OtwÛrz mapÍ",
 	L"Nie moøna opuúciÊ sektora z tej strony.",
-	L"%S jest zbyt daleko.",
+	L"%ls jest zbyt daleko.",
 	L"UsuÒ korony drzew",
 	L"Pokaø korony drzew",
 	L"WRONA",				//Crow, as in the large black bird
@@ -1309,8 +1309,8 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Nie moøna siÍ tam dostaÊ.",					// used ( now ) for when we click on a cliff
 	L"Przejúcie zablokowane. Czy chcesz zamieniÊ siÍ miejscami z tπ osobπ?",
 	L"Osoba nie chce siÍ przesunπÊ.",
-	// In the following message, '%S' would be replaced with a quantity of money (e.g. $200)
-	L"Zgadzasz siÍ zap≥aciÊ %S?",
+	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
+	L"Zgadzasz siÍ zap≥aciÊ %ls?",
 	L"Zgadzasz siÍ na darmowe leczenie?",
 	L"Zgadasz siÍ na ma≥øeÒstwo z Darylem?",
 	L"KÛ≥ko na klucze",
@@ -1320,13 +1320,13 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"GÛrnik",
 	L"Pojazdem moøna podrÛøowaÊ tylko pomiÍdzy sektorami",
 	L"Teraz nie moøna automatycznie udzieliÊ pierwszej pomocy",
-	L"Przejúcie zablokowane dla - %S",
+	L"Przejúcie zablokowane dla - %ls",
 	L"Twoi najemnicy, schwytani przez øo≥nierzy Deidranny, sπ tutaj uwiÍzieni!",
 	L"Zamek zosta≥ trafiony",
 	L"Zamek zosta≥ zniszczony",
 	L"Ktoú inny majstruje przy tych drzwiach.",
 	L"Stan: %d/%d\nPaliwo: %d/%d",
-  L"%S nie widzi - %S.",  // Cannot see person trying to talk to
+  L"%ls nie widzi - %ls.",  // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1345,15 +1345,15 @@ const wchar_t* pExitingSectorHelpText[] =
 	L"Gdy wyprowadzisz swoich pozosta≥ych najemnikÛw z tego sektora,\nto na czas podrÛøy pojawi siÍ automatycznie ekran mapy.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%S jest pod eskortπ twoich najemnikÛw i nie moøe bez nich opuúciÊ tego sektora.",
+	L"%ls jest pod eskortπ twoich najemnikÛw i nie moøe bez nich opuúciÊ tego sektora.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	L"%S nie moøe sam opuúciÊ tego sektora, gdyø %S jest pod jego eskortπ.", //male singular
-	L"%S nie moøe sama opuúciÊ tego sektora, gdyø %S jest pod jej eskortπ.", //female singular
-	L"%S nie moøe sam opuúciÊ tego sektora, gdyø eskortuje inne osoby.", //male plural
-	L"%S nie moøe sama opuúciÊ tego sektora, gdyø eskortuje inne osoby.", //female plural
+	L"%ls nie moøe sam opuúciÊ tego sektora, gdyø %ls jest pod jego eskortπ.", //male singular
+	L"%ls nie moøe sama opuúciÊ tego sektora, gdyø %ls jest pod jej eskortπ.", //female singular
+	L"%ls nie moøe sam opuúciÊ tego sektora, gdyø eskortuje inne osoby.", //male plural
+	L"%ls nie moøe sama opuúciÊ tego sektora, gdyø eskortuje inne osoby.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
@@ -1362,7 +1362,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	L"", //UNUSED
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	L"Jeúli zaznaczysz tÍ opcjÍ, %S bÍdzie podrÛøowaÊ w pojedynkÍ\ni automatycznie znajdzie siÍ w osobnym oddziale.",
+	L"Jeúli zaznaczysz tÍ opcjÍ, %ls bÍdzie podrÛøowaÊ w pojedynkÍ\ni automatycznie znajdzie siÍ w osobnym oddziale.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	L"Jeúli zaznaczysz tÍ opcjÍ, aktualnie\nwybrany oddzia≥ opuúci ten sektor.",
@@ -1371,7 +1371,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%S jest pod eskortπ twoich najemnikÛw i nie moøe bez nich opuúciÊ tego sektora. Aby opuúciÊ sektor twoi najemnicy muszπ byÊ w pobliøu.",
+	L"%ls jest pod eskortπ twoich najemnikÛw i nie moøe bez nich opuúciÊ tego sektora. Aby opuúciÊ sektor twoi najemnicy muszπ byÊ w pobliøu.",
 };
 
 
@@ -1531,12 +1531,12 @@ const wchar_t* pwMiscSectorStrings[] =
 
 const wchar_t* pMapInventoryErrorString[] =
 {
-	L"%S jest zbyt daleko.",	//Merc is in sector with item but not close enough
+	L"%ls jest zbyt daleko.",	//Merc is in sector with item but not close enough
 	L"Nie moøna wybraÊ tego najemnika.",  //MARK CARTER
-	L"%S nie moøe stπd zabraÊ tego przedmiotu, gdyø nie jest w tym sektorze.",
+	L"%ls nie moøe stπd zabraÊ tego przedmiotu, gdyø nie jest w tym sektorze.",
 	L"Podczas walki nie moøna korzystaÊ z tego panelu.",
 	L"Podczas walki nie moøna korzystaÊ z tego panelu.",
-	L"%S nie moøe tu zostawiÊ tego przedmiotu, gdyø nie jest w tym sektorze.",
+	L"%ls nie moøe tu zostawiÊ tego przedmiotu, gdyø nie jest w tym sektorze.",
 };
 
 const wchar_t* pMapInventoryStrings[] =
@@ -1615,7 +1615,7 @@ const wchar_t* pMapScreenBottomText[] =
 
 const wchar_t* pMercDeadString[] =
 {
-	L"%S nie øyje.",
+	L"%ls nie øyje.",
 };
 
 
@@ -1770,36 +1770,36 @@ const wchar_t* pTransactionText[] =
 	L"WynajÍto -", 				// Merc was hired
 	L"Zakupy u Bobby'ego Ray'a", 		// Bobby Ray is the name of an arms dealer
 	L"Uregulowanie rachunkÛw w M.E.R.C.",
-	L"Zastaw na øycie dla - %S", 		// medical deposit for merc
+	L"Zastaw na øycie dla - %ls", 		// medical deposit for merc
 	L"Analiza profilu w IMP", 		// IMP is the acronym for International Mercenary Profiling
-	L"Ubezpieczneie dla - %S",
-	L"Redukcja ubezp. dla - %S",
-	L"Przed≥. ubezp. dla - %S", 				// johnny contract extended
-	L"Anulowano ubezp. dla - %S",
-	L"Odszkodowanie za - %S", 		// insurance claim for merc
+	L"Ubezpieczneie dla - %ls",
+	L"Redukcja ubezp. dla - %ls",
+	L"Przed≥. ubezp. dla - %ls", 				// johnny contract extended
+	L"Anulowano ubezp. dla - %ls",
+	L"Odszkodowanie za - %ls", 		// insurance claim for merc
 	L"1 dzieÒ", 				// merc's contract extended for a day
 	L"1 tydzieÒ", 				// merc's contract extended for a week
 	L"2 tygodnie", 				// ... for 2 weeks
 	L"PrzychÛd z kopalni",
 	L"", //String nuked
 	L"Zakup kwiatÛw",
-	L"Pe≥ny zwrot zastawu za - %S",
-	L"CzÍúciowy zwrot zastawu za - %S",
-	L"Brak zwrotu zastawu za - %S",
-	L"Zap≥ata dla - %S",		// %S is the name of the npc being paid
-	L"Transfer funduszy do - %S", 			// transfer funds to a merc
-	L"Transfer funduszy od - %S", 		// transfer funds from a merc
-	L"Samoobrona w - %S", // initial cost to equip a town's militia
-	L"Zakupy u - %S.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	L"%S wp≥aci≥(a) pieniπdze.",
+	L"Pe≥ny zwrot zastawu za - %ls",
+	L"CzÍúciowy zwrot zastawu za - %ls",
+	L"Brak zwrotu zastawu za - %ls",
+	L"Zap≥ata dla - %ls",		// %ls is the name of the npc being paid
+	L"Transfer funduszy do - %ls", 			// transfer funds to a merc
+	L"Transfer funduszy od - %ls", 		// transfer funds from a merc
+	L"Samoobrona w - %ls", // initial cost to equip a town's militia
+	L"Zakupy u - %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	L"%ls wp≥aci≥(a) pieniπdze.",
 };
 
 const wchar_t* pTransactionAlternateText[] =
 {
 	L"Ubezpieczenie dla -", 				// insurance for a merc
-	L"Przed≥. kontrakt z - %S o 1 dzieÒ.", 				// entend mercs contract by a day
-	L"Przed≥. kontrakt z - %S o 1 tydzieÒ.",
-	L"Przed≥. kontrakt z - %S o 2 tygodnie.",
+	L"Przed≥. kontrakt z - %ls o 1 dzieÒ.", 				// entend mercs contract by a day
+	L"Przed≥. kontrakt z - %ls o 1 tydzieÒ.",
+	L"Przed≥. kontrakt z - %ls o 2 tygodnie.",
 };
 
 // helicopter pilot payment
@@ -1832,8 +1832,8 @@ const wchar_t* pMoralStrings[] =
 
 const wchar_t* pLeftEquipmentString[] =
 {
-	L"%S - jego/jej sprzÍt jest juø w Omercie( A9 ).",
-	L"%S - jego/jej sprzÍt jest juø w Drassen( B13 ).",
+	L"%ls - jego/jej sprzÍt jest juø w Omercie( A9 ).",
+	L"%ls - jego/jej sprzÍt jest juø w Drassen( B13 ).",
 };
 
 // Status that appears on the Map Screen
@@ -1885,44 +1885,44 @@ const wchar_t* pMapErrorString[] =
 	L"",
 //11-15
 	L"Rozkazy przemieszczenia? Trwa walka!",
-	L"Zaatakowa≥y ciÍ dzikie koty, w sektorze %S!",
+	L"Zaatakowa≥y ciÍ dzikie koty, w sektorze %ls!",
 	L"W sektorze I16 znajduje siÍ coú, co wyglπda na legowisko dzikich kotÛw!",
 	L"",
 	L"Baza rakiet Ziemia-Powietrze zosta≥a przejÍta.",
 //16-20
-	L"%S - kopalnia zosta≥a przejÍta. TwÛj dzienny przychÛd zosta≥ zredukowany do %S.",
-	L"Nieprzyjaciel bezkonfliktowo przejπ≥ sektor %S.",
+	L"%ls - kopalnia zosta≥a przejÍta. TwÛj dzienny przychÛd zosta≥ zredukowany do %ls.",
+	L"Nieprzyjaciel bezkonfliktowo przejπ≥ sektor %ls.",
 	L"Przynajmniej jeden z twoich najemnikÛw nie zosta≥ do tego przydzielony.",
-	L"%S nie moøe siÍ przy≥πczyÊ, poniewaø %S jest pe≥ny",
-	L"%S nie moøe siÍ przy≥πczyÊ, poniewaø %S jest zbyt daleko.",
+	L"%ls nie moøe siÍ przy≥πczyÊ, poniewaø %ls jest pe≥ny",
+	L"%ls nie moøe siÍ przy≥πczyÊ, poniewaø %ls jest zbyt daleko.",
 //21-25
-	L"%S - kopalnia zosta≥a przejÍta przez si≥y Deidranny!",
-	L"Si≥y Deidranny w≥aúnie zaatakowa≥y bazÍ rakiet Ziemia-Powietrze w - %S.",
-	L"Si≥y Deidranny w≥aúnie zaatakowa≥y - %S.",
-	L"W≥aúnie zauwaøono si≥y Deidranny w - %S.",
-	L"Si≥y Deidranny w≥aúnie przejÍ≥y - %S.",
+	L"%ls - kopalnia zosta≥a przejÍta przez si≥y Deidranny!",
+	L"Si≥y Deidranny w≥aúnie zaatakowa≥y bazÍ rakiet Ziemia-Powietrze w - %ls.",
+	L"Si≥y Deidranny w≥aúnie zaatakowa≥y - %ls.",
+	L"W≥aúnie zauwaøono si≥y Deidranny w - %ls.",
+	L"Si≥y Deidranny w≥aúnie przejÍ≥y - %ls.",
 //26-30
 	L"Przynajmniej jeden z twoich najemnikÛw nie mÛg≥ siÍ po≥oøyÊ spaÊ.",
 	L"Przynajmniej jeden z twoich najemnikÛw nie mÛg≥ wstaÊ.",
 	L"Oddzia≥y samoobrony nie pojawiπ siÍ dopÛki nie zostanπ wyszkolone.",
-	L"%S nie moøe siÍ w tej chwili przemieszczaÊ.",
+	L"%ls nie moøe siÍ w tej chwili przemieszczaÊ.",
 	L"Øo≥nierze samoobrony, ktÛrzy znajdujπ siÍ poza granicami miasta, nie mogπ byÊ przeniesieni do innego sektora.",
 //31-35
-	L"Nie moøesz trenowaÊ samoobrony w - %S.",
+	L"Nie moøesz trenowaÊ samoobrony w - %ls.",
 	L"Pusty pojazd nie moøe siÍ poruszaÊ!",
-	L"%S ma zbyt wiele ran by podrÛøowaÊ!",
+	L"%ls ma zbyt wiele ran by podrÛøowaÊ!",
 	L"Musisz wpierw opuúciÊ muzeum!",
-	L"%S nie øyje!",
+	L"%ls nie øyje!",
 //36-40
-	L"%S nie moøe siÍ zamieniÊ z - %S, poniewaø siÍ porusza",
-	L"%S nie moøe w ten sposÛb wejúc do pojazdu",
-	L"%S nie moøe siÍ do≥πczyÊ do - %S",
+	L"%ls nie moøe siÍ zamieniÊ z - %ls, poniewaø siÍ porusza",
+	L"%ls nie moøe w ten sposÛb wejúc do pojazdu",
+	L"%ls nie moøe siÍ do≥πczyÊ do - %ls",
 	L"Nie moøesz kompresowaÊ czasu dopÛki nie zatrudnisz sobie kilku nowych najemnikÛw!",
 	L"Ten pojazd moøe siÍ poruszaÊ tylko po drodze!",
 //41-45
 	L"Nie moøna zmieniaÊ przydzia≥u najemnikÛw, ktÛrzy sπ w drodze",
 	L"Pojazd nie ma paliwa!",
-	L"%S jest zbyt zmÍczony(na) by podrÛøowaÊ.",
+	L"%ls jest zbyt zmÍczony(na) by podrÛøowaÊ.",
 	L"Øaden z pasaøerÛw nie jest w stanie kierowaÊ tym pojazdem.",
 	L"Jeden lub wiÍcej cz≥onkÛw tego oddzia≥u nie moøe siÍ w tej chwili przemieszczaÊ.",
 //46-50
@@ -1948,10 +1948,10 @@ const wchar_t* pMapPlotStrings[] =
 const wchar_t* pBullseyeStrings[] =
 {
 	L"Kliknij sektor, do ktÛrego majπ przylatywaÊ najemnicy.",
-	L"Dobrze. Przylatujπcy najemnicy bÍdπ zrzucani w %S",
+	L"Dobrze. Przylatujπcy najemnicy bÍdπ zrzucani w %ls",
 	L"Najemnicy nie mogπ tu przylatywaÊ. PrzestrzeÒ powietrzna nie jest zabezpieczona!",
 	L"Anulowano. Sektor zrzutu nie zosta≥ zmieniony.",
-	L"PrzestrzeÒ powietrzna nad %S nie jest juø bezpieczna! Sektor zrzutu zosta≥ przesuniÍty do %S.",
+	L"PrzestrzeÒ powietrzna nad %ls nie jest juø bezpieczna! Sektor zrzutu zosta≥ przesuniÍty do %ls.",
 };
 
 
@@ -1969,22 +1969,22 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 // male version of where equipment is left
 const wchar_t* pMercHeLeaveString[] =
 {
-	L"Czy %S ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%S), czy w Dressen (B13), skπd odlatuje? ",
-	L"Czy %S ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%S), czy w Omercie (A9), skπd odlatuje?",
+	L"Czy %ls ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%ls), czy w Dressen (B13), skπd odlatuje? ",
+	L"Czy %ls ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%ls), czy w Omercie (A9), skπd odlatuje?",
 	L"wkrÛtce odchodzi i zostawi swÛj sprzÍt w Omercie (A9).",
 	L"wkrÛtce odchodzi i zostawi swÛj sprzÍt w Drassen (B13).",
-	L"%S wkrÛtce odchodzi i zostawi swÛj sprzÍt w %S.",
+	L"%ls wkrÛtce odchodzi i zostawi swÛj sprzÍt w %ls.",
 };
 
 
 // female version
 const wchar_t* pMercSheLeaveString[] =
 {
-	L"Czy %S ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%S), czy w Dressen (B13), skπd odlatuje? ",
-	L"Czy %S ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%S), czy w Omercie (A9), skπd odlatuje?",
+	L"Czy %ls ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%ls), czy w Dressen (B13), skπd odlatuje? ",
+	L"Czy %ls ma zostawiÊ swÛj sprzÍt w sektorze, w ktÛrym siÍ obecnie znajduje (%ls), czy w Omercie (A9), skπd odlatuje?",
 	L"wkrÛtce odchodzi i zostawi swÛj sprzÍt w Omercie (A9).",
 	L"wkrÛtce odchodzi i zostawi swÛj sprzÍt w Drassen (B13).",
-	L"%S wkrÛtce odchodzi i zostawi swÛj sprzÍt w %S.",
+	L"%ls wkrÛtce odchodzi i zostawi swÛj sprzÍt w %ls.",
 };
 
 
@@ -1994,7 +1994,7 @@ const wchar_t* pMercContractOverStrings[] =
 	L" zakoÒczy≥a kontrakt wiÍc wyjecha≥a.", 		// merc's contract is over and has departed
 	L" - jego kontrakt zosta≥ zerwany wiÍc odszed≥.", 		// merc's contract has been terminated
 	L" - jej kontrakt zosta≥ zerwany wiÍc odesz≥a.",		// merc's contract has been terminated
-	L"Masz za duøy d≥ug wobec M.E.R.C. wiÍc %S odchodzi.", // Your M.E.R.C. account is invalid so merc left
+	L"Masz za duøy d≥ug wobec M.E.R.C. wiÍc %ls odchodzi.", // Your M.E.R.C. account is invalid so merc left
 };
 
 // Text used on IMP Web Pages
@@ -2093,40 +2093,40 @@ const wchar_t* pHistoryStrings[] =
 {
 	L"",																						// leave this line blank
 	//1-5
-	L"%S najÍty(ta) w A.I.M.", 										// merc was hired from the aim site
-	L"%S najÍty(ta) w M.E.R.C.", 									// merc was hired from the aim site
-	L"%S ginie.", 															// merc was killed
+	L"%ls najÍty(ta) w A.I.M.", 										// merc was hired from the aim site
+	L"%ls najÍty(ta) w M.E.R.C.", 									// merc was hired from the aim site
+	L"%ls ginie.", 															// merc was killed
 	L"Uregulowano rachunki w M.E.R.C.",								// paid outstanding bills at MERC
 	L"PrzyjÍto zlecenie od Enrico Chivaldori",
 	//6-10
 	L"Profil IMP wygenerowany",
-	L"Podpisano umowÍ ubezpieczeniowπ dla %S.", 				// insurance contract purchased
-	L"Anulowano umowÍ ubezpieczeniowπ dla %S.", 				// insurance contract canceled
-	L"Wyp≥ata ubezpieczenia za %S.", 							// insurance claim payout for merc
-	L"Przed≥uøono kontrakt z: %S o 1 dzieÒ.", 						// Extented "mercs name"'s for a day
+	L"Podpisano umowÍ ubezpieczeniowπ dla %ls.", 				// insurance contract purchased
+	L"Anulowano umowÍ ubezpieczeniowπ dla %ls.", 				// insurance contract canceled
+	L"Wyp≥ata ubezpieczenia za %ls.", 							// insurance claim payout for merc
+	L"Przed≥uøono kontrakt z: %ls o 1 dzieÒ.", 						// Extented "mercs name"'s for a day
 	//11-15
-	L"Przed≥uøono kontrakt z: %S o 1 tydzieÒ.", 					// Extented "mercs name"'s for a week
-	L"Przed≥uøono kontrakt z: %S o 2 tygodnie.", 					// Extented "mercs name"'s 2 weeks
-	L"%S zwolniony(na).", 													// "merc's name" was dismissed.
-	L"%S odchodzi.", 																		// "merc's name" quit.
+	L"Przed≥uøono kontrakt z: %ls o 1 tydzieÒ.", 					// Extented "mercs name"'s for a week
+	L"Przed≥uøono kontrakt z: %ls o 2 tygodnie.", 					// Extented "mercs name"'s 2 weeks
+	L"%ls zwolniony(na).", 													// "merc's name" was dismissed.
+	L"%ls odchodzi.", 																		// "merc's name" quit.
 	L"przyjÍto zadanie.", 															// a particular quest started
 	//16-20
 	L"zadanie wykonane.",
-	L"Rozmawiano szefem kopalni %S",									// talked to head miner of town
-	L"Wyzwolono - %S",
+	L"Rozmawiano szefem kopalni %ls",									// talked to head miner of town
+	L"Wyzwolono - %ls",
 	L"Uøyto kodu Cheat",
 	L"ØywnoúÊ powinna byÊ jutro w Omercie",
 	//21-25
-	L"%S odchodzi, aby wziπÊ úlub z Darylem Hickiem",
-	L"Wygas≥ kontrakt z - %S.",
-	L"%S zrekrutowany(na).",
+	L"%ls odchodzi, aby wziπÊ úlub z Darylem Hickiem",
+	L"Wygas≥ kontrakt z - %ls.",
+	L"%ls zrekrutowany(na).",
 	L"Enrico narzeka na brak postÍpÛw",
 	L"Walka wygrana",
 	//26-30
-	L"%S - w kopalni koÒczy siÍ ruda",
-	L"%S - w kopalni skoÒczy≥a siÍ ruda",
-	L"%S - kopalnia zosta≥a zamkniÍta",
-	L"%S - kopalnia zosta≥a otwarta",
+	L"%ls - w kopalni koÒczy siÍ ruda",
+	L"%ls - w kopalni skoÒczy≥a siÍ ruda",
+	L"%ls - kopalnia zosta≥a zamkniÍta",
+	L"%ls - kopalnia zosta≥a otwarta",
 	L"Informacja o wiÍzieniu zwanym Tixa.",
 	//31-35
 	L"Informacja o tajnej fabryce broni zwanej Orta.",
@@ -2162,10 +2162,10 @@ const wchar_t* pHistoryStrings[] =
 	L"Dave oferuje darmowe tankowania, jeúli bÍdzie mia≥ paliwo.",
 	L"Greased Pablo's palms.",
 	L"Kingpin trzyma pieniπdze w kopalni w San Mona.",
-	L"%S wygra≥(a) walkÍ",
-	L"%S przegra≥(a) walkÍ",
+	L"%ls wygra≥(a) walkÍ",
+	L"%ls przegra≥(a) walkÍ",
 	//61-65
-	L"%S zdyskwalifikowany(na) podczas walki",
+	L"%ls zdyskwalifikowany(na) podczas walki",
 	L"Znaleziono duøo pieniÍdzy w opuszczonej kopalni.",
 	L"Spotkano zabÛjcÍ nas≥anego przez Kingpina.",
 	L"Utrata kontroli nad sektorem",				//ENEMY_INVASION_CODE
@@ -2180,10 +2180,10 @@ const wchar_t* pHistoryStrings[] =
 	L"Stworzenia zaatakowa≥y",			//CREATURE_ATTACK_CODE
 	L"Zabity(ta) przez dzikie koty",			//BLOODCAT_AMBUSH_CODE
 	L"WyrøniÍto dzikie koty",
-	L"%S zabity(ta)",
+	L"%ls zabity(ta)",
 	L"Przekazano Carmenowi g≥owÍ terrorysty",
 	L"Slay odszed≥",
-	L"Zabito: %S",
+	L"Zabito: %ls",
 };
 
 const wchar_t* pHistoryLocations[] =
@@ -2511,7 +2511,7 @@ const wchar_t* MercAccountText[] =
 	L"Stawka",	//5
 	L"Op≥ata",
 	L"Razem:",
-	L"Czy na pewno chcesz zatwierdziÊ p≥atnoúÊ: %S?",		//the %S is a string that contains the dollar amount ( ex. "$150" )
+	L"Czy na pewno chcesz zatwierdziÊ p≥atnoúÊ: %ls?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
 };
 
 
@@ -2697,7 +2697,7 @@ const wchar_t* BobbyROrderFormText[] =
 {
 	L"Formularz zamÛwienia",				//Title of the page
 	L"IloúÊ",					// The number of items ordered
-	L"Waga (%S)",			// The weight of the item
+	L"Waga (%ls)",			// The weight of the item
 	L"Nazwa",				// The name of the item
 	L"Cena",				// the item's weight
 	L"WartoúÊ",				//5	// The total price of all of items of the same type
@@ -2706,7 +2706,7 @@ const wchar_t* BobbyROrderFormText[] =
 	L"Razem",			// The grand total of all item totals + the shipping and handling
 	L"Miejsce dostawy",
 	L"Czas dostawy",			//10	// See below
-	L"Koszt (za %S.)",			// The cost to ship the items
+	L"Koszt (za %ls.)",			// The cost to ship the items
 	L"Ekspres - 24h",			// Gets deliverd the next day
 	L"2 dni robocze",			// Gets delivered in 2 days
 	L"Standardowa dostawa",			// Gets delivered in 3 days
@@ -2717,7 +2717,7 @@ const wchar_t* BobbyROrderFormText[] =
 	L"* oznacza uøywane rzeczy",		// Disclaimer stating that the item is used
 	L"Nie staÊ ciÍ na to.",		//20	// A popup message that to warn of not enough money
 	L"<BRAK>",				// Gets displayed when there is no valid city selected
-	L"Miejsce docelowe przesy≥ki: %S. Potwierdzasz?",		// A popup that asks if the city selected is the correct one
+	L"Miejsce docelowe przesy≥ki: %ls. Potwierdzasz?",		// A popup that asks if the city selected is the correct one
 	L"Waga przesy≥ki*",			// Displays the weight of the package
 	L"* Min. Waga",				// Disclaimer states that there is a minimum weight for the package
 	L"Dostawy",
@@ -3017,8 +3017,8 @@ const wchar_t* AimFiText[] =
 
 	// The title of the page, the above text gets added at the end of this text
 
-	L"Cz≥onkowie A.I.M. posortowani rosnπco wg %S",
-	L"Cz≥onkowie A.I.M. posortowani malejπco wg %S",
+	L"Cz≥onkowie A.I.M. posortowani rosnπco wg %ls",
+	L"Cz≥onkowie A.I.M. posortowani malejπco wg %ls",
 
 	// Instructions to the players on what to do
 
@@ -3154,9 +3154,9 @@ const wchar_t* gzSkiAtmText[] =
 
 const wchar_t* SkiMessageBoxText[] =
 {
-	L"Czy chcesz do≥oøyÊ %S ze swojego konta, aby pokryÊ rÛønicÍ?",
-	L"Brak úrodkÛw. Brakuje ci %S",
-	L"Czy chcesz przeznaczyÊ %S ze swojego konta, aby pokryÊ koszty?",
+	L"Czy chcesz do≥oøyÊ %ls ze swojego konta, aby pokryÊ rÛønicÍ?",
+	L"Brak úrodkÛw. Brakuje ci %ls",
+	L"Czy chcesz przeznaczyÊ %ls ze swojego konta, aby pokryÊ koszty?",
 	L"Poproú o rozpoczÍcie transakscji",
 	L"Poproú o naprawÍ wybranych przedmiotÛw",
 	L"ZakoÒcz rozmowÍ",
@@ -3248,15 +3248,15 @@ const wchar_t* zMarksMapScreenText[] =
 	L"Nie masz jeszcze øo≥nierzy samoobrony.  Musisz najpierw wytrenowaÊ mieszkaÒcÛw miast.",
 	L"Dzienny przychÛd",
 	L"Najmemnik ma polisÍ ubezpieczeniowπ",
-    L"%S nie potrzebuje snu.",
-	L"%S jest w drodze i nie moøe spaÊ",
-	L"%S jest zbyt zmÍczony(na), sprÛbuj trochÍ pÛüniej.",
-	L"%S prowadzi.",
+    L"%ls nie potrzebuje snu.",
+	L"%ls jest w drodze i nie moøe spaÊ",
+	L"%ls jest zbyt zmÍczony(na), sprÛbuj trochÍ pÛüniej.",
+	L"%ls prowadzi.",
 	L"Oddzia≥ nie moøe siÍ poruszaÊ jeøeli jeden z najemnikÛw úpi.",
 
 	// stuff for contracts
 	L"Mimo, øe moøesz op≥aciÊ kontrakt, to jednak nie masz gotÛwki by op≥aciÊ sk≥adkÍ ubezpieczeniowπ za najemnika.",
-	L"%S - sk≥adka ubezpieczeniowa najemnika bÍdzie kosztowaÊ %S za %d dzieÒ(dni). Czy chcesz jπ op≥aciÊ?",
+	L"%ls - sk≥adka ubezpieczeniowa najemnika bÍdzie kosztowaÊ %ls za %d dzieÒ(dni). Czy chcesz jπ op≥aciÊ?",
 	L"Inwentarz sektora",
 	L"Najemnik posiada zastaw na øycie.",
 
@@ -3266,10 +3266,10 @@ const wchar_t* zMarksMapScreenText[] =
 	L"Gotowe", // Continue on with the game after autobandage is complete
 	L"Przerwij", // Stop autobandaging of patients by medics now
 	L"Przykro nam, ale ta opcja jest wy≥πczona w wersji demo.", // informs player this option/button has been disabled in the demo
-	L"%S nie ma zestawu narzÍdzi.",
-	L"%S nie ma apteczki.",
+	L"%ls nie ma zestawu narzÍdzi.",
+	L"%ls nie ma apteczki.",
 	L"Brak chÍtnych ludzi do szkolenia, w tej chwili.",
-	L"%S posiada juø maksymalnπ liczbÍ oddzia≥Ûw samoobrony.",
+	L"%ls posiada juø maksymalnπ liczbÍ oddzia≥Ûw samoobrony.",
 	L"Najemnik ma kontrakt na okreúlony czas.",
   L"Kontrakt najemnika nie jest ubezpieczony",
 };
@@ -3277,7 +3277,7 @@ const wchar_t* zMarksMapScreenText[] =
 
 const wchar_t* pLandMarkInSectorString[] =
 {
-	L"Oddzia≥ %d zauwaøy≥ kogoú w sektorze %S",
+	L"Oddzia≥ %d zauwaøy≥ kogoú w sektorze %ls",
 };
 
 // confirm the player wants to pay X dollars to build a militia force in town
@@ -3286,14 +3286,14 @@ const wchar_t* pMilitiaConfirmStrings[] =
 	L"Szkolenie oddzia≥u samoobrony bÍdzie kosztowa≥o $", // telling player how much it will cost
 	L"Zatwierdzasz wydatek?", // asking player if they wish to pay the amount requested
 	L"Nie staÊ ciÍ na to.", // telling the player they can't afford to train this town
-	L"KontynuowaÊ szkolenie samoobrony w - %S (%S %d)?", // continue training this town?
+	L"KontynuowaÊ szkolenie samoobrony w - %ls (%ls %d)?", // continue training this town?
 	L"Koszt $", // the cost in dollars to train militia
 	L"( T/N )",   // abbreviated yes/no
 	L"",	// unused
-	L"Szkolenie samoobrony w %d sektorach bÍdzie kosztowa≥o $ %d. %S", // cost to train sveral sectors at once
+	L"Szkolenie samoobrony w %d sektorach bÍdzie kosztowa≥o $ %d. %ls", // cost to train sveral sectors at once
 	L"Nie masz %d$, aby wyszkoliÊ samoobronÍ w tym mieúcie.",
-	L"%S musi mieÊ %d% lojalnoúci, aby moøna by≥o kontynuowaÊ szkolenie samoobrony.",
-	L"Nie moøesz juø d≥uøej szkoliÊ samoobrony w mieúcie %S.",
+	L"%ls musi mieÊ %d% lojalnoúci, aby moøna by≥o kontynuowaÊ szkolenie samoobrony.",
+	L"Nie moøesz juø d≥uøej szkoliÊ samoobrony w mieúcie %ls.",
 };
 
 #ifdef JA2DEMOADS
@@ -3367,7 +3367,7 @@ const wchar_t* gpDemoIntroString[] =
 const wchar_t* gzMoneyWithdrawMessageText[] =
 {
 	L"Jednorazowo moøesz wyp≥aciÊ do 20,000$.",
-	L"Czy na pewno chcesz wp≥aciÊ %S na swoje konto?",
+	L"Czy na pewno chcesz wp≥aciÊ %ls na swoje konto?",
 };
 
 const wchar_t* gzCopyrightText[] =
@@ -3525,7 +3525,7 @@ const wchar_t* pIMPFinishButtonText[ 1 ]=
 
 const wchar_t* pIMPFinishStrings[ ]=
 {
-	L"DziÍkujemy, %S", //%S is the name of the merc
+	L"DziÍkujemy, %ls", //%ls is the name of the merc
 };
 
 // the strings for imp voices screen
@@ -3588,7 +3588,7 @@ const wchar_t* pMessageStrings[] =
 	L"USD",					//Abbreviation to US dollars
 	L"N/D",					//Lowercase acronym for not applicable.
 	L"Tymczasem",		//Meanwhile
-	L"%S przyby≥(a) do sektora %S%S", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	L"%ls przyby≥(a) do sektora %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	L"Wersja",
 	L"Wolna pozycja na szybki zapis",
@@ -3599,11 +3599,11 @@ const wchar_t* pMessageStrings[] =
 	L"Tu juø wszystko za≥atwione. Moøe czas spotkaÊ siÍ z Gabby'm.",
 	L"Nie trzeba by≥o go zabijaÊ.",
 #endif
-	L"Brak miejsca na dysku twardym.  Na dysku wolne jest %S MB, a wymagane jest przynajmniej %S MB.",
-	L"NajÍto - %S z A.I.M.",
-	L"%S z≥apa≥(a) %S",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	L"%S zaaplikowa≥(a) sobie lekarstwo", //'Merc name' has taken the drug
-	L"%S nie posiada wiedzy medycznej",//'Merc name' has no medical skill.
+	L"Brak miejsca na dysku twardym.  Na dysku wolne jest %ls MB, a wymagane jest przynajmniej %ls MB.",
+	L"NajÍto - %ls z A.I.M.",
+	L"%ls z≥apa≥(a) %ls",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	L"%ls zaaplikowa≥(a) sobie lekarstwo", //'Merc name' has taken the drug
+	L"%ls nie posiada wiedzy medycznej",//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	L"IntegralnoúÊ gry zosta≥a naraøona na szwank.",
@@ -3620,9 +3620,9 @@ const wchar_t* pMessageStrings[] =
 	L"RzuÊ",
 	L"Podaj",
 
-	L"%S przekazano do - %S.", //"Item" passed to "merc".  Please try to keep the item %S before the merc %S, otherwise,
+	L"%ls przekazano do - %ls.", //"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
 											 //must notify SirTech.
-	L"Brak wolnego miejsca, by przekazaÊ %S do - %S.", //pass "item" to "merc".  Same instructions as above.
+	L"Brak wolnego miejsca, by przekazaÊ %ls do - %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	L" do≥πczono )",
@@ -3634,8 +3634,8 @@ const wchar_t* pMessageStrings[] =
 	//Toggling various stealth modes
 	L"Oddzia≥ ma w≥πczony tryb skradania siÍ.",
 	L"Oddzia≥ ma wy≥πczony tryb skradania siÍ.",
-	L"%S ma w≥πczony tryb skradania siÍ.",
-	L"%S ma wy≥πczony tryb skradania siÍ.",
+	L"%ls ma w≥πczony tryb skradania siÍ.",
+	L"%ls ma wy≥πczony tryb skradania siÍ.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
@@ -3666,13 +3666,13 @@ const wchar_t* pMessageStrings[] =
 	L"Kursor 3D wy≥πczony.",
 	L"Kursor 3D w≥πczony.",
 	L"Oddzia≥ %d aktywny.",
-	L"%S - Nie staÊ ciÍ by wyp≥aciÊ jej/jemu dziennπ pensjÍ w wysokoúci %S.",	//first %S is the mercs name, the seconds is a string containing the salary
+	L"%ls - Nie staÊ ciÍ by wyp≥aciÊ jej/jemu dziennπ pensjÍ w wysokoúci %ls.",	//first %ls is the mercs name, the seconds is a string containing the salary
 	L"PomiÒ",
-	L"%S nie moøe odejúÊ sam(a).",
+	L"%ls nie moøe odejúÊ sam(a).",
 	L"Utworzono zapis gry o nazwie SaveGame99.sav. W razie potrzeby zmieÒ jego nazwÍ na SaveGame01..10. Wtedy bÍdzie moøna go odczytaÊ ze standardowego okna odczytu gry.",
-	L"%S wypi≥(a) trochÍ - %S",
+	L"%ls wypi≥(a) trochÍ - %ls",
 	L"Przesy≥ka dotar≥a do Drassen.",
- 	L"%S przybÍdzie do wyznaczonego punktu zrzutu (sektor %S) w dniu %d, oko≥o godziny %S.",		//first %S is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+ 	L"%ls przybÍdzie do wyznaczonego punktu zrzutu (sektor %ls) w dniu %d, oko≥o godziny %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"Lista historii zaktualizowana.",
 #ifdef JA2BETAVERSION
 	L"Automatyczny zapis zosta≥ pomyúlnie wykonany.",
@@ -3691,7 +3691,7 @@ const wchar_t ItemPickupHelpPopup[][40] =
 
 const wchar_t* pDoctorWarningString[] =
 {
-	L"%S jest za daleko, aby poddaÊ siÍ leczeniu.",
+	L"%ls jest za daleko, aby poddaÊ siÍ leczeniu.",
 	L"Lekarze nie mogli opatrzyÊ wszystkich rannych.",
 };
 
@@ -3765,7 +3765,7 @@ const wchar_t* gzMiscString[] =
 	L"Øo≥nierze samoobrony kontynuujπ walkÍ bez pomocy twoich najemnikÛw...",
 	L"W tym momencie tankowanie nie jest konieczne.",
 	L"W baku jest %d%% paliwa.",
-	L"Øo≥nierze Deidranny przejÍli ca≥kowitπ kontrolÍ nad - %S.",
+	L"Øo≥nierze Deidranny przejÍli ca≥kowitπ kontrolÍ nad - %ls.",
 	L"Nie masz juø gdzie zatankowaÊ.",
 };
 
@@ -3780,17 +3780,17 @@ const wchar_t* gzIntroScreen[] =
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
 const wchar_t* pNewNoiseStr[] =
 {
-	L"%S s≥yszy %S DèWI K dochodzπcy z %S.",
-	L"%S s≥yszy %S ODG£OS RUCHU dochodzπcy z %S.",
-	L"%S s≥yszy %S ODG£OS SKRZYPNI CIA dochodzπcy z %S.",
-	L"%S s≥yszy %S PLUSK dochodzπcy z %S.",
-	L"%S s≥yszy %S ODG£OS UDERZENIA dochodzπcy z %S.",
-	L"%S s≥yszy %S WYBUCH dochodzπcy z %S.",
-	L"%S s≥yszy %S KRZYK dochodzπcy z %S.",
-	L"%S s≥yszy %S ODG£OS UDERZENIA dochodzπcy z %S.",
-	L"%S s≥yszy %S ODG£OS UDERZENIA dochodzπcy z %S.",
-	L"%S s≥yszy %S £OMOT dochodzπcy z %S.",
-	L"%S s≥yszy %S TRZASK dochodzπcy z %S.",
+	L"%ls s≥yszy %ls DèWI K dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls ODG£OS RUCHU dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls ODG£OS SKRZYPNI CIA dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls PLUSK dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls ODG£OS UDERZENIA dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls WYBUCH dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls KRZYK dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls ODG£OS UDERZENIA dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls ODG£OS UDERZENIA dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls £OMOT dochodzπcy z %ls.",
+	L"%ls s≥yszy %ls TRZASK dochodzπcy z %ls.",
 };
 
 const wchar_t* wMapScreenSortButtonHelpText[] =
@@ -3881,10 +3881,10 @@ const wchar_t* gzCreditNameFunny[]=
 
 const wchar_t* sRepairsDoneString[] =
 {
-	L"%S skoÒczy≥(a) naprawiaÊ w≥asne wyposaøenie",
-	L"%S skoÒczy≥(a) naprawiaÊ broÒ i ochraniacze wszystkich cz≥onkÛw oddzia≥u",
-	L"%S skoÒczy≥(a) naprawiaÊ wyposaøenie wszystkich cz≥onkÛw oddzia≥u",
-	L"%S skoÒczy≥(a) naprawiaÊ ekwipunek wszystkich cz≥onkÛw oddzia≥u",
+	L"%ls skoÒczy≥(a) naprawiaÊ w≥asne wyposaøenie",
+	L"%ls skoÒczy≥(a) naprawiaÊ broÒ i ochraniacze wszystkich cz≥onkÛw oddzia≥u",
+	L"%ls skoÒczy≥(a) naprawiaÊ wyposaøenie wszystkich cz≥onkÛw oddzia≥u",
+	L"%ls skoÒczy≥(a) naprawiaÊ ekwipunek wszystkich cz≥onkÛw oddzia≥u",
 };
 
 
@@ -3898,7 +3898,7 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%S - nie odnaleziono pliku...",
+	L"%ls - nie odnaleziono pliku...",
 
 	//1-5
 	L"Robot nie moøe opuúciÊ sektora bez operatora.",
@@ -3907,13 +3907,13 @@ const wchar_t* gzLateLocalizedString[] =
 	L"Nie moøna teraz kompresowaÊ czasu.  Poczekaj na fajerwerki!",
 
 	//'Name' refuses to move.
-	L"%S nie chce siÍ przesunπÊ.",
+	L"%ls nie chce siÍ przesunπÊ.",
 
-	//%S a merc name
-	L"%S ma zbyt ma≥o energii, aby zmieniÊ pozycjÍ.",
+	//%ls a merc name
+	L"%ls ma zbyt ma≥o energii, aby zmieniÊ pozycjÍ.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	L"%S nie ma paliwa i stoi w sektorze %c%d.",
+	L"%ls nie ma paliwa i stoi w sektorze %c%d.",
 
 	//6-10
 
@@ -3941,15 +3941,15 @@ const wchar_t* gzLateLocalizedString[] =
 	//"vs." is the abbreviation of versus.
 	L"%d vs. %d",
 
-	L"%S - brak wolnych miejsc!",  //(ex "The ice cream truck is full")
+	L"%ls - brak wolnych miejsc!",  //(ex "The ice cream truck is full")
 
-  L"%S nie potrzebuje pierwszej pomocy lecz opieki lekarza lub d≥uøszego odpoczynku.",
+  L"%ls nie potrzebuje pierwszej pomocy lecz opieki lekarza lub d≥uøszego odpoczynku.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%S dosta≥(a) w nogi i upad≥(a)!",
+	L"%ls dosta≥(a) w nogi i upad≥(a)!",
 	//Name can't speak right now.
-	L"%S nie moøe teraz mÛwiÊ.",
+	L"%ls nie moøe teraz mÛwiÊ.",
 
 	//22-24 plural versions
 	L"%d zielonych øo≥nierzy samoobrony awansowa≥o na weteranÛw.",
@@ -3961,11 +3961,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	L"%S dostaje úwira!",
+	L"%ls dostaje úwira!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	L"Niebezpiecznie jest kompresowaÊ teraz czas, gdyø masz najemnikÛw w sektorze %S.",
+	L"Niebezpiecznie jest kompresowaÊ teraz czas, gdyø masz najemnikÛw w sektorze %ls.",
 	L"Niebezpiecznie jest kompresowaÊ teraz czas, gdyø masz najemnikÛw w kopalni zaatakowanej przez robale.",
 
 	//29-31 singular versions
@@ -3974,37 +3974,37 @@ const wchar_t* gzLateLocalizedString[] =
 	L"1 regularny øo≥nierz samoobrony awansowa≥ na weterana.",
 
 	//32-34
-	L"%S nic nie mÛwi.",
+	L"%ls nic nie mÛwi.",
 	L"WyjúÊ na powierzchniÍ?",
 	L"(Oddzia≥ %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	L"%S naprawi≥(a) najemnikowi - %S, jego/jej - %S",
+	L"%ls naprawi≥(a) najemnikowi - %ls, jego/jej - %ls",
 
 	//36
 	L"DZIKI KOT",
 
 	//37-38 "Name trips and falls"
-	L"%S potyka siÍ i upada",
+	L"%ls potyka siÍ i upada",
 	L"Nie moøna stπd podnieúÊ tego przedmiotu.",
 
 	//39
 	L"Øaden z twoich najemnikÛw nie jest w stanie walczyÊ.  Øo≥nierze samoobrony sami bÍdπ walczyÊ z robalami.",
 
 	//40-43
-	//%S is the name of merc.
-	L"%S nie ma úrodkÛw medycznych!",
-	L"%S nie posiada odpowiedniej wiedzy, aby kogokolwiek wyleczyÊ!",
-	L"%S nie ma narzÍdzi!",
-	L"%S nie posiada odpowiedniej wiedzy, aby cokolwiek naprawiÊ!",
+	//%ls is the name of merc.
+	L"%ls nie ma úrodkÛw medycznych!",
+	L"%ls nie posiada odpowiedniej wiedzy, aby kogokolwiek wyleczyÊ!",
+	L"%ls nie ma narzÍdzi!",
+	L"%ls nie posiada odpowiedniej wiedzy, aby cokolwiek naprawiÊ!",
 
 	//44-45
 	L"Czas naprawy",
-	L"%S nie widzi tej osoby.",
+	L"%ls nie widzi tej osoby.",
 
 	//46-48
-	L"%S - przed≥uøka lufy jego/jej broni odpada!",
+	L"%ls - przed≥uøka lufy jego/jej broni odpada!",
 	L"W jednym sektorze, szkolenie samoobrony moøe prowadziÊ tylko %d instruktor(Ûw).",
   	L"Na pewno?",
 
@@ -4017,8 +4017,8 @@ const wchar_t* gzLateLocalizedString[] =
 	L"Zatrzymaj kompresjÍ czasu (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	L"%S odblokowa≥(a) - %S",
-	L"%S odblokowa≥(a) najemnikowi - %S, jego/jej - %S",
+	L"%ls odblokowa≥(a) - %ls",
+	L"%ls odblokowa≥(a) najemnikowi - %ls, jego/jej - %ls",
 
 	//55
 	L"Nie moøna kompresowaÊ czasu, gdy otwarty jest inwentarz sektora.",

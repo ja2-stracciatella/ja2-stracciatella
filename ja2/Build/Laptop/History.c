@@ -910,8 +910,8 @@ static void DisplayPageNumberAndDateRange(void)
 
 	if( !pCurrentHistory )
 	{
-		mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%S  %d / %d", pHistoryHeaders[1], 1, 1);
-		mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%S %d - %d",  pHistoryHeaders[2], 1, 1);
+		mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], 1, 1);
+		mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], 1, 1);
 
     // reset shadow
 	  SetFontShadow(DEFAULT_SHADOW);
@@ -954,8 +954,8 @@ static void DisplayPageNumberAndDateRange(void)
 
 	// get the last page
 
-	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%S  %d / %d", pHistoryHeaders[1], iCurrentHistoryPage, iLastPage + 1);
-	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%S %d - %d",  pHistoryHeaders[2], pCurrentHistory->uiDate / (24 * 60), uiLastDate / (24 * 60));
+	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], iCurrentHistoryPage, iLastPage + 1);
+	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], pCurrentHistory->uiDate / (24 * 60), uiLastDate / (24 * 60));
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

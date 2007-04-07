@@ -429,7 +429,7 @@ static void Get8BitStringFromField(UINT8 ubField, UINT8* szString)
 	{
 		if( curr->ubID == ubField )
 		{
-			sprintf( szString, "%S", curr->szString );
+			sprintf( szString, "%ls", curr->szString );
 			return;
 		}
 		curr = curr->next;
@@ -1162,12 +1162,12 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 			iClickX = gusMouseXPos - reg->RegionTopLeftX;
 			iCurrCharPos = 0;
 			gubCursorPos = 0;
-			iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%S", gpActive->szString) / 2;
+			iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%ls", gpActive->szString) / 2;
 			while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
 			{
 				gubCursorPos++;
 				iCurrCharPos = iNextCharPos;
-				iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%S", gpActive->szString);
+				iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%ls", gpActive->szString);
 			}
 			gubEndHilite = gubCursorPos;
 			if( gubEndHilite != gubStartHilite )
@@ -1206,12 +1206,12 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		iClickX = gusMouseXPos - reg->RegionTopLeftX;
 		iCurrCharPos = 0;
 		gubCursorPos = 0;
-		iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%S", gpActive->szString) / 2;
+		iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%ls", gpActive->szString) / 2;
 		while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
 		{
 			gubCursorPos++;
 			iCurrCharPos = iNextCharPos;
-			iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%S", gpActive->szString);
+			iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%ls", gpActive->szString);
 		}
 		gubStartHilite = gubCursorPos;  //This value is the anchor
 		gubEndHilite = gubCursorPos;		//The end will move with the cursor as long as it's down.
@@ -1276,7 +1276,7 @@ static void RenderActiveTextField(void)
 		//Traverse the string one character at a time, and draw the highlited part differently.
 		for( i = 0; i < gpActive->ubStrLen; i++ )
 		{
-			uiCursorXPos = StringPixLengthArg(pColors->usFont, i, L"%S", gpActive->szString) + 3;
+			uiCursorXPos = StringPixLengthArg(pColors->usFont, i, L"%ls", gpActive->szString) + 3;
 			if( i >= usStart && i < usEnd )
 			{ //in highlighted part of text
 				SetFontForeground( pColors->ubHiForeColor );
@@ -1297,12 +1297,12 @@ static void RenderActiveTextField(void)
 		SetFontForeground( pColors->ubForeColor );
 		SetFontShadow( pColors->ubShadowColor );
 		SetFontBackground( 0 );
-		mprintf(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, L"%S", gpActive->szString);
+		mprintf(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, L"%ls", gpActive->szString);
 	}
 	//Draw the cursor in the correct position.
 	if( gfEditingText && gpActive->szString )
 	{
-		uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%S", gpActive->szString) + 2;
+		uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%ls", gpActive->szString) + 2;
 		if( GetJA2Clock()%1000 < 500 )
 		{	//draw the blinking ibeam cursor during the on blink period.
 			ColorFillVideoSurfaceArea(FRAME_BUFFER,
@@ -1338,7 +1338,7 @@ void RenderInactiveTextField( UINT8 ubID )
 	SetFontShadow( pColors->ubShadowColor );
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%S", pNode->szString);
+	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%ls", pNode->szString);
 	RestoreFontSettings();
 }
 
@@ -1363,7 +1363,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	usOffset = (UINT16)(( pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%S", pNode->szString);
+	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%ls", pNode->szString);
 	RestoreFontSettings();
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{

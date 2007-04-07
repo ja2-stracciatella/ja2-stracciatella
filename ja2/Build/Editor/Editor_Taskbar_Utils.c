@@ -487,7 +487,7 @@ void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UI
 	SetFontShadow( FONT_BLACK );
 	x += (w - (UINT16)StringPixLength( str, uiFont )) / 2;
 	y += (h - (UINT16)GetFontHeight( uiFont)) / 2;
-	mprintf(x, y, L"%S", str);
+	mprintf(x, y, L"%ls", str);
 	InvalidateRegion( x, y, x2, y2 );
 }
 
@@ -869,7 +869,7 @@ static void RenderEditorInfo(void)
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( 260, 445, L"No map currently loaded." );
 			else
-				mprintf(260, 445, L"File:  %s, Current Tileset:  %S",
+				mprintf(260, 445, L"File:  %s, Current Tileset:  %ls",
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
 			break;
 		case TASK_TERRAIN:

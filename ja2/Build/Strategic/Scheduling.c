@@ -190,7 +190,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	if ( !pSoldier->bActive )
 	{
 #ifdef JA2BETAVERSION
-		ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %S.", pSoldier->name);
+		ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
 #endif
 	}
 
@@ -643,7 +643,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 	#ifdef JA2EDITOR
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for %S (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->name,
 				pSoldier->ubID,
@@ -655,7 +655,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 		}
 		else
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %S for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->ubID,
 				GetWorldHour(),

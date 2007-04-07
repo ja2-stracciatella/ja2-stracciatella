@@ -546,7 +546,7 @@ static void DrawNameOfLoadedSector(void)
 	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
 
 	VarFindFontCenterCoordinates( 548, 426, 80, 16, COMPFONT, &sFontX, &sFontY, sString );
-	mprintf( sFontX, sFontY, L"%S", sString );
+	mprintf( sFontX, sFontY, L"%ls", sString );
 }
 
 
@@ -1200,11 +1200,11 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 
 	sString = pMapScreenBottomText[0];
 	VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
-	mprintf( sFontX, sFontY, L"%S", sString );
+	mprintf( sFontX, sFontY, L"%ls", sString );
 
 	sString = zMarksMapScreenText[2];
 	VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
-	mprintf( sFontX, sFontY, L"%S", sString );
+	mprintf( sFontX, sFontY, L"%ls", sString );
 
 	// ste the font buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
@@ -1236,7 +1236,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	VarFindFontCenterCoordinates( 359, 387 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%S", sString );
+	mprintf( sFontX, sFontY, L"%ls", sString );
 }
 
 
@@ -1336,7 +1336,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	VarFindFontCenterCoordinates( 359, 433 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
 
 	// print it
-	mprintf( sFontX, sFontY, L"%S", sString );
+	mprintf( sFontX, sFontY, L"%ls", sString );
 }
 
 
@@ -1468,7 +1468,7 @@ void BuildDemoMouseRegionsForHelpText( void )
 		MSYS_DefineRegion(&MapButtonScreenMasks[ iCounter + 10 ] , MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * iCounter ) ),  MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( iCounter + 1 ) ) ), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR,
 			MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
 
-		swprintf(sString, L"%S %d", zMarksMapScreenText[0], iCounter + 1);
+		swprintf(sString, L"%ls %d", zMarksMapScreenText[0], iCounter + 1);
 		SetRegionFastHelpText( &MapButtonScreenMasks[ iCounter + 10 ], sString );
   }
 }

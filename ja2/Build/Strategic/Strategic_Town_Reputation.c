@@ -130,7 +130,7 @@ void HandleSpreadOfAllTownsOpinion( void )
 	UINT8 ubProfileId;
 
 	// debug message
-	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S - Spreading town opinions about mercs", WORLDTIMESTR);
+	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls - Spreading town opinions about mercs", WORLDTIMESTR);
 
 	// run though all player-recruitable profiles and update towns opinion of mercs
 	for( ubProfileId = 0; ubProfileId < FIRST_NPC; ubProfileId++ )

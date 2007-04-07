@@ -532,7 +532,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-		swprintf( sString, lengthof(sString), L"%S%d. %S", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
+		swprintf( sString, lengthof(sString), L"%ls%d. %ls", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
 	}
 
 	// if we are in mapscreen, make a pop up

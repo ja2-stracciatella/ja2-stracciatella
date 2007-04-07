@@ -188,7 +188,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 			else
 			{
 				char zText[1024];
-				sprintf( zText, "LineWrap() Error!  The string ( %S ) has a word ( %S ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels  );
+				sprintf( zText, "LineWrap() Error!  The string ( %ls ) has a word ( %ls ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels  );
 
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zText );
 
@@ -329,8 +329,8 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-	if (fDirty) gprintfdirty(usPosX, usPosY, L"%S", pStr);
-	mprintf(usPosX, usPosY, L"%S", pStr);
+	if (fDirty) gprintfdirty(usPosX, usPosY, L"%ls", pStr);
+	mprintf(usPosX, usPosY, L"%ls", pStr);
 
 	if( IAN_WRAP_NO_SHADOW & ulFlags )
 	{
@@ -1672,7 +1672,7 @@ BOOLEAN ReduceStringLength( wchar_t * pString, size_t Length, UINT32 uiWidthToFi
 
 
 	//combine the temp string and the '...' to form the finished string
-	swprintf( pString, Length, L"%S%S", zTemp, zStrDots );
+	swprintf( pString, Length, L"%ls%ls", zTemp, zStrDots );
 
 	return( TRUE );
 }

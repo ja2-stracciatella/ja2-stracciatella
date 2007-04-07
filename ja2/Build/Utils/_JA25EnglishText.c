@@ -32,9 +32,9 @@ const wchar_t *zNewTacticalMessages[]=
 	L"(Cannot save during combat)", //@@@@ new text
 	L"The current campaign name is greater than 30 characters.",							// @@@ new text
 	L"The current campaign cannot be found.",																	// @@@ new text
-	L"Campaign: Default ( %S )",																							// @@@ new text
-	L"Campaign: %S",																													// @@@ new text
-	L"You have selected the campaign %S. This campaign is a player-modified version of the original Unfinished Business campaign. Are you sure you wish to play the %S campaign?",			// @@@ new text
+	L"Campaign: Default ( %ls )",																							// @@@ new text
+	L"Campaign: %ls",																													// @@@ new text
+	L"You have selected the campaign %ls. This campaign is a player-modified version of the original Unfinished Business campaign. Are you sure you wish to play the %ls campaign?",			// @@@ new text
 	L"In order to use the editor, please select a campaign other than the default.",		///@@new
 };
 

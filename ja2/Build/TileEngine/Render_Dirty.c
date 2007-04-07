@@ -784,7 +784,7 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 
 	gVideoOverlays[ iBlitterIndex ].uiDestBuff = FRAME_BUFFER;
 
-	//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Register Overlay %d %S", iBlitterIndex, gVideoOverlays[ iBlitterIndex ].zText ) );
+	//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Register Overlay %d %ls", iBlitterIndex, gVideoOverlays[ iBlitterIndex ].zText ) );
 
 	return( iBlitterIndex );
 }
@@ -808,7 +808,7 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 		if ( gVideoOverlays[ iVideoOverlay ].fActivelySaving )
 		{
 
-	//		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Overlay Actively saving %d %S", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
+	//		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Overlay Actively saving %d %ls", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
 
 			gVideoOverlays[ iVideoOverlay ].fDeletionPending = TRUE;
 		}
@@ -819,7 +819,7 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 			// Remove background
 			FreeBackgroundRect( gVideoOverlays[ iVideoOverlay ].uiBackground );
 
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Delete Overlay %d %S", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
+			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Delete Overlay %d %ls", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
 
 
 			// Remove save buffer if not done so
@@ -998,7 +998,7 @@ void AllocateVideoOverlaysArea( )
 
 			gVideoOverlays[uiCount].fActivelySaving = TRUE;
 
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %S", uiCount, gVideoOverlays[ uiCount ].zText ) );
+			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
 
 			// Allocate
 			if( ( gVideoOverlays[ uiCount ].pSaveArea = MemAlloc( uiBufSize ) ) == NULL )
@@ -1025,7 +1025,7 @@ static void AllocateVideoOverlayArea(UINT32 uiCount)
 
 		gVideoOverlays[uiCount].fActivelySaving = TRUE;
 
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %S", uiCount, gVideoOverlays[ uiCount ].zText ) );
+		//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
 
 		// Allocate
 		if( ( gVideoOverlays[ uiCount ].pSaveArea = MemAlloc( uiBufSize ) ) == NULL )
@@ -1126,7 +1126,7 @@ void DeleteVideoOverlaysArea( )
 
 			gVideoOverlays[uiCount].pSaveArea = NULL;
 
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Removing Overlay Actively saving %d %S", uiCount, gVideoOverlays[ uiCount ].zText ) );
+			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Removing Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
 
 			// Remove if pending
 			if ( gVideoOverlays[uiCount].fDeletionPending )

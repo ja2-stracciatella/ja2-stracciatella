@@ -1151,7 +1151,7 @@ static void DisplayCharName(INT32 iId, INT32 iSlot)
 	if (sTownName != NULL)
 	{
 		//nick name - town name
-		swprintf( sString, lengthof(sString), L"%S - %S", gMercProfiles[Menptr[iId].ubProfile].zNickname, sTownName );
+		swprintf( sString, lengthof(sString), L"%ls - %ls", gMercProfiles[Menptr[iId].ubProfile].zNickname, sTownName );
 	}
 	else
 	{
@@ -1551,7 +1551,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 
 			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
       FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			mprintf(sX, pPersonnelScreenPoints[23].y, L"%S", sString);
+			mprintf(sX, pPersonnelScreenPoints[23].y, L"%ls", sString);
 		 break;
 		  case 17:
 			// battles
@@ -1593,7 +1593,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 					//if the 2 skills are the same, add the '(expert)' at the end
 					if( bSkill1 == bSkill2 && bSkill1 != NO_SKILLTRAIT )
 					{
-						swprintf( sString, lengthof(sString), L"%S %S", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS] );
+						swprintf( sString, lengthof(sString), L"%ls %ls", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS] );
 
 						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
 
@@ -2266,7 +2266,7 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 							( INT16 )( GetFontHeight( FONT10ARIAL ) ), sString, FONT10ARIAL, &sX, &sY );
 				}
 
-				mprintf(sX, sY, L"%S", sString);
+				mprintf(sX, sY, L"%ls", sString);
 
 				if ( Item[pSoldier->inv[ ubCounter ].usItem ].usItemClass & IC_GUN )
 				{
@@ -2466,7 +2466,7 @@ static void DisplayNumberOnCurrentTeam(void)
 
 	if( fCurrentTeamMode == TRUE )
 	{
-		swprintf( sString, lengthof(sString), L"%S ( %d )", pPersonelTeamStrings[ 0 ], GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) );
+		swprintf( sString, lengthof(sString), L"%ls ( %d )", pPersonelTeamStrings[ 0 ], GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) );
 		sX = PERS_CURR_TEAM_X;
 	}
 	else
@@ -2496,7 +2496,7 @@ static void DisplayNumberDeparted(void)
 
 	if( fCurrentTeamMode == FALSE )
 	{
-		swprintf( sString, lengthof(sString), L"%S ( %d )", pPersonelTeamStrings[ 1 ], GetNumberOfPastMercsOnPlayersTeam( ) );
+		swprintf( sString, lengthof(sString), L"%ls ( %d )", pPersonelTeamStrings[ 1 ], GetNumberOfPastMercsOnPlayersTeam( ) );
 		sX = PERS_CURR_TEAM_X;
 	}
 	else
@@ -4813,7 +4813,7 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 
 			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
       FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			mprintf(sX, pPersonnelScreenPoints[23].y, L"%S", sString);
+			mprintf(sX, pPersonnelScreenPoints[23].y, L"%ls", sString);
 		 break;
 		  case 17:
 			// battles
@@ -6360,7 +6360,7 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 					// if there is going to be a both days and hours left on the contract
 					if( iTimeLeftOnContract / uiMinutesInDay )
 					{
-						swprintf(sString, lengthof(sString), L"%d%S %d%S / %d%S",( iTimeLeftOnContract / uiMinutesInDay ), gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
+						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls",( iTimeLeftOnContract / uiMinutesInDay ), gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
 						mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 					}
 
@@ -6368,7 +6368,7 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 					else
 					{
 						//DEF: removed 2/7/99
-						swprintf(sString, lengthof(sString), L"%d%S / %d%S", (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
+						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
 						mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 					}
 
@@ -6400,7 +6400,7 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 
 			//./DEF 2/4/99: total service days used to be calced as 'days -1'
 
-			swprintf(sString, lengthof(sString), L"%d %S",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
+			swprintf(sString, lengthof(sString), L"%d %ls",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 
       FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);

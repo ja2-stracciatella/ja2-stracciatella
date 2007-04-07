@@ -821,8 +821,8 @@ void ValidatePlayersAreInOneGroupOnly()
 					pGroup = GetGroup( pSoldier->ubGroupID );
 					Assert( pGroup );
 					Assert( pOtherGroup );
-					swprintf(str, lengthof(str), L"%S in %c%d thinks he/she is in group %d in %c%d but isn't.  "
-												 L"Group %d in %c%d thinks %S is in the group but isn't.  %S will be assigned to a unique squad.  "
+					swprintf(str, lengthof(str), L"%ls in %c%d thinks he/she is in group %d in %c%d but isn't.  "
+												 L"Group %d in %c%d thinks %ls is in the group but isn't.  %ls will be assigned to a unique squad.  "
 												 L"Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
 												 pSoldier->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
@@ -865,8 +865,8 @@ void ValidatePlayersAreInOneGroupOnly()
 					Assert( pGroup );
 					Assert( pOtherGroup );
 
-					swprintf(str, lengthof(str), L"%S in %c%d has been found in multiple groups.  The group he/she is supposed "
-												 L"to be in is group %d in %c%d, but %S was also found to be in group %d in %c%d.  %S was found in %d groups "
+					swprintf(str, lengthof(str), L"%ls in %c%d has been found in multiple groups.  The group he/she is supposed "
+												 L"to be in is group %d in %c%d, but %ls was also found to be in group %d in %c%d.  %ls was found in %d groups "
 												 L"total.  Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
 												 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
@@ -876,7 +876,7 @@ void ValidatePlayersAreInOneGroupOnly()
 				else if( !iGroups )
 				{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his
 					//own unique squad as a correction.
-					swprintf(str, lengthof(str), L"%S in %c%d cannot be found in any group.  %S will be assigned to a unique group/squad.  "
+					swprintf(str, lengthof(str), L"%ls in %c%d cannot be found in any group.  %ls will be assigned to a unique group/squad.  "
 												 L"Please provide details on how you think this may have happened.  Send screenshot and PRIOR save.  Do not send a save "
 												 L"you create after this point as the info will have been corrected by then.",
 												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, pSoldier->name );
@@ -941,7 +941,7 @@ void SAIReportError(const wchar_t *wErrorString)
 		if( guiCurrentScreen == AIVIEWER_SCREEN )
 		{
 			UINT8 str[ 512 ];
-			sprintf( str, "%S\n", wErrorString );
+			sprintf( str, "%ls\n", wErrorString );
 			OutputDebugString( str );
 		}
 
@@ -3912,7 +3912,7 @@ static void LogStrategicEvent(const char* str, ...)
 	va_end(argptr);
 
 
-	fprintf( fp, "\n%S:\n", WORLDTIMESTR );
+	fprintf( fp, "\n%ls:\n", WORLDTIMESTR );
 	fprintf( fp, "%s\n", string );
 
 	if( gfDisplayStrategicAILogs )

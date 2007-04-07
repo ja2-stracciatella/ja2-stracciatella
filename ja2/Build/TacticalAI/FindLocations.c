@@ -1948,7 +1948,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	if (sBestSpot != NOWHERE)
 	{
-		DebugAI( String( "%d decides to pick up %S", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].o.usItem ] ) );
+		DebugAI( String( "%d decides to pick up %ls", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].o.usItem ] ) );
 		if (Item[gWorldItems[ iBestItemIndex ].o.usItem].usItemClass == IC_GUN)
 		{
 			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
@@ -1960,14 +1960,14 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 				if (pSoldier->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 				{
 					// destroy this item!
-					DebugAI( String( "%d decides he must drop %S first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
+					DebugAI( String( "%d decides he must drop %ls first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
 					DeleteObj( &(pSoldier->inv[HANDPOS]) );
 					DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
 				}
 				else
 				{
 					// we want to drop this item!
-					DebugAI( String( "%d decides he must drop %S first", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
+					DebugAI( String( "%d decides he must drop %ls first", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
 
 					pSoldier->bNextAction = AI_ACTION_PICKUP_ITEM;
 					pSoldier->usNextActionData = sBestSpot;

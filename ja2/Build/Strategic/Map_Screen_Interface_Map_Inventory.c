@@ -1696,7 +1696,7 @@ static void DisplayCurrentSector(void)
 	INT16 sX, sY;
 
 
-	swprintf( sString, lengthof(sString), L"%S%S%S", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
+	swprintf( sString, lengthof(sString), L"%ls%ls%ls", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
 	// set font stuff
 	SetFont( COMPFONT );

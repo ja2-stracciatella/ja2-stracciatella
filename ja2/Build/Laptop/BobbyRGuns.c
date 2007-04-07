@@ -721,7 +721,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	swprintf( sDollarTemp, lengthof(sDollarTemp), L"%d", CalculateTotalPurchasePrice() );
 	InsertCommasForDollarFigure( sDollarTemp );
 	InsertDollarSignInToString( sDollarTemp );
-	swprintf( sTemp, lengthof(sTemp), L"%S %S", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
+	swprintf( sTemp, lengthof(sTemp), L"%ls %ls", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
 	DrawTextToScreen(sTemp, BOBBYR_ORDER_SUBTOTAL_X, BOBBYR_ORDER_SUBTOTAL_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | TEXT_SHADOWED);
 
 	//Display the Used item disclaimer
@@ -976,9 +976,9 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_ROF], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	if( WeaponROF[ usIndex ] == -1 )
-		swprintf(sTemp, lengthof(sTemp), L"? %S", pMessageStrings[ MSG_RPM ] );
+		swprintf(sTemp, lengthof(sTemp), L"? %ls", pMessageStrings[ MSG_RPM ] );
 	else
-		swprintf(sTemp, lengthof(sTemp), L"%3d/%S", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
+		swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
 
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
@@ -1004,7 +1004,7 @@ static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_RANGE], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %S", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -1016,7 +1016,7 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_MAGAZINE], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %S", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -1060,7 +1060,7 @@ static UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	//display the 'weight' string
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_WEIGHT], BOBBYR_ITEM_WEIGHT_TEXT_X, (UINT16)usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
-	swprintf(sTemp, lengthof(sTemp), L"%3.2f %S", GetWeightBasedOnMetricOption(Item[ usIndex ].ubWeight)/10, GetWeightUnitString() );
+	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(Item[ usIndex ].ubWeight)/10, GetWeightUnitString() );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -1280,7 +1280,7 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pI
 			ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID( pItemNumbers[ i ] );
 			if( ubItemCount != 0 )
 			{
-				swprintf( zItemName, lengthof(zItemName), L"%S %d %S",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
+				swprintf( zItemName, lengthof(zItemName), L"%ls %d %ls",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
 			}
 			else
 				zItemName[0] = '\0';

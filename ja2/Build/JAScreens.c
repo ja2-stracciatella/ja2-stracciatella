@@ -185,8 +185,8 @@ void DisplayFrameRate( )
 		// Debug
 		if (gDebugStr[0] != '\0')
 		{
-			//gprintfdirty( 0, 345, L"DEBUG: %S",gDebugStr);
-			//mprintf( 0,345,L"DEBUG: %S",gDebugStr);
+			//gprintfdirty( 0, 345, L"DEBUG: %ls",gDebugStr);
+			//mprintf( 0,345,L"DEBUG: %ls",gDebugStr);
 		}
 
 		// Print Num tiles
@@ -338,9 +338,9 @@ UINT32 InitScreenHandle(void)
 
 		mprintf( 10, 430,
 		#ifdef _DEBUG
-		L"%S: %S (Debug %s)",
+		L"%ls: %ls (Debug %s)",
 		#else
-		L"%S: %S (%s)",
+		L"%ls: %ls (%s)",
 		#endif
 		pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 

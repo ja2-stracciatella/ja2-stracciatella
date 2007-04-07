@@ -776,7 +776,7 @@ static void DisplayEditMercWindow(void)
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 17, iXPos + 128 + 104, iYPos + 17 + 19, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 17, iXPos + 128 + 103, iYPos + 17 + 18, usFillColorTextBk );
 	iXOff = (105 - StringPixLength( pSoldier->name, FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 20, L"%S", pSoldier->name);
+	gprintf(iXPos + 130 + iXOff, iYPos + 20, L"%ls", pSoldier->name);
 
 	// Orders window
 	gprintf( iXPos + 128, iYPos + 38, L"Orders:" );
@@ -784,7 +784,7 @@ static void DisplayEditMercWindow(void)
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 104, iYPos + 52 + 19, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 103, iYPos + 52 + 18, usFillColorTextBk );
 	iXOff = (105 - StringPixLength( EditMercOrders[pSoldier->bOrders], FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 55, L"%S", EditMercOrders[pSoldier->bOrders]);
+	gprintf(iXPos + 130 + iXOff, iYPos + 55, L"%ls", EditMercOrders[pSoldier->bOrders]);
 
 	// Combat window
 	gprintf( iXPos + 128, iYPos + 73, L"Combat Attitude:" );
@@ -792,7 +792,7 @@ static void DisplayEditMercWindow(void)
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 104, iYPos + 87 + 19, usFillColorLight );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 103, iYPos + 87 + 18, usFillColorTextBk );
 	iXOff = (105 - StringPixLength( EditMercAttitudes[pSoldier->bAttitude], FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 90, L"%S", EditMercAttitudes[pSoldier->bAttitude]);
+	gprintf(iXPos + 130 + iXOff, iYPos + 90, L"%ls", EditMercAttitudes[pSoldier->bAttitude]);
 
 	// Get stats
 	iEditStat[0] = pSoldier->bLifeMax;			  // 12 13
@@ -811,14 +811,14 @@ static void DisplayEditMercWindow(void)
 	// Stat value windows
 	for ( x = 0; x < 12; x++ )
 	{
-		gprintf(iXPos + 6, iYPos + 114 + (20 * x), L"%S", EditMercStat[x]);
+		gprintf(iXPos + 6, iYPos + 114 + (20 * x), L"%ls", EditMercStat[x]);
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 116, iYPos + 110 + (20 * x), iXPos + 116 + 30, iYPos + 110 + (20 * x) + 19, usFillColorDark );
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 30, iYPos + 111 + (20 * x) + 19, usFillColorLight );
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 29, iYPos + 111 + (20 * x) + 18, usFillColorTextBk );
 
 		swprintf(TempString, lengthof(TempString), L"%d", iEditStat[x]);
 		iXOff = (30 - StringPixLength( TempString, FONT12POINT1 )) / 2;
-		gprintf(iXPos + 118 + iXOff, iYPos + 114 + (20 * x), L"%S", TempString);
+		gprintf(iXPos + 118 + iXOff, iYPos + 114 + (20 * x), L"%ls", TempString);
 	}
 
 }
@@ -2493,10 +2493,10 @@ void UpdateMercsInfo()
 			SetFontForeground( FONT_BLACK );
 			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 			{
-				mprintfEditor( 396, 374, L"%S    ", gpSelected->pSoldier->HeadPal );
-				mprintfEditor( 396, 398, L"%S    ", gpSelected->pSoldier->SkinPal );
-				mprintfEditor( 396, 422, L"%S    ", gpSelected->pSoldier->VestPal );
-				mprintfEditor( 396, 446, L"%S    ", gpSelected->pSoldier->PantsPal );
+				mprintfEditor( 396, 374, L"%ls    ", gpSelected->pSoldier->HeadPal );
+				mprintfEditor( 396, 398, L"%ls    ", gpSelected->pSoldier->SkinPal );
+				mprintfEditor( 396, 422, L"%ls    ", gpSelected->pSoldier->VestPal );
+				mprintfEditor( 396, 446, L"%ls    ", gpSelected->pSoldier->PantsPal );
 				ShowEditMercPalettes( gpSelected->pSoldier );
 			}
 			else
@@ -2532,7 +2532,7 @@ void UpdateMercsInfo()
 				{
 					SetFontForeground( FONT_WHITE );
 					ClearTaskbarRegion( 240, 435, 580, 445 );
-					mprintf(240, 435, L"Current Profile:  %S", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
+					mprintf(240, 435, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
 				}
 			}
 			break;
@@ -2576,10 +2576,10 @@ void UpdateMercsInfo()
 				switch( gubScheduleInstructions )
 				{
 					case SCHEDULE_INSTRUCTIONS_DOOR1:
-						swprintf(str, lengthof(str), L"Click on the gridno adjacent to the door that you wish to %S.", keyword);
+						swprintf(str, lengthof(str), L"Click on the gridno adjacent to the door that you wish to %ls.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_DOOR2:
-						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move after you %S the door.", keyword);
+						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move after you %ls the door.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_GRIDNO:
 						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move to.");

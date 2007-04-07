@@ -157,7 +157,7 @@ static void InitNPCs(void)
 	}
 
 #ifdef JA2TESTVERSION
-	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
 #endif
 
 	// use alternate map in this sector
@@ -191,7 +191,7 @@ static void InitNPCs(void)
 		}
 
 #ifdef JA2TESTVERSION
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%S in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
 #endif
 
 		// use alternate map in this sector

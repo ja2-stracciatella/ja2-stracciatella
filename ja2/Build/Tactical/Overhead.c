@@ -1421,7 +1421,7 @@ BOOLEAN ExecuteOverhead( )
 										if ( pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE )
 										{
 #ifdef JA2BETAVERSION
-											ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %S ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID);
+											ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %ls ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID);
 #endif
 										}
 
@@ -7086,7 +7086,7 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 #ifdef JA2TESTVERSION
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%S is changing teams", pTarget->name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%ls is changing teams", pTarget->name);
 			}
 #endif
 			// member of a civ group, either recruited or neutral, so should

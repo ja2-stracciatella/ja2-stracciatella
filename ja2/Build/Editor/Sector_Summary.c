@@ -505,7 +505,7 @@ static void RenderSectorInformation(void)
 		ePoints++;
 	//start at 10,35
 	SetFontForeground( FONT_ORANGE );
-	mprintf(10, 32, L"Tileset:  %S", gTilesets[s->ubTilesetID].zName);
+	mprintf(10, 32, L"Tileset:  %ls", gTilesets[s->ubTilesetID].zName);
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
 	mprintf( 10, 42,    L"Version Info:  Summary:  1.%02d,  Map:  %d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
@@ -746,7 +746,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%S", str);
+				mprintf(xp, yp, L"%ls", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -790,12 +790,12 @@ static void RenderItemDetails(void)
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%S:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
+					mprintf(xp, yp, L"%ls:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
 				}
 				else
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%S:  %3.02f", Type, dAvgExistChance);
+					mprintf(xp, yp, L"%ls:  %3.02f", Type, dAvgExistChance);
 				}
 				yp += 10;
 				if( yp >= 355 )
@@ -852,7 +852,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%S", str);
+				mprintf(xp, yp, L"%ls", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -920,7 +920,7 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%S", str);
+				mprintf(xp, yp, L"%ls", str);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -986,7 +986,7 @@ void RenderSummaryWindow()
 		SetFontBackground( 0 );
 		if( !gfItemDetailsMode )
 		{
-			mprintf(10, 5, L"CAMPAIGN EDITOR -- %S Version 1.%02d",
+			mprintf(10, 5, L"CAMPAIGN EDITOR -- %ls Version 1.%02d",
 				gszVersionType[ GLOBAL_SUMMARY_STATE ], GLOBAL_SUMMARY_VERSION );
 		}
 
@@ -1187,12 +1187,12 @@ void RenderSummaryWindow()
 								SetupItemDetailsMode( TRUE );
 								gfSetupItemDetailsMode = FALSE;
 							}
-							mprintf(10, 5, L"ITEM DETAILS -- sector %S", str);
+							mprintf(10, 5, L"ITEM DETAILS -- sector %ls", str);
 							RenderItemDetails();
 						}
 						else
 						{
-							mprintf(10, 20, L"Summary Information for sector %S:", str);
+							mprintf(10, 20, L"Summary Information for sector %ls:", str);
 							HideButton( iSummaryButton[ SUMMARY_REAL ] );
 							HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 							HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
@@ -1204,12 +1204,12 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_RED );
 						if( gfItemDetailsMode )
 						{
-							mprintf(10, 5, L"Summary Information for sector %S" , str);
+							mprintf(10, 5, L"Summary Information for sector %ls" , str);
 							mprintf( 10, 15, L"does not exist." );
 						}
 						else
 						{
-							mprintf(10, 20, L"Summary Information for sector %S" , str);
+							mprintf(10, 20, L"Summary Information for sector %ls" , str);
 							mprintf( 10, 30, L"does not exist." );
 						}
 						ShowButton( iSummaryButton[ SUMMARY_UPDATE ] );
@@ -1225,9 +1225,9 @@ void RenderSummaryWindow()
 						SetFontShadow( 0 );
 					}
 					if( gfItemDetailsMode )
-						mprintf(10, 5, L"No information exists for sector %S.", str);
+						mprintf(10, 5, L"No information exists for sector %ls.", str);
 					else
-						mprintf(10, 20, L"No information exists for sector %S.", str);
+						mprintf(10, 20, L"No information exists for sector %ls.", str);
 					SetFontShadow( FONT_NEARBLACK );
 
 					switch( giCurrentViewLevel )
@@ -1255,7 +1255,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 55, L"FILE:  %S", gszDisplayName);
+					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 55, L"FILE:  %ls", gszDisplayName);
 				}
 				else //little higher to make room for the override checkbox and text.
 				{
@@ -1263,7 +1263,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 46, L"FILE:  %S", gszDisplayName);
+					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 46, L"FILE:  %ls", gszDisplayName);
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW : FONT_LTRED) );
@@ -1598,7 +1598,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
-		swprintf(str, lengthof(str), L"Analyzing map:  %S...", gszFilename);
+		swprintf(str, lengthof(str), L"Analyzing map:  %ls...", gszFilename);
 
 		if( gfSummaryWindowActive )
 		{
@@ -1613,7 +1613,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 			CreateProgressBar( 0, 250, 200, 390, 210 );
 		}
 
-		sprintf( szCoord, "%S", gszFilename );
+		sprintf( szCoord, "%ls", gszFilename );
 		if( gsSectorX > 9 )
 			szCoord[3] = '\0';
 		else
@@ -2062,14 +2062,14 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		//swprintf(str, L"Loading map:  %S...", gszDisplayName);
+		//swprintf(str, L"Loading map:  %ls...", gszDisplayName);
 		//mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
 		//InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
 
 		CreateProgressBar( 0, MAP_LEFT+5, MAP_BOTTOM+110, 573, MAP_BOTTOM+120 );
 
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, 318, 578, 356 );
-		swprintf(str, lengthof(str), L"Loading map:  %S", gszDisplayName);
+		swprintf(str, lengthof(str), L"Loading map:  %ls", gszDisplayName);
 		SetProgressBarTitle( 0, str, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
 
@@ -2112,7 +2112,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 			if( gubOverrideStatus == READONLY )
 			{
 				UINT8 filename[40];
-				sprintf( filename, "MAPS/%S", gszDisplayName );
+				sprintf( filename, "MAPS/%ls", gszDisplayName );
 				FileClearAttributes( filename );
 			}
 			if(	ExternalSaveMap( gszDisplayName ) )
@@ -2153,7 +2153,7 @@ static void CalculateOverrideStatus(void)
 	if( gfTempFile )
 	{
 		UINT8 *ptr;
-		sprintf( szFilename, "MAPS/%S", gszTempFilename );
+		sprintf( szFilename, "MAPS/%ls", gszTempFilename );
 		if( strlen( szFilename ) == 5 )
 			strcat( szFilename, "test.dat" );
 		ptr = strstr( szFilename, "." );
@@ -2163,7 +2163,7 @@ static void CalculateOverrideStatus(void)
 			strcpy(ptr, ".dat");
 	}
 	else
-		sprintf( szFilename, "MAPS/%S", gszFilename );
+		sprintf( szFilename, "MAPS/%ls", gszFilename );
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%s", szFilename + 5);
 	if( GetFileFirst( szFilename, &FileInfo) )
 	{
@@ -2575,7 +2575,7 @@ static void ReportError(UINT8* pSector, UINT8 ubLevel)
 		swprintf(temp, lengthof(temp), L"_b%d.dat", ubLevel % 4);
 		wcscat( str, temp );
 	}
-	mprintf(10, yp, L"Skipping update for %S.  Probably due to tileset conflicts...", str);
+	mprintf(10, yp, L"Skipping update for %ls.  Probably due to tileset conflicts...", str);
 	InvalidateScreen();
 	yp++;
 }
@@ -2881,7 +2881,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
-	sprintf( szFilename, "MAPS/%S", gszFilename );
+	sprintf( szFilename, "MAPS/%ls", gszFilename );
 	hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hfile )
 	{ //The file couldn't be found!

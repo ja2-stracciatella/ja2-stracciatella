@@ -985,7 +985,7 @@ static BOOLEAN UpdateMercInfo(void)
 		InsertCommasForDollarFigure( zTemp );
 		InsertDollarSignInToString( zTemp );
 
-		swprintf( sMedicalString, lengthof(sMedicalString), L"%S %S", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
+		swprintf( sMedicalString, lengthof(sMedicalString), L"%ls %ls", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
 
 		// If the string will be displayed in more then 2 lines, recenter the string
 		if( ( DisplayWrappedString( 0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT,  sMedicalString, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( AIM_FONT12ARIAL ) ) > 2 )
@@ -1550,7 +1550,7 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 	}
 	else
 	{
-		swprintf( sMercName, lengthof(sMercName), L"%S %S",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
+		swprintf( sMercName, lengthof(sMercName), L"%ls %ls",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
@@ -1712,7 +1712,7 @@ static UINT32 DisplayMercChargeAmount(void)
 //	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
 	{
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-			swprintf(wTemp, lengthof(wTemp), L"%S %S", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
+			swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
 		else
 			wcslcpy(wTemp, wDollarTemp, lengthof(wTemp));
 
@@ -2077,7 +2077,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
 
 void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length)
 {
-	swprintf( gsTalkingMercText, Length, L"\"%S\"", pString );
+	swprintf( gsTalkingMercText, Length, L"\"%ls\"", pString );
 
 	//Set the minimum time for the dialogue text to be present
 	usAimMercSpeechDuration =  wcslen( gsTalkingMercText ) * AIM_TEXT_SPEECH_MODIFIER;
@@ -3985,7 +3985,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
 	GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, zSectorIDString, lengthof(zSectorIDString), FALSE );
 
 	//create the string to display to the user, looks like....
-	//	L"%S should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %S.",		//first %S is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	//	L"%ls should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 
 #ifdef GERMAN
 	//Germans version has a different argument order

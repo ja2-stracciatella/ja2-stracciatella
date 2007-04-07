@@ -1299,7 +1299,7 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 	{
 		#ifdef JA2TESTVERSION
 			//Add entry to the quest debug file
-			NpcRecordLogging( ubApproach, "Quest(%d:'%S') Must be in Progress, status is %d. %s", pNPCQuoteInfo->ubQuest, QuestDescText[ pNPCQuoteInfo->ubQuest ], gubQuest[pNPCQuoteInfo->ubQuest], (gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS) ? "False, return" : "True" );
+			NpcRecordLogging( ubApproach, "Quest(%d:'%ls') Must be in Progress, status is %d. %s", pNPCQuoteInfo->ubQuest, QuestDescText[ pNPCQuoteInfo->ubQuest ], gubQuest[pNPCQuoteInfo->ubQuest], (gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS) ? "False, return" : "True" );
 		#endif
 
 		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM)
@@ -1331,7 +1331,7 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 		fTrue = CheckFact( pNPCQuoteInfo->usFactMustBeTrue, ubNPC );
 		#ifdef JA2TESTVERSION
 			//Add entry to the quest debug file
-			NpcRecordLogging( ubApproach, "Fact (%d:'%S') Must be True, status is %s", pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue], (fTrue == FALSE) ? "False, returning" : "True" );
+			NpcRecordLogging( ubApproach, "Fact (%d:'%ls') Must be True, status is %s", pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue], (fTrue == FALSE) ? "False, returning" : "True" );
 		#endif
 		if (fTrue == FALSE)
 		{
@@ -1347,7 +1347,7 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 
 		#ifdef JA2TESTVERSION
 			//Add entry to the quest debug file
-			NpcRecordLogging( ubApproach, "Fact(%d:'%S') Must be False status is  %s", pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse], (fTrue == TRUE) ? "True, return" : "FALSE" );
+			NpcRecordLogging( ubApproach, "Fact(%d:'%ls') Must be False status is  %s", pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse], (fTrue == TRUE) ? "True, return" : "FALSE" );
 		#endif
 
 		if (fTrue == TRUE)
@@ -1768,7 +1768,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Handling trigger %S/%d at %ld", gMercProfiles[ ubNPC ].zNickname, (UINT8)uiApproachData, GetJA2Clock() ) );
+					DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Handling trigger %ls/%d at %ld", gMercProfiles[ ubNPC ].zNickname, (UINT8)uiApproachData, GetJA2Clock() ) );
 					NPCConsiderTalking( ubNPC, ubMerc, bApproach, (UINT8)uiApproachData, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
 					break;
 				default:
@@ -1880,7 +1880,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 #ifdef JA2BETAVERSION
 				if ( gfDisplayScreenMsgOnRecordUsage )
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Using record %d for %S", ubRecordNum, gMercProfiles[ubNPC].zNickname);
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Using record %d for %ls", ubRecordNum, gMercProfiles[ubNPC].zNickname);
 				}
 #endif
 

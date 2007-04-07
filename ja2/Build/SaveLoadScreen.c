@@ -1026,7 +1026,7 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 			IF YOU UNCOMMENT THIS -- LOCALIZE IT!!!
 			CHAR16	sText[512];
 
-			swprintf(sText, L"%S%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID);
+			swprintf(sText, L"%ls%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID);
 
 			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack );
 */
@@ -1253,7 +1253,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			CHAR16		zDifString[256];
 
 			//Create a string for difficulty level
-			swprintf( zDifString, lengthof(zDifString), L"%S %S", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
+			swprintf( zDifString, lengthof(zDifString), L"%ls %ls", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
 
 			//make a string containing the extended options
 			swprintf( zMouseHelpTextString, lengthof(zMouseHelpTextString), L"%20s     %22s     %22s     %22s", zDifString,
@@ -1272,7 +1272,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		else
 		{
 			//Create the string for the Data
-			swprintf( zDateString, lengthof(zDateString), L"%S %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
+			swprintf( zDateString, lengthof(zDateString), L"%ls %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
 
 			//Create the string for the current location
 			if( SaveGameHeader.sSectorX == -1 && SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ < 0 )
@@ -1299,12 +1299,12 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			if( SaveGameHeader.ubNumOfMercsOnPlayersTeam == 1 )
 			{
 				//use "merc"
-				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %S", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
+				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
 			}
 			else
 			{
 				//use "mercs"
-				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %S", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
+				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
 			}
 
 			//Get the current balance
@@ -1856,7 +1856,7 @@ static void SetSelection(UINT8 ubNewSelection)
 		}
 	}
 
-	swprintf(zMouseHelpTextString, L"%S: %S\n%S: %S\n%S: %S\n%S: %S", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
+	swprintf(zMouseHelpTextString, L"%ls: %ls\n%ls: %ls\n%ls: %ls\n%ls: %ls", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
 		gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel + 1 ],
 
 		gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ],

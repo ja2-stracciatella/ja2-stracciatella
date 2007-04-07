@@ -4416,7 +4416,7 @@ BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-	//	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S", pMercFellAsleepString[0], pSoldier->name);
+	//	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls", pMercFellAsleepString[0], pSoldier->name);
 	}
 
 
@@ -7875,7 +7875,7 @@ static void CreateSquadBox(void)
  for(uiCounter=0; uiCounter <= uiMaxSquad; uiCounter++)
  {
 	 // get info about current squad and put in  string
-	 swprintf( sString, lengthof(sString), L"%S ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
+	 swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
 	 AddMonoString(&hStringHandle, sString );
 
 	 // make sure it is unhighlighted
@@ -8041,7 +8041,7 @@ static void PostTerminateMessage(SOLDIERTYPE* pCharacter)
 	return;
 
 	// send a message stating that termination of contract done
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S's contract has been terminated.", pCharacter->name);
+	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls's contract has been terminated.", pCharacter->name);
 }
 
 
@@ -8145,7 +8145,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 				 swprintf( sDollarString, L"%d", LaptopSaveInfo.iCurrentBalance);
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf(sString, L"%S %S",  pContractStrings[uiCounter], sDollarString);
+				 swprintf(sString, L"%ls %ls",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 */
 				 AddMonoString(&hStringHandle, pContractStrings[uiCounter]);
@@ -8162,7 +8162,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 				 }
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
@@ -8178,7 +8178,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString );
+				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString );
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
@@ -8195,7 +8195,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 
 				 InsertCommasForDollarFigure( sDollarString );
 				 InsertDollarSignInToString( sDollarString );
-				 swprintf( sString, lengthof(sString), L"%S ( %S )",  pContractStrings[uiCounter], sDollarString);
+				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 default:
@@ -8416,7 +8416,7 @@ static void CreateAssignmentsBox(void)
 		if( ( uiCounter == ASSIGN_MENU_ON_DUTY ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment < ON_DUTY ) )
 		{
 			// show his squad # in brackets
-			swprintf( sString, lengthof(sString), L"%S(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
+			swprintf( sString, lengthof(sString), L"%ls(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
 		}
 		else
 		{

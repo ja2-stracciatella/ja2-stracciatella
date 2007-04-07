@@ -1436,7 +1436,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 		pCurrentFinance = pFinanceListHead;
     if( !pCurrentFinance )
 		{
-     swprintf( sString, lengthof(sString), L"%S %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+     swprintf( sString, lengthof(sString), L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	   mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 		 return;
 		}
@@ -1452,7 +1452,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 
 	// get the last page
 
-  swprintf( sString, lengthof(sString), L"%S %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
+  swprintf( sString, lengthof(sString), L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
 	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
 
 	// reset shadow

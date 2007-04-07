@@ -692,8 +692,8 @@ void RenderTalkingMenu( )
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( 33 );
 		}
-		VarFindFontCenterCoordinates( (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", gMercProfiles[ gTalkPanel.ubCharNum ].zNickname );
-		mprintf( sFontX, sFontY, L"%S", gMercProfiles[ ubCharacterNum ].zNickname );
+		VarFindFontCenterCoordinates( (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", gMercProfiles[ gTalkPanel.ubCharNum ].zNickname );
+		mprintf( sFontX, sFontY, L"%ls", gMercProfiles[ ubCharacterNum ].zNickname );
 
 		// Set font settings back
 		SetFontShadow( DEFAULT_SHADOW );
@@ -819,8 +819,8 @@ void RenderTalkingMenu( )
 					switch( cnt )
 					{
 						case 0:
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTalkMenuStrings[ cnt ] );
-							mprintf( sFontX, sFontY, L"%S", zTalkMenuStrings[ cnt ] );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
+							mprintf( sFontX, sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
 							break;
 						case 4:
 							//if its an arms dealer
@@ -836,12 +836,12 @@ void RenderTalkingMenu( )
 							else
 								wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
 
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTempString );
-							mprintf( sFontX, sFontY, L"%S", zTempString );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTempString );
+							mprintf( sFontX, sFontY, L"%ls", zTempString );
 							break;
 						default:
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
-							mprintf( sFontX, sFontY, L"%S (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
+							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
+							mprintf( sFontX, sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
 							break;
 					}
 				}
@@ -862,13 +862,13 @@ void RenderTalkingMenu( )
 						else
 							wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
 
-						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTempString );
-						mprintf( sFontX, sFontY, L"%S", zTempString );
+						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTempString );
+						mprintf( sFontX, sFontY, L"%ls", zTempString );
 					}
 					else
 					{
-						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%S", zTalkMenuStrings[ cnt ] );
-						mprintf( sFontX, sFontY, L"%S", zTalkMenuStrings[ cnt ] );
+						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
+						mprintf( sFontX, sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
 					}
 				}
 			}
@@ -1749,7 +1749,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 
 	pSoldier2 = NULL;
-	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %S, action %d at %ld", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
+	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %ls, action %d at %ld", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
 
 	// Switch on action code!
 	if (usActionCode > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && usActionCode < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE)

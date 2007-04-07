@@ -519,7 +519,7 @@ static void EndLoadScreen(void)
 	if( fp )
 	{
 		//Record all of the timings.
-		fprintf( fp, "%S\n", str );
+		fprintf( fp, "%ls\n", str );
 		fprintf( fp, "EnterSector() supersets LoadWorld().  This includes other external sections.\n");
 		//FileRead()
 		fprintf( fp, "\n\nVARIOUS FUNCTION TIMINGS (exclusive of actual function timings in second heading)\n" );
@@ -1560,7 +1560,7 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	//#ifdef JA2TESTVERSION
 	//	//add more detailed progress bar
 	//	DefineProgressBarPanel( 0, 65, 79, 94, 130, 350, 510, 430 );
-	//	swprintf( str, L"Loading map:  %S", bFilename );
+	//	swprintf( str, L"Loading map:  %ls", bFilename );
 	//	SetProgressBarTitle( 0, str, FONT12POINT1, FONT_BLACK, FONT_BLACK );
 	//#endif
 	if( !LoadWorld( bFilename ) )
@@ -1819,14 +1819,14 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#ifdef JA2BETAVERSION
 					{
 						UINT8 str[256];
-						sprintf( str, "%S's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						sprintf( str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
 													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
 					}
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %S -- substituting entrypoint.", pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", pSoldier->name);
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -1836,14 +1836,14 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					#ifdef JA2BETAVERSION
 					{
 						UINT8 str[256];
-						sprintf( str, "%S's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						sprintf( str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
 													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
 					}
 					#endif
 					if( pSoldier->sInsertionGridNo == NOWHERE )
 					{
-						ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %S -- substituting entrypoint.", pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepont search failed for %ls -- substituting entrypoint.", pSoldier->name);
 						pSoldier->ubStrategicInsertionCode = (UINT8)pSoldier->usStrategicInsertionData;
 						goto MAPEDGEPOINT_SEARCH_FAILED;
 					}
@@ -1909,7 +1909,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				}
 				else
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S has NO entrypoints -- using precise center of map for %S.", szSector, pSoldier->name);
+					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", szSector, pSoldier->name);
 					pSoldier->sInsertionGridNo = 12880;
 					AddSoldierToSector( pSoldier->ubID );
 					return;
@@ -1918,19 +1918,19 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				switch( pSoldier->ubStrategicInsertionCode )
 				{
 					case INSERTION_CODE_NORTH:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a north entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a north entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_EAST:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a east entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a east entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_SOUTH:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a south entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a south entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_WEST:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a west entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a west entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
 						break;
 					case INSERTION_CODE_CENTER:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %S doesn't have a center entrypoint -- substituting  %S entrypoint for %S.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a center entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
 						break;
 				}
 			}
@@ -1983,7 +1983,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 
 	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 ) /* Empty? */
 	{
-		//swprintf(zString, L"%S", pErrorStrings[0]);
+		//swprintf(zString, L"%ls", pErrorStrings[0]);
 	}
 	else if( bSectorZ != 0 )
 	{
@@ -1993,27 +1993,27 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
 			if( bMineIndex != -1 )
 			{
-				swprintf( zString, Length, L"%c%d: %S %S", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
+				swprintf( zString, Length, L"%c%d: %ls %ls", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
 			}
 			else switch( SECTOR( sSectorX, sSectorY ) )
 			{
 				case SEC_A10:
-					swprintf( zString, Length, L"A10: %S", pLandTypeStrings[ REBEL_HIDEOUT ] );
+					swprintf( zString, Length, L"A10: %ls", pLandTypeStrings[ REBEL_HIDEOUT ] );
 					break;
 				case SEC_J9:
-					swprintf( zString, Length, L"J9: %S", pLandTypeStrings[ TIXA_DUNGEON ] );
+					swprintf( zString, Length, L"J9: %ls", pLandTypeStrings[ TIXA_DUNGEON ] );
 					break;
 				case SEC_K4:
-					swprintf( zString, Length, L"K4: %S", pLandTypeStrings[ ORTA_BASEMENT ] );
+					swprintf( zString, Length, L"K4: %ls", pLandTypeStrings[ ORTA_BASEMENT ] );
 					break;
 				case SEC_O3:
-					swprintf( zString, Length, L"O3: %S", pLandTypeStrings[ TUNNEL ] );
+					swprintf( zString, Length, L"O3: %ls", pLandTypeStrings[ TUNNEL ] );
 					break;
 				case SEC_P3:
-					swprintf( zString, Length, L"P3: %S", pLandTypeStrings[ SHELTER ] );
+					swprintf( zString, Length, L"P3: %ls", pLandTypeStrings[ SHELTER ] );
 					break;
 				default:
-					swprintf( zString, Length, L"%c%d: %S", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
+					swprintf( zString, Length, L"%c%d: %ls", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
 					break;
 			}
 		}
@@ -2365,7 +2365,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	//Now, determine the traversal time.
 	pGroup = GetGroup( pValidSoldier->ubGroupID );
-	AssertMsg( pGroup, String( "%S is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+	AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
 
 	// If we are going through an exit grid, don't get traversal direction!
 	if ( ubTacticalDirection != 255 )
@@ -3092,7 +3092,7 @@ static void DoneFadeOutAdjacentSector(void)
 				{
 					#ifdef JA2BETAVERSION
 						UINT8 str[256];
-						sprintf( str, "%S's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name );
+						sprintf( str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
 					#endif
 				}
@@ -3302,7 +3302,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				{
 					//Now, determine if this is a valid path.
 					pGroup = GetGroup( pValidSoldier->ubGroupID );
-					AssertMsg( pGroup, String( "%S is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+					AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
 					if( !gbWorldSectorZ )
 					{
 						*puiTraverseTimeInMinutes = GetSectorMvtTimeForGroup( (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ), bExitDirection, pGroup );
@@ -3362,7 +3362,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			GROUP *pGroup;
 			//Now, determine if this is a valid path.
 			pGroup = GetGroup( pValidSoldier->ubGroupID );
-			AssertMsg( pGroup, String( "%S is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+			AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
 			if( !gbWorldSectorZ )
 			{
 				*puiTraverseTimeInMinutes = GetSectorMvtTimeForGroup( (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ), bExitDirection, pGroup );

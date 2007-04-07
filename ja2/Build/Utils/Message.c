@@ -591,11 +591,11 @@ void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
 	va_end(argptr);
 
 	// pass onto tactical message and mapscreen message
-	TacticalScreenMsg(usColor, ubPriority, L"%S", DestString);
+	TacticalScreenMsg(usColor, ubPriority, L"%ls", DestString);
 
 //	if( ( ubPriority != MSG_DEBUG ) && ( ubPriority != MSG_TESTVERSION ) )
 	{
-		MapScreenMessage(usColor, ubPriority, L"%S", DestString);
+		MapScreenMessage(usColor, ubPriority, L"%ls", DestString);
 	}
 
 
@@ -734,7 +734,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf(DestString, lengthof(DestString), L"Debug: %S", DestStringA);
+		swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
 		WriteMessageToFile( DestStringA );
 	}
 
@@ -750,7 +750,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 
 
 
-	pStringWrapperHead=LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, L"%S", DestString);
+	pStringWrapperHead=LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, L"%ls", DestString);
   pStringWrapper=pStringWrapperHead;
 	if(!pStringWrapper)
     return;
@@ -881,7 +881,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		vswprintf(DestString, lengthof(DestString), pStringA, argptr);	// process gprintf string (get output str)
 		va_end(argptr);
 
-		swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %S", DestString);
+		swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
 
 		BeginUIMessage( DestStringA );
 		WriteMessageToFile( DestStringA );
@@ -930,7 +930,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		#endif
 		usColor = DEBUG_COLOR;
 		wcscpy( DestStringA, DestString );
-		swprintf(DestString, lengthof(DestString), L"Debug: %S", DestStringA);
+		swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
 	}
 
 	if ( ubPriority == MSG_DIALOG )
@@ -1340,7 +1340,7 @@ static void WriteMessageToFile(STR16 pString)
 		return;
 	}
 
-	fprintf( fp, "%S\n", pString );
+	fprintf( fp, "%ls\n", pString );
 	fclose( fp );
 
 #endif

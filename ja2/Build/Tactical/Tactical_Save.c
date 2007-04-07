@@ -719,7 +719,7 @@ BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sG
 			pWorldItems[ cnt ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 
 			// Display warning.....
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %S ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[cnt].o.usItem, ItemNames[pWorldItems[cnt].o.usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[cnt].o.usItem, ItemNames[pWorldItems[cnt].o.usItem]);
 		}
 
 

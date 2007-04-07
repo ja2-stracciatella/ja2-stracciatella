@@ -1816,7 +1816,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 				LoadEncryptedDataFromFile( pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
 				if(zDialogueText[0] == 0)
         {
-					swprintf( zDialogueText, Length, L"I have no text in the EDT file ( %d ) %S", usQuoteNum, pFilename );
+					swprintf( zDialogueText, Length, L"I have no text in the EDT file ( %d ) %ls", usQuoteNum, pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1825,7 +1825,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 			}
 			else
 			{
-				swprintf( zDialogueText, Length, L"I have no text in the file ( %d ) %S", usQuoteNum , pFilename );
+				swprintf( zDialogueText, Length, L"I have no text in the file ( %d ) %ls", usQuoteNum , pFilename );
 
 #ifndef JA2BETAVERSION
           return( FALSE );
@@ -1854,9 +1854,9 @@ static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr)
 	}
 
 	// post message to mapscreen message system
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 }
 
 
@@ -1878,9 +1878,9 @@ static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, STR16 zQuoteStr)
 	}
 
 	// post message to mapscreen message system
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%S\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
+	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
+	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
@@ -1903,8 +1903,8 @@ static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_
 
 	//BUild text
 	// How do we do this with defines?
-	//swprintf(zText, L"\xb4\xa2 %S: \xb5 \"%S\"", gMercProfiles[ubCharacterNum].zNickname, zQuoteStr);
-	swprintf( zText, lengthof(zText), L"\"%S\"", zQuoteStr );
+	//swprintf(zText, L"\xb4\xa2 %ls: \xb5 \"%ls\"", gMercProfiles[ubCharacterNum].zNickname, zQuoteStr);
+	swprintf( zText, lengthof(zText), L"\"%ls\"", zQuoteStr );
 	sLeft	= 110;
 
 
@@ -1913,8 +1913,8 @@ static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_
 
 	ExecuteTacticalTextBox( sLeft, zText );
 
-	swprintf( zText, lengthof(zText), L"%S: \"%S\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%S",  zText );
+	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 }
 
 
@@ -2284,8 +2284,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		  //reset the font dest buffer
 		  SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,640,480, FALSE);
 
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", pSoldier->name );
-			mprintf( sFontX, sFontY, L"%S", pSoldier->name );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", pSoldier->name );
+			mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
 
 			// What sector are we in, ( and is it the same as ours? )
 			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
@@ -2294,8 +2294,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
         ReduceStringLength( zTownIDString, lengthof(zTownIDString), 64 , BLOCKFONT2 );
 
-				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", zTownIDString );
-				mprintf( sFontX, sFontY, L"%S", zTownIDString );
+				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", zTownIDString );
+				mprintf( sFontX, sFontY, L"%ls", zTownIDString );
 			}
 
 		  //reset the font dest buffer
@@ -2305,8 +2305,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		}
 		else
 		{
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%S", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
-			mprintf( sFontX, sFontY, L"%S", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			mprintf( sFontX, sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
 		}
 
 		//RenderAutoFace( gpCurrentTalkingFace->iID );

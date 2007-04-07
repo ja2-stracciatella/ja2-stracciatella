@@ -242,7 +242,7 @@ static void InitEditorMercsToolbar(void)
 	for ( x = 0; x < 8; x++ )
 	{
 		wchar_t TempString[30];
-		swprintf(TempString, lengthof(TempString), L"Set merc to face %S", FaceDirs[x]);
+		swprintf(TempString, lengthof(TempString), L"Set merc to face %ls", FaceDirs[x]);
 		SetButtonFastHelpText( iEditorButton[ FIRST_MERCS_DIRECTION_BUTTON + x ], TempString );
 		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_DIRECTION_BUTTON + x ], 0, x);
 	}

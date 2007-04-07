@@ -375,7 +375,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				}
 
 				// Call soldier function
-//				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: ChangeState %S (%d)", gAnimControl[ SChangeState.ubNewState ].zAnimStr, SChangeState.usSoldierID ) );
+//				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: ChangeState %ls (%d)", gAnimControl[ SChangeState.ubNewState ].zAnimStr, SChangeState.usSoldierID ) );
 				EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
 				break;
 			}

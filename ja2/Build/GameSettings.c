@@ -423,23 +423,23 @@ static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter)
 void DisplayGameSettings( )
 {
 	//Display the version number
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S (%s)", pMessageStrings[MSG_VERSION], zVersionLabel, czVersionNumber);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls (%s)", pMessageStrings[MSG_VERSION], zVersionLabel, czVersionNumber);
 
 	//Display the difficulty level
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);
 
 	//Iron man option
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S", gzGIOScreenText[GIO_GAME_SAVE_STYLE_TEXT], gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT + gGameOptions.fIronManMode]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GAME_SAVE_STYLE_TEXT], gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT + gGameOptions.fIronManMode]);
 
 	// Gun option
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S", gzGIOScreenText[GIO_GUN_OPTIONS_TEXT], gzGIOScreenText[gGameOptions.fGunNut ? GIO_GUN_NUT_TEXT : GIO_REDUCED_GUNS_TEXT]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GUN_OPTIONS_TEXT], gzGIOScreenText[gGameOptions.fGunNut ? GIO_GUN_NUT_TEXT : GIO_REDUCED_GUNS_TEXT]);
 
 	//Sci fi option
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S", gzGIOScreenText[GIO_GAME_STYLE_TEXT], gzGIOScreenText[GIO_REALISTIC_TEXT + gGameOptions.fSciFi]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GAME_STYLE_TEXT], gzGIOScreenText[GIO_REALISTIC_TEXT + gGameOptions.fSciFi]);
 
 	//Timed Turns option
 	// JA2Gold: no timed turns
-	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%S: %S", gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT], gzGIOScreenText[GIO_NO_TIMED_TURNS_TEXT + gGameOptions.fTurnTimeLimit]);
+	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT], gzGIOScreenText[GIO_NO_TIMED_TURNS_TEXT + gGameOptions.fTurnTimeLimit]);
 
 	if (CHEATER_CHEAT_LEVEL())
 	{

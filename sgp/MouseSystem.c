@@ -1135,7 +1135,7 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
 	if( !(region->uiFlags & MSYS_REGION_EXISTS) )
 	{
 		return;
-		//AssertMsg( 0, String( "Attempting to set fast help text, \"%S\" to an inactive region.", szText ) );
+		//AssertMsg( 0, String( "Attempting to set fast help text, \"%ls\" to an inactive region.", szText ) );
 	}
 
 	if( !szText || !wcslen( szText ) )

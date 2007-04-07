@@ -1061,11 +1061,11 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		{
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				swprintf( sString, lengthof(sString), L"%S %S", pSoldier->name, pMercHeLeaveString[ 3 ] );
+				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 3 ] );
 			}
 			else
 			{
-				swprintf( sString, lengthof(sString), L"%S %S", pSoldier->name, pMercSheLeaveString[ 3 ] );
+				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 3 ] );
 			}
 			fInSector = TRUE;
 		}
@@ -1091,11 +1091,11 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		{
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
-				swprintf( sString, lengthof(sString), L"%S %S", pSoldier->name, pMercHeLeaveString[ 2 ] );
+				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 2 ] );
 			}
 			else
 			{
-				swprintf( sString, lengthof(sString), L"%S %S", pSoldier->name, pMercSheLeaveString[ 2 ] );
+				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 2 ] );
 			}
 			fInSector = TRUE;
 		}

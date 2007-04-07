@@ -449,7 +449,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 	}
 	else
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Handling morale event %d for %S at X=%d, Y=%d, Z=%d", bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ ) );
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Handling morale event %d for %ls at X=%d, Y=%d, Z=%d", bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ ) );
 	}
 
 

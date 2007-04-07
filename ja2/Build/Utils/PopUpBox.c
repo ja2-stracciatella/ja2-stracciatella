@@ -1550,8 +1550,8 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 			}
 
 			// print
-			//gprintfdirty(uX, uY, L"%S", Box->Text[uiCount]->pString);
-			mprintf(uX, uY, L"%S", Box->Text[uiCount]->pString);
+			//gprintfdirty(uX, uY, L"%ls", Box->Text[uiCount]->pString);
+			mprintf(uX, uY, L"%ls", Box->Text[uiCount]->pString);
 		}
 
 
@@ -1602,8 +1602,8 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 			}
 
 			// print
-			//gprintfdirty(uX, uY, L"%S", Box->Text[uiCount]->pString);
-			mprintf(uX, uY, L"%S", Box->pSecondColumnString[uiCount]->pString);
+			//gprintfdirty(uX, uY, L"%ls", Box->Text[uiCount]->pString);
+			mprintf(uX, uY, L"%ls", Box->pSecondColumnString[uiCount]->pString);
 		}
 	}
 
