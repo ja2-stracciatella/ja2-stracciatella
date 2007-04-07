@@ -1066,7 +1066,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 					{
 						INT16* Data = malloc(Sample->uiSoundSize);
 
-						uint CountSamples = Sample->uiSoundSize >> (1 + (Sample->fStereo ? 1 : 0));
+						UINT CountSamples = Sample->uiSoundSize >> (1 + (Sample->fStereo ? 1 : 0));
 						INT16* D = Data;
 
 						for (;;)
@@ -1090,12 +1090,12 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 								goto sound_loaded;
 							}
 
-							uint DataCount = BlockAlign / 4;
+							UINT DataCount = BlockAlign / 4;
 							while (--DataCount != 0)
 							{
 								UINT32 DataWord;
 								if (!FileRead(hFile, &DataWord, sizeof(DataWord))) goto error_out;
-								for (uint i = 0; i < 8; i++)
+								for (UINT i = 0; i < 8; i++)
 								{
 									static const INT16 StepTable[] =
 									{
