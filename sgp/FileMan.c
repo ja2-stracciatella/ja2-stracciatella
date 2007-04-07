@@ -212,7 +212,7 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 	{
 		char Path[512];
 
-		snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
+		snprintf(Path, lengthof(Path), SGPDATADIR "/Data/%s", strFilename);
 		file = fopen(Path, "r");
 		if (file != NULL)
 		{
@@ -314,7 +314,7 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 		{
 			char Path[512];
 
-			snprintf(Path, lengthof(Path), DATADIR "/Data/%s", strFilename);
+			snprintf(Path, lengthof(Path), SGPDATADIR "/Data/%s", strFilename);
 			hRealFile = fopen(Path, dwAccess);
 
 			if (hRealFile == NULL)

@@ -8,8 +8,8 @@ endif
 
 
 
-ifndef DATADIR
-$(error No DATADIR specified)
+ifndef SGPDATADIR
+$(error No SGPDATADIR specified)
 endif
 
 
@@ -55,7 +55,7 @@ endif
 
 CFLAGS += -D$(LNG)
 
-CFLAGS += -DDATADIR=\"$(DATADIR)\"
+CFLAGS += -DSGPDATADIR=\"$(SGPDATADIR)\"
 
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
@@ -473,9 +473,9 @@ ja2/Build/Utils/RussianText.c:
 
 lowercase:
 	$(Q)for i in \
-		"$(DATADIR)"/Data/*.[Ss][Ll][Ff] \
-		"$(DATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
-		"$(DATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
+		"$(SGPDATADIR)"/Data/*.[Ss][Ll][Ff] \
+		"$(SGPDATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
+		"$(SGPDATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
 	do \
 		mv "$$i" "`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
 	done

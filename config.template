@@ -15,4 +15,4 @@
 #CFLAGS += -Werror
 
 # Specify here were the Jagged Alliance 2 data files are located
-#DATADIR := /usr/local/share/ja2
+#SGPDATADIR := /usr/local/share/ja2
