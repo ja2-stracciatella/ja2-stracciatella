@@ -402,7 +402,7 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
 			{
 				curr->ubStrLen = (UINT8)strlen( szNewText );
 				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				swprintf(curr->szString, curr->ubMaxChars + 1, L"%s", szNewText);
+				swprintf(curr->szString, curr->ubMaxChars + 1, L"%hs", szNewText);
 			}
 			else if( !curr->fUserField )
 			{

@@ -709,7 +709,7 @@ void InitializeSAMSites( void )
 void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length)
 {
 	// OK, build string id like J11
-	swprintf( sString, Length, L"%s%s",pVertStrings[ sMapY ], pHortStrings[ sMapX ] );
+	swprintf(sString, Length, L"%hs%hs", pVertStrings[sMapY], pHortStrings[sMapX]);
 }
 
 

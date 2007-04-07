@@ -155,7 +155,7 @@ static void LoadSaveScreenEntry(void)
 
 	swprintf(zOrigName, lengthof(zOrigName), L"%ls Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load");
 
-	swprintf(gzFilename, lengthof(gzFilename), L"%s", gubFilename);
+	swprintf(gzFilename, lengthof(gzFilename), L"%hs", gubFilename);
 
 	CreateFileDialog( zOrigName );
 
@@ -216,7 +216,7 @@ static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
 				if( !temp )
 					wcscpy( gzFilename, L"" );
 				else
-					swprintf(gzFilename, lengthof(gzFilename), L"%s", temp->FileInfo.zFileName);
+					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->FileInfo.zFileName);
 				if( ValidFilename() )
 				{
 					SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -608,7 +608,7 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
 			FListNode->FileInfo.zFileName[30] = 0;
-			swprintf(gzFilename, lengthof(gzFilename), L"%s", FListNode->FileInfo.zFileName);
+			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->FileInfo.zFileName);
 			if( ValidFilename() )
 			{
 				SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -829,7 +829,7 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		if( curr )
 		{
 			SetInputFieldStringWith8BitString( 0, curr->FileInfo.zFileName );
-			swprintf(gzFilename, lengthof(gzFilename), L"%s", curr->FileInfo.zFileName);
+			swprintf(gzFilename, lengthof(gzFilename), L"%hs", curr->FileInfo.zFileName);
 		}
 	}
 }

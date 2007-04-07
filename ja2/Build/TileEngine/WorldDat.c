@@ -70,7 +70,7 @@ void InitEngineTilesets( )
 		FileRead(hfile, &gTilesets[cnt].ubAmbientID, sizeof(UINT8));
 
 		// Set into tileset
-		swprintf(gTilesets[cnt].zName, lengthof(gTilesets[cnt].zName), L"%s", zName);
+		swprintf(gTilesets[cnt].zName, lengthof(gTilesets[cnt].zName), L"%hs", zName);
 
 		// Loop for files
 		for ( cnt2 = 0; cnt2 < uiNumFiles; cnt2++ )

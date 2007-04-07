@@ -718,7 +718,7 @@ static void RenderDoorLockInfo(void)
 		if( sScreenY > 390 )
 			continue;
 		if( DoorTable[ i ].ubLockID != 255 )
-			swprintf(str, lengthof(str), L"%s", LockTable[DoorTable[i].ubLockID].ubEditorName);
+			swprintf(str, lengthof(str), L"%hs", LockTable[DoorTable[i].ubLockID].ubEditorName);
 		else
 			swprintf(str, lengthof(str), L"No Lock ID");
 		xp = sScreenX - 10;
@@ -797,7 +797,7 @@ static void RenderSelectedItemBlownUp(void)
 	}
 	else if( Item[ gpItem->usItem ].usItemClass == IC_KEY )
 	{
-		swprintf(szItemName, lengthof(szItemName), L"%s", LockTable[gpItem->ubKeyID].ubEditorName);
+		swprintf(szItemName, lengthof(szItemName), L"%hs", LockTable[gpItem->ubKeyID].ubEditorName);
 	}
 	else
 	{
@@ -869,7 +869,7 @@ static void RenderEditorInfo(void)
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( 260, 445, L"No map currently loaded." );
 			else
-				mprintf(260, 445, L"File:  %s, Current Tileset:  %ls",
+				mprintf(260, 445, L"File:  %hs, Current Tileset:  %ls",
 					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
 			break;
 		case TASK_TERRAIN:

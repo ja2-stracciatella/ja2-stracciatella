@@ -741,9 +741,9 @@ ATM:
 			//While we are at it, add their small face
 			if (!AddVideoObjectFromFile(zTemp, &guiSmallSoldiersFace[gubNumberMercsInArray]))
 			{
-				#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %s", zTemp );
-				#endif
+#ifdef JA2BETAVERSION
+				ScreenMsg(FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %hs", zTemp);
+#endif
 				return( FALSE );
 			}
 

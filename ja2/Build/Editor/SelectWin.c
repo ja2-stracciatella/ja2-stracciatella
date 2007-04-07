@@ -1064,7 +1064,7 @@ void DisplaySelectionWindowGraphicalInformation()
 		//usIndex = pNode->uiIndex;
 		if( !gTilesets[ giCurrentTilesetID].TileSurfaceFilenames[ pNode->uiObjIndx ][0] )
 		{
-			mprintf(2, 2, L"%s[%d] is from default tileset %ls (%s)",
+			mprintf(2, 2, L"%hs[%d] is from default tileset %ls (%s)",
 				gTilesets[0].TileSurfaceFilenames[ pNode->uiObjIndx ],
 				pNode->uiIndex, gTilesets[0].zName,
 				gTileSurfaceName[ pNode->uiObjIndx ] );

@@ -3699,7 +3699,7 @@ static void UpdateLastActionBeforeLeaving(void)
 static void ReloadMap(void)
 {
 	wchar_t szFilename[30];
-	swprintf(szFilename, lengthof(szFilename), L"%s", gubFilename);
+	swprintf(szFilename, lengthof(szFilename), L"%hs", gubFilename);
 	ExternalLoadMap( szFilename );
 }
 

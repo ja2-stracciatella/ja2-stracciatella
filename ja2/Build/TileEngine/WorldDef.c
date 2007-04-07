@@ -2253,7 +2253,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	FileRead(hfile, pBuffer, uiFileSize);
 	FileClose( hfile );
 
-	swprintf(str, lengthof(str), L"Analyzing map %s", szFilename);
+	swprintf(str, lengthof(str), L"Analyzing map %hs", szFilename);
 	if( !gfUpdatingNow )
 		SetRelativeStartAndEndPercentage( 0, 0, 100, str );
 	else

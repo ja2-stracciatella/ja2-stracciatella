@@ -423,7 +423,7 @@ static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter)
 void DisplayGameSettings( )
 {
 	//Display the version number
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls (%s)", pMessageStrings[MSG_VERSION], zVersionLabel, czVersionNumber);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls (%hs)", pMessageStrings[MSG_VERSION], zVersionLabel, czVersionNumber);
 
 	//Display the difficulty level
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);

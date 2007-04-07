@@ -3885,7 +3885,7 @@ static void LogStrategicMsg(const char* str, ...)
 
 	if( gfDisplayStrategicAILogs )
 	{
-		ScreenMsg(FONT_LTKHAKI, MSG_DIALOG, L"%s", string);
+		ScreenMsg(FONT_LTKHAKI, MSG_DIALOG, L"%hs", string);
 	}
 	if( guiCurrentScreen == AIVIEWER_SCREEN )
 	{
@@ -3917,7 +3917,7 @@ static void LogStrategicEvent(const char* str, ...)
 
 	if( gfDisplayStrategicAILogs )
 	{
-		ScreenMsg(FONT_LTKHAKI, MSG_DIALOG, L"%s", string);
+		ScreenMsg(FONT_LTKHAKI, MSG_DIALOG, L"%hs", string);
 	}
 	if( guiCurrentScreen == AIVIEWER_SCREEN )
 	{

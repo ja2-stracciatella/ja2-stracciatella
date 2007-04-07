@@ -259,7 +259,7 @@ UINT32 ErrorScreenHandle(void)
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	SetFontShadow( 60 );		 //60 is near black
-	mprintf( 50, 255, L"%s", gubErrorText );
+	mprintf(50, 255, L"%hs", gubErrorText);
 	SetFontForeground( FONT_LTRED );
 
 	if ( !fFirstTime )
@@ -337,11 +337,11 @@ UINT32 InitScreenHandle(void)
 		//mprintf( 10, 420, zVersionLabel );
 
 		mprintf( 10, 430,
-		#ifdef _DEBUG
-		L"%ls: %ls (Debug %s)",
-		#else
-		L"%ls: %ls (%s)",
-		#endif
+#ifdef _DEBUG
+			L"%ls: %ls (Debug %hs)",
+#else
+			L"%ls: %ls (%hs)",
+#endif
 		pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 
 #ifdef CRIPPLED_VERSION

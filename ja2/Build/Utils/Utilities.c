@@ -81,7 +81,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 
 	}
 
-	gprintf(ubXPos + 16 * 20, ubYPos, L"%s", gpPalRep[ubPaletteRep].ID);
+	gprintf(ubXPos + 16 * 20, ubYPos, L"%hs", gpPalRep[ubPaletteRep].ID);
 
 	return( TRUE );
 }

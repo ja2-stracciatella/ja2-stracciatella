@@ -340,7 +340,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			SetFontForeground( FONT_MCOLOR_WHITE );
 			SetFontDestBuffer( eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight, FALSE );
 
-			swprintf(pStr, lengthof(pStr), L"%s", LockTable[i].ubEditorName);
+			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
 
 			//Calculate the center position of the graphic in a 60 pixel wide area.

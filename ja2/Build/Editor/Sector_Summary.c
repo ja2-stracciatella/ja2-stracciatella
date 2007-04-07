@@ -2164,7 +2164,7 @@ static void CalculateOverrideStatus(void)
 	}
 	else
 		sprintf( szFilename, "MAPS/%ls", gszFilename );
-	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%s", szFilename + 5);
+	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%hs", szFilename + 5);
 	if( GetFileFirst( szFilename, &FileInfo) )
 	{
 		if( gfWorldLoaded )
@@ -2569,7 +2569,7 @@ static void ReportError(UINT8* pSector, UINT8 ubLevel)
 	wchar_t temp[10];
 
 	//Make sure the file exists... if not, then return false
-	swprintf(str, lengthof(str), L"%s", pSector);
+	swprintf(str, lengthof(str), L"%hs", pSector);
 	if( ubLevel % 4  )
 	{
 		swprintf(temp, lengthof(temp), L"_b%d.dat", ubLevel % 4);
