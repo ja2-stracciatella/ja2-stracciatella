@@ -1,6 +1,5 @@
 #include "WorldDef.h"
 #include "WCheck.h"
-#include "stdlib.h"
 #include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"

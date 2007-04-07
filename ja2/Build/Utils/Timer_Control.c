@@ -1,5 +1,4 @@
 #include "WCheck.h"
-#include "stdlib.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
 #include "Timer_Control.h"

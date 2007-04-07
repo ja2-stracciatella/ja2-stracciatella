@@ -6,7 +6,6 @@
 #include "Types.h"
 #include "Debug.h"
 #include <stdarg.h>
-#include <stdlib.h>
 //Kris addition
 #ifdef JA2
 #	include "ScreenIDs.h"

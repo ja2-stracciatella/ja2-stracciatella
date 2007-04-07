@@ -5,7 +5,6 @@
 #include "Utilities.h"
 #include "WordWrap.h"
 #include "Soldier_Profile.h"
-#include "stdlib.h"
 #include "Game_Clock.h"
 #include "Text.h"
 #include "Multi_Language_Graphic_Utils.h"

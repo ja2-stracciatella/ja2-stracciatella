@@ -29,7 +29,6 @@
 #include "Merc_Contract.h"
 #include "Button_System.h"
 #include "VSurface.h"
-#include <stdlib.h>
 #include "Font_Control.h"
 #include "EMail.h"
 #include "Items.h"

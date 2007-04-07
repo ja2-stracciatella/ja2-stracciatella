@@ -66,7 +66,6 @@
 #include "ScreenIDs.h"
 #include "Video.h"
 #include "MemMan.h"
-#include <stdlib.h>
 #include "Debug.h"
 #include "Items.h"
 

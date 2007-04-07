@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Types.h"
 #include "Compression.h"
 #include "Debug.h"

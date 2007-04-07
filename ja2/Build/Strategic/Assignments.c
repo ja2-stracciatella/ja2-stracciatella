@@ -5,7 +5,6 @@
 #include "Items.h"
 #include "Overhead.h"
 #include "Game_Clock.h"
-#include "stdlib.h"
 #include "Message.h"
 #include "Font_Control.h"
 #include "Map_Screen_Interface.h"

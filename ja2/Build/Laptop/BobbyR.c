@@ -17,7 +17,6 @@
 #include "ArmsDealerInvInit.h"
 #include "Video.h"
 #include "VSurface.h"
-#include <stdlib.h>
 #include "Debug.h"
 #include "Font_Control.h"
 #include "Items.h"

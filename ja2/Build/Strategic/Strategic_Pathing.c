@@ -23,7 +23,6 @@
 #include "Strategic_AI.h"
 #include "Debug.h"
 #include "MemMan.h"
-#include <stdlib.h>
 
 
 // mvt modifier

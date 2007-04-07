@@ -17,7 +17,6 @@
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"
-#include <stdlib.h>
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 

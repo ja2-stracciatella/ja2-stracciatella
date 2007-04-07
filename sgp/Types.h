@@ -1,10 +1,10 @@
 #ifndef __TYPES_
 #define __TYPES_
 
-#include <stdlib.h>
 #include "SGPStrings.h"
 
 
+#include <stdlib.h> // for abort()
 #define UNIMPLEMENTED() \
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();

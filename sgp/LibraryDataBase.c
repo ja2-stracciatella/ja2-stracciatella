@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "Types.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"

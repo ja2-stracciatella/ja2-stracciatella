@@ -91,7 +91,6 @@
 #include "Strategic_Town_Loyalty.h"
 #include "EMail.h"
 #include "Video.h"
-#include <stdlib.h>
 #include "Debug.h"
 #include "Local.h"
 #include "Button_System.h"
