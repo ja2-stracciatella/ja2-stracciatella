@@ -86,13 +86,7 @@ BOOLEAN InitializeFileManager(void)
 
 #ifdef _WIN32
 	char Home[MAX_PATH];
-	const char* HomeDrive = getenv("HOMEDRIVE");
-	const char* HomePath  = getenv("HOMEPATH");
-	if (HomeDrive != NULL && HomePath != NULL)
-	{
-		snprintf(Home, lengthof(Home), "%s%s", HomeDrive, HomePath);
-	}
-	else if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, Home)))
+	if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, Home)))
 	{
 		fprintf(stderr, "Unable to locate home directory\n");
 		return FALSE;
