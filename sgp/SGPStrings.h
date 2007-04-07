@@ -17,9 +17,12 @@ size_t strlcpy(char* dst, const char* src, size_t size);
 
 #ifdef _WIN32
 
-void WINsnprintf(char* restrict s, size_t n, const char* restrict format, ...);
-void WINswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, ...);
-void WINvswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, va_list arg);
+#include <stdarg.h>
+
+
+void WINsnprintf(char* s, size_t n, const char* format, ...);
+void WINswprintf(wchar_t* s, size_t n, const wchar_t* format, ...);
+void WINvswprintf(wchar_t* s, size_t n, const wchar_t* format, va_list arg);
 
 #define snprintf  WINsnprintf
 #define swprintf  WINswprintf

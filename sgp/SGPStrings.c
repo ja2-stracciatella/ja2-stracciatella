@@ -1,6 +1,6 @@
 #include "SGPStrings.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(_WIN32)
 
 #include <sys/types.h>
 /*	$OpenBSD: wcslcpy.c,v 1.4 2006/05/05 15:27:38 millert Exp $	*/
@@ -121,20 +121,17 @@ strlcpy(char *dst, const char *src, size_t siz)
 
 #ifdef _WIN32
 
-#include <stdarg.h>
-
-
-void WINsnprintf(char* restrict s, size_t n, const char* restrict format, ...)
+void WINsnprintf(char* s, size_t n, const char* format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
-	_snprintf(s, n, format, arg);
+	_vsnprintf(s, n, format, arg);
 	va_end(arg);
-	if (n != 0) s[n - 1] = L'\0'; // _snprintf() does not guarantee NUL termination
+	if (n != 0) s[n - 1] = '\0'; // _snprintf() does not guarantee NUL termination
 }
 
 
-void WINswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, ...)
+void WINswprintf(wchar_t* s, size_t n, const wchar_t* format, ...)
 {
 	va_list arg;
 	va_start(arg, format);
@@ -143,7 +140,7 @@ void WINswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, 
 }
 
 
-void WINvswprintf(wchar_t* restrict s, size_t n, const wchar_t* restrict format, va_list arg)
+void WINvswprintf(wchar_t* s, size_t n, const wchar_t* format, va_list arg)
 {
 	_vsnwprintf(s, n, format, arg);
 	if (n != 0) s[n - 1] = L'\0'; // _vsnwprintf() does not guarantee NUL termination
