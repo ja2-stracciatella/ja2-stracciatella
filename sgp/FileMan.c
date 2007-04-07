@@ -25,13 +25,23 @@
 #include "MemMan.h"
 #include "Types.h"
 #include <errno.h>
-#include <glob.h>
-#include <pwd.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include "Stubs.h" // XXX
+
+#ifdef _WIN32
+#	include <direct.h>
+#	include <shlobj.h>
+#	include <winerror.h>
+
+#	define mkdir(path, mode) _mkdir(path)
+
+#else
+#	include <glob.h>
+#	include <pwd.h>
+#	include <sys/stat.h>
+#	include <sys/types.h>
+#endif
 
 
 #define FILENAME_LENGTH					600
@@ -77,9 +87,25 @@ static char LocalPath[512];
 BOOLEAN	InitializeFileManager( STR strIndexFilename )
 {
 	char DataPath[512];
-	const char* Home;
 
-	Home = getenv("HOME");
+#ifdef _WIN32
+	char Home[MAX_PATH];
+	const char* HomeDrive = getenv("HOMEDRIVE");
+	const char* HomePath  = getenv("HOMEPATH");
+	if (HomeDrive != NULL && HomePath != NULL)
+	{
+		snprintf(Home, lengthof(Home), "%s%s", HomeDrive, HomePath);
+	}
+	else if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, Home)))
+	{
+		fprintf(stderr, "Unable to locate home directory\n");
+		return FALSE;
+	}
+
+#	define LOCALDIR "JA2"
+
+#else
+	const char* Home = getenv("HOME");
 	if (Home == NULL)
 	{
 		const struct passwd* passwd = getpwuid(getuid());
@@ -93,7 +119,11 @@ BOOLEAN	InitializeFileManager( STR strIndexFilename )
 		Home = passwd->pw_dir;
 	}
 
-	snprintf(LocalPath, lengthof(LocalPath), "%s/.ja2", Home);
+#	define LOCALDIR ".ja2"
+
+#endif
+
+	snprintf(LocalPath, lengthof(LocalPath), "%s/" LOCALDIR, Home);
 	if (mkdir(LocalPath, 0700) != 0 && errno != EEXIST)
 	{
 		fprintf(stderr, "Unable to create directory \"%s\"\n", LocalPath);
