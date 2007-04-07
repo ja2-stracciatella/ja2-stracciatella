@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Types.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -640,18 +639,18 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 		b = pPalette[ cnt ].peBlue;
 
 		if(gusRedShift < 0)
-			r16=((UINT16)r>>abs(gusRedShift));
+			r16 = (UINT16)r >> -gusRedShift;
 		else
 			r16=((UINT16)r<<gusRedShift);
 
 		if(gusGreenShift < 0)
-			g16=((UINT16)g>>abs(gusGreenShift));
+			g16 = (UINT16)g >> -gusGreenShift;
 		else
 			g16=((UINT16)g<<gusGreenShift);
 
 
 		if(gusBlueShift < 0)
-			b16=((UINT16)b>>abs(gusBlueShift));
+			b16 = (UINT16)b >> -gusBlueShift;
 		else
 			b16=((UINT16)b<<gusBlueShift);
 
@@ -765,18 +764,18 @@ UINT16 Get16BPPColor( UINT32 RGBValue )
 	b = SGPGetBValue( RGBValue );
 
 	if(gusRedShift < 0)
-		r16=((UINT16)r>>abs(gusRedShift));
+		r16 = (UINT16)r >> -gusRedShift;
 	else
 		r16=((UINT16)r<<gusRedShift);
 
 	if(gusGreenShift < 0)
-		g16=((UINT16)g>>abs(gusGreenShift));
+		g16 = (UINT16)g >> -gusGreenShift;
 	else
 		g16=((UINT16)g<<gusGreenShift);
 
 
 	if(gusBlueShift < 0)
-		b16=((UINT16)b>>abs(gusBlueShift));
+		b16 = (UINT16)b >> -gusBlueShift;
 	else
 		b16=((UINT16)b<<gusBlueShift);
 
@@ -807,17 +806,17 @@ UINT32 GetRGBColor( UINT16 Value16BPP )
 	b16 = Value16BPP & gusBlueMask;
 
 	if(gusRedShift < 0)
-		r=((UINT32)r16<<abs(gusRedShift));
+		r = (UINT32)r16 << -gusRedShift;
 	else
 		r=((UINT32)r16>>gusRedShift);
 
 	if(gusGreenShift < 0)
-		g=((UINT32)g16<<abs(gusGreenShift));
+		g = (UINT32)g16 << -gusGreenShift;
 	else
 		g=((UINT32)g16>>gusGreenShift);
 
 	if(gusBlueShift < 0)
-		b=((UINT32)b16<<abs(gusBlueShift));
+		b = (UINT32)b16 << -gusBlueShift;
 	else
 		b=((UINT32)b16>>gusBlueShift);
 
