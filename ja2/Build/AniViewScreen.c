@@ -321,14 +321,7 @@ static UINT16 GetAnimStateFromName(INT8* zName)
 	// FInd the next animation with start height the same...
 	for ( cnt = 0; cnt < NUMANIMATIONSTATES; cnt++ )
 	{
-		#if 0 /* XXX */
-		if ( stricmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
-		#else
-		if ( strcasecmp( gAnimControl[ cnt ].zAnimStr, zName ) == 0 )
-		#endif
-		{
-			return( (UINT16) cnt );
-		}
+		if (strcasecmp(gAnimControl[cnt].zAnimStr, zName) == 0) return cnt;
 	}
 
 	return( 5555 );

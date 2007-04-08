@@ -1022,11 +1022,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 				// Get tile type
 				GetTileType( pNode->usIndex, &uiTileType );
 				// Check if we are a fountain!
-				#if 0 /* XXX */
-				if ( stricmp( gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ uiTileType ], "fount1.sti" ) == 0 )
-				#else
 				if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[uiTileType], "fount1.sti") == 0)
-				#endif
 				{
 					// Yes we are!
 					// Remove water....
