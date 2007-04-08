@@ -248,9 +248,6 @@ BOOLEAN InitializeWorld( )
 	// Init default surface list
 	memset( gbDefaultSurfaceUsed, 0, sizeof( gbDefaultSurfaceUsed ) );
 
-	// Init same surface list
-	memset( gbSameAsDefaultSurfaceUsed, 0, sizeof( gbSameAsDefaultSurfaceUsed ) );
-
 
 	// Initialize world data
 
@@ -419,10 +416,6 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 							return( FALSE );
 						}
 					}
-					else
-					{
-						gbSameAsDefaultSurfaceUsed[ uiLoop ] = TRUE;
-					}
 				}
 			}
 		}
@@ -444,9 +437,6 @@ static BOOLEAN AddTileSurface(char* cFilename, UINT32 ubType, UINT8 ubTilesetID,
 		DeleteTileSurface( gTileSurfaceArray[ ubType ] );
 		gTileSurfaceArray[ ubType ] = NULL;
 	}
-
-	// Adjust flag for same as default used...
-	gbSameAsDefaultSurfaceUsed[ ubType ] = FALSE;
 
 	if ( !fGetFromRoot )
 	{
