@@ -4,7 +4,6 @@
 #include "WorldDef.h"
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
-UINT8								gbDefaultSurfaceUsed[ NUMBEROFTILETYPES ];
 
 
 TILE_IMAGERY *LoadTileSurface( char * cFilename );

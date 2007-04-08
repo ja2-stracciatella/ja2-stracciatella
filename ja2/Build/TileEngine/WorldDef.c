@@ -222,6 +222,8 @@ static void DOIT(void)
 }
 
 
+static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
+
 
 BOOLEAN InitializeWorld( )
 {
