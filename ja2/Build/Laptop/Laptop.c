@@ -2820,10 +2820,6 @@ static void CheckIfMouseLeaveScreen(void)
 
 static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 	/*if (iReason == MSYS_CALLBACK_REASON_MOVE)
 	{
 		guiCurrentLapTopCursor=LAPTOP_SCREEN_CURSOR;
@@ -3181,11 +3177,6 @@ static void CreateDestoryBookMarkRegions(void)
 static void BookmarkCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
  INT32 iCount;
-
- if (iReason & MSYS_CALLBACK_REASON_INIT)
- {
-	return;
- }
 
  // we are in process of loading
  if( fLoadPendingFlag == TRUE )
@@ -3954,13 +3945,6 @@ static void HandleLeftButtonUpEvent(void)
 
 void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 {
-
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
-
-	  return;
-  }
-
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		HandleLeftButtonUpEvent( );

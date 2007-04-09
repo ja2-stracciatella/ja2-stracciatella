@@ -6194,11 +6194,6 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32 uiHandPos;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
 
@@ -6257,12 +6252,6 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	UINT32 uiHandPos;
 	UINT16	usOldItemIndex, usNewItemIndex;
 	static BOOLEAN	fRightDown = FALSE;
-
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );

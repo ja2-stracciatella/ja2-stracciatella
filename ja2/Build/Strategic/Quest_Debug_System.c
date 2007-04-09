@@ -2005,10 +2005,7 @@ static void DisplaySelectedItem(void)
 
 static void SelectNpcListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -2124,10 +2121,7 @@ static void DrawQdsScrollRectangle(void)
 
 static void ScrollArrowsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if( (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) || ( iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ) )
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		UINT8 ubSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -2165,10 +2159,7 @@ static void CalcPositionOfNewScrollBoxLocation(void);
 
 static void ScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		CalcPositionOfNewScrollBoxLocation();
 	}
@@ -2726,10 +2717,7 @@ static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* p
 
 static void QuestDebugTextEntryDisableScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 		CreateDestroyDisplaySelectNpcDropDownBox();
@@ -2779,10 +2767,7 @@ static void ChangeQuestState(INT32 iNumber);
 
 static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		wchar_t	String[ 512 ];
 
@@ -2805,10 +2790,7 @@ static void ChangeFactState(INT32 iNumber);
 
 static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		wchar_t	String[ 512 ];
 

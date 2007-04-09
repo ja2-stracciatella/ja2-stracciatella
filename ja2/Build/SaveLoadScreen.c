@@ -1522,10 +1522,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	INT8		bActiveTextField;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT8	bSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		static UINT32	uiLastTime = 0;
@@ -2120,10 +2117,7 @@ static void DoneFadeInForSaveLoadScreen(void)
 
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		DisableSelectedSlot();
 	}

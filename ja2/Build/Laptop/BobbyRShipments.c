@@ -366,10 +366,7 @@ static void RemovePreviousShipmentsMouseRegions(void)
 
 static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		INT32 iSlotID = MSYS_GetRegionUserData( pRegion, 0 );
 

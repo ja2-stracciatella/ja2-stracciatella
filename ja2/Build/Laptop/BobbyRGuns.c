@@ -337,10 +337,7 @@ BOOLEAN DeleteBobbyBrTitle()
 
 static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
 	}
@@ -1320,11 +1317,7 @@ static void UnPurchaseBobbyRayItem(UINT16 usItemNumber);
 
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT16 usItemNum = (UINT16)MSYS_GetRegionUserData( pRegion, 0 );
 

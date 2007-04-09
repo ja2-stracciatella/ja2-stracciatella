@@ -198,10 +198,7 @@ BOOLEAN RenderAimFacialIndex()
 
 static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
 		gbCurrentIndex = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
@@ -215,10 +212,7 @@ static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
 	}

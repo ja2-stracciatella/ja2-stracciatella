@@ -2004,11 +2004,6 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-
 	if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
@@ -2040,10 +2035,6 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 	}
@@ -2056,11 +2047,7 @@ static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SMInvMoveCammoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-	else if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		// Setup a timer....
 		guiMouseOverItemTime = GetJA2Clock( );
@@ -2081,11 +2068,6 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	//UINT16 usNewItemIndex;
 	UINT8	 ubSrcID, ubDestID;
   BOOLEAN fGoodAPs;
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
@@ -2329,11 +2311,6 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
 	}
@@ -2742,10 +2719,6 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// ATE: Don't if this guy can't....
@@ -2804,10 +2777,6 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// ATE: Don't if this guy can't....
@@ -4013,12 +3982,6 @@ static void EnemyIndicatorClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		return;
 	}
 
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-
 	if ( !MercPtrs[ ubSoldierID ]->bActive )
 	{
 		return;
@@ -4076,12 +4039,6 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	ubSoldierID = gTeamPanel[ ubID ].ubID;
 
 	if ( ubSoldierID == NOBODY )
-	{
-		return;
-	}
-
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
 	}
@@ -4550,11 +4507,6 @@ static void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	// If our flags are set to do this, gofoit!
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
 	{
 		return;
 	}
@@ -5092,11 +5044,6 @@ void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if( guiCurrentScreen == MAP_SCREEN )
@@ -5122,12 +5069,6 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	INT32 iNumberOfKeysTaken = 0;
 
 	uiKeyRing = MSYS_GetRegionUserData( pRegion, 0 );
-
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
 
 	//if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	//{
@@ -5491,11 +5432,7 @@ static void ConfirmationToDepositMoneyToPlayersAccount(UINT8 ubExitValue);
 
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
-	else if (iReason == MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (iReason == MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		//If the current merc is to far away, dont allow anything to be done
 		if( gfSMDisableForItems )

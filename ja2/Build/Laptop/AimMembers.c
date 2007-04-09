@@ -924,10 +924,7 @@ static BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT
 
 static void SelectFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX;
 	}
@@ -2096,10 +2093,7 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if(fInCallBack)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_INIT)
-		{
-		}
-		else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 		{
 			gfStopMercFromTalking = TRUE;
 		}

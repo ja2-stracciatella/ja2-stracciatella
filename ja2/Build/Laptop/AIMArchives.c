@@ -351,10 +351,7 @@ void RenderAimArchives()
 
 static void SelectAlumniFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gfDrawPopUpBox = TRUE;
 		gfReDrawScreen = TRUE;
@@ -597,10 +594,7 @@ static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 
 static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gfDestroyPopUpBox = TRUE;
 		gfDrawPopUpBox = FALSE;

@@ -420,11 +420,7 @@ static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mou
 
 static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT8	ubNewPage = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		guiCurrentLaptopMode = ubNewPage;

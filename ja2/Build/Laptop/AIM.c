@@ -360,11 +360,7 @@ void RenderAIM()
 
 static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(!fFirstTimeIn)
 			guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
@@ -374,11 +370,7 @@ static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_POLICIES;
 	}
@@ -387,11 +379,7 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_HISTORY;
 	}
@@ -400,10 +388,7 @@ static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_LINKS;
 	}
@@ -467,10 +452,7 @@ BOOLEAN DrawAimDefaults()
 
 static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM;
 	}
@@ -812,10 +794,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 
 static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if( gubCurrentAdvertisment == AIM_AD_FLOWER_SHOP )
 			GoToWebPage( FLORIST_BOOKMARK );

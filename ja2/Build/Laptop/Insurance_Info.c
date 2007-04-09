@@ -259,10 +259,7 @@ static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_CONTRACT;
 	}
@@ -271,10 +268,7 @@ static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}

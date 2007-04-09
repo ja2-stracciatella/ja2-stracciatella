@@ -386,10 +386,7 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 {
 	if(gfInToc)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_INIT)
-		{
-		}
-		else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
 			gubCurPageNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 			ChangingAimHistorySubPage( gubCurPageNum );

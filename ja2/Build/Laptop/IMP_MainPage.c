@@ -601,13 +601,6 @@ static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 
 static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
-
-	  return;
-  }
-
   if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
    	DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 4 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, BeginMessageBoxCallBack);

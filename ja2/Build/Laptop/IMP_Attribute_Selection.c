@@ -1290,11 +1290,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if( gpCurrentScrollBox != pRegion && gpCurrentScrollBox != NULL )
 		return;
 
-
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
-	  return;
-  }
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
   {
 		if( fSlideIsActive == FALSE)

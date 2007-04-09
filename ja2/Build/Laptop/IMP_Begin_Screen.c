@@ -1010,13 +1010,8 @@ static void DestroyIMPBeginScreenMouseRegions(void)
 
 static void SelectFullNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-
 		// set current mode to full name type in mode
 		ubTextEnterMode = FULL_NAME_MODE;
 		fNewCharInString = TRUE;
@@ -1026,13 +1021,8 @@ static void SelectFullNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-
 		// set mode to nick name type in
 		ubTextEnterMode = NICK_NAME_MODE;
 		fNewCharInString = TRUE;
@@ -1042,13 +1032,8 @@ static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
 		fNewCharInString = TRUE;
@@ -1058,13 +1043,8 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;
 		fNewCharInString = TRUE;

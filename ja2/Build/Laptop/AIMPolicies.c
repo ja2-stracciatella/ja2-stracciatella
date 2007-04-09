@@ -512,10 +512,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 {
 	if(gfInPolicyToc)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_INIT)
-		{
-		}
-		else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
 			gubCurPageNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 

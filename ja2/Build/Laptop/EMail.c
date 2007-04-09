@@ -1408,10 +1408,6 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
  INT32 iCount;
  PagePtr pPage=pPageList;
  INT32 iId=0;
- if (iReason & MSYS_CALLBACK_REASON_INIT)
- {
-	return;
- }
  if(fDisplayMessageFlag)
 	 return;
  if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1488,10 +1484,6 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void EmailMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-		return;
-	}
   if(fDisplayMessageFlag)
 		return;
 	if (iReason == MSYS_CALLBACK_REASON_MOVE)

@@ -144,10 +144,7 @@ void RenderAimLinks()
 
 static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 	}
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)

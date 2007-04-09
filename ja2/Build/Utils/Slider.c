@@ -508,10 +508,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if( gpCurrentSlider != NULL )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
  		uiSelectedSlider = MSYS_GetRegionUserData( pRegion, 1 );
 

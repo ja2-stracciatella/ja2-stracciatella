@@ -103,7 +103,6 @@ typedef struct _MOUSE_REGION {
 
 // Mouse system callback reasons
 #define MSYS_CALLBACK_REASON_NONE									0
-#define MSYS_CALLBACK_REASON_INIT									1
 #define MSYS_CALLBACK_REASON_MOVE									2
 #define MSYS_CALLBACK_REASON_LBUTTON_DWN					4
 #define MSYS_CALLBACK_REASON_LBUTTON_UP						8

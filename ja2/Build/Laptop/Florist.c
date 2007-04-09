@@ -249,10 +249,7 @@ static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 	}

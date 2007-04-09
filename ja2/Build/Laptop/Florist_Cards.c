@@ -174,10 +174,7 @@ void RenderFloristCards()
 
 static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gbCurrentlySelectedCard = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
 

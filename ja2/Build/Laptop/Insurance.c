@@ -333,10 +333,7 @@ void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 
 static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT32 uiInsuranceLink = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -352,10 +349,7 @@ static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}

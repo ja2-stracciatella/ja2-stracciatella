@@ -356,18 +356,12 @@ static void DestroyIMPVoiceMouseRegions(void)
 static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// callback handler for imp portrait region button events
-
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
- 	  return;
-  }
   if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
     if( ! SoundIsPlaying( uiVocVoiceSound ) )
 		{
        uiVocVoiceSound = PlayVoice( );
 		}
-
   }
 }
 

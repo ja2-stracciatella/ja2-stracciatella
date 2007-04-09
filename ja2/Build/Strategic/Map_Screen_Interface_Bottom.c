@@ -842,13 +842,6 @@ static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReas
 	UINT8 ubDesiredMessageIndex;
 	UINT8 ubNumMessages;
 
-
-  if (iReason & MSYS_CALLBACK_REASON_INIT)
-  {
-	  return;
-  }
-
-
 	if ( iReason & ( MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_LBUTTON_REPEAT ) )
   {
 		// how many messages are there?

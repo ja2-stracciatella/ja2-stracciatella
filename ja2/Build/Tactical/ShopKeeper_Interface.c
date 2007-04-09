@@ -1741,10 +1741,7 @@ static void InitShopKeeperItemDescBox(OBJECTTYPE* pObject, UINT8 ubPocket, UINT8
 //Mouse Call back for the Arms traders inventory slot
 static void SelectDealersInventoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		INT8	ubLocation;
@@ -1886,10 +1883,7 @@ static void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION* pRegion, 
 	if( ubSelectedInvSlot >= gSelectArmsDealerInfo.uiNumDistinctInventoryItems )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		//if there is nothing in the slot, exit
 		if( gpTempDealersInventory[ ubSelectedInvSlot ].fActive == FALSE )
@@ -1916,10 +1910,7 @@ static void SelectDealersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion,
 {
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		//if there is nothing in the slot, exit
 		if( ArmsDealerOfferArea[ ubSelectedInvSlot ].fActive == FALSE )
@@ -1945,10 +1936,7 @@ static void SelectPlayersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion,
 {
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		//if there is nothing in the slot, exit
 		if( PlayersOfferArea[ ubSelectedInvSlot ].fActive == FALSE )
@@ -1982,10 +1970,7 @@ static void SelectDealersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 {
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		//if there is something here
 		if( ArmsDealerOfferArea[ ubSelectedInvSlot ].fActive )
@@ -2109,11 +2094,7 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 	INT8 bAddedToSlotID = -1;
 
-
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//if the cursor has no item in it
 		if( gMoveingItem.sItemIndex == 0 )
@@ -4719,10 +4700,7 @@ static BOOLEAN AreThereItemsInThePlayersOfferArea(void)
 //Mouse Call back for the Arms traders inventory slot
 static void ShopKeeperSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		ShutUpShopKeeper();
 	}
@@ -4732,10 +4710,7 @@ static void ShopKeeperSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 //Mouse Call back for the Arms delaers face
 static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP || iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		ShutUpShopKeeper();
 	}
@@ -7380,10 +7355,7 @@ static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 //Mouse Call back for the Arms delaers face
 static void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SOLDIERTYPE *pDropSoldier;
 

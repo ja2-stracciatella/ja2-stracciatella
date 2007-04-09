@@ -632,10 +632,7 @@ static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT32	uiUserData;
 
@@ -713,10 +710,7 @@ static void DisplayFloristCheckBox(void)
 
 static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_CARD_GALLERY;
 	}
@@ -788,10 +782,7 @@ static void DisplayFlowerDynamicItems(void)
 
 static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
 	}
@@ -800,10 +791,7 @@ static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 
 static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_CREATE;
 	}
@@ -812,10 +800,7 @@ static void SelectFloristDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_DESTROY;
 	}
@@ -827,10 +812,7 @@ static void FlowerOrderDrawSelectedCity(UINT8 ubNumber);
 
 static void SelectFlowerDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubCurrentlySelectedFlowerLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		FlowerOrderDrawSelectedCity( gubCurrentlySelectedFlowerLocation );

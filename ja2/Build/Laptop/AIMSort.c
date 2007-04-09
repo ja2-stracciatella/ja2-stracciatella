@@ -380,11 +380,7 @@ void RenderAimSort()
 
 static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX;
 	}
@@ -393,11 +389,7 @@ static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
 	}
@@ -406,11 +398,7 @@ static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_ARCHIVES;
 	}
@@ -419,11 +407,7 @@ static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 0)
 		{
@@ -438,11 +422,7 @@ static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 1)
 		{
@@ -457,11 +437,7 @@ static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 2)
 		{
@@ -476,11 +452,7 @@ static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 3)
 		{
@@ -495,11 +467,7 @@ static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 4)
 		{
@@ -514,11 +482,7 @@ static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentSortMode != 5)
 		{
@@ -533,11 +497,7 @@ static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentListMode != AIM_ASCEND)
 		{
@@ -552,11 +512,7 @@ static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if(gubCurrentListMode != AIM_DESCEND )
 		{
