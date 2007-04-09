@@ -2032,10 +2032,6 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-
-	}
 }
 
 
@@ -2167,10 +2163,6 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 			}
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-
 	}
 }
 
@@ -4493,7 +4485,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 }
 
 
-static void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
+void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT8 ubID, ubSoldierID;
 
@@ -4517,12 +4509,6 @@ static void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		return;
 	}
-
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-
-	}
-
 }
 
 
