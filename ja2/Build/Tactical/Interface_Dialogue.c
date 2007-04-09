@@ -444,31 +444,20 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.ScreenRegion), 0, 0, 640,480, MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion(&(gTalkPanel.ScreenRegion) );
-
 
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.BackRegion), (INT16)(gTalkPanel.sX), (INT16)(gTalkPanel.sY), (INT16)(gTalkPanel.sX + gTalkPanel.usWidth ),(INT16)( gTalkPanel.sY + gTalkPanel.usHeight ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TalkPanelBaseRegionClickCallback );
-	// Add region
-	MSYS_AddRegion(&(gTalkPanel.BackRegion) );
-
 
 	//Define name region
 	MSYS_DefineRegion( &(gTalkPanel.NameRegion), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X ), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_WIDTH + TALK_PANEL_NAME_X ),(INT16)( gTalkPanel.sY + TALK_PANEL_NAME_HEIGHT + TALK_PANEL_NAME_Y ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, TalkPanelNameRegionMoveCallback, TalkPanelNameRegionClickCallback );
-	// Add region
-	MSYS_AddRegion(&(gTalkPanel.NameRegion) );
-
 
 	for ( cnt = 0; cnt < 6; cnt++ )
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &(gTalkPanel.Regions[cnt]), (INT16)(sX), (INT16)(sY), (INT16)(sX + TALK_PANEL_REGION_WIDTH ),(INT16)( sY + TALK_PANEL_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
 							 CURSOR_NORMAL, TalkPanelMoveCallback, TalkPanelClickCallback );
-		// Add region
-		MSYS_AddRegion( &(gTalkPanel.Regions[cnt]));
 		MSYS_SetRegionUserData( &(gTalkPanel.Regions[cnt]), 0, cnt );
 
 		sY += TALK_PANEL_REGION_SPACEY;
@@ -769,8 +758,6 @@ void RenderTalkingMenu( )
 
 			MSYS_DefineRegion( &(gTalkPanel.TextRegion), gTalkPanel.sPopupX, gTalkPanel.sPopupY, (INT16)( gTalkPanel.sPopupX + usTextBoxWidth ), (INT16)( gTalkPanel.sPopupY + usTextBoxHeight ), MSYS_PRIORITY_HIGHEST,
 								 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback );
-			// Add region
-			MSYS_AddRegion(&(gTalkPanel.TextRegion) );
 
 			// Set to true
 			gTalkPanel.fTextRegionOn = TRUE;

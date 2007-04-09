@@ -58,7 +58,6 @@ BOOLEAN EnterInsuranceComments()
 	{
 		MSYS_DefineRegion( &gSelectedInsuranceCommentLinkRegion[i], usPosX, INS_CMNT_LINK_Y-1, (UINT16)(usPosX + INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT+1, MSYS_PRIORITY_HIGH,
 					 CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceCommentLinkRegionCallBack);
-		MSYS_AddRegion(&gSelectedInsuranceCommentLinkRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedInsuranceCommentLinkRegion[i], 0, i );
 
 		usPosX += INS_CMNT_LINK_OFFSET_X;

@@ -1447,7 +1447,6 @@ void DisplayTextForSpeckVideoPopUp( STR16 pString )
 	{
 		MSYS_DefineRegion( &gMercSiteSubTitleMouseRegion, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, (INT16)(gusSpeckDialogueX + gusSpeckDialogueActualWidth), (INT16)(MERC_TEXT_BOX_POS_Y + usActualHeight), MSYS_PRIORITY_HIGH,
 									 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MercSiteSubTitleRegionCallBack );
-		MSYS_AddRegion( &gMercSiteSubTitleMouseRegion );
 	}
 }
 

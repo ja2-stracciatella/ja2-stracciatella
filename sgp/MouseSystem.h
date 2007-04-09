@@ -141,7 +141,6 @@ void MSYS_Shutdown(void);
 void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
 					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback);
 void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr);
-INT32 MSYS_AddRegion(MOUSE_REGION *region);
 void MSYS_RemoveRegion(MOUSE_REGION *region);
 void MSYS_EnableRegion(MOUSE_REGION *region);
 void MSYS_DisableRegion(MOUSE_REGION *region);

@@ -285,9 +285,6 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 		}
 	}
 
-	// Add region
-	MSYS_AddRegion(&(gMsgBox.BackRegion) );
-
 	// findout if cursor locked, if so, store old params and store, restore when done
 	if( IsCursorRestricted() )
 	{

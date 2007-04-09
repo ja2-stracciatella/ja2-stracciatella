@@ -920,20 +920,6 @@ void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr)
 }
 
 
-
-//=================================================================================================
-//	MSYS_AddRegion
-//
-//	Adds a defined mouse region to the system list. Once inserted, it enables the region then
-//	calls the callback functions, if any, for initialization.
-//
-INT32 MSYS_AddRegion(MOUSE_REGION *region)
-{
-	return(1);
-}
-
-
-
 //=================================================================================================
 //	MSYS_RemoveRegion
 //

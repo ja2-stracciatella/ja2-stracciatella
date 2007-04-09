@@ -442,7 +442,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 			//Create mouse regions for the option toggle text
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
 									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
 		}
 		else
@@ -450,7 +449,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 			//Create mouse regions for the option toggle text
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
 									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
 		}
 
@@ -489,14 +487,12 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
 									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
 		}
 		else
 		{
 			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
 									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_AddRegion( &gSelectedOptionTextRegion[cnt]);
 			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
 		}
 
@@ -510,8 +506,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	//Create a mouse region so when the user leaves a togglebox text region we can detect it then unselect the region
 	MSYS_DefineRegion( &gSelectedToggleBoxAreaRegion, 0, 0, 640, 480, MSYS_PRIORITY_NORMAL,
 							 CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK );
-	MSYS_AddRegion( &gSelectedToggleBoxAreaRegion );
-
 
 	//Render the scene before adding the slider boxes
 	RenderOptionsScreen();

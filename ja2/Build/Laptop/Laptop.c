@@ -2479,9 +2479,6 @@ static BOOLEAN CreateLapTopMouseRegions(void)
  // the entire laptop display region
  MSYS_DefineRegion( &gLapTopScreenRegion, ( UINT16 )( LaptopScreenRect.iLeft ),( UINT16 )( LaptopScreenRect.iTop ),( UINT16 ) ( LaptopScreenRect.iRight ),( UINT16 )( LaptopScreenRect.iBottom ), MSYS_PRIORITY_NORMAL+1,
 							CURSOR_LAPTOP_SCREEN, ScreenRegionMvtCallback, LapTopScreenCallBack );
-
-
- //MSYS_AddRegion(&gLapTopScreenRegion);
  return (TRUE);
 }
 
@@ -3115,7 +3112,6 @@ static void CreateBookMarkMouseRegions(void)
 	{
 	  MSYS_DefineRegion(&gBookmarkMouseRegions[iCounter],(INT16)BOOK_X, (UINT16)(BOOK_TOP_Y+((iCounter+1)*(BOOK_HEIGHT+6))+6), BOOK_X+BOOK_WIDTH ,(INT16)(BOOK_TOP_Y+((iCounter+2)*(BOOK_HEIGHT+6))+6),
 			MSYS_PRIORITY_HIGHEST - 2,CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack );
-	  //MSYS_AddRegion(&gBookmarkMouseRegions[iCounter]);
 		MSYS_SetRegionUserData(&gBookmarkMouseRegions[iCounter],0,iCounter);
 		MSYS_SetRegionUserData(&gBookmarkMouseRegions[iCounter],1,0);
 
@@ -3128,7 +3124,6 @@ static void CreateBookMarkMouseRegions(void)
 	// for the cancel button
    MSYS_DefineRegion(&gBookmarkMouseRegions[iCounter],(INT16)BOOK_X, (UINT16)(BOOK_TOP_Y+((iCounter+1)*(BOOK_HEIGHT+6))+6), BOOK_X+BOOK_WIDTH ,(INT16)(BOOK_TOP_Y+((iCounter+2)*(BOOK_HEIGHT+6))+6),
 			MSYS_PRIORITY_HIGHEST - 2,CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack );
-	  //MSYS_AddRegion(&gBookmarkMouseRegions[iCounter]);
 	 MSYS_SetRegionUserData(&gBookmarkMouseRegions[iCounter],0,iCounter);
    MSYS_SetRegionUserData(&gBookmarkMouseRegions[iCounter],1,CANCEL_STRING );
 }
@@ -3614,9 +3609,6 @@ static void CreateDestroyErrorButton(void)
 	// define the screen mask
 	MSYS_DefineRegion(&pScreenMask,0, 0,640,480,
 		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
-
-	// add region
-	MSYS_AddRegion(&pScreenMask);
  }
  else if((!fErrorFlag)&&(fOldErrorFlag))
  {

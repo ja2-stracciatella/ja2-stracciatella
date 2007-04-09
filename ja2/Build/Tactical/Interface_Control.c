@@ -954,8 +954,6 @@ static void LockTacticalInterface(void)
 	{
 		MSYS_DefineRegion( &gLockPanelOverlayRegion, 0, gsVIEWPORT_WINDOW_END_Y ,640, 480, MSYS_PRIORITY_HIGHEST,
 							 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-		// Add region
-		MSYS_AddRegion( &gLockPanelOverlayRegion);
 
 		guiTacticalInterfaceFlags |= INTERFACE_LOCKEDLEVEL1;
 	}

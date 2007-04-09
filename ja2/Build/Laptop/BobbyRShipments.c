@@ -343,7 +343,6 @@ static void CreatePreviousShipmentsMouseRegions(void)
 	{
 		MSYS_DefineRegion( &gSelectedPreviousShipmentsRegion[uiCnt], BOBBYR_SHIPMENT_ORDER_NUM_X, usPosY, (UINT16)(BOBBYR_SHIPMENT_ORDER_NUM_X+usWidth), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPreviousShipmentsRegionCallBack );
-		MSYS_AddRegion(&gSelectedPreviousShipmentsRegion[uiCnt]);
 		MSYS_SetRegionUserData( &gSelectedPreviousShipmentsRegion[uiCnt], 0, uiCnt);
 
 		usPosY += BOBBYR_SHIPMENT_GAP_BTN_LINES;

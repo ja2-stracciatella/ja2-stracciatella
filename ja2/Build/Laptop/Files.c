@@ -637,7 +637,6 @@ static void InitializeFilesMouseRegions(void)
 	{
 	 MSYS_DefineRegion(&pFilesRegions[iCounter],FILES_LIST_X ,(INT16)(FILES_LIST_Y + iCounter * ( BLOCK_HEIGHT + 2 ) ), FILES_LIST_X + FILES_LIST_WIDTH ,(INT16)(FILES_LIST_Y + ( iCounter + 1 ) * ( BLOCK_HEIGHT + 2 ) ),
 			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FilesBtnCallBack );
-	  MSYS_AddRegion(&pFilesRegions[iCounter]);
 		MSYS_SetRegionUserData(&pFilesRegions[iCounter],0,iCounter);
 	}
 }

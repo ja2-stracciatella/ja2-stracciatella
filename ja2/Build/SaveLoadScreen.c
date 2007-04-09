@@ -502,9 +502,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 	{
 		MSYS_DefineRegion( &gSelectedSaveRegion[i], usPosX, usPosY, (UINT16)(usPosX+SLG_SAVELOCATION_WIDTH), (UINT16)(usPosY+SLG_SAVELOCATION_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack );
-		MSYS_AddRegion(&gSelectedSaveRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedSaveRegion[ i ], 0, i);
-
 
 		//if we are to Load a game
 		if( !gfSaveGame )
@@ -528,8 +526,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 	//Create the screen mask to enable ability to righ click to cancel the sace game
 	MSYS_DefineRegion( &gSLSEntireScreenRegion, 0, 0, 639, 479, MSYS_PRIORITY_HIGH-10,
 							 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack );
-	MSYS_AddRegion(&gSLSEntireScreenRegion);
-
 
 	//Reset the regions
 //	for( i=0; i<NUM_SAVE_GAMES; i++)

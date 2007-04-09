@@ -296,7 +296,6 @@ static void InitializeMouseRegions(void)
 	{
 	 MSYS_DefineRegion(&pEmailRegions[iCounter],MIDDLE_X ,((INT16)(MIDDLE_Y+iCounter*MIDDLE_WIDTH)), MIDDLE_X+LINE_WIDTH ,(INT16)(MIDDLE_Y+iCounter*MIDDLE_WIDTH+MIDDLE_WIDTH),
 			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, EmailMvtCallBack, EmailBtnCallBack );
-	  MSYS_AddRegion(&pEmailRegions[iCounter]);
 		MSYS_SetRegionUserData(&pEmailRegions[iCounter],0,iCounter);
 	}
 
@@ -1929,7 +1928,6 @@ void CreateDestroyNewMailButton()
 	// set up screen mask region
 	MSYS_DefineRegion(&pScreenMask,0, 0,640,480,
 		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
-	MSYS_AddRegion(&pScreenMask);
 	MarkAButtonDirty(  giNewMailButton[0] );
 	fReDrawScreenFlag = TRUE;
  }
@@ -2230,10 +2228,6 @@ static void CreateDestroyNextPreviousRegions(void)
 		// ' previous ' region
 	  MSYS_DefineRegion(&pEmailMoveRegions[PREVIOUS_BUTTON],PREVIOUS_PAGE_X,PREVIOUS_PAGE_Y, (INT16)(PREVIOUS_PAGE_X+PREVIOUS_WIDTH),(INT16)(PREVIOUS_PAGE_Y+PREVIOUS_HEIGHT),
 			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PreviousRegionButtonCallback );
-
-		// add regions
-		MSYS_AddRegion(&pEmailMoveRegions[PREVIOUS_BUTTON]);
-	  MSYS_AddRegion(&pEmailMoveRegions[NEXT_BUTTON]);
 		*/
 	}
 }
@@ -2281,7 +2275,6 @@ void CreateDestroyDeleteNoticeMailButton()
 	// set up screen mask to prevent other actions while delete mail box is destroyed
 	MSYS_DefineRegion(&pDeleteScreenMask,0, 0,640,480,
 		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
-	MSYS_AddRegion(&pDeleteScreenMask);
 
 	// force update
 	fReDrawScreenFlag = TRUE;
@@ -2484,13 +2477,6 @@ static void SetUpSortRegions(void)
 	// date region
 	MSYS_DefineRegion(&pSortMailRegions[2],DATE_X ,FROM_BOX_Y, DATE_BOX_X+DATE_WIDTH ,FROM_BOX_Y+TOP_HEIGHT,
 			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR,MSYS_NO_CALLBACK, DateCallback );
-
-	//add regions
-	MSYS_AddRegion(&pSortMailRegions[0]);
-  MSYS_AddRegion(&pSortMailRegions[1]);
-  MSYS_AddRegion(&pSortMailRegions[2]);
-
-	return;
 	*/
 }
 

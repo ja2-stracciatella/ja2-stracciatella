@@ -481,7 +481,6 @@ static BOOLEAN InitAimPolicyTocMenu(void)
 		//Mouse region for the toc buttons
 		MSYS_DefineRegion( &gSelectedPolicyTocMenuRegion[i], AIM_POLICY_TOC_X, usPosY, (UINT16)(AIM_POLICY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack);
-		MSYS_AddRegion(&gSelectedPolicyTocMenuRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedPolicyTocMenuRegion[i], 0, i+2);
 
 		usPosY += AIM_POLICY_TOC_GAP_Y;

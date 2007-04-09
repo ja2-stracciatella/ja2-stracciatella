@@ -548,7 +548,6 @@ BOOLEAN EnterAIMMembers()
 	//** Mouse Regions **
 	MSYS_DefineRegion( &gSelectedFaceRegion, PORTRAIT_X, PORTRAIT_Y , PORTRAIT_X + PORTRAIT_WIDTH , PORTRAIT_Y + PORTRAIT_HEIGHT, MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, SelectFaceMovementRegionCallBack, SelectFaceRegionCallBack );
-  MSYS_AddRegion(&gSelectedFaceRegion);
 
 	//Set the fast help for the mouse region
 //	SetRegionFastHelpText( &gSelectedFaceRegion, AimMemberText[ AIM_MEMBER_CLICK_INSTRUCTIONS ] );
@@ -557,7 +556,6 @@ BOOLEAN EnterAIMMembers()
 	// if user clicks in the area, the merc will shut up!
 	MSYS_DefineRegion( &gSelectedShutUpMercRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y ,LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
 							 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectShutUpMercRegionCallBack);
-	MSYS_AddRegion(&gSelectedShutUpMercRegion);
 	//have it disbled at first
   MSYS_DisableRegion(&gSelectedShutUpMercRegion);
 

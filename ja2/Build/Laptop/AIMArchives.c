@@ -508,8 +508,6 @@ static void InitAlumniFaceRegions(void)
 
 			MSYS_DefineRegion( &gMercAlumniFaceMouseRegions[ i ], usPosX, usPosY, (INT16)(usPosX + AIM_ALUMNI_ALUMNI_FACE_WIDTH), (INT16)(usPosY + AIM_ALUMNI_ALUMNI_FACE_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
-			// Add region
-			MSYS_AddRegion( &gMercAlumniFaceMouseRegions[ i ] );
 			MSYS_SetRegionUserData( &gMercAlumniFaceMouseRegions[ i ], 0, i+(20*gubPageNum));
 
 			usPosX += AIM_ALUMNI_GRID_OFFSET_X;
@@ -524,8 +522,6 @@ static void InitAlumniFaceRegions(void)
 	{
 			MSYS_DefineRegion( &gMercAlumniFaceMouseRegions[ i ], usPosX, usPosY, (INT16)(usPosX + AIM_ALUMNI_ALUMNI_FACE_WIDTH), (INT16)(usPosY + AIM_ALUMNI_ALUMNI_FACE_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
-			// Add region
-			MSYS_AddRegion( &gMercAlumniFaceMouseRegions[ i ] );
 			MSYS_SetRegionUserData( &gMercAlumniFaceMouseRegions[ i ], 0, i+(20*gubPageNum));
 	}
 
@@ -578,8 +574,6 @@ static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 		usPosY -= AIM_ALUMNI_DONE_HEIGHT;
 		MSYS_DefineRegion( &gDoneRegion, AIM_ALUMNI_DONE_X-2, usPosY, (AIM_ALUMNI_DONE_X-2 + AIM_ALUMNI_DONE_WIDTH), (INT16)(usPosY + AIM_ALUMNI_DONE_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniDoneRegionCallBack);
-		// Add region
-		MSYS_AddRegion( &gDoneRegion );
 		DoneRegionCreated = TRUE;
 	}
 

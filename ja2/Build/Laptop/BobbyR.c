@@ -396,7 +396,6 @@ static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegio
 		//Mouse region for the toc buttons
 		MSYS_DefineRegion( &MouseRegion[i], usMouseRegionPosArray[ubCount], usMouseRegionPosArray[ubCount+1], usMouseRegionPosArray[ubCount+2], usMouseRegionPosArray[ubCount+3], MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectBobbiesSignMenuRegionCallBack);
-		MSYS_AddRegion(&MouseRegion[i]);
 		MSYS_SetRegionUserData( &MouseRegion[i], 0, gubBobbyRPages[i]);
 
 		ubCount +=4;

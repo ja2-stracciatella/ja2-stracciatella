@@ -3011,11 +3011,6 @@ UINT32 MapScreenHandle(void)
 		// create status bar region
 		CreateMapStatusBarsRegion( );
 
-		// Add region
-		MSYS_AddRegion( &gMapViewRegion);
-		MSYS_AddRegion( &gCharInfoFaceRegion);
-		MSYS_AddRegion( &gMPanelRegion);
-
     if ( !gfFadeOutDone && !gfFadeIn )
     {
 		  MSYS_SetCurrentCursor(SCREEN_CURSOR);

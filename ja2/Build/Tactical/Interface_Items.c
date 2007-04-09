@@ -798,8 +798,6 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
 	// Add cammo region
 	MSYS_DefineRegion( &gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, (INT16)(pCamoRegion->sX + CAMO_REGION_WIDTH ), (INT16)(pCamoRegion->sY + CAMO_REGION_HEIGHT ), MSYS_PRIORITY_HIGH,
 						 MSYS_NO_CURSOR, INVMoveCammoCallback, INVClickCammoCallback );
-	// Add region
-	MSYS_AddRegion( &gSMInvCamoRegion );
 
 	// Add regions for inventory slots
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
@@ -810,8 +808,6 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
 
 		MSYS_DefineRegion( &gSMInvRegion[ cnt ], gSMInvData[ cnt ].sX, gSMInvData[ cnt ].sY, (INT16)(gSMInvData[ cnt ].sX + gSMInvData[ cnt ].sWidth), (INT16)(gSMInvData[ cnt ].sY + gSMInvData[ cnt ].sHeight), ( INT8 )( fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH ),
 							 MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback );
-		// Add region
-		MSYS_AddRegion( &gSMInvRegion[ cnt ] );
 		MSYS_SetRegionUserData( &gSMInvRegion[ cnt ], 0, cnt );
 	}
 
@@ -2236,7 +2232,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
     MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + MAP_ITEMDESC_WIDTH), (UINT16)(gsInvDescY + MAP_ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST - 2,
 	 					 CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback );
-		 	MSYS_AddRegion( &gInvDesc);
 
 			giMapInvDescButtonImage=  LoadButtonImage( "INTERFACE/itemdescdonebutton.sti" ,-1,0,-1,1,-1 );
 
@@ -2251,9 +2246,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	{
 	 MSYS_DefineRegion( &gInvDesc, (UINT16)gsInvDescX, (UINT16)gsInvDescY ,(UINT16)(gsInvDescX + ITEMDESC_WIDTH), (UINT16)(gsInvDescY + ITEMDESC_HEIGHT), MSYS_PRIORITY_HIGHEST,
 	 					 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
-	 MSYS_AddRegion( &gInvDesc);
-
-
 	}
   // Add region
 	if ( (Item[ pObject->usItem ].usItemClass & IC_GUN) && pObject->usItem != ROCKET_LAUNCHER )
@@ -2343,8 +2335,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					(INT16)(gsInvDescY + gMapItemDescProsConsRects[ cnt ].iBottom),
 					MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
 
-				MSYS_AddRegion( &gProsAndConsRegions[cnt]);
-
 				if (cnt == 0)
 				{
 					wcscpy( gzFullItemPros, gzProsLabel );
@@ -2379,8 +2369,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					(INT16)(gsInvDescX + gItemDescProsConsRects[ cnt ].iRight),
 					(INT16)(gsInvDescY + gItemDescProsConsRects[ cnt ].iBottom),
 					MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
-
-				MSYS_AddRegion( &gProsAndConsRegions[cnt]);
 
 				if (cnt == 0)
 				{
@@ -2422,8 +2410,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			else
 				 MSYS_DefineRegion( &gItemDescAttachmentRegions[cnt], (INT16)(gsInvDescX + gItemDescAttachmentsXY[cnt].sX), (INT16)(gsInvDescY + gItemDescAttachmentsXY[cnt].sY), (INT16)(gsInvDescX + gItemDescAttachmentsXY[cnt].sX + gItemDescAttachmentsXY[cnt].sBarDx + gItemDescAttachmentsXY[cnt].sWidth), (INT16)(gsInvDescY + gItemDescAttachmentsXY[cnt].sY + gItemDescAttachmentsXY[cnt].sHeight), MSYS_PRIORITY_HIGHEST,
 								 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback );
-			// Add region
-			MSYS_AddRegion( &gItemDescAttachmentRegions[cnt]);
 			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
 
 			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
@@ -5032,8 +5018,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &gItemPopupRegions[cnt], (INT16)(sCenX + ( cnt * usPopupWidth ) ), sCenY , (INT16)(sCenX + ( (cnt+1) * usPopupWidth ) ),(INT16)( sCenY + gsItemPopupHeight ), MSYS_PRIORITY_HIGHEST,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback );
-		// Add region
-		MSYS_AddRegion( &gItemPopupRegions[cnt]);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
@@ -5046,8 +5030,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion( &gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY ,(INT16)(gsItemPopupInvX + gsItemPopupInvWidth), (INT16)(gsItemPopupInvY + gsItemPopupInvHeight), MSYS_PRIORITY_HIGH,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback );
-	// Add region
-	MSYS_AddRegion( &gItemPopupRegion);
 
 
 	//Disable all faces
@@ -5229,8 +5211,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 				(INT16)( sInvY + ( (cnt / sKeyRingItemWidth + 1) * usPopupHeight ) + sOffSetY ), // bottom right
 				MSYS_PRIORITY_HIGHEST,
 				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingSlotInvClickCallback );
-		// Add region
-		MSYS_AddRegion( &gKeyRingRegions[cnt]);
 		MSYS_SetRegionUserData( &gKeyRingRegions[cnt], 0, cnt );
 		//gfItemPopupRegionCallbackEndFix = FALSE;
 	}
@@ -5239,9 +5219,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion( &gItemPopupRegion, sInvX, sInvY ,(INT16)(sInvX + sInvWidth), (INT16)(sInvY + sInvHeight), MSYS_PRIORITY_HIGH,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback );
-
-	// Add region
-	MSYS_AddRegion( &gItemPopupRegion);
 
 
 	//Disable all faces
@@ -5902,15 +5879,10 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion( &(gItemPickupMenu.BackRegion ), (INT16)( 532 ), (INT16)( 367 ), (INT16)( 640 ),(INT16)( 480 ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &(gItemPickupMenu.BackRegion ) );
-
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion( &(gItemPickupMenu.BackRegions ), (INT16)(gItemPickupMenu.sX ), (INT16)(gItemPickupMenu.sY), (INT16)(gItemPickupMenu.sX + gItemPickupMenu.sWidth ),(INT16)( gItemPickupMenu.sY + gItemPickupMenu.sHeight ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &(gItemPickupMenu.BackRegions ) );
 
 
 	// Create buttons
@@ -5962,8 +5934,6 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &(gItemPickupMenu.Regions[cnt]), (INT16)(sCenX ), (INT16)(sCenY + 1), (INT16)(sCenX + gItemPickupMenu.sWidth ),(INT16)( sCenY + ITEMPICK_GRAPHIC_YSPACE ), MSYS_PRIORITY_HIGHEST,
 							 CURSOR_NORMAL, ItemPickMenuMouseMoveCallback, ItemPickMenuMouseClickCallback );
-		// Add region
-		MSYS_AddRegion( &(gItemPickupMenu.Regions[cnt]) );
 		MSYS_SetRegionUserData( &(gItemPickupMenu.Regions[cnt]), 0, cnt );
 
 		sCenY += ITEMPICK_GRAPHIC_YSPACE;

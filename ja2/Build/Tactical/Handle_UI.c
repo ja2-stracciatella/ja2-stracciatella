@@ -4639,8 +4639,6 @@ static UINT32 UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 
 		MSYS_DefineRegion( &gDisableRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST,
 							 CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-		// Add region
-		MSYS_AddRegion( &gDisableRegion );
 
 		//guiPendingOverrideEvent = LOCKUI_MODE;
 
@@ -5152,8 +5150,6 @@ static UINT32 UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 
 		MSYS_DefineRegion( &gUserTurnRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST,
 							 CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-		// Add region
-		MSYS_AddRegion( &gUserTurnRegion );
 
 		//guiPendingOverrideEvent = LOCKOURTURN_UI_MODE;
 

@@ -445,7 +445,6 @@ BOOLEAN EnterBobbyRMailOrder()
 
 		MSYS_DefineRegion( &gSelectedShippingSpeedRegion[i], gShippingSpeedAreas[i*2], gShippingSpeedAreas[i*2+1] , (UINT16)(gShippingSpeedAreas[i*2]+SHIPPING_SPEED_LIGHT_WIDTH), (UINT16)(gShippingSpeedAreas[i*2+1]+SHIPPING_SPEED_LIGHT_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectShippingSpeedRegionCallBack );
-		MSYS_AddRegion(&gSelectedShippingSpeedRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedShippingSpeedRegion[ i ], 0, i);
 	}
 
@@ -453,22 +452,16 @@ BOOLEAN EnterBobbyRMailOrder()
 	//s on screen.  When user clicks anywhere the graphic disappears
 	MSYS_DefineRegion( &gSelectedConfirmOrderRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y , LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH+1,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectConfirmOrderRegionCallBack);
-	MSYS_AddRegion(&gSelectedConfirmOrderRegion);
   MSYS_DisableRegion(&gSelectedConfirmOrderRegion);
-
 
 	//click on the shipping location to activate the drop down menu
 	MSYS_DefineRegion( &gSelectedActivateCityDroDownRegion, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_R_X, BOBBYR_SHIPPING_LOC_AREA_B_Y, MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectActivateCityDroDownRegionCallBack);
-	MSYS_AddRegion(&gSelectedActivateCityDroDownRegion);
-
 
 	//click anywhere on the screen to close the window( only when the drop down window is active)
 	MSYS_DefineRegion( &gSelectedCloseDropDownRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y , LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
 							 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectCloseDroDownRegionCallBack);
-	MSYS_AddRegion(&gSelectedCloseDropDownRegion);
   MSYS_DisableRegion(&gSelectedCloseDropDownRegion);
-
 
 	CreateBobbyRayOrderTitle();
 
@@ -1253,7 +1246,6 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			{
 				MSYS_DefineRegion( &gSelectedDropDownRegion[i], usPosX, (UINT16)(usPosY+4), (UINT16)(usPosX+BOBBYR_DROP_DOWN_WIDTH-6), (UINT16)(usPosY+usFontHeight+7), MSYS_PRIORITY_HIGH,
 										 CURSOR_WWW, SelectDropDownMovementCallBack, SelectDropDownRegionCallBack);
-				MSYS_AddRegion(&gSelectedDropDownRegion[i]);
 				MSYS_SetRegionUserData( &gSelectedDropDownRegion[ i ], 0, i);
 
 				usPosY += usFontHeight + 2;
@@ -1270,7 +1262,6 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			{
 				MSYS_DefineRegion( &gSelectedUpDownArrowOnScrollAreaRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), (UINT16)(usPosY+BOBBYR_SCROLL_ARROW_HEIGHT), MSYS_PRIORITY_HIGH,
 										 CURSOR_WWW, MSYS_NO_CALLBACK, SelectUpDownArrowOnScrollAreaRegionCallBack);
-				MSYS_AddRegion(&gSelectedUpDownArrowOnScrollAreaRegion[i]);
 				MSYS_SetRegionUserData( &gSelectedUpDownArrowOnScrollAreaRegion[ i ], 0, i);
 				usPosX = BOBBYR_SCROLL_DOWN_ARROW_X;
 				usPosY = BOBBYR_SCROLL_DOWN_ARROW_Y;
@@ -1284,16 +1275,13 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			{
 				MSYS_DefineRegion( &gSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGH+1,
 										 CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack);
-				MSYS_AddRegion(&gSelectedScrollAreaDropDownRegion[i]);
 				MSYS_SetRegionUserData( &gSelectedScrollAreaDropDownRegion[ i ], 0, i);
 				usPosY += usHeight;
 			}
 			//put the last one down to cover the remaining area
 			MSYS_DefineRegion( &gSelectedScrollAreaDropDownRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), BOBBYR_SCROLL_DOWN_ARROW_Y, MSYS_PRIORITY_HIGH+1,
 									 CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack);
-			MSYS_AddRegion(&gSelectedScrollAreaDropDownRegion[i]);
 			MSYS_SetRegionUserData( &gSelectedScrollAreaDropDownRegion[ i ], 0, i);
-
 
 		  MSYS_EnableRegion(&gSelectedCloseDropDownRegion);
 
@@ -2199,7 +2187,6 @@ BOOLEAN CreateBobbyRayOrderTitle()
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectTitleLinkRegionCallBack);
-	MSYS_AddRegion( &gSelectedTitleLinkRegion );
 
 	return( TRUE );
 }

@@ -1237,9 +1237,6 @@ BOOLEAN InitializeSMPanel(  )
 	// Define region for viewport
 	MSYS_DefineRegion( &gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y, MSYS_PRIORITY_NORMAL,
 						 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &gViewportRegion );
-
 
 	// Create buttons
 	CHECKF( CreateSMPanelButtons( ) );
@@ -1248,29 +1245,18 @@ BOOLEAN InitializeSMPanel(  )
 	// Define region for panel
 	MSYS_DefineRegion( &gSMPanelRegion, 0, INV_INTERFACE_START_Y ,640, 480, MSYS_PRIORITY_NORMAL,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback );
-	// Add region
-	MSYS_AddRegion( &gSMPanelRegion);
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCPanelRegion, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, SM_SELMERC_FACE_X + SM_SELMERC_FACE_WIDTH, SM_SELMERC_FACE_Y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL,
 						 MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, SelectedMercButtonCallback );
-	// Add region
-	MSYS_AddRegion( &gSM_SELMERCPanelRegion );
-
-
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCEnemyIndicatorRegion, SM_SELMERC_FACE_X + 1, SM_SELMERC_FACE_Y + 1, SM_SELMERC_FACE_X + INDICATOR_BOX_WIDTH, SM_SELMERC_FACE_Y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback );
-	// Add region
-	MSYS_AddRegion( &gSM_SELMERCEnemyIndicatorRegion );
-
 
 	//DEfine region for money button
 	MSYS_DefineRegion( &gSM_SELMERCMoneyRegion, MONEY_X, MONEY_Y, MONEY_X + MONEY_WIDTH, MONEY_Y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback );
-	// Add region
-	MSYS_AddRegion( &gSM_SELMERCMoneyRegion );
 
 	SetRegionFastHelpText( &(gSM_SELMERCMoneyRegion), TacticalStr[ MONEY_BUTTON_HELP_TEXT ] );
 
@@ -1283,13 +1269,9 @@ BOOLEAN InitializeSMPanel(  )
 	}
 
 
-
-
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCBarsRegion, 62, 342, 85, 391, MSYS_PRIORITY_NORMAL,
 						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback );
-	// Add region
-	MSYS_AddRegion( &gSM_SELMERCBarsRegion );
 
 
 	InitInvSlotInterface( gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCammoCallback, SMInvClickCamoCallback, FALSE );
@@ -3253,8 +3235,6 @@ BOOLEAN InitializeTEAMPanel(  )
 	// Define region for viewport
 	MSYS_DefineRegion( &gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL,
 						 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &gViewportRegion );
 
 	CHECKF(AddVideoObjectFromFile("INTERFACE/bottom_bar.sti", &guiTEAMPanel));
 	CHECKF(AddVideoObjectFromFile("INTERFACE/gold_front.sti", &guiTEAMObjects));
@@ -3271,22 +3251,16 @@ BOOLEAN InitializeTEAMPanel(  )
 	// Define region for panel
 	MSYS_DefineRegion( &gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y ,640, 480, MSYS_PRIORITY_NORMAL,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &gTEAM_PanelRegion);
 
 	for ( posIndex = 0, cnt = 0; cnt < 6; cnt++, posIndex +=2 )
 	{
 		MSYS_DefineRegion( &gTEAM_FaceRegions[ cnt ], sTEAMFacesXY[ posIndex ], sTEAMFacesXY[ posIndex + 1 ] ,(INT16)(sTEAMFacesXY[ posIndex ] + TM_FACE_WIDTH ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + TM_FACE_HEIGHT), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_FaceRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_FaceRegions[ cnt ], 0, cnt );
 
 
 		MSYS_DefineRegion( &gTEAM_EnemyIndicator[ cnt ], (INT16)(sTEAMFacesXY[ posIndex ] + 1), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + 1 ) ,(INT16)(sTEAMFacesXY[ posIndex ] + INDICATOR_BOX_WIDTH ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + INDICATOR_BOX_HEIGHT), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_EnemyIndicator[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_EnemyIndicator[ cnt ], 0, cnt );
 
 
@@ -3302,21 +3276,15 @@ BOOLEAN InitializeTEAMPanel(  )
 
 		MSYS_DefineRegion( &gTEAM_BarsRegions[ cnt ], sTEAMBarsXY[ posIndex ], sTEAMBarsXY[ posIndex + 1 ] ,(INT16)(sTEAMBarsXY[ posIndex ] + TM_BARS_REGION_WIDTH ), (INT16)(sTEAMBarsXY[ posIndex + 1 ] + TM_BARS_REGION_HEIGHT ), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_BarsRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_BarsRegions[ cnt ], 0, cnt );
 
 		MSYS_DefineRegion( &gTEAM_LeftBarsRegions[ cnt ], (INT16)(sTEAMFacesXY[ posIndex ] - 8 ), sTEAMFacesXY[ posIndex + 1 ] ,(INT16)(sTEAMFacesXY[ posIndex ] ), (INT16)(sTEAMFacesXY[ posIndex + 1 ] + TM_BARS_REGION_HEIGHT ), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_LeftBarsRegions[ cnt ] );
 		MSYS_SetRegionUserData( &gTEAM_LeftBarsRegions[ cnt ], 0, cnt );
 
 
 		MSYS_DefineRegion( &gTEAM_FirstHandInv[ cnt ], sTEAMHandInvXY[ posIndex ], sTEAMHandInvXY[ posIndex + 1 ], (INT16)(sTEAMHandInvXY[ posIndex ] + TM_INV_WIDTH ) ,(INT16)(sTEAMHandInvXY[ posIndex + 1 ] + TM_INV_HEIGHT ), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_FirstHandInv[ cnt ] );
 
 		// Add user data
 		MSYS_SetRegionUserData( &gTEAM_FirstHandInv[ cnt ], 0, cnt );
@@ -3325,8 +3293,6 @@ BOOLEAN InitializeTEAMPanel(  )
 
 		MSYS_DefineRegion( &gTEAM_SecondHandInv[ cnt ], sTEAMHandInvXY[ posIndex ], (INT16)( sTEAMHandInvXY[ posIndex + 1 ] + 24 ), (INT16)(sTEAMHandInvXY[ posIndex ] + TM_INV_WIDTH) ,(INT16)(sTEAMHandInvXY[ posIndex + 1 ] + TM_INV_HEIGHT + 24 ), MSYS_PRIORITY_NORMAL,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback );
-		// Add region
-		MSYS_AddRegion( &gTEAM_SecondHandInv[ cnt ] );
 
 		// Add user data
 		MSYS_SetRegionUserData( &gTEAM_SecondHandInv[ cnt ], 0, cnt );
@@ -3337,8 +3303,6 @@ BOOLEAN InitializeTEAMPanel(  )
 	//DEfine region for selected guy panel
 	//MSYS_DefineRegion( &gSM_SELMERCPanalRegion, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, SM_SELMERC_FACE_X + SM_SELMERC_FACE_WIDTH, SM_SELMERC_FACE_Y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL,
 	//					 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedMercButtonCallback );
-	// Add region
-	//MSYS_AddRegion( &gSM_SELMERCPanalRegion );
 
 	return( TRUE );
 }

@@ -430,8 +430,6 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	//Define main region
 	MSYS_DefineRegion( &(gCivQuoteData.MouseRegion), VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback );
-	// Add region
-	MSYS_AddRegion( &(gCivQuoteData.MouseRegion) );
 
 
 	gCivQuoteData.bActive = TRUE;

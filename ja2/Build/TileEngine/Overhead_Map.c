@@ -528,13 +528,9 @@ void GoIntoOverheadMap( )
 
 	MSYS_DefineRegion( &OverheadBackgroundRegion, 0, 0 ,640, 360, MSYS_PRIORITY_HIGH,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	//Add region
-	MSYS_AddRegion( &OverheadBackgroundRegion );
 
 	MSYS_DefineRegion( &OverheadRegion, 0, 0 ,gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH,
 						 CURSOR_NORMAL, MoveOverheadRegionCallback, ClickOverheadRegionCallback );
-	// Add region
-	MSYS_AddRegion( &OverheadRegion );
 
 	// LOAD CLOSE ANIM
 	if (!AddVideoObjectFromFile("INTERFACE/MAP_BORD.sti", &uiOVERMAP))

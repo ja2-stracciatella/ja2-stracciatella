@@ -147,7 +147,6 @@ BOOLEAN EnterFuneral()
 
 		MSYS_DefineRegion( &gSelectedFuneralLinkRegion[i], usPosX, FUNERAL_LINK_1_Y, (UINT16)(usPosX + FUNERAL_LINK_1_WIDTH), (UINT16)(FUNERAL_LINK_1_Y + FUNERAL_LINK_1_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFuneralLinkRegionCallBack );
-		MSYS_AddRegion(&gSelectedFuneralLinkRegion[i]);
 		MSYS_SetRegionUserData( &gSelectedFuneralLinkRegion[i], 0, i );
 
 		usPosX += FUNERAL_LINK_OFFSET_X;
@@ -155,9 +154,7 @@ BOOLEAN EnterFuneral()
 
 	MSYS_DefineRegion( &gSelectedRipSignRegion, FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y, (UINT16)(FUNERAL_CLOSED_RIP_SIGN_X + FUNERAL_CLOSED_WIDTH), (UINT16)(FUNERAL_CLOSED_RIP_SIGN_Y + FUNERAL_CLOSED_HEIGHT), MSYS_PRIORITY_HIGH+1,
 						 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectRipSignRegionCallBack );
-	MSYS_AddRegion(&gSelectedRipSignRegion);
   MSYS_DisableRegion(&gSelectedRipSignRegion);
-
 
 	SetBookMark( FUNERAL_BOOKMARK );
 

@@ -1967,8 +1967,6 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString)
 	//Define main region
 	MSYS_DefineRegion( &gTextBoxMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback );
-	// Add region
-	MSYS_AddRegion(&(gTextBoxMouseRegion) );
 
 	fTextBoxMouseRegionCreated = TRUE;
 }
@@ -2032,9 +2030,6 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 		//Define main region
 		MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
 							 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback );
-		// Add region
-		MSYS_AddRegion(&(gFacePopupMouseRegion) );
-
 	}
 
 	gfFacePanelActive = TRUE;
@@ -2107,8 +2102,6 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 			//Define main region
 			MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
 								 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback );
-			// Add region
-			MSYS_AddRegion(&(gFacePopupMouseRegion) );
 		}
 
 		gfFacePanelActive = TRUE;

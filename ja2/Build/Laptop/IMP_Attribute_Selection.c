@@ -1213,8 +1213,6 @@ static void CreateSlideRegionMouseRegions(void)
 
 		 // define user data
 		 	MSYS_SetRegionUserData(&pSliderRegions[iCounter],0,iCounter);
-		 // now add it
-		 MSYS_AddRegion(&pSliderRegions[ iCounter ]);
 	}
 }
 
@@ -1239,8 +1237,6 @@ static void CreateSliderBarMouseRegions(void)
 
 		 // define user data
 		 	MSYS_SetRegionUserData(&pSliderBarRegions[iCounter],0,iCounter);
-		 // now add it
-		 MSYS_AddRegion(&pSliderBarRegions[ iCounter ]);
 	}
 }
 

@@ -70,9 +70,6 @@ BOOLEAN InitRadarScreen( )
 											 RadarRegionMoveCallback,
 											 RadarRegionButtonCallback );
 
-		// Add region
-		MSYS_AddRegion( &gRadarRegion );
-
 		//disable the radar map
 		MSYS_DisableRegion(&gRadarRegion);
 
@@ -175,10 +172,6 @@ void MoveRadarScreen( )
 										 MSYS_PRIORITY_HIGHEST, 0,
 										 RadarRegionMoveCallback,
 										 RadarRegionButtonCallback );
-
-	// Add region
-	MSYS_AddRegion( &gRadarRegion );
-
 }
 
 

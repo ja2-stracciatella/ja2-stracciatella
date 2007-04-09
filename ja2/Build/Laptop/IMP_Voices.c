@@ -340,9 +340,6 @@ static void CreateIMPVoiceMouseRegions(void)
   // will create mouse regions needed for the IMP voices page
 	MSYS_DefineRegion( &gVoicePortraitRegion, LAPTOP_SCREEN_UL_X + 200, LAPTOP_SCREEN_WEB_UL_Y + 176 ,LAPTOP_SCREEN_UL_X + 200 + 100, LAPTOP_SCREEN_WEB_UL_Y + 176 + 100,MSYS_PRIORITY_HIGH,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback );
-
-
-	MSYS_AddRegion( &gVoicePortraitRegion );
 }
 
 

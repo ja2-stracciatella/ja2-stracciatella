@@ -461,8 +461,6 @@ static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate)
 		// Make a mouse region
 		MSYS_DefineRegion( &(gBackRegion), 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST,
 							 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack );
-		// Add region
-		MSYS_AddRegion(&(gBackRegion) );
 
 		fRegionCreated = TRUE;
 	}

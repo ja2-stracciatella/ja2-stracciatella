@@ -252,27 +252,22 @@ BOOLEAN EnterAIM()
 	//Mouse region for the MebershipCard
 	MSYS_DefineRegion( &gSelectedMemberCardRegion, MEMBERCARD_X, MEMBERCARD_Y , (MEMBERCARD_X + LINK_SIZE_X), (MEMBERCARD_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectMemberCardRegionCallBack );
-  MSYS_AddRegion(&gSelectedMemberCardRegion);
 
 	//Mouse region for the Policies
 	MSYS_DefineRegion( &gSelectedPoliciesRegion, POLICIES_X, POLICIES_Y , (POLICIES_X + LINK_SIZE_X), (POLICIES_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPoliciesRegionCallBack );
-  MSYS_AddRegion(&gSelectedPoliciesRegion);
 
 	//Mouse region for the History
 	MSYS_DefineRegion( &gSelectedHistoryRegion, HISTORY_X, HISTORY_Y , (HISTORY_X + LINK_SIZE_X), (HISTORY_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryRegionCallBack );
-  MSYS_AddRegion(&gSelectedHistoryRegion);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedLinksRegion, LINKS_X, LINKS_Y , (LINKS_X + LINK_SIZE_X), (LINKS_Y + LINK_SIZE_Y), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinksRegionCallBack );
-  MSYS_AddRegion(&gSelectedLinksRegion);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedBannerRegion, AIM_AD_TOP_LEFT_X, AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X, AIM_AD_BOTTOM_RIGHT_Y, MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectBannerRegionCallBack);
-  MSYS_AddRegion(&gSelectedBannerRegion);
 
 	// disable the region because only certain banners will be 'clickable'
   MSYS_DisableRegion(&gSelectedBannerRegion);
@@ -411,8 +406,6 @@ BOOLEAN InitAimDefaults()
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y, AIM_SYMBOL_X+AIM_SYMBOL_WIDTH, AIM_SYMBOL_Y+AIM_SYMBOL_HEIGHT, MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAimLogoRegionCallBack);
-  MSYS_AddRegion(&gSelectedAimLogo);
-
 
 	return(TRUE);
 }

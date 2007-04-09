@@ -818,9 +818,6 @@ ATM:
 	//Blanket the entire screen
 	MSYS_DefineRegion( &gSKI_EntireScreenMouseRegions, 0, 0, 639, 339, MSYS_PRIORITY_HIGH-2,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	MSYS_AddRegion( &gSKI_EntireScreenMouseRegions );
-
-
 
 
 /*
@@ -828,7 +825,6 @@ ATM:
 	//Blanket the tactical buttons where the ATM will go
 	MSYS_DefineRegion( &gShopKeeperCoverTacticalButtonMouseRegion, SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y, (UINT16)(SKI_ATM_PANEL_X+SKI_ATM_PANEL_WIDTH), (UINT16)(SKI_ATM_PANEL_Y+SKI_ATM_PANEL_HEIGHT), MSYS_PRIORITY_HIGH-1,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	MSYS_AddRegion( &gSKI_EntireScreenMouseRegions );
 */
 
 	//Create the mouse regions for the inventory slot
@@ -839,7 +835,6 @@ ATM:
 	//Create the mouse region to limit the movement of the item cursos
 	MSYS_DefineRegion( &gSkiInventoryMovementAreaMouseRegions, SKI_ITEM_MOVEMENT_AREA_X, SKI_ITEM_MOVEMENT_AREA_Y, (UINT16)(SKI_ITEM_MOVEMENT_AREA_X+SKI_ITEM_MOVEMENT_AREA_WIDTH), (UINT16)(SKI_ITEM_MOVEMENT_AREA_Y+SKI_ITEM_MOVEMENT_AREA_HEIGHT), MSYS_PRIORITY_HIGH-1,
 				CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	MSYS_AddRegion( &gSkiInventoryMovementAreaMouseRegions );
 
 	//Disable the region that limits the movement of the cursor with the item
 	MSYS_DisableRegion( &gSkiInventoryMovementAreaMouseRegions );
@@ -848,7 +843,6 @@ ATM:
 	//Create the mouse region for the shopkeeper's face
 	MSYS_DefineRegion( &gArmsDealersFaceMouseRegions, SKI_FACE_X, SKI_FACE_Y, (UINT16)(SKI_FACE_X+SKI_FACE_WIDTH), (UINT16)(SKI_FACE_Y+SKI_FACE_HEIGHT), MSYS_PRIORITY_HIGH-1,
 				CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectArmsDealersFaceRegionCallBack );
-	MSYS_AddRegion( &gArmsDealersFaceMouseRegions );
 
 
 	//Create the atm button
@@ -953,7 +947,6 @@ ATM:
 	MSYS_DefineRegion( &gArmsDealersDropItemToGroundMouseRegions, SKI_DROP_ITEM_TO_GROUND_START_X, SKI_DROP_ITEM_TO_GROUND_START_Y, 639, 339, MSYS_PRIORITY_HIGH,
 						 CURSOR_NORMAL, SelectArmsDealersDropItemToGroundMovementRegionCallBack, SelectArmsDealersDropItemToGroundRegionCallBack );
 //						 CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectArmsDealersDropItemToGroundRegionCallBack );
-	MSYS_AddRegion( &gArmsDealersDropItemToGroundMouseRegions );
 
 	gfSkiDisplayDropItemToGroundText = FALSE;
 
@@ -1610,7 +1603,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 		{
 			MSYS_DefineRegion( &gDealersInventoryMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
 										 CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, SelectDealersInventoryRegionCallBack );
-			MSYS_AddRegion( &gDealersInventoryMouseRegions[ubCnt] );
 			MSYS_SetRegionUserData( &gDealersInventoryMouseRegions[ ubCnt ], 0, ubCnt);
 			MSYS_SetRegionUserData( &gDealersInventoryMouseRegions[ ubCnt ], 1, ARMS_DEALER_INVENTORY );
 
@@ -1620,7 +1612,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 				//Small Faces
 				MSYS_DefineRegion( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
 											 CURSOR_NORMAL, NULL, NULL );
-				MSYS_AddRegion( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ] );
 				MSYS_SetRegionUserData( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], 0, ubCnt );
 				MSYS_SetRegionUserData( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], 1, ARMS_DEALER_INVENTORY );
 			}
@@ -1642,7 +1633,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 		{
 			MSYS_DefineRegion( &gDealersOfferSlotsMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
 										 CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack );
-			MSYS_AddRegion( &gDealersOfferSlotsMouseRegions[ubCnt] );
 			MSYS_SetRegionUserData( &gDealersOfferSlotsMouseRegions[ ubCnt ], 0, ubCnt);
 
 
@@ -1652,7 +1642,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 				//Small Faces
 				MSYS_DefineRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
 											 CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack );
-				MSYS_AddRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ubCnt] );
 				MSYS_SetRegionUserData( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 0, ubCnt);
 				MSYS_SetRegionUserData( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 1, ARMS_DEALER_OFFER_AREA );
 			}
@@ -1676,7 +1665,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 			//Trading Slots
 			MSYS_DefineRegion( &gPlayersOfferSlotsMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
 										 CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack );
-			MSYS_AddRegion( &gPlayersOfferSlotsMouseRegions[ubCnt] );
 			MSYS_SetRegionUserData( &gPlayersOfferSlotsMouseRegions[ ubCnt ], 0, ubCnt);
 /*
 			//if the dealer repairs
@@ -1688,7 +1676,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 			//Small Faces
 			MSYS_DefineRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
 										 CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack );
-			MSYS_AddRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ubCnt] );
 			MSYS_SetRegionUserData( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 0, ubCnt);
 			MSYS_SetRegionUserData( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 1, PLAYERS_OFFER_AREA );
 
@@ -4636,7 +4623,6 @@ void InitShopKeeperSubTitledText( STR16 pString )
 		{
 			MSYS_DefineRegion( &gShopKeeperSubTitleMouseRegion, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, (INT16)(gusPositionOfSubTitlesX + usActualWidth), (INT16)(SKI_POSITION_SUBTITLES_Y + usActualHeight), MSYS_PRIORITY_HIGH,
 										 CURSOR_NORMAL, MSYS_NO_CALLBACK, ShopKeeperSubTitleRegionCallBack );
-			MSYS_AddRegion( &gShopKeeperSubTitleMouseRegion );
 		}
 
 		//redraw the screen

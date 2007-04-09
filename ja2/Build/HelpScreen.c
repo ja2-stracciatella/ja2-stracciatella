@@ -516,8 +516,6 @@ static BOOLEAN EnterHelpScreen(void)
 	//Create a mouse region 'mask' the entrire screen
 	MSYS_DefineRegion( &gHelpScreenFullScreenMask, 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST,
 							 gHelpScreen.usCursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-  MSYS_AddRegion( &gHelpScreenFullScreenMask );
-
 
 	//Create the exit button
 	if( gHelpScreen.bNumberOfButtons != 0 )
@@ -579,7 +577,6 @@ static BOOLEAN EnterHelpScreen(void)
 /*
 	MSYS_DefineRegion( &HelpScreenDontShowHelpAgainToggleTextRegion, usPosX, usPosY, (UINT16)(usPosX+usWidth), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGHEST-1,
 							 gHelpScreen.usCursor, MSYS_NO_CALLBACK, HelpScreenDontShowHelpAgainToggleTextRegionCallBack );
-  MSYS_AddRegion( &HelpScreenDontShowHelpAgainToggleTextRegion );
 */
 
 	// load the help screen background graphic and add it
@@ -2251,7 +2248,6 @@ static void CreateScrollAreaButtons(void)
 		//Create a mouse region 'mask' the entrire screen
 	MSYS_DefineRegion( &gHelpScreenScrollArea, usPosX, (UINT16)iPosY, (UINT16)(usPosX+usWidth), (UINT16)(iPosY+HLP_SCRN__HEIGHT_OF_SCROLL_AREA), MSYS_PRIORITY_HIGHEST,
 							 gHelpScreen.usCursor, SelectHelpScrollAreaMovementCallBack, SelectHelpScrollAreaCallBack );
-  MSYS_AddRegion( &gHelpScreenScrollArea );
 
 	guiHelpScreenScrollArrowImage[ 0 ] = LoadButtonImage( "INTERFACE/HelpScreen.sti", 14,10, 11, 12 ,13 );
 	guiHelpScreenScrollArrowImage[ 1 ] = UseLoadedButtonImage( guiHelpScreenScrollArrowImage[ 0 ] ,19,15,16,17,18 );

@@ -422,9 +422,6 @@ static BOOLEAN EnterCreditsScreen(void)
 		MSYS_DefineRegion( &gCrdtMouseRegions[uiCnt], gCreditFaces[uiCnt].sX, gCreditFaces[uiCnt].sY, (INT16)(gCreditFaces[uiCnt].sX + gCreditFaces[uiCnt].sWidth), (INT16)(gCreditFaces[uiCnt].sY + gCreditFaces[uiCnt].sHeight), MSYS_PRIORITY_NORMAL,
 							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
 
-		// Add region
-		MSYS_AddRegion( &gCrdtMouseRegions[uiCnt] );
-
 		MSYS_SetRegionUserData( &gCrdtMouseRegions[uiCnt], 0, uiCnt );
 	}
 

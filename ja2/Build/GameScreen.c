@@ -991,8 +991,6 @@ void EnterModalTactical( INT8 bMode )
 
 			MSYS_DefineRegion( &gTacticalDisableRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGH,
 								 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-			// Add region
-			MSYS_AddRegion( &gTacticalDisableRegion );
 		}
 	}
 

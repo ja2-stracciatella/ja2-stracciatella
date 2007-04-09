@@ -773,9 +773,6 @@ static BOOLEAN EnterQuestDebugSystem(void)
 
 	MSYS_DefineRegion( &gQuestDebugSysScreenRegions, 0, 0, 640, 480, MSYS_PRIORITY_HIGH,
 				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-	// Add region
-	MSYS_AddRegion( &gQuestDebugSysScreenRegions );
-
 
 	guiQuestDebugExitButton =
 		CreateTextButton( QuestDebugText[ QUEST_DBS_EXIT_QUEST_DEBUG ], QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -895,8 +892,6 @@ static BOOLEAN EnterQuestDebugSystem(void)
 	{
 		MSYS_DefineRegion( &gQuestListRegion[ i ], usPosX, usPosY, (UINT16)(usPosX+QUEST_DBS_FIRST_SECTION_WIDTH), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+2,
 					CURSOR_WWW, MSYS_NO_CALLBACK, ScrollQuestListRegionCallBack ); //CURSOR_LAPTOP_SCREEN
-		// Add region
-		MSYS_AddRegion( &gQuestListRegion[ i ] );
 		MSYS_SetRegionUserData( &gQuestListRegion[ i ], 0, i);
 
 		usPosY += usFontHeight;
@@ -910,8 +905,6 @@ static BOOLEAN EnterQuestDebugSystem(void)
 	{
 		MSYS_DefineRegion( &gFactListRegion[ i ], usPosX, usPosY, (UINT16)(usPosX+QUEST_DBS_SECOND_SECTION_WIDTH), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+2,
 					CURSOR_WWW, MSYS_NO_CALLBACK, ScrollFactListRegionCallBack ); //CURSOR_LAPTOP_SCREEN
-		// Add region
-		MSYS_AddRegion( &gFactListRegion[ i ] );
 		MSYS_SetRegionUserData( &gFactListRegion[ i ], 0, i);
 
 		usPosY += usFontHeight;
@@ -1683,7 +1676,6 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 				{
 					MSYS_DefineRegion( &gSelectedNpcListRegion[i], usPosX, (UINT16)(usPosY), (UINT16)(usPosX + gpActiveListBox->usScrollWidth), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+20,
 											 CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
-					MSYS_AddRegion(&gSelectedNpcListRegion[i]);
 					MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
 
 					usPosY += usFontHeight;
@@ -1703,7 +1695,6 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			{
 				MSYS_DefineRegion( &gScrollAreaRegion[i], usPosX, usPosY, (UINT16)(usPosX+gpActiveListBox->usScrollBarWidth), (UINT16)(usPosY + gpActiveListBox->usScrollBarHeight ), MSYS_PRIORITY_HIGH+20,
 										 CURSOR_WWW, ScrollAreaMovementCallBack, ScrollAreaRegionCallBack);
-				MSYS_AddRegion(&gScrollAreaRegion[i]);
 				MSYS_SetRegionUserData( &gScrollAreaRegion[ i ], 0, i );
 			}
 
@@ -1713,7 +1704,6 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 
 			MSYS_DefineRegion( &gScrollArrowsRegion[0], usPosX, (UINT16)(usPosY), (UINT16)(usPosX+gpActiveListBox->usScrollBarWidth), (UINT16)(usPosY+gpActiveListBox->usScrollArrowHeight), MSYS_PRIORITY_HIGH+20,
 									 CURSOR_WWW, MSYS_NO_CALLBACK, ScrollArrowsRegionCallBack);
-			MSYS_AddRegion(&gScrollArrowsRegion[0]);
 			MSYS_SetRegionUserData( &gScrollArrowsRegion[ 0 ], 0, 0 );
 
 			//Bottom Scroll arrow
@@ -1721,7 +1711,6 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 
 			MSYS_DefineRegion( &gScrollArrowsRegion[1], usPosX, usPosY, (UINT16)(usPosX+gpActiveListBox->usScrollBarWidth), (UINT16)(usPosY + gpActiveListBox->usScrollArrowHeight), MSYS_PRIORITY_HIGH+20,
 									 CURSOR_WWW, MSYS_NO_CALLBACK, ScrollArrowsRegionCallBack);
-			MSYS_AddRegion(&gScrollArrowsRegion[1]);
 			MSYS_SetRegionUserData( &gScrollArrowsRegion[ 1 ], 0, 1 );
 
 
@@ -1730,7 +1719,6 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			{
 				MSYS_DefineRegion( &gQuestTextEntryDebugDisableScreenRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH+15,
 										 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack );
-				MSYS_AddRegion(&gQuestTextEntryDebugDisableScreenRegion);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -2628,7 +2616,6 @@ static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* p
 			{
 				MSYS_DefineRegion( &gQuestTextEntryDebugDisableScreenRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH+40,
 										 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack );
-				MSYS_AddRegion(&gQuestTextEntryDebugDisableScreenRegion);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -2968,7 +2955,6 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 			{
 				MSYS_DefineRegion( &gQuestTextEntryDebugDisableScreenRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH+40,
 										 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack );
-				MSYS_AddRegion(&gQuestTextEntryDebugDisableScreenRegion);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -3601,7 +3587,6 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 	{
 		MSYS_DefineRegion( &gQuestTextEntryDebugDisableScreenRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH+3,
 								 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack );
-		MSYS_AddRegion(&gQuestTextEntryDebugDisableScreenRegion);
 		gfBackgroundMaskEnabled = TRUE;
 	}
 

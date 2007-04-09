@@ -84,8 +84,6 @@ BOOLEAN EnterAimFacialIndex()
 
 			MSYS_DefineRegion( &gMercFaceMouseRegions[ i ], usPosX, usPosY, (INT16)(usPosX + AIM_FI_PORTRAIT_WIDTH), (INT16)(usPosY + AIM_FI_PORTRAIT_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, SelectMercFaceMoveRegionCallBack, SelectMercFaceRegionCallBack);
-			// Add region
-			MSYS_AddRegion( &gMercFaceMouseRegions[ i ] );
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
 			sprintf(sTemp, "%s%02d.sti", sFaceLoc, AimMercArray[i]);
@@ -100,9 +98,6 @@ BOOLEAN EnterAimFacialIndex()
 
 	MSYS_DefineRegion( &gScreenMouseRegions, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
 						 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectScreenRegionCallBack);
-	// Add region
-	MSYS_AddRegion( &gScreenMouseRegions );
-
 
 	InitAimMenuBar();
 	InitAimDefaults();

@@ -195,7 +195,6 @@ BOOLEAN InitFloristDefaults()
 		//flower title homepage link
 		MSYS_DefineRegion( &gSelectedFloristTitleHomeLinkRegion, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y, (UINT16)(FLORIST_SMALL_TITLE_X + FLORIST_SMALL_TITLE_WIDTH), (UINT16)(FLORIST_SMALL_TITLE_Y + FLORIST_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
 						 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristTitleHomeLinkRegionCallBack );
-		MSYS_AddRegion(&gSelectedFloristTitleHomeLinkRegion);
 	}
 
 	return(TRUE);

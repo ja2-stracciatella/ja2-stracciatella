@@ -563,8 +563,6 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion( &gMenuOverlayRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST-1,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback );
-	// Add region
-	MSYS_AddRegion( &gMenuOverlayRegion);
 
 
 	// OK, CHECK FOR BOUNDARIES!
@@ -2019,8 +2017,6 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion( &gMenuOverlayRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST-1,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback );
-	// Add region
-	MSYS_AddRegion( &gMenuOverlayRegion);
 
 
 	iActionIcons[ USE_KEYRING_ICON ] = QuickCreateButton( iIconImages[ USE_KEYRING_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),

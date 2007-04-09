@@ -74,7 +74,6 @@ BOOLEAN EnterFloristCards()
 		{
 			MSYS_DefineRegion( &gSelectedFloristCardsRegion[ubCount], usPosX, usPosY, (UINT16)(usPosX + FLORIST_CARD_CARD_WIDTH), (UINT16)(usPosY + FLORIST_CARD_CARD_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectFloristCardsRegionCallBack );
-			MSYS_AddRegion(&gSelectedFloristCardsRegion[ubCount]);
 			MSYS_SetRegionUserData( &gSelectedFloristCardsRegion[ubCount], 0, ubCount );
 			ubCount++;
 			usPosX += FLORIST_CARD_FIRST_OFFSET_X;

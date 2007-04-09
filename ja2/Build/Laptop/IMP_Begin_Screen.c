@@ -982,13 +982,6 @@ static void CreateIMPBeginScreenMouseRegions(void)
 	// IMP_FEMALE gender region
 	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 3 ] , FEMALE_BOX_X, MALE_BOX_Y,   FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		MvtOnFemaleRegionCallBack, SelectFemaleRegionCallBack);
-
-
-	// add regions
-	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 0 ]);
-	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 1 ]);
-	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 2 ]);
-	MSYS_AddRegion(&gIMPBeginScreenMouseRegions[ 3 ]);
 }
 
 

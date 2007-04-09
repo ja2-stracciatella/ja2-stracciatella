@@ -315,8 +315,6 @@ BOOLEAN InitBobbyBrTitle()
 	//initialize the link to the homepage by clicking on the title
 	MSYS_DefineRegion( &gSelectedTitleImageLinkRegion, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y, (BOBBYR_BRTITLE_X + BOBBYR_BRTITLE_WIDTH), (UINT16)(BOBBYR_BRTITLE_Y + BOBBYR_BRTITLE_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectTitleImageLinkRegionCallBack);
-	MSYS_AddRegion( &gSelectedTitleImageLinkRegion );
-
 
 	gusOldItemNumOnTopOfPage=65535;
 
@@ -1267,7 +1265,6 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pI
 		//Mouse region for the Big Item Image
 		MSYS_DefineRegion( &gSelectedBigImageRegion[ i ], BOBBYR_GRID_PIC_X, usPosY, (BOBBYR_GRID_PIC_X + BOBBYR_GRID_PIC_WIDTH), (UINT16)(usPosY + BOBBYR_GRID_PIC_HEIGHT), MSYS_PRIORITY_HIGH,
 								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectBigImageRegionCallBack);
-		MSYS_AddRegion(&gSelectedBigImageRegion[ i ]);
 		MSYS_SetRegionUserData( &gSelectedBigImageRegion[ i ], 0, i);
 
 		//specify the help text only if the items is ammo
