@@ -336,7 +336,7 @@ void RestrictMouseToXYXY(UINT16 usX1, UINT16 usY1, UINT16 usX2, UINT16 usY2)
 }
 
 
-void RestrictMouseCursor(SGPRect *pRectangle)
+void RestrictMouseCursor(const SGPRect* pRectangle)
 {
 	// Make a copy of our rect....
 	gCursorClipRect = *pRectangle;

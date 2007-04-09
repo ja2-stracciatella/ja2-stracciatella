@@ -79,9 +79,6 @@ void EnterImpHomePage( void )
 	 // load buttons
    CreateIMPHomePageButtons( );
 
-	 // we have now vsisited IMP, reset fact we haven't
-	 fNotVistedImpYet = FALSE;
-
 	 // render screen once
 	 RenderImpHomePage( );
 }

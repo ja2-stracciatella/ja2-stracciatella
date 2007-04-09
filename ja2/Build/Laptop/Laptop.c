@@ -87,17 +87,6 @@
 #endif
 
 
-// icons text id's
-enum{
-	MAIL=0,
-  WWW,
-	FINANCIAL,
-	PERSONNEL,
-	HISTORY,
-	FILES,
-	MAX_ICON_COUNT,
-};
-
 enum{
 	NO_REGION=0,
 	EMAIL_REGION,
@@ -106,33 +95,6 @@ enum{
 	PERSONNEL_REGION,
 	HISTORY_REGION,
 	FILES_REGION,
-};
-
-
-
-
-
-struct rgbcolor
-{
-	UINT8 ubRed;
-	UINT8 ubGreen;
-	UINT8 ubBlue;
-};
-
-typedef struct rgbcolor RGBCOLOR;
-
-RGBCOLOR GlowColors[]={
-	{0,0,0},
-  {25,0,0},
-	{50,0,0},
-	{75,0,0},
-	{100,0,0},
-	{125,0,0},
-	{150,0,0},
-	{175,0,0},
-	{200,0,0},
-	{225,0,0},
-	{250,0,0},
 };
 
 
@@ -162,12 +124,7 @@ enum{
 #define LAPTOP_ICON_TEXT_X       24
 #define LAPTOP_ICON_TEXT_WIDTH   103-24
 #define LAPTOP_ICON_TEXT_HEIGHT        6
-#define LAPTOP_ICON_TEXT_MAIL_Y       82      -5
-#define LAPTOP_ICON_TEXT_WWW_Y       153+4-10 -5
 #define LAPTOP_ICON_TEXT_FINANCIAL_Y  229-10  -5
-#define LAPTOP_ICON_TEXT_PERSONNEL_Y 291+5+5  -5
-#define LAPTOP_ICON_TEXT_HISTORY_Y   346+10+5 -5
-#define LAPTOP_ICON_TEXT_FILES_Y     412+5+3  -5
 #define LAPTOPICONFONT FONT10ARIAL
 #define BOOK_FONT FONT10ARIAL
 #define DOWNLOAD_FONT FONT12ARIAL
@@ -175,15 +132,8 @@ enum{
 #define ERROR_FONT  FONT12ARIAL
 
 
-#define HISTORY_ICON_OFFSET_X    0
-#define FILES_ICON_OFFSET_X      3
-#define FINANCIAL_ICON_OFFSET_X 0
-#define LAPTOP_ICON_WIDTH 80
 #define MAX_BUTTON_COUNT 1
 #define ON_BUTTON 0
-#define GLOW_DELAY 70
-#define WWW_COUNT 6
-#define ICON_INTERVAL 150
 #define BOOK_X 111
 #define BOOK_TOP_Y 79
 #define BOOK_HEIGHT 12
@@ -195,14 +145,9 @@ enum{
 
 #define LONG_UNIT_TIME 120
 #define UNIT_TIME 40
-#define LOAD_TIME UNIT_TIME*30
 #define FAST_UNIT_TIME 3
 #define FASTEST_UNIT_TIME 2
 #define ALMOST_FAST_UNIT_TIME 25
-#define ALMOST_FAST_LOAD_TIME ALMOST_FAST_UNIT_TIME * 30
-#define FAST_LOAD_TIME FAST_UNIT_TIME*30
-#define LONG_LOAD_TIME LONG_UNIT_TIME*30
-#define FASTEST_LOAD_TIME FASTEST_UNIT_TIME * 30
 #define DOWNLOAD_X 300
 #define DOWNLOAD_Y 200
 #define LAPTOP_WINDOW_X DOWNLOAD_X+12
@@ -210,8 +155,6 @@ enum{
 #define LAPTOP_BAR_Y LAPTOP_WINDOW_Y+2
 #define LAPTOP_BAR_X LAPTOP_WINDOW_X+1
 #define UNIT_WIDTH 4
-#define LAPTOP_WINDOW_WIDTH 331-181
-#define LAPTOP_WINDOW_HEIGHT 240-190
 #define DOWN_STRING_X DOWNLOAD_X+47
 #define DOWN_STRING_Y DOWNLOAD_Y+ 5
 #define ERROR_X 300
@@ -239,7 +182,6 @@ enum{
 #define		LAPTOP_TITLE_BAR_TOP_LEFT_X							  111
 #define		LAPTOP_TITLE_BAR_TOP_LEFT_Y								25
 #define		LAPTOP_TITLE_BAR_TOP_RIGHT_X							610
-#define		LAPTOP_TITLE_BAR_TOP_RIGHT_Y							LAPTOP_TITLE_BAR_TOP_LEFT_Y
 
 #define		LAPTOP_TITLE_BAR_ICON_OFFSET_X						5
 #define		LAPTOP_TITLE_BAR_ICON_OFFSET_Y						2
@@ -255,9 +197,8 @@ enum{
 // the wait time for closing of laptop animation/delay
 #define EXIT_LAPTOP_DELAY_TIME 100
 
-UINT32		guiTitleBarSurface;
-BOOLEAN		gfTitleBarSurfaceAlreadyActive=FALSE;
-extern BOOLEAN fFirstTimeInGameScreen;
+static UINT32  guiTitleBarSurface;
+static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 
 #define		LAPTOP__NEW_FILE_ICON_X			83
 #define		LAPTOP__NEW_FILE_ICON_Y			412//(405+19)
@@ -272,26 +213,23 @@ extern BOOLEAN fFirstTimeInGameScreen;
 // Mode values
 UINT32 guiCurrentLaptopMode;
 UINT32 guiPreviousLaptopMode;
-UINT32 guiCurrentWWWMode = LAPTOP_MODE_NONE;
+static UINT32 guiCurrentWWWMode = LAPTOP_MODE_NONE;
 INT32	 giCurrentSubPage;
-UINT32 guiCurrentLapTopCursor;
-UINT32 guiPreviousLapTopCursor;
-UINT32 guiCurrentSidePanel; // the current navagation panel on the leftside of the laptop screen
-UINT32 guiPreviousSidePanel;
+static UINT32 guiCurrentLapTopCursor;
+static UINT32 guiPreviousLapTopCursor;
 
 extern UINT32 guiVObjectSize;
 extern UINT32 guiVSurfaceSize;
 
 
-INT32 iHighLightBookLine=-1;
+static INT32 iHighLightBookLine = -1;
 BOOLEAN fFastLoadFlag = FALSE;
-BOOLEAN gfSideBarFlag;
-BOOLEAN gfEnterLapTop=TRUE;
+static BOOLEAN gfEnterLapTop=TRUE;
 BOOLEAN gfShowBookmarks=FALSE;
 
 // in progress of loading a page?
 BOOLEAN fLoadPendingFlag=FALSE;
-BOOLEAN fErrorFlag;
+static BOOLEAN fErrorFlag;
 
 // mark buttons dirty?
 BOOLEAN fMarkButtonsDirtyFlag = TRUE;
@@ -300,7 +238,7 @@ BOOLEAN fMarkButtonsDirtyFlag = TRUE;
 BOOLEAN fReDrawPostButtonRender = FALSE;
 
 // intermediate refresh flag
-BOOLEAN fIntermediateReDrawFlag = FALSE;
+static BOOLEAN fIntermediateReDrawFlag = FALSE;
 
 // in laptop right now?
 BOOLEAN fCurrentlyInLaptop = FALSE;
@@ -308,23 +246,17 @@ BOOLEAN fCurrentlyInLaptop = FALSE;
 // exit due to a message box pop up?..don't really leave LAPTOP
 BOOLEAN fExitDueToMessageBox = FALSE;
 
-// have we visited IMP yety?
-BOOLEAN fNotVistedImpYet = TRUE;
-
 // exit laptop during a load?
-BOOLEAN fExitDuringLoad = FALSE;
+static BOOLEAN fExitDuringLoad = FALSE;
 
 // done loading?
 BOOLEAN fDoneLoadPending = FALSE;
-
-// re connecting to a web page?
-BOOLEAN fReConnectingFlag = FALSE;
 
 // going a subpage of a web page?..faster access time
 BOOLEAN fConnectingToSubPage = FALSE;
 
 // is this our first time in laptop?
-BOOLEAN fFirstTimeInLaptop = TRUE;
+static BOOLEAN fFirstTimeInLaptop = TRUE;
 
 // redraw the book mark info panel .. for blitting on top of animations
 BOOLEAN fReDrawBookMarkInfo = FALSE;
@@ -343,142 +275,113 @@ static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
 UINT32		guiExitScreen = MAP_SCREEN;
 
-MOUSE_REGION gLaptopRegion;
 // Laptop screen graphic handle
-UINT32    guiLAPTOP;
-BOOLEAN fNewWWWDisplay=TRUE;
+static UINT32 guiLAPTOP;
 
-static BOOLEAN fNewWWW=TRUE;
+static BOOLEAN fNewWWW = TRUE;
 
 //Used to store the site to go to after the 'rain delay' message
 extern	UINT32										guiRainLoop;
 
 
-INT32	giRainDelayInternetSite=-1;
-
-// have we visitied this site already?
-//BOOLEAN fVisitedBookmarkAlready[20];
+static INT32 giRainDelayInternetSite = -1;
 
 
 // the laptop icons
-UINT32 guiFILESICON;
-UINT32 guiFINANCIALICON;
-UINT32 guiHISTORYICON;
-UINT32 guiMAILICON;
-UINT32 guiPERSICON;
-UINT32 guiWWWICON;
-UINT32 guiBOOKTOP;
-UINT32 guiBOOKHIGH;
-UINT32 guiBOOKMID;
-UINT32 guiBOOKBOT;
-UINT32 guiBOOKMARK;
-UINT32 guiGRAPHWINDOW;
-UINT32 guiGRAPHBAR;
+static UINT32 guiFILESICON;
+static UINT32 guiFINANCIALICON;
+static UINT32 guiHISTORYICON;
+static UINT32 guiMAILICON;
+static UINT32 guiPERSICON;
+static UINT32 guiWWWICON;
+static UINT32 guiBOOKTOP;
+static UINT32 guiBOOKHIGH;
+static UINT32 guiBOOKMID;
+static UINT32 guiBOOKBOT;
+static UINT32 guiBOOKMARK;
+static UINT32 guiGRAPHWINDOW;
+static UINT32 guiGRAPHBAR;
 UINT32 guiLaptopBACKGROUND;
-UINT32 guiDOWNLOADTOP;
-UINT32 guiDOWNLOADMID;
-UINT32 guiDOWNLOADBOT;
-UINT32 guiTITLEBARLAPTOP;
-UINT32 guiLIGHTS;
+static UINT32 guiDOWNLOADTOP;
+static UINT32 guiDOWNLOADMID;
+static UINT32 guiDOWNLOADBOT;
+static UINT32 guiTITLEBARLAPTOP;
+static UINT32 guiLIGHTS;
 UINT32 guiTITLEBARICONS;
-UINT32 guiDESKTOP;
+static UINT32 guiDESKTOP;
 
 // email notification
-UINT32 guiUNREAD;
-UINT32 guiNEWMAIL;
-
-//laptop button
-UINT32 guiLAPTOPBUTTON;
-// the sidepanel handle
-UINT32    guiLAPTOPSIDEPANEL;
-
-//BOOLEAN		gfNewGameLaptop = TRUE;
+static UINT32 guiUNREAD;
 
 // enter new laptop mode due to sliding bars
-BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
+static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
 
 
 // laptop pop up messages index value
-INT32 iLaptopMessageBox = -1;
+static INT32 iLaptopMessageBox = -1;
 
 // whether or not we are initing the slide in title bar
-BOOLEAN fInitTitle = TRUE;
+static BOOLEAN fInitTitle = TRUE;
 
 // tab handled
-BOOLEAN fTabHandled = FALSE;
-
-// are we maxing or mining?
-BOOLEAN fForward = TRUE;
+static BOOLEAN fTabHandled = FALSE;
 
 // BUTTON IMAGES
-INT32 giLapTopButton[MAX_BUTTON_COUNT];
-INT32 giLapTopButtonImage[MAX_BUTTON_COUNT];
-INT32 giErrorButton[1];
-INT32 giErrorButtonImage[1];
+static INT32 giLapTopButton[MAX_BUTTON_COUNT];
+static INT32 giLapTopButtonImage[MAX_BUTTON_COUNT];
+static INT32 giErrorButton[1];
+static INT32 giErrorButtonImage[1];
 
-INT32 gLaptopButton[ 7 ];
-INT32 gLaptopButtonImage[ 7 ];
+static INT32 gLaptopButton[7];
+static INT32 gLaptopButtonImage[7];
 
 // minimize button
-INT32 gLaptopMinButton[ 1 ];
-INT32 gLaptopMinButtonImage[ 1 ];
+static INT32 gLaptopMinButton[1];
+static INT32 gLaptopMinButtonImage[1];
 
 
-
-INT32 gLaptopProgramStates[ LAPTOP_PROGRAM_HISTORY + 1 ];
+static INT32 gLaptopProgramStates[LAPTOP_PROGRAM_HISTORY + 1];
 
 // process of mazimizing
-BOOLEAN fMaximizingProgram = FALSE;
+static BOOLEAN fMaximizingProgram = FALSE;
 
 // program we are maximizing
-INT8 bProgramBeingMaximized = -1;
+static INT8 bProgramBeingMaximized = -1;
 
 // are we minimizing
-BOOLEAN fMinizingProgram = FALSE;
+static BOOLEAN fMinizingProgram = FALSE;
 
 
 // process openned queue
-INT32  gLaptopProgramQueueList[ 6 ];
-
+static INT32 gLaptopProgramQueueList[6];
 
 
 // state of createion of minimize button
-BOOLEAN fCreateMinimizeButton = FALSE;
+static BOOLEAN fCreateMinimizeButton = FALSE;
 
 BOOLEAN fExitingLaptopFlag = FALSE;
 
 // HD and power lights on
-BOOLEAN fPowerLightOn = TRUE;
-BOOLEAN fHardDriveLightOn = FALSE;
+static BOOLEAN fPowerLightOn = TRUE;
+static BOOLEAN fHardDriveLightOn = FALSE;
 
 // HD flicker
-BOOLEAN fFlickerHD = FALSE;
+static BOOLEAN fFlickerHD = FALSE;
 
 // the screens limiting rect
-SGPRect LaptopScreenRect={ LAPTOP_UL_X,LAPTOP_UL_Y - 5,LAPTOP_SCREEN_LR_X + 2,LAPTOP_SCREEN_LR_Y + 5 + 19};
+static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, LAPTOP_UL_Y - 5, LAPTOP_SCREEN_LR_X + 2, LAPTOP_SCREEN_LR_Y + 5 + 19};
 
 
 // the sub pages vistsed or not status within the web browser
-BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
-
-//INT32 iBookMarkList[MAX_BOOKMARKS];
+static BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
 
 // mouse regions
-MOUSE_REGION gEmailRegion;
-MOUSE_REGION gWWWRegion;
-MOUSE_REGION gFinancialRegion;
-MOUSE_REGION gPersonnelRegion;
-MOUSE_REGION gHistoryRegion;
-MOUSE_REGION gFilesRegion;
-MOUSE_REGION gLapTopScreenRegion;
-MOUSE_REGION gBookmarkMouseRegions[MAX_BOOKMARKS];
+static MOUSE_REGION gLapTopScreenRegion;
+static MOUSE_REGION gBookmarkMouseRegions[MAX_BOOKMARKS];
 MOUSE_REGION pScreenMask;
-MOUSE_REGION gLapTopProgramMinIcon;
-MOUSE_REGION gNewMailIconRegion;
-MOUSE_REGION gNewFileIconRegion;
-
-// highlighted mouse region
-INT32 giHighLightRegion=NO_REGION;
+static MOUSE_REGION gLapTopProgramMinIcon;
+static MOUSE_REGION gNewMailIconRegion;
+static MOUSE_REGION gNewFileIconRegion;
 
 
 // highlighted regions
@@ -521,6 +424,14 @@ void	SetLaptopNewGameFlag( )
 {
 	LaptopSaveInfo.gfNewGameLaptop = TRUE;
 }
+
+
+enum {
+	LAPTOP_NO_CURSOR,
+	LAPTOP_PANEL_CURSOR,
+	LAPTOP_SCREEN_CURSOR,
+	LAPTOP_WWW_CURSOR
+};
 
 
 static void HandleLapTopCursorUpDate(void)
@@ -596,11 +507,8 @@ UINT32 LaptopScreenInit()
 	guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;
 	guiPreviousLaptopMode = LAPTOP_MODE_NONE;
 	guiCurrentWWWMode = LAPTOP_MODE_NONE;
-	guiCurrentSidePanel = FIRST_SIDE_PANEL;
-	guiPreviousSidePanel = FIRST_SIDE_PANEL;
 
 
-	gfSideBarFlag=FALSE;
 	gfShowBookmarks=FALSE;
 	InitBookMarkList();
 	GameInitAIM();
@@ -779,9 +687,6 @@ static INT32 EnterLaptop(void)
 	guiCurrentLaptopMode = LAPTOP_MODE_NONE;
 	guiPreviousLaptopMode = LAPTOP_MODE_NONE;
 	guiCurrentWWWMode = LAPTOP_MODE_NONE;
-	guiCurrentSidePanel = FIRST_SIDE_PANEL;
-	guiPreviousSidePanel = FIRST_SIDE_PANEL;
-  gfSideBarFlag=FALSE;
   CreateLapTopMouseRegions();
   RenderLapTopImage();
   HighLightRegion(giCurrentRegion);
@@ -1634,8 +1539,6 @@ static void HandleLapTopHandles(void)
 
 }
 
-extern BOOLEAN gfPrintFrameBuffer;
-
 
 static void CheckIfNewWWWW(void);
 static void CheckMarkButtonsDirtyFlag(void);
@@ -1755,7 +1658,6 @@ UINT32 LaptopScreenHandle()
 
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 			InvalidateScreen();
-			//gfPrintFrameBuffer = TRUE;
 			RefreshScreen();
 		}
 		fReDrawScreenFlag = TRUE;
@@ -1884,7 +1786,6 @@ UINT32 LaptopScreenHandle()
 	//Handle keyboard shortcuts...
 
 	// mouse regions
-  //HandleLapTopScreenMouseUi();
   //RenderButtons();
 	//RenderButtonsFastHelp( );
 
@@ -2306,8 +2207,7 @@ BOOLEAN LeaveLapTopScreen( void )
 				/*guiExitScreen = GAME_SCREEN; */
 				InitNewGame( FALSE );
 				gfDontStartTransitionFromLaptop = TRUE;
-				/*InitHelicopterEntranceByMercs( );
-				fFirstTimeInGameScreen = TRUE;*/
+				/*InitHelicopterEntranceByMercs();*/
 				return( TRUE );
 			}
 		}
@@ -2406,7 +2306,6 @@ BOOLEAN LeaveLapTopScreen( void )
 
 				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 				InvalidateScreen();
-				//gfPrintFrameBuffer = TRUE;
 				RefreshScreen();
 			}
 		}
@@ -2555,7 +2454,6 @@ static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if (giCurrentRegion != WWW_REGION) giOldRegion = giCurrentRegion;
-		if (!fNewWWW) fNewWWWDisplay = FALSE;
 
 		// reset show bookmarks
 		if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
@@ -2568,17 +2466,10 @@ static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			gfShowBookmarks = !gfShowBookmarks;
 		}
 
-		if (gfShowBookmarks && !fNewWWW)
-		{
-			fNewWWWDisplay = FALSE;
-		}
-		else if (fNewWWW)
+		if (fNewWWW)
 		{
 			// no longer a new WWW mode
 			fNewWWW = FALSE;
-
-			// new WWW to display
-			fNewWWWDisplay = TRUE;
 
 			// make sure program is maximized
 			if (gLaptopProgramStates[LAPTOP_PROGRAM_WEB_BROWSER] == LAPTOP_PROGRAM_OPEN)
@@ -2652,37 +2543,6 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_FILES);
 		fReDrawScreenFlag = TRUE;
 	}
-}
-
-
-static void HandleLapTopScreenMouseUi(void)
-{
- if ( gEmailRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=EMAIL_REGION;
- }
- else if ( gPersonnelRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=PERSONNEL_REGION;
- }
- else if ( gFinancialRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=FINANCIAL_REGION;
- }
- else if ( gWWWRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=WWW_REGION;
- }
- else if ( gFilesRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=FILES_REGION;
- }
- else if ( gHistoryRegion.uiFlags & MSYS_MOUSE_IN_AREA )
- {
-  giHighLightRegion=HISTORY_REGION;
- }
- else
-  giHighLightRegion=NO_REGION;
 }
 
 
@@ -3011,10 +2871,7 @@ static void DisplayBookMarks(void)
 
 	//BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKBOT, 0, BOOK_X, 6 + BOOK_TOP_Y + iCounter * BOOK_HEIGHT);
 
-	/*if(fNewWWWDisplay)
-   ScrollDisplayText(BOOK_TOP_Y+2+((iCounter)*BOOK_HEIGHT)+6);
-	else
- */  InvalidateRegion(BOOK_X,BOOK_TOP_Y+((iCounter)*BOOK_HEIGHT)+12, BOOK_X+BOOK_WIDTH, BOOK_TOP_Y+((iCounter+1)*BOOK_HEIGHT)+16);
+	InvalidateRegion(BOOK_X, BOOK_TOP_Y + iCounter * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (iCounter + 1) * BOOK_HEIGHT + 16);
 	SetFontShadow(DEFAULT_SHADOW);
 
 

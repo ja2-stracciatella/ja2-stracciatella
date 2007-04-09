@@ -33,22 +33,15 @@ void HaventMadeImpMercEmailCallBack();
 extern UINT32 guiCurrentLaptopMode;
 extern UINT32 guiPreviousLaptopMode;
 extern INT32	 giCurrentSubPage;
-extern UINT32 guiCurrentLapTopCursor;
-extern UINT32 guiPreviousLapTopCursor;
 extern BOOLEAN fMarkButtonsDirtyFlag;
-extern BOOLEAN fNotVistedImpYet;
 extern BOOLEAN fReDrawScreenFlag;
 extern BOOLEAN fPausedReDrawScreenFlag;
-extern BOOLEAN fIntermediateReDrawFlag;
 extern BOOLEAN fLoadPendingFlag;
-extern BOOLEAN fEscKeyHandled;
 extern BOOLEAN fReDrawPostButtonRender;
 extern BOOLEAN fCurrentlyInLaptop;
-//extern BOOLEAN gfNewGameLaptop;
 extern UINT32 guiLaptopBACKGROUND;
 extern UINT32 guiTITLEBARICONS;
 extern BOOLEAN fDoneLoadPending;
-extern BOOLEAN fReConnectingFlag;
 extern BOOLEAN fConnectingToSubPage;
 extern BOOLEAN fFastLoadFlag;
 extern BOOLEAN gfShowBookmarks;
@@ -107,21 +100,6 @@ enum
 // bookamrks for WWW bookmark list
 
 
-enum{
-	FIRST_SIDE_PANEL=1,
-  SECOND_SIDE_PANEL,
-};
-enum{
-	LAPTOP_NO_CURSOR=0,
-  LAPTOP_PANEL_CURSOR,
-  LAPTOP_SCREEN_CURSOR,
-	LAPTOP_WWW_CURSOR,
-};
-
-#define LAPTOP_SIDE_PANEL_X 0
-#define LAPTOP_SIDE_PANEL_Y 0
-#define LAPTOP_SIDE_PANEL_WIDTH 640
-#define LAPTOP_SIDE_PANEL_HEIGHT 480
 #define LAPTOP_X 0
 #define LAPTOP_Y 0
 
