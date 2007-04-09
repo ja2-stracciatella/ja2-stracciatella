@@ -189,8 +189,6 @@ static void CheckForValidMapEdge(UINT8* pubStrategicInsertionCode)
 
 static void ClearPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoneOverheadPlacementClickCallback(GUI_BUTTON* btn, INT32 reason);
-static void FastHelpRemoved2Callback(void);
-static void FastHelpRemovedCallback(void);
 static void GroupPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 static void MercClickCallback(MOUSE_REGION* reg, INT32 reason);
 static void MercMoveCallback(MOUSE_REGION* reg, INT32 reason);
@@ -240,25 +238,21 @@ void InitTacticalPlacementGUI()
 		DEFAULT_MOVE_CALLBACK, ClearPlacementsCallback );
 	SpecifyGeneralButtonTextAttributes( iTPButtons[ CLEAR_BUTTON ], gpStrategicString[ STR_TP_CLEAR ], BLOCKFONT, FONT_BEIGE, 141 );
 	SetButtonFastHelpText( iTPButtons[ CLEAR_BUTTON ], gpStrategicString[ STR_TP_CLEARHELP ] );
-	SetBtnHelpEndCallback( iTPButtons[ CLEAR_BUTTON ], FastHelpRemoved2Callback );
 	iTPButtons[ SPREAD_BUTTON ] =
 		QuickCreateButton( giOverheadButtonImages[ SPREAD_BUTTON ], 11, 367, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 		DEFAULT_MOVE_CALLBACK, SpreadPlacementsCallback );
 	SpecifyGeneralButtonTextAttributes( iTPButtons[ SPREAD_BUTTON ], gpStrategicString[ STR_TP_SPREAD ], BLOCKFONT, FONT_BEIGE, 141 );
 	SetButtonFastHelpText( iTPButtons[ SPREAD_BUTTON ], gpStrategicString[ STR_TP_SPREADHELP ] );
-	SetBtnHelpEndCallback( iTPButtons[ SPREAD_BUTTON ], FastHelpRemovedCallback );
 	iTPButtons[ GROUP_BUTTON ] =
 		QuickCreateButton( giOverheadButtonImages[ GROUP_BUTTON ], 11, 402, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 		DEFAULT_MOVE_CALLBACK, GroupPlacementsCallback );
 	SpecifyGeneralButtonTextAttributes( iTPButtons[ GROUP_BUTTON ], gpStrategicString[ STR_TP_GROUP ], BLOCKFONT, FONT_BEIGE, 141 );
 	SetButtonFastHelpText( iTPButtons[ GROUP_BUTTON ], gpStrategicString[ STR_TP_GROUPHELP ] );
-	SetBtnHelpEndCallback( iTPButtons[ GROUP_BUTTON ], FastHelpRemovedCallback );
 	iTPButtons[ DONE_BUTTON ] =
 		QuickCreateButton( giOverheadButtonImages[ DONE_BUTTON ], 11, 437, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
 		DEFAULT_MOVE_CALLBACK, DoneOverheadPlacementClickCallback );
 	SpecifyGeneralButtonTextAttributes( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONE ], BLOCKFONT, FONT_BEIGE, 141 );
 	SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONEHELP ] );
-	SetBtnHelpEndCallback( iTPButtons[ DONE_BUTTON ], FastHelpRemovedCallback );
 	AllowDisabledButtonFastHelp( iTPButtons[ DONE_BUTTON ], TRUE );
 
 	SpecifyButtonHilitedTextColors( iTPButtons[ CLEAR_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
@@ -1105,19 +1099,6 @@ static void PickUpMercPiece(INT32 iPlacement)
 	RemoveSoldierFromGridNo( gMercPlacement[ iPlacement ].pSoldier );
 	gMercPlacement[ iPlacement ].fPlaced = FALSE;
 	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
-}
-
-
-static void FastHelpRemovedCallback(void)
-{
-	gfTacticalPlacementGUIDirty = TRUE;
-}
-
-
-static void FastHelpRemoved2Callback(void)
-{
-	gfTacticalPlacementGUIDirty = TRUE;
-	gfValidLocationsChanged = 2; //because fast help text covers it.
 }
 
 

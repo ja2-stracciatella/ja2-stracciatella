@@ -3263,7 +3263,6 @@ static void SetSkiRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion,
 	BuildItemHelpTextString( zHelpText, lengthof(zHelpText), pInv, ubScreenArea );
 
 	SetRegionFastHelpText( pRegion, zHelpText );
-	SetRegionHelpEndCallback( pRegion, SkiHelpTextDoneCallBack );
 }
 
 
@@ -3287,13 +3286,6 @@ static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pReg
 	}
 
 	SetRegionFastHelpText( pRegion, zHelpText );
-	SetRegionHelpEndCallback( pRegion, SkiHelpTextDoneCallBack );
-}
-
-
-void SkiHelpTextDoneCallBack( void )
-{
-	gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 }
 
 

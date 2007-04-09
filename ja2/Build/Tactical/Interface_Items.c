@@ -342,8 +342,6 @@ BOOLEAN	gfItemPopupRegionCallbackEndFix = FALSE;
 extern void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier );
 
 
-extern void HelpTextDoneCallback( void );
-
 extern BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern void	StartSKIDescriptionBox( void );
 
@@ -2353,7 +2351,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscat( gzFullItemCons, gzFullItemTemp );
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
 				}
-				SetRegionHelpEndCallback( &(gProsAndConsRegions[ cnt ]), HelpTextDoneCallback );
 			}
 
 		}
@@ -2388,7 +2385,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscat( gzFullItemCons, gzFullItemTemp );
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
 				}
-				SetRegionHelpEndCallback( &(gProsAndConsRegions[ cnt ]), HelpTextDoneCallback );
 			}
 		}
 	}
@@ -2415,12 +2411,10 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
 			{
 				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ gpItemDescObject->usAttachItem[ cnt ] ] );
-				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
 			}
 			else
 			{
 				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), Message[ STR_ATTACHMENTS ] );
-				SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
 			}
 		}
 	}
@@ -3366,12 +3360,10 @@ void RenderItemDescriptionBox( )
 				DrawItemUIBarEx( gpItemDescObject, (UINT8)(DRAW_ITEM_STATUS_ATTACHMENT1 + cnt), sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , guiSAVEBUFFER );
 
 			  SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ gpItemDescObject->usAttachItem[ cnt ] ] );
-			  SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
 			}
 			else
 			{
 				 SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), Message[ STR_ATTACHMENTS ] );
-				 SetRegionHelpEndCallback( &(gItemDescAttachmentRegions[ cnt ]), HelpTextDoneCallback );
 			}
 			if (fHatchOutAttachments)
 			{
@@ -5022,7 +5014,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 		//OK, for each item, set dirty text if applicable!
 		SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), ItemNames[ pSoldier->inv[ ubPosition ].usItem ] );
-		SetRegionHelpEndCallback( &(gItemPopupRegions[ cnt ]), HelpTextDoneCallback );
 		gfItemPopupRegionCallbackEndFix = FALSE;
 	}
 

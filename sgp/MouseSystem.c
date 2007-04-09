@@ -86,7 +86,7 @@ static MOUSE_REGION MSYS_SystemBaseRegion = {
 								MSYS_ID_SYSTEM, MSYS_PRIORITY_SYSTEM, BASE_REGION_FLAGS,
 								-32767, -32767, 32767, 32767, 0, 0, 0, 0, 0, 0,
 								MSYS_NO_CALLBACK, MSYS_NO_CALLBACK, { 0,0,0,0 },
-								0, 0, -1, MSYS_NO_CALLBACK, NULL, NULL };
+								0, 0, -1, NULL, NULL };
 
 static BOOLEAN gfRefreshUpdate = FALSE;
 
@@ -575,8 +575,6 @@ static void MSYS_UpdateMouseRegion(void)
 			//Remove the help text for the previous region if one is currently being displayed.
 			if( MSYS_PrevRegion->FastHelpText )
 			{
-				//ExecuteMouseHelpEndCallBack( MSYS_PrevRegion );
-
 				#ifdef _JA2_RENDER_DIRTY
 					if( MSYS_PrevRegion->uiFlags & MSYS_GOT_BACKGROUND )
 						FreeBackgroundRectPending( MSYS_PrevRegion->FastHelpRect );
@@ -611,7 +609,6 @@ static void MSYS_UpdateMouseRegion(void)
 			{
 				if( MSYS_CurrRegion->FastHelpText && !( MSYS_CurrRegion->uiFlags & MSYS_FASTHELP_RESET ) )
 				{
-				  //ExecuteMouseHelpEndCallBack( MSYS_CurrRegion );
 					MSYS_CurrRegion->FastHelpTimer = gsFastHelpDelay;
 					#ifdef _JA2_RENDER_DIRTY
 						if( MSYS_CurrRegion->uiFlags & MSYS_GOT_BACKGROUND )
@@ -683,7 +680,6 @@ static void MSYS_UpdateMouseRegion(void)
 				MSYS_CurrRegion->MovementCallback(MSYS_CurrRegion, MSYS_CALLBACK_REASON_MOVE);
 			}
 
-			//ExecuteMouseHelpEndCallBack( MSYS_CurrRegion );
 			//MSYS_CurrRegion->FastHelpTimer = gsFastHelpDelay;
 
 			MSYS_Action &= (~MSYS_DO_MOVE);
@@ -744,7 +740,6 @@ static void MSYS_UpdateMouseRegion(void)
 							#endif
 							MSYS_CurrRegion->uiFlags &= (~MSYS_GOT_BACKGROUND);
 
-							//ExecuteMouseHelpEndCallBack( MSYS_CurrRegion );
 							MSYS_CurrRegion->FastHelpTimer = gsFastHelpDelay;
 							MSYS_CurrRegion->uiFlags &= (~MSYS_FASTHELP_RESET);
 
@@ -884,7 +879,6 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 
 	region->next = NULL;
 	region->prev = NULL;
-	region->HelpDoneCallback = NULL;
 
 	//Add region to system list
 	MSYS_AddRegionToList(region);
@@ -1513,42 +1507,4 @@ void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow )
 	{
 		region->uiFlags &= ~MSYS_ALLOW_DISABLED_FASTHELP;
 	}
-}
-
-// new stuff to allow mouse callbacks when help text finishes displaying
-
-void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn )
-{
-	// make sure region is non null
-	if( region == NULL )
-	{
-		return;
-	}
-
-	// now set the region help text
-	region-> HelpDoneCallback = CallbackFxn;
-}
-
-
-// help text is done, now execute callback, if there is one
-static void ExecuteMouseHelpEndCallBack(MOUSE_REGION* region)
-{
-	if( region == NULL )
-	{
-		return;
-	}
-
-	if( region->FastHelpTimer )
-	{
-		return;
-	}
-	// check if callback is non null
-	if( region->HelpDoneCallback == NULL )
-	{
-		return;
-	}
-
-	// we have a callback, excecute
-	// ATE: Disable these!
-	//( *( region->HelpDoneCallback ) )( );
 }

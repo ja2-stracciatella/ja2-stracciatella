@@ -1464,18 +1464,6 @@ void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 }
 
 
-void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn )
-{
-	GUI_BUTTON *b;
-	if(iButton<0 || iButton>MAX_BUTTONS)
-		return;
-	b = ButtonList[iButton];
-	AssertMsg( b, "Called SetBtnHelpEndCallback() with a non-existant button." );
-
-	SetRegionHelpEndCallback( &b->Area, CallbackFxn );
-}
-
-
 // Dispatches all button callbacks for mouse movement. This function gets
 // called by the Mouse System. *DO NOT CALL DIRECTLY*
 static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)

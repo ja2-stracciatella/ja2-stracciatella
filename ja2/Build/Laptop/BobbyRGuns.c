@@ -1246,7 +1246,6 @@ void SetFirstLastPagesForUsed()
 }
 
 
-static void BobbyrRGunsHelpTextDoneCallBack(void);
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID);
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
@@ -1283,7 +1282,6 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pI
 			zItemName[0] = '\0';
 
 		SetRegionFastHelpText( &gSelectedBigImageRegion[ i ], zItemName );
-		SetRegionHelpEndCallback( &gSelectedBigImageRegion[ i ], BobbyrRGunsHelpTextDoneCallBack );
 
 		usPosY += BOBBYR_GRID_OFFSET;
 	}
@@ -1731,13 +1729,6 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID)
 	}
 
 	return( ubItemCount );
-}
-
-
-static void BobbyrRGunsHelpTextDoneCallBack(void)
-{
-	fReDrawScreenFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;
 }
 
 

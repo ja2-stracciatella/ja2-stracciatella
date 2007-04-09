@@ -99,7 +99,6 @@ BOOLEAN		ShouldSoldierDisplayHatchOnItem( UINT8	ubProfileID, INT16 sSlotNum );
 void			ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue );
 void			ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue );
 
-void			SkiHelpTextDoneCallBack( void );
 void			SetSkiCursor( UINT16	usCursor );
 
 void			InitShopKeeperSubTitledText( STR16 pString );

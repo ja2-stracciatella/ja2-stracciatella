@@ -141,7 +141,6 @@ void ShutdownButtonSystem(void);
 void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text);
 
 #ifdef _JA2_RENDER_DIRTY
-void SetBtnHelpEndCallback( INT32 iButton, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn );
 void RenderButtonsFastHelp(void);
 
 #define RenderButtonsFastHelp()			RenderFastHelp()

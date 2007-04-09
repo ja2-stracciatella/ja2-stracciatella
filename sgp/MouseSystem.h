@@ -22,7 +22,6 @@
 struct _MOUSE_REGION;
 
 typedef void (*MOUSE_CALLBACK)(struct _MOUSE_REGION *,INT32);	// Define MOUSE_CALLBACK type as pointer to void
-typedef void (*MOUSE_HELPTEXT_DONE_CALLBACK)( ); // the help is done callback
 
 typedef struct _MOUSE_REGION {
 	UINT16								IDNumber;						// Region's ID number, set by mouse system
@@ -46,7 +45,6 @@ typedef struct _MOUSE_REGION {
 	INT16					FastHelpTimer;		// Countdown timer for FastHelp text
 	wchar_t				*FastHelpText;		// Text string for the FastHelp (describes buttons if left there a while)
 	INT32					FastHelpRect;
-	MOUSE_HELPTEXT_DONE_CALLBACK HelpDoneCallback;
 
 	struct _MOUSE_REGION	*next;							// List maintenance, do NOT touch these entries
 	struct _MOUSE_REGION	*prev;
@@ -156,8 +154,6 @@ void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
 void RefreshMouseRegions( );
 
 void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
-
-void SetRegionHelpEndCallback( MOUSE_REGION *region, MOUSE_HELPTEXT_DONE_CALLBACK CallbackFxn );
 
 // Now also used by Wizardry -- DB
 void RenderFastHelp();
