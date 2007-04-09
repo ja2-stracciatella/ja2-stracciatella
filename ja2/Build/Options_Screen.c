@@ -1318,10 +1318,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 
 static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-	}
-	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		UINT8	ubCnt;
 
