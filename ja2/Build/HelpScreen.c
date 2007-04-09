@@ -1430,10 +1430,7 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason
 {
 //	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
 
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 /*
 		btn->uiFlags &= ~BUTTON_CLICKED_ON;

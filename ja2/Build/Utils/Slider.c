@@ -557,10 +557,6 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			CalculateNewSliderIncrement( uiSelectedSlider, pRegion->RelativeXPos );
 		}
 	}
-
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-	}
 }
 
 

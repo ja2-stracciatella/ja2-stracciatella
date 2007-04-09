@@ -435,14 +435,6 @@ void ClearMainMenu()
 
 static void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-//		if( gfDoHelpScreen )
-//		{
-//			SetMainMenuExitScreen( INIT_SCREEN );
-//			gfDoHelpScreen = FALSE;
-//		}
-	}
 }
 
 
