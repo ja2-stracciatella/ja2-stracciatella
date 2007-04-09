@@ -2032,10 +2032,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 
 	}
@@ -4521,19 +4518,7 @@ static void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		return;
 	}
 
-
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		//OK FOR NOW, DROP ITEM WHERE BUDDY IS
-		{
-		//	SOLDIERTYPE *pSoldier;
-
-		//	if(	GetSoldier( &pSoldier, ubSoldierID ) )
-		//	{
-		//	}
-		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 
 	}

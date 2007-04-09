@@ -1460,17 +1460,6 @@ void HelpScreenDontShowHelpAgainToggleTextRegionCallBack(MOUSE_REGION * pRegion,
 	{
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
-
-
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		if( gGameSettings.fOptions[ ubButton ] )
-		{
-		}
-		else
-		{
-		}
-	}
 }
 */
 
