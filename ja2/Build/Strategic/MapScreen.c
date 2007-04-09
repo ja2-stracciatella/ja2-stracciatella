@@ -6206,10 +6206,7 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
-	if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-	}
-	else if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
 //  if( ( iReason == MSYS_CALLBACK_REASON_MOVE ) || ( iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE ) )
 	{
 		gubMAP_HandInvDispText[ uiHandPos ] = 2;

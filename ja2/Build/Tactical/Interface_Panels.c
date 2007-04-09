@@ -2007,10 +2007,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 		return;
 
-	if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-	}
-	else if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		if ( gpItemPointer == NULL )
 		{

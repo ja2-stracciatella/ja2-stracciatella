@@ -1287,9 +1287,6 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 	{
 		giCurrentlySelectedFace = MSYS_GetRegionUserData( pRegion,0 );
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_MOVE )
-	{
-	}
 }
 
 

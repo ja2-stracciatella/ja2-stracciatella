@@ -7407,9 +7407,6 @@ static void SelectArmsDealersDropItemToGroundMovementRegionCallBack(MOUSE_REGION
 			gfSkiDisplayDropItemToGroundText = FALSE;
 		}
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_MOVE )
-	{
-	}
 }
 
 

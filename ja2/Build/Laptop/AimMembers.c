@@ -952,9 +952,6 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 		gfAimMemberDisplayFaceHelpText = TRUE;
 		gfRedrawScreen = TRUE;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_MOVE )
-	{
-	}
 }
 
 
