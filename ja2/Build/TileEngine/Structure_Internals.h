@@ -200,44 +200,6 @@ typedef struct TAG_STRUCTURE_FILE_REF
 	UINT16														usNumberOfStructuresStored;
 } STRUCTURE_FILE_REF; // 24 bytes
 
-// IMPORTANT THING TO REMEMBER
-//
-// Although the number of structures and images about which information
-// may be stored in a file, the two are stored very differently.
-//
-// The structure data stored amounts to a sparse array, with no data
-// saved for any structures that are not defined.
-//
-// For image information, however, an array is stored with every entry
-// filled regardless of whether there is non-zero data defined for
-// that graphic!
-typedef struct TAG_STRUCTURE_FILE_HEADER
-{
-	CHAR8		szId[4];
-	union
-	{
-		struct
-		{
-			UINT16	usNumberOfStructures;
-		};
-		struct
-		{
-			UINT16	usNumberOfImages;
-		};
-	};
-	UINT16	usNumberOfStructuresStored;
-	UINT16	usStructureDataSize;
-	UINT8		fFlags;
-	UINT8		bUnused[3];
-	UINT16	usNumberOfImageTileLocsStored;
-} STRUCTURE_FILE_HEADER; // 16 bytes
-CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
-
-
-// "J2SD" = Jagged 2 Structure Data
-#define STRUCTURE_FILE_ID "J2SD"
-#define STRUCTURE_FILE_ID_LEN 4
-
 #define STRUCTURE_SCRIPT_FILE_EXTENSION "JSS"
 #define STRUCTURE_FILE_EXTENSION "JSD"
 

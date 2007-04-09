@@ -246,8 +246,35 @@ BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
 }
 
 
+/* IMPORTANT THING TO REMEMBER
+ * Although the number of structures and images about which information may be
+ * stored in a file, the two are stored very differently.
+ * The structure data stored amounts to a sparse array, with no data saved for
+ * any structures that are not defined.
+ * For image information, however, an array is stored with every entry filled
+ * regardless of whether there is non-zero data defined for that graphic! */
+typedef struct STRUCTURE_FILE_HEADER
+{
+	char szId[4];
+	union
+	{
+		UINT16 usNumberOfStructures;
+		UINT16 usNumberOfImages;
+	};
+	UINT16 usNumberOfStructuresStored;
+	UINT16 usStructureDataSize;
+	UINT8  fFlags;
+	UINT8  bUnused[3];
+	UINT16 usNumberOfImageTileLocsStored;
+} STRUCTURE_FILE_HEADER;
+CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
+
+// "J2SD" = Jagged 2 Structure Data
+#define STRUCTURE_FILE_ID "J2SD"
+#define STRUCTURE_FILE_ID_LEN 4
+
+
 static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFileRef, UINT32* puiStructureDataSize)
-//UINT8 **ppubStructureData, UINT32 * puiDataSize, STRUCTURE_FILE_HEADER * pHeader )
 { // Loads a structure file's data as a honking chunk o' memory
 	HWFILE										hInput;
 	STRUCTURE_FILE_HEADER			Header;
