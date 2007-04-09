@@ -595,8 +595,8 @@ static void MSYS_UpdateMouseRegion(void)
 
 			// Force a callbacks to happen on previous region to indicate that
 			// the mouse has left the old region
-			if ( MSYS_PrevRegion->uiFlags & MSYS_MOVE_CALLBACK && MSYS_PrevRegion->uiFlags & MSYS_REGION_ENABLED )
-				(*(MSYS_PrevRegion->MovementCallback))(MSYS_PrevRegion,MSYS_CALLBACK_REASON_LOST_MOUSE);
+			if (MSYS_PrevRegion->MovementCallback != NULL && MSYS_PrevRegion->uiFlags & MSYS_REGION_ENABLED)
+				MSYS_PrevRegion->MovementCallback(MSYS_PrevRegion, MSYS_CALLBACK_REASON_LOST_MOUSE);
 		}
 	}
 
@@ -607,7 +607,7 @@ static void MSYS_UpdateMouseRegion(void)
 		{
 			//Kris -- October 27, 1997
 			//Implemented gain mouse region
-			if ( MSYS_CurrRegion->uiFlags & MSYS_MOVE_CALLBACK )
+			if (MSYS_CurrRegion->MovementCallback != NULL)
 			{
 				if( MSYS_CurrRegion->FastHelpText && !( MSYS_CurrRegion->uiFlags & MSYS_FASTHELP_RESET ) )
 				{
@@ -629,7 +629,7 @@ static void MSYS_UpdateMouseRegion(void)
 				}
 				if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED )
 				{
-					(*(MSYS_CurrRegion->MovementCallback))(MSYS_CurrRegion,MSYS_CALLBACK_REASON_GAIN_MOUSE);
+					MSYS_CurrRegion->MovementCallback(MSYS_CurrRegion, MSYS_CALLBACK_REASON_GAIN_MOUSE);
 				}
 			}
 
@@ -676,10 +676,11 @@ static void MSYS_UpdateMouseRegion(void)
 
 			MSYS_CurrRegion->ButtonState = MSYS_CurrentButtons;
 
-			if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED &&
-					MSYS_CurrRegion->uiFlags & MSYS_MOVE_CALLBACK && MSYS_Action & MSYS_DO_MOVE )
+			if (MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED &&
+					MSYS_CurrRegion->MovementCallback != NULL &&
+					MSYS_Action & MSYS_DO_MOVE)
 			{
-				(*(MSYS_CurrRegion->MovementCallback))(MSYS_CurrRegion,MSYS_CALLBACK_REASON_MOVE);
+				MSYS_CurrRegion->MovementCallback(MSYS_CurrRegion, MSYS_CALLBACK_REASON_MOVE);
 			}
 
 			//ExecuteMouseHelpEndCallBack( MSYS_CurrRegion );
@@ -687,7 +688,7 @@ static void MSYS_UpdateMouseRegion(void)
 
 			MSYS_Action &= (~MSYS_DO_MOVE);
 
-			if((MSYS_CurrRegion->uiFlags & MSYS_BUTTON_CALLBACK) && (MSYS_Action & MSYS_DO_BUTTONS))
+			if (MSYS_CurrRegion->ButtonCallback != NULL && MSYS_Action & MSYS_DO_BUTTONS)
 			{
 				if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED )
 				{
@@ -818,9 +819,9 @@ static void MSYS_UpdateMouseRegion(void)
 			MSYS_CurrRegion->RelativeXPos = MSYS_CurrentMX - MSYS_CurrRegion->RegionTopLeftX;
 			MSYS_CurrRegion->RelativeYPos = MSYS_CurrentMY - MSYS_CurrRegion->RegionTopLeftY;
 
-			if((MSYS_CurrRegion->uiFlags & MSYS_MOVE_CALLBACK) && (MSYS_Action & MSYS_DO_MOVE))
+			if (MSYS_CurrRegion->MovementCallback != NULL && MSYS_Action & MSYS_DO_MOVE)
 			{
-				(*(MSYS_CurrRegion->MovementCallback))(MSYS_CurrRegion,MSYS_CALLBACK_REASON_MOVE);
+				MSYS_CurrRegion->MovementCallback(MSYS_CurrRegion, MSYS_CALLBACK_REASON_MOVE);
 			}
 
 			MSYS_Action &= (~MSYS_DO_MOVE);
@@ -860,12 +861,7 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 	region->uiFlags = MSYS_NO_FLAGS;
 
 	region->MovementCallback = movecallback;
-	if(movecallback != MSYS_NO_CALLBACK)
-		region->uiFlags |= MSYS_MOVE_CALLBACK;
-
 	region->ButtonCallback = buttoncallback;
-	if(buttoncallback != MSYS_NO_CALLBACK)
-		region->uiFlags |= MSYS_BUTTON_CALLBACK;
 
 	region->Cursor = crsr;
 	if(crsr != MSYS_NO_CURSOR)
