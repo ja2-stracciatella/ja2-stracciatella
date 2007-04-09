@@ -2776,11 +2776,6 @@ static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		swprintf(String, lengthof(String), L"%ls %ls %d \"%ls\" ( %ls )", QuestDebugText[QUEST_DBS_ENTER_NEW_VALUE], QuestDebugText[QUEST_DBS_QUEST_NUM], gubCurQuestSelected, QuestDescText[gubCurQuestSelected], QuestDebugText[QUEST_DBS_0_1_2]);
 
 		TextEntryBox( String, ChangeQuestState );
-
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
-	{
-
 	}
 }
 
@@ -2802,11 +2797,6 @@ static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			swprintf(String, lengthof(String), L"%ls %ls %d \"%ls\" ( %ls )", QuestDebugText[QUEST_DBS_ENTER_NEW_VALUE], QuestDebugText[QUEST_DBS_FACT_NUM], gusCurFactSelected, FactDescText[gusCurFactSelected], QuestDebugText[QUEST_DBS_0_1]);
 
 		TextEntryBox( String, ChangeFactState );
-
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) /* XXX Empty? */
-	{
-
 	}
 }
 

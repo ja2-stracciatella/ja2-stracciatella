@@ -1184,7 +1184,7 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 	}
 
 
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )//iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
+	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		if( gGameSettings.fOptions[ ubButton ] )
 		{
