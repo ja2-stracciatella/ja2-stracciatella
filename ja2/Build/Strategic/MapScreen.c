@@ -11639,7 +11639,7 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], s
 		else
 		{
 			// put brackets around it when he's between sectors!
-			swprintf(sString, lengthof(sString), pSoldier->fBetweenSectors ? L"(%ls%ls%ls)" : L"%ls%ls%ls",
+			swprintf(sString, Length, pSoldier->fBetweenSectors ? L"(%ls%ls%ls)" : L"%ls%ls%ls",
 						pMapVertIndex[ pSoldier->sSectorY ], pMapHortIndex[ pSoldier->sSectorX ], pMapDepthIndex[ pSoldier->bSectorZ ] );
 		}
 	}
