@@ -380,7 +380,6 @@ UINT32	CreditScreenShutdown( void )
 static void InitCreditEyeBlinking(void);
 static BOOLEAN InitCreditNode(void);
 static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectCreditFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static BOOLEAN EnterCreditsScreen(void)
@@ -421,7 +420,7 @@ static BOOLEAN EnterCreditsScreen(void)
 	{
 		// Make a mouse region
 		MSYS_DefineRegion( &gCrdtMouseRegions[uiCnt], gCreditFaces[uiCnt].sX, gCreditFaces[uiCnt].sY, (INT16)(gCreditFaces[uiCnt].sX + gCreditFaces[uiCnt].sWidth), (INT16)(gCreditFaces[uiCnt].sY + gCreditFaces[uiCnt].sHeight), MSYS_PRIORITY_NORMAL,
-							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, SelectCreditFaceRegionCallBack );
+							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
 
 		// Add region
 		MSYS_AddRegion( &gCrdtMouseRegions[uiCnt] );
@@ -1274,20 +1273,6 @@ static void HandleCreditFlags(UINT32 uiFlags)
 	{
 //		guiCrdtTimeTillReadNextCredit = guiCrdtDelayBetweenCreditSection;
 		guiGapTillReadNextCredit = guiGapBetweenCreditSections;
-	}
-}
-
-
-static void SelectCreditFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if (iReason & MSYS_CALLBACK_REASON_INIT)
-	{
-	}
-	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
