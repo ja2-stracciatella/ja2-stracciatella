@@ -377,7 +377,6 @@ static MOUSE_REGION gNewFileIconRegion;
 LaptopSaveInfoStruct LaptopSaveInfo;
 
 
-UINT32 DrawLapTopText();
 BOOLEAN fReDrawScreenFlag=FALSE;
 BOOLEAN fPausedReDrawScreenFlag=FALSE;		//used in the handler functions to redraw the screen, after the current frame
 void PrintBalance( void );
@@ -536,7 +535,7 @@ BOOLEAN InitLaptopAndLaptopScreens()
 static void DisplayPlayersBalanceToDate(void);
 
 
-UINT32 DrawLapTopText()
+static UINT32 DrawLapTopText(void)
 {
 	// show balance
 	DisplayPlayersBalanceToDate( );
@@ -860,9 +859,10 @@ static void RenderLapTopImage(void)
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
 
 	MarkButtonsDirty( );
-
 }
-void RenderLaptop()
+
+
+static void RenderLaptop(void)
 {
 	UINT32 uiTempMode = 0;
 

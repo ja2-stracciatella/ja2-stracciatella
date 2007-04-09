@@ -518,9 +518,6 @@ void HandleEmail( void )
 	// update buttons
 	HandleEmailViewerButtonStates( );
 
-	// redraw screen
-	//ReDraw();
-
 	//redraw headers to sort buttons
   DisplayEmailHeaders( );
 
@@ -2233,20 +2230,6 @@ static void CreateDestroyNextPreviousRegions(void)
 }
 
 
-static void ReDraw(void)
-{
-	// forces update of entire laptop screen
-	if(fReDraw)
-	{
-   RenderLaptop( );
-	 //EnterNewLaptopMode();
-   DrawLapTopText();
-	 MarkButtonsDirty( );
-	 fReDraw=FALSE;
-	}
-
-}
-
 void CreateDestroyDeleteNoticeMailButton()
 {
  static BOOLEAN fOldDeleteMailFlag=FALSE;
@@ -2386,8 +2369,6 @@ static void DeleteEmail(void)
 	 // nolong time to delete mail
 	 fDeleteMailFlag=FALSE;
    fReDrawScreenFlag=TRUE;
-	 // refresh screen (get rid of dialog box image)
-	 //ReDraw();
 
 	 // invalidate
 	 InvalidateRegion(0,0,640,480);

@@ -5,8 +5,6 @@
 #include "Types.h"
 
 void			ExitLaptop();
-void			RenderLaptop();
-UINT32		DrawLapTopText();
 void			SetBookMark(INT32 iBookId);
 BOOLEAN		LeaveLapTopScreen( );
 void			SetLaptopExitScreen( UINT32 uiExitScreen );
