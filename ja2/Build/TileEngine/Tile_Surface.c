@@ -145,11 +145,9 @@ void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 }
 
 
-void SetRaisedObjectFlag( char *cFilename, TILE_IMAGERY *pTileSurf )
+void SetRaisedObjectFlag(const char* cFilename, TILE_IMAGERY* pTileSurf)
 {
-	INT32 cnt = 0;
-	CHAR8	cRootFile[ 128 ];
-	UINT8 ubRaisedObjectFiles[][80] =
+	static const char RaisedObjectFiles[][9] =
 	{
 		"bones",
 		"bones2",
@@ -161,23 +159,21 @@ void SetRaisedObjectFlag( char *cFilename, TILE_IMAGERY *pTileSurf )
 		"sblast",
 		"sweeds",
 		"twigs",
-		"wing",
-		"1"
+		"wing"
 	};
 
-	// Loop through array of RAISED objecttype imagery and
-	// set global value...
-	if ( ( pTileSurf->fType >= DEBRISWOOD && pTileSurf->fType <= DEBRISWEEDS ) || pTileSurf->fType == DEBRIS2MISC || pTileSurf->fType == ANOTHERDEBRIS )
+	// Loop through array of RAISED objecttype imagery and set global value...
+	if ((pTileSurf->fType >= DEBRISWOOD && pTileSurf->fType <= DEBRISWEEDS) || pTileSurf->fType == DEBRIS2MISC || pTileSurf->fType == ANOTHERDEBRIS)
 	{
-		GetRootName( cRootFile, cFilename );
-		while( ubRaisedObjectFiles[ cnt ][ 0 ] != '1' )
+		char cRootFile[128];
+		GetRootName(cRootFile, cFilename);
+		for (UINT32 i = 0; i != lengthof(RaisedObjectFiles); i++)
 		{
-			if (strcasecmp(ubRaisedObjectFiles[cnt], cRootFile) == 0)
+			if (strcasecmp(RaisedObjectFiles[i], cRootFile) == 0)
 			{
 				pTileSurf->bRaisedObjectType = TRUE;
+				return;
 			}
-
-			cnt++;
 		}
 	}
 }
