@@ -695,9 +695,6 @@ static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 		DisplayFloristCheckBox();
 		fPausedReDrawScreenFlag = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -722,9 +719,6 @@ static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, IN
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_CARD_GALLERY;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -800,9 +794,6 @@ static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_FLOWER_GALLERY;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

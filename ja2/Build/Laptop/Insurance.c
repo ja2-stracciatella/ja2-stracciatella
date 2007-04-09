@@ -347,9 +347,6 @@ static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		else if( uiInsuranceLink == 2 )
 			guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_CONTRACT;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -361,8 +358,5 @@ static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }

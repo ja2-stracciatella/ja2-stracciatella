@@ -7815,8 +7815,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// set dirty flag
 	    fTeamPanelDirty = TRUE;
 			fMapScreenBottomDirty = TRUE;
-
-			return;
 		}
 	}
 }

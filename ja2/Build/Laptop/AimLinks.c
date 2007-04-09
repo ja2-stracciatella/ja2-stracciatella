@@ -158,7 +158,4 @@ static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 		GoToWebPage( gNextLaptopPage );
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }

@@ -6664,10 +6664,6 @@ static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			DisableButton( gItemPickupMenu.iOKButton );
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-
-	}
 }
 
 BOOLEAN HandleItemPickupMenu( )

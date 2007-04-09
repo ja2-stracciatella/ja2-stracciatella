@@ -361,9 +361,6 @@ static void SelectAlumniFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 		gubDrawOldMerc = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -608,9 +605,6 @@ static void SelectAlumniDoneRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		gfDestroyPopUpBox = TRUE;
 		gfDrawPopUpBox = FALSE;
 		gfReDrawScreen = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

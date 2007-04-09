@@ -3964,12 +3964,10 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		HandleLeftButtonUpEvent( );
-		return;
 	}
   if(iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
   {
     HandleRightButtonUpEvent( );
-		return;
   }
 }
 

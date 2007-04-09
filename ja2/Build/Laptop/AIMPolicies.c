@@ -525,9 +525,6 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 			ResetAimPolicyButtons();
 			DisableAimPolicyButton();
 		}
-		else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-		{
-		}
 	}
 }
 

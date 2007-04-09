@@ -801,9 +801,6 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 		else if( uiInsuranceLink == 1 )
 			guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_INFO;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 

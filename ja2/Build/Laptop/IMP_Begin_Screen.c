@@ -1021,9 +1021,6 @@ static void SelectFullNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		ubTextEnterMode = FULL_NAME_MODE;
 		fNewCharInString = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -1039,9 +1036,6 @@ static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		// set mode to nick name type in
 		ubTextEnterMode = NICK_NAME_MODE;
 		fNewCharInString = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -1059,9 +1053,6 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		bGenderFlag = IMP_MALE;
 		fNewCharInString = TRUE;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -1077,9 +1068,6 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;
 		fNewCharInString = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

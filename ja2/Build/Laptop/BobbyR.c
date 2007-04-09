@@ -431,9 +431,6 @@ static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 //		FindLastItemIndex(ubNewPage);
 
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 

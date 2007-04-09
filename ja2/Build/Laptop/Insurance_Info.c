@@ -266,9 +266,6 @@ static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_CONTRACT;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -280,9 +277,6 @@ static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

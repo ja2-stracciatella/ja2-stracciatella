@@ -647,11 +647,6 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 
 static void MsgBoxClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	///if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	//{
-	//	gMsgBox.bHandled = MSG_BOX_RETURN_NO;
-	//}
-	//
 }
 
 

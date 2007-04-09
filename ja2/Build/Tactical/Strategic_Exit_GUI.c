@@ -909,10 +909,6 @@ static void CancelCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void SectorExitBackgroundCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		//gMsgBox.bHandled = MSG_BOX_RETURN_NO;
-	}
 }
 
 

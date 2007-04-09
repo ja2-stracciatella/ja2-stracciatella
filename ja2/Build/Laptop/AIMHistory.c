@@ -399,9 +399,6 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 //			RenderAimHistory();
 			DisableAimHistoryButton();
 		}
-		else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-		{
-		}
 	}
 }
 

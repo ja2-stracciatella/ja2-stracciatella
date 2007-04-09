@@ -388,9 +388,6 @@ static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -404,9 +401,6 @@ static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -419,9 +413,6 @@ static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_ARCHIVES;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -442,9 +433,6 @@ static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			gubOldSortMode = gubCurrentSortMode;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -463,9 +451,6 @@ static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
 			gubOldSortMode = gubCurrentSortMode;
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -486,9 +471,6 @@ static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			gubOldSortMode = gubCurrentSortMode;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -507,9 +489,6 @@ static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
 			gubOldSortMode = gubCurrentSortMode;
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -530,9 +509,6 @@ static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 			gubOldSortMode = gubCurrentSortMode;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -551,9 +527,6 @@ static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
 			gubOldSortMode = gubCurrentSortMode;
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -574,9 +547,6 @@ static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			gubOldListMode = gubCurrentListMode;
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -595,9 +565,6 @@ static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			DrawSelectLight(gubOldListMode, AIM_SORT_OFF);
 			gubOldListMode = gubCurrentListMode;
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

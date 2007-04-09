@@ -369,9 +369,6 @@ static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		if(!fFirstTimeIn)
 			guiCurrentLaptopMode = LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -384,9 +381,6 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_POLICIES;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -401,9 +395,6 @@ static void SelectHistoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_HISTORY;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -415,9 +406,6 @@ static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM_LINKS;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -485,9 +473,6 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_AIM;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 
@@ -840,11 +825,6 @@ static void SelectBannerRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			GoToWebPage( FUNERAL_BOOKMARK );
 		else if( gubCurrentAdvertisment == AIM_AD_BOBBY_RAY_AD )
 			GoToWebPage( BOBBYR_BOOKMARK );
-
-
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }
 

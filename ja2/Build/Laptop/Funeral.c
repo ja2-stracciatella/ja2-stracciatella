@@ -292,9 +292,6 @@ static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason
 		}
 
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 
@@ -307,8 +304,5 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 	  MSYS_DisableRegion(&gSelectedRipSignRegion);
 		fPausedReDrawScreenFlag = TRUE;
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
 	}
 }

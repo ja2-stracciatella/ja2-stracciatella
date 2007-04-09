@@ -256,7 +256,4 @@ static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }

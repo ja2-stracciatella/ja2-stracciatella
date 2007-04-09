@@ -183,9 +183,6 @@ static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-	}
 }
 
 

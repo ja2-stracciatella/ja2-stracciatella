@@ -446,16 +446,6 @@ static void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 
 //			gfDoHelpScreen = FALSE;
 //		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-/*
-		if( gfDoHelpScreen )
-		{
-			SetMainMenuExitScreen( INIT_SCREEN );
-			gfDoHelpScreen = FALSE;
-		}
-*/
-	}
 }
 
 

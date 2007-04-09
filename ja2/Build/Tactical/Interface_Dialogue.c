@@ -980,10 +980,6 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 		}
 	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-
-	}
 }
 
 
@@ -1016,7 +1012,6 @@ static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 
 static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// Donot do this if we are talking already
@@ -1025,10 +1020,6 @@ static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 			// Say who are you?
 			Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, NPC_WHOAREYOU, 0 );
 		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-
 	}
 }
 

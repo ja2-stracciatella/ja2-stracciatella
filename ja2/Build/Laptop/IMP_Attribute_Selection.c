@@ -1429,13 +1429,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		// update screen
     fHasAnySlidingBarMoved = TRUE;
-
-
-  }
-  else if ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
-  {
-
-
   }
 	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
