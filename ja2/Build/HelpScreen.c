@@ -2348,14 +2348,7 @@ static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-//		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
-	{
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_MOVE )
+	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
 		if( gfLeftButtonState )
 		{
