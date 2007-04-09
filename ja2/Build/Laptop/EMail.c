@@ -2241,7 +2241,6 @@ static void ReDraw(void)
    RenderLaptop( );
 	 //EnterNewLaptopMode();
    DrawLapTopText();
-	 ReDrawHighLight();
 	 MarkButtonsDirty( );
 	 fReDraw=FALSE;
 	}

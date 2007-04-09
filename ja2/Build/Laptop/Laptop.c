@@ -87,17 +87,6 @@
 #endif
 
 
-enum{
-	NO_REGION=0,
-	EMAIL_REGION,
-	WWW_REGION,
-	FINANCIAL_REGION,
-	PERSONNEL_REGION,
-	HISTORY_REGION,
-	FILES_REGION,
-};
-
-
 // laptop programs
 enum{
 	LAPTOP_PROGRAM_MAILER,
@@ -384,11 +373,6 @@ static MOUSE_REGION gNewMailIconRegion;
 static MOUSE_REGION gNewFileIconRegion;
 
 
-// highlighted regions
-INT32 giCurrentRegion=NO_REGION;
-INT32 giOldRegion=NO_REGION;
-
-
 //used for global variables that need to be saved
 LaptopSaveInfoStruct LaptopSaveInfo;
 
@@ -576,7 +560,6 @@ static void CreateDestroyMouseRegionForNewMailIcon(void);
 static BOOLEAN CreateLapTopMouseRegions(void);
 static BOOLEAN DrawDeskTopBackground(void);
 static void EnterLaptopInitLaptopPages(void);
-static void HighLightRegion(INT32 iCurrentRegion);
 static void InitLaptopOpenQueue(void);
 static void InitalizeSubSitesList(void);
 static BOOLEAN IsItRaining(void);
@@ -658,7 +641,6 @@ static INT32 EnterLaptop(void)
 
 	// sub page
 	giCurrentSubPage = 0;
-	giCurrentRegion=EMAIL_REGION;
 
 	// load the laptop graphic and add it
 	CHECKF(AddVideoObjectFromFile("LAPTOP/laptop3.sti", &guiLAPTOP));
@@ -689,7 +671,6 @@ static INT32 EnterLaptop(void)
 	guiCurrentWWWMode = LAPTOP_MODE_NONE;
   CreateLapTopMouseRegions();
   RenderLapTopImage();
-  HighLightRegion(giCurrentRegion);
 	//AddEmailMessage(L"Entered LapTop",L"Entered", 0, 0);
   //for(iCounter=0; iCounter <10; iCounter++)
 	//{
@@ -1050,7 +1031,6 @@ void RenderLaptop()
 
 
 static BOOLEAN InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar_t* pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex);
-static void RestoreOldRegion(INT32 iOldRegion);
 static void SetSubSiteAsVisted(void);
 
 
@@ -1222,10 +1202,7 @@ static void EnterNewLaptopMode(void)
 	if((guiCurrentWWWMode==LAPTOP_MODE_NONE)&&(guiCurrentLaptopMode >=LAPTOP_MODE_WWW))
 	{
    RenderLapTopImage();
-	 giCurrentRegion=WWW_REGION;
-   RestoreOldRegion(giOldRegion);
 	 guiCurrentLaptopMode =LAPTOP_MODE_WWW;
-   HighLightRegion(giCurrentRegion);
 	}
 	else
 	{
@@ -1585,7 +1562,6 @@ UINT32 LaptopScreenHandle()
 		gfStartMapScreenToLaptopTransition = FALSE;
 		RestoreBackgroundRects();
 		RenderLapTopImage();
-		HighLightRegion(giCurrentRegion);
 		RenderLaptop();
 		RenderButtons();
 		PrintDate( );
@@ -1730,9 +1706,7 @@ UINT32 LaptopScreenHandle()
   if( fReDrawScreenFlag )
 	{
    RenderLapTopImage();
-	 HighLightRegion(giCurrentRegion);
 	 RenderLaptop();
-
 	}
 
 
@@ -2231,7 +2205,6 @@ BOOLEAN LeaveLapTopScreen( void )
 			//Step 1:  Build the laptop image into the save buffer.
 			RestoreBackgroundRects();
 			RenderLapTopImage();
-			HighLightRegion(giCurrentRegion);
 			RenderLaptop();
 			RenderButtons();
 			PrintDate( );
@@ -2398,8 +2371,6 @@ static void FinancialRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != FINANCIAL_REGION) giOldRegion = giCurrentRegion;
-		giCurrentRegion = FINANCIAL_REGION;
 		if (gfShowBookmarks)
 		{
 			gfShowBookmarks = FALSE;
@@ -2416,16 +2387,12 @@ static void PersonnelRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != PERSONNEL_REGION) giOldRegion=giCurrentRegion;
-		giCurrentRegion = PERSONNEL_REGION;
 		guiCurrentLaptopMode = LAPTOP_MODE_PERSONNEL;
 		if (gfShowBookmarks)
 		{
 			gfShowBookmarks = FALSE;
 			fReDrawScreenFlag = TRUE;
 		}
-		RestoreOldRegion(giOldRegion);
-		HighLightRegion(giCurrentRegion);
 		gfShowBookmarks = FALSE;
 
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_PERSONNEL);
@@ -2437,13 +2404,9 @@ static void EmailRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != EMAIL_REGION) giOldRegion = giCurrentRegion;
-		giCurrentRegion = EMAIL_REGION;
 		guiCurrentLaptopMode = LAPTOP_MODE_EMAIL;
 		gfShowBookmarks = FALSE;
-		RestoreOldRegion(giOldRegion);
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_MAILER);
-		HighLightRegion(giCurrentRegion);
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -2453,8 +2416,6 @@ static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != WWW_REGION) giOldRegion = giCurrentRegion;
-
 		// reset show bookmarks
 		if (guiCurrentLaptopMode < LAPTOP_MODE_WWW)
 		{
@@ -2478,8 +2439,6 @@ static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 				DrawDeskTopBackground();
 			}
 		}
-		giCurrentRegion = WWW_REGION;
-		RestoreOldRegion(giOldRegion);
 
 		if (guiCurrentWWWMode != LAPTOP_MODE_NONE)
 			guiCurrentLaptopMode = guiCurrentWWWMode;
@@ -2487,21 +2446,15 @@ static void WWWRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			guiCurrentLaptopMode = LAPTOP_MODE_WWW;
 
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_WEB_BROWSER);
-		HighLightRegion(giCurrentRegion);
 		fReDrawScreenFlag = TRUE;
 	}
   else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		if (giCurrentRegion != WWW_REGION) giOldRegion = giCurrentRegion;
-		giCurrentRegion = WWW_REGION;
-		RestoreOldRegion(giOldRegion);
-
 		if (guiCurrentWWWMode != LAPTOP_MODE_NONE)
 			guiCurrentLaptopMode = guiCurrentWWWMode;
 		else
 			guiCurrentLaptopMode = LAPTOP_MODE_WWW;
 
-		HighLightRegion(giCurrentRegion);
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -2511,15 +2464,11 @@ static void HistoryRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != HISTORY_REGION) giOldRegion = giCurrentRegion;
 		if (gfShowBookmarks)
 		{
 			gfShowBookmarks = FALSE;
 		}
-		giCurrentRegion = HISTORY_REGION;
-		RestoreOldRegion(giOldRegion);
 		guiCurrentLaptopMode = LAPTOP_MODE_HISTORY;
-		HighLightRegion(giCurrentRegion);
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_HISTORY);
 		gfShowBookmarks = FALSE;
 		fReDrawScreenFlag = TRUE;
@@ -2531,28 +2480,14 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentRegion != FILES_REGION) giOldRegion = giCurrentRegion;
 		if (gfShowBookmarks)
 		{
 			gfShowBookmarks = FALSE;
 		}
-		giCurrentRegion = FILES_REGION;
-		RestoreOldRegion(giOldRegion);
-		HighLightRegion(giCurrentRegion);
 		guiCurrentLaptopMode = LAPTOP_MODE_FILES;
 		UpdateListToReflectNewProgramOpened(LAPTOP_PROGRAM_FILES);
 		fReDrawScreenFlag = TRUE;
 	}
-}
-
-
-static void RestoreOldRegion(INT32 iOldRegion)
-{
-}
-
-
-static void HighLightRegion(INT32 iCurrentRegion)
-{
 }
 
 
@@ -2567,7 +2502,6 @@ static void WWWRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		iFrame=0;
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiWWWICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_WWW_Y);
 	  DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2589,7 +2523,6 @@ static void EmailRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			BltVideoObjectFromIndex(FRAME_BUFFER, guiUNREAD, 0, LAPTOP_ICONS_X + CHECK_X, LAPTOP_ICONS_MAIL_Y + CHECK_Y);
 		}
 		DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2606,7 +2539,6 @@ static void FinancialRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		iFrame=0;
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiFINANCIALICON, iFrame, LAPTOP_ICONS_X - 4, LAPTOP_ICONS_FINANCIAL_Y);
 	 	DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2624,7 +2556,6 @@ static void HistoryRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiHISTORYICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_HISTORY_Y);
    	DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2641,7 +2572,6 @@ static void FilesRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		iFrame=0;
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiFILESICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_FILES_Y + 7);
 		DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2658,7 +2588,6 @@ static void PersonnelRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		iFrame=0;
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiPERSICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_PERSONNEL_Y);
  		DrawLapTopText();
-		HighLightRegion(giCurrentRegion);
 		InvalidateRegion(0,0,640,480);
 	}
 }
@@ -2686,11 +2615,6 @@ static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
     CheckIfMouseLeaveScreen();
 	}
 	*/
-}
-
-void ReDrawHighLight()
-{
-  HighLightRegion(giCurrentRegion);
 }
 
 
@@ -3591,7 +3515,6 @@ static void ShouldNewMailBeDisplayed(void)
 	if(fReDraw)
 	{
 		RenderLapTopImage();
-		HighLightRegion(giCurrentRegion);
 		RenderLaptop();
 	}
  */
