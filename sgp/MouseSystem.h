@@ -125,12 +125,6 @@ typedef struct _MOUSE_REGION {
 #define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	1024
 
 
-// Mouse grabbing return codes
-#define MSYS_GRABBED_OK						0
-#define MSYS_ALREADY_GRABBED			1
-#define MSYS_REGION_NOT_IN_LIST		2
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
