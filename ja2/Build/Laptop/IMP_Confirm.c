@@ -22,7 +22,6 @@
 #include "Overhead.h"
 #include "History.h"
 #include "Game_Clock.h"
-#include "EMail.h"
 #include "Game_Event_Hook.h"
 #include "LaptopSave.h"
 #include "Strategic.h"

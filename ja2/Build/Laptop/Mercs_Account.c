@@ -11,7 +11,6 @@
 #include "Soldier_Add.h"
 #include "Overhead.h"
 #include "History.h"
-#include "EMail.h"
 #include "LaptopSave.h"
 #include "Text.h"
 #include "Speck_Quotes.h"

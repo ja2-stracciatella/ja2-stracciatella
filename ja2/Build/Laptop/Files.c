@@ -8,7 +8,6 @@
 #include "Render_Dirty.h"
 #include "Encrypted_File.h"
 #include "Cursors.h"
-#include "EMail.h"
 #include "Text.h"
 #include "Button_System.h"
 #include "VSurface.h"

@@ -5,7 +5,6 @@
 #include "WCheck.h"
 #include "AIM.h"
 #include "Soldier_Profile.h"
-#include "EMail.h"
 #include "Text.h"
 #include "AIMSort.h"
 #include "Assignments.h"

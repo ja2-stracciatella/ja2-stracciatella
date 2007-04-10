@@ -11,7 +11,6 @@
 #include "Strategic_Event_Handler.h"
 #include "BobbyR.h"
 #include "Mercs.h"
-#include "EMail.h"
 #include "Merc_Hiring.h"
 #include "Insurance_Contract.h"
 #include "Strategic_Merc_Handler.h"
