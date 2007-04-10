@@ -4416,33 +4416,6 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 }
 
 
-void TMFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	UINT8 ubID, ubSoldierID;
-
-	ubID = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
-
-	// If our flags are set to do this, gofoit!
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
-
-	if ( ubID == NOBODY )
-		return;
-
-
-	// Now use soldier ID values
-	ubSoldierID = gTeamPanel[ ubID ].ubID;
-
-
-	if ( !MercPtrs[ ubSoldierID ]->bActive )
-	{
-		return;
-	}
-}
-
-
 static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT8		ubID, ubSoldierID;
