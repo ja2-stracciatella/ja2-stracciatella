@@ -82,7 +82,6 @@ UINT32 guiEmailWarning;
 #define SENDER_WIDTH 246-158
 
 #define DATE_X LAPTOP_SCREEN_UL_X+428
-#define DATE_WIDTH 592-527
 
 #define SUBJECT_X LAPTOP_SCREEN_UL_X+175
 #define SUBJECT_WIDTH					254	//526-245
@@ -147,7 +146,6 @@ UINT32 guiEmailWarning;
 #define ENVELOPE_BOX_X 116
 
 #define FROM_BOX_X 166
-#define FROM_BOX_WIDTH 246-160
 
 #define SUBJECT_BOX_X 276
 #define SUBJECT_BOX_WIDTH 528-249
@@ -156,7 +154,6 @@ UINT32 guiEmailWarning;
 #define DATE_BOX_WIDTH 594-530
 
 #define FROM_BOX_Y 51 + EMAIL_TOP_BAR_HEIGHT
-#define TOP_HEIGHT 118-95
 
 #define EMAIL_TITLE_FONT FONT14ARIAL
 #define EMAIL_TITLE_X 140
@@ -235,7 +232,6 @@ INT32 giMailPageButtonsImage[ 2 ];
 
 // mouse regions
 MOUSE_REGION pEmailMoveRegions[NEXT_BUTTON+1];
-MOUSE_REGION pSortMailRegions[3];
 
 // the message record list, for the currently displayed message
 RecordPtr pMessageRecordList=NULL;
@@ -293,8 +289,6 @@ static void InitializeMouseRegions(void)
 		MSYS_SetRegionUserData(&pEmailRegions[iCounter],0,iCounter);
 	}
 
-	//SetUpSortRegions();
-
 	CreateDestroyNextPreviousRegions();
 }
 
@@ -310,10 +304,10 @@ static void DeleteEmailMouseRegions(void)
 	{
 	 MSYS_RemoveRegion( &pEmailRegions[iCounter]);
 	}
-  //DeleteSortRegions();
   CreateDestroyNextPreviousRegions();
-
 }
+
+
 void GameInitEmail()
 {
   pEmailList=NULL;
@@ -2395,42 +2389,6 @@ static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
 		PlaceMessagesinPages();
 		fJustStartedEmail = FALSE;
 	}
-}
-
-
-static void SetUpSortRegions(void)
-{
-
-	// have been replaced by buttons
-	return;
-
-	// will set up sort mail regions
-
-	// from region
-  /*
-	MSYS_DefineRegion(&pSortMailRegions[0],FROM_BOX_X ,FROM_BOX_Y, FROM_BOX_X+FROM_BOX_WIDTH ,FROM_BOX_Y+TOP_HEIGHT,
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR,MSYS_NO_CALLBACK, FromCallback );
-
-	// subject region
-	MSYS_DefineRegion(&pSortMailRegions[1],SUBJECT_X ,FROM_BOX_Y, SUBJECT_BOX_X+SUBJECT_WIDTH ,FROM_BOX_Y+TOP_HEIGHT,
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR,MSYS_NO_CALLBACK, SubjectCallback );
-
-	// date region
-	MSYS_DefineRegion(&pSortMailRegions[2],DATE_X ,FROM_BOX_Y, DATE_BOX_X+DATE_WIDTH ,FROM_BOX_Y+TOP_HEIGHT,
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR,MSYS_NO_CALLBACK, DateCallback );
-	*/
-}
-
-
-static void DeleteSortRegions(void)
-{
-	// have been replaced by buttons
- return;
- /*
- MSYS_RemoveRegion(&pSortMailRegions[0]);
- MSYS_RemoveRegion(&pSortMailRegions[1]);
- MSYS_RemoveRegion(&pSortMailRegions[2]);
- */
 }
 
 
