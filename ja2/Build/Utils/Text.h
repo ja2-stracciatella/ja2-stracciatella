@@ -72,7 +72,6 @@ extern const wchar_t *pMapScreenBottomFastHelp[];
 extern const wchar_t *pMapScreenBottomText[];
 extern const wchar_t *pMercDeadString[];
 extern const wchar_t *pSenderNameList[];
-extern const wchar_t *pTraverseStrings[];
 extern const wchar_t *pNewMailStrings[];
 extern const wchar_t *pDeleteMailStrings[];
 extern const wchar_t *pEmailHeaders[];

@@ -124,8 +124,6 @@ UINT32 guiEmailWarning;
 #define NEW_BTN_Y EMAIL_WARNING_Y +(278-195)
 
 #define EMAIL_TEXT_FONT				FONT10ARIAL
-#define TRAVERSE_EMAIL_FONT		FONT14ARIAL
-#define EMAIL_BOX_FONT				FONT14ARIAL
 #define MESSAGE_FONT					EMAIL_TEXT_FONT
 #define EMAIL_HEADER_FONT			FONT14ARIAL
 #define EMAIL_WARNING_FONT		FONT12ARIAL
@@ -134,14 +132,10 @@ UINT32 guiEmailWarning;
 // the max number of pages to an email
 #define MAX_NUMBER_EMAIL_PAGES 100
 
-#define PREVIOUS_PAGE 0
-#define NEXT_PAGE     1
-
 #define NEXT_PAGE_X LAPTOP_UL_X + 562
 #define NEXT_PAGE_Y 51
 
 #define PREVIOUS_PAGE_X NEXT_PAGE_X - 21
-#define PREVIOUS_PAGE_Y NEXT_PAGE_Y
 
 #define ENVELOPE_BOX_X 116
 
@@ -186,10 +180,6 @@ UINT32 guiEmailWarning;
 
 // maximum size of a email message page, so not to overrun the bottom of the screen
 #define MAX_EMAIL_MESSAGE_PAGE_SIZE ( GetFontHeight( MESSAGE_FONT ) + MESSAGE_GAP ) * 20
-enum{
-	PREVIOUS_BUTTON=0,
-	NEXT_BUTTON,
-};
 
 
 // X button position
@@ -230,9 +220,6 @@ INT32 giMailPageButtons[ 2 ];
 INT32 giMailPageButtonsImage[ 2 ];
 
 
-// mouse regions
-MOUSE_REGION pEmailMoveRegions[NEXT_BUTTON+1];
-
 // the message record list, for the currently displayed message
 RecordPtr pMessageRecordList=NULL;
 
@@ -252,13 +239,6 @@ enum{
 	SUBJECT_HEADER,
 	RECD_HEADER,
 };
-
-
-// size of prev/next strings
-#define PREVIOUS_WIDTH StringPixLength(pTraverseStrings[PREVIOUS_BUTTON], TRAVERSE_EMAIL_FONT)
-#define NEXT_WIDTH StringPixLength(pTraverseStrings[NEXT_BUTTON], TRAVERSE_EMAIL_FONT)
-#define PREVIOUS_HEIGHT GetFontHeight(TRAVERSE_EMAIL_FONT)
-#define NEXT_HEIGHT GetFontHeight(TRAVERSE_EMAIL_FONT)
 
 
 // current line in the email list that is highlighted, -1 is no line highlighted
@@ -541,10 +521,6 @@ void RenderEmail( void )
 
   // redraw line dividers
   DrawLineDividers( );
-
-
-	// show next/prev page buttons depending if there are next/prev page
-  //DetermineNextPrevPageDisplay( );
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 
@@ -2025,41 +2001,6 @@ static void SwitchEmailPages(void)
 }
 
 
-static void DetermineNextPrevPageDisplay(void)
-{
-	// will determine which of previous and next page graphics to display
-
-
-
-	if( iCurrentPage > 0 )
-	{
-		// display Previous graphic
-
-		// font stuff
-	  SetFont( TRAVERSE_EMAIL_FONT );
-		SetFontForeground( FONT_RED );
-		SetFontBackground( FONT_BLACK );
-
-		// print previous string
-    mprintf( PREVIOUS_PAGE_X, PREVIOUS_PAGE_Y, pTraverseStrings[PREVIOUS_PAGE] );
-	}
-
-	// less than last page, so there is a next page
-	if(iCurrentPage <iLastPage)
-	{
-		// display Next graphic
-
-		// font stuff
-	  SetFont( TRAVERSE_EMAIL_FONT );
-		SetFontForeground( FONT_RED );
-		SetFontBackground( FONT_BLACK );
-
-		// next string
-	  mprintf( NEXT_PAGE_X, NEXT_PAGE_Y, pTraverseStrings[NEXT_PAGE] );
-	}
-}
-
-
 static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -2171,16 +2112,6 @@ static void CreateDestroyNextPreviousRegions(void)
 		fCreated=TRUE;
 
 		CreateNextPreviousEmailPageButtons( );
-
-		/*
-		// ' next' region
-    MSYS_DefineRegion(&pEmailMoveRegions[NEXT_BUTTON],NEXT_PAGE_X, NEXT_PAGE_Y,(INT16) (NEXT_PAGE_X+NEXT_WIDTH), (INT16)(NEXT_PAGE_Y+NEXT_HEIGHT),
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, MSYS_NO_CALLBACK, NextRegionButtonCallback);
-
-		// ' previous ' region
-	  MSYS_DefineRegion(&pEmailMoveRegions[PREVIOUS_BUTTON],PREVIOUS_PAGE_X,PREVIOUS_PAGE_Y, (INT16)(PREVIOUS_PAGE_X+PREVIOUS_WIDTH),(INT16)(PREVIOUS_PAGE_Y+PREVIOUS_HEIGHT),
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PreviousRegionButtonCallback );
-		*/
 	}
 }
 

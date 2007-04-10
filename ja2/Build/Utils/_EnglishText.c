@@ -1686,14 +1686,6 @@ const wchar_t *pSenderNameList[] =
 };
 
 
-// next/prev strings
-
-const wchar_t *pTraverseStrings[] =
-{
-  L"Previous",
-  L"Next",
-};
-
 // new mail notify string
 
 const wchar_t *pNewMailStrings[] =
