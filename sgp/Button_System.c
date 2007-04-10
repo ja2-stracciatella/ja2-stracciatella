@@ -359,10 +359,9 @@ void UnloadButtonImage(INT32 Index)
 
 
 // Enables an already created button.
-BOOLEAN EnableButton( INT32 iButtonID )
+void EnableButton(INT32 iButtonID)
 {
 	GUI_BUTTON *b;
-	UINT32 OldState;
 
 	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
 	{
@@ -375,13 +374,8 @@ BOOLEAN EnableButton( INT32 iButtonID )
 	// If button exists, set the ENABLED flag
 	if( b )
 	{
-		OldState = b->uiFlags & BUTTON_ENABLED;
 		b->uiFlags |= ( BUTTON_ENABLED | BUTTON_DIRTY );
 	}
-	else
-		OldState = 0;
-
-	return OldState == BUTTON_ENABLED;
 }
 
 
@@ -389,10 +383,9 @@ BOOLEAN EnableButton( INT32 iButtonID )
 // reactivated by calling EnableButton.
 // Diabled buttons will appear "grayed out" on the screen (unless the
 // graphics for such are not available).
-BOOLEAN DisableButton(INT32 iButtonID )
+void DisableButton(INT32 iButtonID)
 {
 	GUI_BUTTON *b;
-	UINT32 OldState;
 
 	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
 	{
@@ -405,14 +398,9 @@ BOOLEAN DisableButton(INT32 iButtonID )
 	// If button exists, reset the ENABLED flag
 	if( b )
 	{
-		OldState = b->uiFlags & BUTTON_ENABLED;
 		b->uiFlags &= (~BUTTON_ENABLED);
 		b->uiFlags |= BUTTON_DIRTY;
 	}
-	else
-		OldState = 0;
-
-	return OldState == BUTTON_ENABLED;
 }
 
 

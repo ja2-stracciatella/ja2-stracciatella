@@ -153,8 +153,8 @@ INT32 LoadButtonImage(const char *filename, INT32 Grayed, INT32 OffNormal, INT32
 INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 void UnloadButtonImage(INT32 Index);
 
-BOOLEAN EnableButton(INT32 iButtonID);
-BOOLEAN DisableButton(INT32 iButtonID);
+void EnableButton(INT32 iButtonID);
+void DisableButton(INT32 iButtonID);
 void RemoveButton(INT32 iButtonID );
 void HideButton( INT32 iButtonID );
 void ShowButton( INT32 iButton );
