@@ -270,7 +270,6 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 BOOLEAN DisplayNewMailBox();
 void CreateDestroyNewMailButton();
 void CreateDestroyDeleteNoticeMailButton();
-void DisplayEmailHeaders( void );
 void ReDrawNewMailBox( void );
 void ShutDownEmailList();
 void AddMessageToPages(INT32 iMessageId);

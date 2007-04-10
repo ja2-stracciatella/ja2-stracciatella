@@ -258,12 +258,6 @@ enum{
 };
 
 
-// position of header text on the email list
-#define FROM_X 205
-#define FROM_Y FROM_BOX_Y + 5
-#define SUBJECTHEAD_X 368
-#define RECD_X 550
-
 // size of prev/next strings
 #define PREVIOUS_WIDTH StringPixLength(pTraverseStrings[PREVIOUS_BUTTON], TRAVERSE_EMAIL_FONT)
 #define NEXT_WIDTH StringPixLength(pTraverseStrings[NEXT_BUTTON], TRAVERSE_EMAIL_FONT)
@@ -518,10 +512,6 @@ void HandleEmail( void )
 	// update buttons
 	HandleEmailViewerButtonStates( );
 
-	//redraw headers to sort buttons
-  DisplayEmailHeaders( );
-
-
 	// handle buttons states
 	UpdateStatusOfNextPreviousButtons( );
 
@@ -532,32 +522,6 @@ void HandleEmail( void )
 		fOpenMostRecentUnReadFlag = FALSE;
 
 	}
-}
-
-void DisplayEmailHeaders( void )
-{
-  // draw the text at the top of the screen
-
-	// font stuff
-	SetFont(EMAIL_WARNING_FONT);
-	SetFontShadow(NO_SHADOW);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-
-
-	// draw headers to the email list the player sees
-
-	// sender text
-	//mprintf(FROM_X, FROM_Y, pEmailHeaders[FROM_HEADER]);
-
-	// subject text
-	//mprintf(SUBJECTHEAD_X, FROM_Y, pEmailHeaders[SUBJECT_HEADER]);
-
-	// date re'vd
-	//mprintf(RECD_X, FROM_Y, pEmailHeaders[RECD_HEADER]);
-
-	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
@@ -587,9 +551,6 @@ void RenderEmail( void )
 
 	// show next/prev page buttons depending if there are next/prev page
   //DetermineNextPrevPageDisplay( );
-
-  // draw headers for buttons
-	DisplayEmailHeaders();
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 

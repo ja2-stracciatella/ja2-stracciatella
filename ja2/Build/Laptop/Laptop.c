@@ -1487,7 +1487,6 @@ static void DisplayBookMarks(void);
 static BOOLEAN DisplayLoadPending(void);
 static void DisplayTaskBarIcons(void);
 static void DisplayWebBookMarkNotify(void);
-static void DrawButtonText(void);
 static void FlickerHDLight(void);
 static void HandleSlidingTitleBar(void);
 static void HandleWWWSubSites(void);
@@ -1732,13 +1731,6 @@ UINT32 LaptopScreenHandle()
 //		RenderFastHelp( );
 //	  RenderButtonsFastHelp( );
   }
-
-	// show text on top of buttons
-	if( ( fMaximizingProgram == FALSE ) && ( fMinizingProgram == FALSE ) )
-	{
-	  DrawButtonText();
-	}
-
 
 	// check to see if bookmarks need to be displayed
 	if(gfShowBookmarks)
@@ -2547,17 +2539,6 @@ static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
     CheckIfMouseLeaveScreen();
 	}
 	*/
-}
-
-
-static void DrawButtonText(void)
-{
-	switch(guiCurrentLaptopMode)
-	{
-		case LAPTOP_MODE_EMAIL:
-			DisplayEmailHeaders( );
-			break;
-	}
 }
 
 
