@@ -143,11 +143,11 @@ static void InitEditorRegions(void)
 static void LoadEditorImages(void)
 {
 	//Set up the merc inventory panel
-	if (!AddVideoObjectFromFile("EDITOR/InvPanel.sti", &guiMercInventoryPanel))
-		AssertMsg( 0, "Failed to load data/editor/InvPanel.sti" );
+	guiMercInventoryPanel = AddVideoObjectFromFile("EDITOR/InvPanel.sti");
+	AssertMsg(guiMercInventoryPanel != NO_VOBJECT, "Failed to load data/editor/InvPanel.sti");
 	//Set up small omerta map
-	if (!AddVideoObjectFromFile("EDITOR/omerta.sti", &guiOmertaMap))
-		AssertMsg( 0, "Failed to load data/editor/omerta.sti" );
+	guiOmertaMap = AddVideoObjectFromFile("EDITOR/omerta.sti");
+	AssertMsg(guiOmertaMap != NO_VOBJECT, "Failed to load data/editor/omerta.sti");
 	//Set up the merc directional buttons.
 	giEditMercDirectionIcons[0] = LoadGenericButtonIcon("EDITOR/arrowsoff.sti");
 	giEditMercDirectionIcons[1] = LoadGenericButtonIcon("EDITOR/arrowson.sti");
@@ -155,10 +155,10 @@ static void LoadEditorImages(void)
 	giEditMercImage[0] = LoadButtonImage("EDITOR/leftarrow.sti",0,1,2,3,4);
 	giEditMercImage[1] = LoadButtonImage("EDITOR/rightarrow.sti",0,1,2,3,4);
 
-	if (!AddVideoObjectFromFile("EDITOR/Exclamation.sti", &guiExclamation))
-		AssertMsg( 0, "Failed to load data/editor/Exclamation.sti" );
-	if (!AddVideoObjectFromFile("EDITOR/KeyImage.sti", &guiKeyImage))
-		AssertMsg( 0, "Failed to load data/editor/KeyImage.sti" );
+	guiExclamation = AddVideoObjectFromFile("EDITOR/Exclamation.sti");
+	AssertMsg(guiExclamation != NO_VOBJECT, "Failed to load data/editor/Exclamation.sti");
+	guiKeyImage = AddVideoObjectFromFile("EDITOR/KeyImage.sti");
+	AssertMsg(guiKeyImage != NO_VOBJECT, "Failed to load data/editor/KeyImage.sti");
 }
 
 

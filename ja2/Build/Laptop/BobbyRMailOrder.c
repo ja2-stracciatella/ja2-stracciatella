@@ -343,30 +343,38 @@ BOOLEAN EnterBobbyRMailOrder()
 	gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 
 	// load the Order Grid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyOrderGrid.sti", &guiBobbyROrderGrid));
+	guiBobbyROrderGrid = AddVideoObjectFromFile("LAPTOP/BobbyOrderGrid.sti");
+	CHECKF(guiBobbyROrderGrid != NO_VOBJECT);
 
 	// load the Location graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyLocationBox.sti", &guiBobbyRLocationGraphic));
+	guiBobbyRLocationGraphic = AddVideoObjectFromFile("LAPTOP/BobbyLocationBox.sti");
+	CHECKF(guiBobbyRLocationGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyDeliverySpeed.sti", &guiDeliverySpeedGraphic));
+	guiDeliverySpeedGraphic = AddVideoObjectFromFile("LAPTOP/BobbyDeliverySpeed.sti");
+	CHECKF(guiDeliverySpeedGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_CONFIRMORDER);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiConfirmGraphic));
+	guiConfirmGraphic = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiConfirmGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/TotalSaveArea.sti", &guiTotalSaveArea));
+	guiTotalSaveArea = AddVideoObjectFromFile("LAPTOP/TotalSaveArea.sti");
+	CHECKF(guiTotalSaveArea != NO_VOBJECT);
 
   // border
-	CHECKF(AddVideoObjectFromFile("INTERFACE/TactPopUp.sti", &guiDropDownBorder));
+	guiDropDownBorder = AddVideoObjectFromFile("INTERFACE/TactPopUp.sti");
+	CHECKF(guiDropDownBorder != NO_VOBJECT);
 
   // Gold Arrow for the scroll area
-	CHECKF(AddVideoObjectFromFile("LAPTOP/GoldArrows.sti", &guiGoldArrowImages));
+	guiGoldArrowImages = AddVideoObjectFromFile("LAPTOP/GoldArrows.sti");
+	CHECKF(guiGoldArrowImages != NO_VOBJECT);
 
   // Package Weight Graphic
-	CHECKF(AddVideoObjectFromFile("LAPTOP/PackageWeight.sti", &guiPackageWeightImage));
+	guiPackageWeightImage = AddVideoObjectFromFile("LAPTOP/PackageWeight.sti");
+	CHECKF(guiPackageWeightImage != NO_VOBJECT);
 
 
 	InitBobbyRWoodBackground();
@@ -2182,7 +2190,8 @@ static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason)
 BOOLEAN CreateBobbyRayOrderTitle()
 {
 		// load BobbyRayTitle graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyRayTitle.sti", &guiBobbyRayTitle));
+	guiBobbyRayTitle = AddVideoObjectFromFile("LAPTOP/BobbyRayTitle.sti");
+	CHECKF(guiBobbyRayTitle != NO_VOBJECT);
 
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,

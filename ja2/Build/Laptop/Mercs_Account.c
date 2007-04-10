@@ -90,10 +90,12 @@ BOOLEAN EnterMercsAccount()
 	// load the Arrow graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_ORDERGRID);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMercOrderGrid));
+	guiMercOrderGrid = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiMercOrderGrid != NO_VOBJECT);
 
 	// load the Arrow graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/AccountNumber.sti", &guiAccountNumberGrid));
+	guiAccountNumberGrid = AddVideoObjectFromFile("LAPTOP/AccountNumber.sti");
+	CHECKF(guiAccountNumberGrid != NO_VOBJECT);
 
 
 	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );

@@ -95,7 +95,8 @@ BOOLEAN EnterInsuranceInfo()
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/bullet.sti", &guiBulletImage));
+	guiBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
+	CHECKF(guiBulletImage != NO_VOBJECT);
 
 
 	//left arrow

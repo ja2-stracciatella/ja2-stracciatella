@@ -128,10 +128,8 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 					return( FALSE );
 				}
 
-				if (!AddVideoObjectFromHImage(hImage, &gpCursorFileDatabase[pCurImage->uiFileIndex].uiIndex))
-				{
-					return( FALSE );
-				}
+				gpCursorFileDatabase[pCurImage->uiFileIndex].uiIndex = AddVideoObjectFromHImage(hImage);
+				if (gpCursorFileDatabase[pCurImage->uiFileIndex].uiIndex == NO_VOBJECT) return FALSE;
 
 				// Check for animated tile
 				if (hImage->uiAppDataSize > 0 )

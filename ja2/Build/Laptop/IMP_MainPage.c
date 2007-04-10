@@ -596,7 +596,8 @@ static BOOLEAN LoadCharacterPortraitForMainPage(void)
 	if( iCurrentProfileMode >= 4 )
 	{
 		// load it
-		CHECKF(AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber], &guiCHARACTERPORTRAITFORMAINPAGE));
+		guiCHARACTERPORTRAITFORMAINPAGE = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
+		CHECKF(guiCHARACTERPORTRAITFORMAINPAGE != NO_VOBJECT);
 
 	// now specify
 	SpecifyButtonIcon(  giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0,

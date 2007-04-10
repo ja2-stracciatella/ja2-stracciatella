@@ -69,7 +69,8 @@ UINT32	guiSliderBoxImage=0;
 BOOLEAN InitSlider()
 {
 	// load Slider Box Graphic graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE/SliderBox.sti", &guiSliderBoxImage));
+	guiSliderBoxImage = AddVideoObjectFromFile("INTERFACE/SliderBox.sti");
+	CHECKF(guiSliderBoxImage != NO_VOBJECT);
 
 	gfSliderInited = TRUE;
 

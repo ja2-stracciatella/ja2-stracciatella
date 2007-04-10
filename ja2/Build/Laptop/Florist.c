@@ -84,7 +84,8 @@ BOOLEAN EnterFlorist()
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/HandBullet.sti", &guiHandBullet));
+	guiHandBullet = AddVideoObjectFromFile("LAPTOP/HandBullet.sti");
+	CHECKF(guiHandBullet != NO_VOBJECT);
 
 	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
 
@@ -174,7 +175,8 @@ static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 BOOLEAN InitFloristDefaults()
 {
 	// load the Florist background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/leafback.sti", &guiFloristBackground));
+	guiFloristBackground = AddVideoObjectFromFile("LAPTOP/leafback.sti");
+	CHECKF(guiFloristBackground != NO_VOBJECT);
 
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
@@ -182,14 +184,16 @@ BOOLEAN InitFloristDefaults()
 		// load the small title graphic and add it
 		SGPFILENAME ImageFile;
 		GetMLGFilename(ImageFile, MLG_LARGEFLORISTSYMBOL);
-		CHECKF(AddVideoObjectFromFile(ImageFile, &guiLargeTitleSymbol));
+		guiLargeTitleSymbol = AddVideoObjectFromFile(ImageFile);
+		CHECKF(guiLargeTitleSymbol != NO_VOBJECT);
 	}
 	else
 	{
 		// load the leaf back graphic and add it
 		SGPFILENAME ImageFile;
 		GetMLGFilename(ImageFile, MLG_SMALLFLORISTSYMBOL);
-		CHECKF(AddVideoObjectFromFile(ImageFile, &guiSmallTitleSymbol));
+		guiSmallTitleSymbol = AddVideoObjectFromFile(ImageFile);
+		CHECKF(guiSmallTitleSymbol != NO_VOBJECT);
 
 
 		//flower title homepage link

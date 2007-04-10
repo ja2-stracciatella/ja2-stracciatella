@@ -160,7 +160,8 @@ extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *ps
 BOOLEAN LoadInventoryPoolGraphic( void )
 {
 	// add to V-object index
-	CHECKF(AddVideoObjectFromFile("INTERFACE/sector_inventory.sti", &guiMapInventoryPoolBackground));
+	guiMapInventoryPoolBackground = AddVideoObjectFromFile("INTERFACE/sector_inventory.sti");
+	CHECKF(guiMapInventoryPoolBackground != NO_VOBJECT);
 
 	return( TRUE );
 }

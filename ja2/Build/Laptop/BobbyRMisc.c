@@ -19,10 +19,12 @@ UINT32		guiMiscGrid;
 BOOLEAN EnterBobbyRMisc()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/miscbackground.sti", &guiMiscBackground));
+	guiMiscBackground = AddVideoObjectFromFile("LAPTOP/miscbackground.sti");
+	CHECKF(guiMiscBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/miscgrid.sti", &guiMiscGrid));
+	guiMiscGrid = AddVideoObjectFromFile("LAPTOP/miscgrid.sti");
+	CHECKF(guiMiscGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 	//Draw menu bar

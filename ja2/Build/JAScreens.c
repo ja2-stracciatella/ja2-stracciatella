@@ -796,8 +796,8 @@ UINT32 SexScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		// Load face....
-		if (!AddVideoObjectFromFile("INTERFACE/luckysmile.sti", &guiSMILY))
-			AssertMsg(0, "Missing INTERFACE/luckysmile.sti" );
+		guiSMILY = AddVideoObjectFromFile("INTERFACE/luckysmile.sti");
+		AssertMsg(guiSMILY != NO_VOBJECT, "Missing INTERFACE/luckysmile.sti");
 
 		// Init screen
 		bCurFrame = 0;
@@ -914,11 +914,9 @@ void DoDemoIntroduction()
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	if (!AddVideoObjectFromFile("DemoAds/DemoScreen1.sti", &uiTempID))
-	{
-		AssertMsg( 0, "Failed to load DemoAds/DemoScreen1.sti" );
-		return;
-	}
+	uiTempID = AddVideoObjectFromFile("DemoAds/DemoScreen1.sti");
+	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/DemoScreen1.sti");
+	if (uiTempID == NO_VOBJECT) return;
 	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 0, 0);
 	DeleteVideoObjectFromIndex( uiTempID );
 	InvalidateScreen();
@@ -1022,11 +1020,9 @@ static void DisplayTopwareGermanyAddress(void)
 	SGPRect ClipRect;
 
 	//bring up the Topware address screen
-	if (!AddVideoObjectFromFile("German/topware_germany.sti", &uiTempID))
-	{
-		AssertMsg( 0, "Failed to load German/topware_germany.sti" );
-		return;
-	}
+	uiTempID = AddVideoObjectFromFile("German/topware_germany.sti");
+	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load German/topware_germany.sti");
+	if (uiTempID == NO_VOBJECT) return;
 
 	//Shade out a background piece to emphasize the German address.
 	ClipRect.iLeft = 208;
@@ -1253,9 +1249,10 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			if (!AddVideoObjectFromFile("Interface/ja2logo.sti", &uiTempID))
+			uiTempID = AddVideoObjectFromFile("Interface/ja2logo.sti");
+			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load Interface/ja2logo.sti");
+			if (uiTempID == NO_VOBJECT)
 			{
-				AssertMsg( 0, "Failed to load Interface/ja2logo.sti" );
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 3;
 				return DEMO_EXIT_SCREEN;
@@ -1422,9 +1419,10 @@ UINT32 DemoExitScreenHandle(void)
 			//bring up the collage screen
 			SGPFILENAME ImageFile;
 			GetMLGFilename(ImageFile, MLG_AVAILABLE);
-			if (!AddVideoObjectFromFile(ImageFile, &uiTempID))
+			uiTempID = AddVideoObjectFromFile(ImageFile);
+			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/available.sti");
+			if (uiTempID == NO_VOBJECT)
 			{
-				AssertMsg( 0, "Failed to load DemoAds/available.sti" );
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 4;
 				return DEMO_EXIT_SCREEN;

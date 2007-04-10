@@ -316,19 +316,24 @@ BOOLEAN EnterEmail()
 	iCurrentPage = LaptopSaveInfo.iCurrentEmailPage;
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiEmailTitle));
+	guiEmailTitle = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiEmailTitle != NO_VOBJECT);
 
 	// the list background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Mailwindow.sti", &guiEmailBackground));
+	guiEmailBackground = AddVideoObjectFromFile("LAPTOP/Mailwindow.sti");
+	CHECKF(guiEmailBackground != NO_VOBJECT);
 
 	// the indication/notification box
-	CHECKF(AddVideoObjectFromFile("LAPTOP/MailIndicator.sti", &guiEmailIndicator));
+	guiEmailIndicator = AddVideoObjectFromFile("LAPTOP/MailIndicator.sti");
+	CHECKF(guiEmailIndicator != NO_VOBJECT);
 
 	// the message background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/emailviewer.sti", &guiEmailMessage));
+	guiEmailMessage = AddVideoObjectFromFile("LAPTOP/emailviewer.sti");
+	CHECKF(guiEmailMessage != NO_VOBJECT);
 
   // the message background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/maillistdivider.sti", &guiMAILDIVIDER));
+	guiMAILDIVIDER = AddVideoObjectFromFile("LAPTOP/maillistdivider.sti");
+	CHECKF(guiMAILDIVIDER != NO_VOBJECT);
 
   //AddEmail(IMP_EMAIL_PROFILE_RESULTS, IMP_EMAIL_PROFILE_RESULTS_LENGTH, IMP_PROFILE_RESULTS, GetWorldTotalMin( ) );
 	// initialize mouse regions
@@ -4066,7 +4071,8 @@ static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 
 	// get and blt the email list background
    // load, blt and delete graphics
-	//CHECKF(AddVideoObjectFromFile("LAPTOP/mailindent.sti", &uiMailIndent));
+	//uiMailIndent = AddVideoObjectFromFile("LAPTOP/mailindent.sti");
+	//CHECKF(uiMailIndent != NO_VOBJECT);
  // BltVideoObjectFromIndex(FRAME_BUFFER, uiMailIndent, 0,VIEWER_X + INDENT_X_OFFSET, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 10);
  // DeleteVideoObjectFromIndex( uiMailIndent );
 

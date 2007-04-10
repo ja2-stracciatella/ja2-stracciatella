@@ -19,10 +19,12 @@ UINT32		guiArmourGrid;
 BOOLEAN EnterBobbyRArmour()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Armourbackground.sti", &guiArmourBackground));
+	guiArmourBackground = AddVideoObjectFromFile("LAPTOP/Armourbackground.sti");
+	CHECKF(guiArmourBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Armourgrid.sti", &guiArmourGrid));
+	guiArmourGrid = AddVideoObjectFromFile("LAPTOP/Armourgrid.sti");
+	CHECKF(guiArmourGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 	//Draw menu bar

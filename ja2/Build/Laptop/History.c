@@ -310,21 +310,26 @@ static BOOLEAN LoadHistory(void)
   // load History video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
+	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/historywindow.sti", &guiTOP));
+	guiTOP = AddVideoObjectFromFile("LAPTOP/historywindow.sti");
+	CHECKF(guiTOP != NO_VOBJECT);
 
   // shaded line
-	CHECKF(AddVideoObjectFromFile("LAPTOP/historylines.sti", &guiSHADELINE));
+	guiSHADELINE = AddVideoObjectFromFile("LAPTOP/historylines.sti");
+	CHECKF(guiSHADELINE != NO_VOBJECT);
 
 /*
 Not being used???  DF commented out
   // vert  line
-	CHECKF(AddVideoObjectFromFile("LAPTOP/historyvertline.sti", &guiVERTLINE));
+	guiVERTLINE = AddVideoObjectFromFile("LAPTOP/historyvertline.sti");
+	CHECKF(guiVERTLINE != NO_VOBJECT);
 */
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline480.sti", &guiLONGLINE));
+	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
+	CHECKF(guiLONGLINE != NO_VOBJECT);
 
 	return (TRUE);
 }

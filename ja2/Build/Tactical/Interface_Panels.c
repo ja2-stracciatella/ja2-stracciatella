@@ -1219,11 +1219,16 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 BOOLEAN InitializeSMPanel(  )
 {
 	// failing the CHECKF after this will cause you to lose your mouse
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI", &guiSMPanel));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti", &guiSMObjects));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inv_frn.sti", &guiSMObjects2));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti", &guiSecItemHiddenVO));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
+	guiSMPanel = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
+	CHECKF(guiSMPanel != NO_VOBJECT);
+	guiSMObjects = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
+	CHECKF(guiSMObjects != NO_VOBJECT);
+	guiSMObjects2 = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
+	CHECKF(guiSMObjects2 != NO_VOBJECT);
+	guiSecItemHiddenVO = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
+	CHECKF(guiSecItemHiddenVO != NO_VOBJECT);
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
 	// Clear inv display stuff
 	memset( gfSM_HandInvDispText, 0, sizeof( gfSM_HandInvDispText ) );
@@ -3203,9 +3208,12 @@ BOOLEAN InitializeTEAMPanel(  )
 	MSYS_DefineRegion( &gViewportRegion, 0, 0 ,gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL,
 						 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/bottom_bar.sti", &guiTEAMPanel));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/gold_front.sti", &guiTEAMObjects));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
+	guiTEAMPanel = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
+	CHECKF(guiTEAMPanel != NO_VOBJECT);
+	guiTEAMObjects = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
+	CHECKF(guiTEAMObjects != NO_VOBJECT);
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
 	// Clear inv display stuff
 	memset( gfTEAM_HandInvDispText, 0, sizeof( gfTEAM_HandInvDispText ) );

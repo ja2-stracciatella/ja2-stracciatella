@@ -4526,10 +4526,8 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 	// if update
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
 	{
-		if (!AddVideoObjectFromFile("Interface/panels.sti", &giMercPanelImage))
-		{
-			AssertMsg( 0, "Failed to load Interface/panels.sti" );
-		}
+		giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
+		AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
 	}
 
 	// run thought list of update soldiers
@@ -4543,7 +4541,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 
 			SGPFILENAME ImageFile;
 			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
-			AddVideoObjectFromFile(ImageFile, &giUpdateSoldierFaces[iCounter]);
+			giUpdateSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
 
 			return;
 		}

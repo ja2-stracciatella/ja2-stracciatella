@@ -225,10 +225,12 @@ BOOLEAN EnterBobbyRGuns()
 	gfBigImageMouseRegionCreated = FALSE;
 
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/gunbackground.sti", &guiGunBackground));
+	guiGunBackground = AddVideoObjectFromFile("LAPTOP/gunbackground.sti");
+	CHECKF(guiGunBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/gunsgrid.sti", &guiGunsGrid));
+	guiGunsGrid = AddVideoObjectFromFile("LAPTOP/gunsgrid.sti");
+	CHECKF(guiGunsGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 
@@ -310,7 +312,8 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 BOOLEAN InitBobbyBrTitle()
 {
 	// load the br title graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/br.sti", &guiBrTitle));
+	guiBrTitle = AddVideoObjectFromFile("LAPTOP/br.sti");
+	CHECKF(guiBrTitle != NO_VOBJECT);
 
 	//initialize the link to the homepage by clicking on the title
 	MSYS_DefineRegion( &gSelectedTitleImageLinkRegion, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y, (BOBBYR_BRTITLE_X + BOBBYR_BRTITLE_WIDTH), (UINT16)(BOBBYR_BRTITLE_Y + BOBBYR_BRTITLE_HEIGHT), MSYS_PRIORITY_HIGH,

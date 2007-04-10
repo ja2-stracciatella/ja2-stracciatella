@@ -266,10 +266,12 @@ BOOLEAN InitMainMenu( )
 	CreateDestroyMainMenuButtons( TRUE );
 
 	// load background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LOADSCREENS/MainMenuBackGround.sti", &guiMainMenuBackGroundImage));
+	guiMainMenuBackGroundImage = AddVideoObjectFromFile("LOADSCREENS/MainMenuBackGround.sti");
+	CHECKF(guiMainMenuBackGroundImage != NO_VOBJECT);
 
 	// load ja2 logo graphic and add it
-	CHECKF(AddVideoObjectFromFile("LOADSCREENS/Ja2Logo.sti", &guiJa2LogoImage));
+	guiJa2LogoImage = AddVideoObjectFromFile("LOADSCREENS/Ja2Logo.sti");
+	CHECKF(guiJa2LogoImage != NO_VOBJECT);
 
 /*
 	// Gray out some buttons based on status of game!

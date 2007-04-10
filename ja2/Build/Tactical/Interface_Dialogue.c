@@ -367,10 +367,8 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.fHandled		=		FALSE;
 	gTalkPanel.fOnName		=		FALSE;
 
-	if (!AddVideoObjectFromFile("INTERFACE/talkbox1.sti", &gTalkPanel.uiPanelVO))
-	{
-		return( 0 );
-	}
+	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
+	if (gTalkPanel.uiPanelVO == NO_VOBJECT) return 0;
 
 	// Get ETRLE Properties
 	GetVideoObjectETRLESubregionProperties( gTalkPanel.uiPanelVO, 0, &usWidth, &usHeight );

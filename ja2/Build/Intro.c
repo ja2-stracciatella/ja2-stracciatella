@@ -470,11 +470,9 @@ static void DisplaySirtechSplashScreen(void)
 	UnLockVideoSurface( FRAME_BUFFER );
 
 	const char* const ImageFile = "INTERFACE/SirtechSplash.sti";
-	if (!AddVideoObjectFromFile(ImageFile, &uiLogoID))
-	{
-		AssertMsg(0, String("Failed to load %s", ImageFile));
-		return;
-	}
+	uiLogoID = AddVideoObjectFromFile(ImageFile);
+	AssertMsg(uiLogoID != NO_VOBJECT, String("Failed to load %s", ImageFile));
+	if (uiLogoID == NO_VOBJECT) return;
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiLogoID, 0, 0, 0);
 	DeleteVideoObjectFromIndex(uiLogoID);

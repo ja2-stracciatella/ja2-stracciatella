@@ -237,7 +237,8 @@ static BOOLEAN InitFlowerButtons(void)
 	{
 		// load the handbullet graphic and add it
 		sprintf( sTemp, "LAPTOP/Flower_%d.sti", count);
-		CHECKF(AddVideoObjectFromFile(sTemp, &guiFlowerImages[i]));
+		guiFlowerImages[i] = AddVideoObjectFromFile(sTemp);
+		CHECKF(guiFlowerImages[i] != NO_VOBJECT);
 		count++;
 	}
 

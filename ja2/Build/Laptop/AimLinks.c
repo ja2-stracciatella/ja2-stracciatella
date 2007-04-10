@@ -73,15 +73,18 @@ BOOLEAN EnterAimLinks()
 
 	// load the Bobby link graphic and add it
 	GetMLGFilename(ImageFile, MLG_BOBBYRAYLINK);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBobbyLink));
+	guiBobbyLink = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiBobbyLink != NO_VOBJECT);
 
 	// load the Funeral graphic and add it
 	GetMLGFilename(ImageFile, MLG_MORTUARYLINK);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiFuneralLink));
+	guiFuneralLink = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiFuneralLink != NO_VOBJECT);
 
 	// load the Insurance graphic and add it
 	GetMLGFilename(ImageFile, MLG_INSURANCELINK);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiInsuranceLink));
+	guiInsuranceLink = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiInsuranceLink != NO_VOBJECT);
 
 	usPosY = AIM_LINK_BOBBY_LINK_Y;
 	for(i=0; i<AIM_LINK_NUM_LINKS; i++)

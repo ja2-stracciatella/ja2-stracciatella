@@ -265,68 +265,68 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// LOAD CLOSE ANIM
-	if (!AddVideoObjectFromFile("INTERFACE/p_close.sti", &guiCLOSE))
-		AssertMsg(0, "Missing INTERFACE/p_close.sti" );
+	guiCLOSE = AddVideoObjectFromFile("INTERFACE/p_close.sti");
+	AssertMsg(guiCLOSE != NO_VOBJECT, "Missing INTERFACE/p_close.sti");
 
 	// LOAD DEAD ANIM
-	if (!AddVideoObjectFromFile("INTERFACE/p_dead.sti", &guiDEAD))
-		AssertMsg(0, "Missing INTERFACE/p_dead.sti" );
+	guiDEAD = AddVideoObjectFromFile("INTERFACE/p_dead.sti");
+	AssertMsg(guiDEAD != NO_VOBJECT, "Missing INTERFACE/p_dead.sti");
 
 	// LOAD HATCH
-	if (!AddVideoObjectFromFile("INTERFACE/hatch.sti", &guiHATCH))
-		AssertMsg(0, "Missing INTERFACE/hatch.sti" );
+	guiHATCH = AddVideoObjectFromFile("INTERFACE/hatch.sti");
+	AssertMsg(guiHATCH != NO_VOBJECT, "Missing INTERFACE/hatch.sti");
 
 	// LOAD INTERFACE GUN PICTURES
-	if (!AddVideoObjectFromFile("INTERFACE/mdguns.sti", &guiGUNSM))
-		AssertMsg(0, "Missing INTERFACE/mdguns.sti" );
+	guiGUNSM = AddVideoObjectFromFile("INTERFACE/mdguns.sti");
+	AssertMsg(guiGUNSM != NO_VOBJECT, "Missing INTERFACE/mdguns.sti");
 
 	// LOAD INTERFACE ITEM PICTURES
-	if (!AddVideoObjectFromFile("INTERFACE/mdp1items.sti", &guiP1ITEMS))
-		AssertMsg(0, "Missing INTERFACE/mdplitems.sti" );
+	guiP1ITEMS = AddVideoObjectFromFile("INTERFACE/mdp1items.sti");
+	AssertMsg(guiP1ITEMS != NO_VOBJECT, "Missing INTERFACE/mdplitems.sti");
 
 	// LOAD INTERFACE ITEM PICTURES
-	if (!AddVideoObjectFromFile("INTERFACE/mdp2items.sti", &guiP2ITEMS))
-		AssertMsg(0, "Missing INTERFACE/mdp2items.sti" );
+	guiP2ITEMS = AddVideoObjectFromFile("INTERFACE/mdp2items.sti");
+	AssertMsg(guiP2ITEMS != NO_VOBJECT, "Missing INTERFACE/mdp2items.sti");
 
 	// LOAD INTERFACE ITEM PICTURES
-	if (!AddVideoObjectFromFile("INTERFACE/mdp3items.sti", &guiP3ITEMS))
-		AssertMsg(0, "Missing INTERFACE/mdp3items.sti" );
+	guiP3ITEMS = AddVideoObjectFromFile("INTERFACE/mdp3items.sti");
+	AssertMsg(guiP3ITEMS != NO_VOBJECT, "Missing INTERFACE/mdp3items.sti");
 
 	// LOAD INTERFACE BUTTON BORDER
-	if (!AddVideoObjectFromFile("INTERFACE/button_frame.sti", &guiBUTTONBORDER))
-		AssertMsg(0, "Missing INTERFACE/button_frame.sti" );
+	guiBUTTONBORDER = AddVideoObjectFromFile("INTERFACE/button_frame.sti");
+	AssertMsg(guiBUTTONBORDER != NO_VOBJECT, "Missing INTERFACE/button_frame.sti");
 
 	// LOAD AIM CUBES
-	if (!AddVideoObjectFromFile("INTERFACE/aimcubes.sti", &guiAIMCUBES))
-		AssertMsg(0, "Missing INTERFACE/aimcubes.sti" );
+	guiAIMCUBES = AddVideoObjectFromFile("INTERFACE/aimcubes.sti");
+	AssertMsg(guiAIMCUBES != NO_VOBJECT, "Missing INTERFACE/aimcubes.sti");
 
 	// LOAD AIM BARS
-	if (!AddVideoObjectFromFile("INTERFACE/aimbars.sti", &guiAIMBARS))
-		AssertMsg(0, "Missing INTERFACE/aimbars.sti" );
+	guiAIMBARS = AddVideoObjectFromFile("INTERFACE/aimbars.sti");
+	AssertMsg(guiAIMBARS != NO_VOBJECT, "Missing INTERFACE/aimbars.sti");
 
-	if (!AddVideoObjectFromFile("INTERFACE/inventor.sti", &guiVEHINV))
-		AssertMsg(0, "Missing INTERFACE/inventor.sti" );
+	guiVEHINV = AddVideoObjectFromFile("INTERFACE/inventor.sti");
+	AssertMsg(guiVEHINV != NO_VOBJECT, "Missing INTERFACE/inventor.sti");
 
-	if (!AddVideoObjectFromFile("INTERFACE/burst1.sti", &guiBURSTACCUM))
-		AssertMsg(0, "Missing INTERFACE/burst1.sti" );
+	guiBURSTACCUM = AddVideoObjectFromFile("INTERFACE/burst1.sti");
+	AssertMsg(guiBURSTACCUM != NO_VOBJECT, "Missing INTERFACE/burst1.sti");
 
-	if (!AddVideoObjectFromFile("INTERFACE/portraiticons.sti", &guiPORTRAITICONS))
-		AssertMsg(0, "Missing INTERFACE/portraiticons.sti" );
+	guiPORTRAITICONS = AddVideoObjectFromFile("INTERFACE/portraiticons.sti");
+	AssertMsg(guiPORTRAITICONS != NO_VOBJECT, "Missing INTERFACE/portraiticons.sti");
 
 	// LOAD RADIO
-	if (!AddVideoObjectFromFile("INTERFACE/radio.sti", &guiRADIO))
-		AssertMsg(0, "Missing INTERFACE/radio.sti" );
+	guiRADIO = AddVideoObjectFromFile("INTERFACE/radio.sti");
+	AssertMsg(guiRADIO != NO_VOBJECT, "Missing INTERFACE/radio.sti");
 
 	// LOAD RADIO2
-	if (!AddVideoObjectFromFile("INTERFACE/radio2.sti", &guiRADIO2))
-		AssertMsg(0, "Missing INTERFACE/radio2.sti" );
+	guiRADIO2 = AddVideoObjectFromFile("INTERFACE/radio2.sti");
+	AssertMsg(guiRADIO2 != NO_VOBJECT, "Missing INTERFACE/radio2.sti");
 
 	// LOAD com panel 2
-	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup.sti", &guiCOMPANEL))
-		AssertMsg(0, "Missing INTERFACE/communicationpopup.sti" );
+	guiCOMPANEL = AddVideoObjectFromFile("INTERFACE/communicationpopup.sti");
+	AssertMsg(guiCOMPANEL != NO_VOBJECT, "Missing INTERFACE/communicationpopup.sti");
 
-	if (!AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti", &guiCOMPANELB))
-		AssertMsg(0, "Missing INTERFACE/communicationpopup_2.sti" );
+	guiCOMPANELB = AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti");
+	AssertMsg(guiCOMPANELB != NO_VOBJECT, "Missing INTERFACE/communicationpopup_2.sti");
 
 
 	// Alocate message surfaces
@@ -2761,17 +2761,17 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 
 	FLOAT		dNumStepsPerEnemy, dLength, dCurSize;
 
-	if (!AddVideoObjectFromFile("INTERFACE/rect.sti", &uiBAR))
-		AssertMsg(0, "Missing INTERFACE/rect.sti" );
+	uiBAR = AddVideoObjectFromFile("INTERFACE/rect.sti");
+	AssertMsg(uiBAR != NO_VOBJECT, "Missing INTERFACE/rect.sti");
 
 	//if ( gGameOptions.fTurnTimeLimit )
 	{
-		if (!AddVideoObjectFromFile("INTERFACE/timebargreen.sti", &uiPLAYERBAR))
-			AssertMsg(0, "Missing INTERFACE/timebargreen.sti" );
+		uiPLAYERBAR = AddVideoObjectFromFile("INTERFACE/timebargreen.sti");
+		AssertMsg(uiPLAYERBAR != NO_VOBJECT, "Missing INTERFACE/timebargreen.sti");
 	}
 
-	if (!AddVideoObjectFromFile("INTERFACE/timebaryellow.sti", &uiINTBAR))
-		AssertMsg(0, "Missing INTERFACE/timebaryellow.sti" );
+	uiINTBAR = AddVideoObjectFromFile("INTERFACE/timebaryellow.sti");
+	AssertMsg(uiINTBAR != NO_VOBJECT, "Missing INTERFACE/timebaryellow.sti");
 
 	// Change dest buffer
 	SetFontDestBuffer( uiSurface , 0, 0, 640, 20, FALSE );

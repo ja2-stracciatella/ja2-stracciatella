@@ -190,10 +190,12 @@ BOOLEAN EnterInsuranceContract()
 
 
 	// load the Insurance title graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/InsOrderGrid.sti", &guiInsOrderGridImage));
+	guiInsOrderGridImage = AddVideoObjectFromFile("LAPTOP/InsOrderGrid.sti");
+	CHECKF(guiInsOrderGridImage != NO_VOBJECT);
 
 	// load the Insurance bullet graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/bullet.sti", &guiInsOrderBulletImage));
+	guiInsOrderBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
+	CHECKF(guiInsOrderBulletImage != NO_VOBJECT);
 
 
 	usPosX = INS_CTRCT_BOTTOM_LINK_RED_BAR_X;
@@ -470,7 +472,8 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 	// load the mercs face graphic and add it
 	sprintf(sTemp, "FACES/%02d.sti", ubMercID);
-	CHECKF(AddVideoObjectFromFile(sTemp, &uiInsMercFaceImage));
+	uiInsMercFaceImage = AddVideoObjectFromFile(sTemp);
+	CHECKF(uiInsMercFaceImage != NO_VOBJECT);
 
 	HVOBJECT hPixHandle = GetVideoObject(uiInsMercFaceImage);
 

@@ -386,8 +386,10 @@ static BOOLEAN EnterCreditsScreen(void)
 {
 	UINT32 uiCnt;
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Credits.sti", &guiCreditBackGroundImage));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Credit Faces.sti", &guiCreditFaces));
+	guiCreditBackGroundImage = AddVideoObjectFromFile("INTERFACE/Credits.sti");
+	CHECKF(guiCreditBackGroundImage != NO_VOBJECT);
+	guiCreditFaces = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
+	CHECKF(guiCreditFaces != NO_VOBJECT);
 
 	//Initialize the root credit node
 	InitCreditNode( );

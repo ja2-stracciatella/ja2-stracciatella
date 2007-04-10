@@ -51,7 +51,8 @@ BOOLEAN EnterMercsNoAccount()
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti", &guiNoAccountImage));
+	guiNoAccountImage = AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti");
+	CHECKF(guiNoAccountImage != NO_VOBJECT);
 
 
 	// Open Accouint button

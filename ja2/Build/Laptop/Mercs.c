@@ -315,22 +315,28 @@ BOOLEAN EnterMercs()
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/AccountBox.sti", &guiAccountBox));
+	guiAccountBox = AddVideoObjectFromFile("LAPTOP/AccountBox.sti");
+	CHECKF(guiAccountBox != NO_VOBJECT);
 
 	// load the files Box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/FilesBox.sti", &guiFilesBox));
+	guiFilesBox = AddVideoObjectFromFile("LAPTOP/FilesBox.sti");
+	CHECKF(guiFilesBox != NO_VOBJECT);
 
 	// load the MercSymbol graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/MERCSymbol.sti", &guiMercSymbol));
+	guiMercSymbol = AddVideoObjectFromFile("LAPTOP/MERCSymbol.sti");
+	CHECKF(guiMercSymbol != NO_VOBJECT);
 
 	// load the SpecPortrait graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/SpecPortrait.sti", &guiSpecPortrait));
+	guiSpecPortrait = AddVideoObjectFromFile("LAPTOP/SpecPortrait.sti");
+	CHECKF(guiSpecPortrait != NO_VOBJECT);
 
 	// load the Arrow graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Arrow.sti", &guiArrow));
+	guiArrow = AddVideoObjectFromFile("LAPTOP/Arrow.sti");
+	CHECKF(guiArrow != NO_VOBJECT);
 
 	// load the Merc video conf background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/SpeckComWindow.sti", &guiMercVideoPopupBackground));
+	guiMercVideoPopupBackground = AddVideoObjectFromFile("LAPTOP/SpeckComWindow.sti");
+	CHECKF(guiMercVideoPopupBackground != NO_VOBJECT);
 
 
 	// Account Box button
@@ -566,7 +572,8 @@ void RenderMercs()
 BOOLEAN InitMercBackGround()
 {
 	// load the Merc background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/MERCBackGround.sti", &guiMercBackGround));
+	guiMercBackGround = AddVideoObjectFromFile("LAPTOP/MERCBackGround.sti");
+	CHECKF(guiMercBackGround != NO_VOBJECT);
 	return(TRUE);
 }
 

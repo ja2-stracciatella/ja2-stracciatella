@@ -519,12 +519,15 @@ static BOOLEAN LoadPersonnelGraphics(void)
 	// load graphics needed for personnel screen
 
   // title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
+	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// the background grpahics
-	CHECKF(AddVideoObjectFromFile("LAPTOP/personnelwindow.sti", &guiSCREEN));
+	guiSCREEN = AddVideoObjectFromFile("LAPTOP/personnelwindow.sti");
+	CHECKF(guiSCREEN != NO_VOBJECT);
 
-	CHECKF(AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti", &guiPersonnelInventory));
+	guiPersonnelInventory = AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti");
+	CHECKF(guiPersonnelInventory != NO_VOBJECT);
 
 	return(TRUE);
 }
@@ -791,7 +794,8 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEA
 		}
 	}
 
-	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
+	guiFACE = AddVideoObjectFromFile(sTemp);
+	CHECKF(guiFACE != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
@@ -1782,10 +1786,12 @@ static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void)
 	// will load the graphics for the personeel screen background
 
 	// departed bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/departed.sti", &guiDEPARTEDTEAM));
+	guiDEPARTEDTEAM = AddVideoObjectFromFile("LAPTOP/departed.sti");
+	CHECKF(guiDEPARTEDTEAM != NO_VOBJECT);
 
 	// current bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti", &guiCURRENTTEAM));
+	guiCURRENTTEAM = AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti");
+	CHECKF(guiCURRENTTEAM != NO_VOBJECT);
 
 	return ( TRUE );
 }
@@ -1946,7 +1952,8 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 				sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR,	Menptr[iId + iCnt].ubProfile);
 			}
 
-		CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
+		guiFACE = AddVideoObjectFromFile(sTemp);
+		CHECKF(guiFACE != NO_VOBJECT);
 
 		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
@@ -4626,7 +4633,8 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 		sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId);
 	}
 
-	CHECKF(AddVideoObjectFromFile(sTemp, &guiFACE));
+	guiFACE = AddVideoObjectFromFile(sTemp);
+	CHECKF(guiFACE != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
@@ -4999,7 +5007,8 @@ static BOOLEAN DisplayHighLightBox(void)
 	}
 
   // bounding
-	CHECKF(AddVideoObjectFromFile("LAPTOP/PicBorde.sti", &uiBox));
+	uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
+	CHECKF(uiBox != NO_VOBJECT);
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH - 2, SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3);
 	DeleteVideoObjectFromIndex( uiBox );
 
@@ -5209,7 +5218,8 @@ static BOOLEAN RenderAtmPanel(void)
 	// render the ATM panel
 	if( fShowAtmPanel )
 	{
-		CHECKF(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti", &uiBox));
+		uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
+		CHECKF(uiBox != NO_VOBJECT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X, ATM_UL_Y);
 		DeleteVideoObjectFromIndex( uiBox );
 
@@ -5234,7 +5244,8 @@ static BOOLEAN RenderAtmPanel(void)
 	{
 		// just show basic panel
 		// bounding
-		CHECKF(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti", &uiBox));
+		uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
+		CHECKF(uiBox != NO_VOBJECT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X    , ATM_UL_Y);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 		DeleteVideoObjectFromIndex( uiBox );

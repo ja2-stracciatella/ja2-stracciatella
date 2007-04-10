@@ -134,13 +134,16 @@ BOOLEAN EnterMercsFiles()
 	// load the stats box graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_STATSBOX);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiStatsBox));
+	guiStatsBox = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiStatsBox != NO_VOBJECT);
 
 	// load the Portrait box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/PortraitBox.sti", &guiPortraitBox));
+	guiPortraitBox = AddVideoObjectFromFile("LAPTOP/PortraitBox.sti");
+	CHECKF(guiPortraitBox != NO_VOBJECT);
 
 	// load the bio box graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BioBox.sti", &guiBioBox));
+	guiBioBox = AddVideoObjectFromFile("LAPTOP/BioBox.sti");
+	CHECKF(guiBioBox != NO_VOBJECT);
 
 
 	// Prev Box button
@@ -334,7 +337,8 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 
 	// load the Face graphic and add it
   sprintf(sTemp, "%s%02d.sti", sFaceLoc, ubMercID);
-	CHECKF(AddVideoObjectFromFile(sTemp, &guiMercFace));
+	guiMercFace = AddVideoObjectFromFile(sTemp);
+	CHECKF(guiMercFace != NO_VOBJECT);
 
 	//Blt face to screen
 	HVOBJECT hFaceHandle = GetVideoObject(guiMercFace);

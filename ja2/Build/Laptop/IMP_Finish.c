@@ -410,17 +410,20 @@ static BOOLEAN RenderCharProfileFinishFace(void)
 	  switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/00.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/00.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/01.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/01.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/02.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/02.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
@@ -432,17 +435,20 @@ static BOOLEAN RenderCharProfileFinishFace(void)
     switch( LaptopSaveInfo.iVoiceId )
 		{
 		  case( 0 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/03.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/03.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/04.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/04.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
-	      CHECKF(AddVideoObjectFromFile("Faces/SmallFaces/05.sti", &uiGraphicHandle));
+	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/05.sti");
+	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
@@ -485,7 +491,8 @@ static BOOLEAN LoadCharacterPortrait(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	// load it
-	CHECKF(AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber], &guiCHARACTERPORTRAIT));
+	guiCHARACTERPORTRAIT = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
+	CHECKF(guiCHARACTERPORTRAIT != NO_VOBJECT);
 	return( TRUE );
 }
 

@@ -913,9 +913,11 @@ static BOOLEAN EnterQuestDebugSystem(void)
 
 
 	// load Scroll Horizontal Arrow graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti", &guiQdScrollArrowImage));
+	guiQdScrollArrowImage = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
+	CHECKF(guiQdScrollArrowImage != NO_VOBJECT);
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Bars.sti", &guiBrownBackgroundForTeamPanel));
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
 
 	gfRedrawQuestDebugSystem = TRUE;

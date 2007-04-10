@@ -76,7 +76,8 @@ BOOLEAN LoadCarPortraitValues( void )
 	}
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
-		CHECKF(AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter], &giCarPortraits[iCounter]));
+		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
+		CHECKF(giCarPortraits[iCounter] != NO_VOBJECT);
 	}
 	return( TRUE );
 }

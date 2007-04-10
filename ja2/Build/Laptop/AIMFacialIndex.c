@@ -71,7 +71,8 @@ BOOLEAN EnterAimFacialIndex()
 	char			sTemp[100];
 
 	// load the Portait graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/MugShotBorder3.sti", &guiMugShotBorder));
+	guiMugShotBorder = AddVideoObjectFromFile("LAPTOP/MugShotBorder3.sti");
+	CHECKF(guiMugShotBorder != NO_VOBJECT);
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;
@@ -86,7 +87,8 @@ BOOLEAN EnterAimFacialIndex()
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
 			sprintf(sTemp, "%s%02d.sti", sFaceLoc, AimMercArray[i]);
-			if (!AddVideoObjectFromFile(sTemp, &guiAimFiFace[i])) return FALSE;
+			guiAimFiFace[i] = AddVideoObjectFromFile(sTemp);
+			if (guiAimFiFace[i] == NO_VOBJECT) return FALSE;
 
 			usPosX += AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X;
 			i++;

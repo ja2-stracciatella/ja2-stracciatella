@@ -92,11 +92,13 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 BOOLEAN LoadMapBorderGraphics( void )
 {
   // this procedure will load the graphics needed for the map border
-	CHECKF(AddVideoObjectFromFile("INTERFACE/MBS.sti", &guiMapBorder));
+	guiMapBorder = AddVideoObjectFromFile("INTERFACE/MBS.sti");
+	CHECKF(guiMapBorder != NO_VOBJECT);
 
 /* corner was removed along with the Zoom feature
 	// will load map border corner
-	CHECKF(AddVideoObjectFromFile("INTERFACE/map_screen_cutout.sti", &guiMapBorderCorner));
+	guiMapBorderCorner = AddVideoObjectFromFile("INTERFACE/map_screen_cutout.sti");
+	CHECKF(guiMapBorderCorner != NO_VOBJECT);
 
 	fCursorIsOnMapScrollButtons = FALSE;
 */

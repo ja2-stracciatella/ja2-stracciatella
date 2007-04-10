@@ -158,19 +158,24 @@ BOOLEAN EnterAimArchives()
 	gubPageNum = (UINT8)giCurrentSubPage;
 
 	// load the Alumni Frame and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti", &guiAlumniFrame));
+	guiAlumniFrame = AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti");
+	CHECKF(guiAlumniFrame != NO_VOBJECT);
 
 	// load the 1st set of faces and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Old_Aim.sti", &guiOldAim));
+	guiOldAim = AddVideoObjectFromFile("LAPTOP/Old_Aim.sti");
+	CHECKF(guiOldAim != NO_VOBJECT);
 
 	// load the PopupPic graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti", &guiPopUpPic));
+	guiPopUpPic = AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti");
+	CHECKF(guiPopUpPic != NO_VOBJECT);
 
 		// load the AlumniPopUp graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti", &guiAlumniPopUp));
+	guiAlumniPopUp = AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti");
+	CHECKF(guiAlumniPopUp != NO_VOBJECT);
 
 		// load the Done Button graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/DoneButton.sti", &guiDoneButton));
+	guiDoneButton = AddVideoObjectFromFile("LAPTOP/DoneButton.sti");
+	CHECKF(guiDoneButton != NO_VOBJECT);
 
 	InitAlumniFaceRegions();
 

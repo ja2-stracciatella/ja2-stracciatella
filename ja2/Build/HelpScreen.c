@@ -580,7 +580,8 @@ static BOOLEAN EnterHelpScreen(void)
 */
 
 	// load the help screen background graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE/HelpScreen.sti", &guiHelpScreenBackGround));
+	guiHelpScreenBackGround = AddVideoObjectFromFile("INTERFACE/HelpScreen.sti");
+	CHECKF(guiHelpScreenBackGround != NO_VOBJECT);
 
 
 	//create the text buffer

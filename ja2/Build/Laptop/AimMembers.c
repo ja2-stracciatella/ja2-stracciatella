@@ -512,37 +512,48 @@ BOOLEAN EnterAIMMembers()
 	CHECKF(guiVideoFaceBackground != NO_VSURFACE);
 
 	// load the stats graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/stats.sti", &guiStats));
+	guiStats = AddVideoObjectFromFile("LAPTOP/stats.sti");
+	CHECKF(guiStats != NO_VOBJECT);
 
 	// load the Price graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/price.sti", &guiPrice));
+	guiPrice = AddVideoObjectFromFile("LAPTOP/price.sti");
+	CHECKF(guiPrice != NO_VOBJECT);
 
 	// load the Portait graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/portrait.sti", &guiPortrait));
+	guiPortrait = AddVideoObjectFromFile("LAPTOP/portrait.sti");
+	CHECKF(guiPortrait != NO_VOBJECT);
 
 	// load the WeaponBox graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/weaponbox.sti", &guiWeaponBox));
+	guiWeaponBox = AddVideoObjectFromFile("LAPTOP/weaponbox.sti");
+	CHECKF(guiWeaponBox != NO_VOBJECT);
 
 	// load the videoconf Popup graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/VideoConfPopup.sti", &guiVideoConfPopup));
+	guiVideoConfPopup = AddVideoObjectFromFile("LAPTOP/VideoConfPopup.sti");
+	CHECKF(guiVideoConfPopup != NO_VOBJECT);
 
 	// load the video conf terminal graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/VideoConfTerminal.sti", &guiVideoConfTerminal));
+	guiVideoConfTerminal = AddVideoObjectFromFile("LAPTOP/VideoConfTerminal.sti");
+	CHECKF(guiVideoConfTerminal != NO_VOBJECT);
 
 	// load the background snow for the video conf terminal
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BWSnow.sti", &guiBWSnow));
+	guiBWSnow = AddVideoObjectFromFile("LAPTOP/BWSnow.sti");
+	CHECKF(guiBWSnow != NO_VOBJECT);
 
 	// load the fuzzy line for the video conf terminal
-	CHECKF(AddVideoObjectFromFile("LAPTOP/FuzzLine.sti", &guiFuzzLine));
+	guiFuzzLine = AddVideoObjectFromFile("LAPTOP/FuzzLine.sti");
+	CHECKF(guiFuzzLine != NO_VOBJECT);
 
 	// load the line distortion for the video conf terminal
-	CHECKF(AddVideoObjectFromFile("LAPTOP/LineInterference.sti", &guiStraightLine));
+	guiStraightLine = AddVideoObjectFromFile("LAPTOP/LineInterference.sti");
+	CHECKF(guiStraightLine != NO_VOBJECT);
 
 	// load the translucent snow for the video conf terminal
-	CHECKF(AddVideoObjectFromFile("LAPTOP/TransSnow.sti", &guiTransSnow));
+	guiTransSnow = AddVideoObjectFromFile("LAPTOP/TransSnow.sti");
+	CHECKF(guiTransSnow != NO_VOBJECT);
 
 	// load the translucent snow for the video conf terminal
-	CHECKF(AddVideoObjectFromFile("LAPTOP/VideoContractCharge.sti", &guiVideoContractCharge));
+	guiVideoContractCharge = AddVideoObjectFromFile("LAPTOP/VideoContractCharge.sti");
+	CHECKF(guiVideoContractCharge != NO_VOBJECT);
 
 
 	//** Mouse Regions **
@@ -1150,7 +1161,8 @@ static BOOLEAN DisplayMercsFace(void)
 
 	// load the Face graphic and add it
   sprintf(sTemp, "%s%02d.sti", sFaceLoc, gbCurrentSoldier);
-	CHECKF(AddVideoObjectFromFile(sTemp, &guiFace));
+	guiFace = AddVideoObjectFromFile(sTemp);
+	CHECKF(guiFace != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFace);
   BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,FACE_X, FACE_Y);
@@ -1745,7 +1757,8 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 			usPopUpBoxPosY = usPosY;
 
 			// load the popup box graphic
-			CHECKF(AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti", &guiPopUpBox));
+			guiPopUpBox = AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti");
+			CHECKF(guiPopUpBox != NO_VOBJECT);
 
 			BltVideoObjectFromIndex(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
@@ -2779,7 +2792,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			UINT32 uiVideoBackgroundGraphic;
 
 			// load the answering machine graphic and add it
-			CHECKF(AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti", &uiVideoBackgroundGraphic));
+			uiVideoBackgroundGraphic = AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti");
+			CHECKF(uiVideoBackgroundGraphic != NO_VOBJECT);
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
@@ -2979,7 +2993,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 //DEF: TEST
 //
 /*		// load the answering machine graphic and add it
-		CHECKF(AddVideoObjectFromFile("LAPTOP/explosion.sti", &guiAnsweringMachineImage));
+		guiAnsweringMachineImage = AddVideoObjectFromFile("LAPTOP/explosion.sti");
+		CHECKF(guiAnsweringMachineImage != NO_VOBJECT);
 */
 		gubCurrentStaticMode = VC_NO_STATIC;
 	}
@@ -3027,7 +3042,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 
 		// load the Video conference background graphic and add it
-		CHECKF(AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti", &uiVideoBackgroundGraphic));
+		uiVideoBackgroundGraphic = AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti");
+		CHECKF(uiVideoBackgroundGraphic != NO_VOBJECT);
 
 		// Create a background video surface to blt the face onto
 		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);

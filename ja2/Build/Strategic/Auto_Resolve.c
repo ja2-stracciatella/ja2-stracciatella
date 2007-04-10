@@ -1769,10 +1769,8 @@ static void CreateAutoResolveInterface(void)
 	gpAR->fExitAutoResolve = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	if (!AddVideoObjectFromFile("Interface/AutoResolve.sti", &gpAR->iPanelImages))
-	{
-		AssertMsg( 0, "Failed to load Interface/AutoResolve.sti" );
-	}
+	gpAR->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
+	AssertMsg(gpAR->iPanelImages != NO_VOBJECT, "Failed to load Interface/AutoResolve.sti");
 
 	//Load the button images file, and assign it to the first button.
 	/* OLD BEFORE THE MEDICAL BUTTON WAS ADDED
@@ -1809,10 +1807,8 @@ static void CreateAutoResolveInterface(void)
 	gpAR->iButtonImage[ DONELOSE_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 16, -1, 17, -1 );
 
 	//Load the generic faces for civs and enemies
-	if (!AddVideoObjectFromFile("Interface/SmFaces.sti", &gpAR->iFaces))
-	{
-		AssertMsg( 0, "Failed to load Interface/SmFaces.sti" );
-	}
+	gpAR->iFaces = AddVideoObjectFromFile("Interface/SmFaces.sti");
+	AssertMsg(gpAR->iFaces != NO_VOBJECT, "Failed to load Interface/SmFaces.sti");
 	HVOBJECT hVObject = GetVideoObject(gpAR->iFaces);
 	if (hVObject != NULL)
 	{
@@ -1821,10 +1817,8 @@ static void CreateAutoResolveInterface(void)
 	}
 
 	//Add the battle over panels
-	if (!AddVideoObjectFromFile("Interface/indent.sti", &gpAR->iIndent))
-	{
-		AssertMsg( 0, "Failed to load Interface/indent.sti" );
-	}
+	gpAR->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
+	AssertMsg(gpAR->iIndent != NO_VOBJECT, "Failed to load Interface/indent.sti");
 
 	//add all the faces now
 	for( i = 0; i < gpAR->ubMercs; i++ )
@@ -1832,12 +1826,11 @@ static void CreateAutoResolveInterface(void)
 		//Load the face
 		SGPFILENAME ImageFile;
 		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
-		if (!AddVideoObjectFromFile(ImageFile, &gpMercs[i].uiVObjectID))
+		gpMercs[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
+		if (gpMercs[i].uiVObjectID == NO_VOBJECT)
 		{
-			if (!AddVideoObjectFromFile("Faces/65Face/speck.sti", &gpMercs[i].uiVObjectID))
-			{
-				AssertMsg( 0, String("Failed to load %Faces/65Face/%02d.sti or it's placeholder, speck.sti", gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].ubFaceIndex) );
-			}
+			gpMercs[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
+			AssertMsg(gpMercs[i].uiVObjectID != NO_VOBJECT, String("Failed to load %Faces/65Face/%02d.sti or it's placeholder, speck.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex));
 		}
 		HVOBJECT hVObject = GetVideoObject(gpMercs[i].uiVObjectID);
 		if (hVObject != NULL)

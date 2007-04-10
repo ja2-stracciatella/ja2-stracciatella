@@ -65,7 +65,8 @@ extern void DrawBonusPointsRemaining( void );
 BOOLEAN LoadProfileBackGround( void )
 {
 	// this procedure will load in the graphics for the generic background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/MetalBackGround.sti", &guiBACKGROUND));
+	guiBACKGROUND = AddVideoObjectFromFile("LAPTOP/MetalBackGround.sti");
+	CHECKF(guiBACKGROUND != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -108,7 +109,8 @@ BOOLEAN LoadIMPSymbol( void )
 	// this procedure will load the IMP main symbol into memory
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_IMPSYMBOL);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiIMPSYMBOL));
+	guiIMPSYMBOL = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiIMPSYMBOL != NO_VOBJECT);
 
 	return (TRUE) ;
 }
@@ -133,7 +135,8 @@ void RenderIMPSymbol(INT16 sX, INT16 sY)
 BOOLEAN LoadBeginIndent( void )
 {
 	// this procedure will load the indent main symbol into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BeginScreenIndent.sti", &guiBEGININDENT));
+	guiBEGININDENT = AddVideoObjectFromFile("LAPTOP/BeginScreenIndent.sti");
+	CHECKF(guiBEGININDENT != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -160,7 +163,8 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadActivationIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ActivationIndent.sti", &guiACTIVATIONINDENT));
+	guiACTIVATIONINDENT = AddVideoObjectFromFile("LAPTOP/ActivationIndent.sti");
+	CHECKF(guiACTIVATIONINDENT != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -182,7 +186,8 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadFrontPageIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/FrontPageIndent.sti", &guiFRONTPAGEINDENT));
+	guiFRONTPAGEINDENT = AddVideoObjectFromFile("LAPTOP/FrontPageIndent.sti");
+	CHECKF(guiFRONTPAGEINDENT != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -206,7 +211,8 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadAnalyse( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Analyze.sti", &guiANALYSE));
+	guiANALYSE = AddVideoObjectFromFile("LAPTOP/Analyze.sti");
+	CHECKF(guiANALYSE != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -228,7 +234,8 @@ static void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
 BOOLEAN LoadAttributeGraph( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Attributegraph.sti", &guiATTRIBUTEGRAPH));
+	guiATTRIBUTEGRAPH = AddVideoObjectFromFile("LAPTOP/Attributegraph.sti");
+	CHECKF(guiATTRIBUTEGRAPH != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -250,7 +257,8 @@ static void RenderAttributeGraph(INT16 sX, INT16 sY)
 BOOLEAN LoadAttributeGraphBar( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/AttributegraphBar.sti", &guiATTRIBUTEGRAPHBAR));
+	guiATTRIBUTEGRAPHBAR = AddVideoObjectFromFile("LAPTOP/AttributegraphBar.sti");
+	CHECKF(guiATTRIBUTEGRAPHBAR != NO_VOBJECT);
 	return (TRUE) ;
 }
 
@@ -272,7 +280,8 @@ static void RenderAttributeBarGraph(INT16 sX, INT16 sY)
 BOOLEAN LoadFullNameIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/FullNameIndent.sti", &guiFULLNAMEINDENT));
+	guiFULLNAMEINDENT = AddVideoObjectFromFile("LAPTOP/FullNameIndent.sti");
+	CHECKF(guiFULLNAMEINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -294,7 +303,8 @@ static void RenderFullNameIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadNickNameIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/NickName.sti", &guiNICKNAMEINDENT));
+	guiNICKNAMEINDENT = AddVideoObjectFromFile("LAPTOP/NickName.sti");
+	CHECKF(guiNICKNAMEINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -314,7 +324,8 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadNameIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/NameIndent.sti", &guiNAMEINDENT));
+	guiNAMEINDENT = AddVideoObjectFromFile("LAPTOP/NameIndent.sti");
+	CHECKF(guiNAMEINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -337,7 +348,8 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 BOOLEAN LoadGenderIndent( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/GenderIndent.sti", &guiGENDERINDENT));
+	guiGENDERINDENT = AddVideoObjectFromFile("LAPTOP/GenderIndent.sti");
+	CHECKF(guiGENDERINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -358,7 +370,8 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 static BOOLEAN LoadSmallFrame(void)
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/SmallFrame.sti", &guiSMALLFRAME));
+	guiSMALLFRAME = AddVideoObjectFromFile("LAPTOP/SmallFrame.sti");
+	CHECKF(guiSMALLFRAME != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -379,7 +392,8 @@ static void RenderSmallFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadSmallSilhouette( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/SmallSilhouette.sti", &guiSMALLSILHOUETTE));
+	guiSMALLSILHOUETTE = AddVideoObjectFromFile("LAPTOP/SmallSilhouette.sti");
+	CHECKF(guiSMALLSILHOUETTE != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -401,7 +415,8 @@ static void RenderSmallSilhouette(INT16 sX, INT16 sY)
 BOOLEAN LoadLargeSilhouette( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/largesilhouette.sti", &guiLARGESILHOUETTE));
+	guiLARGESILHOUETTE = AddVideoObjectFromFile("LAPTOP/largesilhouette.sti");
+	CHECKF(guiLARGESILHOUETTE != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -422,7 +437,8 @@ void RenderLargeSilhouette(INT16 sX, INT16 sY)
 BOOLEAN LoadAttributeFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/attributeframe.sti", &guiATTRIBUTEFRAME));
+	guiATTRIBUTEFRAME = AddVideoObjectFromFile("LAPTOP/attributeframe.sti");
+	CHECKF(guiATTRIBUTEFRAME != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -487,7 +503,8 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex )
 BOOLEAN LoadSliderBar( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/attributeslider.sti", &guiSLIDERBAR));
+	guiSLIDERBAR = AddVideoObjectFromFile("LAPTOP/attributeslider.sti");
+	CHECKF(guiSLIDERBAR != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -510,7 +527,8 @@ void RenderSliderBar(INT16 sX, INT16 sY)
 BOOLEAN LoadButton2Image( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/button_2.sti", &guiBUTTON2IMAGE));
+	guiBUTTON2IMAGE = AddVideoObjectFromFile("LAPTOP/button_2.sti");
+	CHECKF(guiBUTTON2IMAGE != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -530,7 +548,8 @@ void RenderButton2Image(INT16 sX, INT16 sY)
 BOOLEAN LoadButton4Image( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/button_4.sti", &guiBUTTON4IMAGE));
+	guiBUTTON4IMAGE = AddVideoObjectFromFile("LAPTOP/button_4.sti");
+	CHECKF(guiBUTTON4IMAGE != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -551,7 +570,8 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 BOOLEAN LoadButton1Image( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/button_1.sti", &guiBUTTON1IMAGE));
+	guiBUTTON1IMAGE = AddVideoObjectFromFile("LAPTOP/button_1.sti");
+	CHECKF(guiBUTTON1IMAGE != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -573,7 +593,8 @@ static void RenderButton1Image(INT16 sX, INT16 sY)
 BOOLEAN LoadPortraitFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Voice_PortraitFrame.sti", &guiPORTRAITFRAME));
+	guiPORTRAITFRAME = AddVideoObjectFromFile("LAPTOP/Voice_PortraitFrame.sti");
+	CHECKF(guiPORTRAITFRAME != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -595,7 +616,8 @@ void RenderPortraitFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadMainIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/mainprofilepageindent.sti", &guiMAININDENT));
+	guiMAININDENT = AddVideoObjectFromFile("LAPTOP/mainprofilepageindent.sti");
+	CHECKF(guiMAININDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -616,7 +638,8 @@ void RenderMainIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnLongIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/longindent.sti", &guiLONGINDENT));
+	guiLONGINDENT = AddVideoObjectFromFile("LAPTOP/longindent.sti");
+	CHECKF(guiLONGINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -636,7 +659,8 @@ void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnShortIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/shortindent.sti", &guiSHORTINDENT));
+	guiSHORTINDENT = AddVideoObjectFromFile("LAPTOP/shortindent.sti");
+	CHECKF(guiSHORTINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -656,7 +680,8 @@ void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnLongIndentHighFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/longindenthigh.sti", &guiLONGHINDENT));
+	guiLONGHINDENT = AddVideoObjectFromFile("LAPTOP/longindenthigh.sti");
+	CHECKF(guiLONGHINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -676,7 +701,8 @@ void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnShortIndentHighFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/shortindenthigh.sti", &guiSHORTHINDENT));
+	guiSHORTHINDENT = AddVideoObjectFromFile("LAPTOP/shortindenthigh.sti");
+	CHECKF(guiSHORTHINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -697,7 +723,8 @@ void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/questionindent.sti", &guiQINDENT));
+	guiQINDENT = AddVideoObjectFromFile("LAPTOP/questionindent.sti");
+	CHECKF(guiQINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -718,7 +745,8 @@ void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadAttrib1IndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/attributescreenindent_1.sti", &guiA1INDENT));
+	guiA1INDENT = AddVideoObjectFromFile("LAPTOP/attributescreenindent_1.sti");
+	CHECKF(guiA1INDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -738,7 +766,8 @@ void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadAttrib2IndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/attributescreenindent_2.sti", &guiA2INDENT));
+	guiA2INDENT = AddVideoObjectFromFile("LAPTOP/attributescreenindent_2.sti");
+	CHECKF(guiA2INDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -758,7 +787,8 @@ void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadAvgMercIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/anaveragemercindent.sti", &guiAVGMERCINDENT));
+	guiAVGMERCINDENT = AddVideoObjectFromFile("LAPTOP/anaveragemercindent.sti");
+	CHECKF(guiAVGMERCINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -780,7 +810,8 @@ void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadAboutUsIndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/aboutusindent.sti", &guiABOUTUSINDENT));
+	guiABOUTUSINDENT = AddVideoObjectFromFile("LAPTOP/aboutusindent.sti");
+	CHECKF(guiABOUTUSINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -801,7 +832,8 @@ void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnShort2IndentFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/shortindent2.sti", &guiSHORT2INDENT));
+	guiSHORT2INDENT = AddVideoObjectFromFile("LAPTOP/shortindent2.sti");
+	CHECKF(guiSHORT2INDENT != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -821,7 +853,8 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 BOOLEAN LoadQtnShort2IndentHighFrame( void )
 {
 	// this procedure will load the activation indent into memory
-	CHECKF(AddVideoObjectFromFile("LAPTOP/shortindent2High.sti", &guiSHORT2HINDENT));
+	guiSHORT2HINDENT = AddVideoObjectFromFile("LAPTOP/shortindent2High.sti");
+	CHECKF(guiSHORT2HINDENT != NO_VOBJECT);
 	return (TRUE);
 }
 

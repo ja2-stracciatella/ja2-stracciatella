@@ -117,27 +117,34 @@ BOOLEAN EnterFuneral()
 
 	// load the Closed graphic and add it
 	GetMLGFilename(ImageFile, MLG_CLOSED);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiClosedSign));
+	guiClosedSign = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiClosedSign != NO_VOBJECT);
 
 	// load the Left column graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/LeftColumn.sti", &guiLeftColumn));
+	guiLeftColumn = AddVideoObjectFromFile("LAPTOP/LeftColumn.sti");
+	CHECKF(guiLeftColumn != NO_VOBJECT);
 
 	// load the Link carving graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/LinkCarving.sti", &guiLinkCarving));
+	guiLinkCarving = AddVideoObjectFromFile("LAPTOP/LinkCarving.sti");
+	CHECKF(guiLinkCarving != NO_VOBJECT);
 
 	// load the Marble graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Marble.sti", &guiMarbleBackground));
+	guiMarbleBackground = AddVideoObjectFromFile("LAPTOP/Marble.sti");
+	CHECKF(guiMarbleBackground != NO_VOBJECT);
 
 	// load the McGillicuttys sign graphic and add it
 	GetMLGFilename(ImageFile, MLG_MCGILLICUTTYS);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMcGillicuttys));
+	guiMcGillicuttys = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiMcGillicuttys != NO_VOBJECT);
 
 	// load the Mortuary  graphic and add it
 	GetMLGFilename(ImageFile, MLG_MORTUARY);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiMortuary));
+	guiMortuary = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiMortuary != NO_VOBJECT);
 
 	// load the right column graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/RightColumn.sti", &guiRightColumn));
+	guiRightColumn = AddVideoObjectFromFile("LAPTOP/RightColumn.sti");
+	CHECKF(guiRightColumn != NO_VOBJECT);
 
 
 	usPosX = FUNERAL_LINK_1_X;

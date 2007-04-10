@@ -21,10 +21,12 @@ UINT32		guiAmmoGrid;
 BOOLEAN EnterBobbyRAmmo()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ammobackground.sti", &guiAmmoBackground));
+	guiAmmoBackground = AddVideoObjectFromFile("LAPTOP/ammobackground.sti");
+	CHECKF(guiAmmoBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ammogrid.sti", &guiAmmoGrid));
+	guiAmmoGrid = AddVideoObjectFromFile("LAPTOP/ammogrid.sti");
+	CHECKF(guiAmmoGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 

@@ -109,7 +109,8 @@ BOOLEAN EnterAimHistory()
 	InitAimHistoryMenuBar();
 
 	// load the Content Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ContentButton.sti", &guiContentButton));
+	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
+	CHECKF(guiContentButton != NO_VOBJECT);
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 	RenderAimHistory();

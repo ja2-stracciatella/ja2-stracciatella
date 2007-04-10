@@ -201,23 +201,29 @@ BOOLEAN EnterBobbyR()
 
 	// load the Bobbyname graphic and add it
 	GetMLGFilename(ImageFile, MLG_BOBBYNAME);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBobbyName));
+	guiBobbyName = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiBobbyName != NO_VOBJECT);
 
 	// load the plaque graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyPlaques.sti", &guiPlaque));
+	guiPlaque = AddVideoObjectFromFile("LAPTOP/BobbyPlaques.sti");
+	CHECKF(guiPlaque != NO_VOBJECT);
 
 	// load the TopHinge graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyTopHinge.sti", &guiTopHinge));
+	guiTopHinge = AddVideoObjectFromFile("LAPTOP/BobbyTopHinge.sti");
+	CHECKF(guiTopHinge != NO_VOBJECT);
 
 	// load the BottomHinge graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyBottomHinge.sti", &guiBottomHinge));
+	guiBottomHinge = AddVideoObjectFromFile("LAPTOP/BobbyBottomHinge.sti");
+	CHECKF(guiBottomHinge != NO_VOBJECT);
 
 	// load the Store Plaque graphic and add it
 	GetMLGFilename(ImageFile, MLG_STOREPLAQUE);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiStorePlaque));
+	guiStorePlaque = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiStorePlaque != NO_VOBJECT);
 
 	// load the Handle graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyHandle.sti", &guiHandle));
+	guiHandle = AddVideoObjectFromFile("LAPTOP/BobbyHandle.sti");
+	CHECKF(guiHandle != NO_VOBJECT);
 
 
 	InitBobbiesMouseRegion(BOBBIES_NUMBER_SIGNS, usMouseRegionPosArray, gSelectedBobbiesSignMenuRegion);
@@ -226,7 +232,8 @@ BOOLEAN EnterBobbyR()
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// load the Handle graphic and add it
-		CHECKF(AddVideoObjectFromFile("LAPTOP/UnderConstruction.sti", &guiUnderConstructionImage));
+		guiUnderConstructionImage = AddVideoObjectFromFile("LAPTOP/UnderConstruction.sti");
+		CHECKF(guiUnderConstructionImage != NO_VOBJECT);
 
 		for(i=0; i<BOBBIES_NUMBER_SIGNS; i++)
 		{
@@ -351,7 +358,8 @@ void RenderBobbyR()
 BOOLEAN InitBobbyRWoodBackground()
 {
 	// load the Wood bacground graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyWood.sti", &guiWoodBackground));
+	guiWoodBackground = AddVideoObjectFromFile("LAPTOP/BobbyWood.sti");
+	CHECKF(guiWoodBackground != NO_VOBJECT);
 	return TRUE;
 }
 

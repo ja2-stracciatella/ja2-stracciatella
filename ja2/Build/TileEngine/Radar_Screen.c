@@ -111,7 +111,8 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 		 // Grab the Map image
 		 SGPFILENAME ImageFile;
 		 sprintf(ImageFile, "RADARMAPS/%s.STI", zFilename);
-		 CHECKF(AddVideoObjectFromFile(ImageFile, &gusRadarImage));
+		 gusRadarImage = AddVideoObjectFromFile(ImageFile);
+		 CHECKF(gusRadarImage != NO_VOBJECT);
 
 		 fImageLoaded = TRUE;
 
@@ -605,7 +606,8 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 	{
 		// create regions
 		// load graphics
-	  CHECKF(AddVideoObjectFromFile("INTERFACE/squadpanel.sti", &uiHandle));
+	  uiHandle = AddVideoObjectFromFile("INTERFACE/squadpanel.sti");
+	  CHECKF(uiHandle != NO_VOBJECT);
 
 		BltVideoObjectFromIndex(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
 

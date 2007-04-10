@@ -95,7 +95,8 @@ BOOLEAN EnterBobbyRShipments()
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti", &guiBobbyRShipmentGrid));
+	guiBobbyRShipmentGrid = AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti");
+	CHECKF(guiBobbyRShipmentGrid != NO_VOBJECT);
 
 
 	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );

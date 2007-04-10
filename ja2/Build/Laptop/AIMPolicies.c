@@ -186,7 +186,8 @@ BOOLEAN EnterAimPolicies()
 	gfInPolicyToc = FALSE;
 
 	// load the Content Buttons graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ContentButton.sti", &guiContentButton));
+	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
+	CHECKF(guiContentButton != NO_VOBJECT);
 
 	RenderAimPolicies();
 	return(TRUE);

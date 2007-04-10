@@ -625,7 +625,7 @@ void RenderTopmostTacticalInterface( )
 					if ( uiBogTarget == 0 )
 					{
 						//Loadup cursor!
-						AddVideoObjectFromFile("CURSORS/targblak.sti", &uiBogTarget);
+						uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
 					}
 
 					if ( GridNoOnScreen( (INT16)MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )

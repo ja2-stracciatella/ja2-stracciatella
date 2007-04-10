@@ -8512,7 +8512,8 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fCreated == FALSE ) )
 	{
-		CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
+		guiPOPUPBORDERS = AddVideoObjectFromFile("INTERFACE/popup.sti");
+		CHECKF(guiPOPUPBORDERS != NO_VOBJECT);
 		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
 		CHECKF(guiPOPUPTEX != NO_VSURFACE);
 

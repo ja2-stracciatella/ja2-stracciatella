@@ -533,13 +533,13 @@ void GoIntoOverheadMap( )
 						 CURSOR_NORMAL, MoveOverheadRegionCallback, ClickOverheadRegionCallback );
 
 	// LOAD CLOSE ANIM
-	if (!AddVideoObjectFromFile("INTERFACE/MAP_BORD.sti", &uiOVERMAP))
-		AssertMsg(0, "Missing INTERFACE/MAP_BORD.sti" );
+	uiOVERMAP = AddVideoObjectFromFile("INTERFACE/MAP_BORD.sti");
+	AssertMsg(uiOVERMAP != NO_VOBJECT, "Missing INTERFACE/MAP_BORD.sti");
 
 
 	// LOAD PERSONS
-	if (!AddVideoObjectFromFile("INTERFACE/PERSONS.sti", &uiPERSONS))
-		AssertMsg(0, "Missing INTERFACE/PERSONS.sti" );
+	uiPERSONS = AddVideoObjectFromFile("INTERFACE/PERSONS.sti");
+	AssertMsg(uiPERSONS != NO_VOBJECT, "Missing INTERFACE/PERSONS.sti");
 
 	// Add shades to persons....
 	HVOBJECT hVObject = GetVideoObject(uiPERSONS);

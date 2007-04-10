@@ -310,17 +310,21 @@ static BOOLEAN LoadFiles(void)
   // load files video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
+	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/fileviewer.sti", &guiTOP));
+	guiTOP = AddVideoObjectFromFile("LAPTOP/fileviewer.sti");
+	CHECKF(guiTOP != NO_VOBJECT);
 
 
 	// the highlight
-	CHECKF(AddVideoObjectFromFile("LAPTOP/highlight.sti", &guiHIGHLIGHT));
+	guiHIGHLIGHT = AddVideoObjectFromFile("LAPTOP/highlight.sti");
+	CHECKF(guiHIGHLIGHT != NO_VOBJECT);
 
   	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti", &guiFileBack));
+	guiFileBack = AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti");
+	CHECKF(guiFileBack != NO_VOBJECT);
 
 	return (TRUE);
 }
@@ -771,7 +775,8 @@ static BOOLEAN DisplayFormattedText(void)
 			 // second format, one picture, all text below
 
        // load graphic
-	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[0], &uiFirstTempPicture));
+	     uiFirstTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[0]);
+	     CHECKF(uiFirstTempPicture != NO_VOBJECT);
 
        GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
 
@@ -802,10 +807,12 @@ static BOOLEAN DisplayFormattedText(void)
 			 // third format, two pictures, side by side with all text below
 
 			 // load first graphic
-	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[0], &uiFirstTempPicture));
+	     uiFirstTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[0]);
+	     CHECKF(uiFirstTempPicture != NO_VOBJECT);
 
 			 // load second graphic
-	     CHECKF(AddVideoObjectFromFile(pFilesList->pPicFileNameList[1], &uiSecondTempPicture));
+	     uiSecondTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[1]);
+	     CHECKF(uiSecondTempPicture != NO_VOBJECT);
 
        GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
 			 GetVideoObjectETRLESubregionProperties( uiSecondTempPicture, 0, &usSecondWidth,  &usSecondHeight );
@@ -1158,14 +1165,16 @@ static BOOLEAN HandleSpecialFiles(UINT8 ubFormat)
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		CHECKF(AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti", &uiPicture));
+		uiPicture = AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti");
+		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 300, 270);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		CHECKF(AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti", &uiPicture));
+		uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti");
+		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 225);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
@@ -1174,7 +1183,8 @@ static BOOLEAN HandleSpecialFiles(UINT8 ubFormat)
 
 
 			// wedding pic
-		CHECKF(AddVideoObjectFromFile("LAPTOP/Enrico_W.sti", &uiPicture));
+		uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_W.sti");
+		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 85);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
@@ -1641,13 +1651,15 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
 			{
 				char sTemp[128];
 				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
-				CHECKF(AddVideoObjectFromFile(sTemp, &uiPicture));
+				uiPicture = AddVideoObjectFromFile(sTemp);
+				CHECKF(uiPicture != NO_VOBJECT);
 //def: 3/24/99
 //				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
 				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
 				DeleteVideoObjectFromIndex( uiPicture );
 
-				CHECKF(AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti", &uiPicture));
+				uiPicture = AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti");
+				CHECKF(uiPicture != NO_VOBJECT);
 				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
 				DeleteVideoObjectFromIndex( uiPicture );
 			}

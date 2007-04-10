@@ -20,10 +20,12 @@ UINT32		guiUsedGrid;
 BOOLEAN EnterBobbyRUsed()
 {
 	// load the background graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/usedbackground.sti", &guiUsedBackground));
+	guiUsedBackground = AddVideoObjectFromFile("LAPTOP/usedbackground.sti");
+	CHECKF(guiUsedBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/usedgrid.sti", &guiUsedGrid));
+	guiUsedGrid = AddVideoObjectFromFile("LAPTOP/usedgrid.sti");
+	CHECKF(guiUsedGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 

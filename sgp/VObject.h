@@ -5,6 +5,9 @@
 #include "HImage.h"
 
 
+#define NO_VOBJECT 0
+
+
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 typedef UINT32 COLORVAL;
 
@@ -61,17 +64,17 @@ BOOLEAN ShutdownVideoObjectManager(void);
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
-	BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
-	BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile);
-	#define AddVideoObjectFromHImage(a, b) AddAndRecordVObjectFromHImage(a, b, __LINE__, __FILE__)
-	#define AddVideoObjectFromFile(a, b) AddAndRecordVObjectFromFile(a, b, __LINE__, __FILE__)
+	UINT32 AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile);
+	UINT32 AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
+	#define AddVideoObjectFromHImage(a) AddAndRecordVObjectFromHImage(a, __LINE__, __FILE__)
+	#define AddVideoObjectFromFile(a) AddAndRecordVObjectFromFile(a, __LINE__, __FILE__)
 #else
-	#define AddVideoObjectFromHImage(a, b) AddStandardVideoObjectFromHImage(a, b)
-	#define AddVideoObjectFromFile(a, b) AddStandardVideoObjectFromFile(a, b)
+	#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
+	#define AddVideoObjectFromFile(a) AddStandardVideoObjectFromFile(a)
 #endif
 
-BOOLEAN AddStandardVideoObjectFromHImage(HIMAGE hImage, UINT32* uiIndex);
-BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex);
+UINT32 AddStandardVideoObjectFromHImage(HIMAGE hImage);
+UINT32 AddStandardVideoObjectFromFile(const char* ImageFile);
 
 // Removes a video object
 BOOLEAN DeleteVideoObjectFromIndex(UINT32 uiVObject);

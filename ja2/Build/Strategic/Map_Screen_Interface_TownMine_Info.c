@@ -740,7 +740,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
 
 	// load the button
-	AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti", &uiObject);
+	uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
 
 	// Calculate smily face positions...
 	HVOBJECT hHandle = GetVideoObject(uiObject);
@@ -843,7 +843,7 @@ static void MinWidthOfTownMineInfoBox(void)
 	UINT32 uiObject;
 	ETRLEObject	*pTrav;
 
-	AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti", &uiObject);
+	uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
 
 	// Calculate smily face positions...
 	HVOBJECT hHandle = GetVideoObject(uiObject);

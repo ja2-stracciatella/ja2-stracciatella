@@ -434,12 +434,14 @@ static BOOLEAN EnterSaveLoadScreen(void)
 	}
 
 	// load Main background  graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE/LoadScreen.sti", &guiSlgBackGroundImage));
+	guiSlgBackGroundImage = AddVideoObjectFromFile("INTERFACE/LoadScreen.sti");
+	CHECKF(guiSlgBackGroundImage != NO_VOBJECT);
 
 	// load Load Screen Add ons graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_LOADSAVEHEADER);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiBackGroundAddOns));
+	guiBackGroundAddOns = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiBackGroundAddOns != NO_VOBJECT);
 
 	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1,6,-1,9,-1 );
 //	guiSlgButtonImage = UseLoadedButtonImage( guiBackGroundAddOns, -1,9,-1,6,-1 );

@@ -191,8 +191,8 @@ void HandleLoadOfMapBottomGraphics( void )
 {
 	// will load the graphics needed for the mapscreen interface bottom
 	// will create buttons for interface bottom
-	if (!AddVideoObjectFromFile("INTERFACE/map_screen_bottom.sti", &guiMAPBOTTOMPANEL))
-		return;
+	guiMAPBOTTOMPANEL = AddVideoObjectFromFile("INTERFACE/map_screen_bottom.sti");
+	if (guiMAPBOTTOMPANEL == NO_VOBJECT) return;
 
 	// load slider bar icon
 	LoadMessageSliderBar( );
@@ -800,7 +800,7 @@ static void RemoveCompressModePause(void)
 static void LoadMessageSliderBar(void)
 {
   // this function will load the message slider bar
-	AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti", &guiSliderBar);
+	guiSliderBar = AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti");
 }
 
 

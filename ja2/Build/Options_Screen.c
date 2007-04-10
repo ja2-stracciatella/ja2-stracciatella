@@ -350,12 +350,14 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	gfExitOptionsDueToMessageBox = FALSE;
 
 	// load the options screen background graphic and add it
-	CHECKF(AddVideoObjectFromFile("INTERFACE/OptionScreenBase.sti", &guiOptionBackGroundImage));
+	guiOptionBackGroundImage = AddVideoObjectFromFile("INTERFACE/OptionScreenBase.sti");
+	CHECKF(guiOptionBackGroundImage != NO_VOBJECT);
 
 	// load button, title graphic and add it
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_OPTIONHEADER);
-	CHECKF(AddVideoObjectFromFile(ImageFile, &guiOptionsAddOnImages));
+	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
+	CHECKF(guiOptionsAddOnImages != NO_VOBJECT);
 
 	//Save game button
 	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1,2,-1,3,-1 );

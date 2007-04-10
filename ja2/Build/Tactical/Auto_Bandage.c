@@ -1028,7 +1028,7 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 		{
 			SGPFILENAME ImageFile;
 			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iDoctorList[iCounter]].ubProfile].ubFaceIndex);
-			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter]);
+			giAutoBandagesSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
 			iNumberOfDoctors++;
 
 		}
@@ -1041,16 +1041,13 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 		{
 			SGPFILENAME ImageFile;
 			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iPatientList[iCounter]].ubProfile].ubFaceIndex);
-			AddVideoObjectFromFile(ImageFile, &giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors]);
-
+			giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors] = AddVideoObjectFromFile(ImageFile);
 		}
 	}
 
 		// grab panels
-	if (!AddVideoObjectFromFile("Interface/panels.sti", &giMercPanelImage))
-	{
-		AssertMsg( 0, "Failed to load Interface/panels.sti" );
-	}
+	giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
+	AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
 
 	return( TRUE );
 }

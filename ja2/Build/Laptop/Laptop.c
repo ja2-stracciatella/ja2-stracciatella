@@ -611,22 +611,28 @@ static INT32 EnterLaptop(void)
 	giCurrentSubPage = 0;
 
 	// load the laptop graphic and add it
-	CHECKF(AddVideoObjectFromFile("LAPTOP/laptop3.sti", &guiLAPTOP));
+	guiLAPTOP = AddVideoObjectFromFile("LAPTOP/laptop3.sti");
+	CHECKF(guiLAPTOP != NO_VOBJECT);
 
 	// background for panel
-	CHECKF(AddVideoObjectFromFile("LAPTOP/taskbar.sti", &guiLaptopBACKGROUND));
+	guiLaptopBACKGROUND = AddVideoObjectFromFile("LAPTOP/taskbar.sti");
+	CHECKF(guiLaptopBACKGROUND != NO_VOBJECT);
 
 	// background for panel
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLEBARLAPTOP));
+	guiTITLEBARLAPTOP = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiTITLEBARLAPTOP != NO_VOBJECT);
 
 	// lights for power and HD
-	CHECKF(AddVideoObjectFromFile("LAPTOP/lights.sti", &guiLIGHTS));
+	guiLIGHTS = AddVideoObjectFromFile("LAPTOP/lights.sti");
+	CHECKF(guiLIGHTS != NO_VOBJECT);
 
 	// icons for title bars
-	CHECKF(AddVideoObjectFromFile("LAPTOP/ICONS.sti", &guiTITLEBARICONS));
+	guiTITLEBARICONS = AddVideoObjectFromFile("LAPTOP/ICONS.sti");
+	CHECKF(guiTITLEBARICONS != NO_VOBJECT);
 
 	// load, blt and delete graphics
-	CHECKF(AddVideoObjectFromFile("LAPTOP/NewMailWarning.sti", &guiEmailWarning));
+	guiEmailWarning = AddVideoObjectFromFile("LAPTOP/NewMailWarning.sti");
+	CHECKF(guiEmailWarning != NO_VOBJECT);
 	// load background
 	LoadDesktopBackground( );
 
@@ -2597,11 +2603,16 @@ static BOOLEAN RemoveBookMark(INT32 iBookId)
 static BOOLEAN LoadBookmark(void)
 {
 		// grab download bars too
-	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadtop.sti",    &guiDOWNLOADTOP));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadmid.sti",    &guiDOWNLOADMID));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadbot.sti",    &guiDOWNLOADBOT));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/webpages.sti",       &guiBOOKMARK));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/hilite.sti",         &guiBOOKHIGH));
+	guiDOWNLOADTOP = AddVideoObjectFromFile("LAPTOP/downloadtop.sti");
+	CHECKF(guiDOWNLOADTOP != NO_VOBJECT);
+	guiDOWNLOADMID = AddVideoObjectFromFile("LAPTOP/downloadmid.sti");
+	CHECKF(guiDOWNLOADMID != NO_VOBJECT);
+	guiDOWNLOADBOT = AddVideoObjectFromFile("LAPTOP/downloadbot.sti");
+	CHECKF(guiDOWNLOADBOT != NO_VOBJECT);
+	guiBOOKMARK = AddVideoObjectFromFile("LAPTOP/webpages.sti");
+	CHECKF(guiBOOKMARK != NO_VOBJECT);
+	guiBOOKHIGH = AddVideoObjectFromFile("LAPTOP/hilite.sti");
+	CHECKF(guiBOOKHIGH != NO_VOBJECT);
 	return( TRUE );
 }
 
@@ -3070,8 +3081,10 @@ static BOOLEAN LoadLoadPending(void)
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/graphwindow.sti", &guiGRAPHWINDOW));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/graphsegment.sti", &guiGRAPHBAR));
+	guiGRAPHWINDOW = AddVideoObjectFromFile("LAPTOP/graphwindow.sti");
+	CHECKF(guiGRAPHWINDOW != NO_VOBJECT);
+	guiGRAPHBAR = AddVideoObjectFromFile("LAPTOP/graphsegment.sti");
+	CHECKF(guiGRAPHBAR != NO_VOBJECT);
 	return (TRUE);
 }
 
@@ -4700,7 +4713,8 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	CHAR16 sString[256];
 
 	 // title bar - load
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &uiTITLEFORWWW));
+	uiTITLEFORWWW = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(uiTITLEFORWWW != NO_VOBJECT);
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 

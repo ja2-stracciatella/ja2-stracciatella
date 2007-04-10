@@ -695,7 +695,8 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	SetSMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
 
 	// load the Main trade screen backgroiund image
-	if (!AddVideoObjectFromFile("InterFace/TradeScreen.sti", &guiMainTradeScreenImage))
+	guiMainTradeScreenImage = AddVideoObjectFromFile("InterFace/TradeScreen.sti");
+	if (guiMainTradeScreenImage == NO_VOBJECT)
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load TradeScreen.sti" );
@@ -706,7 +707,8 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 
 	// load the Main trade screen background image
-	if (!AddVideoObjectFromFile("InterFace/itemcrossout.sti", &guiItemCrossOut))
+	guiItemCrossOut = AddVideoObjectFromFile("InterFace/itemcrossout.sti");
+	if (guiItemCrossOut == NO_VOBJECT)
 	{
 #ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load itemcrossout.sti" );
@@ -719,7 +721,8 @@ static BOOLEAN EnterShopKeeperInterface(void)
 /*
 ATM:
 	// load the Main trade screen backgroiund image
-	CHECKF(AddVideoObjectFromFile("InterFace/TradeScreenAtm.sti", &guiSkiAtmImage));
+	guiSkiAtmImage = AddVideoObjectFromFile("InterFace/TradeScreenAtm.sti");
+	CHECKF(guiSkiAtmImage != NO_VOBJECT);
 */
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
@@ -739,7 +742,8 @@ ATM:
 			sprintf( zTemp, "FACES/33FACE/%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
 
 			//While we are at it, add their small face
-			if (!AddVideoObjectFromFile(zTemp, &guiSmallSoldiersFace[gubNumberMercsInArray]))
+			guiSmallSoldiersFace[gubNumberMercsInArray] = AddVideoObjectFromFile(zTemp);
+			if (guiSmallSoldiersFace[gubNumberMercsInArray] == NO_VOBJECT)
 			{
 #ifdef JA2BETAVERSION
 				ScreenMsg(FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %hs", zTemp);

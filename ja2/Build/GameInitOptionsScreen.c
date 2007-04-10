@@ -269,7 +269,8 @@ static BOOLEAN EnterGIOScreen(void)
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
 	// load the Main trade screen backgroiund image
-	CHECKF(AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti", &guiGIOMainBackGroundImage));
+	guiGIOMainBackGroundImage = AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti");
+	CHECKF(guiGIOMainBackGroundImage != NO_VOBJECT);
 
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );

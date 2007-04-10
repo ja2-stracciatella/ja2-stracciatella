@@ -550,19 +550,24 @@ static BOOLEAN LoadFinances(void)
   // load Finance video objects into memory
 
 	// title bar
-	CHECKF(AddVideoObjectFromFile("LAPTOP/programtitlebar.sti", &guiTITLE));
+	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Financeswindow.sti", &guiTOP));
+	guiTOP = AddVideoObjectFromFile("LAPTOP/Financeswindow.sti");
+	CHECKF(guiTOP != NO_VOBJECT);
 
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline480.sti", &guiLONGLINE));
+	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
+	CHECKF(guiLONGLINE != NO_VOBJECT);
 
 	// the records columns
-	CHECKF(AddVideoObjectFromFile("LAPTOP/recordcolumns.sti", &guiLISTCOLUMNS));
+	guiLISTCOLUMNS = AddVideoObjectFromFile("LAPTOP/recordcolumns.sti");
+	CHECKF(guiLISTCOLUMNS != NO_VOBJECT);
 
   // black divider line - long ( 480 length)
-	CHECKF(AddVideoObjectFromFile("LAPTOP/divisionline.sti", &guiLINE));
+	guiLINE = AddVideoObjectFromFile("LAPTOP/divisionline.sti");
+	CHECKF(guiLINE != NO_VOBJECT);
 
 	return (TRUE);
 }

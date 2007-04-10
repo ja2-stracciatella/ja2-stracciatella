@@ -778,20 +778,29 @@ BOOLEAN InitInvSlotInterface( INV_REGION_DESC *pRegionDesc , INV_REGION_DESC *pC
 	INT32 cnt;
 
 	// Load all four body type images
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male.sti", &guiBodyInvVO[1][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male_H.sti", &guiBodyInvVO[1][1]));
+	guiBodyInvVO[1][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male.sti");
+	CHECKF(guiBodyInvVO[1][0] != NO_VOBJECT);
+	guiBodyInvVO[1][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male_H.sti");
+	CHECKF(guiBodyInvVO[1][1] != NO_VOBJECT);
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[0][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male_H.sti", &guiBodyInvVO[0][1]));
+	guiBodyInvVO[0][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
+	CHECKF(guiBodyInvVO[0][0] != NO_VOBJECT);
+	guiBodyInvVO[0][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male_H.sti");
+	CHECKF(guiBodyInvVO[0][1] != NO_VOBJECT);
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[2][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti", &guiBodyInvVO[2][1]));
+	guiBodyInvVO[2][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
+	CHECKF(guiBodyInvVO[2][0] != NO_VOBJECT);
+	guiBodyInvVO[2][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
+	CHECKF(guiBodyInvVO[2][1] != NO_VOBJECT);
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_female.sti", &guiBodyInvVO[3][0]));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti", &guiBodyInvVO[3][1]));
+	guiBodyInvVO[3][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female.sti");
+	CHECKF(guiBodyInvVO[3][0] != NO_VOBJECT);
+	guiBodyInvVO[3][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti");
+	CHECKF(guiBodyInvVO[3][1] != NO_VOBJECT);
 
 	// add gold key graphic
-	CHECKF(AddVideoObjectFromFile("INTERFACE/gold_key_button.sti", &guiGoldKeyVO));
+	guiGoldKeyVO = AddVideoObjectFromFile("INTERFACE/gold_key_button.sti");
+	CHECKF(guiGoldKeyVO != NO_VOBJECT);
 
 	// Add cammo region
 	MSYS_DefineRegion( &gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, (INT16)(pCamoRegion->sX + CAMO_REGION_WIDTH ), (INT16)(pCamoRegion->sY + CAMO_REGION_HEIGHT ), MSYS_PRIORITY_HIGH,
@@ -2390,9 +2399,12 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	}
 
 	// Load graphic
-	CHECKF(AddVideoObjectFromFile("INTERFACE/infobox.sti", &guiItemDescBox));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/iteminfoc.STI", &guiMapItemDescBox));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/bullet.STI", &guiBullet));
+	guiItemDescBox = AddVideoObjectFromFile("INTERFACE/infobox.sti");
+	CHECKF(guiItemDescBox != NO_VOBJECT);
+	guiMapItemDescBox = AddVideoObjectFromFile("INTERFACE/iteminfoc.STI");
+	CHECKF(guiMapItemDescBox != NO_VOBJECT);
+	guiBullet = AddVideoObjectFromFile("INTERFACE/bullet.STI");
+	CHECKF(guiBullet != NO_VOBJECT);
 
 	if ( gpItemDescObject->usItem != MONEY  )
 	{
@@ -2426,7 +2438,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gRemoveMoney.uiMoneyRemoving = 0;
 
 		// Load graphic
-		CHECKF(AddVideoObjectFromFile("INTERFACE/info_bil.sti", &guiMoneyGraphicsForDescBox));
+		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
+		CHECKF(guiMoneyGraphicsForDescBox != NO_VOBJECT);
 
 		//Create buttons for the money
 //		if (guiCurrentScreen ==  MAP_SCREEN )
@@ -4965,7 +4978,8 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
   }
 
 	// Load graphics
-	CHECKF(AddVideoObjectFromFile("INTERFACE/extra_inventory.STI", &guiItemPopupBoxes));
+	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
+	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
 	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
@@ -5181,7 +5195,8 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	gpItemPopupSoldier = pSoldier;
 
 	// Load graphics
-	CHECKF(AddVideoObjectFromFile("INTERFACE/extra_inventory.STI", &guiItemPopupBoxes));
+	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
+	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
 	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
@@ -5426,7 +5441,8 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 	//Load item
 	SGPFILENAME ImageFile;
 	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
-	CHECKF(AddVideoObjectFromFile(ImageFile, puiVo));
+	*puiVo = AddVideoObjectFromFile(ImageFile);
+	CHECKF(*puiVo != NO_VOBJECT);
 
 	return( TRUE );
 }
@@ -5795,7 +5811,8 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		gItemPickupMenu.bNumSlotsPerPage = gItemPickupMenu.ubTotalItems;
 	}
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/itembox.sti", &gItemPickupMenu.uiPanelVo));
+	gItemPickupMenu.uiPanelVo = AddVideoObjectFromFile("INTERFACE/itembox.sti");
+	CHECKF(gItemPickupMenu.uiPanelVo != NO_VOBJECT);
 
 	// Memalloc selection array...
 	 gItemPickupMenu.pfSelectedArray = MemAlloc(( sizeof( UINT8 ) * gItemPickupMenu.ubTotalItems ) );

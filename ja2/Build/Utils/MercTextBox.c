@@ -129,13 +129,12 @@ BOOLEAN InitMercPopupBox( )
 	}
 
 	// LOAD STOP ICON...
-	if (!AddVideoObjectFromFile("INTERFACE/msgboxicons.sti", &guiBoxIcons))
-		AssertMsg(0, "Missing INTERFACE/msgboxicons.sti" );
+	guiBoxIcons = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");
+	AssertMsg(guiBoxIcons != NO_VOBJECT, "Missing INTERFACE/msgboxicons.sti");
 
 	// LOAD SKULL ICON...
-	if (!AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti", &guiSkullIcons))
-		AssertMsg(0, "Missing INTERFACE/msgboxiconskull.sti" );
-
+	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti");
+	AssertMsg(guiSkullIcons != NO_VOBJECT, "Missing INTERFACE/msgboxiconskull.sti");
 
 	return( TRUE );
 }
@@ -165,7 +164,8 @@ static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIn
 	CHECKF(gPopUpTextBox->uiMercTextPopUpBackground != NO_VSURFACE);
 
   // border
-	CHECKF(AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex], &gPopUpTextBox->uiMercTextPopUpBorder));
+	gPopUpTextBox->uiMercTextPopUpBorder = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
+	CHECKF(gPopUpTextBox->uiMercTextPopUpBorder != NO_VOBJECT);
 
 	gPopUpTextBox->fMercTextPopupInitialized = TRUE;
 

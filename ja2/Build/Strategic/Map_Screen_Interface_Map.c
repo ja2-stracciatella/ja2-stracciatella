@@ -5000,10 +5000,14 @@ static BOOLEAN DropAPersonInASector(UINT8 ubType, INT16 sX, INT16 sY)
 BOOLEAN LoadMilitiaPopUpBox( void )
 {
 	// load the militia pop up box
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Militia.sti", &guiMilitia));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/Militiamaps.sti", &guiMilitiaMaps));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti", &guiMilitiaSectorHighLight));
-	CHECKF(AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti", &guiMilitiaSectorOutline));
+	guiMilitia = AddVideoObjectFromFile("INTERFACE/Militia.sti");
+	CHECKF(guiMilitia != NO_VOBJECT);
+	guiMilitiaMaps = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
+	CHECKF(guiMilitiaMaps != NO_VOBJECT);
+	guiMilitiaSectorHighLight = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti");
+	CHECKF(guiMilitiaSectorHighLight != NO_VOBJECT);
+	guiMilitiaSectorOutline = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
+	CHECKF(guiMilitiaSectorOutline != NO_VOBJECT);
 
 	return( TRUE );
 }
@@ -6188,7 +6192,8 @@ BOOLEAN DrawMapForDemo( void )
 {
 	UINT32 uiTempObject;
 
-	CHECKF(AddVideoObjectFromFile("INTERFACE/map_1.sti", &uiTempObject));
+	uiTempObject = AddVideoObjectFromFile("INTERFACE/map_1.sti");
+	CHECKF(uiTempObject != NO_VOBJECT);
 	BltVideoObjectFromIndex(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
 	DeleteVideoObjectFromIndex( uiTempObject );
 

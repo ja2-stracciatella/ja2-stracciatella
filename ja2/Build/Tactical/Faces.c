@@ -267,15 +267,14 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	}
 
 	// Load
-	if (!AddVideoObjectFromFile(ImageFile, &uiVideoObject))
+	uiVideoObject = AddVideoObjectFromFile(ImageFile);
+	if (uiVideoObject == NO_VOBJECT)
 	{
 		// If we are a big face, use placeholder...
 		if ( uiInitFlags & FACE_BIGFACE )
 		{
-			if (!AddVideoObjectFromFile("FACES/placeholder.sti", &uiVideoObject))
-			{
-				return( -1 );
-			}
+			uiVideoObject = AddVideoObjectFromFile("FACES/placeholder.sti");
+			if (uiVideoObject == NO_VOBJECT) return -1;
 		}
 		else
 		{

@@ -105,11 +105,9 @@ static UINT32 CountVideoObjectNodes(void)
 #endif
 
 
-static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
+static UINT32 AddStandardVideoObject(HVOBJECT hVObject)
 {
-	Assert(puiIndex != NULL);
-
-	if (hVObject == NULL) return FALSE;
+	if (hVObject == NULL) return NO_VOBJECT;
 
 	VOBJECT_NODE* Node = MemAlloc(sizeof(*Node));
 	Assert(Node != NULL); // out of memory?
@@ -119,7 +117,6 @@ static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 	/* unlikely that we will ever use 2 billion vobjects! We would have to create
 	 * about 70 vobjects per second for 1 year straight to achieve this... */
 	Assert(guiVObjectIndex < 0xFFFFFFF0);
-	*puiIndex = guiVObjectIndex;
 
 	Node->uiIndex = guiVObjectIndex;
 	Node->next = NULL;
@@ -146,19 +143,19 @@ static BOOLEAN AddStandardVideoObject(HVOBJECT hVObject, UINT32* puiIndex)
 	}
 #endif
 
-	return TRUE;
+	return guiVObjectIndex;
 }
 
 
-BOOLEAN AddStandardVideoObjectFromHImage(HIMAGE hImage, UINT32* uiIndex)
+UINT32 AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
-	return AddStandardVideoObject(CreateVideoObject(hImage), uiIndex);
+	return AddStandardVideoObject(CreateVideoObject(hImage));
 }
 
 
-BOOLEAN AddStandardVideoObjectFromFile(const char* ImageFile, UINT32* uiIndex)
+UINT32 AddStandardVideoObjectFromFile(const char* ImageFile)
 {
-	return AddStandardVideoObject(CreateVideoObjectFromFile(ImageFile), uiIndex);
+	return AddStandardVideoObject(CreateVideoObjectFromFile(ImageFile));
 }
 
 
@@ -705,18 +702,18 @@ static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pS
 }
 
 
-BOOLEAN AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
+UINT32 AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
 {
-	BOOLEAN Res = AddStandardVideoObjectFromHImage(hImage, uiIndex);
-	if (Res) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
+	UINT32 Res = AddStandardVideoObjectFromHImage(hImage);
+	if (Res != NO_VOBJECT) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
 	return Res;
 }
 
 
-BOOLEAN AddAndRecordVObjectFromFile(const char* ImageFile, UINT32* uiIndex, UINT32 uiLineNum, const char* pSourceFile)
+UINT32 AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
 {
-	BOOLEAN Res = AddStandardVideoObjectFromFile(ImageFile, uiIndex);
-	if (Res) RecordVObject(ImageFile, uiLineNum, pSourceFile);
+	UINT32 Res = AddStandardVideoObjectFromFile(ImageFile);
+	if (Res != NO_VOBJECT) RecordVObject(ImageFile, uiLineNum, pSourceFile);
 	return Res;
 }
 
