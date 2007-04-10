@@ -206,7 +206,7 @@ BOOLEAN gfShowBookmarks=FALSE;
 BOOLEAN fLoadPendingFlag=FALSE;
 
 // mark buttons dirty?
-BOOLEAN fMarkButtonsDirtyFlag = TRUE;
+static BOOLEAN fMarkButtonsDirtyFlag = TRUE;
 
 // redraw afer rendering buttons?
 BOOLEAN fReDrawPostButtonRender = FALSE;

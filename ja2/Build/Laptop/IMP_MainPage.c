@@ -123,8 +123,6 @@ void HandleIMPMainPage( void )
 	{
     iCurrentImpPage = IMP_FINISH;
 	}
-	// shade out buttons that should be shaded/unselectable
-	//ShadeUnSelectableButtons( );
 }
 
 
@@ -463,22 +461,6 @@ static BOOLEAN CheckIfFinishedCharacterGeneration(void)
 		// no
 		return ( FALSE );
 	}
-}
-
-
-static void ShadeUnSelectableButtons(void)
-{
-	INT32 iCounter =0;
-	// this function looks at the status ofiCurrentProfileMode and decides which buttons
-	// should be shaded ( unselectable )
-
-	for( iCounter = iCurrentProfileMode; iCounter < 5; iCounter++ )
-	{
-    ShadowVideoSurfaceRect( FRAME_BUFFER, 13 + (iCounter ) * 120 + 114, 245,  13 + ( iCounter + 1 ) * 120 + 90, 245 + 92 );
-	  InvalidateRegion(13 + (iCounter  ) * 120 + 114, 245,  13 + (iCounter ) * 120 + 114, 245 + 92  );
-	}
-
-	fMarkButtonsDirtyFlag = FALSE;
 }
 
 

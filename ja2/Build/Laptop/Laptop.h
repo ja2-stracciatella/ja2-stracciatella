@@ -30,7 +30,6 @@ void HaventMadeImpMercEmailCallBack();
 extern UINT32 guiCurrentLaptopMode;
 extern UINT32 guiPreviousLaptopMode;
 extern INT32	 giCurrentSubPage;
-extern BOOLEAN fMarkButtonsDirtyFlag;
 extern BOOLEAN fReDrawScreenFlag;
 extern BOOLEAN fPausedReDrawScreenFlag;
 extern BOOLEAN fLoadPendingFlag;
