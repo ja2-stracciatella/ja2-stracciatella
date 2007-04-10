@@ -224,9 +224,6 @@ BOOLEAN fMarkButtonsDirtyFlag = TRUE;
 // redraw afer rendering buttons?
 BOOLEAN fReDrawPostButtonRender = FALSE;
 
-// intermediate refresh flag
-static BOOLEAN fIntermediateReDrawFlag = FALSE;
-
 // in laptop right now?
 BOOLEAN fCurrentlyInLaptop = FALSE;
 
@@ -1790,7 +1787,7 @@ UINT32 LaptopScreenHandle()
 	// check if we are showing message?
 	DisplayWebBookMarkNotify( );
 
-	if( ( fIntermediateReDrawFlag )||( fReDrawPostButtonRender ) )
+	if (fReDrawPostButtonRender)
 	{
 	  // rendering AFTER buttons and button text
 	 	if( ( fMaximizingProgram == FALSE ) && ( fMinizingProgram == FALSE ) )
