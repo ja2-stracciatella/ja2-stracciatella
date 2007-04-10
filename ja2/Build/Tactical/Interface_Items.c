@@ -2540,10 +2540,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 static BOOLEAN ReloadItemDesc(void)
 {
-	if ( !LoadTileGraphicForItem( &(Item[ gpItemDescObject->usItem ]), &guiItemGraphic ) )
-	{
-		return( FALSE );
-	}
+	guiItemGraphic = LoadTileGraphicForItem(&Item[gpItemDescObject->usItem]);
+	if (guiItemGraphic == NO_VOBJECT) return FALSE;
 
 	//
 	// Load name, desc
@@ -5427,7 +5425,7 @@ UINT16 GetTileGraphicForItem( INVTYPE *pItem )
 }
 
 
-BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
+UINT32 LoadTileGraphicForItem(const INVTYPE* pItem)
 {
 	const char* Prefix;
 	switch (pItem->ubGraphicType)
@@ -5441,10 +5439,7 @@ BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo )
 	//Load item
 	SGPFILENAME ImageFile;
 	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
-	*puiVo = AddVideoObjectFromFile(ImageFile);
-	CHECKF(*puiVo != NO_VOBJECT);
-
-	return( TRUE );
+	return AddVideoObjectFromFile(ImageFile);
 }
 
 

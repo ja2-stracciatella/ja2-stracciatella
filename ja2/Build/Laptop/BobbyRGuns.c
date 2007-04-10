@@ -834,12 +834,11 @@ static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
 	UINT32			usHeight, usWidth;
   ETRLEObject	*pTrav;
 	INVTYPE			*pItem;
-	UINT32		uiImage;
 
 	PosX = BOBBYR_GRID_PIC_X;
 
 	pItem = &Item[ usIndex ];
-	LoadTileGraphicForItem(pItem, &uiImage);
+	UINT32 uiImage = LoadTileGraphicForItem(pItem);
 
 	HVOBJECT hPixHandle = GetVideoObject(uiImage);
 	pTrav = &(hPixHandle->pETRLEObject[0]);

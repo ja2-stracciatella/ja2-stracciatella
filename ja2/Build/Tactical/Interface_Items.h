@@ -123,7 +123,7 @@ void InitItemInterface( );
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
 UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
 UINT16 GetTileGraphicForItem( INVTYPE *pItem );
-BOOLEAN LoadTileGraphicForItem( INVTYPE *pItem, UINT32 *puiVo );
+UINT32 LoadTileGraphicForItem(const INVTYPE* pItem);
 
 void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier);
 
