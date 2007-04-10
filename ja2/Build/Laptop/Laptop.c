@@ -306,9 +306,6 @@ static UINT32 guiUNREAD;
 static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
 
 
-// laptop pop up messages index value
-static INT32 iLaptopMessageBox = -1;
-
 // whether or not we are initing the slide in title bar
 static BOOLEAN fInitTitle = TRUE;
 
@@ -3736,12 +3733,8 @@ BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExit
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
 
-
-
 	// do message box and return
-  iLaptopMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT8 ) ( ubFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &pCenteringRect );
-
-
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, &pCenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );
@@ -3754,7 +3747,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString,
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-  iLaptopMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  pCenteringRect );
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, pCenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );
@@ -3767,7 +3760,7 @@ BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-  iLaptopMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback, &CenteringRect );
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, &CenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );
