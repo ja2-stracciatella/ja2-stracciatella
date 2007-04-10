@@ -115,10 +115,6 @@ enum
 #define LAPTOP_SCREEN_WEB_LR_Y LAPTOP_SCREEN_WEB_UL_Y + LAPTOP_SCREEN_HEIGHT
 #define LAPTOP_SCREEN_WEB_DELTA_Y LAPTOP_SCREEN_WEB_UL_Y - LAPTOP_SCREEN_UL_Y
 
-// the laptop on/off button
-#define ON_X 113
-#define ON_Y 445
-
 
 // the bookmark values, move cancel down as bookmarks added
 

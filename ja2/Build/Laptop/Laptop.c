@@ -121,8 +121,6 @@ enum{
 #define ERROR_FONT  FONT12ARIAL
 
 
-#define MAX_BUTTON_COUNT 1
-#define ON_BUTTON 0
 #define BOOK_X 111
 #define BOOK_TOP_Y 79
 #define BOOK_HEIGHT 12
@@ -313,8 +311,6 @@ static BOOLEAN fInitTitle = TRUE;
 static BOOLEAN fTabHandled = FALSE;
 
 // BUTTON IMAGES
-static INT32 giLapTopButton[MAX_BUTTON_COUNT];
-static INT32 giLapTopButtonImage[MAX_BUTTON_COUNT];
 static INT32 giErrorButton[1];
 static INT32 giErrorButtonImage[1];
 
@@ -1992,17 +1988,7 @@ static void WWWRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static UINT32 CreateLaptopButtons(void)
 {
- memset( giLapTopButton, -1, sizeof( giLapTopButton ) );
-
- /*giLapTopButtonImage[ON_BUTTON]=  LoadButtonImage( "LAPTOP/button.sti" ,-1,1,-1,0,-1 );
- giLapTopButton[ON_BUTTON] = QuickCreateButton( giLapTopButtonImage[ON_BUTTON], ON_X, ON_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, BtnOnCallback);
-  */
-
-
  // the program buttons
-
 
  gLaptopButtonImage[0]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,0,-1,8,-1 );
  gLaptopButton[0] = QuickCreateButton( gLaptopButtonImage[0], 29, 66,
@@ -2110,23 +2096,7 @@ static UINT32 CreateLaptopButtons(void)
 
 static void DeleteLapTopButtons(void)
 {
-  UINT32 cnt;
-/*	for ( cnt = 0; cnt < MAX_BUTTON_COUNT; cnt++ )
-	{
-		if (giLapTopButton[ cnt ] != -1 )
-		{
-			RemoveButton( giLapTopButton[ cnt ] );
-		}
-	}
-
-
-	for ( cnt = 0; cnt < MAX_BUTTON_COUNT; cnt++ )
-	{
-		UnloadButtonImage( giLapTopButtonImage[ cnt ] );
-	}
-
-*/
-	for( cnt = 0; cnt < 7; cnt++ )
+	for (UINT32 cnt = 0; cnt < 7; cnt++)
 	{
 		RemoveButton( gLaptopButton[ cnt ] );
 		UnloadButtonImage( gLaptopButtonImage[ cnt ] );
