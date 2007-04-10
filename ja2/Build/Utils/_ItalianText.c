@@ -2269,10 +2269,6 @@ const wchar_t* sATMText[ ]=
 
 const wchar_t* pErrorStrings[] =
 {
-	L"Errore",
-	L"Il server non ha entrata NSD.",
-	L"Controlla l'indirizzo LRU e prova di nuovo.",
-	L"OK",
 	L"Connessione intermittente all'host. Tempi d'attesa più lunghi per il trasferimento.",
 };
 

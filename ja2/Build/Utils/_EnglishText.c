@@ -2272,10 +2272,6 @@ const wchar_t *sATMText[ ]=
 
 const wchar_t *pErrorStrings[] =
 {
-	L"Error",
-	L"Server does not have DNS entry.",
-	L"Check URL address and try again.",
-	L"OK",
 	L"Intermittent Connection to Host. Expect longer transfer times.",
 };
 

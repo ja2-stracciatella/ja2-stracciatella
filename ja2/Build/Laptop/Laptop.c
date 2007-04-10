@@ -117,8 +117,6 @@ enum{
 #define LAPTOPICONFONT FONT10ARIAL
 #define BOOK_FONT FONT10ARIAL
 #define DOWNLOAD_FONT FONT12ARIAL
-#define ERROR_TITLE_FONT  FONT14ARIAL
-#define ERROR_FONT  FONT12ARIAL
 
 
 #define BOOK_X 111
@@ -144,16 +142,6 @@ enum{
 #define UNIT_WIDTH 4
 #define DOWN_STRING_X DOWNLOAD_X+47
 #define DOWN_STRING_Y DOWNLOAD_Y+ 5
-#define ERROR_X 300
-#define ERROR_Y 200
-#define ERROR_BTN_X 43
-#define ERROR_BTN_Y ERROR_Y+70
-#define ERROR_TITLE_X ERROR_X+3
-#define ERROR_TITLE_Y ERROR_Y+3
-#define ERROR_BTN_TEXT_X 20
-#define ERROR_BTN_TEXT_Y 9
-#define ERROR_TEXT_X 0
-#define ERROR_TEXT_Y 15
 #define LAPTOP_TITLE_ICONS_X 113
 #define LAPTOP_TITLE_ICONS_Y 27
 
@@ -216,7 +204,6 @@ BOOLEAN gfShowBookmarks=FALSE;
 
 // in progress of loading a page?
 BOOLEAN fLoadPendingFlag=FALSE;
-static BOOLEAN fErrorFlag;
 
 // mark buttons dirty?
 BOOLEAN fMarkButtonsDirtyFlag = TRUE;
@@ -278,10 +265,7 @@ static UINT32 guiHISTORYICON;
 static UINT32 guiMAILICON;
 static UINT32 guiPERSICON;
 static UINT32 guiWWWICON;
-static UINT32 guiBOOKTOP;
 static UINT32 guiBOOKHIGH;
-static UINT32 guiBOOKMID;
-static UINT32 guiBOOKBOT;
 static UINT32 guiBOOKMARK;
 static UINT32 guiGRAPHWINDOW;
 static UINT32 guiGRAPHBAR;
@@ -306,10 +290,6 @@ static BOOLEAN fInitTitle = TRUE;
 
 // tab handled
 static BOOLEAN fTabHandled = FALSE;
-
-// BUTTON IMAGES
-static INT32 giErrorButton[1];
-static INT32 giErrorButtonImage[1];
 
 static INT32 gLaptopButton[7];
 static INT32 gLaptopButtonImage[7];
@@ -357,7 +337,6 @@ static BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WW
 // mouse regions
 static MOUSE_REGION gLapTopScreenRegion;
 static MOUSE_REGION gBookmarkMouseRegions[MAX_BOOKMARKS];
-MOUSE_REGION pScreenMask;
 static MOUSE_REGION gLapTopProgramMinIcon;
 static MOUSE_REGION gNewMailIconRegion;
 static MOUSE_REGION gNewFileIconRegion;
@@ -718,7 +697,6 @@ static INT32 EnterLaptop(void)
 
 
 static void CreateDestoryBookMarkRegions(void);
-static void CreateDestroyErrorButton(void);
 static void CreateDestroyMinimizeButtonForCurrentMode(void);
 static void DeleteBookmark(void);
 static void DeleteDesktopBackground(void);
@@ -791,11 +769,6 @@ void ExitLaptop()
 	// get rid of desktop
 	DeleteDesktopBackground(  );
 
-  if(fErrorFlag)
-	{
-   fErrorFlag=FALSE;
-	 CreateDestroyErrorButton();
-	}
 	if(fDeleteMailFlag)
 	{
 	 fDeleteMailFlag=FALSE;
@@ -1511,7 +1484,6 @@ static void CheckIfNewWWWW(void);
 static void CheckMarkButtonsDirtyFlag(void);
 static UINT32 CreateLaptopButtons(void);
 static void DisplayBookMarks(void);
-static void DisplayErrorBox(void);
 static BOOLEAN DisplayLoadPending(void);
 static void DisplayTaskBarIcons(void);
 static void DisplayWebBookMarkNotify(void);
@@ -1730,10 +1702,6 @@ UINT32 LaptopScreenHandle()
 
 	// create various mouse regions that are global to laptop system
   CreateDestoryBookMarkRegions( );
-	CreateDestroyErrorButton( );
-
-	// check to see if error box needs to be displayed
-	DisplayErrorBox();
 
 	// check to see if buttons marked dirty
   CheckMarkButtonsDirtyFlag( );
@@ -2582,14 +2550,8 @@ static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void DrawTextOnErrorButton(void);
-
-
 static void DrawButtonText(void)
 {
-
-	if(fErrorFlag)
-		DrawTextOnErrorButton();
 	switch(guiCurrentLaptopMode)
 	{
 		case LAPTOP_MODE_EMAIL:
@@ -2657,11 +2619,8 @@ static BOOLEAN LoadBookmark(void)
 	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadtop.sti",    &guiDOWNLOADTOP));
 	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadmid.sti",    &guiDOWNLOADMID));
 	CHECKF(AddVideoObjectFromFile("LAPTOP/downloadbot.sti",    &guiDOWNLOADBOT));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/bookmarktop.sti",    &guiBOOKTOP));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/bookmarkmiddle.sti", &guiBOOKMID));
 	CHECKF(AddVideoObjectFromFile("LAPTOP/webpages.sti",       &guiBOOKMARK));
 	CHECKF(AddVideoObjectFromFile("LAPTOP/hilite.sti",         &guiBOOKHIGH));
-	CHECKF(AddVideoObjectFromFile("LAPTOP/Bookmarkbottom.sti", &guiBOOKBOT));
 	return( TRUE );
 }
 
@@ -2757,8 +2716,6 @@ static void DisplayBookMarks(void)
 
 	 SetFontDestBuffer(FRAME_BUFFER,0,0,640,480, FALSE);
 
-	//BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKBOT, 0, BOOK_X, 6 + BOOK_TOP_Y + iCounter * BOOK_HEIGHT);
-
 	InvalidateRegion(BOOK_X, BOOK_TOP_Y + iCounter * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (iCounter + 1) * BOOK_HEIGHT + 16);
 	SetFontShadow(DEFAULT_SHADOW);
 
@@ -2792,10 +2749,7 @@ static void RemoveBookmark(INT32 iBookId)
 
 static void DeleteBookmark(void)
 {
-  DeleteVideoObjectFromIndex(guiBOOKTOP);
-	DeleteVideoObjectFromIndex(guiBOOKMID);
 	DeleteVideoObjectFromIndex(guiBOOKHIGH);
-	DeleteVideoObjectFromIndex(guiBOOKBOT);
   DeleteVideoObjectFromIndex(guiBOOKMARK);
 
 	DeleteVideoObjectFromIndex(guiDOWNLOADTOP);
@@ -2960,7 +2914,7 @@ void GoToWebPage(INT32 iPageId )
 	{
 		if( giRainDelayInternetSite == -1 )
 		{
-			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, pErrorStrings[4], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InternetRainDelayMessageBoxCallBack );
+			DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, pErrorStrings[0], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InternetRainDelayMessageBoxCallBack);
 			giRainDelayInternetSite = iPageId;
 			return;
 		}
@@ -3325,99 +3279,6 @@ static void DeleteLoadPending(void)
 }
 
 
-static void BtnErrorCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		fErrorFlag = FALSE;
-	}
-}
-
-
-static void CreateDestroyErrorButton(void)
-{
- static BOOLEAN fOldErrorFlag=FALSE;
- if((fErrorFlag)&&(!fOldErrorFlag))
- {
-	 // create inventory button
-  fOldErrorFlag=TRUE;
-
-	// load image and create error confirm button
-	giErrorButtonImage[0]=LoadButtonImage( "LAPTOP/errorbutton.sti" ,-1,0,-1,1,-1 );
-  giErrorButton[0]= QuickCreateButton( giErrorButtonImage[0], ERROR_X+ERROR_BTN_X, ERROR_BTN_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, BtnErrorCallback);
-
-	// define the cursor
-	SetButtonCursor(giErrorButton[0], CURSOR_LAPTOP_SCREEN);
-
-	// define the screen mask
-	MSYS_DefineRegion(&pScreenMask,0, 0,640,480,
-		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
- }
- else if((!fErrorFlag)&&(fOldErrorFlag))
- {
-	 // done dsiplaying, get rid of button and screen mask
-   fOldErrorFlag=FALSE;
-
-	 RemoveButton( giErrorButton[0] );
-   UnloadButtonImage( giErrorButtonImage[0] );
-
-	 MSYS_RemoveRegion(&pScreenMask);
-
-	 // re draw screen
-	 fReDrawScreenFlag=TRUE;
-
- }
-}
-
-
-static void DisplayErrorBox(void)
-{
-	// this function will display the error graphic
-  if(!fErrorFlag)
-		return;
-
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKTOP, 0, ERROR_X, ERROR_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y +     BOOK_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 2 * BOOK_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 3 * BOOK_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 4 * BOOK_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKMID, 0, ERROR_X, ERROR_Y + 5 * BOOK_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBOOKBOT, 0, ERROR_X, ERROR_Y + 6 * BOOK_HEIGHT);
-
-	// font stuff
-	SetFont(ERROR_TITLE_FONT);
-  SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
-
-	// print title
-	mprintf(ERROR_TITLE_X, ERROR_TITLE_Y, pErrorStrings[0]);
-  SetFontForeground(FONT_BLACK);
-  SetFont(ERROR_FONT);
-
-	// display error string
-	DisplayWrappedString(ERROR_X+ERROR_TEXT_X,(UINT16)(ERROR_Y+ERROR_TEXT_Y+DisplayWrappedString(ERROR_X+ERROR_TEXT_X, ERROR_Y+ERROR_TEXT_Y, BOOK_WIDTH, 2,ERROR_FONT,FONT_BLACK, pErrorStrings[1],FONT_BLACK,FALSE,CENTER_JUSTIFIED)), BOOK_WIDTH, 2,ERROR_FONT,FONT_BLACK, pErrorStrings[2],FONT_BLACK,FALSE,CENTER_JUSTIFIED);
-
-	SetFontShadow(DEFAULT_SHADOW);
-}
-
-
-static void DrawTextOnErrorButton(void)
-{
-	// draws text on error button
-  SetFont(ERROR_TITLE_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
-	mprintf(ERROR_X+ERROR_BTN_X+ERROR_BTN_TEXT_X, ERROR_BTN_Y+ERROR_BTN_TEXT_Y, pErrorStrings[3]);
-	SetFontShadow(DEFAULT_SHADOW);
-
-	InvalidateRegion(ERROR_X, ERROR_Y, ERROR_X+BOOK_WIDTH, ERROR_Y+6*BOOK_HEIGHT);
-}
-
-
 // This function is called every time the laptop is FIRST initialized, ie whenever the laptop is loaded.  It calls
 // various init function in the laptop pages that need to be inited when the laptop is just loaded.
 static void EnterLaptopInitLaptopPages(void)
@@ -3565,17 +3426,6 @@ static void HandleLapTopESCKey(void)
 	  fReDrawScreenFlag = TRUE;
 	  RenderLaptop( );
 	}
-	else if( fErrorFlag )
-	{
-		// get rid of error warning box
-    fErrorFlag=FALSE;
-	  CreateDestroyErrorButton();
-
-		// force redraw
-	  fReDrawScreenFlag = TRUE;
-	  RenderLaptop( );
-	}
-
 	else if( gfShowBookmarks )
 	{
 		// get rid of bookmarks
@@ -3619,17 +3469,6 @@ void HandleRightButtonUpEvent( void )
 	  fReDrawScreenFlag = TRUE;
 	  RenderLaptop( );
 	}
-	else if( fErrorFlag )
-	{
-		// get rid of error warning box
-    fErrorFlag=FALSE;
-	  CreateDestroyErrorButton();
-
-		// force redraw
-	  fReDrawScreenFlag = TRUE;
-	  RenderLaptop( );
-	}
-
 	else if( gfShowBookmarks )
 	{
 		// get rid of bookmarks

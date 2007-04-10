@@ -2284,10 +2284,6 @@ const wchar_t* sATMText[ ]=
 
 const wchar_t* pErrorStrings[] =
 {
-	L"Fout",
-	L"Server heeft geen DNS ingang.",
-	L"Controleer URL adres en probeer opnieuw.",
-	L"OK",
 	L"Periodieke verbinding met host. Houdt rekening met lange wachttijden.",
 };
 

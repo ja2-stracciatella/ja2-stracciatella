@@ -2188,10 +2188,6 @@ const wchar_t *sATMText[] =
 // URL is the acronym for Uniform Resource Locator
 const wchar_t *pErrorStrings[] =
 {
-	L"Fehler",
-	L"Server hat keinen DNS-Eintrag.",
-	L"URL-Adresse überprüfen und nochmal versuchen.",
-	L"OK",
 	L"Verbindung zum Host wird dauernd unterbrochen. Mit längeren Übertragungszeiten ist zu rechnen.",
 };
 

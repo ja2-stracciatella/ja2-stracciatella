@@ -212,7 +212,7 @@ BOOLEAN gfPageButtonsWereCreated = FALSE;
 
 // mouse regions
 MOUSE_REGION pEmailRegions[MAX_MESSAGES_PAGE];
-MOUSE_REGION pScreenMask;
+static MOUSE_REGION pScreenMask;
 MOUSE_REGION pDeleteScreenMask;
 
 // the email info struct to speed up email

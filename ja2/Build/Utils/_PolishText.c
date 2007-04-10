@@ -2269,10 +2269,6 @@ const wchar_t* sATMText[ ]=
 
 const wchar_t* pErrorStrings[] =
 {
-	L"B³¹d",
-	L"Serwer nie posiada DNS.",
-	L"SprawdŸ adres URL i spróbuj ponownie.",
-	L"OK",
 	L"Niestabilne po³¹czenie z Hostem. Transfer mo¿e trwaæ d³u¿ej.",
 };
 

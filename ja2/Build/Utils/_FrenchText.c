@@ -2272,10 +2272,6 @@ const wchar_t* sATMText[ ]=
 
 const wchar_t* pErrorStrings[] =
 {
-	L"Erreur",
-	L"Le serveur ne trouve pas l'entrée DNS.",
-	L"Vérifiez l'adresse URL et essayez à nouveau.",
-	L"OK",
 	L"Connexion à l'hôte.",
 };
 
