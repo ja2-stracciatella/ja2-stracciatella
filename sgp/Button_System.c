@@ -723,7 +723,6 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	b->XLoc                    = Left;
 	b->YLoc                    = Top;
 	for (UINT32 i = 0; i < lengthof(b->UserData); i++) b->UserData[i] = 0;
-	b->Group                   = -1;
 	b->bDisabledStyle          = DISABLED_STYLE_DEFAULT;
 	b->string                  = NULL;
 	b->usFont                  = 0;

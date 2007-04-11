@@ -77,7 +77,6 @@ typedef struct _GUI_BUTTON {
 	INT16					XLoc;							// Coordinates where button is on the screen
 	INT16					YLoc;
 	INT32					UserData[4];			// Place holder for user data etc.
-	INT16					Group;						// Group this button belongs to (see DOCs)
 	//Button disabled style
 	INT8					bDisabledStyle;
 	//For buttons with text
