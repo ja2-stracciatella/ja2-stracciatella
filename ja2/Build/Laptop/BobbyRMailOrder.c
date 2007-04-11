@@ -272,7 +272,7 @@ INT32		guiBobbyRClearOrderImage;
 
 //Accept Order Button
 static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRAcceptOrder;
+static UINT32 guiBobbyRAcceptOrder;
 INT32		guiBobbyRAcceptOrderImage;
 
 //Back Button
@@ -2124,9 +2124,6 @@ void EnterInitBobbyRayOrder()
 
 	//Get rid of the city drop dowm, if it is being displayed
 	gubDropDownAction = BR_DROP_DOWN_DESTROY;
-
-	//disable the accept order button
-	DisableButton( guiBobbyRAcceptOrder );
 }
 
 

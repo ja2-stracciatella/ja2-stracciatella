@@ -358,24 +358,20 @@ void UnloadButtonImage(INT32 Index)
 }
 
 
+static GUI_BUTTON* GetButton(INT32 BtnID)
+{
+	AssertMsg(0 <= BtnID && BtnID < MAX_BUTTONS, String("ButtonID %d is out of range.", BtnID));
+	GUI_BUTTON* b = ButtonList[BtnID];
+	AssertMsg(b != NULL, String("Accessing non-existent button %d.", BtnID));
+	return b;
+}
+
+
 // Enables an already created button.
 void EnableButton(INT32 iButtonID)
 {
-	GUI_BUTTON *b;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to EnableButton with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	b = ButtonList[ iButtonID ];
-
-	// If button exists, set the ENABLED flag
-	if( b )
-	{
-		b->uiFlags |= ( BUTTON_ENABLED | BUTTON_DIRTY );
-	}
+	GUI_BUTTON* b = GetButton(iButtonID);
+	b->uiFlags |= BUTTON_ENABLED | BUTTON_DIRTY;
 }
 
 
@@ -385,22 +381,9 @@ void EnableButton(INT32 iButtonID)
 // graphics for such are not available).
 void DisableButton(INT32 iButtonID)
 {
-	GUI_BUTTON *b;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to DisableButton with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	b = ButtonList[ iButtonID ];
-
-	// If button exists, reset the ENABLED flag
-	if( b )
-	{
-		b->uiFlags &= (~BUTTON_ENABLED);
-		b->uiFlags |= BUTTON_DIRTY;
-	}
+	GUI_BUTTON* b = GetButton(iButtonID);
+	b->uiFlags &= ~BUTTON_ENABLED;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -651,25 +634,7 @@ static void RemoveButtonsMarkedForDeletion(void)
 // button is released.
 void RemoveButton(INT32 iButtonID)
 {
-	GUI_BUTTON *b;
-
-	if( iButtonID < 0 || iButtonID >= MAX_BUTTONS )
-	{
-		sprintf( str, "Attempting to RemoveButton with out of range buttonID %d.", iButtonID );
-		AssertMsg( 0, str );
-	}
-
-	b = ButtonList[ iButtonID ];
-
-	// If button exists...
-	if( !b )
-	{
-		#ifdef BUTTONSYSTEM_DEBUGGING
-		if( gfIgnoreShutdownAssertions )
-		#endif
-			return;
-		AssertMsg( 0, "Attempting to remove a button that has already been deleted." );
-	}
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	//If we happen to be in the middle of a callback, and attempt to delete a button,
 	//like deleting a node during list processing, then we delay it till after the callback
@@ -703,7 +668,6 @@ void RemoveButton(INT32 iButtonID)
 		gpPrevAnchoredButton = NULL;
 
 	MemFree(b);
-	b=NULL;
 	ButtonList[ iButtonID ] = NULL;
 }
 
@@ -1213,12 +1177,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 //New functions
 void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 {
-	GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-
-	b = ButtonList[ iButtonID ];
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	//free the previous strings memory if applicable
 	if( b->string )
@@ -1239,11 +1198,7 @@ void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 
 void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->usFont = (UINT16)uiFont;
 	b->uiFlags |= BUTTON_DIRTY ;
 }
@@ -1251,11 +1206,7 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -1264,11 +1215,7 @@ void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadow
 
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorDown = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -1277,11 +1224,7 @@ void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 s
 
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorHilited = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -1290,11 +1233,7 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 
 void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	//Range check:  if invalid, then set it to center justified.
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
@@ -1307,11 +1246,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 																			INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
 	b->usFont = (UINT16)uiFont;
@@ -1330,11 +1265,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
 	b->usFont = (UINT16)uiFont;
@@ -1346,11 +1277,7 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string,
 
 void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	b->bTextXOffset = bTextXOffset;
 	b->bTextYOffset = bTextYOffset;
@@ -1360,11 +1287,7 @@ void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOf
 
 void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	b->bTextXSubOffSet = bTextXOffset;
 	b->bTextYSubOffSet = bTextYOffset;
@@ -1374,23 +1297,14 @@ void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bText
 
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sWrappedWidth = sWrappedWidth;
 }
 
 
 void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 {
-	GUI_BUTTON *b;
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	Assert( bStyle >= DISABLED_STYLE_NONE && bStyle <= DISABLED_STYLE_SHADED );
 
@@ -1404,12 +1318,7 @@ void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex,
 													 INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage )
 {
-	GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	b->iIconID = iVideoObjectID;
 	b->usIconIndex = usVideoObjectIndex;
@@ -1429,13 +1338,7 @@ BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideo
 
 void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 {
-	GUI_BUTTON *b;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS );
-	b = ButtonList[ iButtonID ];
-	Assert( b );
-
+	GUI_BUTTON* b = GetButton(iButtonID);
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
@@ -1443,11 +1346,7 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 // Set the text that will be displayed as the FastHelp
 void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 {
-	GUI_BUTTON *b;
-	if(iButton<0 || iButton>MAX_BUTTONS)
-		return;
-	b = ButtonList[iButton];
-	AssertMsg( b, "Called SetButtonFastHelpText() with a non-existant button." );
+	GUI_BUTTON* b = GetButton(iButton);
 	SetRegionFastHelpText( &b->Area, Text );
 }
 
@@ -1456,27 +1355,10 @@ void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 // called by the Mouse System. *DO NOT CALL DIRECTLY*
 static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)
 {
-	GUI_BUTTON *b;
-	INT32 iButtonID;
-
-
 	Assert(reg != NULL);
 
-	iButtonID = MSYS_GetRegionUserData(reg,0);
-
-	sprintf( str, "QuickButtonCallbackMMove: Mouse Region #%d (%d,%d to %d,%d) has invalid buttonID %d",
-						reg->IDNumber, reg->RegionTopLeftX, reg->RegionTopLeftY, reg->RegionBottomRightX, reg->RegionBottomRightY, iButtonID );
-
-	AssertMsg( iButtonID >= 0, str );
-	AssertMsg( iButtonID < MAX_BUTTONS, str );
-
-	b = ButtonList[ iButtonID ];
-
-	AssertMsg( b != NULL, str );
-
-	if( !b )
-		return;  //This is getting called when Adding new regions...
-
+	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	if( b->uiFlags & BUTTON_ENABLED &&
 		  reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE) )
@@ -1554,29 +1436,14 @@ static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)
 // called by the Mouse System. *DO NOT CALL DIRECTLY*
 static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 {
-	GUI_BUTTON *b;
-	INT32		iButtonID;
 	BOOLEAN MouseBtnDown;
 	BOOLEAN StateBefore,StateAfter;
 
 
 	Assert(reg != NULL);
 
-	iButtonID = MSYS_GetRegionUserData(reg,0);
-
-	sprintf( str, "QuickButtonCallbackMButn: Mouse Region #%d (%d,%d to %d,%d) has invalid buttonID %d",
-						reg->IDNumber, reg->RegionTopLeftX, reg->RegionTopLeftY, reg->RegionBottomRightX, reg->RegionBottomRightY, iButtonID );
-
-	AssertMsg( iButtonID >= 0, str );
-	AssertMsg( iButtonID < MAX_BUTTONS, str );
-
-	b = ButtonList[ iButtonID ];
-
-	AssertMsg( b != NULL, str );
-
-	if( !b )
-		return;
-
+	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
+	GUI_BUTTON* b = GetButton(iButtonID);
 
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN) )
 		MouseBtnDown = TRUE;
@@ -1838,32 +1705,19 @@ void UnmarkButtonsDirty( void )
 
 void ForceButtonUnDirty( INT32 iButtonIndex )
 {
-	ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
-	ButtonList[ iButtonIndex ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+	GUI_BUTTON* b = GetButton(iButtonIndex);
+	b->uiFlags &= ~BUTTON_DIRTY;
+	b->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
 
 
 // Draws a single button on the screen.
 BOOLEAN DrawButton(INT32 iButtonID )
 {
-	// Fail if button handle out of range
-	if( iButtonID < 0 || iButtonID > MAX_BUTTONS )
-		return FALSE;
-
-	// Fail if button handle is invalid
-	if( !ButtonList[ iButtonID ] )
-		return FALSE;
-
-	if( ButtonList[ iButtonID ]->string )
-		SaveFontSettings();
-	// Draw this button
-  if( ButtonList[ iButtonID ]->Area.uiFlags & MSYS_REGION_ENABLED )
-  {
-	  DrawButtonFromPtr( ButtonList[ iButtonID ] );
-  }
-
-	if( ButtonList[ iButtonID ]->string )
-		RestoreFontSettings();
+	GUI_BUTTON* b = GetButton(iButtonID);
+	if (b->string != NULL) SaveFontSettings();
+	if (b->Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(b);
+	if (b->string != NULL) RestoreFontSettings();
 	return TRUE;
 }
 
@@ -1997,13 +1851,8 @@ static void DrawShadeOnButton(const GUI_BUTTON *b)
 
 void DrawCheckBoxButtonOn( INT32 iButtonID )
 {
-	GUI_BUTTON *b;
+	GUI_BUTTON* b = GetButton(iButtonID);
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-	b = ButtonList[ iButtonID ];
-	Assert( b );
 
 	gfLeftButtonState = TRUE;
 	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
@@ -2016,13 +1865,8 @@ void DrawCheckBoxButtonOn( INT32 iButtonID )
 
 void DrawCheckBoxButtonOff( INT32 iButtonID )
 {
-	GUI_BUTTON *b;
+	GUI_BUTTON* b = GetButton(iButtonID);
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
-
-	Assert( iButtonID >= 0 );
-	Assert( iButtonID < MAX_BUTTONS);
-	b = ButtonList[ iButtonID ];
-	Assert( b );
 
 	gfLeftButtonState = FALSE;
 	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
@@ -2610,15 +2454,7 @@ void ReleaseAnchorMode()
 //Yet new logical additions to the winbart library.
 void HideButton( INT32 iButtonNum )
 {
-	GUI_BUTTON *b;
-
-	Assert( iButtonNum >= 0 );
-	Assert( iButtonNum < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonNum ];
-
-	Assert( b );
-
+	GUI_BUTTON* b = GetButton(iButtonNum);
 	b->Area.uiFlags &= (~MSYS_REGION_ENABLED);
 	b->uiFlags |= BUTTON_DIRTY;
 	#ifdef JA2
@@ -2628,15 +2464,7 @@ void HideButton( INT32 iButtonNum )
 
 void ShowButton( INT32 iButtonNum )
 {
-	GUI_BUTTON *b;
-
-	Assert( iButtonNum >= 0 );
-	Assert( iButtonNum < MAX_BUTTONS);
-
-	b = ButtonList[ iButtonNum ];
-
-	Assert( b );
-
+	GUI_BUTTON* b = GetButton(iButtonNum);
 	b->Area.uiFlags |= MSYS_REGION_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;
 	#ifdef JA2
