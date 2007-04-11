@@ -72,14 +72,12 @@ typedef struct _GUI_BUTTON {
 	MOUSE_REGION	Area;							// Mouse System's mouse region to use for this button
 	GUI_CALLBACK	ClickCallback;		// Button Callback when button is clicked
 	GUI_CALLBACK	MoveCallback;			// Button Callback when mouse moved on this region
-	INT16					Cursor;						// Cursor to use for this button
 	UINT32				uiFlags;					// Button state flags etc.( 32-bit )
 	UINT32				uiOldFlags;				// Old flags from previous render loop
 	INT16					XLoc;							// Coordinates where button is on the screen
 	INT16					YLoc;
 	INT32					UserData[4];			// Place holder for user data etc.
 	INT16					Group;						// Group this button belongs to (see DOCs)
-	INT8					bDefaultStatus;
 	//Button disabled style
 	INT8					bDisabledStyle;
 	//For buttons with text
