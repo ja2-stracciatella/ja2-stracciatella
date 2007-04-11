@@ -1482,7 +1482,10 @@ enum
 static const wchar_t *EnemyRankString[TABLE_ENEMY_RANKS] =
 {
 	L"Adm",
-	L"Trp"
+	L"Trp",
+	L"Elt",
+	L"TOT",
+	L"%%"
 };
 
 
