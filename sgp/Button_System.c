@@ -687,22 +687,106 @@ static INT32 GetNextButtonNumber(void)
 }
 
 
-static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason);
-static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason);
+static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason);
+static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
 
 
-static INT32 CreateIconTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 Icon, INT16 IconIndex, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT16 Top, INT16 Width, INT16 Height, INT8 Priority, GUI_CALLBACK Click, GUI_CALLBACK Move)
 {
-	GUI_BUTTON *b;
-	INT32	ButtonNum;
-	INT32 BType;
-	INT32 x;
-
-	if (xloc < 0 || yloc < 0)
+	if (Left < 0 || Top < 0 || Width < 0 || Height < 0)
 	{
-		sprintf(str, "Attempting to %s with invalid position of %d,%d", __func__, xloc, yloc);
-		AssertMsg(0, str);
+		AssertMsg(0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", Left, Top, Width, Height));
 	}
+
+	INT32 BtnID = GetNextButtonNumber();
+	if (BtnID == BUTTON_NO_SLOT)
+	{
+		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0, "No more button slots");
+		return NULL;
+	}
+
+	GUI_BUTTON* b = MemAlloc(sizeof(*b));
+	if (b == NULL)
+	{
+		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0, "Cannor allocte memory for button struct");
+		return NULL;
+	}
+
+	ButtonList[BtnID] = b;
+
+	b->IDNum                   = BtnID;
+	b->ImageNum                = ImageNum;
+	b->ClickCallback           = Click;
+	b->MoveCallback            = Move;
+	b->uiFlags                 = BUTTON_DIRTY | BUTTON_ENABLED | Flags;
+	b->uiOldFlags              = 0;
+	b->XLoc                    = Left;
+	b->YLoc                    = Top;
+	for (UINT32 i = 0; i < lengthof(b->UserData); i++) b->UserData[i] = 0;
+	b->Group                   = -1;
+	b->bDisabledStyle          = DISABLED_STYLE_DEFAULT;
+	b->string                  = NULL;
+	b->usFont                  = 0;
+	b->sForeColor              = 0;
+	b->sShadowColor            = -1;
+	b->sForeColorDown          = -1;
+	b->sShadowColorDown        = -1;
+	b->sForeColorHilited       = -1;
+	b->sShadowColorHilited     = -1;
+	b->bJustification          = BUTTON_TEXT_CENTER;
+	b->bTextXOffset            = -1;
+	b->bTextYOffset            = -1;
+	b->bTextXSubOffSet         = 0;
+	b->bTextYSubOffSet         = 0;
+	b->fShiftText              = TRUE;
+	b->sWrappedWidth           = -1;
+	b->iIconID                 = -1;
+	b->usIconIndex             = -1;
+	b->bIconXOffset            = -1;
+	b->bIconYOffset            = -1;
+	b->fShiftImage             = TRUE;
+	b->ubToggleButtonOldState  = 0;
+	b->ubToggleButtonActivated = FALSE;
+
+	memset(&b->Area, 0, sizeof(b->Area));
+	MSYS_DefineRegion(
+		&b->Area,
+		Left,
+		Top,
+		Left + Width,
+		Top  + Height,
+		Priority,
+		MSYS_STARTING_CURSORVAL,
+		QuickButtonCallbackMMove,
+		QuickButtonCallbackMButn
+	);
+
+	MSYS_SetRegionUserData(&b->Area, 0, BtnID);
+
+#ifdef BUTTONSYSTEM_DEBUGGING
+	AssertFailIfIdenticalButtonAttributesFound(b);
+#endif
+
+	SpecifyButtonSoundScheme(BtnID, BUTTON_SOUND_SCHEME_GENERIC);
+
+	return b;
+}
+
+
+static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
+{
+	if (text == NULL || text[0] == L'\0') return;
+
+	wchar_t* Buf = MemAlloc((wcslen(text) + 1) * sizeof(*Buf));
+	AssertMsg(Buf != NULL, "Out of memory error:  Couldn't allocate string in CreateTextButton.");
+	wcscpy(Buf, text);
+	b->string = Buf;
+}
+
+
+// Creates an Iconic type button.
+INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+{
 	if (GenImg < -1 || GenImg >= MAX_GENERIC_PICS)
 	{
 		sprintf(str, "Attempting to %s with out of range iconID %d.", __func__, GenImg);
@@ -713,104 +797,38 @@ static INT32 CreateIconTextButton(const wchar_t *string, UINT32 uiFont, INT16 sF
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	// Strip off any extraneous bits from button type
-	BType = Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE);
+	GUI_BUTTON* b = AllocateButton(GenImg < 0 ? 0 : GenImg, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
+	if (b == NULL) return BUTTON_NO_SLOT;
 
-	ButtonNum = GetNextButtonNumber();
-	if (ButtonNum == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0, "No more button slots");
-		return(-1);
-	}
-
-	b = MemAlloc(sizeof(*b));
-	if (b == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0, "Can't alloc mem for button struct");
-		return(-1);
-	}
-
-	if (string != NULL && string[0] != L'\0')
-	{
-		b->string = MemAlloc((wcslen(string) + 1) * sizeof(*b->string));
-		AssertMsg(b->string, "Out of memory error:  Couldn't allocate string in CreateTextButton.");
-		wcscpy(b->string, string);
-	}
-	else
-	{
-		b->string = NULL;
-	}
-
-	b->uiFlags = BUTTON_DIRTY;
-	b->uiOldFlags = 0;
-	b->IDNum = ButtonNum;
-	b->XLoc = xloc;
-	b->YLoc = yloc;
-	b->ImageNum = (GenImg < 0 ? 0 : GenImg);
-	for (x = 0; x < 4; x++) b->UserData[x] = 0;
-	b->Group = -1;
-	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
-	b->usFont = (UINT16)uiFont;
-	b->sForeColor = sForeColor;
-	b->sWrappedWidth = -1;
-	b->sShadowColor = sShadowColor;
-	b->sForeColorDown = -1;
-	b->sShadowColorDown = -1;
-	b->sForeColorHilited = -1;
-	b->sShadowColorHilited = -1;
-	b->bJustification = BUTTON_TEXT_CENTER;
-	b->bTextXOffset = -1;
-	b->bTextYOffset = -1;
-	b->bTextXSubOffSet = 0;
-	b->bTextYSubOffSet = 0;
-	b->fShiftText = TRUE;
-	b->iIconID = Icon;
+	b->iIconID     = Icon;
 	b->usIconIndex = IconIndex;
-	b->bIconXOffset = -1;
-	b->bIconYOffset = -1;
-	b->fShiftImage = TRUE;
 
-	b->ClickCallback = ClickCallback;
-	b->MoveCallback = MoveCallback;
-
-	MSYS_DefineRegion(
-		&b->Area,
-		(UINT16)xloc,
-		(UINT16)yloc,
-		(UINT16)(xloc + w),
-		(UINT16)(yloc + h),
-		(INT8)Priority,
-		MSYS_STARTING_CURSORVAL,
-		QuickButtonCallbackMMove,
-		QuickButtonCallbackMButn
-	);
-
-	MSYS_SetRegionUserData(&b->Area, 0, ButtonNum);
-
-	b->uiFlags |= BUTTON_ENABLED | BType | BUTTON_GENERIC;
-
-#ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound(b);
-#endif
-	ButtonList[ButtonNum] = b;
-
-	SpecifyButtonSoundScheme(b->IDNum, BUTTON_SOUND_SCHEME_GENERIC);
-
-	return ButtonNum;
-}
-
-
-// Creates an Iconic type button.
-INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
-{
-	return CreateIconTextButton(NULL, 0, 0, -1, Icon, IconIndex, GenImg, xloc, yloc, w, h, Type, Priority, MoveCallback, ClickCallback);
+	return b->IDNum;
 }
 
 
 // Creates a generic button with text on it.
 INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
-	return CreateIconTextButton(string, uiFont, sForeColor, sShadowColor, -1, -1, GenImg, xloc, yloc, w, h, Type, Priority, MoveCallback, ClickCallback);
+	if (GenImg < -1 || GenImg >= MAX_GENERIC_PICS)
+	{
+		sprintf(str, "Attempting to %s with out of range iconID %d.", __func__, GenImg);
+		AssertMsg(0, str);
+	}
+
+	// if button size is too small, adjust it.
+	if (w < 4) w = 4;
+	if (h < 3) h = 3;
+
+	GUI_BUTTON* b = AllocateButton(GenImg < 0 ? 0 : GenImg, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
+	if (b == NULL) return BUTTON_NO_SLOT;
+
+	CopyButtonText(b, string);
+	b->usFont       = uiFont;
+	b->sForeColor   = sForeColor;
+	b->sShadowColor = sShadowColor;
+
+	return b->IDNum;
 }
 
 
@@ -818,68 +836,10 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 // them.
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON *b;
-	INT32	ButtonNum;
-	INT16 BType,x;
+	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, MoveCallback);
+	if (b == NULL) return BUTTON_NO_SLOT;
 
-	if( xloc < 0 || yloc < 0 || Width < 0 || Height < 0 )
-	{
-		sprintf( str, "Attempting to CreateHotSpot with invalid coordinates: %d,%d, width: %d, and height: %d.",
-			xloc, yloc, Width, Height );
-		AssertMsg( 0, str );
-	}
-
-	BType=0;
-
-	// Get a button number for this hotspot
-	if((ButtonNum = GetNextButtonNumber()) == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"CreateHotSpot: No more button slots");
-		return(-1);
-	}
-
-	// Allocate memory for the GUI_BUTTON structure
-	if((b=(GUI_BUTTON *)MemAlloc(sizeof(GUI_BUTTON))) == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"CreateHotSpot: Can't alloc mem for button struct");
-		return(-1);
-	}
-
-	// Init the structure values
-	b->uiFlags = 0;
-	b->uiOldFlags = 0;
-	b->IDNum = ButtonNum;
-	b->XLoc = xloc;
-	b->YLoc = yloc;
-	b->ImageNum = 0xffffffff;
-	for(x=0;x<4;x++)
-		b->UserData[x] = 0;
-	b->Group = -1;
-	b->string = NULL;
-
-	b->ClickCallback = ClickCallback;
-	b->MoveCallback = MoveCallback;
-
-	// define a MOUSE_REGION for this hotspot
-	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,(UINT16)(xloc+Width),(UINT16)(yloc+Height),
-		(INT8)Priority, MSYS_STARTING_CURSORVAL, QuickButtonCallbackMMove, QuickButtonCallbackMButn);
-
-	// Link the MOUSE_REGION to this hotspot
-	MSYS_SetRegionUserData(&b->Area,0,ButtonNum);
-
-	// Set the flags entry for this hotspot
-	b->uiFlags |= (BUTTON_ENABLED|BType|BUTTON_HOT_SPOT);
-
-	// Add this button (hotspot) to the button list
-	#ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound( b );
-	#endif
-	ButtonList[ButtonNum]=b;
-
-	SpecifyButtonSoundScheme( b->IDNum, BUTTON_SOUND_SCHEME_GENERIC );
-
-	// return the button slot number
-	return(ButtonNum);
+	return b->IDNum;
 }
 
 
@@ -900,121 +860,24 @@ BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 // them. They cannot be re-sized, nor can the graphic be changed.
 INT32 QuickCreateButton(UINT32 Image,INT16 xloc,INT16 yloc,INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON *b;
-	INT32	ButtonNum;
-	INT32 BType,x;
-
-	if( xloc < 0 || yloc < 0 )
-	{
-		sprintf( str, "Attempting to QuickCreateButton with invalid position of %d,%d", xloc, yloc );
-		AssertMsg( 0, str );
-	}
 	if( Image < 0 || Image >= MAX_BUTTON_PICS )
 	{
 		sprintf( str, "Attempting to QuickCreateButton with out of range ImageID %d.", Image );
 		AssertMsg( 0, str );
 	}
 
-	// Strip off any extraneous bits from button type
-	BType = Type & ( BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE );
-
 	// Is there a QuickButton image in the given image slot?
-	if(ButtonPictures[Image].vobj == NULL)
+	const BUTTON_PICS* BtnPic = &ButtonPictures[Image];
+	if (BtnPic->vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: Invalid button image number");
 		return(-1);
 	}
 
-	// Get a new button number
-	if((ButtonNum = GetNextButtonNumber()) == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: No more button slots");
-		return(-1);
-	}
+	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
+	if (b == NULL) return BUTTON_NO_SLOT;
 
-	// Allocate memory for a GUI_BUTTON structure
-	if((b=(GUI_BUTTON *)MemAlloc(sizeof(GUI_BUTTON))) == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: Can't alloc mem for button struct");
-		return(-1);
-	}
-
-	// Set the values for this buttn
-	b->uiFlags = BUTTON_DIRTY;
-	b->uiOldFlags = 0;
-
-	// Set someflags if of s certain type....
-	if ( Type & BUTTON_NEWTOGGLE )
-	{
-		b->uiFlags |= BUTTON_NEWTOGGLE;
-	}
-
-	// shadow style
-	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
-
-	b->Group = -1;
-	//Init string
-	b->string = NULL;
-	b->usFont = 0;
-	b->sForeColor = 0;
-	b->sWrappedWidth = -1;
-	b->sShadowColor = -1;
-	b->sForeColorDown = -1;
-	b->sShadowColorDown = -1;
-	b->sForeColorHilited = -1;
-	b->sShadowColorHilited = -1;
-	b->bJustification = BUTTON_TEXT_CENTER;
-	b->bTextXOffset = -1;
-	b->bTextYOffset = -1;
-	b->bTextXSubOffSet = 0;
-	b->bTextYSubOffSet = 0;
-	b->fShiftText = TRUE;
-	//Init icon
-	b->iIconID = -1;
-	b->usIconIndex = -1;
-	b->bIconXOffset = -1;
-	b->bIconYOffset = -1;
-	b->fShiftImage = TRUE;
-	//Init quickbutton
-	b->IDNum = ButtonNum;
-	b->ImageNum = Image;
-	for(x=0;x<4;x++)
-		b->UserData[x] = 0;
-
-	b->XLoc = xloc;
-	b->YLoc = yloc;
-
-	b->ubToggleButtonOldState = 0;
-	b->ubToggleButtonActivated = FALSE;
-
-	b->ClickCallback = ClickCallback;
-	b->MoveCallback = MoveCallback;
-
-	memset( &b->Area, 0, sizeof( MOUSE_REGION ) );
-	// Define a MOUSE_REGION for this QuickButton
-	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,
-			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
-				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
-				(INT8)Priority, MSYS_STARTING_CURSORVAL,
-				QuickButtonCallbackMMove,
-				QuickButtonCallbackMButn);
-
-	// Link the MOUSE_REGION with this QuickButton
-	MSYS_SetRegionUserData(&b->Area,0,ButtonNum);
-
-	// Set the flags for this button
-	b->uiFlags |= BUTTON_ENABLED | BType | BUTTON_QUICK;
-
-	// Add this QuickButton to the button list
-	#ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound( b );
-	#endif
-	ButtonList[ButtonNum]=b;
-
-	SpecifyButtonSoundScheme( b->IDNum, BUTTON_SOUND_SCHEME_GENERIC );
-
-	// return the button number (slot)
-	return(ButtonNum);
+	return b->IDNum;
 }
 
 
@@ -1066,111 +929,32 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 															 INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority,
 															 GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON *b;
-	INT32	iButtonID;
-	INT32 BType,x;
-
-	if( xloc < 0 || yloc < 0 )
-	{
-		sprintf( str, "Attempting to CreateIconAndTextButton with invalid position of %d,%d", xloc, yloc );
-		AssertMsg( 0, str );
-	}
 	if( Image < 0 || Image >= MAX_BUTTON_PICS )
 	{
 		sprintf( str, "Attemting to CreateIconAndTextButton with out of range ImageID %d.", Image );
 		AssertMsg( 0, str );
 	}
 
-	// Strip off any extraneous bits from button type
-	BType = Type & ( BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE );
-
 	// Is there a QuickButton image in the given image slot?
-	if(ButtonPictures[Image].vobj == NULL)
+	const BUTTON_PICS* BtnPic = &ButtonPictures[Image];
+	if (BtnPic->vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: Invalid button image number");
 		return(-1);
 	}
 
-	// Get a new button number
-	if((iButtonID = GetNextButtonNumber()) == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: No more button slots");
-		return(-1);
-	}
+	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
+	if (b == NULL) return BUTTON_NO_SLOT;
 
-	// Allocate memory for a GUI_BUTTON structure
-	if((b=(GUI_BUTTON *)MemAlloc(sizeof(GUI_BUTTON))) == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER,DBG_LEVEL_0,"QuickCreateButton: Can't alloc mem for button struct");
-		return(-1);
-	}
-
-	// Set the values for this button
-	b->uiFlags = BUTTON_DIRTY;
-	b->uiOldFlags = 0;
-	b->IDNum = iButtonID;
-	b->XLoc = xloc;
-	b->YLoc = yloc;
-	b->ImageNum = Image;
-	for(x=0;x<4;x++)
-		b->UserData[x] = 0;
-	b->Group = -1;
-	b->bDisabledStyle = DISABLED_STYLE_DEFAULT;
-
-	// Allocate memory for the button's text string...
-	b->string = NULL;
-	if ( string  )
-	{
-		b->string = (wchar_t*)MemAlloc( (wcslen(string)+1)*sizeof(wchar_t) );
-		AssertMsg( b->string, "Out of memory error:  Couldn't allocate string in CreateIconAndTextButton." );
-		wcscpy( b->string, string );
-	}
-
-	b->bJustification = bJustification;
-	b->usFont = (UINT16)uiFont;
-	b->sForeColor = sForeColor;
-	b->sWrappedWidth = -1;
-	b->sShadowColor = sShadowColor;
-	b->sForeColorDown = sForeColorDown;
+	CopyButtonText(b, string);
+	b->bJustification   = bJustification;
+	b->usFont           = uiFont;
+	b->sForeColor       = sForeColor;
+	b->sShadowColor     = sShadowColor;
+	b->sForeColorDown   = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
-	b->sForeColorHilited = -1;
-	b->sShadowColorHilited = -1;
-	b->bTextXOffset = -1;
-	b->bTextYOffset = -1;
-	b->bTextXSubOffSet = 0;
-	b->bTextYSubOffSet = 0;
-	b->fShiftText = TRUE;
 
-	b->iIconID = -1;
-	b->usIconIndex = 0;
-
-	b->ClickCallback = ClickCallback;
-	b->MoveCallback = MoveCallback;
-
-	// Define a MOUSE_REGION for this QuickButton
-	MSYS_DefineRegion(&b->Area,(UINT16)xloc,(UINT16)yloc,
-			  (UINT16)(xloc+(INT16)ButtonPictures[Image].MaxWidth),
-				(UINT16)(yloc+(INT16)ButtonPictures[Image].MaxHeight),
-				(INT8)Priority, MSYS_STARTING_CURSORVAL,
-				QuickButtonCallbackMMove,
-				QuickButtonCallbackMButn);
-
-	// Link the MOUSE_REGION with this QuickButton
-	MSYS_SetRegionUserData(&b->Area,0,iButtonID);
-
-	// Set the flags for this button
-	b->uiFlags |= ( BUTTON_ENABLED | BType | BUTTON_QUICK );
-
-	// Add this QuickButton to the button list
-	#ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound( b );
-	#endif
-	ButtonList[iButtonID]=b;
-
-	SpecifyButtonSoundScheme( b->IDNum, BUTTON_SOUND_SCHEME_GENERIC );
-
-	// return the button number (slot)
-	return(iButtonID);
+	return b->IDNum;
 }
 
 
@@ -1184,15 +968,8 @@ void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 		MemFree( b->string );
 	b->string = NULL;
 
-	if( string && wcslen( string ) )
-	{
-		//allocate memory for the new string
-		b->string = (wchar_t*)MemAlloc( (wcslen(string)+1)*sizeof(wchar_t) );
-		Assert( b->string );
-		//copy the string to the button
-		wcscpy( b->string, string );
-		b->uiFlags |= BUTTON_DIRTY;
-	}
+	CopyButtonText(b, string);
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
