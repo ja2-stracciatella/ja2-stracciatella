@@ -846,10 +846,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 // will simply set the cursor for the mouse region the button occupies
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
-  GUI_BUTTON *b;
-  b = ButtonList[iBtnId];
-	if (!b)
-		return FALSE;
+	GUI_BUTTON* b = GetButton(iBtnId);
   b->Area.Cursor = crsr;
 	return TRUE;
 }
@@ -1431,13 +1428,8 @@ void RenderButtons(void)
 void MarkAButtonDirty( INT32 iButtonNum )
 {
   // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
-
-  // If the button exists, and it's not owned by another object, draw it
-		if( ButtonList[ iButtonNum ] )
-		{
-			// Turn on dirty flag
-			ButtonList[ iButtonNum ]->uiFlags |= BUTTON_DIRTY;
-		}
+	GUI_BUTTON* b = GetButton(iButtonNum);
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1458,10 +1450,8 @@ void MarkButtonsDirty( void )
 
 void UnMarkButtonDirty( INT32 iButtonIndex )
 {
-  if ( ButtonList[ iButtonIndex ] )
-  {
-	  ButtonList[ iButtonIndex ]->uiFlags &= ~( BUTTON_DIRTY );
-  }
+	GUI_BUTTON* b = GetButton(iButtonIndex);
+	b->uiFlags &= ~BUTTON_DIRTY;
 }
 
 
@@ -2150,10 +2140,9 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, const char *filename, INT16 Priori
 // Added Oct17, 97 Carter - kind of mindless, but might as well have it
 void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 {
-  GUI_BUTTON *b;
-	b=ButtonList[iButtonNum];
 	if(index < 0 || index > 3)
 		return;
+	GUI_BUTTON* b = GetButton(iButtonNum);
 	b->UserData[index]=userdata;
 }
 
