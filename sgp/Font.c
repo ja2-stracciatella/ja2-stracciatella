@@ -11,15 +11,6 @@
 #define MAX_FONTS 25
 
 
-struct FontTranslationTable
-{
-	UINT16  usNumberOfSymbols;
-	UINT16* DynamicArrayOf16BitValues;
-};
-typedef struct FontTranslationTable FontTranslationTable;
-
-
-static FontTranslationTable TranslationTable;
 static HVOBJECT FontObjs[MAX_FONTS];
 
 // Destination printing parameters
@@ -333,17 +324,15 @@ UINT16 GetFontHeight(INT32 FontNum)
 
 
 /* Given a word-sized character, this function returns the index of the cell in
- * the font to print to the screen. The conversion table is built by
- *	CreateEnglishTransTable() */
+ * the font to print to the screen. */
 INT16 GetIndex(UINT16 siChar)
 {
-	UINT16 usNumberOfSymbols = TranslationTable.usNumberOfSymbols;
+#	include "TranslationTable.inc"
 
 	// search the Translation Table and return the index for the font
-	const UINT16* pTrav = TranslationTable.DynamicArrayOf16BitValues;
-	for (UINT16 ssCount = 0; ssCount < usNumberOfSymbols; ssCount++)
+	for (UINT32 i = 0; i < lengthof(TranslationTable); i++)
 	{
-		if (siChar == pTrav[ssCount]) return ssCount;
+		if (siChar == TranslationTable[i]) return i;
 	}
 
 	// If here, present warning and give the first index
@@ -611,9 +600,6 @@ UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-static void CreateEnglishTransTable(void);
-
-
 /* Starts up the font manager system with the appropriate translation table. */
 BOOLEAN InitializeFontManager(void)
 {
@@ -630,8 +616,6 @@ BOOLEAN InitializeFontManager(void)
 
 	FontDestWrap=FALSE;
 
-	CreateEnglishTransTable();
-
 	// Mark all font slots as empty
 	for (int count = 0; count < MAX_FONTS; count++) FontObjs[count] = NULL;
 
@@ -646,277 +630,4 @@ void ShutdownFontManager(void)
 	{
 		if (FontObjs[count] != NULL) UnloadFont(count);
 	}
-}
-
-
-/* Destroys the English text->font map table. */
-void DestroyEnglishTransTable(void)
-{
-	if (TranslationTable.DynamicArrayOf16BitValues != NULL)
-	{
-		MemFree(TranslationTable.DynamicArrayOf16BitValues);
-	}
-}
-
-
-/* Creates the English text->font map table. */
-static void CreateEnglishTransTable(void)
-{
-#ifdef JA2
-	// ha ha, we have more than Wizardry now (again)
-	TranslationTable.usNumberOfSymbols = 172;
-#else
-	TranslationTable.usNumberOfSymbols = 155;
-#endif
-	UINT16* temp = MemAlloc(TranslationTable.usNumberOfSymbols * sizeof(*temp));
-	TranslationTable.DynamicArrayOf16BitValues = temp;
-
-	*temp++ = 'A';
-	*temp++ = 'B';
-	*temp++ = 'C';
-	*temp++ = 'D';
-	*temp++ = 'E';
-	*temp++ = 'F';
-	*temp++ = 'G';
-	*temp++ = 'H';
-	*temp++ = 'I';
-	*temp++ = 'J';
-	*temp++ = 'K';
-	*temp++ = 'L';
-	*temp++ = 'M';
-	*temp++ = 'N';
-	*temp++ = 'O';
-	*temp++ = 'P';
-	*temp++ = 'Q';
-	*temp++ = 'R';
-	*temp++ = 'S';
-	*temp++ = 'T';
-	*temp++ = 'U';
-	*temp++ = 'V';
-	*temp++ = 'W';
-	*temp++ = 'X';
-	*temp++ = 'Y';
-	*temp++ = 'Z';
-	*temp++ = 'a';
-	*temp++ = 'b';
-	*temp++ = 'c';
-	*temp++ = 'd';
-	*temp++ = 'e';
-	*temp++ = 'f';
-	*temp++ = 'g';
-	*temp++ = 'h';
-	*temp++ = 'i';
-	*temp++ = 'j';
-	*temp++ = 'k';
-	*temp++ = 'l';
-	*temp++ = 'm';
-	*temp++ = 'n';
-	*temp++ = 'o';
-	*temp++ = 'p';
-	*temp++ = 'q';
-	*temp++ = 'r';
-	*temp++ = 's';
-	*temp++ = 't';
-	*temp++ = 'u';
-	*temp++ = 'v';
-	*temp++ = 'w';
-	*temp++ = 'x';
-	*temp++ = 'y';
-	*temp++ = 'z';
-	*temp++ = '0';
-	*temp++ = '1';
-	*temp++ = '2';
-	*temp++ = '3';
-	*temp++ = '4';
-	*temp++ = '5';
-	*temp++ = '6';
-	*temp++ = '7';
-	*temp++ = '8';
-	*temp++ = '9';
-	*temp++ = '!';
-	*temp++ = '@';
-	*temp++ = '#';
-	*temp++ = '$';
-	*temp++ = '%';
-	*temp++ = '^';
-	*temp++ = '&';
-	*temp++ = '*';
-	*temp++ = '(';
-	*temp++ = ')';
-	*temp++ = '-';
-	*temp++ = '_';
-	*temp++ = '+';
-	*temp++ = '=';
-	*temp++ = '|';
-	*temp++ = '\\';
-	*temp++ = '{';
-	*temp++ = '}';// 80
-	*temp++ = '[';
-	*temp++ = ']';
-	*temp++ = ':';
-	*temp++ = ';';
-	*temp++ = '"';
-	*temp++ = '\'';
-	*temp++ = '<';
-	*temp++ = '>';
-	*temp++ = ',';
-	*temp++ = '.';
-	*temp++ = '?';
-	*temp++ = '/';
-	*temp++ = ' '; //93
-
-#ifdef JA2
-	*temp++ = 196; // "A" umlaut
-	*temp++ = 214; // "O" umlaut
-	*temp++ = 220; // "U" umlaut
-	*temp++ = 228; // "a" umlaut
-	*temp++ = 246; // "o" umlaut
-	*temp++ = 252; // "u" umlaut
-	*temp++ = 223; // double-s that looks like a beta/B  // 100
-	// START OF FUNKY RUSSIAN STUFF
-	*temp++ = 1101;
-	*temp++ = 1102;
-	*temp++ = 1103;
-	*temp++ = 1104;
-	*temp++ = 1105;
-	*temp++ = 1106;
-	*temp++ = 1107;
-	*temp++ = 1108;
-	*temp++ = 1109;
-	*temp++ = 1110;
-	*temp++ = 1111;
-	*temp++ = 1112;
-	*temp++ = 1113;
-	*temp++ = 1114;
-	*temp++ = 1115;
-	*temp++ = 1116;
-	*temp++ = 1117;
-	*temp++ = 1118;
-	*temp++ = 1119;
-	*temp++ = 1120;
-	*temp++ = 1121;
-	*temp++ = 1122;
-	*temp++ = 1123;
-	*temp++ = 1124;
-	*temp++ = 1125;
-	*temp++ = 1126;
-	*temp++ = 1127;
-	*temp++ = 1128;
-	*temp++ = 1129;
-	*temp++ = 1130; // 130
-	*temp++ = 1131;
-	*temp++ = 1132;
-	// END OF FUNKY RUSSIAN STUFF
-	*temp++ = 196; // Ä
-	*temp++ = 192; // À
-	*temp++ = 193; // Á
-	*temp++ = 194; // Â
-	*temp++ = 199; // Ç
-	*temp++ = 203; // Ë
-	*temp++ = 200; // È
-	*temp++ = 201; // É				140
-	*temp++ = 202; // Ê
-	*temp++ = 207; // Ï
-	*temp++ = 214; // Ö
-	*temp++ = 210; // Ò
-	*temp++ = 211; // Ó
-	*temp++ = 212; // Ô
-	*temp++ = 220; // Ü
-	*temp++ = 217; // Ù
-	*temp++ = 218; // Ú
-	*temp++ = 219; // Û				150
-
-	*temp++ = 228; // ä
-	*temp++ = 224; // à
-	*temp++ = 225; // á
-	*temp++ = 226; // â
-	*temp++ = 231; // ç
-	*temp++ = 235; // ë
-	*temp++ = 232; // è
-	*temp++ = 233; // é
-	*temp++ = 234; // ê
-	*temp++ = 239; // ï				160
-	*temp++ = 246; // ö
-	*temp++ = 242; // ò
-	*temp++ = 243; // ó
-	*temp++ = 244; // ô
-	*temp++ = 252; // ü
-	*temp++ = 249; // ù
-	*temp++ = 250; // ú
-	*temp++ = 251; // û
-	*temp++ = 204; // Ì
-	*temp++ = 206; // Î				170
-	*temp++ = 236; // ì
-	*temp++ = 238; // î
-
-#else
-// Windows Code Page 1252 Western Standard Character Set
-
-	*temp++ = 193; // "A" acute
-	*temp++ = 192; // "A" grave
-	*temp++ = 193; // "A" circumflex
-	*temp++ = 196; // "A" umlaut
-	*temp++ = 195; // "A" tilde
-	*temp++ = 197; // "A" ring
-	*temp++ = 199; // "C" cedile
-	*temp++ = 201; // "E" acute
-	*temp++ = 200; // "E" grave
-	*temp++ = 202; // "E" circumflex
-	*temp++ = 203; // "E" umlaut
-	*temp++ = 205; // "I" acute
-	*temp++ = 204; // "I" grave
-	*temp++ = 206; // "I" circumflex
-	*temp++ = 207; // "I" umlaut
-	*temp++ = 209; // "N" tilde
-	*temp++ = 211; // "O" acute
-	*temp++ = 210; // "O" grave
-	*temp++ = 212; // "O" circumflex
-	*temp++ = 214; // "O" umlaut
-	*temp++ = 213; // "O" tilde
-	*temp++ = 216; // "0" O strike-through
-	*temp++ = 218; // "U" acute
-	*temp++ = 217; // "U" grave
-	*temp++ = 219; // "U" circumflex
-	*temp++ = 220; // "U" umlaut
-	*temp++ = 221; // "Y" acute
-	*temp++ = 225; // "a" acute
-	*temp++ = 224; // "a" grave
-	*temp++ = 226; // "a" circumflex
-	*temp++ = 228; // "a" umlaut
-	*temp++ = 227; // "a" tilde
-	*temp++ = 229; // "a" ring
-	*temp++ = 231; // "c" cedile
-	*temp++ = 233; // "e" acute
-	*temp++ = 232; // "e" grave
-	*temp++ = 234; // "e" circumflex
-	*temp++ = 235; // "e" umlaut
-	*temp++ = 237; // "i" acute
-	*temp++ = 236; // "i" grave
-	*temp++ = 238; // "i" circumflex
-	*temp++ = 239; // "i" umlaut
-	*temp++ = 241; // "n" tilde
-	*temp++ = 243; // "o" acute
-	*temp++ = 242; // "o" grave
-	*temp++ = 244; // "o" circumflex
-	*temp++ = 246; // "o" umlaut
-	*temp++ = 245; // "o" tilde
-	*temp++ = 248; // "o" strike-through
-	*temp++ = 250; // "u" acute
-	*temp++ = 249; // "u" grave
-	*temp++ = 251; // "u" circumflex
-	*temp++ = 252; // "u" umlaut
-	*temp++ = 254; // "y" acute
-	*temp++ = 255; // "y" umlaut
-	*temp++ = 223; // beta
-
-// Font glyphs for spell targeting icons
-	//ATE: IMPORTANT! INcreate the array above if you add any new items here...
-	*temp++ = FONT_GLYPH_TARGET_POINT;
-	*temp++ = FONT_GLYPH_TARGET_CONE;
-	*temp++ = FONT_GLYPH_TARGET_SINGLE;
-	*temp++ = FONT_GLYPH_TARGET_GROUP;
-	*temp++ = FONT_GLYPH_TARGET_NONE;
-
-// 154
-#endif
 }

@@ -77,8 +77,6 @@ void SetFontForeground(UINT8 ubForeground);
 void SetFontBackground(UINT8 ubBackground);
 void SetFontShadow(UINT8 ubBackground);
 
-void DestroyEnglishTransTable( void );
-
 extern HVOBJECT	 GetFontObject(INT32 iFont);
 extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 extern UINT32		 mprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);

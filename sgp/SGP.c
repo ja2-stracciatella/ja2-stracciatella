@@ -223,7 +223,6 @@ static void ShutdownStandardGamingPlatform(void)
   ShutdownSoundManager();
 #endif
 
-	DestroyEnglishTransTable( );    // has to go before ShutdownFontManager()
   ShutdownFontManager();
 
 #ifdef SGP_VIDEO_DEBUGGING
