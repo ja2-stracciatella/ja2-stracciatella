@@ -11,9 +11,10 @@
 #include "LibraryDataBase.h"
 #include "Random.h"
 #include "SoundMan.h"
+#include "Timer.h"
 #include <SDL.h>
 #include <assert.h>
-#include "Stubs.h" // XXX
+
 
 // Uncomment this to disable the startup of sound hardware
 //#define SOUND_DISABLE
@@ -387,9 +388,8 @@ UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 	else
 		Sample->uiMaxInstances = pParms->uiMaxInstances;
 
-	UINT32 uiTicks = GetTickCount();
 	Sample->uiTimeNext =
-		GetTickCount() +
+		GetClock() +
 		Sample->uiTimeMin +
 		Random(Sample->uiTimeMax - Sample->uiTimeMin);
 
@@ -638,11 +638,10 @@ BOOLEAN SoundServiceRandom(void)
 //*******************************************************************************
 static BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 {
-	UINT32 uiTicks = GetTickCount();
 	SAMPLETAG* Sample = &pSampleList[uiSample];
 	return
 		Sample->uiFlags & SAMPLE_RANDOM &&
-		Sample->uiTimeNext <= GetTickCount() &&
+		Sample->uiTimeNext <= GetClock() &&
 		Sample->uiInstances < Sample->uiMaxInstances;
 }
 
@@ -671,7 +670,7 @@ static UINT32 SoundStartRandom(UINT32 uiSample)
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
 
 	Sample->uiTimeNext =
-		GetTickCount() +
+		GetClock() +
 		Sample->uiTimeMin +
 		Random(Sample->uiTimeMax - Sample->uiTimeMin);
 	return uiSoundID;
@@ -813,7 +812,7 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 
 	SOUNDTAG* Sound = &pSoundList[uiSound];
 
-	UINT32 uiTime = GetTickCount();
+	UINT32 uiTime = GetClock();
 	// check for rollover
 	UINT32 uiPosition;
 	if (uiTime < Sound->uiTimeStamp)
@@ -1486,7 +1485,7 @@ static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPAR
 	UINT32 uiSoundID = SoundGetUniqueID();
 	Sound->uiSoundID    = uiSoundID;
 	Sound->pSample      = Sample;
-	Sound->uiTimeStamp  = GetTickCount();
+	Sound->uiTimeStamp  = GetClock();
 	Sound->Pos          = 0;
 	Sound->State        = CHANNEL_PLAY;
 
@@ -1566,7 +1565,7 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 		Sound->pCallbackData = NULL;
 	}
 
-	Sound->uiTimeStamp  = GetTickCount();
+	Sound->uiTimeStamp  = GetClock();
 	Sound->uiFadeVolume = SoundGetVolumeIndex(uiChannel);
 
 	return uiSoundID;

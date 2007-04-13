@@ -14,6 +14,7 @@
 #	include "Gameloop.h"
 #	include "Input.h"
 #endif
+#include "Timer.h"
 #include "VObject.h"
 #include "Stubs.h" // XXX
 
@@ -92,7 +93,7 @@ void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFil
 {
 	UINT8 ubOutputString[512];
 
-	sprintf( ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetTickCount(), pString, uiLineNum, pSourceFile );
+	sprintf(ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetClock(), pString, uiLineNum, pSourceFile);
 
 	if (gfRecordToDebugger)
 	{
@@ -117,9 +118,9 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 {
 	char ubOutputString[512];
 	if (pString != NULL)
-		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]: %s\n", GetTickCount(), uiLineNum, pSourceFile, pString);
+		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]: %s\n", GetClock(), uiLineNum, pSourceFile, pString);
 	else
-		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetTickCount(), uiLineNum, pSourceFile);
+		sprintf(ubOutputString, "{ %ld } Assertion Failure [Line %d in %s]\n", GetClock(), uiLineNum, pSourceFile);
 
 	//Output to debugger
 	if (gfRecordToDebugger)

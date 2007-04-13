@@ -8,6 +8,7 @@
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
 #include "SGP.h"
+#include "Timer.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "VObject_Blitters.h"
@@ -681,7 +682,7 @@ void RefreshScreen(void)
 
 	if (gfVideoCapture)
 	{
-		UINT32 uiTime = GetTickCount();
+		UINT32 uiTime = GetClock();
 		if (uiTime < guiLastFrame || uiTime > guiLastFrame + guiFramePeriod)
 		{
 			SnapshotSmall();
@@ -1075,7 +1076,7 @@ void VideoCaptureToggle(void)
 		{
 			gpFrameData[cnt] = MemAlloc(640 * 480 * 2);
 		}
-		guiLastFrame = GetTickCount();
+		guiLastFrame = GetClock();
 	}
 	else
 	{

@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "MemMan.h"
 #include "English.h"
+#include "Timer.h"
 #include "Video.h"
 #include "Local.h"
 #include "Stubs.h" // XXX
@@ -157,13 +158,13 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 	switch (BtnEv->button)
 	{
 		case SDL_BUTTON_LEFT:
-			guiLeftButtonRepeatTimer = GetTickCount() + BUTTON_REPEAT_TIMEOUT;
+			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfLeftButtonState = TRUE;
 			QueueMouseEvent(LEFT_BUTTON_DOWN);
 			break;
 
 		case SDL_BUTTON_RIGHT:
-			guiRightButtonRepeatTimer = GetTickCount() + BUTTON_REPEAT_TIMEOUT;
+			guiRightButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfRightButtonState = TRUE;
 			QueueMouseEvent(RIGHT_BUTTON_DOWN);
 			break;
@@ -181,7 +182,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 			guiLeftButtonRepeatTimer = 0;
 			gfLeftButtonState = FALSE;
 			QueueMouseEvent(LEFT_BUTTON_UP);
-			UINT32 uiTimer = GetTickCount();
+			UINT32 uiTimer = GetClock();
 			if (uiTimer - guiSingleClickTimer < DBL_CLK_TIME)
 			{
 				QueueMouseEvent(LEFT_BUTTON_DBL_CLK);
@@ -436,7 +437,7 @@ void DequeueAllKeyBoardEvents(void)
 
 static void HandleSingleClicksAndButtonRepeats(void)
 {
-	UINT32 uiTimer = GetTickCount();
+	UINT32 uiTimer = GetClock();
 
 	// Is there a LEFT mouse button repeat
 	if (gfLeftButtonState)
