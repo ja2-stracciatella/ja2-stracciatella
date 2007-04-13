@@ -69,7 +69,6 @@ enum
 #define MAX_FILES_LIST_LENGTH						28
 #define FILE_VIEWER_X										236
 #define FILE_VIEWER_Y										85
-#define FILE_VIEWER_WIDTH								598 - 240
 #define FILE_GAP												2
 #define FILE_TEXT_COLOR									FONT_BLACK
 #define FILE_STRING_SIZE								400
@@ -235,9 +234,6 @@ void EnterFiles(void)
 	// load grpahics for files system
 	LoadFiles( );
 
-	//AddFilesToPlayersLog(1, 0,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
-	//AddFilesToPlayersLog(0, 3,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
-	//AddFilesToPlayersLog(2, 1,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
   // in files mode now, set the fact
 	fInFilesMode=TRUE;
 
@@ -780,107 +776,6 @@ static BOOLEAN DisplayFormattedText(void)
 
   switch( pFilesList->ubFormat )
 	{
-	   case 0:
-
-			 // no format, all text
-
-			 while(iLength > iCounter)
-			 {
-         // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-
-		     // display string and get height
-	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-
-		     // increment file record counter
-		     iCounter++;
-			 }
-	    break;
-
-     case 1:
-
-			 // second format, one picture, all text below
-
-       // load graphic
-	     uiFirstTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[0]);
-	     CHECKF(uiFirstTempPicture != NO_VOBJECT);
-
-       GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
-
-	     BltVideoObjectFromIndex(FRAME_BUFFER, uiFirstTempPicture, 0, FILE_VIEWER_X + 4 + (FILE_VIEWER_WIDTH - usFirstWidth) / 2, FILE_VIEWER_Y + 10);
-
-			 iHeight = usFirstHeight + 20;
-
-
-			 while(iLength > iCounter)
-			 {
-
-         // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-
-		     // display string and get height
-	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-
-		     // increment file record counter
-		     iCounter++;
-			 }
-
-       // delete video object
-			 DeleteVideoObjectFromIndex( uiFirstTempPicture );
-
-		 break;
-		 case 2:
-
-			 // third format, two pictures, side by side with all text below
-
-			 // load first graphic
-	     uiFirstTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[0]);
-	     CHECKF(uiFirstTempPicture != NO_VOBJECT);
-
-			 // load second graphic
-	     uiSecondTempPicture = AddVideoObjectFromFile(pFilesList->pPicFileNameList[1]);
-	     CHECKF(uiSecondTempPicture != NO_VOBJECT);
-
-       GetVideoObjectETRLESubregionProperties( uiFirstTempPicture, 0, &usFirstWidth,  &usFirstHeight );
-			 GetVideoObjectETRLESubregionProperties( uiSecondTempPicture, 0, &usSecondWidth,  &usSecondHeight );
-
-       // get free space;
-			 usFreeSpace = FILE_VIEWER_WIDTH - usFirstWidth - usSecondWidth;
-
-			 usFreeSpace /= 3;
-
-	     BltVideoObjectFromIndex(FRAME_BUFFER, uiFirstTempPicture, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
-
-			 // get position for second picture
-			 usFreeSpace *= 2;
-			 usFreeSpace += usFirstWidth;
-
-	     BltVideoObjectFromIndex(FRAME_BUFFER, uiSecondTempPicture, 0, FILE_VIEWER_X + usFreeSpace, FILE_VIEWER_Y + 10);
-
-       // delete video object
-			 DeleteVideoObjectFromIndex(uiFirstTempPicture);
-			 DeleteVideoObjectFromIndex(uiSecondTempPicture);
-
-			 // put in text
-			  iHeight = usFirstHeight + 20;
-
-
-			 while(iLength > iCounter)
-			 {
-
-         // read one record from file manager file
-		     LoadEncryptedDataFromFile( "BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * ( iOffSet + iCounter ) * 2, FILE_STRING_SIZE * 2 );
-
-		     // display string and get height
-	       iHeight += IanDisplayWrappedString(FILE_VIEWER_X + 4, ( UINT16 )( FILE_VIEWER_Y + iHeight ), FILE_VIEWER_WIDTH, FILE_GAP, FILES_TEXT_FONT, FILE_TEXT_COLOR, sString,0,FALSE,0);
-
-		     // increment file record counter
-		     iCounter++;
-			 }
-
-
-		 break;
-
 		 case 3:
 		   // picture on the left, with text on right and below
         // load first graphic
