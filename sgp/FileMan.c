@@ -294,11 +294,9 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 	FILE*	hRealFile;
 	const char* dwAccess;
 	BOOLEAN	fExists;
-	DWORD		dwCreationFlags;
 	HWFILE hLibFile;
 
 	hFile = 0;
-	dwCreationFlags = 0;
 
 	// check if the file exists - note that we use the function FileExistsNoDB
 	// because it doesn't check the databases, and we don't want to do that here
@@ -375,6 +373,7 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 		hRealFile = fopen(strFilename, "wb");
 		if (hRealFile == NULL) return 0;
 #else
+		DWORD dwCreationFlags;
 		if ( uiOptions & FILE_CREATE_NEW )
 		{
 			dwCreationFlags = CREATE_NEW;
@@ -508,7 +507,6 @@ void FileClose( HWFILE hFile )
 BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
 	FILE* hRealFile;
-	UINT32 dwNumBytesToRead;
 	BOOLEAN	fRet = FALSE;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -517,12 +515,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 	UINT32 uiStartTime = GetJA2Clock();
 #endif
 
-	//init the variables
-	dwNumBytesToRead = 0;
-
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
-
-	dwNumBytesToRead	= (DWORD)uiBytesToRead;
 
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
@@ -532,7 +525,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 		{
 			hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-			fRet = (fread(pDest, dwNumBytesToRead, 1, hRealFile) == 1);
+			fRet = (fread(pDest, uiBytesToRead, 1, hRealFile) == 1);
 		}
 	}
 	else
@@ -547,7 +540,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
 				{
 					//read the data from the library
-					fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, dwNumBytesToRead);
+					fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, uiBytesToRead);
 				}
 			}
 		}
@@ -590,7 +583,6 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 BOOLEAN FileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 {
 	FILE* hRealFile;
-	DWORD		dwNumBytesToWrite;
 	BOOLEAN	fRet;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -601,12 +593,10 @@ BOOLEAN FileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	//if its a real file, read the data from the file
 	if( sLibraryID == REAL_FILE_LIBRARY_ID )
 	{
-		dwNumBytesToWrite = (DWORD)uiBytesToWrite;
-
 		//get the real file handle to the file
 		hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[ uiFileNum ].hRealFileHandle;
 
-		fRet = (fwrite(pDest, dwNumBytesToWrite, 1, hRealFile) == 1);
+		fRet = (fwrite(pDest, uiBytesToWrite, 1, hRealFile) == 1);
 	}
 	else
 	{

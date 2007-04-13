@@ -30,8 +30,6 @@ public:
     void GetColorTable (RGBQUAD* prgb);
 
 protected:
-    int GetLeftShiftCount (DWORD dwVal);
-    int GetRightShiftCount (DWORD dwVal);
     void AddColor (NODE** ppNode, BYTE r, BYTE g, BYTE b, UINT nColorBits,
         UINT nLevel, UINT* pLeafCount, NODE** pReducibleNodes);
     NODE* CreateNode (UINT nLevel, UINT nColorBits, UINT* pLeafCount,

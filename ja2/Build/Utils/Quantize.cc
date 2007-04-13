@@ -46,26 +46,6 @@ BOOLEAN CQuantizer::ProcessImage(BYTE* pData, int iWidth, int iHeight)
     return TRUE;
 }
 
-int CQuantizer::GetLeftShiftCount (DWORD dwVal)
-{
-    int nCount = 0;
-    for (int i=0; i<sizeof (DWORD) * 8; i++) {
-        if (dwVal & 1)
-            nCount++;
-        dwVal >>= 1;
-    }
-    return (8 - nCount);
-}
-
-int CQuantizer::GetRightShiftCount (DWORD dwVal)
-{
-    for (int i=0; i<sizeof (DWORD) * 8; i++) {
-        if (dwVal & 1)
-            return i;
-        dwVal >>= 1;
-    }
-    return -1;
-}
 
 void CQuantizer::AddColor (NODE** ppNode, BYTE r, BYTE g, BYTE b,
     UINT nColorBits, UINT nLevel, UINT* pLeafCount, NODE** pReducibleNodes)

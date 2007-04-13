@@ -3,8 +3,6 @@
 
 #include "Types.h"
 
-typedef unsigned long DWORD;
-
 
 typedef struct
 {
