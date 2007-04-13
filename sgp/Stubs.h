@@ -5,8 +5,6 @@
 
 typedef unsigned long DWORD;
 
-typedef long LONG;
-
 
 typedef struct
 {

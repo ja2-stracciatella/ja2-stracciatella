@@ -646,7 +646,6 @@ BOOLEAN FileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 {
 	FILE* hRealFile;
-	LONG		lDistanceToMove;
 	int dwMoveMethod;
 	INT32		iDistance=0;
 
@@ -673,8 +672,6 @@ BOOLEAN FileSeek( HWFILE hFile, UINT32 uiDistance, UINT8 uiHow )
 		}
 		else
 			dwMoveMethod = SEEK_CUR;
-
-		lDistanceToMove = (LONG)uiDistance;
 
 		if (fseek(hRealFile, iDistance, dwMoveMethod) != 0)
 			return(FALSE);
