@@ -314,9 +314,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 }
 
 
-
-
-BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead, UINT32 *pBytesRead )
+BOOLEAN LoadDataFromLibrary(INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead)
 {
 	UINT32	uiOffsetInLibrary, uiLength;
 	FILE* hLibraryFile;
@@ -336,7 +334,6 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 	//if we are trying to read more data then the size of the file, return an error
 	if( uiBytesToRead + uiCurPos > uiLength )
 	{
-		*pBytesRead = 0;
 		return( FALSE );
 	}
 
@@ -345,8 +342,6 @@ BOOLEAN LoadDataFromLibrary( INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT
 		return( FALSE );
 
 	gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFilePosInFile += uiBytesToRead;
-
-	*pBytesRead = uiBytesToRead;
 
 	return( TRUE );
 }

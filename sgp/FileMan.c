@@ -508,7 +508,7 @@ void FileClose( HWFILE hFile )
 BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
 	FILE* hRealFile;
-	UINT32 dwNumBytesToRead, dwNumBytesRead;
+	UINT32 dwNumBytesToRead;
 	BOOLEAN	fRet = FALSE;
 	INT16 sLibraryID;
 	UINT32 uiFileNum;
@@ -518,7 +518,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 #endif
 
 	//init the variables
-	dwNumBytesToRead = dwNumBytesRead = 0;
+	dwNumBytesToRead = 0;
 
 	GetLibraryAndFileIDFromLibraryFileHandle( hFile, &sLibraryID, &uiFileNum );
 
@@ -547,7 +547,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID != 0 )
 				{
 					//read the data from the library
-					fRet = LoadDataFromLibrary( sLibraryID, uiFileNum, pDest, dwNumBytesToRead, &dwNumBytesRead );
+					fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, dwNumBytesToRead);
 				}
 			}
 		}
