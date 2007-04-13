@@ -20,7 +20,6 @@ typedef struct FilesUnit FilesUnit;
 struct FilesUnit
 {
 	UINT8 ubCode; // the code index in the files code table
-	UINT8 ubFormat; // layout format
 	BOOLEAN fRead;
 	FilesUnit* Next; // next unit in the list
 };
@@ -178,10 +177,10 @@ static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 static void CheckForUnreadFiles(void);
 static void OpenAndReadFilesFile(void);
 static BOOLEAN OpenAndWriteFilesFile(void);
-static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, BOOLEAN fRead);
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead);
 
 
-static void AddFilesToPlayersLog(UINT8 ubCode, UINT8 ubFormat)
+static void AddFilesToPlayersLog(UINT8 ubCode)
 {
 	// adds Files item to player's log(Files List)
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
@@ -191,7 +190,7 @@ static void AddFilesToPlayersLog(UINT8 ubCode, UINT8 ubFormat)
    OpenAndReadFilesFile( );
 
 	// process the actual data
-	ProcessAndEnterAFilesRecord(ubCode, ubFormat, FALSE);
+	ProcessAndEnterAFilesRecord(ubCode, FALSE);
 
 	// set unread flag, if nessacary
 	CheckForUnreadFiles( );
@@ -217,7 +216,7 @@ void GameInitFiles(void)
 	ClearFilesList( );
 
 	// add background check by RIS
-	AddFilesToPlayersLog(ENRICO_BACKGROUND, 255);
+	AddFilesToPlayersLog(ENRICO_BACKGROUND);
 }
 
 
@@ -374,7 +373,7 @@ static void RemoveFiles(void)
 }
 
 
-static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, BOOLEAN fRead)
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead)
 {
 	FilesUnit* pFiles = pFilesListHead;
 
@@ -405,7 +404,6 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, BOOLEAN fR
 		pFiles = pFiles->Next;
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
-		pFiles->ubFormat = ubFormat;
 		pFiles->fRead = fRead;
 	}
 	else
@@ -417,7 +415,6 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, BOOLEAN fR
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
 	  pFilesListHead = pFiles;
-		pFiles->ubFormat=ubFormat;
 		pFiles -> fRead = fRead;
 	}
 }
@@ -429,7 +426,6 @@ static void OpenAndReadFilesFile(void)
   HWFILE hFileHandle;
   UINT8 ubCode;
   UINT32 uiByteCount=0;
-  UINT8 ubFormat;
 	BOOLEAN fRead;
 
 	// clear out the old list
@@ -461,11 +457,10 @@ static void OpenAndReadFilesFile(void)
 
 		// read in data
     FileRead(hFileHandle, &ubCode,          sizeof(UINT8));
-		FileSeek(hFileHandle, 4 + 128 + 128, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
-		FileRead(hFileHandle, &ubFormat,        sizeof(UINT8));
+		FileSeek(hFileHandle, 4 + 128 + 128 + 1, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
 		FileRead(hFileHandle, &fRead,           sizeof(UINT8));
 		// add transaction
-	  ProcessAndEnterAFilesRecord(ubCode, ubFormat, fRead);
+	  ProcessAndEnterAFilesRecord(ubCode, fRead);
 
 		// increment byte counter
 	  uiByteCount += sizeof( UINT32 ) + sizeof( UINT8 )+ 128 + 128 + sizeof(UINT8) + sizeof( BOOLEAN );
@@ -491,7 +486,7 @@ static BOOLEAN OpenAndWriteFilesFile(void)
 		return ( FALSE );
   }
 
-	BYTE Zeroes[4 + 128 + 128];
+	BYTE Zeroes[4 + 128 + 128 + 1];
 	memset(Zeroes, 0, sizeof(Zeroes));
 
   // write info, while there are elements left in the list
@@ -500,7 +495,6 @@ static BOOLEAN OpenAndWriteFilesFile(void)
     	// now write date and amount, and code
 		FileWrite(hFileHandle, &pFilesList->ubCode,   sizeof(UINT8));
 		FileWrite(hFileHandle, Zeroes, sizeof(Zeroes)); // XXX HACK000B
-		FileWrite(hFileHandle, &pFilesList->ubFormat, sizeof(UINT8));
 		FileWrite(hFileHandle, &pFilesList->fRead,    sizeof(UINT8));
 
 		// next element in list
@@ -697,31 +691,16 @@ static BOOLEAN DisplayFormattedText(void)
 
 	iLength = ubFileRecordsLength[pFilesList->ubCode];
 
-	#if 0 /* XXX */
-	if( pFilesList->ubFormat < ENRICO_BACKGROUND )
-	{
-
-	  LoadEncryptedDataFromFile("BINARYDATA/Files.edt", sString, FILE_STRING_SIZE * (iOffSet) * 2, FILE_STRING_SIZE * iLength * 2);
-	}
-	#endif
-
 	// reset counter
 	iCounter=0;
 
 	// no shadow
 	SetFontShadow(NO_SHADOW);
 
-  switch( pFilesList->ubFormat )
+	switch (pFilesList->ubCode)
 	{
-		 case 3:
-		   // picture on the left, with text on right and below
-        // load first graphic
-			HandleSpecialTerroristFile(pFilesList->ubCode);
-		 break;
-		 default:
-			HandleSpecialFiles();
-     break;
-
+		case ENRICO_BACKGROUND: HandleSpecialFiles();                           break;
+		default:                HandleSpecialTerroristFile(pFilesList->ubCode); break;
 	}
 
 	HandleFileViewerButtonStates( );
@@ -1537,7 +1516,7 @@ BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
 		if( usProfileIdsForTerroristFiles[ iCounter ] == iProfileId )
 		{
 			// checked, and this file is there
-			AddFilesToPlayersLog(iCounter, 3);
+			AddFilesToPlayersLog(iCounter);
 				return( TRUE );
 		}
 	}
