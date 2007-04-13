@@ -21,7 +21,6 @@ struct FilesUnit
 {
 	UINT8 ubCode; // the code index in the files code table
 	UINT8 ubFormat; // layout format
-	UINT32 uiDate; // time in the world in global time (resolution, minutes)
 	BOOLEAN fRead;
 	char* pPicFileNameList[2];
 	FilesUnit* Next; // next unit in the list
@@ -181,10 +180,10 @@ static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 static void CheckForUnreadFiles(void);
 static void OpenAndReadFilesFile(void);
 static BOOLEAN OpenAndWriteFilesFile(void);
-static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead);
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead);
 
 
-static void AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile)
+static void AddFilesToPlayersLog(UINT8 ubCode, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile)
 {
 	// adds Files item to player's log(Files List)
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
@@ -194,7 +193,7 @@ static void AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, co
    OpenAndReadFilesFile( );
 
 	// process the actual data
-  ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat ,pFirstPicFile, pSecondPicFile, FALSE);
+	ProcessAndEnterAFilesRecord(ubCode, ubFormat, pFirstPicFile, pSecondPicFile, FALSE);
 
 	// set unread flag, if nessacary
 	CheckForUnreadFiles( );
@@ -220,7 +219,7 @@ void GameInitFiles(void)
 	ClearFilesList( );
 
 	// add background check by RIS
-	AddFilesToPlayersLog( ENRICO_BACKGROUND, 0,255, NULL, NULL );
+	AddFilesToPlayersLog(ENRICO_BACKGROUND, 255, NULL, NULL);
 }
 
 
@@ -236,9 +235,9 @@ void EnterFiles(void)
 	// load grpahics for files system
 	LoadFiles( );
 
-	//AddFilesToPlayersLog(1, 0, 0,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
-	//AddFilesToPlayersLog(0, 0, 3,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
-  //AddFilesToPlayersLog(2, 0, 1,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
+	//AddFilesToPlayersLog(1, 0,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
+	//AddFilesToPlayersLog(0, 3,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
+	//AddFilesToPlayersLog(2, 1,"LAPTOP/portrait.sti", "LAPTOP/portrait.sti");
   // in files mode now, set the fact
 	fInFilesMode=TRUE;
 
@@ -380,7 +379,7 @@ static void RemoveFiles(void)
 }
 
 
-static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
 {
 	FilesUnit* pFiles = pFilesListHead;
 
@@ -411,7 +410,6 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFor
 		pFiles = pFiles->Next;
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
-		pFiles->uiDate = uiDate;
 		pFiles->ubFormat = ubFormat;
 		pFiles->fRead = fRead;
 	}
@@ -423,7 +421,6 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFor
 		// setup info passed
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
-		pFiles->uiDate = uiDate;
 	  pFilesListHead = pFiles;
 		pFiles->ubFormat=ubFormat;
 		pFiles -> fRead = fRead;
@@ -465,7 +462,6 @@ static void OpenAndReadFilesFile(void)
   // this procedure will open and read in data to the finance list
   HWFILE hFileHandle;
   UINT8 ubCode;
-	UINT32 uiDate;
   UINT32 uiByteCount=0;
   CHAR8 pFirstFilePath[128];
   CHAR8 pSecondFilePath[128];
@@ -501,13 +497,13 @@ static void OpenAndReadFilesFile(void)
 
 		// read in data
     FileRead(hFileHandle, &ubCode,          sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,          sizeof(UINT32));
+		FileSeek(hFileHandle, 4, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
     FileRead(hFileHandle, &pFirstFilePath,  128);
     FileRead(hFileHandle, &pSecondFilePath, 128);
 		FileRead(hFileHandle, &ubFormat,        sizeof(UINT8));
 		FileRead(hFileHandle, &fRead,           sizeof(UINT8));
 		// add transaction
-	  ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat,pFirstFilePath, pSecondFilePath, fRead);
+	  ProcessAndEnterAFilesRecord(ubCode, ubFormat, pFirstFilePath, pSecondFilePath, fRead);
 
 		// increment byte counter
 	  uiByteCount += sizeof( UINT32 ) + sizeof( UINT8 )+ 128 + 128 + sizeof(UINT8) + sizeof( BOOLEAN );
@@ -549,12 +545,16 @@ static BOOLEAN OpenAndWriteFilesFile(void)
 	{
 		return ( FALSE );
   }
+
+	BYTE Zeroes[4];
+	memset(Zeroes, 0, sizeof(Zeroes));
+
   // write info, while there are elements left in the list
   while(pFilesList)
 	{
     	// now write date and amount, and code
 		FileWrite(hFileHandle, &pFilesList->ubCode,   sizeof(UINT8));
-		FileWrite(hFileHandle, &pFilesList->uiDate,   sizeof(UINT32));
+		FileWrite(hFileHandle, Zeroes, sizeof(Zeroes)); // XXX HACK000B
 		FileWrite(hFileHandle, &pFirstFilePath,       128);
 		FileWrite(hFileHandle, &pSecondFilePath,      128);
 		FileWrite(hFileHandle, &pFilesList->ubFormat, sizeof(UINT8));
@@ -1710,7 +1710,7 @@ BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
 		if( usProfileIdsForTerroristFiles[ iCounter ] == iProfileId )
 		{
 			// checked, and this file is there
-				AddFilesToPlayersLog( ( UINT8 )iCounter, 0, 3, NULL, NULL );
+			AddFilesToPlayersLog(iCounter, 3, NULL, NULL);
 				return( TRUE );
 		}
 	}
