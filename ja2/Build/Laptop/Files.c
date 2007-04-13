@@ -713,7 +713,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static BOOLEAN HandleSpecialFiles(UINT8 ubFormat);
-static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName);
+static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber);
 
 
 static BOOLEAN DisplayFormattedText(void)
@@ -884,7 +884,7 @@ static BOOLEAN DisplayFormattedText(void)
 		 case 3:
 		   // picture on the left, with text on right and below
         // load first graphic
-			 HandleSpecialTerroristFile( pFilesList->ubCode, pFilesList->pPicFileNameList[ 0 ] );
+			HandleSpecialTerroristFile(pFilesList->ubCode);
 		 break;
 		 default:
 			 HandleSpecialFiles( pFilesList -> ubFormat );
@@ -1551,7 +1551,7 @@ static void CheckForUnreadFiles(void)
 }
 
 
-static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
+static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 {
 
 	INT32 iCounter = 0;
