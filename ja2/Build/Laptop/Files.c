@@ -21,7 +21,6 @@ struct FilesUnit
 {
 	UINT8 ubCode; // the code index in the files code table
 	UINT8 ubFormat; // layout format
-	UINT32 uiIdNumber; // unique id number
 	UINT32 uiDate; // time in the world in global time (resolution, minutes)
 	BOOLEAN fRead;
 	char* pPicFileNameList[2];
@@ -182,21 +181,20 @@ static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 static void CheckForUnreadFiles(void);
 static void OpenAndReadFilesFile(void);
 static BOOLEAN OpenAndWriteFilesFile(void);
-static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead);
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead);
 
 
-static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile)
+static void AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile)
 {
-	// adds Files item to player's log(Files List), returns unique id number of it
+	// adds Files item to player's log(Files List)
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
-  UINT32 uiId=0;
 
 	// if not in Files mode, read in from file
 	if(!fInFilesMode)
    OpenAndReadFilesFile( );
 
 	// process the actual data
-  uiId = ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat ,pFirstPicFile, pSecondPicFile, FALSE );
+  ProcessAndEnterAFilesRecord(ubCode, uiDate, ubFormat ,pFirstPicFile, pSecondPicFile, FALSE);
 
 	// set unread flag, if nessacary
 	CheckForUnreadFiles( );
@@ -204,9 +202,6 @@ static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, 
 	// write out to file if not in Files mode
 	if(!fInFilesMode)
    OpenAndWriteFilesFile( );
-
-	// return unique id of this transaction
-	return uiId;
 }
 
 
@@ -385,9 +380,8 @@ static void RemoveFiles(void)
 }
 
 
-static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
+static void ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
 {
-  UINT32 uiId=0;
 	FilesUnit* pFiles = pFilesListHead;
 
  	// add to Files list
@@ -396,11 +390,7 @@ static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubF
 		while(pFiles)
 		{
       // check to see if the file is already there
-			if(pFiles->ubCode==ubCode)
-			{
-				// if so, return it's id number
-				return ( pFiles->uiIdNumber );
-			}
+			if (pFiles->ubCode == ubCode) return;
 
 			// next in the list
 			pFiles = pFiles->Next;
@@ -417,15 +407,11 @@ static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubF
 		// alloc space
 		pFiles->Next = MemAlloc(sizeof(FilesUnit));
 
-		// increment id number
-		uiId = pFiles->uiIdNumber + 1;
-
 		// set up information passed
 		pFiles = pFiles->Next;
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
 		pFiles->uiDate = uiDate;
-    pFiles->uiIdNumber = uiId;
 		pFiles->ubFormat = ubFormat;
 		pFiles->fRead = fRead;
 	}
@@ -438,7 +424,6 @@ static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubF
 		pFiles->Next = NULL;
 		pFiles->ubCode = ubCode;
 		pFiles->uiDate = uiDate;
-    pFiles->uiIdNumber = uiId;
 	  pFilesListHead = pFiles;
 		pFiles->ubFormat=ubFormat;
 		pFiles -> fRead = fRead;
@@ -472,9 +457,6 @@ static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubF
 			pFiles->pPicFileNameList[1][ strlen( pSecondPicFile ) ] = 0;
 		}
 	}
-
-	// return unique id
-	return uiId;
 }
 
 
