@@ -16,20 +16,59 @@
 #include "FileMan.h"
 
 
+typedef struct FilesUnit FilesUnit;
+struct FilesUnit
+{
+	UINT8 ubCode; // the code index in the files code table
+	UINT8 ubFormat; // layout format
+	UINT32 uiIdNumber; // unique id number
+	UINT32 uiDate; // time in the world in global time (resolution, minutes)
+	BOOLEAN fRead;
+	char* pPicFileNameList[2];
+	FilesUnit* Next; // next unit in the list
+};
+
+
+typedef struct FileString FileString;
+struct FileString
+{
+	wchar_t* pString;
+	FileString* Next;
+};
+
+
+typedef struct FileRecordWidth FileRecordWidth;
+struct FileRecordWidth
+{
+	INT32 iRecordNumber;
+	INT32 iRecordWidth;
+	INT32 iRecordHeightAdjustment;
+	UINT8 ubFlags;
+	FileRecordWidth* Next;
+};
+
+
+enum
+{
+	ENRICO_BACKGROUND = 0,
+	SLAY_BACKGROUND,
+	MATRON_BACKGROUND,
+	IMPOSTER_BACKGROUND,
+	TIFFANY_BACKGROUND,
+	REXALL_BACKGROUND,
+	ELGIN_BACKGROUND
+};
+
+
 #define TOP_X														0+LAPTOP_SCREEN_UL_X
 #define TOP_Y														LAPTOP_SCREEN_UL_Y
-#define BLOCK_FILE_HEIGHT								10
-#define BOX_HEIGHT											14
 #define TITLE_X													140
 #define TITLE_Y													33
-#define TEXT_X													140
-#define PAGE_SIZE												22
 #define FILES_TITLE_FONT								FONT14ARIAL
 #define FILES_TEXT_FONT									FONT10ARIAL//FONT12ARIAL
 #define BLOCK_HEIGHT										10
 #define FILES_SENDER_TEXT_X							TOP_X + 15
 #define MAX_FILES_LIST_LENGTH						28
-#define NUMBER_OF_FILES_IN_FILE_MANAGER 20
 #define FILE_VIEWER_X										236
 #define FILE_VIEWER_Y										85
 #define FILE_VIEWER_WIDTH								598 - 240
@@ -42,7 +81,6 @@
 #define FILES_LIST_WIDTH								100
 #define LENGTH_OF_ENRICO_FILE						68
 #define MAX_FILE_MESSAGE_PAGE_SIZE			325
-#define VIEWER_MESSAGE_BODY_START_Y			FILES_LIST_Y
 #define PREVIOUS_FILE_PAGE_BUTTON_X			553
 #define PREVIOUS_FILE_PAGE_BUTTON_Y			53
 #define NEXT_FILE_PAGE_BUTTON_X					577
@@ -58,38 +96,39 @@ INT32 iHighLightFileLine=-1;
 
 
 // the files record list
-FilesUnitPtr pFilesListHead=NULL;
+static FilesUnit* pFilesListHead = NULL;
 
-FileStringPtr pFileStringList = NULL;
+static FileString* pFileStringList = NULL;
 
 // are we in files mode
-BOOLEAN fInFilesMode=FALSE;
-BOOLEAN fOnLastFilesPageFlag = FALSE;
+static BOOLEAN fInFilesMode=FALSE;
+static BOOLEAN fOnLastFilesPageFlag = FALSE;
 
 
 //. did we enter due to new file icon?
 BOOLEAN fEnteredFileViewerFromNewFileIcon = FALSE;
-BOOLEAN fWaitAFrame = FALSE;
+static BOOLEAN fWaitAFrame = FALSE;
 
 // are there any new files
 BOOLEAN fNewFilesInFileViewer = FALSE;
 
 // graphics handles
-UINT32 guiTITLE;
-UINT32 guiFileBack;
-UINT32 guiTOP;
-UINT32 guiHIGHLIGHT;
+static UINT32 guiTITLE;
+static UINT32 guiFileBack;
+static UINT32 guiTOP;
+static UINT32 guiHIGHLIGHT;
 
 
 // currewnt page of multipage files we are on
-INT32 giFilesPage = 0;
+static INT32 giFilesPage = 0;
 // strings
 
 #define SLAY_LENGTH 12
 #define ENRICO_LENGTH 0
 
 
-UINT8 ubFileRecordsLength[]={
+static const UINT8 ubFileRecordsLength[] = 
+{
 	ENRICO_LENGTH,
 	SLAY_LENGTH,
 	SLAY_LENGTH,
@@ -99,7 +138,9 @@ UINT8 ubFileRecordsLength[]={
 	SLAY_LENGTH,
 };
 
-UINT16 ubFileOffsets[]={
+
+static const UINT16 ubFileOffsets[] =
+{
 	0,
 	ENRICO_LENGTH,
 	SLAY_LENGTH + ENRICO_LENGTH,
@@ -110,7 +151,8 @@ UINT16 ubFileOffsets[]={
 };
 
 
-UINT16 usProfileIdsForTerroristFiles[]={
+static const UINT16 usProfileIdsForTerroristFiles[] =
+{
 	0, // no body
 	112, // elgin
 	64, // slay
@@ -120,9 +162,11 @@ UINT16 usProfileIdsForTerroristFiles[]={
 	111, // t-rex
 	112, // elgin
 };
+
+
 // buttons for next and previous pages
-UINT32 giFilesPageButtons[ 2 ];
-UINT32 giFilesPageButtonsImage[ 2 ];
+static UINT32 giFilesPageButtons[2];
+static UINT32 giFilesPageButtonsImage[2];
 
 
 // the previous and next pages buttons
@@ -132,7 +176,7 @@ enum{
 	NEXT_FILES_PAGE_BUTTON,
 };
 // mouse regions
-MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
+static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 
 
 static void CheckForUnreadFiles(void);
@@ -169,7 +213,7 @@ static UINT32 AddFilesToPlayersLog(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, 
 static void ClearFilesList(void);
 
 
-void GameInitFiles( )
+void GameInitFiles(void)
 {
 
 	if (  (FileExists( FILES_DAT_FILE ) == TRUE ) )
@@ -192,7 +236,7 @@ static BOOLEAN LoadFiles(void);
 static void OpenFirstUnreadFile(void);
 
 
-void EnterFiles()
+void EnterFiles(void)
 {
 	// load grpahics for files system
 	LoadFiles( );
@@ -232,7 +276,7 @@ static void RemoveFiles(void);
 static void RemoveFilesMouseRegions(void);
 
 
-void ExitFiles()
+void ExitFiles(void)
 {
 
 	// write files list out to disk
@@ -250,7 +294,8 @@ void ExitFiles()
 	RemoveFiles( );
 }
 
-void HandleFiles()
+
+void HandleFiles(void)
 {
 	CheckForUnreadFiles( );
 }
@@ -262,7 +307,7 @@ static void DrawFilesTitleText(void);
 static void RenderFilesBackGround(void);
 
 
-void RenderFiles()
+void RenderFiles(void)
 {
 	// render the background
 	RenderFilesBackGround(  );
@@ -343,7 +388,7 @@ static void RemoveFiles(void)
 static UINT32 ProcessAndEnterAFilesRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubFormat, const char* pFirstPicFile, const char* pSecondPicFile, BOOLEAN fRead)
 {
   UINT32 uiId=0;
-  FilesUnitPtr pFiles=pFilesListHead;
+	FilesUnit* pFiles = pFilesListHead;
 
  	// add to Files list
 	if(pFiles)
@@ -495,7 +540,7 @@ static BOOLEAN OpenAndWriteFilesFile(void)
 {
   // this procedure will open and write out data from the finance list
   HWFILE hFileHandle;
-  FilesUnitPtr pFilesList=pFilesListHead;
+	FilesUnit* pFilesList = pFilesListHead;
 	CHAR8 pFirstFilePath[128];
   CHAR8 pSecondFilePath[128];
 
@@ -550,8 +595,8 @@ static BOOLEAN OpenAndWriteFilesFile(void)
 static void ClearFilesList(void)
 {
 	// remove each element from list of transactions
-  FilesUnitPtr pFilesList=pFilesListHead;
-  FilesUnitPtr pFilesNode=pFilesList;
+	FilesUnit* pFilesList = pFilesListHead;
+	FilesUnit* pFilesNode = pFilesList;
 
 	// while there are elements in the list left, delete them
 	while( pFilesList )
@@ -582,7 +627,7 @@ static void ClearFilesList(void)
 static void DisplayFilesList(void)
 {
   // this function will run through the list of files of files and display the 'sender'
-	FilesUnitPtr pFilesList=pFilesListHead;
+	FilesUnit* pFilesList = pFilesListHead;
   INT32 iCounter=0;
 
 	// font stuff
@@ -659,7 +704,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-  	FilesUnitPtr pFilesList = pFilesListHead;
+		FilesUnit* pFilesList = pFilesListHead;
 		INT32 iFileId = MSYS_GetRegionUserData(pRegion, 0);
 		INT32 iCounter = 0;
 
@@ -691,7 +736,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName);
 
 static BOOLEAN DisplayFormattedText(void)
 {
-  FilesUnitPtr pFilesList=pFilesListHead;
+	FilesUnit* pFilesList = pFilesListHead;
 
 	UINT16 usFirstWidth = 0;
 	UINT16 usFirstHeight = 0;
@@ -872,16 +917,15 @@ static BOOLEAN DisplayFormattedText(void)
 }
 
 
-static FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidthPtr WidthList )
+static FileString* GetFirstStringOnThisPage(FileString* RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
 {
 	// get the first record on this page - build pages up until this point
-
-	FileStringPtr CurrentRecord = NULL;
+	FileString* CurrentRecord = NULL;
 
 	INT32 iCurrentPositionOnThisPage = 0;
 	INT32 iCurrentPage =0;
 	INT32 iCounter =0;
-	FileRecordWidthPtr pWidthList = WidthList;
+	FileRecordWidth* pWidthList = WidthList;
 	UINT16 usCurrentWidth = usWidth;
 
 
@@ -986,23 +1030,23 @@ static FileStringPtr GetFirstStringOnThisPage( FileStringPtr RecordList, UINT32 
 
 static void AddStringToFilesList(STR16 pString);
 static void ClearFileStringList(void);
-static void ClearOutWidthRecordsList(FileRecordWidthPtr pFileRecordWidthList);
-static FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile(void);
+static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList);
+static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 
 
 static BOOLEAN HandleSpecialFiles(UINT8 ubFormat)
 {
 	INT32 iCounter = 0;
   wchar_t sString[2048];
-	FileStringPtr pTempString = NULL ;
-	FileStringPtr pLocatorString = NULL;
+	FileString* pTempString = NULL;
+	FileString* pLocatorString = NULL;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
 	UINT32 uiFlags = 0;
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
-	FileRecordWidthPtr WidthList = NULL;
+	FileRecordWidth* WidthList = NULL;
 
 
 	UINT32 uiPicture;
@@ -1195,9 +1239,8 @@ static BOOLEAN HandleSpecialFiles(UINT8 ubFormat)
 
 static void AddStringToFilesList(STR16 pString)
 {
-
-	FileStringPtr pFileString;
-  FileStringPtr pTempString = pFileStringList;
+	FileString* pFileString;
+	FileString* pTempString = pFileStringList;
 
 	// create string structure
 	pFileString = MemAlloc( sizeof( FileString ) );
@@ -1228,8 +1271,8 @@ static void AddStringToFilesList(STR16 pString)
 
 static void ClearFileStringList(void)
 {
-	FileStringPtr pFileString;
-	FileStringPtr pDeleteFileString;
+	FileString* pFileString;
+	FileString* pDeleteFileString;
 
 	pFileString = pFileStringList;
 
@@ -1365,9 +1408,9 @@ static void HandleFileViewerButtonStates(void)
 }
 
 
-static FileRecordWidthPtr CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
+static FileRecordWidth* CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
 {
-	FileRecordWidthPtr pTempRecord = NULL;
+	FileRecordWidth* pTempRecord = NULL;
 
 	// allocs and inits a width info record for the multipage file viewer...this will tell the procedure that does inital computation on which record is the start of the current page
 	// how wide special records are ( ones that share space with pictures )
@@ -1383,11 +1426,11 @@ static FileRecordWidthPtr CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWi
 }
 
 
-static FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile(void)
+static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void)
 {
 	// this fucntion will create the width list for the Arulco intelligence file
-	FileRecordWidthPtr pTempRecord = NULL;
-	FileRecordWidthPtr pRecordListHead = NULL;
+	FileRecordWidth* pTempRecord = NULL;
+	FileRecordWidth* pRecordListHead = NULL;
 
 
 		// first record width
@@ -1412,11 +1455,11 @@ static FileRecordWidthPtr CreateWidthRecordsForAruloIntelFile(void)
 }
 
 
-static FileRecordWidthPtr CreateWidthRecordsForTerroristFile(void)
+static FileRecordWidth* CreateWidthRecordsForTerroristFile(void)
 {
 	// this fucntion will create the width list for the Arulco intelligence file
-	FileRecordWidthPtr pTempRecord = NULL;
-	FileRecordWidthPtr pRecordListHead = NULL;
+	FileRecordWidth* pTempRecord = NULL;
+	FileRecordWidth* pRecordListHead = NULL;
 
 
 		// first record width
@@ -1438,10 +1481,10 @@ static FileRecordWidthPtr CreateWidthRecordsForTerroristFile(void)
 }
 
 
-static void ClearOutWidthRecordsList(FileRecordWidthPtr pFileRecordWidthList)
+static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList)
 {
-	FileRecordWidthPtr pTempRecord = NULL;
-	FileRecordWidthPtr pDeleteRecord = NULL;
+	FileRecordWidth* pTempRecord = NULL;
+	FileRecordWidth* pDeleteRecord = NULL;
 
 	// set up to head of the list
 	pTempRecord = pDeleteRecord = pFileRecordWidthList;
@@ -1476,7 +1519,7 @@ static void OpenFirstUnreadFile(void)
 {
 	// open the first unread file in the list
 	INT32 iCounter = 0;
-	FilesUnitPtr pFilesList=pFilesListHead;
+	FilesUnit* pFilesList = pFilesListHead;
 
 	// make sure is a valid
 	 while( pFilesList )
@@ -1502,7 +1545,7 @@ static void CheckForUnreadFiles(void)
 	BOOLEAN	fStatusOfNewFileFlag = fNewFilesInFileViewer;
 
 	// willc heck for any unread files and set flag if any
-	FilesUnitPtr pFilesList=pFilesListHead;
+	FilesUnit* pFilesList = pFilesListHead;
 
 	fNewFilesInFileViewer = FALSE;
 
@@ -1531,15 +1574,15 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber, STR sPictureName)
 
 	INT32 iCounter = 0;
   wchar_t sString[2048];
-	FileStringPtr pTempString = NULL ;
-	FileStringPtr pLocatorString = NULL;
+	FileString* pTempString = NULL;
+	FileString* pLocatorString = NULL;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
 	UINT32 uiFlags = 0;
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
-	FileRecordWidthPtr WidthList = NULL;
+	FileRecordWidth* WidthList = NULL;
 	INT32 iOffset = 0;
 	UINT32 uiPicture;
 
