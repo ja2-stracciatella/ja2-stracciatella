@@ -177,10 +177,10 @@ typedef struct
 	INT32		iFirstData;
 	UINT32	uiSecondData;
 
-	INT32  iThirdData_UNUSED;  // XXX unused, but keep for savegame compatibility
-	INT32  iFourthData_UNUSED; // XXX unused, but keep for savegame compatibility
-	UINT32 uiFifthData_UNUSED; // XXX unused, but keep for savegame compatibility
-	UINT32 uiSixData_UNUSED;   // XXX unused, but keep for savegame compatibility
+	INT32  iThirdData_UNUSED;  // XXX HACK000B
+	INT32  iFourthData_UNUSED; // XXX HACK000B
+	UINT32 uiFifthData_UNUSED; // XXX HACK000B
+	UINT32 uiSixData_UNUSED;   // XXX HACK000B
 
 	BOOLEAN fRead;
 	BOOLEAN fNew;

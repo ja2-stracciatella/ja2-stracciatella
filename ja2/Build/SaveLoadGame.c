@@ -2702,10 +2702,10 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			SavedSoldierInfo.pTempObject	 = NULL;
 			SavedSoldierInfo.pKeyRing	 = NULL;
 			SavedSoldierInfo.p8BPPPalette	 = NULL;
-			SavedSoldierInfo.p16BPPPalette_UNUSED = NULL;
+			SavedSoldierInfo.p16BPPPalette_UNUSED = NULL; // XXX HACK000B
 			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
 			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
-			SavedSoldierInfo.pCurrentShade_UNUSED = NULL;
+			SavedSoldierInfo.pCurrentShade_UNUSED = NULL; // XXX HACK000B
 			SavedSoldierInfo.pThrowParams	 = NULL;
 			SavedSoldierInfo.pLevelNode	 = NULL;
 			SavedSoldierInfo.pExternShadowLevelNode	 = NULL;
@@ -3097,10 +3097,10 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 		SavedEmail.uiSecondData = pEmail->uiSecondData;
 		SavedEmail.fRead = pEmail->fRead;
 		SavedEmail.fNew = pEmail->fNew;
-		SavedEmail.iThirdData_UNUSED  = 0;
-		SavedEmail.iFourthData_UNUSED = 0;
-		SavedEmail.uiFifthData_UNUSED = 0;
-		SavedEmail.uiSixData_UNUSED   = 0;
+		SavedEmail.iThirdData_UNUSED  = 0; // XXX HACK000B
+		SavedEmail.iFourthData_UNUSED = 0; // XXX HACK000B
+		SavedEmail.uiFifthData_UNUSED = 0; // XXX HACK000B
+		SavedEmail.uiSixData_UNUSED   = 0; // XXX HACK000B
 
 
 		// write the email header to the saved game file

@@ -515,10 +515,10 @@ typedef struct
 
 
 	SGPPaletteEntry							*p8BPPPalette; // 4
-	UINT16											*p16BPPPalette_UNUSED; // XXX unused, but keep for savegame compatibility
+	UINT16											*p16BPPPalette_UNUSED; // XXX HACK000B
 	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 	UINT16											*pGlowShades[ 20 ]; //
-	UINT16											*pCurrentShade_UNUSED; // XXX unused, but keep for savegame compatibility
+	UINT16											*pCurrentShade_UNUSED; // XXX HACK000B
 	INT8												bMedical;
 	BOOLEAN											fBeginFade;
 	UINT8												ubFadeLevel;
