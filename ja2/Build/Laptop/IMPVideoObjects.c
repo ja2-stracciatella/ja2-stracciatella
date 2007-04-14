@@ -21,14 +21,12 @@ UINT32 guiIMPSYMBOL;
 UINT32 guiBEGININDENT;
 UINT32 guiACTIVATIONINDENT;
 UINT32 guiFRONTPAGEINDENT;
-UINT32 guiFULLNAMEINDENT;
 UINT32 guiNAMEINDENT;
 UINT32 guiNICKNAMEINDENT;
 UINT32 guiGENDERINDENT;
 UINT32 guiSMALLFRAME;
 UINT32 guiANALYSE;
 UINT32 guiATTRIBUTEGRAPH;
-UINT32 guiATTRIBUTEGRAPHBAR;
 UINT32 guiSMALLSILHOUETTE;
 UINT32 guiLARGESILHOUETTE;
 UINT32 guiPORTRAITFRAME;
@@ -38,7 +36,6 @@ UINT32 guiATTRIBUTESCREENINDENT1;
 UINT32 guiATTRIBUTESCREENINDENT2;
 UINT32 guiATTRIBUTEBAR;
 UINT32 guiBUTTON2IMAGE;
-UINT32 guiBUTTON1IMAGE;
 UINT32 guiBUTTON4IMAGE;
 UINT32 guiPORTRAITFRAME;
 UINT32 guiMAININDENT;
@@ -251,52 +248,6 @@ void DeleteAttributeGraph( void )
 static void RenderAttributeGraph(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPH, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
-BOOLEAN LoadAttributeGraphBar( void )
-{
-	// this procedure will load the activation indent into memory
-	guiATTRIBUTEGRAPHBAR = AddVideoObjectFromFile("LAPTOP/AttributegraphBar.sti");
-	CHECKF(guiATTRIBUTEGRAPHBAR != NO_VOBJECT);
-	return (TRUE) ;
-}
-
-
-void DeleteAttributeBarGraph( void )
-{
-
-  // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPHBAR );
-}
-
-
-static void RenderAttributeBarGraph(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPHBAR, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
-BOOLEAN LoadFullNameIndent( void )
-{
-	// this procedure will load the activation indent into memory
-	guiFULLNAMEINDENT = AddVideoObjectFromFile("LAPTOP/FullNameIndent.sti");
-	CHECKF(guiFULLNAMEINDENT != NO_VOBJECT);
-	return (TRUE);
-}
-
-
-void DeleteFullNameIndent( void )
-{
-
-  // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiFULLNAMEINDENT );
-}
-
-
-static void RenderFullNameIndent(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFULLNAMEINDENT, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -564,29 +515,6 @@ void DeleteButton4Image( void )
 void RenderButton4Image(INT16 sX, INT16 sY)
 {
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON4IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
-BOOLEAN LoadButton1Image( void )
-{
-	// this procedure will load the activation indent into memory
-	guiBUTTON1IMAGE = AddVideoObjectFromFile("LAPTOP/button_1.sti");
-	CHECKF(guiBUTTON1IMAGE != NO_VOBJECT);
-	return (TRUE);
-}
-
-
-void DeleteButton1Image( void )
-{
-
-  // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiBUTTON1IMAGE );
-}
-
-
-static void RenderButton1Image(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBUTTON1IMAGE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 

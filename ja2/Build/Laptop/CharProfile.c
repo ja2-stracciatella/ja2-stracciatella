@@ -506,9 +506,7 @@ static void LoadImpGraphics(void)
 	LoadFrontPageIndent( );
 	LoadAnalyse( );
 	LoadAttributeGraph( );
-	LoadAttributeGraphBar( );
 
-	LoadFullNameIndent( );
   LoadNameIndent( );
 	LoadGenderIndent( );
 	LoadNickNameIndent( );
@@ -523,7 +521,6 @@ static void LoadImpGraphics(void)
 
 	LoadButton2Image( );
 	LoadButton4Image( );
-  LoadButton1Image( );
 
 	LoadPortraitFrame( );
 	LoadMainIndentFrame( );
@@ -554,9 +551,7 @@ static void RemoveImpGraphics(void)
 	DeleteFrontPageIndent( );
 	DeleteAnalyse( );
 	DeleteAttributeGraph( );
-	DeleteAttributeBarGraph( );
 
-	DeleteFullNameIndent( );
   DeleteNameIndent( );
 	DeleteGenderIndent( );
 	DeleteNickNameIndent( );
@@ -571,7 +566,6 @@ static void RemoveImpGraphics(void)
 
 	DeleteButton2Image( );
 	DeleteButton4Image( );
-  DeleteButton1Image( );
 
 	DeletePortraitFrame( );
 	DeleteMainIndentFrame( );

@@ -33,12 +33,6 @@ void DeleteAnalyse( void );
 BOOLEAN LoadAttributeGraph( void );
 void DeleteAttributeGraph( void );
 
-BOOLEAN LoadAttributeGraphBar( void );
-void DeleteAttributeBarGraph( void );
-
-BOOLEAN LoadFullNameIndent( void );
-void DeleteFullNameIndent( void );
-
 BOOLEAN LoadNameIndent( void );
 void DeleteNameIndent( void );
 void RenderNameIndent(INT16 sX, INT16 sY);
@@ -74,9 +68,6 @@ void RenderButton2Image(INT16 sX, INT16 sY);
 BOOLEAN LoadButton4Image( void );
 void DeleteButton4Image( void );
 void RenderButton4Image(INT16 sX, INT16 sY);
-
-BOOLEAN LoadButton1Image( void );
-void DeleteButton1Image( void );
 
 BOOLEAN LoadPortraitFrame( void );
 void DeletePortraitFrame( void );
@@ -142,12 +133,10 @@ extern UINT32 guiIMPSYMBOL;
 extern UINT32 guiBEGININDENT;
 extern UINT32 guiACTIVATIONINDENT;
 extern UINT32 guiFRONTPAGEINDENT;
-extern UINT32 guiFULLNAMEINDENT;
 extern UINT32 guiGENDERINDENT;
 extern UINT32 guiSMALLFRAME;
 extern UINT32 guiANALYSE;
 extern UINT32 guiATTRIBUTEGRAPH;
-extern UINT32 guiATTRIBUTEGRAPHBAR;
 extern UINT32 guiSMALLSILHOUETTE;
 extern UINT32 guiLARGESILHOUETTE;
 extern UINT32 guiPORTRAITFRAME;
