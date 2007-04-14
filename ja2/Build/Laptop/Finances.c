@@ -22,17 +22,16 @@
 
 
 // the financial structure
-struct finance {
+typedef struct FinanceUnit FinanceUnit;
+struct FinanceUnit
+{
 	UINT8 ubCode; // the code index in the finance code table
 	UINT8 ubSecondCode; // secondary code
 	UINT32 uiDate; // time in the world in global time
 	INT32 iAmount; // the amount of the transaction
 	INT32 iBalanceToDate;
-	struct finance *Next; // next unit in the list
+	FinanceUnit* Next; // next unit in the list
 };
-
-typedef struct finance FinanceUnit;
-typedef struct finance *FinanceUnitPtr;
 
 
 // the global defines
@@ -63,7 +62,6 @@ typedef struct finance *FinanceUnitPtr;
 #define TODAYS_CURRENT_BALANCE  263 + 28
 #define TODAYS_CURRENT_FORCAST_INCOME  330
 #define TODAYS_CURRENT_FORCAST_BALANCE 354
-#define SUMMARY_NUMBERS_X
 #define FINANCE_HEADER_FONT FONT14ARIAL
 #define FINANCE_TEXT_FONT FONT12ARIAL
 #define NUM_RECORDS_PER_PAGE PAGE_SIZE
@@ -113,13 +111,13 @@ enum{
 
 
 // the financial record list
-static FinanceUnitPtr pFinanceListHead = NULL;
+static FinanceUnit* pFinanceListHead = NULL;
 
 // current page displayed
 static INT32 iCurrentPage = 0;
 
 // current financial record (the one at the top of the current page)
-static FinanceUnitPtr pCurrentFinance = NULL;
+static FinanceUnit* pCurrentFinance = NULL;
 
 // video object id's
 static UINT32 guiTITLE;
@@ -149,7 +147,6 @@ static void DrawSummaryLines(void);
 static void DrawFinanceTitleText(void);
 static void RemoveFinances(void);
 static void DrawSummaryText(void);
-INT32 GetCurrentBalance( void );
 static void ClearFinanceList(void);
 static void OpenAndReadFinancesFile(void);
 static void DrawAPageOfRecords(void);
@@ -162,11 +159,11 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void IncrementCurrentPageFinancialDisplay(void);
-static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFinance);
+static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance);
 static void DisplayFinancePageNumberAndDateRange(void);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
-static BOOLEAN AppendFinanceToEndOfFile(FinanceUnitPtr pFinance);
+static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance);
 static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
@@ -189,7 +186,7 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 {
 	// adds transaction to player's book(Financial List)
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
-  FinanceUnitPtr pFinance=pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	// read in balance from file
 
@@ -250,7 +247,7 @@ static UINT32 GetTotalDebits(void) // XXX unused
 {
 	// returns the total of the debits
 	UINT32 uiDebits=0;
-  FinanceUnitPtr pFinance=pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	// run to end of list
 	while(pFinance)
@@ -271,7 +268,7 @@ static UINT32 GetTotalCredits(void) // XXX unused
 {
  	// returns the total of the credits
 	UINT32 uiCredits = 0;
-  FinanceUnitPtr pFinance=pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	// run to end of list
 	while( pFinance )
@@ -292,7 +289,7 @@ static UINT32 GetDayCredits(UINT32 usDayNumber) // XXX indirectly unused
 {
   // returns the total of the credits for day( note resolution of usDayNumber is days)
 	UINT32 uiCredits = 0;
-  FinanceUnitPtr pFinance = pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	while( pFinance )
 	{
@@ -312,7 +309,7 @@ static UINT32 GetDayDebits(UINT32 usDayNumber) // XXX indirectly unused
 {
 	// returns the total of the debits
 	UINT32 uiDebits=0;
-  FinanceUnitPtr pFinance=pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	while(pFinance)
 	{
@@ -331,7 +328,7 @@ static INT32 GetTotalToDay(INT32 sTimeInMins) // XXX indirectly unused
 {
 	// gets the total amount to this day
   UINT32 uiTotal = 0;
-  FinanceUnitPtr pFinance = pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
 	while(pFinance)
 	{
@@ -669,8 +666,8 @@ static void DrawRecordsColumnHeadersText(void)
 static void DrawRecordsText(void)
 {
   // draws the text of the records
-  FinanceUnitPtr pCurFinance=pCurrentFinance;
-  FinanceUnitPtr pTempFinance=pFinanceListHead;
+	FinanceUnit* pCurFinance = pCurrentFinance;
+	FinanceUnit* pTempFinance = pFinanceListHead;
 	wchar_t sString[512];
 	UINT16 usX, usY;
   INT32 iBalance=0;
@@ -1079,8 +1076,8 @@ static void OpenAndReadFinancesFile(void) // XXX unused
 static void ClearFinanceList(void)
 {
 	// remove each element from list of transactions
-  FinanceUnitPtr pFinanceList=pFinanceListHead;
-  FinanceUnitPtr pFinanceNode=pFinanceList;
+	FinanceUnit* pFinanceList = pFinanceListHead;
+	FinanceUnit* pFinanceNode = pFinanceList;
 
 	// while there are elements in the list left, delete them
 	while( pFinanceList )
@@ -1101,7 +1098,7 @@ static void ClearFinanceList(void)
 
 static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate)
 {
-  FinanceUnitPtr pFinance=pFinanceListHead;
+	FinanceUnit* pFinance = pFinanceListHead;
 
  	// add to finance list
 	if(pFinance)
@@ -1268,7 +1265,7 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 static void IncrementCurrentPageFinancialDisplay(void) // XXX unused
 {
   // run through list, from pCurrentFinance, to NUM_RECORDS_PER_PAGE +1 FinancialUnits
-  FinanceUnitPtr pTempFinance=pCurrentFinance;
+	FinanceUnit* pTempFinance = pCurrentFinance;
 	BOOLEAN fOkToIncrementPage=FALSE;
 	INT32 iCounter=0;
 
@@ -1313,7 +1310,7 @@ static void IncrementCurrentPageFinancialDisplay(void) // XXX unused
 }
 
 
-static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnitPtr pFinance)
+static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance)
 {
 	const wchar_t* s;
 	switch (pFinance->ubCode)
@@ -1386,7 +1383,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iCounter=0;
   UINT32 uiLastDate;
-	FinanceUnitPtr pTempFinance=pFinanceListHead;
+	FinanceUnit* pTempFinance = pFinanceListHead;
   wchar_t sString[50];
 
 
@@ -1469,11 +1466,11 @@ static void GetBalanceFromDisk(void)
 }
 
 
-static BOOLEAN AppendFinanceToEndOfFile(FinanceUnitPtr pFinance)
+static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance)
 {
   	// will write the current finance to disk
   HWFILE hFileHandle;
-  FinanceUnitPtr pFinanceList=pFinanceListHead;
+	FinanceUnit* pFinanceList = pFinanceListHead;
 
 	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 	if (!hFileHandle)
