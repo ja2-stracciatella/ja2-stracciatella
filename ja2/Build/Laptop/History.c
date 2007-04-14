@@ -24,7 +24,6 @@ typedef struct HistoryUnit HistoryUnit;
 struct HistoryUnit
 {
 	UINT8 ubCode; // the code index in the finance code table
-	UINT32 uiIdNumber; // unique id number
 	UINT8 ubSecondCode; // secondary code
 	UINT32 uiDate; // time in the world in global time
 	INT16 sSectorX; // sector X this took place in
@@ -115,14 +114,13 @@ void ClearHistoryList( void );
 
 static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory);
 static BOOLEAN LoadNextHistoryPage(void);
-static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor);
+static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
 
 
-UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY )
+void SetHistoryFact(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
 {
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
-  UINT32 uiId=0;
 	UINT8 ubColor = 0;
 	HistoryUnit* pHistory = pHistoryListHead;
 
@@ -138,7 +136,7 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 	{
 		ubColor = 1;
 	}
-  uiId = ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, ubColor);
+	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, ubColor);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
 
 	// history list head
@@ -156,25 +154,20 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 		// load in first page
 	  LoadNextHistoryPage( );
 	}
-
-
-	// return unique id of this transaction
-	return uiId;
 }
 
 
-UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
+void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
 {
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
-  UINT32 uiId=0;
 	HistoryUnit* pHistory = pHistoryListHead;
 
 	// clear the list
   ClearHistoryList( );
 
 	// process the actual data
-  uiId = ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, 0);
+	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, 0);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
 
 	// history list head
@@ -192,10 +185,6 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 		// load in first page
 	  LoadNextHistoryPage( );
 	}
-
-
-	// return unique id of this transaction
-	return uiId;
 }
 
 
@@ -551,9 +540,8 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 }
 
 
-static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor)
+static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor)
 {
-  UINT32 uiId=0;
 	HistoryUnit* pHistory = pHistoryListHead;
 
  	// add to History list
@@ -566,16 +554,12 @@ static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 u
 		// alloc space
 		pHistory->Next=MemAlloc(sizeof(HistoryUnit));
 
-		// increment id number
-		uiId = pHistory->uiIdNumber + 1;
-
 		// set up information passed
 		pHistory = pHistory->Next;
 		pHistory->Next = NULL;
 		pHistory->ubCode = ubCode;
     pHistory->ubSecondCode = ubSecondCode;
 		pHistory->uiDate = uiDate;
-    pHistory->uiIdNumber = uiId;
 		pHistory->sSectorX = sSectorX;
 		pHistory->sSectorY = sSectorY;
 		pHistory->bSectorZ = bSectorZ;
@@ -592,7 +576,6 @@ static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 u
 		pHistory->ubCode = ubCode;
     pHistory->ubSecondCode = ubSecondCode;
 		pHistory->uiDate = uiDate;
-    pHistory->uiIdNumber = uiId;
 	  pHistoryListHead = pHistory;
 		pHistory->sSectorX = sSectorX;
 		pHistory->sSectorY = sSectorY;
@@ -600,8 +583,6 @@ static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 u
 		pHistory->ubColor = ubColor;
 
 	}
-
-	return uiId;
 }
 
 
