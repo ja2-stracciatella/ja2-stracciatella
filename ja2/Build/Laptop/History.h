@@ -10,19 +10,6 @@ void RenderHistory();
 
 #define		HISTORY_DATA_FILE						"Temp/History.dat"
 
-// the financial structure
-struct history{
- UINT8 ubCode; // the code index in the finance code table
- UINT32 uiIdNumber; // unique id number
- UINT8 ubSecondCode; // secondary code
- UINT32 uiDate; // time in the world in global time
- INT16 sSectorX; // sector X this took place in
- INT16 sSectorY; // sector Y this took place in
- INT8 bSectorZ;
- UINT8 ubColor;
- struct history *Next; // next unit in the list
-};
-
 
 enum{
 	HISTORY_ENTERED_HISTORY_MODE=0,
@@ -104,11 +91,6 @@ enum{
 	HISTORY_SLAY_MYSTERIOUSLY_LEFT,
 	HISTORY_MERC_KILLED_CHARACTER,
 };
-
-typedef struct history HistoryUnit;
-typedef struct history *HistoryUnitPtr;
-
-extern HistoryUnitPtr pHistoryListHead;
 
 // reset history fact..for quests
 void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY );

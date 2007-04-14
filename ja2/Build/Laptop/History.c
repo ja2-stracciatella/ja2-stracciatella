@@ -20,6 +20,21 @@
 #include "FileMan.h"
 
 
+typedef struct HistoryUnit HistoryUnit;
+struct HistoryUnit
+{
+	UINT8 ubCode; // the code index in the finance code table
+	UINT32 uiIdNumber; // unique id number
+	UINT8 ubSecondCode; // secondary code
+	UINT32 uiDate; // time in the world in global time
+	INT16 sSectorX; // sector X this took place in
+	INT16 sSectorY; // sector Y this took place in
+	INT8 bSectorZ;
+	UINT8 ubColor;
+	HistoryUnit* Next; // next unit in the list
+};
+
+
 #define TOP_X											0+LAPTOP_SCREEN_UL_X
 #define TOP_Y											LAPTOP_SCREEN_UL_Y
 #define BLOCK_HIST_HEIGHT					10
@@ -86,10 +101,10 @@ INT32 iCurrentHistoryPage=1;
 
 
 // the History record list
-HistoryUnitPtr pHistoryListHead=NULL;
+static HistoryUnit* pHistoryListHead = NULL;
 
 // current History record (the one at the top of the current page)
-HistoryUnitPtr pCurrentHistory=NULL;
+static HistoryUnit* pCurrentHistory = NULL;
 
 
 // last page in list
@@ -98,7 +113,7 @@ UINT32 guiLastPageInHistoryRecordsList = 0;
 void ClearHistoryList( void );
 
 
-static BOOLEAN AppendHistoryToEndOfFile(HistoryUnitPtr pHistory);
+static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory);
 static BOOLEAN LoadNextHistoryPage(void);
 static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor);
 
@@ -109,7 +124,7 @@ UINT32 SetHistoryFact( UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sS
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
   UINT32 uiId=0;
 	UINT8 ubColor = 0;
-  HistoryUnitPtr pHistory = pHistoryListHead;
+	HistoryUnit* pHistory = pHistoryListHead;
 
 	// clear the list
   ClearHistoryList( );
@@ -153,7 +168,7 @@ UINT32 AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, I
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
   UINT32 uiId=0;
-  HistoryUnitPtr pHistory = pHistoryListHead;
+	HistoryUnit* pHistory = pHistoryListHead;
 
 	// clear the list
   ClearHistoryList( );
@@ -469,7 +484,7 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 {
   // run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
-  HistoryUnitPtr pTempHistory=pCurrentHistory;
+	HistoryUnit* pTempHistory = pCurrentHistory;
 	BOOLEAN fOkToIncrementPage=FALSE;
 	INT32 iCounter=0;
 	HWFILE hFileHandle;
@@ -539,7 +554,7 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 static UINT32 ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , UINT8 ubColor)
 {
   UINT32 uiId=0;
-  HistoryUnitPtr pHistory=pHistoryListHead;
+	HistoryUnit* pHistory = pHistoryListHead;
 
  	// add to History list
 	if(pHistory)
@@ -664,7 +679,7 @@ static BOOLEAN OpenAndWriteHistoryFile(void)
   // this procedure will open and write out data from the History list
 
 	HWFILE hFileHandle;
-  HistoryUnitPtr pHistoryList=pHistoryListHead;
+	HistoryUnit* pHistoryList = pHistoryListHead;
 
 
 	// open file
@@ -711,8 +726,8 @@ void ClearHistoryList( void )
 {
 	// remove each element from list of transactions
 
-	HistoryUnitPtr pHistoryList=pHistoryListHead;
-  HistoryUnitPtr pHistoryNode=pHistoryList;
+	HistoryUnit* pHistoryList = pHistoryListHead;
+	HistoryUnit* pHistoryNode = pHistoryList;
 
 	// while there are elements in the list left, delete them
 	while( pHistoryList )
@@ -780,13 +795,13 @@ static void DisplayHistoryListBackground(void)
 }
 
 
-static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory);
+static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnit* pHistory);
 
 
 static void DrawHistoryRecordsText(void)
 {
   // draws the text of the records
-  HistoryUnitPtr pCurHistory=pHistoryListHead;
+	HistoryUnit* pCurHistory = pHistoryListHead;
 	wchar_t sString[512];
 	UINT16 usX, usY;
 	INT16 sX =0, sY =0;
@@ -905,7 +920,7 @@ static void DisplayPageNumberAndDateRange(void)
 	INT32 iLastPage=0;
 	INT32 iCounter=0;
   UINT32 uiLastDate;
-	HistoryUnitPtr pTempHistory=pHistoryListHead;
+	HistoryUnit* pTempHistory = pHistoryListHead;
 
   // setup the font stuff
 	SetFont(HISTORY_TEXT_FONT);
@@ -971,7 +986,7 @@ static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString);
 static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString);
 
 
-static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnitPtr pHistory)
+static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnit* pHistory)
 {
 	CHAR16 sString[ 128 ];
 
@@ -1283,7 +1298,7 @@ static BOOLEAN WriteOutHistoryRecords(UINT32 uiPage)
 	BOOLEAN fOkToContinue=TRUE;
   INT32 iCount =0;
   HWFILE hFileHandle;
-	HistoryUnitPtr pList;
+	HistoryUnit* pList;
   UINT32 uiByteCount=0;
 
 	// check if bad page
@@ -1495,11 +1510,11 @@ static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 }
 
 
-static BOOLEAN AppendHistoryToEndOfFile(HistoryUnitPtr pHistory)
+static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory)
 {
   	// will write the current finance to disk
   HWFILE hFileHandle;
-  HistoryUnitPtr pHistoryList=pHistoryListHead;
+	HistoryUnit* pHistoryList = pHistoryListHead;
 
 
 	// open file
@@ -1543,7 +1558,7 @@ static BOOLEAN AppendHistoryToEndOfFile(HistoryUnitPtr pHistory)
 void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 {
 	// run through history list
-	HistoryUnitPtr pList = pHistoryListHead;
+	HistoryUnit* pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 
 	// set current page to before list
@@ -1589,7 +1604,7 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 {
 	// run through history list
-	HistoryUnitPtr pList = pHistoryListHead;
+	HistoryUnit* pList = pHistoryListHead;
 	BOOLEAN fFound = FALSE;
 	UINT32 uiTime = 0;
 
