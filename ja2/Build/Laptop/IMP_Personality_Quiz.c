@@ -25,8 +25,8 @@ UINT32 giIMPPersonalityQuizButtonImage[ 2 ];
 
 
 // these are the buttons for the current question
-INT32 giIMPPersonalityQuizAnswerButton[ 10 ];
-INT32 giIMPPersonalityQuizAnswerButtonImage[ 10 ];
+static INT32 giIMPPersonalityQuizAnswerButton[8];
+static INT32 giIMPPersonalityQuizAnswerButtonImage[8];
 
 INT32 giPreviousQuestionButton;
 INT32 giNextQuestionButton;
@@ -278,35 +278,13 @@ static void CreateIMPPersonalityQuizAnswerButtons(void)
 
   switch( giCurrentPersonalityQuizQuestion )
   {
-		case ( -1 ):
-		 // do nothing
-		break;
-		case ( 0 ):
-		 // 6 buttons
-		 iNumberOfPersonaButtons = 6;
-		break;
-		case ( 3 ):
-			// 5 buttons
-			iNumberOfPersonaButtons = 5;
-    break;
-		case ( 5 ):
-			// 5 buttons
-			iNumberOfPersonaButtons = 5;
-    break;
-		case ( 10 ):
-			// 5 buttons
-			iNumberOfPersonaButtons = 5;
-    break;
-		case ( 11 ):
-			// 5 buttons
-			iNumberOfPersonaButtons = 8;
-
-    break;
-		default:
-      // 4 buttons
-			iNumberOfPersonaButtons = 4;
-
-		break;
+		case -1: break; // do nothing
+		case  0: iNumberOfPersonaButtons = 6; break;
+		case  3: iNumberOfPersonaButtons = 5; break;
+		case  5: iNumberOfPersonaButtons = 5; break;
+		case 10: iNumberOfPersonaButtons = 5; break;
+		case 11: iNumberOfPersonaButtons = 8; break;
+		default: iNumberOfPersonaButtons = 4; break;
 	}
 
   AddIMPPersonalityQuizAnswerButtons( iNumberOfPersonaButtons );
@@ -332,36 +310,18 @@ static void DestroyPersonalityQuizButtons(void)
 
 	// this function will destroy the buttons used in the previous personality question
   // destroy old buttons
+	UINT32 ButtonCount;
   switch( giPreviousPersonalityQuizQuestion  )
 	{
-		case ( -1 ):
-			// do nothing
-			break;
-			case ( 0 ):
-		 // 6 buttons
-	   DestroyIMPPersonalityQuizAnswerButtons( 6 );
-		break;
-		case ( 3 ):
-			// 5 buttons
-      DestroyIMPPersonalityQuizAnswerButtons( 5 );
-    break;
-		case ( 5 ):
-			// 5 buttons
-      DestroyIMPPersonalityQuizAnswerButtons( 5 );
-    break;
-		case ( 10 ):
-			// 5 buttons
-      DestroyIMPPersonalityQuizAnswerButtons( 5 );
-    break;
-		case ( 11 ):
-			// 5 buttons
-      DestroyIMPPersonalityQuizAnswerButtons( 8 );
-    break;
-		default:
-      // 4 buttons
-      DestroyIMPPersonalityQuizAnswerButtons( 4 );
-		break;
+		case -1: return; // do nothing
+		case  0: ButtonCount = 6; break;
+		case  3: ButtonCount = 5; break;
+		case  5: ButtonCount = 5; break;
+		case 10: ButtonCount = 5; break;
+		case 11: ButtonCount = 8; break;
+		default: ButtonCount = 4; break;
 	}
+	DestroyIMPPersonalityQuizAnswerButtons(ButtonCount);
 }
 
 
@@ -373,8 +333,6 @@ static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason);
 
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
@@ -441,20 +399,6 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 	      giIMPPersonalityQuizAnswerButton[7] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[7], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 247 ),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
 										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer7Callback);
-
-			break;
-		case ( 8 ):
-			  giIMPPersonalityQuizAnswerButtonImage[8]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[8] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[8], LAPTOP_SCREEN_UL_X +  ( ( BTN_SECOND_COLUMN_X )  ), LAPTOP_SCREEN_WEB_UL_Y + ( 268 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer8Callback);
-
-			break;
-		case ( 9 ):
-			  giIMPPersonalityQuizAnswerButtonImage[9]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[9] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[9], LAPTOP_SCREEN_UL_X +  ( ( 276 - 46 ) / 2 ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer9Callback);
 
 			break;
 		}
@@ -602,35 +546,6 @@ static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason)
 		PrintImpText();
 		PrintQuizQuestionNumber();
 		fReDrawCharProfile = TRUE;
-	}
-}
-
-
-static void BtnIMPPersonalityQuizAnswer8Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 8;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
-}
-
-
-static void BtnIMPPersonalityQuizAnswer9Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton( );
-		iCurrentAnswer = 9;
-		PrintIMPPersonalityQuizQuestionAndAnsers();
-		PrintQuizQuestionNumber();
 	}
 }
 
