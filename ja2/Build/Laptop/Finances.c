@@ -24,7 +24,6 @@
 // the financial structure
 struct finance {
 	UINT8 ubCode; // the code index in the finance code table
-	UINT32 uiIdNumber; // unique id number
 	UINT8 ubSecondCode; // secondary code
 	UINT32 uiDate; // time in the world in global time
 	INT32 iAmount; // the amount of the transaction
@@ -142,7 +141,7 @@ static INT32 giFinanceButton[4];
 static INT32 giFinanceButtonImage[4];
 
 // internal functions
-static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
+static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
 static void RenderBackGround(void);
 static BOOLEAN LoadFinances(void);
 static void DrawSummary(void);
@@ -186,11 +185,10 @@ static INT32 GetTodaysOtherDeposits(void);
 static INT32 GetYesterdaysDebits(void);
 
 
-UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount)
+void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount)
 {
-	// adds transaction to player's book(Financial List), returns unique id number of it
+	// adds transaction to player's book(Financial List)
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
-	UINT32 uiId=0;
   FinanceUnitPtr pFinance=pFinanceListHead;
 
 	// read in balance from file
@@ -221,7 +219,7 @@ UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiD
 	// update balance
 	LaptopSaveInfo.iCurrentBalance += iAmount;
 
-	uiId = ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
+	ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
 
 	// write balance to disk
   WriteBalanceToDisk( );
@@ -245,35 +243,6 @@ UINT32 AddTransactionToPlayersBook (UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiD
 	}
 
 	fMapScreenBottomDirty = TRUE;
-
-	// return unique id of this transaction
-	return uiId;
-}
-
-
-static FinanceUnitPtr GetFinance(UINT32 uiId) // XXX unused
-{
- FinanceUnitPtr pFinance=pFinanceListHead;
-
- // get a finance object and return a pointer to it, the obtaining of the
- // finance object is via a unique ID the programmer must store
- // , it is returned on addition of a financial transaction
-
- // error check
- if(!pFinance)
-	 return ( NULL );
-
- // look for finance object with Id
- while(pFinance)
- {
-	 if(pFinance->uiIdNumber == uiId)
-		 break;
-
-	 // next finance record
-	 pFinance = pFinance->Next;
- }
-
- return (pFinance);
 }
 
 
@@ -1130,9 +1099,8 @@ static void ClearFinanceList(void)
 }
 
 
-static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate)
+static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate)
 {
-  UINT32 uiId = 0;
   FinanceUnitPtr pFinance=pFinanceListHead;
 
  	// add to finance list
@@ -1145,9 +1113,6 @@ static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 
 		// alloc space
 		pFinance->Next=MemAlloc(sizeof(FinanceUnit));
 
-		// increment id number
-		uiId = pFinance->uiIdNumber + 1;
-
 		// set up information passed
 		pFinance = pFinance->Next;
 		pFinance->Next = NULL;
@@ -1155,7 +1120,6 @@ static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 
     pFinance->ubSecondCode = ubSecondCode;
 		pFinance->uiDate = uiDate;
 		pFinance->iAmount = iAmount;
-    pFinance->uiIdNumber = uiId;
 		pFinance->iBalanceToDate = iBalanceToDate;
 
 
@@ -1163,7 +1127,6 @@ static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 
 	else
 	{
 		// alloc space
-		uiId = ReadInLastElementOfFinanceListAndReturnIdNumber( );
 		pFinance=MemAlloc(sizeof(FinanceUnit));
 
 		// setup info passed
@@ -1172,13 +1135,10 @@ static UINT32 ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 
     pFinance->ubSecondCode = ubSecondCode;
 		pFinance->uiDate = uiDate;
 		pFinance->iAmount= iAmount;
-    pFinance->uiIdNumber = uiId;
 		pFinance->iBalanceToDate = iBalanceToDate;
 	  pFinanceListHead = pFinance;
 	}
   pCurrentFinance = pFinanceListHead;
-
-	return uiId;
 }
 
 

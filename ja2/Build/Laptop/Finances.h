@@ -42,7 +42,7 @@ enum
 
 };
 
-UINT32 AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
+void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
 void InsertDollarSignInToString( STR16 pString );
 void InsertCommasForDollarFigure( STR16 pString );
 INT32 GetProjectedTotalDailyIncome( void );
