@@ -148,7 +148,6 @@ static void DrawFinanceTitleText(void);
 static void RemoveFinances(void);
 static void DrawSummaryText(void);
 static void ClearFinanceList(void);
-static void OpenAndReadFinancesFile(void);
 static void DrawAPageOfRecords(void);
 static void DrawRecordsBackGround(void);
 static void DrawRecordsText(void);
@@ -158,7 +157,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
-static void IncrementCurrentPageFinancialDisplay(void);
 static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance);
 static void DisplayFinancePageNumberAndDateRange(void);
 static void GetBalanceFromDisk(void);
@@ -170,7 +168,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage);
 static BOOLEAN LoadPreviousPage(void);
 static BOOLEAN LoadNextPage(void);
 
-static INT32 GetPreviousBalanceToDate(void);
 static INT32 GetPreviousDaysIncome(void);
 static INT32 GetPreviousDaysBalance(void);
 
@@ -243,126 +240,10 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 }
 
 
-static UINT32 GetTotalDebits(void) // XXX unused
-{
-	// returns the total of the debits
-	UINT32 uiDebits=0;
-	FinanceUnit* pFinance = pFinanceListHead;
-
-	// run to end of list
-	while(pFinance)
-	{
-		// if a debit, add to debit total
-		if(pFinance->iAmount > 0)
-			uiDebits+=( (UINT32) (pFinance->iAmount));
-
-		// next finance record
-		pFinance=pFinance->Next;
-	}
-
-	return uiDebits;
-}
-
-
-static UINT32 GetTotalCredits(void) // XXX unused
-{
- 	// returns the total of the credits
-	UINT32 uiCredits = 0;
-	FinanceUnit* pFinance = pFinanceListHead;
-
-	// run to end of list
-	while( pFinance )
-	{
-		// if a credit, add to credit total
-		if( pFinance->iAmount < 0 )
-			uiCredits += ( (UINT32) ( pFinance->iAmount ));
-
-		// next finance record
-		pFinance = pFinance->Next;
-	}
-
-	return uiCredits;
-}
-
-
-static UINT32 GetDayCredits(UINT32 usDayNumber) // XXX indirectly unused
-{
-  // returns the total of the credits for day( note resolution of usDayNumber is days)
-	UINT32 uiCredits = 0;
-	FinanceUnit* pFinance = pFinanceListHead;
-
-	while( pFinance )
-	{
-		// if a credit and it occurs on day passed
-		if(( pFinance->iAmount < 0)&&( (pFinance->uiDate / (60*24)) ==usDayNumber ))
-			uiCredits+=((UINT32)(pFinance->iAmount));
-
-		// next finance record
-		pFinance=pFinance->Next;
-	}
-
-	return uiCredits;
-}
-
-
-static UINT32 GetDayDebits(UINT32 usDayNumber) // XXX indirectly unused
-{
-	// returns the total of the debits
-	UINT32 uiDebits=0;
-	FinanceUnit* pFinance = pFinanceListHead;
-
-	while(pFinance)
-	{
-		if(( pFinance->iAmount > 0 )&&( (pFinance->uiDate / (60*24) ) ==usDayNumber ) )
-			uiDebits += ( (UINT32) (pFinance->iAmount));
-
-    // next finance record
-		pFinance=pFinance->Next;
-	}
-
-	return uiDebits;
-}
-
-
-static INT32 GetTotalToDay(INT32 sTimeInMins) // XXX indirectly unused
-{
-	// gets the total amount to this day
-  UINT32 uiTotal = 0;
-	FinanceUnit* pFinance = pFinanceListHead;
-
-	while(pFinance)
-	{
-		if(((INT32)( pFinance->uiDate / (60*24)) <= sTimeInMins/(24*60) ))
-			uiTotal += ((UINT32)(pFinance->iAmount));
-
-    // next finance record
-		pFinance=pFinance->Next;
-	}
-
-	return uiTotal;
-}
-
-
-static INT32 GetYesterdaysIncome(void) // XXX unused
-{
-	// get income for yesterday
-	return ( GetDayDebits(( ( GetWorldTotalMin() - (24*60) ) / (24*60) )) + GetDayCredits(( (UINT32) ( GetWorldTotalMin() -(24*60) )/ (24*60) )));
-}
-
-
 INT32 GetCurrentBalance( void )
 {
 	// get balance to this minute
 	return ( LaptopSaveInfo.iCurrentBalance );
-
-	// return(GetTotalDebits((GetWorldTotalMin()))+GetTotalCredits((GetWorldTotalMin())));
-}
-
-
-static INT32 GetTodaysIncome(void) // XXX unused
-{
- // get income
- return ( GetCurrentBalance() - GetTotalToDay( GetWorldTotalMin() - ( 24*60 ) ));
 }
 
 
@@ -388,20 +269,6 @@ INT32 GetProjectedTotalDailyIncome( void )
 }
 
 
-static INT32 GetProjectedBalance(void) // XXX unused
-{
-	// return the projected balance for tommorow - total for today plus the total income, projected.
-	return( GetProjectedTotalDailyIncome( ) + GetCurrentBalance( ) );
-}
-
-
-static INT32 GetConfidenceValue(void) // XXX unused
-{
-  // return confidence that the projected income is infact correct
-  return(( ( GetWorldMinutesInDay()*100 ) / (60*24) ));
-}
-
-
 void GameInitFinances()
 {
   // initialize finances on game start up
@@ -420,8 +287,6 @@ void EnterFinances()
  // set the fact we are in the financial display system
 
   fInFinancialMode=TRUE;
-  // build finances list
-  //OpenAndReadFinancesFile( );
 
 	// reset page we are on
 	iCurrentPage = LaptopSaveInfo.iCurrentFinancesPage;
@@ -1019,60 +884,6 @@ static void DrawSummaryText(void)
 }
 
 
-static void OpenAndReadFinancesFile(void) // XXX unused
-{
-  // this procedure will open and read in data to the finance list
-  HWFILE hFileHandle;
-  UINT8 ubCode, ubSecondCode;
-	UINT32 uiDate;
-	INT32 iAmount;
-	INT32 iBalanceToDate;
-  UINT32 uiByteCount=0;
-
-	// clear out the old list
-	ClearFinanceList( );
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		return;
-  }
-
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return;
-	}
-
-	// read in balance
-	// write balance to disk first
-  FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance,  sizeof(INT32));
-	uiByteCount += sizeof( INT32 );
-
-	// file exists, read in data, continue until file end
-  while( FileGetSize( hFileHandle ) > uiByteCount)
-	{
-
-		// read in other data
-    FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
-	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
-    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-		// add transaction
-	  ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, iBalanceToDate);
-
-		// increment byte counter
-	  uiByteCount += sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 );
-	}
-
-  // close file
-	FileClose( hFileHandle );
-}
-
-
 static void ClearFinanceList(void)
 {
 	// remove each element from list of transactions
@@ -1216,7 +1027,6 @@ static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
 	{
      btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		 // increment currentPage
-		 //IncrementCurrentPageFinancialDisplay( );
      LoadNextPage( );
 
 		 // set button state
@@ -1258,54 +1068,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 		pCurrentFinance=pFinanceListHead;
 		// redraw screen
 		fReDrawScreenFlag=TRUE;
-	}
-}
-
-
-static void IncrementCurrentPageFinancialDisplay(void) // XXX unused
-{
-  // run through list, from pCurrentFinance, to NUM_RECORDS_PER_PAGE +1 FinancialUnits
-	FinanceUnit* pTempFinance = pCurrentFinance;
-	BOOLEAN fOkToIncrementPage=FALSE;
-	INT32 iCounter=0;
-
-	// on the overview page, simply set iCurrent to head of list, and page to 1
-  if(iCurrentPage==0)
-	{
-
-		pCurrentFinance=pFinanceListHead;
-		iCurrentPage=1;
-
-		return;
-	}
-
-	// no list, we are on page 2
-	if( pTempFinance == NULL )
-	{
-		iCurrentPage = 2;
-		return;
-	}
-
-	// haven't reached end of list and not yet at beginning of next page
-	while( ( pTempFinance )&&( ! fOkToIncrementPage ) )
-	{
-    // found the next page,  first record thereof
-		if(iCounter==NUM_RECORDS_PER_PAGE+1)
-		{
-			fOkToIncrementPage=TRUE;
-		  pCurrentFinance=pTempFinance->Next;
-		}
-
-		//next record
-		pTempFinance=pTempFinance->Next;
-    iCounter++;
-	}
-
-	// if ok to increment, increment
-  if(fOkToIncrementPage)
-	{
-		iCurrentPage++;
-
 	}
 }
 
@@ -1784,37 +1546,6 @@ void InsertDollarSignInToString( STR16 pString )
 	}
 
 	pString[ 0 ] = L'$';
-}
-
-
-static INT32 GetPreviousBalanceToDate(void) // XXX unused
-{
-
-	// will grab balance to date of previous record
-	// grabs the size of the file and interprets number of pages it will take up
-   HWFILE hFileHandle;
-  INT32 iBalanceToDate=0;
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		return 0;
-  }
-
-  if ( FileGetSize( hFileHandle ) < sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 )  )
-	{
-    FileClose( hFileHandle );
-    return 0;
-	}
-
-  FileSeek( hFileHandle,  ( sizeof( INT32 ) ) , FILE_SEEK_FROM_END );
-
-	// get balnce to date
-  FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-	FileClose( hFileHandle );
-
-	return iBalanceToDate;
 }
 
 
@@ -2347,24 +2078,4 @@ static INT32 GetYesterdaysDebits(void)
 	// return the expenses for yesterday
 
 	return( GetTodaysBalance( ) - GetPreviousDaysBalance( ) - GetPreviousDaysIncome( ) - GetYesterdaysOtherDeposits( ) );
-}
-
-
-static void LoadCurrentBalance(void) // XXX unused
-{
-	// will load the current balance from finances.dat file
-	HWFILE hFileHandle;
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		LaptopSaveInfo.iCurrentBalance = 0;
-		return;
-	}
-
-	FileSeek( hFileHandle,  0 , FILE_SEEK_FROM_START );
-	FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
-
-	 // close file
-	FileClose( hFileHandle );
 }
