@@ -166,7 +166,7 @@ static void DrawMoraleUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPo
 void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BOOLEAN fErase, UINT32 uiBuffer)
 {
 	const UINT32 BarWidth  =  3;
-	const UINT32 BarHeight = 42; 
+	const UINT32 BarHeight = 42;
 	const UINT32 BreathOff =  6;
 	const UINT32 MoraleOff = 12;
 

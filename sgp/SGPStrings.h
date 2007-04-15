@@ -1,7 +1,7 @@
 #ifndef SGPSTRINGS_H
 #define SGPSTRINGS_H
 
-#include <stdio.h> 
+#include <stdio.h>
 #include <string.h>
 #include <strings.h>
 #include <wchar.h>

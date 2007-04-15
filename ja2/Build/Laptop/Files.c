@@ -122,7 +122,7 @@ static INT32 giFilesPage = 0;
 #define ENRICO_LENGTH 0
 
 
-static const UINT8 ubFileRecordsLength[] = 
+static const UINT8 ubFileRecordsLength[] =
 {
 	ENRICO_LENGTH,
 	SLAY_LENGTH,
