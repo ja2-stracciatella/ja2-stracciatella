@@ -24,7 +24,7 @@ TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
 
 BOOLEAN InitTileCache(  )
 {
-	const char* const TilecacheFilePattern = SGPDATADIR "/Data/TILECACHE/*.[Jj][Ss][Dd]";
+	const char* const TilecacheFilePattern = SGPDATADIR "/Data/TILECACHE/*.jsd";
 
 	UINT32				cnt;
 	GETFILESTRUCT FileInfo;
