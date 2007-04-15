@@ -53,10 +53,6 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
    // load the string
 	LoadEncryptedDataFromFile("BINARYDATA/IMPText.EDT", sString, ( UINT32 ) ( ( sIMPTextRecordNumber ) * IMP_SEEK_AMOUNT ), IMP_SEEK_AMOUNT);
 
-	// null put last char
-	sString[ wcslen( sString) ] = 0;
-
-
 	if( uiFlags == 0 )
 	{
 		uiFlags = LEFT_JUSTIFIED;

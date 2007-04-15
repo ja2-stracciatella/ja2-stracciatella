@@ -99,8 +99,6 @@ void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString
 			wcscat( sFacilitiesString, sFacilitiesStrings[ 6 ]);
 		}
 	}
-
-	sFacilitiesString[ wcslen( sFacilitiesString ) ] = 0; /* XXX WZG? */
 }
 
 
