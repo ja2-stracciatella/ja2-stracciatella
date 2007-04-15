@@ -177,7 +177,6 @@ void LoadShadeTablesFromTextFile()
 	FILE *fp;
 	INT32 i, j;
 	INT32 num;
-	UINT8 str[10];
 	if( gfLoadShadeTablesFromTextFile )
 	{
 		fp = fopen( "ShadeTables.txt", "r" );
@@ -188,6 +187,7 @@ void LoadShadeTablesFromTextFile()
 			{
 				for( j = 0; j < 3; j++ )
 				{
+					char str[10];
 					fscanf( fp, "%s", str );
 					sscanf( str, "%d", &num );
 					gusShadeLevels[i][j] = (UINT16)num;
@@ -1927,7 +1927,6 @@ INT16 iCountY, iCountX;
 INT32 LightCreateOmni(UINT8 ubIntensity, INT16 iRadius)
 {
 INT32 iLight;
-UINT8 usName[14];
 
 	iLight=LightGetFree();
 	if(iLight!=(-1))
@@ -1935,6 +1934,7 @@ UINT8 usName[14];
 		LightGenerateElliptical(iLight, ubIntensity, (INT16)(iRadius*DISTANCE_SCALE), (INT16)(iRadius*DISTANCE_SCALE));
 	}
 
+	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
 	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
 	strcpy(pLightNames[iLight], usName);
@@ -1947,7 +1947,6 @@ UINT8 usName[14];
 static INT32 LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
 INT32 iLight;
-UINT8 usName[14];
 
 	iLight=LightGetFree();
 	if(iLight!=(-1))
@@ -1955,6 +1954,7 @@ UINT8 usName[14];
 		LightGenerateSquare(iLight, ubIntensity, (INT16)(iRadius1*DISTANCE_SCALE), (INT16)(iRadius2*DISTANCE_SCALE));
 	}
 
+	char usName[14];
 	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
 	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
 	strcpy(pLightNames[iLight], usName);
@@ -1967,12 +1967,12 @@ UINT8 usName[14];
 static INT32 LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
 INT32 iLight;
-UINT8 usName[14];
 
 	iLight=LightGetFree();
 	if(iLight!=(-1))
 		LightGenerateElliptical(iLight, ubIntensity, (INT16)(iRadius1*DISTANCE_SCALE), (INT16)(iRadius2*DISTANCE_SCALE));
 
+	char usName[14];
 	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
 	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
 	strcpy(pLightNames[iLight], usName);

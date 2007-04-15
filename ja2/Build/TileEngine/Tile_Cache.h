@@ -36,7 +36,7 @@ void DeleteTileCache( );
 INT32 GetCachedTile(const char* cFilename);
 BOOLEAN RemoveCachedTile( INT32 iCachedTile );
 
-STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( INT8 *cFilename );
+STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename);
 
 void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 usIndex, UINT16 usSubIndex );
 void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex );

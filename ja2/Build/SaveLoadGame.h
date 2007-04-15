@@ -17,7 +17,7 @@
 typedef struct
 {
 	UINT32	uiSavedGameVersion;
-	INT8		zGameVersionNumber[ GAME_VERSION_LENGTH ];
+	char zGameVersionNumber[GAME_VERSION_LENGTH];
 
 	CHAR16	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 

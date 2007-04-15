@@ -1505,7 +1505,6 @@ void RenderSummaryWindow()
 void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 {
 	wchar_t str[50];
-	UINT8 szCoord[40];
 	const wchar_t* ptr;
 	INT16 x, y;
 
@@ -1613,6 +1612,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 			CreateProgressBar( 0, 250, 200, 390, 210 );
 		}
 
+		char szCoord[40];
 		sprintf( szCoord, "%ls", gszFilename );
 		if( gsSectorX > 9 )
 			szCoord[3] = '\0';
@@ -2111,7 +2111,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			if( gubOverrideStatus == READONLY )
 			{
-				UINT8 filename[40];
+				char filename[40];
 				sprintf( filename, "MAPS/%ls", gszDisplayName );
 				FileClearAttributes( filename );
 			}
@@ -2147,16 +2147,15 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 static void CalculateOverrideStatus(void)
 {
 	GETFILESTRUCT FileInfo;
-	UINT8 szFilename[40];
+	char szFilename[40];
 	gfOverrideDirty = FALSE;
 	gfOverride = FALSE;
 	if( gfTempFile )
 	{
-		UINT8 *ptr;
 		sprintf( szFilename, "MAPS/%ls", gszTempFilename );
 		if( strlen( szFilename ) == 5 )
 			strcat( szFilename, "test.dat" );
-		ptr = strstr( szFilename, "." );
+		char* ptr = strstr( szFilename, "." );
 		if( !ptr )
 			strcat( szFilename, ".dat" );
 		else
@@ -2191,7 +2190,7 @@ static void CalculateOverrideStatus(void)
 }
 
 
-static void LoadSummary(UINT8* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion);
+static void LoadSummary(const char* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion);
 
 
 static void LoadGlobalSummary(void)
@@ -2201,8 +2200,6 @@ static void LoadGlobalSummary(void)
 	STRING512			MapsDir;
 	FLOAT	dMajorVersion;
   INT32 x,y;
-	UINT8 szFilename[40];
-	UINT8 szSector[6];
 
 	OutputDebugString( "Executing LoadGlobalSummary()...\n" );
 
@@ -2234,6 +2231,9 @@ static void LoadGlobalSummary(void)
 	{
 		for( x = 0; x < 16; x++ )
 		{
+			char szFilename[40];
+			char szSector[6];
+
 			gbSectorLevels[x][y] = 0;
 			sprintf( szSector, "%c%d", 'A' + y, x + 1 );
 
@@ -2423,11 +2423,10 @@ static void GenerateSummaryList(void)
 static void UpdateMasterProgress(void);
 
 
-void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *pSummaryFileInfo )
+void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSummaryFileInfo)
 {
 	FILE *fp;
 	STRING512			Dir;
-	UINT8					*ptr;
 	INT8 x, y;
 
 	//Set current directory to JA2/DevInfo which contains all of the summary data
@@ -2436,7 +2435,7 @@ void WriteSectorSummaryUpdate( UINT8 *puiFilename, UINT8 ubLevel, SUMMARYFILE *p
 	if( !SetFileManCurrentDirectory( Dir ) )
 		AssertMsg( 0, "JA2/DevInfo folder not found and should exist!");
 
-	ptr = strstr( puiFilename, ".dat" );
+	char* ptr = strstr(puiFilename, ".dat");
 	if( !ptr )
 		AssertMsg( 0, "Illegal sector summary filename.");
 	strcpy(ptr, ".sum");
@@ -2486,16 +2485,16 @@ static void SummaryNewGroundLevelCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void LoadSummary(UINT8* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion)
+static void LoadSummary(const char* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion)
 {
-	UINT8 filename[40];
+	char filename[40];
 	SUMMARYFILE temp;
 	INT32 x, y;
 	FILE *fp;
 	strcpy(filename, pSector);
 	if( ubLevel % 4 )
 	{
-		UINT8 str[4];
+		char str[4];
 		sprintf( str, "_b%d", ubLevel % 4 );
 		strcat( filename, str );
 	}
@@ -2562,7 +2561,7 @@ static void UpdateMasterProgress(void)
 }
 
 
-static void ReportError(UINT8* pSector, UINT8 ubLevel)
+static void ReportError(const char* pSector, UINT8 ubLevel)
 {
 	static INT32 yp = 180;
 	wchar_t str[40];
@@ -2584,7 +2583,6 @@ static void ReportError(UINT8* pSector, UINT8 ubLevel)
 static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 {
 	INT32 x, y;
-	UINT8 str[40];
 	SUMMARYFILE *pSF;
 	//CreateProgressBar( 0, 20, 120, 300, 132 ); //slave (individual)
 	//CreateProgressBar( 1, 20, 100, 300, 112 ); //master (total)
@@ -2601,6 +2599,7 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 
 	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
 	{
+		char str[40];
 		sprintf( str, "%c%d", y + 'A', x + 1 );
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
@@ -2669,7 +2668,6 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8 str[40];
 		CreateProgressBar( 0, 20, 100, 300, 112 ); //slave (individual)
 		DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 132 );
 		SetProgressBarTitle( 0, L"Generating map summary", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
@@ -2681,6 +2679,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 			gpCurrentSectorSummary = NULL;
 		}
 
+		char str[40];
 		sprintf( str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
 		EvaluateWorld( str, (UINT8)giCurrLevel );
 
@@ -2711,7 +2710,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 {
 	INT32 x, y;
 	wchar_t str[50];
-	UINT8 name[50];
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
 	gfMajorUpdate = TRUE;
@@ -2745,6 +2743,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
 	{
+		char name[50];
 		sprintf( name, "%c%d", y + 'A', x + 1 );
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
@@ -2845,7 +2844,6 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 {
 	HWFILE hfile;
 	UINT32 uiNumItems;
-	UINT8 szFilename[40];
 	BASIC_SOLDIERCREATE_STRUCT basic;
 	SOLDIERCREATE_STRUCT priority;
 	INT32 i, j;
@@ -2881,6 +2879,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
+	char szFilename[40];
 	sprintf( szFilename, "MAPS/%ls", gszFilename );
 	hfile = FileOpen(szFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
 	if( !hfile )

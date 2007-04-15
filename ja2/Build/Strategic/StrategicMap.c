@@ -1107,7 +1107,7 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 static BOOLEAN MapExists(const char* szFilename)
 {
-	UINT8 str[50];
+	char str[50];
 	HWFILE fp;
 	sprintf( str, "MAPS/%s", szFilename );
 	fp = FileOpen(str, FILE_ACCESS_READ);
@@ -1818,7 +1818,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					pSoldier->sInsertionGridNo = SearchForClosestPrimaryMapEdgepoint( pSoldier->sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
 					#ifdef JA2BETAVERSION
 					{
-						UINT8 str[256];
+						char str[256];
 						sprintf( str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
 													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
@@ -1835,7 +1835,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					pSoldier->sInsertionGridNo = SearchForClosestSecondaryMapEdgepoint( pSoldier->sPendingActionData2, (UINT8)pSoldier->usStrategicInsertionData );
 					#ifdef JA2BETAVERSION
 					{
-						UINT8 str[256];
+						char str[256];
 						sprintf( str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
 													pSoldier->name, pSoldier->sInsertionGridNo, pSoldier->sPendingActionData2, pSoldier->usStrategicInsertionData );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
@@ -3091,7 +3091,7 @@ static void DoneFadeOutAdjacentSector(void)
 				else
 				{
 					#ifdef JA2BETAVERSION
-						UINT8 str[256];
+					char str[256];
 						sprintf( str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name );
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
 					#endif

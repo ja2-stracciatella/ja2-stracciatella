@@ -119,14 +119,13 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
 	HWFILE hfile;
 	INT32 i;
-	UINT8 ShadeFileName[ 100 ];
-	UINT8 *ptr;
 	//ASSUMPTIONS:
 	//We are assuming that the uiTileTypeIndex is referring to the correct file
 	//stored in the TileSurfaceFilenames[].  If it isn't, then that is a huge problem
 	//and should be fixed.  Also assumes that the directory is set to Data\ShadeTables.
+	char ShadeFileName[100];
 	strcpy( ShadeFileName, TileSurfaceFilenames[ uiTileTypeIndex ] );
-	ptr = strstr( ShadeFileName, "." );
+	char* ptr = strstr(ShadeFileName, ".");
 	if( !ptr )
 	{
 		return FALSE;
@@ -161,8 +160,6 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 {
 	HWFILE hfile;
 	INT32 i;
-	UINT8 ShadeFileName[ 100 ];
-	UINT8 *ptr;
 	#ifdef JA2TESTVERSION
 		uiNumTablesSaved++;
 	#endif
@@ -170,8 +167,9 @@ BOOLEAN SaveShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 	//We are assuming that the uiTileTypeIndex is referring to the correct file
 	//stored in the TileSurfaceFilenames[].  If it isn't, then that is a huge problem
 	//and should be fixed.  Also assumes that the directory is set to Data\ShadeTables.
+	char ShadeFileName[100];
 	strcpy( ShadeFileName, TileSurfaceFilenames[ uiTileTypeIndex ] );
-	ptr = strstr( ShadeFileName, "." );
+	char* ptr = strstr(ShadeFileName, ".");
 	if( !ptr )
 	{
 		return FALSE;

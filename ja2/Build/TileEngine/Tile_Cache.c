@@ -122,7 +122,7 @@ void DeleteTileCache( )
 }
 
 
-static INT16 FindCacheStructDataIndex(INT8* cFilename)
+static INT16 FindCacheStructDataIndex(const char* cFilename)
 {
 	UINT32 cnt;
 
@@ -294,7 +294,7 @@ static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 iIndex)
 }
 
 
-STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( INT8 *cFilename )
+STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename)
 {
 	INT16 sStructDataIndex;
 
@@ -352,10 +352,10 @@ void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 void GetRootName(char* pDestStr, const char* pSrcStr)
 {
 	// Remove path and extension
-	INT8		cTempFilename[ 120 ];
 	STR			cEndOfName;
 
 	// Remove path
+	char cTempFilename[120];
 	strcpy( cTempFilename, pSrcStr );
 	cEndOfName = strrchr( cTempFilename, '/' );
 	if (cEndOfName != NULL)

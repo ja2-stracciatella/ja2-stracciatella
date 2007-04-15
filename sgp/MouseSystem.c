@@ -1027,11 +1027,11 @@ void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata)
 {
 	if(index < 0 || index > 3)
 	{
-		UINT8 str[80];
 		#ifdef MOUSESYSTEM_DEBUGGING
 		if( gfIgnoreShutdownAssertions )
 		#endif
 			return;
+		char str[80];
 		sprintf( str, "Attempting MSYS_SetRegionUserData() with out of range index %d.", index );
 		AssertMsg( 0, str );
 	}
@@ -1049,11 +1049,11 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 {
 	if(index < 0 || index > 3)
 	{
-		UINT8 str[80];
 		#ifdef MOUSESYSTEM_DEBUGGING
 		if( gfIgnoreShutdownAssertions )
 		#endif
 			return 0;
+		char str[80];
 		sprintf( str, "Attempting MSYS_GetRegionUserData() with out of range index %d", index );
 		AssertMsg( 0, str );
 	}

@@ -940,7 +940,7 @@ void SAIReportError(const wchar_t *wErrorString)
 		}
 		if( guiCurrentScreen == AIVIEWER_SCREEN )
 		{
-			UINT8 str[ 512 ];
+			char str[512];
 			sprintf( str, "%ls\n", wErrorString );
 			OutputDebugString( str );
 		}
@@ -3869,7 +3869,6 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 static void LogStrategicMsg(const char* str, ...)
 {
 	va_list argptr;
-	UINT8	string[512];
 
 	FILE *fp;
 
@@ -3878,6 +3877,7 @@ static void LogStrategicMsg(const char* str, ...)
 		return;
 
 	va_start(argptr, str );
+	char string[512];
 	vsprintf( string, str, argptr);
 	va_end(argptr);
 
@@ -3899,7 +3899,6 @@ static void LogStrategicMsg(const char* str, ...)
 static void LogStrategicEvent(const char* str, ...)
 {
 	va_list argptr;
-	UINT8	string[512];
 
 	FILE *fp;
 
@@ -3908,6 +3907,7 @@ static void LogStrategicEvent(const char* str, ...)
 		return;
 
 	va_start(argptr, str );
+	char string[512];
 	vsprintf( string, str, argptr);
 	va_end(argptr);
 

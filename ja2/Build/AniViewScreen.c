@@ -314,7 +314,7 @@ UINT32  AniEditScreenHandle(void)
 }
 
 
-static UINT16 GetAnimStateFromName(INT8* zName)
+static UINT16 GetAnimStateFromName(const char* zName)
 {
 	INT32 cnt;
 

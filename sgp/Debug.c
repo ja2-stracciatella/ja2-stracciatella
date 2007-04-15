@@ -91,8 +91,7 @@ static void _DebugRecordToDebugger(BOOLEAN gfState)
 
 void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFile)
 {
-	UINT8 ubOutputString[512];
-
+	char ubOutputString[512];
 	sprintf(ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetClock(), pString, uiLineNum, pSourceFile);
 
 	if (gfRecordToDebugger)

@@ -138,7 +138,7 @@ static void CopyNumEntriesIntoQuoteStruct(void)
 
 static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
 {
-	UINT8 zFileName[164];
+	char zFileName[164];
 
 	// Build filename....
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )

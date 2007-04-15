@@ -2207,16 +2207,15 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	wchar_t str[40];
 	UINT8	bCounts[ WORLD_MAX ][8];
 	UINT8 ubCombine;
-	UINT8 szDirFilename[ 50 ];
-	UINT8 szFilename[ 40 ];
 	UINT8 ubMinorMapVersion;
 
 
 	//Make sure the file exists... if not, then return false
+	char szFilename[40];
 	strlcpy(szFilename, pSector, lengthof(szFilename));
 	if( ubLevel % 4  )
 	{
-		UINT8 str[4];
+		char str[4];
 		sprintf( str, "_b%d", ubLevel % 4 );
 		strcat( szFilename, str );
 	}
@@ -2225,6 +2224,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		strcat( szFilename, "_a" );
 	}
 	strcat( szFilename, ".dat" );
+	char szDirFilename[50];
 	sprintf( szDirFilename, "MAPS/%s", szFilename );
 
 	if( gfMajorUpdate )
@@ -4017,7 +4017,6 @@ static void LoadMapLights(INT8** hBuffer)
 	UINT8 ubNumColors;
 	UINT16 usNumLights;
 	INT32 cnt;
-	INT8	str[30];
 	UINT8 ubStrLen;
 	LIGHT_SPRITE	TmpLight;
 	INT32 iLSprite;
@@ -4062,6 +4061,7 @@ static void LoadMapLights(INT8** hBuffer)
 		LOADDATA( &TmpLight, *hBuffer, sizeof( LIGHT_SPRITE ) );
 		LOADDATA( &ubStrLen, *hBuffer, 1 );
 
+		char str[30];
 		if( ubStrLen )
 		{
 			LOADDATA( str, *hBuffer, ubStrLen );

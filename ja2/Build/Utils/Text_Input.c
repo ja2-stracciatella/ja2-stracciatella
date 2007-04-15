@@ -390,7 +390,8 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 	}
 }
 
-void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
+
+void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;
@@ -421,7 +422,7 @@ void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText )
 
 
 //Allows external functions to access the strings within the fields at anytime.
-static void Get8BitStringFromField(UINT8 ubField, UINT8* szString)
+static void Get8BitStringFromField(UINT8 ubField, char* szString)
 {
 	TEXTINPUTNODE *curr;
   curr = gpTextInputHead;

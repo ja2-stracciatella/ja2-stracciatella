@@ -339,7 +339,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 				RetrieveTempFileFromSavedGame( hFile, SF_CIV_PRESERVED_TEMP_FILE_EXISTS, sMapX, sMapY, 0 );
 				if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
 				{
-					INT8 pMapName[ 128 ];
+					char pMapName[128];
 
 					// KILL IT!!! KILL KIT!!!! IT IS CORRUPTED!!!
 					GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, pMapName, sMapX, sMapY, 0 );
@@ -423,7 +423,7 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 			RetrieveTempFileFromSavedGame( hFile, SF_CIV_PRESERVED_TEMP_FILE_EXISTS, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ );
 			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion < 78 )
 			{
-				INT8 pMapName[ 128 ];
+				char pMapName[128];
 
 				// KILL IT!!! KILL KIT!!!! IT IS CORRUPTED!!!
 				GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, pMapName, TempNode->ubSectorX, TempNode->ubSectorY, TempNode->ubSectorZ );

@@ -108,7 +108,7 @@ void AddUserInputField( INPUT_CALLBACK userFunction );
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
 void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText );
-void SetInputFieldStringWith8BitString( UINT8 ubField, UINT8 *szNewText );
+void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText);
 
 //Allows external functions to access the strings within the fields at anytime.
 void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length);

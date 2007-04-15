@@ -2721,7 +2721,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	BOOLEAN fRemovedLight;
 	INT32 iMapIndex;
 	UINT32 uiLastLightType;
-	UINT8	*pLastLightName;
+	const char* pLastLightName;
 
 	fRemovedLight = FALSE;
 

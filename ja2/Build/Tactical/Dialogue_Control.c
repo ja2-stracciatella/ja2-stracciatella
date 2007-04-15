@@ -1708,9 +1708,9 @@ static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharact
 }
 
 
-static INT8* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
+static const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
 {
-	static UINT8 zFileName[164];
+	static char zFileName[164];
 	UINT8		ubFileNumID;
 
 	// Are we an NPC OR an RPC that has not been recruited?
@@ -1789,11 +1789,9 @@ static INT8* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BO
 }
 
 // Used to see if the dialog text file exists
-BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, UINT8 **ppStr )
+BOOLEAN DialogueDataFileExistsForProfile(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, const char** ppStr)
 {
-  UINT8 *pFilename;
-
-	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, fWavFile );
+	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, fWavFile);
 
 	if ( ppStr )
 	{
@@ -1806,11 +1804,10 @@ BOOLEAN DialogueDataFileExistsForProfile( UINT8 ubCharacterNum, UINT16 usQuoteNu
 
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
 {
-  UINT8 *pFilename;
-
    // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
+			const char* pFilename;
 			if ( DialogueDataFileExistsForProfile( ubCharacterNum, 0, FALSE, &pFilename ) )
 			{
 				LoadEncryptedDataFromFile( pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
@@ -1835,7 +1832,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	pFilename = GetDialogueDataFilename( ubCharacterNum, usQuoteNum, TRUE );
+	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, TRUE);
 	strcpy( zSoundString, pFilename );
  return(TRUE);
 }

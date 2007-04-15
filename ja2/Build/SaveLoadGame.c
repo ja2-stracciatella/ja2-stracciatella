@@ -389,7 +389,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ 512 ];
 	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
-	UINT8		saveDir[100];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 	INT32		iSaveLoadGameMessageBoxID = -1;
@@ -399,7 +398,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	wchar_t pGameDesc[256];
 	wcslcpy(pGameDesc, GameDesc, lengthof(pGameDesc));
 
-
+	char saveDir[100];
 	sprintf( saveDir, "%ls", pMessageStrings[ MSG_SAVEDIRECTORY ] );
 
 #ifdef JA2BETAVERSION

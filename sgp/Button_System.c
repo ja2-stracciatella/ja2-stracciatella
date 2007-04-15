@@ -44,7 +44,7 @@
 #define GUI_BTN_DUPLICATE_VOBJ		1
 
 
-static UINT8 str[128];
+static char str[128];
 
 //Kris:  December 2, 1997
 //Special internal debugging utilities that will ensure that you don't attempt to delete

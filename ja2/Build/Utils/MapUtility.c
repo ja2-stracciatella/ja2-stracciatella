@@ -62,7 +62,6 @@ UINT32	MapUtilScreenHandle( )
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
-	INT8		zFilename[ 260 ], zFilename2[ 260 ];
 	UINT32					uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT16						*pDestBuf, *pSrcBuf;
 	UINT8						*pDataPtr;
@@ -131,6 +130,7 @@ UINT32	MapUtilScreenHandle( )
 		return( MAPUTILITY_SCREEN );
 	}
 
+	char zFilename[260];
 	strcpy(zFilename, FListNode->FileInfo.zFileName);
 
 	// OK, load maps and do overhead shrinkage of them...
@@ -287,6 +287,7 @@ UINT32	MapUtilScreenHandle( )
 		}
 	}
 
+	char zFilename2[260];
 	sprintf( zFilename2, "RADARMAPS/%s.STI", zFilename );
 	WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
 

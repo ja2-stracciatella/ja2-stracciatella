@@ -889,7 +889,7 @@ static void InitErrorCatchDialog(void)
 static UINT32 ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
-	UINT8 ubNewFilename[50];
+	char ubNewFilename[50];
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message

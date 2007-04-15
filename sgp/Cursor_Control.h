@@ -44,7 +44,7 @@ extern BOOLEAN  SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  );
 
 typedef struct
 {
-  UINT8			ubFilename[MAX_FILENAME_LEN];
+	char ubFilename[MAX_FILENAME_LEN];
   BOOLEAN		fLoaded;
   UINT32		uiIndex;
 	UINT8			ubFlags;
