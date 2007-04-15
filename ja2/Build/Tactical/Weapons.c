@@ -1887,9 +1887,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 			AniParams.sX									= sXPos;
 			AniParams.sY									= sYPos;
 			AniParams.sZ									= sZPos;
-
-			strcpy( AniParams.zCachedFile, "TILECACHE/miniboom.sti" );
-
+			AniParams.zCachedFile = "TILECACHE/miniboom.sti";
 			CreateAnimationTile( &AniParams );
 
 			if ( fFreeupAttacker )

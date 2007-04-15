@@ -371,10 +371,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	AniParams.uiUserData					= usItem;
 	AniParams.ubUserData2					= ubOwner;
 	AniParams.uiUserData3					= pExplosion->iID;
-
-
-	strcpy( AniParams.zCachedFile, zBlastFilenames[ ubTypeID ] );
-
+	AniParams.zCachedFile = zBlastFilenames[ubTypeID];
 	CreateAnimationTile( &AniParams );
 
 	//  set light source....

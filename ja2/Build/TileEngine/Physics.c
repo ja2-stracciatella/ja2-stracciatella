@@ -1150,9 +1150,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 					AniParams.sX									= (INT16)pObject->Position.x;
 					AniParams.sY									= (INT16)pObject->Position.y;
 					AniParams.sZ									= (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
-
-					strcpy( AniParams.zCachedFile, "TILECACHE/msle_smk.sti" );
-
+					AniParams.zCachedFile = "TILECACHE/msle_smk.sti";
 					CreateAnimationTile( &AniParams );
 				}
 			}

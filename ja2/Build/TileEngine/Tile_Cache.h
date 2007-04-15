@@ -33,7 +33,7 @@ TILE_CACHE_ELEMENT		*gpTileCache;
 BOOLEAN InitTileCache( );
 void DeleteTileCache( );
 
-INT32 GetCachedTile( INT8 *cFilename );
+INT32 GetCachedTile(const char* cFilename);
 BOOLEAN RemoveCachedTile( INT32 iCachedTile );
 
 STRUCTURE_FILE_REF *GetCachedTileStructureRefFromFilename( INT8 *cFilename );

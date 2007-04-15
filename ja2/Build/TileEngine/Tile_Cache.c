@@ -138,7 +138,7 @@ static INT16 FindCacheStructDataIndex(INT8* cFilename)
 }
 
 
-INT32 GetCachedTile( INT8 *cFilename )
+INT32 GetCachedTile(const char* cFilename)
 {
 	UINT32			cnt;
 	UINT32			ubLowestIndex = 0;

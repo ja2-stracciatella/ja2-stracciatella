@@ -736,9 +736,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			AniParams.sX									= sX;
 			AniParams.sY									= sY;
 			AniParams.sZ									= sZ;
-
-			strcpy( AniParams.zCachedFile, "TILECACHE/miniboom.sti" );
-
+			AniParams.zCachedFile = "TILECACHE/miniboom.sti";
 			CreateAnimationTile( &AniParams );
 
 			PlayJA2Sample(SMALL_EXPLODE_1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));

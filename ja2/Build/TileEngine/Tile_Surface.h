@@ -6,7 +6,7 @@
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
-TILE_IMAGERY *LoadTileSurface( char * cFilename );
+TILE_IMAGERY* LoadTileSurface(const char* cFilename);
 
 void DeleteTileSurface( PTILE_IMAGERY	pTileSurf );
 

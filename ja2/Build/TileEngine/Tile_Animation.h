@@ -89,7 +89,7 @@ typedef struct TAG_anitile_params
 	INT16												sGridNo;							// World GridNo
 
 	LEVELNODE										*pGivenLevelNode;			// Levelnode for existing tile ( optional )
-	CHAR8												zCachedFile[ 100 ];		// Filename for cached tile name ( optional )
+	const char* zCachedFile; // Filename for cached tile name ( optional )
 
 	UINT8												ubOwner;							// UBID for the owner
 	UINT8												ubKeyFrame1;					// Key frame 1

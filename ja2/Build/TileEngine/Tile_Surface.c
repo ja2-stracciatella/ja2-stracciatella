@@ -15,7 +15,7 @@
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
-TILE_IMAGERY *LoadTileSurface( char * cFilename )
+TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 {
 	// Add tile surface
 	PTILE_IMAGERY  pTileSurf = NULL;

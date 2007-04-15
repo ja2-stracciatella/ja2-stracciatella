@@ -383,7 +383,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
 				AniParams.sX									= pSoldier->sX;
 				AniParams.sY									= pSoldier->sY;
 				AniParams.sZ									= 0;
-				strcpy( AniParams.zCachedFile, "TILECACHE/fly_shdw.sti" );
+				AniParams.zCachedFile = "TILECACHE/fly_shdw.sti";
 
 				AniParams.uiUserData3					= pSoldier->bDirection;
 

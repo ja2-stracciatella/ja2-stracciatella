@@ -538,11 +538,11 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 
 	if ( !gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 	{
-		strcpy( AniParams.zCachedFile, zNoBloodCorpseFilenames[ pCorpse->def.ubType ] );
+		AniParams.zCachedFile = zNoBloodCorpseFilenames[pCorpse->def.ubType];
 	}
 	else
 	{
-		strcpy( AniParams.zCachedFile, zCorpseFilenames[ pCorpse->def.ubType ] );
+		AniParams.zCachedFile = zCorpseFilenames[pCorpse->def.ubType];
 	}
 
 	pCorpse->pAniTile = CreateAnimationTile( &AniParams );
@@ -1488,8 +1488,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		AniParams.sX									= CenterX( sBaseGridNo );
 		AniParams.sY									= CenterY( sBaseGridNo );
 		AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
-
-		strcpy( AniParams.zCachedFile, "TILECACHE/gen_blow.sti" );
+		AniParams.zCachedFile = "TILECACHE/gen_blow.sti";
 		CreateAnimationTile( &AniParams );
 
 		// Remove....
