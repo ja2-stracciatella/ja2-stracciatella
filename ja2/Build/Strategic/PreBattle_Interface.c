@@ -424,10 +424,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	gusRetreatButtonRight		= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightX;
 	gusRetreatButtonBottom	= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightY;
 
-	SetButtonCursor(iPBButtonImage[ 0 ], MSYS_NO_CURSOR );
-	SetButtonCursor(iPBButtonImage[ 1 ], MSYS_NO_CURSOR );
-	SetButtonCursor(iPBButtonImage[ 2 ], MSYS_NO_CURSOR );
-
 	HideButton( iPBButton[0] );
 	HideButton( iPBButton[1] );
 	HideButton( iPBButton[2] );
