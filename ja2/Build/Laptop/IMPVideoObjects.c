@@ -24,7 +24,6 @@ static UINT32 guiFRONTPAGEINDENT;
 static UINT32 guiNAMEINDENT;
 static UINT32 guiNICKNAMEINDENT;
 static UINT32 guiGENDERINDENT;
-static UINT32 guiSMALLFRAME;
 UINT32 guiANALYSE;
 UINT32 guiATTRIBUTEGRAPH;
 UINT32 guiSMALLSILHOUETTE;
@@ -218,12 +217,6 @@ void DeleteAnalyse( void )
 }
 
 
-static void RenderAnalyse(INT16 sX, INT16 sY, INT8 bImageNumber)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiANALYSE, bImageNumber, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
 BOOLEAN LoadAttributeGraph( void )
 {
 	// this procedure will load the activation indent into memory
@@ -238,12 +231,6 @@ void DeleteAttributeGraph( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
-}
-
-
-static void RenderAttributeGraph(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiATTRIBUTEGRAPH, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
@@ -314,28 +301,6 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 }
 
 
-static BOOLEAN LoadSmallFrame(void)
-{
-	// this procedure will load the activation indent into memory
-	guiSMALLFRAME = AddVideoObjectFromFile("LAPTOP/SmallFrame.sti");
-	CHECKF(guiSMALLFRAME != NO_VOBJECT);
-	return (TRUE);
-}
-
-
-static void DeleteSmallFrame(void)
-{
-  // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSMALLFRAME );
-}
-
-
-static void RenderSmallFrame(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLFRAME, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-}
-
-
 BOOLEAN LoadSmallSilhouette( void )
 {
 	// this procedure will load the activation indent into memory
@@ -350,12 +315,6 @@ void DeleteSmallSilhouette( void )
 
   // remove activation indent symbol
 	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
-}
-
-
-static void RenderSmallSilhouette(INT16 sX, INT16 sY)
-{
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSMALLSILHOUETTE, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 }
 
 
