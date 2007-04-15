@@ -51,7 +51,6 @@ DatabaseManagerHeaderStruct gFileDataBase;
 
 #ifdef _WIN32
 
-static WIN32_FIND_DATA Win32FindInfo[20];
 static HANDLE hFindInfoHandle[20];
 
 #else
@@ -1012,8 +1011,10 @@ BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 	pGFStruct->iFindHandle = iWhich;
 
 #ifdef _WIN32
-	hFindInfoHandle[iWhich] = FindFirstFile(pSpec, &Win32FindInfo[iWhich]);
+	WIN32_FIND_DATA Win32FindInfo;
+	hFindInfoHandle[iWhich] = FindFirstFile(pSpec, &Win32FindInfo);
 	if (hFindInfoHandle[iWhich] == INVALID_HANDLE_VALUE) return FALSE;
+	W32toSGPFileFind(pGFStruct, &Win32FindInfo);
 #else
 	if (glob(pSpec, 0, NULL, &Win32FindInfo[iWhich].Glob) != 0)
 	{
@@ -1021,11 +1022,10 @@ BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct )
 		return FALSE;
 	}
 	Win32FindInfo[iWhich].Index = 0;
+	W32toSGPFileFind(pGFStruct, &Win32FindInfo[iWhich]);
 #endif
 
 	fFindInfoInUse[iWhich] = TRUE;
-
-	W32toSGPFileFind( pGFStruct, &Win32FindInfo[iWhich] );
 
 	return(TRUE);
 }
@@ -1036,11 +1036,12 @@ BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct )
 	CHECKF( pGFStruct != NULL );
 
 #ifdef _WIN32
-	if (!FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo[pGFStruct->iFindHandle]))
+	WIN32_FIND_DATA Win32FindInfo;
+	if (!FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo))
 	{
 		return FALSE;
 	}
-	W32toSGPFileFind(pGFStruct, &Win32FindInfo[pGFStruct->iFindHandle]);
+	W32toSGPFileFind(pGFStruct, &Win32FindInfo);
 #else
 	Glob* g = &Win32FindInfo[pGFStruct->iFindHandle];
 	if (g->Index >= g->Glob.gl_pathc) return FALSE;
