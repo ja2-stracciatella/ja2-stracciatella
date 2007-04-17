@@ -75,7 +75,8 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 		sBRX = sTLX + 20;
 		sBRY = sTLY + 20;
 
-		us16BPPColor = Get16BPPColor( FROMRGB( gpPalRep[ ubPaletteRep ].r[ cnt1 ], gpPalRep[ ubPaletteRep ].g[ cnt1 ], gpPalRep[ ubPaletteRep ].b[ cnt1 ] ) );
+		const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
+		us16BPPColor = Get16BPPColor(FROMRGB(Clr->peRed, Clr->peGreen, Clr->peBlue));
 
 		ColorFillVideoSurfaceArea( uiDestSurface, sTLX, sTLY, sBRX, sBRY, us16BPPColor );
 

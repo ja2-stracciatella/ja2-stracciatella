@@ -981,6 +981,15 @@ typedef struct ANIM_PROF
 } ANIM_PROF;
 
 
+typedef struct PaletteReplacementType
+{
+	UINT8            ubType;
+	PaletteRepID     ID;
+	UINT8            ubPaletteSize;
+	SGPPaletteEntry* rgb;
+} PaletteReplacementType;
+
+
 // VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
 UINT8										*gubpNumReplacementsPerRange;
 PaletteReplacementType	*gpPalRep;

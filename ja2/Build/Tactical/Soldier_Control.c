@@ -5832,25 +5832,15 @@ BOOLEAN LoadPaletteData( )
 			return( FALSE );
 		}
 
-		// Malloc
-		gpPalRep[ cnt ].r = MemAlloc( gpPalRep[ cnt ].ubPaletteSize );
-		CHECKF( gpPalRep[ cnt ].r != NULL );
-		gpPalRep[ cnt ].g = MemAlloc( gpPalRep[ cnt ].ubPaletteSize );
-		CHECKF( gpPalRep[ cnt ].g != NULL );
-		gpPalRep[ cnt ].b = MemAlloc( gpPalRep[ cnt ].ubPaletteSize );
-		CHECKF( gpPalRep[ cnt ].b != NULL );
+		SGPPaletteEntry* Pal = MemAlloc(sizeof(*Pal) * gpPalRep[cnt].ubPaletteSize);
+		gpPalRep[cnt].rgb = Pal;
+		CHECKF(Pal != NULL);
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
-			if (!FileRead(hFile, &gpPalRep[cnt].r[cnt2], sizeof(UINT8)))
-			{
-				return( FALSE );
-			}
-			if (!FileRead(hFile, &gpPalRep[cnt].g[cnt2], sizeof(UINT8)))
-			{
-				return( FALSE );
-			}
-			if (!FileRead(hFile, &gpPalRep[cnt].b[cnt2], sizeof(UINT8)))
+			if (!FileRead(hFile, &Pal[cnt2].peRed,   sizeof(Pal[cnt2].peRed))   ||
+					!FileRead(hFile, &Pal[cnt2].peGreen, sizeof(Pal[cnt2].peGreen)) ||
+					!FileRead(hFile, &Pal[cnt2].peBlue,  sizeof(Pal[cnt2].peBlue)))
 			{
 				return( FALSE );
 			}
@@ -5876,9 +5866,7 @@ BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalR
 
 	for ( cnt2 = gpPaletteSubRanges[ ubType ].ubStart; cnt2 <= gpPaletteSubRanges[ ubType ].ubEnd; cnt2++ )
 	{
-		p8BPPPalette[ cnt2 ].peRed =  gpPalRep[ ubPalIndex ].r[ cnt2 - gpPaletteSubRanges[ ubType ].ubStart ];
-		p8BPPPalette[ cnt2 ].peGreen = gpPalRep[ ubPalIndex ].g[ cnt2 - gpPaletteSubRanges[ ubType ].ubStart ];
-		p8BPPPalette[ cnt2 ].peBlue = gpPalRep[ ubPalIndex ].b[ cnt2 - gpPaletteSubRanges[ ubType ].ubStart ];
+		p8BPPPalette[cnt2] = gpPalRep[ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
 	}
 
 	return( TRUE );
@@ -5905,22 +5893,7 @@ BOOLEAN DeletePaletteData( )
 
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
 	{
-		// Free
-		if ( gpPalRep[ cnt ].r != NULL )
-		{
-			MemFree( gpPalRep[ cnt ].r );
-			gpPalRep[ cnt ].r = NULL;
-		}
-		if ( gpPalRep[ cnt ].g != NULL )
-		{
-			MemFree( gpPalRep[ cnt ].g );
-			gpPalRep[ cnt ].g = NULL;
-		}
-		if ( gpPalRep[ cnt ].b != NULL )
-		{
-			MemFree( gpPalRep[ cnt ].b );
-			gpPalRep[ cnt ].b  = NULL;
-		}
+		if (gpPalRep[cnt].rgb != NULL) MemFree(gpPalRep[cnt].rgb);
 	}
 
 	// Free
