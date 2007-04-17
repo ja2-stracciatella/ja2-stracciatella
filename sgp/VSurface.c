@@ -800,29 +800,12 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 {
 	HVSURFACE hVSurface = MemAlloc(sizeof(*hVSurface));
-	hVSurface->surface    = surface;
-	hVSurface->usHeight   = surface->h;
-	hVSurface->usWidth    = surface->w;
-	hVSurface->ubBitDepth = surface->format->BitsPerPixel;
-
-	if (surface->format->palette != NULL) // XXX necessary?
-	{
-		SGPPaletteEntry SGPPalette[256];
-		hVSurface->pPalette = MemAlloc(sizeof(*hVSurface->pPalette) * 256);
-		for (UINT32 i = 0; i < 256; i++)
-		{
-			hVSurface->pPalette[i] = surface->format->palette->colors[i];
-			SGPPalette[i].peRed   = surface->format->palette->colors[i].r;
-			SGPPalette[i].peGreen = surface->format->palette->colors[i].g;
-			SGPPalette[i].peBlue  = surface->format->palette->colors[i].b;
-		}
-		hVSurface->p16BPPPalette = Create16BPPPalette(SGPPalette);
-	}
-	else
-	{
-		hVSurface->pPalette = NULL;
-		hVSurface->p16BPPPalette = NULL;
-	}
+	hVSurface->surface       = surface;
+	hVSurface->usHeight      = surface->h;
+	hVSurface->usWidth       = surface->w;
+	hVSurface->ubBitDepth    = surface->format->BitsPerPixel;
+	hVSurface->pPalette      = NULL;
+	hVSurface->p16BPPPalette = NULL;
 
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Success in Creating Video Surface from DD Surface");
 
