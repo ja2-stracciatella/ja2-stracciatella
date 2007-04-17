@@ -1,7 +1,7 @@
 #ifndef __QUANTIZE_H_
 #define __QUANTIZE_H_
 
-#include "Stubs.h" // XXX
+#include "HImage.h"
 
 typedef struct _NODE {
     BOOLEAN bIsLeaf;            // TRUE if node has no children
@@ -27,7 +27,7 @@ public:
     virtual ~CQuantizer ();
     BOOLEAN ProcessImage(BYTE* pData, int iWidth, int iHeight);
     UINT GetColorCount ();
-    void GetColorTable (RGBQUAD* prgb);
+		void GetColorTable(SGPPaletteEntry* prgb);
 
 protected:
     void AddColor (NODE** ppNode, BYTE r, BYTE g, BYTE b, UINT nColorBits,
@@ -37,7 +37,7 @@ protected:
     void ReduceTree (UINT nColorBits, UINT* pLeafCount,
         NODE** pReducibleNodes);
     void DeleteTree (NODE** ppNode);
-    void GetPaletteColors (NODE* pTree, RGBQUAD* prgb, UINT* pIndex);
+		void GetPaletteColors(NODE* pTree, SGPPaletteEntry* prgb, UINT* pIndex);
 };
 
 #endif

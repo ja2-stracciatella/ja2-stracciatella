@@ -150,16 +150,14 @@ void CQuantizer::DeleteTree (NODE** ppNode)
     *ppNode = NULL;
 }
 
-void CQuantizer::GetPaletteColors (NODE* pTree, RGBQUAD* prgb, UINT* pIndex)
+
+void CQuantizer::GetPaletteColors(NODE* pTree, SGPPaletteEntry* prgb, UINT* pIndex)
 {
     if (pTree->bIsLeaf) {
-        prgb[*pIndex].rgbRed =
-            (BYTE) ((pTree->nRedSum) / (pTree->nPixelCount));
-        prgb[*pIndex].rgbGreen =
-            (BYTE) ((pTree->nGreenSum) / (pTree->nPixelCount));
-        prgb[*pIndex].rgbBlue =
-            (BYTE) ((pTree->nBlueSum) / (pTree->nPixelCount));
-        prgb[*pIndex].rgbReserved = 0;
+		prgb[*pIndex].peRed   = pTree->nRedSum   / pTree->nPixelCount;
+		prgb[*pIndex].peGreen = pTree->nGreenSum / pTree->nPixelCount;
+		prgb[*pIndex].peBlue  = pTree->nBlueSum  / pTree->nPixelCount;
+		prgb[*pIndex].peFlags = 0;
         (*pIndex)++;
     }
     else {
@@ -175,7 +173,8 @@ UINT CQuantizer::GetColorCount ()
     return m_nLeafCount;
 }
 
-void CQuantizer::GetColorTable (RGBQUAD* prgb)
+
+void CQuantizer::GetColorTable(SGPPaletteEntry* prgb)
 {
     UINT nIndex = 0;
     GetPaletteColors (m_pTree, prgb, &nIndex);

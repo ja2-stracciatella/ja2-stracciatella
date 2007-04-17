@@ -34,7 +34,7 @@ BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, S
 
 	memset( pPalette, 0,  sizeof( SGPPaletteEntry ) * 256 );
 
-	q.GetColorTable( (RGBQUAD*)pPalette );
+	q.GetColorTable(pPalette);
 
 	// THEN MAP IMAGE TO PALETTE
 	// OK, MAPIT!
