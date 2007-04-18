@@ -710,7 +710,6 @@ static void DeleteLapTopButtons(void);
 static BOOLEAN DeleteLapTopMouseRegions(void);
 static void DeleteLoadPending(void);
 static UINT32 ExitLaptopMode(UINT32 uiMode);
-static void RemoveBookmark(INT32 iBookId);
 
 
 void ExitLaptop()
@@ -802,7 +801,6 @@ void ExitLaptop()
 	CreateDestoryBookMarkRegions( );
 
   fNewWWW=TRUE;
-  RemoveBookmark(-2);
 	DeleteBookmark( );
 	//DeleteBookmarkRegions();
   DeleteLoadPending( );
@@ -2713,28 +2711,6 @@ static void DisplayBookMarks(void)
 
 
 	InvalidateRegion(BOOK_X, BOOK_TOP_Y, BOOK_X+BOOK_WIDTH, BOOK_TOP_Y+(iCounter + 6 )*BOOK_HEIGHT+16);
-	return;
-}
-
-
-static void RemoveBookmark(INT32 iBookId)
-{
-  INT32 iCounter=0;
-	if(iBookId==-2)
-		return;
-	while( LaptopSaveInfo.iBookMarkList[iCounter]!=-1)
-	{
-		if( LaptopSaveInfo.iBookMarkList[iCounter]==iBookId)
-		{
-     // found, move everyone back
-			for(iCounter=iCounter+1; iCounter <MAX_BOOKMARKS; iCounter++)
-			{
-				LaptopSaveInfo.iBookMarkList[iCounter-1] = LaptopSaveInfo.iBookMarkList[iCounter];
-			}
-			return;
-		}
-		iCounter++;
-	}
 	return;
 }
 
