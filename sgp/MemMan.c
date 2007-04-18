@@ -556,9 +556,4 @@ void DumpMemoryInfoIntoFile( UINT8 *filename, BOOLEAN fAppend )
 	free( puiSize );
 }
 
-BOOLEAN _AddAndRecordMemAlloc( UINT32 size, UINT32 uiLineNum, UINT8 *pSourceFile )
-{
-	return 0;
-}
-
 #endif
