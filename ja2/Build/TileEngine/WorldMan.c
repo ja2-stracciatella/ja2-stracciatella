@@ -1180,9 +1180,6 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 }
 
 
-static void SetWorldFlagsFromNewNode(UINT16 sGridNo, UINT16 usIndex);
-
-
 BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pStruct		 = NULL;
@@ -1211,8 +1208,6 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 
 	// Set head
 	gpWorldLevelData[ iMapIndex ].pStructHead = pNextStruct;
-
-	SetWorldFlagsFromNewNode( (UINT16)iMapIndex, pNextStruct->usIndex );
 
 	if ( usIndex < NUMBEROFTILES )
 	{
@@ -1402,9 +1397,6 @@ static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex, BOOLEAN fRemoveStruc
 }
 
 
-static void RemoveWorldFlagsFromNewNode(UINT16 sGridNo, UINT16 usIndex);
-
-
 BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pStruct		 = NULL;
@@ -1466,11 +1458,7 @@ BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex )
 
 	}
 
-	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
-
 	return( FALSE );
-
 }
 
 
@@ -1527,11 +1515,7 @@ BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 
 	}
 
-	// Could not find it, return FALSE
-	RemoveWorldFlagsFromNewNode( (UINT16)iMapIndex, usIndex );
-
 	return( FALSE );
-
 }
 
 
@@ -3651,16 +3635,6 @@ UINT32 cnt;
 	}
 
 	SetRenderFlags(RENDER_FLAG_FULL );
-}
-
-
-static void SetWorldFlagsFromNewNode(UINT16 sGridNo, UINT16 usIndex)
-{
-}
-
-
-static void RemoveWorldFlagsFromNewNode(UINT16 sGridNo, UINT16 usIndex)
-{
 }
 
 
