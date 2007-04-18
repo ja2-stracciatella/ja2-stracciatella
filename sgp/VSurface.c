@@ -965,7 +965,7 @@ void CheckValidVSurfaceIndex(UINT32 uiIndex)
 {
 	/* 0xFFFFFFFF -> deleted
 	 * odd number -> VObject */
-	if (uiIndex == 0xFFFFFFFF || (uiIndex % 2 && uiIndex < 0xFFFFFFF0)
+	if (uiIndex == 0xFFFFFFFF || (uiIndex % 2 && uiIndex < 0xFFFFFFF0))
 	{
 		const char* str;
 		switch (gubVSDebugCode)
