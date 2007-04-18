@@ -1400,12 +1400,7 @@ static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ub
 	CHAR16 sString[ 128 ];
 	CHAR16 sStringA[ 32 ];
 
-	//parse the cost
-	swprintf( sStringA, lengthof(sStringA), L"%d",iCost );
-
-	// insert the commans and dollar sign
-	InsertCommasForDollarFigure( sStringA );
-	InsertDollarSignInToString( sStringA );
+	SPrintMoney(sStringA, iCost);
 
 	swprintf( sString, lengthof(sString), zMarksMapScreenText[ 10 ], pSoldier->name, sStringA, ubLength );
 

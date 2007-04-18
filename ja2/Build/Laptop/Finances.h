@@ -47,4 +47,6 @@ void InsertDollarSignInToString( STR16 pString );
 void InsertCommasForDollarFigure( STR16 pString );
 INT32 GetProjectedTotalDailyIncome( void );
 
+void SPrintMoney(wchar_t* Str, INT32 Amount);
+
 #endif

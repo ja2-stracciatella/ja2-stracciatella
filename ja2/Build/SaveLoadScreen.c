@@ -1305,10 +1305,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
 			}
 
-			//Get the current balance
-			swprintf( zBalanceString, lengthof(zBalanceString), L"%d", SaveGameHeader.iCurrentBalance);
-			InsertCommasForDollarFigure( zBalanceString );
-			InsertDollarSignInToString( zBalanceString );
+			SPrintMoney(zBalanceString, SaveGameHeader.iCurrentBalance);
 
 			//
 			// Display the Saved game information

@@ -408,9 +408,7 @@ static void AddTextToMineBox(void)
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 3 ]);
 		AddMonoString( &hStringHandle, wString );
 
-		swprintf( wString, lengthof(wString), L"%d", PredictDailyIncomeFromAMine( ubMineIndex ) );
-		InsertCommasForDollarFigure( wString );
-		InsertDollarSignInToString( wString );
+		SPrintMoney(wString, PredictDailyIncomeFromAMine(ubMineIndex));
 		AddSecondColumnMonoString( &hStringHandle, wString );
 
 
@@ -418,9 +416,7 @@ static void AddTextToMineBox(void)
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 4 ]);
 		AddMonoString( &hStringHandle, wString );
 
-		swprintf( wString, lengthof(wString), L"%d", GetMaxDailyRemovalFromMine( ubMineIndex ) );
-		InsertCommasForDollarFigure( wString );
-		InsertDollarSignInToString( wString );
+		SPrintMoney(wString, GetMaxDailyRemovalFromMine(ubMineIndex));
 		AddSecondColumnMonoString( &hStringHandle, wString );
 
 
@@ -471,9 +467,7 @@ static void AddTextToMineBox(void)
 	wcscpy( wString, L"Remaining (DEBUG):");
 	AddMonoString( &hStringHandle, wString );
 
-	swprintf( wString, lengthof(wString), L"%d", GetTotalLeftInMine( ubMineIndex ) );
-	InsertCommasForDollarFigure( wString );
-	InsertDollarSignInToString( wString );
+	SPrintMoney(wString, GetTotalLeftInMine(ubMineIndex));
 	AddSecondColumnMonoString( &hStringHandle, wString );
 #endif
 

@@ -847,9 +847,7 @@ BOOLEAN RenderAIMMembers()
 	//Display Option Gear Cost text
 	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
-	swprintf(wTemp, lengthof(wTemp), L"%d", gMercProfiles[gbCurrentSoldier].usOptionalGearCost);
-	InsertCommasForDollarFigure( wTemp );
-	InsertDollarSignInToString( wTemp );
+	SPrintMoney(wTemp, gMercProfiles[gbCurrentSoldier].usOptionalGearCost);
 	uiPosX = AIM_MEMBER_OPTIONAL_GEAR_X + StringPixLength( CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_M_FONT_STATIC_TEXT) + 5;
 	DrawTextToScreen(wTemp, uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
 
@@ -919,12 +917,7 @@ BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 u
 static BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
-
-	swprintf(sStr, lengthof(sStr), L"%d",iNumber);
-	InsertCommasForDollarFigure( sStr );
-	InsertDollarSignInToString( sStr );
-
-//	DrawTextToScreen(L"$", usLocX, usLocY, 0, ulFont, ubColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+	SPrintMoney(sStr, iNumber);
 	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, ulFont, ubColor, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED	);
 
 	return(TRUE);
@@ -983,11 +976,7 @@ static BOOLEAN UpdateMercInfo(void)
 		wchar_t	zTemp[40];
 		wchar_t	sMedicalString[40];
 
-		// Display the medical cost
-		swprintf( zTemp, lengthof(zTemp), L"%d", gMercProfiles[ gbCurrentSoldier ].sMedicalDepositAmount );
-		InsertCommasForDollarFigure( zTemp );
-		InsertDollarSignInToString( zTemp );
-
+		SPrintMoney(zTemp, gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount);
 		swprintf( sMedicalString, lengthof(sMedicalString), L"%ls %ls", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
 
 		// If the string will be displayed in more then 2 lines, recenter the string
@@ -1707,10 +1696,7 @@ static UINT32 DisplayMercChargeAmount(void)
 		}
 	}
 
-
-  swprintf( wDollarTemp, lengthof(wDollarTemp), L"%d", giContractAmount);
-	InsertCommasForDollarFigure( wDollarTemp );
-	InsertDollarSignInToString( wDollarTemp );
+	SPrintMoney(wDollarTemp, giContractAmount);
 
 	//if the merc hasnt just been hired
 //	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )

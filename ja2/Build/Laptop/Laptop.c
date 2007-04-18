@@ -3330,12 +3330,7 @@ static void DisplayPlayersBalanceToDate(void)
 	SetFontForeground( 142 );
   SetFontShadow(NO_SHADOW);
 
-	// parse straigth number
-	swprintf( sString, lengthof(sString), L"%d", LaptopSaveInfo.iCurrentBalance );
-
-	// put in commas, then dollar sign
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
 
 	// get center
 	FindFontCenterCoordinates( (INT16)LAPTOP_ICON_TEXT_X, 0, (INT16)(LAPTOP_ICON_TEXT_WIDTH) ,(INT16)(LAPTOP_ICON_TEXT_HEIGHT), sString, LAPTOPICONFONT, &sX, &sY );
@@ -4294,9 +4289,7 @@ void PrintBalance( void )
 	SetFontBackground( FONT_BLACK );
 	SetFontShadow( NO_SHADOW );
 
-	swprintf(pString, lengthof(pString), L"%d", LaptopSaveInfo.iCurrentBalance);
-	InsertCommasForDollarFigure( pString );
-	InsertDollarSignInToString( pString );
+	SPrintMoney(pString, LaptopSaveInfo.iCurrentBalance);
 
 	if( ButtonList[ gLaptopButton[ 5 ] ]->uiFlags & BUTTON_CLICKED_ON )
 	{

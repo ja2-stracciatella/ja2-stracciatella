@@ -1276,10 +1276,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	DisplayWrappedString( SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_Y, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, 2, SKI_LABEL_FONT, SKI_TITLE_COLOR, SkiMessageBoxText[ SKI_PLAYERS_CURRENT_BALANCE ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 
 	//Display the players current balance value
-	swprintf( zMoney, lengthof(zMoney), L"%d", LaptopSaveInfo.iCurrentBalance );
-
-	InsertCommasForDollarFigure( zMoney );
-	InsertDollarSignInToString( zMoney );
+	SPrintMoney(zMoney, LaptopSaveInfo.iCurrentBalance);
 	DrawTextToScreen( zMoney, SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, TRUE, CENTER_JUSTIFIED );
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
@@ -1455,10 +1452,7 @@ static void DisplayAllDealersCash(void)
 		DrawTextToScreen( gMercProfiles[ ArmsDealerInfo[ bArmsDealer ].ubShopKeeperID ].zNickname, 540, usPosY, 0, FONT10ARIAL, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
 
 		//Display the arms dealer cash on hand
-		swprintf(zTemp, lengthof(zTemp), L"%d", gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash );
-
-		InsertCommasForDollarFigure( zTemp );
-		InsertDollarSignInToString( zTemp );
+		SPrintMoney(zTemp, gArmsDealerStatus[bArmsDealer].uiArmsDealersCash);
 		ubForeColor = ( UINT8 ) ( ( bArmsDealer == gbSelectedArmsDealerID ) ? SKI_BUTTON_COLOR : SKI_TITLE_COLOR );
 		DrawTextToScreen( zTemp, 590, usPosY, 0, FONT10ARIAL, ubForeColor, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
 		usPosY += 17;
@@ -2565,9 +2559,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	//if the item has a price, display it
 	if( uiItemCost != 0 )
 	{
-		swprintf( zTemp, lengthof(zTemp), L"%d", uiItemCost );
-		InsertCommasForDollarFigure( zTemp );
-		InsertDollarSignInToString( zTemp );
+		SPrintMoney(zTemp, uiItemCost);
 		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 	}
 
@@ -3178,9 +3170,7 @@ static void DisplayArmsDealerOfferArea(void)
 		RestoreExternBackgroundRect( SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y, SKI_ARMS_DEALER_TOTAL_COST_WIDTH, SKI_ARMS_DEALER_TOTAL_COST_HEIGHT );
 
 		//Display the total cost text
-		swprintf( zTemp, lengthof(zTemp), L"%d", uiTotalCost );
-		InsertCommasForDollarFigure( zTemp );
-		InsertDollarSignInToString( zTemp );
+		SPrintMoney(zTemp, uiTotalCost);
 		DrawTextToScreen( zTemp, SKI_ARMS_DEALER_TOTAL_COST_X, (UINT16)(SKI_ARMS_DEALER_TOTAL_COST_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 	}
 }
@@ -3470,9 +3460,7 @@ static void DisplayPlayersOfferArea(void)
 		RestoreExternBackgroundRect( SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y, SKI_PLAYERS_TOTAL_VALUE_WIDTH, SKI_PLAYERS_TOTAL_VALUE_HEIGHT );
 
 		//Display the total cost text
-		swprintf( zTemp, lengthof(zTemp), L"%d", uiTotalCost );
-		InsertCommasForDollarFigure( zTemp );
-		InsertDollarSignInToString( zTemp );
+		SPrintMoney(zTemp, uiTotalCost);
 		DrawTextToScreen( zTemp, SKI_PLAYERS_TOTAL_VALUE_X, (UINT16)(SKI_PLAYERS_TOTAL_VALUE_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
 	}
 
@@ -5141,7 +5129,6 @@ static void AddNumberToSkiAtm(UINT8 ubNumber)
 static void DisplaySkiAtmTransferString(void)
 {
 	CHAR16 zSkiAtmTransferString[ 32 ];
-	UINT32	uiMoney;
 
 	//Erase the background behind the string
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, SKI_TRANSFER_STRING_X, SKI_TRANSFER_STRING_Y, SKI_TRANSFER_STRING_X+SKI_TRANSFER_STRING_WIDTH,	SKI_TRANSFER_STRING_Y+SKI_TRANSFER_STRING_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -5154,17 +5141,8 @@ static void DisplaySkiAtmTransferString(void)
 	//Display the transfer string
 	DrawTextToScreen( zSkiAtmTransferString, SKI_TRANSFER_STRING_X, SKI_TRANSFER_STRING_Y, SKI_TRANSFER_STRING_WIDTH, SKI_ATM_BUTTON_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
 
-
-	//
 	//Get and Display the money on the merc
-	//
-	uiMoney = GetFundsOnMerc( gpSMCurrentMerc );
-
-	swprintf( zSkiAtmTransferString, lengthof(zSkiAtmTransferString), L"%d", uiMoney );
-
-	InsertCommasForDollarFigure( zSkiAtmTransferString );
-	InsertDollarSignInToString( zSkiAtmTransferString );
-
+	SPrintMoney(zSkiAtmTransferString, GetFundsOnMerc(gpSMCurrentMerc));
 	DrawTextToScreen( zSkiAtmTransferString, SKI_TRANSFER_STRING_X, SKI_MERCS_MONEY_Y, SKI_TRANSFER_STRING_WIDTH, SKI_ATM_BUTTON_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
 }
 
@@ -5315,10 +5293,7 @@ static void HandleCurrentModeText(UINT8 ubMode)
 			break;
 
 		case SKI_ATM_DISPLAY_PLAYERS_BALANCE:
-			swprintf( zMoney, lengthof(zMoney), L"%d", LaptopSaveInfo.iCurrentBalance );
-			InsertCommasForDollarFigure( zMoney );
-			InsertDollarSignInToString( zMoney );
-
+			SPrintMoney(zMoney, LaptopSaveInfo.iCurrentBalance);
 			swprintf( zTemp, lengthof(zTemp), L"%ls: %ls", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
 			break;
 	}

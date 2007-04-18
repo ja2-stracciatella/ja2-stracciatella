@@ -3183,13 +3183,7 @@ void RenderItemDescriptionBox( )
 			//
 
 			// if the player is taking money from their account
-			if( gfAddingMoneyToMercFromPlayersAccount )
-				swprintf( pStr, lengthof(pStr), L"%ld", LaptopSaveInfo.iCurrentBalance );
-			else
-				swprintf( pStr, lengthof(pStr), L"%ld", gRemoveMoney.uiTotalAmount );
-
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 			sStrX =  MAP_ITEMDESC_NAME_X + ( 245 - uiStringLength );
 			mprintf( sStrX, MAP_ITEMDESC_NAME_Y, pStr );
@@ -3215,9 +3209,7 @@ void RenderItemDescriptionBox( )
 			mprintf( (UINT16)(gMapMoneyButtonLoc.x + gMoneyButtonOffsets[cnt].x), (UINT16)(gMapMoneyButtonLoc.y + gMoneyButtonOffsets[cnt].y ), gzMoneyAmounts[4] );
 
 			// The Money Remaining
-			swprintf( pStr, lengthof(pStr), L"%ld", gRemoveMoney.uiMoneyRemaining );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gRemoveMoney.uiMoneyRemaining);
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 			sStrX =  gMapMoneyStats[ 1 ].sX + gsInvDescX + gMapMoneyStats[ 1 ].sValDx + ( uiRightLength - uiStringLength );
 			mprintf( sStrX, gMapMoneyStats[ 1 ].sY + gsInvDescY, pStr );
@@ -3225,9 +3217,7 @@ void RenderItemDescriptionBox( )
 
 			// The money removing
 			SetFontForeground( 5 );
-			swprintf( pStr, lengthof(pStr), L"%ld", gRemoveMoney.uiMoneyRemoving );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gRemoveMoney.uiMoneyRemoving);
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 			sStrX =  gMapMoneyStats[ 3 ].sX + gsInvDescX + gMapMoneyStats[ 3 ].sValDx + ( uiRightLength - uiStringLength );
 			mprintf( sStrX, gMapMoneyStats[ 3 ].sY + gsInvDescY, pStr );
@@ -3236,9 +3226,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, lengthof(pStr), L"%ld", gpItemDescObject->uiMoneyAmount );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gpItemDescObject->uiMoneyAmount);
 			uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 			sStrX =  MAP_ITEMDESC_NAME_X + ( 245 - uiStringLength );
 			mprintf( sStrX, MAP_ITEMDESC_NAME_Y, pStr );
@@ -3633,9 +3621,7 @@ void RenderItemDescriptionBox( )
 
 			// Total Amount
 			SetFontForeground( FONT_WHITE );
-			swprintf( pStr, lengthof(pStr), L"%d", gRemoveMoney.uiTotalAmount );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gRemoveMoney.uiTotalAmount);
 			FindFontRightCoordinates( (INT16)(ITEMDESC_NAME_X), (INT16)(ITEMDESC_NAME_Y ), 295,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY, pStr );
 
@@ -3663,16 +3649,12 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 5 );
 
 			//Display the total amount of money remaining
-			swprintf( pStr, lengthof(pStr), L"%ld", gRemoveMoney.uiMoneyRemaining );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gRemoveMoney.uiMoneyRemaining);
 			FindFontRightCoordinates( (INT16)(gMoneyStats[ 1 ].sX + gsInvDescX + gMoneyStats[ 1 ].sValDx), (INT16)(gMoneyStats[ 1 ].sY + gsInvDescY ), (UINT16)(ITEM_STATS_WIDTH-3),ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY, pStr );
 
 			//Display the total amount of money removing
-			swprintf( pStr, lengthof(pStr), L"%ld", gRemoveMoney.uiMoneyRemoving );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
+			SPrintMoney(pStr, gRemoveMoney.uiMoneyRemoving);
 			FindFontRightCoordinates( (INT16)(gMoneyStats[ 3 ].sX + gsInvDescX + gMoneyStats[ 3 ].sValDx), (INT16)(gMoneyStats[ 3 ].sY + gsInvDescY), (UINT16)(ITEM_STATS_WIDTH-3) ,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY, pStr );
 
@@ -3681,10 +3663,7 @@ void RenderItemDescriptionBox( )
 		{
 			SetFontForeground( FONT_FCOLOR_WHITE );
 			SetFontShadow( DEFAULT_SHADOW );
-			swprintf( pStr, lengthof(pStr), L"%ld", gpItemDescObject->uiMoneyAmount );
-			InsertCommasForDollarFigure( pStr );
-			InsertDollarSignInToString( pStr );
-
+			SPrintMoney(pStr, gpItemDescObject->uiMoneyAmount);
 			FindFontRightCoordinates( (INT16)(ITEMDESC_NAME_X), (INT16)(ITEMDESC_NAME_Y ), 295,ITEM_STATS_HEIGHT ,pStr, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY, pStr );
 		}
@@ -6296,10 +6275,7 @@ void RenderItemPickupMenu( )
 				if ( Item[ pObject->usItem ].usItemClass == IC_MONEY )
 				{
 					wchar_t pStr2[20];
-					swprintf( pStr2, lengthof(pStr2), L"%ld", pObject->uiMoneyAmount );
-					InsertCommasForDollarFigure( pStr2 );
-					InsertDollarSignInToString( pStr2 );
-
+					SPrintMoney(pStr2, pObject->uiMoneyAmount);
 					swprintf( pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[ pObject->usItem ], pStr2 );
 				}
 				else
@@ -6891,17 +6867,12 @@ void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject
 
 	if ( usItem == MONEY )
 	{
-		swprintf( pStr, lengthof(pStr), L"%ld", pObject->uiMoneyAmount );
-		InsertCommasForDollarFigure( pStr );
-		InsertDollarSignInToString( pStr );
+		SPrintMoney(pStr, pObject->uiMoneyAmount);
 	}
 	else if ( Item[ usItem ].usItemClass == IC_MONEY )
 	{ // alternate money like silver or gold
 		wchar_t pStr2[20];
-		swprintf( pStr2, lengthof(pStr2), L"%ld", pObject->uiMoneyAmount );
-		InsertCommasForDollarFigure( pStr2 );
-		InsertDollarSignInToString( pStr2 );
-
+		SPrintMoney(pStr2, pObject->uiMoneyAmount);
 		swprintf( pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[ usItem ], pStr2 );
 	}
 	else if ( usItem != NOTHING )

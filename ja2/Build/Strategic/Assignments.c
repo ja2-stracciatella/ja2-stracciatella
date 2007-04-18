@@ -8140,59 +8140,24 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 			 case( CONTRACT_MENU_CURRENT_FUNDS ):
 /*
 				// add current balance after title string
-				 swprintf( sDollarString, L"%d", LaptopSaveInfo.iCurrentBalance);
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
+					SPrintMoney(sDollarString, LaptopSaveInfo.iCurrentBalance);
 				 swprintf(sString, L"%ls %ls",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 */
 				 AddMonoString(&hStringHandle, pContractStrings[uiCounter]);
 			 break;
 			 case( CONTRACT_MENU_DAY ):
-
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
-				 }
-				 else
-				 {
-					  swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].sSalary );
-				 }
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
+					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].sSalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
-
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
-				 }
-				 else
-				 {
-					  swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiWeeklySalary );
-				 }
-
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
+					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiWeeklySalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString );
 				 AddMonoString(&hStringHandle, sString);
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
-
-				 if( pCharacter -> ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-				 {
-					 swprintf( sDollarString, lengthof(sDollarString), L"%d", 0 );
-				 }
-				 else
-				 {
-					 swprintf( sDollarString, lengthof(sDollarString), L"%d", gMercProfiles[ pCharacter -> ubProfile ].uiBiWeeklySalary );
-				 }
-
-
-				 InsertCommasForDollarFigure( sDollarString );
-				 InsertDollarSignInToString( sDollarString );
+					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiBiWeeklySalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
 				 AddMonoString(&hStringHandle, sString);
 			 break;

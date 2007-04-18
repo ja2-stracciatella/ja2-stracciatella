@@ -5411,13 +5411,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 			// get how much we now will get from the mines
 			iValue = GetProjectedTotalDailyIncome( );
 
-			// parse the string
-			swprintf( sStringC, lengthof(sStringC), L"%d", iValue );
-
-			// insert
-			InsertCommasForDollarFigure( sStringC );
-			InsertDollarSignInToString( sStringC );
-
+			SPrintMoney(sStringC, iValue);
 			swprintf( sStringB, lengthof(sStringB), pMapErrorString[ 16 ], sString, sStringC );
 
 			// put up the message informing the player of the event

@@ -202,10 +202,7 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		CHAR16 wzAuthorizeString[512];
 		CHAR16 wzDollarAmount[128];
 
-		swprintf(wzDollarAmount, lengthof(wzDollarAmount), L"%d", giMercTotalContractCharge);
-
-		InsertCommasForDollarFigure(wzDollarAmount);
-		InsertDollarSignInToString(wzDollarAmount);
+		SPrintMoney(wzDollarAmount, giMercTotalContractCharge);
 
 		//create the string to show to the user
 		swprintf(wzAuthorizeString, lengthof(wzAuthorizeString), MercAccountText[MERC_ACCOUNT_AUTHORIZE_CONFIRMATION], wzDollarAmount);

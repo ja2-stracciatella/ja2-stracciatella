@@ -716,9 +716,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	}
 
 	//Display the subtotal at the bottom of the screen
-	swprintf( sDollarTemp, lengthof(sDollarTemp), L"%d", CalculateTotalPurchasePrice() );
-	InsertCommasForDollarFigure( sDollarTemp );
-	InsertDollarSignInToString( sDollarTemp );
+	SPrintMoney(sDollarTemp, CalculateTotalPurchasePrice());
 	swprintf( sTemp, lengthof(sTemp), L"%ls %ls", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
 	DrawTextToScreen(sTemp, BOBBYR_ORDER_SUBTOTAL_X, BOBBYR_ORDER_SUBTOTAL_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED | TEXT_SHADOWED);
 
@@ -916,10 +914,7 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_COST], BOBBYR_ITEM_COST_TEXT_X, (UINT16)usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 
-	swprintf(sTemp, lengthof(sTemp), L"%d", CalcBobbyRayCost( usIndex, usBobbyIndex, fUsed ));
-	InsertCommasForDollarFigure( sTemp );
-	InsertDollarSignInToString( sTemp );
-
+	SPrintMoney(sTemp, CalcBobbyRayCost(usIndex, usBobbyIndex, fUsed));
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_COST_NUM_X, (UINT16)usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 

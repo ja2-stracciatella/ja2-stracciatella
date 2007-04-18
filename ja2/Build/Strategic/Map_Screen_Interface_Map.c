@@ -4237,9 +4237,7 @@ void DisplayDistancesForHelicopter( void )
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
 	uiTripCost = ( sNumSafeSectors * COST_AIRSPACE_SAFE ) + ( sNumUnSafeSectors * COST_AIRSPACE_UNSAFE );
 
-	swprintf( sString, lengthof(sString), L"%d", uiTripCost );
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, uiTripCost);
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ) ), sString );
 
@@ -4641,16 +4639,12 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	if (PlayerControlsMine(ubMineIndex) && !gMineStatus[ ubMineIndex ].fEmpty)
 	{
 		// show current production
-		swprintf( wSubString, lengthof(wSubString), L"%d", PredictDailyIncomeFromAMine(ubMineIndex) );
-		InsertCommasForDollarFigure( wSubString );
-		InsertDollarSignInToString( wSubString );
+		SPrintMoney(wSubString, PredictDailyIncomeFromAMine(ubMineIndex));
 		wcscpy( wString, wSubString );
 
 /*
 		// show maximum potential production
-		swprintf( wSubString, L"%d", GetMaxDailyRemovalFromMine(ubMineIndex) );
-		InsertCommasForDollarFigure( wSubString );
-		InsertDollarSignInToString( wSubString );
+		SPrintMoney(wSubString, GetMaxDailyRemovalFromMine(ubMineIndex));
 		wcscat( wString, L" / ");
 		wcscat( wString, wSubString );
 */

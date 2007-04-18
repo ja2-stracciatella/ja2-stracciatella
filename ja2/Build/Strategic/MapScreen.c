@@ -1880,12 +1880,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		iDailyCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
 	}
 
-	swprintf(sString, lengthof(sString), L"%d", iDailyCost );
-
-	// insert commas and dollar sign
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
-
+	SPrintMoney(sString, iDailyCost);
 	FindFontRightCoordinates(CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX,usY, CHAR_FONT);
 
@@ -1893,21 +1888,14 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	// medical deposit
 	if( gMercProfiles[ Menptr[ gCharactersList[ sCharNumber ].usSolID ].ubProfile ].sMedicalDepositAmount > 0 )
 	{
-		swprintf(sString, lengthof(sString), L"%d", gMercProfiles[ Menptr[ gCharactersList[ sCharNumber ].usSolID ].ubProfile ].sMedicalDepositAmount );
-
-		// insert commas and dollar sign
-		InsertCommasForDollarFigure( sString );
-		InsertDollarSignInToString( sString );
-
+		SPrintMoney(sString, gMercProfiles[Menptr[gCharactersList[sCharNumber].usSolID].ubProfile].sMedicalDepositAmount);
 		FindFontRightCoordinates(CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, sString, CHAR_FONT, &usX, &usY);
 		DrawString(sString,usX,CHAR_MEDICAL_Y, CHAR_FONT);
 	}
 
 /*
 	// life insurance
-	swprintf(sString, L"%d", Menptr[ gCharactersList[ sCharNumber ].usSolID ].usLifeInsuranceAmount );
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, Menptr[gCharactersList[sCharNumber].usSolID].usLifeInsuranceAmount);
 	FindFontRightCoordinates(CHAR_LIFE_INSUR_X, CHAR_LIFE_INSUR_Y, CHAR_LIFE_INSUR_WID, CHAR_LIFE_INSUR_HEI, sString, CHAR_FONT, &usX, &usY);
 	DrawString(sString,usX,usY, CHAR_FONT);
 */

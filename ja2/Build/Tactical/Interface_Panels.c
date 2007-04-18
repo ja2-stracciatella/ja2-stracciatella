@@ -5322,10 +5322,7 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		    HandleTacticalUI( );
 
-				swprintf( zMoney, lengthof(zMoney), L"%d", gpItemPointer->uiMoneyAmount );
-
-				InsertCommasForDollarFigure( zMoney );
-				InsertDollarSignInToString( zMoney );
+				SPrintMoney(zMoney, gpItemPointer->uiMoneyAmount);
 
 				//ask the user if they are sure they want to deposit the money
 				swprintf( zText, lengthof(zText), gzMoneyWithdrawMessageText[ CONFIRMATION_TO_DEPOSIT_MONEY_TO_ACCOUNT ], zMoney );

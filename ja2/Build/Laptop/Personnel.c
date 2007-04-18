@@ -2729,21 +2729,14 @@ static void DisplayCostOfCurrentTeam(void)
 		// daily cost
 		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[ 2 ] );
 
-	  swprintf( sString, lengthof(sString), L"%d", GetTotalDailyCostOfCurrentTeam( ) );
-		InsertCommasForDollarFigure( sString );
-		InsertDollarSignInToString( sString );
-
+		SPrintMoney(sString, GetTotalDailyCostOfCurrentTeam());
 		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
-
 		mprintf( sX ,PERS_CURR_TEAM_COST_Y, sString );
 
 		// highest cost
 		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[ 3 ] );
 
-	  swprintf( sString, lengthof(sString), L"%d", GetHighestDailyCostOfCurrentTeam( ) );
-		InsertCommasForDollarFigure( sString );
-		InsertDollarSignInToString( sString );
-
+		SPrintMoney(sString, GetHighestDailyCostOfCurrentTeam());
 		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
 
 		mprintf( sX ,PERS_CURR_TEAM_HIGHEST_Y, sString );
@@ -2751,10 +2744,7 @@ static void DisplayCostOfCurrentTeam(void)
 		// the lowest cost
 		mprintf(  PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[ 4 ] );
 
-	  swprintf( sString, lengthof(sString), L"%d", GetLowestDailyCostOfCurrentTeam( ) );
-		InsertCommasForDollarFigure( sString );
-		InsertDollarSignInToString( sString );
-
+		SPrintMoney(sString, GetLowestDailyCostOfCurrentTeam());
 		FindFontRightCoordinates((INT16)(PERS_CURR_TEAM_COST_X),0,PERS_CURR_TEAM_WIDTH,0,sString, PERS_FONT,  &sX, &sY);
 
 		mprintf( sX ,PERS_CURR_TEAM_LOWEST_Y, sString );
@@ -6132,7 +6122,6 @@ static void DisplayAmountOnCurrentMerc(void)
 	// will display the amount that the merc is carrying on him or herself
 	INT32 iId;
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iFunds;
 	CHAR16 sString[ 64 ];
 	INT16 sX, sY;
 
@@ -6148,13 +6137,7 @@ static void DisplayAmountOnCurrentMerc(void)
 		pSoldier = MercPtrs[ iId ];
 	}
 
-	iFunds = GetFundsOnMerc( pSoldier );
-
-	swprintf( sString, lengthof(sString), L"%d", iFunds );
-
-	// insert commas and dollar sign
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, GetFundsOnMerc(pSoldier));
 
 	// set font
 	SetFont( ATM_FONT );
@@ -6451,11 +6434,7 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 				 swprintf( sString, L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
 			 }
 */
-				swprintf( sString, lengthof(sString), L"%d", gMercProfiles[ Menptr[ iId ].ubProfile ].uiTotalCostToDate );
-
-				// insert commas and dollar sign
-				InsertCommasForDollarFigure( sString );
-				InsertDollarSignInToString( sString );
+				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].uiTotalCostToDate);
 
 				const wchar_t* Cost;
 /*
@@ -6482,39 +6461,27 @@ DEF:3/19/99:
 				 if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
 				 {
 					 // 2 week contract
-					 swprintf( sStringA, lengthof(sStringA), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiBiWeeklySalary / 14 );
-				   InsertCommasForDollarFigure( sStringA );
-					 InsertDollarSignInToString( sStringA );
+					SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].uiBiWeeklySalary / 14);
 				 }
 				 else if( Menptr[iId].bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
 				 {
 					 // 1 week contract
-					 swprintf( sStringA, lengthof(sStringA), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].uiWeeklySalary / 7 );
-				   InsertCommasForDollarFigure( sStringA );
-					 InsertDollarSignInToString( sStringA );
+					SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].uiWeeklySalary / 7);
 				 }
 				 else
 				 {
-
-					 swprintf( sStringA, lengthof(sStringA), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-					 InsertCommasForDollarFigure( sStringA );
-				   InsertDollarSignInToString( sStringA );
+					SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].sSalary);
 				 }
 			 }
 			 else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 			 {
 //DEF: 99/2/7
 //				 swprintf( sStringA, L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary * Menptr[ iId ].iTotalContractLength);
-				 swprintf( sStringA, lengthof(sStringA), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-				 InsertCommasForDollarFigure( sStringA );
-				 InsertDollarSignInToString( sStringA );
+				SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].sSalary);
 			 }
-
 			 else
 			 {
-				 swprintf( sStringA, lengthof(sStringA), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary );
-				 InsertCommasForDollarFigure( sStringA );
-				 InsertDollarSignInToString( sStringA );
+				SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].sSalary);
 			 }
 
 				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + iSlot * TEXT_BOX_WIDTH + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sStringA, PERS_FONT,  &sX, &sY);
@@ -6536,10 +6503,7 @@ DEF:3/19/99:
 			{
 				mprintf((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter-1].y,pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
 
-				swprintf( sString, lengthof(sString), L"%d", gMercProfiles[Menptr[ iId ].ubProfile].sSalary * gMercProfiles[Menptr[ iId ].ubProfile ].iMercMercContractLength );
-				InsertCommasForDollarFigure( sString );
-				InsertDollarSignInToString( sString );
-
+				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].sSalary * gMercProfiles[Menptr[iId].ubProfile].iMercMercContractLength);
 				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}
@@ -6547,12 +6511,7 @@ DEF:3/19/99:
 			{
 				mprintf((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter-1].y,pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
 
-				swprintf(sString, lengthof(sString), L"%d",gMercProfiles[Menptr[iId].ubProfile].sMedicalDepositAmount);
-
-				// insert commas and dollar sign
-				InsertCommasForDollarFigure( sString );
-				InsertDollarSignInToString( sString );
-
+				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].sMedicalDepositAmount);
 				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}

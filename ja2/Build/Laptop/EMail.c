@@ -4500,11 +4500,7 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, E
 			else
 			{
 				CHAR16	sDollarAmount[64];
-
-				swprintf( sDollarAmount, lengthof(sDollarAmount), L"%d", pMail->iFirstData );
-
-				InsertCommasForDollarFigure( sDollarAmount );
-				InsertDollarSignInToString( sDollarAmount );
+				SPrintMoney(sDollarAmount, pMail->iFirstData);
 
 				//add the mercs name to the string
 				wcscat( pFinishedString, sDollarAmount );

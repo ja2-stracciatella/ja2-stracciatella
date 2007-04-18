@@ -1218,12 +1218,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%d", LaptopSaveInfo.iCurrentBalance );
-
-	// insert
-
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 387 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
@@ -1319,11 +1314,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	SetFontForeground( 183 );
 	SetFontBackground( FONT_BLACK );
 
-	swprintf( sString, lengthof(sString), L"%d", iRate );
-
-	// insert
-	InsertCommasForDollarFigure( sString );
-	InsertDollarSignInToString( sString );
+	SPrintMoney(sString, iRate);
 
 	// center it
 	VarFindFontCenterCoordinates( 359, 433 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );

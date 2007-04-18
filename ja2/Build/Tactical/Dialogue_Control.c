@@ -931,9 +931,7 @@ void HandleDialogue( )
 			if( QItem->uiSpecialEventData < 3 )
 			{
 				// post a notice if the player wants to withdraw money from thier account to cover the difference?
-				swprintf( zMoney, lengthof(zMoney), L"%d", QItem->uiSpecialEventData2 );
-				InsertCommasForDollarFigure( zMoney );
-				InsertDollarSignInToString( zMoney );
+				SPrintMoney(zMoney, QItem->uiSpecialEventData2);
 			}
 
 			switch( QItem->uiSpecialEventData  )
