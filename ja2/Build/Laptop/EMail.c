@@ -1779,11 +1779,13 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 			giMailMessageButtons[0] = QuickCreateButton( giMailMessageButtonsImage[0], PREVIOUS_PAGE_BUTTON_X,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, BtnPreviousEmailPageCallback );
+			SetButtonCursor(giMailMessageButtons[0], CURSOR_LAPTOP_SCREEN);
 
 			giMailMessageButtonsImage[1]=  LoadButtonImage( "LAPTOP/NewMailButtons.sti" ,-1,1,-1,4,-1 );
 			giMailMessageButtons[1] = QuickCreateButton( giMailMessageButtonsImage[1], NEXT_PAGE_BUTTON_X ,(INT16) ( LOWER_BUTTON_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, BtnNextEmailPageCallback );
+			SetButtonCursor(giMailMessageButtons[1], CURSOR_LAPTOP_SCREEN);
 
 			gfPageButtonsWereCreated = TRUE;
 
@@ -1799,8 +1801,6 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
     SpecifyDisabledButtonStyle( giMailMessageButtons[0], DISABLED_STYLE_SHADED );
 */
 		// set cursors
-		SetButtonCursor(giMailMessageButtons[0], CURSOR_LAPTOP_SCREEN);
-		SetButtonCursor(giMailMessageButtons[1], CURSOR_LAPTOP_SCREEN);
     SetButtonCursor(giMailMessageButtons[2], CURSOR_LAPTOP_SCREEN);
 		SetButtonCursor(giMessageButton[0], CURSOR_LAPTOP_SCREEN);
 
