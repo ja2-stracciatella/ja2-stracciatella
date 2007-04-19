@@ -3,10 +3,6 @@
 
 #include "Types.h"
 
-// defines
-#define MAX_EMAIL_LINES 10 //max number of lines can be shown in a message
-#define MAX_MESSAGES_PAGE 18 // max number of messages per page
-
 
 #define IMP_EMAIL_INTRO					0
 #define IMP_EMAIL_INTRO_LENGTH	10
@@ -135,16 +131,6 @@
 #define	BOBBY_R_MEDUNA_SHIPMENT_LENGTH				4
 
 
-struct message{
-	STR16 pString;
-	struct message *Next;
-	struct message *Prev;
-};
-
-typedef struct message EmailMessage;
-typedef EmailMessage *MessagePtr;
-
-
 struct email
 {
 	wchar_t pSubject[128];
@@ -188,40 +174,6 @@ typedef struct
 CASSERT(sizeof(SavedEmailStruct) == 44)
 
 
-struct pagemessages{
-	INT32 iIds[MAX_MESSAGES_PAGE];
-	INT32 iPageId;
-	struct pagemessages *Next;
-	struct pagemessages *Prev;
-};
-
-
-typedef struct pagemessages Page;
-typedef Page *PagePtr;
-
-struct messagerecord{
-//  CHAR16 pRecord[ 320 ];
-  CHAR16 pRecord[ 640 ];
-	struct messagerecord *Next;
-};
-
-typedef struct messagerecord Record;
-typedef Record *RecordPtr;
-
-typedef struct
-{
-	RecordPtr pFirstRecord;
-	RecordPtr pLastRecord;
-	INT32 iPageNumber;
-} EmailPageInfoStruct;
-
-enum {
-	SENDER=0,
-	RECEIVED,
-  SUBJECT,
-	READ,
-};
-
 enum {
 	MAIL_ENRICO=0,
 	CHAR_PROFILE_SITE,
@@ -258,9 +210,6 @@ void RenderEmail();
 
 #define CHECK_X 15
 #define CHECK_Y 13
-#define VIEWER_X 155
-#define VIEWER_Y 70 + 21
-#define MAIL_STRING_SIZE 640
 
 
 // message manipulation

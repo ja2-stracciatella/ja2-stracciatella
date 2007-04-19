@@ -25,9 +25,51 @@
 #include "Font_Control.h"
 
 
+#define MAX_MESSAGES_PAGE 18 // max number of messages per page
+
+#define VIEWER_X 155
+#define VIEWER_Y 70 + 21
+#define MAIL_STRING_SIZE 640
+
+
+typedef enum EMailSortCriteria
+{
+	SENDER,
+	RECEIVED,
+	SUBJECT,
+	READ
+} EMailSortCriteria;
+
+
+typedef struct Page Page;
+struct Page
+{
+	INT32 iIds[MAX_MESSAGES_PAGE];
+	INT32 iPageId;
+	Page* Next;
+	Page* Prev;
+};
+
+
+typedef struct Record Record;
+struct Record
+{
+	wchar_t pRecord[640];
+	Record* Next;
+};
+
+
+typedef struct EmailPageInfoStruct
+{
+	Record* pFirstRecord;
+	Record* pLastRecord;
+	INT32 iPageNumber;
+} EmailPageInfoStruct;
+
+
 //static EmailPtr pEmailList;
 EmailPtr pEmailList;
-static PagePtr  pPageList;
+static Page* pPageList;
 static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
 INT32 iDeleteId=0;
@@ -203,7 +245,7 @@ static MOUSE_REGION pScreenMask;
 MOUSE_REGION pDeleteScreenMask;
 
 // the email info struct to speed up email
-EmailPageInfoStruct pEmailPageInfo[ MAX_NUMBER_EMAIL_PAGES ];
+static EmailPageInfoStruct pEmailPageInfo[MAX_NUMBER_EMAIL_PAGES];
 
 //buttons
 INT32 giMessageButton[MAX_BUTTON_COUNT];
@@ -221,7 +263,7 @@ INT32 giMailPageButtonsImage[ 2 ];
 
 
 // the message record list, for the currently displayed message
-RecordPtr pMessageRecordList=NULL;
+static Record* pMessageRecordList = NULL;
 
 // video handles
 UINT32 guiEmailTitle;
@@ -551,8 +593,6 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, E
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
 {
 	wchar_t pSubject[320];
-	//MessagePtr pMessageList;
-	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
 	Email	FakeEmail;
 
@@ -574,8 +614,6 @@ void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 u
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
 	wchar_t pSubject[320];
-	//MessagePtr pMessageList;
-	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
@@ -588,8 +626,6 @@ void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
 	wchar_t pSubject[320];
-	//MessagePtr pMessageList;
-	//MessagePtr pMessage;
 	//wchar_t pMessageString[320];
 
 	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
@@ -810,7 +846,7 @@ static EmailPtr GetEmailMessage(INT32 iId)
 static void AddEmailPage(void)
 {
 	// simple adds a page to the list
-	PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
 	if(pPage)
 	{
 	 while(pPage->Next)
@@ -847,8 +883,8 @@ static void AddEmailPage(void)
 
 static void RemoveEmailPage(INT32 iPageId)
 {
-  PagePtr pPage=pPageList;
-	PagePtr pTempPage=NULL;
+	Page* pPage = pPageList;
+	Page* pTempPage = NULL;
 
 	// run through list until page is matched, or out of pages
 	while((pPage->iPageId !=iPageId)&&(pPage))
@@ -899,7 +935,7 @@ static void RemoveEmailPage(INT32 iPageId)
 void AddMessageToPages(INT32 iMessageId)
 {
 	// go to end of page list
-	PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
 	INT32 iCounter=0;
 	if(!pPage)
    AddEmailPage();
@@ -928,7 +964,7 @@ void AddMessageToPages(INT32 iMessageId)
 static void SwapMessages(Email* pA, Email* pB);
 
 
-static void SortMessages(INT32 iCriteria)
+static void SortMessages(EMailSortCriteria iCriteria)
 {
   EmailPtr pA=pEmailList;
 	EmailPtr pB=pEmailList;
@@ -1079,7 +1115,7 @@ static void SwapMessages(Email* pA, Email* pB)
 static void ClearPages(void)
 {
 	// run through list of message pages and set to -1
-	PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
 
 	// error check
 	if( pPageList == NULL )
@@ -1118,7 +1154,7 @@ static void PlaceMessagesinPages(void)
 static void DisplayMessageList(INT32 iPageNum)
 {
 	// will display page with idNumber iPageNum
-	PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
 	while(pPage->iPageId!=iPageNum)
 	{
 		pPage=pPage->Next;
@@ -1236,7 +1272,7 @@ static void DisplayEmailList(void)
 {
 	INT32 iCounter=0;
 	// look at current page, and display
-  PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
   EmailPtr pEmail=NULL;
 
 
@@ -1338,7 +1374,7 @@ void LookForUnread()
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
  INT32 iCount;
- PagePtr pPage=pPageList;
+	Page* pPage = pPageList;
  INT32 iId=0;
  if(fDisplayMessageFlag)
 	 return;
@@ -1465,11 +1501,11 @@ static void SetUnNewMessages(void)
 }
 
 
-static RecordPtr GetFirstRecordOnThisPage( RecordPtr RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize )
+static Record* GetFirstRecordOnThisPage(Record* RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize)
 {
 	// get the first record on this page - build pages up until this point
 
-	RecordPtr CurrentRecord = NULL;
+	Record* CurrentRecord = NULL;
 
 	INT32 iCurrentPositionOnThisPage = 0;
 	INT32 iCurrentPage =0;
@@ -1536,7 +1572,7 @@ static INT32 DisplayEmailMessage(EmailPtr pMail)
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
 	wchar_t pString[MAIL_STRING_SIZE];
 	INT32 iOffSet=0;
-	RecordPtr pTempRecord;
+	Record* pTempRecord;
 	INT32 iYPositionOnPage = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	BOOLEAN fDonePrintingMessage = FALSE;
@@ -2486,7 +2522,7 @@ static void DrawLineDividers(void)
 
 static void ClearOutEmailMessageRecordsList(void)
 {
-  RecordPtr pTempRecord;
+	Record* pTempRecord;
 	INT32 iCounter = 0;
 
 	// runt hrough list freeing records up
@@ -2515,7 +2551,7 @@ static void ClearOutEmailMessageRecordsList(void)
 
 static void AddEmailRecordToList(STR16 pString)
 {
-  RecordPtr pTempRecord;
+	Record* pTempRecord;
 
 	// set to head of list
 	pTempRecord=pMessageRecordList;
@@ -2792,7 +2828,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
 	wchar_t pString[MAIL_STRING_SIZE];
 	INT32 iOffSet=0;
-	RecordPtr pTempRecord;
+	Record* pTempRecord;
   INT32 iEndOfSection =0;
 	INT32 iRand = 0;
 	BOOLEAN fSufficientMechSkill = FALSE, fSufficientMarkSkill = FALSE, fSufficientMedSkill = FALSE, fSufficientExplSkill = FALSE;
@@ -4103,7 +4139,7 @@ static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 
 static INT32 GetNumberOfPagesToEmail(void)
 {
-	RecordPtr pTempRecord;
+	Record* pTempRecord;
 	INT32 iNumberOfPagesToEmail = 0;
 
 
@@ -4145,7 +4181,10 @@ void ShutDownEmailList()
 
 static void PreProcessEmail(EmailPtr pMail)
 {
-	RecordPtr pTempRecord, pCurrentRecord, pLastRecord , pTempList;
+	Record* pTempRecord;
+	Record* pCurrentRecord;
+	Record* pLastRecord;
+	Record* pTempList;
 	CHAR16 pString[ 512 ];
 	INT32 iCounter = 0, iHeight = 0, iOffSet = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
@@ -4379,7 +4418,7 @@ static void PreProcessEmail(EmailPtr pMail)
 static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, EmailPtr pMail, UINT8 ubNumberOfRecords)
 {
 	INT32 iHeight=0;
-	RecordPtr pTempRecord;
+	Record* pTempRecord;
 //	wchar_t pString[MAIL_STRING_SIZE/2 + 1];
 	wchar_t pString[MAIL_STRING_SIZE];
 	UINT8	ubCnt;
