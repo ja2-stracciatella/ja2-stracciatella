@@ -142,7 +142,6 @@ struct email
 	INT32		iFirstData;
 	UINT32	uiSecondData;
 	BOOLEAN fRead;
-	BOOLEAN fNew;
 
 	struct	email *Next;
 	struct	email *Prev;
@@ -169,7 +168,7 @@ typedef struct
 	UINT32 uiSixData_UNUSED;   // XXX HACK000B
 
 	BOOLEAN fRead;
-	BOOLEAN fNew;
+	BOOLEAN fNew; // XXX HACK000B
 } SavedEmailStruct;
 CASSERT(sizeof(SavedEmailStruct) == 44)
 

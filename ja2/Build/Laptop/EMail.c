@@ -398,7 +398,6 @@ BOOLEAN EnterEmail()
 static void AddDeleteRegionsToMessageRegion(INT32 iViewerY);
 static void ClearOutEmailMessageRecordsList(void);
 static void DestroyMailScreenButtons(void);
-static void SetUnNewMessages(void);
 
 
 void ExitEmail()
@@ -430,9 +429,6 @@ void ExitEmail()
 
 	// remove all mouse regions in use in email
   DeleteEmailMouseRegions();
-
-	// reset flags of new messages
-	SetUnNewMessages();
 
 	// remove video objects being used by email screen
 	DeleteVideoObjectFromIndex(guiEmailTitle);
@@ -691,9 +687,6 @@ static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSu
 
   // reset read flag of this particular message
   pTempEmail->fRead=fAlreadyRead;
-
-	 // set fact this message is new
-	pTempEmail->fNew=TRUE;
 }
 
 
@@ -1425,20 +1418,6 @@ static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
 
 		// force update of entire screen
 		fPausedReDrawScreenFlag = TRUE;
-	}
-}
-
-
-static void SetUnNewMessages(void)
-{
-	// on exit from the mailer, set all new messages as 'un'new
-  	EmailPtr pEmail=pEmailList;
-	// run through the list of messages and add to pages
-
-	while(pEmail)
-	{
-		pEmail->fNew=FALSE;
-		pEmail=pEmail->Next;
 	}
 }
 
