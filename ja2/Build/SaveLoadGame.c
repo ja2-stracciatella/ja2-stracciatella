@@ -3110,21 +3110,14 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 	ShutDownEmailList();
 
 	pEmailList = NULL;
-	//Allocate memory for the header node
-	pEmailList = MemAlloc( sizeof( Email ) );
-	if( pEmailList == NULL )
-		return( FALSE );
-
-	memset( pEmailList, 0, sizeof( Email ) );
 
 	//read in the number of email messages
 	UINT32 uiNumOfEmails;
 	if (!FileRead(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
 
 	//loop through all the emails, add each one individually
-	UINT32 cnt;
-	Email* pEmail = pEmailList;
-	for (cnt = 0; cnt < uiNumOfEmails; cnt++)
+	Email* Prev = NULL;
+	for (UINT32 cnt = 0; cnt < uiNumOfEmails; cnt++)
 	{
 		//get the length of the email subject
 		UINT32 uiSizeOfSubject;
@@ -3151,29 +3144,20 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 		pTempEmail->uiSecondData = SavedEmail.uiSecondData;
 
 		//add the current email in
-		pEmail->Next = pTempEmail;
-		pTempEmail->Prev = pEmail;
+		pTempEmail->Prev = Prev;
+		if (Prev == NULL)
+		{
+			pEmailList = pTempEmail;
+		}
+		else
+		{
+			Prev->Next = pTempEmail;
+		}
 
 		//moved to the next email
-		pEmail = pEmail->Next;
+		Prev = pTempEmail;
 
 		AddMessageToPages( pTempEmail->iId );
-
-	}
-
-	//if there are emails
-	if( cnt )
-	{
-		//the first node of the LL was a dummy, node,get rid  of it
-		Email* pTempEmail = pEmailList;
-		pEmailList = pEmailList->Next;
-		pEmailList->Prev = NULL;
-		MemFree( pTempEmail );
-	}
-	else
-	{
-		MemFree( pEmailList );
-		pEmailList = NULL;
 	}
 
 	return( TRUE );
