@@ -818,7 +818,7 @@ DEF: commented out for Beta.  Nov 30
 
 
 
-void CleanOutControlCodesFromString(STR16 pSourceString, STR16 pDestString)
+void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDestString)
 {
 	INT32		iSourceCounter=0;
 	INT32		iDestCounter=0;

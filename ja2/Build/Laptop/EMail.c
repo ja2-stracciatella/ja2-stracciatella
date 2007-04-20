@@ -905,8 +905,6 @@ static void SortMessages(EMailSortCriteria iCriteria)
 {
 	Email* pA = pEmailList;
 	Email* pB = pEmailList;
-	CHAR16 pSubjectA[256];
-	CHAR16 pSubjectB[256];
 
 	// no messages to sort?
 	if( ( pA == NULL) ||( pB == NULL ) )
@@ -982,10 +980,6 @@ static void SortMessages(EMailSortCriteria iCriteria)
 				pB = pA ->Next;
 				while(pB)
 				{
-					// clear out control codes
-					CleanOutControlCodesFromString( pA->pSubject,  pSubjectA );
-          CleanOutControlCodesFromString( pB->pSubject,  pSubjectB );
-
 					// lesser string?...need sorting
 					if( fSortSubjectUpwards )
 					{
