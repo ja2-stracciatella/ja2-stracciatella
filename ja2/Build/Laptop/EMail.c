@@ -1119,29 +1119,14 @@ static void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 
 	wcscpy( pTempSubject, pSubject );
 
-	if( fRead )
+	UINT32 Font = fRead ? MESSAGE_FONT : FONT10ARIALBOLD;
+	//if the subject will be too long, cap it, and add the '...'
+	if (StringPixLength(pTempSubject, Font) >= SUBJECT_WIDTH - 10)
 	{
-		//if the subject will be too long, cap it, and add the '...'
-		if( StringPixLength( pTempSubject, MESSAGE_FONT ) >= SUBJECT_WIDTH - 10 )
-		{
-			ReduceStringLength( pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, MESSAGE_FONT );
-		}
-
-	  // display string subject
-	  IanDisplayWrappedString(SUBJECT_X, (( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ) , SUBJECT_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR ,pTempSubject,0 ,FALSE ,LEFT_JUSTIFIED );
-  }
-	else
-	{
-		//if the subject will be too long, cap it, and add the '...'
-		if( StringPixLength( pTempSubject, FONT10ARIALBOLD ) >= SUBJECT_WIDTH - 10 )
-		{
-			ReduceStringLength( pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, FONT10ARIALBOLD );
-		}
-
-		// display string subject
-	  IanDisplayWrappedString(SUBJECT_X, (( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ) , SUBJECT_WIDTH, MESSAGE_GAP, FONT10ARIALBOLD, MESSAGE_COLOR ,pTempSubject,0 ,FALSE ,LEFT_JUSTIFIED );
-
+		ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, Font);
 	}
+	IanDisplayWrappedString(SUBJECT_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_WIDTH, MESSAGE_GAP, Font, MESSAGE_COLOR, pTempSubject, 0, FALSE, LEFT_JUSTIFIED);
+
 	SetFontShadow(DEFAULT_SHADOW);
 	// reset font dest buffer
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE  );
@@ -1484,7 +1469,6 @@ static INT32 DisplayEmailMessage(Email* pMail)
 {
 	INT32 iHeight=0;
 	INT32 iCounter=1;
-	wchar_t pString[MAIL_STRING_SIZE];
 	INT32 iOffSet=0;
 	Record* pTempRecord;
 	INT32 iYPositionOnPage = 0;
@@ -1572,13 +1556,8 @@ static INT32 DisplayEmailMessage(Email* pMail)
 	{
 		while( fDonePrintingMessage == FALSE )
 		{
-
-
-			// copy over string
-			wcscpy( pString, pTempRecord -> pRecord );
-
 			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE, IAN_WRAP_NO_SHADOW);
+			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, IAN_WRAP_NO_SHADOW);
 
 			// increment email record ptr
 			pTempRecord = pTempRecord -> Next;
@@ -3990,7 +3969,6 @@ static void PreProcessEmail(Email* pMail)
 	Record* pCurrentRecord;
 	Record* pLastRecord;
 	Record* pTempList;
-	CHAR16 pString[ 512 ];
 	INT32 iCounter = 0, iHeight = 0, iOffSet = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	INT32 iYPositionOnPage = 0;
@@ -4011,6 +3989,7 @@ static void PreProcessEmail(Email* pMail)
   {
 	  while(pMail->usLength > iCounter)
 		{
+			wchar_t pString[512];
       // read one record from email file
 		  LoadEncryptedDataFromFile( "BINARYDATA/Email.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
 
@@ -4039,12 +4018,8 @@ static void PreProcessEmail(Email* pMail)
 
 	while( pTempRecord )
 	{
-
-		// copy over string
-		wcscpy(pString, pTempRecord -> pRecord);
-
 	  // get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-		iHeight += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + iHeight + GetFontHeight(MESSAGE_FONT)), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE,0);
+		iHeight += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + GetFontHeight(MESSAGE_FONT), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, 0);
 
 		// next message record string
 		pTempRecord = pTempRecord -> Next;
@@ -4142,10 +4117,7 @@ static void PreProcessEmail(Email* pMail)
 			// go to the right record
 			while( pTempRecord )
 			{
-				// copy over string
-				wcscpy( pString, pTempRecord -> pRecord );
-
-				if( pString[ 0 ] == 0 )
+				if (pTempRecord->pRecord[0] == L'\0')
 				{
 					// on last page
 					fOnLastPageFlag = TRUE;
@@ -4157,7 +4129,7 @@ static void PreProcessEmail(Email* pMail)
 																 0, 0, 0 ) )  <= MAX_EMAIL_MESSAGE_PAGE_SIZE  )
 				{
      			// now print it
-					iYPositionOnPage += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, ( UINT16 )( VIEWER_MESSAGE_BODY_START_Y + 10 +iYPositionOnPage + iViewerPositionY), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pString,0,FALSE, IAN_WRAP_NO_SHADOW);
+					iYPositionOnPage += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + 10 + iYPositionOnPage + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, IAN_WRAP_NO_SHADOW);
 					fGoingOffCurrentPage = FALSE;
 				}
 				else
@@ -4235,18 +4207,13 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pM
 
 static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, Email* pMail)
 {
+	const wchar_t* const sMercName = L"$MERCNAME$"; //Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
+	const wchar_t* const sAmount = L"$AMOUN$"; //Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
+
 	wchar_t		pTempString[MAIL_STRING_SIZE];
-	INT32			iLength=0;
 	INT32			iCurLocInSourceString=0;
 	INT32			iLengthOfSourceString = wcslen( pFinishedString );		//Get the length of the source string
-	CHAR16		*pMercNameString=NULL;
-	CHAR16		*pAmountString=NULL;
-	CHAR16		*pSubString=NULL;
 	BOOLEAN		fReplacingMercName = TRUE;
-
-	CHAR16	sMercName[ 32 ] = L"$MERCNAME$";	//Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
-	CHAR16	sAmount[32] = L"$AMOUN$";		//Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
-	CHAR16	sSearchString[32];
 
 	//Copy the original string over to the temp string
 	wcscpy( pTempString, pFinishedString );
@@ -4258,40 +4225,38 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, E
 	//Keep looping through to replace all references to the keyword
 	while( iCurLocInSourceString < iLengthOfSourceString )
 	{
-		iLength = 0;
-		pSubString = NULL;
-
 		//Find out if the $MERCNAME$ is in the string
-		pMercNameString = wcsstr( &pTempString[ iCurLocInSourceString ], sMercName );
+		const wchar_t* pMercNameString = wcsstr(&pTempString[iCurLocInSourceString], sMercName);
+		const wchar_t* pAmountString   = wcsstr(&pTempString[iCurLocInSourceString], sAmount);
 
-		pAmountString = wcsstr( &pTempString[ iCurLocInSourceString ], sAmount );
-
+		const wchar_t* pSubString;
+		const wchar_t* sSearchString;
 		if( pMercNameString != NULL && pAmountString != NULL )
 		{
 			if( pMercNameString < pAmountString )
 			{
 				fReplacingMercName = TRUE;
 				pSubString = pMercNameString;
-				wcscpy( sSearchString, sMercName);
+				sSearchString = sMercName;
 			}
 			else
 			{
 				fReplacingMercName = FALSE;
 				pSubString = pAmountString;
-				wcscpy( sSearchString, sAmount);
+				sSearchString = sAmount;
 			}
 		}
 		else if( pMercNameString != NULL )
 		{
 			fReplacingMercName = TRUE;
 			pSubString = pMercNameString;
-			wcscpy( sSearchString, sMercName);
+			sSearchString = sMercName;
 		}
 		else if( pAmountString != NULL )
 		{
 			fReplacingMercName = FALSE;
 			pSubString = pAmountString;
-			wcscpy( sSearchString, sAmount);
+			sSearchString = sAmount;
 		}
 		else
 		{
@@ -4302,7 +4267,7 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, E
 		// if there is a substring
 		if( pSubString != NULL )
 		{
-			iLength = pSubString - &pTempString[ iCurLocInSourceString ];
+			INT32 iLength = pSubString - &pTempString[iCurLocInSourceString];
 
 			//Copy the part of the source string upto the keyword
 			wcsncat( pFinishedString, &pTempString[ iCurLocInSourceString ], iLength );
