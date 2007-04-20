@@ -353,7 +353,6 @@ static UINT8 gubSaveGameLoc = 0;
 
 UINT32		guiScreenToGotoAfterLoadingSavedGame = 0;
 
-extern		EmailPtr	pEmailList;
 extern		UINT32		guiCurrentUniqueSoldierId;
 extern		BOOLEAN		gfHavePurchasedItemsFromTony;
 
@@ -3053,32 +3052,23 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 {
-	UINT32	uiNumOfEmails=0;
-	UINT32		uiSizeOfEmails=0;
-	EmailPtr	pEmail = pEmailList;
-	UINT32	cnt;
-	UINT32	uiStringLength=0;
-
-	SavedEmailStruct SavedEmail;
+	const Email* pEmail;
 
 	//loop through all the email to find out the total number
-	while(pEmail)
+	UINT32 uiNumOfEmails = 0;
+	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
 	{
-		pEmail=pEmail->Next;
 		uiNumOfEmails++;
 	}
-
-	uiSizeOfEmails = sizeof( Email ) * uiNumOfEmails;
 
 	//write the number of email messages
 	if (!FileWrite(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
 
 	//loop trhough all the emails, add each one individually
-	pEmail = pEmailList;
-	for( cnt=0; cnt<uiNumOfEmails; cnt++)
+	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
 	{
 		//Get the strng length of the subject
-		uiStringLength = (wcslen(pEmail->pSubject) + 1) * sizeof(*pEmail->pSubject);
+		UINT32 uiStringLength = (wcslen(pEmail->pSubject) + 1) * sizeof(*pEmail->pSubject);
 
 		//write the length of the current emails subject to the saved game file
 		if (!FileWrite(hFile, &uiStringLength, sizeof(UINT32))) return FALSE;
@@ -3087,6 +3077,7 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 		if (!FileWrite(hFile, pEmail->pSubject, uiStringLength)) return FALSE;
 
 		//Get the current emails data and asign it to the 'Saved email' struct
+		SavedEmailStruct SavedEmail;
 		SavedEmail.usOffset = pEmail->usOffset;
 		SavedEmail.usLength = pEmail->usLength;
 		SavedEmail.ubSender = pEmail->ubSender;
@@ -3115,13 +3106,6 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 
 static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 {
-	UINT32		uiNumOfEmails=0;
-	UINT32		uiSizeOfSubject=0;
-	EmailPtr	pEmail = pEmailList;
-	EmailPtr	pTempEmail = NULL;
-	UINT32		cnt;
-	SavedEmailStruct SavedEmail;
-
 	//Delete the existing list of emails
 	ShutDownEmailList();
 
@@ -3134,16 +3118,19 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 	memset( pEmailList, 0, sizeof( Email ) );
 
 	//read in the number of email messages
+	UINT32 uiNumOfEmails;
 	if (!FileRead(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
 
 	//loop through all the emails, add each one individually
-	pEmail = pEmailList;
-	for( cnt=0; cnt<uiNumOfEmails; cnt++)
+	UINT32 cnt;
+	Email* pEmail = pEmailList;
+	for (cnt = 0; cnt < uiNumOfEmails; cnt++)
 	{
 		//get the length of the email subject
+		UINT32 uiSizeOfSubject;
 		if (!FileRead(hFile, &uiSizeOfSubject, sizeof(UINT32))) return FALSE;
 
-		pTempEmail = MemAlloc(sizeof(*pTempEmail));
+		Email* pTempEmail = MemAlloc(sizeof(*pTempEmail));
 		if (pTempEmail == NULL) return FALSE;
 		memset(pTempEmail, 0, sizeof(*pTempEmail));
 
@@ -3151,6 +3138,7 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 		if (!FileRead(hFile, pTempEmail->pSubject, uiSizeOfSubject)) return FALSE; // XXX potential buffer overflow
 
 		//get the rest of the data from the email
+		SavedEmailStruct SavedEmail;
 		if (!FileRead(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
 
 		pTempEmail->usOffset = SavedEmail.usOffset;
@@ -3177,7 +3165,7 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 	if( cnt )
 	{
 		//the first node of the LL was a dummy, node,get rid  of it
-		pTempEmail = pEmailList;
+		Email* pTempEmail = pEmailList;
 		pEmailList = pEmailList->Next;
 		pEmailList->Prev = NULL;
 		MemFree( pTempEmail );

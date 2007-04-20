@@ -579,7 +579,7 @@ BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 //
 //**************************************************************************
 
-BOOLEAN FileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
+BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite)
 {
 	FILE* hRealFile;
 	BOOLEAN	fRet;

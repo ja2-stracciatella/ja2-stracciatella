@@ -131,7 +131,8 @@
 #define	BOBBY_R_MEDUNA_SHIPMENT_LENGTH				4
 
 
-struct email
+typedef struct Email Email;
+struct Email
 {
 	wchar_t pSubject[128];
 	UINT16	usOffset;
@@ -143,12 +144,9 @@ struct email
 	UINT32	uiSecondData;
 	BOOLEAN fRead;
 
-	struct	email *Next;
-	struct	email *Prev;
+	Email* Next;
+	Email* Prev;
 };
-
-typedef struct email Email;
-typedef Email *EmailPtr;
 
 
 // This used when saving the emails to disk.
@@ -197,7 +195,7 @@ extern BOOLEAN fDeleteMailFlag;
 extern BOOLEAN fDisplayMessageFlag;
 extern BOOLEAN fReDrawNewMailFlag;
 extern BOOLEAN fOpenMostRecentUnReadFlag;
-extern EmailPtr pEmailList;
+extern Email* pEmailList;
 extern UINT32 guiEmailWarning;
 
 

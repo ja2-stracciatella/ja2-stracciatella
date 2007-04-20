@@ -67,7 +67,7 @@ typedef struct EmailPageInfoStruct
 } EmailPageInfoStruct;
 
 
-EmailPtr pEmailList;
+Email* pEmailList;
 static Page* pPageList;
 static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
@@ -443,10 +443,10 @@ void ExitEmail()
 }
 
 
-static BOOLEAN DisplayDeleteNotice(EmailPtr pMail);
+static BOOLEAN DisplayDeleteNotice(Email* pMail);
 static void DisplayEmailList(void);
-static INT32 DisplayEmailMessage(EmailPtr pMail);
-static EmailPtr GetEmailMessage(INT32 iId);
+static INT32 DisplayEmailMessage(Email* pMail);
+static Email* GetEmailMessage(INT32 iId);
 static void HandleEmailViewerButtonStates(void);
 static void OpenMostRecentUnreadEmail(void);
 static void UpDateMessageRecordList(void);
@@ -562,7 +562,7 @@ void RenderEmail( void )
 
 
 static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData);
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, EmailPtr pMail);
+static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, Email* pMail);
 
 
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
@@ -610,8 +610,8 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
 {
 	// will add a message to the list of messages
-	EmailPtr pEmail=pEmailList;
-	EmailPtr pTempEmail=NULL;
+	Email* pEmail = pEmailList;
+	Email* pTempEmail = NULL;
 	UINT32 iCounter=0;
 	INT32 iId=0;
 
@@ -693,8 +693,8 @@ static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSu
 static void RemoveEmailMessage(INT32 iId)
 {
 	// run through list and remove message, update everyone afterwards
-	EmailPtr pEmail=pEmailList;
-	EmailPtr pTempEmail=NULL;
+	Email* pEmail = pEmailList;
+	Email* pTempEmail = NULL;
 	INT32 iCounter=0;
 
 
@@ -748,9 +748,9 @@ static void RemoveEmailMessage(INT32 iId)
 }
 
 
-static EmailPtr GetEmailMessage(INT32 iId)
+static Email* GetEmailMessage(INT32 iId)
 {
-	EmailPtr pEmail=pEmailList;
+	Email* pEmail = pEmailList;
 	// return pointer to message with iId
 
 	// invalid id
@@ -903,8 +903,8 @@ static void SwapMessages(Email* pA, Email* pB);
 
 static void SortMessages(EMailSortCriteria iCriteria)
 {
-  EmailPtr pA=pEmailList;
-	EmailPtr pB=pEmailList;
+	Email* pA = pEmailList;
+	Email* pB = pEmailList;
 	CHAR16 pSubjectA[256];
 	CHAR16 pSubjectB[256];
 
@@ -1074,7 +1074,7 @@ static void ClearPages(void)
 
 static void PlaceMessagesinPages(void)
 {
-	EmailPtr pEmail=pEmailList;
+	Email* pEmail = pEmailList;
 	// run through the list of messages and add to pages
 	ClearPages();
 	while(pEmail)
@@ -1210,7 +1210,7 @@ static void DisplayEmailList(void)
 	INT32 iCounter=0;
 	// look at current page, and display
 	Page* pPage = pPageList;
-  EmailPtr pEmail=NULL;
+	Email* pEmail = NULL;
 
 
 	// error check, if no page, return
@@ -1286,7 +1286,7 @@ void LookForUnread()
 
 	// simply runrs through list of messages, if any unread, set unread flag
 
-  EmailPtr pA=pEmailList;
+	Email* pA = pEmailList;
 
 	// reset unread flag
 	fUnReadMailFlag=FALSE;
@@ -1478,15 +1478,15 @@ static Record* GetFirstRecordOnThisPage(Record* RecordList, UINT32 uiFont, UINT1
 }
 
 
-static void DisplayEmailMessageSubjectDateFromLines(EmailPtr pMail, INT32 iViewerY);
+static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY);
 static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY);
 static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId);
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, EmailPtr pMail);
-static void PreProcessEmail(EmailPtr pMail);
+static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Email* pMail);
+static void PreProcessEmail(Email* pMail);
 
 
-static INT32 DisplayEmailMessage(EmailPtr pMail)
+static INT32 DisplayEmailMessage(Email* pMail)
 {
 	INT32 iHeight=0;
 	INT32 iCounter=1;
@@ -2037,7 +2037,7 @@ void CreateDestroyDeleteNoticeMailButton()
 }
 
 
-static BOOLEAN DisplayDeleteNotice(EmailPtr pMail)
+static BOOLEAN DisplayDeleteNotice(Email* pMail)
 {
 	// will display a delete mail box whenever delete mail has arrived
 	if(!fDeleteMailFlag)
@@ -2272,7 +2272,7 @@ static void CreateMailScreenButtons(void)
 }
 
 
-static void DisplayEmailMessageSubjectDateFromLines(EmailPtr pMail, INT32 iViewerY)
+static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY)
 {
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
@@ -2469,10 +2469,10 @@ static void ReDisplayBoxes(void)
 
 
 static void HandleIMPCharProfileResultsMessage(void);
-static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, EmailPtr pMail, UINT8 ubNumberOfRecords);
+static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pMail, UINT8 ubNumberOfRecords);
 
 
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, EmailPtr pMail)
+static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Email* pMail)
 {
   BOOLEAN fSpecialCase = FALSE;
 
@@ -3890,7 +3890,7 @@ static void OpenMostRecentUnreadEmail(void)
 {
 	// will open the most recent email the player has recieved and not read
 	INT32 iMostRecentMailId = -1;
-	EmailPtr pB=pEmailList;
+	Email* pB = pEmailList;
 	UINT32 iLowestDate = 9999999;
 
 	while( pB )
@@ -3971,8 +3971,8 @@ static INT32 GetNumberOfPagesToEmail(void)
 
 void ShutDownEmailList()
 {
-	EmailPtr pEmail = pEmailList;
-	EmailPtr pTempEmail = NULL;
+	Email* pEmail = pEmailList;
+	Email* pTempEmail = NULL;
 
 	//loop through all the emails to delete them
 	while( pEmail )
@@ -3990,7 +3990,7 @@ void ShutDownEmailList()
 }
 
 
-static void PreProcessEmail(EmailPtr pMail)
+static void PreProcessEmail(Email* pMail)
 {
 	Record* pTempRecord;
 	Record* pCurrentRecord;
@@ -4208,7 +4208,7 @@ static void PreProcessEmail(EmailPtr pMail)
 }
 
 
-static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, EmailPtr pMail, UINT8 ubNumberOfRecords)
+static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pMail, UINT8 ubNumberOfRecords)
 {
 	INT32 iHeight=0;
 	Record* pTempRecord;
@@ -4239,7 +4239,7 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, EmailPtr 
 }
 
 
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, EmailPtr pMail)
+static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, Email* pMail)
 {
 	wchar_t		pTempString[MAIL_STRING_SIZE];
 	INT32			iLength=0;
