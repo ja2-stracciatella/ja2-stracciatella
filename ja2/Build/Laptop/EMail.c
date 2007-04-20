@@ -898,148 +898,59 @@ void AddMessageToPages(INT32 iMessageId)
 }
 
 
-static void SwapMessages(Email* pA, Email* pB);
-
-
-static void SortMessages(EMailSortCriteria iCriteria)
+static void SortMessages(EMailSortCriteria Criterium)
 {
-	Email* pA = pEmailList;
-	Email* pB = pEmailList;
+	Email* NewList = NULL;
 
-	// no messages to sort?
-	if( ( pA == NULL) ||( pB == NULL ) )
+	for (Email* List = pEmailList; List != NULL;)
 	{
-		return;
+		Email* Mail = List;
+		List = List->Next;
+
+		Email* InsAfter = NULL;
+		for (Email* Other = NewList; Other != NULL; Other = Other->Next)
+		{
+			INT Order;
+			switch (Criterium)
+			{
+				case RECEIVED:
+					Order = Mail->iDate - Other->iDate;
+					if (fSortDateUpwards) Order = -Order;
+					break;
+
+				case SENDER:
+					Order = wcscmp(pSenderNameList[Mail->ubSender], pSenderNameList[Other->ubSender]);
+					if (fSortSenderUpwards) Order = -Order;
+					break;
+
+				case SUBJECT:
+					Order = wcscmp(Mail->pSubject, Other->pSubject);
+					if (fSortSubjectUpwards) Order = -Order;
+					break;
+
+				case READ:
+					Order = Other->fRead - Mail->fRead;
+					break;
+			}
+			if (Order > 0) break;
+			InsAfter = Other;
+		}
+		Mail->Prev = InsAfter;
+		if (InsAfter == NULL)
+		{
+			Mail->Next = NewList;
+			NewList = Mail;
+		}
+		else
+		{
+			Mail->Next = InsAfter->Next;
+			InsAfter->Next = Mail;
+		}
+		if (Mail->Next != NULL) Mail->Next->Prev = Mail;
 	}
+	pEmailList = NewList;
 
-  // nothing here either?
-	if(!pA->Next)
-		return;
-
-	pB=pA->Next;
-	switch(iCriteria)
-	{
-		case RECEIVED:
-      while(pA)
-			{
-
-				// set B to next in A
-				pB=pA -> Next;
-				while(pB)
-				{
-
-					if( fSortDateUpwards )
-					{
-							// if date is lesser, swap
-						if (pA->iDate > pB->iDate) SwapMessages(pA, pB);
-					}
-					else
-					{
-						// if date is lesser, swap
-						if (pA->iDate < pB->iDate) SwapMessages(pA, pB);
-					}
-
-
-					// next in B's list
-					pB=pB->Next;
-				}
-
-				// next in A's List
-	      pA=pA->Next;
-			}
-			break;
-		case SENDER:
-			 while(pA)
-			{
-
-				 pB = pA ->Next;
-				while(pB)
-				{
-          // lesser string?...need sorting
-					if( fSortSenderUpwards )
-					{
-					   if(( wcscmp( pSenderNameList[pA->ubSender] , pSenderNameList[pB->ubSender] ) ) < 0 )
-						   SwapMessages(pA, pB);
-					}
-					else
-					{
-						if(( wcscmp( pSenderNameList[pA->ubSender] , pSenderNameList[pB->ubSender] ) ) > 0 )
-						  SwapMessages(pA, pB);
-					}
-					// next in B's list
-					pB=pB->Next;
-				}
-			  // next in A's List
-				pA=pA->Next;
-			}
-			break;
-    case SUBJECT:
-			 while(pA)
-			{
-
-				pB = pA ->Next;
-				while(pB)
-				{
-					// lesser string?...need sorting
-					if( fSortSubjectUpwards )
-					{
-						if (wcscmp(pA->pSubject, pB->pSubject) < 0) SwapMessages(pA, pB);
-          }
-					else
-					{
-						if (wcscmp(pA->pSubject, pB->pSubject) > 0) SwapMessages(pA, pB);
-					}
-					// next in B's list
-					pB=pB->Next;
-				}
-				// next in A's List
-	      pA=pA->Next;
-			}
-			break;
-
-    case READ:
-			 while(pA)
-			{
-
-				pB = pA ->Next;
-				while(pB)
-				{
-					// one read and another not?...need sorting
-					if (pA->fRead && !pB->fRead) SwapMessages(pA, pB);
-
-					// next in B's list
-					pB=pB->Next;
-				}
-				// next in A's List
-	      pA=pA->Next;
-			}
-			break;
-	}
-
-
-	// place new list into pages of email
-  //PlaceMessagesinPages();
-
-	// redraw the screen
-	fReDrawScreenFlag=TRUE;
-}
-
-
-static void SwapMessages(Email* pA, Email* pB)
-{
- // swaps locations of messages in the linked list
-
-	Email Temp = *pA;
-	*pA = *pB;
-	*pB = Temp;
-
-	Email* Next = pA->Next;
-	pA->Next = pB->Next;
-	pB->Next = Next;
-
-	Email* Prev = pA->Prev;
-	pA->Prev = pB->Prev;
-	pB->Prev = Prev;
+	fReDrawScreenFlag = TRUE;
 }
 
 
