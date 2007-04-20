@@ -35,7 +35,6 @@
 #include "Soldier_Profile.h"
 #include "Text_Input.h"
 #include "Random.h"
-#include "WordWrap.h"
 #include "EditorItems.h"
 #include "Editor_Taskbar_Utils.h"
 #include "Exit_Grids.h"

@@ -8,7 +8,6 @@
 #include "Input.h"
 #include "Isometric_Utils.h"
 #include "Debug.h"
-#include "WordWrap.h"
 #include "Render_Dirty.h"
 #include "Encrypted_File.h"
 #include "Cursors.h"

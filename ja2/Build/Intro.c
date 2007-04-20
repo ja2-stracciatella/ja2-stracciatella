@@ -25,7 +25,6 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "WordWrap.h"
 #include "Stubs.h" // XXX
 
 

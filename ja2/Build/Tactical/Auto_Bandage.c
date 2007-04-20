@@ -22,7 +22,6 @@
 #include "Map_Screen_Interface.h"
 #include "Soldier_Profile.h"
 #include "Assignments.h"
-#include "WordWrap.h"
 #include "Cursors.h"
 #include "English.h"
 #include "Video.h"

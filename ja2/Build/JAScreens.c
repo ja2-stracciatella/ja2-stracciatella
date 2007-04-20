@@ -38,7 +38,6 @@
 #include "GameScreen.h"
 #include "English.h"
 #include "Random.h"
-#include "WordWrap.h"
 #include "Fade_Screen.h"
 #include "JA2_Demo_Ads.h"
 #include "Multi_Language_Graphic_Utils.h"

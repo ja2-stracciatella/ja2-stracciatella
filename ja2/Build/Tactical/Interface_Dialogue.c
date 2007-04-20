@@ -7,7 +7,6 @@
 #include "WCheck.h"
 #include "Render_Dirty.h"
 #include "Soldier_Profile.h"
-#include "WordWrap.h"
 #include "SysUtil.h"
 #include "VObject_Blitters.h"
 #include "Interface_Dialogue.h"

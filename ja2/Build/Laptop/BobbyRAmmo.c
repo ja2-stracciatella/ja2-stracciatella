@@ -4,7 +4,6 @@
 #include "BobbyR.h"
 #include "Utilities.h"
 #include "WCheck.h"
-#include "WordWrap.h"
 #include "Cursors.h"
 #include "Interface_Items.h"
 #include "Encrypted_File.h"
