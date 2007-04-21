@@ -80,7 +80,6 @@ BOOLEAN fOldDisplayMessageFlag=FALSE;
 BOOLEAN fReDraw=FALSE;
 BOOLEAN fReDrawMessageFlag = FALSE;
 BOOLEAN fOnLastPageFlag=FALSE;
-BOOLEAN fJustStartedEmail = FALSE;
 BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
 INT32 iViewerPositionY=0;
 
@@ -369,9 +368,6 @@ BOOLEAN EnterEmail()
 
 	// initialize mouse regions
 	InitializeMouseRegions();
-
-	// just started email
-	fJustStartedEmail = TRUE;
 
 	// create buttons
 	CreateMailScreenButtons( );
@@ -1787,7 +1783,6 @@ static void FromCallback(GUI_BUTTON *btn, INT32 iReason)
 		// sort messages based on sender name, then replace into pages of email
 		fSortSenderUpwards = !fSortSenderUpwards;
 		SortMessages(SENDER);
-		fJustStartedEmail = FALSE;
 		PlaceMessagesinPages();
 	}
 }
@@ -1800,7 +1795,6 @@ static void SubjectCallback(GUI_BUTTON *btn, INT32 iReason)
 		// sort message on subject and reorder list
 		fSortSubjectUpwards = !fSortSubjectUpwards;
 		SortMessages(SUBJECT);
-		fJustStartedEmail = FALSE;
 		PlaceMessagesinPages();
 	}
 }
@@ -1823,7 +1817,6 @@ static void DateCallback(GUI_BUTTON *btn, INT32 iReason)
 		fSortDateUpwards = !fSortDateUpwards;
 		SortMessages(RECEIVED);
 		PlaceMessagesinPages();
-		fJustStartedEmail = FALSE;
 	}
 }
 
@@ -1835,7 +1828,6 @@ static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
 		// sort messages based on date recieved and reorder lsit
 		SortMessages(READ);
 		PlaceMessagesinPages();
-		fJustStartedEmail = FALSE;
 	}
 }
 
