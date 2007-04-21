@@ -83,7 +83,6 @@ BOOLEAN fDeleteMailFlag=FALSE;
 BOOLEAN fReDrawMessageFlag = FALSE;
 BOOLEAN fOnLastPageFlag=FALSE;
 BOOLEAN fJustStartedEmail = FALSE;
-BOOLEAN fDeleteInternal = FALSE;
 BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
 INT32 iViewerPositionY=0;
 
@@ -584,7 +583,6 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 {
 	// will add a message to the list of messages
 	Email* pTempEmail = NULL;
-	UINT32 iCounter=0;
 
 	// add new element onto list
   pTempEmail=MemAlloc(sizeof(Email));
@@ -720,58 +718,6 @@ static void AddEmailPage(void)
 }
 
 
-static void RemoveEmailPage(INT32 iPageId)
-{
-	Page* pPage = pPageList;
-	Page* pTempPage = NULL;
-
-	// run through list until page is matched, or out of pages
-	while((pPage->iPageId !=iPageId)&&(pPage))
-		pPage=pPage->Next;
-
-	// error check
-	if(!pPage)
-		return;
-
-
-  // found
-	pTempPage=pPage;
-  if((pPage->Prev)&&(pTempPage->Next))
-	{
-		// in the middle of the list
-	 pPage=pPage->Prev;
-	 pTempPage=pTempPage->Next;
-	 MemFree(pPage->Next);
-	 pPage->Next=pTempPage;
-	 pTempPage->Prev=pPage;
-	}
-	else if(pPage->Prev)
-	{
-		// end of the list
-		pPage=pPage->Prev;
-	  MemFree(pPage->Next);
-		pPage->Next=NULL;
-	}
-	else if(pTempPage->Next)
-	{
-		// beginning of the list
-		pPage=pTempPage;
-		pTempPage=pTempPage->Next;
-	  MemFree(pPage);
-		pTempPage->Prev=NULL;
-	}
-	else
-	{
-		// all alone
-
-	  MemFree(pPage);
-    pPageList=NULL;
-	}
-  if(iLastPage !=0)
-	 iLastPage--;
-}
-
-
 void AddMessageToPages(Email* Mail)
 {
 	// go to end of page list
@@ -892,20 +838,6 @@ static void PlaceMessagesinPages(void)
 	}
 	if(iCurrentPage >iLastPage)
 		iCurrentPage=iLastPage;
-}
-
-
-static void DisplayMessageList(INT32 iPageNum)
-{
-	// will display page with idNumber iPageNum
-	Page* pPage = pPageList;
-	while(pPage->iPageId!=iPageNum)
-	{
-		pPage=pPage->Next;
-		if(!pPage)
-			return;
-	}
-	// found page show it
 }
 
 
@@ -1275,8 +1207,6 @@ static INT32 DisplayEmailMessage(Email* pMail)
 	INT32 iCounter=1;
 	INT32 iOffSet=0;
 	Record* pTempRecord;
-	INT32 iYPositionOnPage = 0;
-	BOOLEAN fGoingOffCurrentPage = FALSE;
 	BOOLEAN fDonePrintingMessage = FALSE;
 
 
@@ -1633,20 +1563,6 @@ void ReDrawNewMailBox( void )
 }
 
 
-static void SwitchEmailPages(void)
-{
-	// this function will switch current page
-
-	// gone too far, reset page to start
-	if( iCurrentPage >iLastPage )
-		iCurrentPage=0;
-
-	// set to last page
-	if( iCurrentPage < 0 )
-		iCurrentPage=iLastPage;
-}
-
-
 static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1877,10 +1793,7 @@ static void DeleteEmail(void)
 {
 
 	// error check, invalid mail, or not time to delete mail
-	if( fDeleteInternal != TRUE )
-	{
-		if (MailToDelete == NULL || !fDeleteMailFlag) return;
-	}
+	if (MailToDelete == NULL || !fDeleteMailFlag) return;
    // remove the message
    RemoveEmailMessage(MailToDelete);
 
@@ -3561,37 +3474,6 @@ static void HandleEmailViewerButtonStates(void)
 	{
 		EnableButton( giMailMessageButtons[ 1 ] );
 	}
-}
-
-
-static void DeleteCurrentMessage(void)
-{
-	// will delete the currently displayed message
-
-	// set current message to be deleted
-	MailToDelete = CurrentMail;
-
-	// set the currently displayed message to none
-	CurrentMail = NULL;
-
-	// reset display message flag
-  fDisplayMessageFlag=FALSE;
-
-	// reset page being displayed
-  giMessagePage = 0;
-
-	fDeleteInternal = TRUE;
-
-	// delete message
-	DeleteEmail( );
-
-	fDeleteInternal = FALSE;
-
-	// force update of entire screen
-	fReDrawScreenFlag=TRUE;
-
-  // rerender email
-	RenderEmail();
 }
 
 
