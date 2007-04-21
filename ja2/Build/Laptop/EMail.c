@@ -632,51 +632,21 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 }
 
 
-static void RemoveEmailMessage(Email* pEmail)
+static void RemoveEmailMessage(Email* Mail)
 {
-	// run through list and remove message, update everyone afterwards
-	Email* pTempEmail = NULL;
-
-	// end of list, no mail found, leave
-	if(!pEmail)
-		return;
-  // found
-
-	// set tempt o current
-	pTempEmail=pEmail;
-
-  // check position of message in list
-  if((pEmail->Prev)&&(pTempEmail->Next))
+	Email* Next = Mail->Next;
+	Email* Prev = Mail->Prev;
+	if (Next != NULL) Next->Prev = Prev;
+	if (Prev != NULL)
 	{
-		// in the middle of the list
-	 pEmail=pEmail->Prev;
-	 pTempEmail=pTempEmail->Next;
-	 MemFree(pEmail->Next);
-	 pEmail->Next=pTempEmail;
-	 pTempEmail->Prev=pEmail;
-	}
-	else if(pEmail->Prev)
-	{
-		// end of the list
-		pEmail=pEmail->Prev;
-	  MemFree(pEmail->Next);
-		pEmail->Next=NULL;
-	}
-	else if(pTempEmail->Next)
-	{
-		// beginning of the list
-		pEmail=pTempEmail;
-		pTempEmail=pTempEmail->Next;
-	  MemFree(pEmail);
-		pTempEmail->Prev=NULL;
-		pEmailList=pTempEmail;
+		Prev->Next = Next;
 	}
 	else
 	{
-		// all alone
-	  MemFree(pEmail);
-    pEmailList=NULL;
+		Assert(pEmailList == Mail);
+		pEmailList = Next;
 	}
+	MemFree(Mail);
 }
 
 
