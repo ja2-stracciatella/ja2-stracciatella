@@ -76,28 +76,20 @@ BOOLEAN fUnReadMailFlag=FALSE;
 BOOLEAN fNewMailFlag=FALSE;
 BOOLEAN fOldNewMailFlag=FALSE;
 BOOLEAN fDisplayMessageFlag=FALSE;
-BOOLEAN fOldDisplayMessageFlag=FALSE;
-BOOLEAN fReDraw=FALSE;
-BOOLEAN fReDrawMessageFlag = FALSE;
-BOOLEAN fOnLastPageFlag=FALSE;
+static BOOLEAN fOldDisplayMessageFlag = FALSE;
+static BOOLEAN fReDraw = FALSE;
+static BOOLEAN fReDrawMessageFlag = FALSE;
+static BOOLEAN fOnLastPageFlag = FALSE;
 BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
-INT32 iViewerPositionY=0;
+static INT32 iViewerPositionY = 0;
 
 static Email* CurrentMail;
 static Email* PreviousMail;
-INT32 giMessagePage = -1;
-INT32 giNumberOfPagesToCurrentEmail = -1;
+static INT32 giMessagePage = -1;
+static INT32 giNumberOfPagesToCurrentEmail = -1;
 UINT32 guiEmailWarning;
 
 #define EMAIL_TOP_BAR_HEIGHT 22
-
-#define LIST_MIDDLE_COUNT 18
-// object positions
-#define TITLE_X 0+LAPTOP_SCREEN_UL_X
-#define TITLE_Y 0+LAPTOP_SCREEN_UL_Y
-
-#define STAMP_X 344+LAPTOP_SCREEN_UL_X
-#define STAMP_Y 0+LAPTOP_SCREEN_UL_Y
 
 #define MIDDLE_X 0+LAPTOP_SCREEN_UL_X
 #define MIDDLE_Y 72 + EMAIL_TOP_BAR_HEIGHT
@@ -106,43 +98,29 @@ UINT32 guiEmailWarning;
 
 // new graphics
 #define EMAIL_LIST_WINDOW_Y 22
-#define EMAIL_TITLE_BAR_X 5
 
 // email columns
 #define SENDER_X LAPTOP_SCREEN_UL_X+65
-#define SENDER_WIDTH 246-158
 
 #define DATE_X LAPTOP_SCREEN_UL_X+428
 
 #define SUBJECT_X LAPTOP_SCREEN_UL_X+175
 #define SUBJECT_WIDTH					254	//526-245
 #define INDIC_X 128
-#define INDIC_WIDTH 155-123
-#define INDIC_HEIGHT 145-128
 
 #define LINE_WIDTH 592-121
 
 #define MESSAGE_X 5	//17
-#define MESSAGE_Y 35
 #define MESSAGE_WIDTH 528-125//150
 #define MESSAGE_COLOR FONT_BLACK
 #define MESSAGE_GAP 2
-
 
 
 #define MESSAGE_HEADER_WIDTH 209-151
 #define MESSAGE_HEADER_X VIEWER_X+4
 
 
-#define VIEWER_HEAD_X 140
-#define VIEWER_HEAD_Y 9
-#define VIEWER_HEAD_WIDTH 445-VIEWER_HEAD_X
 #define MAX_BUTTON_COUNT 1
-#define VIEWER_WIDTH 500
-#define VIEWER_HEIGHT 195
-
-#define MESSAGEX_X 425
-#define MESSAGEX_Y 6
 
 
 #define EMAIL_WARNING_X 210
@@ -173,10 +151,8 @@ UINT32 guiEmailWarning;
 #define FROM_BOX_X 166
 
 #define SUBJECT_BOX_X 276
-#define SUBJECT_BOX_WIDTH 528-249
 
 #define DATE_BOX_X 530
-#define DATE_BOX_WIDTH 594-530
 
 #define FROM_BOX_Y 51 + EMAIL_TOP_BAR_HEIGHT
 
@@ -223,45 +199,43 @@ UINT32 guiEmailWarning;
 #define LOWER_BUTTON_Y BUTTON_Y + 299
 
 
-BOOLEAN fSortDateUpwards = FALSE;
-BOOLEAN fSortSenderUpwards = FALSE;
-BOOLEAN fSortSubjectUpwards = FALSE;
-BOOLEAN gfPageButtonsWereCreated = FALSE;
+static BOOLEAN fSortDateUpwards = FALSE;
+static BOOLEAN fSortSenderUpwards = FALSE;
+static BOOLEAN fSortSubjectUpwards = FALSE;
+static BOOLEAN gfPageButtonsWereCreated = FALSE;
 
 // mouse regions
-MOUSE_REGION pEmailRegions[MAX_MESSAGES_PAGE];
+static MOUSE_REGION pEmailRegions[MAX_MESSAGES_PAGE];
 static MOUSE_REGION pScreenMask;
-MOUSE_REGION pDeleteScreenMask;
+static MOUSE_REGION pDeleteScreenMask;
 
 // the email info struct to speed up email
 static EmailPageInfoStruct pEmailPageInfo[MAX_NUMBER_EMAIL_PAGES];
 
 //buttons
-INT32 giMessageButton[MAX_BUTTON_COUNT];
-INT32 giMessageButtonImage[MAX_BUTTON_COUNT];
-INT32 giDeleteMailButton[2];
-INT32 giDeleteMailButtonImage[2];
-INT32 giSortButton[4];
-INT32 giSortButtonImage[4];
-INT32 giNewMailButton[1];
-INT32 giNewMailButtonImage[1];
-INT32 giMailMessageButtons[3];
-INT32 giMailMessageButtonsImage[3];
-INT32 giMailPageButtons[ 2 ];
-INT32 giMailPageButtonsImage[ 2 ];
+static INT32 giMessageButton[MAX_BUTTON_COUNT];
+static INT32 giMessageButtonImage[MAX_BUTTON_COUNT];
+static INT32 giDeleteMailButton[2];
+static INT32 giDeleteMailButtonImage[2];
+static INT32 giSortButton[4];
+static INT32 giSortButtonImage[4];
+static INT32 giNewMailButton[1];
+static INT32 giNewMailButtonImage[1];
+static INT32 giMailMessageButtons[3];
+static INT32 giMailMessageButtonsImage[3];
+static INT32 giMailPageButtons[2];
+static INT32 giMailPageButtonsImage[2];
 
 
 // the message record list, for the currently displayed message
 static Record* pMessageRecordList = NULL;
 
 // video handles
-UINT32 guiEmailTitle;
-UINT32 guiEmailStamp;
-UINT32 guiEmailBackground;
-UINT32 guiEmailIndicator;
-UINT32 guiEmailMessage;
-UINT32 guiMAILDIVIDER;
-
+static UINT32 guiEmailTitle;
+static UINT32 guiEmailBackground;
+static UINT32 guiEmailIndicator;
+static UINT32 guiEmailMessage;
+static UINT32 guiMAILDIVIDER;
 
 
 // the enumeration of headers
@@ -273,12 +247,11 @@ enum{
 
 
 // current line in the email list that is highlighted, -1 is no line highlighted
-INT32 iHighLightLine=-1;
+static INT32 iHighLightLine = -1;
 
 // whther or not we need to redraw the new mail box
 BOOLEAN fReDrawNewMailFlag = FALSE;
-INT32 giNumberOfMessageToEmail = 0;
-INT32 iTotalHeight = 0;
+static INT32 iTotalHeight = 0;
 
 BOOLEAN	fFirstTime=TRUE;
 
