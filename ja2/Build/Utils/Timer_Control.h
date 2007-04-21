@@ -7,16 +7,7 @@
 
 typedef INT32		TIMECOUNTER;
 
-//typedef void (__stdcall *JA2_TIMERPROC)( UINT32 uiID, UINT32 uiMsg, UINT32 uiUser, UINT32 uiDw1, UINT32 uiDw2 );
-
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
-
-// CALLBACK TIMER DEFINES
-enum
-{
-	ITEM_LOCATOR_CALLBACK,
-	NUM_TIMER_CALLBACKS
-};
 
 // TIMER DEFINES
 enum
@@ -54,7 +45,7 @@ enum
 #define		BASETIMESLICE												10
 
 // TIMER INTERVALS
-INT32		giTimerIntervals[ NUMTIMERS ];
+const INT32 giTimerIntervals[NUMTIMERS];
 // TIMER COUNTERS
 INT32		giTimerCounters[ NUMTIMERS ];
 
@@ -70,8 +61,6 @@ BOOLEAN InitializeJA2Clock( void );
 void    ShutdownJA2Clock( void );
 
 #define GetJA2Clock()						guiBaseJA2Clock
-
-UINT32	GetPauseJA2Clock( );
 
 void PauseTime( BOOLEAN fPaused );
 
@@ -115,8 +104,5 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 #define		SYNCTIMECOUNTER( )						( giClockTimer = GetJA2Clock() )
 
 #endif
-
-
-
 
 #endif

@@ -13,11 +13,10 @@ INT32	giClockTimer = -1;
 INT32	giTimerDiag = 0;
 
 UINT32	guiBaseJA2Clock = 0;
-UINT32	guiBaseJA2NoPauseClock = 0;
 
-BOOLEAN	gfPauseClock = FALSE;
+static BOOLEAN gfPauseClock = FALSE;
 
-INT32		giTimerIntervals[ NUMTIMERS ] =
+const INT32 giTimerIntervals[NUMTIMERS] =
 {
 		5,					// Tactical Overhead
 		20,					// NEXTSCROLL
@@ -59,15 +58,11 @@ INT32		giTimerTeamTurnUpdate			= 0;
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 
 // Clock Callback event ID
-SDL_TimerID	gTimerID;
+static SDL_TimerID gTimerID;
 
 // GLOBALS FOR CALLBACK
-UINT32				gCNT;
-SOLDIERTYPE		*gPSOLDIER;
-
-// GLobal for displaying time diff ( DIAG )
-UINT32		guiClockDiff = 0;
-UINT32		guiClockStart = 0;
+static UINT32 gCNT;
+static SOLDIERTYPE* gPSOLDIER;
 
 
 extern UINT32 guiCompressionStringBaseTime;
@@ -94,9 +89,6 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 	if ( !fInFunction )
 	{
 		fInFunction = TRUE;
-
-		guiBaseJA2NoPauseClock += BASETIMESLICE;
-
 
 		if ( !gfPauseClock )
 		{
