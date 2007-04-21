@@ -3067,14 +3067,9 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 	//loop trhough all the emails, add each one individually
 	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
 	{
-		//Get the strng length of the subject
-		UINT32 uiStringLength = (wcslen(pEmail->pSubject) + 1) * sizeof(*pEmail->pSubject);
-
 		//write the length of the current emails subject to the saved game file
-		if (!FileWrite(hFile, &uiStringLength, sizeof(UINT32))) return FALSE;
-
-		//write the subject of the current email to the saved game file
-		if (!FileWrite(hFile, pEmail->pSubject, uiStringLength)) return FALSE;
+		UINT32 uiStringLength = 0;
+		if (!FileWrite(hFile, &uiStringLength, sizeof(UINT32))) return FALSE; // XXX HACK000B
 
 		//Get the current emails data and asign it to the 'Saved email' struct
 		SavedEmailStruct SavedEmail;
@@ -3121,42 +3116,14 @@ static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
 	{
 		//get the length of the email subject
 		UINT32 uiSizeOfSubject;
-		if (!FileRead(hFile, &uiSizeOfSubject, sizeof(UINT32))) return FALSE;
-
-		Email* pTempEmail = MemAlloc(sizeof(*pTempEmail));
-		if (pTempEmail == NULL) return FALSE;
-		memset(pTempEmail, 0, sizeof(*pTempEmail));
-
-		//Get the subject
-		if (!FileRead(hFile, pTempEmail->pSubject, uiSizeOfSubject)) return FALSE; // XXX potential buffer overflow
+		if (!FileRead(hFile, &uiSizeOfSubject, sizeof(UINT32))) return FALSE; // XXX HACK000B
+		if (!FileSeek(hFile, uiSizeOfSubject, FILE_SEEK_FROM_CURRENT)) return FALSE; // XXX HACK000B
 
 		//get the rest of the data from the email
 		SavedEmailStruct SavedEmail;
 		if (!FileRead(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
 
-		pTempEmail->usOffset = SavedEmail.usOffset;
-		pTempEmail->usLength = SavedEmail.usLength;
-		pTempEmail->ubSender = SavedEmail.ubSender;
-		pTempEmail->iDate = SavedEmail.iDate;
-		pTempEmail->fRead = SavedEmail.fRead;
-		pTempEmail->iFirstData = SavedEmail.iFirstData;
-		pTempEmail->uiSecondData = SavedEmail.uiSecondData;
-
-		//add the current email in
-		pTempEmail->Prev = Prev;
-		if (Prev == NULL)
-		{
-			pEmailList = pTempEmail;
-		}
-		else
-		{
-			Prev->Next = pTempEmail;
-		}
-
-		//moved to the next email
-		Prev = pTempEmail;
-
-		AddMessageToPages(pTempEmail);
+		AddEmailMessage(SavedEmail.usOffset, SavedEmail.usLength, SavedEmail.iDate, SavedEmail.ubSender, SavedEmail.fRead, SavedEmail.iFirstData, SavedEmail.uiSecondData);
 	}
 
 	return( TRUE );

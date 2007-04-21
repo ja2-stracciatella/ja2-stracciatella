@@ -559,53 +559,28 @@ void RenderEmail( void )
 }
 
 
-static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData);
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, Email* pMail);
-
-
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData )
 {
-	wchar_t pSubject[320];
-	Email	FakeEmail;
-
-	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
-
-	//Make a fake email that will contain the codes ( ie the merc ID )
-	FakeEmail.iFirstData = iFirstData;
-	FakeEmail.uiSecondData = uiSecondData;
-
-	//Replace the $mercname$ with the actual mercname
-	ReplaceMercNameAndAmountWithProperData( pSubject, &FakeEmail );
-
-	// add message to list
-	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, FALSE, iFirstData, uiSecondData );
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, FALSE, iFirstData, uiSecondData);
 }
+
 
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
-	wchar_t pSubject[320];
-
-	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
-
-	// add message to list
-	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, FALSE, 0, 0 );
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, FALSE, 0, 0);
 }
+
 
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate)
 {
-	wchar_t pSubject[320];
-
-	// starts at iSubjectOffset amd goes iSubjectLength, reading in string
-	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640*(iMessageOffset), 640);
-
-	// add message to list
-	AddEmailMessage(iMessageOffset,iMessageLength, pSubject, iDate, ubSender, TRUE, 0, 0 );
+	AddEmailMessage(iMessageOffset, iMessageLength, iDate, ubSender, TRUE, 0, 0);
 }
 
 
-static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSubject, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
+static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
+
+
+void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
 {
 	// will add a message to the list of messages
 	Email* pTempEmail = NULL;
@@ -613,9 +588,6 @@ static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSu
 
 	// add new element onto list
   pTempEmail=MemAlloc(sizeof(Email));
-
-	// copy subject
-	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
 
 	// copy offset and length of the actual message in email.edt
 	pTempEmail->usOffset =(UINT16)iMessageOffset;
@@ -628,6 +600,11 @@ static void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength,STR16 pSu
 	// the special data
 	pTempEmail->iFirstData = iFirstData;
   pTempEmail->uiSecondData = uiSecondData;
+
+	wchar_t pSubject[320];
+	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640 * iMessageOffset, 640);
+	ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
+	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
 
 	// place into list
 	Email* pEmail = pEmailList;
@@ -4025,7 +4002,7 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pM
 }
 
 
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(CHAR16* pFinishedString, Email* pMail)
+static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail)
 {
 	const wchar_t* const sMercName = L"$MERCNAME$"; //Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
 	const wchar_t* const sAmount = L"$AMOUN$"; //Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
