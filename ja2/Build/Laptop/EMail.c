@@ -863,26 +863,29 @@ static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 }
 
 
+static Page* GetCurrentPage(void)
+{
+	Page* i = pPageList;
+	if (i == NULL) return i;
+
+	INT32 PageID = 0;
+	while (i->Next != NULL && PageID++ != iCurrentPage) i = i->Next;
+	return i;
+}
+
+
 static void DisplayEmailList(void)
 {
 	INT32 iCounter=0;
 	// look at current page, and display
-	Page* pPage = pPageList;
 	Email* pEmail = NULL;
-
-
-	// error check, if no page, return
-	if(!pPage)
-		return;
 
 	// if current page ever ends up negative, reset to 0
 	if(iCurrentPage==-1)
 		iCurrentPage=0;
 
-	// loop until we get to the current page
-	INT32 PageID = 0;
-	while (PageID++ != iCurrentPage && iCurrentPage <= iLastPage)
-		pPage=pPage->Next;
+	Page* pPage = GetCurrentPage();
+	if (pPage == NULL) return;
 
 	// now we have current page, display it
 	pEmail = pPage->Mail[iCounter];
@@ -966,24 +969,15 @@ void LookForUnread()
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
  INT32 iCount;
-	Page* pPage = pPageList;
  if(fDisplayMessageFlag)
 	 return;
  if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
  {
+		Page* pPage = GetCurrentPage();
+		if (pPage == NULL) return;
 
 	 // error check
 	 iCount=MSYS_GetRegionUserData(pRegion, 0);
-   // check for valid email
-   // find surrent page
-	 if(!pPage)
-		 return;
-		INT32 PageID = 0;
-		while (pPage->Next != NULL && PageID++ != iCurrentPage)
-		 pPage=pPage->Next;
-	 if(!pPage)
-		 return;
-	 // found page
 
 		Email* Mail = pPage->Mail[iCount];
 
@@ -1001,26 +995,17 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
  }
  else if(iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
  {
-   iCount=MSYS_GetRegionUserData(pRegion, 0);
+		Page* pPage = GetCurrentPage();
+		if (pPage == NULL)
+		{
+			HandleRightButtonUpEvent();
+			return;
+		}
 
-	 // error check
-	 if(!pPage)
-	 {
-		 HandleRightButtonUpEvent( );
-		 return;
-   }
+   iCount=MSYS_GetRegionUserData(pRegion, 0);
 
  	 giMessagePage = 0;
 
-		INT32 PageID = 0;
-		while (pPage->Next != NULL && PageID++ != iCurrentPage)
-		 pPage=pPage->Next;
-	 if(!pPage)
-	 {
-		 HandleRightButtonUpEvent( );
-		 return;
-	 }
-	 // found page
 		Email* Mail = pPage->Mail[iCount];
 		if (Mail == NULL)
 	 {
