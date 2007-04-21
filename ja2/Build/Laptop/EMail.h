@@ -139,7 +139,6 @@ struct Email
 	UINT16	usLength;
 	UINT8		ubSender;
 	UINT32	iDate;
-	INT32		iId;
 	INT32		iFirstData;
 	UINT32	uiSecondData;
 	BOOLEAN fRead;
@@ -156,7 +155,7 @@ typedef struct
 	UINT16	usLength;
 	UINT8		ubSender;
 	UINT32	iDate;
-	INT32		iId;
+	INT32		iId; // XXX HACK000B
 	INT32		iFirstData;
 	UINT32	uiSecondData;
 
@@ -218,7 +217,7 @@ void CreateDestroyNewMailButton();
 void CreateDestroyDeleteNoticeMailButton();
 void ReDrawNewMailBox( void );
 void ShutDownEmailList();
-void AddMessageToPages(INT32 iMessageId);
+void AddMessageToPages(Email* Mail);
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData );
 
 #ifdef JA2BETAVERSION
