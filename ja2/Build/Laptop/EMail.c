@@ -45,7 +45,6 @@ typedef struct Page Page;
 struct Page
 {
 	Email* Mail[MAX_MESSAGES_PAGE];
-	INT32 iPageId;
 	Page* Next;
 	Page* Prev;
 };
@@ -637,7 +636,6 @@ static void AddEmailPage(void)
 		pPage->Next->Prev=pPage;
     pPage=pPage->Next;
 		pPage->Next=NULL;
-		pPage->iPageId=pPage->Prev->iPageId+1;
 	}
 	else
 	{
@@ -647,7 +645,6 @@ static void AddEmailPage(void)
 		pPage=pPageList;
 		pPage->Prev=NULL;
 		pPage->Next=NULL;
-		pPage->iPageId=0;
     pPageList=pPage;
 	}
 	for (size_t i = 0; i < lengthof(pPage->Mail); ++i) pPage->Mail[i] = NULL;
@@ -883,7 +880,8 @@ static void DisplayEmailList(void)
 		iCurrentPage=0;
 
 	// loop until we get to the current page
-	while((pPage->iPageId!=iCurrentPage)&&(iCurrentPage <=iLastPage))
+	INT32 PageID = 0;
+	while (PageID++ != iCurrentPage && iCurrentPage <= iLastPage)
 		pPage=pPage->Next;
 
 	// now we have current page, display it
@@ -980,7 +978,8 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
    // find surrent page
 	 if(!pPage)
 		 return;
-	 while((pPage->Next)&&(pPage->iPageId!=iCurrentPage))
+		INT32 PageID = 0;
+		while (pPage->Next != NULL && PageID++ != iCurrentPage)
 		 pPage=pPage->Next;
 	 if(!pPage)
 		 return;
@@ -1013,7 +1012,8 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
  	 giMessagePage = 0;
 
-   while((pPage->Next)&&(pPage->iPageId!=iCurrentPage))
+		INT32 PageID = 0;
+		while (pPage->Next != NULL && PageID++ != iCurrentPage)
 		 pPage=pPage->Next;
 	 if(!pPage)
 	 {
