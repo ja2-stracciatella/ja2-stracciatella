@@ -252,8 +252,6 @@ static INT32 iHighLightLine = -1;
 BOOLEAN fReDrawNewMailFlag = FALSE;
 static INT32 iTotalHeight = 0;
 
-BOOLEAN	fFirstTime=TRUE;
-
 
 static void CreateDestroyNextPreviousRegions(void);
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -346,9 +344,6 @@ BOOLEAN EnterEmail()
 
 	// marks these buttons dirty
 	MarkButtonsDirty( );
-
-	// no longer fitrst time in email
-	fFirstTime = FALSE;
 
 	// reset current page of the message being displayed
 	giMessagePage = 0;
