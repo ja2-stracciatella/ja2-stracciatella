@@ -1160,7 +1160,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY);
 static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId);
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Email* pMail);
+static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
 static void PreProcessEmail(Email* pMail);
 
 
@@ -1191,7 +1191,7 @@ static INT32 DisplayEmailMessage(Email* pMail)
 	// is there any special event meant for this mail?..if so, handle it
 	HandleAnySpecialEmailMessageEvents( iOffSet );
 
-	HandleMailSpecialMessages( ( UINT16 ) ( iOffSet ), &iViewerPositionY, pMail);
+	HandleMailSpecialMessages(iOffSet, pMail);
 
 	PreProcessEmail( pMail );
 
@@ -2106,10 +2106,10 @@ static void ReDisplayBoxes(void)
 
 
 static void HandleIMPCharProfileResultsMessage(void);
-static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pMail, UINT8 ubNumberOfRecords);
+static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords);
 
 
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Email* pMail)
+static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 {
   BOOLEAN fSpecialCase = FALSE;
 
@@ -2132,11 +2132,11 @@ static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Em
 		case INSUR_SUSPIC:
 		case INSUR_SUSPIC_2:
 		case INSUR_INVEST_OVER:
-			ModifyInsuranceEmails( usMessageId, iResults, pMail, INSUR_PAYMENT_LENGTH );
+			ModifyInsuranceEmails(usMessageId, pMail, INSUR_PAYMENT_LENGTH);
 			break;
 
 		case INSUR_1HOUR_FRAUD:
-			ModifyInsuranceEmails( usMessageId, iResults, pMail, INSUR_1HOUR_FRAUD_LENGTH );
+			ModifyInsuranceEmails(usMessageId, pMail, INSUR_1HOUR_FRAUD_LENGTH);
 			break;
 
 		case MERC_NEW_SITE_ADDRESS:
@@ -2145,13 +2145,13 @@ static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, INT32* iResults, Em
 			break;
 
 		case MERC_DIED_ON_OTHER_ASSIGNMENT:
-			ModifyInsuranceEmails( usMessageId, iResults, pMail, MERC_DIED_ON_OTHER_ASSIGNMENT_LENGTH );
+			ModifyInsuranceEmails(usMessageId, pMail, MERC_DIED_ON_OTHER_ASSIGNMENT_LENGTH);
 			break;
 
 		case AIM_MEDICAL_DEPOSIT_REFUND:
 		case AIM_MEDICAL_DEPOSIT_NO_REFUND:
 		case AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND:
-			ModifyInsuranceEmails( usMessageId, iResults, pMail, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH );
+			ModifyInsuranceEmails(usMessageId, pMail, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH);
 			break;
 	}
 
@@ -3801,7 +3801,7 @@ static void PreProcessEmail(Email* pMail)
 }
 
 
-static void ModifyInsuranceEmails(UINT16 usMessageId, INT32* iResults, Email* pMail, UINT8 ubNumberOfRecords)
+static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords)
 {
 	INT32 iHeight=0;
 	Record* pTempRecord;
