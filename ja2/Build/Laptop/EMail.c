@@ -1379,9 +1379,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		giMailMessageButtons[2] = QuickCreateButton( giMailMessageButtonsImage[2], DELETE_BUTTON_X,(INT16) ( BUTTON_LOWER_Y + ( INT16 )iViewerY + 2),
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, BtnDeleteCallback );
-		// set cursors
     SetButtonCursor(giMailMessageButtons[2], CURSOR_LAPTOP_SCREEN);
-		SetButtonCursor(giMessageButton[0], CURSOR_LAPTOP_SCREEN);
 
 		// force update of screen
 	  fReDrawScreenFlag=TRUE;
