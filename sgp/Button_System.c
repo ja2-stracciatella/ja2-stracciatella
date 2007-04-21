@@ -712,8 +712,6 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 		return NULL;
 	}
 
-	ButtonList[BtnID] = b;
-
 	b->IDNum                   = BtnID;
 	b->ImageNum                = ImageNum;
 	b->ClickCallback           = Click;
@@ -765,6 +763,8 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 #ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound(b);
 #endif
+
+	ButtonList[BtnID] = b;
 
 	SpecifyButtonSoundScheme(BtnID, BUTTON_SOUND_SCHEME_GENERIC);
 
