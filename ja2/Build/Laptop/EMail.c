@@ -71,7 +71,7 @@ Email* pEmailList;
 static Page* pPageList;
 static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
-static Email* MailToDelete;
+Email* MailToDelete;
 BOOLEAN fUnReadMailFlag=FALSE;
 BOOLEAN fOldUnreadFlag=TRUE;
 BOOLEAN fNewMailFlag=FALSE;
@@ -79,7 +79,6 @@ BOOLEAN fOldNewMailFlag=FALSE;
 BOOLEAN fDisplayMessageFlag=FALSE;
 BOOLEAN fOldDisplayMessageFlag=FALSE;
 BOOLEAN fReDraw=FALSE;
-BOOLEAN fDeleteMailFlag=FALSE;
 BOOLEAN fReDrawMessageFlag = FALSE;
 BOOLEAN fOnLastPageFlag=FALSE;
 BOOLEAN fJustStartedEmail = FALSE;
@@ -420,9 +419,9 @@ void ExitEmail()
 	}
 
 	// delete mail notice?...get rid of it
-	if(fDeleteMailFlag)
+	if (MailToDelete != NULL)
 	{
-   fDeleteMailFlag=FALSE;
+		MailToDelete = NULL;
 	 CreateDestroyDeleteNoticeMailButton();
 	}
 
@@ -462,7 +461,7 @@ void HandleEmail( void )
   UpDateMessageRecordList( );
 
 	// does email list need to be draw, or can be drawn
-	if( ( (!fDisplayMessageFlag)&&(!fNewMailFlag) && ( !fDeleteMailFlag ) )&&( fEmailListBeenDrawAlready == FALSE ) )
+	if (!fDisplayMessageFlag && !fNewMailFlag && MailToDelete == NULL && !fEmailListBeenDrawAlready)
   {
 		DisplayEmailList();
 		fEmailListBeenDrawAlready = TRUE;
@@ -506,7 +505,7 @@ void HandleEmail( void )
 	CreateDestroyDeleteNoticeMailButton();
 
 	// if delete notice needs to be displayed?...display it
-	if(fDeleteMailFlag) DisplayDeleteNotice(MailToDelete);
+	if (MailToDelete != NULL) DisplayDeleteNotice(MailToDelete);
 
 
 	// update buttons
@@ -1093,7 +1092,6 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	 }
 	 else
 	 {
-		 fDeleteMailFlag=TRUE;
 			MailToDelete = Mail;
 	 }
  }
@@ -1629,7 +1627,7 @@ static void BtnDeleteNoback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		fDeleteMailFlag = FALSE;
+		MailToDelete = NULL;
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -1679,7 +1677,7 @@ static void CreateDestroyNextPreviousRegions(void)
 void CreateDestroyDeleteNoticeMailButton()
 {
  static BOOLEAN fOldDeleteMailFlag=FALSE;
- if((fDeleteMailFlag)&&(!fOldDeleteMailFlag))
+	if (MailToDelete != NULL && !fOldDeleteMailFlag)
  {
 	 // confirm delete email buttons
 
@@ -1708,7 +1706,7 @@ void CreateDestroyDeleteNoticeMailButton()
 	fReDrawScreenFlag = TRUE;
 
  }
- else if((!fDeleteMailFlag)&&(fOldDeleteMailFlag))
+	else if (MailToDelete == NULL && fOldDeleteMailFlag)
  {
 
 	 // clear out the buttons and screen mask
@@ -1731,9 +1729,6 @@ void CreateDestroyDeleteNoticeMailButton()
 static BOOLEAN DisplayDeleteNotice(Email* pMail)
 {
 	// will display a delete mail box whenever delete mail has arrived
-	if(!fDeleteMailFlag)
-		return(FALSE);
-
 	if( !fReDrawScreenFlag )
 	{
 		// no redraw flag, leave
@@ -1791,9 +1786,10 @@ static void DeleteEmail(void)
 {
 
 	// error check, invalid mail, or not time to delete mail
-	if (MailToDelete == NULL || !fDeleteMailFlag) return;
+	if (MailToDelete == NULL) return;
    // remove the message
    RemoveEmailMessage(MailToDelete);
+	MailToDelete = NULL;
 
 	 // stop displaying message, if so
 	 fDisplayMessageFlag = FALSE;
@@ -1808,8 +1804,6 @@ static void DeleteEmail(void)
 	 // rerender mail list
 	 RenderEmail();
 
-	 // nolong time to delete mail
-	 fDeleteMailFlag=FALSE;
    fReDrawScreenFlag=TRUE;
 
 	 // invalidate
@@ -1848,7 +1842,6 @@ static void BtnDeleteCallback(GUI_BUTTON *btn, INT32 iReason)
  if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
  {
 		MailToDelete = CurrentMail;
-	 fDeleteMailFlag = TRUE;
  }
 }
 
@@ -2141,11 +2134,7 @@ static void ReDisplayBoxes(void)
 		DisplayEmailMessage(CurrentMail);
 	}
 
-	if(fDeleteMailFlag)
-	{
-		// delete message, redisplay
-		DisplayDeleteNotice(MailToDelete);
-	}
+	if (MailToDelete != NULL) DisplayDeleteNotice(MailToDelete);
 
 	if(fNewMailFlag)
 	{

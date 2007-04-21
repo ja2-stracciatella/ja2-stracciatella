@@ -190,11 +190,11 @@ extern BOOLEAN fUnReadMailFlag;
 extern BOOLEAN fNewMailFlag;
 extern BOOLEAN  fOldUnreadFlag;
 extern BOOLEAN  fOldNewMailFlag;
-extern BOOLEAN fDeleteMailFlag;
 extern BOOLEAN fDisplayMessageFlag;
 extern BOOLEAN fReDrawNewMailFlag;
 extern BOOLEAN fOpenMostRecentUnReadFlag;
 extern Email* pEmailList;
+extern Email* MailToDelete;
 extern UINT32 guiEmailWarning;
 
 

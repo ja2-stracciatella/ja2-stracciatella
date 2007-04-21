@@ -774,9 +774,9 @@ void ExitLaptop()
 	// get rid of desktop
 	DeleteDesktopBackground(  );
 
-	if(fDeleteMailFlag)
+	if (MailToDelete != NULL)
 	{
-	 fDeleteMailFlag=FALSE;
+		MailToDelete = NULL;
 	 CreateDestroyDeleteNoticeMailButton();
 	}
 	if(fNewMailFlag)
@@ -3381,10 +3381,10 @@ static void HandleLapTopESCKey(void)
 	  fReDrawScreenFlag = TRUE;
 	  RenderLaptop( );
 	}
-	else if(fDeleteMailFlag)
+	else if (MailToDelete != NULL)
 	{
     // get rid of delete mail box
-	  fDeleteMailFlag=FALSE;
+		MailToDelete = NULL;
 	  CreateDestroyDeleteNoticeMailButton();
 
 		// force redraw
@@ -3424,10 +3424,10 @@ void HandleRightButtonUpEvent( void )
 	  fReDrawScreenFlag = TRUE;
 	  RenderLaptop( );
 	}
-	else if(fDeleteMailFlag)
+	else if (MailToDelete != NULL)
 	{
     // get rid of delete mail box
-	  fDeleteMailFlag=FALSE;
+		MailToDelete = NULL;
 	  CreateDestroyDeleteNoticeMailButton();
 
 		// force redraw
