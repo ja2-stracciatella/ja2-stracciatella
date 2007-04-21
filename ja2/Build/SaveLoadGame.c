@@ -278,7 +278,7 @@ typedef struct
 
 	BOOLEAN	fUnReadMailFlag;
 	BOOLEAN fNewMailFlag;
-	BOOLEAN	fOldUnReadFlag;
+	BOOLEAN	fOldUnReadFlag; // XXX HACK000B
 	BOOLEAN	fOldNewMailFlag;
 
 	BOOLEAN	fShowMilitia;
@@ -3708,7 +3708,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	//State of email flags
 	sGeneralInfo.fUnReadMailFlag = fUnReadMailFlag;
 	sGeneralInfo.fNewMailFlag = fNewMailFlag;
-	sGeneralInfo.fOldUnReadFlag = fOldUnreadFlag;
+	sGeneralInfo.fOldUnReadFlag = FALSE; // XXX HACK000B
 	sGeneralInfo.fOldNewMailFlag = fOldNewMailFlag;
 
 	sGeneralInfo.fShowMilitia	= fShowMilitia;
@@ -3970,7 +3970,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	//State of email flags
 	fUnReadMailFlag = sGeneralInfo.fUnReadMailFlag;
 	fNewMailFlag = sGeneralInfo.fNewMailFlag;
-	fOldUnreadFlag = sGeneralInfo.fOldUnReadFlag;
 	fOldNewMailFlag = sGeneralInfo.fOldNewMailFlag;
 
 	//Save the current status of the help screens flag that say wether or not the user has been there before

@@ -73,7 +73,6 @@ static INT32 iLastPage=-1;
 static INT32 iCurrentPage=0;
 Email* MailToDelete;
 BOOLEAN fUnReadMailFlag=FALSE;
-BOOLEAN fOldUnreadFlag=TRUE;
 BOOLEAN fNewMailFlag=FALSE;
 BOOLEAN fOldNewMailFlag=FALSE;
 BOOLEAN fDisplayMessageFlag=FALSE;

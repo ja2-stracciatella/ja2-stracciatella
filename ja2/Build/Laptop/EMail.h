@@ -188,7 +188,6 @@ enum {
 
 extern BOOLEAN fUnReadMailFlag;
 extern BOOLEAN fNewMailFlag;
-extern BOOLEAN  fOldUnreadFlag;
 extern BOOLEAN  fOldNewMailFlag;
 extern BOOLEAN fDisplayMessageFlag;
 extern BOOLEAN fReDrawNewMailFlag;
