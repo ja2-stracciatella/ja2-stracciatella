@@ -13,10 +13,8 @@
 
 
 //internal variables.
-INT32 iMsgBoxNum;
 INT32 iMsgBoxOkImg, iMsgBoxCancelImg;
 INT32 iMsgBoxBgrnd,iMsgBoxOk,iMsgBoxCancel;
-SGPRect MsgBoxRect;
 
 BOOLEAN gfMessageBoxResult = FALSE;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;
@@ -59,6 +57,7 @@ void CreateMessageBox(const wchar_t* wzString)
 										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BUTTON_NO_CALLBACK, MsgBoxCnclClkCallback);
 
+	SGPRect MsgBoxRect;
 	MsgBoxRect.iLeft = sStartX;
 	MsgBoxRect.iTop = sStartY;
 	MsgBoxRect.iRight = sStartX + sPixLen;
