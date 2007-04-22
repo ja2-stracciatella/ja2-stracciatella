@@ -60,10 +60,6 @@ CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 // Clock Callback event ID
 static SDL_TimerID gTimerID;
 
-// GLOBALS FOR CALLBACK
-static UINT32 gCNT;
-static SOLDIERTYPE* gPSOLDIER;
-
 
 extern UINT32 guiCompressionStringBaseTime;
 extern INT32 giFlashHighlightedItemBaseTime;
@@ -94,7 +90,7 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 		{
 			guiBaseJA2Clock += BASETIMESLICE;
 
-			for ( gCNT = 0; gCNT < NUMTIMERS; gCNT++ )
+			for (UINT32 gCNT = 0; gCNT < NUMTIMERS; gCNT++)
 			{
 				UPDATECOUNTER( gCNT );
 			}
@@ -116,9 +112,9 @@ static UINT32 TimeProc(UINT32 interval, void* params)
       if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
       {
         // IN Mapscreen, loop through player's team.....
-			  for ( gCNT = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; gCNT <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; gCNT++ )
+				for (UINT32 gCNT = gTacticalStatus.Team[gbPlayerNum].bFirstID; gCNT <= gTacticalStatus.Team[gbPlayerNum].bLastID; gCNT++)
 			  {
-				  gPSOLDIER = MercPtrs[ gCNT ];
+					SOLDIERTYPE* gPSOLDIER = MercPtrs[gCNT];
 					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
 					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
         }
@@ -127,9 +123,9 @@ static UINT32 TimeProc(UINT32 interval, void* params)
       {
 			  // Set update flags for soldiers
 			  ////////////////////////////
-			  for ( gCNT = 0; gCNT < guiNumMercSlots; gCNT++ )
+				for (UINT32 gCNT = 0; gCNT < guiNumMercSlots; gCNT++)
 			  {
-				  gPSOLDIER = MercSlots[ gCNT ];
+					SOLDIERTYPE* gPSOLDIER = MercSlots[gCNT];
 
 				  if ( gPSOLDIER != NULL )
 				  {
