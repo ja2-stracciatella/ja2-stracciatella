@@ -3020,20 +3020,10 @@ static void PostButtonRendering(void)
 
 static void ShouldNewMailBeDisplayed(void)
 {
-	BOOLEAN fReDraw=FALSE;
-	switch( guiCurrentLaptopMode )
+	switch (guiCurrentLaptopMode)
 	{
-		case LAPTOP_MODE_AIM_MEMBERS:
-			fReDraw = DisableNewMailMessage();
-			break;
+		case LAPTOP_MODE_AIM_MEMBERS: DisableNewMailMessage(); break;
 	}
-/*
-	if(fReDraw)
-	{
-		RenderLapTopImage();
-		RenderLaptop();
-	}
- */
 }
 
 

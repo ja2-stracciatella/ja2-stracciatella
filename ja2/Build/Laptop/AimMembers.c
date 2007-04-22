@@ -3447,18 +3447,15 @@ void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
 		gMercProfiles[ ubMercID ].bMercStatus = 0;
 }
 
-BOOLEAN DisableNewMailMessage()
+
+void DisableNewMailMessage(void)
 {
 	if( fNewMailFlag && gubVideoConferencingMode )
 	{
 		gfIsNewMailFlagSet = TRUE;
 		fNewMailFlag = FALSE;
 		gfRedrawScreen = TRUE;
-
-		return(TRUE);
-
 	}
-	return(FALSE);
 }
 
 
