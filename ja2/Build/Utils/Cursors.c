@@ -14,19 +14,11 @@
 #include "VSurface.h"
 
 
-#define NUM_MOUSE_LEVELS		2
-
-INT16 gsMouseGlobalYOffsets[ NUM_MOUSE_LEVELS ] =
-{
-	0, 50
-};
-
-
 extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
 
 
-CursorFileData CursorFileDatabase[] =
+static CursorFileData CursorFileDatabase[] =
 {
   { "CURSORS/cursor.sti"										 , FALSE, 0, 0, 0, NULL },
   { "CURSORS/cur_targ.sti"									 , FALSE, 0, ANIMATED_CURSOR,   7, NULL },
@@ -105,12 +97,7 @@ CursorFileData CursorFileDatabase[] =
 };
 
 
-static void RaiseMouseToLevel(INT8 bLevel)
-{
-	gsGlobalCursorYOffset = gsMouseGlobalYOffsets[ bLevel ];
-}
-
-CursorData CursorDatabase[] =
+static CursorData CursorDatabase[] =
 {
 	{ C_MISC,					0, 0, 0, 0,
 		0,							0, 0, 0, 0,
@@ -1488,58 +1475,4 @@ void SetCursorFlags( UINT32 uiCursor, UINT8 ubFlags )
 void RemoveCursorFlags( UINT32 uiCursor, UINT8 ubFlags )
 {
 	CursorDatabase[ uiCursor ].bFlags &= ( ~ubFlags );
-}
-
-
-static HVOBJECT GetCursorFileVideoObject(UINT32 uiCursorFile)
-{
-	return( CursorFileDatabase[ uiCursorFile ].hVObject );
-}
-
-
-static void SyncPairedCursorFrames(UINT32 uiSrcIndex, UINT32 uiDestIndex)
-{
-#if 0
-	CursorData		*pSrcCurData, *pDestCurData;
-	CursorImage		*pSrcCurImage, *pDestCurImage;
-	UINT32				cnt;
-	INT32				iCurFrame = -1;
-
-	if ( uiSrcIndex == VIDEO_NO_CURSOR || uiDestIndex == VIDEO_NO_CURSOR )
-	{
-		return;
-	}
-
-	pSrcCurData = &( CursorDatabase[ uiSrcIndex ] );
-	pDestCurData = &( CursorDatabase[ uiDestIndex ] );
-
-	// Get Current frame from src
-	for ( cnt = 0; cnt < pSrcCurData->usNumComposites; cnt++ )
-	{
-		pSrcCurImage = &( pSrcCurData->Composites[ cnt ] );
-
-		if ( CursorFileDatabase[ pSrcCurImage->uiFileIndex ].fFlags & ANIMATED_CURSOR )
-		{
-			iCurFrame = pSrcCurImage->uiCurrentFrame;
-			break;
-		}
-	}
-
-	// If we are not an animated cursor, return now
-	if ( iCurFrame == -1 )
-	{
-		return;
-	}
-
-	// Update dest
-	for ( cnt = 0; cnt < pDestCurData->usNumComposites; cnt++ )
-	{
-		pDestCurImage = &( pDestCurData->Composites[ cnt ] );
-
-		if ( CursorFileDatabase[ pDestCurImage->uiFileIndex ].fFlags & ANIMATED_CURSOR )
-		{
-			pDestCurImage->uiCurrentFrame = iCurFrame;
-		}
-	}
-#endif
 }
