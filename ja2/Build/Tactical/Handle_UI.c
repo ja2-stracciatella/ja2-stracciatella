@@ -350,10 +350,6 @@ BOOLEAN	gRubberBandActive = FALSE;
 BOOLEAN	gfIgnoreOnSelectedGuy = FALSE;
 BOOLEAN gfViewPortAdjustedForSouth = FALSE;
 
-INT16				guiCreateGuyIndex = 0;
-// Temp values for placing bad guys
-INT16				guiCreateBadGuyIndex = 8;
-
 // FLAGS
 // These flags are set for a single frame execution and then are reset for the next iteration.
 BOOLEAN		gfUIDisplayActionPoints					= FALSE;
@@ -2688,38 +2684,6 @@ static UINT8 GetAdjustedAnimHeight(UINT8 ubAnimHeight, INT8 bChange)
 	return( ubNewAnimHeight );
 }
 
-
-void AdjustSoldierCreationStartValues( )
-{
-	INT32				cnt;
-	SOLDIERTYPE		*pSoldier;
-
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	guiCreateGuyIndex = (INT16)cnt;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; pSoldier++, cnt++ )
-	{
-		if ( !pSoldier->bActive )
-		{
-			guiCreateGuyIndex = (INT16)cnt;
-			break;
-		}
-	}
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID + 1;
-	guiCreateBadGuyIndex = (INT16)cnt;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ LAST_TEAM ].bLastID; pSoldier++, cnt++ )
-	{
-		if ( !pSoldier->bActive && cnt > gTacticalStatus.Team[ gbPlayerNum ].bLastID )
-		{
-			guiCreateBadGuyIndex = (INT16)cnt;
-			break;
-		}
-	}
-
-}
 
 BOOLEAN SelectedMercCanAffordAttack( )
 {

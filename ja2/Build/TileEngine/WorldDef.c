@@ -3127,8 +3127,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 		}
 	}
 
-	AdjustSoldierCreationStartValues( );
-
 	RenderProgressBar( 0, 60 );
 
 	InvalidateWorldRedundency( );
@@ -3181,8 +3179,6 @@ BOOLEAN NewWorld( void )
 	INT32					cnt;
 
 	gusSelectedSoldier = NO_SOLDIER;
-
-	AdjustSoldierCreationStartValues( );
 
 	TrashWorld();
 

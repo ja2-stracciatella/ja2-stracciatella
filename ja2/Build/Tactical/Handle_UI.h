@@ -257,9 +257,6 @@ void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc );
 
 BOOLEAN		gfUIForceReExamineCursorData;
 
-INT16				guiCreateGuyIndex;
-INT16				guiCreateBadGuyIndex;
-
 // FUNCTIONS IN INPUT MODULES
 void GetKeyboardInput( UINT32 *puiNewEvent );
 void GetPolledKeyboardInput( UINT32 *puiNewEvent );
@@ -272,8 +269,6 @@ void HandleKeyInputOnEnemyTurn(  );
 
 void GetRTMouseButtonInput( UINT32 *puiNewEvent );
 void GetRTMousePositionInput( UINT32 *puiNewEvent );
-
-void AdjustSoldierCreationStartValues( );
 
 BOOLEAN SelectedMercCanAffordAttack( );
 BOOLEAN SelectedMercCanAffordMove(  );
