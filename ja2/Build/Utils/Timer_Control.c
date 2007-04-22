@@ -27,12 +27,8 @@ const INT32 giTimerIntervals[NUMTIMERS] =
 		150,				// CURSOR TIMER
 		250,				// RIGHT CLICK FOR MENU
 		300,				// LEFT
-		30,					// SLIDING TEXT
 		200,				// TARGET REFINE TIMER
 		150,					// CURSOR/AP FLASH
-		60,					// FADE MERCS OUT
-		160,				// PANEL SLIDE
-		1000,				// CLOCK UPDATE DELAY
 		20,					// PHYSICS UPDATE
 		100,				// FADE ENEMYS
 		20,					// STRATEGIC OVERHEAD
@@ -41,7 +37,6 @@ const INT32 giTimerIntervals[NUMTIMERS] =
 		250,				// IMPROVED CURSOR FLASH
 		500,				// 2nd CURSOR FLASH
 		400,					// RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
-		400,
 		10,					// Music Overhead
 		100,				// Rubber band start delay
 };
