@@ -1112,7 +1112,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY);
 static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId);
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
+static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
 static void PreProcessEmail(Email* pMail);
 
 
@@ -2053,18 +2053,14 @@ static void HandleIMPCharProfileResultsMessage(void);
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords);
 
 
-static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
+static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 {
-  BOOLEAN fSpecialCase = FALSE;
-
 	// this procedure will handle special cases of email messages that are not stored in email.edt, or need special processing
 	switch( usMessageId )
 	{
 		case( IMP_EMAIL_PROFILE_RESULTS ):
 
 			HandleIMPCharProfileResultsMessage( );
-		  fSpecialCase = TRUE;
-
 		break;
 		case( MERC_INTRO ):
 			SetBookMark( MERC_BOOKMARK );
@@ -2098,8 +2094,6 @@ static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 			ModifyInsuranceEmails(usMessageId, pMail, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH);
 			break;
 	}
-
-	return fSpecialCase;
 }
 
 
