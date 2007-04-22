@@ -86,7 +86,6 @@ UINT32					guiBURSTACCUM;
 
 MOUSE_REGION		gViewportRegion;
 MOUSE_REGION		gRadarRegion;
-MOUSE_REGION    gBottomPanalRegion;
 
 #define				MOVEMENT_MENU_LOOK			1
 #define				MOVEMENT_MENU_ACTIONC		2

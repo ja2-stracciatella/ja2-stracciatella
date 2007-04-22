@@ -105,7 +105,6 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
 
 	button = ButtonList[ iButtonID ];
-	MSYS_DisableRegion( &gBottomPanalRegion );
 
 	switch( ubDirection )
 	{
@@ -151,7 +150,6 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
 
 	button = ButtonList[ iButtonID ];
-	MSYS_DisableRegion( &gBottomPanalRegion );
 
 	gPopup.ubPopupMenuID = ubPopupMenuID;
 	gPopup.ubSelectedIndex = 0;
