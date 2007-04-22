@@ -2227,1053 +2227,328 @@ static BOOLEAN HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 #define IMP_RESULTS_END_LENGTH 3
 
 
+typedef enum SkillBits
+{
+	SKILL_MECH = 1 << 0,
+	SKILL_MARK = 1 << 1,
+	SKILL_MED  = 1 << 2,
+	SKILL_EXPL = 1 << 3
+} SkillBits;
+
+
+typedef enum PhysicalBits
+{
+	PHYS_HLTH = 1 << 0,
+	PHYS_DEX  = 1 << 1,
+	PHYS_STR  = 1 << 2,
+	PHYS_AGI  = 1 << 3,
+	PHYS_WIS  = 1 << 4,
+	PHYS_LDR  = 1 << 5
+} PhysicalBits;
+
+
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 {
 	LoadEncryptedDataFromFile("BINARYDATA/Impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
 }
 
 
+static void AddIMPResultText(UINT32 Offset)
+{
+	wchar_t Text[MAIL_STRING_SIZE / 2];
+	LoadIMPResultText(Text, Offset);
+	AddEmailRecordToList(Text);
+}
+
+
+static void AddSkillTraitText(const MERCPROFILESTRUCT* Imp, SkillTrait Skill, UINT32 Offset)
+{
+	if (Imp->bSkillTrait == Skill || Imp->bSkillTrait2 == Skill)
+	{
+		AddIMPResultText(Offset);
+	}
+}
+
+
 static void HandleIMPCharProfileResultsMessage(void)
 {
   // special case, IMP profile return
-	INT32 iHeight=0;
-	INT32 iCounter=0;
-	wchar_t pString[MAIL_STRING_SIZE];
-	INT32 iOffSet=0;
-	Record* pTempRecord;
-  INT32 iEndOfSection =0;
-	INT32 iRand = 0;
-	BOOLEAN fSufficientMechSkill = FALSE, fSufficientMarkSkill = FALSE, fSufficientMedSkill = FALSE, fSufficientExplSkill = FALSE;
-	BOOLEAN fSufficientHlth = FALSE, fSufficientStr = FALSE, fSufficientWis = FALSE, fSufficientAgi = FALSE, fSufficientDex = FALSE, fSufficientLdr = FALSE;
+	INT32 iOffSet;
+  INT32 iEndOfSection;
 
-	iRand = Random( 32767 );
+	INT32 iRand = Random(32767);
 
-	// set record ptr to head of list
-	pTempRecord=pMessageRecordList;
+	if (pMessageRecordList != NULL) return;
+	// list doesn't exist, reload
 
-	// increment height for size of one line
-	iHeight+=GetFontHeight( MESSAGE_FONT );
+	const MERCPROFILESTRUCT* Imp = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
 
 	// load intro
-  iEndOfSection = IMP_RESULTS_INTRO_LENGTH;
+	iEndOfSection = IMP_RESULTS_INTRO_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i)
+	{
+		wchar_t pString[MAIL_STRING_SIZE];
+		LoadIMPResultText(pString, i);
 
-	// list doesn't exist, reload
-	if( !pTempRecord )
-  {
-
-	  while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-			// have to place players name into string for first record
-			if( iCounter == 0)
-			{
-				wchar_t	zTemp[512];
-
-				swprintf( zTemp, lengthof(zTemp), L" %ls", gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName );
-				wcscat( pString, zTemp );
-			}
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		// now the personality intro
-		iOffSet = IMP_RESULTS_PERSONALITY_INTRO;
-		iEndOfSection = IMP_RESULTS_PERSONALITY_INTRO_LENGTH + 1;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		// personality itself
-		switch( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bPersonalityTrait)
-		{
-			// normal as can be
-		  case( NO_PERSONALITYTRAIT ):
-        iOffSet = IMP_PERSONALITY_NORMAL;
-				break;
-			case( HEAT_INTOLERANT ):
-				iOffSet = IMP_PERSONALITY_HEAT;
-				break;
-      case( NERVOUS ):
-				iOffSet = IMP_PERSONALITY_NERVOUS;
-				break;
-			case( CLAUSTROPHOBIC ):
-				iOffSet = IMP_PERSONALITY_CLAUSTROPHOBIC;
-				break;
-			case( NONSWIMMER ):
-				iOffSet = IMP_PERSONALITY_NONSWIMMER;
-				break;
-			case( FEAR_OF_INSECTS ):
-				iOffSet = IMP_PERSONALITY_FEAR_OF_INSECTS;
-				break;
-			case( FORGETFUL ):
-				iOffSet = IMP_PERSONALITY_FORGETFUL;
-				break;
-			case( PSYCHO ):
-				iOffSet = IMP_PERSONALITY_PSYCHO;
-				break;
-		}
-
-		// personality tick
-//  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
-//		LoadIMPResultText(pString, iOffSet + Random(IMP_PERSONALITY_LENGTH - 1) + 1);
-		LoadIMPResultText(pString, iOffSet + 1);
-		// add to list
-		AddEmailRecordToList( pString );
-
-		// persoanlity paragraph
-		LoadIMPResultText(pString, iOffSet + IMP_PERSONALITY_LENGTH);
-    // add to list
-		AddEmailRecordToList( pString );
-
-		// extra paragraph for bugs
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bPersonalityTrait == FEAR_OF_INSECTS )
-		{
-      // persoanlity paragraph
-			LoadIMPResultText(pString, iOffSet + IMP_PERSONALITY_LENGTH + 1);
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-    // attitude intro
-    // now the personality intro
-		iOffSet = IMP_RESULTS_ATTITUDE_INTRO;
-		iEndOfSection = IMP_RESULTS_ATTITUDE_LENGTH;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-      // increment email record counter
-		  iCounter++;
-		}
-
-			// personality itself
-		switch( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAttitude )
-		{
-			// normal as can be
-		  case( ATT_NORMAL ):
-        iOffSet = IMP_ATTITUDE_NORMAL;
-				break;
-			case( ATT_FRIENDLY ):
-				iOffSet = IMP_ATTITUDE_FRIENDLY;
-				break;
-      case( ATT_LONER ):
-				iOffSet = IMP_ATTITUDE_LONER;
-				break;
-			case( ATT_OPTIMIST ):
-				iOffSet = IMP_ATTITUDE_OPTIMIST;
-				break;
-			case( ATT_PESSIMIST ):
-				iOffSet = IMP_ATTITUDE_PESSIMIST;
-				break;
-			case( ATT_AGGRESSIVE ):
-				iOffSet = IMP_ATTITUDE_AGGRESSIVE;
-				break;
-			case( ATT_ARROGANT ):
-				iOffSet = IMP_ATTITUDE_ARROGANT;
-				break;
-      case( ATT_ASSHOLE ):
-				iOffSet = IMP_ATTITUDE_ASSHOLE;
-				break;
-			case( ATT_COWARD ):
-				iOffSet = IMP_ATTITUDE_COWARD;
-				break;
-
-		}
-
-		// attitude title
-		LoadIMPResultText(pString, iOffSet);
-		// add to list
-		AddEmailRecordToList( pString );
-
-
-		// attitude tick
-//  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
-//		LoadIMPResultText(pString, iOffSet + Random(IMP_ATTITUDE_LENGTH - 2) + 1);
-		LoadIMPResultText(pString, iOffSet + 1);
-		// add to list
-		AddEmailRecordToList( pString );
-
-		// attitude paragraph
-		LoadIMPResultText(pString, iOffSet + IMP_ATTITUDE_LENGTH - 1);
-    // add to list
-		AddEmailRecordToList( pString );
-
-		//check for second paragraph
-		if( iOffSet != IMP_ATTITUDE_NORMAL )
-		{
-      // attitude paragraph
-			LoadIMPResultText(pString, iOffSet + IMP_ATTITUDE_LENGTH);
-      // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-
-		// skills
-    // now the skills intro
-		iOffSet = IMP_RESULTS_SKILLS;
-		iEndOfSection = IMP_RESULTS_SKILLS_LENGTH;
-    iCounter = 0;
-
-	  while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-      // increment email record counter
-		  iCounter++;
-		}
-
-		// imperial skills
-    iOffSet = IMP_SKILLS_IMPERIAL_SKILLS;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-		// marksmanship
-		if ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMarksmanship >= SUPER_SKILL_VALUE )
-    {
-			fSufficientMarkSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// medical
-		if ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMedical >= SUPER_SKILL_VALUE )
-		{
-			fSufficientMedSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// mechanical
-		if ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMechanical >= SUPER_SKILL_VALUE )
-		{
-			fSufficientMechSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExplosive >= SUPER_SKILL_VALUE )
-		{
-			fSufficientExplSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		while (iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-      // increment email record counter
-		  iCounter++;
-		}
-
-		// now handle skills
-    if ( fSufficientMarkSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_IMPERIAL_MARK);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-		if ( fSufficientMedSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_IMPERIAL_MED);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if ( fSufficientMechSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_IMPERIAL_MECH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		// explosives
-		if ( fSufficientExplSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_IMPERIAL_EXPL);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		fSufficientMechSkill = FALSE;
-		fSufficientMarkSkill = FALSE;
-		fSufficientExplSkill = FALSE;
-		fSufficientMedSkill = FALSE;
-
-		// imperial skills
-    iOffSet = IMP_SKILLS_NEED_TRAIN_SKILLS;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-
-
-		// now the needs training values
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE ) &&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMarksmanship <= NEEDS_TRAINING_SKILL_VALUE ) )
-    {
-			fSufficientMarkSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMedical > NO_CHANCE_IN_HELL_SKILL_VALUE ) &&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMedical <= NEEDS_TRAINING_SKILL_VALUE ) )
-    {
-			fSufficientMedSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMechanical > NO_CHANCE_IN_HELL_SKILL_VALUE ) &&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMechanical <= NEEDS_TRAINING_SKILL_VALUE ) )
-    {
-			fSufficientMechSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExplosive > NO_CHANCE_IN_HELL_SKILL_VALUE ) &&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExplosive <= NEEDS_TRAINING_SKILL_VALUE ) )
-    {
-			fSufficientExplSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( fSufficientMarkSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NEED_TRAIN_MARK);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientMedSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NEED_TRAIN_MED);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientMechSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NEED_TRAIN_MECH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientExplSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NEED_TRAIN_EXPL);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		fSufficientMechSkill = FALSE;
-		fSufficientMarkSkill = FALSE;
-		fSufficientExplSkill = FALSE;
-		fSufficientMedSkill = FALSE;
-
-		// and the no chance in hell of doing anything useful values
-
-		// no skill
-    iOffSet = IMP_SKILLS_NO_SKILL;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE )
-		{
-			fSufficientMarkSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMedical <= NO_CHANCE_IN_HELL_SKILL_VALUE )
-		{
-			fSufficientMedSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMechanical <= NO_CHANCE_IN_HELL_SKILL_VALUE )
-		{
-			fSufficientMechSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExplosive <= NO_CHANCE_IN_HELL_SKILL_VALUE )
-		{
-			fSufficientExplSkill = TRUE;
-			iEndOfSection = 1;
-		}
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( fSufficientMechSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NO_SKILL_MECH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientMarkSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NO_SKILL_MARK);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientMedSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NO_SKILL_MED);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-		if( fSufficientExplSkill )
-		{
-			LoadIMPResultText(pString, IMP_SKILLS_NO_SKILL_EXPL);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		// now the specialized skills
-		// imperial skills
-    iOffSet = IMP_SKILLS_SPECIAL_INTRO;
-		iEndOfSection = IMP_SKILLS_SPECIAL_INTRO_LENGTH;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == KNIFING )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == KNIFING ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_KNIFE);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-    // lockpick
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == LOCKPICKING)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == LOCKPICKING) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_LOCK);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		// hand to hand
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == HANDTOHAND )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == HANDTOHAND ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_HAND);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		// electronics
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == ELECTRONICS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == ELECTRONICS ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_ELEC);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == NIGHTOPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == NIGHTOPS ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_NIGHT);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == THROWING)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == THROWING) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_THROW);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == TEACHING )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == TEACHING ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_TEACH);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == HEAVY_WEAPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == HEAVY_WEAPS ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_HEAVY);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == AUTO_WEAPS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == AUTO_WEAPS ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_AUTO);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == STEALTHY )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == STEALTHY ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_STEALTH);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == AMBIDEXT)||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == AMBIDEXT) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_AMBI);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == THIEF )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == THIEF ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_THIEF);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-		if( ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait == MARTIALARTS )||( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 == MARTIALARTS ) )
-    {
-			LoadIMPResultText(pString, IMP_SKILLS_SPECIAL_MARTIAL);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-		}
-
-
-		// now the physical
-		// imperial physical
-    iOffSet = IMP_RESULTS_PHYSICAL;
-		iEndOfSection = IMP_RESULTS_PHYSICAL_LENGTH;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		// super physical
-		iOffSet = IMP_PHYSICAL_SUPER;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-
-		// health
-		if(  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLife >= SUPER_STAT_VALUE )
-    {
-			fSufficientHlth = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// dex
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bDexterity >= SUPER_STAT_VALUE )
-		{
-			fSufficientDex = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// agility
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAgility >= SUPER_STAT_VALUE )
-		{
-			fSufficientAgi  = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// strength
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength >= SUPER_STAT_VALUE )
-		{
-			fSufficientStr = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// wisdom
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bWisdom >= SUPER_STAT_VALUE )
-		{
-			fSufficientWis = TRUE;
-			iEndOfSection =1;
-		}
-
-		// leadership
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLeadership >= SUPER_STAT_VALUE )
-		{
-			fSufficientLdr = TRUE;
-			iEndOfSection = 1;
-		}
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( fSufficientHlth )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_HEALTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-		if( fSufficientDex )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_DEXTERITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientStr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_STRENGTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientAgi )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_AGILITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientWis )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_WISDOM);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientLdr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_SUPER_LEADERSHIP);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		fSufficientHlth = FALSE;
-		fSufficientStr = FALSE;
-		fSufficientWis = FALSE;
-		fSufficientAgi = FALSE;
-		fSufficientDex = FALSE;
-		fSufficientLdr = FALSE;
-
-    // now the low attributes
-    // super physical
-		iOffSet = IMP_PHYSICAL_LOW;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-		// health
-		if(  ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLife < NEEDS_TRAINING_STAT_VALUE ) &&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLife > NO_CHANCE_IN_HELL_STAT_VALUE ) )
-    {
-			fSufficientHlth = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// strength
-		if( (gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength < NEEDS_TRAINING_STAT_VALUE )&&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength > NO_CHANCE_IN_HELL_STAT_VALUE ) )
-		{
-			fSufficientStr = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// agility
-		if( (gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAgility < NEEDS_TRAINING_STAT_VALUE )&&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAgility <= NO_CHANCE_IN_HELL_STAT_VALUE ) )
-		{
-			fSufficientAgi = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// wisdom
-		if( (gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bWisdom < NEEDS_TRAINING_STAT_VALUE)&&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bWisdom > NO_CHANCE_IN_HELL_STAT_VALUE ) )
-		{
-			fSufficientWis = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// leadership
-		if( (gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLeadership < NEEDS_TRAINING_STAT_VALUE)&&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLeadership > NO_CHANCE_IN_HELL_STAT_VALUE ) )
-		{
-			fSufficientLdr = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// dex
-		if( (gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bDexterity < NEEDS_TRAINING_STAT_VALUE )&&( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bDexterity > NO_CHANCE_IN_HELL_STAT_VALUE ) )
-		{
-			fSufficientDex = TRUE;
-			iEndOfSection = 1;
-		}
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( fSufficientHlth )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_HEALTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-		if( fSufficientDex )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_DEXTERITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientStr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_STRENGTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-
-		if( fSufficientAgi )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_AGILITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientWis )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_WISDOM);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientLdr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_LOW_LEADERSHIP);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-
-
-
-
-
-
-
-		// very low physical
-		iOffSet = IMP_PHYSICAL_VERY_LOW;
-		iEndOfSection = 0;
-    iCounter = 0;
-
-		fSufficientHlth = FALSE;
-		fSufficientStr = FALSE;
-		fSufficientWis = FALSE;
-		fSufficientAgi = FALSE;
-		fSufficientDex = FALSE;
-		fSufficientLdr = FALSE;
-
-		// health
-		if(  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLife <= NO_CHANCE_IN_HELL_STAT_VALUE )
-    {
-			fSufficientHlth = TRUE;
-			iEndOfSection =1;
-		}
-
-		// dex
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bDexterity <= NO_CHANCE_IN_HELL_STAT_VALUE )
-		{
-			fSufficientDex = TRUE;
-			iEndOfSection =1;
-		}
-
-		// strength
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength <= NO_CHANCE_IN_HELL_STAT_VALUE )
-		{
-			fSufficientStr = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// agility
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAgility <= NO_CHANCE_IN_HELL_STAT_VALUE )
-		{
-			fSufficientAgi = TRUE;
-			iEndOfSection = 1;
-		}
-
-		// wisdom
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bWisdom <= NO_CHANCE_IN_HELL_STAT_VALUE )
-		{
-			fSufficientWis = TRUE;
-			iEndOfSection =1;
-		}
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-		if( fSufficientHlth )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_HEALTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-
-		if( fSufficientDex )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_DEXTERITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-		if( fSufficientStr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_STRENGTH);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-
-		if( fSufficientAgi )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_AGILITY);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-
-		if( fSufficientWis )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_WISDOM);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-
-		// leadership
-		if( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE )
-		{
-			fSufficientLdr = TRUE;
-		}
-
-    if( fSufficientLdr )
-		{
-			LoadIMPResultText(pString, IMP_PHYSICAL_VERY_LOW_LEADERSHIP);
-
-			// add to list
-			AddEmailRecordToList( pString );
-		}
-
-    	// very low physical
-		iOffSet = IMP_RESULTS_PORTRAIT;
-		iEndOfSection = IMP_RESULTS_PORTRAIT_LENGTH;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-
-		// portraits
-
-		switch( iPortraitNumber )
-		{
-		  case( 0 ):
-		    iOffSet = IMP_PORTRAIT_MALE_1;
-				break;
-			case( 1 ):
-		    iOffSet = IMP_PORTRAIT_MALE_2;
-				break;
-			case( 2 ):
-		    iOffSet = IMP_PORTRAIT_MALE_3;
-				break;
-			case( 3 ):
-		    iOffSet = IMP_PORTRAIT_MALE_4;
-				break;
-			case( 4 ):
-			case( 5 ):
-		    iOffSet = IMP_PORTRAIT_MALE_5;
-				break;
-			case( 6 ):
-			case( 7 ):
-		    iOffSet = IMP_PORTRAIT_MALE_6;
-				break;
-			case( 8 ):
-		    iOffSet = IMP_PORTRAIT_FEMALE_1;
-				break;
-			case( 9 ):
-		    iOffSet = IMP_PORTRAIT_FEMALE_2;
-				break;
-      case( 10 ):
-		    iOffSet = IMP_PORTRAIT_FEMALE_3;
-				break;
-			case( 11 ):
-			case( 12 ):
-		    iOffSet = IMP_PORTRAIT_FEMALE_4;
-				break;
-			case( 13 ):
-			case( 14 ):
-		    iOffSet = IMP_PORTRAIT_FEMALE_5;
-				break;
-		}
-
-		if( ( iRand % 2 ) == 0 )
-		{
-			iOffSet += 2;
-		}
-
-    iEndOfSection = 2;
-    iCounter = 0;
-
-    while(iEndOfSection > iCounter)
-		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
-		}
-
-    iOffSet = IMP_RESULTS_END;
-		iEndOfSection = IMP_RESULTS_END_LENGTH;
-    iCounter = 0;
-
-		while(iEndOfSection > iCounter)
+		// have to place players name into string for first record
+		if (i == 0)
 		{
-			LoadIMPResultText(pString, iOffSet + iCounter);
-
-		  // add to list
-		  AddEmailRecordToList( pString );
-
-       // increment email record counter
-		   iCounter++;
+			wchar_t zTemp[512];
+			swprintf(zTemp, lengthof(zTemp), L" %ls", Imp->zName);
+			wcscat(pString, zTemp);
 		}
 
-		PreviousMail = CurrentMail;
+		AddEmailRecordToList(pString);
 	}
 
-  pTempRecord = pMessageRecordList;
+	// now the personality intro
+	iOffSet = IMP_RESULTS_PERSONALITY_INTRO;
+	iEndOfSection = IMP_RESULTS_PERSONALITY_INTRO_LENGTH + 1;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	// personality itself
+	switch (Imp->bPersonalityTrait)
+	{
+		// normal as can be
+		case NO_PERSONALITYTRAIT: iOffSet = IMP_PERSONALITY_NORMAL;          break;
+		case HEAT_INTOLERANT:     iOffSet = IMP_PERSONALITY_HEAT;            break;
+		case NERVOUS:             iOffSet = IMP_PERSONALITY_NERVOUS;         break;
+		case CLAUSTROPHOBIC:      iOffSet = IMP_PERSONALITY_CLAUSTROPHOBIC;  break;
+		case NONSWIMMER:          iOffSet = IMP_PERSONALITY_NONSWIMMER;      break;
+		case FEAR_OF_INSECTS:     iOffSet = IMP_PERSONALITY_FEAR_OF_INSECTS; break;
+		case FORGETFUL:           iOffSet = IMP_PERSONALITY_FORGETFUL;       break;
+		case PSYCHO:              iOffSet = IMP_PERSONALITY_PSYCHO;          break;
+	}
+
+	// personality tick
+//  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
+//		AddIMPResultText(iOffSet + Random(IMP_PERSONALITY_LENGTH - 1) + 1);
+	AddIMPResultText(iOffSet + 1);
+
+	// persoanlity paragraph
+	AddIMPResultText(iOffSet + IMP_PERSONALITY_LENGTH);
+
+	// extra paragraph for bugs
+	if (Imp->bPersonalityTrait == FEAR_OF_INSECTS)
+	{
+		// persoanlity paragraph
+		AddIMPResultText(iOffSet + IMP_PERSONALITY_LENGTH + 1);
+	}
+
+	// attitude intro
+	// now the personality intro
+	iOffSet = IMP_RESULTS_ATTITUDE_INTRO;
+	iEndOfSection = IMP_RESULTS_ATTITUDE_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+		// personality itself
+	switch (Imp->bAttitude)
+	{
+		// normal as can be
+		case ATT_NORMAL:     iOffSet = IMP_ATTITUDE_NORMAL;     break;
+		case ATT_FRIENDLY:   iOffSet = IMP_ATTITUDE_FRIENDLY;   break;
+		case ATT_LONER:      iOffSet = IMP_ATTITUDE_LONER;      break;
+		case ATT_OPTIMIST:   iOffSet = IMP_ATTITUDE_OPTIMIST;   break;
+		case ATT_PESSIMIST:  iOffSet = IMP_ATTITUDE_PESSIMIST;  break;
+		case ATT_AGGRESSIVE: iOffSet = IMP_ATTITUDE_AGGRESSIVE; break;
+		case ATT_ARROGANT:   iOffSet = IMP_ATTITUDE_ARROGANT;   break;
+		case ATT_ASSHOLE:    iOffSet = IMP_ATTITUDE_ASSHOLE;    break;
+		case ATT_COWARD:     iOffSet = IMP_ATTITUDE_COWARD;     break;
+	}
+
+	// attitude title
+	AddIMPResultText(iOffSet);
+
+	// attitude tick
+//  DEF: removed 1/12/99, cause it was changing the length of email that were already calculated
+//		AddIMPResultText(iOffSet + Random(IMP_ATTITUDE_LENGTH - 2) + 1);
+	AddIMPResultText(iOffSet + 1);
+
+	// attitude paragraph
+	AddIMPResultText(iOffSet + IMP_ATTITUDE_LENGTH - 1);
+
+	//check for second paragraph
+	if (iOffSet != IMP_ATTITUDE_NORMAL)
+	{
+		// attitude paragraph
+		AddIMPResultText(iOffSet + IMP_ATTITUDE_LENGTH);
+	}
 
 
+	// skills
+	// now the skills intro
+	iOffSet = IMP_RESULTS_SKILLS;
+	iEndOfSection = IMP_RESULTS_SKILLS_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+
+	SkillBits Skill;
+
+	Skill = 0;
+	if (Imp->bMarksmanship >= SUPER_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (Imp->bMedical      >= SUPER_SKILL_VALUE) Skill |= SKILL_MED;
+	if (Imp->bMechanical   >= SUPER_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (Imp->bExplosive    >= SUPER_SKILL_VALUE) Skill |= SKILL_EXPL;
+
+	if (Skill != 0) AddIMPResultText(IMP_SKILLS_IMPERIAL_SKILLS);
+
+	if (Skill & SKILL_MARK) AddIMPResultText(IMP_SKILLS_IMPERIAL_MARK);
+	if (Skill & SKILL_MED)  AddIMPResultText(IMP_SKILLS_IMPERIAL_MED);
+	if (Skill & SKILL_MECH) AddIMPResultText(IMP_SKILLS_IMPERIAL_MECH);
+	if (Skill & SKILL_EXPL) AddIMPResultText(IMP_SKILLS_IMPERIAL_EXPL);
+
+
+	// now the needs training values
+	Skill = 0;
+	if (Imp->bMarksmanship > NO_CHANCE_IN_HELL_SKILL_VALUE && Imp->bMarksmanship <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (Imp->bMedical      > NO_CHANCE_IN_HELL_SKILL_VALUE && Imp->bMedical      <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MED;
+	if (Imp->bMechanical   > NO_CHANCE_IN_HELL_SKILL_VALUE && Imp->bMechanical   <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (Imp->bExplosive    > NO_CHANCE_IN_HELL_SKILL_VALUE && Imp->bExplosive    <= NEEDS_TRAINING_SKILL_VALUE) Skill |= SKILL_EXPL;
+
+	if (Skill != 0) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_SKILLS);
+
+	if (Skill & SKILL_MARK) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_MARK);
+	if (Skill & SKILL_MED)  AddIMPResultText(IMP_SKILLS_NEED_TRAIN_MED);
+	if (Skill & SKILL_MECH) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_MECH);
+	if (Skill & SKILL_EXPL) AddIMPResultText(IMP_SKILLS_NEED_TRAIN_EXPL);
+
+
+	// and the no chance in hell of doing anything useful values
+	Skill = 0;
+	if (Imp->bMarksmanship <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MARK;
+	if (Imp->bMedical      <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MED;
+	if (Imp->bMechanical   <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_MECH;
+	if (Imp->bExplosive    <= NO_CHANCE_IN_HELL_SKILL_VALUE) Skill |= SKILL_EXPL;
+
+	if (Skill != 0) AddIMPResultText(IMP_SKILLS_NO_SKILL);
+
+	if (Skill & SKILL_MECH) AddIMPResultText(IMP_SKILLS_NO_SKILL_MECH);
+	if (Skill & SKILL_MARK) AddIMPResultText(IMP_SKILLS_NO_SKILL_MARK);
+	if (Skill & SKILL_MED)  AddIMPResultText(IMP_SKILLS_NO_SKILL_MED);
+	if (Skill & SKILL_EXPL) AddIMPResultText(IMP_SKILLS_NO_SKILL_EXPL);
+
+
+	// now the specialized skills
+	// imperial skills
+	iOffSet = IMP_SKILLS_SPECIAL_INTRO;
+	iEndOfSection = IMP_SKILLS_SPECIAL_INTRO_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	AddSkillTraitText(Imp, KNIFING,     IMP_SKILLS_SPECIAL_KNIFE);
+	AddSkillTraitText(Imp, LOCKPICKING, IMP_SKILLS_SPECIAL_LOCK);
+	AddSkillTraitText(Imp, HANDTOHAND,  IMP_SKILLS_SPECIAL_HAND);
+	AddSkillTraitText(Imp, ELECTRONICS, IMP_SKILLS_SPECIAL_ELEC);
+	AddSkillTraitText(Imp, NIGHTOPS,    IMP_SKILLS_SPECIAL_NIGHT);
+	AddSkillTraitText(Imp, THROWING,    IMP_SKILLS_SPECIAL_THROW);
+	AddSkillTraitText(Imp, TEACHING,    IMP_SKILLS_SPECIAL_TEACH);
+	AddSkillTraitText(Imp, HEAVY_WEAPS, IMP_SKILLS_SPECIAL_HEAVY);
+	AddSkillTraitText(Imp, AUTO_WEAPS,  IMP_SKILLS_SPECIAL_AUTO);
+	AddSkillTraitText(Imp, STEALTHY,    IMP_SKILLS_SPECIAL_STEALTH);
+	AddSkillTraitText(Imp, AMBIDEXT,    IMP_SKILLS_SPECIAL_AMBI);
+	AddSkillTraitText(Imp, THIEF,       IMP_SKILLS_SPECIAL_THIEF);
+	AddSkillTraitText(Imp, MARTIALARTS, IMP_SKILLS_SPECIAL_MARTIAL);
+
+
+	// now the physical
+	// imperial physical
+	iOffSet = IMP_RESULTS_PHYSICAL;
+	iEndOfSection = IMP_RESULTS_PHYSICAL_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	PhysicalBits Phys;
+
+	// super physical
+	Phys = 0;
+	if (Imp->bLife       >= SUPER_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (Imp->bDexterity  >= SUPER_STAT_VALUE) Phys |= PHYS_DEX;
+	if (Imp->bAgility    >= SUPER_STAT_VALUE) Phys |= PHYS_AGI;
+	if (Imp->bStrength   >= SUPER_STAT_VALUE) Phys |= PHYS_STR;
+	if (Imp->bWisdom     >= SUPER_STAT_VALUE) Phys |= PHYS_WIS;
+	if (Imp->bLeadership >= SUPER_STAT_VALUE) Phys |= PHYS_LDR;
+
+	if (Phys != 0) AddIMPResultText(IMP_PHYSICAL_SUPER);
+
+	if (Phys & PHYS_HLTH) AddIMPResultText(IMP_PHYSICAL_SUPER_HEALTH);
+	if (Phys & PHYS_DEX)  AddIMPResultText(IMP_PHYSICAL_SUPER_DEXTERITY);
+	if (Phys & PHYS_STR)  AddIMPResultText(IMP_PHYSICAL_SUPER_STRENGTH);
+	if (Phys & PHYS_AGI)  AddIMPResultText(IMP_PHYSICAL_SUPER_AGILITY);
+	if (Phys & PHYS_WIS)  AddIMPResultText(IMP_PHYSICAL_SUPER_WISDOM);
+	if (Phys & PHYS_LDR)  AddIMPResultText(IMP_PHYSICAL_SUPER_LEADERSHIP);
+
+
+	// now the low attributes
+	Phys = 0;
+	if (Imp->bLife       < NEEDS_TRAINING_STAT_VALUE && Imp->bLife       > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (Imp->bStrength   < NEEDS_TRAINING_STAT_VALUE && Imp->bStrength   > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
+	if (Imp->bAgility    < NEEDS_TRAINING_STAT_VALUE && Imp->bAgility    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (Imp->bWisdom     < NEEDS_TRAINING_STAT_VALUE && Imp->bWisdom     > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+	if (Imp->bLeadership < NEEDS_TRAINING_STAT_VALUE && Imp->bLeadership > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
+	if (Imp->bDexterity  < NEEDS_TRAINING_STAT_VALUE && Imp->bDexterity  > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
+
+	if (Phys != 0) AddIMPResultText(IMP_PHYSICAL_LOW);
+
+	if (Phys & PHYS_HLTH) AddIMPResultText(IMP_PHYSICAL_LOW_HEALTH);
+	if (Phys & PHYS_DEX)  AddIMPResultText(IMP_PHYSICAL_LOW_DEXTERITY);
+	if (Phys & PHYS_STR)  AddIMPResultText(IMP_PHYSICAL_LOW_STRENGTH);
+	if (Phys & PHYS_AGI)  AddIMPResultText(IMP_PHYSICAL_LOW_AGILITY);
+	if (Phys & PHYS_WIS)  AddIMPResultText(IMP_PHYSICAL_LOW_WISDOM);
+	if (Phys & PHYS_LDR)  AddIMPResultText(IMP_PHYSICAL_LOW_LEADERSHIP);
+
+
+	// very low physical
+	Phys = 0;
+	if (Imp->bLife      <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (Imp->bDexterity <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
+	if (Imp->bStrength  <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
+	if (Imp->bAgility   <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (Imp->bWisdom    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+
+	if (Phys != 0) AddIMPResultText(IMP_PHYSICAL_VERY_LOW);
+
+	if (Phys & PHYS_HLTH) AddIMPResultText(IMP_PHYSICAL_VERY_LOW_HEALTH);
+	if (Phys & PHYS_DEX)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_DEXTERITY);
+	if (Phys & PHYS_STR)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_STRENGTH);
+	if (Phys & PHYS_AGI)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_AGILITY);
+	if (Phys & PHYS_WIS)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_WISDOM);
+
+	if (Imp->bLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
+
+	if (Phys & PHYS_LDR) AddIMPResultText(IMP_PHYSICAL_VERY_LOW_LEADERSHIP);
+
+
+	iOffSet = IMP_RESULTS_PORTRAIT;
+	iEndOfSection = IMP_RESULTS_PORTRAIT_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	switch (iPortraitNumber)
+	{
+		case  0: iOffSet = IMP_PORTRAIT_MALE_1;   break;
+		case  1: iOffSet = IMP_PORTRAIT_MALE_2;   break;
+		case  2: iOffSet = IMP_PORTRAIT_MALE_3;   break;
+		case  3: iOffSet = IMP_PORTRAIT_MALE_4;   break;
+		case  4:
+		case  5: iOffSet = IMP_PORTRAIT_MALE_5;   break;
+		case  6:
+		case  7: iOffSet = IMP_PORTRAIT_MALE_6;   break;
+		case  8: iOffSet = IMP_PORTRAIT_FEMALE_1; break;
+		case  9: iOffSet = IMP_PORTRAIT_FEMALE_2; break;
+		case 10: iOffSet = IMP_PORTRAIT_FEMALE_3; break;
+		case 11:
+		case 12: iOffSet = IMP_PORTRAIT_FEMALE_4; break;
+		case 13:
+		case 14: iOffSet = IMP_PORTRAIT_FEMALE_5; break;
+	}
+
+	if (iRand % 2 == 0) iOffSet += 2;
+
+	iEndOfSection = 2;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	iOffSet = IMP_RESULTS_END;
+	iEndOfSection = IMP_RESULTS_END_LENGTH;
+	for (INT32 i = 0; i < iEndOfSection; ++i) AddIMPResultText(iOffSet + i);
+
+	PreviousMail = CurrentMail;
 }
 
 
