@@ -127,7 +127,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 				fLeftButtonDown = TRUE;
 				gfRTHaveClickedRightWhileLeftDown = FALSE;
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
-				RESETCOUNTER( RUBBER_BAND_START_DELAY );
 
 				if ( giUIMessageOverlay == -1 )
 				{
@@ -279,52 +278,49 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							}
 							else
 							{
-								//if ( COUNTERDONE( RUBBER_BAND_START_DELAY )  )
+								// OK, change to rubber banding mode..
+								// Have we started this yet?
+								if ( !gfStartLookingForRubberBanding && !gRubberBandActive )
 								{
-									// OK, change to rubber banding mode..
-									// Have we started this yet?
-									if ( !gfStartLookingForRubberBanding && !gRubberBandActive )
+									gfStartLookingForRubberBanding	 = TRUE;
+									gusRubberBandX									 = gusMouseXPos;
+									gusRubberBandY									 = gusMouseYPos;
+								}
+								else
+								{
+									// Have we moved....?
+									if ( abs( gusMouseXPos - gusRubberBandX ) > 10 || abs( gusMouseYPos - gusRubberBandY ) > 10 )
 									{
-										gfStartLookingForRubberBanding	 = TRUE;
-										gusRubberBandX									 = gusMouseXPos;
-										gusRubberBandY									 = gusMouseYPos;
-									}
-									else
-									{
-										// Have we moved....?
-										if ( abs( gusMouseXPos - gusRubberBandX ) > 10 || abs( gusMouseYPos - gusRubberBandY ) > 10 )
+										gfStartLookingForRubberBanding = FALSE;
+
+										// Stop scrolling:
+										gfIgnoreScrolling = TRUE;
+
+										// Anchor cursor....
+										RestrictMouseToXYXY( 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
+
+										// OK, settup anchor....
+										gRubberBandRect.iLeft = gusRubberBandX;
+										gRubberBandRect.iTop	= gusRubberBandY;
+
+										gRubberBandActive			= TRUE;
+
+										// ATE: If we have stopped scrolling.....
+										if ( gfScrollInertia != FALSE  )
 										{
-											gfStartLookingForRubberBanding = FALSE;
+											SetRenderFlags( RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ );
 
-											// Stop scrolling:
-											gfIgnoreScrolling = TRUE;
+											// Restore Interface!
+											RestoreInterface( );
 
-											// Anchor cursor....
-											RestrictMouseToXYXY( 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
+											// Delete Topmost blitters saved areas
+											DeleteVideoOverlaysArea( );
 
-											// OK, settup anchor....
-											gRubberBandRect.iLeft = gusRubberBandX;
-											gRubberBandRect.iTop	= gusRubberBandY;
-
-											gRubberBandActive			= TRUE;
-
-											// ATE: If we have stopped scrolling.....
-											if ( gfScrollInertia != FALSE  )
-											{
-												SetRenderFlags( RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ );
-
-												// Restore Interface!
-												RestoreInterface( );
-
-												// Delete Topmost blitters saved areas
-												DeleteVideoOverlaysArea( );
-
-												gfScrollInertia = FALSE;
-											}
-
-											*puiNewEvent = RB_ON_TERRAIN;
-											return;
+											gfScrollInertia = FALSE;
 										}
+
+										*puiNewEvent = RB_ON_TERRAIN;
+										return;
 									}
 								}
 							}

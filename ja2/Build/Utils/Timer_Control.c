@@ -38,7 +38,6 @@ const INT32 giTimerIntervals[NUMTIMERS] =
 		500,				// 2nd CURSOR FLASH
 		400,					// RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
 		10,					// Music Overhead
-		100,				// Rubber band start delay
 };
 
 // TIMER COUNTERS
