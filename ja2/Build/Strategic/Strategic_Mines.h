@@ -93,15 +93,6 @@ typedef struct MINE_STATUS_TYPE
 CASSERT(sizeof(MINE_STATUS_TYPE) == 44)
 
 
-typedef struct HEAD_MINER_TYPE
-{
-	UINT16	usProfileId;
-	INT8		bQuoteNum[NUM_HEAD_MINER_STRATEGIC_QUOTES];
-	UINT8		ubExternalFace;
-} HEAD_MINER_TYPE;
-
-
-
 // init mines
 void InitializeMines( void );
 

@@ -70,7 +70,15 @@ UINT32 guiMinimumMineProduction[]={
 };
 
 
-HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =
+typedef struct HEAD_MINER_TYPE
+{
+	UINT16 usProfileId;
+	INT8   bQuoteNum[NUM_HEAD_MINER_STRATEGIC_QUOTES];
+	UINT8  ubExternalFace;
+} HEAD_MINER_TYPE;
+
+
+static const HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =
 {
 	//	Profile #		running out		creatures!		all dead!		creatures again!		external face graphic
 	{     FRED,   {     17,           18,          27,             26      }, MINER_FRED_EXTERNAL_FACE   },
