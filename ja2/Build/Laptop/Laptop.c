@@ -103,18 +103,6 @@ enum{
 	LAPTOP_PROGRAM_MINIMIZED,
 	LAPTOP_PROGRAM_OPEN,
 };
-#define LAPTOP_ICONS_X           33
-#define LAPTOP_ICONS_MAIL_Y      35 -5
-#define LAPTOP_ICONS_WWW_Y       102-10 -5
-#define LAPTOP_ICONS_FINANCIAL_Y 172-10 -5
-#define LAPTOP_ICONS_PERSONNEL_Y 263-20 -5
-#define LAPTOP_ICONS_HISTORY_Y   310 -5
-#define LAPTOP_ICONS_FILES_Y     365-5 -5
-#define LAPTOP_ICON_TEXT_X       24
-#define LAPTOP_ICON_TEXT_WIDTH   103-24
-#define LAPTOP_ICON_TEXT_HEIGHT        6
-#define LAPTOP_ICON_TEXT_FINANCIAL_Y  229-10  -5
-#define LAPTOPICONFONT FONT10ARIAL
 #define BOOK_FONT FONT10ARIAL
 #define DOWNLOAD_FONT FONT12ARIAL
 
@@ -124,8 +112,6 @@ enum{
 #define BOOK_HEIGHT 12
 #define DOWN_HEIGHT 19
 #define BOOK_WIDTH 100
-#define SCROLL_MIN -100
-#define SCROLL_DIFFERENCE 10
 
 
 #define LONG_UNIT_TIME 120
@@ -190,8 +176,6 @@ UINT32 guiCurrentLaptopMode;
 UINT32 guiPreviousLaptopMode;
 static UINT32 guiCurrentWWWMode = LAPTOP_MODE_NONE;
 INT32	 giCurrentSubPage;
-static UINT32 guiCurrentLapTopCursor;
-static UINT32 guiPreviousLapTopCursor;
 
 extern UINT32 guiVObjectSize;
 extern UINT32 guiVSurfaceSize;
@@ -259,12 +243,6 @@ static INT32 giRainDelayInternetSite = -1;
 
 
 // the laptop icons
-static UINT32 guiFILESICON;
-static UINT32 guiFINANCIALICON;
-static UINT32 guiHISTORYICON;
-static UINT32 guiMAILICON;
-static UINT32 guiPERSICON;
-static UINT32 guiWWWICON;
 static UINT32 guiBOOKHIGH;
 static UINT32 guiBOOKMARK;
 static UINT32 guiGRAPHWINDOW;
@@ -277,9 +255,6 @@ static UINT32 guiTITLEBARLAPTOP;
 static UINT32 guiLIGHTS;
 UINT32 guiTITLEBARICONS;
 static UINT32 guiDESKTOP;
-
-// email notification
-static UINT32 guiUNREAD;
 
 // enter new laptop mode due to sliding bars
 static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;
@@ -378,34 +353,6 @@ void	SetLaptopNewGameFlag( )
 }
 
 
-enum {
-	LAPTOP_NO_CURSOR,
-	LAPTOP_PANEL_CURSOR,
-	LAPTOP_SCREEN_CURSOR,
-	LAPTOP_WWW_CURSOR
-};
-
-
-static void HandleLapTopCursorUpDate(void)
-{
-	if(guiPreviousLapTopCursor==guiCurrentLapTopCursor)
-	 return;
-	switch(guiCurrentLapTopCursor)
-	{
-		case LAPTOP_PANEL_CURSOR:
-			MSYS_SetCurrentCursor(CURSOR_NORMAL);
-		break;
-		case LAPTOP_SCREEN_CURSOR:
-			MSYS_SetCurrentCursor(CURSOR_LAPTOP_SCREEN);
-		break;
-    	case LAPTOP_WWW_CURSOR:
-			MSYS_SetCurrentCursor(CURSOR_WWW);
-		break;
-	}
-  guiPreviousLapTopCursor=guiCurrentLapTopCursor;
-}
-
-
 static void GetLaptopKeyboardInput(void)
 {
   InputAtom					InputEvent;
@@ -501,16 +448,6 @@ BOOLEAN InitLaptopAndLaptopScreens()
 }
 
 
-static void DisplayPlayersBalanceToDate(void);
-
-
-static UINT32 DrawLapTopText(void)
-{
-	// show balance
-	DisplayPlayersBalanceToDate( );
-	return (TRUE);
-}
-
 //This is only called once at game shutdown.
 UINT32 LaptopScreenShutdown()
 {
@@ -540,7 +477,6 @@ static void RenderLapTopImage(void);
 static INT32 EnterLaptop(void)
 {
 	//Create, load, initialize data -- just entered the laptop.
-  INT32 iCounter=0;
 
 	// we are re entering due to message box, leave NOW!
 	if( fExitDueToMessageBox  == TRUE )
@@ -603,10 +539,6 @@ static INT32 EnterLaptop(void)
 	fReDrawScreenFlag = FALSE;
   fReDrawNewMailFlag = TRUE;
 
-	// setup basic cursors
-  guiCurrentLapTopCursor=LAPTOP_PANEL_CURSOR;
-	guiPreviousLapTopCursor=LAPTOP_NO_CURSOR;
-
 	// sub page
 	giCurrentSubPage = 0;
 
@@ -645,13 +577,6 @@ static INT32 EnterLaptop(void)
 	guiCurrentWWWMode = LAPTOP_MODE_NONE;
   CreateLapTopMouseRegions();
   RenderLapTopImage();
-	//AddEmailMessage(L"Entered LapTop",L"Entered", 0, 0);
-  //for(iCounter=0; iCounter <10; iCounter++)
-	//{
-	 //AddEmail(3,5,0,0);
-	//}
-	// the laptop mouse region
-
 
 	// reset bookmarks flags
 	fFirstTimeInLaptop = TRUE;
@@ -1338,10 +1263,6 @@ static void EnterNewLaptopMode(void)
 	}
 
 	DisplayProgramBoundingBox( TRUE );
-
-
-	// check to see if we need to go to there default web page of not
-  //HandleDefaultWebpageForLaptop( );
 }
 
 
@@ -2268,17 +2189,13 @@ void HaventMadeImpMercEmailCallBack()
 }
 
 
-static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
-
-
 static BOOLEAN CreateLapTopMouseRegions(void)
 {
  // define regions
 
 
  // the entire laptop display region
- MSYS_DefineRegion( &gLapTopScreenRegion, ( UINT16 )( LaptopScreenRect.iLeft ),( UINT16 )( LaptopScreenRect.iTop ),( UINT16 ) ( LaptopScreenRect.iRight ),( UINT16 )( LaptopScreenRect.iBottom ), MSYS_PRIORITY_NORMAL+1,
-							CURSOR_LAPTOP_SCREEN, ScreenRegionMvtCallback, LapTopScreenCallBack );
+	MSYS_DefineRegion(&gLapTopScreenRegion, LaptopScreenRect.iLeft, LaptopScreenRect.iTop, LaptopScreenRect.iRight, LaptopScreenRect.iBottom, MSYS_PRIORITY_NORMAL + 1, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
  return (TRUE);
 }
 
@@ -2419,133 +2336,6 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void WWWRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiWWWICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_WWW_Y);
-	  DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void EmailRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-    DrawLapTopText();
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiMAILICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_MAIL_Y);
-		if(fUnReadMailFlag)
-		{
-			BltVideoObjectFromIndex(FRAME_BUFFER, guiUNREAD, 0, LAPTOP_ICONS_X + CHECK_X, LAPTOP_ICONS_MAIL_Y + CHECK_Y);
-		}
-		DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void FinancialRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiFINANCIALICON, iFrame, LAPTOP_ICONS_X - 4, LAPTOP_ICONS_FINANCIAL_Y);
-	 	DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void HistoryRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiHISTORYICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_HISTORY_Y);
-   	DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void FilesRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiFILESICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_FILES_Y + 7);
-		DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void PersonnelRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	static INT32 iBaseTime=0;
-  static INT32 iFrame=0;
-
-	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		iBaseTime=0;
-		iFrame=0;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiPERSICON, iFrame, LAPTOP_ICONS_X, LAPTOP_ICONS_PERSONNEL_Y);
- 		DrawLapTopText();
-		InvalidateRegion(0,0,640,480);
-	}
-}
-
-
-static void CheckIfMouseLeaveScreen(void)
-{
- 	POINT  MousePos;
-  GetCursorPos(&MousePos);
-  if((MousePos.x >LAPTOP_SCREEN_LR_X )||(MousePos.x<LAPTOP_UL_X)||(MousePos.y<LAPTOP_UL_Y )||(MousePos.y >LAPTOP_SCREEN_LR_Y))
-  {
-   guiCurrentLapTopCursor=LAPTOP_PANEL_CURSOR;
-  }
-}
-
-
-static void ScreenRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	/*if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-		guiCurrentLapTopCursor=LAPTOP_SCREEN_CURSOR;
-	}
-  if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-    CheckIfMouseLeaveScreen();
-	}
-	*/
-}
-
-
 static void InitBookMarkList(void)
 {
 	// sets bookmark list to -1
@@ -2570,31 +2360,6 @@ void SetBookMark(INT32 iBookId)
 	 }
 	 LaptopSaveInfo.iBookMarkList[iCounter]=iBookId;
 	}
-}
-
-
-static BOOLEAN RemoveBookMark(INT32 iBookId)
-{
-  INT32 iCounter=0;
-
-	//Loop through the bookmarks to get to the desired bookmark
-	while( LaptopSaveInfo.iBookMarkList[iCounter] != iBookId )
-	{
-		iCounter++;
-	}
-
-	//Did we find the right one?
-	if( LaptopSaveInfo.iBookMarkList[iCounter] == iBookId )
-	{
-		//Reset it
-		LaptopSaveInfo.iBookMarkList[iCounter] = -1;
-
-		//return true signifing that we found it
-		return( TRUE );
-	}
-
-	//nope, we didnt find it.
-	return( FALSE );
 }
 
 
@@ -2635,10 +2400,6 @@ static void DisplayBookMarks(void)
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
-
-  // dirty and print to screen
-//	gprintfdirty( sX, sY, pBookmarkTitle[0]);
-//	mprintf(sX, sY,pBookmarkTitle[0] );
 
 	// set buffer
 	SetFontDestBuffer(FRAME_BUFFER ,BOOK_X, BOOK_TOP_Y,BOOK_X+BOOK_WIDTH-10,480, FALSE);
@@ -2723,46 +2484,6 @@ static void DeleteBookmark(void)
 	DeleteVideoObjectFromIndex(guiDOWNLOADTOP);
 	DeleteVideoObjectFromIndex(guiDOWNLOADMID);
 	DeleteVideoObjectFromIndex(guiDOWNLOADBOT);
-}
-
-
-static void ScrollDisplayText(INT32 iY)
-{
-	static INT32 iBaseTime=0;
-	static INT16 sCurX;
-
-	// if we are just enetering, set basetime to current clock value
-	if(iBaseTime==0)
-		iBaseTime=GetJA2Clock();
-
-	// long enough time has passed, shift string
-	if(GetJA2Clock()-iBaseTime >SCROLL_DIFFERENCE)
-	{
-
-   // reset postion, if scrolled too far
-	 if(sCurX <SCROLL_MIN)
-		 sCurX=BOOK_X+BOOK_WIDTH;
-	 else
-		 sCurX--;
-
-	 // reset base time
-	 iBaseTime=GetJA2Clock();
-	}
-
-   // font stuff
-   SetFontDestBuffer(FRAME_BUFFER, BOOK_X,0,BOOK_X+BOOK_WIDTH,480, FALSE);
-	 SetFontForeground(FONT_BLACK);
-	 SetFontBackground(FONT_BLACK);
-
-	 // print the scrolling string for bookmarks
-	 mprintf(sCurX, iY, pBookmarkTitle[1]);
-
-	 // reset buffer
-	 SetFontDestBuffer(FRAME_BUFFER, 0,0,640,480, FALSE);
-
-	 // invalidate region
-	 InvalidateRegion(BOOK_X,iY, BOOK_X+BOOK_WIDTH, iY+BOOK_HEIGHT);
-
 }
 
 
@@ -3313,40 +3034,6 @@ static void ShouldNewMailBeDisplayed(void)
 		RenderLaptop();
 	}
  */
-}
-
-
-static void DisplayPlayersBalanceToDate(void)
-{
-  // print players balance to date
-  CHAR16 sString[ 100 ];
-  INT16 sX, sY;
-
-	// initialize string
-	memset( sString, 0, sizeof( sString ) );
-
-	// font stuff
-	SetFont( FONT10ARIAL);
-	SetFontForeground( 142 );
-  SetFontShadow(NO_SHADOW);
-
-	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
-
-	// get center
-	FindFontCenterCoordinates( (INT16)LAPTOP_ICON_TEXT_X, 0, (INT16)(LAPTOP_ICON_TEXT_WIDTH) ,(INT16)(LAPTOP_ICON_TEXT_HEIGHT), sString, LAPTOPICONFONT, &sX, &sY );
-//	gprintfdirty( sX , LAPTOP_ICON_TEXT_FINANCIAL_Y + 10, sString );
-	// printf it!
-	if( ButtonList[ gLaptopButton[ 5 ] ]->uiFlags & BUTTON_CLICKED_ON )
-	{
-		mprintf( sX + 5, LAPTOP_ICON_TEXT_FINANCIAL_Y + 10 + 5, sString);
-	}
-	else
-	{
-		mprintf( sX, LAPTOP_ICON_TEXT_FINANCIAL_Y + 10, sString);
-	}
-
-	// reset shadow
-  SetFontShadow(DEFAULT_SHADOW);
 }
 
 
@@ -4725,21 +4412,6 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 }
 
 
-static void HandleDefaultWebpageForLaptop(void)
-{
-
-	// go to first page in bookmark list
-	if( guiCurrentLaptopMode == LAPTOP_MODE_WWW )
-	{
-		// if valid entry go there
-		if( LaptopSaveInfo.iBookMarkList[ 0 ] != -1 )
-		{
-		  GoToWebPage( LaptopSaveInfo.iBookMarkList[ 0 ] );
-		}
-	}
-}
-
-
 static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
@@ -5087,9 +4759,6 @@ static void DisplayWebBookMarkNotify(void)
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADMID,   0,DOWNLOAD_X,     DOWNLOAD_Y +     DOWN_HEIGHT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADBOT,   0,DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
-
-	//	MSYS_DefineRegion( &gLapTopScreenRegion, ( UINT16 )( LaptopScreenRect.iLeft ),( UINT16 )( LaptopScreenRect.iTop ),( UINT16 ) ( LaptopScreenRect.iRight ),( UINT16 )( LaptopScreenRect.iBottom ), MSYS_PRIORITY_NORMAL+1,
-		//					CURSOR_LAPTOP_SCREEN, ScreenRegionMvtCallback, LapTopScreenCallBack );
 
 			// font stuff
 		SetFont(DOWNLOAD_FONT);

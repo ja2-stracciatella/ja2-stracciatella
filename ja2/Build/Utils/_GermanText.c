@@ -2136,12 +2136,6 @@ const wchar_t *pBookMarkStrings[] =
 	L"Abbruch",
 };
 
-const wchar_t *pBookmarkTitle[] =
-{
-	 L"Lesezeichen",
-	 L"Rechts klicken, um in Zukunft in dieses Menü zu gelangen.",
-};
-
 // When loading or download a web page
 const wchar_t *pDownloadString[] = {
 	L"Download läuft",

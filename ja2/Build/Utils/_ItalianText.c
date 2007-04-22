@@ -2212,12 +2212,6 @@ const wchar_t* pBookMarkStrings[] =
 	L"Annulla",
 };
 
-const wchar_t* pBookmarkTitle[] =
-{
-	L"Segnalibri",
-	L"Cliccate con il destro per accedere a questo menu in futuro.",
-};
-
 // When loading or download a web page
 
 const wchar_t* pDownloadString[] =

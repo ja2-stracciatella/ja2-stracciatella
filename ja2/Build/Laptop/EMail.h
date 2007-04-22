@@ -203,9 +203,6 @@ void ExitEmail();
 void HandleEmail();
 void RenderEmail();
 
-#define CHECK_X 15
-#define CHECK_Y 13
-
 
 // message manipulation
 void LookForUnread();

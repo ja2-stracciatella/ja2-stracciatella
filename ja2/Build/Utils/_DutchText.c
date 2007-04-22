@@ -2227,12 +2227,6 @@ const wchar_t* pBookMarkStrings[] =
 	L"Stop",
 };
 
-const wchar_t* pBookmarkTitle[] =
-{
-	L"Bladwijzer",
-	L"Rechter muisklik om dit menu op te roepen.",
-};
-
 // When loading or download a web page
 
 const wchar_t* pDownloadString[] =

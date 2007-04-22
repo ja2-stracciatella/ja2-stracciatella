@@ -111,7 +111,6 @@ extern const wchar_t *pWebTitle[ ];
 extern const wchar_t *pPersonnelString[];
 extern const wchar_t *pErrorStrings[];
 extern const wchar_t *pDownloadString[];
-extern const wchar_t *pBookmarkTitle[];
 extern const wchar_t *pBookMarkStrings[];
 extern const wchar_t *pLaptopIcons[];
 extern const wchar_t *sATMText[ ];

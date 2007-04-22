@@ -2211,12 +2211,6 @@ const wchar_t* pBookMarkStrings[] =
 	L"Отмена",
 };
 
-const wchar_t* pBookmarkTitle[] =
-{
-	L"Закладки",
-	L"Чтобы попасть в это меню потом - правый щелчок.",
-};
-
 // When loading or download a web page
 
 const wchar_t* pDownloadString[] =
