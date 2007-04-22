@@ -1118,7 +1118,6 @@ static void PreProcessEmail(Email* pMail);
 
 static INT32 DisplayEmailMessage(Email* pMail)
 {
-	INT32 iHeight=0;
 	INT32 iCounter=1;
 	INT32 iOffSet=0;
 	Record* pTempRecord;
@@ -1136,9 +1135,6 @@ static INT32 DisplayEmailMessage(Email* pMail)
 
 	// we KNOW the player is going to "read" this, so mark it as so
 	pMail->fRead=TRUE;
-
-	// increment height for size of one line
-	iHeight+=GetFontHeight( MESSAGE_FONT );
 
 	// is there any special event meant for this mail?..if so, handle it
 	HandleAnySpecialEmailMessageEvents( iOffSet );
@@ -1187,7 +1183,7 @@ static INT32 DisplayEmailMessage(Email* pMail)
 
 	// reset iCounter and iHeight
 	iCounter = 1;
-  iHeight = GetFontHeight(MESSAGE_FONT);
+	INT32 iHeight = GetFontHeight(MESSAGE_FONT);
 
   // draw body of text. Any particular email can encompass more than one "record" in the
 	// email file. Draw each record (length is number of records)
@@ -2962,16 +2958,12 @@ static void PreProcessEmail(Email* pMail)
 
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords)
 {
-	INT32 iHeight=0;
 	Record* pTempRecord;
 	wchar_t pString[MAIL_STRING_SIZE];
 	UINT8	ubCnt;
 
 	// set record ptr to head of list
 	pTempRecord=pMessageRecordList;
-
-	// increment height for size of one line
-	iHeight+=GetFontHeight( MESSAGE_FONT );
 
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{
