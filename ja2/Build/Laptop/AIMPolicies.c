@@ -427,11 +427,16 @@ static BOOLEAN ExitAimPolicyMenuBar(void)
 }
 
 
+static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
+{
+	LoadEncryptedDataFromFile(AIMPOLICYFILE, Text, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
+}
+
+
 static BOOLEAN DrawAimPolicyMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT16			usHeight;
-	UINT32			uiStartLoc=0;
 	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
 								{	DEFINITIONS,
@@ -452,8 +457,7 @@ static BOOLEAN DrawAimPolicyMenu(void)
 	{
 	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_POLICY_TOC_X, usPosY);
 
-		uiStartLoc = AIM_POLICY_LINE_SIZE * ubLocInFile[i];
-		LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+		LoadAIMPolicyText(sText, ubLocInFile[i]);
 		DrawTextToScreen(sText, AIM_POLICY_TOC_X + AIM_POLICY_TOC_TEXT_OFFSET_X, (UINT16)(usPosY + AIM_POLICY_TOC_TEXT_OFFSET_Y), AIM_CONTENTBUTTON_WIDTH, AIM_POLICY_TOC_FONT, AIM_POLICY_TOC_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 		usPosY += AIM_POLICY_TOC_GAP_Y;
@@ -529,11 +533,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 static BOOLEAN DisplayAimPolicyTitleText(void)
 {
 	wchar_t	sText[400];
-	UINT32	uiStartLoc = 0;
-
-	//Load anfd display title
-	uiStartLoc = AIM_POLICY_LINE_SIZE * AIM_STATEMENT_OF_POLICY;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY);
 
 	if(gubCurPageNum == 0)
 		DrawTextToScreen(sText, AIM_POLICY_TITLE_X, AIM_POLICY_TITLE_STATEMENT_Y-25, AIM_POLICY_TITLE_WIDTH, AIM_POLICY_TITLE_FONT, AIM_POLICY_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
@@ -547,17 +547,14 @@ static BOOLEAN DisplayAimPolicyTitleText(void)
 static BOOLEAN DisplayAimPolicyStatement(void)
 {
 	wchar_t	sText[400];
-	UINT32	uiStartLoc = 0;
 	UINT16	usNumPixels;
 
 	//load and display the statment of policies
-	uiStartLoc = AIM_POLICY_LINE_SIZE * AIM_STATEMENT_OF_POLICY_1;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY_1);
 	usNumPixels = DisplayWrappedString(AIM_POLICY_TITLE_STATEMENT_X, AIM_POLICY_TITLE_STATEMENT_Y, AIM_POLICY_TITLE_STATEMENT_WIDTH, 2, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	//load and display the statment of policies
-	uiStartLoc = AIM_POLICY_LINE_SIZE * AIM_STATEMENT_OF_POLICY_2;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY_2);
 	DisplayWrappedString(AIM_POLICY_TITLE_STATEMENT_X, (UINT16)(AIM_POLICY_TITLE_STATEMENT_Y + usNumPixels+15), AIM_POLICY_TITLE_STATEMENT_WIDTH, 2, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	return(TRUE);
@@ -620,11 +617,7 @@ static BOOLEAN ExitAgreementButton(void)
 static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
 	wchar_t	sText[400];
-	UINT32	uiStartLoc = 0;
-
-	//Load and display title
-	uiStartLoc = AIM_POLICY_LINE_SIZE * ubPageNum;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, ubPageNum);
 	DrawTextToScreen(sText, AIM_POLICY_SUBTITLE_NUMBER, usPosY, 0, AIM_POLICY_SUBTITLE_FONT, AIM_POLICY_SUBTITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
 	return(TRUE);
@@ -635,11 +628,9 @@ static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fN
 {
 	wchar_t	sText[400];
 	wchar_t	sTemp[20];
-	UINT32	uiStartLoc=0;
 	UINT16	usNumPixels;
 
-	uiStartLoc = AIM_POLICY_LINE_SIZE * ubPageNum;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, ubPageNum);
 
 	if(fNumber != 0.0)
 	{
@@ -659,11 +650,9 @@ static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT
 {
 	wchar_t	sText[400];
 	wchar_t	sTemp[20];
-	UINT32	uiStartLoc=0;
 	UINT16	usNumPixels;
 
-	uiStartLoc = AIM_POLICY_LINE_SIZE * ubPageNum;
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, sText, uiStartLoc, AIM_POLICY_LINE_SIZE);
+	LoadAIMPolicyText(sText, ubPageNum);
 
 	//Display the section number
 	swprintf(sTemp, lengthof(sTemp), L"%2.2f", fNumber);
