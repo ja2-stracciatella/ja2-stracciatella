@@ -99,9 +99,6 @@
 #include "PreBattle_Interface.h"
 
 
-extern UINT8	gubAICounter;
-
-
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 
@@ -830,7 +827,6 @@ BOOLEAN ExecuteOverhead( )
 		if (!gfPauseAllAI)
 		{
 			// AI limiting crap
-			gubAICounter = 0;
 			if (!((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT)))
 			{
 				if ((iTimerVal - giRTAILastUpdateTime ) > RT_DELAY_BETWEEN_AI_HANDLING)

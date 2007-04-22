@@ -55,8 +55,6 @@ extern UINT8 gubElementsOnExplosionQueue;
 
 extern BOOLEAN gfWaitingForTriggerTimer;
 
-UINT8 gubAICounter;
-
 //
 // Commented out/ to fix:
 // lots of other stuff, I think
@@ -510,7 +508,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			EndMuzzleFlash( pSoldier );
 		}
 
-		gubAICounter++;
 		// figure out what to do!
 		if (gfTurnBasedAI)
 		{
