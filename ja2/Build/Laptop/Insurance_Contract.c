@@ -656,7 +656,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 }
 
 
-static void HandleAcceptButton(UINT8 ubSoldierID, UINT8 ubFormID);
+static void HandleAcceptButton(UINT8 ubSoldierID);
 
 
 static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -669,8 +669,7 @@ static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 re
 		//the accept button
 		if (ubButton == 0)
 		{
-			//handle the accept button, (global to all accept button
-			HandleAcceptButton(ubSoldierID, 1);
+			HandleAcceptButton(ubSoldierID);
 
 			//specify the length of the insurance contract
 			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
@@ -695,8 +694,7 @@ static void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn, INT32 re
 		//the accept button
 		if (ubButton == 0)
 		{
-			//handle the accept button, (global to all accept button
-			HandleAcceptButton(ubSoldierID, 2);
+			HandleAcceptButton(ubSoldierID);
 
 			//specify the length of the insurance contract
 			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
@@ -721,8 +719,7 @@ static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 re
 		//the accept button
 		if (ubButton == 0)
 		{
-			//handle the accept button, (global to all accept button
-			HandleAcceptButton(ubSoldierID, 3);
+			HandleAcceptButton(ubSoldierID);
 
 			//specify the length of the insurance contract
 			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
@@ -932,11 +929,8 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 }
 
 
-static void HandleAcceptButton(UINT8 ubSoldierID, UINT8 ubFormID)
+static void HandleAcceptButton(UINT8 ubSoldierID)
 {
-	//passed in either 1,2,3 should be 0,1,2
-	ubFormID--;
-
 	PurchaseOrExtendInsuranceForSoldier( &Menptr[ ubSoldierID ], CalculateSoldiersInsuranceContractLength( &Menptr[ ubSoldierID ] ) );
 
 	RenderInsuranceContract();
@@ -1375,36 +1369,6 @@ static void EnableDisableIndividualInsuranceContractButton(UINT8 ubMercIDForMerc
 	if( IsMercDead( ubMercIDForMercInForm ) )
 		DisableButton( *puiAcceptButton );
 }
-
-
-/*
-UINT32	GetContractLengthForFormNumber( UINT8 ubFormID )
-{
-	UINT8	ubMercID;
-	SOLDIERTYPE	*pSoldier;
-
-	switch( ubFormID )
-	{
-		case 0:
-			ubMercID = gubMercIDForMercInForm1;
-			break;
-		case 1:
-			ubMercID = gubMercIDForMercInForm1;
-			break;
-		case 2:
-			ubMercID = gubMercIDForMercInForm1;
-			break;
-
-		default:
-			Assert( 0 );
-			break;
-	}
-
-	pSoldier = &Menptr[ GetSoldierIDFromMercID( ubMercID ) ];
-
-	return( pSoldier->iTotalContractLength );
-}
-*/
 
 
 static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
