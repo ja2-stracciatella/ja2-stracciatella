@@ -76,7 +76,6 @@ BOOLEAN fNewMailFlag=FALSE;
 BOOLEAN fOldNewMailFlag=FALSE;
 BOOLEAN fDisplayMessageFlag=FALSE;
 static BOOLEAN fOldDisplayMessageFlag = FALSE;
-static BOOLEAN fReDraw = FALSE;
 static BOOLEAN fReDrawMessageFlag = FALSE;
 static BOOLEAN fOnLastPageFlag = FALSE;
 BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
@@ -1371,10 +1370,6 @@ void CreateDestroyNewMailButton()
 	 // remove screen mask
 	 MSYS_RemoveRegion( &pScreenMask );
 
-
-	 //re draw screen
-	 fReDraw=TRUE;
-
 	 // redraw screen
 		 fPausedReDrawScreenFlag=TRUE;
  }
@@ -1485,7 +1480,6 @@ static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		if (iCurrentPage < iLastPage)
 		{
 			iCurrentPage++;
-			fReDraw = TRUE;
 			RenderEmail();
 			MarkButtonsDirty();
 		}
@@ -1498,8 +1492,6 @@ static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if (giMessagePage > 0) giMessagePage--;
-
-		fReDraw = TRUE;
 		RenderEmail();
 		MarkButtonsDirty();
   }
@@ -1533,7 +1525,6 @@ static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		if (iCurrentPage > 0)
 		{
 			iCurrentPage--;
-			fReDraw = TRUE;
 			RenderEmail();
 			MarkButtonsDirty();
 		}
