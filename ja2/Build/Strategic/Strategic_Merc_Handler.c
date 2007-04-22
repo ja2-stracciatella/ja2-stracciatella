@@ -41,12 +41,6 @@
 #define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3
 
 
-// can you say me too after someone has said thier contract about to end
-BOOLEAN fContractOverMeTooFlag = FALSE;
-BOOLEAN fContractOverAndIWontRenewMeTooFlag = FALSE;
-BOOLEAN fProcessingAMerc = FALSE;
-SOLDIERTYPE *pProcessingSoldier = NULL;
-
 // build a list of mercs based on departure time
 void BuildMercQuitList( SOLDIERTYPE *pMercList );
 

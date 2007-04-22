@@ -96,8 +96,6 @@ typedef struct
 } DIALOGUE_Q_STRUCT, *DIALOGUE_Q_STRUCT_PTR;
 
 extern BOOLEAN gfSKIScreenExit;
-extern SOLDIERTYPE *pProcessingSoldier;
-extern BOOLEAN fProcessingAMerc;
 extern UINT32 guiPendingScreen;
 extern BOOLEAN fReDrawFace;
 extern BOOLEAN gfWaitingForTriggerTimer;
@@ -846,8 +844,6 @@ void HandleDialogue( )
 			fShowContractMenu = TRUE;
 			RebuildContractBoxForMerc( pSoldier );
 			bSelectedContractChar = bSelectedInfoChar;
-			pProcessingSoldier = pSoldier;
-			fProcessingAMerc = TRUE;
 		}
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND )
 		{
