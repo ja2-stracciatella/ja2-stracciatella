@@ -2480,7 +2480,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 	Phys = 0;
 	if (Imp->bLife       < NEEDS_TRAINING_STAT_VALUE && Imp->bLife       > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
 	if (Imp->bStrength   < NEEDS_TRAINING_STAT_VALUE && Imp->bStrength   > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
-	if (Imp->bAgility    < NEEDS_TRAINING_STAT_VALUE && Imp->bAgility    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (Imp->bAgility    < NEEDS_TRAINING_STAT_VALUE && Imp->bAgility    > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
 	if (Imp->bWisdom     < NEEDS_TRAINING_STAT_VALUE && Imp->bWisdom     > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
 	if (Imp->bLeadership < NEEDS_TRAINING_STAT_VALUE && Imp->bLeadership > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
 	if (Imp->bDexterity  < NEEDS_TRAINING_STAT_VALUE && Imp->bDexterity  > NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
@@ -2497,11 +2497,12 @@ static void HandleIMPCharProfileResultsMessage(void)
 
 	// very low physical
 	Phys = 0;
-	if (Imp->bLife      <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
-	if (Imp->bDexterity <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
-	if (Imp->bStrength  <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
-	if (Imp->bAgility   <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
-	if (Imp->bWisdom    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+	if (Imp->bLife       <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_HLTH;
+	if (Imp->bDexterity  <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_DEX;
+	if (Imp->bStrength   <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_STR;
+	if (Imp->bAgility    <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_AGI;
+	if (Imp->bWisdom     <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_WIS;
+	if (Imp->bLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
 
 	if (Phys != 0) AddIMPResultText(IMP_PHYSICAL_VERY_LOW);
 
@@ -2510,9 +2511,6 @@ static void HandleIMPCharProfileResultsMessage(void)
 	if (Phys & PHYS_STR)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_STRENGTH);
 	if (Phys & PHYS_AGI)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_AGILITY);
 	if (Phys & PHYS_WIS)  AddIMPResultText(IMP_PHYSICAL_VERY_LOW_WISDOM);
-
-	if (Imp->bLeadership <= NO_CHANCE_IN_HELL_STAT_VALUE) Phys |= PHYS_LDR;
-
 	if (Phys & PHYS_LDR) AddIMPResultText(IMP_PHYSICAL_VERY_LOW_LEADERSHIP);
 
 
