@@ -206,7 +206,6 @@ UICursor	gUICursors[ NUM_UI_CURSORS ] =
 
 
 static UINT32 guiCurUICursor = NO_UICURSOR;
-UINT32 guiOldUICursor = NO_UICURSOR;
 UINT16				gusCurMousePos;
 UINT16				gusTargetDropPos;
 BOOLEAN				gfTargetDropPos = FALSE;
@@ -214,7 +213,6 @@ BOOLEAN				gfTargetDropPos = FALSE;
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor )
 {
-	guiOldUICursor = guiCurUICursor;
 	guiCurUICursor = uiNewCursor;
 
 	return( TRUE );
