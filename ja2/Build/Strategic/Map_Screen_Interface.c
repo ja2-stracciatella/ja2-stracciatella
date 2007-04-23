@@ -115,7 +115,7 @@ enum{
 // waiting list for update box
 INT32 iUpdateBoxWaitingList[ MAX_CHARACTER_COUNT ];
 
-FASTHELPREGION pFastHelpMapScreenList[ MAX_MAPSCREEN_FAST_HELP ];
+static FASTHELPREGION pFastHelpMapScreenList[MAX_MAPSCREEN_FAST_HELP];
 
 // the move menu region
 MOUSE_REGION gMoveMenuRegion[ MAX_POPUP_BOX_STRING_COUNT ];
@@ -2686,7 +2686,7 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 static void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen(void);
 
 
-static void DisplayFastHelpForInitialTripInToMapScreen(FASTHELPREGION* pRegion)
+void DisplayMapScreenFastHelpList(void)
 {
 	if( gTacticalStatus.fDidGameJustStart )
 	{
@@ -2706,14 +2706,6 @@ static void DisplayFastHelpForInitialTripInToMapScreen(FASTHELPREGION* pRegion)
 	}
 
 	SetUpShutDownMapScreenHelpTextScreenMask( );
-}
-
-
-void DisplayMapScreenFastHelpList( void )
-{
-	INT32 iCounter = 0;
-
-	DisplayFastHelpForInitialTripInToMapScreen( &pFastHelpMapScreenList[ iCounter ] );
 }
 
 
