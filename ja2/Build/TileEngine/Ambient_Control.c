@@ -16,10 +16,19 @@ AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
 
 
-UINT8                   gubCurrentSteadyStateAmbience = SSA_NONE;
-UINT8                   gubCurrentSteadyStateSound    = 0;
-UINT32                  guiCurrentSteadyStateSoundHandle = NO_SAMPLE;
-STEADY_STATE_AMBIENCE   gSteadyStateAmbientTable[ NUM_STEADY_STATE_AMBIENCES ] =
+#define SOUND_NAME_SIZE          256
+#define NUM_SOUNDS_PER_TIMEFRAME   8
+
+typedef struct
+{
+	const char* zSoundNames[NUM_SOUNDS_PER_TIMEFRAME];
+} STEADY_STATE_AMBIENCE;
+
+
+static UINT8                 gubCurrentSteadyStateAmbience    = SSA_NONE;
+static UINT8                 gubCurrentSteadyStateSound       = 0;
+static UINT32                guiCurrentSteadyStateSoundHandle = NO_SAMPLE;
+static const char* const gSteadyStateAmbientTable[NUM_STEADY_STATE_AMBIENCES][NUM_SOUNDS_PER_TIMEFRAME] =
 {
    // NONE
    "",
@@ -239,7 +248,7 @@ SOUNDPARMS spParms;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 
-	return(SoundPlay( gSteadyStateAmbientTable[ gubCurrentSteadyStateAmbience ].zSoundNames[ gubCurrentSteadyStateSound ], &spParms ) );
+	return SoundPlay(gSteadyStateAmbientTable[gubCurrentSteadyStateAmbience][gubCurrentSteadyStateSound], &spParms);
 }
 
 
@@ -267,7 +276,7 @@ BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience )
   // loop through listing to get num sounds...
   for ( cnt = ( fInNight * 4 ); cnt < ( NUM_SOUNDS_PER_TIMEFRAME / 2 ); cnt++ )
   {
-    if ( gSteadyStateAmbientTable[ ubAmbience ].zSoundNames[ cnt ][ 0 ] == 0 )
+		if (gSteadyStateAmbientTable[ubAmbience][cnt][0] == '\0')
     {
       break;
     }

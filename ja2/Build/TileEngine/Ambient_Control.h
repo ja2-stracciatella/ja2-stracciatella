@@ -14,10 +14,6 @@ extern INT16								gsNumAmbData;
 
 BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience );
 
-
-#define               SOUND_NAME_SIZE           256
-#define               NUM_SOUNDS_PER_TIMEFRAME    8
-
 enum
 {
   SSA_NONE,
@@ -33,14 +29,5 @@ enum
   SSA_OCEAN,
   NUM_STEADY_STATE_AMBIENCES
 };
-
-
-typedef struct
-{
-  CHAR8 zSoundNames[ NUM_SOUNDS_PER_TIMEFRAME ][ SOUND_NAME_SIZE ];
-
-} STEADY_STATE_AMBIENCE;
-
-
 
 #endif
