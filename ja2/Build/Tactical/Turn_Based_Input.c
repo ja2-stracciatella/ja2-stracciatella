@@ -1368,7 +1368,6 @@ static void TeleportSelectedSoldier(void);
 static void TestCapture(void);
 static void TestMeanWhile(INT32 iID);
 static void ToggleCliffDebug(void);
-static void ToggleRealTimeConfirm(void);
 static void ToggleTreeTops(void);
 static void ToggleViewAllItems(void);
 static void ToggleViewAllMercs(void);
@@ -2825,13 +2824,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case 'p':
-
-#ifdef JA2BETAVERSION
-					if( fAlt )
-						ToggleRealTimeConfirm();
-					else
-#endif
-
 #ifdef JA2TESTVERSION
 	#ifndef JA2DEMO
 						if( fCtrl )
@@ -4080,11 +4072,6 @@ static void CreatePlayerControlledCow(void)
 			AllTeamsLookForAll(NO_INTERRUPTS);
 		}
 	}
-}
-
-
-static void ToggleRealTimeConfirm(void)
-{
 }
 
 
