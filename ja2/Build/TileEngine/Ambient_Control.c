@@ -16,7 +16,6 @@ AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
 
 
-#define SOUND_NAME_SIZE          256
 #define NUM_SOUNDS_PER_TIMEFRAME   8
 
 typedef struct
@@ -25,9 +24,7 @@ typedef struct
 } STEADY_STATE_AMBIENCE;
 
 
-static UINT8                 gubCurrentSteadyStateAmbience    = SSA_NONE;
-static UINT8                 gubCurrentSteadyStateSound       = 0;
-static UINT32                guiCurrentSteadyStateSoundHandle = NO_SAMPLE;
+static UINT32 guiCurrentSteadyStateSoundHandle = NO_SAMPLE;
 static const char* const gSteadyStateAmbientTable[NUM_STEADY_STATE_AMBIENCES][NUM_SOUNDS_PER_TIMEFRAME] =
 {
    // NONE
@@ -239,7 +236,7 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 }
 
 
-static UINT32 StartSteadyStateAmbient(UINT32 ubVolume, UINT32 ubLoops)
+static UINT32 StartSteadyStateAmbient(UINT32 ubVolume, UINT32 ubLoops, UINT32 Ambience, UINT32 ChosenSound)
 {
 SOUNDPARMS spParms;
 
@@ -248,7 +245,7 @@ SOUNDPARMS spParms;
 	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
 	spParms.uiLoop = ubLoops;
 
-	return SoundPlay(gSteadyStateAmbientTable[gubCurrentSteadyStateAmbience][gubCurrentSteadyStateSound], &spParms);
+	return SoundPlay(gSteadyStateAmbientTable[Ambience][ChosenSound], &spParms);
 }
 
 
@@ -292,11 +289,7 @@ BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience )
   // Pick one
   ubChosenSound = (UINT8) Random( ubNumSounds );
 
-  // Set!
-  gubCurrentSteadyStateAmbience = ubAmbience;
-  gubCurrentSteadyStateSound    = ubChosenSound;
-
-  guiCurrentSteadyStateSoundHandle =  StartSteadyStateAmbient( LOWVOLUME, 0 );
+	guiCurrentSteadyStateSoundHandle = StartSteadyStateAmbient(LOWVOLUME, 0, ubAmbience, ubChosenSound);
 
   return( TRUE );
 }
