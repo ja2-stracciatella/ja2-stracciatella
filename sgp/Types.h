@@ -8,8 +8,13 @@
 #define UNIMPLEMENTED() \
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();
-#define FIXME \
+
+#ifdef WITH_FIXMES
+#	define FIXME \
 	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
+#else
+#	define FIXME (void)0;
+#endif
 
 
 #if defined(_WIN32) && !defined(_WIN64) // XXX HACK000A

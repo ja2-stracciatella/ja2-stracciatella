@@ -20,10 +20,10 @@
 //#define SOUND_DISABLE
 
 
-#if 1
+#ifdef WITH_SOUND_DEBUG
 #	define SNDDBG(fmt, ...) fprintf(stderr, ">>>> SND: " fmt, __VA_ARGS__);
 #else
-#	define SNDDBG(fmt, ...)
+#	define SNDDBG(fmt, ...) (void)0;
 #endif
 
 

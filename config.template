@@ -7,9 +7,11 @@
 #LNG := POLISH
 #LNG := RUSSIAN
 
-#JA2BETAVERSION := yes
-#JA2TESTVERSION := yes
-#JA2EDITOR      := yes
+#JA2BETAVERSION   := yes
+#JA2TESTVERSION   := yes
+#JA2EDITOR        := yes
+#WITH_FIXMES      := yes
+#WITH_SOUND_DEBUG := yes
 
 #CFLAGS += -g
 #CFLAGS += -Werror
