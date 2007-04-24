@@ -179,7 +179,11 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 		//look on the cdrom
 		hFile = fopen(zTempPath, "rb");
-		if (hFile == NULL) return FALSE;
+		if (hFile == NULL)
+		{
+			fprintf(stderr, "ERROR: Failed to open \"%s\"\n", zTempPath);
+			abort();
+		}
 		FastDebugMsg(String("CD Library %s opened.", zTempPath));
 	}
 

@@ -21,7 +21,9 @@ static const char* gGameLibaries[] =
 	"speech.slf",
 	"tilesets.slf",
 	"loadscreens.slf",
+#if 0 // XXX the intro videos are not needed right now, because there is no way to play them
 	"intro.slf",
+#endif
 
 #ifdef JA2DEMO
 	"demoads.slf",
