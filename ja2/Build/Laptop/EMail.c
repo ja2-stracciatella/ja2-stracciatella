@@ -536,6 +536,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 }
 
 
+static void AddMessageToPages(Email* Mail);
 static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
 
 
@@ -646,7 +647,7 @@ static void AddEmailPage(void)
 }
 
 
-void AddMessageToPages(Email* Mail)
+static void AddMessageToPages(Email* Mail)
 {
 	// go to end of page list
 	Page* pPage = pPageList;

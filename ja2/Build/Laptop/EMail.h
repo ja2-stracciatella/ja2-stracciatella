@@ -214,7 +214,6 @@ void CreateDestroyNewMailButton();
 void CreateDestroyDeleteNoticeMailButton();
 void ReDrawNewMailBox( void );
 void ShutDownEmailList();
-void AddMessageToPages(Email* Mail);
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData );
 
 #ifdef JA2BETAVERSION
