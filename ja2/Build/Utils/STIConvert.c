@@ -87,7 +87,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 
 	//UINT16							usLoop;
 
-	memset( &Header, 0, STCI_HEADER_SIZE );
+	memset(&Header, 0, sizeof(Header));
 	memset( &Image, 0, sizeof( image_type ));
 
 
@@ -136,7 +136,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 		return;
 	}
   // write header
-	fwrite( &Header, STCI_HEADER_SIZE, 1, pOutput );
+	fwrite(&Header, sizeof(Header), 1, pOutput);
 	// write palette and subimage structs, if any
 	if (Header.fFlags & STCI_INDEXED)
 	{
