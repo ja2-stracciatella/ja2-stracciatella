@@ -1,5 +1,7 @@
 high prio
 - TODO0001 implement blitters and related functions
+- TODO0004 Make it 64bit clean
+- TODO0005 Make it endian agnostic
 
 med prio
 - TODO0003 Implement sound streaming
@@ -8,7 +10,6 @@ med prio
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
-- r80
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
 - HACK0005 Set gusSelectedSoldier in EnterCombat() to 0 if it is NO_SOLDIER
@@ -17,6 +18,3 @@ low prio
   distribution, which would be a rather complex task with pregenerated randoms
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
 - HACK000B Remove unused fields which are only kept for savegame compatibility
-
-cosmetic
-- FileCheckEndOfFile() complicated
