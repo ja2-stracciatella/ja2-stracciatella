@@ -1236,17 +1236,12 @@ void RemoveAllCurrentBoxStrings( void )
 }
 
 
-static void GetCurrentBox(INT32 *hBoxHandle);
-
-
 void RemoveBox(INT32 hBoxHandle)
 {
-	INT32 hOldBoxHandle;
-
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
 
-	GetCurrentBox(&hOldBoxHandle);
+	INT32 hOldBoxHandle = guiCurrentBox;
 	SetCurrentBox(hBoxHandle);
 
 	RemoveAllCurrentBoxStrings();
@@ -1303,13 +1298,6 @@ void SetCurrentBox(INT32 hBoxHandle)
 
 	guiCurrentBox = hBoxHandle;
 }
-
-
-static void GetCurrentBox(INT32 *hBoxHandle)
-{
-	*hBoxHandle = guiCurrentBox;
-}
-
 
 
 void DisplayBoxes(UINT32 uiBuffer)
