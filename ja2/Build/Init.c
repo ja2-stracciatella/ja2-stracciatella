@@ -43,8 +43,6 @@
 #include "VSurface.h"
 
 #ifdef JA2BETAVERSION
-#	include "Multilingual_Text_Code_Generator.h"
-
 #	ifdef JA2EDITOR
 #		include "EditScreen.h"
 #		include "JAScreens.h"
@@ -141,14 +139,6 @@ UINT32 InitializeJA2(void)
 		ApologizeOverrideAndForceUpdateEverything();
 	}
 	#endif
-#endif
-
-#ifdef JA2BETAVERSION
-	if( ProcessIfMultilingualCmdLineArgDetected( gzCommandLine ) )
-	{ //If the multilingual text code generator has activated, quit now.
-		gfProgramIsRunning = FALSE;
-		return( INIT_SCREEN );
-	}
 #endif
 
 #ifdef JA2BETAVERSION

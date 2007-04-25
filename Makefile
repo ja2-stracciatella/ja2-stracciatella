@@ -351,7 +351,6 @@ SRCS += ja2/Build/Utils/MapUtility.c
 SRCS += ja2/Build/Utils/MercTextBox.c
 SRCS += ja2/Build/Utils/Message.c
 SRCS += ja2/Build/Utils/Multi_Language_Graphic_Utils.c
-SRCS += ja2/Build/Utils/Multilingual_Text_Code_Generator.c
 SRCS += ja2/Build/Utils/Music_Control.c
 SRCS += ja2/Build/Utils/PopUpBox.c
 SRCS += ja2/Build/Utils/Quantize.cc
