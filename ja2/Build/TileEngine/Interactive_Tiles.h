@@ -16,11 +16,8 @@
 BOOLEAN								gfOverIntTile;
 
 
-BOOLEAN InitInteractiveTileManagement( );
-void ShutdownInteractiveTileManagement( );
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection );
 BOOLEAN StartInteractiveObjectFromMouse( SOLDIERTYPE *pSoldier, UINT8 ubDirection );
-void CompileInteractiveTiles( );
 UINT32  GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm );
 BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection );
 BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier );

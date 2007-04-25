@@ -294,8 +294,6 @@ void DeinitializeWorld( )
 
 	// Shutdown tile database data
 	DeallocateTileDatabase( );
-
-	ShutdownRoomDatabase( );
 }
 
 
@@ -2164,9 +2162,6 @@ void InitLoadedWorld( )
 
 	// COMPILE MOVEMENT COSTS
 	CompileWorldMovementCosts( );
-
-	// COMPILE INTERACTIVE TILES
-	CompileInteractiveTiles( );
 
 	// COMPILE WORLD VISIBLIY TILES
 	CalculateWorldWireFrameTiles( TRUE );

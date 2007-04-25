@@ -492,8 +492,6 @@ BOOLEAN InitTacticalEngine( )
 	if( !LoadLockTable() )
 		return(FALSE);
 
-	InitInteractiveTileManagement( );
-
 	// init path code
 	if (!InitPathAI())
 	{
@@ -527,7 +525,6 @@ void ShutdownTacticalEngine( )
 	ShutdownStaticExternalNPCFaces( );
 
 	ShutDownPathAI();
-	ShutdownInteractiveTileManagement( );
 	UnLoadCarPortraits( );
 
 	ShutdownNPCQuotes();

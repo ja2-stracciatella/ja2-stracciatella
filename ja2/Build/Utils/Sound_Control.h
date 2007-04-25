@@ -386,7 +386,6 @@ enum AmbientDefines
 typedef void (*SOUND_STOP_CALLBACK)( void *pData );
 
 
-BOOLEAN InitJA2Sound( );
 BOOLEAN ShutdownJA2Sound( );
 UINT32 PlayJA2Sample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);

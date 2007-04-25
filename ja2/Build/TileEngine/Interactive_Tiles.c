@@ -78,16 +78,6 @@ UINT16	gusINTOldMousePosY = 0;
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
 
 
-BOOLEAN InitInteractiveTileManagement( )
-{
-	return( TRUE );
-}
-
-void ShutdownInteractiveTileManagement( )
-{
-}
-
-
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
 	STRUCTURE * pStructure;
@@ -485,14 +475,6 @@ static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos
 		pRect->iTop			= sScreenY;
 		pRect->iBottom	= sScreenY + usHeight;
 		pRect->iRight		= sScreenX + usWidth;
-}
-
-
-
-
-void CompileInteractiveTiles( )
-{
-
 }
 
 

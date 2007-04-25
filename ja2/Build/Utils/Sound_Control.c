@@ -396,11 +396,6 @@ static const UINT8 AmbientVols[NUM_AMBIENTS] = {
 };
 
 
-BOOLEAN InitJA2Sound( )
-{
-	return( TRUE );
-}
-
 BOOLEAN ShutdownJA2Sound( )
 {
 	SoundStopAll();

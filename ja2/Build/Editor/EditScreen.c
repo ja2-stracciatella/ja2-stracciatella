@@ -496,7 +496,6 @@ static BOOLEAN EditModeShutdown(void)
 	{
 		CompileWorldMovementCosts();
 		RaiseWorldLand();
-		CompileInteractiveTiles();
 		HideEntryPoints();
 		KillItemPoolList();
 		PrepareSchedulesForEditorExit();

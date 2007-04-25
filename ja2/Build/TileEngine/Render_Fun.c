@@ -28,11 +28,6 @@ BOOLEAN InitRoomDatabase( )
 	return( TRUE );
 }
 
-void ShutdownRoomDatabase( )
-{
-
-}
-
 
 static void SetTileRoomNum(INT16 sGridNo, UINT8 ubRoomNum)
 {

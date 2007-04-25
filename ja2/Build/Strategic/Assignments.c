@@ -8018,16 +8018,6 @@ static void HandleShadingOfLinesForSquadMenu(void)
 }
 
 
-static void PostTerminateMessage(SOLDIERTYPE* pCharacter)
-{
-	// do nothing
-	return;
-
-	// send a message stating that termination of contract done
-	//MapScreenMessage(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls's contract has been terminated.", pCharacter->name);
-}
-
-
 static void CreateVehicleBox(void);
 
 

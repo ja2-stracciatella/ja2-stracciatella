@@ -66,9 +66,6 @@ UINT32 InitializeJA2(void)
 	// Load external text
 	LoadAllExternalText();
 
-	// Init JA2 sounds
-	InitJA2Sound( );
-
 	gsRenderCenterX = 805;
 	gsRenderCenterY = 805;
 
