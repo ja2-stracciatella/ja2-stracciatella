@@ -258,6 +258,10 @@ static BOOLEAN MusicFadeIn(void)
 	return(FALSE);
 }
 
+
+static void DoneFadeOutDueToEndMusic(void);
+
+
 //********************************************************************************
 // MusicPoll
 //

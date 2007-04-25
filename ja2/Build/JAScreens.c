@@ -46,6 +46,11 @@
 #include "Video.h"
 #include "Debug.h"
 
+#ifdef JA2DEMO
+#	include "Local.h"
+#	include "WordWrap.h"
+#endif
+
 #define _UNICODE
 // Networking Stuff
 #ifdef NETWORKED
@@ -899,6 +904,9 @@ static void DoneFadeOutForDemoExitScreen(void)
 #ifdef JA2DEMOADS
 void DoDemoIntroduction()
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED();
+#else
 	MSG Message;
 	UINT32 uiTempID;
 	UINT16 yp, height;
@@ -1004,6 +1012,7 @@ void DoDemoIntroduction()
 			RefreshScreen();
 		}
 	}
+#endif
 }
 #endif
 
@@ -1059,7 +1068,7 @@ UINT32 DemoExitScreenHandle(void)
 	SGPRect								SrcRect, DstRect;
 	INT32									iFactor;
 	static BOOLEAN				fSetMusicToFade = FALSE;
-	UINT16 str[150];
+	wchar_t str[150];
 	static UINT16					usCenter = 320;
 	static UINT32					uiCollageID = 0;
 	static BOOLEAN gfFastAnim = FALSE;
@@ -1097,9 +1106,7 @@ UINT32 DemoExitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		//bring up the collage screen
-		SGPFILENAME ImageFile;
-		GetMLGFilename(VSurfaceDesc.ImageFile, MLG_COLLAGE);
-		uiCollageID = AddVideoSurfaceFromFile(ImageFile);
+		uiCollageID = AddVideoSurfaceFromFile("DemoAds/collage.sti");
 		if (uiCollageID == NO_VSURFACE)
 		{
 			AssertMsg( 0, "Failed to load DemoAds/collage.sti" );
@@ -1416,9 +1423,7 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			SGPFILENAME ImageFile;
-			GetMLGFilename(ImageFile, MLG_AVAILABLE);
-			uiTempID = AddVideoObjectFromFile(ImageFile);
+			uiTempID = AddVideoObjectFromFile("DemoAds/available.sti");
 			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/available.sti");
 			if (uiTempID == NO_VOBJECT)
 			{

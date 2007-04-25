@@ -37,6 +37,9 @@
 #include "Video.h"
 #include "Debug.h"
 
+#ifdef JA2DEMO
+#	include "Text.h"
+#endif
 
 #ifdef JA2EDITOR
 #include "Soldier_Init_List.h"

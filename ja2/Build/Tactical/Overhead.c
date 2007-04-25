@@ -7800,7 +7800,7 @@ static void DoneFadeOutDemoCreatureLevel(void)
 }
 
 
-static void DemoEndOKCallback(INT8 bExitCode)
+static void DemoEndOKCallback(UINT8 bExitCode)
 {
 	#ifdef JA2DEMO
 	// Check if gabby is alive...

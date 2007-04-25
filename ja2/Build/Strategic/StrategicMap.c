@@ -1968,11 +1968,8 @@ static void InitializeStrategicMapSectorTownNames(void)
 // Get sector ID string makes a string like 'A9 - OMERTA', or just J11 if no town....
 void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed )
 {
-
 #ifdef JA2DEMO
-
-	swprintf( zString, L"Demoville" );
-
+	swprintf(zString, Length, L"Demoville");
 #else
 	SECTORINFO *pSector = NULL;
 	UNDERGROUND_SECTORINFO *pUnderground;
