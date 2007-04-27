@@ -274,7 +274,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
-			mprintf(5, 5, L"%ls loadscreen data file not found...", ImageFile);
+			mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
 		}
 	}
 
