@@ -150,6 +150,8 @@ typedef struct
 	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
 } OBJECTTYPE;
+CASSERT(sizeof(OBJECTTYPE) == 36)
+
 
 /*
 typedef struct
