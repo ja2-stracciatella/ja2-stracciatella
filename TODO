@@ -7,6 +7,7 @@ med prio
 - TODO0003 Implement sound streaming
 - HACK0003 load data in a cleaner way, especially wide strings
 - HACK000A Clean up system specific hacks, especially wrt. wchar_t
+- HACK000C Workaround for code trying to access non-existent buttons
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.

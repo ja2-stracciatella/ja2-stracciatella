@@ -10,6 +10,7 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
+#include "WCheck.h"
 #include "WordWrap.h"
 
 #ifdef _JA2_RENDER_DIRTY
@@ -360,8 +361,10 @@ void UnloadButtonImage(INT32 Index)
 
 static GUI_BUTTON* GetButton(INT32 BtnID)
 {
+	CHECKN(0 <= BtnID && BtnID < MAX_BUTTONS); // XXX HACK000C
 	AssertMsg(0 <= BtnID && BtnID < MAX_BUTTONS, String("ButtonID %d is out of range.", BtnID));
 	GUI_BUTTON* b = ButtonList[BtnID];
+	CHECKN(b != NULL); // XXX HACK000C
 	AssertMsg(b != NULL, String("Accessing non-existent button %d.", BtnID));
 	return b;
 }
@@ -371,6 +374,7 @@ static GUI_BUTTON* GetButton(INT32 BtnID)
 void EnableButton(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags |= BUTTON_ENABLED | BUTTON_DIRTY;
 }
 
@@ -382,6 +386,7 @@ void EnableButton(INT32 iButtonID)
 void DisableButton(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;
 }
@@ -635,6 +640,7 @@ static void RemoveButtonsMarkedForDeletion(void)
 void RemoveButton(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 
 	//If we happen to be in the middle of a callback, and attempt to delete a button,
 	//like deleting a node during list processing, then we delay it till after the callback
@@ -847,6 +853,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height,INT16 Prio
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
 	GUI_BUTTON* b = GetButton(iBtnId);
+	CHECKF(b != NULL); // XXX HACK000C
   b->Area.Cursor = crsr;
 	return TRUE;
 }
@@ -958,6 +965,7 @@ INT32 CreateIconAndTextButton( INT32 Image, const wchar_t *string, UINT32 uiFont
 void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 
 	//free the previous strings memory if applicable
 	if( b->string )
@@ -972,6 +980,7 @@ void SpecifyButtonText( INT32 iButtonID, const wchar_t *string )
 void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->usFont = (UINT16)uiFont;
 	b->uiFlags |= BUTTON_DIRTY ;
 }
@@ -980,6 +989,7 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -989,6 +999,7 @@ void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadow
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorDown = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -998,6 +1009,7 @@ void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 s
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorHilited = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
 	b->uiFlags |= BUTTON_DIRTY ;
@@ -1007,6 +1019,7 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	//Range check:  if invalid, then set it to center justified.
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
@@ -1020,6 +1033,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
 	b->usFont = (UINT16)uiFont;
@@ -1039,6 +1053,7 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string,
 																			INT16 sForeColor, INT16 sShadowColor )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
 	b->usFont = (UINT16)uiFont;
@@ -1051,6 +1066,7 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string,
 void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	b->bTextXOffset = bTextXOffset;
 	b->bTextYOffset = bTextYOffset;
@@ -1061,6 +1077,7 @@ void SpecifyButtonTextOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOf
 void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	b->bTextXSubOffSet = bTextXOffset;
 	b->bTextYSubOffSet = bTextYOffset;
@@ -1071,6 +1088,7 @@ void SpecifyButtonTextSubOffsets( INT32 iButtonID, INT8 bTextXOffset, INT8 bText
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->sWrappedWidth = sWrappedWidth;
 }
 
@@ -1078,6 +1096,7 @@ void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 void SpecifyDisabledButtonStyle( INT32 iButtonID, INT8 bStyle )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 
 	Assert( bStyle >= DISABLED_STYLE_NONE && bStyle <= DISABLED_STYLE_SHADED );
 
@@ -1092,6 +1111,7 @@ BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideo
 													 INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKF(b != NULL); // XXX HACK000C
 
 	b->iIconID = iVideoObjectID;
 	b->usIconIndex = usVideoObjectIndex;
@@ -1112,6 +1132,7 @@ BOOLEAN SpecifyButtonIcon( INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideo
 void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
@@ -1120,6 +1141,7 @@ void AllowDisabledButtonFastHelp( INT32 iButtonID, BOOLEAN fAllow )
 void SetButtonFastHelpText(INT32 iButton, const wchar_t *Text)
 {
 	GUI_BUTTON* b = GetButton(iButton);
+	CHECKV(b != NULL); // XXX HACK000C
 	SetRegionFastHelpText( &b->Area, Text );
 }
 
@@ -1132,6 +1154,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION *reg, INT32 reason)
 
 	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 
 	if( b->uiFlags & BUTTON_ENABLED &&
 		  reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE) )
@@ -1217,6 +1240,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION *reg, INT32 reason)
 
 	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN) )
 		MouseBtnDown = TRUE;
@@ -1429,6 +1453,7 @@ void MarkAButtonDirty( INT32 iButtonNum )
 {
   // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
 	GUI_BUTTON* b = GetButton(iButtonNum);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags |= BUTTON_DIRTY;
 }
 
@@ -1451,6 +1476,7 @@ void MarkButtonsDirty( void )
 void UnMarkButtonDirty( INT32 iButtonIndex )
 {
 	GUI_BUTTON* b = GetButton(iButtonIndex);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_DIRTY;
 }
 
@@ -1472,6 +1498,7 @@ void UnmarkButtonsDirty( void )
 void ForceButtonUnDirty( INT32 iButtonIndex )
 {
 	GUI_BUTTON* b = GetButton(iButtonIndex);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_DIRTY;
 	b->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
@@ -1481,6 +1508,7 @@ void ForceButtonUnDirty( INT32 iButtonIndex )
 BOOLEAN DrawButton(INT32 iButtonID )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKF(b != NULL); // XXX HACK000C
 	if (b->string != NULL) SaveFontSettings();
 	if (b->Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(b);
 	if (b->string != NULL) RestoreFontSettings();
@@ -1618,6 +1646,7 @@ static void DrawShadeOnButton(const GUI_BUTTON *b)
 void DrawCheckBoxButtonOn( INT32 iButtonID )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
 	gfLeftButtonState = TRUE;
@@ -1632,6 +1661,7 @@ void DrawCheckBoxButtonOn( INT32 iButtonID )
 void DrawCheckBoxButtonOff( INT32 iButtonID )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
 	gfLeftButtonState = FALSE;
@@ -2143,6 +2173,7 @@ void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
 	if(index < 0 || index > 3)
 		return;
 	GUI_BUTTON* b = GetButton(iButtonNum);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->UserData[index]=userdata;
 }
 
@@ -2220,6 +2251,7 @@ void ReleaseAnchorMode()
 void HideButton( INT32 iButtonNum )
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags &= (~MSYS_REGION_ENABLED);
 	b->uiFlags |= BUTTON_DIRTY;
 	#ifdef JA2
@@ -2230,6 +2262,7 @@ void HideButton( INT32 iButtonNum )
 void ShowButton( INT32 iButtonNum )
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
+	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags |= MSYS_REGION_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;
 	#ifdef JA2
