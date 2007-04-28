@@ -67,7 +67,6 @@
 #include "English.h"
 #include "Fade_Screen.h"
 #include "Strategic_Mines.h"
-#include "GameVersion.h"
 #include "SaveLoadScreen.h"
 #include "Options_Screen.h"
 #include "Auto_Resolve.h"

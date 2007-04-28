@@ -121,7 +121,7 @@ LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
 LightSave(): complicated
-LightSpriteRender(): enmpty
+LightSpriteRender(): empty
 LoadAllMapChangesFromMapTempFileAndApplyThem(): Double FileClose()?
 LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
 LoadAmbientControlFile(): complicated, pointless strcpy()
@@ -209,6 +209,7 @@ SoldierCarriesTwoHandedWeapon(): complicated
 StandardGunListAmmoReplacement(): declaration in .c
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
+TacticalScreenMsg(): DestString read before written to
 TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
 TurnSoldierIntoCorpse(): one caller
@@ -266,11 +267,18 @@ uiGoodSound
 uiGruntSound
 uiGrunt2Sound
 uiOkSound
+ubFaceIndex: overwritten after load from data file
+bArmourAttractiveness: overwritten after load from data file
 bStealRate
 bVocalVolume
 bScientific
+uiEyeDelay
+uiMouthDelay
 bMinService
 bResigned
+bMainGunAttractiveness: overwritten after load from data file
+fUseProfileInsertionInfo: overwritten after load from data file
+sGridNo: overwritten after load from data file
 bPadding[4]
 bRace
 bNationality
@@ -282,6 +290,8 @@ bHatedNationality
 bHatedNationalityCareLevel
 bRacist
 bBaseMorale
+sMedicalDepositAmount: overwritten after load from data file
+usOptionalGearCost: overwritten after load from data file
 sTrueSalary: write-only/read-to-init-self
 ubBuffer[4]
 

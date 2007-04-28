@@ -78,7 +78,6 @@
 #include "ShopKeeper_Interface.h"
 #include "GameSettings.h"
 #include "Vehicles.h"
-#include "GameVersion.h"
 #include "SaveLoadScreen.h"
 #include "Air_Raid.h"
 #include "Meanwhile.h"
