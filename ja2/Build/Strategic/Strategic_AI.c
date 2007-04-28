@@ -1889,9 +1889,6 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 							AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 3 ] );
 					}
 
-					//Otherwise, the engine assumes they are being deployed.
-					//pGroup->fWaypointsCancelled = FALSE;
-
 					#ifdef JA2BETAVERSION
 						LogStrategicEvent( "%d soldiers have arrived to patrol area near sector %c%d",
 							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,

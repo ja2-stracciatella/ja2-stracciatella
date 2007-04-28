@@ -1209,15 +1209,6 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 		return;
 	}
 
-	//If the waypoints have been cancelled, then stop moving.
-	/*
-	if( pGroup->fWaypointsCancelled )
-	{
-		DeployGroupToSector( pGroup );
-		return;
-	}
-	*/
-
 	//Determine if we are at a waypoint.
 	i = pGroup->ubNextWaypointID;
 	wp = pGroup->pWaypoints;
@@ -2509,8 +2500,7 @@ void RemoveGroupWaypoints( UINT8 ubGroupID )
 void RemovePGroupWaypoints( GROUP *pGroup )
 {
 	WAYPOINT* wp;
-	//if there aren't any waypoints to delete, then return.  This also avoids setting
-	//the fWaypointsCancelled flag.
+	//if there aren't any waypoints to delete, then return.
 	if( !pGroup->pWaypoints )
 		return;
 	//remove all of the waypoints.
@@ -2522,22 +2512,6 @@ void RemovePGroupWaypoints( GROUP *pGroup )
 	}
 	pGroup->ubNextWaypointID = 0;
 	pGroup->pWaypoints = NULL;
-
-	//By setting this flag, it acknowledges the possibility that the group is currently between sectors,
-	//and will continue moving until it reaches the next sector.  If the user decides to change directions,
-	//during this process, the arrival event must be modified to send the group back.
-	//pGroup->fWaypointsCancelled = TRUE;
-}
-
-
-// set groups waypoints as cancelled
-static void SetWayPointsAsCanceled(UINT8 ubGroupID)
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	Assert( pGroup );
-
-	//pGroup -> fWaypointsCancelled = TRUE;
 }
 
 
@@ -2694,7 +2668,6 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 	pGroup->ubSectorY = pGroup->ubNextY = (UINT8)SECTORY( ubSectorID );
 	pGroup->ubSectorZ = 0;
 	pGroup->fBetweenSectors = FALSE;
-	//pGroup->fWaypointsCancelled = FALSE;
 }
 
 

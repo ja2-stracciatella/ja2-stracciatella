@@ -112,7 +112,7 @@ typedef struct GROUP
 	UINT32 uiArrivalTime;					//the arrival time in world minutes that the group will arrive at the next sector.
 	UINT32 uiTraverseTime;				//the total traversal time from the previous sector to the next sector.
 	BOOLEAN fRestAtNight;					//set when the group is permitted to rest between 2200 and 0600 when moving
-	BOOLEAN fWaypointsCancelled;	//set when groups waypoints have been removed.
+	BOOLEAN fWaypointsCancelled_UNUSED;	// XXX HACK000B
 	WAYPOINT *pWaypoints;					//a list of all of the waypoints in the groups movement.
 	UINT8 ubTransportationMask;		//the mask combining all of the groups transportation methods.
 	UINT32 uiFlags;								//various conditions that apply to the group
