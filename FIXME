@@ -1,0 +1,406 @@
+(BOOLEAN): incorrect/unnecessary casts
+(DOUBLE): casts placed wrong
+(FADE_FUNCTION): remove casts
+ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
+AddCharacterToDeadList(): one caller
+AddEmailPage(): code duplication
+AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
+AimingGun(): empty
+AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
+BlitMineText(): code duplication
+BlitMineText(): unnecessary wcscpy()
+Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
+BltToMouseCursor(): unused
+CalculateOverrideStatus(): szFilename yuck
+CaptureTimerCallback(): complicated
+ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
+CheckForMultiTilesInTreeAndAddToUndoList(): unused (self recursion)
+ChooseCreatureQuestStartDay(): empty
+CleanUpStack(): declaration in .c
+CompileInteractiveTiles(): empty
+ContractBoxGlow(): empty
+ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
+CorpseHit(): empty
+CountNumberOfItemsInStoreInventory(): commented out
+CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
+CreateUpdateBoxStrings(): swprintf() + AddMonoString()
+DONT_DISPLAY_TEXT: what is this good for?
+DeathTimerCallback(): complicated
+DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
+DialogueDataFileExistsForProfile(): interface complicated
+DisplayMercStats(): callers
+DisplayMovingTitleBar(): callers
+DisplayOnScreenNumber(): callers
+DisplayPurchasedItems(): iSubTotal undefined value
+DisplayTopwareGermanyAddress(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
+Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
+DoDive(): callers
+DoLockDoor(): callers
+DoUnlockDoor(): callers
+DoWeHaveThisManyBonusPoints(): complicated
+DoesTownHaveRatingToTrainMilitia(): complicated
+DoesVehicleHaveAnyPassengers(): complicated
+DoneFadeInActionLeaveBasement(): empty
+DoneFadeInForSaveLoadScreen(): callers
+DoneFadeInWarp(): empty
+DoneFadeInWarp(): pointless?
+DoorToggleLockedCallback(): pointless?
+DrawBreathUIBar(): overdraw
+DrawName(): complicated
+DrawOrta(), DrawTixa(): factorise
+DrawPageNumber(): empty
+EndOfHelicoptersPath(): complicated
+EnoughTimeOnAssignment(): complicated
+EnvBeginRainStorm(), EnvEndRainStorm(): TODO
+EvaluateWorld(): complicated
+ExecuteGameEvent(): code duplication
+FaceRegionMvtCallback(): unused
+FileCheckEndOfFile(): complicated
+Filler, Padding, Unused, filler: remove, partially bogus
+FindCacheStructDataIndex(): should return pointer instead of index
+FlowerOrderUserTextFieldCallBack(): pointless
+GetCostOfPassageForHelicopter(): callers
+GetCurrentBox(): complicated interface
+GetCurrentMercForDisplayCover(): complicated
+GetDialogue(): code duplication
+GetHelpTextForItem(): complicated
+GetIdOfPastMercInSlot(): callers
+GetIdOfThisSlot(): callers
+GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
+GetMLGFilename(): complicated
+GetNextString(): callers
+GetNumberOfDeadOnPastTeam(): callers
+GetNumberOfLeftOnPastTeam(): callers
+GetNumberOfMercsOnPlayersTeam(): callers
+GetNumberOfPastMercsOnPlayersTeam(): callers
+GetRootName(): complicated
+GetSectorFacilitiesFlags(): complicated
+GetSectorIDString(): complicated
+GetTheStateOfDepartedMerc(): callers
+GetTileType(): interface complicated
+GetTimeRemainingOnSoldiersContract(): callers
+GetTimeRemainingOnSoldiersInsuranceContract(): callers
+GetTypeSubIndexFromTileIndex(): interface complicated
+GetUIApsToDisplay(): callers
+Handle.*TextEvent(): code duplication
+HandleDefiniteUnloadingOfWorld(): use enum
+HandleFaceHilights(): LockVideoSurface() called unnecessarily often
+HandleItemGlowFlag(): callers/complicated
+HandleMinuteUpdate(): empty
+HandleMinuteUpdate(): remove?
+HandleMoraleEventForSoldier(): callers
+HandleOpinionOfTownsAboutSoldier(): empty
+HandleOptionToggle(): callers
+HandlePlayerTeamMemberDeathAfterSkullAnimation(): declaration in .c
+HandleSoldierFaceFlash(): empty
+HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
+HandleSuppressionFire(): callers
+HeliCharacterDialogue(): callers
+HideItemTileCursor(): empty
+HighLightRegion(), RestoreOldRegion(): empty
+IMPVideoObjects.h(): many needlessly called functions?
+InitStrategicRow[A-P](): complicated?
+InitializeLibrary(): invalid use of strlen()
+InitializeStrategicMapSectorTownNames(): complicated?
+InsContractNoMercsPopupCallBack(): callers
+InternalDoMercBattleSound(): Sound file selection complicated
+InternalIsPerceivedDifferentThanReality(): complicated
+InternalReduceAttackBusyCount(): callers
+InternalSetDoorPerceivedOpenStatus(): callers
+InvPanelButtonClickCallback(): pointless
+InvmaskRegionBtnCallBack(): empty
+IsDoorOpen(): sGridNo is INT16, but used as %s
+IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
+IsItRaining(): complicated
+IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapInventory(): complicated
+IsPastMercDead(), IsPastMercFired(), IsPastMercOther(): complicated
+IsTownUnderCompleteControlByEnemy(): complicated
+ItemHasAttachments(): complicated
+L"/": pointless copy
+LackOfProgressTolerance(): callers
+LightIlluminateWall(): empty
+LightLoad(): complicated
+LightSave(): complicated
+LightSpriteRender(): enmpty
+LoadAllMapChangesFromMapTempFileAndApplyThem(): Double FileClose()?
+LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
+LoadAmbientControlFile(): complicated, pointless strcpy()
+LoadAnimationProfiles(): file leak on error
+LoadCivQuoteFile(): string copy necessary?
+LoadEmailFromSavedGame(): memory leak on error
+LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
+LoadPaletteData(): file leak on error
+LoadRevealedStatusArrayFromRevealedTempFile(): file leak on error
+LoadRevealedStatusArrayFromRevealedTempFile(): file leak on error
+LoadSaveScreenHandle(), LoadSaveScreenInit(), LoadSaveScreenShutdown(): Investigate if the duplication can be removed
+LoadSavedGameHeader(): invalid use of strlen()
+LoadSavedGameWarningMessageBoxCallBack(): users
+LoadShadeTablesFromTextFile(): *scanf()
+LoadSummary(): filename yuck
+LocationOfNearestRefuelPoint(): callers
+LoopLevelNodeForItemGlowFlag(): callers
+LoopLevelNodeForShowThroughFlag(): callers
+MAPInvClickCamoCallback(): empty
+MAPInvMoveCamoCallback(): empty
+MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
+MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
+MakeSureMedKitIsInHand(): Severly broken. Big items can end up in small slots. Checking for first aid kits is probably not necessary at all
+MapExists(): complicated
+MapscreenMarkButtonsDirty(): callers
+MaxDistanceVisible(): inline
+MercDepartEquipmentBoxCallBack(): users
+MergeMessageBoxCallBack(): users
+MinAPsToThrow(): usInHand is INT16, but used as %s
+MiscPal: unused
+MoveGroupFromSectorToSectorButAvoidLastSector(): caller
+MoveOverheadRegionCallback(): empty
+MsgBoxClickCallback(): empty
+NPCQuoteInfo: weird preprocessor magic
+NUM_SKILL_TRAITS: complicated
+NextPersonnelFace(): callers
+NumMercsCloseTo(): callers
+OutOfStockMessageBoxCallBack(): pointless
+PalEditKeyboardHook(): code duplication
+PauseRT(): empty
+PayMilitiaTrainingYesNoBoxCallback(): users
+PerformTest(): useful?
+PlayerGroupInMotion(): overkill
+PrevPersonnelFace(): callers
+ProcessMercEditing(): code duplication
+ProcessTransactionString(): complicated?
+QsortCompare(): complicated
+ReadRLEColMapImage(), ReadRLERGBImage(): empty
+RemoveAmmoGUI(), RemoveEquipGUI(), RemoveKeysGUI(), RemoveMoneyGUI(): empty, remove?
+RemoveGraphicFromTempFile(): file leak on error
+RemoveGraphicFromTempFile(): memory leak
+RemoveItemGUI(): callers
+RenderFaceOverlay(): users
+RenderFemaleGenderIcon(): complicated
+RenderInactiveTextFieldNode(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
+RenderInventoryForCharacter(): callers
+RenderItemDescriptionBox(): code duplication
+RenderSkiAtmPanel(): empty
+RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
+RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
+SAIMOVECODE: use enum
+SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
+SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
+SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
+SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
+SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
+SaveLightEffectsToSaveGameFile(): empty
+SaveLightEffectsToSaveGameFile(): empty
+SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
+SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
+ScreenRegionMvtCallback(): empty
+SearchFor{Roof,Wall}Type(): unnecessary abs()
+SectorExitBackgroundCallback(): empty
+SelectCreditFaceRegionCallBack(): empty
+SelectMainMenuBackGroundRegionCallBack(): empty
+SetClockResolutionPerSecond(): complicated
+SetExclusive24HourTimeValue(): complicated, use swprintf()
+SetInputFieldStringWithNumericStrictValue(): complicated
+SetSelection(): callers
+SetSteadyStateAmbience(): fInNight used as lower index bound incorrectly, because upper bound is not adjusted
+SetTilesetOneTerrainValues(): set callback to avoid explicit test
+SkiGlowColorsA: unused
+SoldierCanSeeCatchComing(): empty
+SoldierCarriesTwoHandedWeapon(): complicated
+StandardGunListAmmoReplacement(): declaration in .c
+StrategicMap[]: definition not used in file
+StrategicPythSpacesAway(): avoid sqrt()
+TacticalScreenMsg(): no need for format string
+TrashMapTile(), MapOptimize(): investigate if useful
+TurnSoldierIntoCorpse(): one caller
+TwoHandedItem(): complicated
+TypeExistsInShadowLayer(): interface complicated
+UIHandleLCOnTerrain(): Redundant GetSoldier() calls?
+UIHandleMOnTerrain(): Redundant GetSoldier() calls?
+UseGun(): code duplication
+VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
+ValidateGameEvents(): questionable
+VehicleHasFuel(): inline
+VerifyGiveItem(): complicated interface
+WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
+WallOrientationString[][]: should be pointer instead of array
+WillShopKeeperRejectObjectsFromPlayer(): complicated
+WrapString(): Make 1st parameter read-only
+WriteSectorSummaryUpdate(): puiFilename yuck
+bBuddy[5], bHated[5]: indices 3 and 4 unused
+fResetContractGlow: probably always TRUE
+gMercPlacement: memory leak?
+gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
+gfOverIntTile: static
+gszFilename: wchar_t[] -> char[]?
+gubAnimSurfaceCorpseID: static if possible
+gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
+guiMemTotal: remove
+guiSkiAtmImage: unused/commented out
+gzFilename: wchar_t[] -> char[]?
+gzSkiAtmTransferString: complicated? int?
+pSoldier = pSoldier: strange
+struct ETRLEData: reorder attributes
+swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
+typedef float real: remove
+ubTravelRating: write-only
+wPrintSpec: use pointer instead of copy
+wcscat(): check for overkill
+zNewTacticalMessages[TACT_MSG__AIMMEMBER_FEE_TEXT]: unused
+zNewTacticalMessages[TACT_MSG__AIMMEMBER_ONE_TIME_FEE]: unused
+zNewTacticalMessages[TACT_MSG__CANNOT_AFFORD_MERC]: unused
+zSoundFile: pointer instead of array?
+{Head,Misc,Pabts,Skin,Vest}Pal: buffer necessary? pointer instead?
+{Load,Save}ShadeTable(): code duplication
+{Load,Save}ShadeTable(): filename generation ugly
+{Loading,Saving}Screen*(): unused?
+{Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
+
+
+STRUCTS: unused attributes
+
+MERCPROFILESTRUCT
+uiAttnSound
+uiCurseSound
+uiDieSound
+uiGoodSound
+uiGruntSound
+uiGrunt2Sound
+uiOkSound
+bStealRate
+bVocalVolume
+bScientific
+bMinService
+bResigned
+bPadding[4]
+bRace
+bNationality
+bAppearance
+bAppearanceCareLevel
+bRefinement
+bRefinementCareLevel
+bHatedNationality
+bHatedNationalityCareLevel
+bRacist
+bBaseMorale
+sTrueSalary: write-only/read-to-init-self
+ubBuffer[4]
+
+BASIC_SOLDIERCREATE_STRUCT
+PADDINGSLOTS[14]
+
+SOLDIERCREATESTRUCT
+fStatic: strange
+fPlayerMerc: strange
+fPlayerPlan: strange
+fCopyProfileItemsOver: strange
+MiscPal
+pExistingSoldier: load/save?
+fUseExistingSoldier: strange
+fKillSlotIfOwnerDies
+fUseGivenVehicle: strange
+fHasKeys: strange
+
+SOLDIERTYPE
+bReserved1
+fPauseAim: seems to be alaways FALSE
+bGunType
+fInMissionExitNode: read-only (in unused function)
+fReloading: always FALSE
+fPauseAim: always FALSE
+bScientific: just copied around a bit
+dOldXPos: write-only
+dOldYPos: write-only
+sHeightAdjustment: seems to be always 0
+sDesiredHeight: strange
+sTempNewGridNo: strange
+sRoomNo
+fPausedMove: strange
+fUIdeadMerc: strange
+fUInewMerc: pointless, if (fUInewMerc) fUInewMerc = FALSE
+fUICloseMerc: strange
+fUIFirstTimeNOAP: write-only
+fUIFirstTimeUNCON: write-only
+ReloadCounter: never gets reset, probably unnecessary, see fReloading
+FlashSelCounter: never gets tested
+uiAIDelay: always 100
+sReloadDelay: seems to be always 0, probably unnecessary, see fReloading
+fTurnInProgress: only gets printed for debug
+bViewRange: always NORMAL_VIEW_RANGE
+bNewOppCnt: strange
+bService: always FALSE
+ubDelayedMovementCauseMerc
+fHoldAttackerUntilDone
+fTurningToFall: always false
+usFrontArcFullTileList: only in unsed function
+usFrontArcFullTileGridNos: only in unsed function
+fShowLocator: maybe unnecessary
+MiscPal
+p16BPPPalette_UNUSED
+pCurrentShade_UNUSED
+pThrowParams: load/save?
+pLevelNode: load/save?
+pExternShadowLevelNode
+pRoofUILevelNode
+sDesiredDest
+bStopped: always FALSE
+bNeedToLook: write-only
+sBlackList: strange
+bHasKeys: strange
+pBackGround: write-only
+pZBackground: write-only
+usUnblitX
+usUnblitY
+usUnblitWidth
+usUnblitHeight
+usLastRandomAnim
+bUnderEscort: seems to be always FASE, only set to true in unused function
+ubLastCall
+bRTPCombat: read-only
+fForceRenderColor
+fForceNoRenderPaletteCycle
+sLocatorOffX: read-only
+sLocatorOffY
+fStopPendingNextTile
+fForceShade: pForceShade != NULL?
+bDamageDir
+bUIInterfaceLevel: write-only
+fOpenPanel: always FALSE
+bVocalVolume: always MIDVOLUME
+uiStartMovementTime
+uiOptimumMovementTime
+usLastUpdateTime: write-only
+fIsSoldierMoving: read-only
+fIsSoldierDelayed
+fSoldierUpdatedFromNetwork: read-only
+uiSoldierUpdateNumber
+ubSoldierUpdateType
+usPendingAnimation2: always NO_PENDING_ANIMATION
+fReactingFromBeingShot
+bTimesDrugUsedSinceSleep: write-only
+ubHoursOnAssignment
+ubMercJustFired
+ubPendingActionInterrupted
+fDieSoundUsed: always FALSE
+bFillerBytes
+fDoingExternalDeath: always TRUE?
+bYetAnotherPaddingSpace
+ubLastDamageReason: necessary?
+bFillerDude
+bFiller
+
+
+BUGS
+KillPreBattleInterface(): EnableDisAbleMapScreenOptionsButton(TRUE) maybe tries to enable non-existent buttons
+
+1. Create a new game
+2. Hire one merc
+3. Close laptop
+4. Enable time compression (The game goes to tactical view)
+5. Go to strategic view
+6. Enter laptop
+-> non-existent button access
+
+DisplayNewMailBox(): MarkAButtonDirty(giNewMailButton[0]); sometimes accesses non-existent button
+
+
+WORKLIST
