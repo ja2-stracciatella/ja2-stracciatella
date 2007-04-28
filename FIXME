@@ -155,6 +155,7 @@ MiscPal: unused
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
 MoveOverheadRegionCallback(): empty
 MsgBoxClickCallback(): empty
+NPC.h: RUSSIAN quirk
 NPCQuoteInfo: weird preprocessor magic
 NUM_SKILL_TRAITS: complicated
 NextPersonnelFace(): callers

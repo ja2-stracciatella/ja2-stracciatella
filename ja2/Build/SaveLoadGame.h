@@ -23,11 +23,6 @@ typedef struct
 
 	UINT32	uiFlags;
 
-#ifdef CRIPPLED_VERSION
-	UINT8 ubCrippleFiller[20];
-#endif
-
-
 	//The following will be used to quickly access info to display in the save/load screen
 	UINT32	uiDay;
 	UINT8		ubHour;

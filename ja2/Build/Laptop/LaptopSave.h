@@ -119,11 +119,6 @@ typedef struct
 	BOOLEAN							fSpeckSaidFloMarriedCousinQuote;
 	BOOLEAN							fHasAMercDiedAtMercSite;
 
-#ifdef CRIPPLED_VERSION
-	UINT8 ubCrippleFiller[20];
-#endif
-
-
 	INT8								gbNumDaysTillFirstMercArrives;
 	INT8								gbNumDaysTillSecondMercArrives;
 	INT8								gbNumDaysTillThirdMercArrives;

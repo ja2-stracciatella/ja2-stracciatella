@@ -91,9 +91,6 @@ static const wchar_t *gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE]={
 	L"Quarter Hour Update",
 	L"MERC Merc went up level email delay",
 	L".",
-#ifdef CRIPPLED_VERSION
-	L"Crippled version end game check",
-#endif
 };
 
 #endif
@@ -111,12 +108,6 @@ UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
 //and the beginning of the next global time.
 BOOLEAN GameEventsPending( UINT32 uiAdjustment )
 {
-	#ifdef CRIPPLED_VERSION
-	if( guiDay >= 8 )
-	{
-		return FALSE;
-	}
-	#endif
 	if( !gpEventList )
 		return FALSE;
 	if( gpEventList->uiTimeStamp <= GetWorldTotalSeconds() + uiAdjustment )
@@ -181,17 +172,6 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	#ifdef CRIPPLED_VERSION
-	if( guiDay >= 8 )
-	{
-		guiDay = 8;
-		guiHour = 0;
-		guiMin = 0;
-		return;
-	}
-
-	#endif
-
 	swprintf(WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%ls %d, %02d:%02d", gpGameClockString[STR_GAMECLOCK_DAY_NAME], guiDay, guiHour, guiMin);
 }
 
@@ -201,13 +181,6 @@ void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode )
 {
 	STRATEGICEVENT *curr, *pEvent, *prev, *temp;
 	BOOLEAN fDeleteEvent = FALSE, fDeleteQueuedEvent = FALSE;
-
-	#ifdef CRIPPLED_VERSION
-	if( guiDay >= 8 )
-	{
-		return;
-	}
-	#endif
 
 	gfTimeInterrupt = FALSE;
 	gfProcessingGameEvents = TRUE;

@@ -52,12 +52,6 @@ extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
 
 
-#ifdef CRIPPLED_VERSION
-void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue );
-void CrippledVersionEndGameCheck();
-#endif
-
-
 static BOOLEAN DelayEventIfBattleInProgress(STRATEGICEVENT* pEvent)
 {
 	STRATEGICEVENT *pNewEvent;
@@ -390,57 +384,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_MERC_SITE_NEW_MERC_AVAILABLE:
 			NewMercsAvailableAtMercSiteCallBack( );
 			break;
-
-#ifdef CRIPPLED_VERSION
-		case EVENT_CRIPPLED_VERSION_END_GAME_CHECK:
-			CrippledVersionEndGameCheck();
-			break;
-#endif
 	}
 	gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
 	return TRUE;
 }
-
-
-#ifdef CRIPPLED_VERSION
-void CrippledVersionEndGameCheck()
-{
-	CHAR16	zString[512];
-
-	//Dont want this to appear before we arrive
-	if( guiDay == 1 )
-		return;
-
-	if( guiDay >= 8 )
-	{
-		swprintf( zString, L"Game Over.  We hope you have enjoyed playing the limited version of Jagged Alliance 2." );
-	}
-	else
-	{
-		swprintf( zString, L"You have %d game days left in this limited version of Jagged Alliance 2.",  ( 8 - guiDay ) );
-	}
-
-	DoScreenIndependantMessageBox( zString, MSG_BOX_FLAG_OK, CrippledVersionEndGameCheckCallBack );
-}
-
-void CrippledVersionEndGameCheckCallBack( UINT8 bExitValue )
-{
-	//if we should restart the game
-	if( guiDay >= 8 )
-	{
-		//clean up the code
-		ReStartingGame();
-
-		//go to the main menu
-		if( guiCurrentScreen == MAP_SCREEN )
-		{
-			SetPendingNewScreen(MAINMENU_SCREEN);
-		}
-		else
-		{
-			InternalLeaveTacticalScreen( MAINMENU_SCREEN );
-		}
-	}
-}
-
-#endif

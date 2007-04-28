@@ -348,11 +348,7 @@ UINT32 InitScreenHandle(void)
 #endif
 		pMessageStrings[ MSG_VERSION ], zVersionLabel, czVersionNumber );
 
-#ifdef CRIPPLED_VERSION
-
-		mprintf( 10, 420, L"(LIMITED PRESS PREVIEW VERSION)" );
-
-#elif defined JA2BETAVERSION
+#ifdef JA2BETAVERSION
 
 		mprintf( 10, 420, L"(Beta version error reporting enabled)" );
 

@@ -11,11 +11,6 @@
 //BETA/TEST BUILD VERSION
 wchar_t		zVersionLabel[16]		= L"Beta v. 0.98";
 
-#elif defined CRIPPLED_VERSION
-
-//RELEASE BUILD VERSION
-wchar_t		zVersionLabel[16]		= L"Beta v. 0.98";
-
 #else
 
 	//RELEASE BUILD VERSION
