@@ -25,6 +25,7 @@
 
 
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
+#define endof(a) ((a) + lengthof(a))
 
 
 #define __max(a, b) ((a) > (b) ? (a) : (b))
