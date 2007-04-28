@@ -26,9 +26,6 @@
 #endif
 
 
-#define		BOBBYR_DEFAULT_MENU_COLOR					255
-
-
 #define		BOBBYR_GRID_PIC_WIDTH							118
 #define		BOBBYR_GRID_PIC_HEIGHT						69
 
@@ -200,21 +197,14 @@ INT32		guiBobbyRHomeImage;
 MOUSE_REGION    gSelectedTitleImageLinkRegion;
 
 
-UINT32	guiTempCurrentMode;
-
-
 void GameInitBobbyRGuns()
 {
-	guiTempCurrentMode=0;
-
 	memset(&BobbyRayPurchases, 0, MAX_PURCHASE_AMOUNT);
 }
 
 
 static void EnterInitBobbyRGuns(void)
 {
-	guiTempCurrentMode=0;
-
 	memset(&BobbyRayPurchases, 0, MAX_PURCHASE_AMOUNT);
 }
 
@@ -456,9 +446,6 @@ BOOLEAN DeleteBobbyMenuBar()
 
 static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	UINT32		bNewValue;
-	bNewValue = MSYS_GetBtnUserData( btn, 0 );
-
 	if (!(btn->uiFlags & BUTTON_ENABLED))
 		return;
 
@@ -466,23 +453,18 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
-		guiTempCurrentMode = bNewValue;
-
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
-		guiTempCurrentMode = BOBBYR_DEFAULT_MENU_COLOR;
 		UpdateButtonText(guiCurrentLaptopMode);
-		guiCurrentLaptopMode = bNewValue;
-
+		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn, 0);
 	}
 	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		guiTempCurrentMode = BOBBYR_DEFAULT_MENU_COLOR;
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
