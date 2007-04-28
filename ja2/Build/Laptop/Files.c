@@ -647,19 +647,10 @@ static BOOLEAN DisplayFormattedText(void)
 {
 	FilesUnit* pFilesList = pFilesListHead;
 
-	UINT16 usFirstWidth = 0;
-	UINT16 usFirstHeight = 0;
-  UINT16 usSecondWidth;
-	UINT16 usSecondHeight;
 	INT32 iCounter=0;
   INT32 iLength=0;
-	INT32 iHeight=0;
 	INT32 iOffSet=0;
 	INT32 iMessageCode;
-	wchar_t sString[2048];
-  UINT32 uiFirstTempPicture;
-	UINT32 uiSecondTempPicture;
-  INT16 usFreeSpace = 0;
 
 	fWaitAFrame = FALSE;
 
