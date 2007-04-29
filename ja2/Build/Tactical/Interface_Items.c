@@ -1768,7 +1768,6 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 
 			if ( pObject->usItem == NOTHING )
 			{
-				gbNewItem[ cnt ] = 0;
 				continue;
 			}
 

@@ -74,11 +74,6 @@ void			RenderTownIDString( );
 void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
 
 
-// ATE TO BE MOVED TO INTERFACE_ITEMS.C
-INT8						gbNewItem[ NUM_INV_SLOTS ];
-INT8						gbNewItemCycle[ NUM_INV_SLOTS ];
-UINT8						gubNewItemMerc;
-
 void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed );
 void EndRadioLocator( UINT8 ubID );
 
