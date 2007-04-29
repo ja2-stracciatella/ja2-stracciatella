@@ -48,7 +48,6 @@
 #include "OppList.h"
 #include "MessageBoxScreen.h"
 #include "Gameloop.h"
-#include "GameScreen.h"
 #include "Spread_Burst.h"
 #include "Tile_Animation.h"
 #include "Merc_Entering.h"

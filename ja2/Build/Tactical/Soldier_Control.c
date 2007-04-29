@@ -48,7 +48,6 @@
 #include "Soldier_Functions.h"
 #include "RT_Time_Defines.h"
 #include "Exit_Grids.h"
-#include "GameScreen.h"
 #include "Quests.h"
 #include "Message.h"
 #include "NPC.h"

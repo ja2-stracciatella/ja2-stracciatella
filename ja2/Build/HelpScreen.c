@@ -7,7 +7,6 @@
 #include "Font_Control.h"
 #include "Cursor_Control.h"
 #include "Render_Dirty.h"
-#include "GameScreen.h"
 #include "Text.h"
 #include "Utilities.h"
 #include "WordWrap.h"

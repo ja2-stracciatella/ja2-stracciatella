@@ -33,7 +33,6 @@
 #include "GameVersion.h"
 #include "GameSettings.h"
 #include "Music_Control.h"
-#include "GameScreen.h"
 #include "Options_Screen.h"
 #include "AI.h"
 #include "RenderWorld.h"
