@@ -3087,9 +3087,6 @@ static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
 
 		// write the email header to the saved game file
 		if (!FileWrite(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
-
-		//advance to the next email
-		pEmail = pEmail->Next;
 	}
 
 	return( TRUE );
