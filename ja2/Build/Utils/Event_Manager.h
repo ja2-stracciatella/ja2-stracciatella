@@ -1,6 +1,8 @@
 #ifndef __EVENT_MANAGER_H
 #define __EVENT_MANAGER_H
 
+#include "Types.h"
+
 typedef struct
 {
 	UINT32 TimeStamp;
