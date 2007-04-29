@@ -5,7 +5,6 @@
 #include "Soldier_Control.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
-#include "Event_Pump.h"
 #include "Timer_Control.h"
 #include "Cursors.h"
 #include "Handle_UI.h"

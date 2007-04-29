@@ -16,7 +16,6 @@
 #include "Soldier_Control.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
-#include "Event_Pump.h"
 #include "Timer_Control.h"
 #include "Render_Dirty.h"
 #include "Sys_Globals.h"

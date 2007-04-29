@@ -20,7 +20,6 @@
 #include "Weapons.h"
 #include "Handle_UI.h"
 #include "Soldier_Ani.h"
-#include "Event_Pump.h"
 #include "OppList.h"
 #include "AI.h"
 #include "Interface.h"

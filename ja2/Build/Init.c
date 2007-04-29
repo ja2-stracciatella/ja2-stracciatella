@@ -15,7 +15,6 @@
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Sound_Control.h"
-#include "Event_Pump.h"
 #include "Lighting.h"
 #include "Cursor_Control.h"
 #include "Music_Control.h"
