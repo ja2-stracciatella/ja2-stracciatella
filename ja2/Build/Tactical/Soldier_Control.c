@@ -28,7 +28,6 @@
 #include "Faces.h"
 #include "Soldier_Profile.h"
 #include "Gap.h"
-#include "Interface_Panels.h"
 #include "Campaign.h"
 #include "Soldier_Macros.h"
 #include "English.h"

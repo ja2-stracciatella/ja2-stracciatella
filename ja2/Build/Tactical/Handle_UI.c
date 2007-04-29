@@ -26,7 +26,6 @@
 #include "Sound_Control.h"
 #include "RenderWorld.h"
 #include "Structure.h"
-#include "Interface_Panels.h"
 #include "Handle_Items.h"
 #include "UI_Cursors.h"
 #include "Handle_UI_Plan.h"

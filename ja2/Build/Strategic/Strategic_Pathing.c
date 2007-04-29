@@ -4,7 +4,6 @@
 #include "Strategic.h"
 #include "MapScreen.h"
 #include "Overhead.h"
-#include "Interface_Panels.h"
 #include "WorldMan.h"
 #include "StrategicMap.h"
 #include "Strategic_Pathing.h"

@@ -27,7 +27,6 @@
 #include "Faces.h"
 #include "Soldier_Profile.h"
 #include "Gap.h"
-#include "Interface_Panels.h"
 #include "Campaign.h"
 #ifdef NETWORKED
 #	include "Networking.h"
