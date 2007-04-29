@@ -59,9 +59,6 @@ static INT16 MSYS_Action         = 0;
 static BOOLEAN MSYS_SystemInitialized   = FALSE;
 static BOOLEAN MSYS_UseMouseHandlerHook = FALSE;
 
-BOOLEAN MSYS_Mouse_Grabbed=FALSE;
-MOUSE_REGION *MSYS_GrabRegion = NULL;
-
 static UINT16  gusClickedIDNumber;
 static BOOLEAN gfClickedModeOn = FALSE;
 
@@ -136,9 +133,6 @@ INT32 MSYS_Init(void)
 	MSYS_PrevRegion = NULL;
 	MSYS_SystemInitialized = TRUE;
 	MSYS_UseMouseHandlerHook = FALSE;
-
-	MSYS_Mouse_Grabbed=FALSE;
-	MSYS_GrabRegion = NULL;
 
 	// Setup the system's background region
 	MSYS_SystemBaseRegion.IDNumber						= MSYS_ID_SYSTEM;
@@ -500,16 +494,6 @@ static void MSYS_DeleteRegionFromList(MOUSE_REGION* region)
 		region->prev = region->next = NULL;
 	}
 
-	// Did we delete a grabbed region?
-	if(MSYS_Mouse_Grabbed)
-	{
-		if(MSYS_GrabRegion == region)
-		{
-			MSYS_Mouse_Grabbed = FALSE;
-			MSYS_GrabRegion = NULL;
-		}
-	}
-
 	// Is only the system background region remaining?
 	if(MSYS_RegList == &MSYS_SystemBaseRegion)
 	{
@@ -541,14 +525,7 @@ static void MSYS_UpdateMouseRegion(void)
 	BOOLEAN fFound=FALSE;
 	found=FALSE;
 
-	// Check previous region!
-	if(MSYS_Mouse_Grabbed)
-	{
-		MSYS_CurrRegion = MSYS_GrabRegion;
-		found = TRUE;
-	}
-	if(!found)
-		MSYS_CurrRegion = MSYS_RegList;
+	MSYS_CurrRegion = MSYS_RegList;
 
 	while( !found && MSYS_CurrRegion )
 	{
