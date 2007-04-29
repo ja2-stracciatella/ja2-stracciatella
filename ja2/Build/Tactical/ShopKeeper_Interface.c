@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Local.h"
 #include "Types.h"
 #include "ShopKeeper_Interface.h"

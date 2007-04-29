@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Font.h"
 #include "SGP.h"
 #include "Button_System.h"
 #include "VObject.h"

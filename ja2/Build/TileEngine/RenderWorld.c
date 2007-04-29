@@ -2,6 +2,7 @@
 #include "Animation_Data.h"
 #include "Debug.h"
 #include "English.h"
+#include "Font.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
 #include "Handle_UI.h"

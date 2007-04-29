@@ -4,6 +4,7 @@
 #include "Cursors.h"
 #include "English.h"
 #include "Fade_Screen.h"
+#include "Font.h"
 #include "Font_Control.h"
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"

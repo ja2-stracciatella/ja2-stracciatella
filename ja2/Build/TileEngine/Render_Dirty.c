@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "VSurface.h"

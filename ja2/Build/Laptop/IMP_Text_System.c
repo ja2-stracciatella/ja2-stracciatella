@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "WordWrap.h"
 #include "SGP.h"
 #include "Render_Dirty.h"

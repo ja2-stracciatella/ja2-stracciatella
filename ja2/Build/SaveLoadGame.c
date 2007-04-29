@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"

@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Font.h"
 #include "Local.h"
 #include "Types.h"
 #include "MouseSystem.h"

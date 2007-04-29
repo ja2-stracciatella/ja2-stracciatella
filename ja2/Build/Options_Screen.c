@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Types.h"
 #include "Options_Screen.h"
 #include "Video.h"

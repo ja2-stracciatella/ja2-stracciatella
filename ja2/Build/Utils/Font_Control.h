@@ -2,7 +2,7 @@
 #define __FONT_CONTROL_H
 
 #include "BuildDefines.h"
-#include "Font.h"
+#include "VObject.h"
 
 
 // Global variables for video objects

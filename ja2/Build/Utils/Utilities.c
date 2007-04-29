@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Types.h"
 #include "SGP.h"
 #include "VObject.h"

@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "WorldDef.h"
 #include "WCheck.h"
 #include "Debug.h"

@@ -1,5 +1,6 @@
 #include "SGP.h"
 #ifdef JA2EDITOR
+#	include "Font.h"
 #	include "Local.h"
 #	include "Screens.h"
 #	include "MapUtility.h"

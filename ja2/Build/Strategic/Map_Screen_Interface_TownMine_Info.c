@@ -5,7 +5,6 @@
 #include "Queen_Command.h"
 #include "Player_Command.h"
 #include "Font_Control.h"
-#include "Font.h"
 #include "Text.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface_Border.h"

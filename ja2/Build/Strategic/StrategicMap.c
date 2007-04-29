@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"

@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Font.h"
 #include "IMP_Personality_Quiz.h"
 #include "IMP_MainPage.h"
 #include "IMP_HomePage.h"

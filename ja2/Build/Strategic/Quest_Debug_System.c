@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Types.h"
 #include "Quest_Debug_System.h"
 #include "WCheck.h"

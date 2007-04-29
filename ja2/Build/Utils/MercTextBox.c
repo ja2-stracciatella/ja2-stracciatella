@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "Local.h"
 #include "MercTextBox.h"
 #include "WCheck.h"
