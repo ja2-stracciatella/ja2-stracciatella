@@ -1,9 +1,6 @@
 #ifndef HELP_SCREEN_TEXT__H_
 #define HELP_SCREEN_TEXT__H_
 
-
-#include "Encrypted_File.h"
-
 #define		HELPSCREEN_FILE		"BINARYDATA/Help.edt"
 
 #define		HELPSCREEN_RECORD_SIZE	80 * 8 * 2

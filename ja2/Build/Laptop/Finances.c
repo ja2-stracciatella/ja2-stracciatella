@@ -5,7 +5,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "Text.h"

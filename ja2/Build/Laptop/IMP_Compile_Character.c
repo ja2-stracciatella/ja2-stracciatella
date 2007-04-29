@@ -4,7 +4,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"

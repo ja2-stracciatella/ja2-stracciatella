@@ -1,3 +1,4 @@
+#include "Encrypted_File.h"
 #include "Local.h"
 #include "SGP.h"
 #include "Sys_Globals.h"

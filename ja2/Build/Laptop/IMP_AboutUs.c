@@ -5,7 +5,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Text_System.h"

@@ -2,7 +2,6 @@
 #include "Video.h"
 #include "SGP.h"
 #include "Soldier_Control.h"
-#include "Encrypted_File.h"
 #include "Faces.h"
 #include "WCheck.h"
 #include "Render_Dirty.h"

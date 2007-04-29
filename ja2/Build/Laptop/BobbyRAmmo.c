@@ -6,7 +6,6 @@
 #include "WCheck.h"
 #include "Cursors.h"
 #include "Interface_Items.h"
-#include "Encrypted_File.h"
 #include "Text.h"
 #include "Button_System.h"
 #include "Video.h"

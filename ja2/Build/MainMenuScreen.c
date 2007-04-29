@@ -22,7 +22,6 @@
 #include "WordWrap.h"
 #include "Text.h"
 #include "Multi_Language_Graphic_Utils.h"
-#include "Encrypted_File.h"
 #include "JA2_Splash.h"
 #include "Debug.h"
 #include "Video.h"
