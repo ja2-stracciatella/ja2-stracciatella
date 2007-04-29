@@ -16,7 +16,6 @@
 #include "Soldier_Profile.h"
 #include "WorldMan.h"
 #include "Rotting_Corpses.h"
-#include "GameSettings.h"
 #include "Keys.h"
 #include "Message.h"
 #include "Structure_Wrap.h"

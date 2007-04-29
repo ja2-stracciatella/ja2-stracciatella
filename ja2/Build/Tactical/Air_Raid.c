@@ -23,7 +23,6 @@
 #include "Interface.h"
 #include "Music_Control.h"
 #include "Campaign_Types.h"
-#include "GameSettings.h"
 #include "Text.h"
 #include "Morale.h"
 #include "Map_Screen_Helicopter.h"

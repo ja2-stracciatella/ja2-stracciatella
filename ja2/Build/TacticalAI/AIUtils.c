@@ -11,7 +11,6 @@
 #include "LOS.h"
 #include "Assignments.h"
 #include "Soldier_Functions.h"
-#include "GameSettings.h"
 #include "Buildings.h"
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
