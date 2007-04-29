@@ -116,11 +116,6 @@ enum
 } KeyFrameEnums;
 
 
-// ANimation tile data
-ANITILE					*pAniTileHead;
-
-
-
 ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams );
 
 

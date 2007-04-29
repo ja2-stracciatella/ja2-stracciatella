@@ -189,7 +189,7 @@ enum
 static INT32 iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
-UINT32					guiINTEXT;
+static UINT32 guiINTEXT;
 UINT32					guiCLOSE;
 UINT32					guiDEAD;
 UINT32					guiHATCH;

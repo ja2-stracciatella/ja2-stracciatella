@@ -22,7 +22,7 @@
 
 
 ANIM_PROF		*gpAnimProfiles = NULL;
-UINT8				gubNumAnimProfiles = 0;
+static UINT8 gubNumAnimProfiles = 0;
 
 INT8				gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
 

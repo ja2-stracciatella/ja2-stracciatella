@@ -548,7 +548,6 @@ STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfa
 
 // Profile data
 ANIM_PROF		*gpAnimProfiles;
-UINT8				gubNumAnimProfiles;
 
 void ZeroAnimSurfaceCounts( );
 

@@ -234,13 +234,9 @@ MAP_ELEMENT			*gpWorldLevelData;
 UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
 
 
-UINT8						gubCurrentLevel;
 INT32						giCurrentTilesetID;
 
-HVOBJECT				hRenderVObject;
 UINT32					gSurfaceMemUsage;
-
-CHAR8						gzLastLoadedFile[ 260 ];
 
 extern INT16		gsRecompileAreaTop;
 extern INT16		gsRecompileAreaLeft;

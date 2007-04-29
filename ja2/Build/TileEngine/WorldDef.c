@@ -83,9 +83,7 @@ BOOLEAN					gfForceLoadPlayers = FALSE;
 CHAR8						gzForceLoadFile[100 ];
 BOOLEAN					gfForceLoad        = FALSE;
 
-UINT8						gubCurrentLevel;
 INT32						giCurrentTilesetID = 0;
-CHAR8						gzLastLoadedFile[ 260 ];
 
 UINT32			gCurrentBackground = FIRSTTEXTURE;
 
@@ -3126,8 +3124,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 	InvalidateWorldRedundency( );
 
-	// SAVE FILENAME
-	strcpy( gzLastLoadedFile, puiFilename	);
 	LoadRadarScreenBitmap( puiFilename );
 
 	RenderProgressBar( 0, 80 );

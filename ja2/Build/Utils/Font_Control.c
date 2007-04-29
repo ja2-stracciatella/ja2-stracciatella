@@ -76,9 +76,6 @@ HVOBJECT				gvo14PointHumanist;
 #endif
 
 
-BOOLEAN					gfFontsInit = FALSE;
-
-
 static UINT16 CreateFontPaletteTables(HVOBJECT pObj);
 
 
@@ -197,8 +194,6 @@ BOOLEAN	InitializeFonts( )
 
 	// Set default for font system
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
-
-	gfFontsInit = TRUE;
 
 	return( TRUE );
 }

@@ -13,11 +13,6 @@
 #include "Item_Types.h"
 
 
-// TEMP VALUES FOR NAMES
-#define MAXCIVLASTNAMES		30
-UINT16 CivLastNames[MAXCIVLASTNAMES][10];
-
-
 // ANDREW: these are defines for OKDestanation usage - please move to approprite file
 #define IGNOREPEOPLE    0
 #define PEOPLETOO       1

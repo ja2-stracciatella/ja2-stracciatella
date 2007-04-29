@@ -11,7 +11,7 @@
 
 #define EMPTY_CACHE_ENTRY		65000
 
-UINT32 guiCacheSize		= MIN_CACHE_SIZE;
+static UINT32 guiCacheSize = MIN_CACHE_SIZE;
 
 
 static void DetermineOptimumAnimationCacheSize( )

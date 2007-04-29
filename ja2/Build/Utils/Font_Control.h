@@ -75,8 +75,6 @@ HVOBJECT				gvoHugeFont;
 #endif
 
 
-BOOLEAN					gfFontsInit;
-
 // Defines
 #define					LARGEFONT1				gpLargeFontType1
 #define					SMALLFONT1				gpSmallFontType1

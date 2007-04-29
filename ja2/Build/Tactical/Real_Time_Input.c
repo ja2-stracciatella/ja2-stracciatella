@@ -526,7 +526,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															//		{
 
 																		//gUITargetShotWaiting  = TRUE;
-																		//gsUITargetShotGridNo	= usMapPos;
 															//		}
 															//		else
 															//		{

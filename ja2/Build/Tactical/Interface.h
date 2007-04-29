@@ -72,7 +72,6 @@ INT16					gsCurInterfacePanel;
 UINT32					guiCLOSE;
 UINT32					guiDEAD;
 UINT32					guiHATCH;
-UINT32					guiINTEXT;
 UINT32					guiGUNSM;
 UINT32					guiP1ITEMS;
 UINT32					guiP2ITEMS;
@@ -166,8 +165,6 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... );
 // map screen version, for centering over the map area
 void BeginMapUIMessage( UINT8 fPosition, wchar_t *pFontString, ... );
 
-
-UINT16				gusUIOldSelectedSoldier;
 
 INT32					giUIMessageOverlay;
 UINT32				guiUIMessageTime;

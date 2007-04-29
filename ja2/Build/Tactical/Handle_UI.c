@@ -229,7 +229,7 @@ UINT32					guiUIInterfaceSwapCursorsTime = 0;
 INT16						gsJumpOverGridNo = 0;
 
 
-UI_EVENT gEvents[ NUM_UI_EVENTS ] =
+static UI_EVENT gEvents[NUM_UI_EVENTS] =
 {
 	0,																											IDLE_MODE,						UIHandleIDoNothing, FALSE, FALSE, 0, 0, 0, 0,
 	0,																											IDLE_MODE,						UIHandleExit, FALSE, FALSE, 0,  0, 0,  0,
@@ -301,7 +301,7 @@ UI_EVENT gEvents[ NUM_UI_EVENTS ] =
 };
 
 UI_MODE									gCurrentUIMode					= IDLE_MODE;
-UI_MODE									gOldUIMode							= IDLE_MODE;
+static UI_MODE gOldUIMode = IDLE_MODE;
 UINT32									guiCurrentEvent					= I_DO_NOTHING;
 UINT32									guiOldEvent							= I_DO_NOTHING;
 UINT32									guiCurrentUICursor			= NO_UICURSOR;
@@ -339,9 +339,8 @@ BOOLEAN	fRightButtonDown = FALSE;
 BOOLEAN	fLeftButtonDown = FALSE;
 BOOLEAN fIgnoreLeftUp		= FALSE;
 
-BOOLEAN	gUITargetReady = FALSE;
+static BOOLEAN gUITargetReady = FALSE;
 BOOLEAN	gUITargetShotWaiting = FALSE;
-UINT16	gsUITargetShotGridNo	= NOWHERE;
 BOOLEAN	gUIUseReverse					= FALSE;
 
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
@@ -378,17 +377,12 @@ BOOLEAN		gfUIConfirmExitArrows						= FALSE;
 BOOLEAN		gfUIShowCurIntTile							= FALSE;
 
 BOOLEAN		gfUIWaitingForUserSpeechAdvance		= FALSE;		// Waiting for key input/mouse click to advance speech
-BOOLEAN		gfUIKeyCheatModeOn								= FALSE;		// Sets cool cheat keys on
 BOOLEAN		gfUIAllMoveOn											= FALSE;		// Sets to all move
 BOOLEAN		gfUICanBeginAllMoveCycle					= FALSE;		// GEts set so we know that the next right-click is a move-call inc\stead of a movement cycle through
 
 INT16			gsSelectedGridNo								= 0;
 INT16			gsSelectedLevel									= I_GROUND_LEVEL;
 INT16			gsSelectedGuy										= NO_SOLDIER;
-
-BOOLEAN		gfUIDisplayDamage								= FALSE;
-INT8			gbDamage												= 0;
-UINT16		gsDamageGridNo									= 0;
 
 BOOLEAN		gfUIRefreshArrows								= FALSE;
 
@@ -432,7 +426,6 @@ UINT32  HandleTacticalUI( void )
 		gfUIDisplayActionPointsCenter		= FALSE;
 		gfUIHandleSelection							= NO_GUY_SELECTION;
 		gfUIHandleSelectionAboveGuy			= FALSE;
-		gfUIDisplayDamage								= FALSE;
 		guiShowUPDownArrows							= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 		gfUIBodyHitLocation							= FALSE;
 		gfUIIntTileLocation							= FALSE;
@@ -550,6 +543,7 @@ UINT32  HandleTacticalUI( void )
 			}
 
 			// Look for soldier selective
+			UINT32 guiUISelectiveTargetFlags;
 			if ( FindSoldier( usMapPos, &gusUISelectiveTargetID, &guiUISelectiveTargetFlags, FINDSOLDIERSELECTIVESAMELEVEL( gsInterfaceLevel ) ) )
 			{
 				gfUISelectiveTargetFound = TRUE;
@@ -2983,7 +2977,6 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 	//{
 	//	fFoundMerc			= gfUISelectiveTargetFound;
 	//	usSoldierIndex	= gusUISelectiveTargetID;
-	//	uiMercFlags			= guiUISelectiveTargetFlags;
 	//}
 	//else
 	{

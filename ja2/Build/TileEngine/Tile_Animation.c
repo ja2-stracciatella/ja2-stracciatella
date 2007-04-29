@@ -23,7 +23,7 @@
 #include "MemMan.h"
 
 
-ANITILE					*pAniTileHead = NULL;
+static ANITILE* pAniTileHead = NULL;
 
 
 ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )

@@ -82,7 +82,6 @@
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
-BOOLEAN	fDirtyRectangleMode = FALSE;
 UINT16  *gpFPSBuffer=NULL;
 // MarkNote
 // extern ScrollStringStPtr pStringS=NULL;

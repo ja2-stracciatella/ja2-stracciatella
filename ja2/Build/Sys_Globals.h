@@ -8,10 +8,8 @@ char gubErrorText[200];
 BOOLEAN				gfAniEditMode;
 BOOLEAN				gfEditMode;
 BOOLEAN				fFirstTimeInGameScreen;
-BOOLEAN				fDirtyRectangleMode;
 extern char gDebugStr[128];
 
-BOOLEAN				gfMode;
 INT16					gsCurrentActionPoints;
 INT8					gbFPSDisplay;
 BOOLEAN				gfGlobalError;

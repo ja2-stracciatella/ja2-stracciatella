@@ -116,6 +116,7 @@ IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapI
 IsPastMercDead(), IsPastMercFired(), IsPastMercOther(): complicated
 IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
+KeyRingSlotInvClickCallback: one caller
 L"/": pointless copy
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
@@ -236,6 +237,7 @@ gfOverIntTile: static
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
+guiCacheSize: const
 guiMemTotal: remove
 guiSkiAtmImage: unused/commented out
 gzFilename: wchar_t[] -> char[]?

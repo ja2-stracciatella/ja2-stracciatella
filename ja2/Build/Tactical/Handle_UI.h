@@ -167,12 +167,8 @@ typedef enum
 typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 
 
-// GLOBAL EVENT STRUCT
-UI_EVENT gEvents[ NUM_UI_EVENTS ];
-
 // GLOBAL STATUS VARS
 UI_MODE									gCurrentUIMode;
-UI_MODE									gOldUIMode;
 UINT32									guiCurrentEvent;
 INT16										gsSelectedLevel;
 BOOLEAN									gfPlotNewMovement;
@@ -202,15 +198,7 @@ BOOLEAN		gUIUseReverse;
 BOOLEAN		gfUIHandleShowMoveGrid;
 UINT16		gsUIHandleShowMoveGridLocation;
 
-BOOLEAN		gfUIDisplayDamage;
-INT8			gbDamage;
-UINT16		gsDamageGridNo;
-
-BOOLEAN		gfFontPopupDo;
-
-BOOLEAN		gUITargetReady;
 BOOLEAN		gUITargetShotWaiting;
-UINT16		gsUITargetShotGridNo;
 
 extern wchar_t		gzLocation[ 20 ];
 BOOLEAN		gfUIBodyHitLocation;
@@ -222,7 +210,6 @@ wchar_t		gzIntTileLocation2[ 20 ];
 BOOLEAN		gfUIIntTileLocation2;
 
 BOOLEAN		gfUIWaitingForUserSpeechAdvance;
-BOOLEAN		gfUIKeyCheatModeOn;
 
 BOOLEAN		gfUIAllMoveOn;
 BOOLEAN		gfUICanBeginAllMoveCycle;
@@ -235,7 +222,6 @@ BOOLEAN		gfUIHandlePhysicsTrajectory;
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
 BOOLEAN gfUISelectiveTargetFound;
 UINT16	gusUISelectiveTargetID;
-UINT32	guiUISelectiveTargetFlags;
 
 BOOLEAN gfUIFullTargetFound;
 UINT16	gusUIFullTargetID;
