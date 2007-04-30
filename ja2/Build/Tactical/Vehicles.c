@@ -16,7 +16,6 @@
 #include "Tile_Animation.h"
 #include "Isometric_Utils.h"
 #include "MapScreen.h"
-#include "Message.h"
 #include "Interface.h"
 #include "Random.h"
 #include "Text.h"

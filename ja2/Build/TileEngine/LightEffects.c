@@ -8,7 +8,6 @@
 #include "Animation_Control.h"
 #include "Tile_Animation.h"
 #include "LightEffects.h"
-#include "Message.h"
 #include "Isometric_Utils.h"
 #include "Explosion_Control.h"
 #include "Random.h"

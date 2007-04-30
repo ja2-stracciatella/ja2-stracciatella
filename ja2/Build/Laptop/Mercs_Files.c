@@ -12,7 +12,6 @@
 #include "Game_Clock.h"
 #include "Soldier_Add.h"
 #include "Overhead.h"
-#include "Message.h"
 #include "Font.h"
 #include "LaptopSave.h"
 #include "Text.h"

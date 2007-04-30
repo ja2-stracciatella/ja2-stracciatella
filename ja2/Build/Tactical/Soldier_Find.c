@@ -31,7 +31,6 @@
 #include "Weapons.h"
 #include "Handle_UI_Plan.h"
 #include "Structure.h"
-#include "Message.h"
 #include "Items.h"
 #include "Soldier_Profile.h"
 #include "FOV.h"

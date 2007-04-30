@@ -9,7 +9,6 @@
 #include "Items.h"
 #include "World_Items.h"
 #include "Points.h"
-#include "Message.h"
 #include "Map_Edgepoints.h"
 #include "RenderWorld.h"
 #include "Render_Fun.h"

@@ -27,7 +27,6 @@
 #include "Tactical_Placement_GUI.h"
 #include "World_Items.h"
 #include "Environment.h"
-#include "Message.h"
 #include "Faces.h"
 #include "Squads.h"
 #include "Interactive_Tiles.h"

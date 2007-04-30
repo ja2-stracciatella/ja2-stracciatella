@@ -12,7 +12,6 @@
 #include "Animation_Data.h"
 #include "Road_Smoothing.h"
 #include "Sys_Globals.h"
-#include "Message.h"
 #include "Weapons.h"
 #include "Environment.h"
 #include "Lighting.h"

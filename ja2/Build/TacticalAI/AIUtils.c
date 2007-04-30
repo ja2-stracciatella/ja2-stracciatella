@@ -7,7 +7,6 @@
 #include "AIInternals.h"
 #include "Items.h"
 #include "WCheck.h"
-#include "Message.h"
 #include "LOS.h"
 #include "Assignments.h"
 #include "Soldier_Functions.h"

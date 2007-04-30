@@ -18,7 +18,6 @@
 #include "Assignments.h"
 #include "Strategic_Mines.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Message.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Helicopter.h"
 #include "Scheduling.h"

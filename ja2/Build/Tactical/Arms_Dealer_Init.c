@@ -7,7 +7,6 @@
 #include "FileMan.h"
 #include "Game_Clock.h"
 #include "ArmsDealerInvInit.h"
-#include "Message.h"
 #include "Soldier_Profile.h"
 #include "Handle_Items.h"
 #include "Quests.h"

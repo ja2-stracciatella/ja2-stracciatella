@@ -1,6 +1,5 @@
 #include "Strategic_Event_Handler.h"
 #include "MemMan.h"
-#include "Message.h"
 #include "Item_Types.h"
 #include "Items.h"
 #include "Handle_Items.h"

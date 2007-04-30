@@ -7,7 +7,6 @@
 #include "Soldier_Add.h"
 #include "Dialogue_Control.h"
 #include "Soldier_Create.h"
-#include "Message.h"
 #include "Personnel.h"
 #include "LaptopSave.h"
 #include "Map_Screen_Interface.h"

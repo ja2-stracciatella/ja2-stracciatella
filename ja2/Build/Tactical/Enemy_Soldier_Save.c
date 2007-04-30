@@ -14,7 +14,6 @@
 #include "Sys_Globals.h"
 #include "EditorMercs.h"
 #include "Animation_Data.h"
-#include "Message.h"
 #include "Tactical_Save.h"
 #include "Campaign_Types.h"
 #include "Game_Clock.h"

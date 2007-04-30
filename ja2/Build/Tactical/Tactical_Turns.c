@@ -4,7 +4,6 @@
 #include "Timer_Control.h"
 #include "Overhead.h"
 #include "Environment.h"
-#include "Message.h"
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"
 #include "Soldier_Create.h"

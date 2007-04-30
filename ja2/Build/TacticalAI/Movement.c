@@ -5,7 +5,6 @@
 #include "WorldMan.h"
 #include "PathAI.h"
 #include "Points.h"
-#include "Message.h"
 #include "Smell.h"
 #include "MapScreen.h"
 #include "Strategic.h"
