@@ -47,7 +47,6 @@ struct Page
 {
 	Email* Mail[MAX_MESSAGES_PAGE];
 	Page* Next;
-	Page* Prev;
 };
 
 
@@ -629,7 +628,6 @@ static void AddEmailPage(void)
 
 		// there is a page, add current page after it
 		pPage->Next=MemAlloc(sizeof(Page));
-		pPage->Next->Prev=pPage;
     pPage=pPage->Next;
 		pPage->Next=NULL;
 	}
@@ -639,7 +637,6 @@ static void AddEmailPage(void)
 		// page becomes head of page list
 		pPageList=MemAlloc(sizeof(Page));
 		pPage=pPageList;
-		pPage->Prev=NULL;
 		pPage->Next=NULL;
     pPageList=pPage;
 	}
@@ -745,8 +742,9 @@ static void ClearPages(void)
 
 	while(pPage->Next)
 	{
-		pPage=pPage->Next;
-		MemFree(pPage->Prev);
+		Page* Next = pPage->Next;
+		MemFree(pPage);
+		pPage = Next;
 	}
 	if(pPage)
    MemFree(pPage);
