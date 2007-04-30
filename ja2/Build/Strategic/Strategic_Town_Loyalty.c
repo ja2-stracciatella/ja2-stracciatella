@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Strategic_Town_Loyalty.h"
 #include "StrategicMap.h"
 #include "Overhead.h"

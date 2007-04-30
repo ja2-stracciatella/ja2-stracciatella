@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "SGP.h"
 #include "Air_Raid.h"
 #include "Game_Event_Hook.h"

@@ -1,4 +1,5 @@
 #include <math.h>
+#include "Font_Control.h"
 #include "WCheck.h"
 #include "Isometric_Utils.h"
 #include "Debug.h"

@@ -1,4 +1,5 @@
 #include "FileMan.h"
+#include "Font_Control.h"
 #include "Types.h"
 #include "Scheduling.h"
 #include "Soldier_Control.h"

@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Types.h"
 #include "MemMan.h"
 #include "Message.h"

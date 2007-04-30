@@ -1,4 +1,5 @@
 #include "Civ_Quotes.h"
+#include "Font_Control.h"
 #include "MouseSystem.h"
 #include "StrategicMap.h"
 #include "WCheck.h"

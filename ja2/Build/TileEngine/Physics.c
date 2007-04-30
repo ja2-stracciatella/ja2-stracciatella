@@ -1,4 +1,5 @@
 #include <math.h>
+#include "Font_Control.h"
 #include "Physics.h"
 #include "WCheck.h"
 #include "Timer_Control.h"

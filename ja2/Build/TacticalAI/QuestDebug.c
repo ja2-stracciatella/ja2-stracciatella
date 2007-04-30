@@ -1,4 +1,5 @@
 #include "FileMan.h"
+#include "Font_Control.h"
 #include "QuestDebug.h"
 #include "stdarg.h"
 #include "Debug.h"

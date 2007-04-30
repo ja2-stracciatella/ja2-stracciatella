@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Morale.h"
 #include "Overhead.h"
 #include "Soldier_Profile.h"

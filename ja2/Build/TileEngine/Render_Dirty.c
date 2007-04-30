@@ -8,7 +8,6 @@
 #include "Video.h"
 #include "VObject_Blitters.h"
 #include <stdarg.h>
-#include "Font_Control.h"
 #include "MemMan.h"
 #include "Debug.h"
 #include "SGP.h"

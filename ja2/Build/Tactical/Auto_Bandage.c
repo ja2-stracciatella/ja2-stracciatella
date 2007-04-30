@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Font_Control.h"
 #include "SGP.h"
 #include "Overhead.h"
 #include "MessageBoxScreen.h"

@@ -10,7 +10,6 @@
 #include "Sound_Control.h"
 #include "Animation_Control.h"
 #include "Isometric_Utils.h"
-#include "Font_Control.h"
 #include "Message.h"
 #include "Tile_Animation.h"
 #include "Tile_Cache.h"

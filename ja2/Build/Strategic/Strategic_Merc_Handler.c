@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Types.h"
 #include "Soldier_Control.h"
 #include "Strategic_Merc_Handler.h"

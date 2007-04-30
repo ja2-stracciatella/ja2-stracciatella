@@ -3,7 +3,6 @@
 #include "Cursors.h"
 #include "Debug.h"
 #include "English.h"
-#include "Font_Control.h"
 #include "Game_Init.h"
 #include "Intro.h"
 #include "LibraryDataBase.h"

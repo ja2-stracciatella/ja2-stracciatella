@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Boxing.h"

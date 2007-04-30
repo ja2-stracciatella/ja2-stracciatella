@@ -8,7 +8,6 @@
 #include "Sys_Globals.h"
 #include "ScreenIDs.h"
 #include "Render_Fun.h"
-#include "Font_Control.h"
 #include "Lighting.h"
 #include "Structure.h"
 #include "VObject.h"

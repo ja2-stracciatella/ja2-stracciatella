@@ -1697,7 +1697,6 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	}
 }
 
-#include "Font_Control.h"
 //When you are ready to generate a soldier with a static detailed placement slot, this function will generate
 //the proper detailed placement slot given the static detailed placement and it's accompanying basic placement.
 //For the purposes of merc editing, the static detailed placement is preserved.

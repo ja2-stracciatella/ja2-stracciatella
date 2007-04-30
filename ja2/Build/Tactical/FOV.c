@@ -5,7 +5,6 @@
 #include "RenderWorld.h"
 #include "Dialogue_Control.h"
 #include "Structure_Wrap.h"
-#include "Font_Control.h"
 #include "PathAI.h"
 #include "Overhead.h"
 #include "Smell.h"

@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Laptop.h"
 #include "Mercs_Files.h"
 #include "Mercs.h"

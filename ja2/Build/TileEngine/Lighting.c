@@ -33,7 +33,6 @@
 #include "Timer_Control.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
-#include "Font_Control.h"
 #include "Sys_Globals.h"
 #include "TileDef.h"
 #include "Lighting.h"

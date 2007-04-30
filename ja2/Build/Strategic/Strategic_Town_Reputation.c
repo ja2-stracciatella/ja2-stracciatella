@@ -1,3 +1,4 @@
+#include "Font_Control.h"
 #include "Types.h"
 #include "Strategic_Town_Reputation.h"
 #include "Soldier_Profile_Type.h"
