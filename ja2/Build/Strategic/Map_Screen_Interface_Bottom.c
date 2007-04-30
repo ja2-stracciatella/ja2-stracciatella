@@ -77,13 +77,6 @@
 
 #define MAP_BOTTOM_FONT_COLOR ( 32 * 4 - 9 )
 
-/*
-// delay to start auto message scroll
-#define DELAY_TO_START_MESSAGE_SCROLL 3000
-// delay per auto message scroll
-#define DELAY_PER_MESSAGE_SCROLL 300
-*/
-
 // button enums
 enum{
 	MAP_SCROLL_MESSAGE_UP =0,
@@ -118,9 +111,6 @@ BOOLEAN gfDontStartTransitionFromLaptop = FALSE;
 BOOLEAN fLapTop = FALSE;
 
 static BOOLEAN gfOneFramePauseOnExit = FALSE;
-
-// we've just scrolled to a new message (for autoscrolling only)
-//BOOLEAN gfNewScrollMessage = FALSE;
 
 // exit states
 INT8 gbExitingMapScreenToWhere = -1;
@@ -181,8 +171,6 @@ void BuildDemoMouseRegionsForHelpText( void );
 void RemoveDemoMouseRegionsForHelpText( void );
 void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
 #endif
-
-//void CheckForAndHandleAutoMessageScroll( void );
 
 
 static void LoadMessageSliderBar(void);
@@ -309,9 +297,6 @@ void RenderMapScreenInterfaceBottom( void )
 
 	// display messages that can be scrolled through
 	DisplayStringsInMapScreenMessageList( );
-
-	// handle auto scroll
-	//CheckForAndHandleAutoMessageScroll( );
 
 	EnableDisableMessageScrollButtonsAndRegions( );
 
@@ -906,70 +891,6 @@ static void DisplayScrollBarSlider(void)
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBar, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
 	}
 }
-
-
-/*
-void CheckForAndHandleAutoMessageScroll( void )
-{
-	// will check if we are not at the most recent message, if not, scroll to it
-	static INT32 iBaseScrollTime =0;
-	static INT32 iBaseScrollDelay =0;
-	static BOOLEAN fScrollMessage = FALSE;
-
-	// check if we are at the last message, if so, leave
-	if( IsThisTheLastMessageInTheList( ) )
-	{
-		// leave
-		// reset flag
-		fScrollMessage = FALSE;
-		return;
-	}
-
-	// we are not, check how long we have been here?
-	if( gfNewScrollMessage == TRUE )
-	{
-		// we just scrolled to a new message, reset timer
-		iBaseScrollTime = GetJA2Clock( );
-
-		// reset flag
-		gfNewScrollMessage = FALSE;
-		fScrollMessage = FALSE;
-	}
-
-	// check timer
-
-	if( GetJA2Clock( ) - iBaseScrollTime > DELAY_TO_START_MESSAGE_SCROLL )
-	{
-
-		if( fScrollMessage == FALSE )
-		{
-		  // set up scroll delay
-		 iBaseScrollDelay = GetJA2Clock( );
-
-		 // start scroll
-		fScrollMessage = TRUE;
-
-		}
-
-		iBaseScrollTime = GetJA2Clock( );
-	}
-
-	if( fScrollMessage == TRUE )
-	{
-		if( GetJA2Clock( ) - iBaseScrollDelay > DELAY_PER_MESSAGE_SCROLL )
-		{
-			// scroll to next message
-			MoveCurrentMessagePointerDownList( );
-
-			// dirty region
-			fMapScreenBottomDirty = TRUE;
-
-			// reset delay timer
-			iBaseScrollDelay = GetJA2Clock( );
-		}
-	}
-}
-*/
 
 
 static void EnableDisableTimeCompressButtons(void);
@@ -1749,9 +1670,6 @@ void ChangeCurrentMapscreenMessageIndex( UINT8 ubNewMessageIndex )
 
 	gubFirstMapscreenMessageIndex = ubNewMessageIndex;
 	gubCurrentMapMessageString = ( gubStartOfMapScreenMessageList + gubFirstMapscreenMessageIndex ) % 256;
-
-	// set fact we just went to a new message
-//	gfNewScrollMessage = TRUE;
 
 	// refresh screen
 	fMapScreenBottomDirty = TRUE;

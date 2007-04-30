@@ -4,7 +4,6 @@
 #include "Types.h"
 
 
-extern UINT32 StringCount;
 extern UINT8 gubCurrentMapMessageString;
 extern BOOLEAN fDisableJustForIan;
 
@@ -63,23 +62,5 @@ void UnHideMessagesDuringNPCDialogue( void );
 // disable and enable scroll string, only to be used by Kris
 void DisableScrollMessages( void );
 void EnableScrollMessages( void );
-
-
-/* unused functions, written by Mr. Carter, so don't expect these to work...
-UINT8 GetTheRelativePositionOfCurrentMessage( void );
-void MoveCurrentMessagePointerDownList( void );
-void MoveCurrentMessagePointerUpList( void );
-void ScrollToHereInMapScreenMessageList( UINT8 ubPosition );
-BOOLEAN IsThereAnEmptySlotInTheMapScreenMessageList( void );
-UINT8 GetFirstEmptySlotInTheMapScreenMessageList( void );
-BOOLEAN AreThereASetOfStringsAfterThisIndex( UINT8 ubMsgIndex, INT32 iNumberOfStrings );
-UINT8 GetCurrentMessageValue( void );
-UINT8 GetCurrentTempMessageValue( void );
-UINT8 GetNewMessageValueGivenPosition( UINT8 ubPosition );
-BOOLEAN IsThisTheLastMessageInTheList( void );
-BOOLEAN IsThisTheFirstMessageInTheList( void );
-void DisplayLastMessage( void );
-*/
-
 
 #endif
