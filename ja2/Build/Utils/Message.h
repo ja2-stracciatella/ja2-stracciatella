@@ -4,19 +4,9 @@
 #include "Types.h"
 
 
-struct stringstruct{
-
-  STR16   pString16;
-  INT32	  iVideoOverlay;
-	UINT32   uiFont;
-	UINT16  usColor;
-	UINT32  uiFlags;
-	BOOLEAN fBeginningOfNewString;
-  UINT32  uiTimeOfLastUpdate;
-	UINT32  uiPadding[ 5 ];
-  struct  stringstruct *pNext;
-	struct  stringstruct *pPrev;
-};
+extern UINT32 StringCount;
+extern UINT8 gubCurrentMapMessageString;
+extern BOOLEAN fDisableJustForIan;
 
 #define		MSG_INTERFACE				0
 #define		MSG_DIALOG					1
@@ -36,15 +26,6 @@ struct stringstruct{
 #define		MSG_FONT_RED					FONT_MCOLOR_RED
 #define		MSG_FONT_YELLOW				FONT_MCOLOR_LTYELLOW
 #define		MSG_FONT_WHITE				FONT_MCOLOR_WHITE
-
-
-typedef struct stringstruct ScrollStringSt;
-typedef ScrollStringSt *ScrollStringStPtr;
-
-
-extern UINT32 StringCount;
-extern UINT8 gubCurrentMapMessageString;
-extern BOOLEAN fDisableJustForIan;
 
 // are we allowed to beep on message scroll in tactical
 extern BOOLEAN fOkToBeepNewMessage;
@@ -91,7 +72,6 @@ void MoveCurrentMessagePointerUpList( void );
 void ScrollToHereInMapScreenMessageList( UINT8 ubPosition );
 BOOLEAN IsThereAnEmptySlotInTheMapScreenMessageList( void );
 UINT8 GetFirstEmptySlotInTheMapScreenMessageList( void );
-void RemoveMapScreenMessageListString( ScrollStringStPtr pStringSt );
 BOOLEAN AreThereASetOfStringsAfterThisIndex( UINT8 ubMsgIndex, INT32 iNumberOfStrings );
 UINT8 GetCurrentMessageValue( void );
 UINT8 GetCurrentTempMessageValue( void );
