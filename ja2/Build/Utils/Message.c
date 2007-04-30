@@ -30,7 +30,6 @@ struct ScrollStringSt
 	INT32   iVideoOverlay;
 	UINT32  uiFont;
 	UINT16  usColor;
-	UINT32  uiFlags;
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
 	ScrollStringSt* pNext;
@@ -42,7 +41,7 @@ typedef struct
 {
 	UINT32  uiFont;
 	UINT32  uiTimeOfLastUpdate;
-	UINT32  uiFlags;
+	UINT32  uiFlags_UNUSED; // XXX HACK000B
 	UINT32	uiPadding[ 3 ];
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
@@ -120,7 +119,7 @@ static ScrollStringSt* SetStringNext(ScrollStringSt* pStringSt, ScrollStringSt* 
 static ScrollStringSt* SetStringPrev(ScrollStringSt* pStringSt, ScrollStringSt* pPrev);
 
 
-static ScrollStringSt* AddString(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString, UINT8 ubPriority)
+static ScrollStringSt* AddString(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
 {
 	// add a new string to the list of strings
 	ScrollStringSt* pStringSt = NULL;
@@ -130,14 +129,10 @@ static ScrollStringSt* AddString(STR16 pString, UINT16 usColor, UINT32 uiFont, B
 	SetStringColor(pStringSt, usColor);
 	pStringSt->uiFont = uiFont;
 	pStringSt -> fBeginningOfNewString = fStartOfNewString;
-	pStringSt -> uiFlags = ubPriority;
 
 	SetStringNext(pStringSt, NULL);
 	SetStringPrev(pStringSt, NULL);
 	pStringSt->iVideoOverlay=-1;
-
-	// now add string to map screen strings
-	//AddStringToMapScreenMessageList(pString, usColor, uiFont, fStartOfNewString, ubPriority );
 
 	return (pStringSt);
 }
@@ -775,7 +770,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	{
 	 if(!pStringSt)
 	 {
-    pStringSt=AddString(pStringWrapper->sString, usColor, uiFont, fNewString, ubPriority );
+		pStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
 		fNewString = FALSE;
 		pStringSt->pNext=NULL;
 		pStringSt->pPrev=NULL;
@@ -783,7 +778,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	 }
 	 else
 	 {
-	  pTempStringSt=AddString(pStringWrapper->sString, usColor, uiFont, fNewString, ubPriority);
+		pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
     fNewString = FALSE;
 		pTempStringSt->pPrev=pStringSt;
 	  pStringSt->pNext=pTempStringSt;
@@ -792,7 +787,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	 }
    pStringWrapper=pStringWrapper->pNextWrappedString;
 	}
-  pTempStringSt=AddString(pStringWrapper->sString, usColor, uiFont, fNewString, ubPriority );
+	pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
 	if(pStringSt)
 	{
 	 pStringSt->pNext=pTempStringSt;
@@ -813,7 +808,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 }
 
 
-static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString, UINT8 ubPriority);
+static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString);
 
 
 void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ... )
@@ -967,13 +962,13 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 
 	while(pStringWrapper->pNextWrappedString!=NULL)
 	{
-		AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, uiFont, fNewString, ubPriority );
+		AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, uiFont, fNewString);
 		fNewString = FALSE;
 
 		pStringWrapper=pStringWrapper->pNextWrappedString;
 	}
 
-  AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, uiFont, fNewString, ubPriority );
+	AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, uiFont, fNewString);
 
 
 	// clear up list of wrapped strings
@@ -987,7 +982,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 
 
 // add string to the map screen message list
-static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString, UINT8 ubPriority)
+static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* pStringSt = NULL;
 
@@ -998,7 +993,6 @@ static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT3
   SetStringColor(pStringSt, usColor);
 	pStringSt->uiFont = uiFont;
 	pStringSt->fBeginningOfNewString = fStartOfNewString;
-	pStringSt->uiFlags = ubPriority;
   pStringSt->iVideoOverlay = -1;
 
 	// next/previous are not used, it's strictly a wraparound queue
@@ -1161,7 +1155,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile )
 			StringSave.usColor = gMapScreenMessageList[ uiCount ]->usColor;
 			StringSave.fBeginningOfNewString = gMapScreenMessageList[ uiCount ]->fBeginningOfNewString;
 			StringSave.uiTimeOfLastUpdate = gMapScreenMessageList[ uiCount ]->uiTimeOfLastUpdate;
-			StringSave.uiFlags= gMapScreenMessageList[ uiCount ]->uiFlags;
+			StringSave.uiFlags_UNUSED = 0; // XXX HACK000B
 
 
 			//Write the rest of the message information to the saved game file
@@ -1250,7 +1244,6 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile )
 			// Create  the saved string struct
 			gMapScreenMessageList[ uiCount ]->uiFont = StringSave.uiFont;
 			gMapScreenMessageList[ uiCount ]->usColor = StringSave.usColor;
-			gMapScreenMessageList[ uiCount ]->uiFlags = StringSave.uiFlags;
 			gMapScreenMessageList[ uiCount ]->fBeginningOfNewString = StringSave.fBeginningOfNewString;
 			gMapScreenMessageList[ uiCount ]->uiTimeOfLastUpdate = StringSave.uiTimeOfLastUpdate;
 		}
