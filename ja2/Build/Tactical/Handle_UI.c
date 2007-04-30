@@ -23,7 +23,6 @@
 #include "OppList.h"
 #include "WorldMan.h"
 #include "Weapons.h"
-#include "Sound_Control.h"
 #include "RenderWorld.h"
 #include "Structure.h"
 #include "Handle_Items.h"

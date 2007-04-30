@@ -16,7 +16,6 @@
 #include "RenderWorld.h"
 #include "Sys_Globals.h"
 #include "Points.h"
-#include "Sound_Control.h"
 #include "Lighting.h"
 #include "Weapons.h"
 #include "Handle_UI.h"

@@ -31,7 +31,6 @@
 #include "Air_Raid.h"
 #include "Finances.h"
 #include "LaptopSave.h"
-#include "Sound_Control.h"
 #include "Interface_Items.h"
 #include "WordWrap.h"
 #include "Dialogue_Control.h"

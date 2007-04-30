@@ -7,7 +7,6 @@
 #include "WCheck.h"
 #include "Gap.h"
 #include "Overhead.h"
-#include "Sound_Control.h"
 #include "Dialogue_Control.h"
 #include "Message.h"
 #include "Render_Dirty.h"

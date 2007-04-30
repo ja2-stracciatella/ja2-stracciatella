@@ -4,7 +4,6 @@
 #include "Environment.h"
 #include "Ambient_Control.h"
 #include "Quests.h"
-#include "Sound_Control.h"
 #include "AIMMembers.h"
 #include "Strategic_Event_Handler.h"
 #include "BobbyR.h"

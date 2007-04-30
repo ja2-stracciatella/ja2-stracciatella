@@ -8,7 +8,6 @@
 #include "RenderWorld.h"
 #include "Overhead.h"
 #include "AI.h"
-#include "Sound_Control.h"
 #include "Animation_Control.h"
 #include "Isometric_Utils.h"
 #include "Font_Control.h"

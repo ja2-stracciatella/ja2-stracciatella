@@ -19,7 +19,6 @@
 #include "Points.h"
 #include "Interactive_Tiles.h"
 #include "Interface_Cursors.h"
-#include "Sound_Control.h"
 #include "Environment.h"
 #include "OppList.h"
 #include "Spread_Burst.h"

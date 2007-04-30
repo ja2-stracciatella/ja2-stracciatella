@@ -23,7 +23,6 @@
 #include "English.h"
 #include "Overhead.h"
 #include "OppList.h"
-#include "Sound_Control.h"
 #include "Lighting.h"
 #include "PathAI.h"
 #include "ScreenIDs.h"

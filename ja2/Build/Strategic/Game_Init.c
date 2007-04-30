@@ -34,7 +34,6 @@
 #include "Creature_Spreading.h"
 #include "Quests.h"
 #include "Strategic_AI.h"
-#include "Sound_Control.h"
 #include "LaptopSave.h"
 #include "AIMMembers.h"
 #include "Dialogue_Control.h"
