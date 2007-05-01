@@ -5958,7 +5958,6 @@ BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 	pMoneyObject.usItem = MONEY;
 	pMoneyObject.ubNumberOfObjects = 1;
 	pMoneyObject.bMoneyStatus = 100;
-	pMoneyObject.	bStatus[0] = 100;
 	pMoneyObject.uiMoneyAmount = iCurrentBalance;
 
 
