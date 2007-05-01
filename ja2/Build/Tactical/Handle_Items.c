@@ -4013,15 +4013,6 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 				}
 			}
 		#else
-			// ATE ignore the commented-out code and add stuff to open the secret passage here
-			/*
-			switch( pSoldier->inv[HANDPOS].ubLocationID )
-			{
-				// check to make sure the appropriate sector is loaded
-			}
-			SetOffBombsByFrequency( pSoldier->ubID, pSoldier->inv[HANDPOS].bFrequency );
-			*/
-
       // PLay sound....
       PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
 

@@ -114,17 +114,7 @@ typedef struct
 			};
 			UINT8 ubBombOwner; // side which placed the bomb
 			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
-			union
-			{
-				struct
-				{
-					UINT8 ubTolerance; // tolerance value for panic triggers
-				};
-				struct
-				{
-					UINT8 ubLocationID; // location value for remote non-bomb (special!) triggers
-				};
-			};
+			UINT8 ubTolerance; // tolerance value for panic triggers
 		};
 		struct
 		{
