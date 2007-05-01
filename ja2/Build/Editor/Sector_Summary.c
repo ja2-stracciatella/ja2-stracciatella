@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "ExtractSoldierCreate.h"
 #include "Font.h"
 #include "Types.h"
 #include "Sector_Summary.h"
@@ -2939,7 +2940,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			if (!FileRead(hfile, &priority, sizeof(SOLDIERCREATE_STRUCT)))
+			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;
@@ -3001,7 +3002,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			if (!FileRead(hfile, &priority, sizeof(SOLDIERCREATE_STRUCT)))
+			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
 			{ //Invalid situation.
 				FileClose( hfile );
 				return;

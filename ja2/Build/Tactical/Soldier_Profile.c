@@ -234,8 +234,8 @@ BOOLEAN LoadMercProfiles(void)
 		const BYTE* S = Data;
 		MERCPROFILESTRUCT* Merc = &gMercProfiles[uiLoop];
 
-		EXTR_WSTR(S, Merc->zName, lengthof(Merc->zName))
-		EXTR_WSTR(S, Merc->zNickname, lengthof(Merc->zNickname))
+		EXTR_WSTR16(S, Merc->zName, lengthof(Merc->zName))
+		EXTR_WSTR16(S, Merc->zNickname, lengthof(Merc->zNickname))
 		EXTR_U32(S, Merc->uiAttnSound)
 		EXTR_U32(S, Merc->uiCurseSound)
 		EXTR_U32(S, Merc->uiDieSound)

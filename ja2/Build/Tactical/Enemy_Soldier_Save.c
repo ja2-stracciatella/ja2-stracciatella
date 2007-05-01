@@ -1,3 +1,4 @@
+#include "ExtractSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
@@ -239,7 +240,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
+		if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -642,7 +643,7 @@ static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 
 			}
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{ //found a match.
-				if (!FileWrite(hfile, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT))) goto FAIL_SAVE;
+				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
 				usCheckSum =
 					curr->pDetailedPlacement->bLife									* 7		+
@@ -912,7 +913,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
+		if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -1255,7 +1256,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	for( i = 0; i < slots; i++ )
 	{
-		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
+		if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.  KM", i );
@@ -1658,7 +1659,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
 			{
 				//found a match.
-				if (!FileWrite(hfile, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT))) goto FAIL_SAVE;
+				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
 				usCheckSum =
 					curr->pDetailedPlacement->bLife									* 7		+
@@ -1873,7 +1874,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 
 	for( i = 0; i < slots; i++ )
 	{
-		if (!FileRead(hfile, &tempDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT)))
+		if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
 		{
 			#ifdef JA2TESTVERSION
 				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );

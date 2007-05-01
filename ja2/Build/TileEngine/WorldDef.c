@@ -1,3 +1,4 @@
+#include "LoadSaveSoldierCreate.h"
 #include "WorldDef.h"
 #include "WorldDat.h"
 #include "WCheck.h"
@@ -2432,7 +2433,9 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 			}
 			if( basic.fDetailedPlacement )
 			{ //skip static priority placement
-				LOADDATA( &priority, pBuffer, sizeof( SOLDIERCREATE_STRUCT ) );
+				BYTE Data[1040];
+				LOADDATA(Data, pBuffer, sizeof(Data));
+				ExtractSoldierCreateUTF16(Data, &priority);
 				if( priority.ubProfile != NO_PROFILE )
 					pTeam->ubProfile++;
 				else

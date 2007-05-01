@@ -1,4 +1,4 @@
-#include "LoadSaveData.h"
+#include "ExtractSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
@@ -227,104 +227,11 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		{
 			if( !curr->pDetailedPlacement )
 				return FALSE;
-			FileWrite(fp, curr->pDetailedPlacement, sizeof(SOLDIERCREATE_STRUCT));
+			InjectSoldierCreateIntoFileUTF16(fp, curr->pDetailedPlacement);
 		}
 		curr = curr->next;
 	}
 	return TRUE;
-}
-
-
-static const BYTE* ExtractObject(const BYTE* S, OBJECTTYPE* o)
-{
-	EXTR_U16(S, o->usItem)
-	EXTR_U8(S, o->ubNumberOfObjects)
-	EXTR_SKIP(S, 1)
-	switch (Item[o->usItem].usItemClass)
-	{
-		case IC_AMMO:
-			EXTR_U8A(S, o->ubShotsLeft, lengthof(o->ubShotsLeft))
-			EXTR_SKIP(S, 4)
-			break;
-
-		case IC_GUN:
-			EXTR_I8(S, o->bGunStatus)
-			EXTR_U8(S, o->ubGunAmmoType)
-			EXTR_U8(S, o->ubGunShotsLeft)
-			EXTR_SKIP(S, 1)
-			EXTR_U16(S, o->usGunAmmoItem)
-			EXTR_I8(S, o->bGunAmmoStatus)
-			EXTR_U8A(S, o->ubGunUnused, lengthof(o->ubGunUnused))
-			EXTR_SKIP(S, 3)
-			break;
-
-		case IC_KEY:
-			EXTR_I8A(S, o->bKeyStatus, lengthof(o->bKeyStatus))
-			EXTR_U8(S, o->ubKeyID)
-			EXTR_U8A(S, o->ubKeyUnused, lengthof(o->ubKeyUnused))
-			EXTR_SKIP(S, 4)
-			break;
-
-		case IC_MONEY:
-			EXTR_I8(S, o->bMoneyStatus)
-			EXTR_SKIP(S, 3)
-			EXTR_U32(S, o->uiMoneyAmount)
-			EXTR_U8A(S, o->ubMoneyUnused, lengthof(o->ubMoneyUnused))
-			EXTR_SKIP(S, 1)
-			break;
-
-		case IC_MISC:
-			switch (o->usItem)
-			{
-				case ACTION_ITEM:
-					EXTR_I8(S, o->bBombStatus)
-					EXTR_I8(S, o->bDetonatorType)
-					EXTR_U16(S, o->usBombItem)
-					EXTR_I8(S, o->bFrequency) // XXX unclear when to use bDelay
-					EXTR_U8(S, o->ubBombOwner)
-					EXTR_U8(S, o->bActionValue)
-					EXTR_U8(S, o->ubTolerance)
-					EXTR_SKIP(S, 4)
-					break;
-
-				case OWNERSHIP:
-					EXTR_U8(S, o->ubOwnerProfile)
-					EXTR_U8(S, o->ubOwnerCivGroup)
-					EXTR_U8A(S, o->ubOwnershipUnused, lengthof(o->ubOwnershipUnused))
-					EXTR_SKIP(S, 4)
-					break;
-
-				case SWITCH:
-					EXTR_I8(S, o->bBombStatus)
-					EXTR_I8(S, o->bDetonatorType)
-					EXTR_U16(S, o->usBombItem)
-					EXTR_I8(S, o->bFrequency)
-					EXTR_U8(S, o->ubBombOwner)
-					EXTR_U8(S, o->bActionValue)
-					EXTR_U8(S, o->ubTolerance)
-					EXTR_SKIP(S, 4)
-					break;
-
-				default: goto extract_status;
-			}
-
-		default:
-extract_status:
-			EXTR_I8A(S, o->bStatus, lengthof(o->bStatus))
-			EXTR_SKIP(S, 4)
-			break;
-	}
-	EXTR_U16A(S, o->usAttachItem, lengthof(o->usAttachItem))
-	EXTR_I8A(S, o->bAttachStatus, lengthof(o->bAttachStatus))
-	EXTR_I8(S, o->fFlags)
-	EXTR_U8(S, o->ubMission)
-	EXTR_I8(S, o->bTrap)
-	EXTR_U8(S, o->ubImprintID)
-	EXTR_U8(S, o->ubWeight)
-	EXTR_U8(S, o->fUsed)
-	EXTR_SKIP(S, 2)
-
-	return S;
 }
 
 
@@ -384,66 +291,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 
 			BYTE Data[1040];
 			LOADDATA(Data, *hBuffer, sizeof(Data));
-			const BYTE* S = Data;
-
-			EXTR_BOOL(S, Soldier->fStatic)
-			EXTR_U8(S, Soldier->ubProfile)
-			EXTR_BOOL(S, Soldier->fPlayerMerc)
-			EXTR_BOOL(S, Soldier->fPlayerPlan)
-			EXTR_BOOL(S, Soldier->fCopyProfileItemsOver)
-			EXTR_SKIP(S, 1)
-			EXTR_I16(S, Soldier->sSectorX)
-			EXTR_I16(S, Soldier->sSectorY)
-			EXTR_I8(S, Soldier->bDirection)
-			EXTR_SKIP(S, 1)
-			EXTR_I16(S, Soldier->sInsertionGridNo)
-			EXTR_I8(S, Soldier->bTeam)
-			EXTR_I8(S, Soldier->bBodyType)
-			EXTR_I8(S, Soldier->bAttitude)
-			EXTR_I8(S, Soldier->bOrders)
-			EXTR_I8(S, Soldier->bLifeMax)
-			EXTR_I8(S, Soldier->bLife)
-			EXTR_I8(S, Soldier->bAgility)
-			EXTR_I8(S, Soldier->bDexterity)
-			EXTR_I8(S, Soldier->bExpLevel)
-			EXTR_I8(S, Soldier->bMarksmanship)
-			EXTR_I8(S, Soldier->bMedical)
-			EXTR_I8(S, Soldier->bMechanical)
-			EXTR_I8(S, Soldier->bExplosive)
-			EXTR_I8(S, Soldier->bLeadership)
-			EXTR_I8(S, Soldier->bStrength)
-			EXTR_I8(S, Soldier->bWisdom)
-			EXTR_I8(S, Soldier->bMorale)
-			EXTR_I8(S, Soldier->bAIMorale)
-			for (size_t i = 0; i < lengthof(Soldier->Inv); i++)
-			{
-				S = ExtractObject(S, &Soldier->Inv[i]);
-			}
-			EXTR_STR(S, Soldier->HeadPal, lengthof(Soldier->HeadPal))
-			EXTR_STR(S, Soldier->PantsPal, lengthof(Soldier->PantsPal))
-			EXTR_STR(S, Soldier->VestPal, lengthof(Soldier->VestPal))
-			EXTR_STR(S, Soldier->SkinPal, lengthof(Soldier->SkinPal))
-			EXTR_STR(S, Soldier->MiscPal, lengthof(Soldier->MiscPal))
-			EXTR_I16A(S, Soldier->sPatrolGrid, lengthof(Soldier->sPatrolGrid))
-			EXTR_I8(S, Soldier->bPatrolCnt)
-			EXTR_BOOL(S, Soldier->fVisible)
-			EXTR_WSTR(S, Soldier->name, lengthof(Soldier->name))
-			EXTR_U8(S, Soldier->ubSoldierClass)
-			EXTR_BOOL(S, Soldier->fOnRoof)
-			EXTR_I8(S, Soldier->bSectorZ)
-			EXTR_SKIP(S, 1)
-			EXTR_PTR(S, Soldier->pExistingSoldier)
-			EXTR_BOOL(S, Soldier->fUseExistingSoldier)
-			EXTR_U8(S, Soldier->ubCivilianGroup)
-			EXTR_BOOL(S, Soldier->fKillSlotIfOwnerDies)
-			EXTR_U8(S, Soldier->ubScheduleID)
-			EXTR_BOOL(S, Soldier->fUseGivenVehicle)
-			EXTR_I8(S, Soldier->bUseGivenVehicleID)
-			EXTR_BOOL(S, Soldier->fHasKeys)
-			EXTR_I8A(S, Soldier->bPadding, lengthof(Soldier->bPadding))
-			EXTR_SKIP(S, 2)
-
-			Assert(S == endof(Data));
+			ExtractSoldierCreateUTF16(Data, Soldier);
 
 			if (Soldier->ubProfile != NO_PROFILE)
 			{
