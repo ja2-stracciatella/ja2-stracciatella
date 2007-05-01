@@ -161,6 +161,8 @@ NPCQuoteInfo: weird preprocessor magic
 NUM_SKILL_TRAITS: complicated
 NextPersonnelFace(): callers
 NumMercsCloseTo(): callers
+OBJECT_ARMED_BOMB: never gets tested
+OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
 PalEditKeyboardHook(): code duplication
 PauseRT(): empty
@@ -199,6 +201,7 @@ SearchFor{Roof,Wall}Type(): unnecessary abs()
 SectorExitBackgroundCallback(): empty
 SelectCreditFaceRegionCallBack(): empty
 SelectMainMenuBackGroundRegionCallBack(): empty
+SelectPlayersOfferSlotsRegionCallBack(): [...].uiItemPrice = [...].bMoneyStatus seems wrong
 SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
@@ -300,6 +303,15 @@ ubBuffer[4]
 
 BASIC_SOLDIERCREATE_STRUCT
 PADDINGSLOTS[14]
+
+OBJECTTYPE
+ubGunUnused
+bMoneyStatus: only one use, which most probably is wrong
+ubMoneyUnused
+ubLocationID
+bKeyStatus
+ubKeyUnused
+ubOwnershipUnused
 
 SOLDIERCREATESTRUCT
 fStatic: strange
