@@ -1,4 +1,4 @@
-#include "ExtractSoldierCreate.h"
+#include "LoadSaveSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"

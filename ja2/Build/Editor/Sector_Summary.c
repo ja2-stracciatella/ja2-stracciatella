@@ -2,7 +2,7 @@
 
 #ifdef JA2EDITOR
 
-#include "ExtractSoldierCreate.h"
+#include "LoadSaveSoldierCreate.h"
 #include "Font.h"
 #include "Types.h"
 #include "Sector_Summary.h"
