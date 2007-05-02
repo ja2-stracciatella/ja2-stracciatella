@@ -466,19 +466,19 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 }
 
 
-static BOOLEAN AddSectorToPathList(PathStPtr pPath, UINT16 uiSectorNu);
+static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNu);
 
 
-PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ )
+PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ )
 {
 
  INT32 iCurrentSectorNum;
  INT32 iDelta=0;
  INT32 iPathLength;
  INT32 iCount=0;
- PathStPtr pNode=NULL;
- PathStPtr pDeleteNode=NULL;
- PathStPtr pHeadOfPathList = pPath;
+	PathSt* pNode = NULL;
+	PathSt* pDeleteNode = NULL;
+	PathSt* pHeadOfPathList = pPath;
  INT32 iOldDelta = 0;
  iCurrentSectorNum=iStartSectorNum;
 
@@ -603,11 +603,11 @@ PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEn
 }
 
 
-static BOOLEAN AddSectorToPathList(PathStPtr pPath, UINT16 uiSectorNum)
+static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNum)
 {
-  PathStPtr pNode=NULL;
-	PathStPtr pTempNode=NULL;
-	PathStPtr pHeadOfList = pPath;
+	PathSt* pNode = NULL;
+	PathSt* pTempNode = NULL;
+	PathSt* pHeadOfList = pPath;
   pNode=pPath;
 
   if(uiSectorNum < MAP_WORLD_X-1)
@@ -799,11 +799,11 @@ void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 s
 
 
 
-PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList )
+PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList)
 {
 	// will append a new section onto the end of the head of list, then return the head of the new list
 
-	PathStPtr pNode = pHeadOfPathList;
+	PathSt* pNode = pHeadOfPathList;
 	// move to end of original section
 
 	if( pNewSection == NULL )
@@ -845,11 +845,11 @@ PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList 
 	return( pHeadOfPathList );
 }
 
-PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
+PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup)
 {
 	// will clear out a strategic path and return head of list as NULL
-	PathStPtr pNode = pHeadOfPath;
-	PathStPtr pDeleteNode = pHeadOfPath;
+	PathSt* pNode = pHeadOfPath;
+	PathSt* pDeleteNode = pHeadOfPath;
 
 	// is there in fact a path?
 	if( pNode == NULL )
@@ -887,14 +887,14 @@ PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup )
 }
 
 
-static PathStPtr MoveToEndOfPathList(PathStPtr pList);
+static PathSt* MoveToEndOfPathList(PathSt* pList);
 
 
-PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup )
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup)
 {
 	// will clear out a strategic path and return head of list as NULL
-	PathStPtr pNode = pHeadOfPath;
-	PathStPtr pDeleteNode = pHeadOfPath;
+	PathSt* pNode = pHeadOfPath;
+	PathSt* pDeleteNode = pHeadOfPath;
 	INT16 sSector = 0;
 	INT16 sCurrentSector = -1;
 
@@ -993,7 +993,7 @@ PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX
 	return( pHeadOfPath );
 }
 
-PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
+PathSt* MoveToBeginningOfPathList(PathSt* pList)
 {
 
 	// move to beginning of this list
@@ -1015,7 +1015,7 @@ PathStPtr MoveToBeginningOfPathList( PathStPtr pList )
 }
 
 
-static PathStPtr MoveToEndOfPathList(PathStPtr pList)
+static PathSt* MoveToEndOfPathList(PathSt* pList)
 {
 	// move to end of list
 
@@ -1036,11 +1036,11 @@ static PathStPtr MoveToEndOfPathList(PathStPtr pList)
 }
 
 
-static PathStPtr RemoveTailFromStrategicPath(PathStPtr pHeadOfList)
+static PathSt* RemoveTailFromStrategicPath(PathSt* pHeadOfList)
 {
 	// remove the tail section from the strategic path
-	PathStPtr pNode = pHeadOfList;
-	PathStPtr pLastNode = pHeadOfList;
+	PathSt* pNode = pHeadOfList;
+	PathSt* pLastNode = pHeadOfList;
 
 	if( pNode == NULL )
 	{
@@ -1068,11 +1068,11 @@ static PathStPtr RemoveTailFromStrategicPath(PathStPtr pHeadOfList)
 }
 
 
-PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
+PathSt* RemoveHeadFromStrategicPath(PathSt* pList)
 {
 	// move to head of list
-	PathStPtr pNode = pList;
-	PathStPtr pNewHead = pList;
+	PathSt* pNode = pList;
+	PathSt* pNewHead = pList;
 
 	// check if there is a list
 	if( pNode == NULL )
@@ -1107,13 +1107,13 @@ PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList )
 
 
 // remove node with this value.. starting at end and working it's way back
-static PathStPtr RemoveSectorFromStrategicPathList(PathStPtr pList, INT16 sX, INT16 sY)
+static PathSt* RemoveSectorFromStrategicPathList(PathSt* pList, INT16 sX, INT16 sY)
 {
 	// find sector sX, sY ...then remove it
 	INT16 sSector = 0;
 	INT16 sCurrentSector = -1;
-	PathStPtr pNode = pList;
-	PathStPtr pPastNode = pList;
+	PathSt* pNode = pList;
+	PathSt* pPastNode = pList;
 
 	// get sector value
 	sSector = sX + ( sY * MAP_WORLD_X );
@@ -1168,7 +1168,7 @@ INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
 {
 	// will return the last sector of the current path, or the current sector if there's no path
 	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	pNode = GetSoldierMercPathPtr( pCharacter );
 
@@ -1185,7 +1185,7 @@ INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
 INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 {
 	INT16 sLastSector = -1;
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
 	{
@@ -1215,10 +1215,10 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 
 
 
-PathStPtr CopyPaths( PathStPtr pSourcePath,  PathStPtr pDestPath )
+PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath)
 {
-	PathStPtr pDestNode = pDestPath;
-	PathStPtr pCurNode = pSourcePath;
+	PathSt* pDestNode = pDestPath;
+	PathSt* pCurNode = pSourcePath;
 	// copies path from source to dest
 
 
@@ -1292,7 +1292,7 @@ static INT32 GetStrategicMvtSpeed(SOLDIERTYPE* pCharacter)
 /*
 void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	UINT32 uiDeltaEta =0;
 	INT32 iMveDelta = 0;
 	BOOLEAN fInVehicle;
@@ -1379,8 +1379,8 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 {
 	// will move a character along a merc path
-	PathStPtr pNode = NULL;
-	PathStPtr pDeleteNode = NULL;
+	PathSt* pNode = NULL;
+	PathSt* pDeleteNode = NULL;
 
 
 	// error check
@@ -1467,10 +1467,10 @@ void MoveTeamOnFoot( void )
 
 
 /*
-UINT32 GetEtaGivenRoute( PathStPtr pPath )
+UINT32 GetEtaGivenRoute(PathSt* pPath)
 {
 	// will return the eta of a passed path in global time units, in minutes
-	PathStPtr pNode = pPath;
+	PathSt* pNode = pPath;
 
 	if( pPath == NULL )
 	{
@@ -1535,12 +1535,12 @@ void VerifyAllMercsInGroupAreOnSameSquad( GROUP *pGroup )
 
 
 
-void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup )
+void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup)
 {
 	INT32 iDelta = 0;
 	INT32 iOldDelta = 0;
 	BOOLEAN fFirstNode = TRUE;
-	PathStPtr pNode = pHeadOfPath;
+	PathSt* pNode = pHeadOfPath;
 	GROUP *pGroup = NULL;
 	WAYPOINT *wp = NULL;
 
@@ -1665,7 +1665,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	// build the path
 	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE */ );
@@ -1689,7 +1689,7 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 
 static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY)
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	// build the path
 	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE*/ );
@@ -1715,7 +1715,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, IN
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -1757,7 +1757,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -1816,10 +1816,10 @@ BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID )
 */
 
 
-INT32 GetLengthOfPath( PathStPtr pHeadPath )
+INT32 GetLengthOfPath(PathSt* pHeadPath)
 {
 	INT32 iLength = 0;
-	PathStPtr pNode = pHeadPath;
+	PathSt* pNode = pHeadPath;
 
 	while( pNode )
 	{
@@ -1832,7 +1832,7 @@ INT32 GetLengthOfPath( PathStPtr pHeadPath )
 
 INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	INT32 iLength = 0;
 
 	pNode = GetSoldierMercPathPtr( pSoldier );
@@ -1841,7 +1841,7 @@ INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN CheckIfPathIsEmpty(PathStPtr pHeadPath)
+static BOOLEAN CheckIfPathIsEmpty(PathSt* pHeadPath)
 {
 	// no path
 	if( pHeadPath == NULL )
@@ -1860,9 +1860,9 @@ static BOOLEAN CheckIfPathIsEmpty(PathStPtr pHeadPath)
 
 
 
-PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
+PathSt* GetSoldierMercPathPtr(SOLDIERTYPE* pSoldier)
 {
-	PathStPtr pMercPath = NULL;
+	PathSt* pMercPath = NULL;
 
 
 	Assert( pSoldier );
@@ -1887,9 +1887,9 @@ PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier )
 
 
 
-PathStPtr GetGroupMercPathPtr( GROUP *pGroup )
+PathSt* GetGroupMercPathPtr(GROUP* pGroup)
 {
-	PathStPtr pMercPath = NULL;
+	PathSt* pMercPath = NULL;
 	INT32 iVehicledId = -1;
 
 
@@ -2016,7 +2016,7 @@ static void ClearPathForSoldier(SOLDIERTYPE* pSoldier)
 }
 
 
-static void AddSectorToFrontOfMercPath(PathStPtr* ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY);
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY);
 
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
@@ -2054,9 +2054,9 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 }
 
 
-static void AddSectorToFrontOfMercPath(PathStPtr* ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 
 	// allocate and hang a new node at the front of the path list

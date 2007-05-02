@@ -600,8 +600,8 @@ MOUSE_REGION gTeamListContractRegion[ MAX_CHARACTER_COUNT ];
 OBJECTTYPE		gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
 
-PathStPtr gpCharacterPreviousMercPath[ MAX_CHARACTER_COUNT ];
-PathStPtr gpHelicopterPreviousMercPath = NULL;
+PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
+PathSt* gpHelicopterPreviousMercPath = NULL;
 
 
 // GLOBAL VARIABLES (EXTERNAL)
@@ -633,8 +633,8 @@ extern UINT32 guiSecItemHiddenVO;
 extern UINT32	guiUIMessageTimeDelay;
 
 
-extern PathStPtr pTempCharacterPath;
-extern PathStPtr pTempHelicopterPath;
+extern PathSt* pTempCharacterPath;
+extern PathSt* pTempHelicopterPath;
 
 extern BOOLEAN gfAutoAIAware;
 extern void HandlePreBattleInterfaceStates();
@@ -1980,7 +1980,7 @@ static void DisplayCharacterInfo(void)
 
 
 
-INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath )
+INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 {
 	INT32 iTravelTime = 0;
 	WAYPOINT pCurrent;
@@ -8603,10 +8603,10 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void);
 
 static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 {
-	PathStPtr *ppMovePath = NULL;
+	PathSt** ppMovePath = NULL;
 	BOOLEAN fLastSectorInPath = FALSE;
 	INT32 iVehicleId = -1;
-	PathStPtr pPreviousMercPath = NULL;
+	PathSt* pPreviousMercPath = NULL;
 
 
 	// see if we have clicked on the last sector in the characters path
@@ -8722,7 +8722,7 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 	BOOLEAN fGroupIDRebuilt[ 256 ];
 	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iVehicleId;
-	PathStPtr *ppMovePath = NULL;
+	PathSt** ppMovePath = NULL;
 	UINT8 ubGroupId;
 
 
@@ -10932,7 +10932,7 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 
 
 
-void CopyPathToAllSelectedCharacters( PathStPtr pPath )
+void CopyPathToAllSelectedCharacters(PathSt* pPath)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -11822,7 +11822,7 @@ static void RestorePreviousPaths(void)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
-	PathStPtr *ppMovePath = NULL;
+	PathSt** ppMovePath = NULL;
 	UINT8 ubGroupId = 0;
 	BOOLEAN fPathChanged = FALSE;
 

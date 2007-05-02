@@ -1877,7 +1877,7 @@ void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 
 BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 {
-	PathStPtr	pTempPathPtr;
+	PathSt* pTempPathPtr;
 	UINT32		uiNodeCount=0;
 	UINT8		cnt;
 	VEHICLETYPE	TempVehicle;

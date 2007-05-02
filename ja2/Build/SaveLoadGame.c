@@ -3367,7 +3367,7 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
 	UINT32	uiNumOfNodes=0;
-	PathStPtr	pTempPath = Menptr[ ubID ].pMercPath;
+	PathSt* pTempPath = Menptr[ubID].pMercPath;
 
 	//loop through to get all the nodes
 	while( pTempPath )
@@ -3402,8 +3402,8 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
 	UINT32	uiNumOfNodes=0;
-	PathStPtr	pTempPath = NULL;
-	PathStPtr	pTemp = NULL;
+	PathSt* pTempPath = NULL;
+	PathSt* pTemp = NULL;
 	UINT32	cnt;
 
 	//The list SHOULD be empty at this point

@@ -62,10 +62,10 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList );
 
 void MAPEndItemPointer();
 
-void CopyPathToAllSelectedCharacters( PathStPtr pPath );
+void CopyPathToAllSelectedCharacters(PathSt* pPath);
 void CancelPathsOfAllSelectedCharacters();
 
-INT32 GetPathTravelTimeDuringPlotting( PathStPtr pPath );
+INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath);
 
 void AbortMovementPlottingMode( void );
 

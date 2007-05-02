@@ -423,10 +423,10 @@ SGPRect gOldClipRect;
 SGPRect FullScreenRect={ 0, 0, 640, 480 };
 
 // temp helicopter path
-PathStPtr pTempHelicopterPath = NULL;
+PathSt* pTempHelicopterPath = NULL;
 
 // character temp path
-PathStPtr pTempCharacterPath = NULL;
+PathSt* pTempCharacterPath = NULL;
 
 // draw temp path?
 BOOLEAN fDrawTempHeliPath = FALSE;
@@ -1863,13 +1863,13 @@ static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
 }
 
 
-static void AnimateRoute(PathStPtr pPath);
-static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath);
+static void AnimateRoute(PathSt* pPath);
+static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* pPath);
 
 
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 {
-	PathStPtr pPath = NULL;
+	PathSt* pPath = NULL;
 
 /* ARM: Hopefully no longer required once using GetSoldierMercPathPtr() ???
 	// check if in vehicle, if so, copy path to vehicle
@@ -2032,7 +2032,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 {
 	// will return the last sector of the helicopter's current path
 	INT16 sLastSector = pVehicleList[ iHelicopterVehicleId ].sSectorX + pVehicleList[ iHelicopterVehicleId ].sSectorY * MAP_WORLD_X ;
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 
 	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
 
@@ -2047,7 +2047,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 
 
 // trace a route for a passed path...doesn't require dest char - most more general
-static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPtr pPath)
+static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* pPath)
 {
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iArrow=-1;
@@ -2057,9 +2057,9 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPt
  INT32 iDeltaA, iDeltaB, iDeltaB1;
  INT32 iDirection = 0;
  BOOLEAN fUTurnFlag=FALSE;
- PathStPtr pNode=NULL;
- PathStPtr pPastNode=NULL;
- PathStPtr pNextNode=NULL;
+	PathSt* pNode = NULL;
+	PathSt* pPastNode = NULL;
+	PathSt* pNextNode = NULL;
 
  if ( pPath==NULL )
  {
@@ -2767,10 +2767,10 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathStPt
 }
 
 
-static BOOLEAN TraceCharAnimatedRoute(PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate);
+static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate);
 
 
-static void AnimateRoute(PathStPtr pPath)
+static void AnimateRoute(PathSt* pPath)
 {
 	// set buffer
 	SetFontDestBuffer( FRAME_BUFFER, 0,0,640, 480, FALSE );
@@ -2842,9 +2842,9 @@ static void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 i
 }
 
 
-static BOOLEAN TraceCharAnimatedRoute(PathStPtr pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate)
+static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate)
 {
- static PathStPtr pCurrentNode=NULL;
+	static PathSt* pCurrentNode = NULL;
  static BOOLEAN fUpDateFlag=FALSE;
  static BOOLEAN fPauseFlag=TRUE;
  static UINT8 ubCounter=1;
@@ -2860,10 +2860,10 @@ static BOOLEAN TraceCharAnimatedRoute(PathStPtr pPath, BOOLEAN fCheckFlag, BOOLE
  INT32 iDirection = -1;
  BOOLEAN fUTurnFlag=FALSE;
  BOOLEAN fNextNode=FALSE;
- PathStPtr pTempNode=NULL;
- PathStPtr pNode=NULL;
- PathStPtr pPastNode=NULL;
- PathStPtr pNextNode=NULL;
+	PathSt* pTempNode = NULL;
+	PathSt* pNode     = NULL;
+	PathSt* pPastNode = NULL;
+	PathSt* pNextNode = NULL;
 
 
 	// must be plotting movement

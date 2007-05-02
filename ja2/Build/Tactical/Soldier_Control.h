@@ -236,7 +236,6 @@ CASSERT(sizeof(struct path) == 20)
 
 
 typedef struct path PathSt;
-typedef PathSt *PathStPtr;
 enum {
 	HELMETPOS = 0,
 	VESTPOS,
@@ -733,7 +732,7 @@ typedef struct
 	INT16                       sSectorY;									// Y position on the Stategic Map
 	INT8												bSectorZ;									// Z sector location
   INT32                       iVehicleId;								// the id of the vehicle the char is in
-  PathStPtr                   pMercPath;								//Path Structure
+	PathSt*                     pMercPath;                // Path Structure
 	UINT8												fHitByGasFlags;						// flags
 	UINT16											usMedicalDeposit;         // is there a medical deposit on merc
 	UINT16											usLifeInsurance;          // is there life insurance taken out on merc

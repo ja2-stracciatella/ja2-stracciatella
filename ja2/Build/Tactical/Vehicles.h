@@ -52,7 +52,7 @@ extern INT16 sVehicleOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES][ NUMBER_OF_IN
 // struct for vehicles
 typedef struct
 {
- PathStPtr pMercPath;  // vehicle's stategic path list
+	PathSt* pMercPath; // vehicle's stategic path list
  UINT8     ubMovementGroup; // the movement group this vehicle belongs to
  UINT8     ubVehicleType; // type of vehicle
  INT16     sSectorX;   // X position on the Stategic Map

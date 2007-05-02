@@ -38,24 +38,24 @@ void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 s
 */
 
 // build a stategic path
-PathStPtr BuildAStrategicPath(PathStPtr pPath , INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ );
+PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ );
 
 
 // append onto path list
-PathStPtr AppendStrategicPath( PathStPtr pNewSection, PathStPtr pHeadOfPathList );
+PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList);
 
 
 // clear out strategic path list
-PathStPtr ClearStrategicPathList( PathStPtr pHeadOfPath, INT16 sMvtGroup );
+PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup);
 
 // move to beginning of list
-PathStPtr MoveToBeginningOfPathList( PathStPtr pList );
+PathSt* MoveToBeginningOfPathList(PathSt* pList);
 
 // remove head of list
-PathStPtr RemoveHeadFromStrategicPath( PathStPtr pList );
+PathSt* RemoveHeadFromStrategicPath(PathSt* pList);
 
 // clear out path list after/including this sector sX, sY..will start at end of path and work it's way back till sector is found...removes most recent sectors first
-PathStPtr ClearStrategicPathListAfterThisSector( PathStPtr pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup );
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup);
 
 // get id of last sector in mercs path list
 INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter );
@@ -64,7 +64,7 @@ INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter );
 INT16 GetLastSectorIdInVehiclePath( INT32 iId );
 
 // copy paths
-PathStPtr CopyPaths( PathStPtr pSourcePath,  PathStPtr pDestPath );
+PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath);
 
 // build eta's for characters path - no longer used
 //void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter );
@@ -75,11 +75,11 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter );
 void MoveTeamOnFoot( void );
 
 // get the final eta of this path to the last sector in it's list
-UINT32 GetEtaGivenRoute( PathStPtr pPath );
+UINT32 GetEtaGivenRoute(PathSt* pPath);
 */
 
 // rebuild way points for strategic mapscreen path changes
-void RebuildWayPointsForGroupPath( PathStPtr pHeadOfPath, INT16 sMvtGroup );
+void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup);
 
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
@@ -96,11 +96,11 @@ BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID );
 
 
 // get length of path
-INT32 GetLengthOfPath( PathStPtr pHeadPath );
+INT32 GetLengthOfPath(PathSt* pHeadPath);
 INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier );
 
-PathStPtr GetSoldierMercPathPtr( SOLDIERTYPE *pSoldier );
-PathStPtr GetGroupMercPathPtr( GROUP *pGroup );
+PathSt* GetSoldierMercPathPtr(SOLDIERTYPE* pSoldier);
+PathSt* GetGroupMercPathPtr(GROUP* pGroup);
 
 UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier );
 

@@ -58,7 +58,7 @@ extern FACETYPE	*gpCurrentTalkingFace;
 extern UINT8			gubCurrentTalkingID;
 
 // current temp path for dest char
-extern PathStPtr pTempHelicopterPath;
+extern PathSt* pTempHelicopterPath;
 
 extern UINT8 ubSAMControlledSectors[ MAP_WORLD_X ][ MAP_WORLD_Y ];
 
@@ -757,7 +757,7 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies)
 // if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 INT32 DistanceOfIntendedHelicopterPath( void )
 {
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	INT32 iLength = 0;
 
 	if( CanHelicopterFly( ) == FALSE )
@@ -1311,7 +1311,7 @@ void HandleAnimationOfSectors( void )
 static INT16 LastSectorInHelicoptersPath(void)
 {
 	// get the last sector value in the helictoper's path
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	UINT32 uiLocation = 0;
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
@@ -1357,7 +1357,8 @@ INT32 GetTotalCostOfHelicopterTrip( void )
 {
 	// get cost of helicopter trip
 
-	PathStPtr pNode = NULL, pTempNode = NULL;
+	PathSt* pNode = NULL;
+	PathSt* pTempNode = NULL;
 	UINT32 uiCost = 0;
 	UINT32 uiLastTempPathSectorId = 0;
 	UINT32 iClosestRefuelPoint = 0;
@@ -1993,7 +1994,7 @@ BOOLEAN IsGroupTheHelicopterGroup( GROUP *pGroup )
 INT16 GetNumSafeSectorsInPath( void )
 {
 	// get the last sector value in the helictoper's path
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	UINT32 uiLocation = 0;
   UINT32  uiCount = 0;
 	INT32 iHeliSector = -1;
@@ -2074,7 +2075,7 @@ INT16 GetNumSafeSectorsInPath( void )
 INT16 GetNumUnSafeSectorsInPath( void )
 {
 	// get the last sector value in the helictoper's path
-	PathStPtr pNode = NULL;
+	PathSt* pNode = NULL;
 	UINT32 uiLocation = 0;
   UINT32  uiCount = 0;
 	INT32 iHeliSector = -1;
