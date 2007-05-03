@@ -261,6 +261,7 @@ zSoundFile: pointer instead of array?
 {Load,Save}ShadeTable(): filename generation ugly
 {Loading,Saving}Screen*(): unused?
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
+SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
 
 
 STRUCTS: unused attributes
@@ -405,6 +406,7 @@ bTimesDrugUsedSinceSleep: write-only
 ubHoursOnAssignment
 ubMercJustFired
 ubPendingActionInterrupted
+pGroup
 fDieSoundUsed: always FALSE
 bFillerBytes
 fDoingExternalDeath: always TRUE?

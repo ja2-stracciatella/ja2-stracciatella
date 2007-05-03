@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "LoadSaveSoldierType.h"
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"
@@ -2563,10 +2564,6 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 	UINT8		ubOne = 1;
 	UINT8		ubZero = 0;
 
-	UINT32	uiSaveSize = sizeof( SOLDIERTYPE );
-
-
-
 	//Loop through all the soldier structs to save
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
 	{
@@ -2586,14 +2583,16 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 			// calculate checksum for soldier
 			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
 			// Save the soldier structure
+			BYTE Data[2352];
+			InjectSoldierType(Data, &Menptr[cnt]);
 			BOOLEAN Ret;
 			if ( guiSavedGameVersion < 87 )
 			{
-				Ret = JA2EncryptedFileWrite(hFile, &Menptr[cnt], uiSaveSize);
+				Ret = JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 			}
 			else
 			{
-				Ret = NewJA2EncryptedFileWrite(hFile, &Menptr[cnt], uiSaveSize);
+				Ret = NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 			}
 			if (!Ret) return FALSE;
 
@@ -2640,7 +2639,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
 	SOLDIERTYPE SavedSoldierInfo;
-	UINT32	uiSaveSize = sizeof( SOLDIERTYPE );
 	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
@@ -2678,17 +2676,19 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 		// else if there is a soldier
 		else
 		{
+			BYTE Data[2352];
 			//Read in the saved soldier info into a Temp structure
 			BOOLEAN Ret;
 			if ( guiSaveGameVersion < 87 )
 			{
-				Ret = JA2EncryptedFileRead(hFile, &SavedSoldierInfo, uiSaveSize);
+				Ret = JA2EncryptedFileRead(hFile, &Data, sizeof(Data));
 			}
 			else
 			{
-				Ret = NewJA2EncryptedFileRead(hFile, &SavedSoldierInfo, uiSaveSize);
+				Ret = NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data));
 			}
 			if (!Ret) return FALSE;
+			ExtractSoldierType(Data, &SavedSoldierInfo);
 			// check checksum
 			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
 			{
