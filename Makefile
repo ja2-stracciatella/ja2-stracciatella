@@ -256,6 +256,7 @@ SRCS += ja2/Build/Tactical/Inventory_Choosing.c
 SRCS += ja2/Build/Tactical/Items.c
 SRCS += ja2/Build/Tactical/Keys.c
 SRCS += ja2/Build/Tactical/LOS.c
+SRCS += ja2/Build/Tactical/LoadSaveMercProfile.c
 SRCS += ja2/Build/Tactical/LoadSaveObjectType.c
 SRCS += ja2/Build/Tactical/LoadSaveSoldierCreate.c
 SRCS += ja2/Build/Tactical/LoadSaveSoldierType.c

@@ -171,11 +171,11 @@ BYTE* InjectObject(BYTE* Dst, const OBJECTTYPE* o)
 					INJ_SKIP(D, 4)
 					break;
 
-				default: goto extract_status;
+				default: goto inject_status;
 			}
 
 		default:
-extract_status:
+inject_status:
 			INJ_I8A(D, o->bStatus, lengthof(o->bStatus))
 			INJ_SKIP(D, 4)
 			break;

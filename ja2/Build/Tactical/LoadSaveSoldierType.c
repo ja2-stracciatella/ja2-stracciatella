@@ -45,10 +45,10 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_SKIP(S, 1)
 	EXTR_I16(S, Soldier->sWeightCarriedAtTurnStart)
 #ifdef _WIN32 // XXX HACK000A
+	EXTR_WSTR16(S, Soldier->name, lengthof(Soldier->name))
+#else
 	EXTR_SKIP(S, 2)
 	EXTR_WSTR32(S, Soldier->name, lengthof(Soldier->name))
-#else
-	EXTR_WSTR16(S, Soldier->name, lengthof(Soldier->name))
 #endif
 	EXTR_I8(S, Soldier->bVisible)
 	EXTR_I8(S, Soldier->bActive)
@@ -546,7 +546,11 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_U8(S, Soldier->ubNextToPreviousAttackerID)
 	EXTR_U8A(S, Soldier->bFiller, lengthof(Soldier->bFiller))
 
+#ifdef _WIN32 // XXX HACK000A
+	Assert(S == Src + 2328);
+#else
 	Assert(S == Src + 2352);
+#endif
 }
 
 
@@ -1092,5 +1096,9 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_U8(D, Soldier->ubNextToPreviousAttackerID)
 	INJ_U8A(D, Soldier->bFiller, lengthof(Soldier->bFiller))
 
+#ifdef _WIN32 // XXX HACK000A
+	Assert(D == Dst + 2328);
+#else
 	Assert(D == Dst + 2352);
+#endif
 }

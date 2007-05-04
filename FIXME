@@ -34,6 +34,7 @@ DisplayOnScreenNumber(): callers
 DisplayPurchasedItems(): iSubTotal undefined value
 DisplayTopwareGermanyAddress(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
+DoChrisTest(): ?
 DoDive(): callers
 DoLockDoor(): callers
 DoUnlockDoor(): callers
@@ -76,6 +77,7 @@ GetNumberOfPastMercsOnPlayersTeam(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
+GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTheStateOfDepartedMerc(): callers
 GetTileType(): interface complicated
 GetTimeRemainingOnSoldiersContract(): callers
@@ -86,6 +88,7 @@ Handle.*TextEvent(): code duplication
 HandleDefiniteUnloadingOfWorld(): use enum
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
 HandleItemGlowFlag(): callers/complicated
+HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers
@@ -189,6 +192,7 @@ RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferSha
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
+SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
 SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
@@ -196,12 +200,14 @@ SaveLightEffectsToSaveGameFile(): empty
 SaveLightEffectsToSaveGameFile(): empty
 SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
+SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
 ScreenRegionMvtCallback(): empty
 SearchFor{Roof,Wall}Type(): unnecessary abs()
 SectorExitBackgroundCallback(): empty
 SelectCreditFaceRegionCallBack(): empty
 SelectMainMenuBackGroundRegionCallBack(): empty
 SelectPlayersOfferSlotsRegionCallBack(): [...].uiItemPrice = [...].bMoneyStatus seems wrong
+SendNetData(): does not exist
 SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
@@ -217,6 +223,7 @@ StrategicPythSpacesAway(): avoid sqrt()
 TacticalScreenMsg(): DestString read before written to
 TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
+TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
 TwoHandedItem(): complicated
 TypeExistsInShadowLayer(): interface complicated
@@ -261,10 +268,19 @@ zSoundFile: pointer instead of array?
 {Load,Save}ShadeTable(): filename generation ugly
 {Loading,Saving}Screen*(): unused?
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
-SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
 
 
 STRUCTS: unused attributes
+
+GROUP // TODO not finished
+ubOriginalSector: write-only, read to write-only
+ubFatigueLevel
+ubRestAtFatigueLevel
+ubRestToFatigueLevel
+fRestAtNight
+fWaypointsCancelled_UNUSED
+ubCreatedSectorID: write-only
+bPadding
 
 MERCPROFILESTRUCT
 uiAttnSound
@@ -325,10 +341,10 @@ fUseExistingSoldier: strange
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange
+bPadding[]
 
 SOLDIERTYPE
 bReserved1
-fPauseAim: seems to be alaways FALSE
 bGunType
 fInMissionExitNode: read-only (in unused function)
 fReloading: always FALSE
@@ -391,6 +407,7 @@ fForceShade: pForceShade != NULL?
 bDamageDir
 bUIInterfaceLevel: write-only
 fOpenPanel: always FALSE
+bOpenPanelFrame: probably unused, see fOpenPanel
 bVocalVolume: always MIDVOLUME
 uiStartMovementTime
 uiOptimumMovementTime

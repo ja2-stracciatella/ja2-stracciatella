@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
 #include "Types.h"
 #include "Soldier_Profile.h"
@@ -2490,20 +2491,25 @@ load_failed_no_close:
 static BOOLEAN SaveMercProfiles(HWFILE hFile)
 {
 	UINT16	cnt;
-	UINT32	uiSaveSize = sizeof( MERCPROFILESTRUCT );
 
 	//Lopp through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
 		gMercProfiles[ cnt ].uiProfileChecksum = ProfileChecksum( &(gMercProfiles[ cnt ]) );
 		BOOLEAN Ret;
+#ifdef _WIN32 // XXX HACK000A
+		BYTE Data[716];
+#else
+		BYTE Data[796];
+#endif
+		InjectMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( guiSavedGameVersion < 87 )
 		{
-			Ret = JA2EncryptedFileWrite(hFile, &gMercProfiles[cnt], uiSaveSize);
+			Ret = JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 		}
 		else
 		{
-			Ret = NewJA2EncryptedFileWrite(hFile, &gMercProfiles[cnt], uiSaveSize);
+			Ret = NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 		}
 		if (!Ret) return FALSE;
 	}
@@ -2519,16 +2525,22 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 	//Lopp through all the profiles to Load
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
+#ifdef _WIN32 // XXX HACK000A
+		BYTE Data[716];
+#else
+		BYTE Data[796];
+#endif
 		BOOLEAN Ret;
 		if ( guiSaveGameVersion < 87 )
 		{
-			Ret = JA2EncryptedFileRead(hFile, &gMercProfiles[cnt], sizeof(MERCPROFILESTRUCT));
+			Ret = JA2EncryptedFileRead(hFile, Data, sizeof(Data));
 		}
 		else
 		{
-			Ret = NewJA2EncryptedFileRead(hFile, &gMercProfiles[cnt], sizeof(MERCPROFILESTRUCT));
+			Ret = NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
 		}
 		if (!Ret) return FALSE;
+		ExtractMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
 		{
 			return( FALSE );
@@ -2583,7 +2595,11 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 			// calculate checksum for soldier
 			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
 			// Save the soldier structure
+#ifdef _WIN32 // XXX HACK000A
+			BYTE Data[2328];
+#else
 			BYTE Data[2352];
+#endif
 			InjectSoldierType(Data, &Menptr[cnt]);
 			BOOLEAN Ret;
 			if ( guiSavedGameVersion < 87 )
@@ -2676,7 +2692,11 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 		// else if there is a soldier
 		else
 		{
+#ifdef _WIN32 // XXX HACK000A
+			BYTE Data[2328];
+#else
 			BYTE Data[2352];
+#endif
 			//Read in the saved soldier info into a Temp structure
 			BOOLEAN Ret;
 			if ( guiSaveGameVersion < 87 )
