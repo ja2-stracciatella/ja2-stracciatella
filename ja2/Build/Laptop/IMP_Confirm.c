@@ -3,6 +3,7 @@
 #include "IMP_MainPage.h"
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
+#include "LoadSaveMercProfile.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -510,7 +511,7 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 	// Write the profile id, portrait id and the profile itself. Abort on error
 	FileWrite(hFile, &iProfileId, sizeof(INT32)) &&
 	FileWrite(hFile, &iPortraitNumber, sizeof(INT32)) &&
-	FileWrite(hFile, &gMercProfiles[iProfileId], sizeof(MERCPROFILESTRUCT));
+	InjectMercProfileIntoFile(hFile, &gMercProfiles[iProfileId]);
 
 	FileClose(hFile);
 }
@@ -532,7 +533,7 @@ static void LoadInCurrentImpCharacter(void)
 	if (!FileRead(hFile, &iPortraitNumber, sizeof(INT32))) return;
 
 	// read in the profile
-	if (!FileRead(hFile, &gMercProfiles[iProfileId], sizeof(MERCPROFILESTRUCT))) return;
+	if (!ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId])) return;
 
 	// close file
 	FileClose(hFile);

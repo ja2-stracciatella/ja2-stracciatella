@@ -370,6 +370,19 @@ void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 }
 
 
+BOOLEAN ExtractMercProfileFromFile(HWFILE File, MERCPROFILESTRUCT* Merc)
+{
+#ifdef _WIN32 // XXX HACK000A
+	BYTE Data[716];
+#else
+	BYTE Data[796];
+#endif
+	BOOLEAN Ret = FileRead(File, Data, sizeof(Data));
+	if (Ret) ExtractMercProfile(Data, Merc);
+	return Ret;
+}
+
+
 void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 {
 	BYTE* D = Dst;
@@ -555,4 +568,16 @@ void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 #else
 	Assert(D == Dst + 796);
 #endif
+}
+
+
+BOOLEAN InjectMercProfileIntoFile(HWFILE File, const MERCPROFILESTRUCT* Merc)
+{
+#ifdef _WIN32 // XXX HACK000A
+	BYTE Data[716];
+#else
+	BYTE Data[796];
+#endif
+	InjectMercProfile(Data, Merc);
+	return FileWrite(File, Data, sizeof(Data));
 }
