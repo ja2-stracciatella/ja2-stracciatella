@@ -173,6 +173,7 @@ SRCS += ja2/Build/Laptop/Mercs_Files.c
 SRCS += ja2/Build/Laptop/Mercs_No_Account.c
 SRCS += ja2/Build/Laptop/Personnel.c
 SRCS += ja2/Build/Laptop/Store_Inventory.c
+SRCS += ja2/Build/LoadSaveEMail.c
 SRCS += ja2/Build/Loading_Screen.c
 SRCS += ja2/Build/MainMenuScreen.c
 SRCS += ja2/Build/MessageBoxScreen.c

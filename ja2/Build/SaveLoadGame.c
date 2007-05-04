@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
 #include "Types.h"
@@ -12,7 +13,6 @@
 #include "History.h"
 #include "Files.h"
 #include "Laptop.h"
-#include "EMail.h"
 #include "StrategicMap.h"
 #include "Game_Events.h"
 #include "Game_Clock.h"
@@ -368,7 +368,6 @@ extern		BOOLEAN		gfHavePurchasedItemsFromTony;
 static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);
 static void PauseBeforeSaveGame(void);
 static void UnPauseAfterSaveGame(void);
-static BOOLEAN SaveEmailToSavedGame(HWFILE hFile);
 static BOOLEAN SaveGeneralInfo(HWFILE hFile);
 static BOOLEAN SaveMeanwhileDefsFromSaveGameFile(HWFILE hFile);
 static BOOLEAN SaveMercProfiles(HWFILE hFile);
@@ -1264,7 +1263,6 @@ UINT32 guiBrokenSaveGameVersion = 0;
 
 
 static void HandleOldBobbyRMailOrders(void);
-static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile);
 static BOOLEAN LoadGeneralInfo(HWFILE hFile);
 static BOOLEAN LoadMeanwhileDefsFromSaveGameFile(HWFILE hFile);
 static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile);
@@ -3065,83 +3063,6 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 	#ifdef JA2BETAVERSION
 		WriteTempFileNameToFile( pSrcFileName, uiFileSize, hFile );
 	#endif
-	return( TRUE );
-}
-
-
-static BOOLEAN SaveEmailToSavedGame(HWFILE hFile)
-{
-	const Email* pEmail;
-
-	//loop through all the email to find out the total number
-	UINT32 uiNumOfEmails = 0;
-	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
-	{
-		uiNumOfEmails++;
-	}
-
-	//write the number of email messages
-	if (!FileWrite(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
-
-	//loop trhough all the emails, add each one individually
-	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
-	{
-		//write the length of the current emails subject to the saved game file
-		UINT32 uiStringLength = 0;
-		if (!FileWrite(hFile, &uiStringLength, sizeof(UINT32))) return FALSE; // XXX HACK000B
-
-		//Get the current emails data and asign it to the 'Saved email' struct
-		SavedEmailStruct SavedEmail;
-		SavedEmail.usOffset = pEmail->usOffset;
-		SavedEmail.usLength = pEmail->usLength;
-		SavedEmail.ubSender = pEmail->ubSender;
-		SavedEmail.iDate = pEmail->iDate;
-		SavedEmail.iId = 0; // XXX HACK000B
-		SavedEmail.iFirstData = pEmail->iFirstData;
-		SavedEmail.uiSecondData = pEmail->uiSecondData;
-		SavedEmail.fRead = pEmail->fRead;
-		SavedEmail.fNew = FALSE; // HACK000B
-		SavedEmail.iThirdData_UNUSED  = 0; // XXX HACK000B
-		SavedEmail.iFourthData_UNUSED = 0; // XXX HACK000B
-		SavedEmail.uiFifthData_UNUSED = 0; // XXX HACK000B
-		SavedEmail.uiSixData_UNUSED   = 0; // XXX HACK000B
-
-
-		// write the email header to the saved game file
-		if (!FileWrite(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
-	}
-
-	return( TRUE );
-}
-
-
-static BOOLEAN LoadEmailFromSavedGame(HWFILE hFile)
-{
-	//Delete the existing list of emails
-	ShutDownEmailList();
-
-	pEmailList = NULL;
-
-	//read in the number of email messages
-	UINT32 uiNumOfEmails;
-	if (!FileRead(hFile, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
-
-	//loop through all the emails, add each one individually
-	Email* Prev = NULL;
-	for (UINT32 cnt = 0; cnt < uiNumOfEmails; cnt++)
-	{
-		//get the length of the email subject
-		UINT32 uiSizeOfSubject;
-		if (!FileRead(hFile, &uiSizeOfSubject, sizeof(UINT32))) return FALSE; // XXX HACK000B
-		if (!FileSeek(hFile, uiSizeOfSubject, FILE_SEEK_FROM_CURRENT)) return FALSE; // XXX HACK000B
-
-		//get the rest of the data from the email
-		SavedEmailStruct SavedEmail;
-		if (!FileRead(hFile, &SavedEmail, sizeof(SavedEmailStruct))) return FALSE;
-
-		AddEmailMessage(SavedEmail.usOffset, SavedEmail.usLength, SavedEmail.iDate, SavedEmail.ubSender, SavedEmail.fRead, SavedEmail.iFirstData, SavedEmail.uiSecondData);
-	}
-
 	return( TRUE );
 }
 

@@ -148,28 +148,6 @@ struct Email
 };
 
 
-// This used when saving the emails to disk.
-typedef struct
-{
-	UINT16	usOffset;
-	UINT16	usLength;
-	UINT8		ubSender;
-	UINT32	iDate;
-	INT32		iId; // XXX HACK000B
-	INT32		iFirstData;
-	UINT32	uiSecondData;
-
-	INT32  iThirdData_UNUSED;  // XXX HACK000B
-	INT32  iFourthData_UNUSED; // XXX HACK000B
-	UINT32 uiFifthData_UNUSED; // XXX HACK000B
-	UINT32 uiSixData_UNUSED;   // XXX HACK000B
-
-	BOOLEAN fRead;
-	BOOLEAN fNew; // XXX HACK000B
-} SavedEmailStruct;
-CASSERT(sizeof(SavedEmailStruct) == 44)
-
-
 enum {
 	MAIL_ENRICO=0,
 	CHAR_PROFILE_SITE,

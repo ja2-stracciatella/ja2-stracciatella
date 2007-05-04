@@ -233,6 +233,7 @@ UIHandleMOnTerrain(): Redundant GetSoldier() calls?
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateGameEvents(): questionable
+ValidateSkillsList(), FindSkillInSkillsList(), RemoveSkillFromSkillsList(): complicated
 VehicleHasFuel(): inline
 VerifyGiveItem(): complicated interface
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
