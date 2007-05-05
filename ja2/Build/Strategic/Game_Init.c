@@ -5,7 +5,6 @@
 #include "WorldDef.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
-#include "Fade_Screen.h"
 #include "EMail.h"
 #include "Game_Clock.h"
 #include "Soldier_Profile.h"

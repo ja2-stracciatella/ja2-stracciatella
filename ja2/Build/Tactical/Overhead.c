@@ -81,7 +81,6 @@
 #include "Map_Screen_Helicopter.h"
 #include "Interface_Control.h"
 #include "Exit_Grids.h"
-#include "Fade_Screen.h"
 #include "Game_Init.h"
 #include "JAScreens.h"
 #include "Strategic.h"
