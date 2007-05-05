@@ -27,21 +27,16 @@
 #include "LaptopSave.h"
 
 
-// how many times should a 'die' be rolled for skills of the same type?
-
-#define HOW_MANY_ROLLS_FOR_SAME_SKILL_CHECK 20
-
-
 #define ATTITUDE_LIST_SIZE 20
 
 
-static INT32 AttitudeList[ ATTITUDE_LIST_SIZE ];
+static INT32 AttitudeList[ATTITUDE_LIST_SIZE];
 static INT32 iLastElementInAttitudeList = 0;
 
-static INT32 SkillsList[ ATTITUDE_LIST_SIZE ];
+static INT32 SkillsList[ATTITUDE_LIST_SIZE];
 static INT32 iLastElementInSkillsList = 0;
 
-static INT32 PersonalityList[ ATTITUDE_LIST_SIZE ];
+static INT32 PersonalityList[ATTITUDE_LIST_SIZE];
 static INT32 iLastElementInPersonalityList = 0;
 
 extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
@@ -91,68 +86,45 @@ const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 static void SelectMercFace(void);
 
 
-void CreateACharacterFromPlayerEnteredStats( void )
+void CreateACharacterFromPlayerEnteredStats(void)
 {
+	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
 
-	// copy over full name
-  wcscpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zName, pFullName );
+	wcscpy(Merc->zName,     pFullName);
+	wcscpy(Merc->zNickname, pNickName);
 
-	// the nickname
-	wcscpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].zNickname, pNickName );
+	Merc->bSex = fCharacterIsMale ? MALE : FEMALE;
 
-	// gender
-	if ( fCharacterIsMale == TRUE )
-	{
-    // male
-    gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSex = MALE;
-	}
-	else
-	{
-		// female
-    gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSex = FEMALE;
-	}
+	Merc->bLifeMax    = iHealth;
+	Merc->bLife       = iHealth;
+	Merc->bAgility    = iAgility;
+	Merc->bStrength   = iStrength;
+	Merc->bDexterity  = iDexterity;
+	Merc->bWisdom     = iWisdom;
+	Merc->bLeadership = iLeadership;
 
+	Merc->bMarksmanship = iMarksmanship;
+	Merc->bMedical      = iMedical;
+	Merc->bMechanical   = iMechanical;
+	Merc->bExplosive    = iExplosives;
 
-	// attributes
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLifeMax		= ( INT8 )iHealth;
-  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLife       = ( INT8 )iHealth;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAgility    = ( INT8 )iAgility;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength   = ( INT8 )iStrength;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bDexterity  = ( INT8 )iDexterity;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bWisdom     = ( INT8 )iWisdom;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bLeadership = ( INT8 )iLeadership;
+	Merc->bPersonalityTrait = iPersonality;
 
+	Merc->bAttitude = iAttitude;
 
-		// skills
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMarksmanship = ( INT8 )iMarksmanship;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMedical      = ( INT8 )iMedical;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMechanical   = ( INT8 )iMechanical;
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExplosive    = ( INT8 )iExplosives;
-
-
-  // personality
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bPersonalityTrait = ( INT8 )iPersonality;
-
-	// attitude
-  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bAttitude = ( INT8 )iAttitude;
-
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bExpLevel = 1;
+	Merc->bExpLevel = 1;
 
 	// set time away
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bMercStatus = 0;
+	Merc->bMercStatus = 0;
 
-
-
-	// face
-	 SelectMercFace( );
+	SelectMercFace();
 }
 
 
 static BOOLEAN DoesCharacterHaveAnAttitude(void)
 {
-
 	// simply checks if caracter has an attitude other than normal
-	switch( iAttitude )
+	switch (iAttitude)
 	{
 		case ATT_LONER:
 		case ATT_PESSIMIST:
@@ -160,9 +132,10 @@ static BOOLEAN DoesCharacterHaveAnAttitude(void)
 		case ATT_BIG_SHOT:
 		case ATT_ASSHOLE:
 		case ATT_COWARD:
-			return( TRUE );
+			return TRUE;
+
 		default:
-			return( FALSE );
+			return FALSE;
 	}
 }
 
@@ -190,52 +163,49 @@ static BOOLEAN DoesCharacterHaveAPersoanlity(void)
 static void CreatePlayerAttitude(void)
 {
   // this function will 'roll a die' and decide if any attitude does exists
-  INT32 iDiceValue = 0;
-	INT32 iCounter = 0, iCounter2 = 0;
-
 	INT32	iAttitudeHits[NUM_ATTITUDES] = { 0 };
-	INT32	iHighestHits = 0;
-	INT32	iNumAttitudesWithHighestHits = 0;
 
 	iAttitude = ATT_NORMAL;
 
-	if ( iLastElementInAttitudeList == 0 )
+	if (iLastElementInAttitudeList == 0)
 	{
 		return;
 	}
 
 	// count # of hits for each attitude
-	for ( iCounter = 0; iCounter < iLastElementInAttitudeList; iCounter++ )
+	for (INT32 i = 0; i < iLastElementInAttitudeList; i++)
 	{
-		iAttitudeHits[ AttitudeList[ iCounter ] ]++;
+		iAttitudeHits[AttitudeList[i]]++;
 	}
 
 	// find highest # of hits for any attitude
-	for ( iCounter = 0; iCounter < NUM_ATTITUDES; iCounter++ )
+	INT32	iHighestHits = 0;
+	INT32	iNumAttitudesWithHighestHits = 0;
+	for (INT32 i = 0; i < NUM_ATTITUDES; i++)
 	{
-		if ( iAttitudeHits[ iCounter ] )
+		if (iAttitudeHits[i])
 		{
-			if ( iAttitudeHits[ iCounter ] > iHighestHits )
+			if (iAttitudeHits[i] > iHighestHits)
 			{
-				iHighestHits = __max( iHighestHits, iAttitudeHits[ iCounter ] );
+				iHighestHits = iAttitudeHits[i];
 				iNumAttitudesWithHighestHits = 1;
 			}
-			else if ( iAttitudeHits[ iCounter ] == iHighestHits )
+			else if (iAttitudeHits[i] == iHighestHits)
 			{
 				iNumAttitudesWithHighestHits++;
 			}
 		}
 	}
 
-	// roll dice
-	iDiceValue = Random( iNumAttitudesWithHighestHits + 1 );
+	INT32 iDiceValue = Random(iNumAttitudesWithHighestHits + 1); // XXX TODO0008
 
 	// find attitude
-	for ( iCounter = 0; iCounter < NUM_ATTITUDES; iCounter++ )
+	INT32 iCounter2 = 0;
+	for (INT32 i = 0; i < NUM_ATTITUDES; i++)
 	{
-		if ( iAttitudeHits[ iCounter ] == iHighestHits )
+		if (iAttitudeHits[i] == iHighestHits)
 		{
-			if ( iCounter2 == iDiceValue )
+			if (iCounter2 == iDiceValue)
 			{
 				// this is it!
 				iAttitude = iCounter2;
@@ -248,67 +218,25 @@ static void CreatePlayerAttitude(void)
 			}
 		}
 	}
-
-/*
-	iAttitude = ATT_NORMAL;
-	// set attitude
-	if ( ( AttitudeList[ iDiceValue ] == ATT_LONER )||( AttitudeList[ iDiceValue ] > ATT_OPTIMIST ) )
-	{
-		for ( iCounter = 0; iCounter < iLastElementInAttitudeList; iCounter++ )
-		{
-			if ( iCounter != iDiceValue )
-			{
-				if ( AttitudeList[ iCounter ] == AttitudeList[ iDiceValue ] )
-				{
-          iAttitude = AttitudeList[ iDiceValue ];
-				}
-			}
-		}
-	}
-	else
-	{
-	  iAttitude = AttitudeList[ iDiceValue ];
-	}
-	*/
 }
 
 
 void AddAnAttitudeToAttitudeList( INT8 bAttitude )
 {
 	// adds an attitude to attitude list
-
-	if( iLastElementInAttitudeList < ATTITUDE_LIST_SIZE)
+	if (iLastElementInAttitudeList < ATTITUDE_LIST_SIZE)
 	{
-		// add element
-		AttitudeList[ iLastElementInAttitudeList ] = ( INT32 )bAttitude;
-
-		// increment attitude list counter
-		iLastElementInAttitudeList++;
+		AttitudeList[iLastElementInAttitudeList++] = bAttitude;
 	}
 }
 
 
 void AddSkillToSkillList( INT8 bSkill )
 {
-  // adds a skill to skills list
-
-  if( iLastElementInSkillsList < ATTITUDE_LIST_SIZE)
+	// adds a skill to skills list
+	if (iLastElementInSkillsList < ATTITUDE_LIST_SIZE)
 	{
-		// add element
-		SkillsList[ iLastElementInSkillsList ] = ( INT32 )bSkill;
-
-		// increment attitude list counter
-		iLastElementInSkillsList++;
-	}
-}
-
-
-static void RemoveIndexFromSkillsList(INT32 iIndex)
-{
-	iLastElementInSkillsList--;
-	for (size_t i = iIndex; i < iLastElementInSkillsList; i++)
-	{
-		SkillsList[i] = SkillsList[i + 1];
+		SkillsList[iLastElementInSkillsList++] = bSkill;
 	}
 }
 
@@ -332,29 +260,27 @@ static void RemoveSkillFromSkillsList(INT32 Skill)
 
 static void ValidateSkillsList(void)
 {
-	INT32	iValue;
-	MERCPROFILESTRUCT * pProfile;
-
 	// remove from the generated traits list any traits that don't match
 	// the character's skills
-	pProfile = &(gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ]);
-	if ( pProfile->bMechanical == 0 )
+	MERCPROFILESTRUCT* pProfile = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+
+	if (pProfile->bMechanical == 0)
 	{
 		// without mechanical, electronics is useless
 		RemoveSkillFromSkillsList(ELECTRONICS);
 	}
 
 	// special check for lockpicking
-	iValue = pProfile->bMechanical;
-	iValue = ( iValue * pProfile->bWisdom ) / 100;
-	iValue = ( iValue * pProfile->bDexterity ) / 100;
-	if ( iValue + gbSkillTraitBonus[ LOCKPICKING ] < 50 )
+	INT32 iValue = pProfile->bMechanical;
+	iValue = iValue * pProfile->bWisdom    / 100;
+	iValue = iValue * pProfile->bDexterity / 100;
+	if (iValue + gbSkillTraitBonus[LOCKPICKING] < 50)
 	{
 		// not good enough for lockpicking!
 		RemoveSkillFromSkillsList(LOCKPICKING);
 	}
 
-	if ( pProfile->bMarksmanship == 0 )
+	if (pProfile->bMarksmanship == 0)
 	{
 		// without marksmanship, the following traits are useless:
 		RemoveSkillFromSkillsList(AUTO_WEAPS);
@@ -365,87 +291,36 @@ static void ValidateSkillsList(void)
 
 static void CreatePlayerSkills(void)
 {
-
-  // this function will 'roll a die' and decide if any attitude does exists
-  INT32 iDiceValue = 0;
-	INT32 iCounter = 0;
-
 	ValidateSkillsList();
 
-	// roll dice
-	iDiceValue = Random( iLastElementInSkillsList );
+	iSkillA = SkillsList[Random(iLastElementInSkillsList)];
 
-	// set attitude
-	iSkillA = SkillsList[ iDiceValue ];
+	// there is no expert level these skills
+	if (iSkillA == ELECTRONICS || iSkillA == AMBIDEXT) RemoveSkillFromSkillsList(iSkillA);
 
-	// second dice value
-	iDiceValue = Random( iLastElementInSkillsList );
-
-	iSkillB = SkillsList[ iDiceValue ];
-
-	// allow expert level for generated merc so you CAN have two of the same
-	// but there is no such thing as expert level for electronics
-
-
-	while ( iSkillA == iSkillB && ( iSkillB == ELECTRONICS || iSkillB == AMBIDEXT ) )
+	if (iLastElementInSkillsList == 0)
 	{
-		// remove electronics as an option and roll again
-		RemoveIndexFromSkillsList(iDiceValue);
-		if ( iLastElementInSkillsList == 0 )
-		{
-			// ok, only one trait!
-			iSkillB = NO_SKILLTRAIT;
-			break;
-		}
-		else
-		{
-			iDiceValue = Random( iLastElementInSkillsList );
-			iSkillB = SkillsList[ iDiceValue ];
-		}
+		iSkillB = NO_SKILLTRAIT;
 	}
-
-	/*
-	// are the same,
-  // reroll until different, or until ATTITUDE_LIST_SIZE times
-	iSkillB = Random( iLastElementInSkillsList + 1 );
-
-	while( (iSkillA == iSkillB ) && ( iCounter < HOW_MANY_ROLLS_FOR_SAME_SKILL_CHECK ) )
+	else
 	{
-		// increment counter
-		iCounter++;
-
-		// next random
-    iSkillB = Random( iLastElementInSkillsList + 1 );
-
+		iSkillB = SkillsList[Random(iLastElementInSkillsList)];
 	}
-  if( iCounter == ATTITUDE_LIST_SIZE )
-	{
-    iSkillB = NO_SKILLTRAIT;
-	}
-	*/
 }
 
 
-void AddAPersonalityToPersonalityList( INT8 bPersonlity )
+void AddAPersonalityToPersonalityList(INT8 bPersonality)
 {
 	// CJC, Oct 26 98: prevent personality list from being generated
 	// because no dialogue was written to support PC personality quotes
 
 	// BUT we can manage this for PSYCHO okay
-
-	if ( bPersonlity != PSYCHO )
-	{
-		return;
-	}
+	if (bPersonality != PSYCHO) return;
 
   // will add a persoanlity to persoanlity list
-  if( iLastElementInPersonalityList < ATTITUDE_LIST_SIZE)
+  if (iLastElementInPersonalityList < ATTITUDE_LIST_SIZE)
 	{
-		// add element
-		PersonalityList[ iLastElementInPersonalityList ] = ( INT32 )bPersonlity;
-
-		// increment attitude list counter
-		iLastElementInPersonalityList++;
+		PersonalityList[iLastElementInPersonalityList++] = bPersonality;
 	}
 }
 
@@ -454,7 +329,7 @@ static void CreatePlayerPersonality(void)
 {
 	// only psycho is available since we have no quotes
 	// SO if the array is not empty, give them psycho!
-	if ( iLastElementInPersonalityList == 0 )
+	if (iLastElementInPersonalityList == 0)
 	{
 		iPersonality = NO_PERSONALITYTRAIT;
 	}
@@ -504,51 +379,35 @@ static void CreatePlayerPersonality(void)
 
 void CreatePlayersPersonalitySkillsAndAttitude( void )
 {
-
-	// creates personality, skills and attitudes from curretly built list
-
-	// personality
-	CreatePlayerPersonality( );
-
-	// skills are now created later after stats have been chosen
-  //CreatePlayerSkills( );
-
-	// attitude
-	CreatePlayerAttitude( );
+	// creates personality and attitudes from curretly built list
+	CreatePlayerPersonality();
+	CreatePlayerAttitude();
 }
 
 
 void ResetSkillsAttributesAndPersonality( void )
 {
-
 	// reset count of skills attributes and personality
-
 	iLastElementInPersonalityList = 0;
-
-	iLastElementInSkillsList = 0;
-
-	iLastElementInAttitudeList = 0;
-
+	iLastElementInSkillsList      = 0;
+	iLastElementInAttitudeList    = 0;
 }
 
 
 void ResetIncrementCharacterAttributes( void )
 {
 	// this resets any increments due to character generation
-
-	// attributes
-	iAddStrength = 0;
-	iAddDexterity = 0;
-	iAddWisdom = 0;
-	iAddAgility = 0;
-	iAddHealth = 0;
+	iAddStrength   = 0;
+	iAddDexterity  = 0;
+	iAddWisdom     = 0;
+	iAddAgility    = 0;
+	iAddHealth     = 0;
 	iAddLeadership = 0;
 
-  // skills
 	iAddMarksmanship = 0;
-	iAddExplosives = 0;
-	iAddMedical = 0;
-	iAddMechanical = 0;
+	iAddExplosives   = 0;
+	iAddMedical      = 0;
+	iAddMechanical   = 0;
 }
 
 
@@ -558,198 +417,110 @@ static void SetMercSkinAndHairColors(void);
 static void SelectMercFace(void)
 {
 	// this procedure will select the approriate face for the merc and save offsets
-
-	// grab face filename
-//  strcpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubUnusedFaceFileName , pPlayerSelectedFaceFileNames[ iPortraitNumber ]);
+	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
 
 	// now the offsets
-  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubFaceIndex = 200 + ( UINT8 )iPortraitNumber;
+  Merc->ubFaceIndex = 200 + iPortraitNumber;
 
 	// eyes
-	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usEyesX = 0;
-	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usEyesY = 0;
+	Merc->usEyesX = 0;
+	Merc->usEyesY = 0;
 
 	// mouth
-	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usMouthX = 0;
-	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usMouthY = 0;
+	Merc->usMouthX = 0;
+	Merc->usMouthY = 0;
 
 	// set merc skins and hair color
-	SetMercSkinAndHairColors( );
+	SetMercSkinAndHairColors();
 }
 
 
 static void SetMercSkinAndHairColors(void)
 {
-	enum{ PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
-	enum{ BROWNHEAD, BLACKHEAD, //black skin (only this line )
-		    WHITEHEAD,						//dark skin (this line plus all above)
-				BLONDHEAD, REDHEAD,   //pink/tan skin (this line plus all above )
-				NUMHEADS
-			};
+#	define PINKSKIN  "PINKSKIN"
+#	define TANSKIN   "TANSKIN"
+#	define DARKSKIN  "DARKSKIN"
+#	define BLACKSKIN "BLACKSKIN"
 
-	// skin strings
-	const char *sSkinStrings[]={
-		"PINKSKIN",
-		"TANSKIN",
-		"DARKSKIN",
-		"BLACKSKIN",
-	};
+#	define BROWNHEAD "BROWNHEAD"
+#	define BLACKHEAD "BLACKHEAD" // black skin till here
+#	define WHITEHEAD "WHITEHEAD" // dark skin till here
+#	define BLONDHEAD "BLONDHEAD"
+#	define REDHEAD   "REDHEAD"   // pink/tan skin till here
 
-	// the hair colors
-	const char *sHairStrings[]={
-		"BROWNHEAD",
-		"BLACKHEAD",
-		"WHITEHEAD",
-		"BLONDHEAD",
-		"REDHEAD",
-	};
-
-	// given the portrait number, set the merc's skin and hair color
-	INT16 sSkinColor = 0, sHairColor = 0;
-
-	switch( iPortraitNumber )
+	static const struct
 	{
-		case( 0 ):
-			sSkinColor = BLACKSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 1 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 2 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 3 ):
-			sSkinColor = DARKSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 4 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 5 ):
-			sSkinColor = DARKSKIN;
-			sHairColor = BLACKHEAD;
-			break;
-		case( 6 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-			break;
-		case( 7 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-			break;
-		case( 8 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 9 ):
-			sSkinColor = PINKSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 10 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BLACKHEAD;
-		break;
-		case( 11 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BLACKHEAD;
-		break;
-		case( 12 ):
-			sSkinColor = PINKSKIN;
-			sHairColor = BROWNHEAD;
-		break;
-		case( 13 ):
-			sSkinColor = BLACKSKIN;
-			sHairColor = BROWNHEAD;
-			break;
-		case( 14 ):
-			sSkinColor = TANSKIN;
-			sHairColor = REDHEAD;
-			break;
-		case( 15 ):
-			sSkinColor = TANSKIN;
-			sHairColor = BLONDHEAD;
-			break;
-	}
+		const char* Skin;
+		const char* Hair;
+	} Colors[] =
+	{
+		{ BLACKSKIN, BROWNHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ DARKSKIN,  BROWNHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ DARKSKIN,  BLACKHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ TANSKIN,   BROWNHEAD },
+		{ PINKSKIN,  BROWNHEAD },
+		{ TANSKIN,   BLACKHEAD },
+		{ TANSKIN,   BLACKHEAD },
+		{ PINKSKIN,  BROWNHEAD },
+		{ BLACKSKIN, BROWNHEAD },
+		{ TANSKIN,   REDHEAD   },
+		{ TANSKIN,   BLONDHEAD }
+	};
 
-	// now set them
-	strcpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].HAIR, sHairStrings[ sHairColor ] );
-	strcpy( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].SKIN, sSkinStrings[ sSkinColor ] );
+	Assert(iPortraitNumber < lengthof(Colors));
+	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+	strcpy(Merc->HAIR, Colors[iPortraitNumber].Hair);
+	strcpy(Merc->SKIN, Colors[iPortraitNumber].Skin);
 }
 
 
 static BOOLEAN ShouldThisMercHaveABigBody(void);
 
 
-void HandleMercStatsForChangesInFace( )
+void HandleMercStatsForChangesInFace(void)
 {
-	if ( fLoadingCharacterForPreviousImpProfile )
-	{
-		return;
-	}
+	if (fLoadingCharacterForPreviousImpProfile) return;
 
-	// now figure out skills
 	CreatePlayerSkills();
 
-	// body type
-	if ( fCharacterIsMale  )
-	{
-    // male
-		// big or regular
-		if( ShouldThisMercHaveABigBody( ) )
-		{
-      gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubBodyType = BIGMALE;
+	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
 
-			if( iSkillA == MARTIALARTS )
-			{
-				iSkillA = HANDTOHAND;
-			}
-			if( iSkillB == MARTIALARTS )
-			{
-				iSkillB = HANDTOHAND;
-			}
+	// body type
+	if (fCharacterIsMale)
+	{
+		if (ShouldThisMercHaveABigBody())
+		{
+			Merc->ubBodyType = BIGMALE;
+			if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
+			if (iSkillB == MARTIALARTS) iSkillB = HANDTOHAND;
 		}
 		else
 		{
-		  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubBodyType = REGMALE;
+			Merc->ubBodyType = REGMALE;
     }
 	}
 	else
 	{
-     // female
-	  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubBodyType = REGFEMALE;
-
-		if( iSkillA == MARTIALARTS )
-		{
-			iSkillA = HANDTOHAND;
-		}
-		if( iSkillB == MARTIALARTS )
-		{
-			iSkillB = HANDTOHAND;
-		}
+		Merc->ubBodyType = REGFEMALE;
+		if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
+		if (iSkillB == MARTIALARTS) iSkillB = HANDTOHAND;
 	}
 
-
 	// skill trait
-  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait =  ( INT8 )iSkillA;
-  gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bSkillTrait2 = ( INT8 )iSkillB;
-
+	Merc->bSkillTrait  = iSkillA;
+	Merc->bSkillTrait2 = iSkillB;
 }
 
 
 static BOOLEAN ShouldThisMercHaveABigBody(void)
 {
 	// should this merc be a big body typ
-	if ( ( iPortraitNumber == 0 ) || ( iPortraitNumber == 6 ) || ( iPortraitNumber == 7 ) )
-	{
-		if ( gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].bStrength >= 75 )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
+	return
+		(iPortraitNumber == 0 || iPortraitNumber == 6 || iPortraitNumber == 7) &&
+		gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].bStrength >= 75;
 }

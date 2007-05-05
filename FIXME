@@ -245,6 +245,7 @@ bBuddy[5], bHated[5]: indices 3 and 4 unused
 fResetContractGlow: probably always TRUE
 gMercPlacement: memory leak?
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
+gbSkillTraitBonus[]: definition not used in file
 gfOverIntTile: static
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
