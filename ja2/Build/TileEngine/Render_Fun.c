@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "WCheck.h"
 #include "WorldMan.h"
-#include "JAScreens.h"
 #include "Isometric_Utils.h"
 #include "Timer_Control.h"
 #include "RenderWorld.h"

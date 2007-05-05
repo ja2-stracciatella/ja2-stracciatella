@@ -1,7 +1,6 @@
 #include "Button_System.h"
 #include "Font.h"
 #include "MouseSystem.h"
-#include "JAScreens.h"
 #include "GameScreen.h"
 #include "StrategicMap.h"
 #include "Game_Clock.h"

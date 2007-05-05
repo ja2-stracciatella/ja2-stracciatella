@@ -1,7 +1,6 @@
 #include "Strategic.h"
 #include "Types.h"
 #include "Squads.h"
-#include "JAScreens.h"
 #include "Assignments.h"
 #include "Interface_Control.h"
 #include "Overhead.h"

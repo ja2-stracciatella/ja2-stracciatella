@@ -10,7 +10,6 @@
 #ifdef JA2
 #	include "ScreenIDs.h"
 #	include "Sys_Globals.h"
-#	include "JAScreens.h"
 #	include "Gameloop.h"
 #	include "Input.h"
 #endif

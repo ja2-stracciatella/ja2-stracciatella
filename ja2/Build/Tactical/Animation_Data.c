@@ -3,7 +3,6 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Soldier_Control.h"
-#include "JAScreens.h"
 #include "TileDef.h"
 #include "Sys_Globals.h"
 #include "Debug_Control.h"
