@@ -595,10 +595,10 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_SKIP(D, 1)
 	INJ_I16(D, Soldier->sWeightCarriedAtTurnStart)
 #ifdef _WIN32 // XXX HACK000A
+	INJ_WSTR16(D, Soldier->name, lengthof(Soldier->name))
+#else
 	INJ_SKIP(D, 2)
 	INJ_WSTR32(D, Soldier->name, lengthof(Soldier->name))
-#else
-	INJ_WSTR16(D, Soldier->name, lengthof(Soldier->name))
 #endif
 	INJ_I8(D, Soldier->bVisible)
 	INJ_I8(D, Soldier->bActive)
