@@ -46,26 +46,6 @@ static INT32 iLastElementInPersonalityList = 0;
 
 extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
 
-// positions of the face x and y for eyes and mouth for the 10 portraits
-INT16 sFacePositions[ NUMBER_OF_PLAYER_PORTRAITS ][ 4 ]=
-{
-  {0,0,0,0},
-  {0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-  {0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-};
 
 const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 {
@@ -586,12 +566,12 @@ static void SelectMercFace(void)
   gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].ubFaceIndex = 200 + ( UINT8 )iPortraitNumber;
 
 	// eyes
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].usEyesX = sFacePositions[ iPortraitNumber ][ 0 ];
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].usEyesY = sFacePositions[ iPortraitNumber ][ 1 ];
+	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usEyesX = 0;
+	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usEyesY = 0;
 
 	// mouth
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].usMouthX = sFacePositions[ iPortraitNumber ][ 2 ];
-	gMercProfiles[ PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ].usMouthY = sFacePositions[ iPortraitNumber ][ 3 ];
+	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usMouthX = 0;
+	gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].usMouthY = 0;
 
 	// set merc skins and hair color
 	SetMercSkinAndHairColors( );
