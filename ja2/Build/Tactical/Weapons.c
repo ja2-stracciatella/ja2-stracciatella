@@ -2542,7 +2542,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		// SMGs are treated as pistols for these purpose except there is a -5 penalty;
 		if (Weapon[usInHand].ubWeaponClass == SMGCLASS)
 		{
-			iChance -= AIM_PENALTY_SMG;
+			iChance -= AIM_PENALTY_SMG; // TODO0007
 		}
 
 		/*
