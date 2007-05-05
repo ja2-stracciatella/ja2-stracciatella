@@ -19,26 +19,26 @@
 #include "Font_Control.h"
 
 
-UINT32 giIMPPersonalityQuizButton[ 2 ];
-UINT32 giIMPPersonalityQuizButtonImage[ 2 ];
+static UINT32 giIMPPersonalityQuizButton[2];
+static UINT32 giIMPPersonalityQuizButtonImage[2];
 
 
 // these are the buttons for the current question
 static INT32 giIMPPersonalityQuizAnswerButton[8];
 static INT32 giIMPPersonalityQuizAnswerButtonImage[8];
 
-INT32 giPreviousQuestionButton;
-INT32 giNextQuestionButton;
+static INT32 giPreviousQuestionButton;
+static INT32 giNextQuestionButton;
 
-INT32 giPreviousQuestionButtonImage;
-INT32 giNextQuestionButtonImage;
+static INT32 giPreviousQuestionButtonImage;
+static INT32 giNextQuestionButtonImage;
 
 // this the currently highlighted answer
 INT32 iCurrentAnswer = -1;
 
 // the current quiz question
 INT32 giCurrentPersonalityQuizQuestion = 0;
-INT32 giPreviousPersonalityQuizQuestion = -1;
+static INT32 giPreviousPersonalityQuizQuestion = -1;
 INT32 giMaxPersonalityQuizQuestion = 0;
 
 // start over flag
@@ -336,78 +336,36 @@ static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
-  // will add iNumberofbuttons to the answer button list
-   INT32 iCounter = 0;
-	 CHAR16 sString[ 32 ];
-
-	for(iCounter = 0; iCounter < iNumberOfButtons; iCounter++)
+	static const GUI_CALLBACK Callback[] =
 	{
-    switch( iCounter )
-		{
-		case ( 0 ):
-			  giIMPPersonalityQuizAnswerButtonImage[0]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[0] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[0], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 97 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer0Callback);
+		BtnIMPPersonalityQuizAnswer0Callback,
+		BtnIMPPersonalityQuizAnswer1Callback,
+		BtnIMPPersonalityQuizAnswer2Callback,
+		BtnIMPPersonalityQuizAnswer3Callback,
+		BtnIMPPersonalityQuizAnswer4Callback,
+		BtnIMPPersonalityQuizAnswer5Callback,
+		BtnIMPPersonalityQuizAnswer6Callback,
+		BtnIMPPersonalityQuizAnswer7Callback
+	};
 
-			break;
-		case ( 1 ):
-			  giIMPPersonalityQuizAnswerButtonImage[1]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[1] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[1], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer1Callback);
-
-			break;
-		case ( 2 ):
-			  giIMPPersonalityQuizAnswerButtonImage[2]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[2] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[2], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 197 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer2Callback);
-
-			break;
-		case ( 3 ):
-			  giIMPPersonalityQuizAnswerButtonImage[3]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[3] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[3], LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 247 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer3Callback);
-
-			break;
-		case ( 4 ):
-			  giIMPPersonalityQuizAnswerButtonImage[4]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[4] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[4], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 97 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer4Callback);
-
-			break;
-		case ( 5 ):
-			  giIMPPersonalityQuizAnswerButtonImage[5]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[5] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[5], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 147 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer5Callback);
-
-			break;
-		case ( 6 ):
-			  giIMPPersonalityQuizAnswerButtonImage[6]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[6] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[6], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 197 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer6Callback);
-
-			break;
-		case ( 7 ):
-			  giIMPPersonalityQuizAnswerButtonImage[7]=  LoadButtonImage( "LAPTOP/button_6.sti" ,-1,0,-1,1,-1 );
-	      giIMPPersonalityQuizAnswerButton[7] = QuickCreateButton( giIMPPersonalityQuizAnswerButtonImage[7], LAPTOP_SCREEN_UL_X +  ( BTN_SECOND_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 247 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-										MSYS_NO_CALLBACK, BtnIMPPersonalityQuizAnswer7Callback);
-
-			break;
-		}
-		swprintf( sString, lengthof(sString), L"%d", iCounter + 1 );
-		SpecifyButtonUpTextColors( giIMPPersonalityQuizAnswerButton[ iCounter ], FONT_WHITE, FONT_BLACK );
-		SpecifyButtonDownTextColors( giIMPPersonalityQuizAnswerButton[ iCounter ], FONT_WHITE, FONT_BLACK  );
-		SpecifyButtonTextOffsets( giIMPPersonalityQuizAnswerButton[ iCounter ], +23, +12, TRUE );
-		SpecifyButtonFont( giIMPPersonalityQuizAnswerButton[ iCounter ], FONT12ARIAL );
-		SpecifyButtonText( giIMPPersonalityQuizAnswerButton[ iCounter ], sString );
-    SetButtonCursor( giIMPPersonalityQuizAnswerButton[ iCounter ], CURSOR_WWW);
+  // will add iNumberofbuttons to the answer button list
+	for (UINT32 i = 0; i < iNumberOfButtons; i++)
+	{
+		INT32 XLoc = LAPTOP_SCREEN_UL_X + (i < 4 ? BTN_FIRST_COLUMN_X : BTN_SECOND_COLUMN_X);
+		INT32 YLoc = LAPTOP_SCREEN_WEB_UL_Y + 97 + i % 4 * 50;
+		INT32 Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
+		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
+		Assert(i < lengthof(Callback));
+		INT32 Button = QuickCreateButton(Image, XLoc, YLoc, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CALLBACK, Callback[i]);
+		giIMPPersonalityQuizAnswerButton[i] = Button;
+		SpecifyButtonUpTextColors(Button, FONT_WHITE, FONT_BLACK);
+		SpecifyButtonDownTextColors(Button, FONT_WHITE, FONT_BLACK);
+		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
+		SpecifyButtonFont(Button, FONT12ARIAL);
+		wchar_t sString[32];
+		swprintf(sString, lengthof(sString), L"%d", i + 1);
+		SpecifyButtonText(Button, sString);
+		SetButtonCursor(Button, CURSOR_WWW);
 	}
 
 	// previous is current
@@ -430,122 +388,65 @@ static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 static void CheckStateOfTheConfirmButton(void);
 
 
-static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason)
+static void QuizAnswerCallback(INT32 Answer, GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		ResetQuizAnswerButtons();
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 0;
+		iCurrentAnswer = Answer;
 		PrintImpText();
 		PrintQuizQuestionNumber();
 		fReDrawCharProfile = TRUE;
 	}
+}
+
+
+static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason)
+{
+	QuizAnswerCallback(0, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 1;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(1, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 2;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(2, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 3;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(3, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 4;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(4, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 5;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(5, btn, reason);
 }
 
 static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 6;
-		PrintIMPPersonalityQuizQuestionAndAnsers();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(6, btn, reason);
 }
 
 
 static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		ResetQuizAnswerButtons();
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = 7;
-		PrintImpText();
-		PrintQuizQuestionNumber();
-		fReDrawCharProfile = TRUE;
-	}
+	QuizAnswerCallback(7, btn, reason);
 }
 
 
@@ -600,429 +501,168 @@ static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason
 
 static void ResetQuizAnswerButtons(void)
 {
-
-	INT32 iCounter = 0;
-  INT32 iCnt = 0;
-
 	// how many buttons to reset?
-	switch( giCurrentPersonalityQuizQuestion  )
+	INT32 iCounter;
+	switch (giCurrentPersonalityQuizQuestion)
 	{
-		case ( -1 ):
-			// do nothing
-			return;
-			break;
-		case ( 0 ):
-		 // 6 buttons
-	   iCounter =6;
-		break;
-		case ( 3 ):
-			// 5 buttons
-     iCounter = 5;
-    break;
-		case ( 5 ):
-			// 6 buttons
-			iCounter = 5;
-		break;
-		case ( 10 ):
-			// 6 buttons
-			iCounter = 5;
-		break;
-		case ( 11 ):
-			// 9 buttons
-      iCounter = 8;
-		break;
-		default:
-      // 4 buttons
-      iCounter = 4;
-		break;
+		case -1: return; // do nothing
+		case  0: iCounter = 6; break;
+		case  3: iCounter = 5; break;
+		case  5: iCounter = 5; break;
+		case 10: iCounter = 5; break;
+		case 11: iCounter = 8; break;
+		default: iCounter = 4; break;
 	}
 
 	// now run through and reset the buttons
-	for(iCnt = 0; iCnt < iCounter; iCnt++)
+	for (INT32 i = 0; i < iCounter; i++)
 	{
-		ButtonList[ giIMPPersonalityQuizAnswerButton[ iCnt ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		ButtonList[giIMPPersonalityQuizAnswerButton[i]]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
 
 static void CompileQuestionsInStatsAndWhatNot(void)
 {
-  // one BIG case/switch statement to determine what values are added where
-  INT32 iCurrentQuestion = 0;
-
-	for( iCurrentQuestion= 0; iCurrentQuestion < MAX_NUMBER_OF_IMP_QUESTIONS; iCurrentQuestion++ )
+	switch (iQuizAnswerList[0])
 	{
-		switch( iCurrentQuestion )
-		{
+		case 0: AddSkillToSkillList(fCharacterIsMale ? MARTIALARTS : AMBIDEXT); break;
+		case 1: AddAnAttitudeToAttitudeList(ATT_LONER);                         break;
+		case 2: AddSkillToSkillList(HANDTOHAND);                                break;
+		case 3: AddSkillToSkillList(LOCKPICKING);                               break;
+		case 4: AddSkillToSkillList(THROWING);                                  break;
+		case 5: AddAnAttitudeToAttitudeList(ATT_OPTIMIST);                      break;
+	}
 
-		  // ok, run throught he list of questions
-		  case ( 0 ):
-			  switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						if( fCharacterIsMale )
-						{
-							// Martial arts
-							AddSkillToSkillList( MARTIALARTS );
-						}
-						else
-						{
-							// for women, ambidexterious
-							AddSkillToSkillList( AMBIDEXT );
-						}
-				  break;
-          case( 1 ):
-						AddAnAttitudeToAttitudeList(  ATT_LONER );
-					break;
-					case( 2 ):
-							// hand to hand
-						AddSkillToSkillList( HANDTOHAND );
-					break;
-          case( 3 ):
-					 // lock picking
-            AddSkillToSkillList( LOCKPICKING );
-					break;
-					case( 4 ):
-					  // throwing
-						AddSkillToSkillList( THROWING );
-					break;
-					case( 5 ):
-					  // optimist
-						 AddAnAttitudeToAttitudeList( ATT_OPTIMIST );
-					break;
-				}
-		  break;
-	    case ( 1 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// teaching
-             AddSkillToSkillList( TEACHING );
-				  break;
-          case( 1 ):
-					 AddSkillToSkillList( STEALTHY );
-					break;
-					case( 2 ):
-					 // psycho
-						AddAPersonalityToPersonalityList( PSYCHO );
-					break;
-          case( 3 ):
-           	AddAnAttitudeToAttitudeList(  ATT_FRIENDLY );
-					break;
-				}
-		  break;
-	    case ( 2 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// lock picking
-            AddSkillToSkillList( LOCKPICKING );
-				  break;
-          case( 1 ):
-					  // arrogant
-						AddAnAttitudeToAttitudeList( ATT_ARROGANT );
-					break;
-					case( 2 ):
-						AddSkillToSkillList( STEALTHY );
-					break;
-          case( 3 ):
-							// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
+	switch (iQuizAnswerList[1])
+	{
+		case 0: AddSkillToSkillList(TEACHING);             break;
+		case 1: AddSkillToSkillList(STEALTHY);             break;
+		case 2: AddAPersonalityToPersonalityList(PSYCHO);  break;
+		case 3: AddAnAttitudeToAttitudeList(ATT_FRIENDLY); break;
+	}
 
-				}
-		  break;
-	    case ( 3 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// automatic weapons
-            AddSkillToSkillList( AUTO_WEAPS );
-				  break;
-          case( 1 ):
-						// friendly
-						AddAnAttitudeToAttitudeList(  ATT_FRIENDLY );
+	switch (iQuizAnswerList[2])
+	{
+		case 0: AddSkillToSkillList(LOCKPICKING);          break;
+		case 1: AddAnAttitudeToAttitudeList(ATT_ARROGANT); break;
+		case 2: AddSkillToSkillList(STEALTHY);             break;
+		case 3: AddAnAttitudeToAttitudeList(ATT_NORMAL);   break;
+	}
 
-					break;
-					case( 2 ):
-							// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
-          case( 3 ):
-						// asshole
-						 AddAnAttitudeToAttitudeList( ATT_ASSHOLE );
-					break;
-					case( 4 ):
-					  AddAnAttitudeToAttitudeList(  ATT_LONER );
-					break;
+	switch (iQuizAnswerList[3])
+	{
+		case 0: AddSkillToSkillList(AUTO_WEAPS);           break;
+		case 1: AddAnAttitudeToAttitudeList(ATT_FRIENDLY); break;
+		case 2: AddAnAttitudeToAttitudeList(ATT_NORMAL);   break;
+		case 3: AddAnAttitudeToAttitudeList(ATT_ASSHOLE);  break;
+		case 4: AddAnAttitudeToAttitudeList(ATT_LONER);    break;
+	}
 
-				}
-		  break;
-      case ( 4 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-					  // coward
-						AddAnAttitudeToAttitudeList( ATT_COWARD );
-				  break;
-          case( 1 ):
-						// none
-					break;
-					case( 2 ):
-							// aggressive
-						AddAnAttitudeToAttitudeList( ATT_AGGRESSIVE );
-					break;
-          case( 3 ):
-						// none
-					break;
-				}
-		  break;
-		  case ( 5 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-					 // coward
-						AddAnAttitudeToAttitudeList( ATT_COWARD );
-				  break;
-          case( 1 ):
-						AddSkillToSkillList( NIGHTOPS );
-					break;
-					case( 2 ):
-						// dont like boxes much
-            AddAPersonalityToPersonalityList( CLAUSTROPHOBIC );
-					break;
-          case( 3 ):
-						// none
-					break;
-					case( 4 ):
-					 // none
-					break;
-				}
-		  break;
-		  case ( 6 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// electronics
-            AddSkillToSkillList( ELECTRONICS );
-				  break;
-          case( 1 ):
-							//knifing
-            AddSkillToSkillList( KNIFING );
-					break;
-					case( 2 ):
-					 AddSkillToSkillList( NIGHTOPS );
-					break;
-          case( 3 ):
-						 // none
-					break;
-				}
-		  break;
-		  case ( 7 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// ambidexterous
-						AddSkillToSkillList( AMBIDEXT );
-				  break;
-          case( 1 ):
-           // none
-					break;
-					case( 2 ):
-           // optimist
-					 AddAnAttitudeToAttitudeList( ATT_OPTIMIST );
-					break;
-          case( 3 ):
-            // psycho
-						AddAPersonalityToPersonalityList( PSYCHO );
-					break;
-				}
-		  break;
-		  case ( 8 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-					// forgetful
-						AddAPersonalityToPersonalityList( FORGETFUL );
-				  break;
-          case( 1 ):
-						// none
-					case( 2 ):
-							// pessimist
-						AddAnAttitudeToAttitudeList( ATT_PESSIMIST );
-					break;
-          case( 3 ):
-					 // nervous
-						AddAPersonalityToPersonalityList( NERVOUS );
-					break;
-				}
-		  break;
-		  case ( 9 ):
+	switch (iQuizAnswerList[4])
+	{
+		// XXX TODO0006 the effects seems odd. answer 3 is even more aggressive than answer 2
+		case 0: AddAnAttitudeToAttitudeList(ATT_COWARD);     break;
+		case 1: break; // none
+		case 2: AddAnAttitudeToAttitudeList(ATT_AGGRESSIVE); break;
+		case 3: break; // none
+	}
 
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// none
-				  break;
-          case( 1 ):
-					 	// pessimist
-						AddAnAttitudeToAttitudeList( ATT_PESSIMIST );
-					break;
-					case( 2 ):
-						// asshole
-						 AddAnAttitudeToAttitudeList( ATT_ASSHOLE );
-					break;
-          case( 3 ):
-					 // nervous
-						AddAPersonalityToPersonalityList( NERVOUS );
-					break;
-				}
-		  break;
-		  case ( 10 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-					case( 0 ):
-					  // none
-				  break;
-          case( 1 ):
-					 // teaching
-             AddSkillToSkillList( TEACHING );
-					break;
-					case( 2 ):
-					 	// aggressive
-						AddAnAttitudeToAttitudeList( ATT_AGGRESSIVE );
-					break;
-          case( 3 ):
-					 	// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
-					case( 4 ):
-						// none
-					break;
-				}
-		  break;
-		  case ( 11 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						if( fCharacterIsMale )
-						{
-							// Martial arts
-							AddSkillToSkillList( MARTIALARTS );
-						}
-						else
-						{
-							// for women, ambidexterious
-							AddSkillToSkillList( AMBIDEXT );
-						}
-				  break;
-          case( 1 ):
-							//knifing
-            AddSkillToSkillList( KNIFING );
-					break;
-					case( 2 ):
-					  // none
-					break;
-          case( 3 ):
-						// automatic weapons
-            AddSkillToSkillList( AUTO_WEAPS );
-					break;
-					case( 4 ):
-							// hand to hand
-						AddSkillToSkillList( HANDTOHAND );
-					break;
-					case( 5 ):
-					  // electronics
-            AddSkillToSkillList( ELECTRONICS );
-					break;
-					case( 6 ):
-					 // ashole
-					break;
-					case( 7 ):
-					 // none
-					break;
-				}
-		  break;
-		  case ( 12 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-           // forgetful
-						AddAPersonalityToPersonalityList( FORGETFUL );
-					break;
-          case( 1 ):
-					  	// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
-					case( 2 ):
-							// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
-          case( 3 ):
-					 // heat problems
-            AddAPersonalityToPersonalityList( HEAT_INTOLERANT );
-					break;
-				}
-		  break;
-		  case ( 13 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// dont like boxes much
-            AddAPersonalityToPersonalityList( CLAUSTROPHOBIC );
-				  break;
-          case( 1 ):
-							// normal
-						AddAnAttitudeToAttitudeList( ATT_NORMAL );
-					break;
-					case( 2 ):
-					  // heat problems
-            AddAPersonalityToPersonalityList( HEAT_INTOLERANT );
-					break;
-          case( 3 ):
-					  // none
-					break;
-				}
-		  break;
-		  case ( 14 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// throwing
-            AddSkillToSkillList( THROWING );
-				  break;
-          case( 1 ):
-						// ambidexterous
-						AddSkillToSkillList( AMBIDEXT );
-					break;
-					case( 3 ):
-					  // none
-					break;
-          case( 2 ):
-					 AddAnAttitudeToAttitudeList( ATT_ARROGANT );
-					break;
+	switch (iQuizAnswerList[5])
+	{
+		case 0: AddAnAttitudeToAttitudeList(ATT_COWARD);          break;
+		case 1: AddSkillToSkillList(NIGHTOPS);                    break;
+		case 2: AddAPersonalityToPersonalityList(CLAUSTROPHOBIC); break;
+		case 3: break; // none
+		case 4: break; // none
+	}
 
-				}
-		  break;
-		  case ( 15 ):
-				switch( iQuizAnswerList[ iCurrentQuestion ] )
-				{
-				  case( 0 ):
-						// none !
-				  break;
-          case( 1 ):
-						// none !
-					break;
-					case( 2 ):
-						// none !
-					break;
-          case( 3 ):
-						// none !
-					break;
-				}
-		  break;
-		}
-  }
+	switch (iQuizAnswerList[6])
+	{
+		case 0: AddSkillToSkillList(ELECTRONICS); break;
+		case 1: AddSkillToSkillList(KNIFING);     break;
+		case 2: AddSkillToSkillList(NIGHTOPS);    break;
+		case 3: break; // none
+	}
+
+	switch (iQuizAnswerList[7])
+	{
+		case 0: AddSkillToSkillList(AMBIDEXT);             break;
+		case 1: break; // none
+		case 2: AddAnAttitudeToAttitudeList(ATT_OPTIMIST); break;
+		case 3: AddAPersonalityToPersonalityList(PSYCHO);  break;
+	}
+
+	switch (iQuizAnswerList[8])
+	{
+		case 0: AddAPersonalityToPersonalityList(FORGETFUL); break;
+		case 1: // none // XXX TODO0006 fallthrough? code and comment disagree
+		case 2: AddAnAttitudeToAttitudeList(ATT_PESSIMIST);  break;
+		case 3: AddAPersonalityToPersonalityList(NERVOUS);   break;
+	}
+
+	switch (iQuizAnswerList[9])
+	{
+		case 0: break; // none
+		case 1: AddAnAttitudeToAttitudeList(ATT_PESSIMIST); break;
+		case 2: AddAnAttitudeToAttitudeList(ATT_ASSHOLE);   break;
+		case 3: AddAPersonalityToPersonalityList(NERVOUS);  break;
+	}
+
+	switch (iQuizAnswerList[10])
+	{
+		case 0: break; // none
+		case 1: AddSkillToSkillList(TEACHING);               break;
+		case 2: AddAnAttitudeToAttitudeList(ATT_AGGRESSIVE); break;
+		case 3: AddAnAttitudeToAttitudeList(ATT_NORMAL);     break;
+		case 4: break; // none
+	}
+
+	switch (iQuizAnswerList[11])
+	{
+		case 0: AddSkillToSkillList(fCharacterIsMale ? MARTIALARTS : AMBIDEXT); break;
+		case 1: AddSkillToSkillList(KNIFING);                                   break;
+		case 2: break; // none
+		case 3: AddSkillToSkillList(AUTO_WEAPS);                                break;
+		case 4: AddSkillToSkillList(HANDTOHAND);                                break;
+		case 5: AddSkillToSkillList(ELECTRONICS);                               break;
+		case 6: break; // asshole // XXX TODO0006 code and commend disagree
+		case 7: break; // none
+	}
+
+	switch (iQuizAnswerList[12])
+	{
+		case 0: AddAPersonalityToPersonalityList(FORGETFUL);       break;
+		case 1: AddAnAttitudeToAttitudeList(ATT_NORMAL);           break;
+		case 2: AddAnAttitudeToAttitudeList(ATT_NORMAL);           break;
+		case 3: AddAPersonalityToPersonalityList(HEAT_INTOLERANT); break;
+	}
+
+	switch (iQuizAnswerList[13])
+	{
+		case 0: AddAPersonalityToPersonalityList(CLAUSTROPHOBIC);  break;
+		case 1: AddAnAttitudeToAttitudeList(ATT_NORMAL);           break;
+		case 2: AddAPersonalityToPersonalityList(HEAT_INTOLERANT); break;
+		case 3: break; // none
+	}
+
+	switch (iQuizAnswerList[14])
+	{
+		case 0: AddSkillToSkillList(THROWING);             break;
+		case 1: AddSkillToSkillList(AMBIDEXT);             break;
+		// XXX TODO0006 cases 2 and 3 probably interchanged
+		case 3: break; // none
+		case 2: AddAnAttitudeToAttitudeList(ATT_ARROGANT); break;
+	}
+
+	switch (iQuizAnswerList[15])
+	{
+		// XXX TODO0006 this question has no effect
+		case 0: break; // none !
+		case 1: break; // none !
+		case 2: break; // none !
+		case 3: break; // none !
+	}
 }
 
 

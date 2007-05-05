@@ -31,15 +31,18 @@
 
 #define HOW_MANY_ROLLS_FOR_SAME_SKILL_CHECK 20
 
-INT32 AttitudeList[ ATTITUDE_LIST_SIZE ];
-INT32 iLastElementInAttitudeList = 0;
 
-INT32 SkillsList[ ATTITUDE_LIST_SIZE ];
-INT32 BackupSkillsList[ ATTITUDE_LIST_SIZE ];
-INT32 iLastElementInSkillsList = 0;
+#define ATTITUDE_LIST_SIZE 20
 
-INT32 PersonalityList[ ATTITUDE_LIST_SIZE ];
-INT32 iLastElementInPersonalityList = 0;
+
+static INT32 AttitudeList[ ATTITUDE_LIST_SIZE ];
+static INT32 iLastElementInAttitudeList = 0;
+
+static INT32 SkillsList[ ATTITUDE_LIST_SIZE ];
+static INT32 iLastElementInSkillsList = 0;
+
+static INT32 PersonalityList[ ATTITUDE_LIST_SIZE ];
+static INT32 iLastElementInPersonalityList = 0;
 
 extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
 
@@ -320,53 +323,36 @@ void AddSkillToSkillList( INT8 bSkill )
 }
 
 
-static void RemoveSkillFromSkillsList(INT32 iIndex)
+static void RemoveIndexFromSkillsList(INT32 iIndex)
 {
-	INT32		iLoop;
-
-	// remove a skill from the index given and shorten the list
-	if ( iIndex < iLastElementInSkillsList )
+	iLastElementInSkillsList--;
+	for (size_t i = iIndex; i < iLastElementInSkillsList; i++)
 	{
-		memset( BackupSkillsList, 0, ATTITUDE_LIST_SIZE * sizeof( INT32 ) );
-
-		// use the backup array to create a version of the array without
-		// this index
-		for ( iLoop = 0; iLoop < iIndex; iLoop++ )
-		{
-			BackupSkillsList[ iLoop ] = SkillsList[ iLoop ];
-		}
-		for ( iLoop = iIndex + 1; iLoop < iLastElementInSkillsList; iLoop++ )
-		{
-			BackupSkillsList[ iLoop - 1 ] = SkillsList[ iLoop ];
-		}
-		// now copy this over to the skills list
-		memcpy( SkillsList, BackupSkillsList, ATTITUDE_LIST_SIZE * sizeof( INT32 ) );
-
-		// reduce recorded size by 1
-		iLastElementInSkillsList--;
+		SkillsList[i] = SkillsList[i + 1];
 	}
 }
 
 
-static INT32 FindSkillInSkillsList(INT32 iSkill)
+static void RemoveSkillFromSkillsList(INT32 Skill)
 {
-	INT32		iLoop;
-
-	for ( iLoop = 0; iLoop < iLastElementInSkillsList; iLoop++ )
+	size_t d = 0;
+	for (size_t s = 0; s < iLastElementInSkillsList; s++)
 	{
-		if ( SkillsList[ iLoop ] == iSkill )
+		if (SkillsList[s] == Skill)
 		{
-			return( iLoop );
+			iLastElementInSkillsList--;
+		}
+		else
+		{
+			SkillsList[d++] = SkillsList[s];
 		}
 	}
-
-	return( -1 );
 }
 
 
 static void ValidateSkillsList(void)
 {
-	INT32	iIndex, iValue;
+	INT32	iValue;
 	MERCPROFILESTRUCT * pProfile;
 
 	// remove from the generated traits list any traits that don't match
@@ -375,12 +361,7 @@ static void ValidateSkillsList(void)
 	if ( pProfile->bMechanical == 0 )
 	{
 		// without mechanical, electronics is useless
-		iIndex = FindSkillInSkillsList( ELECTRONICS );
-		while ( iIndex != -1 )
-		{
-			RemoveSkillFromSkillsList( iIndex );
-			iIndex = FindSkillInSkillsList( ELECTRONICS );
-		}
+		RemoveSkillFromSkillsList(ELECTRONICS);
 	}
 
 	// special check for lockpicking
@@ -390,33 +371,14 @@ static void ValidateSkillsList(void)
 	if ( iValue + gbSkillTraitBonus[ LOCKPICKING ] < 50 )
 	{
 		// not good enough for lockpicking!
-
-		// so is lockpicking
-		iIndex = FindSkillInSkillsList( LOCKPICKING );
-		while ( iIndex != -1 )
-		{
-			RemoveSkillFromSkillsList( iIndex );
-			iIndex = FindSkillInSkillsList( LOCKPICKING );
-		}
+		RemoveSkillFromSkillsList(LOCKPICKING);
 	}
 
 	if ( pProfile->bMarksmanship == 0 )
 	{
 		// without marksmanship, the following traits are useless:
-		// auto weapons, heavy weapons
-		iIndex = FindSkillInSkillsList( AUTO_WEAPS );
-		while ( iIndex != -1 )
-		{
-			RemoveSkillFromSkillsList( iIndex );
-			iIndex = FindSkillInSkillsList( AUTO_WEAPS );
-		}
-		// so is lockpicking
-		iIndex = FindSkillInSkillsList( HEAVY_WEAPS );
-		while ( iIndex != -1 )
-		{
-			RemoveSkillFromSkillsList( iIndex );
-			iIndex = FindSkillInSkillsList( HEAVY_WEAPS );
-		}
+		RemoveSkillFromSkillsList(AUTO_WEAPS);
+		RemoveSkillFromSkillsList(HEAVY_WEAPS);
 	}
 }
 
@@ -448,7 +410,7 @@ static void CreatePlayerSkills(void)
 	while ( iSkillA == iSkillB && ( iSkillB == ELECTRONICS || iSkillB == AMBIDEXT ) )
 	{
 		// remove electronics as an option and roll again
-		RemoveSkillFromSkillsList( iDiceValue );
+		RemoveIndexFromSkillsList(iDiceValue);
 		if ( iLastElementInSkillsList == 0 )
 		{
 			// ok, only one trait!
