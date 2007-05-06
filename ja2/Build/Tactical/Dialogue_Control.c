@@ -1802,29 +1802,16 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
    // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
-			const char* pFilename;
-			if ( DialogueDataFileExistsForProfile( ubCharacterNum, 0, FALSE, &pFilename ) )
+			const char* pFilename = GetDialogueDataFilename(ubCharacterNum, 0, FALSE);
+			if (!LoadEncryptedDataFromFile(pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize) ||
+					zDialogueText[0] == L'\0')
 			{
-				LoadEncryptedDataFromFile( pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize );
-				if(zDialogueText[0] == 0)
-        {
-					swprintf( zDialogueText, Length, L"I have no text in the EDT file ( %d ) %ls", usQuoteNum, pFilename );
-
+				swprintf(zDialogueText, Length, L"I have no text in the EDT file (%d) %hs", usQuoteNum, pFilename);
 #ifndef JA2BETAVERSION
-          return( FALSE );
-#endif
-        }
-			}
-			else
-			{
-				swprintf( zDialogueText, Length, L"I have no text in the file ( %d ) %ls", usQuoteNum , pFilename );
-
-#ifndef JA2BETAVERSION
-          return( FALSE );
+				return( FALSE );
 #endif
 			}
    }
-
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
 	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, TRUE);
