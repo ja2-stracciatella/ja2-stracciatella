@@ -1,6 +1,5 @@
 (BOOLEAN): incorrect/unnecessary casts
 (DOUBLE): casts placed wrong
-(FADE_FUNCTION): remove casts
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication

@@ -478,12 +478,6 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 */
 	if ( gubScreenCount == 1 )
 	{
-		// OK , FADE HERE
-		//BeginFade( INIT_SCREEN, 35, FADE_OUT_REALFADE, 5 );
-		//BeginFade( INIT_SCREEN, 35, FADE_OUT_VERSION_FASTER, 25 );
-		//BeginFade( INIT_SCREEN, 35, FADE_OUT_VERSION_SIDE, 0 );
-
-
 		gubScreenCount = 2;
 		return( TRUE );
 	}
