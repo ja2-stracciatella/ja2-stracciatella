@@ -13,7 +13,6 @@
 #include "Font_Control.h"
 #include "Message.h"
 #include "Tile_Cache.h"
-#include "Smoothing_Utils.h"
 #include "SaveLoadMap.h"
 #include "Random.h"
 #include "Render_Fun.h"

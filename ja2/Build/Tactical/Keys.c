@@ -3,7 +3,6 @@
 #include "Soldier_Control.h"
 #include "Keys.h"
 #include "Debug.h"
-#include "Smoothing_Utils.h"
 #include "SkillCheck.h"
 #include "OppList.h"
 #include "Items.h"

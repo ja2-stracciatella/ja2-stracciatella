@@ -70,6 +70,7 @@ GetNumberOfDeadOnPastTeam(): callers
 GetNumberOfLeftOnPastTeam(): callers
 GetNumberOfMercsOnPlayersTeam(): callers
 GetNumberOfPastMercsOnPlayersTeam(): callers
+GetQuoteBitNumberFromQuoteID(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
