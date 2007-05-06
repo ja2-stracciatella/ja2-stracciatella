@@ -148,7 +148,6 @@ typedef enum
 
 INT16 AdvanceToFiringRange( SOLDIERTYPE * pSoldier, INT16 sClosestOpponent );
 
-BOOLEAN AimingGun(SOLDIERTYPE *pSoldier);
 void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot);
 void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAttack);
 void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab );

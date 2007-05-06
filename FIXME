@@ -4,7 +4,6 @@ ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
 AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
-AimingGun(): empty
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
 BlitMineText(): code duplication
 BlitMineText(): unnecessary wcscpy()

@@ -137,13 +137,6 @@ BOOLEAN InitAI( void )
 }
 
 
-
-BOOLEAN AimingGun(SOLDIERTYPE *pSoldier)
-{
-	return(FALSE);
-}
-
-
 static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier);
 static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier);
 

@@ -3690,7 +3690,7 @@ bCanAttack = FALSE;
 				{
 					// we might want to turn before lying down!
 					if ( (!gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints - GetAPsToChangeStance( pSoldier, (INT8) pSoldier->usActionData )) &&
-								(((pSoldier->bAIMorale > MORALE_HOPELESS) || ubCanMove) && !AimingGun(pSoldier)) )
+							(pSoldier->bAIMorale > MORALE_HOPELESS || ubCanMove))
 					{
 						// determine the location of the known closest opponent
 						// (don't care if he's conscious, don't care if he's reachable at all)
@@ -3746,8 +3746,7 @@ bCanAttack = FALSE;
 	{
 	 // hopeless guys shouldn't waste their time this way, UNLESS they CAN move
 	 // but chose not to to get this far (which probably means they're cornered)
-	 // ALSO, don't bother turning if we're already aiming a gun
-	 if ( !gfHiddenInterrupt && ((pSoldier->bAIMorale > MORALE_HOPELESS) || ubCanMove) && !AimingGun(pSoldier))
+		if (!gfHiddenInterrupt && (pSoldier->bAIMorale > MORALE_HOPELESS || ubCanMove))
 	 {
 		 // determine the location of the known closest opponent
 		 // (don't care if he's conscious, don't care if he's reachable at all)
