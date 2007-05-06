@@ -490,22 +490,18 @@ BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
 	return( TRUE );
 }
 
-BOOLEAN	GetTileTypeLogicalHeight( UINT32 fType, UINT8 *pubLogHeight )
-{
-	*pubLogHeight = gTileTypeLogicalHeight[ fType ];
 
-	return( TRUE );
+UINT8 GetTileTypeLogicalHeight(UINT32 fType)
+{
+	return gTileTypeLogicalHeight[fType];
 }
 
 
 static BOOLEAN LandTypeHeigher(UINT32 uiDestType, UINT32 uiSrcType)
 {
-  UINT8					ubDestLogHeight;
-  UINT8					ubSrcLogHeight;
-
 	// Get logical height of type at head and type we wish to paste
-	GetTileTypeLogicalHeight( uiDestType, &ubDestLogHeight );
-	GetTileTypeLogicalHeight( uiSrcType, &ubSrcLogHeight );
+	UINT8 ubDestLogHeight = GetTileTypeLogicalHeight(uiDestType);
+	UINT8 ubSrcLogHeight  = GetTileTypeLogicalHeight(uiSrcType);
 
 	return( ubDestLogHeight > ubSrcLogHeight );
 }
@@ -514,7 +510,6 @@ static BOOLEAN LandTypeHeigher(UINT32 uiDestType, UINT32 uiSrcType)
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
 	LEVELNODE		*pLand		 = NULL;
-  UINT8					ubSrcLogHeight=0;
 	UINT32				fTileType=0;
 	UINT8					level = 0;
 	UINT8					ubSrcTypeLevel=0;
@@ -522,7 +517,7 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
-	GetTileTypeLogicalHeight( uiSrcType, &ubSrcLogHeight );
+	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(uiSrcType);
 
 	// Check that src type is not head
 	if ( GetTypeLandLevel( iMapIndex, uiSrcType, &ubSrcTypeLevel ) )
@@ -562,7 +557,6 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLevel)
 {
 	LEVELNODE		*pLand		 = NULL;
-  UINT8					ubSrcLogHeight;
 	UINT32				fTileType=0;
 	UINT8					level = 0;
 	UINT8					ubSrcTypeLevel;
@@ -570,7 +564,7 @@ static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLe
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
-	GetTileTypeLogicalHeight( uiSrcType, &ubSrcLogHeight );
+	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(uiSrcType);
 
 	GetTypeLandLevel( iMapIndex, uiSrcType, &ubSrcTypeLevel );
 

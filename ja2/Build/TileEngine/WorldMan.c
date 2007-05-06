@@ -954,7 +954,6 @@ BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiH
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
 	UINT32			fTileType;
-  UINT8					ubSrcLogHeight;
 
 	*pubNumHigherTypes = 0;
 	*puiHigherTypes = NULL;
@@ -972,7 +971,7 @@ BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiH
 	pLand = pOldLand;
 
 	// Get src height
-	GetTileTypeLogicalHeight( fSrcType, &ubSrcLogHeight );
+	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(fSrcType);
 
 	// Look through all objects and Search for height
 	while( pLand != NULL )
@@ -1011,13 +1010,12 @@ static BOOLEAN SetLowerLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT16 usIn
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
 	UINT32			fTileType;
-  UINT8					ubSrcLogHeight;
 	UINT16			NewTile;
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
 	// Get src height
-	GetTileTypeLogicalHeight( fSrcType, &ubSrcLogHeight );
+	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(fSrcType);
 
 	// Look through all objects and Search for height
 	while( pLand != NULL )
