@@ -25,7 +25,6 @@ CreateUpdateBoxStrings(): swprintf() + AddMonoString()
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
-DialogueDataFileExistsForProfile(): interface complicated
 DisplayMercStats(): callers
 DisplayMovingTitleBar(): callers
 DisplayOnScreenNumber(): callers

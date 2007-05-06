@@ -57,7 +57,6 @@
 #include "SoundMan.h"
 #include "MemMan.h"
 #include "Button_System.h"
-#include "FileMan.h"
 #include "Container.h"
 
 
@@ -1703,7 +1702,7 @@ static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharact
 }
 
 
-static const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
+const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
 {
 	static char zFileName[164];
 	UINT8		ubFileNumID;
@@ -1781,19 +1780,6 @@ static const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteN
 	}
 
 	return( zFileName );
-}
-
-// Used to see if the dialog text file exists
-BOOLEAN DialogueDataFileExistsForProfile(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile, const char** ppStr)
-{
-	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, fWavFile);
-
-	if ( ppStr )
-	{
-		(*ppStr ) = pFilename;
-	}
-
-	return( FileExists( pFilename ) );
 }
 
 

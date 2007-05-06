@@ -234,7 +234,7 @@ BOOLEAN LoadMercProfiles(void)
 		ExtractMercProfileUTF16(Data, &gMercProfiles[uiLoop]);
 
 		//if the Dialogue exists for the merc, allow the merc to be hired
-		if( DialogueDataFileExistsForProfile( (UINT8)uiLoop, 0, FALSE, NULL ) )
+		if (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)))
 		{
 			gMercProfiles[uiLoop].bMercStatus = 0;
 		}
