@@ -31,7 +31,6 @@ DisplayOnScreenNumber(): callers
 DisplayPurchasedItems(): iSubTotal undefined value
 DisplayTopwareGermanyAddress(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
-DoChrisTest(): ?
 DoDive(): callers
 DoLockDoor(): callers
 DoUnlockDoor(): callers
@@ -243,6 +242,7 @@ fResetContractGlow: probably always TRUE
 gMercPlacement: memory leak?
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
 gbSkillTraitBonus[]: definition not used in file
+gfDrawPathPoints: always FALSE, debug
 gfOverIntTile: static
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible

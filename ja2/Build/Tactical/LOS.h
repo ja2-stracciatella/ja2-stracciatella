@@ -65,7 +65,6 @@ INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, I
 BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos);
 
 BOOLEAN TestFireBullet( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier );
-void DoChrisTest( SOLDIERTYPE * pSoldier );
 
 
 #define HEIGHT_UNITS 256

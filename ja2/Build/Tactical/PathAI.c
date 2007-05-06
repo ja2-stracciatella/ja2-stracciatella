@@ -47,7 +47,7 @@
 
 extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;
-BOOLEAN gfDrawPathPoints = FALSE;
+static BOOLEAN gfDrawPathPoints = FALSE;
 #endif
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;

@@ -55,7 +55,6 @@
 #include "Assignments.h"
 #include "EditScreen.h"
 #include "Structure_Wrap.h"
-#include "LOS.h"
 #include "Exit_Grids.h"
 #include "Strategic_Exit_GUI.h"
 #include "Auto_Bandage.h"
@@ -2842,13 +2841,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							if ( CHEATER_CHEAT_LEVEL( ) )
 							{
 								ReloadWeapon( MercPtrs[ gusSelectedSoldier ], MercPtrs[ gusSelectedSoldier ]->ubAttackingHand );
-							}
-						}
-						else if( fCtrl )
-						{
-							if ( INFORMATION_CHEAT_LEVEL( ) )
-							{
-								DoChrisTest( MercPtrs[ gusSelectedSoldier ] );
 							}
 						}
 						else

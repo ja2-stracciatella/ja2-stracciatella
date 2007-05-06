@@ -27,7 +27,6 @@
 #include "Text.h"
 #include "FOV.h"
 #include "MessageBoxScreen.h"
-#include "PathAIDebug.h"
 #include "Interface_Control.h"
 #include "ShopKeeper_Interface.h"
 #include "Cursors.h"
@@ -35,7 +34,6 @@
 #include "Environment.h"
 #include "Auto_Resolve.h"
 #include "Interface_Items.h"
-#include "History.h"
 #include "Game_Clock.h"
 #include "Smell.h"
 #include "StrategicMap.h"
@@ -3640,157 +3638,6 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 
 	return( usOriginalPoints -  usPoints );
 }
-
-#ifdef PATHAI_VISIBLE_DEBUG
-
-	extern BOOLEAN gfDrawPathPoints;
-
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-	//	GenerateMapEdgepoints();
-
-			//gfDrawPathPoints = !gfDrawPathPoints;
-
-		//gfDrawPathPoints = TRUE;
-		//GlobalReachableTest( pSoldier->sGridNo );
-		//gfDrawPathPoints = FALSE;
-
-	}
-
-#else
-	void DoChrisTest( SOLDIERTYPE * pSoldier )
-	{
-		/*
-		UINT32 uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == ENEMY_TEAM )
-			{
-				if ( MercSlots[ uiLoop ]->ubSkillTrait1 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 1", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->ubSkillTrait2 == NIGHTOPS )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier %d has nightops 2", MercSlots[ uiLoop ]->ubID ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%ls", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD1POS ].usItem ] ) );
-				}
-				if ( MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem != NOTHING )
-				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%ls", ItemNames[ MercSlots[ uiLoop ]->inv[ HEAD2POS ].usItem ] ) );
-				}
-
-			}
-		}
-		*/
-
-				UINT32	uiLoop;
-
-
-		for ( uiLoop = 0; uiLoop <= HISTORY_MERC_KILLED_CHARACTER; uiLoop++ )
-		{
-			switch( uiLoop )
-			{
-				case HISTORY_FOUND_MONEY:
-				case HISTORY_ASSASSIN:
-				case HISTORY_DISCOVERED_TIXA:
-				case HISTORY_DISCOVERED_ORTA:
-				case HISTORY_GOT_ROCKET_RIFLES:
-				case HISTORY_DEIDRANNA_DEAD_BODIES:
-				case HISTORY_BOXING_MATCHES:
-				case HISTORY_SOMETHING_IN_MINES:
-				case HISTORY_DEVIN:
-				case HISTORY_MIKE:
-				case HISTORY_TONY:
-				case HISTORY_KROTT:
-				case HISTORY_KYLE:
-				case HISTORY_MADLAB:
-				case HISTORY_GABBY:
-				case HISTORY_KEITH_OUT_OF_BUSINESS:
-				case HISTORY_HOWARD_CYANIDE:
-				case HISTORY_KEITH:
-				case HISTORY_HOWARD:
-				case HISTORY_PERKO:
-				case HISTORY_SAM:
-				case HISTORY_FRANZ:
-				case HISTORY_ARNOLD:
-				case HISTORY_FREDO:
-				case HISTORY_RICHGUY_BALIME:
-				case HISTORY_JAKE:
-				case HISTORY_BUM_KEYCARD:
-				case HISTORY_WALTER:
-				case HISTORY_DAVE:
-				case HISTORY_PABLO:
-				case HISTORY_KINGPIN_MONEY:
-				//VARIOUS BATTLE CONDITIONS
-				case HISTORY_LOSTTOWNSECTOR:
-				case HISTORY_DEFENDEDTOWNSECTOR:
-				case HISTORY_LOSTBATTLE:
-				case HISTORY_WONBATTLE:
-				case HISTORY_FATALAMBUSH:
-				case HISTORY_WIPEDOUTENEMYAMBUSH:
-				case HISTORY_UNSUCCESSFULATTACK:
-				case HISTORY_SUCCESSFULATTACK:
-				case HISTORY_CREATURESATTACKED:
-				case HISTORY_KILLEDBYBLOODCATS:
-				case HISTORY_SLAUGHTEREDBLOODCATS:
-				case HISTORY_GAVE_CARMEN_HEAD:
-				case HISTORY_SLAY_MYSTERIOUSLY_LEFT:
-					AddHistoryToPlayersLog( (UINT8) uiLoop, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-					break;
-				default:
-					break;
-			}
-
-		}
-
-
-		/*
-		UINT32		uiEntryTime, uiExitTime;
-		UINT32		uiLoop;
-
-		for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
-		{
-			if ( MercSlots[ uiLoop ] && MercSlots[ uiLoop ]->bTeam == CIV_TEAM )
-			{
-				pSoldier = MercSlots[ uiLoop ];
-				if ( ExtractScheduleEntryAndExitInfo( pSoldier, &uiEntryTime, &uiExitTime ) )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Civ %d enters at %ld, exits at %ld", pSoldier->ubID, uiEntryTime, uiExitTime );
-				}
-			}
-		}
-		*/
-/*
-		UINT32	 uiLoop;
-
-		for ( uiLoop = 0; uiLoop <= 4; uiLoop++ )
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Team %d has %d people", uiLoop, gTacticalStatus.Team[ uiLoop ].bMenInSector );
-		}
-		*/
-	/*
-		UINT32	uiLoop;
-		INT16		sGridNo;
-		UINT32	uiStartTime, uiEndTime;
-
-		if (GetMouseMapPos( &sGridNo ))
-		{
-			uiStartTime = GetJA2Clock();
-			for (uiLoop = 0; uiLoop < 50000; uiLoop++)
-			{
-				FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, WALKING, COPYROUTE );
-			}
-			uiEndTime = GetJA2Clock();
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "50000 path calls from %d to %d took %ld ms", pSoldier->sGridNo, sGridNo, uiEndTime - uiStartTime ) );
-		}
-		*/
-	}
-#endif
 
 
 static UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex)
