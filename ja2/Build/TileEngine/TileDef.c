@@ -303,7 +303,6 @@ static BOOLEAN SetLandIndexWithRadius(INT32 iMapIndex, UINT16 usIndex, UINT32 ui
 	BOOLEAN				fDoPaste = FALSE;
 	INT32					leftmost;
 	//BOOLEAN				fNewCommand;
-	UINT16				Dummy;
 
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
@@ -340,7 +339,7 @@ static BOOLEAN SetLandIndexWithRadius(INT32 iMapIndex, UINT16 usIndex, UINT32 ui
 
 				if ( fDoPaste && ((uiNewType >= FIRSTFLOOR && uiNewType <= LASTFLOOR) ||
 												 ((uiNewType < FIRSTFLOOR || uiNewType > LASTFLOOR) &&
-												 !TypeRangeExistsInLandLayer( iNewIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ))) )
+						!TypeRangeExistsInLandLayer(iNewIndex, FIRSTFLOOR, LASTFLOOR))))
 				{
 					SetLandIndex( iNewIndex, usIndex, uiNewType, FALSE );
 				}

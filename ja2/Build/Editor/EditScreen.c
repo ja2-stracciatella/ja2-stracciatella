@@ -538,7 +538,7 @@ static BOOLEAN EditModeShutdown(void)
 static void SetBackgroundTexture(void)
 {
 	int						cnt;
-	UINT16				usIndex, Dummy;
+	UINT16				usIndex;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
@@ -552,7 +552,7 @@ static void SetBackgroundTexture(void)
 		usIndex += gTileTypeStartIndex[ gCurrentBackground ];
 
 		// Set land index
-		if( TypeRangeExistsInLandLayer( cnt, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
+		if (TypeRangeExistsInLandLayer(cnt, FIRSTFLOOR, LASTFLOOR))
 			AddLandToTail( cnt, usIndex ); //show the land below the floor.
 		else
 			AddLandToHead( cnt, usIndex ); //no floor so no worries.

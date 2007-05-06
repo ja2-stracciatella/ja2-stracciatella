@@ -550,7 +550,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	int temp = 0;
 	int FullTile = FALSE;
 	UINT16 usOldIndex;
-	UINT16 usTempIndex;
 	UINT32 cnt;
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
@@ -585,7 +584,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// Mask approriate bits in temp for the lookup in the SmoothWaterStruct list
 	if ( (gridno- WORLD_COLS ) >= 0 )
 	{
-		if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS, origType, origType, &usTempIndex ) )
+		if (TypeRangeExistsInLandLayer(gridno - WORLD_COLS, origType, origType))
 		{
 			// no it's not
 			temp|=4;
@@ -595,7 +594,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// (make sure there IS a tile to the right, i.e. check for border)
 	if ((gridno+1)% WORLD_COLS !=0)
 	{
-		if ( TypeRangeExistsInLandLayer( gridno + 1, origType, origType, &usTempIndex ) )
+		if (TypeRangeExistsInLandLayer(gridno + 1, origType, origType))
 		{
 			// no it's not
 			temp|=64;
@@ -604,7 +603,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// is land height one tile down not the same type?
 	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS, origType, origType, &usTempIndex ) )
+		if (TypeRangeExistsInLandLayer(gridno + WORLD_COLS, origType, origType))
 		{
 			// no it's not
 			temp|=256;
@@ -613,7 +612,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// is land height one tile to left not the same type?
 	if (gridno % WORLD_COLS!=0)
 	{
-		if ( TypeRangeExistsInLandLayer( gridno - 1, origType, origType, &usTempIndex ) )
+		if (TypeRangeExistsInLandLayer(gridno - 1, origType, origType))
 		{
 			// no it's not
 			temp|=16;
@@ -624,7 +623,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 
 		if ( (gridno- WORLD_COLS ) >= 0 )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS + 1, origType, origType, &usTempIndex ) )
+			if (TypeRangeExistsInLandLayer(gridno - WORLD_COLS + 1, origType, origType))
 			{
 				// no it's not
 				temp|=8;
@@ -635,7 +634,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	{
 		if ( (gridno- WORLD_COLS ) >= 0 )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno - WORLD_COLS - 1, origType, origType, &usTempIndex ) )
+			if (TypeRangeExistsInLandLayer(gridno - WORLD_COLS - 1, origType, origType))
 			{
 				// no it's not
 				temp|=2;
@@ -646,7 +645,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	{
 		if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 		{
-			if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS + 1, origType, origType, &usTempIndex ) )
+			if (TypeRangeExistsInLandLayer(gridno + WORLD_COLS + 1, origType, origType))
 			{
 				// no it's not
 				temp|=512;
@@ -657,15 +656,14 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	{
 		if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 		{
-
-			if ( TypeRangeExistsInLandLayer( gridno + WORLD_COLS - 1, origType, origType, &usTempIndex ) )
+			if (TypeRangeExistsInLandLayer(gridno + WORLD_COLS - 1, origType, origType))
 			{
 				// no it's not
 				temp|=128;
 			}
 		}
 	}
-	if ( TypeRangeExistsInLandLayer( gridno, origType, origType, &usTempIndex ) )
+	if (TypeRangeExistsInLandLayer(gridno, origType, origType))
 	{
 		// no it's not
 		temp|=32;

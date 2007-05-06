@@ -710,7 +710,7 @@ void PasteTextureCommon( UINT32 iMapIndex )
 		 }
 
 		 // Don't draw over floors
-	 	 if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, FOURTHFLOOR, &usTileIndex ) )
+			if (TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, FOURTHFLOOR))
 		 {
 			 return;
 		 }
@@ -756,7 +756,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 	 // - Add a 3 by 3 square of new type at head
 	 // - Smooth World with new type
 
-		//if ( iMapIndex < 0x8000 && TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &NewTile ) )
+		//if (iMapIndex < 0x8000 && TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
 		//ATE: DONOT DO THIS!!!!!!! - I know what was intended - not to draw over floors - this
 		// I don't know is the right way to do it!
 			//return;
@@ -851,7 +851,6 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 {
 	UINT32					uiNewType;
 	UINT16					usNewIndex;
-	//UINT16					Dummy;
 
 	// If here, we want to make, esentially, what is a type in
 	// a level other than TOP-MOST the TOP-MOST level.
@@ -862,7 +861,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	if ( iMapIndex >= 0x8000 )
 		return ( FALSE );
 
-	//if ( TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
+	//if (TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
 	//	return( FALSE );
 
   // Get top tile index
@@ -944,7 +943,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
   UINT32				*puiSmoothTiles = NULL;
 	INT16 			  sNumSmoothTiles = 0;
 	UINT16				usTemp;
-	UINT16				NewTile; //,Dummy;
+	UINT16				NewTile;
 
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
@@ -980,7 +979,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 					}
 				}
 
-				//if ( fDoPaste && !TypeRangeExistsInLandLayer( iMapIndex, FIRSTFLOOR, LASTFLOOR, &Dummy ) )
+				//if (fDoPaste && !TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
 				if ( fDoPaste  )
 				{
 					if ( iMapIndex == iNewIndex )

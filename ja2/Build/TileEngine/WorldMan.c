@@ -696,7 +696,7 @@ BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIn
 }
 
 
-BOOLEAN TypeRangeExistsInLandLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusLandIndex )
+BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
 	LEVELNODE	*pLand		 = NULL;
 	LEVELNODE	*pOldLand		 = NULL;
@@ -719,7 +719,6 @@ BOOLEAN TypeRangeExistsInLandLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 
 
 			if ( fTileType >= fStartType && fTileType <= fEndType )
 			{
-				*pusLandIndex = pOldLand->usIndex;
 				return( TRUE );
 			}
 
