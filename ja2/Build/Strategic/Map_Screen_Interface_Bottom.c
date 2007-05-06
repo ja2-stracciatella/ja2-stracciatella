@@ -28,7 +28,6 @@
 #include "AI.h"
 #include "Tactical_Save.h"
 #include "Campaign_Types.h"
-#include "Air_Raid.h"
 #include "Finances.h"
 #include "LaptopSave.h"
 #include "Interface_Items.h"
