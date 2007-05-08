@@ -1,5 +1,6 @@
 (BOOLEAN): incorrect/unnecessary casts
 (DOUBLE): casts placed wrong
+ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
@@ -76,6 +77,7 @@ GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTheStateOfDepartedMerc(): callers
+GetTileFlags(): interface complicated
 GetTileType(): interface complicated
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers
@@ -83,6 +85,7 @@ GetTypeSubIndexFromTileIndex(): interface complicated
 GetUIApsToDisplay(): callers
 Handle.*TextEvent(): code duplication
 HandleDefiniteUnloadingOfWorld(): use enum
+HandleEndConfirmCursor(): empty
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
 HandleItemGlowFlag(): callers/complicated
 HandleLeftClickCursor(): if ()s without decision
@@ -118,6 +121,7 @@ IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
 L"/": pointless copy
+LEVELNODE_REVEALTREES: unnecessary test before (re)set
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
@@ -191,6 +195,7 @@ SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
+STRUCTURE_TREE: never set
 SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
@@ -242,6 +247,8 @@ bBuddy[5], bHated[5]: indices 3 and 4 unused
 fResetContractGlow: probably always TRUE
 gMercPlacement: memory leak?
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
+gTileTypeLogicalHeight[]: definition not used in file
+gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfOverIntTile: static
@@ -303,6 +310,7 @@ bResigned
 bMainGunAttractiveness: overwritten after load from data file
 fUseProfileInsertionInfo: overwritten after load from data file
 sGridNo: overwritten after load from data file
+bMercTownReputation: probably always INITIAL_TOWN_REPUTATION (0)
 bPadding[4]
 bRace
 bNationality
@@ -432,6 +440,17 @@ bYetAnotherPaddingSpace
 ubLastDamageReason: necessary?
 bFillerDude
 bFiller
+
+StrategicMapElement
+UNUSEDuiFootEta
+UNUSEDuiVehicleEta
+uiBadFootSector: read-only
+uiBadVehicleSector: read-only
+UNUSEDfLostControlAtSomeTime
+bPadding
+
+VIDEO_OVERLAY
+uiUserData[]: write-only in unused function
 
 
 BUGS
