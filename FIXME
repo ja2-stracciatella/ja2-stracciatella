@@ -196,6 +196,7 @@ RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
 RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
+SLOW_ANIMATION: never set or cleared, only in unused function
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
 STRUCTURE_TREE: never set

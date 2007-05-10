@@ -163,7 +163,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 													// us to shoot in most vases ( grenades need a confirm mode regardless )
 													*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
 													//*puiNewEvent = CA_MERC_SHOOT;
-													PauseRT( FALSE );
 												}
 											}
 										}
@@ -828,9 +827,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															break;
 
 														case TALKCURSOR_MODE:
-
-															PauseRT( FALSE );
-
 															if ( HandleTalkInit( ) )
 															{
 																*puiNewEvent = TA_TALKINGMENU;
@@ -1042,11 +1038,6 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
   								break;
 								}
               }
-
-							if ( gCurrentUIMode == ACTION_MODE || gCurrentUIMode == TALKCURSOR_MODE )
-							{
-								PauseRT( FALSE );
-							}
 						}
 					}
 

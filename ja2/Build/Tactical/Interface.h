@@ -186,8 +186,6 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString );
 BOOLEAN InTopMessageBarAnimation( );
 void EndTopMessage( );
 
-void PauseRT( BOOLEAN fPause );
-
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 
 const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );

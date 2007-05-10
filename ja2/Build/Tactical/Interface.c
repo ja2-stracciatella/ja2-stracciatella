@@ -3189,21 +3189,6 @@ BOOLEAN InTopMessageBarAnimation( )
 }
 
 
-void PauseRT( BOOLEAN fPause )
-{
-	//StopMercAnimation( fPause );
-
-	if ( fPause )
-	{
-	//	PauseGame( );
-	}
-	else
-	{
-	//	UnPauseGame( );
-	}
-}
-
-
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 {
 	// OK, set value

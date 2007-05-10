@@ -4546,18 +4546,6 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 		gfUIDisplayActionPointsInvalid = TRUE;
 	}
 
-	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		if ( gfUIFullTargetFound )
-		{
-			PauseRT( TRUE );
-		}
-		else
-		{
-			PauseRT( FALSE );
-		}
-	}
-
 	return( GAME_SCREEN );
 
 }

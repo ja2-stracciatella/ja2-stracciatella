@@ -279,19 +279,6 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 
 	}
 
-	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		if ( gfUIFullTargetFound )
-		{
-			PauseRT( TRUE );
-		}
-		else
-		{
-			PauseRT( FALSE );
-		}
-	}
-
-
 	return( ubCursorID );
 }
 
