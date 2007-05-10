@@ -1495,29 +1495,6 @@ void InsertCommasForDollarFigure( STR16 pString )
 }
 
 
-void InsertDollarSignInToString( STR16 pString )
-{
-	// run to end of string, copy everything in string 2 places right, insert a space at pString[ 1 ] and a L'$' at pString[ 0 ]
-
-	INT32 iCounter =0;
-
-	// run to end of string
-	while( pString[ iCounter ] != 0 )
-	{
-		iCounter++;
-	}
-
-	// now copy over
-	while( iCounter >= 0 )
-	{
-    pString[ iCounter + 1] = pString[ iCounter ];
-		iCounter--;
-	}
-
-	pString[ 0 ] = L'$';
-}
-
-
 static INT32 GetPreviousDaysBalance(void)
 {
 	// find out what today is, then go back 2 days, get balance for that day

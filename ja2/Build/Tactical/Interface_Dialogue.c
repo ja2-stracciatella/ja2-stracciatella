@@ -37,7 +37,6 @@
 #include "Cursors.h"
 #include "Fade_Screen.h"
 #include "Gameloop.h"
-#include "Finances.h"
 #include "SaveLoadMap.h"
 #include "Arms_Dealer_Init.h"
 #include "ShopKeeper_Interface.h"
@@ -4373,8 +4372,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC:
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC_WITH_DAILY_SALARY:
 		case NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS:
-			swprintf( zTemp2, lengthof(zTemp2), L"%d", gMercProfiles[ubProfileID].sSalary );
-			InsertDollarSignInToString( zTemp2 );
+			swprintf(zTemp2, lengthof(zTemp2), L"$%d", gMercProfiles[ubProfileID].sSalary);
 			swprintf( zTemp, lengthof(zTemp), TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2 );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
@@ -4383,8 +4381,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ BOXING_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
-			swprintf( zTemp2, lengthof(zTemp2), L"%d", Item[LEATHER_JACKET_W_KEVLAR].usPrice );
-			InsertDollarSignInToString( zTemp2 );
+			swprintf(zTemp2, lengthof(zTemp2), L"$%d", Item[LEATHER_JACKET_W_KEVLAR].usPrice);
 			swprintf( zTemp, lengthof(zTemp), TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2 );
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
@@ -4405,17 +4402,13 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			{
 				iTemp -= giHospitalRefund;
 			}
-			swprintf( zTemp2, lengthof(zTemp2), L"%ld", iTemp );
-			InsertDollarSignInToString( zTemp2 );
+			swprintf(zTemp2, lengthof(zTemp2), L"$%ld", iTemp);
 			swprintf( zTemp, lengthof(zTemp), TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
 
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_BUY_VEHICLE_REQUESTOR:
-			swprintf( zTemp2, lengthof(zTemp2), L"%ld", 10000 );
-			InsertDollarSignInToString( zTemp2 );
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
-
+			swprintf(zTemp, lengthof(zTemp), TacticalStr[PAY_MONEY_PROMPT], L"$10000");
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_TRIGGER_MARRY_DARYL_PROMPT:

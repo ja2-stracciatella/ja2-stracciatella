@@ -636,8 +636,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 	if( IsMercDead( ubMercID ) )
 	{
-		swprintf( sText, lengthof(sText), L"0");
-		InsertDollarSignInToString( sText );
+		wcslcpy(sText, L"$0", lengthof(sText));
 	}
 	//display the amount owing
 	DrawTextToScreen( sText, (UINT16)(usPosX+32), INS_CTRCT_ORDER_GRID1_Y+179, 72, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );

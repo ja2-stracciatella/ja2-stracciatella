@@ -34,7 +34,6 @@
 #include "Render_Fun.h"
 #include "StrategicMap.h"
 #include "Text.h"
-#include "Finances.h"
 #include "Arms_Dealer_Init.h"
 #include "Interface_Items.h"
 #include "OppList.h"
@@ -1163,9 +1162,7 @@ static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmoun
 				else
 				{
 					wchar_t sTempString[ 100 ];
-
-					swprintf( sTempString, lengthof(sTempString), L"%ld", iCost - uiMoneyAmount - giHospitalTempBalance );
-					InsertDollarSignInToString( sTempString );
+					swprintf(sTempString, lengthof(sTempString), L"$%ld", iCost - uiMoneyAmount - giHospitalTempBalance);
 
 					// not enough cash
 					ScreenMsg( FONT_MCOLOR_LTYELLOW,

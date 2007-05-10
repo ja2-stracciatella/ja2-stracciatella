@@ -30,6 +30,7 @@ DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
 DisplayMercStats(): callers
 DisplayMovingTitleBar(): callers
 DisplayOnScreenNumber(): callers
+DisplayOrderGrid(): call IsMercDead() more early
 DisplayPurchasedItems(): iSubTotal undefined value
 DisplayTopwareGermanyAddress(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
