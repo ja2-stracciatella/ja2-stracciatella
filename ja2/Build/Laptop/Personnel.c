@@ -30,7 +30,6 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 #include "EMail.h"
-#include "Items.h"
 #include "Soldier_Macros.h"
 #include "Stubs.h" // XXX
 
@@ -5391,107 +5390,6 @@ static INT32 GetFundsOnMerc(SOLDIERTYPE* pSoldier)
 	}
 
 	return iCurrentAmount;
-}
-
-
-static BOOLEAN TransferFundsFromMercToBank(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance)
-{
-	INT32 iCurrentPocket = 0;
-	INT32 iAmountLeftToTake = iCurrentBalance;
-	OBJECTTYPE ObjectToRemove;
-
-
-	// move this amount of money from the grunt to the bank
-	// error check
-	if( pSoldier == NULL )
-	{
-		return FALSE;
-	}
-
-	// run through grunts pockets and count all the spare change
-	for( iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++ )
-	{
-		if ( Item[ pSoldier->inv[ iCurrentPocket ] .usItem ].usItemClass == IC_MONEY )
-		{
-
-			// is there more left to go, or does this pocket finish it off?
-			if( pSoldier->inv[ iCurrentPocket ].uiMoneyAmount > ( UINT32 )iAmountLeftToTake )
-			{
-				pSoldier->inv[ iCurrentPocket ].uiMoneyAmount -= iAmountLeftToTake;
-				iAmountLeftToTake = 0;
-			}
-			else
-			{
-				iAmountLeftToTake  -= pSoldier->inv[ iCurrentPocket ].uiMoneyAmount;
-				pSoldier->inv[ iCurrentPocket ].uiMoneyAmount = 0;
-
-				//Remove the item out off the merc
-				RemoveObjectFromSlot( pSoldier, (INT8)iCurrentPocket, &ObjectToRemove );
-			}
-		}
-	}
-
-	if( iAmountLeftToTake != 0 )
-	{
-		// something wrong
-		AddTransactionToPlayersBook ( TRANSFER_FUNDS_FROM_MERC, 	pSoldier->ubProfile, GetWorldTotalMin() , ( iCurrentBalance - iAmountLeftToTake ) );
-		return ( FALSE );
-	}
-	else
-	{
-		// everything ok
-		AddTransactionToPlayersBook ( TRANSFER_FUNDS_FROM_MERC, 	pSoldier->ubProfile, GetWorldTotalMin() , ( iCurrentBalance ) );
-		return ( TRUE );
-	}
-}
-
-
-static BOOLEAN TransferFundsFromBankToMerc(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance)
-{
-	OBJECTTYPE pMoneyObject;
-
-	// move this amount of money from the grunt to the bank
-	// error check
-	if( pSoldier == NULL )
-	{
-		return FALSE;
-	}
-
-	// make sure we are giving them some money
-	if( iCurrentBalance <= 0 )
-	{
-		return ( FALSE );
-	}
-
-	// current balance
-	if( iCurrentBalance > LaptopSaveInfo.iCurrentBalance )
-	{
-		iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
-	}
-
-
-	// set up object
-	memset( &( pMoneyObject ), 0, sizeof( OBJECTTYPE ) );
-
-	// set up money object
-	pMoneyObject.usItem = MONEY;
-	pMoneyObject.ubNumberOfObjects = 1;
-	pMoneyObject.bMoneyStatus = 100;
-	pMoneyObject.uiMoneyAmount = iCurrentBalance;
-
-
-	// now auto place money object
-	if( AutoPlaceObject( pSoldier, &( pMoneyObject ), TRUE ) == TRUE )
-	{
-		// now place transaction
-		AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( iCurrentBalance ) );
-	}
-	else
-	{
-		// error, notify player that merc doesn't have the spce for this much cash
-	}
-
-	return( TRUE );
 }
 
 
