@@ -230,7 +230,6 @@ INT16 GetNumUnSafeSectorsInPath( void );
 
 BOOLEAN SoldierAboardAirborneHeli( SOLDIERTYPE *pSoldier );
 
-UINT8 MoveAllInHelicopterToFootMovementGroup( void );
-
+void MoveAllInHelicopterToFootMovementGroup(void);
 
 #endif

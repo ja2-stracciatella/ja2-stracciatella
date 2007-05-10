@@ -68,9 +68,6 @@ extern INT32 iSeatingCapacities[];
 // the static NPC dialogue faces
 extern UINT32 uiExternalStaticNPCFaces[];
 
-// the squad mvt groups
-extern INT8 SquadMovementGroups[ ];
-
 
 // whether helicopted variables have been set up
 BOOLEAN fSkyRiderSetUp = FALSE;
@@ -942,14 +939,12 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 }
 
 
-UINT8 MoveAllInHelicopterToFootMovementGroup( void )
+void MoveAllInHelicopterToFootMovementGroup(void)
 {
 	// take everyone out of heli and add to movement group
 	INT32 iCounter = 0;
-	UINT8 ubGroupId = 0;
 	SOLDIERTYPE *pSoldier;
 	INT8 bNewSquad;
-	BOOLEAN fAnyoneAboard = FALSE;
 	BOOLEAN fSuccess;
   UINT8   ubInsertionCode;
   BOOLEAN fInsertionCodeSet = FALSE;
@@ -958,10 +953,7 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
 	bNewSquad = GetFirstEmptySquad();
-	if ( bNewSquad == -1 )
-	{
-		return( 0 );
-	}
+	if (bNewSquad == -1) return;
 
 	// go through list of everyone in helicopter
 	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iHelicopterVehicleId ].ubVehicleType ]; iCounter++ )
@@ -974,8 +966,6 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
 			// better really be in there!
 			Assert ( pSoldier->bAssignment == VEHICLE );
 			Assert ( pSoldier->iVehicleId == iHelicopterVehicleId );
-
-			fAnyoneAboard = TRUE;
 
 			fSuccess = RemoveSoldierFromHelicopter( pSoldier );
 			Assert( fSuccess );
@@ -998,13 +988,6 @@ UINT8 MoveAllInHelicopterToFootMovementGroup( void )
       }
 		}
 	}
-
-	if ( fAnyoneAboard )
-	{
-		ubGroupId = SquadMovementGroups[ bNewSquad ];
-	}
-
-	return( ubGroupId );
 }
 
 
