@@ -1132,41 +1132,6 @@ enum
 };
 extern	const wchar_t *SKI_Text[];
 
-//ShopKeeper Interface
-enum
-{
-	SKI_ATM_0,
-	SKI_ATM_1,
-	SKI_ATM_2,
-	SKI_ATM_3,
-	SKI_ATM_4,
-	SKI_ATM_5,
-	SKI_ATM_6,
-	SKI_ATM_7,
-	SKI_ATM_8,
-	SKI_ATM_9,
-	SKI_ATM_OK,
-	SKI_ATM_TAKE,
-	SKI_ATM_GIVE,
-	SKI_ATM_CANCEL,
-	SKI_ATM_CLEAR,
-
-	NUM_SKI_ATM_BUTTONS
-};
-extern	const wchar_t *SkiAtmText[];
-
-//ShopKeeper Interface
-enum
-{
-	SKI_ATM_MODE_TEXT_SELECT_MODE,
-	SKI_ATM_MODE_TEXT_ENTER_AMOUNT,
-	SKI_ATM_MODE_TEXT_SELECT_TO_MERC,
-	SKI_ATM_MODE_TEXT_SELECT_FROM_MERC,
-	SKI_ATM_MODE_TEXT_SELECT_INUSUFFICIENT_FUNDS,
-	SKI_ATM_MODE_TEXT_BALANCE,
-};
-extern	const wchar_t *gzSkiAtmText[];
-
 //ShopKeeperInterface Message Box defines
 enum
 {

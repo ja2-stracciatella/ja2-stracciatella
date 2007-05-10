@@ -3095,43 +3095,6 @@ const wchar_t* SKI_Text[ ] =
 	L"Lascia oggetto a terra.",
 };
 
-//ShopKeeper Interface
-//for the bank machine panels. Referenced here is the acronym ATM, which means Automatic Teller Machine
-
-const wchar_t* SkiAtmText[] =
-{
-	//Text on buttons on the banking machine, displayed at the bottom of the page
-	L"0",
-	L"1",
-	L"2",
-	L"3",
-	L"4",
-	L"5",
-	L"6",
-	L"7",
-	L"8",
-	L"9",
-	L"OK",						// Transfer the money
-	L"Prendi",					// Take money from the player
-	L"Dai",					// Give money to the player
-	L"Annulla",					// Cancel the transfer
-	L"Pulisci",					// Clear the money display
-};
-
-
-//Shopkeeper Interface
-const wchar_t* gzSkiAtmText[] =
-{
-
-	// Text on the bank machine panel that....
-	L"Seleziona tipo",			// tells the user to select either to give or take from the merc
-	L"Inserisci somma",			// Enter the amount to transfer
-	L"Trasferisci fondi al mercenario",		// Giving money to the merc
-	L"Trasferisci fondi dal mercenario",		// Taking money from the merc
-	L"Fondi insufficienti",			// Not enough money to transfer
-	L"Bilancio",				// Display the amount of money the player currently has
-};
-
 
 const wchar_t* SkiMessageBoxText[] =
 {

@@ -90,10 +90,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		SKI_BUTTON_FONT										MILITARYFONT1//FONT14ARIAL
 #define		SKI_BUTTON_COLOR									73
 
-
-#define		SKI_ATM_BUTTON_FONT								FONT10ARIAL
-#define		SKI_ATM_BUTTON_COLOR							FONT_MCOLOR_BLACK
-
 #define		SKI_TITLE_FONT										MILITARYFONT1//FONT14ARIAL
 #define		SKI_TITLE_COLOR										169//FONT_MCOLOR_LTYELLOW
 
@@ -235,29 +231,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		SKI_ATTACHMENT_SYMBOL_Y_OFFSET				14
 
 
-#define		SKI_ATM_PANEL_X												87
-#define		SKI_ATM_PANEL_Y												342
-#define		SKI_ATM_PANEL_WIDTH										127
-#define		SKI_ATM_PANEL_HEIGHT									135
-
-#define		SKI_ATM_BUTTON_X											SKI_ATM_PANEL_X + 23
-#define		SKI_ATM_BUTTON_Y											SKI_ATM_PANEL_Y + 64
-#define		SKI_ATM_BUTTON_HEIGHT									15
-#define		SKI_ATM_NUM_BUTTON_WIDTH							15
-#define		SKI_ATM_SIDE_MENU_PANEL_START_X				48
-
-#define		SKI_TRANSFER_STRING_X									SKI_ATM_PANEL_X + 22
-#define		SKI_TRANSFER_STRING_Y									SKI_ATM_PANEL_Y + 50
-#define		SKI_TRANSFER_STRING_WIDTH							83
-#define		SKI_TRANSFER_STRING_HEIGHT						10
-
-#define		SKI_MERCS_MONEY_Y											SKI_ATM_PANEL_Y + 11
-
-#define		SKI_MODE_TEXT_X												SKI_TRANSFER_STRING_X
-#define		SKI_MODE_TEXT_Y												SKI_ATM_PANEL_Y + 27
-#define		SKI_MODE_TEXT_WIDTH										SKI_TRANSFER_STRING_WIDTH
-
-
 #define		SKI_MAX_AMOUNT_OF_ITEMS_DEALER_CAN_REPAIR_AT_A_TIME			4
 
 #define		SKI_DEALERS_RANDOM_QUOTE_DELAY				15000
@@ -277,9 +250,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 
 UINT32		guiMainTradeScreenImage;
 UINT32		guiCornerWhereTacticalIsStillSeenImage;		//This image is for where the corner of tactical is still seen through the shop keeper interface
-
-//ATM:
-//UINT32		guiSkiAtmImage;
 
 BOOLEAN		gfSKIScreenEntry = TRUE;
 BOOLEAN		gfSKIScreenExit	= FALSE;
@@ -362,9 +332,6 @@ wchar_t		gsShopKeeperTalkingText[ SKI_SUBTITLE_TEXT_SIZE ];
 
 UINT16		gusPositionOfSubTitlesX=0;
 
-// the transfer funds string
-CHAR16 gzSkiAtmTransferString[ 32 ];
-
 BOOLEAN	gfExitSKIDueToMessageBox=FALSE;
 
 OBJECTTYPE	*pShopKeeperItemDescObject=NULL;
@@ -387,20 +354,6 @@ extern		UINT8						gubSelectSMPanelToMerc;
 extern		INT32						giItemDescAmmoButton;
 
 extern		UINT8 gubLastSpecialItemAddedAtElement;
-
-
-//Enums for the various Atm modes
-enum
-{
-	SKI_ATM_DISABLED_MODE,
-	SKI_ATM_TAKE_MODE,
-	SKI_ATM_GIVE_MODE,
-	SKI_ATM_ERR_TAKE_MODE,
-	SKI_ATM_ERR_GIVE_MODE,
-	SKI_ATM_DISPLAY_PLAYERS_BALANCE,
-};
-
-UINT8	gubCurrentSkiAtmMode = SKI_ATM_DISABLED_MODE;
 
 
 // Enums for possible evaluation results
@@ -462,13 +415,6 @@ static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiSKI_DoneButton;
 INT32		guiSKI_DoneButtonImage;
 
-//Atm buttons
-static void BtnSKI_AtmButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiSKI_AtmButton[ NUM_SKI_ATM_BUTTONS ];
-INT32		guiSKI_AtmNumButtonImage;
-INT32		guiSKI_AtmOkButtonImage;
-INT32		guiSKI_AtmSideMenuButtonImage;
-
 UINT32 guiItemCrossOut;
 
 BOOLEAN gfDisplayNoRoomMsg = FALSE;
@@ -494,9 +440,6 @@ MOUSE_REGION		gSkiInventoryMovementAreaMouseRegions;
 
 //Mouse region for the subtitles region when the merc is talking
 MOUSE_REGION		gShopKeeperSubTitleMouseRegion;
-
-//ATM:
-//MOUSE_REGION		gShopKeeperCoverTacticalButtonMouseRegion;
 
 MOUSE_REGION		gArmsDealersFaceMouseRegions;
 
@@ -599,7 +542,6 @@ UINT32	ShopKeeperScreenHandle()
 	}
 
 	// render buttons marked dirty
-//ATM:
 	DisableSMPpanelButtonsWhenInShopKeeperInterface();
 	RenderButtons( );
 
@@ -717,15 +659,6 @@ static BOOLEAN EnterShopKeeperInterface(void)
 		return( FALSE );
 	}
 
-
-
-/*
-ATM:
-	// load the Main trade screen backgroiund image
-	guiSkiAtmImage = AddVideoObjectFromFile("InterFace/TradeScreenAtm.sti");
-	CHECKF(guiSkiAtmImage != NO_VOBJECT);
-*/
-
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
 	gubNumberMercsInArray = 0;
@@ -824,14 +757,6 @@ ATM:
 	MSYS_DefineRegion( &gSKI_EntireScreenMouseRegions, 0, 0, 639, 339, MSYS_PRIORITY_HIGH-2,
 						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-
-/*
-//ATM:
-	//Blanket the tactical buttons where the ATM will go
-	MSYS_DefineRegion( &gShopKeeperCoverTacticalButtonMouseRegion, SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y, (UINT16)(SKI_ATM_PANEL_X+SKI_ATM_PANEL_WIDTH), (UINT16)(SKI_ATM_PANEL_Y+SKI_ATM_PANEL_HEIGHT), MSYS_PRIORITY_HIGH-1,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-*/
-
 	//Create the mouse regions for the inventory slot
 	CreateSkiInventorySlotMouseRegions( );
 
@@ -848,11 +773,6 @@ ATM:
 	//Create the mouse region for the shopkeeper's face
 	MSYS_DefineRegion( &gArmsDealersFaceMouseRegions, SKI_FACE_X, SKI_FACE_Y, (UINT16)(SKI_FACE_X+SKI_FACE_WIDTH), (UINT16)(SKI_FACE_Y+SKI_FACE_HEIGHT), MSYS_PRIORITY_HIGH-1,
 				CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectArmsDealersFaceRegionCallBack );
-
-
-	//Create the atm button
-//ATM:
-	//	CreateSkiAtmButtons();
 
 	memset( ArmsDealerOfferArea, 0, sizeof( INVENTORY_IN_SLOT ) * SKI_NUM_TRADING_INV_SLOTS );
 	memset( PlayersOfferArea, 0, sizeof( INVENTORY_IN_SLOT ) * SKI_NUM_TRADING_INV_SLOTS );
@@ -891,7 +811,6 @@ ATM:
 	//Reset
 	gfRemindedPlayerToPickUpHisStuff = FALSE;
 	gfUserHasRequestedToLeave = FALSE;
-	gubCurrentSkiAtmMode = SKI_ATM_DISABLED_MODE;
 	gfDisplayNoRoomMsg = FALSE;
 
 	//Disable the map radar region
@@ -1024,10 +943,6 @@ static BOOLEAN ExitShopKeeperInterface(void)
 
 	ShutUpShopKeeper();
 
-	//Delete the Atm backgorund
-//ATM:
-//	DeleteVideoObjectFromIndex( guiSkiAtmImage );
-
 	UnloadButtonImage( guiSKI_InvPageUpButtonImage );
 	UnloadButtonImage( guiSKI_InvPageDownButtonImage );
 
@@ -1053,16 +968,8 @@ static BOOLEAN ExitShopKeeperInterface(void)
 
 	MSYS_RemoveRegion( &gSkiInventoryMovementAreaMouseRegions );
 
-//ATM:
-//	MSYS_RemoveRegion( &gShopKeeperCoverTacticalButtonMouseRegion );
-
 	//Remove the region for the face
 	MSYS_RemoveRegion( &gArmsDealersFaceMouseRegions );
-
-	//Remove the Atm buttons
-//ATM:
-	//	RemoveSkiAtmButtons();
-
 
 	//Region to allow the user to drop items to the ground
 	MSYS_RemoveRegion( &gArmsDealersDropItemToGroundMouseRegions );
@@ -1171,9 +1078,6 @@ static void HandleShopKeeperInterface(void)
 
 	RenderClock( CLOCK_X, CLOCK_Y );
 	RenderTownIDString( );
-
-//ATM:
-//	RenderSkiAtmPanel();
 
 	DisplayTalkingArmsDealer();
 
@@ -1360,27 +1264,8 @@ static void GetShopKeeperInterfaceUserInput(void)
 
 	while( DequeueEvent( &Event ) )
 	{
-		// HOOK INTO MOUSE HOOKS
-		switch( Event.usEvent)
-		{
-		}
-
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{
-
-/*
-//ATM:
-
-			//if the number entered was a number
-			if( (Event.usParam >= '0' ) && ( Event.usParam <= '9') )
-			{
-				UINT8 ubValue = 0;
-				ubValue = ( INT8 )( Event.usParam - '0' );
-
-				AddNumberToSkiAtm( ubValue );
-			}
-*/
-
 			switch( Event.usParam )
 			{
 				case SDLK_ESCAPE:
@@ -4794,546 +4679,6 @@ static INT8 GetSlotNumberForMerc(UINT8 ubProfile)
 }
 
 
-static void RenderSkiAtmPanel(void)
-{
-//	BltVideoObjectFromIndex(FRAME_BUFFER, guiSkiAtmImage, 0, SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y);
-}
-
-
-static void CreateSkiAtmButtons(void)
-{
-	UINT16	usPosX, usPosY;
-	UINT8		ubCount=0;
-	UINT8		ubCnt;
-
-	guiSKI_AtmNumButtonImage			= LoadButtonImage("INTERFACE/TradeScreenAtm.sti", 1,2,-1,3,-1 );
-	guiSKI_AtmOkButtonImage				= UseLoadedButtonImage( guiSKI_AtmNumButtonImage, 4,5,-1,6,-1 );
-	guiSKI_AtmSideMenuButtonImage	= UseLoadedButtonImage( guiSKI_AtmNumButtonImage, 7,8,-1,9,-1 );
-
-
-	//Create the number buttons
-	usPosX = SKI_ATM_BUTTON_X;
-	usPosY = SKI_ATM_BUTTON_Y;
-	ubCount=0;
-	for( ubCnt=SKI_ATM_1; ubCnt<=SKI_ATM_9;ubCnt++)
-	{
-		guiSKI_AtmButton[ubCnt] = CreateIconAndTextButton( guiSKI_AtmNumButtonImage, SkiAtmText[ubCnt], SKI_ATM_BUTTON_FONT,
-														 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-														 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-														 TEXT_CJUSTIFIED,
-														 usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+2,
-														 DEFAULT_MOVE_CALLBACK, BtnSKI_AtmButtonCallback );
-
-		SpecifyDisabledButtonStyle( guiSKI_AtmButton[ubCnt], DISABLED_STYLE_SHADED );
-
-		MSYS_SetBtnUserData(guiSKI_AtmButton[ubCnt], 0, ubCnt );
-		ubCount++;
-
-		usPosX += SKI_ATM_NUM_BUTTON_WIDTH;
-
-		if( ( ubCount % 3 ) == 0 )
-		{
-			usPosX = SKI_ATM_BUTTON_X;
-			usPosY += SKI_ATM_BUTTON_HEIGHT;
-		}
-	}
-
-	//Create the zero button
-	usPosX = SKI_ATM_BUTTON_X;
-	guiSKI_AtmButton[SKI_ATM_0] = CreateIconAndTextButton( guiSKI_AtmOkButtonImage, SkiAtmText[SKI_ATM_0], SKI_ATM_BUTTON_FONT,
-													 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-													 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-													 TEXT_CJUSTIFIED,
-													 usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+2,
-													 DEFAULT_MOVE_CALLBACK, BtnSKI_AtmButtonCallback );
-	MSYS_SetBtnUserData(guiSKI_AtmButton[SKI_ATM_0], 0, SKI_ATM_0 );
-
-
-
-	//Create the ok button
-	usPosX = SKI_ATM_BUTTON_X + SKI_ATM_NUM_BUTTON_WIDTH + 8;
-	guiSKI_AtmButton[SKI_ATM_OK] = CreateIconAndTextButton( guiSKI_AtmOkButtonImage, SkiAtmText[SKI_ATM_OK], SKI_ATM_BUTTON_FONT,
-													 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-													 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-													 TEXT_CJUSTIFIED,
-													 usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+2,
-													 DEFAULT_MOVE_CALLBACK, BtnSKI_AtmButtonCallback );
-	MSYS_SetBtnUserData(guiSKI_AtmButton[SKI_ATM_OK], 0, SKI_ATM_OK );
-
-
-	//Create the side menu text buttons
-	usPosX = SKI_ATM_BUTTON_X + SKI_ATM_SIDE_MENU_PANEL_START_X;
-	usPosY = SKI_ATM_BUTTON_Y;
-	for( ubCnt=SKI_ATM_TAKE; ubCnt<=SKI_ATM_CLEAR;ubCnt++ )
-	{
-		guiSKI_AtmButton[ubCnt] = CreateIconAndTextButton( guiSKI_AtmSideMenuButtonImage, SkiAtmText[ubCnt], SKI_ATM_BUTTON_FONT,
-														 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-														 SKI_ATM_BUTTON_COLOR, NO_SHADOW,
-														 TEXT_CJUSTIFIED,
-														 usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+2,
-														 DEFAULT_MOVE_CALLBACK, BtnSKI_AtmButtonCallback );
-
-		MSYS_SetBtnUserData(guiSKI_AtmButton[ubCnt], 0, ubCnt );
-
-		usPosY += SKI_ATM_BUTTON_HEIGHT;
-	}
-
-	//Enable/disable the appropriate buttons
-//ATM:
-//	EnableDisableSkiAtmButtons();
-}
-
-
-static void RemoveSkiAtmButtons(void)
-{
-	UINT8		ubCnt;
-
-	//Remove atm images
-	UnloadButtonImage( guiSKI_AtmNumButtonImage );
-	UnloadButtonImage( guiSKI_AtmOkButtonImage );
-	UnloadButtonImage( guiSKI_AtmSideMenuButtonImage );
-
-
-	//Remove the atm buttons
-	for( ubCnt=0; ubCnt<NUM_SKI_ATM_BUTTONS;ubCnt++)
-	{
-		RemoveButton( guiSKI_AtmButton[ubCnt] );
-	}
-}
-
-
-static void BtnSKI_AtmButtonCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		UINT8	ubButton = (UINT8) MSYS_GetBtnUserData( btn, 0 );
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-//ATM:
-
-//		HandleSkiAtmPanelInput( ubButton );
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-}
-
-
-static void DisplaySkiAtmTransferString(void);
-static void HandleCurrentModeText(UINT8 ubMode);
-static void ToggleSkiAtmButtons(void);
-
-
-static void HandleSkiAtmPanel(void)
-{
-	//Dispaly the appropriate text for the the curret atm mode
-	HandleCurrentModeText( gubCurrentSkiAtmMode );
-
-	//Display Atm transfer string
-	DisplaySkiAtmTransferString();
-
-	ToggleSkiAtmButtons();
-}
-
-
-static void AddNumberToSkiAtm(UINT8 ubNumber);
-static void EnableDisableSkiAtmButtons(void);
-static void HandleAtmOK(void);
-
-
-static void HandleSkiAtmPanelInput(UINT8 ubButtonPress)
-{
-	//switch on the current mode
-	switch( ubButtonPress )
-	{
-		case SKI_ATM_1:
-		case SKI_ATM_2:
-		case SKI_ATM_3:
-		case SKI_ATM_4:
-		case SKI_ATM_5:
-		case SKI_ATM_6:
-		case SKI_ATM_7:
-		case SKI_ATM_8:
-		case SKI_ATM_9:
-		case SKI_ATM_0:
-
-			AddNumberToSkiAtm( ubButtonPress );
-			break;
-
-
-		case SKI_ATM_OK:
-		{
-			HandleAtmOK();
-			break;
-		}
-
-
-		case SKI_ATM_TAKE:
-			gubCurrentSkiAtmMode = SKI_ATM_TAKE_MODE;
-			EnableDisableSkiAtmButtons();
-			break;
-
-
-		case SKI_ATM_GIVE:
-			gubCurrentSkiAtmMode = SKI_ATM_GIVE_MODE;
-			EnableDisableSkiAtmButtons();
-			break;
-
-
-		case SKI_ATM_CANCEL:
-			memset( gzSkiAtmTransferString, 0, 32 );
-			gubCurrentSkiAtmMode = SKI_ATM_DISABLED_MODE;
-			EnableDisableSkiAtmButtons();
-			break;
-
-
-		case SKI_ATM_CLEAR:
-			memset( gzSkiAtmTransferString, 0, 32 );
-			break;
-
-		default:
-			Assert( 0 );
-	}
-}
-
-
-static void HandleAtmOK(void)
-{
-	INT32	iAmountToTransfer;
-	BOOLEAN fOkToClear=FALSE;
-
-	//Get the amount to transfer
-	swscanf( gzSkiAtmTransferString, L"%d", &iAmountToTransfer );
-
-	if( iAmountToTransfer == 0 )
-		return;
-
-	//if we are in an error mode
-	if( gubCurrentSkiAtmMode == SKI_ATM_ERR_TAKE_MODE )
-		gubCurrentSkiAtmMode = SKI_ATM_TAKE_MODE;
-	else if( gubCurrentSkiAtmMode == SKI_ATM_ERR_GIVE_MODE )
-		gubCurrentSkiAtmMode = SKI_ATM_GIVE_MODE;
-
-	//if we are in either the give or take mode, exit
-	if( gubCurrentSkiAtmMode != SKI_ATM_TAKE_MODE && gubCurrentSkiAtmMode != SKI_ATM_GIVE_MODE )
-		return;
-
-
-	//if we are taking money
-	if( gubCurrentSkiAtmMode == SKI_ATM_TAKE_MODE )
-	{
-		//are we trying to take more then the merc has
-		if( iAmountToTransfer > GetFundsOnMerc( gpSMCurrentMerc ) )
-		{
-			UINT32	uiFundsOnCurrentMerc = GetFundsOnMerc( gpSMCurrentMerc );
-
-			if( uiFundsOnCurrentMerc == 0 )
-				memset( gzSkiAtmTransferString, 0, 32 );
-			else
-			{
-				//Set the amount to transfer
-				swprintf( gzSkiAtmTransferString, lengthof(gzSkiAtmTransferString), L"%d", uiFundsOnCurrentMerc );
-			}
-
-			gubCurrentSkiAtmMode = SKI_ATM_ERR_TAKE_MODE;
-			HandleCurrentModeText( gubCurrentSkiAtmMode );
-		}
-		else
-		{
-			TransferFundsFromMercToBank( gpSMCurrentMerc, iAmountToTransfer );
-
-			fOkToClear=TRUE;
-		}
-
-	}
-	else if( gubCurrentSkiAtmMode == SKI_ATM_GIVE_MODE )
-	{
-		//are we tring to take more then we have?
-		if( iAmountToTransfer > LaptopSaveInfo.iCurrentBalance )
-		{
-			if( LaptopSaveInfo.iCurrentBalance == 0 )
-				memset( gzSkiAtmTransferString, 0, 32 );
-			else
-			{
-				//Set the amount to transfer
-				swprintf( gzSkiAtmTransferString, lengthof(gzSkiAtmTransferString), L"%d", LaptopSaveInfo.iCurrentBalance );
-			}
-
-			gubCurrentSkiAtmMode = SKI_ATM_ERR_GIVE_MODE;
-			HandleCurrentModeText( gubCurrentSkiAtmMode );
-		}
-		else
-		{
-			TransferFundsFromBankToMerc( gpSMCurrentMerc, iAmountToTransfer );
-
-			fOkToClear=TRUE;
-		}
-	}
-
-	if( fOkToClear )
-	{
-		gubCurrentSkiAtmMode = SKI_ATM_DISABLED_MODE;
-		EnableDisableSkiAtmButtons();
-		memset( gzSkiAtmTransferString, 0, 32 );
-	}
-
-	//Redraw the screen
-	gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-}
-
-
-static void AddNumberToSkiAtm(UINT8 ubNumber)
-{
-	CHAR16	zTemp[16];
-
-
-	//make sure to durt the panel
-	gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-
-	//if the mode is an error mode
-	if( gubCurrentSkiAtmMode == SKI_ATM_ERR_TAKE_MODE )
-	{
-		gubCurrentSkiAtmMode = SKI_ATM_TAKE_MODE;
-		HandleCurrentModeText( gubCurrentSkiAtmMode );
-	}
-	//else if the mode was
-	else if( gubCurrentSkiAtmMode == SKI_ATM_ERR_GIVE_MODE )
-	{
-		gubCurrentSkiAtmMode = SKI_ATM_GIVE_MODE;
-		HandleCurrentModeText( gubCurrentSkiAtmMode );
-	}
-
-
-	//if we are not in the correct mode, return
-	if( gubCurrentSkiAtmMode != SKI_ATM_TAKE_MODE && gubCurrentSkiAtmMode != SKI_ATM_GIVE_MODE )
-		return;
-
-	//make sure we arent going over the numbers max size
-	if( wcslen( gzSkiAtmTransferString ) >= 9 )
-		return;
-
-	//if its the first number being added and the number is a zero
-	if( gzSkiAtmTransferString[0] == L'\0' && ubNumber == SKI_ATM_0 )
-		return;
-
-	swprintf( zTemp, lengthof(zTemp), L"%d", ubNumber );
-
-	//add the number to the current amount
-	wcscat( gzSkiAtmTransferString, zTemp );
-}
-
-
-static void DisplaySkiAtmTransferString(void)
-{
-	CHAR16 zSkiAtmTransferString[ 32 ];
-
-	//Erase the background behind the string
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, SKI_TRANSFER_STRING_X, SKI_TRANSFER_STRING_Y, SKI_TRANSFER_STRING_X+SKI_TRANSFER_STRING_WIDTH,	SKI_TRANSFER_STRING_Y+SKI_TRANSFER_STRING_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
-	wcscpy( zSkiAtmTransferString, gzSkiAtmTransferString );
-	InsertCommasForDollarFigure( zSkiAtmTransferString );
-	InsertDollarSignInToString( zSkiAtmTransferString );
-
-
-	//Display the transfer string
-	DrawTextToScreen( zSkiAtmTransferString, SKI_TRANSFER_STRING_X, SKI_TRANSFER_STRING_Y, SKI_TRANSFER_STRING_WIDTH, SKI_ATM_BUTTON_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
-
-	//Get and Display the money on the merc
-	SPrintMoney(zSkiAtmTransferString, GetFundsOnMerc(gpSMCurrentMerc));
-	DrawTextToScreen( zSkiAtmTransferString, SKI_TRANSFER_STRING_X, SKI_MERCS_MONEY_Y, SKI_TRANSFER_STRING_WIDTH, SKI_ATM_BUTTON_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
-}
-
-
-static void EnableDisableSkiAtmButtons(void)
-{
-	UINT8	ubCnt;
-
-	switch( gubCurrentSkiAtmMode )
-	{
-		case SKI_ATM_DISABLED_MODE:
-
-			//Disable number positions
-			for( ubCnt=SKI_ATM_0; ubCnt<=SKI_ATM_9; ubCnt++)
-				DisableButton( guiSKI_AtmButton[ubCnt] );
-
-			DisableButton( guiSKI_AtmButton[SKI_ATM_OK] );
-			DisableButton( guiSKI_AtmButton[SKI_ATM_CANCEL] );
-			DisableButton( guiSKI_AtmButton[SKI_ATM_CLEAR] );
-
-			EnableButton( guiSKI_AtmButton[ SKI_ATM_TAKE ] );
-			EnableButton( guiSKI_AtmButton[ SKI_ATM_GIVE ] );
-
-
-			break;
-
-		case SKI_ATM_TAKE_MODE:
-
-			//Make sure the numbers are not disbaled
-			for( ubCnt=SKI_ATM_0; ubCnt<=SKI_ATM_9; ubCnt++)
-				EnableButton( guiSKI_AtmButton[ubCnt] );
-
-
-			//enable other
-			EnableButton( guiSKI_AtmButton[SKI_ATM_OK] );
-			EnableButton( guiSKI_AtmButton[SKI_ATM_CANCEL] );
-			EnableButton( guiSKI_AtmButton[SKI_ATM_CLEAR] );
-
-
-			break;
-
-
-		case SKI_ATM_GIVE_MODE:
-
-			//Make sure the numbers are not disbaled
-			for( ubCnt=SKI_ATM_0; ubCnt<=SKI_ATM_9; ubCnt++)
-				EnableButton( guiSKI_AtmButton[ubCnt] );
-
-			EnableButton( guiSKI_AtmButton[SKI_ATM_OK] );
-			EnableButton( guiSKI_AtmButton[SKI_ATM_CANCEL] );
-			EnableButton( guiSKI_AtmButton[SKI_ATM_CLEAR] );
-
-
-
-			break;
-
-		default:
-			Assert( 0 );
-			break;
-	}
-}
-
-
-static void HandleCurrentModeText(UINT8 ubMode)
-{
-	CHAR16					zTemp[128];
-	CHAR16					zMoney[128];
-	static UINT32		uiLastTime=0;
-	UINT32					uiCurTime=GetJA2Clock();
-	static UINT8		ubLastMode=0;
-	static UINT8		ubDisplayMode=0;
-
-	if( ubMode != ubLastMode )
-	{
-		uiLastTime = uiCurTime;
-		ubLastMode = ubMode;
-		ubDisplayMode = ubMode;
-	}
-	else
-	{
-		//if the current mode is an error mode
-		if( ubLastMode != SKI_ATM_ERR_TAKE_MODE && ubLastMode != SKI_ATM_ERR_GIVE_MODE )
-		{
-			//has the timer gone off?
-			if( ( uiCurTime - uiLastTime ) > DELAY_PER_MODE_CHANGE_IN_ATM )
-			{
-				//display the players current balance
-
-				//if the modes are the same, change to display the players balance
-				if( ubLastMode == ubMode )
-					if( ubMode == ubDisplayMode )
-						ubMode = SKI_ATM_DISPLAY_PLAYERS_BALANCE;
-
-				ubDisplayMode = ubMode;
-
-				uiLastTime = GetJA2Clock();
-			}
-			else
-				ubMode = ubDisplayMode;
-		}
-	}
-
-	//if the current mode is an error mode
-	if( ubLastMode == SKI_ATM_ERR_TAKE_MODE || ubLastMode == SKI_ATM_ERR_GIVE_MODE )
-	{
-		//if it is time to get rid of the error message
-		if( ( uiCurTime - uiLastTime ) > DELAY_PER_MODE_CHANGE_IN_ATM )
-		{
-			if( ubLastMode == SKI_ATM_ERR_TAKE_MODE )
-			{
-				ubLastMode = SKI_ATM_TAKE_MODE;
-				gubCurrentSkiAtmMode = ubLastMode;
-			}
-			else
-			{
-				ubLastMode = SKI_ATM_GIVE_MODE;
-				gubCurrentSkiAtmMode = ubLastMode;
-			}
-		}
-	}
-
-	switch( ubMode )
-	{
-		case SKI_ATM_DISABLED_MODE:
-			wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_SELECT_MODE ] );
-			break;
-
-		case SKI_ATM_TAKE_MODE:
-			//if the player has selected any money yet
-			if( gzSkiAtmTransferString[0] == L'\0' )
-				wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_ENTER_AMOUNT ] );
-			else
-				wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_SELECT_FROM_MERC ] );
-			break;
-
-
-		case SKI_ATM_GIVE_MODE:
-			//if the player has selected any money yet
-			if( gzSkiAtmTransferString[0] == L'\0' )
-				wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_ENTER_AMOUNT ] );
-			else
-				wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_SELECT_TO_MERC ] );
-			break;
-
-		case SKI_ATM_ERR_TAKE_MODE:
-		case SKI_ATM_ERR_GIVE_MODE:
-			wcscpy( zTemp, gzSkiAtmText[ SKI_ATM_MODE_TEXT_SELECT_INUSUFFICIENT_FUNDS ] );
-			break;
-
-		case SKI_ATM_DISPLAY_PLAYERS_BALANCE:
-			SPrintMoney(zMoney, LaptopSaveInfo.iCurrentBalance);
-			swprintf( zTemp, lengthof(zTemp), L"%ls: %ls", gzSkiAtmText[ SKI_ATM_MODE_TEXT_BALANCE ], zMoney );
-			break;
-	}
-
-	DisplayWrappedString( SKI_MODE_TEXT_X, SKI_MODE_TEXT_Y, SKI_MODE_TEXT_WIDTH, 2, SKI_ATM_BUTTON_FONT, FONT_MCOLOR_WHITE, zTemp, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
-
-	//invalidate the atm panel area
-	InvalidateRegion( SKI_ATM_PANEL_X, SKI_ATM_PANEL_Y, SKI_ATM_PANEL_X+SKI_ATM_PANEL_WIDTH, SKI_ATM_PANEL_Y+SKI_ATM_PANEL_HEIGHT );
-}
-
-
-static void ToggleSkiAtmButtons(void)
-{
-	switch( gubCurrentSkiAtmMode )
-	{
-		case SKI_ATM_DISABLED_MODE:
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_TAKE] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_GIVE] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_CANCEL] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			break;
-		case SKI_ATM_TAKE_MODE:
-		case SKI_ATM_ERR_TAKE_MODE:
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_GIVE] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_CANCEL] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_TAKE] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
-
-		case SKI_ATM_GIVE_MODE:
-		case SKI_ATM_ERR_GIVE_MODE:
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_TAKE] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_CANCEL] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-
-			ButtonList[ guiSKI_AtmButton[SKI_ATM_GIVE] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
-	}
-}
-
-
 static void EnableDisableDealersInventoryPageButtons(void)
 {
 	//if we are on the first page, disable the page up arrow
@@ -6253,10 +5598,6 @@ void StartSKIDescriptionBox( void )
 //	DisableButton( guiSKI_EvaluateButton );
 	DisableButton( guiSKI_TransactionButton );
 	DisableButton( guiSKI_DoneButton );
-/*
-	for (iCnt = 0; iCnt < NUM_SKI_ATM_BUTTONS; iCnt++)
-		DisableButton( guiSKI_AtmButton[ iCnt ] );
-*/
 
 	DisableAllDealersInventorySlots();
 	DisableAllDealersOfferSlots();
@@ -6271,8 +5612,6 @@ void StartSKIDescriptionBox( void )
 	{
 		MSYS_DisableRegion( &gShopKeeperSubTitleMouseRegion );
 	}
-
-//	MSYS_DisableRegion( &gShopKeeperCoverTacticalButtonMouseRegion );
 
 //	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
 //	DisableButton( giItemDescAmmoButton );
@@ -6309,11 +5648,6 @@ void DeleteShopKeeperItemDescBox()
 
 //	EnableButton( guiSKI_EvaluateButton );
 
-/*
-	for (iCnt = 0; iCnt < NUM_SKI_ATM_BUTTONS; iCnt++)
-		EnableButton( guiSKI_AtmButton[ iCnt ] );
-*/
-
 	EnableAllDealersInventorySlots();
 	EnableAllDealersOfferSlots();
 
@@ -6327,8 +5661,6 @@ void DeleteShopKeeperItemDescBox()
 	{
 		MSYS_EnableRegion( &gShopKeeperSubTitleMouseRegion );
 	}
-
-//	MSYS_EnableRegion( &gShopKeeperCoverTacticalButtonMouseRegion );
 
 //	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
 //	EnableButton( giItemDescAmmoButton );

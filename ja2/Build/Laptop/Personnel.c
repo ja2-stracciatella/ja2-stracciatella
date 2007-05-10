@@ -36,6 +36,10 @@
 #include "Stubs.h" // XXX
 
 
+// delay for change in ATM mode
+#define DELAY_PER_MODE_CHANGE_IN_ATM 2000
+
+
 #define NUM_BACKGROUND_REPS					40
 #define BACKGROUND_HEIGHT						10
 #define BACKGROUND_WIDTH						125
@@ -5619,6 +5623,11 @@ static void ATMOther2ButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static INT32 GetFundsOnMerc(SOLDIERTYPE* pSoldier);
+static BOOLEAN TransferFundsFromBankToMerc(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance);
+static BOOLEAN TransferFundsFromMercToBank(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance);
+
+
 static void ATMOtherButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -5850,7 +5859,8 @@ static void HandleStateOfATMButtons(void)
 }
 
 
-INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
+// get the total amt of money on this guy
+static INT32 GetFundsOnMerc(SOLDIERTYPE* pSoldier)
 {
 	INT32 iCurrentAmount = 0;
 	INT32 iCurrentPocket = 0;
@@ -5875,7 +5885,7 @@ INT32 GetFundsOnMerc( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
+static BOOLEAN TransferFundsFromMercToBank(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance)
 {
 	INT32 iCurrentPocket = 0;
 	INT32 iAmountLeftToTake = iCurrentBalance;
@@ -5927,7 +5937,7 @@ BOOLEAN TransferFundsFromMercToBank( SOLDIERTYPE *pSoldier, INT32 iCurrentBalanc
 }
 
 
-BOOLEAN TransferFundsFromBankToMerc( SOLDIERTYPE *pSoldier, INT32 iCurrentBalance )
+static BOOLEAN TransferFundsFromBankToMerc(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance)
 {
 	OBJECTTYPE pMoneyObject;
 
