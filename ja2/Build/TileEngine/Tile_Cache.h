@@ -17,14 +17,6 @@ typedef struct
 
 } TILE_CACHE_ELEMENT;
 
-typedef struct
-{
-	CHAR8										Filename[ 150 ];
-	CHAR8										zRootName[ 30 ];	// Root name
-	STRUCTURE_FILE_REF *		pStructureFileRef;
-
-} TILE_CACHE_STRUCT;
-
 
 TILE_CACHE_ELEMENT		*gpTileCache;
 

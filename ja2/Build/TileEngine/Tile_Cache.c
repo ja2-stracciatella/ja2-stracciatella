@@ -12,13 +12,22 @@
 #include "MemMan.h"
 
 
-UINT32	guiNumTileCacheStructs = 0;
-UINT32 guiMaxTileCacheSize		= 50;
-UINT32 guiCurTileCacheSize		= 0;
-INT32  giDefaultStructIndex   = -1;
+typedef struct TILE_CACHE_STRUCT
+{
+	char Filename[150];
+	char zRootName[30];
+	STRUCTURE_FILE_REF* pStructureFileRef;
+} TILE_CACHE_STRUCT;
+
+
+static UINT32 guiNumTileCacheStructs    = 0;
+static const UINT32 guiMaxTileCacheSize = 50;
+static UINT32 guiCurTileCacheSize       = 0;
+static INT32  giDefaultStructIndex      = -1;
+
 
 TILE_CACHE_ELEMENT		*gpTileCache = NULL;
-TILE_CACHE_STRUCT			*gpTileCacheStructInfo = NULL;
+static TILE_CACHE_STRUCT* gpTileCacheStructInfo = NULL;
 
 
 
