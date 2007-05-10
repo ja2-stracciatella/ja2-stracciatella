@@ -2237,31 +2237,11 @@ const wchar_t* pDownloadString[] =
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
 
-const wchar_t* gsAtmSideButtonText[] =
-{
-	L"OK",
-	L"Neem", 			// take money from merc
-	L"Geef", 			// give money to merc
-	L"Stop", 			// cancel transaction
-	L"Leeg", 			// clear amount being displayed on the screen
-};
-
 const wchar_t* gsAtmStartButtonText[] =
 {
-	L"Maak over $", 		// transfer money to merc -- short form
 	L"Info", 			// view stats of the merc
 	L"Inventaris", 			// view the inventory of the merc
 	L"Werk",
-};
-
-const wchar_t* sATMText[ ]=
-{
-	L"Overmaken geld?", 		// transfer funds to merc?
-	L"Ok?", 			// are we certain?
-	L"Geef bedrag", 		// enter the amount you want to transfer to merc
-	L"Geef type", 		// select the type of transfer to merc
-	L"Onvoldoende saldo", 	// not enough money to transfer to merc
-	L"Bedrag moet veelvoud zijn van $10", // transfer amount must be a multiple of $10
 };
 
 // Web error messages. Please use foreign language equivilant for these messages.

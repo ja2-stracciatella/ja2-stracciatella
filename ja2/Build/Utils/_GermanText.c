@@ -2143,31 +2143,12 @@ const wchar_t *pDownloadString[] = {
 };
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
-const wchar_t *gsAtmSideButtonText[] =
-{
-	L"OK",
-	L"Nehmen", 			// take money from merc
-	L"Geben", 			// give money to merc
-	L"Rückgängig", 			// cancel transaction
-	L"Löschen", 			// clear amount being displayed on the screen
-};
 
 const wchar_t *gsAtmStartButtonText[] =
 {
-	L"Überw $", 		// transfer money to merc -- short form
 	L"Statistik", 			// view stats of the merc
 	L"Inventar", 			// view the inventory of the merc
 	L"Anstellung",
-};
-
-const wchar_t *sATMText[] =
-{
-	L"Geld überw.?", 		// transfer funds to merc?
-	L"Ok?", 			// are we certain?
-	L"Betrag eingeben", 		// enter the amount you want to transfer to merc
-	L"Art auswählen", 		// select the type of transfer to merc
-	L"Nicht genug Geld", 	// not enough money to transfer to merc
-	L"Betrag muß durch $10 teilbar sein", // transfer amount must be a multiple of $10
 };
 
 // Web error messages. Please use German equivilant for these messages.

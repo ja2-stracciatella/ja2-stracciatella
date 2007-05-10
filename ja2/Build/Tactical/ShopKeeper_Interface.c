@@ -36,7 +36,6 @@
 #include "Squads.h"
 #include "Soldier_Profile.h"
 #include "Message.h"
-#include "Personnel.h"
 #include "LaptopSave.h"
 #include "Quests.h"
 #include "Weapons.h"

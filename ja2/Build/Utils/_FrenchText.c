@@ -2225,31 +2225,11 @@ const wchar_t* pDownloadString[] =
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
 
-const wchar_t* gsAtmSideButtonText[] =
-{
-	L"OK",
-	L"Prendre", 			// take money from merc
-	L"Donner", 			// give money to merc
-	L"Annuler", 			// cancel transaction
-	L"Effacer", 			// clear amount being displayed on the screen
-};
-
 const wchar_t* gsAtmStartButtonText[] =
 {
-	L"Transférer $", 		// transfer money to merc -- short form
 	L"Stats", 			// view stats of the merc
 	L"Inventaire", 			// view the inventory of the merc
 	L"Tâche",
-};
-
-const wchar_t* sATMText[ ]=
-{
-	L"Transférer les fonds ?", 		// transfer funds to merc?
-	L"Ok ?", 			// are we certain?
-	L"Entrer montant", 		// enter the amount you want to transfer to merc
-	L"Choix du type", 		// select the type of transfer to merc
-	L"Fonds insuffisants", 	// not enough money to transfer to merc
-	L"Le montant doit être un multiple de 10 $", // transfer amount must be a multiple of $10
 };
 
 // Web error messages. Please use foreign language equivilant for these messages.

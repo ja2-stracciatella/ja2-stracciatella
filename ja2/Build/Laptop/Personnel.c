@@ -15,7 +15,6 @@
 #include "Finances.h"
 #include "LaptopSave.h"
 #include "AIMMembers.h"
-#include "Map_Screen_Interface_Map.h"
 #include "Input.h"
 #include "Random.h"
 #include "Line.h"
@@ -159,10 +158,6 @@ enum{
 };
 
 // atm button positions
-#define ATM_BUTTONS_START_Y 110
-#define ATM_BUTTONS_START_X 510
-#define ATM_BUTTON_WIDTH 15
-#define ATM_BUTTON_HEIGHT 15
 #define ATM_DISPLAY_X 509
 #define ATM_DISPLAY_Y 58
 #define ATM_DISPLAY_HEIGHT 10
@@ -176,16 +171,6 @@ enum{
 #define Y_OF_PERSONNEL_SCROLL_REGION 219
 #define X_OF_PERSONNEL_SCROLL_REGION 573
 #define SIZE_OF_PERSONNEL_CURSOR 19
-
-// number buttons
-enum{
-	OK_ATM = 0,
-	DEPOSIT_ATM,
-	WIDTHDRAWL_ATM,
-	CANCEL_ATM,
-	CLEAR_ATM,
-	NUMBER_ATM_BUTTONS,
-};
 
 
 // enums for the buttons in the information side bar ( used with giPersonnelATMStartButton[] )
@@ -244,23 +229,6 @@ UINT8 uiCurrentInventoryIndex = 0;
 
 UINT32 guiSliderPosition;
 
-// the transfer funds string
-CHAR16 sTransferString[ 32 ];
-
-INT32 giPersonnelATMSideButton[ NUMBER_ATM_BUTTONS ];
-INT32 giPersonnelATMSideButtonImage[ NUMBER_ATM_BUTTONS ];
-
-INT32 iNumberPadButtons[ 10 ];
-INT32 iNumberPadButtonsImages[ 10 ];
-
-POINT pAtmSideButtonPts[]={
-	{ 533, 155 },
-	{ 558, 110 },
-	{ 558, 125 },
-	{ 558, 140 },
-	{ 558, 155 },
-};
-
 #define PrsnlOffSetX	(-15) //-20
 #define Prsnl_DATA_OffSetX	(36)
 #define PrsnlOffSetY	10
@@ -317,15 +285,6 @@ INT32 giDepartedButton[ 2 ];
 // buttons for ATM
 INT32 giPersonnelATMStartButton[ 3 ];
 INT32 giPersonnelATMStartButtonImage[ 3 ];
-INT32 giPersonnelATMButton;
-INT32 giPersonnelATMButtonImage;
-
-BOOLEAN fATMFlags = 0;
-BOOLEAN fOldATMFlags = 0;
-// the past team of the player
-//INT16 ubDeadCharactersList[ 256 ];
-//INT16 ubLeftCharactersList[ 256 ];
-//INT16 ubOtherCharactersList[ 256 ];
 
 // the id of currently displayed merc in right half of screen
 INT32 iCurrentPersonSelectedId = -1;
@@ -335,8 +294,6 @@ INT32 giCurrentUpperLeftPortraitNumber = 0;
 // which mode are we showing?..current team?...or deadly departed?
 BOOLEAN fCurrentTeamMode = TRUE;
 
-// show the atm panel?
-BOOLEAN fShowAtmPanel = FALSE;
 BOOLEAN fShowAtmPanelStartButton = TRUE;
 
 // create buttons for scrolling departures
@@ -435,7 +392,6 @@ void EnterPersonnel( void )
 }
 
 
-static void CreateDestroyATMButton(void);
 static void CreateDestroyButtonsForDepartedTeamList(void);
 static void CreateDestroyPersonnelInventoryScrollButtons(void);
 static void CreateDestroyStartATMButton(void);
@@ -457,10 +413,7 @@ void ExitPersonnel( void )
 
 	// get rid of atm panel buttons
 	fShowAtmPanelStartButton = FALSE;
-	fShowAtmPanel = FALSE;
-	fATMFlags = 0;
 	CreateDestroyStartATMButton( );
-	CreateDestroyATMButton( );
 
 //	fShowInventory = FALSE;
 	gubPersonnelInfoState = PRSNL_STATS;
@@ -491,7 +444,6 @@ void ExitPersonnel( void )
 static void EnableDisableDeparturesButtons(void);
 static void EnableDisableInventoryScrollButtons(void);
 static void HandlePersonnelKeyboard(void);
-static void HandleTimedAtmModes(void);
 
 
 void HandlePersonnel( void )
@@ -512,9 +464,6 @@ void HandlePersonnel( void )
 	EnableDisableInventoryScrollButtons( );
 
 	HandlePersonnelKeyboard( );
-
-	// handle timed modes for ATM
-	HandleTimedAtmModes( );
 }
 
 
@@ -5199,65 +5148,22 @@ static INT32 GetIdOfThisSlot(INT32 iSlot)
 }
 
 
-static void DisplayATMAmount(void);
-static void DisplayATMStrings(void);
-static void HandleStateOfATMButtons(void);
-static void RenderRectangleForPersonnelTransactionAmount(void);
-
-
 static BOOLEAN RenderAtmPanel(void)
 {
-	 UINT32 uiBox = 0;
+	// just show basic panel
+	// bounding
+	UINT32 uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
+	CHECKF(uiBox != NO_VOBJECT);
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X    , ATM_UL_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
+	DeleteVideoObjectFromIndex( uiBox );
 
-	// render the ATM panel
-	if( fShowAtmPanel )
-	{
-		uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
-		CHECKF(uiBox != NO_VOBJECT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X, ATM_UL_Y);
-		DeleteVideoObjectFromIndex( uiBox );
-
-		// show amount
-		DisplayATMAmount( );
-		RenderRectangleForPersonnelTransactionAmount( );
-
-		// create destroy
-		CreateDestroyStartATMButton( );
-		CreateDestroyATMButton( );
-
-		// display strings for ATM
-		DisplayATMStrings( );
-
-		// handle states
-		HandleStateOfATMButtons( );
-
-		//DisplayAmountOnCurrentMerc( );
-
-	}
-	else
-	{
-		// just show basic panel
-		// bounding
-		uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
-		CHECKF(uiBox != NO_VOBJECT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X    , ATM_UL_Y);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
-		DeleteVideoObjectFromIndex( uiBox );
-
-		// display strings for ATM
-		DisplayATMStrings( );
-
-		//DisplayAmountOnCurrentMerc( );
-
-		// create destroy
-		CreateDestroyStartATMButton( );
-		CreateDestroyATMButton( );
-	}
+	// create destroy
+	CreateDestroyStartATMButton( );
 	return( TRUE );
 }
 
 
-static void ATMStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void EmployementInfoButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -5268,24 +5174,10 @@ static void CreateDestroyStartATMButton(void)
 	static BOOLEAN fCreated = FALSE;
 	// create/destroy atm start button as needed
 
-
 	if( ( fCreated == FALSE ) && ( fShowAtmPanelStartButton == TRUE ) )
 	{
 		// not created, must create
 
-		/*
-		// the ATM start button
-		giPersonnelATMStartButtonImage[ 0 ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
-		giPersonnelATMStartButton[ 0 ] = QuickCreateButton( giPersonnelATMStartButtonImage[ 0 ] , 519,87,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, ATMStartButtonCallback );
-
-		// set text and what not
-		SpecifyButtonText( giPersonnelATMStartButton[ 0 ] ,gsAtmStartButtonText[ 0 ] );
-		SpecifyButtonUpTextColors( giPersonnelATMStartButton[ 0 ], FONT_BLACK, FONT_BLACK );
-		SpecifyButtonFont( giPersonnelATMStartButton[ 0 ], PERS_FONT );
-		SetButtonCursor(giPersonnelATMStartButton[ 0 ], CURSOR_LAPTOP_SCREEN);
-*/
 		// the stats button
 		giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,2,-1,3,-1 );
 		giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] = QuickCreateButton( giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ] , 519, 80,
@@ -5293,7 +5185,7 @@ static void CreateDestroyStartATMButton(void)
 										MSYS_NO_CALLBACK, PersonnelStatStartButtonCallback );
 
 		// set text and what not
-		SpecifyButtonText( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] ,gsAtmStartButtonText[ 1 ] );
+		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_STAT_BTN], gsAtmStartButtonText[0]);
 		SpecifyButtonUpTextColors( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ], FONT_BLACK, FONT_BLACK );
 		SpecifyButtonFont( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ], PERS_FONT );
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ], CURSOR_LAPTOP_SCREEN);
@@ -5305,7 +5197,7 @@ static void CreateDestroyStartATMButton(void)
 										MSYS_NO_CALLBACK, EmployementInfoButtonCallback );
 
 		// set text and what not
-		SpecifyButtonText( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] ,gsAtmStartButtonText[ 3 ] );
+		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN], gsAtmStartButtonText[2]);
 		SpecifyButtonUpTextColors( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ], FONT_BLACK, FONT_BLACK );
 		SpecifyButtonFont( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ], PERS_FONT );
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ], CURSOR_LAPTOP_SCREEN);
@@ -5317,7 +5209,7 @@ static void CreateDestroyStartATMButton(void)
 										MSYS_NO_CALLBACK, PersonnelINVStartButtonCallback );
 
 		// set text and what not
-		SpecifyButtonText( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] ,gsAtmStartButtonText[ 2 ] );
+		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_INV_BTN], gsAtmStartButtonText[1]);
 		SpecifyButtonUpTextColors( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ], FONT_BLACK, FONT_BLACK );
 		SpecifyButtonFont( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ], PERS_FONT );
 		SetButtonCursor(giPersonnelATMStartButton[ PERSONNEL_INV_BTN ], CURSOR_LAPTOP_SCREEN);
@@ -5328,10 +5220,6 @@ static void CreateDestroyStartATMButton(void)
 	else if( ( fCreated == TRUE ) && ( fShowAtmPanelStartButton == FALSE ) )
 	{
 		// stop showing
-		/*
-		RemoveButton( giPersonnelATMStartButton[ 0 ] );
-		UnloadButtonImage( giPersonnelATMStartButtonImage[ 0 ] );
-		*/
 		RemoveButton( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] );
 		UnloadButtonImage( giPersonnelATMStartButtonImage[ PERSONNEL_STAT_BTN ] );
 		RemoveButton( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] );
@@ -5439,125 +5327,6 @@ static void RenderSliderBarForPersonnelInventory(void)
 }
 
 
-static void CreateDestroyATMButton(void)
-{
-	/*
-	static BOOLEAN fCreated = FALSE;
-	CHAR16 sString[ 32 ];
-
-
-
-	// create/destroy atm start button as needed
-	INT32 iCounter = 0;
-
-	if( ( fCreated == FALSE ) && ( fShowAtmPanel == TRUE ) )
-	{
-
-		for( iCounter = 0; iCounter < 10; iCounter++ )
-		{
-			if( iCounter != 9 )
-			{
-				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,4,-1,6,-1 );
-				swprintf( sString, L"%d", iCounter+1 );
-			}
-			else
-			{
-				iNumberPadButtonsImages[ iCounter ]=LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,7,-1,9,-1 );
-				swprintf( sString, L"%d", iCounter - 9 );
-			}
-
-			iNumberPadButtons[ iCounter ] = QuickCreateButton( iNumberPadButtonsImages[ iCounter ], ( INT16 )( ATM_BUTTONS_START_X + ( ATM_BUTTON_WIDTH * ( INT16 )( iCounter % 3 )) ), ( INT16 )( ATM_BUTTONS_START_Y + ( INT16 )( ATM_BUTTON_HEIGHT * ( iCounter / 3 ))) ,
-									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-									BtnGenericMouseMoveButtonCallback, ATMNumberButtonCallback );
-
-			if( iCounter != 9)
-			{
-				MSYS_SetBtnUserData(iNumberPadButtons[iCounter],0,iCounter + 1 );
-			}
-			else
-			{
-				MSYS_SetBtnUserData(iNumberPadButtons[iCounter],0, 0 );
-			}
-			SetButtonCursor(iNumberPadButtons[iCounter], CURSOR_LAPTOP_SCREEN);
-			SpecifyButtonFont( iNumberPadButtons[iCounter], PERS_FONT );
-			SpecifyButtonText( iNumberPadButtons[iCounter], sString );
-			SpecifyButtonUpTextColors( iNumberPadButtons[iCounter], FONT_BLACK, FONT_BLACK );
-
-		}
-
-
-		// now slap down done, cancel, dep, withdraw
-		for( iCounter = OK_ATM; iCounter < NUMBER_ATM_BUTTONS ;iCounter++ )
-		{
-			if( iCounter == OK_ATM )
-			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,7,-1,9,-1 );
-			}
-			else
-			{
-				giPersonnelATMSideButtonImage[ iCounter ]=  LoadButtonImage( "LAPTOP/AtmButtons.sti" ,-1,10,-1,12,-1 );
-			}
-
-			if( ( iCounter != DEPOSIT_ATM ) && ( iCounter != WIDTHDRAWL_ATM ) )
-			{
-				giPersonnelATMSideButton[ iCounter ] = QuickCreateButton( giPersonnelATMSideButtonImage[ iCounter ], ( INT16 )( pAtmSideButtonPts[ iCounter ].x ), ( INT16 )( pAtmSideButtonPts[ iCounter ].y ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, ATMOtherButtonCallback );
-			}
-			else
-			{
-				giPersonnelATMSideButton[ iCounter ] = QuickCreateButton( giPersonnelATMSideButtonImage[ iCounter ], ( INT16 )( pAtmSideButtonPts[ iCounter ].x ), ( INT16 )( pAtmSideButtonPts[ iCounter ].y ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, ATMOther2ButtonCallback );
-			}
-			MSYS_SetBtnUserData(giPersonnelATMSideButton[iCounter],0,iCounter );
-			SpecifyButtonFont( giPersonnelATMSideButton[iCounter], PERS_FONT );
-			SetButtonCursor(giPersonnelATMSideButton[iCounter], CURSOR_LAPTOP_SCREEN);
-			SpecifyButtonUpTextColors( giPersonnelATMSideButton[iCounter], FONT_BLACK, FONT_BLACK );
-			SpecifyButtonText( giPersonnelATMSideButton[iCounter], gsAtmSideButtonText[ iCounter ] );
-		}
-
-
-		//SetButtonCursor(giPersonnelATMStartButton, CURSOR_LAPTOP_SCREEN);
-		fCreated = TRUE;
-	}
-	else if( ( fCreated == TRUE ) && ( fShowAtmPanel == FALSE ) )
-	{
-		// stop showing
-		//RemoveButton( giPersonnelATMButton );
-		//UnloadButtonImage( giPersonnelATMButtonImage );
-
-		for( iCounter = 0; iCounter < 10; iCounter++ )
-		{
-			UnloadButtonImage( iNumberPadButtonsImages[ iCounter ] );
-			RemoveButton( iNumberPadButtons[ iCounter ] );
-		}
-
-		for( iCounter = OK_ATM; iCounter < NUMBER_ATM_BUTTONS ;iCounter++ )
-		{
-			RemoveButton( giPersonnelATMSideButton[ iCounter ]  );
-			UnloadButtonImage( giPersonnelATMSideButtonImage[ iCounter ] );
-		}
-
-		fCreated = FALSE;
-	}
-
-	*/
-}
-
-
-static void ATMStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		fReDrawScreenFlag=TRUE;
-		fShowAtmPanel = TRUE;
-		fShowAtmPanelStartButton = FALSE;
-		fATMFlags = 0;
-	}
-}
-
-
 static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -5595,266 +5364,6 @@ static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags  &= ~BUTTON_CLICKED_ON;
 		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gubPersonnelInfoState = PRSNL_EMPLOYMENT;
-	}
-}
-
-
-static void ATMOther2ButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		INT32 iValue = MSYS_GetBtnUserData(btn, 0);
-
-		switch (iValue)
-		{
-			case DEPOSIT_ATM:
-				fATMFlags = 2;
-				fReDrawScreenFlag=TRUE;
-				ButtonList[giPersonnelATMSideButton[WIDTHDRAWL_ATM]]->uiFlags &= ~BUTTON_CLICKED_ON;
-				break;
-
-			case WIDTHDRAWL_ATM:
-				fATMFlags = 3;
-				fReDrawScreenFlag = TRUE;
-				ButtonList[giPersonnelATMSideButton[DEPOSIT_ATM]]->uiFlags &= ~BUTTON_CLICKED_ON;
-				break;
-		}
-	}
-}
-
-
-static INT32 GetFundsOnMerc(SOLDIERTYPE* pSoldier);
-static BOOLEAN TransferFundsFromBankToMerc(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance);
-static BOOLEAN TransferFundsFromMercToBank(SOLDIERTYPE* pSoldier, INT32 iCurrentBalance);
-
-
-static void ATMOtherButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if (iCurrentPersonSelectedId != -1)
-		{
-			if (fCurrentTeamMode)
-			{
-				INT32 iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
-				SOLDIERTYPE* pSoldier = MercPtrs[iId];
-				INT32 iValue = MSYS_GetBtnUserData(btn, 0);
-
-				switch (iValue)
-				{
-					case OK_ATM:
-						if( fATMFlags == 0 )
-						{
-							fATMFlags = 1;
-							fReDrawScreenFlag=TRUE;
-							fOneFrameDelayInPersonnel = TRUE;
-						}
-						else if( fATMFlags == 2 )
-						{
-							// deposit from merc to account
-							if( GetFundsOnMerc( pSoldier ) >= wcstol( sTransferString, NULL, 10 ) )
-							{
-								if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
-								{
-									fOldATMFlags = fATMFlags;
-									fATMFlags = 5;
-
-									iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
-									swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-									fReDrawScreenFlag=TRUE;
-								}
-								else
-								{
-									// transfer
-									TransferFundsFromMercToBank( pSoldier, wcstol( sTransferString, NULL, 10 ) );
-									sTransferString[ 0 ] = 0;
-									fReDrawScreenFlag=TRUE;
-								}
-							}
-							else
-							{
-								fOldATMFlags = fATMFlags;
-								fATMFlags = 4;
-								iValue = GetFundsOnMerc( pSoldier );
-								swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-								fReDrawScreenFlag=TRUE;
-							}
-						}
-						else if( fATMFlags == 3 )
-						{
-							// deposit from merc to account
-							if( LaptopSaveInfo.iCurrentBalance >= wcstol( sTransferString, NULL, 10 ) )
-							{
-								if( ( wcstol( sTransferString, NULL, 10 ) % 10 ) != 0 )
-								{
-									fOldATMFlags = fATMFlags;
-									fATMFlags = 5;
-
-									iValue = ( wcstol( sTransferString, NULL, 10 ) - ( wcstol( sTransferString, NULL, 10 ) % 10 ) );
-									swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-									fReDrawScreenFlag=TRUE;
-								}
-								else
-								{
-									// transfer
-									TransferFundsFromBankToMerc( pSoldier, wcstol( sTransferString, NULL, 10 ) );
-									sTransferString[ 0 ] = 0;
-									fReDrawScreenFlag=TRUE;
-								}
-							}
-							else
-							{
-								fOldATMFlags = fATMFlags;
-								fATMFlags = 4;
-								iValue = LaptopSaveInfo.iCurrentBalance;
-								swprintf( sTransferString, lengthof(sTransferString), L"%d", iValue );
-								fReDrawScreenFlag=TRUE;
-							}
-						}
-						else if( fATMFlags == 4 )
-						{
-							fATMFlags = fOldATMFlags;
-							fReDrawScreenFlag=TRUE;
-						}
-						break;
-
-					case DEPOSIT_ATM:
-						fATMFlags = 2;
-						fReDrawScreenFlag=TRUE;
-						break;
-
-					case WIDTHDRAWL_ATM:
-						fATMFlags = 3;
-						fReDrawScreenFlag=TRUE;
-						break;
-
-					case CANCEL_ATM:
-						if( sTransferString[ 0 ] != 0 )
-						{
-							sTransferString[ 0 ] = 0;
-						}
-						else if( fATMFlags != 0 )
-						{
-							fATMFlags = 0;
-							ButtonList[ giPersonnelATMSideButton[ WIDTHDRAWL_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
-							ButtonList[ giPersonnelATMSideButton[ DEPOSIT_ATM ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
-						}
-						else
-						{
-							fShowAtmPanel = FALSE;
-							fShowAtmPanelStartButton = TRUE;
-
-						}
-						fReDrawScreenFlag=TRUE;
-						break;
-
-					case CLEAR_ATM:
-						sTransferString[ 0 ] = 0;
-						fReDrawScreenFlag=TRUE;
-						break;
-				}
-			}
-		}
-	}
-}
-
-
-static void ATMNumberButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		INT32 iValue = MSYS_GetBtnUserData(btn, 0);
-		INT32 iCounter;
-
-		// find position in value string, append character at end
-		iCounter = wcslen(sTransferString);
-		sTransferString[iCounter] = L'0' + (UINT16)iValue;
-		sTransferString[iCounter + 1] = L'\0';
-		fReDrawScreenFlag = TRUE;
-
-		// gone too far
-		if (StringPixLength(sTransferString, ATM_FONT) >= ATM_DISPLAY_WIDTH - 10)
-		{
-			sTransferString[iCounter] = L'\0';
-		}
-	}
-}
-
-
-static void DisplayATMAmount(void)
-{
-
-	INT16 sX = 0, sY = 0;
-	CHAR16 sTempString[ 32 ];
-	INT32 iCounter = 0;
-
-	if( fShowAtmPanel == FALSE )
-	{
-		return;
-	}
-
-	wcscpy( sTempString, sTransferString );
-
-	if( ( sTempString[ 0 ] == 48 ) && ( sTempString[ 1 ] != 0 ) )
-	{
-		// strip the zero from the beginning
-		for(iCounter = 1; iCounter < ( INT32 )wcslen( sTempString ); iCounter++ )
-		{
-			sTempString[ iCounter - 1 ] = sTempString[ iCounter ];
-		}
-	}
-
-	// insert commas and dollar sign
-	InsertCommasForDollarFigure( sTempString );
-	InsertDollarSignInToString( sTempString );
-
-	// set font
-	SetFont( ATM_FONT );
-
-	// set back and foreground
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-
-
-	// right justify
-	FindFontRightCoordinates( ATM_DISPLAY_X, ATM_DISPLAY_Y + 37, ATM_DISPLAY_WIDTH, ATM_DISPLAY_HEIGHT, sTempString, ATM_FONT, &sX, &sY );
-
-	// print string
-	mprintf( sX, sY, sTempString );
-}
-
-
-static void HandleStateOfATMButtons(void)
-{
-	INT32 iCounter = 0;
-
-	// disable buttons based on state
-	if( ( fATMFlags == 0 ) )
-	{
-		for( iCounter = 0; iCounter < 10 ; iCounter++ )
-		{
-			DisableButton( iNumberPadButtons[ iCounter ] );
-		}
-
-		for( iCounter = 0; iCounter < NUMBER_ATM_BUTTONS; iCounter++ )
-		{
-			if( ( iCounter != DEPOSIT_ATM) && ( iCounter != WIDTHDRAWL_ATM ) && ( iCounter != CANCEL_ATM )  )
-			{
-				DisableButton( giPersonnelATMSideButton[ iCounter ] );
-			}
-		}
-	}
-	else
-	{
-		for( iCounter = 0; iCounter < 10; iCounter++ )
-		{
-			EnableButton( iNumberPadButtons[ iCounter ] );
-		}
-
-		for( iCounter = 0; iCounter < NUMBER_ATM_BUTTONS; iCounter++ )
-		{
-			EnableButton( giPersonnelATMSideButton[ iCounter ] );
-		}
 	}
 }
 
@@ -5986,54 +5495,6 @@ static BOOLEAN TransferFundsFromBankToMerc(SOLDIERTYPE* pSoldier, INT32 iCurrent
 }
 
 
-static void DisplayATMStrings(void)
-{
-	// display strings for ATM
-
-	switch( fATMFlags )
-	{
-		case( 0 ):
-			if( fShowAtmPanelStartButton == FALSE )
-			{
-				DisplayWrappedString(509, ( INT16 )( 80 ), 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 3 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-			}
-		break;
-		case( 2 ):
-			if( sTransferString[ 0 ] != 0 )
-			{
-				DisplayWrappedString(509, 80, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 0 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-				//DisplayWrappedString(509, ( INT16 )( 80 + GetFontHeight( ATM_FONT ) ), 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 1 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-
-			}
-			else
-			{
-				DisplayWrappedString(509, 80, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 2 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-			}
-		break;
-		case( 3 ):
-			if( sTransferString[ 0 ] != 0 )
-			{
-				DisplayWrappedString(509, 80, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 0 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-				//DisplayWrappedString(509, ( INT16 )( 80 + GetFontHeight( ATM_FONT ) ), 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 1 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-			}
-			else
-			{
-				DisplayWrappedString(509, 80, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 2 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-			}
-		break;
-		case( 4 ):
-			// not enough money
-			DisplayWrappedString(509, 80, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 4 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-		break;
-		case( 5 ):
-			// not enough money
-			DisplayWrappedString(509, 73, 81, 2, ATM_FONT, FONT_WHITE, sATMText[ 5 ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-		break;
-
-	}
-}
-
-
 // check if current guy can have atm
 static void UpDateStateOfStartButton(void)
 {
@@ -6071,7 +5532,6 @@ static void UpDateStateOfStartButton(void)
 		// is the current guy valid
 		if( GetNumberOfMercsDeadOrAliveOnPlayersTeam( ) > 0 )
 		{
-			//EnableButton( giPersonnelATMStartButton[ 0 ] );
 			EnableButton( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] );
 			EnableButton( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] );
 			EnableButton( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] );
@@ -6082,7 +5542,6 @@ static void UpDateStateOfStartButton(void)
 			{
 				if( Menptr[ iId ].bAssignment == ASSIGNMENT_POW )
 				{
-					//DisableButton( giPersonnelATMStartButton[ 0 ] );
 					DisableButton( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] );
 
 //					if( fShowInventory == TRUE )
@@ -6093,12 +5552,6 @@ static void UpDateStateOfStartButton(void)
 
 						fPausedReDrawScreenFlag = TRUE;
 					}
-
-					if( fATMFlags )
-					{
-						fATMFlags = 0;
-						fPausedReDrawScreenFlag = TRUE;
-					}
 				}
 			}
 
@@ -6107,7 +5560,6 @@ static void UpDateStateOfStartButton(void)
 		else
 		{
 			// not valid, disable
-			//DisableButton( giPersonnelATMStartButton[ 0 ] );
 			DisableButton( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] );
 			DisableButton( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] );
 			DisableButton( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] );
@@ -6118,7 +5570,6 @@ static void UpDateStateOfStartButton(void)
 	else
 	{
 		// disable button
-		//DisableButton( giPersonnelATMStartButton[ 0 ] );
 		EnableButton( giPersonnelATMStartButton[ PERSONNEL_STAT_BTN ] );
 		DisableButton( giPersonnelATMStartButton[ PERSONNEL_INV_BTN ] );
 		DisableButton( giPersonnelATMStartButton[ PERSONNEL_EMPLOYMENT_BTN ] );
@@ -6165,110 +5616,10 @@ static void DisplayAmountOnCurrentMerc(void)
 
 static void HandlePersonnelKeyboard(void)
 {
-	INT32 iCounter = 0;
-	INT32 iValue = 0;
-	CHAR16 sZero[ 2 ] = L"0";
-
 	InputAtom					InputEvent;
-
   while (DequeueEvent(&InputEvent) == TRUE)
   {
-		if ( (InputEvent.usEvent == KEY_DOWN ) && (InputEvent.usParam >= '0' ) && ( InputEvent.usParam <= '9') )
-		{
-			if( ( fShowAtmPanel ) && ( fATMFlags != 0 ) )
-			{
-				iValue = ( INT32 )( InputEvent.usParam - '0' );
-
-				for( iCounter = 0; iCounter < ( INT32 )wcslen( sTransferString ) ; iCounter++ );
-				sTransferString[ iCounter ] = ( sZero[ 0 ] + ( UINT16 )iValue );
-				sTransferString[ iCounter + 1 ] = 0;
-				fPausedReDrawScreenFlag=TRUE;
-
-				// gone too far
-				if( StringPixLength( sTransferString, ATM_FONT ) >= ATM_DISPLAY_WIDTH - 10 )
-				{
-					sTransferString[ iCounter ] = 0;
-				}
-			}
-		}
-
 		HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );
-	}
-}
-
-
-static void RenderRectangleForPersonnelTransactionAmount(void)
-{
-	INT32 iLength = 0;
-	INT32 iHeight = GetFontHeight( ATM_FONT );
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	CHAR16 sTempString[ 32 ];
-	INT32	 iCounter = 0;
-
-
-	wcscpy( sTempString, sTransferString );
-
-	if( ( sTempString[ 0 ] == 48 ) && ( sTempString[ 1 ] != 0 ) )
-	{
-		// strip the zero from the beginning
-		for(iCounter = 1; iCounter < ( INT32 )wcslen( sTempString ); iCounter++ )
-		{
-			sTempString[ iCounter - 1 ] = sTempString[ iCounter ];
-		}
-	}
-
-	// insert commas and dollar sign
-	InsertCommasForDollarFigure( sTempString );
-	InsertDollarSignInToString( sTempString );
-
-	// string not worth worrying about?
-	if( wcslen( sTempString ) < 2 )
-	{
-		return;
-	}
-
-	// grab total length
-	iLength = StringPixLength( sTempString, ATM_FONT );
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-	RectangleDraw( TRUE, ( ATM_DISPLAY_X + ATM_DISPLAY_WIDTH ) - iLength - 2,  ATM_DISPLAY_Y + 35, ATM_DISPLAY_X + ATM_DISPLAY_WIDTH + 1, ATM_DISPLAY_Y + iHeight + 36, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf );
-	UnLockVideoSurface( FRAME_BUFFER );
-
-}
-
-
-static void HandleTimedAtmModes(void)
-{
-	static BOOLEAN fOldAtmMode = 0;
-	static UINT32 uiBaseTime = 0;
-
-	if( fShowAtmPanel == FALSE )
-	{
-		return;
-	}
-
-	// update based on modes
-	if( fATMFlags != fOldAtmMode )
-	{
-		uiBaseTime = GetJA2Clock();
-		fOldAtmMode = fATMFlags;
-		fPausedReDrawScreenFlag = TRUE;
- 	}
-
-
-	if( ( GetJA2Clock() - uiBaseTime ) > DELAY_PER_MODE_CHANGE_IN_ATM )
-	{
-		switch( fATMFlags )
-		{
-			case( 4 ):
-			case( 5 ):
-				// insufficient funds ended
-				fATMFlags = fOldATMFlags;
-				fPausedReDrawScreenFlag = TRUE;
-			break;
-		}
 	}
 }
 
