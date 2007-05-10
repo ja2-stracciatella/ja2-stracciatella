@@ -4,7 +4,6 @@
 #include "VObject.h"
 
 #include "Soldier_Control.h"
-#include "Overhead.h"
 #include "Structure_Internals.h"
 
 
