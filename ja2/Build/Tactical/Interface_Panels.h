@@ -98,8 +98,7 @@ TEAM_PANEL_SLOTS_TYPE		gTeamPanel[ NUM_TEAM_SLOTS ];
 
 
 //Used when the shop keeper interface is active
-void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons );
-//void DisableSMPpanelButtonsWhenInShopKeeperInterface( );
+void DisableSMPpanelButtonsWhenInShopKeeperInterface(void);
 
 //
 void ReEvaluateDisabledINVPanelButtons( );

@@ -5190,8 +5190,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-
-void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
+void DisableSMPpanelButtonsWhenInShopKeeperInterface(void)
 {
 	//Go through the buttons that will be under the ShopKeepers ATM panel and disable them
 	DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
@@ -5223,45 +5222,6 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface( BOOLEAN fDontDrawButtons )
 	DisableButton( iSMPanelButtons[ MUTE_BUTTON ] );
 
 	DisableButton( giSMStealthButton );
-
-
-
-
-	if( fDontDrawButtons )
-	{
-//ATM:
-
-		//Go through the buttons that will be under the ShopKeepers ATM panel and disable them
-		ButtonList[ iSMPanelButtons[ STANCEUP_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ CLIMB_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ STANCEDOWN_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-		ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->uiFlags &= ~BUTTON_DIRTY;
-
-		ButtonList[ giSMStealthButton ]->uiFlags &= ~BUTTON_DIRTY;
-
-		//Make sure the options button is disabled
-		ButtonList[ iSMPanelButtons[ OPTIONS_BUTTON ] ]->uiFlags &= ~BUTTON_ENABLED;
-
-		//Make sure the mapscreen button is disabled
-		ButtonList[ iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] ]->uiFlags &= ~BUTTON_ENABLED;
-
-		ButtonList[ iSMPanelButtons[ STANCEUP_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ CLIMB_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ STANCEDOWN_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
-		ButtonList[ giSMStealthButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-	}
 }
 
 

@@ -600,7 +600,7 @@ UINT32	ShopKeeperScreenHandle()
 
 	// render buttons marked dirty
 //ATM:
-	DisableSMPpanelButtonsWhenInShopKeeperInterface( FALSE );
+	DisableSMPpanelButtonsWhenInShopKeeperInterface();
 	RenderButtons( );
 
 	// render help
@@ -1118,7 +1118,7 @@ static void HandleShopKeeperInterface(void)
 	//if we are in the item desc panel, disable the buttons
 	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
 	{
-		DisableSMPpanelButtonsWhenInShopKeeperInterface( FALSE );
+		DisableSMPpanelButtonsWhenInShopKeeperInterface();
 		DisableButton( guiSKI_InvPageUpButton );
 		DisableButton( guiSKI_InvPageDownButton );
 		DisableButton( guiSKI_TransactionButton );
