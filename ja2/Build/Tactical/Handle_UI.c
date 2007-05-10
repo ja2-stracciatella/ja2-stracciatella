@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "Soldier_Find.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "JAScreens.h"

@@ -1,3 +1,4 @@
+#include "Soldier_Find.h"
 #include "Vehicles.h"
 #include "Strategic_Pathing.h"
 #include "Assignments.h"

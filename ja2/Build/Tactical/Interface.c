@@ -4,6 +4,7 @@
 #include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
+#include "Soldier_Find.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"

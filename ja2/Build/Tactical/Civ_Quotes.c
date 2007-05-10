@@ -1,6 +1,7 @@
 #include "Civ_Quotes.h"
 #include "Font_Control.h"
 #include "MouseSystem.h"
+#include "Soldier_Find.h"
 #include "StrategicMap.h"
 #include "WCheck.h"
 #include "Encrypted_File.h"

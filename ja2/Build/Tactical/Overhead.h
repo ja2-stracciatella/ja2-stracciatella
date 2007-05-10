@@ -3,7 +3,6 @@
 
 #include "Soldier_Control.h"
 #include "Overhead_Types.h"
-#include "Soldier_Find.h"
 #define				ADD_SOLDIER_NO_PROFILE_ID		200
 
 #define  MAX_REALTIME_SPEED_VAL						10

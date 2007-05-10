@@ -4,6 +4,7 @@
 #include "LOS.h"
 #include "Physics.h"
 #include "Items.h"
+#include "Soldier_Find.h"
 #include "Weapons.h"
 #include "Spread_Burst.h"
 #include "Overhead.h"

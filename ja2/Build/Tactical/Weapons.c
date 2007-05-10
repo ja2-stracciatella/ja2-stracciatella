@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "SGP.h"
 #include "Overhead_Types.h"
+#include "Soldier_Find.h"
 #include "Sound_Control.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"

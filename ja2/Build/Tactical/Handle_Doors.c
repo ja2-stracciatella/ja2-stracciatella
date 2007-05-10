@@ -3,6 +3,7 @@
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "RenderWorld.h"
+#include "Soldier_Find.h"
 #include "Structure.h"
 #include "Animation_Control.h"
 #include "Points.h"

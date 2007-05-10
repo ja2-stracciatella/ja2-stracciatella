@@ -3,6 +3,7 @@
 #include "Action_Items.h"
 #include "Handle_Items.h"
 #include "Overhead.h"
+#include "Soldier_Find.h"
 #include "Weapons.h"
 #include "Points.h"
 #include "TileDef.h"

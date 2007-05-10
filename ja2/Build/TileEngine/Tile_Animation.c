@@ -1,3 +1,4 @@
+#include "Soldier_Find.h"
 #include "WorldDef.h"
 #include "WCheck.h"
 #include "Debug.h"

@@ -17,6 +17,7 @@
 #include "Rotting_Corpses.h"
 #include "SGP.h"
 #include "Shading.h"
+#include "Soldier_Find.h"
 #include "Sound_Control.h"
 #include "SysUtil.h"
 #include "Sys_Globals.h"

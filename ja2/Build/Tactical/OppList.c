@@ -9,6 +9,7 @@
 #include "OppList.h"
 #include "AI.h"
 #include "Font_Control.h"
+#include "Soldier_Find.h"
 #include "Sys_Globals.h"
 #include "Animation_Control.h"
 #include "LOS.h"
