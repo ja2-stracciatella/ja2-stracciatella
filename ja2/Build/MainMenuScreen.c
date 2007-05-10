@@ -3,7 +3,6 @@
 #include "Timer_Control.h"
 #include "Sys_Globals.h"
 #include "SysUtil.h"
-#include "MercTextBox.h"
 #include "WCheck.h"
 #include "Cursors.h"
 #include "Font_Control.h"

@@ -1,3 +1,8 @@
+MercTextBox.h
+Soldier_Find.h
+gubWorldRoomHidden: static?
+GetItemPool(): interface complicated
+ConfirmActionCancel(): overkill
 (BOOLEAN): incorrect/unnecessary casts
 (DOUBLE): casts placed wrong
 ANITILE_REVERSE_LOOPING: never set
@@ -75,6 +80,7 @@ GetQuoteBitNumberFromQuoteID(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
+GetSlotInvHeightWidth(), GetSlotInvXY(): interface complicated, callers
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTheStateOfDepartedMerc(): callers
 GetTileFlags(): interface complicated
