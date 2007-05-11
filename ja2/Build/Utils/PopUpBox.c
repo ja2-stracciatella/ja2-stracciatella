@@ -17,7 +17,6 @@ typedef struct PopUpString {
 	UINT8 ubShade;
 	UINT8 ubSecondaryShade;
 	UINT32 uiFont;
-	BOOLEAN fColorFlag;
 	BOOLEAN fHighLightFlag;
 	BOOLEAN fShadeFlag;
 	BOOLEAN fSecondaryShadeFlag;
@@ -446,7 +445,6 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 	RemoveCurrentBoxPrimaryText( iCounter );
 
 	Box->Text[iCounter]                      = pStringSt;
-	Box->Text[iCounter]->fColorFlag          = FALSE;
 	Box->Text[iCounter]->pString             = pLocalString;
 	Box->Text[iCounter]->fShadeFlag          = FALSE;
 	Box->Text[iCounter]->fHighLightFlag      = FALSE;
@@ -498,7 +496,6 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 	RemoveCurrentBoxSecondaryText( iCounter );
 
 	Box->pSecondColumnString[iCounter]                 = pStringSt;
-	Box->pSecondColumnString[iCounter]->fColorFlag     = FALSE;
 	Box->pSecondColumnString[iCounter]->pString        = pLocalString;
 	Box->pSecondColumnString[iCounter]->fShadeFlag     = FALSE;
 	Box->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
@@ -543,7 +540,6 @@ static void AddColorString(INT32* hStringHandle, STR16 pString)
 	RemoveCurrentBoxPrimaryText( iCounter );
 
 	Box->Text[iCounter]             = pStringSt;
-	Box->Text[iCounter]->fColorFlag = TRUE;
 	Box->Text[iCounter]->pString    = pLocalString;
 
 	*hStringHandle=iCounter;
