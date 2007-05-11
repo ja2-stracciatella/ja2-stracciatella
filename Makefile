@@ -307,7 +307,6 @@ SRCS += ja2/Build/TacticalAI/Medical.c
 SRCS += ja2/Build/TacticalAI/Movement.c
 SRCS += ja2/Build/TacticalAI/NPC.c
 SRCS += ja2/Build/TacticalAI/PanicButtons.c
-SRCS += ja2/Build/TacticalAI/QuestDebug.c
 SRCS += ja2/Build/TacticalAI/Realtime.c
 SRCS += ja2/Build/TileEngine/Ambient_Control.c
 SRCS += ja2/Build/TileEngine/Buildings.c
