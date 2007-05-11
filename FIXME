@@ -4,8 +4,10 @@ ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
+AddUIElem(): interface complicated
 AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
+BLOODTIME: unused
 BlitMineText(): code duplication
 BlitMineText(): unnecessary wcscpy()
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
@@ -54,6 +56,7 @@ EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
 EvaluateWorld(): complicated
 ExecuteGameEvent(): code duplication
+FOOTPRINTTIME: unused
 FaceRegionMvtCallback(): unused
 FileCheckEndOfFile(): complicated
 Filler, Padding, Unused, filler: remove, partially bogus
@@ -198,6 +201,8 @@ SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SLOW_ANIMATION: never set or cleared, only in unused function
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
+SOLDIER_QUOTE_SAID_DROWNING: never set
+SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
 SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
 STRUCTURE_TREE: never set
 SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated

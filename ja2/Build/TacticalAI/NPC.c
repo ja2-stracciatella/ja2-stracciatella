@@ -15,7 +15,6 @@
 #include "Items.h"
 #include "Interface.h"
 #include "Assignments.h"
-#include "QuestDebug.h"
 #include "Soldier_Macros.h"
 #include "Dialogue_Control.h"
 #include "Strategic_Town_Loyalty.h"

@@ -52,7 +52,6 @@
 #include "Tile_Animation.h"
 #include "Merc_Entering.h"
 #include "Explosion_Control.h"
-#include "QuestDebug.h"
 #include "Assignments.h"
 #include "EditScreen.h"
 #include "Structure_Wrap.h"
@@ -2010,13 +2009,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
 							ChangeSoldiersBodyType( INFANT_MONSTER, TRUE );
-						}
-					}
-					else if( fCtrl ) //toggle between the different npc debug modes
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ToggleQuestDebugModes( QD_NPC_MSG );
 						}
 					}
 					else
