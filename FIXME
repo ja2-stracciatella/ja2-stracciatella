@@ -173,7 +173,6 @@ OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
 PalEditKeyboardHook(): code duplication
-PauseRT(): empty
 PayMilitiaTrainingYesNoBoxCallback(): users
 PerformTest(): useful?
 PlayerGroupInMotion(): overkill
@@ -265,13 +264,11 @@ guiCacheSize: const
 guiMemTotal: remove
 guiSkiAtmImage: unused/commented out
 gzFilename: wchar_t[] -> char[]?
-gzSkiAtmTransferString: complicated? int?
 pSoldier = pSoldier: strange
 struct ETRLEData: reorder attributes
 swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
 typedef float real: remove
 ubTravelRating: write-only
-wPrintSpec: use pointer instead of copy
 wcscat(): check for overkill
 zNewTacticalMessages[TACT_MSG__AIMMEMBER_FEE_TEXT]: unused
 zNewTacticalMessages[TACT_MSG__AIMMEMBER_ONE_TIME_FEE]: unused

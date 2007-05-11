@@ -1532,7 +1532,6 @@ static void PrintEnemyPopTable(void)
 	UINT8		ubEnemyType;
 	SECTORINFO *pSector;
 	GROUP *pGroup;
-	wchar_t wPrintSpec[10];
 	wchar_t wTempString[10];
 
 
@@ -1655,22 +1654,23 @@ static void PrintEnemyPopTable(void)
 	{
 		for ( ubEnemyType = 0; ubEnemyType < POP_TABLE_ENEMY_TYPES; ubEnemyType++ )
 		{
+			const wchar_t* PrintSpec;
 			// an exclusive OR operator, how often do ya see that, huh?  :-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubEnemyType == ENEMY_TYPE_PERCENT ) )
 			{
-				wcscpy(wPrintSpec, L"%3d%%");
+				PrintSpec = L"%3d%%";
 			}
 			else
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) && ( ubEnemyType == ENEMY_TYPE_PERCENT ) )
 			{
-				wcscpy( wPrintSpec, L"" );
+				PrintSpec = L"";
 			}
 			else
 			{
-				wcscpy( wPrintSpec, L"%4d" );
+				PrintSpec = L"%4d";
 			}
 
-			swprintf(wTempString, lengthof(wTempString), wPrintSpec, usEnemyPopTable[ubEnemyRank][ubEnemyType]);
+			swprintf(wTempString, lengthof(wTempString), PrintSpec, usEnemyPopTable[ubEnemyRank][ubEnemyType]);
 			DrawTextToScreen( wTempString, ( UINT16 ) ( usX + ( POP_TABLE_X_GAP * ubEnemyRank ) ), ( UINT16 ) ( usY + ( POP_TABLE_Y_GAP * ubEnemyType ) ), POP_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, FALSE, RIGHT_JUSTIFIED );
 		}
 	}
@@ -1707,7 +1707,6 @@ static void PrintEnemiesKilledTable(void)
 	UINT16 usEnemiesKilledTable[ TABLE_ENEMY_RANKS ][ KILLED_TABLE_ROWS ];
 	UINT8	ubEnemyRank;
 	UINT8 ubKillType;
-	wchar_t wPrintSpec[10];
 	wchar_t wTempString[10];
 
 
@@ -1795,22 +1794,23 @@ static void PrintEnemiesKilledTable(void)
 	{
 		for ( ubKillType = 0; ubKillType < KILLED_TABLE_ROWS; ubKillType++ )
 		{
+			const wchar_t* PrintSpec;
 			// an exclusive OR operator, how often do ya see that, huh?  :-)
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) ^ ( ubKillType == ENEMIES_KILLED_PERCENT ) )
 			{
-				wcscpy(wPrintSpec, L"%3d%%");
+				PrintSpec = L"%3d%%";
 			}
 			else
 			if ( ( ubEnemyRank == ENEMY_RANK_PERCENT ) && ( ubKillType == ENEMIES_KILLED_PERCENT ) )
 			{
-				wcscpy( wPrintSpec, L"" );
+				PrintSpec = L"";
 			}
 			else
 			{
-				wcscpy( wPrintSpec, L"%4d" );
+				PrintSpec = L"%4d";
 			}
 
-			swprintf(wTempString, lengthof(wTempString), wPrintSpec, usEnemiesKilledTable[ubEnemyRank][ubKillType]);
+			swprintf(wTempString, lengthof(wTempString), PrintSpec, usEnemiesKilledTable[ubEnemyRank][ubKillType]);
 			DrawTextToScreen( wTempString, ( UINT16 ) ( usX + ( KILLED_TABLE_X_GAP * ubEnemyRank ) ), ( UINT16 ) ( usY + ( KILLED_TABLE_Y_GAP * ubKillType ) ), KILLED_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, FALSE, RIGHT_JUSTIFIED );
 		}
 	}
