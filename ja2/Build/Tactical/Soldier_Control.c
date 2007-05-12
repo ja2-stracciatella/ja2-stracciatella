@@ -35,10 +35,6 @@
 #include "Soldier_Macros.h"
 #include "English.h"
 #include "Squads.h"
-#ifdef NETWORKED
-#	include "Networking.h"
-#	include "NetworkEvent.h"
-#endif
 #include "Structure_Wrap.h"
 #include "Items.h"
 #include "SoundMan.h"
@@ -7768,11 +7764,6 @@ void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance )
 {
 #if 0
 	EV_S_CHANGESTANCE			SChangeStance;
-
-	#ifdef NETWORKED
-	if( !IsTheSolderUnderMyControl( pSoldier->ubID) )
-		return;
-	#endif
 
 	SChangeStance.ubNewStance   = ubNewStance;
 	SChangeStance.usSoldierID  = pSoldier->ubID;

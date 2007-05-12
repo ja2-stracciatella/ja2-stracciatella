@@ -254,6 +254,7 @@ WrapString(): Make 1st parameter read-only
 WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fResetContractGlow: probably always TRUE
+fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
 gTileTypeLogicalHeight[]: definition not used in file

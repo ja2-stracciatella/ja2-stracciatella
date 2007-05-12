@@ -1,7 +1,6 @@
 #ifndef EVENT_PROCESSOR_H
 #define EVENT_PROCESSOR_H
 
-#define NETWORK_PATH_DATA_SIZE	6
 // Enumerate all events for JA2
 enum
 {
@@ -20,21 +19,12 @@ enum
 	S_MISS,
 	S_NOISE,
 	S_STOP_MERC,
-
-	EVENTS_LOCAL_AND_NETWORK,				// Events above here are sent locally and over network
-
 	S_GETNEWPATH,
 	S_SETPOSITION,
 	S_CHANGESTATE,
 	S_SETDIRECTION,
-	EVENTS_ONLY_USED_LOCALLY,			// Events above are only used locally
-
-	S_SENDPATHTONETWORK,
-	S_UPDATENETWORKSOLDIER,
-  EVENTS_ONLY_SENT_OVER_NETWORK,	// Events above are only sent to the network
 
 	NUM_EVENTS
-
 } eJA2Events;
 
 // This definition is used to denote events with a special delay value;
@@ -211,33 +201,6 @@ typedef struct
 	INT16		sYPos;
 
 } EV_S_STOP_MERC;
-
-
-
-typedef struct
-{
-	UINT8		usSoldierID;
-	UINT32  uiUniqueId;
-	UINT8		usPathDataSize;			// Size of Path
-	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
-	UINT8		usCurrentPathIndex;	// Index the owner of the merc is at when sending packet
-	UINT8		usPathData[ NETWORK_PATH_DATA_SIZE ];		// make define  // Next X tile to go to
-	UINT8		ubNewState;			// new movment Anim
-//	INT8		bActionPoints;
-//	INT8		bBreath;			// current breath value
-//	INT8		bDesiredDirection;
-
-	// maybe send current action & breath points
-} EV_S_SENDPATHTONETWORK;
-
-typedef struct
-{
-	UINT8		usSoldierID;
-	UINT32  uiUniqueId;
-	INT16		sAtGridNo;					// Owner merc is at this tile when sending packet
-	INT8		bActionPoints;			// current A.P. value
-	INT8		bBreath;						// current breath value
-} EV_S_UPDATENETWORKSOLDIER;
 
 
 BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );

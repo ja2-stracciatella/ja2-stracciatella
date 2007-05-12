@@ -36,10 +36,6 @@
 #include "Air_Raid.h"
 #include "Game_Clock.h"
 #include "Game_Init.h"
-//DEF: Test Code
-#ifdef NETWORKED
-#include "Networking.h"
-#endif
 #include "Interface_Control.h"
 #include "Physics.h"
 #include "Fade_Screen.h"
@@ -731,11 +727,6 @@ UINT32  MainGameScreenHandle(void)
 		// Handle Interface Stuff
 		//RenderTacticalInterface( );
 	}
-
-	#ifdef NETWORKED
-	// DEF:  Test Code
-	PrintNetworkInfo();
-	#endif
 
 	// Render Interface
 	RenderTopmostTacticalInterface( );

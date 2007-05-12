@@ -28,10 +28,6 @@
 #include "Soldier_Profile.h"
 #include "Gap.h"
 #include "Campaign.h"
-#ifdef NETWORKED
-#	include "Networking.h"
-#	include "NetworkEvent.h"
-#endif
 #include "Structure_Wrap.h"
 #include "Items.h"
 #include "SoundMan.h"

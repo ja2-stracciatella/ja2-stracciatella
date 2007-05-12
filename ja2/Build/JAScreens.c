@@ -49,13 +49,6 @@
 #endif
 
 #define _UNICODE
-// Networking Stuff
-#ifdef NETWORKED
-
-#include "Communication.h"
-#include "Application Msg.h"
-#include "Networking.h"
-#endif
 
 #define MAX_DEBUG_PAGES 4
 

@@ -439,13 +439,6 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 		sAPCost = 0;
 	}
 
-	#ifdef NETWORKED
-	if( !IsTheSolderUnderMyControl( pSoldier->ubID)  )
-	{
-		return( TRUE );
-	}
-	#endif
-
 	// Get New points
 	sNewAP = pSoldier->bActionPoints - sAPCost;
 

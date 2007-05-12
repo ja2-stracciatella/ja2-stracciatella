@@ -427,12 +427,6 @@ void BeginTeamTurn( UINT8 ubTeam )
 		}
 		else
 		{
-#ifdef NETWORKED
-			// Only the host should do this
-			if(!gfAmIHost)
-				break;
-#endif
-
 			// Set First enemy merc to AI control
 			if ( BuildAIListForTeam( ubTeam ) )
 			{

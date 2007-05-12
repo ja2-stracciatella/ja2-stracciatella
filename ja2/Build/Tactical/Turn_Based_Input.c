@@ -29,10 +29,6 @@
 #include "WorldMan.h"
 #include "Handle_UI_Plan.h"
 #include "Message.h"
-#ifdef NETWORKED
-#	include "Networking.h"
-#	include "Communication.h"
-#endif
 #include "Overhead_Map.h"
 #include "World_Items.h"
 #include "Game_Clock.h"
@@ -1704,28 +1700,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", ( GetJA2Clock( ) - iTime )  );
 
 		}
-#endif
-
-
-#ifdef NETWORKED
-		// DEF: Test Networking
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '0') && ( InputEvent.usKeyState & ALT_DOWN ))
-    {
-			DisplayMultiPlayerInfo();
-    }
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '9') && ( InputEvent.usKeyState & ALT_DOWN ))
-    {
-			DisplayDirectPlayInfo();
-    }
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '8') && ( InputEvent.usKeyState & ALT_DOWN ))
-    {
-			DisplayDirectPlayPlayerInfo();
-    }
-
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '7') && ( InputEvent.usKeyState & ALT_DOWN ))
-    {
-			SetDisplayFlag();
-    }
 #endif
 
 		if( InputEvent.usEvent == KEY_DOWN )

@@ -11,11 +11,6 @@
 #include "Tactical_Save.h"
 #include "Debug.h"
 
-#ifdef NETWORKED
-#	include "Networking.h"
-#	include "NetworkEvent.h"
-#endif
-
 
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons
@@ -37,9 +32,6 @@ EV_S_WINDOWHIT				SWindowHit;
 EV_S_MISS							SMiss;
 EV_S_NOISE						SNoise;
 EV_S_STOP_MERC				SStopMerc;
-EV_S_SENDPATHTONETWORK SUpdateNetworkSoldier;
-
-extern	BOOLEAN				gfAmINetworked;
 
 static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID);
 
@@ -48,45 +40,17 @@ BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData )
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local and network #%d", uiEvent));
-		#ifdef NETWORKED
-		if(gfAmINetworked)
-			SendEventToNetwork(uiEvent, usDelay, pEventData);
-		#endif
+		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
 		return( AddGameEventToQueue( uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE ) );
 	}
-	else if( uiEvent < EVENTS_LOCAL_AND_NETWORK)
-	{
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local and network #%d", uiEvent));
-		#ifdef NETWORKED
-		if(gfAmINetworked)
-			SendEventToNetwork(uiEvent, usDelay, pEventData);
-		#endif
-		return( AddGameEventToQueue( uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE ) );
-	}
-	else if( uiEvent < EVENTS_ONLY_USED_LOCALLY)
+	else if (uiEvent < NUM_EVENTS)
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
 		return( AddGameEventToQueue( uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE ) );
 	}
-	else if( uiEvent < EVENTS_ONLY_SENT_OVER_NETWORK)
-	{
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending network #%d", uiEvent));
-		#ifdef NETWORKED
-		if(gfAmINetworked)
-			SendEventToNetwork(uiEvent, usDelay, pEventData);
-		#endif
-		return(TRUE);
-	}
 	// There is an error with the event
 	else
 		return(FALSE);
-}
-
-
-static BOOLEAN AddGameEventFromNetwork(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
-{
-		return( AddGameEventToQueue( uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE ) );
 }
 
 
@@ -186,14 +150,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 
 			case S_STOP_MERC:
 				uiDataSize = sizeof( EV_S_STOP_MERC );
-				break;
-
-			case S_SENDPATHTONETWORK:
-				uiDataSize = sizeof(EV_S_SENDPATHTONETWORK);
-				break;
-
-			case 	S_UPDATENETWORKSOLDIER:
-				uiDataSize = sizeof(EV_S_UPDATENETWORKSOLDIER);
 				break;
 
 			default:

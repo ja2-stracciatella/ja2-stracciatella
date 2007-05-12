@@ -61,9 +61,6 @@ extern BOOLEAN gfWaitingForTriggerTimer;
 
 #define DEADLOCK_DELAY							15000
 
-// Very representing if this computer is the host, therefore controlling the ai
-extern	BYTE			gfAmIHost;
-
 //#define TESTAI
 
 INT8 GameOption[MAXGAMEOPTIONS] = {0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0};
@@ -771,13 +768,6 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 {
 
 	BOOLEAN fInValidSoldier = FALSE;
-
-		// Only the host should do this
-#ifdef NETWORKED
-		if(!gfAmIHost)
-			return;
-#endif
-
 
 		//pSoldier->uiStatusFlags |= SOLDIER_UNDERAICONTROL;
 		SetSoldierAsUnderAiControl( pSoldier );

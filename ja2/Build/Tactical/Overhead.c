@@ -42,10 +42,6 @@
 #include "Soldier_Macros.h"
 #include "EditorMercs.h"
 #include "Soldier_Tile.h"
-#ifdef  NETWORKED
-#	include "Networking.h"
-#	include "NetworkEvent.h"
-#endif
 #include "Structure_Wrap.h"
 #include "Tile_Animation.h"
 #include "Strategic_Merc_Handler.h"
@@ -141,11 +137,6 @@ extern BOOLEAN gfSurrendered;
 // GLOBALS
 #define         START_DEMO_SCENE                3
 #define   NUM_RANDOM_SCENES   4
-
-#ifdef NETWORKED
-extern  BYTE                    gfAmIHost;
-extern BOOLEAN                  gfAmINetworked;
-#endif
 
 #define	NEW_FADE_DELAY					60
 
@@ -509,11 +500,6 @@ BOOLEAN InitTacticalEngine( )
 	{
 		return( FALSE );
 	}
-
-#ifdef NETWORKED
-	if ( !gfAmINetworked )
-		gfAmIHost = TRUE;
-#endif
 
 	return( TRUE );
 }
@@ -1027,14 +1013,6 @@ BOOLEAN ExecuteOverhead( )
 #endif
 				{
 
-#ifdef NETWORKED
-					// DEF:
-					// Check for TIMING delay here only if in Realtime
-					if( gTacticalStatus.uiFlags & REALTIME)
-						if ( pSoldier->fIsSoldierMoving )
-								CheckForSlowSoldier( pSoldier );
-#endif
-
 					// Check if we need to look for items
 					if ( pSoldier->uiStatusFlags & SOLDIER_LOOKFOR_ITEMS )
 					{
@@ -1053,12 +1031,6 @@ BOOLEAN ExecuteOverhead( )
 					RESETTIMECOUNTER( pSoldier->UpdateCounter, pSoldier->sAniDelay );
 
 					fNoAPsForPendingAction = FALSE;
-
-#ifdef NETWORKED
-					// Get the path update, if there is 1
-					if (pSoldier->fSoldierUpdatedFromNetwork)
-						UpdateSoldierFromNetwork(pSoldier);
-#endif
 
 					// Check if we are moving and we deduct points and we have no points
 					if ( !( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING | ANIM_SPECIALMOVE ) ) && pSoldier->fNoAPToFinishMove  ) && !pSoldier->fPauseAllAnimation  )
@@ -1141,10 +1113,6 @@ BOOLEAN ExecuteOverhead( )
 										dXPos = pSoldier->sDestXPos;
 										dYPos = pSoldier->sDestYPos;
 										EVENT_SetSoldierPosition( pSoldier, dXPos, dYPos );
-#ifdef NETWORKED
-										// DEF: Test Code
-										StopSoldierMovementTime(pSoldier);
-#endif
 
 										// Handle New sight
 										//HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
@@ -1513,14 +1481,6 @@ BOOLEAN ExecuteOverhead( )
 								TurnSoldier( pSoldier );
 						}
 					}
-
-
-#ifdef NETWORKED
-					if(!pSoldier->fNoAPToFinishMove )
-						pSoldier->usLastUpdateTime = GetJA2Clock();
-					if (pSoldier->fSoldierUpdatedFromNetwork)
-						UpdateSoldierFromNetwork(pSoldier);
-#endif
 				}
 
 				if ( !gfPauseAllAI &&
