@@ -102,7 +102,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
-BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos );
+BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
@@ -121,7 +121,7 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool );
 void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 void HandleSoldierUseRemote( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
-BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel );
+BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 void SoldierHandleDropItem( SOLDIERTYPE *pSoldier );
 

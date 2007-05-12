@@ -209,15 +209,15 @@ static void DeleteOverheadDB(void)
 }
 
 
-static BOOLEAN GetClosestItemPool(INT16 sSweetGridNo, ITEM_POOL** ppReturnedItemPool, UINT8 ubRadius, INT8 bLevel)
+static const ITEM_POOL* GetClosestItemPool(INT16 sSweetGridNo, UINT8 ubRadius, INT8 bLevel)
 {
+	const ITEM_POOL* ClosestItemPool = NULL;
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 	ITEM_POOL	*pItemPool;
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
@@ -246,16 +246,15 @@ static BOOLEAN GetClosestItemPool(INT16 sSweetGridNo, ITEM_POOL** ppReturnedItem
 
 					if ( uiRange < uiLowestRange )
 					{
-						(*ppReturnedItemPool) = pItemPool;
+						ClosestItemPool = pItemPool;
 						uiLowestRange = uiRange;
-						fFound = TRUE;
 					}
 				}
 			}
 		}
 	}
 
-	return( fFound );
+	return ClosestItemPool;
 }
 
 
@@ -417,7 +416,6 @@ void HandleOverheadMap( )
 	if( !gfEditMode && !gfTacticalPlacementGUIActive )
 	{
 		INT16 usMapPos;
-		ITEM_POOL	*pItemPool;
 
 		gfUIHandleSelectionAboveGuy			= FALSE;
 
@@ -425,8 +423,11 @@ void HandleOverheadMap( )
 
 		if ( GetOverheadMouseGridNo( &usMapPos ) )
 		{
+			const ITEM_POOL* pItemPool;
+
 			// ATE: Find the closest item pool within 5 tiles....
-			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 0 ) )
+			pItemPool = GetClosestItemPool(usMapPos, 1, 0);
+			if (pItemPool != NULL)
 			{
 				STRUCTURE					*pStructure = NULL;
 				INT16							sIntTileGridNo;
@@ -450,7 +451,8 @@ void HandleOverheadMap( )
 				}
 			}
 
-			if ( GetClosestItemPool( usMapPos, &pItemPool, 1, 1 ) )
+			pItemPool = GetClosestItemPool(usMapPos, 1, 1);
+			if (pItemPool != NULL)
 			{
 				INT8							bZLevel = 0;
 

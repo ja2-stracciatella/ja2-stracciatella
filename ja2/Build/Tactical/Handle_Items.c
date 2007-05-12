@@ -3023,7 +3023,7 @@ BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel)
 }
 
 
-BOOLEAN ItemPoolOKForDisplay( ITEM_POOL *pItemPool, INT8 bZLevel )
+BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	if (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS)
 	{
@@ -3075,11 +3075,11 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, 
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 
-BOOLEAN DrawItemPoolList( ITEM_POOL *pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos )
+BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos)
 {
 	INT16 sY;
 	INVTYPE			*pItem;
-	ITEM_POOL		*pTempItemPool;
+	const ITEM_POOL* pTempItemPool;
 	wchar_t pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
 	INT16	 sLargeLineWidth = 0, sLineWidth;
