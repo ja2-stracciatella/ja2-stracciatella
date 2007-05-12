@@ -108,7 +108,6 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator );
 
-void SetItemPoolVisibilityHiddenInObject( ITEM_POOL *pItemPool );
 void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool );
 
 void RenderTopmostFlashingItems( );
