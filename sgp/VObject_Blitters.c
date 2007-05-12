@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "Debug.h"
 #include "MemMan.h"
 #include "Shading.h"

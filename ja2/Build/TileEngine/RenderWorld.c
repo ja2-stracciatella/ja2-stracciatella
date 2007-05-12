@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Debug.h"
