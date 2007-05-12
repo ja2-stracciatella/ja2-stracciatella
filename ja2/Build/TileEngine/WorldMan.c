@@ -41,25 +41,24 @@ UINT32 guiLevelNodes = 0;
 
 
 // LEVEL NODE MANIPLULATION FUNCTIONS
-static BOOLEAN CreateLevelNode(LEVELNODE** ppNode)
+static LEVELNODE* CreateLevelNode(void)
 {
-	*ppNode = MemAlloc( sizeof( LEVELNODE ) );
-	CHECKF( *ppNode != NULL );
+	LEVELNODE* Node = MemAlloc(sizeof(*Node));
+	CHECKN(Node != NULL);
 
-	// Clear all values
-	memset( *ppNode, 0, sizeof( LEVELNODE ) );
+	memset(Node, 0, sizeof(*Node));
 
 	// Set default values
-	(*ppNode)->ubShadeLevel = LightGetAmbient();
-	(*ppNode)->ubNaturalShadeLevel = LightGetAmbient();
-	(*ppNode)->pSoldier			= NULL;
-	(*ppNode)->pNext				= NULL;
-	(*ppNode)->sRelativeX		= 0;
-	(*ppNode)->sRelativeY		= 0;
+	Node->ubShadeLevel        = LightGetAmbient();
+	Node->ubNaturalShadeLevel = LightGetAmbient();
+	Node->pSoldier            = NULL;
+	Node->pNext               = NULL;
+	Node->sRelativeX          = 0;
+	Node->sRelativeY          = 0;
 
 	guiLevelNodes++;
 
-	return( TRUE );
+	return Node;
 }
 
 void CountLevelNodes( void )
@@ -225,7 +224,8 @@ LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex )
 	// If we're at the head, set here
 	if ( pObject == NULL )
 	{
-		CHECKF( CreateLevelNode( &pNextObject ) != FALSE );
+		pNextObject = CreateLevelNode();
+		CHECKF(pNextObject != NULL);
 		pNextObject->usIndex = usIndex;
 
 		gpWorldLevelData[ iMapIndex ].pObjectHead = pNextObject;
@@ -237,7 +237,8 @@ LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pObject->pNext == NULL )
 			{
-				CHECKF( CreateLevelNode( &pNextObject ) != FALSE );
+				pNextObject = CreateLevelNode();
+				CHECKF(pNextObject != NULL);
 				pObject->pNext = pNextObject;
 
 				pNextObject->pNext = NULL;
@@ -263,11 +264,11 @@ LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddObjectToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pObject					= NULL;
-	LEVELNODE							 *pNextObject		  = NULL;
 
 	pObject = gpWorldLevelData[ iMapIndex ].pObjectHead;
 
-	CHECKF( CreateLevelNode( &pNextObject ) != FALSE );
+	LEVELNODE* pNextObject = CreateLevelNode();
+	CHECKF(pNextObject != NULL);
 
 	pNextObject->pNext = pObject;
 	pNextObject->usIndex = usIndex;
@@ -453,7 +454,8 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex )
 	// If we're at the head, set here
 	if ( pLand == NULL )
 	{
-		CHECKF( CreateLevelNode( &pNextLand ) != FALSE );
+		pNextLand = CreateLevelNode();
+		CHECKF(pNextLand != NULL);
 		pNextLand->usIndex = usIndex;
 
 		gpWorldLevelData[ iMapIndex ].pLandHead = pNextLand;
@@ -466,7 +468,8 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pLand->pNext == NULL )
 			{
-				CHECKF( CreateLevelNode( &pNextLand ) != FALSE );
+				pNextLand = CreateLevelNode();
+				CHECKF(pNextLand != NULL);
 				pLand->pNext = pNextLand;
 
 				pNextLand->pNext			= NULL;
@@ -491,13 +494,12 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddLandToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pLand		 = NULL;
-	LEVELNODE	*pNextLand		 = NULL;
   TILE_ELEMENT							 TileElem;
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
-	// Allocate head
-	CHECKF( CreateLevelNode( &pNextLand ) != FALSE );
+	LEVELNODE* pNextLand = CreateLevelNode();
+	CHECKF(pNextLand != NULL);
 
 	pNextLand->pNext			= pLand;
 	pNextLand->pPrevNode  = NULL;
@@ -889,7 +891,6 @@ BOOLEAN DeleteAllLandLayers( UINT32 iMapIndex )
 BOOLEAN InsertLandIndexAtLevel( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel )
 {
 	LEVELNODE			*pLand		 = NULL;
-	LEVELNODE			*pNextLand		 = NULL;
 	UINT8					  level = 0;
 	BOOLEAN					CanInsert = FALSE;
 
@@ -903,9 +904,8 @@ BOOLEAN InsertLandIndexAtLevel( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel 
 		 return( TRUE );
 	}
 
-
-	// Allocate memory for new item
-	CHECKF( CreateLevelNode( &pNextLand ) != FALSE );
+	LEVELNODE* pNextLand = CreateLevelNode();
+	CHECKF(pNextLand != NULL);
 	pNextLand->usIndex = usIndex;
 
 	// Move to index before insertion
@@ -1074,7 +1074,8 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 	// Do we have an empty list?
 	if ( pStruct == NULL )
 	{
-		CHECKF( CreateLevelNode( &pNextStruct ) != FALSE );
+		pNextStruct = CreateLevelNode();
+		CHECKN(pNextStruct != NULL);
 
 		if ( fAddStructDBInfo )
 		{
@@ -1111,7 +1112,8 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 			pStruct = pStruct->pNext;
 		}
 
-		CHECKN( CreateLevelNode( &pNextStruct ) != FALSE );
+		pNextStruct = CreateLevelNode();
+		CHECKN(pNextStruct != NULL);
 
 		if ( fAddStructDBInfo )
 		{
@@ -1179,12 +1181,12 @@ LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAdd
 BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pStruct		 = NULL;
-	LEVELNODE							 *pNextStruct		 = NULL;
 	DB_STRUCTURE *				pDBStructure;
 
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 
-	CHECKF( CreateLevelNode( &pNextStruct ) != FALSE );
+	LEVELNODE* pNextStruct = CreateLevelNode();
+	CHECKF(pNextStruct != NULL);
 
 	if ( usIndex < NUMBEROFTILES )
 	{
@@ -1246,7 +1248,6 @@ BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex )
 static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel)
 {
 	LEVELNODE		*pStruct		 = NULL;
-	LEVELNODE		*pNextStruct		 = NULL;
 	UINT8					  level = 0;
 	BOOLEAN					CanInsert = FALSE;
 
@@ -1258,9 +1259,8 @@ static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel
 		 return( AddStructToHead( iMapIndex, usIndex ) );
 	}
 
-
-	// Allocate memory for new item
-	CHECKF( CreateLevelNode( &pNextStruct ) != FALSE );
+	LEVELNODE* pNextStruct = CreateLevelNode();
+	CHECKF(pNextStruct != NULL);
 
 	pNextStruct->usIndex = usIndex;
 
@@ -1812,14 +1812,14 @@ static void RemoveStructIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartT
 BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow		 = NULL;
-	LEVELNODE	*pNextShadow		 = NULL;
 
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
 	// If we're at the head, set here
 	if ( pShadow == NULL )
 	{
-		CHECKF( CreateLevelNode( &pShadow ) != FALSE );
+		pShadow = CreateLevelNode();
+		CHECKF(pShadow != NULL);
 		pShadow->usIndex = usIndex;
 
 		gpWorldLevelData[ iMapIndex ].pShadowHead = pShadow;
@@ -1832,7 +1832,8 @@ BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pShadow->pNext == NULL )
 			{
-				CHECKF( CreateLevelNode( &pNextShadow ) != FALSE );
+				LEVELNODE* pNextShadow = CreateLevelNode();
+				CHECKF(pNextShadow != NULL);
 				pShadow->pNext = pNextShadow;
 				pNextShadow->pNext = NULL;
 				pNextShadow->usIndex = usIndex;
@@ -1871,12 +1872,11 @@ void AddExclusiveShadow( UINT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddShadowToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE	*pShadow;
-	LEVELNODE	*pNextShadow = NULL;
 
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
-	// Allocate head
-	CHECKF( CreateLevelNode( &pNextShadow ) != FALSE );
+	LEVELNODE* pNextShadow = CreateLevelNode();
+	CHECKF(pNextShadow != NULL);
 	pNextShadow->pNext = pShadow;
 	pNextShadow->usIndex = usIndex;
 
@@ -2105,12 +2105,11 @@ static BOOLEAN AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 BOOLEAN AddMercToHead( UINT32 iMapIndex, SOLDIERTYPE *pSoldier, BOOLEAN fAddStructInfo )
 {
 	LEVELNODE							 *pMerc		 = NULL;
-	LEVELNODE							 *pNextMerc		 = NULL;
 
 	pMerc = gpWorldLevelData[ iMapIndex ].pMercHead;
 
-	// Allocate head
-	CHECKF( CreateLevelNode( &pNextMerc ) != FALSE );
+	LEVELNODE* pNextMerc = CreateLevelNode();
+	CHECKF(pNextMerc != NULL);
 	pNextMerc->pNext = pMerc;
 	pNextMerc->pSoldier				= pSoldier;
 	pNextMerc->uiFlags				|= LEVELNODE_SOLDIER;
@@ -2378,7 +2377,8 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 	// If we're at the head, set here
 	if ( pRoof == NULL )
 	{
-		CHECKF( CreateLevelNode( &pRoof ) != FALSE );
+		pRoof = CreateLevelNode();
+		CHECKN(pRoof != NULL);
 
 		if ( usIndex < NUMBEROFTILES )
 		{
@@ -2405,7 +2405,8 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pRoof->pNext == NULL )
 			{
-				CHECKF( CreateLevelNode( &pNextRoof ) != FALSE );
+				pNextRoof = CreateLevelNode();
+				CHECKN(pNextRoof != NULL);
 
 				if ( usIndex < NUMBEROFTILES )
 				{
@@ -2444,11 +2445,11 @@ LEVELNODE *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pRoof					= NULL;
-	LEVELNODE							 *pNextRoof		  = NULL;
 
 	pRoof = gpWorldLevelData[ iMapIndex ].pRoofHead;
 
-	CHECKF( CreateLevelNode( &pNextRoof ) != FALSE );
+	LEVELNODE* pNextRoof = CreateLevelNode();
+	CHECKF(pNextRoof != NULL);
 
 	if ( usIndex < NUMBEROFTILES )
 	{
@@ -2728,7 +2729,8 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 	// If we're at the head, set here
 	if ( pOnRoof == NULL )
 	{
-		CHECKF( CreateLevelNode( &pOnRoof ) != FALSE );
+		pOnRoof = CreateLevelNode();
+		CHECKN(pOnRoof != NULL);
 
 		if ( usIndex < NUMBEROFTILES )
 		{
@@ -2757,7 +2759,8 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pOnRoof->pNext == NULL )
 			{
-				CHECKF( CreateLevelNode( &pNextOnRoof ) != FALSE );
+				pNextOnRoof = CreateLevelNode();
+				CHECKN(pNextOnRoof != NULL);
 
 				if ( usIndex < NUMBEROFTILES )
 				{
@@ -2794,11 +2797,11 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pOnRoof					= NULL;
-	LEVELNODE							 *pNextOnRoof		  = NULL;
 
 	pOnRoof = gpWorldLevelData[ iMapIndex ].pOnRoofHead;
 
-	CHECKF( CreateLevelNode( &pNextOnRoof ) != FALSE );
+	LEVELNODE* pNextOnRoof = CreateLevelNode();
+	CHECKF(pNextOnRoof != NULL);
 	if ( usIndex < NUMBEROFTILES )
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
@@ -2993,7 +2996,8 @@ LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex )
 	// If we're at the head, set here
 	if ( pTopmost == NULL )
 	{
-		CHECKN( CreateLevelNode( &pNextTopmost ) != FALSE );
+		pNextTopmost = CreateLevelNode();
+		CHECKN(pNextTopmost != NULL);
 		pNextTopmost->usIndex = usIndex;
 
 		gpWorldLevelData[ iMapIndex ].pTopmostHead = pNextTopmost;
@@ -3006,7 +3010,8 @@ LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 			if ( pTopmost->pNext == NULL )
 			{
-				CHECKN( CreateLevelNode( &pNextTopmost ) != FALSE );
+				pNextTopmost = CreateLevelNode();
+				CHECKN(pNextTopmost != NULL);
 				pTopmost->pNext = pNextTopmost;
 				pNextTopmost->pNext = NULL;
 				pNextTopmost->usIndex = usIndex;
@@ -3057,12 +3062,11 @@ static void RemoveUIElem(UINT32 iMapIndex, UINT16 usIndex)
 BOOLEAN AddTopmostToHead( UINT32 iMapIndex, UINT16 usIndex )
 {
 	LEVELNODE							 *pTopmost		 = NULL;
-	LEVELNODE							 *pNextTopmost		 = NULL;
 
 	pTopmost = gpWorldLevelData[ iMapIndex ].pTopmostHead;
 
-	// Allocate head
-	CHECKF( CreateLevelNode( &pNextTopmost ) != FALSE );
+	LEVELNODE* pNextTopmost = CreateLevelNode();
+	CHECKF(pNextTopmost != NULL);
 	pNextTopmost->pNext = pTopmost;
 	pNextTopmost->usIndex = usIndex;
 
