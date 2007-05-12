@@ -4326,9 +4326,6 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 }
 
 
-extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
-
-
 static void ExchangeMessageBoxCallBack(UINT8 bExitValue)
 {
 	if ( bExitValue == MSG_BOX_RETURN_YES )

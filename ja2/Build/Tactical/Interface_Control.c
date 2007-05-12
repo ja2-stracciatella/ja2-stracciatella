@@ -75,7 +75,6 @@ BOOLEAN	gfPausedTacticalRenderFlags					 = FALSE;
 // which assignment menu can be shown?
 extern void DetermineWhichAssignmentMenusCanBeShown( void );
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
-extern BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
 
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags )
@@ -398,9 +397,6 @@ void ResetInterface( )
 	}
 
 }
-
-
-extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
 
 
 UINT32	guiColors[ 12 ] =

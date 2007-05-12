@@ -150,4 +150,8 @@ BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay );
 
 void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendingSoldier );
 
+BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel);
+
+BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool);
+
 #endif

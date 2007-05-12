@@ -90,7 +90,6 @@ BOOLEAN						gfOverItemPool = FALSE;
 INT16							gsOveritemPoolGridNo;
 
 
-extern BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel );
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 

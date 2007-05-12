@@ -75,8 +75,6 @@ ITEM_POOL_LOCATOR				FlashItemSlots[ NUM_ITEM_FLASH_SLOTS ];
 UINT32									guiNumFlashItemSlots = 0;
 
 
-BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool );
-
 // Disgusting hacks: have to keep track of these values for accesses in callbacks
 static SOLDIERTYPE *	gpTempSoldier;
 static INT16					gsTempGridno;
@@ -2999,7 +2997,7 @@ static INT16 GetNumOkForDisplayItemsInPool(ITEM_POOL* pItemPool, INT8 bZLevel)
 }
 
 
-BOOLEAN AnyItemsVisibleOnLevel( ITEM_POOL *pItemPool, INT8 bZLevel )
+BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	if ( ( gTacticalStatus.uiFlags & SHOW_ALL_ITEMS ) )
 	{
@@ -3453,7 +3451,7 @@ static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callb
 }
 
 
-BOOLEAN RemoveFlashItemSlot( ITEM_POOL *pItemPool )
+BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool)
 {
 	UINT32 uiCount;
 
