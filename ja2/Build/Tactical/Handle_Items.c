@@ -71,8 +71,22 @@
 #define					MIN_LOB_RANGE					6
 
 
-ITEM_POOL_LOCATOR				FlashItemSlots[ NUM_ITEM_FLASH_SLOTS ];
-UINT32									guiNumFlashItemSlots = 0;
+typedef void (*ITEM_POOL_LOCATOR_HOOK)(void);
+
+
+typedef struct
+{
+	ITEM_POOL*             pItemPool;
+	INT8                   bRadioFrame;
+	UINT32                 uiLastFrameUpdate;
+	ITEM_POOL_LOCATOR_HOOK Callback;
+	BOOLEAN                fAllocated;
+	UINT8                  ubFlags;
+} ITEM_POOL_LOCATOR;
+
+
+static ITEM_POOL_LOCATOR FlashItemSlots[NUM_ITEM_FLASH_SLOTS];
+static UINT32 guiNumFlashItemSlots = 0;
 
 
 // Disgusting hacks: have to keep track of these values for accesses in callbacks

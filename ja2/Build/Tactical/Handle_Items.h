@@ -43,8 +43,6 @@
 // MACRO FOR DEFINING OF ITEM IS VISIBLE
 #define ITEMPOOL_VISIBLE( pItemPool )			( ( pItemPool->bVisible >= 1 ) || (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS) )
 
-typedef void ( *ITEM_POOL_LOCATOR_HOOK )( void );
-
 
 typedef struct TAG_ITEM_POOL
 {
@@ -62,19 +60,6 @@ typedef struct TAG_ITEM_POOL
 	struct TAG_level_node	*pLevelNode;
 
 } ITEM_POOL;
-
-typedef struct
-{
-	ITEM_POOL								*pItemPool;
-
-	// Additional info for locators
-	INT8										bRadioFrame;
-	UINT32									uiLastFrameUpdate;
-	ITEM_POOL_LOCATOR_HOOK	Callback;
-	BOOLEAN									fAllocated;
-	UINT8										ubFlags;
-
-} ITEM_POOL_LOCATOR;
 
 
 INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
