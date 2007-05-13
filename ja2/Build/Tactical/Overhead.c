@@ -563,7 +563,6 @@ BOOLEAN InitOverhead( )
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
 	gTacticalStatus.uiCountdownToRestart = GetJA2Clock();
-	gTacticalStatus.fGoingToEnterDemo               = FALSE;
 	gTacticalStatus.fNOTDOLASTDEMO                  = FALSE;
 	gTacticalStatus.fDidGameJustStart               = TRUE;
 	gTacticalStatus.ubLastRequesterTargetID					= NO_PROFILE;
@@ -3896,7 +3895,6 @@ static BOOLEAN CheckForPlayerTeamInMissionExit(void)
 static void EndTacticalDemo(void)
 {
 	gTacticalStatus.uiFlags &= (~DEMOMODE );
-	gTacticalStatus.fGoingToEnterDemo = FALSE;
 }
 
 UINT32 EnterTacticalDemoMode()
@@ -3935,8 +3933,6 @@ UINT32 EnterTacticalDemoMode()
 
 	// Set demo timer
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
-
-	gTacticalStatus.fGoingToEnterDemo = FALSE;
 
 	return( INIT_SCREEN );
 

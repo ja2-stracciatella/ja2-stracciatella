@@ -291,7 +291,6 @@ static BOOLEAN EditModeInit(void)
 	gTacticalStatus.uiFlags |= TURNBASED | SHOW_ALL_ITEMS;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = gTacticalStatus.uiTimeOfLastInput;
-	gTacticalStatus.fGoingToEnterDemo = FALSE;
 
 	//Remove the radar from the interface.
 	RemoveCurrentTacticalPanelButtons( );
@@ -482,7 +481,6 @@ static BOOLEAN EditModeShutdown(void)
 	// Make sure to turn off demo mode!
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
-	gTacticalStatus.fGoingToEnterDemo = FALSE;
 
 	// RETURN TO PREVIOUS SCROLL MODE
 	gfDoVideoScroll = gfOldDoVideoScroll;
