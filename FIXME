@@ -183,7 +183,6 @@ OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
 PLAYER_TEAM_DEAD: never set
-POPUP_DOMESSAGE: unused
 PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
 PerformTest(): useful?

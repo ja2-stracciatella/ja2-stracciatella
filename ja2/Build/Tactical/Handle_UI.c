@@ -135,8 +135,6 @@ static UINT32 UIHandleMCycleMoveAll(UI_EVENT* pUIEvent);
 static UINT32 UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent);
 static UINT32 UIHandleMChangeToHandMode(UI_EVENT* pUIEvent);
 
-static UINT32 UIHandlePOPUPMSG(UI_EVENT* pUIEvent);
-
 static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent);
 static UINT32 UIHandleAChangeToMove(UI_EVENT* pUIEvent);
 static UINT32 UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent);
@@ -249,7 +247,6 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleMCycleMovement, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		CONFIRM_MOVE_MODE,		UIHandleMCycleMoveAll, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SNAPMOUSE,																			ADJUST_STANCE_MODE,		UIHandleMAdjustStanceMode, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											POPUP_MODE,						UIHandlePOPUPMSG, FALSE, FALSE, 0, 0, 0, 0,
 	0,																											ACTION_MODE,					UIHandleAOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleAChangeToMove, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		CONFIRM_ACTION_MODE,	UIHandleAChangeToConfirmAction, FALSE, FALSE, 0, 0, 0, 0,
@@ -598,7 +595,7 @@ UINT32  HandleTacticalUI( void )
 		// This is needed to hook into the interface stuff which sets the fDoneMenu flag
 		if ( gEvents[ uiNewEvent ].fDoneMenu == TRUE  )
 		{
-			if ( gCurrentUIMode == MENU_MODE || gCurrentUIMode == POPUP_MODE || gCurrentUIMode == LOOKCURSOR_MODE )
+			if (gCurrentUIMode == MENU_MODE || gCurrentUIMode == LOOKCURSOR_MODE)
 			{
 				gCurrentUIMode = gEvents[ uiNewEvent ].uiMenuPreviousMode;
 			}
@@ -2828,12 +2825,6 @@ static void RemoveTacticalCursor(void)
 {
 	guiNewUICursor = NO_UICURSOR;
 	ErasePath( TRUE );
-}
-
-
-static UINT32 UIHandlePOPUPMSG(UI_EVENT* pUIEvent)
-{
-	return( GAME_SCREEN );
 }
 
 
