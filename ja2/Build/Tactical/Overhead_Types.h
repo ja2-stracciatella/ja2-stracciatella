@@ -45,11 +45,9 @@
 #define			GODMODE															0x000000100
 #define			DEMOMODE														0x000000200
 #define			PLAYER_TEAM_DEAD										0x000000400
-#define			NPC_TEAM_DEAD												0x000000800
 #define			DISALLOW_SIGHT											0x000001000
 #define			CHECK_SIGHT_AT_END_OF_ATTACK				0x000002000
 #define     IN_CREATURE_LAIR                    0x000004000
-#define			HIDE_TREES													0x000008000
 #define			NOHIDE_REDUNDENCY										0x000010000
 #define			DEBUGCLIFFS													0x000020000
 #define			INCOMBAT														0x000040000
@@ -60,12 +58,10 @@
 #define			LOADING_SAVED_GAME									0x001000000
 #define			OUR_MERCS_AUTO_MOVE									0x002000000
 #define			SHOW_ALL_ROOFS											0x004000000
-#define			NEWLY_ENTERED_SECTOR								0x008000000
 #define			RED_ITEM_GLOW_ON										0x010000000
 #define			IGNORE_ENGAGED_IN_CONV_UI_UNLOCK		0x020000000
 #define			IGNORE_ALL_OBSTACLES								0x040000000
 #define			IN_DEIDRANNA_ENDGAME								0x080000000
-#define			DONE_DEIDRANNA_ENDGAME							0x100000000
 
 #define			OKBREATH						10
 #define			OKLIFE							15

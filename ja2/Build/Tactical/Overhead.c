@@ -3909,7 +3909,6 @@ UINT32 EnterTacticalDemoMode()
 	// Switch into realtime/demo
 	gTacticalStatus.uiFlags |= ( REALTIME | DEMOMODE );
 	gTacticalStatus.uiFlags &= (~TURNBASED);
-	gTacticalStatus.uiFlags &= (~NPC_TEAM_DEAD);
 	gTacticalStatus.uiFlags &= (~PLAYER_TEAM_DEAD);
 
 	do
