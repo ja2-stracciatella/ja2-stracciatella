@@ -3633,8 +3633,21 @@ void DebugSoldierPage1( )
 
 }
 
+
 void DebugSoldierPage2( )
 {
+	static const char* const gzDirectionStr[] =
+	{
+		"NORTHEAST",
+		"EAST",
+		"SOUTHEAST",
+		"SOUTH",
+		"SOUTHWEST",
+		"WEST",
+		"NORTHWEST",
+		"NORTH"
+	};
+
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
@@ -3699,13 +3712,13 @@ void DebugSoldierPage2( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Direction:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gzDirectionStr[ pSoldier->bDirection] );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzDirectionStr[pSoldier->bDirection]);
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"DesDirection:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gzDirectionStr[ pSoldier->bDesiredDirection] );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzDirectionStr[pSoldier->bDesiredDirection]);
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -3904,6 +3917,14 @@ void DebugSoldierPage2( )
 
 void DebugSoldierPage3( )
 {
+	static const char* const gzAlertStr[] =
+	{
+		"GREEN",
+		"YELLOW",
+		"RED",
+		"BLACK"
+	};
+
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
@@ -3931,7 +3952,7 @@ void DebugSoldierPage3( )
 		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gzActionStr[ pSoldier->bAction ] );
 		if (pSoldier->uiStatusFlags & SOLDIER_ENEMY )
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Alert %ls", gzAlertStr[ pSoldier->bAlertStatus ] );
+			gprintf(350, LINE_HEIGHT * ubLine, L"Alert %hs", gzAlertStr[pSoldier->bAlertStatus]);
 		}
 		ubLine++;
 

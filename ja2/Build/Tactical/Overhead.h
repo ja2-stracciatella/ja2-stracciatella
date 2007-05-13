@@ -184,9 +184,7 @@ UINT8		gbPlayerNum;
 
 UINT16  gusSelectedSoldier;
 
-extern CHAR8		gzAlertStr[][ 30 ];
 extern CHAR8		gzActionStr[][ 30 ];
-extern CHAR8	  gzDirectionStr[][ 30 ];
 
 // TEMP FOR E3
 UINT8				gubCurrentScene;

@@ -170,13 +170,6 @@ UINT8                            gbPlayerNum = 0;
 // Global for current selected soldier
 UINT16                                                                  gusSelectedSoldier = NO_SOLDIER;
 
-CHAR8                   gzAlertStr[][ 30 ] =
-{
-	"GREEN",
-	"YELLOW",
-	"RED",
-	"BLACK"
-};
 
 CHAR8                   gzActionStr[][ 30 ] =
 {
@@ -238,17 +231,6 @@ CHAR8                   gzActionStr[][ 30 ] =
 	"OFFER SURRENDER",
 };
 
-CHAR8                   gzDirectionStr[][ 30 ] =
-{
-	"NORTHEAST",
-	"EAST",
-	"SOUTHEAST",
-	"SOUTH",
-	"SOUTHWEST",
-	"WEST",
-	"NORTHWEST",
-	"NORTH"
-};
 
 // TEMP VALUES FOR TEAM DEAFULT POSITIONS
 static const UINT8 bDefaultTeamRanges[MAXTEAMS][2] =
