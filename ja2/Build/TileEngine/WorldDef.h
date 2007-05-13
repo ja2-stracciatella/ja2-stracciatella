@@ -261,7 +261,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID );
 
-void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoadName );
+void SetLoadOverrideParams(BOOLEAN fForceFile, CHAR8* zLoadName);
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 

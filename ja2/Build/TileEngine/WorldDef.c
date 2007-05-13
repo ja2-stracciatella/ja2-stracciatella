@@ -78,7 +78,6 @@
 #endif
 
 // TEMP
-BOOLEAN					gfForceLoadPlayers = FALSE;
 CHAR8						gzForceLoadFile[100 ];
 BOOLEAN					gfForceLoad        = FALSE;
 
@@ -3109,7 +3108,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	RenderProgressBar( 0, 40 );
 
 	//Reset some override flags
-	gfForceLoadPlayers = FALSE;
 	gfForceLoad				 = FALSE;
 
 	// CHECK IF OUR SELECTED GUY IS GONE!
@@ -3533,9 +3531,8 @@ static BOOLEAN SaveMapTileset(INT32 iTilesetID)
 	return( TRUE );
 }
 
-void SetLoadOverrideParams( BOOLEAN fForceLoad, BOOLEAN fForceFile, CHAR8 *zLoadName )
+void SetLoadOverrideParams(BOOLEAN fForceFile, CHAR8* zLoadName)
 {
-	gfForceLoadPlayers = fForceLoad;
 	gfForceLoad				 = fForceFile;
 
 	if ( zLoadName != NULL )
