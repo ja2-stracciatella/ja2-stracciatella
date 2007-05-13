@@ -3373,13 +3373,13 @@ static INT8 GetListMouseHotSpot(INT16 sLargestLineWidth, INT8 bNumItemsListed, I
 }
 
 
-static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags);
+static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
 static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	pItemPool->bFlashColor = 59;
-	pItemPool->uiTimerID   = AddFlashItemSlot(pItemPool, Callback, 0);
+	pItemPool->uiTimerID   = AddFlashItemSlot(pItemPool, Callback);
 }
 
 
@@ -3418,15 +3418,12 @@ INT32 uiCount;
 }
 
 
-static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags)
+static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	INT32			iFlashItemIndex;
 
 	if( ( iFlashItemIndex = GetFreeFlashItemSlot() )==(-1) )
 		return(-1);
-
-	ubFlags |= ITEM_LOCATOR_LOCKED;
-
 
 	FlashItemSlots[ iFlashItemIndex ].pItemPool	  = pItemPool;
 
@@ -3434,8 +3431,7 @@ static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callb
 	FlashItemSlots[ iFlashItemIndex ].uiLastFrameUpdate = GetJA2Clock( );
 	FlashItemSlots[ iFlashItemIndex ].Callback				  = Callback;
 	FlashItemSlots[ iFlashItemIndex ].fAllocated				= TRUE;
-	FlashItemSlots[ iFlashItemIndex ].ubFlags						= ubFlags;
-
+	FlashItemSlots[iFlashItemIndex].ubFlags           = ITEM_LOCATOR_LOCKED;
 
 	return( iFlashItemIndex );
 }
