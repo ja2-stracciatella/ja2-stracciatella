@@ -142,16 +142,6 @@ extern BOOLEAN gfSurrendered;
 
 // ATE: GLOBALS FOR E3
 UINT8                           gubCurrentScene = 0;
-static const char* const gzLevelFilenames[] =
-{
-	"A9.dat",
-	"ScotTBMines.dat",
-	"LindaTBCaves.dat",
-	"LindaRTDesert.dat",
-	"IanRTNight.dat",
-	"LindaRTCave1.dat",
-	"LindaRTCave2.dat"
-};
 
 
 // Soldier List used for all soldier overhead interaction
@@ -3950,12 +3940,6 @@ UINT32 EnterTacticalDemoMode()
 
 	return( INIT_SCREEN );
 
-}
-
-
-static const char* GetSceneFilename(void)
-{
-	return( gzLevelFilenames[ gubCurrentScene ] );
 }
 
 
