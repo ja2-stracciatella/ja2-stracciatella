@@ -159,15 +159,6 @@ void DisplayFrameRate( )
 		//mprintf( 0, 0, L"GOD MODE" );
 	}
 
-	if ( ( gTacticalStatus.uiFlags & DEMOMODE ) )
-	{
-		SetFont( SMALLFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-		//gprintfdirty( 0, 0, L"DEMO MODE" );
-		//mprintf( 0, 0, L"DEMO MODE" );
-	}
-
 #ifdef _DEBUG
 
 	SetFont( SMALLFONT1 );

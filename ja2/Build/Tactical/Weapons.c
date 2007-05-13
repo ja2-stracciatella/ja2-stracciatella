@@ -1014,13 +1014,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				pSoldier->sReloadDelay	= ( pSoldier->sReloadDelay * 2 );
 			}
 
-
-			// slow down demo mode!
-			if ( gTacticalStatus.uiFlags & DEMOMODE )
-			{
-				pSoldier->sReloadDelay *= 2;
-			}
-
 			//pSoldier->fReloading		= TRUE;
 			//RESETTIMECOUNTER( pSoldier->ReloadCounter, pSoldier->sReloadDelay );
 		}

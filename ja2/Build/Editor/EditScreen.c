@@ -286,7 +286,7 @@ static BOOLEAN EditModeInit(void)
 
 	//essentially, we are turning the game off so the game doesn't process in conjunction with the
 	//editor.
-	guiSaveTacticalStatusFlags = (gTacticalStatus.uiFlags & ~DEMOMODE);
+	guiSaveTacticalStatusFlags = gTacticalStatus.uiFlags;
 	gTacticalStatus.uiFlags &= ~REALTIME;
 	gTacticalStatus.uiFlags |= TURNBASED | SHOW_ALL_ITEMS;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();

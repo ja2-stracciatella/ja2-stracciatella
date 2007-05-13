@@ -177,7 +177,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		if (pSoldier->uiStatusFlags & SOLDIER_PC )
 		{
 			// if this soldier is "selected" then only let user give orders!
-			if ((pSoldier->ubID == gusSelectedSoldier) && !(gTacticalStatus.uiFlags & DEMOMODE))
+			if (pSoldier->ubID == gusSelectedSoldier)
 			{
 				return;
 			}
@@ -696,8 +696,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 		pSoldier->bBypassToGreen = FALSE;
 
 	#ifdef TESTAICONTROL
-		if (!(gTacticalStatus.uiFlags & DEMOMODE))
-			DebugAI( String("Ending control for %d", pSoldier->ubID ) );
+		DebugAI(String("Ending control for %d", pSoldier->ubID));
 	#endif
 
 		// find the next AI guy
@@ -780,8 +779,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 		RefreshAI(pSoldier);
 
 #ifdef TESTAICONTROL
-		if (!(gTacticalStatus.uiFlags & DEMOMODE))
-			DebugAI( String("Giving control to %d", pSoldier->ubID ) );
+		DebugAI(String("Giving control to %d", pSoldier->ubID));
 #endif
 
 		gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();

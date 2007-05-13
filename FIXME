@@ -27,7 +27,6 @@ CorpseHit(): empty
 CountNumberOfItemsInStoreInventory(): commented out
 CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 CreateUpdateBoxStrings(): swprintf() + AddMonoString()
-DEMOMODE: never set
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
