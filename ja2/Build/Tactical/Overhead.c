@@ -1671,11 +1671,74 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 }
 
 
+static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* pSoldier, UINT16 GridNo, BOOLEAN CheckAround, BOOLEAN* pfKeepMoving)
+{
+	UINT16 sMineGridNo;
+
+	if (NearbyGroundSeemsWrong(pSoldier, GridNo, CheckAround, &sMineGridNo))
+	{
+		if (pSoldier->uiStatusFlags & SOLDIER_PC)
+		{
+			// NearbyGroundSeemsWrong returns true with gridno NOWHERE if
+			// we find something by metal detector... we should definitely stop
+			// but we won't place a locator or say anything
+
+			// IF not in combat, stop them all
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
+			{
+				INT32 cnt2 = gTacticalStatus.Team[gbPlayerNum].bLastID;
+				SOLDIERTYPE* pSoldier2;
+
+				// look for all mercs on the same team,
+				for (pSoldier2 = MercPtrs[cnt2]; cnt2 >= gTacticalStatus.Team[gbPlayerNum].bFirstID; cnt2--, pSoldier2--)
+				{
+					if (pSoldier2->bActive)
+					{
+						EVENT_StopMerc(pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection);
+					}
+				}
+			}
+			else
+			{
+				EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+			}
+
+			*pfKeepMoving = FALSE;
+
+			if (sMineGridNo != NOWHERE)
+			{
+				LocateGridNo(sMineGridNo);
+				// we reuse the boobytrap gridno variable here
+				gsBoobyTrapGridNo = sMineGridNo;
+				gpBoobyTrapSoldier = pSoldier;
+				SetStopTimeQuoteCallback(MineSpottedDialogueCallBack);
+				TacticalCharacterDialogue(pSoldier, QUOTE_SUSPICIOUS_GROUND);
+			}
+		}
+		else
+		{
+			if (sMineGridNo != NOWHERE)
+			{
+				EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+				*pfKeepMoving = FALSE;
+
+				gpWorldLevelData[sMineGridNo].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+
+				// better stop and reconsider what to do...
+				SetNewSituation(pSoldier);
+				ActionDone(pSoldier);
+			}
+		}
+	}
+}
+
+
 BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLEAN fInitialMove, UINT16 usAnimState )
 {
 	INT16                           sAPCost;
 	INT16                           sBPCost;
-	UINT16                          usNewGridNo, sOverFenceGridNo, sMineGridNo;
+	UINT16 usNewGridNo;
+	UINT16 sOverFenceGridNo;
 
 	if (gTacticalStatus.uiFlags & INCOMBAT && fInitialMove )
 	{
@@ -1849,67 +1912,8 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 		return( FALSE );
 	}
 
-
 	// just check the tile we're going to walk into
-	if ( NearbyGroundSeemsWrong( pSoldier, usNewGridNo, FALSE, &sMineGridNo ) )
-	{
-		if ( pSoldier->uiStatusFlags & SOLDIER_PC )
-		{
-			// NearbyGroundSeemsWrong returns true with gridno NOWHERE if
-			// we find something by metal detector... we should definitely stop
-			// but we won't place a locator or say anything
-
-      // IF not in combat, stop them all
-      if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
-      {
-	      INT32 cnt2;
-	      SOLDIERTYPE             *pSoldier2;
-
-	      cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-        // look for all mercs on the same team,
-        for ( pSoldier2 = MercPtrs[ cnt2 ]; cnt2 >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt2-- ,pSoldier2-- )
-	      {
-		      if ( pSoldier2->bActive )
-		      {
-      			EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection );
-		      }
-	      }
-      }
-      else
-      {
-			  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-      }
-
-			(*pfKeepMoving) = FALSE;
-
-			if (sMineGridNo != NOWHERE)
-			{
-				LocateGridNo( sMineGridNo );
-				// we reuse the boobytrap gridno variable here
-				gsBoobyTrapGridNo = sMineGridNo;
-				gpBoobyTrapSoldier = pSoldier;
-				SetStopTimeQuoteCallback( MineSpottedDialogueCallBack );
-				TacticalCharacterDialogue( pSoldier, QUOTE_SUSPICIOUS_GROUND );
-			}
-		}
-		else
-		{
-			if (sMineGridNo != NOWHERE)
-			{
-
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-				(*pfKeepMoving) = FALSE;
-
-				gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
-
-				// better stop and reconsider what to do...
-				SetNewSituation( pSoldier );
-				ActionDone( pSoldier );
-			}
-		}
-	}
-
+	CheckIfNearbyGroundSeemsWrong(pSoldier, usNewGridNo, FALSE, pfKeepMoving);
 
 	// ATE: Check if we have sighted anyone, if so, don't do anything else...
 	// IN other words, we have stopped from sighting...
@@ -2242,9 +2246,7 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 {
-	INT16														sMineGridNo;
 	UINT8		                        ubVolume;
-
 
 	// ATE; Handle bad guys, as they fade, to cancel it if
 	// too long...
@@ -2401,64 +2403,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	}
 
 	// OK, check for other stuff like mines...
-	if (NearbyGroundSeemsWrong( pSoldier, pSoldier->sGridNo, TRUE, &sMineGridNo ))
-	{
-		if (pSoldier->uiStatusFlags & SOLDIER_PC)
-		{
-			// NearbyGroundSeemsWrong returns true with gridno NOWHERE if
-			// we find something by metal detector... we should definitely stop
-			// but we won't place a locator or say anything
-
-      // IF not in combat, stop them all
-      if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
-      {
-	      INT32 cnt2;
-	      SOLDIERTYPE             *pSoldier2;
-
-	      cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-        // look for all mercs on the same team,
-        for ( pSoldier2 = MercPtrs[ cnt2 ]; cnt2 >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt2-- ,pSoldier2-- )
-	      {
-		      if ( pSoldier2->bActive )
-		      {
-      			EVENT_StopMerc( pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection );
-		      }
-	      }
-      }
-      else
-      {
-			  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-      }
-
-			(*pfKeepMoving) = FALSE;
-
-			if (sMineGridNo != NOWHERE)
-			{
-				LocateGridNo( sMineGridNo );
-				// we reuse the boobytrap gridno variable here
-				gsBoobyTrapGridNo = sMineGridNo;
-				gpBoobyTrapSoldier = pSoldier;
-				SetStopTimeQuoteCallback( MineSpottedDialogueCallBack );
-				TacticalCharacterDialogue( pSoldier, QUOTE_SUSPICIOUS_GROUND );
-			}
-		}
-		else
-		{
-			if (sMineGridNo != NOWHERE)
-			{
-
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-				(*pfKeepMoving) = FALSE;
-
-				gpWorldLevelData[ sMineGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
-
-				// better stop and reconsider what to do...
-				SetNewSituation( pSoldier );
-				ActionDone( pSoldier );
-			}
-		}
-	}
+	CheckIfNearbyGroundSeemsWrong(pSoldier, pSoldier->sGridNo, TRUE, pfKeepMoving);
 
 	HandleSystemNewAISituation( pSoldier, FALSE );
 
