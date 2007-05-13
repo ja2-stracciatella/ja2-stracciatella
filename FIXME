@@ -1,5 +1,6 @@
 (BOOLEAN): incorrect/unnecessary casts
 (DOUBLE): casts placed wrong
+ACTIVE: never tested
 ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
@@ -26,6 +27,7 @@ CorpseHit(): empty
 CountNumberOfItemsInStoreInventory(): commented out
 CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 CreateUpdateBoxStrings(): swprintf() + AddMonoString()
+DEMOMODE: never set
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
@@ -51,6 +53,7 @@ DrawBreathUIBar(): overdraw
 DrawName(): complicated
 DrawOrta(), DrawTixa(): factorise
 DrawPageNumber(): empty
+ET_ENDENEMYS_TURN: unused
 EndOfHelicoptersPath(): complicated
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
@@ -110,6 +113,10 @@ HeliCharacterDialogue(): callers
 HideItemTileCursor(): empty
 HighLightRegion(), RestoreOldRegion(): empty
 IMPVideoObjects.h(): many needlessly called functions?
+I_CHANGELEVEL: unused
+I_ENTER_PALEDIT_MODE: unused
+I_EXIT: unused
+I_LOADLEVEL: unused
 InitStrategicRow[A-P](): complicated?
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
@@ -176,6 +183,8 @@ NumMercsCloseTo(): callers
 OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
+PLAYER_TEAM_DEAD: never set
+POPUP_DOMESSAGE: unused
 PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
 PerformTest(): useful?
@@ -200,6 +209,7 @@ RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
 RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
+SHOW_AP_LEFT: never set
 SLOW_ANIMATION: never set or cleared, only in unused function
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_QUOTE_SAID_DROWNING: never set
@@ -458,6 +468,11 @@ uiBadFootSector: read-only
 uiBadVehicleSector: read-only
 UNUSEDfLostControlAtSomeTime
 bPadding
+
+TacticalStatusType
+fGoingToEnterDemo_UNUSED
+fNOTDOLASTDEMO_UNUSED
+fMultiplayer
 
 VIDEO_OVERLAY
 uiUserData[]: write-only in unused function

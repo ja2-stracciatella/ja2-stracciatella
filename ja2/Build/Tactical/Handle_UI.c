@@ -124,15 +124,6 @@ static UINT32 UIHandleILoadLevel(UI_EVENT* pUIEvent);
 static UINT32 UIHandleISoldierDebug(UI_EVENT* pUIEvent);
 static UINT32 UIHandleILOSDebug(UI_EVENT* pUIEvent);
 static UINT32 UIHandleILevelNodeDebug(UI_EVENT* pUIEvent);
-static UINT32 UIHandleIGotoDemoMode(UI_EVENT* pUIEvent);
-
-
-
-static UINT32 UIHandleILoadFirstLevel(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILoadSecondLevel(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILoadThirdLevel(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILoadFourthLevel(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILoadFifthLevel(UI_EVENT* pUIEvent);
 
 static UINT32 UIHandleIETOnTerrain(UI_EVENT* pUIEvent);
 static UINT32 UIHandleIETEndTurn(UI_EVENT* pUIEvent);
@@ -247,12 +238,6 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleISoldierDebug, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILOSDebug, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILevelNodeDebug, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleIGotoDemoMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFirstLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadSecondLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadThirdLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFourthLevel, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILoadFifthLevel, FALSE, FALSE, 0, 0, 0, 0,
 
 	0,																											ENEMYS_TURN_MODE,			UIHandleIETOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleIETEndTurn, FALSE, FALSE, 0, 0, 0, 0,
@@ -3278,47 +3263,6 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 static UINT32 UIHandleIETEndTurn(UI_EVENT* pUIEvent)
 {
 	return( GAME_SCREEN );
-}
-
-
-static UINT32 UIHandleIGotoDemoMode(UI_EVENT* pUIEvent)
-{
-	return( EnterTacticalDemoMode() );
-}
-
-
-static UINT32 UIHandleILoadFirstLevel(UI_EVENT* pUIEvent)
-{
-	gubCurrentScene = 0;
-	return( INIT_SCREEN );
-}
-
-
-static UINT32 UIHandleILoadSecondLevel(UI_EVENT* pUIEvent)
-{
-	gubCurrentScene = 1;
-	return( INIT_SCREEN );
-}
-
-
-static UINT32 UIHandleILoadThirdLevel(UI_EVENT* pUIEvent)
-{
-	gubCurrentScene = 2;
-	return( INIT_SCREEN );
-}
-
-
-static UINT32 UIHandleILoadFourthLevel(UI_EVENT* pUIEvent)
-{
-	gubCurrentScene = 3;
-	return( INIT_SCREEN );
-}
-
-
-static UINT32 UIHandleILoadFifthLevel(UI_EVENT* pUIEvent)
-{
-	gubCurrentScene = 4;
-	return( INIT_SCREEN );
 }
 
 

@@ -186,9 +186,6 @@ UINT16  gusSelectedSoldier;
 
 extern CHAR8		gzActionStr[][ 30 ];
 
-// TEMP FOR E3
-UINT8				gubCurrentScene;
-
 // Soldier List used for all soldier overhead interaction
 SOLDIERTYPE	 Menptr[ TOTAL_SOLDIERS ];
 SOLDIERTYPE	 *MercPtrs[ TOTAL_SOLDIERS ];
@@ -241,8 +238,6 @@ UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLe
 UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
 
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
-
-UINT32 EnterTacticalDemoMode();
 
 BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos);
 

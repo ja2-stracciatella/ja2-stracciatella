@@ -134,14 +134,7 @@ extern void PlayStealthySoldierFootstepSound( SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN gfSurrendered;
 
-// GLOBALS
-#define         START_DEMO_SCENE                3
-#define   NUM_RANDOM_SCENES   4
-
 #define	NEW_FADE_DELAY					60
-
-// ATE: GLOBALS FOR E3
-UINT8                           gubCurrentScene = 0;
 
 
 // Soldier List used for all soldier overhead interaction
@@ -3888,42 +3881,6 @@ static BOOLEAN CheckForPlayerTeamInMissionExit(void)
 	}
 
 	return( FALSE );
-}
-
-
-static void EndTacticalDemo(void)
-{
-	gTacticalStatus.uiFlags &= (~DEMOMODE );
-}
-
-UINT32 EnterTacticalDemoMode()
-{
-	UINT8 ubNewScene = gubCurrentScene;
-	UINT8   ubNumScenes = NUM_RANDOM_SCENES;
-
-	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
-
-	// REMOVE ALL EVENTS!
-	DequeAllGameEvents( FALSE );
-
-	// Switch into realtime/demo
-	gTacticalStatus.uiFlags |= ( REALTIME | DEMOMODE );
-	gTacticalStatus.uiFlags &= (~TURNBASED);
-	gTacticalStatus.uiFlags &= (~PLAYER_TEAM_DEAD);
-
-	do
-	{
-		ubNewScene = START_DEMO_SCENE + (UINT8)Random( ubNumScenes );
-
-	} while( ubNewScene == gubCurrentScene );
-
-	gubCurrentScene = ubNewScene;
-
-	// Set demo timer
-	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
-
-	return( INIT_SCREEN );
-
 }
 
 
