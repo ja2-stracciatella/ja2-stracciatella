@@ -792,7 +792,7 @@ void RenderTopmostTacticalInterface( )
 
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
-						DrawItemPoolList( pItemPool, gfUIOverItemPoolGridNo	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
+						DrawItemPoolList(pItemPool, gfUIOverItemPoolGridNo, bZLevel, gusMouseXPos, gusMouseYPos);
 
 						// ATE: If over items, remove locator....
 						RemoveFlashItemSlot( pItemPool );
@@ -831,7 +831,7 @@ void RenderTopmostTacticalInterface( )
 
 					  if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					  {
-						  DrawItemPoolList( pItemPool, gfUIOverItemPoolGridNo	, ITEMLIST_DISPLAY, bZLevel, gusMouseXPos, gusMouseYPos );
+							DrawItemPoolList(pItemPool, gfUIOverItemPoolGridNo, bZLevel, gusMouseXPos, gusMouseYPos);
 
 						  // ATE: If over items, remove locator....
 						  RemoveFlashItemSlot( pItemPool );

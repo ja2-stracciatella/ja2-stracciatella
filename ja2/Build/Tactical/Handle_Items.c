@@ -3089,7 +3089,7 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, 
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 
-BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos)
+BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos)
 {
 	INT16 sY;
 	INVTYPE			*pItem;
@@ -3272,19 +3272,6 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, UINT8 bComma
 
 	while( pItemPool != NULL )
 	{
-		if ( bCommand == ITEMLIST_HANDLE )
-		{
-			if ( cnt == gbCurrentItemSel )
-			{
-				SetFontForeground( FONT_MCOLOR_LTGRAY );
-			}
-			else
-			{
-				SetFontForeground( FONT_MCOLOR_DKGRAY );
-			}
-		}
-
-
 		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
 		{
 			// GET ITEM
@@ -3664,8 +3651,7 @@ void RenderTopmostFlashingItems( )
 
 					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos);
 
-					DrawItemPoolList( pItemPool, pItemPool->sGridNo	, ITEMLIST_DISPLAY, pItemPool->bRenderZHeightAboveLevel, sXPos, sYPos );
-
+					DrawItemPoolList(pItemPool, pItemPool->sGridNo, pItemPool->bRenderZHeightAboveLevel, sXPos, sYPos);
 				}
 			}
 		}

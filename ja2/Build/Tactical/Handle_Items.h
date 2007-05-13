@@ -21,12 +21,6 @@
 
 #define ITEM_IGNORE_Z_LEVEL											-1
 
-#define ITEMLIST_INIT_HANDLE			1
-#define ITEMLIST_DISPLAY					2
-#define ITEMLIST_HANDLE						3
-#define ITEMLIST_END_HANDLE				4
-#define ITEMLIST_HANDLE_SELECTION	5
-
 // visibility defines
 #define ANY_VISIBILITY_VALUE  -10
 #define HIDDEN_ITEM -4
@@ -87,7 +81,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
-BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, UINT8 bCommand, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
+BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
