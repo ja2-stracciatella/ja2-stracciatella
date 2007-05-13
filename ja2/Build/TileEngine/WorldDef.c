@@ -77,10 +77,6 @@
 #	include "LoadScreen.h"
 #endif
 
-// TEMP
-CHAR8						gzForceLoadFile[100 ];
-BOOLEAN					gfForceLoad        = FALSE;
-
 INT32						giCurrentTilesetID = 0;
 
 UINT32			gCurrentBackground = FIRSTTEXTURE;
@@ -2621,14 +2617,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	LoadShadeTablesFromTextFile();
 
 	// Append exension to filename!
-	if ( gfForceLoad )
-	{
-		sprintf( aFilename, "MAPS/%s", gzForceLoadFile );
-	}
-	else
-	{
-		sprintf( aFilename, "MAPS/%s", puiFilename );
-	}
+	sprintf(aFilename, "MAPS/%s", puiFilename);
 
 	// RESET FLAGS FOR OUTDOORS/INDOORS
 	gfBasement = FALSE;
@@ -3107,9 +3096,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 	RenderProgressBar( 0, 40 );
 
-	//Reset some override flags
-	gfForceLoad				 = FALSE;
-
 	// CHECK IF OUR SELECTED GUY IS GONE!
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
@@ -3529,16 +3515,6 @@ static BOOLEAN SaveMapTileset(INT32 iTilesetID)
 	FileClose( hTSet );
 
 	return( TRUE );
-}
-
-void SetLoadOverrideParams(BOOLEAN fForceFile, CHAR8* zLoadName)
-{
-	gfForceLoad				 = fForceFile;
-
-	if ( zLoadName != NULL )
-	{
-		strcpy( gzForceLoadFile, zLoadName );
-	}
 }
 
 

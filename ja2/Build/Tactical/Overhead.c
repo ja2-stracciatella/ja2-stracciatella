@@ -3913,9 +3913,6 @@ UINT32 EnterTacticalDemoMode()
 	gTacticalStatus.uiFlags &= (~NPC_TEAM_DEAD);
 	gTacticalStatus.uiFlags &= (~PLAYER_TEAM_DEAD);
 
-	// Force load of guys
-	SetLoadOverrideParams(FALSE, NULL);
-
 	// Load random level
 	// Dont't do first three levels
 	if ( gTacticalStatus.fNOTDOLASTDEMO )
