@@ -1,4 +1,3 @@
-ITEM_LOCATOR_DELAY: unused
 GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
 HandleGotoNewGridNo(), HandleAtNewGridNo(): code duplication
 

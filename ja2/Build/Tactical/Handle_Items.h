@@ -29,7 +29,6 @@
 #define INVISIBLE -1
 #define VISIBLE 1
 
-#define	ITEM_LOCATOR_DELAY  0x01
 #define	ITEM_LOCATOR_LOCKED 0x02
 
 
