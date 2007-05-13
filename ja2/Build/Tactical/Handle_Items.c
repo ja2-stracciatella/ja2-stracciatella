@@ -2602,7 +2602,7 @@ static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel)
 }
 
 
-static void SetItemPoolLocator(ITEM_POOL* pItemPool);
+static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator )
@@ -2710,7 +2710,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 
 	if ( fSetLocator )
 	{
-		SetItemPoolLocator( pItemPool );
+		SetItemPoolLocator(pItemPool, NULL);
 	}
 
 	return( TRUE );
@@ -3376,21 +3376,10 @@ static INT8 GetListMouseHotSpot(INT16 sLargestLineWidth, INT8 bNumItemsListed, I
 static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback, UINT8 ubFlags);
 
 
-static void SetItemPoolLocator(ITEM_POOL* pItemPool)
+static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	pItemPool->bFlashColor = 59;
-
-	pItemPool->uiTimerID		= AddFlashItemSlot( pItemPool, NULL, 0 );
-
-}
-
-
-static void SetItemPoolLocatorWithCallback(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
-{
-	pItemPool->bFlashColor = 59;
-
-	pItemPool->uiTimerID		= AddFlashItemSlot( pItemPool, Callback, 0 );
-
+	pItemPool->uiTimerID   = AddFlashItemSlot(pItemPool, Callback, 0);
 }
 
 
@@ -4736,7 +4725,7 @@ void MineSpottedDialogueCallBack( void )
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 
 	// play a locator at the location of the mine
-	SetItemPoolLocatorWithCallback( pItemPool, MineSpottedLocatorCallback );
+	SetItemPoolLocator(pItemPool, MineSpottedLocatorCallback);
 }
 
 

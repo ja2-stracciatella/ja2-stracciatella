@@ -1,3 +1,7 @@
+ITEM_LOCATOR_DELAY: unused
+GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
+HandleGotoNewGridNo(), HandleAtNewGridNo(): code duplication
+
 (BOOLEAN): incorrect/unnecessary casts
 (DOUBLE): casts placed wrong
 ANITILE_REVERSE_LOOPING: never set
