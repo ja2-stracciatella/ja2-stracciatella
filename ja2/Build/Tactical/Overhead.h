@@ -93,7 +93,7 @@ typedef struct
 	UINT32							uiTimeSinceDemoOn;
 	UINT32							uiCountdownToRestart;
 	BOOLEAN							fGoingToEnterDemo_UNUSED; // XXX HACK000B
-	BOOLEAN							fNOTDOLASTDEMO;
+	BOOLEAN							fNOTDOLASTDEMO_UNUSED; // XXX HACK000B
 	BOOLEAN							fMultiplayer;
 	BOOLEAN							fCivGroupHostile[ NUM_CIV_GROUPS ];
 	UINT8								ubLastBattleSectorX;

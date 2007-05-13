@@ -563,7 +563,6 @@ BOOLEAN InitOverhead( )
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
 	gTacticalStatus.uiCountdownToRestart = GetJA2Clock();
-	gTacticalStatus.fNOTDOLASTDEMO                  = FALSE;
 	gTacticalStatus.fDidGameJustStart               = TRUE;
 	gTacticalStatus.ubLastRequesterTargetID					= NO_PROFILE;
 
@@ -3912,13 +3911,6 @@ UINT32 EnterTacticalDemoMode()
 	gTacticalStatus.uiFlags &= (~TURNBASED);
 	gTacticalStatus.uiFlags &= (~NPC_TEAM_DEAD);
 	gTacticalStatus.uiFlags &= (~PLAYER_TEAM_DEAD);
-
-	// Load random level
-	// Dont't do first three levels
-	if ( gTacticalStatus.fNOTDOLASTDEMO )
-	{
-		ubNumScenes--;
-	}
 
 	do
 	{
