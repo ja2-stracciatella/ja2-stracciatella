@@ -242,7 +242,6 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	UINT32 cnt;
-  ITEM_POOL					*pItemPool;
 	INT16							sX, sY;
 	BOOLEAN						fSaidItemSeenQuote = FALSE;
 
@@ -259,7 +258,8 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-			if ( GetItemPool( (INT16)cnt, &pItemPool, 0 ) )
+  		ITEM_POOL* pItemPool = GetItemPool((INT16)cnt, 0);
+			if (pItemPool != NULL)
 			{
 				// Set visible! ( only if invisible... )
 				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )

@@ -218,7 +218,6 @@ static const ITEM_POOL* GetClosestItemPool(INT16 sSweetGridNo, UINT8 ubRadius, I
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
-	ITEM_POOL	*pItemPool;
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
@@ -240,7 +239,8 @@ static const ITEM_POOL* GetClosestItemPool(INT16 sSweetGridNo, UINT8 ubRadius, I
 			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 			{
 				// Go on sweet stop
-				if ( GetItemPool( sGridNo, &pItemPool, bLevel ) )
+				const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
+				if (pItemPool != NULL)
 				{
 					uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
 

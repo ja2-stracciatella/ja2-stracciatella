@@ -1564,15 +1564,14 @@ static void HandleAutoPlaceFail(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 s
 static void CheckForPickedOwnership(void);
 static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
-static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, INT8 bZLevel);
+static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel);
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel);
 static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
 
 
 void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
 {
-	ITEM_POOL		*		pItemPool;
-	ITEM_POOL		*		pItemPoolToDelete = NULL;
+	const ITEM_POOL* pItemPoolToDelete = NULL;
 	OBJECTTYPE			Object;
 	INT32						cnt = 0;
 	BOOLEAN					fPickup;
@@ -1587,7 +1586,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 	{
 		// DO all pickup!
 		// LOOP THROUGH LIST TO FIND NODE WE WANT
-		GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel );
+		const ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
 
 		while( pItemPool )
 		{
@@ -1797,18 +1796,18 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 
 static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue);
-static BOOLEAN DoesItemPoolContainAllHiddenItems(ITEM_POOL* pItemPool);
+static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
 static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
-static INT16 GetNumOkForDisplayItemsInPool(ITEM_POOL* pItemPool, INT8 bZLevel);
+static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
-	ITEM_POOL		*pItemPool;
 	UINT16				usNum;
 
 	// Draw menu if more than one item!
-	if ( GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel ) )
+	ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
+	if (pItemPool != NULL)
 	{
 		// OK, if an enemy, go directly ( skip menu )
 		if ( pSoldier->bTeam != gbPlayerNum )
@@ -2190,7 +2189,8 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	iWorldItem = AddItemToWorld( *psGridNo,  pObject, ubLevel, usFlags, bRenderZHeightAboveLevel, bVisible );
 
 	// Check for and existing pool on the object layer
-	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
+	pItemPool = GetItemPool(*psGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 
 		// Add to exitsing pool
@@ -2267,7 +2267,8 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 	pItemPool->bRenderZHeightAboveLevel	 = bRenderZHeightAboveLevel;
 
 	// ATE: Get head of pool again....
-	if ( GetItemPool( *psGridNo, &pItemPool, ubLevel ) )
+	pItemPool = GetItemPool(*psGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 		AdjustItemPoolVisibility( pItemPool );
 	}
@@ -2283,14 +2284,12 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
 {
-	ITEM_POOL		*pItemPool;
-	ITEM_POOL		*pItemPoolTemp;
-
 	// Check for an existing pool on the object layer
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-		pItemPoolTemp = pItemPool;
+		const ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
 			if ( pItemPoolTemp->iItemIndex == iItemIndex )
@@ -2307,14 +2306,12 @@ static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLev
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex )
 {
-	ITEM_POOL		*pItemPool;
-	ITEM_POOL		*pItemPoolTemp;
-
 	// Check for an existing pool on the object layer
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 	// LOOP THROUGH LIST TO FIND ITEM WE WANT
-		pItemPoolTemp = pItemPool;
+		const ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
 			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == usItem )
@@ -2336,14 +2333,13 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 
 static INT32 GetItemOfClassTypeInPool(INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel)
 {
-	ITEM_POOL		*pItemPool;
-	ITEM_POOL		*pItemPoolTemp;
 
 	// Check for an existing pool on the object layer
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-		pItemPoolTemp = pItemPool;
+		const ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
 			if ( Item[ gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem ].usItemClass & uiItemClass )
@@ -2361,14 +2357,12 @@ static INT32 GetItemOfClassTypeInPool(INT16 sGridNo, UINT32 uiItemClass, UINT8 u
 
 static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
 {
-	ITEM_POOL		*pItemPool;
-	ITEM_POOL		*pItemPoolTemp;
-
 	// Check for an existing pool on the object layer
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-		pItemPoolTemp = pItemPool;
+		ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
 			if (pItemPoolTemp->iItemIndex == iItemIndex )
@@ -2384,8 +2378,7 @@ static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubL
 }
 
 
-
-BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool )
+BOOLEAN DoesItemPoolContainAnyHiddenItems(const ITEM_POOL* pItemPool)
 {
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
@@ -2402,7 +2395,7 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool )
 }
 
 
-static BOOLEAN DoesItemPoolContainAllHiddenItems(ITEM_POOL* pItemPool)
+static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
 {
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
@@ -2421,11 +2414,11 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(ITEM_POOL* pItemPool)
 
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel)
 {
-	ITEM_POOL *pItemPool = NULL;
 	ITEM_POOL *pHeadItemPool = NULL;
 	BOOLEAN		fFound = FALSE;
 
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 		pHeadItemPool = pItemPool;
 
@@ -2455,22 +2448,22 @@ static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocat
 
 INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE *pStructure )
 {
-	ITEM_POOL *pItemPool;
-
 	if ( pStructure == NULL )
 	{
 		return( 0 );
 	}
 
 	// OK, check if this struct contains items....
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) == TRUE )
+	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 		return( GetLargestZLevelOfItemPool( pItemPool ) );
 	}
 	return( 0 );
 }
 
-INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool )
+
+INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool)
 {
 	// OK, loop through pools and get any height != 0........
 	while( pItemPool != NULL )
@@ -2523,10 +2516,10 @@ static BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel(ITEM_POOL* pItemPool)
 
 static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 {
-	ITEM_POOL		*pItemPool;
+	const ITEM_POOL* pItemPool;
 
 	// Check for and existing pool on the object layer
-	while ( GetItemPool( sGridNo, &pItemPool, ubLevel ) == TRUE )
+	while ((pItemPool = GetItemPool(sGridNo, ubLevel)) != NULL)
 	{
 		RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, ubLevel );
 	}
@@ -2534,11 +2527,8 @@ static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 
 void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 {
-	ITEM_POOL		*pItemPool;
-
 	// Check for and existing pool on the object layer
-	GetItemPool( sGridNo, &pItemPool, ubLevel );
-
+	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
 	while( pItemPool )
 	{
 		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == BURIED)
@@ -2549,7 +2539,7 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 		{
 			RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, ubLevel );
 			// get new start pointer
-			GetItemPool( sGridNo, &pItemPool, ubLevel );
+			pItemPool = GetItemPool(sGridNo, ubLevel);
 		}
 	}
 }
@@ -2717,9 +2707,9 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 }
 
 
-void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool )
+void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool)
 {
-	ITEM_POOL		*pItemPoolTemp;
+	ITEM_POOL* pItemPoolTemp;
 
 	pItemPoolTemp = pItemPool;
 	while( pItemPoolTemp != NULL )
@@ -2781,14 +2771,14 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 {
-	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fItemFound = FALSE;
 	LEVELNODE		*pObject;
 
 
 	// Check for and existing pool on the object layer
-	if ( GetItemPool( sGridNo, &pItemPool, ubLevel ) )
+	ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
+	if (pItemPool != NULL)
 	{
 
 		// REMOVE FROM LIST
@@ -2871,10 +2861,9 @@ BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 		if ( pItemPoolTemp->bRenderZHeightAboveLevel > 0 )
 		{
 			STRUCTURE		*pStructure;
-			ITEM_POOL		*pTempPool;
 
 			// Check if an item pool exists here....
-			if ( !GetItemPool( pItemPoolTemp->sGridNo, &pTempPool, pItemPoolTemp->ubLevel ) )
+			if (GetItemPool(pItemPoolTemp->sGridNo, pItemPoolTemp->ubLevel) == NULL)
 			{
 				pStructure = FindStructure( pItemPoolTemp->sGridNo , STRUCTURE_HASITEMONTOP );
 
@@ -2905,11 +2894,11 @@ BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 {
 	// note, only works between locations on the ground
-	ITEM_POOL		*pItemPool;
 	WORLDITEM		TempWorldItem;
 
 	// While there is an existing pool
-	while( GetItemPool( sStartPos, &pItemPool, 0 ) )
+	const ITEM_POOL* pItemPool;
+	while ((pItemPool = GetItemPool(sStartPos, 0)) != NULL)
 	{
 		TempWorldItem = gWorldItems[pItemPool->iItemIndex];
 		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
@@ -2918,7 +2907,7 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	return( TRUE );
 }
 
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
+ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel)
 {
 	LEVELNODE *pObject;
 
@@ -2931,26 +2920,18 @@ BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel )
 		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
 	}
 
-	(*ppItemPool) = NULL;
-
 	// LOOP THORUGH OBJECT LAYER
 	while( pObject != NULL )
 	{
 		if ( pObject->uiFlags & LEVELNODE_ITEM )
 		{
-			(*ppItemPool) = pObject->pItemPool;
-
-			//DEF added the check because pObject->pItemPool was NULL which was causing problems
-			if( *ppItemPool )
-				return( TRUE );
-			else
-				return( FALSE );
+			return pObject->pItemPool;
 		}
 
 		pObject = pObject->pNext;
 	}
 
-	return( FALSE );
+	return NULL;
 }
 
 
@@ -2991,7 +2972,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 }
 
 
-static INT16 GetNumOkForDisplayItemsInPool(ITEM_POOL* pItemPool, INT8 bZLevel)
+static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	INT32						cnt;
 
@@ -3060,7 +3041,7 @@ BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel)
 }
 
 
-static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, ITEM_POOL* pItemPool, INT8 bZLevel)
+static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel)
 {
 	if (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS)
 	{
@@ -4711,12 +4692,10 @@ static void MineSpottedLocatorCallback(void);
 
 void MineSpottedDialogueCallBack( void )
 {
-	ITEM_POOL * pItemPool;
-
   // ATE: REALLY IMPORTANT - ALL CALLBACK ITEMS SHOULD UNLOCK
   gTacticalStatus.fLockItemLocators = FALSE;
 
-	GetItemPool( gsBoobyTrapGridNo, &pItemPool, gbBoobyTrapLevel );
+	ITEM_POOL* pItemPool = GetItemPool(gsBoobyTrapGridNo, gbBoobyTrapLevel);
 
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 
@@ -4846,14 +4825,13 @@ static void TestPotentialOwner(SOLDIERTYPE* pSoldier)
 
 static void CheckForPickedOwnership(void)
 {
-	ITEM_POOL *				pItemPool;
 	UINT8							ubProfile;
 	UINT8							ubCivGroup;
 	SOLDIERTYPE *			pSoldier;
 	UINT8							ubLoop;
 
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	GetItemPool( gsTempGridno, &pItemPool, gpTempSoldier->bLevel );
+	const ITEM_POOL* pItemPool = GetItemPool(gsTempGridno, gpTempSoldier->bLevel);
 
 	while( pItemPool )
 	{

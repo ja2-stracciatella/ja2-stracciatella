@@ -1025,7 +1025,6 @@ void RemoveAssassin( UINT8 ubProfile )
 void CheckForMissingHospitalSupplies( void )
 {
 	UINT32				uiLoop;
-	ITEM_POOL *		pItemPool;
 	OBJECTTYPE *	pObj;
 	UINT8					ubMedicalObjects = 0;
 
@@ -1034,7 +1033,7 @@ void CheckForMissingHospitalSupplies( void )
 		// loop through all items, look for ownership
 		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
 		{
-			GetItemPool( gWorldItems[ uiLoop ].sGridNo, &pItemPool, 0 ) ;
+			const ITEM_POOL* pItemPool = GetItemPool(gWorldItems[uiLoop].sGridNo, 0);
 			while( pItemPool )
 			{
 				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );

@@ -1553,12 +1553,11 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 {
-	ITEM_POOL					*pItemPool;
 	UINT16						sAPCost = 0;
 	INT16							sActionGridNo;
 
 	// Check if we are over an item pool
-	if ( GetItemPool( usMapPos, &pItemPool, pSoldier->bLevel ) )
+	if (GetItemPool(usMapPos, pSoldier->bLevel) != NULL)
 	{
 		// If we are in the same tile, just return pickup cost
 		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, usMapPos );

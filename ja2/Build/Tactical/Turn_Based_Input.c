@@ -4177,7 +4177,6 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	INT16							sAPCost;
 	INT16							sAdjustedGridNo;
 	STRUCTURE					*pStructure = NULL;
-	ITEM_POOL					*pItemPool;
 	BOOLEAN						fIgnoreItems = FALSE;
 
 	SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
@@ -4247,7 +4246,8 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 
 		// Check if we are over an item pool
 		// ATE: Ignore items will be set if over a switch interactive tile...
-		if ( GetItemPool( sActionGridNo, &pItemPool, pSoldier->bLevel ) && ITEMPOOL_VISIBLE( pItemPool ) && !fIgnoreItems )
+		const ITEM_POOL* pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
+		if (pItemPool != NULL && ITEMPOOL_VISIBLE(pItemPool) && !fIgnoreItems)
 		{
 			if ( AM_AN_EPC( pSoldier ) )
 			{
@@ -4338,7 +4338,6 @@ static void ExchangeMessageBoxCallBack(UINT8 bExitValue)
 INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 {
 	// Look for an item pool
-	ITEM_POOL					*pItemPool;
 	BOOLEAN						fContinue = TRUE;
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;
@@ -4404,7 +4403,8 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 
 			// Check if we are over an item pool, take precedence over that.....
 			// EXCEPT FOR SWITCHES!
-			if ( GetItemPool( sIntTileGridNo, &pItemPool, pSoldier->bLevel ) && !( pStructure->fFlags & ( STRUCTURE_SWITCH | STRUCTURE_ANYDOOR ) ) )
+			const ITEM_POOL* pItemPool = GetItemPool(sIntTileGridNo, pSoldier->bLevel);
+			if (pItemPool != NULL && !(pStructure->fFlags & (STRUCTURE_SWITCH | STRUCTURE_ANYDOOR)))
 			{
 				if ( AM_AN_EPC( pSoldier ) )
 				{

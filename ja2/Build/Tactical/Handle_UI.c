@@ -1228,7 +1228,6 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 	LEVELNODE					*pIntNode;
 	EXITGRID					ExitGrid;
 	INT16							sIntTileGridNo;
-	ITEM_POOL					*pItemPool;
 
 	static INT16			sGridNoForItemsOver;
 	static INT8				bLevelForItemsOver;
@@ -1260,7 +1259,8 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 	if ( !UIHandleOnMerc( TRUE ) )
 	{
 		 // Are we over items...
-		 if ( GetItemPool( usMapPos, &pItemPool, (UINT8)gsInterfaceLevel ) && ITEMPOOL_VISIBLE( pItemPool ) )
+		const ITEM_POOL* pItemPool = GetItemPool(usMapPos, (UINT8)gsInterfaceLevel);
+		if (pItemPool != NULL && ITEMPOOL_VISIBLE(pItemPool))
 		 {
 				// Are we already in...
 			  if ( fOverItems )
@@ -3495,7 +3495,6 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	INT16							sActionGridNo;
 	STRUCTURE					*pStructure;
 	UINT8							ubDirection;
-//	ITEM_POOL					*pItemPool;
 	INT16							sAdjustedGridNo;
   INT16							sIntTileGridNo;
 	LEVELNODE					*pIntTile;
@@ -3809,32 +3808,25 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	}
 	else if ( uiFlags == MOVEUI_TARGET_ITEMS )
 	{
-		//if ( GetItemPool( usMapPos, &pItemPool, pSoldier->bLevel ) )
+		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sActionGridNo );
+
+		if ( pSoldier->sGridNo != sActionGridNo )
 		{
-			//if ( ITEMPOOL_VISIBLE( pItemPool ) )
+			sAPCost += UIPlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints);
+			if ( sAPCost != 0 )
 			{
-				sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sActionGridNo );
-
-				if ( pSoldier->sGridNo != sActionGridNo )
-				{
-					sAPCost += UIPlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints);
-					if ( sAPCost != 0 )
-					{
-						sAPCost += AP_PICKUP_ITEM;
-					}
-				}
-				else
-				{
-						sAPCost += AP_PICKUP_ITEM;
-				}
-
-				if ( sActionGridNo != pSoldier->sGridNo )
-				{
-					gfUIHandleShowMoveGrid = TRUE;
-					gsUIHandleShowMoveGridLocation = sActionGridNo;
-				}
-
+				sAPCost += AP_PICKUP_ITEM;
 			}
+		}
+		else
+		{
+				sAPCost += AP_PICKUP_ITEM;
+		}
+
+		if ( sActionGridNo != pSoldier->sGridNo )
+		{
+			gfUIHandleShowMoveGrid = TRUE;
+			gsUIHandleShowMoveGridLocation = sActionGridNo;
 		}
 	}
 	else
@@ -4023,7 +4015,6 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	INT16							sAPCost;
-	ITEM_POOL					*pItemPool;
 
 	sAPCost = GetAPsToPickupItem( pSoldier, sGridNo );
 
@@ -4033,14 +4024,6 @@ BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 	else
 	{
-		if ( GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel ) )
-		{
-			//if ( !ITEMPOOL_VISIBLE( pItemPool ) )
-			{
-		//		return( FALSE );
-			}
-		}
-
 		if ( EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
 		{
 			return( TRUE );
@@ -5444,7 +5427,6 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 
 static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles)
 {
-	ITEM_POOL					*pItemPool;
 	BOOLEAN						fSetCursor;
 	UINT32						uiCursorFlags;
 	LEVELNODE					*pIntTile;
@@ -5566,7 +5548,8 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 	}
 
 	// Check if we are over an item pool
-	if ( GetItemPool( sActionGridNo, &pItemPool, pSoldier->bLevel ) )
+	const ITEM_POOL* pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
+	if (pItemPool != NULL)
 	{
 		// If we want only on int tiles, and we have no int tiles.. ignore items!
 		if ( fItemsOnlyIfOnIntTiles && pIntTile == NULL  )

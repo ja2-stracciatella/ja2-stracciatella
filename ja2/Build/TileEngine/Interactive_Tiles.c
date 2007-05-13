@@ -197,7 +197,6 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	STRUCTURE			*pStructure, *pNewStructure;
 	INT16					sAPCost = 0, sBPCost = 0;
-	ITEM_POOL			*pItemPool;
   BOOLEAN       fDidMissingQuote = FALSE;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
@@ -243,7 +242,8 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 
 		// LOOK for item pool here...
-		if ( GetItemPool( (INT16)sGridNo, &pItemPool, pSoldier->bLevel ) )
+		ITEM_POOL* pItemPool = GetItemPool((INT16)sGridNo, pSoldier->bLevel);
+		if (pItemPool != NULL)
 		{
 			// Update visiblity....
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )

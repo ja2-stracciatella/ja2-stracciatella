@@ -764,7 +764,6 @@ static void RenderSelectedItemBlownUp(void)
 {
 	UINT32 uiVideoObjectIndex;
 	INT16 sScreenX, sScreenY, xp, yp;
-	ITEM_POOL	*pItemPool;
 	wchar_t szItemName[SIZE_ITEM_NAME];
 	INT32 i;
 	INT16 sWidth, sHeight, sOffsetX, sOffsetY;
@@ -822,7 +821,7 @@ static void RenderSelectedItemBlownUp(void)
 
 	//Count the number of items in the current pool, and display that.
 	i = 0;
-	GetItemPool( gsItemGridNo, &pItemPool, 0 );
+	const ITEM_POOL* pItemPool = GetItemPool(gsItemGridNo, 0);
 	Assert( pItemPool );
 	while( pItemPool )
 	{

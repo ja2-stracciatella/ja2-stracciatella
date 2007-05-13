@@ -1652,7 +1652,6 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	INT16					sGridNo;
 	INT16					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
-	ITEM_POOL *		pItemPool;
 	OBJECTTYPE *	pObj;
 	INVTYPE *			pItem;
 	INT32					iItemIndex, iBestItemIndex;
@@ -1765,7 +1764,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 				}
 
 				iValue = 0;
-				GetItemPool( sGridNo, &pItemPool, pSoldier->bLevel );
+				const ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
 				switch( bReason )
 				{
 					case SEARCH_AMMO:

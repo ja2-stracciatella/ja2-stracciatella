@@ -293,7 +293,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
  UINT8 dir,range,Path2;
  UINT8	ubRoomNo;
  BOOLEAN	fCheckForRooms = FALSE;
- ITEM_POOL					*pItemPool;
  BOOLEAN			fHiddenStructVisible;
  UINT8				ubMovementCost;
  BOOLEAN			fTravelCostObs;
@@ -694,7 +693,8 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
                	// OK, look for corpses...
 	              LookForAndMayCommentOnSeeingCorpse( pSoldier, (INT16)marker, ubLevel );
 
-								if ( GetItemPool( (INT16)marker, &pItemPool, ubLevel ) )
+								ITEM_POOL* pItemPool = GetItemPool((INT16)marker, ubLevel);
+								if (pItemPool != NULL)
 								{
 										itemVisible = pItemPool->bVisible;
 

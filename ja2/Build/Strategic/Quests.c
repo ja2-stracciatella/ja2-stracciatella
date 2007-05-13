@@ -70,11 +70,10 @@ void SetFactFalse( UINT16 usFact )
 
 static BOOLEAN CheckForNewShipment(void)
 {
-	ITEM_POOL *			pItemPool;
-
 	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
 	{
-		if ( GetItemPool( BOBBYR_SHIPPING_DEST_GRIDNO, &pItemPool, 0 ) )
+		ITEM_POOL* pItemPool = GetItemPool(BOBBYR_SHIPPING_DEST_GRIDNO, 0);
+		if (pItemPool != NULL)
 		{
 			return( !( ITEMPOOL_VISIBLE( pItemPool ) ) );
 		}

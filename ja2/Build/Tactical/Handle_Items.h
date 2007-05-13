@@ -79,21 +79,21 @@ OBJECTTYPE* AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 b
 OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex );
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN	GetItemPool( UINT16 usMapPos, ITEM_POOL **ppItemPool, UINT8 ubLevel );
+ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
 BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel );
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator );
 
-void SetItemPoolVisibilityHidden( ITEM_POOL *pItemPool );
+void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool);
 
 void RenderTopmostFlashingItems( );
 
 void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel );
 
 
-BOOLEAN DoesItemPoolContainAnyHiddenItems( ITEM_POOL *pItemPool );
+BOOLEAN DoesItemPoolContainAnyHiddenItems(const ITEM_POOL* pItemPool);
 
 
 void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
@@ -105,7 +105,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier );
 
 INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE *pStructure );
 
-INT8 GetLargestZLevelOfItemPool( ITEM_POOL *pItemPool );
+INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool);
 
 BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo );
 void MineSpottedDialogueCallBack( void );

@@ -1455,7 +1455,6 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	BOOLEAN	fBlastEffect = TRUE;
 	INT16		sNewGridNo;
 	BOOLEAN	fBloodEffect = FALSE;
-	ITEM_POOL * pItemPool, * pItemPoolNext;
 	UINT32	uiRoll;
 
 	//Init the variables
@@ -1607,11 +1606,11 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 		// NB radius can be 0 so cannot divide it by 2 here
 		if (!fStunEffect && (uiDist * 2 <= pExplosive->ubRadius)  )
 		{
-			GetItemPool( sGridNo, &pItemPool, bLevel );
+			const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
 
 			while( pItemPool )
 			{
-				pItemPoolNext = pItemPool->pNext;
+				const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
 
 				if ( DamageItemOnGround( &(gWorldItems[ pItemPool->iItemIndex ].o), sGridNo, bLevel, (INT32) (sWoundAmt * 2), ubOwner ) )
 				{

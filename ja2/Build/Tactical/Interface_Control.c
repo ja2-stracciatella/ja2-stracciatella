@@ -547,8 +547,6 @@ void RenderTopmostTacticalInterface( )
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
 	UINT16						usMapPos;
-	ITEM_POOL					*pItemPool;
-
 
 	if ( gfRerenderInterfaceFromHelpText == TRUE )
 	{
@@ -775,7 +773,8 @@ void RenderTopmostTacticalInterface( )
 			if (pSoldier != NULL)
 			{
 				// Check if we are over an item pool
-				if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, pSoldier->bLevel ) )
+				const ITEM_POOL* pItemPool = GetItemPool(gfUIOverItemPoolGridNo, pSoldier->bLevel);
+				if (pItemPool != NULL)
 				{
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
@@ -814,7 +813,8 @@ void RenderTopmostTacticalInterface( )
           }
 
 				  // Check if we are over an item pool
-				  if ( GetItemPool( gfUIOverItemPoolGridNo, &pItemPool, bCheckLevel ) )
+					const ITEM_POOL* pItemPool = GetItemPool(gfUIOverItemPoolGridNo, bCheckLevel);
+				  if (pItemPool != NULL)
 				  {
 					  STRUCTURE					*pStructure = NULL;
 					  INT16							sIntTileGridNo;
