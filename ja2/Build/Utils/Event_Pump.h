@@ -4,8 +4,6 @@
 // Enumerate all events for JA2
 enum
 {
-
-	E_PLAYSOUND,
 	S_CHANGEDEST,
 //	S_GETNEWPATH,
 	S_BEGINTURN,
@@ -30,16 +28,6 @@ enum
 // it indicates that these events will not be processed until specifically
 // called for in a special loop.
 #define DEMAND_EVENT_DELAY 0xFFFF
-
-// Enumerate all structures for events
-typedef struct
-{
-	UINT16		usIndex;
-	UINT8			ubVolume;
-	UINT8			ubLoops;
-	UINT32		uiPan;
-
-} EV_E_PLAYSOUND;
 
 
 typedef struct

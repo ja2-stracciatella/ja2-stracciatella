@@ -3,7 +3,6 @@
 #include "WCheck.h"
 #include "Event_Pump.h"
 #include "Soldier_Control.h"
-#include "Sound_Control.h"
 #include "Overhead.h"
 #include "Weapons.h"
 #include "Animation_Control.h"
@@ -14,8 +13,6 @@
 
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons
-EV_E_PLAYSOUND			EPlaySound;
-
 EV_S_CHANGEDEST				SChangeDest;
 EV_S_SETPOSITION			SSetPosition;
 EV_S_GETNEWPATH				SGetNewPath;
@@ -68,11 +65,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 	 // Switch on event type and set size accordingly
 	 switch( uiEvent )
 	 {
-			case E_PLAYSOUND:
-
-				uiDataSize = sizeof( EV_E_PLAYSOUND );
-				break;
-
 			case S_CHANGEDEST:
 
 				uiDataSize = sizeof( EV_S_CHANGEDEST );
@@ -298,14 +290,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 	// Switch on event type
 	switch( pEvent->uiEvent )
 	{
-			case E_PLAYSOUND:
-
-				memcpy( &EPlaySound, pEvent->pData, pEvent->uiDataSize );
-
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Play Sound");
-				PlayJA2Sample(EPlaySound.usIndex, EPlaySound.ubVolume, EPlaySound.ubLoops, EPlaySound.uiPan);
-				break;
-
 			case S_CHANGEDEST:
 			{
 				memcpy( &SChangeDest, pEvent->pData, pEvent->uiDataSize );
