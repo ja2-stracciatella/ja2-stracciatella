@@ -25,7 +25,7 @@ EV_S_WEAPONHIT				SWeaponHit;
 EV_S_STRUCTUREHIT			SStructureHit;
 EV_S_WINDOWHIT				SWindowHit;
 EV_S_NOISE						SNoise;
-EV_S_STOP_MERC				SStopMerc;
+
 
 static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID);
 
@@ -120,10 +120,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 
 			case S_NOISE:
 				uiDataSize = sizeof( EV_S_NOISE );
-				break;
-
-			case S_STOP_MERC:
-				uiDataSize = sizeof( EV_S_STOP_MERC );
 				break;
 
 			default:
@@ -503,29 +499,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: Noise from %d at %d/%d, type %d volume %d", SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubNoiseType, SNoise.ubVolume ) );
 				OurNoise( SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType );
 				break;
-
-			case S_STOP_MERC:
-			{
-				memcpy( &SStopMerc, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SStopMerc.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
-					 break;
-				}
-
-				if( pSoldier-> uiUniqueSoldierIdValue != SStopMerc.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Stop Merc at Gridno %d", SStopMerc.sGridNo ));
-				EVENT_StopMerc( pSoldier, SStopMerc.sGridNo, SStopMerc.bDirection );
-				break;
-			}
 
 			default:
 

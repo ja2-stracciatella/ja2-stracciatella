@@ -14,7 +14,6 @@ enum
 	S_STRUCTUREHIT,
 	S_WINDOWHIT,
 	S_NOISE,
-	S_STOP_MERC,
 	S_GETNEWPATH,
 	S_SETPOSITION,
 	S_SETDIRECTION,
@@ -150,18 +149,6 @@ typedef struct
 	UINT8 ubVolume;
 	UINT8 ubNoiseType;
 } EV_S_NOISE;
-
-
-typedef struct
-{
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	INT8		bDirection;
-	INT16		sGridNo;
-	INT16		sXPos;
-	INT16		sYPos;
-
-} EV_S_STOP_MERC;
 
 
 BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );

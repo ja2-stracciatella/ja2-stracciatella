@@ -8819,14 +8819,6 @@ void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier )
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy )
 {
-	// SEND HUALT EVENT!
-	//EV_S_STOP_MERC				SStopMerc;
-
-	//SStopMerc.sGridNo					= pSoldier->sGridNo;
-	//SStopMerc.bDirection			= pSoldier->bDirection;
-	//SStopMerc.usSoldierID			= pSoldier->ubID;
-	//AddGameEvent( S_STOP_MERC, 0, &SStopMerc );
-
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 	{
