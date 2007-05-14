@@ -4,8 +4,6 @@
 // Enumerate all events for JA2
 enum
 {
-	S_CHANGEDEST,
-//	S_GETNEWPATH,
 	S_SETDESIREDDIRECTION,
 	S_BEGINFIREWEAPON,
 	S_FIREWEAPON,
@@ -25,14 +23,6 @@ enum
 // called for in a special loop.
 #define DEMAND_EVENT_DELAY 0xFFFF
 
-
-typedef struct
-{
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	UINT16	usNewDestination;
-
-} EV_S_CHANGEDEST;
 
 typedef struct
 {

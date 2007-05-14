@@ -13,7 +13,6 @@
 
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons
-EV_S_CHANGEDEST				SChangeDest;
 EV_S_SETPOSITION			SSetPosition;
 EV_S_GETNEWPATH				SGetNewPath;
 EV_S_SETDIRECTION			SSetDirection;
@@ -62,12 +61,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 	 // Switch on event type and set size accordingly
 	 switch( uiEvent )
 	 {
-			case S_CHANGEDEST:
-
-				uiDataSize = sizeof( EV_S_CHANGEDEST );
-				break;
-
-
 			case S_SETPOSITION:
 
 				uiDataSize = sizeof( EV_S_SETPOSITION );
@@ -269,30 +262,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 	// Switch on event type
 	switch( pEvent->uiEvent )
 	{
-			case S_CHANGEDEST:
-			{
-				memcpy( &SChangeDest, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SChangeDest.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Invalid Soldier ID #%d", SChangeDest.usSoldierID) );
-					 break;
-				}
-
-				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SChangeDest.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Change Dest");
-				EVENT_SetSoldierDestination( pSoldier, SChangeDest.usNewDestination );
-				break;
-			}
-
 			case S_SETPOSITION:
 			{
 				memcpy( &SSetPosition, pEvent->pData, pEvent->uiDataSize );

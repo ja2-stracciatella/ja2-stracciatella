@@ -7688,20 +7688,6 @@ static void SendSoldierPositionEvent(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOA
 }
 
 
-static void SendSoldierDestinationEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDestination)
-{
-	// Sent event for position update
-	EV_S_CHANGEDEST	SChangeDest;
-
-	SChangeDest.usSoldierID = pSoldier->ubID;
-	SChangeDest.usNewDestination = usNewDestination;
-	SChangeDest.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
-
-	AddGameEvent( S_CHANGEDEST, 0, &SChangeDest );
-
-}
-
-
 static void SendSoldierSetDirectionEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDirection)
 {
 	// Sent event for position update
