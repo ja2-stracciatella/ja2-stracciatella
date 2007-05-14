@@ -872,7 +872,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 457:
 
 					// CODE: CHANGCE STANCE TO STANDING
-					SendChangeSoldierStanceEvent( pSoldier, ANIM_STAND );
+					ChangeSoldierStance(pSoldier, ANIM_STAND);
 					break;
 
 				case 459:

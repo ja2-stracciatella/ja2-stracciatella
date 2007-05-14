@@ -2403,7 +2403,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #ifdef DEBUGDECISIONS
 			DebugAI("ExecuteAction: SkipCoverCheck ON\n");
 #endif
-			SendChangeSoldierStanceEvent( pSoldier, (UINT8) pSoldier->usActionData );
+			ChangeSoldierStance(pSoldier, pSoldier->usActionData);
 			break;
 
 		case AI_ACTION_COWER:

@@ -633,7 +633,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 				if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_CROUCH )
 				{
 					// SET DESIRED STANCE AND SET PENDING ANIMATION
-					SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
+					ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 					pSoldier->usPendingAnimation = PUNCH_LOW;
 				}
 				else
@@ -1285,7 +1285,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 						// Set our next moving animation to be pending, after
 						pSoldier->usPendingAnimation = usNewState;
 						// Set new state to be animation to move to new stance
-						SendChangeSoldierStanceEvent( pSoldier, gAnimControl[ usNewState ].ubHeight );
+						ChangeSoldierStance(pSoldier, gAnimControl[usNewState].ubHeight);
 						return( TRUE );
 					}
 				}
@@ -4558,8 +4558,7 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usN
 					pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_ON;
 
 					// Set a pending animation to change stance first...
-					SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
-
+					ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 				}
 			}
 		}
@@ -4995,7 +4994,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 			{
 				if ( IsValidStance( pSoldier, ANIM_PRONE ) )
 				{
-					SendChangeSoldierStanceEvent( pSoldier, ANIM_PRONE );
+					ChangeSoldierStance(pSoldier, ANIM_PRONE);
 					pSoldier->usPendingAnimation = SelectFireAnimation( pSoldier, ANIM_PRONE );
 				}
 				else
@@ -5021,7 +5020,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
  {
 		if ( pSoldier->bDirection == pSoldier->bDesiredDirection )
 		{
-			SendChangeSoldierStanceEvent( pSoldier, pSoldier->ubPendingStanceChange );
+			ChangeSoldierStance(pSoldier, pSoldier->ubPendingStanceChange);
 			pSoldier->ubPendingStanceChange = NO_PENDING_STANCE;
 			pSoldier->fTurningUntilDone = FALSE;
 		}
@@ -5080,7 +5079,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 			// ATE: Don't do this if we have something in our hands we are going to throw!
 			if ( IsValidStance( pSoldier, ANIM_PRONE ) && pSoldier->pTempObject == NULL )
 			{
-				SendChangeSoldierStanceEvent( pSoldier, ANIM_PRONE );
+				ChangeSoldierStance(pSoldier, ANIM_PRONE);
 			}
 			pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 		}
@@ -5233,7 +5232,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		 if ( pSoldier->usAnimState == CRAWLING )
 		 {
 				// OK, we want to getup, turn and go prone again....
-				SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
+				ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 				pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
 		 }
 		 // If we are a creature, or multi-tiled, cancel AI action.....?
@@ -7743,12 +7742,6 @@ void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT
 }
 
 
-void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance )
-{
-	ChangeSoldierStance( pSoldier, ubNewStance );
-}
-
-
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
 	EV_S_BEGINFIREWEAPON		SBeginFireWeapon;
@@ -8164,7 +8157,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 					if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_CROUCH )
 					{
 						// SET DESIRED STANCE AND SET PENDING ANIMATION
-						SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
+						ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 						pSoldier->usPendingAnimation = CROUCH_STAB;
 					}
 					else
@@ -8322,7 +8315,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_CROUCH )
 				  {
 					  // SET DESIRED STANCE AND SET PENDING ANIMATION
-					  SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
+					  ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 					  pSoldier->usPendingAnimation = PUNCH_LOW;
 				  }
 				  else
@@ -8465,7 +8458,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		//if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_CROUCH )
 		//{
 			// SET DESIRED STANCE AND SET PENDING ANIMATION
-		//	SendChangeSoldierStanceEvent( pSoldier, ANIM_CROUCH );
+		//	ChangeSoldierStance(pSoldier, ANIM_CROUCH);
 		//	pSoldier->usPendingAnimation = START_AID;
 		//}
 		//else

@@ -3192,9 +3192,7 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 		// Check if we have enough APS
 		if ( SoldierCanAffordNewStance( pSoldier, bNewStance ) )
 		{
-			// Adjust stance
-			//ChangeSoldierStance( pSoldier, bNewStance );
-			SendChangeSoldierStanceEvent( pSoldier, bNewStance );
+			ChangeSoldierStance(pSoldier, bNewStance);
 
 			pSoldier->sFinalDestination = pSoldier->sGridNo;
 			pSoldier->bGoodContPath			= FALSE;
@@ -3212,8 +3210,7 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 		if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY )
 		{
 			// Change stance normally
-			SendChangeSoldierStanceEvent( pSoldier, bNewStance );
-
+			ChangeSoldierStance(pSoldier, bNewStance);
 		}
 		else
 		{

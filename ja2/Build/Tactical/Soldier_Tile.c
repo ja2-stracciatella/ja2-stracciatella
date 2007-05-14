@@ -461,7 +461,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 
 						// Change height to stand
 						pSoldier->fContinueMoveAfterStanceChange = TRUE;
-						SendChangeSoldierStanceEvent( pSoldier, ANIM_STAND );
+						ChangeSoldierStance(pSoldier, ANIM_STAND);
 						break;
 				}
 
