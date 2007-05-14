@@ -13,7 +13,6 @@ enum
 	S_WEAPONHIT,
 	S_STRUCTUREHIT,
 	S_WINDOWHIT,
-	S_MISS,
 	S_NOISE,
 	S_STOP_MERC,
 	S_GETNEWPATH,
@@ -141,11 +140,6 @@ typedef struct
 	BOOLEAN	fBlowWindowSouth;
 	BOOLEAN	fLargeForce;
 } EV_S_WINDOWHIT;
-
-typedef struct
-{
-	UINT8		ubAttackerID;
-} EV_S_MISS;
 
 typedef struct
 {

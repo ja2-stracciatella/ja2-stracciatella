@@ -24,7 +24,6 @@ EV_S_FIREWEAPON				SFireWeapon;
 EV_S_WEAPONHIT				SWeaponHit;
 EV_S_STRUCTUREHIT			SStructureHit;
 EV_S_WINDOWHIT				SWindowHit;
-EV_S_MISS							SMiss;
 EV_S_NOISE						SNoise;
 EV_S_STOP_MERC				SStopMerc;
 
@@ -117,10 +116,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 
 			case S_WINDOWHIT:
 				uiDataSize = sizeof( EV_S_STRUCTUREHIT );
-				break;
-
-			case S_MISS:
-				uiDataSize = sizeof( EV_S_MISS );
 				break;
 
 			case S_NOISE:
@@ -501,13 +496,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				memcpy( &SWindowHit, pEvent->pData, pEvent->uiDataSize );
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: WindowHit");
 				WindowHit( SWindowHit.sGridNo, SWindowHit.usStructureID, SWindowHit.fBlowWindowSouth, SWindowHit.fLargeForce );
-				break;
-
-			case S_MISS:
-
-				memcpy( &SMiss, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Shot Miss ( obsolete )");
-				//ShotMiss( SMiss.ubAttackerID );
 				break;
 
 			case S_NOISE:
