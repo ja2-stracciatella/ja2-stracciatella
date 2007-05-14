@@ -7672,20 +7672,6 @@ static BOOLEAN IsActionInterruptable(SOLDIERTYPE* pSoldier)
 }
 
 
-static void SendSoldierSetDirectionEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDirection)
-{
-	// Sent event for position update
-	EV_S_SETDIRECTION	SSetDirection;
-
-	SSetDirection.usSoldierID = pSoldier->ubID;
-	SSetDirection.usNewDirection = usNewDirection;
-	SSetDirection.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
-
-	AddGameEvent( S_SETDIRECTION, 0, &SSetDirection );
-
-}
-
-
 void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usDesiredDirection)
 {
 	// Sent event for position update

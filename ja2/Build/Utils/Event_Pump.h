@@ -12,7 +12,6 @@ enum
 	S_WINDOWHIT,
 	S_NOISE,
 	S_GETNEWPATH,
-	S_SETDIRECTION,
 
 	NUM_EVENTS
 };
@@ -31,14 +30,6 @@ typedef struct
 	UINT16		usMovementAnim;
 
 } EV_S_GETNEWPATH;
-
-typedef struct
-{
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	UINT16	usNewDirection;
-
-} EV_S_SETDIRECTION;
 
 typedef struct
 {

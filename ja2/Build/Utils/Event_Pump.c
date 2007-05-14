@@ -14,7 +14,6 @@
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons
 EV_S_GETNEWPATH				SGetNewPath;
-EV_S_SETDIRECTION			SSetDirection;
 EV_S_SETDESIREDDIRECTION			SSetDesiredDirection;
 EV_S_BEGINFIREWEAPON	SBeginFireWeapon;
 EV_S_FIREWEAPON				SFireWeapon;
@@ -63,11 +62,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 			case S_GETNEWPATH:
 
 				uiDataSize = sizeof( EV_S_GETNEWPATH );
-				break;
-
-			case S_SETDIRECTION:
-
-				uiDataSize = sizeof( EV_S_SETDIRECTION );
 				break;
 
 			case S_SETDESIREDDIRECTION:
@@ -276,30 +270,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: GetNewPath");
 				EVENT_GetNewSoldierPath( pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim );
-				break;
-			}
-
-			case S_SETDIRECTION:
-			{
-				memcpy( &SSetDirection, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SSetDirection.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
-					 break;
-				}
-
-				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SSetDirection.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetDirection: Dir( %d )", SSetDirection.usNewDirection)  );
-				EVENT_SetSoldierDirection( pSoldier, SSetDirection.usNewDirection );
 				break;
 			}
 
