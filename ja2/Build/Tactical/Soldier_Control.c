@@ -7745,18 +7745,6 @@ void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT
 
 void SendChangeSoldierStanceEvent( SOLDIERTYPE *pSoldier, UINT8 ubNewStance )
 {
-#if 0
-	EV_S_CHANGESTANCE			SChangeStance;
-
-	SChangeStance.ubNewStance   = ubNewStance;
-	SChangeStance.usSoldierID  = pSoldier->ubID;
-	SChangeStance.sXPos				= pSoldier->sX;
-	SChangeStance.sYPos				= pSoldier->sY;
-	SChangeStance.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
-
-	AddGameEvent( S_CHANGESTANCE, 0, &SChangeStance );
-#endif
-
 	ChangeSoldierStance( pSoldier, ubNewStance );
 }
 

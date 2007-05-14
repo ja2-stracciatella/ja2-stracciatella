@@ -6,7 +6,6 @@ enum
 {
 	S_CHANGEDEST,
 //	S_GETNEWPATH,
-	S_CHANGESTANCE,
 	S_SETDESIREDDIRECTION,
 	S_BEGINFIREWEAPON,
 	S_FIREWEAPON,
@@ -52,16 +51,6 @@ typedef struct
 	UINT16		usMovementAnim;
 
 } EV_S_GETNEWPATH;
-
-typedef struct
-{
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	UINT8		ubNewStance;
-	INT16		sXPos;
-	INT16		sYPos;
-
-} EV_S_CHANGESTANCE;
 
 typedef struct
 {
