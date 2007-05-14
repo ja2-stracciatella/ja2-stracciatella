@@ -1064,10 +1064,9 @@ BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
 // FUNCTIONS CALLED BY EVENT PUMP
 /////////////////////////////////
 
-BOOLEAN ChangeSoldierState( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
+void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce)
 {
 	EVENT_InitNewSoldierAnim(pSoldier, usNewState, usStartingAniCode, fForce);
-	return TRUE;
 }
 
 
