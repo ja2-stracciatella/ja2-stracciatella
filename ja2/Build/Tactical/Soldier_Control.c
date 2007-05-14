@@ -1066,23 +1066,8 @@ BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
 
 BOOLEAN ChangeSoldierState( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
-	EV_S_CHANGESTATE	SChangeState;
-
-	// Send message that we have changed states
-	SChangeState.usNewState				 = usNewState;
-	SChangeState.usSoldierID			 = pSoldier->ubID;
-	SChangeState.uiUniqueId				 = pSoldier -> uiUniqueSoldierIdValue;
-	SChangeState.usStartingAniCode = usStartingAniCode;
-	SChangeState.sXPos						 = pSoldier->sX;
-	SChangeState.sYPos						 = pSoldier->sY;
-	SChangeState.fForce						 = fForce;
-	SChangeState.uiUniqueId				 = pSoldier -> uiUniqueSoldierIdValue;
-
-	//AddGameEvent( S_CHANGESTATE, 0, &SChangeState );
-	EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
-
-
-	return( TRUE );
+	EVENT_InitNewSoldierAnim(pSoldier, usNewState, usStartingAniCode, fForce);
+	return TRUE;
 }
 
 
