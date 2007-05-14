@@ -3,7 +3,7 @@
 
 BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier );
 
-BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCorpse );
+void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse);
 
 BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier );
 

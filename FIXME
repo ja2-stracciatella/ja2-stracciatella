@@ -13,9 +13,11 @@ BlitMineText(): code duplication
 BlitMineText(): unnecessary wcscpy()
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BltToMouseCursor(): unused
+BulletHitMerc: pointless EV_S_WEAPONHIT
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
+CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
 CheckForMultiTilesInTreeAndAddToUndoList(): unused (self recursion)
 ChooseCreatureQuestStartDay(): empty
 CleanUpStack(): declaration in .c
@@ -241,6 +243,7 @@ SoldierCarriesTwoHandedWeapon(): complicated
 StandardGunListAmmoReplacement(): declaration in .c
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
+StructureHit(): interface complicated (pointer -> index -> pointer)
 TacticalScreenMsg(): DestString read before written to
 TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful

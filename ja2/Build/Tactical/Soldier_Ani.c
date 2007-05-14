@@ -3265,7 +3265,8 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier )
 	RemoveCharacterFromSquads( pSoldier );
 }
 
-BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCorpse )
+
+void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse)
 {
 
 	if ( HandleSoldierDeath( pSoldier, pfMadeCorpse ) )
@@ -3322,11 +3323,7 @@ BOOLEAN CheckForAndHandleSoldierDeath( SOLDIERTYPE *pSoldier, BOOLEAN *pfMadeCor
 				// IF we are here - something is wrong - we should have an animation stop here
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 440 Error, Death STOP not handled" );
 		}
-
-		return( TRUE );
 	}
-
-	return( FALSE );
 }
 
 
