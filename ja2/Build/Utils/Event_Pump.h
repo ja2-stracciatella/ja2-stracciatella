@@ -12,7 +12,6 @@ enum
 	S_WINDOWHIT,
 	S_NOISE,
 	S_GETNEWPATH,
-	S_SETPOSITION,
 	S_SETDIRECTION,
 
 	NUM_EVENTS
@@ -23,15 +22,6 @@ enum
 // called for in a special loop.
 #define DEMAND_EVENT_DELAY 0xFFFF
 
-
-typedef struct
-{
-	UINT16 usSoldierID;
-	UINT32  uiUniqueId;
-	FLOAT	 dNewXPos;
-	FLOAT	 dNewYPos;
-
-} EV_S_SETPOSITION;
 
 typedef struct
 {

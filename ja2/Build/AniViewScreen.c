@@ -86,8 +86,6 @@ UINT32  AniEditScreenHandle(void)
 	static BOOLEAN		fToggle = FALSE;
 	static BOOLEAN		fToggle2 = FALSE;
 
-//	EV_S_SETPOSITION SSetPosition;
-
 	// Make backups
 	if ( fFirstTime )
 	{

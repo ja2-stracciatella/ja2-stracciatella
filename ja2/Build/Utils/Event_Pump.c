@@ -13,7 +13,6 @@
 
 // GLobals used here, for each event structure used,
 // Used as globals for stack reasons
-EV_S_SETPOSITION			SSetPosition;
 EV_S_GETNEWPATH				SGetNewPath;
 EV_S_SETDIRECTION			SSetDirection;
 EV_S_SETDESIREDDIRECTION			SSetDesiredDirection;
@@ -61,11 +60,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 	 // Switch on event type and set size accordingly
 	 switch( uiEvent )
 	 {
-			case S_SETPOSITION:
-
-				uiDataSize = sizeof( EV_S_SETPOSITION );
-				break;
-
 			case S_GETNEWPATH:
 
 				uiDataSize = sizeof( EV_S_GETNEWPATH );
@@ -262,30 +256,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 	// Switch on event type
 	switch( pEvent->uiEvent )
 	{
-			case S_SETPOSITION:
-			{
-				memcpy( &SSetPosition, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SSetPosition.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
-					 break;
-				}
-
-				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SSetPosition.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-//				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: SetPosition ( %f %f ) ( %d )", SSetPosition.dNewXPos, SSetPosition.dNewYPos, SSetPosition.usSoldierID ) );
-				EVENT_SetSoldierPosition( pSoldier, SSetPosition.dNewXPos, SSetPosition.dNewYPos );
-				break;
-			}
-
 			case S_GETNEWPATH:
 			{
 				memcpy( &SGetNewPath, pEvent->pData, pEvent->uiDataSize );

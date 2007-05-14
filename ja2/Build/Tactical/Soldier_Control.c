@@ -7672,22 +7672,6 @@ static BOOLEAN IsActionInterruptable(SOLDIERTYPE* pSoldier)
 }
 
 
-// WRAPPER FUNCTIONS FOR SOLDIER EVENTS
-static void SendSoldierPositionEvent(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos)
-{
-	// Sent event for position update
-	EV_S_SETPOSITION	SSetPosition;
-
-	SSetPosition.usSoldierID = pSoldier->ubID;
-	SSetPosition.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
-
-	SSetPosition.dNewXPos = dNewXPos;
-	SSetPosition.dNewYPos = dNewYPos;
-
-	AddGameEvent( S_SETPOSITION, 0, &SSetPosition );
-}
-
-
 static void SendSoldierSetDirectionEvent(SOLDIERTYPE* pSoldier, UINT16 usNewDirection)
 {
 	// Sent event for position update
