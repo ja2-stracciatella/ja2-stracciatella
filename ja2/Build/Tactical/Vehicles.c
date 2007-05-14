@@ -1213,7 +1213,7 @@ static BOOLEAN InjurePersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier, UINT8 ubP
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage( pSoldier, 0, ubPointsOfDmg, ubPointsOfDmg, TAKE_DAMAGE_GUNFIRE, NOBODY, NOWHERE, 0, TRUE );
+	SoldierTakeDamage(pSoldier, 0, ubPointsOfDmg, ubPointsOfDmg, TAKE_DAMAGE_GUNFIRE, NOBODY, NOWHERE, TRUE);
 
 	HandleSoldierTakeDamageFeedback( pSoldier );
 
@@ -1244,7 +1244,7 @@ static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier)
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage( pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, 0, TRUE );
+	SoldierTakeDamage(pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, TRUE);
 
 	return( TRUE );
 }
