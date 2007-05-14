@@ -18,7 +18,6 @@ EV_S_SETDESIREDDIRECTION			SSetDesiredDirection;
 EV_S_BEGINFIREWEAPON	SBeginFireWeapon;
 EV_S_FIREWEAPON				SFireWeapon;
 EV_S_WEAPONHIT				SWeaponHit;
-EV_S_STRUCTUREHIT			SStructureHit;
 EV_S_NOISE						SNoise;
 
 
@@ -82,10 +81,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 			case S_WEAPONHIT:
 
 				uiDataSize = sizeof( EV_S_WEAPONHIT );
-				break;
-
-			case S_STRUCTUREHIT:
-				uiDataSize = sizeof( EV_S_STRUCTUREHIT );
 				break;
 
 			case S_NOISE:
@@ -353,13 +348,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				memcpy( &SWeaponHit, pEvent->pData, pEvent->uiDataSize );
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: WeaponHit %d Damage", SWeaponHit.sDamage ) );
 				WeaponHit( SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.fHit, SWeaponHit.ubSpecial, SWeaponHit.ubLocation );
-				break;
-
-			case S_STRUCTUREHIT:
-
-				memcpy( &SStructureHit, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: StructureHit");
-				StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, TRUE );
 				break;
 
 			case S_NOISE:

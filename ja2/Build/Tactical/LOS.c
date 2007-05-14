@@ -2309,19 +2309,10 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 static void BulletHitStructure(BULLET* pBullet, UINT16 usStructureID, INT32 iImpact, SOLDIERTYPE* pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped)
 {
-	EV_S_STRUCTUREHIT		SStructureHit;
-
-	SStructureHit.sXPos = (INT16) FIXEDPT_TO_INT32( qCurrX + FloatToFixed( 0.5f ) ); // + 0.5);
-	SStructureHit.sYPos = (INT16) FIXEDPT_TO_INT32( qCurrY + FloatToFixed( 0.5f ) ); // (dCurrY + 0.5);
-	SStructureHit.sZPos = CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16) FIXEDPT_TO_INT32( qCurrZ + FloatToFixed( 0.5f )) );// dCurrZ + 0.5) );
-	SStructureHit.usWeaponIndex = pFirer->usAttackingWeapon;
-	SStructureHit.bWeaponStatus = pBullet->ubItemStatus;
-	SStructureHit.ubAttackerID	= pFirer->ubID;
-	SStructureHit.usStructureID = usStructureID;
-	SStructureHit.iImpact				= iImpact;
-	SStructureHit.iBullet				= pBullet->iBullet;
-
-	StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, fStopped );
+	INT16 sXPos = FIXEDPT_TO_INT32(qCurrX + FloatToFixed(0.5f)); // + 0.5);
+	INT16 sYPos = FIXEDPT_TO_INT32(qCurrY + FloatToFixed(0.5f)); // (dCurrY + 0.5);
+	INT16 sZPos = CONVERT_HEIGHTUNITS_TO_PIXELS((INT16)FIXEDPT_TO_INT32(qCurrZ + FloatToFixed(0.5f)));// dCurrZ + 0.5) );
+	StructureHit(pBullet->iBullet, pFirer->usAttackingWeapon, pBullet->ubItemStatus, pFirer->ubID, sXPos, sYPos, sZPos, usStructureID, iImpact, fStopped);
 }
 
 

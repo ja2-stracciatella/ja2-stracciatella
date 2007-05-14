@@ -8,7 +8,6 @@ enum
 	S_BEGINFIREWEAPON,
 	S_FIREWEAPON,
 	S_WEAPONHIT,
-	S_STRUCTUREHIT,
 	S_NOISE,
 	S_GETNEWPATH,
 
@@ -76,20 +75,6 @@ typedef struct
 	UINT8		ubLocation;
 
 } EV_S_WEAPONHIT;
-
-typedef struct
-{
-	INT16		sXPos;
-	INT16		sYPos;
-	INT16		sZPos;
-	UINT16	usWeaponIndex;
-	INT8		bWeaponStatus;
-	UINT8		ubAttackerID;
-	UINT16	usStructureID;
-	INT32		iImpact;
-	INT32		iBullet;
-
-} EV_S_STRUCTUREHIT;
 
 typedef struct
 {
