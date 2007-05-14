@@ -19,7 +19,6 @@ EV_S_BEGINFIREWEAPON	SBeginFireWeapon;
 EV_S_FIREWEAPON				SFireWeapon;
 EV_S_WEAPONHIT				SWeaponHit;
 EV_S_STRUCTUREHIT			SStructureHit;
-EV_S_WINDOWHIT				SWindowHit;
 EV_S_NOISE						SNoise;
 
 
@@ -86,10 +85,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 				break;
 
 			case S_STRUCTUREHIT:
-				uiDataSize = sizeof( EV_S_STRUCTUREHIT );
-				break;
-
-			case S_WINDOWHIT:
 				uiDataSize = sizeof( EV_S_STRUCTUREHIT );
 				break;
 
@@ -365,13 +360,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				memcpy( &SStructureHit, pEvent->pData, pEvent->uiDataSize );
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: StructureHit");
 				StructureHit( SStructureHit.iBullet, SStructureHit.usWeaponIndex, SStructureHit.bWeaponStatus, SStructureHit.ubAttackerID, SStructureHit.sXPos, SStructureHit.sYPos, SStructureHit.sZPos, SStructureHit.usStructureID, SStructureHit.iImpact, TRUE );
-				break;
-
-			case S_WINDOWHIT:
-
-				memcpy( &SWindowHit, pEvent->pData, pEvent->uiDataSize );
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: WindowHit");
-				WindowHit( SWindowHit.sGridNo, SWindowHit.usStructureID, SWindowHit.fBlowWindowSouth, SWindowHit.fLargeForce );
 				break;
 
 			case S_NOISE:

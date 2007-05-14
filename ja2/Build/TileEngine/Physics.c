@@ -1299,15 +1299,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
 static void ObjectHitWindow(INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce)
 {
-	EV_S_WINDOWHIT	SWindowHit;
-	SWindowHit.sGridNo = sGridNo;
-	SWindowHit.usStructureID = usStructureID;
-	SWindowHit.fBlowWindowSouth = fBlowWindowSouth;
-	SWindowHit.fLargeForce = fLargeForce;
-	//AddGameEvent( S_WINDOWHIT, 0, &SWindowHit );
-
 	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, fLargeForce );
-
 }
 
 

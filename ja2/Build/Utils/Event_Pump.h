@@ -9,7 +9,6 @@ enum
 	S_FIREWEAPON,
 	S_WEAPONHIT,
 	S_STRUCTUREHIT,
-	S_WINDOWHIT,
 	S_NOISE,
 	S_GETNEWPATH,
 
@@ -91,14 +90,6 @@ typedef struct
 	INT32		iBullet;
 
 } EV_S_STRUCTUREHIT;
-
-typedef struct
-{
-	INT16		sGridNo;
-	UINT16	usStructureID;
-	BOOLEAN	fBlowWindowSouth;
-	BOOLEAN	fLargeForce;
-} EV_S_WINDOWHIT;
 
 typedef struct
 {
