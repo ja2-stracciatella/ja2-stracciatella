@@ -70,10 +70,8 @@ typedef struct
 	INT16		sZPos;
 	INT16		sRange;
 	UINT8		ubAttackerID;
-	BOOLEAN fHit;
 	UINT8		ubSpecial;
 	UINT8		ubLocation;
-
 } EV_S_WEAPONHIT;
 
 typedef struct

@@ -1325,7 +1325,6 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			SWeaponHit.sZPos						= 20;
 			SWeaponHit.sRange						= 1;
 			SWeaponHit.ubAttackerID			= pSoldier->ubID;
-			SWeaponHit.fHit							= TRUE;
 			SWeaponHit.ubSpecial				= FIRE_WEAPON_NO_SPECIAL;
 			AddGameEvent( S_WEAPONHIT, (UINT16) 20, &SWeaponHit );
 		}
@@ -1635,7 +1634,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 				SWeaponHit.sZPos						= 20;
 				SWeaponHit.sRange						= 1;
 				SWeaponHit.ubAttackerID			= pSoldier->ubID;
-				SWeaponHit.fHit							= TRUE;
 				SWeaponHit.ubSpecial				= FIRE_WEAPON_NO_SPECIAL;
 				AddGameEvent( S_WEAPONHIT, (UINT16) 20, &SWeaponHit );
 			}
@@ -1935,7 +1933,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 }
 
 
-void WeaponHit( UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange , UINT8 ubAttackerID, BOOLEAN fHit, UINT8 ubSpecial, UINT8 ubHitLocation )
+void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
 	SOLDIERTYPE				*pTargetSoldier, *pSoldier;
 
