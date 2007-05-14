@@ -21,7 +21,6 @@ enum
 	S_STOP_MERC,
 	S_GETNEWPATH,
 	S_SETPOSITION,
-	S_CHANGESTATE,
 	S_SETDIRECTION,
 
 	NUM_EVENTS
@@ -41,19 +40,6 @@ typedef struct
 	UINT32		uiPan;
 
 } EV_E_PLAYSOUND;
-
-
-typedef struct
-{
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	UINT16	usNewState;
-	INT16		sXPos;
-	INT16		sYPos;
-	UINT16  usStartingAniCode;
-	BOOLEAN	fForce;
-
-} EV_S_CHANGESTATE;
 
 
 typedef struct

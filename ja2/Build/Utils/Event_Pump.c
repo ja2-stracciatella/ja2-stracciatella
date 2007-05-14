@@ -16,7 +16,6 @@
 // Used as globals for stack reasons
 EV_E_PLAYSOUND			EPlaySound;
 
-EV_S_CHANGESTATE			SChangeState;
 EV_S_CHANGEDEST				SChangeDest;
 EV_S_SETPOSITION			SSetPosition;
 EV_S_GETNEWPATH				SGetNewPath;
@@ -73,12 +72,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 
 				uiDataSize = sizeof( EV_E_PLAYSOUND );
 				break;
-
-			case S_CHANGESTATE:
-
-				uiDataSize = sizeof( EV_S_CHANGESTATE );
-				break;
-
 
 			case S_CHANGEDEST:
 
@@ -312,30 +305,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Play Sound");
 				PlayJA2Sample(EPlaySound.usIndex, EPlaySound.ubVolume, EPlaySound.ubLoops, EPlaySound.uiPan);
 				break;
-
-			case S_CHANGESTATE:
-			{
-				memcpy( &SChangeState, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SChangeState.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
-					 break;
-				}
-
-				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SChangeState.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-//				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: ChangeState %ls (%d)", gAnimControl[ SChangeState.ubNewState ].zAnimStr, SChangeState.usSoldierID ) );
-				EVENT_InitNewSoldierAnim( pSoldier, SChangeState.usNewState, SChangeState.usStartingAniCode, SChangeState.fForce );
-				break;
-			}
 
 			case S_CHANGEDEST:
 			{

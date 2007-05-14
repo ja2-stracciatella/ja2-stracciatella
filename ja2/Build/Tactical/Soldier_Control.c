@@ -1199,7 +1199,6 @@ static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BO
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 
-// THIS IS CALLED FROM AN EVENT ( S_CHANGESTATE )!
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
 	UINT16  usNewGridNo = 0;
