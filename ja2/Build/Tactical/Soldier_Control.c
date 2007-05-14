@@ -3239,7 +3239,7 @@ static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT1
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
-void EVENT_SoldierGotHit( SOLDIERTYPE *pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sSubsequent, INT16 sLocationGrid )
+void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sLocationGrid)
 {
 	UINT8		ubCombinedLoss, ubVolume, ubReason;
 	SOLDIERTYPE * pNewSoldier;

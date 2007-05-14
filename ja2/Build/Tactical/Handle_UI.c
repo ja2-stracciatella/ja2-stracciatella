@@ -1139,8 +1139,7 @@ static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent)
 
 		gTacticalStatus.ubAttackBusyCount++;
 
-		EVENT_SoldierGotHit( pSoldier, 1, bDamage, 10, pSoldier->bDirection, 320, NOBODY , FIRE_WEAPON_NO_SPECIAL, pSoldier->bAimShotLocation, 0, NOWHERE );
-
+		EVENT_SoldierGotHit(pSoldier, 1, bDamage, 10, pSoldier->bDirection, 320, NOBODY, FIRE_WEAPON_NO_SPECIAL, pSoldier->bAimShotLocation, NOWHERE);
 	}
 	return( GAME_SCREEN );
 }

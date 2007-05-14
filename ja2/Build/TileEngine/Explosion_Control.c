@@ -1252,7 +1252,7 @@ static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist,
 }
 
 
-static BOOLEAN DamageSoldierFromBlast(UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem, INT16 sSubsequent)
+static BOOLEAN DamageSoldierFromBlast(UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem)
 {
 	 SOLDIERTYPE *pSoldier;
 	 INT16 sNewWoundAmt = 0;
@@ -1281,7 +1281,7 @@ static BOOLEAN DamageSoldierFromBlast(UINT8 ubPerson, UINT8 ubOwner, INT16 sBomb
 	 {
 		sNewWoundAmt = 0;
 	 }
-	 EVENT_SoldierGotHit( pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, (INT16)uiDist, ubOwner, 0, ANIM_CROUCH, sSubsequent, sBombGridNo );
+	 EVENT_SoldierGotHit(pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, uiDist, ubOwner, 0, ANIM_CROUCH, sBombGridNo);
 
 	 pSoldier->ubMiscSoldierFlags |= SOLDIER_MISC_HURT_BY_EXPLOSION;
 
@@ -1675,7 +1675,7 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 		 // don't hurt anyone who is already dead & waiting to be removed
 		 if ( ( ubPerson = WhoIsThere2( sGridNo, bLevel ) ) != NOBODY )
 		 {
-			 DamageSoldierFromBlast( ubPerson, ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem, sSubsequent );
+			 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
 		 }
 
 		 if ( bLevel == 1 )
@@ -1687,11 +1687,11 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 					 // debris damage!
 					 if ( (sBreathAmt / 2) > 20 )
 					 {
-						 DamageSoldierFromBlast( ubPerson, ubOwner, sBombGridNo, (INT16) Random( (sWoundAmt / 2) - 20 ), (INT16) Random( (sBreathAmt / 2) - 20 ), uiDist, usItem, sSubsequent );
+						 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, (INT16)Random(sWoundAmt / 2 - 20), (INT16)Random(sBreathAmt / 2 - 20), uiDist, usItem);
 					 }
 					 else
 					 {
-						 DamageSoldierFromBlast( ubPerson, ubOwner, sBombGridNo, (INT16) Random( (sWoundAmt / 2) - 20 ), 1, uiDist, usItem, sSubsequent );
+						 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, (INT16)Random(sWoundAmt / 2 - 20), 1, uiDist, usItem);
 					 }
 
 				 }
