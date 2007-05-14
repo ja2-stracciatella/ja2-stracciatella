@@ -637,7 +637,6 @@ static void PhysicsDeleteObject(REAL_OBJECT* pObject)
 
 static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID);
 static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID);
-static void ObjectHitWindow(INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce);
 
 
 static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID)
@@ -858,7 +857,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
-				ObjectHitWindow( sGridNo, usStructureID, FALSE, TRUE );
+				WindowHit(sGridNo, usStructureID, FALSE, TRUE);
 			}
 			*piCollisionID = COLLISION_NONE;
       return( FALSE );
@@ -1295,12 +1294,6 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
 }
 #endif
-
-
-static void ObjectHitWindow(INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce)
-{
-	WindowHit( sGridNo, usStructureID, fBlowWindowSouth, fLargeForce );
-}
 
 
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
