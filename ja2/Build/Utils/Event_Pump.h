@@ -24,7 +24,7 @@ enum
 	S_SETDIRECTION,
 
 	NUM_EVENTS
-} eJA2Events;
+};
 
 // This definition is used to denote events with a special delay value;
 // it indicates that these events will not be processed until specifically
