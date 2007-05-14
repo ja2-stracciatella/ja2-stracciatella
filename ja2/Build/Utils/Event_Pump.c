@@ -16,7 +16,6 @@
 EV_S_CHANGEDEST				SChangeDest;
 EV_S_SETPOSITION			SSetPosition;
 EV_S_GETNEWPATH				SGetNewPath;
-EV_S_BEGINTURN				SBeginTurn;
 EV_S_CHANGESTANCE			SChangeStance;
 EV_S_SETDIRECTION			SSetDirection;
 EV_S_SETDESIREDDIRECTION			SSetDesiredDirection;
@@ -79,11 +78,6 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 			case S_GETNEWPATH:
 
 				uiDataSize = sizeof( EV_S_GETNEWPATH );
-				break;
-
-			case S_BEGINTURN:
-
-				uiDataSize = sizeof( EV_S_BEGINTURN );
 				break;
 
 			case S_CHANGESTANCE:
@@ -358,30 +352,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				// Call soldier function
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: GetNewPath");
 				EVENT_GetNewSoldierPath( pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim );
-				break;
-			}
-
-			case S_BEGINTURN:
-			{
-				memcpy( &SBeginTurn, pEvent->pData, pEvent->uiDataSize );
-
-				SOLDIERTYPE* pSoldier = GetSoldier(SBeginTurn.usSoldierID);
-				if (pSoldier == NULL)
-				{
-					 // Handle Error?
-					 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
-					 break;
-				}
-
-				// check for error
-				if( pSoldier-> uiUniqueSoldierIdValue != SBeginTurn.uiUniqueId )
-				{
-					break;
-				}
-
-				// Call soldier function
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: BeginTurn");
-				EVENT_BeginMercTurn( pSoldier, FALSE, 0 );
 				break;
 			}
 

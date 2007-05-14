@@ -111,10 +111,6 @@ static BOOLEAN BloodcatsPresent(void)
 
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 {
-	INT32 cnt;
-//	SOLDIERTYPE		*pSoldier;
-//	EV_S_BEGINTURN	SBeginTurn;
-
 	// Start the turn of player charactors
 
 	//
@@ -122,8 +118,6 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	//
 	// make sure set properly in gTacticalStatus:
 	gTacticalStatus.ubCurrentTeam = OUR_TEAM;
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	InitPlayerUIBar( FALSE );
 
@@ -139,17 +133,6 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 		EndDeadlockMsg( );
 
 		// Check for victory conditions
-
-		// ATE: Commented out - looks like this message is called earlier for our team
-		// look for all mercs on the same team,
-		//for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-		//{
-		//	if ( pSoldier->bActive && pSoldier->bLife > 0 )
-		//	{
-		//		SBeginTurn.usSoldierID		= (UINT16)cnt;
-		//		AddGameEvent( S_BEGINTURN, 0, &SBeginTurn );
-		//	}
-		//}
 
 		// Are we in combat already?
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
