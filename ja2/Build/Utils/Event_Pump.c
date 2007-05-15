@@ -133,7 +133,7 @@ BOOLEAN DequeAllGameEvents(void)
 }
 
 
-BOOLEAN DequeueAllDemandGameEvents(BOOLEAN fExecute)
+BOOLEAN DequeueAllDemandGameEvents(void)
 {
 	// Dequeue all events on the demand queue (only)
 
@@ -142,17 +142,14 @@ BOOLEAN DequeueAllDemandGameEvents(BOOLEAN fExecute)
 		EVENT* pEvent = RemoveEvent(0, DEMAND_EVENT_QUEUE);
 		if (pEvent == NULL) return FALSE;
 
-		if (fExecute)
+		// Check if event has a delay and add to secondary queue if so
+		if (pEvent->usDelay > 0)
 		{
-			// Check if event has a delay and add to secondary queue if so
-			if (pEvent->usDelay > 0)
-			{
-				AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
-			}
-			else
-			{
-				ExecuteGameEvent(pEvent);
-			}
+			AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
+		}
+		else
+		{
+			ExecuteGameEvent(pEvent);
 		}
 
 		FreeEvent(pEvent);

@@ -7252,7 +7252,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 		gTacticalStatus.uiFlags &= ~CHECK_SIGHT_AT_END_OF_ATTACK;
 	}
 
-	DequeueAllDemandGameEvents( TRUE );
+	DequeueAllDemandGameEvents();
 
 	CheckForEndOfBattle( FALSE );
 
