@@ -68,7 +68,7 @@ static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventDat
 static BOOLEAN ExecuteGameEvent(EVENT* pEvent);
 
 
-BOOLEAN DequeAllGameEvents(BOOLEAN fExecute)
+BOOLEAN DequeAllGameEvents(void)
 {
 	UINT32  uiQueueSize;
 	UINT32  cnt;
@@ -79,17 +79,14 @@ BOOLEAN DequeAllGameEvents(BOOLEAN fExecute)
 		EVENT* pEvent = RemoveEvent(0, PRIMARY_EVENT_QUEUE);
 		if (pEvent == NULL) return FALSE;
 
-		if (fExecute)
+		// Check if event has a delay and add to secondary queue if so
+		if (pEvent->usDelay > 0)
 		{
-			// Check if event has a delay and add to secondary queue if so
-			if (pEvent->usDelay > 0)
-			{
-				AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
-			}
-			else
-			{
-				ExecuteGameEvent(pEvent);
-			}
+			AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
+		}
+		else
+		{
+			ExecuteGameEvent(pEvent);
 		}
 
 		FreeEvent(pEvent);
@@ -105,11 +102,7 @@ BOOLEAN DequeAllGameEvents(BOOLEAN fExecute)
 		// Check time
 		if (GetJA2Clock() - pEvent->TimeStamp > pEvent->usDelay)
 		{
-			if (fExecute)
-			{
-				ExecuteGameEvent(pEvent);
-			}
-
+			ExecuteGameEvent(pEvent);
 			pEvent->uiFlags = EVENT_EXPIRED;
 		}
 	}

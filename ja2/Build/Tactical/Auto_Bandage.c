@@ -269,7 +269,7 @@ BOOLEAN HandleAutoBandage( )
 		ExecuteOverhead( );
 
 		// Deque all game events
-		DequeAllGameEvents( TRUE );
+		DequeAllGameEvents();
 
 		while (DequeueEvent(&InputEvent) == TRUE)
 		{

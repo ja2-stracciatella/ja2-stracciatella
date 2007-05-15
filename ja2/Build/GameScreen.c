@@ -685,7 +685,7 @@ UINT32  MainGameScreenHandle(void)
 		// Deque all game events
 		if ( !ARE_IN_FADE_IN( ) )
 		{
-			DequeAllGameEvents( TRUE );
+			DequeAllGameEvents();
 		}
 	}
 

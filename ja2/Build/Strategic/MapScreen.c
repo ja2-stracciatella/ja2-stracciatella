@@ -3214,7 +3214,7 @@ UINT32 MapScreenHandle(void)
 //	CreateDestroyMovementBox( 0,0,0 );
 
 	// Deque all game events
-	DequeAllGameEvents( TRUE );
+	DequeAllGameEvents();
 
 	// Handle Interface Stuff
 	SetUpInterface( );

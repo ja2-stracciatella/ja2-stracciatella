@@ -84,7 +84,7 @@ typedef struct
 
 
 BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData);
-BOOLEAN DequeAllGameEvents(BOOLEAN fExecute);
+BOOLEAN DequeAllGameEvents(void);
 BOOLEAN DequeueAllDemandGameEvents(BOOLEAN fExecute);
 
 // clean out the event queue

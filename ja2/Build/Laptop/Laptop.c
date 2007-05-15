@@ -1547,7 +1547,7 @@ UINT32 LaptopScreenHandle()
 	// handle animated cursors
 	HandleAnimatedCursors( );
 	// Deque all game events
-	DequeAllGameEvents( TRUE );
+	DequeAllGameEvents();
 
 	// handle sub sites..like BR Guns, BR Ammo, Armour, Misc...for WW Wait..since they are not true sub pages
 	// and are not individual sites

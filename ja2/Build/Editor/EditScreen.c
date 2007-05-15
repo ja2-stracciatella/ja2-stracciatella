@@ -3587,7 +3587,7 @@ UINT32  EditScreenHandle( void )
 
 	fShowingCursor = DoIRenderASpecialMouseCursor();
 
-	DequeAllGameEvents( TRUE );
+	DequeAllGameEvents();
 
 	if ( fBuildingShowRoomInfo )
 	{
