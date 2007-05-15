@@ -126,7 +126,7 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 			// Check if event has a delay and add to secondary queue if so
 			if ( pEvent->usDelay > 0 )
 			{
-				AddGameEventToQueue( pEvent->uiEvent, pEvent->usDelay, pEvent->pData, SECONDARY_EVENT_QUEUE );
+				AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
 			}
 			else
 			{
@@ -217,7 +217,7 @@ BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute )
 			// Check if event has a delay and add to secondary queue if so
 			if ( pEvent->usDelay > 0 )
 			{
-				AddGameEventToQueue( pEvent->uiEvent, pEvent->usDelay, pEvent->pData, SECONDARY_EVENT_QUEUE );
+				AddGameEventToQueue(pEvent->uiEvent, pEvent->usDelay, pEvent->Data, SECONDARY_EVENT_QUEUE);
 			}
 			else
 			{
@@ -241,7 +241,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 	{
 			case S_GETNEWPATH:
 			{
-				memcpy( &SGetNewPath, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SGetNewPath, pEvent->Data, pEvent->uiDataSize);
 
 				SOLDIERTYPE* pSoldier = GetSoldier(SGetNewPath.usSoldierID);
 				if (pSoldier == NULL)
@@ -264,7 +264,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 			case S_SETDESIREDDIRECTION:
 			{
-				memcpy( &SSetDesiredDirection, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SSetDesiredDirection, pEvent->Data, pEvent->uiDataSize);
 
 				SOLDIERTYPE* pSoldier = GetSoldier(SSetDesiredDirection.usSoldierID);
 				if (pSoldier == NULL)
@@ -288,7 +288,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 			case S_BEGINFIREWEAPON:
 			{
-				memcpy( &SBeginFireWeapon, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SBeginFireWeapon, pEvent->Data, pEvent->uiDataSize);
 
 				SOLDIERTYPE* pSoldier = GetSoldier(SBeginFireWeapon.usSoldierID);
 				if (pSoldier == NULL)
@@ -316,7 +316,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 			case S_FIREWEAPON:
 			{
-				memcpy( &SFireWeapon, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SFireWeapon, pEvent->Data, pEvent->uiDataSize);
 
 				SOLDIERTYPE* pSoldier = GetSoldier(SFireWeapon.usSoldierID);
 				if (pSoldier == NULL)
@@ -344,13 +344,13 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 			case S_WEAPONHIT:
 
-				memcpy( &SWeaponHit, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SWeaponHit, pEvent->Data, pEvent->uiDataSize);
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: WeaponHit %d Damage", SWeaponHit.sDamage ) );
 				WeaponHit(SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 				break;
 
 			case S_NOISE:
-				memcpy( &SNoise, pEvent->pData, pEvent->uiDataSize );
+				memcpy(&SNoise, pEvent->Data, pEvent->uiDataSize);
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Event Pump: Noise from %d at %d/%d, type %d volume %d", SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubNoiseType, SNoise.ubVolume ) );
 				OurNoise( SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType );
 				break;

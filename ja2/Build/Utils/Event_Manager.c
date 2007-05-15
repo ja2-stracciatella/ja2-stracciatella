@@ -71,13 +71,9 @@ static void SetQueue(UINT8 ubQueueID, HQUEUE hQueue);
 
 BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID )
 {
-	EVENT *pEvent;
-	UINT32 uiEventSize = sizeof( EVENT );
 	HLIST	hQueue;
 
-	// Allocate new event
-	pEvent = MemAlloc( uiEventSize + uiDataSize );
-
+	EVENT* pEvent = MemAlloc(sizeof(*pEvent) + uiDataSize);
 	CHECKF( pEvent != NULL );
 
 	// Set values
@@ -86,10 +82,7 @@ BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataS
 	pEvent->uiEvent		 = uiEvent;
 	pEvent->uiFlags		 = 0;
 	pEvent->uiDataSize = uiDataSize;
-	pEvent->pData			 = (BYTE*)pEvent;
-	pEvent->pData			 = pEvent->pData + uiEventSize;
-
-	memcpy( pEvent->pData, pEventData, uiDataSize );
+	memcpy(pEvent->Data, pEventData, uiDataSize);
 
 	// Add event to queue
 	hQueue = GetQueue( ubQueueID );

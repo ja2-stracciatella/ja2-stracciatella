@@ -10,8 +10,7 @@ typedef struct
 	UINT16	usDelay;
 	UINT32	uiEvent;
 	UINT32	uiDataSize;
-	BYTE		*pData;
-
+	BYTE   Data[];
 } EVENT;
 
 #define			PRIMARY_EVENT_QUEUE			0
