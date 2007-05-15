@@ -72,11 +72,7 @@ BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSi
 EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
 	// Get an event from queue, if one exists
-
 	HLIST hQueue = GetQueue(ubQueueID);
-	UINT32 uiQueueSize = ListSize(hQueue);
-
-	if (uiQueueSize == 0) return NULL;
 
 	EVENT* Event;
 	CHECKN(RemfromList(hQueue, &Event, uiIndex));
@@ -87,11 +83,7 @@ EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
 EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
 	// Get an event from queue, if one exists
-
 	HLIST hQueue = GetQueue(ubQueueID);
-	UINT32 uiQueueSize = ListSize(hQueue);
-
-	if (uiQueueSize == 0) return NULL;
 
 	EVENT* Event;
 	CHECKN(PeekList(hQueue, &Event, uiIndex));
