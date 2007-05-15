@@ -288,12 +288,6 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 
 static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
 {
-	if ((uiSourceOfst < 0) || (uiDestOfst < 0) || (uiSize < 0))
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy");
-		return FALSE;
-	}
-
 	if (pmem_void == NULL)
 	{
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy");
@@ -308,12 +302,6 @@ static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, 
 
 static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT32 uiSize)
 {
-	if ((uiSrcOfst < 0) || (uiSize < 0))
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid parameters passed to do_copy_data");
-		return FALSE;
-	}
-
 	if (pmem_void == NULL)
 	{
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy_data");
@@ -375,14 +363,6 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return NULL;
 	}
-	// check for a 0 or negative position passed in
-	if (uiPos < 0)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
-		return NULL;
-	}
-
-	// assign some temporary variables
 
 	ListHeader* pTemp_cont = hList;
 	if (uiPos > pTemp_cont->uiTotal_items)
@@ -533,24 +513,12 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
 		return FALSE;
 	}
-	// check for a 0 or negative position passed in
-	if (uiPos < 0)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
-		return FALSE;
-	}
 
-	// assign some temporary variables
 	ListHeader* pTemp_cont = hList;
 
 	if (uiPos >= pTemp_cont->uiTotal_items)
 	{
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Cannot delete at the specified position");
-		return FALSE;
-	}
-	if (pTemp_cont->uiTotal_items == 0)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are no elements in the list to remove");
 		return FALSE;
 	}
 
