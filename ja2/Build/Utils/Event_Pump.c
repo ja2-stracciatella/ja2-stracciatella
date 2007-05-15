@@ -369,14 +369,14 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 BOOLEAN ClearEventQueue( void )
 {
 	// clear out the event queue
-	EVENT					*pEvent;
 	while( EventQueueSize( PRIMARY_EVENT_QUEUE ) > 0 )
 	{
-		EVENT* pEvent = RemoveEvent(0, PRIMARY_EVENT_QUEUE);
-		if (pEvent == NULL)
+		EVENT* Event = RemoveEvent(0, PRIMARY_EVENT_QUEUE);
+		if (Event == NULL)
 		{
 			return( FALSE );
 		}
+		FreeEvent(Event);
 	}
 
 	return( TRUE );
