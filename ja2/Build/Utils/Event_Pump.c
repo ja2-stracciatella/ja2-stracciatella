@@ -108,7 +108,6 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent);
 
 BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 {
-	EVENT					*pEvent;
 	UINT32				uiQueueSize, cnt;
 	BOOLEAN				fCompleteLoop = FALSE;
 	// First dequeue all primary events
@@ -116,8 +115,8 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 
 	while( EventQueueSize( PRIMARY_EVENT_QUEUE ) > 0 )
 	{
-		// Get Event
-		if ( RemoveEvent( &pEvent, 0, PRIMARY_EVENT_QUEUE) == FALSE )
+		EVENT* pEvent = RemoveEvent(0, PRIMARY_EVENT_QUEUE);
+		if (pEvent == NULL)
 		{
 			return( FALSE );
 		}
@@ -146,7 +145,8 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 
 	for ( cnt = 0; cnt < uiQueueSize; cnt++ )
 	{
-		if ( PeekEvent( &pEvent, cnt, SECONDARY_EVENT_QUEUE) == FALSE )
+		EVENT* pEvent = PeekEvent(cnt, SECONDARY_EVENT_QUEUE);
+		if (pEvent == NULL)
 		{
 			return( FALSE );
 		}
@@ -172,7 +172,8 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 
 		for ( cnt = 0; cnt < uiQueueSize; cnt++ )
 		{
-			if ( PeekEvent( &pEvent, cnt, SECONDARY_EVENT_QUEUE) == FALSE )
+			EVENT* pEvent = PeekEvent(cnt, SECONDARY_EVENT_QUEUE);
+			if (pEvent == NULL)
 			{
 				return( FALSE );
 			}
@@ -180,7 +181,7 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 			// Check time
 			if ( pEvent->uiFlags & EVENT_EXPIRED )
 			{
-				RemoveEvent( &pEvent, cnt, SECONDARY_EVENT_QUEUE );
+				pEvent = RemoveEvent(cnt, SECONDARY_EVENT_QUEUE);
 				FreeEvent( pEvent );
 				// Restart loop
 				break;
@@ -201,14 +202,12 @@ BOOLEAN  DequeAllGameEvents( BOOLEAN fExecute )
 
 BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute )
 {
-	EVENT					*pEvent;
-
 	// Dequeue all events on the demand queue (only)
 
 	while( EventQueueSize( DEMAND_EVENT_QUEUE ) > 0 )
 	{
-		// Get Event
-		if ( RemoveEvent( &pEvent, 0, DEMAND_EVENT_QUEUE) == FALSE )
+		EVENT* pEvent = RemoveEvent(0, DEMAND_EVENT_QUEUE);
+		if (pEvent == NULL)
 		{
 			return( FALSE );
 		}
@@ -373,8 +372,8 @@ BOOLEAN ClearEventQueue( void )
 	EVENT					*pEvent;
 	while( EventQueueSize( PRIMARY_EVENT_QUEUE ) > 0 )
 	{
-		// Get Event
-		if ( RemoveEvent( &pEvent, 0, PRIMARY_EVENT_QUEUE) == FALSE )
+		EVENT* pEvent = RemoveEvent(0, PRIMARY_EVENT_QUEUE);
+		if (pEvent == NULL)
 		{
 			return( FALSE );
 		}

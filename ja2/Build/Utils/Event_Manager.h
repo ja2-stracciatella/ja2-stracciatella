@@ -25,8 +25,8 @@ BOOLEAN InitializeEventManager( );
 BOOLEAN ShutdownEventManager( );
 
 BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID );
-BOOLEAN RemoveEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID );
-BOOLEAN PeekEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID );
+EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID);
+EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID);
 BOOLEAN FreeEvent( EVENT *pEvent );
 UINT32	EventQueueSize( UINT8 ubQueueID );
 

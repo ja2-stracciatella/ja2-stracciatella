@@ -101,8 +101,7 @@ BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataS
 }
 
 
-
-BOOLEAN RemoveEvent( EVENT **ppEvent, UINT32 uiIndex, UINT8 ubQueueID )
+EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
 	UINT32 uiQueueSize;
 	HLIST hQueue;
@@ -118,19 +117,18 @@ BOOLEAN RemoveEvent( EVENT **ppEvent, UINT32 uiIndex, UINT8 ubQueueID )
 
 	if ( uiQueueSize > 0 )
 	{
-		// Get
-		CHECKF( RemfromList( hQueue , ppEvent, uiIndex ) != FALSE );
+		EVENT* Event;
+		CHECKN(RemfromList(hQueue, &Event, uiIndex));
+		return Event;
 	}
 	else
 	{
-		return( FALSE );
+		return NULL;
 	}
-
-	return( TRUE );
 }
 
 
-BOOLEAN PeekEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID )
+EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
 	UINT32 uiQueueSize;
 	HLIST hQueue;
@@ -146,15 +144,14 @@ BOOLEAN PeekEvent( EVENT **ppEvent, UINT32 uiIndex , UINT8 ubQueueID )
 
 	if ( uiQueueSize > 0 )
 	{
-		// Get
-		CHECKF( PeekList( hQueue, ppEvent, uiIndex ) != FALSE );
+		EVENT* Event;
+		CHECKN(PeekList(hQueue, &Event, uiIndex));
+		return Event;
 	}
 	else
 	{
-		return( FALSE );
+		return NULL;
 	}
-
-	return( TRUE );
 }
 
 
