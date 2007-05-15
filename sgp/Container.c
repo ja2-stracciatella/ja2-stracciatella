@@ -1,7 +1,5 @@
 //*****************************************************************************
 //
-// Filename : Container.c
-//
 // Purpose : Function definition for the Container
 //
 // Modification History :
@@ -36,19 +34,10 @@ typedef struct HeaderTag
 } QueueHeader , ListHeader;
 
 
-//*****************************************************************************
-//
-// CreateQueue
-//
-// Parameter List : num_items - estimated number
-//									of items in queue
+// Parameter List : num_items - estimated number of items in queue
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 {
 	UINT32 uiAmount;
@@ -86,19 +75,10 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 }
 
 
-//*****************************************************************************
-//
-// CreateList
-//
-// Parameter List : num_items - estimated number
-//									of items in ordered list
+// Parameter List : num_items - estimated number of items in ordered list
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 {
 	UINT32 uiAmount;
@@ -134,22 +114,9 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 	// return the pointer to memory
 
 	return hList;
-
 }
 
 
-//*****************************************************************************
-//
-// DeleteQueue
-//
-// Parameter List : pointer to memory
-//
-// Return Value	: BOOLEAN
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 BOOLEAN DeleteQueue(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
@@ -163,18 +130,6 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 }
 
 
-//*****************************************************************************
-//
-// DeleteList
-//
-// Parameter List : pointer to memory
-//
-// Return Value	: BOOLEAN
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 BOOLEAN DeleteList(HLIST hList)
 {
 	if (hList == NULL)
@@ -188,18 +143,10 @@ BOOLEAN DeleteList(HLIST hList)
 }
 
 
-// PeekQueue - gets the first item in queue without
-// actually deleting it.
+// PeekQueue - gets the first item in queue without actually deleting it.
 //
-// Parameter List : pvoid_queue - pointer to queue
-//									container
+// Parameter List : pvoid_queue - pointer to queue container
 //									data - data removed from queue
-//
-// Return Value	pointer to queue with data removed
-//							 or NULL if failed
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
 static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 {
 	QueueHeader *pTemp_cont;
@@ -239,22 +186,10 @@ static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 }
 
 
-//*****************************************************************************
+// PeekList - gets the specified item in the list without actually deleting it.
 //
-// PeekList - gets the specified item in the list without
-// actually deleting it.
-//
-// Parameter List : hList - pointer to list
-//									container
+// Parameter List : hList - pointer to list container
 //									data - data where list element is stored
-//
-// Return Value	BOOLEAN
-//
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 {
 	ListHeader *pTemp_cont;
@@ -303,21 +238,8 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 }
 
 
-//*****************************************************************************
-//
-// RemfromQueue
-//
-// Parameter List : pvoid_queue - pointer to queue
-//									container
+// Parameter List : pvoid_queue - pointer to queue container
 //									data - data removed from queue
-//
-// Return Value	pointer to queue with data removed
-//							 or NULL if failed
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 {
 	QueueHeader *pTemp_cont;
@@ -371,21 +293,10 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 }
 
 
-//*****************************************************************************
-//
-// AddtoQueue
-//
-// Parameter List : pvoid_queue - pointer to queue
-//									container
+// Parameter List : pvoid_queue - pointer to queue container
 //									pdata - pointer to data to add to queue
 //
-// Return Value	pointer to queue with data added
-//							 else	false
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
+// Return Value	pointer to queue with data added else	NULL
 HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 {
 	QueueHeader *pTemp_cont;
@@ -459,19 +370,6 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 }
 
 
-//*****************************************************************************
-//
-// do_copy
-//
-// Parameter List : pointer to mem, source offset, dest offset, size
-//
-// Return Value	BOOLEAN
-//
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
 {
 	BYTE *pOffsetSrc;
@@ -501,19 +399,6 @@ static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, 
 }
 
 
-//*****************************************************************************
-//
-// do_copy_data
-//
-// Parameter List : pointer to mem, pointer to data, source offset, size
-//
-// Return Value	BOOLEAN
-//
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT32 uiSize)
 {
 	BYTE *pOffsetSrc;
@@ -538,19 +423,9 @@ static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT3
 }
 
 
-//*****************************************************************************
-//
-// QueueSize
-//
 // Parameter List : pointer to queue
 //
 // Return Value	UINT32 queue size
-//
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 UINT32 QueueSize(HQUEUE hQueue)
 {
 	QueueHeader *pTemp_cont;
@@ -564,19 +439,9 @@ UINT32 QueueSize(HQUEUE hQueue)
 }
 
 
-//*****************************************************************************
-//
-// ListSize
-//
 // Parameter List : pointer to queue
 //
 // Return Value	UINT32 list size
-//
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 UINT32 ListSize(HLIST hList)
 {
 	ListHeader *pTemp_cont;
@@ -590,22 +455,9 @@ UINT32 ListSize(HLIST hList)
 }
 
 
-//*****************************************************************************
-//
-// AddtoList
-//
-// Parameter List : HCONTAINER - handle to list
-//									container
+// Parameter List : HCONTAINER - handle to list container
 //									data - data to add to queue
 //									position - position after which data is to added
-//
-// Return Value	BOOLEAN true if push ok
-//							 else	false
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 {
 	ListHeader *pTemp_cont;
@@ -778,22 +630,9 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 }
 
 
-//*****************************************************************************
-//
-// RemfromList
-//
-// Parameter List : HLIST - handle to list
-//									container
+// Parameter List : HLIST - handle to list container
 //									data - data to remove from list
 //									position - position after which data is to added
-//
-// Return Value	BOOLEAN true if push ok
-//							 else	false
-//
-// Modification History :
-// Nov 26th 1996 -> modified for use by Wizardry
-//
-//*****************************************************************************
 BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 {
 	ListHeader *pTemp_cont;
