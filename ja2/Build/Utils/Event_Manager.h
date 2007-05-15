@@ -19,15 +19,13 @@ typedef struct
 
 #define			EVENT_EXPIRED						0x00000002
 
-// Management fucntions
-BOOLEAN InitializeEventManager( );
-BOOLEAN ShutdownEventManager( );
+BOOLEAN InitializeEventManager(void);
+BOOLEAN ShutdownEventManager(void);
 
-BOOLEAN AddEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID );
-EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID);
-EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID);
-BOOLEAN FreeEvent( EVENT *pEvent );
-UINT32	EventQueueSize( UINT8 ubQueueID );
-
+BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID);
+EVENT*  RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID);
+EVENT*  PeekEvent(UINT32 uiIndex, UINT8 ubQueueID);
+BOOLEAN FreeEvent(EVENT* pEvent);
+UINT32	EventQueueSize(UINT8 ubQueueID);
 
 #endif

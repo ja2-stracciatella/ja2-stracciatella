@@ -26,7 +26,6 @@ typedef struct
 	UINT32	 uiUniqueId;
 	INT16		 sDestGridNo;
 	UINT16		usMovementAnim;
-
 } EV_S_GETNEWPATH;
 
 typedef struct
@@ -34,7 +33,6 @@ typedef struct
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	UINT16	usDesiredDirection;
-
 } EV_S_SETDESIREDDIRECTION;
 
 
@@ -85,12 +83,11 @@ typedef struct
 } EV_S_NOISE;
 
 
-BOOLEAN AddGameEvent( UINT32 uiEvent, UINT16 usDelay, PTR pEventData );
-BOOLEAN DequeAllGameEvents( BOOLEAN fExecute );
-BOOLEAN DequeueAllDemandGameEvents( BOOLEAN fExecute );
+BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData);
+BOOLEAN DequeAllGameEvents(BOOLEAN fExecute);
+BOOLEAN DequeueAllDemandGameEvents(BOOLEAN fExecute);
 
-// clean out the evetn queue
-BOOLEAN ClearEventQueue( void );
-
+// clean out the event queue
+BOOLEAN ClearEventQueue(void);
 
 #endif
