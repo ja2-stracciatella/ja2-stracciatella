@@ -44,7 +44,7 @@ BOOLEAN ShutdownEventManager(void)
 
 
 static HLIST GetQueue(UINT8 ubQueueID);
-static void SetQueue(UINT8 ubQueueID, HQUEUE hQueue);
+static void SetQueue(UINT8 ubQueueID, HLIST hQueue);
 
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID)
@@ -123,7 +123,7 @@ static HLIST GetQueue(UINT8 ubQueueID)
 }
 
 
-static void SetQueue(UINT8 ubQueueID, HQUEUE hQueue)
+static void SetQueue(UINT8 ubQueueID, HLIST hQueue)
 {
 	switch (ubQueueID)
 	{

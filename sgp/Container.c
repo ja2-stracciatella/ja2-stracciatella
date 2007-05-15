@@ -23,15 +23,24 @@
 #include "Types.h"
 
 
-typedef struct HeaderTag
+typedef struct ListHeader
 {
 	UINT32 uiTotal_items;
 	UINT32 uiSiz_of_elem;
 	UINT32 uiMax_size;
 	UINT32 uiHead;
 	UINT32 uiTail;
+} ListHeader;
 
-} QueueHeader , ListHeader;
+
+typedef struct QueueHeader
+{
+	UINT32 uiTotal_items;
+	UINT32 uiSiz_of_elem;
+	UINT32 uiMax_size;
+	UINT32 uiHead;
+	UINT32 uiTail;
+} QueueHeader;
 
 
 // Parameter List : num_items - estimated number of items in queue
@@ -62,7 +71,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 		return NULL;
 		}
 
-	pQueue = (QueueHeader *)hQueue;
+	pQueue = hQueue;
 	//initialize the queue structure
 
 		pQueue->uiMax_size = uiAmount + sizeof(QueueHeader);
@@ -103,7 +112,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 		return 0;
 		}
 
-	pList = (ListHeader *)hList;
+	pList = hList;
 	//initialize the list structure
 
 		pList->uiMax_size = uiAmount + sizeof(ListHeader);
@@ -166,7 +175,7 @@ static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
 	}
 
 	//assign to temporary variables
-	pTemp_cont = (QueueHeader *)hQueue;
+	pTemp_cont = hQueue;
 
 	// if theres no elements to remove return error
 	if (pTemp_cont->uiTotal_items == 0)
@@ -210,7 +219,7 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 	}
 
 	//assign to temporary variables
-	pTemp_cont = (ListHeader *)hList;
+	pTemp_cont = hList;
 
 	// if theres no elements to peek return error
 	if (pTemp_cont->uiTotal_items == 0)
@@ -259,7 +268,7 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 	}
 
 	//assign to temporary variables
-	pTemp_cont = (QueueHeader *)hQueue;
+	pTemp_cont = hQueue;
 
 	// if theres no elements to remove return error
 	if (pTemp_cont->uiTotal_items == 0)
@@ -328,7 +337,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 
 	// assign some temporary variables
 	fresize = FALSE;
-	pTemp_cont = (QueueHeader *)hQueue;
+	pTemp_cont = hQueue;
 		uiTotal = pTemp_cont->uiTotal_items;
 		uiSize_of_each = pTemp_cont->uiSiz_of_elem;
 	uiMax_size = pTemp_cont->uiMax_size;
@@ -351,7 +360,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 		// copy memory from beginning of container to end of container
 	// so that all the data is in one continuous block
 
-		pTemp_cont = (QueueHeader *)hQueue;
+		pTemp_cont = hQueue;
 		presize = (BYTE *)hQueue;
 		pmaxsize = (BYTE *)hQueue;
 		presize += sizeof(QueueHeader);
@@ -434,7 +443,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Queue pointer is NULL");
 		return 0;
 	}
-	pTemp_cont = (QueueHeader *)hQueue;
+	pTemp_cont = hQueue;
 	return pTemp_cont->uiTotal_items;
 }
 
@@ -450,7 +459,7 @@ UINT32 ListSize(HLIST hList)
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "List pointer is NULL");
 		return 0;
 	}
-	pTemp_cont = (ListHeader *)hList;
+	pTemp_cont = hList;
 	return pTemp_cont->uiTotal_items;
 }
 
@@ -496,7 +505,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 
 	// assign some temporary variables
 
-	pTemp_cont = (ListHeader *)hList;
+	pTemp_cont = hList;
 	if (uiPos > pTemp_cont->uiTotal_items)
 	{
 			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
@@ -589,7 +598,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not resize list container memory");
 				return NULL;
 			}
-		pTemp_cont = (ListHeader *)hList;
+		pTemp_cont = hList;
 		if (do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader)) == FALSE)
 		{
 				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy list container memory");
@@ -666,7 +675,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 	}
 
 	// assign some temporary variables
-	pTemp_cont = (ListHeader *)hList;
+	pTemp_cont = hList;
 
 	if (uiPos >= pTemp_cont->uiTotal_items)
 	{

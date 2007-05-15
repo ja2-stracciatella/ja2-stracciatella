@@ -13,8 +13,8 @@
 
 #include "Types.h"
 
-typedef void* HQUEUE;
-typedef void* HLIST;
+typedef struct QueueHeader* HQUEUE;
+typedef struct ListHeader*  HLIST;
 
 #ifdef __cplusplus
 extern "C" {
