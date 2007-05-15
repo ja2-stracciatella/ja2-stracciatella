@@ -129,43 +129,6 @@ BOOLEAN DeleteList(HLIST hList)
 }
 
 
-// PeekQueue - gets the first item in queue without actually deleting it.
-//
-// Parameter List : pvoid_queue - pointer to queue container
-//									data - data removed from queue
-static BOOLEAN PeekQueue(HQUEUE hQueue, void* pdata)
-{
-	// cannot check for invalid handle , only 0
-	if (hQueue == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
-		return FALSE;
-	}
-	if (pdata == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
-		return FALSE;
-	}
-
-	QueueHeader* pTemp_cont = hQueue;
-
-	// if theres no elements to remove return error
-	if (pTemp_cont->uiTotal_items == 0)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue");
-		return FALSE;
-	}
-
-	// copy the element pointed to by uiHead
-	BYTE* pbyte = (BYTE*)hQueue;
-	pbyte += pTemp_cont->uiHead;
-	void* pvoid = pbyte;
-	memmove(pdata, pvoid, pTemp_cont->uiSiz_of_elem);
-
-	return TRUE;
-}
-
-
 // PeekList - gets the specified item in the list without actually deleting it.
 //
 // Parameter List : hList - pointer to list container

@@ -295,21 +295,6 @@ void EmptyDialogueQueue( )
 	// If we have anything left in the queue, remove!
   if( ghDialogueQ != NULL )
 	{
-/*
-DEF:  commented out because the Queue system ?? uses a contiguous memory block ??? for the queue
-	so you cant delete a single node.  The DeleteQueue, below, will free the entire memory block
-
-		numDialogueItems = QueueSize( ghDialogueQ );
-
-		for ( cnt = numDialogueItems-1; cnt >= 0; cnt-- )
-		{
-			if ( PeekQueue( ghDialogueQ, &QItem ) )
-			{
-					MemFree( QItem );
-			}
-		}
-*/
-
 		// Delete list
 		DeleteQueue( ghDialogueQ );
 		ghDialogueQ=NULL;
