@@ -7,7 +7,6 @@
 #include "Edit_Sys.h"
 #include "PathAI.h"
 #include "Tile_Surface.h"
-#include "Tactical_Save.h"
 #include "MemMan.h"
 
 

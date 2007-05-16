@@ -1,7 +1,6 @@
 #include "Campaign_Types.h"
 #include "Queen_Command.h"
 #include "Strategic_Movement.h"
-#include "Tactical_Save.h"
 
 #ifdef JA2TESTVERSION
 #	include "Debug.h"

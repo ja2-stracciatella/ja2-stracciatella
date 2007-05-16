@@ -13,7 +13,6 @@
 #include "Debug.h"
 #include "Isometric_Utils.h"
 #include "Sys_Globals.h"
-#include "Tactical_Save.h"
 #include "StrategicMap.h"
 #include "Campaign_Types.h"
 #include "Random.h"

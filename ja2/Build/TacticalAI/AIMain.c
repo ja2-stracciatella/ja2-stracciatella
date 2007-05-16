@@ -24,7 +24,6 @@
 #include "Dialogue_Control.h"
 #include "Soldier_Profile.h"
 #include "StrategicMap.h"
-#include "Tactical_Save.h"
 #include "Soldier_Create.h"
 #include "Explosion_Control.h"
 #include "Interactive_Tiles.h"

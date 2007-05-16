@@ -17,7 +17,6 @@
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"
 #include "Animation_Control.h"
-#include "Tactical_Save.h"
 #include "Strategic_Merc_Handler.h"
 #include "Interface_Control.h"
 #include "GameScreen.h"

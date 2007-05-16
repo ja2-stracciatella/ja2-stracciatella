@@ -20,7 +20,6 @@
 #include "Options_Screen.h"
 #include "GameVersion.h"
 #include "SysUtil.h"
-#include "Tactical_Save.h"
 #include "Overhead.h"
 #include "GameScreen.h"
 #include "GameSettings.h"
