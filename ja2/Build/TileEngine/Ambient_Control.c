@@ -7,7 +7,6 @@
 #include "Ambient_Control.h"
 #include "Lighting.h"
 #include "Random.h"
-#include "WorldMan.h"
 #include "SoundMan.h"
 #include "Debug.h"
 

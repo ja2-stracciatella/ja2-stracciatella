@@ -10,7 +10,6 @@
 #include "Font_Control.h"
 #include "Interface.h"
 #include "ScreenIDs.h"
-#include "WorldMan.h"
 #include "PathAI.h"
 #include "Points.h"
 #include "Weapons.h"

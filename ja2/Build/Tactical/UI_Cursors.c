@@ -11,7 +11,6 @@
 #include "Sys_Globals.h"
 #include "Isometric_Utils.h"
 #include "Animation_Data.h"
-#include "WorldMan.h"
 #include "UI_Cursors.h"
 #include "LOS.h"
 #include "Interface.h"

@@ -9,7 +9,6 @@
 #include "Debug_Control.h"
 #include "Utilities.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "FileMan.h"
 #include "MemMan.h"
 

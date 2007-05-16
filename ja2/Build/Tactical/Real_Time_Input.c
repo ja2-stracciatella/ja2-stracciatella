@@ -28,7 +28,6 @@
 #include "Interface_Items.h"
 #include "Physics.h"
 #include "UI_Cursors.h"
-#include "WorldMan.h"
 #include "StrategicMap.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Create.h"

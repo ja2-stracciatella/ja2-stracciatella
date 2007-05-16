@@ -9,7 +9,6 @@
 #include "Overhead_Types.h"
 #include "Faces.h"
 #include "Isometric_Utils.h"
-#include "WorldMan.h"
 #include "Items.h"
 #include "Weapons.h"
 #include "OppList.h"

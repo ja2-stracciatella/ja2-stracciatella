@@ -24,7 +24,6 @@
 #include "SysUtil.h"
 #include "Debug.h"
 #include "WCheck.h"
-#include "WorldMan.h"
 #include "Edit_Sys.h"
 #include "Isometric_Utils.h"
 #include "Line.h"

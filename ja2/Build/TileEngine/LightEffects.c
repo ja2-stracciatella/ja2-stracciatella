@@ -4,7 +4,6 @@
 #include "Weapons.h"
 #include "Handle_Items.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Animation_Control.h"
 #include "Tile_Animation.h"
 #include "LightEffects.h"

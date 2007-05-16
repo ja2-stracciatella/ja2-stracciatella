@@ -4,7 +4,6 @@
 #include "Soldier_Init_List.h"
 #include "Random.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "RenderWorld.h"
 #include "EditorMercs.h"
 #include "Exit_Grids.h"

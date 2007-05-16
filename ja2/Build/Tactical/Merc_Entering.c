@@ -6,7 +6,6 @@
 #include "Weapons.h"
 #include "Handle_Items.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Rotting_Corpses.h"
 #include "Isometric_Utils.h"
 #include "Animation_Control.h"

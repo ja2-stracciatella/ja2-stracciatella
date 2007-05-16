@@ -3,7 +3,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "Smooth.h"
-#include "WorldMan.h"
 #include "MouseSystem.h"
 #include "Sys_Globals.h"
 #include "TileDat.h"

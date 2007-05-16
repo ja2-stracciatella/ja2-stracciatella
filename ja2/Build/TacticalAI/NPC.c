@@ -20,7 +20,6 @@
 #include "Strategic_Town_Loyalty.h"
 #include "Message.h"
 #include "Timer_Control.h"
-#include "WorldMan.h"
 #include "Soldier_Add.h"
 #include "Soldier_Tile.h"
 #include "Weapons.h"

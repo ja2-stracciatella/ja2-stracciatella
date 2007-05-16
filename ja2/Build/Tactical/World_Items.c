@@ -5,7 +5,6 @@
 #include "Points.h"
 #include "TileDef.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Interface.h"
 #include "Animation_Control.h"
 #include "Font_Control.h"

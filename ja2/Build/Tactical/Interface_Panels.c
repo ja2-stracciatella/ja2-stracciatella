@@ -16,7 +16,6 @@
 #include "Sys_Globals.h"
 #include "Cursors.h"
 #include "Radar_Screen.h"
-#include "WorldMan.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"
 #include "Utilities.h"

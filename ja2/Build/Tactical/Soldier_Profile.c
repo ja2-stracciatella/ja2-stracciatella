@@ -3,7 +3,6 @@
 #include "Debug.h"
 #include "math.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Soldier_Control.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"

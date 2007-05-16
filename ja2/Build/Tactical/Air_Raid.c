@@ -17,7 +17,6 @@
 #include "Message.h"
 #include "Isometric_Utils.h"
 #include "Soldier_Macros.h"
-#include "WorldMan.h"
 #include "LOS.h"
 #include "math.h"
 #include "Explosion_Control.h"

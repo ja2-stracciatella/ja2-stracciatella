@@ -7,7 +7,6 @@
 #include "Weapons.h"
 #include "Handle_Items.h"
 #include "WorldDef.h"
-#include "WorldMan.h"
 #include "Rotting_Corpses.h"
 #include "Tile_Cache.h"
 #include "Isometric_Utils.h"

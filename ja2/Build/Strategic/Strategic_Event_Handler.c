@@ -16,7 +16,6 @@
 #include "Strategic_Town_Loyalty.h"
 #include "Soldier_Init_List.h"
 #include "SaveLoadMap.h"
-#include "WorldMan.h"
 #include "Soldier_Create.h"
 #include "Soldier_Add.h"
 #include "OppList.h"
