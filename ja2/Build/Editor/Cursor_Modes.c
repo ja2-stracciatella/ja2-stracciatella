@@ -4,7 +4,6 @@
 
 #include "Types.h"
 #include "Cursor_Modes.h"
-#include "RenderWorld.h"
 #include "Random.h"
 #include "WorldMan.h"
 #include "Interface.h"
