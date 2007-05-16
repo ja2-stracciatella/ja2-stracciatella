@@ -114,7 +114,6 @@ static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent);
 static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent);
 static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent);
 static UINT32 UIHandleEnterEditMode(UI_EVENT* pUIEvent);
-static UINT32 UIHandleEnterPalEditMode(UI_EVENT* pUIEvent);
 static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent);
 static UINT32 UIHandleIOnTerrain(UI_EVENT* pUIEvent);
 static UINT32 UIHandleIChangeToIdle(UI_EVENT* pUIEvent);
@@ -222,7 +221,6 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleNewBadMerc, FALSE, FALSE, 0, 0, 0,  0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleSelectMerc, FALSE, FALSE, 0, 0, 0,  0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleEnterEditMode, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleEnterPalEditMode, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleEndTurn, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleTestHit, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleChangeLevel, FALSE, FALSE, 0, 0, 0, 0,
@@ -1052,12 +1050,6 @@ static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent)
 static UINT32 UIHandleEnterEditMode(UI_EVENT* pUIEvent)
 {
 		return( EDIT_SCREEN );
-}
-
-
-static UINT32 UIHandleEnterPalEditMode(UI_EVENT* pUIEvent)
-{
-		return( PALEDIT_SCREEN );
 }
 
 
