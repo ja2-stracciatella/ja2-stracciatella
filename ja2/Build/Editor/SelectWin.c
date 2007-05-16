@@ -14,28 +14,84 @@
 #include "EditorDefines.h"
 #include "Editor_Taskbar_Utils.h"
 #include "MemMan.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+
+
+// defines for DisplaySpec.ubType
+#define DISPLAY_TEXT    1
+#define DISPLAY_GRAPHIC 2
+
+#define ONE_COLUMN       0x0001
+#define ONE_ROW          0x0002
+#define CLEAR_BACKGROUND 0x0004
+
+#define DISPLAY_ALL_OBJECTS 0xFFFF
+
+
+typedef struct DisplaySpec
+{
+	UINT8 ubType;
+	union
+	{
+		struct
+		{
+			HVOBJECT hVObject;
+			UINT16   usStart;
+			UINT16   usEnd;
+			UINT32   uiObjIndx;
+		};
+		struct
+		{
+			UINT16* pString;
+		};
+	};
+} DisplaySpec;
+
+
+typedef struct DisplayList DisplayList;
+struct DisplayList
+{
+	HVOBJECT     hObj;
+	UINT16       uiIndex;
+	INT16        iX;
+	INT16        iY;
+	INT16        iWidth;
+	INT16        iHeight;
+	UINT32       uiObjIndx;
+	BOOLEAN      fChosen;
+	DisplayList* pNext;
+};
 
 
 extern BOOLEAN gfOverheadMapDirty;
-
-extern void SetClippingRect(SGPRect *clip);
-extern void GetClippingRect(SGPRect *clip);
 
 
 extern BOOLEAN fDontUseRandom;
 
 extern UINT16 GenericButtonFillColors[40];
 
-BOOLEAN gfRenderSquareArea = FALSE;
-INT16 iStartClickX,iStartClickY;
-INT16 iEndClickX,iEndClickY;
+static BOOLEAN gfRenderSquareArea = FALSE;
+static INT16 iStartClickX;
+static INT16 iStartClickY;
+static INT16 iEndClickX;
+static INT16 iEndClickY;
 
 
-INT32 iButtonIcons[4];
-INT32 iSelectWin,iCancelWin,iScrollUp,iScrollDown,iOkWin;
+#define CANCEL_ICON		0
+#define UP_ICON				1
+#define DOWN_ICON			2
+#define OK_ICON				3
+
+static INT32 iButtonIcons[4];
+static INT32 iSelectWin;
+static INT32 iCancelWin;
+static INT32 iScrollUp;
+static INT32 iScrollDown;
+static INT32 iOkWin;
 
 BOOLEAN fAllDone=FALSE;
-BOOLEAN fButtonsPresent=FALSE;
+static BOOLEAN fButtonsPresent = FALSE;
 
 SGPPoint SelWinSpacing, SelWinStartPoint, SelWinEndPoint;
 
@@ -82,26 +138,26 @@ SGPPoint SelWinSpacing, SelWinStartPoint, SelWinEndPoint;
 //This is a special case for trees which may have varying numbers.  There was a problem
 //in which we loaded a new tileset which had one less tree in it.  When we called BuildSelectionWindow(),
 //it would crash because it thought there was an extra tree which was now invalid.
-UINT16	gusNumOStructs = 0;
+static UINT16 gusNumOStructs = 0;
 
 // List of objects to display in the selection window
-DisplaySpec OStructs[ OSTRUCTS_NUMELEMENTS ];
-DisplaySpec OStructs1[ OSTRUCTS1_NUMELEMENTS ];
-DisplaySpec OStructs2[ OSTRUCTS2_NUMELEMENTS ];
-DisplaySpec BanksList[ BANKSLIST_NUMELEMENTS ];
-DisplaySpec RoadsList[ ROADSLIST_NUMELEMENTS ];
-DisplaySpec DebrisList[ DEBRISLIST_NUMELEMENTS ];
-DisplaySpec SingleWall[ SINGLEWALL_NUMELEMENTS ];
-DisplaySpec SingleDoor[ SINGLEDOOR_NUMELEMENTS ];
-DisplaySpec SingleWindow[ SINGLEWINDOW_NUMELEMENTS ];
-DisplaySpec SingleRoof[ SINGLEROOF_NUMELEMENTS ];
-DisplaySpec SingleNewRoof[ SINGLENEWROOF_NUMELEMENTS ];
-DisplaySpec SingleBrokenWall[ SINGLEBROKENWALL_NUMELEMENTS ];
-DisplaySpec SingleDecor[ SINGLEDECOR_NUMELEMENTS ];
-DisplaySpec SingleDecal[ SINGLEDECAL_NUMELEMENTS ];
-DisplaySpec SingleFloor[ SINGLEFLOOR_NUMELEMENTS ];
-DisplaySpec SingleToilet[ SINGLETOILET_NUMELEMENTS ];
-DisplaySpec Room[ ROOM_NUMELEMENTS ];
+static DisplaySpec OStructs[OSTRUCTS_NUMELEMENTS];
+static DisplaySpec OStructs1[OSTRUCTS1_NUMELEMENTS];
+static DisplaySpec OStructs2[OSTRUCTS2_NUMELEMENTS];
+static DisplaySpec BanksList[BANKSLIST_NUMELEMENTS];
+static DisplaySpec RoadsList[ROADSLIST_NUMELEMENTS];
+static DisplaySpec DebrisList[DEBRISLIST_NUMELEMENTS];
+static DisplaySpec SingleWall[SINGLEWALL_NUMELEMENTS];
+static DisplaySpec SingleDoor[SINGLEDOOR_NUMELEMENTS];
+static DisplaySpec SingleWindow[SINGLEWINDOW_NUMELEMENTS];
+static DisplaySpec SingleRoof[SINGLEROOF_NUMELEMENTS];
+static DisplaySpec SingleNewRoof[SINGLENEWROOF_NUMELEMENTS];
+static DisplaySpec SingleBrokenWall[SINGLEBROKENWALL_NUMELEMENTS];
+static DisplaySpec SingleDecor[SINGLEDECOR_NUMELEMENTS];
+static DisplaySpec SingleDecal[SINGLEDECAL_NUMELEMENTS];
+static DisplaySpec SingleFloor[SINGLEFLOOR_NUMELEMENTS];
+static DisplaySpec SingleToilet[SINGLETOILET_NUMELEMENTS];
+static DisplaySpec Room[ROOM_NUMELEMENTS];
 
 //These are all of the different selection lists.  Changing the max_selections will
 //change the number of selections values you can have at a time.  This is Bret's gay code,
@@ -155,8 +211,9 @@ INT32				*pNumSelList;
 // Global used to indicate which selection to use (changes with the PGUP/PGDWN keys in editor)
 INT32				iCurBank = 0;
 
-DisplayList *pDispList;
-INT16 iTopWinCutOff,iBotWinCutOff;
+static DisplayList* pDispList;
+static INT16 iTopWinCutOff;
+static INT16 iBotWinCutOff;
 
 UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue

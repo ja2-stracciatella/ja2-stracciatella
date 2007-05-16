@@ -5,17 +5,7 @@
 #define _SELECTION_WIN_H_
 
 #include "Types.h"
-#include "VObject.h"
 
-#include "MouseSystem.h"
-
-#define CANCEL_ICON		0
-#define UP_ICON				1
-#define DOWN_ICON			2
-#define OK_ICON				3
-
-extern INT32 iButtonIcons[4];
-extern INT32 iSelectWin,iCancelWin,iScrollUp,iScrollDown;
 
 extern BOOLEAN fAllDone;
 
@@ -28,17 +18,6 @@ extern void RenderSelectionWindow( void );
 
 extern void ScrollSelWinUp(void);
 extern void ScrollSelWinDown(void);
-
-// defines for DisplaySpec.ubType
-
-#define DISPLAY_TEXT					1
-#define DISPLAY_GRAPHIC				2
-
-#define ONE_COLUMN					0x0001
-#define ONE_ROW							0x0002
-#define CLEAR_BACKGROUND		0x0004
-
-#define DISPLAY_ALL_OBJECTS		0xffff
 
 #define MAX_SELECTIONS		120
 
@@ -63,39 +42,6 @@ enum
 	SELWIN_OSTRUCTS1,
 	SELWIN_OSTRUCTS2
 };
-
-typedef struct
-{
-	UINT8		ubType;
-	union
-	{
-		struct
-		{
-			HVOBJECT	hVObject;
-			UINT16		usStart;
-			UINT16		usEnd;
-			UINT32    uiObjIndx;
-		};
-		struct
-		{
-			UINT16 *	pString;
-		};
-	};
-}
-DisplaySpec;
-
-typedef struct _DisplayList
-{
-	HVOBJECT						hObj;
-	UINT16							uiIndex;
-	INT16								iX;
-	INT16								iY;
-	INT16								iWidth;
-	INT16								iHeight;
-	UINT32							uiObjIndx;
-	BOOLEAN							fChosen;
-	struct _DisplayList *pNext;
-} DisplayList;
 
 typedef struct _Selections
 {

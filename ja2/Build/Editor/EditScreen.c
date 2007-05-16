@@ -157,8 +157,6 @@ INT32 giMusicID = 0;
 void EraseWorldData(  );
 
 
-extern BOOLEAN fAllDone;
-
 BOOLEAN				gfEditorDirty = TRUE;
 
 BOOLEAN fRaiseHeight = FALSE;
