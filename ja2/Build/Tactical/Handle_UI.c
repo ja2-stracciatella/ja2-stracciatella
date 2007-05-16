@@ -118,7 +118,6 @@ static UINT32 UIHandleEnterPalEditMode(UI_EVENT* pUIEvent);
 static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent);
 static UINT32 UIHandleIOnTerrain(UI_EVENT* pUIEvent);
 static UINT32 UIHandleIChangeToIdle(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILoadLevel(UI_EVENT* pUIEvent);
 static UINT32 UIHandleISoldierDebug(UI_EVENT* pUIEvent);
 static UINT32 UIHandleILOSDebug(UI_EVENT* pUIEvent);
 static UINT32 UIHandleILevelNodeDebug(UI_EVENT* pUIEvent);
@@ -229,7 +228,6 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleChangeLevel, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleIOnTerrain, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleIChangeToIdle, FALSE, FALSE, 0, 0, 0, 0,
-	UIEVENT_SINGLEEVENT,																		IDLE_MODE,						UIHandleILoadLevel, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleISoldierDebug, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILOSDebug, FALSE, FALSE, 0, 0, 0, 0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleILevelNodeDebug, FALSE, FALSE, 0, 0, 0, 0,
@@ -3084,12 +3082,6 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 	}
 
 	return( TRUE );
-}
-
-
-static UINT32 UIHandleILoadLevel(UI_EVENT* pUIEvent)
-{
-	return( INIT_SCREEN );
 }
 
 
