@@ -194,6 +194,10 @@ void RemoveTextMercPopupImages( )
 	}
 }
 
+
+static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer);
+
+
 BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
 {
 
@@ -207,7 +211,8 @@ BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, U
 	return( RenderMercPopupBox( sDestX,  sDestY,  uiBuffer ) );
 }
 
-BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
+
+static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer)
 {
 //	UINT32  uiDestPitchBYTES;
 //	UINT32  uiSrcPitchBYTES;

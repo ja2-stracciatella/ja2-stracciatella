@@ -19,9 +19,6 @@ INT32 PrepareMercPopupBox(  INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorde
 // remove this box from the index
 BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 
-// render the current pop up box
-BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer );
-
 // render pop up box with this index value
 BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer );
 

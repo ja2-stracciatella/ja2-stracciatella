@@ -103,18 +103,11 @@ extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, 
 static MOUSE_REGION gMenuOverlayRegion;
 
 
-// OVerlay ID
-static INT32        giPopupSlideMessageOverlay = -1;
-static UINT16       gusOverlayPopupBoxWidth;
-static UINT16       gusOverlayPopupBoxHeight;
-static MercPopUpBox gpOverrideMercBox;
-
 INT32					      giUIMessageOverlay = -1;
 static UINT16       gusUIMessageWidth;
 static UINT16       gusUIMessageHeight;
 static MercPopUpBox gpUIMessageOverrideMercBox;
 UINT32				guiUIMessageTime = 0;
-static INT32        iOverlayMessageBox = -1;
 static INT32        iUIMessageBox = -1;
 UINT32				guiUIMessageTimeDelay = 0;
 static BOOLEAN      gfUseSkullIconMessage = FALSE;
@@ -1664,74 +1657,6 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
 	}
 
-}
-
-
-static void RenderOverlayMessage(VIDEO_OVERLAY* pBlitter)
-{
-	// Override it!
-	OverrideMercPopupBox( &gpOverrideMercBox );
-
-	RenderMercPopupBox( pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
-
-	// Set it back!
-	ResetOverrideMercPopupBox( );
-
-	InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusOverlayPopupBoxWidth, pBlitter->sY + gusOverlayPopupBoxHeight );
-}
-
-
-static void BeginOverlayMessage(UINT32 uiFont, wchar_t* pFontString, ...)
-{
-	va_list argptr;
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	wchar_t	SlideString[512];
-
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(SlideString, lengthof(SlideString), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	// Override it!
-	OverrideMercPopupBox( &gpOverrideMercBox );
-
-	SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS );
-
-	// Prepare text box
-	iOverlayMessageBox = PrepareMercPopupBox( iOverlayMessageBox, BASIC_MERC_POPUP_BACKGROUND, RED_MERC_POPUP_BORDER, SlideString, 200, 50, 0, 0, &gusOverlayPopupBoxWidth, &gusOverlayPopupBoxHeight );
-
-	// Set it back!
-	ResetOverrideMercPopupBox( );
-
-	if ( giPopupSlideMessageOverlay == -1  )
-	{
-		// Set Overlay
-		VideoOverlayDesc.sLeft			 = ( 640 - gusOverlayPopupBoxWidth ) / 2;
-		VideoOverlayDesc.sTop				 = 100;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusOverlayPopupBoxWidth;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusOverlayPopupBoxHeight;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-		VideoOverlayDesc.BltCallback = RenderOverlayMessage;
-
-		giPopupSlideMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
-	}
-
-}
-
-
-static void EndOverlayMessage(void)
-{
-	if ( giPopupSlideMessageOverlay != -1 )
-	{
-
-//		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Removing Overlay message");
-
-		RemoveVideoOverlay( giPopupSlideMessageOverlay );
-
-		giPopupSlideMessageOverlay = -1;
-
-	}
 }
 
 
