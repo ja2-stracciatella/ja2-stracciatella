@@ -78,7 +78,6 @@ typedef struct TAG_UI_EVENT
 typedef enum
 {
 	I_DO_NOTHING,
-	I_EXIT,
 	I_NEW_MERC,
 	I_NEW_BADMERC,
 	I_SELECT_MERC,

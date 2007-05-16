@@ -70,7 +70,6 @@
 #include "Map_Information.h"
 #include "Video.h"
 #include "Screens.h"
-#include "SGP.h"
 
 
 #define MAX_ON_DUTY_SOLDIERS 6
@@ -111,7 +110,6 @@
 
 // CALLBACKS FOR EVENTS
 static UINT32 UIHandleIDoNothing(UI_EVENT* pUIEvent);
-static UINT32 UIHandleExit(UI_EVENT* pUIEvent);
 static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent);
 static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent);
 static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent);
@@ -221,7 +219,6 @@ INT16						gsJumpOverGridNo = 0;
 static UI_EVENT gEvents[NUM_UI_EVENTS] =
 {
 	0,																											IDLE_MODE,						UIHandleIDoNothing, FALSE, FALSE, 0, 0, 0, 0,
-	0,																											IDLE_MODE,						UIHandleExit, FALSE, FALSE, 0,  0, 0,  0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleNewMerc, FALSE, FALSE, 0, 0, 0,  0,
 	UIEVENT_SINGLEEVENT,																		DONT_CHANGEMODE,			UIHandleNewBadMerc, FALSE, FALSE, 0, 0, 0,  0,
 	UIEVENT_SINGLEEVENT,																		MOVE_MODE,						UIHandleSelectMerc, FALSE, FALSE, 0, 0, 0,  0,
@@ -935,13 +932,6 @@ static UINT32 UIHandleIDoNothing(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_SNAPUICURSOR;
 
-	return( GAME_SCREEN );
-}
-
-
-static UINT32 UIHandleExit(UI_EVENT* pUIEvent)
-{
-  gfProgramIsRunning = FALSE;
 	return( GAME_SCREEN );
 }
 

@@ -67,13 +67,11 @@ Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FlowerOrderUserTextFieldCallBack(): pointless
 GetCostOfPassageForHelicopter(): callers
-GetCurrentBox(): complicated interface
 GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
 GetHelpTextForItem(): complicated
 GetIdOfPastMercInSlot(): callers
 GetIdOfThisSlot(): callers
-GetItemPool(): interface complicated
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetMLGFilename(): complicated
 GetNextString(): callers
@@ -112,7 +110,6 @@ HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HandleSuppressionFire(): callers
 HeliCharacterDialogue(): callers
 HideItemTileCursor(): empty
-HighLightRegion(), RestoreOldRegion(): empty
 IMPVideoObjects.h(): many needlessly called functions?
 I_CHANGELEVEL: unused
 I_ENTER_PALEDIT_MODE: unused

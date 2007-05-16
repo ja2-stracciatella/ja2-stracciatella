@@ -1468,7 +1468,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
     if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == 'x') && ( InputEvent.usKeyState & ALT_DOWN ))
     {
 			HandleShortCutExitState( );
-			//*puiNewEvent = I_EXIT;
     }
 
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_ESCAPE)
