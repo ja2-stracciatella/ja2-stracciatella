@@ -4440,10 +4440,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
           }
 					else if( fShowUpdateBox )
 					{
-						if( fShowUpdateBox )
-						{
-							EndUpdateBox( FALSE );  // stop time compression
-						}
+						EndUpdateBox(FALSE); // stop time compression
 					}
 					else if(fShowDescriptionFlag)
 					{
