@@ -519,11 +519,11 @@ static void DrawSnappingCursor(void)
 		case CONFIRM_MOVE_RUN_UICURSOR:
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, GOODRUN1, 0, -WALL_HEIGHT - 8, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODRUN1, 0, -WALL_HEIGHT - 8);
 			}
 			else
 			{
-				AddUIElem( gusCurMousePos, GOODRUN1, 0, 0, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODRUN1, 0, 0);
 			}
 			pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -533,11 +533,11 @@ static void DrawSnappingCursor(void)
 		case CONFIRM_MOVE_WALK_UICURSOR:
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, GOODWALK1, 0, -WALL_HEIGHT - 8, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODWALK1, 0, -WALL_HEIGHT - 8);
 			}
 			else
 			{
-				AddUIElem( gusCurMousePos, GOODWALK1, 0, 0, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODWALK1, 0, 0);
 			}
 			pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -547,11 +547,11 @@ static void DrawSnappingCursor(void)
 		case CONFIRM_MOVE_SWAT_UICURSOR:
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, GOODSWAT1, 0, -WALL_HEIGHT - 8, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODSWAT1, 0, -WALL_HEIGHT - 8);
 			}
 			else
 			{
-				AddUIElem( gusCurMousePos, GOODSWAT1, 0, 0, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODSWAT1, 0, 0);
 			}
 			pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -561,11 +561,11 @@ static void DrawSnappingCursor(void)
 		case CONFIRM_MOVE_PRONE_UICURSOR:
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, GOODPRONE1, 0, -WALL_HEIGHT - 8 - 6, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODPRONE1, 0, -WALL_HEIGHT - 8 - 6);
 			}
 			else
 			{
-				AddUIElem( gusCurMousePos, GOODPRONE1, 0, -6, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, GOODPRONE1, 0, -6);
 			}
 			pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -575,11 +575,11 @@ static void DrawSnappingCursor(void)
 		case CONFIRM_MOVE_VEHICLE_UICURSOR:
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, VEHICLEMOVE1, 0, -WALL_HEIGHT - 8, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, VEHICLEMOVE1, 0, -WALL_HEIGHT - 8);
 			}
 			else
 			{
-				AddUIElem( gusCurMousePos, VEHICLEMOVE1, 0, 0, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, VEHICLEMOVE1, 0, 0);
 			}
 			pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 			pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
@@ -592,7 +592,7 @@ static void DrawSnappingCursor(void)
 
 			if ( gsInterfaceLevel > 0 )
 			{
-				AddUIElem( gusCurMousePos, BADMARKER1, 0, -WALL_HEIGHT - 8, &pNewUIElem );
+				pNewUIElem = AddUIElem(gusCurMousePos, BADMARKER1, 0, -WALL_HEIGHT - 8);
 				pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 				pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 
@@ -645,11 +645,11 @@ static void DrawSnappingCursor(void)
 
 		if ( gsInterfaceLevel > 0 )
 		{
-			AddUIElem( gusCurMousePos, DISPLAY_AP_INDEX, SNAPCURSOR_AP_X_STARTVAL, SNAPCURSOR_AP_Y_STARTVAL - WALL_HEIGHT - 10, &pNewUIElem );
+			pNewUIElem = AddUIElem(gusCurMousePos, DISPLAY_AP_INDEX, SNAPCURSOR_AP_X_STARTVAL, SNAPCURSOR_AP_Y_STARTVAL - WALL_HEIGHT - 10);
 		}
 		else
 		{
-			AddUIElem( gusCurMousePos, DISPLAY_AP_INDEX, SNAPCURSOR_AP_X_STARTVAL, SNAPCURSOR_AP_Y_STARTVAL, &pNewUIElem );
+			pNewUIElem = AddUIElem(gusCurMousePos, DISPLAY_AP_INDEX, SNAPCURSOR_AP_X_STARTVAL, SNAPCURSOR_AP_Y_STARTVAL);
 		}
 		pNewUIElem->uiFlags |= LEVELNODE_DISPLAY_AP;
 		pNewUIElem->uiAPCost = gsCurrentActionPoints;
@@ -688,8 +688,6 @@ static void StartLooseCursor(INT16 sGridNo, UINT32 uiCursorID)
 
 static void HandleLooseCursorDraw(void)
 {
-	LEVELNODE					*pNewUIElem;
-
 	if ( ( GetJA2Clock( ) - guiLooseCursorTimeOfLastUpdate ) > LOOSE_CURSOR_DELAY )
 	{
 		gfLooseCursorOn = FALSE;
@@ -697,7 +695,7 @@ static void HandleLooseCursorDraw(void)
 
 	if ( gfLooseCursorOn )
 	{
-		AddUIElem( gsLooseCursorGridNo, FIRSTPOINTERS4, 0, 0, &pNewUIElem );
+		LEVELNODE* pNewUIElem = AddUIElem(gsLooseCursorGridNo, FIRSTPOINTERS4, 0, 0);
 		pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 		pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 	}

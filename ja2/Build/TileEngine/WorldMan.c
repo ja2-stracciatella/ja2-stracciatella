@@ -3030,26 +3030,18 @@ LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex )
 
 }
 
-BOOLEAN AddUIElem( UINT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode )
+LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY)
 {
-	LEVELNODE							 *pTopmost		 = NULL;
-
-	pTopmost = AddTopmostToTail( iMapIndex, usIndex );
-
-	CHECKF( pTopmost != NULL );
+	LEVELNODE* pTopmost = AddTopmostToTail(iMapIndex, usIndex);
+	CHECKN(pTopmost != NULL);
 
 	// Set flags
 	pTopmost->uiFlags		|= LEVELNODE_USERELPOS;
 	pTopmost->sRelativeX = sRelativeX;
 	pTopmost->sRelativeY = sRelativeY;
 
-	if ( ppNewNode != NULL )
-	{
-		*ppNewNode = pTopmost;
-	}
-
 	ResetSpecificLayerOptimizing( TILES_DYNAMIC_TOPMOST );
-	return( TRUE );
+	return pTopmost;
 }
 
 

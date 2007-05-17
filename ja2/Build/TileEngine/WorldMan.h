@@ -101,7 +101,7 @@ BOOLEAN AddTopmostToHead( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN RemoveTopmost( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN TypeExistsInTopmostLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusTopmostIndex );
 BOOLEAN RemoveAllTopmostsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-BOOLEAN AddUIElem( UINT32 iMapIndex, UINT16 usIndex, INT8	sRelativeX, INT8 sRelativeY, LEVELNODE **ppNewNode );
+LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY);
 BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 

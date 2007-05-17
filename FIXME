@@ -5,7 +5,6 @@ ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
-AddUIElem(): interface complicated
 AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
 BLOODTIME: unused
