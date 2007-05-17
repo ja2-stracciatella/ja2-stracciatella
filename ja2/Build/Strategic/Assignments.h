@@ -167,7 +167,6 @@ extern INT32 ghAttributeBox;
 extern INT32 ghRemoveMercAssignBox;
 extern INT32 ghContractBox;
 extern INT32 ghMoveBox;
-//extern INT32 ghUpdateBox;
 
 
 extern BOOLEAN fShownContractMenu;

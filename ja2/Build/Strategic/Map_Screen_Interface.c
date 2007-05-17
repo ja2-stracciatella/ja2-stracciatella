@@ -195,7 +195,7 @@ extern STR16 pUpdatePanelButtons[];
 SOLDIERTYPE * pSoldierMovingList[ MAX_CHARACTER_COUNT ];
 BOOLEAN fSoldierIsMoving[ MAX_CHARACTER_COUNT ];
 
-SOLDIERTYPE *pUpdateSoldierBox[ SIZE_OF_UPDATE_BOX ];
+static SOLDIERTYPE* pUpdateSoldierBox[SIZE_OF_UPDATE_BOX];
 
 INT32 giUpdateSoldierFaces[ SIZE_OF_UPDATE_BOX ];
 
@@ -232,7 +232,7 @@ SGPPoint MovePosition={450, 100 };
 // which lines are selected? .. for assigning groups of mercs to the same thing
 BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 BOOLEAN fResetTimerForFirstEntryIntoMapScreen = FALSE;
-INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
+static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
 // sam and mine icons
 UINT32 guiSAMICON;
@@ -4750,17 +4750,8 @@ void DisplaySoldierUpdateBox( )
 		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 1, iX + TACT_UPDATE_MERC_FACE_X_WIDTH * (iCounter ) , iY + iUpdatePanelHeight - 3);
 	}
 
-
 	//Display the reason for the update box
-	if( fFourWideMode )
-	{
-		DisplayWrappedString( ( INT16 )( iX ),  ( INT16 )( iY + 6 ), (INT16)iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[ iReasonForSoldierUpDate ], FONT_BLACK, 0, CENTER_JUSTIFIED );
-	}
-	else
-	{
-		DisplayWrappedString( ( INT16 )( iX ),  ( INT16 )( iY + 3 ), (INT16)iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[ iReasonForSoldierUpDate ], FONT_BLACK, 0, CENTER_JUSTIFIED );
-	}
-
+	DisplayWrappedString(iX, iY + (fFourWideMode ? 6 : 3), iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[iReasonForSoldierUpDate], FONT_BLACK, 0, CENTER_JUSTIFIED);
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
 
@@ -4844,118 +4835,6 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 		UnPauseDialogueQueue( );
 	}
 }
-
-
-/*
-void CreateUpdateBox( void )
-{
-	// create basic box
- CreatePopUpBox(&ghUpdateBox, AssignmentDimensions, MovePosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE ));
-
- // which buffer will box render to
- SetBoxBuffer(ghUpdateBox, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghUpdateBox,guiPOPUPBORDERS);
-
- // background texture
- SetBackGroundSurface(ghUpdateBox, guiPOPUPTEX);
-
- // margin sizes
- SetMargins( ghUpdateBox, 6, 6, 4, 4 );
-
- // space between lines
- SetLineSpace(ghUpdateBox, 2);
-
- // set current box to this one
- SetCurrentBox( ghUpdateBox );
-
- // add strings
- CreateUpdateBoxStrings( );
-
- // set font type
- SetBoxFont(ghUpdateBox, MAP_SCREEN_FONT);
-
- // set highlight color
- SetBoxHighLight(ghUpdateBox, FONT_WHITE);
-
- // unhighlighted color
- SetBoxForeground(ghUpdateBox, FONT_LTGREEN);
-
- // background color
- SetBoxBackground(ghUpdateBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghUpdateBox, FONT_BLACK );
-
- // resize box to text
- ResizeBoxToText( ghUpdateBox );
-
- // create screen mask
- CreateScreenMaskForMoveBox( );
-
- ShowBox( ghUpdateBox );
-}
-
-
-void CreateUpdateBoxStrings( void )
-{
-	INT32 iCounter = 0;
-	CHAR16 sString[ 64 ];
-	INT32 hStringHandle;
-
-	swprintf(sString, L"%ls", pUpdateMercStrings[iReasonForSoldierUpDate]);
-	AddMonoString(&hStringHandle, sString );
-
-	for( iCounter = 0; iCounter < SIZE_OF_UPDATE_BOX; iCounter++ )
-	{
-		// find valid soldier, add name
-		if( pUpdateSoldierBox[ iCounter ] )
-		{
-			swprintf(sString, L"%ls", pUpdateSoldierBox[iCounter]->name);
-			AddMonoString(&hStringHandle, sString );
-		}
-	}
-
-	// add a few blank lines
-	sString[ 0 ] = 0;
-
-	AddMonoString(&hStringHandle, sString );
-	AddMonoString(&hStringHandle, sString );
-	AddMonoString(&hStringHandle, sString );
-	AddMonoString(&hStringHandle, sString );
-}
-
-
-
-void RemoveUpdateBox( void )
-{
-	// remove the box
-	RemoveBox( ghUpdateBox );
-	ghUpdateBox = -1;
-
-	iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
-
-	// remove the screen mask
-	RemoveScreenMaskForMoveBox( );
-
-	// reset mercs that are in progress of being updated
-	ResetSoldierUpdateBox( );
-}
-
-
-
-void DisplayUpdateBox( void )
-{
-	if( fShowUpdateBox )
-	{
-		// show the box
-		ShowBox( ghUpdateBox );
-		PauseTime( TRUE );
-	}
-}
-*/
-
 
 
 void CreateDestroyTheUpdateBox( void )

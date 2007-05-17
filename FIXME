@@ -259,6 +259,7 @@ WillShopKeeperRejectObjectsFromPlayer(): complicated
 WrapString(): Make 1st parameter read-only
 WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
+fButtonsPresent: once TRUE it never changes anymore
 fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
@@ -268,12 +269,14 @@ gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfOverIntTile: static
+gfProgBarActive: once TRUE it never changes anymore
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
 guiCacheSize: const
 guiMemTotal: remove
+guiPOPUPTEX: load probably unnecessary in MapScreen.c
 guiSkiAtmImage: unused/commented out
 gzFilename: wchar_t[] -> char[]?
 pSoldier = pSoldier: strange

@@ -2823,7 +2823,6 @@ UINT32 MapScreenHandle(void)
 			guiSAMICON = AddVideoObjectFromFile("INTERFACE/SAM.sti");
 			CHECKF(guiSAMICON != NO_VOBJECT);
 #endif
-			// CHECKF(AddVideoObjectFromFile("INTERFACE/s_map.sti", &guiMAP));
 			guiMAPCURSORS = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
 			CHECKF(guiMAPCURSORS != NO_VOBJECT);
 
@@ -2835,8 +2834,6 @@ UINT32 MapScreenHandle(void)
 			guiSubLevel3 = AddVideoObjectFromFile("INTERFACE/Mine_3.sti");
 			CHECKF(guiSubLevel3 != NO_VOBJECT);
 #endif
-			//CHECKF(AddVideoObjectFromFile("INTERFACE/addonslcp.sti", &guiCORNERADDONS));
-			//CHECKF(AddVideoObjectFromFile("INTERFACE/mapborder.sti", &guiMAPBORDER));
 
 			guiSleepIcon = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
 			CHECKF(guiSleepIcon != NO_VOBJECT);
@@ -2844,9 +2841,6 @@ UINT32 MapScreenHandle(void)
 			CHECKF(guiCHARINFO != NO_VOBJECT);
 			guiCHARLIST = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
 			CHECKF(guiCHARLIST != NO_VOBJECT);
-
-			//CHECKF(AddVideoObjectFromFile("INTERFACE/mapbordercorner.sti", &guiMAPCORNER));
-			//CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
 
 			guiCHARICONS = AddVideoObjectFromFile("INTERFACE/boxes.sti");
 			CHECKF(guiCHARICONS != NO_VOBJECT);
@@ -5443,11 +5437,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 #endif
 		DeleteVideoObjectFromIndex( guiSleepIcon );
 		DeleteVideoObjectFromIndex(guiMAPCURSORS);
-		//DeleteVideoObjectFromIndex(guiMAPBORDER);
 		DeleteVideoObjectFromIndex(guiCHARLIST);
-		//DeleteVideoObjectFromIndex(guiCORNERADDONS);
-		//DeleteVideoObjectFromIndex(guiMAPCORNER);
-		//DeleteVideoObjectFromIndex(guiPOPUPBORDERS);
 		DeleteVideoObjectFromIndex(guiCHARINFO);
 		DeleteVideoObjectFromIndex(guiCHARICONS);
 		DeleteVideoObjectFromIndex(guiCROSS);
@@ -9513,17 +9503,12 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(guiMAPCURSORS != NO_VOBJECT);
 	guiSAMICON = AddVideoObjectFromFile("INTERFACE/SAM.sti");
 	CHECKF(guiSAMICON != NO_VOBJECT);
-	// CHECKF(AddVideoObjectFromFile("INTERFACE/s_map.sti", &guiMAP));
 	guiSleepIcon = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
 	CHECKF(guiSleepIcon != NO_VOBJECT);
-	//CHECKF(AddVideoObjectFromFile("INTERFACE/addonslcp.sti", &guiCORNERADDONS));
-	//CHECKF(AddVideoObjectFromFile("INTERFACE/mapborder.sti", &guiMAPBORDER));
 	guiCHARINFO = AddVideoObjectFromFile("INTERFACE/charinfo.sti");
 	CHECKF(guiCHARINFO != NO_VOBJECT);
 	guiCHARLIST = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
 	CHECKF(guiCHARLIST != NO_VOBJECT);
-	//CHECKF(AddVideoObjectFromFile("INTERFACE/mapbordercorner.sti", &guiMAPCORNER));
-	// CHECKF(AddVideoObjectFromFile("INTERFACE/popup.sti", &guiPOPUPBORDERS));
 
 	// the sublevels
 	guiSubLevel1 = AddVideoObjectFromFile("INTERFACE/Mine_1.sti");
@@ -9600,11 +9585,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 		DeleteVideoObjectFromIndex( guiMAPCURSORS );
 		DeleteVideoObjectFromIndex( guiSleepIcon );
 
-		//DeleteVideoObjectFromIndex(guiMAPBORDER);
 		DeleteVideoObjectFromIndex(guiCHARLIST);
-		//DeleteVideoObjectFromIndex(guiCORNERADDONS);
-		//DeleteVideoObjectFromIndex(guiMAPCORNER);
-	//	DeleteVideoObjectFromIndex(guiPOPUPBORDERS);
 		DeleteVideoObjectFromIndex(guiCHARINFO);
 		DeleteVideoObjectFromIndex(guiCHARICONS);
 		DeleteVideoObjectFromIndex(guiCROSS);

@@ -129,10 +129,10 @@ INT32 ghAttributeBox = -1;
 INT32 ghRemoveMercAssignBox = -1;
 INT32 ghContractBox = -1;
 INT32 ghMoveBox = -1;
-//INT32 ghUpdateBox = -1;
 
 // the x,y position of assignment pop up in tactical
-INT16 gsAssignmentBoxesX, gsAssignmentBoxesY;
+static INT16 gsAssignmentBoxesX;
+static INT16 gsAssignmentBoxesY;
 
 
 // assignment menu mouse regions
@@ -5634,13 +5634,6 @@ void DetermineWhichAssignmentMenusCanBeShown( void )
 				fCharacterNoLongerValid = TRUE;
 			}
 		}
-/*
-		else if( fShowUpdateBox )
-		{
-			//handle showing of the merc update box
-			HandleShowingOfUpBox( );
-		}
-*/
 		else if( bSelectedAssignChar == -1 )
 		{
 			fCharacterNoLongerValid = TRUE;
@@ -9749,36 +9742,6 @@ static BOOLEAN HandleAssignmentExpansionAndHighLightForTrainingMenu(void)
 
 	return( FALSE );
 }
-
-
-
-/*
-BOOLEAN HandleShowingOfUpBox( void )
-{
-
-	// if the list is being shown, then show it
-	if( fShowUpdateBox == TRUE )
-	{
-		MarkAllBoxesAsAltered( );
-		ShowBox( ghUpdateBox );
-		return( TRUE );
-	}
-	else
-	{
-		if( IsBoxShown( ghUpdateBox ) )
-		{
-			HideBox( ghUpdateBox );
-			fMapPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-			fTeamPanelDirty = TRUE;
-			fMapScreenBottomDirty = TRUE;
-			fCharacterInfoPanelDirty = TRUE;
-		}
-	}
-
-	return( FALSE );
-}
-*/
 
 
 static BOOLEAN HandleShowingOfMovementBox(void)
