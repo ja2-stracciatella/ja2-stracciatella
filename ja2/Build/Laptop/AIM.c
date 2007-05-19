@@ -150,35 +150,35 @@ static UINT32 guiFuneralAdImages;
 static UINT32 guiBobbyRAdImages;
 
 
-UINT8			gubCurrentAdvertisment;
+static UINT8 gubCurrentAdvertisment;
 
 static BOOLEAN gfInitAdArea;
 
 // MemberCard
-MOUSE_REGION    gSelectedMemberCardRegion;
+static MOUSE_REGION gSelectedMemberCardRegion;
 
 
 // Policies
-MOUSE_REGION    gSelectedPoliciesRegion;
+static MOUSE_REGION gSelectedPoliciesRegion;
 
 //History
-MOUSE_REGION    gSelectedHistoryRegion;
+static MOUSE_REGION gSelectedHistoryRegion;
 
 //Links
-MOUSE_REGION    gSelectedLinksRegion;
+static MOUSE_REGION gSelectedLinksRegion;
 
 //Bottom Buttons
-UINT32	guiBottomButtons[ NUM_AIM_SCREENS ];
-INT32		guiBottomButtonImage;
+static UINT32 guiBottomButtons[NUM_AIM_SCREENS];
+static INT32  guiBottomButtonImage;
 
 //Banner Area
-MOUSE_REGION    gSelectedBannerRegion;
+static MOUSE_REGION gSelectedBannerRegion;
 
 //Aim logo click
-MOUSE_REGION    gSelectedAimLogo;
+static MOUSE_REGION gSelectedAimLogo;
 
 
-BOOLEAN		fFirstTimeIn=TRUE;
+static BOOLEAN fFirstTimeIn = TRUE;
 
 
 static void LaptopInitAim(void);
