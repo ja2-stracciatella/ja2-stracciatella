@@ -20,7 +20,7 @@
 
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
-UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
+static const UINT8 gCurrentAimPage[NUM_AIM_SCREENS] =
 {
 	LAPTOP_MODE_AIM,
 	LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES,
@@ -94,9 +94,6 @@ UINT8			gCurrentAimPage[ NUM_AIM_SCREENS ] =
 //#define			AIM_WARNING_TIME				100
 #define			AIM_WARNING_TIME				10000
 
-//#define			AIM_ADVERTISING_DELAY		50
-#define			AIM_ADVERTISING_DELAY		500
-
 //#define			AIM_FLOWER_AD_DELAY					15
 #define			AIM_FLOWER_AD_DELAY					150
 #define			AIM_FLOWER_NUM_SUBIMAGES		16
@@ -139,24 +136,23 @@ enum
 
 
 // Aim Screen Handle
-UINT32    guiAimSymbol;
-UINT32		guiRustBackGround;
-UINT32		guiMemberCard;
-UINT32		guiPolicies;
-UINT32		guiHistory;
-UINT32		guiLinks;
-UINT32		guiWarning;
-UINT32		guiFlowerAdvertisement;
-UINT32		guiAdForAdsImages;
-UINT32		guiInsuranceAdImages;
-UINT32		guiFuneralAdImages;
-UINT32		guiBobbyRAdImages;
+static UINT32 guiAimSymbol;
+static UINT32 guiRustBackGround;
+static UINT32 guiMemberCard;
+static UINT32 guiPolicies;
+static UINT32 guiHistory;
+static UINT32 guiLinks;
+static UINT32 guiWarning;
+static UINT32 guiFlowerAdvertisement;
+static UINT32 guiAdForAdsImages;
+static UINT32 guiInsuranceAdImages;
+static UINT32 guiFuneralAdImages;
+static UINT32 guiBobbyRAdImages;
 
 
-UINT32		gubWarningTimer;
 UINT8			gubCurrentAdvertisment;
 
-BOOLEAN		gfInitAdArea;
+static BOOLEAN gfInitAdArea;
 
 // MemberCard
 MOUSE_REGION    gSelectedMemberCardRegion;
@@ -205,7 +201,6 @@ BOOLEAN EnterAIM()
 {
 	SGPFILENAME ImageFile;
 
-	gubWarningTimer = 0;
 	gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
 	LaptopInitAim();
 
