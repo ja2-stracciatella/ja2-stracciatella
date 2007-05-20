@@ -1069,19 +1069,19 @@ static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel
 }
 
 
-static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex, BOOLEAN fRemoveStructDBInfo);
+static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex);
 
 
 BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex )
 {
-	return(RemoveStructFromTailCommon( iMapIndex, FALSE ));
+	return RemoveStructFromTailCommon(iMapIndex);
 }
 
 
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex);
 
 
-static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex, BOOLEAN fRemoveStructDBInfo)
+static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex)
 {
 	LEVELNODE	*pStruct		  = NULL;
 	LEVELNODE	*pPrevStruct	= NULL;
@@ -1101,22 +1101,6 @@ static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex, BOOLEAN fRemoveStruc
 			}
 			else
 				gpWorldLevelData[ iMapIndex ].pStructHead = pPrevStruct;
-
-			if ( fRemoveStructDBInfo )
-			{
-				//Check for special flag to stop burn-through on same-tile structs...
-				if ( pStruct->pStructureData != NULL )
-				{
-					// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-					//if ( !( pStruct->pStructureData->fFlags & STRUCTURE_WALLSTUFF ) && pStruct->pStructureData->pDBStructureRef->pDBStructure->ubNumberOfTiles == 1 )
-					//{
-						// UNSet flag...
-					//	gpWorldLevelData[ iMapIndex ].ubExtFlags[0] &= ( ~MAPELEMENT_EXT_NOBURN_STRUCT );
-					//}
-				}
-
-				DeleteStructureFromWorld( pStruct->pStructureData );
-			}
 
 			usIndex = pStruct->usIndex;
 
