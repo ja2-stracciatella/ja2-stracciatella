@@ -1069,19 +1069,10 @@ static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel
 }
 
 
-static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex);
-
-
-BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex )
-{
-	return RemoveStructFromTailCommon(iMapIndex);
-}
-
-
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex);
 
 
-static BOOLEAN RemoveStructFromTailCommon(UINT32 iMapIndex)
+BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 {
 	LEVELNODE	*pStruct		  = NULL;
 	LEVELNODE	*pPrevStruct	= NULL;
