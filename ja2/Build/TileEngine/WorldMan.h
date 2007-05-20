@@ -105,7 +105,6 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 
-BOOLEAN IsLowerLevel( INT16 sGridNo );
 BOOLEAN IsHeigherLevel( INT16 sGridNo );
 BOOLEAN IsRoofVisible( INT16 sMapPos );
 BOOLEAN IsRoofVisible2( INT16 sMapPos );
