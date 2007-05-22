@@ -857,6 +857,8 @@ BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 
 			UINT16 usIndex = pStruct->usIndex;
 
+			// XXX TODO000A It rather seems like a memory leak not to DeleteStructureFromWorld() here. See InternalRemoveStruct()
+
 			//If we have to, make sure to remove this node when we reload the map from a saved game
 			RemoveStructFromMapTempFile(iMapIndex, usIndex);
 
@@ -881,6 +883,37 @@ BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 }
 
 
+static BOOLEAN InternalRemoveStruct(UINT32 MapIndex, LEVELNODE* Pred, LEVELNODE* Removee, UINT16 Index)
+{
+	if (Pred == NULL)
+	{
+		gpWorldLevelData[MapIndex].pStructHead = Removee->pNext;
+	}
+	else
+	{
+		Pred->pNext = Removee->pNext;
+	}
+
+	// Delete memory assosiated with item
+	DeleteStructureFromWorld(Removee->pStructureData);
+
+	//If we have to, make sure to remove this node when we reload the map from a saved game
+	RemoveStructFromMapTempFile(MapIndex, Index);
+
+	if (Index < NUMBEROFTILES)
+	{
+		// Check flags for tiledat and set a shadow if we have a buddy
+		if (!GridNoIndoors(MapIndex) && gTileDatabase[Index].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[Index].sBuddyNum != -1)
+		{
+			RemoveShadow(MapIndex, gTileDatabase[Index].sBuddyNum);
+		}
+	}
+	MemFree(Removee);
+
+	return TRUE;
+}
+
+
 BOOLEAN RemoveStruct(UINT32 iMapIndex, UINT16 usIndex)
 {
 	LEVELNODE* pOldStruct = NULL;
@@ -890,35 +923,7 @@ BOOLEAN RemoveStruct(UINT32 iMapIndex, UINT16 usIndex)
 	{
 		if (pStruct->usIndex == usIndex)
 		{
-			// OK, set links
-			// Check for head or tail
-			if (pOldStruct == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pStructHead = pStruct->pNext;
-			}
-			else
-			{
-				pOldStruct->pNext = pStruct->pNext;
-			}
-
-			// Delete memory assosiated with item
-			DeleteStructureFromWorld(pStruct->pStructureData);
-
-			//If we have to, make sure to remove this node when we reload the map from a saved game
-			RemoveStructFromMapTempFile(iMapIndex, usIndex);
-
-			if (usIndex < NUMBEROFTILES)
-			{
-				// Check flags for tiledat and set a shadow if we have a buddy
-				if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
-				{
-					RemoveShadow(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
-				}
-			}
-			MemFree(pStruct);
-
-			return TRUE;
+			return InternalRemoveStruct(iMapIndex, pOldStruct, pStruct, usIndex);
 		}
 
 		pOldStruct = pStruct;
@@ -930,43 +935,14 @@ BOOLEAN RemoveStruct(UINT32 iMapIndex, UINT16 usIndex)
 
 BOOLEAN RemoveStructFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 {
-	LEVELNODE* pOldStruct  = NULL;
-	UINT16 usIndex = pNode->usIndex;
+	LEVELNODE* pOldStruct = NULL;
 
 	// Look through all structs and remove index if found
 	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct != NULL; pStruct = pStruct->pNext)
 	{
 		if (pStruct == pNode)
 		{
-			// OK, set links
-			// Check for head or tail
-			if (pOldStruct == NULL)
-			{
-				// It's the head
-				gpWorldLevelData[iMapIndex].pStructHead = pStruct->pNext;
-			}
-			else
-			{
-				pOldStruct->pNext = pStruct->pNext;
-			}
-
-			// Delete memory assosiated with item
-			DeleteStructureFromWorld(pStruct->pStructureData);
-
-			//If we have to, make sure to remove this node when we reload the map from a saved game
-			RemoveStructFromMapTempFile(iMapIndex, usIndex);
-
-			if (pNode->usIndex < NUMBEROFTILES)
-			{
-				// Check flags for tiledat and set a shadow if we have a buddy
-				if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
-				{
-					RemoveShadow(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
-				}
-			}
-			MemFree(pStruct);
-
-			return TRUE;
+			return InternalRemoveStruct(iMapIndex, pOldStruct, pStruct, pNode->usIndex);
 		}
 
 		pOldStruct = pStruct;
