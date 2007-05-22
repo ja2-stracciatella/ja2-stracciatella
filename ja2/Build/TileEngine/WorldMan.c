@@ -2365,8 +2365,7 @@ void WorldHideTrees(void)
 		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			GetTileFlags(pNode->usIndex, &fTileFlags);
-			if (fTileFlags & FULL3D_TILE &&
-					!(pNode->uiFlags & LEVELNODE_REVEALTREES))
+			if (fTileFlags & FULL3D_TILE)
 			{
 				pNode->uiFlags |= LEVELNODE_REVEALTREES;
 			}
@@ -2386,8 +2385,7 @@ void WorldShowTrees(void)
 		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			GetTileFlags(pNode->usIndex, &fTileFlags);
-			if (fTileFlags & FULL3D_TILE &&
-					pNode->uiFlags & LEVELNODE_REVEALTREES)
+			if (fTileFlags & FULL3D_TILE)
 			{
 				pNode->uiFlags &= ~LEVELNODE_REVEALTREES;
 			}

@@ -10,6 +10,7 @@ AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBuffe
 BLOODTIME: unused
 BlitMineText(): code duplication
 BlitMineText(): unnecessary wcscpy()
+Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BltToMouseCursor(): unused
 BulletHitMerc: pointless EV_S_WEAPONHIT
@@ -130,7 +131,6 @@ IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
 L"/": pointless copy
-LEVELNODE_REVEALTREES: unnecessary test before (re)set
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
