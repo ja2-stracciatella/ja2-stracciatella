@@ -786,7 +786,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 			AddToUndoList( iMapIndex );
 
 	    GetTileIndexFromTypeSubIndex( fNewType, REQUIRES_SMOOTHING_TILE, &NewTile );
-			SetLandIndex( iMapIndex, NewTile, fNewType, FALSE );
+			SetLandIndex(iMapIndex, NewTile, fNewType);
 
 			// Smooth item then adding here
 			SmoothTerrain( iMapIndex, fNewType, &NewTile, FALSE );
@@ -794,7 +794,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		  if ( NewTile != NO_TILE )
 		  {
 				// Change tile
-				SetLandIndex( iMapIndex, NewTile, fNewType, FALSE );
+				SetLandIndex(iMapIndex, NewTile, fNewType);
 		  }
 	 }
 }
@@ -879,7 +879,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	// Set land index
 	AddLandToHead( iMapIndex, usNewIndex );
 
-	SetLandIndex( iMapIndex, usIndex, uiNewType, FALSE );
+	SetLandIndex(iMapIndex, usIndex, uiNewType);
 
 	// ATE: Set this land peice to require smoothing again!
   SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
@@ -989,7 +989,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 						// Force middle one to NOT smooth, and set to random 'full' tile
 						usTemp = ( rand( ) % 10 ) + 1;
 						GetTileIndexFromTypeSubIndex( uiNewType, usTemp, &NewTile );
-						SetLandIndex( iNewIndex, NewTile, uiNewType, FALSE );
+						SetLandIndex(iNewIndex, NewTile, uiNewType);
 					}
 					else if ( AnyHeigherLand( iNewIndex, uiNewType, &ubLastHighLevel ) )
 					{
@@ -998,7 +998,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 						// Force middle one to NOT smooth, and set to random 'full' tile
 						usTemp = ( rand( ) % 10 ) + 1;
 						GetTileIndexFromTypeSubIndex( uiNewType, usTemp, &NewTile );
-						SetLandIndex( iNewIndex, NewTile, uiNewType, FALSE );
+						SetLandIndex(iNewIndex, NewTile, uiNewType);
 					}
 					else
 					{
@@ -1006,7 +1006,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 
 						// Set tile to 'smooth target' tile
 						GetTileIndexFromTypeSubIndex( uiNewType, REQUIRES_SMOOTHING_TILE, &NewTile );
-						SetLandIndex( iNewIndex, NewTile, uiNewType, FALSE );
+						SetLandIndex(iNewIndex, NewTile, uiNewType);
 
 						// If we are top-most, add to smooth list
 						sNumSmoothTiles++;
@@ -1059,7 +1059,7 @@ static void PasteTextureEx(INT16 sGridNo, UINT16 usType)
 		 // Fill with just first tile, smoothworld() will pick proper piece later
 		 GetTileIndexFromTypeSubIndex( usType, REQUIRES_SMOOTHING_TILE, &NewTile );
 
-		 SetLandIndex( sGridNo, NewTile, usType, FALSE );
+		 SetLandIndex(sGridNo, NewTile, usType);
 	}
 
 }

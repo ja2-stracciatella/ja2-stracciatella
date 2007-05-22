@@ -248,16 +248,11 @@ BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 
 }
 
-BOOLEAN SetLandIndex( INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, BOOLEAN fDelete )
+
+BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)
 {
 	UINT16	usTempIndex;
 	UINT8		ubLastHighLevel=0;
-
-	if ( fDelete )
-	{
-		RemoveLand( iMapIndex, usIndex );
-		return( TRUE );
-	}
 
 	if ( AnyHeigherLand( iMapIndex, uiNewType, &ubLastHighLevel ) )
 	{
@@ -340,7 +335,7 @@ static BOOLEAN SetLandIndexWithRadius(INT32 iMapIndex, UINT16 usIndex, UINT32 ui
 												 ((uiNewType < FIRSTFLOOR || uiNewType > LASTFLOOR) &&
 						!TypeRangeExistsInLandLayer(iNewIndex, FIRSTFLOOR, LASTFLOOR))))
 				{
-					SetLandIndex( iNewIndex, usIndex, uiNewType, FALSE );
+					SetLandIndex(iNewIndex, usIndex, uiNewType);
 				}
 			}
 		}

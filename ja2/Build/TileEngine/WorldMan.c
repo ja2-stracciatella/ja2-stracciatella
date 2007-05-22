@@ -610,8 +610,7 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 
 		if (gTileTypeLogicalHeight[fTileType] > ubSrcLogHeight)
 		{
-			// Remove Item
-			SetLandIndex(iMapIndex, pOldLand->usIndex, fTileType, TRUE);
+			RemoveLand(iMapIndex, pOldLand->usIndex);
 
 			++*pubNumHigherTypes;
 			*puiHigherTypes = MemRealloc(*puiHigherTypes, *pubNumHigherTypes * sizeof(UINT32));

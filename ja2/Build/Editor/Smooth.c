@@ -427,7 +427,7 @@ static void SmoothTerrainWorld(UINT32 uiCheckType)
 			  if ( NewTile != NO_TILE )
 			  {
 					 // Change tile
-					 SetLandIndex( cnt, NewTile, uiCheckType, FALSE );
+					SetLandIndex(cnt, NewTile, uiCheckType);
 			  }
 			}
 	 }
@@ -452,7 +452,7 @@ void SmoothAllTerrainWorld( void )
 				if ( NewTile != NO_TILE )
 				{
 					 // Change tile
-					 SetLandIndex( cnt, NewTile, uiCheckType, FALSE );
+					SetLandIndex(cnt, NewTile, uiCheckType);
 				}
 			}
 		}
@@ -493,7 +493,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 				  {
 						 // Change tile
 						 AddToUndoList( iNewIndex );
-						 SetLandIndex( iNewIndex, NewTile, uiCheckType, FALSE );
+						SetLandIndex(iNewIndex, NewTile, uiCheckType);
 					}
 				}
 			}
@@ -532,7 +532,7 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 						if ( NewTile != NO_TILE )
 						{
 							 // Change tile
-							 SetLandIndex( iNewIndex, NewTile, cnt3, FALSE );
+							SetLandIndex(iNewIndex, NewTile, cnt3);
 						}
 					}
 				}
