@@ -349,7 +349,7 @@ BOOLEAN AddLandToHead(UINT32 iMapIndex, UINT16 usIndex)
 
 
 static BOOLEAN AdjustForFullTile(UINT32 iMapIndex);
-static BOOLEAN RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex);
+static void RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex);
 
 
 BOOLEAN RemoveLand(UINT32 iMapIndex, UINT16 usIndex)
@@ -360,7 +360,7 @@ BOOLEAN RemoveLand(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-static BOOLEAN RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex)
+static void RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex)
 {
 	// Look through all Lands and remove index if found
 	for (LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead; pLand != NULL; pLand = pLand->pNext)
@@ -388,9 +388,6 @@ static BOOLEAN RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex)
 			break;
 		}
 	}
-
-	// Could not find it
-	return FALSE;
 }
 
 
