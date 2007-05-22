@@ -113,8 +113,8 @@ BOOLEAN IsRoofVisible2( INT16 sMapPos );
 LEVELNODE * FindLevelNodeBasedOnStructure( INT16 sGridNo, STRUCTURE * pStructure );
 LEVELNODE * FindShadow( INT16 sGridNo, UINT16 usStructIndex );
 
-void WorldHideTrees( );
-void WorldShowTrees( );
+void WorldHideTrees(void);
+void WorldShowTrees(void);
 
 
 //this is found in editscreen.c
@@ -122,6 +122,6 @@ void WorldShowTrees( );
 //The best thing to do is toast it here, and include editscreen.h in worldman.c.
 extern UINT32	gCurrentBackground;
 
-void		SetTreeTopStateForMap();
+void SetTreeTopStateForMap(void);
 
 #endif
