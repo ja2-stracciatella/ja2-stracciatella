@@ -131,11 +131,7 @@ typedef struct
 // Globals used
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
 UINT16					gTileDatabaseSize;
-extern UINT8						gFullBaseTileValues[];
-UINT16					gNumTilesPerType[ NUMBEROFTILETYPES ];
 UINT16					gTileTypeStartIndex[ NUMBEROFTILETYPES ];
-const char *gTileSurfaceName[NUMBEROFTILETYPES];
-UINT8						gTileTypeLogicalHeight[ NUMBEROFTILETYPES ];
 
 UINT16					gusNumAnimatedTiles;
 UINT16					gusAnimatedTiles[ MAX_ANIMATED_TILES ];

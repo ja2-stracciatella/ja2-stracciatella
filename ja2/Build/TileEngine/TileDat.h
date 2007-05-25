@@ -3153,10 +3153,11 @@ enum TileTypeDefines
 #define     WALL_AFRAME4						34
 
 
-extern INT16 gOpenDoorList[20];
-extern INT16 gOpenDoorShadowList[20];
-extern INT16 gClosedDoorList[20];
-extern INT16 gClosedDoorShadowList[20];
+extern const INT16 gOpenDoorList[];
+extern const INT16 gClosedDoorList[];
 
+extern const char* const gTileSurfaceName[NUMBEROFTILETYPES];
+extern const UINT16 gNumTilesPerType[NUMBEROFTILETYPES];
+extern UINT8 gTileTypeLogicalHeight[NUMBEROFTILETYPES];
 
 #endif
