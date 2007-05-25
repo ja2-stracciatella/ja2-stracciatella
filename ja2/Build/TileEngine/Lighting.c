@@ -147,7 +147,7 @@ UINT16 gusShadeLevels[16][3] =
 */
 
 // JA2 Gold:
-UINT16 gusShadeLevels[16][3] =
+static UINT16 gusShadeLevels[16][3] =
 {
 	500, 500, 500,
 	450, 450, 450,	//bright
@@ -3290,40 +3290,28 @@ static BOOLEAN LightSpriteDirty(INT32 iSprite)
 }
 
 
+void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256])
+{
+	UINT16* sl0 = gusShadeLevels[0];
+	Shades[0] = Create16BPPPaletteShaded(ShadePal, sl0[0], sl0[1], sl0[2], TRUE);
+	for (UINT i = 1; i < 16; i++)
+	{
+		const UINT16* sl = gusShadeLevels[i];
+		Shades[i] = Create16BPPPaletteShaded(ShadePal, sl[0], sl[1], sl[2], FALSE);
+	}
+}
+
+
 static BOOLEAN CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
 {
-UINT32 uiCount;
-
-	pObj->pShades[uiBase]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[0][0],
-																															gusShadeLevels[0][1],
-																															gusShadeLevels[0][2], TRUE);
-
-	for(uiCount=1; uiCount < 16; uiCount++)
-	{
-		pObj->pShades[uiBase+uiCount]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[uiCount][0],
-																																				gusShadeLevels[uiCount][1],
-																																				gusShadeLevels[uiCount][2], FALSE);
-	}
-
+	CreateShadedPalettes(pObj->pShades + uiBase, pShadePal);
 	return(TRUE);
 }
 
 
 static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
 {
-	UINT32 uiCount;
-
-	pSoldier->pShades[uiBase]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[0][0],
-																															gusShadeLevels[0][1],
-																															gusShadeLevels[0][2], TRUE);
-
-	for(uiCount=1; uiCount < 16; uiCount++)
-	{
-		pSoldier->pShades[uiBase+uiCount]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[uiCount][0],
-																																				gusShadeLevels[uiCount][1],
-																																				gusShadeLevels[uiCount][2], FALSE);
-	}
-
+	CreateShadedPalettes(pSoldier->pShades + uiBase, pShadePal);
 	return(TRUE);
 }
 

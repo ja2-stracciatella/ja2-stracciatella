@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "Lighting.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "WCheck.h"
@@ -51,10 +52,6 @@
 #define   DELAY_UNTIL_DONE_ROTTING  ( 3 * NUM_SEC_IN_DAY / 60 )
 
 #define		MAX_NUM_CROWS					6
-
-// From lighting
-extern		SGPPaletteEntry	gpLightColors[3];
-extern		UINT16 gusShadeLevels[16][3];
 
 
 static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorpse);
@@ -1325,9 +1322,6 @@ void RebuildAllCorpseShadeTables( )
 }
 
 
-static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, const SGPPaletteEntry* pShadePal);
-
-
 static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 {
 	SGPPaletteEntry LightPal[256];
@@ -1342,32 +1336,13 @@ static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 		LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pCorpse->p8BPPPalette[uiCount].peBlue+(UINT16)gpLightColors[0].peBlue, 255));
 	}
 	// build the shade tables
-	CreateCorpseShadedPalette( pCorpse, 0, LightPal );
+	CreateShadedPalettes(pCorpse->pShades, LightPal);
 
 	// build neutral palette as well!
 	// Set current shade table to neutral color
 
 	return(TRUE);
 
-}
-
-
-static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
-{
-	UINT32 uiCount;
-
-	pCorpse->pShades[uiBase] = Create16BPPPaletteShaded( pShadePal, gusShadeLevels[0][0],
-																															gusShadeLevels[0][1],
-																															gusShadeLevels[0][2], TRUE);
-
-	for(uiCount=1; uiCount < 16; uiCount++)
-	{
-		pCorpse->pShades[uiBase+uiCount]=Create16BPPPaletteShaded( pShadePal, gusShadeLevels[uiCount][0],
-																																				gusShadeLevels[uiCount][1],
-																																				gusShadeLevels[uiCount][2], FALSE);
-	}
-
-	return(TRUE);
 }
 
 
