@@ -316,14 +316,11 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 	// If no Tileset filenames are given, return error
 	if (ppTileSurfaceFilenames == NULL)
 	{
-		return( FALSE );
-	}
-	else
-	{
-	  for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
-			strcpy( TileSurfaceFilenames[uiLoop], ppTileSurfaceFilenames[uiLoop] );//(char *)(ppTileSurfaceFilenames + (65 * uiLoop)) );
+		return FALSE;
 	}
 
+	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+		strcpy(TileSurfaceFilenames[uiLoop], ppTileSurfaceFilenames[uiLoop]);
 
 	//uiFillColor = Get16BPPColor(FROMRGB(223, 223, 223));
 	//StartFrameBufferRender( );
@@ -345,16 +342,21 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		//InvalidateRegion( 0, 399, 640, 420 );
 		//EndFrameBufferRender( );
 
-		// The cost of having to do this check each time through the loop,
-		// thus about 20 times, seems better than having to maintain two
-		// almost completely identical functions
-		if (ppTileSurfaceFilenames == NULL)
+		GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
+		if (*cTemp != '\0')
 		{
-			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
-			if (*cTemp != '\0')
+			strcpy( TileSurfaceFilenames[uiLoop], cTemp );
+			if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
 			{
-				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
-				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
+				DestroyTileSurfaces(  );
+				return( FALSE );
+			}
+		}
+		else
+		{
+			if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
+			{
+				if (AddTileSurface( ppTileSurfaceFilenames[uiLoop], uiLoop, ubTilesetID, FALSE ) == FALSE)
 				{
 					DestroyTileSurfaces( );
 					return( FALSE );
@@ -362,51 +364,16 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 			}
 			else
 			{
-				// Use default
-				if (AddTileSurface( TileSurfaceFilenames[uiLoop], uiLoop, ubTilesetID, FALSE ) == FALSE)
-				{
-					DestroyTileSurfaces(  );
-					return( FALSE );
-				}
+				// USE FIRST TILESET VALUE!
 
-			}
-
-		}
-		else
-		{
-			GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
-			if (*cTemp != '\0')
-			{
-				strcpy( TileSurfaceFilenames[uiLoop], cTemp );
-				if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
+				// ATE: If here, don't load default surface if already loaded...
+				if ( !gbDefaultSurfaceUsed[ uiLoop ] )
 				{
-					DestroyTileSurfaces(  );
-					return( FALSE );
-				}
-			}
-			else
-			{
-				if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
-				{
-					if (AddTileSurface( ppTileSurfaceFilenames[uiLoop], uiLoop, ubTilesetID, FALSE ) == FALSE)
+					strcpy( TileSurfaceFilenames[uiLoop], gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop] );//(char *)(ppTileSurfaceFilenames + (65 * uiLoop)) );
+					if (AddTileSurface( gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop], uiLoop, GENERIC_1, FALSE ) == FALSE)
 					{
-						DestroyTileSurfaces( );
+						DestroyTileSurfaces(  );
 						return( FALSE );
-					}
-				}
-				else
-				{
-					// USE FIRST TILESET VALUE!
-
-					// ATE: If here, don't load default surface if already loaded...
-					if ( !gbDefaultSurfaceUsed[ uiLoop ] )
-					{
-						strcpy( TileSurfaceFilenames[uiLoop], gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop] );//(char *)(ppTileSurfaceFilenames + (65 * uiLoop)) );
-						if (AddTileSurface( gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop], uiLoop, GENERIC_1, FALSE ) == FALSE)
-						{
-							DestroyTileSurfaces(  );
-							return( FALSE );
-						}
 					}
 				}
 			}
