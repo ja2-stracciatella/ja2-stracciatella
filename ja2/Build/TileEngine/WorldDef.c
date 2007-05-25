@@ -289,7 +289,7 @@ void DeinitializeWorld( )
 }
 
 
-static BOOLEAN AddTileSurface(const char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot);
+static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID);
 
 
 static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID)
@@ -342,37 +342,41 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		//InvalidateRegion( 0, 399, 640, 420 );
 		//EndFrameBufferRender( );
 
+		char AdjustedFilename[128];
 		const char* Filename;
 		UINT8 TilesetToAdd;
-		BOOLEAN GetFromRoot;
 		GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
 		if (*cTemp != '\0')
 		{
 			strcpy(TileSurfaceFilenames[uiLoop], cTemp);
 			Filename = cTemp;
 			TilesetToAdd = ubTilesetID;
-			GetFromRoot = TRUE;
-		}
-		else if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
-		{
-			Filename = ppTileSurfaceFilenames[uiLoop];
-			TilesetToAdd = ubTilesetID;
-			GetFromRoot = FALSE;
 		}
 		else
 		{
-			// USE FIRST TILESET VALUE!
+			if (ppTileSurfaceFilenames[uiLoop][0] != '\0')
+			{
+				Filename = ppTileSurfaceFilenames[uiLoop];
+				TilesetToAdd = ubTilesetID;
+			}
+			else
+			{
+				// USE FIRST TILESET VALUE!
 
-			// ATE: If here, don't load default surface if already loaded...
-			if (gbDefaultSurfaceUsed[uiLoop]) continue;
+				// ATE: If here, don't load default surface if already loaded...
+				if (gbDefaultSurfaceUsed[uiLoop]) continue;
 
-			strcpy(TileSurfaceFilenames[uiLoop], gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
-			Filename = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
-			TilesetToAdd = GENERIC_1;
-			GetFromRoot = FALSE;
+				strcpy(TileSurfaceFilenames[uiLoop], gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
+				Filename = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
+				TilesetToAdd = GENERIC_1;
+			}
+
+			// Adjust for tileset position
+			sprintf(AdjustedFilename, "TILESETS/%d/%s", TilesetToAdd, Filename);
+			Filename = AdjustedFilename;
 		}
 
-		if (!AddTileSurface(Filename, uiLoop, TilesetToAdd, GetFromRoot))
+		if (!AddTileSurface(Filename, uiLoop, TilesetToAdd))
 		{
 			DestroyTileSurfaces();
 			return FALSE;
@@ -383,11 +387,10 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 }
 
 
-static BOOLEAN AddTileSurface(const char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot)
+static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID)
 {
 	// Add tile surface
 	PTILE_IMAGERY  TileSurf;
-	CHAR8	cAdjustedFile[ 128 ];
 
 	// Delete the surface first!
 	if ( gTileSurfaceArray[ ubType ] != NULL )
@@ -396,24 +399,14 @@ static BOOLEAN AddTileSurface(const char* cFilename, UINT32 ubType, UINT8 ubTile
 		gTileSurfaceArray[ ubType ] = NULL;
 	}
 
-	if ( !fGetFromRoot )
-	{
-		// Adjust for tileset position
-		sprintf(cAdjustedFile, "TILESETS/%d/%s", ubTilesetID, cFilename);
-	}
-	else
-	{
-		strcpy(cAdjustedFile, cFilename);
-	}
-
-	TileSurf = LoadTileSurface( cAdjustedFile );
+	TileSurf = LoadTileSurface(Filename);
 
 	if ( TileSurf == NULL )
 		return( FALSE );
 
 	TileSurf->fType							= ubType;
 
-	SetRaisedObjectFlag( cAdjustedFile, TileSurf );
+	SetRaisedObjectFlag(Filename, TileSurf);
 
 	gTileSurfaceArray[ ubType ] = TileSurf;
 
