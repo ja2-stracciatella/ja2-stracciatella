@@ -114,7 +114,6 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{ //we have found an existing exitgrid in this node, so replace it with the new information.
 			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
-			//SmoothExitGridRadius( (UINT16)iMapIndex, 0 );
 			return;
 		}
 		pShadow = pShadow->pNext;
