@@ -221,7 +221,7 @@ void EnterTacticalScreen( )
 			SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );
 		}
 		// ATE: If the current guy is sleeping, change....
-		if (gusSelectedSoldier != NO_SOLDIER && MercPtrs[gusSelectedSoldier]->fMercAsleep) // XXX TODO000B
+		if (gusSelectedSoldier != NO_SOLDIER && MercPtrs[gusSelectedSoldier]->fMercAsleep)
 		{
 			SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );
 		}

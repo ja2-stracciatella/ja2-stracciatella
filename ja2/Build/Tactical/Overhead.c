@@ -5181,13 +5181,8 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 
 	if (ubStartingTeam == gbPlayerNum)
 	{
-		if (gusSelectedSoldier == NO_SOLDIER) /* XXX HACK0005: Set selected merc to 0 if NO_SOLDIER is selected */
-		{
-			printf("!!!> HACK0005\n");
-			gusSelectedSoldier = 0;
-		}
 		// OK, make sure we have a selected guy
-		if ( MercPtrs[ gusSelectedSoldier ]->bOppCnt == 0 )
+		if (gusSelectedSoldier == NO_SOLDIER || MercPtrs[gusSelectedSoldier]->bOppCnt == 0)
 		{
 			// OK, look through and find one....
 			for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++ )

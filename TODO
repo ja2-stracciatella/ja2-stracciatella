@@ -12,8 +12,6 @@ low prio
 - TODO0000 remove RestrictMouseCursor() et al.
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0002 get rid of the directory mumbo jumbo
-- HACK0005 Set gusSelectedSoldier in EnterCombat() to 0 if it is NO_SOLDIER
-  (happens when entering a sector and being immediatly in combat)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
   distribution, which would be a rather complex task with pregenerated randoms
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
@@ -23,4 +21,3 @@ low prio
 - TODO0008 The random call here seems to be off-by-one. If it returns its maximum value then no assignment to iAttitude happens, because the next loop tries to find the n+1th peak of n peaks.
 - TODO0009 Possible endless loop
 - TODO000A Memory leak?
-- TODO000B Investigate if != NO_SOLDIER is necessary or why the original build does not die here (maybe luck)
