@@ -158,7 +158,7 @@ BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer );
 // UTILITY FUNCTIONS
 
 // Used to create a 16BPP Palette from an 8 bit palette, found in himage.c
-UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono);
+UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono);
 UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette);
 UINT16 Get16BPPColor( UINT32 RGBValue );
 UINT32 GetRGBColor( UINT16 Value16BPP );

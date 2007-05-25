@@ -692,7 +692,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 	4) For gamma correction, pass in weighted values for each color.
 
 **********************************************************************************************/
-UINT16 *Create16BPPPaletteShaded( SGPPaletteEntry *pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono)
+UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;

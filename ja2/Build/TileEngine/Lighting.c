@@ -3290,7 +3290,7 @@ static BOOLEAN LightSpriteDirty(INT32 iSprite)
 }
 
 
-static BOOLEAN CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, SGPPaletteEntry* pShadePal)
+static BOOLEAN CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
 {
 UINT32 uiCount;
 
@@ -3309,7 +3309,7 @@ UINT32 uiCount;
 }
 
 
-static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, SGPPaletteEntry* pShadePal)
+static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
 {
 	UINT32 uiCount;
 

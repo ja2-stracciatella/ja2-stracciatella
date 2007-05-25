@@ -1325,7 +1325,7 @@ void RebuildAllCorpseShadeTables( )
 }
 
 
-static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, SGPPaletteEntry* pShadePal);
+static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, const SGPPaletteEntry* pShadePal);
 
 
 static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
@@ -1352,7 +1352,7 @@ static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 }
 
 
-static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, SGPPaletteEntry* pShadePal)
+static BOOLEAN CreateCorpseShadedPalette(ROTTING_CORPSE* pCorpse, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
 {
 	UINT32 uiCount;
 
