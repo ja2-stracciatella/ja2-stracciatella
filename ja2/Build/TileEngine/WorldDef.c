@@ -319,9 +319,6 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		return FALSE;
 	}
 
-	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
-		strcpy(TileSurfaceFilenames[uiLoop], ppTileSurfaceFilenames[uiLoop]);
-
 	//uiFillColor = Get16BPPColor(FROMRGB(223, 223, 223));
 	//StartFrameBufferRender( );
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 20, 399, 622, 420, uiFillColor );
@@ -366,10 +363,10 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 				// ATE: If here, don't load default surface if already loaded...
 				if (gbDefaultSurfaceUsed[uiLoop]) continue;
 
-				strcpy(TileSurfaceFilenames[uiLoop], gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
 				Filename = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
 				TilesetToAdd = GENERIC_1;
 			}
+			strcpy(TileSurfaceFilenames[uiLoop], Filename);
 
 			// Adjust for tileset position
 			sprintf(AdjustedFilename, "TILESETS/%d/%s", TilesetToAdd, Filename);
