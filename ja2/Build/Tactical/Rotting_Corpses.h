@@ -143,8 +143,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier );
 
-void RebuildAllCorpseShadeTables( );
-
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
 
 

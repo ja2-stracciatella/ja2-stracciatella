@@ -1295,33 +1295,6 @@ static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 }
 
 
-void RebuildAllCorpseShadeTables( )
-{
-	INT32                    cnt;
-	ROTTING_CORPSE					 *pCorpse;
-
-	// Loop through all corpses....
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
-	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
-
-		// If this cump is already visible, continue
-		if ( pCorpse->def.bVisible == 1 )
-		{
-			continue;
-		}
-
-		if ( !pCorpse->fActivated )
-		{
-			continue;
-		}
-
-		// Rebuild shades....
-
-	}
-}
-
-
 static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 {
 	SGPPaletteEntry LightPal[256];

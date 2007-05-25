@@ -2964,8 +2964,6 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 	// ( THIS FUNCTION WILL ERASE THEM IF THEY EXIST )
 	RebuildAllSoldierShadeTables( );
 
-	RebuildAllCorpseShadeTables( );
-
 	SetRenderFlags(RENDER_FLAG_FULL);
 
 	return(TRUE);
