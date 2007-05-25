@@ -289,7 +289,7 @@ void DeinitializeWorld( )
 }
 
 
-static BOOLEAN AddTileSurface(char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot);
+static BOOLEAN AddTileSurface(const char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot);
 
 
 static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID)
@@ -342,41 +342,40 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		//InvalidateRegion( 0, 399, 640, 420 );
 		//EndFrameBufferRender( );
 
+		const char* Filename;
+		UINT8 TilesetToAdd;
+		BOOLEAN GetFromRoot;
 		GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
 		if (*cTemp != '\0')
 		{
-			strcpy( TileSurfaceFilenames[uiLoop], cTemp );
-			if (AddTileSurface( cTemp, uiLoop, ubTilesetID, TRUE ) == FALSE)
-			{
-				DestroyTileSurfaces(  );
-				return( FALSE );
-			}
+			strcpy(TileSurfaceFilenames[uiLoop], cTemp);
+			Filename = cTemp;
+			TilesetToAdd = ubTilesetID;
+			GetFromRoot = TRUE;
+		}
+		else if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
+		{
+			Filename = ppTileSurfaceFilenames[uiLoop];
+			TilesetToAdd = ubTilesetID;
+			GetFromRoot = FALSE;
 		}
 		else
 		{
-			if (*(ppTileSurfaceFilenames[uiLoop]) != '\0')
-			{
-				if (AddTileSurface( ppTileSurfaceFilenames[uiLoop], uiLoop, ubTilesetID, FALSE ) == FALSE)
-				{
-					DestroyTileSurfaces( );
-					return( FALSE );
-				}
-			}
-			else
-			{
-				// USE FIRST TILESET VALUE!
+			// USE FIRST TILESET VALUE!
 
-				// ATE: If here, don't load default surface if already loaded...
-				if ( !gbDefaultSurfaceUsed[ uiLoop ] )
-				{
-					strcpy( TileSurfaceFilenames[uiLoop], gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop] );//(char *)(ppTileSurfaceFilenames + (65 * uiLoop)) );
-					if (AddTileSurface( gTilesets[ GENERIC_1 ].TileSurfaceFilenames[uiLoop], uiLoop, GENERIC_1, FALSE ) == FALSE)
-					{
-						DestroyTileSurfaces(  );
-						return( FALSE );
-					}
-				}
-			}
+			// ATE: If here, don't load default surface if already loaded...
+			if (gbDefaultSurfaceUsed[uiLoop]) continue;
+
+			strcpy(TileSurfaceFilenames[uiLoop], gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
+			Filename = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
+			TilesetToAdd = GENERIC_1;
+			GetFromRoot = FALSE;
+		}
+
+		if (!AddTileSurface(Filename, uiLoop, TilesetToAdd, GetFromRoot))
+		{
+			DestroyTileSurfaces();
+			return FALSE;
 		}
 	}
 
@@ -384,7 +383,7 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 }
 
 
-static BOOLEAN AddTileSurface(char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot)
+static BOOLEAN AddTileSurface(const char* cFilename, UINT32 ubType, UINT8 ubTilesetID, BOOLEAN fGetFromRoot)
 {
 	// Add tile surface
 	PTILE_IMAGERY  TileSurf;
