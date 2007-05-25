@@ -465,7 +465,6 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion < 17 )
 	{
 		gMapInformation.ubMapVersion = 17;
-		//EliminateObjectLayerRedundancy();
 	}
 	if( gMapInformation.ubMapVersion < 18 )
 	{

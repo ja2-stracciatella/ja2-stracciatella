@@ -458,29 +458,6 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 }
 
 
-static UINT16 GetRandomTypeByRange(UINT16 usRangeStart, UINT16 usRangeEnd)
-{
-	UINT16	usPickList[50];
-	UINT16	usNumInPickList;
-	UINT16	i;
-	UINT16	usObject;
-	UINT32  uiType;
-	// Get a list of valid object to select from
-	usNumInPickList = 0;
-	for ( i = 0; i < *pNumSelList; i++ )
-	{
-		usObject = (UINT16)pSelList[ i ].uiObject;
-		if ( (usObject >= usRangeStart) && (usObject <= usRangeEnd) )
-		{
-			GetTileType( usObject, &uiType );
-			usPickList[ usNumInPickList ] = (UINT16)uiType;
-			usNumInPickList++;
-		}
-	}
-	return ( usNumInPickList ) ? usPickList[ rand() % usNumInPickList ] : 0xffff;
-}
-
-
 static void PasteStructureCommon(UINT32 iMapIndex);
 
 
@@ -800,53 +777,6 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 }
 
 
-//	Like above function except it performs it's operation on a redial area.
-static BOOLEAN PasteHigherTextureFromRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius)
-{
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32				iNewIndex;
-	INT32				iXPos,iYPos;
-
-	// Determine start and end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = -ubRadius;
-	sRight  = ubRadius;
-
-	iXPos = (iMapIndex % WORLD_COLS);
-	iYPos = (iMapIndex - iXPos) / WORLD_COLS;
-
-	if ( (iXPos + (INT32)sLeft) < 0 )
-		sLeft = (INT16)(-iXPos);
-
-	if ( (iXPos + (INT32)sRight) >= WORLD_COLS )
-		sRight = (INT16)(WORLD_COLS - iXPos - 1);
-
-	if ( (iYPos + (INT32)sTop) >= WORLD_ROWS )
-		sTop = (INT16)(WORLD_ROWS - iYPos - 1);
-
-	if ( (iYPos + (INT32)sBottom) < 0 )
-		sBottom = (INT16)(-iYPos);
-
-	if ( iMapIndex >= 0x8000 )
-		return (FALSE);
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
-
-			PasteHigherTexture( iNewIndex, uiNewType );
-		}
-	}
-
-	return( TRUE );
-}
-
-
 static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 {
 	UINT32					uiNewType;
@@ -883,47 +813,6 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 
 	// ATE: Set this land peice to require smoothing again!
   SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
-
-	return( TRUE );
-}
-
-
-//	As above, but on a radial area
-static BOOLEAN PasteExistingTextureFromRadius(INT32 iMapIndex, UINT16 usIndex, UINT8 ubRadius)
-{
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32				iNewIndex;
-	INT32				leftmost;
-
-	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	if ( iMapIndex >= 0x8000 )
-		return ( FALSE );
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-
-		leftmost = ( ( iMapIndex + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
-
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
-			{
-				AddToUndoList( iMapIndex );
-				PasteExistingTexture( iNewIndex, usIndex );
-			}
-
-		}
-	}
 
 	return( TRUE );
 }
@@ -1062,40 +951,6 @@ static void PasteTextureEx(INT16 sGridNo, UINT16 usType)
 		 SetLandIndex(sGridNo, NewTile, usType);
 	}
 
-}
-
-
-static void PasteTextureFromRadiusEx(INT16 sGridNo, UINT16 usType, UINT8 ubRadius)
-{
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT32				iNewIndex;
-	INT32				leftmost;
-
-	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-
-		leftmost = ( ( sGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			iNewIndex = sGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
-			{
-				PasteTextureEx( sGridNo, usType );
-			}
-
-		}
-	}
 }
 
 
@@ -1360,51 +1215,5 @@ void RaiseWorldLand( )
 //*/
 
 }
-
-
-static void EliminateObjectLayerRedundancy(void)
-{
-	INT32 i, numRoads, numAnothers;
-	UINT32 uiType;
-	LEVELNODE *pObject, *pValidRoad, *pValidAnother;
-	UINT16 usIndex;
-
-	for( i = 0; i < WORLD_MAX; i++ )
-	{ //Eliminate all but the last ROADPIECE and ANOTHERDEBRIS
-		pObject = gpWorldLevelData[ i ].pObjectHead;
-		pValidRoad = pValidAnother = NULL;
-		numRoads = numAnothers = 0;
-		while( pObject )
-		{
-			GetTileType( pObject->usIndex, &uiType );
-			if( uiType == ROADPIECES )
-			{ //keep track of the last valid road piece, and count the total
-				pValidRoad = pObject;
-				numRoads++;
-			}
-			else if( uiType == ANOTHERDEBRIS )
-			{ //keep track of the last valid another debris, and count the total
-				pValidAnother = pObject;
-				numAnothers++;
-			}
-			pObject = pObject->pNext;
-		}
-		if( pValidRoad && numRoads > 1 )
-		{ //we have more than two roadpieces on the same gridno, so get rid of them, replacing it
-			//with the visible one.
-			usIndex = pValidRoad->usIndex;
-			RemoveAllObjectsOfTypeRange( i, ROADPIECES, ROADPIECES );
-			AddObjectToHead( i, usIndex );
-		}
-		if( pValidAnother && numAnothers > 1 )
-		{ //we have more than two anotherdebris on the same gridno, so get rid of them, replacing it
-			//with the visible one.
-			usIndex = pValidAnother->usIndex;
-			RemoveAllObjectsOfTypeRange( i, ANOTHERDEBRIS, ANOTHERDEBRIS );
-			AddObjectToHead( i, usIndex );
-		}
-	}
-}
-
 
 #endif //JA2EDITOR
