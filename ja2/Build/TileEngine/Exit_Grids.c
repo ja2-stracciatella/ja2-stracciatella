@@ -135,14 +135,12 @@ void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 	}
 }
 
-void RemoveExitGridFromWorld( INT32 iMapIndex )
+
+void RemoveExitGridFromWorld(INT32 iMapIndex)
 {
-	UINT16 usDummy;
-	if( TypeExistsInShadowLayer( iMapIndex, MOCKFLOOR, &usDummy ) )
-	{
-		RemoveAllShadowsOfTypeRange( iMapIndex, MOCKFLOOR, MOCKFLOOR );
-	}
+	RemoveAllShadowsOfTypeRange(iMapIndex, MOCKFLOOR, MOCKFLOOR);
 }
+
 
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {

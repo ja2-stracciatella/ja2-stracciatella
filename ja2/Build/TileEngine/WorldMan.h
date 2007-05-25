@@ -78,7 +78,6 @@ BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex );
 BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN AddShadowToHead( UINT32 iMapIndex, UINT16 usIndex );
 void AddExclusiveShadow( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN TypeExistsInShadowLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusShadowIndex );
 BOOLEAN RemoveAllShadowsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN	RemoveAllShadows( UINT32 iMapIndex );
 BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );

@@ -1317,13 +1317,6 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 }
 
 
-BOOLEAN TypeExistsInShadowLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusShadowIndex)
-{
-	const LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead;
-	return TypeExistsInLevel(pShadow, fType, pusShadowIndex);
-}
-
-
 // Merc layer
 // #################################################################
 
