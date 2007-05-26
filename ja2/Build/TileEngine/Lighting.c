@@ -3348,7 +3348,7 @@ static void CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, con
 	extern UINT32 uiNumTablesSaved;
 #endif
 
-UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce )
+void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 {
 		BOOLEAN fLoaded = FALSE;
 
@@ -3394,12 +3394,10 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		// build neutral palette as well!
 		// Set current shade table to neutral color
 		pObj->pShadeCurrent=pObj->pShades[4];
-
-		return(TRUE);
 }
 
 
-UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
+void CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 {
 	// create the basic shade table
 	CreateSoldierShadedPalette(pSoldier, 0, &gpLightColors[0]);
@@ -3413,7 +3411,4 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 		// build a table that is a mix of the first two
 		CreateSoldierShadedPalette(pSoldier, 32, &gpLightColors[2]);
 	}
-
-	return(TRUE);
-
 }
