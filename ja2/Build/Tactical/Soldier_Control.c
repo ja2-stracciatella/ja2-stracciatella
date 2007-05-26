@@ -5294,7 +5294,7 @@ static const UINT8 gOrangeGlowR[]=
 	80,
 	100,
 	120,
-	140,
+	141,
 	160,
 	180,
 };
@@ -5381,8 +5381,8 @@ static const UINT8 gOrangeGlowG[]=
 };
 
 
-static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen);
-static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen);
+static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale);
+static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale);
 
 
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
@@ -5500,16 +5500,16 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
 	pSoldier->pGlowShades[ 0 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 255, 255, 255, FALSE );
 	for ( cnt = 1; cnt < 10; cnt++ )
 	{
-		pSoldier->pGlowShades[ cnt ] = CreateEnemyGlow16BPPPalette( pSoldier->p8BPPPalette, gRedGlowR[cnt], 255, FALSE );
+		pSoldier->pGlowShades[cnt] = CreateEnemyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[cnt], 0);
 	}
 
 	// Now for gray guy...
 	pSoldier->pGlowShades[ 10 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 100, 100, TRUE );
 	for ( cnt = 11; cnt < 19; cnt++ )
 	{
-		pSoldier->pGlowShades[ cnt ] = CreateEnemyGreyGlow16BPPPalette( pSoldier->p8BPPPalette, gRedGlowR[cnt], 0, FALSE );
+		pSoldier->pGlowShades[cnt] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[cnt], 0);
 	}
-	pSoldier->pGlowShades[ 19 ] = CreateEnemyGreyGlow16BPPPalette( pSoldier->p8BPPPalette, gRedGlowR[18], 0, FALSE );
+	pSoldier->pGlowShades[19] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[18], 0);
 
 
 	// ATE: OK, piggyback on the shades we are not using for 2 colored lighting....
@@ -5517,16 +5517,16 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
 	pSoldier->pShades[ 20 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 255, 255, 255, FALSE );
 	for ( cnt = 21; cnt < 30; cnt++ )
 	{
-		pSoldier->pShades[ cnt ] = CreateEnemyGlow16BPPPalette( pSoldier->p8BPPPalette, gOrangeGlowR[ ( cnt - 20 )], gOrangeGlowG[ ( cnt - 20 ) ], TRUE );
+		pSoldier->pShades[cnt] = CreateEnemyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[cnt - 20], gOrangeGlowG[cnt - 20]);
 	}
 
 	// ORANGE, GREY GUY
 	pSoldier->pShades[ 30 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 100, 100, TRUE );
 	for ( cnt = 31; cnt < 39; cnt++ )
 	{
-		pSoldier->pShades[ cnt ] = CreateEnemyGreyGlow16BPPPalette( pSoldier->p8BPPPalette, gOrangeGlowR[ ( cnt - 20 ) ], gOrangeGlowG[ ( cnt - 20 ) ], TRUE );
+		pSoldier->pShades[cnt] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[cnt - 20], gOrangeGlowG[cnt - 20]);
 	}
-	pSoldier->pShades[ 39 ] = CreateEnemyGreyGlow16BPPPalette( pSoldier->p8BPPPalette, gOrangeGlowR[18], gOrangeGlowG[18], TRUE );
+	pSoldier->pShades[39] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[18], gOrangeGlowG[18]);
 
 	return( TRUE );
 }
@@ -8984,7 +8984,7 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 }
 
 
-static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen)
+static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt;
@@ -8997,15 +8997,10 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 
 	for ( cnt = 0; cnt < 256; cnt++ )
 	{
-		gmod = (pPalette[ cnt ].peGreen);
 		bmod = (pPalette[ cnt ].peBlue);
 
 		rmod = __max( rscale, (pPalette[ cnt ].peRed) );
-
-		if ( fAdjustGreen )
-		{
-			gmod = __max( gscale, (pPalette[ cnt ].peGreen) );
-		}
+		gmod = __max(gscale, pPalette[cnt].peGreen);
 
 		r = (UINT8)__min(rmod, 255);
 		g = (UINT8)__min(gmod, 255);
@@ -9039,7 +9034,7 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 }
 
 
-static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, BOOLEAN fAdjustGreen)
+static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale)
 {
 	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
 	UINT32 cnt, lumin;
@@ -9060,12 +9055,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 
 
 		rmod = __max( rscale, rmod );
-
-		if ( fAdjustGreen )
-		{
-			gmod = __max( gscale, gmod );
-		}
-
+		gmod = __max(gscale, gmod);
 
 		r = (UINT8)__min(rmod, 255);
 		g = (UINT8)__min(gmod, 255);
