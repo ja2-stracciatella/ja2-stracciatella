@@ -1298,10 +1298,7 @@ static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
 {
 	// create the basic shade table
-	SGPPaletteEntry LightPal[256];
-	AddSaturatePalette(LightPal, pCorpse->p8BPPPalette, &gpLightColors[0]);
-	// build the shade tables
-	CreateShadedPalettes(pCorpse->pShades, LightPal);
+	CreateBiasedShadedPalettes(pCorpse->pShades, pCorpse->p8BPPPalette, &gpLightColors[0]);
 
 	// build neutral palette as well!
 	// Set current shade table to neutral color

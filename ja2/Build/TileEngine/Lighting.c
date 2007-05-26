@@ -3288,33 +3288,7 @@ static BOOLEAN LightSpriteDirty(INT32 iSprite)
 }
 
 
-void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256])
-{
-	UINT16* sl0 = gusShadeLevels[0];
-	Shades[0] = Create16BPPPaletteShaded(ShadePal, sl0[0], sl0[1], sl0[2], TRUE);
-	for (UINT i = 1; i < 16; i++)
-	{
-		const UINT16* sl = gusShadeLevels[i];
-		Shades[i] = Create16BPPPaletteShaded(ShadePal, sl[0], sl[1], sl[2], FALSE);
-	}
-}
-
-
-static BOOLEAN CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
-{
-	CreateShadedPalettes(pObj->pShades + uiBase, pShadePal);
-	return(TRUE);
-}
-
-
-static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, const SGPPaletteEntry* pShadePal)
-{
-	CreateShadedPalettes(pSoldier->pShades + uiBase, pShadePal);
-	return(TRUE);
-}
-
-
-void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256], const SGPPaletteEntry* Bias)
+static void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256], const SGPPaletteEntry* Bias)
 {
 	UINT8 r = Bias->peRed;
 	UINT8 g = Bias->peGreen;
@@ -3325,6 +3299,38 @@ void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256]
 		Dst[i].peGreen = __min(Src[i].peGreen + g, 255);
 		Dst[i].peBlue  = __min(Src[i].peBlue  + b, 255);
 	}
+}
+
+
+static void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256])
+{
+	const UINT16* sl0 = gusShadeLevels[0];
+	Shades[0] = Create16BPPPaletteShaded(ShadePal, sl0[0], sl0[1], sl0[2], TRUE);
+	for (UINT i = 1; i < 16; i++)
+	{
+		const UINT16* sl = gusShadeLevels[i];
+		Shades[i] = Create16BPPPaletteShaded(ShadePal, sl[0], sl[1], sl[2], FALSE);
+	}
+}
+
+
+void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256], const SGPPaletteEntry* Bias)
+{
+	SGPPaletteEntry LightPal[256];
+	AddSaturatePalette(LightPal, ShadePal, Bias);
+	CreateShadedPalettes(Shades, LightPal);
+}
+
+
+static void CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, const SGPPaletteEntry* Light)
+{
+	CreateBiasedShadedPalettes(pObj->pShades + uiBase, pObj->pPaletteEntry, Light);
+}
+
+
+static void CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, const SGPPaletteEntry* Light)
+{
+	CreateBiasedShadedPalettes(pSoldier->pShades + uiBase, pSoldier->p8BPPPalette, Light);
 }
 
 
@@ -3344,7 +3350,6 @@ void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256]
 
 UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce )
 {
-		SGPPaletteEntry LightPal[256];
 		BOOLEAN fLoaded = FALSE;
 
 		Assert(pObj!=NULL);
@@ -3361,9 +3366,8 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		}
 		if( !fLoaded )
 		{ //This is expensive as hell to call!
-			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[0]);
 			// build the shade tables
-			CreateObjectPalette(pObj, 0, LightPal);
+			CreateObjectPalette(pObj, 0, &gpLightColors[0]);
 
 			//We paid to generate the shade table, so now save it, so we don't have to regenerate it ever
 			//again!
@@ -3381,12 +3385,10 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		if(gubNumLightColors==2)
 		{
 			// build the second light's palette and table
-			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[1]);
-			CreateObjectPalette(pObj, 16, LightPal);
+			CreateObjectPalette(pObj, 16, &gpLightColors[1]);
 
 			// build a table that is a mix of the first two
-			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[2]);
-			CreateObjectPalette(pObj, 32, LightPal);
+			CreateObjectPalette(pObj, 32, &gpLightColors[2]);
 		}
 
 		// build neutral palette as well!
@@ -3399,23 +3401,17 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 
 UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 {
-	SGPPaletteEntry LightPal[256];
-
 	// create the basic shade table
-	AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[0]);
-	// build the shade tables
-	CreateSoldierShadedPalette(pSoldier, 0, LightPal);
+	CreateSoldierShadedPalette(pSoldier, 0, &gpLightColors[0]);
 
 	// if two lights are active
 	if(gubNumLightColors==2)
 	{
 		// build the second light's palette and table
-		AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[1]);
-		CreateSoldierShadedPalette(pSoldier, 16, LightPal);
+		CreateSoldierShadedPalette(pSoldier, 16, &gpLightColors[1]);
 
 		// build a table that is a mix of the first two
-		AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[2]);
-		CreateSoldierShadedPalette(pSoldier, 32, LightPal);
+		CreateSoldierShadedPalette(pSoldier, 32, &gpLightColors[2]);
 	}
 
 	return(TRUE);
