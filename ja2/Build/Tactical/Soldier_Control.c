@@ -5294,7 +5294,7 @@ static const UINT8 gOrangeGlowR[]=
 	80,
 	100,
 	120,
-	141,
+	140,
 	160,
 	180,
 };
