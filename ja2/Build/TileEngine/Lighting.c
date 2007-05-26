@@ -3314,6 +3314,20 @@ static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, 
 }
 
 
+void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256], const SGPPaletteEntry* Bias)
+{
+	UINT8 r = Bias->peRed;
+	UINT8 g = Bias->peGreen;
+	UINT8 b = Bias->peBlue;
+	for (UINT i = 0; i < 256; i++)
+	{
+		Dst[i].peRed   = __min(Src[i].peRed   + r, 255);
+		Dst[i].peGreen = __min(Src[i].peGreen + g, 255);
+		Dst[i].peBlue  = __min(Src[i].peBlue  + b, 255);
+	}
+}
+
+
 /**********************************************************************************************
  CreateObjectPaletteTables
 
@@ -3330,7 +3344,6 @@ static BOOLEAN CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, 
 
 UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce )
 {
-		UINT32 uiCount;
 		SGPPaletteEntry LightPal[256];
 		BOOLEAN fLoaded = FALSE;
 
@@ -3348,13 +3361,7 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		}
 		if( !fLoaded )
 		{ //This is expensive as hell to call!
-			for(uiCount=0; uiCount < 256; uiCount++)
-			{
-				// combine the rgb of the light color with the object's palette
-				LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peRed+(UINT16)gpLightColors[0].peRed, 255));
-				LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peGreen+(UINT16)gpLightColors[0].peGreen, 255));
-				LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peBlue+(UINT16)gpLightColors[0].peBlue, 255));
-			}
+			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[0]);
 			// build the shade tables
 			CreateObjectPalette(pObj, 0, LightPal);
 
@@ -3374,21 +3381,11 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 		if(gubNumLightColors==2)
 		{
 			// build the second light's palette and table
-			for(uiCount=0; uiCount < 256; uiCount++)
-			{
-				LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peRed+(UINT16)gpLightColors[1].peRed, 255));
-				LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peGreen+(UINT16)gpLightColors[1].peGreen, 255));
-				LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peBlue+(UINT16)gpLightColors[1].peBlue, 255));
-			}
+			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[1]);
 			CreateObjectPalette(pObj, 16, LightPal);
 
 			// build a table that is a mix of the first two
-			for(uiCount=0; uiCount < 256; uiCount++)
-			{
-				LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peRed+(UINT16)gpLightColors[2].peRed, 255));
-				LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peGreen+(UINT16)gpLightColors[2].peGreen, 255));
-				LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pObj->pPaletteEntry[uiCount].peBlue+(UINT16)gpLightColors[2].peBlue, 255));
-			}
+			AddSaturatePalette(LightPal, pObj->pPaletteEntry, &gpLightColors[2]);
 			CreateObjectPalette(pObj, 32, LightPal);
 		}
 
@@ -3403,16 +3400,9 @@ UINT16 CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce
 UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 {
 	SGPPaletteEntry LightPal[256];
-	UINT32 uiCount;
 
 	// create the basic shade table
-	for(uiCount=0; uiCount < 256; uiCount++)
-	{
-		// combine the rgb of the light color with the object's palette
-		LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peRed+(UINT16)gpLightColors[0].peRed, 255));
-		LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peGreen+(UINT16)gpLightColors[0].peGreen, 255));
-		LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peBlue+(UINT16)gpLightColors[0].peBlue, 255));
-	}
+	AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[0]);
 	// build the shade tables
 	CreateSoldierShadedPalette(pSoldier, 0, LightPal);
 
@@ -3420,21 +3410,11 @@ UINT16 CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 	if(gubNumLightColors==2)
 	{
 		// build the second light's palette and table
-		for(uiCount=0; uiCount < 256; uiCount++)
-		{
-			LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peRed+(UINT16)gpLightColors[1].peRed, 255));
-			LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peGreen+(UINT16)gpLightColors[1].peGreen, 255));
-			LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peBlue+(UINT16)gpLightColors[1].peBlue, 255));
-		}
+		AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[1]);
 		CreateSoldierShadedPalette(pSoldier, 16, LightPal);
 
 		// build a table that is a mix of the first two
-		for(uiCount=0; uiCount < 256; uiCount++)
-		{
-			LightPal[uiCount].peRed=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peRed+(UINT16)gpLightColors[2].peRed, 255));
-			LightPal[uiCount].peGreen=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peGreen+(UINT16)gpLightColors[2].peGreen, 255));
-			LightPal[uiCount].peBlue=(UINT8)(__min((UINT16)pSoldier->p8BPPPalette[uiCount].peBlue+(UINT16)gpLightColors[2].peBlue, 255));
-		}
+		AddSaturatePalette(LightPal, pSoldier->p8BPPPalette, &gpLightColors[2]);
 		CreateSoldierShadedPalette(pSoldier, 32, LightPal);
 	}
 

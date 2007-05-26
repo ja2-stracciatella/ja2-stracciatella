@@ -176,6 +176,7 @@ extern SGPPaletteEntry	gpLightColors[3];
 #define LightSpriteGetTypeName(x)		(pLightNames[LightSprites[x].iTemplate])
 #define LightGetAmbient()						(ubAmbientLightLevel)
 
+void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256], const SGPPaletteEntry* Bias);
 void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256]);
 
 #endif
