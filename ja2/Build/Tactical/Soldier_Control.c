@@ -8986,106 +8986,59 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 
 static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale)
 {
-	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
-	UINT32 cnt;
-	UINT32 rmod, gmod, bmod;
-	UINT8	 r,g,b;
+	Assert(pPalette != NULL);
 
-	Assert( pPalette != NULL );
+	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
 
-	p16BPPPalette = MemAlloc( sizeof( UINT16 ) * 256 );
-
-	for ( cnt = 0; cnt < 256; cnt++ )
+	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		bmod = (pPalette[ cnt ].peBlue);
+		UINT8 r = __max(rscale, pPalette[cnt].peRed);
+		UINT8 g = __max(gscale, pPalette[cnt].peGreen);
+		UINT8 b = pPalette[cnt].peBlue;
 
-		rmod = __max( rscale, (pPalette[ cnt ].peRed) );
-		gmod = __max(gscale, pPalette[cnt].peGreen);
-
-		r = (UINT8)__min(rmod, 255);
-		g = (UINT8)__min(gmod, 255);
-		b = (UINT8)__min(bmod, 255);
-
-		if(gusRedShift < 0)
-			r16=((UINT16)r>>(-gusRedShift));
-		else
-			r16=((UINT16)r<<gusRedShift);
-
-		if(gusGreenShift < 0)
-			g16=((UINT16)g>>(-gusGreenShift));
-		else
-			g16=((UINT16)g<<gusGreenShift);
-
-
-		if(gusBlueShift < 0)
-			b16=((UINT16)b>>(-gusBlueShift));
-		else
-			b16=((UINT16)b<<gusBlueShift);
+		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
+		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
+		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
 
 		// Prevent creation of pure black color
-		usColor	= (r16&gusRedMask)|(g16&gusGreenMask)|(b16&gusBlueMask);
-
-		if((usColor==0) && ((r+g+b)!=0))
-			usColor=0x0001;
-
-		p16BPPPalette[ cnt ] = usColor;
+		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
+		if (usColor == 0 && r + g + b != 0) usColor = 0x0001;
+		p16BPPPalette[cnt] = usColor;
 	}
-	return( p16BPPPalette );
+	return p16BPPPalette;
 }
 
 
 static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale)
 {
-	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
-	UINT32 cnt, lumin;
-	UINT32 rmod, gmod, bmod;
-	UINT8	 r,g,b;
+	Assert(pPalette != NULL);
 
-	Assert( pPalette != NULL );
+	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
 
-	p16BPPPalette = MemAlloc( sizeof( UINT16 ) * 256 );
-
-	for ( cnt = 0; cnt < 256; cnt++ )
+	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		lumin=(pPalette[ cnt ].peRed*299/1000)+ (pPalette[ cnt ].peGreen*587/1000)+(pPalette[ cnt ].peBlue*114/1000);
-		rmod=(100*lumin)/256;
-		gmod=(100*lumin)/256;
-		bmod=(100*lumin)/256;
+		UINT32 lumin = (pPalette[cnt].peRed * 299 + pPalette[cnt].peGreen * 587 + pPalette[cnt].peBlue * 114) / 1000;
+		UINT32 rmod = 100 * lumin / 256;
+		UINT32 gmod = 100 * lumin / 256;
+		UINT32 bmod = 100 * lumin / 256;
 
-
-
-		rmod = __max( rscale, rmod );
+		rmod = __max(rscale, rmod);
 		gmod = __max(gscale, gmod);
 
-		r = (UINT8)__min(rmod, 255);
-		g = (UINT8)__min(gmod, 255);
-		b = (UINT8)__min(bmod, 255);
+		UINT8 r = __min(rmod, 255);
+		UINT8 g = __min(gmod, 255);
+		UINT8 b = __min(bmod, 255);
 
-		if(gusRedShift < 0)
-			r16=((UINT16)r>>(-gusRedShift));
-		else
-			r16=((UINT16)r<<gusRedShift);
-
-		if(gusGreenShift < 0)
-			g16=((UINT16)g>>(-gusGreenShift));
-		else
-			g16=((UINT16)g<<gusGreenShift);
-
-
-		if(gusBlueShift < 0)
-			b16=((UINT16)b>>(-gusBlueShift));
-		else
-			b16=((UINT16)b<<gusBlueShift);
+		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
+		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
+		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
 
 		// Prevent creation of pure black color
-		usColor	= (r16&gusRedMask)|(g16&gusGreenMask)|(b16&gusBlueMask);
-
-		if((usColor==0) && ((r+g+b)!=0))
-			usColor=0x0001;
-
-		p16BPPPalette[ cnt ] = usColor;
+		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
+		if (usColor == 0 && r + g + b != 0) usColor = 0x0001;
+		p16BPPPalette[cnt] = usColor;
 	}
-	return( p16BPPPalette );
+	return p16BPPPalette;
 }
 
 

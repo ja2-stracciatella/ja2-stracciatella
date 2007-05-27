@@ -624,49 +624,28 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 
 
 UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 {
-	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
-	UINT32 cnt;
-	UINT8	 r,g,b;
+	Assert(pPalette != NULL);
 
-	Assert( pPalette != NULL );
+	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
 
-	p16BPPPalette = MemAlloc( sizeof( UINT16 ) * 256 );
-
-	for ( cnt = 0; cnt < 256; cnt++ )
+	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		r = pPalette[ cnt ].peRed;
-		g = pPalette[ cnt ].peGreen;
-		b = pPalette[ cnt ].peBlue;
+		UINT8 r = pPalette[cnt].peRed;
+		UINT8 g = pPalette[cnt].peGreen;
+		UINT8 b = pPalette[cnt].peBlue;
 
-		if(gusRedShift < 0)
-			r16 = (UINT16)r >> -gusRedShift;
-		else
-			r16=((UINT16)r<<gusRedShift);
+		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
+		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
+		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
 
-		if(gusGreenShift < 0)
-			g16 = (UINT16)g >> -gusGreenShift;
-		else
-			g16=((UINT16)g<<gusGreenShift);
-
-
-		if(gusBlueShift < 0)
-			b16 = (UINT16)b >> -gusBlueShift;
-		else
-			b16=((UINT16)b<<gusBlueShift);
-
-		usColor = (r16&gusRedMask)|(g16&gusGreenMask)|(b16&gusBlueMask);
-
-		if(usColor==0)
-		{
-			if((r+g+b)!=0)
-				usColor = BLACK_SUBSTITUTE;
-		}
-
-		p16BPPPalette[ cnt ] = usColor;
+		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
+		if (usColor == 0 && r + g + b != 0) usColor = BLACK_SUBSTITUTE;
+		p16BPPPalette[cnt] = usColor;
 	}
 
-	return( p16BPPPalette );
+	return p16BPPPalette;
 }
+
 
 /**********************************************************************************************
  Create16BPPPaletteShaded
@@ -694,139 +673,85 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 **********************************************************************************************/
 UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale, UINT32 bscale, BOOLEAN mono)
 {
-	UINT16 *p16BPPPalette, r16, g16, b16, usColor;
-	UINT32 cnt, lumin;
-	UINT32 rmod, gmod, bmod;
-	UINT8	 r,g,b;
+	Assert(pPalette != NULL);
 
-	Assert( pPalette != NULL );
+	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
 
-	p16BPPPalette = MemAlloc( sizeof( UINT16 ) * 256 );
-
-	for ( cnt = 0; cnt < 256; cnt++ )
+	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		if(mono)
+		UINT32 rmod;
+		UINT32 gmod;
+		UINT32 bmod;
+		if (mono)
 		{
-			lumin=(pPalette[ cnt ].peRed*299/1000)+ (pPalette[ cnt ].peGreen*587/1000)+(pPalette[ cnt ].peBlue*114/1000);
-			rmod=(rscale*lumin)/256;
-			gmod=(gscale*lumin)/256;
-			bmod=(bscale*lumin)/256;
+			UINT32 lumin = (pPalette[cnt].peRed * 299 + pPalette[cnt].peGreen * 587 + pPalette[cnt].peBlue * 114) / 1000;
+			rmod = rscale * lumin / 256;
+			gmod = gscale * lumin / 256;
+			bmod = bscale * lumin / 256;
 		}
 		else
 		{
-			rmod = (rscale*pPalette[ cnt ].peRed/256);
-			gmod = (gscale*pPalette[ cnt ].peGreen/256);
-			bmod = (bscale*pPalette[ cnt ].peBlue/256);
+			rmod = rscale * pPalette[cnt].peRed   / 256;
+			gmod = gscale * pPalette[cnt].peGreen / 256;
+			bmod = bscale * pPalette[cnt].peBlue  / 256;
 		}
 
-		r = (UINT8)__min(rmod, 255);
-		g = (UINT8)__min(gmod, 255);
-		b = (UINT8)__min(bmod, 255);
+		UINT8 r = __min(rmod, 255);
+		UINT8 g = __min(gmod, 255);
+		UINT8 b = __min(bmod, 255);
 
-		if(gusRedShift < 0)
-			r16=((UINT16)r>>(-gusRedShift));
-		else
-			r16=((UINT16)r<<gusRedShift);
-
-		if(gusGreenShift < 0)
-			g16=((UINT16)g>>(-gusGreenShift));
-		else
-			g16=((UINT16)g<<gusGreenShift);
-
-
-		if(gusBlueShift < 0)
-			b16=((UINT16)b>>(-gusBlueShift));
-		else
-			b16=((UINT16)b<<gusBlueShift);
+		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
+		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
+		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
 
 		// Prevent creation of pure black color
-		usColor	= (r16&gusRedMask)|(g16&gusGreenMask)|(b16&gusBlueMask);
-
-		if(usColor==0)
-		{
-			if((r+g+b)!=0)
-				usColor = BLACK_SUBSTITUTE;
-		}
-
-		p16BPPPalette[ cnt ] = usColor;
+		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
+		if (usColor == 0 && r + g + b != 0) usColor = BLACK_SUBSTITUTE;
+		p16BPPPalette[cnt] = usColor;
 	}
-	return( p16BPPPalette );
+	return p16BPPPalette;
 }
+
 
 // Convert from RGB to 16 bit value
 UINT16 Get16BPPColor( UINT32 RGBValue )
 {
-	UINT16 r16, g16, b16, usColor;
-	UINT8	 r,g,b;
+	UINT8 r = SGPGetRValue(RGBValue);
+	UINT8 g = SGPGetGValue(RGBValue);
+	UINT8 b = SGPGetBValue(RGBValue);
 
-	r = SGPGetRValue( RGBValue );
-	g = SGPGetGValue( RGBValue );
-	b = SGPGetBValue( RGBValue );
+	UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
+	UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
+	UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
 
-	if(gusRedShift < 0)
-		r16 = (UINT16)r >> -gusRedShift;
-	else
-		r16=((UINT16)r<<gusRedShift);
-
-	if(gusGreenShift < 0)
-		g16 = (UINT16)g >> -gusGreenShift;
-	else
-		g16=((UINT16)g<<gusGreenShift);
-
-
-	if(gusBlueShift < 0)
-		b16 = (UINT16)b >> -gusBlueShift;
-	else
-		b16=((UINT16)b<<gusBlueShift);
-
-	usColor=(r16&gusRedMask)|(g16&gusGreenMask)|(b16&gusBlueMask);
+	UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
 
 	// if our color worked out to absolute black, and the original wasn't
 	// absolute black, convert it to a VERY dark grey to avoid transparency
 	// problems
+	if (usColor == 0 && RGBValue != 0) usColor = BLACK_SUBSTITUTE;
 
-	if(usColor==0)
-	{
-		if(RGBValue!=0)
-			usColor = BLACK_SUBSTITUTE;
-	}
-
-	return(usColor);
+	return usColor;
 }
 
 
 // Convert from 16 BPP to RGBvalue
-UINT32 GetRGBColor( UINT16 Value16BPP )
+UINT32 GetRGBColor(UINT16 Value16BPP)
 {
-	UINT16 r16, g16, b16;
-	UINT32 r,g,b,val;
+	UINT32 r16 = Value16BPP & gusRedMask;
+	UINT32 g16 = Value16BPP & gusGreenMask;
+	UINT32 b16 = Value16BPP & gusBlueMask;
 
-	r16 = Value16BPP & gusRedMask;
-	g16 = Value16BPP & gusGreenMask;
-	b16 = Value16BPP & gusBlueMask;
-
-	if(gusRedShift < 0)
-		r = (UINT32)r16 << -gusRedShift;
-	else
-		r=((UINT32)r16>>gusRedShift);
-
-	if(gusGreenShift < 0)
-		g = (UINT32)g16 << -gusGreenShift;
-	else
-		g=((UINT32)g16>>gusGreenShift);
-
-	if(gusBlueShift < 0)
-		b = (UINT32)b16 << -gusBlueShift;
-	else
-		b=((UINT32)b16>>gusBlueShift);
+	UINT32 r = (gusRedShift   < 0 ? r16 << -gusRedShift   : r16 >> gusRedShift);
+	UINT32 g = (gusGreenShift < 0 ? g16 << -gusGreenShift : g16 >> gusGreenShift);
+	UINT32 b = (gusBlueShift  < 0 ? b16 << -gusBlueShift  : b16 >> gusBlueShift);
 
 	r &= 0x000000ff;
 	g &= 0x000000ff;
 	b &= 0x000000ff;
 
-	val = FROMRGB(r,g,b);
-
-	return(val);
+	UINT32 val = FROMRGB(r, g, b);
+	return val;
 }
 
 
