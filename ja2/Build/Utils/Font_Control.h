@@ -5,73 +5,29 @@
 #include "VObject.h"
 
 
-// Global variables for video objects
-INT32						gpLargeFontType1;
-HVOBJECT				gvoLargeFontType1;
+extern INT32 gp10PointArial;
+extern INT32 gp10PointArialBold;
+extern INT32 gp10PointRoman;
+extern INT32 gp12PointArial;
+extern INT32 gp12PointArialFixedFont;
+extern INT32 gp12PointFont1;
+extern INT32 gp12PointRoman;
+extern INT32 gp14PointArial;
+extern INT32 gp14PointHumanist;
+extern INT32 gp14PointSansSerif;
+extern INT32 gp16PointArial;
+extern INT32 gpBlockFontNarrow;
+extern INT32 gpBlockyFont;
+extern INT32 gpBlockyFont2;
+extern INT32 gpLargeFontType1;
+extern INT32 gpSmallFontType1;
+extern INT32 gpTinyFontType1;
+extern INT32 gpClockFont;
+extern INT32 gpCompFont;
+extern INT32 gpSmallCompFont;
 
-INT32						gpSmallFontType1;
-HVOBJECT				gvoSmallFontType1;
-
-INT32						gpTinyFontType1;
-HVOBJECT				gvoTinyFontType1;
-
-INT32						gp12PointFont1;
-HVOBJECT				gvo12PointFont1;
-
-INT32           gpClockFont;
-HVOBJECT        gvoClockFont;
-
-INT32           gpCompFont;
-HVOBJECT        gvoCompFont;
-
-INT32           gpSmallCompFont;
-HVOBJECT        gvoSmallCompFont;
-
-INT32						gp10PointRoman;
-HVOBJECT				gvo10PointRoman;
-
-INT32						gp12PointRoman;
-HVOBJECT				gvo12PointRoman;
-
-INT32						gp14PointSansSerif;
-HVOBJECT				gvo14PointSansSerif;
-
-//INT32						gpMilitaryFont1;
-//HVOBJECT				gvoMilitaryFont1;
-
-INT32						gp10PointArial;
-HVOBJECT				gvo10PointArial;
-
-INT32						gp14PointArial;
-HVOBJECT				gvo14PointArial;
-
-INT32						gp12PointArial;
-HVOBJECT				gvo12PointArial;
-
-INT32						gpBlockyFont;
-HVOBJECT				gvoBlockyFont;
-
-INT32						gpBlockyFont2;
-HVOBJECT				gvoBlockyFont2;
-
-INT32						gp10PointArialBold;
-HVOBJECT				gvo10PointArialBold;
-
-INT32						gp12PointArialFixedFont;
-HVOBJECT				gvo12PointArialFixedFont;
-
-INT32						gp16PointArial;
-HVOBJECT				gvo16PointArial;
-
-INT32						gpBlockFontNarrow;
-HVOBJECT				gvoBlockFontNarrow;
-
-INT32						gp14PointHumanist;
-HVOBJECT				gvo14PointHumanist;
-
-#ifdef JA2EDITOR
-INT32						gpHugeFont;
-HVOBJECT				gvoHugeFont;
+#if defined JA2EDITOR && defined ENGLISH
+extern INT32 gpHugeFont;
 #endif
 
 
@@ -86,7 +42,7 @@ HVOBJECT				gvoHugeFont;
 #define					FONT10ROMAN				gp10PointRoman
 #define					FONT12ROMAN				gp12PointRoman
 #define					FONT14SANSERIF		gp14PointSansSerif
-#define					MILITARYFONT1			BLOCKFONT		//gpMilitaryFont1
+#define					MILITARYFONT1			BLOCKFONT
 #define					FONT10ARIAL				gp10PointArial
 #define					FONT14ARIAL				gp14PointArial
 #define         FONT12ARIAL       gp12PointArial
@@ -98,7 +54,7 @@ HVOBJECT				gvoHugeFont;
 #define					BLOCKFONTNARROW		gpBlockFontNarrow
 #define					FONT14HUMANIST		gp14PointHumanist
 
-#if defined( JA2EDITOR ) && defined( ENGLISH )
+#if defined JA2EDITOR && defined ENGLISH
 	#define				HUGEFONT					gpHugeFont
 #else
 	#define				HUGEFONT					gp16PointArial
@@ -159,9 +115,9 @@ HVOBJECT				gvoHugeFont;
 #define FONT_KHAKI				198
 #define FONT_DKKHAKI			201
 
-BOOLEAN	InitializeFonts( );
-void ShutdownFonts( );
+BOOLEAN InitializeFonts(void);
+void ShutdownFonts(void);
 
-BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID );
+BOOLEAN SetFontShade(UINT32 uiFontID, INT8 bColorID);
 
 #endif
