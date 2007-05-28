@@ -227,7 +227,7 @@ BOOLEAN SetFontShade( UINT32 uiFontID, INT8 bColorID )
 {
 	HVOBJECT pFont;
 
-	CHECKF( bColorID > 0 );
+	CHECKF(bColorID >= 0);
 	CHECKF( bColorID < 16 );
 
 	pFont	= GetFontObject( uiFontID );

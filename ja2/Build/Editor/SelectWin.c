@@ -1510,14 +1510,12 @@ static void DrawSelections(void)
 	GetClippingRect(&ClipRect);
 	SetClippingRect(&NewRect);
 
-//	SetFont( gpSmallFont );
 	SetFont( gpLargeFontType1 );
-	SetObjectShade( gvoLargeFontType1, 0 );
-//	SetObjectShade( gvoLargeFont, 0 );
+	SetFontShade(LARGEFONT1, 0);
 
 	DisplayWindowFunc( pDispList, iTopWinCutOff, iBotWinCutOff, &SelWinStartPoint, CLEAR_BACKGROUND );
 
-	SetObjectShade( gvoLargeFontType1, 4 );
+	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 
 	SetClippingRect(&ClipRect);
 }
