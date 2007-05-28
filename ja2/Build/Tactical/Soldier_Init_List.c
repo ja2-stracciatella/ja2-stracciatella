@@ -334,22 +334,8 @@ static void SortSoldierInitList(void)
 {
 	SOLDIERINITNODE *temp, *curr;
 
-	BOOLEAN	fFredoAtStart = FALSE;
-	BOOLEAN	fFredoAtEnd = FALSE;
-
 	if( !gSoldierInitHead )
 		return;
-
-	curr = gSoldierInitHead;
-	while( curr )
-	{
-		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == FREDO )
-		{
-			fFredoAtStart = TRUE;
-			break;
-		}
-		curr = curr->next;
-	}
 
 	//1st priority sort
 	curr = gSoldierInitTail;
@@ -496,18 +482,6 @@ static void SortSoldierInitList(void)
 	//Done!  If the soldier existing slots are at the end of the list and the
 	//			 priority placements are at the beginning of the list, then the
 	//			 basic placements are in the middle.
-
-	curr = gSoldierInitHead;
-	while( curr )
-	{
-		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == FREDO )
-		{
-			fFredoAtEnd = TRUE;
-			break;
-		}
-		curr = curr->next;
-	}
-
 }
 
 BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
