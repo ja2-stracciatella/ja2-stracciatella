@@ -81,12 +81,17 @@ void ShutdownFonts(void)
 	UnloadFont(gp10PointArial);
 	UnloadFont(gp10PointArialBold);
 	UnloadFont(gp10PointRoman);
+	UnloadFont(gp12PointArial);
 	UnloadFont(gp12PointArialFixedFont);
 	UnloadFont(gp12PointFont1);
 	UnloadFont(gp12PointRoman);
 	UnloadFont(gp14PointArial);
+	UnloadFont(gp14PointHumanist);
 	UnloadFont(gp14PointSansSerif);
+	UnloadFont(gp16PointArial);
+	UnloadFont(gpBlockFontNarrow);
 	UnloadFont(gpBlockyFont);
+	UnloadFont(gpBlockyFont2);
 	UnloadFont(gpClockFont);
 	UnloadFont(gpCompFont);
 	UnloadFont(gpLargeFontType1);
