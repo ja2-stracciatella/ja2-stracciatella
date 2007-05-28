@@ -282,18 +282,12 @@ static void RenderSelectedSliderBar(SLIDER* pSlider)
 
 static void RenderSliderBox(SLIDER* pSlider)
 {
-	SGPRect		SrcRect;
 	SGPRect		DestRect;
 
 
 	if( pSlider->uiFlags & SLIDER_VERTICAL )
 	{
-		//fill out the settings for the current dest and source rects
-		SrcRect.iLeft = 0;
-		SrcRect.iTop = 0;
-		SrcRect.iRight = pSlider->ubSliderWidth;
-		SrcRect.iBottom = pSlider->ubSliderHeight;
-
+		//fill out the settings for the current dest rect
 		DestRect.iLeft = pSlider->usPosX - pSlider->ubSliderWidth / 2;
 		DestRect.iTop = pSlider->usCurrentSliderBoxPosition - pSlider->ubSliderHeight/2;
 		DestRect.iRight = DestRect.iLeft + pSlider->ubSliderWidth;
@@ -315,12 +309,7 @@ static void RenderSliderBox(SLIDER* pSlider)
 	}
 	else
 	{
-		//fill out the settings for the current dest and source rects
-		SrcRect.iLeft = 0;
-		SrcRect.iTop = 0;
-		SrcRect.iRight = pSlider->ubSliderWidth;
-		SrcRect.iBottom = pSlider->ubSliderHeight;
-
+		//fill out the settings for the current dest rect
 		DestRect.iLeft = pSlider->usCurrentSliderBoxPosition;
 		DestRect.iTop = pSlider->usPosY-DEFUALT_SLIDER_SIZE;
 		DestRect.iRight = DestRect.iLeft + pSlider->ubSliderWidth;

@@ -725,13 +725,9 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 
 BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
 {
-	INT16 sSectorValue = 0, sSector = 0;
+	INT16 sSectorValue = 0;
 	INT16 sCounterA = 0, sCounterB = 0;
 	UINT8 ubScoutingRange = 1;
-
-
-	// get the sector value
-	sSector = sSectorX + sSectorY * MAP_WORLD_X;
 
 	for( sCounterA = sSectorX - ubScoutingRange; sCounterA <= sSectorX + ubScoutingRange; sCounterA++ )
 	{

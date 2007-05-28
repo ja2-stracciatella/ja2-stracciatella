@@ -1691,10 +1691,6 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 {
 	INT32 iImpact, iFluke, iBonus;
 
-	UINT16	usItem;
-
-	usItem = pSoldier->inv[HANDPOS].usItem;
-
 	if (fBladeAttack)
 	{
 		iImpact = Weapon[ pSoldier->usAttackingWeapon ].ubImpact;

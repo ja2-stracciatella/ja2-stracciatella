@@ -2204,7 +2204,6 @@ INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlo
  INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
  INT32 iLastGrid;
  INT32 iCnt;
- INT16 sOldGrid=0;
  INT16 sFootOrderIndex;
  INT16 sSwitchValue;
  INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART,
@@ -2296,8 +2295,6 @@ INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlo
 			sExtraCostStand = 0;
 			sExtraCostSwat = 0;
 			sExtraCostCrawl = 0;
-			// what is the next gridno in the path?
-			sOldGrid   = sTempGrid;
 
 			sTempGrid  = NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
 

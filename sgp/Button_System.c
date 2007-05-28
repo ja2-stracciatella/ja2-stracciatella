@@ -2023,7 +2023,6 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
 	SGPRect			ClipRect;
-	ETRLEObject *pTrav;
 
 	// Select the graphics to use depending on the current state of the button
 	if( b->uiFlags & BUTTON_ENABLED )
@@ -2062,14 +2061,13 @@ static void DrawGenericButton(const GUI_BUTTON *b)
 
 	iBorderWidth=3;
 	iBorderHeight=2;
-	pTrav=NULL;
 
 // DB - Added this to support more flexible sizing of border images
 // The 3x2 size was a bit limiting. JA2 should default to the original
 // size, unchanged
 
 #ifndef JA2
-	pTrav = &(BPic->pETRLEObject[0] );
+	const ETRLEObject* pTrav = &BPic->pETRLEObject[0];
 	iBorderHeight = (INT32)pTrav->usHeight;
 	iBorderWidth = (INT32)pTrav->usWidth;
 #endif

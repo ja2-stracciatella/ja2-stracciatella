@@ -361,8 +361,6 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
 															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-
-	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
 	UINT32	uiLocalFont=uiFont;
@@ -371,8 +369,6 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 	BOOLEAN fBoldOn=FALSE;
 
 	CHAR16	zLineString[128] = L"",zWordString[64]= L"";
-
-  usHeight = GetFontHeight(uiFont);
 
 	do
 	{
@@ -906,7 +902,6 @@ void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDest
 //					the gap in between the lines, the height of buffer and which page you want the text displayed for, and the total height to date
 static INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usPageHeight, UINT16 usTotalHeight, UINT16 usPageNumber, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, STR16 pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags, BOOLEAN* fOnLastPageFlag)
 {
-	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
 	UINT32	uiLocalFont=uiFont;
@@ -914,8 +909,6 @@ static INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
-
-  usHeight = GetFontHeight(uiFont);
 
 	// identical to ianwordwrap, but this one lets the user to specify the page they want to display, if the text takes more than one page
 	// multiple calls to this function will allow one to work out how many pages there are
@@ -1244,7 +1237,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
 															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
 {
-	UINT16	usHeight;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
 	UINT32	uiLocalFont=uiFont;
@@ -1252,8 +1244,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
-
-	usHeight = GetFontHeight(uiFont);
 
 	// simply a cut and paste operation on Ian Display Wrapped, but will not write string to screen
 	// since this all we want to do, everything IanWrapped will do but without displaying string

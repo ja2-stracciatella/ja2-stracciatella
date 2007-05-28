@@ -1273,9 +1273,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
   INT32 iAttributeDelta = 0;
   INT32 iCounter =0;
   INT16 sX =0;
-	INT16 sY = 0;
 	static INT16 sOldX = -1;
-	static INT16 sOldY = -1;
 	static INT32 iAttribute = -1;
 	INT32 iNewValue = 0;
   INT16 sNewX = -1;
@@ -1300,7 +1298,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// different regions
 			iAttribute = MSYS_GetRegionUserData(pRegion, 0);
 		  sOldX = -1;
-			sOldY = -1;
       return;
 		}
 
@@ -1369,7 +1366,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// get mouse XY
 
 		sX = pRegion -> MouseXPos;
-		sY = pRegion -> MouseYPos;
 
     // which region are we in?
 
@@ -1425,7 +1421,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		// get mouse positions
 		sX = pRegion -> MouseXPos;
-		sY = pRegion -> MouseYPos;
 
 		// get attribute
 		iAttribute = MSYS_GetRegionUserData(pRegion, 0);

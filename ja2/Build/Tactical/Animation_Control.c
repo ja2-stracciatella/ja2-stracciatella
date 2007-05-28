@@ -3314,14 +3314,11 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 {
 	UINT16 usAnimSurface;
 	UINT16 usAltAnimSurface;
-	UINT8 ubBodyType;
 	UINT16	usItem;
 	UINT8		ubWaterHandIndex = 1;
 	INT32		cnt;
 	BOOLEAN	fAdjustedForItem	= FALSE;
 	UINT16		usNewAnimState;
-
-	ubBodyType = pSoldier->ubBodyType;
 
 	if ( SubstituteBodyTypeAnimation( pSoldier, usAnimState, &usNewAnimState ) )
 	{

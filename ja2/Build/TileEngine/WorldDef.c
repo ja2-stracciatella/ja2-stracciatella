@@ -620,7 +620,6 @@ static void CompileWorldTerrainIDs(void)
 static void CompileTileMovementCosts(UINT16 usGridNo)
 {
 	UINT8						ubTerrainID;
-	TILE_ELEMENT		TileElem;
 	LEVELNODE *			pLand;
 
 	STRUCTURE *			pStructure;
@@ -674,8 +673,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 		if ( pLand != NULL )
 		{
 			// Set TEMPORARY cost here
-			// Get from tile database
-			TileElem = gTileDatabase[ pLand->usIndex ];
 
 			// Get terrain type
 			ubTerrainID =	gpWorldLevelData[usGridNo].ubTerrainID; // = GetTerrainType( (INT16)usGridNo );
@@ -1270,8 +1267,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 		if ( pLand != NULL )
 		{
 			// Set cost here
-			// Get from tile database
-			TileElem = gTileDatabase[ pLand->usIndex ];
 
 			// Get terrain type
 			ubTerrainID =	GetTerrainType( (INT16)usGridNo );

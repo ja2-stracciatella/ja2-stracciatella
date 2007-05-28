@@ -1282,7 +1282,6 @@ static BOOLEAN WriteOutHistoryRecords(UINT32 uiPage)
   INT32 iCount =0;
   HWFILE hFileHandle;
 	HistoryUnit* pList;
-  UINT32 uiByteCount=0;
 
 	// check if bad page
 	if( uiPage == 0 )
@@ -1327,7 +1326,6 @@ static BOOLEAN WriteOutHistoryRecords(UINT32 uiPage)
 
 	FileSeek( hFileHandle, sizeof( INT32 ) + ( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START );
 
-	uiByteCount = /*sizeof( INT32 )+ */( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * SIZE_OF_HISTORY_FILE_RECORD;
 	// file exists, read in data, continue until end of page
   while( ( iCount < NUM_RECORDS_PER_PAGE )&&( fOkToContinue ) )
 	{

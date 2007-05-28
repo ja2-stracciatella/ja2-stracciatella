@@ -3168,7 +3168,6 @@ void ScrollWorld( )
 
 void InitRenderParams( UINT8 ubRestrictionID )
 {
-		INT16 gsTilesX, gsTilesY;
 		UINT32 cnt, cnt2;
 		DOUBLE  dWorldX, dWorldY;
 
@@ -3228,10 +3227,6 @@ void InitRenderParams( UINT8 ubRestrictionID )
 		gsTLY += ROOF_LEVEL_HEIGHT;
 		gsTRY += ROOF_LEVEL_HEIGHT;
 		gsCY  += ( ROOF_LEVEL_HEIGHT / 2 );
-
-		// Take these spaning distances and determine # tiles spaning
-		gsTilesX = ( gsTRX - gsTLX ) / WORLD_TILE_X;
-		gsTilesY = ( gsBRY - gsTRY ) / WORLD_TILE_Y;
 
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("World Screen Width %d Height %d", ( gsTRX - gsTLX ), ( gsBRY - gsTRY )));
 
@@ -6783,8 +6778,6 @@ static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPoin
 	INT16				sX, sY, sWorldX, sZLevel;
 	TILE_ELEMENT *TileElem;
 	INT8			bBlitClipVal;
-	LEVELNODE		*pObject;
-
 
 	// Begin Render Loop
 	sAnchorPosX_M = sStartPointX_M;
@@ -6845,10 +6838,6 @@ static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPoin
 					{
 						// Set flag to not evaluate again!
 						gpWorldLevelData[usTileIndex].uiFlags &= (~MAPELEMENT_REEVALUATE_REDUNDENCY );
-
-						// OK, first do some rules with exceptions
-						// Don't let this happen for roads!
-						pObject = gpWorldLevelData[usTileIndex ].pObjectHead;
 
 						if ( IsTileRedundent( gpZBuffer, sZLevel, TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex ) )
 						{

@@ -428,7 +428,7 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 {
-	UINT16	usPosX, usPosY;
+	UINT16	usPosX;
 	UINT32	uiInsMercFaceImage;
 	INT32		iCostOfContract=0;
 	char			sTemp[100];
@@ -441,7 +441,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	pSoldier = &Menptr[ GetSoldierIDFromMercID( ubMercID ) ];
 
 
-	usPosX=usPosY=0;
+	usPosX = 0;
 
 	switch( ubGridNumber )
 	{

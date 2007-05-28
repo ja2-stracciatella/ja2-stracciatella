@@ -3421,7 +3421,6 @@ static INT32 GetAvgStatOfPastTeamStat(INT32 iStat)
   // -1 means error
 	INT32 cnt=0;
 	INT32 iTotalStatValue = 0;
-	INT32 iId = -1;
 	MERCPROFILESTRUCT *pTeamSoldier;
 	INT8 bCurrentList = 0;
 	INT16 *bCurrentListValue = LaptopSaveInfo.ubDeadCharactersList;
@@ -3528,7 +3527,6 @@ static INT32 GetAvgStatOfPastTeamStat(INT32 iStat)
 			case 7:
 			//mrkmanship
 
-					iId = cnt;
 					iTotalStatValue += pTeamSoldier -> bMarksmanship;
 
 

@@ -49,7 +49,6 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	UINT16 usMapPos, usStandardMapPos;
 	UINT16 usNumberOfItems;
 	BOOLEAN	fSectorLoaded = FALSE;
-	UINT16	usTotalNumberOfItemTypes;
 	UINT32	uiCount = 0,uiStolenCount = 0;
 	static UINT8 ubShipmentsSinceNoBribes = 0;
 	UINT32	uiChanceOfTheft;
@@ -99,9 +98,6 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		SetFactTrue( FACT_AGENTS_PREVENTED_SHIPMENT );
 		return;
 	}
-
-	//Get the number of item types
-	usTotalNumberOfItemTypes = gpNewBobbyrShipments[ ubOrderID ].ubNumberPurchases;
 
 	//Must get the total number of items ( all item types plus how many of each item type ordered )
 	usNumberOfItems = 0;

@@ -2625,7 +2625,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  INT16	sClosestOpponent,sBestCover = NOWHERE;
  INT16	sClosestDisturbance;
  UINT8	ubMinAPCost,ubCanMove;
- INT8		bInWater,bInDeepWater,bInGas;
+ INT8		bInDeepWater,bInGas;
  INT8		bDirection;
  UINT8	ubBestAttackAction = AI_ACTION_NONE;
  INT8		bCanAttack,bActionReturned;
@@ -2700,8 +2700,6 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		}
 		else if ( gTacticalStatus.bBoxingState == BOXING )
 		{
-
-			bInWater = FALSE;
 			bInDeepWater = FALSE;
 			bInGas = FALSE;
 
@@ -2718,7 +2716,6 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	{
 
 		// determine if we happen to be in water (in which case we're in BIG trouble!)
-		bInWater = Water( pSoldier->sGridNo );
 		bInDeepWater = WaterTooDeepForAttacks( pSoldier->sGridNo );
 
 		// check if standing in tear gas without a gas mask on

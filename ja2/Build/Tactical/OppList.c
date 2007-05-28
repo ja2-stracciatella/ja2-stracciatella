@@ -2641,7 +2641,7 @@ static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGrid
 {
  INT32 cnt;
  INT8 *pbPublOL;
- UINT8 ubTeamMustLookAgain = FALSE, ubMadeDifference = FALSE;
+ UINT8 ubTeamMustLookAgain = FALSE;
  SOLDIERTYPE *pSoldier;
 
 
@@ -2680,7 +2680,6 @@ static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGrid
 			 {
 					if (ManLooksForMan(pSoldier,MercPtrs[ubID],UPDATEPUBLIC))
 						// then he actually saw guynum because of our new public knowledge
-						ubMadeDifference = TRUE;
 
 					// whether successful or not, whack newOppCnt.  Since this is a
 					// delayed reaction to a radio call, there's no chance of interrupt!
@@ -3148,8 +3147,7 @@ void RadioSightings(SOLDIERTYPE *pSoldier, UINT8 ubAbout, UINT8 ubTeamToRadioTo 
 {
  SOLDIERTYPE *pOpponent;
  INT32 	iLoop;
- UINT8 	start,end,revealedEnemies = 0,unknownEnemies = 0,stillUnseen=TRUE;
- UINT8 	scrollToGuynum = NOBODY,sightedHatedOpponent = FALSE;
+ UINT8 	start,end,revealedEnemies = 0,unknownEnemies = 0;
  //UINT8 	oppIsCivilian;
  INT8 	*pPersOL,*pbPublOL; //,dayQuote;
  BOOLEAN	fContactSeen;
@@ -3231,16 +3229,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
      continue;                          // skip to the next merc
     }
 
-   // determine whether we think we're still unseen or if "our cover's blown"
-   // if we know about this opponent's location for any reason
-   if ((pOpponent->bVisible >= 0) || gbShowEnemies)
-    {
-     // and he can see us, then gotta figure we KNOW that he can see us
-     if (pOpponent->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
-       stillUnseen = FALSE;
-    }
-
-
    // if we personally don't know a thing about this opponent
    if (*pPersOL == NOT_HEARD_OR_SEEN)
     {
@@ -3286,11 +3274,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
    // if it's our merc, and he currently sees this opponent
    if (PTR_OURTEAM && (*pPersOL == SEEN_CURRENTLY) && !(( pOpponent->bSide == pSoldier->bSide) || pOpponent->bNeutral))
    {
-    // used by QueueDayMessage() to scroll to one of the new enemies
-    // scroll to the last guy seen, unless we see a hated guy, then use him!
-    if (!sightedHatedOpponent)
-       scrollToGuynum = pOpponent->ubID;
-
     // don't care whether and how many new enemies are seen if everyone visible
     // and he's healthy enough to be a threat (so is worth talking about)
 
@@ -3307,9 +3290,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 	   			unknownEnemies++;
 
 					fContactSeen = TRUE;
-		   			// if this enemy is hated by the merc doing the sighting
-	   			//if (MercHated(Proptr[ptr->characternum].p_bias,oppPtr->characternum))
-	     			//sightedHatedOpponent = TRUE;
 
 	   			// now the important part: does this enemy see him/her back?
 	   			if (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY)

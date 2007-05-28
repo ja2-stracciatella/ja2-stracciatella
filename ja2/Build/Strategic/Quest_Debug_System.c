@@ -2197,7 +2197,7 @@ static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 
 static void CalcPositionOfNewScrollBoxLocation(void)
 {
-	INT16 sMouseXPos, sMouseYPos;
+	INT16 sMouseYPos;
 	INT16	sIncrementValue;
 	FLOAT	dValue;
 	INT16	sHeight=0;
@@ -2205,7 +2205,6 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
 	INT16	sStartPosOfScrollArea = gpActiveListBox->usScrollPosY + gpActiveListBox->usScrollArrowHeight;
 
-	sMouseXPos = gusMouseXPos;
 	sMouseYPos = gusMouseYPos;
 
 	//if we have to scroll

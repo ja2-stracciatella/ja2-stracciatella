@@ -1200,7 +1200,6 @@ static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
 {
-	UINT16  usNewGridNo = 0;
 	INT16		sAPCost = 0;
 	INT16		sBPCost = 0;
 	UINT32	uiOldAnimFlags;
@@ -1688,8 +1687,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 	uiOldAnimFlags = gAnimControl[ pSoldier->usAnimState ].uiFlags;
 	uiNewAnimFlags = gAnimControl[ usNewState ].uiFlags;
-
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 
 	// CHECKING IF WE HAVE A HIT FINISH BUT NO DEATH IS DONE WITH A SPECIAL ANI CODE
@@ -4043,7 +4040,6 @@ static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT1
 BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestartAnim )
 {
 	INT32	iDest;
-	INT16	sNewGridNo;
 	BOOLEAN fContinue;
 	UINT32	uiDist;
 	UINT16	usAnimState;
@@ -4186,10 +4182,6 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 		pSoldier->sFinalDestination = sDestGridNo;
 		pSoldier->fPastXDest = 0;
 		pSoldier->fPastYDest = 0;
-
-
-		// CHECK IF FIRST TILE IS FREE
-		sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 		// If true, we're OK, if not, WAIT for a guy to pass!
 		// If we are in deep water, we can only swim!
@@ -6708,7 +6700,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	UINT32				iFaceIndex;
 	BOOLEAN				fDoSub = FALSE;
 	INT32					uiSubSoundID = 0;
-	BOOLEAN				fSpeechSound = FALSE;
 
 	// DOUBLECHECK RANGE
 	CHECKF ( ubBattleSoundID < NUM_MERC_BATTLE_SOUNDS );
@@ -6950,9 +6941,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	{
 		if( gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
 			return( TRUE );
-		//else a speech sound is to be played
-		else
-			fSpeechSound = TRUE;
 	}
 
 	// Randomize between sounds, if appropriate
@@ -7195,14 +7183,9 @@ void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier )
 
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange )
 {
-	INT16					dDegAngle;
 	FLOAT					dDeltaPos;
 	FLOAT					dXPos , dYPos;
 	BOOLEAN				fStop = FALSE;
-
-
-	dDegAngle = (INT16)( dAngle * 180 / PI );
-	//sprintf( gDebugStr, "Move Angle: %d", (int)dDegAngle );
 
 	// Find delta Movement for X pos
 	dDeltaPos = (FLOAT) (dMovementChange * sin( dAngle ));
@@ -7376,7 +7359,6 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 	DOUBLE  test_x =  sXPos2 - sXPos;
 	DOUBLE  test_y =  sYPos2 - sYPos;
 	UINT8	  mFacing = WEST;
-	INT16					dDegAngle;
 	DOUBLE angle;
 
 	if ( test_x == 0 )
@@ -7385,10 +7367,6 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 	}
 
 	angle = atan2( test_x, test_y );
-
-
-	dDegAngle = (INT16)( angle * 180 / PI );
-	//sprintf( gDebugStr, "Move Angle: %d", (int)dDegAngle );
 
 	do
 	{
@@ -8463,7 +8441,6 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 {
  UINT32 uiDressSkill, uiPossible, uiActual, uiMedcost, uiDeficiency, uiAvailAPs, uiUsedAPs;
  UINT8 ubBelowOKlife, ubPtsLeft;
- BOOLEAN	fRanOut = FALSE;
 
  if (pVictim->bBleeding < 1 && pVictim->bLife >= OKLIFE )
  {
@@ -8545,7 +8522,6 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 
     if ( uiMedcost > (UINT32)sKitPts )     		// if we can't afford this
     {
-			fRanOut = TRUE;
 			uiMedcost = sKitPts;		// what CAN we afford?
 			uiActual = uiMedcost * 2;		// give double this as aid
     }
@@ -8556,7 +8532,6 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 
     if ( uiMedcost > (UINT32)sKitPts)		// can't afford it
 		{
-			fRanOut = TRUE;
       uiMedcost = uiActual = sKitPts;   	// recalc cost AND aid
 		}
  }
@@ -9493,8 +9468,6 @@ static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 
 static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 {
-	INT8 bOldLife;
-
 	// OK, here make some stuff happen for bleeding
 	// A banaged bleed does not show damage taken , just through existing bandages
 
@@ -9511,8 +9484,6 @@ static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 			SetInfoChar( pSoldier->ubID );
 		}
 	}
-
-	bOldLife = pSoldier->bLife;
 
 	// If we are already dead, don't show damage!
 	if ( !fBandagedBleed )

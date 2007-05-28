@@ -506,7 +506,6 @@ void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iF
 
 static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY)
 {
-	UINT16						usMercProfileID;
 	FACETYPE					*pFace;
 
 	// Check face index
@@ -552,8 +551,6 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 		pFace->uiAutoDisplayBuffer = uiDisplayBuffer;
 	}
 
-
-	usMercProfileID = pFace->ubCharacterNum;
 
 	pFace->usFaceX				= usFaceX;
 	pFace->usFaceY				= usFaceY;
@@ -671,14 +668,11 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 void SetAllAutoFacesInactive(  )
 {
 	UINT32 uiCount;
-	FACETYPE				*pFace;
 
 	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
 	{
 		if ( gFacesData[ uiCount ].fAllocated )
 		{
-			pFace = &gFacesData[ uiCount ];
-
 			SetAutoFaceInActive( uiCount );
 		}
 	}
@@ -1730,7 +1724,6 @@ void HandleAutoFaces( )
 	UINT32 uiCount;
 	FACETYPE				*pFace;
 	INT8	bLife;
-	INT8	bInSector;
 	INT8	bAPs;
 	BOOLEAN	fRerender = FALSE;
 	BOOLEAN	fHandleFace;
@@ -1755,7 +1748,6 @@ void HandleAutoFaces( )
 				 // Get Life now
 				 pSoldier  = MercPtrs[ pFace->ubSoldierID ];
 				 bLife		 = pSoldier->bLife;
-				 bInSector = pSoldier->bInSector;
 				 bAPs      = pSoldier->bActionPoints;
 
 				 if ( pSoldier->ubID == gsSelectedGuy && gfUIHandleSelectionAboveGuy )
@@ -1974,15 +1966,12 @@ void HandleAutoFaces( )
 void HandleTalkingAutoFaces( )
 {
 	UINT32 uiCount;
-	FACETYPE				*pFace;
 
 	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
 	{
 		// OK, NOW, check if our bLife status has changed, re-render if so!
 		if ( gFacesData[ uiCount ].fAllocated  )
 		{
-			pFace = &gFacesData[ uiCount ];
-
 			HandleTalkingAutoFace( uiCount );
 
 		}

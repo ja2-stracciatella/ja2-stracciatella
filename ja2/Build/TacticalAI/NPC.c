@@ -600,7 +600,6 @@ static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8
 	NPCQuoteInfo *				pNPCQuoteInfo=NULL;
 	UINT8									ubTalkDesire, ubLoop, ubQuote, ubHighestOpinionRequired = 0;
 	BOOLEAN								fQuoteFound = FALSE;
-	UINT32								uiDay;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
 	SOLDIERTYPE						*pSoldier=NULL;
 
@@ -660,8 +659,6 @@ static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8
 			ubLastQuoteRecord = NUM_NPC_QUOTE_RECORDS - 1;
 			break;
 	}
-
-	uiDay = GetWorldDay();
 
 	for (ubLoop = ubFirstQuoteRecord; ubLoop <= ubLastQuoteRecord; ubLoop++)
 	{
@@ -750,7 +747,6 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
-	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
 	UINT8 ubTalkDesire, ubLoop;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
@@ -764,8 +760,6 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 		// don't accept any items when we are the player's enemy
 		return( 0 );
 	}
-
-	pNPCProfile = &(gMercProfiles[ubNPC]);
 
 	// How much do we want to talk with this merc?
 
@@ -2576,7 +2570,6 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
 {
 	// Check if we have a quote that could be used
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
-	NPCQuoteInfo	*pQuotePtr;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -2589,7 +2582,6 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
-		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
 		if ( NPCConsiderQuote( ubNPC, 0, ubApproach, ubLoop, 0, pNPCQuoteInfoArray ) )
 		{
 			return( TRUE );
@@ -2667,7 +2659,6 @@ BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pus
 {
 	// Check if we have a quote that could be used
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
-	NPCQuoteInfo	*pQuotePtr;
 	UINT8					ubLoop;
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -2680,7 +2671,6 @@ BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pus
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
-		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
 		if ( NPCConsiderQuote( ubNPC, 0, APPROACH_EPC_IN_WRONG_SECTOR, ubLoop, 0, pNPCQuoteInfoArray ) )
 		{
 			*pusQuoteNum = pNPCQuoteInfoArray[ubLoop].ubQuoteNum;

@@ -2322,16 +2322,13 @@ static BOOLEAN LightGreenTile(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
 LEVELNODE *pStruct, *pLand;
 UINT32 uiTile;
-BOOLEAN fRerender=FALSE, fHitWall=FALSE, fThroughWall=FALSE;
+BOOLEAN fRerender=FALSE, fHitWall=FALSE;
 TILE_ELEMENT *TileElem;
 
 	Assert(gpWorldLevelData!=NULL);
 
 	uiTile=MAPROWCOLTOPOS(sY, sX);
 	pStruct=gpWorldLevelData[uiTile].pStructHead;
-
-	if((sX < sSrcX) || (sY < sSrcY))
-		fThroughWall=TRUE;
 
 	while(pStruct!=NULL)
 	{

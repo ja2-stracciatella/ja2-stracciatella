@@ -1228,7 +1228,6 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 {
 	BOOLEAN			fFound = FALSE;
 	INT32				cnt;
-	BOOLEAN			fFoundAttachment = FALSE;
 
 	const OBJECTTYPE* pTestObject;
 	if( fFromMerc == FALSE )
@@ -1313,8 +1312,6 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 					 ValidLaunchable( pTestObject->usItem, pObject->usItem ) ||
 					 ValidLaunchable( pObject->usItem, pTestObject->usItem ) )
 			{
-				fFoundAttachment = TRUE;
-
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
 					fFound = TRUE;
@@ -1377,7 +1374,6 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 	BOOLEAN			fFound = FALSE;
 	INT32				cnt;
 	OBJECTTYPE  *pObject, *pTestObject ;
-	BOOLEAN			fFoundAttachment = FALSE;
 
 	if( fFromMerc == FALSE )
 	{
@@ -1411,8 +1407,6 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 				 ValidLaunchable( pTestObject->usItem, pObject->usItem ) ||
 				 ValidLaunchable( pObject->usItem, pTestObject->usItem ) )
 		{
-			fFoundAttachment = TRUE;
-
 			if ( fOn != fMapInventoryItemCompatable[ cnt ] )
 			{
 				fFound = TRUE;
@@ -1650,7 +1644,6 @@ void ResetCompatibleItemArray( )
 BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEAN fOn)
 {
 	INT32 cnt;
-	BOOLEAN			fFound = FALSE;
 
 	//if we are in the shopkeeper interface
 	const OBJECTTYPE* pTestObject;
@@ -1678,7 +1671,6 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 				{
 					if ( gbCompatibleAmmo[ cnt ] )
 					{
-						fFound = TRUE;
 						gbCompatibleAmmo[ cnt ] = FALSE;
 					}
 				}
@@ -5055,7 +5047,7 @@ static void EndItemStackPopupWithItemInHand(void)
 void RenderItemStackPopup( BOOLEAN fFullRender )
 {
   ETRLEObject						*pTrav;
-	UINT32								usHeight, usWidth;
+	UINT32								usWidth;
 	UINT32								cnt;
 	INT16									sX, sY, sNewX, sNewY;
 
@@ -5075,7 +5067,6 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
 	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 
 
@@ -5600,10 +5591,6 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	UINT32					uiItemPos;
-
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if ( InItemStackPopup( ) )
@@ -6058,11 +6045,10 @@ static void SetupPickupPage(INT8 bPage)
 static void CalculateItemPickupMenuDimensions(void)
 {
 	INT32			cnt;
-	INT16			sX, sY;
+	INT16			sY;
 	UINT16			usSubRegion, usHeight, usWidth;
 
 	// Build background
-	sX = 0;
 	sY = 0;
 
 	for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )

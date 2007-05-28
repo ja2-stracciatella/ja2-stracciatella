@@ -2511,7 +2511,6 @@ static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID,
 
 static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefencePoints, GROUP** pOptionalGroup)
 {
-	SECTORINFO *pSector;
 	INT32 iChance, iRandom, iSrcGarrisonID;
 	INT32 iMaxReinforcementsAllowed, iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	GROUP *pGroup;
@@ -2522,13 +2521,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 	ValidateWeights( 8 );
 
-	if( gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_B13 ||
-		  gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_C13 ||
-		  gGarrisonGroup[ iDstGarrisonID ].ubSectorID == SEC_D13 )
-	{
-		pSector = NULL;
-	}
-	pSector = &SectorInfo[ gGarrisonGroup[ iDstGarrisonID ].ubSectorID ];
 	//Determine how many units the garrison needs.
 	iReinforcementsRequested = GarrisonReinforcementsRequested( iDstGarrisonID, &ubNumExtraReinforcements );
 
@@ -2864,7 +2856,6 @@ void EvaluateQueenSituation()
 	INT32 iWeight;
 	UINT32 uiOffset;
 	UINT16 usDefencePoints;
-	INT32 iOrigRequestPoints;
 	INT32 iSumOfAllWeights = 0;
 
 	ValidateWeights( 26 );
@@ -2919,8 +2910,6 @@ void EvaluateQueenSituation()
 	//now randomly choose who gets the reinforcements.
 	// giRequestPoints is the combined sum of all the individual weights of all garrisons and patrols requesting reinforcements
 	iRandom = Random( giRequestPoints );
-
-	iOrigRequestPoints = giRequestPoints;	// debug only!
 
 	//go through garrisons first
 	for( i = 0; i < giGarrisonArraySize; i++ )
@@ -3370,7 +3359,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 			{
 				INT32 cnt, iRandom;
 				INT32 iEliteChance, iTroopChance, iAdminChance;
-				INT32 iStartPop, iDesiredPop, iPriority;
+				INT32 iStartPop;
 				SECTORINFO *pSector = NULL;
 
 				//Change the garrison composition to LEVEL1_DEFENCE from LEVEL2_DEFENCE
@@ -3378,8 +3367,6 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 				gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition = LEVEL1_DEFENCE;
 
 				iStartPop = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bStartPopulation;
-				iDesiredPop = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
-				iPriority = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bPriority;
 				iEliteChance = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bElitePercentage;
 				iTroopChance = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bTroopPercentage + iEliteChance;
 				iAdminChance = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bAdminPercentage;
@@ -5097,26 +5084,11 @@ static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT
 	INT32 iCompositionID;
 	UINT8 ubNumTroops, ubNumElites;
 
-	//debug stuff
-	UINT8 ubOrigSectorAdmins;
-	UINT8 ubOrigSectorTroops;
-	UINT8 ubOrigSectorElites;
-	UINT8 ubOrigNumElites;
-	UINT8 ubOrigNumTroops;
-	UINT8 ubOrigSize;
-
 	iCompositionID = gGarrisonGroup[ iGarrisonID ].ubComposition;
 
 	CalcNumTroopsBasedOnComposition( &ubNumTroops, &ubNumElites, ubSize, iCompositionID );
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	//if there are administrators in this sector, remove them first.
-
-	ubOrigNumElites = ubNumElites;
-	ubOrigNumTroops = ubNumTroops;
-	ubOrigSectorAdmins = pSector->ubNumAdmins;
-	ubOrigSectorTroops = pSector->ubNumTroops;
-	ubOrigSectorElites = pSector->ubNumElites;
-	ubOrigSize = ubSize;
 
 	while( ubSize && pSector->ubNumAdmins )
 	{

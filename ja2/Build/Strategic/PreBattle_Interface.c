@@ -927,7 +927,6 @@ static void GetSoldierConditionInfo(SOLDIERTYPE* pSoldier, wchar_t* szCondition,
 
 void RenderPreBattleInterface()
 {
-	GROUP *pGroup;
 	INT32 i, x, y, line, width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
@@ -1152,7 +1151,6 @@ void RenderPreBattleInterface()
 		}
 		else
 		{
-			pGroup = gpGroupList;
 			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
 			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 			{

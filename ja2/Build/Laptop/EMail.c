@@ -2958,12 +2958,8 @@ static void PreProcessEmail(Email* pMail)
 
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords)
 {
-	Record* pTempRecord;
 	wchar_t pString[MAIL_STRING_SIZE];
 	UINT8	ubCnt;
-
-	// set record ptr to head of list
-	pTempRecord=pMessageRecordList;
 
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{

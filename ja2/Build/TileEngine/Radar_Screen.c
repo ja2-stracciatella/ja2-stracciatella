@@ -261,8 +261,6 @@ void RenderRadarScreen( )
 	INT16 sScreenCenterX, sScreenCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
 	INT16 sTopLeftWorldX, sTopLeftWorldY;
-	INT16 sTopRightWorldX, sTopRightWorldY;
-	INT16 sBottomLeftWorldX, sBottomLeftWorldY;
 	INT16 sBottomRightWorldX, sBottomRightWorldY;
 
 
@@ -336,12 +334,6 @@ void RenderRadarScreen( )
 	sTopLeftWorldX = sScreenCenterX  - sX_S;
 	sTopLeftWorldY = sScreenCenterY  - sY_S;
 
-	sTopRightWorldX = sScreenCenterX  + sX_S;
-	sTopRightWorldY = sScreenCenterY  - sY_S;
-
-	sBottomLeftWorldX = sScreenCenterX  - sX_S;
-	sBottomLeftWorldY = sScreenCenterY  + sY_S;
-
 	sBottomRightWorldX = sScreenCenterX  + sX_S;
 	sBottomRightWorldY = sScreenCenterY  + sY_S;
 
@@ -354,7 +346,6 @@ void RenderRadarScreen( )
 	sWidth		= ( RADAR_WINDOW_WIDTH );
 	sHeight		= ( RADAR_WINDOW_HEIGHT );
 	sX				= RADAR_WINDOW_X;
-	sY				= gsRadarY;
 
 
 	sRadarTLX = (INT16)( ( sTopLeftWorldX * gdScaleX ) - sRadarCX  + sX + ( sWidth /2 ) );
@@ -383,10 +374,6 @@ void RenderRadarScreen( )
 
 	if( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( fShowMapInventoryPool == TRUE ) )
 	{
-		INT32 iNumberOfItems = 0;
-
-		iNumberOfItems = GetTotalNumberOfItems( );
-
 		for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 		{
 

@@ -906,10 +906,9 @@ INT16 CenterX( INT16 sGridNo )
 // Returns the (center ) cell coordinates in Y
 INT16 CenterY( INT16 sGridNo )
 {
-	INT16 sYPos, sXPos;
+	INT16 sYPos;
 
 	sYPos = sGridNo / WORLD_COLS;
-	sXPos = ( sGridNo - ( sYPos * WORLD_COLS ) );
 
 	return( ( sYPos * CELL_Y_SIZE ) + ( CELL_Y_SIZE / 2 ) );
 }
@@ -928,10 +927,9 @@ static INT16 MapX(INT16 sGridNo)
 
 static INT16 MapY(INT16 sGridNo)
 {
-	INT16 sYPos, sXPos;
+	INT16 sYPos;
 
 	sYPos = sGridNo / WORLD_COLS;
-	sXPos = ( sGridNo - ( sYPos * WORLD_COLS ) );
 
 	return( sYPos );
 }

@@ -525,6 +525,7 @@ static void ClearUpTempUnSeenList(void)
 }
 
 
+static INT32 GetTotalNumberOfItems(void);
 static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 iNumberUnSeenItems, WORLDITEM* pSeenItemsList, WORLDITEM* pUnSeenItemsList);
 
 
@@ -727,7 +728,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
-	UINT16 usOldItemIndex, usNewItemIndex;
 	INT32 iOldNumberOfObjects = 0;
 	INT16 sDistanceFromObject = 0;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -851,8 +851,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 				return;
 			}
 
-			usOldItemIndex = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.usItem;
-			usNewItemIndex = gpItemPointer->usItem;
 			iOldNumberOfObjects =  pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.ubNumberOfObjects;
 
 
@@ -1626,7 +1624,8 @@ static INT32 GetTotalNumberOfItemsInSectorStash(void)
 }
 
 
-INT32 GetTotalNumberOfItems( void )
+// get total number of items in sector
+static INT32 GetTotalNumberOfItems(void)
 {
 	INT32 iCounter, iCount = 0;
 

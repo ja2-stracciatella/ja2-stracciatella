@@ -1631,10 +1631,6 @@ void MapScreenMsgScrollDown( UINT8 ubLinesDown )
 
 void MapScreenMsgScrollUp( UINT8 ubLinesUp )
 {
-	UINT8 ubNumMessages;
-
-  ubNumMessages = GetRangeOfMapScreenMessages();
-
 	// check if we can go that far, only go as far as we can
 	if ( gubFirstMapscreenMessageIndex < ubLinesUp )
 	{

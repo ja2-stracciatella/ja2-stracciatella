@@ -1310,12 +1310,9 @@ static UINT8 GetStatColor(INT8 bStat)
 //displays the dots between the stats and the stat name
 static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString)
 {
-	INT16 sNumberOfDots;
 	UINT16 usStringLength = StringPixLength(pString, AIM_M_FONT_STATIC_TEXT);
 	INT16	 i;
 	UINT16 usPosX;
-
-	sNumberOfDots = (usStatX - usNameX - usStringLength) / 7;
 
 	usPosX = usStatX;
 	for(i=usNameX + usStringLength; i <= usPosX; usPosX-=7)
@@ -2307,15 +2304,10 @@ static BOOLEAN DisplaySnowBackground(void)
 static BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 {
 	UINT32		uiCurrentTime = 0;
-	UINT8			ubCount;
 
 	uiCurrentTime = GetJA2Clock();
 
-	if(gubCurrentCount < ubMaxNumOfLoops)
-	{
-		ubCount = gubCurrentCount;
-	}
-	else
+	if (gubCurrentCount >= ubMaxNumOfLoops)
 	{
 		gubCurrentCount = 0;
 		return(TRUE);
@@ -2685,7 +2677,6 @@ static BOOLEAN DeleteVideoConfPopUp(void);
 static BOOLEAN InitDeleteVideoConferencePopUp(void)
 {
 	static BOOLEAN	fXRegionActive = FALSE;
-	static BOOLEAN	fVideoConferenceCreated = FALSE;
 	UINT8	i;
 	UINT16	usPosX, usPosY;
 
@@ -2760,9 +2751,6 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 				EnableDisableCurrentVideoConferenceButtons(FALSE);
 			}
 
-
-		fVideoConferenceCreated = FALSE;
-
 		fNewMailFlag = gfIsNewMailFlagSet;
 		gfIsNewMailFlagSet = FALSE;
 
@@ -2811,8 +2799,6 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		gfVideoFaceActive = FALSE;
 		guiLastHandleMercTime = 0;
 		gfHangUpMerc = FALSE;
-
-		fVideoConferenceCreated = TRUE;
 	}
 
 	// The screen in which you first contact the merc, you have the option to hang up or goto hire merc screen

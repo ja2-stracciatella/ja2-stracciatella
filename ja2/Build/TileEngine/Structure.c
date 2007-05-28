@@ -1071,7 +1071,6 @@ static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStruct
 
 BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 { // removes all of the STRUCTURE elements for a structure from the world
-	MAP_ELEMENT *					pBaseMapElement;
 	STRUCTURE *						pBaseStructure;
 	DB_STRUCTURE_TILE	**	ppTile;
 	STRUCTURE *						pCurrent;
@@ -1079,7 +1078,6 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 	UINT8									ubNumberOfTiles;
 	INT16									sBaseGridNo, sGridNo;
 	UINT16								usStructureID;
-	BOOLEAN								fMultiStructure;
 	BOOLEAN								fRecompileMPs;
 	BOOLEAN								fRecompileExtraRadius; // for doors... yuck
 	INT16									sCheckGridNo;
@@ -1090,7 +1088,6 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 	CHECKF( pBaseStructure );
 
 	usStructureID = pBaseStructure->usStructureID;
-	fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
 	fRecompileMPs = ( ( gsRecompileAreaLeft != 0 ) && ! ( ( pBaseStructure->fFlags & STRUCTURE_MOBILE ) != 0 ) );
 	if (fRecompileMPs)
 	{
@@ -1101,7 +1098,6 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 		fRecompileExtraRadius = FALSE;
 	}
 
-	pBaseMapElement = &gpWorldLevelData[pBaseStructure->sGridNo];
 	ppTile = pBaseStructure->pDBStructureRef->ppTile;
 	sBaseGridNo = pBaseStructure->sGridNo;
 	ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
@@ -1865,7 +1861,6 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 	INT16						sOffsetX;
 	INT16						sOffsetY;
 	UINT16					usWidth;
-	UINT16					usHeight;
 	DB_STRUCTURE_REF *	pDBStructureRef;
 	DB_STRUCTURE *	pDBStructure = NULL;
 	INT16						sSTIStep = 0;
@@ -2010,7 +2005,6 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 						sOffsetX = hVObject->pETRLEObject[uiLoop].sOffsetX;
 						sOffsetY = hVObject->pETRLEObject[uiLoop].sOffsetY;
 						usWidth = hVObject->pETRLEObject[uiLoop].usWidth;
-						usHeight = hVObject->pETRLEObject[uiLoop].usHeight;
 						if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE) )
 						{
 							// adjust for the difference between the animation and structure base tile

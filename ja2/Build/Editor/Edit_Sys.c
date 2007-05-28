@@ -569,7 +569,6 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 	BOOLEAN				fDoPaste = FALSE;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
-	UINT16 usIndex;
 
 	pSelList = SelBanks;
 	pNumSelList = &iNumBanksSelected;
@@ -597,9 +596,6 @@ void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
 
 		if ( fDoPaste )
 		{
-
-			usIndex = gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex;
-
 			AddToUndoList( iMapIndex );
 
 			{
@@ -966,7 +962,6 @@ void RaiseWorldLand( )
 	UINT32				sTempGridNo;
 	LEVELNODE			*pStruct;
 	TILE_ELEMENT	*pTileElement;
-	BOOLEAN fRaise;
 	BOOLEAN fRaiseSet;
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
@@ -975,7 +970,6 @@ void RaiseWorldLand( )
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;
 
-	fRaise=FALSE;
 	fRaiseSet=FALSE;
 
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )

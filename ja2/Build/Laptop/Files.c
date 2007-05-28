@@ -649,7 +649,6 @@ static BOOLEAN DisplayFormattedText(void)
 	FilesUnit* pFilesList = pFilesListHead;
 
 	INT32 iCounter=0;
-  INT32 iLength=0;
 	INT32 iOffSet=0;
 	INT32 iMessageCode;
 
@@ -680,8 +679,6 @@ static BOOLEAN DisplayFormattedText(void)
 		// increment counter
 		iCounter++;
 	}
-
-	iLength = ubFileRecordsLength[pFilesList->ubCode];
 
 	// reset counter
 	iCounter=0;

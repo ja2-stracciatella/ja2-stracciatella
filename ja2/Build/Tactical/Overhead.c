@@ -4250,10 +4250,10 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 // in that location, because we could be passed a gridno based on the overlap of soldier's graphic
 // fDoor determines whether special door-handling code should be used (for interacting with doors)
 
- INT16 sFourGrids[4], sDistance=0;
+ INT16 sDistance = 0;
  INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
  INT32 cnt;
- INT16 sClosest=NOWHERE, sSpot, sOkTest;
+ INT16 sClosest=NOWHERE, sSpot;
  INT16 sCloseGridNo=NOWHERE;
  UINT32                                         uiMercFlags;
  UINT16                                         usSoldierIndex;
@@ -4353,7 +4353,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 	}
 
 
- if ( ( sOkTest = NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) ) > 0)    // no problem going there! nobody on it!
+ if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
  {
 	 // OK, if we are looking to goto a switch, ignore this....
 	 if ( pDoor )
@@ -4393,7 +4393,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
  for (cnt = 0; cnt < 4; cnt++)
  {
 	 // MOVE OUT TWO DIRECTIONS
-   sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
+   sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
 	 ubTestDirection = (UINT8)sDirs[ cnt ];
 
@@ -4538,10 +4538,10 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 // in that location, because we could be passed a gridno based on the overlap of soldier's graphic
 // fDoor determines whether special door-handling code should be used (for interacting with doors)
 
- INT16 sFourGrids[4], sDistance=0;
+ INT16 sDistance=0;
  INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
  INT32 cnt;
- INT16 sClosest=WORLD_MAX, sSpot, sSpot2, sOkTest;
+ INT16 sClosest=WORLD_MAX, sSpot, sSpot2;
  INT16 sCloseGridNo=NOWHERE;
  UINT32                                         uiMercFlags;
  UINT16                                         usSoldierIndex;
@@ -4588,7 +4588,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	}
 
 
- if ( ( sOkTest = NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) ) > 0)    // no problem going there! nobody on it!
+ if (NewOKDestination(pSoldier, sGridNo, TRUE, pSoldier->bLevel) > 0) // no problem going there! nobody on it!
  {
 	 // OK, if we are looking to goto a switch, ignore this....
 	 if ( pDoor )
@@ -4620,7 +4620,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
  for (cnt = 0; cnt < 4; cnt++)
  {
 	 // MOVE OUT TWO DIRECTIONS
-   sFourGrids[cnt] = sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
+   sSpot = NewGridNo( sGridNo, DirectionInc( sDirs[ cnt ] ) );
 
 	 ubTestDirection = (UINT8)sDirs[ cnt ];
 
@@ -4873,7 +4873,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 	INT32                           cnt;
 	SOLDIERTYPE             *pTeamSoldier, *pTargetSoldier;
 	UINT32                  uiPointsUsed;
-	UINT16                  usSoldierIndex, usInHand;
+	UINT16                  usSoldierIndex;
 	UINT16                  usKitPts;
   INT8										bSlot;
 	BOOLEAN									fDone;
@@ -4891,9 +4891,6 @@ void HandleTeamServices( UINT8 ubTeamNum )
 			// FOR DOING AID
 			if ( pTeamSoldier->usAnimState == GIVING_AID )
 			{
-				// Get medkit info
-				usInHand = pTeamSoldier->inv[ HANDPOS ].usItem;
-
 				// Get victim pointer
 				usSoldierIndex = WhoIsThere2( pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel );
 				if ( usSoldierIndex != NOBODY )
@@ -4965,7 +4962,7 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 {
 	SOLDIERTYPE     *pTargetSoldier;
 	UINT32                  uiPointsUsed;
-	UINT16                  usSoldierIndex, usInHand;
+	UINT16                  usSoldierIndex;
 	UINT16                  usKitPts;
 	INT8										bSlot;
 	BOOLEAN									fDone = FALSE;
@@ -4976,9 +4973,6 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 		// FOR DOING AID
 		if ( pTeamSoldier->usAnimState == GIVING_AID )
 		{
-			// Get medkit info
-			usInHand = pTeamSoldier->inv[ HANDPOS ].usItem;
-
 			// Get victim pointer
 			usSoldierIndex = WhoIsThere2( pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel );
 
@@ -6043,10 +6037,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 {
 	// static to indicate last position we were at:
 	SOLDIERTYPE		 *pSoldier;
-	UINT16	usStartToLook;
 	UINT32				cnt;
-
-	usStartToLook = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 
 	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID, pSoldier = MercPtrs[ cnt ]; cnt < TOTAL_SOLDIERS; cnt++, pSoldier++ )
 	{
@@ -6074,7 +6065,6 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 	pSrcSoldier->ubLastEnemyCycledID = 0;
 
 
-	usStartToLook = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID, pSoldier = MercPtrs[ cnt ]; cnt < TOTAL_SOLDIERS; cnt++, pSoldier++ )
 	{
 		// try to find first active, OK enemy

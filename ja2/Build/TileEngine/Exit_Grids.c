@@ -104,13 +104,12 @@ BOOLEAN	GetExitGridLevelNode( UINT16 usMapIndex, LEVELNODE **ppLevelNode )
 
 void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
 {
-	LEVELNODE *pShadow, *tail;
+	LEVELNODE *pShadow;
 	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
 
 	//Search through object layer for an exitgrid
 	while( pShadow )
 	{
-		tail = pShadow;
 		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
 		{ //we have found an existing exitgrid in this node, so replace it with the new information.
 			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );

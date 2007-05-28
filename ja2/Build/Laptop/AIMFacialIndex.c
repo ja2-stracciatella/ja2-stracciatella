@@ -219,15 +219,8 @@ static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason
 {
 	UINT8	ubMercNum;
 	UINT16 usPosX, usPosY;
-	UINT16 ty1, ty2, tx1, tx2;
 
 	ubMercNum = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
-
-	ty1 = AIM_FI_FIRST_MUGSHOT_Y;
-	ty2 = (AIM_FI_PORTRAIT_HEIGHT + AIM_FI_MUGSHOT_GAP_Y);
-
-	tx1 = AIM_FI_FIRST_MUGSHOT_X;
-	tx2 = (AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X);
 
 	usPosY = ubMercNum / AIM_FI_NUM_MUHSHOTS_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y + (AIM_FI_PORTRAIT_HEIGHT + AIM_FI_MUGSHOT_GAP_Y) * usPosY;

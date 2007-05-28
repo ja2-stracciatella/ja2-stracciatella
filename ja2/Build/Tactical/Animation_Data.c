@@ -979,7 +979,6 @@ static BOOLEAN LoadAnimationProfiles(void)
 //	FILE *			pInput;
 	HWFILE			pInput;
 	INT32				iProfileCount, iDirectionCount, iTileCount;
-	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDirs;
 
 //	pInput = fopen( ANIMPROFILEFILENAME, "rb" );
@@ -1000,9 +999,6 @@ static BOOLEAN LoadAnimationProfiles(void)
 	// Loop profiles
 	for ( iProfileCount = 0; iProfileCount < gubNumAnimProfiles; iProfileCount++ )
 	{
-		// Get profile pointer
-		pProfile = &( gpAnimProfiles[ iProfileCount ] );
-
 		// Loop directions
 		for ( iDirectionCount = 0; iDirectionCount < 8; iDirectionCount++ )
 		{
@@ -1042,15 +1038,11 @@ static BOOLEAN LoadAnimationProfiles(void)
 static void DeleteAnimationProfiles(void)
 {
 	INT32				iProfileCount, iDirectionCount;
-	ANIM_PROF					*pProfile;
 	ANIM_PROF_DIR			*pProfileDir;
 
 	// Loop profiles
 	for ( iProfileCount = 0; iProfileCount < gubNumAnimProfiles; iProfileCount++ )
 	{
-		// Get profile pointer
-		pProfile = &( gpAnimProfiles[ iProfileCount ] );
-
 		// Loop directions
 		for ( iDirectionCount = 0; iDirectionCount < 8; iDirectionCount++ )
 		{

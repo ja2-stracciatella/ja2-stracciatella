@@ -437,7 +437,6 @@ static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
 static BOOLEAN DrawAimPolicyMenu(void)
 {
 	UINT16			i, usPosY;
-	UINT16			usHeight;
 	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
 								{	DEFINITIONS,
@@ -452,7 +451,6 @@ static BOOLEAN DrawAimPolicyMenu(void)
 
 	HVOBJECT	hContentButtonHandle = GetVideoObject(guiContentButton);
 
-	usHeight = GetFontHeight(AIM_POLICY_TOC_FONT);
 	usPosY = AIM_POLICY_TOC_Y;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
 	{
@@ -475,12 +473,10 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 static BOOLEAN InitAimPolicyTocMenu(void)
 {
 	UINT16			i, usPosY;
-	UINT16			usHeight;
 
 	if(gfInPolicyToc)
 		return(TRUE);
 
-	usHeight = GetFontHeight(AIM_POLICY_TOC_FONT);
 	usPosY = AIM_POLICY_TOC_Y;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
 	{

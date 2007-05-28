@@ -57,7 +57,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 {
 	UINT16										us16BPPColor;
 	UINT32										cnt1;
-	UINT8											ubSize, ubType;
+	UINT8											ubSize;
 	INT16											 sTLX, sTLY, sBRX, sBRY;
 	UINT8											ubPaletteRep;
 
@@ -66,7 +66,6 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 
 	SetFont( LARGEFONT1 );
 
-	ubType = gpPalRep[ ubPaletteRep ].ubType;
 	ubSize = gpPalRep[ ubPaletteRep ].ubPaletteSize;
 
 	for ( cnt1 = 0; cnt1 < ubSize; cnt1++ )

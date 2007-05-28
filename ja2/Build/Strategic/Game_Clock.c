@@ -62,8 +62,6 @@ extern BOOLEAN fMapScreenBottomDirty;
 
 
 #define			SECONDS_PER_COMPRESSION						1 // 1/2 minute passes every 1 second of real time
-#define			SECONDS_PER_COMPRESSION_IN_RTCOMBAT			10
-#define			SECONDS_PER_COMPRESSION_IN_TBCOMBAT			10
 #define			CLOCK_STRING_HEIGHT				13
 #define			CLOCK_STRING_WIDTH				66
 #define			CLOCK_FONT							COMPFONT
@@ -185,22 +183,6 @@ void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode )
 
 static void AdvanceClock(UINT8 ubWarpCode)
 {
-	UINT32 uiGameSecondsPerRealSecond = guiGameSecondsPerRealSecond;
-
-
-	// Set value, to different things if we are in combat...
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		if ( (gTacticalStatus.uiFlags & TURNBASED) )
-		{
-			uiGameSecondsPerRealSecond = SECONDS_PER_COMPRESSION_IN_TBCOMBAT;
-		}
-		else
-		{
-			uiGameSecondsPerRealSecond = SECONDS_PER_COMPRESSION_IN_RTCOMBAT;
-		}
-	}
-
 	if( ubWarpCode != WARPTIME_NO_PROCESSING_OF_EVENTS )
 	{
 		guiTimeOfLastEventQuery = guiGameClock;

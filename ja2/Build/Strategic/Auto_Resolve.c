@@ -1370,12 +1370,10 @@ static UINT32 AutoBandageMercs(void)
 	UINT32 uiPointsUsed, uiCurrPointsUsed, uiMaxPointsUsed, uiParallelPointsUsed;
 	UINT16 usKitPts;
 	OBJECTTYPE *pKit = NULL;
-	BOOLEAN fFound = FALSE;
 	BOOLEAN fComplete = TRUE;
 	INT8 bSlot, cnt;
 
 	//Do we have any doctors?  If so, bandage selves first.
-	fFound = FALSE;
 	uiMaxPointsUsed = uiParallelPointsUsed = 0;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
@@ -1384,7 +1382,6 @@ static UINT32 AutoBandageMercs(void)
 				gpMercs[ i ].pSoldier->bMedical > 0 &&
 				( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
 		{
-			fFound = TRUE;
 			//bandage self first!
 			uiCurrPointsUsed = 0;
 			cnt = 0;

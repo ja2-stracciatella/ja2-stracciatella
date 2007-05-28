@@ -2255,7 +2255,6 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 	INT32							iHandleReturn;
 	INT16							sTargetGridNo;
 	INT8							bTargetLevel;
-	UINT16						usItem;
 	LEVELNODE					*pIntNode;
 	STRUCTURE					*pStructure;
 	INT16							sGridNo, sNewGridNo;
@@ -2279,7 +2278,6 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 
 	// Set aim time to one in UI
 	pSoldier->bAimTime			= (pSoldier->bShownAimTime/2);
-	usItem									= pSoldier->inv[ HANDPOS ].usItem;
 
 	// ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
 	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
@@ -2645,7 +2643,6 @@ BOOLEAN SelectedMercCanAffordAttack( )
 	INT16							sTargetGridNo;
 	INT16							sAPCost;
 	UINT8							ubItemCursor;
-	UINT16						usInHand;
 
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
@@ -2658,9 +2655,6 @@ BOOLEAN SelectedMercCanAffordAttack( )
 		SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 		if (pSoldier != NULL)
 		{
-			// LOOK IN GUY'S HAND TO CHECK LOCATION
-			usInHand = pSoldier->inv[HANDPOS].usItem;
-
 			// Get cursor value
 			ubItemCursor  =  GetActionModeCursor( pSoldier );
 
@@ -5881,7 +5875,7 @@ BOOLEAN ValidQuickExchangePosition( )
 // to jump over people.
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath)
 {
-	INT16 sFourGrids[4], sSpot, sIntSpot;
+	INT16 sSpot, sIntSpot;
 	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	INT32 cnt;
 	UINT8	ubGuyThere;
@@ -5917,7 +5911,7 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 
 
 		// TWICE AS FAR!
-		sFourGrids[cnt] = sSpot = NewGridNo( sIntSpot, DirectionInc( sDirs[ cnt ] ) );
+		sSpot = NewGridNo( sIntSpot, DirectionInc( sDirs[ cnt ] ) );
 
 		// Is the soldier we're looking at here?
 		ubGuyThere = WhoIsThere2( sSpot, pSoldier->bLevel );

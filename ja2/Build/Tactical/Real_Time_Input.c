@@ -209,24 +209,18 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 										}
 										else if ( bReturnCode == 0 )
 										{
+											if ( gusSelectedSoldier != NOBODY )
 											{
+												if (UIOKMoveDestination(MercPtrs[gusSelectedSoldier], usMapPos) == 1)
 												{
-													BOOLEAN fResult;
-
-													if ( gusSelectedSoldier != NOBODY )
+													if ( gsCurrentActionPoints != 0 )
 													{
-														if ( ( fResult = UIOKMoveDestination( MercPtrs[ gusSelectedSoldier ], usMapPos ) ) == 1 )
+														// We're on terrain in which we can walk, walk
+														// If we're on terrain,
+														if ( !gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
 														{
-															if ( gsCurrentActionPoints != 0 )
-															{
-																// We're on terrain in which we can walk, walk
-																// If we're on terrain,
-																if ( !gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
-																{
-																	*puiNewEvent = C_WAIT_FOR_CONFIRM;
-																	gfPlotNewMovement = TRUE;
-																}
-															}
+															*puiNewEvent = C_WAIT_FOR_CONFIRM;
+															gfPlotNewMovement = TRUE;
 														}
 													}
 												}
@@ -1226,8 +1220,6 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 	static UINT16			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 	SOLDIERTYPE								 *pSoldier;
-	static BOOLEAN		fOnValidGuy = FALSE;
-
 
 	if (!GetMouseMapPos( &usMapPos ) )
 	{
@@ -1356,11 +1348,7 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 				if (pSoldier != NULL)
 				{
-						UINT16 usItem;
 						UINT8					ubItemCursor;
-
-						 // Alrighty, check what's in our hands = if a 'friendly thing', like med kit, look for our own guys
-						 usItem = pSoldier->inv[HANDPOS].usItem;
 
 						 // get cursor for item
 						 ubItemCursor  =  GetActionModeCursor( pSoldier );
@@ -1415,8 +1403,6 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 				// Check if the guy is visible
 				guiUITargetSoldierId = NOBODY;
 
-				fOnValidGuy = FALSE;
-
 				if ( gfUIFullTargetFound  )
 				//if ( gfUIFullTargetFound )
 				{
@@ -1424,18 +1410,12 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 						{
 							 guiUITargetSoldierId = gusUIFullTargetID;
 
-							 if ( MercPtrs[ gusUIFullTargetID ]->bTeam != gbPlayerNum )
-							 {
-								fOnValidGuy = TRUE;
-							 }
-							 else
-							 {
-									if ( gUIActionModeChangeDueToMouseOver )
-									{
-										*puiNewEvent = A_CHANGE_TO_MOVE;
-										return;
-									}
-							 }
+							if (MercPtrs[gusUIFullTargetID]->bTeam == gbPlayerNum &&
+									gUIActionModeChangeDueToMouseOver)
+							{
+								*puiNewEvent = A_CHANGE_TO_MOVE;
+								return;
+							}
 						}
 				}
 				else

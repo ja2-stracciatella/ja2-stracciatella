@@ -1067,7 +1067,6 @@ static void DisplayFinancePageNumberAndDateRange(void)
 	// this function will go through the list of 'histories' starting at current until end or
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iCounter=0;
-  UINT32 uiLastDate;
 	FinanceUnit* pTempFinance = pFinanceListHead;
   wchar_t sString[50];
 
@@ -1089,7 +1088,6 @@ static void DisplayFinancePageNumberAndDateRange(void)
 		}
 	}
 
-	uiLastDate=pCurrentFinance->uiDate;
 	// find last page
 	while(pTempFinance)
 	{

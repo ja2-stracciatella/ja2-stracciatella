@@ -1421,7 +1421,7 @@ static void UpClkCallback(GUI_BUTTON* button, INT32 reason)
 void ScrollSelWinUp(void)
 {
 	DisplayList *pNode;
-	INT16 iCutOff,iBotCutOff;
+	INT16 iCutOff;
 	BOOLEAN fDone;
 
 	// Code to scroll window up!
@@ -1443,7 +1443,6 @@ void ScrollSelWinUp(void)
 		}
 	}
 
-	iBotCutOff = iBotWinCutOff - iTopWinCutOff + iCutOff;
 	iTopWinCutOff = iCutOff;
 }
 
@@ -1456,7 +1455,7 @@ void ScrollSelWinUp(void)
 void ScrollSelWinDown(void)
 {
 	DisplayList *pNode;
-	INT16 iCutOff,iBotCutOff;
+	INT16 iCutOff;
 	BOOLEAN fDone;
 
 	pNode = pDispList;
@@ -1474,7 +1473,6 @@ void ScrollSelWinDown(void)
 			fDone = TRUE;
 	}
 
-	iBotCutOff = iBotWinCutOff - iTopWinCutOff + iCutOff;
 	iTopWinCutOff = iCutOff;
 }
 

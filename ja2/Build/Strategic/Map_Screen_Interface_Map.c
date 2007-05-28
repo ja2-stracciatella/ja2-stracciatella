@@ -475,7 +475,6 @@ BOOLEAN gfMilitiaPopupCreated = FALSE;
 
 INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
-INT32 giClickHeliIconBaseTime = 0;
 
 
 extern BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY );
@@ -4463,22 +4462,11 @@ static void DisplayDestinationOfHelicopter(void)
 
 BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSectorY )
 {
-	INT32 iDeltaTime = 0;
-	BOOLEAN fIgnoreClick = FALSE;
 	GROUP *pGroup = NULL;
 	BOOLEAN fHelicopterOverNextSector = FALSE;
 	FLOAT flRatio = 0.0;
 	INT16 sSectorX;
 	INT16 sSectorY;
-
-
-	iDeltaTime = GetJA2Clock() - giClickHeliIconBaseTime;
-	giClickHeliIconBaseTime = GetJA2Clock();
-
-	if( iDeltaTime < 400 )
-	{
-		fIgnoreClick = TRUE;
-	}
 
 	if( !fHelicopterAvailable || !fShowAircraftFlag )
 	{
@@ -6565,7 +6553,6 @@ static void BlitSAMGridMarkers(void)
 
 static BOOLEAN CanMilitiaAutoDistribute(void)
 {
-	INT32 iTotalTroopsOnCursor = 0;
 	INT32 iCounter = 0;
 	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
@@ -6607,9 +6594,6 @@ static BOOLEAN CanMilitiaAutoDistribute(void)
 															SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
 		}
 	}
-
-
-	iTotalTroopsOnCursor = sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor;
 
 	// can't auto-distribute if we don't have any militia in the town
 	if( !iTotalTroopsInTown )

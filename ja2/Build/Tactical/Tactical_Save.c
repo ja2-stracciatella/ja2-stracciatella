@@ -1465,12 +1465,9 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
-	UINT8 bSectorId = 0;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 
-	// grab the sector id
-	bSectorId = SECTOR( sMapX, sMapY );
 /*
 	//Convert the current sector location into a file name
 	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE );

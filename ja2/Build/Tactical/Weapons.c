@@ -1935,10 +1935,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 
 void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
 {
-	SOLDIERTYPE				*pTargetSoldier, *pSoldier;
-
-	// Get attacker
-	pSoldier				= MercPtrs[ ubAttackerID ];
+	SOLDIERTYPE				*pTargetSoldier;
 
 	// Get Target
 	pTargetSoldier	= MercPtrs[ usSoldierID ];

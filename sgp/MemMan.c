@@ -78,7 +78,6 @@ static const wchar_t* const gzJA2ScreenNames[] =
 	UINT32				guiTotalMemoryNodes = 0;
 #endif
 
-static BOOLEAN gfMemDebug = TRUE;
 // debug variable for total memory currently allocated
 UINT32	guiMemTotal = 0;
 UINT32  guiMemAlloced = 0;
@@ -119,14 +118,6 @@ BOOLEAN InitializeMemoryManager( void )
 	return(TRUE);
 }
 
-
-//		To set whether or not we should print debug info.
-// Modification history :
-//		12sep96:HJH		-> modified for use by Wizardry
-static void MemDebug(BOOLEAN f)
-{
-	gfMemDebug = f;
-}
 
 //**************************************************************************
 //

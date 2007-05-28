@@ -686,10 +686,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	INT32		cnt;
 	UINT16	usItem;
 	INT8		bBestArmour = -1;
-	INT8		bBestArmourIndex = -1;
 	INT8		bBestGun = -1;
-	INT8		bBestGunIndex = -1;
-
 
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
@@ -703,7 +700,6 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 			{
 				if ( Weapon[ usItem ].ubDeadliness > bBestGun )
 				{
-					bBestGunIndex = (INT8)cnt;
 					bBestGun = Weapon[ usItem ].ubDeadliness;
 				}
 			}
@@ -713,7 +709,6 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 			{
 				if ( Armour[ Item[ usItem ].ubClassIndex ].ubProtection > bBestArmour )
 				{
-					bBestArmourIndex = (INT8)cnt;
 					bBestArmour = Armour[ Item[ usItem ].ubClassIndex ].ubProtection;
 				}
 			}

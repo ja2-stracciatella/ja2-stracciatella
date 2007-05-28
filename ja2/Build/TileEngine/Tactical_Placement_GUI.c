@@ -366,7 +366,7 @@ void InitTacticalPlacementGUI()
 
 static void RenderTacticalPlacementGUI(void)
 {
-	INT32 i, xp, yp, width, height;
+	INT32 i, xp, yp, width;
 	INT32 iStartY;
 	SOLDIERTYPE *pSoldier;
 	UINT32 uiDestPitchBYTES;
@@ -518,7 +518,6 @@ static void RenderTacticalPlacementGUI(void)
 		}
 		SetFont( BLOCKFONT );
 		width = StringPixLength( pSoldier->name, BLOCKFONT );
-		height = GetFontHeight( BLOCKFONT );
 		xp = xp + ( 48 - width ) / 2;
 		yp = yp + 33;
 		mprintf( xp, yp, pSoldier->name );

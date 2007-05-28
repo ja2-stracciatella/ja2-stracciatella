@@ -105,9 +105,6 @@ UINT8 gubMonsterMineInfestation[]={
 };
 */
 
-// the static NPC dialogue faces
-extern UINT32 uiExternalStaticNPCFaces[];
-
 
 void InitializeMines( void )
 {
@@ -566,7 +563,6 @@ static INT32 GetCurrentWorkRateOfMineForEnemy(INT8 bMineIndex)
 static INT32 MineAMine(INT8 bMineIndex)
 {
 	// will extract ore based on available workforce, and increment players income based on amount
-	INT8 bMineType = 0;
 	INT32 iAmtExtracted = 0;
 
 
@@ -596,9 +592,6 @@ static INT32 MineAMine(INT8 bMineIndex)
 		{
 			// debug message
 //			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls - Mine income from %ls = $%d", WORLDTIMESTR, pTownNames[GetTownAssociatedWithMine(bMineIndex)], iAmtExtracted);
-
-			// check type of mine
-			bMineType = gMineStatus[ bMineIndex ].ubMineType;
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ bMineIndex ].fMineHasProducedForPlayer )
@@ -911,7 +904,6 @@ void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 	UINT8 ubHeadMinerIndex = 0;
 	UINT16 usHeadMinerProfileId = 0;
 	INT8 bQuoteNum = 0;
-	UINT8 ubFaceIndex = 0;
 	BOOLEAN fForceMapscreen = FALSE;
 	INT16 sXPos, sYPos;
 
@@ -933,8 +925,6 @@ void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
 
 	bQuoteNum = gHeadMinerData[ ubHeadMinerIndex ].bQuoteNum[ ubQuoteType ];
 	Assert( bQuoteNum != -1 );
-
-	ubFaceIndex = ( UINT8 ) uiExternalStaticNPCFaces[ gHeadMinerData[ ubHeadMinerIndex ].ubExternalFace ];
 
 	// transition to mapscreen is not necessary for "creatures gone" quote - player is IN that mine, so he'll know
 	if ( ubQuoteType != HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE )

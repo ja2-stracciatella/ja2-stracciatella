@@ -4253,7 +4253,6 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 	UINT32	uiCurTime = GetJA2Clock();
 
 	static	UINT32	uiLastTime = 0;
-	static	UINT32	uiLastTimeSpoke = 0;
 	static	INT8		bSpeech = -1;
 
 
@@ -4291,7 +4290,6 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 	{
 		if( ( uiCurTime - uiLastTime ) > 800 )
 		{
-			uiLastTimeSpoke = GetJA2Clock();
 			StartShopKeeperTalking( bSpeech );
 			bSpeech = -1;
 			uiLastTime = GetJA2Clock();

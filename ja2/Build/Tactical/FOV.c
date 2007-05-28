@@ -286,10 +286,8 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 {
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
  INT32 Inc[6],Dir[6];
- INT8	itemVisible = FALSE;
- INT8 Blocking,twoMoreTiles,markerDir;
+ INT8 Blocking, markerDir;
 	INT8 nextDir = 0;
- UINT8 who; //,itemIndex; // for each square checked
  UINT8 dir,range,Path2;
  UINT8	ubRoomNo;
  BOOLEAN	fCheckForRooms = FALSE;
@@ -345,7 +343,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	MercLooksForDoors( pSoldier, TRUE );
 
 
-  who = pSoldier->ubID;
   dir = pSoldier->bDirection;
 
  //NumMessage("good old reveal",dir);
@@ -390,7 +387,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
   {
    marker = pSoldier->sGridNo;
    Blocking = FALSE;
-   twoMoreTiles = FALSE;
    tilesLeftToSee = 99;
 	 fRevealItems = TRUE;
 	 fStopRevealingItemsAfterThisTile = FALSE;
@@ -684,8 +680,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 						// and revealing objects...
 						//gpSoldier->shad |= SEENBIT;
 
-						 //itemVisible = ObjList[itemIndex].visible;
-
 						 // NOTE: don't allow object viewing if gassed XXX
 
 						 if (itemsToo && fRevealItems ) // && itemIndex < MAXOBJECTLIST)
@@ -696,8 +690,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 								ITEM_POOL* pItemPool = GetItemPool((INT16)marker, ubLevel);
 								if (pItemPool != NULL)
 								{
-										itemVisible = pItemPool->bVisible;
-
 										if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, fShowLocators ) )
 										{
 											SetRenderFlags(RENDER_FLAG_FULL);
@@ -801,14 +793,12 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 				// CHECK FOR SLANT ROOF!
 				{
-					STRUCTURE							*pStructure, *pBase;
+					STRUCTURE* pStructure;
 
 					pStructure = FindStructure( (INT16)marker, STRUCTURE_SLANTED_ROOF );
 
 					if ( pStructure != NULL )
 					{
-						pBase = FindBaseStructure( pStructure );
-
 						// ADD TO SLANTED ROOF LIST!
 						AddSlantRoofFOVSlot( (INT16)marker );
 					}

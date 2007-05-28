@@ -812,7 +812,7 @@ static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
 {
 	INT16			PosX, sCenX, sCenY;
-	UINT32			usHeight, usWidth;
+	UINT32			usWidth;
   ETRLEObject	*pTrav;
 	INVTYPE			*pItem;
 
@@ -825,7 +825,6 @@ static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
 	pTrav = &(hPixHandle->pETRLEObject[0]);
 
 	//center picture in frame
-	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 //	sCenX = PosX + ( abs( BOBBYR_GRID_PIC_WIDTH - usWidth ) / 2 );
 //	sCenY = PosY + 8;
@@ -867,7 +866,6 @@ static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUse
 
 static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
-	UINT16	usHeight;
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
@@ -875,7 +873,7 @@ static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 //	DisplayItemNameAndInfo(usTextPosY, usIndex, fUsed);
 
 	//Display the Cost and the qty bought and on hand
-	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
+	DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
 
 	return(TRUE);
 }

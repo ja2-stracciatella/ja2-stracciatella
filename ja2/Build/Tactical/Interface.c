@@ -3418,10 +3418,6 @@ static void IncrementAimCubeUI(void)
 	{
 		if ( gCubeUIData.ubPowerIndex == 10 )
 		{
-			UINT8	ubHeight;
-
-			ubHeight = GET_CUBES_HEIGHT_FROM_UIHEIGHT( gCubeUIData.bHeight );
-
 			// Start back to basic7
 			gCubeUIData.dDegrees = (FLOAT)(PI/4);
 			gCubeUIData.dInitialForce = gCubeUIData.dForce;

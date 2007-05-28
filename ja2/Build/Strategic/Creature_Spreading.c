@@ -704,9 +704,6 @@ static void AddCreaturesToBattle(UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales,
 static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
 {
 	INT32 iRandom;
-	UINT8 ubSectorX, ubSectorY;
-	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
-	ubSectorY = (UINT8)((ubSectorID / 16) + 1);
 
 	if( !fOverrideTest )
 	{

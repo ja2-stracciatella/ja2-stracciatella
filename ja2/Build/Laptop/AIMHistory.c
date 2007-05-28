@@ -155,7 +155,6 @@ void RenderAimHistory()
 {
 	wchar_t	sText[400];
 	UINT32	uiStartLoc=0;
-	UINT16	usPosY;
 
 	DrawAimDefaults();
 //	DrawAimHistoryMenuBar();
@@ -192,7 +191,6 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(WORD_FROM_FOUNDER, 1);
 
 			// display coloniel Mohanned...
-			usPosY = AIM_HISTORY_PARAGRAPH_Y + (GetFontHeight(AIM_HISTORY_TEXT_FONT) + 2)* 5 + LAPTOP_SCREEN_WEB_DELTA_Y;
 			uiStartLoc = AIM_HISTORY_LINE_SIZE * COLONEL_MOHANNED;
 			LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 210+LAPTOP_SCREEN_WEB_DELTA_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED);
@@ -322,8 +320,6 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 static BOOLEAN InitTocMenu(void)
 {
 	UINT16			i, usPosY;
-	UINT16			usHeight;
-	UINT16			usWidth=0;
 	UINT32			uiStartLoc=0;
 	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
@@ -335,14 +331,11 @@ static BOOLEAN InitTocMenu(void)
 
 	HVOBJECT hContentButtonHandle = GetVideoObject(guiContentButton);
 
-	usHeight = GetFontHeight(AIM_HISTORY_TOC_TEXT_FONT);
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
 		uiStartLoc = AIM_HISTORY_LINE_SIZE * ubLocInFile[i];
 		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
-
-		usWidth = StringPixLength(sText, AIM_HISTORY_TOC_TEXT_FONT);
 
 		//if the mouse regions havent been inited, init them
 		if( !gfInToc )

@@ -239,27 +239,11 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 {
 	EXPLOSIONTYPE		*pExplosion;
-	UINT32		uiFlags;
-	UINT8			ubOwner;
-	UINT8			ubTypeID;
-	INT16			sX;
-	INT16			sY;
-	INT16			sZ;
 	INT16			sGridNo;
-	UINT16		usItem;
 	INT32			iIndex;
-	INT8			bLevel;
 
 	// Assign param values
-	uiFlags				= pExpParams->uiFlags;
-	ubOwner				= pExpParams->ubOwner;
-	ubTypeID			= pExpParams->ubTypeID;
-	sX						= pExpParams->sX;
-	sY						= pExpParams->sY;
-	sZ						= pExpParams->sZ;
 	sGridNo				= pExpParams->sGridNo;
-	usItem				= pExpParams->usItem;
-	bLevel				= pExpParams->bLevel;
 
 
 	{
@@ -1454,7 +1438,6 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	INT8		bSmokeEffectType = 0;
 	BOOLEAN	fBlastEffect = TRUE;
 	INT16		sNewGridNo;
-	BOOLEAN	fBloodEffect = FALSE;
 	UINT32	uiRoll;
 
 	//Init the variables
@@ -1464,7 +1447,6 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	{
 		fSmokeEffect			= FALSE;
 		fBlastEffect			= FALSE;
-		fBloodEffect			= TRUE;
 	}
 	else
 	{
@@ -2653,7 +2635,6 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 
 			{
 				UINT8		ubID, ubID2;
-				BOOLEAN	fEnterCombat = FALSE;
 
 				for ( ubID = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubID++ )
 				{
@@ -2664,7 +2645,6 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 							if ( MercPtrs[ ubID ]->bOppList[ ubID2 ] == SEEN_CURRENTLY )
 							{
 								MakeCivHostile( MercPtrs[ ubID ], 2 );
-								fEnterCombat = TRUE;
 							}
 						}
 					}
@@ -3411,10 +3391,7 @@ static void HandleBuldingDestruction(INT16 sGridNo, UINT8 ubOwner)
 static INT32 FindActiveTimedBomb(void)
 {
 	UINT32				uiWorldBombIndex;
-	UINT32				uiTimeStamp;
 	OBJECTTYPE *	pObj;
-
-	uiTimeStamp = GetJA2Clock();
 
 	// Go through all the bombs in the world, and look for timed ones
 	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)

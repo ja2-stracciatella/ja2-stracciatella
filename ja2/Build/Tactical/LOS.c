@@ -4506,21 +4506,18 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 	FLOAT						dTargetY;
 	FLOAT						dTargetZMin;
 	FLOAT						dTargetZMax;
-	BOOLEAN					fIntended;
 
 	//INT8						iImpactReduction;
 
-	INT16						sX, sY, sZ;
+	INT16						sX, sY;
 
 	FLOAT						dOldZUnits, dZUnits;
 
 	INT8						bLOSIndexX, bLOSIndexY;
-	INT32						iCurrCubesZ;
 
 
 	sX = (INT16)( dX / CELL_X_SIZE );
 	sY = (INT16)( dY / CELL_Y_SIZE );
-	sZ = (INT16)dZ;
 
 	// Check if gridno is in bounds....
 	if ( !GridNoOnVisibleWorldTile( (INT16) (sX + sY * WORLD_COLS) ) )
@@ -4566,14 +4563,6 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		{
 			// on roof
 			dTargetZMin += WALL_HEIGHT_UNITS;
-		}
-		if ( sX + sY * WORLD_COLS == pTarget->sGridNo)
-		{
-			fIntended = TRUE;
-		}
-		else
-		{
-			fIntended = FALSE;
 		}
 	}
 	else
@@ -4671,7 +4660,6 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		// CALCULAT LOS INDEX
 		bLOSIndexX = CONVERT_WITHINTILE_TO_INDEX( ((INT32)dX) % CELL_X_SIZE );
 		bLOSIndexY = CONVERT_WITHINTILE_TO_INDEX( ((INT32)dY) % CELL_Y_SIZE );
-		iCurrCubesZ = (INT32) CONVERT_HEIGHTUNITS_TO_INDEX( dZ );
 
 		if (iCurrCubesAboveLevelZ < STRUCTURE_ON_ROOF_MAX)
 		{

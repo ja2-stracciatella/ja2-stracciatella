@@ -877,7 +877,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	UINT16	usStringLength;
 	UINT16	usPixLength;
 	wchar_t	OneChar[2];
-	INT32		iGrandTotal;
 	INT32		iSubTotal;
 
 
@@ -919,7 +918,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	else
 	{
 		iSubTotal = 0;
-		iGrandTotal = 0;
 	}
 
 

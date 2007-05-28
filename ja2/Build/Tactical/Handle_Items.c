@@ -3073,7 +3073,6 @@ extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *p
 BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos)
 {
 	INT16 sY;
-	INVTYPE			*pItem;
 	const ITEM_POOL* pTempItemPool;
 	wchar_t pStr[ 100 ];
 	INT16		cnt = 0, sHeight = 0;
@@ -3162,8 +3161,6 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 	{
 		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
 		{
-			// GET ITEM
-			pItem = &Item[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ];
 			// Set string
 			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
 			{
@@ -3255,8 +3252,6 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 	{
 		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
 		{
-			// GET ITEM
-			pItem = &Item[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ];
 			// Set string
 
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
@@ -3631,19 +3626,13 @@ void RenderTopmostFlashingItems( )
 BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 {
 	UINT16 usSoldierIndex;
-	OBJECTTYPE	*pObject;
 
 	INT16				sGridNo;
-	UINT8				ubDirection;
 	UINT8				ubTargetMercID;
 
 	// DO SOME CHECKS IF WE CAN DO ANIMATION.....
 
-	// Get items from pending data
-	pObject = pSoldier->pTempObject;
-
 	sGridNo		= pSoldier->sPendingActionData2;
-	ubDirection = pSoldier->bPendingActionData3;
 	ubTargetMercID = (UINT8)pSoldier->uiPendingActionData4;
 
 	usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bLevel );
@@ -3697,9 +3686,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	OBJECTTYPE	TempObject;
 	UINT8				ubProfile;
 
-	INT16				sGridNo;
-	UINT8				ubDirection;
-	UINT8				ubTargetMercID;
 	UINT16			usItemNum;
 	BOOLEAN			fToTargetPlayer = FALSE;
 
@@ -3727,10 +3713,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
       }
     }
   }
-
-	sGridNo		= pSoldier->sPendingActionData2;
-	ubDirection = pSoldier->bPendingActionData3;
-	ubTargetMercID = (UINT8)pSoldier->uiPendingActionData4;
 
 	// ATE: Deduct APs!
 	DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
@@ -5013,7 +4995,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, cnt3;
+	INT16  cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT16		sLowestGridNo=0;
@@ -5022,8 +5004,6 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 	SOLDIERTYPE soldier;
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
-
-	cnt3 = 0;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.

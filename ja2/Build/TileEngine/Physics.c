@@ -1397,7 +1397,6 @@ static INT16 FindFinalGridNoGivenDirectionGridNoForceAngle(INT16 sSrcGridNo, INT
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	real				dRange;
 	INT16				sEndGridNo;
 
 
@@ -1420,9 +1419,6 @@ static INT16 FindFinalGridNoGivenDirectionGridNoForceAngle(INT16 sSrcGridNo, INT
 
 	// From degrees, calculate Z portion of normal
 	vDirNormal.z	= (float)sin( dzDegrees );
-
-	// Get range
-	dRange = (float)GetRangeInCellCoordsFromGridNoDiff( sGridNo, sSrcGridNo );
 
 	// Now use a force
 	vForce.x = dForce * vDirNormal.x;

@@ -1025,7 +1025,6 @@ static void GlowItem(void)
 static void GlowTrashCan(void)
 {
  static INT32 iColorNum =10;
- static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldTrashCanGlow = FALSE;
  UINT16 usColor;
  UINT32 uiDestPitchBYTES;
@@ -1040,7 +1039,6 @@ static void GlowTrashCan(void)
 	if( fShowTrashCanHighLight == FALSE )
 	{
 		iColorNum =0;
-		fDelta = TRUE;
 
 		if( fOldTrashCanGlow == TRUE )
 		{
@@ -11780,14 +11778,11 @@ static void InitPreviousPaths(void)
 void RememberPreviousPathForAllSelectedChars( void )
 {
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
 		{
-			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
-
 			// remember his previous path by copying it to his slot in the array kept for that purpose
 			gpCharacterPreviousMercPath[ iCounter ] = CopyPaths( GetSoldierMercPathPtr( MercPtrs[ gCharactersList[ iCounter ].usSolID ] ), gpCharacterPreviousMercPath[ iCounter ] );
 		}

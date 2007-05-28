@@ -31,9 +31,6 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen );
 // bail out of sector inventory mode if it is on
 void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen );
 
-// get total number of items in sector
-INT32 GetTotalNumberOfItems( void );
-
 // handle flash of inventory items
 void HandleFlashForHighLightedItem( void );
 

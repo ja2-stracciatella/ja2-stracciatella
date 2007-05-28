@@ -96,7 +96,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	int temp = 0;
-	int FullTile = FALSE;
 	UINT16 usOldIndex;
 	UINT16 usTempIndex;
 	UINT32 cnt;
@@ -233,7 +232,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 		// this is a "full" tile, so randomize between the
 		// five available tiles
 		land = (rand( ) % 10 ) + 1;
-		FullTile = TRUE;
 	}
 	GetTileIndexFromTypeSubIndex( origType, land, &usTileIndex );
 	*piNewTile = usTileIndex;
@@ -354,7 +352,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// based on the surrounding water textures. This is done via masking bits within
 	// a temp variable, then searching for the right texture and inserting it
 	int temp = 0;
-	int FullTile = FALSE;
 	UINT16 usOldIndex;
 	UINT32 cnt;
 	BOOLEAN fFound;
@@ -522,7 +519,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 				return;
 			}
 			land = (rand( ) % 10 ) + 1;
-			FullTile = TRUE;
 	}
 	GetTileIndexFromTypeSubIndex( origType, land, &usTileIndex );
 	*piNewTile = usTileIndex;

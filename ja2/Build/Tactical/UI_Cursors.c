@@ -1632,11 +1632,7 @@ static UINT8 HandleBombCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAc
 
 void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier)
 {
-	UINT16				usInHand;
 	UINT8					ubItemCursor;
-
-	// LOOK IN GUY'S HAND TO CHECK LOCATION
-	usInHand = pSoldier->inv[HANDPOS].usItem;
 
 	ubItemCursor  =  GetActionModeCursor( pSoldier );
 
@@ -1648,12 +1644,8 @@ void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier)
 
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
-	UINT16				usInHand;
 	UINT8					ubItemCursor;
 	INT16					sGridNo;
-
-	// LOOK IN GUY'S HAND TO CHECK LOCATION
-	usInHand = pSoldier->inv[HANDPOS].usItem;
 
 	ubItemCursor  =  GetActionModeCursor( pSoldier );
 
@@ -1749,15 +1741,12 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
-  UINT16				usInHand;
 	INT16					sAPCosts;
 	INT8					bFutureAim;
 	UINT8					ubCursor;
 	SOLDIERTYPE		*pTSoldier;
 	INT16					sGridNo;
 	INT8					bTargetLevel;
-
-	usInHand = pSoldier->inv[HANDPOS].usItem;
 
 	ubCursor =  GetActionModeCursor( pSoldier );
 

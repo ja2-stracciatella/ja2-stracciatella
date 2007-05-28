@@ -730,7 +730,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	SGPPoint pPosition;
 	UINT32 uiObject;
 	ETRLEObject	*pTrav;
-	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
+	INT16 sWidthA = 0, sTotalBoxWidth = 0;
 
 	// load the button
 	uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
@@ -740,9 +740,6 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	pTrav = &(hHandle->pETRLEObject[ 0 ] );
 
 	sWidthA = pTrav->usWidth;
-
-	pTrav = &(hHandle->pETRLEObject[ 1 ] );
-	sWidthB = pTrav->usWidth;
 
 	sTotalBoxWidth = sTotalButtonWidth;
 

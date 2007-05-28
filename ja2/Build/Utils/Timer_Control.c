@@ -60,7 +60,6 @@ extern INT32 giFlashHighlightedItemBaseTime;
 extern INT32 giCompatibleItemBaseTime;
 extern INT32 giAnimateRouteBaseTime;
 extern INT32 giPotHeliPathBaseTime;
-extern INT32 giClickHeliIconBaseTime;
 extern INT32 giExitToTactBaseTime;
 extern UINT32 guiSectorLocatorBaseTime;
 extern INT32 giCommonGlowBaseTime;
@@ -235,7 +234,6 @@ void ResetJA2ClockGlobalTimers( void )
 	giCompatibleItemBaseTime = uiCurrentTime;
   giAnimateRouteBaseTime = uiCurrentTime;
 	giPotHeliPathBaseTime = uiCurrentTime;
-	giClickHeliIconBaseTime = uiCurrentTime;
 	giExitToTactBaseTime = uiCurrentTime;
 	guiSectorLocatorBaseTime = uiCurrentTime;
 
