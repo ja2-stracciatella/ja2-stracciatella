@@ -815,7 +815,6 @@ static BOOLEAN HandleSpecialFiles(void)
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
-	UINT32 uiFlags = 0;
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
@@ -856,7 +855,6 @@ static BOOLEAN HandleSpecialFiles(void)
 	// move through list and display
 	while( pTempString )
 	{
-		uiFlags = IAN_WRAP_NO_SHADOW;
 				// copy over string
 		wcscpy( sString, pTempString->pString );
 
@@ -937,7 +935,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
-			 iYPositionOnPage += ( INT32 )IanDisplayWrappedString((UINT16) ( iFileStartX ), ( UINT16 )( FILE_VIEWER_Y + iYPositionOnPage), ( INT16 )iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString,0,FALSE, uiFlags );
+			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString, 0, FALSE, IAN_WRAP_NO_SHADOW);
 
 			 fGoingOffCurrentPage = FALSE;
 		}
@@ -1343,7 +1341,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
-	UINT32 uiFlags = 0;
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
@@ -1383,7 +1380,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 		// move through list and display
 		while( pTempString )
 		{
-			uiFlags = IAN_WRAP_NO_SHADOW;
 					// copy over string
 			wcscpy( sString, pTempString -> pString );
 
@@ -1423,7 +1419,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
-		     iYPositionOnPage += ( INT32 )IanDisplayWrappedString((UINT16) ( iFileStartX ), ( UINT16 )( FILE_VIEWER_Y + iYPositionOnPage), ( INT16 )iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString,0,FALSE, uiFlags );
+		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString, 0, FALSE, IAN_WRAP_NO_SHADOW);
 
 				 fGoingOffCurrentPage = FALSE;
 			}
