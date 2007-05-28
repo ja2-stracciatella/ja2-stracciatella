@@ -165,7 +165,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 					}
 					return LOADINGSCREEN_DAYGENERIC;
 			}
-			break;
+
 		case 1:
 			switch( ubSectorID )
 			{
@@ -179,7 +179,7 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 				default:			//rest are mines
 					return LOADINGSCREEN_MINE;
 			}
-			break;
+
 		case 2:
 		case 3:
 			//all level 2 and 3 maps are caves!

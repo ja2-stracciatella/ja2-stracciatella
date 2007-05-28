@@ -1853,7 +1853,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					//pSoldier->sInsertionGridNo = 4058;
 					AddMercToHeli( pSoldier->ubID );
 					return;
-					break;
+
 				default:
 					pSoldier->sInsertionGridNo = 12880;
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion code %d given to UpdateMercsInSector", pSoldier->ubStrategicInsertionCode ) );
@@ -3809,8 +3809,6 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 			} while( TRUE );
 
-			break;
-
 		case WEST:
 
 			sGridNo				 = pSoldier->sGridNo;
@@ -3871,8 +3869,6 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd2 = (INT8)(!bOdd2);
 
 			} while( TRUE );
-
-			break;
 
 		case NORTH:
 
@@ -3935,8 +3931,6 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 			} while( TRUE );
 
-			break;
-
 		case SOUTH:
 
 			sGridNo				 = pSoldier->sGridNo;
@@ -3997,9 +3991,6 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd2 = (INT8)(!bOdd2);
 
 			} while( TRUE );
-
-			break;
-
 	}
 
 	return( NOWHERE );

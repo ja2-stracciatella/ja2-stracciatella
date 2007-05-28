@@ -1453,7 +1453,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 					case TRAVELCOST_OBSTACLE:
 					default									:	goto NEXTDIR;	// Cost too much to be considered!
-																		break;
 				}
 
 

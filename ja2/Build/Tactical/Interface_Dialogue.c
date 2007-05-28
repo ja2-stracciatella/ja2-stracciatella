@@ -4497,7 +4497,7 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 				TriggerNPCRecord( ubProfile, 2 );
 			}
 			break;
-			break;
+
 		case NPC_ACTION_DARREN_REQUESTOR:
 			if ( ubExitValue == MSG_BOX_RETURN_YES )
 			{

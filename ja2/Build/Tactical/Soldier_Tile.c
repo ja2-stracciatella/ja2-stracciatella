@@ -847,17 +847,7 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 
 		  // ATE: OK, reduce this guy's next ai counter....
 		  pSoldier2->uiAIDelay = 100;
-
-		  return( FALSE );
-	  }
-	  else
-	  {
-		  return( FALSE );
 	  }
   }
-	else
-	{
-		return( FALSE );
-	}
-	return( TRUE );
+	return FALSE;
 }

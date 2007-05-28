@@ -2775,24 +2775,16 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			case AM_MONSTER:
 			case YAF_MONSTER:
 			case YAM_MONSTER:
-
 				return( MONSTER_SPIT_ATTACK );
-				break;
 
 			case LARVAE_MONSTER:
-
 				break;
 
 			case INFANT_MONSTER:
-
 				return( INFANT_ATTACK );
-				break;
 
 			case QUEENMONSTER:
-
 			  return( QUEEN_SPIT );
-			  break;
-
 		}
 		return( TRUE );
 	}
@@ -2899,7 +2891,6 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 					}
 				}
 			}
-			break;
 
 		case ANIM_PRONE:
 
@@ -2919,7 +2910,6 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 					return( SHOOT_RIFLE_PRONE );
 				}
 			}
-			break;
 
 		case ANIM_CROUCH:
 
@@ -2943,7 +2933,6 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 					return( SHOOT_RIFLE_CROUCH );
 				}
 			}
-			break;
 
 		default:
 			AssertMsg( FALSE, String( "SelectFireAnimation: ERROR - Invalid height %d", ubHeight ) );
@@ -2971,7 +2960,6 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 			{
 				return( WALKING );
 			}
-			break;
 
 		case ANIM_PRONE:
 			if ( pSoldier->fUIMovementFast )
@@ -2982,7 +2970,6 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 			{
 				return( CRAWLING );
 			}
-			break;
 
 		case ANIM_CROUCH:
 			if ( pSoldier->fUIMovementFast )
@@ -2993,8 +2980,6 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 			{
 				return( SWATTING );
 			}
-			break;
-
 
 		default:
 			AssertMsg( FALSE, String( "GetMoveStateBasedOnStance: ERROR - Invalid height %d", ubStanceHeight ) );
@@ -3132,7 +3117,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 					{
 						return( END_RIFLE_STAND );
 					}
-					break;
 
 				case ANIM_PRONE:
 
@@ -3144,7 +3128,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 					{
 						return( END_RIFLE_PRONE );
 					}
-					break;
 
 				case ANIM_CROUCH:
 
@@ -3157,7 +3140,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 					{
 						return( END_RIFLE_CROUCH );
 					}
-					break;
 
 			}
 
@@ -3184,7 +3166,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 						{
 							return( READY_RIFLE_STAND );
 						}
-						break;
 
 					case ANIM_PRONE:
 						// Go into crouch, turn, then go into prone again
@@ -3199,7 +3180,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 						{
 							return( READY_RIFLE_PRONE );
 						}
-						break;
 
 					case ANIM_CROUCH:
 
@@ -3212,8 +3192,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 						{
 							return( READY_RIFLE_CROUCH );
 						}
-						break;
-
 				}
 			}
 
@@ -3568,12 +3546,10 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 		case COW:
 			EVENT_InitNewSoldierAnim( pSoldier, COW_HIT, 0 , FALSE );
 			return;
-			break;
 
 		case BLOODCAT:
 			EVENT_InitNewSoldierAnim( pSoldier, BLOODCAT_HIT, 0 , FALSE );
 			return;
-			break;
 
 		case ADULTFEMALEMONSTER:
 		case AM_MONSTER:
@@ -3582,17 +3558,14 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 
 			EVENT_InitNewSoldierAnim( pSoldier, ADULTMONSTER_HIT, 0 , FALSE );
 			return;
-			break;
 
 		case LARVAE_MONSTER:
 			EVENT_InitNewSoldierAnim( pSoldier, LARVAE_HIT, 0 , FALSE );
 			return;
-			break;
 
 		case QUEENMONSTER:
 			EVENT_InitNewSoldierAnim( pSoldier, QUEEN_HIT, 0 , FALSE );
 			return;
-			break;
 
 		case CRIPPLECIV:
 
@@ -3606,12 +3579,10 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 
 			}
 			return;
-			break;
 
 		case ROBOTNOWEAPON:
 			EVENT_InitNewSoldierAnim( pSoldier, ROBOTNW_HIT, 0 , FALSE );
 			return;
-			break;
 
 
 		case INFANT_MONSTER:
@@ -3644,7 +3615,6 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 			// IF here, go generic hit ALWAYS.....
 			EVENT_InitNewSoldierAnim( pSoldier, GENERIC_HIT_STAND, 0 , FALSE );
 			return;
-			break;
 	}
 
 	// If here, we are a merc, check if we are in water
@@ -9517,7 +9487,6 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 			// Give breath back....
 			DeductPoints( pSoldier,0, (INT16)-5000 );
 			return;
-			break;
 	}
 
 	pSoldier->bCollapsed			 = TRUE;
@@ -10308,7 +10277,6 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 			default:
 				// Start talking!
 				return( InitiateConversation( pTSoldier, pSoldier, NPC_INITIAL_QUOTE, 0 ) );
-				break;
 		}
 	}
 	else

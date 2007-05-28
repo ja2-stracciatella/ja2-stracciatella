@@ -111,29 +111,11 @@ static UINT8 FromSmokeTypeToWorldFlags(INT8 bType)
 {
 	switch( bType )
 	{
-		case NORMAL_SMOKE_EFFECT:
-
-			return( MAPELEMENT_EXT_SMOKE );
-			break;
-
-		case TEARGAS_SMOKE_EFFECT:
-
-			return( MAPELEMENT_EXT_TEARGAS );
-			break;
-
-		case MUSTARDGAS_SMOKE_EFFECT:
-
-			return( MAPELEMENT_EXT_MUSTARDGAS );
-			break;
-
-    case CREATURE_SMOKE_EFFECT:
-
-      return( MAPELEMENT_EXT_CREATUREGAS );
-      break;
-
-		default:
-
-			return( 0 );
+		case NORMAL_SMOKE_EFFECT:     return MAPELEMENT_EXT_SMOKE;
+		case TEARGAS_SMOKE_EFFECT:    return MAPELEMENT_EXT_TEARGAS;
+		case MUSTARDGAS_SMOKE_EFFECT: return MAPELEMENT_EXT_MUSTARDGAS;
+		case CREATURE_SMOKE_EFFECT:   return MAPELEMENT_EXT_CREATUREGAS;
+		default:                      return 0;
 	}
 }
 

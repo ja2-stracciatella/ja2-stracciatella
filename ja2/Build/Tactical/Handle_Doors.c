@@ -112,7 +112,6 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 				  }
 			  }
       }
-			break;
 
 		case CLOSE_DOOR:
 
@@ -145,7 +144,6 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 				  }
 			  }
       }
-			break;
 
 		case END_OPEN_DOOR:
 
@@ -178,8 +176,6 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 				  }
 			  }
       }
-			break;
-
 
 		case END_OPEN_LOCKED_DOOR:
 
@@ -212,7 +208,6 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
 				  }
 			  }
       }
-			break;
 
 		case PICK_LOCK:
 
@@ -224,13 +219,11 @@ UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 
       {
         return( PICK_LOCK );
       }
-      break;
 
 		default:
 			// should never happen!
 			Assert( FALSE );
 			return( usAnimState );
-			break;
 	}
 }
 
@@ -578,7 +571,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							// Open if it's not locked....
 							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
 							fHandleDoor = TRUE;
-							break;
 						}
 						else
 						{
@@ -604,7 +596,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								fHandleDoor = TRUE;
 							}
 							UpdateDoorPerceivedValue( pDoor );
-							break;
 						}
 						break;
 

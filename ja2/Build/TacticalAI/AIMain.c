@@ -2355,8 +2355,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			pSoldier->bAction = AI_ACTION_NONE;
 			return(FALSE);           // no longer in progress
 
-			break;
-
 		case AI_ACTION_RED_ALERT:             // tell friends opponent(s) seen
 			// if a computer merc, and up to now they didn't know you're here
 			if (!(pSoldier->uiStatusFlags & SOLDIER_PC) && ( !(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) || ( ( gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE ) && gTacticalStatus.ubTheChosenOne == NOBODY ) ) )

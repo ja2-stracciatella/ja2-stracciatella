@@ -315,8 +315,6 @@ UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank,
 			break;
 		case ELITE_MILITIA:
 			return 0;
-			break;
-
 	}
 	// roll the bones, and see if he makes it
 	if (Random(100) < uiChanceToLevel)

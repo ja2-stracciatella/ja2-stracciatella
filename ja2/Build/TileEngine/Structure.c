@@ -2254,7 +2254,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
             {
 						  return( BLOCKING_TOPLEFT_WINDOW );
             }
-						break;
 
 					case OUTSIDE_TOP_RIGHT:
 					case INSIDE_TOP_RIGHT:
@@ -2270,7 +2269,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
             {
 						  return( BLOCKING_TOPRIGHT_WINDOW );
             }
-						break;
 				}
 			}
 
@@ -2283,7 +2281,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
           (*pStructHeight) = StructureHeight( pCurrent );
 					(*ppTallestStructure) = pCurrent;
 					return( FULL_BLOCKING );
-					break;
 				}
 				else
 				{
@@ -2295,7 +2292,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
               (*pStructHeight) = StructureHeight( pCurrent );
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPLEFT_DOOR );
-							break;
 
 						case OUTSIDE_TOP_RIGHT:
 						case INSIDE_TOP_RIGHT:
@@ -2303,7 +2299,6 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
               (*pStructHeight) = StructureHeight( pCurrent );
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPRIGHT_DOOR );
-							break;
 					}
 				}
 			}

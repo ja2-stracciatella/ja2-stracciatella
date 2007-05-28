@@ -1144,7 +1144,6 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 				{
 					return( KNIFE_NOGO_AIM1_UICURSOR );
 				}
-				break;
 
 			case REFINE_KNIFE_2:
 
@@ -1160,13 +1159,11 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 				{
 					return( KNIFE_NOGO_AIM2_UICURSOR );
 				}
-				break;
 
 			default:
 				Assert( FALSE );
 				// no return value!
 				return(0);
-				break;
 		}
 	}
 	else
@@ -1271,7 +1268,6 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 				{
 					return( ACTION_PUNCH_NOGO_AIM1_UICURSOR );
 				}
-				break;
 
 			case REFINE_PUNCH_2:
 
@@ -1287,13 +1283,11 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 				{
 					return( ACTION_PUNCH_NOGO_AIM2_UICURSOR );
 				}
-				break;
 
 			default:
 				Assert( FALSE );
 				// no return value!
 				return(0);
-				break;
 		}
 	}
 	else

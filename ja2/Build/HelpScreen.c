@@ -1106,7 +1106,6 @@ static void SpecialHandlerCode(void)
 			break;
 		case HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY:
 			break;
-			break;
 		case HELP_SCREEN_OPTIONS:
 			break;
 		case HELP_SCREEN_LOAD_GAME:

@@ -859,7 +859,6 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			if( fMouseRegionsCreated )
 			{
 				return(FALSE);
-				break;
 			}
 
 //Get the current text from the text box

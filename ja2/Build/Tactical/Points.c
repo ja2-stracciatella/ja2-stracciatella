@@ -1791,25 +1791,18 @@ UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		// Now change to appropriate animation
-		case ANIM_STAND:
-			return( AP_LOOK_STANDING );
-			break;
-
-		case ANIM_CROUCH:
-			return( AP_LOOK_CROUCHED );
-			break;
+		case ANIM_STAND:  return AP_LOOK_STANDING;
+		case ANIM_CROUCH: return AP_LOOK_CROUCHED;
 
 		case ANIM_PRONE:
 			// AP_PRONE is the AP cost to go to or from the prone stance.  To turn while prone, your merc has to get up to
 			// crouched, turn, and then go back down.  Hence you go up (AP_PRONE), turn (AP_LOOK_PRONE) and down (AP_PRONE).
 			return( AP_LOOK_PRONE + AP_PRONE + AP_PRONE );
-			break;
 
 		// no other values should be possible
 		default:
 			Assert( FALSE );
 			return(0);
-			break;
 	}
 }
 

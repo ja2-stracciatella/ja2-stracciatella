@@ -3447,8 +3447,6 @@ BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECT
 
 		return( CreateKeyObject( pObj, 1, ubItem ) );
 	}
-
-	return( FALSE );
 }
 
 
@@ -4600,7 +4598,6 @@ INT8 IsMedicalKitItem( OBJECTTYPE *pObject )
 		case( MEDICKIT ):
 			// medical bag, return 1
 			return ( 1 );
-		break;
 	}
 
 	return( 0 );

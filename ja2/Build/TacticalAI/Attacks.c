@@ -710,7 +710,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					return;
 				}
 				break;
-				break;
+
 			default:
 				break;
 		}

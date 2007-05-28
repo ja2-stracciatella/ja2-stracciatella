@@ -328,7 +328,6 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 
 		default:
 			return(FALSE);
-			break;
 	}
 
 	//check to see if the merc has enough money

@@ -999,7 +999,6 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									{
 										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->uiMoneyAmount / 400);
 										TriggerNPCRecord( MADAME, 19 );
-										break;
 									}
 									else
 									{

@@ -921,39 +921,32 @@ BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT
 				if ( dRelPer < .2 )
 				{
 					(*usFlags )= TILE_FLAG_HEAD;
-					return( TRUE );
 				}
 				else if ( dRelPer < .6 )
 				{
 					(*usFlags )= TILE_FLAG_MID;
-					return( TRUE );
 				}
 				else
 				{
 					(*usFlags )= TILE_FLAG_FEET;
-					return( TRUE );
 				}
-				break;
+				return TRUE;
 
 			case ANIM_CROUCH:
 
 				if ( dRelPer < .2 )
 				{
 					(*usFlags )= TILE_FLAG_HEAD;
-					return( TRUE );
 				}
 				else if ( dRelPer < .7 )
 				{
 					(*usFlags )= TILE_FLAG_MID;
-					return( TRUE );
 				}
 				else
 				{
 					(*usFlags )= TILE_FLAG_FEET;
-					return( TRUE );
 				}
-				break;
-
+				return( TRUE );
 		}
 	}
 

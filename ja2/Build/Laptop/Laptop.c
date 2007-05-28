@@ -3390,8 +3390,6 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 			return(FALSE);
 		}
 	}
-
-	return(TRUE);
 }
 
 

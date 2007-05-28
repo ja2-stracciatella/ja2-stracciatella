@@ -718,49 +718,15 @@ UINT16 GetSnapCursorIndex( UINT16 usAdditionalData )
 	{
 		switch( usAdditionalData )
 		{
-			case FIRSTPOINTERS2:
-
-				return( FIRSTPOINTERS13 );
-				break;
-
-			case FIRSTPOINTERS3:
-
-				return( FIRSTPOINTERS14 );
-				break;
-
-			case FIRSTPOINTERS4:
-
-				return( FIRSTPOINTERS15 );
-				break;
-
-			case FIRSTPOINTERS5:
-
-				return( FIRSTPOINTERS16 );
-				break;
-
-			case FIRSTPOINTERS6:
-
-				return( FIRSTPOINTERS17 );
-				break;
-
-			case FIRSTPOINTERS7:
-
-				return( FIRSTPOINTERS18 );
-				break;
-
-			case FIRSTPOINTERS9:
-
-				return( FIRSTPOINTERS19 );
-				break;
-
-			case FIRSTPOINTERS10:
-
-				return( FIRSTPOINTERS20 );
-				break;
-
-			default:
-
-				return( usAdditionalData );
+			case FIRSTPOINTERS2:  return FIRSTPOINTERS13;
+			case FIRSTPOINTERS3:  return FIRSTPOINTERS14;
+			case FIRSTPOINTERS4:  return FIRSTPOINTERS15;
+			case FIRSTPOINTERS5:  return FIRSTPOINTERS16;
+			case FIRSTPOINTERS6:  return FIRSTPOINTERS17;
+			case FIRSTPOINTERS7:  return FIRSTPOINTERS18;
+			case FIRSTPOINTERS9:  return FIRSTPOINTERS19;
+			case FIRSTPOINTERS10: return FIRSTPOINTERS20;
+			default:              return usAdditionalData;
 		}
 	}
 	else

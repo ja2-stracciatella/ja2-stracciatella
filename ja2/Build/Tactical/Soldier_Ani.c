@@ -371,7 +371,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					uiJumpAddress = pSoldier->usAnimState;
 					ChangeSoldierState( pSoldier, FLYBACK_HIT_BLOOD_STAND, 0, FALSE );
 					return( TRUE );
-					break;
 
 				case 435:
 
@@ -465,7 +464,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							return( TRUE );
 						}
 					}
-					break;
 
 				case 441:
 					// CODE: Show mussel flash
@@ -1044,7 +1042,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					EVENT_GetNewSoldierPath( pSoldier, sNewGridNo, WALKING );
 
 					return( TRUE );
-					break;
 
 				case 468:
 
@@ -1105,14 +1102,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							}
 						}
 					}
-					break;
 
 				case 469:
 
 					// CODE: Begin martial artist attack
 					DoNinjaAttack( pSoldier );
 					return( TRUE );
-					break;
 
 				case 470:
 
@@ -1240,8 +1235,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CODE: GOTO PREVIOUS ANIMATION
 					ChangeSoldierState( pSoldier, ( pSoldier->sPendingActionData2 ), (UINT8)( pSoldier->uiPendingActionData1 + 1 ), FALSE );
 					return( TRUE );
-					break;
-
 
 				case 477:
 
@@ -1847,7 +1840,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						return( TRUE );
 					}
-					break;
 
 				case 498:
 

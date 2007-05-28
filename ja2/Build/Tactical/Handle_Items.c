@@ -1283,8 +1283,6 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		{
 			return( ITEM_HANDLE_NOAPS );
 		}
-
-		return( ITEM_HANDLE_OK );
 	}
 
 	// CHECK FOR BOMB....

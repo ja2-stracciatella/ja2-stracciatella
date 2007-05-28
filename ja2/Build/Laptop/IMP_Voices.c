@@ -299,13 +299,10 @@ UINT32 PlayVoice( void )
 				//swprintf( sString, L"Voice # %d is not done yet", iCurrentVoices + 1 );
 				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 	     return PlayJA2SampleFromFile("Speech/051_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-		  break;
 			case( 1 ):
 	     return PlayJA2SampleFromFile("Speech/052_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-		  break;
 			case( 2 ):
 				return PlayJA2SampleFromFile("Speech/053_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-		  break;
 		}
 	}
 	else
@@ -317,13 +314,10 @@ UINT32 PlayVoice( void )
 				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return PlayJA2SampleFromFile("Speech/054_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 
-		  break;
 			case( 1 ):
 	    	return PlayJA2SampleFromFile("Speech/055_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-		  break;
 			case( 2 ):
 				return PlayJA2SampleFromFile("Speech/056_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-		  break;
 		}
 
 	}

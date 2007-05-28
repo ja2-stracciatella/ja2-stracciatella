@@ -553,32 +553,25 @@ static INT32 QsortCompare(const void* pNum1, const void* pNum2)
 		//Price						INT16	uiWeeklySalary
 		case 0:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].uiWeeklySalary,  (INT32)gMercProfiles[Num2].uiWeeklySalary ) );
-			break;
 		//Experience			INT16	bExpLevel
 		case 1:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].bExpLevel,  (INT32)gMercProfiles[Num2].bExpLevel) );
-			break;
 		//Marksmanship		INT16	bMarksmanship
 		case 2:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMarksmanship,  (INT32)gMercProfiles[Num2].bMarksmanship ) );
-			break;
 		//Medical					INT16	bMedical
 		case 3:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMedical,  (INT32)gMercProfiles[Num2].bMedical ) );
-			break;
 		//Explosives			INT16	bExplosive
 		case 4:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].bExplosive,  (INT32)gMercProfiles[Num2].bExplosive ) );
-			break;
 		//Mechanical			INT16	bMechanical
 		case 5:
 			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMechanical,  (INT32)gMercProfiles[Num2].bMechanical ) );
-			break;
 
 		default:
 			Assert( 0 );
 			return( 0 );
-			break;
 	}
 }
 

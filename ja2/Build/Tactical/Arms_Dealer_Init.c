@@ -786,64 +786,38 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 {
 	switch( Item[ usItem ].usItemClass )
 	{
-		case IC_NONE:
-			return( 0 );
-			break;
+		case IC_NONE: return 0;
 
 		case IC_GUN:
 			switch(  Weapon[ Item[ usItem ].ubClassIndex ].ubWeaponClass )
 			{
-				case HANDGUNCLASS:
-					return( ARMS_DEALER_HANDGUNCLASS );
-					break;
+				case HANDGUNCLASS: return ARMS_DEALER_HANDGUNCLASS;
+
 				case RIFLECLASS:
-					if ( ItemIsARocketRifle( usItem ) )
-						return( ARMS_DEALER_ROCKET_RIFLE );
-					else
-						return( ARMS_DEALER_RIFLECLASS );
-					break;
-				case SHOTGUNCLASS:
-					return( ARMS_DEALER_SHOTGUNCLASS );
-					break;
-				case SMGCLASS:
-					return( ARMS_DEALER_SMGCLASS );
-					break;
-				case MGCLASS:
-					return( ARMS_DEALER_MGCLASS );
-					break;
-				case MONSTERCLASS:
-					return( 0 );
-					break;
-				case KNIFECLASS:
-					return( ARMS_DEALER_KNIFECLASS );
-					break;
+					return ItemIsARocketRifle(usItem) ?
+						ARMS_DEALER_ROCKET_RIFLE : ARMS_DEALER_RIFLECLASS;
+
+				case SHOTGUNCLASS: return ARMS_DEALER_SHOTGUNCLASS;
+				case SMGCLASS:     return ARMS_DEALER_SMGCLASS;
+				case MGCLASS:      return ARMS_DEALER_MGCLASS;
+				case MONSTERCLASS: return 0;
+				case KNIFECLASS:   return ARMS_DEALER_KNIFECLASS;
 			}
 			break;
 
 		case IC_PUNCH:
-			if (usItem == NOTHING)
-			{
-				return( 0 );
-			}
+			if (usItem == NOTHING) return 0;
 			// else treat as blade
 		case IC_BLADE:
 		case IC_THROWING_KNIFE:
-			return( ARMS_DEALER_BLADE );
-			break;
-		case IC_LAUNCHER:
-			return( ARMS_DEALER_LAUNCHER );
-			break;
-		case IC_ARMOUR:
-			return( ARMS_DEALER_ARMOUR );
-			break;
-		case IC_MEDKIT:
-			return( ARMS_DEALER_MEDKIT );
-			break;
-		case IC_KIT:
-			return( ARMS_DEALER_KIT );
-			break;
+			return ARMS_DEALER_BLADE;
+
+		case IC_LAUNCHER:       return ARMS_DEALER_LAUNCHER;
+		case IC_ARMOUR:         return ARMS_DEALER_ARMOUR;
+		case IC_MEDKIT:         return ARMS_DEALER_MEDKIT;
+		case IC_KIT:            return ARMS_DEALER_KIT;
+
 		case IC_MISC:
-		{
 			//switch on the type of item
 			switch( usItem )
 			{
@@ -851,19 +825,16 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 				case WINE:
 				case ALCOHOL:
 					return( ARMS_DEALER_ALCOHOL );
-					break;
 
 				case METALDETECTOR:
 				case LASERSCOPE:
 //				case REMDETONATOR:
 					return( ARMS_DEALER_ELECTRONICS );
-					break;
 
 				case CANTEEN:
 				case CROWBAR:
 				case WIRECUTTERS:
 					return( ARMS_DEALER_HARDWARE );
-					break;
 
 				case ADRENALINE_BOOSTER:
 				case REGEN_BOOSTER:
@@ -871,30 +842,23 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 				case SYRINGE_4:
 				case SYRINGE_5:
 					return( ARMS_DEALER_MEDICAL );
-					break;
 
 				case SILENCER:
 				case SNIPERSCOPE:
 				case BIPOD:
 				case DUCKBILL:
 					return( ARMS_DEALER_ATTACHMENTS );
-					break;
 
 				case DETONATOR:
 				case REMDETONATOR:
 				case REMOTEBOMBTRIGGER:
 					return( ARMS_DEALER_DETONATORS );
-					break;
 
-				default:
-					return( ARMS_DEALER_MISC );
+				default: return ARMS_DEALER_MISC;
 			}
 
-		}
-		break;
-		case IC_AMMO:
-			return( ARMS_DEALER_AMMO );
-			break;
+		case IC_AMMO: return ARMS_DEALER_AMMO;
+
 		case IC_FACE:
 			switch( usItem )
 			{
@@ -902,34 +866,19 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 				case NIGHTGOGGLES:
 				case ROBOT_REMOTE_CONTROL:
 					return( ARMS_DEALER_ELECTRONICS );
-				break;
 
-				default:
-					return( ARMS_DEALER_FACE );
+				default: return ARMS_DEALER_FACE;
 			}
-			break;
-		case IC_THROWN:
-			return( 0 );
-//			return( ARMS_DEALER_THROWN );
 
-			break;
-		case IC_KEY:
-			return( 0 );
-//			return( ARMS_DEALER_KEY );
-			break;
-		case IC_GRENADE:
-			return( ARMS_DEALER_GRENADE );
-			break;
-		case IC_BOMB:
-			return( ARMS_DEALER_BOMB );
-			break;
-		case IC_EXPLOSV:
-			return( ARMS_DEALER_EXPLOSV );
-			break;
+		case IC_THROWN:  return 0; // return ARMS_DEALER_THROWN;
+		case IC_KEY:     return 0; // return ARMS_DEALER_KEY;
+		case IC_GRENADE: return ARMS_DEALER_GRENADE;
+		case IC_BOMB:    return ARMS_DEALER_BOMB;
+		case IC_EXPLOSV: return ARMS_DEALER_EXPLOSV;
+
 		case IC_TENTACLES:
 		case IC_MONEY:
 			return( 0 );
-			break;
 
 	//	case IC_APPLIABLE:
 			break;

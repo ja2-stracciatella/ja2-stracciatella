@@ -297,9 +297,7 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv)
 		case MINICIV:
 		case DRESSCIV:
 		case CRIPPLECIV:
-
 			return( CIV_TYPE_ADULT );
-			break;
 
 		case ADULTFEMALEMONSTER:
 		case AM_MONSTER:
@@ -320,8 +318,6 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv)
 
 			return( CIV_TYPE_NA );
 	}
-
-	return( CIV_TYPE_NA );
 }
 
 

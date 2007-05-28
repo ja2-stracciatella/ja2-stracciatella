@@ -3805,7 +3805,6 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			//Should never get in here
 			Assert( 0 );
 			return;
-			break;
 
 		case ARMS_DEALER_OFFER_AREA:
 			//Get the item from the slot.
@@ -4139,7 +4138,6 @@ static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocat
 			// not used this way
 			Assert( 0 );
 			return( bSlotAddedTo );
-			break;
 
 		case ARMS_DEALER_OFFER_AREA:
 
