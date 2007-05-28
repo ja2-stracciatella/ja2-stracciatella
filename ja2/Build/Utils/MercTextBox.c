@@ -378,7 +378,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		usTextWidth = usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X  ) * 2 + 1 - usMarginX;
 	}
 
-	usNumberVerticalPixels = IanWrappedStringHeight(0,0, usTextWidth, 2, TEXT_POPUP_FONT, MERC_TEXT_COLOR, pString, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+	usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
 
 	usHeight = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
 

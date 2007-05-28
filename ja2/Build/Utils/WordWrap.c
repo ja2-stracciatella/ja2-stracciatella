@@ -1233,15 +1233,12 @@ static INT16 IanDisplayWrappedStringToPages(UINT16 usPosX, UINT16 usPosY, UINT16
 
 
 // now variant for grabbing height
-UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
-															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
-															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
+UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const wchar_t* pString)
 {
-	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
-	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
+	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0;
+	UINT16	usLinesUsed=1;
 	UINT32	uiLocalFont=uiFont;
-	UINT16	usJustification = LEFT_JUSTIFIED,usLocalPosX=usPosX;
-	UINT8		ubLocalColor = ubColor;
+	UINT16	usJustification = LEFT_JUSTIFIED;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
 
@@ -1284,15 +1281,8 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						}
 						else	// turn OFF centering...
 						{
-
-							// increment Y position for next time
-  						usPosY += GetFontHeight(uiLocalFont) + ubGap;
-
 							// we just used a line, so note that
 							usLinesUsed++;
-
-							// reset x position
-							usLocalPosX = usPosX;
 
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
@@ -1318,15 +1308,8 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 						// NEWLINE character!
 
-
-						// increment Y position for next time
-  					usPosY += GetFontHeight(uiLocalFont) + ubGap;
-
 						// we just used a line, so note that
 						usLinesUsed++;
-
-						// reset x position
-						usLocalPosX = usPosX;
 
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
@@ -1336,9 +1319,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 						// reset the line length
 						usLineLengthPixels = 0;
-
-						// reset width
-						usLocalWidth = usWidth;
 
 						// reset dest char counter
 						usDestCounter = 0;
@@ -1350,15 +1330,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 						if (!fBoldOn)
 						{
-
-							// calc length of what we just wrote
-  						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
-							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
-
-							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
-
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
 
@@ -1375,16 +1346,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 						}
 						else
 						{
-
-  						// calc length of what we just wrote
-							usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
-
-							// calculate new x position for next time
-							usLocalPosX += usPhraseLengthPixels;
-
-							// shorten width for next time
-							usLocalWidth -= usLineLengthPixels;
-
 							// erase line string
 							memset(zLineString,0,sizeof(zLineString));
 
@@ -1404,23 +1365,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 					case TEXT_CODE_NEWCOLOR:
-
-						// the new color value is the next character in the word
-						if (zWordString[1] != TEXT_SPACE && zWordString[1] < 256)
-							ubLocalColor = (UINT8) zWordString[1];
-
-
-						ubLocalColor = 184;;
-
-						// calc length of what we just wrote
-						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
-
-						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
-
-						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
-
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
 
@@ -1434,25 +1378,11 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 
 					case TEXT_CODE_DEFCOLOR:
-
-
-  					// calc length of what we just wrote
-						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);
-
-						// calculate new x position for next time
-						usLocalPosX += usPhraseLengthPixels;
-
-						// shorten width for next time
-						usLocalWidth -= usLineLengthPixels;
-
 						// erase line string
 						memset(zLineString,0,sizeof(zLineString));
 
 						// erase word string
 						memset(zWordString,0,sizeof(zWordString));
-
-						// change color back to default color
-						ubLocalColor = ubColor;
 
 						// reset dest char counter
 						usDestCounter = 0;
@@ -1497,13 +1427,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 				{
 					// can't fit this word!
 
-
-					// increment Y position for next time
-  				usPosY += GetFontHeight(uiLocalFont) + ubGap;
-
-					// reset x position
-					usLocalPosX = usPosX;
-
 					// we just used a line, so note that
 					usLinesUsed++;
 
@@ -1515,9 +1438,6 @@ UINT16 IanWrappedStringHeight(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT
 
 					// reset dest char counter
 					usDestCounter = 0;
-
-					// reset width
-					usLocalWidth = usWidth;
 				}
 			}		// end of this word was NOT a special code
 
@@ -1542,9 +1462,7 @@ static BOOLEAN WillThisStringGetCutOff(INT32 iTotalYPosition, INT32 iBottomOfPag
 	// Will return if this string will get cut off
 
 
-	iHeight = IanWrappedStringHeight(0, 0,  ( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
-															  uiFont, 0, pString,
-															0, FALSE , 0);
+	iHeight = IanWrappedStringHeight(iWrapWidth, iGap, uiFont, pString);
 
 	if( iHeight + iTotalYPosition >= ((iPage + 1) * iBottomOfPage ) )
 	{
@@ -1560,9 +1478,7 @@ static BOOLEAN IsThisStringBeforeTheCurrentPage(INT32 iTotalYPosition, INT32 iPa
 	// check to see if the current string will appear on the current page
 	BOOLEAN fBeforeCurrentPage = FALSE;
 
-	if( iTotalYPosition + IanWrappedStringHeight(0, 0,  ( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
-															  uiFont, 0, pString,
-															0, FALSE , 0)  >  ( iPageSize * iCurrentPage ) )
+	if (iTotalYPosition + IanWrappedStringHeight(iWrapWidth, iGap, uiFont, pString) > iPageSize * iCurrentPage)
 	{
 		fBeforeCurrentPage = FALSE;
 	}
@@ -1580,9 +1496,7 @@ static INT32 GetNewTotalYPositionOfThisString(INT32 iTotalYPosition, INT32 iPage
 	INT32 iNewYPosition = 0;
   // will returnt he new total y value of this string
 
-	iNewYPosition = iTotalYPosition + IanWrappedStringHeight(0, 0,  ( INT16 )iWrapWidth, ( UINT8 ) ( iGap ),
-															  uiFont, 0, pString,
-															0, FALSE , 0);
+	iNewYPosition = iTotalYPosition + IanWrappedStringHeight(iWrapWidth, iGap, uiFont, pString);
 
 	return( iNewYPosition );
 }

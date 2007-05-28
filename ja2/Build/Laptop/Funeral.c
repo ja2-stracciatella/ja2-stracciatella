@@ -215,9 +215,7 @@ void RenderFuneral()
 		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,usPosX, FUNERAL_LINK_1_Y);
 
 		//Calculate the height of the string, as it needs to be vertically centered.
-		usStringHeight = IanWrappedStringHeight( 0, 0, FUNERAL_LINK_TEXT_WIDTH, 2,
-															 FUNERAL_SENTENCE_FONT, 0, sFuneralString[i+FUNERAL_SEND_FLOWERS],
-															 0, 0, 0 );
+		usStringHeight = IanWrappedStringHeight(FUNERAL_LINK_TEXT_WIDTH, 2, FUNERAL_SENTENCE_FONT, sFuneralString[i + FUNERAL_SEND_FLOWERS]);
 		DisplayWrappedString( (UINT16)(usPosX+FUNERAL_LINK_TEXT_OFFSET_X), (UINT16)(FUNERAL_LINK_1_Y + (FUNERAL_LINK_1_HEIGHT - usStringHeight) / 2), FUNERAL_LINK_TEXT_WIDTH, 2, FUNERAL_SENTENCE_FONT, FUNERAL_TITLE_COLOR, sFuneralString[i+FUNERAL_SEND_FLOWERS], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED);
 
 

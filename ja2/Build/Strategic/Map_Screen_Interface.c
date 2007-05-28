@@ -2636,7 +2636,7 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	iY = pRegion->iY;
 	// get the width and height of the string
 	iW = (INT32)( pRegion->iW ) + 14;
-	iH = IanWrappedStringHeight( ( UINT16 )iX, ( UINT16 )iY, ( UINT16 )( pRegion->iW ), 0, FONT10ARIAL, FONT_BLACK, pRegion->FastHelpText, FONT_BLACK, TRUE, 0 );
+	iH = IanWrappedStringHeight(pRegion->iW, 0, FONT10ARIAL, pRegion->FastHelpText);
 
 	// tack on the outer border
 	iH += 14;

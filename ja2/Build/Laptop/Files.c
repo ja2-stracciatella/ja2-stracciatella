@@ -754,20 +754,10 @@ static FileString* GetFirstStringOnThisPage(FileString* RecordList, UINT32 uiFon
 		}
 
 		// build record list to this point
-		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
-															  uiFont, 0, CurrentRecord->pString,
-															 0, 0, 0 ) )  < iPageSize )
+		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usCurrentWidth, ubGap, uiFont, CurrentRecord->pString) < iPageSize)
 		{
-
-
-
-
-
-
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usCurrentWidth, ubGap,
-															  uiFont, 0, CurrentRecord->pString,
-															 0, 0, 0 ) ;
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(usCurrentWidth, ubGap, uiFont, CurrentRecord->pString);
 
 			// next record
 			CurrentRecord = CurrentRecord->Next;
@@ -944,9 +934,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		}
 		// not far enough, advance
 
-		if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP,
-														uiFont, 0, sString,
-													 0, 0, 0 ) )  < MAX_FILE_MESSAGE_PAGE_SIZE  )
+		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
 			 iYPositionOnPage += ( INT32 )IanDisplayWrappedString((UINT16) ( iFileStartX ), ( UINT16 )( FILE_VIEWER_Y + iYPositionOnPage), ( INT16 )iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString,0,FALSE, uiFlags );
@@ -1432,9 +1420,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			}
 
 			// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-			if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, ( UINT16 )iFileLineWidth, FILE_GAP,
-															uiFont, 0, sString,
-														 0, 0, 0 ) )  < MAX_FILE_MESSAGE_PAGE_SIZE  )
+			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
 		     iYPositionOnPage += ( INT32 )IanDisplayWrappedString((UINT16) ( iFileStartX ), ( UINT16 )( FILE_VIEWER_Y + iYPositionOnPage), ( INT16 )iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString,0,FALSE, uiFlags );

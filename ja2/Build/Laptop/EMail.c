@@ -1077,15 +1077,11 @@ static Record* GetFirstRecordOnThisPage(Record* RecordList, UINT32 uiFont, UINT1
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point
-		while( ( iCurrentPositionOnThisPage + IanWrappedStringHeight(0, 0, usWidth, ubGap,
-															  uiFont, 0, CurrentRecord->pRecord,
-															 0, 0, 0 ) )  <= iPageSize )
+		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usWidth, ubGap, uiFont, CurrentRecord->pRecord) <= iPageSize)
 		{
 
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(0, 0, usWidth, ubGap,
-															  uiFont, 0, CurrentRecord->pRecord,
-															 0, 0, 0 ) ;
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(usWidth, ubGap, uiFont, CurrentRecord->pRecord);
 
 			// next record
 			CurrentRecord = CurrentRecord -> Next;
@@ -2801,7 +2797,7 @@ static void PreProcessEmail(Email* pMail)
 	while( pTempRecord )
 	{
 	  // get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-		iHeight += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + GetFontHeight(MESSAGE_FONT), MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, 0);
+		iHeight += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord);
 
 		// next message record string
 		pTempRecord = pTempRecord -> Next;
@@ -2906,12 +2902,10 @@ static void PreProcessEmail(Email* pMail)
 				}
 
 
-				if( ( iYPositionOnPage + IanWrappedStringHeight(0, 0, MESSAGE_WIDTH, MESSAGE_GAP,
-																	MESSAGE_FONT, 0, pTempRecord->pRecord,
-																 0, 0, 0 ) )  <= MAX_EMAIL_MESSAGE_PAGE_SIZE  )
+				if (iYPositionOnPage + IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord) <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
 				{
      			// now print it
-					iYPositionOnPage += IanWrappedStringHeight(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + 10 + iYPositionOnPage + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, IAN_WRAP_NO_SHADOW);
+					iYPositionOnPage += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord);
 					fGoingOffCurrentPage = FALSE;
 				}
 				else
