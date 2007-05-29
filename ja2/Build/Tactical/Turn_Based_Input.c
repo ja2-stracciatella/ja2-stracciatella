@@ -3655,23 +3655,12 @@ static void ToggleWireFrame(void)
 
 static void RefreshSoldier(void)
 {
-	UINT16 usMapPos;
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if ( gfUIFullTargetFound )
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
 		ReviveSoldier( pSoldier );
 	}
-
-	if ( GetMouseMapPos( &usMapPos ) )
-		sprintf( gDebugStr, "%d %d %d %d %d %d %d %d", gubWorldMovementCosts[ usMapPos ][ 0 ][ 0 ],
-			gubWorldMovementCosts[ usMapPos ][ 1 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 2 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 3 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 4 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 5 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 6 ][gsInterfaceLevel],
-			gubWorldMovementCosts[ usMapPos ][ 7 ][gsInterfaceLevel] );
 }
 
 

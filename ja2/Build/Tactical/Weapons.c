@@ -1271,8 +1271,6 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 		// ROLL DICE
 		iDiceRoll = (INT32) PreRandom( 100 );
-		//sprintf( gDebugStr, "Hit Chance: %d %d", (int)uiHitChance, uiDiceRoll );
-
 
 		if ( iDiceRoll <= iHitChance )
 		{
@@ -1464,7 +1462,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 
 		// ROLL DICE
 		iDiceRoll = (INT32) PreRandom( 100 );
-		//sprintf( gDebugStr, "Hit Chance: %d %d", (int)uiHitChance, uiDiceRoll );
 
 		#ifdef JA2BETAVERSION
 		if ( gfReportHitChances )

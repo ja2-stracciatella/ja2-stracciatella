@@ -3269,10 +3269,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 	INT16 sTempPosX_W, sTempPosY_W;
 
-
-	// For debug text for all 4 angles
-	double at1, at2, at3, at4;
-
 	INT16	sX_S, sY_S;
 	INT16 sScreenCenterX, sScreenCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
@@ -3328,8 +3324,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	dAdj = sTopLeftWorldX - gsTLX;
 
 	dAngle = (double)atan2( dAdj, dOpp );
-	at1 = dAngle * 180 / PI;
-
 	if ( dAngle < 0 )
 	{
 		fOutLeft = TRUE;
@@ -3344,8 +3338,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	dAdj = gsTRX - sTopRightWorldX;
 
 	dAngle = (double)atan2( dAdj, dOpp );
-	at2 = dAngle * 180 / PI;
-
 	if ( dAngle < 0 )
 	{
 		fOutRight = TRUE;
@@ -3361,8 +3353,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	dAdj = sBottomLeftWorldX - gsBLX;
 
 	dAngle = (double)atan2( dAdj, dOpp );
-	at3 = dAngle * 180 / PI;
-
 	if ( dAngle < 0 )
 	{
 		fOutLeft = TRUE;
@@ -3377,7 +3367,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	dAdj = gsBRX - sBottomRightWorldX;
 
 	dAngle = (double)atan2( dAdj, dOpp );
-	at4 = dAngle * 180 / PI;
 
 	if ( dAngle < 0 )
 	{
@@ -3387,8 +3376,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	{
 		fOutBottom = TRUE;
 	}
-
-	sprintf( gDebugStr, "Angles: %d %d %d %d", (int)at1, (int)at2, (int)at3, (int)at4 );
 
 	if ( !fOutRight && !fOutLeft && !fOutTop && !fOutBottom )
 	{
@@ -3502,8 +3489,6 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	{
 		if ( !fCheckOnly )
 		{
-				sprintf( gDebugStr, "Center: %d %d ", (int)gsRenderCenterX, (int)gsRenderCenterY );
-
 				//Makesure it's a multiple of 5
 				sMult = sTempRenderCenterX / CELL_X_SIZE;
 				gsRenderCenterX = ( sMult * CELL_X_SIZE ) + ( CELL_X_SIZE / 2 );

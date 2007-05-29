@@ -1721,9 +1721,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
    // then we look for him full viewing distance in EVERY direction
  	 sDistVisible = DistanceVisible(pSoldier, DIRECTION_IRRELEVANT, 0, pOpponent->sGridNo, pOpponent->bLevel );
-
-	 //if (pSoldier->ubID == 0)
-		//sprintf(gDebugStr,"ALREADY KNOW: ME %d him %d val %d",pSoldier->ubID,pOpponent->ubID,pSoldier->bOppList[pOpponent->ubID]);
   }
  else   // soldier is not currently known about
   {
@@ -1733,9 +1730,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
    // situation, the direction may still be changing if it's one of the first
    // few animation steps when this guy's turn to do his stepped look comes up
    sDistVisible = DistanceVisible(pSoldier,pSoldier->bDesiredDirection,bDir, pOpponent->sGridNo, pOpponent->bLevel );
-
-	 //if (pSoldier->ubID == 0)
-		 //sprintf(gDebugStr,"dist visible %d: my dir %d to him %d",sDistVisible,pSoldier->bDesiredDirection,bDir);
   }
 
  // calculate how many spaces away soldier is (using Pythagoras' theorem)

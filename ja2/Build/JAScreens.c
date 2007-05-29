@@ -167,13 +167,6 @@ void DisplayFrameRate( )
 
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
-		// Debug
-		if (gDebugStr[0] != '\0')
-		{
-			//gprintfdirty( 0, 345, L"DEBUG: %ls",gDebugStr);
-			//mprintf( 0,345,L"DEBUG: %ls",gDebugStr);
-		}
-
 		// Print Num tiles
 		//gprintfdirty( 0, 280, L"%d Tiles", gTileDatabaseSize );
 		//mprintf( 0, 280, L"%d Tiles", gTileDatabaseSize );
