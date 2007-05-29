@@ -109,7 +109,6 @@ OBJECTTYPE		*gpItemPointer;
 OBJECTTYPE		gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
 UINT16				usItemSnapCursor;
-UINT16				us16BPPItemCyclePlacedItemColors[ 20 ];
 BOOLEAN				gfItemPointerDifferentThanDefault;
 
 

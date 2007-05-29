@@ -277,7 +277,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	}
 	else
 	{
-		sOutLine = us16BPPItemCyclePlacedItemColors[ 0 ];
+		sOutLine = 0;
     fOutLine = FALSE;
 	}
 
@@ -287,15 +287,6 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
                  (INT16)(sX + 7), sY, 60, 25, DIRTYLEVEL2, NULL, 0, fOutLine, sOutLine );//67
 
 	SetFontDestBuffer( FRAME_BUFFER, 0,0, 640, 480, FALSE );
-
-
-	// now blit this object in the box
-	//BltVideoObjectOutlineFromIndex( guiSAVEBUFFER, GetInterfaceGraphicForItem( &(Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ]) ),
-	//	Item[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ].ubGraphicNum,
-	//	sCenX, sCenY,
-	 //sOutLine, TRUE );
-
-
 
 
 	// now draw bar for condition

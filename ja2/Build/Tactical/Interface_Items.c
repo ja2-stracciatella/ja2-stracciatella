@@ -532,7 +532,7 @@ MOUSE_REGION		gKeyRingPanel;
 MOUSE_REGION		gSMInvCamoRegion;
 INT8						gbCompatibleAmmo[ NUM_INV_SLOTS ];
 INT8						gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
-UINT16					us16BPPItemCyclePlacedItemColors[ 20 ];
+static UINT16 us16BPPItemCyclePlacedItemColors[20];
 UINT32					guiBodyInvVO[ 4 ][ 2 ];
 UINT32					guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
