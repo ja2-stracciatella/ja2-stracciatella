@@ -51,7 +51,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	                                                                                       \
 			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY);                    \
 	                                                                                       \
-			sZLevel=( ( sWorldY ) * Z_SUBLAYERS)+STRUCT_Z_LEVEL;                               \
+			sZLevel = STRUCT_Z_LEVEL;                                                          \
 	                                                                                       \
 		}                                                                                    \
 		else                                                                                 \
@@ -62,31 +62,31 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	                                                                                       \
       sWorldY += 20;                                                                     \
                                                                                          \
-			sZLevel=( ( sWorldY ) * Z_SUBLAYERS)+LAND_Z_LEVEL;                                 \
+			sZLevel = LAND_Z_LEVEL;                                                            \
 		}                                                                                    \
 	}                                                                                      \
 	else if ( uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT )                                 \
 	{                                                                                      \
 		sWorldY += pNode->sRelativeZ;                                                        \
                                                                                          \
-		sZLevel=(sWorldY*Z_SUBLAYERS)+ONROOF_Z_LEVEL;                                        \
+		sZLevel = ONROOF_Z_LEVEL;                                                            \
                                                                                          \
 	}                                                                                      \
 	else if ( uiLevelNodeFlags & LEVELNODE_ITEM )                                          \
 	{                                                                                      \
 		if ( pNode->pItemPool->bRenderZHeightAboveLevel > 0 )                                \
 		{                                                                                    \
-			sZLevel=(sWorldY*Z_SUBLAYERS)+STRUCT_Z_LEVEL;                                      \
+			sZLevel = STRUCT_Z_LEVEL;                                                          \
 			sZLevel+=( pNode->pItemPool->bRenderZHeightAboveLevel );                           \
 		}                                                                                    \
 		else                                                                                 \
 		{                                                                                    \
-			sZLevel=(sWorldY*Z_SUBLAYERS)+OBJECT_Z_LEVEL;                                      \
+			sZLevel = OBJECT_Z_LEVEL;                                                          \
 		}                                                                                    \
 	}                                                                                      \
   else if ( uiAniTileFlags & ANITILE_SMOKE_EFFECT )                                      \
   {                                                                                      \
-		sZLevel=(sWorldY*Z_SUBLAYERS)+OBJECT_Z_LEVEL;                                        \
+		sZLevel = OBJECT_Z_LEVEL;                                                            \
   }                                                                                      \
 	else if ( ( uiLevelNodeFlags & LEVELNODE_USEZ ) )                                      \
 	{                                                                                      \
@@ -100,13 +100,13 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 			sWorldY += pNode->sRelativeZ;                                                      \
 		}                                                                                    \
                                                                                          \
-		sZLevel=(sWorldY*Z_SUBLAYERS)+ONROOF_Z_LEVEL;                                        \
+		sZLevel = ONROOF_Z_LEVEL;                                                            \
 	}                                                                                      \
 	else                                                                                   \
 	{                                                                                      \
-		sZLevel=(sWorldY*Z_SUBLAYERS)+STRUCT_Z_LEVEL;                                        \
+		sZLevel = STRUCT_Z_LEVEL;                                                            \
 	}                                                                                      \
-                                                                                         \
+  sZLevel += sWorldY * Z_SUBLAYERS;                                                      \
 }
 
 #define	RoofZLevel( sMapX, sMapY )              \
