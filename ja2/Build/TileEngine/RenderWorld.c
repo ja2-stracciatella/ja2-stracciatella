@@ -1086,14 +1086,12 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							switch( uiRowFlags )
 							{
 								case TILES_STATIC_LAND:
-
-									LandZLevel( iTempPosX_M, iTempPosY_M );
+									LandZLevel();
 									break;
 
 								case TILES_STATIC_OBJECTS:
-
 									// ATE: Modified to use constant z level, as these are same level as land items
-									ObjectZLevel( TileElem, pNode, iTempPosX_M, iTempPosY_M );
+									ObjectZLevel(iTempPosX_M, iTempPosY_M);
 									break;
 
 								case TILES_STATIC_STRUCTURES:
@@ -1150,8 +1148,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									break;
 
 								case TILES_DYNAMIC_LAND:
-
-									LandZLevel( iTempPosX_M, iTempPosY_M );
+									LandZLevel();
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 								case TILES_DYNAMIC_SHADOWS:
@@ -1160,8 +1157,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 								case TILES_DYNAMIC_OBJECTS:
-
-									ObjectZLevel( TileElem, pNode, iTempPosX_M, iTempPosY_M );
+									ObjectZLevel(iTempPosX_M, iTempPosY_M);
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 

@@ -10,13 +10,13 @@
 }
 
 
-#define	LandZLevel( sMapX, sMapY )\
+#define LandZLevel() \
 {\
 	sZLevel = LAND_Z_LEVEL;\
 }
 
 
-#define ObjectZLevel( TileElem, pNode, sMapX, sMapY )\
+#define ObjectZLevel(sMapX, sMapY) \
 {\
 	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
 \
