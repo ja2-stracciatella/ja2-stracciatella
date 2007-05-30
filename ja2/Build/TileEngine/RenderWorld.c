@@ -59,10 +59,7 @@ extern BOOLEAN gfTopMessageDirty;
 
 
 #define TILES_DIRTY								0x80000000
-#define TILES_NOZWRITE						0x20000000
 #define TILES_MARKED							0x10000000
-#define TILES_NOZ									0x04000000
-#define TILES_DOALL								0x02000000
 #define TILES_OBSCURED						0x01000000
 
 
@@ -895,13 +892,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										}
 									}
 
-
-									// If flag says to do dynamic as well, render!
-									if ( ( uiFlags & TILES_DOALL ) )
-									{
-										fRenderTile = TRUE;
-									}
-
 									if(fRenderTile)
 									{
 										// Set flag to set layer as used
@@ -1512,16 +1502,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								{
 									fZWrite = FALSE;
 								}
-
-
-								if(uiFlags&TILES_NOZWRITE)
-									fZWrite=FALSE;
-
-								if ( uiFlags & TILES_NOZ )
-								{
-									fZBlitter							= FALSE;
-								}
-
 
 								// RENDER
 								if (uiLevelNodeFlags & LEVELNODE_WIREFRAME &&
