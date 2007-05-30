@@ -106,7 +106,6 @@ void ClearRenderFlags(UINT32 uiFlags);
 void RenderSetShadows(BOOLEAN fShadows);
 
 extern UINT16 *gpZBuffer;
-extern UINT32 gRenderFlags;
 BOOLEAN gfIgnoreScrolling;
 
 BOOLEAN			gfScrollInertia;

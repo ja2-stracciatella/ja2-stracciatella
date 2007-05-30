@@ -444,7 +444,7 @@ INT32				guiScrollDirection;
 
 
 // Rendering flags (full, partial, etc.)
-UINT32 gRenderFlags=0;
+static UINT32 gRenderFlags = 0;
 
 static SGPRect gClippingRect = { 0, 0, 640, 360 };
 SGPRect		gOldClipRect;
