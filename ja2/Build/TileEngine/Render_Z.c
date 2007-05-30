@@ -45,7 +45,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 				sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY; \
 			}                                                                                  \
 			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY);                    \
-			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY);                    \
 			sZLevel = STRUCT_Z_LEVEL;                                                          \
 		}                                                                                    \
 		else                                                                                 \
