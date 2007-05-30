@@ -191,14 +191,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 		}                                                                                  \
 		else                                                                               \
 		{                                                                                  \
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )                                \
-			{                                                                                \
-				sZLevel=(sWorldY*Z_SUBLAYERS)+MERC_Z_LEVEL;                                    \
-			}                                                                                \
-			else                                                                             \
-			{                                                                                \
-				sZLevel=(sWorldY*Z_SUBLAYERS)+MERC_Z_LEVEL;                                    \
-			}                                                                                \
+			sZLevel = (sWorldY * Z_SUBLAYERS) + MERC_Z_LEVEL;                                \
 		}                                                                                  \
 	                                                                                     \
 		if ( pSoldier->sZLevelOverride != -1 )                                             \
