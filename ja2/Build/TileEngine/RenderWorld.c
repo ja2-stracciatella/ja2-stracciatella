@@ -1493,8 +1493,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 							if( fRenderTile && !fHiddenTile )
 							{
-								BOOLEAN fTileInvisible = FALSE;
-
 								if ( ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) )
 								{
 									// Set fmerc flag!
@@ -1527,17 +1525,9 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								}
 
 
-
-								if ( ( uiLevelNodeFlags & LEVELNODE_WIREFRAME ) )
-								{
-									if ( !gGameSettings.fOptions[ TOPTION_TOGGLE_WIREFRAME ] )
-									{
-										 fTileInvisible = TRUE;
-									}
-								}
-
 								// RENDER
-								if ( fTileInvisible )
+								if (uiLevelNodeFlags & LEVELNODE_WIREFRAME &&
+										!gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME])
 								{
 
 								}
