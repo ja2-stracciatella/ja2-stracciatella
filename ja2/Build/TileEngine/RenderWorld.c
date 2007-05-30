@@ -1988,7 +1988,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								}
 
 								// RENDR APS ONTOP OF PLANNED MERC GUY
-								if ( fRenderTile && !( uiFlags&TILES_DIRTY ) )
+								if (!(uiFlags & TILES_DIRTY))
 								{
 									if ( fMerc )
 									{
