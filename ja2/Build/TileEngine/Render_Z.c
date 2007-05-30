@@ -1,12 +1,9 @@
-#define GetMapXYWorldY( sWorldCellX, sWorldCellY, sWorldY )\
-{\
-\
-	INT16 gsRDistToCenterX = (sWorldCellX * CELL_X_SIZE) - gCenterWorldX;\
-	INT16 gsRDistToCenterY = (sWorldCellY * CELL_Y_SIZE) - gCenterWorldY;\
-\
-	INT16 gsRScreenCenterY = gsRDistToCenterX + gsRDistToCenterY;\
-\
-	sWorldY = gsRScreenCenterY + gsCY - gsTLY;\
+static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
+{
+	INT16 RDistToCenterX = WorldCellX * CELL_X_SIZE - gCenterWorldX;
+	INT16 RDistToCenterY = WorldCellY * CELL_Y_SIZE - gCenterWorldY;
+	INT16 RScreenCenterY = RDistToCenterX + RDistToCenterY;
+	return RScreenCenterY + gsCY - gsTLY;
 }
 
 
@@ -18,7 +15,7 @@
 
 #define ObjectZLevel(sMapX, sMapY) \
 {\
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( uiTileElemFlags & CLIFFHANG_TILE )\
 	{\
@@ -38,7 +35,7 @@
 #define	StructZLevel( sMapX, sMapY )\
 {\
 \
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) )\
 	{\
@@ -51,9 +48,9 @@
 				sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
 			}\
 	\
-			GetMapXYWorldY( (sMapX + sZOffsetX), (sMapY + sZOffsetY), sWorldY );\
+			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY); \
 	\
-			GetMapXYWorldY( (sMapX + sZOffsetX), (sMapY + sZOffsetY), sWorldY );\
+			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY); \
 	\
 			sZLevel=( ( sWorldY ) * Z_SUBLAYERS)+STRUCT_Z_LEVEL;\
 	\
@@ -62,7 +59,7 @@
 		{\
 			sZOffsetX = -1;\
 			sZOffsetY = -1;\
-			GetMapXYWorldY( (sMapX + sZOffsetX), (sMapY + sZOffsetY), sWorldY );\
+			sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY); \
 	\
       sWorldY += 20;\
 \
@@ -116,7 +113,7 @@
 #define	RoofZLevel( sMapX, sMapY )\
 {\
 \
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sWorldY += WALL_HEIGHT;\
 \
@@ -127,7 +124,7 @@
 #define	OnRoofZLevel( sMapX, sMapY )\
 {\
 \
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE )\
 	{\
@@ -149,7 +146,7 @@
 #define	TopmostZLevel( sMapX, sMapY )\
 {\
 \
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sZLevel=TOPMOST_Z_LEVEL;\
 \
@@ -158,7 +155,7 @@
 #define	ShadowZLevel( sMapX, sMapY )\
 {\
 \
-	GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sZLevel=__max( ( (sWorldY - 80 ) *Z_SUBLAYERS )+SHADOW_Z_LEVEL, 0 );\
 \
@@ -176,12 +173,12 @@
 			sZOffsetY = pNode->pStructureData->pDBStructureRef->pDBStructure->bZTileOffsetY;\
 		}\
 \
-		GetMapXYWorldY( (sMapX + sZOffsetX), (sMapY + sZOffsetY), sWorldY );\
+		sWorldY = GetMapXYWorldY(sMapX + sZOffsetX, sMapY + sZOffsetY); \
 \
 	}\
 	else\
 	{\
-		GetMapXYWorldY( sMapX, sMapY, sWorldY );\
+		sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 	}\
 \
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )\
