@@ -143,13 +143,9 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 \
 }
 
-#define	TopmostZLevel( sMapX, sMapY )\
+#define	TopmostZLevel() \
 {\
-\
-	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
-\
 	sZLevel=TOPMOST_Z_LEVEL;\
-\
 }
 
 #define	ShadowZLevel( sMapX, sMapY )\

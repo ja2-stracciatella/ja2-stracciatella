@@ -1131,8 +1131,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									break;
 
 								case TILES_STATIC_TOPMOST:
-
-									TopmostZLevel( iTempPosX_M, iTempPosY_M );
+									TopmostZLevel();
 									break;
 
 								case TILES_STATIC_SHADOWS:
@@ -1182,7 +1181,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									break;
 
 								case TILES_DYNAMIC_TOPMOST:
-									TopmostZLevel( iTempPosX_M, iTempPosY_M );
+									TopmostZLevel();
 									uiDirtyFlags=BGND_FLAG_SINGLE|BGND_FLAG_ANIMATED;
 									break;
 
