@@ -1547,22 +1547,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									sXPos += pTrav->sOffsetX;
 									sYPos += pTrav->sOffsetY;
 
-									if ( gfUIDisplayActionPointsInvalid )
-									{
-										SetFontBackground( FONT_MCOLOR_BLACK );
-										SetFontForeground( FONT_MCOLOR_WHITE );
-									}
-									else
-									{
-										SetFontBackground( FONT_MCOLOR_BLACK );
-										SetFontForeground( FONT_MCOLOR_WHITE );
-									}
-
-									if ( gfUIDisplayActionPointsBlack )
-									{
-										SetFontBackground( FONT_MCOLOR_BLACK );
-										SetFontForeground( FONT_MCOLOR_BLACK );
-									}
+									SetFontBackground(FONT_MCOLOR_BLACK);
+									SetFontForeground(gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE);
 
 									SetFont( TINYFONT1 );
 									SetFontDestBuffer( guiSAVEBUFFER , 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y, FALSE );
