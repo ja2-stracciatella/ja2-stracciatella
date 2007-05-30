@@ -15,14 +15,13 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 
 #define ObjectZLevel(sMapX, sMapY) \
 {\
-	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
-\
 	if ( uiTileElemFlags & CLIFFHANG_TILE )\
 	{\
 		sZLevel=LAND_Z_LEVEL;\
 	}\
 	else if ( uiTileElemFlags & OBJECTLAYER_USEZHEIGHT )\
 	{\
+		INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 		sZLevel=( ( sWorldY ) *Z_SUBLAYERS)+LAND_Z_LEVEL;\
 	}\
 	else\
