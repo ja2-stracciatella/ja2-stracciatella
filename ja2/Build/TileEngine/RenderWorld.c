@@ -610,7 +610,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 	BOOLEAN				fCheckForMouseDetections = FALSE;
 	static				RenderFXType  RenderFXList[ NUM_RENDER_FX_TYPES ];
-	INT16					sWorldY;
 	INT16					sZOffsetX=-1;
 	INT16					sZOffsetY=-1;
 	ROTTING_CORPSE	*pCorpse=NULL;

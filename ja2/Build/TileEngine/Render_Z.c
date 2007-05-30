@@ -15,7 +15,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 
 #define ObjectZLevel(sMapX, sMapY) \
 {\
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( uiTileElemFlags & CLIFFHANG_TILE )\
 	{\
@@ -35,7 +35,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define	StructZLevel( sMapX, sMapY )\
 {\
 \
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) )\
 	{\
@@ -113,7 +113,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define	RoofZLevel( sMapX, sMapY )\
 {\
 \
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sWorldY += WALL_HEIGHT;\
 \
@@ -124,7 +124,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define	OnRoofZLevel( sMapX, sMapY )\
 {\
 \
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	if ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE )\
 	{\
@@ -146,7 +146,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define	TopmostZLevel( sMapX, sMapY )\
 {\
 \
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sZLevel=TOPMOST_Z_LEVEL;\
 \
@@ -155,7 +155,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define	ShadowZLevel( sMapX, sMapY )\
 {\
 \
-	sWorldY = GetMapXYWorldY(sMapX, sMapY); \
+	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
 \
 	sZLevel=__max( ( (sWorldY - 80 ) *Z_SUBLAYERS )+SHADOW_Z_LEVEL, 0 );\
 \
@@ -164,6 +164,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 #define SoldierZLevel( pSoldier, sMapX, sMapY )\
 {\
 \
+	INT16 sWorldY; \
 	if ( ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )\
 	{\
 \
