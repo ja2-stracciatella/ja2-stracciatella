@@ -1240,8 +1240,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 												continue;
 											}
 										}
-
-										if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z )
+										else
 										{
 											fSaveZ													= TRUE;
 											fMultiTransShadowZBlitter				= TRUE;
