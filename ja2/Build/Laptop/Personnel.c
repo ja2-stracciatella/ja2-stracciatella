@@ -241,7 +241,6 @@ static const POINT pPersonnelScreenPoints[]=
 
 static UINT32 guiSCREEN;
 static UINT32 guiTITLE;
-static UINT32 guiFACE;
 static UINT32 guiDEPARTEDTEAM;
 static UINT32 guiCURRENTTEAM;
 static UINT32 guiPersonnelInventory;
@@ -608,7 +607,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEA
 		}
 	}
 
-	guiFACE = AddVideoObjectFromFile(sTemp);
+	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKF(guiFACE != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
@@ -1524,7 +1523,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 				sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR,	Menptr[iId + iCnt].ubProfile);
 			}
 
-		guiFACE = AddVideoObjectFromFile(sTemp);
+		UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 		CHECKF(guiFACE != NO_VOBJECT);
 
 		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
@@ -4061,7 +4060,7 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 		sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId);
 	}
 
-	guiFACE = AddVideoObjectFromFile(sTemp);
+	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKF(guiFACE != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
