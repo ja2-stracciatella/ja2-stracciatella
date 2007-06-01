@@ -3453,13 +3453,6 @@ const wchar_t* pIMPVoicesStrings[] =
 	L"Голос",
 };
 
-const wchar_t* pDepartedMercPortraitStrings[ ]=
-{
-	L"Убит в бою",
-	L"Уволен",
-	L"Другое",
-};
-
 // title for program
 const wchar_t* pPersTitleText[] =
 {

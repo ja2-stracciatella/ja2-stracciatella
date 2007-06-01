@@ -3457,13 +3457,6 @@ const wchar_t *pIMPVoicesStrings[] =
 	L"Voice",
 };
 
-const wchar_t *pDepartedMercPortraitStrings[ ]=
-{
-	L"Killed in Action",
-	L"Dismissed",
-	L"Other",
-};
-
 // title for program
 const wchar_t *pPersTitleText[] =
 {

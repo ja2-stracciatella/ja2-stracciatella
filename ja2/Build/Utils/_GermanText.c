@@ -3276,13 +3276,6 @@ const wchar_t *pIMPVoicesStrings[] =
 	L"Stimme",
 };
 
-const wchar_t *pDepartedMercPortraitStrings[] =
-{
-	L"Im Einsatz getötet",
-	L"Entlassen",
-	L"Sonstiges",
-};
-
 // title for program
 const wchar_t *pPersTitleText[] =
 {

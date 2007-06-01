@@ -133,7 +133,6 @@ extern const wchar_t *pIMPBeginScreenStrings[];
 extern const wchar_t *pIMPFinishButtonText[1];
 extern const wchar_t *pIMPFinishStrings[];
 extern const wchar_t *pIMPVoicesStrings[];
-extern const wchar_t *pDepartedMercPortraitStrings[];
 extern const wchar_t *pPersTitleText[];
 extern const wchar_t *pPausedGameText[];
 extern const wchar_t *zOptionsToggleText[];
