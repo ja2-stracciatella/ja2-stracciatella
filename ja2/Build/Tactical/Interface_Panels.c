@@ -1821,7 +1821,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		}
 
 		RestoreExternBackgroundRect( SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT );
-		VarFindFontCenterCoordinates( SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT, SMALLFONT1, &sFontX, &sFontY, L"%ls", gpSMCurrentMerc->name );
+		FindFontCenterCoordinates(SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT, gpSMCurrentMerc->name, SMALLFONT1, &sFontX, &sFontY);
 		mprintf( sFontX + 5, sFontY, L"%ls", gpSMCurrentMerc->name );
 
 	}
@@ -3462,7 +3462,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
-				VarFindFontCenterCoordinates( (INT16)(sTEAMNamesXY[ posIndex ] + 2 ), (INT16)(sTEAMNamesXY[ posIndex + 1 ] ), TM_NAME_WIDTH, TM_NAME_HEIGHT, BLOCKFONT2, &sFontX, &sFontY, L"%ls", pSoldier->name );
+				FindFontCenterCoordinates(sTEAMNamesXY[posIndex] + 2, sTEAMNamesXY[posIndex + 1], TM_NAME_WIDTH, TM_NAME_HEIGHT, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
 				mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
 				gprintfRestore( sFontX, sFontY, L"%ls", pSoldier->name );
 				// reset to frame buffer!
@@ -4693,7 +4693,7 @@ void RenderTownIDString( )
 
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
-	VarFindFontCenterCoordinates( 548, 425, 80, 16, COMPFONT, &sFontX, &sFontY, zTownIDString );
+	FindFontCenterCoordinates(548, 425, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", zTownIDString );
 }
 

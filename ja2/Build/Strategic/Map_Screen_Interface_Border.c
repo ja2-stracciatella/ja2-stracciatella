@@ -778,23 +778,6 @@ void ToggleItemsFilter( void )
 
 
 /*
-void ShowDestinationOfPlottedPath( STR16 pLoc )
-{
-	INT16 sFontX, sFontY;
-
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
-
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
-	VarFindFontCenterCoordinates( 461, 344,  70, 12,  COMPFONT, &sFontX, &sFontY, pLoc );
-	gprintfdirty(sFontX, sFontY, pLoc );
-	mprintf(sFontX, sFontY, pLoc  );
-}
-*/
-
-/*
 void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )

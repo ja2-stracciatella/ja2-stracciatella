@@ -529,7 +529,7 @@ static void DrawNameOfLoadedSector(void)
 	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, lengthof(sString), TRUE );
 	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
 
-	VarFindFontCenterCoordinates( 548, 426, 80, 16, COMPFONT, &sFontX, &sFontY, sString );
+	FindFontCenterCoordinates(548, 426, 80, 16, sString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", sString );
 }
 
@@ -1112,11 +1112,11 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	SetFontBackground( FONT_BLACK );
 
 	sString = pMapScreenBottomText[0];
-	VarFindFontCenterCoordinates( 359, 387 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	FindFontCenterCoordinates(359, 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", sString );
 
 	sString = zMarksMapScreenText[2];
-	VarFindFontCenterCoordinates( 359, 433 - 14,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	FindFontCenterCoordinates(359, 433 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", sString );
 
 	// ste the font buffer
@@ -1141,7 +1141,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
 
 	// center it
-	VarFindFontCenterCoordinates( 359, 387 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	FindFontCenterCoordinates(359, 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 
 	// print it
 	mprintf( sFontX, sFontY, L"%ls", sString );
@@ -1237,7 +1237,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	SPrintMoney(sString, iRate);
 
 	// center it
-	VarFindFontCenterCoordinates( 359, 433 + 2,  437 - 359, 10,  COMPFONT, &sFontX, &sFontY, sString );
+	FindFontCenterCoordinates(359, 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 
 	// print it
 	mprintf( sFontX, sFontY, L"%ls", sString );

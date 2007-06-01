@@ -1972,8 +1972,7 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 						swprintf( pStr, lengthof(pStr), TacticalStr[ SHORT_JAMMED_GUN ] );
 					}
 
-					VarFindFontCenterCoordinates( sX, sY, sWidth, sHeight , ITEM_FONT, &sNewX, &sNewY, pStr );
-
+					FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr, ITEM_FONT, &sNewX, &sNewY);
 					mprintf( sNewX, sNewY, pStr );
 					gprintfinvalidate( sNewX, sNewY, pStr );
 				}
@@ -2089,13 +2088,13 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 
 			fLineSplit = WrapString( pStr, pStr2, lengthof(pStr2), WORD_WRAP_INV_WIDTH, ITEM_FONT );
 
-			VarFindFontCenterCoordinates( sX, sY, sWidth, sHeight , ITEM_FONT, &sFontX, &sFontY, pStr );
+			FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr, ITEM_FONT, &sFontX, &sFontY);
 			sFontY = sY + 1;
 			gprintfinvalidate( sFontX, sFontY, pStr );
 
 			if ( fLineSplit )
 			{
-				VarFindFontCenterCoordinates( sX, sY, sWidth, sHeight , ITEM_FONT, &sFontX2, &sFontY2, pStr2 );
+				FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr2, ITEM_FONT, &sFontX2, &sFontY2);
 				sFontY2 = sY + 13;
 				gprintfinvalidate( sFontX2, sFontY2, pStr2 );
 			}
@@ -6205,7 +6204,7 @@ void RenderItemPickupMenu( )
 
 				  swprintf( pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects );
 
-				  VarFindFontRightCoordinates( sCenX, sCenY, 42, 1 , ITEM_FONT, &sFontX, &sFontY, pStr );
+				  FindFontRightCoordinates(sCenX, sCenY, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
 				  mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 				}
       	SetFont( ITEMDESC_FONT );
@@ -6266,7 +6265,7 @@ void RenderItemPickupMenu( )
 				{
 					wcslcpy(pStr, ShortItemNames[pObject->usItem], lengthof(pStr));
 				}
-				VarFindFontCenterCoordinates( sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1 , ITEMDESC_FONT, &sFontX, &sFontY, pStr );
+				FindFontCenterCoordinates(sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1, pStr, ITEMDESC_FONT, &sFontX, &sFontY);
 				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 
 				sY += ITEMPICK_GRAPHIC_YSPACE;

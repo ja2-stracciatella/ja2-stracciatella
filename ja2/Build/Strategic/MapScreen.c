@@ -3784,7 +3784,6 @@ static void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	}
 
 	//RestoreExternBackgroundRect(DEST_ETA_X+1, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), DEST_ETA_WIDTH-1, Y_SIZE);
-	// ShowDestinationOfPlottedPath( sString );
 	DrawString( sString,((UINT16)(usX)), ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ((UINT32)iFont));
 }
 

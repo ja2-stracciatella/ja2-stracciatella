@@ -3528,7 +3528,7 @@ static void RenderCurrentSchedule(void)
 			SetFontBackground( FONT_LTKHAKI );
 			SetFontForeground( FONT_WHITE );
 			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
-			VarFindFontCenterCoordinates( sScreenX, sScreenY, 1, 1, TINYFONT1, &sX, &sY, str );
+			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, str, TINYFONT1, &sX, &sY);
 			mprintf( sX, sY, str );
 		}
 	}

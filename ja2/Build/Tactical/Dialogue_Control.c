@@ -2227,7 +2227,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		  //reset the font dest buffer
 		  SetFontDestBuffer( pBlitter->uiDestBuff, 0,0,640,480, FALSE);
 
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", pSoldier->name );
+			FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 55, 73, 9, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
 			mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
 
 			// What sector are we in, ( and is it the same as ours? )
@@ -2237,7 +2237,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
         ReduceStringLength( zTownIDString, lengthof(zTownIDString), 64 , BLOCKFONT2 );
 
-				VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 12 ), (INT16)( pBlitter->sY + 68 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", zTownIDString );
+				FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 68, 73, 9, zTownIDString, BLOCKFONT2, &sFontX, &sFontY);
 				mprintf( sFontX, sFontY, L"%ls", zTownIDString );
 			}
 
@@ -2248,7 +2248,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		}
 		else
 		{
-			VarFindFontCenterCoordinates( (INT16)( pBlitter->sX + 9 ), (INT16)( pBlitter->sY + 55 ), 73, 9, BLOCKFONT2, &sFontX, &sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
+			FindFontCenterCoordinates(pBlitter->sX + 9, pBlitter->sY + 55, 73, 9, gMercProfiles[gpCurrentTalkingFace->ubCharacterNum].zNickname, BLOCKFONT2, &sFontX, &sFontY);
 			mprintf( sFontX, sFontY, L"%ls", gMercProfiles[ gpCurrentTalkingFace->ubCharacterNum ].zNickname );
 		}
 

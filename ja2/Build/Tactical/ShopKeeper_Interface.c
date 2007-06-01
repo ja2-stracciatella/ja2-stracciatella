@@ -2484,13 +2484,13 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	if ( pItemObject->bGunAmmoStatus < 0 )
 	{
 		swprintf( zTemp, lengthof(zTemp), TacticalStr[ JAMMED_ITEM_STR ] );
-		VarFindFontCenterCoordinates( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, TINYFONT1, &sCenX, &sCenY, zTemp );
+		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, zTemp, TINYFONT1, &sCenX, &sCenY);
 		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	}
 	else if ( fPrintRepaired )
 	{
 		swprintf( zTemp, lengthof(zTemp), SKI_Text[ SKI_TEXT_REPAIRED ] );
-		VarFindFontCenterCoordinates( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, TINYFONT1, &sCenX, &sCenY, zTemp );
+		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, zTemp, TINYFONT1, &sCenX, &sCenY);
 		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
 	}
 

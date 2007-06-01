@@ -1294,7 +1294,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 
 					SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
 
-					VarFindFontCenterCoordinates( sFaceX, sFaceY, pFace->usFaceWidth, pFace->usFaceHeight, TINYFONT1, &sFontX, &sFontY, pFace->zDisplayText );
+					FindFontCenterCoordinates(sFaceX, sFaceY, pFace->usFaceWidth, pFace->usFaceHeight, pFace->zDisplayText, TINYFONT1, &sFontX, &sFontY);
 
 					if ( pFace->fDisplayTextOver == FACE_DRAW_TEXT_OVER )
 					{
