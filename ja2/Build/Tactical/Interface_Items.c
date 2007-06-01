@@ -1963,18 +1963,19 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				{
 					SetFontForeground( FONT_MCOLOR_RED );
 
+					const wchar_t* Jammed;
 					if ( sWidth >= ( BIG_INV_SLOT_WIDTH - 10 )  )
 					{
-						swprintf( pStr, lengthof(pStr), TacticalStr[ JAMMED_ITEM_STR ] );
+						Jammed = TacticalStr[JAMMED_ITEM_STR];
 					}
 					else
 					{
-						swprintf( pStr, lengthof(pStr), TacticalStr[ SHORT_JAMMED_GUN ] );
+						Jammed = TacticalStr[SHORT_JAMMED_GUN];
 					}
 
-					FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr, ITEM_FONT, &sNewX, &sNewY);
-					mprintf( sNewX, sNewY, pStr );
-					gprintfinvalidate( sNewX, sNewY, pStr );
+					FindFontCenterCoordinates(sX, sY, sWidth, sHeight, Jammed, ITEM_FONT, &sNewX, &sNewY);
+					mprintf(sNewX, sNewY, Jammed);
+					gprintfinvalidate(sNewX, sNewY, Jammed);
 				}
 			}
 			else
@@ -2017,10 +2018,10 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				}
 
 				sNewY = sY;
-				swprintf( pStr, lengthof(pStr), L"*" );
+				const wchar_t* AttachMarker = L"*";
 
 				// Get length of string
-				uiStringLength=StringPixLength(pStr, ITEM_FONT );
+				uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
 
 				sNewX = sX + sWidth - uiStringLength - 4;
 
@@ -2028,9 +2029,8 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
 				}
-				mprintf( sNewX, sNewY, pStr );
-				gprintfinvalidate( sNewX, sNewY, pStr );
-
+				mprintf(sNewX, sNewY, AttachMarker);
+				gprintfinvalidate(sNewX, sNewY, AttachMarker);
 			}
 
 			if ( pSoldier && pObject == &(pSoldier->inv[HANDPOS] ) && ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN ) && pSoldier->bWeaponMode != WM_NORMAL )
@@ -2038,17 +2038,18 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				SetFontForeground( FONT_DKRED );
 
 				sNewY = sY + 13; // rather arbitrary
+				const wchar_t* ModeMarker;
 				if ( pSoldier->bWeaponMode == WM_BURST )
 				{
-					swprintf( pStr, lengthof(pStr), L"*" );
+					ModeMarker = L"*";
 				}
 				else
 				{
-					swprintf( pStr, lengthof(pStr), L"+" );
+					ModeMarker = L"+";
 				}
 
 				// Get length of string
-				uiStringLength=StringPixLength(pStr, ITEM_FONT );
+				uiStringLength = StringPixLength(ModeMarker, ITEM_FONT);
 
 				sNewX = sX + sWidth - uiStringLength - 4;
 
@@ -2056,13 +2057,9 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				{
 					RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
 				}
-				mprintf( sNewX, sNewY, pStr );
-				gprintfinvalidate( sNewX, sNewY, pStr );
-
+				mprintf(sNewX, sNewY, ModeMarker);
+				gprintfinvalidate(sNewX, sNewY, ModeMarker);
 			}
-
-
-
 		}
 	}
 
@@ -2575,7 +2572,6 @@ static BOOLEAN ReloadItemDesc(void)
 static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 {
 	static BOOLEAN fRightDown = FALSE;
-	wchar_t		pStr[10];
 
 /*	region gets disabled in SKI for shopkeeper boxes.  It now works normally for merc's inventory boxes!
 	//if we are currently in the shopkeeper interface, return;
@@ -2607,8 +2603,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				gpItemPointer = &gItemPointer;
 				gpItemPointerSoldier = gpItemDescSoldier;
 
-				swprintf( pStr, lengthof(pStr), L"0" );
-				SpecifyButtonText( giItemDescAmmoButton, pStr );
+				SpecifyButtonText(giItemDescAmmoButton, L"0");
 
 				// Set mouse
 				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
@@ -2639,9 +2634,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				//fItemDescDelete = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 
-				swprintf( pStr, lengthof(pStr), L"0" );
-				SpecifyButtonText( giItemDescAmmoButton, pStr );
-
+				SpecifyButtonText(giItemDescAmmoButton, L"0");
 
 				fItemDescDelete = TRUE;
 			}
@@ -6217,15 +6210,14 @@ void RenderItemPickupMenu( )
 					SetFontShadow( DEFAULT_SHADOW );
 
 				  sNewY = sCenY + 2;
-				  swprintf( pStr, lengthof(pStr), L"*" );
+					const wchar_t* AttachMarker = L"*";
 
 				  // Get length of string
-				  uiStringLength=StringPixLength( pStr, ITEM_FONT );
+				  uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
 
 				  sNewX = sCenX + 43 - uiStringLength - 4;
 
-  				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, pStr);
-				  //gprintfinvalidate( sNewX, sNewY, pStr );
+  				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
 			  }
 
 				if ( gItemPickupMenu.bCurSelect == ( cnt + gItemPickupMenu.ubScrollAnchor ) )

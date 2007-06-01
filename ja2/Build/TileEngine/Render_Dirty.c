@@ -643,7 +643,7 @@ INT32 iBack;
 }
 
 
-UINT16 gprintfinvalidate(INT16 x, INT16 y, wchar_t *pFontString, ...)
+UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 {
 va_list argptr;
 wchar_t	string[512];

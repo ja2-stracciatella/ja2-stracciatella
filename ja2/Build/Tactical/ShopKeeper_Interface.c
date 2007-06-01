@@ -2476,22 +2476,21 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	if( ItemHasAttachments( pItemObject ) )
 	{
 		//Display the '*' in the bottom right corner of the square
-		swprintf( zTemp, lengthof(zTemp), L"*" );
-		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ATTACHMENT_SYMBOL_X_OFFSET), (UINT16)(usPosY+SKI_ATTACHMENT_SYMBOL_Y_OFFSET), 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		DrawTextToScreen(L"*", usPosX + SKI_ATTACHMENT_SYMBOL_X_OFFSET, usPosY + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
 	// Display 'JAMMED' if it's jammed
 	if ( pItemObject->bGunAmmoStatus < 0 )
 	{
-		swprintf( zTemp, lengthof(zTemp), TacticalStr[ JAMMED_ITEM_STR ] );
-		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, zTemp, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		const wchar_t* Jammed = TacticalStr[JAMMED_ITEM_STR];
+		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Jammed, TINYFONT1, &sCenX, &sCenY);
+		DrawTextToScreen(Jammed, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 	else if ( fPrintRepaired )
 	{
-		swprintf( zTemp, lengthof(zTemp), SKI_Text[ SKI_TEXT_REPAIRED ] );
-		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, zTemp, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen( zTemp, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		const wchar_t* Repaired = SKI_Text[SKI_TEXT_REPAIRED];
+		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Repaired, TINYFONT1, &sCenX, &sCenY);
+		DrawTextToScreen(Repaired, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 	}
 
 	if( fHatchedOut )

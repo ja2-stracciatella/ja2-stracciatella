@@ -116,7 +116,7 @@ BOOLEAN EmptyBackgroundRects( void );
 
 // GPRINTF DIRTY STUFF
 UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...);
-UINT16 gprintfinvalidate(INT16 x, INT16 y, wchar_t *pFontString, ...);
+UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
 UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 
