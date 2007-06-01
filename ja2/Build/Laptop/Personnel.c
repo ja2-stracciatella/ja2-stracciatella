@@ -51,11 +51,6 @@
 #define TEXT_BOX_WIDTH							160
 #define	TEXT_DELTA_OFFSET						9
 #define TEXT_BOX_Y LAPTOP_SCREEN_UL_Y+188
-#define PAGE_BOX_X LAPTOP_SCREEN_UL_X+250 - 10
-#define PAGE_BOX_Y LAPTOP_SCREEN_UL_Y+3
-#define PAGE_BOX_WIDTH  58
-#define PAGE_BOX_HEIGHT 24
-#define MAX_SLOTS 4
 #define PERS_CURR_TEAM_X LAPTOP_SCREEN_UL_X + 39 - 15
 #define PERS_CURR_TEAM_Y LAPTOP_SCREEN_UL_Y + 218
 #define PERS_DEPART_TEAM_Y LAPTOP_SCREEN_UL_Y + 247
@@ -66,16 +61,12 @@
 #define PERS_COUNT 15
 #define MAX_STATS 20
 #define PERS_FONT						FONT10ARIAL
-#define PERS_HEADER_FONT		FONT14ARIAL
 #define CHAR_NAME_FONT			FONT12ARIAL
 #define CHAR_NAME_Y 177
 #define CHAR_LOC_Y	189
 #define PERS_TEXT_FONT_COLOR FONT_WHITE //146
 #define PERS_TEXT_FONT_ALTERNATE_COLOR FONT_YELLOW
 #define PERS_FONT_COLOR FONT_WHITE
-#define PAGE_X PAGE_BOX_X+2 - 10
-#define PAGE_Y PAGE_BOX_Y+2
-
 
 
 #define	FACES_DIR "FACES/BIGFACES/"
@@ -252,7 +243,7 @@ POINT pPersonnelScreenPoints[]=
 	{422+PrsnlOffSetX, 445+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 380+PrsnlOffSetY}, // for contract price
 	{422+PrsnlOffSetX, 435+PrsnlOffSetY},
-	{140,33},  // Personnel Header
+	{140,33},  // Personnel Header // XXX unused
 	{422+PrsnlOffSetX, 330+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 340+PrsnlOffSetY},	//20
 	{422+PrsnlOffSetX, 355+PrsnlOffSetY},
@@ -276,7 +267,6 @@ INT32 giPersonnelButton[6];
 INT32 giPersonnelButtonImage[6];
 INT32 giPersonnelInventoryButtons[ 2 ];
 INT32 giPersonnelInventoryButtonsImages[ 2 ];
-INT32 iStartPersonId; // iId of the person who is leftmost on the display
 INT32 iLastPersonId;
 INT32 giDepartedButtonImage[ 2 ];
 INT32 giDepartedButton[ 2 ];
@@ -342,7 +332,6 @@ static void SetPersonnelButtonStates(void);
 void EnterPersonnel( void )
 {
 	fReDrawScreenFlag=TRUE;
-  iStartPersonId=-1;
 
 	iCurrentPersonSelectedId = -1;
 
@@ -376,8 +365,6 @@ void EnterPersonnel( void )
 	fCreatePersonnelPortraitMouseRegions = TRUE;
 
 	CreateDestroyMouseRegionsForPersonnelPortraits( );
-	// set states of en- dis able buttons
-	//SetPersonnelButtonStates( );
 
 	fCreateRegionsForPastCurrentToggle = TRUE;
 
@@ -520,22 +507,6 @@ void RenderPersonnel( void )
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y -  2);
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiSCREEN, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
 
-  // render pictures of mercs on scnree
- 	//RenderPersonnelPictures( );
-
-	// display header for screen
-	//DisplayHeader( );
-
-	// what page are we on?..display it
-	//DrawPageNumber( );
-
-		// display border
-	//BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
-
-
-	// invalidte the region we blitted to
-	//InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y);
-
 	// render personnel screen background
 	RenderPersonnelScreenBackground( );
 
@@ -594,101 +565,16 @@ void RenderPersonnel( void )
 }
 
 
-static void DisplayCharName(INT32 iId, INT32 iSlot);
-static BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther);
-static void RenderPersonnelStats(INT32 iId, INT32 iSlot);
-
-
-static BOOLEAN RenderPersonnelPictures(void)
-{
-	// will render portraits of personnel onscreen
-	// find person with iStartPersonId, unless it is -1, then find first bActive Merc on Staff
-	SOLDIERTYPE *pTeamSoldier, *pSoldier;
-	BOOLEAN fFound=FALSE;
-	INT32 iSlot=0;
-	INT32 cnt=0;
-	INT32 iCurrentId = 0;
-
-
-	pSoldier = MercPtrs[ cnt ];
-	pTeamSoldier = pSoldier;
-
-
-	if(iStartPersonId==-1)
-	{
-   cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-   for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++, pSoldier++ )
-	 {
-		 if ( pSoldier->bLife >= OKLIFE && pSoldier->bActive )
-		 {
-			 fFound = TRUE;
-			 iStartPersonId=cnt;
-			 break;
-		 }
-	 }
-   if(!fFound)
-		return (FALSE);
-	}
-	else
-	{
-   iCurrentId=iStartPersonId;
-	 fFound=TRUE;
-	 cnt=iCurrentId;
-	}
-
-
-
-	while(fFound)
-	{
-	  // the soldier's ID is found
-	  // render Face
-	  fFound=FALSE;
-		RenderPersonnelFace(iCurrentId, iSlot, FALSE, FALSE, FALSE );
-		// draw stats
-    RenderPersonnelStats(iCurrentId, iSlot);
-		DisplayCharName( iCurrentId, iSlot);
-		//find next guy
-		pSoldier=MercPtrs[iCurrentId];
-		cnt++;
-    for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-		{
-		  if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
-			{
-				if( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-				{
-					return( FALSE );
-				}
-
-			  fFound = TRUE;
-				iSlot++;
-			  break;
-			}
-		}
-		if(iSlot>=MAX_SLOTS)
-			fFound=FALSE;
-    iCurrentId=cnt;
-	}
-
-	return(TRUE);
-}
-
-
 static void DisplayCharStats(INT32 iId, INT32 iSlot);
 static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot);
 
 
 static void RenderPersonnelStats(INT32 iId, INT32 iSlot)
 {
-
-	INT32 iCounter=0;
 	// will render the stats of person iId in slot iSlot
 	SetFont(PERS_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
-
-	//for(iCounter=0; iCounter <PERS_COUNT; iCounter++)
-	// mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*IMAGE_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-
 
 	if( gubPersonnelInfoState == PERSONNEL_STAT_BTN )
 	{
@@ -1063,16 +949,6 @@ static void RightFFButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 		NextPersonnelFace();
 		SetPersonnelButtonStates();
 	}
-}
-
-
-static void DisplayHeader(void)
-{
-  SetFont(PERS_HEADER_FONT);
-	SetFontForeground(PERS_FONT_COLOR);
-	SetFontBackground( 0 );
-
-	mprintf(pPersonnelScreenPoints[18].x,pPersonnelScreenPoints[18].y,pPersonnelTitle[0]);
 }
 
 
@@ -1648,43 +1524,6 @@ static INT32 GetLastMercId(void)
 			 iCounter++;
 		}
 	return iCounter;
-}
-
-
-static void DrawPageNumber(void)
-{
-	// draws the page number
-
-	wchar_t sString[10];
-	INT16 sX, sY;
-  INT32 iPageNumber, iLastPage;
-
-	return;
-
-	// get last page number, and current page too
-	iLastPage=GetLastMercId()/MAX_SLOTS;
-	iPageNumber=iStartPersonId/MAX_SLOTS;
-  iPageNumber++;
-	if(iLastPage==0)
-	 iLastPage++;
-
-	// get current and last pages
-	swprintf(sString, lengthof(sString), L"%d/%d", iPageNumber, iLastPage);
-
-	// set up font
-	SetFont(PERS_FONT);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
-
-	// center
-	FindFontCenterCoordinates(PAGE_X, PAGE_Y,PAGE_BOX_WIDTH, PAGE_BOX_HEIGHT, sString, PERS_FONT, &sX, &sY);
-
-	// print page number
-	mprintf(sX, sY, sString);
-
-	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
 }
 
 

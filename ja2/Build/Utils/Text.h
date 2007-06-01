@@ -26,7 +26,6 @@ extern const wchar_t *pAssignmentStrings[];
 extern const wchar_t *pConditionStrings[];
 extern const wchar_t *pTownNames[];
 extern const wchar_t *pPersonnelScreenStrings[];
-extern const wchar_t *pPersonnelTitle[];
 extern const wchar_t *pUpperLeftMapScreenStrings[];
 extern const wchar_t *pTacticalPopupButtonStrings[];
 extern const wchar_t *pSquadMenuStrings[];

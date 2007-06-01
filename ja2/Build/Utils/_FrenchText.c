@@ -656,10 +656,6 @@ const wchar_t* pSquadMenuStrings[] =
 	L"Annuler",
 };
 
-const wchar_t* pPersonnelTitle[] =
-{
-	L"Personnel", // the title for the personnel screen/program application
-};
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
