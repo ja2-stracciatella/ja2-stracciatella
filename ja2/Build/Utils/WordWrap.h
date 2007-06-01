@@ -42,7 +42,7 @@ typedef struct _WRAPPEDSTRING
 WRAPPED_STRING * LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...);
 UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t *pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags);
 void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDestString);
-BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 LocX, UINT16 LocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 FLAGS);
+void DrawTextToScreen(const wchar_t* pStr, UINT16 LocX, UINT16 LocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 FLAGS);
 UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const wchar_t* pString);
 
 BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidth, UINT32 uiFont );

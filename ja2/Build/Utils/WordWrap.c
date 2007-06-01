@@ -274,15 +274,13 @@ static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiF
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-
-BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
+void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
 {
 	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight=0;
 	UINT16	usStringWidth=0;
 
-	if( ulFlags & DONT_DISPLAY_TEXT )
-		return( TRUE );
+	if (ulFlags & DONT_DISPLAY_TEXT) return;
 
 	if( ulFlags == 0 )
 		ulFlags = LEFT_JUSTIFIED;
@@ -326,8 +324,6 @@ BOOLEAN DrawTextToScreen(const wchar_t *pStr, UINT16 usLocX, UINT16 usLocY, UINT
 
   		InvalidateRegion( usPosX, usPosY, usPosX+usStringWidth, usPosY+usFontHeight );
 	}
-
-	return(TRUE);
 }
 
 
