@@ -181,7 +181,7 @@ enum
 	PRSNL_EMPLOYMENT,
 	PRSNL_INV,
 };
-UINT8	gubPersonnelInfoState = PRSNL_STATS;
+static UINT8 gubPersonnelInfoState = PRSNL_STATS;
 
 
 //enums for the pPersonnelScreenStrings[]
@@ -215,15 +215,15 @@ enum
 };
 
 //BOOLEAN fShowInventory = FALSE;
-UINT8 uiCurrentInventoryIndex = 0;
+static UINT8 uiCurrentInventoryIndex = 0;
 
-UINT32 guiSliderPosition;
+static UINT32 guiSliderPosition;
 
 #define PrsnlOffSetX	(-15) //-20
 #define Prsnl_DATA_OffSetX	(36)
 #define PrsnlOffSetY	10
 
-POINT pPersonnelScreenPoints[]=
+static const POINT pPersonnelScreenPoints[]=
 {
 	{422+PrsnlOffSetX, 205+PrsnlOffSetY},
 	{422+PrsnlOffSetX, 215+PrsnlOffSetY},
@@ -254,58 +254,50 @@ POINT pPersonnelScreenPoints[]=
 };
 
 
+static UINT32 guiSCREEN;
+static UINT32 guiTITLE;
+static UINT32 guiFACE;
+static UINT32 guiDEPARTEDTEAM;
+static UINT32 guiCURRENTTEAM;
+static UINT32 guiPersonnelInventory;
 
-
-UINT32 guiSCREEN;
-UINT32 guiTITLE;
-UINT32 guiFACE;
-UINT32 guiDEPARTEDTEAM;
-UINT32 guiCURRENTTEAM;
-UINT32 guiPersonnelInventory;
-
-INT32 giPersonnelButton[6];
-INT32 giPersonnelButtonImage[6];
-INT32 giPersonnelInventoryButtons[ 2 ];
-INT32 giPersonnelInventoryButtonsImages[ 2 ];
-INT32 iLastPersonId;
-INT32 giDepartedButtonImage[ 2 ];
-INT32 giDepartedButton[ 2 ];
+static INT32 giPersonnelButton[6];
+static INT32 giPersonnelButtonImage[6];
+static INT32 giPersonnelInventoryButtons[2];
+static INT32 giPersonnelInventoryButtonsImages[2];
 
 // buttons for ATM
-INT32 giPersonnelATMStartButton[ 3 ];
-INT32 giPersonnelATMStartButtonImage[ 3 ];
+static INT32 giPersonnelATMStartButton[3];
+static INT32 giPersonnelATMStartButtonImage[3];
 
 // the id of currently displayed merc in right half of screen
-INT32 iCurrentPersonSelectedId = -1;
+static INT32 iCurrentPersonSelectedId = -1;
 
-INT32 giCurrentUpperLeftPortraitNumber = 0;
+static INT32 giCurrentUpperLeftPortraitNumber = 0;
 
 // which mode are we showing?..current team?...or deadly departed?
-BOOLEAN fCurrentTeamMode = TRUE;
+static BOOLEAN fCurrentTeamMode = TRUE;
 
 BOOLEAN fShowAtmPanelStartButton = TRUE;
 
 // create buttons for scrolling departures
-BOOLEAN fCreatePeronnelDepartureButton = FALSE;
-
-// waitr one frame
-BOOLEAN fOneFrameDelayInPersonnel = FALSE;
+static BOOLEAN fCreatePeronnelDepartureButton = FALSE;
 
 // whther or not we are creating mouse regions to place over portraits
-BOOLEAN fCreatePersonnelPortraitMouseRegions = FALSE;
+static BOOLEAN fCreatePersonnelPortraitMouseRegions = FALSE;
 
 // mouse regions
-MOUSE_REGION gPortraitMouseRegions[ 20 ];
+static MOUSE_REGION gPortraitMouseRegions[20];
 
-MOUSE_REGION gTogglePastCurrentTeam[ 2 ];
+static MOUSE_REGION gTogglePastCurrentTeam[2];
 
-MOUSE_REGION gMouseScrollPersonnelINV;
+static MOUSE_REGION gMouseScrollPersonnelINV;
 
-INT32 iCurPortraitId = 0;
+static INT32 iCurPortraitId = 0;
 
 
 // create mouse regions for past/current toggles
-BOOLEAN fCreateRegionsForPastCurrentToggle = FALSE;
+static BOOLEAN fCreateRegionsForPastCurrentToggle = FALSE;
 
 
 static void InitPastCharactersList(void);
