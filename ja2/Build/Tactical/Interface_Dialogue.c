@@ -649,8 +649,6 @@ void RenderTalkingMenu( )
 	UINT32				uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT8					*pDestBuf, *pSrcBuf;
 	UINT16				usTextBoxWidth, usTextBoxHeight;
-	CHAR16				zTempString[128];
-
 
 	if ( !gfInTalkPanel )
 	{
@@ -805,23 +803,27 @@ void RenderTalkingMenu( )
 							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
 							mprintf( sFontX, sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
 							break;
+
 						case 4:
+						{
+							const wchar_t* DealerString;
 							//if its an arms dealer
 							if( IsMercADealer( ubCharacterNum ) )
 							{
-								UINT8	ubType;
-
 								//determine the 'kind' of arms dealer
-								ubType = GetTypeOfArmsDealer( GetArmsDealerIDFromMercID( ubCharacterNum ) );
-
-								wcscpy( zTempString, zDealerStrings[ ubType ] );
+								UINT8 ubType = GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(ubCharacterNum));
+								DealerString = zDealerStrings[ubType];
 							}
 							else
-								wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
+							{
+								DealerString = zTalkMenuStrings[cnt];
+							}
 
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTempString );
-							mprintf( sFontX, sFontY, L"%ls", zTempString );
+							VarFindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", DealerString);
+							mprintf(sFontX, sFontY, L"%ls", DealerString);
 							break;
+						}
+
 						default:
 							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
 							mprintf( sFontX, sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
@@ -832,21 +834,21 @@ void RenderTalkingMenu( )
 				{
 					if( cnt == 4 )
 					{
+						const wchar_t* DealerString;
 						//if its an arms dealer
 						if( IsMercADealer( ubCharacterNum ) )
 						{
-							UINT8	ubType;
-
 							//determine the 'kind' of arms dealer
-							ubType = GetTypeOfArmsDealer( GetArmsDealerIDFromMercID( ubCharacterNum ) );
-
-							wcscpy( zTempString, zDealerStrings[ ubType ] );
+							UINT8 ubType = GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(ubCharacterNum));
+							DealerString = zDealerStrings[ubType];
 						}
 						else
-							wcscpy( zTempString, zTalkMenuStrings[ cnt ] );
+						{
+							DealerString = zTalkMenuStrings[cnt];
+						}
 
-						VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", zTempString );
-						mprintf( sFontX, sFontY, L"%ls", zTempString );
+						VarFindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls", DealerString);
+						mprintf(sFontX, sFontY, L"%ls", DealerString);
 					}
 					else
 					{
