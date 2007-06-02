@@ -149,6 +149,60 @@ void    ShutdownGame(void)
 }
 
 
+static void InsertCommasIntoNumber(wchar_t pString[])
+{
+  INT16 sCounter = 0;
+  INT16 sZeroCount = 0;
+	INT16 sTempCounter = 0;
+
+	// go to end of dollar figure
+	while (pString[sCounter] != L'\0')
+	{
+		sCounter++;
+	}
+
+	// is there under $1,000?
+	if (sCounter < 4)
+	{
+		// can't do anything, return
+		return;
+	}
+
+	// at end, start backing up until beginning
+  while (sCounter > 0)
+	{
+		// enough for a comma?
+		if (sZeroCount == 3)
+		{
+			// reset count
+			sZeroCount = 0;
+      // set tempcounter to current counter
+			sTempCounter = sCounter;
+
+			// run until end
+			while (pString[sTempCounter] != L'\0')
+			{
+				sTempCounter++;
+			}
+			// now shift everything over ot the right one place until sTempCounter = sCounter
+			while (sTempCounter >= sCounter)
+			{
+				pString[sTempCounter + 1] = pString[sTempCounter];
+				sTempCounter--;
+			}
+			// now insert comma
+			pString[sCounter] = L',';
+		}
+
+		// increment count of digits
+		sZeroCount++;
+
+		// decrement counter
+		sCounter--;
+	}
+}
+
+
 static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 
 
@@ -211,7 +265,7 @@ void GameLoop(void)
 					CHAR16	zSizeNeeded[512];
 
 					swprintf( zSizeNeeded, lengthof(zSizeNeeded), L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
-					InsertCommasForDollarFigure( zSizeNeeded );
+					InsertCommasIntoNumber(zSizeNeeded);
 
 					uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
 

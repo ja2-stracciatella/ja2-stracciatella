@@ -43,7 +43,6 @@ enum
 };
 
 void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
-void InsertCommasForDollarFigure( STR16 pString );
 INT32 GetProjectedTotalDailyIncome( void );
 
 void SPrintMoney(wchar_t* Str, INT32 Amount);

@@ -2212,33 +2212,6 @@ BOOLEAN DoQuickSave()
 {
 	gzGameDescTextField[0] = '\0';
 
-/*
-	// Make sure the user has enough hard drive space
-	if( !DoesUserHaveEnoughHardDriveSpace() )
-	{
-		CHAR16	zText[512];
-		CHAR16	zSpaceOnDrive[512];
-		UINT32	uiSpaceOnDrive;
-		CHAR16	zSizeNeeded[512];
-
-		swprintf( zSizeNeeded, L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
-		InsertCommasForDollarFigure( zSizeNeeded );
-
-		uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
-
-		swprintf( zSpaceOnDrive, L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
-
-		swprintf( zText, pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, zSizeNeeded );
-
-		if( guiPreviousOptionScreen == MAP_SCREEN )
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, zText, MAP_SCREEN, MSG_BOX_FLAG_OK, NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack );
-		else
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zText, GAME_SCREEN, MSG_BOX_FLAG_OK, NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack, NULL );
-
-		return( FALSE );
-	}
-*/
-
 	if( !SaveGame( 0, gzGameDescTextField ) )
 	{
 		//Unset the fact that we are saving a game
@@ -2429,30 +2402,6 @@ static void ClearSelectedSaveSlot(void)
 
 static void SaveGameToSlotNum(void)
 {
-/*
-	// Make sure the user has enough hard drive space
-	if( !DoesUserHaveEnoughHardDriveSpace() )
-	{
-		CHAR16	zText[512];
-		CHAR16	zSizeNeeded[512];
-		CHAR16	zSpaceOnDrive[512];
-		UINT32	uiSpaceOnDrive;
-
-		swprintf( zSizeNeeded, L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
-		InsertCommasForDollarFigure( zSizeNeeded );
-
-		uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
-
-		swprintf( zSpaceOnDrive, L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
-
-		swprintf( zText, pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, zSizeNeeded );
-
-		DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack );
-
-		return;
-	}
-*/
-
 	//Redraw the save load screen
 	RenderSaveLoadScreen();
 
