@@ -45,6 +45,6 @@ void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDest
 void DrawTextToScreen(const wchar_t* pStr, UINT16 LocX, UINT16 LocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 FLAGS);
 UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const wchar_t* pString);
 
-BOOLEAN ReduceStringLength( STR16 pString, size_t Length, UINT32 uiWidth, UINT32 uiFont );
+void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidth, UINT32 uiFont);
 
 #endif

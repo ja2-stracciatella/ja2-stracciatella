@@ -1106,72 +1106,23 @@ static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiF
 }
 
 
-BOOLEAN ReduceStringLength( wchar_t * pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont )
+void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont)
 {
-	wchar_t			OneChar[2];
-	wchar_t			zTemp[ 1024 ];
-	wchar_t			zStrDots[16];
-	UINT32			uiDotWidth;
-	UINT32			uiTempStringPixWidth=0;
-	UINT32			uiStringPixWidth;
-	BOOLEAN			fDone = FALSE;
-	UINT32			uiSrcStringCntr = 0;
-	UINT32			uiOneCharWidth = 0;
-
-  uiStringPixWidth = StringPixLength(pString, uiFont);
-
-	OneChar[1] = L'\0';
-	zTemp[0] = L'\0';
-
 	//if the string is wider then the loaction
-	if( uiStringPixWidth <= uiWidthToFitIn )
-	{
-		//leave
-		return( TRUE );
-	}
+	if (StringPixLength(pString, uiFont) <= uiWidthToFitIn) return;
 
-	//addd the '...' to the string
-	wcscpy( zStrDots, L"..." );
-
-	//get the width of the '...'
-  uiDotWidth = StringPixLength( zStrDots, uiFont );
-
-	//since the temp strig will contain the '...' add the '...' width to the temp string now
-	uiTempStringPixWidth = uiDotWidth;
+	HVOBJECT Font = GetFontObject(uiFont);
+	const wchar_t* const Dots = L"...";
+	UINT32 RestWidth = uiWidthToFitIn - StringPixLength(Dots, uiFont);
 
 	//loop through and add each character, 1 at a time
-	while( !fDone )
+	UINT32 i;
+	for (i = 0;; i++)
 	{
-		//get the next char
-		OneChar[0] = pString[ uiSrcStringCntr ];
-
-		//get the width of the character
-  	uiOneCharWidth = StringPixLength( OneChar, uiFont );
-
-		//will the new char + the old string be too wide for the width
-		if( ( uiTempStringPixWidth + uiOneCharWidth ) <= uiWidthToFitIn )
-		{
-			//add the new char to the string
-			wcscat( zTemp, OneChar );
-
-			//add the new char width to the string width
-			uiTempStringPixWidth += uiOneCharWidth;
-
-			//increment to the next string
-			uiSrcStringCntr++;
-		}
-
-		//yes the string would be too long if we add the new char, stop adding characters
-		else
-		{
-			//we are done
-			fDone = TRUE;
-		}
+		UINT32 CharWidth = GetWidth(Font, GetIndex(pString[i]));
+		if (CharWidth > RestWidth) break;
+		RestWidth -= CharWidth;
 	}
 
-
-	//combine the temp string and the '...' to form the finished string
-	swprintf( pString, Length, L"%ls%ls", zTemp, zStrDots );
-
-	return( TRUE );
+	wcslcpy(pString + i, Dots, Length - i);
 }
