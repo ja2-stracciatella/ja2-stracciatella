@@ -264,9 +264,6 @@ static BOOLEAN fCurrentTeamMode = TRUE;
 
 BOOLEAN fShowAtmPanelStartButton = TRUE;
 
-// create buttons for scrolling departures
-static BOOLEAN fCreatePeronnelDepartureButton = FALSE;
-
 // whther or not we are creating mouse regions to place over portraits
 static BOOLEAN fCreatePersonnelPortraitMouseRegions = FALSE;
 
@@ -294,7 +291,6 @@ void GameInitPersonnel(void)
 }
 
 
-static void CreateDestroyButtonsForPersonnelDepartures(void);
 static void CreateDestroyCurrentDepartedMouseRegions(void);
 static void CreateDestroyMouseRegionsForPersonnelPortraits(void);
 static void CreatePersonnelButtons(void);
@@ -321,9 +317,6 @@ void EnterPersonnel(void)
 
 	// show atm panel
 	fShowAtmPanelStartButton = TRUE;
-
-	// create buttons needed
-	CreateDestroyButtonsForPersonnelDepartures();
 
 	// load personnel
 	LoadPersonnelScreenBackgroundGraphics();
@@ -384,8 +377,6 @@ void ExitPersonnel(void)
 
 	DeletePersonnelScreenBackgroundGraphics();
 
-	CreateDestroyButtonsForPersonnelDepartures();
-
 	// delete buttons
 	DeletePersonnelButtons();
 
@@ -407,9 +398,6 @@ static void HandlePersonnelKeyboard(void);
 
 void HandlePersonnel(void)
 {
-	//RenderButtonsFastHelp();
-	CreateDestroyButtonsForPersonnelDepartures();
-
 	// create / destroy buttons for scrolling departed list
 	CreateDestroyButtonsForDepartedTeamList();
 
@@ -1338,24 +1326,6 @@ static void DeletePersonnelScreenBackgroundGraphics(void)
 	// delete background V/O's
 	DeleteVideoObjectFromIndex(guiCURRENTTEAM);
 	DeleteVideoObjectFromIndex(guiDEPARTEDTEAM);
-}
-
-
-static void CreateDestroyButtonsForPersonnelDepartures(void)
-{
-	static BOOLEAN fCreated = FALSE;
-
-	// create/ destroy personnel departures buttons as needed
-
-	// create button?..if not created
-	if ((fCreatePeronnelDepartureButton == TRUE) && (fCreated == FALSE))
-	{
-		fCreated = TRUE;
-	}
-	else if ((fCreatePeronnelDepartureButton == FALSE) && (fCreated == TRUE))
-	{
-		fCreated = FALSE;
-	}
 }
 
 
