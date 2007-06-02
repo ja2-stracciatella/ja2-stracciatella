@@ -1585,7 +1585,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 	UINT16	usX, usY;
 	wchar_t sString[9];
 	UINT32	cnt;
-	static wchar_t pStr[ 200 ], pMoraleStr[ 20 ];
+	static wchar_t pStr[200];
 
 	if ( gubSelectSMPanelToMerc != NOBODY )
 	{
@@ -1843,8 +1843,8 @@ void RenderSMPanel( BOOLEAN *pfDirty )
       }
       else
       {
-			  GetMoraleString( gpSMCurrentMerc, pMoraleStr );
-			  swprintf( pStr, lengthof(pStr), TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax, pMoraleStr );
+			  const wchar_t* Morale = GetMoraleString(gpSMCurrentMerc);
+			  swprintf(pStr, lengthof(pStr), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], gpSMCurrentMerc->bLife, gpSMCurrentMerc->bLifeMax, gpSMCurrentMerc->bBreath, gpSMCurrentMerc->bBreathMax, Morale);
 			  SetRegionFastHelpText( &(gSM_SELMERCBarsRegion), pStr );
       }
 		}
@@ -3340,7 +3340,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 	INT16 sFontX, sFontY;
 	UINT32				cnt, posIndex;
 	SOLDIERTYPE		*pSoldier;
-	static				wchar_t		pStr[ 200 ], pMoraleStr[ 20 ];
+	static wchar_t pStr[200];
 
 	if ( fDirty == DIRTYLEVEL2 )
 	{
@@ -3510,8 +3510,8 @@ void RenderTEAMPanel( BOOLEAN fDirty )
             }
             else
             {
-					    GetMoraleString( pSoldier, pMoraleStr );
-					    swprintf( pStr, lengthof(pStr), TacticalStr[ MERC_VITAL_STATS_POPUPTEXT ], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax, pMoraleStr );
+					    const wchar_t* Morale = GetMoraleString(pSoldier);
+					    swprintf(pStr, lengthof(pStr), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], pSoldier->bLife, pSoldier->bLifeMax, pSoldier->bBreath, pSoldier->bBreathMax, Morale);
 					    SetRegionFastHelpText( &(gTEAM_BarsRegions[ cnt ]), pStr );
             }
 				  }

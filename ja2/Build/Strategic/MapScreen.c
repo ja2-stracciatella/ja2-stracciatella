@@ -1897,25 +1897,26 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 */
 
 	// morale
+	const wchar_t* Morale;
 	if( pSoldier->bAssignment != ASSIGNMENT_POW )
 	{
 		if ( pSoldier->bLife != 0 )
 		{
-			GetMoraleString( MercPtrs[gCharactersList[sCharNumber].usSolID], sString );
+			Morale = GetMoraleString(MercPtrs[gCharactersList[sCharNumber].usSolID]);
 		}
 		else
 		{
-			wcscpy( sString, L"" );
+			Morale = L"";
 		}
 	}
 	else
 	{
 		// POW - morale unknown
-		swprintf( sString, lengthof(sString), pPOWStrings[ 1 ] );
+		Morale = pPOWStrings[1];
 	}
 
-	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX,CHAR_MORALE_Y, CHAR_FONT);
+	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, Morale, CHAR_FONT, &usX, &usY);
+	DrawString(Morale, usX, CHAR_MORALE_Y, CHAR_FONT);
 }
 
 

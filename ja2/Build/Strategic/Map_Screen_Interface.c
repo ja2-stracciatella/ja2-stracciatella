@@ -1352,33 +1352,33 @@ static void InventoryScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void GetMoraleString( SOLDIERTYPE *pSoldier, STR16 sString )
+const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier)
 {
 	INT8 bMorale = pSoldier->bMorale;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 	{
-    wcscpy( sString, pMoralStrings[ 5 ] );
+    return pMoralStrings[5];
 	}
 	else if( bMorale > 80 )
 	{
-		wcscpy( sString, pMoralStrings[ 0 ] );
+		return pMoralStrings[0];
 	}
 	else if( bMorale > 65 )
 	{
-    wcscpy( sString, pMoralStrings[ 1 ] );
+    return pMoralStrings[1];
 	}
 	else if( bMorale > 35 )
 	{
-    wcscpy( sString, pMoralStrings[ 2 ] );
+    return pMoralStrings[2];
 	}
 	else if( bMorale > 20 )
 	{
-		wcscpy( sString, pMoralStrings[ 3 ] );
+		return pMoralStrings[3];
 	}
 	else
 	{
-    wcscpy( sString, pMoralStrings[ 4 ] );
+    return pMoralStrings[4];
 	}
 }
 
@@ -1917,7 +1917,6 @@ void RemoveMapStatusBarsRegion( void )
 void UpdateCharRegionHelpText( void )
 {
 	CHAR16 sString[ 128 ];
-	CHAR16 pMoraleStr[ 128 ];
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -1947,11 +1946,11 @@ void UpdateCharRegionHelpText( void )
 				else
 				{
 					// person (health/energy/morale)
-					GetMoraleString( pSoldier, pMoraleStr );
+					const wchar_t* Morale = GetMoraleString(pSoldier);
 					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
 													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
 													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
-													pMapScreenStatusStrings[ 2 ], pMoraleStr );
+													pMapScreenStatusStrings[ 2 ], Morale);
 				}
 			}
 			else

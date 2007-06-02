@@ -377,7 +377,7 @@ void HandleDisplayOfSelectedMercArrows( void );
 void DeselectSelectedListMercsWhoCantMoveWithThisGuy( SOLDIERTYPE *pSoldier );
 
 // get morale string for this grunt given this morale level
-void GetMoraleString( SOLDIERTYPE *pSoldier, STR16 sString );
+const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier);
 
 // handle leaving of equipment in sector
 void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId );
