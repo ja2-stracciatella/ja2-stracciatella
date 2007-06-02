@@ -716,8 +716,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment screen mask region
 	INT32 iCounter = 0;
 	INT32 iOldNumberOfObjects = 0;
-	INT16 sDistanceFromObject = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	CHAR16 sString[ 128 ];
 
 	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
@@ -806,25 +804,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 
 			sObjectSourceGridNo = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo;
-
-			// check if this is the loaded sector, if so, then notify player, can't do anything
-			if( ( sSelMapX == gWorldSectorX )&&( gWorldSectorY == sSelMapY ) &&(gbWorldSectorZ == iCurrentMapSectorZ ) )
-			{
-				// notify
-				pSoldier = &( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] );
-
-				sDistanceFromObject = PythSpacesAway( sObjectSourceGridNo, pSoldier -> sGridNo);
-
-			/*	if( sDistanceFromObject > MAX_DISTANCE_TO_PICKUP_ITEM )
-				{
-					// see for the loaded sector if the merc is cloase enough?
-					swprintf( sString, pMapInventoryErrorString[ 0 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
-					DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-					return;
-				}
-				*/
-			}
-
 			BeginInventoryPoolPtr( &( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o ) );
 		}
 		else
