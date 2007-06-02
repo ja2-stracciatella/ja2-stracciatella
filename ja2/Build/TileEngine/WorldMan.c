@@ -254,8 +254,10 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all objects and Search for type
-	for (LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL; pObject = pObject->pNext)
+	for (LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL;)
 	{
+		LEVELNODE* Next = pObject->pNext;
+
 		if (pObject->usIndex != NO_TILE && pObject->usIndex < NUMBEROFTILES)
 		{
 			GetTileType(pObject->usIndex, &fTileType);
@@ -265,6 +267,8 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 				fRetVal = TRUE;
 			}
 		}
+
+		pObject = Next;
 	}
 	return fRetVal;
 }
@@ -484,8 +488,9 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 	{
 		if (pLand->usIndex != NO_TILE)
 		{
-			GetTileType(pLand->usIndex, &fTileType);
+			const LEVELNODE* Next = pLand->pNext;
 
+			GetTileType(pLand->usIndex, &fTileType);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				// Remove Item
@@ -493,7 +498,7 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 				fRetVal = TRUE;
 			}
 
-			pLand = pLand->pNext; // XXX TODO0009 if pLand->usIndex == NO_TILE this is an endless loop
+			pLand = Next; // XXX TODO0009 if pLand->usIndex == NO_TILE this is an endless loop
 		}
 	}
 	return fRetVal;
