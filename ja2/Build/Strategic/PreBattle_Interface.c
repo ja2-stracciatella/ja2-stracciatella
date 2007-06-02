@@ -922,7 +922,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 }
 
 
-static void GetSoldierConditionInfo(SOLDIERTYPE* pSoldier, wchar_t* szCondition, size_t Length, UINT8* pubHPPercent, UINT8* pubBPPercent);
+static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier);
 
 
 void RenderPreBattleInterface()
@@ -930,7 +930,6 @@ void RenderPreBattleInterface()
 	INT32 i, x, y, line, width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
-	UINT8 ubHPPercent, ubBPPercent;
 	BOOLEAN fMouseInRetreatButtonArea;
 	UINT8 ubJunk;
 	//PLAYERGROUP *pPlayer;
@@ -1121,15 +1120,16 @@ void RenderPreBattleInterface()
 					x = 72 + (54-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 					//COND
-					GetSoldierConditionInfo( MercPtrs[ i ], str, lengthof(str), &ubHPPercent, &ubBPPercent );
-					x = 129 + (58-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", str);
+					const SOLDIERTYPE* Merc = MercPtrs[i];
+					const wchar_t* Condition = GetSoldierConditionInfo(Merc);
+					x = 129 + (58 - StringPixLength(Condition, BLOCKFONT2)) / 2;
+					mprintf(x, y, L"%ls", Condition);
 					//HP
-					swprintf( str, lengthof(str), L"%d%%", ubHPPercent );
+					swprintf(str, lengthof(str), L"%d%%", Merc->bLife * 100 / Merc->bLifeMax);
 					x = 189 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 					//BP
-					swprintf( str, lengthof(str), L"%d%%", ubBPPercent );
+					swprintf(str, lengthof(str), L"%d%%", Merc->bBreath);
 					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 
@@ -1383,47 +1383,45 @@ enum
 };
 
 
-static void GetSoldierConditionInfo(SOLDIERTYPE* pSoldier, wchar_t* szCondition, size_t Length, UINT8* pubHPPercent, UINT8* pubBPPercent)
+static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier)
 {
 	Assert( pSoldier );
-	*pubHPPercent = (UINT8)(pSoldier->bLife * 100 / pSoldier->bLifeMax);
-	*pubBPPercent = pSoldier->bBreath;
 	//Go from the worst condition to the best.
 	if( !pSoldier->bLife )
 	{ //0 life
-		swprintf( szCondition, Length, pConditionStrings[ COND_DEAD ] );
+		return pConditionStrings[COND_DEAD];
 	}
 	else if( pSoldier->bLife < OKLIFE && pSoldier->bBleeding )
 	{ //life less than OKLIFE and bleeding
-		swprintf( szCondition, Length, pConditionStrings[ COND_DYING ] );
+		return pConditionStrings[COND_DYING];
 	}
 	else if( pSoldier->bBreath < OKBREATH && pSoldier->bCollapsed )
 	{ //breath less than OKBREATH
-		swprintf( szCondition, Length, pConditionStrings[ COND_UNCONCIOUS ] );
+		return pConditionStrings[COND_UNCONCIOUS];
 	}
 	else if( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD)
 	{ //bleeding
-		swprintf( szCondition, Length, pConditionStrings[ COND_BLEEDING ] );
+		return pConditionStrings[COND_BLEEDING];
 	}
 	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*50 )
 	{ //less than 50% life
-		swprintf( szCondition, Length, pConditionStrings[ COND_WOUNDED ] );
+		return pConditionStrings[COND_WOUNDED];
 	}
 	else if( pSoldier->bBreath < 50 )
 	{ //breath less than half
-		swprintf( szCondition, Length, pConditionStrings[ COND_FATIGUED ] );
+		return pConditionStrings[COND_FATIGUED];
 	}
 	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*67 )
 	{ //less than 67% life
-		swprintf( szCondition, Length, pConditionStrings[ COND_FAIR ] );
+		return pConditionStrings[COND_FAIR];
 	}
 	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*86 )
 	{ //less than 86% life
-		swprintf( szCondition, Length, pConditionStrings[ COND_GOOD ] );
+		return pConditionStrings[COND_GOOD];
 	}
 	else
 	{ //86%+ life
-		swprintf( szCondition, Length, pConditionStrings[ COND_EXCELLENT ] );
+		return pConditionStrings[COND_EXCELLENT];
 	}
 }
 
