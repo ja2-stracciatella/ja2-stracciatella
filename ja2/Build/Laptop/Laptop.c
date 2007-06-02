@@ -3985,12 +3985,9 @@ void PrintBalance( void )
 
 void PrintNumberOnTeam( void )
 {
-  CHAR16 pString[ 32 ];
 	SOLDIERTYPE *pSoldier, *pTeamSoldier;
   INT32 cnt=0;
 	INT32 iCounter=0;
-	UINT16 usPosX, usPosY, usFontHeight, usStrLength;
-
 
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_BLACK );
@@ -4010,31 +4007,14 @@ void PrintNumberOnTeam( void )
 		}
 	}
 
-
-	swprintf( pString, lengthof(pString), L"%ls %d",pPersonnelString[ 0 ], iCounter );
-
-	usFontHeight = GetFontHeight( FONT10ARIAL );
-	usStrLength = StringPixLength( pString, FONT10ARIAL );
-
-	if( ButtonList[ gLaptopButton[ 3 ] ]->uiFlags & BUTTON_CLICKED_ON )
+	UINT16 usPosX = 47;
+	UINT16 usPosY = 194 + 30;
+	if (ButtonList[gLaptopButton[3]]->uiFlags & BUTTON_CLICKED_ON)
 	{
-		usPosX = 47 + 1;
-		usPosY = 194 + 30 + 1;
-//		gprintfdirty(47 + 1, 194 +30 +1  ,pString);
-//		mprintf(47 + 1, 194 + 30 + 1,pString);
+		++usPosX;
+		++usPosY;
 	}
-	else
-	{
-		usPosX = 47;
-		usPosY = 194 + 30;
-//		gprintfdirty(47, 194 +30 ,pString);
-//		mprintf(47, 194 + 30,pString);
-	}
-
-//	RestoreExternBackgroundRect( usPosX, usPosY, usStrLength, usFontHeight );
-//	gprintfdirty( usPosX, usPosY, pString);
-	mprintf( usPosX, usPosY, pString);
-
+	mprintf(usPosX, usPosY, L"%ls %d", pPersonnelString[0], iCounter);
 
 	SetFontShadow( DEFAULT_SHADOW );
 }
