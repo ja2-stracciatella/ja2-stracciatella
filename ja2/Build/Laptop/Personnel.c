@@ -1708,16 +1708,8 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 				SetFontBackground(FONT_BLACK);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE);
 
-				// grab item name
 				LoadItemInfo(sIndex, sString, NULL);
-
-				// shorten if needed
-				if (StringPixLength(sString, FONT10ARIAL) > (171 - 75))
-				{
-					ReduceStringLength(sString, lengthof(sString), (171 - 75), FONT10ARIAL);
-				}
-
-				// print name
+				ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 				mprintf(PosX + 65, PosY + 3, sString);
 
 				// condition
@@ -1752,14 +1744,7 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 				if (Item[pSoldier->inv[ubCounter].usItem].usItemClass & IC_GUN)
 				{
 					wcslcpy(sString, AmmoCaliber[Weapon[Item[pSoldier->inv[ubCounter].usItem].ubClassIndex].ubCalibre], lengthof(sString));
-
-					// shorten if needed
-					if (StringPixLength(sString, FONT10ARIAL) > (171 - 75))
-					{
-						ReduceStringLength(sString, lengthof(sString), (171 - 75), FONT10ARIAL);
-					}
-
-					// print name
+					ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 					mprintf(PosX + 65, PosY + 15, sString);
 				}
 

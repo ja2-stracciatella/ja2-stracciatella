@@ -793,11 +793,7 @@ static void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 	wcscpy( pTempSubject, pSubject );
 
 	UINT32 Font = fRead ? MESSAGE_FONT : FONT10ARIALBOLD;
-	//if the subject will be too long, cap it, and add the '...'
-	if (StringPixLength(pTempSubject, Font) >= SUBJECT_WIDTH - 10)
-	{
-		ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, Font);
-	}
+	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, Font);
 	IanDisplayWrappedString(SUBJECT_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_WIDTH, MESSAGE_GAP, Font, MESSAGE_COLOR, pTempSubject, 0, FALSE, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);

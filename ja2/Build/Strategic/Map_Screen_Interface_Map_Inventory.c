@@ -314,11 +314,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	// the name
 
 	wcscpy( sString, ShortItemNames[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ] );
-
-	if( StringPixLength( sString, MAP_IVEN_FONT ) >= ( MAP_INVEN_SLOT_WIDTH ) )
-	{
-		ReduceStringLength( sString, lengthof(sString), ( INT16 )( MAP_INVEN_SLOT_WIDTH - StringPixLength( L" ...", MAP_IVEN_FONT ) ), MAP_IVEN_FONT );
-	}
+	ReduceStringLength(sString, lengthof(sString), MAP_INVEN_SLOT_WIDTH, MAP_IVEN_FONT);
 
 	FindFontCenterCoordinates( (INT16)( 4 + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) ),
 		0, MAP_INVEN_SLOT_WIDTH, 0,
