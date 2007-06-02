@@ -4656,17 +4656,11 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 
 static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX)
 {
-	INT16 sStartingX, sPastEdge;
+	// it's ok to cut strings off in zoomed mode
+	if (fZoomFlag) return;
 
-	if( fZoomFlag )
-		// it's ok to cut strings off in zoomed mode
-		return;
-
-	sStartingX = *psX - StringPixLength(wString, MAP_FONT) / 2;
-	sPastEdge = (MAP_VIEW_START_X + 23) - sStartingX;
-
-	if (sPastEdge > 0)
-		*psX += sPastEdge;
+	INT16 MinX = MAP_VIEW_START_X + 23 + StringPixLength(wString, MAP_FONT) / 2;
+	if (*psX < MinX) *psX = MinX;
 }
 
 
