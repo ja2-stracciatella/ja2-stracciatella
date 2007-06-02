@@ -83,7 +83,6 @@ BOOLEAN gfIllegalName;
 BOOLEAN gfDeleteFile;
 BOOLEAN gfNoFiles;
 
-static wchar_t zOrigName[60];
 GETFILESTRUCT FileInfo;
 
 BOOLEAN fEnteringLoadSaveScreen = TRUE;
@@ -154,11 +153,9 @@ static void LoadSaveScreenEntry(void)
 		GetFileClose(&FileInfo);
 	}
 
-	swprintf(zOrigName, lengthof(zOrigName), L"%ls Map (*.dat)", iCurrentAction == ACTION_SAVE_MAP ? L"Save" : L"Load");
-
 	swprintf(gzFilename, lengthof(gzFilename), L"%hs", gubFilename);
 
-	CreateFileDialog( zOrigName );
+	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? L"Save Map (*.dat)" : L"Load Map (*.dat)");
 
 	if( !iTotalFiles )
 	{
@@ -420,6 +417,7 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar( 0, 118, 183, 522, 202 );
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
+			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %ls", gzFilename);
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
@@ -900,6 +898,7 @@ static UINT32 ProcessFileIO(void)
 			SetFontForeground( FONT_LTKHAKI );
 			SetFontShadow( FONT_DKKHAKI );
 			SetFontBackground( 0 );
+			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
 			usStartX = 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
 			usStartY = 180 - GetFontHeight( LARGEFONT1 ) / 2;
