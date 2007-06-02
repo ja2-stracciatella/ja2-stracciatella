@@ -34,10 +34,6 @@ INT32 giIMPVoicesButton[ 3 ];
 INT32 giIMPVoicesButtonImage[ 3 ];
 
 
-// hacks to be removeed later
-BOOLEAN fVoiceAVisited = FALSE, fVoiceBVisited = FALSE, fVoiceCVisited = FALSE;
-
-
 // redraw protrait screen
 BOOLEAN fReDrawVoicesScreenFlag = FALSE;
 
@@ -51,10 +47,6 @@ static void CreateIMPVoicesButtons(void);
 
 void EnterIMPVoices( void )
 {
-  fVoiceAVisited = FALSE;
-	fVoiceBVisited = FALSE;
-	fVoiceCVisited = FALSE;
-
 		// create buttons
 	CreateIMPVoicesButtons( );
 
@@ -286,18 +278,12 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
 
 UINT32 PlayVoice( void )
 {
-//	CHAR16 sString[ 64 ];
-
 	// gender?
-
 	if( fCharacterIsMale == TRUE )
 	{
 	  switch( iCurrentVoices )
 		{
 		  case( 0 ):
-				//fVoiceAVisited = TRUE;
-				//swprintf( sString, L"Voice # %d is not done yet", iCurrentVoices + 1 );
-				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 	     return PlayJA2SampleFromFile("Speech/051_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 			case( 1 ):
 	     return PlayJA2SampleFromFile("Speech/052_001.wav", MIDVOLUME, 1, MIDDLEPAN);
@@ -310,10 +296,7 @@ UINT32 PlayVoice( void )
     switch( iCurrentVoices )
 		{
 		  case( 0 ):
-				//	swprintf( sString, L"Voice # %d is not done yet", iCurrentVoices + 1 );
-				//DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, sString, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return PlayJA2SampleFromFile("Speech/054_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-
 			case( 1 ):
 	    	return PlayJA2SampleFromFile("Speech/055_001.wav", MIDVOLUME, 1, MIDDLEPAN);
 			case( 2 ):
