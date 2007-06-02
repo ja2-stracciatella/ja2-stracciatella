@@ -1308,23 +1308,6 @@ static void DisplayCharStats(INT32 iId)
 }
 
 
-static INT32 GetLastMercId(void)
-{
-	// rolls through list of mercs and returns how many on team
-  SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-	INT32 iCounter=0;
-	pSoldier = MercPtrs[0];
-
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
-		{
-		 if( ( pTeamSoldier->bActive ) && ( pTeamSoldier->bLife > 0 ) )
-			 iCounter++;
-		}
-	return iCounter;
-}
-
-
 static void SetPersonnelButtonStates(void)
 {
 	// this function will look at what page we are viewing, enable and disable buttons as needed
