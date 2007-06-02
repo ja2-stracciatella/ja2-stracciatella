@@ -76,7 +76,7 @@ BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier );
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber );
 
-void GetMapscreenMercAssignmentString(SOLDIERTYPE* pSoldier, wchar_t sString[]);
+const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier);
 void GetMapscreenMercLocationString(SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);
 void GetMapscreenMercDestinationString(SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);
 void GetMapscreenMercDepartureString(SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length, UINT8* pubFontColor);

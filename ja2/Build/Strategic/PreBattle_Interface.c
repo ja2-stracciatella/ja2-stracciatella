@@ -1116,9 +1116,9 @@ void RenderPreBattleInterface()
 					x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 					//ASSIGN
-					GetMapscreenMercAssignmentString( MercPtrs[ i ], str );
-					x = 72 + (54-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", str);
+					const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
+					x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
+					mprintf(x, y, L"%ls", Assignment);
 					//COND
 					const SOLDIERTYPE* Merc = MercPtrs[i];
 					const wchar_t* Condition = GetSoldierConditionInfo(Merc);
@@ -1168,9 +1168,9 @@ void RenderPreBattleInterface()
 						x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x , y, str );
 						//ASSIGN
-						GetMapscreenMercAssignmentString( MercPtrs[ i ], str );
-						x = 72 + (54-StringPixLength( str, BLOCKFONT2)) / 2;
-						mprintf( x, y, str );
+						const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
+						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
+						mprintf(x, y, Assignment);
 						//LOC
 						GetMapscreenMercLocationString(MercPtrs[i], str, lengthof(str));
 						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;

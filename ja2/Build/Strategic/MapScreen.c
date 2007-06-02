@@ -3707,20 +3707,17 @@ static void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 
 static void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 {
+	const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[gCharactersList[sCharNumber].usSolID]);
 	UINT16 usX=0;
 	UINT16 usY=0;
-	wchar_t sString[32];
-
-
-	GetMapscreenMercAssignmentString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString );
 
 	if( sRowIndex < FIRST_VEHICLE )
 	{
-		FindFontCenterCoordinates((short)ASSIGN_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)ASSIGN_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(ASSIGN_X + 1, Y_START + sRowIndex * Y_SIZE, ASSIGN_WIDTH, Y_SIZE, Assignment, iFont, &usX, &usY);
 	}
 	else
 	{
-		FindFontCenterCoordinates((short)ASSIGN_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)ASSIGN_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		FindFontCenterCoordinates(ASSIGN_X + 1, Y_START + sRowIndex * Y_SIZE + 6, ASSIGN_WIDTH, Y_SIZE, Assignment, iFont, &usX, &usY);
 	}
 
 	if( fFlashAssignDone == TRUE )
@@ -3732,7 +3729,7 @@ static void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	}
 
 	//RestoreExternBackgroundRect(ASSIGN_X-2, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ASSIGN_WIDTH+2, Y_SIZE);
-	DrawString(sString, (UINT16)usX, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), iFont);
+	DrawString(Assignment, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
 }
 
 
@@ -11603,15 +11600,15 @@ static void HandlePostAutoresolveMessages(void)
 }
 
 
-void GetMapscreenMercAssignmentString( SOLDIERTYPE *pSoldier, wchar_t sString[] )
+const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier)
 {
-	if( pSoldier->bAssignment != VEHICLE )
+	if (pSoldier->bAssignment == VEHICLE)
 	{
-		wcscpy(sString, pAssignmentStrings[ pSoldier->bAssignment ] );
+		return pShortVehicleStrings[pVehicleList[pSoldier->iVehicleId].ubVehicleType];
 	}
 	else
 	{
-		wcscpy( sString, pShortVehicleStrings[ pVehicleList[ pSoldier->iVehicleId ].ubVehicleType ] );
+		return pAssignmentStrings[pSoldier->bAssignment];
 	}
 }
 
