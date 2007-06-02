@@ -37,10 +37,10 @@
 #define IMAGE_BOX_X									395
 #define IMAGE_BOX_Y									LAPTOP_SCREEN_UL_Y+24
 #define IMAGE_BOX_WIDTH							112
-#define	IMAGE_NAME_WIDTH						106
-#define	IMAGE_FULL_NAME_OFFSET_Y		111
+#define IMAGE_NAME_WIDTH						106
+#define IMAGE_FULL_NAME_OFFSET_Y		111
 #define TEXT_BOX_WIDTH							160
-#define	TEXT_DELTA_OFFSET						9
+#define TEXT_DELTA_OFFSET						9
 #define PERS_CURR_TEAM_X LAPTOP_SCREEN_UL_X + 39 - 15
 #define PERS_CURR_TEAM_Y LAPTOP_SCREEN_UL_Y + 218
 #define PERS_DEPART_TEAM_Y LAPTOP_SCREEN_UL_Y + 247
@@ -55,8 +55,8 @@
 #define PERS_FONT_COLOR FONT_WHITE
 
 
-#define	FACES_DIR "FACES/BIGFACES/"
-#define	SMALL_FACES_DIR "FACES/"
+#define FACES_DIR "FACES/BIGFACES/"
+#define SMALL_FACES_DIR "FACES/"
 
 #define NEXT_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 448
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150
@@ -77,7 +77,7 @@
 #define SMALL_PORT_WIDTH 52
 #define SMALL_PORT_HEIGHT 45
 
-#define	SMALL_PORTRAIT_WIDTH_NO_BORDERS		48
+#define SMALL_PORTRAIT_WIDTH_NO_BORDERS		48
 
 #define SMALL_PORTRAIT_START_X 141 - 10
 #define SMALL_PORTRAIT_START_Y 53
@@ -220,7 +220,7 @@ static const POINT pPersonnelScreenPoints[] =
 	{422 + PrsnlOffSetX, 270 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 280 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 290 + PrsnlOffSetY},
-	{422 + PrsnlOffSetX, 300 + PrsnlOffSetY}, 			//10
+	{422 + PrsnlOffSetX, 300 + PrsnlOffSetY}, // 10
 	{422 + PrsnlOffSetX, 395 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 385 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 415 + PrsnlOffSetY},
@@ -230,7 +230,7 @@ static const POINT pPersonnelScreenPoints[] =
 	{422 + PrsnlOffSetX, 435 + PrsnlOffSetY},
 	{140, 33},  // Personnel Header // XXX unused
 	{422 + PrsnlOffSetX, 330 + PrsnlOffSetY},
-	{422 + PrsnlOffSetX, 340 + PrsnlOffSetY}, 	//20
+	{422 + PrsnlOffSetX, 340 + PrsnlOffSetY}, // 20
 	{422 + PrsnlOffSetX, 355 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 365 + PrsnlOffSetY},
 	{422 + PrsnlOffSetX, 375 + PrsnlOffSetY},
@@ -568,7 +568,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 		}
 		else
 		{
-			sprintf(sTemp, "%s%02d.sti", FACES_DIR, 	Menptr[iId].ubProfile);
+			sprintf(sTemp, "%s%02d.sti", FACES_DIR, Menptr[iId].ubProfile);
 		}
 	}
 	else
@@ -585,7 +585,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 		}
 		else
 		{
-			sprintf(sTemp, "%s%02d.sti", FACES_DIR, 	 iId);
+			sprintf(sTemp, "%s%02d.sti", FACES_DIR, iId);
 		}
 	}
 
@@ -809,7 +809,7 @@ static void DisplayCharName(INT32 iId)
 	INT16 sX, sY;
 	SOLDIERTYPE* pSoldier;
 	CHAR16 sString[64];
-	INT32	iHeightOfText;
+	INT32 iHeightOfText;
 
 	pSoldier = MercPtrs[iId];
 
@@ -894,7 +894,7 @@ static void DisplayCharStats(INT32 iId)
 	INT16 sX, sY;
 	UINT32 uiHits = 0;
 	SOLDIERTYPE* pSoldier = &Menptr[iId];
-	BOOLEAN	fAmIaRobot = AM_A_ROBOT(pSoldier);
+	BOOLEAN fAmIaRobot = AM_A_ROBOT(pSoldier);
 
 	if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
 	{
@@ -1208,8 +1208,8 @@ static void DisplayCharStats(INT32 iId)
 
 				if (!fAmIaRobot)
 				{
-					INT8	bSkill1 = gMercProfiles[Menptr[iId].ubProfile].bSkillTrait;
-					INT8	bSkill2 = gMercProfiles[Menptr[iId].ubProfile].bSkillTrait2;
+					INT8 bSkill1 = gMercProfiles[Menptr[iId].ubProfile].bSkillTrait;
+					INT8 bSkill2 = gMercProfiles[Menptr[iId].ubProfile].bSkillTrait2;
 
 					//if the 2 skills are the same, add the '(expert)' at the end
 					if (bSkill1 == bSkill2 && bSkill1 != NO_SKILLTRAIT)
@@ -1920,14 +1920,14 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 	{
 		// create buttons
 		giPersonnelInventoryButtonsImages[0] = LoadButtonImage("LAPTOP/personnel_inventory.sti", -1, 1, -1, 2, -1);
-	  giPersonnelInventoryButtons[0] = QuickCreateButton(giPersonnelInventoryButtonsImages[0], 176 + 397, 2 + 200, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryUpButtonCallback);
+		giPersonnelInventoryButtons[0] = QuickCreateButton(giPersonnelInventoryButtonsImages[0], 176 + 397, 2 + 200, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryUpButtonCallback);
 
 		giPersonnelInventoryButtonsImages[1] = LoadButtonImage("LAPTOP/personnel_inventory.sti", -1, 3, -1, 4, -1);
-	  giPersonnelInventoryButtons[1] = QuickCreateButton(giPersonnelInventoryButtonsImages[1], 397 + 176, 200 + 223, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryDownButtonCallback);
+		giPersonnelInventoryButtons[1] = QuickCreateButton(giPersonnelInventoryButtonsImages[1], 397 + 176, 200 + 223, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryDownButtonCallback);
 
 		// set up cursors for these buttons
 		SetButtonCursor(giPersonnelInventoryButtons[0], CURSOR_LAPTOP_SCREEN);
-	  SetButtonCursor(giPersonnelInventoryButtons[1], CURSOR_LAPTOP_SCREEN);
+		SetButtonCursor(giPersonnelInventoryButtons[1], CURSOR_LAPTOP_SCREEN);
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
@@ -1937,9 +1937,9 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 	{
 		// destroy buttons
 		RemoveButton(giPersonnelInventoryButtons[0]);
-	  UnloadButtonImage(giPersonnelInventoryButtonsImages[0]);
-	  RemoveButton(giPersonnelInventoryButtons[1]);
-	  UnloadButtonImage(giPersonnelInventoryButtonsImages[1]);
+		UnloadButtonImage(giPersonnelInventoryButtonsImages[0]);
+		RemoveButton(giPersonnelInventoryButtons[1]);
+		UnloadButtonImage(giPersonnelInventoryButtonsImages[1]);
 
 		MSYS_RemoveRegion(&gMouseScrollPersonnelINV);
 
@@ -2831,8 +2831,8 @@ static INT32 GetAvgStatOfCurrentTeamStat(INT32 iStat)
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;
 	INT32 cnt = 0;
 	INT32 iTotalStatValue = 0;
-	INT8	bNumberOfPows = 0;
-	UINT8	ubNumberOfMercsInCalculation = 0;
+	INT8 bNumberOfPows = 0;
+	UINT8 ubNumberOfMercsInCalculation = 0;
 
 	// first grunt
 	pSoldier = MercPtrs[0];
@@ -3071,7 +3071,7 @@ static void DisplayAverageStatValuesForCurrentTeam(void)
 	mprintf(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[1]);
 
 	// nobody on team leave
-  if ((GetNumberOfMercsDeadOrAliveOnPlayersTeam() == 0) && (fCurrentTeamMode == TRUE))
+	if ((GetNumberOfMercsDeadOrAliveOnPlayersTeam() == 0) && (fCurrentTeamMode == TRUE))
 	{
 		return;
 	}
@@ -3097,7 +3097,7 @@ static void DisplayAverageStatValuesForCurrentTeam(void)
 
 		if (fCurrentTeamMode == TRUE)
 		{
-			INT32	iValue = GetAvgStatOfCurrentTeamStat(iCounter);
+			INT32 iValue = GetAvgStatOfCurrentTeamStat(iCounter);
 
 			//if there are no values
 			if (iValue == -1)
@@ -3124,8 +3124,8 @@ static void DisplayLowestStatValuesForCurrentTeam(void)
 	INT16 sX, sY;
 	INT32 iCounter = 0;
 	INT32 iStat = 0;
-	INT32	iDepartedId=0;
-	INT32	iId = 0;
+	INT32 iDepartedId = 0;
+	INT32 iId = 0;
 
 	// set up font
 	SetFont(FONT10ARIAL);
@@ -3735,7 +3735,7 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		if (fCurrentTeamMode == TRUE)
 		{
-		  iCurrentPersonSelectedId = -1;
+			iCurrentPersonSelectedId = -1;
 
 			// how many people do we have?..if you have someone set default to 0
 			if (GetNumberOfMercsDeadOrAliveOnPlayersTeam() > 0)
@@ -3754,12 +3754,12 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fCurrentTeamMode = FALSE;
 
 		if (fCurrentTeamMode == FALSE)
 		{
-		  iCurrentPersonSelectedId = -1;
+			iCurrentPersonSelectedId = -1;
 
 			// how many departed people?
 			if (GetNumberOfPastMercsOnPlayersTeam() > 0)
@@ -3789,7 +3789,7 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 	{
 		// not created. create
 		giPersonnelButtonImage[4]=  LoadButtonImage("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1);
-	  giPersonnelButton[4] = QuickCreateButton(giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, DepartedUpCallBack);
+		giPersonnelButton[4] = QuickCreateButton(giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, DepartedUpCallBack);
 
 		// right button
 		giPersonnelButtonImage[5]=  LoadButtonImage("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1);
@@ -3797,7 +3797,7 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 
 		// set up cursors for these buttons
 		SetButtonCursor(giPersonnelButton[4], CURSOR_LAPTOP_SCREEN);
-	  SetButtonCursor(giPersonnelButton[5], CURSOR_LAPTOP_SCREEN);
+		SetButtonCursor(giPersonnelButton[5], CURSOR_LAPTOP_SCREEN);
 
 		fCreated = TRUE;
 	}
@@ -3805,9 +3805,9 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 	{
 		// created. destroy
 		RemoveButton(giPersonnelButton[4]);
-	  UnloadButtonImage(giPersonnelButtonImage[4]);
-	  RemoveButton(giPersonnelButton[5]);
-	  UnloadButtonImage(giPersonnelButtonImage[5]);
+		UnloadButtonImage(giPersonnelButtonImage[4]);
+		RemoveButton(giPersonnelButton[5]);
+		UnloadButtonImage(giPersonnelButtonImage[5]);
 		fCreated = FALSE;
 		fReDrawScreenFlag = TRUE;
 	}
@@ -3995,7 +3995,7 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 
 	// now the fired list
 	iCounterA = 0;
-	for (iCounterA = 0; (((iCounter)< iSlot + giCurrentUpperLeftPortraitNumber)); iCounterA++)
+	for (iCounterA = 0; (((iCounter) < iSlot + giCurrentUpperLeftPortraitNumber)); iCounterA++)
 	{
 		if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
 			iCounter++;
@@ -4247,10 +4247,10 @@ static void EnableDisableDeparturesButtons(void)
 
 static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 {
-  // get merc's nickName, assignment, and sector location info
+	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 
-  SetFont(CHAR_NAME_FONT);
+	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
@@ -4359,8 +4359,8 @@ static void DisplayPersonnelTextOnTitleBar(void)
 	// draw email screen title text
 
 	// font stuff
-  SetFont(FONT14ARIAL);
-  SetFontForeground(FONT_WHITE);
+	SetFont(FONT14ARIAL);
+	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
 
 	// printf the title
@@ -4385,7 +4385,7 @@ static BOOLEAN DisplayHighLightBox(void)
 		return (FALSE);
 	}
 
-  // bounding
+	// bounding
 	uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
 	CHECKF(uiBox != NO_VOBJECT);
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH - 2, SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3);
@@ -4514,13 +4514,13 @@ static INT32 GetIdOfFirstDisplayedMerc(void)
 	// set current soldier
 	pSoldier = MercPtrs[cnt];
 
-  if (fCurrentTeamMode == TRUE)
+	if (fCurrentTeamMode == TRUE)
 	{
 		// run through list of soldiers on players current team
 		//cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
-    for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
+		for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
 		{
-		  if ((pSoldier->bActive)&&(pSoldier->bLife > 0))
+			if ((pSoldier->bActive) && (pSoldier->bLife > 0))
 			{
 				return (0);
 			}
@@ -4686,7 +4686,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	INT16 iCurrentItemValue = 0;
 
 	if ((iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN) || (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT))
-  {
+	{
 		// find out how many there are
 		iValue = (INT32)(GetNumberOfInventoryItemsOnCurrentMerc());
 
@@ -4706,7 +4706,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		// find the x, y on the slider bar
-	  GetCursorPos(&MousePos);
+		GetCursorPos(&MousePos);
 
 		// get the subregion sizes
 		sSizeOfEachSubRegion = (INT16)((INT32)(Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / (INT32)(iNumberOfItems));
@@ -4799,7 +4799,7 @@ static INT32 GetFundsOnMerc(SOLDIERTYPE* pSoldier)
 	// run through grunts pockets and count all the spare change
 	for (iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++)
 	{
-		if (Item[pSoldier->inv[iCurrentPocket] .usItem].usItemClass == IC_MONEY)
+		if (Item[pSoldier->inv[iCurrentPocket].usItem].usItemClass == IC_MONEY)
 		{
 			iCurrentAmount += pSoldier->inv[iCurrentPocket].uiMoneyAmount;
 		}
