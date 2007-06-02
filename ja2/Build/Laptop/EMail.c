@@ -834,8 +834,6 @@ static void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
 
 static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 {
-	wchar_t sString[20];
-
 	SetFontShadow(NO_SHADOW);
   SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
@@ -849,8 +847,7 @@ static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-  swprintf(sString, lengthof(sString), L"%ls %d", pDayStrings[ 0 ], iDate/ ( 24 * 60 ) );
-  mprintf(DATE_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ),sString);
+	mprintf(DATE_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, L"%ls %d", pDayStrings[0], iDate / (24 * 60));
 
 	SetFont( MESSAGE_FONT );
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1854,7 +1851,6 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
   UINT16 usX, usY;
-  wchar_t sString[100];
 
 	// font stuff
 	SetFont(MESSAGE_FONT);
@@ -1879,10 +1875,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	mprintf( usX, MESSAGE_DATE_Y+ (UINT16)iViewerY , pEmailHeaders[2]);
 
 	// the actual date info
-	swprintf(sString, lengthof(sString), L"%d", ( ( pMail->iDate ) / ( 24 * 60) ) );
-	mprintf( MESSAGE_HEADER_X+235, MESSAGE_DATE_Y + (UINT16)iViewerY, sString);
-
-
+	mprintf(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, L"%d", pMail->iDate / (24 * 60));
 
 	// print subject
 	FindFontRightCoordinates( MESSAGE_HEADER_X-20, MESSAGE_SUBJECT_Y ,  MESSAGE_HEADER_WIDTH, ( INT16 ) (MESSAGE_SUBJECT_Y + GetFontHeight ( MESSAGE_FONT )),pEmailHeaders[1] ,MESSAGE_FONT, &usX, &usY);
@@ -2620,8 +2613,6 @@ static void UpdateStatusOfNextPreviousButtons(void)
 static void DisplayWhichPageOfEmailProgramIsDisplayed(void)
 {
 	// will draw the number of the email program we are viewing right now
-	CHAR16 sString[ 10 ];
-
 	// font stuff
 	SetFont(MESSAGE_FONT);
 	SetFontForeground(FONT_BLACK);
@@ -2629,13 +2620,19 @@ static void DisplayWhichPageOfEmailProgramIsDisplayed(void)
 	SetFontShadow(NO_SHADOW);
 
 	// page number
-	if( iLastPage < 0 )
-		swprintf( sString, lengthof(sString), L"%d / %d", 1, 1);
+	INT32 CPage;
+	INT32 LPage;
+	if (iLastPage < 0)
+	{
+		CPage = 1;
+		LPage = 1;
+	}
 	else
-		swprintf( sString, lengthof(sString), L"%d / %d", iCurrentPage + 1, iLastPage + 1);
-
-	// print it
-	mprintf( PAGE_NUMBER_X ,PAGE_NUMBER_Y, sString );
+	{
+		CPage = iCurrentPage + 1;
+		LPage = iLastPage + 1;
+	}
+	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%d / %d", CPage, LPage);
 
 	// restore shadow
 	SetFontShadow( DEFAULT_SHADOW );
