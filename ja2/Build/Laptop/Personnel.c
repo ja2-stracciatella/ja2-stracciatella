@@ -540,33 +540,33 @@ void RenderPersonnel( void )
 }
 
 
-static void DisplayCharStats(INT32 iId, INT32 iSlot);
-static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot);
+static void DisplayCharStats(INT32 iId);
+static void DisplayEmploymentinformation(INT32 iId);
 
 
-static void RenderPersonnelStats(INT32 iId, INT32 iSlot)
+static void RenderPersonnelStats(INT32 iId)
 {
-	// will render the stats of person iId in slot iSlot
+	// will render the stats of person iId
 	SetFont(PERS_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
 	if( gubPersonnelInfoState == PERSONNEL_STAT_BTN )
 	{
-		DisplayCharStats(iId, iSlot);
+		DisplayCharStats(iId);
 	}
 	else if( gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN )
 	{
-		DisplayEmploymentinformation( iId, iSlot );
+		DisplayEmploymentinformation(iId);
 	}
 }
 
 
-static BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther)
+static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther)
 {
 	char sTemp[100];
 
-	// draw face to soldier iId in slot iSlot
+	// draw face to soldier iId
 
 	// special case?..player generated merc
 	if( fCurrentTeamMode == TRUE )
@@ -634,7 +634,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, INT32 iSlot, BOOLEAN fDead, BOOLEA
 	}
 
 
-  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,IMAGE_BOX_X+(iSlot*IMAGE_BOX_WIDTH), IMAGE_BOX_Y);
+  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
 
 
 	//if the merc is dead, display it
@@ -825,7 +825,7 @@ static void RightButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void DisplayCharName(INT32 iId, INT32 iSlot)
+static void DisplayCharName(INT32 iId)
 {
   // get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
@@ -875,7 +875,7 @@ static void DisplayCharName(INT32 iId, INT32 iSlot)
 	}
 
 	//Display the mercs name
-	mprintf(sX+iSlot*IMAGE_BOX_WIDTH, CHAR_NAME_Y, sString );
+	mprintf(sX, CHAR_NAME_Y, sString);
 
 	const wchar_t* Assignment = pPersonnelAssignmentStrings[Menptr[iId].bAssignment];
 
@@ -888,7 +888,7 @@ static void DisplayCharName(INT32 iId, INT32 iSlot)
 		sX = ( INT16 )pPersonnelScreenPoints[ 0 ].x;
 	}
 
-	mprintf(sX + iSlot * IMAGE_BOX_WIDTH, CHAR_LOC_Y, Assignment);
+	mprintf(sX, CHAR_LOC_Y, Assignment);
 
 
 	//
@@ -911,7 +911,7 @@ static void DisplayCharName(INT32 iId, INT32 iSlot)
 }
 
 
-static void DisplayCharStats(INT32 iId, INT32 iSlot)
+static void DisplayCharStats(INT32 iId)
 {
 	INT32 iCounter=0;
 	wchar_t sString[50];
@@ -938,7 +938,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				if( gMercProfiles[Menptr[iId].ubProfile].bLifeDelta > 0 )
 				{
 					swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bLifeDelta);
-				  FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+				  FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 	  mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 				}
 				 swprintf(sString, lengthof(sString), L"%d/%d",Menptr[iId].bLife,Menptr[iId].bLifeMax);
@@ -947,8 +947,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 swprintf( sString, lengthof(sString), pPOWStrings[ 1 ] );
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			 break;
 
@@ -959,7 +959,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta > 0 )
 				 {
 					 swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bAgilityDelta);
-					 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+					 FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);			 }
 					 swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bAgility);
 			 }
@@ -967,8 +967,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			 break;
 
@@ -979,7 +979,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bDexterityDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bDexterity);
@@ -988,8 +988,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			break;
 
@@ -1000,7 +1000,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bStrengthDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bStrengthDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bStrength );
@@ -1009,8 +1009,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1021,7 +1021,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bLeadershipDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bLeadershipDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bLeadership );
@@ -1030,8 +1030,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1042,7 +1042,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bWisdomDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bWisdomDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 				 }
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bWisdom );
@@ -1051,8 +1051,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1064,7 +1064,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bExpLevelDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bExpLevelDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 				 }
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bExpLevel );
@@ -1073,8 +1073,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1085,7 +1085,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bMarksmanshipDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMarksmanshipDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bMarksmanship);
@@ -1094,8 +1094,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1106,7 +1106,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bMechanicDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMechanicDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 					 swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bMechanical);
@@ -1115,8 +1115,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20,0,sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1127,7 +1127,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bExplosivesDelta > 0 )
 				 {
 						swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bExplosivesDelta);
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20+TEXT_DELTA_OFFSET ),0,30,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 			mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bExplosive);
@@ -1136,8 +1136,8 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -1148,7 +1148,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				 if( gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta > 0 )
 				 {
 					 swprintf(sString, lengthof(sString), L"( %+d )", gMercProfiles[Menptr[iId].ubProfile].bMedicalDelta);
-					 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
+					 FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			 		 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 					}
 				 		swprintf(sString, lengthof(sString), L"%d",Menptr[iId].bMedical);
@@ -1157,30 +1157,30 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 			 {
 				 wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 			 }
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+			 mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+			 FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 			 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
 		 case 14:
 		 // kills
-      mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+      mprintf(pPersonnelScreenPoints[21].x, pPersonnelScreenPoints[21].y, pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[Menptr[iId].ubProfile].usKills);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[21].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[21].y,sString);
 		 break;
 
 		 case 15:
 			// assists
-			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+			mprintf(pPersonnelScreenPoints[22].x, pPersonnelScreenPoints[22].y, pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[Menptr[iId].ubProfile].usAssists);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[22].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[22].y,sString);
 		 break;
 
 		  case 16:
 			// shots/hits
-			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+			mprintf(pPersonnelScreenPoints[23].x, pPersonnelScreenPoints[23].y, pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 			uiHits = ( UINT32 )gMercProfiles[Menptr[iId].ubProfile].usShotsHit;
 			uiHits *= 100;
 			// check we have shot at least once
@@ -1194,23 +1194,23 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				uiHits = 0;
 			}
 			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[23].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 			mprintf(sX, pPersonnelScreenPoints[23].y, L"%ls", sString);
 		 break;
 
 		  case 17:
 			// battles
-			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+			mprintf(pPersonnelScreenPoints[24].x, pPersonnelScreenPoints[24].y, pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[Menptr[iId].ubProfile].usBattlesFought);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[24].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[24].y,sString);
 		 break;
 
 		 case 18:
 			// wounds
-			mprintf((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[25].y,pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+			mprintf(pPersonnelScreenPoints[25].x, pPersonnelScreenPoints[25].y, pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[Menptr[iId].ubProfile].usTimesWounded);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[25].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[25].y,sString);
 		 break;
 
@@ -1222,14 +1222,14 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 				INT8	bScreenLocIndex = 19;	//if you change the '19', change it below in the if statement
 
 				//Display the 'Skills' text
-				mprintf( (INT16)( pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[bScreenLocIndex].y,pPersonnelScreenStrings[ PRSNL_TXT_SKILLS ] );
+				mprintf(pPersonnelScreenPoints[bScreenLocIndex].x, pPersonnelScreenPoints[bScreenLocIndex].y, pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
 
 				//KM: April 16, 1999
 				//Added support for the German version, which has potential string overrun problems.  For example, the text "Skills:" can
 				//overlap "NightOps (Expert)" because the German strings are much longer.  In these cases, I ensure that the right
 				//justification of the traits don't overlap.  If it would, I move it over to the right.
 				iWidth = StringPixLength( pPersonnelScreenStrings[ PRSNL_TXT_SKILLS ], PERS_FONT );
-				iMinimumX = iWidth + pPersonnelScreenPoints[bScreenLocIndex].x + iSlot * TEXT_BOX_WIDTH + 2;
+				iMinimumX = iWidth + pPersonnelScreenPoints[bScreenLocIndex].x + 2;
 
 				if( !fAmIaRobot )
 				{
@@ -1241,13 +1241,13 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 					{
 						swprintf( sString, lengthof(sString), L"%ls %ls", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS] );
 
-						FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[bScreenLocIndex].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+						FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 
 						//KM: April 16, 1999
 						//Perform the potential overrun check
 						if( sX <= iMinimumX )
 						{
-							FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH) + TEXT_BOX_WIDTH-20 +TEXT_DELTA_OFFSET),0,30,0,sString, PERS_FONT,  &sX, &sY);
+							FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 							sX = (INT16)max( sX, iMinimumX );
 						}
 
@@ -1260,7 +1260,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							const wchar_t* Skill = gzMercSkillText[bSkill1];
 
-							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x + iSlot * TEXT_BOX_WIDTH, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
+							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
@@ -1276,7 +1276,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							const wchar_t* Skill = gzMercSkillText[bSkill2];
 
-							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x + iSlot * TEXT_BOX_WIDTH, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
+							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
 
 							//KM: April 16, 1999
 							//Perform the potential overrun check
@@ -1292,7 +1292,7 @@ static void DisplayCharStats(INT32 iId, INT32 iSlot)
 						{
 							const wchar_t* NoSkill = pPersonnelScreenStrings[PRSNL_TXT_NOSKILLS];
 
-							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x + iSlot * TEXT_BOX_WIDTH, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
+							FindFontRightCoordinates(pPersonnelScreenPoints[bScreenLocIndex].x, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
 							mprintf(sX, pPersonnelScreenPoints[bScreenLocIndex].y, NoSkill);
 						}
 					}
@@ -1644,8 +1644,8 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void DisplayDepartedCharName(INT32 iId, INT32 iSlot, INT32 iState);
-static void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState);
+static void DisplayDepartedCharName(INT32 iId, INT32 iState);
+static void DisplayDepartedCharStats(INT32 iId, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
 static INT32 GetIdOfPastMercInSlot(INT32 iSlot);
 static INT32 GetTheStateOfDepartedMerc(INT32 iId);
@@ -1665,28 +1665,28 @@ static void DisplayFaceOfDisplayedMerc(void)
 		// if showing inventory, leave
 		if( fCurrentTeamMode == TRUE )
 		{
-			RenderPersonnelFace(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0, FALSE, FALSE, FALSE );
-			DisplayCharName(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
+			RenderPersonnelFace(GetIdOfThisSlot(iCurrentPersonSelectedId), FALSE, FALSE, FALSE);
+			DisplayCharName(GetIdOfThisSlot(iCurrentPersonSelectedId));
 
 			if( gubPersonnelInfoState == PRSNL_INV )
 			{
 				return;
 			}
 
-	    RenderPersonnelStats(  GetIdOfThisSlot( iCurrentPersonSelectedId ), 0 );
+			RenderPersonnelStats(GetIdOfThisSlot(iCurrentPersonSelectedId));
 
 		}
 		else
 		{
-			RenderPersonnelFace(  GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, IsPastMercDead( iCurrentPersonSelectedId ), IsPastMercFired( iCurrentPersonSelectedId ), IsPastMercOther( iCurrentPersonSelectedId ) );
-			DisplayDepartedCharName(  GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId  ) ) );
+			RenderPersonnelFace(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), IsPastMercDead(iCurrentPersonSelectedId), IsPastMercFired(iCurrentPersonSelectedId), IsPastMercOther(iCurrentPersonSelectedId));
+			DisplayDepartedCharName(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iCurrentPersonSelectedId)));
 
 			if( gubPersonnelInfoState == PRSNL_INV )
 			{
 				return;
 			}
 
-			DisplayDepartedCharStats( GetIdOfPastMercInSlot( iCurrentPersonSelectedId ), 0, GetTheStateOfDepartedMerc( GetIdOfPastMercInSlot( iCurrentPersonSelectedId  ) ) );
+			DisplayDepartedCharStats(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iCurrentPersonSelectedId)));
 		}
 	}
 }
@@ -4081,7 +4081,7 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 }
 
 
-static void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
+static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
 {
 	INT32 iCounter=0;
 	wchar_t sString[50];
@@ -4111,102 +4111,99 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 				 swprintf(sString, lengthof(sString), L"%d/%d",gMercProfiles[iId].bLife,gMercProfiles[iId].bLife);
 			 }
 
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+			 mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			 break;
 		 case 1:
 			 // agility
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bAgility);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			 break;
 		 case 2:
 		  // dexterity
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bDexterity);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 			break;
 		 case 3:
 		 // strength
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bStrength);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 		 case 4:
 		  // leadership
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bLeadership);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 		 case 5:
 		  // wisdom
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bWisdom);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 		 case 6:
 		  // exper
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bExpLevel);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 		 case 7:
 			 //mrkmanship
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bMarksmanship);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
      case 8:
 		  // mech
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bMechanical);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
      case 9:
 		  // exp
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bExplosive);
-       mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+       mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 		 case 10:
        // med
-			 mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[iCounter]);
-
+			 mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[iCounter]);
        swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].bMedical);
-
-
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+			 FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 			 mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
 
 		 case 14:
 		 // kills
-      mprintf((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[21].y,pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+      mprintf(pPersonnelScreenPoints[21].x, pPersonnelScreenPoints[21].y, pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].usKills);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[21].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[21].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[21].y,sString);
 		 break;
 		 case 15:
 			// assists
-			mprintf((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[22].y,pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+			mprintf(pPersonnelScreenPoints[22].x, pPersonnelScreenPoints[22].y, pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].usAssists);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[22].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[22].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[22].y,sString);
 		 break;
 		  case 16:
 			// shots/hits
-			mprintf((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[23].y,pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+			mprintf(pPersonnelScreenPoints[23].x, pPersonnelScreenPoints[23].y, pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 			uiHits = ( UINT32 )gMercProfiles[iId].usShotsHit;
 			uiHits *= 100;
 
@@ -4222,21 +4219,21 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iSlot, INT32 iState)
 			}
 
 			swprintf(sString, lengthof(sString), L"%d %%", uiHits);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[23].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[23].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 			mprintf(sX, pPersonnelScreenPoints[23].y, L"%ls", sString);
 		 break;
 		  case 17:
 			// battles
-			mprintf((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[24].y,pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+			mprintf(pPersonnelScreenPoints[24].x, pPersonnelScreenPoints[24].y, pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].usBattlesFought);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[24].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[24].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[24].y,sString);
 		 break;
 		 case 18:
 			// wounds
-			mprintf((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[25].y,pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+			mprintf(pPersonnelScreenPoints[25].x, pPersonnelScreenPoints[25].y, pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 			swprintf(sString, lengthof(sString), L"%d",gMercProfiles[iId].usTimesWounded);
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[25].x+(iSlot*TEXT_BOX_WIDTH)),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[25].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[25].y,sString);
 		 break;
 		}
@@ -4271,7 +4268,7 @@ static void EnableDisableDeparturesButtons(void)
 }
 
 
-static void DisplayDepartedCharName(INT32 iId, INT32 iSlot, INT32 iState)
+static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 {
   // get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
@@ -4296,7 +4293,7 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iSlot, INT32 iState)
 		sX = ( INT16 )pPersonnelScreenPoints[ 0 ].x;
 	}
 
-	mprintf(sX + iSlot * IMAGE_BOX_WIDTH, CHAR_NAME_Y, Name);
+	mprintf(sX, CHAR_NAME_Y, Name);
 
 
 	const wchar_t* State;
@@ -4344,7 +4341,7 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iSlot, INT32 iState)
 		sX = ( INT16 )pPersonnelScreenPoints[ 0 ].x;
 	}
 
-	mprintf(sX + iSlot * IMAGE_BOX_WIDTH, CHAR_NAME_Y + 10 , State);
+	mprintf(sX, CHAR_NAME_Y + 10, State);
 }
 
 
@@ -5008,7 +5005,7 @@ static BOOLEAN IsPastMercOther(INT32 iId)
 static INT32 CalcTimeLeftOnMercContract(SOLDIERTYPE* pSoldier);
 
 
-static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
+static void DisplayEmploymentinformation(INT32 iId)
 {
 	INT32 iCounter=0;
 	wchar_t sString[50];
@@ -5047,7 +5044,7 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 					if( iTimeLeftOnContract / uiMinutesInDay )
 					{
 						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls",( iTimeLeftOnContract / uiMinutesInDay ), gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
-						mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+						mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 					}
 
 					//else there is under a day left
@@ -5055,22 +5052,22 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 					{
 						//DEF: removed 2/7/99
 						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], Menptr[iId].iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
-						mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+						mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 					}
 
 				}
 				else if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
 					wcscpy( sString, gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-					mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+					mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 				}
 				else
 				{
 					wcscpy( sString, gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
-					mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+					mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 				}
 
-		   FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+		   FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
        mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		}
 		break;
@@ -5078,13 +5075,13 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 		 case 1:
 
 			 // total contract time served
-			mprintf((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter].y,pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
+			mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
 
 			//./DEF 2/4/99: total service days used to be calced as 'days -1'
 
 			swprintf(sString, lengthof(sString), L"%d %ls",gMercProfiles[Menptr[iId].ubProfile].usTotalDaysServed, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
 
-      FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+      FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
       mprintf(sX,pPersonnelScreenPoints[iCounter].y,sString);
 		 break;
 
@@ -5092,8 +5089,8 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 		   // cost (PRSNL_TXT_TOTAL_COST)
 				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].uiTotalCostToDate);
 
-			 FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
-			 mprintf(pPersonnelScreenPoints[iCounter].x + iSlot * TEXT_BOX_WIDTH, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
+			 FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+			 mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
 			 // print contract cost
 			 mprintf( ( INT16 ) ( sX ) , pPersonnelScreenPoints[iCounter].y,sString);
@@ -5125,13 +5122,13 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 				SPrintMoney(sStringA, gMercProfiles[Menptr[iId].ubProfile].sSalary);
 			 }
 
-				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + iSlot * TEXT_BOX_WIDTH + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sStringA, PERS_FONT,  &sX, &sY);
+				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sStringA, PERS_FONT,  &sX, &sY);
 
 			 iCounter++;
 
        // now print daily rate
 				mprintf(sX, pPersonnelScreenPoints[iCounter + 1].y, sStringA);
-			 mprintf( (INT16)(pPersonnelScreenPoints[iCounter+1].x +(iSlot*TEXT_BOX_WIDTH) ),pPersonnelScreenPoints[ iCounter +1].y, pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
+			 mprintf(pPersonnelScreenPoints[iCounter + 1].x, pPersonnelScreenPoints[iCounter + 1].y, pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
 			 break;
 
 		 case 5:
@@ -5140,18 +5137,18 @@ static void DisplayEmploymentinformation(INT32 iId, INT32 iSlot)
 			 //if its a merc merc, display the salary oweing
 			if( Menptr[iId].ubWhatKindOfMercAmI == MERC_TYPE__MERC )
 			{
-				mprintf((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter-1].y,pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
+				mprintf(pPersonnelScreenPoints[iCounter - 1].x, pPersonnelScreenPoints[iCounter - 1].y, pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
 
 				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].sSalary * gMercProfiles[Menptr[iId].ubProfile].iMercMercContractLength);
-				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter - 1].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}
 			else
 			{
-				mprintf((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)),pPersonnelScreenPoints[iCounter-1].y,pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
+				mprintf(pPersonnelScreenPoints[iCounter - 1].x, pPersonnelScreenPoints[iCounter - 1].y, pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
 
 				SPrintMoney(sString, gMercProfiles[Menptr[iId].ubProfile].sMedicalDepositAmount);
-				FindFontRightCoordinates((INT16)(pPersonnelScreenPoints[iCounter-1].x+(iSlot*TEXT_BOX_WIDTH)+Prsnl_DATA_OffSetX),0,TEXT_BOX_WIDTH-20,0,sString, PERS_FONT,  &sX, &sY);
+				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter - 1].x + Prsnl_DATA_OffSetX, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				mprintf(sX,pPersonnelScreenPoints[iCounter-1].y,sString);
 			}
 		 break;
