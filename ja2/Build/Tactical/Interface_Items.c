@@ -2,6 +2,7 @@
 #include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
+#include "Text_Utils.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"
@@ -2539,7 +2540,8 @@ static BOOLEAN ReloadItemDesc(void)
 	{
 		Item = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
-	return LoadItemInfo(Item, gzItemName, gzItemDesc);
+	wcslcpy(gzItemName, ItemNames[Item], lengthof(gzItemName));
+	return LoadItemInfo(Item, gzItemDesc);
 }
 
 

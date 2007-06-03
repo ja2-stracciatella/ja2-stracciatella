@@ -1008,7 +1008,6 @@ extern	const wchar_t *zMarksMapScreenText[];
 #define   SIZE_ITEM_PROS						160
 #define   SIZE_ITEM_CONS						160
 
-BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString );
 extern void LoadAllExternalText( void );
 
 enum
