@@ -1640,50 +1640,53 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 
 
 	// Nickname (beneath Picture)
+	const wchar_t* Nickname;
 	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// vehicle
-		wcscpy(sString, pShortVehicleStrings[ pVehicleList[ pSoldier->bVehicleID ].ubVehicleType ]);
+		Nickname = pShortVehicleStrings[pVehicleList[pSoldier->bVehicleID].ubVehicleType];
 	}
 	else
 	{
 		// soldier
-		wcscpy(sString, gMercProfiles[usMercProfileID].zNickname);
+		Nickname = gMercProfiles[usMercProfileID].zNickname;
 	}
 
-	FindFontCenterCoordinates(PIC_NAME_X, PIC_NAME_Y, PIC_NAME_WID, PIC_NAME_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString, usX, usY, CHAR_FONT);
+	FindFontCenterCoordinates(PIC_NAME_X, PIC_NAME_Y, PIC_NAME_WID, PIC_NAME_HEI, Nickname, CHAR_FONT, &usX, &usY);
+	DrawString(Nickname, usX, usY, CHAR_FONT);
 
 
 	// Full name (Top Box)
+	const wchar_t* Name;
 	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// vehicle
-		wcscpy(sString, pVehicleStrings[ pVehicleList[ pSoldier->bVehicleID ].ubVehicleType ]);
+		Name = pVehicleStrings[pVehicleList[pSoldier->bVehicleID].ubVehicleType];
 	}
 	else
 	{
 		// soldier
-		wcscpy(sString, gMercProfiles[usMercProfileID].zName);
+		Name = gMercProfiles[usMercProfileID].zName;
 	}
 
-	FindFontCenterCoordinates(CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString, usX, usY, CHAR_FONT);
+	FindFontCenterCoordinates(CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, Name, CHAR_FONT, &usX, &usY);
+	DrawString(Name, usX, usY, CHAR_FONT);
 
 
 	// Assignment
+	const wchar_t* Assignment;
 	if( pSoldier->bAssignment == VEHICLE )
 	{
 		// show vehicle type
-		wcscpy( sString, pShortVehicleStrings[ pVehicleList[ pSoldier->iVehicleId ].ubVehicleType ] );
+		Assignment = pShortVehicleStrings[pVehicleList[pSoldier->iVehicleId].ubVehicleType];
 	}
 	else
 	{
-		wcscpy( sString, pAssignmentStrings[ pSoldier->bAssignment ] );
+		Assignment = pAssignmentStrings[pSoldier->bAssignment];
 	}
 
-	FindFontCenterCoordinates( CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, sString, CHAR_FONT, &usX, &usY );
-	DrawString( sString, usX, usY, CHAR_FONT );
+	FindFontCenterCoordinates(CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, Assignment, CHAR_FONT, &usX, &usY);
+	DrawString(Assignment, usX, usY, CHAR_FONT);
 
 
 	// second assignment line

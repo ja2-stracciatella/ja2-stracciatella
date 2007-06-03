@@ -4627,8 +4627,7 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	if (PlayerControlsMine(ubMineIndex) && !gMineStatus[ ubMineIndex ].fEmpty)
 	{
 		// show current production
-		SPrintMoney(wSubString, PredictDailyIncomeFromAMine(ubMineIndex));
-		wcscpy( wString, wSubString );
+		SPrintMoney(wString, PredictDailyIncomeFromAMine(ubMineIndex));
 
 /*
 		// show maximum potential production
@@ -6400,8 +6399,6 @@ static void ShowSAMSitesOnStrategicMap(void)
 	INT8 ubVidObjIndex = 0;
 	UINT8 *pDestBuf2;
 	UINT32 uiDestPitchBYTES;
-	CHAR16 wString[ 40 ];
-
 
 	if( fShowAircraftFlag )
 	{
@@ -6456,10 +6453,10 @@ static void ShowSAMSitesOnStrategicMap(void)
 				sY += 16;
 			}
 
-			wcscpy( wString, pLandTypeStrings[ SAM_SITE ] );
+			const wchar_t* SAMSite = pLandTypeStrings[SAM_SITE];
 
 			// we're CENTERING the first string AROUND sX, so calculate the starting X value
-			sX -= StringPixLength( wString, MAP_FONT) / 2;
+			sX -= StringPixLength(SAMSite, MAP_FONT) / 2;
 
 			// if within view region...render, else don't
 			if( ( sX > MAP_VIEW_START_X + MAP_VIEW_WIDTH  ) || ( sX < MAP_VIEW_START_X ) ||
@@ -6480,8 +6477,8 @@ static void ShowSAMSitesOnStrategicMap(void)
 			SetFontBackground(FONT_MCOLOR_BLACK);
 
 			// draw the text
-			gprintfdirty( sX, sY, wString );
-			mprintf( sX, sY, wString);
+			gprintfdirty(sX, sY, SAMSite);
+			mprintf(sX, sY, SAMSite);
 
 			// restore clip blits
 			RestoreClipRegionToFullScreen( );

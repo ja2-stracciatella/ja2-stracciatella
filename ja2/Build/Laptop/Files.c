@@ -855,10 +855,9 @@ static BOOLEAN HandleSpecialFiles(void)
 	// move through list and display
 	while( pTempString )
 	{
-				// copy over string
-		wcscpy( sString, pTempString->pString );
+		const wchar_t* String = pTempString->pString;
 
-		if( sString[ 0 ] == 0 )
+		if (String[0] == L'\0')
 		{
 			// on last page
 			fOnLastFilesPageFlag = TRUE;
@@ -932,10 +931,10 @@ static BOOLEAN HandleSpecialFiles(void)
 		}
 		// not far enough, advance
 
-		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
+		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
-			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString, 0, FALSE, IAN_WRAP_NO_SHADOW);
+			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, FALSE, IAN_WRAP_NO_SHADOW);
 
 			 fGoingOffCurrentPage = FALSE;
 		}
@@ -1380,10 +1379,8 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 		// move through list and display
 		while( pTempString )
 		{
-					// copy over string
-			wcscpy( sString, pTempString -> pString );
-
-			if( sString[ 0 ] == 0 )
+			const wchar_t* String = pTempString->pString;
+			if (String[0] == L'\0')
 			{
 				// on last page
 				fOnLastFilesPageFlag = TRUE;
@@ -1416,10 +1413,10 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			}
 
 			// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, sString) < MAX_FILE_MESSAGE_PAGE_SIZE)
+			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
-		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, sString, 0, FALSE, IAN_WRAP_NO_SHADOW);
+		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, FALSE, IAN_WRAP_NO_SHADOW);
 
 				 fGoingOffCurrentPage = FALSE;
 			}

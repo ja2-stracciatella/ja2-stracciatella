@@ -375,29 +375,30 @@ static void AddTextToMineBox(void)
 	AddMonoString( &hStringHandle, wString );
 
 	// check if mine is empty (abandoned) or running out
+	const wchar_t* MineStatus;
 	if (gMineStatus[ ubMineIndex ].fEmpty)
 	{
 		// abandonded
-		wcscpy( wString, pwMineStrings[ 5 ] );
+		MineStatus = pwMineStrings[5];
 	}
 	else
 	if (gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		// shut down
-		wcscpy( wString, pwMineStrings[ 6 ] );
+		MineStatus = pwMineStrings[6];
 	}
 	else
 	if (gMineStatus[ ubMineIndex ].fRunningOut)
 	{
 		// running out
-		wcscpy( wString, pwMineStrings[ 7 ] );
+		MineStatus = pwMineStrings[7];
 	}
 	else
 	{
 		// producing
-		wcscpy( wString, pwMineStrings[ 8 ] );
+		MineStatus = pwMineStrings[8];
 	}
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(&hStringHandle, MineStatus);
 
 
 	// if still producing
@@ -463,8 +464,7 @@ static void AddTextToMineBox(void)
 
 #ifdef _DEBUG
 	// dollar amount remaining in mine
-	wcscpy( wString, L"Remaining (DEBUG):");
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(&hStringHandle, L"Remaining (DEBUG):");
 
 	SPrintMoney(wString, GetTotalLeftInMine(ubMineIndex));
 	AddSecondColumnMonoString( &hStringHandle, wString );
@@ -596,8 +596,7 @@ static void AddCommonInfoToBox(void)
 		else
 		{
 			// no militia: don't bother displaying level breakdown
-			wcscpy( wString, L"0");
-			AddSecondColumnMonoString( &hStringHandle, wString );
+			AddSecondColumnMonoString(&hStringHandle, L"0");
 		}
 
 

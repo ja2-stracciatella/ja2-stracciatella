@@ -1422,7 +1422,6 @@ void DisplayTextForSpeckVideoPopUp( STR16 pString )
 	if( !gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
 		return;
 
-//	wcscpy(gsSpeckDialogueTextPopUp, pString);
 	//add the "" around the speech.
 	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"\"%ls\"", pString );
 
