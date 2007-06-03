@@ -272,20 +272,9 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 //		Assert( 0 );
 	}
 
-	//if the library has a path
-	if( strlen( LibFileHeader.sPathToLibrary ) != 0 )
-	{
-		pLibHeader->sLibraryPath = MemAlloc( strlen( LibFileHeader.sPathToLibrary ) + 1 );
-		strcpy( pLibHeader->sLibraryPath, LibFileHeader.sPathToLibrary );
-		Slashify(pLibHeader->sLibraryPath);
-	}
-	else
-	{
-		//else the library name does not contain a path ( most likely either an error or it is the default path )
-		pLibHeader->sLibraryPath = MemAlloc( 1 );
-		pLibHeader->sLibraryPath[0] = '\0';
-	}
-
+	pLibHeader->sLibraryPath = MemAlloc(strlen(LibFileHeader.sPathToLibrary) + 1);
+	strcpy(pLibHeader->sLibraryPath, LibFileHeader.sPathToLibrary);
+	Slashify(pLibHeader->sLibraryPath);
 
 	#ifdef JA2TESTVERSION
 		pLibHeader->uiTotalMemoryAllocatedForLibrary += strlen( LibFileHeader.sPathToLibrary ) + 1;
