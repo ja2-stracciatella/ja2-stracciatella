@@ -10,7 +10,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 {
 	UINT32 uiStartSeekAmount = (SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex;
 	return
-		LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, pNameString, uiStartSeekAmount,  SIZE_ITEM_NAME) &&
+		LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, pNameString, uiStartSeekAmount + SIZE_SHORT_ITEM_NAME,  SIZE_ITEM_NAME) &&
 		(
 			pInfoString == NULL ||
 			LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, pInfoString, uiStartSeekAmount + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO)

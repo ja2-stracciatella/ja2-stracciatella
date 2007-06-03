@@ -215,7 +215,6 @@ RenderFemaleGenderIcon(): complicated
 RenderInactiveTextFieldNode(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 RenderInventoryForCharacter(): callers
 RenderItemDescriptionBox(): code duplication
-RenderSkiAtmPanel(): empty
 RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
 RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 RenderTalkingMenu(): code duplication
