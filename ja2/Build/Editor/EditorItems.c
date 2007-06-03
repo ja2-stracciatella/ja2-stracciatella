@@ -201,7 +201,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	INT16 i, x, y;
 	UINT16 usCounter;
 	wchar_t pStr[100];//, pStr2[ 100 ];
-	wchar_t pItemName[SIZE_ITEM_NAME];
 	BOOLEAN fTypeMatch;
 	INT32 iEquipCount = 0;
 
@@ -441,8 +440,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{
-					LoadItemInfo( usCounter, pItemName, NULL );
-					wcslcpy(pStr, pItemName, lengthof(pStr));
+					wcslcpy(pStr, ItemNames[usCounter], lengthof(pStr));
 				}
 				else
 				{
@@ -1606,7 +1604,6 @@ void DisplayItemStatistics()
 {
 	BOOLEAN fUseSelectedItem;
 	INT16 usItemIndex;
-	wchar_t pItemName[SIZE_ITEM_NAME];
 
 	if( !eInfo.fActive )
 	{
@@ -1623,9 +1620,9 @@ void DisplayItemStatistics()
 	if( !eInfo.pusItemIndex )
 		return;
 	usItemIndex = eInfo.pusItemIndex[ fUseSelectedItem ? eInfo.sSelItemIndex : eInfo.sHilitedItemIndex ];
-	LoadItemInfo( usItemIndex, pItemName, NULL );
+	const wchar_t* ItemName = ItemNames[usItemIndex];
 
-	mprintf( 50 - StringPixLength( pItemName , SMALLCOMPFONT )/2, 403, pItemName );
+	mprintf(50 - StringPixLength(ItemName, SMALLCOMPFONT) / 2, 403, ItemName);
 	mprintf( 2, 410, L"Status Info Line 1");
 	mprintf( 2, 420, L"Status Info Line 2");
 	mprintf( 2, 430, L"Status Info Line 3");

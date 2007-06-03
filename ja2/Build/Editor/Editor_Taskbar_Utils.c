@@ -792,7 +792,7 @@ static void RenderSelectedItemBlownUp(void)
 	}
 	else
 	{
-		LoadItemInfo( gpItem->usItem, szItemName, NULL );
+		wcslcpy(szItemName, ItemNames[gpItem->usItem], lengthof(szItemName));
 	}
 	xp = sScreenX - (StringPixLength( szItemName, FONT10ARIAL ) - 40) / 2;
 	yp -= 10;

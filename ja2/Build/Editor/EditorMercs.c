@@ -2641,7 +2641,6 @@ static void RenderSelectedMercsInventory(void)
 	UINT8 *pSrc, *pDst;
 	INT32 xp, yp;
 	UINT32 uiSrcPitchBYTES, uiDstPitchBYTES;
-	wchar_t pItemName[100];
 	UINT8 ubFontColor;
 	if( gsSelectedMercID == -1 )
 		return;
@@ -2657,7 +2656,6 @@ static void RenderSelectedMercsInventory(void)
 				(UINT16 *)pSrc, uiSrcPitchBYTES, xp, yp, 0, 0, i<3 ? 22 : 44, 15, 0 );
 			UnLockVideoSurface( FRAME_BUFFER );
 			UnLockVideoSurface( guiMercInvPanelBuffers[i] );
-			LoadItemInfo( gpMercSlotItem[i]->usItem, pItemName, NULL );
 			//Render the text
 			switch( i )
 			{
@@ -2687,7 +2685,8 @@ static void RenderSelectedMercsInventory(void)
 				ubFontColor = FONT_YELLOW;
 			else
 				ubFontColor = FONT_WHITE;
-			DisplayWrappedString( (UINT16)xp, (UINT16)yp, 60, 2, SMALLCOMPFONT, ubFontColor, pItemName, 0, FALSE, LEFT_JUSTIFIED );
+			const wchar_t* ItemName = ItemNames[gpMercSlotItem[i]->usItem];
+			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, ItemName, 0, FALSE, LEFT_JUSTIFIED);
 		}
 	}
 }
