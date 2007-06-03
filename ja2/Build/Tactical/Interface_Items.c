@@ -2534,22 +2534,12 @@ static BOOLEAN ReloadItemDesc(void)
 	//
 
 	//if the player is extracting money from the players account, use a different item name and description
-	if( gfAddingMoneyToMercFromPlayersAccount && gpItemDescObject->usItem == MONEY )
+	UINT16 Item = gpItemDescObject->usItem;
+	if (Item == MONEY && gfAddingMoneyToMercFromPlayersAccount)
 	{
-		if ( !LoadItemInfo( MONEY_FOR_PLAYERS_ACCOUNT, gzItemName, gzItemDesc ) )
-		{
-			return( FALSE );
-		}
+		Item = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
-	else
-	{
-		if ( !LoadItemInfo( gpItemDescObject->usItem, gzItemName, gzItemDesc ) )
-		{
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
+	return LoadItemInfo(Item, gzItemName, gzItemDesc);
 }
 
 
