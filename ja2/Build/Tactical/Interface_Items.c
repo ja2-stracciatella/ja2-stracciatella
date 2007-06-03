@@ -2549,22 +2549,6 @@ static BOOLEAN ReloadItemDesc(void)
 		}
 	}
 
-/*
-	if (Item[ gpItemDescObject->usItem ].usItemClass & IC_WEAPON)
-	{
-		// load item pros and cons
-		if ( !LoadItemProsAndCons( gpItemDescObject->usItem, gzItemPros, gzItemCons ) )
-		{
-			return( FALSE );
-		}
-	}
-	else
-	{
-		wcscpy( gzItemPros, L"" );
-		wcscpy( gzItemCons, L"" );
-	}
-	*/
-
 	return( TRUE );
 }
 

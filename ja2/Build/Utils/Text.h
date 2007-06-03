@@ -1010,7 +1010,6 @@ extern	const wchar_t *zMarksMapScreenText[];
 
 BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString );
 extern void LoadAllExternalText( void );
-BOOLEAN LoadItemProsAndCons( UINT16 usIndex, STR16 pProsString, STR16 pConsString );
 
 enum
 {
