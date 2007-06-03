@@ -448,28 +448,28 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				{
 					if( i == PRESSURE_ACTION_ID )
 					{
-						swprintf(pStr, lengthof(pStr), L"Pressure Action");
+						wcslcpy(pStr, L"Pressure Action", lengthof(pStr));
 					}
 					else if( i < 2 )
 					{
 						if( usCounter == SWITCH )
-							swprintf(pStr, lengthof(pStr), L"Panic Trigger1");
+							wcslcpy(pStr, L"Panic Trigger1", lengthof(pStr));
 						else
-							swprintf(pStr, lengthof(pStr), L"Panic Action1");
+							wcslcpy(pStr, L"Panic Action1", lengthof(pStr));
 					}
 					else if( i < 4 )
 					{
 						if( usCounter == SWITCH )
-							swprintf(pStr, lengthof(pStr), L"Panic Trigger2");
+							wcslcpy(pStr, L"Panic Trigger2", lengthof(pStr));
 						else
-							swprintf(pStr, lengthof(pStr), L"Panic Action2");
+							wcslcpy(pStr, L"Panic Action2", lengthof(pStr));
 					}
 					else if( i < 6 )
 					{
 						if( usCounter == SWITCH )
-							swprintf(pStr, lengthof(pStr), L"Panic Trigger3");
+							wcslcpy(pStr, L"Panic Trigger3", lengthof(pStr));
 						else
-							swprintf(pStr, lengthof(pStr), L"Panic Action3");
+							wcslcpy(pStr, L"Panic Action3", lengthof(pStr));
 					}
 					else
 					{

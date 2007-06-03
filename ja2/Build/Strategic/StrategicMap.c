@@ -1541,13 +1541,6 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	SetProgressBarTextDisplayFlag( 0, TRUE, TRUE, TRUE );
 	#endif
 
-	//CreateProgressBar( 0, 160, 380, 480, 400 );
-	//#ifdef JA2TESTVERSION
-	//	//add more detailed progress bar
-	//	DefineProgressBarPanel( 0, 65, 79, 94, 130, 350, 510, 430 );
-	//	swprintf( str, L"Loading map:  %ls", bFilename );
-	//	SetProgressBarTitle( 0, str, FONT12POINT1, FONT_BLACK, FONT_BLACK );
-	//#endif
 	if( !LoadWorld( bFilename ) )
 	{
 		return( FALSE );
@@ -1863,33 +1856,33 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 			if( fError )
 			{ //strategic insertion failed because it expected to find an entry point.  This is likely
 				//a missing part of the map or possible fault in strategic movement costs, traversal logic, etc.
-				wchar_t szEntry[10];
+				const wchar_t* Entry;
 				wchar_t szSector[10];
 				INT16 sGridNo;
 				GetLoadedSectorString(szSector, lengthof(szSector));
 				if( gMapInformation.sNorthGridNo != -1 )
 				{
-					swprintf( szEntry, lengthof(szEntry), L"north" );
+					Entry = L"north";
 					sGridNo = gMapInformation.sNorthGridNo;
 				}
 				else if( gMapInformation.sEastGridNo != -1 )
 				{
-					swprintf( szEntry, lengthof(szEntry), L"east" );
+					Entry = L"east";
 					sGridNo = gMapInformation.sEastGridNo;
 				}
 				else if( gMapInformation.sSouthGridNo != -1 )
 				{
-					swprintf( szEntry, lengthof(szEntry), L"south" );
+					Entry = L"south";
 					sGridNo = gMapInformation.sSouthGridNo;
 				}
 				else if( gMapInformation.sWestGridNo != -1 )
 				{
-					swprintf( szEntry, lengthof(szEntry), L"west" );
+					Entry = L"west";
 					sGridNo = gMapInformation.sWestGridNo;
 				}
 				else if( gMapInformation.sCenterGridNo != -1 )
 				{
-					swprintf( szEntry, lengthof(szEntry), L"center" );
+					Entry = L"center";
 					sGridNo = gMapInformation.sCenterGridNo;
 				}
 				else
@@ -1903,19 +1896,19 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				switch( pSoldier->ubStrategicInsertionCode )
 				{
 					case INSERTION_CODE_NORTH:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a north entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a north entrypoint -- substituting  %ls entrypoint for %ls.", szSector, Entry, pSoldier->name);
 						break;
 					case INSERTION_CODE_EAST:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a east entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a east entrypoint -- substituting  %ls entrypoint for %ls.", szSector, Entry, pSoldier->name);
 						break;
 					case INSERTION_CODE_SOUTH:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a south entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a south entrypoint -- substituting  %ls entrypoint for %ls.", szSector, Entry, pSoldier->name);
 						break;
 					case INSERTION_CODE_WEST:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a west entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a west entrypoint -- substituting  %ls entrypoint for %ls.", szSector, Entry, pSoldier->name);
 						break;
 					case INSERTION_CODE_CENTER:
-						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a center entrypoint -- substituting  %ls entrypoint for %ls.", szSector, szEntry, pSoldier->name);
+						ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a center entrypoint -- substituting  %ls entrypoint for %ls.", szSector, Entry, pSoldier->name);
 						break;
 				}
 			}
@@ -1954,7 +1947,7 @@ static void InitializeStrategicMapSectorTownNames(void)
 void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed )
 {
 #ifdef JA2DEMO
-	swprintf(zString, Length, L"Demoville");
+	wcslcpy(zString, L"Demoville", Length);
 #else
 	SECTORINFO *pSector = NULL;
 	UNDERGROUND_SECTORINFO *pUnderground;

@@ -4391,8 +4391,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ YESNOLIE_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNOLIE, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_MEDICAL_REQUESTOR_2:
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ FREE_MEDICAL_PROMPT ] );
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[FREE_MEDICAL_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_MEDICAL_REQUESTOR:
 			iTemp = (INT32) CalcMedicalCost( ubProfileID );
@@ -4414,12 +4413,10 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
 			break;
 		case NPC_ACTION_TRIGGER_MARRY_DARYL_PROMPT:
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ MARRY_DARYL_PROMPT ] );
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[MARRY_DARYL_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_KROTT_REQUESTOR:
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ SPARE_KROTT_PROMPT ] );
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[SPARE_KROTT_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		default:
 			break;

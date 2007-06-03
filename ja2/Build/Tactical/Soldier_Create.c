@@ -1065,31 +1065,38 @@ static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIE
 
 	//Kris:  November 10, 1997
 	//Expanded the default names based on team.
+	const wchar_t* Name;
 	switch( pCreateStruct->bTeam )
 	{
-		case ENEMY_TEAM:		swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ ENEMY_TEAM_MERC_NAME ] );		break;
-		case MILITIA_TEAM:	swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ MILITIA_TEAM_MERC_NAME ] );	break;
+		case ENEMY_TEAM:    Name = TacticalStr[ENEMY_TEAM_MERC_NAME];   break;
+		case MILITIA_TEAM:  Name = TacticalStr[MILITIA_TEAM_MERC_NAME]; break;
+
 		case CIV_TEAM:
 			if( pSoldier->ubSoldierClass == SOLDIER_CLASS_MINER )
 			{
-				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CIV_TEAM_MINER_NAME ] );
+				Name = TacticalStr[CIV_TEAM_MINER_NAME];
 			}
 			else
 			{
-				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CIV_TEAM_MERC_NAME ] );
+				Name = TacticalStr[CIV_TEAM_MERC_NAME];
 			}
 			break;
+
 		case CREATURE_TEAM:
 			if( pSoldier->ubBodyType == BLOODCAT )
 			{
-				swprintf( pSoldier->name, lengthof(pSoldier->name), gzLateLocalizedString[ 36 ] );
+				Name = gzLateLocalizedString[36];
 			}
 			else
 			{
-				swprintf( pSoldier->name, lengthof(pSoldier->name), TacticalStr[ CREATURE_TEAM_MERC_NAME ] );	break;
+				Name = TacticalStr[CREATURE_TEAM_MERC_NAME];
 			}
 			break;
+
+		default: goto no_name; // XXX fishy
 	}
+	wcslcpy(pSoldier->name, Name, lengthof(pSoldier->name));
+no_name:
 
 	//Generate colors for soldier based on the body type.
 	GeneratePaletteForSoldier( pSoldier, pCreateStruct->ubSoldierClass );

@@ -4290,8 +4290,6 @@ static void WriteQuantityAndAttachments(const OBJECTTYPE* pObject, INT32 yp)
 void DebugSoldierPage4( )
 {
 	UINT32						uiMercFlags;
-	wchar_t szOrders[20];
-	wchar_t szAttitude[20];
 	UINT16						usSoldierIndex;
 	UINT8							ubLine;
 
@@ -4325,27 +4323,29 @@ void DebugSoldierPage4( )
 		if( pSoldier->bTeam != OUR_TEAM )
 		{
 			SOLDIERINITNODE		*pNode;
+			const wchar_t* Orders;
 			switch( pSoldier->bOrders )
 			{
-				case STATIONARY:	swprintf( szOrders, lengthof(szOrders), L"STATIONARY" );			break;
-				case ONGUARD:			swprintf( szOrders, lengthof(szOrders), L"ON GUARD" );				break;
-				case ONCALL:			swprintf( szOrders, lengthof(szOrders), L"ON CALL" );					break;
-				case SEEKENEMY:		swprintf( szOrders, lengthof(szOrders), L"SEEK ENEMY" );			break;
-				case CLOSEPATROL:	swprintf( szOrders, lengthof(szOrders), L"CLOSE PATROL" );		break;
-				case FARPATROL:		swprintf( szOrders, lengthof(szOrders), L"FAR PATROL" );			break;
-				case POINTPATROL:	swprintf( szOrders, lengthof(szOrders), L"POINT PATROL" );		break;
-				case RNDPTPATROL:	swprintf( szOrders, lengthof(szOrders), L"RND PT PATROL" );		break;
-				default:					swprintf( szOrders, lengthof(szOrders), L"UNKNOWN" );					break;
+				case STATIONARY:  Orders = L"STATIONARY";    break;
+				case ONGUARD:     Orders = L"ON GUARD";      break;
+				case ONCALL:      Orders = L"ON CALL";       break;
+				case SEEKENEMY:   Orders = L"SEEK ENEMY";    break;
+				case CLOSEPATROL: Orders = L"CLOSE PATROL";  break;
+				case FARPATROL:   Orders = L"FAR PATROL";    break;
+				case POINTPATROL: Orders = L"POINT PATROL";  break;
+				case RNDPTPATROL: Orders = L"RND PT PATROL"; break;
+				default:          Orders = L"UNKNOWN";       break;
 			}
+			const wchar_t* Attitude;
 			switch( pSoldier->bAttitude )
 			{
-				case DEFENSIVE:		swprintf( szAttitude, lengthof(szAttitude), L"DEFENSIVE" );			break;
-				case BRAVESOLO:		swprintf( szAttitude, lengthof(szAttitude), L"BRAVE SOLO" );		break;
-				case BRAVEAID:		swprintf( szAttitude, lengthof(szAttitude), L"BRAVE AID" );			break;
-				case AGGRESSIVE:	swprintf( szAttitude, lengthof(szAttitude), L"AGGRESSIVE" );		break;
-				case CUNNINGSOLO:	swprintf( szAttitude, lengthof(szAttitude), L"CUNNING SOLO" );	break;
-				case CUNNINGAID:	swprintf( szAttitude, lengthof(szAttitude), L"CUNNING AID"	);	break;
-				default:					swprintf( szAttitude, lengthof(szAttitude), L"UNKNOWN" );				break;
+				case DEFENSIVE:   Attitude = L"DEFENSIVE";    break;
+				case BRAVESOLO:   Attitude = L"BRAVE SOLO";   break;
+				case BRAVEAID:    Attitude = L"BRAVE AID";    break;
+				case AGGRESSIVE:  Attitude = L"AGGRESSIVE";   break;
+				case CUNNINGSOLO: Attitude = L"CUNNING SOLO"; break;
+				case CUNNINGAID:  Attitude = L"CUNNING AID";  break;
+				default:          Attitude = L"UNKNOWN";      break;
 			}
 			pNode = gSoldierInitHead;
 			while( pNode )
@@ -4358,12 +4358,12 @@ void DebugSoldierPage4( )
 			if( pNode )
 			{
 				gprintf( 0, LINE_HEIGHT * ubLine, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
-					szOrders, szAttitude, pNode->pBasicPlacement->bRelativeEquipmentLevel,
+					Orders, Attitude, pNode->pBasicPlacement->bRelativeEquipmentLevel,
 					pNode->pBasicPlacement->bRelativeAttributeLevel );
 			}
 			else
 			{
-				gprintf( 0, LINE_HEIGHT * ubLine, L"%ls, %ls", szOrders, szAttitude );
+				gprintf(0, LINE_HEIGHT * ubLine, L"%ls, %ls", Orders, Attitude);
 			}
 			ubLine++;
 		}

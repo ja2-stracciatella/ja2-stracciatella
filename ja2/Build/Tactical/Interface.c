@@ -534,7 +534,6 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	SOLDIERTYPE					*pSoldier = NULL;
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	UINT32							uiActionImages;
-	wchar_t							zActionString[ 50 ];
 	BOOLEAN							fDisableAction = FALSE;
 
 	// Erase other menus....
@@ -692,11 +691,12 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		}
 	}
 
+	const wchar_t* Action;
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		// Until we get mounted weapons...
 		uiActionImages = CANCEL_IMAGES;
-		swprintf( zActionString, lengthof(zActionString), TacticalStr[ NOT_APPLICABLE_POPUPTEXT ] );
+		Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		fDisableAction = TRUE;
 	}
 	else
@@ -704,12 +704,12 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		if ( pSoldier->inv[ HANDPOS ].usItem == TOOLKIT )
 		{
 			uiActionImages = TOOLKITACTIONC_IMAGES;
-			swprintf( zActionString, lengthof(zActionString), TacticalStr[ NOT_APPLICABLE_POPUPTEXT ] );
+			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
 		else if ( pSoldier->inv[ HANDPOS ].usItem == WIRECUTTERS )
 		{
 			uiActionImages = WIRECUTACTIONC_IMAGES;
-			swprintf( zActionString, lengthof(zActionString), TacticalStr[ NOT_APPLICABLE_POPUPTEXT ] );
+			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
 		else
 		{
@@ -717,40 +717,34 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 			switch( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass )
 			{
 				case IC_PUNCH:
-
 					uiActionImages = PUNCHACTIONC_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ USE_HANDTOHAND_POPUPTEXT ] );
+					Action = TacticalStr[USE_HANDTOHAND_POPUPTEXT];
 					break;
 
 				case IC_GUN:
-
 					uiActionImages = TARGETACTIONC_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ USE_FIREARM_POPUPTEXT ] );
+					Action = TacticalStr[USE_FIREARM_POPUPTEXT];
 					break;
 
 				case IC_BLADE:
-
 					uiActionImages = KNIFEACTIONC_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ USE_BLADE_POPUPTEXT ] );
+					Action = TacticalStr[USE_BLADE_POPUPTEXT];
 					break;
 
 				case IC_GRENADE:
 				case IC_BOMB:
-
 					uiActionImages = BOMBACTIONC_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ USE_EXPLOSIVE_POPUPTEXT ] );
+					Action = TacticalStr[USE_EXPLOSIVE_POPUPTEXT];
 					break;
 
 				case IC_MEDKIT:
-
 					uiActionImages = AIDACTIONC_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ USE_MEDKIT_POPUPTEXT ] );
+					Action = TacticalStr[USE_MEDKIT_POPUPTEXT];
 					break;
 
 				default:
-
 					uiActionImages = CANCEL_IMAGES;
-					swprintf( zActionString, lengthof(zActionString), TacticalStr[ NOT_APPLICABLE_POPUPTEXT ] );
+					Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 					fDisableAction = TRUE;
 					break;
 			}
@@ -771,7 +765,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		return;
 	}
 	//SetButtonSavedRect( iActionIcons[ ACTIONC_ICON ] );
-	SetButtonFastHelpText( iActionIcons[ ACTIONC_ICON ], zActionString );
+	SetButtonFastHelpText(iActionIcons[ACTIONC_ICON], Action);
 	ButtonList[ iActionIcons[ ACTIONC_ICON ] ]->UserData[0] = (UINT32)pUIEvent;
 
 	if ( fDisableAction )
@@ -1501,26 +1495,26 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	{
 		if ( gfUIMouseOnValidCatcher == 1 && pSoldier->ubID == gubUIValidCatcherID )
 		{
-			swprintf( NameStr, lengthof(NameStr), TacticalStr[ CATCH_STR ] );
-			FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			const wchar_t* Catch = TacticalStr[CATCH_STR];
+			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Catch, TINYFONT1, &sX, &sY);
+			gprintfdirty(sX, sY, Catch);
+			mprintf(sX, sY, Catch);
       fRaiseName = TRUE;
 		}
 		else if ( gfUIMouseOnValidCatcher == 3 && pSoldier->ubID == gubUIValidCatcherID )
 		{
-			swprintf( NameStr, lengthof(NameStr), TacticalStr[ RELOAD_STR ] );
-			FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			const wchar_t* Reload = TacticalStr[RELOAD_STR];
+			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Reload, TINYFONT1, &sX, &sY);
+			gprintfdirty(sX, sY, Reload);
+			mprintf(sX, sY, Reload);
       fRaiseName = TRUE;
 		}
 		else if ( gfUIMouseOnValidCatcher == 4 && pSoldier->ubID == gubUIValidCatcherID )
 		{
-			swprintf( NameStr, lengthof(NameStr), pMessageStrings[ MSG_PASS ] );
-			FindFontCenterCoordinates( sXPos, (INT16)(sYPos ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			const wchar_t* Pass = pMessageStrings[MSG_PASS];
+			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Pass, TINYFONT1, &sX, &sY);
+			gprintfdirty(sX, sY, Pass);
+			mprintf(sX, sY, Pass);
       fRaiseName = TRUE;
 		}
     else if ( pSoldier->bAssignment >= ON_DUTY )
@@ -1610,10 +1604,10 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 				SetFontBackground( FONT_MCOLOR_BLACK );
 				SetFontForeground( FONT_MCOLOR_WHITE );
 
-				swprintf( NameStr, lengthof(NameStr), TacticalStr[ GIVE_STR ] );
-				FindFontCenterCoordinates( sXPos, (INT16)(sYPos + 10 ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-				gprintfdirty( sX, sY, NameStr );
-				mprintf( sX, sY, NameStr );
+				const wchar_t* Give = TacticalStr[GIVE_STR];
+				FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, Give, TINYFONT1, &sX, &sY);
+				gprintfdirty(sX, sY, Give);
+				mprintf(sX, sY, Give);
 			}
 			else
 			{
@@ -1639,10 +1633,10 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	    SetFontBackground( FONT_MCOLOR_BLACK );
 	    SetFontForeground( FONT_YELLOW );
 
-			swprintf( NameStr, lengthof(NameStr), gzLateLocalizedString[ 15 ] );
-			FindFontCenterCoordinates( sXPos, (INT16)(sYPos + 10 ), (INT16)(80 ), 1, NameStr, TINYFONT1, &sX, &sY );
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			const wchar_t* Roof = gzLateLocalizedString[15];
+			FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, Roof, TINYFONT1, &sX, &sY);
+			gprintfdirty(sX, sY, Roof);
+			mprintf(sX, sY, Roof);
     }
 
 		pStr = GetSoldierHealthString( pSoldier );

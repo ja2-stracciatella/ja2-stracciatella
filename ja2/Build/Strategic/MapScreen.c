@@ -1559,9 +1559,9 @@ static void DrawCharHealth(INT16 sCharNum)
 
 		// slash
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		wcscpy( sString, L"/" );
-		DrawString( sString, usX, CHAR_HP_Y, CHAR_FONT );
-		usX += StringPixLength( sString, CHAR_FONT );
+		const wchar_t* Slash = L"/";
+		DrawString(Slash, usX, CHAR_HP_Y, CHAR_FONT);
+		usX += StringPixLength(Slash, CHAR_FONT);
 
 
 		if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeHealthTime)&& ( pSoldier->uiChangeHealthTime != 0 ) )
@@ -1588,9 +1588,9 @@ static void DrawCharHealth(INT16 sCharNum)
 	{
 		// POW - health unknown
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		swprintf( sString, lengthof(sString), pPOWStrings[ 1 ] );
-		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, sString, CHAR_FONT, &usX, &usY);
-		DrawString(sString, usX, CHAR_HP_Y, CHAR_FONT);
+		const wchar_t* POW = pPOWStrings[1];
+		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, POW, CHAR_FONT, &usX, &usY);
+		DrawString(POW, usX, CHAR_HP_Y, CHAR_FONT);
 	}
 
 

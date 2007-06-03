@@ -3239,9 +3239,9 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 		{
 			SetFontForeground( FONT_MCOLOR_DKGRAY );
 		}
-		swprintf( pStr, lengthof(pStr), TacticalStr[ ITEMPOOL_POPUP_PREV_STR ] );
-		gprintfdirty( sFontX, sY, pStr );
-		mprintf( sFontX, sY, pStr );
+		const wchar_t* Prev = TacticalStr[ITEMPOOL_POPUP_PREV_STR];
+		gprintfdirty(sFontX, sY, Prev);
+		mprintf(sFontX, sY, Prev);
 		sY += GetFontHeight( SMALLFONT1 ) - 2;
 		cnt++;
 	}
@@ -3292,9 +3292,9 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 				{
 					SetFontForeground( FONT_MCOLOR_DKGRAY );
 				}
-				swprintf( pStr, lengthof(pStr), TacticalStr[ ITEMPOOL_POPUP_MORE_STR ] );
-				gprintfdirty( sFontX, sY, pStr );
-				mprintf( sFontX, sY, pStr );
+				const wchar_t* More = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
+				gprintfdirty(sFontX, sY, More);
+				mprintf(sFontX, sY, More);
 			}
 	}
 

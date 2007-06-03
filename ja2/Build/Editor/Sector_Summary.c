@@ -2064,10 +2064,6 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		//swprintf(str, L"Loading map:  %ls...", gszDisplayName);
-		//mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
-		//InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
-
 		CreateProgressBar( 0, MAP_LEFT+5, MAP_BOTTOM+110, 573, MAP_BOTTOM+120 );
 
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, 318, 578, 356 );
@@ -2705,7 +2701,7 @@ static void ExtractTempFilename(void)
 		gfOverrideDirty = TRUE;
 	}
 	if( !wcslen( str ) )
-		swprintf(gszDisplayName, lengthof(gszDisplayName), L"test.dat");
+		wcslcpy(gszDisplayName, L"test.dat", lengthof(gszDisplayName));
 }
 
 void ApologizeOverrideAndForceUpdateEverything()
@@ -2726,8 +2722,8 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SetFont( HUGEFONT );
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );
-	swprintf(str, lengthof(str), L"MAJOR VERSION UPDATE");
-	mprintf( 320 - StringPixLength( str, HUGEFONT )/2, 105, str );
+	const wchar_t* UpdateInfo = L"MAJOR VERSION UPDATE";
+	mprintf(320 - StringPixLength(UpdateInfo, HUGEFONT) / 2, 105, UpdateInfo);
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);

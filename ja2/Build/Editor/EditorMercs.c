@@ -2584,10 +2584,10 @@ void UpdateMercsInfo()
 						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move after you %ls the door.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_GRIDNO:
-						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move to.");
+						wcslcpy(str, L"Click on the gridno where you wish to move to.", lengthof(str));
 						break;
 					case SCHEDULE_INSTRUCTIONS_SLEEP:
-						swprintf(str, lengthof(str), L"Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up.");
+						wcslcpy(str, L"Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up.", lengthof(str));
 					default:
 						return;
 				}
@@ -3187,12 +3187,12 @@ void RenderMercStrings()
 						SetFontForeground( FONT_DKRED );
 					else
 						SetFontForeground( FONT_RED );
-					swprintf(str, lengthof(str), L"Patrol orders with no waypoints");
-					FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
+					const wchar_t* Msg = L"Patrol orders with no waypoints";
+					FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
 					if( sY < 352 )
 					{
-						gprintfdirty( sX, sY, str );
-						mprintf( sX, sY, str );
+						gprintfdirty(sX, sY, Msg);
+						mprintf(sX, sY, Msg);
 					}
 					sYPos += 10;
 				}
@@ -3203,12 +3203,12 @@ void RenderMercStrings()
 					SetFontForeground( FONT_DKRED );
 				else
 					SetFontForeground( FONT_RED );
-				swprintf(str, lengthof(str), L"Waypoints with no patrol orders");
-				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
+				const wchar_t* Msg = L"Waypoints with no patrol orders";
+				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, str );
-					mprintf( sX, sY, str );
+					gprintfdirty(sX, sY, Msg);
+					mprintf(sX, sY, Msg);
 				}
 				sYPos += 10;
 			}

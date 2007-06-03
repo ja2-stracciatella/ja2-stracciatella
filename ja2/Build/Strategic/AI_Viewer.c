@@ -1961,7 +1961,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 							{
 								if( pFinalWaypoint->x == 3 && pFinalWaypoint->y == 16 )
 								{
-									swprintf(wSubString, lengthof(wSubString), L" - group returning to pool.");
+									wcslcpy(wSubString, L" - group returning to pool.", lengthof(wSubString));
 								}
 								else
 								{
@@ -1970,7 +1970,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 							}
 							else
 							{
-								swprintf(wSubString, lengthof(wSubString), L" - can't determine target sector");
+								wcslcpy(wSubString, L" - can't determine target sector", lengthof(wSubString));
 							}
 						}
 						wcscat( wString, wSubString );
@@ -2003,7 +2003,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 								{
 									if( pFinalWaypoint->x == 3 && pFinalWaypoint->y == 16 )
 									{
-										swprintf(wSubString, lengthof(wSubString), L" - group returning to pool.");
+										wcslcpy(wSubString, L" - group returning to pool.", lengthof(wSubString));
 									}
 									else
 									{
@@ -2012,7 +2012,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 								}
 								else
 								{
-									swprintf(wSubString, lengthof(wSubString), L" (LOST GROUP!)");
+									wcslcpy(wSubString, L" (LOST GROUP!)", lengthof(wSubString));
 								}
 								wcscat( wString, wSubString );
 							}

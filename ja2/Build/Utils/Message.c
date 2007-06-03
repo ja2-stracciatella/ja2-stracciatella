@@ -209,7 +209,7 @@ static BOOLEAN CreateStringVideoOverlay(ScrollStringSt* pStringSt, UINT16 usX, U
 	VideoOverlayDesc.ubFontFore  = (unsigned char)pStringSt->usColor;
 	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-	swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), pStringSt->pString16 );
+	wcslcpy(VideoOverlayDesc.pzText, pStringSt->pString16, lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitString;
 	pStringSt->iVideoOverlay =  RegisterVideoOverlay( ( VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
 

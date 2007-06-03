@@ -1507,8 +1507,7 @@ void HandleEquipmentLeftInOmerta( UINT32 uiSlotIndex )
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), L"A departing merc has left their equipment in Omerta." );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"A departing merc has left their equipment in Omerta.");
 		}
 	}
 
@@ -1550,8 +1549,7 @@ void HandleEquipmentLeftInDrassen( UINT32 uiSlotIndex )
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), L"A departing merc has left their equipment in Drassen." );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"A departing merc has left their equipment in Drassen.");
 		}
 	}
 

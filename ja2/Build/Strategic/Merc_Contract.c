@@ -1069,7 +1069,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		else
 		{
 			// Set string for generic button
-			swprintf( gzUserDefinedButton2, lengthof(gzUserDefinedButton2), L"B13" );
+			wcslcpy(gzUserDefinedButton2, L"B13", lengthof(gzUserDefinedButton2));
 
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{
@@ -1099,7 +1099,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		else
 		{
 			// Set string for generic button
-			swprintf( gzUserDefinedButton2, lengthof(gzUserDefinedButton2), L"A9" );
+			wcslcpy(gzUserDefinedButton2, L"A9", lengthof(gzUserDefinedButton2));
 
 			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
 			{

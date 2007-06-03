@@ -1498,8 +1498,6 @@ static void DisplayQuestList(void)
 
 		//Display Quest status text
 		DisplayWrappedString( QUEST_DBS_FIRST_COL_STATUS_X, usPosY, QUEST_DBS_STATUS_COL_WIDTH, 2, QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, QuestStates[ gubQuest[ usLoop1 ] ], FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
-//		swprintf( sTemp, L"%02d", gubQuest[ usLoop1 ] );
-//		DrawTextToScreen( sTemp, QUEST_DBS_FIRST_COL_STATUS_X, usPosY, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED	);
 
 		usPosY += usTextHeight;
 		usCount++;
@@ -3900,13 +3898,13 @@ static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Leng
 	if( pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP )
 	{
 		//the soldier is on schedule
-		swprintf( pzText, Length, L"On Schdl.");
+		wcslcpy(pzText, L"On Schdl.", Length);
 	}
 
 	//if the soldier is dead
 	else if( gMercProfiles[ usProfileID ].bMercStatus == MERC_IS_DEAD )
 	{
-		swprintf( pzText, Length, L"Dead");
+		wcslcpy(pzText, L"Dead", Length);
 	}
 
 	//the soldier is in this sector

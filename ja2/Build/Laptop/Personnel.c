@@ -908,7 +908,7 @@ static void DisplayCharStats(INT32 iId)
 				}
 				else
 				{
-					swprintf(sString, lengthof(sString), pPOWStrings[1]);
+					wcslcpy(sString, pPOWStrings[1], lengthof(sString));
 				}
 				mprintf(pPersonnelScreenPoints[iCounter].x, pPersonnelScreenPoints[iCounter].y, pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
 				FindFontRightCoordinates(pPersonnelScreenPoints[iCounter].x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);

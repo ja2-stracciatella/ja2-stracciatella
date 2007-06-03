@@ -496,7 +496,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 			swprintf( pGameDesc, lengthof(pGameDesc), L"%ls%03d", pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber );
 		else
 #endif
-			swprintf( pGameDesc, lengthof(pGameDesc), pMessageStrings[ MSG_QUICKSAVE_NAME ] );
+			wcslcpy(pGameDesc, pMessageStrings[MSG_QUICKSAVE_NAME], lengthof(pGameDesc));
 	}
 
 	//If there was no string, add one

@@ -331,21 +331,6 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 		( INT16 )( 3 + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) )
 	, sString );
 
-/*
-	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.ubNumberOfObjects > 1 )
-	{
-		swprintf( sString, L"x%d",  pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.ubNumberOfObjects );
-
-		// find font right coord
-		FindFontRightCoordinates( ( INT16 )( ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X + MAP_INVENTORY_POOL_SLOT_START_X - 1 + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) ),0, MAP_INVEN_SPACE_BTWN_SLOTS - 10, 0, sString, MAP_IVEN_FONT, &sX, &sY );
-
-		sY = ( INT16 )( 3 + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) ) - 7;
-
-		// print string
-		mprintf( sX, sY, sString );
-	}
-*/
-
 	SetFontDestBuffer( FRAME_BUFFER, 0,0, 640, 480, FALSE );
 
 	return( TRUE );
@@ -366,19 +351,6 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 			{
 				GetHelpTextForItem( pStr , lengthof(pStr), &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o ), NULL );
 				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
-
-				/*
-				// set text for current item
-				if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.usItem == MONEY )
-				{
-					swprintf( pStr, L"$%ld", pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.uiMoneyAmount );
-					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), pStr );
-				}
-				else
-				{
-					SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), ItemNames[ pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.usItem ] );
-				}
-				*/
 			}
 			else
 			{
@@ -1774,20 +1746,17 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 static void DrawTextOnSectorInventory(void)
 {
 	INT16 sX = 0, sY = 0;
-	CHAR16 sString[ 64 ];
-
-	// parse the string
-	swprintf( sString, lengthof(sString), zMarksMapScreenText[ 11 ] );
 
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
 
-	FindFontCenterCoordinates( MAP_INVENTORY_POOL_SLOT_START_X, MAP_INVENTORY_POOL_SLOT_START_Y - 20,  630 - MAP_INVENTORY_POOL_SLOT_START_X, GetFontHeight( FONT14ARIAL ), sString, FONT14ARIAL, &sX, &sY );
+	const wchar_t* InvText = zMarksMapScreenText[11];
+	FindFontCenterCoordinates(MAP_INVENTORY_POOL_SLOT_START_X, MAP_INVENTORY_POOL_SLOT_START_Y - 20,  630 - MAP_INVENTORY_POOL_SLOT_START_X, GetFontHeight(FONT14ARIAL), InvText, FONT14ARIAL, &sX, &sY);
 
 	SetFont( FONT14ARIAL );
 	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK );
 
-	mprintf( sX, sY, sString );
+	mprintf(sX, sY, InvText);
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
 

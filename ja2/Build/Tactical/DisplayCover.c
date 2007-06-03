@@ -997,23 +997,6 @@ static BOOLEAN IsTheRoofVisible(INT16 sGridNo)
 	return( FALSE );
 }
 
-#ifdef JA2TESTVERSION
-/*
-void DisplayLosAndDisplayCoverUsageScreenMsg()
-{
-	CHAR16	zString[512];
-
-	swprintf( zString, L"Display Cover: %d", gJa25SaveStruct.uiDisplayCoverCounter );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
-
-	swprintf( zString, L"LOS: %d", gJa25SaveStruct.uiDisplayLosCounter );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
-
-	swprintf( zString, L"Gun Range: %d", gJa25SaveStruct.uiDisplayGunRangeCounter );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
-}
-*/
-#endif
 
 void ChangeSizeOfDisplayCover( INT32 iNewSize )
 {

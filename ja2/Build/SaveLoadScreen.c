@@ -1275,10 +1275,12 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			//Create the string for the current location
 			if( SaveGameHeader.sSectorX == -1 && SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ < 0 )
 			{
+				const wchar_t* Location;
 				if( ( SaveGameHeader.uiDay * NUM_SEC_IN_DAY + SaveGameHeader.ubHour * NUM_SEC_IN_HOUR + SaveGameHeader.ubMin * NUM_SEC_IN_MIN ) <= STARTING_TIME )
-					swprintf( zLocationString, lengthof(zLocationString), gpStrategicString[ STR_PB_NOTAPPLICABLE_ABBREVIATION ] );
+					Location = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 				else
-					swprintf( zLocationString, lengthof(zLocationString), gzLateLocalizedString[14] );
+					Location = gzLateLocalizedString[14];
+				wcslcpy(zLocationString, Location, lengthof(zLocationString));
 			}
 			else
 			{

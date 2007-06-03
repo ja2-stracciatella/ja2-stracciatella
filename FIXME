@@ -5,6 +5,7 @@ ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
+AddStructureToWorld(): complicated, PTR as parameter
 AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
 BLOODTIME: unused
@@ -16,6 +17,7 @@ BltToMouseCursor(): unused
 BulletHitMerc: pointless EV_S_WEAPONHIT
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
+CenterX(): use %
 ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
 CheckForMultiTilesInTreeAndAddToUndoList(): unused (self recursion)
@@ -27,11 +29,13 @@ ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
 CountNumberOfItemsInStoreInventory(): commented out
+Create16BPPPaletteShaded(): callers
+CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
-CreateUpdateBoxStrings(): swprintf() + AddMonoString()
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
+DisplayEmploymentinformation(): pointless loop
 DisplayMercStats(): callers
 DisplayMovingTitleBar(): callers
 DisplayOnScreenNumber(): callers
@@ -50,11 +54,14 @@ DoneFadeInForSaveLoadScreen(): callers
 DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
+DrawAssignment(): code duplication
 DrawBreathUIBar(): overdraw
 DrawName(): complicated
 DrawOrta(), DrawTixa(): factorise
-DrawPageNumber(): empty
+DrawTextToScreen(): DONT_DISPLAY_TEXT == IAN_WRAP_NO_SHADOW
+DrawTownLabels(): complicated coordinates (FindFontCenterCoordinates() necessary at all?)
 ET_ENDENEMYS_TURN: unused
+EXPLOSION_PARAMS: all attributes used?
 EndOfHelicoptersPath(): complicated
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
@@ -94,8 +101,10 @@ GetTypeSubIndexFromTileIndex(): interface complicated
 GetUIApsToDisplay(): callers
 GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
 Handle.*TextEvent(): code duplication
+HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FALSE;
 HandleDefiniteUnloadingOfWorld(): use enum
 HandleEndConfirmCursor(): empty
+HandleEquipmentLeftInOmerta(), HandleEquipmentLeftInDrassen(): very similar
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
 HandleItemGlowFlag(): callers/complicated
 HandleLeftClickCursor(): if ()s without decision
@@ -135,6 +144,7 @@ LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
 LightSave(): complicated
+LightSetColors(): second parameter always 1
 LightSpriteRender(): empty
 LoadAllMapChangesFromMapTempFileAndApplyThem(): Double FileClose()?
 LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
@@ -160,6 +170,7 @@ MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
 MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
 MakeSureMedKitIsInHand(): Severly broken. Big items can end up in small slots. Checking for first aid kits is probably not necessary at all
 MapExists(): complicated
+MapX(): use %
 MapscreenMarkButtonsDirty(): callers
 MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
@@ -181,13 +192,20 @@ PLAYER_TEAM_DEAD: never set
 PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
 PerformTest(): useful?
+PersonnelDepartedTeamCallback(): x = 0; if (x == 0)
+PickRandomPassengerFromVehicle(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 PlayerGroupInMotion(): overkill
 PrevPersonnelFace(): callers
 ProcessMercEditing(): code duplication
 ProcessPlayerInputActivationString(): complicated
 ProcessTransactionString(): complicated?
+ProcessUpdateStats(): pbSoldierStatPtr write-only
 QsortCompare(): complicated
 ReadRLEColMapImage(), ReadRLERGBImage(): empty
+RemoveAllOnRoofsOfTypeRange(): O(n^2)
+RemoveAllShadows(): O(n^2)
+RemoveAllShadowsOfTypeRange(): O(n^2)
+RemoveAllTopmostsOfTypeRange(): O(n^2)
 RemoveAmmoGUI(), RemoveEquipGUI(), RemoveKeysGUI(), RemoveMoneyGUI(): empty, remove?
 RemoveGraphicFromTempFile(): file leak on error
 RemoveGraphicFromTempFile(): memory leak
@@ -200,6 +218,8 @@ RenderItemDescriptionBox(): code duplication
 RenderSkiAtmPanel(): empty
 RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
 RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
+RenderTalkingMenu(): code duplication
+RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SHOW_AP_LEFT: never set
@@ -208,8 +228,10 @@ SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_QUOTE_SAID_DROWNING: never set
 SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
 SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
+STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
 SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
+SaveEnemySoldiersToTempFile(), NewWayOfSavingEnemyAndCivliansToTempFile(): code duplication
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveLightEffectsToSaveGameFile(): empty
@@ -217,6 +239,7 @@ SaveLightEffectsToSaveGameFile(): empty
 SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
+SayBattleSoundFromAnyBodyInSector(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 ScreenRegionMvtCallback(): empty
 SearchFor{Roof,Wall}Type(): unnecessary abs()
 SectorExitBackgroundCallback(): empty
@@ -259,16 +282,20 @@ WrapString(): Make 1st parameter read-only
 WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fButtonsPresent: once TRUE it never changes anymore
+fPotentialForDebug: ?
 fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
+gOpenDoorList[], gClosedDoorList[]: users, code duplication
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
+gTileTypeLogicalHeight[]: always 1 (memset)?
 gTileTypeLogicalHeight[]: definition not used in file
 gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfOverIntTile: static
 gfProgBarActive: once TRUE it never changes anymore
+gsRadarY: always RADAR_WINDOW_TM_Y?
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
@@ -278,10 +305,13 @@ guiMemTotal: remove
 guiPOPUPTEX: load probably unnecessary in MapScreen.c
 guiSkiAtmImage: unused/commented out
 gzFilename: wchar_t[] -> char[]?
+pMapInventoryErrorString[0]: probably unused
 pSoldier = pSoldier: strange
+pSoldier->pShades[16 ... 31]: unused?
 struct ETRLEData: reorder attributes
 swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
 typedef float real: remove
+ubMineType: unused?
 ubTravelRating: write-only
 wcscat(): check for overkill
 zNewTacticalMessages[TACT_MSG__AIMMEMBER_FEE_TEXT]: unused

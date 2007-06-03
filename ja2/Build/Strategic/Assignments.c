@@ -2345,65 +2345,6 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 }
 
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient )
-{
-	// run through all doctors in sector, if it is loaded
-	// if no - one is close enough and there is a doctor assigned in sector, inform player
-	BOOLEAN fDoctorInSector = FALSE;
-	BOOLEAN fDoctorCloseEnough = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iCounter = 0;
-	CHAR16 sString[ 128 ];
-
-	if( ( pPatient->sSectorX != gWorldSectorX ) || ( pPatient->sSectorY != gWorldSectorY ) || ( pPatient->bSectorZ != gbWorldSectorZ ) )
-	{
-		// not currently loaded
-		return( TRUE );
-	}
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( pSoldier->bActive )
-		{
-
-			// are they two of these guys in the same sector?
-			if( ( pSoldier->sSectorX == pPatient->sSectorX ) && ( pSoldier->sSectorY == pPatient->sSectorY ) && ( pSoldier->bSectorZ == pPatient->bSectorZ ) )
-			{
-
-				// is a doctor
-				if( pSoldier->bAssignment == DOCTOR )
-				{
-
-					// the doctor is in the house
-					fDoctorInSector = TRUE;
-
-					// can this patient be healed by the doctor?
-					if( CanSoldierBeHealedByDoctor( pPatient, pSoldier, TRUE, HEALABLE_EVER, FALSE, FALSE ) == TRUE )
-					{
-						// yep
-						fDoctorCloseEnough = TRUE;
-					}
-				}
-			}
-		}
-	}
-
-	// there are doctors here but noone can heal this guy
-	if( ( fDoctorInSector ) && ( fDoctorCloseEnough == FALSE ) )
-	{
-		swprintf( sString, pDoctorWarningString[ 0 ] , pPatient->name );
-		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL);
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-*/
-
-
 static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE* pPatient);
 
 
@@ -8352,7 +8293,7 @@ static void CreateAssignmentsBox(void)
 		}
 		else
 		{
-			swprintf( sString, lengthof(sString), pAssignMenuStrings[uiCounter] );
+			wcslcpy(sString, pAssignMenuStrings[uiCounter], lengthof(sString));
 		}
 
 		AddMonoString(&hStringHandle, sString );
@@ -10255,8 +10196,6 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT8 ubNumberOfSelectedSoldiers = 0;
-	CHAR16 sString[ 128 ];
-
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
@@ -10316,20 +10255,21 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 	{
 		if( fSuccess == FALSE )
 		{
+			const wchar_t* WarningMsg;
 			if( fWakeUp )
 			{
 				// inform player not everyone could be woke up
-				swprintf( sString, lengthof(sString), pMapErrorString[ 27 ] );
+				WarningMsg = pMapErrorString[27];
 			}
 			else
 			{
 				// inform player not everyone could be put to sleep
-				swprintf( sString, lengthof(sString), pMapErrorString[ 26 ]);
+				WarningMsg = pMapErrorString[26];
 			}
 
 			if( fDisplayWarning )
 			{
-				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL);
+				DoScreenIndependantMessageBox(WarningMsg, MSG_BOX_FLAG_OK, NULL);
 			}
 		}
 	}

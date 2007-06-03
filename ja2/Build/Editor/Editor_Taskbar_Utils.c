@@ -683,27 +683,28 @@ static void BuildTriggerName(OBJECTTYPE* pItem, wchar_t* szItemName, size_t leng
 {
 	if( pItem->usItem == SWITCH )
 	{
-		if( pItem->bFrequency == PANIC_FREQUENCY )
-			swprintf(szItemName, length, L"Panic Trigger1");
-		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
-			swprintf(szItemName, length, L"Panic Trigger2");
-		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
-			swprintf(szItemName, length, L"Panic Trigger3");
-		else
-			swprintf(szItemName, length, L"Trigger%d", pItem->bFrequency - 50);
+		switch (pItem->bFrequency)
+		{
+			case PANIC_FREQUENCY:   wcslcpy(szItemName, L"Panic Trigger1", length); break;
+			case PANIC_FREQUENCY_2: wcslcpy(szItemName, L"Panic Trigger2", length); break;
+			case PANIC_FREQUENCY_3: wcslcpy(szItemName, L"Panic Trigger3", length); break;
+			default: swprintf(szItemName, length, L"Trigger%d", pItem->bFrequency - 50); break;
+		}
 	}
 	else
 	{ //action item
 		if( pItem->bDetonatorType == BOMB_PRESSURE )
-			swprintf(szItemName, length, L"Pressure Action");
-		else if( pItem->bFrequency == PANIC_FREQUENCY )
-			swprintf(szItemName, length, L"Panic Action1");
-		else if( pItem->bFrequency == PANIC_FREQUENCY_2 )
-			swprintf(szItemName, length, L"Panic Action2");
-		else if( pItem->bFrequency == PANIC_FREQUENCY_3 )
-			swprintf(szItemName, length, L"Panic Action3");
+			wcslcpy(szItemName, L"Pressure Action", length);
 		else
-			swprintf(szItemName, length, L"Action%d", pItem->bFrequency - 50);
+		{
+			switch (pItem->bFrequency)
+			{
+				case PANIC_FREQUENCY:   wcslcpy(szItemName, L"Panic Action1", length); break;
+				case PANIC_FREQUENCY_2: wcslcpy(szItemName, L"Panic Action2", length); break;
+				case PANIC_FREQUENCY_3: wcslcpy(szItemName, L"Panic Action3", length); break;
+				default: swprintf(szItemName, length, L"Action%d", pItem->bFrequency - 50); break;
+			}
+		}
 	}
 }
 
@@ -721,7 +722,7 @@ static void RenderDoorLockInfo(void)
 		if( DoorTable[ i ].ubLockID != 255 )
 			swprintf(str, lengthof(str), L"%hs", LockTable[DoorTable[i].ubLockID].ubEditorName);
 		else
-			swprintf(str, lengthof(str), L"No Lock ID");
+			wcslcpy(str, L"No Lock ID", lengthof(str));
 		xp = sScreenX - 10;
 		yp = sScreenY - 40;
 		DisplayWrappedString( xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
@@ -730,28 +731,18 @@ static void RenderDoorLockInfo(void)
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_RED );
 			SetFontShadow( FONT_NEARBLACK );
+			const wchar_t* TrapType;
 			switch( DoorTable[ i ].ubTrapID )
 			{
-				case EXPLOSION:
-					swprintf(str, lengthof(str), L"Explosion Trap");
-					break;
-				case ELECTRIC:
-					swprintf(str, lengthof(str), L"Electric Trap");
-					break;
-				case SIREN:
-					swprintf(str, lengthof(str), L"Siren Trap");
-					break;
-				case SILENT_ALARM:
-					swprintf(str, lengthof(str), L"Silent Alarm");
-					break;
-				case SUPER_ELECTRIC:
-					swprintf(str, lengthof(str), L"Super Electric Trap");
-					break;
-
+				case EXPLOSION:      TrapType = L"Explosion Trap"; break;
+				case ELECTRIC:       TrapType = L"Electric Trap"; break;
+				case SIREN:          TrapType = L"Siren Trap"; break;
+				case SILENT_ALARM:   TrapType = L"Silent Alarm"; break;
+				case SUPER_ELECTRIC: TrapType = L"Super Electric Trap"; break;
 			}
-			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
+			xp = sScreenX + 20 - StringPixLength(TrapType, FONT10ARIAL) / 2;
 			yp = sScreenY;
-			mprintf( xp, yp, str );
+			mprintf(xp, yp, TrapType);
 			swprintf(str, lengthof(str), L"Trap Level %d", DoorTable[i].ubTrapLevel);
 			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
 			mprintf( xp, yp+10, str );

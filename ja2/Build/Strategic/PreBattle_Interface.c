@@ -863,7 +863,6 @@ void KillPreBattleInterface()
 
 static void RenderPBHeader(INT32* piX, INT32* piWidth)
 {
-	wchar_t str[100];
 	INT32 x, width;
 	SetFont( FONT10ARIALBOLD );
 	if( gfBlinkHeader )
@@ -882,35 +881,36 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 		SetFontForeground( FONT_BEIGE );
 	}
 	SetFontShadow( FONT_NEARBLACK );
+	const wchar_t* str;
 	if( !gfPersistantPBI )
 	{
-		swprintf( str, lengthof(str), gzNonPersistantPBIText[8] );
+		str = gzNonPersistantPBIText[8];
 	}
 	else switch( gubEnemyEncounterCode )
 	{
 		case ENEMY_INVASION_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENEMYINVASION_HEADER ] );
+			str = gpStrategicString[STR_PB_ENEMYINVASION_HEADER];
 			break;
 		case ENEMY_ENCOUNTER_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENEMYENCOUNTER_HEADER ] );
+			str = gpStrategicString[STR_PB_ENEMYENCOUNTER_HEADER];
 			break;
 		case ENEMY_AMBUSH_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENEMYAMBUSH_HEADER ] );
+			str = gpStrategicString[STR_PB_ENEMYAMBUSH_HEADER];
 			gfBlinkHeader = TRUE;
 			break;
 		case ENTERING_ENEMY_SECTOR_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENTERINGENEMYSECTOR_HEADER ] );
+			str = gpStrategicString[STR_PB_ENTERINGENEMYSECTOR_HEADER];
 			break;
 		case CREATURE_ATTACK_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_CREATUREATTACK_HEADER ] );
+			str = gpStrategicString[STR_PB_CREATUREATTACK_HEADER];
 			gfBlinkHeader = TRUE;
 			break;
 		case BLOODCAT_AMBUSH_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_BLOODCATAMBUSH_HEADER ] );
+			str = gpStrategicString[STR_PB_BLOODCATAMBUSH_HEADER];
 			gfBlinkHeader = TRUE;
 			break;
 		case ENTERING_BLOODCAT_LAIR_CODE:
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENTERINGBLOODCATLAIR_HEADER ] );
+			str = gpStrategicString[STR_PB_ENTERINGBLOODCATLAIR_HEADER];
 			break;
 	}
 	width = StringPixLength( str, FONT10ARIALBOLD );
@@ -992,55 +992,56 @@ void RenderPreBattleInterface()
 
 		SetFont( BLOCKFONT );
 		SetFontForeground( FONT_BEIGE );
-		swprintf( str, lengthof(str), gpStrategicString[ STR_PB_LOCATION ] );
-		width = StringPixLength( str, BLOCKFONT );
+		const wchar_t* Location = gpStrategicString[STR_PB_LOCATION];
+		width = StringPixLength(Location, BLOCKFONT);
 		if( width > 64 )
 		{
 			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength( str, BLOCKFONTNARROW );
+			width = StringPixLength(Location, BLOCKFONTNARROW);
 		}
-		mprintf( 65 - width , 17, str );
+		mprintf(65 - width , 17, Location);
 
 		SetFont( BLOCKFONT );
+		const wchar_t* Encounter;
 		if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 		{
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_ENEMIES ] );
+			Encounter = gpStrategicString[STR_PB_ENEMIES];
 		}
 		else if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 		{
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_BLOODCATS ] );
+			Encounter = gpStrategicString[STR_PB_BLOODCATS];
 		}
 		else
 		{
-			swprintf( str, lengthof(str), gpStrategicString[ STR_PB_CREATURES ] );
+			Encounter = gpStrategicString[STR_PB_CREATURES];
 		}
-		width = StringPixLength( str, BLOCKFONT );
+		width = StringPixLength(Encounter, BLOCKFONT);
 		if( width > 52 )
 		{
 			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength( str, BLOCKFONTNARROW );
+			width = StringPixLength(Encounter, BLOCKFONTNARROW);
 		}
-		mprintf( 54 - width , 38, str );
+		mprintf(54 - width , 38, Encounter);
 
 		SetFont( BLOCKFONT );
-		swprintf( str, lengthof(str), gpStrategicString[ STR_PB_MERCS ] );
-		width = StringPixLength( str, BLOCKFONT );
+		const wchar_t* Mercs = gpStrategicString[STR_PB_MERCS];
+		width = StringPixLength(Mercs, BLOCKFONT);
 		if( width > 52 )
 		{
 			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength( str, BLOCKFONTNARROW );
+			width = StringPixLength(Mercs, BLOCKFONTNARROW);
 		}
-		mprintf( 139 - width , 38, str );
+		mprintf(139 - width , 38, Mercs);
 
 		SetFont( BLOCKFONT );
-		swprintf( str, lengthof(str), gpStrategicString[ STR_PB_MILITIA ] );
-		width = StringPixLength( str, BLOCKFONT );
+		const wchar_t* Milita = gpStrategicString[STR_PB_MILITIA];
+		width = StringPixLength(Milita, BLOCKFONT);
 		if( width > 52 )
 		{
 			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength( str, BLOCKFONTNARROW );
+			width = StringPixLength(Milita, BLOCKFONTNARROW);
 		}
-		mprintf( 224 - width , 38, str );
+		mprintf(224 - width , 38, Milita);
 
 		//Draw the bottom columns
 		for( i = 0; i < (INT32)max( guiNumUninvolved, 1 ); i++ )
@@ -1112,9 +1113,9 @@ void RenderPreBattleInterface()
 					else
 						SetFontForeground( FONT_YELLOW );
 					//NAME
-					wcscpy( str, MercPtrs[ i ]->name );
-					x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", str);
+					const wchar_t* Name = MercPtrs[i]->name;
+					x = 17 + (52-StringPixLength(Name, BLOCKFONT2)) / 2;
+					mprintf(x, y, L"%ls", Name);
 					//ASSIGN
 					const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
 					x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
@@ -1144,10 +1145,10 @@ void RenderPreBattleInterface()
 		if( !guiNumUninvolved )
 		{
 			SetFontForeground( FONT_YELLOW );
-			wcscpy( str, gpStrategicString[ STR_PB_NONE ] );
-			x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
+			const wchar_t* None = gpStrategicString[STR_PB_NONE];
+			x = 17 + (52 - StringPixLength(None, BLOCKFONT2)) / 2;
 			y = BOTTOM_Y - ROW_HEIGHT + 2;
-			mprintf( x, y, str );
+			mprintf(x, y, None);
 		}
 		else
 		{
@@ -1164,9 +1165,9 @@ void RenderPreBattleInterface()
 						else
 							SetFontForeground( FONT_YELLOW );
 						//NAME
-						wcscpy( str, MercPtrs[ i ]->name );
-						x = 17 + (52-StringPixLength( str, BLOCKFONT2)) / 2;
-						mprintf( x , y, str );
+						const wchar_t* Name = MercPtrs[i]->name;
+						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
+						mprintf(x , y, Name);
 						//ASSIGN
 						const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
 						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
