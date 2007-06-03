@@ -4,30 +4,20 @@
 #include "Language_Defines.h"
 
 
-BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
+BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
 {
 	UINT16 str[uiSeekAmount / 2];
-	HWFILE		hFile;
 	UINT16		i;
-
-	hFile = FileOpen(pFileName, FILE_ACCESS_READ);
-	if ( !hFile )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed to FileOpen");
-		return( FALSE );
-	}
 
 	if ( FileSeek( hFile, uiSeekFrom, FILE_SEEK_FROM_START ) == FALSE )
 	{
-		FileClose(hFile);
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed FileSeek");
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileSeek");
 		return( FALSE );
 	}
 
 	if (!FileRead(hFile, str, sizeof(str)))
 	{
-		FileClose(hFile);
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed FileRead");
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileRead");
 		return( FALSE );
 	}
 
@@ -63,6 +53,20 @@ BOOLEAN LoadEncryptedDataFromFile(const char *pFileName, STR16 pDestString, UINT
 	}
 	pDestString[i] = L'\0';
 
-	FileClose(hFile);
 	return(TRUE);
+}
+
+
+BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 Seek, UINT32 ReadBytes)
+{
+	HWFILE File = FileOpen(Filename, FILE_ACCESS_READ);
+	if (File == 0)
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed to FileOpen");
+		return FALSE;
+	}
+
+	BOOLEAN Ret = LoadEncryptedData(File, DestString, Seek, ReadBytes);
+	FileClose(File);
+	return Ret;
 }

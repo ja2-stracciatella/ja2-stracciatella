@@ -16,12 +16,14 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, wchar_t Info[])
 
 static void LoadAllItemNames(void)
 {
+	HWFILE File = FileOpen(ITEMSTRINGFILENAME, FILE_ACCESS_READ);
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;
-		LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, ShortItemNames[i], Seek,                        SIZE_SHORT_ITEM_NAME);
-		LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, ItemNames[i],      Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
+		LoadEncryptedData(File, ShortItemNames[i], Seek,                        SIZE_SHORT_ITEM_NAME);
+		LoadEncryptedData(File, ItemNames[i],      Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
 	}
+	FileClose(File);
 }
 
 
