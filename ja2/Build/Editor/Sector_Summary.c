@@ -659,7 +659,6 @@ static void RenderItemDetails(void)
 	FLOAT dAvgExistChance, dAvgStatus;
 	OBJECTTYPE *pItem;
 	INT32 index, i;
-	wchar_t str[100];
 	UINT32 uiQuantity, uiExistChance, uiStatus;
 	UINT32 uiTriggerQuantity[8], uiActionQuantity[8], uiTriggerExistChance[8], uiActionExistChance[8];
 	UINT32 xp, yp;
@@ -747,8 +746,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%ls", str);
+				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -853,8 +851,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%ls", str);
+				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -921,8 +918,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				LoadShortNameItemInfo( (UINT16)index, str );
-				mprintf(xp, yp, L"%ls", str);
+				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;

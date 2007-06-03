@@ -17,9 +17,10 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, STR16 pNameString, STR16 pInfoString )
 		);
 }
 
-BOOLEAN LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString )
+
+static void LoadShortNameItemInfo(UINT16 ubIndex, STR16 pNameString)
 {
-	return LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, pNameString, (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex, SIZE_ITEM_NAME);
+	LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, pNameString, (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex, SIZE_SHORT_ITEM_NAME);
 }
 
 
