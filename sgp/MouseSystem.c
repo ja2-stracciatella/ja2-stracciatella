@@ -1208,39 +1208,39 @@ static INT16 GetWidthOfString(const wchar_t* pStringA)
 
 static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY)
 {
-	STR16 pToken;
-	INT32 iCounter = 0, i;
-	UINT32 uiCursorXPos;
-	CHAR16 pString[ 512 ];
-	INT32 iLength;
-	wchar_t* Context = NULL;
-
-	wcscpy( pString, pStringA );
-
-	// tokenize
-	pToken = wcstok(pString, L"\n", &Context);
-
-	while( pToken != NULL )
-  {
-		iLength = (INT32)wcslen( pToken );
-		for( i = 0; i < iLength; i++ )
+	HVOBJECT BoldFont   = GetFontObject(FONT10ARIALBOLD);
+	HVOBJECT NormalFont = GetFontObject(FONT10ARIAL);
+	INT32 h = GetFontHeight(FONT10ARIAL) + 1;
+	INT32 x = sX;
+	INT32 y = sY;
+	for (const wchar_t* i = pStringA;; i++)
+	{
+		wchar_t c = *i;
+		HVOBJECT Font;
+		switch (c)
 		{
-			uiCursorXPos = StringPixLengthArgFastHelp( FONT10ARIAL, FONT10ARIALBOLD, i, pToken );
-			if( pToken[ i ] == '|' )
-			{
-				i++;
-				SetFont( FONT10ARIALBOLD );
-				SetFontForeground( 146 );
-			}
-			else
-			{
-				SetFont( FONT10ARIAL );
-				SetFontForeground( FONT_BEIGE );
-			}
-			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(FONT10ARIAL)+1), L"%lc", pToken[ i ] );
+			case L'\0': return;
+
+			case L'\n':
+				x = sX;
+				y += h;
+				continue;
+
+			case L'|':
+				c = *++i;
+				SetFont(FONT10ARIALBOLD);
+				SetFontForeground(146);
+				Font = BoldFont;
+				break;
+
+			default:
+				SetFont(FONT10ARIAL);
+				SetFontForeground(FONT_BEIGE);
+				Font = NormalFont;
+				break;
 		}
-		pToken = wcstok( NULL, L"\n", &Context);
-		iCounter++;
+		mprintf(x, y, L"%lc", c);
+		x += GetCharWidth(Font, c);
 	}
 }
 

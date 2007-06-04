@@ -210,56 +210,6 @@ INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFo
 }
 
 
-/* Returns the length of a string with a variable number of arguments, in
- * pixels, using the current font. Maximum length in characters the string can
- * evaluate to is 512.  Because this is for fast help text, all '|' characters
- * are ignored for the width calculation.
- * 'uiCharCount' specifies how many characters of the string are counted.
- * YOU HAVE TO PREBUILD THE FAST HELP STRING! */
-INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, const wchar_t* pFontString)
-{
-	Assert(pFontString != NULL);
-
-	wchar_t	string[512];
-	wcscpy(string, pFontString);
-
-	// make sure the character count is legal
-	if (uiCharCount > wcslen(string))
-	{
-		uiCharCount = wcslen(string);
-	}
-	else
-	{
-		if (uiCharCount < wcslen(string))
-		{
-			// less than the full string, so whack off the end of it (it's temporary anyway)
-			string[uiCharCount] = '\0';
-		}
-	}
-
-	//now eliminate all '|' characters from the string.
-	INT16 sBoldDiff = 0;
-	for (UINT32 i = 0; i < uiCharCount; i++)
-	{
-		if (string[i] == '|')
-		{
-			for (UINT32 index = i; index < uiCharCount; index++)
-			{
-				string[index] = string[index + 1];
-			}
-			uiCharCount--;
-			//now we have eliminated the '|' character, so now calculate the size difference of the
-			//bolded character.
-			wchar_t str[2];
-			str[0] = string[i];
-			str[1] = L'\0';
-			sBoldDiff += StringPixLength(str, usBoldFont) - StringPixLength(str, usUseFont);
-		}
-	}
-	return StringPixLength(string, usUseFont) + sBoldDiff;
-}
-
-
 /* Returns the length of a string in pixels, depending on the font given. */
 INT16 StringPixLength(const wchar_t *string, INT32 UseFont)
 {
