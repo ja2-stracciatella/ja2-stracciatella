@@ -1119,7 +1119,7 @@ void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, 
 	UINT32 i;
 	for (i = 0;; i++)
 	{
-		UINT32 CharWidth = GetWidth(Font, GetIndex(pString[i]));
+		UINT32 CharWidth = GetCharWidth(Font, pString[i]);
 		if (CharWidth > RestWidth) break;
 		RestWidth -= CharWidth;
 	}

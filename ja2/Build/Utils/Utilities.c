@@ -91,7 +91,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidth, INT32 uiFont )
 {
 	UINT32 Cur, uiLet, uiNewLet, uiHyphenLet;
-	wchar_t *curletter,transletter;
+	const wchar_t* curletter;
 	BOOLEAN	fLineSplit = FALSE;
 	HVOBJECT	hFont;
 
@@ -106,8 +106,7 @@ BOOLEAN	 WrapString( wchar_t *pStr, wchar_t *pStr2, size_t Length, UINT16 usWidt
 	// LOOP FORWARDS AND COUNT
 	while((*curletter)!=0)
 	{
-		transletter=GetIndex(*curletter);
-		Cur+=GetWidth( hFont, transletter );
+		Cur += GetCharWidth(hFont, *curletter);
 
 		if ( Cur > usWidth )
 		{

@@ -163,7 +163,7 @@ void UnloadFont(UINT32 FontIndex)
 
 
 /* Returns the width of a given character in the font. */
-UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
+static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
 	Assert(hSrcVObject != NULL);
 
@@ -268,8 +268,7 @@ INT16 StringPixLength(const wchar_t *string, INT32 UseFont)
 	UINT32 Cur = 0;
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
-		wchar_t transletter = GetIndex(*curletter);
-		Cur += GetWidth(FontObjs[UseFont], transletter);
+		Cur += GetCharWidth(FontObjs[UseFont], *curletter);
 	}
 	return Cur;
 }
@@ -325,7 +324,7 @@ UINT16 GetFontHeight(INT32 FontNum)
 
 /* Given a word-sized character, this function returns the index of the cell in
  * the font to print to the screen. */
-INT16 GetIndex(UINT16 siChar)
+static INT16 GetIndex(UINT16 siChar)
 {
 #	include "TranslationTable.inc"
 
@@ -340,6 +339,12 @@ INT16 GetIndex(UINT16 siChar)
 
 	// Return 0 here, NOT -1 - we should see A's here now...
 	return 0;
+}
+
+
+UINT32 GetCharWidth(HVOBJECT Font, wchar_t c)
+{
+	return GetWidth(Font, GetIndex(c));
 }
 
 

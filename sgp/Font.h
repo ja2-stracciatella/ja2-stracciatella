@@ -94,8 +94,7 @@ extern BOOLEAN   InitializeFontManager(void);
 extern void      ShutdownFontManager(void);
 extern void			 UnloadFont(UINT32 FontIndex);
 
-extern INT16 GetIndex(UINT16 siChar);
-extern UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex);
+UINT32 GetCharWidth(HVOBJECT Font, wchar_t c);
 
 extern INT16 StringPixLengthArgFastHelp(INT32 usUseFont, INT32 usBoldFont, UINT32 uiCharCount, const wchar_t* pFontString);
 extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFontString, ...);
