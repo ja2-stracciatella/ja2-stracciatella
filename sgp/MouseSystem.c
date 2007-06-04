@@ -18,7 +18,6 @@
 #include "MemMan.h"
 #include "Line.h"
 #include "Video.h"
-// Include mouse system defs and macros
 #include "MouseSystem.h"
 #include "Cursor_Control.h"
 #include "Button_System.h"
@@ -93,12 +92,8 @@ static BOOLEAN gfRefreshUpdate = FALSE;
 //an already deleted region.  It will also ensure that you don't create an identical region
 //that already exists.
 //TO REMOVE ALL DEBUG FUNCTIONALITY:  simply comment out MOUSESYSTEM_DEBUGGING definition
-#ifdef JA2
-  #ifdef _DEBUG
-	#ifndef BOUNDS_CHECKER
-	  #define MOUSESYSTEM_DEBUGGING
-	#endif
-  #endif
+#if defined _DEBUG && !defined BOUNDS_CHECKER
+#	define MOUSESYSTEM_DEBUGGING
 #endif
 
 #ifdef MOUSESYSTEM_DEBUGGING
@@ -559,12 +554,6 @@ static void MSYS_UpdateMouseRegion(void)
 				#endif
 				MSYS_PrevRegion->uiFlags &= (~MSYS_GOT_BACKGROUND);
 				MSYS_PrevRegion->uiFlags &= (~MSYS_FASTHELP_RESET);
-
-				//if( region->uiFlags & MSYS_REGION_ENABLED )
-				//	region->uiFlags |= BUTTON_DIRTY;
-#ifndef JA2
-							VideoRemoveToolTip();
-#endif
 			}
 
 			MSYS_CurrRegion->FastHelpTimer = gsFastHelpDelay;
@@ -594,13 +583,6 @@ static void MSYS_UpdateMouseRegion(void)
 					#endif
 					MSYS_CurrRegion->uiFlags &= (~MSYS_GOT_BACKGROUND);
 					MSYS_CurrRegion->uiFlags |= MSYS_FASTHELP_RESET;
-
-#ifndef JA2
-							VideoRemoveToolTip();
-#endif
-
-					//if( b->uiFlags & BUTTON_ENABLED )
-					//	b->uiFlags |= BUTTON_DIRTY;
 				}
 				if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED )
 				{
@@ -720,12 +702,6 @@ static void MSYS_UpdateMouseRegion(void)
 
 							MSYS_CurrRegion->FastHelpTimer = gsFastHelpDelay;
 							MSYS_CurrRegion->uiFlags &= (~MSYS_FASTHELP_RESET);
-
-							//if( b->uiFlags & BUTTON_ENABLED )
-							//	b->uiFlags |= BUTTON_DIRTY;
-#ifndef JA2
-							VideoRemoveToolTip();
-#endif
 						}
 
 						//Kris: Nov 31, 1999 -- Added support for double click events.
@@ -926,10 +902,6 @@ void MSYS_RemoveRegion(MOUSE_REGION *region)
 	// Get rid of the FastHelp text (if applicable)
 	if( region->FastHelpText )
 	{
-#ifndef JA2
-		if(region->uiFlags & MSYS_FASTHELP)
-			VideoRemoveToolTip();
-#endif
 		MemFree( region->FastHelpText );
 	}
 	region->FastHelpText = NULL;
@@ -1147,9 +1119,6 @@ static INT16 GetNumberOfLinesInHeight(const wchar_t* pStringA)
 }
 
 
-
-#ifdef _JA2_RENDER_DIRTY
-
 static INT16 GetWidthOfString(const wchar_t* pStringA);
 static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY);
 
@@ -1324,152 +1293,6 @@ void RenderFastHelp()
 		}
 	}
 }
-#else
-
-// **********Wiz8 Versions**************************************************************************
-
-INT16 GetWidthOfString( STR16 pStringA )
-{
-	CHAR16 pString[ 512 ];
-	STR16 pToken;
-	INT16 sWidth = 0;
-	wcscpy( pString, pStringA );
-
-	// tokenize
-	pToken = wcstok( pString, L"\n" );
-
-	while( pToken != NULL )
-  {
-		if( sWidth < StringPixLength( pToken, ghTinyMonoFont ) )
-		{
-			sWidth = StringPixLength( pToken, ghTinyMonoFont );
-		}
-
-		pToken = wcstok( NULL, L"\n" );
-	}
-
-	return( sWidth );
-
-}
-
-void DisplayFastHelp( MOUSE_REGION *region )
-{
-	INT32 iX,iY,iW,iH;
-
-	if ( region->uiFlags & MSYS_FASTHELP )
-	{
-		VideoToolTip(region->FastHelpText);
-
-		iW = VideoGetToolTipWidth();
-		iH = VideoGetToolTipHeight();
-
-		iX = (INT32)region->RegionTopLeftX + 10;
-
-		if (iX < 0)
-			iX = 0;
-
-		if ( (iX + iW) >= SCREEN_WIDTH )
-			iX = (SCREEN_WIDTH - iW - 4);
-
-		iY = (INT32)region->RegionTopLeftY - (iH * 3 / 4);
-		if (iY < 0)
-			iY = 0;
-
-		if ( (iY + iH) >= SCREEN_HEIGHT )
-			iY = (SCREEN_HEIGHT - iH - 15);
-
-		VideoPositionToolTip(iX, iY);
-	}
-}
-
-void DisplayHelpTokenizedString( STR16 pStringA, INT16 sX, INT16 sY )
-{
-	STR16 pToken;
-	INT32 iCounter = 0, i;
-	UINT32 uiCursorXPos;
-	CHAR16 pString[ 512 ];
-	INT32 iLength;
-
-	wcscpy( pString, pStringA );
-
-	// tokenize
-	pToken = wcstok( pString, L"\n" );
-
-	while( pToken != NULL )
-  {
-		iLength = (INT32)wcslen( pToken );
-		for( i = 0; i < iLength; i++ )
-		{
-			uiCursorXPos = StringPixLengthArgFastHelp( ghTinyMonoFont, ghTinyMonoFont, i, pToken );
-			if( pToken[ i ] == '|' )
-			{
-				i++;
-				SetFont(ghTinyMonoFont);
-				SetFontForeground( 2 );
-			}
-			else
-			{
-				SetFont( ghTinyMonoFont );
-				SetFontForeground( 2 );
-			}
-			mprintf( sX + uiCursorXPos, sY + iCounter * (GetFontHeight(ghTinyMonoFont)+1), L"%lc", pToken[ i ] );
-		}
-		pToken = wcstok( NULL, L"\n" );
-		iCounter++;
-	}
-}
-
-void RenderFastHelp()
-{
-	static INT32 iLastClock;
-	INT32 iTimeDifferential, iCurrentClock;
-
-	if( !gfRenderHilights )
-		return;
-
-	iCurrentClock = GetClock();
-	iTimeDifferential = iCurrentClock - iLastClock;
-	if (iTimeDifferential < 0)
-		iTimeDifferential += 0x7fffffff;
-	iLastClock = iCurrentClock;
-
-	if( MSYS_CurrRegion && MSYS_CurrRegion->FastHelpText)
-	{
-		if( !MSYS_CurrRegion->FastHelpTimer )
-		{
-			if( MSYS_CurrRegion->uiFlags & ( MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED ) )
-			{
-				if( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA )
-				{
-					MSYS_CurrRegion->uiFlags |= MSYS_FASTHELP;
-					DisplayFastHelp( MSYS_CurrRegion );
-				}
-				else
-				{
-					MSYS_CurrRegion->uiFlags &= ( ~( MSYS_FASTHELP | MSYS_FASTHELP_RESET ) );
-					VideoRemoveToolTip();
-				}
-			}
-		}
-		else
-		{
-			if( MSYS_CurrRegion->uiFlags & ( MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED ) )
-			{
-				if ( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA &&
-						!MSYS_CurrRegion->ButtonState)// & (MSYS_LEFT_BUTTON|MSYS_RIGHT_BUTTON)) )
-				{
-					MSYS_CurrRegion->FastHelpTimer -= (INT16)max( iTimeDifferential, 0 );
-
-					if( MSYS_CurrRegion->FastHelpTimer < 0 )
-					{
-						MSYS_CurrRegion->FastHelpTimer = 0;
-					}
-				}
-			}
-		}
-	}
-}
-#endif
 
 
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow )
