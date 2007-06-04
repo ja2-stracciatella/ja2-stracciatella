@@ -1097,25 +1097,14 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
 }
 
 
-static INT16 GetNumberOfLinesInHeight(const wchar_t* pStringA)
+static size_t GetNumberOfLinesInHeight(const wchar_t* String)
 {
-	STR16 pToken;
-	INT16 sCounter = 0;
-	CHAR16 pString[ 512 ];
-	wchar_t* Context = NULL;
-
-	wcscpy( pString, pStringA );
-
-	// tokenize
-	pToken = wcstok(pString, L"\n", &Context);
-
-	while( pToken != NULL )
-  {
-		 pToken = wcstok(NULL, L"\n", &Context);
-		 sCounter++;
+	size_t Lines = 1;
+	for (const wchar_t* i = String; *i != L'\0'; i++)
+	{
+		if (*i == L'\n') Lines++;
 	}
-
-	return( sCounter );
+	return Lines;
 }
 
 
