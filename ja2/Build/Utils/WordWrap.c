@@ -14,7 +14,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
 	wchar_t					TempString[1024];
-	wchar_t         pNullString[2];
 	INT16					usCurIndex, usEndIndex, usDestIndex;
 	STR16						pCurrentStringLoc;
   wchar_t					DestString[1024];
@@ -25,8 +24,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 	BOOLEAN					fTheStringIsToLong=FALSE;
 	INT32 iCounter=0;
 	INT32 iErrorCount = 0;
-  pNullString[0]=L' ';
-	pNullString[1]=0;
 
 	memset(&FirstWrappedString, 0, sizeof(WRAPPED_STRING) );
 
@@ -173,7 +170,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 					 //allocate memory for the string
 					 pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING));
 						pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-					 wcscpy(pWrappedString->pNextWrappedString->sString, pNullString);
+						wcscpy(pWrappedString->pNextWrappedString->sString, L" ");
 					 pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
 
