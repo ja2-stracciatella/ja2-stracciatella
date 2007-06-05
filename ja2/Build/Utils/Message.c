@@ -760,7 +760,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 
 
 
-	pStringWrapperHead=LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, L"%ls", DestString);
+	pStringWrapperHead = LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, DestString);
   pStringWrapper=pStringWrapperHead;
 	if(!pStringWrapper)
     return;

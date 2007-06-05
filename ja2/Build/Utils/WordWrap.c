@@ -3,14 +3,13 @@
 #include "SGP.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
-#include <stdarg.h>
 #include "Debug.h"
 #include "Video.h"
 #include "MemMan.h"
 #include "VSurface.h"
 
 
-WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLineWidthIfWordIsWiderThenWidth, const wchar_t *pString, ...)
+WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
 {
 	WRAPPED_STRING FirstWrappedString;
 	WRAPPED_STRING *pWrappedString = NULL;
@@ -19,7 +18,6 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 	INT16					usCurIndex, usEndIndex, usDestIndex;
 	STR16						pCurrentStringLoc;
   wchar_t					DestString[1024];
-	va_list					argptr;
 	BOOLEAN					fDone = FALSE;
 	UINT16					usCurrentWidthPixels=0;
 	wchar_t					OneChar[2];
@@ -37,9 +35,7 @@ WRAPPED_STRING *LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16 *pusLin
 	if(pString == NULL)
 		return(FALSE);
 
-	va_start(argptr, pString);       	// Set up variable argument pointer
-	vswprintf(TempString, lengthof(TempString), pString, argptr);	// process string (get output str)
-	va_end(argptr);
+	wcslcpy(TempString, pString, lengthof(TempString));
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
 	OneChar[1] = L'\0';
