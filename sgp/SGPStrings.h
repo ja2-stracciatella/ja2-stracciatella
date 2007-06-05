@@ -28,9 +28,6 @@ void WINvswprintf(wchar_t* s, size_t n, const wchar_t* format, va_list arg);
 #define swprintf  WINswprintf
 #define vswprintf WINvswprintf
 
-// XXX this is not ideal as it drops the context, but should work
-#define wcstok(str, sep, last) wcstok(str, sep)
-
 #endif
 
 #endif

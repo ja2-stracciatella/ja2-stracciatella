@@ -1108,7 +1108,7 @@ static size_t GetNumberOfLinesInHeight(const wchar_t* String)
 }
 
 
-static INT16 GetWidthOfString(const wchar_t* pStringA);
+static size_t GetWidthOfString(const wchar_t* String);
 static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY);
 
 
@@ -1168,30 +1168,28 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 }
 
 
-static INT16 GetWidthOfString(const wchar_t* pStringA)
+static size_t GetWidthOfString(const wchar_t* pStringA)
 {
-	CHAR16 pString[ 512 ];
-	STR16 pToken;
-	INT16 sWidth = 0;
-	wchar_t* Context = NULL;
-
-	wcscpy( pString, pStringA );
-
-	// tokenize
-	pToken = wcstok(pString, L"\n", &Context);
-
-	while( pToken != NULL )
-  {
-		if( sWidth < StringPixLength( pToken, FONT10ARIAL ) )
+	HVOBJECT Font = GetFontObject(FONT10ARIAL);
+	size_t MaxWidth = 0;
+	size_t Width = 0;
+	for (const wchar_t* i = pStringA;; i++)
+	{
+		switch (*i)
 		{
-			sWidth = StringPixLength( pToken, FONT10ARIAL );
+			case L'\0':
+				return max(Width, MaxWidth);
+
+			case L'\n':
+				MaxWidth = max(Width, MaxWidth);
+				Width = 0;
+				break;
+
+			default:
+				Width += GetCharWidth(Font, *i);
+				break;
 		}
-
-		pToken = wcstok(NULL, L"\n", &Context);
 	}
-
-	return( sWidth );
-
 }
 
 
