@@ -157,8 +157,9 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			 			pWrappedString = pWrappedString->pNextWrappedString;
 
 					 //allocate memory for the string
-						pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-						wcscpy(pWrappedString->pNextWrappedString->sString, L" ");
+						static const wchar_t SpaceString[] = L" ";
+						pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * lengthof(SpaceString));
+						wcscpy(pWrappedString->pNextWrappedString->sString, SpaceString);
 					 pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
 
