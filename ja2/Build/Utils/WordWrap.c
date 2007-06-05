@@ -19,7 +19,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
   wchar_t					DestString[1024];
 	BOOLEAN					fDone = FALSE;
 	UINT16					usCurrentWidthPixels=0;
-	wchar_t					OneChar[2];
   BOOLEAN					fNewLine=FALSE;
 	BOOLEAN					fTheStringIsToLong=FALSE;
 	INT32 iCounter=0;
@@ -38,7 +37,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 	wcslcpy(TempString, pString, lengthof(TempString));
 
 	usCurIndex = usEndIndex = usDestIndex = 0;
-	OneChar[1] = L'\0';
+	HVOBJECT Font = GetFontObject(ulFont);
 
 	while(!fDone)
 	{
@@ -60,9 +59,8 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			DestString[usDestIndex]=TempString[usCurIndex]=0;
 			fNewLine=TRUE;
 		}
-		OneChar[0] = TempString[ usCurIndex ];
 
-  	usCurrentWidthPixels += StringPixLength(OneChar, ulFont);
+		usCurrentWidthPixels += GetCharWidth(Font, TempString[usCurIndex]);
 
 		//If we are at the end of the string
 		if(TempString[ usCurIndex  ] == 0)
@@ -96,10 +94,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			 //Go back to begining of word
 			 while(  (DestString[ usDestIndex ] != L' ') && (usCurIndex > 0) )
 			 {
-		 		OneChar[0] = DestString[ usDestIndex ];
-
-  		 	usCurrentWidthPixels -= StringPixLength(OneChar, ulFont);
-
+				usCurrentWidthPixels -= GetCharWidth(Font, DestString[usDestIndex]);
 				usCurIndex--;
 				usDestIndex--;
 			 }
