@@ -680,8 +680,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
   WRAPPED_STRING *pStringWrapper=NULL;
   WRAPPED_STRING *pStringWrapperHead=NULL;
   BOOLEAN fNewString = FALSE;
-	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
-
 
 	if( giTimeCompressMode > TIME_COMPRESS_X1 )
 	{
@@ -760,7 +758,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 
 
 
-	pStringWrapperHead = LineWrap(uiFont, LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, DestString);
+	pStringWrapperHead = LineWrap(uiFont, LINE_WIDTH, NULL, DestString);
   pStringWrapper=pStringWrapperHead;
 	if(!pStringWrapper)
     return;
@@ -824,7 +822,6 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
   WRAPPED_STRING *pStringWrapper=NULL;
   WRAPPED_STRING *pStringWrapperHead=NULL;
   BOOLEAN fNewString = FALSE;
-	UINT16	usLineWidthIfWordIsWiderThenWidth;
 
 	if( fDisableJustForIan == TRUE )
 	{
@@ -953,7 +950,7 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 		usColor = INTERFACE_COLOR;
 	}
 
-	pStringWrapperHead=LineWrap(uiFont, MAP_LINE_WIDTH, &usLineWidthIfWordIsWiderThenWidth, DestString);
+	pStringWrapperHead = LineWrap(uiFont, MAP_LINE_WIDTH, NULL, DestString);
   pStringWrapper=pStringWrapperHead;
 	if(!pStringWrapper)
     return;

@@ -27,7 +27,10 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 	memset(&FirstWrappedString, 0, sizeof(WRAPPED_STRING) );
 
-	*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
+	if (pusLineWidthIfWordIsWiderThenWidth != NULL)
+	{
+		*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
+	}
 
 	if(pString == NULL)
 		return(FALSE);
@@ -189,7 +192,10 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 				//error
 				usLineWidthPixels = 1 + StringPixLength(&TempString[usCurIndex], ulFont);
 
-				*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
+				if (pusLineWidthIfWordIsWiderThenWidth != NULL)
+				{
+					*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
+				}
 
 				fTheStringIsToLong = TRUE;
 
