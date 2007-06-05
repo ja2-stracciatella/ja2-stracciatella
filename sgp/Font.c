@@ -193,6 +193,7 @@ INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFo
 	va_end(argptr);
 
 	// make sure the character count is legal
+	if (uiCharCount < wcslen(string))
 	{
 		// less than the full string, so whack off the end of it (it's temporary anyway)
 		string[uiCharCount] = '\0';
