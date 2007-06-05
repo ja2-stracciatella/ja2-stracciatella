@@ -643,10 +643,6 @@ static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
 		// set current node as next node
 		pNode = pNode -> pNextWrappedString;
 
-		//delete the string
-		MemFree( pDeleteNode->sString );
-		pDeleteNode->sString = NULL;
-
 		// clear out delete node
 		MemFree( pDeleteNode );
 		pDeleteNode = NULL;

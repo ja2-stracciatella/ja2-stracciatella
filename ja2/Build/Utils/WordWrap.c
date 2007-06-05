@@ -71,10 +71,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 				pWrappedString = pWrappedString->pNextWrappedString;
 
 			//allocate memory for the string
-			pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-			pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-			if( pWrappedString->pNextWrappedString->sString == NULL)
-				return (NULL);
+			pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 
 			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 			pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
@@ -114,10 +111,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			if( wcslen(DestString) != 0 )
 			{
 				//allocate memory for the string
-				pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-				pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-				if( pWrappedString->pNextWrappedString->sString == NULL)
-					return (NULL);
+				pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 
 				wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 				pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
@@ -152,10 +146,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 						pWrappedString = pWrappedString->pNextWrappedString;
 
 					//allocate memory for the string
-					pWrappedString->pNextWrappedString = MemAlloc( sizeof(WRAPPED_STRING) );
-					pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-					if( pWrappedString->pNextWrappedString->sString == NULL)
-						return (NULL);
+					pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 
 					wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 					pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
@@ -166,8 +157,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			 			pWrappedString = pWrappedString->pNextWrappedString;
 
 					 //allocate memory for the string
-					 pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING));
-						pWrappedString->pNextWrappedString->sString = MemAlloc(sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
+						pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
 						wcscpy(pWrappedString->pNextWrappedString->sString, L" ");
 					 pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
@@ -241,8 +231,6 @@ UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8
 
 		pTempWrappedString = pFirstWrappedString;
 		pFirstWrappedString = pTempWrappedString->pNextWrappedString;
-		MemFree( pTempWrappedString->sString );
-		pTempWrappedString->sString = NULL;
 		MemFree( pTempWrappedString );
 		pTempWrappedString = NULL;
 

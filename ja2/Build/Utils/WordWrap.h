@@ -34,8 +34,8 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 typedef struct _WRAPPEDSTRING
 {
-	STR16		sString;
 	struct _WRAPPEDSTRING *pNextWrappedString;
+	wchar_t sString[];
 } WRAPPED_STRING;
 
 
