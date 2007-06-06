@@ -188,9 +188,6 @@ UINT16		gsUIHandleShowMoveGridLocation;
 
 BOOLEAN		gUITargetShotWaiting;
 
-extern wchar_t		gzLocation[ 20 ];
-BOOLEAN		gfUIBodyHitLocation;
-
 wchar_t		gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 

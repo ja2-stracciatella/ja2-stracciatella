@@ -249,4 +249,7 @@ void SetCursorFlags( UINT32 uiCursor, UINT8 ubFlags );
 
 void RemoveCursorFlags( UINT32 uiCursor, UINT8 ubFlags );
 
+// The string must be persistent
+void SetHitLocationText(const wchar_t* Text);
+
 #endif

@@ -1016,10 +1016,7 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 				if ( pTargetSoldier->ubBodyType == CROW )
 				{
 					pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
-
-					wcscpy( gzLocation, TacticalStr[ CROW_HIT_LOCATION_STR ] );
-
-					gfUIBodyHitLocation = TRUE;
+					SetHitLocationText(TacticalStr[CROW_HIT_LOCATION_STR]);
 					return;
 				}
 
@@ -1035,23 +1032,20 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 						// If we have a knife in hand, change string
 						if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_BLADE )
 						{
-							wcscpy( gzLocation, TacticalStr[ NECK_HIT_LOCATION_STR ] );
+							SetHitLocationText(TacticalStr[NECK_HIT_LOCATION_STR]);
 						}
 						else
 						{
-							wcscpy( gzLocation, TacticalStr[ HEAD_HIT_LOCATION_STR ] );
+							SetHitLocationText(TacticalStr[HEAD_HIT_LOCATION_STR]);
 						}
-						gfUIBodyHitLocation = TRUE;
 						break;
 
 					case AIM_SHOT_TORSO:
-						wcscpy( gzLocation, TacticalStr[ TORSO_HIT_LOCATION_STR ] );
-						gfUIBodyHitLocation = TRUE;
+						SetHitLocationText(TacticalStr[TORSO_HIT_LOCATION_STR]);
 						break;
 
 					case AIM_SHOT_LEGS:
-						wcscpy( gzLocation, TacticalStr[ LEGS_HIT_LOCATION_STR ] );
-						gfUIBodyHitLocation = TRUE;
+						SetHitLocationText(TacticalStr[LEGS_HIT_LOCATION_STR]);
 						break;
 				}
 		}

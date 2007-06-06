@@ -293,9 +293,6 @@ UINT32									guiTimerLastUpdate = 0;
 UINT32									guiTimerCursorDelay = 0;
 
 
-wchar_t		gzLocation[ 20 ];
-BOOLEAN		gfLocation = FALSE;
-
 wchar_t		gzIntTileLocation[ 20 ];
 BOOLEAN		gfUIIntTileLocation;
 
@@ -402,7 +399,7 @@ UINT32  HandleTacticalUI( void )
 		gfUIHandleSelection							= NO_GUY_SELECTION;
 		gfUIHandleSelectionAboveGuy			= FALSE;
 		guiShowUPDownArrows							= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
-		gfUIBodyHitLocation							= FALSE;
+		SetHitLocationText(NULL);
 		gfUIIntTileLocation							= FALSE;
 		gfUIIntTileLocation2						= FALSE;
 		//gfUIForceReExamineCursorData		= FALSE;
