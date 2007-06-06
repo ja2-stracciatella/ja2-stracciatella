@@ -942,11 +942,11 @@ const wchar_t* gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"Kasuje wszystkie pozy|cje najemników, \ni pozwala ponownie je wprowadziæ.",
+	L"Kasuje wszystkie pozy|cje najemników,\ni pozwala ponownie je wprowadziæ.",
 	L"Po ka¿dym naciœniêciu rozmie|szcza\nlosowo twoich najemników.",
 	L"|Grupuje najemników w wybranym miejscu.",
-	L"Kliknij ten klawisz gdy ju¿ rozmieœcisz \nswoich najemników. (|E|n|t|e|r)",
-	L"Musisz rozmieœciæ wszystkich najemników \nzanim rozpoczniesz walkê.",
+	L"Kliknij ten klawisz gdy ju¿ rozmieœcisz\nswoich najemników. (|E|n|t|e|r)",
+	L"Musisz rozmieœciæ wszystkich najemników\nzanim rozpoczniesz walkê.",
 
 	//Various strings (translate word for word)
 

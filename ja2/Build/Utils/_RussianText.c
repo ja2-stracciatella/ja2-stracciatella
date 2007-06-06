@@ -941,11 +941,11 @@ const wchar_t* gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"Убрать позиции наемников \nдля повторного их ввода ( |C).",
+	L"Убрать позиции наемников\nдля повторного их ввода ( |C).",
 	L"Рассредоточить наемников вручную (|S).",
 	L"Выбрать место сбора наемников (|G).",
-	L"Нажмите эту кнопку, когда закончите \nвыбор позиций для наемников. (|E|n|t|e|r)",
-	L"Вы должны разместить всех наемн. \nперед началом битвы.",
+	L"Нажмите эту кнопку, когда закончите\nвыбор позиций для наемников. (|E|n|t|e|r)",
+	L"Вы должны разместить всех наемн.\nперед началом битвы.",
 
 	//Various strings (translate word for word)
 
@@ -1337,7 +1337,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
 	L"Выводя оставшихся наемников из этого сектора,\nучти, что соседний сектор будет занят немедленно.",
-	L"Выведя оставшихся наемников из этого сектора,\nвы автоматически перемещаетесь в окно карты \nвашему наемнику понадобится время на дорогу.",
+	L"Выведя оставшихся наемников из этого сектора,\nвы автоматически перемещаетесь в окно карты\nвашему наемнику понадобится время на дорогу.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
 	L"%ls не может покинуть этот сектор один, его надо сопроводить.",
@@ -1360,7 +1360,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	L"После проверки %ls поедет один, и\nавтоматически попадет в уникальный отряд.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
-	L"После проверки выбранный вами сейчас \nотряд покинет этот сектор.",
+	L"После проверки выбранный вами сейчас\nотряд покинет этот сектор.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the

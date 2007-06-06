@@ -945,11 +945,11 @@ const wchar_t *gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"|Clears all the mercs' positions, \nand allows you to re-enter them manually.",
-	L"Randomly |spreads your mercs out \neach time it's pressed.",
+	L"|Clears all the mercs' positions,\nand allows you to re-enter them manually.",
+	L"Randomly |spreads your mercs out\neach time it's pressed.",
 	L"Allows you to select where you wish to |group your mercs.",
-	L"Click this button when you're finished \nchoosing your mercs' positions. (|E|n|t|e|r)",
-	L"You must place all of your mercs \nbefore you start the battle.",
+	L"Click this button when you're finished\nchoosing your mercs' positions. (|E|n|t|e|r)",
+	L"You must place all of your mercs\nbefore you start the battle.",
 
 	//Various strings (translate word for word)
 

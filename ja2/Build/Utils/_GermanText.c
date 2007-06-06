@@ -921,11 +921,11 @@ const wchar_t *gpStrategicString[] =
 
 	//The help text for the four buttons. Use \n to denote new line (just like enter).
 
-	L"Söldner räumen ihre Positionen\n und können manuell neu plaziert werden. (|C)",
-	L"Söldner |schwärmen in alle Richtungen aus\n wenn der Button gedrückt wird.",
+	L"Söldner räumen ihre Positionen und\nkönnen manuell neu plaziert werden. (|C)",
+	L"Söldner |schwärmen in alle Richtungen\naus wenn der Button gedrückt wird.",
 	L"Mit diesem Button können Sie wählen, wo die Söldner |gruppiert werden sollen.",
-	L"Klicken Sie auf diesen Button, wenn Sie die\n Positionen der Söldner gewählt haben. (|E|n|t|e|r)",
-	L"Sie müssen alle Söldner positionieren\n bevor die Schlacht beginnt.",
+	L"Klicken Sie auf diesen Button, wenn Sie die\nPositionen der Söldner gewählt haben. (|E|n|t|e|r)",
+	L"Sie müssen alle Söldner positionieren\nbevor die Schlacht beginnt.",
 
 	//Various strings (translate word for word)
 

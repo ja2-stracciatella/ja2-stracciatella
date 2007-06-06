@@ -941,11 +941,11 @@ const wchar_t* gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"|Mostra chiaramente tutte le postazioni dei mercenari, \ne vi permette di rimetterli in gioco manualmente.",
-	L"A caso |sparge i vostri mercenari \nogni volta che lo premerete.",
+	L"|Mostra chiaramente tutte le postazioni dei mercenari,\ne vi permette di rimetterli in gioco manualmente.",
+	L"A caso |sparge i vostri mercenari\nogni volta che lo premerete.",
 	L"Vi permette di scegliere dove vorreste |raggruppare i vostri mercenari.",
-	L"Cliccate su questo pulsante quando avrete \nscelto le postazioni dei vostri mercenari. (|I|n|v|i|o)",
-	L"Dovete posizionare tutti i vostri mercenari \nprima di iniziare la battaglia.",
+	L"Cliccate su questo pulsante quando avrete\nscelto le postazioni dei vostri mercenari. (|I|n|v|i|o)",
+	L"Dovete posizionare tutti i vostri mercenari\nprima di iniziare la battaglia.",
 
 	//Various strings (translate word for word)
 
@@ -1361,7 +1361,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	L"Se selezionato, %ls viaggerà da solo, e\nautomaticamente verrà riassegnato a un'unica squadra.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
-	L"Se selezionato, la vostra \nsquadra attualmente selezionata viaggerà, lasciando questo settore.",
+	L"Se selezionato, la vostra\nsquadra attualmente selezionata viaggerà, lasciando questo settore.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the

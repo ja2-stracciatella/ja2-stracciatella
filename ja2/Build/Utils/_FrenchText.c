@@ -945,11 +945,11 @@ const wchar_t* gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"|Annule le déploiement des mercenaires \net vous permet de les déployer vous-même.",
-	L"Disperse |aléatoirement vos mercenaires \nà chaque fois.",
+	L"|Annule le déploiement des mercenaires\net vous permet de les déployer vous-même.",
+	L"Disperse |aléatoirement vos mercenaires\nà chaque fois.",
 	L"Vous permet de placer votre groupe |de mercenaires.",
-	L"Cliquez sur ce bouton lorsque vous avez déployé \nvos mercenaires. (|E|n|t|r|é|e)",
-	L"Vous devez déployer vos mercenaires \navant d'engager le combat.",
+	L"Cliquez sur ce bouton lorsque vous avez déployé\nvos mercenaires. (|E|n|t|r|é|e)",
+	L"Vous devez déployer vos mercenaires\navant d'engager le combat.",
 
 	//Various strings (translate word for word)
 
