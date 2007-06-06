@@ -3381,7 +3381,7 @@ const wchar_t* zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"Gdy opcja ta jest w³¹czona, wyœwietlane s¹ zarysy niewidocznych œcian. ( |W )",
 
-	L"Gdy opcja ta jest w³¹czona, kursor ruchu wyœwietlany jest w 3D. ( |Home )",
+	L"Gdy opcja ta jest w³¹czona, kursor ruchu wyœwietlany jest w 3D. (|H|o|m|e)",
 
 };
 

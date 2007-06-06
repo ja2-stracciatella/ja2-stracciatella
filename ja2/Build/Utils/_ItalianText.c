@@ -3380,7 +3380,7 @@ const wchar_t* zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"Se attivata, visualizza le |Strutture dei muri nascosti.",
 
-	L"Se attivata, il cursore di movimento verrà mostrato in 3D (|Home).",
+	L"Se attivata, il cursore di movimento verrà mostrato in 3D (|H|o|m|e).",
 
 };
 

@@ -3383,7 +3383,7 @@ const wchar_t* zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"Activez cette option pour afficher les murs en fil de fer.",
 
-	L"Activez cette option pour afficher le curseur en 3D. ( |Home )",
+	L"Activez cette option pour afficher le curseur en 3D. (|H|o|m|e)",
 
 };
 

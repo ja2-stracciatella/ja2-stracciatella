@@ -3395,7 +3395,7 @@ const wchar_t* zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"Wanneer INGESCHAKELD worden Draadmodellen (|W) van niet-zichtbare muren getoond.",
 
-	L"Wanneer INGESCHAKELD wordt de cursor in 3D getoond. (|Home)",
+	L"Wanneer INGESCHAKELD wordt de cursor in 3D getoond. (|H|o|m|e)",
 
 };
 

@@ -3383,7 +3383,7 @@ const wchar_t *zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"When ON, displays |Wireframes for obscured walls.",
 
-	L"When ON, the movement cursor is shown in 3D. ( |Home )",
+	L"When ON, the movement cursor is shown in 3D. (|H|o|m|e)",
 
 };
 

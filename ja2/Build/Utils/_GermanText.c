@@ -3203,7 +3203,7 @@ const wchar_t *zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"ANgeschaltet, werden Drahtgitter für verborgene Wände gezeigt (|W).",
 
-	L"ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt. ( |Home )",
+	L"ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt. (|P|o|s|1)",
 
 };
 
