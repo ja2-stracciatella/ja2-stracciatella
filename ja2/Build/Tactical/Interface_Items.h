@@ -116,7 +116,6 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void EndItemPointer( );
 void DrawItemFreeCursor( );
 void DrawItemTileCursor( );
-void HideItemTileCursor( );
 void InitItemInterface( );
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
 UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );

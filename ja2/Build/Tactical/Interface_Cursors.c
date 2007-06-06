@@ -446,7 +446,6 @@ BOOLEAN HideUICursor( )
 		// Check if we are in the viewport region...
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
-			HideItemTileCursor( );
 			return( TRUE );
 		}
 	}

@@ -3997,12 +3997,6 @@ void DrawItemFreeCursor( )
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 }
 
-void HideItemTileCursor( )
-{
-//	RemoveTopmost( gusCurMousePos, gusItemPointer );
-
-}
-
 
 static BOOLEAN SoldierCanSeeCatchComing(SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 {
