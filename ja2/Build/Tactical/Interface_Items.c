@@ -298,8 +298,6 @@ extern BOOLEAN fShowInventoryFlag;
 static BOOLEAN gfInItemStackPopup = FALSE;
 static UINT32 guiItemPopupBoxes;
 static OBJECTTYPE* gpItemPopupObject;
-static INT16 gsItemPopupWidth;
-static INT16 gsItemPopupHeight;
 static INT16 gsItemPopupX;
 static INT16 gsItemPopupY;
 static MOUSE_REGION gItemPopupRegions[8];
@@ -4908,8 +4906,8 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	GetSlotInvHeightWidth( ubPosition, &sItemSlotWidth, &sItemSlotHeight );
 
 	// Get Width, Height
-	gsItemPopupWidth	= ubLimit * usPopupWidth;
-	gsItemPopupHeight = pTrav->usHeight;
+	INT16 gsItemPopupWidth = ubLimit * usPopupWidth;
+	INT16 gsItemPopupHeight = pTrav->usHeight;
 	gubNumItemPopups = ubLimit;
 
 	// Calculate X,Y, first center
