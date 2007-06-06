@@ -60,8 +60,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			fNewLine=TRUE;
 		}
 
-		usCurrentWidthPixels += GetCharWidth(Font, TempString[usCurIndex]);
-
 		//If we are at the end of the string
 		if(TempString[ usCurIndex  ] == 0)
 		{
@@ -80,6 +78,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 		}
 
+		usCurrentWidthPixels += GetCharWidth(Font, TempString[usCurIndex]);
 
 		if((usCurrentWidthPixels > usLineWidthPixels))//||(DestString[ usDestIndex ]==NEWLINE_CHAR )||(fNewLine))
 		{
