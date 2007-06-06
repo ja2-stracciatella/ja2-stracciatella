@@ -1302,9 +1302,7 @@ void SetDoorString( INT16 sGridNo )
 			switch( pDoor->bPerceivedTrapped )
 			{
 				case DOOR_PERCEIVED_TRAPPED:
-
-					wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_TRAPPED_MOUSE_DESCRIPTION ] );
-					gfUIIntTileLocation2 = TRUE;
+					SetIntTileLocation2Text(TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION]);
 					fTrapped = TRUE;
 					break;
 			}
@@ -1319,23 +1317,16 @@ void SetDoorString( INT16 sGridNo )
 						break;
 
 					case DOOR_PERCEIVED_LOCKED:
-
-						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_LOCKED_MOUSE_DESCRIPTION ] );
-						gfUIIntTileLocation2 = TRUE;
+						SetIntTileLocation2Text(TacticalStr[DOOR_LOCKED_MOUSE_DESCRIPTION]);
 						break;
 
 					case DOOR_PERCEIVED_UNLOCKED:
-
-						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_UNLOCKED_MOUSE_DESCRIPTION ] );
-						gfUIIntTileLocation2 = TRUE;
+						SetIntTileLocation2Text(TacticalStr[DOOR_UNLOCKED_MOUSE_DESCRIPTION]);
 						break;
 
 					case DOOR_PERCEIVED_BROKEN:
-
-						wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_BROKEN_MOUSE_DESCRIPTION ] );
-						gfUIIntTileLocation2 = TRUE;
+						SetIntTileLocation2Text(TacticalStr[DOOR_BROKEN_MOUSE_DESCRIPTION]);
 						break;
-
 				}
 			}
 
@@ -1343,12 +1334,10 @@ void SetDoorString( INT16 sGridNo )
 	}
 
 	// ATE: If here, we try to say, opened or closed...
-	if ( gfUIIntTileLocation2 == FALSE )
+	if (GetIntTileLocation2Text() == NULL)
 	{
 #ifdef GERMAN
-
-			wcscpy( gzIntTileLocation2, TacticalStr[ DOOR_DOOR_MOUSE_DESCRIPTION ] );
-			gfUIIntTileLocation2 = TRUE;
+			SetIntTileLocation2Text(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
 
 			// Try to get doors status here...
 			pDoorStatus = GetDoorStatus( sGridNo );
@@ -1397,14 +1386,12 @@ void SetDoorString( INT16 sGridNo )
 					if ( pStructure->fFlags & STRUCTURE_OPEN )
 					{
 						// Door is opened....
-						wcscpy( gzIntTileLocation2, pMessageStrings[ MSG_OPENED ] );
-						gfUIIntTileLocation2 = TRUE;
+						SetIntTileLocation2Text(pMessageStrings[MSG_OPENED]);
 					}
 					else
 					{
 						// Door is closed
-						wcscpy( gzIntTileLocation2, pMessageStrings[ MSG_CLOSED ] );
-						gfUIIntTileLocation2 = TRUE;
+						SetIntTileLocation2Text(pMessageStrings[MSG_CLOSED]);
 					}
 				}
 			}
@@ -1414,14 +1401,12 @@ void SetDoorString( INT16 sGridNo )
 				if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
 				{
 					// Door is opened....
-					wcscpy( gzIntTileLocation2, pMessageStrings[ MSG_OPENED ] );
-					gfUIIntTileLocation2 = TRUE;
+					SetIntTileLocation2Text(pMessageStrings[MSG_OPENED]);
 				}
 				else
 				{
 					// Door is closed
-					wcscpy( gzIntTileLocation2, pMessageStrings[ MSG_CLOSED ] );
-					gfUIIntTileLocation2 = TRUE;
+					SetIntTileLocation2Text(pMessageStrings[MSG_CLOSED]);
 				}
 			}
 
