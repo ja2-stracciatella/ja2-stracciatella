@@ -1,3 +1,4 @@
+#include "Cursors.h"
 #include "Font_Control.h"
 #include "SGP.h"
 #include "HImage.h"
@@ -355,8 +356,7 @@ UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
 		{
 		  if( pStructure->fFlags & STRUCTURE_SWITCH )
 		  {
-			  wcscpy( gzIntTileLocation, gzLateLocalizedString[ 25 ] );
-			  gfUIIntTileLocation = TRUE;
+			  SetIntTileLocationText(gzLateLocalizedString[25]);
       }
 
 

@@ -4243,8 +4243,7 @@ void DrawItemTileCursor( )
 				// OK, we want to drop.....
 
 				// Write the word 'drop' on cursor...
-				wcscpy( gzIntTileLocation, pMessageStrings[ MSG_DROP ] );
-				gfUIIntTileLocation = TRUE;
+				SetIntTileLocationText(pMessageStrings[MSG_DROP]);
 			}
 			else
 			{
@@ -4262,8 +4261,7 @@ void DrawItemTileCursor( )
 					// Write the word 'drop' on cursor...
 					if ( gfUIMouseOnValidCatcher == 0 )
 					{
-						wcscpy( gzIntTileLocation, pMessageStrings[ MSG_THROW ] );
-						gfUIIntTileLocation = TRUE;
+						SetIntTileLocationText(pMessageStrings[MSG_THROW]);
 					}
 
 					gfUIHandlePhysicsTrajectory = TRUE;

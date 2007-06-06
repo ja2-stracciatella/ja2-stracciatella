@@ -1,3 +1,4 @@
+#include "Cursors.h"
 #include "Font_Control.h"
 #include "SGP.h"
 #include "WorldDef.h"
@@ -1292,18 +1293,11 @@ void SetDoorString( INT16 sGridNo )
 	// Try and get a door if one exists here
 	pDoor = FindDoorInfoAtGridNo( sGridNo );
 
-	if ( gfUIIntTileLocation == FALSE )
+	if (GetIntTileLocationText() == NULL)
 	{
-		if ( pDoor == NULL )
+		SetIntTileLocationText(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
+		if (pDoor != NULL)
 		{
-			wcscpy( gzIntTileLocation, TacticalStr[ DOOR_DOOR_MOUSE_DESCRIPTION ] );
-			gfUIIntTileLocation = TRUE;
-		}
-		else
-		{
-			wcscpy( gzIntTileLocation, TacticalStr[ DOOR_DOOR_MOUSE_DESCRIPTION ] );
-			gfUIIntTileLocation = TRUE;
-
 			// CHECK PERCEIVED VALUE
 			switch( pDoor->bPerceivedTrapped )
 			{
@@ -1367,14 +1361,12 @@ void SetDoorString( INT16 sGridNo )
 					if ( pStructure->fFlags & STRUCTURE_OPEN )
 					{
 						// Door is opened....
-						wcscpy( gzIntTileLocation, pMessageStrings[ MSG_OPENED ] );
-						gfUIIntTileLocation = TRUE;
+						SetIntTileLocationText(pMessageStrings[MSG_OPENED]);
 					}
 					else
 					{
 						// Door is closed
-						wcscpy( gzIntTileLocation, pMessageStrings[ MSG_CLOSED ] );
-						gfUIIntTileLocation = TRUE;
+						SetIntTileLocationText(pMessageStrings[MSG_CLOSED]);
 					}
 				}
 			}
@@ -1384,14 +1376,12 @@ void SetDoorString( INT16 sGridNo )
 				if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
 				{
 					// Door is opened....
-					wcscpy( gzIntTileLocation, pMessageStrings[ MSG_OPENED ] );
-					gfUIIntTileLocation = TRUE;
+					SetIntTileLocationText(pMessageStrings[MSG_OPENED]);
 				}
 				else
 				{
 					// Door is closed
-					wcscpy( gzIntTileLocation, pMessageStrings[ MSG_CLOSED ] );
-					gfUIIntTileLocation = TRUE;
+					SetIntTileLocationText(pMessageStrings[MSG_CLOSED]);
 				}
 			}
 #else

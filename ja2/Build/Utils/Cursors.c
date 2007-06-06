@@ -1229,11 +1229,24 @@ static void BltJA2CursorData(void)
 
 
 static const wchar_t* gzLocation;
+static const wchar_t* gzIntTileLocation;
 
 
 void SetHitLocationText(const wchar_t* Text)
 {
 	gzLocation = Text;
+}
+
+
+void SetIntTileLocationText(const wchar_t* Text)
+{
+	gzIntTileLocation = Text;
+}
+
+
+const wchar_t* GetIntTileLocationText(void)
+{
+	return gzIntTileLocation;
 }
 
 
@@ -1261,7 +1274,7 @@ static void DrawMouseText(void)
 
 	}
 
-	if ( gfUIIntTileLocation )
+	if (gzIntTileLocation != NULL)
 	{
 		// Set dest for gprintf to be different
 		SetFontDestBuffer( MOUSE_BUFFER , 0, 0, 64, 64, FALSE );
