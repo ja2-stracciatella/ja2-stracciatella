@@ -71,11 +71,8 @@
 
 
 #define		ITEMDESC_FONT							BLOCKFONT2
-#define		ITEMDESC_FONTSHADOW1			MILITARY_SHADOW
 #define		ITEMDESC_FONTSHADOW2			32
 #define		ITEMDESC_FONTSHADOW3			34
-#define		ITEMDESC_FONTFORE1				33
-#define		ITEMDESC_FONTFORE2				32
 
 #define		ITEMDESC_FONTAPFORE					218
 #define		ITEMDESC_FONTHPFORE					24
@@ -128,7 +125,6 @@
 #define		BULLET_BURST_X					(263 + gsInvDescX)
 #define		BULLET_BURST_Y					(49 + gsInvDescY)
 #define		BULLET_WIDTH						3
-#define		BULLET_GAP							5
 
 #define		MAP_BULLET_SING_X				(77 + gsInvDescX)
 #define		MAP_BULLET_SING_Y				(135 + gsInvDescY)
@@ -172,8 +168,6 @@
 
 #define		ITEMDESC_AMMO_X					( 10 + gsInvDescX )
 #define		ITEMDESC_AMMO_Y					( 50 + gsInvDescY )
-#define		MAP_ITEMDESC_AMMO_X					( 28 + gsInvDescX )
-#define		MAP_ITEMDESC_AMMO_Y					( 45 + gsInvDescY )
 
 #define		ITEMDESC_AMMO_TEXT_X	3
 #define		ITEMDESC_AMMO_TEXT_Y	1
@@ -5626,7 +5620,6 @@ typedef struct
 #define					ITEMPICK_CANCEL_Y		6
 
 #define					ITEMPICK_START_X_OFFSET		10
-#define					ITEMPICK_START_Y_OFFSET		20
 
 #define					ITEMPICK_GRAPHIC_X			10
 #define					ITEMPICK_GRAPHIC_Y			12
@@ -5636,10 +5629,9 @@ typedef struct
 #define					ITEMPICK_TEXT_Y					22
 #define					ITEMPICK_TEXT_YSPACE		26
 #define					ITEMPICK_TEXT_WIDTH			109
-#define					ITEMPICK_TEXT_HEIGHT		17
 
 
-ITEM_PICKUP_MENU_STRUCT			gItemPickupMenu;
+static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu;
 BOOLEAN											gfInItemPickupMenu = FALSE;
 
 
