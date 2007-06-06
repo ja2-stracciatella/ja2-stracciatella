@@ -1,14 +1,6 @@
 #ifndef __AIM_H
 #define __AIM_H
 
-#include "Cursors.h"
-
-
-//
-// AIM defines
-//
-
-
 #define	AIMHISTORYFILE		"BINARYDATA/AimHist.edt"
 #define AIM_HISTORY_LINE_SIZE 400 * 2
 

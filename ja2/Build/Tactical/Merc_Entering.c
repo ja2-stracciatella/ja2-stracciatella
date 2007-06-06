@@ -21,7 +21,6 @@
 #include "Handle_UI.h"
 #include "Squads.h"
 #include "English.h"
-#include "Cursors.h"
 #include "Cursor_Control.h"
 #include "Merc_Hiring.h"
 #include "Message.h"

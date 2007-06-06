@@ -4,7 +4,6 @@
 #include "BobbyRGuns.h"
 #include "Utilities.h"
 #include "WCheck.h"
-#include "Cursors.h"
 #include "Text.h"
 #include "LaptopSave.h"
 #include "Button_System.h"

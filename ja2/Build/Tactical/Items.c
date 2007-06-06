@@ -28,7 +28,6 @@
 #include "MessageBoxScreen.h"
 #include "Interface_Control.h"
 #include "ShopKeeper_Interface.h"
-#include "Cursors.h"
 #include "GameSettings.h"
 #include "Environment.h"
 #include "Auto_Resolve.h"

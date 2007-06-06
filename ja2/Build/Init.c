@@ -13,7 +13,6 @@
 #include "Utilities.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
-#include "Cursors.h"
 #include "Sound_Control.h"
 #include "Lighting.h"
 #include "Cursor_Control.h"

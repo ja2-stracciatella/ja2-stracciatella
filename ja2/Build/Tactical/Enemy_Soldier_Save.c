@@ -9,7 +9,6 @@
 #include "Debug.h"
 #include "Random.h"
 #include "Items.h"
-#include "Cursors.h"
 #include "Map_Information.h"
 #include "Soldier_Profile.h"
 #include "Sys_Globals.h"

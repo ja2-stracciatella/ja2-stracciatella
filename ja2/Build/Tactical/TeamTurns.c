@@ -16,7 +16,6 @@
 #include "Smell.h"
 #include "Game_Clock.h"
 #include "Soldier_Functions.h"
-#include "Cursors.h"
 #include "Queen_Command.h"
 #include "PathAI.h"
 #include "Music_Control.h"

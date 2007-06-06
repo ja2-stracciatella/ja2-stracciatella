@@ -3,7 +3,6 @@
 #include "Soldier_Control.h"
 #include "Weapons.h"
 #include "Cursor_Control.h"
-#include "Cursors.h"
 #include "Soldier_Find.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

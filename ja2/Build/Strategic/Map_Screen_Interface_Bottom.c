@@ -14,7 +14,6 @@
 #include "Font_Control.h"
 #include "Radar_Screen.h"
 #include "Game_Clock.h"
-#include "Cursors.h"
 #include "SysUtil.h"
 #include "Render_Dirty.h"
 #include "Map_Screen_Interface.h"
