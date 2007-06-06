@@ -350,7 +350,6 @@ extern		MOUSE_REGION		gInvDesc;
 extern		BOOLEAN					gfSMDisableForItems;
 extern		void						HandleShortCutExitState( void );
 extern		UINT8						gubSelectSMPanelToMerc;
-extern		INT32						giItemDescAmmoButton;
 
 extern		UINT8 gubLastSpecialItemAddedAtElement;
 
@@ -5607,10 +5606,6 @@ void StartSKIDescriptionBox( void )
 		MSYS_DisableRegion( &gShopKeeperSubTitleMouseRegion );
 	}
 
-//	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
-//	DisableButton( giItemDescAmmoButton );
-
-
 	RenderItemDescriptionBox( );
 }
 
@@ -5655,10 +5650,6 @@ void DeleteShopKeeperItemDescBox()
 	{
 		MSYS_EnableRegion( &gShopKeeperSubTitleMouseRegion );
 	}
-
-//	if( giItemDescAmmoButton >= 0 && ButtonList[ giItemDescAmmoButton ].
-//	EnableButton( giItemDescAmmoButton );
-
 }
 
 

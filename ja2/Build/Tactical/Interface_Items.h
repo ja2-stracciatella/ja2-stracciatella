@@ -108,7 +108,6 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition );
 OBJECTTYPE		*gpItemPointer;
 OBJECTTYPE		gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
-UINT16				usItemSnapCursor;
 BOOLEAN				gfItemPointerDifferentThanDefault;
 
 

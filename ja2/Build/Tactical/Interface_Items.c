@@ -219,11 +219,7 @@ enum
 	M_DONE,
 };
 
-// AN ARRAY OF MOUSE REGIONS, ONE FOR EACH OBJECT POSITION ON BUDDY
-MOUSE_REGION				gInvRegions[ NUM_INV_SLOTS ];
-
 extern	MOUSE_REGION    gMPanelRegion;
-extern	BOOLEAN					fMapInventoryItem;
 extern	BOOLEAN					gfAddingMoneyToMercFromPlayersAccount;
 extern	SOLDIERTYPE			*gpSMCurrentMerc;
 extern  UINT8 gubSelectSMPanelToMerc;
@@ -232,54 +228,50 @@ extern	UINT32					guiMapInvSecondHandBlockout;
 
 MOUSE_REGION				gInvDesc;
 
-OBJECTTYPE		*gpItemPointer = NULL;
 OBJECTTYPE		gItemPointer;
 BOOLEAN				gfItemPointerDifferentThanDefault = FALSE;
 SOLDIERTYPE		*gpItemPointerSoldier;
 INT8					gbItemPointerSrcSlot;
-UINT16				gusItemPointer = 255;
-UINT16				usItemSnapCursor;
-UINT32				guiNewlyPlacedItemTimer = 0;
-BOOLEAN				gfBadThrowItemCTGH;
+static UINT16 gusItemPointer = 255;
+static UINT32 guiNewlyPlacedItemTimer = 0;
+static BOOLEAN gfBadThrowItemCTGH;
 BOOLEAN				gfDontChargeAPsToPickup = FALSE;
-BOOLEAN				gbItemPointerLocateGood = FALSE;
+static BOOLEAN gbItemPointerLocateGood = FALSE;
 
 // ITEM DESCRIPTION BOX STUFF
-UINT32			guiItemDescBox;
-UINT32      guiMapItemDescBox;
-UINT32			guiItemGraphic;
-UINT32			guiMoneyGraphicsForDescBox;
-UINT32			guiBullet;
+static UINT32 guiItemDescBox;
+static UINT32 guiMapItemDescBox;
+static UINT32 guiItemGraphic;
+static UINT32 guiMoneyGraphicsForDescBox;
+static UINT32 guiBullet;
 BOOLEAN			gfInItemDescBox = FALSE;
-UINT32			guiCurrentItemDescriptionScreen=0;
+static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE	*gpItemDescObject = NULL;
-BOOLEAN			gfItemDescObjectIsAttachment = FALSE;
+static BOOLEAN gfItemDescObjectIsAttachment = FALSE;
 static const wchar_t* gzItemName;
-wchar_t			gzItemDesc[ SIZE_ITEM_INFO ];
-wchar_t			gzItemPros[ SIZE_ITEM_PROS ];
-wchar_t			gzItemCons[ SIZE_ITEM_CONS ];
-wchar_t			gzFullItemPros[ SIZE_ITEM_PROS ];
-wchar_t			gzFullItemCons[ SIZE_ITEM_PROS ];
-wchar_t			gzFullItemTemp[ SIZE_ITEM_PROS ]; // necessary, unfortunately
-INT16				gsInvDescX;
-INT16				gsInvDescY;
-UINT8				gubItemDescStatusIndex;
-INT32				giItemDescAmmoButtonImages;
-INT32				giItemDescAmmoButton;
-BOOLEAN			gfItemAmmoDown = FALSE;
+static wchar_t gzItemDesc[SIZE_ITEM_INFO];
+static wchar_t gzItemPros[SIZE_ITEM_PROS];
+static wchar_t gzItemCons[SIZE_ITEM_CONS];
+static wchar_t gzFullItemPros[SIZE_ITEM_PROS];
+static wchar_t gzFullItemCons[SIZE_ITEM_PROS];
+static wchar_t gzFullItemTemp[SIZE_ITEM_PROS]; // necessary, unfortunately
+static INT16 gsInvDescX;
+static INT16 gsInvDescY;
+static UINT8 gubItemDescStatusIndex;
+static INT32 giItemDescAmmoButtonImages;
+static INT32 giItemDescAmmoButton;
 static SOLDIERTYPE* gpItemDescSoldier;
-BOOLEAN			fItemDescDelete = FALSE;
+static BOOLEAN fItemDescDelete = FALSE;
 MOUSE_REGION		gItemDescAttachmentRegions[4];
-MOUSE_REGION		gProsAndConsRegions[2];
+static MOUSE_REGION gProsAndConsRegions[2];
 
-static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32			guiMoneyButtonBtn[MAX_ATTACHMENTS];
-INT32				guiMoneyButtonImage;
-INT32				guiMoneyDoneButtonImage;
+static UINT32 guiMoneyButtonBtn[MAX_ATTACHMENTS];
+static INT32 guiMoneyButtonImage;
+static INT32 guiMoneyDoneButtonImage;
 
-UINT16		gusOriginalAttachItem[ MAX_ATTACHMENTS ];
-UINT8			gbOriginalAttachStatus[ MAX_ATTACHMENTS ];
-SOLDIERTYPE * gpAttachSoldier;
+static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
+static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
+static SOLDIERTYPE* gpAttachSoldier;
 extern BOOLEAN	gfSMDisableForItems;
 
 typedef struct
@@ -303,42 +295,38 @@ extern BOOLEAN fShowInventoryFlag;
 #define			MAP_KEY_RING_ROW_WIDTH 4
 
 // ITEM STACK POPUP STUFF
-BOOLEAN			gfInItemStackPopup = FALSE;
-UINT32			guiItemPopupBoxes;
-OBJECTTYPE	*gpItemPopupObject;
-INT16				gsItemPopupWidth;
-INT16				gsItemPopupHeight;
-INT16				gsItemPopupX;
-INT16				gsItemPopupY;
-MOUSE_REGION				gItemPopupRegions[8];
-MOUSE_REGION				gKeyRingRegions[ NUMBER_KEYS_ON_KEYRING ];
+static BOOLEAN gfInItemStackPopup = FALSE;
+static UINT32 guiItemPopupBoxes;
+static OBJECTTYPE* gpItemPopupObject;
+static INT16 gsItemPopupWidth;
+static INT16 gsItemPopupHeight;
+static INT16 gsItemPopupX;
+static INT16 gsItemPopupY;
+static MOUSE_REGION gItemPopupRegions[8];
+static MOUSE_REGION gKeyRingRegions[NUMBER_KEYS_ON_KEYRING];
 BOOLEAN							gfInKeyRingPopup = FALSE;
-UINT8								gubNumItemPopups = 0;
-MOUSE_REGION				gItemPopupRegion;
-INT16				gsItemPopupInvX;
-INT16				gsItemPopupInvY;
-INT16				gsItemPopupInvWidth;
-INT16				gsItemPopupInvHeight;
+static UINT8 gubNumItemPopups = 0;
+static MOUSE_REGION gItemPopupRegion;
+static INT16 gsItemPopupInvX;
+static INT16 gsItemPopupInvY;
+static INT16 gsItemPopupInvWidth;
+static INT16 gsItemPopupInvHeight;
 
-INT16				gsKeyRingPopupInvX;
-INT16				gsKeyRingPopupInvY;
-INT16				gsKeyRingPopupInvWidth;
-INT16				gsKeyRingPopupInvHeight;
+static INT16 gsKeyRingPopupInvX;
+static INT16 gsKeyRingPopupInvY;
+static INT16 gsKeyRingPopupInvWidth;
+static INT16 gsKeyRingPopupInvHeight;
 
 
 SOLDIERTYPE *gpItemPopupSoldier;
 extern BOOLEAN fMapScreenBottomDirty;
 
 // inventory description done button for mapscreen
-INT32 giMapInvDescButtonImage;
+static INT32 giMapInvDescButtonImage;
 INT32 giMapInvDescButton = -1;
 
-// the done descrition button callback
-static void ItemDescDoneButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
-
-extern BOOLEAN fMapInventoryItem;
-BOOLEAN	gfItemPopupRegionCallbackEndFix = FALSE;
+static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
 extern void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier );
 
 
@@ -348,7 +336,7 @@ extern void	StartSKIDescriptionBox( void );
 void UpdateItemHatches();
 
 
-UINT8		ubRGBItemCyclePlacedItemColors[] =
+static const UINT8 ubRGBItemCyclePlacedItemColors[] =
 {
 	25,		25,		25,
 	50,		50,		50,
@@ -406,7 +394,7 @@ typedef struct
 } INV_HELPTEXT;
 
 
-INV_DESC_STATS gWeaponStats[] =
+static const INV_DESC_STATS gWeaponStats[] =
 {
 	202,		25,			83,
 	202,		15,			83,
@@ -421,7 +409,7 @@ INV_DESC_STATS gWeaponStats[] =
 
 
 // displayed AFTER the mass/weight/"Kg" line
-INV_DESC_STATS gMoneyStats[] =
+static const INV_DESC_STATS gMoneyStats[] =
 {
 	202,		14,			78,
 	212,		25,			78,
@@ -430,7 +418,7 @@ INV_DESC_STATS gMoneyStats[] =
 };
 
 // displayed AFTER the mass/weight/"Kg" line
-INV_DESC_STATS gMapMoneyStats[] =
+static const INV_DESC_STATS gMapMoneyStats[] =
 {
 	51,		97,				45,
 	61,		107,			75,
@@ -439,7 +427,7 @@ INV_DESC_STATS gMapMoneyStats[] =
 };
 
 
-INV_DESC_STATS gMapWeaponStats[] =
+static const INV_DESC_STATS gMapWeaponStats[] =
 {
 	72 - 20,		20+80+8,		80,
 	72 - 20,		20+80-2,		80,
@@ -454,7 +442,7 @@ INV_DESC_STATS gMapWeaponStats[] =
 };
 
 
-INV_ATTACHXY	gItemDescAttachmentsXY[] =
+static const INV_ATTACHXY gItemDescAttachmentsXY[] =
 {
 	129,		12,		SM_INV_SLOT_HEIGHT,		SM_INV_SLOT_WIDTH,		INV_BAR_DX-1,		INV_BAR_DY+1,
 	163,		12,		SM_INV_SLOT_HEIGHT,		SM_INV_SLOT_WIDTH,		INV_BAR_DX-1,		INV_BAR_DY+1,
@@ -462,7 +450,7 @@ INV_ATTACHXY	gItemDescAttachmentsXY[] =
 	163,		39,		SM_INV_SLOT_HEIGHT,		SM_INV_SLOT_WIDTH,		INV_BAR_DX-1,		INV_BAR_DY+1
 };
 
-INV_ATTACHXY gMapItemDescAttachmentsXY[] =
+static const INV_ATTACHXY gMapItemDescAttachmentsXY[] =
 {
   173,		10,		SM_INV_SLOT_HEIGHT,		26,		INV_BAR_DX + 2,		INV_BAR_DY,
 	211,		10,		SM_INV_SLOT_HEIGHT,		26,		INV_BAR_DX + 2,		INV_BAR_DY,
@@ -470,20 +458,20 @@ INV_ATTACHXY gMapItemDescAttachmentsXY[] =
 	211,		36,		SM_INV_SLOT_HEIGHT,		26,		INV_BAR_DX + 2,		INV_BAR_DY
 };
 
-SGPRect gItemDescProsConsRects[] =
+static const SGPRect gItemDescProsConsRects[] =
 {// NB the left value is calculated based on the width of the 'pros' and 'cons' labels
 	0, 111, 313, 118,
 	0, 119, 313, 126
 };
 
-SGPRect gMapItemDescProsConsRects[] =
+static const SGPRect gMapItemDescProsConsRects[] =
 {
 	0, 231, 313, 238,
 	0, 239, 313, 246,
 };
 
 
-INV_HELPTEXT gItemDescHelpText =
+static INV_HELPTEXT gItemDescHelpText =
 {
 	{ 69 }, // x locations
 	{ 12 }, // y locations
@@ -492,10 +480,10 @@ INV_HELPTEXT gItemDescHelpText =
 	{ Message[STR_ATTACHMENT_INVALID_HELP] },
 };
 
-BOOLEAN gfItemDescHelpTextOffset = FALSE;
+static BOOLEAN gfItemDescHelpTextOffset = FALSE;
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS (sX,sY get set via InitInvSlotInterface() )
-INV_REGIONS gSMInvData[] =
+static INV_REGIONS gSMInvData[] =
 {
 	FALSE,		INV_BAR_DX,		INV_BAR_DY,		HEAD_INV_SLOT_WIDTH,	HEAD_INV_SLOT_HEIGHT,		0,	0,			// HELMETPOS
 	FALSE,		INV_BAR_DX,		INV_BAR_DY,		VEST_INV_SLOT_WIDTH,	VEST_INV_SLOT_HEIGHT,		0,	0,			// VESTPOS
@@ -526,16 +514,16 @@ typedef struct
 	UINT32	uiMoneyRemoving;
 
 } REMOVE_MONEY;
-REMOVE_MONEY gRemoveMoney;
+static REMOVE_MONEY gRemoveMoney;
 
-MOUSE_REGION		gSMInvRegion[ NUM_INV_SLOTS ];
-MOUSE_REGION		gKeyRingPanel;
-MOUSE_REGION		gSMInvCamoRegion;
-INT8						gbCompatibleAmmo[ NUM_INV_SLOTS ];
+static MOUSE_REGION gSMInvRegion[NUM_INV_SLOTS];
+static MOUSE_REGION gKeyRingPanel;
+static MOUSE_REGION gSMInvCamoRegion;
+static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8						gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
-UINT32					guiBodyInvVO[ 4 ][ 2 ];
-UINT32					guiGoldKeyVO;
+static UINT32 guiBodyInvVO[4][2];
+static UINT32 guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
 
@@ -2192,9 +2180,11 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 }
 
 
+static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void ItemDescAmmoCallback(GUI_BUTTON* btn, INT32 reason);
 static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BOOLEAN ReloadItemDesc(void);
 
 
@@ -2309,9 +2299,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		FindFontCenterCoordinates( (INT16)ITEMDESC_AMMO_TEXT_X, (INT16)ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight( TINYFONT1 ), pStr, TINYFONT1, &usX, &usY);
 
 		SpecifyButtonTextOffsets( giItemDescAmmoButton, (UINT8) usX, (UINT8) usY, TRUE );
-
-		gfItemAmmoDown = FALSE;
-
 	}
 
 	if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
@@ -2561,13 +2548,11 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		fRightDown = TRUE;
-		gfItemAmmoDown = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP && fRightDown )
 	{
 		fRightDown = FALSE;
-		gfItemAmmoDown = FALSE;
 
 		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 		{
@@ -4012,9 +3997,6 @@ void EndItemPointer( )
 
 void DrawItemFreeCursor( )
 {
-	//OBJECTTYPE		*gpItemPointer;
-	//UINT16				usItemSnapCursor;
-
 	// Get usIndex and then graphic for item
 	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
