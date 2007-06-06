@@ -714,11 +714,11 @@ const wchar_t* gzMercSkillText[] =
 
 const wchar_t* pTacticalPopupButtonStrings[] =
 {
-	L"|Debout/Marcher",
-	L"|Accroupi/Avancer",
+	L"Debout/Marcher (|S)",
+	L"Accroupi/Avancer (|C)",
 	L"Debout/|Courir",
-	L"|A terre/Ramper",
-	L"|Regarder",
+	L"A terre/Ramper (|P)",
+	L"Regarder (|L)",
 	L"Action",
 	L"Parler",
 	L"Examiner (|C|t|r|l)",
@@ -945,9 +945,9 @@ const wchar_t* gpStrategicString[] =
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"|Annule le déploiement des mercenaires\net vous permet de les déployer vous-même.",
-	L"Disperse |aléatoirement vos mercenaires\nà chaque fois.",
-	L"Vous permet de placer votre groupe |de mercenaires.",
+	L"Annule le déploiement des mercenaires\net vous permet de les déployer vous-même. (|C)",
+	L"Disperse aléatoirement vos mercenaires\nà chaque fois. (|s)",
+	L"Vous permet de placer votre |groupe de mercenaires.",
 	L"Cliquez sur ce bouton lorsque vous avez déployé\nvos mercenaires. (|E|n|t|r|é|e)",
 	L"Vous devez déployer vos mercenaires\navant d'engager le combat.",
 
@@ -968,11 +968,11 @@ const wchar_t* gpStrategicString[] =
 
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
-	L"|Résolution automatique du combat\nsans charger la carte.",
-	L"|Résolution automatique impossible lorsque\nvous attaquez.",
-	L"|Pénétrez dans le secteur pour engager le combat.",
-	L"|Faire retraite vers le secteur précédent.",				//singular version
-	L"|Faire retraite vers les secteurs précédents.", //multiple groups with same previous sector
+	L"Résolution |automatique du combat\nsans charger la carte.",
+	L"Résolution automatique impossible lorsque\nvous attaquez.",
+	L"Pénétrez dans le secteur pour engager le combat. (|E)",
+	L"Faire |retraite vers le secteur précédent.",				//singular version
+	L"Faire |retraite vers les secteurs précédents.", //multiple groups with same previous sector
 
 	//various popup messages for battle conditions.
 
@@ -1234,8 +1234,8 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	// These are different buttons that the player can turn on and off.
 
 	L"Furtivité (|Z)",
-	L"|Carte",
-	L"|OK (Fin du tour)",
+	L"Carte (|M)",
+	L"OK (Fin du tour) (|D)",
 	L"Parler à",
 	L"Muet",
 	L"Position haute (|P|g|U|p)",
@@ -1246,8 +1246,8 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Mercenaire précédent",
 	L"Mercenaire suivant (E|s|p|a|c|e)",
 	L"|Options",
-	L"|Rafale",
-	L"|Regarder/Pivoter",
+	L"Rafale (|B)",
+	L"Regarder/Pivoter (|L)",
 	L"Santé : %d/%d\nEnergie : %d/%d\nMoral : %ls",
 	L"Pardon ?",					//this means "what?"
 	L"Suite",					//an abbrieviation for "Continued"
@@ -1586,18 +1586,18 @@ const wchar_t* pUpdateMercStrings[] =
 
 const wchar_t* pMapScreenBorderButtonHelpText[] =
 {
-	L"Afficher |Villes",
+	L"Afficher Villes (|w)",
 	L"Afficher |Mines",
-	L"Afficher |Escouades & Ennemis",
-	L"Afficher |Espace aérien",
-	L"Afficher |Objets",
+	L"Afficher Escouades & Ennemis (|T)",
+	L"Afficher Espace |aérien",
+	L"Afficher Objets (|I)",
 	L"Afficher Milice & Ennemis (|Z)",
 };
 
 
 const wchar_t* pMapScreenBottomFastHelp[] =
 {
-	L"|Poste de Travail",
+	L"Poste de Travail (|L)",
 	L"Tactique (|E|c|h|a|p)",
 	L"|Options",
 	L"Compression du temps (|+)", 	// time compress more
@@ -3375,13 +3375,13 @@ const wchar_t* zOptionsScreenHelpText[] =
 	L"Activez cette option pour que le curseur se positionne directement sur une porte quand il est à proximité.",
 
 	//glow items
-	L"Activez cette option pour mettre les objets en évidence",
+	L"Activez cette option pour mettre les objets en évidence (|I)",
 
 	//toggle tree tops
-	L"Activez cette option pour afficher le cime des arbres.",
+	L"Activez cette option pour afficher le cime des arbres. (|T)",
 
 	//toggle wireframe
-	L"Activez cette option pour afficher les murs en fil de fer.",
+	L"Activez cette option pour afficher les murs en fil de fer. (|W)",
 
 	L"Activez cette option pour afficher le curseur en 3D. (|H|o|m|e)",
 
@@ -3665,8 +3665,8 @@ const wchar_t* gzHelpScreenText[] =
 const wchar_t* gzNonPersistantPBIText[] =
 {
 	L"Vous êtes en plein combat. Vous pouvez donner l'ordre de retraite depuis l'écran tactique.",
-	L"|Pénétrez dans le secteur pour reprendre le cours du combat.",
-	L"|Résolution automatique du combat.",
+	L"Pénétrez dans le secteur pour reprendre le cours du combat. (|E)",
+	L"Résolution |automatique du combat.",
 	L"Résolution automatique impossible lorsque vous êtes l'attaquant.",
 	L"Résolution automatique impossible lorsque vous êtes pris en embuscade.",
 	L"Résolution automatique impossible lorsque vous combattez des créatures dans les mines.",
