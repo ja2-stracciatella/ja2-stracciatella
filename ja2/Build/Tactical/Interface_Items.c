@@ -254,7 +254,7 @@ BOOLEAN			gfInItemDescBox = FALSE;
 UINT32			guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE	*gpItemDescObject = NULL;
 BOOLEAN			gfItemDescObjectIsAttachment = FALSE;
-wchar_t			gzItemName[ SIZE_ITEM_NAME ];
+static const wchar_t* gzItemName;
 wchar_t			gzItemDesc[ SIZE_ITEM_INFO ];
 wchar_t			gzItemPros[ SIZE_ITEM_PROS ];
 wchar_t			gzItemCons[ SIZE_ITEM_CONS ];
@@ -2540,7 +2540,7 @@ static BOOLEAN ReloadItemDesc(void)
 	{
 		Item = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
-	wcslcpy(gzItemName, ItemNames[Item], lengthof(gzItemName));
+	gzItemName = ItemNames[Item];
 	return LoadItemInfo(Item, gzItemDesc);
 }
 
