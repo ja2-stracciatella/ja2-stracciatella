@@ -248,7 +248,6 @@ static wchar_t gzItemPros[SIZE_ITEM_PROS];
 static wchar_t gzItemCons[SIZE_ITEM_CONS];
 static wchar_t gzFullItemPros[SIZE_ITEM_PROS];
 static wchar_t gzFullItemCons[SIZE_ITEM_PROS];
-static wchar_t gzFullItemTemp[SIZE_ITEM_PROS]; // necessary, unfortunately
 static INT16 gsInvDescX;
 static INT16 gsInvDescY;
 static UINT8 gubItemDescStatusIndex;
@@ -2313,8 +2312,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscpy( gzFullItemPros, gzProsLabel );
 					wcscat( gzFullItemPros, L" " );
 					// use temp variable to prevent an initial comma from being displayed
-					GenerateProsString( gzFullItemTemp, gpItemDescObject, 1000 );
-					wcscat( gzFullItemPros, gzFullItemTemp );
+					wchar_t FullItemTemp[SIZE_ITEM_PROS];
+					GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
+					wcscat(gzFullItemPros, FullItemTemp);
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemPros );
 				}
 				else
@@ -2322,8 +2322,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscpy( gzFullItemCons, gzConsLabel );
 					wcscat( gzFullItemCons, L" " );
 					// use temp variable to prevent an initial comma from being displayed
-					GenerateConsString( gzFullItemTemp, gpItemDescObject, 1000 );
-					wcscat( gzFullItemCons, gzFullItemTemp );
+					wchar_t FullItemTemp[SIZE_ITEM_PROS];
+					GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
+					wcscat(gzFullItemCons, FullItemTemp);
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
 				}
 			}
@@ -2347,8 +2348,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscpy( gzFullItemPros, gzProsLabel );
 					wcscat( gzFullItemPros, L" " );
 					// use temp variable to prevent an initial comma from being displayed
-					GenerateProsString( gzFullItemTemp, gpItemDescObject, 1000 );
-					wcscat( gzFullItemPros, gzFullItemTemp );
+					wchar_t FullItemTemp[SIZE_ITEM_PROS];
+					GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
+					wcscat(gzFullItemPros, FullItemTemp);
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemPros );
 				}
 				else
@@ -2356,8 +2358,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 					wcscpy( gzFullItemCons, gzConsLabel );
 					wcscat( gzFullItemCons, L" " );
 					// use temp variable to prevent an initial comma from being displayed
-					GenerateConsString( gzFullItemTemp, gpItemDescObject, 1000 );
-					wcscat( gzFullItemCons, gzFullItemTemp );
+					wchar_t FullItemTemp[SIZE_ITEM_PROS];
+					GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
+					wcscat(gzFullItemCons, FullItemTemp);
 					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
 				}
 			}
