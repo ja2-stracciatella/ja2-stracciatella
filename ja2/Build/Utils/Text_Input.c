@@ -106,7 +106,6 @@ static void PopTextInputLevel(void)
 //flags for determining various editing modes.
 BOOLEAN gfEditingText = FALSE;
 BOOLEAN gfTextInputMode = FALSE;
-BOOLEAN gfHiliteMode = FALSE;
 
 //values that contain the hiliting positions and the cursor position.
 UINT8 gubCursorPos = 0;
@@ -262,7 +261,6 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 	{
 		gubStartHilite = 0;
 		gubCursorPos = pNode->ubStrLen;
-		gfHiliteMode = TRUE;
 	}
 	pNode->fUserField = FALSE;
 	pNode->fEnabled = TRUE;
@@ -524,12 +522,10 @@ void SetActiveField( UINT8 ubField )
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
 			}
 			else
 			{
-				gfHiliteMode = FALSE;
 				gfEditingText = FALSE;
 				if( gpActive->InputCallback )
 					(gpActive->InputCallback)(gpActive->ubID, TRUE);
@@ -568,12 +564,10 @@ void SelectNextField()
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
 			}
 			else
 			{
-				gfHiliteMode = FALSE;
 				gfEditingText = FALSE;
 				if( gpActive->InputCallback )
 					(gpActive->InputCallback)(gpActive->ubID, TRUE);
@@ -612,12 +606,10 @@ static void SelectPrevField(void)
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
 			}
 			else
 			{
-				gfHiliteMode = FALSE;
 				gfEditingText = FALSE;
 				if( gpActive->InputCallback )
 					(gpActive->InputCallback)(gpActive->ubID, TRUE);
@@ -770,96 +762,23 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 
 		case SDLK_LEFT:
 			gfNoScroll = TRUE;
-			if (Event->usKeyState & SHIFT_DOWN)
-			{
-				//Initiates or continues hilighting to the left one position.  If the cursor
-				//is at the left end of the block, then the block decreases one position.
-				if (!gfHiliteMode)
-				{
-					gfHiliteMode = TRUE;
-					gubStartHilite = gubCursorPos;
-				}
-				if (gubCursorPos) gubCursorPos--;
-			}
-			else
-			{
-				//Move the cursor to the left one position.  If there is selected text,
-				//the cursor moves to the left of the block, and clears the block.
-				if (gfHiliteMode)
-				{
-					gfHiliteMode = FALSE;
-					gubCursorPos = gubStartHilite;
-					break;
-				}
-				if (gubCursorPos) gubCursorPos--;
-			}
+			if (gubCursorPos) gubCursorPos--;
+			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
 			break;
 
 		case SDLK_RIGHT:
-			if (Event->usKeyState & SHIFT_DOWN)
-			{
-				//Initiates or continues hilighting to the right one position.  If the cursor
-				//is at the right end of the block, then the block decreases one position.
-				gfNoScroll = TRUE;
-				if (!gfHiliteMode)
-				{
-					gfHiliteMode = TRUE;
-					gubStartHilite = gubCursorPos;
-				}
-				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
-			}
-			else
-			{
-				//Move the cursor to the right one position.  If there is selected text,
-				//the block is cleared.
-				gfNoScroll = TRUE;
-				if( gfHiliteMode )
-				{
-					gfHiliteMode = FALSE;
-					break;
-				}
-				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
-			}
+			if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
+			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
 			break;
 
 		case SDLK_END:
-			if (Event->usKeyState & SHIFT_DOWN)
-			{
-				/* From the location of the anchored cursor for hilighting, the cursor
-				 * goes to the end of the text, selecting all text from the anchor to
-				 * the end of the text. */
-				if (!gfHiliteMode)
-				{
-					gfHiliteMode = TRUE;
-					gubStartHilite = gubCursorPos;
-				}
-			}
-			else
-			{
-				//Any hilighting is cleared and the cursor moves to the end of the text.
-				gfHiliteMode = FALSE;
-			}
 			gubCursorPos = gpActive->ubStrLen;
+			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
 			break;
 
 		case SDLK_HOME:
-			if (Event->usKeyState & SHIFT_DOWN)
-			{
-				/* From the location of the anchored cursor for hilighting, the cursor
-				 * goes to the beginning of the text, selecting all text from the
-				 * anchor to the beginning of the text. */
-				if (!gfHiliteMode)
-				{
-					gfHiliteMode = TRUE;
-					gubStartHilite = gubCursorPos;
-				}
-			}
-			else
-			{
-				//Any hilighting is cleared and the cursor moves to the beginning of the line.
-				gfHiliteMode = FALSE;
-			}
 			gubCursorPos = 0;
+			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
 			break;
 
 		case SDLK_DELETE:
@@ -871,10 +790,9 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfHiliteMode = TRUE;
 				DeleteHilitedText();
 			}
-			else if( gfHiliteMode )
+			else if (gubStartHilite != gubCursorPos)
 				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 			else
 				RemoveChar( gubCursorPos );
@@ -882,7 +800,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 
 		case SDLK_BACKSPACE:
 			//Will delete the selected text, or the character to the left of the cursor if applicable.
-			if( gfHiliteMode)
+			if (gubStartHilite != gubCursorPos)
 			{
 				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 				DeleteHilitedText();
@@ -890,12 +808,13 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			else if( gubCursorPos > 0 )
 			{
 				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-				RemoveChar( --gubCursorPos );
+				--gubCursorPos;
+				gubStartHilite = gubCursorPos;
+				RemoveChar(gubCursorPos);
 			}
 			break;
 		default:  //check for typing keys
-			if( gfHiliteMode )
-				DeleteHilitedText();
+			DeleteHilitedText();
 			if( gpActive->usInputType >= INPUTTYPE_EXCLUSIVE_BASEVALUE )
 				HandleExclusiveInput(Event->Char);
 			else
@@ -1005,7 +924,10 @@ static void HandleExclusiveInput(wchar_t Char)
 				if( !gpActive->szString[ 2 ] )
 					AddChar( ':' );
 				else
+				{
 					gubCursorPos++;
+					gubStartHilite = gubCursorPos;
+				}
 			}
 			else if( gubCursorPos == 2 )
 			{
@@ -1059,6 +981,7 @@ static void AddChar(UINT32 uiKey)
 		gpActive->ubStrLen++;
 		gubCursorPos++;
 	}
+	gubStartHilite = gubCursorPos;
 }
 
 
@@ -1066,7 +989,6 @@ static void DeleteHilitedText(void)
 {
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
-	gfHiliteMode = FALSE;
 	if (gubStartHilite != gubCursorPos)
 	{
 		if (gubStartHilite < gubCursorPos)
@@ -1084,9 +1006,8 @@ static void DeleteHilitedText(void)
 		{
 			RemoveChar( ubStart );
 		}
-		gubStartHilite = 0;
+		gubStartHilite = ubStart;
 		gubCursorPos = ubStart;
-		gfHiliteMode = FALSE;
 	}
 }
 
@@ -1137,13 +1058,11 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 				if( gusMouseYPos < reg->RegionTopLeftY )
 				{
 					gubCursorPos = 0;
-					gfHiliteMode = TRUE;
 					return;
 				}
 				else if( gusMouseYPos > reg->RegionBottomRightY )
 				{
 					gubCursorPos = gpActive->ubStrLen;
-					gfHiliteMode = TRUE;
 					return;
 				}
 			}
@@ -1159,8 +1078,6 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 				if (char_pos >= click_x) break;
 			}
 			gubCursorPos = i;
-			if (gubCursorPos != gubStartHilite)
-				gfHiliteMode = TRUE;
 		}
 	}
 }
@@ -1202,8 +1119,6 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		}
 		gubCursorPos   = i;
 		gubStartHilite = i;
-		gfHiliteMode = FALSE;
-
 	}
 }
 
@@ -1244,7 +1159,7 @@ static void RenderActiveTextField(void)
 	SetFont( pColors->usFont );
 	usOffset = (UINT16)(( gpActive->region.RegionBottomRightY - gpActive->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
 	RenderBackgroundField( gpActive );
-	if (gfHiliteMode && gubStartHilite != gubCursorPos)
+	if (gubStartHilite != gubCursorPos)
 	{ //Some or all of the text is hilighted, so we will use a different method.
 		UINT16 i;
 		UINT16 usStart, usEnd;
