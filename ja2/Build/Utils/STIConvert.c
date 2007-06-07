@@ -1,7 +1,6 @@
 #include "Types.h"
 #include "Compression.h"
 #include "Debug.h"
-#include "FileMan.h"
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "PCX.h"

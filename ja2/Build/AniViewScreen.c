@@ -22,7 +22,6 @@
 #include "Interface.h"
 #include "Soldier_Ani.h"
 #include "English.h"
-#include "FileMan.h"
 #include "MessageBoxScreen.h"
 #include "Video.h"
 #include "MemMan.h"

@@ -1,8 +1,4 @@
 #include "Language_Defines.h"
-#ifdef ENGLISH
-#	include "FileMan.h"
-#endif
-
 
 #if defined(DUTCH) || defined(ENGLISH) || defined(FRENCH) || defined(ITALIAN) || defined(POLISH) || defined(RUSSIAN)
 

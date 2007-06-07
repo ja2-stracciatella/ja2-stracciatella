@@ -1,7 +1,6 @@
 #include "Language_Defines.h"
 #ifdef GERMAN
 #	include "Text.h"
-#	include "FileMan.h"
 #	include "JA2_Demo_Ads.h"
 #endif
 

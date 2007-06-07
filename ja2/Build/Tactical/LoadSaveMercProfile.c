@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
 

@@ -1,7 +1,6 @@
 #include "Language_Defines.h"
 #ifdef ENGLISH
 #	include "Text.h"
-#	include "FileMan.h"
 #endif
 #include <wchar.h>
 

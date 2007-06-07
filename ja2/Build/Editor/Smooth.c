@@ -3,7 +3,6 @@
 #ifdef JA2EDITOR
 
 #include <stdlib.h>
-#include "FileMan.h"
 #include "Debug.h"
 #include "TileDef.h"
 #include "WorldDef.h"

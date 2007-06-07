@@ -1,7 +1,6 @@
 #ifndef LOADSAVEMERCPROFILE_H
 #define LOADSAVEMERCPROFILE_H
 
-#include "FileMan.h"
 #include "Soldier_Profile_Type.h"
 
 

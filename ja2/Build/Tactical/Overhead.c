@@ -16,7 +16,6 @@
 #include "MouseSystem.h"
 #include "Interface.h"
 #include "SysUtil.h"
-#include "FileMan.h"
 #include "Points.h"
 #include "Random.h"
 #include "AI.h"
