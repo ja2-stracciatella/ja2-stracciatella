@@ -1126,7 +1126,6 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 				reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
 				reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 		{
-			INT32 iClickX, iCurrCharPos, iNextCharPos;
 			UINT8 ubNewID;
 			ubNewID = (UINT8)MSYS_GetRegionUserData( reg, 0 );
 			if( ubNewID != gpActive->ubID )
@@ -1160,17 +1159,17 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 			}
 
 			//Calculate the cursor position.
-			iClickX = gusMouseXPos - reg->RegionTopLeftX;
-			iCurrCharPos = 0;
-			gubCursorPos = 0;
-			iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%ls", gpActive->szString) / 2;
-			while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
+			HVOBJECT font = GetFontObject(pColors->usFont);
+			INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
+			size_t i;
+			INT32 char_pos = 0;
+			for (i = 0; i < gpActive->ubStrLen; i++)
 			{
-				gubCursorPos++;
-				iCurrCharPos = iNextCharPos;
-				iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%ls", gpActive->szString);
+				char_pos += GetCharWidth(font, gpActive->szString[i]);
+				if (char_pos >= click_x) break;
 			}
-			gubEndHilite = gubCursorPos;
+			gubCursorPos   = i;
+			gubEndHilite   = i;
 			if( gubEndHilite != gubStartHilite )
 				gfHiliteMode = TRUE;
 		}
@@ -1184,7 +1183,6 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 	TEXTINPUTNODE *curr;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		INT32 iClickX, iCurrCharPos, iNextCharPos;
 		UINT8 ubNewID;
 		ubNewID = (UINT8)MSYS_GetRegionUserData( reg, 0 );
 		if( ubNewID != gpActive->ubID )
@@ -1204,18 +1202,18 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		//Signifies that we are typing text now.
 		gfEditingText = TRUE;
 		//Calculate the cursor position.
-		iClickX = gusMouseXPos - reg->RegionTopLeftX;
-		iCurrCharPos = 0;
-		gubCursorPos = 0;
-		iNextCharPos = StringPixLengthArg(pColors->usFont, 1, L"%ls", gpActive->szString) / 2;
-		while( iCurrCharPos + (iNextCharPos-iCurrCharPos)/2 < iClickX && gubCursorPos < gpActive->ubStrLen )
+		HVOBJECT font = GetFontObject(pColors->usFont);
+		INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
+		size_t i;
+		INT32 char_pos = 0;
+		for (i = 0; i < gpActive->ubStrLen; i++)
 		{
-			gubCursorPos++;
-			iCurrCharPos = iNextCharPos;
-			iNextCharPos = StringPixLengthArg(pColors->usFont, gubCursorPos + 1, L"%ls", gpActive->szString);
+			char_pos += GetCharWidth(font, gpActive->szString[i]);
+			if (char_pos >= click_x) break;
 		}
-		gubStartHilite = gubCursorPos;  //This value is the anchor
-		gubEndHilite = gubCursorPos;		//The end will move with the cursor as long as it's down.
+		gubCursorPos   = i;
+		gubStartHilite = i;
+		gubEndHilite   = i;
 		gfHiliteMode = FALSE;
 
 	}
