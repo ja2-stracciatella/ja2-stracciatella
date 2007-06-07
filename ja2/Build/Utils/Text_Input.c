@@ -15,7 +15,7 @@
 #include "MouseSystem.h"
 
 
-UINT16 *szClipboard;
+static UINT16* szClipboard;
 BOOLEAN gfNoScroll = FALSE;
 
 typedef struct TextInputColors
@@ -37,7 +37,7 @@ typedef struct TextInputColors
 	UINT16 usDisabledTextFieldColor;
 }TextInputColors;
 
-TextInputColors *pColors = NULL;
+static TextInputColors* pColors = NULL;
 
 //Internal nodes for keeping track of the text and user defined fields.
 typedef struct TEXTINPUTNODE{
@@ -61,15 +61,17 @@ typedef struct STACKTEXTINPUTNODE
 	struct STACKTEXTINPUTNODE *next;
 }STACKTEXTINPUTNODE;
 
-STACKTEXTINPUTNODE *pInputStack = NULL;
+static STACKTEXTINPUTNODE* pInputStack = NULL;
 
 //Internal list vars.  active always points to the currently edited field.
-TEXTINPUTNODE *gpTextInputHead = NULL, *gpTextInputTail = NULL, *gpActive = NULL;
+static TEXTINPUTNODE* gpTextInputHead = NULL;
+static TEXTINPUTNODE* gpTextInputTail = NULL;
+static TEXTINPUTNODE* gpActive = NULL;
 
 //Saving current mode
-TEXTINPUTNODE *pSavedHead = NULL;
-TextInputColors *pSavedColors = NULL;
-UINT16 gusTextInputCursor = CURSOR_IBEAM;
+static TEXTINPUTNODE* pSavedHead = NULL;
+static TextInputColors* pSavedColors = NULL;
+static UINT16 gusTextInputCursor = CURSOR_IBEAM;
 
 
 //Saves the current text input mode by pushing it onto our stack, then starts a new
@@ -104,15 +106,15 @@ static void PopTextInputLevel(void)
 
 
 //flags for determining various editing modes.
-BOOLEAN gfEditingText = FALSE;
-BOOLEAN gfTextInputMode = FALSE;
+static BOOLEAN gfEditingText = FALSE;
+static BOOLEAN gfTextInputMode = FALSE;
 
 //values that contain the hiliting positions and the cursor position.
-UINT8 gubCursorPos = 0;
-UINT8 gubStartHilite = 0;
+static UINT8 gubCursorPos = 0;
+static UINT8 gubStartHilite = 0;
 
 //allow the user to cut, copy, and paste just like windows.
-UINT16 gszClipboardString[256];
+static UINT16 gszClipboardString[256];
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
 //initializations that contain fields that edit text.  It also verifies and clears any existing
