@@ -1025,9 +1025,6 @@ static void FlowerOrderDisplayShippingLocationCity(void)
 }
 
 
-static void FlowerOrderUserTextFieldCallBack(UINT8 ubID, BOOLEAN fEntering);
-
-
 static void InitFlowerOrderTextInputBoxes(void)
 {
 	UINT32	uiStartLoc=0;
@@ -1043,7 +1040,7 @@ static void InitFlowerOrderTextInputBoxes(void)
 	SetTextInputHilitedColors( FONT_WHITE, 2, 141  );
 	SetCursorColor( Get16BPPColor(FROMRGB(0, 0, 0) ) );
 
-	AddUserInputField( FlowerOrderUserTextFieldCallBack );
+	AddUserInputField(NULL);
 
 	if( gbCurrentlySelectedCard != -1 )
 	{
@@ -1110,15 +1107,6 @@ static void HandleFloristOrderKeyBoardInput(void)
 			}
 		}
 	}
-}
-
-
-static void FlowerOrderUserTextFieldCallBack(UINT8 ubID, BOOLEAN fEntering)
-{
-	if( fEntering )
-	{
-//		SetActiveField(1);
- 	}
 }
 
 

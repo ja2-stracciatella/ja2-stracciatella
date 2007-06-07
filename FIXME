@@ -14,6 +14,7 @@ BlitMineText(): unnecessary wcscpy()
 Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BltToMouseCursor(): unused
+BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2]: merge
 BulletHitMerc: pointless EV_S_WEAPONHIT
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
@@ -72,7 +73,6 @@ FaceRegionMvtCallback(): unused
 FileCheckEndOfFile(): complicated
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
-FlowerOrderUserTextFieldCallBack(): pointless
 GetCostOfPassageForHelicopter(): callers
 GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
@@ -118,7 +118,6 @@ HandleSoldierFaceFlash(): empty
 HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HandleSuppressionFire(): callers
 HeliCharacterDialogue(): callers
-HideItemTileCursor(): empty
 IMPVideoObjects.h(): many needlessly called functions?
 I_CHANGELEVEL: unused
 InitStrategicRow[A-P](): complicated?
@@ -292,6 +291,7 @@ gTileTypeLogicalHeight[]: definition not used in file
 gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
+gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfOverIntTile: static
 gfProgBarActive: once TRUE it never changes anymore
 gsRadarY: always RADAR_WINDOW_TM_Y?

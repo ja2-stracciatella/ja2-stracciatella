@@ -2797,15 +2797,6 @@ static void InitQuestDebugTextInputBoxes(void)
 	SetTextInputHilitedColors( FONT_WHITE, 2, 141  );
 	SetCursorColor( Get16BPPColor(FROMRGB(0, 0, 0) ) );
 
-//	AddUserInputField( NULL );
-//	AddUserInputField( FlowerOrderUserTextFieldCallBack );
-
-/*
-	if( gbCurrentlySelectedCard != -1 )
-	{
-	}
-*/
-
 	swprintf( sTemp, lengthof(sTemp), L"%d", gsQdsEnteringGridNo );
 
 	//Text entry field
