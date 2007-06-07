@@ -1250,7 +1250,6 @@ static void RenderBackgroundField(TEXTINPUTNODE* pNode)
  * cursor. */
 static void RenderActiveTextField(void)
 {
-	UINT32 uiCursorXPos;
 	UINT16 usOffset;
 	if( !gpActive || !gpActive->szString )
 		return;
@@ -1275,9 +1274,11 @@ static void RenderActiveTextField(void)
 			usEnd = gubStartHilite;
 		}
 		//Traverse the string one character at a time, and draw the highlited part differently.
+		HVOBJECT Font = GetFontObject(pColors->usFont);
+		UINT32 x = gpActive->region.RegionTopLeftX + 3;
+		UINT32 y = gpActive->region.RegionTopLeftY + usOffset;
 		for( i = 0; i < gpActive->ubStrLen; i++ )
 		{
-			uiCursorXPos = StringPixLengthArg(pColors->usFont, i, L"%ls", gpActive->szString) + 3;
 			if( i >= usStart && i < usEnd )
 			{ //in highlighted part of text
 				SetFontForeground( pColors->ubHiForeColor );
@@ -1290,7 +1291,8 @@ static void RenderActiveTextField(void)
 				SetFontShadow( pColors->ubShadowColor );
 				SetFontBackground( 0 );
 			}
-			mprintf(uiCursorXPos + gpActive->region.RegionTopLeftX, gpActive->region.RegionTopLeftY + usOffset, L"%lc", gpActive->szString[i]);
+			mprintf(x, y, L"%lc", gpActive->szString[i]);
+			x += GetCharWidth(Font, gpActive->szString[i]);
 		}
 	}
 	else
@@ -1303,7 +1305,7 @@ static void RenderActiveTextField(void)
 	//Draw the cursor in the correct position.
 	if( gfEditingText && gpActive->szString )
 	{
-		uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%ls", gpActive->szString) + 2;
+		UINT32 uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%ls", gpActive->szString) + 2;
 		if( GetJA2Clock()%1000 < 500 )
 		{	//draw the blinking ibeam cursor during the on blink period.
 			ColorFillVideoSurfaceArea(FRAME_BUFFER,
