@@ -793,7 +793,9 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 				DeleteHilitedText();
 			}
 			else if (gubStartHilite != gubCursorPos)
-				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
+			{
+				DeleteHilitedText();
+			}
 			else
 				RemoveChar( gubCursorPos );
 			break;
