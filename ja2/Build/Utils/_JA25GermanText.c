@@ -2,7 +2,6 @@
 #ifdef ENGLISH
 #	include "Text.h"
 #	include "FileMan.h"
-#	include "JA2_Demo_Ads.h"
 #endif
 #include <wchar.h>
 

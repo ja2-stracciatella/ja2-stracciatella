@@ -2,7 +2,6 @@
 #include "Text.h"
 #include "Text_Utils.h"
 #include "FileMan.h"
-#include "JA2_Demo_Ads.h"
 #include "GameSettings.h"
 #include "Encrypted_File.h"
 
