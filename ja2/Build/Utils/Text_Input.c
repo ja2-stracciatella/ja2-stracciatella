@@ -111,7 +111,6 @@ BOOLEAN gfHiliteMode = FALSE;
 //values that contain the hiliting positions and the cursor position.
 UINT8 gubCursorPos = 0;
 UINT8 gubStartHilite = 0;
-UINT8 gubEndHilite = 0;
 
 //allow the user to cut, copy, and paste just like windows.
 UINT16 gszClipboardString[256];
@@ -262,7 +261,6 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 	if( gpTextInputHead == pNode )
 	{
 		gubStartHilite = 0;
-		gubEndHilite = pNode->ubStrLen;
 		gubCursorPos = pNode->ubStrLen;
 		gfHiliteMode = TRUE;
 	}
@@ -525,7 +523,6 @@ void SetActiveField( UINT8 ubField )
 			if( gpActive->szString )
 			{
 				gubStartHilite = 0;
-				gubEndHilite = gpActive->ubStrLen;
 				gubCursorPos = gpActive->ubStrLen;
 				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
@@ -570,7 +567,6 @@ void SelectNextField()
 			if( gpActive->szString )
 			{
 				gubStartHilite = 0;
-				gubEndHilite = gpActive->ubStrLen;
 				gubCursorPos = gpActive->ubStrLen;
 				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
@@ -615,7 +611,6 @@ static void SelectPrevField(void)
 			if( gpActive->szString )
 			{
 				gubStartHilite = 0;
-				gubEndHilite = gpActive->ubStrLen;
 				gubCursorPos = gpActive->ubStrLen;
 				gfHiliteMode = TRUE;
 				gfEditingText = TRUE;
@@ -785,7 +780,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					gubStartHilite = gubCursorPos;
 				}
 				if (gubCursorPos) gubCursorPos--;
-				gubEndHilite = gubCursorPos;
 			}
 			else
 			{
@@ -813,7 +807,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					gubStartHilite = gubCursorPos;
 				}
 				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
-				gubEndHilite = gubCursorPos;
 			}
 			else
 			{
@@ -823,7 +816,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 				if( gfHiliteMode )
 				{
 					gfHiliteMode = FALSE;
-					gubCursorPos = gubEndHilite;
 					break;
 				}
 				if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
@@ -841,7 +833,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					gfHiliteMode = TRUE;
 					gubStartHilite = gubCursorPos;
 				}
-				gubEndHilite = gpActive->ubStrLen;
 			}
 			else
 			{
@@ -862,7 +853,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					gfHiliteMode = TRUE;
 					gubStartHilite = gubCursorPos;
 				}
-				gubEndHilite = 0;
 			}
 			else
 			{
@@ -880,7 +870,7 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			if( Event->usKeyState & CTRL_DOWN )
 			{
 				gubStartHilite = 0;
-				gubEndHilite = gpActive->ubStrLen;
+				gubCursorPos = gpActive->ubStrLen;
 				gfHiliteMode = TRUE;
 				DeleteHilitedText();
 			}
@@ -1077,16 +1067,16 @@ static void DeleteHilitedText(void)
 	UINT8 ubCount;
 	UINT8 ubStart, ubEnd;
 	gfHiliteMode = FALSE;
-	if( gubStartHilite != gubEndHilite )
+	if (gubStartHilite != gubCursorPos)
 	{
-		if( gubStartHilite < gubEndHilite )
+		if (gubStartHilite < gubCursorPos)
 		{
 			ubStart = gubStartHilite;
-			ubEnd = gubEndHilite;
+			ubEnd = gubCursorPos;
 		}
 		else
 		{
-			ubStart = gubEndHilite;
+			ubStart = gubCursorPos;
 			ubEnd = gubStartHilite;
 		}
 		ubCount = (UINT8)(ubEnd - ubStart);
@@ -1094,7 +1084,7 @@ static void DeleteHilitedText(void)
 		{
 			RemoveChar( ubStart );
 		}
-		gubStartHilite = gubEndHilite = 0;
+		gubStartHilite = 0;
 		gubCursorPos = ubStart;
 		gfHiliteMode = FALSE;
 	}
@@ -1146,13 +1136,13 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 			{
 				if( gusMouseYPos < reg->RegionTopLeftY )
 				{
-					gubEndHilite = 0;
+					gubCursorPos = 0;
 					gfHiliteMode = TRUE;
 					return;
 				}
 				else if( gusMouseYPos > reg->RegionBottomRightY )
 				{
-					gubEndHilite = gpActive->ubStrLen;
+					gubCursorPos = gpActive->ubStrLen;
 					gfHiliteMode = TRUE;
 					return;
 				}
@@ -1168,9 +1158,8 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 				char_pos += GetCharWidth(font, gpActive->szString[i]);
 				if (char_pos >= click_x) break;
 			}
-			gubCursorPos   = i;
-			gubEndHilite   = i;
-			if( gubEndHilite != gubStartHilite )
+			gubCursorPos = i;
+			if (gubCursorPos != gubStartHilite)
 				gfHiliteMode = TRUE;
 		}
 	}
@@ -1213,7 +1202,6 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		}
 		gubCursorPos   = i;
 		gubStartHilite = i;
-		gubEndHilite   = i;
 		gfHiliteMode = FALSE;
 
 	}
@@ -1256,19 +1244,19 @@ static void RenderActiveTextField(void)
 	SetFont( pColors->usFont );
 	usOffset = (UINT16)(( gpActive->region.RegionBottomRightY - gpActive->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
 	RenderBackgroundField( gpActive );
-	if( gfHiliteMode && gubStartHilite != gubEndHilite )
+	if (gfHiliteMode && gubStartHilite != gubCursorPos)
 	{ //Some or all of the text is hilighted, so we will use a different method.
 		UINT16 i;
 		UINT16 usStart, usEnd;
 		//sort the hilite order.
-		if( gubStartHilite < gubEndHilite )
+		if (gubStartHilite < gubCursorPos)
 		{
 			usStart = gubStartHilite;
-			usEnd = gubEndHilite;
+			usEnd = gubCursorPos;
 		}
 		else
 		{
-			usStart = gubEndHilite;
+			usStart = gubCursorPos;
 			usEnd = gubStartHilite;
 		}
 		//Traverse the string one character at a time, and draw the highlited part differently.
@@ -1565,16 +1553,16 @@ static void ExecuteCopyCommand(void)
 	//Delete the current contents in the clipboard
 	KillClipboard();
 	//Calculate the start and end of the hilight
-	if( gubStartHilite != gubEndHilite )
+	if (gubStartHilite != gubCursorPos)
 	{
-		if( gubStartHilite < gubEndHilite )
+		if (gubStartHilite < gubCursorPos)
 		{
 			ubStart = gubStartHilite;
-			ubEnd = gubEndHilite;
+			ubEnd = gubCursorPos;
 		}
 		else
 		{
-			ubStart = gubEndHilite;
+			ubStart = gubCursorPos;
 			ubEnd = gubStartHilite;
 		}
 		ubCount = (UINT8)(ubEnd - ubStart);
