@@ -12,16 +12,11 @@
 WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
 {
 	WRAPPED_STRING FirstWrappedString;
-	WRAPPED_STRING *pWrappedString = NULL;
 	wchar_t					TempString[1024];
 	INT16					usCurIndex, usEndIndex, usDestIndex;
-	STR16						pCurrentStringLoc;
   wchar_t					DestString[1024];
-	BOOLEAN					fDone = FALSE;
 	UINT16					usCurrentWidthPixels=0;
-  BOOLEAN					fNewLine=FALSE;
 	BOOLEAN					fTheStringIsToLong=FALSE;
-	INT32 iCounter=0;
 	INT32 iErrorCount = 0;
 
 	memset(&FirstWrappedString, 0, sizeof(WRAPPED_STRING) );
@@ -39,7 +34,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 	usCurIndex = usEndIndex = usDestIndex = 0;
 	HVOBJECT Font = GetFontObject(ulFont);
 
-	while(!fDone)
+	for (BOOLEAN fDone = FALSE; !fDone;)
 	{
 		//Kris:
 		//This is TEMPORARY!!!  Dave, I've added this to get out of the infinite loop by slowing increasing the
@@ -51,7 +46,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			usLineWidthPixels++;
 		}
 
-    fNewLine=FALSE;
+		BOOLEAN fNewLine = FALSE;
 
 		DestString[ usDestIndex ] = TempString[ usCurIndex ];
     if(DestString[usDestIndex]==NEWLINE_CHAR)
@@ -64,7 +59,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 		if(TempString[ usCurIndex  ] == 0)
 		{
 			//get to next WrappedString structure
-			pWrappedString = &FirstWrappedString;
+			WRAPPED_STRING* pWrappedString = &FirstWrappedString;
 			while(pWrappedString->pNextWrappedString != NULL)
 				pWrappedString = pWrappedString->pNextWrappedString;
 
@@ -103,7 +98,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			DestString[usEndIndex] = 0;
 
 			//get to next WrappedString structure
-			pWrappedString = &FirstWrappedString;
+			WRAPPED_STRING* pWrappedString = &FirstWrappedString;
 			while(pWrappedString->pNextWrappedString != NULL)
 				pWrappedString = pWrappedString->pNextWrappedString;
 
@@ -121,14 +116,13 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 				usEndIndex = usCurIndex;
 
 
-				pCurrentStringLoc = &TempString[ usEndIndex ];
+				const wchar_t* pCurrentStringLoc = &TempString[usEndIndex];
 				//if last line, put line into string structure
         if (StringPixLength(pCurrentStringLoc, ulFont) < usLineWidthPixels)
         {
 					// run until end of DestString
 					wcscpy(DestString, pCurrentStringLoc);
-					iCounter=0;
-					while(DestString[iCounter]!=0)
+					for (INT32 iCounter = 0; DestString[iCounter] != L'\0'; iCounter++)
 					{
 						if(DestString[iCounter]==NEWLINE_CHAR)
 						{
@@ -136,7 +130,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 							fNewLine=TRUE;
 							break;
 						}
-						iCounter++;
 					}
 
 					//get to next WrappedString structure
