@@ -9,6 +9,14 @@
 #include "VSurface.h"
 
 
+static WRAPPED_STRING* AllocWrappedString(const wchar_t* str)
+{
+	WRAPPED_STRING* ws = MemAlloc(sizeof(*ws) + sizeof(*ws->sString) * (wcslen(str) + 1));
+	ws->pNextWrappedString = NULL;
+	wcscpy(ws->sString, str);
+}
+
+
 WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
 {
 	WRAPPED_STRING FirstWrappedString;
@@ -60,7 +68,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 		}
 
 		//If we are at the end of the string
-		if (TempString[usCurIndex ] == L'\0')
+		if (TempString[usCurIndex] == L'\0')
 		{
 			//get to next WrappedString structure
 			WRAPPED_STRING* pWrappedString = &FirstWrappedString;
@@ -68,11 +76,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			{
 				pWrappedString = pWrappedString->pNextWrappedString;
 			}
-
-			//allocate memory for the string
-			pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
-			pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
+			pWrappedString->pNextWrappedString = AllocWrappedString(DestString);
 
 			return FirstWrappedString.pNextWrappedString;
 		}
@@ -107,12 +111,9 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 			if (wcslen(DestString) != 0)
 			{
-				//allocate memory for the string
-				pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-				wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
-				pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
+				pWrappedString->pNextWrappedString = AllocWrappedString(DestString);
 
-				usCurrentWidthPixels =0;
+				usCurrentWidthPixels = 0;
 				usDestIndex = 0;
 				usCurIndex++;
 				usEndIndex = usCurIndex;
@@ -139,23 +140,14 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 					{
 						pWrappedString = pWrappedString->pNextWrappedString;
 					}
-
-					//allocate memory for the string
-					pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-					wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
-					pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
+					pWrappedString->pNextWrappedString = AllocWrappedString(DestString);
 
 					if (fNewLine)
 					{
 						pWrappedString = &FirstWrappedString;
 						while(pWrappedString->pNextWrappedString != NULL)
 						pWrappedString = pWrappedString->pNextWrappedString;
-
-						//allocate memory for the string
-						static const wchar_t SpaceString[] = L" ";
-						pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * lengthof(SpaceString));
-						wcscpy(pWrappedString->pNextWrappedString->sString, SpaceString);
-						pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
+						pWrappedString->pNextWrappedString = AllocWrappedString(L" ");
 					}
 
 					fDone = TRUE;
