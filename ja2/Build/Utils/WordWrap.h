@@ -29,9 +29,6 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 #define       IAN_WRAP_NO_SHADOW  32
 
 
-
-#define NEWLINE_CHAR 177
-
 typedef struct _WRAPPEDSTRING
 {
 	struct _WRAPPEDSTRING *pNextWrappedString;

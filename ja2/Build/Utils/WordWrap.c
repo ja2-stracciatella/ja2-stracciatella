@@ -61,7 +61,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 		BOOLEAN fNewLine = FALSE;
 
 		DestString[usDestIndex] = TempString[usCurIndex];
-		if (DestString[usDestIndex] == NEWLINE_CHAR)
+		if (DestString[usDestIndex] == TEXT_CODE_NEWLINE)
 		{
 			DestString[usDestIndex] = L'\0';
 			TempString[usCurIndex]  = L'\0';
@@ -127,7 +127,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 					wcscpy(DestString, pCurrentStringLoc);
 					for (INT32 iCounter = 0; DestString[iCounter] != L'\0'; iCounter++)
 					{
-						if (DestString[iCounter] == NEWLINE_CHAR)
+						if (DestString[iCounter] == TEXT_CODE_NEWLINE)
 						{
 							DestString[iCounter] = L'\0';
 							fNewLine = TRUE;
