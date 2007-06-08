@@ -12,26 +12,29 @@
 WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
 {
 	WRAPPED_STRING FirstWrappedString;
-	wchar_t					TempString[1024];
-	INT16					usCurIndex, usEndIndex, usDestIndex;
-  wchar_t					DestString[1024];
-	UINT16					usCurrentWidthPixels=0;
-	BOOLEAN					fTheStringIsToLong=FALSE;
+	wchar_t TempString[1024];
+	INT16 usCurIndex;
+	INT16 usEndIndex;
+	INT16 usDestIndex;
+	wchar_t DestString[1024];
+	UINT16 usCurrentWidthPixels = 0;
+	BOOLEAN fTheStringIsToLong = FALSE;
 	INT32 iErrorCount = 0;
 
-	memset(&FirstWrappedString, 0, sizeof(WRAPPED_STRING) );
+	memset(&FirstWrappedString, 0, sizeof(FirstWrappedString));
 
 	if (pusLineWidthIfWordIsWiderThenWidth != NULL)
 	{
 		*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
 	}
 
-	if(pString == NULL)
-		return(FALSE);
+	if (pString == NULL) return FALSE;
 
 	wcslcpy(TempString, pString, lengthof(TempString));
 
-	usCurIndex = usEndIndex = usDestIndex = 0;
+	usCurIndex = 0;
+	usEndIndex = 0;
+	usDestIndex = 0;
 	HVOBJECT Font = GetFontObject(ulFont);
 
 	for (BOOLEAN fDone = FALSE; !fDone;)
@@ -40,7 +43,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 		//This is TEMPORARY!!!  Dave, I've added this to get out of the infinite loop by slowing increasing the
 		//line width!
 		iErrorCount++;
-		if( iErrorCount > 300 )
+		if (iErrorCount > 300)
 		{
 			iErrorCount = 0;
 			usLineWidthPixels++;
@@ -48,65 +51,64 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 		BOOLEAN fNewLine = FALSE;
 
-		DestString[ usDestIndex ] = TempString[ usCurIndex ];
-    if(DestString[usDestIndex]==NEWLINE_CHAR)
+		DestString[usDestIndex] = TempString[usCurIndex];
+		if (DestString[usDestIndex] == NEWLINE_CHAR)
 		{
-			DestString[usDestIndex]=TempString[usCurIndex]=0;
-			fNewLine=TRUE;
+			DestString[usDestIndex] = L'\0';
+			TempString[usCurIndex]  = L'\0';
+			fNewLine = TRUE;
 		}
 
 		//If we are at the end of the string
-		if(TempString[ usCurIndex  ] == 0)
+		if (TempString[usCurIndex ] == L'\0')
 		{
 			//get to next WrappedString structure
 			WRAPPED_STRING* pWrappedString = &FirstWrappedString;
-			while(pWrappedString->pNextWrappedString != NULL)
+			while (pWrappedString->pNextWrappedString != NULL)
+			{
 				pWrappedString = pWrappedString->pNextWrappedString;
+			}
 
 			//allocate memory for the string
 			pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-
 			wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 			pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 
-			return(FirstWrappedString.pNextWrappedString);
-
+			return FirstWrappedString.pNextWrappedString;
 		}
 
 		usCurrentWidthPixels += GetCharWidth(Font, TempString[usCurIndex]);
 
-		if((usCurrentWidthPixels > usLineWidthPixels))//||(DestString[ usDestIndex ]==NEWLINE_CHAR )||(fNewLine))
+		if (usCurrentWidthPixels > usLineWidthPixels)
 		{
-
 			//if an error has occured, and the string is too long
-			if( fTheStringIsToLong )
-				DestString[ usDestIndex ] = L' ';
+			if (fTheStringIsToLong) DestString[usDestIndex] = L' ';
 
-			 //Go back to begining of word
-			 while(  (DestString[ usDestIndex ] != L' ') && (usCurIndex > 0) )
-			 {
+			//Go back to begining of word
+			while (DestString[usDestIndex] != L' ' && usCurIndex > 0)
+			{
 				usCurrentWidthPixels -= GetCharWidth(Font, DestString[usDestIndex]);
 				usCurIndex--;
 				usDestIndex--;
-			 }
-			 usEndIndex = usDestIndex;
+			}
+			usEndIndex = usDestIndex;
 
-			 if( usEndIndex < 0 )
-				 usEndIndex = 0;
+			if (usEndIndex < 0) usEndIndex = 0;
 
 			// put next line into temp buffer
-			DestString[usEndIndex] = 0;
+			DestString[usEndIndex] = L'\0';
 
 			//get to next WrappedString structure
 			WRAPPED_STRING* pWrappedString = &FirstWrappedString;
-			while(pWrappedString->pNextWrappedString != NULL)
+			while (pWrappedString->pNextWrappedString != NULL)
+			{
 				pWrappedString = pWrappedString->pNextWrappedString;
+			}
 
-			if( wcslen(DestString) != 0 )
+			if (wcslen(DestString) != 0)
 			{
 				//allocate memory for the string
 				pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-
 				wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 				pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 
@@ -115,44 +117,45 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 				usCurIndex++;
 				usEndIndex = usCurIndex;
 
-
 				const wchar_t* pCurrentStringLoc = &TempString[usEndIndex];
 				//if last line, put line into string structure
-        if (StringPixLength(pCurrentStringLoc, ulFont) < usLineWidthPixels)
-        {
+				if (StringPixLength(pCurrentStringLoc, ulFont) < usLineWidthPixels)
+				{
 					// run until end of DestString
 					wcscpy(DestString, pCurrentStringLoc);
 					for (INT32 iCounter = 0; DestString[iCounter] != L'\0'; iCounter++)
 					{
-						if(DestString[iCounter]==NEWLINE_CHAR)
+						if (DestString[iCounter] == NEWLINE_CHAR)
 						{
-							DestString[iCounter]=0;
-							fNewLine=TRUE;
+							DestString[iCounter] = L'\0';
+							fNewLine = TRUE;
 							break;
 						}
 					}
 
 					//get to next WrappedString structure
 					pWrappedString = &FirstWrappedString;
-					while(pWrappedString->pNextWrappedString != NULL)
+					while (pWrappedString->pNextWrappedString != NULL)
+					{
 						pWrappedString = pWrappedString->pNextWrappedString;
+					}
 
 					//allocate memory for the string
 					pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * (wcslen(DestString) + 1));
-
 					wcscpy(pWrappedString->pNextWrappedString->sString, DestString);
 					pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
-					if(fNewLine)
-					{
-					 pWrappedString = &FirstWrappedString;
-					 while(pWrappedString->pNextWrappedString != NULL)
-			 			pWrappedString = pWrappedString->pNextWrappedString;
 
-					 //allocate memory for the string
+					if (fNewLine)
+					{
+						pWrappedString = &FirstWrappedString;
+						while(pWrappedString->pNextWrappedString != NULL)
+						pWrappedString = pWrappedString->pNextWrappedString;
+
+						//allocate memory for the string
 						static const wchar_t SpaceString[] = L" ";
 						pWrappedString->pNextWrappedString = MemAlloc(sizeof(WRAPPED_STRING) + sizeof(*pWrappedString->pNextWrappedString->sString) * lengthof(SpaceString));
 						wcscpy(pWrappedString->pNextWrappedString->sString, SpaceString);
-					 pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
+						pWrappedString->pNextWrappedString->pNextWrappedString = NULL;
 					}
 
 					fDone = TRUE;
@@ -163,9 +166,8 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			else
 			{
 				char zText[1024];
-				sprintf( zText, "LineWrap() Error!  The string ( %ls ) has a word ( %ls ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels  );
-
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zText );
+				sprintf(zText, "LineWrap() Error!  The string ( %ls ) has a word ( %ls ) that is too long to fit into the required width of %d!  Please fix!!", pString, &TempString[usCurIndex], usLineWidthPixels);
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, zText);
 
 				//error
 				usLineWidthPixels = 1 + StringPixLength(&TempString[usCurIndex], ulFont);
@@ -184,17 +186,8 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 		usCurIndex++;
 		usDestIndex++;
 	}
-	return(FirstWrappedString.pNextWrappedString);
+	return FirstWrappedString.pNextWrappedString;
 }
-
-
-
-
-
-
-
-
-
 
 
 //
