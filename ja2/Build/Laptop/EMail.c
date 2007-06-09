@@ -794,7 +794,7 @@ static void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 
 	UINT32 Font = fRead ? MESSAGE_FONT : FONT10ARIALBOLD;
 	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, Font);
-	IanDisplayWrappedString(SUBJECT_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_WIDTH, MESSAGE_GAP, Font, MESSAGE_COLOR, pTempSubject, 0, FALSE, LEFT_JUSTIFIED);
+	IanDisplayWrappedString(SUBJECT_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_WIDTH, MESSAGE_GAP, Font, MESSAGE_COLOR, pTempSubject, 0, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
 	// reset font dest buffer
@@ -1191,7 +1191,7 @@ static INT32 DisplayEmailMessage(Email* pMail)
 		while( fDonePrintingMessage == FALSE )
 		{
 			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, FALSE, IAN_WRAP_NO_SHADOW);
+			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, IAN_WRAP_NO_SHADOW);
 
 			// increment email record ptr
 			pTempRecord = pTempRecord -> Next;
@@ -1878,8 +1878,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	mprintf( usX, MESSAGE_SUBJECT_Y + (UINT16)iViewerY, pEmailHeaders[1]);
 
  	// the actual subject info
-	IanDisplayWrappedString(SUBJECT_LINE_X+2, (INT16) ( SUBJECT_LINE_Y+2 + (UINT16)iViewerY ), SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR,pMail->pSubject,0,FALSE,0);
-
+	IanDisplayWrappedString(SUBJECT_LINE_X + 2, SUBJECT_LINE_Y + 2 + iViewerY, SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

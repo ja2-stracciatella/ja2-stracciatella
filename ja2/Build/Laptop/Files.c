@@ -934,8 +934,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
-			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, FALSE, IAN_WRAP_NO_SHADOW);
-
+			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 			 fGoingOffCurrentPage = FALSE;
 		}
 		else
@@ -1416,8 +1415,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
-		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, FALSE, IAN_WRAP_NO_SHADOW);
-
+		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 				 fGoingOffCurrentPage = FALSE;
 			}
 			else

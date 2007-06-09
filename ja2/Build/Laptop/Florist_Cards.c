@@ -153,10 +153,7 @@ void RenderFloristCards()
 
 				usHeightOffset = ( FLORIST_CARD_TEXT_HEIGHT - usHeightOffset ) / 2;
 
-
-				IanDisplayWrappedString( (UINT16)(usPosX+7), (UINT16)(usPosY+10+usHeightOffset), FLORIST_CARD_TEXT_WIDTH, 2,
-															 FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp,
-															 0, FALSE, 0);
+				IanDisplayWrappedString(usPosX + 7, usPosY + 10 + usHeightOffset, FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, 0, 0);
 
 			ubCount++;
 			usPosX += FLORIST_CARD_FIRST_OFFSET_X;

@@ -1261,10 +1261,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 //									 HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, HELP_SCREEN_TEXT_BACKGROUND, FALSE, CENTER_JUSTIFIED );
 
 		//Display the Title
-		IanDisplayWrappedString( usPosX, (UINT16)(gHelpScreen.usScreenLocY+HELP_SCREEN_TITLE_OFFSET_Y), usWidth, HELP_SCREEN_GAP_BTN_LINES,
-														 HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText,
-														 HELP_SCREEN_TEXT_BACKGROUND, FALSE, 0 );
-
+		IanDisplayWrappedString(usPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TITLE_OFFSET_Y, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 	}
 
 	//Display the '( press H to get help... )'
@@ -1277,11 +1274,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 //	DrawTextToScreen( zText, usPosX, usPosY, usWidth,
 //								 HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, HELP_SCREEN_TEXT_BACKGROUND, FALSE, CENTER_JUSTIFIED );
 
-
-	IanDisplayWrappedString( usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES,
-													 HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText,
-													 HELP_SCREEN_TEXT_BACKGROUND, FALSE, 0 );
-
+	IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
@@ -1293,11 +1286,8 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 
 		usPosY = gHelpScreen.usScreenLocY + gHelpScreen.usScreenHeight - HELP_SCREEN_SHOW_HELP_AGAIN_REGION_TEXT_OFFSET_Y + 2;
 
-
 		//Display the ' [ x ] Dont display again...'
-		IanDisplayWrappedString( usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES,
-														 HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText,
-														 HELP_SCREEN_TEXT_BACKGROUND, FALSE, 0 );
+		IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 	}
 
 	SetFontShadow( DEFAULT_SHADOW );
@@ -1414,9 +1404,7 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 	LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, uiStartLoc, HELPSCREEN_RECORD_SIZE );
 
 	//Display the text
-	usNumVertPixels = IanDisplayWrappedString( usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES,
-													 HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TEXT_BODY_COLOR, zText,
-													 HELP_SCREEN_TEXT_BACKGROUND, FALSE, 0 );
+	usNumVertPixels = IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TEXT_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 
 	SetFontShadow( DEFAULT_SHADOW );
 

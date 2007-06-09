@@ -14,7 +14,7 @@
 #define				TEXT_CODE_NEWCOLOR	180
 #define				TEXT_CODE_DEFCOLOR	181
 
-UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t *pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags);
+UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags);
 
 
 #define				LEFT_JUSTIFIED		0x00000001
@@ -24,6 +24,8 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 #define				INVALIDATE_TEXT		0x00000010
 #define				DONT_DISPLAY_TEXT	0x00000020			//Wont display the text.  Used if you just want to get how many lines will be displayed
+
+#define MARK_DIRTY 0x00000040
 
 
 #define       IAN_WRAP_NO_SHADOW  32

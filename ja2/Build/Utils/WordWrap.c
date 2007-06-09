@@ -288,10 +288,9 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 //					the gap in between the lines
 //
 
-UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap,
-															 UINT32 uiFont, UINT8 ubColor, const wchar_t *pString,
-															 UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags)
+UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
+	BOOLEAN fDirty = (uiFlags & MARK_DIRTY) != 0;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
 	UINT32	uiLocalFont=uiFont;
