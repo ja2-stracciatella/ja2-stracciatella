@@ -189,8 +189,9 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 //					the gap in between the lines
 //
 
-UINT16 DisplayWrappedString( UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t *pString, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 uiFlags )
+UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
+	BOOLEAN fDirty = (uiFlags & MARK_DIRTY) != 0;
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;

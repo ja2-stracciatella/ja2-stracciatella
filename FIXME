@@ -106,6 +106,7 @@ HandleDefiniteUnloadingOfWorld(): use enum
 HandleEndConfirmCursor(): empty
 HandleEquipmentLeftInOmerta(), HandleEquipmentLeftInDrassen(): very similar
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
+HandleHighLightedText(): MARK_DIRTY necessary?
 HandleItemGlowFlag(): callers/complicated
 HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty

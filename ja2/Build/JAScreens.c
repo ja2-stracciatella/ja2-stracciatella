@@ -903,21 +903,21 @@ void DoDemoIntroduction()
 	SetFontShadow( FONT_NEARBLACK );
 
 	yp = 50;
-	height = DisplayWrappedString( 20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
 	SetFontForeground( FONT_GRAY2 );
 	mprintf( 35, yp, L"-" );
-	height = DisplayWrappedString( 45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[1], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[1], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
 	mprintf( 35, yp, L"-" );
-	height = DisplayWrappedString( 45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[2], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[2], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
 	mprintf( 35, yp, L"-" );
-	height = DisplayWrappedString( 45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[3], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[3], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 30 + height);
-	height = DisplayWrappedString( 35, yp, 385, 3, FONT14ARIAL, FONT_GRAY3, gpDemoIntroString[4], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(35, yp, 385, 3, FONT14ARIAL, FONT_GRAY3, gpDemoIntroString[4], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 35 + height);
-	height = DisplayWrappedString( 20, yp, 400, 3, FONT14ARIAL, FONT_LTKHAKI, gpDemoIntroString[5], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_LTKHAKI, gpDemoIntroString[5], FONT_BLACK, LEFT_JUSTIFIED);
 
 	RefreshScreen();
 	while (gfProgramIsRunning)

@@ -1689,12 +1689,12 @@ static void DrawTextOnMapInventoryBackground(void)
 	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
 
 	//Calculate the height of the string, as it needs to be vertically centered.
-	usStringHeight = DisplayWrappedString( 268, 342, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 0 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT );
-	DisplayWrappedString( 268, (UINT16)(342 - (usStringHeight / 2) ), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 0 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED );
+	usStringHeight = DisplayWrappedString(268, 342, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
+	DisplayWrappedString(268, 342 - (usStringHeight / 2), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED);
 
 	//Calculate the height of the string, as it needs to be vertically centered.
-	usStringHeight = DisplayWrappedString( 369, 342, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 1 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT );
-	DisplayWrappedString( 369, (UINT16)(342 - (usStringHeight / 2) ), 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[ 1 ], FONT_BLACK, FALSE, RIGHT_JUSTIFIED );
+	usStringHeight = DisplayWrappedString(369, 342, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
+	DisplayWrappedString( 369, 342 - (usStringHeight / 2), 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_BLACK, RIGHT_JUSTIFIED);
 
 	DrawTextOnSectorInventory( );
 

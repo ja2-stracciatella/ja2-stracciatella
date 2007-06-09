@@ -802,7 +802,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	// print medic
 	mprintf(sX, sYPosition - 7 , Medics);
 
-	//DisplayWrappedString( ( INT16 )( sXPosition ),  ( INT16 )( sCurrentYPosition - 40 ), ( INT16 )( iTotalPixelsWide ), 0, TINYFONT1, FONT_WHITE, pUpdateMercStrings[ 0 ], FONT_BLACK, 0, 0 );
+	//DisplayWrappedString(sXPosition,  sCurrentYPosition - 40, iTotalPixelsWide, 0, TINYFONT1, FONT_WHITE, pUpdateMercStrings[0], FONT_BLACK, 0);
 
 
 	sYPosition += 9;

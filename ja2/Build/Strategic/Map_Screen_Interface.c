@@ -2672,7 +2672,7 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_BEIGE );
 
-	iH = ( INT32 )DisplayWrappedString( ( INT16 )( iX + 10 ), ( INT16 )( iY + 6 ), ( INT16 )pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, TRUE, 0 );
+	iH = DisplayWrappedString(iX + 10, iY + 6, pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, MARK_DIRTY);
 
 	iHeightOfInitFastHelpText = iH + 20;
 
@@ -4718,7 +4718,7 @@ void DisplaySoldierUpdateBox( )
 		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 19, iX - 4 + TACT_UPDATE_MERC_FACE_X_WIDTH,  iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y+3);
 
 		// ATE: Display string for time compression
-		DisplayWrappedString( ( UINT16 )( iX ),  ( UINT16 )( iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3), ( UINT16 )( iUpdatePanelWidth ), 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[49], FONT_BLACK, 0, CENTER_JUSTIFIED );
+		DisplayWrappedString(iX, iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3, iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[49], FONT_BLACK, CENTER_JUSTIFIED);
 	}
 	else
 	{
@@ -4726,7 +4726,7 @@ void DisplaySoldierUpdateBox( )
 		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 19, iX - 4 , iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y+3);
 
 		// ATE: Display string for time compression
-		DisplayWrappedString( ( UINT16 )( iX ),  ( UINT16 )( iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y+3 ), ( UINT16 )( iUpdatePanelWidth ), 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[49], FONT_BLACK, 0, CENTER_JUSTIFIED );
+		DisplayWrappedString(iX, iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3, iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[49], FONT_BLACK, CENTER_JUSTIFIED);
 	}
 
 	iCounter = 0;
@@ -4748,7 +4748,7 @@ void DisplaySoldierUpdateBox( )
 	}
 
 	//Display the reason for the update box
-	DisplayWrappedString(iX, iY + (fFourWideMode ? 6 : 3), iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[iReasonForSoldierUpDate], FONT_BLACK, 0, CENTER_JUSTIFIED);
+	DisplayWrappedString(iX, iY + (fFourWideMode ? 6 : 3), iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[iReasonForSoldierUpDate], FONT_BLACK, CENTER_JUSTIFIED);
 
 	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
 

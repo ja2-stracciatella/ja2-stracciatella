@@ -1601,8 +1601,7 @@ static void RenderAutoResolve(void)
 
 	if( gpAR->fPendingSurrender )
 	{
-		DisplayWrappedString( (UINT16)(gpAR->sCenterStartX+16), (UINT16)(230+gpAR->bVerticalOffset), 108, 2,
-			(UINT8)FONT10ARIAL, FONT_YELLOW, gpStrategicString[ STR_ENEMY_SURRENDER_OFFER ], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+		DisplayWrappedString(gpAR->sCenterStartX + 16, 230 + gpAR->bVerticalOffset, 108, 2, FONT10ARIAL, FONT_YELLOW, gpStrategicString[STR_ENEMY_SURRENDER_OFFER], FONT_BLACK, LEFT_JUSTIFIED);
 	}
 
 	if( gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
@@ -1706,8 +1705,7 @@ static void RenderAutoResolve(void)
 					}
 					else
 					{
-						DisplayWrappedString( (UINT16)(gpAR->sCenterStartX+16), 310, 108, 2,
-							FONT10ARIAL, FONT_YELLOW, gpStrategicString[ STR_ENEMY_CAPTURED ], FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+						DisplayWrappedString(gpAR->sCenterStartX + 16, 310, 108, 2, FONT10ARIAL, FONT_YELLOW, gpStrategicString[STR_ENEMY_CAPTURED], FONT_BLACK, LEFT_JUSTIFIED);
 						BattleResult = gpStrategicString[STR_AR_OVER_CAPTURED];
 					}
 					SetFontForeground( FONT_RED );

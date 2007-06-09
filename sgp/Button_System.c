@@ -1996,7 +1996,7 @@ static void DrawTextOnButton(const GUI_BUTTON *b)
 			}
 			yp+= b->bTextYSubOffSet;
 			xp+= b->bTextXSubOffSet;
-			DisplayWrappedString((UINT16)xp, (UINT16)yp, b->sWrappedWidth, 1, b->usFont, (UINT8)sForeColor, b->string, FONT_MCOLOR_BLACK, FALSE, bJustified);
+			DisplayWrappedString(xp, yp, b->sWrappedWidth, 1, b->usFont, sForeColor, b->string, FONT_MCOLOR_BLACK, bJustified);
 		}
 		else
 		{

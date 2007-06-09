@@ -338,7 +338,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			SetFontDestBuffer( eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight, FALSE );
 
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
-			DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
 			//Calculate the center position of the graphic in a 60 pixel wide area.
 			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
@@ -477,7 +477,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 							swprintf(pStr, lengthof(pStr), L"Action%d", (i - 4) / 2);
 					}
 				}
-				DisplayWrappedString(x, (UINT16)(y+25), 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+				DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
 				//Calculate the center position of the graphic in a 60 pixel wide area.
 				sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;

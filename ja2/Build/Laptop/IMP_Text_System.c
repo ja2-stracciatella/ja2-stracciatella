@@ -59,8 +59,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 		uiFlags = LEFT_JUSTIFIED;
 	}
 
-  DisplayWrappedString( sStartX, ( INT16 )( sStartY  ), sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK,FALSE, uiFlags);
-
+  DisplayWrappedString(sStartX, sStartY, sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow
 	SetFontShadow( DEFAULT_SHADOW );

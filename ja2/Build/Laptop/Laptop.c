@@ -4745,7 +4745,7 @@ static void DisplayWebBookMarkNotify(void)
 		SetFontShadow(NO_SHADOW);
 
 		// now draw the message
-		DisplayWrappedString(( INT16 )( DOWN_STRING_X - 42 ),(UINT16)(DOWN_STRING_Y + 20), BOOK_WIDTH + 45, 2,BOOK_FONT,FONT_BLACK, pShowBookmarkString[ 1 ],FONT_BLACK,FALSE,CENTER_JUSTIFIED);
+		DisplayWrappedString(DOWN_STRING_X - 42, DOWN_STRING_Y + 20, BOOK_WIDTH + 45, 2, BOOK_FONT,FONT_BLACK, pShowBookmarkString[1], FONT_BLACK, CENTER_JUSTIFIED);
 
 		// invalidate region
 		InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);

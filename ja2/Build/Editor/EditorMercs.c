@@ -2523,7 +2523,7 @@ void UpdateMercsInfo()
 					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically "
 					L"extract the number you have typed.  A blank field will clear the profile.  The current "
 					L"number of profiles range from 0 to %d.", NUM_PROFILES);
-				DisplayWrappedString(180, 370, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+				DisplayWrappedString(180, 370, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, LEFT_JUSTIFIED);
 				SetFont( FONT12POINT1 );
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
@@ -2592,7 +2592,7 @@ void UpdateMercsInfo()
 						return;
 				}
 				wcscat(str, L"  Hit ESC to abort entering this line in the schedule.");
-				DisplayWrappedString( 436, 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, FALSE, LEFT_JUSTIFIED );
+				DisplayWrappedString(436, 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, LEFT_JUSTIFIED);
 			}
 			break;
 	}
@@ -2686,7 +2686,7 @@ static void RenderSelectedMercsInventory(void)
 			else
 				ubFontColor = FONT_WHITE;
 			const wchar_t* ItemName = ItemNames[gpMercSlotItem[i]->usItem];
-			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, ItemName, 0, FALSE, LEFT_JUSTIFIED);
+			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, ItemName, 0, LEFT_JUSTIFIED);
 		}
 	}
 }

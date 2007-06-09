@@ -617,13 +617,13 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 	{
 		INT32 iHeightOfText;
 
-		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
+		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 		//if the string will rap
 		if ((iHeightOfText - 2) > GetFontHeight(PERS_FONT))
 		{
 			//raise where we display it, and rap it
-			DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT)), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, FALSE, CENTER_JUSTIFIED);
+			DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED);
 		}
 		else
 		{
@@ -860,13 +860,13 @@ static void DisplayCharName(INT32 iId)
 	//
 
 	//first get height of text to be displayed
-	iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, FALSE, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
+	iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 	//if the string will rap
 	if ((iHeightOfText - 2) > GetFontHeight(PERS_FONT))
 	{
 		//raise where we display it, and rap it
-		DisplayWrappedString(IMAGE_BOX_X, (UINT16)(IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT)), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, FALSE, CENTER_JUSTIFIED);
+		DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED);
 	}
 	else
 	{

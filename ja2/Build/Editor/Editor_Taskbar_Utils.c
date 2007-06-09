@@ -479,7 +479,7 @@ void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UI
 	if( usStrWidth > w )
 	{ //the string is too long, so use the wrapped method
 		y += 1;
-		DisplayWrappedString( x, y, w, 2, uiFont, FONT_BLACK, str, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+		DisplayWrappedString(x, y, w, 2, uiFont, FONT_BLACK, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		return;
 	}
 	//center the string vertically and horizontally.
@@ -610,7 +610,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"North Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"North Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	sGridNo = gMapInformation.sWestGridNo;
@@ -619,7 +619,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"West Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"West Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	sGridNo = gMapInformation.sEastGridNo;
@@ -628,7 +628,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"East Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"East Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	sGridNo = gMapInformation.sSouthGridNo;
@@ -637,7 +637,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"South Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"South Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	sGridNo = gMapInformation.sCenterGridNo;
@@ -646,7 +646,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Center Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"Center Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	sGridNo = gMapInformation.sIsolatedGridNo;
@@ -655,7 +655,7 @@ static void RenderMapEntryPointsAndLights(void)
 		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
 		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 40, 2, FONT10ARIAL, FONT_YELLOW, L"Isolated Entry Point", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"Isolated Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 	//Do the lights now.
@@ -668,11 +668,11 @@ static void RenderMapEntryPointsAndLights(void)
 			if( sScreenY >= -50 && sScreenY < 300 && sScreenX >= -40  && sScreenX < 640 )
 			{
 				if( LightSprites[ i ].uiFlags & LIGHT_PRIMETIME )
-					DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 50, 2, FONT10ARIAL, FONT_ORANGE, L"Prime", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_ORANGE, L"Prime", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 				else if( LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME )
-					DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 50, 2, FONT10ARIAL, FONT_RED, L"Night", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_RED, L"Night", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 				else
-					DisplayWrappedString( sScreenX, (INT16)(sScreenY-5), 50, 2, FONT10ARIAL, FONT_YELLOW, L"24Hour", FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_YELLOW, L"24Hour", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 			}
 		}
 	}
@@ -725,7 +725,7 @@ static void RenderDoorLockInfo(void)
 			wcslcpy(str, L"No Lock ID", lengthof(str));
 		xp = sScreenX - 10;
 		yp = sScreenY - 40;
-		DisplayWrappedString( xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, TRUE, CENTER_JUSTIFIED );
+		DisplayWrappedString(xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		if( DoorTable[ i ].ubTrapID )
 		{
 			SetFont( FONT10ARIAL );
