@@ -79,10 +79,7 @@
 
 //Text
 #define		OPT_TOGGLE_BOX_FIRST_COL_TEXT_X				OPT_TOGGLE_BOX_FIRST_COLUMN_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX//350
-#define		OPT_TOGGLE_BOX_FIRST_COL_TEXT_Y				OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y//100
-
 #define		OPT_TOGGLE_BOX_SECOND_TEXT_X					OPT_TOGGLE_BOX_SECOND_COLUMN_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX//350
-#define		OPT_TOGGLE_BOX_SECOND_TEXT_Y					OPT_TOGGLE_BOX_SECOND_COLUMN_START_Y//100
 
 
 //toggle boxes
@@ -90,10 +87,8 @@
 #define		OPT_TOGGLE_TEXT_OFFSET_Y								2//3
 
 #define		OPT_TOGGLE_BOX_FIRST_COLUMN_X						265 //257 //OPT_TOGGLE_BOX_TEXT_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX
-#define		OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y			89//OPT_TOGGLE_BOX_TEXT_Y
-
 #define		OPT_TOGGLE_BOX_SECOND_COLUMN_X					428 //OPT_TOGGLE_BOX_TEXT_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX
-#define		OPT_TOGGLE_BOX_SECOND_COLUMN_START_Y		OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y
+#define   OPT_TOGGLE_BOX_START_Y                  89
 
 #define		OPT_TOGGLE_BOX_TEXT_WIDTH								OPT_TOGGLE_BOX_SECOND_COLUMN_X - OPT_TOGGLE_BOX_FIRST_COLUMN_X - 20
 
@@ -300,10 +295,6 @@ static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 static BOOLEAN EnterOptionsScreen(void)
 {
-	UINT16 usPosY;
-	UINT8	cnt;
-	UINT16	usTextWidth, usTextHeight;
-
 	//Default this to off
 	gfHideBloodAndGoreOption=FALSE;
 
@@ -408,102 +399,51 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 
 
-	//
 	// Toggle Boxes
-	//
-	usTextHeight = GetFontHeight( OPT_MAIN_FONT );
+	UINT16 usTextHeight = GetFontHeight(OPT_MAIN_FONT);
 
 	//Create the first column of check boxes
-	usPosY = OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y;
+	UINT32 pos_x = OPT_TOGGLE_BOX_FIRST_COLUMN_X;
+	UINT16 pos_y = OPT_TOGGLE_BOX_START_Y;
 	gubFirstColOfOptions = OPT_FIRST_COLUMN_TOGGLE_CUT_OFF;
-	for( cnt=0; cnt<gubFirstColOfOptions; cnt++)
+	for (UINT8 cnt = 0; cnt < NUM_GAME_OPTIONS; cnt++)
 	{
 		//if this is the blood and gore option, and we are to hide the option
-		if( cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
+		if (cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption)
 		{
 			gubFirstColOfOptions++;
-
 			//advance to the next
 			continue;
 		}
+		if (cnt == gubFirstColOfOptions)
+		{
+			pos_y = OPT_TOGGLE_BOX_START_Y;
+			pos_x = OPT_TOGGLE_BOX_SECOND_COLUMN_X;
+		}
+
 		//Check box to toggle tracking mode
-		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_FIRST_COLUMN_X, usPosY,
-																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnOptionsTogglesCallback );
-		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
+		guiOptionsToggles[cnt] = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
+		MSYS_SetBtnUserData(guiOptionsToggles[cnt], 0, cnt);
 
-
-		usTextWidth = StringPixLength( zOptionsToggleText[ cnt ], OPT_MAIN_FONT );
-
-		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
+		UINT32 height;
+		UINT16 usTextWidth = StringPixLength(zOptionsToggleText[cnt], OPT_MAIN_FONT);
+		if (usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH)
 		{
 			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
-
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
-
-			//Create mouse regions for the option toggle text
-			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
-									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
+			height = DisplayWrappedString(0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT);
 		}
 		else
 		{
-			//Create mouse regions for the option toggle text
-			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_FIRST_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_FIRST_COL_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
-									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt);
+			height = usTextHeight;
 		}
+		MSYS_DefineRegion(&gSelectedOptionTextRegion[cnt], pos_x + 13, pos_y, pos_x + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX + usTextWidth, pos_y + height, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack);
+		MSYS_SetRegionUserData(&gSelectedOptionTextRegion[cnt], 0, cnt);
 
+		SetRegionFastHelpText(&gSelectedOptionTextRegion[cnt], zOptionsScreenHelpText[cnt]);
+		SetButtonFastHelpText(guiOptionsToggles[cnt], zOptionsScreenHelpText[cnt]);
 
-		SetRegionFastHelpText( &gSelectedOptionTextRegion[ cnt ], zOptionsScreenHelpText[cnt] );
-		SetButtonFastHelpText( guiOptionsToggles[ cnt ], zOptionsScreenHelpText[cnt] );
-
-		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
-	}
-
-
-	//Create the 2nd column of check boxes
-	usPosY = OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y;
-	for( cnt=gubFirstColOfOptions; cnt<NUM_GAME_OPTIONS; cnt++)
-	{
-		//Check box to toggle tracking mode
-		guiOptionsToggles[ cnt ] = CreateCheckBoxButton( OPT_TOGGLE_BOX_SECOND_COLUMN_X, usPosY,
-																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnOptionsTogglesCallback );
-		MSYS_SetBtnUserData( guiOptionsToggles[ cnt ], 0, cnt );
-
-
-		//
-		// Create mouse regions for the option toggle text
-		//
-
-
-		usTextWidth = StringPixLength( zOptionsToggleText[ cnt ], OPT_MAIN_FONT );
-
-		if( usTextWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
-		{
-			//Get how many lines will be used to display the string, without displaying the string
-			UINT8	ubNumLines = DisplayWrappedString( 0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT ) / GetFontHeight( OPT_MAIN_FONT );
-
-			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
-
-			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight*ubNumLines), MSYS_PRIORITY_HIGH,
-									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
-		}
-		else
-		{
-			MSYS_DefineRegion( &gSelectedOptionTextRegion[cnt], OPT_TOGGLE_BOX_SECOND_COLUMN_X+13, usPosY, (UINT16)(OPT_TOGGLE_BOX_SECOND_TEXT_X+usTextWidth), (UINT16)(usPosY+usTextHeight), MSYS_PRIORITY_HIGH,
-									 CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack );
-			MSYS_SetRegionUserData( &gSelectedOptionTextRegion[ cnt ], 0, cnt );
-		}
-
-
-		SetRegionFastHelpText( &gSelectedOptionTextRegion[ cnt ], zOptionsScreenHelpText[cnt] );
-		SetButtonFastHelpText( guiOptionsToggles[ cnt ], zOptionsScreenHelpText[cnt] );
-
-		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
+		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
 
 	//Create a mouse region so when the user leaves a togglebox text region we can detect it then unselect the region
@@ -664,10 +604,6 @@ static void HandleOptionsScreen(void)
 
 static void RenderOptionsScreen(void)
 {
-	UINT16	usPosY;
-	UINT8	cnt;
-	UINT16	usWidth=0;
-
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
 
 	//Get and display the titla image
@@ -681,10 +617,9 @@ static void RenderOptionsScreen(void)
 	// Text for the toggle boxes
 	//
 
-	usPosY = OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
-
-	//Display the First column of toggles
-	for( cnt=0; cnt<gubFirstColOfOptions; cnt++)
+	UINT32 pos_x = OPT_TOGGLE_BOX_FIRST_COL_TEXT_X;
+	UINT16 pos_y = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
+	for (UINT8 cnt = 0; cnt < NUM_GAME_OPTIONS; cnt++)
 	{
 		//if this is the blood and gore option, and we are to hide the option
 		if( cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
@@ -692,36 +627,22 @@ static void RenderOptionsScreen(void)
 		//advance to the next
 			continue;
 		}
+		if (cnt == gubFirstColOfOptions)
+		{
+			pos_x = OPT_TOGGLE_BOX_SECOND_TEXT_X;
+			pos_y = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
+		}
 
-		usWidth = StringPixLength( zOptionsToggleText[ cnt ], OPT_MAIN_FONT );
-
-		//if the string is going to wrap, move the string up a bit
-		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
-			DisplayWrappedString( OPT_TOGGLE_BOX_FIRST_COL_TEXT_X, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
-		else
-			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_FIRST_COL_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
-
-		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
-	}
-
-
-	usPosY = OPT_TOGGLE_BOX_SECOND_COLUMN_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
-	//Display the 2nd column of toggles
-	for( cnt=gubFirstColOfOptions; cnt<NUM_GAME_OPTIONS; cnt++)
-	{
-		usWidth = StringPixLength( zOptionsToggleText[ cnt ], OPT_MAIN_FONT );
+		UINT16 usWidth = StringPixLength(zOptionsToggleText[cnt], OPT_MAIN_FONT);
 
 		//if the string is going to wrap, move the string up a bit
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
-			DisplayWrappedString( OPT_TOGGLE_BOX_SECOND_TEXT_X, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ cnt ], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 		else
-			DrawTextToScreen( zOptionsToggleText[ cnt ], OPT_TOGGLE_BOX_SECOND_TEXT_X, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
 
-		usPosY += OPT_GAP_BETWEEN_TOGGLE_BOXES;
+		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
-
-
-
 
 	//
 	// Text for the Slider Bars
@@ -1274,12 +1195,12 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		if( bHighLight < OPT_FIRST_COLUMN_TOGGLE_CUT_OFF )
 		{
 			usPosX = OPT_TOGGLE_BOX_FIRST_COL_TEXT_X;
-			usPosY = OPT_TOGGLE_BOX_FIRST_COLUMN_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y + ( bHighLight * OPT_GAP_BETWEEN_TOGGLE_BOXES ) ;
+			usPosY = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y + bHighLight * OPT_GAP_BETWEEN_TOGGLE_BOXES;
 		}
 		else
 		{
 			usPosX = OPT_TOGGLE_BOX_SECOND_TEXT_X;
-			usPosY = OPT_TOGGLE_BOX_SECOND_COLUMN_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y + ( ( bHighLight - OPT_FIRST_COLUMN_TOGGLE_CUT_OFF ) * OPT_GAP_BETWEEN_TOGGLE_BOXES ) ;
+			usPosY = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y + (bHighLight - OPT_FIRST_COLUMN_TOGGLE_CUT_OFF) * OPT_GAP_BETWEEN_TOGGLE_BOXES;
 		}
 
 		//If we are to hide the blood and gore option, and we are to highlight an option past the blood and gore option
@@ -1293,21 +1214,14 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		usWidth = StringPixLength( zOptionsToggleText[ bHighLight ], OPT_MAIN_FONT );
 
 		//if the string is going to wrap, move the string up a bit
+		UINT8 color = fHighLight ? OPT_HIGHLIGHT_COLOR : OPT_MAIN_COLOR;
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
-			if( fHighLight )
-				DisplayWrappedString( usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[ bHighLight ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
-//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
-			else
-				DisplayWrappedString( usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[ bHighLight ], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
-//				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
+			DisplayWrappedString(usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, color, zOptionsToggleText[bHighLight], FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED);
 		}
 		else
 		{
-			if( fHighLight )
-				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
-			else
-				DrawTextToScreen( zOptionsToggleText[ bHighLight ], usPosX, usPosY, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED);
 		}
 	}
 }

@@ -10,7 +10,6 @@ AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
 BLOODTIME: unused
 BlitMineText(): code duplication
-BlitMineText(): unnecessary wcscpy()
 Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BltToMouseCursor(): unused
@@ -36,6 +35,7 @@ CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
+DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
 DisplayMercStats(): callers
 DisplayMovingTitleBar(): callers
