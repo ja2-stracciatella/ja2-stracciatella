@@ -724,10 +724,6 @@ DEF: commented out for Beta.  Nov 30
 
 	} while (pString[usSourceCounter++] != 0);
 
-
-	// terminate the entire paragraph with a null string (null character guaranteed)
-	wcscat(zLineString, L"");
-
 	 // shadow control
 	if( IAN_WRAP_NO_SHADOW & uiFlags )
 	{
