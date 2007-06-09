@@ -107,10 +107,8 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 			gMapInformation.sWestGridNo		!= -1 && !gps1stWestEdgepointArray		 )
 	{
 		InvalidateScreen();
-		DrawTextToScreen( L"Map doesn't has entrypoints without corresponding edgepoints. LC:1",
-			30, 150, 600, FONT10ARIALBOLD, FONT_RED, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
-		DrawTextToScreen( L"GENERATING MAP EDGEPOINTS!  Please wait...",
-			30, 160, 600, FONT10ARIALBOLD, FONT_YELLOW, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(L"Map doesn't has entrypoints without corresponding edgepoints. LC:1", 30, 150, 600, FONT10ARIALBOLD, FONT_RED,    FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
+		DrawTextToScreen(L"GENERATING MAP EDGEPOINTS!  Please wait...",                         30, 160, 600, FONT10ARIALBOLD, FONT_YELLOW, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
 
 		RefreshScreen();
 		GenerateMapEdgepoints();

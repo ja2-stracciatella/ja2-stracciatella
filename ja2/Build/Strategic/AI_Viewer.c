@@ -1633,14 +1633,14 @@ static void PrintEnemyPopTable(void)
 	// print horizontal labels
 	for ( ubEnemyRank = 0; ubEnemyRank < TABLE_ENEMY_RANKS; ubEnemyRank++ )
 	{
-		DrawTextToScreen( EnemyRankString[ ubEnemyRank ], ( UINT16 ) ( usX + POP_TABLE_X_OFFSET + ( POP_TABLE_X_GAP * ubEnemyRank ) ), usY, POP_TABLE_X_GAP, FONT10ARIAL, FONT_LTBLUE, 0, FALSE, RIGHT_JUSTIFIED );
+		DrawTextToScreen(EnemyRankString[ubEnemyRank], usX + POP_TABLE_X_OFFSET + POP_TABLE_X_GAP * ubEnemyRank, usY, POP_TABLE_X_GAP, FONT10ARIAL, FONT_LTBLUE, 0, RIGHT_JUSTIFIED);
 	}
 
 
 	// print vertical labels
 	for ( ubEnemyType = 0; ubEnemyType < POP_TABLE_ENEMY_TYPES; ubEnemyType++ )
 	{
-		DrawTextToScreen( EnemyTypeString[ ubEnemyType ], usX, ( UINT16 ) ( usY + POP_TABLE_Y_GAP + ( POP_TABLE_Y_GAP * ubEnemyType ) ), POP_TABLE_X_OFFSET, FONT10ARIAL, FONT_LTBLUE, 0, FALSE, RIGHT_JUSTIFIED );
+		DrawTextToScreen(EnemyTypeString[ubEnemyType], usX, usY + POP_TABLE_Y_GAP + POP_TABLE_Y_GAP * ubEnemyType, POP_TABLE_X_OFFSET, FONT10ARIAL, FONT_LTBLUE, 0, RIGHT_JUSTIFIED);
 	}
 
 	// over to first column, and down 1 line
@@ -1671,7 +1671,7 @@ static void PrintEnemyPopTable(void)
 			}
 
 			swprintf(wTempString, lengthof(wTempString), PrintSpec, usEnemyPopTable[ubEnemyRank][ubEnemyType]);
-			DrawTextToScreen( wTempString, ( UINT16 ) ( usX + ( POP_TABLE_X_GAP * ubEnemyRank ) ), ( UINT16 ) ( usY + ( POP_TABLE_Y_GAP * ubEnemyType ) ), POP_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, FALSE, RIGHT_JUSTIFIED );
+			DrawTextToScreen(wTempString, usX + POP_TABLE_X_GAP * ubEnemyRank, usY + POP_TABLE_Y_GAP * ubEnemyType, POP_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, RIGHT_JUSTIFIED);
 		}
 	}
 }
@@ -1773,14 +1773,14 @@ static void PrintEnemiesKilledTable(void)
 	// print horizontal labels
 	for ( ubEnemyRank = 0; ubEnemyRank < TABLE_ENEMY_RANKS; ubEnemyRank++ )
 	{
-		DrawTextToScreen( EnemyRankString[ ubEnemyRank ], ( UINT16 ) ( usX + KILLED_TABLE_X_OFFSET + ( KILLED_TABLE_X_GAP * ubEnemyRank ) ), usY, KILLED_TABLE_X_GAP, FONT10ARIAL, FONT_LTBLUE, 0, FALSE, RIGHT_JUSTIFIED );
+		DrawTextToScreen(EnemyRankString[ubEnemyRank], usX + KILLED_TABLE_X_OFFSET + KILLED_TABLE_X_GAP * ubEnemyRank, usY, KILLED_TABLE_X_GAP, FONT10ARIAL, FONT_LTBLUE, 0, RIGHT_JUSTIFIED);
 	}
 
 
 	// print vertical labels
 	for ( ubKillType = 0; ubKillType < KILLED_TABLE_ROWS; ubKillType++ )
 	{
-		DrawTextToScreen( EnemiesKilledString[ ubKillType ], usX, ( UINT16 ) ( usY + KILLED_TABLE_Y_GAP + ( KILLED_TABLE_Y_GAP * ubKillType ) ), KILLED_TABLE_X_OFFSET, FONT10ARIAL, FONT_LTBLUE, 0, FALSE, RIGHT_JUSTIFIED );
+		DrawTextToScreen(EnemiesKilledString[ubKillType], usX, usY + KILLED_TABLE_Y_GAP + KILLED_TABLE_Y_GAP * ubKillType, KILLED_TABLE_X_OFFSET, FONT10ARIAL, FONT_LTBLUE, 0, RIGHT_JUSTIFIED);
 	}
 
 	// over to first column, and down 1 line
@@ -1811,7 +1811,7 @@ static void PrintEnemiesKilledTable(void)
 			}
 
 			swprintf(wTempString, lengthof(wTempString), PrintSpec, usEnemiesKilledTable[ubEnemyRank][ubKillType]);
-			DrawTextToScreen( wTempString, ( UINT16 ) ( usX + ( KILLED_TABLE_X_GAP * ubEnemyRank ) ), ( UINT16 ) ( usY + ( KILLED_TABLE_Y_GAP * ubKillType ) ), KILLED_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, FALSE, RIGHT_JUSTIFIED );
+			DrawTextToScreen(wTempString, usX + KILLED_TABLE_X_GAP * ubEnemyRank, usY + KILLED_TABLE_Y_GAP * ubKillType, KILLED_TABLE_X_GAP, FONT10ARIAL, FONT_YELLOW, 0, RIGHT_JUSTIFIED);
 		}
 	}
 }

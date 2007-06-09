@@ -4707,7 +4707,7 @@ void DisplaySoldierUpdateBox( )
 			RenderSoldierSmallFaceForUpdatePanel( iCounter, iFaceX, iFaceY );
 
 			// display the mercs name
-			DrawTextToScreen(pUpdateSoldierBox[iCounter]->name, iFaceX - 5, iFaceY + 31, 57, TINYFONT1, FONT_LTRED, FONT_BLACK, 0, CENTER_JUSTIFIED);
+			DrawTextToScreen(pUpdateSoldierBox[iCounter]->name, iFaceX - 5, iFaceY + 31, 57, TINYFONT1, FONT_LTRED, FONT_BLACK, CENTER_JUSTIFIED);
 		}
 	}
 

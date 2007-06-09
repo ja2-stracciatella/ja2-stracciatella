@@ -1157,7 +1157,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiMainTradeScreenImage, 0, SKI_MAIN_BACKGROUND_X, SKI_MAIN_BACKGROUND_Y);
 
 	//Display the Title
-	DrawTextToScreen( SKI_Text[ SKI_TEXT_MERCHADISE_IN_STOCK ], SKI_MAIN_TITLE_X, SKI_MAIN_TITLE_Y, SKI_MAIN_TITLE_WIDTH, SKI_TITLE_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+	DrawTextToScreen(SKI_Text[SKI_TEXT_MERCHADISE_IN_STOCK], SKI_MAIN_TITLE_X, SKI_MAIN_TITLE_Y, SKI_MAIN_TITLE_WIDTH, SKI_TITLE_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//if the dealer repairs
 	if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
@@ -1180,7 +1180,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 
 	//Display the players current balance value
 	SPrintMoney(zMoney, LaptopSaveInfo.iCurrentBalance);
-	DrawTextToScreen( zMoney, SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, TRUE, CENTER_JUSTIFIED );
+	DrawTextToScreen(zMoney, SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
@@ -1333,12 +1333,12 @@ static void DisplayAllDealersCash(void)
 	for( bArmsDealer=0; bArmsDealer<NUM_ARMS_DEALERS; bArmsDealer++ )
 	{
 		//Display the shopkeeper's name
-		DrawTextToScreen( gMercProfiles[ ArmsDealerInfo[ bArmsDealer ].ubShopKeeperID ].zNickname, 540, usPosY, 0, FONT10ARIAL, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
+		DrawTextToScreen(gMercProfiles[ArmsDealerInfo[bArmsDealer].ubShopKeeperID].zNickname, 540, usPosY, 0, FONT10ARIAL, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
 
 		//Display the arms dealer cash on hand
 		SPrintMoney(zTemp, gArmsDealerStatus[bArmsDealer].uiArmsDealersCash);
 		ubForeColor = ( UINT8 ) ( ( bArmsDealer == gbSelectedArmsDealerID ) ? SKI_BUTTON_COLOR : SKI_TITLE_COLOR );
-		DrawTextToScreen( zTemp, 590, usPosY, 0, FONT10ARIAL, ubForeColor, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED );
+		DrawTextToScreen(zTemp, 590, usPosY, 0, FONT10ARIAL, ubForeColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
 		usPosY += 17;
 	}
 }
@@ -2202,12 +2202,12 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 			RestoreExternBackgroundRect( SKI_ARMS_DEALERS_INV_START_X, SKI_ARMS_DEALERS_INV_START_Y, 370, 107 );
 
 			//Display the current inventory page
-			DrawTextToScreen( SKI_Text[ SKI_TEXT_PAGE ], SKI_PAGE_X, (UINT16)(SKI_PAGE_Y+3), SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+			DrawTextToScreen(SKI_Text[SKI_TEXT_PAGE], SKI_PAGE_X, SKI_PAGE_Y + 3, SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 			//Display the Current Page number
 			uiFontHeight = GetFontHeight( SKI_LABEL_FONT );
 			swprintf( zTemp, lengthof(zTemp), L"%d/%d", gSelectArmsDealerInfo.ubCurrentPage, gSelectArmsDealerInfo.ubNumberOfPages );
-			DrawTextToScreen( zTemp, SKI_PAGE_X, (UINT16)(SKI_PAGE_Y+uiFontHeight+6), SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+			DrawTextToScreen(zTemp, SKI_PAGE_X, SKI_PAGE_Y + uiFontHeight + 6, SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
 		//Display all the items for the current page
@@ -2414,7 +2414,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 			ubElement = (UINT8) gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement;
 
 			BuildDoneWhenTimeString( zTemp, lengthof(zTemp), gbSelectedArmsDealerID, usItemIndex, ubElement );
-			DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+			DrawTextToScreen(zTemp, usPosX + SKI_INV_PRICE_OFFSET_X, usPosY + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 			//if the item belongs to a merc
 			if( gpTempDealersInventory[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
@@ -2444,7 +2444,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	if( uiItemCost != 0 )
 	{
 		SPrintMoney(zTemp, uiItemCost);
-		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_INV_PRICE_OFFSET_X), (UINT16)(usPosY+SKI_INV_PRICE_OFFSET_Y), SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+		DrawTextToScreen(zTemp, usPosX + SKI_INV_PRICE_OFFSET_X, usPosY + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
 
@@ -2456,7 +2456,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 				( ubItemArea == ARMS_DEALER_INVENTORY ) && ( gpTempDealersInventory[ ubSlotNum ].uiFlags & ARMS_INV_ITEM_SELECTED ) ) )
 	{
 		swprintf( zTemp, lengthof(zTemp), L"x%d", pItemObject->ubNumberOfObjects );
-		DrawTextToScreen( zTemp, (UINT16)(usPosX+SKI_ITEM_NUMBER_TEXT_OFFSET_X), (UINT16)(usPosY+SKI_ITEM_NUMBER_TEXT_OFFSET_Y), SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, RIGHT_JUSTIFIED );
+		DrawTextToScreen(zTemp, usPosX + SKI_ITEM_NUMBER_TEXT_OFFSET_X, usPosY + SKI_ITEM_NUMBER_TEXT_OFFSET_Y, SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	}
 
 	//if we are to display the face
@@ -2475,7 +2475,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	if( ItemHasAttachments( pItemObject ) )
 	{
 		//Display the '*' in the bottom right corner of the square
-		DrawTextToScreen(L"*", usPosX + SKI_ATTACHMENT_SYMBOL_X_OFFSET, usPosY + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DrawTextToScreen(L"*", usPosX + SKI_ATTACHMENT_SYMBOL_X_OFFSET, usPosY + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	// Display 'JAMMED' if it's jammed
@@ -2483,13 +2483,13 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	{
 		const wchar_t* Jammed = TacticalStr[JAMMED_ITEM_STR];
 		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Jammed, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen(Jammed, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DrawTextToScreen(Jammed, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 	else if ( fPrintRepaired )
 	{
 		const wchar_t* Repaired = SKI_Text[SKI_TEXT_REPAIRED];
 		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Repaired, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen(Repaired, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DrawTextToScreen(Repaired, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	if( fHatchedOut )
@@ -3054,7 +3054,7 @@ static void DisplayArmsDealerOfferArea(void)
 
 		//Display the total cost text
 		SPrintMoney(zTemp, uiTotalCost);
-		DrawTextToScreen( zTemp, SKI_ARMS_DEALER_TOTAL_COST_X, (UINT16)(SKI_ARMS_DEALER_TOTAL_COST_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+		DrawTextToScreen(zTemp, SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 }
 
@@ -3344,7 +3344,7 @@ static void DisplayPlayersOfferArea(void)
 
 		//Display the total cost text
 		SPrintMoney(zTemp, uiTotalCost);
-		DrawTextToScreen( zTemp, SKI_PLAYERS_TOTAL_VALUE_X, (UINT16)(SKI_PLAYERS_TOTAL_VALUE_Y+5), SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
+		DrawTextToScreen(zTemp, SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
 	CrossOutUnwantedItems( );

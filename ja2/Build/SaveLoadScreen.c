@@ -720,7 +720,6 @@ static void RenderSaveLoadScreen(void)
 		// If we are saving a game
 
 		//Display the Title
-//		DrawTextToScreen( zSaveLoadText[SLG_SAVE_GAME], 0, 10, 639, SAVE_LOAD_TITLE_FONT, SAVE_LOAD_TITLE_COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 	else
@@ -1265,7 +1264,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 
 
 			//The date
-			DrawTextToScreen( zMouseHelpTextString, (UINT16)(usPosX+SLG_DATE_OFFSET_X), (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zMouseHelpTextString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 		else
 		{
@@ -1314,24 +1313,24 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			//
 
 			//The date
-			DrawTextToScreen( zDateString, (UINT16)(usPosX+SLG_DATE_OFFSET_X), (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zDateString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//if the sector string exceeds the width, and the ...
 			ReduceStringLength( zLocationString, lengthof(zLocationString), SLG_SECTOR_WIDTH, uiFont );
 
 			//The Sector
-			DrawTextToScreen( zLocationString, (UINT16)(usPosX+SLG_SECTOR_OFFSET_X), (UINT16)(usPosY+SLG_SECTOR_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zLocationString, usPosX + SLG_SECTOR_OFFSET_X, usPosY + SLG_SECTOR_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//The Num of mercs
-			DrawTextToScreen( zNumMercsString, (UINT16)(usPosX+SLG_NUM_MERCS_OFFSET_X), (UINT16)(usPosY+SLG_NUM_MERCS_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zNumMercsString, usPosX + SLG_NUM_MERCS_OFFSET_X, usPosY + SLG_NUM_MERCS_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//The balance
-			DrawTextToScreen( zBalanceString, (UINT16)(usPosX+SLG_BALANCE_OFFSET_X), (UINT16)(usPosY+SLG_BALANCE_OFFSET_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zBalanceString, usPosX + SLG_BALANCE_OFFSET_X, usPosY + SLG_BALANCE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			if( gbSaveGameArray[ bEntryID ] || ( gfSaveGame && !gfUserInTextInputMode && ( gbSelectedSaveLocation == bEntryID ) ) )
 			{
 				//The Saved Game description
-				DrawTextToScreen( SaveGameHeader.sSavedGameDesc, (UINT16)(usPosX+SLG_SAVE_GAME_DESC_X), (UINT16)(usPosY+SLG_SAVE_GAME_DESC_Y), 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+				DrawTextToScreen(SaveGameHeader.sSavedGameDesc, usPosX + SLG_SAVE_GAME_DESC_X, usPosY + SLG_SAVE_GAME_DESC_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			}
 		}
 	}
@@ -1341,12 +1340,12 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		if( bEntryID == 0 )
 		{
 			//display the empty spot
-			DrawTextToScreen( pMessageStrings[ MSG_EMPTY_QUICK_SAVE_SLOT ], usPosX, (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+			DrawTextToScreen(pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 		else
 		{
 			//display the empty spot
-			DrawTextToScreen( pMessageStrings[ MSG_EMPTYSLOT ], usPosX, (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+			DrawTextToScreen(pMessageStrings[MSG_EMPTYSLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 	}
 
@@ -1995,7 +1994,7 @@ static void DisplayOnScreenNumber(BOOLEAN fErase)
 		}
 
 		if( !fErase )
-			DrawTextToScreen( zTempString, usPosX, (UINT16)(usPosY+SLG_DATE_OFFSET_Y), 0, SAVE_LOAD_NUMBER_FONT, SAVE_LOAD_NUMBER_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(zTempString, usPosX, usPosY + SLG_DATE_OFFSET_Y, 0, SAVE_LOAD_NUMBER_FONT, SAVE_LOAD_NUMBER_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		InvalidateRegion( usPosX, usPosY+SLG_DATE_OFFSET_Y, usPosX+10, usPosY+SLG_DATE_OFFSET_Y+10 );
 

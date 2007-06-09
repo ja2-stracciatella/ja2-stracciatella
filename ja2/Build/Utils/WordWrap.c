@@ -191,7 +191,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
-	BOOLEAN fDirty = (uiFlags & MARK_DIRTY) != 0;
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
@@ -207,7 +206,7 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 
 	while(pFirstWrappedString != NULL)
 	{
-		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, uiFont, ubColor, ubBackGroundColor, fDirty, uiFlags );
+		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, uiFont, ubColor, ubBackGroundColor, uiFlags);
 
 		pTempWrappedString = pFirstWrappedString;
 		pFirstWrappedString = pTempWrappedString->pNextWrappedString;
@@ -236,7 +235,7 @@ static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiF
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, BOOLEAN fDirty, UINT32 ulFlags)
+void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags)
 {
 	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight=0;
@@ -270,7 +269,7 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-	if (fDirty) gprintfdirty(usPosX, usPosY, L"%ls", pStr);
+	if (ulFlags & MARK_DIRTY) gprintfdirty(usPosX, usPosY, L"%ls", pStr);
 	mprintf(usPosX, usPosY, L"%ls", pStr);
 
 	if( ulFlags & INVALIDATE_TEXT )
@@ -291,7 +290,7 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 
 UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
-	BOOLEAN fDirty = (uiFlags & MARK_DIRTY) != 0;
+	UINT32 draw_flags = uiFlags & MARK_DIRTY;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
 	UINT32	uiLocalFont=uiFont;
@@ -347,7 +346,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 
 							// time to draw this line of text (centered)!
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification);
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
               // shadow control
 							if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -397,7 +396,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 						}
 
 						// Display what we have up to now
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
             // shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -447,7 +446,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// turn bold ON.... but first, write whatever we have in normal now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, usJustification | draw_flags);
 
 							// shadow control
 						  if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -491,7 +490,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 							}
 
 							// turn bold OFF - write whatever we have in bold now...
-							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, fDirty, usJustification );
+							DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubColor, ubBackGroundColor, usJustification | draw_flags);
 
 							// shadow control
 						  if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -552,7 +551,7 @@ DEF: commented out for Beta.  Nov 30
 						}
 
 						// change to new color.... but first, write whatever we have in normal now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
 						 // shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -600,7 +599,7 @@ DEF: commented out for Beta.  Nov 30
 						}
 
 						// turn color back to default - write whatever we have in bold now...
-						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+						DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
 						 // shadow control
 						if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -679,7 +678,7 @@ DEF: commented out for Beta.  Nov 30
 
 
 					// Display what we have up to now
-					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification );
+					DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
            // shadow control
 					if( IAN_WRAP_NO_SHADOW & uiFlags )
@@ -726,7 +725,7 @@ DEF: commented out for Beta.  Nov 30
 	}
 
 	// draw the paragraph
-	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, fDirty, usJustification  );
+	DrawTextToScreen(zLineString, usLocalPosX, usPosY, usLocalWidth, uiLocalFont, ubLocalColor, ubBackGroundColor, usJustification | draw_flags);
 
 
 	// shadow control

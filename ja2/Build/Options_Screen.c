@@ -639,7 +639,7 @@ static void RenderOptionsScreen(void)
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		else
-			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
@@ -1220,7 +1220,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		}
 		else
 		{
-			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_BLACK, TRUE, LEFT_JUSTIFIED);
+			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 }

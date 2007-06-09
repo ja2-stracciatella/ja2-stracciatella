@@ -1131,13 +1131,13 @@ static void RenderQuestDebugSystem(void)
 	DisplayNPCInfo();
 
 	//Display the text beside the NPC in current sector toggle box
-	DrawTextToScreen( QuestDebugText[ QUEST_DBS_VIEW_LOCAL_NPC ], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_NPC_CHCKBOX_TGL_Y+1, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+	DrawTextToScreen(QuestDebugText[QUEST_DBS_VIEW_LOCAL_NPC], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_NPC_CHCKBOX_TGL_Y + 1, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the text beside the add npc to team toggle box
-	DrawTextToScreen( QuestDebugText[ QUEST_DBS_ADD_NPC_TO_TEAM ], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y+1, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+	DrawTextToScreen(QuestDebugText[QUEST_DBS_ADD_NPC_TO_TEAM], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y + 1, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the text beside the rpc say sector desc quotes
-	DrawTextToScreen( QuestDebugText[ QUEST_DBS_RPC_SAY_SECTOR_DESC ], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+	DrawTextToScreen(QuestDebugText[QUEST_DBS_RPC_SAY_SECTOR_DESC], QUEST_DBS_NPC_CHCKBOX_TGL_X + 25, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 
 	DisplayCurrentGridNo();
@@ -1166,7 +1166,7 @@ static void DisplayCurrentGridNo(void)
 		CHAR16	zTemp[512];
 
 		swprintf(zTemp, lengthof(zTemp), L"%ls:  %d", QuestDebugText[QUEST_DBS_CURRENT_GRIDNO], gsQdsEnteringGridNo);
-		DrawTextToScreen( zTemp, QUEST_DBS_NPC_CURRENT_GRIDNO_X, QUEST_DBS_NPC_CURRENT_GRIDNO_Y, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(zTemp, QUEST_DBS_NPC_CURRENT_GRIDNO_X, QUEST_DBS_NPC_CURRENT_GRIDNO_Y, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
 
@@ -1491,7 +1491,7 @@ static void DisplayQuestList(void)
 	{
 		//Display Quest Number text
 		swprintf( sTemp, lengthof(sTemp), L"%02d", usLoop1 );
-		DrawTextToScreen( sTemp, QUEST_DBS_FIRST_COL_NUMBER_X, usPosY, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(sTemp, QUEST_DBS_FIRST_COL_NUMBER_X, usPosY, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		//Display Quest title text
 		DisplayWrappedString(QUEST_DBS_FIRST_COL_TITLE_X, usPosY, QUEST_DBS_TITLE_COL_WIDTH, 2, QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, QuestDescText[usLoop1], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -1522,7 +1522,7 @@ static void DisplayFactList(void)
 	{
 		//Display Quest Number text
 		swprintf( sTemp, lengthof(sTemp), L"%02d", usLoop1 );
-		DrawTextToScreen( sTemp, QUEST_DBS_SECOND_COL_NUMBER_X, usPosY, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(sTemp, QUEST_DBS_SECOND_COL_NUMBER_X, usPosY, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		//Display Quest title text
 		if( FactDescText[ usLoop1 ][0] == '\0' )
@@ -1535,10 +1535,10 @@ static void DisplayFactList(void)
 			wcscpy( sTemp, FactDescText[ usLoop1 ] );
 			ReduceStringLength(sTemp, lengthof(sTemp), QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT);
 //			DisplayWrappedString(QUEST_DBS_SECOND_COL_TITLE_X, usPosY, QUEST_DBS_SECOND_TITLE_COL_WIDTH, 2, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FactDescText[usLoop1], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-			DrawTextToScreen( sTemp, QUEST_DBS_SECOND_COL_TITLE_X, usPosY, QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+			DrawTextToScreen(sTemp, QUEST_DBS_SECOND_COL_TITLE_X, usPosY, QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
-		DrawTextToScreen( gubFact[ usLoop1 ] ? L"True" : L"False", QUEST_DBS_SECOND_COL_STATUS_X, usPosY, QUEST_DBS_STATUS_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+		DrawTextToScreen(gubFact[usLoop1] ? L"True" : L"False", QUEST_DBS_SECOND_COL_STATUS_X, usPosY, QUEST_DBS_STATUS_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		usPosY += usTextHeight;
 		usCount++;
@@ -1867,7 +1867,7 @@ static void DisplaySelectedNPC(void)
 	{
 		if( gfUseLocalNPCs )
 		{
-			DrawTextToScreen( gMercProfiles[ gubCurrentNpcInSector[ i ] ].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[i]].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			GetDebugLocationString( gubCurrentNpcInSector[ i ], sTempString, lengthof(sTempString));
 
@@ -1875,7 +1875,7 @@ static void DisplaySelectedNPC(void)
 		}
 		else
 		{
-			DrawTextToScreen( gMercProfiles[ i ].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+			DrawTextToScreen(gMercProfiles[i].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			GetDebugLocationString( i, sTempString, lengthof(sTempString));
 
@@ -1885,7 +1885,7 @@ static void DisplaySelectedNPC(void)
 		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
 		// the location value
-		DrawTextToScreen( sTempString, ( UINT16 ) ( usLocationX - 2 ), usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		DrawTextToScreen(sTempString, usLocationX - 2, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		usPosY += usFontHeight;
 	}
@@ -1907,14 +1907,14 @@ static void DisplaySelectedNPC(void)
 		// the highlighted name
 		if( gfUseLocalNPCs )
 		{
-			DrawTextToScreen( gMercProfiles[ gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ] ].zNickname, gpActiveListBox->usScrollPosX, (UINT16)(usPosY), 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem]].zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			GetDebugLocationString( gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ], sTempString, lengthof(sTempString));
 
 //			GetShortSectorString( gMercProfiles[ gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ] ].sSectorX, gMercProfiles[ gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ] ].sSectorY, sTempString );
 		}
 		else
 		{
-			DrawTextToScreen( gMercProfiles[ gpActiveListBox->sCurSelectedItem ].zNickname, gpActiveListBox->usScrollPosX, (UINT16)(usPosY), 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+			DrawTextToScreen(gMercProfiles[gpActiveListBox->sCurSelectedItem].zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			GetDebugLocationString( gpActiveListBox->sCurSelectedItem, sTempString, lengthof(sTempString));
 //			GetShortSectorString( gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorX, gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorY, sTempString );
@@ -1923,7 +1923,7 @@ static void DisplaySelectedNPC(void)
 		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, (UINT16)(usPosY), gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
 		// the location value
-		DrawTextToScreen( sTempString, usLocationX, (UINT16)(usPosY), 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+		DrawTextToScreen(sTempString, usLocationX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		SetFontShadow(DEFAULT_SHADOW);
 
@@ -1957,7 +1957,7 @@ static void DisplaySelectedItem(void)
 		const wchar_t* ItemName = ShortItemNames[i];
 		if (ItemName[0] == L'\0') ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
-		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DrawTextToScreen(ItemName, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		usPosY += usFontHeight;
 	}
 
@@ -1974,7 +1974,7 @@ static void DisplaySelectedItem(void)
 		const wchar_t* ItemName = ShortItemNames[gpActiveListBox->sCurSelectedItem];
 		if (ItemName[0] == L'\0') ItemName = QuestDebugText[QUEST_DBS_NO_ITEM];
 
-		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED);
+		DrawTextToScreen(ItemName, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		SetFontShadow(DEFAULT_SHADOW);
 
 		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", gpActiveListBox->sCurSelectedItem, ItemName);
@@ -2984,29 +2984,22 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 				ColorFillVideoSurfaceArea( FRAME_BUFFER, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y, QUEST_DBS_NPC_INV_POPUP_X+QUEST_DBS_NPC_INV_POPUP_WIDTH,	QUEST_DBS_NPC_INV_POPUP_Y+QUEST_DBS_NPC_INV_POPUP_HEIGHT, Get16BPPColor( FROMRGB(  45,  59,  74 ) ) );
 
 				//Dispaly the NPC inve title
-				DrawTextToScreen( QuestDebugText[ QUEST_DBS_NPC_INVENTORY ], QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+5, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+				DrawTextToScreen(QuestDebugText[QUEST_DBS_NPC_INVENTORY], QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+5, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				//Dispaly the current npc name
 			if( gfUseLocalNPCs )
-				DrawTextToScreen( gMercProfiles[ gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ] ].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+				DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem]].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 			else
-				DrawTextToScreen( gMercProfiles[ gNpcListBox.sCurSelectedItem ].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED	);
+				DrawTextToScreen(gMercProfiles[gNpcListBox.sCurSelectedItem].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
 				for( i=0; i<NUM_INV_SLOTS; i++)
 				{
 					//Display Name of the pocket
-					DrawTextToScreen( PocketText[ i ], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED	);
+					DrawTextToScreen(PocketText[i], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 					//Display the contents of the pocket
-					DrawTextToScreen
-					(
-						ShortItemNames[pSoldier->inv[i].usItem],
-						QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY,
-						0, QUEST_DBS_FONT_DYNAMIC_TEXT,
-						QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK,
-						FALSE, LEFT_JUSTIFIED
-					);
+					DrawTextToScreen(ShortItemNames[pSoldier->inv[i].usItem], QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 					usPosY += usFontHeight;
 				}
 			}

@@ -1257,9 +1257,6 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 
 		usPosX = gHelpScreen.usLeftMarginPosX;
 
-//		DrawTextToScreen( zText, usPosX, (UINT16)(gHelpScreen.usScreenLocY+HELP_SCREEN_TITLE_OFFSET_Y), usWidth,
-//									 HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, HELP_SCREEN_TEXT_BACKGROUND, FALSE, CENTER_JUSTIFIED );
-
 		//Display the Title
 		IanDisplayWrappedString(usPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TITLE_OFFSET_Y, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 	}
@@ -1271,8 +1268,6 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	usPosX = gHelpScreen.usLeftMarginPosX;
 
 	usPosY = gHelpScreen.usScreenLocY+HELP_SCREEN_HELP_REMINDER_Y;
-//	DrawTextToScreen( zText, usPosX, usPosY, usWidth,
-//								 HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, HELP_SCREEN_TEXT_BACKGROUND, FALSE, CENTER_JUSTIFIED );
 
 	IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TITLE_BODY_FONT, HELP_SCREEN_TITLE_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
 
