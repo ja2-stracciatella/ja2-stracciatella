@@ -272,12 +272,6 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 	if (fDirty) gprintfdirty(usPosX, usPosY, L"%ls", pStr);
 	mprintf(usPosX, usPosY, L"%ls", pStr);
 
-	if( IAN_WRAP_NO_SHADOW & ulFlags )
-	{
-		// reset shadow
-	  SetFontShadow( DEFAULT_SHADOW );
-	}
-
 	if( ulFlags & INVALIDATE_TEXT )
 	{
 		  usFontHeight = GetFontHeight(ulFont);
