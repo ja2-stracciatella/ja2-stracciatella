@@ -35,6 +35,7 @@ CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
+DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
 DisplayMercStats(): callers
@@ -73,6 +74,7 @@ FaceRegionMvtCallback(): unused
 FileCheckEndOfFile(): complicated
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
+FindValidInsertionCode(): MARK_DIRTY necessary?
 GetCostOfPassageForHelicopter(): callers
 GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
@@ -215,6 +217,7 @@ RenderFemaleGenderIcon(): complicated
 RenderInactiveTextFieldNode(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 RenderInventoryForCharacter(): callers
 RenderItemDescriptionBox(): code duplication
+RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
 RenderSummaryWindow(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect() and remove dependency on VObject_Blitters
 RenderTalkingMenu(): code duplication
