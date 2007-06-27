@@ -1399,7 +1399,7 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	*/
 
 	memcpy( pNewProfile->bInvStatus, gMercProfiles[ ubSrcProfile ].bInvStatus , sizeof( UINT8) * 19 );
-	memcpy( pNewProfile->bInvStatus, gMercProfiles[ ubSrcProfile ].bInvStatus , sizeof( UINT8) * 19 );
+	memcpy(pNewProfile->bInvNumber, gMercProfiles[ubSrcProfile].bInvStatus, sizeof(pNewProfile->bInvNumber));
 	memcpy( pNewProfile->inv , gMercProfiles[ ubSrcProfile ].inv , sizeof( UINT16 ) * 19 );
 	memcpy( pNewProfile->bMercTownReputation , gMercProfiles[ ubSrcProfile ].bMercTownReputation , sizeof( UINT8 ) * 20 );
 
