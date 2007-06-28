@@ -1,6 +1,5 @@
 #include "CharProfile.h"
 #include "Font.h"
-#include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
 #include "LoadSaveMercProfile.h"
 #include "Utilities.h"

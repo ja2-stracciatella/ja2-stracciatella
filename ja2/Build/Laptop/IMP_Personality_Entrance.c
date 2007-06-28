@@ -1,7 +1,6 @@
 #include "CharProfile.h"
 #include "Font.h"
 #include "IMP_Personality_Entrance.h"
-#include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
 #include "Utilities.h"
 #include "WCheck.h"
