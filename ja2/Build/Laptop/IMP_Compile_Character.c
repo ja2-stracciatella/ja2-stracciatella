@@ -9,7 +9,6 @@
 #include "IMP_Personality_Entrance.h"
 #include "IMP_Personality_Quiz.h"
 #include "IMP_Personality_Finish.h"
-#include "IMP_Attribute_Entrance.h"
 #include "IMP_Attribute_Selection.h"
 #include "IMP_Attribute_Finish.h"
 #include "IMP_Portraits.h"
