@@ -6,7 +6,6 @@
 #include "Render_Dirty.h"
 #include "IMP_Portraits.h"
 #include "IMP_Compile_Character.h"
-#include "IMP_Voices.h"
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Profile.h"
 #include "Animation_Data.h"

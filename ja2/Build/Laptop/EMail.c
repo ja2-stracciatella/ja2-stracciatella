@@ -10,7 +10,6 @@
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "IMP_Compile_Character.h"
-#include "IMP_Voices.h"
 #include "IMP_Portraits.h"
 #include "Game_Clock.h"
 #include "Environment.h"

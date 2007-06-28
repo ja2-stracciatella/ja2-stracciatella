@@ -16,7 +16,6 @@
 #include "MessageBoxScreen.h"
 #include "Soldier_Profile_Type.h"
 #include "IMP_Portraits.h"
-#include "IMP_Voices.h"
 #include "IMP_Attribute_Selection.h"
 #include "English.h"
 #include "Line.h"

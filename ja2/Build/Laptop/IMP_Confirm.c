@@ -16,7 +16,6 @@
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Control.h"
 #include "IMP_Portraits.h"
-#include "IMP_Voices.h"
 #include "Overhead.h"
 #include "History.h"
 #include "Game_Clock.h"
