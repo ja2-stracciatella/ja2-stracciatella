@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "IMP_MainPage.h"
-#include "IMP_Begin_Screen.h"
 #include "IMP_Personality_Entrance.h"
 #include "IMP_Personality_Quiz.h"
 #include "IMP_Personality_Finish.h"
