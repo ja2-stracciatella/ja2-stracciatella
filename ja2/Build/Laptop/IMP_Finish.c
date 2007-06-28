@@ -13,7 +13,6 @@
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Attribute_Selection.h"
-#include "IMP_Text_System.h"
 #include "SoundMan.h"
 #include "IMP_Compile_Character.h"
 #include "Text.h"

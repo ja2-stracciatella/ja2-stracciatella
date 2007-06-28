@@ -12,7 +12,6 @@
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Finish.h"
-#include "IMP_Text_System.h"
 #include "Text_Input.h"
 #include "MessageBoxScreen.h"
 #include "Soldier_Profile_Type.h"
