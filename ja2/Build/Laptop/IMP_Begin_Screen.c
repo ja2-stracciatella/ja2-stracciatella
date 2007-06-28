@@ -155,8 +155,7 @@ void EnterIMPBeginScreen( void )
 }
 
 
-static void DisplayPlayerFullNameString(void);
-static void DisplayPlayerNickNameString(void);
+static void DisplayPlayerNameStrings(void);
 static void Print8CharacterOnlyString(void);
 static void RenderGender(void);
 
@@ -183,14 +182,8 @@ void RenderIMPBeginScreen( void )
 	// render warning string
 	Print8CharacterOnlyString( );
 
-
-
-	// display player name
-	DisplayPlayerFullNameString( );
-	DisplayPlayerNickNameString( );
-
-	// the gender itself
-	RenderGender( );
+	DisplayPlayerNameStrings();
+	RenderGender();
 }
 
 
@@ -238,33 +231,19 @@ void HandleIMPBeginScreen( void )
 
 		// has a new char been added to activation string
 
-
-
 	// render the cursor
-	switch( ubTextEnterMode )
+	switch (ubTextEnterMode)
 	{
-		case( FULL_NAME_MODE ):
-		  DisplayFullNameStringCursor( );
-		break;
-		case( NICK_NAME_MODE ):
-		  DisplayNickNameStringCursor( );
-		break;
-		case( MALE_GENDER_SELECT ):
-		  DisplayMaleGlowCursor( );
-		break;
-		case( FEMALE_GENDER_SELECT ):
-		  DisplayFemaleGlowCursor( );
-		break;
+		case FULL_NAME_MODE:       DisplayFullNameStringCursor(); break;
+		case NICK_NAME_MODE:       DisplayNickNameStringCursor(); break;
+		case MALE_GENDER_SELECT:   DisplayMaleGlowCursor();       break;
+		case FEMALE_GENDER_SELECT: DisplayFemaleGlowCursor();     break;
 	}
 
 	if( fNewCharInString )
 	{
-		// display strings
-    DisplayPlayerFullNameString( );
-    DisplayPlayerNickNameString( );
-
-		// the gender itself
-	  RenderGender( );
+		DisplayPlayerNameStrings();
+	  RenderGender();
 	}
 }
 
@@ -559,301 +538,107 @@ static void HandleBeginScreenTextEvent(const InputAtom* Inp)
 }
 
 
-static void DisplayFullNameStringCursor(void)
+static UINT16 CurrentGlowColour(void)
 {
-	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
-  UINT32 uiDestPitchBYTES;
-	static UINT32 uiBaseTime = 0;
-	UINT32 uiDeltaTime = 0;
-  static UINT32 iCurrentState = 0;
-  UINT8 *pDestBuf;
-  static BOOLEAN fIncrement = TRUE;
+	static UINT32 uiBaseTime    = 0;
+	static UINT32 iCurrentState = 0;
+	static BOOLEAN fIncrement   = TRUE;
 
-	if(uiBaseTime == 0)
+	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
+
+	// get difference
+	UINT32 uiDeltaTime = GetJA2Clock() - uiBaseTime;
+
+	// if difference is long enough, rotate colors
+	if (uiDeltaTime > MIN_GLOW_DELTA)
 	{
+		if (iCurrentState == 10) fIncrement = FALSE; // start rotating downward
+		if (iCurrentState ==  0) fIncrement = TRUE;  // rotate colors upward
+		iCurrentState = iCurrentState + (fIncrement ? 1 : -1);
+		// reset basetime to current clock
 		uiBaseTime = GetJA2Clock();
 	}
 
-	// get difference
-	uiDeltaTime = GetJA2Clock() - uiBaseTime;
-
-	// if difference is long enough, rotate colors
-	if(uiDeltaTime > MIN_GLOW_DELTA)
-  {
-		if( iCurrentState == 10)
-		{
-		  // start rotating downward
-			fIncrement = FALSE;
-		}
-		if( iCurrentState == 0)
-		{
-			// rotate colors upward
-			fIncrement = TRUE;
-		}
-		// if increment upward, increment iCurrentState
-    if(fIncrement)
-		{
-			iCurrentState++;
-		}
-		else
-		{
-			// else downwards
-			iCurrentState--;
-		}
-	  // reset basetime to current clock
-		uiBaseTime = GetJA2Clock( );
-	}
+	const INT32* c = GlowColorsList[iCurrentState];
+	return Get16BPPColor(FROMRGB(c[0], c[1], c[2]));
+}
 
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+static void DisplayNameStringCursor(INT32 x, INT32 y)
+{
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+	LineDraw(TRUE, x, y, x, y + CURSOR_HEIGHT + 1, CurrentGlowColour(), pDestBuf);
+	InvalidateRegion(x, y , x + 1, y + CURSOR_HEIGHT + 2);
+	UnLockVideoSurface(FRAME_BUFFER);
+}
 
-  // draw line in current state
-	LineDraw(TRUE, (UINT16) uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3, (UINT16)uiFullNameCursorPosition, FULL_NAME_CURSOR_Y + CURSOR_HEIGHT - 2, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
-	         pDestBuf);
 
-  InvalidateRegion((UINT16) uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3 , (UINT16)uiFullNameCursorPosition + 1, FULL_NAME_CURSOR_Y + CURSOR_HEIGHT + 1 - 2);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
+static void DisplayFullNameStringCursor(void)
+{
+	DisplayNameStringCursor(uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3);
 }
 
 
 static void DisplayNickNameStringCursor(void)
 {
-	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
-  UINT32 uiDestPitchBYTES;
-	static UINT32 uiBaseTime = 0;
-	UINT32 uiDeltaTime = 0;
-	UINT8 *pDestBuf;
-  static UINT32 iCurrentState = 0;
-  static BOOLEAN fIncrement = TRUE;
-
-	if(uiBaseTime == 0)
-	{
-		uiBaseTime = GetJA2Clock();
-	}
-
-	// get difference
-	uiDeltaTime = GetJA2Clock() - uiBaseTime;
-
-	// if difference is long enough, rotate colors
-	if(uiDeltaTime > MIN_GLOW_DELTA)
-  {
-		if( iCurrentState == 10)
-		{
-		  // start rotating downward
-			fIncrement = FALSE;
-		}
-		if( iCurrentState == 0)
-		{
-			// rotate colors upward
-			fIncrement = TRUE;
-		}
-		// if increment upward, increment iCurrentState
-    if(fIncrement)
-		{
-			iCurrentState++;
-		}
-		else
-		{
-			// else downwards
-			iCurrentState--;
-		}
-	  // reset basetime to current clock
-		uiBaseTime = GetJA2Clock( );
-	}
-
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-  // draw line in current state
-	LineDraw(TRUE, (UINT16) uiNickNameCursorPosition, NICK_NAME_CURSOR_Y, (UINT16)uiNickNameCursorPosition, NICK_NAME_CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
-	         pDestBuf );
-
-  InvalidateRegion((UINT16) uiNickNameCursorPosition, NICK_NAME_CURSOR_Y, (UINT16)uiNickNameCursorPosition + 1, NICK_NAME_CURSOR_Y + CURSOR_HEIGHT + 1);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
+	DisplayNameStringCursor(uiNickNameCursorPosition, NICK_NAME_CURSOR_Y);
 }
 
 
-static void DisplayPlayerFullNameString(void)
+static void DisplayPlayerNameStrings(void)
 {
-
-	// this function will grab the string that the player will enter for activation
-
 	// player gone too far, move back
-	if(uiFullNameCharacterPosition > MAX_FULL_NAME)
+	if (uiFullNameCharacterPosition > MAX_FULL_NAME)
 	{
 		uiFullNameCharacterPosition = MAX_FULL_NAME;
 	}
-
-	// restore background
-	RenderNameIndent( 194, 132);
-
-  // setup the font stuff
-	SetFont( FONT14ARIAL );
-  SetFontForeground( 184 );
-	SetFontBackground(FONT_BLACK);
-
-
-  // reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
-  mprintf(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
-
-
-	fNewCharInString = FALSE;
-  fReDrawScreenFlag = TRUE;
-}
-
-
-static void DisplayPlayerNickNameString(void)
-{
-
-	// this function will grab the string that the player will enter for activation
-
-	// player gone too far, move back
-	if(uiNickNameCharacterPosition > MAX_NICK_NAME)
+	if (uiNickNameCharacterPosition > MAX_NICK_NAME)
 	{
 		uiNickNameCharacterPosition = MAX_NICK_NAME;
 	}
 
 	// restore background
-	RenderNickNameIndent( 194, 192);
+	RenderNameIndent(    194, 132);
+	RenderNickNameIndent(194, 192);
 
-  // setup the font stuff
-	SetFont( FONT14ARIAL );
-  SetFontForeground( 184 );
+	// setup the font stuff
+	SetFont(FONT14ARIAL);
+	SetFontForeground(184);
 	SetFontBackground(FONT_BLACK);
-
 
   // reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-  mprintf( LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
+	mprintf(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
+	mprintf(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
+
+	fNewCharInString  = FALSE;
+	fReDrawScreenFlag = TRUE;
+}
 
 
-	fNewCharInString = FALSE;
-  fReDrawScreenFlag = TRUE;
+static void DisplayGenderGlowCursor(INT32 x)
+{
+	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+  RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, CurrentGlowColour(), pDestBuf);
+  InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
+	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 
 static void DisplayMaleGlowCursor(void)
 {
-	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
-  UINT32 uiDestPitchBYTES;
-	static UINT32 uiBaseTime = 0;
-	UINT32 uiDeltaTime = 0;
-  static UINT32 iCurrentState = 0;
-  static BOOLEAN fIncrement = TRUE;
-  UINT8 *pDestBuf;
-
-	if(uiBaseTime == 0)
-	{
-		uiBaseTime = GetJA2Clock();
-	}
-
-	// get difference
-	uiDeltaTime = GetJA2Clock() - uiBaseTime;
-
-	// if difference is long enough, rotate colors
-	if(uiDeltaTime > MIN_GLOW_DELTA)
-  {
-		if( iCurrentState == 10)
-		{
-		  // start rotating downward
-			fIncrement = FALSE;
-		}
-		if( iCurrentState == 0)
-		{
-			// rotate colors upward
-			fIncrement = TRUE;
-		}
-		// if increment upward, increment iCurrentState
-    if(fIncrement)
-		{
-			iCurrentState++;
-		}
-		else
-		{
-			// else downwards
-			iCurrentState--;
-		}
-	  // reset basetime to current clock
-		uiBaseTime = GetJA2Clock( );
-	}
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-	// draw rectangle
-  RectangleDraw( TRUE, MALE_BOX_X, MALE_BOX_Y, MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),  pDestBuf );
-
-
-  InvalidateRegion((UINT16) MALE_BOX_X, MALE_BOX_Y,  MALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
+	DisplayGenderGlowCursor(MALE_BOX_X);
 }
 
 
 static void DisplayFemaleGlowCursor(void)
 {
-	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
-  UINT32 uiDestPitchBYTES;
-	static UINT32 uiBaseTime = 0;
-	UINT32 uiDeltaTime = 0;
-  static UINT32 iCurrentState = 0;
-  static BOOLEAN fIncrement = TRUE;
-	UINT8 *pDestBuf;
-
-	if(uiBaseTime == 0)
-	{
-		uiBaseTime = GetJA2Clock();
-	}
-
-	// get difference
-	uiDeltaTime = GetJA2Clock() - uiBaseTime;
-
-	// if difference is long enough, rotate colors
-	if(uiDeltaTime > MIN_GLOW_DELTA)
-  {
-		if( iCurrentState == 10)
-		{
-		  // start rotating downward
-			fIncrement = FALSE;
-		}
-		if( iCurrentState == 0)
-		{
-			// rotate colors upward
-			fIncrement = TRUE;
-		}
-		// if increment upward, increment iCurrentState
-    if(fIncrement)
-		{
-			iCurrentState++;
-		}
-		else
-		{
-			// else downwards
-			iCurrentState--;
-		}
-	  // reset basetime to current clock
-		uiBaseTime = GetJA2Clock( );
-	}
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
-
-	// draw rectangle
-  RectangleDraw( TRUE, FEMALE_BOX_X, MALE_BOX_Y, FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),  pDestBuf );
-
-
-  InvalidateRegion((UINT16) FEMALE_BOX_X, MALE_BOX_Y,  FEMALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
+	DisplayGenderGlowCursor(FEMALE_BOX_X);
 }
 
 
