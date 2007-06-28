@@ -559,8 +559,7 @@ static UINT16 CurrentGlowColour(void)
 		uiBaseTime = GetJA2Clock();
 	}
 
-	const INT32* c = GlowColorsList[iCurrentState];
-	return Get16BPPColor(FROMRGB(c[0], c[1], c[2]));
+	return Get16BPPColor(GlowColorsList[iCurrentState]);
 }
 
 

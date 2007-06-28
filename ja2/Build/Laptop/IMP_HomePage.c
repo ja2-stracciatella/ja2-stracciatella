@@ -21,18 +21,18 @@
 #include "Font_Control.h"
 
 
-INT32 GlowColorsList[][3] ={
-	{ 0,0,0 },
-	{ 0,25,0 },
-	{ 0,50,0 },
-	{ 0,75,0 },
-	{ 0,100,0 },
-	{ 0,125,0 },
-	{ 0,150,0 },
-	{ 0,175,0 },
-	{ 0,200,0 },
-	{ 0,225,0 },
-	{ 0,255,0 },
+const UINT32 GlowColorsList[] = {
+	FROMRGB(0,   0, 0),
+	FROMRGB(0,  25, 0),
+	FROMRGB(0,  50, 0),
+	FROMRGB(0,  75, 0),
+	FROMRGB(0, 100, 0),
+	FROMRGB(0, 125, 0),
+	FROMRGB(0, 150, 0),
+	FROMRGB(0, 175, 0),
+	FROMRGB(0, 200, 0),
+	FROMRGB(0, 225, 0),
+	FROMRGB(0, 255, 0)
 };
 
 static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
@@ -223,8 +223,7 @@ static void DisplayActivationStringCursor(void)
 
 
   // draw line in current state
-	LineDraw(TRUE, (UINT16) uiCursorPosition, CURSOR_Y, (UINT16)uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor( FROMRGB( GlowColorsList[ iCurrentState ][ 0 ], GlowColorsList[ iCurrentState ][ 1 ], GlowColorsList[ iCurrentState ][ 2 ] ) ),
-	         pDestBuf );
+	LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), pDestBuf);
 
 	// unlock frame buffer
 	UnLockVideoSurface( FRAME_BUFFER );

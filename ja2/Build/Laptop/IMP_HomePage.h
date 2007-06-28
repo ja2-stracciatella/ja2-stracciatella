@@ -12,5 +12,5 @@ void HandleImpHomePage( void );
 #define MIN_GLOW_DELTA 100
 #define CURSOR_HEIGHT GetFontHeight( FONT14ARIAL ) + 6
 
-extern INT32 GlowColorsList[][3];
+extern const UINT32 GlowColorsList[11];
 #endif
