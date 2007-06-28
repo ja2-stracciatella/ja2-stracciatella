@@ -27,7 +27,6 @@
 #define LOOSE_CURSOR_DELAY 300
 static BOOLEAN gfLooseCursorOn		 = FALSE;
 static INT16	 gsLooseCursorGridNo = NOWHERE;
-static UINT32	 guiLooseCursorID		 = 0;
 static UINT32	 guiLooseCursorTimeOfLastUpdate = 0;
 
 
@@ -676,8 +675,6 @@ static void EraseSnappingCursor(void)
 static void StartLooseCursor(INT16 sGridNo, UINT32 uiCursorID)
 {
 	gfLooseCursorOn		= TRUE;
-
-	guiLooseCursorID	= uiCursorID;
 
 	guiLooseCursorTimeOfLastUpdate = GetJA2Clock( );
 

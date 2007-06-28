@@ -195,7 +195,6 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 	UINT8		ubPerson;
 	INT16		sTempDestGridNo;
 	INT16		sNewGridNo;
-	BOOLEAN	fSwapInDoor = FALSE;
 
 	if ( sGridNo == NOWHERE )
 	{
@@ -255,14 +254,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 								// Not for multi-tiled things...
 								if ( !( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )
 								{
-									// Is the next movement cost for a door?
-									if ( DoorTravelCost( pSoldier, sGridNo, gubWorldMovementCosts[ sGridNo ][ bDirection ][ pSoldier->bLevel ], (BOOLEAN)( pSoldier->bTeam == gbPlayerNum ), NULL ) == TRAVELCOST_DOOR )
-									{
-										fSwapInDoor = TRUE;
-									}
-
 									// If we are to swap and we're near a door, open door first and then close it...?
-
 
 									// Swap now!
 									MercPtrs[ ubPerson ]->fBlockedByAnotherMerc = FALSE;

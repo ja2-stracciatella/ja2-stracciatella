@@ -2759,7 +2759,6 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 {
 	INT16 sDist;
-	UINT16 usItem;
 	FLOAT		dTargetX;
 	FLOAT		dTargetY;
 	FLOAT		dTargetZ;
@@ -2828,9 +2827,6 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 	switch ( ubHeight )
 	{
 		case ANIM_STAND:
-
-			usItem = pSoldier->inv[ HANDPOS ].usItem;
-
 			// CHECK 2ND HAND!
 			if ( IsValidSecondHandShot( pSoldier ) )
 			{

@@ -191,7 +191,7 @@ static INT8 CalcBestCTGT(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo,
 
 	// using only ints for maximum execution speed here
 	// CJC: Well, so much for THAT idea!
-	INT16 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sDir, sCheckSpot, sOKTest;
+	INT16 sCentralGridNo, sAdjSpot, sNorthGridNo, sSouthGridNo, sDir, sCheckSpot;
 
 	INT8 bThisCTGT, bBestCTGT = 0;
 
@@ -201,7 +201,6 @@ static INT8 CalcBestCTGT(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo,
 
 	// precalculate these for speed
 	// what was struct for?
-	sOKTest = NewOKDestination( pSoldier, sCentralGridNo, IGNOREPEOPLE , bLevel );
 	sNorthGridNo = NewGridNo( sCentralGridNo, DirectionInc(NORTH) );
 	sSouthGridNo = NewGridNo( sCentralGridNo, DirectionInc(SOUTH) );
 

@@ -242,8 +242,7 @@ static void RenderItemsForCurrentPageOfInventoryPool(void)
 static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 {
 	// render item in this slot of the list
-	INT16 sCenX, sCenY, usWidth, usHeight, sX, sY;
-	ETRLEObject		*pTrav;
+	INT16 sX, sY;
 	CHAR16 sString[ 64 ];
 	INT16 sWidth = 0, sHeight = 0;
 	INT16 sOutLine = 0;
@@ -255,19 +254,9 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 		return ( FALSE );
 	}
 
-	HVOBJECT hHandle = GetVideoObject(GetInterfaceGraphicForItem(&(Item[pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage].o.usItem])));
-
-	pTrav = &( hHandle->pETRLEObject[ Item[pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ].ubGraphicNum] );
-	usHeight				= (UINT16)pTrav->usHeight;
-	usWidth					= (UINT16)pTrav->usWidth;
-
 	// set sx and sy
 	sX = ( INT16 )( MAP_INVENTORY_POOL_SLOT_OFFSET_X + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) );
 	sY = 	( INT16 )( MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) );
-
-	// CENTER IN SLOT!
-	sCenX = sX + ( abs( MAP_INVEN_SPACE_BTWN_SLOTS - usWidth ) / 2 ) - pTrav->sOffsetX;
-	sCenY = sY + ( abs( MAP_INVEN_SLOT_HEIGHT - 5 - usHeight ) / 2 ) - pTrav->sOffsetY;
 
 
 	if( fMapInventoryItemCompatable[ iCurrentSlot ] )

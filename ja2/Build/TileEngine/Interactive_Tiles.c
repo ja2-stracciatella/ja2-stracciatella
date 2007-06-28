@@ -914,7 +914,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr;
-	UINT32 LineSkip;
 	ETRLEObject *pTrav;
 	BOOLEAN	fDataFound = FALSE;
 	INT32	 iTestPos, iStartPos;
@@ -933,7 +932,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usI
 	// Calculate from 0, 0 at top left!
 	iTestPos	= ( ( usHeight - iTestY ) * usWidth ) + iTestX;
 	iStartPos	= 0;
-	LineSkip  = usWidth;
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 
@@ -1059,7 +1057,6 @@ BlitDoneLine:
 
 		dec		usHeight
 		jz		BlitDone
-//		add		edi, LineSkip
 		jmp		BlitDispatch
 
 

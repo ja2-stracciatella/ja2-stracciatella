@@ -813,9 +813,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	UINT32									cnt;
 	INT16										sOldGridNo;
 
-	UINT8										ubOldID;
-	UINT32									uiOldUniqueId;
-
 	UINT32									uiSlot;
 	SOLDIERTYPE							*pGroupMember;
 
@@ -826,9 +823,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 	// Save merc id for this guy...
 	ubID = pSoldier->ubID;
-
-	ubOldID = ubID;
-	uiOldUniqueId = pSoldier->uiUniqueSoldierIdValue;
 
 	sOldGridNo = pSoldier->sGridNo;
 
@@ -921,9 +915,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 			AddSoldierToSectorNoCalculateDirectionUseAnimation( ubID, pSoldier->usAnimState, pSoldier->usAniCode );
 			HandleSight(pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
 		}
-
-		// fix up the event queue...
-	//	ChangeSoldierIDInQueuedEvents( ubOldID, uiOldUniqueId, pNewSoldier->ubID, pNewSoldier->uiUniqueSoldierIdValue );
 
 		if ( pNewSoldier->ubProfile != NO_PROFILE )
 		{

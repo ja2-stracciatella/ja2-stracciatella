@@ -7079,7 +7079,6 @@ BlitDone:
 
 static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
-	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *ZPtr;
@@ -7109,7 +7108,6 @@ static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 
 	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
 	ZPtr = (UINT8*)(pZBuffer + iTempY * SCREEN_WIDTH + iTempX);
-	p16BPPPalette = hSrcVObject->pShadeCurrent;
 	LineSkip = (SCREEN_WIDTH - usWidth) * 2;
 
 #if 1 // XXX TODO
@@ -7143,7 +7141,6 @@ static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 	__asm {
 
 		mov		esi, SrcPtr
-		mov		edx, p16BPPPalette
 		xor		eax, eax
 		mov		ebx, ZPtr
 		xor		ecx, ecx
