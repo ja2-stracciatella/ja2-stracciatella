@@ -158,9 +158,7 @@ void EnterIMPBeginScreen( void )
 static void DisplayPlayerFullNameString(void);
 static void DisplayPlayerNickNameString(void);
 static void Print8CharacterOnlyString(void);
-static void RenderFemaleGenderIcon(void);
 static void RenderGender(void);
-static void RenderMaleGenderIcon(void);
 
 
 void RenderIMPBeginScreen( void )
@@ -182,11 +180,6 @@ void RenderIMPBeginScreen( void )
 	// nick name
   RenderNickNameIndent( 194, 192);
 
-
-	// gender indents
-	RenderGenderIndent( 192, 252 );
-	RenderGenderIndent( 302, 252 );
-
 	// render warning string
 	Print8CharacterOnlyString( );
 
@@ -195,8 +188,6 @@ void RenderIMPBeginScreen( void )
 	// display player name
 	DisplayPlayerFullNameString( );
 	DisplayPlayerNickNameString( );
-	RenderMaleGenderIcon( );
-	RenderFemaleGenderIcon( );
 
 	// the gender itself
 	RenderGender( );
@@ -271,8 +262,6 @@ void HandleIMPBeginScreen( void )
 		// display strings
     DisplayPlayerFullNameString( );
     DisplayPlayerNickNameString( );
-		RenderMaleGenderIcon( );
-		RenderFemaleGenderIcon( );
 
 		// the gender itself
 	  RenderGender( );
@@ -917,38 +906,6 @@ static void DecrementTextEnterMode(void)
 }
 
 
-static void RenderMaleGenderIcon(void)
-{
-  // this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
-
-	// re render indent
-	RenderGenderIndent( 192, 252 );
-
-	// IMP_MALE selected draw box
-  if( bGenderFlag == IMP_MALE )
-	{
-
-	}
-
-
-}
-
-
-static void RenderFemaleGenderIcon(void)
-{
-  // this function displays a filled box in the IMP_MALE gender box if IMP_MALE has been selected
-
-	// re render indent
-	RenderGenderIndent( 302, 252 );
-
-  // IMP_FEMALE selected draw box
-  if( bGenderFlag == IMP_FEMALE )
-	{
-
-	}
-}
-
-
 static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -1075,26 +1032,19 @@ static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void RenderGender(void)
 {
   // this procedure will render the gender of the character int he appropriate box
+	RenderGenderIndent(192, 252);
+	RenderGenderIndent(302, 252);
 
-	// check to see if gender has been in fact set
-  if( bGenderFlag == -1 )
-  {
-		// nope, leave
-		return;
-	}
-
-	SetFontBackground( FONT_BLACK );
-	SetFontForeground( 184 );
-	if( bGenderFlag == IMP_MALE )
+	INT32 x;
+	switch (bGenderFlag)
 	{
-		// IMP_MALE, render x in IMP_MALE box
-		mprintf( MALE_BOX_X + 9, MALE_BOX_Y + 6, L"X" );
+		case IMP_FEMALE: x = FEMALE_BOX_X + 9; break;
+		case IMP_MALE:   x = MALE_BOX_X   + 9; break;
+		default:         return; // none selected yet
 	}
-	else
-	{
-		// IMP_FEMALE, render x in IMP_FEMALE box
-		mprintf(FEMALE_BOX_X + 9, MALE_BOX_Y + 6, L"X");
-	}
+	SetFontBackground(FONT_BLACK);
+	SetFontForeground(184);
+	mprintf(x, MALE_BOX_Y + 6, L"X");
 }
 
 
