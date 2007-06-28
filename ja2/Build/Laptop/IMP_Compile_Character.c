@@ -10,7 +10,6 @@
 #include "IMP_Personality_Quiz.h"
 #include "IMP_Personality_Finish.h"
 #include "IMP_Attribute_Selection.h"
-#include "IMP_Attribute_Finish.h"
 #include "IMP_Portraits.h"
 #include "IMP_Compile_Character.h"
 #include "IMP_Voices.h"
