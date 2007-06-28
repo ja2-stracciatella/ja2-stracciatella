@@ -4,7 +4,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
-#include "IMP_Personality_Entrance.h"
 #include "IMP_Personality_Quiz.h"
 #include "IMP_Personality_Finish.h"
 #include "IMP_Portraits.h"
