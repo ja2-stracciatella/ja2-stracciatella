@@ -288,9 +288,6 @@ static UINT8  gubArrayOfEmployedMercs[MAX_CHARACTER_COUNT];
 static UINT32 guiSmallSoldiersFace[MAX_CHARACTER_COUNT];
 static UINT8  gubNumberMercsInArray;
 
-//The subutitled text for what the merc is saying
-static wchar_t gsShopKeeperTalkingText[SKI_SUBTITLE_TEXT_SIZE];
-
 static UINT16 gusPositionOfSubTitlesX = 0;
 
 static BOOLEAN gfExitSKIDueToMessageBox = FALSE;
@@ -4413,20 +4410,18 @@ static BOOLEAN IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE* pItemObject)
 static void ShopKeeperSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void InitShopKeeperSubTitledText( STR16 pString )
+void InitShopKeeperSubTitledText(const wchar_t* pString)
 {
-	//Clear the contents of the subtitle text
-	memset( gsShopKeeperTalkingText, 0, SKI_SUBTITLE_TEXT_SIZE );
-
-	swprintf( gsShopKeeperTalkingText, lengthof(gsShopKeeperTalkingText), L"\"%ls\"", pString );
-
 	//Now setup the popup box
 	if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
 	{
 		UINT16 usActualWidth=0;
 		UINT16 usActualHeight=0;
 
-		giPopUpBoxId = PrepareMercPopupBox( giPopUpBoxId, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
+		// The subutitled text for what the merc is saying
+		wchar_t ShopKeeperTalkingText[SKI_SUBTITLE_TEXT_SIZE];
+		swprintf(ShopKeeperTalkingText, lengthof(ShopKeeperTalkingText), L"\"%ls\"", pString);
+		giPopUpBoxId = PrepareMercPopupBox(giPopUpBoxId, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, ShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 
 //		gusPositionOfSubTitlesX = ( 640 - usActualWidth ) / 2 ;
 		//position it to start under the guys face

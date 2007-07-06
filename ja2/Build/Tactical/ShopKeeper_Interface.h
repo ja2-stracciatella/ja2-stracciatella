@@ -83,7 +83,7 @@ void			ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue );
 
 void			SetSkiCursor( UINT16	usCursor );
 
-void			InitShopKeeperSubTitledText( STR16 pString );
+void InitShopKeeperSubTitledText(const wchar_t* pString);
 
 void			AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE	*pItemObject, INT8 bPreviousInvPos );
 
