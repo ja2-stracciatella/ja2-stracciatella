@@ -4648,20 +4648,6 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 }
 
 
-static void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType)
-{
-//	SOLDIERTYPE *pSoldier;
-
-
-#ifdef BYPASSNOISE
-	return;
-#endif
-
-	// see if anyone actually hears this noise, sees noiseMaker, etc.
-	ProcessNoise(ubNoiseMaker,sGridNo,bLevel,ubTerrType,ubVolume,ubNoiseType);
-}
-
-
 static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen);
 static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
 static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
