@@ -39,10 +39,6 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
  if ( pSoldier->bReverse || gUIUseReverse )
      sAPCost += AP_REVERSE_MODIFIER;
 
- //if (GridCost[gridno] == NPCMINECOST)
- //   switchValue = BackupGridCost[gridno];
- //else
-
   sSwitchValue = gubWorldMovementCosts[sGridno][bDir][ bLevel ];
 
 	// Check reality vs what the player knows....
@@ -187,12 +183,6 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 			iPoints = BP_MOVEMENT_FLAT;
 			break;
 		}
-/*
-#ifdef TESTVERSION
-     NumMessage("ERROR: TerrainBreathPoints: Unrecognized grid cost = ",
-	     						GridCost[gridno]);
-#endif
-*/
 			return(0);
   }
 
