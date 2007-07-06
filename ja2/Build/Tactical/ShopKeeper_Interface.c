@@ -62,30 +62,6 @@
 #endif
 
 
-// temp
-struct skirgbcolor
-{
-	UINT8 ubRed;
-	UINT8 ubGreen;
-	UINT8 ubBlue;
-};
-typedef struct skirgbcolor SKIRGBCOLOR;
-
-SKIRGBCOLOR SkiGlowColorsA[]={
-	{0,0,0},
-	{25,0,0},
-	{50,0,0},
-	{75,0,0},
-	{100,0,0},
-	{125,0,0},
-	{150,0,0},
-	{175,0,0},
-	{200,0,0},
-	{225,0,0},
-	{250,0,0},
-};
-
-
 #define		SKI_BUTTON_FONT										MILITARYFONT1//FONT14ARIAL
 #define		SKI_BUTTON_COLOR									73
 
@@ -164,9 +140,6 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		SKI_INV_OFFSET_X										74
 #define		SKI_INV_OFFSET_Y										36
 
-
-// the delay for glow cycling in glow areas, in millisecs
-#define SKI_GLOW_DELAY 70
 
 //Start Locations for the inventory boxes
 #define		SKI_ARMS_DEALERS_INV_START_X					165
@@ -247,31 +220,29 @@ SKIRGBCOLOR SkiGlowColorsA[]={
 #define		FLO_DISCOUNT_PERCENTAGE						10
 
 
-UINT32		guiMainTradeScreenImage;
-UINT32		guiCornerWhereTacticalIsStillSeenImage;		//This image is for where the corner of tactical is still seen through the shop keeper interface
+static UINT32 guiMainTradeScreenImage;
+static UINT32 guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
 
-BOOLEAN		gfSKIScreenEntry = TRUE;
+static BOOLEAN gfSKIScreenEntry = TRUE;
 BOOLEAN		gfSKIScreenExit	= FALSE;
-BOOLEAN		gfUserHasRequestedToLeave = FALSE;
-//BOOLEAN		gfRedrawSkiScreen = TRUE;
+static BOOLEAN gfUserHasRequestedToLeave = FALSE;
 
-BOOLEAN		gfRenderScreenOnNextLoop = FALSE;
+static BOOLEAN gfRenderScreenOnNextLoop = FALSE;
 
 UINT8			gubSkiDirtyLevel = SKI_DIRTY_LEVEL0;
-INT32			giSKIMessageBox=-1;
+static INT32 giSKIMessageBox = -1;
 
 INT8			gbSelectedArmsDealerID = -1;		//Contains the enum value for the currently selected arms dealer
 
 //the quote that is in progress, in certain circumstances, we don't want queuing of related but different quotes
 INT32			giShopKeepDialogueEventinProgress = - 1;
 
-//OBJECTTYPE				gpSkiItemPointer;
 INVENTORY_IN_SLOT		gMoveingItem;
 
 const OBJECTTYPE* gpHighLightedItemObject = NULL;
 
-BOOLEAN gfResetShopKeepIdleQuote = FALSE;
-BOOLEAN gfDoEvaluationAfterOpening = FALSE;
+static BOOLEAN gfResetShopKeepIdleQuote = FALSE;
+static BOOLEAN gfDoEvaluationAfterOpening = FALSE;
 
 typedef struct
 {
@@ -285,63 +256,57 @@ typedef struct
 
 
 
-SELECTED_ARMS_DEALERS_STATS		gSelectArmsDealerInfo;
+static SELECTED_ARMS_DEALERS_STATS gSelectArmsDealerInfo;
 
 
 //This pointer is used to store the inventory the arms dealer has for sale
-INVENTORY_IN_SLOT *gpTempDealersInventory=NULL;
+static INVENTORY_IN_SLOT* gpTempDealersInventory = NULL;
 
-INVENTORY_IN_SLOT	ArmsDealerOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
-INVENTORY_IN_SLOT	PlayersOfferArea[ SKI_NUM_TRADING_INV_SLOTS ];
+static INVENTORY_IN_SLOT ArmsDealerOfferArea[SKI_NUM_TRADING_INV_SLOTS];
+static INVENTORY_IN_SLOT PlayersOfferArea[SKI_NUM_TRADING_INV_SLOTS];
 
-OBJECTTYPE	gSubObject[ MAX_SUBOBJECTS_PER_OBJECT ];
+static OBJECTTYPE gSubObject[MAX_SUBOBJECTS_PER_OBJECT];
 
 BOOLEAN		gfHavePurchasedItemsFromTony = FALSE;
 
-BOOLEAN		gfDealerHasSaidTheEvaluateQuoteOnceThisSession=FALSE;
-BOOLEAN		gfAlreadySaidTooMuchToRepair = FALSE;
-UINT32		guiRandomQuoteDelayTime=SKI_DEALERS_RANDOM_QUOTE_DELAY;
+static BOOLEAN gfDealerHasSaidTheEvaluateQuoteOnceThisSession = FALSE;
+static BOOLEAN gfAlreadySaidTooMuchToRepair                   = FALSE;
+static UINT32  guiRandomQuoteDelayTime                        = SKI_DEALERS_RANDOM_QUOTE_DELAY;
 
 //Index for the shopkeepers face
-INT32			giShopKeeperFaceIndex;
+static INT32 giShopKeeperFaceIndex;
 
 //Id for the popup box
-INT32			giPopUpBoxId=-1;
+static INT32 giPopUpBoxId = -1;
 
-BOOLEAN		gfIsTheShopKeeperTalking;
-
-
-// the glow for unwanted items
-BOOLEAN fDeltaColorForShopkeepUnwanted = TRUE;
-INT8 bShopKeepGlowIndex = 9;
-BOOLEAN fDoShopkeepGlow = FALSE;
+static BOOLEAN gfIsTheShopKeeperTalking;
 
 
-BOOLEAN		gfRemindedPlayerToPickUpHisStuff = FALSE;
+static BOOLEAN gfRemindedPlayerToPickUpHisStuff = FALSE;
 
-BOOLEAN		gfDoneBusinessThisSession = FALSE;
+static BOOLEAN gfDoneBusinessThisSession = FALSE;
 
 // this is used within SKI exclusively, to handle small faces
-UINT8			gubArrayOfEmployedMercs[ MAX_CHARACTER_COUNT ];
-UINT32		guiSmallSoldiersFace[ MAX_CHARACTER_COUNT ];
-UINT8			gubNumberMercsInArray;
+static UINT8  gubArrayOfEmployedMercs[MAX_CHARACTER_COUNT];
+static UINT32 guiSmallSoldiersFace[MAX_CHARACTER_COUNT];
+static UINT8  gubNumberMercsInArray;
 
 //The subutitled text for what the merc is saying
-wchar_t		gsShopKeeperTalkingText[ SKI_SUBTITLE_TEXT_SIZE ];
+static wchar_t gsShopKeeperTalkingText[SKI_SUBTITLE_TEXT_SIZE];
 
-UINT16		gusPositionOfSubTitlesX=0;
+static UINT16 gusPositionOfSubTitlesX = 0;
 
-BOOLEAN	gfExitSKIDueToMessageBox=FALSE;
+static BOOLEAN gfExitSKIDueToMessageBox = FALSE;
 
 OBJECTTYPE	*pShopKeeperItemDescObject=NULL;
 
-UINT32	guiNextFreeInvSlot;
+static UINT32 guiNextFreeInvSlot;
 
-BOOLEAN gfStartWithRepairsDelayedQuote = FALSE;
+static BOOLEAN gfStartWithRepairsDelayedQuote = FALSE;
 
-BOOLEAN gfPerformTransactionInProgress = FALSE;
+static BOOLEAN gfPerformTransactionInProgress = FALSE;
 
-BOOLEAN gfCommonQuoteUsedThisSession[ NUM_COMMON_SK_QUOTES ];
+static BOOLEAN gfCommonQuoteUsedThisSession[NUM_COMMON_SK_QUOTES];
 
 
 extern		SOLDIERTYPE			*gpSMCurrentMerc;
@@ -368,11 +333,11 @@ enum
 	NUM_EVAL_RESULTS
 };
 
-BOOLEAN gfEvalResultQuoteSaid[ NUM_EVAL_RESULTS ];
+static BOOLEAN gfEvalResultQuoteSaid[NUM_EVAL_RESULTS];
 
-UINT32	guiLastTimeDealerSaidNormalEvaluationQuote = 0;
+static UINT32	guiLastTimeDealerSaidNormalEvaluationQuote = 0;
 
-BOOLEAN	gfSkiDisplayDropItemToGroundText = FALSE;
+static BOOLEAN gfSkiDisplayDropItemToGroundText = FALSE;
 
 typedef struct
 {
@@ -381,18 +346,18 @@ typedef struct
 	INT8 bPreviousInvPos;
 
 } ITEM_TO_ADD_AFTER_SKI_OPEN;
-ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
+static ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
 
 
 //Page up buttons for the merchants
 static void BtnSKI_InvPageUpButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiSKI_InvPageUpButton;
-INT32		guiSKI_InvPageUpButtonImage;
+static UINT32 guiSKI_InvPageUpButton;
+static INT32  guiSKI_InvPageUpButtonImage;
 
 //Page down buttons for the merchants
 static void BtnSKI_InvPageDownButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiSKI_InvPageDownButton;
-INT32		guiSKI_InvPageDownButtonImage;
+static UINT32 guiSKI_InvPageDownButton;
+static INT32  guiSKI_InvPageDownButtonImage;
 
 
 /*
@@ -406,44 +371,43 @@ INT32		guiSKI_EvaluateButtonImage;
 //Transaction buttons
 static void BtnSKI_TransactionButtonCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiSKI_TransactionButton;
-INT32		guiSKI_TransactionButtonImage;
+static INT32 guiSKI_TransactionButtonImage;
 
 //Done buttons
 static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiSKI_DoneButton;
-INT32		guiSKI_DoneButtonImage;
+static UINT32 guiSKI_DoneButton;
+static INT32  guiSKI_DoneButtonImage;
 
-UINT32 guiItemCrossOut;
+static UINT32 guiItemCrossOut;
 
-BOOLEAN gfDisplayNoRoomMsg = FALSE;
+static BOOLEAN gfDisplayNoRoomMsg = FALSE;
 
 //Blanket the entire screen
-MOUSE_REGION		gSKI_EntireScreenMouseRegions;
+static MOUSE_REGION gSKI_EntireScreenMouseRegions;
 
 
-MOUSE_REGION		gDealersInventoryMouseRegions[ SKI_NUM_ARMS_DEALERS_INV_SLOTS ];
-MOUSE_REGION		gRepairmanInventorySmallFaceMouseRegions[ SKI_NUM_ARMS_DEALERS_INV_SLOTS ];
+static MOUSE_REGION gDealersInventoryMouseRegions[SKI_NUM_ARMS_DEALERS_INV_SLOTS];
+static MOUSE_REGION gRepairmanInventorySmallFaceMouseRegions[SKI_NUM_ARMS_DEALERS_INV_SLOTS];
 
-MOUSE_REGION		gDealersOfferSlotsMouseRegions[ SKI_NUM_TRADING_INV_SLOTS ];
+static MOUSE_REGION gDealersOfferSlotsMouseRegions[SKI_NUM_TRADING_INV_SLOTS];
 
-MOUSE_REGION		gPlayersOfferSlotsMouseRegions[ SKI_NUM_TRADING_INV_SLOTS ];
+static MOUSE_REGION gPlayersOfferSlotsMouseRegions[SKI_NUM_TRADING_INV_SLOTS];
 
-MOUSE_REGION		gDealersOfferSlotsSmallFaceMouseRegions[ SKI_NUM_TRADING_INV_SLOTS ];
-MOUSE_REGION		gPlayersOfferSlotsSmallFaceMouseRegions[ SKI_NUM_TRADING_INV_SLOTS ];
+static MOUSE_REGION gDealersOfferSlotsSmallFaceMouseRegions[SKI_NUM_TRADING_INV_SLOTS];
+static MOUSE_REGION gPlayersOfferSlotsSmallFaceMouseRegions[SKI_NUM_TRADING_INV_SLOTS];
 
 
-
-MOUSE_REGION		gSkiInventoryMovementAreaMouseRegions;
+static MOUSE_REGION gSkiInventoryMovementAreaMouseRegions;
 
 
 //Mouse region for the subtitles region when the merc is talking
-MOUSE_REGION		gShopKeeperSubTitleMouseRegion;
+static MOUSE_REGION gShopKeeperSubTitleMouseRegion;
 
-MOUSE_REGION		gArmsDealersFaceMouseRegions;
+static MOUSE_REGION gArmsDealersFaceMouseRegions;
 
 
 //Region to allow the user to drop items to the ground
-MOUSE_REGION		gArmsDealersDropItemToGroundMouseRegions;
+static MOUSE_REGION gArmsDealersDropItemToGroundMouseRegions;
 
 
 BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
@@ -454,7 +418,7 @@ extern BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
 
 
 #ifdef JA2TESTVERSION
-BOOLEAN gfTestDisplayDealerCash = FALSE;
+static BOOLEAN gfTestDisplayDealerCash = FALSE;
 #endif
 
 
@@ -1978,8 +1942,6 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 		else	// we have something in the cursor
 		{
 			//Drop the item into the current slot
-//			AddObjectToSkiLocation( &gpSkiItemPointer, ubSelectedInvSlot, PLAYERS_OFFER_AREA );
-
 			//if there is something already there
 			if( PlayersOfferArea[ ubSelectedInvSlot ].fActive )
 			{
@@ -4056,7 +4018,6 @@ void SetSkiCursor( UINT16	usCursor )
 	{
 		memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
 
-//		gpSkiItemPointer = NULL;
 		gpItemPointer = NULL;
 
 		DisableTacticalTeamPanelButtons( FALSE );
