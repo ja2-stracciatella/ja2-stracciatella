@@ -266,8 +266,6 @@ static INVENTORY_IN_SLOT PlayersOfferArea[SKI_NUM_TRADING_INV_SLOTS];
 
 static OBJECTTYPE gSubObject[MAX_SUBOBJECTS_PER_OBJECT];
 
-BOOLEAN		gfHavePurchasedItemsFromTony = FALSE;
-
 static BOOLEAN gfDealerHasSaidTheEvaluateQuoteOnceThisSession = FALSE;
 static BOOLEAN gfAlreadySaidTooMuchToRepair                   = FALSE;
 static UINT32  guiRandomQuoteDelayTime                        = SKI_DEALERS_RANDOM_QUOTE_DELAY;
@@ -3599,11 +3597,6 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 				else if( iChangeToGiveToPlayer == 0 )
 					StartShopKeeperTalking( SK_QUOTES_PLAYER_HAS_EXACTLY_ENOUGH_MONEY_FOR_TRANSACTION );
 			}
-
-
-			//if the arms dealer is tony
-			if( gbSelectedArmsDealerID == ARMS_DEALER_TONY )
-				gfHavePurchasedItemsFromTony = TRUE;
 
 			//if the arms dealer is Howard( 125), set fact 222
 			if( gbSelectedArmsDealerID == ARMS_DEALER_HOWARD )

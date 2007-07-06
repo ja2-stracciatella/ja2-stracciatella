@@ -150,7 +150,7 @@ typedef struct
 	UINT8		ubMusicMode;
 
 	//Flag indicating that we have purchased something from Tony
-	BOOLEAN	fHavePurchasedItemsFromTony;
+	BOOLEAN	fHavePurchasedItemsFromTony_UNUSED; // XXX HACK000B
 
 	//The selected soldier in tactical
 	UINT16	usSelectedSoldier;
@@ -357,7 +357,6 @@ static UINT8 gubSaveGameLoc = 0;
 UINT32		guiScreenToGotoAfterLoadingSavedGame = 0;
 
 extern		UINT32		guiCurrentUniqueSoldierId;
-extern		BOOLEAN		gfHavePurchasedItemsFromTony;
 
 
 #ifdef JA2BETAVERSION
@@ -3508,7 +3507,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	sGeneralInfo.sRenderCenterX = gsRenderCenterX;
 	sGeneralInfo.sRenderCenterY = gsRenderCenterY;
 	sGeneralInfo.fAtLeastOneMercWasHired = gfAtLeastOneMercWasHired;
-	sGeneralInfo.fHavePurchasedItemsFromTony = gfHavePurchasedItemsFromTony;
+	sGeneralInfo.fHavePurchasedItemsFromTony_UNUSED = FALSE;
 
 	sGeneralInfo.fShowItemsFlag			= fShowItemsFlag;
 	sGeneralInfo.fShowTownFlag			= fShowTownFlag;
@@ -3729,9 +3728,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	gfAtLeastOneMercWasHired = sGeneralInfo.fAtLeastOneMercWasHired;
 
-
-
-	gfHavePurchasedItemsFromTony = sGeneralInfo.fHavePurchasedItemsFromTony;
 
 	fShowItemsFlag		= sGeneralInfo.fShowItemsFlag;
 	fShowTownFlag			= sGeneralInfo.fShowTownFlag;
