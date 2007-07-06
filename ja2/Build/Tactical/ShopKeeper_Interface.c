@@ -13,7 +13,6 @@
 #include "Interface_Control.h"
 #include "Overhead.h"
 #include "Cursors.h"
-//#include "Store_Inventory.h"
 #include "SysUtil.h"
 #include "Interface_Panels.h"
 #include "Radar_Screen.h"
