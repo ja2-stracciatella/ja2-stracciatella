@@ -4721,17 +4721,6 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 	// DETERMINE THE TERRAIN TYPE OF THE GRIDNO WHERE NOISE IS COMING FROM
 
 	ubSourceTerrType = gpWorldLevelData[sGridNo].ubTerrainID;
-/*
-	// start with the terrain type passed in to us
-	ubSourceTerrType = ubTerrType;
-
-	// if this isn't enough to get a valid terrain type
-	if ((ubSourceTerrType < GROUNDTYPE) || (ubSourceTerrType > OCEANTYPE))
-	{
-		// use the source gridno of the noise itself
-		ubSourceTerrType = TTypeList[Terrain(sGridNo)];
-	}
-	*/
 
 	// if we have now somehow obtained a valid terrain type
 	if ((ubSourceTerrType >= FLAT_GROUND) || (ubSourceTerrType <= DEEP_WATER))

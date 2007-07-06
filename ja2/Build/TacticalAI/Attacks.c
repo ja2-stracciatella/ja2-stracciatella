@@ -1673,12 +1673,6 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 	// then use that to reduce the expected damage because thing may not blow!
 	iDamage = (iDamage * pSoldier->inv[ubItemPos].bStatus[0]) / 100;
 
-	// if the target gridno is in water, grenade may not blow (guess 50% of time)
-	/*
-	if (TTypeList[Grid[gridno].land] >= LAKETYPE)
-		iDamage /= 2;
-	*/
-
 	return( iDamage);
 }
 
