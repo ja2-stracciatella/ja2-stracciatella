@@ -52,7 +52,6 @@ UINT8 gubOutOfTurnPersons = 0;
 #define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
-static INT16 InterruptOnlyGuynum = NOBODY;
 BOOLEAN gfHiddenInterrupt = FALSE;
 static UINT8 gubLastInterruptedGuy = 0;
 
@@ -63,7 +62,7 @@ typedef struct
 {
 	UINT8		ubOutOfTurnPersons;
 
-	INT16		InterruptOnlyGuynum;
+	INT16   InterruptOnlyGuynum_UNUSED; // XXX HACK000B
 	INT16		sWhoThrewRock;
 	BOOLEAN InterruptsAllowed_UNUSED; // XXX HACK000B
 	BOOLEAN fHiddenInterrupt;
@@ -1063,13 +1062,6 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 
 	if (ubOpponentID < NOBODY)
 	{
-		// ALEX
-		// if interrupts are restricted to a particular opponent only & he's not it
-		if ((InterruptOnlyGuynum != NOBODY) && (ubOpponentID != InterruptOnlyGuynum))
-		{
-			return(FALSE);
-		}
-
 		pOpponent = MercPtrs[ ubOpponentID ];
 	}
 	else	// no opponent, so controller of 'ptr' makes the call instead
@@ -1926,7 +1918,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 
 	TeamTurnStruct.ubOutOfTurnPersons = gubOutOfTurnPersons;
 
-	TeamTurnStruct.InterruptOnlyGuynum = InterruptOnlyGuynum;
+	TeamTurnStruct.InterruptOnlyGuynum_UNUSED = NOBODY;
 	TeamTurnStruct.sWhoThrewRock = gsWhoThrewRock;
 	TeamTurnStruct.InterruptsAllowed_UNUSED = TRUE;
 	TeamTurnStruct.fHiddenInterrupt = gfHiddenInterrupt;
@@ -1951,7 +1943,6 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 
 	gubOutOfTurnPersons = TeamTurnStruct.ubOutOfTurnPersons;
 
-	InterruptOnlyGuynum = TeamTurnStruct.InterruptOnlyGuynum;
 	gsWhoThrewRock = TeamTurnStruct.sWhoThrewRock;
 	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
 	gubLastInterruptedGuy = TeamTurnStruct.ubLastInterruptedGuy;
