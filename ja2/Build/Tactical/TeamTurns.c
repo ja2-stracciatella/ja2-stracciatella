@@ -53,7 +53,6 @@ UINT8 gubOutOfTurnPersons = 0;
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
 static INT16 InterruptOnlyGuynum = NOBODY;
-static BOOLEAN InterruptsAllowed = TRUE;
 BOOLEAN gfHiddenInterrupt = FALSE;
 static UINT8 gubLastInterruptedGuy = 0;
 
@@ -66,7 +65,7 @@ typedef struct
 
 	INT16		InterruptOnlyGuynum;
 	INT16		sWhoThrewRock;
-	BOOLEAN InterruptsAllowed;
+	BOOLEAN InterruptsAllowed_UNUSED; // XXX HACK000B
 	BOOLEAN fHiddenInterrupt;
 	UINT8		ubLastInterruptedGuy;
 
@@ -1088,12 +1087,6 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		pOpponent = NULL;
   }
 
-	// if interrupts have been disabled for any reason
-	if (!InterruptsAllowed)
-	{
-		return(FALSE);
-	}
-
 	// in non-combat allow interrupt points to be calculated freely (everyone's in control!)
 	// also allow calculation for storing in AllTeamsLookForAll
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) && ( gubBestToMakeSightingSize != BEST_SIGHTING_ARRAY_SIZE_ALL_TEAMS_LOOK_FOR_ALL ) )
@@ -1935,7 +1928,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 
 	TeamTurnStruct.InterruptOnlyGuynum = InterruptOnlyGuynum;
 	TeamTurnStruct.sWhoThrewRock = gsWhoThrewRock;
-	TeamTurnStruct.InterruptsAllowed = InterruptsAllowed;
+	TeamTurnStruct.InterruptsAllowed_UNUSED = TRUE;
 	TeamTurnStruct.fHiddenInterrupt = gfHiddenInterrupt;
 	TeamTurnStruct.ubLastInterruptedGuy = gubLastInterruptedGuy;
 
@@ -1960,7 +1953,6 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 
 	InterruptOnlyGuynum = TeamTurnStruct.InterruptOnlyGuynum;
 	gsWhoThrewRock = TeamTurnStruct.sWhoThrewRock;
-	InterruptsAllowed = TeamTurnStruct.InterruptsAllowed;
 	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
 	gubLastInterruptedGuy = TeamTurnStruct.ubLastInterruptedGuy;
 
