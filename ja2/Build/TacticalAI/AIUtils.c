@@ -1944,9 +1944,6 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
      // threat value to ME personally.  Divide later by sum of them all.
      iOurTotalThreat += sOppThreatValue * sFrndThreatValue;
     }
-
-   // this could get slow if I have a lot of friends...
-   //KeepInterfaceGoing();
   }
 
 
@@ -2184,10 +2181,6 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 	if (iThreatValue > 250)
 	{
 		sprintf(tempstr,"CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
-
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\t%s\n",tempstr);
-#endif
 
 #ifdef TESTVERSION
 		PopMessage(tempstr);

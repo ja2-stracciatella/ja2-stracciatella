@@ -159,8 +159,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
    if (ubMinAPcost > pSoldier->bActionPoints)
      continue;          // next opponent
 
-   //KeepInterfaceGoing();
-
    // calculate chance to get through the opponent's cover (if any)
 
 		ubChanceToGetThrough = AISoldierToSoldierChanceToGetThrough( pSoldier, pOpponent );
@@ -1155,8 +1153,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		 }
 		 */
 	 }
-
-   //KeepInterfaceGoing();
 
    // calc next attack's minimum stabbing cost (excludes movement & turning)
    //ubRawAPCost = MinAPsToShootOrStab(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;

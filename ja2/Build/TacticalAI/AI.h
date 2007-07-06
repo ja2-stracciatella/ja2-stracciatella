@@ -198,7 +198,7 @@ void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
 UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
-void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate);
+void HandleInitialRedAlert(INT8 bTeam);
 
 void InitPanicSystem();
 INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridno);

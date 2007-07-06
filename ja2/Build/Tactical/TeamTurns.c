@@ -1064,14 +1064,6 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 
 	if (ubOpponentID < NOBODY)
 	{
-		/*
-		// only the OPPONENT'S controller's decision matters
-		if (Menptr[ubOpponentID].controller != Net.pnum)
-		{
-			return(FALSE);
-		}
-		*/
-
 		// ALEX
 		// if interrupts are restricted to a particular opponent only & he's not it
 		if ((InterruptOnlyGuynum != NOBODY) && (ubOpponentID != InterruptOnlyGuynum))
@@ -1093,11 +1085,6 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 			return(FALSE);
 		}
 
-		// the machine that controls the guy who threw the rock makes the decision
-		/*
-		if (Menptr[WhoThrewRock].controller != Net.pnum)
-			return(FALSE);
-		*/
 		pOpponent = NULL;
   }
 
@@ -1311,11 +1298,6 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 	// soldier passed on the chance to react during previous interrupt this turn
 	if (pSoldier->bPassedLastInterrupt)
 	{
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\tStandardInterruptConditionsMet: FAILING because PassedLastInterrupt %d(%s)\n",
-			pSoldier->guynum,ExtMen[pSoldier->guynum].name);
-#endif
-
 		return(FALSE);
 	}
 

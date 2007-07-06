@@ -219,10 +219,6 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		// if he chose to continue doing nothing
 		if (pSoldier->bAction == AI_ACTION_NONE)
 		{
-			#ifdef RECORDNET
-				fprintf(NetDebugFile,"\tMOVED BECOMING TRUE: Chose to do nothing, guynum %d\n",pSoldier->ubID);
-			#endif
-
 			// do a standard wait before doing anything else!
 			pSoldier->bAction = AI_ACTION_WAIT;
 			//if (PTR_CIVILIAN && pSoldier->bAlertStatus != STATUS_BLACK)

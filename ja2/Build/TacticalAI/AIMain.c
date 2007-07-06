@@ -1270,137 +1270,6 @@ void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
 }
 
 
-
-
-/*
-void ActionTimeoutExceeded(SOLDIERTYPE *pSoldier, UCHAR alreadyFreedUp)
-{
- int cnt;
- UCHAR attackAction = FALSE;
-
-
-#ifdef BETAVERSION
- if (ConvertedMultiSave)
-  {
-   // re-start real-time NPC action timer
-   EnemyTimedOut = FALSE;
-   EnemyTimerCnt = ENEMYWAITTOLERANCE;
-   return;
-  }
-#endif
-
-
- // check if it's a problem with a offensive combat action
- if ((pSoldier->bAction == AI_ACTION_FIRE_GUN) ||
-     (pSoldier->bAction == AI_ACTION_TOSS_PROJECTILE) ||
-     (pSoldier->bAction == AI_ACTION_KNIFE_STAB))
-  {
-   // THESE ARE LESS SERIOUS, SINCE THEY LIKELY WON'T REPEAT THEMSELVES
-   attackAction = TRUE;
-  }
-   // OTHERS ARE VERY SERIOUS, SINCE THEY ARE LIKELY TO REPEAT THEMSELVES
-
-
-#ifdef BETAVERSION
- sprintf(tempstr,"ActionInProgress - ERROR: %s's timeout limit exceeded.  Action #%d (%d)",
-		pSoldier->name,pSoldier->bAction,pSoldier->usActionData);
-
-#ifdef RECORDNET
- fprintf(NetDebugFile,"\n%s\n\n",tempstr);
-#endif
-
- PopMessage(tempstr);
- SaveGame(ERROR_SAVE);
-#endif
-
-#ifdef TESTVERSION
- PopMessage("FULL SOLDIER INFORMATION DUMP COMING UP, BRACE THYSELF!");
- DumpSoldierInfo(pSoldier);
-#endif
-
-
- // re-start real-time NPC action timer
- EnemyTimedOut = FALSE;
- EnemyTimerCnt = ENEMYWAITTOLERANCE;
-
- if (attackAction)
-  {
-#ifdef BETAVERSION
-   NameMessage(pSoldier,"will now be freed up from attacking...",2000);
-#endif
-
-
-   // free up ONLY players from whom we haven't received an AI_ACTION_DONE yet
-   // we can all agree the action is DONE and we can continue...
-   // (otherwise they'll be calling FreeUp... twice and get REAL screwed up)
-   NetSend.msgType = NET_FREE_UP_ATTACK;
-   NetSend.ubID  = pSoldier->ubID;
-
-   for (cnt = 0; cnt < MAXPLAYERS; cnt++)
-    {
-     if ((cnt != Net.pnum) && Net.player[cnt].playerActive &&
-	 (Net.player[cnt].actionDone != pSoldier->ubID))
-       SendNetData(cnt);
-    }
-
-   if (!alreadyFreedUp)
-     FreeUpManFromAttacking(pSoldier->ubID,COMMUNICATE);
-  }
- else if (pSoldier->bAction == AI_ACTION_CHANGE_FACING)
-  {
-#ifdef BETAVERSION
-   NameMessage(pSoldier,"will now be freed up from turning...",2000);
-#endif
-
-   // force him to face in the right direction (as long as it's legal)
-   if ((pSoldier->bDesiredDirection >= 1) && (pSoldier->bDesiredDirection <= 8))
-     pSoldier->bDirection = pSoldier->bDesiredDirection;
-   else
-     pSoldier->bDesiredDirection = pSoldier->bDirection;
-
-   // free up ONLY players from whom we haven't received an AI_ACTION_DONE yet
-   // we can all agree the action is DONE and we can continue...
-   // (otherwise they'll be calling FreeUp... twice and get REAL screwed up)
-   NetSend.msgType    = NET_FREE_UP_TURN;
-   NetSend.ubID     = pSoldier->ubID;
-   NetSend.misc_UCHAR = pSoldier->bDirection;
-   NetSend.answer     = pSoldier->bDesiredDirection;
-
-   for (cnt = 0; cnt < MAXPLAYERS; cnt++)
-    {
-     if ((cnt != Net.pnum) && Net.player[cnt].playerActive &&
-	 (Net.player[cnt].actionDone != pSoldier->ubID))
-       SendNetData(cnt);
-    }
-
-   if (!alreadyFreedUp)
-     // this calls FreeUpManFromTurning()
-     NowFacingRightWay(pSoldier,COMMUNICATE);
-  }
- else
-  {
-#ifdef BETAVERSION
-   NameMessage(pSoldier,"is having the remainder of his turn canceled...",1000);
-#endif
-
-   // cancel the remainder of the offender's turn as a penalty!
-   pSoldier->bActionPoints = 0;
-   NPCDoesNothing(pSoldier);
-  }
-
-
- // cancel whatever the current action is, force this even for escorted NPCs
- CancelAIAction(pSoldier,FORCE);
-
-
- // reset the timeout counter for next time
- pSoldier->bActionTimeout = 0;
-}
-*/
-
-
-
-
 INT16 ActionInProgress(SOLDIERTYPE *pSoldier)
 {
  // if NPC has a desired destination, but isn't currently going there
@@ -1443,10 +1312,6 @@ void RestoreMarkedMines()
    if (GridCost[gridno] == NPCMINECOST)
     {
      GridCost[gridno] = BackupGridCost[gridno];
-
-#ifdef TESTMINEMARKING
-     fprintf(NetDebugFile,"\tRestoring marked mine at gridno %d back to gridCost %d\n",gridno,BackupGridCost[gridno]);
-#endif
     }
   }
 
@@ -1466,11 +1331,6 @@ void MarkDetectableMines(SOLDIERTYPE *pSoldier)
   {
 #ifdef BETAVERSION
    sprintf(tempstr,"MarkDetectableMines: ERROR - mines still marked!  Guynum %d",pSoldier->ubID);
-
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
    PopMessage(tempstr);
 #endif
 
@@ -1499,10 +1359,6 @@ void MarkDetectableMines(SOLDIERTYPE *pSoldier)
        // bingo!  Mark it as "unpassable" for the purposes of the path AI
        GridCost[gridno] = NPCMINECOST;
        MarkedNPCMines = TRUE;
-
-#ifdef TESTMINEMARKING
-       fprintf(NetDebugFile,"\tNPC %d, dtctLvl %d, marking mine at gridno %d, gridCost was %d\n",pSoldier->ubID,detectLevel,gridno,BackupGridCost[gridno]);
-#endif
       }
     }
   }
@@ -1560,10 +1416,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
    if ((pSoldier->bBreath < OKBREATH) || (pSoldier->bActionPoints < (AP_GET_UP + AP_ROLL_OVER))
        || pSoldier->service)
     {
-#ifdef RECORDNET
-     fprintf(NetDebugFile,"\tAI: %d can't get up (breath %d, AP %d), ending his turn\n",
-		pSoldier->ubID,pSoldier->bBreath,pSoldier->bActionPoints);
-#endif
 #ifdef DEBUGDECISIONS
      AINumMessage("HandleManAI - CAN'T GET UP, skipping guy #",pSoldier->ubID);
 #endif
@@ -1574,12 +1426,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
    else
     {
      // wait until he gets up first, only then worry about deciding his AI
-
-#ifdef RECORDNET
-     fprintf(NetDebugFile,"\tAI: waiting for %d to GET UP (breath %d, AP %d)\n",
-		pSoldier->ubID,pSoldier->bBreath,pSoldier->bActionPoints);
-#endif
-
 #ifdef DEBUGBUSY
      AINumMessage("HandleManAI - About to get up, skipping guy#",pSoldier->ubID);
 #endif
@@ -1613,28 +1459,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 
 	// yikes, this shouldn't occur! we should be trying to finish our move!
 	// pSoldier->fNoAPToFinishMove = FALSE;
-
- // unless in mid-move, get an up-to-date alert status for this guy
-	if (pSoldier->bStopped)
-	{
-		// if active team is waiting for oppChanceToDecide, that means we have NOT
-		// had a chance to go through NewSelectedNPC(), so do the refresh here
-		/*
-		???
-		if (gTacticalStatus.team[Net.turnActive].allowOppChanceToDecide)
-		{
-			// if mines are still marked (this could happen if we also control the
-			// active team that's potentially BEING interrupted), unmark them
-			//RestoreMarkedMines();
-
-			RefreshAI(pSoldier);
-		}
-		else
-		{
-			DecideAlertStatus(pSoldier);
-		}
-		*/
-  }
 
 /*
 	// move this clause outside of the function...
@@ -1821,10 +1645,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 		// if he chose to continue doing nothing
 		if (pSoldier->bAction == AI_ACTION_NONE)
 		{
-			#ifdef RECORDNET
-				fprintf(NetDebugFile,"\tMOVED BECOMING TRUE: Chose to do nothing, guynum %d\n",pSoldier->ubID);
-			#endif
-
 			NPCDoesNothing(pSoldier);  // sets pSoldier->moved to TRUE
 			return;
 		}
@@ -2024,13 +1844,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				CancelAIAction(pSoldier,FORCE);
 				return(FALSE);         // nothing is in progress
 			}
-			else
-			{
-#ifdef RECORDNET
-				fprintf(NetDebugFile,"\tAI decides to turn guynum %d to dir %d\n",pSoldier->ubID,pSoldier->usActionData);
-#endif
-				NetLookTowardsDir(pSoldier,pSoldier->usActionData);
-			}
 			*/
 			break;
 
@@ -2221,10 +2034,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				sprintf(tempstr,"ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
 					pSoldier->name,pSoldier->usActionData,pSoldier->bAction);
 
-#ifdef RECORDNET
-				fprintf(NetDebugFile,"\n%s\n\n",tempstr);
-#endif
-
 				PopMessage(tempstr);
 
 				sprintf(tempstr,"BLACK-LISTING gridno %d for %s",pSoldier->usActionData,pSoldier->name);
@@ -2285,10 +2094,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				  }
         }
 			}
-#ifdef RECORDNET
-			fprintf(NetDebugFile,"\tExecuteAction: %d calling HandleItem(), inHand %d, actionData %d, anitype %d, oldani %d\n",
-				pSoldier->ubID,pSoldier->inv[HANDPOS].item,pSoldier->usActionData,pSoldier->anitype[pSoldier->anim],pSoldier->oldani);
-#endif
 
 #ifdef TESTVERSION
 			if (pSoldier->bAction == AI_ACTION_KNIFE_MOVE)
@@ -2359,18 +2164,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			// if a computer merc, and up to now they didn't know you're here
 			if (!(pSoldier->uiStatusFlags & SOLDIER_PC) && ( !(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) || ( ( gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE ) && gTacticalStatus.ubTheChosenOne == NOBODY ) ) )
 			{
-				HandleInitialRedAlert(pSoldier->bTeam, TRUE);
+				HandleInitialRedAlert(pSoldier->bTeam);
 			}
 			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Debug: AI radios your position!" );
 			// DROP THROUGH HERE!
 		case AI_ACTION_YELLOW_ALERT:          // tell friends opponent(s) heard
 			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Debug: AI radios about a noise!" );
-/*
-			NetSend.msgType = NET_RADIO_SIGHTINGS;
-			NetSend.ubID  = pSoldier->ubID;
-
-			SendNetData(ALL_NODES);
-*/
 			DeductPoints(pSoldier,AP_RADIO,BP_RADIO);// pay for it!
 			RadioSightings(pSoldier,EVERYBODY,pSoldier->bTeam);      // about everybody
 			// action completed immediately, cancel it right away
@@ -2613,15 +2412,8 @@ void InitAttackType(ATTACKTYPE *pAttack)
  pAttack->ubAPCost            = 0;
 }
 
-void HandleInitialRedAlert( INT8 bTeam, UINT8 ubCommunicate)
+void HandleInitialRedAlert(INT8 bTeam)
 {
-/*
- if (ubCommunicate)
-  {
-   NetSend.msgType = NET_RED_ALERT;
-   SendNetData(ALL_NODES);
-  }*/
-
  if ( gTacticalStatus.Team[bTeam].bAwareOfOpposition == FALSE )
  {
 	#ifdef JA2TESTVERSION

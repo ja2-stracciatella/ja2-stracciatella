@@ -452,10 +452,6 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 	if (sNoiseGridNo == NOWHERE)
 	{
 		// then we have no business being under YELLOW status any more!
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\nDecideActionYellow: ERROR - No important noise known by guynum %d\n\n",pSoldier->ubID);
-#endif
-
 #ifdef BETAVERSION
 		NumMessage("DecideActionYellow: ERROR - No important noise known by guynum ",pSoldier->ubID);
 #endif
@@ -1144,9 +1140,6 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 								if (sClosestDisturbance != NOWHERE)
 								{
 									// don't bother checking GRENADES/KNIVES, he can't have conscious targets
-									#ifdef RECORDNET
-										fprintf(NetDebugFile,"\tDecideActionBlack: all visible opponents unconscious, switching to RED AI...\n");
-									#endif
 									// then make decision as if at alert status RED, but make sure
 									// we don't try to SEEK OPPONENT the unconscious guy!
 									return(DecideActionRed(pSoldier,FALSE));

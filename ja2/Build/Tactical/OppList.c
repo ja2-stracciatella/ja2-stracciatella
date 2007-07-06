@@ -849,23 +849,6 @@ static void OurTeamRadiosRandomlyAbout(UINT8 ubAbout)
  INT8					radioCnt = 0,radioMan[20];
  SOLDIERTYPE	*pSoldier;
 
-
-// Temporary for opplist synching - disable random order radioing
-#ifdef RECORDOPPLIST
- for (iLoop = Status.team[Net.pnum].guystart,ourPtr = MercPtrs[iLoop]; iLoop < Status.team[Net.pnum].guyend; iLoop++,ourPtr++)
-  {
-   // if this merc is active, in this sector, and well enough to look
-   if (pSoldier->active && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE))
-    {
-     RadioSightings(pSoldier,ubAbout,pSoldier->bTeam);
-     pSoldier->bNewOppCnt = 0;
-    }
-  }
-
- return;
-#endif
-
-
  // All mercs on our local team check if they should radio about him
  iLoop = gTacticalStatus.Team[gbPlayerNum].bFirstID;
 
@@ -1370,50 +1353,6 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 		gubBestToMakeSightingSize = BEST_SIGHTING_ARRAY_SIZE_INCOMBAT;
 	}
 
- /*
-
- // do this here as well as in overhead so the looks/interrupts are combined!
-
- // if a door was recently opened/closed (doesn't matter if we could see it)
- // this is done here so we can first handle everyone looking through the
- // door, and deal with the resulting opplist changes, interrupts, etc.
- if (Status.doorCreakedGridno != NOWHERE)
-  {
-   // opening/closing a door makes a bit of noise (constant volume)
-   MakeNoise(Status.doorCreakedGuynum,Status.doorCreakedGridno,TTypeList[Grid[Status.doorCreakedGridno].land],DOOR_NOISE_VOLUME,NOISE_CREAKING,EXPECTED_NOSEND);
-
-   Status.doorCreakedGridno = NOWHERE;
-   Status.doorCreakedGuynum = NOBODY;
-  }
-
-
- // all soldiers now radio their findings (NO interrupts permitted this early!)
- // NEW: our entire team must radio first, so that they radio about EVERYBODY
- // rather radioing about individuals one a a time (repeats see 1 enemy quote)
- for (cnt = Status.team[Net.pnum].guystart,ptr = MercPtrs[cnt]; cnt < Status.team[Net.pnum].guyend; cnt++,ptr++)
-  {
-   if (ptr->active && ptr->in_sector && (ptr->life >= OKLIFE))
-     HandleSight(ptr,SIGHT_RADIO);      // looking was done above
-  }
-
- for (cnt = 0,ptr = Menptr; cnt < MAXMERCS; cnt++,ptr++)
-  {
-   if (ptr->active && ptr->in_sector && (ptr->life >= OKLIFE) && !PTR_OURTEAM)
-     HandleSight(ptr,SIGHT_RADIO);      // looking was done above
-  }
-
-
- // if interrupts were allowed
- if (allowInterrupts)
-   // resolve interrupts against the selected character (others disallowed)
-   HandleSight(MercPtrs[Status.allLookCharacter],SIGHT_INTERRUPT);
-
-
- // revert to normal interrupt operation
- InterruptOnlyGuynum = NOBODY;
- InterruptsAllowed = TRUE;
- */
-
  // reset interrupt only guynum which may have been used
  gubInterruptProvoker = NOBODY;
 }
@@ -1587,19 +1526,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  // if we're somehow looking while inactive, at base, dead or dying
  if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
  {
-/*
-#ifdef BETAVERSION
-   sprintf(tempstr,"ManLooksForMan: ERROR - %s is looking while inactive/at base/dead/dying.  Caller %s",
-		   	ExtMen[ptr->guynum].name,LastCaller2Text[caller]);
-
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
-   PopMessage(tempstr);
-#endif
-*/
-
 #ifdef TESTOPPLIST
 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			String("ERROR: ManLooksForMan - WE are inactive/dead etc ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
@@ -1613,19 +1539,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  // if we're somehow looking for a guy who is inactive, at base, or already dead
  if (!pOpponent->bActive || !pOpponent->bInSector || pOpponent->bLife <= 0 || pOpponent->sGridNo == NOWHERE )
  {
-/*
-#ifdef BETAVERSION
-   sprintf(tempstr,"ManLooksForMan: ERROR - %s looks for %s, who is inactive/at base/dead.  Caller %s",
-   	ExtMen[ptr->guynum].name,ExtMen[oppPtr->guynum].name,LastCaller2Text[caller]);
-
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
-   PopMessage(tempstr);
-#endif
-*/
-
 #ifdef TESTOPPLIST
 	 DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			String("ERROR: ManLooksForMan - TARGET is inactive etc ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
@@ -1638,18 +1551,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  // if he's looking for a guy who is on the same team
  if (pSoldier->bTeam == pOpponent->bTeam)
   {
-/*
-#ifdef BETAVERSION
-   sprintf(tempstr,"ManLooksFormMan: ERROR - on SAME TEAM.  ptr->guynum = %d, oppPtr->guynum = %d",
-					ptr->guynum,oppPtr->guynum);
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
-   PopMessage(tempstr);
-#endif
-*/
-
 #ifdef TESTOPPLIST
 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			String("ERROR: ManLooksForMan - SAME TEAM ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
@@ -2331,13 +2232,6 @@ else
 
      //LastOpponentLocatedTo = oppPtr->guynum;
 
-		 /*
-#ifdef RECORDNET
-     fprintf(NetDebugFile,"\tManSeesMan - LOCATE\n");
-#endif
-		 */
-
-
 		 if ( gTacticalStatus.uiFlags & TURNBASED && ( ( gTacticalStatus.uiFlags & INCOMBAT ) | gTacticalStatus.fVirginSector ) )
 		 {
 			 if (!pOpponent->bNeutral && (pSoldier->bSide != pOpponent->bSide))
@@ -2381,12 +2275,6 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate)
    // if he remains visible (or ShowEnemies ON)
    if ((pSoldier->bVisible >= 0) || gbShowEnemies)
     {
-		 /*
-#ifdef RECORDNET
-     fprintf(NetDebugFile,"\tDecideTrueVisibility - LOCATE\n");
-#endif
-	*/
-
     if (PTR_OURTEAM)
      {
       //if (ConfigOptions[FOLLOWMODE] && Status.stopSlidingAt == NOBODY)
@@ -2759,11 +2647,6 @@ BOOLEAN VisibleAnywhere(SOLDIERTYPE *pSoldier)
  // this takes care of any mercs on our own team
  if (pSoldier->bVisible >= 0)
    return(TRUE);
-
- // if playing alone, "anywhere" is just over here!
- //if (!Net.multiType || Net.activePlayers < 2)
-   //return(FALSE);
-
 
  for (bTeam = 0; bTeam < MAXTEAMS; bTeam++)
   {
@@ -3153,13 +3036,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			 String("RADIO SIGHTINGS: for %d about %d",pSoldier->ubID,ubAbout) );
 #endif
 
-
-
-#ifdef RECORDNET
- if (!ptr->human)
-   fprintf(NetDebugFile,"\tNPC %d(%ls) radios his sightings to his team\n",ptr->guynum,ExtMen[ptr->guynum].name);
-#endif
-
  gTacticalStatus.Team[pSoldier->bTeam].ubLastMercToRadio = pSoldier->ubID;
 
 
@@ -3359,7 +3235,7 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			// radioing to militia that we saw someone! alert them!
 			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bTeamActive && !gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
 			{
-				HandleInitialRedAlert( MILITIA_TEAM, FALSE );
+				HandleInitialRedAlert(MILITIA_TEAM);
 			}
 		}
    } 	// end of our team's merc sees new opponent
@@ -4741,75 +4617,6 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 		OurNoise( SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType );
 
 	}
-
-/*
-	INT8 bWeControlNoise = FALSE;
-
-	if (ubNoiseMode == UNEXPECTED)
-	{
-		bWeControlNoise = TRUE;
-	}
-	else	// EXPECTED noise
-	{
-		if (ubNoiseMaker < NOBODY)
-		{
-			if (Menptr[ubNoiseMaker].controller == Net.pnum)
-			{
-				bWeControlNoise = TRUE;
-			}
-		}
-		else
-		{
-			// expected noise by NOBODY is sent by LEADER, received by others
-			if (Net.pnum == LEADER)
-			{
-				bWeControlNoise = TRUE;
-			}
-		}
-	}
-
-	if (bWeControlNoise)
-	{
-		OurNoise(ubNoiseMaker,sGridNo,ubTerrType,ubVolume,ubNoiseType,ubNoiseMode);
-	}
-	else
-	{
-		// can't be UNEXPECTED, check if it's a SEND or NO_SEND
-		if (ubNoiseMode == EXPECTED_NOSEND)
-		{
-			// no NET_NOISE message is required, trigger TheirNoise() right here
-			TheirNoise(ubNoiseMaker,sGridNo,ubTerrType,ubVolume,ubNoiseType,ubNoiseMode);
-		}
-		else
-		{
-
-			// EXPECTED_SEND, TheirNoise() will be triggered by the arrival of the
-			// NET_NOISE message, not by us.  Wait here until that's all done...
-
-			// wait for the NET_NOISE to arrive (it will set noiseReceived flag)
-			//stopAction = TRUE;		// prevent real-time events from passing us by
-			MarkTime(&LoopTime);
-			while (Status.noiseReceived != ubNoiseType)
-			{
-				LoopTimePast = Elapsed(&LoopTime);
-				if (LoopTimePast > 50 && LoopTimePast < 2000)
-				{
-					KeepInterfaceGoing(19); // xxx yyy zzz experimental Aug 16/96 9:15 pm
-				}
-				else
-				{
-					KeyHitReport("MakeNoise: Waiting for NET_NOISE, need ubNoiseType ",ubNoiseType);
-				}
-				CheckForNetIncoming();
-			};
-			//stopAction = FALSE;	// re-enable real-time events
-
-			// turn off the oppChk flag again
-			Status.noiseReceived = -1;
-
-		}
-	}
-*/
 }
 
 
@@ -4823,18 +4630,6 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 
 #ifdef BYPASSNOISE
 	return;
-#endif
-
-
-#ifdef BETAVERSION
-	sprintf(tempstr,"OurNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
-		 	NoiseTypeStr[ubNoiseType],ubNoiseMaker,ubNoiseMode,sGridNo,ubVolume);
-#ifdef RECORDNET
-	fprintf(NetDebugFile,"\t%s\n",tempstr);
-#endif
-#ifdef TESTNOISE
-	PopMessage(tempstr);
-#endif
 #endif
 
 	// see if anyone actually hears this noise, sees ubNoiseMaker, etc.
@@ -4862,54 +4657,8 @@ static void TheirNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubT
 	return;
 #endif
 
-
-#ifdef BETAVERSION
-	sprintf(tempstr,"TheirNoise: ubNoiseType = %s, ubNoiseMaker = %d, ubNoiseMode = %d, sGridNo = %d, ubVolume = %d",
-		 	NoiseTypeStr[ubNoiseType],ubNoiseMaker,ubNoiseMode,sGridNo,ubVolume);
-#ifdef RECORDNET
-	fprintf(NetDebugFile,"\t%s\n",tempstr);
-#endif
-
-#ifdef TESTNOISE
-	PopMessage(tempstr);
-#endif
-#endif
-
 	// see if anyone actually hears this noise, sees noiseMaker, etc.
 	ProcessNoise(ubNoiseMaker,sGridNo,bLevel,ubTerrType,ubVolume,ubNoiseType);
-
-	// if noiseMaker is SOMEBODY
-	if (ubNoiseMaker < NOBODY)
-	{
-		/*
-		pSoldier = MercPtrs[ubNoiseMaker];
-
-		//stopAction = TRUE;		// prevent real-time events from passing us by
-		MarkTime(&LoopTime);
-		do
-		{
-			LoopTimePast = Elapsed(&LoopTime);
-			if (LoopTimePast > 50 && LoopTimePast < 2000)
-			{
-				KeepInterfaceGoing(20); // xxx yyy zzz experimental Aug 16/96 9:15 pm
-			}
-			else
-			{
-				// the gridno is added to end of the string by KeyHitReport itself...
-				sprintf(tempstr,"TheirNoise: Waiting for NOISE_INT_DONE for guynum %d, ubNoiseType %d(%s), sGridNo ",
-					pSoldier->guynum,ubNoiseType,NoiseTypeStr[ubNoiseType]);
-				KeyHitReport(tempstr,sGridNo);
-			}
-
-			CheckForNetIncoming();
-		} while ((ExtMen[pSoldier->guynum].noiseRcvdGridno[ubNoiseType] != sGridNo) && pSoldier->in_sector);
-		//stopAction = FALSE;	// re-enable real-time events
-
-		// reset the gridno flag for next time
-		ExtMen[pSoldier->guynum].noiseRcvdGridno[ubNoiseType] = NOWHERE;
-		*/
-	}
-	// else if noiseMaker's NOBODY, no opplist changes or interrupts are possible
 }
 
 
@@ -5047,74 +4796,64 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 			}
 		}
 
-#ifdef REPORTTHEIRNOISE
-		// if this is any team
-		if (TRUE)
-#else
-		// if this is our team
-		if (TRUE)
-		//if (bTeam == Net.pnum)
-#endif
-		{
-			// tell player about noise if enemies are present
-			bTellPlayer = gTacticalStatus.fEnemyInSector && ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.ubCurrentTeam) );
+		// tell player about noise if enemies are present
+		bTellPlayer = gTacticalStatus.fEnemyInSector && ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.ubCurrentTeam) );
 
 #ifndef TESTNOISE
-			switch (ubNoiseType)
-			{
-				case NOISE_GUNFIRE:
-				case NOISE_BULLET_IMPACT:
-				case NOISE_ROCK_IMPACT:
-				case NOISE_GRENADE_IMPACT:
-					// It's noise caused by a projectile.  If the projectile was seen by
-					// the local player while in flight (PublicBullet), then don't bother
-					// giving him a message about the noise it made, he's obviously aware.
-					if (1 /*PublicBullet*/)
-					{
-						bTellPlayer = FALSE;
-					}
-
-					break;
-
-				case NOISE_EXPLOSION:
-					// if center of explosion is in visual range of team, don't report
-					// noise, because the player is already watching the thing go BOOM!
-					if (TeamMemberNear(bTeam,sGridNo,STRAIGHT))
-					{
-						bTellPlayer = FALSE;
-					}
-					break;
-
-				case NOISE_SILENT_ALARM:
+		switch (ubNoiseType)
+		{
+			case NOISE_GUNFIRE:
+			case NOISE_BULLET_IMPACT:
+			case NOISE_ROCK_IMPACT:
+			case NOISE_GRENADE_IMPACT:
+				// It's noise caused by a projectile.  If the projectile was seen by
+				// the local player while in flight (PublicBullet), then don't bother
+				// giving him a message about the noise it made, he's obviously aware.
+				if (1 /*PublicBullet*/)
+				{
 					bTellPlayer = FALSE;
-					break;
+				}
+
+				break;
+
+			case NOISE_EXPLOSION:
+				// if center of explosion is in visual range of team, don't report
+				// noise, because the player is already watching the thing go BOOM!
+				if (TeamMemberNear(bTeam,sGridNo,STRAIGHT))
+				{
+					bTellPlayer = FALSE;
+				}
+				break;
+
+			case NOISE_SILENT_ALARM:
+				bTellPlayer = FALSE;
+				break;
+		}
+
+		// if noise was made by a person
+		if (ubNoiseMaker < NOBODY)
+		{
+			// if noisemaker has been *PUBLICLY* SEEN OR HEARD during THIS TURN
+			if ((gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_CURRENTLY) || // seen now
+				(gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_THIS_TURN) || // seen this turn
+				(gbPublicOpplist[bTeam][ubNoiseMaker] == HEARD_THIS_TURN))  // heard this turn
+			{
+				// then don't bother reporting any noise made by him to the player
+				bTellPlayer = FALSE;
+			}
+			/*
+			else if ( (Menptr[ubNoiseMaker].bVisible == TRUE) && (bTeam == gbPlayerNum) )
+			{
+				ScreenMsg( MSG_FONT_YELLOW, MSG_TESTVERSION, L"Handling noise from person not currently seen in player's public opplist" );
+			}
+			*/
+
+			if ( MercPtrs[ ubNoiseMaker ]->bLife == 0 )
+			{
+				// this guy is dead (just dying) so don't report to player
+				bTellPlayer = FALSE;
 			}
 
-			// if noise was made by a person
-			if (ubNoiseMaker < NOBODY)
-			{
-				// if noisemaker has been *PUBLICLY* SEEN OR HEARD during THIS TURN
-				if ((gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_CURRENTLY) || // seen now
-					(gbPublicOpplist[bTeam][ubNoiseMaker] == SEEN_THIS_TURN) || // seen this turn
-					(gbPublicOpplist[bTeam][ubNoiseMaker] == HEARD_THIS_TURN))  // heard this turn
-				{
-					// then don't bother reporting any noise made by him to the player
-					bTellPlayer = FALSE;
-				}
-				/*
-				else if ( (Menptr[ubNoiseMaker].bVisible == TRUE) && (bTeam == gbPlayerNum) )
-				{
-					ScreenMsg( MSG_FONT_YELLOW, MSG_TESTVERSION, L"Handling noise from person not currently seen in player's public opplist" );
-				}
-				*/
-
-				if ( MercPtrs[ ubNoiseMaker ]->bLife == 0 )
-				{
-					// this guy is dead (just dying) so don't report to player
-					bTellPlayer = FALSE;
-				}
-
-			}
 		}
 #endif
 
@@ -5261,9 +5000,6 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 		{
 			// and we're doing our team
 			if (bTeam == OUR_TEAM)
-			/*
-			if (team == Net.pnum)
-			*/
 			{
 				// if we are to tell the player about this type of noise
 				if (bTellPlayer && ubHeardLoudestBy != NOBODY )
@@ -5312,18 +5048,8 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 					}
 				}
 #else
-				// if this human team is OURS
-				if (1 /* bTeam == Net.pnum */)
-				{
-					// this team is now allowed to report sightings and set Public flags
-					OurTeamRadiosRandomlyAbout(ubSource);
-				}
-				else	// noise was heard by another human-controlled team (not ours)
-				{
-					// mark noise maker as being seen currently
-					//UpdatePublic(bTeam,ubSource,SEEN_CURRENTLY,sGridNo,NOUPDATE,ACTUAL);
-					UpdatePublic(bTeam,ubSource,SEEN_CURRENTLY,sGridNo,bLevel);
-				}
+				// this team is now allowed to report sightings and set Public flags
+				OurTeamRadiosRandomlyAbout(ubSource);
 #endif
 			}
 			else // not seen
@@ -5915,10 +5641,6 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 		PopMessage(tempstr);
 #endif
 
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
 #endif
 
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)
@@ -5989,11 +5711,6 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
    // looked, his sight limit was 2 tiles, and now he may no longer be gassed
    // and thus he sees opponents much further away for the first time!
    // - Always happens if you STUNGRENADE an opponent by surprise...
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\tVerifyAndDecayOpplist: d(%s) saw %d new opponents\n",
-		   pSoldier->guynum,ExtMen[pSoldier->guynum].name,pSoldier->newOppCnt);
-#endif
-
    if (pSoldier->uiStatusFlags & SOLDIER_PC)
      RadioSightings(pSoldier,EVERYBODY,pSoldier->bTeam);
 

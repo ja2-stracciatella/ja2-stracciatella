@@ -33,10 +33,6 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
   {
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"LegalNPC->sDestination: ERROR - rcvd invalid gridno %d",gridno);
-#endif
-
 #ifdef BETAVERSION
    NumMessage("LegalNPC->sDestination: ERROR - rcvd invalid gridno ",gridno);
 #endif
@@ -145,11 +141,6 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		{
 #ifdef BETAVERSION
 			sprintf(tempstr,"TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
-
-#ifdef RECORDNET
-			fprintf(NetDebugFile,"\n\t%s\n",tempstr);
-#endif
-
 			PopMessage(tempstr);
 			SaveGame(ERROR_SAVE);
 #endif
@@ -166,10 +157,6 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 #ifdef BETAVERSION
 		sprintf(tempstr,"TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
-
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\n\t%s\n",tempstr);
-#endif
 
 #ifdef DEBUGDECISIONS
 		AIPopMessage(tempstr);
@@ -603,11 +590,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
     {
 #ifdef BETAVERSION
      sprintf(tempstr,"GoAsFarAsPossibleTowards: ERROR - gridno along valid route is invalid!  guynum %d, sTempDest = %d",pSoldier->ubID,sTempDest);
-
-#ifdef RECORDNET
-     fprintf(NetDebugFile,"\n\t%s\n",tempstr);
-#endif
-
      PopMessage(tempstr);
      SaveGame(ERROR_SAVE);
 #endif
@@ -857,45 +839,27 @@ static void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
 
  pSoldier = MercPtrs[ubWho];
 
-/*
- // if we control the civilian
- if (PTR_OURCONTROL)
-  {
-*/
-   // if the destination is different from what he has now
-   if (pSoldier->usActionData != sGridno)
-    {
-     // store his new destination
-     pSoldier->usActionData = sGridno;
+	// if the destination is different from what he has now
+	if (pSoldier->usActionData != sGridno)
+	{
+		// store his new destination
+		pSoldier->usActionData = sGridno;
 
-     // and cancel any movement in progress that he was still engaged in
-     pSoldier->bAction = AI_ACTION_NONE;
-     pSoldier->bActionInProgress = FALSE;
-    }
+		// and cancel any movement in progress that he was still engaged in
+		pSoldier->bAction = AI_ACTION_NONE;
+		pSoldier->bActionInProgress = FALSE;
+	}
 
-   // only set the underEscort flag once you give him a destination
-   // (that way AI can keep him appearing to act on his own until you
-   // give him orders).
-   //
-   // Either way, once set, it should stay that way, preventing AI from
-   // doing anything other than advance him towards destination.
-   pSoldier->bUnderEscort = TRUE;
+	// only set the underEscort flag once you give him a destination
+	// (that way AI can keep him appearing to act on his own until you
+	// give him orders).
+	//
+	// Either way, once set, it should stay that way, preventing AI from
+	// doing anything other than advance him towards destination.
+	pSoldier->bUnderEscort = TRUE;
 
-   // change orders to maximize roaming range so he can Go As Far As Possible
-   pSoldier->bOrders = ONCALL;
-/*
-  }
-
- else
-  {
-   NetSend.msgType = NET_CIV_DEST;
-   NetSend.ubID  = pSoldier->ubID;
-   NetSend.gridno  = gridno;
-
-   // only the civilian's controller needs to know this
-   SendNetData(pSoldier->controller);
-  }
-*/
+	// change orders to maximize roaming range so he can Go As Far As Possible
+	pSoldier->bOrders = ONCALL;
 }
 
 

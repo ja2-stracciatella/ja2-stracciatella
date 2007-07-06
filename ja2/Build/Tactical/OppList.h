@@ -49,12 +49,6 @@ enum
 	MAX_NOISES
 };
 
-enum
-{
-	EXPECTED_NOSEND,	// other nodes expecting noise & have all info
-	EXPECTED_SEND,		// other nodes expecting noise, but need info
-	UNEXPECTED				// other nodes are NOT expecting this noise
-};
 
 #define NUM_WATCHED_LOCS 3
 

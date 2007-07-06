@@ -1160,10 +1160,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 	if (sNoiseGridNo == NOWHERE)
 	{
    // then we have no business being under YELLOW status any more!
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\nDecideActionYellow: ERROR - No important noise known by guynum %d\n\n",pSoldier->ubID);
-#endif
-
 #ifdef BETAVERSION
    NumMessage("DecideActionYellow: ERROR - No important noise known by guynum ",pSoldier->ubID);
 #endif
@@ -1497,10 +1493,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  if ((INT16)PreRandom(100) < 50)
   {
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\tDecideActionYellow: guynum %d ignores noise, switching to GREEN AI...\n",pSoldier->ubID);
-#endif
-
 #ifdef DEBUGDECISIONS
    AINameMessage(pSoldier,"ignores noise completely and BYPASSES to GREEN!",1000);
 #endif
@@ -2538,10 +2530,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			pSoldier->bBleeding = __max( 0, pSoldier->bBleeding - pSoldier->bActionPoints );
 			return( AI_ACTION_NONE ); // will end-turn/wait depending on whether we're in TB or realtime
 		}
-#ifdef RECORDNET
-		fprintf(NetDebugFile,"\tDecideActionRed: guynum %d switching to GREEN AI...\n",pSoldier->ubID);
-#endif
-
 #ifdef DEBUGDECISIONS
 		AINameMessage(ptr,"- chose to SKIP all RED actions, BYPASSES to GREEN!",1000);
 #endif
@@ -3009,9 +2997,6 @@ bCanAttack = FALSE;
 							if (sClosestDisturbance != NOWHERE)
 							{
 								// don't bother checking GRENADES/KNIVES, he can't have conscious targets
-						#ifdef RECORDNET
-								fprintf(NetDebugFile,"\tDecideActionBlack: all visible opponents unconscious, switching to RED AI...\n");
-						#endif
 								// then make decision as if at alert status RED, but make sure
 								// we don't try to SEEK OPPONENT the unconscious guy!
 								return(DecideActionRed(pSoldier,FALSE));

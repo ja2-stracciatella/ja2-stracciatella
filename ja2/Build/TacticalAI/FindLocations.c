@@ -38,7 +38,6 @@
 
 INT8	gubAIPathCosts[19][19];
 
-// FindBestNearbyCover - "Net" related stuff commented out
 extern BOOLEAN gfTurnBasedAI;
 
 
@@ -55,11 +54,6 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
   {
 #ifdef BETAVERSION
    sprintf(tempstr,"CalcPercentBetter: ERROR - invalid valueChange = %d",valueChange);
-
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
    PopMessage(tempstr);
 #endif
 
@@ -74,11 +68,6 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
   {
 #ifdef BETAVERSION
    sprintf(tempstr,"CalcPercentBetter: ERROR - invalid scaleSum = %d",iScaleSum);
-
-#ifdef RECORDNET
-   fprintf(NetDebugFile,"\n\t%s\n\n",tempstr);
-#endif
-
    PopMessage(tempstr);
 #endif
 
@@ -897,12 +886,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				}
       }
 
-/*
-			if (Net.pnum != Net.turnActive)
-			{
-				KeepInterfaceGoing(1);
-			}
-*/
 			if (!(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE))
 			{
 				continue;
@@ -1015,21 +998,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 			if (iCoverValue > iBestCoverValue)
 			{
-				// ONLY DO THIS CHECK HERE IF WE'RE WAITING FOR OPPCHANCETODECIDE,
-				// OTHERWISE IT WOULD USUALLY BE A WASTE OF TIME
-				// ok to comment out for now?
-				/*
-				if (Status.team[Net.turnActive].allowOppChanceToDecide)
-				{
-					// if this cover value qualifies as "better" enough to get used
-					if (CalcPercentBetter( iCurrentCoverValue,iCoverValue,iCurrentScale,iCoverScale) >= MIN_PERCENT_BETTER)
-					{
-						// then we WILL do something (take this cover, at least)
-						NPCDoesAct(pSoldier);
-					}
-				}
-				*/
-
 #ifdef DEBUGDECISIONS
 				DebugAI( String( "FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue ) );
 #endif

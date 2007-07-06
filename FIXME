@@ -60,7 +60,6 @@ DrawAssignment(): code duplication
 DrawBreathUIBar(): overdraw
 DrawName(): complicated
 DrawOrta(), DrawTixa(): factorise
-DrawTextToScreen(): DONT_DISPLAY_TEXT == IAN_WRAP_NO_SHADOW
 DrawTownLabels(): complicated coordinates (FindFontCenterCoordinates() necessary at all?)
 ET_ENDENEMYS_TURN: unused
 EXPLOSION_PARAMS: all attributes used?
@@ -248,7 +247,6 @@ SectorExitBackgroundCallback(): empty
 SelectCreditFaceRegionCallBack(): empty
 SelectMainMenuBackGroundRegionCallBack(): empty
 SelectPlayersOfferSlotsRegionCallBack(): [...].uiItemPrice = [...].bMoneyStatus seems wrong
-SendNetData(): does not exist
 SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
@@ -443,7 +441,7 @@ pLevelNode: load/save?
 pExternShadowLevelNode
 pRoofUILevelNode
 sDesiredDest
-bStopped: always FALSE
+bStopped: always FALSE, unused
 bNeedToLook: write-only
 sBlackList: strange
 bHasKeys: strange
