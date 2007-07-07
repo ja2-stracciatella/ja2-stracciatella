@@ -91,7 +91,7 @@
 #define	SOLDIER_TRAIT_KNIFING				0x1000
 */
 #define HAS_SKILL_TRAIT( s, t ) (s->ubSkillTrait1 == t || s->ubSkillTrait2 == t)
-#define NUM_SKILL_TRAITS( s, t ) ( (s->ubSkillTrait1 == t) ? ( (s->ubSkillTrait2 == t) ? 2 : 1 ) : ( (s->ubSkillTrait2 == t) ? 1 : 0 ) )
+#define NUM_SKILL_TRAITS(s, t) (((s)->ubSkillTrait1 == (t)) + ((s)->ubSkillTrait2 == (t)))
 
 #define	SOLDIER_QUOTE_SAID_IN_SHIT										0x0001
 #define	SOLDIER_QUOTE_SAID_LOW_BREATH									0x0002

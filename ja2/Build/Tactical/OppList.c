@@ -1098,11 +1098,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 		}
 
 		// give one step better vision for people with nightops
-		if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
-		{
-			sDistVisible += 1 * NUM_SKILL_TRAITS( pSoldier, NIGHTOPS );
-		}
-
+		sDistVisible += 1 * NUM_SKILL_TRAITS(pSoldier, NIGHTOPS);
 	}
 
 
@@ -1232,11 +1228,8 @@ static INT8 DecideHearing(const SOLDIERTYPE* pSoldier)
 		bHearing++;
 	}
 
-	if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
-	{
-		// sharper hearing generally
-		bHearing += 1 * NUM_SKILL_TRAITS( pSoldier, NIGHTOPS );
-	}
+	// sharper hearing generally
+	bHearing += 1 * NUM_SKILL_TRAITS(pSoldier, NIGHTOPS);
 
 	bSlot = FindObj( pSoldier, EXTENDEDEAR );
 	if ( bSlot == HEAD1POS || bSlot == HEAD2POS)
@@ -1261,11 +1254,8 @@ static INT8 DecideHearing(const SOLDIERTYPE* pSoldier)
 		case 14:
 		case 15:
 			bHearing += 3;
-			if (HAS_SKILL_TRAIT( pSoldier, NIGHTOPS ))
-			{
-				// yet another bonus for nighttime
-				bHearing += 1 * NUM_SKILL_TRAITS( pSoldier, NIGHTOPS );
-			}
+			// yet another bonus for nighttime
+			bHearing += 1 * NUM_SKILL_TRAITS(pSoldier, NIGHTOPS);
 			break;
 		default:
 			break;
@@ -4343,9 +4333,9 @@ UINT8 MovementNoise( SOLDIERTYPE *pSoldier )
 	{
 		iStealthSkill += 50;
 	}
-	else if (HAS_SKILL_TRAIT( pSoldier, STEALTHY ))
+	else
 	{
-		iStealthSkill += 25 * NUM_SKILL_TRAITS( pSoldier, STEALTHY );
+		iStealthSkill += 25 * NUM_SKILL_TRAITS(pSoldier, STEALTHY);
 	}
 
 

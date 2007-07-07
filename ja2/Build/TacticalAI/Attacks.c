@@ -1712,14 +1712,8 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	if (!fBladeAttack)
 	{
 		// add bonuses for hand-to-hand and martial arts
-		if ( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) )
-		{
-			iImpact = iImpact * (100 + gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pSoldier, MARTIALARTS ) ) / 100;
-		}
-		if ( HAS_SKILL_TRAIT( pSoldier, HANDTOHAND ) )
-		{
-			iImpact = iImpact * (100 + gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS( pSoldier, HANDTOHAND ) ) / 100;
-		}
+		iImpact = iImpact * (100 + gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pSoldier, MARTIALARTS)) / 100;
+		iImpact = iImpact * (100 + gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pSoldier, HANDTOHAND))  / 100;
 		// Here, if we're doing a bare-fisted attack,
 		// we want to pay attention just to wounds inflicted
 		iImpact = iImpact / PUNCH_REAL_DAMAGE_PORTION;

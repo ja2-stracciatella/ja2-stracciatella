@@ -2447,10 +2447,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		// use the same calculation as for mechanical thrown weapons
 		iMarksmanship = ( EffectiveDexterity( pSoldier ) + EffectiveMarksmanship( pSoldier ) + EffectiveWisdom( pSoldier ) + (10 * EffectiveExpLevel( pSoldier ) )) / 4;
 		// heavy weapons trait helps out
-		if (HAS_SKILL_TRAIT( pSoldier, HEAVY_WEAPS ))
-		{
-			iMarksmanship += gbSkillTraitBonus[HEAVY_WEAPS] * NUM_SKILL_TRAITS( pSoldier, HEAVY_WEAPS );
-		}
+		iMarksmanship += gbSkillTraitBonus[HEAVY_WEAPS] * NUM_SKILL_TRAITS(pSoldier, HEAVY_WEAPS);
 	}
 	else
 	{
@@ -2560,9 +2557,10 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		iPenalty = Weapon[usInHand].ubBurstPenalty * (pSoldier->bDoBurst - 1);
 
 		// halve the penalty for people with the autofire trait
-		if ( HAS_SKILL_TRAIT( pSoldier, AUTO_WEAPS ) )
+		UINT AutoWeaponsSkill = NUM_SKILL_TRAITS(pSoldier, AUTO_WEAPS);
+		if (AutoWeaponsSkill != 0)
 		{
-			iPenalty /= 2 * NUM_SKILL_TRAITS( pSoldier, AUTO_WEAPS );
+			iPenalty /= 2 * AutoWeaponsSkill;
 		}
 		iChance -= iPenalty;
 	}
@@ -2815,10 +2813,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			iChance += AIM_BONUS_FIRING_DOWN;
 		}
 		// if have roof trait, give bonus
-		if ( HAS_SKILL_TRAIT( pSoldier, ONROOF ) )
-		{
-			iChance += gbSkillTraitBonus[ ONROOF ] * NUM_SKILL_TRAITS( pSoldier, ONROOF );
-		}
+		iChance += gbSkillTraitBonus[ONROOF] * NUM_SKILL_TRAITS(pSoldier, ONROOF);
 	}
 
 
@@ -3618,12 +3613,9 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 				iImpact *= 2;
 			}
 		}
-		if ( HAS_SKILL_TRAIT( pSoldier, HANDTOHAND ) )
-		{
-			// SPECIAL  - give TRIPLE bonus for damage for hand-to-hand trait
-			// because the HTH bonus is half that of martial arts, and gets only 1x for to-hit bonus
-			iImpact = iImpact * ( 100 + 3 * gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS( pSoldier, HANDTOHAND ) ) / 100;
-		}
+		// SPECIAL  - give TRIPLE bonus for damage for hand-to-hand trait
+		// because the HTH bonus is half that of martial arts, and gets only 1x for to-hit bonus
+		iImpact = iImpact * (100 + 3 * gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS(pSoldier, HANDTOHAND)) / 100;
 	}
 
 	return( iImpact );
@@ -3811,22 +3803,13 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	{
 		if (ubMode == HTH_MODE_STAB)
 		{
-			if (HAS_SKILL_TRAIT( pAttacker, KNIFING ))
-			{
-				iAttRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS( pAttacker, KNIFING );
-			}
+			iAttRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pAttacker, KNIFING);
 		}
 		else
 		{
 			// add bonuses for hand-to-hand and martial arts
-			if (HAS_SKILL_TRAIT( pAttacker, MARTIALARTS ))
-			{
-				iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pAttacker, MARTIALARTS );
-			}
-			if ( HAS_SKILL_TRAIT( pAttacker, HANDTOHAND ) )
-			{
-				iAttRating += gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS( pAttacker, HANDTOHAND );
-			}
+			iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pAttacker, MARTIALARTS);
+			iAttRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pAttacker, HANDTOHAND);
 		}
 	}
 
@@ -3925,51 +3908,30 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		{
 			if (Item[pDefender->inv[HANDPOS].usItem].usItemClass == IC_BLADE)
 			{
-				if ( HAS_SKILL_TRAIT( pDefender, KNIFING ) )
-				{
-					// good with knives, got one, so we're good at parrying
-					iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS( pDefender, KNIFING );
-				}
-				if (HAS_SKILL_TRAIT( pDefender, MARTIALARTS ))
-				{
-					// the knife gets in the way but we're still better than nobody
-					iDefRating += ( gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pDefender, MARTIALARTS ) ) / 3;
-				}
+				// good with knives, got one, so we're good at parrying
+				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING);
+				// the knife gets in the way but we're still better than nobody
+				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 3;
 			}
 			else
 			{
-				if ( HAS_SKILL_TRAIT( pDefender, KNIFING ) )
-				{
-					// good with knives, don't have one, but we know a bit about dodging
-					iDefRating += ( gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS( pDefender, KNIFING ) ) / 3;
-				}
-				if (HAS_SKILL_TRAIT( pDefender, MARTIALARTS ))
-				{
-					// bonus for dodging knives
-					iDefRating += ( gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pDefender, MARTIALARTS ) )/ 2;
-				}
+				// good with knives, don't have one, but we know a bit about dodging
+				iDefRating += gbSkillTraitBonus[KNIFING]     * NUM_SKILL_TRAITS(pDefender, KNIFING)     / 3;
+				// bonus for dodging knives
+				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 2;
 			}
 		}
 		else
 		{	// punch/hand-to-hand/martial arts attack/steal
 			if (Item[pDefender->inv[HANDPOS].usItem].usItemClass == IC_BLADE && ubMode != HTH_MODE_STEAL)
 			{
-				if (HAS_SKILL_TRAIT( pDefender, KNIFING ))
-				{
-					// with our knife, we get some bonus at defending from HTH attacks
-					iDefRating += ( gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS( pDefender, KNIFING ) ) / 2;
-				}
+				// with our knife, we get some bonus at defending from HTH attacks
+				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING) / 2;
 			}
 			else
 			{
-				if (HAS_SKILL_TRAIT( pDefender, MARTIALARTS ))
-				{
-					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pDefender, MARTIALARTS );
-				}
-				if (HAS_SKILL_TRAIT( pDefender, HANDTOHAND ))
-				{
-					iDefRating += gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS( pDefender, HANDTOHAND );
-				}
+				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS);
+				iDefRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pDefender, HANDTOHAND);
 			}
 		}
 	}
@@ -4123,11 +4085,8 @@ INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArme
 		// adjust for thrower's remaining breath (lose up to 1/2 of range)
 		iRange -= (iRange * (100 - pSoldier->bBreath)) / 200;
 
-		if ( HAS_SKILL_TRAIT( pSoldier, THROWING ) )
-		{
-			// better max range due to expertise
-			iRange = iRange * (100 + gbSkillTraitBonus[THROWING] * NUM_SKILL_TRAITS( pSoldier, THROWING ) ) / 100;
-		}
+		// better max range due to expertise
+		iRange = iRange * (100 + gbSkillTraitBonus[THROWING] * NUM_SKILL_TRAITS(pSoldier, THROWING)) / 100;
 	}
 
 	if (iRange < 1)
@@ -4171,10 +4130,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 		// for lack of anything better, base throwing accuracy on dex & marskmanship
 		iChance = ( EffectiveDexterity( pSoldier ) + EffectiveMarksmanship( pSoldier ) ) / 2;
 		// throwing trait helps out
-		if ( HAS_SKILL_TRAIT( pSoldier, THROWING ) )
-		{
-			iChance += gbSkillTraitBonus[THROWING] * NUM_SKILL_TRAITS( pSoldier, THROWING );
-		}
+		iChance += gbSkillTraitBonus[THROWING] * NUM_SKILL_TRAITS(pSoldier, THROWING);
 	}
 	else
 	{
@@ -4182,10 +4138,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 		iChance = ( EffectiveDexterity( pSoldier ) + EffectiveMarksmanship( pSoldier ) + EffectiveWisdom( pSoldier ) + pSoldier->bExpLevel ) / 4;
 
 		// heavy weapons trait helps out
-		if (HAS_SKILL_TRAIT( pSoldier, HEAVY_WEAPS ))
-		{
-			iChance += gbSkillTraitBonus[HEAVY_WEAPS] * NUM_SKILL_TRAITS( pSoldier, HEAVY_WEAPS );
-		}
+		iChance += gbSkillTraitBonus[HEAVY_WEAPS] * NUM_SKILL_TRAITS(pSoldier, HEAVY_WEAPS);
 	}
 
 	// modify based on morale

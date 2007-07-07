@@ -8114,7 +8114,6 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	BOOLEAN			fMartialArtist = FALSE;
 	//UINT32 uiMercFlags;
 	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
@@ -8150,14 +8149,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	}
 
 
-	// Are we a martial artist?
-	if ( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) )
-	{
-		fMartialArtist = TRUE;
-	}
-
-
-	if ( fMartialArtist && !AreInMeanwhile( ) && usItem != CROWBAR )
+	if (HAS_SKILL_TRAIT(pSoldier, MARTIALARTS) && !AreInMeanwhile() && usItem != CROWBAR)
 	{
 		// Are we in attack mode yet?
 		if ( pSoldier->usAnimState != NINJA_BREATH && gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND && gAnimControl[ pTSoldier->usAnimState ].ubHeight != ANIM_PRONE )

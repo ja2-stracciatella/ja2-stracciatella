@@ -230,11 +230,8 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 			iSkill = iSkill * (EffectiveDexterity( pSoldier ) + 100) / 200;
 			// factor in experience
 			iSkill = iSkill + EffectiveExpLevel( pSoldier ) * 3;
-			if (HAS_SKILL_TRAIT( pSoldier, LOCKPICKING ) )
-			{
-				// if we specialize in picking locks...
-				iSkill += gbSkillTraitBonus[LOCKPICKING] * NUM_SKILL_TRAITS( pSoldier, LOCKPICKING );
-			}
+			// if we specialize in picking locks...
+			iSkill += gbSkillTraitBonus[LOCKPICKING] * NUM_SKILL_TRAITS(pSoldier, LOCKPICKING);
 			if (bReason == ELECTRONIC_LOCKPICKING_CHECK && !(HAS_SKILL_TRAIT( pSoldier, ELECTRONICS)) )
 			{
 				// if we are unfamiliar with electronics...
