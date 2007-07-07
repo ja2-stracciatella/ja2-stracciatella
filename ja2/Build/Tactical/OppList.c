@@ -2275,17 +2275,13 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate)
    // if he remains visible (or ShowEnemies ON)
    if ((pSoldier->bVisible >= 0) || gbShowEnemies)
     {
-    if (PTR_OURTEAM)
-     {
-      //if (ConfigOptions[FOLLOWMODE] && Status.stopSlidingAt == NOBODY)
-        //  LocateMember(ptr->guynum,DONTSETLOCATOR);
-     }
-    else // not our team - if we're NOT allied then locate...
+			if (!PTR_OURTEAM) // not our team - if we're NOT allied then locate...
+			{
      //if (pSoldier->side != gTacticalStatus.Team[gbPlayerNum].side && ConfigOptions[FOLLOWMODE])
-       //if (Status.stopSlidingAt == NOBODY)
 			 	if (gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
           //LocateSoldier(pSoldier->ubID,DONTSETLOCATOR);
 					SlideTo(0,pSoldier->ubID, NOBODY, DONTSETLOCATOR);
+			}
 
      // follow his movement on our screen as he moves around...
      //LocateMember(ptr->guynum,DONTSETLOCATOR);
@@ -2633,55 +2629,6 @@ static INT8 OurMaxPublicOpplist(void)
 
  return(bHighestOpplist);
 }
-
-
-
-
-/*
-BOOLEAN VisibleAnywhere(SOLDIERTYPE *pSoldier)
-{
- INT8 team,cnt;
- SOLDIERTYPE *pOpponent;
-
-
- // this takes care of any mercs on our own team
- if (pSoldier->bVisible >= 0)
-   return(TRUE);
-
- for (bTeam = 0; bTeam < MAXTEAMS; bTeam++)
-  {
-   // skip our team (local visible flag will do for them)
-   if (bTeam == gbPlayerNum)
-     continue;
-
-   // skip any inactive teams
-   if (!gTacticalStatus.team[bTeam].teamActive)
-     continue;
-
-   // skip non-human teams (they don't communicate for their machines!)
-   if (!gTacticalStatus.Team[bTeam].human)
-     continue;
-
-   // so we're left with another human player's team of mercs...
-
-   // check if soldier is currently visible to any human mercs on other teams
-   for (cnt = Status.team[team].guystart,oppPtr = Menptr + cnt; cnt < Status.team[team].guyend; cnt++,oppPtr++)
-    {
-     // if this merc is inactive, or in no condition to care
-     if (!oppPtr->active || !oppPtr->in_sector || oppPtr->deadAndRemoved || (oppPtr->life < OKLIFE))
-       continue;          // skip him!
-
-     if (oppPtr->opplist[ptr->guynum] == SEEN_CURRENTLY)
-       return(TRUE);
-    }
-  }
-
-
- // nobody anywhere sees him
- return(FALSE);
-}
-
-*/
 
 
 static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier)
@@ -4549,16 +4496,9 @@ UINT8 MovementNoise( SOLDIERTYPE *pSoldier )
 			{
 				ubVolume = 0;
 			}
-
-			// randomize at which movement step the sneaking failure will happen
-//			Status.stepsTilNoise = Random(MAXMOVESTEPS);	// 0 - 6
 		}
 	}
 
-	//NumMessage("Volume = ",volume);
-
-	// save noise volume where stepped HandleSteppedLook can back get at it later
-//	Status.moveNoiseVolume = ubVolume;
 	return( ubVolume );
 }
 
@@ -5010,22 +4950,8 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 			// if ubNoiseMaker was seen by at least one member of this team
 			if (bSeen)
 			{
-// Temporary for opplist synching - disable random order radioing
-#ifdef RECORDOPPLIST
-				// insure all machines radio in synch to keep logs the same
-				for (bLoop = Status.team[team].guystart,pSoldier = Menptr + bLoop; bLoop < Status.team[team].guyend; bLoop++,pSoldier++)
-				{
-					// if this merc is active, in this sector, and well enough to look
-					if (pSoldier->active && pSoldier->in_sector && (pSoldier->life >= OKLIFE))
-					{
-						RadioSightings(pSoldier,ubSource);
-						pSoldier->newOppCnt = 0;
-					}
-				}
-#else
 				// this team is now allowed to report sightings and set Public flags
 				OurTeamRadiosRandomlyAbout(ubSource);
-#endif
 			}
 			else // not seen
 			{

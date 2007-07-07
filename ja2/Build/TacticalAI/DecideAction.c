@@ -4079,38 +4079,7 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 		else
 		{
 			pSoldier->bAlertStatus = STATUS_RED;         // enemy sector
-
-/*
-			// wow, JA1 stuff...
-       // good guys all have a built-in, magic, "enemy detecting radar"...
-       if (Status.enemies)
-	 pSoldier->bAlertStatus = STATUS_RED;         // enemy sector
-       else
-	{
-	 pSoldier->bAlertStatus = STATUS_GREEN;       // secured sector
-
-	 // if he just dropped back from alert status, and it's a GUARD
-	 if ((oldStatus >= STATUS_RED) && (pSoldier->manCategory == MAN_GUARD))
-	  {
-	   if (pSoldier->whereIWas == NOWHERE)       // not assigned to any trees
-	     // FUTURE ENHANCEMENT: Look for unguarded trees with tappers
-	     pSoldier->orders = ONCALL;
-	   else                                 // assigned to trees
-	     // FUTURE ENHANCEMENT: If his tree is now tapperless, go ONCALL
-	     pSoldier->orders = CLOSEPATROL;         // go back to his tree area
-
-	   // turn off any existing bypass to Green and its "hyper-activity"
-	   pSoldier->bypassToGreen = FALSE;
-
-	   // turn off the "inTheWay" flag, may have been set during TurnBased
-	   pSoldier->inTheWay = FALSE;
-
-	   // make the guard put his gun away if he has it drawn
-	   HandleNoMoreTarget(pSoldier);
-	  }
-	}
-*/
-      }
+		}
   }
 #endif
 

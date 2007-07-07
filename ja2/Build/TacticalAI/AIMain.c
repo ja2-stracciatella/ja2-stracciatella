@@ -1301,16 +1301,6 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier)
 static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 {
 /*
- if (Status.gamePaused)
-  {
-#ifdef DEBUGBUSY
-   DebugAI("HandleManAI - Skipping %d, the game is paused\n",pSoldier->ubID);
-#endif
-
-   return;
-  }
-//
-
  // If man is inactive/at base/dead/unconscious
  if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
   {
@@ -2377,13 +2367,8 @@ void HandleInitialRedAlert(INT8 bTeam)
 		}
 	}
 
- // open and close certain doors when this happens
- //AffectDoors(OPENDOORS, MapExt[Status.cur_sector].opendoors);
- //AffectDoors(CLOSEDOORS,MapExt[Status.cur_sector].closedoors);
-
  // remember enemies are alerted, prevent another red alert from happening
  gTacticalStatus.Team[ bTeam ].bAwareOfOpposition = TRUE;
-
 }
 
 

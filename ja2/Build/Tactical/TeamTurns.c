@@ -1520,15 +1520,6 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate)
 	// either way, whack the last entry to NOBODY and decrement the list size
 	gubOutOfTurnOrder[gubOutOfTurnPersons] = NOBODY;
 	gubOutOfTurnPersons--;
-
-	// once the last interrupted guy gets deleted from the list, he's no longer
-	// the last interrupted guy!
-	/*
-	if (Status.lastInterruptedWas == ubID)
-	{
-		Status.lastInterruptedWas = NOBODY;
-	}
-	*/
 }
 
 void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
@@ -1562,15 +1553,6 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 	// increment total (making index valid) and add him to list
 	gubOutOfTurnPersons++;
 	gubOutOfTurnOrder[gubOutOfTurnPersons] = ubID;
-
-/*
-	// the guy being interrupted HAS to be the currently selected character
-	if (Status.lastInterruptedWas != CharacterSelected)
-	{
-		// if we don't already do so, remember who that was
-		Status.lastInterruptedWas = CharacterSelected;
-	}
-*/
 
 	// if the guy is gaining control
 	if (fGainControl)

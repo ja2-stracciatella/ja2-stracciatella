@@ -573,18 +573,6 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 	 sBreathFactor -= (pSold->bStrength - 80) / 2;
  }
 
-/*	THIS IS OLD JAGGED ALLIANCE STUFF (left for possible future reference)
-
- // apply penalty due to high temperature, heat, and hot Metaviran sun
- // if INDOORS, in DEEP WATER, or possessing HEAT TOLERANCE trait
- if ((ptr->terrtype == FLOORTYPE) || (ptr->terr >= OCEAN21) ||
-				       (ptr->trait == HEAT_TOLERANT))
-   breathFactor += (Status.heatFactor / 5);	// 20% of normal heat penalty
- else
-   breathFactor += Status.heatFactor;		// not used to this!
-*/
-
-
  // if a non-swimmer type is thrashing around in deep water
 	if ( (pSold->ubProfile != NO_PROFILE ) && (gMercProfiles[ pSold->ubProfile ].bPersonalityTrait == NONSWIMMER) )
 	{
