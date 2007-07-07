@@ -721,10 +721,6 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 		*/
 			// he looks for all other soldiers not on his own team
 			ManLooksForOtherTeams(pSoldier);
-
-     // if "Show only enemies seen" option is ON and it's this guy looking
-     //if (pSoldier->ubID == ShowOnlySeenPerson)
-       //NewShowOnlySeenPerson(pSoldier);                  // update the string
 		}
 
 
@@ -2335,10 +2331,6 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 					}
 				}
 			}
-
-			// if "Show only enemies seen" option is ON and it's this guy looking
-			//if (ptr->guynum == ShowOnlySeenPerson)
-			//NewShowOnlySeenPerson(ptr);                  // update the string
 		}
 	}
 
@@ -2536,10 +2528,6 @@ static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGrid
 					// whether successful or not, whack newOppCnt.  Since this is a
 					// delayed reaction to a radio call, there's no chance of interrupt!
 					pSoldier->bNewOppCnt = 0;
-
-					// if "Show only enemies seen" option is ON and it's this guy looking
-					//if (pSoldier->ubID == ShowOnlySeenPerson)
-						// NewShowOnlySeenPerson(pSoldier);                  // update the string
 			 }
 		 }
 	 }
