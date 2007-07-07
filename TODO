@@ -7,6 +7,7 @@ med prio
 - TODO0003 Implement sound streaming
 - HACK000A Clean up system specific hacks, especially wrt. wchar_t
 - HACK000C Workaround for code trying to access non-existent buttons
+- TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.

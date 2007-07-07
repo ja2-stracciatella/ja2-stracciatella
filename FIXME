@@ -253,7 +253,6 @@ SetInputFieldStringWithNumericStrictValue(): complicated
 SetSelection(): callers
 SetSteadyStateAmbience(): fInNight used as lower index bound incorrectly, because upper bound is not adjusted
 SetTilesetOneTerrainValues(): set callback to avoid explicit test
-SkiGlowColorsA: unused
 SoldierCanSeeCatchComing(): empty
 SoldierCarriesTwoHandedWeapon(): complicated
 StandardGunListAmmoReplacement(): declaration in .c
@@ -297,6 +296,8 @@ gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfOverIntTile: static
 gfProgBarActive: once TRUE it never changes anymore
 gsRadarY: always RADAR_WINDOW_TM_Y?
+gsWhoThrewRock: useful?
+gszCivGroupNames[]: move declaration
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated

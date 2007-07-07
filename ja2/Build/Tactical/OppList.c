@@ -4315,7 +4315,7 @@ void DebugSoldierPage4( )
 
 #define MAX_MOVEMENT_NOISE 9
 
-UINT8 MovementNoise( SOLDIERTYPE *pSoldier )
+UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 {
  INT32	iStealthSkill, iRoll;
  UINT8	ubMaxVolume, ubVolume, ubBandaged, ubEffLife;
