@@ -36,45 +36,44 @@
 #include "Debug.h"
 
 
-#define		MAX_INTTILE_STACK							10
+#define MAX_INTTILE_STACK 10
 
-typedef struct
+
+typedef struct CUR_INTERACTIVE_TILE
 {
-	INT16					sGridNo;
-	UINT8					ubFlags;
-	INT16					sTileIndex;
-	INT16					sMaxScreenY;
-	INT16					sHeighestScreenY;
-	BOOLEAN				fFound;
-	LEVELNODE			*pFoundNode;
-	INT16					sFoundGridNo;
-	UINT16				usStructureID;
-	BOOLEAN				fStructure;
-
+	INT16      sGridNo;
+	UINT8      ubFlags;
+	INT16      sTileIndex;
+	INT16      sMaxScreenY;
+	INT16      sHeighestScreenY;
+	BOOLEAN    fFound;
+	LEVELNODE* pFoundNode;
+	INT16      sFoundGridNo;
+	UINT16     usStructureID;
+	BOOLEAN    fStructure;
 } CUR_INTERACTIVE_TILE;
 
 
-typedef struct
+typedef struct INTERACTIVE_TILE_STACK_TYPE
 {
-	INT8										bNum;
-	CUR_INTERACTIVE_TILE		bTiles[ MAX_INTTILE_STACK ];
-	INT8										bCur;
-
+	INT8                 bNum;
+	CUR_INTERACTIVE_TILE bTiles[MAX_INTTILE_STACK];
+	INT8                 bCur;
 } INTERACTIVE_TILE_STACK_TYPE;
 
 
-INTERACTIVE_TILE_STACK_TYPE		gCurIntTileStack;
-BOOLEAN												gfCycleIntTile = FALSE;
+static INTERACTIVE_TILE_STACK_TYPE gCurIntTileStack;
+static BOOLEAN                     gfCycleIntTile = FALSE;
 
 
-CUR_INTERACTIVE_TILE	gCurIntTile;
-BOOLEAN								gfOverIntTile				= FALSE;
+static CUR_INTERACTIVE_TILE gCurIntTile;
+static BOOLEAN              gfOverIntTile = FALSE;
 
 // Values to determine if we should check or not
-INT16		gsINTOldRenderCenterX = 0;
-INT16		gsINTOldRenderCenterY = 0;
-UINT16	gusINTOldMousePosX = 0;
-UINT16	gusINTOldMousePosY = 0;
+static INT16  gsINTOldRenderCenterX = 0;
+static INT16  gsINTOldRenderCenterY = 0;
+static UINT16 gusINTOldMousePosX    = 0;
+static UINT16 gusINTOldMousePosY    = 0;
 
 
 BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );

@@ -293,7 +293,6 @@ gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
-gfOverIntTile: static
 gfProgBarActive: once TRUE it never changes anymore
 gsRadarY: always RADAR_WINDOW_TM_Y?
 gsWhoThrewRock: useful?
@@ -305,7 +304,6 @@ gubWorldRoomHidden: static?
 guiCacheSize: const
 guiMemTotal: remove
 guiPOPUPTEX: load probably unnecessary in MapScreen.c
-guiSkiAtmImage: unused/commented out
 gzFilename: wchar_t[] -> char[]?
 pMapInventoryErrorString[0]: probably unused
 pSoldier = pSoldier: strange
