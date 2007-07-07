@@ -630,9 +630,6 @@ void DeleteTalkingMenu( )
     RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
     iInterfaceDialogueBox = -1;
   }
-
-	// Save time for give item
-	gTacticalStatus.uiTimeCounterForGiveItemSrc = GetJA2Clock( );
 }
 
 

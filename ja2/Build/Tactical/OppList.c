@@ -3097,7 +3097,6 @@ DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 								gTacticalStatus.fEnemySightingOnTheirTurn = TRUE;
 							}
 							gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID = pOpponent->ubID;
-							gTacticalStatus.ubEnemySightingOnTheirTurnPlayerID = pSoldier->ubID;
 							gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock( );
 
 							pOpponent->fPauseAllAnimation = TRUE;

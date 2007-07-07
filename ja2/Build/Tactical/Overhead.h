@@ -49,22 +49,22 @@ typedef struct
 	INT16								sSlideReason;
 	UINT32							uiTimeSinceMercAIStart;
 	INT8								fPanicFlags;
-	INT16								sPanicTriggerGridnoUnused;
-	INT16								sHandGrid;
+	INT16								sPanicTriggerGridno_UNUSED; // XXX HACK000B
+	INT16								sHandGrid_UNUSED; // XXX HACK000B
 	UINT8								ubSpottersCalledForBy;
 	UINT8								ubTheChosenOne;
 	UINT32							uiTimeOfLastInput;
 	UINT32							uiTimeSinceDemoOn;
-	UINT32							uiCountdownToRestart;
+	UINT32							uiCountdownToRestart_UNUSED; // XXX HACK000B
 	BOOLEAN							fGoingToEnterDemo_UNUSED; // XXX HACK000B
 	BOOLEAN							fNOTDOLASTDEMO_UNUSED; // XXX HACK000B
-	BOOLEAN							fMultiplayer;
+	BOOLEAN							fMultiplayer_UNUSED; // XXX HACK000B
 	BOOLEAN							fCivGroupHostile[ NUM_CIV_GROUPS ];
 	UINT8								ubLastBattleSectorX;
 	UINT8								ubLastBattleSectorY;
 	BOOLEAN							fLastBattleWon;
 	INT8								bOriginalSizeOfEnemyForce;
-	INT8								bPanicTriggerIsAlarmUnused;
+	INT8								bPanicTriggerIsAlarm_UNUSED; // XXX HACK000B
 	BOOLEAN							fVirginSector;
 	BOOLEAN							fEnemyInSector;
 	BOOLEAN							fInterruptOccurred;
@@ -72,11 +72,11 @@ typedef struct
 	UINT8								ubEnemyIntention_UNUSED; // XXX HACK000B
 	UINT8								ubEnemyIntendedRetreatDirection_UNUSED; // XXX HACK000B
 	UINT8								ubEnemySightingOnTheirTurnEnemyID;
-	UINT8								ubEnemySightingOnTheirTurnPlayerID;
+	UINT8								ubEnemySightingOnTheirTurnPlayerID_UNUSED; // XXX HACK000B
 	BOOLEAN							fEnemySightingOnTheirTurn;
 	BOOLEAN							fAutoBandageMode;
 	UINT8								ubAttackBusyCount;
-	INT8								bNumEnemiesFoughtInBattleUnused;
+	INT8								bNumEnemiesFoughtInBattle_UNUSED; // XXX HACK000B
 	UINT8								ubEngagedInConvFromActionMercID;
 	UINT16							usTactialTurnLimitCounter;
 	BOOLEAN							fInTopMessage;
@@ -93,16 +93,16 @@ typedef struct
 	INT8								bPanicTriggerIsAlarm[ NUM_PANIC_TRIGGERS ];
 	UINT8								ubPanicTolerance[ NUM_PANIC_TRIGGERS ];
 	BOOLEAN							fAtLeastOneGuyOnMultiSelect;
-	BOOLEAN							fSaidCreatureFlavourQuote;
-	BOOLEAN							fHaveSeenCreature;
+	BOOLEAN							fSaidCreatureFlavourQuote_UNUSED; // XXX HACK000B
+	BOOLEAN							fHaveSeenCreature_UNUSED; // XXX HACK000B
 	BOOLEAN							fKilledEnemyOnAttack;
 	UINT8								ubEnemyKilledOnAttack;
 	INT8								bEnemyKilledOnAttackLevel;
 	UINT16							ubEnemyKilledOnAttackLocation;
 	BOOLEAN							fItemsSeenOnAttack;
 	BOOLEAN							ubItemsSeenOnAttackSoldier;
-	BOOLEAN							fBeenInCombatOnce;
-	BOOLEAN							fSaidCreatureSmellQuote;
+	BOOLEAN							fBeenInCombatOnce_UNUSED; // XXX HACK000B
+	BOOLEAN							fSaidCreatureSmellQuote_UNUSED; // XXX HACK000B
 	UINT16							usItemsSeenOnAttackGridNo;
 	BOOLEAN							fLockItemLocators;
 	UINT8								ubLastQuoteSaid;
@@ -112,11 +112,11 @@ typedef struct
 	INT16								sCantGetThroughSoldierGridNo;
 	UINT8								ubCantGetThroughID;
 	BOOLEAN							fDidGameJustStart;
-	BOOLEAN							fStatChangeCheatOn;
+	BOOLEAN							fStatChangeCheatOn_UNUSED; // XXX HACK000B
 	UINT8								ubLastRequesterTargetID;
 	BOOLEAN							fGoodToAllowCrows;
 	UINT8								ubNumCrowsPossible;
-	UINT32							uiTimeCounterForGiveItemSrc;
+	UINT32							uiTimeCounterForGiveItemSrc_UNUSED; // XXX HACK000B
 	BOOLEAN							fUnLockUIAfterHiddenInterrupt;
 	INT8								bNumFoughtInBattle[ MAXTEAMS ];
 	UINT32							uiDecayBloodLastUpdate;
@@ -124,7 +124,7 @@ typedef struct
 	BOOLEAN							fHasAGameBeenStarted;
 	INT8								bConsNumTurnsWeHaventSeenButEnemyDoes;
 	BOOLEAN								fSomeoneHit;
-	UINT8								ubPaddingSmall;
+	UINT8								ubPaddingSmall_UNUSED; // XXX HACK000B
 	UINT32							uiTimeSinceLastOpplistDecay;
 	INT8								bMercArrivingQuoteBeingUsed;
 	UINT8								ubEnemyKilledOnAttackKiller;
@@ -137,7 +137,7 @@ typedef struct
   BOOLEAN             fAutoBandagePending;
   BOOLEAN             fHasEnteredCombatModeSinceEntering;
   BOOLEAN             fDontAddNewCrows;
-  UINT8               ubMorePadding;
+  UINT8               ubMorePadding_UNUSED; // XXX HACK000B
   UINT16              sCreatureTenseQuoteDelay;
   UINT32              uiCreatureTenseQuoteLastUpdate;
 } TacticalStatusType;

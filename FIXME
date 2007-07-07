@@ -287,6 +287,8 @@ fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
 gOpenDoorList[], gClosedDoorList[]: users, code duplication
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
+gTacticalStatus.ubEngagedInConvFromActionMercID, ENGAGED_IN_CONV: redundant?
+gTacticalStatus.ubSpottersCalledForBy: once != NOBODY never gets NOBODY again
 gTileTypeLogicalHeight[]: always 1 (memset)?
 gTileTypeLogicalHeight[]: definition not used in file
 gbSAMGraphicList[]: definition not used in file

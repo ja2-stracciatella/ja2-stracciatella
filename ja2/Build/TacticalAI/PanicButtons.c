@@ -313,22 +313,6 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			// if we managed to find an adjacent spot
 			if (fFoundRoute)
 			{
-
-/*
- *** COMMENTED OUT BECAUSE WE DON'T HAVE SUPPORT ROUTINES YET
-
-       // make sure it's not in water (those triggers can't be pulled)
-       if (Water(Terrain(gTacticalStatus.sHandGrid),Structure(gTacticalStatus.sHandGrid)))
-	{
-#ifdef BETAVERSION
-         PopMessage("BAD SCENARIO DESIGN: Enemies can't use this panic trigger!");
-#endif
-         gTacticalStatus.ubTheChosenOne = NOBODY;   // strip him of his Chosen One status
-	 // don't bother replacing him either, the next won't have more luck!
-         return(-1);
-	}
-
-	*/
 				// if we are at that spot now
 				if (pSoldier->sGridNo == sPanicTriggerGridNo)
 				{

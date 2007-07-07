@@ -1046,11 +1046,6 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		// ATE: Set Flag for being visited...
 		SetSectorFlag( sMapX, sMapY, bMapZ, SF_HAS_ENTERED_TACTICAL );
 
-		// ATE; Reset some flags for creature sayings....
-		gTacticalStatus.fSaidCreatureFlavourQuote = FALSE;
-		gTacticalStatus.fHaveSeenCreature					= FALSE;
-		gTacticalStatus.fBeenInCombatOnce					= FALSE;
-		gTacticalStatus.fSaidCreatureSmellQuote		= FALSE;
 		ResetMultiSelection( );
 
 		// ATE: Decide if we can have crows here....

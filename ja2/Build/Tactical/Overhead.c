@@ -554,7 +554,6 @@ BOOLEAN InitOverhead( )
 	gTacticalStatus.sSlideTarget = NOWHERE;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock();
-	gTacticalStatus.uiCountdownToRestart = GetJA2Clock();
 	gTacticalStatus.fDidGameJustStart               = TRUE;
 	gTacticalStatus.ubLastRequesterTargetID					= NO_PROFILE;
 

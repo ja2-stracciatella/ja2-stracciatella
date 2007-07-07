@@ -88,14 +88,6 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 	if ( pSoldier->bLife < CONSCIOUSNESS )
 		return;
 
-
-#ifdef TESTVERSION
-	if ( gTacticalStatus.fStatChangeCheatOn )
-	{
-		usNumChances = 100;
-	}
-#endif
-
 	ProcessStatChange( &( gMercProfiles[ pSoldier->ubProfile ] ), ubStat, usNumChances, ubReason );
 
 	// Update stats....right away... ATE
