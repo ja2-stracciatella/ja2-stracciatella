@@ -33,7 +33,9 @@ static TILE_CACHE_STRUCT* gpTileCacheStructInfo = NULL;
 
 BOOLEAN InitTileCache(  )
 {
-	const char* const TilecacheFilePattern = SGPDATADIR "/Data/TILECACHE/*.jsd";
+	char TilecacheFilePattern[512];
+
+	snprintf(TilecacheFilePattern, lengthof(TilecacheFilePattern), "%s/Data/TILECACHE/*.jsd", GetBinDataPath());
 
 	UINT32				cnt;
 	GETFILESTRUCT FileInfo;
@@ -76,7 +78,7 @@ BOOLEAN InitTileCache(  )
 		{
 			while( GetFileNext(&FileInfo) )
 			{
-				sprintf(gpTileCacheStructInfo[cnt].Filename, SGPDATADIR "/Data/TILECACHE/%s", FileInfo.zFileName);
+				sprintf(gpTileCacheStructInfo[cnt].Filename, "%s/Data/TILECACHE/%s", GetBinDataPath(), FileInfo.zFileName);
 
 				// Get root name
 				GetRootName( gpTileCacheStructInfo[ cnt ].zRootName, gpTileCacheStructInfo[ cnt ].Filename );

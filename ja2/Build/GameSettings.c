@@ -246,11 +246,6 @@ void InitGameOptions()
 }
 
 
-#ifndef SGPDATADIR
-#	error No SGPDATADIR specified
-#endif
-
-
 static BOOLEAN GetCDromDriveLetter(char* pString);
 static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter);
 
@@ -259,7 +254,7 @@ BOOLEAN GetCDLocation( )
 {
 #if 1 // XXX TODO
 	FIXME
-	strcpy(gzCdDirectory, SGPDATADIR "/Data/");
+	snprintf(gzCdDirectory, lengthof(gzCdDirectory), "%s/Data/", GetBinDataPath());
 	return TRUE;
 #else
 	UINT32	uiStrngLength = 0;

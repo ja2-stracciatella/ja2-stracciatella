@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "Config.h"
 
 #ifdef _WIN32
 #	include <direct.h>
@@ -74,6 +75,18 @@ BOOLEAN fFindInfoInUse[20] = {FALSE,FALSE,FALSE,FALSE,FALSE,
 
 
 static char LocalPath[512];
+static const config_entry* BinDataDir;
+
+static void TellAboutDataDir(const char* ConfigFile)
+{
+	FILE* IniFile = fopen(ConfigFile, "a");
+	if (IniFile != NULL)
+	{
+		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\ndata_dir = /some/place/where/the/data/is");
+		fclose(IniFile);
+		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
+	}
+}
 
 
 //**************************************************************************
@@ -141,7 +154,23 @@ BOOLEAN InitializeFileManager(void)
 		fprintf(stderr, "Unable to create directory \"%s\"\n", DataPath);
 		return FALSE;
 	}
+	BinDataDir = ConfigRegisterKey("data_dir");
 
+	char ConfigFile[512];
+	snprintf(ConfigFile, lengthof(ConfigFile), "%s/ja2.ini", LocalPath);
+	if (ConfigParseFile(ConfigFile))
+	{
+		fprintf(stderr, "Couldn't open configfile (\"%s\").\n", ConfigFile);
+		TellAboutDataDir(ConfigFile);
+		return FALSE;
+	}
+
+	if (GetBinDataPath() == NULL)
+	{
+		fprintf(stderr, "Path to binary data is not set.\n");
+		TellAboutDataDir(ConfigFile);
+		return FALSE;
+	}
 	return( TRUE );
 }
 
@@ -221,7 +250,7 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 	{
 		char Path[512];
 
-		snprintf(Path, lengthof(Path), SGPDATADIR "/Data/%s", strFilename);
+		snprintf(Path, lengthof(Path), "%s/Data/%s", GetBinDataPath(), strFilename);
 		file = fopen(Path, "rb");
 		if (file != NULL)
 		{
@@ -321,7 +350,7 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 		{
 			char Path[512];
 
-			snprintf(Path, lengthof(Path), SGPDATADIR "/Data/%s", strFilename);
+			snprintf(Path, lengthof(Path), "%s/Data/%s", GetBinDataPath(), strFilename);
 			hRealFile = fopen(Path, dwAccess);
 
 			if (hRealFile == NULL)
@@ -1442,4 +1471,10 @@ static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter)
 
 	return( uiBytesFree );
 #endif
+}
+
+
+const char* GetBinDataPath(void)
+{
+	return ConfigGetValue(BinDataDir);
 }

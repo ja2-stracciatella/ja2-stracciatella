@@ -7,7 +7,7 @@ $(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLIS
 endif
 
 ifndef SGPDATADIR
-$(error No SGPDATADIR specified)
+$(warn No SGPDATADIR specified, make lowercase will not work)
 endif
 
 
@@ -370,6 +370,7 @@ SRCS += ja2/Build/Utils/WordWrap.c
 SRCS += sgp/Button_Sound_Control.c
 SRCS += sgp/Button_System.c
 SRCS += sgp/Compression.c
+SRCS += sgp/Config.c
 SRCS += sgp/Container.c
 SRCS += sgp/Cursor_Control.c
 SRCS += sgp/Debug.c
