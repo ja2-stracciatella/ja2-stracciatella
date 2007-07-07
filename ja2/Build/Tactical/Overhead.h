@@ -3,27 +3,10 @@
 
 #include "Soldier_Control.h"
 #include "Overhead_Types.h"
-#define				ADD_SOLDIER_NO_PROFILE_ID		200
+
 
 #define  MAX_REALTIME_SPEED_VAL						10
 
-/*
-enum
-{
-	TOPTION_SUBTITLES,
-	TOPTION_SPEECH,
-	TOPTION_KEY_ADVANCE_SPEECH,
-	TOPTION_RTCONFIRM,
-	TOPTION_HIDE_BULLETS,
-	TOPTION_TRACKING_MODE,
-	TOPTION_CONFIRM_MOVE,
-	TOPTION_MUTE_CONFIRMATIONS,
-	TOPTION_SHADOWS,
-	TOPTION_BLOOD_N_GORE,
-
-	NUM_TOPTIONS
-};
-*/
 
 // Enums for waiting for mercs to finish codes
 enum
@@ -33,7 +16,6 @@ enum
 	WAIT_FOR_MERCS_TO_WALKON_SCREEN,
 	WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO
 };
-
 
 
 // TACTICAL ENGINE STATUS FLAGS
@@ -50,24 +32,6 @@ typedef struct
 	INT8			bHuman;
 } TacticalTeamType;
 
-//for use with TacticalStatusType.ubEnemyIntention
-enum
-{
-	INTENTION_SCOUTING,
-	INTENTION_PATROLLING,
-	INTENTION_ATTACKING,
-	INTENTION_DEFENDING,
-	INTENTION_RETREATING
-};
-
-//for use with TacticalStatusType.ubEnemyIntendedRetreatDirection
-enum
-{
-	RETREAT_NORTH,
-	RETREAT_EAST,
-	RETREAT_SOUTH,
-	RETREAT_WEST
-};
 
 #define PANIC_BOMBS_HERE			0x01
 #define PANIC_TRIGGERS_HERE		0x02
@@ -105,8 +69,8 @@ typedef struct
 	BOOLEAN							fEnemyInSector;
 	BOOLEAN							fInterruptOccurred;
 	INT8								bRealtimeSpeed;
-	UINT8								ubEnemyIntention;
-	UINT8								ubEnemyIntendedRetreatDirection;
+	UINT8								ubEnemyIntention_UNUSED; // XXX HACK000B
+	UINT8								ubEnemyIntendedRetreatDirection_UNUSED; // XXX HACK000B
 	UINT8								ubEnemySightingOnTheirTurnEnemyID;
 	UINT8								ubEnemySightingOnTheirTurnPlayerID;
 	BOOLEAN							fEnemySightingOnTheirTurn;

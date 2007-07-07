@@ -562,14 +562,6 @@ BOOLEAN InitOverhead( )
 	{
 		gTacticalStatus.sPanicTriggerGridNo[ cnt ] = NOWHERE;
 	}
-/*	for ( cnt = 0; cnt < NUM_TOPTIONS; cnt++ )
-	{
-		gGameSettings.fOptions[ cnt ] = 1;
-	}
-
-	gGameSettings.fOptions[ TOPTION_RTCONFIRM ] = 0;
-	gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] = 0;
-*/
 	gTacticalStatus.bRealtimeSpeed                  = MAX_REALTIME_SPEED_VAL / 2;
 
 	gfInAirRaid = FALSE;
