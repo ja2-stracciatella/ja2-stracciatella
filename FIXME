@@ -8,7 +8,6 @@ AddEmailPage(): code duplication
 AddStructureToWorld(): complicated, PTR as parameter
 AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
-BLOODTIME: unused
 BlitMineText(): code duplication
 Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
@@ -68,7 +67,6 @@ EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
 EvaluateWorld(): complicated
 ExecuteGameEvent(): code duplication
-FOOTPRINTTIME: unused
 FaceRegionMvtCallback(): unused
 FileCheckEndOfFile(): complicated
 Filler, Padding, Unused, filler: remove, partially bogus

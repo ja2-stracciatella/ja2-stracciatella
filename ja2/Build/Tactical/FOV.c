@@ -749,12 +749,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 						 }
 
-						 // if blood here, let the user see it now...
-						 //if (ExtGrid[marker].patrolInfo < MAXBLOOD)
-						 //		gpSoldier->blood = ExtGrid[marker].patrolInfo;
-
-						 //DoRoofs(marker,gpSoldier);
-
 						 tilesLeftToSee--;
 				}
 

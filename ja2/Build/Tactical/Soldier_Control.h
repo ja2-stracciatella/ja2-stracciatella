@@ -132,10 +132,7 @@
 // should be revealed due to xrays
 #define SOLDIER_MISC_XRAYED														0x04
 
-#define MAXBLOOD										40
-#define NOBLOOD											MAXBLOOD
-#define BLOODTIME										5
-#define FOOTPRINTTIME								2
+#define NOBLOOD                40
 #define MIN_BLEEDING_THRESHOLD			12      // you're OK while <4 Yellow life bars
 
 #define BANDAGED( s ) (s->bLifeMax - s->bLife - s->bBleeding)
@@ -224,18 +221,18 @@ enum
 #define NO_SLOT -1
 
 // vehicle/human path structure
-struct path
+typedef struct PathSt PathSt;
+struct PathSt
 {
 	UINT32 uiSectorId;
 	UINT32 uiEta;
 	BOOLEAN fSpeed;
-	struct path *pNext;
-	struct path *pPrev;
+	PathSt* pNext;
+	PathSt* pPrev;
 };
-CASSERT(sizeof(struct path) == 20)
+CASSERT(sizeof(PathSt) == 20)
 
 
-typedef struct path PathSt;
 enum {
 	HELMETPOS = 0,
 	VESTPOS,
