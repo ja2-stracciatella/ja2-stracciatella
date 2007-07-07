@@ -218,9 +218,6 @@ UINT32 ErrorScreenHandle(void)
 {
   InputAtom  InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
-#ifdef JA2BETAVERSION
-	wchar_t str[256];
-#endif
 
 	// For quick setting of new video stuff / to be changed
 	StartFrameBufferRender( );
