@@ -95,12 +95,6 @@
 #define SETANDREMOVEPREVIOUSLOCATOR			2
 #define SETLOCATORFAST									3
 
-#define NOCENTERING     0
-
-
-#define NOUPDATE        0
-#define UPDATE          1
-
 
 // ORDERS
 enum

@@ -4936,7 +4936,6 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 #endif
 
 					// mark noise maker as having been PUBLICLY heard THIS TURN
-					//UpdatePublic(team,ubSource,HEARD_THIS_TURN,sGridNo,NOUPDATE,ACTUAL);
 					UpdatePublic(bTeam,ubSource,HEARD_THIS_TURN,sGridNo,bLevel);
 				}
 			}
