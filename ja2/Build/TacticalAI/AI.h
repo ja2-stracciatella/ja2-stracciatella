@@ -191,7 +191,7 @@ INT16 FindSweetCoverSpot(SOLDIERTYPE *pSoldier);
 
 void FreeUpNPCFromAttacking(UINT8 ubID);
 void FreeUpNPCFromPendingAction( SOLDIERTYPE * pSoldier );
-void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook);
+void FreeUpNPCFromTurning(SOLDIERTYPE* pSoldier);
 void FreeUpNPCFromStanceChange(SOLDIERTYPE *pSoldier );
 void FreeUpNPCFromRoofClimb(SOLDIERTYPE *pSoldier );
 

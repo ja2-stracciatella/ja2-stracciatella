@@ -90,10 +90,6 @@
 #define PTR_OURTEAM     (pSoldier->bTeam == gbPlayerNum)
 
 
-#define DONTLOOK				0
-#define LOOK						1
-
-
 #define DONTSETLOCATOR									0
 #define SETLOCATOR											1
 #define SETANDREMOVEPREVIOUSLOCATOR			2

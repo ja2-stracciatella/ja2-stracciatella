@@ -5028,7 +5028,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 			pSoldier->uiStatusFlags &= (~SOLDIER_PAUSEANIMOVE);
 		}
 
-		FreeUpNPCFromTurning( pSoldier, LOOK);
+		FreeUpNPCFromTurning(pSoldier);
 
 		// Undo our flag for prone turning...
 		// Else check if we are trying to shoot and once was prone, but am now crouched because we needed to turn...
@@ -7599,10 +7599,8 @@ static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier)
 		else
 		{
 			SetSoldierAniSpeed( pSoldier );
-		//	FreeUpNPCFromTurning( pSoldier, LOOK);
 		}
 	}
-
 }
 
 

@@ -1052,9 +1052,9 @@ static void FreeUpNPCFromLoweringGun(SOLDIERTYPE* pSoldier)
 	}
 }
 
-void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook)
-{
 
+void FreeUpNPCFromTurning(SOLDIERTYPE* pSoldier)
+{
 	// if NPC is in the process of changing facing, mark him as being done!
  if ((pSoldier->bAction == AI_ACTION_CHANGE_FACING) && pSoldier->bActionInProgress)
   {
@@ -1063,14 +1063,7 @@ void FreeUpNPCFromTurning(SOLDIERTYPE *pSoldier, INT8 bLook)
 						String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
 #endif
 
-
 	 ActionDone(pSoldier);
-
-   if (bLook)
-    {
-     //HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO); // no interrupt possible
-    }
-
   }
 }
 
