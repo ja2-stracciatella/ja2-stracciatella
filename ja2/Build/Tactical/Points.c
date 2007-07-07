@@ -89,11 +89,6 @@ INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8
 
 	 case TRAVELCOST_DEEPWATER: sAPCost += AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
 															break;
-/*
-   case TRAVELCOST_VEINEND	:
-   case TRAVELCOST_VEINMID	: sAPCost += AP_MOVEMENT_FLAT;
-															break;
-*/
    case TRAVELCOST_DOOR			: sAPCost += AP_MOVEMENT_FLAT;
 															break;
 
@@ -175,8 +170,6 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
   case TRAVELCOST_SHORE			: iPoints = BP_MOVEMENT_SHORE;	break;	// wading shallow water
   case TRAVELCOST_KNEEDEEP	: iPoints = BP_MOVEMENT_LAKE;		break;	// wading waist/chest deep - very slow
   case TRAVELCOST_DEEPWATER	: iPoints = BP_MOVEMENT_OCEAN;	break;	// can swim, so it's faster than wading
-//  case TRAVELCOST_VEINEND		:
-//  case TRAVELCOST_VEINMID		: iPoints = BP_MOVEMENT_FLAT;		break;
 	default:
 		if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		{

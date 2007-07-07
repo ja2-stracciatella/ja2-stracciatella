@@ -2417,7 +2417,6 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
-  //SOLDIERTYPE *vicpSoldier;
 	SOLDIERTYPE * pTarget;
   INT32 iChance, iRange, iSightRange, iMaxRange, iScopeBonus, iBonus; //, minRange;
   INT32 iGunCondition, iMarksmanship;
@@ -2931,39 +2930,6 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		iChance -= 25 * ( ( MIN_TANK_RANGE - iRange ) / CELL_X_SIZE );
 	}
 
-
-	// add camo effects
-
-#if 0
-	if ((victim = WhoIsThere(sGridNo)) < NOBODY)
-	 {
-
-		// if victim is 5 or more tiles away and camouflaged, reduce
-		// chance to hit by 5%  (ALREADY HAVE THIS INFO)
-		if (range > 75 && vicpSoldier->camouflage)
-		 {
-			switch(vicpSoldier->terrtype)
-			{
-			 case GROUNDTYPE:
-			 case SANDTYPE  :
-			 case GRASSTYPE :
-			 case TGRASSTYPE:
-			 case DGRASSTYPE:
-			 case ROUGHTYPE : iChance += CAMOUFLAGE_TO_HIT_PENALTY;
-						break;
-
-			 case FLOORTYPE :
-			 case LAKETYPE  :
-			 case OCEANTYPE : break;
-
-#ifdef BETAVERSION
-			 default        : NumMessage("CHANCE TO HIT ERROR: Unknown camo terrtype ",vicpSoldier->terrtype);
-#endif
-			}
-		 }
-	 }
-#endif
-
 	// IF CHANCE EXISTS, BUT SHOOTER IS INJURED
 	if ((iChance > 0) && (pSoldier->bLife < pSoldier->bLifeMax))
 	{
@@ -3025,9 +2991,9 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
       iChance = MAXCHANCETOHIT;
    }
 
-//  NumMessage("ChanceToHit = ",chance);
   return (iChance);
 }
+
 
 UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
@@ -3827,12 +3793,6 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
   if (pAttacker->bShock)
     iAttRating -= (pAttacker->bShock * AIM_PENALTY_PER_SHOCK);
 
-/*
-  // if the attacker is an A.I.M. mercenary
-  if (pAttacker->characternum < MAX_AIM_MERCS)	// exclude Gus
-    iAttRating += AdjustChanceForProfile(pAttacker,pDefender);
-*/
-
   // If attacker injured, reduce chance accordingly (by up to 2/3rds)
   if ((iAttRating > 0) && (pAttacker->bLife < pAttacker->bLifeMax))
    {
@@ -3910,12 +3870,6 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
   // if defender is still in shock
   if (pDefender->bShock)
     iDefRating -= (pDefender->bShock * AIM_PENALTY_PER_SHOCK);
-
-/*
-  // if the defender is an A.I.M. mercenary
-  if (pDefender->characternum < MAX_AIM_MERCS)	// exclude Gus
-    iDefRating += AdjustChanceForProfile(pDefender,pAttacker);
-*/
 
   // If defender injured, reduce chance accordingly (by up to 2/3rds)
   if ((iDefRating > 0) && (pDefender->bLife < pDefender->bLifeMax))
@@ -4251,13 +4205,6 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	{
 		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
 	}
-
-/*
-	if (!pSoldier->human)	// if this is a computer AI controlled enemy
-	{
-		iChance += Diff[DIFF_ENEMY_TO_HIT_MOD][GameOption[ENEMYDIFFICULTY]];
-	}
-*/
 
 	// if shooter is being affected by gas
 	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )

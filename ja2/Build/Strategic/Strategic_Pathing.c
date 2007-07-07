@@ -72,7 +72,6 @@ typedef struct trail_s trail_t;
 //#define ISWATER(t)	(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))
 //#define NOPASS (TRAVELCOST_OBSTACLE)
 //#define VEINCOST TRAVELCOST_FLAT     //actual cost for bridges and doors and such
-//#define ISVEIN(v) ((v==TRAVELCOST_VEINMID) || (v==TRAVELCOST_VEINEND))
 #define TRAILCELLTYPE UINT32
 
 static path_t pathQB[MAXpathQ];
@@ -224,7 +223,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	memset(trailStratTreeB,0,sizeof(trailStratTreeB));
 	memset(trailCostB,255,sizeof(trailCostB));
 
-	//memset(trailCostB,255*PATHFACTOR,MAP_LENGTH);
 	memset(pathQB,0,sizeof(pathQB));
 
 	// FOLLOWING LINE COMMENTED OUT ON MARCH 7/97 BY IC
@@ -384,7 +382,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 				}
 			}
 			*/
-				 //if (_KeyDown(CTRL_DOWN) && nextCost < TRAVELCOST_VEINEND)
 			newTotCost = curCost + nextCost;
 			if (newTotCost < trailCostB[newLoc])
 			{

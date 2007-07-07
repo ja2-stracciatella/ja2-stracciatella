@@ -1822,7 +1822,6 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 #ifdef DEBUGDECISIONS
 	if (bCanAttack != TRUE) // if for any reason we can't attack right now
 	{
-		//LocateMember(pSoldier->ubID,SETLOCATOR); // locate to this NPC, don't center
 		sprintf(tempstr,"%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
 		AIPopMessage(tempstr);
 	}

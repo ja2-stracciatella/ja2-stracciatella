@@ -2270,23 +2270,14 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate)
 	//	pSoldier->bLocator = FALSE;
 
 
- if (ubLocate)
-  {
-   // if he remains visible (or ShowEnemies ON)
-   if ((pSoldier->bVisible >= 0) || gbShowEnemies)
-    {
-			if (!PTR_OURTEAM) // not our team - if we're NOT allied then locate...
-			{
-     //if (pSoldier->side != gTacticalStatus.Team[gbPlayerNum].side && ConfigOptions[FOLLOWMODE])
-			 	if (gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
-          //LocateSoldier(pSoldier->ubID,DONTSETLOCATOR);
-					SlideTo(0,pSoldier->ubID, NOBODY, DONTSETLOCATOR);
-			}
-
-     // follow his movement on our screen as he moves around...
-     //LocateMember(ptr->guynum,DONTSETLOCATOR);
-    }
-  }
+	if (ubLocate &&
+			(pSoldier->bVisible >= 0 || gbShowEnemies) && // if he remains visible (or ShowEnemies ON)
+			!PTR_OURTEAM && // not our team - if we're NOT allied then locate...
+			gTacticalStatus.uiFlags & TURNBASED &&
+			gTacticalStatus.uiFlags & INCOMBAT)
+	{
+		SlideTo(0, pSoldier->ubID, NOBODY, DONTSETLOCATOR);
+	}
 }
 
 

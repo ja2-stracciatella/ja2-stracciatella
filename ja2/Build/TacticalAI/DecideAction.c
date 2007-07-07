@@ -1225,9 +1225,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 		 // CJC: this addition allows for varying difficulty levels for soldier types
 		 iChance += gbDiff[ DIFF_RADIO_RED_ALERT ][ SoldierDifficultyLevel( pSoldier ) ] / 2;
 
-     // Alex: this addition replaces the sectorValue/2 in original JA
-     //iChance += gsDiff[DIFF_RADIO_RED_ALERT][GameOption[ENEMYDIFFICULTY]] / 2;
-
      // modify base chance according to orders
      switch (pSoldier->bOrders)
       {
@@ -4102,17 +4099,6 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 			{
 				CheckForChangingOrders(pSoldier);
 			}
-
-	#ifdef DEBUGDECISIONS
-			// don't report status changes for human-controlled mercs
-			if (!pSoldier->human)
-			{
-				sprintf(tempstr,"%s's Alert Status changed from %d to %d",
-					ExtMen[pSoldier->guynum].name,oldStatus,pSoldier->bAlertStatus);
-				AIPopMessage(tempstr);
-			}
-	#endif
-
 		}
 		else   // status didn't change
 		{

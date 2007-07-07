@@ -35,7 +35,6 @@
 #include "Buildings.h"
 
 
-//extern UINT8 gubDiagCost[20];
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
 
@@ -119,8 +118,6 @@ enum
 #define EASYWATERCOST	TRAVELCOST_FLAT / 2
 #define ISWATER(t)	(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))
 #define NOPASS (TRAVELCOST_BLOCKED)
-//#define VEINCOST TRAVELCOST_FLAT     //actual cost for bridges and doors and such
-//#define ISVEIN(v) ((v==TRAVELCOST_VEINMID) || (v==TRAVELCOST_VEINEND))
 
 static path_t * pathQ;
 static UINT16	gusPathShown,gusAPtsToMove;
@@ -1366,8 +1363,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						case TRAVELCOST_SHORE		:
 						case TRAVELCOST_KNEEDEEP:
 						case TRAVELCOST_DEEPWATER:
-//						case TRAVELCOST_VEINEND	:
-//						case TRAVELCOST_VEINMID	:
 						//case TRAVELCOST_DOOR		:
 						case TRAVELCOST_FENCE		:	nextCost = TRAVELCOST_OBSTACLE;
 																			break;
@@ -1404,9 +1399,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 					case TRAVELCOST_DEEPWATER:ubAPCost = AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
 																		break;
-					//case TRAVELCOST_VEINEND	:
-					//case TRAVELCOST_VEINMID	: ubAPCost = AP_MOVEMENT_FLAT;
-					//													break;
 
 					//case TRAVELCOST_DOOR		:	ubAPCost = AP_MOVEMENT_FLAT;
 					//													break;
@@ -1460,8 +1452,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			  // ubCurAPCost, that must be preserved for remaining dirs!
 				if (iCnt & 1)
 				{
-					//ubAPCost++;
-					//ubAPCost = gubDiagCost[ubAPCost];
 					ubAPCost = (ubAPCost * 14) / 10;
 				}
 
@@ -1545,35 +1535,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			 }
 
-			//ATE: Uncommented out for doors, if we are at a door but not dest, continue!
-		//	if ( nextCost == TRAVELCOST_DOOR  ) //&& newLoc != iDestination)
-		//	      goto NEXTDIR;
-/*
-			// FOLLOWING SECTION COMMENTED OUT ON MARCH 7/97 BY IC
-
-			if (nextCost == SECRETCOST && !s->human)
-			     goto NEXTDIR;
-
-			if (prevCost==VEINMIDCOST)
-				if (!ISVEIN(nextCost))
-					goto NEXTDIR;
-			//veining check
-			if (nextCost==VEINMIDCOST)
-				if (!ISVEIN(prevCost))
-					goto NEXTDIR;
-
-			if (nextCost==VEINMIDCOST)
-			  //if (ISVEIN(nextCost))
-				nextCost=VEINCOST;
-			else
-			   if (nextCost==VEINENDCOST)
-			     if (Grid[newLoc].land < LAKE1)
-			        nextCost = VEINCOST;
-			     else
-			        nextCost = OCEANCOST+(10*PATHFACTOR);
-
-	*/
-
 			if ( fCloseGoodEnough )
 			{
 				if ( PythSpacesAway( (INT16)newLoc, sDestination ) <= sClosePathLimit )
@@ -1588,15 +1549,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			if (newLoc == iDestination)
 					nextCost = 0;
 			else
-				 //if (_KeyDown(CTRL_DOWN) && nextCost < TRAVELCOST_VEINEND)
 				 if (gfPlotDirectPath && nextCost < NOPASS)
 						nextCost = TRAVELCOST_FLAT;
-
-
-
-			//if (ISVEIN(prevCost))
-			//		prevCost=VEINCOST;
-
 
 			// make water cost attractive for water to water paths
 			if (iWaterToWater)
@@ -1611,9 +1565,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			if (iCnt & 1)
 			{
 				// moving on a diagonal
-				//nextCost = gubDiagCost[nextCost];
 				nextCost = nextCost * 14 / 10;
-				//nextCost++;
 			}
 
 			if ( bLoopState == LOOPING_REVERSE)
@@ -1623,25 +1575,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			}
 
 			newTotCost = curCost + nextCost;
-
-/*
-// no diagonal bias - straightforward costing regardless of direction
-			newTotCost = curCost + nextCost;
-
-
-// NOTE: ON JAN 6TH, 1995, IAN COMMENTED OUT THE DIAGONAL BIAS AND
-//       UNCOMMENTED THE "NO DIAGONAL BIAS"
-//diagonal bias - this makes diagonal moves cost more
-
-
-	    if (iCnt & 1)
-			// diagonal move costs 70 percent
-	       		     //newTotCost += (nextCost/PATHFACTOR);
-			     newTotCost += 1;
-//				newTotCost = curCost + ((prevCost+nextCost)*7)/10;
-//			else	// non-diagonal costs only 50%
-//				newTotCost = curCost + (prevCost+nextCost)/2;
-*/
 
 			// have we found a path to the current location that
 			// costs less than the best so far to the same location?

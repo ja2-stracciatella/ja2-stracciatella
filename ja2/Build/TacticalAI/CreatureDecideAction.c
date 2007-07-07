@@ -1587,17 +1587,6 @@ void CreatureDecideAlertStatus( SOLDIERTYPE *pSoldier )
 			// might want to make custom to let them go anywhere
 			CheckForChangingOrders(pSoldier);
 		}
-
-#ifdef DEBUGDECISIONS
-		// don't report status changes for human-controlled mercs
-		if (!pSoldier->human)
-		{
-			sprintf(tempstr,"%s's Alert Status changed from %d to %d",
-				ExtMen[pSoldier->guynum].name,oldStatus,pSoldier->bAlertStatus);
-			AIPopMessage(tempstr);
-		}
-#endif
-
 	}
 	else   // status didn't change
 	{

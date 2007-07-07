@@ -1389,20 +1389,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 
 */
 
-
- /*
- if (!pSoldier->stopped)
-  {
-#ifdef DEBUGBUSY
-   AINumMessage("HandleManAI - Moving, skipping guy#",pSoldier->ubID);
-#endif
-
-   return;
-  }
-*/
-
-
-
 	if ((pSoldier->bAction != AI_ACTION_NONE) && pSoldier->bActionInProgress)
 	{
 /*
