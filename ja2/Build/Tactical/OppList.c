@@ -1130,7 +1130,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 
 static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT8* pPersOL, INT8* pbPublOL);
-static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate);
+static void DecideTrueVisibility(SOLDIERTYPE* pSoldier);
 
 
 void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
@@ -1177,8 +1177,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 			}
 		}
 	}
-	DecideTrueVisibility( pSoldier, FALSE );
-
+	DecideTrueVisibility(pSoldier);
 }
 
 void TurnOffEveryonesMuzzleFlashes( void )
@@ -2252,7 +2251,7 @@ else
 }
 
 
-static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate)
+static void DecideTrueVisibility(SOLDIERTYPE* pSoldier)
 {
  // if his visibility is still in the special "limbo" state (FALSE)
  if (pSoldier->bVisible == FALSE)
@@ -2262,21 +2261,6 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier, UINT8 ubLocate)
    pSoldier->bVisible = -1;
 
 	 // Don;t adjust anim speed here, it's done once fade is over!
-	}
-
-
- // If soldier is not visible, make sure his red "locator" is turned off
- //if ((pSoldier->bVisible < 0) && !gbShowEnemies)
-	//	pSoldier->bLocator = FALSE;
-
-
-	if (ubLocate &&
-			(pSoldier->bVisible >= 0 || gbShowEnemies) && // if he remains visible (or ShowEnemies ON)
-			!PTR_OURTEAM && // not our team - if we're NOT allied then locate...
-			gTacticalStatus.uiFlags & TURNBASED &&
-			gTacticalStatus.uiFlags & INCOMBAT)
-	{
-		SlideTo(0, pSoldier->ubID, NOBODY, DONTSETLOCATOR);
 	}
 }
 
@@ -2362,8 +2346,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 	// if he's not on our team
 	if (pOpponent->bTeam != gbPlayerNum)
 	{
-   // don't do a locate here, it's already done by Man Sees Man for new opps.
-   DecideTrueVisibility(pOpponent,NOLOCATE);
+		DecideTrueVisibility(pOpponent);
 	}
 }
 

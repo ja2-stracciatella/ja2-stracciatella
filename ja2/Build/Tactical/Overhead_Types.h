@@ -94,9 +94,6 @@
 #define LOOK						1
 
 
-#define NOLOCATE        0
-#define LOCATE          1
-
 #define DONTSETLOCATOR									0
 #define SETLOCATOR											1
 #define SETANDREMOVEPREVIOUSLOCATOR			2
