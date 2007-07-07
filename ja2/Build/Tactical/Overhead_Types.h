@@ -305,12 +305,6 @@ enum
 //-----------------------------------------------
 
 // PALETTE SUBSITUTION TYPES
-typedef struct
-{
-	UINT8		ubStart;
-	UINT8		ubEnd;
-
-} PaletteSubRangeType;
 
 typedef CHAR8 PaletteRepID[ 30 ];
 

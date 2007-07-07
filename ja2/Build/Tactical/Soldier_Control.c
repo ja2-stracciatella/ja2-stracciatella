@@ -247,6 +247,13 @@ static const INT16 gsFullTileDirections[MAX_FULLTILE_DIRECTIONS] =
 };
 
 
+typedef struct PaletteSubRangeType
+{
+	UINT8 ubStart;
+	UINT8 ubEnd;
+} PaletteSubRangeType;
+
+
 // Palette ranges
 static UINT32 guiNumPaletteSubRanges;
 static PaletteSubRangeType* gpPaletteSubRanges;
@@ -5714,7 +5721,7 @@ BOOLEAN LoadPaletteData( )
 	}
 
 	// Malloc!
-	gpPaletteSubRanges = MemAlloc( sizeof( PaletteSubRangeType ) * guiNumPaletteSubRanges );
+	gpPaletteSubRanges = MemAlloc(sizeof(*gpPaletteSubRanges) * guiNumPaletteSubRanges);
 	gubpNumReplacementsPerRange = MemAlloc( sizeof( UINT8 ) * guiNumPaletteSubRanges );
 
 	// Read # of types for each!
