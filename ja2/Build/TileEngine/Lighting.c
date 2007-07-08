@@ -487,7 +487,6 @@ UINT16 usSrcTileNo;
 INT8		bDirection;
 UINT8		ubTravelCost;
 //INT8		bWallCount = 0;
-//UINT16	usWallOrientation;
 
 	Assert(gpWorldLevelData!=NULL);
 
@@ -536,6 +535,7 @@ UINT8		ubTravelCost;
 	}
 
 #if 0
+	UINT16 usWallOrientation;
 	pStruct = gpWorldLevelData[ usTileNo ].pStructHead;
 	while ( pStruct != NULL )
 	{
@@ -548,8 +548,7 @@ UINT8		ubTravelCost;
 			// use of the orientation value flags..
 			if((uiType >= FIRSTWALL) && (uiType <=LASTDECORATIONS ))
 			{
-				GetWallOrientation(pStruct->usIndex, &usWallOrientation);
-
+				usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				bWallCount++;
 			}
 		}
@@ -1985,10 +1984,7 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 //	return( LightTileHasWall( iSourceX, iSourceY, iTileX, iTileY ) );
 
 #if 0
-UINT16 usWallOrientation;
-
-	GetWallOrientation(pStruct->usIndex, &usWallOrientation);
-
+	UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 	switch(usWallOrientation)
 	{
 		case NO_ORIENTATION:

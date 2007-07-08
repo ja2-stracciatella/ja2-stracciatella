@@ -140,11 +140,10 @@ BOOLEAN CalcWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UIN
 BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UINT16 *pusIndex )
 {
 	LEVELNODE *pWall = NULL;
-	UINT16 usWallOrientation;
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
 	{
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartDoorIndex( usWallOrientation ) - 1;
 		*pusDoorType = CalcSmartDoorType();
 		return TRUE;
@@ -152,7 +151,7 @@ BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UIN
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
 	{
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartDoorIndex( usWallOrientation ) - 1;
 		*pusDoorType = CalcSmartDoorType();
 		return TRUE;
@@ -164,7 +163,6 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 {
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
@@ -177,7 +175,7 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			*pusWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartWindowIndex( usWallOrientation ) - 1;
 		return TRUE;
 	}
@@ -192,7 +190,7 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			*pusWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartWindowIndex( usWallOrientation ) - 1;
 		return TRUE;
 	}
@@ -203,7 +201,6 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 {
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
 
 	if( gubBrokenWallUIValue == 2 ) //the hole in the wall
 	{
@@ -223,7 +220,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			*pusWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartBrokenWallIndex( usWallOrientation ) - 1;
 		return TRUE;
 	}
@@ -238,7 +235,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			*pusWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		*pusIndex = CalcSmartBrokenWallIndex( usWallOrientation ) - 1;
 		return TRUE;
 	}
@@ -484,11 +481,10 @@ void PasteSmartDoor( UINT32 iMapIndex )
 	UINT16 usTileIndex;
 	UINT16 usDoorType;
 	UINT16 usIndex;
-	UINT16 usWallOrientation;
 
 	if( pWall = GetVerticalWall( iMapIndex ) )
 	{
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartDoorIndex( usWallOrientation );
 		usDoorType = CalcSmartDoorType();
 		AddToUndoList( iMapIndex );
@@ -497,7 +493,7 @@ void PasteSmartDoor( UINT32 iMapIndex )
 	}
 	if( pWall = GetHorizontalWall( iMapIndex ) )
 	{
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartDoorIndex( usWallOrientation );
 		usDoorType = CalcSmartDoorType();
 		AddToUndoList( iMapIndex );
@@ -514,7 +510,6 @@ void PasteSmartWindow( UINT32 iMapIndex )
 	UINT32 uiTileType;
 	UINT16 usWallType;
 	UINT16 usIndex;
-	UINT16 usWallOrientation;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
@@ -527,7 +522,7 @@ void PasteSmartWindow( UINT32 iMapIndex )
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			usWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartWindowIndex( usWallOrientation );
 		//Calculate the new graphic for the window type selected.
 
@@ -546,7 +541,7 @@ void PasteSmartWindow( UINT32 iMapIndex )
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			usWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartWindowIndex( usWallOrientation );
 		//Calculate the new graphic for the window type selected.
 		AddToUndoList( iMapIndex );
@@ -563,7 +558,6 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 	UINT32 uiTileType;
 	UINT16 usWallType;
 	UINT16 usIndex;
-	UINT16 usWallOrientation;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
@@ -574,7 +568,7 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 		{
 			usWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartBrokenWallIndex( usWallOrientation );
 		if( usIndex == 0xffff )
 		{
@@ -599,7 +593,7 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 			//contain the wall type, so we have to search for the nearest wall to extract it.
 			usWallType = SearchForWallType( iMapIndex );
 		}
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartBrokenWallIndex( usWallOrientation );
 		if( usIndex == 0xffff )
 		{

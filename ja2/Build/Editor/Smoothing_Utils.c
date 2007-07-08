@@ -150,7 +150,6 @@ LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pStruct )
 	{
@@ -160,7 +159,7 @@ LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
 				{
 					return pStruct;
@@ -176,7 +175,7 @@ LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
+
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pStruct )
 	{
@@ -186,7 +185,7 @@ LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
 				{
 					return pStruct;
@@ -233,7 +232,7 @@ static LEVELNODE* GetVerticalFence(UINT32 iMapIndex)
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
+
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pStruct )
 	{
@@ -242,7 +241,7 @@ static LEVELNODE* GetVerticalFence(UINT32 iMapIndex)
 			GetTileType( pStruct->usIndex, &uiTileType );
 			if ( uiTileType == FENCESTRUCT )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
 				{
 					return pStruct;
@@ -259,7 +258,7 @@ static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex)
 {
 	LEVELNODE *pStruct;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
+
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pStruct )
 	{
@@ -268,7 +267,7 @@ static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex)
 			GetTileType( pStruct->usIndex, &uiTileType );
 			if ( uiTileType == FENCESTRUCT )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
 				{
 					return pStruct;
@@ -350,7 +349,6 @@ void RestoreWalls( UINT32 iMapIndex )
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallType;
-	UINT16 usWallOrientation;
 	UINT8 ubSaveWallUIValue;
 	BOOLEAN fDone = FALSE;
 
@@ -361,7 +359,7 @@ void RestoreWalls( UINT32 iMapIndex )
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			usWallType = SearchForWallType( iMapIndex );
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		AddToUndoList( iMapIndex );
 		RemoveStruct( iMapIndex, pWall->usIndex );
 		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
@@ -383,7 +381,7 @@ void RestoreWalls( UINT32 iMapIndex )
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			usWallType = SearchForWallType( iMapIndex );
-		GetWallOrientation( pWall->usIndex, &usWallOrientation );
+		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		AddToUndoList( iMapIndex );
 		RemoveStruct( iMapIndex, pWall->usIndex );
 		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );

@@ -284,7 +284,7 @@ void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 
 void PasteSingleBrokenWall( UINT32 iMapIndex )
 {
-	UINT16 usIndex, usObjIndex, usTileIndex, usWallOrientation;
+	UINT16 usIndex, usObjIndex, usTileIndex;
 
 	pSelList = SelSingleBrokenWall;
 	pNumSelList = &iNumBrokenWallsSelected;
@@ -292,7 +292,7 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 	usIndex = pSelList[ iCurBank ].usIndex;
 	usObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
 	usTileIndex = GetTileIndexFromTypeSubIndex( usObjIndex, usIndex, &usTileIndex );
-	GetWallOrientation( usTileIndex, &usWallOrientation );
+	UINT16 usWallOrientation = GetWallOrientation(usTileIndex);
 	if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == INSIDE_TOP_RIGHT )
 		EraseHorizontalWall( iMapIndex );
 	else

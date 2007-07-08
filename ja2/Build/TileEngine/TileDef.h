@@ -159,7 +159,7 @@ BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags );
 
 UINT8 GetTileTypeLogicalHeight(UINT32 fType);
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
-BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation );
+UINT16 GetWallOrientation(UINT16 usIndex);
 
 void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType );
 

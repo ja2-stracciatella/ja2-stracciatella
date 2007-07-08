@@ -1024,8 +1024,6 @@ BOOLEAN ReplaceStructIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewInde
 BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
 {
 	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-	UINT16				usCheckWallOrient;
-	UINT16				usWallOrientation;
 	BOOLEAN				fInsertFound = FALSE;
 	BOOLEAN				fRoofFound = FALSE;
 	UINT8					ubRoofLevel=0;
@@ -1033,12 +1031,12 @@ BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
 	UINT8					ubLevel = 0;
 
 	// Get orientation of piece we want to add
-	GetWallOrientation(usIndex, &usWallOrientation);
+	UINT16 usWallOrientation = GetWallOrientation(usIndex);
 
 	// Look through all objects and Search for orientation
 	while (pStruct != NULL)
 	{
-		GetWallOrientation(pStruct->usIndex, &usCheckWallOrient);
+		UINT16 usCheckWallOrient = GetWallOrientation(pStruct->usIndex);
 		//OLD CASE
 		//if ( usCheckWallOrient > usWallOrientation )
 		//Kris:

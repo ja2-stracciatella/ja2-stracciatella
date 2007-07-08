@@ -598,18 +598,10 @@ static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLe
 }
 
 
-BOOLEAN GetWallOrientation( UINT16 usIndex, UINT16 *pusWallOrientation )
+UINT16 GetWallOrientation(UINT16 usIndex)
 {
-  TILE_ELEMENT		TileElem;
-
-	CHECKF( usIndex != NO_TILE );
-
-	// Get tile element
-	TileElem = gTileDatabase[ usIndex ];
-
-	*pusWallOrientation = TileElem.usWallOrientation;
-
-	return( TRUE );
+	Assert(usIndex != NO_TILE);
+	return gTileDatabase[usIndex].usWallOrientation;
 }
 
 
@@ -617,7 +609,6 @@ static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 us
 {
 	LEVELNODE	*pStruct = NULL;
 	UINT8					level = 0;
-	UINT16				usCheckWallOrient=0;
 
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 
@@ -625,9 +616,7 @@ static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 us
 
 	while( pStruct != NULL )
 	{
-
-		GetWallOrientation( pStruct->usIndex, &usCheckWallOrient );
-
+		UINT16 usCheckWallOrient = GetWallOrientation(pStruct->usIndex);
 		if ( usCheckWallOrient == usWallOrientation )
 		{
 				*pubLevel = level;
@@ -652,14 +641,13 @@ static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 us
 //first wall encountered -- not that there should be duplicate walls...
 static UINT8 CalculateWallOrientationsAtGridNo(INT32 iMapIndex)
 {
-	UINT16 usCheckWallOrientation=0;
 	LEVELNODE *pStruct = NULL;
 	UINT8 ubFinalWallOrientation = NO_ORIENTATION;
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	//Traverse all of the pStructs
 	while( pStruct != NULL )
 	{
-		GetWallOrientation( pStruct->usIndex, &usCheckWallOrientation );
+		UINT16 usCheckWallOrientation = GetWallOrientation(pStruct->usIndex);
 		if( ubFinalWallOrientation == NO_ORIENTATION )
 		{	//Get the first valid orientation.
 			ubFinalWallOrientation = (UINT8)usCheckWallOrientation;

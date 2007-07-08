@@ -719,7 +719,6 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 {
 	LEVELNODE	*pStruct = NULL;
 	UINT32 uiTileType;
-	UINT16 usWallOrientation;
 
 	if( !gfBasement && !FloorAtGridNo( iMapIndex ) )
 	{	//We don't have ownership issues if there isn't a floor here.
@@ -736,7 +735,7 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
 				{
 					AddToUndoList( iMapIndex - 1 );
@@ -758,7 +757,7 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
-				GetWallOrientation( pStruct->usIndex, &usWallOrientation );
+				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
 				{
 					AddToUndoList( iMapIndex - WORLD_COLS );
