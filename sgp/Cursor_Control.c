@@ -301,7 +301,6 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 	CursorImage		*pCurImage;
 	UINT32				cnt;
 	INT16					sCenterValX, sCenterValY;
-  ETRLEObject *pTrav;
 	UINT16				usEffHeight, usEffWidth;
 
 	if ( gfCursorDatabaseInit )
@@ -321,22 +320,20 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 			if ( uiCursorIndex == EXTERN_CURSOR || uiCursorIndex == EXTERN2_CURSOR  )
 			{
 				INT16 sSubX, sSubY;
-				ETRLEObject *pTravTemp;
 
 				// Erase old cursor
 				EraseMouseCursor( );
 
+				const ETRLEObject* pTrav;
 				if ( uiCursorIndex == EXTERN2_CURSOR )
 				{
 					// Get ETRLE values
-					HVOBJECT hVObject = GetVideoObject(guiExtern2Vo);
-					pTrav = &(hVObject->pETRLEObject[ gusExtern2VoSubIndex ] );
+					pTrav = GetVideoObjectETRLESubregionProperties(guiExtern2Vo, gusExtern2VoSubIndex);
 				}
 				else
 				{
 					// Get ETRLE values
-					HVOBJECT hVObject = GetVideoObject(guiExternVo);
-					pTrav = &(hVObject->pETRLEObject[ gusExternVoSubIndex ] );
+					pTrav = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
 				}
 
 				// Determine center
@@ -354,9 +351,7 @@ BOOLEAN SetCurrentCursorFromDatabase( UINT32 uiCursorIndex  )
 					BltVideoObjectOutlineFromIndex( MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, 0, FALSE );
 
 					// Get ETRLE values
-					HVOBJECT hVObjectTemp = GetVideoObject(guiExternVo);
-					pTravTemp = &(hVObjectTemp->pETRLEObject[ gusExternVoSubIndex ] );
-
+					const ETRLEObject* pTravTemp = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
 					sSubX = ( pTrav->usWidth - pTravTemp->usWidth - pTravTemp->sOffsetX ) / 2;
 					sSubY = ( pTrav->usHeight - pTravTemp->usHeight - pTravTemp->sOffsetY ) / 2;
 
