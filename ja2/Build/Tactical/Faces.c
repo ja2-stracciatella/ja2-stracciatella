@@ -341,10 +341,11 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 
 
 	// Get FACE height, width
-	if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 0, &pFace->usFaceWidth, &pFace->usFaceHeight))
-	{
-		return -1;
-	}
+	const ETRLEObject* ETRLEProps;
+	ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 0);
+	if (ETRLEProps == NULL) return -1;
+	pFace->usFaceWidth  = ETRLEProps->usWidth;
+	pFace->usFaceHeight = ETRLEProps->usHeight;
 
 	// OK, check # of items
 	if ( hVObject->usNumberOfObjects == 8 )
@@ -352,16 +353,16 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 		pFace->fInvalidAnim = FALSE;
 
 		// Get EYE height, width
-		if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 1, &pFace->usEyesWidth, &pFace->usEyesHeight))
-		{
-			return -1;
-		}
+		ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 1);
+		if (ETRLEProps == NULL) return -1;
+		pFace->usEyesWidth  = ETRLEProps->usWidth;
+		pFace->usEyesHeight = ETRLEProps->usHeight;
 
 		// Get Mouth height, width
-		if (!GetVideoObjectETRLESubregionProperties(uiVideoObject, 5, &pFace->usMouthWidth, &pFace->usMouthHeight))
-		{
-			return -1;
-		}
+		ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 5);
+		if (ETRLEProps == NULL) return -1;
+		pFace->usMouthWidth  = ETRLEProps->usWidth;
+		pFace->usMouthHeight = ETRLEProps->usHeight;
 	}
 	else
 	{

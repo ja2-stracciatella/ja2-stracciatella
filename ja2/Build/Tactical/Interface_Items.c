@@ -5979,41 +5979,25 @@ static void SetupPickupPage(INT8 bPage)
 
 static void CalculateItemPickupMenuDimensions(void)
 {
-	INT32			cnt;
-	INT16			sY;
-	UINT16			usSubRegion, usHeight, usWidth;
-
 	// Build background
-	sY = 0;
+	INT16 sY = 0;
 
-	for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
+	for (INT32 cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++)
 	{
-		if ( cnt == 0 )
-		{
-			usSubRegion = 0;
-		}
-		else
-		{
-			usSubRegion = 1;
-		}
-
-		// Add hieght of object
-		GetVideoObjectETRLESubregionProperties( gItemPickupMenu.uiPanelVo, usSubRegion, &usWidth, &usHeight );
-
-		sY += usHeight;
-
+		// Add height of object
+		UINT16 usSubRegion = (cnt == 0 ? 0 : 1);
+		const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, usSubRegion);
+		sY += ETRLEProps->usHeight;
 	}
 	gItemPickupMenu.sButtomPanelStartY = sY;
 
 	// Do end
-	GetVideoObjectETRLESubregionProperties( gItemPickupMenu.uiPanelVo, 2, &usWidth, &usHeight );
-
-	sY += usHeight;
+	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, 2);
+	sY += ETRLEProps->usHeight;
 
 	// Set height, width
-	gItemPickupMenu.sHeight				= sY;
-	gItemPickupMenu.sWidth				= usWidth;
-
+	gItemPickupMenu.sHeight = sY;
+	gItemPickupMenu.sWidth  = ETRLEProps->usWidth;
 }
 
 
@@ -6032,7 +6016,6 @@ void RenderItemPickupMenu( )
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
 	wchar_t			pStr[ 100 ];
-	UINT16			usSubRegion, usHeight, usWidth;
 	INVTYPE   *pItem;
 	OBJECTTYPE  *pObject;
 	UINT16			uiStringLength;
@@ -6055,22 +6038,13 @@ void RenderItemPickupMenu( )
 
 		for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
 		{
-			if ( cnt == 0 )
-			{
-				usSubRegion = 0;
-			}
-			else
-			{
-				usSubRegion = 1;
-			}
+			UINT16 usSubRegion = (cnt == 0 ? 0 : 1);
 
 			BltVideoObjectFromIndex( FRAME_BUFFER, gItemPickupMenu.uiPanelVo, usSubRegion, sX, sY);
 
-			// Add hieght of object
-			GetVideoObjectETRLESubregionProperties( gItemPickupMenu.uiPanelVo, usSubRegion, &usWidth, &usHeight );
-
-			sY += usHeight;
-
+			// Add height of object
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, usSubRegion);
+			sY += ETRLEProps->usHeight;
 		}
 
 		// Do end

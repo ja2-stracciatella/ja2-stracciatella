@@ -510,21 +510,15 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 }
 
 
-BOOLEAN GetVideoObjectETRLESubregionProperties(UINT32 uiVideoObject, UINT16 usIndex, UINT16* pusWidth, UINT16* pusHeight)
+const ETRLEObject* GetVideoObjectETRLESubregionProperties(UINT32 uiVideoObject, UINT16 usIndex)
 {
 #ifdef _DEBUG
 	gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES;
 #endif
 	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
-
-	CHECKF(hVObject != NULL);
-	CHECKF(usIndex < hVObject->usNumberOfObjects);
-	const ETRLEObject* ETRLEObject = &hVObject->pETRLEObject[usIndex];
-
-	*pusWidth  = ETRLEObject->usWidth;
-	*pusHeight = ETRLEObject->usHeight;
-
-	return TRUE;
+	CHECKN(hVObject != NULL);
+	CHECKN(usIndex < hVObject->usNumberOfObjects);
+	return &hVObject->pETRLEObject[usIndex];
 }
 
 

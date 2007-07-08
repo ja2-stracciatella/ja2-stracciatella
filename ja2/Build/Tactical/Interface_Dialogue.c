@@ -348,8 +348,6 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 {
 	INT32	iFaceIndex, cnt;
 	FACETYPE				*pFace;
-	UINT16						usWidth;
-	UINT16						usHeight;
 	INT16							sCenterYVal, sCenterXVal;
 
 	// disable scroll messages
@@ -368,12 +366,9 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
 	if (gTalkPanel.uiPanelVO == NO_VOBJECT) return 0;
 
-	// Get ETRLE Properties
-	GetVideoObjectETRLESubregionProperties( gTalkPanel.uiPanelVO, 0, &usWidth, &usHeight );
-
-	// Set values into structure
-	gTalkPanel.usWidth  = usWidth;
-	gTalkPanel.usHeight	= usHeight;
+	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gTalkPanel.uiPanelVO, 0);
+	gTalkPanel.usWidth  = ETRLEProps->usWidth;
+	gTalkPanel.usHeight	= ETRLEProps->usHeight;
 
 	// Check coords
 	{
