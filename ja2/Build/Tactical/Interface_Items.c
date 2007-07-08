@@ -1832,9 +1832,7 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
-  ETRLEObject						*pTrav;
-	UINT32								usHeight, usWidth;
-	INT16									sCenX, sCenY, sNewY, sNewX;
+	INT16									sNewY, sNewX;
 	BOOLEAN								fLineSplit = FALSE;
 	INT16									sFontX2, sFontY2;
 	INT16									sFontX, sFontY;
@@ -1858,22 +1856,19 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 	if ( fDirtyLevel == DIRTYLEVEL2 )
 	{
 		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
-		pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
-		usHeight				= (UINT32)pTrav->usHeight;
-		usWidth					= (UINT32)pTrav->usWidth;
-
-
+		UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+		const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
+		UINT32 usHeight = pTrav->usHeight;
+		UINT32 usWidth  = pTrav->usWidth;
 
 		// CENTER IN SLOT!
 		// CANCEL OFFSETS!
-		sCenX = sX + ( abs( sWidth - usWidth ) / 2 ) - pTrav->sOffsetX;
-		sCenY = sY + ( abs( sHeight - usHeight ) / 2 ) - pTrav->sOffsetY;
+		INT16 sCenX = sX + abs(sWidth  - usWidth)  / 2 - pTrav->sOffsetX;
+		INT16 sCenY = sY + abs(sHeight - usHeight) / 2 - pTrav->sOffsetY;
 
 		// Shadow area
-		BltVideoObjectOutlineShadowFromIndex( uiBuffer, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX - 2, sCenY + 2 );
-
-		BltVideoObjectOutlineFromIndex( uiBuffer, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX, sCenY, sOutlineColor, fOutline );
+		BltVideoObjectOutlineShadowFromIndex(uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
+		BltVideoObjectOutlineFromIndex(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor, fOutline);
 
 
 		if ( uiBuffer == FRAME_BUFFER )
@@ -2781,9 +2776,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 void RenderItemDescriptionBox( )
 {
-  ETRLEObject						*pTrav;
-	UINT32								usHeight, usWidth;
-	INT16									sCenX, sCenY, sStrX;
+	INT16									sStrX;
 	CHAR16								sTempString[ 128 ];
 
 	UINT16								uiStringLength, uiRightLength;
@@ -2798,15 +2791,14 @@ void RenderItemDescriptionBox( )
   if( ( guiCurrentItemDescriptionScreen == MAP_SCREEN ) &&(gfInItemDescBox ) )
 	{
     	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		HVOBJECT hVObject = GetVideoObject(guiItemGraphic);
-		pTrav = &(hVObject->pETRLEObject[ 0 ] );
-		usHeight				= (UINT32)pTrav->usHeight;
-		usWidth					= (UINT32)pTrav->usWidth;
+		const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
+		UINT32 usHeight = pTrav->usHeight;
+		UINT32 usWidth  = pTrav->usWidth;
 
 		// CENTER IN SLOT!
 		// REMOVE OFFSETS!
-		sCenX = MAP_ITEMDESC_ITEM_X + ( abs( ITEMDESC_ITEM_WIDTH - usWidth ) / 2 ) - pTrav->sOffsetX;
-		sCenY = MAP_ITEMDESC_ITEM_Y + ( abs( ITEMDESC_ITEM_HEIGHT - usHeight ) / 2 )- pTrav->sOffsetY;
+		INT16 sCenX = MAP_ITEMDESC_ITEM_X + abs(ITEMDESC_ITEM_WIDTH  - usWidth)  / 2 - pTrav->sOffsetX;
+		INT16 sCenY = MAP_ITEMDESC_ITEM_Y + abs(ITEMDESC_ITEM_HEIGHT - usHeight) / 2 - pTrav->sOffsetY;
 
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapItemDescBox, 0, gsInvDescX, gsInvDescY);
 
@@ -3243,16 +3235,14 @@ void RenderItemDescriptionBox( )
 	}
 	else if ( gfInItemDescBox )
 	{
-
 		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		HVOBJECT hVObject = GetVideoObject(guiItemGraphic);
-		pTrav = &(hVObject->pETRLEObject[ 0 ] );
-		usHeight				= (UINT32)pTrav->usHeight;
-		usWidth					= (UINT32)pTrav->usWidth;
+		const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
+		UINT32 usHeight = pTrav->usHeight;
+		UINT32 usWidth  = pTrav->usWidth;
 
 		// CENTER IN SLOT!
-		sCenX = ITEMDESC_ITEM_X + ( abs( ITEMDESC_ITEM_WIDTH - usWidth ) / 2 ) - pTrav->sOffsetX;
-		sCenY = ITEMDESC_ITEM_Y + ( abs( ITEMDESC_ITEM_HEIGHT - usHeight ) / 2 ) - pTrav->sOffsetY;
+		INT16 sCenX = ITEMDESC_ITEM_X + abs(ITEMDESC_ITEM_WIDTH  - usWidth)  / 2 - pTrav->sOffsetX;
+		INT16 sCenY = ITEMDESC_ITEM_Y + abs(ITEMDESC_ITEM_HEIGHT - usHeight) / 2 - pTrav->sOffsetY;
 
 		BltVideoObjectFromIndex( guiSAVEBUFFER, guiItemDescBox, 0, gsInvDescX, gsInvDescY);
 
@@ -4847,7 +4837,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	INT16						sX, sY, sCenX, sCenY;
 	SGPRect					aRect;
 	UINT8						ubLimit;
-  ETRLEObject						*pTrav;
 	INT32						cnt;
 	UINT16				 usPopupWidth;
 	INT16					sItemSlotWidth, sItemSlotHeight;
@@ -4886,8 +4875,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
-	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
 	usPopupWidth = pTrav->usWidth;
 
 	// Determine position, height and width of mouse region, area
@@ -4983,11 +4971,6 @@ static void EndItemStackPopupWithItemInHand(void)
 
 void RenderItemStackPopup( BOOLEAN fFullRender )
 {
-  ETRLEObject						*pTrav;
-	UINT32								usWidth;
-	UINT32								cnt;
-	INT16									sX, sY, sNewX, sNewY;
-
 	if ( gfInItemStackPopup )
 	{
 
@@ -5002,27 +4985,24 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 	}
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-	usWidth					= (UINT32)pTrav->usWidth;
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	UINT32 usWidth = pTrav->usWidth;
 
-
-	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
+	for (UINT32 cnt = 0; cnt < gubNumItemPopups; cnt++)
 	{
 		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + ( cnt * usWidth ), gsItemPopupY);
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
-			sX = (INT16)(gsItemPopupX + ( cnt * usWidth ) + 11);
-			sY = (INT16)( gsItemPopupY + 3 );
+			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
+			INT16 sY = gsItemPopupY + 3;
 
 			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0 );
 
 			// Do status bar here...
-			sNewX = (INT16)( gsItemPopupX + ( cnt * usWidth ) + 7 );
-			sNewY = gsItemPopupY + INV_BAR_DY + 3;
+			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
+			INT16 sNewY = gsItemPopupY + INV_BAR_DY + 3;
 			DrawItemUIBarEx( gpItemPopupObject, (UINT8)cnt, sNewX, sNewY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, 	Get16BPPColor( STATUS_BAR ), Get16BPPColor( STATUS_BAR_SHADOW ), TRUE , FRAME_BUFFER );
-
 		}
 	}
 
@@ -5068,9 +5048,6 @@ static void DeleteItemStackPopup(void)
 BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
 	SGPRect			aRect;
-  ETRLEObject	*pTrav;
-	INT32				cnt;
-	UINT16			usPopupWidth, usPopupHeight;
 	UINT8				ubSlotSimilarToKeySlot = 10;
 	INT16				sKeyRingItemWidth = 0;
 	INT16				sOffSetY = 0, sOffSetX = 0;
@@ -5102,15 +5079,14 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
-	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-	usPopupWidth = pTrav->usWidth;
-	usPopupHeight = pTrav->usHeight;
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	UINT16 usPopupWidth = pTrav->usWidth;
+	UINT16 usPopupHeight = pTrav->usHeight;
 
 	// Determine position, height and width of mouse region, area
 	//GetSlotInvHeightWidth( ubSlotSimilarToKeySlot, &sItemSlotWidth, &sItemSlotHeight );
 
-	for ( cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++ )
+	for (INT32 cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++)
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &gKeyRingRegions[cnt],
@@ -5161,8 +5137,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 
 void RenderKeyRingPopup( BOOLEAN fFullRender )
 {
-  ETRLEObject						*pTrav;
-	UINT32								usHeight, usWidth;
 	UINT32								cnt;
 	OBJECTTYPE						pObject;
 	INT16 sKeyRingItemWidth = 0;
@@ -5198,10 +5172,9 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 	pObject.bStatus[ 0 ] = 100;
 
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	HVOBJECT hVObject = GetVideoObject(guiItemPopupBoxes);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-	usHeight				= (UINT32)pTrav->usHeight;
-	usWidth					= (UINT32)pTrav->usWidth;
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	UINT32 usHeight = pTrav->usHeight;
+	UINT32 usWidth  = pTrav->usWidth;
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
@@ -5282,51 +5255,32 @@ void DeleteKeyRingPopup( )
 	FreeMouseCursor( );
 }
 
-UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem )
+UINT32 GetInterfaceGraphicForItem(const INVTYPE* pItem)
 {
 	// CHECK SUBCLASS
-	if ( pItem->ubGraphicType == 0 )
+	switch (pItem->ubGraphicType)
 	{
-		return( guiGUNSM );
+		case 0:  return guiGUNSM;
+		case 1:  return guiP1ITEMS;
+		case 2:  return guiP2ITEMS;
+		default: return guiP3ITEMS;
 	}
-	else if ( pItem->ubGraphicType == 1 )
-	{
-		return( guiP1ITEMS );
-	}
-	else if ( pItem->ubGraphicType == 2 )
-	{
-		return( guiP2ITEMS );
-	}
-	else
-	{
-		return( guiP3ITEMS );
-	}
-
 }
 
 
-UINT16 GetTileGraphicForItem( INVTYPE *pItem )
+UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 {
-	UINT16 usIndex;
-
-	// CHECK SUBCLASS
-	if ( pItem->ubGraphicType == 0 )
+	UINT32 Type;
+	switch (pItem->ubGraphicType)
 	{
-		GetTileIndexFromTypeSubIndex( GUNS, (INT16)(pItem->ubGraphicNum+1), &usIndex );
+		case 0:  Type = GUNS;    break;
+		case 1:  Type = P1ITEMS; break;
+		case 2:  Type = P2ITEMS; break;
+		default: Type = P3ITEMS; break;
 	}
-	else if ( pItem->ubGraphicType == 1 )
-	{
-		GetTileIndexFromTypeSubIndex( P1ITEMS, (INT16)(pItem->ubGraphicNum+1), &usIndex );
-	}
-	else if ( pItem->ubGraphicType == 2 )
-	{
-		GetTileIndexFromTypeSubIndex( P2ITEMS, (INT16)(pItem->ubGraphicNum+1), &usIndex );
-	}
-	else
-	{
-		GetTileIndexFromTypeSubIndex( P3ITEMS, (INT16)(pItem->ubGraphicNum+1), &usIndex );
-	}
-	return( usIndex );
+	UINT16 Index;
+	GetTileIndexFromTypeSubIndex(Type, pItem->ubGraphicNum + 1, &Index);
+	return Index;
 }
 
 

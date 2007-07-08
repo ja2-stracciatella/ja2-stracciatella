@@ -1639,11 +1639,7 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 {
 	UINT8 ubCounter = 0;
 	SOLDIERTYPE* pSoldier;
-	INT16 sIndex;
-	ETRLEObject* pTrav;
-	INVTYPE* pItem;
-	INT16 PosX, PosY, sCenX, sCenY;
-	UINT32 usHeight, usWidth;
+	INT16 PosX, PosY;
 	UINT8 ubItemCount = 0;
 	UINT8 ubUpToCount = 0;
 	INT16 sX, sY;
@@ -1688,20 +1684,17 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 			}
 			else
 			{
-				sIndex = (pSoldier->inv[ubCounter].usItem);
-				pItem = &Item[sIndex];
+				INT16 sIndex = pSoldier->inv[ubCounter].usItem;
+				const INVTYPE* pItem = &Item[sIndex];
+				UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
 
-				HVOBJECT hHandle = GetVideoObject(GetInterfaceGraphicForItem(pItem));
-				pTrav = &(hHandle->pETRLEObject[pItem->ubGraphicNum]);
+				const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
+				UINT32 usHeight = pTrav->usHeight;
+				UINT32 usWidth  = pTrav->usWidth;
+				INT16  sCenX    = PosX + abs(57 - usWidth)  / 2 - pTrav->sOffsetX;
+				INT16  sCenY    = PosY + abs(22 - usHeight) / 2 - pTrav->sOffsetY;
 
-				usHeight = (UINT32)pTrav->usHeight;
-				usWidth  = (UINT32)pTrav->usWidth;
-
-				sCenX = PosX + (abs(57 - usWidth)  / 2) - pTrav->sOffsetX;
-				sCenY = PosY + (abs(22 - usHeight) / 2) - pTrav->sOffsetY;
-
-				//blt the item
-				BltVideoObjectOutlineFromIndex(FRAME_BUFFER, GetInterfaceGraphicForItem(pItem), pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
+				BltVideoObjectOutlineFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
 
 				SetFont(FONT10ARIAL);
 				SetFontForeground(FONT_WHITE);

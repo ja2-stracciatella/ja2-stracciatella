@@ -2708,12 +2708,8 @@ void DeleteSelectedMercsItem()
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
 static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {
-	UINT32 uiVideoObjectIndex;
 	UINT32 uiSrcID, uiDstID;
-	ETRLEObject *pObject;
-	INVTYPE *item;
 	SGPRect	SrcRect, DstRect;
-	INT32 iSrcWidth, iSrcHeight;
 	INT32 iDstWidth, iDstHeight;
 	float rScalar, rWidthScalar, rHeightScalar;
 	BOOLEAN fUnDroppable;
@@ -2797,15 +2793,14 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 		return;
 
 	//now draw the fullsize item into the temp buffer
-	item = &Item[ gusMercsNewItemIndex ];
-	uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-	HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
+	const INVTYPE* item = &Item[gusMercsNewItemIndex];
+	UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
 	BltVideoObjectOutlineFromIndex( uiSrcID, uiVideoObjectIndex, item->ubGraphicNum, 0, 0, 0, FALSE );
 
 	//crop the source image
-	pObject = &hVObject->pETRLEObject[ item->ubGraphicNum ];
-	iSrcWidth				=		pObject->usWidth;
-	iSrcHeight			=		pObject->usHeight;
+	const ETRLEObject* pObject = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+	INT32 iSrcWidth  = pObject->usWidth;
+	INT32 iSrcHeight = pObject->usHeight;
 	SrcRect.iLeft   +=	pObject->sOffsetX;
 	SrcRect.iRight  =		SrcRect.iLeft + iSrcWidth;
 	SrcRect.iTop    +=	pObject->sOffsetY;

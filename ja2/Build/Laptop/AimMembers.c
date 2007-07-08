@@ -1011,25 +1011,17 @@ static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 
 static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 {
-	UINT8				i;
-	INT16				PosX, PosY, sCenX, sCenY;
-	UINT16			usItem;
-	INVTYPE			*pItem;
-	UINT32			usHeight, usWidth;
-  ETRLEObject	*pTrav;
 	UINT8				ubItemCount=0;
-//	UINT16			gzTempItemName[ SIZE_ITEM_INFO ];
 
 	//if the mercs inventory has already been purchased, dont display the inventory
 	if( gMercProfiles[ ubMercID ].ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS )
 		return( TRUE );
 
-
-	PosY = WEAPONBOX_Y;
-	PosX = WEAPONBOX_X+3;		// + 3 ( 1 to take care of the shadow, +2 to get past the weapon box border )
-	for(i=0; i<NUM_INV_SLOTS; i++)
+	INT16 PosY = WEAPONBOX_Y;
+	INT16 PosX = WEAPONBOX_X + 3; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
+	for (UINT8 i = 0; i < NUM_INV_SLOTS; i++)
 	{
-		usItem = gMercProfiles[ubMercID].inv[ i ];
+		UINT16 usItem = gMercProfiles[ubMercID].inv[i];
 
 		//if its a valid item AND we are only displaying less then 8 items
 		if( usItem && ubItemCount < WEAPONBOX_NUMBER )
@@ -1037,20 +1029,20 @@ static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 			//increase the item count
 			ubItemCount++;
 
-			pItem = &Item[ usItem ];
-			HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
-			pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
+			const INVTYPE* pItem = &Item[usItem];
+			UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+			const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
 
-			usHeight				= (UINT32)pTrav->usHeight;
-			usWidth					= (UINT32)pTrav->usWidth;
+			UINT32 usHeight = pTrav->usHeight;
+			UINT32 usWidth  = pTrav->usWidth;
 
-			sCenX = PosX + ( abs( WEAPONBOX_SIZE_X - 3 - usWidth ) /  2 ) - pTrav->sOffsetX;
-			sCenY = PosY + ( abs( WEAPONBOX_SIZE_Y - usHeight ) / 2 ) - pTrav->sOffsetY;
+			INT16 sCenX = PosX + abs(WEAPONBOX_SIZE_X - 3 - usWidth)  / 2 - pTrav->sOffsetX;
+			INT16 sCenY = PosY + abs(WEAPONBOX_SIZE_Y     - usHeight) / 2 - pTrav->sOffsetY;
 
 			//blt the shadow of the item
-			BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX-2, sCenY+2);
+			BltVideoObjectOutlineShadowFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
 			//blt the item
-			BltVideoObjectOutlineFromIndex( FRAME_BUFFER, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE );
+			BltVideoObjectOutlineFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
 
 
 			//if there are more then 1 piece of equipment in the current slot, display how many there are

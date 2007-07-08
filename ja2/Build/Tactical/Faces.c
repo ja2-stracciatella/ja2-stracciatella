@@ -1105,18 +1105,13 @@ BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID )
 
 static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY)
 {
-	INT16 sX, sY;
-	UINT16 usWidth, usHeight;
-  ETRLEObject						*pTrav;
-
 	// Get height, width of icon...
-	HVOBJECT hVObject = GetVideoObject(guiPORTRAITICONS);
-	pTrav = &(hVObject->pETRLEObject[ ubIndex ] );
-	usHeight				= pTrav->usHeight;
-	usWidth					= pTrav->usWidth;
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiPORTRAITICONS, ubIndex);
+	UINT16 usHeight = pTrav->usHeight;
+	UINT16 usWidth  = pTrav->usWidth;
 
-	sX = sFaceX + pFace->usFaceWidth - usWidth - 1;
-	sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
+	INT16 sX = sFaceX + pFace->usFaceWidth  - usWidth  - 1;
+	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
 
 	*psX = sX;
 	*psY = sY;
@@ -1125,18 +1120,13 @@ static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 s
 
 static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
 {
-	INT16 sX, sY;
-	UINT16 usWidth, usHeight;
-  ETRLEObject						*pTrav;
-
 	// Get height, width of icon...
-	HVOBJECT hVObject = GetVideoObject(guiPORTRAITICONS);
-	pTrav = &(hVObject->pETRLEObject[ ubIndex ] );
-	usHeight				= pTrav->usHeight;
-	usWidth					= pTrav->usWidth;
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiPORTRAITICONS, ubIndex);
+	UINT16 usHeight = pTrav->usHeight;
+	UINT16 usWidth  = pTrav->usWidth;
 
-	sX = sFaceX + ( usWidth * bNumIcons ) + 1;
-	sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
+	INT16 sX = sFaceX + usWidth * bNumIcons + 1;
+	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
 
 	*psX = sX;
 	*psY = sY;

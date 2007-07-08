@@ -5009,9 +5009,6 @@ static void ShowHighLightedSectorOnMilitiaMap(void);
 
 BOOLEAN DrawMilitiaPopUpBox( void )
 {
-	ETRLEObject						*pTrav;
-
-
 	if( !fShowMilitia )
 	{
 		sSelectedMilitiaTown = 0;
@@ -5052,9 +5049,7 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// draw the highlight last
 	ShowHighLightedSectorOnMilitiaMap( );
 
-	HVOBJECT hVObject = GetVideoObject(guiMilitia);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiMilitia, 0);
 	InvalidateRegion( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y, MAP_MILITIA_BOX_POS_X + pTrav->usWidth, MAP_MILITIA_BOX_POS_Y + pTrav->usHeight );
 
 	// set the text for the militia map sector info buttons
@@ -5340,8 +5335,6 @@ void CreateDestroyMilitiaSectorButtons( void )
 	static INT16 sOldSectorValue = -1;
 	INT16 sX = 0, sY = 0;
 	INT32 iCounter = 0;
-	ETRLEObject						*pTrav;
-
 
 	if( sOldSectorValue == sSectorMilitiaMapSector && fShowMilitia && sSelectedMilitiaTown && !fCreated && sSectorMilitiaMapSector != -1 )
 	{
@@ -5374,17 +5367,8 @@ void CreateDestroyMilitiaSectorButtons( void )
 			SpecifyButtonUpTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
 			SpecifyButtonDownTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
 
-			HVOBJECT hVObject = GetVideoObject(guiMilitia);
-			pTrav = &(hVObject->pETRLEObject[ 0 ] );
-
 			SetButtonFastHelpText( giMapMilitiaButton[ iCounter ], pMilitiaButtonsHelpText[ iCounter ] );
-
-
 		}
-
-		// mark here the militia box left click region
-		//MSYS_DefineRegion( &gMapScreenMilitiaRegion, ( INT16 ) ( MAP_MILITIA_BOX_POS_X ), ( INT16 )( MAP_MILITIA_BOX_POS_Y  ), ( INT16 )( MAP_MILITIA_BOX_POS_X + pTrav->usWidth ), ( INT16 )( MAP_MILITIA_BOX_POS_Y + pTrav->usHeight ), MSYS_PRIORITY_HIGHEST - 2,
-			//				 MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MilitiaBoxMaskBtnCallback );
 
 		CreateScreenMaskForMoveBox( );
 

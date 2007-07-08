@@ -811,31 +811,21 @@ static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 
 static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
 {
-	INT16			PosX, sCenX, sCenY;
-	UINT32			usWidth;
-  ETRLEObject	*pTrav;
-	INVTYPE			*pItem;
+	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	PosX = BOBBYR_GRID_PIC_X;
-
-	pItem = &Item[ usIndex ];
+	const INVTYPE* pItem = &Item[usIndex];
 	UINT32 uiImage = LoadTileGraphicForItem(pItem);
 
-	HVOBJECT hPixHandle = GetVideoObject(uiImage);
-	pTrav = &(hPixHandle->pETRLEObject[0]);
-
 	//center picture in frame
-	usWidth					= (UINT32)pTrav->usWidth;
-//	sCenX = PosX + ( abs( BOBBYR_GRID_PIC_WIDTH - usWidth ) / 2 );
-//	sCenY = PosY + 8;
-	sCenX = PosX + ( abs( BOBBYR_GRID_PIC_WIDTH - usWidth ) / 2 ) - pTrav->sOffsetX;
-	sCenY = PosY + 8;
-
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiImage, 0);
+	UINT32 usWidth = pTrav->usWidth;
+	INT16  sCenX   = PosX + abs(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav->sOffsetX;
+	INT16  sCenY   = PosY + 8;
 
 	//blt the shadow of the item
-	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, uiImage, 0, sCenX-2, sCenY+2);//pItem->ubGraphicNum
+	BltVideoObjectOutlineShadowFromIndex(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
 
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, sCenX, sCenY);
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
 	DeleteVideoObjectFromIndex(uiImage);
 
 	return(TRUE);

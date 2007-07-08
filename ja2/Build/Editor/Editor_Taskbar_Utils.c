@@ -754,11 +754,9 @@ static void RenderDoorLockInfo(void)
 
 static void RenderSelectedItemBlownUp(void)
 {
-	UINT32 uiVideoObjectIndex;
 	INT16 sScreenX, sScreenY, xp, yp;
 	wchar_t szItemName[SIZE_ITEM_NAME];
 	INT32 i;
-	INT16 sWidth, sHeight, sOffsetX, sOffsetY;
 
 	GetGridNoScreenPos( gsItemGridNo, 0, &sScreenX, &sScreenY );
 
@@ -766,15 +764,14 @@ static void RenderSelectedItemBlownUp(void)
 		return;
 
 	//Display the enlarged item graphic
-	uiVideoObjectIndex = GetInterfaceGraphicForItem( &Item[ gpItem->usItem ] );
-	HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
-
-	sWidth = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].usWidth;
-	sOffsetX = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].sOffsetX;
+	UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(&Item[gpItem->usItem]);
+	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, Item[gpItem->usItem].ubGraphicNum);
+	INT16 sWidth   = ETRLEProps->usWidth;
+	INT16 sOffsetX = ETRLEProps->sOffsetX;
 	xp = sScreenX + (40 - sWidth - sOffsetX*2) / 2;
 
-	sHeight = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].usHeight;
-	sOffsetY = hVObject->pETRLEObject[ Item[ gpItem->usItem ].ubGraphicNum ].sOffsetY;
+	INT16 sHeight  = ETRLEProps->usHeight;
+	INT16 sOffsetY = ETRLEProps->sOffsetY;
 	yp = sScreenY + (20 - sHeight - sOffsetY*2) / 2;
 
 	BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, Item[ gpItem->usItem ].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)), TRUE );

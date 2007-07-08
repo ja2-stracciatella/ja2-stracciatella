@@ -45,7 +45,7 @@ INT8 bCurrentTownMineSectorZ = 0;
 UINT32 guiMapButtonInventoryImage[2];
 static UINT32 guiMapButtonInventory[2];
 
-UINT16 sTotalButtonWidth = 0;
+static UINT16 sTotalButtonWidth = 0;
 
 extern MINE_LOCATION_TYPE gMineLocation[];
 extern MINE_STATUS_TYPE gMineStatus[];
@@ -727,20 +727,15 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	INT16 sX, sY;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
-	UINT32 uiObject;
-	ETRLEObject	*pTrav;
-	INT16 sWidthA = 0, sTotalBoxWidth = 0;
 
 	// load the button
-	uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
+	UINT32 uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
 
 	// Calculate smily face positions...
-	HVOBJECT hHandle = GetVideoObject(uiObject);
-	pTrav = &(hHandle->pETRLEObject[ 0 ] );
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiObject, 0);
+	INT16 sWidthA = pTrav->usWidth;
 
-	sWidthA = pTrav->usWidth;
-
-	sTotalBoxWidth = sTotalButtonWidth;
+	INT16 sTotalBoxWidth = sTotalButtonWidth;
 
 	GetBoxSize( ghTownMineBox , &pDimensions );
 	GetBoxPosition( ghTownMineBox, &pPosition );
@@ -828,22 +823,13 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 // get the min width of the town mine info pop up box
 static void MinWidthOfTownMineInfoBox(void)
 {
-	INT16 sWidthA = 0, sWidthB = 0, sTotalBoxWidth = 0;
-	UINT32 uiObject;
-	ETRLEObject	*pTrav;
-
-	uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
+	UINT32 uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
 
 	// Calculate smily face positions...
-	HVOBJECT hHandle = GetVideoObject(uiObject);
-	pTrav = &(hHandle->pETRLEObject[ 0 ] );
+	INT16 sWidthA = GetVideoObjectETRLESubregionProperties(uiObject, 0)->usWidth;
+	INT16 sWidthB = GetVideoObjectETRLESubregionProperties(uiObject, 1)->usWidth;
 
-	sWidthA = pTrav->usWidth;
-
-	pTrav = &(hHandle->pETRLEObject[ 1 ] );
-	sWidthB = pTrav->usWidth;
-
-	sTotalBoxWidth = sWidthA + sWidthB;
+	INT16 sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;
 
 	// delete video object

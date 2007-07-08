@@ -2276,10 +2276,6 @@ static BOOLEAN IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE* pItemObject);
 static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea)
 {
 	CHAR16			zTemp[64];
-	INVTYPE			*pItem;
-	ETRLEObject	*pTrav;
-	UINT32			usHeight, usWidth;
-	INT16				sCenX, sCenY;
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
@@ -2296,26 +2292,22 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 
 
 	//Display the item graphic, and price
-	pItem = &Item[ usItemIndex ];
-	HVOBJECT hVObject = GetVideoObject(GetInterfaceGraphicForItem(pItem));
-	pTrav = &(hVObject->pETRLEObject[ pItem->ubGraphicNum ] );
+	const INVTYPE* pItem = &Item[usItemIndex];
+	UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
 
-	usHeight				= (UINT32)pTrav->usHeight;
-	usWidth					= (UINT32)pTrav->usWidth;
+	UINT32 usHeight = pTrav->usHeight;
+	UINT32 usWidth  = pTrav->usWidth;
 
-	sCenX = usPosX + 7 + ( abs( SKI_INV_WIDTH - 3 - usWidth ) / 2 ) - pTrav->sOffsetX;
-	sCenY = usPosY + ( abs( SKI_INV_HEIGHT - usHeight ) / 2 ) - pTrav->sOffsetY;
+	INT16 sCenX = usPosX + 7 + abs(SKI_INV_WIDTH - 3 - usWidth)  / 2 - pTrav->sOffsetX;
+	INT16 sCenY = usPosY +     abs(SKI_INV_HEIGHT    - usHeight) / 2 - pTrav->sOffsetY;
 
 
 	//Restore the background region
 	RestoreExternBackgroundRect( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT );
 
-
-	//blt the shadow of the item
-	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX-2, sCenY+2);
-
-	//blt the item
-	BltVideoObjectOutlineFromIndex( FRAME_BUFFER, GetInterfaceGraphicForItem( pItem ), pItem->ubGraphicNum, sCenX, sCenY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), fHighlighted );
+	BltVideoObjectOutlineShadowFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
+	BltVideoObjectOutlineFromIndex(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, Get16BPPColor(FROMRGB(255, 255, 255)), fHighlighted);
 
 	//Display the status of the item
 	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 2 + 20, 2, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), TRUE, FRAME_BUFFER);//guiSAVEBUFFER

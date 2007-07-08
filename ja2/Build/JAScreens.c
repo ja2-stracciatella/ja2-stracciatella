@@ -754,8 +754,6 @@ UINT32 SexScreenHandle(void)
 	static UINT32					guiSMILY;
 	static INT8						bCurFrame = 0;
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
-  ETRLEObject						*pTrav;
-	INT16									sX, sY;
 
 	// OK, Clear screen and show smily face....
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640,	480, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
@@ -823,11 +821,9 @@ UINT32 SexScreenHandle(void)
 	}
 
 	// Calculate smily face positions...
-	HVOBJECT hVObject = GetVideoObject(guiSMILY);
-	pTrav = &(hVObject->pETRLEObject[ 0 ] );
-
-	sX = (INT16)(( 640 - pTrav->usWidth ) / 2);
-	sY = (INT16)(( 480 - pTrav->usHeight ) / 2);
+	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiSMILY, 0);
+	INT16 sX = (640 - pTrav->usWidth)  / 2;
+	INT16 sY = (480 - pTrav->usHeight) / 2;
 
 	if( bCurFrame < 24 )
 	{

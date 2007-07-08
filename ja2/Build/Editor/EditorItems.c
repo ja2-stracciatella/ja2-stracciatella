@@ -194,10 +194,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 {
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
-	INVTYPE *item;
 	SGPRect	SaveRect, NewRect;
-	UINT32 uiVideoObjectIndex;
-	INT16 sWidth, sOffset, sStart;
 	INT16 i, x, y;
 	UINT16 usCounter;
 	wchar_t pStr[100];//, pStr2[ 100 ];
@@ -326,9 +323,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	{ //Keys use a totally different method for determining
 		for( i = 0; i < eInfo.sNumItems; i++ )
 		{
-			item = &Item[ KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem ];
-			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex );
+			const INVTYPE* item = &Item[KeyTable[0].usItem + LockTable[i].usKeyItem];
 
 			//Store these item pointers for later when rendering selected items.
 			eInfo.pusItemIndex[i] = KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem;
@@ -340,10 +335,12 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
+			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
 			//Calculate the center position of the graphic in a 60 pixel wide area.
-			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
-			sOffset = hVObject->pETRLEObject[item->ubGraphicNum].sOffsetX;
-			sStart = x + (60 - sWidth - sOffset*2) / 2;
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			INT16 sWidth  = ETRLEProps->usWidth;
+			INT16 sOffset = ETRLEProps->sOffsetX;
+			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 
 			BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
@@ -364,7 +361,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		fTypeMatch = FALSE;
 		while( usCounter<MAXITEMS && !fTypeMatch )
 		{
-			item = &Item[usCounter];
+			const INVTYPE* item = &Item[usCounter];
 			if( Item[usCounter].fFlags & ITEM_NOT_EDITOR )
 			{
 				usCounter++;
@@ -426,10 +423,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			}
 			if( fTypeMatch )
 			{
-
-				uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-				HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
-
 				//Store these item pointers for later when rendering selected items.
 				eInfo.pusItemIndex[i] = usCounter;
 
@@ -479,10 +472,12 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				}
 				DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
+				UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
 				//Calculate the center position of the graphic in a 60 pixel wide area.
-				sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
-				sOffset = hVObject->pETRLEObject[item->ubGraphicNum].sOffsetX;
-				sStart = x + (60 - sWidth - sOffset*2) / 2;
+				const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+				INT16 sWidth  = ETRLEProps->usWidth;
+				INT16 sOffset = ETRLEProps->sOffsetX;
+				INT16 sStart = x + (60 - sWidth - sOffset*2) / 2;
 
 				if( sWidth )
 				{
@@ -530,11 +525,8 @@ void RenderEditorItemsInfo()
 {
 	UINT8	 *pDestBuf, *pSrcBuf;
 	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
-	INVTYPE *item;
-	UINT32 uiVideoObjectIndex;
 	INT16 i;
 	INT16 minIndex, maxIndex;
-	INT16 sWidth, sOffset, sStart, x, y;
 	UINT16 usNumItems;
 	UINT16 usQuantity;
 
@@ -566,14 +558,14 @@ void RenderEditorItemsInfo()
 	{
 		if( eInfo.pusItemIndex )
 		{
-			item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
-			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
-			x = (eInfo.sHilitedItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
-			y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
-			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
-			sOffset = hVObject->pETRLEObject[item->ubGraphicNum].sOffsetX;
-			sStart = x + (60 - sWidth - sOffset*2) / 2;
+			INT16 x = (eInfo.sHilitedItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
+			INT16 y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
+			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
+			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			INT16 sWidth  = ETRLEProps->usWidth;
+			INT16 sOffset = ETRLEProps->sOffsetX;
+			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
 				BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 250, 0)), TRUE );
@@ -585,14 +577,14 @@ void RenderEditorItemsInfo()
 	{
 		if( eInfo.pusItemIndex )
 		{
-			item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
-			uiVideoObjectIndex = GetInterfaceGraphicForItem( item );
-			HVOBJECT hVObject = GetVideoObject(uiVideoObjectIndex);
-			x = (eInfo.sSelItemIndex/2 - eInfo.sScrollIndex)*60 + 110;
-			y = 360 + (eInfo.sSelItemIndex % 2) * 40;
-			sWidth = hVObject->pETRLEObject[item->ubGraphicNum].usWidth;
-			sOffset = hVObject->pETRLEObject[item->ubGraphicNum].sOffsetX;
-			sStart = x + (60 - sWidth - sOffset*2) / 2;
+			INT16 x = (eInfo.sSelItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
+			INT16 y = 360 + (eInfo.sSelItemIndex % 2) * 40;
+			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
+			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			INT16 sWidth  = ETRLEProps->usWidth;
+			INT16 sOffset = ETRLEProps->sOffsetX;
+			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
 				BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 0, 0)), TRUE );
@@ -606,8 +598,8 @@ void RenderEditorItemsInfo()
 		usNumItems = CountNumberOfEditorPlacementsInWorld( i, &usQuantity );
 		if( usNumItems )
 		{
-			x = (i/2 - eInfo.sScrollIndex)*60 + 110;
-			y = 360 + (i % 2) * 40;
+			INT16 x = (i / 2 - eInfo.sScrollIndex) * 60 + 110;
+			INT16 y = 360 + (i % 2) * 40;
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );

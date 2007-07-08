@@ -118,8 +118,8 @@ void DrawItemFreeCursor( );
 void DrawItemTileCursor( );
 void InitItemInterface( );
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
-UINT32 GetInterfaceGraphicForItem( INVTYPE *pItem );
-UINT16 GetTileGraphicForItem( INVTYPE *pItem );
+UINT32 GetInterfaceGraphicForItem(const INVTYPE* pItem);
+UINT16 GetTileGraphicForItem(const INVTYPE* pItem);
 UINT32 LoadTileGraphicForItem(const INVTYPE* pItem);
 
 void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier);
