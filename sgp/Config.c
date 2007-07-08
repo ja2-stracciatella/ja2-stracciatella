@@ -104,7 +104,7 @@ int ConfigParseFile(const char* file)
 		char key[BUFFER_SIZE];
 		char value[BUFFER_SIZE];
 
-		if (sscanf(string, "%s = %[A-z 0-9/\\_:-]", key, value) == 2)
+		if (sscanf(string, "%s = %[A-z 0-9/\\_.:-]", key, value) == 2)
 		{
 			const char* trim_value = Trim(value);
 			ConfigUpdateEntry(key, trim_value);
