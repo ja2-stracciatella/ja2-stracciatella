@@ -1545,32 +1545,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 												// Are we playing a sound
 												if ( pAnimDef->sAnimID == RANDOM_ANIM_SOUND )
 												{
-                          if ( pSoldier->ubBodyType == COW )
-                          {
-                            if ( Random( 2 ) == 1 )
-                            {
-                              if ( ( gTacticalStatus.uiFlags & INCOMBAT ) && pSoldier->bVisible == -1 )
-                              {
-                                // DO this every 10th time or so...
-                                if ( Random( 100 ) < 10 )
-                                {
-													        // Play sound
-													        PlayJA2SampleFromFile(pAnimDef->zSoundFile, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-                                }
-                              }
-                              else
-                              {
-
-													      // Play sound
-													      PlayJA2SampleFromFile(pAnimDef->zSoundFile, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-                              }
-                            }
-                          }
-                          else
-                          {
-													  // Play sound
-													  PlayJA2SampleFromFile(pAnimDef->zSoundFile, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-                          }
+													if (pSoldier->ubBodyType != COW ||
+															Random(2) != 0 && (!(gTacticalStatus.uiFlags & INCOMBAT) || pSoldier->bVisible != -1 || Random(100) < 10))
+													{
+														PlayJA2SampleFromFile(pAnimDef->zSoundFile, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+													}
 												}
 												else
 												{
