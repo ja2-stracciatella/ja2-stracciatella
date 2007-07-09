@@ -478,7 +478,6 @@ void PasteSmartWall( UINT32 iMapIndex )
 void PasteSmartDoor( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall = NULL;
-	UINT16 usTileIndex;
 	UINT16 usDoorType;
 	UINT16 usIndex;
 
@@ -488,7 +487,7 @@ void PasteSmartDoor( UINT32 iMapIndex )
 		usIndex = CalcSmartDoorIndex( usWallOrientation );
 		usDoorType = CalcSmartDoorType();
 		AddToUndoList( iMapIndex );
-		GetTileIndexFromTypeSubIndex( usDoorType, usIndex, &usTileIndex );
+		UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usDoorType, usIndex);
 		ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
 	}
 	if( pWall = GetHorizontalWall( iMapIndex ) )
@@ -497,15 +496,13 @@ void PasteSmartDoor( UINT32 iMapIndex )
 		usIndex = CalcSmartDoorIndex( usWallOrientation );
 		usDoorType = CalcSmartDoorType();
 		AddToUndoList( iMapIndex );
-		GetTileIndexFromTypeSubIndex( usDoorType, usIndex, &usTileIndex );
+		UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usDoorType, usIndex);
 		ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
 	}
 }
 
 void PasteSmartWindow( UINT32 iMapIndex )
 {
-	UINT16 usNewWallIndex;
-
 	LEVELNODE *pWall = NULL;
 	UINT32 uiTileType;
 	UINT16 usWallType;
@@ -527,7 +524,7 @@ void PasteSmartWindow( UINT32 iMapIndex )
 		//Calculate the new graphic for the window type selected.
 
 		AddToUndoList( iMapIndex );
-		GetTileIndexFromTypeSubIndex( usWallType, usIndex, &usNewWallIndex );
+		UINT16 usNewWallIndex = GetTileIndexFromTypeSubIndex(usWallType, usIndex);
 		ReplaceStructIndex( iMapIndex, pWall->usIndex, usNewWallIndex );
 	}
 	pWall = GetHorizontalWall( iMapIndex );
@@ -545,15 +542,13 @@ void PasteSmartWindow( UINT32 iMapIndex )
 		usIndex = CalcSmartWindowIndex( usWallOrientation );
 		//Calculate the new graphic for the window type selected.
 		AddToUndoList( iMapIndex );
-		GetTileIndexFromTypeSubIndex( usWallType, usIndex, &usNewWallIndex );
+		UINT16 usNewWallIndex = GetTileIndexFromTypeSubIndex(usWallType, usIndex);
 		ReplaceStructIndex( iMapIndex, pWall->usIndex, usNewWallIndex );
 	}
 }
 
 void PasteSmartBrokenWall( UINT32 iMapIndex )
 {
-	UINT16 usNewWallIndex;
-
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
 	UINT16 usWallType;
@@ -578,7 +573,7 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 		else
 		{
 			AddToUndoList( iMapIndex );
-			GetTileIndexFromTypeSubIndex( usWallType, usIndex, &usNewWallIndex );
+			UINT16 usNewWallIndex = GetTileIndexFromTypeSubIndex(usWallType, usIndex);
 			ReplaceStructIndex( iMapIndex, pWall->usIndex, usNewWallIndex );
 		}
 	}
@@ -603,7 +598,7 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 		else
 		{
 			AddToUndoList( iMapIndex );
-			GetTileIndexFromTypeSubIndex( usWallType, usIndex, &usNewWallIndex );
+			UINT16 usNewWallIndex = GetTileIndexFromTypeSubIndex(usWallType, usIndex);
 			ReplaceStructIndex( iMapIndex, pWall->usIndex, usNewWallIndex );
 		}
 		//Calculate the new graphic for the window type selected.

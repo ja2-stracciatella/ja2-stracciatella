@@ -82,18 +82,18 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 	ApplyMapChangesToMapTempFile( TRUE );
 	// Remove it!
 	// Get index for it...
-	GetTileIndexFromTypeSubIndex( EIGHTOSTRUCT, (INT8)( 5 ), &usTileIndex );
+	usTileIndex = GetTileIndexFromTypeSubIndex(EIGHTOSTRUCT, 5);
 	RemoveStruct( 13830, usTileIndex );
 
 	// Add new one...
 	if ( fFromExplosion )
 	{
 		// Use damaged peice
-		GetTileIndexFromTypeSubIndex( EIGHTOSTRUCT, (INT8)( 7 ), &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(EIGHTOSTRUCT, 7);
 	}
 	else
 	{
-		GetTileIndexFromTypeSubIndex( EIGHTOSTRUCT, (INT8)( 8 ), &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(EIGHTOSTRUCT, 8);
 		// Play sound...
 
     PlayJA2Sample(OPEN_STATUE, HIGHVOLUME, 1, MIDDLEPAN);

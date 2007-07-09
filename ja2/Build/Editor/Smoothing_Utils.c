@@ -308,7 +308,6 @@ static void ChangeHorizontalWall(UINT32 iMapIndex, UINT16 usNewPiece)
 {
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
-	UINT16 usTileIndex;
 	INT16 sIndex;
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
@@ -318,7 +317,7 @@ static void ChangeHorizontalWall(UINT32 iMapIndex, UINT16 usNewPiece)
 		{ //Okay, we have the wall, now change it's type.
 			sIndex = PickAWallPiece( usNewPiece );
 			AddToUndoList( iMapIndex );
-			GetTileIndexFromTypeSubIndex( uiTileType, sIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, sIndex);
 			ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
 		}
 	}
@@ -328,7 +327,6 @@ void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 {
 	LEVELNODE *pWall;
 	UINT32 uiTileType;
-	UINT16 usTileIndex;
 	INT16 sIndex;
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
@@ -338,7 +336,7 @@ void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece )
 		{ //Okay, we have the wall, now change it's type.
 			sIndex = PickAWallPiece( usNewPiece );
 			AddToUndoList( iMapIndex );
-			GetTileIndexFromTypeSubIndex( uiTileType, sIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, sIndex);
 			ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
 		}
 	}

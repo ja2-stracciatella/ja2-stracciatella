@@ -414,7 +414,6 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 	LEVELNODE *pFenceNode;
 	INT8		bFenceDestructionPartner = -1;
 	UINT32	uiFenceType;
-	UINT16	usTileIndex;
 
 	pFenceStructure = FindStructure( sStructGridNo, STRUCTURE_FENCE );
 
@@ -435,7 +434,7 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 			bFenceDestructionPartner = -1 * ( pFenceBaseStructure->pDBStructureRef->pDBStructure->bDestructionPartner );
 
 			// Get new index
-			GetTileIndexFromTypeSubIndex( uiFenceType, (INT8)( bFenceDestructionPartner ), &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiFenceType, bFenceDestructionPartner);
 
 			//Set a flag indicating that the following changes are to go the the maps, temp file
 			ApplyMapChangesToMapTempFile( TRUE );
@@ -458,8 +457,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 	STRUCTURE		*pBase, *pWallStruct, *pAttached, *pAttachedBase;
 	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
 	INT16 sNewGridNo, sStructGridNo;
-	INT16	sNewIndex, sSubIndex;
-	UINT16 usObjectIndex, usTileIndex;
+	UINT16 usObjectIndex;
 	UINT8	 ubNumberOfTiles, ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
 	INT8	bDestructionPartner=-1;
@@ -577,13 +575,14 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 
 					// OK, destrcution index is , as default, the partner, until we go over the first set of explsion
 					// debris...
+					UINT16 usTileIndex;
 					if ( bDestructionPartner > 39 )
 					{
-						GetTileIndexFromTypeSubIndex( SECONDEXPLDEBRIS, (INT8)( bDestructionPartner - 40 ), &usTileIndex );
+						usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, bDestructionPartner - 40);
 					}
 					else
 					{
-						GetTileIndexFromTypeSubIndex( FIRSTEXPLDEBRIS, bDestructionPartner, &usTileIndex );
+						usTileIndex = GetTileIndexFromTypeSubIndex(FIRSTEXPLDEBRIS, bDestructionPartner);
 					}
 
 					// Free all the non-base tiles; the base tile is at pointer 0
@@ -698,17 +697,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 							{
 								if ( pWallStruct->fFlags & STRUCTURE_WALL )
 								{
-									if ( pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT )
-									{
-										sSubIndex = 48;
-									}
-									else
-									{
-										sSubIndex = 52;
-									}
-
+									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT ? 48 : 52);
 									// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
 									//Set a flag indicating that the following changes are to go the the maps temp file
 									ApplyMapChangesToMapTempFile( TRUE );
@@ -730,17 +721,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 							{
 								if ( pWallStruct->fFlags & STRUCTURE_WALL )
 								{
-									if ( pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT )
-									{
-										sSubIndex = 49;
-									}
-									else
-									{
-										sSubIndex = 53;
-									}
-
+									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT ? 49 : 53);
 									// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
 									//Set a flag indicating that the following changes are to go the the maps, temp file
 									ApplyMapChangesToMapTempFile( TRUE );
@@ -845,17 +828,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 							{
 								if ( pWallStruct->fFlags & STRUCTURE_WALL )
 								{
-									if ( pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT )
-									{
-										sSubIndex = 51;
-									}
-									else
-									{
-										sSubIndex = 55;
-									}
-
+									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
 									// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
 									//Set a flag indicating that the following changes are to go the the maps, temp file
 									ApplyMapChangesToMapTempFile( TRUE );
@@ -876,17 +851,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 							{
 								if ( pWallStruct->fFlags & STRUCTURE_WALL )
 								{
-									if ( pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT )
-									{
-										sSubIndex = 50;
-									}
-									else
-									{
-										sSubIndex = 54;
-									}
-
+									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
 									// Replace!
-									GetTileIndexFromTypeSubIndex( gTileDatabase[ pNewNode->usIndex ].fType, sSubIndex, &sNewIndex );
+									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
 									//Set a flag indicating that the following changes are to go the the maps, temp file
 									ApplyMapChangesToMapTempFile( TRUE );
@@ -1009,13 +976,14 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 					// Yes we are!
 					// Remove water....
 					ApplyMapChangesToMapTempFile( TRUE );
-					GetTileIndexFromTypeSubIndex( uiTileType, 1, &sNewIndex );
+					UINT16 sNewIndex;
+					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 1);
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 2, &sNewIndex );
+					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 2);
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					GetTileIndexFromTypeSubIndex( uiTileType, 3, &sNewIndex );
+					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 3);
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					ApplyMapChangesToMapTempFile( FALSE );
@@ -1041,15 +1009,10 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 				{
 					// We have a levelnode...
 					// Get new index for new grpahic....
-					GetTileIndexFromTypeSubIndex( uiTileType, bDestructionPartner, &usTileIndex );
-
+					UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, bDestructionPartner);
 					ApplyMapChangesToMapTempFile( TRUE );
-
 					AddStructToHead( sBaseGridNo, usTileIndex );
-
 					ApplyMapChangesToMapTempFile( FALSE );
-
-
 				}
 
 				// Rerender world!
@@ -1577,11 +1540,9 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 		{
 			//if ( !TypeRangeExistsInObjectLayer( sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS, &usObjectIndex ) )
 			//{
-			//	GetTileIndexFromTypeSubIndex( SECONDEXPLDEBRIS, (UINT16)( Random( 10 ) + 1 ), &usTileIndex );
+			//	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, Random(10) + 1);
 			//	AddObjectToHead( sGridNo, usTileIndex );
-
 			//	SetRenderFlags(RENDER_FLAG_FULL);
-
 			//}
 		}
 
@@ -3290,7 +3251,6 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 	INT32 cnt;
 	INT16	sSectorNo;
 	BOOLEAN		fInSector = FALSE;
-	UINT16		usGoodGraphic, usDamagedGraphic;
 
 	// ATE: If we are below, return right away...
 	if ( sSectorZ != 0 )
@@ -3312,10 +3272,10 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 		if ( pSamList[ cnt ] == sSectorNo )
 		{
 			// get graphic.......
-			GetTileIndexFromTypeSubIndex( EIGHTISTRUCT, (UINT16)( gbSAMGraphicList[ cnt ] ), &usGoodGraphic );
+			UINT16 usGoodGraphic = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, gbSAMGraphicList[cnt]);
 
 			// Damaged one ( current ) is 2 less...
-			usDamagedGraphic = usGoodGraphic - 2;
+			UINT16 usDamagedGraphic = usGoodGraphic - 2;
 
 			// First gridno listed is base gridno....
 

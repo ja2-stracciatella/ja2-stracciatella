@@ -500,7 +500,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 {
 	MAP_ELEMENT *		pMapElement;
 	INT8						bValue;
-	UINT16					usIndex, usNewIndex;
+	UINT16					usIndex;
 
 	// OK, based on level, type, display graphics for blood
 	pMapElement = &(gpWorldLevelData[ sGridNo ]);
@@ -541,13 +541,14 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 			{
 				usIndex = (UINT16)( ( Random( 4 ) * 4 ) + ubBloodGraphicLUT[ bValue ] );
 
+				UINT16 usNewIndex;
 				if ( BLOOD_FLOOR_TYPE( pMapElement->ubSmellInfo )	== 0 )
 				{
-					GetTileIndexFromTypeSubIndex( HUMANBLOOD, (UINT16)(usIndex + 1), &usNewIndex );
+					usNewIndex = GetTileIndexFromTypeSubIndex(HUMANBLOOD, usIndex + 1);
 				}
 				else
 				{
-					GetTileIndexFromTypeSubIndex( CREATUREBLOOD, (UINT16)(usIndex + 1), &usNewIndex );
+					usNewIndex = GetTileIndexFromTypeSubIndex(CREATUREBLOOD, usIndex + 1);
 				}
 
 				//This has been removed and it is handled by the ubBloodInfo level when restoring a saved game.

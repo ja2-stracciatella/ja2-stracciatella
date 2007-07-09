@@ -100,7 +100,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	UINT32 cnt;
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
-	UINT16  usTileIndex;
 	UINT16	land=0;
 	UINT32  uiTopType;
 	BOOLEAN	fSameTile;
@@ -116,6 +115,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	pSmoothStruct = gbSmoothStruct;
 
 	// Get land index value for given level and adjust according to type
+	UINT16 usTileIndex;
 	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
 	{
 		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
@@ -232,8 +232,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 		// five available tiles
 		land = (rand( ) % 10 ) + 1;
 	}
-	GetTileIndexFromTypeSubIndex( origType, land, &usTileIndex );
-	*piNewTile = usTileIndex;
+	*piNewTile = GetTileIndexFromTypeSubIndex(origType, land);
 }
 
 
@@ -355,7 +354,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	UINT32 cnt;
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
-	UINT16  usTileIndex;
 	UINT16	land=0;
 	UINT32  uiTopType;
 	BOOLEAN	fSameTile;
@@ -363,6 +361,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 
 	pSmoothStruct = gbSmoothWaterStruct;
 	// Get land index value for given level and adjust according to type
+	UINT16 usTileIndex;
 	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
 	{
 		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
@@ -519,9 +518,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 			}
 			land = (rand( ) % 10 ) + 1;
 	}
-	GetTileIndexFromTypeSubIndex( origType, land, &usTileIndex );
-	*piNewTile = usTileIndex;
+	*piNewTile = GetTileIndexFromTypeSubIndex(origType, land);
 }
-
 
 #endif

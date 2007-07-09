@@ -429,16 +429,12 @@ BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UI
 	return( TRUE );
 }
 
-BOOLEAN	GetTileIndexFromTypeSubIndex( UINT32 uiCheckType, UINT16 usSubIndex, UINT16 *pusTileIndex )
+
+UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex)
 {
-	// Tile database is zero-based, Type indecies are 1-based!
-
-	CHECKF ( uiCheckType < NUMBEROFTILETYPES );
-
-	*pusTileIndex = usSubIndex + gTileTypeStartIndex[ uiCheckType ] - 1;
-
-	return( TRUE );
-
+	Assert(uiCheckType < NUMBEROFTILETYPES);
+	// Tile database is zero-based, Type indices are 1-based!
+	return usSubIndex + gTileTypeStartIndex[uiCheckType] - 1;
 }
 
 

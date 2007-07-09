@@ -5278,9 +5278,7 @@ UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 		case 2:  Type = P2ITEMS; break;
 		default: Type = P3ITEMS; break;
 	}
-	UINT16 Index;
-	GetTileIndexFromTypeSubIndex(Type, pItem->ubGraphicNum + 1, &Index);
-	return Index;
+	return GetTileIndexFromTypeSubIndex(Type, pItem->ubGraphicNum + 1);
 }
 
 

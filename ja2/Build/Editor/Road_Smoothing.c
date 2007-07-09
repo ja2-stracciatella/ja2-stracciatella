@@ -398,13 +398,12 @@ void InitializeRoadMacros()
 void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID )
 {
 	INT32 i;
-	UINT16 usTileIndex;
 	i = gsRoadMacroStartIndex[ iMacroID ];
 	while( gRoadMacros[ i ].sMacroID == iMacroID )
 	{
 		AddToUndoList( iMapIndex + gRoadMacros[ i ].sOffset );
 		RemoveAllObjectsOfTypeRange( i, ROADPIECES, ROADPIECES );
-		GetTileIndexFromTypeSubIndex( ROADPIECES, (UINT16)(i+1) , &usTileIndex );
+		UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ROADPIECES, i + 1);
 		AddObjectToHead( iMapIndex + gRoadMacros[ i ].sOffset, usTileIndex );
 		i++;
 	}

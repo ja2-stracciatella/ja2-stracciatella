@@ -2140,7 +2140,6 @@ INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlo
  INT16 sSwitchValue;
  INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART,
 													ORANGESTEPSTART, REDSTEPSTART };
- UINT16	usTileIndex;
  UINT16	usTileNum;
  LEVELNODE	*pNode;
  UINT16 usMovementModeToUseForAPs;
@@ -2408,7 +2407,8 @@ INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlo
 						}
 					}
 
-					GetTileIndexFromTypeSubIndex( FOOTPRINTS, (UINT16)usTileNum, &usTileIndex );
+					UINT16 usTileIndex;
+					usTileIndex = GetTileIndexFromTypeSubIndex(FOOTPRINTS, usTileNum);
 
 					// Adjust based on what mode we are in...
 					if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -2464,7 +2464,7 @@ INT16 PlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlo
 					// this is a LEAVING footstep which is always the second set of 8
 					usTileNum += 8;
 
-					GetTileIndexFromTypeSubIndex( FOOTPRINTS, (UINT16)usTileNum, &usTileIndex );
+					usTileIndex = GetTileIndexFromTypeSubIndex(FOOTPRINTS, usTileNum);
 
 					// Adjust based on what mode we are in...
 					if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )

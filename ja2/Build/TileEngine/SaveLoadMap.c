@@ -94,7 +94,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
 	MODIFY_MAP *pTempArrayOfMaps=NULL;
-	UINT16	usIndex;
 
 	//Convert the current sector location into a file name
 //	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
@@ -159,8 +158,8 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 			case SLM_LAND:
 				break;
 			case SLM_OBJECT:
-				GetTileIndexFromTypeSubIndex( pMap->usImageType, pMap->usSubImageIndex, &usIndex );
-
+			{
+				UINT16 usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
 				AddObjectFromMapTempFileToMap( pMap->usGridNo, usIndex );
 
 				// Save this struct back to the temp file
@@ -168,11 +167,12 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 
 				//Since the element is being saved back to the temp file, increment the #
 				uiNumberOfElementsSavedBackToFile++;
-
 				break;
-			case SLM_STRUCT:
-				GetTileIndexFromTypeSubIndex( pMap->usImageType, pMap->usSubImageIndex, &usIndex );
+			}
 
+			case SLM_STRUCT:
+			{
+				UINT16 usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
 				AddStructFromMapTempFileToMap( pMap->usGridNo, usIndex );
 
 				// Save this struct back to the temp file
@@ -181,6 +181,8 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 				//Since the element is being saved back to the temp file, increment the #
 				uiNumberOfElementsSavedBackToFile++;
 				break;
+			}
+
 			case SLM_SHADOW:
 				break;
 			case SLM_MERC:
@@ -210,7 +212,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 				}
 				else
 				{
-					GetTileIndexFromTypeSubIndex( pMap->usImageType, pMap->usSubImageIndex, &usIndex );
+					UINT16 usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
 					RemoveSavedStructFromMap( pMap->usGridNo, usIndex );
 				}
 

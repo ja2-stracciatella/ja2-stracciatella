@@ -1499,7 +1499,7 @@ static void HandleKeyboardShortcuts(void)
 					if( gfBasement )
 					{
 						INT32 i;
-						UINT16 usRoofIndex, usRoofType, usTileIndex;
+						UINT16 usRoofIndex, usRoofType;
 						pSelList = SelSingleRoof;
 						pNumSelList = &iNumRoofsSelected;
 						usRoofType = GetRandomIndexByRange( FIRSTROOF, LASTROOF );
@@ -1514,7 +1514,7 @@ static void HandleKeyboardShortcuts(void)
 								RemoveAllOnRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );
 								RemoveAllShadowsOfTypeRange( i, FIRSTROOF, LASTSLANTROOF );
 								usRoofIndex = 9 + ( rand() % 3 );
-								GetTileIndexFromTypeSubIndex( usRoofType, usRoofIndex, &usTileIndex );
+								UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, usRoofIndex);
 								AddRoofToHead( i, usTileIndex );
 							}
 						}
@@ -2252,11 +2252,10 @@ void CreateNewMap()
 	if( gfPendingBasement )
 	{
 		UINT32 i;
-		UINT16 usIndex;
 		for ( i = 0; i < WORLD_MAX; i++ )
 		{
 			// Set land index 9 + 3 variants
-			GetTileIndexFromTypeSubIndex( FIRSTROOF, (UINT16)(9 + Random(3)), &usIndex );
+			UINT16 usIndex = GetTileIndexFromTypeSubIndex(FIRSTROOF, 9 + Random(3));
 			AddRoofToHead( i, usIndex );
 		}
 		SetEditorSmoothingMode( SMOOTHING_BASEMENT );
@@ -2264,11 +2263,10 @@ void CreateNewMap()
 	else if( gfPendingCaves )
 	{
 		UINT32 i;
-		UINT16 usIndex;
 		for ( i = 0; i < WORLD_MAX; i++ )
 		{
 			//Set up the default cave here.
-			GetTileIndexFromTypeSubIndex( FIRSTWALL, (UINT16)(60 + Random(6)), &usIndex );
+			UINT16 usIndex = GetTileIndexFromTypeSubIndex(FIRSTWALL, 60 + Random(6));
 			AddCave( i, usIndex );
 		}
 		SetEditorSmoothingMode( SMOOTHING_CAVES );

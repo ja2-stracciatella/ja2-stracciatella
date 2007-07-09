@@ -2550,7 +2550,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 #endif
 	INT32						cnt, cnt2;
 	INT32						iTilesetID;
-	UINT16					usTileIndex;
 	UINT16					usTypeSubIndex;
 	UINT8						ubType;
 	UINT8						ubSubIndex;
@@ -2705,7 +2704,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
 
 			// Get tile index
-			GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
 			// Add layer
 			AddLandToHead( cnt, usTileIndex );
@@ -2735,7 +2734,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 					continue;
 				}
 				// Get tile index
-				GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 				// Add layer
 				AddObjectToTail( cnt, usTileIndex );
 			}
@@ -2761,7 +2760,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 					continue;
 				}
 				// Get tile index
-				GetTileIndexFromTypeSubIndex( ubType, usTypeSubIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, usTypeSubIndex);
 				// Add layer
 				AddObjectToTail( cnt, usTileIndex );
 
@@ -2789,14 +2788,14 @@ BOOLEAN LoadWorld(const char *puiFilename)
 			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
 
 			// Get tile index
-			GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
       if ( ubMinorMapVersion <= 25 )
       {
         // Check patching for phantom menace struct data...
         if ( gTileDatabase[ usTileIndex ].uiFlags & UNDERFLOW_FILLER )
         {
-			    GetTileIndexFromTypeSubIndex( ubType, 1, &usTileIndex );
+			    usTileIndex = GetTileIndexFromTypeSubIndex(ubType, 1);
         }
       }
 
@@ -2825,7 +2824,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
 
 			// Get tile index
-			GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
 			// Add layer
 			AddShadowToTail( cnt, usTileIndex );
@@ -2852,7 +2851,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
 
 			// Get tile index
-			GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
 			// Add layer
 			AddRoofToTail( cnt, usTileIndex );
@@ -2879,7 +2878,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
 
 			// Get tile index
-			GetTileIndexFromTypeSubIndex( ubType, ubSubIndex, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
 			// Add layer
 			AddOnRoofToTail( cnt, usTileIndex );

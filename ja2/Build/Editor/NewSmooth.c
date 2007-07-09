@@ -52,7 +52,6 @@ static UINT16 GetCaveTileIndexFromPerimeterValue(UINT8 ubTotal)
 {
 	UINT16 usType = FIRSTWALL;
 	UINT16 usIndex;
-	UINT16 usTileIndex;
 
 	switch( ubTotal )
 	{
@@ -210,8 +209,7 @@ static UINT16 GetCaveTileIndexFromPerimeterValue(UINT8 ubTotal)
 			usIndex = 60 + (UINT16)Random( 6 );
 			break;
 	}
-	GetTileIndexFromTypeSubIndex( usType, usIndex, &usTileIndex );
-	return usTileIndex;
+	return GetTileIndexFromTypeSubIndex(usType, usIndex);
 }
 
 //	16 | 1 | 32
@@ -326,7 +324,6 @@ INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 static void BuildSlantRoof(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom, UINT16 usWallType, UINT16 usRoofType, BOOLEAN fVertical)
 {
 	INT32 i;
-	UINT16 usTileIndex;
 	INT32 iMapIndex;
 	if( fVertical )
 	{
@@ -335,26 +332,27 @@ static void BuildSlantRoof(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom,
 		//done because of the building code before this.
 		AddToUndoList( iMapIndex + 8 );
 		//Add the closest viewable pieces.  There are two aframe walls pieces, and extended aframe roof pieces.
-		GetTileIndexFromTypeSubIndex( usWallType, VWALL_LEFT, &usTileIndex );
+		UINT16 usTileIndex;
+		usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, VWALL_LEFT);
 		AddRoofToHead( iMapIndex + 4, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usWallType, VWALL_RIGHT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, VWALL_RIGHT);
 		AddRoofToHead( iMapIndex + 8, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_LEFT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_LEFT);
 		AddRoofToHead( iMapIndex + 3, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_RIGHT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_RIGHT);
 		AddRoofToHead( iMapIndex + 7, usTileIndex );
 		for( i = iBottom - 1; i > iTop; i-- )
 		{
 			iMapIndex -= WORLD_COLS;
-			GetTileIndexFromTypeSubIndex( usRoofType, THIN_LEFT, &usTileIndex );
+			usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THIN_LEFT);
 			AddRoofToHead( iMapIndex + 3, usTileIndex );
-			GetTileIndexFromTypeSubIndex( usRoofType, THIN_RIGHT, &usTileIndex );
+			usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THIN_RIGHT);
 			AddRoofToHead( iMapIndex + 7, usTileIndex );
 		}
 		iMapIndex -= WORLD_COLS;
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_LEFT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_LEFT);
 		AddRoofToHead( iMapIndex + 3, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_RIGHT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_RIGHT);
 		AddRoofToHead( iMapIndex + 7, usTileIndex );
 	}
 	else
@@ -364,26 +362,27 @@ static void BuildSlantRoof(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom,
 		//done because of the building code before this.
 		AddToUndoList( iMapIndex + 8*WORLD_COLS );
 		//Add the closest viewable pieces.  There are two aframe walls pieces, and extended aframe roof pieces.
-		GetTileIndexFromTypeSubIndex( usWallType, HWALL_LEFT, &usTileIndex );
+		UINT16 usTileIndex;
+		usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, HWALL_LEFT);
 		AddRoofToHead( iMapIndex + 4*WORLD_COLS, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usWallType, HWALL_RIGHT, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, HWALL_RIGHT);
 		AddRoofToHead( iMapIndex + 8*WORLD_COLS, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_TOP, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_TOP);
 		AddRoofToHead( iMapIndex + 3*WORLD_COLS, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_BOTTOM, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_BOTTOM);
 		AddRoofToHead( iMapIndex + 7*WORLD_COLS, usTileIndex );
 		for( i = iRight - 1; i > iLeft; i-- )
 		{
 			iMapIndex--;
-			GetTileIndexFromTypeSubIndex( usRoofType, THIN_TOP, &usTileIndex );
+			usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THIN_TOP);
 			AddRoofToHead( iMapIndex + 3*WORLD_COLS, usTileIndex );
-			GetTileIndexFromTypeSubIndex( usRoofType, THIN_BOTTOM, &usTileIndex );
+			usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THIN_BOTTOM);
 			AddRoofToHead( iMapIndex + 7*WORLD_COLS, usTileIndex );
 		}
 		iMapIndex--;
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_TOP, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_TOP);
 		AddRoofToHead( iMapIndex + 3*WORLD_COLS, usTileIndex );
-		GetTileIndexFromTypeSubIndex( usRoofType, THICK_BOTTOM, &usTileIndex );
+		usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, THICK_BOTTOM);
 		AddRoofToHead( iMapIndex + 7*WORLD_COLS, usTileIndex );
 	}
 }
@@ -415,7 +414,6 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 {
 	INT16 sIndex;
-	UINT16 usTileIndex;
 	UINT16 ubWallClass;
 	LEVELNODE *pStruct;
 	if( !usWallType )
@@ -431,7 +429,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			{	//Special case where a shadow has to be created as it now is a bottom corner and
 				//must contribute to the bottom shadow.
 				AddToUndoList( iMapIndex - 1 );
-				GetTileIndexFromTypeSubIndex( usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex - 1, usTileIndex );
 			}
 			if ( pStruct = GetVerticalWall( iMapIndex ) ) //right corner
@@ -439,14 +437,14 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				//the vertical piece with a bottomend.
 				sIndex = PickAWallPiece( EXTERIOR_BOTTOMEND );
 				AddToUndoList( iMapIndex );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex, pStruct->usIndex, usTileIndex );
 			}
 			ubWallClass = EXTERIOR_L;
 			if( !gfBasement )
 			{
 				//All exterior_l walls have shadows.
-				GetTileIndexFromTypeSubIndex( usWallType, EXTERIOR_L_SHADOW_INDEX, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, EXTERIOR_L_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex, usTileIndex );
 			}
 			break;
@@ -456,7 +454,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			{
 				sIndex = PickAWallPiece( INTERIOR_EXTENDED );
 				AddToUndoList( iMapIndex + WORLD_COLS - 1 );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex + WORLD_COLS - 1, pStruct->usIndex, usTileIndex );
 			}
 			break;
@@ -495,7 +493,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			{	//Replace the piece with an extended piece.
 				sIndex = PickAWallPiece( INTERIOR_EXTENDED );
 				AddToUndoList( iMapIndex + WORLD_COLS - 1 );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex + WORLD_COLS - 1, pStruct->usIndex, usTileIndex );
 				//NOTE:  Not yet checking for interior extended bottomend!
 			}
@@ -503,7 +501,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			{
 				sIndex = PickAWallPiece( INTERIOR_BOTTOMEND );
 				AddToUndoList( iMapIndex );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex, pStruct->usIndex, usTileIndex );
 			}
 			break;
@@ -514,20 +512,20 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				//the vertical piece with a bottomend.
 				sIndex = PickAWallPiece( EXTERIOR_BOTTOMEND );
 				AddToUndoList( iMapIndex );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex, pStruct->usIndex, usTileIndex );
 			}
 			if( (pStruct = GetVerticalWall( iMapIndex + WORLD_COLS - 1 )) && !GetVerticalWall( iMapIndex - 1) )
 			{
 				sIndex = PickAWallPiece( EXTERIOR_EXTENDED );
 				AddToUndoList( iMapIndex + WORLD_COLS - 1 );
-				GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 				ReplaceStructIndex( iMapIndex + WORLD_COLS - 1, pStruct->usIndex, usTileIndex );
 			}
 			if( !gfBasement )
 			{
 				//All exterior_l walls have shadows.
-				GetTileIndexFromTypeSubIndex( usWallType, EXTERIOR_L_SHADOW_INDEX, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, EXTERIOR_L_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex, usTileIndex );
 			}
 			break;
@@ -541,7 +539,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			if( !gfBasement && GetHorizontalWall( iMapIndex + 1 ) )
 			{
 				AddToUndoList( iMapIndex );
-				GetTileIndexFromTypeSubIndex( usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex, usTileIndex );
 			}
 			if( GetHorizontalWall( iMapIndex - WORLD_COLS + 1 ) )
@@ -569,13 +567,13 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			if( !gfBasement && GetHorizontalWall( iMapIndex + 1 ) && !GetHorizontalWall( iMapIndex )
 				  && !FloorAtGridNo( iMapIndex + WORLD_COLS ) )
 			{
-				GetTileIndexFromTypeSubIndex( usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex, usTileIndex );
 			}
 			break;
 	}
 	sIndex = PickAWallPiece( ubWallClass );
-	GetTileIndexFromTypeSubIndex( usWallType, sIndex, &usTileIndex );
+	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
 	AddToUndoList( iMapIndex );
 	AddWallToStructLayer( iMapIndex, usTileIndex, FALSE );
 }
@@ -586,7 +584,6 @@ static void EraseRoof(UINT32 iMapIndex);
 
 void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 {
-	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop = FALSE, fBottom = FALSE, fLeft = FALSE, fRight = FALSE;
 	if( !usRoofType )
 	{
@@ -603,6 +600,7 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 	fLeft = FloorAtGridNo( iMapIndex - 1 ) ? FALSE : TRUE;
 	fBottom = FloorAtGridNo( iMapIndex + WORLD_COLS ) ? FALSE : TRUE;
 	fRight = FloorAtGridNo( iMapIndex + 1 ) ? FALSE : TRUE;
+	UINT16 usRoofIndex;
 	if( fTop && fLeft )						usRoofIndex = TOPLEFT_ROOF_INDEX;
 	else if( fTop && fRight)			usRoofIndex = TOPRIGHT_ROOF_INDEX;
 	else if( fBottom && fLeft )		usRoofIndex = BOTTOMLEFT_ROOF_INDEX;
@@ -612,7 +610,7 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 	else if( fLeft )							usRoofIndex = LEFT_ROOF_INDEX;
 	else if( fRight )							usRoofIndex = RIGHT_ROOF_INDEX;
 	else													usRoofIndex = CENTER_ROOF_BASE_INDEX + ( rand() % CENTER_ROOF_VARIANTS );
-	GetTileIndexFromTypeSubIndex( usRoofType, usRoofIndex, &usTileIndex );
+	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, usRoofIndex);
 	AddRoofToHead( iMapIndex, usTileIndex );
 	//if the editor view roofs is off, then the new roofs need to be hidden.
 	if( !fBuildingShowRoofs )
@@ -627,7 +625,6 @@ void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
 //  and use that for the new roof.  This is needed when erasing parts of multiple buildings simultaneously.
 void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 {
-	UINT16 usRoofIndex, usTileIndex;
 	BOOLEAN fTop, fBottom, fLeft, fRight;
 	if( !usRoofType )
 	{
@@ -644,6 +641,7 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 	fLeft = GetVerticalWall( iMapIndex - 1 ) ? TRUE : FALSE;
 	fBottom = GetHorizontalWall( iMapIndex ) ? TRUE : FALSE;
 	fRight = GetVerticalWall( iMapIndex ) ? TRUE : FALSE;
+	UINT16 usRoofIndex;
 	if( fTop && fLeft )						usRoofIndex = TOPLEFT_ROOF_INDEX;
 	else if( fTop && fRight)			usRoofIndex = TOPRIGHT_ROOF_INDEX;
 	else if( fBottom && fLeft )		usRoofIndex = BOTTOMLEFT_ROOF_INDEX;
@@ -653,7 +651,7 @@ void RebuildRoof( UINT32 iMapIndex, UINT16 usRoofType )
 	else if( fLeft )							usRoofIndex = LEFT_ROOF_INDEX;
 	else if( fRight )							usRoofIndex = RIGHT_ROOF_INDEX;
 	else													usRoofIndex = CENTER_ROOF_BASE_INDEX + ( rand() % CENTER_ROOF_VARIANTS );
-	GetTileIndexFromTypeSubIndex( usRoofType, usRoofIndex, &usTileIndex );
+	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, usRoofIndex);
 	AddRoofToHead( iMapIndex, usTileIndex );
 	//if the editor view roofs is off, then the new roofs need to be hidden.
 	if( !fBuildingShowRoofs )
@@ -868,7 +866,6 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 {
 	UINT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
-	UINT16 usTileIndex;
 	UINT16 usFloorType;
 	BOOLEAN fFloor;
 
@@ -922,7 +919,7 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 		for( y = top; y <= bottom; y++ ) for( x = left; x <= right; x++ )
 		{
 			iMapIndex = y * WORLD_COLS + x;
-			GetTileIndexFromTypeSubIndex( usFloorType, 1, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usFloorType, 1);
 			AddLandToHead( iMapIndex, (UINT16)( usTileIndex + Random( FLOOR_VARIANTS ) ) );
 		}
 	}
@@ -944,7 +941,6 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	INT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
 	UINT16 usFloorType, usWallType, usRoofType;
-	UINT16 usTileIndex;
 	BOOLEAN fNewBuilding;
 	BOOLEAN fSlantRoof = FALSE;
 	BOOLEAN fVertical;
@@ -965,7 +961,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 		{
 			iMapIndex = y * WORLD_COLS + x;
 			EraseFloor( iMapIndex );
-			GetTileIndexFromTypeSubIndex( usFloorType, 1, &usTileIndex );
+			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usFloorType, 1);
 			AddLandToHead( iMapIndex, (UINT16)( usTileIndex + Random( FLOOR_VARIANTS ) ) );
 		}
 		//we are done!
@@ -1125,7 +1121,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 				RebuildRoof( iMapIndex, usRoofType );
 			if( usFloorType != 0xffff && !gfBasement )
 			{
-				GetTileIndexFromTypeSubIndex( usFloorType, 1, &usTileIndex );
+				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usFloorType, 1);
 				AddLandToHead( iMapIndex, (UINT16)( usTileIndex + Random( FLOOR_VARIANTS ) ) );
 			}
 		}
