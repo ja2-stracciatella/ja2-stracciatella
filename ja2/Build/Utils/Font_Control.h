@@ -7,14 +7,11 @@
 
 extern INT32 gp10PointArial;
 extern INT32 gp10PointArialBold;
-extern INT32 gp10PointRoman;
 extern INT32 gp12PointArial;
 extern INT32 gp12PointArialFixedFont;
 extern INT32 gp12PointFont1;
-extern INT32 gp12PointRoman;
 extern INT32 gp14PointArial;
 extern INT32 gp14PointHumanist;
-extern INT32 gp14PointSansSerif;
 extern INT32 gp16PointArial;
 extern INT32 gpBlockFontNarrow;
 extern INT32 gpBlockyFont;
@@ -22,7 +19,6 @@ extern INT32 gpBlockyFont2;
 extern INT32 gpLargeFontType1;
 extern INT32 gpSmallFontType1;
 extern INT32 gpTinyFontType1;
-extern INT32 gpClockFont;
 extern INT32 gpCompFont;
 extern INT32 gpSmallCompFont;
 
@@ -36,12 +32,8 @@ extern INT32 gpHugeFont;
 #define					SMALLFONT1				gpSmallFontType1
 #define					TINYFONT1				  gpTinyFontType1
 #define					FONT12POINT1			gp12PointFont1
-#define					CLOCKFONT			    gpClockFont
 #define         COMPFONT          gpCompFont
 #define         SMALLCOMPFONT     gpSmallCompFont
-#define					FONT10ROMAN				gp10PointRoman
-#define					FONT12ROMAN				gp12PointRoman
-#define					FONT14SANSERIF		gp14PointSansSerif
 #define					MILITARYFONT1			BLOCKFONT
 #define					FONT10ARIAL				gp10PointArial
 #define					FONT14ARIAL				gp14PointArial

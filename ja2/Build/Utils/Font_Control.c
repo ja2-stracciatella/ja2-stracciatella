@@ -9,19 +9,15 @@
 
 INT32 gp10PointArial;
 INT32 gp10PointArialBold;
-INT32 gp10PointRoman;
 INT32 gp12PointArial;
 INT32 gp12PointArialFixedFont;
 INT32 gp12PointFont1;
-INT32 gp12PointRoman;
 INT32 gp14PointArial;
 INT32 gp14PointHumanist;
-INT32 gp14PointSansSerif;
 INT32 gp16PointArial;
 INT32 gpBlockFontNarrow;
 INT32 gpBlockyFont;
 INT32 gpBlockyFont2;
-INT32 gpClockFont;
 INT32 gpCompFont;
 INT32 gpLargeFontType1;
 INT32 gpSmallCompFont;
@@ -44,19 +40,15 @@ BOOLEAN	InitializeFonts(void)
 {
 	M(gp10PointArial,          "FONTS/FONT10ARIAL.sti")
 	M(gp10PointArialBold,      "FONTS/FONT10ARIALBOLD.sti")
-	M(gp10PointRoman,          "FONTS/FONT10ROMAN.sti")
 	M(gp12PointArial,          "FONTS/FONT12ARIAL.sti")
 	M(gp12PointArialFixedFont, "FONTS/FONT12ARIALFIXEDWIDTH.sti")
 	M(gp12PointFont1,          "FONTS/FONT12POINT1.sti")
-	M(gp12PointRoman,          "FONTS/FONT12ROMAN.sti")
 	M(gp14PointArial,          "FONTS/FONT14ARIAL.sti")
 	M(gp14PointHumanist,       "FONTS/FONT14HUMANIST.sti")
-	M(gp14PointSansSerif,      "FONTS/FONT14SANSERIF.sti")
 	M(gp16PointArial,          "FONTS/FONT16ARIAL.sti")
 	M(gpBlockFontNarrow,       "FONTS/BLOCKFONTNARROW.sti")
 	M(gpBlockyFont,            "FONTS/BLOCKFONT.sti")
 	M(gpBlockyFont2,           "FONTS/BLOCKFONT2.sti")
-	M(gpClockFont,             "FONTS/CLOCKFONT.sti")
 	M(gpCompFont,              "FONTS/COMPFONT.sti")
 	M(gpLargeFontType1,        "FONTS/LARGEFONT1.sti")
 	M(gpSmallCompFont,         "FONTS/SMALLCOMPFONT.sti")
@@ -80,19 +72,15 @@ void ShutdownFonts(void)
 {
 	UnloadFont(gp10PointArial);
 	UnloadFont(gp10PointArialBold);
-	UnloadFont(gp10PointRoman);
 	UnloadFont(gp12PointArial);
 	UnloadFont(gp12PointArialFixedFont);
 	UnloadFont(gp12PointFont1);
-	UnloadFont(gp12PointRoman);
 	UnloadFont(gp14PointArial);
 	UnloadFont(gp14PointHumanist);
-	UnloadFont(gp14PointSansSerif);
 	UnloadFont(gp16PointArial);
 	UnloadFont(gpBlockFontNarrow);
 	UnloadFont(gpBlockyFont);
 	UnloadFont(gpBlockyFont2);
-	UnloadFont(gpClockFont);
 	UnloadFont(gpCompFont);
 	UnloadFont(gpLargeFontType1);
 	UnloadFont(gpSmallCompFont);

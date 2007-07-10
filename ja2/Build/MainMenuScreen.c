@@ -566,9 +566,6 @@ static void RenderMainMenu(void)
 	DrawTextToScreen(L"FONT12POINT1: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,          0, 165, 640, FONT12POINT1,          FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"COMPFONT: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,              0, 185, 640, COMPFONT,              FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"SMALLCOMPFONT: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,         0, 205, 640, SMALLCOMPFONT,         FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT10ROMAN: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,           0, 225, 640, FONT10ROMAN,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT12ROMAN: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,           0, 245, 640, FONT12ROMAN,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT14SANSERIF: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,        0, 255, 640, FONT14SANSERIF,        FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"MILITARYFONT: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,          0, 265, 640, MILITARYFONT1,         FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"FONT10ARIAL: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,           0, 285, 640, FONT10ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"FONT14ARIAL: ДАБВЗЛИЙКПЦТУФЬЩЪЫдабвзлийкпцтуфьщъыМОмо"/*gzCopyrightText[ 0 ]*/,           0, 305, 640, FONT14ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
