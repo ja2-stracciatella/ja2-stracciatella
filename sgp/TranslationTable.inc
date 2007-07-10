@@ -102,40 +102,38 @@ static const UINT16 TranslationTable[] = {
 	246, // "o" umlaut
 	252, // "u" umlaut
 	223, // double-s that looks like a beta/B  // 100
-	// START OF FUNKY RUSSIAN STUFF
-	1101,
-	1102,
-	1103,
-	1104,
-	1105,
-	1106,
-	1107,
-	1108,
-	1109,
-	1110,
-	1111,
-	1112,
-	1113,
-	1114,
-	1115,
-	1116,
-	1117,
-	1118,
-	1119,
-	1120,
-	1121,
-	1122,
-	1123,
-	1124,
-	1125,
-	1126,
-	1127,
-	1128,
-	1129,
-	1130, // 130
-	1131,
-	1132,
-	// END OF FUNKY RUSSIAN STUFF
+	0x0410, // cyrillic A
+	0x0411, // cyrillic BE
+	0x0412, // cyrillic VE
+	0x0413, // cyrillic GHE
+	0x0414, // cyrillic DE
+	0x0415, // cyrillic IE
+	0x0401, // cyrillic IO
+	0x0416, // cyrillic ZHE
+	0x0417, // cyrillic ZE
+	0x0418, // cyrillic I
+	0x0419, // cyrillic short I
+	0x041A, // cyrillic KA
+	0x041B, // cyrillic EL
+	0x041C, // cyrillic EM
+	0x041D, // cyrillic EN
+	0x041E, // cyrillic O
+	0x041F, // cyrillic PE
+	0x0420, // cyrillic ER
+	0x0421, // cyrillic ES
+	0x0422, // cyrillic TE
+	0x0423, // cyrillic U
+	0x0424, // cyrillic EF
+	0x0425, // cyrillic HA
+	0x0426, // cyrillic TSE
+	0x0427, // cyrillic CHE
+	0x0428, // cyrillic SHA
+	0x0429, // cyrillic SHCHA
+	0x042B, // cyrillic YERU
+	0x042C, // cyrillic capital soft sign
+	0x042D, // cyrillic E
+	0x042E, // cyrillic YU
+	0x042F, // cyrillic YA
 	196, // Ä
 	192, // À
 	193, // Á
@@ -172,10 +170,26 @@ static const UINT16 TranslationTable[] = {
 	249, // ù
 	250, // ú
 	251, // û
-	204, // Ì
-	206, // Î				170
-	236, // ì
-	238  // î
+	0x00CC, // I with grave
+	0x00EC, // i with grave
+	0x0104, // A with ogonek
+	0x0106, // C with acute
+	0x0118, // E with ogonek
+	0x0141, // L with stroke
+	0x0143, // N with acute
+	0x00D3, // O with acute (duplicate)
+	0x015A, // S with acute
+	0x017B, // Z with dot above
+	0x0179, // Z with acute
+	0x0105, // a with ogonek
+	0x0107, // c with acute
+	0x0119, // e with ogonek
+	0x0142, // l with stroke
+	0x0144, // n with acute
+	0x00F3, // o with acute (duplicate)
+	0x015B, // s with acute
+	0x017C, // z with dot above
+	0x017A  // z with acute
 
 #else
 	// Windows Code Page 1252 Western Standard Character Set
@@ -247,7 +261,7 @@ static const UINT16 TranslationTable[] = {
 #endif
 };
 #ifdef JA2
-	CASSERT(lengthof(TranslationTable) == 172)
+	CASSERT(lengthof(TranslationTable) == 188)
 #else
 	CASSERT(lengthof(TranslationTable) == 154)
 #endif
