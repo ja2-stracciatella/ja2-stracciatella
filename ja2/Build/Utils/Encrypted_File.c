@@ -24,32 +24,34 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 	// Decrement, by 1, any value > 32
 	for (i = 0; i < uiSeekAmount / 2 - 1 && str[i] != 0; i++)
 	{
-		pDestString[i] = (str[i] > 33 ? str[i] - 1 : str[i]);
-		#ifdef POLISH
-			switch( pDestString[ i ] )
-			{
-				case 260:		pDestString[ i ] = 165;		break;
-				case 262:		pDestString[ i ] = 198;		break;
-				case 280:		pDestString[ i ] = 202;		break;
-				case 321:		pDestString[ i ] = 163;		break;
-				case 323:		pDestString[ i ] = 209;		break;
-				case 211:		pDestString[ i ] = 211;		break;
-
-				case 346:		pDestString[ i ] = 338;		break;
-				case 379:		pDestString[ i ] = 175;		break;
-				case 377:		pDestString[ i ] = 143;		break;
-				case 261:		pDestString[ i ] = 185;		break;
-				case 263:		pDestString[ i ] = 230;		break;
-				case 281:		pDestString[ i ] = 234;		break;
-
-				case 322:		pDestString[ i ] = 179;		break;
-				case 324:		pDestString[ i ] = 241;		break;
-				case 243:		pDestString[ i ] = 243;		break;
-				case 347:		pDestString[ i ] = 339;		break;
-				case 380:		pDestString[ i ] = 191;		break;
-				case 378:		pDestString[ i ] = 376;		break;
-			}
-		#endif
+		wchar_t c = (str[i] > 33 ? str[i] - 1 : str[i]);
+#if defined POLISH
+		/* The polish data files are incorrectly encoded. The original texts seem to
+		 * be encoded in CP1250, but then they were converted from CP1252 (!) to
+		 * UTF-16 to store them in the data files. Undo this damage here.
+		 * Also the format code for centering texts differs. */
+		switch (c)
+		{
+			case 143: c = 0x0179; break;
+			case 163: c = 0x0141; break;
+			case 165: c = 0x0104; break;
+			case 175: c = 0x017B; break;
+			case 179: c = 0x0142; break;
+			case 182: c = 179;    break; // not a char, but a format code (centering)
+			case 185: c = 0x0105; break;
+			case 191: c = 0x017C; break;
+			case 198: c = 0x0106; break;
+			case 202: c = 0x0118; break;
+			case 209: c = 0x0143; break;
+			case 230: c = 0x0107; break;
+			case 234: c = 0x0119; break;
+			case 241: c = 0x0144; break;
+			case 338: c = 0x015A; break;
+			case 339: c = 0x015B; break;
+			case 376: c = 0x017A; break;
+		}
+#endif
+		pDestString[i] = c;
 	}
 	pDestString[i] = L'\0';
 
