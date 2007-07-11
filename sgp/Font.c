@@ -167,11 +167,6 @@ static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
 	Assert(hSrcVObject != NULL);
 
-	if (ssIndex < 0 || ssIndex > 92)
-	{
-		int i=0;
-	}
-
 	// Get Offsets from Index into structure
 	const ETRLEObject* pTrav = &hSrcVObject->pETRLEObject[ssIndex];
 	return pTrav->usWidth + pTrav->sOffsetX;
@@ -265,23 +260,19 @@ UINT16 GetFontHeight(INT32 FontNum)
 }
 
 
-/* Given a word-sized character, this function returns the index of the cell in
- * the font to print to the screen. */
-static INT16 GetIndex(UINT16 siChar)
+/* Given a wide char, this function returns the index of the glyph. Returns 0
+ * - the index of 'A' - if no glyph exists for the requested wide char. */
+static INT16 GetIndex(wchar_t c)
 {
 #	include "TranslationTable.inc"
 
-	// search the Translation Table and return the index for the font
-	for (UINT32 i = 0; i < lengthof(TranslationTable); i++)
+	UINT16 Idx = 0;
+	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
+	if (Idx == 0 && c != L'A')
 	{
-		if (siChar == TranslationTable[i]) return i;
+		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U%04X", c));
 	}
-
-	// If here, present warning and give the first index
-	DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given %d", siChar));
-
-	// Return 0 here, NOT -1 - we should see A's here now...
-	return 0;
+	return Idx;
 }
 
 

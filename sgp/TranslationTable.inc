@@ -1,267 +1,233 @@
 /* The text->font map table. */
-static const UINT16 TranslationTable[] = {
-	'A',
-	'B',
-	'C',
-	'D',
-	'E',
-	'F',
-	'G',
-	'H',
-	'I',
-	'J',
-	'K',
-	'L',
-	'M',
-	'N',
-	'O',
-	'P',
-	'Q',
-	'R',
-	'S',
-	'T',
-	'U',
-	'V',
-	'W',
-	'X',
-	'Y',
-	'Z',
-	'a',
-	'b',
-	'c',
-	'd',
-	'e',
-	'f',
-	'g',
-	'h',
-	'i',
-	'j',
-	'k',
-	'l',
-	'm',
-	'n',
-	'o',
-	'p',
-	'q',
-	'r',
-	's',
-	't',
-	'u',
-	'v',
-	'w',
-	'x',
-	'y',
-	'z',
-	'0',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'!',
-	'@',
-	'#',
-	'$',
-	'%',
-	'^',
-	'&',
-	'*',
-	'(',
-	')',
-	'-',
-	'_',
-	'+',
-	'=',
-	'|',
-	'\\',
-	'{',
-	'}',// 80
-	'[',
-	']',
-	':',
-	';',
-	'"',
-	'\'',
-	'<',
-	'>',
-	',',
-	'.',
-	'?',
-	'/',
-	' ', //93
+static const UINT16 TranslationTable[] =
+{
+	[L'A'] =   0,
+	[L'B'] =   1,
+	[L'C'] =   2,
+	[L'D'] =   3,
+	[L'E'] =   4,
+	[L'F'] =   5,
+	[L'G'] =   6,
+	[L'H'] =   7,
+	[L'I'] =   8,
+	[L'J'] =   9,
+	[L'K'] =  10,
+	[L'L'] =  11,
+	[L'M'] =  12,
+	[L'N'] =  13,
+	[L'O'] =  14,
+	[L'P'] =  15,
+	[L'Q'] =  16,
+	[L'R'] =  17,
+	[L'S'] =  18,
+	[L'T'] =  19,
+	[L'U'] =  20,
+	[L'V'] =  21,
+	[L'W'] =  22,
+	[L'X'] =  23,
+	[L'Y'] =  24,
+	[L'Z'] =  25,
 
-#ifdef JA2
-	196, // "A" umlaut
-	214, // "O" umlaut
-	220, // "U" umlaut
-	228, // "a" umlaut
-	246, // "o" umlaut
-	252, // "u" umlaut
-	223, // double-s that looks like a beta/B  // 100
-	0x0410, // cyrillic A
-	0x0411, // cyrillic BE
-	0x0412, // cyrillic VE
-	0x0413, // cyrillic GHE
-	0x0414, // cyrillic DE
-	0x0415, // cyrillic IE
-	0x0401, // cyrillic IO
-	0x0416, // cyrillic ZHE
-	0x0417, // cyrillic ZE
-	0x0418, // cyrillic I
-	0x0419, // cyrillic short I
-	0x041A, // cyrillic KA
-	0x041B, // cyrillic EL
-	0x041C, // cyrillic EM
-	0x041D, // cyrillic EN
-	0x041E, // cyrillic O
-	0x041F, // cyrillic PE
-	0x0420, // cyrillic ER
-	0x0421, // cyrillic ES
-	0x0422, // cyrillic TE
-	0x0423, // cyrillic U
-	0x0424, // cyrillic EF
-	0x0425, // cyrillic HA
-	0x0426, // cyrillic TSE
-	0x0427, // cyrillic CHE
-	0x0428, // cyrillic SHA
-	0x0429, // cyrillic SHCHA
-	0x042B, // cyrillic YERU
-	0x042C, // cyrillic capital soft sign
-	0x042D, // cyrillic E
-	0x042E, // cyrillic YU
-	0x042F, // cyrillic YA
-	196, // Ä
-	192, // À
-	193, // Á
-	194, // Â
-	199, // Ç
-	203, // Ë
-	200, // È
-	201, // É				140
-	202, // Ê
-	207, // Ï
-	214, // Ö
-	210, // Ò
-	211, // Ó
-	212, // Ô
-	220, // Ü
-	217, // Ù
-	218, // Ú
-	219, // Û				150
-	228, // ä
-	224, // à
-	225, // á
-	226, // â
-	231, // ç
-	235, // ë
-	232, // è
-	233, // é
-	234, // ê
-	239, // ï				160
-	246, // ö
-	242, // ò
-	243, // ó
-	244, // ô
-	252, // ü
-	249, // ù
-	250, // ú
-	251, // û
-	0x00CC, // I with grave
-	0x00EC, // i with grave
-	0x0104, // A with ogonek
-	0x0106, // C with acute
-	0x0118, // E with ogonek
-	0x0141, // L with stroke
-	0x0143, // N with acute
-	0x00D3, // O with acute (duplicate)
-	0x015A, // S with acute
-	0x017B, // Z with dot above
-	0x0179, // Z with acute
-	0x0105, // a with ogonek
-	0x0107, // c with acute
-	0x0119, // e with ogonek
-	0x0142, // l with stroke
-	0x0144, // n with acute
-	0x00F3, // o with acute (duplicate)
-	0x015B, // s with acute
-	0x017C, // z with dot above
-	0x017A  // z with acute
+	[L'a'] =  26,
+	[L'b'] =  27,
+	[L'c'] =  28,
+	[L'd'] =  29,
+	[L'e'] =  30,
+	[L'f'] =  31,
+	[L'g'] =  32,
+	[L'h'] =  33,
+	[L'i'] =  34,
+	[L'j'] =  35,
+	[L'k'] =  36,
+	[L'l'] =  37,
+	[L'm'] =  38,
+	[L'n'] =  39,
+	[L'o'] =  40,
+	[L'p'] =  41,
+	[L'q'] =  42,
+	[L'r'] =  43,
+	[L's'] =  44,
+	[L't'] =  45,
+	[L'u'] =  46,
+	[L'v'] =  47,
+	[L'w'] =  48,
+	[L'x'] =  49,
+	[L'y'] =  50,
+	[L'z'] =  51,
 
-#else
-	// Windows Code Page 1252 Western Standard Character Set
+	[L'0'] =  52,
+	[L'1'] =  53,
+	[L'2'] =  54,
+	[L'3'] =  55,
+	[L'4'] =  56,
+	[L'5'] =  57,
+	[L'6'] =  58,
+	[L'7'] =  59,
+	[L'8'] =  60,
+	[L'9'] =  61,
 
-	193, // "A" acute
-	192, // "A" grave
-	193, // "A" circumflex
-	196, // "A" umlaut
-	195, // "A" tilde
-	197, // "A" ring
-	199, // "C" cedile
-	201, // "E" acute
-	200, // "E" grave
-	202, // "E" circumflex
-	203, // "E" umlaut
-	205, // "I" acute
-	204, // "I" grave
-	206, // "I" circumflex
-	207, // "I" umlaut
-	209, // "N" tilde
-	211, // "O" acute
-	210, // "O" grave
-	212, // "O" circumflex
-	214, // "O" umlaut
-	213, // "O" tilde
-	216, // "0" O strike-through
-	218, // "U" acute
-	217, // "U" grave
-	219, // "U" circumflex
-	220, // "U" umlaut
-	221, // "Y" acute
-	225, // "a" acute
-	224, // "a" grave
-	226, // "a" circumflex
-	228, // "a" umlaut
-	227, // "a" tilde
-	229, // "a" ring
-	231, // "c" cedile
-	233, // "e" acute
-	232, // "e" grave
-	234, // "e" circumflex
-	235, // "e" umlaut
-	237, // "i" acute
-	236, // "i" grave
-	238, // "i" circumflex
-	239, // "i" umlaut
-	241, // "n" tilde
-	243, // "o" acute
-	242, // "o" grave
-	244, // "o" circumflex
-	246, // "o" umlaut
-	245, // "o" tilde
-	248, // "o" strike-through
-	250, // "u" acute
-	249, // "u" grave
-	251, // "u" circumflex
-	252, // "u" umlaut
-	254, // "y" acute
-	255, // "y" umlaut
-	223, // beta
+	[L'!'] =  62,
+	[L'@'] =  63,
+	[L'#'] =  64,
+	[L'$'] =  65,
+	[L'%'] =  66,
+	[L'^'] =  67,
+	[L'&'] =  68,
+	[L'*'] =  69,
+	[L'('] =  70,
+	[L')'] =  71,
+	[L'-'] =  72,
+	[L'_'] =  73,
+	[L'+'] =  74,
+	[L'='] =  75,
+	[L'|'] =  76,
+	[L'\\'] =  77,
+	[L'{'] =  78,
+	[L'}'] =  79,
+	[L'['] =  80,
+	[L']'] =  81,
+	[L':'] =  82,
+	[L';'] =  83,
+	[L'"'] =  84,
+	[L'\''] =  85,
+	[L'<'] =  86,
+	[L'>'] =  87,
+	[L','] =  88,
+	[L'.'] =  89,
+	[L'?'] =  90,
+	[L'/'] =  91,
+	[L' '] =  92,
+	[196] =  93, // A umlaut
+	[214] =  94, // O umlaut
+	[220] =  95, // U umlaut
+	[228] =  96, // a umlaut
+	[246] =  97, // o umlaut
+	[252] =  98, // u umlaut
+	[223] =  99, // sharp s
 
-	// Font glyphs for spell targeting icons
-	// ATE: IMPORTANT! INcreate the array above if you add any new items here...
-	FONT_GLYPH_TARGET_POINT,
-	FONT_GLYPH_TARGET_CONE,
-	FONT_GLYPH_TARGET_SINGLE,
-	FONT_GLYPH_TARGET_GROUP,
-	FONT_GLYPH_TARGET_NONE
-#endif
+	// duplicate 196, // Ä
+	[192] = 133, // À
+	[193] = 134, // Á
+	[194] = 135, // Â
+	[199] = 136, // Ç
+	[203] = 137, // Ë
+	[200] = 138, // È
+	[201] = 139, // É				140
+	[202] = 140, // Ê
+	[207] = 141, // Ï
+	// duplicate 214, // Ö
+	[210] = 143, // Ò
+	[211] = 144, // Ó
+	[212] = 145, // Ô
+	// duplicate 220, // Ü
+	[217] = 147, // Ù
+	[218] = 148, // Ú
+	[219] = 149, // Û				150
+	// duplicate 228, // ä
+	[224] = 151, // à
+	[225] = 152, // á
+	[226] = 153, // â
+	[231] = 154, // ç
+	[235] = 155, // ë
+	[232] = 156, // è
+	[233] = 157, // é
+	[234] = 158, // ê
+	[239] = 159, // ï				160
+	// duplicate 246, // ö
+	[242] = 161, // ò
+	[243] = 162, // ó
+	[244] = 163, // ô
+	// duplicate 252, // ü
+	[249] = 165, // ù
+	[250] = 166, // ú
+	[251] = 167, // û
+	[0x00CC] = 168, // I with grave
+	[0x00EC] = 169, // i with grave
+	[0x0104] = 170, // A with ogonek
+	[0x0106] = 171, // C with acute
+	[0x0118] = 172, // E with ogonek
+	[0x0141] = 173, // L with stroke
+	[0x0143] = 174, // N with acute
+	[0x00D3] = 175, // O with acute (duplicate)
+	[0x015A] = 176, // S with acute
+	[0x017B] = 177, // Z with dot above
+	[0x0179] = 178, // Z with acute
+	[0x0105] = 179, // a with ogonek
+	[0x0107] = 180, // c with acute
+	[0x0119] = 181, // e with ogonek
+	[0x0142] = 182, // l with stroke
+	[0x0144] = 183, // n with acute
+	[0x00F3] = 184, // o with acute (duplicate)
+	[0x015B] = 185, // s with acute
+	[0x017C] = 186, // z with dot above
+	[0x017A] = 187, // z with acute
+
+	[0x0410] = 100, // cyrillic A
+	[0x0411] = 101, // cyrillic BE
+	[0x0412] = 102, // cyrillic VE
+	[0x0413] = 103, // cyrillic GHE
+	[0x0414] = 104, // cyrillic DE
+	[0x0415] = 105, // cyrillic IE
+	[0x0401] = 106, // cyrillic IO
+	[0x0416] = 107, // cyrillic ZHE
+	[0x0417] = 108, // cyrillic ZE
+	[0x0418] = 109, // cyrillic I
+	[0x0419] = 110, // cyrillic short I
+	[0x041A] = 111, // cyrillic KA
+	[0x041B] = 112, // cyrillic EL
+	[0x041C] = 113, // cyrillic EM
+	[0x041D] = 114, // cyrillic EN
+	[0x041E] = 115, // cyrillic O
+	[0x041F] = 116, // cyrillic PE
+	[0x0420] = 117, // cyrillic ER
+	[0x0421] = 118, // cyrillic ES
+	[0x0422] = 119, // cyrillic TE
+	[0x0423] = 120, // cyrillic U
+	[0x0424] = 121, // cyrillic EF
+	[0x0425] = 122, // cyrillic HA
+	[0x0426] = 123, // cyrillic TSE
+	[0x0427] = 124, // cyrillic CHE
+	[0x0428] = 125, // cyrillic SHA
+	[0x0429] = 126, // cyrillic SHCHA
+	[0x042B] = 127, // cyrillic YERU
+	[0x042C] = 128, // cyrillic capital soft sign
+	[0x042D] = 129, // cyrillic E
+	[0x042E] = 130, // cyrillic YU
+	[0x042F] = 131, // cyrillic YA
+
+	/* There are no lowercase cyrillic glyphs in the fonts (at least neither in
+	 * the german nor the polish datafiles), so reuse the uppercase cyrillic
+	 * glyphs */
+	[0x0430] = 100, // cyrillic a
+	[0x0431] = 101, // cyrillic be
+	[0x0432] = 102, // cyrillic ve
+	[0x0433] = 103, // cyrillic ghe
+	[0x0434] = 104, // cyrillic de
+	[0x0435] = 105, // cyrillic ie
+	[0x0451] = 106, // cyrillic io
+	[0x0436] = 107, // cyrillic zhe
+	[0x0437] = 108, // cyrillic ze
+	[0x0438] = 109, // cyrillic i
+	[0x0439] = 110, // cyrillic short i
+	[0x043A] = 111, // cyrillic ka
+	[0x043B] = 112, // cyrillic el
+	[0x043C] = 113, // cyrillic em
+	[0x043D] = 114, // cyrillic en
+	[0x043E] = 115, // cyrillic o
+	[0x043F] = 116, // cyrillic pe
+	[0x0440] = 117, // cyrillic er
+	[0x0441] = 118, // cyrillic es
+	[0x0442] = 119, // cyrillic te
+	[0x0443] = 120, // cyrillic u
+	[0x0444] = 121, // cyrillic ef
+	[0x0445] = 122, // cyrillic ha
+	[0x0446] = 123, // cyrillic tse
+	[0x0447] = 124, // cyrillic che
+	[0x0448] = 125, // cyrillic sha
+	[0x0449] = 126, // cyrillic shcha
+	[0x044B] = 127, // cyrillic yeru
+	[0x044C] = 128, // cyrillic lowercase soft sign
+	[0x044D] = 129, // cyrillic e
+	[0x044E] = 130, // cyrillic yu
+	[0x044F] = 131  // cyrillic ya
 };
-#ifdef JA2
-	CASSERT(lengthof(TranslationTable) == 188)
-#else
-	CASSERT(lengthof(TranslationTable) == 154)
-#endif
