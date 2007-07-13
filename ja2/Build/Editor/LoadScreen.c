@@ -900,8 +900,8 @@ static UINT32 ProcessFileIO(void)
 			SetFontBackground( 0 );
 			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
-			usStartX = 320 - StringPixLength( zOrigName, LARGEFONT1 ) / 2;
-			usStartY = 180 - GetFontHeight( LARGEFONT1 ) / 2;
+			usStartX = 320 - StringPixLength(zOrigName, HUGEFONT) / 2;
+			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
 
 			InvalidateScreen( );
