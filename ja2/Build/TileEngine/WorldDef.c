@@ -82,19 +82,13 @@ INT32						giCurrentTilesetID = 0;
 UINT32			gCurrentBackground = FIRSTTEXTURE;
 
 
-// From memman.c in SGP
-extern					UINT32		guiMemTotal;
-
-
 CHAR8 TileSurfaceFilenames[NUMBEROFTILETYPES][32];
-INT8	gbNewTileSurfaceLoaded[ NUMBEROFTILETYPES ];
+static INT8 gbNewTileSurfaceLoaded[NUMBEROFTILETYPES];
 
 void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 {
 	memset( gbNewTileSurfaceLoaded, fNew, sizeof( gbNewTileSurfaceLoaded ) );
 }
-
-BOOLEAN gfInitAnimateLoading = FALSE;
 
 
 extern void SetInterfaceHeightLevel( );
@@ -102,7 +96,6 @@ extern void SetInterfaceHeightLevel( );
 
 // Global Variables
 MAP_ELEMENT			*gpWorldLevelData;
-INT32						*gpDirtyData;
 UINT32					gSurfaceMemUsage;
 UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
 
@@ -274,11 +267,6 @@ void DeinitializeWorld( )
 	if ( gpWorldLevelData != NULL )
 	{
 		MemFree( gpWorldLevelData );
-	}
-
-	if ( gpDirtyData != NULL )
-	{
-		MemFree( gpDirtyData );
 	}
 
 	DestroyTileSurfaces( );

@@ -50,7 +50,7 @@
 
 BOOLEAN gfErrorCatch = FALSE;
 wchar_t gzErrorCatchString[256] = L"";
-INT32	giErrorCatchMessageBox = 0;
+static INT32 giErrorCatchMessageBox = 0;
 
 extern void RemoveMercsInSector();
 
@@ -62,35 +62,33 @@ enum{
 	DIALOG_DELETE
 };
 
-INT32 iTotalFiles;
-INT32 iTopFileShown;
-INT32 iCurrFileShown;
-INT32	iLastFileClicked;
-INT32 iLastClickTime;
+static INT32 iTotalFiles;
+static INT32 iTopFileShown;
+static INT32 iCurrFileShown;
+static INT32	iLastFileClicked;
+static INT32 iLastClickTime;
 
 static wchar_t gzFilename[31];
 
-FDLG_LIST *FileList = NULL;
+static FDLG_LIST* FileList = NULL;
 
-INT32 iFDlgState = DIALOG_NONE;
-BOOLEAN gfDestroyFDlg = FALSE;
-INT32 iFileDlgButtons[7];
+static INT32 iFDlgState = DIALOG_NONE;
+static INT32 iFileDlgButtons[7];
 
-BOOLEAN gfLoadError;
-BOOLEAN gfReadOnly;
-BOOLEAN gfFileExists;
-BOOLEAN gfIllegalName;
-BOOLEAN gfDeleteFile;
-BOOLEAN gfNoFiles;
+static BOOLEAN gfLoadError;
+static BOOLEAN gfReadOnly;
+static BOOLEAN gfFileExists;
+static BOOLEAN gfIllegalName;
+static BOOLEAN gfDeleteFile;
+static BOOLEAN gfNoFiles;
 
-GETFILESTRUCT FileInfo;
+static GETFILESTRUCT FileInfo;
 
-BOOLEAN fEnteringLoadSaveScreen = TRUE;
-BOOLEAN gfPassedSaveCheck = FALSE;
+static BOOLEAN fEnteringLoadSaveScreen = TRUE;
 
-MOUSE_REGION BlanketRegion;
+static MOUSE_REGION BlanketRegion;
 
-CHAR8	 gszCurrFilename[80];
+static char gszCurrFilename[80];
 
 enum{
 	IOSTATUS_NONE,
@@ -99,7 +97,7 @@ enum{
 	INITIATE_MAP_LOAD,
 	LOADING_MAP
 };
-INT8 gbCurrentFileIOStatus;  //1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
+static INT8 gbCurrentFileIOStatus; // 1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 
 extern UINT16 gusLightLevel;
 UINT32 LoadSaveScreenInit(void)
@@ -624,7 +622,6 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			iCurrClickTime = GetJA2Clock();
 			if( iCurrClickTime - iLastClickTime < 400 && x == iLastFileClicked )
 			{ //Considered a double click, so activate load/save this filename.
-				gfDestroyFDlg = TRUE;
 				iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 			}
 			iLastClickTime = iCurrClickTime;
@@ -747,12 +744,10 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		case SDLK_RETURN:
 			if( gfNoFiles && iCurrentAction == ACTION_LOAD_MAP )
 				break;
-			gfDestroyFDlg = TRUE;
 			iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 			break;
 
 		case SDLK_ESCAPE:
-			gfDestroyFDlg = TRUE;
 			iFDlgState = DIALOG_CANCEL;
 			break;
 
@@ -1049,7 +1044,6 @@ static void FDlgOkCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		gfDestroyFDlg = TRUE;
 		iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 	}
 }
@@ -1059,7 +1053,6 @@ static void FDlgCancelCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		gfDestroyFDlg = TRUE;
 		iFDlgState = DIALOG_CANCEL;
 	}
 }

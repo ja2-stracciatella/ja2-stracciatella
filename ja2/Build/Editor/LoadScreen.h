@@ -1,32 +1,22 @@
 #include "BuildDefines.h"
-#include "FileMan.h"
 
 #ifdef JA2EDITOR
 
 #ifndef _JA2_LOAD_SCREEN_
 #define _JA2_LOAD_SCREEN_
 
-typedef struct _FDLG_LIST_TAG
+#include "FileMan.h"
+
+typedef struct FDLG_LIST FDLG_LIST;
+struct FDLG_LIST
 {
 	GETFILESTRUCT FileInfo;
-	struct _FDLG_LIST_TAG	*pNext;
-	struct _FDLG_LIST_TAG *pPrev;
-} FDLG_LIST;
+	FDLG_LIST* pNext;
+	FDLG_LIST* pPrev;
+};
 
 extern FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo);
 
-extern INT32 iFDlgState;
-extern INT32 iFDlgSelectedSlot;
-
-extern BOOLEAN gfAskForName;
-extern BOOLEAN gfCreatedFDlg;
-extern BOOLEAN gfDestroyFDlg;
-
-UINT32 WaitForFileName( void );
-
-
-void BuildFilenameWithCoordinate();
-void BuildCoordinateWithFilename();
 
 BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
 BOOLEAN ExternalSaveMap(const wchar_t* szFilename);

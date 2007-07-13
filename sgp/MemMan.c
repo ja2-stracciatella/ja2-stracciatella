@@ -80,8 +80,8 @@ static const wchar_t* const gzJA2ScreenNames[] =
 
 // debug variable for total memory currently allocated
 UINT32	guiMemTotal = 0;
-UINT32  guiMemAlloced = 0;
-UINT32  guiMemFreed = 0;
+static UINT32 guiMemAlloced = 0;
+static UINT32 guiMemFreed   = 0;
 static UINT32 MemDebugCounter = 0;
 BOOLEAN fMemManagerInit = FALSE;
 
