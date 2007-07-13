@@ -7,7 +7,17 @@
 static inline void ExtractWideString16(wchar_t* Dst, const BYTE* Src, size_t Size)
 {
 	const UINT16* S = (const UINT16*)Src;
-	for (size_t i = 0; i < Size; i++) Dst[i] = S[i];
+	for (size_t i = 0; i < Size; i++)
+	{
+		wchar_t c = S[i];
+#if defined RUSSIAN
+		/* The Russian data files are incorrectly encoded. The original texts seem to
+		 * be encoded in CP1251, but then they were converted from CP1252 (!) to
+		 * UTF-16 to store them in the data files. Undo this damage here. */
+		if (0xC0 <= c && c <= 0xFF) c += 0x350;
+#endif
+		Dst[i] = c;
+	}
 }
 
 

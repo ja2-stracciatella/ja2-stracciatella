@@ -4,7 +4,7 @@
 
 BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 {
-#if defined(ENGLISH) || defined(FRENCH)
+#if defined ENGLISH || defined FRENCH || defined RUSSIAN_GOLD
 	const char* s;
 	switch (usMLGGraphicID)
 	{

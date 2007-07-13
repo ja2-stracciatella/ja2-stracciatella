@@ -5,7 +5,10 @@
 #LNG := GERMAN
 #LNG := ITALIAN
 #LNG := POLISH
+# Russian BUKA Agonia Vlasti release
 #LNG := RUSSIAN
+# Russian Gold release
+#LNG := RUSSIAN_GOLD
 
 #JA2BETAVERSION   := yes
 #JA2TESTVERSION   := yes

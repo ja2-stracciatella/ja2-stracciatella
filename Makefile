@@ -2,8 +2,8 @@ CONFIG ?= config.default
 -include $(CONFIG)
 
 
-ifeq ($(findstring $(LNG), DUTCH ENGLISH FRENCH GERMAN ITALIAN POLISH RUSSIAN),)
-$(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH or RUSSIAN. Copy config.template to config.default and uncomment one of the languages)
+ifeq ($(findstring $(LNG), DUTCH ENGLISH FRENCH GERMAN ITALIAN POLISH RUSSIAN RUSSIAN_GOLD),)
+$(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD. Copy config.template to config.default and uncomment one of the languages)
 endif
 
 ifndef SGPDATADIR

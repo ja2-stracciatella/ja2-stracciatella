@@ -261,14 +261,19 @@ UINT16 GetFontHeight(INT32 FontNum)
 
 
 /* Given a wide char, this function returns the index of the glyph. Returns 0
- * - the index of 'A' - if no glyph exists for the requested wide char. */
+ * - the index of 'A' (or ' ', depending on data files) - if no glyph exists for
+ * the requested wide char. */
 static INT16 GetIndex(wchar_t c)
 {
 #	include "TranslationTable.inc"
 
 	UINT16 Idx = 0;
 	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
+#if !defined RUSSIAN || defined RUSSIAN_GOLD
 	if (Idx == 0 && c != L'A')
+#else
+	if (Idx == 0 && c != L' ')
+#endif
 	{
 		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U%04X", c));
 	}

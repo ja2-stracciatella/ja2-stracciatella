@@ -1,6 +1,8 @@
 /* The text->font map table. */
 static const UINT16 TranslationTable[] =
 {
+#if !defined RUSSIAN || defined RUSSIAN_GOLD
+
 	[L'A'] =   0,
 	[L'B'] =   1,
 	[L'C'] =   2,
@@ -105,6 +107,132 @@ static const UINT16 TranslationTable[] =
 	[252] =  98, // u umlaut
 	[223] =  99, // sharp s
 
+# if defined RUSSIAN_GOLD
+
+	// duplicate 196, // Ä
+	[192] = 164, // À
+	[193] = 165, // Á
+	[194] = 166, // Â
+	[199] = 167, // Ç
+	[203] = 168, // Ë
+	[200] = 169, // È
+	[201] = 170, // É
+	[202] = 171, // Ê
+	[207] = 172, // Ï
+	// duplicate 214, // Ö
+	[210] = 174, // Ò
+	[211] = 175, // Ó
+	[212] = 176, // Ô
+	// duplicate 220, // Ü
+	[217] = 178, // Ù
+	[218] = 179, // Ú
+	[219] = 180, // Û
+	// duplicate 228, // ä
+	[224] = 182, // à
+	[225] = 183, // á
+	[226] = 184, // â
+	[231] = 185, // ç
+	[235] = 186, // ë
+	[232] = 187, // è
+	[233] = 188, // é
+	[234] = 189, // ê
+	[239] = 190, // ï
+	// duplicate 246, // ö
+	[242] = 192, // ò
+	[243] = 193, // ó
+	[244] = 194, // ô
+	// duplicate 252, // ü
+	[249] = 196, // ù
+	[250] = 197, // ú
+	[251] = 198, // û
+	[0x00CC] = 199, // I with grave
+	[0x00EC] = 200, // i with grave
+	[0x0104] = 201, // A with ogonek
+	[0x0106] = 202, // C with acute
+	[0x0118] = 203, // E with ogonek
+	[0x0141] = 204, // L with stroke
+	[0x0143] = 205, // N with acute
+	[0x00D3] = 206, // O with acute (duplicate)
+	[0x015A] = 207, // S with acute
+	[0x017B] = 208, // Z with dot above
+	[0x0179] = 209, // Z with acute
+	[0x0105] = 210, // a with ogonek
+	[0x0107] = 211, // c with acute
+	[0x0119] = 212, // e with ogonek
+	[0x0142] = 213, // l with stroke
+	[0x0144] = 214, // n with acute
+	[0x00F3] = 215, // o with acute (duplicate)
+	[0x015B] = 216, // s with acute
+	[0x017C] = 217, // z with dot above
+	[0x017A] = 218, // z with acute
+
+	[0x0410] = 100, // CYRILLIC CAPITAL LETTER A
+	[0x0411] = 101, // CYRILLIC CAPITAL LETTER BE
+	[0x0412] = 102, // CYRILLIC CAPITAL LETTER VE
+	[0x0413] = 103, // CYRILLIC CAPITAL LETTER GHE
+	[0x0414] = 104, // CYRILLIC CAPITAL LETTER DE
+	[0x0415] = 105, // CYRILLIC CAPITAL LETTER IE
+	[0x0416] = 106, // CYRILLIC CAPITAL LETTER ZHE
+	[0x0417] = 107, // CYRILLIC CAPITAL LETTER ZE
+	[0x0418] = 108, // CYRILLIC CAPITAL LETTER I
+	[0x0419] = 109, // CYRILLIC CAPITAL LETTER SHORT I
+	[0x041A] = 110, // CYRILLIC CAPITAL LETTER KA
+	[0x041B] = 111, // CYRILLIC CAPITAL LETTER EL
+	[0x041C] = 112, // CYRILLIC CAPITAL LETTER EM
+	[0x041D] = 113, // CYRILLIC CAPITAL LETTER EN
+	[0x041E] = 114, // CYRILLIC CAPITAL LETTER O
+	[0x041F] = 115, // CYRILLIC CAPITAL LETTER PE
+	[0x0420] = 116, // CYRILLIC CAPITAL LETTER ER
+	[0x0421] = 117, // CYRILLIC CAPITAL LETTER ES
+	[0x0422] = 118, // CYRILLIC CAPITAL LETTER TE
+	[0x0423] = 119, // CYRILLIC CAPITAL LETTER U
+	[0x0424] = 120, // CYRILLIC CAPITAL LETTER EF
+	[0x0425] = 121, // CYRILLIC CAPITAL LETTER HA
+	[0x0426] = 122, // CYRILLIC CAPITAL LETTER TSE
+	[0x0427] = 123, // CYRILLIC CAPITAL LETTER CHE
+	[0x0428] = 124, // CYRILLIC CAPITAL LETTER SHA
+	[0x0429] = 125, // CYRILLIC CAPITAL LETTER SHCHA
+	[0x042A] = 126, // CYRILLIC CAPITAL LETTER HARD SIGN
+	[0x042B] = 127, // CYRILLIC CAPITAL LETTER YERU
+	[0x042C] = 128, // CYRILLIC CAPITAL LETTER SOFT SIGN
+	[0x042D] = 129, // CYRILLIC CAPITAL LETTER E
+	[0x042E] = 130, // CYRILLIC CAPITAL LETTER YU
+	[0x042F] = 131, // CYRILLIC CAPITAL LETTER YA
+	[0x0430] = 132, // CYRILLIC SMALL LETTER A
+	[0x0431] = 133, // CYRILLIC SMALL LETTER BE
+	[0x0432] = 134, // CYRILLIC SMALL LETTER VE
+	[0x0433] = 135, // CYRILLIC SMALL LETTER GHE
+	[0x0434] = 136, // CYRILLIC SMALL LETTER DE
+	[0x0435] = 137, // CYRILLIC SMALL LETTER IE
+	[0x0436] = 138, // CYRILLIC SMALL LETTER ZHE
+	[0x0437] = 139, // CYRILLIC SMALL LETTER ZE
+	[0x0438] = 140, // CYRILLIC SMALL LETTER I
+	[0x0439] = 141, // CYRILLIC SMALL LETTER SHORT I
+	[0x043A] = 142, // CYRILLIC SMALL LETTER KA
+	[0x043B] = 143, // CYRILLIC SMALL LETTER EL
+	[0x043C] = 144, // CYRILLIC SMALL LETTER EM
+	[0x043D] = 145, // CYRILLIC SMALL LETTER EN
+	[0x043E] = 146, // CYRILLIC SMALL LETTER O
+	[0x043F] = 147, // CYRILLIC SMALL LETTER PE
+	[0x0440] = 148, // CYRILLIC SMALL LETTER ER
+	[0x0441] = 149, // CYRILLIC SMALL LETTER ES
+	[0x0442] = 150, // CYRILLIC SMALL LETTER TE
+	[0x0443] = 151, // CYRILLIC SMALL LETTER U
+	[0x0444] = 152, // CYRILLIC SMALL LETTER EF
+	[0x0445] = 153, // CYRILLIC SMALL LETTER HA
+	[0x0446] = 154, // CYRILLIC SMALL LETTER TSE
+	[0x0447] = 155, // CYRILLIC SMALL LETTER CHE
+	[0x0448] = 156, // CYRILLIC SMALL LETTER SHA
+	[0x0449] = 157, // CYRILLIC SMALL LETTER SHCHA
+	[0x044A] = 158, // CYRILLIC SMALL LETTER HARD SIGN
+	[0x044B] = 159, // CYRILLIC SMALL LETTER YERU
+	[0x044C] = 160, // CYRILLIC SMALL LETTER SOFT SIGN
+	[0x044D] = 161, // CYRILLIC SMALL LETTER E
+	[0x044E] = 162, // CYRILLIC SMALL LETTER YU
+	[0x044F] = 163  // CYRILLIC SMALL LETTER YA
+
+#	else
+
 	// duplicate 196, // Ä
 	[192] = 133, // À
 	[193] = 134, // Á
@@ -197,7 +325,7 @@ static const UINT16 TranslationTable[] =
 
 	/* There are no lowercase cyrillic glyphs in the fonts (at least neither in
 	 * the german nor the polish datafiles), so reuse the uppercase cyrillic
-	 * glyphs */
+	 * glyphs. */
 	[0x0430] = 100, // cyrillic a
 	[0x0431] = 101, // cyrillic be
 	[0x0432] = 102, // cyrillic ve
@@ -230,4 +358,173 @@ static const UINT16 TranslationTable[] =
 	[0x044D] = 129, // cyrillic e
 	[0x044E] = 130, // cyrillic yu
 	[0x044F] = 131  // cyrillic ya
+
+#	endif
+#else
+
+	/* This is the table for the BUKA Agonia Vlasti release. The glyph set is,
+	 * except for two gaps (0x00-0x1F, 0x80-0xBF), identical to CP1251. */
+	[L' '] =   0,
+	[L'!'] =   1,
+	[L'"'] =   2,
+	[L'#'] =   3,
+	[L'$'] =   4,
+	[L'%'] =   5,
+	[L'&'] =   6,
+	[L'\''] =   7,
+	[L'('] =   8,
+	[L')'] =   9,
+	[L'*'] =  10,
+	[L'+'] =  11,
+	[L','] =  12,
+	[L'-'] =  13,
+	[L'.'] =  14,
+	[L'/'] =  15,
+	[L'0'] =  16,
+	[L'1'] =  17,
+	[L'2'] =  18,
+	[L'3'] =  19,
+	[L'4'] =  20,
+	[L'5'] =  21,
+	[L'6'] =  22,
+	[L'7'] =  23,
+	[L'8'] =  24,
+	[L'9'] =  25,
+	[L':'] =  26,
+	[L';'] =  27,
+	[L'<'] =  28,
+	[L'='] =  29,
+	[L'>'] =  30,
+	[L'?'] =  31,
+	[L'@'] =  32,
+	[L'A'] =  33,
+	[L'B'] =  34,
+	[L'C'] =  35,
+	[L'D'] =  36,
+	[L'E'] =  37,
+	[L'F'] =  38,
+	[L'G'] =  39,
+	[L'H'] =  40,
+	[L'I'] =  41,
+	[L'J'] =  42,
+	[L'K'] =  43,
+	[L'L'] =  44,
+	[L'M'] =  45,
+	[L'N'] =  46,
+	[L'O'] =  47,
+	[L'P'] =  48,
+	[L'Q'] =  49,
+	[L'R'] =  50,
+	[L'S'] =  51,
+	[L'T'] =  52,
+	[L'U'] =  53,
+	[L'V'] =  54,
+	[L'W'] =  55,
+	[L'X'] =  56,
+	[L'Y'] =  57,
+	[L'Z'] =  58,
+	[L'['] =  59,
+	[L'\\'] =  60,
+	[L']'] =  61,
+	[L'^'] =  62,
+	[L'_'] =  63,
+	[L'`'] =  64,
+	[L'a'] =  65,
+	[L'b'] =  66,
+	[L'c'] =  67,
+	[L'd'] =  68,
+	[L'e'] =  69,
+	[L'f'] =  70,
+	[L'g'] =  71,
+	[L'h'] =  72,
+	[L'i'] =  73,
+	[L'j'] =  74,
+	[L'k'] =  75,
+	[L'l'] =  76,
+	[L'm'] =  77,
+	[L'n'] =  78,
+	[L'o'] =  79,
+	[L'p'] =  80,
+	[L'q'] =  81,
+	[L'r'] =  82,
+	[L's'] =  83,
+	[L't'] =  84,
+	[L'u'] =  85,
+	[L'v'] =  86,
+	[L'w'] =  87,
+	[L'x'] =  88,
+	[L'y'] =  89,
+	[L'z'] =  90,
+	[L'{'] =  91,
+	[L'|'] =  92,
+	[L'}'] =  93,
+	[L'~'] =  94,
+	[0x007F] =  95, // DELETE
+
+	[0x0410] =  96, // CYRILLIC CAPITAL LETTER A
+	[0x0411] =  97, // CYRILLIC CAPITAL LETTER BE
+	[0x0412] =  98, // CYRILLIC CAPITAL LETTER VE
+	[0x0413] =  99, // CYRILLIC CAPITAL LETTER GHE
+	[0x0414] = 100, // CYRILLIC CAPITAL LETTER DE
+	[0x0415] = 101, // CYRILLIC CAPITAL LETTER IE
+	[0x0416] = 102, // CYRILLIC CAPITAL LETTER ZHE
+	[0x0417] = 103, // CYRILLIC CAPITAL LETTER ZE
+	[0x0418] = 104, // CYRILLIC CAPITAL LETTER I
+	[0x0419] = 105, // CYRILLIC CAPITAL LETTER SHORT I
+	[0x041A] = 106, // CYRILLIC CAPITAL LETTER KA
+	[0x041B] = 107, // CYRILLIC CAPITAL LETTER EL
+	[0x041C] = 108, // CYRILLIC CAPITAL LETTER EM
+	[0x041D] = 109, // CYRILLIC CAPITAL LETTER EN
+	[0x041E] = 110, // CYRILLIC CAPITAL LETTER O
+	[0x041F] = 111, // CYRILLIC CAPITAL LETTER PE
+	[0x0420] = 112, // CYRILLIC CAPITAL LETTER ER
+	[0x0421] = 113, // CYRILLIC CAPITAL LETTER ES
+	[0x0422] = 114, // CYRILLIC CAPITAL LETTER TE
+	[0x0423] = 115, // CYRILLIC CAPITAL LETTER U
+	[0x0424] = 116, // CYRILLIC CAPITAL LETTER EF
+	[0x0425] = 117, // CYRILLIC CAPITAL LETTER HA
+	[0x0426] = 118, // CYRILLIC CAPITAL LETTER TSE
+	[0x0427] = 119, // CYRILLIC CAPITAL LETTER CHE
+	[0x0428] = 120, // CYRILLIC CAPITAL LETTER SHA
+	[0x0429] = 121, // CYRILLIC CAPITAL LETTER SHCHA
+	[0x042A] = 122, // CYRILLIC CAPITAL LETTER HARD SIGN
+	[0x042B] = 123, // CYRILLIC CAPITAL LETTER YERU
+	[0x042C] = 124, // CYRILLIC CAPITAL LETTER SOFT SIGN
+	[0x042D] = 125, // CYRILLIC CAPITAL LETTER E
+	[0x042E] = 126, // CYRILLIC CAPITAL LETTER YU
+	[0x042F] = 127, // CYRILLIC CAPITAL LETTER YA
+	[0x0430] = 128, // CYRILLIC SMALL LETTER A
+	[0x0431] = 129, // CYRILLIC SMALL LETTER BE
+	[0x0432] = 130, // CYRILLIC SMALL LETTER VE
+	[0x0433] = 131, // CYRILLIC SMALL LETTER GHE
+	[0x0434] = 132, // CYRILLIC SMALL LETTER DE
+	[0x0435] = 133, // CYRILLIC SMALL LETTER IE
+	[0x0436] = 134, // CYRILLIC SMALL LETTER ZHE
+	[0x0437] = 135, // CYRILLIC SMALL LETTER ZE
+	[0x0438] = 136, // CYRILLIC SMALL LETTER I
+	[0x0439] = 137, // CYRILLIC SMALL LETTER SHORT I
+	[0x043A] = 138, // CYRILLIC SMALL LETTER KA
+	[0x043B] = 139, // CYRILLIC SMALL LETTER EL
+	[0x043C] = 140, // CYRILLIC SMALL LETTER EM
+	[0x043D] = 141, // CYRILLIC SMALL LETTER EN
+	[0x043E] = 142, // CYRILLIC SMALL LETTER O
+	[0x043F] = 143, // CYRILLIC SMALL LETTER PE
+	[0x0440] = 144, // CYRILLIC SMALL LETTER ER
+	[0x0441] = 145, // CYRILLIC SMALL LETTER ES
+	[0x0442] = 146, // CYRILLIC SMALL LETTER TE
+	[0x0443] = 147, // CYRILLIC SMALL LETTER U
+	[0x0444] = 148, // CYRILLIC SMALL LETTER EF
+	[0x0445] = 149, // CYRILLIC SMALL LETTER HA
+	[0x0446] = 150, // CYRILLIC SMALL LETTER TSE
+	[0x0447] = 151, // CYRILLIC SMALL LETTER CHE
+	[0x0448] = 152, // CYRILLIC SMALL LETTER SHA
+	[0x0449] = 153, // CYRILLIC SMALL LETTER SHCHA
+	[0x044A] = 154, // CYRILLIC SMALL LETTER HARD SIGN
+	[0x044B] = 155, // CYRILLIC SMALL LETTER YERU
+	[0x044C] = 156, // CYRILLIC SMALL LETTER SOFT SIGN
+	[0x044D] = 157, // CYRILLIC SMALL LETTER E
+	[0x044E] = 158, // CYRILLIC SMALL LETTER YU
+	[0x044F] = 159  // CYRILLIC SMALL LETTER YA
+
+#endif
 };

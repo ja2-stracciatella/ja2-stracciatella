@@ -26,7 +26,7 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 	{
 		wchar_t c = (str[i] > 33 ? str[i] - 1 : str[i]);
 #if defined POLISH
-		/* The polish data files are incorrectly encoded. The original texts seem to
+		/* The Polish data files are incorrectly encoded. The original texts seem to
 		 * be encoded in CP1250, but then they were converted from CP1252 (!) to
 		 * UTF-16 to store them in the data files. Undo this damage here.
 		 * Also the format code for centering texts differs. */
@@ -50,6 +50,11 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 			case 339: c = 0x015B; break;
 			case 376: c = 0x017A; break;
 		}
+#elif defined RUSSIAN
+		/* The Russian data files are incorrectly encoded. The original texts seem to
+		 * be encoded in CP1251, but then they were converted from CP1252 (!) to
+		 * UTF-16 to store them in the data files. Undo this damage here. */
+		if (0xC0 <= c && c <= 0xFF) c += 0x0350;
 #endif
 		pDestString[i] = c;
 	}

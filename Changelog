@@ -1,3 +1,9 @@
+v0.5
+(r1201) Adjust the char/glyph mapping table for two Russian releases (BUKA Agonia Vlasti and Russian Gold) and fix the incorrectly encoded Russian texts when loading them from the data files.
+(r1198) Fix the incorrectly encoded Polish texts when loading them from data files. Playing with Polish data files should work flawlessly now.
+(r1196) Correct the char to glyph translation table. This should fix the Polish translation.
+(r1193) Simplify the interface of GetTileIndexFromTypeSubIndex(). This also fixes one incorrect use of this function in PasteSingleBrokenWall().
+
 v0.4
 (r1183) Add configfile handling and change the code to use the configfile to determine the path to the binary data.
 (r1139) In SwapLarrysProfiles() ->bInvStatus[] gets copied twice, but ->bInvNumber[] not at all. Rectify this.
