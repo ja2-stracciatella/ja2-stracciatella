@@ -26,12 +26,12 @@ void    ShutdownMemoryManager(void);
  * occurrences.  The shutdown code will report all unhandled memory with
  * exact location allocated. */
 void DumpMemoryInfoIntoFile(const char* filename, BOOLEAN fAppend);
-#	define MemAlloc(size)        MemAllocXDebug((size), __FILE__, __LINE__, NULL)
-#	define MemFree(ptr)          MemFreeXDebug((ptr), __FILE__, __LINE__, NULL)
-#	define MemRealloc(ptr, size) MemReallocXDebug((ptr), (size), __FILE__, __LINE__, NULL)
-PTR  MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum, void* pSpecial);
-void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum, void* pSpecial);
-PTR  MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLineNum, void* pSpecial);
+#	define MemAlloc(size)        MemAllocXDebug((size), __FILE__, __LINE__)
+#	define MemFree(ptr)          MemFreeXDebug((ptr), __FILE__, __LINE__)
+#	define MemRealloc(ptr, size) MemReallocXDebug((ptr), (size), __FILE__, __LINE__)
+PTR  MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum);
+void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum);
+PTR  MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLineNum);
 #else
 #	if defined _DEBUG && 0 // XXX TODO
 /* This is another debug feature.  Not as sophistocated, but definately not the

@@ -252,14 +252,14 @@ PTR MemReallocReal(PTR ptr, UINT32 uiSize, const char* pcFile, INT32 iLine)
 
 #ifdef EXTREME_MEMORY_DEBUGGING
 
-PTR MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum, void* pSpecial)
+PTR MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum)
 {
 	if (size == 0)
 	{
 		return NULL;
 	}
 
-	PTR ptr = (pSpecial ? pSpecial : malloc(size));
+	PTR ptr = malloc(size);
 	if (ptr)
 	{
 		// Set into video object list
@@ -296,7 +296,7 @@ PTR MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum, void* 
 	return ptr;
 }
 
-void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum, void* pSpecial)
+void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum)
 {
 	if (!ptr) return;
 
@@ -305,10 +305,7 @@ void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum, void* pSpe
 		if (curr->pBlock != ptr) continue;
 
 		//Found the node, so detach it and delete it.
-		if (!pSpecial)
-		{
-			free(ptr);
-		}
+		free(ptr);
 
 		if (curr == gpMemoryHead)
 		{ //Advance the head, because we are going to remove the head node.
@@ -336,11 +333,11 @@ void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum, void* pSpe
 }
 
 
-PTR	MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLineNum, void* pSpecial)
+PTR	MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLineNum)
 {
 	if (!ptr && size)
 	{
-		return MemAllocXDebug(size, szCodeString, iLineNum, pSpecial);
+		return MemAllocXDebug(size, szCodeString, iLineNum);
 	}
 
 	for (MEMORY_NODE* curr = gpMemoryHead; curr; curr = curr->next)
@@ -348,7 +345,7 @@ PTR	MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLine
 		if (curr->pBlock != ptr) continue;
 
 		// Note that the ptr changes to ptrNew...
-		PTR	ptrNew = (pSpecial ? pSpecial : realloc(ptr, size));
+		PTR	ptrNew = realloc(ptr, size);
 		if (ptrNew)
 		{
 			curr->pBlock = ptrNew;
