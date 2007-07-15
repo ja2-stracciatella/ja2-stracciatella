@@ -12,7 +12,6 @@ BeginCurInteractiveTileCheck(): parameter is always INTILE_CHECK_SELECTIVE
 BlitMineText(): code duplication
 Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
-BltToMouseCursor(): unused
 BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2]: merge
 BulletHitMerc: pointless EV_S_WEAPONHIT
 CalculateOverrideStatus(): szFilename yuck
@@ -151,7 +150,6 @@ LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
 LoadAmbientControlFile(): complicated, pointless strcpy()
 LoadAnimationProfiles(): file leak on error
 LoadCivQuoteFile(): string copy necessary?
-LoadEmailFromSavedGame(): memory leak on error
 LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
 LoadPaletteData(): file leak on error
 LoadRevealedStatusArrayFromRevealedTempFile(): file leak on error
@@ -182,7 +180,6 @@ MoveOverheadRegionCallback(): empty
 MsgBoxClickCallback(): empty
 NPC.h: RUSSIAN quirk
 NPCQuoteInfo: weird preprocessor magic
-NUM_SKILL_TRAITS: complicated
 NewOKDestination(): boolean parameter with three (four?) values
 NextPersonnelFace(): callers
 NumMercsCloseTo(): callers
@@ -242,7 +239,6 @@ SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
 SayBattleSoundFromAnyBodyInSector(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 ScreenRegionMvtCallback(): empty
-SearchFor{Roof,Wall}Type(): unnecessary abs()
 SectorExitBackgroundCallback(): empty
 SelectCreditFaceRegionCallBack(): empty
 SelectMainMenuBackGroundRegionCallBack(): empty
@@ -265,17 +261,15 @@ TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
 TwoHandedItem(): complicated
-TypeExistsInShadowLayer(): interface complicated
 UIHandleLCOnTerrain(): Redundant GetSoldier() calls?
 UIHandleMOnTerrain(): Redundant GetSoldier() calls?
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateGameEvents(): questionable
-ValidateSkillsList(), FindSkillInSkillsList(), RemoveSkillFromSkillsList(): complicated
+ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
 VehicleHasFuel(): inline
 VerifyGiveItem(): complicated interface
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
-WallOrientationString[][]: should be pointer instead of array
 WillShopKeeperRejectObjectsFromPlayer(): complicated
 WrapString(): Make 1st parameter read-only
 WriteSectorSummaryUpdate(): puiFilename yuck
@@ -319,7 +313,6 @@ wcscat(): check for overkill
 zNewTacticalMessages[TACT_MSG__AIMMEMBER_FEE_TEXT]: unused
 zNewTacticalMessages[TACT_MSG__AIMMEMBER_ONE_TIME_FEE]: unused
 zNewTacticalMessages[TACT_MSG__CANNOT_AFFORD_MERC]: unused
-zSoundFile: pointer instead of array?
 {Head,Misc,Pabts,Skin,Vest}Pal: buffer necessary? pointer instead?
 {Load,Save}ShadeTable(): code duplication
 {Load,Save}ShadeTable(): filename generation ugly

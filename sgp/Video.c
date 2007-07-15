@@ -968,12 +968,6 @@ BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursor
 }
 
 
-static BOOLEAN BltToMouseCursor(UINT32 uiVideoObjectHandle, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
-{
-	return BltVideoObjectFromIndex(MOUSE_BUFFER, uiVideoObjectHandle, usVideoObjectSubIndex, usXPos, usYPos);
-}
-
-
 void DirtyCursor(void)
 {
 	guiMouseBufferState = BUFFER_DIRTY;

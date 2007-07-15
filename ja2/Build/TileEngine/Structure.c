@@ -1674,7 +1674,7 @@ void DebugStructurePage1( void )
 	INT8					bHeight, bDens0, bDens1, bDens2, bDens3;
 	INT8					bStructures;
 
-	static CHAR16 WallOrientationString[5][15] =
+	static const wchar_t* const WallOrientationString[] =
 	{
 		L"None",
 		L"Inside left",

@@ -39,7 +39,7 @@ UINT16 SearchForWallType( UINT32 iMapIndex )
 		// structure type one tile north, but not one tile south -- so it'll find the correct wall first.
 		for( y = sRadius; y >= -sRadius; y-- ) for( x = -sRadius; x <= sRadius; x++ )
 		{
-			if( abs(x) == abs(sRadius) || abs(y) == abs(sRadius) )
+			if (abs(x) == sRadius || abs(y) == sRadius)
 			{
 				sOffset = y * WORLD_COLS + x;
 				if( !GridNoOnVisibleWorldTile( (INT16)(iMapIndex + sOffset) ) )
@@ -80,7 +80,7 @@ UINT16 SearchForRoofType( UINT32 iMapIndex )
 	{
 		for( y = -sRadius; y <= sRadius; y++ ) for( x = -sRadius; x <= sRadius; x++ )
 		{
-			if( abs(x) == abs(sRadius) || abs(y) == abs(sRadius) )
+			if (abs(x) == sRadius || abs(y) == sRadius)
 			{
 				sOffset = y * WORLD_COLS + x;
 				if( !GridNoOnVisibleWorldTile( (INT16)(iMapIndex + sOffset) ) )
