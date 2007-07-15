@@ -189,7 +189,6 @@ OutOfStockMessageBoxCallBack(): pointless
 PLAYER_TEAM_DEAD: never set
 PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
-PerformTest(): useful?
 PersonnelDepartedTeamCallback(): x = 0; if (x == 0)
 PickRandomPassengerFromVehicle(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 PlayerGroupInMotion(): overkill

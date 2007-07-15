@@ -1719,28 +1719,6 @@ static void SummaryToggleProgressCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void PerformTest(void)
-{
-#if 0
-	OutputDebugString( "PERFORMING A NEW TEST -------------------------------------------------\n" );
-	memset( gbDefaultSurfaceUsed, 0, sizeof( gbDefaultSurfaceUsed ) );
-	giCurrentTilesetID = -1;
-	switch( Random( 3 ) )
-	{
-		case 0:
-			LoadWorld( "J9.dat" );
-			break;
-		case 1:
-			LoadWorld( "J9_b1.dat" );
-			break;
-		case 2:
-			LoadWorld( "J9_b2.dat" );
-			break;
-	}
-#endif
-}
-
-
 static void CreateGlobalSummary(void);
 static void RegenerateSummaryInfoForAllOutdatedMaps(void);
 
@@ -1769,10 +1747,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 				else if( gfWorldLoaded )
 					DestroySummaryWindow();
 				break;
-
-			case SDLK_F6: PerformTest(); break;
-			case SDLK_F7: for (x = 0; x <  10; x++) PerformTest(); break;
-			case SDLK_F8: for (x = 0; x < 100; x++) PerformTest(); break;
 
 			case SDLK_y:
 				if( gusNumEntriesWithOutdatedOrNoSummaryInfo && !gfOutdatedDenied )
