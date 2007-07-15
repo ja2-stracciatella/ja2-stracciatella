@@ -63,7 +63,6 @@ struct MEMORY_NODE
 {
 	PTR pBlock;
 	MEMORY_NODE* next;
-	MEMORY_NODE* prev;
 	char* pCode;
 	size_t uiSize;
 };
@@ -266,7 +265,6 @@ PTR MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum)
 		MEMORY_NODE* Node = malloc(sizeof(*Node));
 		Assert(Node); // out of memory?
 		Node->next = NULL;
-		Node->prev = gpMemoryTail;
 		if (gpMemoryTail)
 		{ //Add node after tail
 			gpMemoryTail->next = Node;
@@ -300,7 +298,8 @@ void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum)
 {
 	if (!ptr) return;
 
-	for (MEMORY_NODE* curr = gpMemoryHead; curr; curr = curr->next)
+	MEMORY_NODE* prev = NULL;
+	for (MEMORY_NODE* curr = gpMemoryHead; curr; prev = curr, curr = curr->next)
 	{
 		if (curr->pBlock != ptr) continue;
 
@@ -313,16 +312,12 @@ void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum)
 		}
 		if (curr == gpMemoryTail)
 		{ //Back up the tail, because we are going to remove the tail node.
-			gpMemoryTail = gpMemoryTail->prev;
+			gpMemoryTail = prev;
 		}
 		//Detach the node from the vobject list
-		if (curr->next)
-		{ //Make the prev node point to the next
-			curr->next->prev = curr->prev;
-		}
-		if (curr->prev)
+		if (prev)
 		{ //Make the next node point to the prev
-			curr->prev->next = curr->next;
+			prev->next = curr->next;
 		}
 		//The node is now detached.  Now deallocate it.
 		free(curr);
