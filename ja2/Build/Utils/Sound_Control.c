@@ -699,7 +699,7 @@ typedef struct
   INT16         sGridNo;
   INT32         iSoundSampleID;
   INT32         iSoundToPlay;
-  UINT32        uiData;
+  const SOLDIERTYPE* SoundSource;
   BOOLEAN       fAllocated;
   BOOLEAN       fInActive;
 
@@ -744,7 +744,7 @@ static void RecountPositionSnds(void)
 }
 
 
-INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay )
+INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, const SOLDIERTYPE* SoundSource, UINT32 iSoundToPlay)
 {
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;
@@ -769,7 +769,7 @@ INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoun
   }
 
   pPositionSnd->sGridNo     = sGridNo;
-  pPositionSnd->uiData      = uiData;
+  pPositionSnd->SoundSource = SoundSource;
   pPositionSnd->uiFlags     = uiFlags;
   pPositionSnd->fAllocated  = TRUE;
   pPositionSnd->iSoundToPlay = iSoundToPlay;
@@ -979,7 +979,6 @@ void SetPositionSndsVolumeAndPanning( )
   UINT32 cnt;
 	POSITIONSND *pPositionSnd;
   INT8        bVolume, bPan;
-  SOLDIERTYPE *pSoldier;
 
   for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
   {
@@ -995,9 +994,7 @@ void SetPositionSndsVolumeAndPanning( )
 
             if ( pPositionSnd->uiFlags & POSITION_SOUND_FROM_SOLDIER )
             {
-               pSoldier = (SOLDIERTYPE*)pPositionSnd->uiData;
-
-               if ( pSoldier->bVisible == -1 )
+               if (pPositionSnd->SoundSource->bVisible == -1)
                {
                   // Limit volume,,,
                   if ( bVolume > 10 )

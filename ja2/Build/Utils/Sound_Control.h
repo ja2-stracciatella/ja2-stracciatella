@@ -1,6 +1,7 @@
 #ifndef SOUND_CONTROL_H
 #define SOUND_CONTROL_H
 
+#include "Soldier_Control.h"
 
 #define FARLEFT         0
 #define LEFTSIDE        48
@@ -419,7 +420,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 
 #define POSITION_SOUND_FROM_SOLDIER   0x00000001
 
-INT32 NewPositionSnd( INT16 sGridNo, UINT32 uiFlags, UINT32 uiData, UINT32 iSoundToPlay );
+INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, const SOLDIERTYPE* SoundSource, UINT32 iSoundToPlay);
 void DeletePositionSnd( INT32 iPositionSndIndex );
 void SetPositionSndsActive( );
 void SetPositionSndsInActive( );
