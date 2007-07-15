@@ -5321,7 +5321,7 @@ static void MakeSureToolKitIsInHand(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier)
+static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier) // XXX TODO000C
 {
 	INT8 bPocket = 0;
 

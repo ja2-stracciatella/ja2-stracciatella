@@ -5442,7 +5442,7 @@ static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 	{
 		ubChosenMerc = (UINT8)Random( ubNumMercs );
 
-		DoMercBattleSound( MercPtrs[ ubChosenMerc ],(UINT8)iBattleSnd );
+		DoMercBattleSound(MercPtrs[ubChosenMerc], iBattleSnd); // XXX TODO000E
 	}
 
 }

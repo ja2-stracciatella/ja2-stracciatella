@@ -2451,7 +2451,7 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 		ubChosenMerc = (UINT8)Random( ubNumMercs );
 
 		// If we are air raid, AND red exists somewhere...
-    return( pVehicleList[ iId ].pPassengers[ ubChosenMerc ] );
+		return pVehicleList[iId].pPassengers[ubChosenMerc]; // XXX TODO000D
   }
 
   return( NULL );

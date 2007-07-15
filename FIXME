@@ -6,7 +6,6 @@ ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
 AddEmailPage(): code duplication
 AddStructureToWorld(): complicated, PTR as parameter
-AdjustToNextAnimationFrame(): case 491, PlayJA2SampleFromFile() x3
 AutoResolveScreenHandle(): Use ShadowVideoSurfaceRect() instead of Blt16BPPBufferShadowRect()
 BeginCurInteractiveTileCheck(): parameter is always INTILE_CHECK_SELECTIVE
 BlitMineText(): code duplication
@@ -166,7 +165,6 @@ MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
 MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
 MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
-MakeSureMedKitIsInHand(): Severly broken. Big items can end up in small slots. Checking for first aid kits is probably not necessary at all
 MapExists(): complicated
 MapX(): use %
 MapscreenMarkButtonsDirty(): callers
@@ -190,7 +188,6 @@ PLAYER_TEAM_DEAD: never set
 PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
 PersonnelDepartedTeamCallback(): x = 0; if (x == 0)
-PickRandomPassengerFromVehicle(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 PlayerGroupInMotion(): overkill
 PrevPersonnelFace(): callers
 ProcessMercEditing(): code duplication
@@ -236,7 +233,6 @@ SaveLightEffectsToSaveGameFile(): empty
 SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
-SayBattleSoundFromAnyBodyInSector(): MercPtrs[ubChosenMerc] probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 ScreenRegionMvtCallback(): empty
 SectorExitBackgroundCallback(): empty
 SelectCreditFaceRegionCallBack(): empty
