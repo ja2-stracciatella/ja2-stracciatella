@@ -520,10 +520,7 @@ BOOLEAN InitAimMenuBar(void)
 														 usPosX, BOTTOM_BUTTON_START_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnAimBottomButtonsCallback);
 		SetButtonCursor(guiBottomButtons[i], CURSOR_LAPTOP_SCREEN);
-
-
 		MSYS_SetBtnUserData( guiBottomButtons[i], 0, gCurrentAimPage[i]);
-		MSYS_SetBtnUserData( guiBottomButtons[i], 1, i);
 
 		usPosX += BOTTOM_BUTTON_START_WIDTH;
 	}
