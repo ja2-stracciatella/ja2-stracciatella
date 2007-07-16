@@ -72,7 +72,7 @@ static void AssertFailIfIdenticalButtonAttributesFound( GUI_BUTTON *b )
 		c = ButtonList[ x ];
 		if( !c )																													continue;
 		if( c->uiFlags									&  BUTTON_DELETION_PENDING		)   continue;
-		if( c->UserData[3]							== 0xffffffff									)		continue;
+		if (c->uiFlags                  &  BUTTON_NO_DUPLICATE        )   continue;
 		if( b->Area.PriorityLevel				!= c->Area.PriorityLevel			)		continue;
 		if( b->Area.RegionTopLeftX			!= c->Area.RegionTopLeftX			)		continue;
 		if( b->Area.RegionTopLeftY			!= c->Area.RegionTopLeftY			)		continue;

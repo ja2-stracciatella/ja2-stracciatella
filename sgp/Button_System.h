@@ -44,6 +44,7 @@ extern "C" {
 #define BUTTON_CHECKBOX									0x00001000
 #define BUTTON_NEWTOGGLE								0x00002000
 #define BUTTON_FORCE_UNDIRTY						0x00004000 // no matter what happens this buttons does NOT get marked dirty
+#define BUTTON_NO_DUPLICATE             0x80000000 // Exclude button from duplicate check
 
 #define BUTTON_SOUND_NONE										0x00
 #define BUTTON_SOUND_CLICKED_ON							0x01

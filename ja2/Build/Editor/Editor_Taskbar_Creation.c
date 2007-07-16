@@ -121,7 +121,7 @@ static void InitEditorMercsToolbar(void)
 		CreateEasyToggleButton( 134, 434, "EDITOR/MercSchedule.sti", MercsScheduleModeCallback );
 	SetButtonFastHelpText( iEditorButton[ MERCS_SCHEDULE ], L"Schedule mode");
 	//Workaround for identical buttons.
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE ], 3, 0xffffffff );
+	ButtonList[iEditorButton[MERCS_SCHEDULE]]->uiFlags |= BUTTON_NO_DUPLICATE;
 	iEditorButton[ MERCS_GLOWSCHEDULE ] =
 		CreateEasyToggleButton( 134, 434, "EDITOR/MercGlowSchedule.sti", MercsScheduleModeCallback );
 	SetButtonFastHelpText( iEditorButton[ MERCS_GLOWSCHEDULE ], L"Schedule mode");
