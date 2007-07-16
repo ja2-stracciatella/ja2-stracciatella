@@ -2419,7 +2419,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 				(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 				DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
 			);
-			MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], 0, cnt);
+			MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
 		}
 		if (gRemoveMoney.uiTotalAmount < 1000) DisableButton(guiMoneyButtonBtn[M_1000]);
 		if (gRemoveMoney.uiTotalAmount <  100) DisableButton(guiMoneyButtonBtn[M_100]);
@@ -2435,7 +2435,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 			DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
 		);
-		MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], 0, cnt);
+		MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
 	}
 
 
@@ -6491,7 +6491,7 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		UINT8	ubButton = MSYS_GetBtnUserData(btn);
 
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
@@ -6565,7 +6565,7 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 
 	if(reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 	{
-		UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		UINT8	ubButton = MSYS_GetBtnUserData(btn);
 
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 

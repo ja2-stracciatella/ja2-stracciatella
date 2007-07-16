@@ -893,14 +893,14 @@ static void CreateFinanceButtons(void)
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, BtnFinanceFirstLastPageCallBack);
 
-	MSYS_SetBtnUserData( giFinanceButton[FIRST_PAGE_BUTTON], 0, 0 );
+	MSYS_SetBtnUserData(giFinanceButton[FIRST_PAGE_BUTTON], 0);
 
 	//button to go to the last page
   giFinanceButtonImage[LAST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,9,-1,10,-1  );
 	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton( giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
 										BtnGenericMouseMoveButtonCallback, BtnFinanceFirstLastPageCallBack);
-	MSYS_SetBtnUserData( giFinanceButton[LAST_PAGE_BUTTON], 0, 1 );
+	MSYS_SetBtnUserData(giFinanceButton[LAST_PAGE_BUTTON], 1);
 
 
 
@@ -966,7 +966,7 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT32	uiButton = MSYS_GetBtnUserData( btn, 0 );
+		UINT32 uiButton = MSYS_GetBtnUserData(btn);
 
 		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 

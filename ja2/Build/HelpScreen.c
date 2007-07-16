@@ -928,7 +928,7 @@ static void CreateHelpScreenButtons(void)
 
 
 			SetButtonCursor( guiHelpScreenBtns[i], gHelpScreen.usCursor);
-			MSYS_SetBtnUserData( guiHelpScreenBtns[i], 0, i);
+			MSYS_SetBtnUserData(guiHelpScreenBtns[i], i);
 
 //	SpecifyButtonTextOffsets( guiHelpScreenBtns[i], 19, 9, TRUE );
 
@@ -1299,7 +1299,7 @@ static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		//Get the btn id
-		INT8	bRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		INT8 bRetValue = MSYS_GetBtnUserData(btn);
 
 		ChangeToHelpScreenSubPage( bRetValue );
 /*
@@ -1409,8 +1409,6 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 
 static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason)
 {
-//	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
-
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 /*
@@ -2247,7 +2245,7 @@ static void CreateScrollAreaButtons(void)
 	giHelpScreenScrollArrows[ 0 ] = QuickCreateButton( guiHelpScreenScrollArrowImage[ 0 ], usPosX, usPosY,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										DEFAULT_MOVE_CALLBACK, BtnHelpScreenScrollArrowsCallback );
-	MSYS_SetBtnUserData( giHelpScreenScrollArrows[0],0,0);
+	MSYS_SetBtnUserData(giHelpScreenScrollArrows[0], 0);
 	SetButtonCursor( giHelpScreenScrollArrows[0], gHelpScreen.usCursor );
 
 	usPosY = gHelpScreen.usScreenLocY + HLP_SCRN__SCROLL_DWN_ARROW_Y;
@@ -2256,7 +2254,7 @@ static void CreateScrollAreaButtons(void)
 	giHelpScreenScrollArrows[ 1 ] = QuickCreateButton( guiHelpScreenScrollArrowImage[ 1 ], usPosX, usPosY,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										DEFAULT_MOVE_CALLBACK, BtnHelpScreenScrollArrowsCallback );
-	MSYS_SetBtnUserData( giHelpScreenScrollArrows[1],0,1);
+	MSYS_SetBtnUserData(giHelpScreenScrollArrows[1], 1);
 	SetButtonCursor( giHelpScreenScrollArrows[1], gHelpScreen.usCursor );
 }
 
@@ -2415,7 +2413,7 @@ static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		INT32 iButtonID = MSYS_GetBtnUserData( btn, 0);
+		INT32 iButtonID = MSYS_GetBtnUserData(btn);
 
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -2434,7 +2432,7 @@ static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
-		INT32 iButtonID = MSYS_GetBtnUserData( btn, 0);
+		INT32 iButtonID = MSYS_GetBtnUserData(btn);
 
 		//if up
 		if( iButtonID == 0 )

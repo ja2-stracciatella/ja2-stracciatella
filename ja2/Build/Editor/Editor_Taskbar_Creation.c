@@ -183,7 +183,7 @@ static void InitEditorMercsToolbar(void)
 		MercsSetOrdersCallback );
 	for ( x = 0; x < 8; x++ )
 	{
-		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_ORDERS_BUTTON + x ], 0, x);
+		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_ORDERS_BUTTON + x], x);
 	}
 
 	//Attitudes
@@ -213,7 +213,7 @@ static void InitEditorMercsToolbar(void)
 		MercsSetAttitudeCallback );
 	for ( x = 0; x < 6; x++ )
 	{
-		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_ATTITUDE_BUTTON + x ], 0, x);
+		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_ATTITUDE_BUTTON + x], x);
 	}
 
 	iEditorButton[ MERCS_DIRECTION_W ] =
@@ -245,7 +245,7 @@ static void InitEditorMercsToolbar(void)
 		wchar_t TempString[30];
 		swprintf(TempString, lengthof(TempString), L"Set merc to face %ls", FaceDirs[x]);
 		SetButtonFastHelpText( iEditorButton[ FIRST_MERCS_DIRECTION_BUTTON + x ], TempString );
-		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_DIRECTION_BUTTON + x ], 0, x);
+		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_DIRECTION_BUTTON + x], x);
 	}
 
 	iEditorButton[ MERCS_DIRECTION_FIND ] =
@@ -275,7 +275,7 @@ static void InitEditorMercsToolbar(void)
 	SpecifyButtonDownTextColors( iEditorButton[ MERCS_EQUIPMENT_GREAT ], FONT_LTBLUE, FONT_BLACK );
 	for ( x = 0; x < 5; x++ )
 	{
-		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_REL_EQUIPMENT_BUTTON + x ], 0, x);
+		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_REL_EQUIPMENT_BUTTON + x], x);
 	}
 
 	iEditorButton[ MERCS_ATTRIBUTES_BAD ] =
@@ -299,17 +299,17 @@ static void InitEditorMercsToolbar(void)
 		530, 445, 40, 15, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, MercsSetRelativeAttributesCallback );
 	SpecifyButtonDownTextColors( iEditorButton[ MERCS_ATTRIBUTES_GREAT ], FONT_LTBLUE, FONT_BLACK );
 	for( x = 0; x < 5; x++ )
-		MSYS_SetBtnUserData( iEditorButton[ FIRST_MERCS_REL_ATTRIBUTE_BUTTON + x ], 0, x);
+		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_REL_ATTRIBUTE_BUTTON + x], x);
 
 	iEditorButton[ MERCS_ARMY_CODE ] =
 		CreateCheckBoxButton(	575, 410, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MercsSetEnemyColorCodeCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_ARMY_CODE ], 0, SOLDIER_CLASS_ARMY );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_ARMY_CODE], SOLDIER_CLASS_ARMY);
 	iEditorButton[ MERCS_ADMIN_CODE ] =
 		CreateCheckBoxButton(	575, 424, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MercsSetEnemyColorCodeCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_ADMIN_CODE ], 0, SOLDIER_CLASS_ADMINISTRATOR );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_ADMIN_CODE], SOLDIER_CLASS_ADMINISTRATOR);
 	iEditorButton[ MERCS_ELITE_CODE ] =
 		CreateCheckBoxButton(	575, 438, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MercsSetEnemyColorCodeCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_ELITE_CODE ], 0, SOLDIER_CLASS_ELITE );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_ELITE_CODE], SOLDIER_CLASS_ELITE);
 
 	iEditorButton[ MERCS_CIVILIAN_GROUP ] =
 		CreateTextButton( gszCivGroupNames[0], (INT16)SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -405,31 +405,31 @@ static void InitEditorMercsToolbar(void)
 
 	iEditorButton[ MERCS_HEAD_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+61, MERCPANEL_Y+0, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_HEAD_SLOT ], 0, HELMETPOS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_HEAD_SLOT], HELMETPOS);
 	iEditorButton[ MERCS_BODY_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+61, MERCPANEL_Y+22, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_BODY_SLOT ], 0, VESTPOS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_BODY_SLOT], VESTPOS);
 	iEditorButton[ MERCS_LEGS_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+62, MERCPANEL_Y+73, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_LEGS_SLOT ], 0, LEGPOS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_LEGS_SLOT], LEGPOS);
 	iEditorButton[ MERCS_LEFTHAND_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+12, MERCPANEL_Y+43, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_LEFTHAND_SLOT ], 0, HANDPOS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_LEFTHAND_SLOT], HANDPOS);
 	iEditorButton[ MERCS_RIGHTHAND_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+90, MERCPANEL_Y+42, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_RIGHTHAND_SLOT ], 0, SECONDHANDPOS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_RIGHTHAND_SLOT], SECONDHANDPOS);
 	iEditorButton[ MERCS_PACK1_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+166, MERCPANEL_Y+6, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_PACK1_SLOT ], 0, BIGPOCK1POS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_PACK1_SLOT], BIGPOCK1POS);
 	iEditorButton[ MERCS_PACK2_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+166, MERCPANEL_Y+29, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_PACK2_SLOT ], 0, BIGPOCK2POS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_PACK2_SLOT], BIGPOCK2POS);
 	iEditorButton[ MERCS_PACK3_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+166, MERCPANEL_Y+52, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_PACK3_SLOT ], 0, BIGPOCK3POS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_PACK3_SLOT], BIGPOCK3POS);
 	iEditorButton[ MERCS_PACK4_SLOT ] =
 		CreateCheckBoxButton(	MERCPANEL_X+166, MERCPANEL_Y+75, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL+1, MercsInventorySlotCallback );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_PACK4_SLOT ], 0, BIGPOCK4POS );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_PACK4_SLOT], BIGPOCK4POS);
 }
 
 

@@ -5362,7 +5362,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 										BtnGenericMouseMoveButtonCallback, MilitiaButtonCallback);
 
 			// set button user data
-			MSYS_SetBtnUserData( 	giMapMilitiaButton[ iCounter ], 0, iCounter );
+			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
 			SpecifyButtonFont( giMapMilitiaButton[ iCounter ], FONT10ARIAL );
 			SpecifyButtonUpTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
 			SpecifyButtonDownTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
@@ -5443,7 +5443,7 @@ static void SetMilitiaMapButtonsText(void)
 
 static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = MSYS_GetBtnUserData(btn, 0);
+	INT32 iValue = MSYS_GetBtnUserData(btn);
 
 	// get the sector value for the upper left corner
 	INT16 sBaseSectorValue = GetBaseSectorForCurrentTown();

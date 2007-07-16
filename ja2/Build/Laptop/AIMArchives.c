@@ -194,7 +194,7 @@ BOOLEAN EnterAimArchives()
 														 usPosX, AIM_ALUMNI_PAGE1_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnAlumniPageButtonCallback);
 		SetButtonCursor(guiAlumniPageButton[i], CURSOR_WWW);
-		MSYS_SetBtnUserData( guiAlumniPageButton[i], 0, i);
+		MSYS_SetBtnUserData(guiAlumniPageButton[i], i);
 
 		usPosX += AIM_ALUMNI_PAGE_GAP;
 	}
@@ -374,7 +374,7 @@ static void ResetAimArchiveButtons(void);
 
 static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+	UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

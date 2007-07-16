@@ -386,7 +386,7 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 //																	DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
 //		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
-//		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
+//		MSYS_SetBtnUserData(guiPoliciesMenuButton[i], i);
 
 		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
@@ -395,7 +395,7 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 														 usPosX, AIM_POLICY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
 		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
-		MSYS_SetBtnUserData( guiPoliciesMenuButton[i], 0, i);
+		MSYS_SetBtnUserData(guiPoliciesMenuButton[i], i);
 
 
 
@@ -573,7 +573,7 @@ static BOOLEAN InitAgreementRegion(void)
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 //																	BUTTON_NO_CALLBACK, BtnPoliciesAgreeButtonCallback);
 //		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
-//		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
+//		MSYS_SetBtnUserData(guiPoliciesAgreeButton[i], i);
 
 		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT,
 														 AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW,
@@ -582,7 +582,7 @@ static BOOLEAN InitAgreementRegion(void)
 														 usPosX, AIM_POLICY_AGREEMENT_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnPoliciesAgreeButtonCallback);
 		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
-		MSYS_SetBtnUserData( guiPoliciesAgreeButton[i], 0, i);
+		MSYS_SetBtnUserData(guiPoliciesAgreeButton[i], i);
 
 
 
@@ -669,7 +669,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+			UINT8 ubRetValue = MSYS_GetBtnUserData(btn);
 
 			fOnPage = FALSE;
 			if (ubRetValue == 1)
@@ -697,7 +697,7 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+			UINT8 ubRetValue = MSYS_GetBtnUserData(btn);
 
 			switch (ubRetValue)
 			{

@@ -1316,7 +1316,7 @@ static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 		gubContractLength = ubRetValue;
 		DisplaySelectLights(TRUE, FALSE);
@@ -1334,7 +1334,7 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		gfBuyEquipment = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		gfBuyEquipment = MSYS_GetBtnUserData(btn);
 		DisplaySelectLights(FALSE, TRUE);
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1356,7 +1356,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 		gfStopMercFromTalking = TRUE;
 		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
@@ -1742,7 +1742,7 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 															 (UINT16)(usPosX+AIM_POPUP_BOX_BUTTON_OFFSET_X), (UINT16)(usPosY+AIM_POPUP_BOX_BUTTON_OFFSET_Y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+5,
 															 DEFAULT_MOVE_CALLBACK, BtnPopUpOkButtonCallback);
 			SetButtonCursor(guiPopUpOkButton, CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData( guiPopUpOkButton, 0, ubData);
+			MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
 
 			fPopUpBoxActive = TRUE;
 			gubPopUpBoxAction = AIM_POPUP_DISPLAY;
@@ -1832,7 +1832,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubCurPageNum = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+			UINT8 ubCurPageNum = MSYS_GetBtnUserData(btn);
 
 			fInCallback = FALSE;
 
@@ -1863,7 +1863,7 @@ static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 //		gfStopMercFromTalking = TRUE;
 		StopMercTalking();
@@ -1889,7 +1889,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 		if (ubRetValue == 0)
 		{
@@ -2815,7 +2815,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 															 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															 DEFAULT_MOVE_CALLBACK, BtnFirstContactButtonCallback);
 
-			MSYS_SetBtnUserData( giAuthorizeButton[i], 0, i);
+			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
 			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 		}
@@ -2851,7 +2851,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 DEFAULT_MOVE_CALLBACK, BtnContractLengthButtonCallback);
 
 			SetButtonCursor(giContractLengthButton[i], CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData( giContractLengthButton[i], 0, i);
+			MSYS_SetBtnUserData(giContractLengthButton[i], i);
 			SpecifyDisabledButtonStyle( giContractLengthButton[i], DISABLED_STYLE_NONE );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 		}
@@ -2869,7 +2869,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 DEFAULT_MOVE_CALLBACK, BtnBuyEquipmentButtonCallback);
 
 			SetButtonCursor(giBuyEquipmentButton[i], CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData( giBuyEquipmentButton[i], 0, i);
+			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
 			SpecifyDisabledButtonStyle( giBuyEquipmentButton[i], DISABLED_STYLE_SHADED );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 		}
@@ -2891,7 +2891,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 DEFAULT_MOVE_CALLBACK, BtnAuthorizeButtonCallback);
 
 			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData( giAuthorizeButton[i], 0, i);
+			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
 			SpecifyDisabledButtonStyle( giAuthorizeButton[i], DISABLED_STYLE_NONE );
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 		}
@@ -2921,7 +2921,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnAnsweringMachineButtonCallback);
-		MSYS_SetBtnUserData( giAnsweringMachineButton[0], 0, 0);
+		MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
 		SetButtonCursor(giAnsweringMachineButton[0], CURSOR_LAPTOP_SCREEN);
 
 		//if the user has already left a message, disable the button
@@ -2938,7 +2938,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnAnsweringMachineButtonCallback);
 
-		MSYS_SetBtnUserData( giAnsweringMachineButton[1], 0, 1);
+		MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
 		SetButtonCursor(giAnsweringMachineButton[1], CURSOR_LAPTOP_SCREEN);
 
 		//The face must be inited even though the face wont appear.  It is so the voice is played
@@ -2977,7 +2977,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnHangUpButtonCallback);
 
-		MSYS_SetBtnUserData( giHangUpButton, 0, 1);
+		MSYS_SetBtnUserData(giHangUpButton, 1);
 		SetButtonCursor(giHangUpButton, CURSOR_LAPTOP_SCREEN);
 
 		//set the flag saying specifying that merc is busy

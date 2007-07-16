@@ -423,7 +423,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 
 		//Check box to toggle tracking mode
 		guiOptionsToggles[cnt] = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
-		MSYS_SetBtnUserData(guiOptionsToggles[cnt], 0, cnt);
+		MSYS_SetBtnUserData(guiOptionsToggles[cnt], cnt);
 
 		UINT32 height;
 		UINT16 usTextWidth = StringPixLength(zOptionsToggleText[cnt], OPT_MAIN_FONT);
@@ -853,7 +853,7 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	UINT8	ubButton = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+	UINT8	ubButton = MSYS_GetBtnUserData(btn);
 
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{

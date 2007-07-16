@@ -661,7 +661,7 @@ static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm1);
 
 		//the accept button
@@ -686,7 +686,7 @@ static void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm2);
 
 		//the accept button
@@ -711,7 +711,7 @@ static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm3);
 
 		//the accept button
@@ -861,7 +861,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_CTRCT_ORDER_GRID1_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															 DEFAULT_MOVE_CALLBACK, BtnInsuranceAcceptClearForm1ButtonCallback);
 			SetButtonCursor( guiInsuranceAcceptClearForm1Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData( guiInsuranceAcceptClearForm1Button, 0, 0);
+			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm1Button, 0);
 		}
 
 
@@ -876,7 +876,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_CTRCT_ORDER_GRID2_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															 DEFAULT_MOVE_CALLBACK, BtnInsuranceAcceptClearForm2ButtonCallback);
 			SetButtonCursor(guiInsuranceAcceptClearForm2Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData( guiInsuranceAcceptClearForm2Button, 0, 0);
+			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm2Button, 0);
 
 		}
 
@@ -893,7 +893,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_CTRCT_ORDER_GRID3_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 															 DEFAULT_MOVE_CALLBACK, BtnInsuranceAcceptClearForm3ButtonCallback);
 			SetButtonCursor( guiInsuranceAcceptClearForm3Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData( guiInsuranceAcceptClearForm3Button, 0, 0);
+			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm3Button, 0);
 		}
 
 		fButtonsCreated = TRUE;

@@ -906,7 +906,7 @@ void MercsInventorySlotCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 uiSlot;
-		uiSlot = MSYS_GetBtnUserData( btn, 0 );
+		uiSlot = MSYS_GetBtnUserData(btn);
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 			SetEnemyDroppableStatus( uiSlot, TRUE );
 		else
@@ -919,7 +919,7 @@ void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8 ubColorCode;
-		ubColorCode = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+		ubColorCode = MSYS_GetBtnUserData(btn);
 		SetEnemyColorCode( ubColorCode );
 	}
 }
@@ -1234,21 +1234,21 @@ void MercsScheduleModeCallback( GUI_BUTTON *btn, INT32 reason )
 void MercsSetOrdersCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercOrders( (UINT8)MSYS_GetBtnUserData( btn, 0) );
+		SetMercOrders(MSYS_GetBtnUserData(btn));
 }
 
 //multiple attitude buttons
 void MercsSetAttitudeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercAttitude( (UINT8)MSYS_GetBtnUserData( btn, 0) );
+		SetMercAttitude(MSYS_GetBtnUserData(btn));
 }
 
 //multiple direction buttons
 void MercsDirectionSetCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercDirection( (UINT8)MSYS_GetBtnUserData( btn, 0) );
+		SetMercDirection(MSYS_GetBtnUserData(btn));
 }
 
 void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
@@ -1267,13 +1267,13 @@ void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
 void MercsSetRelativeEquipmentCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercRelativeEquipment( (INT8)MSYS_GetBtnUserData( btn, 0 ) );
+		SetMercRelativeEquipment(MSYS_GetBtnUserData(btn));
 }
 
 void MercsSetRelativeAttributesCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercRelativeAttributes( (INT8)MSYS_GetBtnUserData( btn, 0 ) );
+		SetMercRelativeAttributes(MSYS_GetBtnUserData(btn));
 }
 
 void MouseMovedInMercRegion( MOUSE_REGION *reg, INT32 reason )

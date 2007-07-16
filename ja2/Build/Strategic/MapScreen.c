@@ -9910,7 +9910,7 @@ void MapScreenDemoOkBoxCallback( UINT8 bExitValue )
 static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	// grab the button index value for the sort buttons
-	INT32 iValue = MSYS_GetBtnUserData(btn, 0);
+	INT32 iValue = MSYS_GetBtnUserData(btn);
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -9945,7 +9945,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
 										BtnGenericMouseMoveButtonCallback, MapSortBtnCallback );
 
-		MSYS_SetBtnUserData(giMapSortButton[ iCounter ], 0, iCounter );
+		MSYS_SetBtnUserData(giMapSortButton[iCounter], iCounter);
 
 		SetButtonFastHelpText( giMapSortButton[ iCounter ], wMapScreenSortButtonHelpText[ iCounter ] );
 	}

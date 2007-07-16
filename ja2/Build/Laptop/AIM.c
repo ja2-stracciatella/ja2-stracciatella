@@ -520,7 +520,7 @@ BOOLEAN InitAimMenuBar(void)
 														 usPosX, BOTTOM_BUTTON_START_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnAimBottomButtonsCallback);
 		SetButtonCursor(guiBottomButtons[i], CURSOR_LAPTOP_SCREEN);
-		MSYS_SetBtnUserData( guiBottomButtons[i], 0, gCurrentAimPage[i]);
+		MSYS_SetBtnUserData(guiBottomButtons[i], gCurrentAimPage[i]);
 
 		usPosX += BOTTOM_BUTTON_START_WIDTH;
 	}
@@ -548,7 +548,7 @@ static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
-		guiCurrentLaptopMode = (UINT8)MSYS_GetBtnUserData(btn, 0);
+		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn);
 	}
 	DisableAimButton();
 }

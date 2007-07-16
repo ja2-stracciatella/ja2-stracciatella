@@ -332,7 +332,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		INT8 bID = (UINT8)btn->UserData[0];
+		INT8 bID = MSYS_GetBtnUserData(btn);
 
 		gbHandledMainMenu = bID;
 		RenderMainMenu();
@@ -522,7 +522,7 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			{
 				return( FALSE );
 			}
-			ButtonList[ iMenuButtons[ cnt ] ]->UserData[0] = cnt;
+			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);
 		}
 
 		fButtonsCreated = TRUE;

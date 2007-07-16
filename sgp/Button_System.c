@@ -726,7 +726,7 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	b->uiOldFlags              = 0;
 	b->XLoc                    = Left;
 	b->YLoc                    = Top;
-	for (UINT32 i = 0; i < lengthof(b->UserData); i++) b->UserData[i] = 0;
+	b->UserData                = 0;
 	b->bDisabledStyle          = DISABLED_STYLE_DEFAULT;
 	b->string                  = NULL;
 	b->usFont                  = 0;
@@ -2166,22 +2166,17 @@ INT32 CreateCheckBoxButton( INT16 x, INT16 y, const char *filename, INT16 Priori
 
 
 // Added Oct17, 97 Carter - kind of mindless, but might as well have it
-void MSYS_SetBtnUserData(INT32 iButtonNum,INT32 index,INT32 userdata)
+void MSYS_SetBtnUserData(INT32 iButtonNum, INT32 userdata)
 {
-	if(index < 0 || index > 3)
-		return;
 	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
-	b->UserData[index]=userdata;
+	b->UserData = userdata;
 }
 
 
-INT32 MSYS_GetBtnUserData(GUI_BUTTON *b,INT32 index)
+INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b)
 {
-	if(index < 0 || index > 3)
-		return(0);
-
-	return(b->UserData[index]);
+	return b->UserData;
 }
 
 

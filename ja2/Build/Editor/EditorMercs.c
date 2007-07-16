@@ -1860,7 +1860,7 @@ void ExtractAndUpdateMercSchedule()
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i]	= GetExclusive24HourTimeValueFromField( (UINT8)(i+1) );
-		gCurrSchedule.ubAction[i] = (UINT8)MSYS_GetBtnUserData( ButtonList[ iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ]], 0 );
+		gCurrSchedule.ubAction[i] = MSYS_GetBtnUserData(ButtonList[iEditorButton[MERCS_SCHEDULE_ACTION1 + i]]);
 		if( gCurrSchedule.ubAction[i] )
 			fValidSchedule = TRUE;
 	}
@@ -3408,7 +3408,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 	gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] = ubNewAction;
 	SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ],
 		gszScheduleActions[ ubNewAction ] );
-	MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ], 0, ubNewAction );
+	MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex], ubNewAction);
 	//Now, based on this action, disable the other buttons
 	StartScheduleAction();
 	gfSingleAction = FALSE;
@@ -3459,7 +3459,7 @@ void ClearCurrentSchedule()
 	memset( &gCurrSchedule, 0, sizeof( SCHEDULENODE ) );
 	for( i = 0; i < 4; i++ )
 	{
-		MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], 0, 0 );
+		MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i], 0);
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], L"No action" );
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
@@ -3543,7 +3543,7 @@ static void UpdateScheduleInfo(void)
 		}
 		for( i = 0; i < 4; i++ )
 		{ //Update the text and buttons
-			MSYS_SetBtnUserData( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], 0, pSchedule->ubAction[i] );
+			MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i], pSchedule->ubAction[i]);
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
 			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData1[i] != 0xffff )

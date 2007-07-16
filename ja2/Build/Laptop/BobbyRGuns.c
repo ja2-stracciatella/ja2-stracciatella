@@ -356,7 +356,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													 DEFAULT_MOVE_CALLBACK, BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRPreviousPage, CURSOR_LAPTOP_SCREEN);
-	MSYS_SetBtnUserData( guiBobbyRPreviousPage, 0, BOBBYR_PREVIOUS_PAGE);
+	MSYS_SetBtnUserData(guiBobbyRPreviousPage, BOBBYR_PREVIOUS_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRPreviousPage, DISABLED_STYLE_SHADED );
 
 
@@ -371,7 +371,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 													 DEFAULT_MOVE_CALLBACK, BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRNextPage, CURSOR_LAPTOP_SCREEN);
-	MSYS_SetBtnUserData( guiBobbyRNextPage, 0, BOBBYR_NEXT_PAGE);
+	MSYS_SetBtnUserData(guiBobbyRNextPage, BOBBYR_NEXT_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRNextPage, DISABLED_STYLE_SHADED );
 
 
@@ -389,7 +389,7 @@ BOOLEAN InitBobbyMenuBar(  )
 
 		SetButtonCursor(guiBobbyRPageMenu[i], CURSOR_LAPTOP_SCREEN);
 
-		MSYS_SetBtnUserData( guiBobbyRPageMenu[i], 0, ubCatalogueButtonValues[bCurMode]);
+		MSYS_SetBtnUserData(guiBobbyRPageMenu[i], ubCatalogueButtonValues[bCurMode]);
 
 		usPosX += BOBBYR_CATALOGUE_BUTTON_GAP;
 		bCurMode++;
@@ -461,7 +461,7 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 		UpdateButtonText(guiCurrentLaptopMode);
-		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn, 0);
+		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn);
 	}
 	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
@@ -475,7 +475,7 @@ static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	UINT32		bNewValue;
 
-	bNewValue = MSYS_GetBtnUserData( btn, 0 );
+	bNewValue = MSYS_GetBtnUserData(btn);
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{

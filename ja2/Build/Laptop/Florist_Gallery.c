@@ -211,7 +211,7 @@ static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		guiCurrentlySelectedFlower = (UINT8) MSYS_GetBtnUserData( btn, 0 );
+		guiCurrentlySelectedFlower = MSYS_GetBtnUserData(btn);
 		guiCurrentLaptopMode = LAPTOP_MODE_FLORIST_ORDERFORM;
 		gfShowBookmarks = FALSE;
 	}
@@ -253,7 +253,7 @@ static BOOLEAN InitFlowerButtons(void)
 																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 																	DEFAULT_MOVE_CALLBACK, BtnGalleryFlowerButtonCallback);
 		SetButtonCursor( guiGalleryButton[j], CURSOR_WWW);
-		MSYS_SetBtnUserData( guiGalleryButton[j], 0, count);
+		MSYS_SetBtnUserData(guiGalleryButton[j], count);
 
 		SpecifyButtonIcon( guiGalleryButton[j], guiFlowerImages[ j ], 0, 5, 5, FALSE );
 		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;

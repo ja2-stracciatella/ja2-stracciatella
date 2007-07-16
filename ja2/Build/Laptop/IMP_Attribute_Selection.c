@@ -1140,8 +1140,8 @@ static void CreateAttributeSliderButtons(void)
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter], CURSOR_WWW);
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter + 1 ], CURSOR_WWW);
 		// set user data
-		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter],0, iCounter / 2 );
-		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter + 1],0, iCounter / 2 );
+		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter], iCounter / 2);
+		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter + 1], iCounter / 2);
 	}
 
 	MarkButtonsDirty( );
@@ -1171,7 +1171,7 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		INT32 iValue = (INT32)MSYS_GetBtnUserData(btn, 0);
+		INT32 iValue = MSYS_GetBtnUserData(btn);
 
 		DecrementStat(iValue);
 		fHasAnySlidingBarMoved = TRUE;
@@ -1185,7 +1185,7 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-  	INT32 iValue = (INT32)MSYS_GetBtnUserData(btn, 0);
+  	INT32 iValue = MSYS_GetBtnUserData(btn);
 
 		IncrementStat(iValue);
 		fHasAnySlidingBarMoved = TRUE;

@@ -302,7 +302,7 @@ static BOOLEAN EnterGIOScreen(void)
 		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnDifficultyTogglesCallback );
-		MSYS_SetBtnUserData( guiDifficultySettingsToggles[ cnt ], 0, cnt );
+		MSYS_SetBtnUserData(guiDifficultySettingsToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	if (gGameOptions.ubDifficultyLevel == DIF_LEVEL_EASY)
@@ -321,7 +321,7 @@ static BOOLEAN EnterGIOScreen(void)
 		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameStyleTogglesCallback );
-		MSYS_SetBtnUserData( guiGameStyleToggles[ cnt ], 0, cnt );
+		MSYS_SetBtnUserData(guiGameStyleToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	if (gGameOptions.fSciFi)
@@ -336,7 +336,7 @@ static BOOLEAN EnterGIOScreen(void)
 		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameSaveTogglesCallback );
-		MSYS_SetBtnUserData( guiGameSaveToggles[ cnt ], 0, cnt );
+		MSYS_SetBtnUserData(guiGameSaveToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	if (gGameOptions.fIronManMode)
@@ -351,7 +351,7 @@ static BOOLEAN EnterGIOScreen(void)
 		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGunOptionsTogglesCallback);
-		MSYS_SetBtnUserData( guiGunOptionToggles[ cnt ], 0, cnt );
+		MSYS_SetBtnUserData(guiGunOptionToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 
@@ -383,7 +383,7 @@ static BOOLEAN EnterGIOScreen(void)
 		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnTimedTurnsTogglesCallback );
-		MSYS_SetBtnUserData( guiTimedTurnToggles[ cnt ], 0, cnt );
+		MSYS_SetBtnUserData(guiTimedTurnToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	if (gGameOptions.fTurnTimeLimit)

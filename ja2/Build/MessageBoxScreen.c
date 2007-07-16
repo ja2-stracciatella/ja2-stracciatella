@@ -309,7 +309,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 														 TEXT_CJUSTIFIED,
 														 (INT16)(gMsgBox.sX + sButtonX ), (INT16)(gMsgBox.sY + sButtonY ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
 														 DEFAULT_MOVE_CALLBACK, NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData( gMsgBox.uiButton[0], 0, 1);
+		MSYS_SetBtnUserData(gMsgBox.uiButton[0], 1);
 		SetButtonCursor(gMsgBox.uiButton[0], usCursor);
 
 		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
@@ -319,7 +319,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 														 TEXT_CJUSTIFIED,
 														 (INT16)(gMsgBox.sX + sButtonX ), (INT16)(gMsgBox.sY + sButtonY ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
 														 DEFAULT_MOVE_CALLBACK, NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData( gMsgBox.uiButton[1], 0, 2);
+		MSYS_SetBtnUserData(gMsgBox.uiButton[1], 2);
 		SetButtonCursor(gMsgBox.uiButton[1], usCursor);
 
 		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
@@ -329,7 +329,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 														 TEXT_CJUSTIFIED,
 														 (INT16)(gMsgBox.sX + sButtonX ), (INT16)(gMsgBox.sY + sButtonY ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
 														 DEFAULT_MOVE_CALLBACK, NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData( gMsgBox.uiButton[2], 0, 3);
+		MSYS_SetBtnUserData(gMsgBox.uiButton[2], 3);
 		SetButtonCursor(gMsgBox.uiButton[2], usCursor);
 
 		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
@@ -339,7 +339,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 														 TEXT_CJUSTIFIED,
 														 (INT16)(gMsgBox.sX + sButtonX ), (INT16)(gMsgBox.sY + sButtonY ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
 														 DEFAULT_MOVE_CALLBACK, NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData( gMsgBox.uiButton[3], 0, 4);
+		MSYS_SetBtnUserData(gMsgBox.uiButton[3], 4);
 		SetButtonCursor(gMsgBox.uiButton[3], usCursor);
 		ForceButtonUnDirty( gMsgBox.uiButton[3] );
 		ForceButtonUnDirty( gMsgBox.uiButton[2] );
@@ -776,7 +776,7 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 		// OK, exit
-		gMsgBox.bHandled = (INT8) MSYS_GetBtnUserData( btn, 0);
+		gMsgBox.bHandled = MSYS_GetBtnUserData(btn);
 	}
 
 }

@@ -235,7 +235,7 @@ static BOOLEAN InitAimHistoryMenuBar(void)
 //																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 //																	DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
 //		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
-//		MSYS_SetBtnUserData( guiHistoryMenuButton[i], 0, i+1);
+//		MSYS_SetBtnUserData(guiHistoryMenuButton[i], i + 1);
 
 		guiHistoryMenuButton[i] = CreateIconAndTextButton( guiHistoryMenuButtonImage, AimHistoryText[i+AIM_HISTORY_PREVIOUS], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
@@ -244,7 +244,7 @@ static BOOLEAN InitAimHistoryMenuBar(void)
 														 usPosX, AIM_HISTORY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
 														 DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
 		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
-		MSYS_SetBtnUserData( guiHistoryMenuButton[i], 0, i+1);
+		MSYS_SetBtnUserData(guiHistoryMenuButton[i], i + 1);
 
 
 		usPosX += AIM_HISTORY_GAP_X;
@@ -396,7 +396,7 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 
 static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	UINT8	ubRetValue = (UINT8)MSYS_GetBtnUserData( btn, 0 );
+	UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
