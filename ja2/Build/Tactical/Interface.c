@@ -592,7 +592,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	SetButtonFastHelpText( iActionIcons[ RUN_ICON ], pTacticalPopupButtonStrings[ RUN_ICON ] );
 	//SetButtonSavedRect( iActionIcons[ RUN_ICON ] );
-	ButtonList[iActionIcons[RUN_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[RUN_ICON]]->User.Ptr = pUIEvent;
 
 	if ( MercInWater( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
 	{
@@ -618,7 +618,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		SetButtonFastHelpText( iActionIcons[ WALK_ICON ], pTacticalPopupButtonStrings[ WALK_ICON ] );
 	}
 
-	ButtonList[iActionIcons[WALK_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[WALK_ICON]]->User.Ptr = pUIEvent;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	{
@@ -639,7 +639,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	SetButtonFastHelpText( iActionIcons[ SNEAK_ICON ], pTacticalPopupButtonStrings[ SNEAK_ICON ] );
 	//SetButtonSavedRect( iActionIcons[ SNEAK_ICON ] );
-	ButtonList[iActionIcons[SNEAK_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[SNEAK_ICON]]->User.Ptr = pUIEvent;
 
 	// Check if this is a valid stance, diable if not!
 	if ( !IsValidStance( pSoldier, ANIM_CROUCH ) )
@@ -657,7 +657,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	SetButtonFastHelpText( iActionIcons[ CRAWL_ICON ], pTacticalPopupButtonStrings[ CRAWL_ICON ] );
 	//SetButtonSavedRect( iActionIcons[ CRAWL_ICON ] );
-	ButtonList[iActionIcons[CRAWL_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[CRAWL_ICON]]->User.Ptr = pUIEvent;
 
 	// Check if this is a valid stance, diable if not!
 	if ( !IsValidStance( pSoldier, ANIM_PRONE ) )
@@ -676,7 +676,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	SetButtonFastHelpText( iActionIcons[ LOOK_ICON ], TacticalStr[ LOOK_CURSOR_POPUPTEXT ] );
 	//SetButtonSavedRect( iActionIcons[ LOOK_ICON ] );
-	ButtonList[iActionIcons[LOOK_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[LOOK_ICON]]->User.Ptr = pUIEvent;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
@@ -766,7 +766,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ ACTIONC_ICON ] );
 	SetButtonFastHelpText(iActionIcons[ACTIONC_ICON], Action);
-	ButtonList[iActionIcons[ACTIONC_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[ACTIONC_ICON]]->User.Ptr = pUIEvent;
 
 	if ( fDisableAction )
 	{
@@ -784,7 +784,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ TALK_ICON ] );
 	SetButtonFastHelpText( iActionIcons[ TALK_ICON ], pTacticalPopupButtonStrings[ TALK_ICON ] );
-	ButtonList[iActionIcons[TALK_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[TALK_ICON]]->User.Ptr = pUIEvent;
 
 	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
@@ -802,7 +802,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ HAND_ICON ] );
 	SetButtonFastHelpText( iActionIcons[ HAND_ICON ], pTacticalPopupButtonStrings[ HAND_ICON ] );
-	ButtonList[iActionIcons[HAND_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[HAND_ICON]]->User.Ptr = pUIEvent;
 
 	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
@@ -819,7 +819,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	//SetButtonSavedRect( iActionIcons[ CANCEL_ICON ] );
 	SetButtonFastHelpText( iActionIcons[ CANCEL_ICON ], pTacticalPopupButtonStrings[ CANCEL_ICON ] );
-	ButtonList[iActionIcons[CANCEL_ICON]]->UserData = (UINT32)pUIEvent;
+	ButtonList[iActionIcons[CANCEL_ICON]]->User.Ptr = pUIEvent;
 
 	//LockTacticalInterface( );
 
@@ -894,7 +894,6 @@ void CancelMovementMenu( )
 static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32		uiBtnID;
-	UI_EVENT	*pUIEvent;
 
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -902,7 +901,7 @@ static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
 
 		uiBtnID = btn->IDNum;
 
-		pUIEvent = (UI_EVENT*)btn->UserData;
+		UI_EVENT* pUIEvent = (UI_EVENT*)btn->User.Ptr;
 
 		if ( uiBtnID == iActionIcons[ WALK_ICON  ] )
 		{

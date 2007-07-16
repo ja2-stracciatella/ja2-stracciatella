@@ -77,7 +77,11 @@ typedef struct _GUI_BUTTON {
 	UINT32				uiOldFlags;				// Old flags from previous render loop
 	INT16					XLoc;							// Coordinates where button is on the screen
 	INT16					YLoc;
-	INT32         UserData;         // Place holder for user data etc.
+	union                           // Place holder for user data etc.
+	{
+		INT32 Data;
+		void* Ptr;
+	} User;
 	//Button disabled style
 	INT8					bDisabledStyle;
 	//For buttons with text

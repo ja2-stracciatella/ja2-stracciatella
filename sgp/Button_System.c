@@ -726,7 +726,7 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	b->uiOldFlags              = 0;
 	b->XLoc                    = Left;
 	b->YLoc                    = Top;
-	b->UserData                = 0;
+	b->User.Data               = 0;
 	b->bDisabledStyle          = DISABLED_STYLE_DEFAULT;
 	b->string                  = NULL;
 	b->usFont                  = 0;
@@ -2170,13 +2170,13 @@ void MSYS_SetBtnUserData(INT32 iButtonNum, INT32 userdata)
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
-	b->UserData = userdata;
+	b->User.Data = userdata;
 }
 
 
 INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b)
 {
-	return b->UserData;
+	return b->User.Data;
 }
 
 
