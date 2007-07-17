@@ -1973,7 +1973,6 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 {
 	UINT16 usHealPts = 0;
 	UINT16 usKitPts = 0;
-	INT8 bMedFactor;
 
 	// make sure he has a medkit in his hand
 	if( fMakeSureKitIsInHand )
