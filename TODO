@@ -8,7 +8,6 @@ med prio
 - HACK000A Clean up system specific hacks, especially wrt. wchar_t
 - HACK000C Workaround for code trying to access non-existent buttons
 - TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
-- TODO000C MakeSureMedKitIsInHand() is severly broken: Big items can end up in small slots. Checking for first aid kits is probably not necessary at all
 - TODO000D In PickRandomPassengerFromVehicle() using MercPtrs[ubChosenMerc] is probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 - TODO000E In SayBattleSoundFromAnyBodyInSector() using MercPtrs[ubChosenMerc] is probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 

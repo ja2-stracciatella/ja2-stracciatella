@@ -117,8 +117,8 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable );
 BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem );
 
 
-// is the item passed a medical/ first aid kit? and what type?
-INT8 IsMedicalKitItem( OBJECTTYPE *pObject );
+// Is the item passed a medical kit?
+BOOLEAN IsMedicalKitItem(const OBJECTTYPE* pObject);
 
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier );
 INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );

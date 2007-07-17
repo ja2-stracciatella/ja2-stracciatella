@@ -479,7 +479,6 @@ static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(SOLDIERTYPE* pSoldier)
 // check that character is alive, conscious, has medical skill and equipment
 static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
 {
-	BOOLEAN fFoundMedKit = FALSE;
 	INT8 bPocket = 0;
 
 	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
@@ -495,22 +494,13 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
 	// find med kit
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
-		// doctoring is allowed using either type of med kit (but first aid kit halves doctoring effectiveness)
-		if( IsMedicalKitItem( &( pSoldier -> inv[ bPocket ] ) ) )
+		if (IsMedicalKitItem(&pSoldier->inv[bPocket]))
 		{
-			fFoundMedKit = TRUE;
-			break;
+			return TRUE;
 		}
 	}
 
-	if( fFoundMedKit == FALSE )
-	{
-		return( FALSE );
-	}
-
-	// all criteria fit, can doctor
-	return ( TRUE );
-
+	return FALSE;
 }
 
 
@@ -1990,7 +1980,7 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 	UINT16 usKitPts = 0;
 	INT8 bMedFactor;
 
-	// make sure he has a medkit in his hand, and preferably make it a medical bag, not a first aid kit
+	// make sure he has a medkit in his hand
 	if( fMakeSureKitIsInHand )
 	{
 		if ( !MakeSureMedKitIsInHand( pDoctor ) )
@@ -2017,22 +2007,6 @@ UINT16 CalculateHealingPointsForDoctor(SOLDIERTYPE *pDoctor, UINT16 *pusMaxPts, 
 	{
 		usHealPts = usKitPts;
 	}
-
-	// get the type of medkit being used
-	bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ HANDPOS ] ) );
-
-	if( bMedFactor != 0 )
-	{
-		// no med kit left?
-		// if he's working with only a first aid kit, the doctoring rate is halved!
-		// for simplicity, we're ignoring the situation where a nearly empty medical bag in is hand and the rest are just first aid kits
-		usHealPts /= bMedFactor;
-	}
-	else
-	{
-		usHealPts = 0;
-	}
-
 
 	// return healing pts value
 	return( usHealPts );
@@ -2129,7 +2103,6 @@ static UINT16 TotalMedicalKitPoints(SOLDIERTYPE* pSoldier)
 	// add up kit points of all medkits
 	for (ubPocket = HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
-		// NOTE: Here, we don't care whether these are MEDICAL BAGS or FIRST AID KITS!
     if ( IsMedicalKitItem( &( pSoldier -> inv[ ubPocket ] ) ) )
     {
 			usKitpts += TotalPoints( &( pSoldier -> inv[ ubPocket ] ) );
@@ -2432,7 +2405,6 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 	INT8 bPointsUsed = 0;
 	INT8 bPointsHealed = 0;
 	INT8 bPocket = 0;
-	INT8 bMedFactor;
 //	INT8 bOldPatientLife = pPatient -> bLife;
 
 
@@ -2449,46 +2421,6 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		return( usTotalHundredthsUsed );
 	}
 
-
-/* ARM - Eliminated.  We now have other methods of properly using doctors to auto-bandage bleeding,
-// using the correct kits points instead of this 1 pt. "special"
-
-	// stop all bleeding of patient..for 1 pt (it's fast).  But still use up normal kit pts to do it
-	if (pPatient -> bBleeding > 0)
-	{
-		usHealingPtsLeft--;
-		usTotalFullPtsUsed++;
-
-		// get points needed to heal him to dress bleeding wounds
-		bPointsToUse = pPatient -> bBleeding;
-
-		// go through doctor's pockets and heal, starting at with his in-hand item
-		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
-		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
-		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
-			if ( bMedFactor > 0 )
-			{
-				// ok, we have med kit in this pocket, use it
-
-				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
-				bPointsHealed = bPointsUsed / bMedFactor;
-
-				bPointsToUse -= bPointsHealed;
-				pPatient -> bBleeding -= bPointsHealed;
-
-				// if we're done all we're supposed to, or the guy's no longer bleeding, bail
-				if ( ( bPointsToUse <= 0 ) || ( pPatient -> bBleeding == 0 ) )
-				{
-					break;
-				}
-			}
-		}
-	}
-*/
-
 	// if below ok life, heal these first at double point cost
 	if( pPatient -> bLife < OKLIFE )
 	{
@@ -2502,18 +2434,13 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		}
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
-		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
-			if ( bMedFactor > 0 )
+			if (IsMedicalKitItem(&pDoctor->inv[bPocket]))
 			{
 				// ok, we have med kit in this pocket, use it
-
-				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
-				bPointsHealed = bPointsUsed / bMedFactor;
+				bPointsUsed = UseKitPoints(&pDoctor->inv[bPocket], bPointsToUse, pDoctor);
+				bPointsHealed = bPointsUsed;
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
@@ -2547,15 +2474,11 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			bMedFactor = IsMedicalKitItem( &( pDoctor -> inv[ bPocket ] ) );
-			if ( bMedFactor > 0 )
+			if (IsMedicalKitItem(&pDoctor->inv[bPocket]))
 			{
 				// ok, we have med kit in this pocket, use it  (use only half if it's worth double)
-
-				// The medFactor here doesn't affect how much the doctor can heal (that's already factored into lower healing pts)
-				// but it does effect how fast the medkit is used up!  First aid kits disappear at double their doctoring rate!
-				bPointsUsed = (INT8) UseKitPoints( &( pDoctor -> inv[ bPocket ] ), (UINT16) (bPointsToUse * bMedFactor), pDoctor );
-				bPointsHealed = bPointsUsed / bMedFactor;
+				bPointsUsed = UseKitPoints(&pDoctor->inv[bPocket], bPointsToUse, pDoctor);
+				bPointsHealed = bPointsUsed;
 
 				bPointsToUse -= bPointsHealed;
 				usHealingPtsLeft -= bPointsHealed;
@@ -5321,7 +5244,7 @@ static void MakeSureToolKitIsInHand(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier) // XXX TODO000C
+static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier)
 {
 	INT8 bPocket = 0;
 
@@ -5333,41 +5256,13 @@ static BOOLEAN MakeSureMedKitIsInHand(SOLDIERTYPE* pSoldier) // XXX TODO000C
 		return(TRUE);
 	}
 
-	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
+	// run through rest of inventory looking for MEDICAL BAGS, swap the first one into hand if found
 	for (bPocket = SECONDHANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		if ( pSoldier -> inv[ bPocket ].usItem == MEDICKIT )
 		{
 			fCharacterInfoPanelDirty = TRUE;
 			SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
-			return(TRUE);
-		}
-	}
-
-	// we didn't find a medical bag, so settle for a FIRST AID KIT
-	if ( pSoldier -> inv[ HANDPOS ].usItem == FIRSTAIDKIT )
-	{
-		return(TRUE);
-	}
-
-	// run through rest of inventory looking 1st for MEDICAL BAGS, swap the first one into hand if found
-	for (bPocket = SECONDHANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
-	{
-		if ( pSoldier -> inv[ bPocket ].usItem == FIRSTAIDKIT )
-		{
-			if( ( Item[ pSoldier -> inv[ HANDPOS ].usItem ].fFlags & IF_TWOHANDED_GUN ) && ( bPocket >= SMALLPOCK1POS ) )
-			{
-				// first move from hand to second hand
-				SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ SECONDHANDPOS ] );
-
-				// dirty mapscreen and squad panels
-				fCharacterInfoPanelDirty = TRUE;
-				fInterfacePanelDirty = DIRTYLEVEL2;
-			}
-
-			SwapObjs( &pSoldier -> inv[ HANDPOS ], &pSoldier -> inv[ bPocket ] );
-
-
 			return(TRUE);
 		}
 	}

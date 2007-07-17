@@ -4588,19 +4588,12 @@ BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, IN
 	}
 }
 
-// is the item a medical kit/first aid kit item?
-INT8 IsMedicalKitItem( OBJECTTYPE *pObject )
-{
-	// check item id against current medical kits
-	switch( pObject->usItem )
-	{
-		case( MEDICKIT ):
-			// medical bag, return 1
-			return ( 1 );
-	}
 
-	return( 0 );
+BOOLEAN IsMedicalKitItem(const OBJECTTYPE* pObject)
+{
+	return pObject->usItem == MEDICKIT;
 }
+
 
 void SwapHandItems( SOLDIERTYPE * pSoldier )
 {
