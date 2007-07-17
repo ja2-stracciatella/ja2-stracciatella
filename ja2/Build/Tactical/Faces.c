@@ -1155,7 +1155,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 	UINT16					usTextWidth;
 	BOOLEAN					fAtGunRange = FALSE;
 	BOOLEAN					fShowNumber = FALSE;
-	BOOLEAN					fShowMaximum = FALSE;
 	SOLDIERTYPE			*pSoldier;
 	INT16						sFontX, sFontY;
 	INT16						sX1, sY1, sY2, sX2;
@@ -1351,7 +1350,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				fDoIcon		 = TRUE;
 				sPtsAvailable = CalculateHealingPointsForDoctor( MercPtrs[ pFace->ubSoldierID ], &usMaximumPts, FALSE );
 				fShowNumber = TRUE;
-				fShowMaximum = TRUE;
 
 				// divide both amounts by 10 to make the displayed numbers a little more user-palatable (smaller)
 				sPtsAvailable = ( sPtsAvailable + 5 ) / 10;
@@ -1366,7 +1364,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				sPtsAvailable = MercPtrs[ pFace->ubSoldierID ]->bLife;
 				usMaximumPts  = MercPtrs[ pFace->ubSoldierID ]->bLifeMax;
 				fShowNumber = TRUE;
-				fShowMaximum = TRUE;
 				break;
 
 			case TRAIN_SELF:
@@ -1376,7 +1373,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				sIconIndex = 3;
 				fDoIcon		 = TRUE;
 				fShowNumber = TRUE;
-				fShowMaximum = TRUE;
 				// there could be bonus pts for training at gun range
 				if ( ( MercPtrs[ pFace->ubSoldierID ]->sSectorX == 13) && (MercPtrs[ pFace->ubSoldierID ]->sSectorY == MAP_ROW_H) && (MercPtrs[ pFace->ubSoldierID ]->bSectorZ == 0) )
 				{
@@ -1409,7 +1405,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				fDoIcon		 = TRUE;
 				sPtsAvailable = CalculateRepairPointsForRepairman( MercPtrs[ pFace->ubSoldierID ], &usMaximumPts, FALSE );
 				fShowNumber = TRUE;
-				fShowMaximum = TRUE;
 
 				// check if we are repairing a vehicle
 				if ( Menptr[ pFace->ubSoldierID ].bVehicleUnderRepairID != -1 )
@@ -1449,14 +1444,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			{
 				SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
 
-				if ( fShowMaximum )
-				{
-					swprintf( sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts );
-				}
-				else
-				{
-					swprintf( sString, lengthof(sString), L"%d", sPtsAvailable );
-				}
+				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
 
 				usTextWidth = StringPixLength( sString, FONT10ARIAL );
 				usTextWidth += 1;
