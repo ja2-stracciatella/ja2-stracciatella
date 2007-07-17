@@ -481,11 +481,6 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
 {
 	INT8 bPocket = 0;
 
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
 	if( CanCharacterDoctorButDoesntHaveMedKit( pSoldier ) == FALSE )
 	{
 		return( FALSE );
