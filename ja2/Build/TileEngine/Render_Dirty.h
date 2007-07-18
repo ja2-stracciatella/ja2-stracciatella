@@ -55,7 +55,6 @@ typedef struct _VIDEO_OVERLAY
 		INT32						uiBackground;
 		BACKGROUND_SAVE		*pBackground;
 		INT16							*pSaveArea;
-		UINT32						uiUserData[ 5 ];
 		UINT32						uiFontID;
 		INT16							sX;
 		INT16							sY;
@@ -64,8 +63,6 @@ typedef struct _VIDEO_OVERLAY
 		wchar_t						zText[ 200 ];
 		UINT32						uiDestBuff;
 		OVERLAY_CALLBACK		BltCallback;
-
-
 } VIDEO_OVERLAY;
 
 

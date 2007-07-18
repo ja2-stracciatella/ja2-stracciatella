@@ -1180,24 +1180,6 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 }
 
 
-static BOOLEAN SetOverlayUserData(INT32 iVideoOverlay, UINT8 ubNum, UINT32 uiData)
-{
-	if ( !gVideoOverlays[ iVideoOverlay ].fAllocated )
-	{
-		return( FALSE );
-	}
-
-	if ( ubNum > 4 )
-	{
-		return( FALSE );
-	}
-
-	gVideoOverlays[ iVideoOverlay ].uiUserData[ ubNum ] = uiData;
-
-	return ( TRUE );
-}
-
-
 // Common callbacks for topmost blitters
 void BlitMFont( VIDEO_OVERLAY *pBlitter )
 {
