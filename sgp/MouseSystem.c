@@ -1142,8 +1142,7 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 
 		if ( !(region->uiFlags & MSYS_GOT_BACKGROUND) )
 		{
-			region->FastHelpRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, NULL, (INT16)iX, (INT16)iY,
-						(INT16)(iX + iW), (INT16)(iY + iH) );
+			region->FastHelpRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, iX, iY, iX + iW, iY + iH);
 			region->uiFlags |= MSYS_GOT_BACKGROUND;
 			region->uiFlags |= MSYS_HAS_BACKRECT;
 		}

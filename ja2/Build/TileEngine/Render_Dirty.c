@@ -158,11 +158,8 @@ INT32 uiCount;
 }
 
 
-
-
-INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 *pSaveArea, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
-UINT32 uiBufSize;
 INT32 iBackIndex;
 INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 INT32	uiLeftSkip, uiRightSkip, uiTopSkip, uiBottomSkip;
@@ -216,31 +213,25 @@ INT32	 iTempX, iTempY;
 
 	gBackSaves[iBackIndex].fZBuffer=FALSE;
 
-	if(pSaveArea==NULL)
+	UINT32 uiBufSize = (sRight - sLeft) * 2 * (sBottom - sTop);
+
+	if (uiBufSize == 0)
+		return -1;
+
+	if (uiFlags & BGND_FLAG_SAVERECT)
 	{
-		uiBufSize=((sRight-sLeft)*2)*(sBottom-sTop);
-
-		if(uiBufSize==0)
-			return(-1);
-
-		if ( uiFlags & BGND_FLAG_SAVERECT )
-		{
-			if((gBackSaves[iBackIndex].pSaveArea=MemAlloc(uiBufSize))==NULL)
-				return(-1);
-		}
-
-
-		if(uiFlags&BGND_FLAG_SAVE_Z)
-		{
-			if((gBackSaves[iBackIndex].pZSaveArea=MemAlloc(uiBufSize))==NULL)
-				return(-1);
-			gBackSaves[iBackIndex].fZBuffer=TRUE;
-		}
-
-		gBackSaves[iBackIndex].fFreeMemory=TRUE;
+		if ((gBackSaves[iBackIndex].pSaveArea = MemAlloc(uiBufSize)) == NULL)
+			return -1;
 	}
-	//else
-	//	gBackSaves[iBackIndex].pSaveArea=pSaveArea;
+
+	if (uiFlags & BGND_FLAG_SAVE_Z)
+	{
+		if ((gBackSaves[iBackIndex].pZSaveArea = MemAlloc(uiBufSize)) == NULL)
+			return -1;
+		gBackSaves[iBackIndex].fZBuffer = TRUE;
+	}
+
+	gBackSaves[iBackIndex].fFreeMemory = TRUE;
 
 	gBackSaves[iBackIndex].fAllocated=TRUE;
 	gBackSaves[iBackIndex].uiFlags=uiFlags;
@@ -631,8 +622,7 @@ INT32 iBack;
 
 	if ( uiStringLength > 0 )
 	{
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight));
-
+		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + uiStringLength, y + uiStringHeight);
 		if ( iBack != -1 )
 		{
 			SetBackgroundRectFilled( iBack );
@@ -734,12 +724,12 @@ INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDes
 		uiStringLength=StringPixLength( pTopmostDesc->pzText, pTopmostDesc->uiFontID );
 		uiStringHeight=GetFontHeight( pTopmostDesc->uiFontID );
 
-		iBackIndex = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, (INT16)(pTopmostDesc->sLeft + uiStringLength), (INT16)(pTopmostDesc->sTop + uiStringHeight) );
+		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
 	}
 	else
 	{
 		// Register background
-		iBackIndex = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom );
+		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
 	}
 
 
@@ -1215,7 +1205,7 @@ void SetVideoOverlayPos(UINT32 iOverlayIndex, INT16 X, INT16 Y)
 		// Remove background
 		FreeBackgroundRectPending(v->uiBackground);
 
-		v->uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, X, Y, X + uiStringLength, Y + uiStringHeight);
+		v->uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, X, Y, X + uiStringLength, Y + uiStringHeight);
 		v->sX           = X;
 		v->sY           = Y;
 	}

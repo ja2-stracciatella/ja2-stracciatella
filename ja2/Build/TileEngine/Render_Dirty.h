@@ -88,7 +88,7 @@ BOOLEAN ExecuteBaseDirtyRectQueue( );
 // BACKGROUND RECT BUFFERING STUFF
 BOOLEAN InitializeBackgroundRects(void);
 BOOLEAN ShutdownBackgroundRects(void);
-INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 *pSaveArea, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
+INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 BOOLEAN FreeBackgroundRect(INT32 iIndex);
 BOOLEAN FreeBackgroundRectPending(INT32 iIndex);
 BOOLEAN FreeBackgroundRectType(UINT32 uiFlags);

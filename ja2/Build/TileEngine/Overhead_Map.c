@@ -1154,12 +1154,12 @@ static void RenderOverheadOverlays(void)
 		if( !gfTacticalPlacementGUIActive )
 		{ //normal
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, sX, sY, (INT16)(sX + 3), (INT16)(sY + 9));
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
 		}
 		else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{ //vehicle
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 9 );
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-6), (INT16)(sY), (INT16)(sX + 9), (INT16)(sY + 10));
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 6, sY, sX + 9, sY + 10);
 		}
 		//else if( pSoldier->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER) )
 		//{// //don't draw person, because they are inside the vehicle.
@@ -1168,17 +1168,17 @@ static void RenderOverheadOverlays(void)
 		else if( gpTacticalPlacementSelectedSoldier == pSoldier )
 		{ //tactical placement selected merc
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 7 );
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-2), (INT16)(sY-2), (INT16)(sX + 5), (INT16)(sY + 11));
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
 		else if( gpTacticalPlacementHilightedSoldier == pSoldier && pSoldier->uiStatusFlags )
 		{ //tactical placement hilighted merc
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 8 );
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-2), (INT16)(sY-2), (INT16)(sX + 5), (INT16)(sY + 11));
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
 		else
 		{ //normal
 			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, sX, sY, (INT16)(sX + 3), (INT16)(sY + 9));
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
 		}
 		if( ubPassengers )
 		{
@@ -1376,7 +1376,7 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 							{ //normal
 								Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
 							}
-							RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, (INT16)(sX-2), (INT16)(sY-2), (INT16)(sX + 5), (INT16)(sY + 11));
+							RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 						}
 
 						pNode = pNode->pNext;

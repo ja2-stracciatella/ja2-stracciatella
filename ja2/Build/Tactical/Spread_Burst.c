@@ -182,7 +182,7 @@ void RenderAccumulatedBurstLocations( )
 			//sXPos -= 10;
 			//sYPos -= 10;
 
-			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos +40 ), (INT16)(sYPos + 40 ) );
+			iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 			if ( iBack != -1 )
 			{
 				SetBackgroundRectFilled( iBack );

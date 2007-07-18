@@ -1221,8 +1221,8 @@ static void GetArrowsBackground(void)
 		EraseRenderArrows( );
 
 		// Register dirty rects
-		giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, gsDownArrowX, gsDownArrowY, (INT16)(gsDownArrowX + sArrowWidth), (INT16)(gsDownArrowY + sArrowHeight ) );
-		giUpArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, gsUpArrowX, gsUpArrowY, (INT16)(gsUpArrowX + sArrowWidth), (INT16)(gsUpArrowY + sArrowHeight ) );
+		giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, gsDownArrowX + sArrowWidth, gsDownArrowY + sArrowHeight);
+		giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   gsUpArrowX   + sArrowWidth, gsUpArrowY   + sArrowHeight);
 	}
 }
 
@@ -1409,8 +1409,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 
 
 				// Add bars
-				//iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos + 55 ), (INT16)(sYPos + 80 ) );
-				iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos +40 ), (INT16)(sYPos + 40 ) );
+				iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 
 				if ( iBack != -1 )
 				{
@@ -1575,7 +1574,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 			}
 
 			// Add bars
-			iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos + 34 ), (INT16)(sYPos + 11 ) );
+			iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 34, sYPos + 11);
 
 			if ( iBack != -1 )
 			{
@@ -3466,7 +3465,7 @@ void RenderAimCubeUI( )
 			GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
 
 			// Save background
-			iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sScreenX, (INT16)(sScreenY - 70 ), (INT16)(sScreenX + 40 ), (INT16)(sScreenY + 50 ) );
+			iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sScreenX, sScreenY - 70, sScreenX + 40, sScreenY + 50);
 			if ( iBack != -1 )
 			{
 				SetBackgroundRectFilled( iBack );
@@ -3701,7 +3700,7 @@ void RenderTopmostMultiPurposeLocator( )
 	sXPos -= 20;
 	sYPos -= 20;
 
-	iBack = RegisterBackgroundRect( BGND_FLAG_SINGLE, NULL, sXPos, sYPos, (INT16)(sXPos +40 ), (INT16)(sYPos + 40 ) );
+	iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 	if ( iBack != -1 )
 	{
 		SetBackgroundRectFilled( iBack );
