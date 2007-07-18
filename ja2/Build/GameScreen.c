@@ -896,9 +896,8 @@ void DisableFPSOverlay( BOOLEAN fEnable )
 	VideoOverlayDesc.fDisabled	= fEnable;
 	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
 
-	UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
-	UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
-
+	UpdateVideoOverlay(&VideoOverlayDesc, giFPSOverlay);
+	UpdateVideoOverlay(&VideoOverlayDesc, giCounterPeriodOverlay);
 }
 
 

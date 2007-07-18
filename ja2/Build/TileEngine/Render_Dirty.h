@@ -121,9 +121,9 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 
 // VIDEO OVERLAY STUFF
-INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc );
+INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
 void ExecuteVideoOverlays( );
-BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterIndex, BOOLEAN fForceAll );
+BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitterIndex);
 void SaveVideoOverlaysArea( UINT32 uiSrcBuffer );
 void DeleteVideoOverlaysArea( );
 void AllocateVideoOverlaysArea( );

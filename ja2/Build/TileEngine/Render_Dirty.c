@@ -722,7 +722,8 @@ static void RecountVideoOverlays(void)
 	}
 }
 
-INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
+
+INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
 {
 	UINT32 iBlitterIndex;
 	UINT32 iBackIndex;
@@ -753,31 +754,29 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 		return(-1);
 
 	// Init new blitter
-	memset(&gVideoOverlays[ iBlitterIndex ], 0, sizeof( VIDEO_OVERLAY ) );
-
-	gVideoOverlays[ iBlitterIndex ].uiFlags			 = uiFlags;
-	gVideoOverlays[ iBlitterIndex ].fAllocated   = 2;
-	gVideoOverlays[ iBlitterIndex ].uiBackground = iBackIndex;
-	gVideoOverlays[ iBlitterIndex ].pBackground  = &( gBackSaves[ iBackIndex ] );
-	gVideoOverlays[ iBlitterIndex ].BltCallback	  = pTopmostDesc->BltCallback;
-
-	// Update blitter info
-	// Set update flags to zero since we are forcing all updates
-	pTopmostDesc->uiFlags = 0;
-	UpdateVideoOverlay( pTopmostDesc, iBlitterIndex , TRUE );
+	VIDEO_OVERLAY* v = &gVideoOverlays[iBlitterIndex];
+	memset(v, 0, sizeof(*v));
+	v->uiFlags      = uiFlags;
+	v->fAllocated   = 2;
+	v->uiBackground = iBackIndex;
+	v->pBackground  = &gBackSaves[iBackIndex];
+	v->uiFontID     = pTopmostDesc->uiFontID;
+	v->sX           = pTopmostDesc->sX;
+	v->sY           = pTopmostDesc->sY;
+	v->ubFontBack   = pTopmostDesc->ubFontBack;
+	v->ubFontFore   = pTopmostDesc->ubFontFore;
+	v->uiDestBuff   = FRAME_BUFFER;
+	v->BltCallback  = pTopmostDesc->BltCallback;
+	wcslcpy(v->zText, pTopmostDesc->pzText, lengthof(v->zText));
 
 	// Set disabled flag to true
-	if ( uiFlags & VOVERLAY_STARTDISABLED )
+	if (uiFlags & VOVERLAY_STARTDISABLED)
 	{
-		gVideoOverlays[ iBlitterIndex ].fDisabled		= TRUE;
-		DisableBackgroundRect( gVideoOverlays[ iBlitterIndex ].uiBackground, TRUE );
+		v->fDisabled = TRUE;
+		DisableBackgroundRect(v->uiBackground, TRUE);
 	}
 
-	gVideoOverlays[ iBlitterIndex ].uiDestBuff = FRAME_BUFFER;
-
-	//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Register Overlay %d %ls", iBlitterIndex, gVideoOverlays[ iBlitterIndex ].zText ) );
-
-	return( iBlitterIndex );
+	return iBlitterIndex;
 }
 
 
@@ -828,11 +827,8 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 }
 
 
-BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterIndex, BOOLEAN fForceAll )
+BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitterIndex)
 {
-	UINT32 uiFlags;
-	UINT16 uiStringLength, uiStringHeight;
-
 	if ( iBlitterIndex != -1 )
 	{
 
@@ -841,54 +837,36 @@ BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterInd
 			return( FALSE );
 		}
 
-		uiFlags = pTopmostDesc->uiFlags;
+		UINT32 uiFlags = pTopmostDesc->uiFlags;
 
-		if ( fForceAll )
+		if (uiFlags & VOVERLAY_DESC_TEXT)
 		{
-			gVideoOverlays[ iBlitterIndex ].uiFontID     = pTopmostDesc->uiFontID;
-			gVideoOverlays[ iBlitterIndex ].sX					 = pTopmostDesc->sX;
-			gVideoOverlays[ iBlitterIndex ].sY					 = pTopmostDesc->sY;
-			gVideoOverlays[ iBlitterIndex ].ubFontBack	 = pTopmostDesc->ubFontBack;
-			gVideoOverlays[ iBlitterIndex ].ubFontFore	 = pTopmostDesc->ubFontFore;
-
 			wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
 		}
-		else
+
+		if (uiFlags & VOVERLAY_DESC_DISABLED)
 		{
-			if ( uiFlags & VOVERLAY_DESC_TEXT )
-			{
-				wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
-			}
-
-
-			if ( uiFlags & VOVERLAY_DESC_DISABLED )
-			{
-				gVideoOverlays[ iBlitterIndex ].fDisabled = pTopmostDesc->fDisabled;
-				DisableBackgroundRect( gVideoOverlays[ iBlitterIndex ].uiBackground, pTopmostDesc->fDisabled );
-			}
-
-			// If position has changed and flags are of type that use dirty rects, adjust
-			if ( ( uiFlags & VOVERLAY_DESC_POSITION ) )
-			{
-				if ( gVideoOverlays[ iBlitterIndex ].uiFlags & VOVERLAY_DIRTYBYTEXT )
-				{
-					uiStringLength=StringPixLength( gVideoOverlays[ iBlitterIndex ].zText,gVideoOverlays[ iBlitterIndex ].uiFontID );
-					uiStringHeight=GetFontHeight( gVideoOverlays[ iBlitterIndex ].uiFontID );
-
-					// Delete old rect
-					// Remove background
-					FreeBackgroundRectPending( gVideoOverlays[ iBlitterIndex ].uiBackground );
-
-					gVideoOverlays[ iBlitterIndex ].uiBackground = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, (INT16)(pTopmostDesc->sLeft + uiStringLength), (INT16)(pTopmostDesc->sTop + uiStringHeight) );
-					gVideoOverlays[ iBlitterIndex ].sX					 = pTopmostDesc->sX;
-					gVideoOverlays[ iBlitterIndex ].sY					 = pTopmostDesc->sY;
-
-				}
-
-			}
-
+			gVideoOverlays[ iBlitterIndex ].fDisabled = pTopmostDesc->fDisabled;
+			DisableBackgroundRect( gVideoOverlays[ iBlitterIndex ].uiBackground, pTopmostDesc->fDisabled );
 		}
 
+		// If position has changed and flags are of type that use dirty rects, adjust
+		if (uiFlags & VOVERLAY_DESC_POSITION)
+		{
+			if (gVideoOverlays[iBlitterIndex].uiFlags & VOVERLAY_DIRTYBYTEXT)
+			{
+				UINT16 uiStringLength = StringPixLength(gVideoOverlays[iBlitterIndex].zText, gVideoOverlays[iBlitterIndex].uiFontID);
+				UINT16 uiStringHeight = GetFontHeight(gVideoOverlays[iBlitterIndex].uiFontID);
+
+				// Delete old rect
+				// Remove background
+				FreeBackgroundRectPending(gVideoOverlays[iBlitterIndex].uiBackground);
+
+				gVideoOverlays[iBlitterIndex].uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
+				gVideoOverlays[iBlitterIndex].sX           = pTopmostDesc->sX;
+				gVideoOverlays[iBlitterIndex].sY           = pTopmostDesc->sY;
+			}
+		}
 	}
 	return( TRUE );
 }
@@ -1273,6 +1251,5 @@ void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex )
 	// go play with enable/disable state
 	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
 
-	UpdateVideoOverlay( &VideoOverlayDesc, iOverlayIndex, FALSE );
-
+	UpdateVideoOverlay(&VideoOverlayDesc, iOverlayIndex);
 }

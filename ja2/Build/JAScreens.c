@@ -129,12 +129,12 @@ void DisplayFrameRate( )
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
 		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( uiFPS, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
-		UpdateVideoOverlay( &VideoOverlayDesc, giFPSOverlay, FALSE );
+		UpdateVideoOverlay(&VideoOverlayDesc, giFPSOverlay);
 
 		// TIMER COUNTER
 		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( giTimerDiag, 1000 ) );
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
-		UpdateVideoOverlay( &VideoOverlayDesc, giCounterPeriodOverlay, FALSE );
+		UpdateVideoOverlay(&VideoOverlayDesc, giCounterPeriodOverlay);
 
 
 		if( GetMouseMapPos( &usMapPos) )

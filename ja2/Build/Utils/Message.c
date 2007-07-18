@@ -250,7 +250,7 @@ static void SetStringVideoOverlayPosition(ScrollStringSt* pStringSt, UINT16 usX,
 		VideoOverlayDesc.sTop				 = usY;
 		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
 		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-		UpdateVideoOverlay( &VideoOverlayDesc, pStringSt->iVideoOverlay, FALSE );
+		UpdateVideoOverlay(&VideoOverlayDesc, pStringSt->iVideoOverlay);
 	}
 }
 
@@ -291,7 +291,7 @@ static void EnableStringVideoOverlay(ScrollStringSt* pStringSt, BOOLEAN fEnable)
 	{
 		VideoOverlayDesc.fDisabled	= !fEnable;
 		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
-		UpdateVideoOverlay( &VideoOverlayDesc, pStringSt->iVideoOverlay, FALSE );
+		UpdateVideoOverlay(&VideoOverlayDesc, pStringSt->iVideoOverlay);
 	}
 }
 
@@ -508,7 +508,7 @@ void HideMessagesDuringNPCDialogue( void )
 			if ( gpDisplayList[ cnt ] != NULL )
 			{
 				RestoreExternBackgroundRectGivenID( gVideoOverlays[ gpDisplayList[ cnt ] -> iVideoOverlay ].uiBackground );
-				UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
+				UpdateVideoOverlay(&VideoOverlayDesc, gpDisplayList[cnt]->iVideoOverlay);
 			}
 	}
 }
@@ -532,7 +532,7 @@ void UnHideMessagesDuringNPCDialogue( void )
 		if ( gpDisplayList[ cnt ] != NULL )
 		{
 			gpDisplayList[ cnt ]->uiTimeOfLastUpdate+= GetJA2Clock() - uiStartOfPauseTime;
-			UpdateVideoOverlay( &VideoOverlayDesc, gpDisplayList[ cnt ] -> iVideoOverlay, FALSE );
+			UpdateVideoOverlay(&VideoOverlayDesc, gpDisplayList[cnt]->iVideoOverlay);
 		}
 	}
 }
