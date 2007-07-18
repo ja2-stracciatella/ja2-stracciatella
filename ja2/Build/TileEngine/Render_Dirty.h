@@ -14,7 +14,6 @@
 
 
 #define VOVERLAY_DESC_TEXT			0x00001000
-#define VOVERLAY_DESC_DISABLED	0x00002000
 #define VOVERLAY_DESC_POSITION	0x00004000
 
 
@@ -70,7 +69,6 @@ typedef struct _VIDEO_OVERLAY
 typedef struct
 {
 		UINT32			uiFlags;
-		BOOLEAN			fDisabled;
 		INT16				sLeft;
 		INT16				sTop;
 		INT16				sRight;

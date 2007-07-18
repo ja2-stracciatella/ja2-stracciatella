@@ -844,12 +844,6 @@ BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitt
 			wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
 		}
 
-		if (uiFlags & VOVERLAY_DESC_DISABLED)
-		{
-			gVideoOverlays[ iBlitterIndex ].fDisabled = pTopmostDesc->fDisabled;
-			DisableBackgroundRect( gVideoOverlays[ iBlitterIndex ].uiBackground, pTopmostDesc->fDisabled );
-		}
-
 		// If position has changed and flags are of type that use dirty rects, adjust
 		if (uiFlags & VOVERLAY_DESC_POSITION)
 		{
@@ -1220,18 +1214,12 @@ BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrc
 }
 
 
-void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex )
+void EnableVideoOverlay(BOOLEAN fEnable, INT32 iOverlayIndex)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
+	if (iOverlayIndex == -1) return;
+	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (!v->fAllocated) return;
 
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-
-	// enable or disable
-	VideoOverlayDesc.fDisabled	= !fEnable;
-
-	// go play with enable/disable state
-	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
-
-	UpdateVideoOverlay(&VideoOverlayDesc, iOverlayIndex);
+	v->fDisabled = !fEnable;
+	DisableBackgroundRect(v->uiBackground, !fEnable);
 }
