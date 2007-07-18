@@ -761,8 +761,8 @@ INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDes
 	v->uiBackground = iBackIndex;
 	v->pBackground  = &gBackSaves[iBackIndex];
 	v->uiFontID     = pTopmostDesc->uiFontID;
-	v->sX           = pTopmostDesc->sX;
-	v->sY           = pTopmostDesc->sY;
+	v->sX           = pTopmostDesc->sLeft;
+	v->sY           = pTopmostDesc->sTop;
 	v->ubFontBack   = pTopmostDesc->ubFontBack;
 	v->ubFontFore   = pTopmostDesc->ubFontFore;
 	v->uiDestBuff   = FRAME_BUFFER;

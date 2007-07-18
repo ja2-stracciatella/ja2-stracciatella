@@ -2512,8 +2512,6 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... )
 		VideoOverlayDesc.sTop				 = 150;
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusUIMessageWidth;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusUIMessageHeight;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
 
 		giUIMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
@@ -2579,8 +2577,6 @@ void BeginMapUIMessage( UINT8 ubPosition, wchar_t *pFontString, ... )
 
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusUIMessageWidth;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusUIMessageHeight;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
 
 		giUIMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );

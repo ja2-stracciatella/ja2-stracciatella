@@ -1906,8 +1906,6 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString)
 	VideoOverlayDesc.sTop				 = gsTopPosition;
 	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusSubtitleBoxWidth;
 	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusSubtitleBoxHeight;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 	VideoOverlayDesc.BltCallback = RenderSubtitleBoxOverlay;
 
 	giTextBoxOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
@@ -1949,8 +1947,6 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 		VideoOverlayDesc.sTop				 = 20;
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 	}
 	else
@@ -1962,8 +1958,6 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 	}
 
@@ -2035,8 +2029,6 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 		VideoOverlayDesc.sTop				 = 20;
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 
 		iFaceOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );

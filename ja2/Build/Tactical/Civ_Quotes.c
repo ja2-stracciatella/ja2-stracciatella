@@ -418,8 +418,6 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	VideoOverlayDesc.sTop				 = sY;
 	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusCivQuoteBoxWidth;
 	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusCivQuoteBoxHeight;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 	VideoOverlayDesc.BltCallback = RenderCivQuoteBoxOverlay;
 
 	gCivQuoteData.iVideoOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );

@@ -69,8 +69,6 @@ typedef struct
 		INT16				sRight;
 		INT16				sBottom;
 		UINT32			uiFontID;
-		INT16				sX;
-		INT16				sY;
 		UINT8				ubFontBack;
 		UINT8				ubFontFore;
 		wchar_t				pzText[ 200 ];

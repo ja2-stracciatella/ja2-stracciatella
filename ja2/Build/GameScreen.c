@@ -148,8 +148,6 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.uiFontID    = SMALLFONT1;
 	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK ;
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 	wcslcpy(VideoOverlayDesc.pzText, L"90", lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
@@ -157,8 +155,6 @@ UINT32 MainGameScreenInit(void)
 	// SECOND, PERIOD COUNTER
 	VideoOverlayDesc.sLeft			 = 30;
 	VideoOverlayDesc.sTop				 = 0;
-	VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-	VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
 	wcslcpy(VideoOverlayDesc.pzText, L"Levelnodes: 100000", lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );

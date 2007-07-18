@@ -93,7 +93,6 @@ void DisplayFrameRate( )
 	static UINT32		uiFPS = 0;
 	static UINT32		uiFrameCount = 0;
 	UINT16 usMapPos;
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
 	// Increment frame count
 	uiFrameCount++;
