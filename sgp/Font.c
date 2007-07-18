@@ -315,47 +315,6 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 
 	return TRUE;
 }
-
-
-/* Prints to the currently selected destination buffer, at the X/Y coordinates
- * specified, using the currently selected font. Other than the X/Y coordinates,
- * the parameters are identical to printf. The resulting string may be no longer
- * than 512 word-characters. Uses monochrome font color settings */
-UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
-{
-	Assert(pFontString != NULL);
-
-	va_list argptr;
-	va_start(argptr, pFontString);
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, argptr);
-	va_end(argptr);
-
-	INT32 destx = x;
-	INT32 desty = y;
-
-	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
-
-	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
-	{
-		wchar_t transletter = GetIndex(*curletter);
-
-		if (FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
-		{
-			destx = x;
-			desty += GetHeight(FontObjs[FontDefault], transletter);
-		}
-
-		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx += GetWidth(FontObjs[FontDefault], transletter);
-	}
-
-	UnLockVideoSurface(FontDestBuffer);
-	return 0;
-}
-
-
 void VarFindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16* psNewX, INT16* psNewY, const wchar_t* pFontString, ...)
 {
 	va_list argptr;
@@ -443,22 +402,19 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+static UINT32 vmprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
 {
 	Assert(pFontString != NULL);
 
-	va_list argptr;
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
 	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
+	vswprintf(string, lengthof(string), pFontString, ArgPtr);
 
 	INT32 destx = x;
 	INT32 desty = y;
 
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
-		wchar_t transletter=GetIndex(*curletter);
+		wchar_t transletter = GetIndex(*curletter);
 
 		if (FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
 		{
@@ -466,12 +422,41 @@ UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y
 			desty += GetHeight(FontObjs[FontDefault], transletter);
 		}
 
-		// Blit directly
 		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
 
 	return 0;
+}
+
+
+/* Prints to the currently selected destination buffer, at the X/Y coordinates
+ * specified, using the currently selected font. Other than the X/Y coordinates,
+ * the parameters are identical to printf. The resulting string may be no longer
+ * than 512 word-characters. Uses monochrome font color settings */
+UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
+{
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+
+	va_list ArgPtr;
+	va_start(ArgPtr, pFontString);
+	UINT32 Ret = vmprintf_buffer(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	va_end(ArgPtr);
+
+	UnLockVideoSurface(FontDestBuffer);
+	return Ret;
+}
+
+
+UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+{
+	va_list ArgPtr;
+	va_start(ArgPtr, pFontString);
+	UINT32 Ret = vmprintf_buffer(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	va_end(ArgPtr);
+
+	return Ret;
 }
 
 
