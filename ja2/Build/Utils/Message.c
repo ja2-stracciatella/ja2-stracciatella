@@ -238,19 +238,10 @@ static void RemoveStringVideoOverlay(ScrollStringSt* pStringSt)
 
 static void SetStringVideoOverlayPosition(ScrollStringSt* pStringSt, UINT16 usX, UINT16 usY)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
 	// Donot update if not allocated!
 	if ( pStringSt->iVideoOverlay != -1 )
 	{
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_POSITION;
-		VideoOverlayDesc.sLeft			 = usX;
-		VideoOverlayDesc.sTop				 = usY;
-		VideoOverlayDesc.sX					 = VideoOverlayDesc.sLeft;
-		VideoOverlayDesc.sY					 = VideoOverlayDesc.sTop;
-		UpdateVideoOverlay(&VideoOverlayDesc, pStringSt->iVideoOverlay);
+		SetVideoOverlayPos(pStringSt->iVideoOverlay, usX, usY);
 	}
 }
 

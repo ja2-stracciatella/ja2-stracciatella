@@ -13,9 +13,6 @@
 #define	VOVERLAY_STARTDISABLED				0x00000002
 
 
-#define VOVERLAY_DESC_POSITION	0x00004000
-
-
 struct _VIDEO_OVERLAY;
 
 // Callback for topmost blitters
@@ -67,7 +64,6 @@ typedef struct _VIDEO_OVERLAY
 // Struct for init topmost blitter
 typedef struct
 {
-		UINT32			uiFlags;
 		INT16				sLeft;
 		INT16				sTop;
 		INT16				sRight;
@@ -79,7 +75,6 @@ typedef struct
 		UINT8				ubFontFore;
 		wchar_t				pzText[ 200 ];
 		OVERLAY_CALLBACK		BltCallback;
-
 }	VIDEO_OVERLAY_DESC;
 
 
@@ -117,7 +112,6 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 // VIDEO OVERLAY STUFF
 INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
 void ExecuteVideoOverlays( );
-BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitterIndex);
 void SaveVideoOverlaysArea( UINT32 uiSrcBuffer );
 void DeleteVideoOverlaysArea( );
 void AllocateVideoOverlaysArea( );
@@ -126,6 +120,7 @@ void RemoveVideoOverlay( INT32 iVideoOverlay );
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
 void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex );
 void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...);
+void SetVideoOverlayPos(UINT32 iOverlayIndex, INT16 X, INT16 Y);
 
 
 void BlitMFont( VIDEO_OVERLAY *pBlitter );

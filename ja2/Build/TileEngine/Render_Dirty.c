@@ -827,40 +827,6 @@ void RemoveVideoOverlay( INT32 iVideoOverlay )
 }
 
 
-BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitterIndex)
-{
-	if ( iBlitterIndex != -1 )
-	{
-
-		if ( !gVideoOverlays[ iBlitterIndex ].fAllocated )
-		{
-			return( FALSE );
-		}
-
-		UINT32 uiFlags = pTopmostDesc->uiFlags;
-
-		// If position has changed and flags are of type that use dirty rects, adjust
-		if (uiFlags & VOVERLAY_DESC_POSITION)
-		{
-			if (gVideoOverlays[iBlitterIndex].uiFlags & VOVERLAY_DIRTYBYTEXT)
-			{
-				UINT16 uiStringLength = StringPixLength(gVideoOverlays[iBlitterIndex].zText, gVideoOverlays[iBlitterIndex].uiFontID);
-				UINT16 uiStringHeight = GetFontHeight(gVideoOverlays[iBlitterIndex].uiFontID);
-
-				// Delete old rect
-				// Remove background
-				FreeBackgroundRectPending(gVideoOverlays[iBlitterIndex].uiBackground);
-
-				gVideoOverlays[iBlitterIndex].uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
-				gVideoOverlays[iBlitterIndex].sX           = pTopmostDesc->sX;
-				gVideoOverlays[iBlitterIndex].sY           = pTopmostDesc->sY;
-			}
-		}
-	}
-	return( TRUE );
-}
-
-
 // FUnctions for entrie array of blitters
 void ExecuteVideoOverlays( )
 {
@@ -1230,4 +1196,27 @@ void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...)
 	va_start(Arg, Fmt);
 	vswprintf(v->zText, lengthof(v->zText), Fmt, Arg);
 	va_end(Arg);
+}
+
+
+void SetVideoOverlayPos(UINT32 iOverlayIndex, INT16 X, INT16 Y)
+{
+	if (iOverlayIndex == -1) return;
+	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (!v->fAllocated) return;
+
+	// If position has changed and flags are of type that use dirty rects, adjust
+	if (v->uiFlags & VOVERLAY_DIRTYBYTEXT)
+	{
+		UINT16 uiStringLength = StringPixLength(v->zText, v->uiFontID);
+		UINT16 uiStringHeight = GetFontHeight(v->uiFontID);
+
+		// Delete old rect
+		// Remove background
+		FreeBackgroundRectPending(v->uiBackground);
+
+		v->uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, NULL, X, Y, X + uiStringLength, Y + uiStringHeight);
+		v->sX           = X;
+		v->sY           = Y;
+	}
 }
