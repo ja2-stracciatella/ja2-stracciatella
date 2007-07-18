@@ -1,4 +1,7 @@
 v0.5
+(r1219) Fix two transcription erros in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
+        - Do not draw a background pixel, if the background colour is transparent
+				- Draw background pixels in transparent areas (if the background colour is not transparent)
 (r1215) Fix a vanilla bug: When doctoring and the character only has first aid kits available, a big item (from the second hand position) could end up in a small pocket and/or multiple first aid kits could be placed into the first hand position.
 (r1210, r1214) Fixes for porting to 64bit platforms
 (r1201) Adjust the char/glyph mapping table for two Russian releases (BUKA Agonia Vlasti and Russian Gold) and fix the incorrectly encoded Russian texts when loading them from the data files.
@@ -69,7 +72,7 @@ v0.2
 (r390) Implement Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured().
 (r382) Fix a memory leak: The SDL_Surface got leaked when deleting a video surface.
 (r381) Fix a memory leak which happens during loading savegames.
-(r378) Fix Blt8BPPDataTo16BPPBufferMonoShadow(), clipping was done incorrectly which lead to graphical artifacts when drawing text.
+(r378) Fix Blt8BPPDataTo16BPPBufferMonoShadowClip(), clipping was done incorrectly which lead to graphical artifacts when drawing text.
 
 v0.1 - First release
 (r369) Fixing german translation - there is no longer a time limit, only an option to set whether saving in battles is allowed. Changing text accordingly.

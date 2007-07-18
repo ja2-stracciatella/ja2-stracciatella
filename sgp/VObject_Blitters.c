@@ -812,7 +812,18 @@ BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
 				if (PxCount > LSCount) PxCount = LSCount;
 				LSCount -= PxCount;
-				DestPtr += 2 * PxCount;
+				if (usBackground == 0)
+				{
+					DestPtr += 2 * PxCount;
+				}
+				else
+				{
+					while (PxCount-- != 0)
+					{
+						*(UINT16*)DestPtr = usBackground;
+						DestPtr += 2;
+					}
+				}
 			}
 			else
 			{
@@ -832,9 +843,9 @@ BlitNonTransLoop: // blit non-transparent pixels
 				{
 					switch (*SrcPtr++)
 					{
-						case 0:                     *(UINT16*)DestPtr = usBackground; break;
-						case 1:  if (usShadow != 0) *(UINT16*)DestPtr = usShadow;     break;
-						default:                    *(UINT16*)DestPtr = usForeground; break;
+						case 0:  if (usBackground != 0) *(UINT16*)DestPtr = usBackground; break;
+						case 1:  if (usShadow != 0)     *(UINT16*)DestPtr = usShadow;     break;
+						default:                        *(UINT16*)DestPtr = usForeground; break;
 					}
 					DestPtr += 2;
 				}
