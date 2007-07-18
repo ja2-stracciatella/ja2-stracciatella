@@ -283,16 +283,8 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 
 static void EnableStringVideoOverlay(ScrollStringSt* pStringSt, BOOLEAN fEnable)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-	if ( pStringSt->iVideoOverlay != -1 )
-	{
-		VideoOverlayDesc.fDisabled	= !fEnable;
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
-		UpdateVideoOverlay(&VideoOverlayDesc, pStringSt->iVideoOverlay);
-	}
+	if (pStringSt->iVideoOverlay == -1) return;
+	EnableVideoOverlay(fEnable, pStringSt->iVideoOverlay);
 }
 
 
@@ -489,50 +481,30 @@ void EnableScrollMessages( void )
 void HideMessagesDuringNPCDialogue( void )
 {
 	// will stop the scroll of messages in tactical and hide them during an NPC's dialogue
-	INT32 cnt;
-
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-
-	VideoOverlayDesc.fDisabled	= TRUE;
-	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
-
-
 	fScrollMessagesHidden = TRUE;
 	uiStartOfPauseTime = GetJA2Clock();
 
-	for ( cnt = 0; cnt < MAX_LINE_COUNT; cnt++ )
+	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
 	{
-			if ( gpDisplayList[ cnt ] != NULL )
-			{
-				RestoreExternBackgroundRectGivenID( gVideoOverlays[ gpDisplayList[ cnt ] -> iVideoOverlay ].uiBackground );
-				UpdateVideoOverlay(&VideoOverlayDesc, gpDisplayList[cnt]->iVideoOverlay);
-			}
+		if (gpDisplayList[cnt] != NULL)
+		{
+			RestoreExternBackgroundRectGivenID(gVideoOverlays[gpDisplayList[cnt]->iVideoOverlay].uiBackground);
+			EnableVideoOverlay(FALSE, gpDisplayList[cnt]->iVideoOverlay);
+		}
 	}
 }
 
 
 void UnHideMessagesDuringNPCDialogue( void )
 {
-
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	INT32 cnt = 0;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-
-	VideoOverlayDesc.fDisabled	= FALSE;
-	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
 	fScrollMessagesHidden				= FALSE;
 
-	for ( cnt = 0; cnt < MAX_LINE_COUNT; cnt++ )
+	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
 	{
 		if ( gpDisplayList[ cnt ] != NULL )
 		{
 			gpDisplayList[ cnt ]->uiTimeOfLastUpdate+= GetJA2Clock() - uiStartOfPauseTime;
-			UpdateVideoOverlay(&VideoOverlayDesc, gpDisplayList[cnt]->iVideoOverlay);
+			EnableVideoOverlay(TRUE, gpDisplayList[cnt]->iVideoOverlay);
 		}
 	}
 }

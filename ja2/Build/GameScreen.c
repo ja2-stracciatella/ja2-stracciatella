@@ -887,17 +887,8 @@ void SetRenderHook( RENDER_HOOK pRenderOverride )
 
 void DisableFPSOverlay( BOOLEAN fEnable )
 {
-
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-
-	VideoOverlayDesc.fDisabled	= fEnable;
-	VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_DISABLED;
-
-	UpdateVideoOverlay(&VideoOverlayDesc, giFPSOverlay);
-	UpdateVideoOverlay(&VideoOverlayDesc, giCounterPeriodOverlay);
+	EnableVideoOverlay(!fEnable, giFPSOverlay);
+	EnableVideoOverlay(!fEnable, giCounterPeriodOverlay);
 }
 
 
