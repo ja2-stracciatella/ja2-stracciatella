@@ -145,15 +145,6 @@ static void SetString(ScrollStringSt* pStringSt, STR16 pString)
 }
 
 
-static void SetStringVideoOverlayPosition(ScrollStringSt* pStringSt, UINT16 usX, UINT16 usY);
-
-
-static void SetStringPosition(ScrollStringSt* pStringSt, UINT16 usX, UINT16 usY)
-{
-	SetStringVideoOverlayPosition( pStringSt, usX, usY );
-}
-
-
 static void SetStringColor(ScrollStringSt* pStringSt, UINT16 usColor)
 {
 	pStringSt->usColor=usColor;
