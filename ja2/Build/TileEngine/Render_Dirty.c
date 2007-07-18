@@ -730,18 +730,10 @@ INT32 RegisterVideoOverlay( UINT32 uiFlags, VIDEO_OVERLAY_DESC *pTopmostDesc )
 
 	if ( uiFlags & VOVERLAY_DIRTYBYTEXT )
 	{
-		// Get dims by supplied text
-		if ( pTopmostDesc->pzText == NULL )
-		{
-			return( -1 );
-		}
-
 		uiStringLength=StringPixLength( pTopmostDesc->pzText, pTopmostDesc->uiFontID );
 		uiStringHeight=GetFontHeight( pTopmostDesc->uiFontID );
 
 		iBackIndex = RegisterBackgroundRect( BGND_FLAG_PERMANENT, NULL, pTopmostDesc->sLeft, pTopmostDesc->sTop, (INT16)(pTopmostDesc->sLeft + uiStringLength), (INT16)(pTopmostDesc->sTop + uiStringHeight) );
-
-
 	}
 	else
 	{
@@ -859,19 +851,13 @@ BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterInd
 			gVideoOverlays[ iBlitterIndex ].ubFontBack	 = pTopmostDesc->ubFontBack;
 			gVideoOverlays[ iBlitterIndex ].ubFontFore	 = pTopmostDesc->ubFontFore;
 
-			if ( pTopmostDesc->pzText != NULL )
-			{
-				wcscpy( gVideoOverlays[ iBlitterIndex ].zText, pTopmostDesc->pzText );
-			}
+			wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
 		}
 		else
 		{
 			if ( uiFlags & VOVERLAY_DESC_TEXT )
 			{
-				if ( pTopmostDesc->pzText != NULL )
-				{
-					wcscpy( gVideoOverlays[ iBlitterIndex ].zText, pTopmostDesc->pzText );
-				}
+				wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
 			}
 
 
@@ -884,15 +870,8 @@ BOOLEAN UpdateVideoOverlay( VIDEO_OVERLAY_DESC *pTopmostDesc, UINT32 iBlitterInd
 			// If position has changed and flags are of type that use dirty rects, adjust
 			if ( ( uiFlags & VOVERLAY_DESC_POSITION ) )
 			{
-
 				if ( gVideoOverlays[ iBlitterIndex ].uiFlags & VOVERLAY_DIRTYBYTEXT )
 				{
-					// Get dims by supplied text
-					if ( pTopmostDesc->pzText == NULL )
-					{
-						return( FALSE );
-					}
-
 					uiStringLength=StringPixLength( gVideoOverlays[ iBlitterIndex ].zText,gVideoOverlays[ iBlitterIndex ].uiFontID );
 					uiStringHeight=GetFontHeight( gVideoOverlays[ iBlitterIndex ].uiFontID );
 
