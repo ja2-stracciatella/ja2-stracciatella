@@ -839,11 +839,6 @@ BOOLEAN UpdateVideoOverlay(const VIDEO_OVERLAY_DESC* pTopmostDesc, UINT32 iBlitt
 
 		UINT32 uiFlags = pTopmostDesc->uiFlags;
 
-		if (uiFlags & VOVERLAY_DESC_TEXT)
-		{
-			wcscpy(gVideoOverlays[iBlitterIndex].zText, pTopmostDesc->pzText);
-		}
-
 		// If position has changed and flags are of type that use dirty rects, adjust
 		if (uiFlags & VOVERLAY_DESC_POSITION)
 		{
@@ -1222,4 +1217,17 @@ void EnableVideoOverlay(BOOLEAN fEnable, INT32 iOverlayIndex)
 
 	v->fDisabled = !fEnable;
 	DisableBackgroundRect(v->uiBackground, !fEnable);
+}
+
+
+void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...)
+{
+	if (iOverlayIndex == -1) return;
+	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (!v->fAllocated) return;
+
+	va_list Arg;
+	va_start(Arg, Fmt);
+	vswprintf(v->zText, lengthof(v->zText), Fmt, Arg);
+	va_end(Arg);
 }

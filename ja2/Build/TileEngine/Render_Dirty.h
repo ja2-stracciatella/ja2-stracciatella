@@ -13,7 +13,6 @@
 #define	VOVERLAY_STARTDISABLED				0x00000002
 
 
-#define VOVERLAY_DESC_TEXT			0x00001000
 #define VOVERLAY_DESC_POSITION	0x00004000
 
 
@@ -126,6 +125,7 @@ void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer );
 void RemoveVideoOverlay( INT32 iVideoOverlay );
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
 void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex );
+void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...);
 
 
 void BlitMFont( VIDEO_OVERLAY *pBlitter );

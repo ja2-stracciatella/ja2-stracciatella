@@ -126,16 +126,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( uiFPS, 1000 ) );
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
-		UpdateVideoOverlay(&VideoOverlayDesc, giFPSOverlay);
+		SetVideoOverlayTextF(giFPSOverlay, L"%ld", __min(uiFPS, 1000));
 
 		// TIMER COUNTER
-		swprintf( VideoOverlayDesc.pzText, lengthof(VideoOverlayDesc.pzText), L"%ld", __min( giTimerDiag, 1000 ) );
-		VideoOverlayDesc.uiFlags    = VOVERLAY_DESC_TEXT;
-		UpdateVideoOverlay(&VideoOverlayDesc, giCounterPeriodOverlay);
-
+		SetVideoOverlayTextF(giCounterPeriodOverlay, L"%ld", __min(giTimerDiag, 1000));
 
 		if( GetMouseMapPos( &usMapPos) )
 		{
