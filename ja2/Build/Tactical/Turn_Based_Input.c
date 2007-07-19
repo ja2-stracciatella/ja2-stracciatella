@@ -2350,7 +2350,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							//Toggle Frame Rate Display
 							gbFPSDisplay = !gbFPSDisplay;
-							DisableFPSOverlay( (BOOLEAN)!gbFPSDisplay );
+							EnableFPSOverlay(gbFPSDisplay);
 							if( !gbFPSDisplay )
 								SetRenderFlags( RENDER_FLAG_FULL );
 						}

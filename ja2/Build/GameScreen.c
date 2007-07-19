@@ -881,10 +881,10 @@ void SetRenderHook( RENDER_HOOK pRenderOverride )
 }
 
 
-void DisableFPSOverlay( BOOLEAN fEnable )
+void EnableFPSOverlay(BOOLEAN fEnable)
 {
-	EnableVideoOverlay(!fEnable, giFPSOverlay);
-	EnableVideoOverlay(!fEnable, giCounterPeriodOverlay);
+	EnableVideoOverlay(fEnable, giFPSOverlay);
+	EnableVideoOverlay(fEnable, giCounterPeriodOverlay);
 }
 
 

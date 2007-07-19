@@ -132,7 +132,7 @@ void SetRenderHook( RENDER_HOOK pRenderOverride );
 void SetCurrentScreen( UINT32 uiNewScreen );
 void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage );
 
-void DisableFPSOverlay( BOOLEAN fEnable );
+void EnableFPSOverlay(BOOLEAN fEnable);
 
 void EnterTacticalScreen( );
 void LeaveTacticalScreen( );

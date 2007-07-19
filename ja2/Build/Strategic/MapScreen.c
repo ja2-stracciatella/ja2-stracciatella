@@ -4887,7 +4887,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						{
 						  //Toggle Frame Rate Display
 						  gbFPSDisplay = !gbFPSDisplay;
-						  DisableFPSOverlay( (BOOLEAN)!gbFPSDisplay );
+						  EnableFPSOverlay(gbFPSDisplay);
             }
 					}
 					break;
