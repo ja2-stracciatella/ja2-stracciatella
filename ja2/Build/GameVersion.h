@@ -16,9 +16,6 @@ extern	char		czVersionNumber[16];
 extern	wchar_t		zTrackingNumber[16];
 
 
-
-//#define RUSSIANGOLD
-
 //
 //		Keeps track of the saved game version.  Increment the saved game version whenever
 //	you will invalidate the saved game file
