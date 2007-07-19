@@ -19,7 +19,7 @@
 
 
 //Don't mess with this value, unless you want to force update all maps in the game!
-#ifdef RUSSIAN
+#if defined RUSSIAN && !defined RUSSIAN_GOLD
 	#define MAJOR_MAP_VERSION		6.00
 #else
 	#define MAJOR_MAP_VERSION		5.00

@@ -2594,12 +2594,12 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
 
-	#ifdef RUSSIAN
-		if( dMajorMapVersion != 6.00 )
-		{
-			return FALSE;
-		}
-	#endif
+#if defined RUSSIAN && !defined RUSSIAN_GOLD
+	if (dMajorMapVersion != 6.00)
+	{
+		return FALSE;
+	}
+#endif
 
 	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
 
@@ -2878,12 +2878,12 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	fp += offset;
 	offset = 0;
 
-	#ifdef RUSSIAN
+#if defined RUSSIAN && !defined RUSSIAN_GOLD
 	{
 		UINT32 uiNums[37];
 		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
 	}
-	#endif
+#endif
 
 	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
 	RenderProgressBar( 0, 100 );

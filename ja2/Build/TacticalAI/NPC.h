@@ -34,8 +34,7 @@
 
 typedef struct
 {
-
-#if defined(RUSSIAN)
+#if defined RUSSIAN && !defined RUSSIAN_GOLD
 	UINT8		ubIdentifier[4];
 #endif
 
@@ -70,7 +69,7 @@ typedef struct
 	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value
 
-#if !defined(RUSSIAN)
+#if !defined RUSSIAN || defined RUSSIAN_GOLD
 	UINT8		ubUnused[4];
 #endif
 } NPCQuoteInfo;																									// 32 bytes
