@@ -1905,14 +1905,6 @@ const wchar_t *pMercSheLeaveString[] =
 	L"%ls geht bald und läßt ihre Ausrüstung in %ls.",
 };
 
-const wchar_t *pMercContractOverStrings[] =
-{
-	L"s Vertrag war abgelaufen, und er ist nach Hause gegangen.", 		// merc's contract is over and has departed
-	L"s Vertrag war abgelaufen, und sie ist nach Hause gegangen.", 		// merc's contract is over and has departed
-	L"s Vertrag wurde gekündigt, und er ist weggegangen.", 		// merc's contract has been terminated
-	L"s Vertrag wurde gekündigt, und sie ist weggegangen.",		// merc's contract has been terminated
-	L"Sie schulden M.E.R.C. zuviel, also ist %ls gegangen.", // Your M.E.R.C. account is invalid so merc left
-};
 
 // Text used on IMP Web Pages
 const wchar_t *pImpPopUpStrings[] =

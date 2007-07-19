@@ -1976,15 +1976,6 @@ const wchar_t* pMercSheLeaveString[] =
 };
 
 
-const wchar_t* pMercContractOverStrings[] =
-{
-	L" zakoñczy³ kontrakt wiêc wyjecha³.", 		// merc's contract is over and has departed
-	L" zakoñczy³a kontrakt wiêc wyjecha³a.", 		// merc's contract is over and has departed
-	L" - jego kontrakt zosta³ zerwany wiêc odszed³.", 		// merc's contract has been terminated
-	L" - jej kontrakt zosta³ zerwany wiêc odesz³a.",		// merc's contract has been terminated
-	L"Masz za du¿y d³ug wobec M.E.R.C. wiêc %ls odchodzi.", // Your M.E.R.C. account is invalid so merc left
-};
-
 // Text used on IMP Web Pages
 
 const wchar_t* pImpPopUpStrings[] =

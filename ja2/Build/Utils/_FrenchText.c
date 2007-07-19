@@ -1978,15 +1978,6 @@ const wchar_t* pMercSheLeaveString[] =
 };
 
 
-const wchar_t* pMercContractOverStrings[] =
-{
-	L"a rempli son contrat, il est rentré chez lui.", 		// merc's contract is over and has departed
-	L"a rempli son contrat, elle est rentrée chez elle.", 		// merc's contract is over and has departed
-	L"est parti, son contrat ayant été annulé.", 		// merc's contract has been terminated
-	L"est partie, son contrat ayant été annulé.",		// merc's contract has been terminated
-	L"Vous devez trop d'argent au M.E.R.C., %ls quitte Arulco.", // Your M.E.R.C. account is invalid so merc left
-};
-
 // Text used on IMP Web Pages
 
 const wchar_t* pImpPopUpStrings[] =

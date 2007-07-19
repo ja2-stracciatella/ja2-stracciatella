@@ -125,7 +125,6 @@ extern const wchar_t *pMapDepthIndex[];
 //extern const wchar_t *sVehicleHit[ ];
 extern const wchar_t *pLaptopTitles[];
 extern const wchar_t *pDayStrings[];
-extern const wchar_t *pMercContractOverStrings[];
 extern const wchar_t *pMilitiaConfirmStrings[];
 extern const wchar_t *pDeliveryLocationStrings[];
 extern const wchar_t *pSkillAtZeroWarning[];

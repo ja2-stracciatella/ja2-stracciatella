@@ -1975,15 +1975,6 @@ const wchar_t* pMercSheLeaveString[] =
 };
 
 
-const wchar_t* pMercContractOverStrings[] =
-{
-	L":его контракт закончился,он уехал домой.", 		// merc's contract is over and has departed
-	L":ее контракт закончился,она уехала домой.", 		// merc's contract is over and has departed
-	L":контракт кончился,он уехал.", 		// merc's contract has been terminated
-	L":контракт кончился она уехала.",		// merc's contract has been terminated
-	L"Вы должны M.E.R.C. слишком много,%ls уехал.", // Your M.E.R.C. account is invalid so merc left
-};
-
 // Text used on IMP Web Pages
 
 const wchar_t* pImpPopUpStrings[] =
