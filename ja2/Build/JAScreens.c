@@ -92,7 +92,6 @@ void DisplayFrameRate( )
 {
 	static UINT32		uiFPS = 0;
 	static UINT32		uiFrameCount = 0;
-	UINT16 usMapPos;
 
 	// Increment frame count
 	uiFrameCount++;
@@ -129,17 +128,6 @@ void DisplayFrameRate( )
 
 		// TIMER COUNTER
 		SetVideoOverlayTextF(giCounterPeriodOverlay, L"%ld", __min(giTimerDiag, 1000));
-
-		if( GetMouseMapPos( &usMapPos) )
-		{
-			//gprintfdirty( 0, 315, L"(%d)",usMapPos);
-			//mprintf( 0,315,L"(%d)",usMapPos);
-		}
-		else
-		{
-			//gprintfdirty( 0, 315, L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );
-			//mprintf( 0,315,L"(%d %d)",gusMouseXPos, gusMouseYPos - INTERFACE_START_Y );
-		}
 	}
 
 	if ( ( gTacticalStatus.uiFlags & GODMODE ) )
