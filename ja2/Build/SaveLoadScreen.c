@@ -1253,7 +1253,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			swprintf( zDifString, lengthof(zDifString), L"%ls %ls", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
 
 			//make a string containing the extended options
-			swprintf( zMouseHelpTextString, lengthof(zMouseHelpTextString), L"%20s     %22s     %22s     %22s", zDifString,
+			swprintf(zMouseHelpTextString, lengthof(zMouseHelpTextString), L"%20ls     %22ls     %22ls     %22ls", zDifString,
 						/*gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT + SaveGameHeader.sInitialGameOptions.fTurnTimeLimit + 1],*/
 
 						SaveGameHeader.sInitialGameOptions.fIronManMode ? gzGIOScreenText[ GIO_IRON_MAN_TEXT ] : gzGIOScreenText[ GIO_SAVE_ANYWHERE_TEXT ],

@@ -1,4 +1,5 @@
 v0.5
+(r1233) Fix wide string/string format specifiers.
 (r1219) Fix two transcription erros in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
         - Do not draw a background pixel, if the background colour is transparent
 				- Draw background pixels in transparent areas (if the background colour is not transparent)
