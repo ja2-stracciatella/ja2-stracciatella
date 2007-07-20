@@ -17,36 +17,35 @@ extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
 
 
-#define SCURSOR(name)         { name, FALSE, 0, 0,                                               0, NULL }
-#define ACURSOR(name, frames) { name, FALSE, 0, ANIMATED_CURSOR,                            frames, NULL }
-#define ECURSOR()             { "",   FALSE, 0, USE_EXTERN_VO_CURSOR | USE_OUTLINE_BLITTER,      0, NULL }
+#define SCURSOR(name)         { name, FALSE, 0, 0,                                          0, NULL }
+#define ECURSOR()             { "",   FALSE, 0, USE_EXTERN_VO_CURSOR | USE_OUTLINE_BLITTER, 0, NULL }
 
 static CursorFileData CursorFileDatabase[] =
 {
 	SCURSOR("CURSORS/cursor.sti"),
-	ACURSOR("CURSORS/cur_targ.sti",  7),
-	ACURSOR("CURSORS/cur_tagr.sti",  7),
-	ACURSOR("CURSORS/targblak.sti",  7),
-	ACURSOR("CURSORS/cur_bst.sti",   7),
-	ACURSOR("CURSORS/cur_rbst.sti",  7),
-	ACURSOR("CURSORS/burstblk.sti",  7),
+	SCURSOR("CURSORS/cur_targ.sti"),
+	SCURSOR("CURSORS/cur_tagr.sti"),
+	SCURSOR("CURSORS/targblak.sti"),
+	SCURSOR("CURSORS/cur_bst.sti"),
+	SCURSOR("CURSORS/cur_rbst.sti"),
+	SCURSOR("CURSORS/burstblk.sti"),
 	SCURSOR("CURSORS/cur_tr.sti"),
 	SCURSOR("CURSORS/cur_trw.sti"),
-	ACURSOR("CURSORS/cur_tb.sti",    7),
+	SCURSOR("CURSORS/cur_tb.sti"),
 
-	ACURSOR("CURSORS/punch.sti",     6),
-	ACURSOR("CURSORS/punchr.sti",    6),
-	ACURSOR("CURSORS/cur_run.sti",  10),
-	ACURSOR("CURSORS/cur_walk.sti", 10),
-	ACURSOR("CURSORS/cur_swat.sti", 10),
-	ACURSOR("CURSORS/cur_pron.sti", 10),
+	SCURSOR("CURSORS/punch.sti"),
+	SCURSOR("CURSORS/punchr.sti"),
+	SCURSOR("CURSORS/cur_run.sti"),
+	SCURSOR("CURSORS/cur_walk.sti"),
+	SCURSOR("CURSORS/cur_swat.sti"),
+	SCURSOR("CURSORS/cur_pron.sti"),
 	SCURSOR("CURSORS/grabsr.sti"),
 	SCURSOR("CURSORS/grabs.sti"),
-	ACURSOR("CURSORS/stab.sti",      6),
-	ACURSOR("CURSORS/stabr.sti",     6),
+	SCURSOR("CURSORS/stab.sti"),
+	SCURSOR("CURSORS/stabr.sti"),
 
-	ACURSOR("CURSORS/cross1.sti",    6),
-	ACURSOR("CURSORS/cross2.sti",    6),
+	SCURSOR("CURSORS/cross1.sti"),
+	SCURSOR("CURSORS/cross2.sti"),
 	SCURSOR("LAPTOP/FingerCursor.sti"),
 	SCURSOR("LAPTOP/LapTopCursor.sti"),
 	SCURSOR("CURSORS/ibeam.sti"),
