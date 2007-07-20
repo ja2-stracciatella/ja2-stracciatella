@@ -1447,28 +1447,22 @@ static void DrawMouseText(void)
 
 void UpdateAnimatedCursorFrames( UINT32 uiCursorIndex )
 {
-	CursorData		*pCurData;
-	CursorImage		*pCurImage;
-	UINT32				cnt;
-
 	if ( uiCursorIndex != VIDEO_NO_CURSOR )
 	{
-		pCurData = &( CursorDatabase[ uiCursorIndex ] );
+		CursorData* pCurData = &CursorDatabase[uiCursorIndex];
 
-		for ( cnt = 0; cnt < pCurData->usNumComposites; cnt++ )
+		for (UINT32 cnt = 0; cnt < pCurData->usNumComposites; cnt++)
 		{
+			CursorImage*          pCurImage = &pCurData->Composites[cnt];
+			const CursorFileData* CFData    = &CursorFileDatabase[pCurImage->uiFileIndex];
 
-			pCurImage = &( pCurData->Composites[ cnt ] );
-
-			if ( CursorFileDatabase[ pCurImage->uiFileIndex ].ubFlags & ANIMATED_CURSOR )
+			if (CFData->ubNumberOfFrames != 0)
 			{
 				pCurImage->uiCurrentFrame++;
-
-				if ( pCurImage->uiCurrentFrame == CursorFileDatabase[ pCurImage->uiFileIndex ].ubNumberOfFrames )
+				if (pCurImage->uiCurrentFrame == CFData->ubNumberOfFrames)
 				{
 					pCurImage->uiCurrentFrame = 0;
 				}
-
 			}
 		}
 	}

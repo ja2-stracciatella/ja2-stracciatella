@@ -13,7 +13,6 @@ extern "C" {
 void    CursorDatabaseClear(void);
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 
-#define ANIMATED_CURSOR      0x02
 #define	USE_EXTERN_VO_CURSOR 0x04
 #define USE_OUTLINE_BLITTER  0x08
 
@@ -48,7 +47,7 @@ typedef struct CursorFileData
 	BOOLEAN  fLoaded;
 	UINT32   uiIndex;
 	UINT8    ubFlags;
-	UINT8    ubNumberOfFrames;
+	UINT8    ubNumberOfFrames; // If != 0 then the cursor is animated
 	HVOBJECT hVObject;
 } CursorFileData;
 

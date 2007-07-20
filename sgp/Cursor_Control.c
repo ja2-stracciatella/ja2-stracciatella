@@ -108,8 +108,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 					const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
 					if (pAuxData->fFlags & AUX_ANIMATED_TILE)
 					{
-						CFData->ubFlags          |= ANIMATED_CURSOR;
-						CFData->ubNumberOfFrames  = pAuxData->ubNumberOfFrames;
+						CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
 					}
 				}
 
@@ -350,7 +349,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 
 				// Adjust sub-index if cursor is animated
 				UINT16 usSubIndex;
-				if (CFData->ubFlags & ANIMATED_CURSOR)
+				if (CFData->ubNumberOfFrames != 0)
 				{
 					usSubIndex = pCurImage->uiCurrentFrame;
 				}
