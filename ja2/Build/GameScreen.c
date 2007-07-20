@@ -395,29 +395,6 @@ UINT32  MainGameScreenHandle(void)
 		#endif
 	}
 
-#if 0
-	{
-		PTR pData, pDestBuf;
-		UINT32 uiPitch, uiDestPitchBYTES;
-
-		pData = LockMouseBuffer( &uiPitch );
-
-		pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-					(UINT16 *)pData, uiPitch,
-					0 , 0,
-					0 , 0,
-					64, 64 );
-
-		UnlockMouseBuffer( );
-		UnLockVideoSurface(FRAME_BUFFER);
-		InvalidateRegion( 0, 0, 64, 64 );
-
-		//mprintf( 0, 55, L"W: %dH: %d", gsCurMouseWidth, gsCurMouseHeight );
-	}
-#endif
-
 	if ( gfBeginEndTurn )
 	{
 		UIHandleEndTurn( NULL );
