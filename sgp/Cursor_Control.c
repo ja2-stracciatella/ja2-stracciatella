@@ -29,6 +29,12 @@ static UINT32 guiDelayTimer = 0;
 static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
 
+static void EraseMouseCursor(void)
+{
+	FillSurface(MOUSE_BUFFER, 0);
+}
+
+
 static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
   BOOLEAN      ReturnValue;

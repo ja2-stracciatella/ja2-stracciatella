@@ -940,15 +940,6 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 }
 
 
-BOOLEAN EraseMouseCursor(void)
-{
-	// Erase cursor background
-	FillSurface(MOUSE_BUFFER, 0);
-	// Don't set dirty
-	return TRUE;
-}
-
-
 BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
 {
 	gsMouseCursorXOffset = sOffsetX;
