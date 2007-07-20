@@ -1,4 +1,5 @@
 v0.5
+(r1238) Remove the black box around the text in the help window by marking the text surface as transparent.
 (r1234) Fix loading of tactical maps for the Russian Gold version.
 (r1233) Fix wide string/string format specifiers.
 (r1219) Fix two transcription erros in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
