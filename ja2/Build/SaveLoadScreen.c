@@ -622,18 +622,11 @@ Removed so that the user can click on it and get displayed a message that the qu
 
 	if( gfLoadGameUponEntry )
 	{
-		UINT32										 uiDestPitchBYTES;
-		UINT8											 *pDestBuf;
-
 		//unmark the 2 buttons from being dirty
 		ButtonList[ guiSlgCancelBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 		ButtonList[ guiSlgSaveLoadBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
-
-		// CLEAR THE FRAME BUFFER
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
-		UnLockVideoSurface( FRAME_BUFFER );
+		FillSurface(FRAME_BUFFER, 0);
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;

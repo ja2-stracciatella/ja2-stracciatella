@@ -2087,14 +2087,8 @@ static void ChangeHelpScreenSubPage(void)
 
 static void ClearHelpScreenTextBuffer(void)
 {
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-
-	// CLEAR THE FRAME BUFFER
-	pDestBuf = LockVideoSurface( guiHelpScreenTextBufferSurface, &uiDestPitchBYTES );
-	memset(pDestBuf, 0, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER * uiDestPitchBYTES );
-	UnLockVideoSurface( guiHelpScreenTextBufferSurface );
-	InvalidateScreen( );
+	FillSurface(guiHelpScreenTextBufferSurface, 0);
+	InvalidateScreen();
 }
 
 

@@ -140,11 +140,7 @@ BOOLEAN InitializeVideoManager(void)
 	gusScreenWidth = SCREEN_WIDTH;
 	gusScreenHeight = SCREEN_HEIGHT;
 
-	// Blank out the frame buffer
-	UINT32 uiPitch;
-	PTR pTmpPointer = LockFrameBuffer(&uiPitch);
-	memset(pTmpPointer, 0, 480 * uiPitch);
-	UnlockFrameBuffer();
+	FillSurface(FRAME_BUFFER, 0);
 
 	gMouseCursorBackground.fRestore = FALSE;
 
@@ -947,12 +943,7 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 BOOLEAN EraseMouseCursor(void)
 {
 	// Erase cursor background
-
-	UINT32 uiPitch;
-	PTR pTmpPointer = LockMouseBuffer(&uiPitch);
-	memset(pTmpPointer, 0, MAX_CURSOR_HEIGHT * uiPitch);
-	UnlockMouseBuffer();
-
+	FillSurface(MOUSE_BUFFER, 0);
 	// Don't set dirty
 	return TRUE;
 }

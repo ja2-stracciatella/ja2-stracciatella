@@ -452,27 +452,15 @@ void SetIntroType( INT8 bIntroType )
 
 static void DisplaySirtechSplashScreen(void)
 {
-	UINT32 uiLogoID;
-
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-
-	// JA3Gold: do nothing until we have a graphic to replace Talonsoft's
-	//return;
-
-	// CLEAR THE FRAME BUFFER
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
-	UnLockVideoSurface( FRAME_BUFFER );
+	FillSurface(FRAME_BUFFER, 0);
 
 	const char* const ImageFile = "INTERFACE/SirtechSplash.sti";
-	uiLogoID = AddVideoObjectFromFile(ImageFile);
+	UINT32 uiLogoID = AddVideoObjectFromFile(ImageFile);
 	AssertMsg(uiLogoID != NO_VOBJECT, String("Failed to load %s", ImageFile));
 	if (uiLogoID == NO_VOBJECT) return;
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiLogoID, 0, 0, 0);
 	DeleteVideoObjectFromIndex(uiLogoID);
-
 
 	InvalidateScreen();
 	RefreshScreen();

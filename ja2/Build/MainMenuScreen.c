@@ -300,9 +300,6 @@ BOOLEAN InitMainMenu( )
 
 static void ExitMainMenu(void)
 {
-//	UINT32										 uiDestPitchBYTES;
-//	UINT8											 *pDestBuf;
-
 //	if( !gfDoHelpScreen )
 	{
 		CreateDestroyBackGroundMouseMask( FALSE );
@@ -315,13 +312,6 @@ static void ExitMainMenu(void)
 	DeleteVideoObjectFromIndex( guiJa2LogoImage );
 
 	gMsgBox.uiExitScreen = MAINMENU_SCREEN;
-/*
-	// CLEAR THE FRAME BUFFER
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
-	UnLockVideoSurface( FRAME_BUFFER );
-	InvalidateScreen( );
-*/
 }
 
 
@@ -416,14 +406,8 @@ static void HandleHelpScreenInput(void)
 
 void ClearMainMenu()
 {
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-
-	// CLEAR THE FRAME BUFFER
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	memset(pDestBuf, 0, SCREEN_HEIGHT * uiDestPitchBYTES );
-	UnLockVideoSurface( FRAME_BUFFER );
-	InvalidateScreen( );
+	FillSurface(FRAME_BUFFER, 0);
+	InvalidateScreen();
 }
 
 

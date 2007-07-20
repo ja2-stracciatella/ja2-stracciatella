@@ -55,6 +55,10 @@ void UnLockVideoSurface(UINT32 uiVSurface);
 // Blits a video Surface to another video Surface
 BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
 
+/* Fill an entire surface with a colour */
+void FillSurface(UINT32 uiDestVSurface, UINT16 Colour);
+
+/* Fills an rectangular area with a specified color value. */
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2,	INT32 iDestY2, UINT16 Color16BPP);
 
 // Sets transparency

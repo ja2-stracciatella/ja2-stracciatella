@@ -319,7 +319,14 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDest
 }
 
 
-/* Fills an rectangular area with a specified color value. */
+void FillSurface(UINT32 uiDestVSurface, UINT16 Colour)
+{
+	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);
+	CHECKV(hDestVSurface != NULL);
+	SDL_FillRect(hDestVSurface->surface, NULL, Colour);
+}
+
+
 BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP)
 {
 #ifdef _DEBUG
