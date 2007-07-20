@@ -1,3 +1,4 @@
+#include "FileMan.h"
 #include "Font_Control.h"
 #include "Soldier_Find.h"
 #include "WCheck.h"

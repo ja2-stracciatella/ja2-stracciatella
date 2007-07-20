@@ -95,7 +95,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 			}
 			else
 			{
-				HIMAGE hImage = CreateImage(CFData->ubFilename, IMAGE_ALLDATA);
+				HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
 				if (hImage == NULL) return FALSE;
 
 				CFData->uiIndex = AddVideoObjectFromHImage(hImage);

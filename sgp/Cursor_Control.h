@@ -2,7 +2,6 @@
 #define CURSOR_CONTROL_H
 
 #include "Types.h"
-#include "FileMan.h"
 #include "VObject.h"
 
 #ifdef __cplusplus
@@ -43,12 +42,12 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 
 typedef struct CursorFileData
 {
-	char     ubFilename[MAX_FILENAME_LEN];
-	BOOLEAN  fLoaded;
-	UINT32   uiIndex;
-	UINT8    ubFlags;
-	UINT8    ubNumberOfFrames; // If != 0 then the cursor is animated
-	HVOBJECT hVObject;
+	const char* Filename;
+	BOOLEAN     fLoaded;
+	UINT32      uiIndex;
+	UINT8       ubFlags;
+	UINT8       ubNumberOfFrames; // If != 0 then the cursor is animated
+	HVOBJECT    hVObject;
 } CursorFileData;
 
 typedef struct CursorImage
