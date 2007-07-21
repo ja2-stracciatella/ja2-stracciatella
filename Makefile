@@ -11,8 +11,6 @@ $(warn No SGPDATADIR specified, make lowercase will not work)
 endif
 
 
-ICONV ?= iconv
-
 SDL_CONFIG  ?= sdl-config
 CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
@@ -398,15 +396,15 @@ SRCS += sgp/VSurface.c
 SRCS += sgp/Video.c
 
 LNGS :=
-LNGS += ja2/Build/Utils/DutchText.c
-LNGS += ja2/Build/Utils/EnglishText.c
-LNGS += ja2/Build/Utils/FrenchText.c
-LNGS += ja2/Build/Utils/GermanText.c
-LNGS += ja2/Build/Utils/ItalianText.c
-LNGS += ja2/Build/Utils/JA25EnglishText.c
-LNGS += ja2/Build/Utils/JA25GermanText.c
-LNGS += ja2/Build/Utils/PolishText.c
-LNGS += ja2/Build/Utils/RussianText.c
+LNGS += ja2/Build/Utils/_DutchText.c
+LNGS += ja2/Build/Utils/_EnglishText.c
+LNGS += ja2/Build/Utils/_FrenchText.c
+LNGS += ja2/Build/Utils/_GermanText.c
+LNGS += ja2/Build/Utils/_ItalianText.c
+LNGS += ja2/Build/Utils/_JA25EnglishText.c
+LNGS += ja2/Build/Utils/_JA25GermanText.c
+LNGS += ja2/Build/Utils/_PolishText.c
+LNGS += ja2/Build/Utils/_RussianText.c
 
 SRCS += $(LNGS)
 
@@ -450,35 +448,7 @@ ja: $(OBJS)
 
 clean:
 	@echo '===> CLEAN'
-	$(Q)rm -fr $(DEPS) $(OBJS) $(LNGS)
-
-ja2/Build/Utils/DutchText.c:       ja2/Build/Utils/_DutchText.c
-ja2/Build/Utils/EnglishText.c:     ja2/Build/Utils/_EnglishText.c
-ja2/Build/Utils/FrenchText.c:      ja2/Build/Utils/_FrenchText.c
-ja2/Build/Utils/GermanText.c:      ja2/Build/Utils/_GermanText.c
-ja2/Build/Utils/ItalianText.c:     ja2/Build/Utils/_ItalianText.c
-ja2/Build/Utils/JA25EnglishText.c: ja2/Build/Utils/_JA25EnglishText.c
-ja2/Build/Utils/JA25GermanText.c:  ja2/Build/Utils/_JA25GermanText.c
-ja2/Build/Utils/PolishText.c:      ja2/Build/Utils/_PolishText.c
-ja2/Build/Utils/RussianText.c:     ja2/Build/Utils/_RussianText.c
-
-ja2/Build/Utils/DutchText.c        \
-ja2/Build/Utils/EnglishText.c      \
-ja2/Build/Utils/FrenchText.c       \
-ja2/Build/Utils/GermanText.c       \
-ja2/Build/Utils/ItalianText.c      \
-ja2/Build/Utils/JA25EnglishText.c  \
-ja2/Build/Utils/JA25GermanText.c:
-	@echo '===> ICONV $<'
-	$(Q)$(ICONV) -f ISO8859-15 -t UTF-8 < $< > $@
-
-ja2/Build/Utils/PolishText.c:
-	@echo '===> ICONV $<'
-	$(Q)$(ICONV) -f CP1250 -t UTF-8 < $< > $@
-
-ja2/Build/Utils/RussianText.c:
-	@echo '===> ICONV $<'
-	$(Q)$(ICONV) -f CP1251 -t UTF-8 < $< > $@
+	$(Q)rm -fr $(DEPS) $(OBJS)
 
 
 lowercase:

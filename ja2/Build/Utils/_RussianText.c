@@ -119,22 +119,22 @@ wchar_t ShortItemNames[MAXITEMS][80] =
 const wchar_t AmmoCaliber[][20] =
 {
 	L"0",
-	L",38 кал",
-	L"9мм",
-	L",45 кал",
-	L",357 кал",
-	L"12 кал",
-	L"ОББ",
-	L"5,45мм",
-	L"5,56мм",
-	L"7,62мм НАТО",
-	L"7,62мм ВД",
-	L"4,7мм",
-	L"5,7мм",
-	L"Монстр",
-	L"Ракета",
-	L"", // дротик
-	L"", // пламя
+	L",38 РєР°Р»",
+	L"9РјРј",
+	L",45 РєР°Р»",
+	L",357 РєР°Р»",
+	L"12 РєР°Р»",
+	L"РћР‘Р‘",
+	L"5,45РјРј",
+	L"5,56РјРј",
+	L"7,62РјРј РќРђРўРћ",
+	L"7,62РјРј Р’Р”",
+	L"4,7РјРј",
+	L"5,7РјРј",
+	L"РњРѕРЅСЃС‚СЂ",
+	L"Р Р°РєРµС‚Р°",
+	L"", // РґСЂРѕС‚РёРє
+	L"", // РїР»Р°РјСЏ
 };
 
 // This BobbyRayAmmoCaliber is virtually the same as AmmoCaliber however the bobby version doesnt have as much room for the words.
@@ -147,44 +147,44 @@ const wchar_t AmmoCaliber[][20] =
 const wchar_t BobbyRayAmmoCaliber[][20] =
 {
 	L"0",
-	L",38 кал",
-	L"9мм",
-	L",45 кал",
-	L",357 кал",
-	L"12 кал",
-	L"ОББ",
-	L"5,45мм",
-	L"5,56мм",
-	L"7,62мм Н.",
-	L"7,62мм ВД",
-	L"4,7мм",
-	L"5.7мм",
-	L"Монстр",
-	L"Ракета",
-	L"", // дротик
+	L",38 РєР°Р»",
+	L"9РјРј",
+	L",45 РєР°Р»",
+	L",357 РєР°Р»",
+	L"12 РєР°Р»",
+	L"РћР‘Р‘",
+	L"5,45РјРј",
+	L"5,56РјРј",
+	L"7,62РјРј Рќ.",
+	L"7,62РјРј Р’Р”",
+	L"4,7РјРј",
+	L"5.7РјРј",
+	L"РњРѕРЅСЃС‚СЂ",
+	L"Р Р°РєРµС‚Р°",
+	L"", // РґСЂРѕС‚РёРє
 };
 
 
 const wchar_t WeaponType[][30] =
 {
-	L"Другое",
-	L"Пистолет",
-	L"Автопистолет",
-	L"Полуавтомат",
-	L"Винтовка",
-	L"Снайп.винтовка",
-	L"Базука",
-	L"Легкий автомат",
-	L"Револьвер"
+	L"Р”СЂСѓРіРѕРµ",
+	L"РџРёСЃС‚РѕР»РµС‚",
+	L"РђРІС‚РѕРїРёСЃС‚РѕР»РµС‚",
+	L"РџРѕР»СѓР°РІС‚РѕРјР°С‚",
+	L"Р’РёРЅС‚РѕРІРєР°",
+	L"РЎРЅР°Р№Рї.РІРёРЅС‚РѕРІРєР°",
+	L"Р‘Р°Р·СѓРєР°",
+	L"Р›РµРіРєРёР№ Р°РІС‚РѕРјР°С‚",
+	L"Р РµРІРѕР»СЊРІРµСЂ"
 };
 
 const wchar_t TeamTurnString[][STRING_LENGTH] =
 {
-	L"Ход Игрока", // player's turn
-	L"Ход Оппонента",
-	L"Ход Существа",
-	L"Ход Ополчения",
-	L"Ход Жителей"
+	L"РҐРѕРґ РРіСЂРѕРєР°", // player's turn
+	L"РҐРѕРґ РћРїРїРѕРЅРµРЅС‚Р°",
+	L"РҐРѕРґ РЎСѓС‰РµСЃС‚РІР°",
+	L"РҐРѕРґ РћРїРѕР»С‡РµРЅРёСЏ",
+	L"РҐРѕРґ Р–РёС‚РµР»РµР№"
 	// planning turn
 };
 
@@ -194,95 +194,95 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
 
-	L"%ls:попадание в голову. Теряет в мудрости!",
-	L"%ls получает рану плеча и теряет в ловкости!",
-	L"%ls получает рану в грудь и теряет в силе!",
-	L"%ls получает рану ног и теряет в проворности!",
-	L"%ls получает рану головы и теряет %d очков мудрости!",
-	L"%ls получает рану в плечо теряет %d очков ловкости!",
-	L"%ls получает рану в грудь и теряет %d очков силы!",
-	L"%ls получает рану ног и теряет %d очков проворности!",
-	L"Перерыв!",
+	L"%ls:РїРѕРїР°РґР°РЅРёРµ РІ РіРѕР»РѕРІСѓ. РўРµСЂСЏРµС‚ РІ РјСѓРґСЂРѕСЃС‚Рё!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РїР»РµС‡Р° Рё С‚РµСЂСЏРµС‚ РІ Р»РѕРІРєРѕСЃС‚Рё!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РІ РіСЂСѓРґСЊ Рё С‚РµСЂСЏРµС‚ РІ СЃРёР»Рµ!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РЅРѕРі Рё С‚РµСЂСЏРµС‚ РІ РїСЂРѕРІРѕСЂРЅРѕСЃС‚Рё!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РіРѕР»РѕРІС‹ Рё С‚РµСЂСЏРµС‚ %d РѕС‡РєРѕРІ РјСѓРґСЂРѕСЃС‚Рё!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РІ РїР»РµС‡Рѕ С‚РµСЂСЏРµС‚ %d РѕС‡РєРѕРІ Р»РѕРІРєРѕСЃС‚Рё!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РІ РіСЂСѓРґСЊ Рё С‚РµСЂСЏРµС‚ %d РѕС‡РєРѕРІ СЃРёР»С‹!",
+	L"%ls РїРѕР»СѓС‡Р°РµС‚ СЂР°РЅСѓ РЅРѕРі Рё С‚РµСЂСЏРµС‚ %d РѕС‡РєРѕРІ РїСЂРѕРІРѕСЂРЅРѕСЃС‚Рё!",
+	L"РџРµСЂРµСЂС‹РІ!",
 
 	// The first %ls is a merc's name, the second is a string from pNoiseVolStr,
 	// the third is a string from pNoiseTypeStr, and the last is a string from pDirectionStr
 
 	L"", //OBSOLETE
-	L"Подкрепление прибыло!",
+	L"РџРѕРґРєСЂРµРїР»РµРЅРёРµ РїСЂРёР±С‹Р»Рѕ!",
 
 	// In the following four lines, all %ls's are merc names
 
-	L"%ls заряжает",
-	L"%ls недостаточно очков действия!",
-	L"%ls оказывает перв.помощь.(люб.клавиша-отмена)",
-	L"%ls и %ls оказывают перв.помощь. (люб.клавиша-отмена.)",
+	L"%ls Р·Р°СЂСЏР¶Р°РµС‚",
+	L"%ls РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РѕС‡РєРѕРІ РґРµР№СЃС‚РІРёСЏ!",
+	L"%ls РѕРєР°Р·С‹РІР°РµС‚ РїРµСЂРІ.РїРѕРјРѕС‰СЊ.(Р»СЋР±.РєР»Р°РІРёС€Р°-РѕС‚РјРµРЅР°)",
+	L"%ls Рё %ls РѕРєР°Р·С‹РІР°СЋС‚ РїРµСЂРІ.РїРѕРјРѕС‰СЊ. (Р»СЋР±.РєР»Р°РІРёС€Р°-РѕС‚РјРµРЅР°.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
-	L"надежен",
-	L"ненадежен",
-	L"легко починить",
-	L"трудно почин.",
-	L"сильн.поврежд.",
-	L"слаб.поврежд.",
-	L"быстр.огонь",
-	L"медл.огонь",
-	L"дальний бой",
-	L"ближний бой",
-	L"легкий",
-	L"тяжелый",
-	L"малый",
-	L"очередями",
-	L"не очередями",
-	L"бол.обойма",
-	L"мал.обойма",
+	L"РЅР°РґРµР¶РµРЅ",
+	L"РЅРµРЅР°РґРµР¶РµРЅ",
+	L"Р»РµРіРєРѕ РїРѕС‡РёРЅРёС‚СЊ",
+	L"С‚СЂСѓРґРЅРѕ РїРѕС‡РёРЅ.",
+	L"СЃРёР»СЊРЅ.РїРѕРІСЂРµР¶Рґ.",
+	L"СЃР»Р°Р±.РїРѕРІСЂРµР¶Рґ.",
+	L"Р±С‹СЃС‚СЂ.РѕРіРѕРЅСЊ",
+	L"РјРµРґР».РѕРіРѕРЅСЊ",
+	L"РґР°Р»СЊРЅРёР№ Р±РѕР№",
+	L"Р±Р»РёР¶РЅРёР№ Р±РѕР№",
+	L"Р»РµРіРєРёР№",
+	L"С‚СЏР¶РµР»С‹Р№",
+	L"РјР°Р»С‹Р№",
+	L"РѕС‡РµСЂРµРґСЏРјРё",
+	L"РЅРµ РѕС‡РµСЂРµРґСЏРјРё",
+	L"Р±РѕР».РѕР±РѕР№РјР°",
+	L"РјР°Р».РѕР±РѕР№РјР°",
 
 	// In the following two lines, all %ls's are merc names
 
-	L"%ls:камуфляж изношен",
-	L"%ls:окраска камуфляжа смыта",
+	L"%ls:РєР°РјСѓС„Р»СЏР¶ РёР·РЅРѕС€РµРЅ",
+	L"%ls:РѕРєСЂР°СЃРєР° РєР°РјСѓС„Р»СЏР¶Р° СЃРјС‹С‚Р°",
 
 	// The first %ls is a merc name and the second %ls is an item name
 
-	L"Втор.оружие:нет патронов!",
-	L"%ls крадет %ls.",
+	L"Р’С‚РѕСЂ.РѕСЂСѓР¶РёРµ:РЅРµС‚ РїР°С‚СЂРѕРЅРѕРІ!",
+	L"%ls РєСЂР°РґРµС‚ %ls.",
 
 	// The %ls is a merc name
 
-	L"%ls:оружие не стрел.очеред.",
+	L"%ls:РѕСЂСѓР¶РёРµ РЅРµ СЃС‚СЂРµР».РѕС‡РµСЂРµРґ.",
 
-	L"вы повторяетесь!",
-	L"Объединить?",
+	L"РІС‹ РїРѕРІС‚РѕСЂСЏРµС‚РµСЃСЊ!",
+	L"РћР±СЉРµРґРёРЅРёС‚СЊ?",
 
 	// Both %ls's are item names
 
-	L"Нельзя соединить %ls и %ls.",
+	L"РќРµР»СЊР·СЏ СЃРѕРµРґРёРЅРёС‚СЊ %ls Рё %ls.",
 
-	L"Ничего",
-	L"Разрядить",
-	L"Приложения",
+	L"РќРёС‡РµРіРѕ",
+	L"Р Р°Р·СЂСЏРґРёС‚СЊ",
+	L"РџСЂРёР»РѕР¶РµРЅРёСЏ",
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	L"Нельзя использовать %ls и %ls одновр.",
+	L"РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ %ls Рё %ls РѕРґРЅРѕРІСЂ.",
 
-	L"Вещь,на к-рую указывает курсор,можно присоединить к другим вещам,поместив ее в одну из связных ячеек.",
-	L"Вещь,на к-рую указывает курсор,можно присоединить к другим вещам,поместив ее в одну из связных ячеек.(Однако эти вещи несовместимы.)",
-	L"В этом секторе еще остались враги!",
-	L"Тебе нужно дать %ls %ls",
-	L"%ls:попадание в голову!",
-	L"Покинуть битву?",
-	L"Эта вещь останется у тебя.Оставить ее?",
-	L"%ls чувствует прилив энергии!",
-	L"%ls скользит по мрамору!",
-	L"%ls не получает %ls!",
-	L"%ls чинит %ls",
-	L"Прервать для ",
-	L"Сдаться?",
-	L"Человек отверг твою помощь",
-	L"Я так НЕ ДУМАЮ!",
-  L"Чтобы воспользоваться вертолетеом Всадника, выберите ПРИНАДЛЕЖНОСТЬ и МАШИНА.",
-	L"%ls успевает зарядить только один пистолет",
-	L"ход Кошки-Убийцы",
+	L"Р’РµС‰СЊ,РЅР° Рє-СЂСѓСЋ СѓРєР°Р·С‹РІР°РµС‚ РєСѓСЂСЃРѕСЂ,РјРѕР¶РЅРѕ РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ Рє РґСЂСѓРіРёРј РІРµС‰Р°Рј,РїРѕРјРµСЃС‚РёРІ РµРµ РІ РѕРґРЅСѓ РёР· СЃРІСЏР·РЅС‹С… СЏС‡РµРµРє.",
+	L"Р’РµС‰СЊ,РЅР° Рє-СЂСѓСЋ СѓРєР°Р·С‹РІР°РµС‚ РєСѓСЂСЃРѕСЂ,РјРѕР¶РЅРѕ РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊ Рє РґСЂСѓРіРёРј РІРµС‰Р°Рј,РїРѕРјРµСЃС‚РёРІ РµРµ РІ РѕРґРЅСѓ РёР· СЃРІСЏР·РЅС‹С… СЏС‡РµРµРє.(РћРґРЅР°РєРѕ СЌС‚Рё РІРµС‰Рё РЅРµСЃРѕРІРјРµСЃС‚РёРјС‹.)",
+	L"Р’ СЌС‚РѕРј СЃРµРєС‚РѕСЂРµ РµС‰Рµ РѕСЃС‚Р°Р»РёСЃСЊ РІСЂР°РіРё!",
+	L"РўРµР±Рµ РЅСѓР¶РЅРѕ РґР°С‚СЊ %ls %ls",
+	L"%ls:РїРѕРїР°РґР°РЅРёРµ РІ РіРѕР»РѕРІСѓ!",
+	L"РџРѕРєРёРЅСѓС‚СЊ Р±РёС‚РІСѓ?",
+	L"Р­С‚Р° РІРµС‰СЊ РѕСЃС‚Р°РЅРµС‚СЃСЏ Сѓ С‚РµР±СЏ.РћСЃС‚Р°РІРёС‚СЊ РµРµ?",
+	L"%ls С‡СѓРІСЃС‚РІСѓРµС‚ РїСЂРёР»РёРІ СЌРЅРµСЂРіРёРё!",
+	L"%ls СЃРєРѕР»СЊР·РёС‚ РїРѕ РјСЂР°РјРѕСЂСѓ!",
+	L"%ls РЅРµ РїРѕР»СѓС‡Р°РµС‚ %ls!",
+	L"%ls С‡РёРЅРёС‚ %ls",
+	L"РџСЂРµСЂРІР°С‚СЊ РґР»СЏ ",
+	L"РЎРґР°С‚СЊСЃСЏ?",
+	L"Р§РµР»РѕРІРµРє РѕС‚РІРµСЂРі С‚РІРѕСЋ РїРѕРјРѕС‰СЊ",
+	L"РЇ С‚Р°Рє РќР• Р”РЈРњРђР®!",
+  L"Р§С‚РѕР±С‹ РІРѕСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІРµСЂС‚РѕР»РµС‚РµРѕРј Р’СЃР°РґРЅРёРєР°, РІС‹Р±РµСЂРёС‚Рµ РџР РРќРђР”Р›Р•Р–РќРћРЎРўР¬ Рё РњРђРЁРРќРђ.",
+	L"%ls СѓСЃРїРµРІР°РµС‚ Р·Р°СЂСЏРґРёС‚СЊ С‚РѕР»СЊРєРѕ РѕРґРёРЅ РїРёСЃС‚РѕР»РµС‚",
+	L"С…РѕРґ РљРѕС€РєРё-РЈР±РёР№С†С‹",
 };
 
 
@@ -291,18 +291,18 @@ const wchar_t Message[][STRING_LENGTH] =
 const wchar_t* pTownNames[] =
 {
 	L"",
-	L"Омерта",
-	L"Драссен",
-	L"Альма",
-	L"Грам",
-	L"Тикса",
-	L"Камбрия",
-	L"Сан Мона",
-	L"Эстони",
-	L"Орта",
-	L"Балайм",
-	L"Медуна",
-	L"Читзена",
+	L"РћРјРµСЂС‚Р°",
+	L"Р”СЂР°СЃСЃРµРЅ",
+	L"РђР»СЊРјР°",
+	L"Р“СЂР°Рј",
+	L"РўРёРєСЃР°",
+	L"РљР°РјР±СЂРёСЏ",
+	L"РЎР°РЅ РњРѕРЅР°",
+	L"Р­СЃС‚РѕРЅРё",
+	L"РћСЂС‚Р°",
+	L"Р‘Р°Р»Р°Р№Рј",
+	L"РњРµРґСѓРЅР°",
+	L"Р§РёС‚Р·РµРЅР°",
 };
 
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
@@ -310,12 +310,12 @@ const wchar_t* pTownNames[] =
 
 const wchar_t* sTimeStrings[] =
 {
-	L"Пауза",
-	L"Норма",
-	L"5 мин",
-	L"30 мин",
-	L"60 мин",
-	L"6 час",
+	L"РџР°СѓР·Р°",
+	L"РќРѕСЂРјР°",
+	L"5 РјРёРЅ",
+	L"30 РјРёРЅ",
+	L"60 РјРёРЅ",
+	L"6 С‡Р°СЃ",
 };
 
 
@@ -324,78 +324,78 @@ const wchar_t* sTimeStrings[] =
 
 const wchar_t* pAssignmentStrings[] =
 {
-	L"Отряд1",
-	L"Отряд2",
-	L"Отряд3",
-	L"Отряд4",
-	L"Отряд5",
-	L"Отряд6",
-	L"Отряд7",
-	L"Отряд8",
-	L"Отряд9",
-	L"Отряд10",
-	L"Отряд11",
-	L"Отряд12",
-	L"Отряд13",
-	L"Отряд14",
-	L"Отряд15",
-	L"Отряд16",
-	L"Отряд17",
-	L"Отряд18",
-	L"Отряд19",
-	L"Отряд20",
-	L"На службе", // on active duty
-	L"Доктор", // оказывает медпомощь
-	L"Пациент", //принимает медпомощь
-	L"Машина", // in a vehicle
-	L"В пути", //транзитом - сокращение
-	L"Ремонт", // ремонтируются
-	L"Практика", // тренируются
-  L"Ополчение", //готовят восстание среди горожан
-	L"Тренер", // training a teammate
-	L"Студент", // being trained by someone else
-	L"Мертв", // мертв
-	L"Беспом.", // abbreviation for incapacitated
-	L"ВП", // Prisoner of war - captured
-	L"Госпиталь", // patient in a hospital
-	L"Пусто",	// Vehicle is empty
+	L"РћС‚СЂСЏРґ1",
+	L"РћС‚СЂСЏРґ2",
+	L"РћС‚СЂСЏРґ3",
+	L"РћС‚СЂСЏРґ4",
+	L"РћС‚СЂСЏРґ5",
+	L"РћС‚СЂСЏРґ6",
+	L"РћС‚СЂСЏРґ7",
+	L"РћС‚СЂСЏРґ8",
+	L"РћС‚СЂСЏРґ9",
+	L"РћС‚СЂСЏРґ10",
+	L"РћС‚СЂСЏРґ11",
+	L"РћС‚СЂСЏРґ12",
+	L"РћС‚СЂСЏРґ13",
+	L"РћС‚СЂСЏРґ14",
+	L"РћС‚СЂСЏРґ15",
+	L"РћС‚СЂСЏРґ16",
+	L"РћС‚СЂСЏРґ17",
+	L"РћС‚СЂСЏРґ18",
+	L"РћС‚СЂСЏРґ19",
+	L"РћС‚СЂСЏРґ20",
+	L"РќР° СЃР»СѓР¶Р±Рµ", // on active duty
+	L"Р”РѕРєС‚РѕСЂ", // РѕРєР°Р·С‹РІР°РµС‚ РјРµРґРїРѕРјРѕС‰СЊ
+	L"РџР°С†РёРµРЅС‚", //РїСЂРёРЅРёРјР°РµС‚ РјРµРґРїРѕРјРѕС‰СЊ
+	L"РњР°С€РёРЅР°", // in a vehicle
+	L"Р’ РїСѓС‚Рё", //С‚СЂР°РЅР·РёС‚РѕРј - СЃРѕРєСЂР°С‰РµРЅРёРµ
+	L"Р РµРјРѕРЅС‚", // СЂРµРјРѕРЅС‚РёСЂСѓСЋС‚СЃСЏ
+	L"РџСЂР°РєС‚РёРєР°", // С‚СЂРµРЅРёСЂСѓСЋС‚СЃСЏ
+  L"РћРїРѕР»С‡РµРЅРёРµ", //РіРѕС‚РѕРІСЏС‚ РІРѕСЃСЃС‚Р°РЅРёРµ СЃСЂРµРґРё РіРѕСЂРѕР¶Р°РЅ
+	L"РўСЂРµРЅРµСЂ", // training a teammate
+	L"РЎС‚СѓРґРµРЅС‚", // being trained by someone else
+	L"РњРµСЂС‚РІ", // РјРµСЂС‚РІ
+	L"Р‘РµСЃРїРѕРј.", // abbreviation for incapacitated
+	L"Р’Рџ", // Prisoner of war - captured
+	L"Р“РѕСЃРїРёС‚Р°Р»СЊ", // patient in a hospital
+	L"РџСѓСЃС‚Рѕ",	// Vehicle is empty
 };
 
 
 const wchar_t* pMilitiaString[] =
 {
-	L"Ополчение", // the title of the militia box
-	L"Не определен", //the number of unassigned militia troops
-	L"Ты не можешь перераспределять ополчение, когда кругом враги!",
+	L"РћРїРѕР»С‡РµРЅРёРµ", // the title of the militia box
+	L"РќРµ РѕРїСЂРµРґРµР»РµРЅ", //the number of unassigned militia troops
+	L"РўС‹ РЅРµ РјРѕР¶РµС€СЊ РїРµСЂРµСЂР°СЃРїСЂРµРґРµР»СЏС‚СЊ РѕРїРѕР»С‡РµРЅРёРµ, РєРѕРіРґР° РєСЂСѓРіРѕРј РІСЂР°РіРё!",
 };
 
 
 const wchar_t* pMilitiaButtonString[] =
 {
-	L"Авто", // auto place the militia troops for the player
-	L"Готово", // done placing militia troops
+	L"РђРІС‚Рѕ", // auto place the militia troops for the player
+	L"Р“РѕС‚РѕРІРѕ", // done placing militia troops
 };
 
 const wchar_t* pConditionStrings[] =
 {
-	L"Отлично", //состояние солдата..отличное здоровье
-	L"Хорошо", //хорошее здоровье
-	L"Прилично", //нормальное здоровье
-	L"Ранен", //раны
-	L"Устал", // усталый
-	L"Кровоточит", // истекает кровью
-	L"Без сознания", // в обмороке
-	L"Умирает", //умирает
-	L"Мертв", // мертв
+	L"РћС‚Р»РёС‡РЅРѕ", //СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРѕР»РґР°С‚Р°..РѕС‚Р»РёС‡РЅРѕРµ Р·РґРѕСЂРѕРІСЊРµ
+	L"РҐРѕСЂРѕС€Рѕ", //С…РѕСЂРѕС€РµРµ Р·РґРѕСЂРѕРІСЊРµ
+	L"РџСЂРёР»РёС‡РЅРѕ", //РЅРѕСЂРјР°Р»СЊРЅРѕРµ Р·РґРѕСЂРѕРІСЊРµ
+	L"Р Р°РЅРµРЅ", //СЂР°РЅС‹
+	L"РЈСЃС‚Р°Р»", // СѓСЃС‚Р°Р»С‹Р№
+	L"РљСЂРѕРІРѕС‚РѕС‡РёС‚", // РёСЃС‚РµРєР°РµС‚ РєСЂРѕРІСЊСЋ
+	L"Р‘РµР· СЃРѕР·РЅР°РЅРёСЏ", // РІ РѕР±РјРѕСЂРѕРєРµ
+	L"РЈРјРёСЂР°РµС‚", //СѓРјРёСЂР°РµС‚
+	L"РњРµСЂС‚РІ", // РјРµСЂС‚РІ
 };
 
 const wchar_t* pEpcMenuStrings[] =
 {
-	L"На службе", // set merc on active duty
-	L"Пациент", // set as a patient to receive medical aid
-	L"Машина", // tell merc to enter vehicle
-	L"Без эскорта", // охрана покидает героя
-	L"Отмена", // выход из этого меню
+	L"РќР° СЃР»СѓР¶Р±Рµ", // set merc on active duty
+	L"РџР°С†РёРµРЅС‚", // set as a patient to receive medical aid
+	L"РњР°С€РёРЅР°", // tell merc to enter vehicle
+	L"Р‘РµР· СЌСЃРєРѕСЂС‚Р°", // РѕС…СЂР°РЅР° РїРѕРєРёРґР°РµС‚ РіРµСЂРѕСЏ
+	L"РћС‚РјРµРЅР°", // РІС‹С…РѕРґ РёР· СЌС‚РѕРіРѕ РјРµРЅСЋ
 };
 
 
@@ -403,41 +403,41 @@ const wchar_t* pEpcMenuStrings[] =
 
 const wchar_t* pPersonnelAssignmentStrings[] =
 {
-	L"Отряд1",
-	L"Отряд2",
-	L"Отряд3",
-	L"Отряд4",
-	L"Отряд5",
-	L"Отряд6",
-	L"Отряд7",
-	L"Отряд8",
-	L"Отряд9",
-	L"Отряд10",
-	L"Отряд11",
-	L"Отряд12",
-	L"Отряд13",
-	L"Отряд14",
-	L"Отряд15",
-	L"Отряд16",
-	L"Отряд17",
-	L"Отряд18",
-	L"Отряд19",
-	L"Отряд20",
-	L"На службе",
-	L"Доктор",
-	L"Пациент",
-	L"Машина",
-	L"В пути",
-	L"Ремонт",
-	L"Практика",
-  L"Тренировка ополч",
-	L"Тренер",
-	L"Ученик",
-	L"Мертв",
-	L"Беспом.",
-	L"ВП",
-	L"Госпиталь",
-	L"Пусто",	// Vehicle is empty
+	L"РћС‚СЂСЏРґ1",
+	L"РћС‚СЂСЏРґ2",
+	L"РћС‚СЂСЏРґ3",
+	L"РћС‚СЂСЏРґ4",
+	L"РћС‚СЂСЏРґ5",
+	L"РћС‚СЂСЏРґ6",
+	L"РћС‚СЂСЏРґ7",
+	L"РћС‚СЂСЏРґ8",
+	L"РћС‚СЂСЏРґ9",
+	L"РћС‚СЂСЏРґ10",
+	L"РћС‚СЂСЏРґ11",
+	L"РћС‚СЂСЏРґ12",
+	L"РћС‚СЂСЏРґ13",
+	L"РћС‚СЂСЏРґ14",
+	L"РћС‚СЂСЏРґ15",
+	L"РћС‚СЂСЏРґ16",
+	L"РћС‚СЂСЏРґ17",
+	L"РћС‚СЂСЏРґ18",
+	L"РћС‚СЂСЏРґ19",
+	L"РћС‚СЂСЏРґ20",
+	L"РќР° СЃР»СѓР¶Р±Рµ",
+	L"Р”РѕРєС‚РѕСЂ",
+	L"РџР°С†РёРµРЅС‚",
+	L"РњР°С€РёРЅР°",
+	L"Р’ РїСѓС‚Рё",
+	L"Р РµРјРѕРЅС‚",
+	L"РџСЂР°РєС‚РёРєР°",
+  L"РўСЂРµРЅРёСЂРѕРІРєР° РѕРїРѕР»С‡",
+	L"РўСЂРµРЅРµСЂ",
+	L"РЈС‡РµРЅРёРє",
+	L"РњРµСЂС‚РІ",
+	L"Р‘РµСЃРїРѕРј.",
+	L"Р’Рџ",
+	L"Р“РѕСЃРїРёС‚Р°Р»СЊ",
+	L"РџСѓСЃС‚Рѕ",	// Vehicle is empty
 };
 
 
@@ -445,41 +445,41 @@ const wchar_t* pPersonnelAssignmentStrings[] =
 
 const wchar_t* pLongAssignmentStrings[] =
 {
-	L"Отряд1",
-	L"Отряд2",
-	L"Отряд3",
-	L"Отряд4",
-	L"Отряд5",
-	L"Отряд6",
-	L"Отряд7",
-	L"Отряд8",
-	L"Отряд9",
-	L"Отряд10",
-	L"Отряд11",
-	L"Отряд12",
-	L"Отряд13",
-	L"Отряд14",
-	L"Отряд15",
-	L"Отряд16",
-	L"Отряд17",
-	L"Отряд18",
-	L"Отряд19",
-	L"Отряд20",
-	L"На службе",
-	L"Доктор",
-	L"пациент",
-	L"Машина",
-	L"В пути",
-	L"Ремонт",
-	L"Практика",
-  L"Тренинг ополч",
-	L"Тренинг команды",
-	L"Ученик",
-	L"Мертв",
-	L"Беспом.",
-	L"ВП",
-	L"Госпиталь", // patient in a hospital
-	L"Пусто",	// Vehicle is empty
+	L"РћС‚СЂСЏРґ1",
+	L"РћС‚СЂСЏРґ2",
+	L"РћС‚СЂСЏРґ3",
+	L"РћС‚СЂСЏРґ4",
+	L"РћС‚СЂСЏРґ5",
+	L"РћС‚СЂСЏРґ6",
+	L"РћС‚СЂСЏРґ7",
+	L"РћС‚СЂСЏРґ8",
+	L"РћС‚СЂСЏРґ9",
+	L"РћС‚СЂСЏРґ10",
+	L"РћС‚СЂСЏРґ11",
+	L"РћС‚СЂСЏРґ12",
+	L"РћС‚СЂСЏРґ13",
+	L"РћС‚СЂСЏРґ14",
+	L"РћС‚СЂСЏРґ15",
+	L"РћС‚СЂСЏРґ16",
+	L"РћС‚СЂСЏРґ17",
+	L"РћС‚СЂСЏРґ18",
+	L"РћС‚СЂСЏРґ19",
+	L"РћС‚СЂСЏРґ20",
+	L"РќР° СЃР»СѓР¶Р±Рµ",
+	L"Р”РѕРєС‚РѕСЂ",
+	L"РїР°С†РёРµРЅС‚",
+	L"РњР°С€РёРЅР°",
+	L"Р’ РїСѓС‚Рё",
+	L"Р РµРјРѕРЅС‚",
+	L"РџСЂР°РєС‚РёРєР°",
+  L"РўСЂРµРЅРёРЅРі РѕРїРѕР»С‡",
+	L"РўСЂРµРЅРёРЅРі РєРѕРјР°РЅРґС‹",
+	L"РЈС‡РµРЅРёРє",
+	L"РњРµСЂС‚РІ",
+	L"Р‘РµСЃРїРѕРј.",
+	L"Р’Рџ",
+	L"Р“РѕСЃРїРёС‚Р°Р»СЊ", // patient in a hospital
+	L"РџСѓСЃС‚Рѕ",	// Vehicle is empty
 };
 
 
@@ -487,222 +487,222 @@ const wchar_t* pLongAssignmentStrings[] =
 
 const wchar_t* pContractStrings[] =
 {
-	L"Пункты контракта:",
+	L"РџСѓРЅРєС‚С‹ РєРѕРЅС‚СЂР°РєС‚Р°:",
 	L"", // a blank line, required
-	L"Предл.1 день", // offer merc a one day contract extension
-	L"Предложить 7дн", // 1 week
-	L"Предложить 14дн", // 2 week
-	L"Уволить", // end merc's contract
-	L"Отмена", // stop showing this menu
+	L"РџСЂРµРґР».1 РґРµРЅСЊ", // offer merc a one day contract extension
+	L"РџСЂРµРґР»РѕР¶РёС‚СЊ 7РґРЅ", // 1 week
+	L"РџСЂРµРґР»РѕР¶РёС‚СЊ 14РґРЅ", // 2 week
+	L"РЈРІРѕР»РёС‚СЊ", // end merc's contract
+	L"РћС‚РјРµРЅР°", // stop showing this menu
 };
 
 const wchar_t* pPOWStrings[] =
 {
-	L"ВП",  //an acronym for Prisoner of War
+	L"Р’Рџ",  //an acronym for Prisoner of War
 	L"??",
 };
 
 const wchar_t* pLongAttributeStrings[] =
 {
-    L"СИЛА",
-	L"ЛОВКОСТЬ",
-	L"ПОДВИЖНОСТЬ",
-	L"МУДРОСТЬ",
-	L"МЕТКОСТЬ",
-	L"МЕДИЦИНА",
-	L"МЕХАНИКА",
-	L"ЛИДЕРСТВО",
-	L"ВЗРЫВНИК",
-	L"УРОВЕНЬ",
+    L"РЎРР›Рђ",
+	L"Р›РћР’РљРћРЎРўР¬",
+	L"РџРћР”Р’РР–РќРћРЎРўР¬",
+	L"РњРЈР”Р РћРЎРўР¬",
+	L"РњР•РўРљРћРЎРўР¬",
+	L"РњР•Р”РР¦РРќРђ",
+	L"РњР•РҐРђРќРРљРђ",
+	L"Р›РР”Р•Р РЎРўР’Рћ",
+	L"Р’Р—Р Р«Р’РќРРљ",
+	L"РЈР РћР’Р•РќР¬",
 };
 
 const wchar_t* pInvPanelTitleStrings[] =
 {
-	L"Броня", // the armor rating of the merc
-	L"Вес", // the weight the merc is carrying
-	L"Камуфляж", // the merc's camouflage rating
+	L"Р‘СЂРѕРЅСЏ", // the armor rating of the merc
+	L"Р’РµСЃ", // the weight the merc is carrying
+	L"РљР°РјСѓС„Р»СЏР¶", // the merc's camouflage rating
 };
 
 const wchar_t* pShortAttributeStrings[] =
 {
-	L"Пдв", // the abbreviated version of : agility
-	L"Лов", // dexterity
-	L"Сил", // strength
-	L"Лид", // leadership
-	L"Мдр", // wisdom
-	L"Урв", // experience level
-	L"Мтк", // marksmanship skill
-	L"Взр", // explosive skill
-	L"Мех", // mechanical skill
-	L"Мед", // medical skill};
+	L"РџРґРІ", // the abbreviated version of : agility
+	L"Р›РѕРІ", // dexterity
+	L"РЎРёР»", // strength
+	L"Р›РёРґ", // leadership
+	L"РњРґСЂ", // wisdom
+	L"РЈСЂРІ", // experience level
+	L"РњС‚Рє", // marksmanship skill
+	L"Р’Р·СЂ", // explosive skill
+	L"РњРµС…", // mechanical skill
+	L"РњРµРґ", // medical skill};
 };
 
 
 const wchar_t* pUpperLeftMapScreenStrings[] =
 {
-	L"Принадлежность", // the mercs current assignment
-	L"Контракт", // the contract info about the merc
-	L"Здоровье", // the health level of the current merc
-	L"Дух", // the morale of the current merc
-	L"Сост.",	// the condition of the current vehicle
-	L"Горючее",	// the fuel level of the current vehicle
+	L"РџСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ", // the mercs current assignment
+	L"РљРѕРЅС‚СЂР°РєС‚", // the contract info about the merc
+	L"Р—РґРѕСЂРѕРІСЊРµ", // the health level of the current merc
+	L"Р”СѓС…", // the morale of the current merc
+	L"РЎРѕСЃС‚.",	// the condition of the current vehicle
+	L"Р“РѕСЂСЋС‡РµРµ",	// the fuel level of the current vehicle
 };
 
 const wchar_t* pTrainingStrings[] =
 {
-	L"Практика", // tell merc to train self
-    L"Ополчение", // tell merc to train town
-	L"Тренер", // tell merc to act as trainer
-	L"Ученик", // tell merc to be train by other
+	L"РџСЂР°РєС‚РёРєР°", // tell merc to train self
+    L"РћРїРѕР»С‡РµРЅРёРµ", // tell merc to train town
+	L"РўСЂРµРЅРµСЂ", // tell merc to act as trainer
+	L"РЈС‡РµРЅРёРє", // tell merc to be train by other
 };
 
 const wchar_t* pGuardMenuStrings[] =
 {
-	L"Возм.стрелять:", // the allowable rate of fire for a merc who is guarding
-	L" Агрессивный огонь", // the merc can be aggressive in their choice of fire rates
-	L" Беречь патроны", // conserve ammo
-	L" Пока не стрелять", // fire only when the merc needs to
-	L"Другие опции:", // other options available to merc
-	L" Отступить", // merc can retreat
-	L" Искать укрытие",  // merc is allowed to seek cover
-	L" Можно помочь команде", // merc can assist teammates
-	L"Готово", // done with this menu
-	L"Отмена", // cancel this menu
+	L"Р’РѕР·Рј.СЃС‚СЂРµР»СЏС‚СЊ:", // the allowable rate of fire for a merc who is guarding
+	L" РђРіСЂРµСЃСЃРёРІРЅС‹Р№ РѕРіРѕРЅСЊ", // the merc can be aggressive in their choice of fire rates
+	L" Р‘РµСЂРµС‡СЊ РїР°С‚СЂРѕРЅС‹", // conserve ammo
+	L" РџРѕРєР° РЅРµ СЃС‚СЂРµР»СЏС‚СЊ", // fire only when the merc needs to
+	L"Р”СЂСѓРіРёРµ РѕРїС†РёРё:", // other options available to merc
+	L" РћС‚СЃС‚СѓРїРёС‚СЊ", // merc can retreat
+	L" РСЃРєР°С‚СЊ СѓРєСЂС‹С‚РёРµ",  // merc is allowed to seek cover
+	L" РњРѕР¶РЅРѕ РїРѕРјРѕС‡СЊ РєРѕРјР°РЅРґРµ", // merc can assist teammates
+	L"Р“РѕС‚РѕРІРѕ", // done with this menu
+	L"РћС‚РјРµРЅР°", // cancel this menu
 };
 
 // This string has the same comments as above, however the * denotes the option has been selected by the player
 
 const wchar_t* pOtherGuardMenuStrings[] =
 {
-	L"Тип Огня:",
-	L" *Агрессивный огонь*",
-	L" *Беречь патроны*",
-	L" *Воздерж.от стрельбы*",
-	L"Другие опции:",
-	L" *Отступить*",
-	L" *Искать укрытие*",
-	L" *Помочь команде*",
-	L"Готово",
-	L"Отмена",
+	L"РўРёРї РћРіРЅСЏ:",
+	L" *РђРіСЂРµСЃСЃРёРІРЅС‹Р№ РѕРіРѕРЅСЊ*",
+	L" *Р‘РµСЂРµС‡СЊ РїР°С‚СЂРѕРЅС‹*",
+	L" *Р’РѕР·РґРµСЂР¶.РѕС‚ СЃС‚СЂРµР»СЊР±С‹*",
+	L"Р”СЂСѓРіРёРµ РѕРїС†РёРё:",
+	L" *РћС‚СЃС‚СѓРїРёС‚СЊ*",
+	L" *РСЃРєР°С‚СЊ СѓРєСЂС‹С‚РёРµ*",
+	L" *РџРѕРјРѕС‡СЊ РєРѕРјР°РЅРґРµ*",
+	L"Р“РѕС‚РѕРІРѕ",
+	L"РћС‚РјРµРЅР°",
 };
 
 const wchar_t* pAssignMenuStrings[] =
 {
-	L"На службе", // merc is on active duty
-	L"Доктор", // the merc is acting as a doctor
-	L"Пациент", // the merc is receiving medical attention
-	L"Машина", // the merc is in a vehicle
-	L"Ремонт", // the merc is repairing items
-	L"Тренинг", // the merc is training
-	L"Отмена", // cancel this menu
+	L"РќР° СЃР»СѓР¶Р±Рµ", // merc is on active duty
+	L"Р”РѕРєС‚РѕСЂ", // the merc is acting as a doctor
+	L"РџР°С†РёРµРЅС‚", // the merc is receiving medical attention
+	L"РњР°С€РёРЅР°", // the merc is in a vehicle
+	L"Р РµРјРѕРЅС‚", // the merc is repairing items
+	L"РўСЂРµРЅРёРЅРі", // the merc is training
+	L"РћС‚РјРµРЅР°", // cancel this menu
 };
 
 const wchar_t* pRemoveMercStrings[] =
 {
-	L"Убрать мертвеца", // remove dead merc from current team
-	L"Отмена",
+	L"РЈР±СЂР°С‚СЊ РјРµСЂС‚РІРµС†Р°", // remove dead merc from current team
+	L"РћС‚РјРµРЅР°",
 };
 
 const wchar_t* pAttributeMenuStrings[] =
 {
-	L"Сила",
-	L"Ловкость",
-	L"Подвижность",
-	L"Здоровье",
-	L"Меткость",
-	L"Медицина",
-	L"Механика",
-	L"Лидерство",
-	L"Взрывник",
-	L"Отмена",
+	L"РЎРёР»Р°",
+	L"Р›РѕРІРєРѕСЃС‚СЊ",
+	L"РџРѕРґРІРёР¶РЅРѕСЃС‚СЊ",
+	L"Р—РґРѕСЂРѕРІСЊРµ",
+	L"РњРµС‚РєРѕСЃС‚СЊ",
+	L"РњРµРґРёС†РёРЅР°",
+	L"РњРµС…Р°РЅРёРєР°",
+	L"Р›РёРґРµСЂСЃС‚РІРѕ",
+	L"Р’Р·СЂС‹РІРЅРёРє",
+	L"РћС‚РјРµРЅР°",
 };
 
 const wchar_t* pTrainingMenuStrings[] =
 {
- L"Практика", // train yourself
- L"Ополч.", // train the town
- L"Тренер", // train your teammates
- L"Ученик",  // be trained by an instructor
- L"Отмена", // cancel this menu
+ L"РџСЂР°РєС‚РёРєР°", // train yourself
+ L"РћРїРѕР»С‡.", // train the town
+ L"РўСЂРµРЅРµСЂ", // train your teammates
+ L"РЈС‡РµРЅРёРє",  // be trained by an instructor
+ L"РћС‚РјРµРЅР°", // cancel this menu
 };
 
 
 const wchar_t* pSquadMenuStrings[] =
 {
-	L"Отряд  1",
-	L"Отряд  2",
-	L"Отряд  3",
-	L"Отряд  4",
-	L"Отряд  5",
-	L"Отряд  6",
-	L"Отряд  7",
-	L"Отряд  8",
-	L"Отряд  9",
-	L"Отряд 10",
-	L"Отряд 11",
-	L"Отряд 12",
-	L"Отряд 13",
-	L"Отряд 14",
-	L"Отряд 15",
-	L"Отряд 16",
-	L"Отряд 17",
-	L"Отряд 18",
-	L"Отряд 19",
-	L"Отряд 20",
-	L"Отмена",
+	L"РћС‚СЂСЏРґ  1",
+	L"РћС‚СЂСЏРґ  2",
+	L"РћС‚СЂСЏРґ  3",
+	L"РћС‚СЂСЏРґ  4",
+	L"РћС‚СЂСЏРґ  5",
+	L"РћС‚СЂСЏРґ  6",
+	L"РћС‚СЂСЏРґ  7",
+	L"РћС‚СЂСЏРґ  8",
+	L"РћС‚СЂСЏРґ  9",
+	L"РћС‚СЂСЏРґ 10",
+	L"РћС‚СЂСЏРґ 11",
+	L"РћС‚СЂСЏРґ 12",
+	L"РћС‚СЂСЏРґ 13",
+	L"РћС‚СЂСЏРґ 14",
+	L"РћС‚СЂСЏРґ 15",
+	L"РћС‚СЂСЏРґ 16",
+	L"РћС‚СЂСЏРґ 17",
+	L"РћС‚СЂСЏРґ 18",
+	L"РћС‚СЂСЏРґ 19",
+	L"РћС‚СЂСЏРґ 20",
+	L"РћС‚РјРµРЅР°",
 };
 
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Здоровье: ", // health of merc
-	L"Подвижность: ",
-	L"Ловкость: ",
-	L"Сила: ",
-	L"Лидерство: ",
-	L"Мудрость: ",
-	L"Опытность: ", // experience level
-	L"Меткость: ",
-	L"Механика: ",
-	L"Взрывник.: ",
-	L"Медицина: ",
-	L"Мед.депозит: ", // amount of medical deposit put down on the merc
-	L"Контракт: ", // cost of current contract
-	L"Убийства: ", // number of kills by merc
-	L"Помощники: ", // number of assists on kills by merc
-	L"Цена в день:", // daily cost of merc
-	L"Общая стоимость:", // total cost of merc
-	L"Контракт:", // cost of current contract
-	L"Все услуги:", // total service rendered by merc
-	L"Долги по з/п:", // amount left on MERC merc to be paid
-	L"Проц.попаданий:", // percentage of shots that hit target
-	L"Битвы:", // number of battles fought
-	L"Кол-во ран:", // number of times merc has been wounded
-	L"Навыки:",
-	L"Нет навыков",
+	L"Р—РґРѕСЂРѕРІСЊРµ: ", // health of merc
+	L"РџРѕРґРІРёР¶РЅРѕСЃС‚СЊ: ",
+	L"Р›РѕРІРєРѕСЃС‚СЊ: ",
+	L"РЎРёР»Р°: ",
+	L"Р›РёРґРµСЂСЃС‚РІРѕ: ",
+	L"РњСѓРґСЂРѕСЃС‚СЊ: ",
+	L"РћРїС‹С‚РЅРѕСЃС‚СЊ: ", // experience level
+	L"РњРµС‚РєРѕСЃС‚СЊ: ",
+	L"РњРµС…Р°РЅРёРєР°: ",
+	L"Р’Р·СЂС‹РІРЅРёРє.: ",
+	L"РњРµРґРёС†РёРЅР°: ",
+	L"РњРµРґ.РґРµРїРѕР·РёС‚: ", // amount of medical deposit put down on the merc
+	L"РљРѕРЅС‚СЂР°РєС‚: ", // cost of current contract
+	L"РЈР±РёР№СЃС‚РІР°: ", // number of kills by merc
+	L"РџРѕРјРѕС‰РЅРёРєРё: ", // number of assists on kills by merc
+	L"Р¦РµРЅР° РІ РґРµРЅСЊ:", // daily cost of merc
+	L"РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ:", // total cost of merc
+	L"РљРѕРЅС‚СЂР°РєС‚:", // cost of current contract
+	L"Р’СЃРµ СѓСЃР»СѓРіРё:", // total service rendered by merc
+	L"Р”РѕР»РіРё РїРѕ Р·/Рї:", // amount left on MERC merc to be paid
+	L"РџСЂРѕС†.РїРѕРїР°РґР°РЅРёР№:", // percentage of shots that hit target
+	L"Р‘РёС‚РІС‹:", // number of battles fought
+	L"РљРѕР»-РІРѕ СЂР°РЅ:", // number of times merc has been wounded
+	L"РќР°РІС‹РєРё:",
+	L"РќРµС‚ РЅР°РІС‹РєРѕРІ",
 };
 
 
 //These string correspond to enums used in by the SkillTrait enums in SoldierProfileType.h
 const wchar_t* gzMercSkillText[] =
 {
-	L"Нет навыков",
-	L"Раб.с отмычкой",
-	L"Плечом к плечу",
-	L"Электроника",
-	L"Ночные опер.",
-	L"Броски",
-	L"Обучение",
-	L"Тяж.оружие",
-	L"Автом.оружие",
-	L"Скрытный",
-	L"Оч.проворный",
-	L"Вор",
-	L"Военное иск-во",
-	L"Метание ножа",
-	L"Стрельба с крыши",
-	L"Маскировка",
-	L"(Эксперт)",
+	L"РќРµС‚ РЅР°РІС‹РєРѕРІ",
+	L"Р Р°Р±.СЃ РѕС‚РјС‹С‡РєРѕР№",
+	L"РџР»РµС‡РѕРј Рє РїР»РµС‡Сѓ",
+	L"Р­Р»РµРєС‚СЂРѕРЅРёРєР°",
+	L"РќРѕС‡РЅС‹Рµ РѕРїРµСЂ.",
+	L"Р‘СЂРѕСЃРєРё",
+	L"РћР±СѓС‡РµРЅРёРµ",
+	L"РўСЏР¶.РѕСЂСѓР¶РёРµ",
+	L"РђРІС‚РѕРј.РѕСЂСѓР¶РёРµ",
+	L"РЎРєСЂС‹С‚РЅС‹Р№",
+	L"РћС‡.РїСЂРѕРІРѕСЂРЅС‹Р№",
+	L"Р’РѕСЂ",
+	L"Р’РѕРµРЅРЅРѕРµ РёСЃРє-РІРѕ",
+	L"РњРµС‚Р°РЅРёРµ РЅРѕР¶Р°",
+	L"РЎС‚СЂРµР»СЊР±Р° СЃ РєСЂС‹С€Рё",
+	L"РњР°СЃРєРёСЂРѕРІРєР°",
+	L"(Р­РєСЃРїРµСЂС‚)",
 };
 
 
@@ -710,306 +710,306 @@ const wchar_t* gzMercSkillText[] =
 
 const wchar_t* pTacticalPopupButtonStrings[] =
 {
-	L"Стоять/Идти (|S)",
-	L"Cогнуться/Красться (|C)",
-	L"Стоять/Бежать (|R)"
-	L"Лечь/Ползти (|P)",
-	L"Смотреть (|L)",
-	L"Действие",
-	L"Разговор",
-	L"Проверить (|C|t|r|l)",
+	L"РЎС‚РѕСЏС‚СЊ/РРґС‚Рё (|S)",
+	L"CРѕРіРЅСѓС‚СЊСЃСЏ/РљСЂР°СЃС‚СЊСЃСЏ (|C)",
+	L"РЎС‚РѕСЏС‚СЊ/Р‘РµР¶Р°С‚СЊ (|R)"
+	L"Р›РµС‡СЊ/РџРѕР»Р·С‚Рё (|P)",
+	L"РЎРјРѕС‚СЂРµС‚СЊ (|L)",
+	L"Р”РµР№СЃС‚РІРёРµ",
+	L"Р Р°Р·РіРѕРІРѕСЂ",
+	L"РџСЂРѕРІРµСЂРёС‚СЊ (|C|t|r|l)",
 
 	// Pop up door menu
-	L"Открыть вручную",
-	L"Поиск ловушек",
-	L"Поиск ловушек",
-	L"Разрядить ловушки",
-	L"Силой",
-	L"Минировать",
-	L"Открыть",
-	L"Отмычкой",
-	L"Исп.взрывчатку",
-	L"Ломом",
-	L"Отмена(|E|s|c)"
+	L"РћС‚РєСЂС‹С‚СЊ РІСЂСѓС‡РЅСѓСЋ",
+	L"РџРѕРёСЃРє Р»РѕРІСѓС€РµРє",
+	L"РџРѕРёСЃРє Р»РѕРІСѓС€РµРє",
+	L"Р Р°Р·СЂСЏРґРёС‚СЊ Р»РѕРІСѓС€РєРё",
+	L"РЎРёР»РѕР№",
+	L"РњРёРЅРёСЂРѕРІР°С‚СЊ",
+	L"РћС‚РєСЂС‹С‚СЊ",
+	L"РћС‚РјС‹С‡РєРѕР№",
+	L"РСЃРї.РІР·СЂС‹РІС‡Р°С‚РєСѓ",
+	L"Р›РѕРјРѕРј",
+	L"РћС‚РјРµРЅР°(|E|s|c)"
 };
 
 // Door Traps. When we examine a door, it could have a particular trap on it. These are the traps.
 
 const wchar_t* pDoorTrapStrings[] =
 {
-	L"Ловушек нет",
-	L"Бомба-Ловушка",
-	L"Электроловушка",
-	L"Ловушка-Сирена",
-	L"Тихая сигнализация"
+	L"Р›РѕРІСѓС€РµРє РЅРµС‚",
+	L"Р‘РѕРјР±Р°-Р›РѕРІСѓС€РєР°",
+	L"Р­Р»РµРєС‚СЂРѕР»РѕРІСѓС€РєР°",
+	L"Р›РѕРІСѓС€РєР°-РЎРёСЂРµРЅР°",
+	L"РўРёС…Р°СЏ СЃРёРіРЅР°Р»РёР·Р°С†РёСЏ"
 };
 
 // On the map screen, there are four columns. This text is popup help text that identifies the individual columns.
 
 const wchar_t* pMapScreenMouseRegionHelpText[] =
 {
-	L"Выбрать наемника",
-	L"Назначить наемника",
-	L"Направить",
-	L"Наемн |Контракт (|C)",
-	L"Убрать наемн",
-	L"Спать",
+	L"Р’С‹Р±СЂР°С‚СЊ РЅР°РµРјРЅРёРєР°",
+	L"РќР°Р·РЅР°С‡РёС‚СЊ РЅР°РµРјРЅРёРєР°",
+	L"РќР°РїСЂР°РІРёС‚СЊ",
+	L"РќР°РµРјРЅ |РљРѕРЅС‚СЂР°РєС‚ (|C)",
+	L"РЈР±СЂР°С‚СЊ РЅР°РµРјРЅ",
+	L"РЎРїР°С‚СЊ",
 };
 
 // volumes of noises
 
 const wchar_t* pNoiseVolStr[] =
 {
-	L"ТИХИЙ",
-	L"ЧЕТКИЙ",
-	L"ГРОМКИЙ",
-	L"ОЧ.ГРОМКИЙ"
+	L"РўРРҐРР™",
+	L"Р§Р•РўРљРР™",
+	L"Р“Р РћРњРљРР™",
+	L"РћР§.Р“Р РћРњРљРР™"
 };
 
 // types of noises
 
 const wchar_t* pNoiseTypeStr[] = // OBSOLETE
 {
-	L"НЕЗНАКОМЫЙ",
-	L"звук ДВИЖЕНИЯ",
-	L"СКРИП",
-	L"ПЛЕСК",
-	L"УДАР",
-	L"ВЫСТРЕЛ",
-	L"ВЗРЫВ",
-	L"КРИК",
-	L"УДАР",
-	L"УДАР",
-	L"ЗВОН",
-	L"ГРОХОТ"
+	L"РќР•Р—РќРђРљРћРњР«Р™",
+	L"Р·РІСѓРє Р”Р’РР–Р•РќРРЇ",
+	L"РЎРљР РРџ",
+	L"РџР›Р•РЎРљ",
+	L"РЈР”РђР ",
+	L"Р’Р«РЎРўР Р•Р›",
+	L"Р’Р—Р Р«Р’",
+	L"РљР РРљ",
+	L"РЈР”РђР ",
+	L"РЈР”РђР ",
+	L"Р—Р’РћРќ",
+	L"Р“Р РћРҐРћРў"
 };
 
 // Directions that are used to report noises
 
 const wchar_t* pDirectionStr[] =
 {
-	L"СЕВ-ВОСТОК",
-	L"ВОСТОК",
-	L"ЮГО-ВОСТОК",
-	L"ЮГ",
-	L"ЮГО-ЗАПАД",
-	L"ЗАПАД",
-	L"СЕВ-ЗАПАД",
-	L"СЕВЕР"
+	L"РЎР•Р’-Р’РћРЎРўРћРљ",
+	L"Р’РћРЎРўРћРљ",
+	L"Р®Р“Рћ-Р’РћРЎРўРћРљ",
+	L"Р®Р“",
+	L"Р®Р“Рћ-Р—РђРџРђР”",
+	L"Р—РђРџРђР”",
+	L"РЎР•Р’-Р—РђРџРђР”",
+	L"РЎР•Р’Р•Р "
 };
 
 // These are the different terrain types.
 
 const wchar_t* pLandTypeStrings[] =
 {
-	L"Город",
-	L"Дорога",
-	L"Равнина",
-	L"Пустыня",
-	L"Леса",
-	L"Роща",
-	L"Болото",
-	L"Вода",
-	L"Холмы",
-	L"Непроходимо",
-	L"Река",	//river from north to south
-	L"Река",	//river from east to west
-	L"Чужая страна",
+	L"Р“РѕСЂРѕРґ",
+	L"Р”РѕСЂРѕРіР°",
+	L"Р Р°РІРЅРёРЅР°",
+	L"РџСѓСЃС‚С‹РЅСЏ",
+	L"Р›РµСЃР°",
+	L"Р РѕС‰Р°",
+	L"Р‘РѕР»РѕС‚Рѕ",
+	L"Р’РѕРґР°",
+	L"РҐРѕР»РјС‹",
+	L"РќРµРїСЂРѕС…РѕРґРёРјРѕ",
+	L"Р РµРєР°",	//river from north to south
+	L"Р РµРєР°",	//river from east to west
+	L"Р§СѓР¶Р°СЏ СЃС‚СЂР°РЅР°",
 	//NONE of the following are used for directional travel, just for the sector description.
-	L"Тропики",
-	L"Фермы",
-	L"Поля, дорога",
-	L"Леса, дорога",
-	L"Фермы, дорога",
-	L"Тропики,дорога",
-	L"Роща, дорога",
-	L"Берег",
-	L"Гора, дорога",
-	L"Побережье,дорога",
-	L"Пустыня, дорога",
-	L"Болото, дорога",
-	L"Леса,ПВО",
-	L"Пустыня,ПВО",
-	L"Тропики,ПВО",
-	L"Медуна,ПВО",
+	L"РўСЂРѕРїРёРєРё",
+	L"Р¤РµСЂРјС‹",
+	L"РџРѕР»СЏ, РґРѕСЂРѕРіР°",
+	L"Р›РµСЃР°, РґРѕСЂРѕРіР°",
+	L"Р¤РµСЂРјС‹, РґРѕСЂРѕРіР°",
+	L"РўСЂРѕРїРёРєРё,РґРѕСЂРѕРіР°",
+	L"Р РѕС‰Р°, РґРѕСЂРѕРіР°",
+	L"Р‘РµСЂРµРі",
+	L"Р“РѕСЂР°, РґРѕСЂРѕРіР°",
+	L"РџРѕР±РµСЂРµР¶СЊРµ,РґРѕСЂРѕРіР°",
+	L"РџСѓСЃС‚С‹РЅСЏ, РґРѕСЂРѕРіР°",
+	L"Р‘РѕР»РѕС‚Рѕ, РґРѕСЂРѕРіР°",
+	L"Р›РµСЃР°,РџР’Рћ",
+	L"РџСѓСЃС‚С‹РЅСЏ,РџР’Рћ",
+	L"РўСЂРѕРїРёРєРё,РџР’Рћ",
+	L"РњРµРґСѓРЅР°,РџР’Рћ",
 
 	//These are descriptions for special sectors
-	L"Госпит.Камбрии",
-	L"Аэроп.Драссена",
-	L"Аэроп.Медуны",
-	L"ПВО",
-	L"База повстанц.", //The rebel base underground in sector A10
-	L"Подзем.Тиксы",	//The basement of the Tixa Prison (J9)
-	L"Логово существ",	//Any mine sector with creatures in it
-	L"Подвалы Орты",	//The basement of Orta (K4)
-	L"Туннель",				//The tunnel access from the maze garden in Meduna
+	L"Р“РѕСЃРїРёС‚.РљР°РјР±СЂРёРё",
+	L"РђСЌСЂРѕРї.Р”СЂР°СЃСЃРµРЅР°",
+	L"РђСЌСЂРѕРї.РњРµРґСѓРЅС‹",
+	L"РџР’Рћ",
+	L"Р‘Р°Р·Р° РїРѕРІСЃС‚Р°РЅС†.", //The rebel base underground in sector A10
+	L"РџРѕРґР·РµРј.РўРёРєСЃС‹",	//The basement of the Tixa Prison (J9)
+	L"Р›РѕРіРѕРІРѕ СЃСѓС‰РµСЃС‚РІ",	//Any mine sector with creatures in it
+	L"РџРѕРґРІР°Р»С‹ РћСЂС‚С‹",	//The basement of Orta (K4)
+	L"РўСѓРЅРЅРµР»СЊ",				//The tunnel access from the maze garden in Meduna
 										//leading to the secret shelter underneath the palace
-	L"Убежище",				//The shelter underneath the queen's palace
+	L"РЈР±РµР¶РёС‰Рµ",				//The shelter underneath the queen's palace
 	L"",							//Unused
 };
 
 const wchar_t* gpStrategicString[] =
 {
 	L"",	//Unused
-	L"%ls обнаружен в секторе %c%d и вот-вот прибудет еще один отряд.",	//STR_DETECTED_SINGULAR
-	L"%ls обнаружен в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
-	L"Вы хотите координировать одновременное прибытие?",													//STR_COORDINATE
+	L"%ls РѕР±РЅР°СЂСѓР¶РµРЅ РІ СЃРµРєС‚РѕСЂРµ %c%d Рё РІРѕС‚-РІРѕС‚ РїСЂРёР±СѓРґРµС‚ РµС‰Рµ РѕРґРёРЅ РѕС‚СЂСЏРґ.",	//STR_DETECTED_SINGULAR
+	L"%ls РѕР±РЅР°СЂСѓР¶РµРЅ РІ СЃРµРєС‚РѕСЂРµ %c%d Рё РІРѕС‚-РІРѕС‚ РїСЂРёР±СѓРґСѓС‚ РµС‰Рµ РѕС‚СЂСЏРґС‹.",	//STR_DETECTED_PLURAL
+	L"Р’С‹ С…РѕС‚РёС‚Рµ РєРѕРѕСЂРґРёРЅРёСЂРѕРІР°С‚СЊ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕРµ РїСЂРёР±С‹С‚РёРµ?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
 
-	L"Враг дает шанс сдаться.",			//STR_ENEMY_SURRENDER_OFFER
-	L"Враг захватил вашего наемника, который пребывает без сознания.",	//STR_ENEMY_CAPTURED
+	L"Р’СЂР°Рі РґР°РµС‚ С€Р°РЅСЃ СЃРґР°С‚СЊСЃСЏ.",			//STR_ENEMY_SURRENDER_OFFER
+	L"Р’СЂР°Рі Р·Р°С…РІР°С‚РёР» РІР°С€РµРіРѕ РЅР°РµРјРЅРёРєР°, РєРѕС‚РѕСЂС‹Р№ РїСЂРµР±С‹РІР°РµС‚ Р±РµР· СЃРѕР·РЅР°РЅРёСЏ.",	//STR_ENEMY_CAPTURED
 
 	//The text that goes on the autoresolve buttons
 
-	L"Отступл.", 		//The retreat button				//STR_AR_RETREAT_BUTTON
-	L"Готово",		//The done button				//STR_AR_DONE_BUTTON
+	L"РћС‚СЃС‚СѓРїР».", 		//The retreat button				//STR_AR_RETREAT_BUTTON
+	L"Р“РѕС‚РѕРІРѕ",		//The done button				//STR_AR_DONE_BUTTON
 
 	//The headers are for the autoresolve type (MUST BE UPPERCASE)
 
-	L"ЗАЩИТА",								//STR_AR_DEFEND_HEADER
-	L"АТАКА",								//STR_AR_ATTACK_HEADER
-	L"СТЫЧКА",								//STR_AR_ENCOUNTER_HEADER
-	L"Сектор",		//The Sector A9 part of the header		//STR_AR_SECTOR_HEADER
+	L"Р—РђР©РРўРђ",								//STR_AR_DEFEND_HEADER
+	L"РђРўРђРљРђ",								//STR_AR_ATTACK_HEADER
+	L"РЎРўР«Р§РљРђ",								//STR_AR_ENCOUNTER_HEADER
+	L"РЎРµРєС‚РѕСЂ",		//The Sector A9 part of the header		//STR_AR_SECTOR_HEADER
 
 	//The battle ending conditions
 
-	L"ПОБЕДА!",								//STR_AR_OVER_VICTORY
-	L"ЗАЩИТА!",								//STR_AR_OVER_DEFEAT
-	L"СДАЛСЯ!",							//STR_AR_OVER_SURRENDERED
-	L"ЗАХВАЧЕН!",								//STR_AR_OVER_CAPTURED
-	L"ОТСТУПИЛ!",								//STR_AR_OVER_RETREATED
+	L"РџРћР‘Р•Р”Рђ!",								//STR_AR_OVER_VICTORY
+	L"Р—РђР©РРўРђ!",								//STR_AR_OVER_DEFEAT
+	L"РЎР”РђР›РЎРЇ!",							//STR_AR_OVER_SURRENDERED
+	L"Р—РђРҐР’РђР§Р•Рќ!",								//STR_AR_OVER_CAPTURED
+	L"РћРўРЎРўРЈРџРР›!",								//STR_AR_OVER_RETREATED
 
 	//These are the labels for the different types of enemies we fight in autoresolve.
 
-	L"Ополчен",							//STR_AR_MILITIA_NAME,
-	L"Элита",								//STR_AR_ELITE_NAME,
-	L"Войско",								//STR_AR_TROOP_NAME,
-	L"Админ",								//STR_AR_ADMINISTRATOR_NAME,
-	L"Существо",								//STR_AR_CREATURE_NAME,
+	L"РћРїРѕР»С‡РµРЅ",							//STR_AR_MILITIA_NAME,
+	L"Р­Р»РёС‚Р°",								//STR_AR_ELITE_NAME,
+	L"Р’РѕР№СЃРєРѕ",								//STR_AR_TROOP_NAME,
+	L"РђРґРјРёРЅ",								//STR_AR_ADMINISTRATOR_NAME,
+	L"РЎСѓС‰РµСЃС‚РІРѕ",								//STR_AR_CREATURE_NAME,
 
 	//Label for the length of time the battle took
 
-	L"Время истекло",							//STR_AR_TIME_ELAPSED,
+	L"Р’СЂРµРјСЏ РёСЃС‚РµРєР»Рѕ",							//STR_AR_TIME_ELAPSED,
 
 	//Labels for status of merc if retreating.  (UPPERCASE)
 
-	L"ОТСТУПИЛ",								//STR_AR_MERC_RETREATED,
-	L"ОТСТУПАЕТ",								//STR_AR_MERC_RETREATING,
-	L"ОТСТУПЛЕНИЕ",								//STR_AR_MERC_RETREAT,
+	L"РћРўРЎРўРЈРџРР›",								//STR_AR_MERC_RETREATED,
+	L"РћРўРЎРўРЈРџРђР•Рў",								//STR_AR_MERC_RETREATING,
+	L"РћРўРЎРўРЈРџР›Р•РќРР•",								//STR_AR_MERC_RETREAT,
 
 	//PRE BATTLE INTERFACE STRINGS
 	//Goes on the three buttons in the prebattle interface.  The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
 
-	L"Авто битва",							//STR_PB_AUTORESOLVE_BTN,
-	L"Идти в Сектор",							//STR_PB_GOTOSECTOR_BTN,
-	L"Отступить",							//STR_PB_RETREATMERCS_BTN,
+	L"РђРІС‚Рѕ Р±РёС‚РІР°",							//STR_PB_AUTORESOLVE_BTN,
+	L"РРґС‚Рё РІ РЎРµРєС‚РѕСЂ",							//STR_PB_GOTOSECTOR_BTN,
+	L"РћС‚СЃС‚СѓРїРёС‚СЊ",							//STR_PB_RETREATMERCS_BTN,
 
 	//The different headers(titles) for the prebattle interface.
-	L"СТЫЧКА",									//STR_PB_ENEMYENCOUNTER_HEADER,
-	L"ВРАЖЕСК. ЗАХВАТ",							//STR_PB_ENEMYINVASION_HEADER, // 30
-	L"ВРАЖ. ЗАСАДА",							//STR_PB_ENEMYAMBUSH_HEADER
-	L"ВСТУПИТЬ ВО ВРАЖ. СЕКТОР",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
-	L"АТАКА СУЩЕСТВ",							//STR_PB_CREATUREATTACK_HEADER
-	L"ЗАСАДА КОШКИ",							//STR_PB_BLOODCATAMBUSH_HEADER
-	L"ИДТИ В ЛОГОВО КОШКИ-УБИЙЦЫ",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
+	L"РЎРўР«Р§РљРђ",									//STR_PB_ENEMYENCOUNTER_HEADER,
+	L"Р’Р РђР–Р•РЎРљ. Р—РђРҐР’РђРў",							//STR_PB_ENEMYINVASION_HEADER, // 30
+	L"Р’Р РђР–. Р—РђРЎРђР”Рђ",							//STR_PB_ENEMYAMBUSH_HEADER
+	L"Р’РЎРўРЈРџРРўР¬ Р’Рћ Р’Р РђР–. РЎР•РљРўРћР ",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
+	L"РђРўРђРљРђ РЎРЈР©Р•РЎРўР’",							//STR_PB_CREATUREATTACK_HEADER
+	L"Р—РђРЎРђР”Рђ РљРћРЁРљР",							//STR_PB_BLOODCATAMBUSH_HEADER
+	L"РР”РўР Р’ Р›РћР“РћР’Рћ РљРћРЁРљР-РЈР‘РР™Р¦Р«",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
 	//Various single words for direct translation.  The Civilians represent the civilian
 	//militia occupying the sector being attacked.  Limited to 9-10 chars
 
-	L"Место",
-	L"Враги",
-	L"Наемники",
-	L"Ополчение",
-	L"Существа",
-	L"Кошки-уб",
-	L"Сектор",
-	L"Никого",		//If there are no uninvolved mercs in this fight.
-	L"Н/П",			//Acronym of Not Applicable
-	L"д",			//One letter abbreviation of day
-	L"ч",			//One letter abbreviation of hour
+	L"РњРµСЃС‚Рѕ",
+	L"Р’СЂР°РіРё",
+	L"РќР°РµРјРЅРёРєРё",
+	L"РћРїРѕР»С‡РµРЅРёРµ",
+	L"РЎСѓС‰РµСЃС‚РІР°",
+	L"РљРѕС€РєРё-СѓР±",
+	L"РЎРµРєС‚РѕСЂ",
+	L"РќРёРєРѕРіРѕ",		//If there are no uninvolved mercs in this fight.
+	L"Рќ/Рџ",			//Acronym of Not Applicable
+	L"Рґ",			//One letter abbreviation of day
+	L"С‡",			//One letter abbreviation of hour
 
 	//TACTICAL PLACEMENT USER INTERFACE STRINGS
 	//The four buttons
 
-	L"Очистить",
-	L"Вручную",
-	L"Группа",
-	L"Готово",
+	L"РћС‡РёСЃС‚РёС‚СЊ",
+	L"Р’СЂСѓС‡РЅСѓСЋ",
+	L"Р“СЂСѓРїРїР°",
+	L"Р“РѕС‚РѕРІРѕ",
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"Убрать позиции наемников\nдля повторного их ввода ( |C).",
-	L"Рассредоточить наемников вручную (|S).",
-	L"Выбрать место сбора наемников (|G).",
-	L"Нажмите эту кнопку, когда закончите\nвыбор позиций для наемников. (|E|n|t|e|r)",
-	L"Вы должны разместить всех наемн.\nперед началом битвы.",
+	L"РЈР±СЂР°С‚СЊ РїРѕР·РёС†РёРё РЅР°РµРјРЅРёРєРѕРІ\nРґР»СЏ РїРѕРІС‚РѕСЂРЅРѕРіРѕ РёС… РІРІРѕРґР° ( |C).",
+	L"Р Р°СЃСЃСЂРµРґРѕС‚РѕС‡РёС‚СЊ РЅР°РµРјРЅРёРєРѕРІ РІСЂСѓС‡РЅСѓСЋ (|S).",
+	L"Р’С‹Р±СЂР°С‚СЊ РјРµСЃС‚Рѕ СЃР±РѕСЂР° РЅР°РµРјРЅРёРєРѕРІ (|G).",
+	L"РќР°Р¶РјРёС‚Рµ СЌС‚Сѓ РєРЅРѕРїРєСѓ, РєРѕРіРґР° Р·Р°РєРѕРЅС‡РёС‚Рµ\nРІС‹Р±РѕСЂ РїРѕР·РёС†РёР№ РґР»СЏ РЅР°РµРјРЅРёРєРѕРІ. (|E|n|t|e|r)",
+	L"Р’С‹ РґРѕР»Р¶РЅС‹ СЂР°Р·РјРµСЃС‚РёС‚СЊ РІСЃРµС… РЅР°РµРјРЅ.\nРїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј Р±РёС‚РІС‹.",
 
 	//Various strings (translate word for word)
 
-	L"Сектор",
-	L"Выбрать место входа",
+	L"РЎРµРєС‚РѕСЂ",
+	L"Р’С‹Р±СЂР°С‚СЊ РјРµСЃС‚Рѕ РІС…РѕРґР°",
 
 	//Strings used for various popup message boxes.  Can be as long as desired.
 
-	L"Выглядит непривлекательно. Место недоступно. Выберите другое место.",
-	L"Поместите своих наемников в выделенное место на карте.",
+	L"Р’С‹РіР»СЏРґРёС‚ РЅРµРїСЂРёРІР»РµРєР°С‚РµР»СЊРЅРѕ. РњРµСЃС‚Рѕ РЅРµРґРѕСЃС‚СѓРїРЅРѕ. Р’С‹Р±РµСЂРёС‚Рµ РґСЂСѓРіРѕРµ РјРµСЃС‚Рѕ.",
+	L"РџРѕРјРµСЃС‚РёС‚Рµ СЃРІРѕРёС… РЅР°РµРјРЅРёРєРѕРІ РІ РІС‹РґРµР»РµРЅРЅРѕРµ РјРµСЃС‚Рѕ РЅР° РєР°СЂС‚Рµ.",
 
 	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
 	//Don't uppercase first character, or add spaces on either end.
 
-	L"прибыл в сектор",
+	L"РїСЂРёР±С‹Р» РІ СЃРµРєС‚РѕСЂ",
 
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
-	L"Битва разрешается автоматически\nбез загрузки карты(|A)",
-	L"Нельзя исп.авторазрешение когда\nигрок атакует.",
-	L"Войти в сектор:стычка с врагом (|E).",
-	L"Группа отступает в прежний сектор (|R).",				//singular version
-	L"Все группы отступают в прежние сектора (|R)", //multiple groups with same previous sector
+	L"Р‘РёС‚РІР° СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё\nР±РµР· Р·Р°РіСЂСѓР·РєРё РєР°СЂС‚С‹(|A)",
+	L"РќРµР»СЊР·СЏ РёСЃРї.Р°РІС‚РѕСЂР°Р·СЂРµС€РµРЅРёРµ РєРѕРіРґР°\nРёРіСЂРѕРє Р°С‚Р°РєСѓРµС‚.",
+	L"Р’РѕР№С‚Рё РІ СЃРµРєС‚РѕСЂ:СЃС‚С‹С‡РєР° СЃ РІСЂР°РіРѕРј (|E).",
+	L"Р“СЂСѓРїРїР° РѕС‚СЃС‚СѓРїР°РµС‚ РІ РїСЂРµР¶РЅРёР№ СЃРµРєС‚РѕСЂ (|R).",				//singular version
+	L"Р’СЃРµ РіСЂСѓРїРїС‹ РѕС‚СЃС‚СѓРїР°СЋС‚ РІ РїСЂРµР¶РЅРёРµ СЃРµРєС‚РѕСЂР° (|R)", //multiple groups with same previous sector
 //!!!What about repeated "R" as hotkey?
 	//various popup messages for battle conditions.
 
 	//%c%d is the sector -- ex:  A9
-	L"Враги атакуют ваше ополчение в секторе %c%d.",
-	//%c%d сектор -- напр:  A9
-	L"Существа атакуют ваше ополч.в секторе %c%d.",
+	L"Р’СЂР°РіРё Р°С‚Р°РєСѓСЋС‚ РІР°С€Рµ РѕРїРѕР»С‡РµРЅРёРµ РІ СЃРµРєС‚РѕСЂРµ %c%d.",
+	//%c%d СЃРµРєС‚РѕСЂ -- РЅР°РїСЂ:  A9
+	L"РЎСѓС‰РµСЃС‚РІР° Р°С‚Р°РєСѓСЋС‚ РІР°С€Рµ РѕРїРѕР»С‡.РІ СЃРµРєС‚РѕСЂРµ %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Существа атакуют и убивают %d жителей в секторе %ls.",
+	L"РЎСѓС‰РµСЃС‚РІР° Р°С‚Р°РєСѓСЋС‚ Рё СѓР±РёРІР°СЋС‚ %d Р¶РёС‚РµР»РµР№ РІ СЃРµРєС‚РѕСЂРµ %ls.",
 	//%ls is the sector location -- ex:  A9: Omerta
-	L"Враги атакуют ваших наемн.в секторе %ls. Никто из наемников не может драться!",
+	L"Р’СЂР°РіРё Р°С‚Р°РєСѓСЋС‚ РІР°С€РёС… РЅР°РµРјРЅ.РІ СЃРµРєС‚РѕСЂРµ %ls. РќРёРєС‚Рѕ РёР· РЅР°РµРјРЅРёРєРѕРІ РЅРµ РјРѕР¶РµС‚ РґСЂР°С‚СЊСЃСЏ!",
 	//%ls is the sector location -- ex:  A9: Omerta
-	L"Существа атакуют ваших наемн.в секторе%ls. Никто из наемников не может драться!",
+	L"РЎСѓС‰РµСЃС‚РІР° Р°С‚Р°РєСѓСЋС‚ РІР°С€РёС… РЅР°РµРјРЅ.РІ СЃРµРєС‚РѕСЂРµ%ls. РќРёРєС‚Рѕ РёР· РЅР°РµРјРЅРёРєРѕРІ РЅРµ РјРѕР¶РµС‚ РґСЂР°С‚СЊСЃСЏ!",
 
 };
 
 const wchar_t* gpGameClockString[] =
 {
 	//This is the day represented in the game clock.  Must be very short, 4 characters max.
-	L"День",
+	L"Р”РµРЅСЊ",
 };
 
 //When the merc finds a key, they can get a description of it which
 //tells them where and when they found it.
 const wchar_t* sKeyDescriptionStrings[2] =
 {
-	L"Сект.находки:",
-	L"День находки:",
+	L"РЎРµРєС‚.РЅР°С…РѕРґРєРё:",
+	L"Р”РµРЅСЊ РЅР°С…РѕРґРєРё:",
 };
 
 //The headers used to describe various weapon statistics.
 
 const wchar_t 	gWeaponStatsDesc[][ 14 ] =
 {
-	L"Вес (%ls):",
-	L"Статус:",
-	L"Пули:", 		// Number of bullets left in a magazine
-	L"Дист:",		// Range
-	L"Урон:",		// Damage
-	L"ОД:",			// abbreviation for Action Points
+	L"Р’РµСЃ (%ls):",
+	L"РЎС‚Р°С‚СѓСЃ:",
+	L"РџСѓР»Рё:", 		// Number of bullets left in a magazine
+	L"Р”РёСЃС‚:",		// Range
+	L"РЈСЂРѕРЅ:",		// Damage
+	L"РћР”:",			// abbreviation for Action Points
 	L"",
 	L"=",
 	L"=",
@@ -1019,15 +1019,15 @@ const wchar_t 	gWeaponStatsDesc[][ 14 ] =
 
 const wchar_t gMoneyStatsDesc[][ 13 ] =
 {
-	L"Кол-во",
-	L"Осталось:", //this is the overall balance
-	L"Кол-во",
-	L"Отделить:", // the amount he wants to separate from the overall balance to get two piles of money
+	L"РљРѕР»-РІРѕ",
+	L"РћСЃС‚Р°Р»РѕСЃСЊ:", //this is the overall balance
+	L"РљРѕР»-РІРѕ",
+	L"РћС‚РґРµР»РёС‚СЊ:", // the amount he wants to separate from the overall balance to get two piles of money
 
-	L"Текущий",
-	L"Баланс",
-	L"Кол-во",
-	L"Взять",
+	L"РўРµРєСѓС‰РёР№",
+	L"Р‘Р°Р»Р°РЅСЃ",
+	L"РљРѕР»-РІРѕ",
+	L"Р’Р·СЏС‚СЊ",
 };
 
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
@@ -1035,13 +1035,13 @@ const wchar_t gMoneyStatsDesc[][ 13 ] =
 
 const wchar_t zHealthStr[][13] =
 {
-	L"УМИРАЕТ",		//	>= 0
-	L"КРИТИЧЕН", 		//	>= 15
-	L"ПЛОХ",		//	>= 30
-	L"РАНЕН",    	//	>= 45
-	L"ЗДОРОВ",    	//	>= 60
-	L"СИЛЕН",     	// 	>= 75
-  L"ОТЛИЧНО",		// 	>= 90
+	L"РЈРњРР РђР•Рў",		//	>= 0
+	L"РљР РРўРР§Р•Рќ", 		//	>= 15
+	L"РџР›РћРҐ",		//	>= 30
+	L"Р РђРќР•Рќ",    	//	>= 45
+	L"Р—Р”РћР РћР’",    	//	>= 60
+	L"РЎРР›Р•Рќ",     	// 	>= 75
+  L"РћРўР›РР§РќРћ",		// 	>= 90
 };
 
 const wchar_t* gzMoneyAmounts[6] =
@@ -1049,45 +1049,45 @@ const wchar_t* gzMoneyAmounts[6] =
 	L"1000$",
 	L"100$",
 	L"10$",
-	L"Готово",
-	L"Отделить",
-	L"Взять"
+	L"Р“РѕС‚РѕРІРѕ",
+	L"РћС‚РґРµР»РёС‚СЊ",
+	L"Р’Р·СЏС‚СЊ"
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
 const wchar_t 	gzProsLabel[10] =
 {
-	L"За:",
+	L"Р—Р°:",
 };
 
 const wchar_t 	gzConsLabel[10] =
 {
-	L"Прот:",
+	L"РџСЂРѕС‚:",
 };
 
 //Conversation options a player has when encountering an NPC
 const wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 {
-	L"Еще раз?", 	//meaning "Repeat yourself"
-	L"Дружески",		//approach in a friendly
-	L"Прямо",		//approach directly - let's get down to business
-	L"Угрожать",		//approach threateningly - talk now, or I'll blow your face off
-	L"Дать",
-	L"Нанять"
+	L"Р•С‰Рµ СЂР°Р·?", 	//meaning "Repeat yourself"
+	L"Р”СЂСѓР¶РµСЃРєРё",		//approach in a friendly
+	L"РџСЂСЏРјРѕ",		//approach directly - let's get down to business
+	L"РЈРіСЂРѕР¶Р°С‚СЊ",		//approach threateningly - talk now, or I'll blow your face off
+	L"Р”Р°С‚СЊ",
+	L"РќР°РЅСЏС‚СЊ"
 };
 
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
 const wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 {
-	L"Куп/Прод",
-	L"Куп.",
-	L"Прод.",
-	L"Ремонт",
+	L"РљСѓРї/РџСЂРѕРґ",
+	L"РљСѓРї.",
+	L"РџСЂРѕРґ.",
+	L"Р РµРјРѕРЅС‚",
 };
 
 const wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] =
 {
-	L"Готово",
+	L"Р“РѕС‚РѕРІРѕ",
 };
 
 
@@ -1095,32 +1095,32 @@ const wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] =
 
 const wchar_t* pVehicleStrings[] =
 {
- L"Эльдорадо",
- L"Хаммер", // a hummer jeep/truck -- military vehicle
- L"Трак с морож",
- L"Джип",
- L"Танк",
- L"Вертолет",
+ L"Р­Р»СЊРґРѕСЂР°РґРѕ",
+ L"РҐР°РјРјРµСЂ", // a hummer jeep/truck -- military vehicle
+ L"РўСЂР°Рє СЃ РјРѕСЂРѕР¶",
+ L"Р”Р¶РёРї",
+ L"РўР°РЅРє",
+ L"Р’РµСЂС‚РѕР»РµС‚",
 };
 
 const wchar_t* pShortVehicleStrings[] =
 {
-	L"Эльдор",
-	L"Хаммер",			// the HMVV
-	L"Трак",
-	L"Джип",
-	L"Танк",
-	L"Верт", 				// the helicopter
+	L"Р­Р»СЊРґРѕСЂ",
+	L"РҐР°РјРјРµСЂ",			// the HMVV
+	L"РўСЂР°Рє",
+	L"Р”Р¶РёРї",
+	L"РўР°РЅРє",
+	L"Р’РµСЂС‚", 				// the helicopter
 };
 
 const wchar_t* zVehicleName[] =
 {
-	L"Эльдорадо",
-	L"Хаммер",		//a military jeep. This is a brand name.
-	L"Трак",			// Ice cream truck
-	L"Джип",
-	L"Танк",
-	L"Верт", 		//an abbreviation for Helicopter
+	L"Р­Р»СЊРґРѕСЂР°РґРѕ",
+	L"РҐР°РјРјРµСЂ",		//a military jeep. This is a brand name.
+	L"РўСЂР°Рє",			// Ice cream truck
+	L"Р”Р¶РёРї",
+	L"РўР°РЅРє",
+	L"Р’РµСЂС‚", 		//an abbreviation for Helicopter
 };
 
 
@@ -1128,255 +1128,255 @@ const wchar_t* zVehicleName[] =
 
 const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 {
-	L"Воздушный Рейд",
-	L"Оказывать перв.помощь сразу?",
+	L"Р’РѕР·РґСѓС€РЅС‹Р№ Р РµР№Рґ",
+	L"РћРєР°Р·С‹РІР°С‚СЊ РїРµСЂРІ.РїРѕРјРѕС‰СЊ СЃСЂР°Р·Сѓ?",
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	L"%ls замечает, что некоторые предметы не погрузили.",
+	L"%ls Р·Р°РјРµС‡Р°РµС‚, С‡С‚Рѕ РЅРµРєРѕС‚РѕСЂС‹Рµ РїСЂРµРґРјРµС‚С‹ РЅРµ РїРѕРіСЂСѓР·РёР»Рё.",
 
 	// The %ls is a string from pDoorTrapStrings
 
-	L"Замок (%ls).",
-	L"Тут нет замка.",
-	L"Успех!",
-	L"Провал.",
-	L"Успех!",
-	L"Провал",
-	L"Замок без ловушки",
-	L"Успех!",
+	L"Р—Р°РјРѕРє (%ls).",
+	L"РўСѓС‚ РЅРµС‚ Р·Р°РјРєР°.",
+	L"РЈСЃРїРµС…!",
+	L"РџСЂРѕРІР°Р».",
+	L"РЈСЃРїРµС…!",
+	L"РџСЂРѕРІР°Р»",
+	L"Р—Р°РјРѕРє Р±РµР· Р»РѕРІСѓС€РєРё",
+	L"РЈСЃРїРµС…!",
 	// The %ls is a merc name
-	L"%ls:нет нужного ключа",
-	L"Замок без ловушки",
-	L"Замок без ловушки",
-	L"Заперто",
-	L"ДВЕРЬ",
-	L"ЛОВУШКА",
-	L"ЗАПЕРТО",
-	L"НЕЗАПЕРТО",
-	L"РАЗГРОМЛЕНО",
-	L"Тут есть выключатель.Нажать?",
-	L"Разрядить ловушку?",
-	L"Пред...",
-	L"След...",
-	L"Еще...",
+	L"%ls:РЅРµС‚ РЅСѓР¶РЅРѕРіРѕ РєР»СЋС‡Р°",
+	L"Р—Р°РјРѕРє Р±РµР· Р»РѕРІСѓС€РєРё",
+	L"Р—Р°РјРѕРє Р±РµР· Р»РѕРІСѓС€РєРё",
+	L"Р—Р°РїРµСЂС‚Рѕ",
+	L"Р”Р’Р•Р Р¬",
+	L"Р›РћР’РЈРЁРљРђ",
+	L"Р—РђРџР•Р РўРћ",
+	L"РќР•Р—РђРџР•Р РўРћ",
+	L"Р РђР—Р“Р РћРњР›Р•РќРћ",
+	L"РўСѓС‚ РµСЃС‚СЊ РІС‹РєР»СЋС‡Р°С‚РµР»СЊ.РќР°Р¶Р°С‚СЊ?",
+	L"Р Р°Р·СЂСЏРґРёС‚СЊ Р»РѕРІСѓС€РєСѓ?",
+	L"РџСЂРµРґ...",
+	L"РЎР»РµРґ...",
+	L"Р•С‰Рµ...",
 
 	// In the next 2 strings, %ls is an item name
 
-	L"%ls помещен(а) на землю.",
-	L"%ls отдан(а) %ls.",
+	L"%ls РїРѕРјРµС‰РµРЅ(Р°) РЅР° Р·РµРјР»СЋ.",
+	L"%ls РѕС‚РґР°РЅ(Р°) %ls.",
 
 	// In the next 2 strings, %ls is a name
 
-	L"%ls.Оплачено сполна.",
-	L"%ls.Еще должен %d.",
-	L"Выбрать частоту детонатора:",  	//in this case, frequency refers to a radio signal
-	L"Кол-во ходов перед взрывом:",	//how much time, in turns, until the bomb blows
-	L"Устан.частоту дистанц.взрывателя:", 	//in this case, frequency refers to a radio signal
-	L"Разрядить ловушку?",
-	L"Убрать голубой флаг?",
-	L"Установить голубой флаг?",
-	L"Завершающий ход",
+	L"%ls.РћРїР»Р°С‡РµРЅРѕ СЃРїРѕР»РЅР°.",
+	L"%ls.Р•С‰Рµ РґРѕР»Р¶РµРЅ %d.",
+	L"Р’С‹Р±СЂР°С‚СЊ С‡Р°СЃС‚РѕС‚Сѓ РґРµС‚РѕРЅР°С‚РѕСЂР°:",  	//in this case, frequency refers to a radio signal
+	L"РљРѕР»-РІРѕ С…РѕРґРѕРІ РїРµСЂРµРґ РІР·СЂС‹РІРѕРј:",	//how much time, in turns, until the bomb blows
+	L"РЈСЃС‚Р°РЅ.С‡Р°СЃС‚РѕС‚Сѓ РґРёСЃС‚Р°РЅС†.РІР·СЂС‹РІР°С‚РµР»СЏ:", 	//in this case, frequency refers to a radio signal
+	L"Р Р°Р·СЂСЏРґРёС‚СЊ Р»РѕРІСѓС€РєСѓ?",
+	L"РЈР±СЂР°С‚СЊ РіРѕР»СѓР±РѕР№ С„Р»Р°Рі?",
+	L"РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РіРѕР»СѓР±РѕР№ С„Р»Р°Рі?",
+	L"Р—Р°РІРµСЂС€Р°СЋС‰РёР№ С…РѕРґ",
 
 	// In the next string, %ls is a name. Stance refers to way they are standing.
 
-	L"Уверен,что хочешь напасть на %ls ?",
-	L"Машина не может менять положения.",
-	L"Робот не может менять положения.",
+	L"РЈРІРµСЂРµРЅ,С‡С‚Рѕ С…РѕС‡РµС€СЊ РЅР°РїР°СЃС‚СЊ РЅР° %ls ?",
+	L"РњР°С€РёРЅР° РЅРµ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ РїРѕР»РѕР¶РµРЅРёСЏ.",
+	L"Р РѕР±РѕС‚ РЅРµ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ РїРѕР»РѕР¶РµРЅРёСЏ.",
 
 	// In the next 3 strings, %ls is a name
 
-	L"%ls не может поменять положение здесь.",
-	L"%ls не может получить перв.помощь.",
-	L"%ls не нуждается в перв.помощи.",
-	L"Туда идти нельзя.",
-	L"Команда набрана.Мест нет.",	//there's no room for a recruit on the player's team
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРјРµРЅСЏС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ Р·РґРµСЃСЊ.",
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕР»СѓС‡РёС‚СЊ РїРµСЂРІ.РїРѕРјРѕС‰СЊ.",
+	L"%ls РЅРµ РЅСѓР¶РґР°РµС‚СЃСЏ РІ РїРµСЂРІ.РїРѕРјРѕС‰Рё.",
+	L"РўСѓРґР° РёРґС‚Рё РЅРµР»СЊР·СЏ.",
+	L"РљРѕРјР°РЅРґР° РЅР°Р±СЂР°РЅР°.РњРµСЃС‚ РЅРµС‚.",	//there's no room for a recruit on the player's team
 
 	// In the next string, %ls is a name
 
-	L"%ls нанят.",
+	L"%ls РЅР°РЅСЏС‚.",
 
 	// Here %ls is a name and %d is a number
 
-	L"%ls должен получить $%d.",
+	L"%ls РґРѕР»Р¶РµРЅ РїРѕР»СѓС‡РёС‚СЊ $%d.",
 
 	// In the next string, %ls is a name
 
-	L"Сопров. %ls?",
+	L"РЎРѕРїСЂРѕРІ. %ls?",
 
 	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
 
-	L"Нанять %ls за %ls в день?",
+	L"РќР°РЅСЏС‚СЊ %ls Р·Р° %ls РІ РґРµРЅСЊ?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
-	L"Хотите драться?",
+	L"РҐРѕС‚РёС‚Рµ РґСЂР°С‚СЊСЃСЏ?",
 
 	// In the next string, the first %ls is an item name and the
 	// second %ls is an amount of money (including $ sign)
 
-	L"Купить %ls за %ls?",
+	L"РљСѓРїРёС‚СЊ %ls Р·Р° %ls?",
 
 	// In the next string, %ls is a name
 
-	L"%ls сопровожден в отряд %d.",
+	L"%ls СЃРѕРїСЂРѕРІРѕР¶РґРµРЅ РІ РѕС‚СЂСЏРґ %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
-	L"ЗАКЛИНИЛО",					//weapon is jammed.
-	L"Роботу нужно пули %ls калибра.",		//Robot is out of ammo
-	L"Бросить туда? Нет. Не выйдет.",		//Merc can't throw to the destination he selected
+	L"Р—РђРљР›РРќРР›Рћ",					//weapon is jammed.
+	L"Р РѕР±РѕС‚Сѓ РЅСѓР¶РЅРѕ РїСѓР»Рё %ls РєР°Р»РёР±СЂР°.",		//Robot is out of ammo
+	L"Р‘СЂРѕСЃРёС‚СЊ С‚СѓРґР°? РќРµС‚. РќРµ РІС‹Р№РґРµС‚.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
 
-	L"Скрытно (|Z)",
-	L"Окно карты (|M)",
-	L"Готово (|D)(Завершить ход)",
-	L"Говорить",
-	L"Без звука",
-	L"Подняться (|P|g|U|p)",
-	L"Поз.курсора(|T|a|b)",
-	L"Карабк./ Прыг.",
-	L"Опуститься (|P|g|D|n)",
-	L"Проверить (|C|t|r|l)",
-	L"Пред.наемник",
-	L"След.наемник (|S|p|a|c|e)",
-	L"Настройки (|O)",
-	L"Очередь (|B)",
-	L"Смотреть/Повернуться (|L)",
-	L"Здоровье: %d/%d\nЭнерг.: %d/%d\nДух: %ls",
-	L"Чего?",					//this means "what?"
-	L"Продолж.",					//an abbrieviation for "Continued"
-	L"Вкл.звук для %ls.",
-	L"Выкл.звук для %ls.",
-	L"Здоровье: %d/%d\nБенз: %d/%d",
-	L"Выйти из машины" ,
-	L"Поменять отряд ( |S|h|i|f|t |S|p|a|c|e )",
-	L"Ехать",
-	L"Н/П",						//this is an acronym for "Not Applicable."
-	L"Исп ( Рука в руке )",
-	L"Исп ( Огнестр.ор. )",
-	L"Исп ( Лезвие )",
-	L"Исп ( Взрывчатка )",
-	L"Исп ( Аптечка )",
-	L"(Поймать)",
-	L"(Перезарядить)",
-	L"(Дать)",
-	L"%ls отправлен.",
-	L"%ls прибыл.",
-	L"%ls:нет очков действия.",
-	L"%ls недоступен.",
-	L"%ls весь в бинтах.",
-	L"%ls:бинты сняты.",
-	L"Враг в секторе!",
-	L"Врага не видно.",
-	L"Не хватает очков действия.",
-	L"Никто не исп.дистанц.упр.",
-	L"Обойма опустела!",
-	L"СОЛДАТ",
-	L"РЕПТИОНЫ",
-	L"ОПОЛЧЕНИЕ",
-	L"ЖИТЕЛЬ",
-	L"Вход из сектора",
+	L"РЎРєСЂС‹С‚РЅРѕ (|Z)",
+	L"РћРєРЅРѕ РєР°СЂС‚С‹ (|M)",
+	L"Р“РѕС‚РѕРІРѕ (|D)(Р—Р°РІРµСЂС€РёС‚СЊ С…РѕРґ)",
+	L"Р“РѕРІРѕСЂРёС‚СЊ",
+	L"Р‘РµР· Р·РІСѓРєР°",
+	L"РџРѕРґРЅСЏС‚СЊСЃСЏ (|P|g|U|p)",
+	L"РџРѕР·.РєСѓСЂСЃРѕСЂР°(|T|a|b)",
+	L"РљР°СЂР°Р±Рє./ РџСЂС‹Рі.",
+	L"РћРїСѓСЃС‚РёС‚СЊСЃСЏ (|P|g|D|n)",
+	L"РџСЂРѕРІРµСЂРёС‚СЊ (|C|t|r|l)",
+	L"РџСЂРµРґ.РЅР°РµРјРЅРёРє",
+	L"РЎР»РµРґ.РЅР°РµРјРЅРёРє (|S|p|a|c|e)",
+	L"РќР°СЃС‚СЂРѕР№РєРё (|O)",
+	L"РћС‡РµСЂРµРґСЊ (|B)",
+	L"РЎРјРѕС‚СЂРµС‚СЊ/РџРѕРІРµСЂРЅСѓС‚СЊСЃСЏ (|L)",
+	L"Р—РґРѕСЂРѕРІСЊРµ: %d/%d\nР­РЅРµСЂРі.: %d/%d\nР”СѓС…: %ls",
+	L"Р§РµРіРѕ?",					//this means "what?"
+	L"РџСЂРѕРґРѕР»Р¶.",					//an abbrieviation for "Continued"
+	L"Р’РєР».Р·РІСѓРє РґР»СЏ %ls.",
+	L"Р’С‹РєР».Р·РІСѓРє РґР»СЏ %ls.",
+	L"Р—РґРѕСЂРѕРІСЊРµ: %d/%d\nР‘РµРЅР·: %d/%d",
+	L"Р’С‹Р№С‚Рё РёР· РјР°С€РёРЅС‹" ,
+	L"РџРѕРјРµРЅСЏС‚СЊ РѕС‚СЂСЏРґ ( |S|h|i|f|t |S|p|a|c|e )",
+	L"Р•С…Р°С‚СЊ",
+	L"Рќ/Рџ",						//this is an acronym for "Not Applicable."
+	L"РСЃРї ( Р СѓРєР° РІ СЂСѓРєРµ )",
+	L"РСЃРї ( РћРіРЅРµСЃС‚СЂ.РѕСЂ. )",
+	L"РСЃРї ( Р›РµР·РІРёРµ )",
+	L"РСЃРї ( Р’Р·СЂС‹РІС‡Р°С‚РєР° )",
+	L"РСЃРї ( РђРїС‚РµС‡РєР° )",
+	L"(РџРѕР№РјР°С‚СЊ)",
+	L"(РџРµСЂРµР·Р°СЂСЏРґРёС‚СЊ)",
+	L"(Р”Р°С‚СЊ)",
+	L"%ls РѕС‚РїСЂР°РІР»РµРЅ.",
+	L"%ls РїСЂРёР±С‹Р».",
+	L"%ls:РЅРµС‚ РѕС‡РєРѕРІ РґРµР№СЃС‚РІРёСЏ.",
+	L"%ls РЅРµРґРѕСЃС‚СѓРїРµРЅ.",
+	L"%ls РІРµСЃСЊ РІ Р±РёРЅС‚Р°С….",
+	L"%ls:Р±РёРЅС‚С‹ СЃРЅСЏС‚С‹.",
+	L"Р’СЂР°Рі РІ СЃРµРєС‚РѕСЂРµ!",
+	L"Р’СЂР°РіР° РЅРµ РІРёРґРЅРѕ.",
+	L"РќРµ С…РІР°С‚Р°РµС‚ РѕС‡РєРѕРІ РґРµР№СЃС‚РІРёСЏ.",
+	L"РќРёРєС‚Рѕ РЅРµ РёСЃРї.РґРёСЃС‚Р°РЅС†.СѓРїСЂ.",
+	L"РћР±РѕР№РјР° РѕРїСѓСЃС‚РµР»Р°!",
+	L"РЎРћР›Р”РђРў",
+	L"Р Р•РџРўРРћРќР«",
+	L"РћРџРћР›Р§Р•РќРР•",
+	L"Р–РРўР•Р›Р¬",
+	L"Р’С…РѕРґ РёР· СЃРµРєС‚РѕСЂР°",
 	L"OK",
-	L"ОТМЕНА",
-	L"Выбранный наемник",
-	L"Все наемники в отряде",
-	L"Идти в сектор",
-	L"Идти на карту",
-	L"Этот сектор отсюда покинуть нельзя.",
-	L"%ls слишком далеко.",
-	L"Короткие деревья",
-	L"Показать деревья",
-	L"ВОРОНА",				//Crow, as in the large black bird
-	L"ШЕЯ",
-	L"ГОЛОВА",
-	L"ТОРС",
-	L"НОГИ",
-	L"Сказать королеве то,что она хочет знать?",
-	L"Отпечатки пальцев получены",
-	L"Отпечатки неверные. Оружие не действует",
-	L"Цель захвачена",
-	L"Путь блокирован",
-	L"Положить/Взять деньги со счета",		//Help text over the $ button on the Single Merc Panel
-	L"Медпомощь никому не нужна.",
-	L"Слом.",											// Short form of JAMMED, for small inv slots
-	L"Туда не добраться.",					// used ( now ) for when we click on a cliff
-	L"Путь блокирован. Хотите поменяться местами с этим человеком?",
-	L"Человек отказывается двигаться.",
+	L"РћРўРњР•РќРђ",
+	L"Р’С‹Р±СЂР°РЅРЅС‹Р№ РЅР°РµРјРЅРёРє",
+	L"Р’СЃРµ РЅР°РµРјРЅРёРєРё РІ РѕС‚СЂСЏРґРµ",
+	L"РРґС‚Рё РІ СЃРµРєС‚РѕСЂ",
+	L"РРґС‚Рё РЅР° РєР°СЂС‚Сѓ",
+	L"Р­С‚РѕС‚ СЃРµРєС‚РѕСЂ РѕС‚СЃСЋРґР° РїРѕРєРёРЅСѓС‚СЊ РЅРµР»СЊР·СЏ.",
+	L"%ls СЃР»РёС€РєРѕРј РґР°Р»РµРєРѕ.",
+	L"РљРѕСЂРѕС‚РєРёРµ РґРµСЂРµРІСЊСЏ",
+	L"РџРѕРєР°Р·Р°С‚СЊ РґРµСЂРµРІСЊСЏ",
+	L"Р’РћР РћРќРђ",				//Crow, as in the large black bird
+	L"РЁР•РЇ",
+	L"Р“РћР›РћР’Рђ",
+	L"РўРћР РЎ",
+	L"РќРћР“Р",
+	L"РЎРєР°Р·Р°С‚СЊ РєРѕСЂРѕР»РµРІРµ С‚Рѕ,С‡С‚Рѕ РѕРЅР° С…РѕС‡РµС‚ Р·РЅР°С‚СЊ?",
+	L"РћС‚РїРµС‡Р°С‚РєРё РїР°Р»СЊС†РµРІ РїРѕР»СѓС‡РµРЅС‹",
+	L"РћС‚РїРµС‡Р°С‚РєРё РЅРµРІРµСЂРЅС‹Рµ. РћСЂСѓР¶РёРµ РЅРµ РґРµР№СЃС‚РІСѓРµС‚",
+	L"Р¦РµР»СЊ Р·Р°С…РІР°С‡РµРЅР°",
+	L"РџСѓС‚СЊ Р±Р»РѕРєРёСЂРѕРІР°РЅ",
+	L"РџРѕР»РѕР¶РёС‚СЊ/Р’Р·СЏС‚СЊ РґРµРЅСЊРіРё СЃРѕ СЃС‡РµС‚Р°",		//Help text over the $ button on the Single Merc Panel
+	L"РњРµРґРїРѕРјРѕС‰СЊ РЅРёРєРѕРјСѓ РЅРµ РЅСѓР¶РЅР°.",
+	L"РЎР»РѕРј.",											// Short form of JAMMED, for small inv slots
+	L"РўСѓРґР° РЅРµ РґРѕР±СЂР°С‚СЊСЃСЏ.",					// used ( now ) for when we click on a cliff
+	L"РџСѓС‚СЊ Р±Р»РѕРєРёСЂРѕРІР°РЅ. РҐРѕС‚РёС‚Рµ РїРѕРјРµРЅСЏС‚СЊСЃСЏ РјРµСЃС‚Р°РјРё СЃ СЌС‚РёРј С‡РµР»РѕРІРµРєРѕРј?",
+	L"Р§РµР»РѕРІРµРє РѕС‚РєР°Р·С‹РІР°РµС‚СЃСЏ РґРІРёРіР°С‚СЊСЃСЏ.",
 	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
-	L"Вы согласны заплатить %ls?",
-	L"Принять бесплатное лечение?",
-	L"Согласны женить Дэррела?",
-	L"Круглая панель управления",
-	L"С эскортируемыми этого сделать нельзя.",
-	L"Пощадить сержанта?",
-	L"Вне досягаемости для оружия",
-	L"Шахтер",
-	L"Машина ходит только между сектор.",
-	L"Автоперевязку сделать сейчас нельзя",
-	L"Путь для %ls блокирован",
-	L"Наемники, захваченные армией Дейдранны, томятся здесь",
-	L"Замок поражен",
-	L"Замок разрушен",
-	L"Кто-то еще пытается воспользов.этой дверью.",
-	L"Здоровье: %d/%d\nБенз: %d/%d",
-  L"%ls не видит %ls.",  // Cannot see person trying to talk to
+	L"Р’С‹ СЃРѕРіР»Р°СЃРЅС‹ Р·Р°РїР»Р°С‚РёС‚СЊ %ls?",
+	L"РџСЂРёРЅСЏС‚СЊ Р±РµСЃРїР»Р°С‚РЅРѕРµ Р»РµС‡РµРЅРёРµ?",
+	L"РЎРѕРіР»Р°СЃРЅС‹ Р¶РµРЅРёС‚СЊ Р”СЌСЂСЂРµР»Р°?",
+	L"РљСЂСѓРіР»Р°СЏ РїР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ",
+	L"РЎ СЌСЃРєРѕСЂС‚РёСЂСѓРµРјС‹РјРё СЌС‚РѕРіРѕ СЃРґРµР»Р°С‚СЊ РЅРµР»СЊР·СЏ.",
+	L"РџРѕС‰Р°РґРёС‚СЊ СЃРµСЂР¶Р°РЅС‚Р°?",
+	L"Р’РЅРµ РґРѕСЃСЏРіР°РµРјРѕСЃС‚Рё РґР»СЏ РѕСЂСѓР¶РёСЏ",
+	L"РЁР°С…С‚РµСЂ",
+	L"РњР°С€РёРЅР° С…РѕРґРёС‚ С‚РѕР»СЊРєРѕ РјРµР¶РґСѓ СЃРµРєС‚РѕСЂ.",
+	L"РђРІС‚РѕРїРµСЂРµРІСЏР·РєСѓ СЃРґРµР»Р°С‚СЊ СЃРµР№С‡Р°СЃ РЅРµР»СЊР·СЏ",
+	L"РџСѓС‚СЊ РґР»СЏ %ls Р±Р»РѕРєРёСЂРѕРІР°РЅ",
+	L"РќР°РµРјРЅРёРєРё, Р·Р°С…РІР°С‡РµРЅРЅС‹Рµ Р°СЂРјРёРµР№ Р”РµР№РґСЂР°РЅРЅС‹, С‚РѕРјСЏС‚СЃСЏ Р·РґРµСЃСЊ",
+	L"Р—Р°РјРѕРє РїРѕСЂР°Р¶РµРЅ",
+	L"Р—Р°РјРѕРє СЂР°Р·СЂСѓС€РµРЅ",
+	L"РљС‚Рѕ-С‚Рѕ РµС‰Рµ РїС‹С‚Р°РµС‚СЃСЏ РІРѕСЃРїРѕР»СЊР·РѕРІ.СЌС‚РѕР№ РґРІРµСЂСЊСЋ.",
+	L"Р—РґРѕСЂРѕРІСЊРµ: %d/%d\nР‘РµРЅР·: %d/%d",
+  L"%ls РЅРµ РІРёРґРёС‚ %ls.",  // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
 const wchar_t* pExitingSectorHelpText[] =
 {
 	//Helptext for the "Go to Sector" checkbox button, that explains what will happen when the box is checked.
-	L"После проверки соседний сектор можно сразу занять.",
-	L"После проверки вы автоматически оказываетесь в окне карты а\nвашему наемнику понадобится время на дорогу.",
+	L"РџРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё СЃРѕСЃРµРґРЅРёР№ СЃРµРєС‚РѕСЂ РјРѕР¶РЅРѕ СЃСЂР°Р·Сѓ Р·Р°РЅСЏС‚СЊ.",
+	L"РџРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё РІС‹ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРєР°Р·С‹РІР°РµС‚РµСЃСЊ РІ РѕРєРЅРµ РєР°СЂС‚С‹ Р°\nРІР°С€РµРјСѓ РЅР°РµРјРЅРёРєСѓ РїРѕРЅР°РґРѕР±РёС‚СЃСЏ РІСЂРµРјСЏ РЅР° РґРѕСЂРѕРіСѓ.",
 
 	//If you attempt to leave a sector when you have multiple squads in a hostile sector.
-	L"Этот сектор занят врагами и здесь оставлять наемников нельзя.\nНадо решить эту проблему перед тем как занимать другие сектора.",
+	L"Р­С‚РѕС‚ СЃРµРєС‚РѕСЂ Р·Р°РЅСЏС‚ РІСЂР°РіР°РјРё Рё Р·РґРµСЃСЊ РѕСЃС‚Р°РІР»СЏС‚СЊ РЅР°РµРјРЅРёРєРѕРІ РЅРµР»СЊР·СЏ.\nРќР°РґРѕ СЂРµС€РёС‚СЊ СЌС‚Сѓ РїСЂРѕР±Р»РµРјСѓ РїРµСЂРµРґ С‚РµРј РєР°Рє Р·Р°РЅРёРјР°С‚СЊ РґСЂСѓРіРёРµ СЃРµРєС‚РѕСЂР°.",
 
 	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
-	L"Выводя оставшихся наемников из этого сектора,\nучти, что соседний сектор будет занят немедленно.",
-	L"Выведя оставшихся наемников из этого сектора,\nвы автоматически перемещаетесь в окно карты\nвашему наемнику понадобится время на дорогу.",
+	L"Р’С‹РІРѕРґСЏ РѕСЃС‚Р°РІС€РёС…СЃСЏ РЅР°РµРјРЅРёРєРѕРІ РёР· СЌС‚РѕРіРѕ СЃРµРєС‚РѕСЂР°,\nСѓС‡С‚Рё, С‡С‚Рѕ СЃРѕСЃРµРґРЅРёР№ СЃРµРєС‚РѕСЂ Р±СѓРґРµС‚ Р·Р°РЅСЏС‚ РЅРµРјРµРґР»РµРЅРЅРѕ.",
+	L"Р’С‹РІРµРґСЏ РѕСЃС‚Р°РІС€РёС…СЃСЏ РЅР°РµРјРЅРёРєРѕРІ РёР· СЌС‚РѕРіРѕ СЃРµРєС‚РѕСЂР°,\nРІС‹ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїРµСЂРµРјРµС‰Р°РµС‚РµСЃСЊ РІ РѕРєРЅРѕ РєР°СЂС‚С‹\nРІР°С€РµРјСѓ РЅР°РµРјРЅРёРєСѓ РїРѕРЅР°РґРѕР±РёС‚СЃСЏ РІСЂРµРјСЏ РЅР° РґРѕСЂРѕРіСѓ.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%ls не может покинуть этот сектор один, его надо сопроводить.",
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЌС‚РѕС‚ СЃРµРєС‚РѕСЂ РѕРґРёРЅ, РµРіРѕ РЅР°РґРѕ СЃРѕРїСЂРѕРІРѕРґРёС‚СЊ.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	L"%ls не может покинуть сектор один-он сопровождает %ls.", //male singular
-	L"%ls не может покинуть сектор одна-она сопровождает %ls.", //female singular
-	L"%ls не может покинуть сектор один-он  сопровождает группу.", //male plural
-	L"%ls не может покинуть сектор одна-она сопровождает группу.", //female plural
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЃРµРєС‚РѕСЂ РѕРґРёРЅ-РѕРЅ СЃРѕРїСЂРѕРІРѕР¶РґР°РµС‚ %ls.", //male singular
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЃРµРєС‚РѕСЂ РѕРґРЅР°-РѕРЅР° СЃРѕРїСЂРѕРІРѕР¶РґР°РµС‚ %ls.", //female singular
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЃРµРєС‚РѕСЂ РѕРґРёРЅ-РѕРЅ  СЃРѕРїСЂРѕРІРѕР¶РґР°РµС‚ РіСЂСѓРїРїСѓ.", //male plural
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЃРµРєС‚РѕСЂ РѕРґРЅР°-РѕРЅР° СЃРѕРїСЂРѕРІРѕР¶РґР°РµС‚ РіСЂСѓРїРїСѓ.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
-	L"Чтобы дать отряд мог пойти,\nвсе ваши наемники дожны быть в рядом.",
+	L"Р§С‚РѕР±С‹ РґР°С‚СЊ РѕС‚СЂСЏРґ РјРѕРі РїРѕР№С‚Рё,\nРІСЃРµ РІР°С€Рё РЅР°РµРјРЅРёРєРё РґРѕР¶РЅС‹ Р±С‹С‚СЊ РІ СЂСЏРґРѕРј.",
 
 	L"", //UNUSED
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	L"После проверки %ls поедет один, и\nавтоматически попадет в уникальный отряд.",
+	L"РџРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё %ls РїРѕРµРґРµС‚ РѕРґРёРЅ, Рё\nР°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїРѕРїР°РґРµС‚ РІ СѓРЅРёРєР°Р»СЊРЅС‹Р№ РѕС‚СЂСЏРґ.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
-	L"После проверки выбранный вами сейчас\nотряд покинет этот сектор.",
+	L"РџРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё РІС‹Р±СЂР°РЅРЅС‹Р№ РІР°РјРё СЃРµР№С‡Р°СЃ\nРѕС‚СЂСЏРґ РїРѕРєРёРЅРµС‚ СЌС‚РѕС‚ СЃРµРєС‚РѕСЂ.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%ls не может покинуть этот сектор один, его надо сопроводить. Остальные наемники остаются пока с вами.",
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЌС‚РѕС‚ СЃРµРєС‚РѕСЂ РѕРґРёРЅ, РµРіРѕ РЅР°РґРѕ СЃРѕРїСЂРѕРІРѕРґРёС‚СЊ. РћСЃС‚Р°Р»СЊРЅС‹Рµ РЅР°РµРјРЅРёРєРё РѕСЃС‚Р°СЋС‚СЃСЏ РїРѕРєР° СЃ РІР°РјРё.",
 };
 
 
 
 const wchar_t* pRepairStrings[] =
 {
-	L"Вещи", 		// tell merc to repair items in inventory
-	L"ПВО", 		// tell merc to repair SAM site - SAM is an acronym for Surface to Air Missile
-	L"Отмена", 		// cancel this menu
-	L"Робот", 		// repair the robot
+	L"Р’РµС‰Рё", 		// tell merc to repair items in inventory
+	L"РџР’Рћ", 		// tell merc to repair SAM site - SAM is an acronym for Surface to Air Missile
+	L"РћС‚РјРµРЅР°", 		// cancel this menu
+	L"Р РѕР±РѕС‚", 		// repair the robot
 };
 
 
@@ -1385,52 +1385,52 @@ const wchar_t* pRepairStrings[] =
 
 const wchar_t* sPreStatBuildString[] =
 {
-	L"потерял", 			// the merc has lost a statistic
-	L"приобрел", 		// the merc has gained a statistic
-	L"очко",	// singular
-	L"очки",	// plural
-	L"уровень",	// singular
-	L"уровня",	// plural
+	L"РїРѕС‚РµСЂСЏР»", 			// the merc has lost a statistic
+	L"РїСЂРёРѕР±СЂРµР»", 		// the merc has gained a statistic
+	L"РѕС‡РєРѕ",	// singular
+	L"РѕС‡РєРё",	// plural
+	L"СѓСЂРѕРІРµРЅСЊ",	// singular
+	L"СѓСЂРѕРІРЅСЏ",	// plural
 };
 
 const wchar_t* sStatGainStrings[] =
 {
-	L"здор.",
-	L"подвижн.",
-	L"проворн.",
-	L"мудрость.",
-	L"медицина",
-	L"взрывн.работы.",
-	L"механика.",
-	L"меткость.",
-	L"опытность.",
-	L"сила.",
-	L"лидерство.",
+	L"Р·РґРѕСЂ.",
+	L"РїРѕРґРІРёР¶РЅ.",
+	L"РїСЂРѕРІРѕСЂРЅ.",
+	L"РјСѓРґСЂРѕСЃС‚СЊ.",
+	L"РјРµРґРёС†РёРЅР°",
+	L"РІР·СЂС‹РІРЅ.СЂР°Р±РѕС‚С‹.",
+	L"РјРµС…Р°РЅРёРєР°.",
+	L"РјРµС‚РєРѕСЃС‚СЊ.",
+	L"РѕРїС‹С‚РЅРѕСЃС‚СЊ.",
+	L"СЃРёР»Р°.",
+	L"Р»РёРґРµСЂСЃС‚РІРѕ.",
 };
 
 
 const wchar_t* pHelicopterEtaStrings[] =
 {
-	L"Общее расст.:  ", 			// total distance for helicopter to travel
-	L" Безопасно:  ", 			// distance to travel to destination
-	L" Опасно:", 			// distance to return from destination to airport
-	L"Общ.цена: ", 		// total cost of trip by helicopter
-	L"УВП:  ", 			// ETA is an acronym for "estimated time of arrival"
-	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
-  L"Пассажиры: ",
-  L"Выбрать высадку Всадника или Прибывающих?",
-  L"Всадник",
-  L"Прибывающие",
+	L"РћР±С‰РµРµ СЂР°СЃСЃС‚.:  ", 			// total distance for helicopter to travel
+	L" Р‘РµР·РѕРїР°СЃРЅРѕ:  ", 			// distance to travel to destination
+	L" РћРїР°СЃРЅРѕ:", 			// distance to return from destination to airport
+	L"РћР±С‰.С†РµРЅР°: ", 		// total cost of trip by helicopter
+	L"РЈР’Рџ:  ", 			// ETA is an acronym for "estimated time of arrival"
+	L"Р’ РІРµСЂС‚РѕР»РµС‚Рµ РјР°Р»Рѕ С‚РѕРїР»РёРІР°, РѕРЅ РІС‹РЅСѓР¶Рґ.СЃРµСЃС‚СЊ РЅР° РІСЂР°Р¶.С‚РµСЂСЂРёС‚РѕСЂРёРё!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
+  L"РџР°СЃСЃР°Р¶РёСЂС‹: ",
+  L"Р’С‹Р±СЂР°С‚СЊ РІС‹СЃР°РґРєСѓ Р’СЃР°РґРЅРёРєР° РёР»Рё РџСЂРёР±С‹РІР°СЋС‰РёС…?",
+  L"Р’СЃР°РґРЅРёРє",
+  L"РџСЂРёР±С‹РІР°СЋС‰РёРµ",
 };
 
 const wchar_t* sMapLevelString[] =
 {
-	L"Подуровень ", 			// what level below the ground is the player viewing in mapscreen
+	L"РџРѕРґСѓСЂРѕРІРµРЅСЊ ", 			// what level below the ground is the player viewing in mapscreen
 };
 
 const wchar_t* gsLoyalString[] =
 {
-	L"Отнош",	// the loyalty rating of a town ie : Loyal 53%
+	L"РћС‚РЅРѕС€",	// the loyalty rating of a town ie : Loyal 53%
 };
 
 
@@ -1438,106 +1438,106 @@ const wchar_t* gsLoyalString[] =
 
 const wchar_t* gsUndergroundString[] =
 {
-	L"не приним.приказов идти под землей.",
+	L"РЅРµ РїСЂРёРЅРёРј.РїСЂРёРєР°Р·РѕРІ РёРґС‚Рё РїРѕРґ Р·РµРјР»РµР№.",
 };
 
 const wchar_t* gsTimeStrings[] =
 {
-	L"ч",				// hours abbreviation
-	L"м",				// minutes abbreviation
-	L"с",				// seconds abbreviation
-	L"д",				// days abbreviation
+	L"С‡",				// hours abbreviation
+	L"Рј",				// minutes abbreviation
+	L"СЃ",				// seconds abbreviation
+	L"Рґ",				// days abbreviation
 };
 
 // text for the various facilities in the sector
 
 const wchar_t* sFacilitiesStrings[] =
 {
-	L"Ничего",
-	L"Госпит.",
-	L"Заводы",
-	L"Тюрьма",
-	L"Ополчен.",
-	L"Аэропорт",
-	L"Стрельбище",		// a field for soldiers to practise their shooting skills
+	L"РќРёС‡РµРіРѕ",
+	L"Р“РѕСЃРїРёС‚.",
+	L"Р—Р°РІРѕРґС‹",
+	L"РўСЋСЂСЊРјР°",
+	L"РћРїРѕР»С‡РµРЅ.",
+	L"РђСЌСЂРѕРїРѕСЂС‚",
+	L"РЎС‚СЂРµР»СЊР±РёС‰Рµ",		// a field for soldiers to practise their shooting skills
 };
 
 // text for inventory pop up button
 
 const wchar_t* pMapPopUpInventoryText[] =
 {
-	L"Инвентарь",
-	L"Выход",
+	L"РРЅРІРµРЅС‚Р°СЂСЊ",
+	L"Р’С‹С…РѕРґ",
 };
 
 // town strings
 
 const wchar_t* pwTownInfoStrings[] =
 {
-	L"Размер",					// 0 // size of the town in sectors
+	L"Р Р°Р·РјРµСЂ",					// 0 // size of the town in sectors
 	L"", 						// blank line, required
-	L"Контроль", 					// how much of town is controlled
-	L"Ничего", 					// none of this town
-	L"Шахта города", 				// mine associated with this town
-	L"Верность",					// 5 // the loyalty level of this town
-	L"Готовы", 					// the forces in the town trained by the player
+	L"РљРѕРЅС‚СЂРѕР»СЊ", 					// how much of town is controlled
+	L"РќРёС‡РµРіРѕ", 					// none of this town
+	L"РЁР°С…С‚Р° РіРѕСЂРѕРґР°", 				// mine associated with this town
+	L"Р’РµСЂРЅРѕСЃС‚СЊ",					// 5 // the loyalty level of this town
+	L"Р“РѕС‚РѕРІС‹", 					// the forces in the town trained by the player
 	L"",
-	L"Осн.оборуд.", 				// main facilities in this town
-	L"Уровень", 					// the training level of civilians in this town
-	L"Подготовка жителей",				// 10 // state of civilian training in town
-	L"Ополчение", 					// the state of the trained civilians in the town
+	L"РћСЃРЅ.РѕР±РѕСЂСѓРґ.", 				// main facilities in this town
+	L"РЈСЂРѕРІРµРЅСЊ", 					// the training level of civilians in this town
+	L"РџРѕРґРіРѕС‚РѕРІРєР° Р¶РёС‚РµР»РµР№",				// 10 // state of civilian training in town
+	L"РћРїРѕР»С‡РµРЅРёРµ", 					// the state of the trained civilians in the town
 };
 
 // Mine strings
 
 const wchar_t* pwMineStrings[] =
 {
-	L"Шахта",						// 0
-	L"Серебро",
-	L"Золото",
-	L"Производит/день",
-	L"Производств.возм-ти",
-	L"Брошено",				// 5
-	L"Закрыто",
-	L"Выработана",
-	L"Работает",
-	L"Статус",
-	L"Производительность",
-	L"Тип руды",				// 10
-	L"Город контроля",
-	L"Отношение города",
-//	L"Работ.шахтеры",
+	L"РЁР°С…С‚Р°",						// 0
+	L"РЎРµСЂРµР±СЂРѕ",
+	L"Р—РѕР»РѕС‚Рѕ",
+	L"РџСЂРѕРёР·РІРѕРґРёС‚/РґРµРЅСЊ",
+	L"РџСЂРѕРёР·РІРѕРґСЃС‚РІ.РІРѕР·Рј-С‚Рё",
+	L"Р‘СЂРѕС€РµРЅРѕ",				// 5
+	L"Р—Р°РєСЂС‹С‚Рѕ",
+	L"Р’С‹СЂР°Р±РѕС‚Р°РЅР°",
+	L"Р Р°Р±РѕС‚Р°РµС‚",
+	L"РЎС‚Р°С‚СѓСЃ",
+	L"РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ",
+	L"РўРёРї СЂСѓРґС‹",				// 10
+	L"Р“РѕСЂРѕРґ РєРѕРЅС‚СЂРѕР»СЏ",
+	L"РћС‚РЅРѕС€РµРЅРёРµ РіРѕСЂРѕРґР°",
+//	L"Р Р°Р±РѕС‚.С€Р°С…С‚РµСЂС‹",
 };
 
 // blank sector strings
 
 const wchar_t* pwMiscSectorStrings[] =
 {
-	L"Силы врага",
-	L"Сектор",
-	L"# вещей",
-	L"Неизв.",
-	L"Под контр.",
-	L"Да",
-	L"Нет",
+	L"РЎРёР»С‹ РІСЂР°РіР°",
+	L"РЎРµРєС‚РѕСЂ",
+	L"# РІРµС‰РµР№",
+	L"РќРµРёР·РІ.",
+	L"РџРѕРґ РєРѕРЅС‚СЂ.",
+	L"Р”Р°",
+	L"РќРµС‚",
 };
 
 // error strings for inventory
 
 const wchar_t* pMapInventoryErrorString[] =
 {
-	L"%ls недостаточно близко",	//Merc is in sector with item but not close enough
-	L"Нельзя выбрать этого.",  //MARK CARTER
-	L"%ls не в секторе и не может взять эту вещь",
-	L"Во время битвы надо подбирать эти вещи вручную",
-	L"Во время битвы надо бросать вещи вручную.",
-	L"%ls не в секторе,чтобы бросить вещи.",
+	L"%ls РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±Р»РёР·РєРѕ",	//Merc is in sector with item but not close enough
+	L"РќРµР»СЊР·СЏ РІС‹Р±СЂР°С‚СЊ СЌС‚РѕРіРѕ.",  //MARK CARTER
+	L"%ls РЅРµ РІ СЃРµРєС‚РѕСЂРµ Рё РЅРµ РјРѕР¶РµС‚ РІР·СЏС‚СЊ СЌС‚Сѓ РІРµС‰СЊ",
+	L"Р’Рѕ РІСЂРµРјСЏ Р±РёС‚РІС‹ РЅР°РґРѕ РїРѕРґР±РёСЂР°С‚СЊ СЌС‚Рё РІРµС‰Рё РІСЂСѓС‡РЅСѓСЋ",
+	L"Р’Рѕ РІСЂРµРјСЏ Р±РёС‚РІС‹ РЅР°РґРѕ Р±СЂРѕСЃР°С‚СЊ РІРµС‰Рё РІСЂСѓС‡РЅСѓСЋ.",
+	L"%ls РЅРµ РІ СЃРµРєС‚РѕСЂРµ,С‡С‚РѕР±С‹ Р±СЂРѕСЃРёС‚СЊ РІРµС‰Рё.",
 };
 
 const wchar_t* pMapInventoryStrings[] =
 {
-	L"Место", 			// sector these items are in
-	L"Всего вещей", 		// total number of items in sector
+	L"РњРµСЃС‚Рѕ", 			// sector these items are in
+	L"Р’СЃРµРіРѕ РІРµС‰РµР№", 		// total number of items in sector
 };
 
 
@@ -1545,136 +1545,136 @@ const wchar_t* pMapInventoryStrings[] =
 
 const wchar_t* pMapScreenFastHelpTextList[] =
 {
-	L"Чтобы дать наемнику такие задания как идти в др.отряд, лечение или ремонт,выберите нужное в 'Принадлежность'",
-	L"чтобы направить наемника в другой сектор, выберите нужное в колонке 'Куда'",
-	L"Когда наемники получают приказ начать движение,компрессия позволит им это сделать.",
-	L"Левый щелчок-выбрать сектор. Еще раз левый щелчок-дать наемнику команду начать движение,правый щелчок-общая информация о секторе.",
-	L"Нажать'h' в любое время, чтобы вызвать подсказку.",
-	L"Проверка",
-	L"Проверка",
-	L"Проверка",
-	L"Проверка",
-	L"Пока команда не добралась до Арулько,в этом окне вам делать нечего.Когда вы укомплектуете свою команду,нажмите на кнопку Сжатие Времени в правом нижнем углу экрана.Команда доберется гораздо быстрее.",
+	L"Р§С‚РѕР±С‹ РґР°С‚СЊ РЅР°РµРјРЅРёРєСѓ С‚Р°РєРёРµ Р·Р°РґР°РЅРёСЏ РєР°Рє РёРґС‚Рё РІ РґСЂ.РѕС‚СЂСЏРґ, Р»РµС‡РµРЅРёРµ РёР»Рё СЂРµРјРѕРЅС‚,РІС‹Р±РµСЂРёС‚Рµ РЅСѓР¶РЅРѕРµ РІ 'РџСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ'",
+	L"С‡С‚РѕР±С‹ РЅР°РїСЂР°РІРёС‚СЊ РЅР°РµРјРЅРёРєР° РІ РґСЂСѓРіРѕР№ СЃРµРєС‚РѕСЂ, РІС‹Р±РµСЂРёС‚Рµ РЅСѓР¶РЅРѕРµ РІ РєРѕР»РѕРЅРєРµ 'РљСѓРґР°'",
+	L"РљРѕРіРґР° РЅР°РµРјРЅРёРєРё РїРѕР»СѓС‡Р°СЋС‚ РїСЂРёРєР°Р· РЅР°С‡Р°С‚СЊ РґРІРёР¶РµРЅРёРµ,РєРѕРјРїСЂРµСЃСЃРёСЏ РїРѕР·РІРѕР»РёС‚ РёРј СЌС‚Рѕ СЃРґРµР»Р°С‚СЊ.",
+	L"Р›РµРІС‹Р№ С‰РµР»С‡РѕРє-РІС‹Р±СЂР°С‚СЊ СЃРµРєС‚РѕСЂ. Р•С‰Рµ СЂР°Р· Р»РµРІС‹Р№ С‰РµР»С‡РѕРє-РґР°С‚СЊ РЅР°РµРјРЅРёРєСѓ РєРѕРјР°РЅРґСѓ РЅР°С‡Р°С‚СЊ РґРІРёР¶РµРЅРёРµ,РїСЂР°РІС‹Р№ С‰РµР»С‡РѕРє-РѕР±С‰Р°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµРєС‚РѕСЂРµ.",
+	L"РќР°Р¶Р°С‚СЊ'h' РІ Р»СЋР±РѕРµ РІСЂРµРјСЏ, С‡С‚РѕР±С‹ РІС‹Р·РІР°С‚СЊ РїРѕРґСЃРєР°Р·РєСѓ.",
+	L"РџСЂРѕРІРµСЂРєР°",
+	L"РџСЂРѕРІРµСЂРєР°",
+	L"РџСЂРѕРІРµСЂРєР°",
+	L"РџСЂРѕРІРµСЂРєР°",
+	L"РџРѕРєР° РєРѕРјР°РЅРґР° РЅРµ РґРѕР±СЂР°Р»Р°СЃСЊ РґРѕ РђСЂСѓР»СЊРєРѕ,РІ СЌС‚РѕРј РѕРєРЅРµ РІР°Рј РґРµР»Р°С‚СЊ РЅРµС‡РµРіРѕ.РљРѕРіРґР° РІС‹ СѓРєРѕРјРїР»РµРєС‚СѓРµС‚Рµ СЃРІРѕСЋ РєРѕРјР°РЅРґСѓ,РЅР°Р¶РјРёС‚Рµ РЅР° РєРЅРѕРїРєСѓ РЎР¶Р°С‚РёРµ Р’СЂРµРјРµРЅРё РІ РїСЂР°РІРѕРј РЅРёР¶РЅРµРј СѓРіР»Сѓ СЌРєСЂР°РЅР°.РљРѕРјР°РЅРґР° РґРѕР±РµСЂРµС‚СЃСЏ РіРѕСЂР°Р·РґРѕ Р±С‹СЃС‚СЂРµРµ.",
 };
 
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =
 {
-	L"Преместить наемн.в сектор", 	// title for movement box
-	L"Путь", 		// done with movement menu, start plotting movement
-	L"Отмена", 		// cancel this menu
-	L"Другое",		// title for group of mercs not on squads nor in vehicles
+	L"РџСЂРµРјРµСЃС‚РёС‚СЊ РЅР°РµРјРЅ.РІ СЃРµРєС‚РѕСЂ", 	// title for movement box
+	L"РџСѓС‚СЊ", 		// done with movement menu, start plotting movement
+	L"РћС‚РјРµРЅР°", 		// cancel this menu
+	L"Р”СЂСѓРіРѕРµ",		// title for group of mercs not on squads nor in vehicles
 };
 
 
 const wchar_t* pUpdateMercStrings[] =
 {
-	L"Ой!:", 			// an error has occured
-	L"Контракты закончились:", 	// this pop up came up due to a merc contract ending
-	L"Наемник выполнил задание:", // this pop up....due to more than one merc finishing assignments
-	L"Наемн.снова работает:", // this pop up ....due to more than one merc waking up and returing to work
-	L"Наемники идут спать:", // this pop up ....due to more than one merc being tired and going to sleep
-	L"Контракты скоро кончатся:", // this pop up came up due to a merc contract ending
+	L"РћР№!:", 			// an error has occured
+	L"РљРѕРЅС‚СЂР°РєС‚С‹ Р·Р°РєРѕРЅС‡РёР»РёСЃСЊ:", 	// this pop up came up due to a merc contract ending
+	L"РќР°РµРјРЅРёРє РІС‹РїРѕР»РЅРёР» Р·Р°РґР°РЅРёРµ:", // this pop up....due to more than one merc finishing assignments
+	L"РќР°РµРјРЅ.СЃРЅРѕРІР° СЂР°Р±РѕС‚Р°РµС‚:", // this pop up ....due to more than one merc waking up and returing to work
+	L"РќР°РµРјРЅРёРєРё РёРґСѓС‚ СЃРїР°С‚СЊ:", // this pop up ....due to more than one merc being tired and going to sleep
+	L"РљРѕРЅС‚СЂР°РєС‚С‹ СЃРєРѕСЂРѕ РєРѕРЅС‡Р°С‚СЃСЏ:", // this pop up came up due to a merc contract ending
 };
 
 // map screen map border buttons help text
 
 const wchar_t* pMapScreenBorderButtonHelpText[] =
 {
-	L"Показать Города (|W)",
-	L"Показать Шахты (|M)",
-	L"Показ.Команды и Врагов(|T)",
-	L"Показать воздушное пространство(|A)",
-	L"Показать Вещи (|I)",
-	L"Показ.ополчен.и врагов(|Z)",
+	L"РџРѕРєР°Р·Р°С‚СЊ Р“РѕСЂРѕРґР° (|W)",
+	L"РџРѕРєР°Р·Р°С‚СЊ РЁР°С…С‚С‹ (|M)",
+	L"РџРѕРєР°Р·.РљРѕРјР°РЅРґС‹ Рё Р’СЂР°РіРѕРІ(|T)",
+	L"РџРѕРєР°Р·Р°С‚СЊ РІРѕР·РґСѓС€РЅРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ(|A)",
+	L"РџРѕРєР°Р·Р°С‚СЊ Р’РµС‰Рё (|I)",
+	L"РџРѕРєР°Р·.РѕРїРѕР»С‡РµРЅ.Рё РІСЂР°РіРѕРІ(|Z)",
 };
 
 
 const wchar_t* pMapScreenBottomFastHelp[] =
 {
-	L"Лэптоп (|L)",
-	L"Тактика(|E|s|c)",
-	L"Настройки (|O)",
-	L"Сжатие врем.(|+)", 	// time compress more
-	L"Сжатие врем.(|-)", 	// time compress less
-	L"Предыдущ.сообщ (|U|p)\nПредыдущ.стр. (|P|g|U|p)", 	// previous message in scrollable list
-	L"След.сообщ. (|D|o|w|n)\nСлнд.стр. (|P|g|D|n)", 	// next message in the scrollable list
-	L"Пустить/Остановить время (|S|p|a|c|e)",	// start/stop time compression
+	L"Р›СЌРїС‚РѕРї (|L)",
+	L"РўР°РєС‚РёРєР°(|E|s|c)",
+	L"РќР°СЃС‚СЂРѕР№РєРё (|O)",
+	L"РЎР¶Р°С‚РёРµ РІСЂРµРј.(|+)", 	// time compress more
+	L"РЎР¶Р°С‚РёРµ РІСЂРµРј.(|-)", 	// time compress less
+	L"РџСЂРµРґС‹РґСѓС‰.СЃРѕРѕР±С‰ (|U|p)\nРџСЂРµРґС‹РґСѓС‰.СЃС‚СЂ. (|P|g|U|p)", 	// previous message in scrollable list
+	L"РЎР»РµРґ.СЃРѕРѕР±С‰. (|D|o|w|n)\nРЎР»РЅРґ.СЃС‚СЂ. (|P|g|D|n)", 	// next message in the scrollable list
+	L"РџСѓСЃС‚РёС‚СЊ/РћСЃС‚Р°РЅРѕРІРёС‚СЊ РІСЂРµРјСЏ (|S|p|a|c|e)",	// start/stop time compression
 };
 
 const wchar_t* pMapScreenBottomText[] =
 {
-	L"Текущий баланс", 	// current balance in player bank account
+	L"РўРµРєСѓС‰РёР№ Р±Р°Р»Р°РЅСЃ", 	// current balance in player bank account
 };
 
 const wchar_t* pMercDeadString[] =
 {
-	L"%ls мертв.",
+	L"%ls РјРµСЂС‚РІ.",
 };
 
 
 const wchar_t* pDayStrings[] =
 {
-	L"День",
+	L"Р”РµРЅСЊ",
 };
 
 // the list of email sender names
 
 const wchar_t* pSenderNameList[] =
 {
-	L"Энрико",
-	L"Псих Про Инк",
-	L"Помощь",
-	L"Псих.Про Инк",
-	L"Спек",
+	L"Р­РЅСЂРёРєРѕ",
+	L"РџСЃРёС… РџСЂРѕ РРЅРє",
+	L"РџРѕРјРѕС‰СЊ",
+	L"РџСЃРёС….РџСЂРѕ РРЅРє",
+	L"РЎРїРµРє",
 	L"R.I.S.",		//5
-	L"Барри",
-	L"Блад",
-	L"Рысь",
-	L"Гризли",
-	L"Вики",			//10
-	L"Тревор",
-	L"Хряп",
-	L"Иван",
-	L"Анаболик",
-	L"Игорь",			//15
-	L"Тень",
-	L"Рыжий",
-	L"Потрошитель",
-	L"Фидель",
-	L"Лиска",				//20
-	L"Сидней",
-	L"Гас",
-	L"Сдоба",
-	L"Айс",
-	L"Паук",		//25
-	L"Скала",
-	L"Бык",
-	L"Стрелок",
-	L"Тоска",
-	L"Рейдер",		//30
-	L"Сова",
-	L"Статик",
-	L"Лен",
-	L"Данни",
-	L"Маг",
-	L"Стэфен",
-	L"Лысый",
-	L"Злобный",
-	L"Доктор Кью",
-	L"Гвоздь",
-	L"Тор",
-	L"Стрелка",
-	L"Волк",
-	L"ЭмДи",
-	L"Лава",
+	L"Р‘Р°СЂСЂРё",
+	L"Р‘Р»Р°Рґ",
+	L"Р С‹СЃСЊ",
+	L"Р“СЂРёР·Р»Рё",
+	L"Р’РёРєРё",			//10
+	L"РўСЂРµРІРѕСЂ",
+	L"РҐСЂСЏРї",
+	L"РРІР°РЅ",
+	L"РђРЅР°Р±РѕР»РёРє",
+	L"РРіРѕСЂСЊ",			//15
+	L"РўРµРЅСЊ",
+	L"Р С‹Р¶РёР№",
+	L"РџРѕС‚СЂРѕС€РёС‚РµР»СЊ",
+	L"Р¤РёРґРµР»СЊ",
+	L"Р›РёСЃРєР°",				//20
+	L"РЎРёРґРЅРµР№",
+	L"Р“Р°СЃ",
+	L"РЎРґРѕР±Р°",
+	L"РђР№СЃ",
+	L"РџР°СѓРє",		//25
+	L"РЎРєР°Р»Р°",
+	L"Р‘С‹Рє",
+	L"РЎС‚СЂРµР»РѕРє",
+	L"РўРѕСЃРєР°",
+	L"Р РµР№РґРµСЂ",		//30
+	L"РЎРѕРІР°",
+	L"РЎС‚Р°С‚РёРє",
+	L"Р›РµРЅ",
+	L"Р”Р°РЅРЅРё",
+	L"РњР°Рі",
+	L"РЎС‚СЌС„РµРЅ",
+	L"Р›С‹СЃС‹Р№",
+	L"Р—Р»РѕР±РЅС‹Р№",
+	L"Р”РѕРєС‚РѕСЂ РљСЊСЋ",
+	L"Р“РІРѕР·РґСЊ",
+	L"РўРѕСЂ",
+	L"РЎС‚СЂРµР»РєР°",
+	L"Р’РѕР»Рє",
+	L"Р­РјР”Рё",
+	L"Р›Р°РІР°",
 	//----------
-	L"M.I.S.Страх.",
-	L"Бобби Рэй",
-	L"Босс",
-	L"Джон Калба",
-	L"А.I.М.",
+	L"M.I.S.РЎС‚СЂР°С….",
+	L"Р‘РѕР±Р±Рё Р СЌР№",
+	L"Р‘РѕСЃСЃ",
+	L"Р”Р¶РѕРЅ РљР°Р»Р±Р°",
+	L"Рђ.I.Рњ.",
 };
 
 
@@ -1682,7 +1682,7 @@ const wchar_t* pSenderNameList[] =
 
 const wchar_t* pNewMailStrings[] =
 {
- L"Есть новые сообщения...",
+ L"Р•СЃС‚СЊ РЅРѕРІС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ...",
 };
 
 
@@ -1690,8 +1690,8 @@ const wchar_t* pNewMailStrings[] =
 
 const wchar_t* pDeleteMailStrings[] =
 {
- L"Стереть сообщение?",
- L"Стереть НЕПРОЧТЕННЫЕ?",
+ L"РЎС‚РµСЂРµС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ?",
+ L"РЎС‚РµСЂРµС‚СЊ РќР•РџР РћР§РўР•РќРќР«Р•?",
 };
 
 
@@ -1699,39 +1699,39 @@ const wchar_t* pDeleteMailStrings[] =
 
 const wchar_t* pEmailHeaders[] =
 {
-	L"От:",
-	L"Тема:",
-	L"Дата:",
+	L"РћС‚:",
+	L"РўРµРјР°:",
+	L"Р”Р°С‚Р°:",
 };
 
 // email titlebar text
 
 const wchar_t* pEmailTitleText[] =
 {
-	L"Почтовый ящик",
+	L"РџРѕС‡С‚РѕРІС‹Р№ СЏС‰РёРє",
 };
 
 
 // the financial screen strings
 const wchar_t* pFinanceTitle[] =
 {
-	L"Бухгалтер Плюс",		//the name we made up for the financial program in the game
+	L"Р‘СѓС…РіР°Р»С‚РµСЂ РџР»СЋСЃ",		//the name we made up for the financial program in the game
 };
 
 const wchar_t* pFinanceSummary[] =
 {
-	L"Кредит:", 				// credit (subtract from) to player's account
-	L"Дебет:", 				// debit (add to) to player's account
-	L"Приход за вчерашний день:",
-	L"Депозиты за вчерашн.день:",
-	L"Дебет за вчерашн. день:",
-	L"Баланс на конец дня:",
-	L"Приход за сегодня:",
-	L"Депозиты за сегодня:",
-	L"Дебет на сегодня:",
-	L"Текущий баланс:",
-	L"Предполагаемый приход:",
-	L"Предполагаемый баланс:", 		// projected balance for player for tommorow
+	L"РљСЂРµРґРёС‚:", 				// credit (subtract from) to player's account
+	L"Р”РµР±РµС‚:", 				// debit (add to) to player's account
+	L"РџСЂРёС…РѕРґ Р·Р° РІС‡РµСЂР°С€РЅРёР№ РґРµРЅСЊ:",
+	L"Р”РµРїРѕР·РёС‚С‹ Р·Р° РІС‡РµСЂР°С€РЅ.РґРµРЅСЊ:",
+	L"Р”РµР±РµС‚ Р·Р° РІС‡РµСЂР°С€РЅ. РґРµРЅСЊ:",
+	L"Р‘Р°Р»Р°РЅСЃ РЅР° РєРѕРЅРµС† РґРЅСЏ:",
+	L"РџСЂРёС…РѕРґ Р·Р° СЃРµРіРѕРґРЅСЏ:",
+	L"Р”РµРїРѕР·РёС‚С‹ Р·Р° СЃРµРіРѕРґРЅСЏ:",
+	L"Р”РµР±РµС‚ РЅР° СЃРµРіРѕРґРЅСЏ:",
+	L"РўРµРєСѓС‰РёР№ Р±Р°Р»Р°РЅСЃ:",
+	L"РџСЂРµРґРїРѕР»Р°РіР°РµРјС‹Р№ РїСЂРёС…РѕРґ:",
+	L"РџСЂРµРґРїРѕР»Р°РіР°РµРјС‹Р№ Р±Р°Р»Р°РЅСЃ:", 		// projected balance for player for tommorow
 };
 
 
@@ -1740,66 +1740,66 @@ const wchar_t* pFinanceSummary[] =
 const wchar_t* pFinanceHeaders[] =
 {
   L"Day", 					// the day column
-	L"Кредит", 				// the credits column
-	L"Дебет",				// the debits column
-	L"Перевод", 			// transaction type - see TransactionText below
-	L"Баланс", 				// balance at this point in time
-	L"Стр.", 				// page number
-	L"Дн.", 				// the day(s) of transactions this page displays
+	L"РљСЂРµРґРёС‚", 				// the credits column
+	L"Р”РµР±РµС‚",				// the debits column
+	L"РџРµСЂРµРІРѕРґ", 			// transaction type - see TransactionText below
+	L"Р‘Р°Р»Р°РЅСЃ", 				// balance at this point in time
+	L"РЎС‚СЂ.", 				// page number
+	L"Р”РЅ.", 				// the day(s) of transactions this page displays
 };
 
 
 const wchar_t* pTransactionText[] =
 {
-	L"Интерес",			// interest the player has accumulated so far
-	L"Анонимные вклады",
-	L"Пеня за перевод",
-	L"Нанят", 				// Merc was hired
-	L"Торговля Бобби Рэя", 		// Bobby Ray is the name of an arms dealer
-	L"Зарегистр.счета в M.E.R.C.",
-	L"Мед Депозит: %ls", 		// medical deposit for merc
-	L"IMP анализ", 		// IMP is the acronym for International Mercenary Profiling
-	L"Куплена страховка:%ls",
-	L"Понижена страховка: %ls",
-	L"Расширена страховка: %ls", 				// johnny contract extended
-	L"Отменена страховка: %ls",
-	L"Страховой запрос: %ls", 		// insurance claim for merc
-	L"в день", 				// merc's contract extended for a day
-	L"7 дней", 				// merc's contract extended for a week
-	L"14 дней", 				// ... for 2 weeks
-	L"Доход с шахт",
+	L"РРЅС‚РµСЂРµСЃ",			// interest the player has accumulated so far
+	L"РђРЅРѕРЅРёРјРЅС‹Рµ РІРєР»Р°РґС‹",
+	L"РџРµРЅСЏ Р·Р° РїРµСЂРµРІРѕРґ",
+	L"РќР°РЅСЏС‚", 				// Merc was hired
+	L"РўРѕСЂРіРѕРІР»СЏ Р‘РѕР±Р±Рё Р СЌСЏ", 		// Bobby Ray is the name of an arms dealer
+	L"Р—Р°СЂРµРіРёСЃС‚СЂ.СЃС‡РµС‚Р° РІ M.E.R.C.",
+	L"РњРµРґ Р”РµРїРѕР·РёС‚: %ls", 		// medical deposit for merc
+	L"IMP Р°РЅР°Р»РёР·", 		// IMP is the acronym for International Mercenary Profiling
+	L"РљСѓРїР»РµРЅР° СЃС‚СЂР°С…РѕРІРєР°:%ls",
+	L"РџРѕРЅРёР¶РµРЅР° СЃС‚СЂР°С…РѕРІРєР°: %ls",
+	L"Р Р°СЃС€РёСЂРµРЅР° СЃС‚СЂР°С…РѕРІРєР°: %ls", 				// johnny contract extended
+	L"РћС‚РјРµРЅРµРЅР° СЃС‚СЂР°С…РѕРІРєР°: %ls",
+	L"РЎС‚СЂР°С…РѕРІРѕР№ Р·Р°РїСЂРѕСЃ: %ls", 		// insurance claim for merc
+	L"РІ РґРµРЅСЊ", 				// merc's contract extended for a day
+	L"7 РґРЅРµР№", 				// merc's contract extended for a week
+	L"14 РґРЅРµР№", 				// ... for 2 weeks
+	L"Р”РѕС…РѕРґ СЃ С€Р°С…С‚",
 	L"", //String nuked
-	L"Торговля цветами",
-	L"Полная оплата медуслуг.: %ls",
-	L"Частичн.оплата медуслуг: %ls",
-	L"Медуслуги не оплачены: %ls",
-	L"Выплаты: %ls",		// %ls is the name of the npc being paid
-	L"Перевод средств на имя %ls", 			// transfer funds to a merc
-	L"Перевод средств от %ls", 		// transfer funds from a merc
-	L"Стоим.экипировки ополч: %ls", // initial cost to equip a town's militia
-	L"Покупки у %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	L"%ls положил деньги.",
+	L"РўРѕСЂРіРѕРІР»СЏ С†РІРµС‚Р°РјРё",
+	L"РџРѕР»РЅР°СЏ РѕРїР»Р°С‚Р° РјРµРґСѓСЃР»СѓРі.: %ls",
+	L"Р§Р°СЃС‚РёС‡РЅ.РѕРїР»Р°С‚Р° РјРµРґСѓСЃР»СѓРі: %ls",
+	L"РњРµРґСѓСЃР»СѓРіРё РЅРµ РѕРїР»Р°С‡РµРЅС‹: %ls",
+	L"Р’С‹РїР»Р°С‚С‹: %ls",		// %ls is the name of the npc being paid
+	L"РџРµСЂРµРІРѕРґ СЃСЂРµРґСЃС‚РІ РЅР° РёРјСЏ %ls", 			// transfer funds to a merc
+	L"РџРµСЂРµРІРѕРґ СЃСЂРµРґСЃС‚РІ РѕС‚ %ls", 		// transfer funds from a merc
+	L"РЎС‚РѕРёРј.СЌРєРёРїРёСЂРѕРІРєРё РѕРїРѕР»С‡: %ls", // initial cost to equip a town's militia
+	L"РџРѕРєСѓРїРєРё Сѓ %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	L"%ls РїРѕР»РѕР¶РёР» РґРµРЅСЊРіРё.",
 };
 
 const wchar_t* pTransactionAlternateText[] =
 {
-	L"Страховка", 				// insurance for a merc
-	L"%ls:продлить контракт на 1 день", 				// entend mercs contract by a day
-	L"%ls:продлить контракт на 7 дней",
-	L"%ls:продлить контракт на 14 дней",
+	L"РЎС‚СЂР°С…РѕРІРєР°", 				// insurance for a merc
+	L"%ls:РїСЂРѕРґР»РёС‚СЊ РєРѕРЅС‚СЂР°РєС‚ РЅР° 1 РґРµРЅСЊ", 				// entend mercs contract by a day
+	L"%ls:РїСЂРѕРґР»РёС‚СЊ РєРѕРЅС‚СЂР°РєС‚ РЅР° 7 РґРЅРµР№",
+	L"%ls:РїСЂРѕРґР»РёС‚СЊ РєРѕРЅС‚СЂР°РєС‚ РЅР° 14 РґРЅРµР№",
 };
 
 // helicopter pilot payment
 
 const wchar_t* pSkyriderText[] =
 {
-	L"Всаднику заплачено $%d", 			// skyrider was paid an amount of money
-	L"Всаднику недоплачено $%d", 		// skyrider is still owed an amount of money
-	L"Всадник. Заправка завершена",	// skyrider has finished refueling
+	L"Р’СЃР°РґРЅРёРєСѓ Р·Р°РїР»Р°С‡РµРЅРѕ $%d", 			// skyrider was paid an amount of money
+	L"Р’СЃР°РґРЅРёРєСѓ РЅРµРґРѕРїР»Р°С‡РµРЅРѕ $%d", 		// skyrider is still owed an amount of money
+	L"Р’СЃР°РґРЅРёРє. Р—Р°РїСЂР°РІРєР° Р·Р°РІРµСЂС€РµРЅР°",	// skyrider has finished refueling
 	L"",//unused
 	L"",//unused
-	L"Всадник готов к полету.", // Skyrider was grounded but has been freed
-	L"У Всадника нет пассажиров.Если вы хотите отправить наемников в этот сектор, выберите ПРИНАДЛ. и МАШИНА"
+	L"Р’СЃР°РґРЅРёРє РіРѕС‚РѕРІ Рє РїРѕР»РµС‚Сѓ.", // Skyrider was grounded but has been freed
+	L"РЈ Р’СЃР°РґРЅРёРєР° РЅРµС‚ РїР°СЃСЃР°Р¶РёСЂРѕРІ.Р•СЃР»Рё РІС‹ С…РѕС‚РёС‚Рµ РѕС‚РїСЂР°РІРёС‚СЊ РЅР°РµРјРЅРёРєРѕРІ РІ СЌС‚РѕС‚ СЃРµРєС‚РѕСЂ, РІС‹Р±РµСЂРёС‚Рµ РџР РРќРђР”Р›. Рё РњРђРЁРРќРђ"
 };
 
 
@@ -1807,138 +1807,138 @@ const wchar_t* pSkyriderText[] =
 
 const wchar_t* pMoralStrings[] =
 {
-	L"Отлично",
-	L"Хорошо",
-	L"Норм.",
-	L"НеОчень",
-	L"Паника",
-	L"Плох",
+	L"РћС‚Р»РёС‡РЅРѕ",
+	L"РҐРѕСЂРѕС€Рѕ",
+	L"РќРѕСЂРј.",
+	L"РќРµРћС‡РµРЅСЊ",
+	L"РџР°РЅРёРєР°",
+	L"РџР»РѕС…",
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 
 const wchar_t* pLeftEquipmentString[] =
 {
-	L"%ls:экипировку можно получить в Омерте( A9 ).",
-	L"%ls:экипировку можно получить в Драссене( B13 ).",
+	L"%ls:СЌРєРёРїРёСЂРѕРІРєСѓ РјРѕР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РІ РћРјРµСЂС‚Рµ( A9 ).",
+	L"%ls:СЌРєРёРїРёСЂРѕРІРєСѓ РјРѕР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РІ Р”СЂР°СЃСЃРµРЅРµ( B13 ).",
 };
 
 // Status that appears on the Map Screen
 
 const wchar_t* pMapScreenStatusStrings[] =
 {
-	L"Здоровье",
-	L"Энергия",
-	L"Дух",
-	L"Сост.",	// the condition of the current vehicle (its "health")
-	L"Бензин",	// the fuel level of the current vehicle (its "energy")
+	L"Р—РґРѕСЂРѕРІСЊРµ",
+	L"Р­РЅРµСЂРіРёСЏ",
+	L"Р”СѓС…",
+	L"РЎРѕСЃС‚.",	// the condition of the current vehicle (its "health")
+	L"Р‘РµРЅР·РёРЅ",	// the fuel level of the current vehicle (its "energy")
 };
 
 
 const wchar_t* pMapScreenPrevNextCharButtonHelpText[] =
 {
-	L"Пред.наемник (|L|e|f|t)", 			// previous merc in the list
-	L"След.наемник (|R|i|g|h|t)", 				// next merc in the list
+	L"РџСЂРµРґ.РЅР°РµРјРЅРёРє (|L|e|f|t)", 			// previous merc in the list
+	L"РЎР»РµРґ.РЅР°РµРјРЅРёРє (|R|i|g|h|t)", 				// next merc in the list
 };
 
 
 const wchar_t* pEtaString[] =
 {
-	L"УВП:", 				// eta is an acronym for Estimated Time of Arrival
+	L"РЈР’Рџ:", 				// eta is an acronym for Estimated Time of Arrival
 };
 
 const wchar_t* pTrashItemText[] =
 {
-	L"Вы потеряете это навсегда.Выполнить?", 	// do you want to continue and lose the item forever
-	L"Это,кажется,и вправду ВАЖНАЯ вещь.Вы ВПОЛНЕ уверены, что хотите выбросить ее?", // does the user REALLY want to trash this item
+	L"Р’С‹ РїРѕС‚РµСЂСЏРµС‚Рµ СЌС‚Рѕ РЅР°РІСЃРµРіРґР°.Р’С‹РїРѕР»РЅРёС‚СЊ?", 	// do you want to continue and lose the item forever
+	L"Р­С‚Рѕ,РєР°Р¶РµС‚СЃСЏ,Рё РІРїСЂР°РІРґСѓ Р’РђР–РќРђРЇ РІРµС‰СЊ.Р’С‹ Р’РџРћР›РќР• СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РІС‹Р±СЂРѕСЃРёС‚СЊ РµРµ?", // does the user REALLY want to trash this item
 };
 
 
 const wchar_t* pMapErrorString[] =
 {
-	L"Отряд не может двигаться со спящим наемн.",
+	L"РћС‚СЂСЏРґ РЅРµ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ СЃРѕ СЃРїСЏС‰РёРј РЅР°РµРјРЅ.",
 
 //1-5
-	L"Сперва выведите отряд на землю.",
-	L"Приказ двигаться? Тут же кругом враги!",
-	L"Наемн.должен быть назначен в сектор или машину,чтобы ехать.",
-	L"У вас в команде еще никого нет",	// you have no members, can't do anything
-	L"Наемн.не может выполнить.",		// merc can't comply with your order
+	L"РЎРїРµСЂРІР° РІС‹РІРµРґРёС‚Рµ РѕС‚СЂСЏРґ РЅР° Р·РµРјР»СЋ.",
+	L"РџСЂРёРєР°Р· РґРІРёРіР°С‚СЊСЃСЏ? РўСѓС‚ Р¶Рµ РєСЂСѓРіРѕРј РІСЂР°РіРё!",
+	L"РќР°РµРјРЅ.РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅР°Р·РЅР°С‡РµРЅ РІ СЃРµРєС‚РѕСЂ РёР»Рё РјР°С€РёРЅСѓ,С‡С‚РѕР±С‹ РµС…Р°С‚СЊ.",
+	L"РЈ РІР°СЃ РІ РєРѕРјР°РЅРґРµ РµС‰Рµ РЅРёРєРѕРіРѕ РЅРµС‚",	// you have no members, can't do anything
+	L"РќР°РµРјРЅ.РЅРµ РјРѕР¶РµС‚ РІС‹РїРѕР»РЅРёС‚СЊ.",		// merc can't comply with your order
 //6-10
-	L"чтобы двигаться,нужен эскорт.Обеспечьте его эскортом", // merc can't move unescorted .. for a male
-	L"чтобы двигаться, нужен эскорт.Обеспечьте ее эскортом.", // for a female
-	L"Наемник еще не прибыл в Арулько!",
-	L"Кажется,сначала нужно уладить все проблемы с контрактом.",
+	L"С‡С‚РѕР±С‹ РґРІРёРіР°С‚СЊСЃСЏ,РЅСѓР¶РµРЅ СЌСЃРєРѕСЂС‚.РћР±РµСЃРїРµС‡СЊС‚Рµ РµРіРѕ СЌСЃРєРѕСЂС‚РѕРј", // merc can't move unescorted .. for a male
+	L"С‡С‚РѕР±С‹ РґРІРёРіР°С‚СЊСЃСЏ, РЅСѓР¶РµРЅ СЌСЃРєРѕСЂС‚.РћР±РµСЃРїРµС‡СЊС‚Рµ РµРµ СЌСЃРєРѕСЂС‚РѕРј.", // for a female
+	L"РќР°РµРјРЅРёРє РµС‰Рµ РЅРµ РїСЂРёР±С‹Р» РІ РђСЂСѓР»СЊРєРѕ!",
+	L"РљР°Р¶РµС‚СЃСЏ,СЃРЅР°С‡Р°Р»Р° РЅСѓР¶РЅРѕ СѓР»Р°РґРёС‚СЊ РІСЃРµ РїСЂРѕР±Р»РµРјС‹ СЃ РєРѕРЅС‚СЂР°РєС‚РѕРј.",
 	L"",
 //11-15
-	L"Приказ двигаться? Тут же битва идет!",
-	L"Вы наткнулись на засаду Кошки-Убийцы в секторе %ls!",
-	L"Вы попали в логово Кошек-Убийц в секторе I16!",
+	L"РџСЂРёРєР°Р· РґРІРёРіР°С‚СЊСЃСЏ? РўСѓС‚ Р¶Рµ Р±РёС‚РІР° РёРґРµС‚!",
+	L"Р’С‹ РЅР°С‚РєРЅСѓР»РёСЃСЊ РЅР° Р·Р°СЃР°РґСѓ РљРѕС€РєРё-РЈР±РёР№С†С‹ РІ СЃРµРєС‚РѕСЂРµ %ls!",
+	L"Р’С‹ РїРѕРїР°Р»Рё РІ Р»РѕРіРѕРІРѕ РљРѕС€РµРє-РЈР±РёР№С† РІ СЃРµРєС‚РѕСЂРµ I16!",
 	L"",
-	L"ПВО в %ls занята врагом.",
+	L"РџР’Рћ РІ %ls Р·Р°РЅСЏС‚Р° РІСЂР°РіРѕРј.",
 //16-20
-	L"Шахта в %ls взята. Ваш ежедневный доход упал до %ls в день.",
-	L"Противник взял сектор %ls, не встретив сопротивления.",
-	L"Как минимум одного из ваших наемн.нельзя назн.на это задание.",
-	L"%ls нельзя присоед.к %ls. Уже полон",
-	L"%ls нельзя присоед.к %ls. Слишком далеко.",
+	L"РЁР°С…С‚Р° РІ %ls РІР·СЏС‚Р°. Р’Р°С€ РµР¶РµРґРЅРµРІРЅС‹Р№ РґРѕС…РѕРґ СѓРїР°Р» РґРѕ %ls РІ РґРµРЅСЊ.",
+	L"РџСЂРѕС‚РёРІРЅРёРє РІР·СЏР» СЃРµРєС‚РѕСЂ %ls, РЅРµ РІСЃС‚СЂРµС‚РёРІ СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ.",
+	L"РљР°Рє РјРёРЅРёРјСѓРј РѕРґРЅРѕРіРѕ РёР· РІР°С€РёС… РЅР°РµРјРЅ.РЅРµР»СЊР·СЏ РЅР°Р·РЅ.РЅР° СЌС‚Рѕ Р·Р°РґР°РЅРёРµ.",
+	L"%ls РЅРµР»СЊР·СЏ РїСЂРёСЃРѕРµРґ.Рє %ls. РЈР¶Рµ РїРѕР»РѕРЅ",
+	L"%ls РЅРµР»СЊР·СЏ РїСЂРёСЃРѕРµРґ.Рє %ls. РЎР»РёС€РєРѕРј РґР°Р»РµРєРѕ.",
 //21-25
-	L"Шахта в %ls захвачена войсками Дейдранны!",
-	L"Войска Дейдранны только что захватили ПВО в %ls",
-	L"Войска Дейдранны только что захватили %ls",
-	L"Войска Дейдранны только что были замечены в %ls.",
-	L"Войска Дейдраннытолько что захватили %ls.",
+	L"РЁР°С…С‚Р° РІ %ls Р·Р°С…РІР°С‡РµРЅР° РІРѕР№СЃРєР°РјРё Р”РµР№РґСЂР°РЅРЅС‹!",
+	L"Р’РѕР№СЃРєР° Р”РµР№РґСЂР°РЅРЅС‹ С‚РѕР»СЊРєРѕ С‡С‚Рѕ Р·Р°С…РІР°С‚РёР»Рё РџР’Рћ РІ %ls",
+	L"Р’РѕР№СЃРєР° Р”РµР№РґСЂР°РЅРЅС‹ С‚РѕР»СЊРєРѕ С‡С‚Рѕ Р·Р°С…РІР°С‚РёР»Рё %ls",
+	L"Р’РѕР№СЃРєР° Р”РµР№РґСЂР°РЅРЅС‹ С‚РѕР»СЊРєРѕ С‡С‚Рѕ Р±С‹Р»Рё Р·Р°РјРµС‡РµРЅС‹ РІ %ls.",
+	L"Р’РѕР№СЃРєР° Р”РµР№РґСЂР°РЅРЅС‹С‚РѕР»СЊРєРѕ С‡С‚Рѕ Р·Р°С…РІР°С‚РёР»Рё %ls.",
 //26-30
-	L"Как минимум один из ваших наемников невозможно уложить спать.",
-	L"Как минимум одного из ваших наемников невозможно разбудить.",
-	L"Ополчение не придет, пока не закончится его обучение.",
-	L"%ls сейчас не может принять приказ двигаться.",
-	L"Ополчение, которое находится вне города,нельзя переместить в другой сектор.",
+	L"РљР°Рє РјРёРЅРёРјСѓРј РѕРґРёРЅ РёР· РІР°С€РёС… РЅР°РµРјРЅРёРєРѕРІ РЅРµРІРѕР·РјРѕР¶РЅРѕ СѓР»РѕР¶РёС‚СЊ СЃРїР°С‚СЊ.",
+	L"РљР°Рє РјРёРЅРёРјСѓРј РѕРґРЅРѕРіРѕ РёР· РІР°С€РёС… РЅР°РµРјРЅРёРєРѕРІ РЅРµРІРѕР·РјРѕР¶РЅРѕ СЂР°Р·Р±СѓРґРёС‚СЊ.",
+	L"РћРїРѕР»С‡РµРЅРёРµ РЅРµ РїСЂРёРґРµС‚, РїРѕРєР° РЅРµ Р·Р°РєРѕРЅС‡РёС‚СЃСЏ РµРіРѕ РѕР±СѓС‡РµРЅРёРµ.",
+	L"%ls СЃРµР№С‡Р°СЃ РЅРµ РјРѕР¶РµС‚ РїСЂРёРЅСЏС‚СЊ РїСЂРёРєР°Р· РґРІРёРіР°С‚СЊСЃСЏ.",
+	L"РћРїРѕР»С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РЅР°С…РѕРґРёС‚СЃСЏ РІРЅРµ РіРѕСЂРѕРґР°,РЅРµР»СЊР·СЏ РїРµСЂРµРјРµСЃС‚РёС‚СЊ РІ РґСЂСѓРіРѕР№ СЃРµРєС‚РѕСЂ.",
 //31-35
-	L"Нельзя держать ополчение в %ls.",
-	L"Пустая машина не может двигаться!",
-	L"%ls слишком изранен, чтобы идти!",
-	L"Сперва надо покинуть музей!",
-	L"%ls мертв!",
+	L"РќРµР»СЊР·СЏ РґРµСЂР¶Р°С‚СЊ РѕРїРѕР»С‡РµРЅРёРµ РІ %ls.",
+	L"РџСѓСЃС‚Р°СЏ РјР°С€РёРЅР° РЅРµ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ!",
+	L"%ls СЃР»РёС€РєРѕРј РёР·СЂР°РЅРµРЅ, С‡С‚РѕР±С‹ РёРґС‚Рё!",
+	L"РЎРїРµСЂРІР° РЅР°РґРѕ РїРѕРєРёРЅСѓС‚СЊ РјСѓР·РµР№!",
+	L"%ls РјРµСЂС‚РІ!",
 //36-40
-	L"%ls не может перейти к %ls: он в движении",
-	L"%ls не может сесть в машину так",
-	L"%ls не может присоед. к %ls",
-	L"Нельзя сжимать время пока нет наемников!",
-	L"Эта машина может ездить только по дорогам!",
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїРµСЂРµР№С‚Рё Рє %ls: РѕРЅ РІ РґРІРёР¶РµРЅРёРё",
+	L"%ls РЅРµ РјРѕР¶РµС‚ СЃРµСЃС‚СЊ РІ РјР°С€РёРЅСѓ С‚Р°Рє",
+	L"%ls РЅРµ РјРѕР¶РµС‚ РїСЂРёСЃРѕРµРґ. Рє %ls",
+	L"РќРµР»СЊР·СЏ СЃР¶РёРјР°С‚СЊ РІСЂРµРјСЏ РїРѕРєР° РЅРµС‚ РЅР°РµРјРЅРёРєРѕРІ!",
+	L"Р­С‚Р° РјР°С€РёРЅР° РјРѕР¶РµС‚ РµР·РґРёС‚СЊ С‚РѕР»СЊРєРѕ РїРѕ РґРѕСЂРѕРіР°Рј!",
 //41-45
-	L"Нельзя переназначать движущихся наемников",
-	L"В машине кончился бензин!",
-	L"%ls слишком устал,чтобы передвигаться.",
-	L"Никто из сидящих в машине не может управлять ею.",
-	L"Сейчас один/неск.наемн.этого отряда не могут двигаться.",
+	L"РќРµР»СЊР·СЏ РїРµСЂРµРЅР°Р·РЅР°С‡Р°С‚СЊ РґРІРёР¶СѓС‰РёС…СЃСЏ РЅР°РµРјРЅРёРєРѕРІ",
+	L"Р’ РјР°С€РёРЅРµ РєРѕРЅС‡РёР»СЃСЏ Р±РµРЅР·РёРЅ!",
+	L"%ls СЃР»РёС€РєРѕРј СѓСЃС‚Р°Р»,С‡С‚РѕР±С‹ РїРµСЂРµРґРІРёРіР°С‚СЊСЃСЏ.",
+	L"РќРёРєС‚Рѕ РёР· СЃРёРґСЏС‰РёС… РІ РјР°С€РёРЅРµ РЅРµ РјРѕР¶РµС‚ СѓРїСЂР°РІР»СЏС‚СЊ РµСЋ.",
+	L"РЎРµР№С‡Р°СЃ РѕРґРёРЅ/РЅРµСЃРє.РЅР°РµРјРЅ.СЌС‚РѕРіРѕ РѕС‚СЂСЏРґР° РЅРµ РјРѕРіСѓС‚ РґРІРёРіР°С‚СЊСЃСЏ.",
 //46-50
-	L"Сейчас один/неск.ДРУГИХ наемн.не могут двигаться.",
-	L"Машина слишком побита!",
-	L"Тренировать ополчение могут только 2 наемн.в секторе",
-	L"Робот не может двигаться без управляющего.Поместите их в один отряд.",
+	L"РЎРµР№С‡Р°СЃ РѕРґРёРЅ/РЅРµСЃРє.Р”Р РЈР“РРҐ РЅР°РµРјРЅ.РЅРµ РјРѕРіСѓС‚ РґРІРёРіР°С‚СЊСЃСЏ.",
+	L"РњР°С€РёРЅР° СЃР»РёС€РєРѕРј РїРѕР±РёС‚Р°!",
+	L"РўСЂРµРЅРёСЂРѕРІР°С‚СЊ РѕРїРѕР»С‡РµРЅРёРµ РјРѕРіСѓС‚ С‚РѕР»СЊРєРѕ 2 РЅР°РµРјРЅ.РІ СЃРµРєС‚РѕСЂРµ",
+	L"Р РѕР±РѕС‚ РЅРµ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ Р±РµР· СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ.РџРѕРјРµСЃС‚РёС‚Рµ РёС… РІ РѕРґРёРЅ РѕС‚СЂСЏРґ.",
 };
 
 
 // help text used during strategic route plotting
 const wchar_t* pMapPlotStrings[] =
 {
-	L"Щелкните по месту,чтобы подтвердить конечное направление,или щелкните по другому сектору.",
-	L"Направление подтверждено.",
-	L"Место назн.не изменилось.",
-	L"Направление отменено.",
-	L"Путь укорочен.",
+	L"Р©РµР»РєРЅРёС‚Рµ РїРѕ РјРµСЃС‚Сѓ,С‡С‚РѕР±С‹ РїРѕРґС‚РІРµСЂРґРёС‚СЊ РєРѕРЅРµС‡РЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ,РёР»Рё С‰РµР»РєРЅРёС‚Рµ РїРѕ РґСЂСѓРіРѕРјСѓ СЃРµРєС‚РѕСЂСѓ.",
+	L"РќР°РїСЂР°РІР»РµРЅРёРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ.",
+	L"РњРµСЃС‚Рѕ РЅР°Р·РЅ.РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ.",
+	L"РќР°РїСЂР°РІР»РµРЅРёРµ РѕС‚РјРµРЅРµРЅРѕ.",
+	L"РџСѓС‚СЊ СѓРєРѕСЂРѕС‡РµРЅ.",
 };
 
 
 // help text used when moving the merc arrival sector
 const wchar_t* pBullseyeStrings[] =
 {
-	L"Кликнуть на тот сектор, куда вы хотите отправить наемника.",
-	L"OK.Прибывающий наемник будет высажен в %ls",
-	L"Наемнику нельзя туда лететь,воздушн.путь небезопасен!",
-	L"Отмена. Сектор прибытия тот же",
-	L"Возд.пространство над %ls небезопасно!Сектор прибытия перемещен в %ls.",
+	L"РљР»РёРєРЅСѓС‚СЊ РЅР° С‚РѕС‚ СЃРµРєС‚РѕСЂ, РєСѓРґР° РІС‹ С…РѕС‚РёС‚Рµ РѕС‚РїСЂР°РІРёС‚СЊ РЅР°РµРјРЅРёРєР°.",
+	L"OK.РџСЂРёР±С‹РІР°СЋС‰РёР№ РЅР°РµРјРЅРёРє Р±СѓРґРµС‚ РІС‹СЃР°Р¶РµРЅ РІ %ls",
+	L"РќР°РµРјРЅРёРєСѓ РЅРµР»СЊР·СЏ С‚СѓРґР° Р»РµС‚РµС‚СЊ,РІРѕР·РґСѓС€РЅ.РїСѓС‚СЊ РЅРµР±РµР·РѕРїР°СЃРµРЅ!",
+	L"РћС‚РјРµРЅР°. РЎРµРєС‚РѕСЂ РїСЂРёР±С‹С‚РёСЏ С‚РѕС‚ Р¶Рµ",
+	L"Р’РѕР·Рґ.РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РЅР°Рґ %ls РЅРµР±РµР·РѕРїР°СЃРЅРѕ!РЎРµРєС‚РѕСЂ РїСЂРёР±С‹С‚РёСЏ РїРµСЂРµРјРµС‰РµРЅ РІ %ls.",
 };
 
 
@@ -1946,9 +1946,9 @@ const wchar_t* pBullseyeStrings[] =
 
 const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 {
-	L"Просмотр инвентаря(|E|n|t|e|r)",
-	L"Выкинуть вещь",
-	L"Выйти из инвентаря(|E|n|t|e|r)",
+	L"РџСЂРѕСЃРјРѕС‚СЂ РёРЅРІРµРЅС‚Р°СЂСЏ(|E|n|t|e|r)",
+	L"Р’С‹РєРёРЅСѓС‚СЊ РІРµС‰СЊ",
+	L"Р’С‹Р№С‚Рё РёР· РёРЅРІРµРЅС‚Р°СЂСЏ(|E|n|t|e|r)",
 };
 
 
@@ -1956,22 +1956,22 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 // male version of where equipment is left
 const wchar_t* pMercHeLeaveString[] =
 {
-	L"%ls должен оставить свое снаряжение здесь (%ls) или позже в Драссене (B13)во время вылета из Арулько?",
-	L"%ls должен оставить свое снаряжение здесь (%ls) или позже в Омерте (А9) во время вылета из Арулько?",
-	L"отправляется и сбросит свое снаряжение в Омерте (A9).",
-	L"отправляется и сбросит свое снаряжение в Драссене (B13).",
-	L"%ls отправляется и сбросит свое снаряжение в %ls.",
+	L"%ls РґРѕР»Р¶РµРЅ РѕСЃС‚Р°РІРёС‚СЊ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ Р·РґРµСЃСЊ (%ls) РёР»Рё РїРѕР·Р¶Рµ РІ Р”СЂР°СЃСЃРµРЅРµ (B13)РІРѕ РІСЂРµРјСЏ РІС‹Р»РµС‚Р° РёР· РђСЂСѓР»СЊРєРѕ?",
+	L"%ls РґРѕР»Р¶РµРЅ РѕСЃС‚Р°РІРёС‚СЊ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ Р·РґРµСЃСЊ (%ls) РёР»Рё РїРѕР·Р¶Рµ РІ РћРјРµСЂС‚Рµ (Рђ9) РІРѕ РІСЂРµРјСЏ РІС‹Р»РµС‚Р° РёР· РђСЂСѓР»СЊРєРѕ?",
+	L"РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ РћРјРµСЂС‚Рµ (A9).",
+	L"РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ Р”СЂР°СЃСЃРµРЅРµ (B13).",
+	L"%ls РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ %ls.",
 };
 
 
 // female version
 const wchar_t* pMercSheLeaveString[] =
 {
-	L"%ls должна оставить свое снаряжение здесь (%ls) или позже в Драссене (B13)во время вылета из Арулько?",
-	L" должна оставить свое снаряжение здесь (%ls) или позже в Омерте (А9)во время вылета из Арулько?",
-	L"отправляется и сбросит свое снаряжение в Омерте (A9).",
-	L"отправляется и сбросит свое снаряжение в Драссене (B13).",
-	L"%ls отправляется и сбросит свое снаряжение в %ls.",
+	L"%ls РґРѕР»Р¶РЅР° РѕСЃС‚Р°РІРёС‚СЊ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ Р·РґРµСЃСЊ (%ls) РёР»Рё РїРѕР·Р¶Рµ РІ Р”СЂР°СЃСЃРµРЅРµ (B13)РІРѕ РІСЂРµРјСЏ РІС‹Р»РµС‚Р° РёР· РђСЂСѓР»СЊРєРѕ?",
+	L" РґРѕР»Р¶РЅР° РѕСЃС‚Р°РІРёС‚СЊ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ Р·РґРµСЃСЊ (%ls) РёР»Рё РїРѕР·Р¶Рµ РІ РћРјРµСЂС‚Рµ (Рђ9)РІРѕ РІСЂРµРјСЏ РІС‹Р»РµС‚Р° РёР· РђСЂСѓР»СЊРєРѕ?",
+	L"РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ РћРјРµСЂС‚Рµ (A9).",
+	L"РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ Р”СЂР°СЃСЃРµРЅРµ (B13).",
+	L"%ls РѕС‚РїСЂР°РІР»СЏРµС‚СЃСЏ Рё СЃР±СЂРѕСЃРёС‚ СЃРІРѕРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ РІ %ls.",
 };
 
 
@@ -1979,13 +1979,13 @@ const wchar_t* pMercSheLeaveString[] =
 
 const wchar_t* pImpPopUpStrings[] =
 {
-	L"Неверный код авторизации",
-	L"Вы уверены, что хотите начать процесс записи профайла заново?",
-	L"Введите полное имя и пол",
-	L"Предварит.анализ ваших финансов показал, что у вас недостаточно денег на анализ.",
-  L"Сейчас вы не можете выбрать это.",
-	L"Чтобы закончить анализ,нужно иметь место еще хотя бы для одного члена команды.",
-	L"Анализ уже завершен.",
+	L"РќРµРІРµСЂРЅС‹Р№ РєРѕРґ Р°РІС‚РѕСЂРёР·Р°С†РёРё",
+	L"Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РЅР°С‡Р°С‚СЊ РїСЂРѕС†РµСЃСЃ Р·Р°РїРёСЃРё РїСЂРѕС„Р°Р№Р»Р° Р·Р°РЅРѕРІРѕ?",
+	L"Р’РІРµРґРёС‚Рµ РїРѕР»РЅРѕРµ РёРјСЏ Рё РїРѕР»",
+	L"РџСЂРµРґРІР°СЂРёС‚.Р°РЅР°Р»РёР· РІР°С€РёС… С„РёРЅР°РЅСЃРѕРІ РїРѕРєР°Р·Р°Р», С‡С‚Рѕ Сѓ РІР°СЃ РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґРµРЅРµРі РЅР° Р°РЅР°Р»РёР·.",
+  L"РЎРµР№С‡Р°СЃ РІС‹ РЅРµ РјРѕР¶РµС‚Рµ РІС‹Р±СЂР°С‚СЊ СЌС‚Рѕ.",
+	L"Р§С‚РѕР±С‹ Р·Р°РєРѕРЅС‡РёС‚СЊ Р°РЅР°Р»РёР·,РЅСѓР¶РЅРѕ РёРјРµС‚СЊ РјРµСЃС‚Рѕ РµС‰Рµ С…РѕС‚СЏ Р±С‹ РґР»СЏ РѕРґРЅРѕРіРѕ С‡Р»РµРЅР° РєРѕРјР°РЅРґС‹.",
+	L"РђРЅР°Р»РёР· СѓР¶Рµ Р·Р°РІРµСЂС€РµРЅ.",
 };
 
 
@@ -1993,72 +1993,72 @@ const wchar_t* pImpPopUpStrings[] =
 
 const wchar_t* pImpButtonText[] =
 {
-	L"Подробнее", 			// about the IMP site
-	L"НАЧАТЬ", 			// begin profiling
-	L"Личность", 		// personality section
-	L"Свойства", 		// personal stats/attributes section
-	L"Портрет", 			// the personal portrait selection
-	L"Голос %d", 			// the voice selection
-	L"Готово", 			// done profiling
-	L"Заново", 		// start over profiling
-	L"Да,выбрать выделенный ответ.",
-	L"Да",
-	L"Нет",
-	L"Закончить", 			// finished answering questions
-	L"Пред", 			// previous question..abbreviated form
-	L"След", 			// next question
-	L"ДА.", 		// yes, I am certain
-	L"НЕТ, ХОЧУ НАЧАТЬ СНАЧАЛА.", // no, I want to start over the profiling process
-	L"ДА.",
-	L"НЕТ",
-	L"Назад", 			// back one page
-	L"Отменить", 			// cancel selection
-	L"Да,уверен.",
-	L"Нет,просмотреть еще раз.",
-	L"Зарегистр.", 			// the IMP site registry..when name and gender is selected
-	L"Анализ", 			// analyzing your profile results
+	L"РџРѕРґСЂРѕР±РЅРµРµ", 			// about the IMP site
+	L"РќРђР§РђРўР¬", 			// begin profiling
+	L"Р›РёС‡РЅРѕСЃС‚СЊ", 		// personality section
+	L"РЎРІРѕР№СЃС‚РІР°", 		// personal stats/attributes section
+	L"РџРѕСЂС‚СЂРµС‚", 			// the personal portrait selection
+	L"Р“РѕР»РѕСЃ %d", 			// the voice selection
+	L"Р“РѕС‚РѕРІРѕ", 			// done profiling
+	L"Р—Р°РЅРѕРІРѕ", 		// start over profiling
+	L"Р”Р°,РІС‹Р±СЂР°С‚СЊ РІС‹РґРµР»РµРЅРЅС‹Р№ РѕС‚РІРµС‚.",
+	L"Р”Р°",
+	L"РќРµС‚",
+	L"Р—Р°РєРѕРЅС‡РёС‚СЊ", 			// finished answering questions
+	L"РџСЂРµРґ", 			// previous question..abbreviated form
+	L"РЎР»РµРґ", 			// next question
+	L"Р”Рђ.", 		// yes, I am certain
+	L"РќР•Рў, РҐРћР§РЈ РќРђР§РђРўР¬ РЎРќРђР§РђР›Рђ.", // no, I want to start over the profiling process
+	L"Р”Рђ.",
+	L"РќР•Рў",
+	L"РќР°Р·Р°Рґ", 			// back one page
+	L"РћС‚РјРµРЅРёС‚СЊ", 			// cancel selection
+	L"Р”Р°,СѓРІРµСЂРµРЅ.",
+	L"РќРµС‚,РїСЂРѕСЃРјРѕС‚СЂРµС‚СЊ РµС‰Рµ СЂР°Р·.",
+	L"Р—Р°СЂРµРіРёСЃС‚СЂ.", 			// the IMP site registry..when name and gender is selected
+	L"РђРЅР°Р»РёР·", 			// analyzing your profile results
 	L"OK",
-	L"Голос",
+	L"Р“РѕР»РѕСЃ",
 };
 
 const wchar_t* pExtraIMPStrings[] =
 {
-	L"Чтобы начать профилирование, выберите Личность.",
-	L"Когда Личность завершена, выберите ваши Свойства.",
-	L"Свойства приписаны,переходите к Портрету.",
-	L"Чтобы завершить процесс,выберите голос,который вам подходит."
+	L"Р§С‚РѕР±С‹ РЅР°С‡Р°С‚СЊ РїСЂРѕС„РёР»РёСЂРѕРІР°РЅРёРµ, РІС‹Р±РµСЂРёС‚Рµ Р›РёС‡РЅРѕСЃС‚СЊ.",
+	L"РљРѕРіРґР° Р›РёС‡РЅРѕСЃС‚СЊ Р·Р°РІРµСЂС€РµРЅР°, РІС‹Р±РµСЂРёС‚Рµ РІР°С€Рё РЎРІРѕР№СЃС‚РІР°.",
+	L"РЎРІРѕР№СЃС‚РІР° РїСЂРёРїРёСЃР°РЅС‹,РїРµСЂРµС…РѕРґРёС‚Рµ Рє РџРѕСЂС‚СЂРµС‚Сѓ.",
+	L"Р§С‚РѕР±С‹ Р·Р°РІРµСЂС€РёС‚СЊ РїСЂРѕС†РµСЃСЃ,РІС‹Р±РµСЂРёС‚Рµ РіРѕР»РѕСЃ,РєРѕС‚РѕСЂС‹Р№ РІР°Рј РїРѕРґС…РѕРґРёС‚."
 };
 
 const wchar_t* pFilesTitle[] =
 {
-  L"Просмотр файлов",
+  L"РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ",
 };
 
 const wchar_t* pFilesSenderList[] =
 {
-  L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Перехват #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Перехват #2",	   // second intercept file
-	L"Перехват #3",			 // third intercept file
-	L"Перехват #4", // fourth intercept file
-	L"Перехват #5", // fifth intercept file
-	L"Перехват #6", // sixth intercept file
+  L"РћС‚С‡РµС‚ СЂР°Р·РІРµРґРєРё", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"РџРµСЂРµС…РІР°С‚ #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	L"РџРµСЂРµС…РІР°С‚ #2",	   // second intercept file
+	L"РџРµСЂРµС…РІР°С‚ #3",			 // third intercept file
+	L"РџРµСЂРµС…РІР°С‚ #4", // fourth intercept file
+	L"РџРµСЂРµС…РІР°С‚ #5", // fifth intercept file
+	L"РџРµСЂРµС…РІР°С‚ #6", // sixth intercept file
 };
 
 // Text having to do with the History Log
 
 const wchar_t* pHistoryTitle[] =
 {
-	L"История",
+	L"РСЃС‚РѕСЂРёСЏ",
 };
 
 const wchar_t* pHistoryHeaders[] =
 {
-	L"День", 			// the day the history event occurred
-	L"Стр.", 			// the current page in the history report we are in
-	L"День", 			// the days the history report occurs over
-	L"Место", 			// location (in sector) the event occurred
-	L"Событие", 			// the event label
+	L"Р”РµРЅСЊ", 			// the day the history event occurred
+	L"РЎС‚СЂ.", 			// the current page in the history report we are in
+	L"Р”РµРЅСЊ", 			// the days the history report occurs over
+	L"РњРµСЃС‚Рѕ", 			// location (in sector) the event occurred
+	L"РЎРѕР±С‹С‚РёРµ", 			// the event label
 };
 
 // various history events
@@ -2071,116 +2071,116 @@ const wchar_t* pHistoryStrings[] =
 {
 	L"",																						// leave this line blank
 	//1-5
-	L"%ls нанят из A.I.M.", 										// merc was hired from the aim site
-	L"%ls нанят из M.E.R.C.", 									// merc was hired from the aim site
-	L"%ls умер.", 															// merc was killed
-	L"Зарегистр.счета в M.E.R.C.",								// paid outstanding bills at MERC
-	L"Принято назначение от Энрико Сальвадори",
+	L"%ls РЅР°РЅСЏС‚ РёР· A.I.M.", 										// merc was hired from the aim site
+	L"%ls РЅР°РЅСЏС‚ РёР· M.E.R.C.", 									// merc was hired from the aim site
+	L"%ls СѓРјРµСЂ.", 															// merc was killed
+	L"Р—Р°СЂРµРіРёСЃС‚СЂ.СЃС‡РµС‚Р° РІ M.E.R.C.",								// paid outstanding bills at MERC
+	L"РџСЂРёРЅСЏС‚Рѕ РЅР°Р·РЅР°С‡РµРЅРёРµ РѕС‚ Р­РЅСЂРёРєРѕ РЎР°Р»СЊРІР°РґРѕСЂРё",
 	//6-10
-	L"IMP профайл сгенерирован",
-	L"Подписан страховой контракт для %ls.", 				// insurance contract purchased
-	L"Отменен страховой контракт для %ls.", 				// insurance contract canceled
-	L"Страховая выплата для %ls.", 							// insurance claim payout for merc
-	L"%ls:контракт продлен на день.", 						// Extented "mercs name"'s for a day
+	L"IMP РїСЂРѕС„Р°Р№Р» СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅ",
+	L"РџРѕРґРїРёСЃР°РЅ СЃС‚СЂР°С…РѕРІРѕР№ РєРѕРЅС‚СЂР°РєС‚ РґР»СЏ %ls.", 				// insurance contract purchased
+	L"РћС‚РјРµРЅРµРЅ СЃС‚СЂР°С…РѕРІРѕР№ РєРѕРЅС‚СЂР°РєС‚ РґР»СЏ %ls.", 				// insurance contract canceled
+	L"РЎС‚СЂР°С…РѕРІР°СЏ РІС‹РїР»Р°С‚Р° РґР»СЏ %ls.", 							// insurance claim payout for merc
+	L"%ls:РєРѕРЅС‚СЂР°РєС‚ РїСЂРѕРґР»РµРЅ РЅР° РґРµРЅСЊ.", 						// Extented "mercs name"'s for a day
 	//11-15
-	L"%ls:контракт продлен на 7дн.", 					// Extented "mercs name"'s for a week
-	L"%ls:контракт продлен на 14дн.", 					// Extented "mercs name"'s 2 weeks
-	L"%ls уволен.", 													// "merc's name" was dismissed.
-	L"%ls ушел.", 																		// "merc's name" quit.
-	L"начало.", 															// a particular quest started
+	L"%ls:РєРѕРЅС‚СЂР°РєС‚ РїСЂРѕРґР»РµРЅ РЅР° 7РґРЅ.", 					// Extented "mercs name"'s for a week
+	L"%ls:РєРѕРЅС‚СЂР°РєС‚ РїСЂРѕРґР»РµРЅ РЅР° 14РґРЅ.", 					// Extented "mercs name"'s 2 weeks
+	L"%ls СѓРІРѕР»РµРЅ.", 													// "merc's name" was dismissed.
+	L"%ls СѓС€РµР».", 																		// "merc's name" quit.
+	L"РЅР°С‡Р°Р»Рѕ.", 															// a particular quest started
 	//16-20
-	L"завершен.",
-	L"Разговор с начальн.шахт в 						 s",									// talked to head miner of town
-	L"Освобожден %ls",
-	L"Был использован обман",
-	L"Пища должна быть в Омерте до завтра",
+	L"Р·Р°РІРµСЂС€РµРЅ.",
+	L"Р Р°Р·РіРѕРІРѕСЂ СЃ РЅР°С‡Р°Р»СЊРЅ.С€Р°С…С‚ РІ 						 s",									// talked to head miner of town
+	L"РћСЃРІРѕР±РѕР¶РґРµРЅ %ls",
+	L"Р‘С‹Р» РёСЃРїРѕР»СЊР·РѕРІР°РЅ РѕР±РјР°РЅ",
+	L"РџРёС‰Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІ РћРјРµСЂС‚Рµ РґРѕ Р·Р°РІС‚СЂР°",
 	//21-25
-	L"%ls покинула команду и вышла замуж за Дэрила Хика",
-	L"%ls:срок контракта истек.",
-	L"%ls нанят.",
-	L"Энрико жалуется на отсуствие прогресса",
-	L"Битва выиграна",
+	L"%ls РїРѕРєРёРЅСѓР»Р° РєРѕРјР°РЅРґСѓ Рё РІС‹С€Р»Р° Р·Р°РјСѓР¶ Р·Р° Р”СЌСЂРёР»Р° РҐРёРєР°",
+	L"%ls:СЃСЂРѕРє РєРѕРЅС‚СЂР°РєС‚Р° РёСЃС‚РµРє.",
+	L"%ls РЅР°РЅСЏС‚.",
+	L"Р­РЅСЂРёРєРѕ Р¶Р°Р»СѓРµС‚СЃСЏ РЅР° РѕС‚СЃСѓСЃС‚РІРёРµ РїСЂРѕРіСЂРµСЃСЃР°",
+	L"Р‘РёС‚РІР° РІС‹РёРіСЂР°РЅР°",
 	//26-30
-	L"%ls:в шахте кончается руда",
-	L"%ls: шахта выработана",
-	L"%ls: шахта закрыта",
-	L"%ls: шахта вновь открыта",
-	L"Получил сведения о тюрьме Тикса.",
+	L"%ls:РІ С€Р°С…С‚Рµ РєРѕРЅС‡Р°РµС‚СЃСЏ СЂСѓРґР°",
+	L"%ls: С€Р°С…С‚Р° РІС‹СЂР°Р±РѕС‚Р°РЅР°",
+	L"%ls: С€Р°С…С‚Р° Р·Р°РєСЂС‹С‚Р°",
+	L"%ls: С€Р°С…С‚Р° РІРЅРѕРІСЊ РѕС‚РєСЂС‹С‚Р°",
+	L"РџРѕР»СѓС‡РёР» СЃРІРµРґРµРЅРёСЏ Рѕ С‚СЋСЂСЊРјРµ РўРёРєСЃР°.",
 	//31-35
-	L"Услышал о секретном военном заводе Орта.",
-	L"Ученый с Орты помог с ракетным ружьем.",
-	L"Дейдранна нашла применение трупам.",
-	L"Франк говорил о боях в Сан Моне.",
-	L"Пациент думает,что он что-то видел в шахтах.",
+	L"РЈСЃР»С‹С€Р°Р» Рѕ СЃРµРєСЂРµС‚РЅРѕРј РІРѕРµРЅРЅРѕРј Р·Р°РІРѕРґРµ РћСЂС‚Р°.",
+	L"РЈС‡РµРЅС‹Р№ СЃ РћСЂС‚С‹ РїРѕРјРѕРі СЃ СЂР°РєРµС‚РЅС‹Рј СЂСѓР¶СЊРµРј.",
+	L"Р”РµР№РґСЂР°РЅРЅР° РЅР°С€Р»Р° РїСЂРёРјРµРЅРµРЅРёРµ С‚СЂСѓРїР°Рј.",
+	L"Р¤СЂР°РЅРє РіРѕРІРѕСЂРёР» Рѕ Р±РѕСЏС… РІ РЎР°РЅ РњРѕРЅРµ.",
+	L"РџР°С†РёРµРЅС‚ РґСѓРјР°РµС‚,С‡С‚Рѕ РѕРЅ С‡С‚Рѕ-С‚Рѕ РІРёРґРµР» РІ С€Р°С…С‚Р°С….",
 	//36-40
-	L"Встретил какого-то Девина - торгует взрывчаткой.",
-	L"Столкнулся со знаменитым Майком!",
-	L"Встретил Тони - он занимается оружием.",
-	L"Получил ракетное ружье от сержанта Кротта.",
-	L"Право собственности на магазин Энжела передано Кайлу.",
+	L"Р’СЃС‚СЂРµС‚РёР» РєР°РєРѕРіРѕ-С‚Рѕ Р”РµРІРёРЅР° - С‚РѕСЂРіСѓРµС‚ РІР·СЂС‹РІС‡Р°С‚РєРѕР№.",
+	L"РЎС‚РѕР»РєРЅСѓР»СЃСЏ СЃРѕ Р·РЅР°РјРµРЅРёС‚С‹Рј РњР°Р№РєРѕРј!",
+	L"Р’СЃС‚СЂРµС‚РёР» РўРѕРЅРё - РѕРЅ Р·Р°РЅРёРјР°РµС‚СЃСЏ РѕСЂСѓР¶РёРµРј.",
+	L"РџРѕР»СѓС‡РёР» СЂР°РєРµС‚РЅРѕРµ СЂСѓР¶СЊРµ РѕС‚ СЃРµСЂР¶Р°РЅС‚Р° РљСЂРѕС‚С‚Р°.",
+	L"РџСЂР°РІРѕ СЃРѕР±СЃС‚РІРµРЅРЅРѕСЃС‚Рё РЅР° РјР°РіР°Р·РёРЅ Р­РЅР¶РµР»Р° РїРµСЂРµРґР°РЅРѕ РљР°Р№Р»Сѓ.",
 	//41-45
-	L"Шиз предлагает сделать робота.",
-	L"Болтун может сделать тайное варево для жуков.",
-	L"Кейт больше не работает.",
-	L"Говард обеспечивает Дейдранну цианидом.",
-	L"Встретил Кейта - своего человека в Камбрии.",
+	L"РЁРёР· РїСЂРµРґР»Р°РіР°РµС‚ СЃРґРµР»Р°С‚СЊ СЂРѕР±РѕС‚Р°.",
+	L"Р‘РѕР»С‚СѓРЅ РјРѕР¶РµС‚ СЃРґРµР»Р°С‚СЊ С‚Р°Р№РЅРѕРµ РІР°СЂРµРІРѕ РґР»СЏ Р¶СѓРєРѕРІ.",
+	L"РљРµР№С‚ Р±РѕР»СЊС€Рµ РЅРµ СЂР°Р±РѕС‚Р°РµС‚.",
+	L"Р“РѕРІР°СЂРґ РѕР±РµСЃРїРµС‡РёРІР°РµС‚ Р”РµР№РґСЂР°РЅРЅСѓ С†РёР°РЅРёРґРѕРј.",
+	L"Р’СЃС‚СЂРµС‚РёР» РљРµР№С‚Р° - СЃРІРѕРµРіРѕ С‡РµР»РѕРІРµРєР° РІ РљР°РјР±СЂРёРё.",
 	//46-50
-	L"Встретил Говарда - фармацевта из Балимы.",
-	L"Встретил Перко - у него маленький ремонтный бизнес.",
-	L"Встретил Сэма из Балайма - у него компьютерный магазин.",
-	L"Фрэнс занимается электроникой и другими вещами.",
-	L"У Арнольда ремонтный магазин в Граме.",
+	L"Р’СЃС‚СЂРµС‚РёР» Р“РѕРІР°СЂРґР° - С„Р°СЂРјР°С†РµРІС‚Р° РёР· Р‘Р°Р»РёРјС‹.",
+	L"Р’СЃС‚СЂРµС‚РёР» РџРµСЂРєРѕ - Сѓ РЅРµРіРѕ РјР°Р»РµРЅСЊРєРёР№ СЂРµРјРѕРЅС‚РЅС‹Р№ Р±РёР·РЅРµСЃ.",
+	L"Р’СЃС‚СЂРµС‚РёР» РЎСЌРјР° РёР· Р‘Р°Р»Р°Р№РјР° - Сѓ РЅРµРіРѕ РєРѕРјРїСЊСЋС‚РµСЂРЅС‹Р№ РјР°РіР°Р·РёРЅ.",
+	L"Р¤СЂСЌРЅСЃ Р·Р°РЅРёРјР°РµС‚СЃСЏ СЌР»РµРєС‚СЂРѕРЅРёРєРѕР№ Рё РґСЂСѓРіРёРјРё РІРµС‰Р°РјРё.",
+	L"РЈ РђСЂРЅРѕР»СЊРґР° СЂРµРјРѕРЅС‚РЅС‹Р№ РјР°РіР°Р·РёРЅ РІ Р“СЂР°РјРµ.",
 	//51-55
-	L"Фредо ремонтирует электронику в Граме.",
-	L"Получено пожертвование от богатого парня из Балайма.",
-	L"Встретил старьевщика по имени Джейк.",
-	L"Нам дали электронный ключ.",
-	L"Подкупил Вальтера, чтобы он открыл дверь в подвал.",
+	L"Р¤СЂРµРґРѕ СЂРµРјРѕРЅС‚РёСЂСѓРµС‚ СЌР»РµРєС‚СЂРѕРЅРёРєСѓ РІ Р“СЂР°РјРµ.",
+	L"РџРѕР»СѓС‡РµРЅРѕ РїРѕР¶РµСЂС‚РІРѕРІР°РЅРёРµ РѕС‚ Р±РѕРіР°С‚РѕРіРѕ РїР°СЂРЅСЏ РёР· Р‘Р°Р»Р°Р№РјР°.",
+	L"Р’СЃС‚СЂРµС‚РёР» СЃС‚Р°СЂСЊРµРІС‰РёРєР° РїРѕ РёРјРµРЅРё Р”Р¶РµР№Рє.",
+	L"РќР°Рј РґР°Р»Рё СЌР»РµРєС‚СЂРѕРЅРЅС‹Р№ РєР»СЋС‡.",
+	L"РџРѕРґРєСѓРїРёР» Р’Р°Р»СЊС‚РµСЂР°, С‡С‚РѕР±С‹ РѕРЅ РѕС‚РєСЂС‹Р» РґРІРµСЂСЊ РІ РїРѕРґРІР°Р».",
 	//56-60
-	L"Если у Дэвида есть бензин,он нам его даст бесплатно.",
-	L"Дал взятку Пабло.",
-	L"Босс хранит деньги в шахте Сан Моны.",
-	L"%ls выиграл кулачный бой",
-	L"%ls проиграл кулачный бой",
+	L"Р•СЃР»Рё Сѓ Р”СЌРІРёРґР° РµСЃС‚СЊ Р±РµРЅР·РёРЅ,РѕРЅ РЅР°Рј РµРіРѕ РґР°СЃС‚ Р±РµСЃРїР»Р°С‚РЅРѕ.",
+	L"Р”Р°Р» РІР·СЏС‚РєСѓ РџР°Р±Р»Рѕ.",
+	L"Р‘РѕСЃСЃ С…СЂР°РЅРёС‚ РґРµРЅСЊРіРё РІ С€Р°С…С‚Рµ РЎР°РЅ РњРѕРЅС‹.",
+	L"%ls РІС‹РёРіСЂР°Р» РєСѓР»Р°С‡РЅС‹Р№ Р±РѕР№",
+	L"%ls РїСЂРѕРёРіСЂР°Р» РєСѓР»Р°С‡РЅС‹Р№ Р±РѕР№",
 	//61-65
-	L"%ls дисквалифицирован в кулачном бою",
-	L"Нашел много денег в заброшенной шахте.",
-	L"Захватил убийцу, подосланного Боссом.",
-	L"Потерял контроль над сектором",				//ENEMY_INVASION_CODE
-	L"Защитил сектор",
+	L"%ls РґРёСЃРєРІР°Р»РёС„РёС†РёСЂРѕРІР°РЅ РІ РєСѓР»Р°С‡РЅРѕРј Р±РѕСЋ",
+	L"РќР°С€РµР» РјРЅРѕРіРѕ РґРµРЅРµРі РІ Р·Р°Р±СЂРѕС€РµРЅРЅРѕР№ С€Р°С…С‚Рµ.",
+	L"Р—Р°С…РІР°С‚РёР» СѓР±РёР№С†Сѓ, РїРѕРґРѕСЃР»Р°РЅРЅРѕРіРѕ Р‘РѕСЃСЃРѕРј.",
+	L"РџРѕС‚РµСЂСЏР» РєРѕРЅС‚СЂРѕР»СЊ РЅР°Рґ СЃРµРєС‚РѕСЂРѕРј",				//ENEMY_INVASION_CODE
+	L"Р—Р°С‰РёС‚РёР» СЃРµРєС‚РѕСЂ",
 	//66-70
-	L"Проиграл битву",							//ENEMY_ENCOUNTER_CODE
-	L"Засада",						//ENEMY_AMBUSH_CODE
-	L"Засада перебита",
-	L"Безуспешная атака",			//ENTERING_ENEMY_SECTOR_CODE
-	L"Успешная атака!",
+	L"РџСЂРѕРёРіСЂР°Р» Р±РёС‚РІСѓ",							//ENEMY_ENCOUNTER_CODE
+	L"Р—Р°СЃР°РґР°",						//ENEMY_AMBUSH_CODE
+	L"Р—Р°СЃР°РґР° РїРµСЂРµР±РёС‚Р°",
+	L"Р‘РµР·СѓСЃРїРµС€РЅР°СЏ Р°С‚Р°РєР°",			//ENTERING_ENEMY_SECTOR_CODE
+	L"РЈСЃРїРµС€РЅР°СЏ Р°С‚Р°РєР°!",
 	//71-75
-	L"Существа атаковали",			//CREATURE_ATTACK_CODE
-	L"Убит кошкой-убийцей",			//BLOODCAT_AMBUSH_CODE
-	L"Перебил кошек-убийц",
-	L"%ls убит",
-	L"Отдал голову террориста Слаю",
-	L"Слай ушел",
-	L"Убил %ls",
+	L"РЎСѓС‰РµСЃС‚РІР° Р°С‚Р°РєРѕРІР°Р»Рё",			//CREATURE_ATTACK_CODE
+	L"РЈР±РёС‚ РєРѕС€РєРѕР№-СѓР±РёР№С†РµР№",			//BLOODCAT_AMBUSH_CODE
+	L"РџРµСЂРµР±РёР» РєРѕС€РµРє-СѓР±РёР№С†",
+	L"%ls СѓР±РёС‚",
+	L"РћС‚РґР°Р» РіРѕР»РѕРІСѓ С‚РµСЂСЂРѕСЂРёСЃС‚Р° РЎР»Р°СЋ",
+	L"РЎР»Р°Р№ СѓС€РµР»",
+	L"РЈР±РёР» %ls",
 };
 
 const wchar_t* pHistoryLocations[] =
 {
-	L"Н/П",						// N/A is an acronym for Not Applicable
+	L"Рќ/Рџ",						// N/A is an acronym for Not Applicable
 };
 
 // icon text strings that appear on the laptop
 
 const wchar_t* pLaptopIcons[] =
 {
-	L"Почта",
-	L"Сеть",
-	L"Финансы",
-	L"Кадры",
-	L"Журнал",
-	L"Файлы",
-	L"Выключить",
-	L"сир-ФЕР 4.0",			// our play on the company name (Sirtech) and web surFER
+	L"РџРѕС‡С‚Р°",
+	L"РЎРµС‚СЊ",
+	L"Р¤РёРЅР°РЅСЃС‹",
+	L"РљР°РґСЂС‹",
+	L"Р–СѓСЂРЅР°Р»",
+	L"Р¤Р°Р№Р»С‹",
+	L"Р’С‹РєР»СЋС‡РёС‚СЊ",
+	L"СЃРёСЂ-Р¤Р•Р  4.0",			// our play on the company name (Sirtech) and web surFER
 };
 
 // bookmarks for different websites
@@ -2188,31 +2188,31 @@ const wchar_t* pLaptopIcons[] =
 
 const wchar_t* pBookMarkStrings[] =
 {
-	L"А.I.M.",
-	L"Бобби Рэй",
+	L"Рђ.I.M.",
+	L"Р‘РѕР±Р±Рё Р СЌР№",
 	L"I.M.P.",
-	L"М.Е.R.С.",
-	L"Морг",
-	L"Цветы",
-	L"Страховка",
-	L"Отмена",
+	L"Рњ.Р•.R.РЎ.",
+	L"РњРѕСЂРі",
+	L"Р¦РІРµС‚С‹",
+	L"РЎС‚СЂР°С…РѕРІРєР°",
+	L"РћС‚РјРµРЅР°",
 };
 
 // When loading or download a web page
 
 const wchar_t* pDownloadString[] =
 {
-	L"Загрузка",
-	L"Перезагрузка",
+	L"Р—Р°РіСЂСѓР·РєР°",
+	L"РџРµСЂРµР·Р°РіСЂСѓР·РєР°",
 };
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
 
 const wchar_t* gsAtmStartButtonText[] =
 {
-	L"Стат.", 			// view stats of the merc
-	L"Инвентарь", 			// view the inventory of the merc
-	L"Занятость",
+	L"РЎС‚Р°С‚.", 			// view stats of the merc
+	L"РРЅРІРµРЅС‚Р°СЂСЊ", 			// view the inventory of the merc
+	L"Р—Р°РЅСЏС‚РѕСЃС‚СЊ",
 };
 
 // Web error messages. Please use German equivilant for these messages.
@@ -2221,19 +2221,19 @@ const wchar_t* gsAtmStartButtonText[] =
 
 const wchar_t* pErrorStrings[] =
 {
-	L"Плохое соединение.Попробуйте позднее.",
+	L"РџР»РѕС…РѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ.РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·РґРЅРµРµ.",
 };
 
 
 const wchar_t* pPersonnelString[] =
 {
-	L"Наемн:", 			// mercs we have
+	L"РќР°РµРјРЅ:", 			// mercs we have
 };
 
 
 const wchar_t* pWebTitle[ ]=
 {
-	L"сир-ФЕР 4.0",		// our name for the version of the browser, play on company name
+	L"СЃРёСЂ-Р¤Р•Р  4.0",		// our name for the version of the browser, play on company name
 };
 
 
@@ -2241,40 +2241,40 @@ const wchar_t* pWebTitle[ ]=
 
 const wchar_t* pWebPagesTitles[] =
 {
-	L"А.I.M.",
-	L"Члены A.I.M.",
-	L"Фото A.I.M.",		// a mug shot is another name for a portrait
-	L"A.I.M. Сортировка",
+	L"Рђ.I.M.",
+	L"Р§Р»РµРЅС‹ A.I.M.",
+	L"Р¤РѕС‚Рѕ A.I.M.",		// a mug shot is another name for a portrait
+	L"A.I.M. РЎРѕСЂС‚РёСЂРѕРІРєР°",
 	L"A.I.M.",
-	L"A.I.M.-История", //$$
-	L"A.I.M.-Политика",
-	L"A.I.M.-Журнал",
-	L"A.I.M.-Ссылки",
+	L"A.I.M.-РСЃС‚РѕСЂРёСЏ", //$$
+	L"A.I.M.-РџРѕР»РёС‚РёРєР°",
+	L"A.I.M.-Р–СѓСЂРЅР°Р»",
+	L"A.I.M.-РЎСЃС‹Р»РєРё",
 	L"M.E.R.C.",
-	L"M.E.R.C.-Счета",
-	L"M.E.R.C.-Регистрация",
-	L"M.E.R.C.-Индекс",
-	L"Бобби Рэй",
-	L"Бобби Рэй - Пист.",
-	L"Бобби Рэй - Оруж.",
-	L"Бобби Рэй - Броня",
-	L"Бобби Рэй - разное",							//misc is an abbreviation for miscellaneous
-	L"Бобби Рэй - Б.У.",
-	L"Бобби Рэй - Бланк",
+	L"M.E.R.C.-РЎС‡РµС‚Р°",
+	L"M.E.R.C.-Р РµРіРёСЃС‚СЂР°С†РёСЏ",
+	L"M.E.R.C.-РРЅРґРµРєСЃ",
+	L"Р‘РѕР±Р±Рё Р СЌР№",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - РџРёСЃС‚.",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - РћСЂСѓР¶.",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - Р‘СЂРѕРЅСЏ",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - СЂР°Р·РЅРѕРµ",							//misc is an abbreviation for miscellaneous
+	L"Р‘РѕР±Р±Рё Р СЌР№ - Р‘.РЈ.",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - Р‘Р»Р°РЅРє",
 	L"I.M.P.",
 	L"I.M.P.",
-	L"Объед.Служба Цветов",
-	L"Объед.Служба Цветов - Галерея",
-	L"Объед.Служба Цветов - Бланк Заказа",
-	L"Объед.Служба Цветов - Открытки",
-	L"Малеус,Инкус и Стэйпс:страховые агенты",
-	L"Информация",
-	L"Контракт",
-	L"Комментарии",
-	L"Морг Макгилликути",
+	L"РћР±СЉРµРґ.РЎР»СѓР¶Р±Р° Р¦РІРµС‚РѕРІ",
+	L"РћР±СЉРµРґ.РЎР»СѓР¶Р±Р° Р¦РІРµС‚РѕРІ - Р“Р°Р»РµСЂРµСЏ",
+	L"РћР±СЉРµРґ.РЎР»СѓР¶Р±Р° Р¦РІРµС‚РѕРІ - Р‘Р»Р°РЅРє Р—Р°РєР°Р·Р°",
+	L"РћР±СЉРµРґ.РЎР»СѓР¶Р±Р° Р¦РІРµС‚РѕРІ - РћС‚РєСЂС‹С‚РєРё",
+	L"РњР°Р»РµСѓСЃ,РРЅРєСѓСЃ Рё РЎС‚СЌР№РїСЃ:СЃС‚СЂР°С…РѕРІС‹Рµ Р°РіРµРЅС‚С‹",
+	L"РРЅС„РѕСЂРјР°С†РёСЏ",
+	L"РљРѕРЅС‚СЂР°РєС‚",
+	L"РљРѕРјРјРµРЅС‚Р°СЂРёРё",
+	L"РњРѕСЂРі РњР°РєРіРёР»Р»РёРєСѓС‚Рё",
 	L"",
-	L"URL не найден.",
-	L"Бобби Рэй - Последние поступл.",//@@@3 Translate new text
+	L"URL РЅРµ РЅР°Р№РґРµРЅ.",
+	L"Р‘РѕР±Р±Рё Р СЌР№ - РџРѕСЃР»РµРґРЅРёРµ РїРѕСЃС‚СѓРїР».",//@@@3 Translate new text
 	L"",
 	L"",
 };
@@ -2282,64 +2282,64 @@ const wchar_t* pWebPagesTitles[] =
 const wchar_t* pShowBookmarkString[] =
 {
 	L"Sir-Help",
-	L"Закладки:щелкните еще раз по Web.",
+	L"Р—Р°РєР»Р°РґРєРё:С‰РµР»РєРЅРёС‚Рµ РµС‰Рµ СЂР°Р· РїРѕ Web.",
 };
 
 const wchar_t* pLaptopTitles[] =
 {
-	L"Почтовый ящик",
-	L"Просмотр файлов",
-	L"Персонал",
-	L"Бухгалтер Плюс",
-	L"Журнал",
+	L"РџРѕС‡С‚РѕРІС‹Р№ СЏС‰РёРє",
+	L"РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ",
+	L"РџРµСЂСЃРѕРЅР°Р»",
+	L"Р‘СѓС…РіР°Р»С‚РµСЂ РџР»СЋСЃ",
+	L"Р–СѓСЂРЅР°Р»",
 };
 
 const wchar_t* pPersonnelDepartedStateStrings[] =
 {
 	//reasons why a merc has left.
-	L"Убит в бою",
-	L"Уволен",
-	L"Другое",
-	L"Женат",
-	L"Контракт окончен",
-	L"Выход",
+	L"РЈР±РёС‚ РІ Р±РѕСЋ",
+	L"РЈРІРѕР»РµРЅ",
+	L"Р”СЂСѓРіРѕРµ",
+	L"Р–РµРЅР°С‚",
+	L"РљРѕРЅС‚СЂР°РєС‚ РѕРєРѕРЅС‡РµРЅ",
+	L"Р’С‹С…РѕРґ",
 };
 // personnel strings appearing in the Personnel Manager on the laptop
 
 const wchar_t* pPersonelTeamStrings[] =
 {
-	L"Текущий отряд",
-	L"Отправления",
-	L"Расходы/день:",
-	L"Наиб.расход:",
-	L"Наим.расход:",
-	L"Убит в бою:",
-	L"Уволен:",
-	L"Другое:",
+	L"РўРµРєСѓС‰РёР№ РѕС‚СЂСЏРґ",
+	L"РћС‚РїСЂР°РІР»РµРЅРёСЏ",
+	L"Р Р°СЃС…РѕРґС‹/РґРµРЅСЊ:",
+	L"РќР°РёР±.СЂР°СЃС…РѕРґ:",
+	L"РќР°РёРј.СЂР°СЃС…РѕРґ:",
+	L"РЈР±РёС‚ РІ Р±РѕСЋ:",
+	L"РЈРІРѕР»РµРЅ:",
+	L"Р”СЂСѓРіРѕРµ:",
 };
 
 
 const wchar_t* pPersonnelCurrentTeamStatsStrings[] =
 {
-	L"Низкий",
-	L"Средний",
-	L"Высокий",
+	L"РќРёР·РєРёР№",
+	L"РЎСЂРµРґРЅРёР№",
+	L"Р’С‹СЃРѕРєРёР№",
 };
 
 
 const wchar_t* pPersonnelTeamStatsStrings[] =
 {
-	L"ЗДОР",
-	L"ПДВ",
-	L"ЛОВ",
-	L"СИЛ",
-	L"ЛДР",
-	L"МДР",
-	L"УРВ",
-	L"МТК",
-	L"МЕХ",
-	L"ВЗРВ",
-	L"МЕД",
+	L"Р—Р”РћР ",
+	L"РџР”Р’",
+	L"Р›РћР’",
+	L"РЎРР›",
+	L"Р›Р”Р ",
+	L"РњР”Р ",
+	L"РЈР Р’",
+	L"РњРўРљ",
+	L"РњР•РҐ",
+	L"Р’Р—Р Р’",
+	L"РњР•Р”",
 };
 
 
@@ -2399,25 +2399,25 @@ const wchar_t* pMapDepthIndex[] =
 
 const wchar_t* pContractButtonString[] =
 {
-	L"Контракт",
+	L"РљРѕРЅС‚СЂР°РєС‚",
 };
 
 // text that appears on the update panel buttons
 
 const wchar_t* pUpdatePanelButtons[] =
 {
-	L"Продолжить",
-	L"Стоп",
+	L"РџСЂРѕРґРѕР»Р¶РёС‚СЊ",
+	L"РЎС‚РѕРї",
 };
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
 const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
 {
-	L"В этом секторе вам нанесли поражение!",
-	L"Враг, не испытывая угрызений совести, пожрет всех до единого!",
-	L"Член вашей команды захвачен (он без сознания)!",
-	L"Член вашей команды захвачен в плен врагом.",
+	L"Р’ СЌС‚РѕРј СЃРµРєС‚РѕСЂРµ РІР°Рј РЅР°РЅРµСЃР»Рё РїРѕСЂР°Р¶РµРЅРёРµ!",
+	L"Р’СЂР°Рі, РЅРµ РёСЃРїС‹С‚С‹РІР°СЏ СѓРіСЂС‹Р·РµРЅРёР№ СЃРѕРІРµСЃС‚Рё, РїРѕР¶СЂРµС‚ РІСЃРµС… РґРѕ РµРґРёРЅРѕРіРѕ!",
+	L"Р§Р»РµРЅ РІР°С€РµР№ РєРѕРјР°РЅРґС‹ Р·Р°С…РІР°С‡РµРЅ (РѕРЅ Р±РµР· СЃРѕР·РЅР°РЅРёСЏ)!",
+	L"Р§Р»РµРЅ РІР°С€РµР№ РєРѕРјР°РЅРґС‹ Р·Р°С…РІР°С‡РµРЅ РІ РїР»РµРЅ РІСЂР°РіРѕРј.",
 };
 
 
@@ -2426,10 +2426,10 @@ const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
 
 const wchar_t* InsContractText[] =
 {
-	L"Пред.",
-	L"След",
-	L"ОК",
-	L"Очистить",
+	L"РџСЂРµРґ.",
+	L"РЎР»РµРґ",
+	L"РћРљ",
+	L"РћС‡РёСЃС‚РёС‚СЊ",
 };
 
 
@@ -2439,8 +2439,8 @@ const wchar_t* InsContractText[] =
 
 const wchar_t* InsInfoText[] =
 {
-	L"Пред.",
-	L"След."
+	L"РџСЂРµРґ.",
+	L"РЎР»РµРґ."
 };
 
 
@@ -2450,15 +2450,15 @@ const wchar_t* InsInfoText[] =
 const wchar_t* MercAccountText[] =
 {
 	// Text on the buttons on the bottom of the screen
-	L"Подтвердить",
-	L"На гл.страницу",
-	L"Счет #:",
-	L"Наем.",
-	L"Дни",
-	L"Ставка",	//5
-	L"Стоимость",
-	L"Всего:",
-	L"Вы уверены, что хотите подтвердить выплату %ls?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
+	L"РџРѕРґС‚РІРµСЂРґРёС‚СЊ",
+	L"РќР° РіР».СЃС‚СЂР°РЅРёС†Сѓ",
+	L"РЎС‡РµС‚ #:",
+	L"РќР°РµРј.",
+	L"Р”РЅРё",
+	L"РЎС‚Р°РІРєР°",	//5
+	L"РЎС‚РѕРёРјРѕСЃС‚СЊ",
+	L"Р’СЃРµРіРѕ:",
+	L"Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РїРѕРґС‚РІРµСЂРґРёС‚СЊ РІС‹РїР»Р°С‚Сѓ %ls?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
 };
 
 
@@ -2468,30 +2468,30 @@ const wchar_t* MercAccountText[] =
 
 const wchar_t* MercInfo[] =
 {
-	L"Здоровье",
-	L"Подвижность",
-	L"Проворность",
-	L"Сила",
-	L"Лидерство",
-	L"Мудрость",
-	L"Опытность",
-	L"Меткость",
-	L"Механика",
-	L"Взрывн.раб.",
-	L"Медицина",
+	L"Р—РґРѕСЂРѕРІСЊРµ",
+	L"РџРѕРґРІРёР¶РЅРѕСЃС‚СЊ",
+	L"РџСЂРѕРІРѕСЂРЅРѕСЃС‚СЊ",
+	L"РЎРёР»Р°",
+	L"Р›РёРґРµСЂСЃС‚РІРѕ",
+	L"РњСѓРґСЂРѕСЃС‚СЊ",
+	L"РћРїС‹С‚РЅРѕСЃС‚СЊ",
+	L"РњРµС‚РєРѕСЃС‚СЊ",
+	L"РњРµС…Р°РЅРёРєР°",
+	L"Р’Р·СЂС‹РІРЅ.СЂР°Р±.",
+	L"РњРµРґРёС†РёРЅР°",
 
-	L"Пред.",
-	L"Нанять",
-	L"Далее",
-	L"Дополн.информ.",
-	L"На гл.страницу",
-	L"Нанят",
-	L"Зарплата:",
-	L"в день   .",
-	L"Мертвец",
+	L"РџСЂРµРґ.",
+	L"РќР°РЅСЏС‚СЊ",
+	L"Р”Р°Р»РµРµ",
+	L"Р”РѕРїРѕР»РЅ.РёРЅС„РѕСЂРј.",
+	L"РќР° РіР».СЃС‚СЂР°РЅРёС†Сѓ",
+	L"РќР°РЅСЏС‚",
+	L"Р—Р°СЂРїР»Р°С‚Р°:",
+	L"РІ РґРµРЅСЊ   .",
+	L"РњРµСЂС‚РІРµС†",
 
-	L"Похоже,вы увлеклись набором наемников.Ваш предел-18 чел.",
-	L"Недоступно",
+	L"РџРѕС…РѕР¶Рµ,РІС‹ СѓРІР»РµРєР»РёСЃСЊ РЅР°Р±РѕСЂРѕРј РЅР°РµРјРЅРёРєРѕРІ.Р’Р°С€ РїСЂРµРґРµР»-18 С‡РµР».",
+	L"РќРµРґРѕСЃС‚СѓРїРЅРѕ",
 };
 
 
@@ -2501,9 +2501,9 @@ const wchar_t* MercInfo[] =
 const wchar_t* MercNoAccountText[] =
 {
 	//Text on the buttons at the bottom of the screen
-	L"Открыть счет",
-	L"Отмена",
-	L"У вас нет счета. Хотите открыть?"
+	L"РћС‚РєСЂС‹С‚СЊ СЃС‡РµС‚",
+	L"РћС‚РјРµРЅР°",
+	L"РЈ РІР°СЃ РЅРµС‚ СЃС‡РµС‚Р°. РҐРѕС‚РёС‚Рµ РѕС‚РєСЂС‹С‚СЊ?"
 };
 
 
@@ -2513,34 +2513,34 @@ const wchar_t* MercNoAccountText[] =
 const wchar_t* MercHomePageText[] =
 {
 	//Description of various parts on the MERC page
-	L"Спек Т.Клайн,основатель",
-	L"Открытие счета",
-	L"Просмотр счета",
-	L"Просмотр файлов",
+	L"РЎРїРµРє Рў.РљР»Р°Р№РЅ,РѕСЃРЅРѕРІР°С‚РµР»СЊ",
+	L"РћС‚РєСЂС‹С‚РёРµ СЃС‡РµС‚Р°",
+	L"РџСЂРѕСЃРјРѕС‚СЂ СЃС‡РµС‚Р°",
+	L"РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ",
 	// The version number on the video conferencing system that pops up when Speck is talking
-	L"Спек Ком.v3.2"
+	L"РЎРїРµРє РљРѕРј.v3.2"
 };
 
 // For use at MiGillicutty's Web Page.
 
 const wchar_t* sFuneralString[] =
 {
-	L"Морг Макгилликути:скорбим вместе с семьями усопших с 1983.",
-	L"Директор по похоронам и бывший наемник А.I.М Мюррэй \"Попс\" Макгилликати-специалист по части похорон.",
-	L"Всю жизнь Попса сопровождали смерть и утраты,поэтому он как никто познал их тяжесть.",
-	L"Морг Мак Гилликути предлагает широкий спектр похоронных услуг,от жилетки,в которую можно поплакать,до восстановления сильно поврежденных останков.",
-	L"Доверьтесь моргу Мак Гилликути, и ваши родственники почиют в мире.",
+	L"РњРѕСЂРі РњР°РєРіРёР»Р»РёРєСѓС‚Рё:СЃРєРѕСЂР±РёРј РІРјРµСЃС‚Рµ СЃ СЃРµРјСЊСЏРјРё СѓСЃРѕРїС€РёС… СЃ 1983.",
+	L"Р”РёСЂРµРєС‚РѕСЂ РїРѕ РїРѕС…РѕСЂРѕРЅР°Рј Рё Р±С‹РІС€РёР№ РЅР°РµРјРЅРёРє Рђ.I.Рњ РњСЋСЂСЂСЌР№ \"РџРѕРїСЃ\" РњР°РєРіРёР»Р»РёРєР°С‚Рё-СЃРїРµС†РёР°Р»РёСЃС‚ РїРѕ С‡Р°СЃС‚Рё РїРѕС…РѕСЂРѕРЅ.",
+	L"Р’СЃСЋ Р¶РёР·РЅСЊ РџРѕРїСЃР° СЃРѕРїСЂРѕРІРѕР¶РґР°Р»Рё СЃРјРµСЂС‚СЊ Рё СѓС‚СЂР°С‚С‹,РїРѕСЌС‚РѕРјСѓ РѕРЅ РєР°Рє РЅРёРєС‚Рѕ РїРѕР·РЅР°Р» РёС… С‚СЏР¶РµСЃС‚СЊ.",
+	L"РњРѕСЂРі РњР°Рє Р“РёР»Р»РёРєСѓС‚Рё РїСЂРµРґР»Р°РіР°РµС‚ С€РёСЂРѕРєРёР№ СЃРїРµРєС‚СЂ РїРѕС…РѕСЂРѕРЅРЅС‹С… СѓСЃР»СѓРі,РѕС‚ Р¶РёР»РµС‚РєРё,РІ РєРѕС‚РѕСЂСѓСЋ РјРѕР¶РЅРѕ РїРѕРїР»Р°РєР°С‚СЊ,РґРѕ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЃРёР»СЊРЅРѕ РїРѕРІСЂРµР¶РґРµРЅРЅС‹С… РѕСЃС‚Р°РЅРєРѕРІ.",
+	L"Р”РѕРІРµСЂСЊС‚РµСЃСЊ РјРѕСЂРіСѓ РњР°Рє Р“РёР»Р»РёРєСѓС‚Рё, Рё РІР°С€Рё СЂРѕРґСЃС‚РІРµРЅРЅРёРєРё РїРѕС‡РёСЋС‚ РІ РјРёСЂРµ.",
 
 	// Text for the various links available at the bottom of the page
-	L"ПОСЛАТЬ ЦВЕТЫ",
-	L"КОЛЛЕКЦИЯ УРН И ГРОБОВ",
-	L"УСЛУГИ ПО КРЕМАЦИИ",
-	L"ПОДГОТОВКА ПОХОРОН",
-	L"ПОХОРОННЫЙ ЭТИКЕТ",
+	L"РџРћРЎР›РђРўР¬ Р¦Р’Р•РўР«",
+	L"РљРћР›Р›Р•РљР¦РРЇ РЈР Рќ Р Р“Р РћР‘РћР’",
+	L"РЈРЎР›РЈР“Р РџРћ РљР Р•РњРђР¦РР",
+	L"РџРћР”Р“РћРўРћР’РљРђ РџРћРҐРћР РћРќ",
+	L"РџРћРҐРћР РћРќРќР«Р™ Р­РўРРљР•Рў",
 
 	// The text that comes up when you click on any of the links ( except for send flowers ).
-	L"Семья понесла тяжелую утрату.К сожалению, не все работы еще завершены.Приходите после прочтения завещания и выплат долгов умершего.",
-	L"Надеемся,что вы ощущаете наше сочувствие в это нелегкое время."
+	L"РЎРµРјСЊСЏ РїРѕРЅРµСЃР»Р° С‚СЏР¶РµР»СѓСЋ СѓС‚СЂР°С‚Сѓ.Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, РЅРµ РІСЃРµ СЂР°Р±РѕС‚С‹ РµС‰Рµ Р·Р°РІРµСЂС€РµРЅС‹.РџСЂРёС…РѕРґРёС‚Рµ РїРѕСЃР»Рµ РїСЂРѕС‡С‚РµРЅРёСЏ Р·Р°РІРµС‰Р°РЅРёСЏ Рё РІС‹РїР»Р°С‚ РґРѕР»РіРѕРІ СѓРјРµСЂС€РµРіРѕ.",
+	L"РќР°РґРµРµРјСЃСЏ,С‡С‚Рѕ РІС‹ РѕС‰СѓС‰Р°РµС‚Рµ РЅР°С€Рµ СЃРѕС‡СѓРІСЃС‚РІРёРµ РІ СЌС‚Рѕ РЅРµР»РµРіРєРѕРµ РІСЂРµРјСЏ."
 };
 
 // Text for the florist Home page
@@ -2549,26 +2549,26 @@ const wchar_t* sFloristText[] =
 {
 	//Text on the button on the bottom of the page
 
-	L"Галерея",
+	L"Р“Р°Р»РµСЂРµСЏ",
 
 	//Address of United Florist
 
-	L"\"Мы сбрасываем цветы везде\"",
+	L"\"РњС‹ СЃР±СЂР°СЃС‹РІР°РµРј С†РІРµС‚С‹ РІРµР·РґРµ\"",
 	L"1-555-SCENT-ME",
-	L"333 Др.Ноуз-Гей,Сиди Сити,КА США 90210",
+	L"333 Р”СЂ.РќРѕСѓР·-Р“РµР№,РЎРёРґРё РЎРёС‚Рё,РљРђ РЎРЁРђ 90210",
 	L"http://www.scent-me.com",
 
 	// detail of the florist page
 
-	L"Мы работаем быстро и эффективно!",
-	L"Гарантированная доставка в течение одного дня в любую точку земного шара.Есть ограничения.",
-	L"Самые низкие в мире цены!",
-	L"Покажите нам рекламу подобных услуг,которые стоят дешевле и получите 10роз бесплатно.",
-	L"Летающая Флора,Фауна&Цветы с 1981.",
-	L"Наши сотрудники-бывшие военные летчики-сбросят ваш букет в радиусе 10миль от нужного вам места.В любое время!Всегда!",
-	L"Позвольте нам воплотить ваши цветочные фантазии в жизнь.",
-	L"Пусть Брюс,известный во всем мире флорист,собственноручно соберет вам букет свежайших цветов из наших оранжерей.",
-	L"И помните-то,чего у нас нет,мы можем вырастить-быстро!"
+	L"РњС‹ СЂР°Р±РѕС‚Р°РµРј Р±С‹СЃС‚СЂРѕ Рё СЌС„С„РµРєС‚РёРІРЅРѕ!",
+	L"Р“Р°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅР°СЏ РґРѕСЃС‚Р°РІРєР° РІ С‚РµС‡РµРЅРёРµ РѕРґРЅРѕРіРѕ РґРЅСЏ РІ Р»СЋР±СѓСЋ С‚РѕС‡РєСѓ Р·РµРјРЅРѕРіРѕ С€Р°СЂР°.Р•СЃС‚СЊ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ.",
+	L"РЎР°РјС‹Рµ РЅРёР·РєРёРµ РІ РјРёСЂРµ С†РµРЅС‹!",
+	L"РџРѕРєР°Р¶РёС‚Рµ РЅР°Рј СЂРµРєР»Р°РјСѓ РїРѕРґРѕР±РЅС‹С… СѓСЃР»СѓРі,РєРѕС‚РѕСЂС‹Рµ СЃС‚РѕСЏС‚ РґРµС€РµРІР»Рµ Рё РїРѕР»СѓС‡РёС‚Рµ 10СЂРѕР· Р±РµСЃРїР»Р°С‚РЅРѕ.",
+	L"Р›РµС‚Р°СЋС‰Р°СЏ Р¤Р»РѕСЂР°,Р¤Р°СѓРЅР°&Р¦РІРµС‚С‹ СЃ 1981.",
+	L"РќР°С€Рё СЃРѕС‚СЂСѓРґРЅРёРєРё-Р±С‹РІС€РёРµ РІРѕРµРЅРЅС‹Рµ Р»РµС‚С‡РёРєРё-СЃР±СЂРѕСЃСЏС‚ РІР°С€ Р±СѓРєРµС‚ РІ СЂР°РґРёСѓСЃРµ 10РјРёР»СЊ РѕС‚ РЅСѓР¶РЅРѕРіРѕ РІР°Рј РјРµСЃС‚Р°.Р’ Р»СЋР±РѕРµ РІСЂРµРјСЏ!Р’СЃРµРіРґР°!",
+	L"РџРѕР·РІРѕР»СЊС‚Рµ РЅР°Рј РІРѕРїР»РѕС‚РёС‚СЊ РІР°С€Рё С†РІРµС‚РѕС‡РЅС‹Рµ С„Р°РЅС‚Р°Р·РёРё РІ Р¶РёР·РЅСЊ.",
+	L"РџСѓСЃС‚СЊ Р‘СЂСЋСЃ,РёР·РІРµСЃС‚РЅС‹Р№ РІРѕ РІСЃРµРј РјРёСЂРµ С„Р»РѕСЂРёСЃС‚,СЃРѕР±СЃС‚РІРµРЅРЅРѕСЂСѓС‡РЅРѕ СЃРѕР±РµСЂРµС‚ РІР°Рј Р±СѓРєРµС‚ СЃРІРµР¶Р°Р№С€РёС… С†РІРµС‚РѕРІ РёР· РЅР°С€РёС… РѕСЂР°РЅР¶РµСЂРµР№.",
+	L"Р РїРѕРјРЅРёС‚Рµ-С‚Рѕ,С‡РµРіРѕ Сѓ РЅР°СЃ РЅРµС‚,РјС‹ РјРѕР¶РµРј РІС‹СЂР°СЃС‚РёС‚СЊ-Р±С‹СЃС‚СЂРѕ!"
 };
 
 
@@ -2579,33 +2579,33 @@ const wchar_t* sOrderFormText[] =
 {
 	//Text on the buttons
 
-	L"Назад",
-	L"Послать",
-	L"Очистить",
-	L"Галерея",
+	L"РќР°Р·Р°Рґ",
+	L"РџРѕСЃР»Р°С‚СЊ",
+	L"РћС‡РёСЃС‚РёС‚СЊ",
+	L"Р“Р°Р»РµСЂРµСЏ",
 
-	L"Назв.букета:",
-	L"Цена:",			//5
-	L"Номер заказа:",
-	L"День доставки",
-	L"след.день",
-	L"дойдет когда дойдет",
-	L"Место доставки",			//10
-	L"Дополнит.услуги",
-	L"Сломанные цветы($10)",
-	L"Черные розы($20)",
-	L"Увядший букет($10)",
-	L"Фруктовый пирог(если есть)($10)",		//15
-	L"Личные переживания:",
-	L"Ввиду небольшого размера карточек, 75 символов - максимум.",
-	L"...или посмотрите на наши",
+	L"РќР°Р·РІ.Р±СѓРєРµС‚Р°:",
+	L"Р¦РµРЅР°:",			//5
+	L"РќРѕРјРµСЂ Р·Р°РєР°Р·Р°:",
+	L"Р”РµРЅСЊ РґРѕСЃС‚Р°РІРєРё",
+	L"СЃР»РµРґ.РґРµРЅСЊ",
+	L"РґРѕР№РґРµС‚ РєРѕРіРґР° РґРѕР№РґРµС‚",
+	L"РњРµСЃС‚Рѕ РґРѕСЃС‚Р°РІРєРё",			//10
+	L"Р”РѕРїРѕР»РЅРёС‚.СѓСЃР»СѓРіРё",
+	L"РЎР»РѕРјР°РЅРЅС‹Рµ С†РІРµС‚С‹($10)",
+	L"Р§РµСЂРЅС‹Рµ СЂРѕР·С‹($20)",
+	L"РЈРІСЏРґС€РёР№ Р±СѓРєРµС‚($10)",
+	L"Р¤СЂСѓРєС‚РѕРІС‹Р№ РїРёСЂРѕРі(РµСЃР»Рё РµСЃС‚СЊ)($10)",		//15
+	L"Р›РёС‡РЅС‹Рµ РїРµСЂРµР¶РёРІР°РЅРёСЏ:",
+	L"Р’РІРёРґСѓ РЅРµР±РѕР»СЊС€РѕРіРѕ СЂР°Р·РјРµСЂР° РєР°СЂС‚РѕС‡РµРє, 75 СЃРёРјРІРѕР»РѕРІ - РјР°РєСЃРёРјСѓРј.",
+	L"...РёР»Рё РїРѕСЃРјРѕС‚СЂРёС‚Рµ РЅР° РЅР°С€Рё",
 
-	L"СТАНДАРТНЫЕ КАРТЫ",
-	L"Информация о счете",//20
+	L"РЎРўРђРќР”РђР РўРќР«Р• РљРђР РўР«",
+	L"РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‡РµС‚Рµ",//20
 
 	//The text that goes beside the area where the user can enter their name
 
-	L"Имя:",
+	L"РРјСЏ:",
 };
 
 
@@ -2617,23 +2617,23 @@ const wchar_t* sFloristGalleryText[] =
 {
 	//text on the buttons
 
-	L"Пред",	//abbreviation for previous
-	L"След",	//abbreviation for next
+	L"РџСЂРµРґ",	//abbreviation for previous
+	L"РЎР»РµРґ",	//abbreviation for next
 
-	L"Щелкните по тому,что хотите заказать.",
-	L"Примечание:за каждый увядший или сломанный букет дополн.плата $10.",
+	L"Р©РµР»РєРЅРёС‚Рµ РїРѕ С‚РѕРјСѓ,С‡С‚Рѕ С…РѕС‚РёС‚Рµ Р·Р°РєР°Р·Р°С‚СЊ.",
+	L"РџСЂРёРјРµС‡Р°РЅРёРµ:Р·Р° РєР°Р¶РґС‹Р№ СѓРІСЏРґС€РёР№ РёР»Рё СЃР»РѕРјР°РЅРЅС‹Р№ Р±СѓРєРµС‚ РґРѕРїРѕР»РЅ.РїР»Р°С‚Р° $10.",
 
 	//text on the button
 
-	L"На гл.стр.",
+	L"РќР° РіР».СЃС‚СЂ.",
 };
 
 //Florist Cards
 
 const wchar_t* sFloristCards[] =
 {
-	L"Щелкните по выбранному",
-	L"Назад"
+	L"Р©РµР»РєРЅРёС‚Рµ РїРѕ РІС‹Р±СЂР°РЅРЅРѕРјСѓ",
+	L"РќР°Р·Р°Рґ"
 };
 
 
@@ -2642,32 +2642,32 @@ const wchar_t* sFloristCards[] =
 
 const wchar_t* BobbyROrderFormText[] =
 {
-	L"Бланк заказа",				//Title of the page
-	L"Ед.",					// The number of items ordered
-	L"Вес (%ls)",			// The weight of the item
-	L"Название",				// The name of the item
-	L"Цена",				// the item's weight
-	L"Всего",				//5	// The total price of all of items of the same type
-	L"Стоимость",				// The sub total of all the item totals added
-	L"ДиУ (см. Место Доставки)",		// S&H is an acronym for Shipping and Handling
-	L"Общая стоим.",			// The grand total of all item totals + the shipping and handling
-	L"Место доставки",
-	L"Скор.доставки",			//10	// See below
-	L"Стоим.(за %ls.)",			// The cost to ship the items
-	L"Доставка-1день",			// Gets deliverd the next day
-	L"2 рабочих дня",			// Gets delivered in 2 days
-	L"Стандартный срок",			// Gets delivered in 3 days
-	L"Очистить",//15			// Clears the order page
-	L"Принять заказ",			// Accept the order
-	L"Назад",				// text on the button that returns to the previous page
-	L"На гл.стр.",				// Text on the button that returns to the home page
-	L"* Указывает БУвещи",		// Disclaimer stating that the item is used
-	L"У вас нет на это средств.",		//20	// A popup message that to warn of not enough money
-	L"<НЕТ>",				// Gets displayed when there is no valid city selected
-	L"Вы уверены,что надо послать этот заказ %ls?",		// A popup that asks if the city selected is the correct one
-	L"Вес упаковки**",			// Displays the weight of the package
-	L"** Мин.вес",				// Disclaimer states that there is a minimum weight for the package
-	L"Заказы",
+	L"Р‘Р»Р°РЅРє Р·Р°РєР°Р·Р°",				//Title of the page
+	L"Р•Рґ.",					// The number of items ordered
+	L"Р’РµСЃ (%ls)",			// The weight of the item
+	L"РќР°Р·РІР°РЅРёРµ",				// The name of the item
+	L"Р¦РµРЅР°",				// the item's weight
+	L"Р’СЃРµРіРѕ",				//5	// The total price of all of items of the same type
+	L"РЎС‚РѕРёРјРѕСЃС‚СЊ",				// The sub total of all the item totals added
+	L"Р”РёРЈ (СЃРј. РњРµСЃС‚Рѕ Р”РѕСЃС‚Р°РІРєРё)",		// S&H is an acronym for Shipping and Handling
+	L"РћР±С‰Р°СЏ СЃС‚РѕРёРј.",			// The grand total of all item totals + the shipping and handling
+	L"РњРµСЃС‚Рѕ РґРѕСЃС‚Р°РІРєРё",
+	L"РЎРєРѕСЂ.РґРѕСЃС‚Р°РІРєРё",			//10	// See below
+	L"РЎС‚РѕРёРј.(Р·Р° %ls.)",			// The cost to ship the items
+	L"Р”РѕСЃС‚Р°РІРєР°-1РґРµРЅСЊ",			// Gets deliverd the next day
+	L"2 СЂР°Р±РѕС‡РёС… РґРЅСЏ",			// Gets delivered in 2 days
+	L"РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ СЃСЂРѕРє",			// Gets delivered in 3 days
+	L"РћС‡РёСЃС‚РёС‚СЊ",//15			// Clears the order page
+	L"РџСЂРёРЅСЏС‚СЊ Р·Р°РєР°Р·",			// Accept the order
+	L"РќР°Р·Р°Рґ",				// text on the button that returns to the previous page
+	L"РќР° РіР».СЃС‚СЂ.",				// Text on the button that returns to the home page
+	L"* РЈРєР°Р·С‹РІР°РµС‚ Р‘РЈРІРµС‰Рё",		// Disclaimer stating that the item is used
+	L"РЈ РІР°СЃ РЅРµС‚ РЅР° СЌС‚Рѕ СЃСЂРµРґСЃС‚РІ.",		//20	// A popup message that to warn of not enough money
+	L"<РќР•Рў>",				// Gets displayed when there is no valid city selected
+	L"Р’С‹ СѓРІРµСЂРµРЅС‹,С‡С‚Рѕ РЅР°РґРѕ РїРѕСЃР»Р°С‚СЊ СЌС‚РѕС‚ Р·Р°РєР°Р· %ls?",		// A popup that asks if the city selected is the correct one
+	L"Р’РµСЃ СѓРїР°РєРѕРІРєРё**",			// Displays the weight of the package
+	L"** РњРёРЅ.РІРµСЃ",				// Disclaimer states that there is a minimum weight for the package
+	L"Р—Р°РєР°Р·С‹",
 };
 
 
@@ -2675,56 +2675,56 @@ const wchar_t* BobbyROrderFormText[] =
 
 const wchar_t* BobbyRText[] =
 {
-	L"Заказать",				// Title
+	L"Р—Р°РєР°Р·Р°С‚СЊ",				// Title
 	// instructions on how to order
-	L"Щелкните на вещь.Если вам нужно больше одной,щелкните еще. Правый клик-умень. кол-во вещей.Когда выберете все,что хотите,заполняйте бланк заказа.",
+	L"Р©РµР»РєРЅРёС‚Рµ РЅР° РІРµС‰СЊ.Р•СЃР»Рё РІР°Рј РЅСѓР¶РЅРѕ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№,С‰РµР»РєРЅРёС‚Рµ РµС‰Рµ. РџСЂР°РІС‹Р№ РєР»РёРє-СѓРјРµРЅСЊ. РєРѕР»-РІРѕ РІРµС‰РµР№.РљРѕРіРґР° РІС‹Р±РµСЂРµС‚Рµ РІСЃРµ,С‡С‚Рѕ С…РѕС‚РёС‚Рµ,Р·Р°РїРѕР»РЅСЏР№С‚Рµ Р±Р»Р°РЅРє Р·Р°РєР°Р·Р°.",
 
 	//Text on the buttons to go the various links
 
-	L"Пред.вещи",		//
-	L"Пист.", 			//3
-	L"Амуниция",			//4
-	L"Броня",			//5
-	L"Разн.",			//6	//misc is an abbreviation for miscellaneous
-	L"Б.У.",			//7
-	L"Еще",
-	L"БЛАНК",
-	L"На гл.стр.",			//10
+	L"РџСЂРµРґ.РІРµС‰Рё",		//
+	L"РџРёСЃС‚.", 			//3
+	L"РђРјСѓРЅРёС†РёСЏ",			//4
+	L"Р‘СЂРѕРЅСЏ",			//5
+	L"Р Р°Р·РЅ.",			//6	//misc is an abbreviation for miscellaneous
+	L"Р‘.РЈ.",			//7
+	L"Р•С‰Рµ",
+	L"Р‘Р›РђРќРљ",
+	L"РќР° РіР».СЃС‚СЂ.",			//10
 
 	//The following 2 lines are used on the Ammunition page.
 	//They are used for help text to display how many items the player's merc has
 	//that can use this type of ammo
 
-	L"У вашей команды есть",//11
-	L"Оруж.,где исп.этот тип боеприпасов", //12
+	L"РЈ РІР°С€РµР№ РєРѕРјР°РЅРґС‹ РµСЃС‚СЊ",//11
+	L"РћСЂСѓР¶.,РіРґРµ РёСЃРї.СЌС‚РѕС‚ С‚РёРї Р±РѕРµРїСЂРёРїР°СЃРѕРІ", //12
 
 	//The following lines provide information on the items
 
-	L"Вес:",		// Weight of all the items of the same type
-	L"Кал:",			// the caliber of the gun
-	L"Маг:",			// number of rounds of ammo the Magazine can hold
-	L"Рнг:",			// The range of the gun
-	L"Пвр:",			// Damage of the weapon
-	L"УС:",			// Weapon's Rate Of Fire, acronym ROF
-	L"Цена:",			// Cost of the item
-	L"На складе:",			// The number of items still in the store's inventory
-	L"Заказ:кол-во:",		// The number of items on order
-	L"Повреждение",			// If the item is damaged
-	L"Вес:",			// the Weight of the item
-	L"Итого:",			// The total cost of all items on order
-	L"* %% действует",		// if the item is damaged, displays the percent function of the item
+	L"Р’РµСЃ:",		// Weight of all the items of the same type
+	L"РљР°Р»:",			// the caliber of the gun
+	L"РњР°Рі:",			// number of rounds of ammo the Magazine can hold
+	L"Р РЅРі:",			// The range of the gun
+	L"РџРІСЂ:",			// Damage of the weapon
+	L"РЈРЎ:",			// Weapon's Rate Of Fire, acronym ROF
+	L"Р¦РµРЅР°:",			// Cost of the item
+	L"РќР° СЃРєР»Р°РґРµ:",			// The number of items still in the store's inventory
+	L"Р—Р°РєР°Р·:РєРѕР»-РІРѕ:",		// The number of items on order
+	L"РџРѕРІСЂРµР¶РґРµРЅРёРµ",			// If the item is damaged
+	L"Р’РµСЃ:",			// the Weight of the item
+	L"РС‚РѕРіРѕ:",			// The total cost of all items on order
+	L"* %% РґРµР№СЃС‚РІСѓРµС‚",		// if the item is damaged, displays the percent function of the item
 
 	//Popup that tells the player that they can only order 10 items at a time
 
-	L"Дорогие клиенты!Заказ в режиме on-line позволяет заказать не более 10 вещей. Если вы хотите заказать больше,(а мы надемся,что так и есть),заполните еще один бланк и примите наши извинения.",
+	L"Р”РѕСЂРѕРіРёРµ РєР»РёРµРЅС‚С‹!Р—Р°РєР°Р· РІ СЂРµР¶РёРјРµ on-line РїРѕР·РІРѕР»СЏРµС‚ Р·Р°РєР°Р·Р°С‚СЊ РЅРµ Р±РѕР»РµРµ 10 РІРµС‰РµР№. Р•СЃР»Рё РІС‹ С…РѕС‚РёС‚Рµ Р·Р°РєР°Р·Р°С‚СЊ Р±РѕР»СЊС€Рµ,(Р° РјС‹ РЅР°РґРµРјСЃСЏ,С‡С‚Рѕ С‚Р°Рє Рё РµСЃС‚СЊ),Р·Р°РїРѕР»РЅРёС‚Рµ РµС‰Рµ РѕРґРёРЅ Р±Р»Р°РЅРє Рё РїСЂРёРјРёС‚Рµ РЅР°С€Рё РёР·РІРёРЅРµРЅРёСЏ.",
 
 	// A popup that tells the user that they are trying to order more items then the store has in stock
 
-	L"Извините.Этот товар закончился.Попробуйте заказать его позже.",
+	L"РР·РІРёРЅРёС‚Рµ.Р­С‚РѕС‚ С‚РѕРІР°СЂ Р·Р°РєРѕРЅС‡РёР»СЃСЏ.РџРѕРїСЂРѕР±СѓР№С‚Рµ Р·Р°РєР°Р·Р°С‚СЊ РµРіРѕ РїРѕР·Р¶Рµ.",
 
 	//A popup that tells the user that the store is temporarily sold out
 
-	L"Извините,но все товары этого типа закончились.",
+	L"РР·РІРёРЅРёС‚Рµ,РЅРѕ РІСЃРµ С‚РѕРІР°СЂС‹ СЌС‚РѕРіРѕ С‚РёРїР° Р·Р°РєРѕРЅС‡РёР»РёСЃСЊ.",
 
 };
 
@@ -2735,21 +2735,21 @@ const wchar_t* BobbyRaysFrontText[] =
 {
 	//Details on the web site
 
-	L"Здесь вы можете приобрести последние новинки производства оружия и сопутствующих товаров",
-	L"Мы можем предложить вам все,что нужно для взрывных работ",
-	L"Б.У.",
+	L"Р—РґРµСЃСЊ РІС‹ РјРѕР¶РµС‚Рµ РїСЂРёРѕР±СЂРµСЃС‚Рё РїРѕСЃР»РµРґРЅРёРµ РЅРѕРІРёРЅРєРё РїСЂРѕРёР·РІРѕРґСЃС‚РІР° РѕСЂСѓР¶РёСЏ Рё СЃРѕРїСѓС‚СЃС‚РІСѓСЋС‰РёС… С‚РѕРІР°СЂРѕРІ",
+	L"РњС‹ РјРѕР¶РµРј РїСЂРµРґР»РѕР¶РёС‚СЊ РІР°Рј РІСЃРµ,С‡С‚Рѕ РЅСѓР¶РЅРѕ РґР»СЏ РІР·СЂС‹РІРЅС‹С… СЂР°Р±РѕС‚",
+	L"Р‘.РЈ.",
 
 	//Text for the various links to the sub pages
 
-	L"Разное",
-	L"ПИСТОЛЕТЫ",
-	L"АМУНИЦИЯ",		//5
-	L"БРОНЯ",
+	L"Р Р°Р·РЅРѕРµ",
+	L"РџРРЎРўРћР›Р•РўР«",
+	L"РђРњРЈРќРР¦РРЇ",		//5
+	L"Р‘Р РћРќРЇ",
 
 	//Details on the web site
 
-	L"Если мы этого не продаем, вам это взять неоткуда!",
-	L"В разработке",
+	L"Р•СЃР»Рё РјС‹ СЌС‚РѕРіРѕ РЅРµ РїСЂРѕРґР°РµРј, РІР°Рј СЌС‚Рѕ РІР·СЏС‚СЊ РЅРµРѕС‚РєСѓРґР°!",
+	L"Р’ СЂР°Р·СЂР°Р±РѕС‚РєРµ",
 };
 
 
@@ -2759,29 +2759,29 @@ const wchar_t* BobbyRaysFrontText[] =
 
 const wchar_t* AimSortText[] =
 {
-	L"Члены А.I.M.",				// Title
+	L"Р§Р»РµРЅС‹ Рђ.I.M.",				// Title
 	// Title for the way to sort
-	L"Сортировка:",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР°:",
 
 	// sort by...
 
-	L"Цена",
-	L"Опытность",
-	L"Меткость",
-	L"Медицина",
-	L"Взрывн.раб.",
-	L"Механика",
+	L"Р¦РµРЅР°",
+	L"РћРїС‹С‚РЅРѕСЃС‚СЊ",
+	L"РњРµС‚РєРѕСЃС‚СЊ",
+	L"РњРµРґРёС†РёРЅР°",
+	L"Р’Р·СЂС‹РІРЅ.СЂР°Р±.",
+	L"РњРµС…Р°РЅРёРєР°",
 
 	//Text of the links to other AIM pages
 
-	L"Просмотреть Фото наемников",
-	L"Просмотреть Статистику наемников",
-	L"Просмотреть Историю А.I.M.",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ Р¤РѕС‚Рѕ РЅР°РµРјРЅРёРєРѕРІ",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ РЎС‚Р°С‚РёСЃС‚РёРєСѓ РЅР°РµРјРЅРёРєРѕРІ",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ РСЃС‚РѕСЂРёСЋ Рђ.I.M.",
 
 	// text to display how the entries will be sorted
 
-	L"По возраст.",
-	L"По убыв."
+	L"РџРѕ РІРѕР·СЂР°СЃС‚.",
+	L"РџРѕ СѓР±С‹РІ."
 };
 
 
@@ -2792,12 +2792,12 @@ const wchar_t* AimPolicyText[] =
 {
 	// The text on the buttons at the bottom of the page
 
-	L"Пред.стр.",
-	L"Гл. стр.AIM",
-	L"Правила",
-	L"След.стр.",
-	L"Отвергнуть",
-	L"Согл."
+	L"РџСЂРµРґ.СЃС‚СЂ.",
+	L"Р“Р». СЃС‚СЂ.AIM",
+	L"РџСЂР°РІРёР»Р°",
+	L"РЎР»РµРґ.СЃС‚СЂ.",
+	L"РћС‚РІРµСЂРіРЅСѓС‚СЊ",
+	L"РЎРѕРіР»."
 };
 
 
@@ -2809,10 +2809,10 @@ const wchar_t* AimPolicyText[] =
 
 const wchar_t* AimMemberText[] =
 {
-	L"Левый щелчок",
-	L"контакт с наемн.",
-	L"Правый щелчок",
-	L"индекс фото.",
+	L"Р›РµРІС‹Р№ С‰РµР»С‡РѕРє",
+	L"РєРѕРЅС‚Р°РєС‚ СЃ РЅР°РµРјРЅ.",
+	L"РџСЂР°РІС‹Р№ С‰РµР»С‡РѕРє",
+	L"РёРЅРґРµРєСЃ С„РѕС‚Рѕ.",
 };
 
 //Aim Member.c
@@ -2822,37 +2822,37 @@ const wchar_t* CharacterInfo[] =
 {
 	// The various attributes of the merc
 
-	L"Здоровье",
-	L"Подвижность",
-	L"Проворность",
-	L"Сила",
-	L"Лидерство",
-	L"Мудрость",
-	L"Опытность",
-	L"Меткость",
-	L"Механика",
-	L"Взрывн.раб.",
-	L"Медицина",				//10
+	L"Р—РґРѕСЂРѕРІСЊРµ",
+	L"РџРѕРґРІРёР¶РЅРѕСЃС‚СЊ",
+	L"РџСЂРѕРІРѕСЂРЅРѕСЃС‚СЊ",
+	L"РЎРёР»Р°",
+	L"Р›РёРґРµСЂСЃС‚РІРѕ",
+	L"РњСѓРґСЂРѕСЃС‚СЊ",
+	L"РћРїС‹С‚РЅРѕСЃС‚СЊ",
+	L"РњРµС‚РєРѕСЃС‚СЊ",
+	L"РњРµС…Р°РЅРёРєР°",
+	L"Р’Р·СЂС‹РІРЅ.СЂР°Р±.",
+	L"РњРµРґРёС†РёРЅР°",				//10
 
 	// the contract expenses' area
 
-	L"Плата",
-	L"Срок",
-	L"1 день",
-	L"7 дней",
-	L"14 дней",
+	L"РџР»Р°С‚Р°",
+	L"РЎСЂРѕРє",
+	L"1 РґРµРЅСЊ",
+	L"7 РґРЅРµР№",
+	L"14 РґРЅРµР№",
 
 	// text for the buttons that either go to the previous merc,
 	// start talking to the merc, or go to the next merc
 
-	L"Пред.",
-	L"Контакт",
-	L"След.",
+	L"РџСЂРµРґ.",
+	L"РљРѕРЅС‚Р°РєС‚",
+	L"РЎР»РµРґ.",
 
-	L"Дополнит.инф.",				// Title for the additional info for the merc's bio
-	L"Действ.члены",		//20		// Title of the page
-	L"Стоим.оборудования:",				// Displays the optional gear cost
-	L"Необходимый мед.депозит",			// If the merc required a medical deposit, this is displayed
+	L"Р”РѕРїРѕР»РЅРёС‚.РёРЅС„.",				// Title for the additional info for the merc's bio
+	L"Р”РµР№СЃС‚РІ.С‡Р»РµРЅС‹",		//20		// Title of the page
+	L"РЎС‚РѕРёРј.РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ:",				// Displays the optional gear cost
+	L"РќРµРѕР±С…РѕРґРёРјС‹Р№ РјРµРґ.РґРµРїРѕР·РёС‚",			// If the merc required a medical deposit, this is displayed
 };
 
 
@@ -2863,34 +2863,34 @@ const wchar_t* CharacterInfo[] =
 
 const wchar_t* VideoConfercingText[] =
 {
-	L"Цена контракта:",				//Title beside the cost of hiring the merc
+	L"Р¦РµРЅР° РєРѕРЅС‚СЂР°РєС‚Р°:",				//Title beside the cost of hiring the merc
 
 	//Text on the buttons to select the length of time the merc can be hired
 
-	L"1 день",
-	L"7 дней",
-	L"14 дней",
+	L"1 РґРµРЅСЊ",
+	L"7 РґРЅРµР№",
+	L"14 РґРЅРµР№",
 
 	//Text on the buttons to determine if you want the merc to come with the equipment
 
-	L"Нет экипировки",
-	L"Купить экипир.",
+	L"РќРµС‚ СЌРєРёРїРёСЂРѕРІРєРё",
+	L"РљСѓРїРёС‚СЊ СЌРєРёРїРёСЂ.",
 
 	// Text on the Buttons
 
-	L"ПЕРЕВЕСТИ ФОНДЫ",			// to actually hire the merc
-	L"ОТМЕНА",				// go back to the previous menu
-	L"НАНЯТЬ",				// go to menu in which you can hire the merc
-	L"ПРЕКР.РАЗГОВОР",				// stops talking with the merc
+	L"РџР•Р Р•Р’Р•РЎРўР Р¤РћРќР”Р«",			// to actually hire the merc
+	L"РћРўРњР•РќРђ",				// go back to the previous menu
+	L"РќРђРќРЇРўР¬",				// go to menu in which you can hire the merc
+	L"РџР Р•РљР .Р РђР—Р“РћР’РћР ",				// stops talking with the merc
 	L"OK",
-	L"ОСТАВИТЬ СООБЩ.",			// if the merc is not there, you can leave a message
+	L"РћРЎРўРђР’РРўР¬ РЎРћРћР‘Р©.",			// if the merc is not there, you can leave a message
 
 	//Text on the top of the video conference popup
 
-	L"Видеоконференция с",
-	L"Соединение. . .",
+	L"Р’РёРґРµРѕРєРѕРЅС„РµСЂРµРЅС†РёСЏ СЃ",
+	L"РЎРѕРµРґРёРЅРµРЅРёРµ. . .",
 
-	L"с мед.депоз."			// Displays if you are hiring the merc with the medical deposit
+	L"СЃ РјРµРґ.РґРµРїРѕР·."			// Displays if you are hiring the merc with the medical deposit
 };
 
 
@@ -2902,22 +2902,22 @@ const wchar_t* VideoConfercingText[] =
 
 const wchar_t* AimPopUpText[] =
 {
-	L"ПЕРЕВОД ФОНДОВ ЗАВЕРШЕН УСПЕШНО",	// You hired the merc
-	L"НЕЛЬЗЯ ПЕРЕВЕСТИ ФОНДЫ",		// Player doesn't have enough money, message 1
-	L"НЕДОСТАТОЧНО СРЕДСТВ",				// Player doesn't have enough money, message 2
+	L"РџР•Р Р•Р’РћР” Р¤РћРќР”РћР’ Р—РђР’Р•Р РЁР•Рќ РЈРЎРџР•РЁРќРћ",	// You hired the merc
+	L"РќР•Р›Р¬Р—РЇ РџР•Р Р•Р’Р•РЎРўР Р¤РћРќР”Р«",		// Player doesn't have enough money, message 1
+	L"РќР•Р”РћРЎРўРђРўРћР§РќРћ РЎР Р•Р”РЎРўР’",				// Player doesn't have enough money, message 2
 
 	// if the merc is not available, one of the following is displayed over the merc's face
 
-	L"На задании",
-	L"Оставьте сообщение",
-	L"Скончался",
+	L"РќР° Р·Р°РґР°РЅРёРё",
+	L"РћСЃС‚Р°РІСЊС‚Рµ СЃРѕРѕР±С‰РµРЅРёРµ",
+	L"РЎРєРѕРЅС‡Р°Р»СЃСЏ",
 
 	//If you try to hire more mercs than game can support
 
-	L"У вас уже набрано 18 наемников-полная команда.",
+	L"РЈ РІР°СЃ СѓР¶Рµ РЅР°Р±СЂР°РЅРѕ 18 РЅР°РµРјРЅРёРєРѕРІ-РїРѕР»РЅР°СЏ РєРѕРјР°РЅРґР°.",
 
-	L"Сообщение",
-	L"Сообщ. оставлено",
+	L"РЎРѕРѕР±С‰РµРЅРёРµ",
+	L"РЎРѕРѕР±С‰. РѕСЃС‚Р°РІР»РµРЅРѕ",
 };
 
 
@@ -2925,7 +2925,7 @@ const wchar_t* AimPopUpText[] =
 
 const wchar_t* AimLinkText[] =
 {
-	L"Линки A.I.M.",	//The title of the AIM links page
+	L"Р›РёРЅРєРё A.I.M.",	//The title of the AIM links page
 };
 
 
@@ -2936,14 +2936,14 @@ const wchar_t* AimLinkText[] =
 
 const wchar_t* AimHistoryText[] =
 {
-	L"Журнал A.I.M.",					//Title
+	L"Р–СѓСЂРЅР°Р» A.I.M.",					//Title
 
 	// Text on the buttons at the bottom of the page
 
-	L"Пред.стр.",
-	L"Гл.стр.",
-	L"История A.I.M.", //$$
-	L"След.стр."
+	L"РџСЂРµРґ.СЃС‚СЂ.",
+	L"Р“Р».СЃС‚СЂ.",
+	L"РСЃС‚РѕСЂРёСЏ A.I.M.", //$$
+	L"РЎР»РµРґ.СЃС‚СЂ."
 };
 
 
@@ -2955,30 +2955,30 @@ const wchar_t* AimFiText[] =
 {
 	// displays the way in which the mercs were sorted
 
-	L"Цена",
-	L"Опытность",
-	L"Меткость",
-	L"Медицина",
-	L"Взрывн.раб.",
-	L"Механика",
+	L"Р¦РµРЅР°",
+	L"РћРїС‹С‚РЅРѕСЃС‚СЊ",
+	L"РњРµС‚РєРѕСЃС‚СЊ",
+	L"РњРµРґРёС†РёРЅР°",
+	L"Р’Р·СЂС‹РІРЅ.СЂР°Р±.",
+	L"РњРµС…Р°РЅРёРєР°",
 
 	// The title of the page, the above text gets added at the end of this text
 
-	L"Члены A.I.M.:сортировка по возраст. %ls",
-	L"Члены A.I.M.:сортировка по убыв. %ls",
+	L"Р§Р»РµРЅС‹ A.I.M.:СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІРѕР·СЂР°СЃС‚. %ls",
+	L"Р§Р»РµРЅС‹ A.I.M.:СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СѓР±С‹РІ. %ls",
 
 	// Instructions to the players on what to do
 
-	L"Левый щелчок",
-	L"Выбрать наемн",			//10
-	L"Правый щелчок",
-	L"Упорядочить выбор",
+	L"Р›РµРІС‹Р№ С‰РµР»С‡РѕРє",
+	L"Р’С‹Р±СЂР°С‚СЊ РЅР°РµРјРЅ",			//10
+	L"РџСЂР°РІС‹Р№ С‰РµР»С‡РѕРє",
+	L"РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ РІС‹Р±РѕСЂ",
 
 	// Gets displayed on top of the merc's portrait if they are...
 
-	L"Отсутствует",
-	L"Скончался",						//14
-	L"На задании",
+	L"РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚",
+	L"РЎРєРѕРЅС‡Р°Р»СЃСЏ",						//14
+	L"РќР° Р·Р°РґР°РЅРёРё",
 };
 
 
@@ -2990,13 +2990,13 @@ const wchar_t* AimAlumniText[] =
 {
 	// Text of the buttons
 
-	L"СТР 1",
-	L"СТР 2",
-	L"СТР 3",
+	L"РЎРўР  1",
+	L"РЎРўР  2",
+	L"РЎРўР  3",
 
-	L"История A.I.M.",	// Title of the page //$$
+	L"РСЃС‚РѕСЂРёСЏ A.I.M.",	// Title of the page //$$
 
-	L"ОК"			// Stops displaying information on selected merc
+	L"РћРљ"			// Stops displaying information on selected merc
 };
 
 
@@ -3010,17 +3010,17 @@ const wchar_t* AimScreenText[] =
 {
 	// AIM disclaimers
 
-	L"A.I.M. и логотип A.I.M.-зарегистрированные во многих странах торговые марки.",
-	L"Поэтому даже и не думайте нас копировать.",
-	L"Копирайт 1998-1999 A.I.M.,Ltd.Все права защищены.",
+	L"A.I.M. Рё Р»РѕРіРѕС‚РёРї A.I.M.-Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ РІРѕ РјРЅРѕРіРёС… СЃС‚СЂР°РЅР°С… С‚РѕСЂРіРѕРІС‹Рµ РјР°СЂРєРё.",
+	L"РџРѕСЌС‚РѕРјСѓ РґР°Р¶Рµ Рё РЅРµ РґСѓРјР°Р№С‚Рµ РЅР°СЃ РєРѕРїРёСЂРѕРІР°С‚СЊ.",
+	L"РљРѕРїРёСЂР°Р№С‚ 1998-1999 A.I.M.,Ltd.Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.",
 
 	//Text for an advertisement that gets displayed on the AIM page
 
-	L"Объединенные цветочные службы",
-	L"\"Мы сбрасываем в любои месте\"",				//10
-	L"Сделай как надо",
-	L"... первый раз",
-	L"Если у нас нет такого пистолета,он вам и не нужен.",
+	L"РћР±СЉРµРґРёРЅРµРЅРЅС‹Рµ С†РІРµС‚РѕС‡РЅС‹Рµ СЃР»СѓР¶Р±С‹",
+	L"\"РњС‹ СЃР±СЂР°СЃС‹РІР°РµРј РІ Р»СЋР±РѕРё РјРµСЃС‚Рµ\"",				//10
+	L"РЎРґРµР»Р°Р№ РєР°Рє РЅР°РґРѕ",
+	L"... РїРµСЂРІС‹Р№ СЂР°Р·",
+	L"Р•СЃР»Рё Сѓ РЅР°СЃ РЅРµС‚ С‚Р°РєРѕРіРѕ РїРёСЃС‚РѕР»РµС‚Р°,РѕРЅ РІР°Рј Рё РЅРµ РЅСѓР¶РµРЅ.",
 };
 
 
@@ -3029,12 +3029,12 @@ const wchar_t* AimScreenText[] =
 const wchar_t* AimBottomMenuText[] =
 {
 	//Text for the links at the bottom of all AIM pages
-	L"Гл.стр.",
-	L"Члены",
-	L"История", //$$
-	L"Принципы",
-	L"Журнал",
-	L"Ссылки"
+	L"Р“Р».СЃС‚СЂ.",
+	L"Р§Р»РµРЅС‹",
+	L"РСЃС‚РѕСЂРёСЏ", //$$
+	L"РџСЂРёРЅС†РёРїС‹",
+	L"Р–СѓСЂРЅР°Р»",
+	L"РЎСЃС‹Р»РєРё"
 };
 
 
@@ -3045,32 +3045,32 @@ const wchar_t* AimBottomMenuText[] =
 
 const wchar_t* SKI_Text[ ] =
 {
-	L"ИМЕЮЩИЕСЯ ТОВАРЫ",		//Header for the merchandise available
-	L"СТР",				//The current store inventory page being displayed
-	L"ОБЩАЯ СТОИМ",				//The total cost of the the items in the Dealer inventory area
-	L"ОБЩАЯ ЦЕНА",			//The total value of items player wishes to sell
-	L"ОЦЕНКА",				//Button text for dealer to evaluate items the player wants to sell
-	L"ПЕРЕДАЧА",			//Button text which completes the deal. Makes the transaction.
-	L"ГОТОВО",				//Text for the button which will leave the shopkeeper interface.
-	L"СТОИМ.РЕМОНТА",			//The amount the dealer will charge to repair the merc's goods
-	L"1 ЧАС",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"%d ЧАСОВ",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"ОТРЕМОНТИРОВАНО",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
-	L"Вам уже некуда класть вещи.",	//Message box that tells the user there is no more room to put there stuff
-	L"%d МИНУТ",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"Бросьте вещи на землю.",
+	L"РРњР•Р®Р©РР•РЎРЇ РўРћР’РђР Р«",		//Header for the merchandise available
+	L"РЎРўР ",				//The current store inventory page being displayed
+	L"РћР‘Р©РђРЇ РЎРўРћРРњ",				//The total cost of the the items in the Dealer inventory area
+	L"РћР‘Р©РђРЇ Р¦Р•РќРђ",			//The total value of items player wishes to sell
+	L"РћР¦Р•РќРљРђ",				//Button text for dealer to evaluate items the player wants to sell
+	L"РџР•Р Р•Р”РђР§Рђ",			//Button text which completes the deal. Makes the transaction.
+	L"Р“РћРўРћР’Рћ",				//Text for the button which will leave the shopkeeper interface.
+	L"РЎРўРћРРњ.Р Р•РњРћРќРўРђ",			//The amount the dealer will charge to repair the merc's goods
+	L"1 Р§РђРЎ",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
+	L"%d Р§РђРЎРћР’",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
+	L"РћРўР Р•РњРћРќРўРР РћР’РђРќРћ",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
+	L"Р’Р°Рј СѓР¶Рµ РЅРµРєСѓРґР° РєР»Р°СЃС‚СЊ РІРµС‰Рё.",	//Message box that tells the user there is no more room to put there stuff
+	L"%d РњРРќРЈРў",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
+	L"Р‘СЂРѕСЃСЊС‚Рµ РІРµС‰Рё РЅР° Р·РµРјР»СЋ.",
 };
 
 
 const wchar_t* SkiMessageBoxText[] =
 {
-	L"Вы хотите снять %ls со своего основного счета,чтобы покрыть разницу?",
-	L"Недостаточно денег.Не хватает %ls",
-	L"Вы хотите снять %ls со своего основного счета,чтобы покрыть стоимость?",
-	L"Попросить торговца начать перевод",
-	L"Попросить торговца починить выбр.вещи",
-	L"Закончить разговор",
-	L"Текущий баланс",
+	L"Р’С‹ С…РѕС‚РёС‚Рµ СЃРЅСЏС‚СЊ %ls СЃРѕ СЃРІРѕРµРіРѕ РѕСЃРЅРѕРІРЅРѕРіРѕ СЃС‡РµС‚Р°,С‡С‚РѕР±С‹ РїРѕРєСЂС‹С‚СЊ СЂР°Р·РЅРёС†Сѓ?",
+	L"РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґРµРЅРµРі.РќРµ С…РІР°С‚Р°РµС‚ %ls",
+	L"Р’С‹ С…РѕС‚РёС‚Рµ СЃРЅСЏС‚СЊ %ls СЃРѕ СЃРІРѕРµРіРѕ РѕСЃРЅРѕРІРЅРѕРіРѕ СЃС‡РµС‚Р°,С‡С‚РѕР±С‹ РїРѕРєСЂС‹С‚СЊ СЃС‚РѕРёРјРѕСЃС‚СЊ?",
+	L"РџРѕРїСЂРѕСЃРёС‚СЊ С‚РѕСЂРіРѕРІС†Р° РЅР°С‡Р°С‚СЊ РїРµСЂРµРІРѕРґ",
+	L"РџРѕРїСЂРѕСЃРёС‚СЊ С‚РѕСЂРіРѕРІС†Р° РїРѕС‡РёРЅРёС‚СЊ РІС‹Р±СЂ.РІРµС‰Рё",
+	L"Р—Р°РєРѕРЅС‡РёС‚СЊ СЂР°Р·РіРѕРІРѕСЂ",
+	L"РўРµРєСѓС‰РёР№ Р±Р°Р»Р°РЅСЃ",
 };
 
 
@@ -3079,74 +3079,74 @@ const wchar_t* SkiMessageBoxText[] =
 const wchar_t* zOptionsText[] =
 {
 	//button Text
-	L"Сохранить",
-	L"Загрузить",
-	L"Выход",
-	L"Готово",
+	L"РЎРѕС…СЂР°РЅРёС‚СЊ",
+	L"Р—Р°РіСЂСѓР·РёС‚СЊ",
+	L"Р’С‹С…РѕРґ",
+	L"Р“РѕС‚РѕРІРѕ",
 
 	//Text above the slider bars
-	L"Эффекты",
-	L"Речь",
-	L"Музыка",
+	L"Р­С„С„РµРєС‚С‹",
+	L"Р РµС‡СЊ",
+	L"РњСѓР·С‹РєР°",
 
 	//Confirmation pop when the user selects..
-	L"Выйти из игры и вернуться в главное меню?",
+	L"Р’С‹Р№С‚Рё РёР· РёРіСЂС‹ Рё РІРµСЂРЅСѓС‚СЊСЃСЏ РІ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ?",
 
-	L"Нужно выбрать либо РЕЧЬ, либо СУБТИТРЫ.",
+	L"РќСѓР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ Р»РёР±Рѕ Р Р•Р§Р¬, Р»РёР±Рѕ РЎРЈР‘РўРРўР Р«.",
 };
 
 
 //SaveLoadScreen
 const wchar_t* zSaveLoadText[] =
 {
-	L"Сохранить",
-	L"Загрузить",
-	L"Отмена",
-	L"Сохр.выбр.",
-	L"Загр.выбр.",
+	L"РЎРѕС…СЂР°РЅРёС‚СЊ",
+	L"Р—Р°РіСЂСѓР·РёС‚СЊ",
+	L"РћС‚РјРµРЅР°",
+	L"РЎРѕС…СЂ.РІС‹Р±СЂ.",
+	L"Р—Р°РіСЂ.РІС‹Р±СЂ.",
 
-	L"Игра сохранена",
-	L"ОШИБКА при сохранении!",
-	L"Игра загружена",
-	L"ОШИБКА при загрузке!",
+	L"РРіСЂР° СЃРѕС…СЂР°РЅРµРЅР°",
+	L"РћРЁРР‘РљРђ РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё!",
+	L"РРіСЂР° Р·Р°РіСЂСѓР¶РµРЅР°",
+	L"РћРЁРР‘РљРђ РїСЂРё Р·Р°РіСЂСѓР·РєРµ!",
 
-	L"Сохраненная версия игры отличается от текущей.Надежнее всего продолжить.Продолжить?",
-	L"Файлы сохраненной игры могут быть с ошибкой.Уничтожить их все?",
+	L"РЎРѕС…СЂР°РЅРµРЅРЅР°СЏ РІРµСЂСЃРёСЏ РёРіСЂС‹ РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ С‚РµРєСѓС‰РµР№.РќР°РґРµР¶РЅРµРµ РІСЃРµРіРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ.РџСЂРѕРґРѕР»Р¶РёС‚СЊ?",
+	L"Р¤Р°Р№Р»С‹ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РёРіСЂС‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ СЃ РѕС€РёР±РєРѕР№.РЈРЅРёС‡С‚РѕР¶РёС‚СЊ РёС… РІСЃРµ?",
 
 	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
 	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
 	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
-	L"Сохр.версия была изменена.Сообщите о проблемах.Продолжить?",
+	L"РЎРѕС…СЂ.РІРµСЂСЃРёСЏ Р±С‹Р»Р° РёР·РјРµРЅРµРЅР°.РЎРѕРѕР±С‰РёС‚Рµ Рѕ РїСЂРѕР±Р»РµРјР°С….РџСЂРѕРґРѕР»Р¶РёС‚СЊ?",
 #else
-	L"Попытка загрузки старой версии. Обновить автоматически и загрузить?",
+	L"РџРѕРїС‹С‚РєР° Р·Р°РіСЂСѓР·РєРё СЃС‚Р°СЂРѕР№ РІРµСЂСЃРёРё. РћР±РЅРѕРІРёС‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё Рё Р·Р°РіСЂСѓР·РёС‚СЊ?",
 #endif
 
 	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
 	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
 	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
 #ifdef JA2BETAVERSION
-	L"Сохр.версии и версии игры были изменены. Сообщите о проблемах. Продолжить?",
+	L"РЎРѕС…СЂ.РІРµСЂСЃРёРё Рё РІРµСЂСЃРёРё РёРіСЂС‹ Р±С‹Р»Рё РёР·РјРµРЅРµРЅС‹. РЎРѕРѕР±С‰РёС‚Рµ Рѕ РїСЂРѕР±Р»РµРјР°С…. РџСЂРѕРґРѕР»Р¶РёС‚СЊ?",
 #else
-	L"Попытка загрузки старой версии. Обновить автоматически и загрузить?",
+	L"РџРѕРїС‹С‚РєР° Р·Р°РіСЂСѓР·РєРё СЃС‚Р°СЂРѕР№ РІРµСЂСЃРёРё. РћР±РЅРѕРІРёС‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё Рё Р·Р°РіСЂСѓР·РёС‚СЊ?",
 #endif
 
-	L"Вы уверены,что хотите записать сох.игру поверх #%d?",
-	L"Вы хотите загрузить игру из ячейки #",
+	L"Р’С‹ СѓРІРµСЂРµРЅС‹,С‡С‚Рѕ С…РѕС‚РёС‚Рµ Р·Р°РїРёСЃР°С‚СЊ СЃРѕС….РёРіСЂСѓ РїРѕРІРµСЂС… #%d?",
+	L"Р’С‹ С…РѕС‚РёС‚Рµ Р·Р°РіСЂСѓР·РёС‚СЊ РёРіСЂСѓ РёР· СЏС‡РµР№РєРё #",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,
 	//the second is the recommended amount of free space.
-	L"У вас кончается дисковое пространство. Осталось всего %d Mбайт. Нужно как минимум %d свободных Mбайт.",
+	L"РЈ РІР°СЃ РєРѕРЅС‡Р°РµС‚СЃСЏ РґРёСЃРєРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ. РћСЃС‚Р°Р»РѕСЃСЊ РІСЃРµРіРѕ %d MР±Р°Р№С‚. РќСѓР¶РЅРѕ РєР°Рє РјРёРЅРёРјСѓРј %d СЃРІРѕР±РѕРґРЅС‹С… MР±Р°Р№С‚.",
 
-	L"Сохранение...",			//When saving a game, a message box with this string appears on the screen
+	L"РЎРѕС…СЂР°РЅРµРЅРёРµ...",			//When saving a game, a message box with this string appears on the screen
 
-	L"Обычные пист.",
-	L"Тонны пист.",
-	L"Реалист.стиль",
-	L"Фантаст. стиль",
+	L"РћР±С‹С‡РЅС‹Рµ РїРёСЃС‚.",
+	L"РўРѕРЅРЅС‹ РїРёСЃС‚.",
+	L"Р РµР°Р»РёСЃС‚.СЃС‚РёР»СЊ",
+	L"Р¤Р°РЅС‚Р°СЃС‚. СЃС‚РёР»СЊ",
 
-	L"Сложн.",
+	L"РЎР»РѕР¶РЅ.",
 };
 
 
@@ -3154,431 +3154,431 @@ const wchar_t* zSaveLoadText[] =
 //MapScreen
 const wchar_t* zMarksMapScreenText[] =
 {
-	L"Уровень карты",
-	L"У вас нет ополчения.Надо подготовить горожан,и у вас будет городское ополчение.",
-	L"Доход в день",
-	L"У наемн.есть страховка",
-	L"%ls не устал.",
-	L"%ls движется и спать не может",
-	L"%ls слишком устал,попробуйте позже.",
-	L"%ls за рулем.",
-	L"Отряд не может двигаться,когда один наемн.спит.",
+	L"РЈСЂРѕРІРµРЅСЊ РєР°СЂС‚С‹",
+	L"РЈ РІР°СЃ РЅРµС‚ РѕРїРѕР»С‡РµРЅРёСЏ.РќР°РґРѕ РїРѕРґРіРѕС‚РѕРІРёС‚СЊ РіРѕСЂРѕР¶Р°РЅ,Рё Сѓ РІР°СЃ Р±СѓРґРµС‚ РіРѕСЂРѕРґСЃРєРѕРµ РѕРїРѕР»С‡РµРЅРёРµ.",
+	L"Р”РѕС…РѕРґ РІ РґРµРЅСЊ",
+	L"РЈ РЅР°РµРјРЅ.РµСЃС‚СЊ СЃС‚СЂР°С…РѕРІРєР°",
+	L"%ls РЅРµ СѓСЃС‚Р°Р».",
+	L"%ls РґРІРёР¶РµС‚СЃСЏ Рё СЃРїР°С‚СЊ РЅРµ РјРѕР¶РµС‚",
+	L"%ls СЃР»РёС€РєРѕРј СѓСЃС‚Р°Р»,РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.",
+	L"%ls Р·Р° СЂСѓР»РµРј.",
+	L"РћС‚СЂСЏРґ РЅРµ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ,РєРѕРіРґР° РѕРґРёРЅ РЅР°РµРјРЅ.СЃРїРёС‚.",
 
 	// stuff for contracts
-	L"Вы можете платить по контракту,но у вас нет денег на страховые премии этому наемн.",
-	L"%ls:страховая премия составит %ls за %d дополн.дней.Хотите платить?",
-	L"Инвентарь Сектора",
-	L"У наемн.есть мед.депозит.",
+	L"Р’С‹ РјРѕР¶РµС‚Рµ РїР»Р°С‚РёС‚СЊ РїРѕ РєРѕРЅС‚СЂР°РєС‚Сѓ,РЅРѕ Сѓ РІР°СЃ РЅРµС‚ РґРµРЅРµРі РЅР° СЃС‚СЂР°С…РѕРІС‹Рµ РїСЂРµРјРёРё СЌС‚РѕРјСѓ РЅР°РµРјРЅ.",
+	L"%ls:СЃС‚СЂР°С…РѕРІР°СЏ РїСЂРµРјРёСЏ СЃРѕСЃС‚Р°РІРёС‚ %ls Р·Р° %d РґРѕРїРѕР»РЅ.РґРЅРµР№.РҐРѕС‚РёС‚Рµ РїР»Р°С‚РёС‚СЊ?",
+	L"РРЅРІРµРЅС‚Р°СЂСЊ РЎРµРєС‚РѕСЂР°",
+	L"РЈ РЅР°РµРјРЅ.РµСЃС‚СЊ РјРµРґ.РґРµРїРѕР·РёС‚.",
 
 	// other items
-	L"Медики", // people acting a field medics and bandaging wounded mercs
-	L"Пациенты", // people who are being bandaged by a medic
-	L"Готово", // Continue on with the game after autobandage is complete
-	L"Стоп", // Stop autobandaging of patients by medics now
-	L"Извините.Эта опция невозможна,т.к.это демо-версия.", // informs player this option/button has been disabled in the demo
-	L"%ls:нет ремонтных принадл.",
-	L"%ls:нет медицинских принадл.",
-	L"Недостаточно людей,желающих пройти подготовку.",
-	L"%ls:много ополченцев.",
-	L"У наемн.конечн.контракт.",
-  L"Контракт наемн.не застрахован",
+	L"РњРµРґРёРєРё", // people acting a field medics and bandaging wounded mercs
+	L"РџР°С†РёРµРЅС‚С‹", // people who are being bandaged by a medic
+	L"Р“РѕС‚РѕРІРѕ", // Continue on with the game after autobandage is complete
+	L"РЎС‚РѕРї", // Stop autobandaging of patients by medics now
+	L"РР·РІРёРЅРёС‚Рµ.Р­С‚Р° РѕРїС†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°,С‚.Рє.СЌС‚Рѕ РґРµРјРѕ-РІРµСЂСЃРёСЏ.", // informs player this option/button has been disabled in the demo
+	L"%ls:РЅРµС‚ СЂРµРјРѕРЅС‚РЅС‹С… РїСЂРёРЅР°РґР».",
+	L"%ls:РЅРµС‚ РјРµРґРёС†РёРЅСЃРєРёС… РїСЂРёРЅР°РґР».",
+	L"РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р»СЋРґРµР№,Р¶РµР»Р°СЋС‰РёС… РїСЂРѕР№С‚Рё РїРѕРґРіРѕС‚РѕРІРєСѓ.",
+	L"%ls:РјРЅРѕРіРѕ РѕРїРѕР»С‡РµРЅС†РµРІ.",
+	L"РЈ РЅР°РµРјРЅ.РєРѕРЅРµС‡РЅ.РєРѕРЅС‚СЂР°РєС‚.",
+  L"РљРѕРЅС‚СЂР°РєС‚ РЅР°РµРјРЅ.РЅРµ Р·Р°СЃС‚СЂР°С…РѕРІР°РЅ",
 };
 
 
 const wchar_t* pLandMarkInSectorString[] =
 {
-	L"Отряд %d заметил кого-то в секторе %ls",
+	L"РћС‚СЂСЏРґ %d Р·Р°РјРµС‚РёР» РєРѕРіРѕ-С‚Рѕ РІ СЃРµРєС‚РѕСЂРµ %ls",
 };
 
 // confirm the player wants to pay X dollars to build a militia force in town
 const wchar_t* pMilitiaConfirmStrings[] =
 {
-	L"Тренировка отряда город.ополч.будет стоить $", // telling player how much it will cost
-	L"Одобрить платеж?", // asking player if they wish to pay the amount requested
-	L"У вас нет денег на это.", // telling the player they can't afford to train this town
-	L"Продолжить тренировку ополчения в %ls (%ls %d)?", // continue training this town?
-	L"Стоит $", // the cost in dollars to train militia
-	L"( Д/Н )",   // abbreviated yes/no
+	L"РўСЂРµРЅРёСЂРѕРІРєР° РѕС‚СЂСЏРґР° РіРѕСЂРѕРґ.РѕРїРѕР»С‡.Р±СѓРґРµС‚ СЃС‚РѕРёС‚СЊ $", // telling player how much it will cost
+	L"РћРґРѕР±СЂРёС‚СЊ РїР»Р°С‚РµР¶?", // asking player if they wish to pay the amount requested
+	L"РЈ РІР°СЃ РЅРµС‚ РґРµРЅРµРі РЅР° СЌС‚Рѕ.", // telling the player they can't afford to train this town
+	L"РџСЂРѕРґРѕР»Р¶РёС‚СЊ С‚СЂРµРЅРёСЂРѕРІРєСѓ РѕРїРѕР»С‡РµРЅРёСЏ РІ %ls (%ls %d)?", // continue training this town?
+	L"РЎС‚РѕРёС‚ $", // the cost in dollars to train militia
+	L"( Р”/Рќ )",   // abbreviated yes/no
 	L"",	// unused
-	L"Тренировка отряда город.ополч.в секторе %d будет стоить $ %d. %ls", // cost to train sveral sectors at once
-	L"У вас нет $%d на тренировку город.ополчения здесь.",
-	L"%ls:нужно %d процентов верности тебе,чтобы продолжить тренировку ополчения.",
-	L"В %ls больше нельзя тренировать ополчение.",
+	L"РўСЂРµРЅРёСЂРѕРІРєР° РѕС‚СЂСЏРґР° РіРѕСЂРѕРґ.РѕРїРѕР»С‡.РІ СЃРµРєС‚РѕСЂРµ %d Р±СѓРґРµС‚ СЃС‚РѕРёС‚СЊ $ %d. %ls", // cost to train sveral sectors at once
+	L"РЈ РІР°СЃ РЅРµС‚ $%d РЅР° С‚СЂРµРЅРёСЂРѕРІРєСѓ РіРѕСЂРѕРґ.РѕРїРѕР»С‡РµРЅРёСЏ Р·РґРµСЃСЊ.",
+	L"%ls:РЅСѓР¶РЅРѕ %d РїСЂРѕС†РµРЅС‚РѕРІ РІРµСЂРЅРѕСЃС‚Рё С‚РµР±Рµ,С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ С‚СЂРµРЅРёСЂРѕРІРєСѓ РѕРїРѕР»С‡РµРЅРёСЏ.",
+	L"Р’ %ls Р±РѕР»СЊС€Рµ РЅРµР»СЊР·СЏ С‚СЂРµРЅРёСЂРѕРІР°С‚СЊ РѕРїРѕР»С‡РµРЅРёРµ.",
 };
 
 #ifdef JA2DEMOADS
 const wchar_t* gpDemoString[] =
 {
 	//0-9
-	L"ЛУЧШАЯ СТРАТЕГИЯ",
-	L"ЛУЧШАЯ РПГ.",
-	L"Многомерная игра",
-	L"Абсолютно новая история",
-	L"Кровопролитнейшие бои",
-	L"Динамическое освещение",
-	L"Взаимодействие с NPC",
-	L"Тайные и ночные бои",
-	L"Создай собственного наемника",
-	L"Захватывающий и необычный квест",
-	L"Управляемые машины",
+	L"Р›РЈР§РЁРђРЇ РЎРўР РђРўР•Р“РРЇ",
+	L"Р›РЈР§РЁРђРЇ Р РџР“.",
+	L"РњРЅРѕРіРѕРјРµСЂРЅР°СЏ РёРіСЂР°",
+	L"РђР±СЃРѕР»СЋС‚РЅРѕ РЅРѕРІР°СЏ РёСЃС‚РѕСЂРёСЏ",
+	L"РљСЂРѕРІРѕРїСЂРѕР»РёС‚РЅРµР№С€РёРµ Р±РѕРё",
+	L"Р”РёРЅР°РјРёС‡РµСЃРєРѕРµ РѕСЃРІРµС‰РµРЅРёРµ",
+	L"Р’Р·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃ NPC",
+	L"РўР°Р№РЅС‹Рµ Рё РЅРѕС‡РЅС‹Рµ Р±РѕРё",
+	L"РЎРѕР·РґР°Р№ СЃРѕР±СЃС‚РІРµРЅРЅРѕРіРѕ РЅР°РµРјРЅРёРєР°",
+	L"Р—Р°С…РІР°С‚С‹РІР°СЋС‰РёР№ Рё РЅРµРѕР±С‹С‡РЅС‹Р№ РєРІРµСЃС‚",
+	L"РЈРїСЂР°РІР»СЏРµРјС‹Рµ РјР°С€РёРЅС‹",
 	//10-19
-	L"Больше 150 персонажей",
-	L"Сотни крутых фишек",
-	L"Больше 250 уник.мест",
-	L"Ошеломляющие взрывы",
-	L"Новые тактич.маневры",
-	L"Масса анимации",
-	L"Более 9000 строк диалогов",
-	L"Потрясающая музыка Кейвина Мантея",
-	L"Глобальная стратегия",
-	L"Прекрасно выдержанный игровой баланс",
+	L"Р‘РѕР»СЊС€Рµ 150 РїРµСЂСЃРѕРЅР°Р¶РµР№",
+	L"РЎРѕС‚РЅРё РєСЂСѓС‚С‹С… С„РёС€РµРє",
+	L"Р‘РѕР»СЊС€Рµ 250 СѓРЅРёРє.РјРµСЃС‚",
+	L"РћС€РµР»РѕРјР»СЏСЋС‰РёРµ РІР·СЂС‹РІС‹",
+	L"РќРѕРІС‹Рµ С‚Р°РєС‚РёС‡.РјР°РЅРµРІСЂС‹",
+	L"РњР°СЃСЃР° Р°РЅРёРјР°С†РёРё",
+	L"Р‘РѕР»РµРµ 9000 СЃС‚СЂРѕРє РґРёР°Р»РѕРіРѕРІ",
+	L"РџРѕС‚СЂСЏСЃР°СЋС‰Р°СЏ РјСѓР·С‹РєР° РљРµР№РІРёРЅР° РњР°РЅС‚РµСЏ",
+	L"Р“Р»РѕР±Р°Р»СЊРЅР°СЏ СЃС‚СЂР°С‚РµРіРёСЏ",
+	L"РџСЂРµРєСЂР°СЃРЅРѕ РІС‹РґРµСЂР¶Р°РЅРЅС‹Р№ РёРіСЂРѕРІРѕР№ Р±Р°Р»Р°РЅСЃ",
 	//20-29
-	L"Подготовка собств.ополчения",
-	L"Гибкий сценарий",
-	L"Реалистичное взаимодействие с героями",
-	L"Красочная многоцветная графика",
-	L"Покупки,продажи,торговля",
-	L"Безжалостный рузум противников",
-	L"Искуство ведения боя",
-	L"Элементы фантастики",
-	L"24-часовой режим",
-	L"Более 60 часов игры",
+	L"РџРѕРґРіРѕС‚РѕРІРєР° СЃРѕР±СЃС‚РІ.РѕРїРѕР»С‡РµРЅРёСЏ",
+	L"Р“РёР±РєРёР№ СЃС†РµРЅР°СЂРёР№",
+	L"Р РµР°Р»РёСЃС‚РёС‡РЅРѕРµ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃ РіРµСЂРѕСЏРјРё",
+	L"РљСЂР°СЃРѕС‡РЅР°СЏ РјРЅРѕРіРѕС†РІРµС‚РЅР°СЏ РіСЂР°С„РёРєР°",
+	L"РџРѕРєСѓРїРєРё,РїСЂРѕРґР°Р¶Рё,С‚РѕСЂРіРѕРІР»СЏ",
+	L"Р‘РµР·Р¶Р°Р»РѕСЃС‚РЅС‹Р№ СЂСѓР·СѓРј РїСЂРѕС‚РёРІРЅРёРєРѕРІ",
+	L"РСЃРєСѓСЃС‚РІРѕ РІРµРґРµРЅРёСЏ Р±РѕСЏ",
+	L"Р­Р»РµРјРµРЅС‚С‹ С„Р°РЅС‚Р°СЃС‚РёРєРё",
+	L"24-С‡Р°СЃРѕРІРѕР№ СЂРµР¶РёРј",
+	L"Р‘РѕР»РµРµ 60 С‡Р°СЃРѕРІ РёРіСЂС‹",
 	//30-34
-	L"Множество уровней сложности",
-	L"Реалистичное моделирование баллистики",
-	L"Гениальные физические модели",
-	L"Полное интерактивное обеспечение",
-	L"И более того...",
+	L"РњРЅРѕР¶РµСЃС‚РІРѕ СѓСЂРѕРІРЅРµР№ СЃР»РѕР¶РЅРѕСЃС‚Рё",
+	L"Р РµР°Р»РёСЃС‚РёС‡РЅРѕРµ РјРѕРґРµР»РёСЂРѕРІР°РЅРёРµ Р±Р°Р»Р»РёСЃС‚РёРєРё",
+	L"Р“РµРЅРёР°Р»СЊРЅС‹Рµ С„РёР·РёС‡РµСЃРєРёРµ РјРѕРґРµР»Рё",
+	L"РџРѕР»РЅРѕРµ РёРЅС‚РµСЂР°РєС‚РёРІРЅРѕРµ РѕР±РµСЃРїРµС‡РµРЅРёРµ",
+	L"Р Р±РѕР»РµРµ С‚РѕРіРѕ...",
 	//35 on are BOLD
 	L"",
 	L"",
-	L"\"Одна из самых....игр 1999 года\"",
+	L"\"РћРґРЅР° РёР· СЃР°РјС‹С…....РёРіСЂ 1999 РіРѕРґР°\"",
 	L"PC Gamer",
-	L"Закажите игру в Буке Сегодня! buka@dol.ru",
+	L"Р—Р°РєР°Р¶РёС‚Рµ РёРіСЂСѓ РІ Р‘СѓРєРµ РЎРµРіРѕРґРЅСЏ! buka@dol.ru",
 };
 
 const wchar_t* gpDemoIntroString[] =
 {
-	L"Сейчас вы узнаете,что такое настоящая стратегия,игра и битва:",
+	L"РЎРµР№С‡Р°СЃ РІС‹ СѓР·РЅР°РµС‚Рµ,С‡С‚Рѕ С‚Р°РєРѕРµ РЅР°СЃС‚РѕСЏС‰Р°СЏ СЃС‚СЂР°С‚РµРіРёСЏ,РёРіСЂР° Рё Р±РёС‚РІР°:",
 	//Point 1 (uses one string)
-	L"Вы вашем распоряжении команда наемников с характером(никакой скуки и занудства).",
+	L"Р’С‹ РІР°С€РµРј СЂР°СЃРїРѕСЂСЏР¶РµРЅРёРё РєРѕРјР°РЅРґР° РЅР°РµРјРЅРёРєРѕРІ СЃ С…Р°СЂР°РєС‚РµСЂРѕРј(РЅРёРєР°РєРѕР№ СЃРєСѓРєРё Рё Р·Р°РЅСѓРґСЃС‚РІР°).",
 	//Point 2 (uses one string)
-	L"Посмотрите, какой широкий спектр маневров,от бега до ползания,прыжки,карабкание,бой плечом к плечу и еще...",
+	L"РџРѕСЃРјРѕС‚СЂРёС‚Рµ, РєР°РєРѕР№ С€РёСЂРѕРєРёР№ СЃРїРµРєС‚СЂ РјР°РЅРµРІСЂРѕРІ,РѕС‚ Р±РµРіР° РґРѕ РїРѕР»Р·Р°РЅРёСЏ,РїСЂС‹Р¶РєРё,РєР°СЂР°Р±РєР°РЅРёРµ,Р±РѕР№ РїР»РµС‡РѕРј Рє РїР»РµС‡Сѓ Рё РµС‰Рµ...",
 	//Point 3 (uses one string)
-	L"Игра с огнем!Крутые игрушки,оружие убийства,взрывы.",
+	L"РРіСЂР° СЃ РѕРіРЅРµРј!РљСЂСѓС‚С‹Рµ РёРіСЂСѓС€РєРё,РѕСЂСѓР¶РёРµ СѓР±РёР№СЃС‚РІР°,РІР·СЂС‹РІС‹.",
 	//Additional comment
 	L"(and this is just the beginning)",
 	//Introduction/instructions
-	L"Добро пожаловать в Демовилль(нажмите,чтобы продолжить)",
+	L"Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ Р”РµРјРѕРІРёР»Р»СЊ(РЅР°Р¶РјРёС‚Рµ,С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ)",
 };
 #endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 const wchar_t* gzMoneyWithdrawMessageText[] =
 {
-	L"За один раз можно брать не более $20,000.",
-	L"Вы уверены, что хотите положить %ls на свой счет?",
+	L"Р—Р° РѕРґРёРЅ СЂР°Р· РјРѕР¶РЅРѕ Р±СЂР°С‚СЊ РЅРµ Р±РѕР»РµРµ $20,000.",
+	L"Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РїРѕР»РѕР¶РёС‚СЊ %ls РЅР° СЃРІРѕР№ СЃС‡РµС‚?",
 };
 
 const wchar_t* gzCopyrightText[] =
 {
-	L"Авторские права(C) 1999 Sir-Tech Canada Ltd. Все права защищены. Распространение на территории стран СНГ компания БУКА",
+	L"РђРІС‚РѕСЂСЃРєРёРµ РїСЂР°РІР°(C) 1999 Sir-Tech Canada Ltd. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹. Р Р°СЃРїСЂРѕСЃС‚СЂР°РЅРµРЅРёРµ РЅР° С‚РµСЂСЂРёС‚РѕСЂРёРё СЃС‚СЂР°РЅ РЎРќР“ РєРѕРјРїР°РЅРёСЏ Р‘РЈРљРђ",
 };
 
 //option Text
 const wchar_t* zOptionsToggleText[] =
 {
-	L"Речь",
-	L"Немое подтверждение", //$$
-	L"Субтитры",
-	L"Диалоги с паузами",
-	L"Анимированный дым",
-	L"Кровища",
-	L"Не трожь мою мышь!",
-	L"Старый способ выбора",
-	L"Показывать движения",
-	L"Показывать промахи",
-	L"Игра в реальном времени",
-	L"Показать индикатор врага",
-	L"Использовать метрич.систему",
-	L"Выделять наемн.во время движения",
-	L"Перевести курсор на наемн.",
-	L"Перевести курсор на двери",
-	L"Мерцание вещей",
-	L"Показать верхушки деревьев",
-	L"Показывать каркасы",
-	L"Показать трехмерный курсор",
+	L"Р РµС‡СЊ",
+	L"РќРµРјРѕРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ", //$$
+	L"РЎСѓР±С‚РёС‚СЂС‹",
+	L"Р”РёР°Р»РѕРіРё СЃ РїР°СѓР·Р°РјРё",
+	L"РђРЅРёРјРёСЂРѕРІР°РЅРЅС‹Р№ РґС‹Рј",
+	L"РљСЂРѕРІРёС‰Р°",
+	L"РќРµ С‚СЂРѕР¶СЊ РјРѕСЋ РјС‹С€СЊ!",
+	L"РЎС‚Р°СЂС‹Р№ СЃРїРѕСЃРѕР± РІС‹Р±РѕСЂР°",
+	L"РџРѕРєР°Р·С‹РІР°С‚СЊ РґРІРёР¶РµРЅРёСЏ",
+	L"РџРѕРєР°Р·С‹РІР°С‚СЊ РїСЂРѕРјР°С…Рё",
+	L"РРіСЂР° РІ СЂРµР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё",
+	L"РџРѕРєР°Р·Р°С‚СЊ РёРЅРґРёРєР°С‚РѕСЂ РІСЂР°РіР°",
+	L"РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚СЂРёС‡.СЃРёСЃС‚РµРјСѓ",
+	L"Р’С‹РґРµР»СЏС‚СЊ РЅР°РµРјРЅ.РІРѕ РІСЂРµРјСЏ РґРІРёР¶РµРЅРёСЏ",
+	L"РџРµСЂРµРІРµСЃС‚Рё РєСѓСЂСЃРѕСЂ РЅР° РЅР°РµРјРЅ.",
+	L"РџРµСЂРµРІРµСЃС‚Рё РєСѓСЂСЃРѕСЂ РЅР° РґРІРµСЂРё",
+	L"РњРµСЂС†Р°РЅРёРµ РІРµС‰РµР№",
+	L"РџРѕРєР°Р·Р°С‚СЊ РІРµСЂС…СѓС€РєРё РґРµСЂРµРІСЊРµРІ",
+	L"РџРѕРєР°Р·С‹РІР°С‚СЊ РєР°СЂРєР°СЃС‹",
+	L"РџРѕРєР°Р·Р°С‚СЊ С‚СЂРµС…РјРµСЂРЅС‹Р№ РєСѓСЂСЃРѕСЂ",
 };
 
 //This is the help text associated with the above toggles.
 const wchar_t* zOptionsScreenHelpText[] =
 {
 	//speech
-	L"Если вы хотите услышать диалог персонажей,включите эту опцию.",
+	L"Р•СЃР»Рё РІС‹ С…РѕС‚РёС‚Рµ СѓСЃР»С‹С€Р°С‚СЊ РґРёР°Р»РѕРі РїРµСЂСЃРѕРЅР°Р¶РµР№,РІРєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ.",
 
 	//Mute Confirmation
-	L"Вкл/выкл вербальное подтверждение.",
+	L"Р’РєР»/РІС‹РєР» РІРµСЂР±Р°Р»СЊРЅРѕРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ.",
 
 		//Subtitles
 	L" whether on-screen text is displayed for dialogue.", //$$
 
 	//Key to advance speech
-	L"Если субитры включены,включите также это,чтобы читать NPC диалог.",
+	L"Р•СЃР»Рё СЃСѓР±РёС‚СЂС‹ РІРєР»СЋС‡РµРЅС‹,РІРєР»СЋС‡РёС‚Рµ С‚Р°РєР¶Рµ СЌС‚Рѕ,С‡С‚РѕР±С‹ С‡РёС‚Р°С‚СЊ NPC РґРёР°Р»РѕРі.",
 
 	//Toggle smoke animation
-	L"Отключите эту опцию,если анимированный дым замедляет игру.",
+	L"РћС‚РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,РµСЃР»Рё Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹Р№ РґС‹Рј Р·Р°РјРµРґР»СЏРµС‚ РёРіСЂСѓ.",
 
 	//Blood n Gore
-	L"Отключите эту опцию,если боитесь крови.",
+	L"РћС‚РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,РµСЃР»Рё Р±РѕРёС‚РµСЃСЊ РєСЂРѕРІРё.",
 
 	//Never move my mouse
-	L"Отключите эту опцию,чтобы курсор автоматически перемещался на всплывающее меню диалога",
+	L"РћС‚РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,С‡С‚РѕР±С‹ РєСѓСЂСЃРѕСЂ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїРµСЂРµРјРµС‰Р°Р»СЃСЏ РЅР° РІСЃРїР»С‹РІР°СЋС‰РµРµ РјРµРЅСЋ РґРёР°Р»РѕРіР°",
 
 	//Old selection method
-	L"Включите эту опцию,чтобы персонажи работали,как в предыдущей версии Jagged Alliance (иначе они будут работать по-другому).",
+	L"Р’РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,С‡С‚РѕР±С‹ РїРµСЂСЃРѕРЅР°Р¶Рё СЂР°Р±РѕС‚Р°Р»Рё,РєР°Рє РІ РїСЂРµРґС‹РґСѓС‰РµР№ РІРµСЂСЃРёРё Jagged Alliance (РёРЅР°С‡Рµ РѕРЅРё Р±СѓРґСѓС‚ СЂР°Р±РѕС‚Р°С‚СЊ РїРѕ-РґСЂСѓРіРѕРјСѓ).",
 
 	//Show movement path
-	L"Включите эту опцию,чтобы действие происходило в реальном времени(или используйте SHIFT при отключенной опции).",
+	L"Р’РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,С‡С‚РѕР±С‹ РґРµР№СЃС‚РІРёРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ РІ СЂРµР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё(РёР»Рё РёСЃРїРѕР»СЊР·СѓР№С‚Рµ SHIFT РїСЂРё РѕС‚РєР»СЋС‡РµРЅРЅРѕР№ РѕРїС†РёРё).",
 
 	//show misses
-	L"Включите эту опцию,чтобы видеть,куда попадают пули при \"промахе\".",
+	L"Р’РєР»СЋС‡РёС‚Рµ СЌС‚Сѓ РѕРїС†РёСЋ,С‡С‚РѕР±С‹ РІРёРґРµС‚СЊ,РєСѓРґР° РїРѕРїР°РґР°СЋС‚ РїСѓР»Рё РїСЂРё \"РїСЂРѕРјР°С…Рµ\".",
 
 	//Real Time Confirmation
-	L"Когда опция вкл,дополн.\"безопасность\" щелчок нужен для перехода в реальное время.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РґРѕРїРѕР»РЅ.\"Р±РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ\" С‰РµР»С‡РѕРє РЅСѓР¶РµРЅ РґР»СЏ РїРµСЂРµС…РѕРґР° РІ СЂРµР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ.",
 
 	//Display the enemy indicator
-	L"Когда опция вкл,количество врагов,видных наемнику,высвечивается над его портретом.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РєРѕР»РёС‡РµСЃС‚РІРѕ РІСЂР°РіРѕРІ,РІРёРґРЅС‹С… РЅР°РµРјРЅРёРєСѓ,РІС‹СЃРІРµС‡РёРІР°РµС‚СЃСЏ РЅР°Рґ РµРіРѕ РїРѕСЂС‚СЂРµС‚РѕРј.",
 
 	//Use the metric system
-	L"Когда опция вкл,исп.метрич.система,иначе-британская.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РёСЃРї.РјРµС‚СЂРёС‡.СЃРёСЃС‚РµРјР°,РёРЅР°С‡Рµ-Р±СЂРёС‚Р°РЅСЃРєР°СЏ.",
 
 	//Merc Lighted movement
-	L"Когда опция вкл,путь наемника обозн.светящейся линией.Отключите для быстроты.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РїСѓС‚СЊ РЅР°РµРјРЅРёРєР° РѕР±РѕР·РЅ.СЃРІРµС‚СЏС‰РµР№СЃСЏ Р»РёРЅРёРµР№.РћС‚РєР»СЋС‡РёС‚Рµ РґР»СЏ Р±С‹СЃС‚СЂРѕС‚С‹.",
 
 	//Smart cursor
-	L"Когда опция вкл,передвижение курсора на наемника будет его выделять.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РїРµСЂРµРґРІРёР¶РµРЅРёРµ РєСѓСЂСЃРѕСЂР° РЅР° РЅР°РµРјРЅРёРєР° Р±СѓРґРµС‚ РµРіРѕ РІС‹РґРµР»СЏС‚СЊ.",
 
 	//snap cursor to the door
-	L"Когда опция вкл,передвижение курсора на дверь будет автоматически передвигать его поверх двери.",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РїРµСЂРµРґРІРёР¶РµРЅРёРµ РєСѓСЂСЃРѕСЂР° РЅР° РґРІРµСЂСЊ Р±СѓРґРµС‚ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїРµСЂРµРґРІРёРіР°С‚СЊ РµРіРѕ РїРѕРІРµСЂС… РґРІРµСЂРё.",
 
 	//glow items
-	L"Когда опция вкл,вещи светятся( |I)",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РІРµС‰Рё СЃРІРµС‚СЏС‚СЃСЏ( |I)",
 
 	//toggle tree tops
-	L"Когда опция вкл,показываются верхушки деревьев.( |Е)",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІРµСЂС…СѓС€РєРё РґРµСЂРµРІСЊРµРІ.( |Р•)",
 
 	//toggle wireframe
-	L"Когда опция вкл,видны каркасы домов. ( |W)", //$$
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РІРёРґРЅС‹ РєР°СЂРєР°СЃС‹ РґРѕРјРѕРІ. ( |W)", //$$
 
-	L"Когда опция вкл,движущийся курсор-трехмерный.(|H|o|m|e)",
+	L"РљРѕРіРґР° РѕРїС†РёСЏ РІРєР»,РґРІРёР¶СѓС‰РёР№СЃСЏ РєСѓСЂСЃРѕСЂ-С‚СЂРµС…РјРµСЂРЅС‹Р№.(|H|o|m|e)",
 
 };
 
 
 const wchar_t* gzGIOScreenText[] =
 {
-	L"УСТАНОВКА НАЧАЛА ИГРЫ",
-	L"Стиль игры",
-	L"Реалистичный",
-	L"Фантастичный",
-	L"Выбор пистолетов",
-	L"Сотни пистолетов",
-	L"Нормальный",
-	L"Уровень сложности",
-	L"Легкий",
-	L"Нормальный",
-	L"Трудный",
+	L"РЈРЎРўРђРќРћР’РљРђ РќРђР§РђР›Рђ РР“Р Р«",
+	L"РЎС‚РёР»СЊ РёРіСЂС‹",
+	L"Р РµР°Р»РёСЃС‚РёС‡РЅС‹Р№",
+	L"Р¤Р°РЅС‚Р°СЃС‚РёС‡РЅС‹Р№",
+	L"Р’С‹Р±РѕСЂ РїРёСЃС‚РѕР»РµС‚РѕРІ",
+	L"РЎРѕС‚РЅРё РїРёСЃС‚РѕР»РµС‚РѕРІ",
+	L"РќРѕСЂРјР°Р»СЊРЅС‹Р№",
+	L"РЈСЂРѕРІРµРЅСЊ СЃР»РѕР¶РЅРѕСЃС‚Рё",
+	L"Р›РµРіРєРёР№",
+	L"РќРѕСЂРјР°Р»СЊРЅС‹Р№",
+	L"РўСЂСѓРґРЅС‹Р№",
 	L"Ok",
-	L"Отмена",
-	L"Дополнительная сложность",
-	L"Без ограничений времени",
-	L"Время хода ограничено",
-	L"Отключено в демо-версии",
+	L"РћС‚РјРµРЅР°",
+	L"Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ СЃР»РѕР¶РЅРѕСЃС‚СЊ",
+	L"Р‘РµР· РѕРіСЂР°РЅРёС‡РµРЅРёР№ РІСЂРµРјРµРЅРё",
+	L"Р’СЂРµРјСЏ С…РѕРґР° РѕРіСЂР°РЅРёС‡РµРЅРѕ",
+	L"РћС‚РєР»СЋС‡РµРЅРѕ РІ РґРµРјРѕ-РІРµСЂСЃРёРё",
 };
 
 const wchar_t* pDeliveryLocationStrings[] =
 {
-	L"Остен",			//Austin, Texas, USA
-	L"Багдад",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Драссен",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
-	L"Гон Конг",		//Hong Kong, Hong Kong
-	L"Бейрут",			//Beirut, Lebanon	(Middle East)
-	L"Лондон",			//London, England
-	L"Лос Анджелес",	//Los Angeles, California, USA (SW corner of USA)
-	L"Медуна",			//Meduna -- the other airport in JA2 that you can receive items.
-	L"Метавира",		//The island of Metavira was the fictional location used by JA1
-	L"Майами",				//Miami, Florida, USA (SE corner of USA)
-	L"Москва",			//Moscow, USSR
-	L"Нью Йорк",		//New York, New York, USA
-	L"Оттава",			//Ottawa, Ontario, Canada -- where JA2 was made!
-	L"Париж",				//Paris, France
-	L"Триполи",			//Tripoli, Libya (eastern Mediterranean)
-	L"Токио",				//Tokyo, Japan
-	L"Ванкувер",		//Vancouver, British Columbia, Canada (west coast near US border)
+	L"РћСЃС‚РµРЅ",			//Austin, Texas, USA
+	L"Р‘Р°РіРґР°Рґ",			//Baghdad, Iraq (Suddam Hussein's home)
+	L"Р”СЂР°СЃСЃРµРЅ",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
+	L"Р“РѕРЅ РљРѕРЅРі",		//Hong Kong, Hong Kong
+	L"Р‘РµР№СЂСѓС‚",			//Beirut, Lebanon	(Middle East)
+	L"Р›РѕРЅРґРѕРЅ",			//London, England
+	L"Р›РѕСЃ РђРЅРґР¶РµР»РµСЃ",	//Los Angeles, California, USA (SW corner of USA)
+	L"РњРµРґСѓРЅР°",			//Meduna -- the other airport in JA2 that you can receive items.
+	L"РњРµС‚Р°РІРёСЂР°",		//The island of Metavira was the fictional location used by JA1
+	L"РњР°Р№Р°РјРё",				//Miami, Florida, USA (SE corner of USA)
+	L"РњРѕСЃРєРІР°",			//Moscow, USSR
+	L"РќСЊСЋ Р™РѕСЂРє",		//New York, New York, USA
+	L"РћС‚С‚Р°РІР°",			//Ottawa, Ontario, Canada -- where JA2 was made!
+	L"РџР°СЂРёР¶",				//Paris, France
+	L"РўСЂРёРїРѕР»Рё",			//Tripoli, Libya (eastern Mediterranean)
+	L"РўРѕРєРёРѕ",				//Tokyo, Japan
+	L"Р’Р°РЅРєСѓРІРµСЂ",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
 const wchar_t* pSkillAtZeroWarning[] =
 { //This string is used in the IMP character generation.  It is possible to select 0 ability
 	//in a skill meaning you can't use it.  This text is confirmation to the player.
-	L"Уверен? Ноль означает отсутствие навыков."
+	L"РЈРІРµСЂРµРЅ? РќРѕР»СЊ РѕР·РЅР°С‡Р°РµС‚ РѕС‚СЃСѓС‚СЃС‚РІРёРµ РЅР°РІС‹РєРѕРІ."
 };
 
 const wchar_t* pIMPBeginScreenStrings[] =
 {
-	L"( 8 макс. символов )",
+	L"( 8 РјР°РєСЃ. СЃРёРјРІРѕР»РѕРІ )",
 };
 
 const wchar_t* pIMPFinishButtonText[ 1 ]=
 {
-	L"Анализ",
+	L"РђРЅР°Р»РёР·",
 };
 
 const wchar_t* pIMPFinishStrings[ ]=
 {
-	L"Спасибо,%ls", //%ls is the name of the merc
+	L"РЎРїР°СЃРёР±Рѕ,%ls", //%ls is the name of the merc
 };
 
 // the strings for imp voices screen
 const wchar_t* pIMPVoicesStrings[] =
 {
-	L"Голос",
+	L"Р“РѕР»РѕСЃ",
 };
 
 // title for program
 const wchar_t* pPersTitleText[] =
 {
-	L"Кадры",
+	L"РљР°РґСЂС‹",
 };
 
 // paused game strings
 const wchar_t* pPausedGameText[] =
 {
-	L"Пауза",
-	L"Возобновить (|P|a|u|s|e)",
-	L"Поставить на паузу (|P|a|u|s|e)",
+	L"РџР°СѓР·Р°",
+	L"Р’РѕР·РѕР±РЅРѕРІРёС‚СЊ (|P|a|u|s|e)",
+	L"РџРѕСЃС‚Р°РІРёС‚СЊ РЅР° РїР°СѓР·Сѓ (|P|a|u|s|e)",
 };
 
 
 const wchar_t* pMessageStrings[] =
 {
-	L"Выйти из игры?",
+	L"Р’С‹Р№С‚Рё РёР· РёРіСЂС‹?",
 	L"OK",
-	L"ДА",
-	L"НЕТ",
-	L"ОТМЕНА",
-	L"НАНЯТЬ",
-	L"ЛОЖЬ",
+	L"Р”Рђ",
+	L"РќР•Рў",
+	L"РћРўРњР•РќРђ",
+	L"РќРђРќРЇРўР¬",
+	L"Р›РћР–Р¬",
 	L"No description", //Save slots that don't have a description.
-	L"Игра сохранена",
-	L"Игра сохранена",
+	L"РРіСЂР° СЃРѕС…СЂР°РЅРµРЅР°",
+	L"РРіСЂР° СЃРѕС…СЂР°РЅРµРЅР°",
 	L"QuickSave", //The name of the quicksave file (filename, text reference)
 	L"SaveGame",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
 	L"sav",				//The 3 character dos extension (represents sav)
 	L"../SavedGames", //The name of the directory where games are saved.
-	L"День",
-	L"Наемн",
-	L"Пустая ячейка", //An empty save game slot
-	L"Демо",				//Demo of JA2
-	L"Ловля Багов",				//State of development of a project (JA2) that is a debug build
+	L"Р”РµРЅСЊ",
+	L"РќР°РµРјРЅ",
+	L"РџСѓСЃС‚Р°СЏ СЏС‡РµР№РєР°", //An empty save game slot
+	L"Р”РµРјРѕ",				//Demo of JA2
+	L"Р›РѕРІР»СЏ Р‘Р°РіРѕРІ",				//State of development of a project (JA2) that is a debug build
 	L"Release",			//Release build for JA2
-	L"пвм",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
-	L"мин",					//Abbreviation for minute.
-	L"м",						//One character abbreviation for meter (metric distance measurement unit).
-	L"пули",				//Abbreviation for rounds (# of bullets)
-	L"кг",					//Abbreviation for kilogram (metric weight measurement unit)
-	L"ф",					//Abbreviation for pounds (Imperial weight measurement unit)
-	L"Гл.стр",				//Home as in homepage on the internet.
+	L"РїРІРј",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
+	L"РјРёРЅ",					//Abbreviation for minute.
+	L"Рј",						//One character abbreviation for meter (metric distance measurement unit).
+	L"РїСѓР»Рё",				//Abbreviation for rounds (# of bullets)
+	L"РєРі",					//Abbreviation for kilogram (metric weight measurement unit)
+	L"С„",					//Abbreviation for pounds (Imperial weight measurement unit)
+	L"Р“Р».СЃС‚СЂ",				//Home as in homepage on the internet.
 	L"USD",					//Abbreviation to US dollars
-	L"н/п",					//Lowercase acronym for not applicable.
-	L"В это время",		//Meanwhile
-	L"%ls прибыл(а) в сектор %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	L"РЅ/Рї",					//Lowercase acronym for not applicable.
+	L"Р’ СЌС‚Рѕ РІСЂРµРјСЏ",		//Meanwhile
+	L"%ls РїСЂРёР±С‹Р»(Р°) РІ СЃРµРєС‚РѕСЂ %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
-	L"Версия",
-	L"Пустая ячейка быстрого сохр",
-	L"Эта ячейка-для быстрого сохранения экранов игры (ALT+S).",
-	L"Открыто",
-	L"Закрыто",
+	L"Р’РµСЂСЃРёСЏ",
+	L"РџСѓСЃС‚Р°СЏ СЏС‡РµР№РєР° Р±С‹СЃС‚СЂРѕРіРѕ СЃРѕС…СЂ",
+	L"Р­С‚Р° СЏС‡РµР№РєР°-РґР»СЏ Р±С‹СЃС‚СЂРѕРіРѕ СЃРѕС…СЂР°РЅРµРЅРёСЏ СЌРєСЂР°РЅРѕРІ РёРіСЂС‹ (ALT+S).",
+	L"РћС‚РєСЂС‹С‚Рѕ",
+	L"Р—Р°РєСЂС‹С‚Рѕ",
 #ifdef JA2DEMO
-	L"Вас всех разгромили. Может стоит повидаться с Габби?",
-	L"Очень плохо,что ты убил его.",
+	L"Р’Р°СЃ РІСЃРµС… СЂР°Р·РіСЂРѕРјРёР»Рё. РњРѕР¶РµС‚ СЃС‚РѕРёС‚ РїРѕРІРёРґР°С‚СЊСЃСЏ СЃ Р“Р°Р±Р±Рё?",
+	L"РћС‡РµРЅСЊ РїР»РѕС…Рѕ,С‡С‚Рѕ С‚С‹ СѓР±РёР» РµРіРѕ.",
 #endif
-	L"У вас кончается дисковое пространство. У вас осталось %lsМБ свободных,а для АЛЬЯНСА 2 требуется %lsMБ.",
-	L"Нанят %ls из AIM",
-	L"%ls поймал %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	L"%ls принял лекарство.", //'Merc name' has taken the drug
-	L"%ls не имеет меднавыков",//'Merc name' has no medical skill.
+	L"РЈ РІР°СЃ РєРѕРЅС‡Р°РµС‚СЃСЏ РґРёСЃРєРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ. РЈ РІР°СЃ РѕСЃС‚Р°Р»РѕСЃСЊ %lsРњР‘ СЃРІРѕР±РѕРґРЅС‹С…,Р° РґР»СЏ РђР›Р¬РЇРќРЎРђ 2 С‚СЂРµР±СѓРµС‚СЃСЏ %lsMР‘.",
+	L"РќР°РЅСЏС‚ %ls РёР· AIM",
+	L"%ls РїРѕР№РјР°Р» %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	L"%ls РїСЂРёРЅСЏР» Р»РµРєР°СЂСЃС‚РІРѕ.", //'Merc name' has taken the drug
+	L"%ls РЅРµ РёРјРµРµС‚ РјРµРґРЅР°РІС‹РєРѕРІ",//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
-	L"Нарушена целостность программы.",
-	L"ОШИБКА: Выньте CD-ROM",
+	L"РќР°СЂСѓС€РµРЅР° С†РµР»РѕСЃС‚РЅРѕСЃС‚СЊ РїСЂРѕРіСЂР°РјРјС‹.",
+	L"РћРЁРР‘РљРђ: Р’С‹РЅСЊС‚Рµ CD-ROM",
 
 	//When firing heavier weapons in close quarters, you may not have enough room to do so.
-	L"Мало места для стрельбы.",
+	L"РњР°Р»Рѕ РјРµСЃС‚Р° РґР»СЏ СЃС‚СЂРµР»СЊР±С‹.",
 
 	//Can't change stance due to objects in the way...
-	L"Сейчас изменить положение нельзя.",
+	L"РЎРµР№С‡Р°СЃ РёР·РјРµРЅРёС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ РЅРµР»СЊР·СЏ.",
 
 	//Simple text indications that appear in the game, when the merc can do one of these things.
-	L"Уронить",
-	L"Бросить",
-	L"Передать",
+	L"РЈСЂРѕРЅРёС‚СЊ",
+	L"Р‘СЂРѕСЃРёС‚СЊ",
+	L"РџРµСЂРµРґР°С‚СЊ",
 
-	L"%ls передано %ls.", //"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
+	L"%ls РїРµСЂРµРґР°РЅРѕ %ls.", //"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
 											 //must notify SirTech.
-	L"Нельзя передать %ls %ls.", //pass "item" to "merc".  Same instructions as above.
+	L"РќРµР»СЊР·СЏ РїРµСЂРµРґР°С‚СЊ %ls %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" Присоединено )",
+	L" РџСЂРёСЃРѕРµРґРёРЅРµРЅРѕ )",
 
 	//Cheat modes
-	L"Достигнут чит-уровень один",
-	L"Достигнут чит-уровень два",
+	L"Р”РѕСЃС‚РёРіРЅСѓС‚ С‡РёС‚-СѓСЂРѕРІРµРЅСЊ РѕРґРёРЅ",
+	L"Р”РѕСЃС‚РёРіРЅСѓС‚ С‡РёС‚-СѓСЂРѕРІРµРЅСЊ РґРІР°",
 
 	//Toggling various stealth modes
-	L"Отряд скрыт.",
-	L"Отряд виден.",
-	L"%ls скрыт.",
-	L"%ls открыт.",
+	L"РћС‚СЂСЏРґ СЃРєСЂС‹С‚.",
+	L"РћС‚СЂСЏРґ РІРёРґРµРЅ.",
+	L"%ls СЃРєСЂС‹С‚.",
+	L"%ls РѕС‚РєСЂС‹С‚.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
-	L"Дополнительные Каркасы Вкл",//$$
-	L"Дополнительные Каркасы Выкл",//$$
+	L"Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РљР°СЂРєР°СЃС‹ Р’РєР»",//$$
+	L"Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РљР°СЂРєР°СЃС‹ Р’С‹РєР»",//$$
 
 	//These are used in the cheat modes for changing levels in the game.  Going from a basement level to
 	//an upper level, etc.
-	L"Нельзя подняться с этого уровня...",
-	L"Ниже уровней нет...",
-	L"Входим в подвальный уровень %d...",
-	L"Уходим из подвала...",
+	L"РќРµР»СЊР·СЏ РїРѕРґРЅСЏС‚СЊСЃСЏ СЃ СЌС‚РѕРіРѕ СѓСЂРѕРІРЅСЏ...",
+	L"РќРёР¶Рµ СѓСЂРѕРІРЅРµР№ РЅРµС‚...",
+	L"Р’С…РѕРґРёРј РІ РїРѕРґРІР°Р»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ %d...",
+	L"РЈС…РѕРґРёРј РёР· РїРѕРґРІР°Р»Р°...",
 
 	#ifdef JA2DEMO
 
 	//For the demo, the sector exit interface, you'll be able to split your teams up, but the demo
 	//has this feature disabled.  This string is fast help text that appears over "single" button.
-	L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.",
+	L"Р’ РїРѕР»РЅРѕР№ РёРіСЂРµ РІС‹ СЃРјРѕР¶РµС‚Рµ СЂР°Р·РґРµР»СЏС‚СЊ\nРєРѕРјР°РЅРґСѓ, РЅРѕ РЅРµ РІ РґРµРјРѕ РІРµСЂСЃРёРё.",
 
 	//The overhead map is a map of the entire sector, which you can go into anytime, except in the demo.
-	L"Общая карта в демо-версии отсутствует.",
+	L"РћР±С‰Р°СЏ РєР°СЂС‚Р° РІ РґРµРјРѕ-РІРµСЂСЃРёРё РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.",
 
 	#endif
 
 	L".",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
-	L"ВЫКЛЮЧЕНО.",
-	L"ВКЛЮЧЕНО.",
-	L"3D-курсор ОТКЛ.",
-	L"3D-курсор ВКЛ.",
-	L"Отряд %d действует.",
-	L"У вас нет денег,чтобы ежедневно выплачивать %ls %ls",	//first %ls is the mercs name, the seconds is a string containing the salary
-	L"Пропуск",
-	L"%ls не может уйти один.",
-	L"Игра была сохранена под именем SaveGame99.sav. При необходимости пересохраните ее под именем SaveGame01-SaveGame10 и тогда вы будете получите доступ к ней в экране Загрузка.",
-	L"%ls выпил немного %ls",
-	L"Багаж прибыл в Драссен.",
-	L"%ls должен прибыть в указанное место высадки (сектор %ls) в день %d,примерно в %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
-	L"История обновлена.",
+	L"Р’Р«РљР›Р®Р§Р•РќРћ.",
+	L"Р’РљР›Р®Р§Р•РќРћ.",
+	L"3D-РєСѓСЂСЃРѕСЂ РћРўРљР›.",
+	L"3D-РєСѓСЂСЃРѕСЂ Р’РљР›.",
+	L"РћС‚СЂСЏРґ %d РґРµР№СЃС‚РІСѓРµС‚.",
+	L"РЈ РІР°СЃ РЅРµС‚ РґРµРЅРµРі,С‡С‚РѕР±С‹ РµР¶РµРґРЅРµРІРЅРѕ РІС‹РїР»Р°С‡РёРІР°С‚СЊ %ls %ls",	//first %ls is the mercs name, the seconds is a string containing the salary
+	L"РџСЂРѕРїСѓСЃРє",
+	L"%ls РЅРµ РјРѕР¶РµС‚ СѓР№С‚Рё РѕРґРёРЅ.",
+	L"РРіСЂР° Р±С‹Р»Р° СЃРѕС…СЂР°РЅРµРЅР° РїРѕРґ РёРјРµРЅРµРј SaveGame99.sav. РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїРµСЂРµСЃРѕС…СЂР°РЅРёС‚Рµ РµРµ РїРѕРґ РёРјРµРЅРµРј SaveGame01-SaveGame10 Рё С‚РѕРіРґР° РІС‹ Р±СѓРґРµС‚Рµ РїРѕР»СѓС‡РёС‚Рµ РґРѕСЃС‚СѓРї Рє РЅРµР№ РІ СЌРєСЂР°РЅРµ Р—Р°РіСЂСѓР·РєР°.",
+	L"%ls РІС‹РїРёР» РЅРµРјРЅРѕРіРѕ %ls",
+	L"Р‘Р°РіР°Р¶ РїСЂРёР±С‹Р» РІ Р”СЂР°СЃСЃРµРЅ.",
+	L"%ls РґРѕР»Р¶РµРЅ РїСЂРёР±С‹С‚СЊ РІ СѓРєР°Р·Р°РЅРЅРѕРµ РјРµСЃС‚Рѕ РІС‹СЃР°РґРєРё (СЃРµРєС‚РѕСЂ %ls) РІ РґРµРЅСЊ %d,РїСЂРёРјРµСЂРЅРѕ РІ %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	L"РСЃС‚РѕСЂРёСЏ РѕР±РЅРѕРІР»РµРЅР°.",
 #ifdef JA2BETAVERSION
-	L"Игра сохранена в ячейку авто-сохранения.",
+	L"РРіСЂР° СЃРѕС…СЂР°РЅРµРЅР° РІ СЏС‡РµР№РєСѓ Р°РІС‚Рѕ-СЃРѕС…СЂР°РЅРµРЅРёСЏ.",
 #endif
 };
 
@@ -3586,95 +3586,95 @@ const wchar_t* pMessageStrings[] =
 const wchar_t ItemPickupHelpPopup[][40] =
 {
 	L"OK",
-	L"Листать вверх",
-	L"Выделить все",
-	L"Листать вниз",
-	L"Отмена"
+	L"Р›РёСЃС‚Р°С‚СЊ РІРІРµСЂС…",
+	L"Р’С‹РґРµР»РёС‚СЊ РІСЃРµ",
+	L"Р›РёСЃС‚Р°С‚СЊ РІРЅРёР·",
+	L"РћС‚РјРµРЅР°"
 };
 
 const wchar_t* pDoctorWarningString[] =
 {
-	L"%ls слишком далеко,чтобы его можно было лечить.",
-	L"Медики не могут перевязать всех.",
+	L"%ls СЃР»РёС€РєРѕРј РґР°Р»РµРєРѕ,С‡С‚РѕР±С‹ РµРіРѕ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ Р»РµС‡РёС‚СЊ.",
+	L"РњРµРґРёРєРё РЅРµ РјРѕРіСѓС‚ РїРµСЂРµРІСЏР·Р°С‚СЊ РІСЃРµС….",
 };
 
 const wchar_t* pMilitiaButtonsHelpText[] =
 {
-	L"Взять новичков(Правый щелчок)/Отвергнуть(Левый щелчок)", // button help text informing player they can pick up or drop militia with this button
-	L"Взять постоянные войска(Правый щелчок)/Отвергнуть(Левый щелчок)",
-	L"Взять войска ветеранов(Правый щелчок)/Отвергнуть(Левый щелчок)",
-	L"Равномерно распределить доступное ополчение по всем секторам",
+	L"Р’Р·СЏС‚СЊ РЅРѕРІРёС‡РєРѕРІ(РџСЂР°РІС‹Р№ С‰РµР»С‡РѕРє)/РћС‚РІРµСЂРіРЅСѓС‚СЊ(Р›РµРІС‹Р№ С‰РµР»С‡РѕРє)", // button help text informing player they can pick up or drop militia with this button
+	L"Р’Р·СЏС‚СЊ РїРѕСЃС‚РѕСЏРЅРЅС‹Рµ РІРѕР№СЃРєР°(РџСЂР°РІС‹Р№ С‰РµР»С‡РѕРє)/РћС‚РІРµСЂРіРЅСѓС‚СЊ(Р›РµРІС‹Р№ С‰РµР»С‡РѕРє)",
+	L"Р’Р·СЏС‚СЊ РІРѕР№СЃРєР° РІРµС‚РµСЂР°РЅРѕРІ(РџСЂР°РІС‹Р№ С‰РµР»С‡РѕРє)/РћС‚РІРµСЂРіРЅСѓС‚СЊ(Р›РµРІС‹Р№ С‰РµР»С‡РѕРє)",
+	L"Р Р°РІРЅРѕРјРµСЂРЅРѕ СЂР°СЃРїСЂРµРґРµР»РёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕРµ РѕРїРѕР»С‡РµРЅРёРµ РїРѕ РІСЃРµРј СЃРµРєС‚РѕСЂР°Рј",
 };
 
 const wchar_t* pMapScreenJustStartedHelpText[] =
 {
-	L"Иди в АIM и нанять наемников (*Подсказка* в лаптопе)", // to inform the player to hired some mercs to get things going
-	L"Если вы готовы отправиться в Арулько,щелкните по кнопке Компрессия времени в правом нижнем углу экрана.", // to inform the player to hit time compression to get the game underway
+	L"РРґРё РІ РђIM Рё РЅР°РЅСЏС‚СЊ РЅР°РµРјРЅРёРєРѕРІ (*РџРѕРґСЃРєР°Р·РєР°* РІ Р»Р°РїС‚РѕРїРµ)", // to inform the player to hired some mercs to get things going
+	L"Р•СЃР»Рё РІС‹ РіРѕС‚РѕРІС‹ РѕС‚РїСЂР°РІРёС‚СЊСЃСЏ РІ РђСЂСѓР»СЊРєРѕ,С‰РµР»РєРЅРёС‚Рµ РїРѕ РєРЅРѕРїРєРµ РљРѕРјРїСЂРµСЃСЃРёСЏ РІСЂРµРјРµРЅРё РІ РїСЂР°РІРѕРј РЅРёР¶РЅРµРј СѓРіР»Сѓ СЌРєСЂР°РЅР°.", // to inform the player to hit time compression to get the game underway
 };
 
 const wchar_t* pAntiHackerString[] =
 {
-	L"Ошибка.Испорченные или отсутствующие файлы.Вы выходите из игры.",
+	L"РћС€РёР±РєР°.РСЃРїРѕСЂС‡РµРЅРЅС‹Рµ РёР»Рё РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёРµ С„Р°Р№Р»С‹.Р’С‹ РІС‹С…РѕРґРёС‚Рµ РёР· РёРіСЂС‹.",
 };
 
 
 const wchar_t* gzLaptopHelpText[] =
 {
 	//Buttons:
-	L"Просмотреть почту",
-	L"Пролистать web страницы",
-	L"Просмотреть файлы и аттачменты.",
-	L"Прочитать последние события",
-	L"Информация о команде",
-	L"Просмотреть финансовое заключение и журнал",
-	L"Закрыть лаптоп",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ РїРѕС‡С‚Сѓ",
+	L"РџСЂРѕР»РёСЃС‚Р°С‚СЊ web СЃС‚СЂР°РЅРёС†С‹",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ С„Р°Р№Р»С‹ Рё Р°С‚С‚Р°С‡РјРµРЅС‚С‹.",
+	L"РџСЂРѕС‡РёС‚Р°С‚СЊ РїРѕСЃР»РµРґРЅРёРµ СЃРѕР±С‹С‚РёСЏ",
+	L"РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РєРѕРјР°РЅРґРµ",
+	L"РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ С„РёРЅР°РЅСЃРѕРІРѕРµ Р·Р°РєР»СЋС‡РµРЅРёРµ Рё Р¶СѓСЂРЅР°Р»",
+	L"Р—Р°РєСЂС‹С‚СЊ Р»Р°РїС‚РѕРї",
 
 	//Bottom task bar icons (if they exist):
-	L"Новое сообщение",
-	L"Новые файлы",
+	L"РќРѕРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ",
+	L"РќРѕРІС‹Рµ С„Р°Р№Р»С‹",
 
 	//Bookmarks:
-	L"Международная Ассоциация Наемников",
-	L"Бобби Рэй-заказ оружия в сети",
-	L"Институт Психологии Наемников",
-	L"Рекрутинговый Центр",
-	L"Морг Мак Гилликути",
-	L"Объединенная цветочная служба",
-	L"Страховые агенты по контрактам A.I.M.",
+	L"РњРµР¶РґСѓРЅР°СЂРѕРґРЅР°СЏ РђСЃСЃРѕС†РёР°С†РёСЏ РќР°РµРјРЅРёРєРѕРІ",
+	L"Р‘РѕР±Р±Рё Р СЌР№-Р·Р°РєР°Р· РѕСЂСѓР¶РёСЏ РІ СЃРµС‚Рё",
+	L"РРЅСЃС‚РёС‚СѓС‚ РџСЃРёС…РѕР»РѕРіРёРё РќР°РµРјРЅРёРєРѕРІ",
+	L"Р РµРєСЂСѓС‚РёРЅРіРѕРІС‹Р№ Р¦РµРЅС‚СЂ",
+	L"РњРѕСЂРі РњР°Рє Р“РёР»Р»РёРєСѓС‚Рё",
+	L"РћР±СЉРµРґРёРЅРµРЅРЅР°СЏ С†РІРµС‚РѕС‡РЅР°СЏ СЃР»СѓР¶Р±Р°",
+	L"РЎС‚СЂР°С…РѕРІС‹Рµ Р°РіРµРЅС‚С‹ РїРѕ РєРѕРЅС‚СЂР°РєС‚Р°Рј A.I.M.",
 };
 
 
 const wchar_t* gzHelpScreenText[] =
 {
-	L"Выход из экрана помощь",
+	L"Р’С‹С…РѕРґ РёР· СЌРєСЂР°РЅР° РїРѕРјРѕС‰СЊ",
 };
 
 const wchar_t* gzNonPersistantPBIText[] =
 {
-	L"Идет бой. Вы можете только покинуть экран битвы.",
-	L"Войти в сектор, чтобы продолжить бой( |E).",
-	L"Автоматически остановить текущую битву ( |A).",
-	L"Нельзя автоматически остановить битву, когда ты нападаешь.",
-	L"Нельзя автоматически остановить битву,когда на тебя напали.",
-	L"Нельзя автоматически остановить битву,когда дерешься с существами в шахтах.",
-	L"Нельзя автоматически остановить битву,если поблизости враждебные жители.",
-	L"Нельзя автоматически остановить битву,если поблизости кошки-убийцы.",
-	L"ИДЕТ БОЙ",
-	L"Сейчас отступать нельзя.",
+	L"РРґРµС‚ Р±РѕР№. Р’С‹ РјРѕР¶РµС‚Рµ С‚РѕР»СЊРєРѕ РїРѕРєРёРЅСѓС‚СЊ СЌРєСЂР°РЅ Р±РёС‚РІС‹.",
+	L"Р’РѕР№С‚Рё РІ СЃРµРєС‚РѕСЂ, С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ Р±РѕР№( |E).",
+	L"РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РµРєСѓС‰СѓСЋ Р±РёС‚РІСѓ ( |A).",
+	L"РќРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РёС‚РІСѓ, РєРѕРіРґР° С‚С‹ РЅР°РїР°РґР°РµС€СЊ.",
+	L"РќРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РёС‚РІСѓ,РєРѕРіРґР° РЅР° С‚РµР±СЏ РЅР°РїР°Р»Рё.",
+	L"РќРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РёС‚РІСѓ,РєРѕРіРґР° РґРµСЂРµС€СЊСЃСЏ СЃ СЃСѓС‰РµСЃС‚РІР°РјРё РІ С€Р°С…С‚Р°С….",
+	L"РќРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РёС‚РІСѓ,РµСЃР»Рё РїРѕР±Р»РёР·РѕСЃС‚Рё РІСЂР°Р¶РґРµР±РЅС‹Рµ Р¶РёС‚РµР»Рё.",
+	L"РќРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РёС‚РІСѓ,РµСЃР»Рё РїРѕР±Р»РёР·РѕСЃС‚Рё РєРѕС€РєРё-СѓР±РёР№С†С‹.",
+	L"РР”Р•Рў Р‘РћР™",
+	L"РЎРµР№С‡Р°СЃ РѕС‚СЃС‚СѓРїР°С‚СЊ РЅРµР»СЊР·СЏ.",
 };
 
 const wchar_t* gzMiscString[] =
 {
-	L"Ваше ополчение дерется без помощи наемников...",
-	L"Машине пока не нужно заправляться.",
-	L"Бензобак полон на %d%%.",
-	L"Армия Дейдранны полностью контролирует территорию %ls.",
-	L"Вы потеряли заправку.",
+	L"Р’Р°С€Рµ РѕРїРѕР»С‡РµРЅРёРµ РґРµСЂРµС‚СЃСЏ Р±РµР· РїРѕРјРѕС‰Рё РЅР°РµРјРЅРёРєРѕРІ...",
+	L"РњР°С€РёРЅРµ РїРѕРєР° РЅРµ РЅСѓР¶РЅРѕ Р·Р°РїСЂР°РІР»СЏС‚СЊСЃСЏ.",
+	L"Р‘РµРЅР·РѕР±Р°Рє РїРѕР»РѕРЅ РЅР° %d%%.",
+	L"РђСЂРјРёСЏ Р”РµР№РґСЂР°РЅРЅС‹ РїРѕР»РЅРѕСЃС‚СЊСЋ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµС‚ С‚РµСЂСЂРёС‚РѕСЂРёСЋ %ls.",
+	L"Р’С‹ РїРѕС‚РµСЂСЏР»Рё Р·Р°РїСЂР°РІРєСѓ.",
 };
 
 const wchar_t* gzIntroScreen[] =
 {
-	L"Невозможно найти вступительный ролик",
+	L"РќРµРІРѕР·РјРѕР¶РЅРѕ РЅР°Р№С‚Рё РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹Р№ СЂРѕР»РёРє",
 };
 
 // These strings are combined with a merc name, a volume string (from pNoiseVolStr),
@@ -3683,44 +3683,44 @@ const wchar_t* gzIntroScreen[] =
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
 const wchar_t* pNewNoiseStr[] =
 {
-	L"%ls слышит %ls звук, идущий с %lsА.",
-	L"%ls слышит %ls звук ДВИЖЕНИЯ, идущий с %lsА.",
-	L"%ls слышит %ls СКРИП, идущий с %lsА.",
-	L"%ls слышит %ls ПЛЕСК, идущий с %lsА.",
-	L"%ls слышит %ls УДАР, идущий с %lsА.", //$$
-	L"%ls слышит %ls ВЗРЫВ на %lsЕ.",
-	L"%ls слышит %ls КРИК с %lsА.",
-	L"%ls слышит %ls УДАР с %lsА.",
-	L"%ls слышит %ls УДАР с %lsА.",
-	L"%ls слышит %ls ЗВОН, идущий с %lsА.",
-	L"%ls слышит %ls ГРОХОТ, идущий  %lsА.",
+	L"%ls СЃР»С‹С€РёС‚ %ls Р·РІСѓРє, РёРґСѓС‰РёР№ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls Р·РІСѓРє Р”Р’РР–Р•РќРРЇ, РёРґСѓС‰РёР№ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РЎРљР РРџ, РёРґСѓС‰РёР№ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РџР›Р•РЎРљ, РёРґСѓС‰РёР№ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РЈР”РђР , РёРґСѓС‰РёР№ СЃ %lsРђ.", //$$
+	L"%ls СЃР»С‹С€РёС‚ %ls Р’Р—Р Р«Р’ РЅР° %lsР•.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РљР РРљ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РЈР”РђР  СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls РЈР”РђР  СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls Р—Р’РћРќ, РёРґСѓС‰РёР№ СЃ %lsРђ.",
+	L"%ls СЃР»С‹С€РёС‚ %ls Р“Р РћРҐРћРў, РёРґСѓС‰РёР№  %lsРђ.",
 };
 
 const wchar_t* wMapScreenSortButtonHelpText[] =
 {
-	L"Сортировка по имени (|F|1)",
-	L"Сортировка по назн. (|F|2)",
-	L"Сортировка по сну (|F|3)",
-	L"Сортировка по месту (|F|4)",
-	L"Сортировка по месту назн.(|F|5)",
-	L"Сортировка по времени контракта (|F|6)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РёРјРµРЅРё (|F|1)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РЅР°Р·РЅ. (|F|2)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СЃРЅСѓ (|F|3)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РјРµСЃС‚Сѓ (|F|4)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РјРµСЃС‚Сѓ РЅР°Р·РЅ.(|F|5)",
+	L"РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІСЂРµРјРµРЅРё РєРѕРЅС‚СЂР°РєС‚Р° (|F|6)",
 };
 
 
 
 const wchar_t* BrokenLinkText[] =
 {
-	L"Ошибка 404",
-	L"URL не найден.",
+	L"РћС€РёР±РєР° 404",
+	L"URL РЅРµ РЅР°Р№РґРµРЅ.",
 };
 
 
 const wchar_t* gzBobbyRShipmentText[] =
 {
-	L"Посл.поступления",
-	L"Заказ #",
-	L"Количество",
-	L"Заказано",
+	L"РџРѕСЃР».РїРѕСЃС‚СѓРїР»РµРЅРёСЏ",
+	L"Р—Р°РєР°Р· #",
+	L"РљРѕР»РёС‡РµСЃС‚РІРѕ",
+	L"Р—Р°РєР°Р·Р°РЅРѕ",
 };
 
 
@@ -3746,196 +3746,196 @@ const wchar_t* gzCreditNames[]=
 
 const wchar_t* gzCreditNameTitle[]=
 {
-	L"Ведущий программист игры", 			// Chris Camfield !!!
-	L"Дизайн/Сценарий",							// Shaun Lyng
-	L"Программист стратегической части и Редактора",					//Kris Marnes
-	L"Продюсер/Дизайн",						// Ian Currie
-	L"Дизайн/Дизайн карт",				// Linda Currie
-	L"Художник",													// Eric \"WTF\" Cheng
-	L"Бета-Координатор, фин.поддержка",				// Lynn Holowka
-	L"Главный художник",						// Norman \"NRG\" Olsen
-	L"Мастер по звуку",											// George Brooks
-	L"Дизайн экрана/Художник",					// Andrew Stacey
-	L"Главный художник/Анимация",						// Scot Loving
-	L"Главный программист",									// Andrew \"Big Cheese Doddle\" Emmons
-	L"Программист",											// Dave French
-	L"Программист стратегической части и баланса игры",					// Alex Meduna
-	L"Художник по портретам",								// Joey \"Joeker\" Whelan",
+	L"Р’РµРґСѓС‰РёР№ РїСЂРѕРіСЂР°РјРјРёСЃС‚ РёРіСЂС‹", 			// Chris Camfield !!!
+	L"Р”РёР·Р°Р№РЅ/РЎС†РµРЅР°СЂРёР№",							// Shaun Lyng
+	L"РџСЂРѕРіСЂР°РјРјРёСЃС‚ СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРѕР№ С‡Р°СЃС‚Рё Рё Р РµРґР°РєС‚РѕСЂР°",					//Kris Marnes
+	L"РџСЂРѕРґСЋСЃРµСЂ/Р”РёР·Р°Р№РЅ",						// Ian Currie
+	L"Р”РёР·Р°Р№РЅ/Р”РёР·Р°Р№РЅ РєР°СЂС‚",				// Linda Currie
+	L"РҐСѓРґРѕР¶РЅРёРє",													// Eric \"WTF\" Cheng
+	L"Р‘РµС‚Р°-РљРѕРѕСЂРґРёРЅР°С‚РѕСЂ, С„РёРЅ.РїРѕРґРґРµСЂР¶РєР°",				// Lynn Holowka
+	L"Р“Р»Р°РІРЅС‹Р№ С…СѓРґРѕР¶РЅРёРє",						// Norman \"NRG\" Olsen
+	L"РњР°СЃС‚РµСЂ РїРѕ Р·РІСѓРєСѓ",											// George Brooks
+	L"Р”РёР·Р°Р№РЅ СЌРєСЂР°РЅР°/РҐСѓРґРѕР¶РЅРёРє",					// Andrew Stacey
+	L"Р“Р»Р°РІРЅС‹Р№ С…СѓРґРѕР¶РЅРёРє/РђРЅРёРјР°С†РёСЏ",						// Scot Loving
+	L"Р“Р»Р°РІРЅС‹Р№ РїСЂРѕРіСЂР°РјРјРёСЃС‚",									// Andrew \"Big Cheese Doddle\" Emmons
+	L"РџСЂРѕРіСЂР°РјРјРёСЃС‚",											// Dave French
+	L"РџСЂРѕРіСЂР°РјРјРёСЃС‚ СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРѕР№ С‡Р°СЃС‚Рё Рё Р±Р°Р»Р°РЅСЃР° РёРіСЂС‹",					// Alex Meduna
+	L"РҐСѓРґРѕР¶РЅРёРє РїРѕ РїРѕСЂС‚СЂРµС‚Р°Рј",								// Joey \"Joeker\" Whelan",
 };
 
 const wchar_t* gzCreditNameFunny[]=
 {
 	L"", 																			// Chris Camfield
-	L"(все еще зубрит правила пунктуации)",					// Shaun Lyng
-	L"(\"Готово. Я просто чиню\")",	//Kris \"The Cow Rape Man\" Marnes
-	L"(он уже слишком стар для этого)",				// Ian Currie
-	L"(работает над Wizardry 8)",						// Linda Currie
-	L"(тестировал по дулом пистолета)",			// Eric \"WTF\" Cheng
-	L"(Ушла от нас в CFSA - скатертью дорожка...)",	// Lynn Holowka
+	L"(РІСЃРµ РµС‰Рµ Р·СѓР±СЂРёС‚ РїСЂР°РІРёР»Р° РїСѓРЅРєС‚СѓР°С†РёРё)",					// Shaun Lyng
+	L"(\"Р“РѕС‚РѕРІРѕ. РЇ РїСЂРѕСЃС‚Рѕ С‡РёРЅСЋ\")",	//Kris \"The Cow Rape Man\" Marnes
+	L"(РѕРЅ СѓР¶Рµ СЃР»РёС€РєРѕРј СЃС‚Р°СЂ РґР»СЏ СЌС‚РѕРіРѕ)",				// Ian Currie
+	L"(СЂР°Р±РѕС‚Р°РµС‚ РЅР°Рґ Wizardry 8)",						// Linda Currie
+	L"(С‚РµСЃС‚РёСЂРѕРІР°Р» РїРѕ РґСѓР»РѕРј РїРёСЃС‚РѕР»РµС‚Р°)",			// Eric \"WTF\" Cheng
+	L"(РЈС€Р»Р° РѕС‚ РЅР°СЃ РІ CFSA - СЃРєР°С‚РµСЂС‚СЊСЋ РґРѕСЂРѕР¶РєР°...)",	// Lynn Holowka
 	L"",																			// Norman \"NRG\" Olsen
 	L"",																			// George Brooks
-	L"(Мертвая Голова и любитель джаза)",						// Andrew Stacey
-	L"(его настоящее имя Роберт)",							// Scot Loving
-	L"(единственное ответственное лицо)",					// Andrew \"Big Cheese Doddle\" Emmons
-	L"(может опять заняться мотогонками)",	// Dave French
-	L"(украден с работы над Wizardry 8)",							// Alex Meduna
-	L"(строил предметы и загрузочные экраны!)",	// Joey \"Joeker\" Whelan",
+	L"(РњРµСЂС‚РІР°СЏ Р“РѕР»РѕРІР° Рё Р»СЋР±РёС‚РµР»СЊ РґР¶Р°Р·Р°)",						// Andrew Stacey
+	L"(РµРіРѕ РЅР°СЃС‚РѕСЏС‰РµРµ РёРјСЏ Р РѕР±РµСЂС‚)",							// Scot Loving
+	L"(РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ РѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕРµ Р»РёС†Рѕ)",					// Andrew \"Big Cheese Doddle\" Emmons
+	L"(РјРѕР¶РµС‚ РѕРїСЏС‚СЊ Р·Р°РЅСЏС‚СЊСЃСЏ РјРѕС‚РѕРіРѕРЅРєР°РјРё)",	// Dave French
+	L"(СѓРєСЂР°РґРµРЅ СЃ СЂР°Р±РѕС‚С‹ РЅР°Рґ Wizardry 8)",							// Alex Meduna
+	L"(СЃС‚СЂРѕРёР» РїСЂРµРґРјРµС‚С‹ Рё Р·Р°РіСЂСѓР·РѕС‡РЅС‹Рµ СЌРєСЂР°РЅС‹!)",	// Joey \"Joeker\" Whelan",
 };
 
 const wchar_t* sRepairsDoneString[] =
 {
-	L"%ls закончил ремонт своих вещей",
-	L"%ls закончил ремонтировать все оружие и броню",
-	L"%ls закончил ремонтировать все снаряжение",
-	L"%ls закончил ремонтировать все транспортируемые вещи",
+	L"%ls Р·Р°РєРѕРЅС‡РёР» СЂРµРјРѕРЅС‚ СЃРІРѕРёС… РІРµС‰РµР№",
+	L"%ls Р·Р°РєРѕРЅС‡РёР» СЂРµРјРѕРЅС‚РёСЂРѕРІР°С‚СЊ РІСЃРµ РѕСЂСѓР¶РёРµ Рё Р±СЂРѕРЅСЋ",
+	L"%ls Р·Р°РєРѕРЅС‡РёР» СЂРµРјРѕРЅС‚РёСЂРѕРІР°С‚СЊ РІСЃРµ СЃРЅР°СЂСЏР¶РµРЅРёРµ",
+	L"%ls Р·Р°РєРѕРЅС‡РёР» СЂРµРјРѕРЅС‚РёСЂРѕРІР°С‚СЊ РІСЃРµ С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂСѓРµРјС‹Рµ РІРµС‰Рё",
 };
 
 const wchar_t* zGioDifConfirmText[]=
 {
-	L"Вы выбрали ЛЕГКИЙ режим. Это подходит для новичков в Jagged Alliance 'Агония Власти', для новичков в жанре стратегий, или для тех, кто желает сократить битвы в игре. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Легком режиме?",
-	L"Вы выбрали НОРМАЛЬНЫЙ режим. Это подходит для всех тех, кто уже знаком с Jagged Alliance 'Агония Власти' или с подобными играми. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Нормальном режиме?",
-	L"Вы выбрали ТРУДНЫЙ режим. Мы Вас предупреждаем. Нечего на нас пенять, если вас доставят назад в цинковом гробу. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Трудном режиме?",
+	L"Р’С‹ РІС‹Р±СЂР°Р»Рё Р›Р•Р“РљРР™ СЂРµР¶РёРј. Р­С‚Рѕ РїРѕРґС…РѕРґРёС‚ РґР»СЏ РЅРѕРІРёС‡РєРѕРІ РІ Jagged Alliance 'РђРіРѕРЅРёСЏ Р’Р»Р°СЃС‚Рё', РґР»СЏ РЅРѕРІРёС‡РєРѕРІ РІ Р¶Р°РЅСЂРµ СЃС‚СЂР°С‚РµРіРёР№, РёР»Рё РґР»СЏ С‚РµС…, РєС‚Рѕ Р¶РµР»Р°РµС‚ СЃРѕРєСЂР°С‚РёС‚СЊ Р±РёС‚РІС‹ РІ РёРіСЂРµ. Р’Р°С€ РІС‹Р±РѕСЂ СЃРєР°Р¶РµС‚СЃСЏ РЅР° РёРіСЂРµ РІ С†РµР»РѕРј, С‚Р°Рє С‡С‚Рѕ РІС‹Р±РёСЂР°Р№С‚Рµ СЃ СѓРјРѕРј. Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РёРіСЂР°С‚СЊ РІ Р›РµРіРєРѕРј СЂРµР¶РёРјРµ?",
+	L"Р’С‹ РІС‹Р±СЂР°Р»Рё РќРћР РњРђР›Р¬РќР«Р™ СЂРµР¶РёРј. Р­С‚Рѕ РїРѕРґС…РѕРґРёС‚ РґР»СЏ РІСЃРµС… С‚РµС…, РєС‚Рѕ СѓР¶Рµ Р·РЅР°РєРѕРј СЃ Jagged Alliance 'РђРіРѕРЅРёСЏ Р’Р»Р°СЃС‚Рё' РёР»Рё СЃ РїРѕРґРѕР±РЅС‹РјРё РёРіСЂР°РјРё. Р’Р°С€ РІС‹Р±РѕСЂ СЃРєР°Р¶РµС‚СЃСЏ РЅР° РёРіСЂРµ РІ С†РµР»РѕРј, С‚Р°Рє С‡С‚Рѕ РІС‹Р±РёСЂР°Р№С‚Рµ СЃ СѓРјРѕРј. Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РёРіСЂР°С‚СЊ РІ РќРѕСЂРјР°Р»СЊРЅРѕРј СЂРµР¶РёРјРµ?",
+	L"Р’С‹ РІС‹Р±СЂР°Р»Рё РўР РЈР”РќР«Р™ СЂРµР¶РёРј. РњС‹ Р’Р°СЃ РїСЂРµРґСѓРїСЂРµР¶РґР°РµРј. РќРµС‡РµРіРѕ РЅР° РЅР°СЃ РїРµРЅСЏС‚СЊ, РµСЃР»Рё РІР°СЃ РґРѕСЃС‚Р°РІСЏС‚ РЅР°Р·Р°Рґ РІ С†РёРЅРєРѕРІРѕРј РіСЂРѕР±Сѓ. Р’Р°С€ РІС‹Р±РѕСЂ СЃРєР°Р¶РµС‚СЃСЏ РЅР° РёРіСЂРµ РІ С†РµР»РѕРј, С‚Р°Рє С‡С‚Рѕ РІС‹Р±РёСЂР°Р№С‚Рµ СЃ СѓРјРѕРј. Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РёРіСЂР°С‚СЊ РІ РўСЂСѓРґРЅРѕРј СЂРµР¶РёРјРµ?",
 };
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%ls файл для загрузки экрана не найден...",
+	L"%ls С„Р°Р№Р» РґР»СЏ Р·Р°РіСЂСѓР·РєРё СЌРєСЂР°РЅР° РЅРµ РЅР°Р№РґРµРЅ...",
 
 	//1-5
-	L"Робот не может покинуть сектор,т.к.некому управлять им.",
+	L"Р РѕР±РѕС‚ РЅРµ РјРѕР¶РµС‚ РїРѕРєРёРЅСѓС‚СЊ СЃРµРєС‚РѕСЂ,С‚.Рє.РЅРµРєРѕРјСѓ СѓРїСЂР°РІР»СЏС‚СЊ РёРј.",
 
 	//This message comes up if you have pending bombs waiting to explode in tactical.
-	L"Сейчас сжимать время нельзя.Подождите фейерверка!",
+	L"РЎРµР№С‡Р°СЃ СЃР¶РёРјР°С‚СЊ РІСЂРµРјСЏ РЅРµР»СЊР·СЏ.РџРѕРґРѕР¶РґРёС‚Рµ С„РµР№РµСЂРІРµСЂРєР°!",
 
 	//'Name' refuses to move.
-	L"%ls отказывается двигаться.",
+	L"%ls РѕС‚РєР°Р·С‹РІР°РµС‚СЃСЏ РґРІРёРіР°С‚СЊСЃСЏ.",
 
 	//%ls a merc name
-	L"%ls:недостаточно энергии,чтобы поменять положение.",
+	L"%ls:РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЌРЅРµСЂРіРёРё,С‡С‚РѕР±С‹ РїРѕРјРµРЅСЏС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	L"%ls:кончилось топливо и он остается в %c%d.",
+	L"%ls:РєРѕРЅС‡РёР»РѕСЃСЊ С‚РѕРїР»РёРІРѕ Рё РѕРЅ РѕСЃС‚Р°РµС‚СЃСЏ РІ %c%d.",
 
 	//6-10
 
 	// the following two strings are combined with the pNewNoise[] strings above to report noises
 	// heard above or below the merc
-	L"над",
-	L"под",
+	L"РЅР°Рґ",
+	L"РїРѕРґ",
 
 	//The following strings are used in autoresolve for autobandaging related feedback.
-	L"Ни у кого из ваших наемников нет меднавыков.",
-	L"Нет материала для перевязок.",
-	L"Не хватает материалов,чтобы перевязать всех.",
-	L"Перевязывать ваших наемников не нужно.",
-	L"Перевязывать наемников автоматически.",
-	L"Все наемники перевязаны.",
+	L"РќРё Сѓ РєРѕРіРѕ РёР· РІР°С€РёС… РЅР°РµРјРЅРёРєРѕРІ РЅРµС‚ РјРµРґРЅР°РІС‹РєРѕРІ.",
+	L"РќРµС‚ РјР°С‚РµСЂРёР°Р»Р° РґР»СЏ РїРµСЂРµРІСЏР·РѕРє.",
+	L"РќРµ С…РІР°С‚Р°РµС‚ РјР°С‚РµСЂРёР°Р»РѕРІ,С‡С‚РѕР±С‹ РїРµСЂРµРІСЏР·Р°С‚СЊ РІСЃРµС….",
+	L"РџРµСЂРµРІСЏР·С‹РІР°С‚СЊ РІР°С€РёС… РЅР°РµРјРЅРёРєРѕРІ РЅРµ РЅСѓР¶РЅРѕ.",
+	L"РџРµСЂРµРІСЏР·С‹РІР°С‚СЊ РЅР°РµРјРЅРёРєРѕРІ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.",
+	L"Р’СЃРµ РЅР°РµРјРЅРёРєРё РїРµСЂРµРІСЏР·Р°РЅС‹.",
 
 	//14
-	L"Арулько",
+	L"РђСЂСѓР»СЊРєРѕ",
 
   L"(roof)",
 
-	L"Здоровье: %d/%d",
+	L"Р—РґРѕСЂРѕРІСЊРµ: %d/%d",
 
 	//In autoresolve if there were 5 mercs fighting 8 enemies the text would be "5 vs. 8"
 	//"vs." is the abbreviation of versus.
-	L"%d против %d",
+	L"%d РїСЂРѕС‚РёРІ %d",
 
-	L"%ls полон!",  //(ex "The ice cream truck is full")
+	L"%ls РїРѕР»РѕРЅ!",  //(ex "The ice cream truck is full")
 
-  L"%ls нуждается не в перевязке и первой помощи, а в серьезном медицинском обследовании и/или отдыхе.",
+  L"%ls РЅСѓР¶РґР°РµС‚СЃСЏ РЅРµ РІ РїРµСЂРµРІСЏР·РєРµ Рё РїРµСЂРІРѕР№ РїРѕРјРѕС‰Рё, Р° РІ СЃРµСЂСЊРµР·РЅРѕРј РјРµРґРёС†РёРЅСЃРєРѕРј РѕР±СЃР»РµРґРѕРІР°РЅРёРё Рё/РёР»Рё РѕС‚РґС‹С…Рµ.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%ls ранен в ногу и без сознания!",
+	L"%ls СЂР°РЅРµРЅ РІ РЅРѕРіСѓ Рё Р±РµР· СЃРѕР·РЅР°РЅРёСЏ!",
 	//Name can't speak right now.
-	L"%ls сейчас говорить не может.",
+	L"%ls СЃРµР№С‡Р°СЃ РіРѕРІРѕСЂРёС‚СЊ РЅРµ РјРѕР¶РµС‚.",
 
 	//22-24 plural versions @@@2 elite to veteran
-	L"%d новички стали ветеранами.",
-	L"%d новички стали постояным ополчением.",
-	L"%d постоянное ополчение стало ветеранами.",
+	L"%d РЅРѕРІРёС‡РєРё СЃС‚Р°Р»Рё РІРµС‚РµСЂР°РЅР°РјРё.",
+	L"%d РЅРѕРІРёС‡РєРё СЃС‚Р°Р»Рё РїРѕСЃС‚РѕСЏРЅС‹Рј РѕРїРѕР»С‡РµРЅРёРµРј.",
+	L"%d РїРѕСЃС‚РѕСЏРЅРЅРѕРµ РѕРїРѕР»С‡РµРЅРёРµ СЃС‚Р°Р»Рѕ РІРµС‚РµСЂР°РЅР°РјРё.",
 
 	//25
-	L"Перекл.",
+	L"РџРµСЂРµРєР».",
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	L"%ls двинулся умом!",
+	L"%ls РґРІРёРЅСѓР»СЃСЏ СѓРјРѕРј!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	L"Сейчас опасно сжимать время, поскольку у вас есть наемники в секторе %ls.", //
-	L"Опасно сжимать время, когда наемники находятся в шахтах с существами.", //
+	L"РЎРµР№С‡Р°СЃ РѕРїР°СЃРЅРѕ СЃР¶РёРјР°С‚СЊ РІСЂРµРјСЏ, РїРѕСЃРєРѕР»СЊРєСѓ Сѓ РІР°СЃ РµСЃС‚СЊ РЅР°РµРјРЅРёРєРё РІ СЃРµРєС‚РѕСЂРµ %ls.", //
+	L"РћРїР°СЃРЅРѕ СЃР¶РёРјР°С‚СЊ РІСЂРµРјСЏ, РєРѕРіРґР° РЅР°РµРјРЅРёРєРё РЅР°С…РѕРґСЏС‚СЃСЏ РІ С€Р°С…С‚Р°С… СЃ СЃСѓС‰РµСЃС‚РІР°РјРё.", //
 
 	//29-31 singular versions @@@2 elite to veteran
-	L"1 новичок стал ветеранами.",
-	L"1 новичок стал постоянным ополчением.",
-	L"1 постоянное ополчение стало заслуженным.",
+	L"1 РЅРѕРІРёС‡РѕРє СЃС‚Р°Р» РІРµС‚РµСЂР°РЅР°РјРё.",
+	L"1 РЅРѕРІРёС‡РѕРє СЃС‚Р°Р» РїРѕСЃС‚РѕСЏРЅРЅС‹Рј РѕРїРѕР»С‡РµРЅРёРµРј.",
+	L"1 РїРѕСЃС‚РѕСЏРЅРЅРѕРµ РѕРїРѕР»С‡РµРЅРёРµ СЃС‚Р°Р»Рѕ Р·Р°СЃР»СѓР¶РµРЅРЅС‹Рј.",
 
 	//32-34
-	L"%ls ничего не говорит.",
-	L"Выбираться на поверхность?",
-	L"(Отряд %d)",
+	L"%ls РЅРёС‡РµРіРѕ РЅРµ РіРѕРІРѕСЂРёС‚.",
+	L"Р’С‹Р±РёСЂР°С‚СЊСЃСЏ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ?",
+	L"(РћС‚СЂСЏРґ %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	L"%ls починил %ls %ls",
+	L"%ls РїРѕС‡РёРЅРёР» %ls %ls",
 
 	//36
-	L"КОШКА-УБИЙЦА",
+	L"РљРћРЁРљРђ-РЈР‘РР™Р¦Рђ",
 
 	//37-38 "Name trips and falls"
-	L"%ls падает",
-	L"Эту вещь отсюда брать нельзя.",
+	L"%ls РїР°РґР°РµС‚",
+	L"Р­С‚Сѓ РІРµС‰СЊ РѕС‚СЃСЋРґР° Р±СЂР°С‚СЊ РЅРµР»СЊР·СЏ.",
 
 	//39
-	L"Никто из оставшихся наемн.не может драться.Ополчение сразится с существами само.",
+	L"РќРёРєС‚Рѕ РёР· РѕСЃС‚Р°РІС€РёС…СЃСЏ РЅР°РµРјРЅ.РЅРµ РјРѕР¶РµС‚ РґСЂР°С‚СЊСЃСЏ.РћРїРѕР»С‡РµРЅРёРµ СЃСЂР°Р·РёС‚СЃСЏ СЃ СЃСѓС‰РµСЃС‚РІР°РјРё СЃР°РјРѕ.",
 
 	//40-43
 	//%ls is the name of merc.
-	L"%ls:медикаменты кончились!",
-	L"%ls не обладает навыками,чтобы лечить кого-либо!",
-	L"%ls:кончились инструменты!",
-	L"%ls не обладает навыками,чтобы ремонтировать что-либо!",
+	L"%ls:РјРµРґРёРєР°РјРµРЅС‚С‹ РєРѕРЅС‡РёР»РёСЃСЊ!",
+	L"%ls РЅРµ РѕР±Р»Р°РґР°РµС‚ РЅР°РІС‹РєР°РјРё,С‡С‚РѕР±С‹ Р»РµС‡РёС‚СЊ РєРѕРіРѕ-Р»РёР±Рѕ!",
+	L"%ls:РєРѕРЅС‡РёР»РёСЃСЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚С‹!",
+	L"%ls РЅРµ РѕР±Р»Р°РґР°РµС‚ РЅР°РІС‹РєР°РјРё,С‡С‚РѕР±С‹ СЂРµРјРѕРЅС‚РёСЂРѕРІР°С‚СЊ С‡С‚Рѕ-Р»РёР±Рѕ!",
 
 	//44-45
-	L"Время ремонта",
-	L"%ls Не может увидеть этого человека.",
+	L"Р’СЂРµРјСЏ СЂРµРјРѕРЅС‚Р°",
+	L"%ls РќРµ РјРѕР¶РµС‚ СѓРІРёРґРµС‚СЊ СЌС‚РѕРіРѕ С‡РµР»РѕРІРµРєР°.",
 
 	//46-48
-	L"%ls'. Барабан его пистолета сломан!",
-	L"Не разрешается больше %d тренеров ополчения на сектор.",
-  L"Уверен?",
+	L"%ls'. Р‘Р°СЂР°Р±Р°РЅ РµРіРѕ РїРёСЃС‚РѕР»РµС‚Р° СЃР»РѕРјР°РЅ!",
+	L"РќРµ СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ Р±РѕР»СЊС€Рµ %d С‚СЂРµРЅРµСЂРѕРІ РѕРїРѕР»С‡РµРЅРёСЏ РЅР° СЃРµРєС‚РѕСЂ.",
+  L"РЈРІРµСЂРµРЅ?",
 
 	//49-50
-	L"Компрессия времени",
-	L"Бак теперь заправлен.",
+	L"РљРѕРјРїСЂРµСЃСЃРёСЏ РІСЂРµРјРµРЅРё",
+	L"Р‘Р°Рє С‚РµРїРµСЂСЊ Р·Р°РїСЂР°РІР»РµРЅ.",
 
 	//51-52 Fast help text in mapscreen.
-	L"Продолжить компрессию времени (|S|p|a|c|e)",
-	L"Прекратить компрессию времени (|E|s|c)",
+	L"РџСЂРѕРґРѕР»Р¶РёС‚СЊ РєРѕРјРїСЂРµСЃСЃРёСЋ РІСЂРµРјРµРЅРё (|S|p|a|c|e)",
+	L"РџСЂРµРєСЂР°С‚РёС‚СЊ РєРѕРјРїСЂРµСЃСЃРёСЋ РІСЂРµРјРµРЅРё (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	L"%ls исправил(а) %ls",
-	L"%ls исправил(а) %ls (%ls)",
+	L"%ls РёСЃРїСЂР°РІРёР»(Р°) %ls",
+	L"%ls РёСЃРїСЂР°РІРёР»(Р°) %ls (%ls)",
 
 	//55
-	L"Невозможно сжимать время при просмотре содержимого сектора.",
+	L"РќРµРІРѕР·РјРѕР¶РЅРѕ СЃР¶РёРјР°С‚СЊ РІСЂРµРјСЏ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ СЃРµРєС‚РѕСЂР°.",
 
-	L"CD Агония Власти не найден. Программа выходит в ОС.",
+	L"CD РђРіРѕРЅРёСЏ Р’Р»Р°СЃС‚Рё РЅРµ РЅР°Р№РґРµРЅ. РџСЂРѕРіСЂР°РјРјР° РІС‹С…РѕРґРёС‚ РІ РћРЎ.",
 
-	L"Предметы успешно совмещены.",
+	L"РџСЂРµРґРјРµС‚С‹ СѓСЃРїРµС€РЅРѕ СЃРѕРІРјРµС‰РµРЅС‹.",
 
 	//58
 	//Displayed with the version information when cheats are enabled.
-	L"Текущий/Максимальный: %d%%/%d%%",
+	L"РўРµРєСѓС‰РёР№/РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№: %d%%/%d%%",
 
 	//59
-	L"Сопроводить Джона и Мэри?",
+	L"РЎРѕРїСЂРѕРІРѕРґРёС‚СЊ Р”Р¶РѕРЅР° Рё РњСЌСЂРё?",
 
-  L"Выключатель нажат.",
+  L"Р’С‹РєР»СЋС‡Р°С‚РµР»СЊ РЅР°Р¶Р°С‚.",
 };
 
 

@@ -251,7 +251,7 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	L"%ls's wapen vuurt geen salvo.",
 
-	L"Je hebt er al één van die vastgemaakt.",
+	L"Je hebt er al Ã©Ã©n van die vastgemaakt.",
 	L"Samen voegen?",
 
 	// Both %ls's are item names
@@ -346,7 +346,7 @@ const wchar_t* pAssignmentStrings[] =
 	L"Team 20",
 	L"Dienst", // on active duty
 	L"Dokter", // administering medical aid
-	L"Patiënt", // getting medical aid
+	L"PatiÃ«nt", // getting medical aid
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
@@ -425,7 +425,7 @@ const wchar_t* pPersonnelAssignmentStrings[] =
 	L"Team 20",
 	L"Dienst", // on active duty
 	L"Dokter", // administering medical aid
-	L"Patiënt", // getting medical aid
+	L"PatiÃ«nt", // getting medical aid
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
@@ -467,7 +467,7 @@ const wchar_t* pLongAssignmentStrings[] =
 	L"Team 20",
 	L"Dienst", // on active duty
 	L"Dokter", // administering medical aid
-	L"Patiënt", // getting medical aid
+	L"PatiÃ«nt", // getting medical aid
 	L"Voertuig", // in a vehicle
 	L"Onderweg", // in transit - abbreviated form
 	L"Repareer", // repairing
@@ -868,7 +868,7 @@ const wchar_t* gpStrategicString[] =
 	L"",	//Unused
 	L"%ls zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
 	L"%ls zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
-	L"Wil je een gezamenlijke aankomst coördineren?",					//STR_COORDINATE
+	L"Wil je een gezamenlijke aankomst coÃ¶rdineren?",					//STR_COORDINATE
 
 	//Dialog strings for enemies.
 
@@ -1260,7 +1260,7 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Salvo's (|B)",				// L"|Burst Mode",
 	L"Kijk/draai (|L)",			// L"|Look/Turn",
 	L"Gezond: %d/%d\nKracht: %d/%d\nMoraal: %ls",		// L"Health: %d/%d\nEnergy: %d/%d\nMorale: %ls",
-	L"Hé?",					//this means "what?"
+	L"HÃ©?",					//this means "what?"
 	L"Door",					//an abbrieviation for "Continued"
 	L"%ls is praat weer.",			// L"Mute off for %ls.",
 	L"%ls is stil.",				// L"Mute on for %ls.",
@@ -1355,7 +1355,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	L"Als de overgebleven huurlingen uit deze sector trekken,\nwordt je automatisch in het landkaartscherm geplaatst,\nrekening houdend met de reistijd van je huurlingen.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%ls moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
+	L"%ls moet geÃ«scorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
@@ -1381,7 +1381,7 @@ const wchar_t* pExitingSectorHelpText[] =
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%ls wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
+	L"%ls wordt geÃ«scorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
 };
 
 
@@ -1905,8 +1905,8 @@ const wchar_t* pMapErrorString[] =
 	L"Deidranna's troepen zijn gezien in %ls.",
 	L"Deidranna's troepen hebben zojuist %ls overgenomen.",
 //26-30
-	L"Tenminste één huurling kon niet tot slapen gebracht worden.",
-	L"Tenminste één huurling kon niet wakker gemaakt worden.",
+	L"Tenminste Ã©Ã©n huurling kon niet tot slapen gebracht worden.",
+	L"Tenminste Ã©Ã©n huurling kon niet wakker gemaakt worden.",
 	L"De Militie verschijnt niet totdat hun training voorbij is.",
 	L"%ls kan geen reisorders gegeven worden op dit moment.",
 	L"Milities niet binnen de stadsgrenzen kunnen niet verplaatst worden naar een andere sector.",
@@ -1927,9 +1927,9 @@ const wchar_t* pMapErrorString[] =
 	L"Voertuig zit zonder brandstof!",
 	L"%ls is te moe om te reizen.",
 	L"Niemand aan boord is in staat om het voertuig te besturen.",
-	L"Eén of meer teamleden kunnen zich op dit moment niet verplaatsen.",
+	L"EÃ©n of meer teamleden kunnen zich op dit moment niet verplaatsen.",
 //46-50
-	L"Eén of meer leden van de ANDERE huurlingen kunnen zich op dit moment niet verplaatsen.",
+	L"EÃ©n of meer leden van de ANDERE huurlingen kunnen zich op dit moment niet verplaatsen.",
 	L"Voertuig is te beschadigd!",
 	L"Let op dat maar twee huurlingen milities in een sector mogen trainen.",
 	L"De robot kan zich zonder bediening niet verplaatsen. Plaats ze in hetzelfde team.",
@@ -1998,9 +1998,9 @@ const wchar_t* pImpPopUpStrings[] =
 	L"Ongeldige Autorisatiecode",
 	L"Je wil het gehele persoonlijkheidsonderzoek te herstarten. Zeker weten?",
 	L"Vul alsjeblieft de volledige naam en geslacht in",
-	L"Voortijdig onderzoek van je financiële status wijst uit dat je een persoonlijksheidsonderzoek niet kunt betalen.",
+	L"Voortijdig onderzoek van je financiÃ«le status wijst uit dat je een persoonlijksheidsonderzoek niet kunt betalen.",
 	L"Geen geldige optie op dit moment.",
-	L"Om een nauwkeurig profiel te maken, moet je ruimte hebben voor tenminste één teamlid.",
+	L"Om een nauwkeurig profiel te maken, moet je ruimte hebben voor tenminste Ã©Ã©n teamlid.",
 	L"Profiel is al gemaakt.",
 };
 
@@ -2127,7 +2127,7 @@ const wchar_t* pHistoryStrings[] =
 	L"Onderzoeker in Orta geeft wat raketwerpers.",			// ("Scientist in Orta donated a slew of rocket rifles.")
 	L"Koningin Deidranna kickt op lijken.",				// ("Queen Deidranna has a use for dead bodies.")
 	L"Frank vertelde over knokwedstrijden in San Mona.",		// ("Frank talked about fighting matches in San Mona.")
-	L"Een patiënt dacht dat ie iets in de mijnen zag.",		// ("A patient thinks he saw something in the mines.")
+	L"Een patiÃ«nt dacht dat ie iets in de mijnen zag.",		// ("A patient thinks he saw something in the mines.")
 	//36-40
 	L"Pers. ontmoet; Devin - verkoopt explosieven.",		// ("Met someone named Devin - he sells explosives.")
 	L"Beroemde ex-AIM huurling Mike ontmoet!",			// ("Ran into the famous ex-AIM merc Mike!")
@@ -2519,7 +2519,7 @@ const wchar_t* 		MercNoAccountText[] =
 	//Text on the buttons at the bottom of the screen
 	L"Open Rekening",
 	L"Afbreken",
-	L"Je hebt geen rekening. Wil je er één openen?",
+	L"Je hebt geen rekening. Wil je er Ã©Ã©n openen?",
 };
 
 
@@ -2576,13 +2576,13 @@ const wchar_t* 		sFloristText[] =
 
 	// detail of the florist page
 
-	L"We zijn snel en efficiënt!",
+	L"We zijn snel en efficiÃ«nt!",
 	L"Volgende dag gebracht, wereldwijd, gegarandeerd. Enkele beperkingen zijn van toepassing.",
 	L"Laagste prijs in de wereld, gegarandeerd!",
 	L"Toon ons een lagere geadverteerde prijs voor een regeling en ontvang gratis een dozijn rozen.",
 	L"Flora, Fauna & Bloemen sinds 1981.",
 	L"Onze onderscheiden ex-bommenwerperpiloten droppen je boeket binnen een tien kilometer radius van de gevraagde locatie. Altijd!",
-	L"Laat ons al je bloemenfantasieën waarmaken.",
+	L"Laat ons al je bloemenfantasieÃ«n waarmaken.",
 	L"Laat Bruce, onze wereldberoemde bloemist, de verste bloemen met de hoogste kwaliteit uit onze eigen kassen uitzoeken.",
 	L"En onthoudt, als we het niet hebben, kunnen we het kweken - Snel!",
 };
@@ -2614,7 +2614,7 @@ const wchar_t* 		sOrderFormText[] =
 	L"Fruitcake (indien beschikbaar)($10)",		//15
 	L"Persoonlijk Bericht:",
 	L"Wegens de grootte kaarten, mogen je berichten niet langer zijn dan 75 karakters.",
-	L"...of selecteer er één van de onze",
+	L"...of selecteer er Ã©Ã©n van de onze",
 
 	L"STANDAARDKAARTEN",
 	L"Factuurinformatie",	//20
@@ -2693,7 +2693,7 @@ const wchar_t* 		BobbyRText[] =
 {
 	L"Bestelling",				// Title
 	// instructions on how to order
-	L"Klik op de item(s). Voor meer dan één, blijf dan klikken. Rechtsklikken voor minder. Als je alles geselecteerd hebt, dat je wil bestellen, ga dan naar het bestelformulier.",
+	L"Klik op de item(s). Voor meer dan Ã©Ã©n, blijf dan klikken. Rechtsklikken voor minder. Als je alles geselecteerd hebt, dat je wil bestellen, ga dan naar het bestelformulier.",
 
 	//Text on the buttons to go the various links
 
@@ -3027,7 +3027,7 @@ const wchar_t* 		AimScreenText[] =
 	// AIM disclaimers
 
 	L"A.I.M. en A.I.M.-logo zijn geregistreerde handelsmerken in de meeste landen.",
-	L"Dus denk er niet aan om ons te kopiëren.",
+	L"Dus denk er niet aan om ons te kopiÃ«ren.",
 	L"Copyright 1998-1999 A.I.M., Ltd.  All rights reserved.",
 
 	//Text for an advertisement that gets displayed on the AIM page
@@ -3188,7 +3188,7 @@ const wchar_t* 	zMarksMapScreenText[] =
 
 	// other items
 	L"Medici",		// people acting a field medics and bandaging wounded mercs
-	L"Patiënten", // people who are being bandaged by a medic
+	L"PatiÃ«nten", // people who are being bandaged by a medic
 	L"OK", // Continue on with the game after autobandage is complete
 	L"Stop", // Stop autobandaging of patients by medics now
 	L"Sorry. Optie niet mogelijk in deze demo.", // informs player this option/button has been disabled in the demo
@@ -3233,7 +3233,7 @@ const wchar_t* gpDemoString[] =
 	L"Verzengende vuurgevechten",
 	L"Dynamische verlichting",
 	L"NPC interactie",
-	L"Geheime en nachtstrategieën",
+	L"Geheime en nachtstrategieÃ«n",
 	L"Maak eigen huurlingen",
 	L"Uitdagende en creatieve missies",
 	L"Bestuurbare voertuigen",
@@ -3292,7 +3292,7 @@ const wchar_t* gpDemoIntroString[] =
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 const wchar_t* gzMoneyWithdrawMessageText[] =
 {
-	L"Je kunt maximaal $20.000 in één keer opnemen.",
+	L"Je kunt maximaal $20.000 in Ã©Ã©n keer opnemen.",
 	L"Weet je zeker dat je %ls wil storten op je rekening?",
 };
 
@@ -3630,7 +3630,7 @@ const wchar_t* pMapScreenJustStartedHelpText[] =
 
 const wchar_t* pAntiHackerString[] =
 {
-	L"Fout. Bestanden missen of zijn beschadigd. Spel wordt beëindigd.",
+	L"Fout. Bestanden missen of zijn beschadigd. Spel wordt beÃ«indigd.",
 };
 
 
@@ -3744,7 +3744,7 @@ const wchar_t* gzCreditNames[]=
 {
 	L"Chris Camfield",
 	L"Shaun Lyng",
-	L"Kris Märnes",
+	L"Kris MÃ¤rnes",
 	L"Ian Currie",
 	L"Linda Currie",
 	L"Eric \"WTF\" Cheng",
@@ -3768,7 +3768,7 @@ const wchar_t* gzCreditNameTitle[]=
 	L"Producer/Co-ontwerper",				// Ian Currie "Producer/Co-designer"
 	L"Co-ontwerper/Kaartontwerp",				// Linda Currie "Co-designer/Map Designer"
 	L"Artiest",							// Eric \"WTF\" Cheng "Artist"
-	L"Beta Coördinator, Ondersteuning",			// Lynn Holowka
+	L"Beta CoÃ¶rdinator, Ondersteuning",			// Lynn Holowka
 	L"Artiest Extraordinaire",				// Norman \"NRG\" Olsen
 	L"Geluidsgoeroe",						// George Brooks
 	L"Schermontwerp/Artiest",				// Andrew Stacey
@@ -3816,9 +3816,9 @@ const wchar_t* sRepairsDoneString[] =
 
 const wchar_t* zGioDifConfirmText[]=
 {
-	L"Je hebt de NOVICE-modus geselecteerd. Deze instelling is geschikt voor diegenen die Jagged Alliance voor de eerste keer spelen, voor diegenen die nog niet zo bekend zijn met strategy games, of voor diegenen die kortere gevechten in de game willen hebben.", //Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Novice-modus wilt spelen?",
-	L"Je hebt de EXPERIENCED-modus geselecteerd. Deze instelling is geschikt voor diegenen die al bekend zijn met Jagged Alliance of dergelijke games. Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Experienced-modus wilt spelen ?",
-	L"Je hebt de EXPERT-modus geselecteerd. We hebben je gewaarschuwd. Geef ons niet de schuld als je in een kist terugkomt. Je keuze beïnvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Expert-modus wilt spelen?",
+	L"Je hebt de NOVICE-modus geselecteerd. Deze instelling is geschikt voor diegenen die Jagged Alliance voor de eerste keer spelen, voor diegenen die nog niet zo bekend zijn met strategy games, of voor diegenen die kortere gevechten in de game willen hebben.", //Je keuze beÃ¯nvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Novice-modus wilt spelen?",
+	L"Je hebt de EXPERIENCED-modus geselecteerd. Deze instelling is geschikt voor diegenen die al bekend zijn met Jagged Alliance of dergelijke games. Je keuze beÃ¯nvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Experienced-modus wilt spelen ?",
+	L"Je hebt de EXPERT-modus geselecteerd. We hebben je gewaarschuwd. Geef ons niet de schuld als je in een kist terugkomt. Je keuze beÃ¯nvloedt dingen in het hele verloop van de game, dus weet wat je doet. Weet je zeker dat je in de Expert-modus wilt spelen?",
 };
 
 const wchar_t* gzLateLocalizedString[] =
@@ -3868,7 +3868,7 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"%ls is vol!",  //(ex "The ice cream truck is full")
 
-	L"%ls heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
+	L"%ls heeft geen eerste hulp nodig, maar Ã©chte medische hulp of iets dergelijks.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.

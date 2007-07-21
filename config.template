@@ -26,8 +26,6 @@
 # Below are some example variable overrides for MSys/MinGW
 # If you set CFLAGS_SDL and LDFLAGS_SDL explicitly, then SDL_CONFIG is ignored
 
-#ICONV := ../libiconv-1.9.2-1/bin/iconv
-
 #SDL_CONFIG  := sdl-config
 #SDL_PATH    := ../sdl-1.2.11
 #CFLAGS_SDL  := -I $(SDL_PATH)/include

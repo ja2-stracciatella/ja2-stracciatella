@@ -12,8 +12,8 @@ const wchar_t* const zNewTacticalMessages[] =
 	L"Waffen-Rchwt.: %d Felder, Entf. zum Ziel: %d Felder",
 	L"Deckung anzeigen",
 	L"Sichtfeld",
-	L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich Gegner in der N‰he befinden.",
-	L"(Kann w‰hrend Kampf nicht speichern)",
+	L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich Gegner in der N√§he befinden.",
+	L"(Kann w√§hrend Kampf nicht speichern)",
 };
 
 //@@@:  New string as of March 3, 2000.
