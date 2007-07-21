@@ -43,7 +43,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 typedef struct CursorFileData
 {
 	const char* Filename;
-	BOOLEAN     fLoaded;
 	UINT32      uiIndex;
 	UINT8       ubFlags;
 	UINT8       ubNumberOfFrames; // If != 0 then the cursor is animated

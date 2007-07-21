@@ -1,4 +1,5 @@
 #include "Cursor_Control.h"
+#include "Debug.h"
 #include "Timer.h"
 #include "Video.h"
 #include "WCheck.h"
@@ -79,47 +80,34 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 		const CursorImage* pCurImage = &pCurData->Composites[cnt];
 		CursorFileData*    CFData    = &gpCursorFileDatabase[pCurImage->uiFileIndex];
 
-		if (!CFData->fLoaded)
+		if (CFData->hVObject == NULL)
 		{
 			// The file containing the video object hasn't been loaded yet. Let's load it now
 			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
+			Assert(!(CFData->ubFlags & USE_EXTERN_VO_CURSOR));
 
-			// ATE: First check if we are using an extern vo cursor...
-			if (CFData->ubFlags & USE_EXTERN_VO_CURSOR)
+			HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
+			if (hImage == NULL) return FALSE;
+
+			CFData->uiIndex = AddVideoObjectFromHImage(hImage);
+			if (CFData->uiIndex == NO_VOBJECT) return FALSE;
+
+			// Check for animated tile
+			if (hImage->uiAppDataSize > 0)
 			{
-				// Let's check if we have NOT NULL here...
-				if (CFData->hVObject == NULL)
+				// Valid auxiliary data, so get # od frames from data
+				const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
+				if (pAuxData->fFlags & AUX_ANIMATED_TILE)
 				{
-					// Something wrong here...
+					CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
 				}
 			}
-			else
-			{
-				HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
-				if (hImage == NULL) return FALSE;
 
-				CFData->uiIndex = AddVideoObjectFromHImage(hImage);
-				if (CFData->uiIndex == NO_VOBJECT) return FALSE;
+			// the hImage is no longer needed
+			DestroyImage(hImage);
 
-				// Check for animated tile
-				if (hImage->uiAppDataSize > 0)
-				{
-					// Valid auxiliary data, so get # od frames from data
-					const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
-					if (pAuxData->fFlags & AUX_ANIMATED_TILE)
-					{
-						CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
-					}
-				}
-
-				// the hImage is no longer needed
-				DestroyImage(hImage);
-
-				// Save hVObject....
-				CFData->hVObject = GetVideoObject(CFData->uiIndex);
-			}
-
-			CFData->fLoaded = TRUE;
+			// Save hVObject....
+			CFData->hVObject = GetVideoObject(CFData->uiIndex);
 		}
 
 		// Get ETRLE Data for this video object
@@ -189,14 +177,11 @@ static void UnLoadCursorData(UINT32 uiCursorIndex)
 		const CursorImage* pCurImage = &pCurData->Composites[cnt];
 		CursorFileData* CFData = &gpCursorFileDatabase[pCurImage->uiFileIndex];
 
-		if (CFData->fLoaded)
+		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
 		{
-			if (!(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
-			{
-				DeleteVideoObjectFromIndex(CFData->uiIndex);
-				CFData->uiIndex = 0;
-			}
-			CFData->fLoaded = FALSE;
+			DeleteVideoObjectFromIndex(CFData->uiIndex);
+			CFData->uiIndex  = 0;
+			CFData->hVObject = NULL;
 		}
 	}
 }
@@ -207,14 +192,11 @@ void CursorDatabaseClear(void)
   for (UINT32 uiIndex = 0; uiIndex < gusNumDataFiles; uiIndex++)
   {
 		CursorFileData* CFData = &gpCursorFileDatabase[uiIndex];
-    if (CFData->fLoaded)
+		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
 		{
-			if (!(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
-			{
-				DeleteVideoObjectFromIndex(CFData->uiIndex);
-				CFData->uiIndex = 0;
-			}
-      CFData->fLoaded = FALSE;
+			DeleteVideoObjectFromIndex(CFData->uiIndex);
+			CFData->uiIndex  = 0;
+			CFData->hVObject = NULL;
     }
   }
 }
