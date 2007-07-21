@@ -1,5 +1,5 @@
-#ifndef __CURSORS_H
-#define __CURSORS_H
+#ifndef CURSORS_H
+#define CURSORS_H
 
 #include "Types.h"
 
@@ -155,8 +155,7 @@ typedef enum
 	CURSOR_STRATEGIC_BULLSEYE,
 	CURSOR_JUMP_OVER,
   CURSOR_FUEL,
-  CURSOR_FUEL_RED,
-
+  CURSOR_FUEL_RED
 } CursorTypeDefines;
 
 typedef enum
@@ -231,23 +230,18 @@ typedef enum
 	C_FUEL_RED,
 
 	NUM_CURSOR_FILES
-
 } CursorSurfaceDefines;
 
-#define			MOUSE_LEVEL_GROUND		0
-#define			MOUSE_LEVEL_ROOF			1
 
-void InitCursors( );
-void HandleAnimatedCursors( );
+void InitCursors(void);
+void HandleAnimatedCursors(void);
 
-void DrawMouseActionPoints( );
-void UpdateAnimatedCursorFrames( UINT32 uiCursorIndex );
+void UpdateAnimatedCursorFrames(UINT32 uiCursorIndex);
 
-void SetCursorSpecialFrame( UINT32 uiCursor, UINT8 ubFrame );
+void SetCursorSpecialFrame(UINT32 uiCursor, UINT8 ubFrame);
 
-void SetCursorFlags( UINT32 uiCursor, UINT8 ubFlags );
-
-void RemoveCursorFlags( UINT32 uiCursor, UINT8 ubFlags );
+void SetCursorFlags(UINT32 uiCursor, UINT8 ubFlags);
+void RemoveCursorFlags(UINT32 uiCursor, UINT8 ubFlags);
 
 // The string must be persistent
 void SetHitLocationText(const wchar_t* Text);
