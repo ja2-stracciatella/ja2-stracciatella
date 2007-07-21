@@ -403,6 +403,7 @@ LNGS += ja2/Build/Utils/_GermanText.c
 LNGS += ja2/Build/Utils/_ItalianText.c
 LNGS += ja2/Build/Utils/_JA25EnglishText.c
 LNGS += ja2/Build/Utils/_JA25GermanText.c
+LNGS += ja2/Build/Utils/_JA25RussianText.c
 LNGS += ja2/Build/Utils/_PolishText.c
 LNGS += ja2/Build/Utils/_RussianText.c
 

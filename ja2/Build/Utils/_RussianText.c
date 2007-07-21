@@ -155,8 +155,8 @@ const wchar_t BobbyRayAmmoCaliber[][20] =
 	L"ОББ",
 	L"5,45мм",
 	L"5,56мм",
-	L"7,62мм Н.",
-	L"7,62мм ВД",
+	L"7,62 НАТО",
+	L"7,62 ВД",
 	L"4,7мм",
 	L"5.7мм",
 	L"Монстр",
@@ -169,22 +169,22 @@ const wchar_t WeaponType[][30] =
 {
 	L"Другое",
 	L"Пистолет",
-	L"Автопистолет",
-	L"Полуавтомат",
+	L"Автом. пистолет",
+	L"Пистолет-пулемет",
 	L"Винтовка",
-	L"Снайп.винтовка",
-	L"Базука",
-	L"Легкий автомат",
-	L"Револьвер"
+	L"Снайп. винтовка",
+	L"Автомат",
+	L"Легкий пулемет",
+	L"Дробовик"
 };
 
 const wchar_t TeamTurnString[][STRING_LENGTH] =
 {
-	L"Ход Игрока", // player's turn
-	L"Ход Оппонента",
-	L"Ход Существа",
-	L"Ход Ополчения",
-	L"Ход Жителей"
+	L"Ход игрока", // player's turn
+	L"Ход противника",
+	L"Ход существ",
+	L"Ход ополчения",
+	L"Ход жителей"
 	// planning turn
 };
 
@@ -194,7 +194,7 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
 
-	L"%ls:попадание в голову. Теряет в мудрости!",
+	L"%ls: попадание в голову. Теряет в мудрости!",
 	L"%ls получает рану плеча и теряет в ловкости!",
 	L"%ls получает рану в грудь и теряет в силе!",
 	L"%ls получает рану ног и теряет в проворности!",
@@ -202,7 +202,7 @@ const wchar_t Message[][STRING_LENGTH] =
 	L"%ls получает рану в плечо теряет %d очков ловкости!",
 	L"%ls получает рану в грудь и теряет %d очков силы!",
 	L"%ls получает рану ног и теряет %d очков проворности!",
-	L"Перерыв!",
+	L"Прерывание хода!",
 
 	// The first %ls is a merc's name, the second is a string from pNoiseVolStr,
 	// the third is a string from pNoiseTypeStr, and the last is a string from pDirectionStr
@@ -212,46 +212,46 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	// In the following four lines, all %ls's are merc names
 
-	L"%ls заряжает",
+	L"%ls: перезарядка.",
 	L"%ls недостаточно очков действия!",
-	L"%ls оказывает перв.помощь.(люб.клавиша-отмена)",
-	L"%ls и %ls оказывают перв.помощь. (люб.клавиша-отмена.)",
+	L"%ls оказывает первую помощь (люб. клавиша - отмена).",
+	L"%ls и %ls оказывают первую помощь (люб. клавиша - отмена).",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"надежен",
 	L"ненадежен",
 	L"легко починить",
-	L"трудно почин.",
-	L"сильн.поврежд.",
-	L"слаб.поврежд.",
-	L"быстр.огонь",
+	L"трудно починить",
+	L"сильный урон",
+	L"слабый урон",
+	L"скорострельный",
 	L"медл.огонь",
 	L"дальний бой",
 	L"ближний бой",
 	L"легкий",
 	L"тяжелый",
-	L"малый",
-	L"очередями",
-	L"не очередями",
+	L"небольшой",
+	L"авто-огонь",
+	L"только одиночн.",
 	L"бол.обойма",
 	L"мал.обойма",
 
 	// In the following two lines, all %ls's are merc names
 
-	L"%ls:камуфляж изношен",
-	L"%ls:окраска камуфляжа смыта",
+	L"%ls: камуфляж изношен.",
+	L"%ls: окраска камуфляжа смыта.",
 
 	// The first %ls is a merc name and the second %ls is an item name
 
-	L"Втор.оружие:нет патронов!",
+	L"Второе оружие: нет патронов!",
 	L"%ls крадет %ls.",
 
 	// The %ls is a merc name
 
-	L"%ls:оружие не стрел.очеред.",
+	L"%ls: оружие не стреляет очередями.",
 
-	L"вы повторяетесь!",
-	L"Объединить?",
+	L"Это уже присоеденено!",
+	L"Соединить?",
 
 	// Both %ls's are item names
 
@@ -259,30 +259,30 @@ const wchar_t Message[][STRING_LENGTH] =
 
 	L"Ничего",
 	L"Разрядить",
-	L"Приложения",
+	L"Обвеска",
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	L"Нельзя использовать %ls и %ls одновр.",
+	L"Нельзя использовать %ls и %ls одновременно.",
 
-	L"Вещь,на к-рую указывает курсор,можно присоединить к другим вещам,поместив ее в одну из связных ячеек.",
-	L"Вещь,на к-рую указывает курсор,можно присоединить к другим вещам,поместив ее в одну из связных ячеек.(Однако эти вещи несовместимы.)",
-	L"В этом секторе еще остались враги!",
+	L"Предмет на который указывает курсор можно присоединить к другим предметам, поместив его в одну из ячеек обвески.",
+	L"Предмет на который указывает курсор можно присоединить к другим предметам, поместив его в одну из ячеек обвески. (Однако эти предметы несовместимы.)",
+	L"В секторе еще остались враги!",
 	L"Тебе нужно дать %ls %ls",
-	L"%ls:попадание в голову!",
-	L"Покинуть битву?",
-	L"Эта вещь останется у тебя.Оставить ее?",
+	L"%ls: попадание в голову!",
+	L"Выйти из боя?",
+	L"Соединение будет неразборно. Соединить?",
 	L"%ls чувствует прилив энергии!",
-	L"%ls скользит по мрамору!",
+	L"%ls поскальзывается на шариках!",
 	L"%ls не получает %ls!",
 	L"%ls чинит %ls",
-	L"Прервать для ",
+	L"Перехват инициативы: ",
 	L"Сдаться?",
-	L"Человек отверг твою помощь",
+	L"Человек отверг твою помощь.",
 	L"Я так НЕ ДУМАЮ!",
-  L"Чтобы воспользоваться вертолетеом Всадника, выберите ПРИНАДЛЕЖНОСТЬ и МАШИНА.",
+	L"Чтобы воспользоваться вертолетом Всадника, выберите ПРИНАДЛЕЖНОСТЬ и МАШИНА.",
 	L"%ls успевает зарядить только один пистолет",
-	L"ход Кошки-Убийцы",
+	L"Ход кошек-убийц",
 };
 
 
@@ -351,7 +351,7 @@ const wchar_t* pAssignmentStrings[] =
 	L"В пути", //транзитом - сокращение
 	L"Ремонт", // ремонтируются
 	L"Практика", // тренируются
-  L"Ополчение", //готовят восстание среди горожан
+	L"Ополчение", //готовят восстание среди горожан
 	L"Тренер", // training a teammate
 	L"Студент", // being trained by someone else
 	L"Мертв", // мертв
@@ -365,8 +365,8 @@ const wchar_t* pAssignmentStrings[] =
 const wchar_t* pMilitiaString[] =
 {
 	L"Ополчение", // the title of the militia box
-	L"Не определен", //the number of unassigned militia troops
-	L"Ты не можешь перераспределять ополчение, когда кругом враги!",
+	L"Не назначено", //the number of unassigned militia troops
+	L"Нельзя перераспределять ополчение, когда кругом враги!",
 };
 
 
@@ -430,7 +430,7 @@ const wchar_t* pPersonnelAssignmentStrings[] =
 	L"В пути",
 	L"Ремонт",
 	L"Практика",
-  L"Тренировка ополч",
+	L"Тренировка ополч",
 	L"Тренер",
 	L"Ученик",
 	L"Мертв",
@@ -472,7 +472,7 @@ const wchar_t* pLongAssignmentStrings[] =
 	L"В пути",
 	L"Ремонт",
 	L"Практика",
-  L"Тренинг ополч",
+	L"Тренинг ополч",
 	L"Тренинг команды",
 	L"Ученик",
 	L"Мертв",
@@ -487,11 +487,11 @@ const wchar_t* pLongAssignmentStrings[] =
 
 const wchar_t* pContractStrings[] =
 {
-	L"Пункты контракта:",
+	L"Действия по контракту:",
 	L"", // a blank line, required
-	L"Предл.1 день", // offer merc a one day contract extension
-	L"Предложить 7дн", // 1 week
-	L"Предложить 14дн", // 2 week
+	L"Продлить на 1 день", // offer merc a one day contract extension
+	L"Продлить на 7 дней", // 1 week
+	L"Продлить на 14 дней", // 2 week
 	L"Уволить", // end merc's contract
 	L"Отмена", // stop showing this menu
 };
@@ -504,7 +504,7 @@ const wchar_t* pPOWStrings[] =
 
 const wchar_t* pLongAttributeStrings[] =
 {
-    L"СИЛА",
+	L"СИЛА",
 	L"ЛОВКОСТЬ",
 	L"ПОДВИЖНОСТЬ",
 	L"МУДРОСТЬ",
@@ -519,7 +519,7 @@ const wchar_t* pLongAttributeStrings[] =
 const wchar_t* pInvPanelTitleStrings[] =
 {
 	L"Броня", // the armor rating of the merc
-	L"Вес", // the weight the merc is carrying
+	L"Груз", // the weight the merc is carrying
 	L"Камуфляж", // the merc's camouflage rating
 };
 
@@ -540,7 +540,7 @@ const wchar_t* pShortAttributeStrings[] =
 
 const wchar_t* pUpperLeftMapScreenStrings[] =
 {
-	L"Принадлежность", // the mercs current assignment
+	L"Задание", // the mercs current assignment
 	L"Контракт", // the contract info about the merc
 	L"Здоровье", // the health level of the current merc
 	L"Дух", // the morale of the current merc
@@ -551,7 +551,7 @@ const wchar_t* pUpperLeftMapScreenStrings[] =
 const wchar_t* pTrainingStrings[] =
 {
 	L"Практика", // tell merc to train self
-    L"Ополчение", // tell merc to train town
+	L"Ополчение", // tell merc to train town
 	L"Тренер", // tell merc to act as trainer
 	L"Ученик", // tell merc to be train by other
 };
@@ -565,7 +565,7 @@ const wchar_t* pGuardMenuStrings[] =
 	L"Другие опции:", // other options available to merc
 	L" Отступить", // merc can retreat
 	L" Искать укрытие",  // merc is allowed to seek cover
-	L" Можно помочь команде", // merc can assist teammates
+	L" Помочь команде", // merc can assist teammates
 	L"Готово", // done with this menu
 	L"Отмена", // cancel this menu
 };
@@ -577,7 +577,7 @@ const wchar_t* pOtherGuardMenuStrings[] =
 	L"Тип Огня:",
 	L" *Агрессивный огонь*",
 	L" *Беречь патроны*",
-	L" *Воздерж.от стрельбы*",
+	L" *Пока не стрелять*",
 	L"Другие опции:",
 	L" *Отступить*",
 	L" *Искать укрытие*",
@@ -619,11 +619,11 @@ const wchar_t* pAttributeMenuStrings[] =
 
 const wchar_t* pTrainingMenuStrings[] =
 {
- L"Практика", // train yourself
- L"Ополч.", // train the town
- L"Тренер", // train your teammates
- L"Ученик",  // be trained by an instructor
- L"Отмена", // cancel this menu
+	L"Практика", // train yourself
+	L"Ополч.", // train the town
+	L"Тренер", // train your teammates
+	L"Ученик",  // be trained by an instructor
+	L"Отмена", // cancel this menu
 };
 
 
@@ -666,10 +666,10 @@ const wchar_t* pPersonnelScreenStrings[] =
 	L"Механика: ",
 	L"Взрывник.: ",
 	L"Медицина: ",
-	L"Мед.депозит: ", // amount of medical deposit put down on the merc
+	L"Мед. страховка: ", // amount of medical deposit put down on the merc
 	L"Контракт: ", // cost of current contract
 	L"Убийства: ", // number of kills by merc
-	L"Помощники: ", // number of assists on kills by merc
+	L"Помощь: ", // number of assists on kills by merc
 	L"Цена в день:", // daily cost of merc
 	L"Общая стоимость:", // total cost of merc
 	L"Контракт:", // cost of current contract
@@ -677,7 +677,7 @@ const wchar_t* pPersonnelScreenStrings[] =
 	L"Долги по з/п:", // amount left on MERC merc to be paid
 	L"Проц.попаданий:", // percentage of shots that hit target
 	L"Битвы:", // number of battles fought
-	L"Кол-во ран:", // number of times merc has been wounded
+	L"Ранения:", // number of times merc has been wounded
 	L"Навыки:",
 	L"Нет навыков",
 };
@@ -687,19 +687,19 @@ const wchar_t* pPersonnelScreenStrings[] =
 const wchar_t* gzMercSkillText[] =
 {
 	L"Нет навыков",
-	L"Раб.с отмычкой",
-	L"Плечом к плечу",
+	L"Взлом",
+	L"Рукопашная",
 	L"Электроника",
 	L"Ночные опер.",
 	L"Броски",
-	L"Обучение",
+	L"Учитель",
 	L"Тяж.оружие",
 	L"Автом.оружие",
-	L"Скрытный",
-	L"Оч.проворный",
+	L"Скрытность",
+	L"Амбидекстрия",
 	L"Вор",
-	L"Военное иск-во",
-	L"Метание ножа",
+	L"Боевые иск-ва",
+	L"Ножи",
 	L"Стрельба с крыши",
 	L"Маскировка",
 	L"(Эксперт)",
@@ -711,37 +711,37 @@ const wchar_t* gzMercSkillText[] =
 const wchar_t* pTacticalPopupButtonStrings[] =
 {
 	L"Стоять/Идти (|S)",
-	L"Cогнуться/Красться (|C)",
-	L"Стоять/Бежать (|R)"
-	L"Лечь/Ползти (|P)",
-	L"Смотреть (|L)",
+	L"Присядью (|C)",
+	L"Стоять/Бегом (|R)",
+	L"Лечь/Ползти(|P)",
+	L"Поворот (|L)",
 	L"Действие",
-	L"Разговор",
-	L"Проверить (|C|t|r|l)",
+	L"Поговорить",
+	L"Осмотреть (|C|t|r|l)",
 
 	// Pop up door menu
-	L"Открыть вручную",
-	L"Поиск ловушек",
-	L"Поиск ловушек",
-	L"Разрядить ловушки",
-	L"Силой",
-	L"Минировать",
 	L"Открыть",
-	L"Отмычкой",
-	L"Исп.взрывчатку",
-	L"Ломом",
-	L"Отмена(|E|s|c)"
+	L"Искать ловушки",
+	L"Взлом отмычкой",
+	L"Выбить",
+	L"Обезвредить",
+	L"Запереть",
+	L"Отпереть",
+	L"Взорвать замок",
+	L"Взлом ломом",
+	L"Отмена (|E|s|c)",
+	L"Закрыть",
 };
 
 // Door Traps. When we examine a door, it could have a particular trap on it. These are the traps.
 
 const wchar_t* pDoorTrapStrings[] =
 {
-	L"Ловушек нет",
-	L"Бомба-Ловушка",
-	L"Электроловушка",
-	L"Ловушка-Сирена",
-	L"Тихая сигнализация"
+	L"нет ловушек",
+	L"мина",
+	L"электрошок",
+	L"сирена",
+	L"сигнализация"
 };
 
 // On the map screen, there are four columns. This text is popup help text that identifies the individual columns.
@@ -749,9 +749,9 @@ const wchar_t* pDoorTrapStrings[] =
 const wchar_t* pMapScreenMouseRegionHelpText[] =
 {
 	L"Выбрать наемника",
-	L"Назначить наемника",
-	L"Направить",
-	L"Наемн |Контракт (|C)",
+	L"Дать задание",
+	L"Маршрут",
+	L"Контракт (|C)", //check ingame
 	L"Убрать наемн",
 	L"Спать",
 };
@@ -824,14 +824,14 @@ const wchar_t* pLandTypeStrings[] =
 	L"Тропики,дорога",
 	L"Роща, дорога",
 	L"Берег",
-	L"Гора, дорога",
+	L"Горы, дорога",
 	L"Побережье,дорога",
 	L"Пустыня, дорога",
 	L"Болото, дорога",
-	L"Леса,ПВО",
-	L"Пустыня,ПВО",
-	L"Тропики,ПВО",
-	L"Медуна,ПВО",
+	L"Леса, ПВО",
+	L"Пустыня, ПВО",
+	L"Тропики, ПВО",
+	L"Медуна, ПВО",
 
 	//These are descriptions for special sectors
 	L"Госпит.Камбрии",
@@ -853,12 +853,12 @@ const wchar_t* gpStrategicString[] =
 	L"",	//Unused
 	L"%ls обнаружен в секторе %c%d и вот-вот прибудет еще один отряд.",	//STR_DETECTED_SINGULAR
 	L"%ls обнаружен в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
-	L"Вы хотите координировать одновременное прибытие?",													//STR_COORDINATE
+	L"Хотите координировать одновременное прибытие?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
 
-	L"Враг дает шанс сдаться.",			//STR_ENEMY_SURRENDER_OFFER
-	L"Враг захватил вашего наемника, который пребывает без сознания.",	//STR_ENEMY_CAPTURED
+	L"Враг предлагает сдаться.",			//STR_ENEMY_SURRENDER_OFFER
+	L"Враг взял в плен наемников без сознания.",	//STR_ENEMY_CAPTURED
 
 	//The text that goes on the autoresolve buttons
 
@@ -884,13 +884,13 @@ const wchar_t* gpStrategicString[] =
 
 	L"Ополчен",							//STR_AR_MILITIA_NAME,
 	L"Элита",								//STR_AR_ELITE_NAME,
-	L"Войско",								//STR_AR_TROOP_NAME,
+	L"Армия",								//STR_AR_TROOP_NAME,
 	L"Админ",								//STR_AR_ADMINISTRATOR_NAME,
 	L"Существо",								//STR_AR_CREATURE_NAME,
 
 	//Label for the length of time the battle took
 
-	L"Время истекло",							//STR_AR_TIME_ELAPSED,
+	L"Бой длился",							//STR_AR_TIME_ELAPSED,
 
 	//Labels for status of merc if retreating.  (UPPERCASE)
 
@@ -904,17 +904,17 @@ const wchar_t* gpStrategicString[] =
 	//These strings must be short (two lines -- 6-8 chars per line)
 
 	L"Авто битва",							//STR_PB_AUTORESOLVE_BTN,
-	L"Идти в Сектор",							//STR_PB_GOTOSECTOR_BTN,
-	L"Отступить",							//STR_PB_RETREATMERCS_BTN,
+	L"Идти в сектор",							//STR_PB_GOTOSECTOR_BTN,
+	L"Назад",							//STR_PB_RETREATMERCS_BTN,
 
 	//The different headers(titles) for the prebattle interface.
 	L"СТЫЧКА",									//STR_PB_ENEMYENCOUNTER_HEADER,
-	L"ВРАЖЕСК. ЗАХВАТ",							//STR_PB_ENEMYINVASION_HEADER, // 30
-	L"ВРАЖ. ЗАСАДА",							//STR_PB_ENEMYAMBUSH_HEADER
-	L"ВСТУПИТЬ ВО ВРАЖ. СЕКТОР",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
+	L"НАПАДЕНИЕ",							//STR_PB_ENEMYINVASION_HEADER, // 30
+	L"ЗАСАДА",							//STR_PB_ENEMYAMBUSH_HEADER
+	L"АТАКА ВРАГА",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
 	L"АТАКА СУЩЕСТВ",							//STR_PB_CREATUREATTACK_HEADER
-	L"ЗАСАДА КОШКИ",							//STR_PB_BLOODCATAMBUSH_HEADER
-	L"ИДТИ В ЛОГОВО КОШКИ-УБИЙЦЫ",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
+	L"ЗАСАДА КОШЕК",							//STR_PB_BLOODCATAMBUSH_HEADER
+	L"ЛОГОВО КОШЕК-УБИЙЦ",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
 	//Various single words for direct translation.  The Civilians represent the civilian
 	//militia occupying the sector being attacked.  Limited to 9-10 chars
@@ -935,17 +935,17 @@ const wchar_t* gpStrategicString[] =
 	//The four buttons
 
 	L"Очистить",
-	L"Вручную",
+	L"Порознь", //??
 	L"Группа",
 	L"Готово",
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"Убрать позиции наемников\nдля повторного их ввода ( |C).",
-	L"Рассредоточить наемников вручную (|S).",
-	L"Выбрать место сбора наемников (|G).",
-	L"Нажмите эту кнопку, когда закончите\nвыбор позиций для наемников. (|E|n|t|e|r)",
-	L"Вы должны разместить всех наемн.\nперед началом битвы.",
+	L"Отменить размещение и начать заново (|C).",
+	L"Равномерно распределить бойцов (|S).", //??
+	L"Сгруппировать бойцов в заданной точке (|G).",
+	L"Нажмите эту кнопку, когда закончите\nвыбор позиций для бойцов. (|E|n|t|e|r)",
+	L"Нужно разместить ВСЕХ наемников\nперед началом битвы.",
 
 	//Various strings (translate word for word)
 
@@ -954,35 +954,35 @@ const wchar_t* gpStrategicString[] =
 
 	//Strings used for various popup message boxes.  Can be as long as desired.
 
-	L"Выглядит непривлекательно. Место недоступно. Выберите другое место.",
-	L"Поместите своих наемников в выделенное место на карте.",
+	L"Не очень-то хорошее место. Туда не пройти. Выберите другую позицию.",
+	L"Разместите своих наемников в выделенной на карте зоне.",
 
 	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
 	//Don't uppercase first character, or add spaces on either end.
 
-	L"прибыл в сектор",
+	L"прибытие в сектор",
 
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
-	L"Битва разрешается автоматически\nбез загрузки карты(|A)",
-	L"Нельзя исп.авторазрешение когда\nигрок атакует.",
-	L"Войти в сектор:стычка с врагом (|E).",
-	L"Группа отступает в прежний сектор (|R).",				//singular version
-	L"Все группы отступают в прежние сектора (|R)", //multiple groups with same previous sector
+	L"Битва разрешается автоматически\nбез вашего участия(|A)",
+	L"Нельзя использовать авто битву\nкогда вы нападаете.",
+	L"Войти в сектор: стычка с врагом (|E).",
+	L"Отступить в исходный сектор (|R).",				//singular version
+	L"Отступить всем группам на исходные позиции (|R)", //multiple groups with same previous sector
 //!!!What about repeated "R" as hotkey?
 	//various popup messages for battle conditions.
 
 	//%c%d is the sector -- ex:  A9
 	L"Враги атакуют ваше ополчение в секторе %c%d.",
 	//%c%d сектор -- напр:  A9
-	L"Существа атакуют ваше ополч.в секторе %c%d.",
+	L"Существа напали на ополчение в секторе %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Существа атакуют и убивают %d жителей в секторе %ls.",
+	L"Существа напали на гражданских, убито %d в секторе %ls.",
 	//%ls is the sector location -- ex:  A9: Omerta
-	L"Враги атакуют ваших наемн.в секторе %ls. Никто из наемников не может драться!",
+	L"Враги атакуют ваш отряд секторе %ls. Никто из наемников не может драться!",
 	//%ls is the sector location -- ex:  A9: Omerta
-	L"Существа атакуют ваших наемн.в секторе%ls. Никто из наемников не может драться!",
+	L"Существа атакуют ваш отряд в секторе %ls. Никто из наемников не может драться!",
 
 };
 
@@ -996,13 +996,13 @@ const wchar_t* gpGameClockString[] =
 //tells them where and when they found it.
 const wchar_t* sKeyDescriptionStrings[2] =
 {
-	L"Сект.находки:",
+	L"Найден в:",
 	L"День находки:",
 };
 
 //The headers used to describe various weapon statistics.
 
-const wchar_t 	gWeaponStatsDesc[][ 14 ] =
+const wchar_t gWeaponStatsDesc[][14] =
 {
 	L"Вес (%ls):",
 	L"Статус:",
@@ -1019,15 +1019,15 @@ const wchar_t 	gWeaponStatsDesc[][ 14 ] =
 
 const wchar_t gMoneyStatsDesc[][ 13 ] =
 {
-	L"Кол-во",
-	L"Осталось:", //this is the overall balance
-	L"Кол-во",
-	L"Отделить:", // the amount he wants to separate from the overall balance to get two piles of money
+	L"Денег в",
+	L"пачке:", //this is the overall balance
+	L"Отделить",
+	L"сумму:", // the amount he wants to separate from the overall balance to get two piles of money
 
 	L"Текущий",
 	L"Баланс",
-	L"Кол-во",
-	L"Взять",
+	L"Взять со",
+	L"счета",
 };
 
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
@@ -1035,13 +1035,13 @@ const wchar_t gMoneyStatsDesc[][ 13 ] =
 
 const wchar_t zHealthStr[][13] =
 {
-	L"УМИРАЕТ",		//	>= 0
-	L"КРИТИЧЕН", 		//	>= 15
-	L"ПЛОХ",		//	>= 30
-	L"РАНЕН",    	//	>= 45
-	L"ЗДОРОВ",    	//	>= 60
-	L"СИЛЕН",     	// 	>= 75
-  L"ОТЛИЧНО",		// 	>= 90
+	L"УМИРАЕТ",  // >=  0
+	L"КРИТИЧЕН", // >= 15
+	L"ПЛОХ",     // >= 30
+	L"РАНЕН",    // >= 45
+	L"ЗДОРОВ",   // >= 60
+	L"СИЛЕН",    // >= 75
+	L"ОТЛИЧНО",  // >= 90
 };
 
 const wchar_t* gzMoneyAmounts[6] =
@@ -1049,20 +1049,20 @@ const wchar_t* gzMoneyAmounts[6] =
 	L"1000$",
 	L"100$",
 	L"10$",
-	L"Готово",
+	L"OK",
 	L"Отделить",
 	L"Взять"
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-const wchar_t 	gzProsLabel[10] =
+const wchar_t gzProsLabel[10] =
 {
-	L"За:",
+	L"+: ",
 };
 
-const wchar_t 	gzConsLabel[10] =
+const wchar_t gzConsLabel[10] =
 {
-	L"Прот:",
+	L"-: ",
 };
 
 //Conversation options a player has when encountering an NPC
@@ -1079,9 +1079,9 @@ const wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
 const wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 {
-	L"Куп/Прод",
-	L"Куп.",
-	L"Прод.",
+	L"Торговля",
+	L"Купить",
+	L"Продать",
 	L"Ремонт",
 };
 
@@ -1095,19 +1095,19 @@ const wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] =
 
 const wchar_t* pVehicleStrings[] =
 {
- L"Эльдорадо",
- L"Хаммер", // a hummer jeep/truck -- military vehicle
- L"Трак с морож",
- L"Джип",
- L"Танк",
- L"Вертолет",
+	L"Эльдорадо",
+	L"Хаммер", // a hummer jeep/truck -- military vehicle
+	L"Минивэн",
+	L"Джип",
+	L"Танк",
+	L"Вертолет",
 };
 
 const wchar_t* pShortVehicleStrings[] =
 {
 	L"Эльдор",
 	L"Хаммер",			// the HMVV
-	L"Трак",
+	L"Вэн",
 	L"Джип",
 	L"Танк",
 	L"Верт", 				// the helicopter
@@ -1117,7 +1117,7 @@ const wchar_t* zVehicleName[] =
 {
 	L"Эльдорадо",
 	L"Хаммер",		//a military jeep. This is a brand name.
-	L"Трак",			// Ice cream truck
+	L"Вэн",			// Ice cream truck
 	L"Джип",
 	L"Танк",
 	L"Верт", 		//an abbreviation for Helicopter
@@ -1128,12 +1128,12 @@ const wchar_t* zVehicleName[] =
 
 const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 {
-	L"Воздушный Рейд",
-	L"Оказывать перв.помощь сразу?",
+	L"Воздушный налет",
+	L"Оказать первую помощь?",
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	L"%ls замечает, что некоторые предметы не погрузили.",
+	L"%ls замечает недостачу товара в ящике.",
 
 	// The %ls is a string from pDoorTrapStrings
 
@@ -1143,44 +1143,44 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Провал.",
 	L"Успех!",
 	L"Провал",
-	L"Замок без ловушки",
+	L"Замок без ловушки.",
 	L"Успех!",
 	// The %ls is a merc name
-	L"%ls:нет нужного ключа",
-	L"Замок без ловушки",
-	L"Замок без ловушки",
-	L"Заперто",
+	L"%ls: нет нужного ключа.",
+	L"Ловушка обезврежена.",
+	L"Замок без ловушки.",
+	L"Заперто.",
 	L"ДВЕРЬ",
 	L"ЛОВУШКА",
 	L"ЗАПЕРТО",
 	L"НЕЗАПЕРТО",
 	L"РАЗГРОМЛЕНО",
-	L"Тут есть выключатель.Нажать?",
-	L"Разрядить ловушку?",
+	L"Тут есть выключатель. Нажать?",
+	L"Снять ловушку?",
 	L"Пред...",
 	L"След...",
 	L"Еще...",
 
 	// In the next 2 strings, %ls is an item name
 
-	L"%ls помещен(а) на землю.",
-	L"%ls отдан(а) %ls.",
+	L"%ls на земле.",
+	L"%ls теперь у %ls.",
 
 	// In the next 2 strings, %ls is a name
 
-	L"%ls.Оплачено сполна.",
-	L"%ls.Еще должен %d.",
+	L"%ls все выплачено.",
+	L"Ваш долг %ls составляет %d.",
 	L"Выбрать частоту детонатора:",  	//in this case, frequency refers to a radio signal
 	L"Кол-во ходов перед взрывом:",	//how much time, in turns, until the bomb blows
-	L"Устан.частоту дистанц.взрывателя:", 	//in this case, frequency refers to a radio signal
+	L"Выбрать частоту взрывателя:", 	//in this case, frequency refers to a radio signal
 	L"Разрядить ловушку?",
-	L"Убрать голубой флаг?",
-	L"Установить голубой флаг?",
-	L"Завершающий ход",
+	L"Убрать флажок?",
+	L"Установить флажок?",
+	L"Завершение хода",
 
 	// In the next string, %ls is a name. Stance refers to way they are standing.
 
-	L"Уверен,что хочешь напасть на %ls ?",
+	L"Атаковать %ls? Вы уверены?",
 	L"Машина не может менять положения.",
 	L"Робот не может менять положения.",
 
@@ -1190,7 +1190,7 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"%ls не может получить перв.помощь.",
 	L"%ls не нуждается в перв.помощи.",
 	L"Туда идти нельзя.",
-	L"Команда набрана.Мест нет.",	//there's no room for a recruit on the player's team
+	L"Команда набрана. Мест нет.",	//there's no room for a recruit on the player's team
 
 	// In the next string, %ls is a name
 
@@ -1202,7 +1202,7 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 
 	// In the next string, %ls is a name
 
-	L"Сопров. %ls?",
+	L"Сопроводить %ls?",
 
 	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
 
@@ -1224,67 +1224,67 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	// These messages are displayed during play to alert the player to a particular situation
 
 	L"ЗАКЛИНИЛО",					//weapon is jammed.
-	L"Роботу нужно пули %ls калибра.",		//Robot is out of ammo
+	L"Роботу нужно пули калибра %ls.",		//Robot is out of ammo
 	L"Бросить туда? Нет. Не выйдет.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
 
 	L"Скрытно (|Z)",
 	L"Окно карты (|M)",
-	L"Готово (|D)(Завершить ход)",
+	L"Завершить ход (|D)",
 	L"Говорить",
-	L"Без звука",
+	L"Запретить отзывы",
 	L"Подняться (|P|g|U|p)",
-	L"Поз.курсора(|T|a|b)",
+	L"Курсор на земле/крышах (|T|a|b)",
 	L"Карабк./ Прыг.",
 	L"Опуститься (|P|g|D|n)",
-	L"Проверить (|C|t|r|l)",
-	L"Пред.наемник",
-	L"След.наемник (|S|p|a|c|e)",
+	L"Осмотреть (|C|t|r|l)",
+	L"Предыдущий боец",
+	L"Следующий боец (|S|p|a|c|e)",
 	L"Настройки (|O)",
-	L"Очередь (|B)",
+	L"Стрелять очередью (|B)",
 	L"Смотреть/Повернуться (|L)",
-	L"Здоровье: %d/%d\nЭнерг.: %d/%d\nДух: %ls",
+	L"Здоровье: %d/%d\nЭнергия.: %d/%d\nДух: %ls",
 	L"Чего?",					//this means "what?"
 	L"Продолж.",					//an abbrieviation for "Continued"
-	L"Вкл.звук для %ls.",
-	L"Выкл.звук для %ls.",
-	L"Здоровье: %d/%d\nБенз: %d/%d",
+	L"%ls может говорить.",
+	L"%ls молчит.",
+	L"Состояние: %d/%d\nБенз: %d/%d",
 	L"Выйти из машины" ,
-	L"Поменять отряд ( |S|h|i|f|t |S|p|a|c|e )",
+	L"Поменять отряд (|S|h|i|f|t |S|p|a|c|e)",
 	L"Ехать",
 	L"Н/П",						//this is an acronym for "Not Applicable."
-	L"Исп ( Рука в руке )",
-	L"Исп ( Огнестр.ор. )",
-	L"Исп ( Лезвие )",
-	L"Исп ( Взрывчатка )",
-	L"Исп ( Аптечка )",
-	L"(Поймать)",
+	L"Применить (Рукопашная)",
+	L"Применить (Оружие)",
+	L"Применить (Нож)",
+	L"Применить (Взрывчатка)",
+	L"Применить (Аптечка)",
+	L"(Ловит)",
 	L"(Перезарядить)",
 	L"(Дать)",
 	L"%ls отправлен.",
 	L"%ls прибыл.",
-	L"%ls:нет очков действия.",
+	L"%ls: нет очков действия.",
 	L"%ls недоступен.",
-	L"%ls весь в бинтах.",
-	L"%ls:бинты сняты.",
+	L"%ls: успешная перевязка.",
+	L"%ls: нет бинтов.",
 	L"Враг в секторе!",
 	L"Врага не видно.",
 	L"Не хватает очков действия.",
 	L"Никто не исп.дистанц.упр.",
 	L"Обойма опустела!",
 	L"СОЛДАТ",
-	L"РЕПТИОНЫ",
-	L"ОПОЛЧЕНИЕ",
+	L"РЕПТИОН",
+	L"ОПОЛЧЕНЕЦ",
 	L"ЖИТЕЛЬ",
-	L"Вход из сектора",
+	L"Выход из сектора",
 	L"OK",
 	L"ОТМЕНА",
 	L"Выбранный наемник",
-	L"Все наемники в отряде",
+	L"Весь отряд",
 	L"Идти в сектор",
 	L"Идти на карту",
-	L"Этот сектор отсюда покинуть нельзя.",
+	L"Этот сектор нельзя покинуть здесь.",
 	L"%ls слишком далеко.",
 	L"Короткие деревья",
 	L"Показать деревья",
@@ -1293,13 +1293,13 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"ГОЛОВА",
 	L"ТОРС",
 	L"НОГИ",
-	L"Сказать королеве то,что она хочет знать?",
+	L"Сказать королеве то, что она хочет знать?",
 	L"Отпечатки пальцев получены",
-	L"Отпечатки неверные. Оружие не действует",
+	L"Отпечатки неверные. Оружие заблокировано",
 	L"Цель захвачена",
 	L"Путь блокирован",
-	L"Положить/Взять деньги со счета",		//Help text over the $ button on the Single Merc Panel
-	L"Медпомощь никому не нужна.",
+	L"Положить/Взять деньги",		//Help text over the $ button on the Single Merc Panel
+	L"Некого лечить.",
 	L"Слом.",											// Short form of JAMMED, for small inv slots
 	L"Туда не добраться.",					// used ( now ) for when we click on a cliff
 	L"Путь блокирован. Хотите поменяться местами с этим человеком?",
@@ -1308,65 +1308,65 @@ const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
 	L"Вы согласны заплатить %ls?",
 	L"Принять бесплатное лечение?",
 	L"Согласны женить Дэррела?",
-	L"Круглая панель управления",
+	L"Ключи",
 	L"С эскортируемыми этого сделать нельзя.",
 	L"Пощадить сержанта?",
-	L"Вне досягаемости для оружия",
+	L"Вне зоны эффективного огня",
 	L"Шахтер",
-	L"Машина ходит только между сектор.",
+	L"Машина передвигается только между секторами.",
 	L"Автоперевязку сделать сейчас нельзя",
-	L"Путь для %ls блокирован",
+	L"Путь %ls блокирован",
 	L"Наемники, захваченные армией Дейдранны, томятся здесь",
-	L"Замок поражен",
+	L"Попадание в замок",
 	L"Замок разрушен",
 	L"Кто-то еще пытается воспользов.этой дверью.",
-	L"Здоровье: %d/%d\nБенз: %d/%d",
-  L"%ls не видит %ls.",  // Cannot see person trying to talk to
+	L"Состояние: %d/%d\nБенз: %d/%d",
+	L"%ls не видит %ls.", // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
 const wchar_t* pExitingSectorHelpText[] =
 {
 	//Helptext for the "Go to Sector" checkbox button, that explains what will happen when the box is checked.
-	L"После проверки соседний сектор можно сразу занять.",
-	L"После проверки вы автоматически оказываетесь в окне карты а\nвашему наемнику понадобится время на дорогу.",
+	L"Установите, чтобы сразу перейти в смежный сектор.",
+	L"Установите, чтобы выйти на карту,\nпока ваши бойцы в пути.",
 
 	//If you attempt to leave a sector when you have multiple squads in a hostile sector.
-	L"Этот сектор занят врагами и здесь оставлять наемников нельзя.\nНадо решить эту проблему перед тем как занимать другие сектора.",
+	L"Сектор занят врагами и оставлять здесь наемников нельзя.\nНадо решить эту проблему перед тем как идти в другие сектора.",
 
 	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
-	L"Выводя оставшихся наемников из этого сектора,\nучти, что соседний сектор будет занят немедленно.",
-	L"Выведя оставшихся наемников из этого сектора,\nвы автоматически перемещаетесь в окно карты\nвашему наемнику понадобится время на дорогу.",
+	L"Выведя всех наемников из сектора,\nвы автоматически перейдете в смежный сектор.",
+	L"Выведя всех наемников из сектора,\nвы автоматически выходите на карту,\nпока ваши бойцы в пути.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%ls не может покинуть этот сектор один, его надо сопроводить.",
+	L"%ls не может покинуть этот сектор без сопровождения.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	L"%ls не может покинуть сектор один-он сопровождает %ls.", //male singular
-	L"%ls не может покинуть сектор одна-она сопровождает %ls.", //female singular
-	L"%ls не может покинуть сектор один-он  сопровождает группу.", //male plural
-	L"%ls не может покинуть сектор одна-она сопровождает группу.", //female plural
+	L"%ls не может покинуть сектор один - он сопровождает %ls.", //male singular
+	L"%ls не может покинуть сектор одна - она сопровождает %ls.", //female singular
+	L"%ls не может покинуть сектор один - он сопровождает группу.", //male plural
+	L"%ls не может покинуть сектор одна - она сопровождает группу.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
-	L"Чтобы дать отряд мог пойти,\nвсе ваши наемники дожны быть в рядом.",
+	L"Для перемещения отряда\nвсе ваши наемники дожны быть рядом.",
 
 	L"", //UNUSED
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	L"После проверки %ls поедет один, и\nавтоматически попадет в уникальный отряд.",
+	L"Установите опцию, и %ls пойдет в одиночку и\nавтоматически попадет в отдельный отряд.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
-	L"После проверки выбранный вами сейчас\nотряд покинет этот сектор.",
+	L"Установите опцию, и выбранный \nотряд покинет этот сектор.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%ls не может покинуть этот сектор один, его надо сопроводить. Остальные наемники остаются пока с вами.",
+	L"%ls не может покинуть этот сектор без сопровождения. Для этого ваш отряд должен быть рядом.",
 };
 
 
@@ -1395,17 +1395,17 @@ const wchar_t* sPreStatBuildString[] =
 
 const wchar_t* sStatGainStrings[] =
 {
-	L"здор.",
-	L"подвижн.",
-	L"проворн.",
-	L"мудрость.",
-	L"медицина",
-	L"взрывн.работы.",
-	L"механика.",
-	L"меткость.",
-	L"опытность.",
-	L"сила.",
-	L"лидерство.",
+	L"здоровья.",
+	L"подвижности.",
+	L"проворности.",
+	L"мудрости.",
+	L"медицины.",
+	L"умения взрывника.",
+	L"умения механика.",
+	L"меткости.",
+	L"опыта.",
+	L"силы.",
+	L"лидерства.",
 };
 
 
@@ -1415,12 +1415,12 @@ const wchar_t* pHelicopterEtaStrings[] =
 	L" Безопасно:  ", 			// distance to travel to destination
 	L" Опасно:", 			// distance to return from destination to airport
 	L"Общ.цена: ", 		// total cost of trip by helicopter
-	L"УВП:  ", 			// ETA is an acronym for "estimated time of arrival"
-	L"В вертолете мало топлива, он вынужд.сесть на враж.территории!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
-  L"Пассажиры: ",
-  L"Выбрать высадку Всадника или Прибывающих?",
-  L"Всадник",
-  L"Прибывающие",
+	L"ОВП:  ", 			// ETA is an acronym for "estimated time of arrival"
+	L"В вертолете мало топлива, придется сесть на территории врага!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
+	L"Пассажиры: ",
+	L"Высадить Всадника или Прибывающих?",
+	L"Всадник",
+	L"Прибывающие",
 };
 
 const wchar_t* sMapLevelString[] =
@@ -1438,7 +1438,7 @@ const wchar_t* gsLoyalString[] =
 
 const wchar_t* gsUndergroundString[] =
 {
-	L"не приним.приказов идти под землей.",
+	L"не может двигаться по карте, находясь под землей.",
 };
 
 const wchar_t* gsTimeStrings[] =
@@ -1453,11 +1453,11 @@ const wchar_t* gsTimeStrings[] =
 
 const wchar_t* sFacilitiesStrings[] =
 {
-	L"Ничего",
-	L"Госпит.",
+	L"Нет",
+	L"Госпиталь",
 	L"Заводы",
 	L"Тюрьма",
-	L"Ополчен.",
+	L"База армии",
 	L"Аэропорт",
 	L"Стрельбище",		// a field for soldiers to practise their shooting skills
 };
@@ -1466,7 +1466,7 @@ const wchar_t* sFacilitiesStrings[] =
 
 const wchar_t* pMapPopUpInventoryText[] =
 {
-	L"Инвентарь",
+	L"Предметы",
 	L"Выход",
 };
 
@@ -1477,12 +1477,12 @@ const wchar_t* pwTownInfoStrings[] =
 	L"Размер",					// 0 // size of the town in sectors
 	L"", 						// blank line, required
 	L"Контроль", 					// how much of town is controlled
-	L"Ничего", 					// none of this town
+	L"Нет", 					// none of this town
 	L"Шахта города", 				// mine associated with this town
-	L"Верность",					// 5 // the loyalty level of this town
+	L"Отношение",					// 5 // the loyalty level of this town
 	L"Готовы", 					// the forces in the town trained by the player
 	L"",
-	L"Осн.оборуд.", 				// main facilities in this town
+	L"Сооружения", 				// main facilities in this town
 	L"Уровень", 					// the training level of civilians in this town
 	L"Подготовка жителей",				// 10 // state of civilian training in town
 	L"Ополчение", 					// the state of the trained civilians in the town
@@ -1495,16 +1495,16 @@ const wchar_t* pwMineStrings[] =
 	L"Шахта",						// 0
 	L"Серебро",
 	L"Золото",
-	L"Производит/день",
-	L"Производств.возм-ти",
-	L"Брошено",				// 5
-	L"Закрыто",
-	L"Выработана",
+	L"Выработка в день",
+	L"Максимум выработки",
+	L"Заброшена",				// 5
+	L"Закрыта",
+	L"Истощена",
 	L"Работает",
-	L"Статус",
+	L"Состояние",
 	L"Производительность",
 	L"Тип руды",				// 10
-	L"Город контроля",
+	L"Город контроля", //?
 	L"Отношение города",
 //	L"Работ.шахтеры",
 };
@@ -1515,9 +1515,9 @@ const wchar_t* pwMiscSectorStrings[] =
 {
 	L"Силы врага",
 	L"Сектор",
-	L"# вещей",
-	L"Неизв.",
-	L"Под контр.",
+	L"Кол-во предметов",
+	L"?",
+	L"Захвачен",
 	L"Да",
 	L"Нет",
 };
@@ -1526,18 +1526,18 @@ const wchar_t* pwMiscSectorStrings[] =
 
 const wchar_t* pMapInventoryErrorString[] =
 {
-	L"%ls недостаточно близко",	//Merc is in sector with item but not close enough
-	L"Нельзя выбрать этого.",  //MARK CARTER
+	L"%ls недостаточно близко.",	//Merc is in sector with item but not close enough
+	L"Нельзя выбрать этого бойца.",  //MARK CARTER
 	L"%ls не в секторе и не может взять эту вещь",
-	L"Во время битвы надо подбирать эти вещи вручную",
+	L"Во время битвы надо подбирать вещи вручную",
 	L"Во время битвы надо бросать вещи вручную.",
-	L"%ls не в секторе,чтобы бросить вещи.",
+	L"%ls не в секторе, чтобы бросить этот предмет.",
 };
 
 const wchar_t* pMapInventoryStrings[] =
 {
-	L"Место", 			// sector these items are in
-	L"Всего вещей", 		// total number of items in sector
+	L"Сектор", 			// sector these items are in
+	L"Всего предметов", 		// total number of items in sector
 };
 
 
@@ -1545,23 +1545,23 @@ const wchar_t* pMapInventoryStrings[] =
 
 const wchar_t* pMapScreenFastHelpTextList[] =
 {
-	L"Чтобы дать наемнику такие задания как идти в др.отряд, лечение или ремонт,выберите нужное в 'Принадлежность'",
-	L"чтобы направить наемника в другой сектор, выберите нужное в колонке 'Куда'",
-	L"Когда наемники получают приказ начать движение,компрессия позволит им это сделать.",
-	L"Левый щелчок-выбрать сектор. Еще раз левый щелчок-дать наемнику команду начать движение,правый щелчок-общая информация о секторе.",
-	L"Нажать'h' в любое время, чтобы вызвать подсказку.",
+	L"Чтобы дать наемнику задание идти в другой отряд, лечение или ремонт, щелкните в столбце 'Задание'",
+	L"Чтобы направить наемника в другой сектор, выберите место назначения в столбце 'Куда'",
+	L"После выдачи приказа движения, отряд отправится в путь как только будет выключена пауза.",
+	L"Выберите сектор левой клавишей мыши. Нажмите ее еще раз чтобы направить туда отряд, или нажмите правую чтобы посмотреть сводку по сектору.",
+	L"Нажмите 'h' чтобы вызвать подсказку.",
 	L"Проверка",
 	L"Проверка",
 	L"Проверка",
 	L"Проверка",
-	L"Пока команда не добралась до Арулько,в этом окне вам делать нечего.Когда вы укомплектуете свою команду,нажмите на кнопку Сжатие Времени в правом нижнем углу экрана.Команда доберется гораздо быстрее.",
+	L"Пока команда не добралась до Арулько, в этом окне вам делать нечего. Когда вы соберете команду бойцов, нажмите на кнопку Сжатие Времени в правом нижнем углу экрана, чтобы перейти к моменту ее высадки.",
 };
 
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =
 {
-	L"Преместить наемн.в сектор", 	// title for movement box
+	L"Переместить наемн.в сектор", 	// title for movement box
 	L"Путь", 		// done with movement menu, start plotting movement
 	L"Отмена", 		// cancel this menu
 	L"Другое",		// title for group of mercs not on squads nor in vehicles
@@ -1572,9 +1572,9 @@ const wchar_t* pUpdateMercStrings[] =
 {
 	L"Ой!:", 			// an error has occured
 	L"Контракты закончились:", 	// this pop up came up due to a merc contract ending
-	L"Наемник выполнил задание:", // this pop up....due to more than one merc finishing assignments
-	L"Наемн.снова работает:", // this pop up ....due to more than one merc waking up and returing to work
-	L"Наемники идут спать:", // this pop up ....due to more than one merc being tired and going to sleep
+	L"Бойцы выполнили задание:", // this pop up....due to more than one merc finishing assignments
+	L"Бойцы снова в строю:", // this pop up ....due to more than one merc waking up and returing to work
+	L"Бойцы идут спать:", // this pop up ....due to more than one merc being tired and going to sleep
 	L"Контракты скоро кончатся:", // this pop up came up due to a merc contract ending
 };
 
@@ -1582,25 +1582,25 @@ const wchar_t* pUpdateMercStrings[] =
 
 const wchar_t* pMapScreenBorderButtonHelpText[] =
 {
-	L"Показать Города (|W)",
-	L"Показать Шахты (|M)",
-	L"Показ.Команды и Врагов(|T)",
-	L"Показать воздушное пространство(|A)",
-	L"Показать Вещи (|I)",
-	L"Показ.ополчен.и врагов(|Z)",
+	L"Показать города (|W)",
+	L"Показать шахты (|M)",
+	L"Показать отряды и врагов (|T)",
+	L"Показать воздушное пространство (|A)",
+	L"Показать предметы (|I)",
+	L"Показать ополчение и врагов (|Z)",
 };
 
 
 const wchar_t* pMapScreenBottomFastHelp[] =
 {
 	L"Лэптоп (|L)",
-	L"Тактика(|E|s|c)",
+	L"Тактика (|E|s|c)",
 	L"Настройки (|O)",
-	L"Сжатие врем.(|+)", 	// time compress more
-	L"Сжатие врем.(|-)", 	// time compress less
-	L"Предыдущ.сообщ (|U|p)\nПредыдущ.стр. (|P|g|U|p)", 	// previous message in scrollable list
-	L"След.сообщ. (|D|o|w|n)\nСлнд.стр. (|P|g|D|n)", 	// next message in the scrollable list
-	L"Пустить/Остановить время (|S|p|a|c|e)",	// start/stop time compression
+	L"Ускорение времени (|+)", 	// time compress more
+	L"Замедление времени (|-)", 	// time compress less
+	L"Предыдущее сообщение (|U|p)\nПредыдущая страница (|P|g|U|p)", 	// previous message in scrollable list
+	L"Следующее сообщение (|D|o|w|n)\nСледующая страница (|P|g|D|n)", 	// next message in the scrollable list
+	L"Пауза/Снять с паузы (|S|p|a|c|e)",	// start/stop time compression
 };
 
 const wchar_t* pMapScreenBottomText[] =
@@ -1610,7 +1610,7 @@ const wchar_t* pMapScreenBottomText[] =
 
 const wchar_t* pMercDeadString[] =
 {
-	L"%ls мертв.",
+	L"%ls покойник.",
 };
 
 
@@ -1620,7 +1620,7 @@ const wchar_t* pDayStrings[] =
 };
 
 // the list of email sender names
-
+//CHECK with Agony and Gold ver to consistiency!!
 const wchar_t* pSenderNameList[] =
 {
 	L"Энрико",
@@ -1682,7 +1682,7 @@ const wchar_t* pSenderNameList[] =
 
 const wchar_t* pNewMailStrings[] =
 {
- L"Есть новые сообщения...",
+	L"Есть новые сообщения...",
 };
 
 
@@ -1690,8 +1690,8 @@ const wchar_t* pNewMailStrings[] =
 
 const wchar_t* pDeleteMailStrings[] =
 {
- L"Стереть сообщение?",
- L"Стереть НЕПРОЧТЕННЫЕ?",
+	L"Стереть сообщение?",
+	L"Стереть НЕПРОЧТЕННЫЕ?",
 };
 
 
@@ -1720,15 +1720,15 @@ const wchar_t* pFinanceTitle[] =
 
 const wchar_t* pFinanceSummary[] =
 {
-	L"Кредит:", 				// credit (subtract from) to player's account
-	L"Дебет:", 				// debit (add to) to player's account
+	L"Расход:", 				// credit (subtract from) to player's account
+	L"Приход:", 				// debit (add to) to player's account
+	L"Прибыль за вчерашний день:",
+	L"Другие вклады за вчерашний день:",
 	L"Приход за вчерашний день:",
-	L"Депозиты за вчерашн.день:",
-	L"Дебет за вчерашн. день:",
 	L"Баланс на конец дня:",
 	L"Приход за сегодня:",
-	L"Депозиты за сегодня:",
-	L"Дебет на сегодня:",
+	L"Другие вклады за сегодня:",
+	L"Приход на сегодня:",
 	L"Текущий баланс:",
 	L"Предполагаемый приход:",
 	L"Предполагаемый баланс:", 		// projected balance for player for tommorow
@@ -1739,10 +1739,10 @@ const wchar_t* pFinanceSummary[] =
 
 const wchar_t* pFinanceHeaders[] =
 {
-  L"Day", 					// the day column
-	L"Кредит", 				// the credits column
-	L"Дебет",				// the debits column
-	L"Перевод", 			// transaction type - see TransactionText below
+	L"День", 					// the day column
+	L"Приход", 				// the credits column
+	L"Расход",				// the debits column
+	L"Операция", 			// transaction type - see TransactionText below
 	L"Баланс", 				// balance at this point in time
 	L"Стр.", 				// page number
 	L"Дн.", 				// the day(s) of transactions this page displays
@@ -1752,33 +1752,33 @@ const wchar_t* pFinanceHeaders[] =
 const wchar_t* pTransactionText[] =
 {
 	L"Интерес",			// interest the player has accumulated so far
-	L"Анонимные вклады",
+	L"Анонимный вклад",
 	L"Пеня за перевод",
 	L"Нанят", 				// Merc was hired
-	L"Торговля Бобби Рэя", 		// Bobby Ray is the name of an arms dealer
+	L"Покупки у Бобби Рэя", 		// Bobby Ray is the name of an arms dealer
 	L"Зарегистр.счета в M.E.R.C.",
 	L"Мед Депозит: %ls", 		// medical deposit for merc
-	L"IMP анализ", 		// IMP is the acronym for International Mercenary Profiling
+	L"Профилирование в IMP", 		// IMP is the acronym for International Mercenary Profiling
 	L"Куплена страховка:%ls",
 	L"Понижена страховка: %ls",
 	L"Расширена страховка: %ls", 				// johnny contract extended
 	L"Отменена страховка: %ls",
 	L"Страховой запрос: %ls", 		// insurance claim for merc
-	L"в день", 				// merc's contract extended for a day
+	L"на день", 				// merc's contract extended for a day
 	L"7 дней", 				// merc's contract extended for a week
 	L"14 дней", 				// ... for 2 weeks
 	L"Доход с шахт",
 	L"", //String nuked
-	L"Торговля цветами",
+	L"Покупка цветов",
 	L"Полная оплата медуслуг.: %ls",
 	L"Частичн.оплата медуслуг: %ls",
 	L"Медуслуги не оплачены: %ls",
-	L"Выплаты: %ls",		// %ls is the name of the npc being paid
+	L"Выплаты %ls",		// %ls is the name of the npc being paid
 	L"Перевод средств на имя %ls", 			// transfer funds to a merc
 	L"Перевод средств от %ls", 		// transfer funds from a merc
-	L"Стоим.экипировки ополч: %ls", // initial cost to equip a town's militia
+	L"Снаряжение ополчения: %ls", // initial cost to equip a town's militia
 	L"Покупки у %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	L"%ls положил деньги.",
+	L"%ls: денежный вклад.",
 };
 
 const wchar_t* pTransactionAlternateText[] =
@@ -1799,7 +1799,7 @@ const wchar_t* pSkyriderText[] =
 	L"",//unused
 	L"",//unused
 	L"Всадник готов к полету.", // Skyrider was grounded but has been freed
-	L"У Всадника нет пассажиров.Если вы хотите отправить наемников в этот сектор, выберите ПРИНАДЛ. и МАШИНА"
+	L"У Всадника нет пассажиров. Если хотите отправить наемников в этот сектор, выберите ЗАДАНИЕ и МАШИНА"
 };
 
 
@@ -1819,8 +1819,8 @@ const wchar_t* pMoralStrings[] =
 
 const wchar_t* pLeftEquipmentString[] =
 {
-	L"%ls:экипировку можно получить в Омерте( A9 ).",
-	L"%ls:экипировку можно получить в Драссене( B13 ).",
+	L"%ls: снаряжение оставлено в Омерте (A9).",
+	L"%ls: снаряжение оставлено в Драссене (B13).",
 };
 
 // Status that appears on the Map Screen
@@ -1837,66 +1837,66 @@ const wchar_t* pMapScreenStatusStrings[] =
 
 const wchar_t* pMapScreenPrevNextCharButtonHelpText[] =
 {
-	L"Пред.наемник (|L|e|f|t)", 			// previous merc in the list
-	L"След.наемник (|R|i|g|h|t)", 				// next merc in the list
+	L"Предыдущий наемник (|L|e|f|t)", 			// previous merc in the list
+	L"Следующий наемник (|R|i|g|h|t)", 				// next merc in the list
 };
 
 
 const wchar_t* pEtaString[] =
 {
-	L"УВП:", 				// eta is an acronym for Estimated Time of Arrival
+	L"ОВП:", 				// eta is an acronym for Estimated Time of Arrival
 };
 
 const wchar_t* pTrashItemText[] =
 {
-	L"Вы потеряете это навсегда.Выполнить?", 	// do you want to continue and lose the item forever
-	L"Это,кажется,и вправду ВАЖНАЯ вещь.Вы ВПОЛНЕ уверены, что хотите выбросить ее?", // does the user REALLY want to trash this item
+	L"Вы потеряете это навсегда. Уверены?", 	// do you want to continue and lose the item forever
+	L"Похоже, это действительно ВАЖНАЯ вещь. Вы ТОЧНО уверены, что хотите ее выбросить?", // does the user REALLY want to trash this item
 };
 
 
 const wchar_t* pMapErrorString[] =
 {
-	L"Отряд не может двигаться со спящим наемн.",
+	L"Отряд не может двигаться пока бойцы спят.",
 
 //1-5
-	L"Сперва выведите отряд на землю.",
+	L"Сперва выведите отряд на поверхность.",
 	L"Приказ двигаться? Тут же кругом враги!",
-	L"Наемн.должен быть назначен в сектор или машину,чтобы ехать.",
-	L"У вас в команде еще никого нет",	// you have no members, can't do anything
-	L"Наемн.не может выполнить.",		// merc can't comply with your order
+	L"Боец должен быть членом отряда или пассажиром, чтобы путешествовать.",
+	L"У вас в команде пока никого нет",	// you have no members, can't do anything
+	L"Боец не может выполнить приказ.",		// merc can't comply with your order
 //6-10
-	L"чтобы двигаться,нужен эскорт.Обеспечьте его эскортом", // merc can't move unescorted .. for a male
-	L"чтобы двигаться, нужен эскорт.Обеспечьте ее эскортом.", // for a female
+	L" нуждается в сопровождении. Назначьте его в отряд.", // merc can't move unescorted .. for a male
+	L" нуждается в сопровождении. Назначьте ее в отряд.", // for a female
 	L"Наемник еще не прибыл в Арулько!",
-	L"Кажется,сначала нужно уладить все проблемы с контрактом.",
+	L"Кажется, сначала нужно уладить все проблемы с контрактом.",
 	L"",
 //11-15
 	L"Приказ двигаться? Тут же битва идет!",
-	L"Вы наткнулись на засаду Кошки-Убийцы в секторе %ls!",
+	L"Вы попали в засаду кошек-убийц в секторе %ls!",
 	L"Вы попали в логово Кошек-Убийц в секторе I16!",
 	L"",
-	L"ПВО в %ls занята врагом.",
+	L"ПВО в %ls захвачена врагом.",
 //16-20
-	L"Шахта в %ls взята. Ваш ежедневный доход упал до %ls в день.",
+	L"%ls: шахта захвачена. Ваш ежедневный доход упал до %ls в день.",
 	L"Противник взял сектор %ls, не встретив сопротивления.",
-	L"Как минимум одного из ваших наемн.нельзя назн.на это задание.",
+	L"Как минимум одного из ваших бойцов нельзя назначить на это задание.",
 	L"%ls нельзя присоед.к %ls. Уже полон",
 	L"%ls нельзя присоед.к %ls. Слишком далеко.",
 //21-25
-	L"Шахта в %ls захвачена войсками Дейдранны!",
+	L"%ls: шахта захвачена войсками Дейдранны!",
 	L"Войска Дейдранны только что захватили ПВО в %ls",
 	L"Войска Дейдранны только что захватили %ls",
 	L"Войска Дейдранны только что были замечены в %ls.",
-	L"Войска Дейдраннытолько что захватили %ls.",
+	L"Войска Дейдранны только что захватили %ls.",
 //26-30
 	L"Как минимум один из ваших наемников невозможно уложить спать.",
 	L"Как минимум одного из ваших наемников невозможно разбудить.",
-	L"Ополчение не придет, пока не закончится его обучение.",
-	L"%ls сейчас не может принять приказ двигаться.",
-	L"Ополчение, которое находится вне города,нельзя переместить в другой сектор.",
+	L"Ополчение небоеспопобно, пока не закончится его обучение.",
+	L"%ls пока не может передвигаться.",
+	L"Ополчение, которое находится вне города, нельзя переместить в другой сектор.",
 //31-35
 	L"Нельзя держать ополчение в %ls.",
-	L"Пустая машина не может двигаться!",
+	L"Машине нужен водитель!",
 	L"%ls слишком изранен, чтобы идти!",
 	L"Сперва надо покинуть музей!",
 	L"%ls мертв!",
@@ -1904,41 +1904,41 @@ const wchar_t* pMapErrorString[] =
 	L"%ls не может перейти к %ls: он в движении",
 	L"%ls не может сесть в машину так",
 	L"%ls не может присоед. к %ls",
-	L"Нельзя сжимать время пока нет наемников!",
+	L"Нельзя ускорять время пока нет наемников!",
 	L"Эта машина может ездить только по дорогам!",
 //41-45
 	L"Нельзя переназначать движущихся наемников",
 	L"В машине кончился бензин!",
-	L"%ls слишком устал,чтобы передвигаться.",
+	L"Усталость не дает %ls передвигаться.",
 	L"Никто из сидящих в машине не может управлять ею.",
-	L"Сейчас один/неск.наемн.этого отряда не могут двигаться.",
+	L"Один или больше бойцов этого отряда сейчас не могут перемещаться.",
 //46-50
 	L"Сейчас один/неск.ДРУГИХ наемн.не могут двигаться.",
 	L"Машина слишком побита!",
-	L"Тренировать ополчение могут только 2 наемн.в секторе",
-	L"Робот не может двигаться без управляющего.Поместите их в один отряд.",
+	L"Тренировать ополчение может не больше 2 бойцов на сектор.",
+	L"Робот не может двигаться без оператора. Поместите их в один отряд.",
 };
 
 
 // help text used during strategic route plotting
 const wchar_t* pMapPlotStrings[] =
 {
-	L"Щелкните по месту,чтобы подтвердить конечное направление,или щелкните по другому сектору.",
-	L"Направление подтверждено.",
-	L"Место назн.не изменилось.",
-	L"Направление отменено.",
-	L"Путь укорочен.",
+	L"Щелкните на секторе еще раз для отправки туда отряда, или щелкните по другому сектору для прокладки маршрута.",
+	L"Маршрут движения проложен.",
+	L"Маршрут не изменился.",
+	L"Маршрут отменен.",
+	L"Маршрут укорочен.",
 };
 
 
 // help text used when moving the merc arrival sector
 const wchar_t* pBullseyeStrings[] =
 {
-	L"Кликнуть на тот сектор, куда вы хотите отправить наемника.",
-	L"OK.Прибывающий наемник будет высажен в %ls",
-	L"Наемнику нельзя туда лететь,воздушн.путь небезопасен!",
-	L"Отмена. Сектор прибытия тот же",
-	L"Возд.пространство над %ls небезопасно!Сектор прибытия перемещен в %ls.",
+	L"Выберите сектор, куда хотите высаживать прибывающих бойцов.",
+	L"Теперь прибывающие наемники будут высаживаться в %ls",
+	L"Сюда нельзя лететь, воздух контролирует враг!",
+	L"Отмена. Сектор прибытия тот же.",
+	L"Полет над %ls опасен!Сектор прибытия перемещен в %ls.",
 };
 
 
@@ -1946,9 +1946,9 @@ const wchar_t* pBullseyeStrings[] =
 
 const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 {
-	L"Просмотр инвентаря(|E|n|t|e|r)",
-	L"Выкинуть вещь",
-	L"Выйти из инвентаря(|E|n|t|e|r)",
+	L"Просмотр инвентаря (|E|n|t|e|r)",
+	L"Выкинуть предмет",
+	L"Выйти из инвентаря (|E|n|t|e|r)",
 };
 
 
@@ -1982,9 +1982,9 @@ const wchar_t* pImpPopUpStrings[] =
 	L"Неверный код авторизации",
 	L"Вы уверены, что хотите начать процесс записи профайла заново?",
 	L"Введите полное имя и пол",
-	L"Предварит.анализ ваших финансов показал, что у вас недостаточно денег на анализ.",
-  L"Сейчас вы не можете выбрать это.",
-	L"Чтобы закончить анализ,нужно иметь место еще хотя бы для одного члена команды.",
+	L"Изучение вашего счета показало, что у вас недостаточно денег на профилирование.",
+	L"Сейчас вы не можете выбрать это.",
+	L"Чтобы закончить анализ, нужно иметь место еще хотя бы для одного члена команды.",
 	L"Анализ уже завершен.",
 };
 
@@ -2001,7 +2001,7 @@ const wchar_t* pImpButtonText[] =
 	L"Голос %d", 			// the voice selection
 	L"Готово", 			// done profiling
 	L"Заново", 		// start over profiling
-	L"Да,выбрать выделенный ответ.",
+	L"Да, выбрать выделенный ответ.",
 	L"Да",
 	L"Нет",
 	L"Закончить", 			// finished answering questions
@@ -2012,10 +2012,10 @@ const wchar_t* pImpButtonText[] =
 	L"ДА.",
 	L"НЕТ",
 	L"Назад", 			// back one page
-	L"Отменить", 			// cancel selection
-	L"Да,уверен.",
-	L"Нет,просмотреть еще раз.",
-	L"Зарегистр.", 			// the IMP site registry..when name and gender is selected
+	L"Отмена", 			// cancel selection
+	L"Да, уверен.",
+	L"Нет, просмотреть еще раз.",
+	L"Регистрация", 			// the IMP site registry..when name and gender is selected
 	L"Анализ", 			// analyzing your profile results
 	L"OK",
 	L"Голос",
@@ -2023,20 +2023,20 @@ const wchar_t* pImpButtonText[] =
 
 const wchar_t* pExtraIMPStrings[] =
 {
-	L"Чтобы начать профилирование, выберите Личность.",
-	L"Когда Личность завершена, выберите ваши Свойства.",
-	L"Свойства приписаны,переходите к Портрету.",
-	L"Чтобы завершить процесс,выберите голос,который вам подходит."
+	L"Чтобы начать профилирование, протестируйте свои личные качества.",
+	L"Личные качества оценены, переходите к свойствам.",
+	L"Свойства зафиксированы, выберите наиболее подходящее вам лицо.",
+	L"Чтобы завершить процесс, выберите подходящий голос."
 };
 
 const wchar_t* pFilesTitle[] =
 {
-  L"Просмотр файлов",
+	L"Просмотр файлов",
 };
 
 const wchar_t* pFilesSenderList[] =
 {
-  L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
 	L"Перехват #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
 	L"Перехват #2",	   // second intercept file
 	L"Перехват #3",			 // third intercept file
@@ -2049,7 +2049,7 @@ const wchar_t* pFilesSenderList[] =
 
 const wchar_t* pHistoryTitle[] =
 {
-	L"История",
+	L"События",
 };
 
 const wchar_t* pHistoryHeaders[] =
@@ -2075,7 +2075,7 @@ const wchar_t* pHistoryStrings[] =
 	L"%ls нанят из M.E.R.C.", 									// merc was hired from the aim site
 	L"%ls умер.", 															// merc was killed
 	L"Зарегистр.счета в M.E.R.C.",								// paid outstanding bills at MERC
-	L"Принято назначение от Энрико Сальвадори",
+	L"Принято назначение от Энрико Чивалдори",
 	//6-10
 	L"IMP профайл сгенерирован",
 	L"Подписан страховой контракт для %ls.", 				// insurance contract purchased
@@ -2090,14 +2090,14 @@ const wchar_t* pHistoryStrings[] =
 	L"начало.", 															// a particular quest started
 	//16-20
 	L"завершен.",
-	L"Разговор с начальн.шахт в 						 s",									// talked to head miner of town
+	L"Разговор с начальником шахт в %ls",									// talked to head miner of town
 	L"Освобожден %ls",
 	L"Был использован обман",
 	L"Пища должна быть в Омерте до завтра",
 	//21-25
 	L"%ls покинула команду и вышла замуж за Дэрила Хика",
-	L"%ls:срок контракта истек.",
-	L"%ls нанят.",
+	L"%ls: срок контракта истек.",
+	L"%ls теперь в команде.",
 	L"Энрико жалуется на отсуствие прогресса",
 	L"Битва выиграна",
 	//26-30
@@ -2108,10 +2108,10 @@ const wchar_t* pHistoryStrings[] =
 	L"Получил сведения о тюрьме Тикса.",
 	//31-35
 	L"Услышал о секретном военном заводе Орта.",
-	L"Ученый с Орты помог с ракетным ружьем.",
+	L"Ученый из Орты помог с ракетным ружьем.",
 	L"Дейдранна нашла применение трупам.",
 	L"Франк говорил о боях в Сан Моне.",
-	L"Пациент думает,что он что-то видел в шахтах.",
+	L"Пациент думает, что он что-то видел в шахтах.",
 	//36-40
 	L"Встретил какого-то Девина - торгует взрывчаткой.",
 	L"Столкнулся со знаменитым Майком!",
@@ -2176,7 +2176,7 @@ const wchar_t* pLaptopIcons[] =
 	L"Почта",
 	L"Сеть",
 	L"Финансы",
-	L"Кадры",
+	L"Команда",
 	L"Журнал",
 	L"Файлы",
 	L"Выключить",
@@ -2227,7 +2227,7 @@ const wchar_t* pErrorStrings[] =
 
 const wchar_t* pPersonnelString[] =
 {
-	L"Наемн:", 			// mercs we have
+	L"Бойцы:", 			// mercs we have
 };
 
 
@@ -2259,7 +2259,7 @@ const wchar_t* pWebPagesTitles[] =
 	L"Бобби Рэй - Оруж.",
 	L"Бобби Рэй - Броня",
 	L"Бобби Рэй - разное",							//misc is an abbreviation for miscellaneous
-	L"Бобби Рэй - Б.У.",
+	L"Бобби Рэй - Б/У",
 	L"Бобби Рэй - Бланк",
 	L"I.M.P.",
 	L"I.M.P.",
@@ -2271,7 +2271,7 @@ const wchar_t* pWebPagesTitles[] =
 	L"Информация",
 	L"Контракт",
 	L"Комментарии",
-	L"Морг Макгилликути",
+	L"Морг Макгилликати",
 	L"",
 	L"URL не найден.",
 	L"Бобби Рэй - Последние поступл.",//@@@3 Translate new text
@@ -2282,7 +2282,7 @@ const wchar_t* pWebPagesTitles[] =
 const wchar_t* pShowBookmarkString[] =
 {
 	L"Sir-Help",
-	L"Закладки:щелкните еще раз по Web.",
+	L"Закладки: щелкните еще раз по кнопке Сеть.",
 };
 
 const wchar_t* pLaptopTitles[] =
@@ -2309,7 +2309,7 @@ const wchar_t* pPersonnelDepartedStateStrings[] =
 const wchar_t* pPersonelTeamStrings[] =
 {
 	L"Текущий отряд",
-	L"Отправления",
+	L"Убытие",
 	L"Расходы/день:",
 	L"Наиб.расход:",
 	L"Наим.расход:",
@@ -2415,9 +2415,9 @@ const wchar_t* pUpdatePanelButtons[] =
 const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
 {
 	L"В этом секторе вам нанесли поражение!",
-	L"Враг, не испытывая угрызений совести, пожрет всех до единого!",
-	L"Член вашей команды захвачен (он без сознания)!",
-	L"Член вашей команды захвачен в плен врагом.",
+	L"Враг, без тени сожаления, пожрет всех до единого!",
+	L"Члены вашей команды захвачены (без сознания)!",
+	L"Члены вашей команды захвачены в плен врагом.",
 };
 
 
@@ -2483,14 +2483,14 @@ const wchar_t* MercInfo[] =
 	L"Пред.",
 	L"Нанять",
 	L"Далее",
-	L"Дополн.информ.",
+	L"Доп. информация",
 	L"На гл.страницу",
 	L"Нанят",
 	L"Зарплата:",
 	L"в день   .",
 	L"Мертвец",
 
-	L"Похоже,вы увлеклись набором наемников.Ваш предел-18 чел.",
+	L"Похоже, вы увлеклись набором наемников. Ваш предел - 18 чел.",
 	L"Недоступно",
 };
 
@@ -2525,11 +2525,11 @@ const wchar_t* MercHomePageText[] =
 
 const wchar_t* sFuneralString[] =
 {
-	L"Морг Макгилликути:скорбим вместе с семьями усопших с 1983.",
-	L"Директор по похоронам и бывший наемник А.I.М Мюррэй \"Попс\" Макгилликати-специалист по части похорон.",
-	L"Всю жизнь Попса сопровождали смерть и утраты,поэтому он как никто познал их тяжесть.",
-	L"Морг Мак Гилликути предлагает широкий спектр похоронных услуг,от жилетки,в которую можно поплакать,до восстановления сильно поврежденных останков.",
-	L"Доверьтесь моргу Мак Гилликути, и ваши родственники почиют в мире.",
+	L"Морг Макгилликати: скорбим вместе с семьями усопших с 1983.",
+	L"Директор по похоронам и бывший наемник А.I.М Мюррэй \"Папаша\" Макгилликати - специалист по части похорон.",
+	L"Всю жизнь Папашу сопровождали смерть и утраты, поэтому он, как никто, познал их тяжесть.",
+	L"Морг Макгилликати предлагает широкий спектр похоронных услуг, от жилетки, в которую можно поплакать, до восстановления сильно поврежденных останков.",
+	L"Доверьтесь похоронному агенству Макгилликати, и ваши родственники почиют в мире.",
 
 	// Text for the various links available at the bottom of the page
 	L"ПОСЛАТЬ ЦВЕТЫ",
@@ -2720,11 +2720,11 @@ const wchar_t* BobbyRText[] =
 
 	// A popup that tells the user that they are trying to order more items then the store has in stock
 
-	L"Извините.Этот товар закончился.Попробуйте заказать его позже.",
+	L"Извините. Этот товар закончился. Попробуйте заказать его позже.",
 
 	//A popup that tells the user that the store is temporarily sold out
 
-	L"Извините,но все товары этого типа закончились.",
+	L"Извините, но все товары этого типа закончились.",
 
 };
 
@@ -2735,20 +2735,20 @@ const wchar_t* BobbyRaysFrontText[] =
 {
 	//Details on the web site
 
-	L"Здесь вы можете приобрести последние новинки производства оружия и сопутствующих товаров",
+	L"Здесь вы можете приобрести последние новинки оружия и боеприпасов",
 	L"Мы можем предложить вам все,что нужно для взрывных работ",
-	L"Б.У.",
+	L"Б/У",
 
 	//Text for the various links to the sub pages
 
 	L"Разное",
-	L"ПИСТОЛЕТЫ",
+	L"ОРУЖИЕ",
 	L"АМУНИЦИЯ",		//5
 	L"БРОНЯ",
 
 	//Details on the web site
 
-	L"Если мы этого не продаем, вам это взять неоткуда!",
+	L"Нет у нас - нет нигде!",
 	L"В разработке",
 };
 
@@ -2769,7 +2769,7 @@ const wchar_t* AimSortText[] =
 	L"Опытность",
 	L"Меткость",
 	L"Медицина",
-	L"Взрывн.раб.",
+	L"Взрывчатка",
 	L"Механика",
 
 	//Text of the links to other AIM pages
@@ -2780,8 +2780,8 @@ const wchar_t* AimSortText[] =
 
 	// text to display how the entries will be sorted
 
-	L"По возраст.",
-	L"По убыв."
+	L"по возрастанию",
+	L"по убыванию   "
 };
 
 
@@ -2792,12 +2792,12 @@ const wchar_t* AimPolicyText[] =
 {
 	// The text on the buttons at the bottom of the page
 
-	L"Пред.стр.",
-	L"Гл. стр.AIM",
+	L"Назад",
+	L"Главная",
 	L"Правила",
-	L"След.стр.",
+	L"Дальше",
 	L"Отвергнуть",
-	L"Согл."
+	L"Принять"
 };
 
 
@@ -2810,9 +2810,9 @@ const wchar_t* AimPolicyText[] =
 const wchar_t* AimMemberText[] =
 {
 	L"Левый щелчок",
-	L"контакт с наемн.",
+	L"связаться",
 	L"Правый щелчок",
-	L"индекс фото.",
+	L"назад к фото",
 };
 
 //Aim Member.c
@@ -2845,14 +2845,14 @@ const wchar_t* CharacterInfo[] =
 	// text for the buttons that either go to the previous merc,
 	// start talking to the merc, or go to the next merc
 
-	L"Пред.",
-	L"Контакт",
-	L"След.",
+	L"<<<<",
+	L"Связь",
+	L">>>>",
 
-	L"Дополнит.инф.",				// Title for the additional info for the merc's bio
-	L"Действ.члены",		//20		// Title of the page
-	L"Стоим.оборудования:",				// Displays the optional gear cost
-	L"Необходимый мед.депозит",			// If the merc required a medical deposit, this is displayed
+	L"Доп. информация",				// Title for the additional info for the merc's bio
+	L"Действительные члены",		//20		// Title of the page
+	L"Цена снаряжения:",				// Displays the optional gear cost
+	L"медицинская страховка",			// If the merc required a medical deposit, this is displayed
 };
 
 
@@ -2873,21 +2873,21 @@ const wchar_t* VideoConfercingText[] =
 
 	//Text on the buttons to determine if you want the merc to come with the equipment
 
-	L"Нет экипировки",
-	L"Купить экипир.",
+	L"Без снаряжения",
+	L"Со снаряжением",
 
 	// Text on the Buttons
 
-	L"ПЕРЕВЕСТИ ФОНДЫ",			// to actually hire the merc
+	L"ОПЛАТИТЬ",			// to actually hire the merc
 	L"ОТМЕНА",				// go back to the previous menu
 	L"НАНЯТЬ",				// go to menu in which you can hire the merc
-	L"ПРЕКР.РАЗГОВОР",				// stops talking with the merc
+	L"ОТБОЙ",				// stops talking with the merc
 	L"OK",
-	L"ОСТАВИТЬ СООБЩ.",			// if the merc is not there, you can leave a message
+	L"СООБЩЕНИЕ",			// if the merc is not there, you can leave a message
 
 	//Text on the top of the video conference popup
 
-	L"Видеоконференция с",
+	L"Видеоконференция, абонент",
 	L"Соединение. . .",
 
 	L"с мед.депоз."			// Displays if you are hiring the merc with the medical deposit
@@ -2902,9 +2902,9 @@ const wchar_t* VideoConfercingText[] =
 
 const wchar_t* AimPopUpText[] =
 {
-	L"ПЕРЕВОД ФОНДОВ ЗАВЕРШЕН УСПЕШНО",	// You hired the merc
-	L"НЕЛЬЗЯ ПЕРЕВЕСТИ ФОНДЫ",		// Player doesn't have enough money, message 1
-	L"НЕДОСТАТОЧНО СРЕДСТВ",				// Player doesn't have enough money, message 2
+	L"ОПЛАТА УСПЕШНО ЗАВЕРШЕНА",	// You hired the merc
+	L"ОШИБКА! НЕТ",		// Player doesn't have enough money, message 1
+	L"СРЕДСТВ НА СЧЕТУ!",				// Player doesn't have enough money, message 2
 
 	// if the merc is not available, one of the following is displayed over the merc's face
 
@@ -2914,10 +2914,10 @@ const wchar_t* AimPopUpText[] =
 
 	//If you try to hire more mercs than game can support
 
-	L"У вас уже набрано 18 наемников-полная команда.",
+	L"У вас уже набрано 18 наемников - полная команда.",
 
-	L"Сообщение",
-	L"Сообщ. оставлено",
+	L"Автоответ.",
+	L"Сообщение записано",
 };
 
 
@@ -2925,7 +2925,7 @@ const wchar_t* AimPopUpText[] =
 
 const wchar_t* AimLinkText[] =
 {
-	L"Линки A.I.M.",	//The title of the AIM links page
+	L"Ссылки A.I.M.",	//The title of the AIM links page
 };
 
 
@@ -2940,10 +2940,10 @@ const wchar_t* AimHistoryText[] =
 
 	// Text on the buttons at the bottom of the page
 
-	L"Пред.стр.",
-	L"Гл.стр.",
+	L"Назад",
+	L"Главная",
 	L"История A.I.M.", //$$
-	L"След.стр."
+	L"Дальше"
 };
 
 
@@ -2955,24 +2955,24 @@ const wchar_t* AimFiText[] =
 {
 	// displays the way in which the mercs were sorted
 
-	L"Цена",
-	L"Опытность",
-	L"Меткость",
-	L"Медицина",
-	L"Взрывн.раб.",
-	L"Механика",
+	L"цены",
+	L"опытности",
+	L"меткости",
+	L"медицины",
+	L"саперных навыков",
+	L"навыков механика",
 
 	// The title of the page, the above text gets added at the end of this text
 
-	L"Члены A.I.M.:сортировка по возраст. %ls",
-	L"Члены A.I.M.:сортировка по убыв. %ls",
+	L"Список наемников по возрастанию %ls",
+	L"Список наемников по убыванию %ls",
 
 	// Instructions to the players on what to do
 
 	L"Левый щелчок",
-	L"Выбрать наемн",			//10
+	L"Выбор наемника",			//10
 	L"Правый щелчок",
-	L"Упорядочить выбор",
+	L"Настройка сортировки",
 
 	// Gets displayed on top of the merc's portrait if they are...
 
@@ -3010,17 +3010,17 @@ const wchar_t* AimScreenText[] =
 {
 	// AIM disclaimers
 
-	L"A.I.M. и логотип A.I.M.-зарегистрированные во многих странах торговые марки.",
+	L"A.I.M. и логотип A.I.M. - зарегистрированные во многих странах торговые марки.",
 	L"Поэтому даже и не думайте нас копировать.",
-	L"Копирайт 1998-1999 A.I.M.,Ltd.Все права защищены.",
+	L"Копирайт 1998-1999 A.I.M.,Ltd. Все права защищены.",
 
 	//Text for an advertisement that gets displayed on the AIM page
 
 	L"Объединенные цветочные службы",
-	L"\"Мы сбрасываем в любои месте\"",				//10
+	L"\"Доставка воздухом куда угодно\"",				//10
 	L"Сделай как надо",
 	L"... первый раз",
-	L"Если у нас нет такого пистолета,он вам и не нужен.",
+	L"Если у нас чего-то нет - оно вам и не нужно.",
 };
 
 
@@ -3029,7 +3029,7 @@ const wchar_t* AimScreenText[] =
 const wchar_t* AimBottomMenuText[] =
 {
 	//Text for the links at the bottom of all AIM pages
-	L"Гл.стр.",
+	L"Главная",
 	L"Члены",
 	L"История", //$$
 	L"Принципы",
@@ -3085,7 +3085,7 @@ const wchar_t* zOptionsText[] =
 	L"Готово",
 
 	//Text above the slider bars
-	L"Эффекты",
+	L"Звуки",
 	L"Речь",
 	L"Музыка",
 
@@ -3131,7 +3131,7 @@ const wchar_t* zSaveLoadText[] =
 	L"Попытка загрузки старой версии. Обновить автоматически и загрузить?",
 #endif
 
-	L"Вы уверены,что хотите записать сох.игру поверх #%d?",
+	L"Вы уверены, что хотите перезаписать игру #%d?",
 	L"Вы хотите загрузить игру из ячейки #",
 
 
@@ -3155,33 +3155,33 @@ const wchar_t* zSaveLoadText[] =
 const wchar_t* zMarksMapScreenText[] =
 {
 	L"Уровень карты",
-	L"У вас нет ополчения.Надо подготовить горожан,и у вас будет городское ополчение.",
+	L"У вас нет ополчения, пока вы не подготовили его из гражданского населения.",
 	L"Доход в день",
-	L"У наемн.есть страховка",
+	L"У наемника есть страховка",
 	L"%ls не устал.",
 	L"%ls движется и спать не может",
-	L"%ls слишком устал,попробуйте позже.",
+	L"%ls слишком устал, попробуйте позже.",
 	L"%ls за рулем.",
-	L"Отряд не может двигаться,когда один наемн.спит.",
+	L"Отряд не может двигаться, когда кто-то из бойцов спит.",
 
 	// stuff for contracts
 	L"Вы можете платить по контракту,но у вас нет денег на страховые премии этому наемн.",
-	L"%ls:страховая премия составит %ls за %d дополн.дней.Хотите платить?",
-	L"Инвентарь Сектора",
-	L"У наемн.есть мед.депозит.",
+	L"%ls: страховая премия составит %ls за %d дополн.дней.Хотите платить?",
+	L"Предметы в секторе",
+	L"У наемника есть страховка.",
 
 	// other items
 	L"Медики", // people acting a field medics and bandaging wounded mercs
 	L"Пациенты", // people who are being bandaged by a medic
 	L"Готово", // Continue on with the game after autobandage is complete
 	L"Стоп", // Stop autobandaging of patients by medics now
-	L"Извините.Эта опция невозможна,т.к.это демо-версия.", // informs player this option/button has been disabled in the demo
-	L"%ls:нет ремонтных принадл.",
-	L"%ls:нет медицинских принадл.",
-	L"Недостаточно людей,желающих пройти подготовку.",
-	L"%ls:много ополченцев.",
-	L"У наемн.конечн.контракт.",
-  L"Контракт наемн.не застрахован",
+	L"Извините. В демо версии это отключено.", // informs player this option/button has been disabled in the demo
+	L"%ls: нет инструментов для ремонта.",
+	L"%ls: нет медицинских инструментов.",
+	L"Недостаточно желающих пройти подготовку.",
+	L"%ls: слишком много ополченцев.",
+	L"У наемника ограниченный по времени контракт.",
+	L"У наемника нет страховки.",
 };
 
 
@@ -3193,16 +3193,16 @@ const wchar_t* pLandMarkInSectorString[] =
 // confirm the player wants to pay X dollars to build a militia force in town
 const wchar_t* pMilitiaConfirmStrings[] =
 {
-	L"Тренировка отряда город.ополч.будет стоить $", // telling player how much it will cost
+	L"Тренировка отряда ополчения будет стоить $", // telling player how much it will cost
 	L"Одобрить платеж?", // asking player if they wish to pay the amount requested
-	L"У вас нет денег на это.", // telling the player they can't afford to train this town
+	L"У вас нет столько денег.", // telling the player they can't afford to train this town
 	L"Продолжить тренировку ополчения в %ls (%ls %d)?", // continue training this town?
 	L"Стоит $", // the cost in dollars to train militia
 	L"( Д/Н )",   // abbreviated yes/no
 	L"",	// unused
-	L"Тренировка отряда город.ополч.в секторе %d будет стоить $ %d. %ls", // cost to train sveral sectors at once
-	L"У вас нет $%d на тренировку город.ополчения здесь.",
-	L"%ls:нужно %d процентов верности тебе,чтобы продолжить тренировку ополчения.",
+	L"Тренировка ополчения в %d секторах будет стоить $ %d. %ls", // cost to train sveral sectors at once
+	L"У вас нет $%d на тренировку здесь ополчения.",
+	L"%ls: нужно %d% отношения к вам, чтобы продолжить тренировку ополчения.",
 	L"В %ls больше нельзя тренировать ополчение.",
 };
 
@@ -3259,17 +3259,17 @@ const wchar_t* gpDemoString[] =
 
 const wchar_t* gpDemoIntroString[] =
 {
-	L"Сейчас вы узнаете,что такое настоящая стратегия,игра и битва:",
+	L"Сейчас вы узнаете, что такое настоящая стратегия, тактика и ролевая игра:",
 	//Point 1 (uses one string)
-	L"Вы вашем распоряжении команда наемников с характером(никакой скуки и занудства).",
+	L"Управляйте командой наемников, каждый из которых - личность (никакого пушечного мяса).",
 	//Point 2 (uses one string)
-	L"Посмотрите, какой широкий спектр маневров,от бега до ползания,прыжки,карабкание,бой плечом к плечу и еще...",
+	L"Испробуйте широкий спектр тактических маневров, от бега до ползания, от прыжков до лазания по крышам, рукопашная и конечно...",
 	//Point 3 (uses one string)
-	L"Игра с огнем!Крутые игрушки,оружие убийства,взрывы.",
+	L"Игра с огнем! Крутые игрушки, оружие убийства, мощные взрывы.",
 	//Additional comment
-	L"(and this is just the beginning)",
+	L"(и это всего лишь начало)",
 	//Introduction/instructions
-	L"Добро пожаловать в Демовилль(нажмите,чтобы продолжить)",
+	L"Добро пожаловать в Демовилль (нажмите, чтобы продолжить)",
 };
 #endif
 
@@ -3289,101 +3289,101 @@ const wchar_t* gzCopyrightText[] =
 const wchar_t* zOptionsToggleText[] =
 {
 	L"Речь",
-	L"Немое подтверждение", //$$
+	L"Заглушить отзывы", //$$
 	L"Субтитры",
 	L"Диалоги с паузами",
 	L"Анимированный дым",
 	L"Кровища",
 	L"Не трожь мою мышь!",
 	L"Старый способ выбора",
-	L"Показывать движения",
+	L"Показывать путь",
 	L"Показывать промахи",
-	L"Игра в реальном времени",
-	L"Показать индикатор врага",
-	L"Использовать метрич.систему",
-	L"Выделять наемн.во время движения",
-	L"Перевести курсор на наемн.",
-	L"Перевести курсор на двери",
-	L"Мерцание вещей",
-	L"Показать верхушки деревьев",
+	L"Подтверждение движения",
+	L"Оповещение о сне/бодрствовании",  //INCONSISTIENT with _EnglishText.c! CHECK INGAME!
+	L"Метрическая система мер",
+	L"Выделять во время движения",
+	L"Переводить курсор на наемников",
+	L"Переводить курсор на двери",
+	L"Подсветка вещей",
+	L"Показывать верхушки деревьев",
 	L"Показывать каркасы",
-	L"Показать трехмерный курсор",
+	L"Трехмерный курсор",
 };
 
 //This is the help text associated with the above toggles.
 const wchar_t* zOptionsScreenHelpText[] =
 {
 	//speech
-	L"Если вы хотите услышать диалог персонажей,включите эту опцию.",
+	L"Включите эту опцию, если хотите слышать диалоги персонажей.",
 
 	//Mute Confirmation
-	L"Вкл/выкл вербальное подтверждение.",
+	L"Включите эту опцию, чтобы не слышать отзывы на команды.",
 
-		//Subtitles
-	L" whether on-screen text is displayed for dialogue.", //$$
+	//Subtitles
+	L"Показывать тексты диалогов.",
 
 	//Key to advance speech
-	L"Если субитры включены,включите также это,чтобы читать NPC диалог.",
+	L"Включите эту опцию, чтобы субтитры переходили к следующей фразе по нажатию клавиши.",
 
 	//Toggle smoke animation
-	L"Отключите эту опцию,если анимированный дым замедляет игру.",
+	L"Отключите эту опцию, если анимированный дым тормозит игру.",
 
 	//Blood n Gore
-	L"Отключите эту опцию,если боитесь крови.",
+	L"Отключите эту опцию, если вам не нравится вид крови.",
 
 	//Never move my mouse
-	L"Отключите эту опцию,чтобы курсор автоматически перемещался на всплывающее меню диалога",
+	L"Отключите эту опцию, чтобы курсор автоматически перемещался к всплывающим окнам.",
 
 	//Old selection method
-	L"Включите эту опцию,чтобы персонажи работали,как в предыдущей версии Jagged Alliance (иначе они будут работать по-другому).",
+	L"Включает выбор персонажей, как в Jagged Alliance 1 (иначе выбор происходит наоборот).",
 
 	//Show movement path
-	L"Включите эту опцию,чтобы действие происходило в реальном времени(или используйте SHIFT при отключенной опции).",
+	L"Включает отображение пути бойца в реальном времени (или отключите эту опцию и используйте SHIFT).",
 
 	//show misses
-	L"Включите эту опцию,чтобы видеть,куда попадают пули при \"промахе\".",
+	L"Включите эту опцию, чтобы видеть, куда попадают пули при \"промахе\".",
 
-	//Real Time Confirmation
-	L"Когда опция вкл,дополн.\"безопасность\" щелчок нужен для перехода в реальное время.",
+	//Sleep/Wake notification
+	L"При включенной опции для движения в реальном времени необходим дополнительный клик мышью.",
 
 	//Display the enemy indicator
-	L"Когда опция вкл,количество врагов,видных наемнику,высвечивается над его портретом.",
+	L"Включает отображение оповещений о том, что ваш боец засыпает или просыпается.",
 
 	//Use the metric system
-	L"Когда опция вкл,исп.метрич.система,иначе-британская.",
+	L"Когда опция включена, игра использует метрическую систему мер, иначе - британскую.",
 
 	//Merc Lighted movement
-	L"Когда опция вкл,путь наемника обозн.светящейся линией.Отключите для быстроты.",
+	L"Когда опция включена, боец \"освещает\" землю при движении. Отключите для улучшения производительности.",
 
 	//Smart cursor
-	L"Когда опция вкл,передвижение курсора на наемника будет его выделять.",
+	L"Когда опция включена, бойцы подсвечиваются, если курсор рядом с ними.",
 
 	//snap cursor to the door
-	L"Когда опция вкл,передвижение курсора на дверь будет автоматически передвигать его поверх двери.",
+	L"Когда опция включена, курсор перескакивает на дверь, если он рядом с ней.",
 
 	//glow items
-	L"Когда опция вкл,вещи светятся( |I)",
+	L"Включает постоянную подсветку предметов на земле (|I).",
 
 	//toggle tree tops
-	L"Когда опция вкл,показываются верхушки деревьев.( |Е)",
+	L"Включает отображение верхушек деревьев (|Е).",
 
 	//toggle wireframe
-	L"Когда опция вкл,видны каркасы домов. ( |W)", //$$
+	L"Включает отображение \"каркасов\" домов (|W).", //$$
 
-	L"Когда опция вкл,движущийся курсор-трехмерный.(|H|o|m|e)",
+	L"Включает \"трехмерный\" курсор движения (|H|o|m|e).",
 
 };
 
 
 const wchar_t* gzGIOScreenText[] =
 {
-	L"УСТАНОВКА НАЧАЛА ИГРЫ",
+	L"ИГРОВЫЕ НАСТРОЙКИ",
 	L"Стиль игры",
 	L"Реалистичный",
 	L"Фантастичный",
-	L"Выбор пистолетов",
-	L"Сотни пистолетов",
-	L"Нормальный",
+	L"Количество оружия",
+	L"Сотни стволов",
+	L"Обычное",
 	L"Уровень сложности",
 	L"Легкий",
 	L"Нормальный",
@@ -3391,17 +3391,17 @@ const wchar_t* gzGIOScreenText[] =
 	L"Ok",
 	L"Отмена",
 	L"Дополнительная сложность",
-	L"Без ограничений времени",
-	L"Время хода ограничено",
+	L"Сохранение где угодно",
+	L"ЖЕЛЕЗНАЯ ВОЛЯ",
 	L"Отключено в демо-версии",
 };
 
 const wchar_t* pDeliveryLocationStrings[] =
 {
-	L"Остен",			//Austin, Texas, USA
+	L"Остин",			//Austin, Texas, USA
 	L"Багдад",			//Baghdad, Iraq (Suddam Hussein's home)
 	L"Драссен",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
-	L"Гон Конг",		//Hong Kong, Hong Kong
+	L"Гонконг",		   //Hong Kong, Hong Kong
 	L"Бейрут",			//Beirut, Lebanon	(Middle East)
 	L"Лондон",			//London, England
 	L"Лос Анджелес",	//Los Angeles, California, USA (SW corner of USA)
@@ -3409,7 +3409,7 @@ const wchar_t* pDeliveryLocationStrings[] =
 	L"Метавира",		//The island of Metavira was the fictional location used by JA1
 	L"Майами",				//Miami, Florida, USA (SE corner of USA)
 	L"Москва",			//Moscow, USSR
-	L"Нью Йорк",		//New York, New York, USA
+	L"Нью-Йорк",		//New York, New York, USA
 	L"Оттава",			//Ottawa, Ontario, Canada -- where JA2 was made!
 	L"Париж",				//Paris, France
 	L"Триполи",			//Tripoli, Libya (eastern Mediterranean)
@@ -3420,12 +3420,12 @@ const wchar_t* pDeliveryLocationStrings[] =
 const wchar_t* pSkillAtZeroWarning[] =
 { //This string is used in the IMP character generation.  It is possible to select 0 ability
 	//in a skill meaning you can't use it.  This text is confirmation to the player.
-	L"Уверен? Ноль означает отсутствие навыков."
+	L"Уверены? Ноль означает отсутствие навыка."
 };
 
 const wchar_t* pIMPBeginScreenStrings[] =
 {
-	L"( 8 макс. символов )",
+	L"( не более 8 букв )",
 };
 
 const wchar_t* pIMPFinishButtonText[ 1 ]=
@@ -3435,7 +3435,7 @@ const wchar_t* pIMPFinishButtonText[ 1 ]=
 
 const wchar_t* pIMPFinishStrings[ ]=
 {
-	L"Спасибо,%ls", //%ls is the name of the merc
+	L"Спасибо, %ls", //%ls is the name of the merc
 };
 
 // the strings for imp voices screen
@@ -3454,7 +3454,7 @@ const wchar_t* pPersTitleText[] =
 const wchar_t* pPausedGameText[] =
 {
 	L"Пауза",
-	L"Возобновить (|P|a|u|s|e)",
+	L"Снять с паузы (|P|a|u|s|e)",
 	L"Поставить на паузу (|P|a|u|s|e)",
 };
 
@@ -3468,7 +3468,7 @@ const wchar_t* pMessageStrings[] =
 	L"ОТМЕНА",
 	L"НАНЯТЬ",
 	L"ЛОЖЬ",
-	L"No description", //Save slots that don't have a description.
+	L"Без описания", //Save slots that don't have a description.
 	L"Игра сохранена",
 	L"Игра сохранена",
 	L"QuickSave", //The name of the quicksave file (filename, text reference)
@@ -3503,7 +3503,7 @@ const wchar_t* pMessageStrings[] =
 	L"Очень плохо,что ты убил его.",
 #endif
 	L"У вас кончается дисковое пространство. У вас осталось %lsМБ свободных,а для АЛЬЯНСА 2 требуется %lsMБ.",
-	L"Нанят %ls из AIM",
+	L"Найм %ls из AIM",
 	L"%ls поймал %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls принял лекарство.", //'Merc name' has taken the drug
 	L"%ls не имеет меднавыков",//'Merc name' has no medical skill.
@@ -3528,7 +3528,7 @@ const wchar_t* pMessageStrings[] =
 	L"Нельзя передать %ls %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" Присоединено )",
+	L" в обвесе )",
 
 	//Cheat modes
 	L"Достигнут чит-уровень один",
@@ -3572,11 +3572,11 @@ const wchar_t* pMessageStrings[] =
 	L"У вас нет денег,чтобы ежедневно выплачивать %ls %ls",	//first %ls is the mercs name, the seconds is a string containing the salary
 	L"Пропуск",
 	L"%ls не может уйти один.",
-	L"Игра была сохранена под именем SaveGame99.sav. При необходимости пересохраните ее под именем SaveGame01-SaveGame10 и тогда вы будете получите доступ к ней в экране Загрузка.",
-	L"%ls выпил немного %ls",
+	L"Игра была сохранена под именем SaveGame99.sav. Для загрузки переименуйте ее в SaveGame01-SaveGame10.",
+	L"%ls выпивает немного %ls",
 	L"Багаж прибыл в Драссен.",
-	L"%ls должен прибыть в указанное место высадки (сектор %ls) в день %d,примерно в %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
-	L"История обновлена.",
+	L"%ls прибудет в указанное место высадки (сектор %ls) в день %d, примерно в %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	L"Журнал событий обновлен.",
 #ifdef JA2BETAVERSION
 	L"Игра сохранена в ячейку авто-сохранения.",
 #endif
@@ -3594,8 +3594,8 @@ const wchar_t ItemPickupHelpPopup[][40] =
 
 const wchar_t* pDoctorWarningString[] =
 {
-	L"%ls слишком далеко,чтобы его можно было лечить.",
-	L"Медики не могут перевязать всех.",
+	L"%ls слишком далеко для лечения.",
+	L"Медики не смогли перевязать всех.",
 };
 
 const wchar_t* pMilitiaButtonsHelpText[] =
@@ -3603,13 +3603,13 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Взять новичков(Правый щелчок)/Отвергнуть(Левый щелчок)", // button help text informing player they can pick up or drop militia with this button
 	L"Взять постоянные войска(Правый щелчок)/Отвергнуть(Левый щелчок)",
 	L"Взять войска ветеранов(Правый щелчок)/Отвергнуть(Левый щелчок)",
-	L"Равномерно распределить доступное ополчение по всем секторам",
+	L"Поровну распределить доступное ополчение по всем секторам",
 };
 
 const wchar_t* pMapScreenJustStartedHelpText[] =
 {
-	L"Иди в АIM и нанять наемников (*Подсказка* в лаптопе)", // to inform the player to hired some mercs to get things going
-	L"Если вы готовы отправиться в Арулько,щелкните по кнопке Компрессия времени в правом нижнем углу экрана.", // to inform the player to hit time compression to get the game underway
+	L"Сходите на сайт АIM и наймите наемников (*Подсказка* через ноутбук)", // to inform the player to hired some mercs to get things going
+	L"Если вы готовы отправиться в Арулько, щелкните по кнопке ускорения времени в правом нижнем углу экрана.", // to inform the player to hit time compression to get the game underway
 };
 
 const wchar_t* pAntiHackerString[] =
@@ -3624,10 +3624,10 @@ const wchar_t* gzLaptopHelpText[] =
 	L"Просмотреть почту",
 	L"Пролистать web страницы",
 	L"Просмотреть файлы и аттачменты.",
-	L"Прочитать последние события",
+	L"Прочитать журнал событий",
 	L"Информация о команде",
-	L"Просмотреть финансовое заключение и журнал",
-	L"Закрыть лаптоп",
+	L"Просмотреть финансовый отчет и журнал",
+	L"Выключить ноутбук",
 
 	//Bottom task bar icons (if they exist):
 	L"Новое сообщение",
@@ -3635,10 +3635,10 @@ const wchar_t* gzLaptopHelpText[] =
 
 	//Bookmarks:
 	L"Международная Ассоциация Наемников",
-	L"Бобби Рэй-заказ оружия в сети",
+	L"Бобби Рэй - заказ оружия в сети",
 	L"Институт Психологии Наемников",
 	L"Рекрутинговый Центр",
-	L"Морг Мак Гилликути",
+	L"Морг МакГилликати",
 	L"Объединенная цветочная служба",
 	L"Страховые агенты по контрактам A.I.M.",
 };
@@ -3652,23 +3652,23 @@ const wchar_t* gzHelpScreenText[] =
 const wchar_t* gzNonPersistantPBIText[] =
 {
 	L"Идет бой. Вы можете только покинуть экран битвы.",
-	L"Войти в сектор, чтобы продолжить бой( |E).",
-	L"Автоматически остановить текущую битву ( |A).",
-	L"Нельзя автоматически остановить битву, когда ты нападаешь.",
-	L"Нельзя автоматически остановить битву,когда на тебя напали.",
-	L"Нельзя автоматически остановить битву,когда дерешься с существами в шахтах.",
-	L"Нельзя автоматически остановить битву,если поблизости враждебные жители.",
-	L"Нельзя автоматически остановить битву,если поблизости кошки-убийцы.",
+	L"Войти в сектор, чтобы продолжить бой (|E).",
+	L"Автоматически остановить текущую битву (|A).",
+	L"Нельзя провести авто-бой, когда вы нападаете.",
+	L"Нельзя провести авто-бой, когда вы попали в засаду.",
+	L"Нельзя провести авто-бой, когда вы сражаетесь с существами в шахтах.",
+	L"Нельзя провести авто-бой, если рядом враждебные жители.",
+	L"Нельзя провести авто-бой, если рядом кошки-убийцы.",
 	L"ИДЕТ БОЙ",
-	L"Сейчас отступать нельзя.",
+	L"Сейчас отступить нельзя.",
 };
 
 const wchar_t* gzMiscString[] =
 {
-	L"Ваше ополчение дерется без помощи наемников...",
+	L"Ваше ополчение сражается без помощи наемников...",
 	L"Машине пока не нужно заправляться.",
-	L"Бензобак полон на %d%%.",
-	L"Армия Дейдранны полностью контролирует территорию %ls.",
+	L"Бензобак заправлен на %d%%.",
+	L"Армия Дейдранны полностью захватила %ls.",
 	L"Вы потеряли заправку.",
 };
 
@@ -3699,10 +3699,10 @@ const wchar_t* pNewNoiseStr[] =
 const wchar_t* wMapScreenSortButtonHelpText[] =
 {
 	L"Сортировка по имени (|F|1)",
-	L"Сортировка по назн. (|F|2)",
-	L"Сортировка по сну (|F|3)",
+	L"Сортировка по заданию (|F|2)",
+	L"Сортировка по сну/бодрствованию (|F|3)",
 	L"Сортировка по месту (|F|4)",
-	L"Сортировка по месту назн.(|F|5)",
+	L"Сортировка по цели (|F|5)",
 	L"Сортировка по времени контракта (|F|6)",
 };
 
@@ -3755,7 +3755,7 @@ const wchar_t* gzCreditNameTitle[]=
 	L"Бета-Координатор, фин.поддержка",				// Lynn Holowka
 	L"Главный художник",						// Norman \"NRG\" Olsen
 	L"Мастер по звуку",											// George Brooks
-	L"Дизайн экрана/Художник",					// Andrew Stacey
+	L"Дизайн экранов/Художник",					// Andrew Stacey
 	L"Главный художник/Анимация",						// Scot Loving
 	L"Главный программист",									// Andrew \"Big Cheese Doddle\" Emmons
 	L"Программист",											// Dave French
@@ -3768,9 +3768,9 @@ const wchar_t* gzCreditNameFunny[]=
 	L"", 																			// Chris Camfield
 	L"(все еще зубрит правила пунктуации)",					// Shaun Lyng
 	L"(\"Готово. Я просто чиню\")",	//Kris \"The Cow Rape Man\" Marnes
-	L"(он уже слишком стар для этого)",				// Ian Currie
+	L"(слишком стар для этого)",				// Ian Currie
 	L"(работает над Wizardry 8)",						// Linda Currie
-	L"(тестировал по дулом пистолета)",			// Eric \"WTF\" Cheng
+	L"(принужденный еще и к тестам)",			// Eric \"WTF\" Cheng
 	L"(Ушла от нас в CFSA - скатертью дорожка...)",	// Lynn Holowka
 	L"",																			// Norman \"NRG\" Olsen
 	L"",																			// George Brooks
@@ -3779,7 +3779,7 @@ const wchar_t* gzCreditNameFunny[]=
 	L"(единственное ответственное лицо)",					// Andrew \"Big Cheese Doddle\" Emmons
 	L"(может опять заняться мотогонками)",	// Dave French
 	L"(украден с работы над Wizardry 8)",							// Alex Meduna
-	L"(строил предметы и загрузочные экраны!)",	// Joey \"Joeker\" Whelan",
+	L"(делал предметы и загрузочные экраны!)",	// Joey \"Joeker\" Whelan",
 };
 
 const wchar_t* sRepairsDoneString[] =
@@ -3792,9 +3792,9 @@ const wchar_t* sRepairsDoneString[] =
 
 const wchar_t* zGioDifConfirmText[]=
 {
-	L"Вы выбрали ЛЕГКИЙ режим. Это подходит для новичков в Jagged Alliance 'Агония Власти', для новичков в жанре стратегий, или для тех, кто желает сократить битвы в игре. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Легком режиме?",
-	L"Вы выбрали НОРМАЛЬНЫЙ режим. Это подходит для всех тех, кто уже знаком с Jagged Alliance 'Агония Власти' или с подобными играми. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Нормальном режиме?",
-	L"Вы выбрали ТРУДНЫЙ режим. Мы Вас предупреждаем. Нечего на нас пенять, если вас доставят назад в цинковом гробу. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Вы уверены, что хотите играть в Трудном режиме?",
+	L"Вы выбрали ЛЕГКИЙ режим. Это подходит для новичков в Jagged Alliance, для новичков в жанре стратегий вообще, или для тех, кто желает сократить битвы в игре. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть в Легком режиме?",
+	L"Вы выбрали НОРМАЛЬНЫЙ режим. Это подходит для всех тех, кто уже знаком с Jagged Alliance 'Агония Власти' или с подобными играми. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть в Нормальном режиме?",
+	L"Вы выбрали ТРУДНЫЙ режим. Мы Вас предупредили. Нечего на нас пенять, если вас доставят назад в цинковом гробу. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть в Трудном режиме?",
 };
 
 const wchar_t* gzLateLocalizedString[] =
@@ -3805,7 +3805,7 @@ const wchar_t* gzLateLocalizedString[] =
 	L"Робот не может покинуть сектор,т.к.некому управлять им.",
 
 	//This message comes up if you have pending bombs waiting to explode in tactical.
-	L"Сейчас сжимать время нельзя.Подождите фейерверка!",
+	L"Сейчас ускорять время нельзя. Подождите фейерверка!",
 
 	//'Name' refuses to move.
 	L"%ls отказывается двигаться.",
@@ -3834,7 +3834,7 @@ const wchar_t* gzLateLocalizedString[] =
 	//14
 	L"Арулько",
 
-  L"(roof)",
+	L"(roof)",
 
 	L"Здоровье: %d/%d",
 
@@ -3844,13 +3844,13 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"%ls полон!",  //(ex "The ice cream truck is full")
 
-  L"%ls нуждается не в перевязке и первой помощи, а в серьезном медицинском обследовании и/или отдыхе.",
+	L"%ls нуждается не в перевязке и первой помощи, а в серьезном медицинском обследовании и/или отдыхе.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%ls ранен в ногу и без сознания!",
+	L"%ls получает ранение в ногу и падает!",
 	//Name can't speak right now.
-	L"%ls сейчас говорить не может.",
+	L"%ls не может сейчас говорить.",
 
 	//22-24 plural versions @@@2 elite to veteran
 	L"%d новички стали ветеранами.",
@@ -3862,12 +3862,12 @@ const wchar_t* gzLateLocalizedString[] =
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	L"%ls двинулся умом!",
+	L"%ls впадает в безумие!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	L"Сейчас опасно сжимать время, поскольку у вас есть наемники в секторе %ls.", //
-	L"Опасно сжимать время, когда наемники находятся в шахтах с существами.", //
+	L"Нельзя ускорять время, поскольку у вас есть наемники в секторе %ls.", //
+	L"Нельзя ускорять время, когда наемники находятся в шахтах с существами.", //
 
 	//29-31 singular versions @@@2 elite to veteran
 	L"1 новичок стал ветеранами.",
@@ -3887,39 +3887,39 @@ const wchar_t* gzLateLocalizedString[] =
 	L"КОШКА-УБИЙЦА",
 
 	//37-38 "Name trips and falls"
-	L"%ls падает",
-	L"Эту вещь отсюда брать нельзя.",
+	L"%ls запинается и падает",
+	L"Эту вещь нельзя взять отсюда.",
 
 	//39
-	L"Никто из оставшихся наемн.не может драться.Ополчение сразится с существами само.",
+	L"Никто из наемников не может драться. Ополчение сразится с существами само.",
 
 	//40-43
 	//%ls is the name of merc.
-	L"%ls:медикаменты кончились!",
-	L"%ls не обладает навыками,чтобы лечить кого-либо!",
-	L"%ls:кончились инструменты!",
-	L"%ls не обладает навыками,чтобы ремонтировать что-либо!",
+	L"%ls: медикаменты кончились!",
+	L"%ls не обладает навыками, чтобы лечить кого-либо!",
+	L"%ls: кончились инструменты!",
+	L"%ls не обладает навыками, чтобы ремонтировать что-либо!",
 
 	//44-45
 	L"Время ремонта",
-	L"%ls Не может увидеть этого человека.",
+	L"%ls не видит этого человека.",
 
 	//46-48
-	L"%ls'. Барабан его пистолета сломан!",
+	L"%ls: удлинитель ствола сломан!",
 	L"Не разрешается больше %d тренеров ополчения на сектор.",
-  L"Уверен?",
+	L"Уверен?",
 
 	//49-50
-	L"Компрессия времени",
+	L"Ускорение времени",
 	L"Бак теперь заправлен.",
 
 	//51-52 Fast help text in mapscreen.
-	L"Продолжить компрессию времени (|S|p|a|c|e)",
-	L"Прекратить компрессию времени (|E|s|c)",
+	L"Продолжить ускорение времени (|S|p|a|c|e)",
+	L"Прекратить ускорение времени (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	L"%ls исправил(а) %ls",
-	L"%ls исправил(а) %ls (%ls)",
+	L"%ls расклинил %ls",
+	L"%ls расклинил %ls (%ls)",
 
 	//55
 	L"Невозможно сжимать время при просмотре содержимого сектора.",
@@ -3935,10 +3935,9 @@ const wchar_t* gzLateLocalizedString[] =
 	//59
 	L"Сопроводить Джона и Мэри?",
 
-  L"Выключатель нажат.",
+	L"Выключатель нажат.",
+
+	L"В бронежилете %ls разбились пластины!"
 };
 
-
-
-
-#endif //RUSSIAN
+#endif

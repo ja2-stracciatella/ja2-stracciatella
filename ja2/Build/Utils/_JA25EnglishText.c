@@ -1,6 +1,6 @@
 #include "Language_Defines.h"
 
-#if defined(DUTCH) || defined(ENGLISH) || defined(FRENCH) || defined(ITALIAN) || defined(POLISH) || defined(RUSSIAN)
+#if defined DUTCH || defined ENGLISH || defined FRENCH || defined ITALIAN || defined POLISH
 
 #include "_JA25EnglishText.h"
 

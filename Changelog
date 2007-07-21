@@ -1,8 +1,9 @@
 v0.5
+(r1251) Improve the Russian translation.
 (r1238) Remove the black box around the text in the help window by marking the text surface as transparent.
 (r1234) Fix loading of tactical maps for the Russian Gold version.
 (r1233) Fix wide string/string format specifiers.
-(r1219) Fix two transcription erros in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
+(r1219) Fix two transcription errors in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
         - Do not draw a background pixel, if the background colour is transparent
 				- Draw background pixels in transparent areas (if the background colour is not transparent)
 (r1215) Fix a vanilla bug: When doctoring and the character only has first aid kits available, a big item (from the second hand position) could end up in a small pocket and/or multiple first aid kits could be placed into the first hand position.
