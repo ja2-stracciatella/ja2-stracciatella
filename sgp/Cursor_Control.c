@@ -89,8 +89,8 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 			HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
 			if (hImage == NULL) return FALSE;
 
-			CFData->uiIndex = AddVideoObjectFromHImage(hImage);
-			if (CFData->uiIndex == NO_VOBJECT) return FALSE;
+			CFData->hVObject = CreateVideoObject(hImage);
+			if (CFData->hVObject == NULL) return FALSE;
 
 			// Check for animated tile
 			if (hImage->uiAppDataSize > 0)
@@ -105,9 +105,6 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 			// the hImage is no longer needed
 			DestroyImage(hImage);
-
-			// Save hVObject....
-			CFData->hVObject = GetVideoObject(CFData->uiIndex);
 		}
 
 		// Get ETRLE Data for this video object
@@ -179,8 +176,7 @@ static void UnLoadCursorData(UINT32 uiCursorIndex)
 
 		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
 		{
-			DeleteVideoObjectFromIndex(CFData->uiIndex);
-			CFData->uiIndex  = 0;
+			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
 		}
 	}
@@ -194,8 +190,7 @@ void CursorDatabaseClear(void)
 		CursorFileData* CFData = &gpCursorFileDatabase[uiIndex];
 		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
 		{
-			DeleteVideoObjectFromIndex(CFData->uiIndex);
-			CFData->uiIndex  = 0;
+			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
     }
   }
