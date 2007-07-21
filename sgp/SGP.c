@@ -1,3 +1,14 @@
+/* The implementation of swprintf() is broken on FreeBSD and sometimes fails if
+ * LC_TYPE is not set to UTF-8.  This happens when characters, which cannot be
+ * represented by the current LC_CTYPE, are printed. */
+#if defined __FreeBSD__
+#	define BROKEN_SWPRINTF
+#endif
+
+#if defined BROKEN_SWPRINTF
+#	include <locale.h>
+#endif
+
 #include "BuildDefines.h"
 #include "Button_System.h"
 #include "Container.h"
@@ -246,6 +257,13 @@ static BOOLEAN ParseParameters(char* const argv[]);
 
 int main(int argc, char* argv[])
 {
+#if defined BROKEN_SWPRINTF
+	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
+	{
+		fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
+	}
+#endif
+
 	if (!ParseParameters(argv)) return EXIT_FAILURE;
 	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
 
