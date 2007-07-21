@@ -84,7 +84,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 		{
 			// The file containing the video object hasn't been loaded yet. Let's load it now
 			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
-			Assert(!(CFData->ubFlags & USE_EXTERN_VO_CURSOR));
+			Assert(CFData->Filename != NULL);
 
 			HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
 			if (hImage == NULL) return FALSE;
@@ -174,7 +174,7 @@ static void UnLoadCursorData(UINT32 uiCursorIndex)
 		const CursorImage* pCurImage = &pCurData->Composites[cnt];
 		CursorFileData* CFData = &gpCursorFileDatabase[pCurImage->uiFileIndex];
 
-		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
+		if (CFData->hVObject != NULL && CFData->Filename != NULL)
 		{
 			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
@@ -188,7 +188,7 @@ void CursorDatabaseClear(void)
   for (UINT32 uiIndex = 0; uiIndex < gusNumDataFiles; uiIndex++)
   {
 		CursorFileData* CFData = &gpCursorFileDatabase[uiIndex];
-		if (CFData->hVObject != NULL && !(CFData->ubFlags & USE_EXTERN_VO_CURSOR))
+		if (CFData->hVObject != NULL && CFData->Filename != NULL)
 		{
 			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
@@ -384,7 +384,7 @@ void SetExternVOData(UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex)
 		CursorImage*    pCurImage = &pCurData->Composites[cnt];
 		CursorFileData* CFData    = &gpCursorFileDatabase[pCurImage->uiFileIndex];
 
-		if (CFData->ubFlags & USE_EXTERN_VO_CURSOR)
+		if (CFData->Filename == NULL)
 		{
 			// OK, set Video Object here....
 

@@ -17,8 +17,8 @@ extern MOUSE_REGION	gDisableRegion;
 extern MOUSE_REGION gUserTurnRegion;
 
 
-#define SCURSOR(name)         { name, NULL, 0,                                          0 }
-#define ECURSOR()             { "",   NULL, USE_EXTERN_VO_CURSOR | USE_OUTLINE_BLITTER, 0 }
+#define SCURSOR(name)         { name, NULL, 0,                   0 }
+#define ECURSOR()             { NULL, NULL, USE_OUTLINE_BLITTER, 0 }
 
 static CursorFileData CursorFileDatabase[] =
 {

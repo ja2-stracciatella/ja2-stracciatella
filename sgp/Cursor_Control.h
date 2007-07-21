@@ -12,7 +12,6 @@ extern "C" {
 void    CursorDatabaseClear(void);
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 
-#define	USE_EXTERN_VO_CURSOR 0x04
 #define USE_OUTLINE_BLITTER  0x08
 
 #define	EXTERN_CURSOR    0xFFF0
@@ -42,7 +41,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 
 typedef struct CursorFileData
 {
-	const char* Filename;
+	const char* Filename;         // If NULL then an extern video object is used
 	HVOBJECT    hVObject;
 	UINT8       ubFlags;
 	UINT8       ubNumberOfFrames; // If != 0 then the cursor is animated
