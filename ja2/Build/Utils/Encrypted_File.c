@@ -25,7 +25,14 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 	for (i = 0; i < uiSeekAmount / 2 - 1 && str[i] != 0; i++)
 	{
 		wchar_t c = (str[i] > 33 ? str[i] - 1 : str[i]);
-#if defined POLISH
+
+#if defined RUSSIAN
+		/* The Russian data files are incorrectly encoded. The original texts seem to
+		 * be encoded in CP1251, but then they were converted from CP1252 (!) to
+		 * UTF-16 to store them in the data files. Undo this damage here. */
+		if (0xC0 <= c && c <= 0xFF) c += 0x0350;
+#else
+#	if defined POLISH
 		/* The Polish data files are incorrectly encoded. The original texts seem to
 		 * be encoded in CP1250, but then they were converted from CP1252 (!) to
 		 * UTF-16 to store them in the data files. Undo this damage here.
@@ -50,12 +57,28 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 			case 339: c = 0x015B; break;
 			case 376: c = 0x017A; break;
 		}
-#elif defined RUSSIAN
-		/* The Russian data files are incorrectly encoded. The original texts seem to
-		 * be encoded in CP1251, but then they were converted from CP1252 (!) to
-		 * UTF-16 to store them in the data files. Undo this damage here. */
-		if (0xC0 <= c && c <= 0xFF) c += 0x0350;
+#	endif
+
+		/* Cyrillic texts (by Ivan Dolvich) in the non-Russian versions are encoded
+		 * in some wild manner. Undo this damage here. */
+		if (0x044D <= c && c <= 0x0452) // cyrillic A to IE
+		{
+			c += -0x044D + 0x0410;
+		}
+		else if (c == 0x0453) // cyrillic IO
+		{
+			c = 0x0401;
+		}
+		else if (0x0454 <= c && c <= 0x0467) // cyrillic ZHE to SHCHA
+		{
+			c += -0x0454 + 0x0416;
+		}
+		else if (0x0468 <= c && c <= 0x046C) // cyrillic YERU to YA
+		{
+			c += -0x0468 + 0x042B;
+		}
 #endif
+
 		pDestString[i] = c;
 	}
 	pDestString[i] = L'\0';
