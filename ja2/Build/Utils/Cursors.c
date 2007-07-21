@@ -98,7 +98,6 @@ static CursorFileData CursorFileDatabase[] =
 };
 
 #undef SCURSOR
-#undef ACURSOR
 #undef ECURSOR
 
 
