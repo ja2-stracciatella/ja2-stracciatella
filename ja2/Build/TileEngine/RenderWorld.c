@@ -595,14 +595,9 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf=NULL;
 	INT8				bXOddFlag = 0;
-	FLOAT				dTempX_S, dTempY_S;
-	INT16				sXPos, sYPos;
-	BOOLEAN			fRenderTile=TRUE;
 	BOOLEAN			fPixelate=FALSE;
 	INT16				sMultiTransShadowZBlitterIndex=-1;
-	INT16				sX, sY;
 	static			UINT8				ubLevelNodeStartIndex[ NUM_RENDER_FX_TYPES ];
-	UINT16			usOutlineColor=0;
 
 	BOOLEAN				fCheckForMouseDetections = FALSE;
 	static				RenderFXType  RenderFXList[ NUM_RENDER_FX_TYPES ];
@@ -776,7 +771,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							}
 
 
-							fRenderTile=TRUE;
+							BOOLEAN fRenderTile = TRUE;
 							if(uiLevelNodeFlags&LEVELNODE_REVEAL)
 							{
 								if(!fDynamic)
@@ -788,8 +783,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								fPixelate=FALSE;
 
 							// non-type specific setup
-							sXPos = (INT16)iTempPosX_S;
-							sYPos = (INT16)iTempPosY_S;
+							INT16 sXPos = iTempPosX_S;
+							INT16 sYPos = iTempPosY_S;
 
 
 							// setup for any tile type except mercs
@@ -943,6 +938,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											}
 
 											// Calculate guy's position
+											float dTempX_S;
+											float dTempY_S;
 											FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
 											sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
@@ -998,6 +995,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
 											dOffsetX -= CELL_Y_SIZE;
 
+											float dTempX_S;
+											float dTempY_S;
 											FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
 											sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)SHORT_ROUND( dTempX_S );
@@ -1301,6 +1300,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 
 									// Calculate guy's position
+									float dTempX_S;
+									float dTempY_S;
 									FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
 									sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
@@ -1520,6 +1521,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 									SetFont( TINYFONT1 );
 									SetFontDestBuffer( guiSAVEBUFFER , 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y, FALSE );
+									INT16 sX;
+									INT16 sY;
 									VarFindFontCenterCoordinates( sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pNode->uiAPCost );
 									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
 									SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
@@ -1530,6 +1533,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								}
 								else if ( ( uiLevelNodeFlags  & LEVELNODE_ITEM ) && !( uiFlags&TILES_DIRTY ) )
 								{
+										UINT16 usOutlineColor;
 										if ( uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF )
 										{
 											usOutlineColor = gusYellowItemOutlineColor;
@@ -1603,11 +1607,11 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										{
 											if ( bBlitClipVal == FALSE )
 											{
-												 Blt8BPPDataTo16BPPBufferOutlineZNB((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, FALSE );
+												 Blt8BPPDataTo16BPPBufferOutlineZNB((UINT16*)pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, 0, FALSE);
 											}
 											else if ( bBlitClipVal == TRUE )
 											{
-												 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, FALSE, &gClippingRect );
+												 Blt8BPPDataTo16BPPBufferOutlineClip((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, 0, FALSE, &gClippingRect);
 											}
 										}
 								}
@@ -1974,6 +1978,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										{
 											SetFont( TINYFONT1 );
 											SetFontDestBuffer( guiSAVEBUFFER , 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y, FALSE );
+											INT16 sX;
+											INT16 sY;
 											VarFindFontCenterCoordinates( sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pSoldier->ubPlannedUIAPCost );
 											mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pSoldier->ubPlannedUIAPCost);
 											SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
