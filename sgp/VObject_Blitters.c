@@ -1164,7 +1164,20 @@ UINT32 uiLineSkipDest, uiLineSkipSrc;
 	uiLineSkipSrc=uiSrcPitch-(uiWidth*2);
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	do
+	{
+		UINT32 w = uiWidth;
+		do
+		{
+			if (*pSrcPtr != usTrans) *pDestPtr = *pSrcPtr;
+			pSrcPtr++;
+			pDestPtr++;
+		}
+		while (--w != 0);
+		pSrcPtr  = (UINT16*)((UINT8*)pSrcPtr  + uiLineSkipSrc);
+		pDestPtr = (UINT16*)((UINT8*)pDestPtr + uiLineSkipDest);
+	}
+	while (--uiHeight != 0);
 #else
 __asm {
 	mov		esi, pSrcPtr
