@@ -6655,7 +6655,7 @@ static void ExamineZBufferRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBot
 }
 
 
-static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
+static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 
 
 static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
@@ -6731,7 +6731,7 @@ static void ExamineZBufferForHiddenTiles( INT16 sStartPointX_M, INT16 sStartPoin
 						// Set flag to not evaluate again!
 						gpWorldLevelData[usTileIndex].uiFlags &= (~MAPELEMENT_REEVALUATE_REDUNDENCY );
 
-						if ( IsTileRedundent( gpZBuffer, sZLevel, TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex ) )
+						if (IsTileRedundant(gpZBuffer, sZLevel, TileElem->hTileSurface, sX, sY, TileElem->usRegionIndex))
 						{
 							// Mark in the world!
 							gpWorldLevelData[ usTileIndex ].uiFlags |= MAPELEMENT_REDUNDENT;
@@ -7036,7 +7036,7 @@ BlitDone:
 }
 
 
-static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
+static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
