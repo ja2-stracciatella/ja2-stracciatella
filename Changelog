@@ -1,4 +1,5 @@
 v0.5
+(r1259) Implement Blt16BPPTo16BPPTrans(). It is used in the editor.
 (r1257) Fix a transcription error in IsTileRedundent(): The source data only uses one byte per pixel, not two.
 (r1253) Fix incorrectly encoded cyrillic texts in the non-Russion versions when loading them from the data files.
 (r1252) Add a workaround for the broken swprintf() implementation of FreeBSD for printing characters which cannot be represented by the current LC_CTYPE.

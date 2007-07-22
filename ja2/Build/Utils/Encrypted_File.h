@@ -1,9 +1,9 @@
-#ifndef __ENCRYPTED_H_
-#define __ENCRYPTED_H_
+#ifndef ENCRYPTED_FILE_H
+#define ENCRYPTED_FILE_H
 
 #include "Types.h"
 
-BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount);
+BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 Seek, UINT32 ReadBytes);
 BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 Seek, UINT32 ReadBytes);
 
 #endif

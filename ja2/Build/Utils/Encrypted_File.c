@@ -4,27 +4,26 @@
 #include "Language_Defines.h"
 
 
-BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UINT32 uiSeekAmount)
+BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 Seek, UINT32 ReadBytes)
 {
-	UINT16 str[uiSeekAmount / 2];
-	UINT16		i;
-
-	if ( FileSeek( hFile, uiSeekFrom, FILE_SEEK_FROM_START ) == FALSE )
+	if (!FileSeek(File, Seek, FILE_SEEK_FROM_START))
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileSeek");
-		return( FALSE );
+		return FALSE;
 	}
 
-	if (!FileRead(hFile, str, sizeof(str)))
+	UINT16 Str[ReadBytes / 2];
+	if (!FileRead(File, Str, sizeof(Str)))
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileRead");
-		return( FALSE );
+		return FALSE;
 	}
 
-	// Decrement, by 1, any value > 32
-	for (i = 0; i < uiSeekAmount / 2 - 1 && str[i] != 0; i++)
+	Str[ReadBytes / 2 - 1] = '\0';
+	for (const UINT16* i = Str; *i != '\0'; ++i)
 	{
-		wchar_t c = (str[i] > 33 ? str[i] - 1 : str[i]);
+		/* "Decrypt" the ROT-1 "encrypted" data */
+		wchar_t c = (*i > 33 ? *i - 1 : *i);
 
 #if defined RUSSIAN
 		/* The Russian data files are incorrectly encoded. The original texts seem to
@@ -79,11 +78,11 @@ BOOLEAN LoadEncryptedData(HWFILE hFile, STR16 pDestString, UINT32 uiSeekFrom, UI
 		}
 #endif
 
-		pDestString[i] = c;
+		*DestString++ = c;
 	}
-	pDestString[i] = L'\0';
+	*DestString = L'\0';
 
-	return(TRUE);
+	return TRUE;
 }
 
 
