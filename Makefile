@@ -11,6 +11,15 @@ $(warn No SGPDATADIR specified, make lowercase will not work)
 endif
 
 
+BINARY    ?= ja
+PREFIX    ?= /usr/local
+MANPREFIX ?= $(PREFIX)
+
+INSTALL         ?= install
+INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
+INSTALL_MAN     ?= $(INSTALL) -m 444
+
+
 SDL_CONFIG  ?= sdl-config
 CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
@@ -417,7 +426,7 @@ OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
 
 Q ?= @
 
-all: ja
+all: $(BINARY)
 
 ifndef NO_DEPS
 depend: $(DEPS)
@@ -427,7 +436,7 @@ ifeq ($(findstring $(MAKECMDGOALS), clean depend Data),)
 endif
 endif
 
-ja: $(OBJS)
+$(BINARY): $(OBJS)
 	@echo '===> LD $@'
 	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
@@ -447,9 +456,15 @@ ja: $(OBJS)
 	@echo '===> DEP $<'
 	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
-clean:
+clean distclean:
 	@echo '===> CLEAN'
-	$(Q)rm -fr $(DEPS) $(OBJS)
+	$(Q)rm -fr $(DEPS) $(OBJS) $(BINARY)
+
+install: $(BINARY)
+	@echo '===> INSTALL'
+	$(Q)$(INSTALL) -d $(PREFIX)/bin $(MANPREFIX)/man/man6
+	$(Q)$(INSTALL_PROGRAM) $(BINARY) $(PREFIX)/bin/ja2
+	$(Q)$(INSTALL_MAN) ja2.6 $(MANPREFIX)/man/man6
 
 
 lowercase:

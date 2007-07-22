@@ -23,6 +23,15 @@
 #SGPDATADIR := /usr/local/share/ja2
 
 
+# Tunables for installation. The default values are shown
+#PREFIX    := /usr/local
+#MANPREFIX := $(PREFIX)
+
+#INSTALL         := install
+#INSTALL_PROGRAM := $(INSTALL) -m 555 -s
+#INSTALL_MAN     := $(INSTALL) -m 444
+
+
 # Below are some example variable overrides for MSys/MinGW
 # If you set CFLAGS_SDL and LDFLAGS_SDL explicitly, then SDL_CONFIG is ignored
 
