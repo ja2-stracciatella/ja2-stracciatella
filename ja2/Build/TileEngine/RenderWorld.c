@@ -7084,7 +7084,7 @@ static BOOLEAN IsTileRedundent(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 			}
 			else
 			{
-				SrcPtr += 2 * data;
+				SrcPtr += data;
 				do
 				{
 					if (*(UINT16*)ZPtr < usZValue) return FALSE;
