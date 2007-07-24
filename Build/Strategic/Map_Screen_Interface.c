@@ -117,6 +117,16 @@ enum{
 // waiting list for update box
 INT32 iUpdateBoxWaitingList[ MAX_CHARACTER_COUNT ];
 
+
+typedef struct FASTHELPREGION
+{
+	wchar_t FastHelpText[256];
+	INT32 iX;
+	INT32 iY;
+	INT32 iW;
+} FASTHELPREGION;
+
+
 static FASTHELPREGION pFastHelpMapScreenList[MAX_MAPSCREEN_FAST_HELP];
 
 // the move menu region

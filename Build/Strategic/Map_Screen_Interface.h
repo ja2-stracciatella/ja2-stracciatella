@@ -7,27 +7,6 @@
 #include "MessageBoxScreen.h"
 
 
-
-typedef struct FASTHELPREGION {
-	// the string
-	CHAR16 FastHelpText[ 256 ];
-
-	// the x and y position values
-	INT32 iX;
-	INT32 iY;
-	INT32 iW;
-
-} FASTHELPREGION;
-
-
-// String Lengths Defines
-#define MAX_NAME_LENGTH 10
-#define MAX_LOCATION_SIZE 8
-#define MAX_DESTETA_SIZE 8
-#define MAX_ASSIGN_SIZE 10
-#define MAX_TIME_REMAINING_SIZE 8
-
-
 // char breath and life position
 #define BAR_INFO_X 66
 #define BAR_INFO_Y 61
@@ -39,10 +18,9 @@ typedef struct FASTHELPREGION {
 #define CHAR_ICON_HEIGHT 10
 #define CHAR_ICON_SPACING 13
 
-// max number of characters and vehicles
+// max number of characters
 //Character List Length
 #define MAX_CHARACTER_COUNT 20
-#define MAX_VEHICLE_COUNT 20
 
 // map screen font
 #define MAP_SCREEN_FONT BLOCKFONT2
