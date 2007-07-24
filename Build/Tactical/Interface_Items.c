@@ -374,17 +374,6 @@ typedef struct
 
 } INV_ATTACHXY;
 
-#define NUM_INV_HELPTEXT_ENTRIES 1
-
-typedef struct
-{
-	INT32 iXPosition[NUM_INV_HELPTEXT_ENTRIES];
-	INT32 iYPosition[NUM_INV_HELPTEXT_ENTRIES];
-	INT32 iWidth[NUM_INV_HELPTEXT_ENTRIES];
-	const wchar_t *sString1[NUM_INV_HELPTEXT_ENTRIES];
-	const wchar_t *sString2[NUM_INV_HELPTEXT_ENTRIES];
-} INV_HELPTEXT;
-
 
 static const INV_DESC_STATS gWeaponStats[] =
 {
@@ -462,15 +451,6 @@ static const SGPRect gMapItemDescProsConsRects[] =
 	0, 239, 313, 246,
 };
 
-
-static INV_HELPTEXT gItemDescHelpText =
-{
-	{ 69 }, // x locations
-	{ 12 }, // y locations
-	{ 170 }, // widths
-	{ Message[STR_ATTACHMENT_HELP] },
-	{ Message[STR_ATTACHMENT_INVALID_HELP] },
-};
 
 static BOOLEAN gfItemDescHelpTextOffset = FALSE;
 
@@ -2462,34 +2442,22 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gbOriginalAttachStatus[ cnt ] = pObject->bAttachStatus[ cnt ];
 	}
 
-
-	if ( (gpItemPointer != NULL) && (gfItemDescHelpTextOffset == FALSE) && (CheckFact( FACT_ATTACHED_ITEM_BEFORE, 0 ) == FALSE) )
+	if (gpItemPointer != NULL && !gfItemDescHelpTextOffset && !CheckFact(FACT_ATTACHED_ITEM_BEFORE, 0))
 	{
-		// set up help text for attachments
-		for ( cnt = 0; cnt < NUM_INV_HELPTEXT_ENTRIES; cnt++ )
+		const wchar_t* text;
+		if (!(Item[pObject->usItem].fFlags & ITEM_HIDDEN_ADDON) && (
+					ValidAttachment(gpItemPointer->usItem, pObject->usItem) ||
+					ValidLaunchable(gpItemPointer->usItem, pObject->usItem) ||
+					ValidMerge(gpItemPointer->usItem, pObject->usItem)
+				))
 		{
-			gItemDescHelpText.iXPosition[ cnt ] += gsInvDescX;
-			gItemDescHelpText.iYPosition[ cnt ] += gsInvDescY;
-		}
-
-		if ( !(Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON) && ( ValidAttachment( gpItemPointer->usItem, pObject->usItem ) || ValidLaunchable( gpItemPointer->usItem, pObject->usItem ) || ValidMerge( gpItemPointer->usItem, pObject->usItem ) ) )
-		{
-			SetUpFastHelpListRegions(
-				gItemDescHelpText.iXPosition,
-				gItemDescHelpText.iYPosition,
-				gItemDescHelpText.iWidth,
-				gItemDescHelpText.sString1,
-				NUM_INV_HELPTEXT_ENTRIES );
+			text = Message[STR_ATTACHMENT_HELP];
 		}
 		else
 		{
-			SetUpFastHelpListRegions(
-				gItemDescHelpText.iXPosition,
-				gItemDescHelpText.iYPosition,
-				gItemDescHelpText.iWidth,
-				gItemDescHelpText.sString2,
-				NUM_INV_HELPTEXT_ENTRIES );
+			text = Message[STR_ATTACHMENT_INVALID_HELP];
 		}
+		SetUpFastHelpRegion(69 + gsInvDescX, 12 + gsInvDescY, 170, text);
 
 		StartShowingInterfaceFastHelpText();
 

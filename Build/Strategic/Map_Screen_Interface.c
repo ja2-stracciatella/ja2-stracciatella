@@ -2524,34 +2524,14 @@ void ShutDownUserDefineHelpTextRegions( void )
 }
 
 
-// thsi will setup the fast help text regions that are unrelated to mouse regions
-// user is to pass in the x,y position of the box, the width to wrap the strings and the string itself
-BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], const wchar_t *sString[], INT32 iSize )
+void SetUpFastHelpRegion(INT32 x, INT32 y, INT32 width, const wchar_t* text)
 {
-	INT32 iCounter = 0;
-
-	// reset the size
-	giSizeOfInterfaceFastHelpTextList = 0;
-
-	for( iCounter = 0; iCounter < iSize; iCounter++ )
-	{
-
-		// forgiving way of making sure we don't go too far
-		CHECKF( iCounter < MAX_MAPSCREEN_FAST_HELP );
-
-		// now copy over info
-		pFastHelpMapScreenList[ iCounter ].iX = iXPosition[ iCounter ];
-		pFastHelpMapScreenList[ iCounter ].iY = iYPosition[ iCounter ];
-		pFastHelpMapScreenList[ iCounter ].iW = iWidth[ iCounter ];
-
-		// copy string
-		wcscpy( pFastHelpMapScreenList[ iCounter ].FastHelpText, sString[ iCounter ] );
-
-		// update the size
-		giSizeOfInterfaceFastHelpTextList = iCounter + 1;
-	}
-
-	return( TRUE );
+	FASTHELPREGION* fhr = &pFastHelpMapScreenList[0];
+	fhr->iX = x;
+	fhr->iY = y;
+	fhr->iW = width;
+	wcslcpy(fhr->FastHelpText, text, lengthof(fhr->FastHelpText));
+	giSizeOfInterfaceFastHelpTextList = 1;
 }
 
 

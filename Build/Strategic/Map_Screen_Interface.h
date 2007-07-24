@@ -456,8 +456,10 @@ void StartShowingInterfaceFastHelpText( void );
 // is the list active?
 BOOLEAN IsTheInterfaceFastHelpTextActive( void );
 
-//set up the tactical lists
-BOOLEAN SetUpFastHelpListRegions( INT32 iXPosition[], INT32 iYPosition[], INT32 iWidth[], const wchar_t *sString[], INT32 iSize );
+/* This will setup a fast help text region that is unrelated to mouse regions.
+ * The user is to pass in the x,y position of the box, the width to wrap the
+ * string and the string itself */
+void SetUpFastHelpRegion(INT32 x, INT32 y, INT32 width, const wchar_t* text);
 
 
 // reset assignment for mercs trainign militia in this sector
