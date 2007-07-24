@@ -101,17 +101,6 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-wchar_t ItemNames[MAXITEMS][80] =
-{
-	L"",
-};
-
-
-wchar_t ShortItemNames[MAXITEMS][80] =
-{
-	L"",
-};
-
 // Different weapon calibres
 // CAWS is Close Assault Weapon System and should probably be left as it is
 // NATO is the North Atlantic Treaty Organization

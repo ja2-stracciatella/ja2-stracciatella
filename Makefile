@@ -369,6 +369,7 @@ SRCS += Build/Utils/Quantize_Wrap.cc
 SRCS += Build/Utils/STIConvert.c
 SRCS += Build/Utils/Slider.c
 SRCS += Build/Utils/Sound_Control.c
+SRCS += Build/Utils/Text.c
 SRCS += Build/Utils/Text_Input.c
 SRCS += Build/Utils/Text_Utils.c
 SRCS += Build/Utils/Timer_Control.c
