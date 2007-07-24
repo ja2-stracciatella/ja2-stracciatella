@@ -243,22 +243,18 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 
 	if (ulFlags & DONT_DISPLAY_TEXT) return;
 
-	if( ulFlags == 0 )
-		ulFlags = LEFT_JUSTIFIED;
-
-	// FONT_MCOLOR_BLACK, FALSE
-	if( ulFlags & LEFT_JUSTIFIED )
-	{
-		usPosX = usLocX;
-		usPosY = usLocY;
-	}
-	else if( ulFlags & CENTER_JUSTIFIED )
+	if (ulFlags & CENTER_JUSTIFIED)
 	{
 		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
 	}
 	else if( ulFlags & RIGHT_JUSTIFIED )
 	{
   	FindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
+	}
+	else
+	{
+		usPosX = usLocX;
+		usPosY = usLocY;
 	}
 
 	SetFont(ulFont);

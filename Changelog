@@ -1,3 +1,6 @@
+v0.6
+(r1267) Fix a vanilla bug where some texts were not displayed because of uninitialised drawing coordinates.
+
 v0.5
 (r1259) Implement Blt16BPPTo16BPPTrans(). It is used in the editor.
 (r1257) Fix a transcription error in IsTileRedundent(): The source data only uses one byte per pixel, not two.
