@@ -3218,7 +3218,7 @@ const wchar_t* gpDemoString[] =
 	L"Des centaines d'objets",
 	L"Plus de 250 secteurs différents",
 	L"Des explosions ébouriffantes",
-	L"De nouvelles manuvres tactiques",
+	L"De nouvelles manœuvres tactiques",
 	L"Des tonnes d'animation",
 	L"Plus de 9000 lignes de dialogue",
 	L"Une superbe bande originale de Kevin Manthei",
