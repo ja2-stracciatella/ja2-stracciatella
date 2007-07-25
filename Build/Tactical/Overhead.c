@@ -7626,28 +7626,34 @@ void HandleEndDemoInCreatureLevel( )
 
 static void DeathTimerCallback(void)
 {
-	if (gTacticalStatus.Team[ CREATURE_TEAM ].bMenInSector > gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector )
+	const wchar_t* text;
+	if (gTacticalStatus.Team[CREATURE_TEAM].bMenInSector > gTacticalStatus.Team[ENEMY_TEAM].bMenInSector)
 	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_AGAINST_CREATURES_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
+		text = LargeTacticalStr[LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_AGAINST_CREATURES_STR];
 	}
 	else
 	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_STR ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
+		text = LargeTacticalStr[LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_STR];
 	}
+	DoMessageBox(MSG_BOX_BASIC_STYLE, text, GAME_SCREEN, MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL);
 }
 
-void CaptureTimerCallback( void )
+
+void CaptureTimerCallback(void)
 {
-	if( gfSurrendered )
+	const wchar_t* text;
+	if (gfSurrendered)
 	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ 3 ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
+		text = LargeTacticalStr[3];
 	}
 	else
 	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, LargeTacticalStr[ LARGESTR_HAVE_BEEN_CAPTURED ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL );
+		text = LargeTacticalStr[LARGESTR_HAVE_BEEN_CAPTURED];
 	}
+	DoMessageBox(MSG_BOX_BASIC_STYLE, text, GAME_SCREEN, MSG_BOX_FLAG_OK, EndBattleWithUnconsciousGuysCallback, NULL);
 	gfSurrendered = FALSE;
 }
+
 
 void DoPOWPathChecks( void )
 {
