@@ -214,7 +214,7 @@ static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader
 }
 
 
-#ifndef NO_ZLIB_COMPRESSION
+#if defined WITH_ZLIB
 static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
 static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
 static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
@@ -232,13 +232,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 	if ( hImage->ubBitDepth == 8 && fBufferType == BUFFER_8BPP )
 	{
-		#ifndef NO_ZLIB_COMPRESSION
-			if ( hImage->fFlags & IMAGE_COMPRESSED )
-			{
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery." );
-				return( Copy8BPPCompressedImageTo8BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
-			}
-		#endif
+#if defined WITH_ZLIB
+		if (hImage->fFlags & IMAGE_COMPRESSED)
+		{
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery.");
+			return Copy8BPPCompressedImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+		}
+#endif
 
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery." );
@@ -248,13 +248,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 	if ( hImage->ubBitDepth == 8 && fBufferType == BUFFER_16BPP )
 	{
-		#ifndef NO_ZLIB_COMPRESSION
-			if ( hImage->fFlags & IMAGE_COMPRESSED )
-			{
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer." );
-				return ( Copy8BPPCompressedImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
-			}
-		#endif
+#if defined WITH_ZLIB
+		if (hImage->fFlags & IMAGE_COMPRESSED)
+		{
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer.");
+			return Copy8BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+		}
+#endif
 
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer." );
@@ -265,13 +265,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 	if ( hImage->ubBitDepth == 16 && fBufferType == BUFFER_16BPP )
 	{
-		#ifndef NO_ZLIB_COMPRESSION
-			if ( hImage->fFlags & IMAGE_COMPRESSED )
-			{
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery." );
-				return( Copy16BPPCompressedImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
-			}
-		#endif
+#if defined WITH_ZLIB
+		if (hImage->fFlags & IMAGE_COMPRESSED)
+		{
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery.");
+			return  Copy16BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+		}
+#endif
 
 			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
 		return( Copy16BPPImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
@@ -282,7 +282,7 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 }
 
 
-#ifndef NO_ZLIB_COMPRESSION
+#if defined WITH_ZLIB
 
 static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
 {
@@ -468,7 +468,7 @@ static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestB
 	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
 	return( FALSE );
 }
-#endif //NO_ZLIB_COMPRESSION
+#endif
 
 
 static BOOLEAN Copy8BPPImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)

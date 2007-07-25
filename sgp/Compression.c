@@ -1,3 +1,5 @@
+#if defined WITH_ZLIB
+
 #include "MemMan.h"
 #include "Debug.h"
 #include "zlib.h"
@@ -83,3 +85,5 @@ void DecompressFini( PTR pDecompPtr )
 	inflateEnd( pZStream );
 	MemFree( pZStream );
 }
+
+#endif

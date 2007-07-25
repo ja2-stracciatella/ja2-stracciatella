@@ -55,6 +55,10 @@ ifdef WITH_SOUND_DEBUG
 CFLAGS += -DWITH_SOUND_DEBUG
 endif
 
+ifdef WITH_ZLIB
+CFLAGS += -DWITH_ZLIB
+endif
+
 ifdef JA2BETAVERSION
 CFLAGS += -DJA2BETAVERSION
 endif
@@ -81,7 +85,10 @@ CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
+
+ifdef WITH_ZLIB
 LDFLAGS += -lz
+endif
 
 SRCS :=
 SRCS += Build/AniViewScreen.c

@@ -1,6 +1,7 @@
 #if !defined( COMPRESSION_H )
-
 #define COMPRESSION_H
+
+#if defined WITH_ZLIB
 
 #include "Types.h"
 
@@ -26,5 +27,7 @@
 PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize );
 UINT32 Decompress( PTR pDecompPtr, BYTE * pBuffer, UINT32 uiBufferLen );
 void DecompressFini( PTR pDecompPtr );
+
+#endif
 
 #endif
