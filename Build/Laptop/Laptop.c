@@ -3177,19 +3177,12 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	// reset exit mode
-	fExitDueToMessageBox = TRUE;
-
-	// do message box and return
-	const SGPRect pCenteringRect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
-	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
-
-	// send back return state
-	return( ( iLaptopMessageBox != -1 ) );
+	const SGPRect CenteringRect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
+	return DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &CenteringRect);
 }
 
 
-BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
@@ -3201,19 +3194,12 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString,
 	return( ( iLaptopMessageBox != -1 ) );
 }
 
+
 BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	// reset exit mode
-	fExitDueToMessageBox = TRUE;
-
-	// do message box and return
 	const SGPRect CenteringRect = { 0, 0, 640, INV_INTERFACE_START_Y };
-	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
-
-	// send back return state
-	return( ( iLaptopMessageBox != -1 ) );
+	return DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
 }
-
 
 
 //places a tileable pattern down

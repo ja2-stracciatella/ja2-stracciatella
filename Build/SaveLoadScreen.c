@@ -1036,12 +1036,11 @@ BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UIN
 	return( ( giSaveLoadMessageBox != -1 ) );
 }
 
+
 BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	giSaveLoadMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
-	return( ( giSaveLoadMessageBox != -1 ) );
+	return DoSaveLoadMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
-
 
 
 BOOLEAN InitSaveGameArray()

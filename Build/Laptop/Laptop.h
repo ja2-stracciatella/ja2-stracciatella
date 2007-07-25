@@ -134,4 +134,6 @@ enum{
 #define	DEAD_MERC_COLOR_BLUE						55
 
 
+BOOLEAN DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
+
 #endif

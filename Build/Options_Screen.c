@@ -994,14 +994,7 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT
 
 static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	// reset exit mode
-	gfExitOptionsDueToMessageBox = TRUE;
-
-	// do message box and return
-	giOptionsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
-
-	// send back return state
-	return( ( giOptionsMessageBox != -1 ) );
+	return DoOptionsMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 

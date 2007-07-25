@@ -1125,15 +1125,17 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 	}
 	else
 	{
-		if( fInSector == FALSE )
+		UINT16 Flags;
+		if (fInSector)
 		{
-			// set up for all otherscreens
-			DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC, MercDepartEquipmentBoxCallBack, NULL);
+			Flags = fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
 		}
 		else
 		{
-			DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK, MercDepartEquipmentBoxCallBack, NULL);
+			// set up for all otherscreens
+			Flags = fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 		}
+		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, Flags, MercDepartEquipmentBoxCallBack, NULL);
 	}
 
 	if( pSoldier->fSignedAnotherContract == TRUE )
