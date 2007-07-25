@@ -4,7 +4,6 @@
 #include "Item_Types.h"
 #include "Types.h"
 
-#define STRING_LENGTH 255
 
 extern wchar_t ShortItemNames[MAXITEMS][80];
 extern wchar_t ItemNames[MAXITEMS][80];
@@ -12,8 +11,8 @@ extern const wchar_t AmmoCaliber[][20];
 extern const wchar_t BobbyRayAmmoCaliber[][20];
 extern const wchar_t WeaponType[][30];
 
-extern const wchar_t Message[][STRING_LENGTH];
-extern const wchar_t TeamTurnString[][STRING_LENGTH];
+extern const wchar_t* const Message[];
+extern const wchar_t* const TeamTurnString[];
 extern const wchar_t *pAssignMenuStrings[];
 extern const wchar_t *pTrainingStrings[];
 extern const wchar_t *pTrainingMenuStrings[];
@@ -316,12 +315,10 @@ enum
 	STR_BLOODCATS_TURN,
 };
 
-#define LARGE_STRING_LENGTH			200
-#define MED_STRING_LENGTH				80
 #define	SMALL_STRING_LENGTH			20
 
-extern const wchar_t TacticalStr[][MED_STRING_LENGTH];
-extern const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ];
+extern const wchar_t* const TacticalStr[];
+extern const wchar_t* const LargeTacticalStr[];
 
 
 extern const wchar_t	zDialogActions[][ SMALL_STRING_LENGTH ];

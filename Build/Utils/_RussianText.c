@@ -167,7 +167,7 @@ const wchar_t WeaponType[][30] =
 	L"Дробовик"
 };
 
-const wchar_t TeamTurnString[][STRING_LENGTH] =
+const wchar_t* const TeamTurnString[] =
 {
 	L"Ход игрока", // player's turn
 	L"Ход противника",
@@ -177,7 +177,7 @@ const wchar_t TeamTurnString[][STRING_LENGTH] =
 	// planning turn
 };
 
-const wchar_t Message[][STRING_LENGTH] =
+const wchar_t* const Message[] =
 {
 	L"",
 
@@ -1115,7 +1115,7 @@ const wchar_t* zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
+const wchar_t* const TacticalStr[] =
 {
 	L"Воздушный налет",
 	L"Оказать первую помощь?",
@@ -2401,7 +2401,7 @@ const wchar_t* pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
+const wchar_t* const LargeTacticalStr[] =
 {
 	L"В этом секторе вам нанесли поражение!",
 	L"Враг, без тени сожаления, пожрет всех до единого!",

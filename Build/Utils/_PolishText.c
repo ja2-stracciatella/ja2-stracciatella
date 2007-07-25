@@ -168,7 +168,7 @@ const wchar_t WeaponType[][30] =
 	L"Strzelba"
 };
 
-const wchar_t TeamTurnString[][STRING_LENGTH] =
+const wchar_t* const TeamTurnString[] =
 {
 	L"Tura gracza", // player's turn
 	L"Tura przeciwnika",
@@ -178,7 +178,7 @@ const wchar_t TeamTurnString[][STRING_LENGTH] =
 	// planning turn
 };
 
-const wchar_t Message[][STRING_LENGTH] =
+const wchar_t* const Message[] =
 {
 	L"",
 
@@ -1116,7 +1116,7 @@ const wchar_t* zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
+const wchar_t* const TacticalStr[] =
 {
 	L"Nalot",
 	L"Udzielić automatycznie pierwszej pomocy?",
@@ -2402,7 +2402,7 @@ const wchar_t* pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
+const wchar_t* const LargeTacticalStr[] =
 {
 	L"Pokonano cię w tym sektorze!",
 	L"Wróg nie zna litości i pożera was wszystkich!",

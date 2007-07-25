@@ -168,7 +168,7 @@ const wchar_t WeaponType[][30] =
 	L"Shotgun",
 };
 
-const wchar_t TeamTurnString[][STRING_LENGTH] =
+const wchar_t* const TeamTurnString[] =
 {
 	L"Beurt speler",
 	L"Beurt opponent",
@@ -178,7 +178,7 @@ const wchar_t TeamTurnString[][STRING_LENGTH] =
 	// planning turn
 };
 
-const wchar_t Message[][STRING_LENGTH] =
+const wchar_t* const Message[] =
 {
 	L"",
 
@@ -1130,7 +1130,7 @@ const wchar_t* zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-const wchar_t TacticalStr[][ MED_STRING_LENGTH ] =
+const wchar_t* const TacticalStr[] =
 {
 	L"Luchtaanval",
 	L"Automatisch EHBO toepassen?",
@@ -2417,7 +2417,7 @@ const wchar_t* pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-const wchar_t LargeTacticalStr[][ LARGE_STRING_LENGTH ] =
+const wchar_t* const LargeTacticalStr[] =
 {
 	L"Je bent verslagen in deze sector!",
 	L"De vijand, geen genade kennende, slacht ieder teamlid af!",
