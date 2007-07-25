@@ -867,11 +867,7 @@ static void SetGlobalSectorValues(const wchar_t* szFilename)
 
 static void InitErrorCatchDialog(void)
 {
-	SGPRect CenteringRect= {0, 0, 639, 479 };
-
-	// do message box and return
-	giErrorCatchMessageBox = DoMessageBox( MSG_BOX_BASIC_STYLE, gzErrorCatchString,
-											EDIT_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
+	giErrorCatchMessageBox = DoMessageBox(MSG_BOX_BASIC_STYLE, gzErrorCatchString, EDIT_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 	gfErrorCatch = FALSE;
 }
 

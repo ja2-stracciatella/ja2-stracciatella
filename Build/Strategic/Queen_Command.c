@@ -66,7 +66,6 @@ INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 static void ValidateEnemiesHaveWeapons(void)
 {
 	#ifdef JA2BETAVERSION
-		SGPRect CenteringRect= {0, 0, 639, 479 };
 		INT32 i, iErrorDialog;
 		SOLDIERTYPE *pSoldier;
 		INT32 iNumInvalid = 0;
@@ -89,7 +88,7 @@ static void ValidateEnemiesHaveWeapons(void)
 		{
 			wchar_t str[100];
 			swprintf(str, lengthof(str), L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid);
-			iErrorDialog = DoMessageBox( MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, &CenteringRect );
+			iErrorDialog = DoMessageBox(MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 		}
 	#endif
 }

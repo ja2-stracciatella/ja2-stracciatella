@@ -1009,9 +1009,6 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 //	INT16					zTownIDString[50];
 	CHAR16				zShortTownIDString[ 50 ];
 
-	// use YES/NO Pop up box, settup for particular screen
-	SGPRect pCenteringRect= {0, 0, 640, 480};
-
 	//GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, TRUE );
 
 	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString, lengthof(zShortTownIDString));
@@ -1131,11 +1128,11 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		if( fInSector == FALSE )
 		{
 			// set up for all otherscreens
-			DoMessageBox(  MSG_BOX_BASIC_STYLE, sString,  guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ),  MercDepartEquipmentBoxCallBack,  &pCenteringRect );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC, MercDepartEquipmentBoxCallBack, NULL);
 		}
 		else
 		{
-			DoMessageBox(  MSG_BOX_BASIC_STYLE, sString,  guiCurrentScreen, ( UINT16 ) ( MSG_BOX_FLAG_USE_CENTERING_RECT | ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ) ,  MercDepartEquipmentBoxCallBack,  &pCenteringRect );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK, MercDepartEquipmentBoxCallBack, NULL);
 		}
 	}
 

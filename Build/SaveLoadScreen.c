@@ -1038,12 +1038,7 @@ BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UIN
 
 BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-  SGPRect CenteringRect= {0, 0, 639, 479 };
-
-	// do message box and return
-  giSaveLoadMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT8 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &CenteringRect );
-
-	// send back return state
+	giSaveLoadMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 	return( ( giSaveLoadMessageBox != -1 ) );
 }
 

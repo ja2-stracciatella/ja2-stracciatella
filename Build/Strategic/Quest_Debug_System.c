@@ -3409,14 +3409,12 @@ static void EnableQDSButtons(void)
 
 static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-  SGPRect pCenteringRect= {0, 0, 639, 479 };
-
 	// reset exit mode
 	gfExitQdsDueToMessageBox = TRUE;
 	gfQuestDebugEntry = TRUE;
 
 	// do message box and return
-  giQdsMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT8 ) ( ubFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &pCenteringRect );
+	giQdsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
 
 	// send back return state
 	return( ( giQdsMessageBox != -1 ) );

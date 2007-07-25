@@ -994,13 +994,11 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT
 
 static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-  SGPRect CenteringRect= {0, 0, 639, 479 };
-
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
 	// do message box and return
-  giOptionsMessageBox = DoMessageBox(  ubStyle,  zString,  uiExitScreen, ( UINT16 ) ( usFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ),  ReturnCallback,  &CenteringRect );
+	giOptionsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 
 	// send back return state
 	return( ( giOptionsMessageBox != -1 ) );
