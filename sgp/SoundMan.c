@@ -537,9 +537,6 @@ static BOOLEAN SoundSetVolumeIndex(UINT32 uiChannel, UINT32 uiVolume)
 //*******************************************************************************
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED();
-#else
 	if (!fSoundSystemInit) return FALSE;
 
 	UINT32 uiPanCap = __min(uiPan, 127);
@@ -547,20 +544,9 @@ BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
 	if (uiSound == NO_SAMPLE) return FALSE;
 
-	SOUNDTAG* Sound = &pSoundList[uiSound];
-
-	if (Sound->hMSS != NULL)
-	{
-		AIL_set_sample_pan(Sound->hMSS, uiPanCap);
-	}
-
-	if (Sound->hMSSStream != NULL)
-	{
-		AIL_set_stream_pan(Sound->hMSSStream, uiPanCap);
-	}
+	pSoundList[uiSound].Pan = uiPanCap;
 
 	return TRUE;
-#endif
 }
 
 
