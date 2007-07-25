@@ -3177,14 +3177,12 @@ void LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason )
 
 BOOLEAN DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-  SGPRect pCenteringRect= {LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
-
-
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, &pCenteringRect);
+	const SGPRect pCenteringRect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );
@@ -3197,7 +3195,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString,
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, pCenteringRect);
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );
@@ -3205,12 +3203,12 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString,
 
 BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-  SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags | MSG_BOX_FLAG_USE_CENTERING_RECT, ReturnCallback, &CenteringRect);
+	const SGPRect CenteringRect = { 0, 0, 640, INV_INTERFACE_START_Y };
+	INT32 iLaptopMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
 
 	// send back return state
 	return( ( iLaptopMessageBox != -1 ) );

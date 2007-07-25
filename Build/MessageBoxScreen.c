@@ -82,7 +82,7 @@ static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
 	UINT16	usTextBoxWidth;
 	UINT16	usTextBoxHeight;
@@ -195,7 +195,7 @@ INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, 
 	}
 
 
-	if ( usFlags & MSG_BOX_FLAG_USE_CENTERING_RECT && pCenteringRect != NULL )
+	if (pCenteringRect != NULL)
 	{
 		aRect.iTop = 	pCenteringRect->iTop;
 		aRect.iLeft = 	pCenteringRect->iLeft;

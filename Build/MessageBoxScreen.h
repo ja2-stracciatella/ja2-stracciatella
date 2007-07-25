@@ -4,7 +4,6 @@
 #include "MouseSystem.h"
 
 // Message box flags
-#define		MSG_BOX_FLAG_USE_CENTERING_RECT			0x0001			// Pass in a rect to center in
 #define   MSG_BOX_FLAG_OK											0x0002			// Displays OK button
 #define   MSG_BOX_FLAG_YESNO									0x0004			// Displays YES NO buttons
 #define   MSG_BOX_FLAG_CANCEL									0x0008			// Displays YES NO buttons
@@ -88,10 +87,10 @@ extern		BOOLEAN							gfDontOverRideSaveBuffer;
 // uiExitScreen		The screen to exit to
 // ubFlags				Some flags for button style
 // ReturnCallback	Callback for return. Can be NULL. Returns any above return value
-// pCenteringRect	Rect to send if MSG_BOX_FLAG_USE_CENTERING_RECT set. Can be NULL
+// pCenteringRect	Rect to center in. Can be NULL
 ////////////////////////////////
 
-INT32 DoMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect );
+INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
 void DoScreenIndependantMessageBox( const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 

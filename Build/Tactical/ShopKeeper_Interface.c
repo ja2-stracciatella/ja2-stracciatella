@@ -5219,13 +5219,12 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 
 BOOLEAN DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	SGPRect pCenteringRect= {0, 0, 639, 339 };
-
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;
 
 	// do message box and return
-	giSKIMessageBox = DoMessageBox( ubStyle, zString, uiExitScreen, ( UINT8 ) ( ubFlags| MSG_BOX_FLAG_USE_CENTERING_RECT ), ReturnCallback, &pCenteringRect );
+	const SGPRect pCenteringRect = { 0, 0, 639, 339 };
+	giSKIMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
 
 	// send back return state
 	return( ( giSKIMessageBox != -1 ) );

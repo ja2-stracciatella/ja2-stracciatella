@@ -376,7 +376,7 @@ void HandleShortCutExitState( void )
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
-	SGPRect pCenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
+	const SGPRect pCenteringRect = { 0, 0, 640, INV_INTERFACE_START_Y };
 
 	if( guiCurrentScreen == ERROR_SCREEN )
 	{ //an assert failure, don't bring up the box!
@@ -386,7 +386,7 @@ void HandleShortCutExitState( void )
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN )
 	{
-		DoMessageBox(  MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],  guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),  EndGameMessageBoxCallBack,  &pCenteringRect );
+		DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
 		return;
 	}
 
@@ -427,7 +427,7 @@ void HandleShortCutExitState( void )
 		}
 
 		// set up for all otherscreens
-		DoMessageBox(  MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ],  guiCurrentScreen, ( UINT8 ) ( MSG_BOX_FLAG_YESNO | MSG_BOX_FLAG_USE_CENTERING_RECT ),  EndGameMessageBoxCallBack,  &pCenteringRect );
+		DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
 	}
 }
 
