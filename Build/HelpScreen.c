@@ -689,7 +689,7 @@ static void RenderHelpScreen(void)
 		gfHaveRenderedFirstFrameToSaveBuffer = TRUE;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenLocX + gHelpScreen.usScreenWidth, gHelpScreen.usScreenLocY + gHelpScreen.usScreenHeight);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenWidth, gHelpScreen.usScreenHeight);
 
 		UnmarkButtonsDirty( );
 	}
