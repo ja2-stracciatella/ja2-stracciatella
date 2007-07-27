@@ -1,11 +1,9 @@
 #include "Language_Defines.h"
-#ifdef FRENCH
-#	include "Text.h"
-#	include "JA2_Demo_Ads.h"
-#endif
-
 
 #ifdef FRENCH
+
+#include "JA2_Demo_Ads.h"
+
 
 /*
 

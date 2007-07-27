@@ -30,6 +30,10 @@
 	#define SGP_VIDEO_DEBUGGING
 #endif
 
+#if defined JA2DEMO
+#	define JA2DEMOADS
+#endif
+
 // Huge speed and memory hog, but thorough -- will work with release builds.
 // #define EXTREME_MEMORY_DEBUGGING
 

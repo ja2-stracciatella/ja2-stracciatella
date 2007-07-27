@@ -17,7 +17,6 @@
 #include "Interface.h"
 #include "GameSettings.h"
 #include "Interface_Control.h"
-#include "JA2_Demo_Ads.h"
 #include "Text.h"
 #include "HelpScreen.h"
 #include "SaveLoadGame.h"

@@ -70,7 +70,6 @@
 #include "SysUtil.h"
 #include "Sound_Control.h"
 #include "Points.h"
-#include "JA2_Demo_Ads.h"
 #include "Render_Dirty.h"
 #include "Loading_Screen.h"
 #include "Enemy_Soldier_Save.h"
