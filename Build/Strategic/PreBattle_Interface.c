@@ -954,7 +954,7 @@ void RenderPreBattleInterface()
 	if( gfRenderPBInterface )
 	{
 		// set font destinanation buffer to the save buffer
-		SetFontDestBuffer( guiSAVEBUFFER , 0, 0, 640, 480, FALSE );
+		SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 
 		if( gfPBButtonsHidden )
 		{
@@ -1199,7 +1199,7 @@ void RenderPreBattleInterface()
 		RestoreExternBackgroundRect( 0, 0, 261, 359 );
 
 		// restore font destinanation buffer to the frame buffer
-		SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 	}
 	else if( gfBlinkHeader )
 	{

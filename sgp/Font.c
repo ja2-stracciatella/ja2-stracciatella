@@ -299,9 +299,9 @@ BOOLEAN SetFont(INT32 iFontIndex)
 }
 
 
-/* Sets the destination buffer for printing to, the clipping rectangle, and
- * sets the line wrap on/off. DestBuffer is a VOBJECT handle, not a pointer. */
-BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2, BOOLEAN wrap)
+/* Sets the destination buffer for printing to and the clipping rectangle.
+ * DestBuffer is a VOBJECT handle, not a pointer. */
+BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2)
 {
 	Assert(x2 > x1);
 	Assert(y2 > y1);
@@ -311,7 +311,7 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 	FontDestRegion.iTop    = y1;
 	FontDestRegion.iRight  = x2;
 	FontDestRegion.iBottom = y2;
-	FontDestWrap           = wrap;
+	FontDestWrap           = FALSE;
 
 	return TRUE;
 }

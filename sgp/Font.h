@@ -85,7 +85,7 @@ UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, I
 UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...);
 
 
-extern BOOLEAN	 SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2, BOOLEAN wrap);
+BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 extern BOOLEAN	 SetFont(INT32 iFontIndex);
 
 extern INT32		 LoadFontFile(const char *pFileName);

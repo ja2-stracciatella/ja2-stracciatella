@@ -1895,9 +1895,7 @@ static void DrawTextOnButton(const GUI_BUTTON *b)
 			return;
 
 		// Set the font printing settings to the buttons viewable area
-		SetFontDestBuffer(ButtonDestBuffer, NewClip.iLeft,
-											NewClip.iTop, NewClip.iRight,
-											NewClip.iBottom, FALSE);
+		SetFontDestBuffer(ButtonDestBuffer, NewClip.iLeft, NewClip.iTop, NewClip.iRight, NewClip.iBottom);
 
 		// Compute the coordinates to center the text
 		if( b->bTextYOffset == -1 )

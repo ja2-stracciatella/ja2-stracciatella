@@ -1520,12 +1520,12 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									SetFontForeground(gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE);
 
 									SetFont( TINYFONT1 );
-									SetFontDestBuffer( guiSAVEBUFFER , 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y, FALSE );
+									SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y);
 									INT16 sX;
 									INT16 sY;
 									VarFindFontCenterCoordinates( sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pNode->uiAPCost );
 									mprintf_buffer((UINT8*)pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
-									SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
+									SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 								}
 								else if ( ( uiLevelNodeFlags  & LEVELNODE_ERASEZ ) && !( uiFlags&TILES_DIRTY ) )
 								{
@@ -1930,12 +1930,12 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										if ( pSoldier != NULL && pSoldier->ubID >= MAX_NUM_SOLDIERS )
 										{
 											SetFont( TINYFONT1 );
-											SetFontDestBuffer( guiSAVEBUFFER , 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y, FALSE );
+											SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, 640, gsVIEWPORT_WINDOW_END_Y);
 											INT16 sX;
 											INT16 sY;
 											VarFindFontCenterCoordinates( sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pSoldier->ubPlannedUIAPCost );
 											mprintf_buffer((UINT8*)pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pSoldier->ubPlannedUIAPCost);
-											SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
+											SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 										}
 									}
 								}
@@ -6267,7 +6267,7 @@ static void RenderRoomInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sS
 				if ( gubWorldRoomInfo[ usTileIndex ] != NO_ROOM )
 				{
 					SetFont( SMALLCOMPFONT );
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, gsVIEWPORT_END_Y, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, gsVIEWPORT_END_Y);
 					switch( gubWorldRoomInfo[ usTileIndex ] % 5 )
 					{
 						case 0:		SetFontForeground( FONT_GRAY3 );	break;
@@ -6277,7 +6277,7 @@ static void RenderRoomInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sS
 						case 4:   SetFontForeground( FONT_LTGREEN );break;
 					}
 					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gubWorldRoomInfo[usTileIndex]);
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 				}
 			}
 
@@ -6372,23 +6372,21 @@ static void RenderFOVDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, INT1
 				if ( gubFOVDebugInfoInfo[ usTileIndex ] != 0 )
 				{
 					SetFont( SMALLCOMPFONT );
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, gsVIEWPORT_END_Y, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, gsVIEWPORT_END_Y);
 					SetFontForeground( FONT_GRAY3 );
 					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gubFOVDebugInfoInfo[usTileIndex]);
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
-
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 					Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[0].hTileSurface, sTempPosX_S, sTempPosY_S, 0, &gClippingRect );
-
 				}
 
 			  if ( gubGridNoMarkers[ usTileIndex ] == gubGridNoValue )
 				{
 					SetFont( SMALLCOMPFONT );
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, gsVIEWPORT_END_Y, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, gsVIEWPORT_END_Y);
 					SetFontForeground( FONT_FCOLOR_YELLOW );
 					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, L"x");
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 				}
 
 			}
@@ -6482,7 +6480,7 @@ static void RenderCoverDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, IN
 				if (gsCoverValue[ usTileIndex] != 0x7F7F)
 				{
 					SetFont( SMALLCOMPFONT );
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, gsVIEWPORT_END_Y, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, gsVIEWPORT_END_Y);
 					if (usTileIndex == gsBestCover)
 					{
 						SetFontForeground( FONT_MCOLOR_RED );
@@ -6496,9 +6494,8 @@ static void RenderCoverDebugInfo( INT16 sStartPointX_M, INT16 sStartPointY_M, IN
 						SetFontForeground( FONT_GRAY3 );
 					}
 					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gsCoverValue[usTileIndex]);
-					SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 				}
-
 			}
 
 			sTempPosX_S += 40;
@@ -6588,7 +6585,7 @@ static void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPoin
 				sY += gsRenderHeight;
 
 				SetFont( SMALLCOMPFONT );
-				SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, gsVIEWPORT_END_Y, FALSE );
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, gsVIEWPORT_END_Y);
 
 				if ( !GridNoOnVisibleWorldTile( usTileIndex ) )
 				{
@@ -6599,8 +6596,7 @@ static void RenderGridNoVisibleDebugInfo( INT16 sStartPointX_M, INT16 sStartPoin
 					SetFontForeground( FONT_GRAY3 );
 				}
 				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", usTileIndex);
-				SetFontDestBuffer( FRAME_BUFFER , 0, 0, 640, 480, FALSE );
-
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 			}
 
 			sTempPosX_S += 40;

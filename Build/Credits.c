@@ -781,13 +781,13 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, STR16 pString)
 		ColorFillVideoSurfaceArea(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA,	pNodeToAdd->sHeightOfString, 0 );
 
 		//set the font dest buffer to be the surface
-		SetFontDestBuffer( pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, FALSE );
+		SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
 
 		//write the string onto the surface
 		DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, gubCrdtJustification);
 
 		//reset the font dest buffer
-		SetFontDestBuffer(FRAME_BUFFER, 0,0,640,480, FALSE);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 	}
 
 

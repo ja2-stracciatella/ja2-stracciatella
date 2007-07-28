@@ -2404,7 +2404,7 @@ static void DisplayBookMarks(void)
   SetFontShadow(NO_SHADOW);
 
 	// set buffer
-	SetFontDestBuffer(FRAME_BUFFER ,BOOK_X, BOOK_TOP_Y,BOOK_X+BOOK_WIDTH-10,480, FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, 480);
 
 
 	// blt in book mark background
@@ -2467,7 +2467,7 @@ static void DisplayBookMarks(void)
 	 mprintf(sX, sY,pBookMarkStrings[CANCEL_STRING] );
 	 	 iCounter++;
 
-	 SetFontDestBuffer(FRAME_BUFFER,0,0,640,480, FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	InvalidateRegion(BOOK_X, BOOK_TOP_Y + iCounter * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (iCounter + 1) * BOOK_HEIGHT + 16);
 	SetFontShadow(DEFAULT_SHADOW);
@@ -3235,9 +3235,9 @@ static BOOLEAN InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wc
 	BltVideoObjectFromIndex(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
 	BltVideoObjectFromIndex(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
 
-	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, FALSE);
+	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT);
 	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	return( TRUE );
 }

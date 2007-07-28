@@ -1135,10 +1135,8 @@ static UINT16 RenderSpecificHelpScreen(void)
 //new screen:
 
 	//set the buffer for the text to go to
-//	SetFontDestBuffer( guiHelpScreenTextBufferSurface, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y,
-//										 HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__NUMBER_BYTES_IN_TEXT_BUFFER, FALSE );
-	SetFontDestBuffer( guiHelpScreenTextBufferSurface, 0, 0,
-										 HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, FALSE );
+//	SetFontDestBuffer(guiHelpScreenTextBufferSurface, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y, HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__NUMBER_BYTES_IN_TEXT_BUFFER);
+	SetFontDestBuffer(guiHelpScreenTextBufferSurface, 0, 0, HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER);
 
 
 	//switch on the current screen
@@ -1169,14 +1167,14 @@ static UINT16 RenderSpecificHelpScreen(void)
 
 		default:
 			#ifdef JA2BETAVERSION
-				SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 				AssertMsg( 0, "Error in help screen:  RenderSpecificHelpScreen().  DF 0" );
       #else
         break;
 			#endif
 	}
 
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	//add 1 line to the bottom of the buffer
 	usNumVerticalPixelsDisplayed += 10;

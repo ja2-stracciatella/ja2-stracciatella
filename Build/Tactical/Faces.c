@@ -1239,7 +1239,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			if ( pSoldier->bOppCnt > 0 )
 #endif
 			{
-				SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
+				SetFontDestBuffer(uiRenderBuffer, 0, 0, 640, 480);
 
 				swprintf( sString, lengthof(sString), L"%d", pSoldier->bOppCnt );
 
@@ -1254,7 +1254,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				sY2 = sY1 + GetFontHeight( TINYFONT1 ) - 1;
 
 				mprintf( (INT16)( sX1 + 1), (INT16)( sY1 - 1 ), sString );
-				SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 				// Draw box
 				pDestBuf = LockVideoSurface( uiRenderBuffer, &uiDestPitchBYTES );
@@ -1282,7 +1282,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 					SetFontBackground( FONT_MCOLOR_BLACK );
 					SetFontForeground( FONT_MCOLOR_WHITE );
 
-					SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
+					SetFontDestBuffer(uiRenderBuffer, 0, 0, 640, 480);
 
 					FindFontCenterCoordinates(sFaceX, sFaceY, pFace->usFaceWidth, pFace->usFaceHeight, pFace->zDisplayText, TINYFONT1, &sFontX, &sFontY);
 
@@ -1297,7 +1297,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 						pFace->fDisplayTextOver = FACE_NO_TEXT_OVER;
 					}
 
-					SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+					SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 				}
 			}
@@ -1442,7 +1442,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
       // ATE: Show numbers only in mapscreen
 			if( fShowNumber )
 			{
-				SetFontDestBuffer( uiRenderBuffer, 0, 0, 640, 480, FALSE );
+				SetFontDestBuffer(uiRenderBuffer, 0, 0, 640, 480);
 
 				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
 
@@ -1454,7 +1454,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				SetFontBackground( FONT_BLACK );
 
 				mprintf(  sFaceX + pFace->usFaceWidth - usTextWidth, ( INT16 )( sFaceY + 3 ), sString );
-				SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 			}
 		}
 	}

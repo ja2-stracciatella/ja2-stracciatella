@@ -1699,7 +1699,7 @@ static void RenderInventoryForCharacter(INT32 iId, INT32 iSlot)
 				SetFont(FONT10ARIAL);
 				SetFontForeground(FONT_WHITE);
 				SetFontBackground(FONT_BLACK);
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE);
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 				wcslcpy(sString, ItemNames[sIndex], lengthof(sString));
 				ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);

@@ -60,7 +60,7 @@ BOOLEAN	InitializeFonts(void)
 #endif
 
 	// Set default for font system
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	return TRUE;
 }

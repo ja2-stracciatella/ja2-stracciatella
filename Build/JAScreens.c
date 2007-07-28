@@ -1273,7 +1273,7 @@ UINT32 DemoExitScreenHandle(void)
 			gbFadeSpeed = (INT8)50;
 			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
 			ubCurrentScreen = 4;
-			SetFontDestBuffer( FRAME_BUFFER, 0, 230, 640, 480, FALSE );
+			SetFontDestBuffer(FRAME_BUFFER, 0, 230, 640, 480);
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_GRAY2 );
 			uiStartTime = GetJA2Clock();

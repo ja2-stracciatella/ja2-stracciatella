@@ -1477,8 +1477,7 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 			Box->Position.iX + Box->uiLeftMargin - 1,
 			Box->Position.iY + Box->uiTopMargin,
 			Box->Position.iX + Box->Dimensions.iRight  - Box->uiRightMargin,
-			Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin,
-			FALSE
+			Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin
 		);
 	}
 
@@ -1604,7 +1603,7 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 		);
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480, FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	return TRUE;
 }

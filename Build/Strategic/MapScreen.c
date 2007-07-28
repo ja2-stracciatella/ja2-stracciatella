@@ -1964,14 +1964,14 @@ static void DisplayCharacterInfo(void)
 	Assert( gCharactersList[ bSelectedInfoChar ].fValid );
 
 	// set font buffer
-	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 
 	// draw character info and face
 	DrawCharacterInfo( bSelectedInfoChar );
 
 	RenderHandPosItem();
 
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	RenderIconsForUpperLeftCornerPiece( bSelectedInfoChar );
 
@@ -2543,13 +2543,13 @@ static void DisplayCharacterList(void)
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fTeamPanelDirty == FALSE ) )
 	{
-		SetFontDestBuffer(FRAME_BUFFER ,0,0,640,480,FALSE);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 		return;
 	}
 
 
 	// set dest buffer
-	SetFontDestBuffer(guiSAVEBUFFER,0,0,640,480,FALSE);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 	SetFont( MAP_SCREEN_FONT );
 	SetFontBackground(FONT_BLACK);
 
@@ -2601,7 +2601,7 @@ static void DisplayCharacterList(void)
 	}
 
 	HandleDisplayOfSelectedMercArrows( );
-	SetFontDestBuffer(FRAME_BUFFER ,0,0,640,480,FALSE);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 	EnableDisableTeamListRegionsAndHelpText( );
 
@@ -4048,7 +4048,7 @@ static UINT32 HandleMapUI(void)
 								// fMapPanelDirty = TRUE;
 							 }
 
-							//SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+							//SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 							if( ( IsTheCursorAllowedToHighLightThisSector( sMapX, sMapY ) == TRUE ) &&
 									( SectorInfo[ ( SECTOR( sMapX, sMapY ) ) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER ) )
@@ -6090,19 +6090,19 @@ static void BltCharInvPanel(void)
   RenderInvBodyPanel(pSoldier, INV_BODY_X, INV_BODY_Y );
 
 	// reset font destination buffer to the save buffer
-	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 
 	// render items in each of chars slots
   HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 
 	// reset font destination buffer
-	SetFontDestBuffer( FRAME_BUFFER, 0,0, 640, 480, FALSE );
+	SetFontDestBuffer(FRAME_BUFFER, 0,0, 640, 480);
 
  	SetFont( BLOCKFONT2 );
 
 	// Render Values for stats!
 	// Set font drawing to saved buffer
-	SetFontDestBuffer( guiSAVEBUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
@@ -6142,7 +6142,7 @@ static void BltCharInvPanel(void)
 		// blit gold key on top of key ring if key ring is not empty
 	}
 
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 }
 
 
@@ -6567,7 +6567,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 	SetFont( CHAR_FONT );
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
-	SetFontDestBuffer( uiBufferToRenderTo, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(uiBufferToRenderTo, 0, 0, 640, 480);
 
 
 	// assignment strings
@@ -6599,7 +6599,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 
 
 	// restore buffer
-	SetFontDestBuffer( FRAME_BUFFER, 0, 0, 640, 480, FALSE );
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 }
 
 
