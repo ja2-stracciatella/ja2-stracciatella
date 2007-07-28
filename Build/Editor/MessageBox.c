@@ -26,10 +26,9 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
 
 void CreateMessageBox(const wchar_t* wzString)
 {
-	INT16 sPixLen;
 	INT16 sStartX, sStartY;
 
-	sPixLen = StringPixLength ( wzString, (UINT16)gpLargeFontType1 ) + 10;
+	INT16 sPixLen = StringPixLength(wzString, gpLargeFontType1) + 10;
 	if ( sPixLen > 600 )
 		sPixLen = 600;
 
@@ -39,10 +38,7 @@ void CreateMessageBox(const wchar_t* wzString)
 	gfMessageBoxResult = FALSE;
 
 	// Fake button for background w/ text
-	iMsgBoxBgrnd = CreateTextButton( wzString, (UINT16)gpLargeFontType1,
-									FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT, sStartX, sStartY,
-									sPixLen, 96, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2,
-									BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
+	iMsgBoxBgrnd = CreateTextButton(wzString, gpLargeFontType1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT, sStartX, sStartY, sPixLen, 96, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
 	DisableButton( iMsgBoxBgrnd );
 	SpecifyDisabledButtonStyle( iMsgBoxBgrnd, DISABLED_STYLE_NONE );
 

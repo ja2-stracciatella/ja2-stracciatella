@@ -1211,8 +1211,7 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			usPosY = BOBBYR_CITY_START_LOCATION_Y;
 			for( i=0; i< BOBBYR_NUM_DISPLAYED_CITIES; i++)
 			{
-				MSYS_DefineRegion( &gSelectedDropDownRegion[i], usPosX, (UINT16)(usPosY+4), (UINT16)(usPosX+BOBBYR_DROP_DOWN_WIDTH-6), (UINT16)(usPosY+usFontHeight+7), MSYS_PRIORITY_HIGH,
-										 CURSOR_WWW, SelectDropDownMovementCallBack, SelectDropDownRegionCallBack);
+				MSYS_DefineRegion(&gSelectedDropDownRegion[i], usPosX, usPosY + 4, usPosX + BOBBYR_DROP_DOWN_WIDTH - 6, usPosY + usFontHeight + 7, MSYS_PRIORITY_HIGH, CURSOR_WWW, SelectDropDownMovementCallBack, SelectDropDownRegionCallBack);
 				MSYS_SetRegionUserData( &gSelectedDropDownRegion[ i ], 0, i);
 
 				usPosY += usFontHeight + 2;
@@ -1227,8 +1226,7 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			usPosY = BOBBYR_SCROLL_UP_ARROW_Y;
 			for(i=0; i<2; i++)
 			{
-				MSYS_DefineRegion( &gSelectedUpDownArrowOnScrollAreaRegion[i], usPosX, usPosY, (UINT16)(usPosX+BOBBYR_SCROLL_ARROW_WIDTH), (UINT16)(usPosY+BOBBYR_SCROLL_ARROW_HEIGHT), MSYS_PRIORITY_HIGH,
-										 CURSOR_WWW, MSYS_NO_CALLBACK, SelectUpDownArrowOnScrollAreaRegionCallBack);
+				MSYS_DefineRegion(&gSelectedUpDownArrowOnScrollAreaRegion[i], usPosX, usPosY, usPosX + BOBBYR_SCROLL_ARROW_WIDTH, usPosY + BOBBYR_SCROLL_ARROW_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectUpDownArrowOnScrollAreaRegionCallBack);
 				MSYS_SetRegionUserData( &gSelectedUpDownArrowOnScrollAreaRegion[ i ], 0, i);
 				usPosX = BOBBYR_SCROLL_DOWN_ARROW_X;
 				usPosY = BOBBYR_SCROLL_DOWN_ARROW_Y;

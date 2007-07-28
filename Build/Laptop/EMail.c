@@ -1858,23 +1858,23 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	// all headers, but not info are right justified
 
   // print from
-  FindFontRightCoordinates( MESSAGE_HEADER_X-20, ( INT16 ) ( MESSAGE_FROM_Y + (INT16)iViewerY ) ,  MESSAGE_HEADER_WIDTH, ( INT16 ) ( MESSAGE_FROM_Y + GetFontHeight ( MESSAGE_FONT ) ) ,pEmailHeaders[0] ,MESSAGE_FONT, &usX, &usY);
-	mprintf( usX, MESSAGE_FROM_Y + (UINT16)iViewerY, pEmailHeaders[0]);
+	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);
+	mprintf(usX, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0]);
 
 	// the actual from info
 	mprintf( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
 
 
   // print date
-	FindFontRightCoordinates( MESSAGE_HEADER_X+168, ( INT16 ) ( MESSAGE_DATE_Y + (UINT16)iViewerY ),  MESSAGE_HEADER_WIDTH, ( INT16 ) ( MESSAGE_DATE_Y + GetFontHeight ( MESSAGE_FONT ) ) ,pEmailHeaders[2] ,MESSAGE_FONT, &usX, &usY);
-	mprintf( usX, MESSAGE_DATE_Y+ (UINT16)iViewerY , pEmailHeaders[2]);
+	FindFontRightCoordinates(MESSAGE_HEADER_X + 168, MESSAGE_DATE_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_DATE_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[2], MESSAGE_FONT, &usX, &usY);
+	mprintf(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
 
 	// the actual date info
 	mprintf(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, L"%d", pMail->iDate / (24 * 60));
 
 	// print subject
-	FindFontRightCoordinates( MESSAGE_HEADER_X-20, MESSAGE_SUBJECT_Y ,  MESSAGE_HEADER_WIDTH, ( INT16 ) (MESSAGE_SUBJECT_Y + GetFontHeight ( MESSAGE_FONT )),pEmailHeaders[1] ,MESSAGE_FONT, &usX, &usY);
-	mprintf( usX, MESSAGE_SUBJECT_Y + (UINT16)iViewerY, pEmailHeaders[1]);
+	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
+	mprintf(usX, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1]);
 
  	// the actual subject info
 	IanDisplayWrappedString(SUBJECT_LINE_X + 2, SUBJECT_LINE_Y + 2 + iViewerY, SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);

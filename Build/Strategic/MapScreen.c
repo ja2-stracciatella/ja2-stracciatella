@@ -3705,7 +3705,7 @@ static void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
 	}
 
 	//RestoreExternBackgroundRect(NAME_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), NAME_WIDTH, Y_SIZE);
-	DrawString( pName, (UINT16)usX, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), iFont);
+	DrawString(pName, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
 }
 
 
@@ -3758,7 +3758,7 @@ static void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	//RestoreExternBackgroundRect(LOC_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), LOC_WIDTH, Y_SIZE);
 
 	// draw string
-	DrawString( sString,((UINT16)(usX)), ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ((UINT32)iFont));
+	DrawString(sString, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
 }
 
 
@@ -3785,7 +3785,7 @@ static void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
 	}
 
 	//RestoreExternBackgroundRect(DEST_ETA_X+1, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), DEST_ETA_WIDTH-1, Y_SIZE);
-	DrawString( sString,((UINT16)(usX)), ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ((UINT32)iFont));
+	DrawString(sString, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
 }
 
 
@@ -3817,7 +3817,7 @@ static void DrawTimeRemaining(INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor)
 	}
 
 	//RestoreExternBackgroundRect(TIME_REMAINING_X, ((UINT16)(usY+(Y_OFFSET*sCharNumber+1))), TIME_REMAINING_WIDTH, Y_SIZE);
-	DrawString(sString,((UINT16)(usX)), ((UINT16)(usY+(Y_OFFSET*sCharNumber+1))), ((UINT32)iFont));
+	DrawString(sString, usX, usY + Y_OFFSET * sCharNumber + 1, iFont);
 }
 
 
@@ -6571,7 +6571,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 
 
 	// assignment strings
-	DrawString( pUpperLeftMapScreenStrings[ 0 ], (UINT16)(220 - StringPixLength( pUpperLeftMapScreenStrings[0], CHAR_FONT)/2), 6, CHAR_FONT);
+	DrawString(pUpperLeftMapScreenStrings[0], 220 - StringPixLength(pUpperLeftMapScreenStrings[0], CHAR_FONT) / 2, 6, CHAR_FONT);
 
 	// vehicles and robot don't have attributes, contracts, or morale
 	if ( ( pSoldier == NULL ) || ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) ) )
@@ -6581,8 +6581,8 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 
 		for( iCounter = 0; iCounter < 5; iCounter++ )
 		{
-			DrawString(pShortAttributeStrings[ iCounter  ], 88, ( INT16 )( 22 + iCounter * 10 ) ,CHAR_FONT );
-			DrawString(pShortAttributeStrings[ iCounter + 5 ] ,133, ( INT16 )( 22 + iCounter * 10 ), CHAR_FONT );
+			DrawString(pShortAttributeStrings[iCounter],      88, 22 + iCounter * 10, CHAR_FONT);
+			DrawString(pShortAttributeStrings[iCounter + 5], 133, 22 + iCounter * 10, CHAR_FONT);
 		}
 
 		// contract

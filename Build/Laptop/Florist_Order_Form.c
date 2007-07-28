@@ -883,8 +883,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			usPosY = FLOWER_ORDER_DROP_DOWN_CITY_START_Y;
 			for( i=0; i< FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS; i++)
 			{
-				MSYS_DefineRegion( &gSelectedFlowerDropDownRegion[i], usPosX, (UINT16)(usPosY+4), (UINT16)(usPosX+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+3,
-										 CURSOR_WWW, SelectFlowerDropDownMovementCallBack, SelectFlowerDropDownRegionCallBack);
+				MSYS_DefineRegion(&gSelectedFlowerDropDownRegion[i], usPosX, usPosY + 4, usPosX + FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 3, CURSOR_WWW, SelectFlowerDropDownMovementCallBack, SelectFlowerDropDownRegionCallBack);
 				MSYS_SetRegionUserData( &gSelectedFlowerDropDownRegion[ i ], 0, i);
 
 				usPosY += usFontHeight + 2;
@@ -1031,7 +1030,7 @@ static void InitFlowerOrderTextInputBoxes(void)
 
 
 	InitTextInputMode();
-	SetTextInputFont( (UINT16)FONT12ARIAL );
+	SetTextInputFont(FONT12ARIAL);
 	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 255, 255, 255) ) );
 	SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
 	SetTextInputRegularColors( 2, FONT_WHITE );

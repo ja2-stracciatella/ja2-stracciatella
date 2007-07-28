@@ -487,8 +487,8 @@ void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UI
 	SetFont( uiFont );
 	SetFontForeground( FONT_BLACK );
 	SetFontShadow( FONT_BLACK );
-	x += (w - (UINT16)StringPixLength( str, uiFont )) / 2;
-	y += (h - (UINT16)GetFontHeight( uiFont)) / 2;
+	x += (w - StringPixLength(str, uiFont)) / 2;
+	y += (h - GetFontHeight(uiFont)) / 2;
 	mprintf(x, y, L"%ls", str);
 	InvalidateRegion( x, y, x2, y2 );
 }
@@ -850,7 +850,7 @@ static void RenderEditorInfo(void)
 		swprintf(FPSText, lengthof(FPSText), L"   (%d)   ", iMapIndex);
 	else
 		swprintf(FPSText, lengthof(FPSText), L"          ");
-	mprintfEditor( (UINT16)(50-StringPixLength( FPSText, FONT12POINT1 )/2), 463, FPSText );
+	mprintfEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 463, FPSText);
 
 	switch( iCurrentTaskbar )
 	{

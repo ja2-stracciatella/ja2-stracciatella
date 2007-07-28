@@ -1518,19 +1518,19 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 			{
 				FindFontCenterCoordinates
 				(
-					(INT16)(Box->Position.iX + Box->uiLeftMargin),
-					(INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace),
-					(INT16)(Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2)),
-					(INT16)GetFontHeight(Box->Text[uiCount]->uiFont),
+					Box->Position.iX + Box->uiLeftMargin,
+					Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
+					Box->Dimensions.iRight - Box->uiRightMargin + Box->uiLeftMargin + 2,
+					GetFontHeight(Box->Text[uiCount]->uiFont),
 					Box->Text[uiCount]->pString,
-					(INT32)Box->Text[uiCount]->uiFont,
+					Box->Text[uiCount]->uiFont,
 					&uX, &uY
 				);
 			}
 			else
 			{
-				uX = (INT16)(Box->Position.iX + Box->uiLeftMargin);
-				uY = (INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace);
+				uX = Box->Position.iX + Box->uiLeftMargin;
+				uY = Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace;
 			}
 
 			// print
@@ -1570,19 +1570,19 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 			{
 				FindFontCenterCoordinates
 				(
-					(INT16)(Box->Position.iX + Box->uiLeftMargin),
-					(INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace),
-					(INT16)(Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2)),
-					(INT16)GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont),
+					Box->Position.iX + Box->uiLeftMargin,
+					Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
+					Box->Dimensions.iRight - Box->uiRightMargin + Box->uiLeftMargin + 2,
+					GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont),
 					Box->pSecondColumnString[uiCount]->pString,
-					(INT32)Box->pSecondColumnString[uiCount]->uiFont,
+					Box->pSecondColumnString[uiCount]->uiFont,
 					&uX, &uY
 				);
 			}
 			else
 			{
-				uX = (INT16)(Box->Position.iX + Box->uiLeftMargin + Box->uiSecondColumnCurrentOffset);
-				uY = (INT16)(Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace);
+				uX = Box->Position.iX + Box->uiLeftMargin + Box->uiSecondColumnCurrentOffset;
+				uY = Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace;
 			}
 
 			// print

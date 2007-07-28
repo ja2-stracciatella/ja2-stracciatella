@@ -3620,13 +3620,11 @@ static void BuildMouseRegionsForMoveBox(void)
 
 
 	// box heading
-	MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	iCounter++;
 
 	// blank line
-	MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	iCounter++;
 
 	// calc total number of "moving" lines in the box
@@ -3641,8 +3639,7 @@ static void BuildMouseRegionsForMoveBox(void)
 		// define regions for squad lines
 		for( iCount = 0; iCount < giNumberOfSquadsInSectorMoving; iCount++ )
 		{
-			MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+			MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 			// set user defines
 			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3654,8 +3651,7 @@ static void BuildMouseRegionsForMoveBox(void)
 			{
 				if( pSoldierMovingList[ iCountB ] -> bAssignment == iSquadMovingList[ iCount ] )
 				{
-					MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 					// set user defines
 					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3669,8 +3665,7 @@ static void BuildMouseRegionsForMoveBox(void)
 		for( iCount = 0; iCount < giNumberOfVehiclesInSectorMoving; iCount++ )
 		{
 			// define regions for vehicle lines
-			MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+			MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 			// set user defines
 			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3682,8 +3677,7 @@ static void BuildMouseRegionsForMoveBox(void)
 			{
 				if( ( pSoldierMovingList[ iCountB ] -> bAssignment == VEHICLE ) &&( pSoldierMovingList[ iCountB ] -> iVehicleId == iVehicleMovingList[ iCount ] ) )
 				{
-					MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 					// set user defines
 					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3704,8 +3698,7 @@ static void BuildMouseRegionsForMoveBox(void)
 				// this line gets place only once...
 				if( !fDefinedOtherRegion )
 				{
-					MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 					// set user defines
 					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3716,8 +3709,7 @@ static void BuildMouseRegionsForMoveBox(void)
 					fDefinedOtherRegion = TRUE;
 				}
 
-				MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-					MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+				MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 				// set user defines
 				MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3730,16 +3722,14 @@ static void BuildMouseRegionsForMoveBox(void)
 
 
 	// blank line
-	MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-						 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	iCounter++;
 
 
 	if ( IsAnythingSelectedForMoving() )
 	{
 		// DONE line
-		MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+		MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 		// set user defines
 		MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
@@ -3750,14 +3740,12 @@ static void BuildMouseRegionsForMoveBox(void)
 	else
 	{
 		// blank line
-		MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+		MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		iCounter++;
 	}
 
 	// CANCEL line
-	MSYS_DefineRegion( &gMoveMenuRegion[ iCounter ], 	( INT16 )( iBoxXPosition ), ( INT16 )( iBoxYPosition + iFontHeight * iCounter ), ( INT16 )( iBoxXPosition + iBoxWidth ), ( INT16 )( iBoxYPosition + iFontHeight * ( iCounter + 1 ) ), MSYS_PRIORITY_HIGHEST,
-						 MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback );
+	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
 
 	// set user defines
 	MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );

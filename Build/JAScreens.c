@@ -1288,7 +1288,6 @@ UINT32 DemoExitScreenHandle(void)
 	if( ubCurrentScreen == 4 )
 	{
 		INT32 i, width, yp;
-		UINT16 usFont;
 		uiTime = GetJA2Clock();
 		//percentage is at 100 times higher resolution.
 		iPercentage = (uiTime - uiStartTime) ;
@@ -1317,10 +1316,7 @@ UINT32 DemoExitScreenHandle(void)
 		yp = max( yp, -400 );
 		for( i = 2; i < 40; i++ )
 		{
-			if( i < 36 )
-				usFont = (UINT16)FONT14ARIAL;
-			else
-				usFont = (UINT16)FONT14HUMANIST;
+			UINT16 usFont = (i < 36 ? FONT14ARIAL : FONT14HUMANIST);
 
 			switch( i )
 			{

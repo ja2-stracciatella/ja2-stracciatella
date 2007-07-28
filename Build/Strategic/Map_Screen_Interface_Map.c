@@ -509,23 +509,23 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
 	 if( fDrawCursors && ( iCount == sSelMapX ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
-		SetFontForeground( ( UINT8 ) ( fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE ) );
+		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorX ) )
     SetFontForeground(FONT_WHITE);
    else
     SetFontForeground(MAP_INDEX_COLOR);
 
-	 FindFontCenterCoordinates(((INT16)(MAP_HORT_INDEX_X+( iCount - 1) *MAP_GRID_X)), MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
+	 FindFontCenterCoordinates(MAP_HORT_INDEX_X + (iCount - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
 	 mprintf(usX,usY,pMapHortIndex[iCount]);
 
 	 if( fDrawCursors && ( iCount == sSelMapY) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
-		SetFontForeground( ( UINT8 ) ( fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE ) );
+		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorY ) )
     SetFontForeground(FONT_WHITE);
    else
     SetFontForeground(MAP_INDEX_COLOR);
 
-	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, ((INT16)(MAP_VERT_INDEX_Y+ ( iCount - 1) *MAP_GRID_Y)), MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
+	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (iCount - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
 	 mprintf(usX,usY,pMapVertIndex[iCount]);
 	}
 
@@ -557,13 +557,13 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
 	 if( fDrawCursors && ( iCount == sSelMapX ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
-		SetFontForeground( ( UINT8 ) ( fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE ) );
+		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorX ) )
     SetFontForeground(FONT_WHITE);
    else
     SetFontForeground(MAP_INDEX_COLOR);
 
-   FindFontCenterCoordinates(((INT16)(MAP_HORT_INDEX_X+((iCount)*MAP_GRID_X)*2-iZoomX)), MAP_HORT_INDEX_Y, MAP_GRID_X*2, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
+   FindFontCenterCoordinates(MAP_HORT_INDEX_X + iCount * MAP_GRID_X * 2 - iZoomX, MAP_HORT_INDEX_Y, MAP_GRID_X * 2, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
 	 mprintf(usX,usY,pMapHortIndex[iCount]);
   }
 	SetFontDestBuffer(FRAME_BUFFER, MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y, MAP_VERT_INDEX_X + MAP_GRID_X, MAP_VERT_INDEX_Y + MAX_VIEW_SECTORS * MAP_GRID_Y);
@@ -571,13 +571,13 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
 	 if( fDrawCursors && ( iCount == sSelMapY) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
-		SetFontForeground( ( UINT8 ) ( fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE ) );
+		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorY ) )
     SetFontForeground(FONT_WHITE);
    else
     SetFontForeground(MAP_INDEX_COLOR);
 
-	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, ((INT16)(MAP_VERT_INDEX_Y+(iCount*MAP_GRID_Y)*2-iZoomY)), MAP_HORT_HEIGHT, MAP_GRID_Y*2, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
+	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + iCount * MAP_GRID_Y * 2 - iZoomY, MAP_HORT_HEIGHT, MAP_GRID_Y * 2, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
 	 mprintf(usX,usY,pMapVertIndex[iCount]);
 	}
 
@@ -930,7 +930,7 @@ static void ShowTownText(void)
 			}
 
 			// red for low loyalty, green otherwise
-		  SetFontForeground( ( UINT8 ) ( fLoyaltyTooLowToTrainMilitia ? FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN ) );
+		  SetFontForeground(fLoyaltyTooLowToTrainMilitia ? FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN);
 
       DrawTownLabels(pTownNames[bTown], sStringA, usX, usY);
 		}
@@ -979,7 +979,7 @@ static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT
 	}
 
 	// print second string beneath first
-	sSecondY = ( INT16 )( usFirstY + GetFontHeight( MAP_FONT ) );
+	sSecondY = usFirstY + GetFontHeight(MAP_FONT);
 	gprintfdirty(sSecondX, sSecondY, L"%ls", pStringA);
 	mprintf(sSecondX, sSecondY, L"%ls", pStringA);
 
@@ -4094,7 +4094,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 					RestoreClipRegionToFullScreen( );
 				}
 
-				FindFontCenterCoordinates(( INT16 )( iX + sTextXOffset ), 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
+				FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
 				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
 				mprintf( usX, iY + sTextYOffset, sString);
 
@@ -4218,14 +4218,14 @@ void DisplayDistancesForHelicopter( void )
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumSafeSectors );
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, ( INT16 ) ( sYPosition + 5 + GetFontHeight( MAP_FONT ) ), sString );
+	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
+	mprintf(sX, sYPosition + 5 + GetFontHeight(MAP_FONT), sString);
 
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[2]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumUnSafeSectors );
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 2 * GetFontHeight( MAP_FONT ) ), sString );
+	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
+	mprintf(sX, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), sString);
 
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[3]);
 
@@ -4234,8 +4234,8 @@ void DisplayDistancesForHelicopter( void )
 	uiTripCost = ( sNumSafeSectors * COST_AIRSPACE_SAFE ) + ( sNumUnSafeSectors * COST_AIRSPACE_UNSAFE );
 
 	SPrintMoney(sString, uiTripCost);
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 3 * GetFontHeight( MAP_FONT ) ), sString );
+	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
+	mprintf(sX, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), sString);
 
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[4]);
 
@@ -4247,15 +4247,15 @@ void DisplayDistancesForHelicopter( void )
 	iTime += GetPathTravelTimeDuringPlotting( pVehicleList[ iHelicopterVehicleId ].pMercPath );
 
 	swprintf( sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 4 * GetFontHeight( MAP_FONT ) ), sString );
+	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
+	mprintf(sX, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), sString);
 
 
 	// show # of passengers aboard the chopper
 	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 5 * GetFontHeight( MAP_FONT ), pHelicopterEtaStrings[ 6 ] );
 	swprintf( sString, lengthof(sString), L"%d", GetNumberOfPassengersInHelicopter() );
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, ( INT16 ) ( MAP_HELICOPTER_ETA_POPUP_Y + 5 + 5 * GetFontHeight( MAP_FONT ) ), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, ( INT16 ) ( sYPosition + 5 + 5 * GetFontHeight( MAP_FONT ) ), sString );
+	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 5 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
+	mprintf(sX, sYPosition + 5 + 5 * GetFontHeight(MAP_FONT), sString);
 
 
 	InvalidateRegion( MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition,  MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT );
@@ -5163,7 +5163,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 		// printf number of troops
 		SetFont( FONT10ARIAL );
 		swprintf( sString, lengthof(sString), L"%d", iTotalNumberOfTroops );
-		FindFontRightCoordinates( ( INT16 )( MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( iCounter % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH ) ), ( INT16 ) ( MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( iCounter / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT ) ),  MILITIA_BOX_BOX_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY );
+		FindFontRightCoordinates(MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + iCounter % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + iCounter / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT, MILITIA_BOX_BOX_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY);
 
 		if( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].bNameId != BLANK_SECTOR &&
 				!StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].fEnemyControlled )

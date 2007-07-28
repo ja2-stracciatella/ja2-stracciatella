@@ -2433,7 +2433,7 @@ static void DisplayBookMarks(void)
      SetFontBackground(FONT_BLACK);
 	 }
 
-	 FindFontCenterCoordinates(BOOK_X + 3, (UINT16)(BOOK_TOP_Y+2+(iCounter*( BOOK_HEIGHT + 6 ) ) + 6),BOOK_WIDTH - 3,BOOK_HEIGHT+6, pBookMarkStrings[ LaptopSaveInfo.iBookMarkList[iCounter-1] ] , BOOK_FONT, &sX, &sY );
+		FindFontCenterCoordinates(BOOK_X + 3, BOOK_TOP_Y + 2 + iCounter * (BOOK_HEIGHT + 6) + 6, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[iCounter - 1]], BOOK_FONT, &sX, &sY);
 
 	 mprintf(sX, sY,pBookMarkStrings[ LaptopSaveInfo.iBookMarkList[iCounter-1] ] );
 	 	 iCounter++;
@@ -2463,7 +2463,7 @@ static void DisplayBookMarks(void)
      SetFontForeground(FONT_BLACK);
      SetFontBackground(FONT_BLACK);
 	 }
-	 FindFontCenterCoordinates(BOOK_X + 3, (UINT16)(BOOK_TOP_Y+2+(iCounter*( BOOK_HEIGHT + 6 ) ) + 6),BOOK_WIDTH - 3,BOOK_HEIGHT+6,pBookMarkStrings[ CANCEL_STRING ] , BOOK_FONT, &sX, &sY );
+	FindFontCenterCoordinates(BOOK_X + 3, BOOK_TOP_Y + 2 + iCounter * (BOOK_HEIGHT + 6) + 6, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[CANCEL_STRING], BOOK_FONT, &sX, &sY);
 	 mprintf(sX, sY,pBookMarkStrings[CANCEL_STRING] );
 	 	 iCounter++;
 

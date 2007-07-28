@@ -326,7 +326,7 @@ static void DisplayMercNameInOverhead(SOLDIERTYPE* pSoldier)
 	SetFontForeground( FONT_MCOLOR_WHITE );
 
 	// Center here....
-	FindFontCenterCoordinates( sWorldScreenX, sWorldScreenY, (INT16)( 1 ), 1, pSoldier->name, TINYFONT1, &sX, &sY );
+	FindFontCenterCoordinates(sWorldScreenX, sWorldScreenY, 1, 1, pSoldier->name, TINYFONT1, &sX, &sY);
 
 	// OK, selected guy is here...
 	gprintfdirty( sX, sY, pSoldier->name );

@@ -411,8 +411,7 @@ void ScrollString( )
 				// Adjust position!
 				if ( gpDisplayList[ cnt  ] != NULL )
 				{
-
-					SetStringVideoOverlayPosition( gpDisplayList[ cnt ], X_START, (INT16)( ( Y_START - ( ( cnt ) * GetFontHeight( SMALLFONT1 ) ) ) - ( INT16)( WIDTH_BETWEEN_NEW_STRINGS * ( iNumberOfNewStrings ) ) ) );
+					SetStringVideoOverlayPosition(gpDisplayList[cnt], X_START, Y_START - cnt * GetFontHeight(SMALLFONT1) - WIDTH_BETWEEN_NEW_STRINGS * iNumberOfNewStrings);
 
 					// start of new string, increment count of new strings, for spacing purposes
 					if( gpDisplayList[ cnt ] -> fBeginningOfNewString == TRUE )

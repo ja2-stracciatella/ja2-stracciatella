@@ -62,7 +62,7 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 	pNew->usBarBottom = usBottom;
 	//Init default data
 	pNew->fPanel = FALSE;
-	pNew->usMsgFont = (UINT16)FONT12POINT1;
+	pNew->usMsgFont = FONT12POINT1;
 	pNew->ubMsgFontForeColor = FONT_BLACK;
 	pNew->ubMsgFontShadowColor = 0;
 	SetRelativeStartAndEndPercentage( pNew->ubProgressBarID, 0, 100, NULL );
@@ -121,7 +121,7 @@ void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, UINT32 usFont, UIN
 		pCurr->swzTitle = (wchar_t*)MemAlloc( sizeof( wchar_t ) * ( wcslen( pString ) + 1 ) );
 		swprintf( pCurr->swzTitle, wcslen(pString) + 1, pString );
 	}
-	pCurr->usTitleFont = (UINT16)usFont;
+	pCurr->usTitleFont = usFont;
 	pCurr->ubTitleFontForeColor = ubForeColor;
 	pCurr->ubTitleFontShadowColor = ubShadowColor;
 }
@@ -135,7 +135,7 @@ void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor,
 	pCurr = pBar[ ubID ];
 	if( !pCurr )
 		return;
-	pCurr->usMsgFont = (UINT16)usFont;
+	pCurr->usMsgFont = usFont;
 	pCurr->ubMsgFontForeColor = ubForeColor;
 	pCurr->ubMsgFontShadowColor = ubShadowColor;
 }
@@ -210,8 +210,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 			if( pCurr->fUseSaveBuffer )
 			{
 				UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont );
-
-				RestoreExternBackgroundRect( pCurr->usBarLeft, pCurr->usBarBottom, (INT16)(pCurr->usBarRight-pCurr->usBarLeft), (INT16)(usFontHeight + 3) );
+				RestoreExternBackgroundRect(pCurr->usBarLeft, pCurr->usBarBottom, pCurr->usBarRight - pCurr->usBarLeft, usFontHeight + 3);
 			}
 
 			SetFont( pCurr->usMsgFont );

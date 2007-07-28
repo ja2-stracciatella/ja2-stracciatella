@@ -1716,7 +1716,7 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	InitTextInputMode();
 
 	SetTextInputCursor( CUROSR_IBEAM_WHITE );
-	SetTextInputFont( (UINT16) FONT12ARIALFIXEDWIDTH ); //FONT12ARIAL //FONT12ARIALFIXEDWIDTH
+	SetTextInputFont(FONT12ARIALFIXEDWIDTH); //FONT12ARIAL //FONT12ARIALFIXEDWIDTH
 	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 0, 0, 0) ) );
 	SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
 	SetTextInputRegularColors( FONT_WHITE, 2 );

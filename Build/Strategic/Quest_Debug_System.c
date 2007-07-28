@@ -891,8 +891,7 @@ static BOOLEAN EnterQuestDebugSystem(void)
 	usPosY = QUEST_DBS_FIRST_COL_NUMBER_Y  + QUEST_DBS_LIST_TEXT_OFFSET;
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_QUESTS; i++)
 	{
-		MSYS_DefineRegion( &gQuestListRegion[ i ], usPosX, usPosY, (UINT16)(usPosX+QUEST_DBS_FIRST_SECTION_WIDTH), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+2,
-					CURSOR_WWW, MSYS_NO_CALLBACK, ScrollQuestListRegionCallBack ); //CURSOR_LAPTOP_SCREEN
+		MSYS_DefineRegion(&gQuestListRegion[i], usPosX, usPosY, usPosX + QUEST_DBS_FIRST_SECTION_WIDTH, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, ScrollQuestListRegionCallBack); //CURSOR_LAPTOP_SCREEN
 		MSYS_SetRegionUserData( &gQuestListRegion[ i ], 0, i);
 
 		usPosY += usFontHeight;
@@ -904,8 +903,7 @@ static BOOLEAN EnterQuestDebugSystem(void)
 	usPosY = QUEST_DBS_SECOND_COL_NUMBER_Y + QUEST_DBS_LIST_TEXT_OFFSET + QUEST_DBS_FACT_LIST_OFFSET;
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
 	{
-		MSYS_DefineRegion( &gFactListRegion[ i ], usPosX, usPosY, (UINT16)(usPosX+QUEST_DBS_SECOND_SECTION_WIDTH), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+2,
-					CURSOR_WWW, MSYS_NO_CALLBACK, ScrollFactListRegionCallBack ); //CURSOR_LAPTOP_SCREEN
+		MSYS_DefineRegion(&gFactListRegion[i], usPosX, usPosY, usPosX + QUEST_DBS_SECOND_SECTION_WIDTH, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, ScrollFactListRegionCallBack); //CURSOR_LAPTOP_SCREEN
 		MSYS_SetRegionUserData( &gFactListRegion[ i ], 0, i);
 
 		usPosY += usFontHeight;
@@ -1670,8 +1668,7 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 				// create the scroll regions
 				for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
 				{
-					MSYS_DefineRegion( &gSelectedNpcListRegion[i], usPosX, (UINT16)(usPosY), (UINT16)(usPosX + gpActiveListBox->usScrollWidth), (UINT16)(usPosY+usFontHeight), MSYS_PRIORITY_HIGH+20,
-											 CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
+					MSYS_DefineRegion(&gSelectedNpcListRegion[i], usPosX, usPosY, usPosX + gpActiveListBox->usScrollWidth, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 20, CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
 					MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
 
 					usPosY += usFontHeight;
@@ -1920,7 +1917,7 @@ static void DisplaySelectedNPC(void)
 //			GetShortSectorString( gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorX, gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorY, sTempString );
 		}
 
-		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, (UINT16)(usPosY), gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
+		FindFontRightCoordinates(gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY);
 
 		// the location value
 		DrawTextToScreen(sTempString, usLocationX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -2790,7 +2787,7 @@ static void InitQuestDebugTextInputBoxes(void)
 
 
 	InitTextInputMode();
-	SetTextInputFont( (UINT16)FONT12ARIAL );
+	SetTextInputFont(FONT12ARIAL);
 	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 255, 255, 255) ) );
 	SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
 	SetTextInputRegularColors( 2, FONT_WHITE );

@@ -101,7 +101,7 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	//calculate the location of the menu based on the button position.
 	//This also calculates the menu's direction based on position.
 
-	gPopup.usFont = (UINT16)SMALLFONT1;
+	gPopup.usFont = SMALLFONT1;
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
 
 	button = ButtonList[ iButtonID ];
@@ -146,7 +146,7 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 			return;
 	}
 
-	gPopup.usFont = (UINT16)SMALLFONT1;
+	gPopup.usFont = SMALLFONT1;
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
 
 	button = ButtonList[ iButtonID ];

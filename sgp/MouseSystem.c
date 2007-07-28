@@ -1118,14 +1118,12 @@ static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 
 //
 static void DisplayFastHelp(MOUSE_REGION* region)
 {
-	INT32 iX,iY,iW,iH;
-
 	if ( region->uiFlags & MSYS_FASTHELP )
 	{
-		iW = (INT32)GetWidthOfString( region->FastHelpText ) + 10;
-		iH = (INT32)( GetNumberOfLinesInHeight( region->FastHelpText ) * (GetFontHeight(FONT10ARIAL)+1) + 8 );
+		INT32 iW = GetWidthOfString(region->FastHelpText) + 10;
+		INT32 iH = GetNumberOfLinesInHeight(region->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
 
-		iX = (INT32)region->RegionTopLeftX + 10;
+		INT32 iX = region->RegionTopLeftX + 10;
 
 		if (iX < 0)
 			iX = 0;
@@ -1133,7 +1131,7 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 		if ( (iX + iW) >= SCREEN_WIDTH )
 			iX = (SCREEN_WIDTH - iW - 4);
 
-		iY = (INT32)region->RegionTopLeftY - (iH * 3 / 4);
+		INT32 iY = region->RegionTopLeftY - iH * 3 / 4;
 		if (iY < 0)
 			iY = 0;
 

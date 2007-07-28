@@ -150,7 +150,7 @@ void InitTextInputModeWithScheme( UINT8 ubSchemeID )
 	switch( ubSchemeID )
 	{
 		case DEFAULT_SCHEME:  //yellow boxes with black text, with bluish bevelling
-			SetTextInputFont( (UINT16)FONT12POINT1 );
+			SetTextInputFont(FONT12POINT1);
 			Set16BPPTextFieldColor( Get16BPPColor(FROMRGB(250, 240, 188) ) );
 			SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
 			SetTextInputRegularColors( FONT_BLACK, FONT_BLACK );
@@ -1155,13 +1155,12 @@ static void RenderBackgroundField(TEXTINPUTNODE* pNode)
  * cursor. */
 static void RenderActiveTextField(void)
 {
-	UINT16 usOffset;
 	if( !gpActive || !gpActive->szString )
 		return;
 
 	SaveFontSettings();
 	SetFont( pColors->usFont );
-	usOffset = (UINT16)(( gpActive->region.RegionBottomRightY - gpActive->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
+	UINT16 usOffset = (gpActive->region.RegionBottomRightY - gpActive->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
 	RenderBackgroundField( gpActive );
 	if (gubStartHilite != gubCursorPos)
 	{ //Some or all of the text is hilighted, so we will use a different method.
@@ -1225,7 +1224,6 @@ static void RenderActiveTextField(void)
 
 void RenderInactiveTextField( UINT8 ubID )
 {
-	UINT16 usOffset;
 	TEXTINPUTNODE* pNode, *curr;
 	curr = gpTextInputHead;
 	pNode = NULL;
@@ -1241,7 +1239,7 @@ void RenderInactiveTextField( UINT8 ubID )
 		return;
 	SaveFontSettings();
 	SetFont( pColors->usFont );
-	usOffset = (UINT16)(( pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
+	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
 	SetFontForeground( pColors->ubForeColor );
 	SetFontShadow( pColors->ubShadowColor );
 	SetFontBackground( 0 );
@@ -1253,7 +1251,6 @@ void RenderInactiveTextField( UINT8 ubID )
 
 static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 {
-	UINT16 usOffset;
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
@@ -1268,7 +1265,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 		SetFontForeground( pColors->ubForeColor );
 		SetFontShadow( pColors->ubShadowColor );
 	}
-	usOffset = (UINT16)(( pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight( pColors->usFont ) ) / 2);
+	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
 	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%ls", pNode->szString);

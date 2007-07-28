@@ -1606,7 +1606,7 @@ void DisplayItemStatistics()
 	fUseSelectedItem = eInfo.sHilitedItemIndex == -1 || eInfo.sHilitedItemIndex == eInfo.sSelItemIndex;
 
 	SetFont( SMALLCOMPFONT );
-	SetFontForeground( (UINT8)(fUseSelectedItem ? FONT_LTRED : FONT_YELLOW) );
+	SetFontForeground(fUseSelectedItem ? FONT_LTRED : FONT_YELLOW);
 
 	//Extract all of the item information.
 	if( !eInfo.pusItemIndex )

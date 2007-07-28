@@ -1326,10 +1326,8 @@ static void CreateEditMercWindow(void)
 
 	iEditMercBkgrndArea = CreateHotSpot((INT16)iXPos, (INT16)iYPos, (INT16)iWidth, (INT16)iHeight, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, EditMercBkgrndCallback );
 
-	iEditMercColorPage = CreateTextButton( L"Merc Colors", (INT16)FONT12POINT1, FONT_BLACK, FONT_BLACK,
-		BUTTON_USE_DEFAULT, (INT16)(iXPos + 183), (INT16)(iYPos + 315), 80, 20, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercChangeToColorPageCallback );
-	iEditMercEnd = CreateTextButton( L"Done", (INT16)FONT12POINT1, FONT_MCOLOR_BLACK, FONT_BLACK,
-		BUTTON_USE_DEFAULT, (INT16)(iXPos + 183), (INT16)(iYPos + 337), 80, 20, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercDoneEditCallback );
+	iEditMercColorPage = CreateTextButton(L"Merc Colors", FONT12POINT1, FONT_BLACK,        FONT_BLACK, BUTTON_USE_DEFAULT, iXPos + 183, iYPos + 315, 80, 20, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercChangeToColorPageCallback);
+	iEditMercEnd       = CreateTextButton(L"Done",        FONT12POINT1, FONT_MCOLOR_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT, iXPos + 183, iYPos + 337, 80, 20, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercDoneEditCallback);
 
 	// Disable color editing for PC Mercs
 	if ( (UINT16)gsSelectedMercID >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && (UINT16)gsSelectedMercID <=  gTacticalStatus.Team[ OUR_TEAM ].bLastID )
@@ -3115,7 +3113,7 @@ void RenderMercStrings()
 			SetFontForeground( FONT_WHITE );
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
-				FindFontCenterCoordinates( sXPos, sYPos, (INT16)(80 ), 1, pSoldier->name, TINYFONT1, &sX, &sY );
+				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pSoldier->name, TINYFONT1, &sX, &sY);
 				if( sY < 352 )
 				{
 					gprintfdirty( sX, sY, pSoldier->name );

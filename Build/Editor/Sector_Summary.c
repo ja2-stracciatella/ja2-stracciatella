@@ -1264,12 +1264,12 @@ void RenderSummaryWindow()
 					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 46, L"FILE:  %ls", gszDisplayName);
 					if( gubOverrideStatus == READONLY )
 					{
-						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW : FONT_LTRED) );
+						SetFontForeground(gfOverride ? FONT_YELLOW : FONT_LTRED);
 						mprintf( MAP_LEFT+124, MAP_BOTTOM+61, L"Override READONLY" );
 					}
 					else
 					{
-						SetFontForeground( (UINT8)(gfOverride ? FONT_YELLOW: FONT_ORANGE ) );
+						SetFontForeground(gfOverride ? FONT_YELLOW: FONT_ORANGE);
 						mprintf( MAP_LEFT+124, MAP_BOTTOM+61, L"Overwrite File");
 					}
 				}

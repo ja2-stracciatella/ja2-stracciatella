@@ -981,8 +981,8 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont )
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
-	b->usFont = (UINT16)uiFont;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->usFont = uiFont;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -992,7 +992,7 @@ void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadow
 	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1002,7 +1002,7 @@ void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 s
 	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorDown = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1012,7 +1012,7 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorHilited = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1024,7 +1024,7 @@ void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
 	b->bJustification = bJustification;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1036,7 +1036,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
-	b->usFont = (UINT16)uiFont;
+	b->usFont = uiFont;
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
 	b->sForeColorDown = sForeColorDown;
@@ -1045,7 +1045,7 @@ void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, IN
 	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
 		bJustification = BUTTON_TEXT_CENTER;
 	b->bJustification = bJustification;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
@@ -1056,10 +1056,10 @@ void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string,
 	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText( iButtonID, string );
-	b->usFont = (UINT16)uiFont;
+	b->usFont = uiFont;
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
-	b->uiFlags |= BUTTON_DIRTY ;
+	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
