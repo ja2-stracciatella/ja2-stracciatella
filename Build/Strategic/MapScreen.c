@@ -123,8 +123,6 @@
 
 #define	MAP_TIME_UNDER_THIS_DISPLAY_AS_HOURS			( 3 * 24 * 60 )
 
-#define MIN_KB_TO_DO_PRE_LOAD ( 32 * 1024 )
-
 
 #define DELAY_PER_FLASH_FOR_DEPARTING_PERSONNEL 500
 #define GLOW_DELAY 70
@@ -176,7 +174,6 @@
 #define			MAP_PERCENT_HEIGHT					10
 
 #define			MAP_INV_STATS_TITLE_FONT_COLOR				6
-#define			MAP_INV_STATS_TEXT_FONT_COLOR					5
 
 #define     PLAYER_INFO_FACE_START_X    9
 #define     PLAYER_INFO_FACE_START_Y    17
@@ -199,7 +196,6 @@
 #define     DEST_ETA_WIDTH        217 - DEST_ETA_X
 #define     TIME_REMAINING_X      222
 #define     TIME_REMAINING_WIDTH  250 - TIME_REMAINING_X
-#define     CLOCK_X_START         463 - 18
 #define     CLOCK_Y_START         298
 #define     DEST_PLOT_X						463
 #define     DEST_PLOT_Y						345
@@ -211,8 +207,6 @@
 // contract
 #define CONTRACT_X      185
 #define CONTRACT_Y      50
-//#define CONTRACT_WIDTH  63
-//#define CONTRACT_HEIGHT 10
 
 // trash can
 #define TRASH_CAN_X 176
@@ -222,21 +216,6 @@
 
 //Text offsets
 #define Y_OFFSET 2
-
-// The boxes defines
-#define TRAIN_Y_OFFSET     53
-#define TRAIN_X_OFF        65
-#define TRAIN_WID          80
-#define TRAIN_HEIG         47
-#define STRING_X_OFFSET    10
-#define STRING_Y_OFFSET     5
-#define POP_UP_BOX_X      120
-#define POP_UP_BOX_Y        0
-#define POP_UP_BOX_WIDTH   60
-#define POP_UP_BOX_HEIGHT  100
-#define MOUSE_PTR_Y_OFFSET  3
-#define POP_UP_Y_OFFSET     3
-#define TRAIN_TEXT_Y_OFFSET 4
 
 
 // char stat positions
@@ -272,10 +251,6 @@
 #define CHAR_NAME_Y (2 + 3)
 #define CHAR_NAME_WID 164 - CHAR_NAME_X
 #define CHAR_NAME_HEI 11 - CHAR_NAME_Y
-#define CHAR_LOC_X    76
-#define CHAR_LOC_Y    84
-#define CHAR_LOC_WID  16
-#define CHAR_LOC_HEI  9
 #define CHAR_TIME_REMAINING_X		207
 #define CHAR_TIME_REMAINING_Y		65
 #define CHAR_TIME_REMAINING_WID 258 - CHAR_TIME_REMAINING_X
@@ -302,20 +277,14 @@
 #define CHAR_MORALE_WID 175 - CHAR_MORALE_X
 #define CHAR_MORALE_HEI 101 - CHAR_MORALE_Y
 
-#define CROSS_X 195
-#define CROSS_Y 83
-#define CROSS_HEIGHT 20
-#define CROSS_WIDTH  20
 #define CHAR_PAY_X 150
 #define CHAR_PAY_Y 80+4
 #define CHAR_PAY_HEI GetFontHeight(CHAR_FONT)
-#define CHAR_PAY_WID CROSS_X-CHAR_PAY_X
+#define CHAR_PAY_WID 45
 #define SOLDIER_PIC_X 9
 #define SOLDIER_PIC_Y 20
 #define SOLDIER_HAND_X 6
 #define SOLDIER_HAND_Y 81
-//#define	TM_INV_WIDTH								58
-//#define	TM_INV_HEIGHT								23
 
 #define CLOCK_X 554
 #define CLOCK_Y 459
@@ -348,28 +317,6 @@ struct rgbcolor
 };
 
 typedef struct rgbcolor RGBCOLOR;
-
-
-struct lineoftext
-{
-	STR16 pLineText;
-	UINT32 uiFont;
-	struct lineoftext *pNext;
-};
-
-typedef struct lineoftext LineText;
-typedef LineText *LineTextPtr;
-
-
-struct popbox
-{
- UINT16 usTopX;
- UINT16 usTopY;
- UINT16 usWidth;
- UINT16 usHeight;
- LineTextPtr pBoxText;
- struct popbox *pNext;
-};
 
 
 RGBCOLOR GlowColorsA[]={
@@ -415,55 +362,56 @@ RGBCOLOR GlowColorsC[]={
 */
 
 
-SGPPoint gMapSortButtons[ MAX_SORT_METHODS ]={
-	{12,125},
-	{68,125},
-	{124,125},
-	{148,125},
-	{185,125},
-	{223,125},
+static const SGPPoint gMapSortButtons[MAX_SORT_METHODS] =
+{
+	{  12, 125 },
+	{  68, 125 },
+	{ 124, 125 },
+	{ 148, 125 },
+	{ 185, 125 },
+	{ 223, 125 }
 };
 
 
 // map screen's inventory panel pockets - top right corner coordinates
-INV_REGION_DESC gMapScreenInvPocketXY[] =
+static const INV_REGION_DESC gMapScreenInvPocketXY[] =
 {
-	{ 204,116 }, // HELMETPOS
-	{ 204,145 }, // VESTPOS
-	{ 204,205 }, // LEGPOS,
-	{ 21,	116 }, // HEAD1POS
-	{ 21,	140 }, // HEAD2POS
-	{ 21,	194 }, // HANDPOS,
-	{ 21,	218 }, // SECONDHANDPOS
-	{ 98,	251 }, // BIGPOCK1
-	{ 98,	275 }, // BIGPOCK2
-	{ 98,	299 }, // BIGPOCK3
-	{ 98,	323 }, // BIGPOCK4
-	{ 22,	251 }, // SMALLPOCK1
-	{ 22,	275 }, // SMALLPOCK2
-	{ 22,	299 }, // SMALLPOCK3
-	{ 22,	323 }, // SMALLPOCK4
-	{ 60,	251 }, // SMALLPOCK5
-	{ 60,	275 }, // SMALLPOCK6
-	{ 60,	299 }, // SMALLPOCK7
-	{ 60,	323 }  // SMALLPOCK8
+	{ 204, 116 }, // HELMETPOS
+	{ 204, 145 }, // VESTPOS
+	{ 204, 205 }, // LEGPOS
+	{  21, 116 }, // HEAD1POS
+	{  21, 140 }, // HEAD2POS
+	{  21, 194 }, // HANDPOS
+	{  21, 218 }, // SECONDHANDPOS
+	{  98, 251 }, // BIGPOCK1
+	{  98, 275 }, // BIGPOCK2
+	{  98, 299 }, // BIGPOCK3
+	{  98, 323 }, // BIGPOCK4
+	{  22, 251 }, // SMALLPOCK1
+	{  22, 275 }, // SMALLPOCK2
+	{  22, 299 }, // SMALLPOCK3
+	{  22, 323 }, // SMALLPOCK4
+	{  60, 251 }, // SMALLPOCK5
+	{  60, 275 }, // SMALLPOCK6
+	{  60, 299 }, // SMALLPOCK7
+	{  60, 323 }  // SMALLPOCK8
 };
 
-INV_REGION_DESC gSCamoXY =
+static const INV_REGION_DESC gSCamoXY =
 {
-	INV_BODY_X, INV_BODY_Y		// X, Y Location of Map screen's Camouflage region
+	INV_BODY_X, INV_BODY_Y // X, Y Location of Map screen's Camouflage region
 };
 
 
 // GLOBAL VARIABLES (OURS)
 
 
-BOOLEAN	fFlashAssignDone = FALSE;
+static BOOLEAN fFlashAssignDone = FALSE;
 BOOLEAN	fInMapMode = FALSE;
 BOOLEAN fMapPanelDirty=TRUE;
 BOOLEAN fTeamPanelDirty = TRUE;
 BOOLEAN fCharacterInfoPanelDirty = TRUE;
-BOOLEAN	gfLoadPending = FALSE;
+static BOOLEAN gfLoadPending = FALSE;
 BOOLEAN fReDrawFace=FALSE;
 BOOLEAN fFirstTimeInMapScreen = TRUE;
 BOOLEAN fShowInventoryFlag = FALSE;
@@ -471,22 +419,22 @@ BOOLEAN fMapInventoryItem=FALSE;
 BOOLEAN fShowDescriptionFlag=FALSE;
 
 // are the graphics for mapscreen preloaded?
-BOOLEAN fPreLoadedMapGraphics = FALSE;
+static BOOLEAN fPreLoadedMapGraphics = FALSE;
 
-BOOLEAN gfHotKeyEnterSector = FALSE;
-static BOOLEAN fOneFrame = FALSE;
-BOOLEAN fShowFaceHightLight = FALSE;
-BOOLEAN fShowItemHighLight = FALSE;
-BOOLEAN gfAllowSkyriderTooFarQuote = FALSE;
-BOOLEAN fJustFinishedPlotting = FALSE;
+static BOOLEAN gfHotKeyEnterSector        = FALSE;
+static BOOLEAN fOneFrame                  = FALSE;
+static BOOLEAN fShowFaceHightLight        = FALSE;
+static BOOLEAN fShowItemHighLight         = FALSE;
+static BOOLEAN gfAllowSkyriderTooFarQuote = FALSE;
+static BOOLEAN fJustFinishedPlotting      = FALSE;
 
 // for the flashing of the contract departure time...for when mercs are leaving in an hour or less
-BOOLEAN fFlashContractFlag = FALSE;
+static BOOLEAN fFlashContractFlag = FALSE;
 
-BOOLEAN fShowTrashCanHighLight = FALSE;
+static BOOLEAN fShowTrashCanHighLight = FALSE;
 
 // the flags for display of pop up boxes/menus
-BOOLEAN fEndPlotting = FALSE;
+static BOOLEAN fEndPlotting = FALSE;
 
 BOOLEAN gfInConfirmMapMoveMode = FALSE;
 BOOLEAN gfInChangeArrivalSectorMode = FALSE;
@@ -495,19 +443,16 @@ BOOLEAN gfInChangeArrivalSectorMode = FALSE;
 BOOLEAN fDrawCharacterList = TRUE;
 
 // was the cursor set to the checkmark?
-BOOLEAN fCheckCursorWasSet = FALSE;
+static BOOLEAN fCheckCursorWasSet = FALSE;
 
-BOOLEAN fShowingMapDisableBox = FALSE;
-BOOLEAN fShowFrameRate = FALSE;
+static BOOLEAN fShowingMapDisableBox = FALSE;
 //BOOLEAN fMapExitDueToMessageBox = FALSE;
-BOOLEAN fEndShowInventoryFlag = FALSE;
+static BOOLEAN fEndShowInventoryFlag = FALSE;
 
 // draw the temp path
-BOOLEAN fDrawTempPath = TRUE;
+static BOOLEAN fDrawTempPath = TRUE;
 
-BOOLEAN gfCharacterListInited = FALSE;
-
-BOOLEAN gfGlowTimerExpired = FALSE;
+static BOOLEAN gfGlowTimerExpired = FALSE;
 
 //not required to be saved.  The flag is set to allow mapscreen to render once, then transition the
 //current tactical battle into autoresolve.
@@ -515,11 +460,11 @@ BOOLEAN gfTransitionMapscreenToAutoResolve = FALSE;
 
 BOOLEAN gfSkyriderEmptyHelpGiven = FALSE;
 
-BOOLEAN gfRequestGiveSkyriderNewDestination = FALSE;
+static BOOLEAN gfRequestGiveSkyriderNewDestination = FALSE;
 
-BOOLEAN gfFirstMapscreenFrame = FALSE;
+static BOOLEAN gfFirstMapscreenFrame = FALSE;
 
-BOOLEAN gfMapPanelWasRedrawn = FALSE;
+static BOOLEAN gfMapPanelWasRedrawn = FALSE;
 
 
 UINT8 gubMAP_HandInvDispText[ NUM_INV_SLOTS ];
@@ -528,17 +473,17 @@ UINT8 gubMAP_HandInvDispText[ NUM_INV_SLOTS ];
 INT8 bSelectedInfoChar = -1;
 
 // map sort button images
-INT32 giMapSortButtonImage[ MAX_SORT_METHODS ] = { -1, -1, -1, -1, -1, -1 };
-INT32 giMapSortButton[ MAX_SORT_METHODS ] = { -1, -1, -1, -1, -1, -1 };
+static INT32 giMapSortButtonImage[MAX_SORT_METHODS] = { -1, -1, -1, -1, -1, -1 };
+static INT32 giMapSortButton[MAX_SORT_METHODS]      = { -1, -1, -1, -1, -1, -1 };
 
-INT32 giCharInfoButtonImage[ 2 ];
-INT32 giCharInfoButton[ 2 ] = { -1, -1 };
+static INT32 giCharInfoButtonImage[2];
+INT32 giCharInfoButton[2] = { -1, -1 };
 
-INT32 giMapInvButtonDoneImage;
+static INT32 giMapInvButtonDoneImage;
 INT32 giMapInvDoneButton = -1;
 
 INT32 giMapContractButton = -1;
-INT32 giMapContractButtonImage;
+static INT32 giMapContractButtonImage;
 
 //INT32 giMapInvButton = -1;
 //INT32 giMapInvButtonImage;
@@ -568,39 +513,39 @@ extern BOOLEAN gfDeductPoints;
 
 extern void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
 
-UINT32	guiCHARLIST;
-UINT32	guiCHARINFO;
-UINT32	guiSleepIcon;
-UINT32	guiCROSS;
-UINT32	guiMAPINV;
+static UINT32 guiCHARLIST;
+static UINT32 guiCHARINFO;
+static UINT32 guiSleepIcon;
+static UINT32 guiCROSS;
+static UINT32 guiMAPINV;
 UINT32	guiMapInvSecondHandBlockout;
-UINT32	guiULICONS;
-UINT32	guiNewMailIcons;
+static UINT32 guiULICONS;
+static UINT32 guiNewMailIcons;
 UINT32	guiLEVELMARKER;		// the white rectangle highlighting the current level on the map border
 
 
 // misc mouse regions
-MOUSE_REGION gCharInfoFaceRegion;
+static MOUSE_REGION gCharInfoFaceRegion;
 MOUSE_REGION gCharInfoHandRegion;
 MOUSE_REGION gMPanelRegion;
-MOUSE_REGION gMapViewRegion;
-MOUSE_REGION gMapScreenMaskRegion;
-MOUSE_REGION gTrashCanRegion;
+static MOUSE_REGION gMapViewRegion;
+static MOUSE_REGION gMapScreenMaskRegion;
+static MOUSE_REGION gTrashCanRegion;
 
 // mouse regions for team info panel
-MOUSE_REGION gTeamListNameRegion[ MAX_CHARACTER_COUNT ];
-MOUSE_REGION gTeamListAssignmentRegion[ MAX_CHARACTER_COUNT ];
-MOUSE_REGION gTeamListSleepRegion[ MAX_CHARACTER_COUNT ];
-MOUSE_REGION gTeamListLocationRegion[ MAX_CHARACTER_COUNT ];
-MOUSE_REGION gTeamListDestinationRegion[ MAX_CHARACTER_COUNT ];
-MOUSE_REGION gTeamListContractRegion[ MAX_CHARACTER_COUNT ];
+static MOUSE_REGION gTeamListNameRegion[MAX_CHARACTER_COUNT];
+static MOUSE_REGION gTeamListAssignmentRegion[MAX_CHARACTER_COUNT];
+static MOUSE_REGION gTeamListSleepRegion[MAX_CHARACTER_COUNT];
+static MOUSE_REGION gTeamListLocationRegion[MAX_CHARACTER_COUNT];
+static MOUSE_REGION gTeamListDestinationRegion[MAX_CHARACTER_COUNT];
+static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 
 
 OBJECTTYPE		gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
 
-PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
-PathSt* gpHelicopterPreviousMercPath = NULL;
+static PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
+static PathSt* gpHelicopterPreviousMercPath = NULL;
 
 
 // GLOBAL VARIABLES (EXTERNAL)
@@ -724,7 +669,7 @@ void DumpItemsList( void );
 
 #ifdef JA2DEMO
 //void MapScreenDemoOkBoxCallback( UINT8 bExitValue );
-void DisplayExitToTacticalGlowDuringDemo( void );
+static void DisplayExitToTacticalGlowDuringDemo(void);
 #endif
 
 
@@ -10344,7 +10289,7 @@ static void DisplayIconsForMercsAsleep(void)
 
 #ifdef JA2DEMO
 
-void DisplayExitToTacticalGlowDuringDemo( void )
+static void DisplayExitToTacticalGlowDuringDemo(void)
 {
   static INT32 iColorNum=10;
   static BOOLEAN fDelta=FALSE;
