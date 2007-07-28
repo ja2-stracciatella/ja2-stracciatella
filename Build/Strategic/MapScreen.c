@@ -411,7 +411,6 @@ BOOLEAN	fInMapMode = FALSE;
 BOOLEAN fMapPanelDirty=TRUE;
 BOOLEAN fTeamPanelDirty = TRUE;
 BOOLEAN fCharacterInfoPanelDirty = TRUE;
-static BOOLEAN gfLoadPending = FALSE;
 BOOLEAN fReDrawFace=FALSE;
 BOOLEAN fFirstTimeInMapScreen = TRUE;
 BOOLEAN fShowInventoryFlag = FALSE;
@@ -2656,30 +2655,6 @@ UINT32 MapScreenHandle(void)
 	}
 
 
-
-	// shaded screen, leave
-	if ( gfLoadPending == 2 )
-	{
-		gfLoadPending = FALSE;
-
-		// Load Sector
-		// BigCheese
-		if ( !SetCurrentWorldSector( sSelMapX, sSelMapY , ( INT8 )iCurrentMapSectorZ ) )
-		{
-			// Cannot load!
-		}
-		else
-		{
-			CreateDestroyMapInvButton();
-			// define our progress bar
-			//CreateProgressBar( 0, 118, 183, 522, 202 );
-
-		}
-		return( MAP_SCREEN );
-	}
-
-
-
 //	if ( (fInMapMode == FALSE ) && ( fMapExitDueToMessageBox == FALSE ) )
 	if ( !fInMapMode )
 	{
@@ -3551,21 +3526,6 @@ UINT32 MapScreenHandle(void)
 
 	// update cursor
 	UpdateCursorIfInLastSector( );
-
-
-	// about to leave for new map
-	if ( gfLoadPending == 1 )
-	{
-		gfLoadPending++;
-
-		// Shade this frame!
-		// Remove cursor
-		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-
-		//Shadow area
-		ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, 640, 480 );
-		InvalidateScreen( );
-	}
 
 	//InvalidateRegion( 0,0, 640, 480);
 	EndFrameBufferRender( );
