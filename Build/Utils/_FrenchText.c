@@ -2,7 +2,7 @@
 
 #ifdef FRENCH
 
-#include "JA2_Demo_Ads.h"
+#include "Text.h"
 
 
 /*
