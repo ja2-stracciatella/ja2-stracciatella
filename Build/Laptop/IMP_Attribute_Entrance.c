@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "IMP_Attribute_Entrance.h"
 #include "IMPVideoObjects.h"
+#include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"

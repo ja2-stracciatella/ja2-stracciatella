@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "IMPVideoObjects.h"
 #include "LoadSaveMercProfile.h"
+#include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"

@@ -1,15 +1,7 @@
-#ifndef __IMP_TEXT_SYSTEM_H
-#define __IMP_TEXT_SYSTEM_H
+#ifndef IMP_TEXT_SYSTEM_H
+#define IMP_TEXT_SYSTEM_H
 
-void PrintImpText( void );
-void PrintIMPPersonalityQuizQuestionAndAnsers( void );
-
-// buttons text
-extern const wchar_t *pImpButtonText[];
-
-
-// extra strings not found in IMP Text Document
-extern const wchar_t *pExtraIMPStrings[];
+void PrintImpText(void);
 
 
 enum{
@@ -135,9 +127,6 @@ enum{
 	IMP_CON_1 = IMP_FIN_10 - 1,
 	IMP_CON_2,
 	IMP_CON_3,
-
-
-
 };
 
 #endif

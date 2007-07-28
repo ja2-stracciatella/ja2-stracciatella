@@ -3,6 +3,7 @@
 #include "IMP_Personality_Finish.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
+#include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Timer_Control.h"

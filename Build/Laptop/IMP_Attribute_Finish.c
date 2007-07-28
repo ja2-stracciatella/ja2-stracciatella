@@ -3,6 +3,7 @@
 #include "IMP_Attribute_Finish.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
+#include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Input.h"

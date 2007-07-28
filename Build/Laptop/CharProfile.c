@@ -23,6 +23,7 @@
 #include "Button_System.h"
 #include "Debug.h"
 #include "Font_Control.h"
+#include "Text.h"
 
 
 //BOOLEAN fIMPCompletedFlag = FALSE;
