@@ -507,7 +507,6 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate );
 
 // stuff to deal with player just starting the game
 BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void );
-//void HandlePlayerEnteringMapScreenBeforeGoingToTactical( void );
 
 // handle sector being taken over uncontested
 BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fContested );

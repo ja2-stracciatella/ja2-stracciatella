@@ -2642,7 +2642,6 @@ static void UpdateTownMinePopUpDisplay(void);
 UINT32 MapScreenHandle(void)
 {
 	UINT32 uiNewScreen;
-//	static BOOLEAN fSecondFrame = FALSE;
 	INT32 iCounter = 0;
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
@@ -3509,18 +3508,6 @@ UINT32 MapScreenHandle(void)
 		RenderButtonsFastHelp( );
 	}
 
-/*
-	if( fSecondFrame )
-	{
-		if( gTacticalStatus.fDidGameJustStart )
-		{
-			// game just started, check what state player is in......
-			HandlePlayerEnteringMapScreenBeforeGoingToTactical( );
-		}
-	}
-	fSecondFrame = FALSE;
-*/
-
 	// execute dirty
 	ExecuteBaseDirtyRectQueue( );
 
@@ -3566,7 +3553,6 @@ UINT32 MapScreenHandle(void)
 
 	if( gfFirstMapscreenFrame )
 	{
-//		fSecondFrame = TRUE;
 		gfFirstMapscreenFrame = FALSE;
 	}
 	else

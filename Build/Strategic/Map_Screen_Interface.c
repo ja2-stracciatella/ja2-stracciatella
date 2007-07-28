@@ -5076,54 +5076,6 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 }
 
 
-/*
-void HandlePlayerEnteringMapScreenBeforeGoingToTactical( void )
-{
-	CHAR16 sString[ 256 ];
-
-	if( !( AnyMercsHired( ) ) )
-	{
-		// no mercs hired inform player they must hire mercs
-		swprintf( sString, pMapScreenJustStartedHelpText[ 0 ] );
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, DoneHandlePlayerFirstEntryToMapScreen );
-
-	}
-	else
-	{
-		// player has mercs hired, tell them to time compress to get things underway
-		swprintf( sString, pMapScreenJustStartedHelpText[ 1 ] );
-		fShowMapScreenHelpText = TRUE;
-	}
-
-
-
-	// now inform the player
-
-	if( fShowMapScreenHelpText )
-	{
-		fShowMapScreenHelpText = FALSE;
-		SetUpShutDownMapScreenHelpTextScreenMask( );
-		fShowMapScreenHelpText = TRUE;
-	}
-}
-
-
-void DoneHandlePlayerFirstEntryToMapScreen(  UINT8 bExitValue )
-{
-	static BOOLEAN fFirstTime = TRUE;
-
-	if( bExitValue == MSG_BOX_RETURN_OK )
-	{
-		if( fFirstTime == TRUE )
-		{
-			fFirstTime = FALSE;
-			fShowMapScreenHelpText = TRUE;
-		}
-	}
-}
-*/
-
-
 BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 {
 	// check a team is ready to go
