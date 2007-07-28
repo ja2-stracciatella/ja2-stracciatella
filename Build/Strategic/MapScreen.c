@@ -467,8 +467,6 @@ static BOOLEAN gfFirstMapscreenFrame = FALSE;
 static BOOLEAN gfMapPanelWasRedrawn = FALSE;
 
 
-UINT8 gubMAP_HandInvDispText[ NUM_INV_SLOTS ];
-
 // currently selected character's list index
 INT8 bSelectedInfoChar = -1;
 
@@ -5971,9 +5969,6 @@ void CreateDestroyMapInvButton()
 	// switch hand region help text to "Exit Inventory"
 	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
 
-	// reset inventory item help text
-	memset( gubMAP_HandInvDispText, 0, sizeof( gubMAP_HandInvDispText ) );
-
 	// dirty character info panel  ( Why? ARM )
 	fCharacterInfoPanelDirty=TRUE;
  }
@@ -6147,7 +6142,6 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
 //  if( ( iReason == MSYS_CALLBACK_REASON_MOVE ) || ( iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE ) )
 	{
-		gubMAP_HandInvDispText[ uiHandPos ] = 2;
 		guiMouseOverItemTime = GetJA2Clock( );
 		gfCheckForMouseOverItem = TRUE;
 		HandleCompatibleAmmoUI( pSoldier, (INT8)uiHandPos, FALSE );
@@ -6155,7 +6149,6 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		gubMAP_HandInvDispText[ uiHandPos ] = 1;
 		HandleCompatibleAmmoUI( pSoldier, (INT8)uiHandPos, FALSE );
 		gfCheckForMouseOverItem = FALSE;
 		fTeamPanelDirty = TRUE;
