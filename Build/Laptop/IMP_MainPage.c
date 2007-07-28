@@ -11,7 +11,6 @@
 #include "Laptop.h"
 #include "Finances.h"
 #include "IMP_Attribute_Selection.h"
-#include "IMP_Text_System.h"
 #include "IMP_Finish.h"
 #include "MouseSystem.h"
 #include "Merc_Hiring.h"

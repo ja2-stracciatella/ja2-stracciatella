@@ -12,7 +12,6 @@
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
-#include "IMP_Text_System.h"
 #include "IMP_Attribute_Selection.h"
 #include "Button_System.h"
 #include "Font_Control.h"

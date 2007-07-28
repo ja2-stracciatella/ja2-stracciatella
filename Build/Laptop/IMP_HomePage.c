@@ -9,7 +9,6 @@
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
-#include "IMP_Text_System.h"
 #include "Timer_Control.h"
 #include "Text_Input.h"
 #include "LaptopSave.h"
