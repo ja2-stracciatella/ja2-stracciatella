@@ -454,10 +454,6 @@ static BOOLEAN fDrawTempPath = TRUE;
 
 static BOOLEAN gfGlowTimerExpired = FALSE;
 
-//not required to be saved.  The flag is set to allow mapscreen to render once, then transition the
-//current tactical battle into autoresolve.
-BOOLEAN gfTransitionMapscreenToAutoResolve = FALSE;
-
 BOOLEAN gfSkyriderEmptyHelpGiven = FALSE;
 
 static BOOLEAN gfRequestGiveSkyriderNewDestination = FALSE;

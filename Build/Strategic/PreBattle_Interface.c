@@ -50,7 +50,6 @@
 
 extern void InitializeTacticalStatusAtBattleStart();
 extern BOOLEAN gfDelayAutoResolveStart;
-extern BOOLEAN gfTransitionMapscreenToAutoResolve;
 
 #ifdef JA2BETAVERSION
 extern BOOLEAN gfExitViewer;
@@ -2011,9 +2010,5 @@ void HandlePreBattleInterfaceStates()
 	{
 		gfAutomaticallyStartAutoResolve = FALSE;
 		ActivateAutomaticAutoResolveStart();
-	}
-	else if( gfTransitionMapscreenToAutoResolve )
-	{
-		gfTransitionMapscreenToAutoResolve = FALSE;
 	}
 }
