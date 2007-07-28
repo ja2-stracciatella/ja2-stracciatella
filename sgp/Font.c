@@ -17,7 +17,6 @@ static HVOBJECT FontObjs[MAX_FONTS];
 INT32 FontDefault = -1;
 static UINT32  FontDestBuffer   = BACKBUFFER;
 static SGPRect FontDestRegion   = { 0, 0, 640, 480 };
-static BOOLEAN FontDestWrap     = FALSE;
 static UINT16  FontForeground16 = 0;
 static UINT16  FontBackground16 = 0;
 static UINT16  FontShadow16     = DEFAULT_SHADOW;
@@ -26,7 +25,6 @@ static UINT16  FontShadow16     = DEFAULT_SHADOW;
 static INT32   SaveFontDefault      = -1;
 static UINT32  SaveFontDestBuffer   = BACKBUFFER;
 static SGPRect SaveFontDestRegion   = { 0, 0, 640, 480};
-static BOOLEAN SaveFontDestWrap     = FALSE;
 static UINT16  SaveFontForeground16 = 0;
 static UINT16  SaveFontShadow16     = 0;
 static UINT16  SaveFontBackground16 = 0;
@@ -218,7 +216,6 @@ void SaveFontSettings(void)
 	SaveFontDefault      = FontDefault;
 	SaveFontDestBuffer   = FontDestBuffer;
 	SaveFontDestRegion   = FontDestRegion;
-	SaveFontDestWrap     = FontDestWrap;
 	SaveFontForeground16 = FontForeground16;
 	SaveFontShadow16     = FontShadow16;
 	SaveFontBackground16 = FontBackground16;
@@ -231,7 +228,6 @@ void RestoreFontSettings(void)
 	FontDefault      = SaveFontDefault;
 	FontDestBuffer   = SaveFontDestBuffer;
 	FontDestRegion   = SaveFontDestRegion;
-	FontDestWrap     = SaveFontDestWrap;
 	FontForeground16 = SaveFontForeground16;
 	FontShadow16     = SaveFontShadow16;
 	FontBackground16 = SaveFontBackground16;
@@ -311,7 +307,6 @@ BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32
 	FontDestRegion.iTop    = y1;
 	FontDestRegion.iRight  = x2;
 	FontDestRegion.iBottom = y2;
-	FontDestWrap           = FALSE;
 
 	return TRUE;
 }
@@ -385,14 +380,6 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
 		wchar_t transletter = GetIndex(*curletter);
-
-		if (FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
-		{
-			destx = x;
-			desty += GetHeight(FontObjs[FontDefault], transletter);
-		}
-
-		// Blit directly
 		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
@@ -415,13 +402,6 @@ static UINT32 vmprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x,
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
 		wchar_t transletter = GetIndex(*curletter);
-
-		if (FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
-		{
-			destx = x;
-			desty += GetHeight(FontObjs[FontDefault], transletter);
-		}
-
 		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
@@ -487,14 +467,6 @@ static UINT32 vmprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, IN
 		}
 
 		wchar_t transletter = GetIndex(*curletter);
-
-
-		if (FontDestWrap && BltIsClipped(FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion))
-		{
-			destx = x;
-			desty += GetHeight(FontObjs[FontDefault], transletter);
-		}
-
 		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
@@ -542,8 +514,6 @@ BOOLEAN InitializeFontManager(void)
 	FontDestRegion.iTop = 0;
 	FontDestRegion.iRight=(INT32)uiRight;
 	FontDestRegion.iBottom=(INT32)uiBottom;
-
-	FontDestWrap=FALSE;
 
 	// Mark all font slots as empty
 	for (int count = 0; count < MAX_FONTS; count++) FontObjs[count] = NULL;
