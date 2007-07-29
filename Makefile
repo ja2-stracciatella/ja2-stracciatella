@@ -481,5 +481,6 @@ lowercase:
 		"$(SGPDATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
 		"$(SGPDATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
 	do \
-		mv "$$i" "`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
+		lower="`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
+		[ "$$i" = "$$lower" ] || mv "$$i" "$$lower"; \
 	done
