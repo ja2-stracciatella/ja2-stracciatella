@@ -2146,23 +2146,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 #endif
 					}
-					else if ( fAlt )
-					{
-#ifdef JA2TESTVERSION
-					//	ToggleMercsNeverQuit();
-            static UINT8 ubAmbientSound = 0;
-
-            ubAmbientSound++;
-
-            if ( ubAmbientSound >= NUM_STEADY_STATE_AMBIENCES )
-            {
-              ubAmbientSound = 1;
-            }
-
-            SetSteadyStateAmbience( ubAmbientSound );
-
-#endif
-					}
 					else
 					{
 						BeginAutoBandage( );

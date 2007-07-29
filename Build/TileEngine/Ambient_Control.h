@@ -12,22 +12,4 @@ void DeleteAllAmbients();
 extern AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 extern INT16								gsNumAmbData;
 
-BOOLEAN SetSteadyStateAmbience( UINT8 ubAmbience );
-
-enum
-{
-  SSA_NONE,
-  SSA_COUNTRYSIZE,
-  SSA_NEAR_WATER,
-  SSA_IN_WATER,
-  SSA_HEAVY_FOREST,
-  SSA_PINE_FOREST,
-  SSA_ABANDONED,
-  SSA_AIRPORT,
-  SSA_WASTELAND,
-  SSA_UNDERGROUND,
-  SSA_OCEAN,
-  NUM_STEADY_STATE_AMBIENCES
-};
-
 #endif
