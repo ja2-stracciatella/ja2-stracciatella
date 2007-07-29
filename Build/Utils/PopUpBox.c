@@ -1520,7 +1520,7 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 				(
 					Box->Position.iX + Box->uiLeftMargin,
 					Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
-					Box->Dimensions.iRight - Box->uiRightMargin + Box->uiLeftMargin + 2,
+					Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2),
 					GetFontHeight(Box->Text[uiCount]->uiFont),
 					Box->Text[uiCount]->pString,
 					Box->Text[uiCount]->uiFont,
@@ -1572,7 +1572,7 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 				(
 					Box->Position.iX + Box->uiLeftMargin,
 					Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
-					Box->Dimensions.iRight - Box->uiRightMargin + Box->uiLeftMargin + 2,
+					Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2),
 					GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont),
 					Box->pSecondColumnString[uiCount]->pString,
 					Box->pSecondColumnString[uiCount]->uiFont,
