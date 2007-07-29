@@ -1160,7 +1160,8 @@ static PathSt* RemoveSectorFromStrategicPathList(PathSt* pList, INT16 sX, INT16 
 	return ( pPastNode );
 }
 
-INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter )
+
+INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter)
 {
 	// will return the last sector of the current path, or the current sector if there's no path
 	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
@@ -1826,7 +1827,8 @@ INT32 GetLengthOfPath(PathSt* pHeadPath)
 	return( iLength );
 }
 
-INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier )
+
+INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier)
 {
 	PathSt* pNode = NULL;
 	INT32 iLength = 0;
@@ -1855,8 +1857,7 @@ static BOOLEAN CheckIfPathIsEmpty(PathSt* pHeadPath)
 }
 
 
-
-PathSt* GetSoldierMercPathPtr(SOLDIERTYPE* pSoldier)
+PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier)
 {
 	PathSt* pMercPath = NULL;
 
@@ -1914,8 +1915,7 @@ PathSt* GetGroupMercPathPtr(GROUP* pGroup)
 }
 
 
-
-UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier )
+UINT8 GetSoldierGroupId(const SOLDIERTYPE* pSoldier)
 {
 	UINT8 ubGroupId = 0;
 

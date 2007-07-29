@@ -2412,11 +2412,7 @@ static void LoadCharacters(void)
 }
 
 
-static void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont);
-static void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont);
-static void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont);
-static void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont);
-static void DrawTimeRemaining(INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor);
+static void DrawCharInfo(INT16 row, UINT8 text_color);
 static void EnableDisableTeamListRegionsAndHelpText(void);
 
 
@@ -2476,11 +2472,7 @@ static void DisplayCharacterList(void)
 
 			SetFontForeground( ubForegroundColor );
 
-			DrawName( Menptr[gCharactersList[sCount].usSolID].name, sCount, MAP_SCREEN_FONT);
-			DrawLocation(sCount, sCount, MAP_SCREEN_FONT);
-			DrawDestination(sCount, sCount, MAP_SCREEN_FONT);
-			DrawAssignment(sCount, sCount, MAP_SCREEN_FONT);
-			DrawTimeRemaining(sCount, MAP_SCREEN_FONT, ubForegroundColor );
+			DrawCharInfo(sCount, ubForegroundColor);
 		}
 	}
 
@@ -3521,134 +3513,54 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 ui
 }
 
 
-static void DrawName(STR16 pName, INT16 sRowIndex, INT32 iFont)
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
 {
-	UINT16 usX=0;
-	UINT16 usY=0;
-
-	if( sRowIndex < FIRST_VEHICLE )
-	{
-		FindFontCenterCoordinates((short)NAME_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)NAME_WIDTH, (short)Y_SIZE, pName, (long)iFont, &usX, &usY);
-	}
-	else
-	{
-		FindFontCenterCoordinates((short)NAME_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)NAME_WIDTH, (short)Y_SIZE, pName, (long)iFont, &usX, &usY);
-	}
-
-	//RestoreExternBackgroundRect(NAME_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), NAME_WIDTH, Y_SIZE);
-	DrawString(pName, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
+	UINT16 cx;
+	UINT16 cy;
+	FindFontCenterCoordinates(x, y, w, h, str, font, &cx, &cy);
+	DrawString(str, cx, cy, font);
 }
 
 
-static void DrawAssignment(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
+static void DrawCharInfo(INT16 row, UINT8 text_color)
 {
-	const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[gCharactersList[sCharNumber].usSolID]);
-	UINT16 usX=0;
-	UINT16 usY=0;
+	UINT16 y = Y_START + row * (Y_SIZE + Y_OFFSET) + 1;
+	if (row >= FIRST_VEHICLE) y += 6;
 
-	if( sRowIndex < FIRST_VEHICLE )
+	UINT16 id = gCharactersList[row].usSolID;
+	const SOLDIERTYPE* man  = &Menptr[id];  // XXX Is there a difference?
+	const SOLDIERTYPE* merc = MercPtrs[id];
+
+	// Name
+	const wchar_t* name = man->name;
+	DrawStringCentered(name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+
+	wchar_t str[32];
+
+	// Location
+	GetMapscreenMercLocationString(merc, str, lengthof(str));
+	DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+
+	// Destination
+	GetMapscreenMercDestinationString(merc, str, lengthof(str));
+	if (str[0] != '\0')
 	{
-		FindFontCenterCoordinates(ASSIGN_X + 1, Y_START + sRowIndex * Y_SIZE, ASSIGN_WIDTH, Y_SIZE, Assignment, iFont, &usX, &usY);
-	}
-	else
-	{
-		FindFontCenterCoordinates(ASSIGN_X + 1, Y_START + sRowIndex * Y_SIZE + 6, ASSIGN_WIDTH, Y_SIZE, Assignment, iFont, &usX, &usY);
-	}
-
-	if( fFlashAssignDone == TRUE )
-	{
-		if( Menptr[gCharactersList[sCharNumber].usSolID].fDoneAssignmentAndNothingToDoFlag )
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-
-	//RestoreExternBackgroundRect(ASSIGN_X-2, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), ASSIGN_WIDTH+2, Y_SIZE);
-	DrawString(Assignment, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
-}
-
-
-static void DrawLocation(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
-{
-	UINT16 usX=0;
-	UINT16 usY=0;
-	wchar_t sString[32];
-
-	GetMapscreenMercLocationString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString, lengthof(sString));
-
-	if( sRowIndex < FIRST_VEHICLE )
-	{
-		// center
-		FindFontCenterCoordinates((short)LOC_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)LOC_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-	}
-	else
-	{
-		FindFontCenterCoordinates((short)LOC_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6), (short)LOC_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-	}
-	// restore background
-	//RestoreExternBackgroundRect(LOC_X, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), LOC_WIDTH, Y_SIZE);
-
-	// draw string
-	DrawString(sString, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
-}
-
-
-static void DrawDestination(INT16 sCharNumber, INT16 sRowIndex, INT32 iFont)
-{
-	UINT16 usX=0;
-	UINT16 usY=0;
-	wchar_t sString[32];
-
-	GetMapscreenMercDestinationString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString, lengthof(sString));
-
-	if ( wcslen( sString ) == 0 )
-	{
-		return;
+		DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 	}
 
-	if( sRowIndex < FIRST_VEHICLE )
+	// Assignment
+	if (fFlashAssignDone && man->fDoneAssignmentAndNothingToDoFlag)
 	{
-		FindFontCenterCoordinates((short)DEST_ETA_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE)), (short)DEST_ETA_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
+		SetFontForeground(FONT_RED);
 	}
-	else
-	{
-		FindFontCenterCoordinates((short)DEST_ETA_X + 1, (short)(Y_START+(sRowIndex*Y_SIZE) + 6 ), (short)DEST_ETA_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-	}
+	const wchar_t* assignment = GetMapscreenMercAssignmentString(merc);
+	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
-	//RestoreExternBackgroundRect(DEST_ETA_X+1, ((UINT16)(usY+(Y_OFFSET*sRowIndex+1))), DEST_ETA_WIDTH-1, Y_SIZE);
-	DrawString(sString, usX, usY + Y_OFFSET * sRowIndex + 1, iFont);
-}
-
-
-static void DrawTimeRemaining(INT16 sCharNumber, INT32 iFont, UINT8 ubFontColor)
-{
-	UINT16 usX=0;
-	UINT16 usY=0;
-	wchar_t sString[32];
-
-
-	GetMapscreenMercDepartureString( MercPtrs[ gCharactersList[ sCharNumber ].usSolID ], sString, lengthof(sString), &ubFontColor );
-
-	// if merc is highlighted, override the color decided above with bright white
-	if( sCharNumber == ( INT16 ) giHighLine )
-	{
-		ubFontColor = FONT_WHITE;
-	}
-
-	SetFont(iFont);
-	SetFontForeground( ubFontColor );
-
-	if( sCharNumber < FIRST_VEHICLE )
-	{
-		FindFontCenterCoordinates((short)TIME_REMAINING_X + 1, (short)(Y_START+(sCharNumber*Y_SIZE)), (short)TIME_REMAINING_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-	}
-	else
-	{
-		FindFontCenterCoordinates((short)TIME_REMAINING_X + 1, (short)(Y_START+(sCharNumber*Y_SIZE) + 6 ), (short)TIME_REMAINING_WIDTH, (short)Y_SIZE, sString, (long)iFont, &usX, &usY);
-	}
-
-	//RestoreExternBackgroundRect(TIME_REMAINING_X, ((UINT16)(usY+(Y_OFFSET*sCharNumber+1))), TIME_REMAINING_WIDTH, Y_SIZE);
-	DrawString(sString, usX, usY + Y_OFFSET * sCharNumber + 1, iFont);
+	// Remaining contract time
+	GetMapscreenMercDepartureString(merc, str, lengthof(str), &text_color);
+	if (row == giHighLine) text_color = FONT_WHITE;
+	SetFontForeground(text_color);
+	DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 }
 
 
@@ -11442,7 +11354,7 @@ const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier)
 }
 
 
-void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length)
+void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length)
 {
 	if( pSoldier->bAssignment == IN_TRANSIT )
 	{
@@ -11466,7 +11378,7 @@ void GetMapscreenMercLocationString( SOLDIERTYPE *pSoldier, wchar_t sString[], s
 }
 
 
-void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length)
+void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length)
 {
 	INT32 iSectorX, iSectorY;
 	INT16 sSector=0;
@@ -11524,7 +11436,7 @@ void GetMapscreenMercDestinationString( SOLDIERTYPE *pSoldier, wchar_t sString[]
 }
 
 
-void GetMapscreenMercDepartureString( SOLDIERTYPE *pSoldier, wchar_t sString[], size_t Length , UINT8 *pubFontColor )
+void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length, UINT8* pubFontColor)
 {
 	INT32 iMinsRemaining = 0;
 	INT32 iDaysRemaining = 0;

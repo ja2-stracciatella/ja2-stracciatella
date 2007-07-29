@@ -58,7 +58,7 @@ PathSt* RemoveHeadFromStrategicPath(PathSt* pList);
 PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup);
 
 // get id of last sector in mercs path list
-INT16 GetLastSectorIdInCharactersPath( SOLDIERTYPE *pCharacter );
+INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);
 
 // get id of last sector in mercs path list
 INT16 GetLastSectorIdInVehiclePath( INT32 iId );
@@ -97,12 +97,12 @@ BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID );
 
 // get length of path
 INT32 GetLengthOfPath(PathSt* pHeadPath);
-INT32 GetLengthOfMercPath( SOLDIERTYPE *pSoldier );
+INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier);
 
-PathSt* GetSoldierMercPathPtr(SOLDIERTYPE* pSoldier);
+PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier);
 PathSt* GetGroupMercPathPtr(GROUP* pGroup);
 
-UINT8 GetSoldierGroupId( SOLDIERTYPE *pSoldier );
+UINT8 GetSoldierGroupId(const SOLDIERTYPE* pSoldier);
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup );
