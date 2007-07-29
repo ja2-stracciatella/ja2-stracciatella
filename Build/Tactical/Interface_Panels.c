@@ -272,11 +272,11 @@ enum
 };
 
 
-INT32										iSMPanelImages[ NUM_SM_BUTTON_IMAGES ];
-INT32										iBurstButtonImages[ NUM_WEAPON_MODES ];
-INT32										iTEAMPanelImages[ NUM_TEAM_BUTTON_IMAGES ];
+static INT32 iSMPanelImages[NUM_SM_BUTTON_IMAGES];
+static INT32 iBurstButtonImages[NUM_WEAPON_MODES];
+static INT32 iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 
-INT32										giSMStealthImages = -1;
+static INT32 giSMStealthImages = -1;
 INT32										giSMStealthButton = -1;
 
 BOOLEAN									gfSwitchPanel = FALSE;
@@ -284,7 +284,7 @@ UINT8										gbNewPanel		= SM_PANEL;
 UINT8										gubNewPanelParam = 0;
 
 BOOLEAN									gfUIStanceDifferent = FALSE;
-BOOLEAN									gfAllDisabled = FALSE;
+static BOOLEAN gfAllDisabled = FALSE;
 
 BOOLEAN									gfSMDisableForItems = FALSE;
 
@@ -296,13 +296,12 @@ BOOLEAN	gfCheckForMouseOverItem = FALSE;
 UINT32	guiMouseOverItemTime		= 0;
 INT8		gbCheckForMouseOverItemPos = 0;
 UINT8		gubSelectSMPanelToMerc   = NOBODY;
-BOOLEAN	gfReEvaluateDisabledINVPanelButtons = FALSE;
+static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
 UINT32 guiBrownBackgroundForTeamPanel;
 
 extern BOOLEAN							gfInKeyRingPopup;
 extern UINT32	 guiVEHINV;
-extern INT32 giMapInvDoneButton;
 extern BOOLEAN	gfBeginEndTurn;
 extern	BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern	BOOLEAN	gfInItemPickupMenu;
@@ -4918,8 +4917,6 @@ void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	{
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
-			// want the inv done button shutdown and the region behind the keyring shaded
-			//ForceButtonUnDirty( giMapInvDoneButton );
 			// shade the background
 			ShadowVideoSurfaceRect( FRAME_BUFFER , 0, 107, 261, 359 );
 			InvalidateRegion( 0, 107, 261, 359 );
