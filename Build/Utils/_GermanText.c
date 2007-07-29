@@ -3414,11 +3414,8 @@ const wchar_t *pMilitiaButtonsHelpText[] =
 	L"Milizen gleichmäßig über alle Sektoren verteilen",
 };
 
-const wchar_t *pMapScreenJustStartedHelpText[] =
-{
-	L"Zu AIM gehen und Söldner anheuern ( *Tip*: Befindet sich im Laptop )", // to inform the player to hired some mercs to get things going
-	L"Sobald Sie für die Reise nach Arulco bereit sind, klicken Sie auf den Zeitraffer-Button unten rechts auf dem Bildschirm.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Zu AIM gehen und Söldner anheuern ( *Tip*: Befindet sich im Laptop )";
 
 const wchar_t *pAntiHackerString[] =
 {

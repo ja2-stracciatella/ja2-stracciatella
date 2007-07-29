@@ -3596,11 +3596,8 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Répartition automatique",
 };
 
-const wchar_t* pMapScreenJustStartedHelpText[] =
-{
-	L"Allez sur le site de l'AIM et engagez des mercenaires ( *Truc* allez voir dans le Poste de travail)", // to inform the player to hired some mercs to get things going
-	L"Cliquez sur le bouton de Compression du temps pour faire avancer votre équipe sur le terrain.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Allez sur le site de l'AIM et engagez des mercenaires ( *Truc* allez voir dans le Poste de travail)";
 
 const wchar_t* pAntiHackerString[] =
 {

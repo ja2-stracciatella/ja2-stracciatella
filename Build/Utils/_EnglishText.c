@@ -3596,11 +3596,8 @@ const wchar_t *pMilitiaButtonsHelpText[] =
 	L"Distribute available militia equally among all sectors",
 };
 
-const wchar_t *pMapScreenJustStartedHelpText[] =
-{
-	L"Go to AIM and hire some mercs ( *Hint* it's in the Laptop )", // to inform the player to hired some mercs to get things going
-	L"When you're ready to travel to Arulco, click on the Time Compression button at the bottom right of the screen.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Go to AIM and hire some mercs ( *Hint* it's in the Laptop )";
 
 const wchar_t *pAntiHackerString[] =
 {

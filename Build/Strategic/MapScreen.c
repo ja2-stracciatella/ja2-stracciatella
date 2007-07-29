@@ -9692,7 +9692,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	else if( gfAtLeastOneMercWasHired == FALSE )
 	{
 		// no mercs hired, ever
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapScreenJustStartedHelpText[ 0 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapScreenJustStartedHelpText, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 	}
 	else if ( !AnyUsableRealMercenariesOnTeam() )
 	{

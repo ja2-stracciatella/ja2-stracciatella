@@ -3595,11 +3595,8 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Поровну распределить доступное ополчение по всем секторам",
 };
 
-const wchar_t* pMapScreenJustStartedHelpText[] =
-{
-	L"Сходите на сайт АIM и наймите наемников (*Подсказка* через ноутбук)", // to inform the player to hired some mercs to get things going
-	L"Если вы готовы отправиться в Арулько, щелкните по кнопке ускорения времени в правом нижнем углу экрана.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Сходите на сайт АIM и наймите наемников (*Подсказка* через ноутбук)"
 
 const wchar_t* pAntiHackerString[] =
 {

@@ -3596,11 +3596,8 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Distribuisci equamente i soldati disponibili tra i vari settori",
 };
 
-const wchar_t* pMapScreenJustStartedHelpText[] =
-{
-	L"Andate all'A.I.M. e arruolate alcuni mercenari (*Hint* è nel Laptop)", // to inform the player to hired some mercs to get things going
-	L"Quando sarete pronti per partire per Arulco, cliccate sul pulsante nella parte in basso a destra dello schermo.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Andate all'A.I.M. e arruolate alcuni mercenari (*Hint* è nel Laptop)";
 
 const wchar_t* pAntiHackerString[] =
 {

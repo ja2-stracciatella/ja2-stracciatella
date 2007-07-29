@@ -137,7 +137,7 @@ extern const wchar_t *zOptionsToggleText[];
 extern const wchar_t *zOptionsScreenHelpText[];
 extern const wchar_t *pDoctorWarningString[];
 extern const wchar_t *pMilitiaButtonsHelpText[];
-extern const wchar_t *pMapScreenJustStartedHelpText[];
+extern const wchar_t pMapScreenJustStartedHelpText[];
 extern const wchar_t *pLandMarkInSectorString[];
 extern const wchar_t *gzMercSkillText[];
 extern const wchar_t *gzNonPersistantPBIText[];

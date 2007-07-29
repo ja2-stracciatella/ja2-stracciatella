@@ -3596,11 +3596,8 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Umieszcza jednakową ilość żołnierzy samoobrony w każdym sektorze.",
 };
 
-const wchar_t* pMapScreenJustStartedHelpText[] =
-{
-	L"Zajrzyj do A.I.M. i zatrudnij kilku najemników (*Wskazówka* musisz otworzyć laptopa)", // to inform the player to hired some mercs to get things going
-	L"Jeśli chcesz już udać się do Arulco, kliknij przycisk kompresji czasu, w prawym dolnym rogu ekranu.", // to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Zajrzyj do A.I.M. i zatrudnij kilku najemników (*Wskazówka* musisz otworzyć laptopa)";
 
 const wchar_t* pAntiHackerString[] =
 {

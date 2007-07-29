@@ -3611,11 +3611,8 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 	L"Verspreidt beschikbare milities evenredig over alle sectoren",
 };
 
-const wchar_t* pMapScreenJustStartedHelpText[] =
-{
-	L"Ga naar AIM en huur wat huurlingen in ( *Hint* dat kan bij Laptop )",
-	L"Als je klaar bent om naar Arulco te gaan, klik dan op TijdVersneller onder rechts op het scherm.",	// to inform the player to hit time compression to get the game underway
-};
+// to inform the player to hire some mercs to get things going
+const wchar_t pMapScreenJustStartedHelpText[] = L"Ga naar AIM en huur wat huurlingen in ( *Hint* dat kan bij Laptop )";
 
 const wchar_t* pAntiHackerString[] =
 {
