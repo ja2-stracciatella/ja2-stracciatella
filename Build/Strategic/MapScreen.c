@@ -309,57 +309,11 @@ enum
 };
 
 
-struct rgbcolor
+static inline UINT16 GlowColor(UINT i)
 {
-	UINT8 ubRed;
-	UINT8 ubGreen;
-	UINT8 ubBlue;
-};
-
-typedef struct rgbcolor RGBCOLOR;
-
-
-RGBCOLOR GlowColorsA[]={
-	{0,0,0},
-	{25,0,0},
-	{50,0,0},
-	{75,0,0},
-	{100,0,0},
-	{125,0,0},
-	{150,0,0},
-	{175,0,0},
-	{200,0,0},
-	{225,0,0},
-	{250,0,0},
-};
-/* unused
-RGBCOLOR GlowColorsB[]={
-	{0,0,0},
-	{25,25,0},
-	{50,50,0},
-	{75,75,0},
-	{100,100,0},
-	{125,125,0},
-	{150,150,0},
-	{175,175,0},
-	{200,200,0},
-	{225,225,0},
-	{255,255,0},
-};
-RGBCOLOR GlowColorsC[]={
-	{0,0,0},
-	{25,0,25},
-	{50,0,50},
-	{75,0,75},
-	{100,0,100},
-	{125,0,125},
-	{150,0,150},
-	{175,0,175},
-	{200,0,200},
-	{225,0,225},
-	{255,0,255},
-};
-*/
+	Assert(i <= 10);
+	return Get16BPPColor(FROMRGB(25 * i, 0, 0));
+}
 
 
 static const SGPPoint gMapSortButtons[MAX_SORT_METHODS] =
@@ -717,7 +671,6 @@ static void ContractBoxGlow(void)
  static INT32 iColorNum=10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldContractGlow = FALSE;
- UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
 
@@ -761,7 +714,7 @@ static void ContractBoxGlow(void)
 	else
 		iColorNum--;
 
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
 	RectangleDraw( TRUE, CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH, CONTRACT_Y+CONTRACT_HEIGHT, usColor, pDestBuf );
@@ -779,7 +732,6 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 {
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
- UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
  INT16 usY = 0;
@@ -825,7 +777,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE) + sYAdd );
 
 	// glow contract box
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
 	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );
@@ -845,7 +797,6 @@ static void GlowFace(void)
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldFaceGlow = FALSE;
- UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
 
@@ -884,7 +835,7 @@ static void GlowFace(void)
 		iColorNum--;
 
 	// glow contract box
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
 	RectangleDraw( TRUE, 9, 18, 60, 63 , usColor, pDestBuf );
@@ -905,7 +856,6 @@ static void GlowItem(void)
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldItemGlow = FALSE;
- UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
 
@@ -951,7 +901,7 @@ static void GlowItem(void)
 	}
 
 	// glow contract box
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
 	RectangleDraw( TRUE, 3, 80, 64, 104 , usColor, pDestBuf );
@@ -964,7 +914,6 @@ static void GlowTrashCan(void)
 {
  static INT32 iColorNum =10;
  static BOOLEAN fOldTrashCanGlow = FALSE;
- UINT16 usColor;
  UINT32 uiDestPitchBYTES;
  UINT8	*pDestBuf;
 
@@ -995,7 +944,7 @@ static void GlowTrashCan(void)
 	fOldTrashCanGlow = TRUE;
 
 	// glow contract box
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
 	RectangleDraw( TRUE, TRASH_CAN_X, TRASH_CAN_Y , TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , usColor, pDestBuf );
@@ -2090,7 +2039,6 @@ static void HighLightAssignLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
-	UINT16 usColor;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -2155,7 +2103,7 @@ static void HighLightAssignLine(void)
 				usY += 6;
 			}
 
-			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+			UINT16 usColor = GlowColor(iColorNum);
 
 			LineDraw(TRUE, usX, usY, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
 			LineDraw(TRUE, usX+ASSIGN_WIDTH, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
@@ -2181,7 +2129,6 @@ static void HighLightDestLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
-	UINT16 usColor;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -2236,7 +2183,7 @@ static void HighLightDestLine(void)
 				usY += 6;
 			}
 
-			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+			UINT16 usColor = GlowColor(iColorNum);
 
 			if( ( usCount == 0 ) || ( usCount != 0 ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
@@ -2264,7 +2211,6 @@ static void HighLightSleepLine(void)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8  *pDestBuf;
-	UINT16 usColor;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -2322,7 +2268,7 @@ static void HighLightSleepLine(void)
 				usY += 6;
 			}
 
-			usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+			UINT16 usColor = GlowColor(iColorNum);
 
 			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
 			{
@@ -10228,7 +10174,6 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 {
   static INT32 iColorNum=10;
   static BOOLEAN fDelta=FALSE;
-	UINT16 usColor = 0;
 	UINT32 uiDestPitchBYTES;
   UINT8  *pDestBuf;
 
@@ -10250,7 +10195,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 	else
 		iColorNum--;
 
-	usColor=Get16BPPColor( FROMRGB( GlowColorsA[iColorNum].ubRed, GlowColorsA[iColorNum].ubGreen, GlowColorsA[iColorNum].ubBlue ) );
+	UINT16 usColor = GlowColor(iColorNum);
   pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
   RectangleDraw( TRUE, 496, 409, 528, 442, usColor, pDestBuf );
