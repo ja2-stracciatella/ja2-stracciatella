@@ -149,29 +149,26 @@
 #define     INV_BTN_X PLAYER_INFO_X + 217
 #define     INV_BTN_Y PLAYER_INFO_Y + 210
 
-#define			MAP_ARMOR_LABEL_X 208
-#define			MAP_ARMOR_LABEL_Y 180
-#define			MAP_ARMOR_X									209
-#define			MAP_ARMOR_Y									189
-#define			MAP_ARMOR_PERCENT_X 229
-#define			MAP_ARMOR_PERCENT_Y 190
+#define MAP_ARMOR_LABEL_X 208
+#define MAP_ARMOR_LABEL_Y 180
+#define MAP_ARMOR_X       209
+#define MAP_ARMOR_Y       188
+#define MAP_ARMOR_W        28
+#define MAP_ARMOR_H        10
 
-#define			MAP_WEIGHT_LABEL_X 173
-#define			MAP_WEIGHT_LABEL_Y 256
-#define			MAP_WEIGHT_X								176
-#define			MAP_WEIGHT_Y								266
-#define			MAP_WEIGHT_PERCENT_X 196
-#define			MAP_WEIGHT_PERCENT_Y 266
+#define MAP_WEIGHT_LABEL_X 173
+#define MAP_WEIGHT_LABEL_Y 256
+#define MAP_WEIGHT_X       176
+#define MAP_WEIGHT_Y       265
+#define MAP_WEIGHT_W        28
+#define MAP_WEIGHT_H        10
 
-#define			MAP_CAMMO_LABEL_X						178
-#define			MAP_CAMMO_LABEL_Y						283
-#define			MAP_CAMMO_X									176
-#define			MAP_CAMMO_Y									292
-#define			MAP_CAMMO_PERCENT_X					196
-#define			MAP_CAMMO_PERCENT_Y					293
-
-#define			MAP_PERCENT_WIDTH						20
-#define			MAP_PERCENT_HEIGHT					10
+#define MAP_CAMO_LABEL_X 178
+#define MAP_CAMO_LABEL_Y 283
+#define MAP_CAMO_X       176
+#define MAP_CAMO_Y       292
+#define MAP_CAMO_W        28
+#define MAP_CAMO_H        10
 
 #define			MAP_INV_STATS_TITLE_FONT_COLOR				6
 
@@ -5847,30 +5844,23 @@ static void BltCharInvPanel(void)
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
 
-	// print armor/weight/camo labels
-  mprintf( MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[ 0 ] );
-  mprintf( MAP_ARMOR_PERCENT_X, MAP_ARMOR_PERCENT_Y, L"%%" );
+	// Display armor
+	mprintf(MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
+	swprintf(sString, lengthof(sString), L"%3d%%", ArmourPercent(pSoldier));
+	FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_ARMOR_W, MAP_ARMOR_H, sString, BLOCKFONT2, &usX, &usY);
+	mprintf(usX, usY, L"%ls", sString);
 
-  mprintf( MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ]  );
-  mprintf( MAP_WEIGHT_PERCENT_X, MAP_WEIGHT_PERCENT_Y, L"%%" );
+	// Display weight
+	mprintf(MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
+	swprintf(sString, lengthof(sString), L"%d%%", CalculateCarriedWeight(pSoldier));
+	FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_WEIGHT_W, MAP_WEIGHT_H, sString, BLOCKFONT2, &usX, &usY);
+	mprintf(usX, usY, L"%ls", sString);
 
-	mprintf( MAP_CAMMO_LABEL_X, MAP_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ]  );
-  mprintf( MAP_CAMMO_PERCENT_X, MAP_CAMMO_PERCENT_Y, L"%%" );
-
-	// display armor value
-	swprintf( sString, lengthof(sString), L"%3d", ArmourPercent( pSoldier ) );
-	FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString );
-
-	// Display weight value
-	swprintf( sString, lengthof(sString), L"%3d", CalculateCarriedWeight( pSoldier ) );
-	FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString );
-
-	// Display camo value
-	swprintf( sString, lengthof(sString), L"%3d", pSoldier->bCamo );
-	FindFontRightCoordinates(MAP_CAMMO_X, MAP_CAMMO_Y, MAP_PERCENT_WIDTH, MAP_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-	mprintf( usX, usY, sString );
+	// Display camouflage
+	mprintf(MAP_CAMO_LABEL_X, MAP_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
+	swprintf(sString, lengthof(sString), L"%d%%", pSoldier->bCamo);
+	FindFontRightCoordinates(MAP_CAMO_X, MAP_CAMO_Y, MAP_CAMO_W, MAP_CAMO_H, sString, BLOCKFONT2, &usX, &usY);
+	mprintf(usX, usY, L"%ls", sString);
 
 	if( InKeyRingPopup( ) )
 	{
