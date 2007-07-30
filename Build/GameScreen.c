@@ -78,11 +78,6 @@
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
-UINT16  *gpFPSBuffer=NULL;
-// MarkNote
-// extern ScrollStringStPtr pStringS=NULL;
-UINT32 counter=0;
-UINT32 count=0;
 BOOLEAN		gfTacticalDoHeliRun = FALSE;
 BOOLEAN		gfPlayAttnAfterMapLoad = FALSE;
 

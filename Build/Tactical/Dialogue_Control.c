@@ -145,7 +145,7 @@ INT16       gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
 INT16       gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
 
 BOOLEAN			gfDialogueQueuePaused = FALSE;
-UINT16			gusSubtitleBoxWidth;
+static UINT16 gusSubtitleBoxWidth;
 UINT16			gusSubtitleBoxHeight;
 INT32				giTextBoxOverlay = -1;
 BOOLEAN			gfFacePanelActive = FALSE;
