@@ -33,7 +33,6 @@ struct ScrollStringSt
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
 	ScrollStringSt* pNext;
-	ScrollStringSt* pPrev;
 };
 
 
@@ -107,7 +106,6 @@ static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, UINT32 
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
 	i->pNext                 = NULL;
-	i->pPrev                 = NULL;
 	return i;
 }
 
@@ -305,10 +303,6 @@ void ScrollString(void)
 
 			// Adjust head!
 			pStringS = pStringS->pNext;
-			if (pStringS != NULL)
-			{
-				pStringS->pPrev = NULL;
-			}
 
 			//check if new meesage we have not seen since mapscreen..if so, beep
 			if (fOkToBeepNewMessage &&
@@ -528,7 +522,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	do
 	{
 		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
-		pTempStringSt->pPrev = tail;
 		if (tail == NULL)
 		{
 			pStringS = pTempStringSt;
