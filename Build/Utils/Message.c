@@ -112,14 +112,6 @@ static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, UINT32 
 }
 
 
-// returns pointer to next string line
-static ScrollStringSt* GetNextString(ScrollStringSt* pStringSt)
-{
-	if (pStringSt != NULL) pStringSt = pStringSt->pNext;
-	return pStringSt;
-}
-
-
 static void BlitString(VIDEO_OVERLAY* pBlitter);
 
 
@@ -497,9 +489,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 		fFirstTimeInMessageSystem = FALSE;
 	}
 
-	ScrollStringSt* pStringSt = pStringS;
-	while (GetNextString(pStringSt)) pStringSt = GetNextString(pStringSt);
-
 	va_list argptr;
 	va_start(argptr, pStringA);
 	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
@@ -529,20 +518,26 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
 	if (pStringWrapper == NULL) return;
 
+	ScrollStringSt* tail = pStringS;
+	if (tail != NULL)
+	{
+		while (tail->pNext != NULL) tail = tail->pNext;
+	}
+
 	BOOLEAN fNewString = TRUE;
 	do
 	{
 		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
-		pTempStringSt->pPrev = pStringSt;
-		if (pStringSt == NULL)
+		pTempStringSt->pPrev = tail;
+		if (tail == NULL)
 		{
 			pStringS = pTempStringSt;
 		}
 		else
 		{
-			pStringSt->pNext = pTempStringSt;
+			tail->pNext = pTempStringSt;
 		}
-		pStringSt = pTempStringSt;
+		tail = pTempStringSt;
 		fNewString = FALSE;
 		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}
@@ -634,9 +629,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 		memset(gpDisplayList, 0, sizeof(gpDisplayList));
 		fFirstTimeInMessageSystem = FALSE;
 	}
-
-	ScrollStringSt* pStringSt = pStringS;
-	while (GetNextString(pStringSt)) pStringSt = GetNextString(pStringSt);
 
 	va_start(argptr, pStringA);
 	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
