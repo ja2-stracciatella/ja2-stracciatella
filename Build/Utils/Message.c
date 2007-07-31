@@ -926,21 +926,10 @@ static void HandleLastQuotePopUpTimer(void)
 }
 
 
-static const ScrollStringSt* MoveToBeginningOfMessageQueue(void)
-{
-	const ScrollStringSt* i = pStringS;
-	if (i != NULL)
-	{
-		while (i->pPrev != NULL) i = i->pPrev;
-	}
-	return i;
-}
-
-
 static INT32 GetMessageQueueSize(void)
 {
 	INT32 iCounter = 0;
-	for (const ScrollStringSt* i = MoveToBeginningOfMessageQueue(); i != NULL; i = i->pNext)
+	for (const ScrollStringSt* i = pStringS; i != NULL; i = i->pNext)
 	{
 		iCounter++;
 	}
