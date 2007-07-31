@@ -1386,10 +1386,8 @@ const wchar_t *sMapLevelString[] =
 	L"Ebene:", 			// what level below the ground is the player viewing in mapscreen
 };
 
-const wchar_t *gsLoyalString[] =
-{
-	L"Loyalität ", 			// the loyalty rating of a town ie : Loyal 53%
-};
+const wchar_t gsLoyalString[] = L"%d%% Loyalität"; // the loyalty rating of a town ie : Loyal 53%
+
 
 // error message for when player is trying to give a merc a travel order while he's underground.
 const wchar_t *gsUndergroundString[] =

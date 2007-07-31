@@ -51,7 +51,7 @@ extern const wchar_t *sPreStatBuildString[];
 extern const wchar_t *sStatGainStrings[];
 extern const wchar_t *pHelicopterEtaStrings[];
 extern const wchar_t *sMapLevelString[];
-extern const wchar_t *gsLoyalString[];
+extern const wchar_t gsLoyalString[];
 extern const wchar_t *pMapHeliErrorString[];
 extern const wchar_t *gsUndergroundString[];
 extern const wchar_t *gsTimeStrings[];

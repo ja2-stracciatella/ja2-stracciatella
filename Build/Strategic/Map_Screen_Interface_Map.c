@@ -903,7 +903,7 @@ static void ShowTownText(void)
 			// don't show loyalty string until loyalty tracking for that town has been started
 			if( gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
-				swprintf(sStringA, lengthof(sStringA), L"%d%% %ls", gTownLoyalty[bTown].ubRating, gsLoyalString[0]);
+				swprintf(sStringA, lengthof(sStringA), gsLoyalString, gTownLoyalty[bTown].ubRating);
 
 				// if loyalty is too low to train militia, and militia training is allowed here
 				if ( ( gTownLoyalty[ bTown ].ubRating < MIN_RATING_TO_TRAIN_TOWN ) && MilitiaTrainingAllowedInTown( bTown ) )
