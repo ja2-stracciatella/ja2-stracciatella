@@ -97,40 +97,18 @@ extern BOOLEAN fTextBoxMouseRegionCreated;
 extern BOOLEAN fDialogueBoxDueToLastMessage;
 
 
-static void SetString(ScrollStringSt* pStringSt, STR16 pString);
-static void SetStringColor(ScrollStringSt* pStringSt, UINT16 usColor);
-static ScrollStringSt* SetStringNext(ScrollStringSt* pStringSt, ScrollStringSt* pNext);
-static ScrollStringSt* SetStringPrev(ScrollStringSt* pStringSt, ScrollStringSt* pPrev);
-
-
-static ScrollStringSt* AddString(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
+static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
 {
-	// add a new string to the list of strings
-	ScrollStringSt* pStringSt = MemAlloc(sizeof(*pStringSt));
-
-	SetString(pStringSt, pString);
-	SetStringColor(pStringSt, usColor);
-	pStringSt->uiFont = uiFont;
-	pStringSt->fBeginningOfNewString = fStartOfNewString;
-
-	SetStringNext(pStringSt, NULL);
-	SetStringPrev(pStringSt, NULL);
-	pStringSt->iVideoOverlay = -1;
-
-	return pStringSt;
-}
-
-
-static void SetString(ScrollStringSt* pStringSt, STR16 pString)
-{
-	pStringSt->pString16 = MemAlloc(sizeof(*pStringSt->pString16) * (wcslen(pString) + 1));
-	wcscpy(pStringSt->pString16, pString);
-}
-
-
-static void SetStringColor(ScrollStringSt* pStringSt, UINT16 usColor)
-{
-	pStringSt->usColor = usColor;
+	ScrollStringSt* i = MemAlloc(sizeof(*i));
+	i->pString16             = MemAlloc(sizeof(*i->pString16) * (wcslen(pString) + 1));
+	wcscpy(i->pString16, pString);
+	i->iVideoOverlay         = -1;
+	i->uiFont                = uiFont;
+	i->usColor               = usColor;
+	i->fBeginningOfNewString = fStartOfNewString;
+	i->pNext                 = NULL;
+	i->pPrev                 = NULL;
+	return i;
 }
 
 
@@ -138,20 +116,6 @@ static void SetStringColor(ScrollStringSt* pStringSt, UINT16 usColor)
 static ScrollStringSt* GetNextString(ScrollStringSt* pStringSt)
 {
 	if (pStringSt != NULL) pStringSt = pStringSt->pNext;
-	return pStringSt;
-}
-
-
-static ScrollStringSt* SetStringNext(ScrollStringSt* pStringSt, ScrollStringSt* pNext)
-{
-	pStringSt->pNext = pNext;
-	return pStringSt;
-}
-
-
-static ScrollStringSt* SetStringPrev(ScrollStringSt* pStringSt, ScrollStringSt* pPrev)
-{
-	pStringSt->pPrev = pPrev;
 	return pStringSt;
 }
 
@@ -570,7 +534,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	{
 		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
 		pTempStringSt->pPrev = pStringSt;
-		pTempStringSt->pNext = NULL;
 		if (pStringSt == NULL)
 		{
 			pStringS = pTempStringSt;
@@ -589,7 +552,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 }
 
 
-static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString);
+static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString);
 
 
 // this function sets up the string into several single line structures
@@ -716,19 +679,9 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 
 // add string to the map screen message list
-static void AddStringToMapScreenMessageList(STR16 pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
+static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
 {
-	ScrollStringSt* pStringSt = MemAlloc(sizeof(*pStringSt));
-
-	SetString(pStringSt, pString);
-	SetStringColor(pStringSt, usColor);
-	pStringSt->uiFont = uiFont;
-	pStringSt->fBeginningOfNewString = fStartOfNewString;
-	pStringSt->iVideoOverlay = -1;
-
-	// next/previous are not used, it's strictly a wraparound queue
-	SetStringNext(pStringSt, NULL);
-	SetStringPrev(pStringSt, NULL);
+	ScrollStringSt* pStringSt = AddString(pString, usColor, uiFont, fStartOfNewString);
 
 	// Figure out which queue slot index we're going to use to store this
 	// If queue isn't full, this is easy, if is is full, we'll re-use the oldest slot
