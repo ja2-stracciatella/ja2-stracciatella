@@ -78,8 +78,6 @@ static ScrollStringSt* gpDisplayList[MAX_LINE_COUNT];
 static ScrollStringSt* gMapScreenMessageList[256];
 static ScrollStringSt* pStringS = NULL;
 
-// first time adding any message to the message dialogue system
-static BOOLEAN fFirstTimeInMessageSystem = TRUE;
 BOOLEAN fDisableJustForIan = FALSE;
 
 static BOOLEAN fScrollMessagesHidden = FALSE;
@@ -476,13 +474,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 #endif
 	}
 
-	if (fFirstTimeInMessageSystem)
-	{
-		// Init display array!
-		memset(gpDisplayList, 0, sizeof(gpDisplayList));
-		fFirstTimeInMessageSystem = FALSE;
-	}
-
 	va_list argptr;
 	va_start(argptr, pStringA);
 	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
@@ -614,13 +605,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 			va_end(argptr);
 			BeginMapUIMessage(ubPriority, DestString);
 			return;
-	}
-
-	if (fFirstTimeInMessageSystem)
-	{
-		// Init display array!
-		memset(gpDisplayList, 0, sizeof(gpDisplayList));
-		fFirstTimeInMessageSystem = FALSE;
 	}
 
 	va_start(argptr, pStringA);
