@@ -2532,20 +2532,14 @@ void BeginUIMessage( wchar_t *pFontString, ... )
 }
 
 
-void BeginMapUIMessage(INT16 delta_y, const wchar_t* pFontString, ...)
+void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 {
-	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	wchar_t	MsgString[512];
 
 	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(MsgString, lengthof(MsgString), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
 	guiUIMessageTime = GetJA2Clock( );
-	guiUIMessageTimeDelay = CalcUIMessageDuration(MsgString);
+	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
 	// Override it!
 	OverrideMercPopupBox( &gpUIMessageOverrideMercBox );
@@ -2553,7 +2547,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* pFontString, ...)
 	SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS );
 
 	// Prepare text box
-	iUIMessageBox = PrepareMercPopupBox( iUIMessageBox ,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, MsgString, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight );
+	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
 
 	// Set it back!
 	ResetOverrideMercPopupBox( );

@@ -163,7 +163,7 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... );
 
 
 // map screen version, for centering over the map area
-void BeginMapUIMessage(INT16 delta_y, const wchar_t* pFontString, ...);
+void BeginMapUIMessage(INT16 delta_y, const wchar_t* text);
 
 
 INT32					giUIMessageOverlay;
