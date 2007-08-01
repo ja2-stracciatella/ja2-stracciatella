@@ -577,6 +577,10 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 			BeginUIMessage(DestString);
 			return;
 
+		case MSG_SKULL_UI_FEEDBACK:
+			BeginSkullUIMessage(DestString);
+			return;
+
 		case MSG_ERROR:
 			swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
 			BeginUIMessage(DestStringA);
