@@ -2534,38 +2534,27 @@ void BeginUIMessage( wchar_t *pFontString, ... )
 
 void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-	guiUIMessageTime = GetJA2Clock( );
+	guiUIMessageTime      = GetJA2Clock();
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
-	// Override it!
-	OverrideMercPopupBox( &gpUIMessageOverrideMercBox );
-
-	SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS );
-
-	// Prepare text box
+	OverrideMercPopupBox(&gpUIMessageOverrideMercBox);
+	SetPrepareMercPopupFlags(MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS);
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
+	ResetOverrideMercPopupBox();
 
-	// Set it back!
-	ResetOverrideMercPopupBox( );
-
-	if ( giUIMessageOverlay == -1  )
+	if (giUIMessageOverlay == -1)
 	{
-		// Set Overlay
-		VideoOverlayDesc.sLeft = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
-		VideoOverlayDesc.sTop  = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
-
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusUIMessageWidth;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusUIMessageHeight;
+		VIDEO_OVERLAY_DESC VideoOverlayDesc;
+		memset(&VideoOverlayDesc, 0, sizeof(VideoOverlayDesc));
+		VideoOverlayDesc.sLeft       = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
+		VideoOverlayDesc.sTop        = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
+		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
+		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop  + gusUIMessageHeight;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
-
-		giUIMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+		giUIMessageOverlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 	}
-
 }
+
 
 void EndUIMessage( )
 {
