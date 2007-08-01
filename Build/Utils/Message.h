@@ -15,9 +15,6 @@ extern BOOLEAN fDisableJustForIan;
 #define   MSG_ERROR						5
 #define   MSG_BETAVERSION     6
 #define   MSG_TESTVERSION     7
-#define   MSG_MAP_UI_POSITION_MIDDLE 8
-#define   MSG_MAP_UI_POSITION_UPPER 9
-#define   MSG_MAP_UI_POSITION_LOWER 10
 #define   MSG_SKULL_UI_FEEDBACK	11
 
 

@@ -700,7 +700,7 @@ void ToggleShowMilitiaMode( void )
 				pwString = zMarksMapScreenText[ 1 ];
 			}
 
-			MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pwString );
+			BeginMapUIMessage(0, pwString);
 		}
 	}
 

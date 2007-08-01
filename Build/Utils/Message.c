@@ -587,13 +587,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 			WriteMessageToFile(DestStringA);
 			return;
 
-		case MSG_MAP_UI_POSITION_UPPER:
-		case MSG_MAP_UI_POSITION_MIDDLE:
-		case MSG_MAP_UI_POSITION_LOWER:
-			// An immediate MAP feedback message. Do something else!
-			BeginMapUIMessage(ubPriority, DestString);
-			return;
-
 		case MSG_DEBUG:
 #if defined _DEBUG && !defined JA2DEMO
 			wcscpy(DestStringA, DestString);

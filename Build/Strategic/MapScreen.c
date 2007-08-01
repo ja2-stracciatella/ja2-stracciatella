@@ -3808,7 +3808,7 @@ static UINT32 HandleMapUI(void)
 								else
 								{
 									// means it's a vehicle and we've clicked an off-road sector
-									MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapErrorString[ 40 ] );
+									BeginMapUIMessage(0, pMapErrorString[40]);
 								}
 							}
 						}
@@ -3931,7 +3931,7 @@ static UINT32 HandleMapUI(void)
 							swprintf( sMsgString, lengthof(sMsgString), pBullseyeStrings[ 1 ], sMsgSubString );
 
 							// confirm the change with overlay message
-							MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, sMsgString );
+							BeginMapUIMessage(0, sMsgString);
 
 							// update destination column for any mercs in transit
 							fTeamPanelDirty = TRUE;
@@ -3939,7 +3939,7 @@ static UINT32 HandleMapUI(void)
 						else
 						{
 							// message: not allowed, don't have airspace secured
-							MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pBullseyeStrings[ 2 ] );
+							BeginMapUIMessage(0, pBullseyeStrings[2]);
 						}
 					}
 
@@ -4154,7 +4154,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					if ( gfInChangeArrivalSectorMode )
 					{
 						CancelChangeArrivalSectorMode( );
-						MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pBullseyeStrings[ 3 ] );
+						BeginMapUIMessage(0, pBullseyeStrings[3]);
 					}
 					// ESC cancels MAP UI messages, unless we're in confirm map move mode
 					else if( ( giUIMessageOverlay != -1 ) && !gfInConfirmMapMoveMode )
@@ -5614,7 +5614,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 				if ( gfInChangeArrivalSectorMode )
 				{
 					CancelChangeArrivalSectorMode( );
-					MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pBullseyeStrings[ 3 ] );
+					BeginMapUIMessage(0, pBullseyeStrings[3]);
 					return;
 				}
 
@@ -6479,8 +6479,7 @@ void AbortMovementPlottingMode( void )
 	fPlotForHelicopter = FALSE;
 
 	// tell player the route was UNCHANGED
-	MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 2 ] );
-
+	BeginMapUIMessage(0, pMapPlotStrings[2]);
 
 	// reset cursors
 	ChangeMapScreenMaskCursor( CURSOR_NORMAL );
@@ -8411,12 +8410,12 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			if ( pPreviousMercPath != NULL )
 			{
 				// then this means we've CANCELED it
-				MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 3 ] );
+				BeginMapUIMessage(0, pMapPlotStrings[3]);
 			}
 			else	// no previous path
 			{
 				// then it means the route was UNCHANGED
-				MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 2 ] );
+				BeginMapUIMessage(0, pMapPlotStrings[2]);
 			}
 		}
 	}
@@ -9070,11 +9069,8 @@ static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void StartConfirmMapMoveMode(INT16 sMapY)
 {
-	UINT8 ubPosition = ( sMapY < 8 ) ? MSG_MAP_UI_POSITION_LOWER : MSG_MAP_UI_POSITION_UPPER;
-
 	// tell player what to do - to click again to confirm move
-	MapScreenMessage( FONT_MCOLOR_LTYELLOW, ubPosition, pMapPlotStrings[ 0 ] );
-
+	BeginMapUIMessage(sMapY < 8 ? 100 : -100, pMapPlotStrings[0]);
 	gfInConfirmMapMoveMode = TRUE;
 }
 
@@ -10499,7 +10495,7 @@ static void CancelOrShortenPlottedPath(void)
 
 		case PATH_SHORTENED:	// route was shortened but isn't completely gone
 			// display "route shortened" message
-			MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 4 ] );
+			BeginMapUIMessage(0, pMapPlotStrings[4]);
 			break;
 
 		default:
@@ -11044,7 +11040,7 @@ static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY)
 
 		// tell player the route was CONFIRMED
 		// NOTE: We don't this this for the helicopter any more, since it clashes with Skyrider's own confirmation msg
-		MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 1 ] );
+		BeginMapUIMessage(0, pMapPlotStrings[1]);
 	}
 
 
@@ -11204,7 +11200,7 @@ static void StartChangeSectorArrivalMode(void)
 	SetUpCursorForStrategicMap();
 
 	// give instructions as overlay message
-	MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pBullseyeStrings[ 0 ] );
+	BeginMapUIMessage(0, pBullseyeStrings[0]);
 }
 
 

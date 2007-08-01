@@ -1763,7 +1763,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 	else
 	{
 		// display "travel route canceled" message
-		MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 3 ] );
+		BeginMapUIMessage(0, pMapPlotStrings[3]);
 	}
 
 
@@ -1793,7 +1793,7 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 	}
 
 	// display "travel route canceled" message
-	MapScreenMessage( FONT_MCOLOR_LTYELLOW, MSG_MAP_UI_POSITION_MIDDLE, pMapPlotStrings[ 3 ] );
+	BeginMapUIMessage(0, pMapPlotStrings[3]);
 
 	// turn the helicopter flag off here, this prevents the "route aborted" msg from coming up
 	fPlotForHelicopter = FALSE;

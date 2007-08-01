@@ -2532,7 +2532,7 @@ void BeginUIMessage( wchar_t *pFontString, ... )
 }
 
 
-void BeginMapUIMessage( UINT8 ubPosition, wchar_t *pFontString, ... )
+void BeginMapUIMessage(INT16 delta_y, const wchar_t* pFontString, ...)
 {
 	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
@@ -2561,18 +2561,8 @@ void BeginMapUIMessage( UINT8 ubPosition, wchar_t *pFontString, ... )
 	if ( giUIMessageOverlay == -1  )
 	{
 		// Set Overlay
-		VideoOverlayDesc.sLeft	 = 20 + MAP_VIEW_START_X + ( MAP_VIEW_WIDTH - gusUIMessageWidth ) / 2;
-
-		VideoOverlayDesc.sTop	 = MAP_VIEW_START_Y + ( MAP_VIEW_HEIGHT - gusUIMessageHeight ) / 2;
-
-		if( ubPosition == MSG_MAP_UI_POSITION_UPPER )
-		{
-			VideoOverlayDesc.sTop	-= 100;
-		}
-		else if ( ubPosition == MSG_MAP_UI_POSITION_LOWER )
-		{
-			VideoOverlayDesc.sTop	+= 100;
-		}
+		VideoOverlayDesc.sLeft = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
+		VideoOverlayDesc.sTop  = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
 
 		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusUIMessageWidth;
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusUIMessageHeight;
