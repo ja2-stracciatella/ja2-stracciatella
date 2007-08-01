@@ -158,8 +158,7 @@ void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel );
 
 
 void EndUIMessage( );
-void BeginUIMessage(const wchar_t* format, ...);
-void BeginSkullUIMessage(const wchar_t* format, ...);
+void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text);
 
 
 // map screen version, for centering over the map area

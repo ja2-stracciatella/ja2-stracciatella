@@ -2461,15 +2461,12 @@ static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 static UINT32 CalcUIMessageDuration(const wchar_t* wString);
 
 
-static void InternalBeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* format, va_list arg)
+void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	wchar_t	MsgString[512];
-
-	vswprintf(MsgString, lengthof(MsgString), format, arg);
 
 	guiUIMessageTime = GetJA2Clock( );
-	guiUIMessageTimeDelay = CalcUIMessageDuration(MsgString);
+	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
 	// Override it!
 	OverrideMercPopupBox( &gpUIMessageOverrideMercBox );
@@ -2486,7 +2483,7 @@ static void InternalBeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* format,
 	}
 
 	// Prepare text box
-	iUIMessageBox = PrepareMercPopupBox( iUIMessageBox ,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, MsgString, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight );
+	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
 
 	// Set it back!
 	ResetOverrideMercPopupBox( );
@@ -2513,24 +2510,6 @@ static void InternalBeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* format,
 	}
 
 	gfUseSkullIconMessage = fUseSkullIcon;
-}
-
-
-void BeginUIMessage(const wchar_t* format, ...)
-{
-	va_list arg;
-	va_start(arg, format);
-	InternalBeginUIMessage(FALSE, format, arg);
-	va_end(arg);
-}
-
-
-void BeginSkullUIMessage(const wchar_t* format, ...)
-{
-	va_list arg;
-	va_start(arg, format);
-	InternalBeginUIMessage(TRUE, format, arg);
-	va_end(arg);
 }
 
 

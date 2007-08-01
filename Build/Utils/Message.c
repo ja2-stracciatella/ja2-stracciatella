@@ -574,16 +574,16 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 		case MSG_UI_FEEDBACK:
 			// An imeediate feedback message. Do something else!
-			BeginUIMessage(DestString);
+			BeginUIMessage(FALSE, DestString);
 			return;
 
 		case MSG_SKULL_UI_FEEDBACK:
-			BeginSkullUIMessage(DestString);
+			BeginUIMessage(TRUE, DestString);
 			return;
 
 		case MSG_ERROR:
 			swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
-			BeginUIMessage(DestStringA);
+			BeginUIMessage(FALSE, DestStringA);
 			WriteMessageToFile(DestStringA);
 			return;
 
