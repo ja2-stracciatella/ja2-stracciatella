@@ -451,7 +451,11 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 		return;
 	}
 
+	va_list argptr;
+	va_start(argptr, pStringA);
 	wchar_t DestString[512];
+	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
+	va_end(argptr);
 
 	switch (ubPriority)
 	{
@@ -472,15 +476,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 #else
 			return;
 #endif
-	}
 
-	va_list argptr;
-	va_start(argptr, pStringA);
-	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-	va_end(argptr);
-
-	switch (ubPriority)
-	{
 		case MSG_DEBUG:
 #if defined _DEBUG && !defined JA2DEMO
 			wchar_t DestStringA[512];
@@ -548,9 +544,13 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 		}
 	}
 
-	va_list argptr;
-	wchar_t DestString[512];
 	wchar_t DestStringA[512];
+
+	va_list argptr;
+	va_start(argptr, pStringA);
+	wchar_t DestString[512];
+	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
+	va_end(argptr);
 
 	switch (ubPriority)
 	{
@@ -574,23 +574,14 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 		case MSG_UI_FEEDBACK:
 			// An imeediate feedback message. Do something else!
-			va_start(argptr, pStringA);
-			vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-			va_end(argptr);
 			BeginUIMessage(DestString);
 			return;
 
 		case MSG_SKULL_UI_FEEDBACK:
-			va_start(argptr, pStringA);
-			vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-			va_end(argptr);
 			InternalBeginUIMessage(TRUE, DestString);
 			return;
 
 		case MSG_ERROR:
-			va_start(argptr, pStringA);
-			vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-			va_end(argptr);
 			swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
 			BeginUIMessage(DestStringA);
 			WriteMessageToFile(DestStringA);
@@ -600,19 +591,9 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 		case MSG_MAP_UI_POSITION_MIDDLE:
 		case MSG_MAP_UI_POSITION_LOWER:
 			// An immediate MAP feedback message. Do something else!
-			va_start(argptr, pStringA);
-			vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-			va_end(argptr);
 			BeginMapUIMessage(ubPriority, DestString);
 			return;
-	}
 
-	va_start(argptr, pStringA);
-	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-	va_end(argptr);
-
-	switch (ubPriority)
-	{
 		case MSG_DEBUG:
 #if defined _DEBUG && !defined JA2DEMO
 			wcscpy(DestStringA, DestString);

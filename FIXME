@@ -243,7 +243,6 @@ SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()
 SetInputFieldStringWithNumericStrictValue(): complicated
 SetSelection(): callers
-SetSteadyStateAmbience(): fInNight used as lower index bound incorrectly, because upper bound is not adjusted
 SetTilesetOneTerrainValues(): set callback to avoid explicit test
 SoldierCanSeeCatchComing(): empty
 SoldierCarriesTwoHandedWeapon(): complicated
@@ -251,7 +250,6 @@ StandardGunListAmmoReplacement(): declaration in .c
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
 StructureHit(): interface complicated (pointer -> index -> pointer)
-TacticalScreenMsg(): DestString read before written to
 TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
@@ -306,9 +304,6 @@ typedef float real: remove
 ubMineType: unused?
 ubTravelRating: write-only
 wcscat(): check for overkill
-zNewTacticalMessages[TACT_MSG__AIMMEMBER_FEE_TEXT]: unused
-zNewTacticalMessages[TACT_MSG__AIMMEMBER_ONE_TIME_FEE]: unused
-zNewTacticalMessages[TACT_MSG__CANNOT_AFFORD_MERC]: unused
 {Head,Misc,Pabts,Skin,Vest}Pal: buffer necessary? pointer instead?
 {Load,Save}ShadeTable(): code duplication
 {Load,Save}ShadeTable(): filename generation ugly
