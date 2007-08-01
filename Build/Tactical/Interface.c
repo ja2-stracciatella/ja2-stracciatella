@@ -2461,16 +2461,12 @@ static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 static UINT32 CalcUIMessageDuration(const wchar_t* wString);
 
 
-void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... )
+static void InternalBeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* format, va_list arg)
 {
-	va_list argptr;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	wchar_t	MsgString[512];
 
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(MsgString, lengthof(MsgString), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
+	vswprintf(MsgString, lengthof(MsgString), format, arg);
 
 	guiUIMessageTime = GetJA2Clock( );
 	guiUIMessageTimeDelay = CalcUIMessageDuration(MsgString);
@@ -2519,16 +2515,22 @@ void InternalBeginUIMessage( BOOLEAN fUseSkullIcon, wchar_t *pFontString, ... )
 	gfUseSkullIconMessage = fUseSkullIcon;
 }
 
-void BeginUIMessage( wchar_t *pFontString, ... )
+
+void BeginUIMessage(const wchar_t* format, ...)
 {
-	va_list argptr;
-	wchar_t	MsgString[512];
+	va_list arg;
+	va_start(arg, format);
+	InternalBeginUIMessage(FALSE, format, arg);
+	va_end(arg);
+}
 
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(MsgString, lengthof(MsgString), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
 
-	InternalBeginUIMessage( FALSE, MsgString );
+void BeginSkullUIMessage(const wchar_t* format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	InternalBeginUIMessage(TRUE, format, arg);
+	va_end(arg);
 }
 
 
