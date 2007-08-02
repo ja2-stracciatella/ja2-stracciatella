@@ -1051,7 +1051,7 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 	gTalkPanel.fOnName		= FALSE;
 	//gTalkPanel.fHandled		= FALSE;
 
-	CHECKF( CharacterDialogue( gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, FALSE, FALSE ) != FALSE );
+	CHECKF(CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, FALSE, FALSE));
 	return( TRUE );
 }
 
@@ -1283,39 +1283,36 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 
 BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 {
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, (UINT32) ubNPC, (UINT32)pObject, (UINT32) bInvPos, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
-
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, (UINT32)pObject, bInvPos, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
+
 BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu )
 {
-	//CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
-	CHECKF( SpecialCharacterDialogueEventWithExtraParam( DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
-
+	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
+	CHECKF(SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
 
 BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum )
 {
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
-
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
 
 BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI ) != FALSE );
-
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
+
 BOOLEAN	NPCClosePanel( )
 {
-	CHECKF( SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI ) != FALSE );
-
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 

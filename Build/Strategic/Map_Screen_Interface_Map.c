@@ -896,7 +896,7 @@ static void ShowTownText(void)
  	for( bTown = FIRST_TOWN; bTown < NUM_TOWNS; bTown++)
 	{
 		// skip Orta/Tixa until found
-		if( ( ( fFoundOrta != FALSE ) || ( bTown != ORTA ) ) && ( ( bTown != TIXA ) || ( fFoundTixa != FALSE) ) )
+		if ((bTown != ORTA || fFoundOrta) && (bTown != TIXA || fFoundTixa))
 		{
 			fLoyaltyTooLowToTrainMilitia = FALSE;
 
@@ -4683,7 +4683,7 @@ static void BlitTownGridMarkers(void)
 	while( pTownNamesList[ iCounter ] != 0 )
 	{
 		// skip Orta/Tixa until found
-		if( ( ( fFoundOrta != FALSE ) || ( pTownNamesList[ iCounter ] != ORTA ) ) && ( ( pTownNamesList[ iCounter ] != TIXA ) || ( fFoundTixa != FALSE) ) )
+		if ((pTownNamesList[iCounter] != ORTA || fFoundOrta) && (pTownNamesList[iCounter] != TIXA || fFoundTixa))
 		{
 			if( fZoomFlag )
 			{

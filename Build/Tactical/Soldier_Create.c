@@ -569,7 +569,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			// Copy into merc struct
 			*MercPtrs[Soldier.ubID] = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
-			CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, STANDING ) != FALSE );
+			CHECKF(CreateSoldierCommon(Soldier.ubBodyType, MercPtrs[Soldier.ubID], Soldier.ubID, STANDING));
 		}
 	}
 	else
@@ -593,7 +593,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 		*MercPtrs[Soldier.ubID] = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
-		CHECKF( CreateSoldierCommon( Soldier.ubBodyType, MercPtrs[ Soldier.ubID ], Soldier.ubID, Menptr[ Soldier.ubID ].usAnimState ) != FALSE );
+		CHECKF(CreateSoldierCommon(Soldier.ubBodyType, MercPtrs[Soldier.ubID], Soldier.ubID, Menptr[Soldier.ubID].usAnimState));
 
 		*pubID = Soldier.ubID;
 

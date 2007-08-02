@@ -35,6 +35,7 @@ CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
+DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop

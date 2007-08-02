@@ -1289,22 +1289,18 @@ INT32 GetRandomSelection( void )
 
 
 //	Verifies if a particular display list object exists in the current selection list.
-static BOOLEAN IsInSelectionList(DisplayList* pNode)
+static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 {
-	INT32 iIndex;
-	BOOLEAN fFound;
-
-	fFound = FALSE;
-	for (iIndex = 0; iIndex < (*pNumSelList) && !fFound; iIndex++ )
+	for (INT32 iIndex = 0; iIndex < *pNumSelList; iIndex++)
 	{
-		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+		if (pNode->uiObjIndx == pSelList[iIndex].uiObject &&
+				pNode->uiIndex   == pSelList[iIndex].usIndex)
 		{
-			fFound = TRUE;
+			return TRUE;
 		}
 	}
 
-	return ( fFound );
+	return FALSE;
 }
 
 
@@ -1536,7 +1532,6 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 	UINT16					usETRLEEnd;
 	DisplaySpec *		pDisplaySpec;
 	ETRLEObject *		pETRLEObject;
-	DisplayList			*pCurNode;
 
 	SaveSelectionList();
 
@@ -1576,26 +1571,20 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 					usGreatestHeightInRow = 0;
 				}
 
-				if ((pCurNode = (DisplayList *)MemAlloc(sizeof(DisplayList))) != FALSE)
-				{
-					pCurNode->hObj = pDisplaySpec->hVObject;
-					pCurNode->uiIndex = usETRLELoop;
-					pCurNode->iX = (INT16)iCurrX;
-					pCurNode->iY = (INT16)iCurrY;
-					pCurNode->iWidth = pETRLEObject->usWidth;
-					pCurNode->iHeight = pETRLEObject->usHeight;
-					pCurNode->pNext = *pDisplayList;
-					pCurNode->uiObjIndx = pDisplaySpec->uiObjIndx;
+				DisplayList* pCurNode = MemAlloc(sizeof(*pCurNode));
+				if (pCurNode == NULL) return FALSE;
 
-					if ( IsInSelectionList( pCurNode ) )
-						pCurNode->fChosen = TRUE;
-					else
-						pCurNode->fChosen = FALSE;
+				pCurNode->hObj      = pDisplaySpec->hVObject;
+				pCurNode->uiIndex   = usETRLELoop;
+				pCurNode->iX        = iCurrX;
+				pCurNode->iY        = iCurrY;
+				pCurNode->iWidth    = pETRLEObject->usWidth;
+				pCurNode->iHeight   = pETRLEObject->usHeight;
+				pCurNode->pNext     = *pDisplayList;
+				pCurNode->uiObjIndx = pDisplaySpec->uiObjIndx;
+				pCurNode->fChosen   = IsInSelectionList(pCurNode);
 
-					*pDisplayList = pCurNode;
-				}
-				else
-					return(FALSE);
+				*pDisplayList = pCurNode;
 
 				if (pETRLEObject->usHeight > usGreatestHeightInRow)
 				{

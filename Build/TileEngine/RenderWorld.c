@@ -3055,7 +3055,7 @@ void ScrollWorld( )
 		}
 
 		// Check if we have just stopped scrolling!
-		if ( gfScrollInertia != FALSE  )
+		if (gfScrollInertia)
 		{
 			SetRenderFlags( RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ );
 

@@ -133,7 +133,7 @@ BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType
 			AnimDebugMsg( String( "Anim Cache: Loading Surface %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
 
 			// Insert here
-			CHECKF( LoadAnimationSurface( usSoldierID, usSurfaceIndex, usCurrentAnimation ) != FALSE );
+			CHECKF(LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation));
 			pAnimCache->sCacheHits[ cnt ] = 0;
 			pAnimCache->usCachedSurfaces[ cnt ] = usSurfaceIndex;
 			pAnimCache->ubCacheSize++;

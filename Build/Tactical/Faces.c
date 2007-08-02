@@ -395,7 +395,7 @@ void DeleteFace( INT32 iFaceIndex )
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Check for a valid slot!
-	CHECKV( pFace->fAllocated != FALSE );
+	CHECKV(pFace->fAllocated);
 
   pFace->fCanHandleInactiveNow = TRUE;
 
@@ -610,7 +610,7 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Check for a valid slot!
-	CHECKV( pFace->fAllocated != FALSE );
+	CHECKV(pFace->fAllocated);
 
 
 	// Turn off some flags
@@ -1481,7 +1481,7 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Check for a valid slot!
-	CHECKF( pFace->fAllocated != FALSE );
+	CHECKF(pFace->fAllocated);
 
 	// Check for disabled guy!
 	CHECKF( pFace->fDisabled != TRUE );
@@ -1549,7 +1549,7 @@ static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Check for a valid slot!
-	CHECKF( pFace->fAllocated != FALSE );
+	CHECKF(pFace->fAllocated);
 
 	// Here, any face can be rendered, even if disabled
 

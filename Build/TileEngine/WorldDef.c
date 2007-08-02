@@ -2620,7 +2620,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
 #endif
-	CHECKF( LoadMapTileset( iTilesetID ) != FALSE );
+	CHECKF(LoadMapTileset(iTilesetID));
 #ifdef JA2TESTVERSION
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
@@ -3400,7 +3400,7 @@ BOOLEAN LoadMapTileset( INT32 iTilesetID )
 	gSurfaceMemUsage = guiMemTotal;
 
 	// LOAD SURFACES
-	CHECKF( LoadTileSurfaces( &(gTilesets[ iTilesetID ].TileSurfaceFilenames[0] ), (UINT8)iTilesetID ) != FALSE );
+	CHECKF(LoadTileSurfaces(&gTilesets[iTilesetID].TileSurfaceFilenames[0], iTilesetID));
 
 	// SET TERRAIN COSTS
 	if ( gTilesets[ iTilesetID ].MovementCostFnc != NULL )
