@@ -919,12 +919,12 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			if ( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
 				BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, 496, 446);
-				RestoreExternBackgroundRect( 496, 446, 29, 23 );
+				RestoreExternBackgroundRect(496, 446, KEYRING_WIDTH - 1, KEYRING_HEIGHT - 1);
 			}
 			else
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, 217, 271);
-				RestoreExternBackgroundRect( 217, 271, 29, 23 );
+				BltVideoObjectFromIndex(guiSAVEBUFFER, guiGoldKeyVO, 0, MAP_KEYRING_X, MAP_KEYRING_Y);
+				RestoreExternBackgroundRect(MAP_KEYRING_X, MAP_KEYRING_Y, KEYRING_WIDTH - 1, KEYRING_HEIGHT - 1);
 			}
 		}
 	}
