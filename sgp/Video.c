@@ -38,9 +38,6 @@ typedef struct
 } MouseCursorBackground;
 
 
-static UINT16 gusScreenWidth;
-static UINT16 gusScreenHeight;
-
 #define MAX_NUM_FRAMES 25
 
 static BOOLEAN gfVideoCapture = FALSE;
@@ -137,9 +134,6 @@ BOOLEAN InitializeVideoManager(void)
 
 	SDL_ShowCursor(SDL_DISABLE);
 
-	gusScreenWidth = SCREEN_WIDTH;
-	gusScreenHeight = SCREEN_HEIGHT;
-
 	FillSurface(FRAME_BUFFER, 0);
 
 	gMouseCursorBackground.fRestore = FALSE;
@@ -204,13 +198,6 @@ BOOLEAN RestoreVideoManager(void)
 		return FALSE;
 	}
 #endif
-}
-
-
-void GetCurrentVideoSettings(UINT16* usWidth, UINT16* usHeight)
-{
-	*usWidth  = gusScreenWidth;
-	*usHeight = gusScreenHeight;
 }
 
 
@@ -328,10 +315,8 @@ static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT
 	SDL_Rect SrcRect;
 	SDL_Rect DstRect;
 
-	UINT16 usWidth;
-	UINT16 usHeight;
-	GetCurrentVideoSettings(&usWidth, &usHeight);
-	usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+	const UINT16 usWidth  = SCREEN_WIDTH;
+	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
 	SGPRect StripRegions[2];
 	StripRegions[0].iLeft   = gsVIEWPORT_START_X;
@@ -611,9 +596,6 @@ void RefreshScreen(void)
 
 	if (guiVideoManagerState != VIDEO_ON) return;
 
-	UINT16 usScreenWidth  = gusScreenWidth;
-	UINT16 usScreenHeight = gusScreenHeight;
-
 	SDL_Rect OldMouseRect;
 	BOOLEAN UndrawMouse = gMouseCursorBackground.fRestore;
 	if (UndrawMouse)
@@ -717,8 +699,8 @@ void RefreshScreen(void)
 		Region.iRight  = Region.iLeft + gusMouseCursorWidth;
 		Region.iBottom = Region.iTop + gusMouseCursorHeight;
 
-		if (Region.iRight  > usScreenWidth)  Region.iRight  = usScreenWidth;
-		if (Region.iBottom > usScreenHeight) Region.iBottom = usScreenHeight;
+		if (Region.iRight  > SCREEN_WIDTH)  Region.iRight  = SCREEN_WIDTH;
+		if (Region.iBottom > SCREEN_HEIGHT) Region.iBottom = SCREEN_HEIGHT;
 
 		if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
 		{

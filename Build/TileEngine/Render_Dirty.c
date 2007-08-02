@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "VSurface.h"
@@ -539,10 +540,7 @@ static void DisableBackgroundRect(INT32 iIndex, BOOLEAN fDisabled)
 BOOLEAN UpdateSaveBuffer(void)
 {
 	// Update saved buffer - do for the viewport size ony!
-	UINT16 usWidth;
-	UINT16 usHeight;
-	GetCurrentVideoSettings(&usWidth, &usHeight);
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, usWidth, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 	return TRUE;
 }
 

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "SGP.h"
 #include "VObject.h"
 #include "TileDef.h"
@@ -1061,10 +1062,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 		}
 
     // Update the save buffer
-		UINT16 usWidth;
-		UINT16 usHeight;
-		GetCurrentVideoSettings(&usWidth, &usHeight);
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, usWidth, usHeight);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 }
 

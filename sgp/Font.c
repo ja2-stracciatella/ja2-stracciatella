@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include "Local.h"
 #include "Types.h"
 #include "MemMan.h"
 #include "Font.h"
@@ -507,13 +508,10 @@ BOOLEAN InitializeFontManager(void)
 	FontDefault = -1;
 	FontDestBuffer = BACKBUFFER;
 
-	UINT16 uiRight;
-	UINT16 uiBottom;
-	GetCurrentVideoSettings(&uiRight, &uiBottom);
-	FontDestRegion.iLeft = 0;
-	FontDestRegion.iTop = 0;
-	FontDestRegion.iRight=(INT32)uiRight;
-	FontDestRegion.iBottom=(INT32)uiBottom;
+	FontDestRegion.iLeft   = 0;
+	FontDestRegion.iTop    = 0;
+	FontDestRegion.iRight  = SCREEN_WIDTH;
+	FontDestRegion.iBottom = SCREEN_HEIGHT;
 
 	// Mark all font slots as empty
 	for (int count = 0; count < MAX_FONTS; count++) FontObjs[count] = NULL;

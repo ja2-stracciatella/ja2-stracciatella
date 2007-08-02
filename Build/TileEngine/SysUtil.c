@@ -12,16 +12,10 @@ BOOLEAN gfExtraBuffer = FALSE;
 
 BOOLEAN	InitializeGameVideoObjects( )
 {
-	UINT16					usWidth;
-	UINT16					usHeight;
-
-	// Create render buffer
-	GetCurrentVideoSettings(&usWidth, &usHeight);
-
-	guiSAVEBUFFER = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
+	guiSAVEBUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiSAVEBUFFER != NO_VSURFACE);
 
-	guiEXTRABUFFER = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
+	guiEXTRABUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiEXTRABUFFER != NO_VSURFACE);
 	gfExtraBuffer = TRUE;
 
