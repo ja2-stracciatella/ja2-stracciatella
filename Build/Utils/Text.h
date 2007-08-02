@@ -38,8 +38,6 @@ extern const wchar_t *pDirectionStr[];
 extern const wchar_t *pRemoveMercStrings[];
 extern const wchar_t *sTimeStrings[];
 extern const wchar_t *pLandTypeStrings[];
-extern const wchar_t *pGuardMenuStrings[];
-extern const wchar_t *pOtherGuardMenuStrings[];
 extern const wchar_t *pInvPanelTitleStrings[];
 extern const wchar_t *pPOWStrings[];
 extern const wchar_t *pMilitiaString[];

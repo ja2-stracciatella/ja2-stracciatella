@@ -529,35 +529,6 @@ const wchar_t *pTrainingStrings[] =
 	L"Rekrut", // tell merc to be train by other
 };
 
-const wchar_t *pGuardMenuStrings[] =
-{
-	L"Schußrate:", // the allowable rate of fire for a merc who is guarding
-	L" Aggressiv feuern", // the merc can be aggressive in their choice of fire rates
-	L" Ammo sparen", // conserve ammo
-	L" Nur bei Bedarf feuern", // fire only when the merc needs to
-	L"Andere Optionen:", // other options available to merc
-	L" Rückzug möglich", // merc can retreat
-	L" Deckung möglich", // merc is allowed to seek cover
-	L" Kann Kameraden helfen", // merc can assist teammates
-	L"Fertig", // done with this menu
-	L"Abbruch", // cancel this menu
-};
-
-// This string has the same comments as above, however the * denotes the option has been selected by the player
-const wchar_t *pOtherGuardMenuStrings[] =
-{
-	L"Schußrate:",
-	L" *Aggressiv feuern*",
-	L" *Ammo sparen*",
-	L" *Nur bei Bedarf feuern*",
-	L"Andere Optionen:",
-	L" *Rückzug möglich*",
-	L" *Deckung möglich*",
-	L" *Kann Kameraden helfen*",
-	L"Fertig",
-	L"Abbruch",
-};
-
 const wchar_t *pAssignMenuStrings[] =
 {
 	L"Dienst", // merc is on active duty
