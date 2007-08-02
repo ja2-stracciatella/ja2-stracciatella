@@ -71,8 +71,6 @@
 
 
 // DEFINES FOR VARIOUS PANELS
-#define				CLOCK_X								554
-#define				CLOCK_Y								459
 #define	SM_ITEMDESC_START_X					214
 #define	SM_ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
 #define	SM_ITEMDESC_HEIGHT					128
@@ -80,19 +78,18 @@
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X							70
-#define SM_SELMERC_AP_Y							393
-#define SM_SELMERC_AP_HEIGHT				12
-#define SM_SELMERC_AP_WIDTH					11
+#define SM_SELMERC_AP_X       67
+#define SM_SELMERC_AP_Y      393
+#define SM_SELMERC_AP_HEIGHT  10
+#define SM_SELMERC_AP_WIDTH   17
 
 #define SM_SELMERC_HEALTH_X					69
 #define SM_SELMERC_HEALTH_Y					387
 
-#define SM_SELMERCNAME_X						7
-#define SM_SELMERCNAME_Y						395
-
-#define SM_SELMERCNAME_WIDTH				53
-#define SM_SELMERCNAME_HEIGHT				9
+#define SM_SELMERCNAME_X       11
+#define SM_SELMERCNAME_Y      393
+#define SM_SELMERCNAME_WIDTH   53
+#define SM_SELMERCNAME_HEIGHT  10
 
 #define	SM_SELMERC_FACE_X						13
 #define	SM_SELMERC_FACE_Y						346
@@ -1820,9 +1817,8 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		}
 
 		RestoreExternBackgroundRect( SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT );
-		FindFontCenterCoordinates(SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT, gpSMCurrentMerc->name, SMALLFONT1, &sFontX, &sFontY);
-		mprintf( sFontX + 5, sFontY, L"%ls", gpSMCurrentMerc->name );
-
+		FindFontCenterCoordinates(SM_SELMERCNAME_X, SM_SELMERCNAME_Y, SM_SELMERCNAME_WIDTH, SM_SELMERCNAME_HEIGHT, gpSMCurrentMerc->name, BLOCKFONT2, &sFontX, &sFontY);
+		mprintf(sFontX, sFontY, L"%ls", gpSMCurrentMerc->name);
 	}
 
 	if ( *pfDirty != DIRTYLEVEL0 )
@@ -1885,7 +1881,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 				RestoreExternBackgroundRect(SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
 				VarFindFontCenterCoordinates( SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
-				mprintf( sFontX, SM_SELMERC_AP_Y, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
+				mprintf(sFontX, sFontY, L"%d", GetUIApsToDisplay(gpSMCurrentMerc));
 			}
 
 			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
@@ -3587,8 +3583,6 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 	if( fRenderRadarScreen == TRUE )
 	{
-		// Render clock
-		//RenderClock( CLOCK_X, CLOCK_Y );
 		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
 	}
 	else
