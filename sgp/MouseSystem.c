@@ -1149,7 +1149,7 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 			UINT8 *pDestBuf;
 			UINT32 uiDestPitchBYTES;
 			pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-			SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+			SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw( TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor( FROMRGB( 65, 57, 15 ) ), pDestBuf );
 			RectangleDraw( TRUE, iX, iY, iX + iW - 2, iY + iH - 2, Get16BPPColor( FROMRGB( 227, 198, 88 ) ), pDestBuf );
 			UnLockVideoSurface( FRAME_BUFFER );

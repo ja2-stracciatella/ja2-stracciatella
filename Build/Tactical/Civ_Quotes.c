@@ -1,5 +1,6 @@
 #include "Civ_Quotes.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "MouseSystem.h"
 #include "Soldier_Find.h"
 #include "StrategicMap.h"
@@ -396,9 +397,9 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		}
 
 		// CHECK FOR LEFT/RIGHT
-		if ( ( sX + gusCivQuoteBoxWidth ) > 640 )
+		if (sX + gusCivQuoteBoxWidth > SCREEN_WIDTH)
 		{
-			sX = 640 - gusCivQuoteBoxWidth;
+			sX = SCREEN_WIDTH - gusCivQuoteBoxWidth;
 		}
 
 		// Now check for top

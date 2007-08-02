@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "Town_Militia.h"
 #include "Militia_Control.h"
 #include "Campaign_Types.h"
@@ -499,7 +500,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue);
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 {
 	CHAR16 sString[ 128 ];
-	SGPRect pCenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
+	SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	INT32 iNumberOfSectors = 0;
 
 	pMilitiaTrainerSoldier = pSoldier;

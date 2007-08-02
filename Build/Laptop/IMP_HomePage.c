@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
+#include "Local.h"
 #include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"
@@ -219,7 +220,7 @@ static void DisplayActivationStringCursor(void)
 	}
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
   // draw line in current state

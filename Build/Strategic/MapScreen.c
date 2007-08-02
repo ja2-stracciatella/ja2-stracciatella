@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "MapScreen.h"
 #include "Gameloop.h"
 #include "SGP.h"
@@ -712,7 +713,7 @@ static void ContractBoxGlow(void)
 
 	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH, CONTRACT_Y+CONTRACT_HEIGHT, usColor, pDestBuf );
 	InvalidateRegion(CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH+1, CONTRACT_Y+CONTRACT_HEIGHT+1);
 	UnLockVideoSurface( FRAME_BUFFER );
@@ -775,7 +776,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 	UnLockVideoSurface( FRAME_BUFFER );
@@ -833,7 +834,7 @@ static void GlowFace(void)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, 9, 18, 60, 63 , usColor, pDestBuf );
 	InvalidateRegion( 9, 18, 61, 64 );
 	UnLockVideoSurface( FRAME_BUFFER );
@@ -899,7 +900,7 @@ static void GlowItem(void)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, 3, 80, 64, 104 , usColor, pDestBuf );
 	InvalidateRegion( 3, 80, 65, 105 );
 	UnLockVideoSurface( FRAME_BUFFER );
@@ -942,7 +943,7 @@ static void GlowTrashCan(void)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, TRASH_CAN_X, TRASH_CAN_Y , TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , usColor, pDestBuf );
 	InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
 	UnLockVideoSurface( FRAME_BUFFER );
@@ -1847,14 +1848,14 @@ static void DisplayCharacterInfo(void)
 	Assert( gCharactersList[ bSelectedInfoChar ].fValid );
 
 	// set font buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw character info and face
 	DrawCharacterInfo( bSelectedInfoChar );
 
 	RenderHandPosItem();
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	RenderIconsForUpperLeftCornerPiece( bSelectedInfoChar );
 
@@ -2085,7 +2086,7 @@ static void HighLightAssignLine(void)
 
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -2165,7 +2166,7 @@ static void HighLightDestLine(void)
 
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -2248,7 +2249,7 @@ static void HighLightSleepLine(void)
 
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -2419,13 +2420,13 @@ static void DisplayCharacterList(void)
 
 	if( ( fShowAssignmentMenu == TRUE ) && ( fTeamPanelDirty == FALSE ) )
 	{
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		return;
 	}
 
 
 	// set dest buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFont( MAP_SCREEN_FONT );
 	SetFontBackground(FONT_BLACK);
 
@@ -2473,7 +2474,7 @@ static void DisplayCharacterList(void)
 	}
 
 	HandleDisplayOfSelectedMercArrows( );
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	EnableDisableTeamListRegionsAndHelpText( );
 
@@ -2835,8 +2836,7 @@ UINT32 MapScreenHandle(void)
 		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X+INV_REGION_WIDTH, INV_REGION_Y+INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK,InvmaskRegionBtnCallBack);
 		// screen mask for animated cursors
-		MSYS_DefineRegion( &gMapScreenMaskRegion, 0, 0, 640, 480, MSYS_PRIORITY_LOW,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
+		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
 		// set help text for item glow region
 		SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
@@ -2886,8 +2886,8 @@ UINT32 MapScreenHandle(void)
 		CreateMercRemoveAssignBox( );
 
 		// fill in
-		ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 640, 480, Get16BPPColor( RGB_NEAR_BLACK ) );
-		ColorFillVideoSurfaceArea(  FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor( RGB_NEAR_BLACK ) );
+		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(RGB_NEAR_BLACK));
+		ColorFillVideoSurfaceArea(FRAME_BUFFER,  0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(RGB_NEAR_BLACK));
 
 
 		if( ( fFirstTimeInMapScreen == TRUE ) && ( AnyMercsHired( ) == FALSE ) )
@@ -3448,7 +3448,6 @@ UINT32 MapScreenHandle(void)
 	// update cursor
 	UpdateCursorIfInLastSector( );
 
-	//InvalidateRegion( 0,0, 640, 480);
 	EndFrameBufferRender( );
 
 
@@ -3786,8 +3785,6 @@ static UINT32 HandleMapUI(void)
 								 RestoreBackgroundForMapGrid( sX, sY );
 								// fMapPanelDirty = TRUE;
 							 }
-
-							//SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
 
 							if( ( IsTheCursorAllowedToHighLightThisSector( sMapX, sMapY ) == TRUE ) &&
 									( SectorInfo[ ( SECTOR( sMapX, sMapY ) ) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER ) )
@@ -5826,19 +5823,19 @@ static void BltCharInvPanel(void)
   RenderInvBodyPanel(pSoldier, INV_BODY_X, INV_BODY_Y );
 
 	// reset font destination buffer to the save buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// render items in each of chars slots
   HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 
 	// reset font destination buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0,0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
  	SetFont( BLOCKFONT2 );
 
 	// Render Values for stats!
 	// Set font drawing to saved buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
@@ -5871,7 +5868,7 @@ static void BltCharInvPanel(void)
 		// blit gold key on top of key ring if key ring is not empty
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -6294,7 +6291,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 	SetFont( CHAR_FONT );
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
-	SetFontDestBuffer(uiBufferToRenderTo, 0, 0, 640, 480);
+	SetFontDestBuffer(uiBufferToRenderTo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 	// assignment strings
@@ -6326,7 +6323,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRender
 
 
 	// restore buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -7599,7 +7596,7 @@ void RenderMapRegionBackground( void )
 
 	MapscreenMarkButtonsDirty();
 
-	RestoreExternBackgroundRect( 261, 0, 640 - 261, 359 );
+	RestoreExternBackgroundRect(261, 0, SCREEN_WIDTH - 261, 359);
 
 	// don't bother if showing sector inventory instead of the map!!!
 	if( !fShowMapInventoryPool )
@@ -10094,7 +10091,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 
 	UINT16 usColor = GlowColor(iColorNum);
   pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   RectangleDraw( TRUE, 496, 409, 528, 442, usColor, pDestBuf );
 	InvalidateRegion(495, 408, 529+1, 442+1);
 	UnLockVideoSurface( FRAME_BUFFER );

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Render_Dirty.h"
 #include "VObject.h"
@@ -270,12 +271,12 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
     fOutLine = FALSE;
 	}
 
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   INVRenderItem( guiSAVEBUFFER, NULL, &(pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o),
                  (INT16)(sX + 7), sY, 60, 25, DIRTYLEVEL2, NULL, 0, fOutLine, sOutLine );//67
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 	// now draw bar for condition
@@ -310,7 +311,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 		sString, MAP_IVEN_FONT,
 		&sWidth, &sHeight );
 
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SetFont( MAP_IVEN_FONT );
 	SetFontForeground( FONT_WHITE );
@@ -320,7 +321,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 		( INT16 )( 3 + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) )
 	, sString );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return( TRUE );
 }
@@ -596,9 +597,7 @@ static void CreateMapInventoryPoolSlots(void)
 	INT16 sULX = 0, sULY = 0;
 	INT16 sBRX = 0, sBRY = 0;
 
-	MSYS_DefineRegion( &MapInventoryPoolMask,
-			MAP_INVENTORY_POOL_SLOT_START_X, 0, 640, 360,
-			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
+	MSYS_DefineRegion(&MapInventoryPoolMask, MAP_INVENTORY_POOL_SLOT_START_X, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
 
 	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 	{
@@ -1518,7 +1517,7 @@ static void DisplayPagesForMapInventoryPool(void)
 	SetFontBackground( FONT_BLACK );
 
 	// set the buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// grab current and last pages
 	swprintf( sString, lengthof(sString), L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
@@ -1528,7 +1527,7 @@ static void DisplayPagesForMapInventoryPool(void)
 
 	mprintf( sX, sY, sString );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1585,14 +1584,14 @@ static void DrawNumberOfIventoryPoolItems(void)
 	SetFontBackground( FONT_BLACK );
 
 	// set the buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// grab centered coords
 	FindFontCenterCoordinates(MAP_INVENTORY_POOL_NUMBER_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_NUMBER_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
 
 	mprintf( sX, sY, sString );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1630,14 +1629,14 @@ static void DisplayCurrentSector(void)
 	SetFontBackground( FONT_BLACK );
 
 	// set the buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// grab centered coords
 	FindFontCenterCoordinates(MAP_INVENTORY_POOL_LOC_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_LOC_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
 
 	mprintf( sX, sY, sString );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1673,7 +1672,7 @@ static void DrawTextOnMapInventoryBackground(void)
 	SetFontForeground( FONT_BEIGE );
 
 	// set the buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//Calculate the height of the string, as it needs to be vertically centered.
 	usStringHeight = DisplayWrappedString(268, 342, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
@@ -1685,7 +1684,7 @@ static void DrawTextOnMapInventoryBackground(void)
 
 	DrawTextOnSectorInventory( );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1734,7 +1733,7 @@ static void DrawTextOnSectorInventory(void)
 {
 	INT16 sX = 0, sY = 0;
 
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	const wchar_t* InvText = zMarksMapScreenText[11];
 	FindFontCenterCoordinates(MAP_INVENTORY_POOL_SLOT_START_X, MAP_INVENTORY_POOL_SLOT_START_Y - 20,  630 - MAP_INVENTORY_POOL_SLOT_START_X, GetFontHeight(FONT14ARIAL), InvText, FONT14ARIAL, &sX, &sY);
@@ -1745,7 +1744,7 @@ static void DrawTextOnSectorInventory(void)
 
 	mprintf(sX, sY, InvText);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 

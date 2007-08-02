@@ -118,7 +118,7 @@ static void InitEditorRegions(void)
 	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
 	//Any new buttons will cover this up as well.  Think of it as a barrier between the editor buttons,
 	//and the game's interface panel buttons and regions.
-	MSYS_DefineRegion( &EditorRegion, 0, 360, 640, 480, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&EditorRegion, 0, 360, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	//Create the regions for the terrain tile selections
 	for( x = 0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
@@ -446,10 +446,14 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, 360, sRight, 361, gusEditorTaskbarHiColor );
 		sTop++;
 	}
-	if( sBottom == 480 )
-		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, 479, sRight, 480, gusEditorTaskbarLoColor );
-	if( sRight == 640 )
-		ColorFillVideoSurfaceArea( ButtonDestBuffer, 639, sTop, 640, sBottom, gusEditorTaskbarLoColor );
+	if (sBottom == SCREEN_HEIGHT)
+	{
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, sLeft, SCREEN_HEIGHT - 1, sRight, SCREEN_HEIGHT, gusEditorTaskbarLoColor);
+	}
+	if (sRight == SCREEN_WIDTH)
+	{
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, SCREEN_WIDTH - 1, sTop, SCREEN_WIDTH, sBottom, gusEditorTaskbarLoColor);
+	}
 
 	InvalidateRegion( sLeft, sTop, sRight, sBottom );
 }
@@ -900,7 +904,7 @@ void ProcessEditorRendering()
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
-		ClearTaskbarRegion( 0, 360, 640, 480 );
+		ClearTaskbarRegion(0, 360, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RenderTerrainTileButtons();
 		MarkButtonsDirty();
 		gfRenderTaskbar = FALSE;
@@ -946,7 +950,7 @@ void ProcessEditorRendering()
 
 
 	if( fSaveBuffer )
-		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 360, 640, 120 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 360, SCREEN_WIDTH, 120);
 
 	//Make sure this is TRUE at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get

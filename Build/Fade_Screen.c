@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"
@@ -148,10 +149,10 @@ static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 u
 			gFadeFunction = FadeInFrameBufferRealFade;
 			gfFadeInVideo   = FALSE;
 
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			// Clear framebuffer
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor(FROMRGB(0, 0, 0)));
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
 			break;
 
 		case FADE_OUT_REALFADE:
@@ -229,7 +230,7 @@ UINT32	FadeScreenHandle( )
 				case FADE_OUT_REALFADE:
 
 					// Clear framebuffer
-					ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+					ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
 					break;
 			}
 
@@ -255,7 +256,7 @@ static void FadeFrameBufferRealFade(void)
 {
 	if ( gsFadeRealCount != gsFadeCount )
 	{
-		ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 0, 0, 640, 480 );
+		ShadowVideoSurfaceRectUsingLowPercentTable(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		gsFadeRealCount = gsFadeCount;
 	}
@@ -272,13 +273,13 @@ static void FadeInFrameBufferRealFade(void)
 
 		for ( cnt = 0; cnt < ( gsFadeLimit - gsFadeCount ); cnt++ )
 		{
-			ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 0, 0, 640, 480 );
+			ShadowVideoSurfaceRectUsingLowPercentTable(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 
 		RefreshScreen();
 
 		// Copy save buffer back
-		RestoreExternBackgroundRect( 0, 0, 640, 480 );
+		RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		gsFadeRealCount = gsFadeCount;
 	}

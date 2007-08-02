@@ -321,8 +321,6 @@ void RenderCharProfile()
 	 RenderWWWProgramTitleBar( );
 
 	 DisplayProgramBoundingBox( TRUE );
-
-	 //InvalidateRegion( 0, 0, 640, 480 );
 }
 
 

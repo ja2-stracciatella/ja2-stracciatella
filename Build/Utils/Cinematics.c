@@ -11,6 +11,7 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "Intro.h"
+#include "Local.h"
 //#include "Smack.h" // XXX
 #include "Smack_Stub.h" // XXX
 #include "SoundMan.h"
@@ -163,7 +164,8 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	hFile = GetRealFileHandleFromFileManFileHandle( pSmack->hFileHandle );
 
 	// Allocate a Smacker buffer for video decompression
-	if(!(pSmack->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, 640, 480, 0, 0)))
+	pSmack->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+	if (pSmack->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		goto fail_close;

@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "Font.h"
 #include "Types.h"
@@ -692,7 +693,7 @@ void DisplayStringsInMapScreenMessageList(void)
 		ubCurrentStringIndex = (ubCurrentStringIndex + 1) % 256;
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 

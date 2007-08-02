@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Local.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"
 #include "VSurface.h"
@@ -2626,7 +2627,7 @@ static void DrawRect(SGPRect* pRect, INT16 color)
 	UINT32	uiDestPitchBYTES;
 	UINT8		*pDestBuf;
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw( TRUE, pRect->iLeft+MERCPANEL_X, pRect->iTop+MERCPANEL_Y, pRect->iRight+MERCPANEL_X, pRect->iBottom+MERCPANEL_Y, color, pDestBuf );
 	UnLockVideoSurface( FRAME_BUFFER );
 	//InvalidateRegion( pRect->iLeft+175, pRect->iTop+361, pRect->iRight+176, pRect->iBottom+362 );

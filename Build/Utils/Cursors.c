@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "Cursors.h"
 #include "Timer_Control.h"
@@ -1293,7 +1294,7 @@ static void DrawMouseText(void)
 
 		mprintf(sX, sY + 12, gzLocation);
 		// reset
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	if (gzIntTileLocation != NULL)
@@ -1309,7 +1310,7 @@ static void DrawMouseText(void)
 
 		mprintf(sX, sY + 6, gzIntTileLocation);
 		// reset
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	if (gzIntTileLocation2 != NULL)
@@ -1325,7 +1326,7 @@ static void DrawMouseText(void)
 
 		mprintf(sX, sY - 2, gzIntTileLocation2);
 		// reset
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	//if (TacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
@@ -1401,7 +1402,7 @@ static void DrawMouseText(void)
 			SetFontShadow(DEFAULT_SHADOW);
 
 			// reset
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 	}
 
@@ -1422,7 +1423,7 @@ static void DrawMouseText(void)
 			SetFontShadow(DEFAULT_SHADOW);
 			mprintf(sX + 10, sY - 10, L"x%d", gpItemPointer->ubNumberOfObjects);
 
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 	}
 #endif

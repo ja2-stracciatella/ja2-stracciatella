@@ -3,6 +3,7 @@
 #include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
+#include "Local.h"
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"
@@ -426,11 +427,11 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 	//Place a message on the screen telling the user that we are saving the game
 	iSaveLoadGameMessageBoxID = PrepareMercPopupBox( iSaveLoadGameMessageBoxID, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[ SLG_SAVING_GAME_MESSAGE ], 300, 0, 0, 0, &usActualWidth, &usActualHeight);
-	usPosX = ( 640 - usActualWidth ) / 2 ;
+	usPosX = (SCREEN_WIDTH - usActualWidth) / 2;
 
 	RenderMercPopUpBoxFromIndex( iSaveLoadGameMessageBoxID, usPosX, 160, FRAME_BUFFER );
 
-  InvalidateRegion(0,0,640,480);
+  InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	ExecuteBaseDirtyRectQueue( );
 	EndFrameBufferRender( );

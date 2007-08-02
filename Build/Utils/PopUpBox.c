@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "PopUpBox.h"
 #include "SysUtil.h"
 #include "Debug.h"
@@ -1394,8 +1395,8 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 	}
 
 	// make sure it will fit on screen!
-	Assert( usTopX + usWidth  <= 639 );
-	Assert( usTopY + usHeight <= 479 );
+	Assert(usTopX + usWidth  < SCREEN_WIDTH);
+	Assert(usTopY + usHeight < SCREEN_HEIGHT);
 
 	// subtract 4 because the 2 2-pixel corners are handled separately
 	uiNumTilesWide=((usWidth-4)/BORDER_WIDTH);
@@ -1603,7 +1604,7 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 		);
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return TRUE;
 }

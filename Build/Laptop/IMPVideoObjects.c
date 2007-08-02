@@ -1,4 +1,5 @@
 #include "IMPVideoObjects.h"
+#include "Local.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -88,7 +89,7 @@ void RenderProfileBackGround( void )
 	MarkButtonsDirty( );
 
 	// force refresh of screen
-  InvalidateRegion( LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, 640, 480 );
+  InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 BOOLEAN LoadIMPSymbol( void )

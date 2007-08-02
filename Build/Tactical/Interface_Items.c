@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
@@ -971,13 +972,13 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 
 				// Draw rectangle!
 				pDestBuf = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
-				SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				//usLineColor = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
 				usLineColor = Get16BPPColor( FROMRGB( 230, 215, 196 ) );
 				RectangleDraw( TRUE, (sX+1), (sY+1), (sX + gSMInvData[ sPocket ].sWidth - 2 ),( sY + gSMInvData[ sPocket ].sHeight - 2 ), usLineColor, pDestBuf );
 
-				SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				UnLockVideoSurface( guiSAVEBUFFER );
 			}
@@ -5648,9 +5649,9 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		}
 
 		// CHECK FOR LEFT/RIGHT
-		if ( ( sX + gItemPickupMenu.sWidth ) > 640 )
+		if (sX + gItemPickupMenu.sWidth > SCREEN_WIDTH)
 		{
-			sX = 640 - gItemPickupMenu.sWidth - ITEMPICK_START_X_OFFSET;
+			sX = SCREEN_WIDTH - gItemPickupMenu.sWidth - ITEMPICK_START_X_OFFSET;
 		}
 		else
 		{
@@ -5696,7 +5697,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPickupMenu.BackRegion, 532, 367, 640, 480, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gItemPickupMenu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion(&gItemPickupMenu.BackRegions, gItemPickupMenu.sX, gItemPickupMenu.sY, gItemPickupMenu.sX + gItemPickupMenu.sWidth, gItemPickupMenu.sY + gItemPickupMenu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

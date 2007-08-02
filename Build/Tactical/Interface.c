@@ -325,7 +325,7 @@ BOOLEAN InitializeTacticalInterface(  )
 
 
 	// Alocate message surfaces
-	gTopMessage.uiSurface = AddVideoSurface(640, 20, PIXEL_DEPTH);
+	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 	CHECKF(gTopMessage.uiSurface != NO_VSURFACE);
 
 	InitItemInterface( );
@@ -555,14 +555,13 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 
 	// Create mouse region over all area to facilitate clicking to end
-	MSYS_DefineRegion( &gMenuOverlayRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST-1,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback );
+	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback);
 
 
 	// OK, CHECK FOR BOUNDARIES!
-	if ( ( giMenuAnchorX + BUTTON_PANEL_WIDTH ) > 640 )
+	if (giMenuAnchorX + BUTTON_PANEL_WIDTH > SCREEN_WIDTH)
 	{
-		giMenuAnchorX = ( 640 - BUTTON_PANEL_WIDTH );
+		giMenuAnchorX = SCREEN_WIDTH - BUTTON_PANEL_WIDTH;
 	}
 	if ( ( giMenuAnchorY + BUTTON_PANEL_HEIGHT ) > gsVIEWPORT_WINDOW_END_Y )
 	{
@@ -1666,7 +1665,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 
 	// Draw new size
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, gsVIEWPORT_WINDOW_START_Y, 640, ( gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y ) );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 
 	// get amt bandaged
 	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
@@ -1779,7 +1778,7 @@ void ClearInterface( )
 	MSYS_ChangeRegionCursor( &gUserTurnRegion , VIDEO_NO_CURSOR );
 
 	// Remove special thing for south arrow...
-	if ( gsGlobalCursorYOffset == ( 480 - gsVIEWPORT_WINDOW_END_Y ) )
+	if (gsGlobalCursorYOffset == SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y)
 	{
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 	}
@@ -1886,9 +1885,9 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 
 
 	// OK, CHECK FOR BOUNDARIES!
-	if ( ( gOpenDoorMenu.sX + BUTTON_PANEL_WIDTH ) > 640 )
+	if (gOpenDoorMenu.sX + BUTTON_PANEL_WIDTH > SCREEN_WIDTH)
 	{
-		gOpenDoorMenu.sX = ( 640 - BUTTON_PANEL_WIDTH );
+		gOpenDoorMenu.sX = SCREEN_WIDTH - BUTTON_PANEL_WIDTH;
 	}
 	if ( ( gOpenDoorMenu.sY + BUTTON_PANEL_HEIGHT ) > gsVIEWPORT_WINDOW_END_Y )
 	{
@@ -1934,8 +1933,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 
 	// Create mouse region over all area to facilitate clicking to end
-	MSYS_DefineRegion( &gMenuOverlayRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGHEST-1,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback );
+	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback);
 
 
 	iActionIcons[ USE_KEYRING_ICON ] = QuickCreateButton( iIconImages[ USE_KEYRING_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),
@@ -2500,10 +2498,10 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
 
 		// Set Overlay
-		VideoOverlayDesc.sLeft			 = ( 640 - gusUIMessageWidth ) / 2;
-		VideoOverlayDesc.sTop				 = 150;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusUIMessageWidth;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusUIMessageHeight;
+		VideoOverlayDesc.sLeft       = (SCREEN_WIDTH - gusUIMessageWidth) / 2;
+		VideoOverlayDesc.sTop        = 150;
+		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
+		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop + gusUIMessageHeight;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
 
 		giUIMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
@@ -2643,7 +2641,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 	AssertMsg(uiINTBAR != NO_VOBJECT, "Missing INTERFACE/timebaryellow.sti");
 
 	// Change dest buffer
-	SetFontDestBuffer(uiSurface, 0, 0, 640, 20);
+	SetFontDestBuffer(uiSurface, 0, 0, SCREEN_WIDTH, 20);
 	SetFont( TINYFONT1 );
 
 	switch( ubType )
@@ -2717,7 +2715,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 				sBarX++;
 
 				// Check sBarX, ( just as a precaution )
-				if ( sBarX > 640 )
+				if (sBarX > SCREEN_WIDTH)
 				{
 					break;
 				}
@@ -2770,7 +2768,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 			sBarX++;
 
 			// Check sBarX, ( just as a precaution )
-			if ( sBarX > 639 )
+			if (sBarX >= SCREEN_WIDTH)
 			{
 				break;
 			}
@@ -2810,7 +2808,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 	mprintf( sX, sY, psString );
 
 	// Change back...
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Done!
 	SetFontShadow( DEFAULT_SHADOW );
@@ -2969,19 +2967,19 @@ void HandleTopMessages( )
 			gTopMessage.sWorldRenderX = gsRenderCenterX;
 			gTopMessage.sWorldRenderY = gsRenderCenterY;
 
-			SrcRect.iLeft   =   0;
-			SrcRect.iTop    =  20 - gTopMessage.bYPos;
-			SrcRect.iRight  = 640;
-			SrcRect.iBottom =  20;
+			SrcRect.iLeft   =  0;
+			SrcRect.iTop    = 20 - gTopMessage.bYPos;
+			SrcRect.iRight  = SCREEN_WIDTH;
+			SrcRect.iBottom = 20;
 			BltVideoSurface(FRAME_BUFFER, gTopMessage.uiSurface, 0, 0, &SrcRect);
 
-			SrcRect.iLeft   =   0;
-			SrcRect.iTop    =   0;
-			SrcRect.iRight  = 640;
-			SrcRect.iBottom =  20;
+			SrcRect.iLeft   =  0;
+			SrcRect.iTop    =  0;
+			SrcRect.iRight  = SCREEN_WIDTH;
+			SrcRect.iBottom = 20;
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
 
-			InvalidateRegion( 0, 0, 640, 20 );
+			InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
 
 			gfTopMessageDirty = FALSE;
 		}
@@ -3011,14 +3009,14 @@ void EndTopMessage( )
 			gTacticalStatus.fInTopMessage = FALSE;
 
 			SetRenderFlags( RENDER_FLAG_FULL );
-			//RenderStaticWorldRect( 0, 0, 640, 20, TRUE );
+			//RenderStaticWorldRect(0, 0, SCREEN_WIDTH, 20, TRUE);
 			//gsVIEWPORT_WINDOW_START_Y = 20;
 
 			// Copy into save buffer...
-			//SrcRect.iLeft   =   0;
-			//SrcRect.iTop    =   0;
-			//SrcRect.iRight  = 640;
-			//SrcRect.iBottom =  20;
+			//SrcRect.iLeft   =  0;
+			//SrcRect.iTop    =  0;
+			//SrcRect.iRight  = SCREEN_WIDTH;
+			//SrcRect.iBottom = 20;
 			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
 		}
 		//else

@@ -129,7 +129,7 @@ UINT32 MainGameScreenInit(void)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
-	gpZBuffer=InitZBuffer(SCREEN_WIDTH * 2, 480);
+	gpZBuffer = InitZBuffer(SCREEN_WIDTH * 2, SCREEN_HEIGHT);
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);
@@ -413,7 +413,7 @@ UINT32  MainGameScreenHandle(void)
 			SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
 			//Shadow area
-			ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, 640, 480 );
+			ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			InvalidateScreen( );
 
 			// Next frame please
@@ -937,8 +937,7 @@ void EnterModalTactical( INT8 bMode )
 		{
 			gfTacticalDisableRegionActive = TRUE;
 
-			MSYS_DefineRegion( &gTacticalDisableRegion, 0, 0 ,640, 480, MSYS_PRIORITY_HIGH,
-								 VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+			MSYS_DefineRegion(&gTacticalDisableRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		}
 	}
 

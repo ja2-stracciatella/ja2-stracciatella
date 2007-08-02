@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Laptop.h"
 #include "EMail.h"
+#include "Local.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -512,7 +513,7 @@ void RenderEmail( void )
 	// show which page we are on
 	DisplayWhichPageOfEmailProgramIsDisplayed( );
 
-	InvalidateRegion(0,0,640,480);
+	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	 // invalidate region to force update
 }
 
@@ -797,7 +798,7 @@ static void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
 
 	SetFontShadow(DEFAULT_SHADOW);
 	// reset font dest buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1335,8 +1336,7 @@ void CreateDestroyNewMailButton()
 	SetButtonCursor(giNewMailButton[0], CURSOR_LAPTOP_SCREEN);
 
 	// set up screen mask region
-	MSYS_DefineRegion(&pScreenMask,0, 0,640,480,
-		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
+	MSYS_DefineRegion(&pScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 	MarkAButtonDirty(  giNewMailButton[0] );
 	fReDrawScreenFlag = TRUE;
  }
@@ -1592,8 +1592,7 @@ void CreateDestroyDeleteNoticeMailButton()
   SetButtonCursor(giDeleteMailButton[1], CURSOR_LAPTOP_SCREEN);
 
 	// set up screen mask to prevent other actions while delete mail box is destroyed
-	MSYS_DefineRegion(&pDeleteScreenMask,0, 0,640,480,
-		MSYS_PRIORITY_HIGHEST-3,CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
+	MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 
 	// force update
 	fReDrawScreenFlag = TRUE;
@@ -1700,7 +1699,7 @@ static void DeleteEmail(void)
    fReDrawScreenFlag=TRUE;
 
 	 // invalidate
-	 InvalidateRegion(0,0,640,480);
+	 InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -2678,7 +2677,7 @@ static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 	// turn off the shadows
 	SetFontShadow(NO_SHADOW);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0,INDENT_X_WIDTH, 0, sString, FONT12ARIAL, &sX, &sY);
 	mprintf( sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, sString );

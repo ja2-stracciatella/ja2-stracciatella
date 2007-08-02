@@ -88,8 +88,7 @@ UINT32	MapUtilScreenHandle( )
 	bAvR = bAvG = bAvB = 0;
 
 	// Zero out area!
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, (INT16)(640), (INT16)(480), Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
 
 	if ( fNewMap )
 	{
@@ -145,23 +144,23 @@ UINT32	MapUtilScreenHandle( )
 
 	gfOverheadMapDirty = TRUE;
 
-	RenderOverheadMap( 0, (WORLD_COLS/2), 0, 0, 640, 320, TRUE );
+	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, TRUE);
 
   TrashOverheadMap( );
 
 	// OK, NOW PROCESS OVERHEAD MAP ( SHOUIDL BE ON THE FRAMEBUFFER )
-	gdXStep	= (float)640/(float)88;
-	gdYStep	= (float)320/(float)44;
+	gdXStep	= SCREEN_WIDTH / 88.f;
+	gdYStep	= 320 / 44.f;
 	dStartX = dStartY = 0;
 
 	// Adjust if we are using a restricted map...
 	if ( gMapInformation.ubRestrictedScrollID != 0 )
 	{
 
-		CalculateRestrictedMapCoords( NORTH, &sX1, &sY1, &sX2, &sTop, 640, 320 );
-		CalculateRestrictedMapCoords( SOUTH, &sX1, &sBottom, &sX2, &sY2, 640, 320 );
-		CalculateRestrictedMapCoords( WEST,	 &sX1, &sY1, &sLeft, &sY2, 640, 320 );
-		CalculateRestrictedMapCoords( EAST, &sRight, &sY1, &sX2, &sY2, 640, 320 );
+		CalculateRestrictedMapCoords(NORTH, &sX1,    &sY1,     &sX2,   &sTop, SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(SOUTH, &sX1,    &sBottom, &sX2,   &sY2,  SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(WEST,  &sX1,    &sY1,     &sLeft, &sY2,  SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(EAST,  &sRight, &sY1,     &sX2,   &sY2,  SCREEN_WIDTH, 320);
 
 		gdXStep	= (float)( sRight - sLeft )/(float)88;
 		gdYStep	= (float)( sBottom - sTop )/(float)44;
@@ -201,7 +200,8 @@ UINT32	MapUtilScreenHandle( )
 			{
 				for ( iWindowY = iSubY1; iWindowY < iSubY2; iWindowY++ )
 				{
-					if ( iWindowX >=0 && iWindowX < 640 && iWindowY >=0 && iWindowY < 320 )
+					if (0 <= iWindowX && iWindowX < SCREEN_WIDTH &&
+							0 <= iWindowY && iWindowY < 320)
 					{
 						s16BPPSrc = pSrcBuf[ ( iWindowY * (uiSrcPitchBYTES/2) ) + iWindowX ];
 
@@ -265,7 +265,7 @@ UINT32	MapUtilScreenHandle( )
 		INT32 sX = 0, sY = 420;
 		UINT16 usLineColor;
 
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		for ( cnt = 0; cnt < 256; cnt++ )
 		{

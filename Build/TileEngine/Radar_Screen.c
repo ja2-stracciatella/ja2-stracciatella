@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Radar_Screen.h"
 #include "Line.h"
@@ -599,7 +600,7 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 
 		BltVideoObjectFromIndex(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
 
-		RestoreExternBackgroundRect( 538, gsVIEWPORT_END_Y, ( 640 - 538 ),( INT16 ) ( 480 - gsVIEWPORT_END_Y ) );
+		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, SCREEN_WIDTH - 538, SCREEN_HEIGHT - gsVIEWPORT_END_Y);
 
 		for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
 		{

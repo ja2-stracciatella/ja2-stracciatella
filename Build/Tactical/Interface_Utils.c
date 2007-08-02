@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "HImage.h"
 #include "VObject.h"
@@ -200,7 +201,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BO
 
 	UINT32 uiDestPitchBYTES;
 	UINT8* pDestBuf = LockVideoSurface(uiBuffer, &uiDestPitchBYTES);
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	DrawLifeUIBar(pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
 	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
@@ -266,7 +267,7 @@ void DrawItemUIBarEx(const OBJECTTYPE* pObject, UINT8 ubStatus, INT16 sXPos, INT
 	}
 
 	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 	// FIRST DO BREATH

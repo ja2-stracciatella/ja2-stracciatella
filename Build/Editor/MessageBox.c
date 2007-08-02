@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Local.h"
 #include "VObject.h"
 #include "Video.h"
 #include "Font.h"
@@ -32,8 +33,8 @@ void CreateMessageBox(const wchar_t* wzString)
 	if ( sPixLen > 600 )
 		sPixLen = 600;
 
-	sStartX = (640 - sPixLen) / 2;
-	sStartY = (480 - 96) / 2;
+	sStartX = (SCREEN_WIDTH  - sPixLen) / 2;
+	sStartY = (SCREEN_HEIGHT - 96)      / 2;
 
 	gfMessageBoxResult = FALSE;
 

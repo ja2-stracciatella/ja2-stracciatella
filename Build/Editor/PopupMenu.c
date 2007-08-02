@@ -13,6 +13,7 @@
 #ifdef JA2EDITOR
 
 #include "Button_System.h"
+#include "Local.h"
 #include "TileDef.h"
 #include "SysUtil.h"
 #include "Font.h"
@@ -168,8 +169,8 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	gPopup.ubColumns = 1;
 	gPopup.ubMaxEntriesPerColumn = gPopup.ubNumEntries;
 	usMenuHeight = gPopup.ubNumEntries * gusEntryHeight + 3;
-	while( usMenuHeight >= usY && ( ubDirection == DIR_UPLEFT || ubDirection == DIR_UPRIGHT ) ||
-				 480-usMenuHeight >= usY && ( ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT ) )
+	while (usMenuHeight                 >= usY && (ubDirection == DIR_UPLEFT   || ubDirection == DIR_UPRIGHT) ||
+				 SCREEN_HEIGHT - usMenuHeight >= usY && (ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT))
 	{ //menu has too many entries.  Increase the number of columns until the height is
 		//less than the max height.
 		gPopup.ubMaxEntriesPerColumn = (gPopup.ubNumEntries+gPopup.ubColumns)/(gPopup.ubColumns+1);
@@ -226,8 +227,7 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 			gPopup.usBottom = usY + usMenuHeight + 1;
 			break;
 	}
-	MSYS_DefineRegion( &popupRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&popupRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	RenderPopupMenu();
 }
@@ -248,7 +248,7 @@ static void RenderPopupMenu(void)
 		gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
 		Get16BPPColor(FROMRGB(128, 128, 128) ) );
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	usLineColor = Get16BPPColor( FROMRGB( 64, 64, 64 ) );
 	RectangleDraw( TRUE, gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
 		usLineColor, pDestBuf );

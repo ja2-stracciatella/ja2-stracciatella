@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"
@@ -376,15 +377,15 @@ void BeginLoadScreen( )
 
 	if( guiCurrentScreen == MAP_SCREEN && !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && !AreInMeanwhile() )
 	{
-		DstRect.iLeft = 0;
-		DstRect.iTop = 0;
-		DstRect.iRight = 640;
-		DstRect.iBottom = 480;
+		DstRect.iLeft   = 0;
+		DstRect.iTop    = 0;
+		DstRect.iRight  = SCREEN_WIDTH;
+		DstRect.iBottom = SCREEN_HEIGHT;
 		uiTimeRange = 2000;
 		iPercentage = 0;
 		iLastShadePercentage = 0;
 		uiStartTime = GetJA2Clock();
-		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		PlayJA2SampleFromFile("SOUNDS/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
@@ -412,20 +413,20 @@ void BeginLoadScreen( )
 					//	iReqShadePercentage = iFactor;
 					//Record the new final shade percentage.
 					//iLastShadePercentage = iFactor;
-					ShadowVideoSurfaceRectUsingLowPercentTable( guiSAVEBUFFER, 0, 0, 640, 480 );
+					ShadowVideoSurfaceRectUsingLowPercentTable(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			//	}
 			}
 
-			SrcRect.iLeft = 536 * iPercentage / 100;
-			SrcRect.iRight = 640 - iPercentage / 20;
-			SrcRect.iTop = 367 * iPercentage / 100;
-			SrcRect.iBottom = 480 - 39 * iPercentage / 100;
+			SrcRect.iLeft   =                 536 * iPercentage / 100;
+			SrcRect.iRight  = SCREEN_WIDTH  -       iPercentage /  20;
+			SrcRect.iTop    =                 367 * iPercentage / 100;
+			SrcRect.iBottom = SCREEN_HEIGHT -  39 * iPercentage / 100;
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 			InvalidateScreen();
 			RefreshScreen();
 		}
 	}
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
 	InvalidateScreen( );
 	RefreshScreen();
 

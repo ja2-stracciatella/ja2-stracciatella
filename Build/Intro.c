@@ -4,6 +4,7 @@
 #include "English.h"
 #include "Game_Init.h"
 #include "Intro.h"
+#include "Local.h"
 #include "LibraryDataBase.h"
 #include "Line.h"
 #include "MainMenuScreen.h"
@@ -128,7 +129,7 @@ UINT32	IntroScreenHandle( void )
 		gfIntroScreenEntry = FALSE;
 		gfIntroScreenExit = FALSE;
 
-		InvalidateRegion( 0, 0, 640, 480 );
+		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	RestoreBackgroundRects();
@@ -178,7 +179,7 @@ static BOOLEAN EnterIntroScreen(void)
 	}
 #endif
 
-	SmkInitialize(640, 480);
+	SmkInitialize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
@@ -278,7 +279,7 @@ static void GetIntroScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion( 0, 0, 640, 480 );
+					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 					break;
 
 #endif

@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Overhead.h"
 #include "MessageBoxScreen.h"
@@ -242,7 +243,7 @@ BOOLEAN HandleAutoBandage( )
 		if ( gfBeginningAutoBandage )
 		{
 			//Shadow area
-			ShadowVideoSurfaceRect( FRAME_BUFFER, 0, 0, 640, 480 );
+			ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			InvalidateScreen( );
 			RefreshScreen();
 		}
@@ -430,10 +431,10 @@ void AutoBandage( BOOLEAN fStart )
 			giBoxId = PrepareMercPopupBox( -1, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, sAutoBandageString, 200, 40, 10, 30, &gusTextBoxWidth, &gusTextBoxHeight );
 		}
 
-		aRect.iTop		= 	0;
-		aRect.iLeft		= 	0;
-		aRect.iBottom = 	INV_INTERFACE_START_Y;
-		aRect.iRight	= 	640;
+		aRect.iTop    = 0;
+		aRect.iLeft   = 0;
+		aRect.iBottom = INV_INTERFACE_START_Y;
+		aRect.iRight  = SCREEN_WIDTH;
 
 		// Determine position ( centered in rect )
 		gsX = (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - gusTextBoxWidth ) / 2 ) + aRect.iLeft );
@@ -441,8 +442,7 @@ void AutoBandage( BOOLEAN fStart )
 
 
 		// build a mask
-		MSYS_DefineRegion( &gAutoBandageRegion, 0,0, 640, 480, MSYS_PRIORITY_HIGHEST - 1,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 		gfBeginningAutoBandage = TRUE;
 
@@ -730,8 +730,8 @@ static void DisplayAutoBandageUpdatePanel(void)
 	iTotalPixelsWide = TACT_UPDATE_MERC_FACE_X_WIDTH * iNumberDoctorsWide;
 
 	// now get the x and y position for the box
-	sXPosition = ( 640 - iTotalPixelsWide ) / 2;
-	sYPosition = ( INV_INTERFACE_START_Y - iTotalPixelsHigh ) / 2;
+	sXPosition = (SCREEN_WIDTH          - iTotalPixelsWide) / 2;
+	sYPosition = (INV_INTERFACE_START_Y - iTotalPixelsHigh) / 2;
 
 	HVOBJECT hBackGroundHandle = GetVideoObject(guiUpdatePanelTactical);
 

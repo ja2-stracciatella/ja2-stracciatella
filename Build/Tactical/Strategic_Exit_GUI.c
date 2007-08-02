@@ -1,5 +1,6 @@
 #include "Button_System.h"
 #include "Font.h"
+#include "Local.h"
 #include "MouseSystem.h"
 #include "GameScreen.h"
 #include "StrategicMap.h"
@@ -189,10 +190,10 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 	EnterModalTactical( TACTICAL_MODAL_WITHMOUSE );
 	gfIgnoreScrolling = TRUE;
 
-	aRect.iTop		= 	0;
-	aRect.iLeft		= 	0;
-	aRect.iBottom = 	INV_INTERFACE_START_Y;
-	aRect.iRight	= 	640;
+	aRect.iTop    = 0;
+	aRect.iLeft   = 0;
+	aRect.iBottom = INV_INTERFACE_START_Y;
+	aRect.iRight  = SCREEN_WIDTH;
 
 
 	if( gExitDialog.fAllMoveOn )
@@ -320,8 +321,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	gfInSectorExitMenu = TRUE;
 
-	MSYS_DefineRegion( &(gExitDialog.BackRegion), 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST-1,
-																			CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback );
+	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback);
 
 	gExitDialog.iButtonImages				= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
 

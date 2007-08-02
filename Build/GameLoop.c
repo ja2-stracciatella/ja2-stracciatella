@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"
 #include "Screens.h"
@@ -375,7 +376,7 @@ void HandleShortCutExitState( void )
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
-	const SGPRect pCenteringRect = { 0, 0, 640, INV_INTERFACE_START_Y };
+	const SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 
 	if( guiCurrentScreen == ERROR_SCREEN )
 	{ //an assert failure, don't bring up the box!

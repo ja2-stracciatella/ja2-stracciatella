@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "MapScreen.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
@@ -420,7 +421,7 @@ SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MA
 SGPRect gOldClipRect;
 
 // screen region
-SGPRect FullScreenRect={ 0, 0, 640, 480 };
+SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 // temp helicopter path
 PathSt* pTempHelicopterPath = NULL;
@@ -497,7 +498,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 	INT32 iCount=0;
 	BOOLEAN fDrawCursors;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   //SetFontColors(FONT_FCOLOR_GREEN)
   SetFont(MAP_FONT);
   SetFontForeground(MAP_INDEX_COLOR);
@@ -532,7 +533,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+( iCount - 1 ) * MAP_GRID_Y );
   InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y,MAP_HORT_INDEX_X + ( iCount - 1) * MAP_GRID_X,  MAP_HORT_INDEX_Y+ MAP_HORT_HEIGHT);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -583,7 +584,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+iCount*MAP_GRID_Y );
   InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y,MAP_HORT_INDEX_X+iCount*MAP_GRID_X,  MAP_HORT_INDEX_Y+ MAP_HORT_HEIGHT);
-  SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+  SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 */
 
@@ -2726,7 +2727,8 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* 
 		 }
 		 if ((iDirection !=-1))
 		 {
-		   if((!fZoomFlag)||((fZoomFlag)&&(iX >MAP_VIEW_START_X)&&(iY >MAP_VIEW_START_Y)&&(iX < 640-MAP_GRID_X*2)&&(iY < MAP_VIEW_START_Y+MAP_VIEW_HEIGHT)))
+			if (!fZoomFlag ||
+					(MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
 			 {
 
 
@@ -2771,7 +2773,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN
 static void AnimateRoute(PathSt* pPath)
 {
 	// set buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// the animated path
   if( TraceCharAnimatedRoute( pPath, FALSE, FALSE ))
@@ -3641,7 +3643,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN
 
       if(!fUTurnFlag)
 			{
-       if((!fZoomFlag)||((fZoomFlag)&&(iX >MAP_VIEW_START_X)&&(iY >MAP_VIEW_START_Y)&&(iX < 640-MAP_GRID_X*2)&&(iY < MAP_VIEW_START_Y+MAP_VIEW_HEIGHT)))
+				if (!fZoomFlag ||
+						(MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
 			 {
 
          //if(!fZoomFlag)
@@ -3857,7 +3860,7 @@ void ClipBlitsToMapViewRegionForRectangleAndABit( UINT32 uiDestPitchBYTES )
 void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 {
 	// clip blits to map view region
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -4095,7 +4098,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 				}
 
 				FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
-				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 				mprintf( usX, iY + sTextYOffset, sString);
 
 				switch( iCounter % 2 )
@@ -4137,7 +4140,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 	}
 
 	// restore buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -4278,8 +4281,8 @@ void DisplayPositionOfHelicopter( void )
 	CHAR16 sString[ 4 ];
 
 
-	AssertMsg( ( sOldMapX >= 0 ) && ( sOldMapX < 640 ), String( "DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX ) );
-	AssertMsg( ( sOldMapY >= 0 ) && ( sOldMapY < 480 ), String( "DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY ) );
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -4376,10 +4379,10 @@ void DisplayPositionOfHelicopter( void )
 			}
 
 
-			AssertMsg( ( x >= 0 ) && ( x < 640 ), String( "DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
+			AssertMsg(0 <= x && x < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
 							x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minX, maxX ) );
 
-			AssertMsg( ( y >= 0 ) && ( y < 480 ), String( "DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
+			AssertMsg(0 <= y && y < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
 							y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minY, maxY ) );
 
 
@@ -4417,8 +4420,8 @@ static void DisplayDestinationOfHelicopter(void)
 	INT16 sMapX, sMapY;
 	UINT32 x,y;
 
-	AssertMsg( ( sOldMapX >= 0 ) && ( sOldMapX < 640 ), String( "DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX ) );
-	AssertMsg( ( sOldMapY >= 0 ) && ( sOldMapY < 480 ), String( "DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY ) );
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -4438,8 +4441,8 @@ static void DisplayDestinationOfHelicopter(void)
 		x = MAP_VIEW_START_X + ( MAP_GRID_X * sMapX ) + 1;
 		y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMapY ) + 3;
 
-		AssertMsg( ( x >= 0 ) && ( x < 640 ), String( "DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY ) );
-		AssertMsg( ( y >= 0 ) && ( y < 480 ), String( "DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY ) );
+		AssertMsg(0 <= x && x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
+		AssertMsg(0 <= y && y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );
@@ -4851,7 +4854,7 @@ static void DisplayLevelString(void)
 
 	mprintf(  MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, sString  );
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 

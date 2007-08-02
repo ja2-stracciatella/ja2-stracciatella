@@ -4,6 +4,7 @@
 #include "IMP_MainPage.h"
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
+#include "Local.h"
 #include "Utilities.h"
 #include "WCheck.h"
 #include "Timer_Control.h"
@@ -565,7 +566,7 @@ static void DisplayNameStringCursor(INT32 x, INT32 y)
 {
 	UINT32 uiDestPitchBYTES;
 	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	LineDraw(TRUE, x, y, x, y + CURSOR_HEIGHT + 1, CurrentGlowColour(), pDestBuf);
 	InvalidateRegion(x, y , x + 1, y + CURSOR_HEIGHT + 2);
 	UnLockVideoSurface(FRAME_BUFFER);
@@ -620,7 +621,7 @@ static void DisplayGenderGlowCursor(INT32 x)
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	UINT32 uiDestPitchBYTES;
 	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, CurrentGlowColour(), pDestBuf);
   InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 	UnLockVideoSurface(FRAME_BUFFER);

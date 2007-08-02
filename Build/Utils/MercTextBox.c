@@ -312,7 +312,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	INT16		sDispTextXPos;
 	MercPopUpBox *pPopUpTextBox = NULL;
 
-	if( usWidth >= 640 )
+	if (usWidth >= SCREEN_WIDTH)
 		return( -1 );
 
 	if( usWidth <= MERC_TEXT_MIN_WIDTH )
@@ -520,7 +520,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 
 	DisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, pString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	if( iBoxId == -1 )

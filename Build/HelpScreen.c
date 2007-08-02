@@ -515,8 +515,7 @@ static BOOLEAN EnterHelpScreen(void)
 	SetSizeAndPropertiesOfHelpScreen();
 
 	//Create a mouse region 'mask' the entrire screen
-	MSYS_DefineRegion( &gHelpScreenFullScreenMask, 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST,
-							 gHelpScreen.usCursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gHelpScreenFullScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, gHelpScreen.usCursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	//Create the exit button
 	if( gHelpScreen.bNumberOfButtons != 0 )
@@ -816,8 +815,8 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 		gHelpScreen.usScreenWidth = HELP_SCREEN_DEFUALT_LOC_WIDTH;
 		gHelpScreen.usScreenHeight = HELP_SCREEN_DEFUALT_LOC_HEIGHT;
 
-		gHelpScreen.usScreenLocX = ( 640 - gHelpScreen.usScreenWidth ) / 2;
-		gHelpScreen.usScreenLocY = ( 480 - gHelpScreen.usScreenHeight ) / 2;
+		gHelpScreen.usScreenLocX = (SCREEN_WIDTH  - gHelpScreen.usScreenWidth)  / 2;
+		gHelpScreen.usScreenLocY = (SCREEN_HEIGHT - gHelpScreen.usScreenHeight) / 2;
 
 		gHelpScreen.bCurrentHelpScreenActiveSubPage = 0;
 
@@ -856,7 +855,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 			gHelpScreen.usScreenHeight = HELP_SCREEN_SMALL_LOC_HEIGHT;
 
 			//calc screen position since we just set the width and height
-			gHelpScreen.usScreenLocX = ( 640 - gHelpScreen.usScreenWidth ) / 2;
+			gHelpScreen.usScreenLocX = (SCREEN_WIDTH - gHelpScreen.usScreenWidth) / 2;
 
 			//calc the center position based on the current panel thats being displayed
 			gHelpScreen.usScreenLocY = ( gsVIEWPORT_END_Y - gHelpScreen.usScreenHeight ) / 2;
@@ -1004,7 +1003,7 @@ static void GetHelpScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion( 0, 0, 640, 480 );
+					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 					break;
 
 				case 'd':
@@ -1166,15 +1165,15 @@ static UINT16 RenderSpecificHelpScreen(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
-				AssertMsg( 0, "Error in help screen:  RenderSpecificHelpScreen().  DF 0" );
-      #else
-        break;
-			#endif
+#if defined JA2BETAVERSION
+			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			AssertMsg(0, "Error in help screen:  RenderSpecificHelpScreen().  DF 0");
+#else
+			break;
+#endif
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//add 1 line to the bottom of the buffer
 	usNumVerticalPixelsDisplayed += 10;
@@ -2180,7 +2179,7 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 
 		//display the line
 		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// draw the gold highlite line on the top and left
 		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);

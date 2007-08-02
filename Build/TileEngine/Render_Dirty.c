@@ -30,7 +30,7 @@ VIDEO_OVERLAY	gVideoOverlays[ VIDEO_OVERLAYS ];
 UINT32 guiNumVideoOverlays=0;
 
 
-SGPRect		gDirtyClipRect = { 0, 0, 640, 480 };
+SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 
 BOOLEAN		gfViewportDirty=FALSE;
@@ -40,44 +40,19 @@ void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 {
 	SGPRect aRect;
 
-	if ( iLeft < 0 )
-	{
-		iLeft = 0;
-	}
-	if ( iLeft > 640 )
-	{
-		iLeft = 640;
-	}
+	if (iLeft < 0)            iLeft = 0;
+	if (iLeft > SCREEN_WIDTH) iLeft = SCREEN_WIDTH;
 
 
-	if ( iTop < 0 )
-	{
-		iTop = 0;
-	}
-	if ( iTop > 480 )
-	{
-		iTop = 480;
-	}
+	if (iTop < 0)             iTop = 0;
+	if (iTop > SCREEN_HEIGHT) iTop = SCREEN_HEIGHT;
+
+	if (iRight < 0)            iRight = 0;
+	if (iRight > SCREEN_WIDTH) iRight = SCREEN_WIDTH;
 
 
-	if ( iRight < 0 )
-	{
-		iRight = 0;
-	}
-	if ( iRight > 640 )
-	{
-		iRight = 640;
-	}
-
-
-	if ( iBottom < 0 )
-	{
-		iBottom = 0;
-	}
-	if ( iBottom > 480 )
-	{
-		iBottom = 480;
-	}
+	if (iBottom < 0)             iBottom = 0;
+	if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
 
 	if (  ( iRight - iLeft ) == 0 || ( iBottom - iTop ) == 0 )
 	{
@@ -547,7 +522,7 @@ BOOLEAN UpdateSaveBuffer(void)
 
 BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight )
 {
-	Assert( ( sLeft >= 0 ) && ( sTop >= 0 ) && ( sLeft + sWidth <= 640 ) && ( sTop + sHeight <= 480 ) );
+	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
 
 	BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, sLeft, sTop, sWidth, sHeight);
 
@@ -572,7 +547,7 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 	sWidth	= gBackSaves[iBack].sWidth;
 	sHeight	= gBackSaves[iBack].sHeight;
 
-	Assert( ( sLeft >= 0 ) && ( sTop >= 0 ) && ( sLeft + sWidth <= 640 ) && ( sTop + sHeight <= 480 ) );
+	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
 
 	BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, sLeft, sTop, sWidth, sHeight);
 
@@ -585,7 +560,7 @@ BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
 
 static BOOLEAN CopyExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight)
 {
-	Assert( ( sLeft >= 0 ) && ( sTop >= 0 ) && ( sLeft + sWidth <= 640 ) && ( sTop + sHeight <= 480 ) );
+	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, sLeft, sTop, sWidth, sHeight);
 
@@ -1051,10 +1026,10 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 	INT32	 iTempX, iTempY;
 	INT16		sLeft, sTop, sRight, sBottom;
 
-	ClipX1= 0;
-	ClipY1= gsVIEWPORT_WINDOW_START_Y;
-	ClipX2= 640;
-	ClipY2= gsVIEWPORT_WINDOW_END_Y - 1;
+	ClipX1 = 0;
+	ClipY1 = gsVIEWPORT_WINDOW_START_Y;
+	ClipX2 = SCREEN_WIDTH;
+	ClipY2 = gsVIEWPORT_WINDOW_END_Y - 1;
 
 
 	pDestBuf = LockVideoSurface( BACKBUFFER, &uiDestPitchBYTES);

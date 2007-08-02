@@ -553,27 +553,27 @@ static void TakeScreenshot(void)
 	UINT16* p16BPPData;
 	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
 	{
-		p16BPPData = MemAlloc(640 * 2);
+		p16BPPData = MemAlloc(SCREEN_WIDTH * 2);
 	}
 
-	for (INT32 iIndex = 479; iIndex >= 0; iIndex--)
+	for (INT32 iIndex = SCREEN_HEIGHT - 1; iIndex >= 0; iIndex--)
 	{
 		// ATE: OK, fix this such that it converts pixel format to 5/5/5
 		// if current settings are 5/6/5....
 		if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
 		{
 			// Read into a buffer...
-			memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2);
+			memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * SCREEN_WIDTH, SCREEN_WIDTH * 2);
 
 			// Convert....
-			ConvertRGBDistribution565To555(p16BPPData, 640);
+			ConvertRGBDistribution565To555(p16BPPData, SCREEN_WIDTH);
 
 			// Write
-			fwrite(p16BPPData, 640 * 2, 1, OutputFile);
+			fwrite(p16BPPData, SCREEN_WIDTH * 2, 1, OutputFile);
 		}
 		else
 		{
-			fwrite((UINT16*)ScreenBuffer->pixels + iIndex * 640, 640 * 2, 1, OutputFile);
+			fwrite((UINT16*)ScreenBuffer->pixels + iIndex * SCREEN_WIDTH, SCREEN_WIDTH * 2, 1, OutputFile);
 		}
 	}
 
@@ -1014,7 +1014,7 @@ static void SnapshotSmall(void)
 	{
 		for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX++)
 		{
-			pDest[iCountY * 640 + iCountX] = pVideo[iCountY * 640 + iCountX];
+			pDest[iCountY * SCREEN_WIDTH + iCountX] = pVideo[iCountY * SCREEN_WIDTH + iCountX];
 		}
 	}
 
@@ -1032,7 +1032,7 @@ void VideoCaptureToggle(void)
 	{
 		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
 		{
-			gpFrameData[cnt] = MemAlloc(640 * 480 * 2);
+			gpFrameData[cnt] = MemAlloc(SCREEN_WIDTH * SCREEN_HEIGHT * 2);
 		}
 		guiLastFrame = GetClock();
 	}
@@ -1069,19 +1069,19 @@ static void RefreshMovieCache(void)
 		TARGA_HEADER Header;
 		memset(&Header, 0, sizeof(TARGA_HEADER));
 		Header.ubTargaType    = 2; // Uncompressed 16/24/32 bit
-		Header.usImageWidth   = 640;
-		Header.usImageHeight  = 480;
+		Header.usImageWidth   = SCREEN_WIDTH;
+		Header.usImageHeight  = SCREEN_HEIGHT;
 		Header.ubBitsPerPixel = 16;
 
 		fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
 
 		UINT16* pDest = gpFrameData[cnt];
 
-		for (INT32 iCountY = 480 - 1; iCountY >= 0; iCountY -= 1)
+		for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY -= 1)
 		{
-			for (INT32 iCountX = 0; iCountX < 640; iCountX ++)
+			for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX ++)
 			{
-				fwrite(pDest + iCountY * 640 + iCountX, sizeof(UINT16), 1, disk);
+				fwrite(pDest + iCountY * SCREEN_WIDTH + iCountX, sizeof(UINT16), 1, disk);
 			}
 		}
 

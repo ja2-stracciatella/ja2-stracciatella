@@ -4,6 +4,7 @@
 
 #include "Font.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Button_System.h"
 #include "VObject.h"
@@ -3655,7 +3656,7 @@ static void CreateGotoGridNoUI(void)
 	SpecifyButtonTextOffsets( guiGotoGridNoUIButtonID, 5, 5, FALSE );
 	DisableButton( guiGotoGridNoUIButtonID );
 	//Create a blanket region so nobody can use
-	MSYS_DefineRegion( &GotoGridNoUIRegion, 0, 0, 640, 480,	MSYS_PRIORITY_NORMAL+1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, L"", 6, INPUTTYPE_NUMERICSTRICT );

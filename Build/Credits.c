@@ -134,7 +134,7 @@ enum
 #define		CRDT_SPACE_BN_SECTIONS					50
 #define		CRDT_SPACE_BN_NODES							12
 
-#define		CRDT_START_POS_Y								479
+#define CRDT_START_POS_Y        (SCREEN_HEIGHT - 1)
 
 #define		CRDT_EYE_WIDTH									30
 #define		CRDT_EYE_HEIGHT									12
@@ -541,7 +541,7 @@ static BOOLEAN RenderCreditScreen(void)
 		gfCrdtHaveRenderedFirstFrameToSaveBuffer = TRUE;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		UnmarkButtonsDirty( );
 	}
@@ -569,7 +569,7 @@ static void GetCreditScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion( 0, 0, 640, 480 );
+					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 					break;
 
 				case SDLK_UP:
@@ -787,7 +787,7 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, STR16 pString)
 		DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, gubCrdtJustification);
 
 		//reset the font dest buffer
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 
@@ -953,7 +953,7 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 		//if the surface is at the bottom of the screen
 		if( pCurrent->sOldPosY + pCurrent->sHeightOfString > CRDT_START_POS_Y )
 		{
-			INT16	sHeight = 480 - pCurrent->sOldPosY;
+			INT16	sHeight = SCREEN_HEIGHT - pCurrent->sOldPosY;
 			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight );
 		}
 		else if( pCurrent->sOldPosY > CRDT_LINE_NODE_DISAPPEARS_AT )

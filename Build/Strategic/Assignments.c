@@ -1,5 +1,6 @@
 #include "Assignments.h"
 #include "Font.h"
+#include "Local.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"
 #include "Strategic.h"
@@ -5667,8 +5668,7 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 	// not created, create
 	if( ( fCreated == FALSE ) && ( ( fShowAssignmentMenu == TRUE )||( fShowContractMenu == TRUE ) || ( fShowTownInfo == TRUE) ) )
 	{
-		MSYS_DefineRegion( &gAssignmentScreenMaskRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST - 4 ,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback );
+		MSYS_DefineRegion(&gAssignmentScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback);
 
 		// created
 		fCreated = TRUE;
@@ -7703,9 +7703,9 @@ static void CreateSquadBox(void)
  GetBoxPosition( ghSquadBox, &pPoint);
  GetBoxSize( ghSquadBox, &pDimensions );
 
- if( giBoxY + pDimensions.iBottom > 479 )
- {
-		pPoint.iY = SquadPosition.iY = 479 - pDimensions.iBottom;
+	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
+	{
+		pPoint.iY = SquadPosition.iY = SCREEN_HEIGHT - 1 - pDimensions.iBottom;
 	}
 
 	SetBoxPosition( ghSquadBox, pPoint );
@@ -7768,10 +7768,10 @@ static void CreateEPCBox(void)
 
 	 GetBoxSize( ghEpcBox, &pDimensions );
 
-	 if( giBoxY + pDimensions.iBottom > 479 )
-	 {
-			pPoint.iY = AssignmentPosition.iY = 479 - pDimensions.iBottom;
-	 }
+	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
+	{
+		pPoint.iY = AssignmentPosition.iY = SCREEN_HEIGHT - 1 - pDimensions.iBottom;
+	}
 
 		SetBoxPosition( ghEpcBox, pPoint );
 }
@@ -8424,9 +8424,9 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 
 	// ATE: Check if we are past tactical viewport....
 	// Use estimate width's/heights
-	if ( ( gsAssignmentBoxesX + 100 ) > 640 )
+	if (gsAssignmentBoxesX > SCREEN_WIDTH - 100)
 	{
-		gsAssignmentBoxesX = 540;
+		gsAssignmentBoxesX = SCREEN_WIDTH - 100;
 	}
 
 	if ( ( gsAssignmentBoxesY + 130 ) > 320 )
@@ -8496,9 +8496,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	{
 		GetBoxSize( ghRepairBox, &pDimensions );
 
-		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= 640 )
+		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( 639 - ( pDimensions2.iRight + pDimensions.iRight ) );
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
@@ -8527,9 +8527,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 		GetBoxSize( ghSquadBox, &pDimensions );
 
 
-		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= 640 )
+		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( 639 - ( pDimensions2.iRight + pDimensions.iRight ) );
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
@@ -8558,9 +8558,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 		GetBoxSize( ghTrainingBox, &pDimensions );
 		GetBoxSize( ghAttributeBox, &pDimensions3 );
 
-		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight >= 640 )
+		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( 639 - ( pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight ) );
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
@@ -8589,9 +8589,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	{
 		GetBoxSize( ghTrainingBox, &pDimensions );
 
-		if( gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight  >= 640 )
+		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( 639 - ( pDimensions2.iRight + pDimensions.iRight  ) );
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
@@ -8612,9 +8612,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	else
 	{
 		// just the assignment box
-		if( gsAssignmentBoxesX + pDimensions2.iRight  >= 640 )
+		if (gsAssignmentBoxesX + pDimensions2.iRight >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = ( INT16 ) ( 639 - ( pDimensions2.iRight  ) );
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - pDimensions2.iRight;
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 

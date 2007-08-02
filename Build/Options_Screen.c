@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "Types.h"
 #include "Options_Screen.h"
 #include "Video.h"
@@ -230,8 +231,8 @@ UINT32	OptionsScreenHandle()
 		RenderOptionsScreen();
 
 		//Blit the background to the save buffer
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480);
-		InvalidateRegion( 0, 0, 640, 480 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	RestoreBackgroundRects();
@@ -447,8 +448,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	}
 
 	//Create a mouse region so when the user leaves a togglebox text region we can detect it then unselect the region
-	MSYS_DefineRegion( &gSelectedToggleBoxAreaRegion, 0, 0, 640, 480, MSYS_PRIORITY_NORMAL,
-							 CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gSelectedToggleBoxAreaRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK);
 
 	//Render the scene before adding the slider boxes
 	RenderOptionsScreen();
@@ -717,7 +717,7 @@ static void GetOptionsScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion( 0, 0, 640, 480 );
+					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 					break;
 
 					//Test keys

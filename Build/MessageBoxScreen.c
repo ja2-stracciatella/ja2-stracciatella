@@ -205,10 +205,10 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	else
 	{
 		// Use default!
-		aRect.iTop		= 	0;
-		aRect.iLeft		= 	0;
-		aRect.iBottom = 	480;
-		aRect.iRight	= 	640;
+		aRect.iLeft   = 0;
+		aRect.iTop    = 0;
+		aRect.iRight  = SCREEN_WIDTH;
+		aRect.iBottom = SCREEN_HEIGHT;
 	}
 
 	// Set some values!
@@ -271,8 +271,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	UnLockVideoSurface( FRAME_BUFFER );
 
 	// Create top-level mouse region
-	MSYS_DefineRegion( &(gMsgBox.BackRegion), 0, 0, 640, 480, MSYS_PRIORITY_HIGHEST,
-						 usCursor, MSYS_NO_CALLBACK, MsgBoxClickCallback );
+	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, usCursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
 
 	if( gGameSettings.fOptions[ TOPTION_DONT_MOVE_MOUSE ] == FALSE )
 	{
@@ -1195,7 +1194,7 @@ static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16
 // a basic box that don't care what screen we came from
 void DoScreenIndependantMessageBox(const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y };
+	SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
@@ -1203,14 +1202,14 @@ void DoScreenIndependantMessageBox(const wchar_t *zString, UINT16 usFlags, MSGBO
 // a basic box that don't care what screen we came from
 static void DoUpperScreenIndependantMessageBox(wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	SGPRect CenteringRect= {0, 0, 640, INV_INTERFACE_START_Y / 2 };
+	SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 
 // a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	SGPRect CenteringRect= {0, INV_INTERFACE_START_Y / 2, 640, INV_INTERFACE_START_Y };
+	SGPRect CenteringRect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
 }
 

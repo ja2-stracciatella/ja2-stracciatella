@@ -531,12 +531,6 @@ static INT32 EnterLaptop(void)
 	// set the fact we are currently in laptop, for rendering purposes
 	fCurrentlyInLaptop = TRUE;
 
-
-
-	// clear guiSAVEBUFFER
-	//ColorFillVideoSurfaceArea(guiSAVEBUFFER,	0, 0, 640, 480, Get16BPPColor(FROMRGB(0, 0, 0)) );
-  // disable characters panel buttons
-
   // reset redraw flag and redraw new mail
 	fReDrawScreenFlag = FALSE;
   fReDrawNewMailFlag = TRUE;
@@ -623,7 +617,7 @@ static INT32 EnterLaptop(void)
 
 	fShowAtmPanelStartButton = TRUE;
 
-	InvalidateRegion(0,0,640,480);
+	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return( TRUE );
 }
@@ -1459,15 +1453,15 @@ UINT32 LaptopScreenHandle()
 
 		//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 		//         Start transitioning the screen.
-		DstRect.iLeft = 0;
-		DstRect.iTop = 0;
-		DstRect.iRight = 640;
-		DstRect.iBottom = 480;
+		DstRect.iLeft   = 0;
+		DstRect.iTop    = 0;
+		DstRect.iRight  = SCREEN_WIDTH;
+		DstRect.iBottom = SCREEN_HEIGHT;
 		uiTimeRange = 1000;
 		iPercentage = iRealPercentage = 0;
 		uiStartTime = GetJA2Clock();
-		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
-		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
+		BlitBufferToBuffer(FRAME_BUFFER,   guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER,  0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iRealPercentage < 100  )
 		{
@@ -1485,10 +1479,10 @@ UINT32 LaptopScreenHandle()
 				iPercentage = (UINT32)(iPercentage + (100-iPercentage) * iFactor * 0.01 + 0.5);
 
 			//Mapscreen source rect
-			SrcRect1.iLeft = 464 * iPercentage / 100;
-			SrcRect1.iRight = 640 - 163 * iPercentage / 100;
-			SrcRect1.iTop = 417 * iPercentage / 100;
-			SrcRect1.iBottom = 480 - 55 * iPercentage / 100;
+			SrcRect1.iLeft   =                 464 * iPercentage / 100;
+			SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
+			SrcRect1.iTop    =                 417 * iPercentage / 100;
+			SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
 			//Laptop source rect
 			if( iPercentage < 99 )
 				iScalePercentage = 10000 / (100-iPercentage);
@@ -1515,7 +1509,7 @@ UINT32 LaptopScreenHandle()
 			//SetFontShadow( FONT_NEARBLACK );
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 			//pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-			//SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+			//SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			//RectangleDraw( TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor( FROMRGB( 255, 100, 0 ) ), pDestBuf );
 			//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
 			//UnLockVideoSurface( FRAME_BUFFER );
@@ -1708,7 +1702,7 @@ UINT32 LaptopScreenHandle()
 	// invalidate screen if redrawn
 	if( fReDrawScreenFlag == TRUE )
 	{
-		InvalidateRegion(0,0,640,480);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     fReDrawScreenFlag = FALSE;
 	}
 
@@ -2065,18 +2059,18 @@ BOOLEAN LeaveLapTopScreen( void )
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-			DstRect.iLeft = 0;
-			DstRect.iTop = 0;
-			DstRect.iRight = 640;
-			DstRect.iBottom = 480;
+			DstRect.iLeft   = 0;
+			DstRect.iTop    = 0;
+			DstRect.iRight  = SCREEN_WIDTH;
+			DstRect.iBottom = SCREEN_HEIGHT;
 			uiTimeRange = 1000;
 			iPercentage = iRealPercentage = 100;
 			uiStartTime = GetJA2Clock();
-			BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 640, 480 );
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			PlayJA2SampleFromFile("SOUNDS/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 			while( iRealPercentage > 0  )
 			{
-				BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 640, 480 );
+				BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				uiCurrTime = GetJA2Clock();
 				iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
@@ -2093,10 +2087,10 @@ BOOLEAN LeaveLapTopScreen( void )
 					iPercentage = (UINT32)(iPercentage + (100-iPercentage) * iFactor * 0.01 + 0.5);
 
 				//Mapscreen source rect
-				SrcRect1.iLeft = 464 * iPercentage / 100;
-				SrcRect1.iRight = 640 - 163 * iPercentage / 100;
-				SrcRect1.iTop = 417 * iPercentage / 100;
-				SrcRect1.iBottom = 480 - 55 * iPercentage / 100;
+				SrcRect1.iLeft   =                 464 * iPercentage / 100;
+				SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
+				SrcRect1.iTop    =                 417 * iPercentage / 100;
+				SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
 				//Laptop source rect
 				if( iPercentage < 99 )
 					iScalePercentage = 10000 / (100-iPercentage);
@@ -2123,7 +2117,7 @@ BOOLEAN LeaveLapTopScreen( void )
 				//SetFontShadow( FONT_NEARBLACK );
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 				//pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-				//SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+				//SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 				//RectangleDraw( TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor( FROMRGB( 255, 100, 0 ) ), pDestBuf );
 				//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
 				//UnLockVideoSurface( FRAME_BUFFER );
@@ -2404,7 +2398,7 @@ static void DisplayBookMarks(void)
   SetFontShadow(NO_SHADOW);
 
 	// set buffer
-	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, 480);
+	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, SCREEN_HEIGHT);
 
 
 	// blt in book mark background
@@ -2467,7 +2461,7 @@ static void DisplayBookMarks(void)
 	 mprintf(sX, sY,pBookMarkStrings[CANCEL_STRING] );
 	 	 iCounter++;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	InvalidateRegion(BOOK_X, BOOK_TOP_Y + iCounter * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (iCounter + 1) * BOOK_HEIGHT + 16);
 	SetFontShadow(DEFAULT_SHADOW);
@@ -3197,7 +3191,7 @@ BOOLEAN DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, 
 
 BOOLEAN DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
 {
-	const SGPRect CenteringRect = { 0, 0, 640, INV_INTERFACE_START_Y };
+	const SGPRect CenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	return DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
 }
 
@@ -3237,7 +3231,7 @@ static BOOLEAN InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wc
 
 	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT);
 	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return( TRUE );
 }
@@ -4361,7 +4355,6 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 
 	DisplayProgramBoundingBox( FALSE );
 
-	//InvalidateRegion( 0, 0, 640, 480 );
 	return( TRUE );
 }
 
@@ -4472,8 +4465,6 @@ void DisplayProgramBoundingBox( BOOLEAN fMarkButtons )
 
 	// new files or email?
 	DisplayTaskBarIcons( );
-
-	//InvalidateRegion( 0,0, 640, 480 );
 }
 
 

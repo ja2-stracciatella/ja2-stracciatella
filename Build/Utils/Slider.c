@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "Types.h"
 #include "Render_Dirty.h"
 #include "Utilities.h"
@@ -615,7 +616,7 @@ static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16
 
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // draw the line
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, iColor, pDestBuf);

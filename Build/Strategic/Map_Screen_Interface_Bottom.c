@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Types.h"
@@ -271,7 +272,7 @@ void RenderMapScreenInterfaceBottom( void )
 		MarkButtonsDirty( );
 
 		// invalidate region
-		RestoreExternBackgroundRect( MAP_BOTTOM_X, MAP_BOTTOM_Y, 640 - MAP_BOTTOM_X, 480 - MAP_BOTTOM_Y );
+		RestoreExternBackgroundRect(MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH - MAP_BOTTOM_X, SCREEN_HEIGHT - MAP_BOTTOM_Y);
 
 		// re render radar map
 		RenderRadarScreen( );
@@ -305,14 +306,9 @@ void RenderMapScreenInterfaceBottom( void )
 
 static BOOLEAN CreateButtonsForMapScreenInterfaceBottom(void)
 {
-
-
 #ifdef JA2DEMO
-	MSYS_DefineRegion( &MapScreenmaskForDemo, 0,0, 640, 480, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&MapScreenmaskForDemo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 #endif
-
-
 
 	// laptop
 	guiMapBottomExitButtonsImage[ MAP_EXIT_TO_LAPTOP ]=  LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,6,-1,15,-1 );
@@ -517,7 +513,7 @@ static void DrawNameOfLoadedSector(void)
 	wchar_t sString[ 128 ];
   INT16 sFontX, sFontY;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SetFont( COMPFONT );
 	SetFontForeground( 183 );
@@ -735,7 +731,7 @@ static void DisplayCompressMode(void)
 	}
 
 	RestoreExternBackgroundRect( 489, 456, 522 - 489, 467 - 454 );
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFont( COMPFONT );
 
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
@@ -1103,7 +1099,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	// ste the font buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SetFont( COMPFONT );
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
@@ -1118,7 +1114,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	mprintf( sFontX, sFontY, L"%ls", sString );
 
 	// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -1129,7 +1125,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// set up the font
 	SetFont( COMPFONT );
@@ -1225,7 +1221,7 @@ static void DisplayProjectedDailyMineIncome(void)
 		}
 	}
 		// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// set up the font
 	SetFont( COMPFONT );
@@ -1562,7 +1558,7 @@ void HandleExitsFromMapScreen( void )
 
 					if( gfExtraBuffer )
 					{ //Then initiate the transition animation from the mapscreen to laptop...
-						BlitBufferToBuffer( FRAME_BUFFER, guiEXTRABUFFER, 0, 0, 640, 480 );
+						BlitBufferToBuffer(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 						gfStartMapScreenToLaptopTransition = TRUE;
 					}
 					break;

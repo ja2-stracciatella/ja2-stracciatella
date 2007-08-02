@@ -2,6 +2,7 @@
 #include "Items.h"
 #include "Action_Items.h"
 #include "Handle_Items.h"
+#include "Local.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Weapons.h"
@@ -3182,7 +3183,7 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 	}
 
 	// Determine where our mouse is!
-	if ( sXPos > ( 640 - sLargestLineWidth ) )
+	if (sXPos > SCREEN_WIDTH - sLargestLineWidth)
 	{
 		sFontX = sXPos - sLargestLineWidth;
 	}

@@ -319,10 +319,6 @@ void EnterFinances()
 
   // draw page number
   DisplayFinancePageNumberAndDateRange( );
-
-
-
-  //InvalidateRegion(0,0,640,480);
 }
 
 void ExitFinances( void )

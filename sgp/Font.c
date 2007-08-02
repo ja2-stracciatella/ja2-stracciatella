@@ -17,7 +17,7 @@ static HVOBJECT FontObjs[MAX_FONTS];
 // Destination printing parameters
 INT32 FontDefault = -1;
 static UINT32  FontDestBuffer   = BACKBUFFER;
-static SGPRect FontDestRegion   = { 0, 0, 640, 480 };
+static SGPRect FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16  FontForeground16 = 0;
 static UINT16  FontBackground16 = 0;
 static UINT16  FontShadow16     = DEFAULT_SHADOW;
@@ -25,7 +25,7 @@ static UINT16  FontShadow16     = DEFAULT_SHADOW;
 // Temp, for saving printing parameters
 static INT32   SaveFontDefault      = -1;
 static UINT32  SaveFontDestBuffer   = BACKBUFFER;
-static SGPRect SaveFontDestRegion   = { 0, 0, 640, 480};
+static SGPRect SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16  SaveFontForeground16 = 0;
 static UINT16  SaveFontShadow16     = 0;
 static UINT16  SaveFontBackground16 = 0;

@@ -379,9 +379,9 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 		sX -= sCenterXVal;
 
 		// Check right
-		if ( ( sX + gTalkPanel.usWidth ) > 640 )
+		if (sX + gTalkPanel.usWidth > SCREEN_WIDTH)
 		{
-			sX = 640 - gTalkPanel.usWidth;
+			sX = SCREEN_WIDTH - gTalkPanel.usWidth;
 		}
 
 		// Check left
@@ -433,8 +433,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 
 	//Define main region
-	MSYS_DefineRegion( &(gTalkPanel.ScreenRegion), 0, 0, 640,480, MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gTalkPanel.ScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.BackRegion), (INT16)(gTalkPanel.sX), (INT16)(gTalkPanel.sY), (INT16)(gTalkPanel.sX + gTalkPanel.usWidth ),(INT16)( gTalkPanel.sY + gTalkPanel.usHeight ), MSYS_PRIORITY_HIGHEST,

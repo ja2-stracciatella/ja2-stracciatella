@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"
@@ -2217,7 +2218,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		if ( pSoldier )
 		{
 		  //reset the font dest buffer
-		  SetFontDestBuffer(pBlitter->uiDestBuff, 0, 0, 640, 480);
+		  SetFontDestBuffer(pBlitter->uiDestBuff, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 55, 73, 9, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
 			mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
@@ -2234,7 +2235,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 			}
 
 		  //reset the font dest buffer
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			DrawSoldierUIBars(pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
 		}

@@ -9,6 +9,7 @@
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
 #include "Intro.h"
+#include "Local.h"
 #include "MainMenuScreen.h"
 #include "Music_Control.h"
 #include "Options_Screen.h"
@@ -43,7 +44,7 @@
 //main title
 #define		GIO_MAIN_TITLE_X										0
 #define		GIO_MAIN_TITLE_Y										68
-#define		GIO_MAIN_TITLE_WIDTH								640
+#define GIO_MAIN_TITLE_WIDTH SCREEN_WIDTH
 
 //radio box locations
 #define		GIO_GAP_BN_SETTINGS									35
@@ -206,7 +207,7 @@ UINT32 GameInitOptionsScreenHandle(void)
 		EnterGIOScreen();
 		gfGIOScreenEntry = FALSE;
 		gfGIOScreenExit = FALSE;
-		InvalidateRegion(0, 0, 640, 480);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	GetGIOScreenUserInput();
@@ -398,7 +399,7 @@ static BOOLEAN EnterGIOScreen(void)
 	//REnder the screen once so we can blt ot to ths save buffer
 	RenderGIOScreen();
 
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 639, 439);
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
 
 	gfGIOButtonsAllocated = TRUE;
 
@@ -603,7 +604,7 @@ static void GetGIOScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion(0, 0, 640, 480);
+					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 					break;
 #endif
 

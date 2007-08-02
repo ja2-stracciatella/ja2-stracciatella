@@ -4,6 +4,7 @@
 
 #include "Button_System.h"
 #include "Font.h"
+#include "Local.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"
 #include "SysUtil.h"
@@ -515,7 +516,7 @@ void InitDoorEditing( INT32 iMapIndex )
 	gfEditingDoor = TRUE;
 	iDoorMapIndex = iMapIndex;
 	DisableEditorTaskbar();
-	MSYS_DefineRegion( &DoorRegion, 0, 0, 640, 480, MSYS_PRIORITY_HIGH-2, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&DoorRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 2, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	iDoorButton[ DOOR_BACKGROUND ] =
 		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, 200, 130, 240, 100, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
 		BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );

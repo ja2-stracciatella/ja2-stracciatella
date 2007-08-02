@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "SGP.h"
 #include "HImage.h"
 #include "VSurface.h"
@@ -60,7 +61,7 @@ BOOLEAN	InitializeFonts(void)
 #endif
 
 	// Set default for font system
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return TRUE;
 }

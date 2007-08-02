@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
@@ -395,7 +396,7 @@ static void RenderTacticalPlacementGUI(void)
 	if( gfTacticalPlacementGUIDirty )
 	{
 		BltVideoObjectFromIndex( FRAME_BUFFER, giOverheadPanelImage, 0, 0, 320);
-		InvalidateRegion( 0, 0, 320, 480 );
+		InvalidateRegion(0, 0, 320, SCREEN_HEIGHT);
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
 		for( i = 0; i < giPlacements; i++ )
@@ -439,7 +440,7 @@ static void RenderTacticalPlacementGUI(void)
 		mprintf( 120, 335, L"%ls %ls -- %ls...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
 
 		//Shade out the part of the tactical map that isn't considered placable.
-		BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, 0, 320, 640, 160 );
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 320, SCREEN_WIDTH, 160);
 	}
 	if( gfValidLocationsChanged )
 	{
@@ -477,7 +478,7 @@ static void RenderTacticalPlacementGUI(void)
 		}
 		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 		Blt16BPPBufferLooseHatchRectWithColor( (UINT16*)pDestBuf, uiDestPitchBYTES, &gTPClipRect, usHatchColor );
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, 640, 480 );
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw( TRUE, gTPClipRect.iLeft, gTPClipRect.iTop, gTPClipRect.iRight, gTPClipRect.iBottom, usHatchColor, pDestBuf );
 		UnLockVideoSurface( FRAME_BUFFER );
 	}

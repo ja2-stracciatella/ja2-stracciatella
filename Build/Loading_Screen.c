@@ -1,3 +1,4 @@
+#include "Local.h"
 #include "VSurface.h"
 #include "Loading_Screen.h"
 #include "Campaign_Types.h"
@@ -257,7 +258,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_YELLOW );
 		SetFontShadow( FONT_NEARBLACK );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 		mprintf(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
 	else
@@ -273,7 +274,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 0, 640, 480, 0 );
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 			mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
 		}
 	}

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
@@ -1240,8 +1241,7 @@ BOOLEAN InitializeSMPanel(  )
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion( &gSMPanelRegion, 0, INV_INTERFACE_START_Y ,640, 480, MSYS_PRIORITY_NORMAL,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback );
+	MSYS_DefineRegion(&gSMPanelRegion, 0, INV_INTERFACE_START_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback);
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion( &gSM_SELMERCPanelRegion, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, SM_SELMERC_FACE_X + SM_SELMERC_FACE_WIDTH, SM_SELMERC_FACE_Y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL,
@@ -1686,7 +1686,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 			// Render Values for stats!
 			// Set font drawing to saved buffer
-			SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+			SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( STATS_TITLE_FONT_COLOR );
@@ -1793,9 +1793,9 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 
 
 			// reset to frame buffer!
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-			RestoreExternBackgroundRect( INTERFACE_START_X, INV_INTERFACE_START_Y, ( 640 - INTERFACE_START_X ) , ( 480 - INV_INTERFACE_START_Y ) );
+			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 
 
 			RenderSoldierFace( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, TRUE );
@@ -1908,7 +1908,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		ClipRect.iLeft	 = 87;
 		ClipRect.iRight  = 536;
 		ClipRect.iTop		 = INV_INTERFACE_START_Y;
-		ClipRect.iBottom = 480;
+		ClipRect.iBottom = SCREEN_HEIGHT;
 		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 		Blt16BPPBufferHatchRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
 		UnLockVideoSurface( FRAME_BUFFER );
@@ -2528,10 +2528,8 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( !InItemStackPopup( )  )
 			{
-
 				//InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, SM_ITEMDESC_WIDTH, SM_ITEMDESC_HEIGHT );
-				InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, ( 480 - INV_INTERFACE_START_Y ) );
-
+				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 			}
 		}
 		else
@@ -3219,8 +3217,7 @@ BOOLEAN InitializeTEAMPanel(  )
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion( &gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y ,640, 480, MSYS_PRIORITY_NORMAL,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	for ( posIndex = 0, cnt = 0; cnt < 6; cnt++, posIndex +=2 )
 	{
@@ -3346,7 +3343,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 		// Blit video surface
 		BltVideoObjectFromIndex(guiSAVEBUFFER, guiTEAMPanel, 0, INTERFACE_START_X, INTERFACE_START_Y);
-		RestoreExternBackgroundRect( INTERFACE_START_X, INTERFACE_START_Y, ( 640 - INTERFACE_START_X ) , ( 480 - INTERFACE_START_Y ) );
+		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
 
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		for ( cnt = 0, posIndex = 0; cnt < NUM_TEAM_SLOTS; cnt++, posIndex+= 2 )
@@ -3456,12 +3453,12 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 				}
 
 				// RENDER ON SAVE BUFFER!
-				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, 640, 480);
+				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 				FindFontCenterCoordinates(sTEAMNamesXY[posIndex] + 2, sTEAMNamesXY[posIndex + 1], TM_NAME_WIDTH, TM_NAME_HEIGHT, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
 				mprintf( sFontX, sFontY, L"%ls", pSoldier->name );
 				gprintfRestore( sFontX, sFontY, L"%ls", pSoldier->name );
 				// reset to frame buffer!
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, 640, 480);
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
 
@@ -4852,8 +4849,8 @@ void BeginKeyPanelFromKeyShortcut( )
 
 
 	sStartYPosition = INV_INTERFACE_START_Y;
-	sWidth = 640;
-	sHeight = ( 480 - ( INV_INTERFACE_START_Y ) );
+	sWidth  = SCREEN_WIDTH;
+	sHeight = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
 	pSoldier = gpSMCurrentMerc;
 
 	//if we are in the shop keeper interface
@@ -4898,8 +4895,8 @@ void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		}
 
 		sStartYPosition = INV_INTERFACE_START_Y;
-		sWidth = 640;
-		sHeight = ( 480 - ( INV_INTERFACE_START_Y ) );
+		sWidth   = SCREEN_WIDTH;
+		sHeight  = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
 		pSoldier = gpSMCurrentMerc;
 	}
 
