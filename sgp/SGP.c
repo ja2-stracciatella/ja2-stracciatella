@@ -19,7 +19,6 @@
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
-#include "Local.h"
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"

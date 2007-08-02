@@ -90,7 +90,6 @@
 #include "EMail.h"
 #include "Video.h"
 #include "Debug.h"
-#include "Local.h"
 #include "Button_System.h"
 #include "JAScreens.h"
 #include "Stubs.h" // XXX

@@ -6,7 +6,6 @@
 #include "Intro.h"
 #include "LibraryDataBase.h"
 #include "Line.h"
-#include "Local.h"
 #include "MainMenuScreen.h"
 #include "MessageBoxScreen.h"
 #include "Multi_Language_Graphic_Utils.h"

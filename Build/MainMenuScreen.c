@@ -25,7 +25,6 @@
 #include "Video.h"
 #include "Button_System.h"
 #include "JAScreens.h"
-#include "Local.h"
 #include "GameVersion.h"
 #include "VSurface.h"
 

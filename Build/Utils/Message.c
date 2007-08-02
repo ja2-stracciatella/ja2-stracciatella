@@ -6,7 +6,6 @@
 #include "Timer_Control.h"
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
-#include "Local.h"
 #include "Interface.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "WordWrap.h"
