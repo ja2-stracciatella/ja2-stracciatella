@@ -1883,7 +1883,7 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 					}
 				}
 
-				gprintfRestore( SM_SELMERC_AP_X, SM_SELMERC_AP_Y, L"%2d", GetUIApsToDisplay( gpSMCurrentMerc ) );
+				RestoreExternBackgroundRect(SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
 				VarFindFontCenterCoordinates( SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
 				mprintf( sFontX, SM_SELMERC_AP_Y, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
 			}
