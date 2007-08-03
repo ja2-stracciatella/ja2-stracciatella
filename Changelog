@@ -1,4 +1,5 @@
 v0.6
+(r1325) Fix vanilla misplacement of the key ring click area in tactical mode.
 (r1315) Improve the Russian translation.
 (r1271) Implement SoundSetPan(). This caused an unexpected termination of the game in certain places.
 (r1267) Fix a vanilla bug where some texts were not displayed because of uninitialised drawing coordinates.

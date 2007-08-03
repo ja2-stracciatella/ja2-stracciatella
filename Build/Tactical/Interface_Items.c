@@ -199,12 +199,12 @@
 #define BAD_RELIABILITY							-2
 #define BAD_REPAIR_EASE							-2
 
-#define KEYRING_X 487
-#define KEYRING_Y 445
+#define KEYRING_X      496
+#define KEYRING_Y      (INV_INTERFACE_START_Y + 106)
 #define MAP_KEYRING_X 217
 #define MAP_KEYRING_Y 271
-#define KEYRING_WIDTH 517 - 487
-#define KEYRING_HEIGHT 469 - 445
+#define KEYRING_WIDTH   29
+#define KEYRING_HEIGHT  23
 #define TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X 215
 //enum used for the money buttons
 enum
@@ -786,7 +786,7 @@ BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGIO
 
 void InitKeyRingInterface(MOUSE_CALLBACK KeyRingClickCallback)
 {
-	MSYS_DefineRegion(&gKeyRingPanel, KEYRING_X, KEYRING_Y, KEYRING_X + KEYRING_WIDTH, KEYRING_X + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
+	MSYS_DefineRegion(&gKeyRingPanel, KEYRING_X, KEYRING_Y, KEYRING_X + KEYRING_WIDTH, KEYRING_Y + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
 	SetRegionFastHelpText(&gKeyRingPanel, TacticalStr[KEYRING_HELP_TEXT]);
 }
 
@@ -917,16 +917,20 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 		if ( KeyExistsInKeyRing( pSoldier, ANYKEY, NULL ) )
 		{
 			// blit gold key here?
-			if ( guiCurrentItemDescriptionScreen != MAP_SCREEN )
+			INT32 x;
+			INT32 y;
+			if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiGoldKeyVO, 0, 496, 446);
-				RestoreExternBackgroundRect(496, 446, KEYRING_WIDTH - 1, KEYRING_HEIGHT - 1);
+				x = MAP_KEYRING_X;
+				y = MAP_KEYRING_Y;
 			}
 			else
 			{
-				BltVideoObjectFromIndex(guiSAVEBUFFER, guiGoldKeyVO, 0, MAP_KEYRING_X, MAP_KEYRING_Y);
-				RestoreExternBackgroundRect(MAP_KEYRING_X, MAP_KEYRING_Y, KEYRING_WIDTH - 1, KEYRING_HEIGHT - 1);
+				x = KEYRING_X;
+				y = KEYRING_Y;
 			}
+			BltVideoObjectFromIndex(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
+			RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 		}
 	}
 }
