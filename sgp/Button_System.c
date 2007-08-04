@@ -1015,18 +1015,6 @@ void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, I
 }
 
 
-void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification )
-{
-	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
-	//Range check:  if invalid, then set it to center justified.
-	if( bJustification < BUTTON_TEXT_LEFT || bJustification > BUTTON_TEXT_RIGHT )
-		bJustification = BUTTON_TEXT_CENTER;
-	b->bJustification = bJustification;
-	b->uiFlags |= BUTTON_DIRTY;
-}
-
-
 void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor,
 																			INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification )

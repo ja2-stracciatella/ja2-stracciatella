@@ -195,7 +195,6 @@ void SpecifyButtonFont( INT32 iButtonID, UINT32 uiFont );
 void SpecifyButtonUpTextColors( INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor );
 void SpecifyButtonDownTextColors( INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown );
 void SpecifyButtonHilitedTextColors( INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited );
-void SpecifyButtonTextJustification( INT32 iButtonID, INT8 bJustification );
 void SpecifyGeneralButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
 																			INT16 sForeColor, INT16 sShadowColor );
 void SpecifyFullButtonTextAttributes( INT32 iButtonID, const wchar_t *string, INT32 uiFont,
