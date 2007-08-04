@@ -1,5 +1,4 @@
 #include "Local.h"
-#include "SGP.h"
 #include "Font.h"
 #include "Types.h"
 #include "Font_Control.h"

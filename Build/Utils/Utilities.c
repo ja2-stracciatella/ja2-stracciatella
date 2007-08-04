@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Types.h"
-#include "SGP.h"
 #include "VObject.h"
 #include "FileMan.h"
 #include "Utilities.h"

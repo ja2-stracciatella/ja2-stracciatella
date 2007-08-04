@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Isometric_Utils.h"
 #include "WorldDef.h"
 #include "Render_Fun.h"

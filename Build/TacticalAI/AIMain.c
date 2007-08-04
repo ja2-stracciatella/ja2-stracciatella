@@ -1,5 +1,4 @@
 #include "WCheck.h"
-#include "SGP.h"
 #include "AI.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"

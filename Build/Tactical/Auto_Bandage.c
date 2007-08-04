@@ -1,7 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Local.h"
-#include "SGP.h"
 #include "Overhead.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"

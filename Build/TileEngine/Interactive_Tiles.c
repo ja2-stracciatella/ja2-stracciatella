@@ -1,6 +1,5 @@
 #include "Cursors.h"
 #include "Font_Control.h"
-#include "SGP.h"
 #include "HImage.h"
 #include "VSurface.h"
 #include "WCheck.h"

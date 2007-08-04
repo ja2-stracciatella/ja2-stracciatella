@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Local.h"
-#include "SGP.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"
 #include "Sys_Globals.h"

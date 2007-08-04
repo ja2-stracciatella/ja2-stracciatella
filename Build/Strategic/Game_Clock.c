@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Local.h"
-#include "SGP.h"
 #include "Game_Clock.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"

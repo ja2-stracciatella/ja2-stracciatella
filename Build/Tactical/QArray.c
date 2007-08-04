@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "QArray.h"
 
 

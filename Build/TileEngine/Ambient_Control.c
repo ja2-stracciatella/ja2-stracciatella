@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Ambient_Types.h"
 #include "FileMan.h"
 #include "Environment.h"

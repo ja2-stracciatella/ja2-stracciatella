@@ -3,7 +3,6 @@
 #include "VSurface.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
-#include "SGP.h"
 #include "WCheck.h"
 #include "Utilities.h"
 #include "Message.h"

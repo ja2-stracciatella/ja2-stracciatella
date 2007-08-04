@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Local.h"
-#include "SGP.h"
 #include "HImage.h"
 #include "VSurface.h"
 #include "WCheck.h"

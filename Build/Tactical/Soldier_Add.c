@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"

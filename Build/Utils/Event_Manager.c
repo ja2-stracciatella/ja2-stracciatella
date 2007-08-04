@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Container.h"
 #include "WCheck.h"
 #include "Event_Manager.h"

@@ -1,5 +1,4 @@
 #include "Local.h"
-#include "SGP.h"
 #include "Gameloop.h"
 #include "VObject.h"
 #include "WCheck.h"

@@ -1,7 +1,6 @@
 #include "Font.h"
 #include "Text.h"
 #include "WordWrap.h"
-#include "SGP.h"
 #include "Render_Dirty.h"
 #include "Encrypted_File.h"
 #include "IMP_Text_System.h"

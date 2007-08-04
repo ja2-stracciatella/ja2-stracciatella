@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Local.h"
-#include "SGP.h"
 #include "Radar_Screen.h"
 #include "Line.h"
 #include "RenderWorld.h"

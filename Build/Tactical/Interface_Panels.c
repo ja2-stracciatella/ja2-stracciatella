@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Local.h"
-#include "SGP.h"
 #include "Gameloop.h"
 #include "HImage.h"
 #include "VObject.h"

@@ -11,7 +11,6 @@
 #include <stdarg.h>
 #include "MemMan.h"
 #include "Debug.h"
-#include "SGP.h"
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"

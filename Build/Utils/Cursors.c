@@ -1,5 +1,4 @@
 #include "Local.h"
-#include "SGP.h"
 #include "Cursors.h"
 #include "Timer_Control.h"
 #include "Font.h"

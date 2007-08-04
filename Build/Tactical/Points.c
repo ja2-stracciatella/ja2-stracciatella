@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Soldier_Find.h"
 #include "WorldDef.h"
 #include "Points.h"

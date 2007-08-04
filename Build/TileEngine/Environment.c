@@ -1,5 +1,4 @@
 #include "Font_Control.h"
-#include "SGP.h"
 #include "Lighting.h"
 #include "Environment.h"
 #include "RenderWorld.h"

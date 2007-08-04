@@ -1,6 +1,8 @@
 #ifndef MEANWHILE_H
 #define MEANWHILE_H
 
+#include "Types.h"
+
 
 enum
 {

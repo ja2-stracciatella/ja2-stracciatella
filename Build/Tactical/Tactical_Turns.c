@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Game_Clock.h"
 #include "Render_Dirty.h"
 #include "Timer_Control.h"

@@ -1,6 +1,5 @@
 #include "Types.h"
 #include "WorldDef.h"
-#include "SGP.h"
 #include "Strategic.h"
 #include "MapScreen.h"
 #include "Overhead.h"

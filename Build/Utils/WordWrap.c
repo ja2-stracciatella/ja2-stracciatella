@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "WordWrap.h"
-#include "SGP.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
 #include "Debug.h"

@@ -13,7 +13,6 @@
 #include "Music_Control.h"
 #include "Render_Dirty.h"
 #include "ScreenIDs.h"
-#include "SGP.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
 #include "Sys_Globals.h"

@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "Soldier_Create.h"
 #include "Overhead.h"
 #include "WCheck.h"

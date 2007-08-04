@@ -1,4 +1,3 @@
-#include "SGP.h"
 #include "MouseSystem.h"
 #include "VSurface.h"
 #include "WCheck.h"

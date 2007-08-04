@@ -1,5 +1,4 @@
 #include "Event_Manager.h"
-#include "SGP.h"
 #include "WCheck.h"
 #include "Event_Pump.h"
 #include "Soldier_Control.h"

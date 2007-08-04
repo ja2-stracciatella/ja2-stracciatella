@@ -1,5 +1,4 @@
 #include "Local.h"
-#include "SGP.h"
 #include "HImage.h"
 #include "VObject.h"
 #include "Interface_Utils.h"
