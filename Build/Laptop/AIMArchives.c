@@ -262,12 +262,6 @@ static void DisplayAlumniOldMercPopUp(void);
 
 void RenderAimArchives()
 {
-	UINT16		usPosX, usPosY,x,y,i=0;
-	UINT8			ubNumRows=0;
-	UINT32			uiStartLoc=0;
-	wchar_t			sText[400];
-
-
 	DrawAimDefaults();
 	DisableAimButton();
 
@@ -278,68 +272,32 @@ void RenderAimArchives()
 	HVOBJECT hFrameHandle = GetVideoObject(guiAlumniFrame);
 	HVOBJECT hFaceHandle  = GetVideoObject(guiOldAim);
 
-	switch(gubPageNum)
+	UINT start = AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS * gubPageNum;
+	UINT end   = min(start + AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS, 51);
+
+	INT32 usPosX = AIM_ALUMNI_START_GRID_X;
+	INT32 usPosY = AIM_ALUMNI_START_GRID_Y;
+	for (UINT i = start; i < end;)
 	{
-		case 0:
-			ubNumRows = AIM_ALUMNI_NUM_FACE_ROWS;
-			i=0;
-			break;
-		case 1:
-			ubNumRows = AIM_ALUMNI_NUM_FACE_ROWS;
-			i=20;
-			break;
-		case 2:
-			ubNumRows = 2;
-			i=40;
-			break;
-		default:
-			Assert(0);
-			break;
-	}
+		BltVideoObject(FRAME_BUFFER, hFaceHandle,  i, usPosX + 4, usPosY + 4); // Blt face to screen
+		BltVideoObject(FRAME_BUFFER, hFrameHandle, 0, usPosX,     usPosY);     // Blt the alumni frame background
 
-	usPosX = AIM_ALUMNI_START_GRID_X;
-	usPosY = AIM_ALUMNI_START_GRID_Y;
-	for(y=0; y<ubNumRows; y++)
-	{
-		for(x=0; x<AIM_ALUMNI_NUM_FACE_COLS; x++)
-		{
-			//Blt face to screen
-			BltVideoObject(FRAME_BUFFER, hFaceHandle, i,usPosX+4, usPosY+4);
-
-			//Blt the alumni frame background
-			BltVideoObject(FRAME_BUFFER, hFrameHandle, 0,usPosX, usPosY);
-
-			//Display the merc's name
-			uiStartLoc = AIM_ALUMNI_NAME_LINESIZE * i;
-			LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, uiStartLoc, AIM_ALUMNI_NAME_SIZE );
-			DrawTextToScreen(sText, usPosX + AIM_ALUMNI_NAME_OFFSET_X, usPosY + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-			usPosX += AIM_ALUMNI_GRID_OFFSET_X;
-			i++;
-		}
-		usPosX = AIM_ALUMNI_START_GRID_X;
-		usPosY += AIM_ALUMNI_GRID_OFFSET_Y;
-	}
-
-	//the 3rd page now has an additional row with 1 merc on it, so add a new row
-	if( gubPageNum == 2 )
-	{
-		//Blt face to screen
-		BltVideoObject(FRAME_BUFFER, hFaceHandle, i,usPosX+4, usPosY+4);
-
-		//Blt the alumni frame background
-		BltVideoObject(FRAME_BUFFER, hFrameHandle, 0,usPosX, usPosY);
-
-		//Display the merc's name
-		uiStartLoc = AIM_ALUMNI_NAME_LINESIZE * i;
-		LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, uiStartLoc, AIM_ALUMNI_NAME_SIZE );
+		// Display the merc's name
+		wchar_t sText[80];
+		LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, AIM_ALUMNI_NAME_LINESIZE * i, AIM_ALUMNI_NAME_SIZE);
 		DrawTextToScreen(sText, usPosX + AIM_ALUMNI_NAME_OFFSET_X, usPosY + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-		usPosX += AIM_ALUMNI_GRID_OFFSET_X;
+		++i;
+		if (i % AIM_ALUMNI_NUM_FACE_COLS == 0)
+		{
+			usPosX  = AIM_ALUMNI_START_GRID_X;
+			usPosY += AIM_ALUMNI_GRID_OFFSET_Y;
+		}
+		else
+		{
+			usPosX += AIM_ALUMNI_GRID_OFFSET_X;
+		}
 	}
-
-
-	usPosX = AIM_ALUMNI_PAGE1_X;
 
 	if( gfDrawPopUpBox )
 	{
