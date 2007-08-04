@@ -1402,7 +1402,7 @@ static void HandleLapTopHandles(void)
 
 static void CheckIfNewWWWW(void);
 static void CheckMarkButtonsDirtyFlag(void);
-static UINT32 CreateLaptopButtons(void);
+static void CreateLaptopButtons(void);
 static void DisplayBookMarks(void);
 static BOOLEAN DisplayLoadPending(void);
 static void DisplayTaskBarIcons(void);
@@ -1853,121 +1853,40 @@ static UINT32 ExitLaptopMode(UINT32 uiMode)
 }
 
 
-static void BtnOnCallback(GUI_BUTTON* btn, INT32 reason);
-static void CreateLaptopButtonHelpText(INT32 iButtonIndex, UINT32 uiButtonHelpTextID);
-static void EmailRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FilesRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void FinancialRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void HistoryRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void PersonnelRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static void WWWRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-
-
-static UINT32 CreateLaptopButtons(void)
+static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
- // the program buttons
-
- gLaptopButtonImage[0]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,0,-1,8,-1 );
- gLaptopButton[0] = QuickCreateButton( gLaptopButtonImage[0], 29, 66,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, EmailRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[0], LAPTOP_BN_HLP_TXT_VIEW_EMAIL );
-
- SpecifyButtonText(  gLaptopButton[0], pLaptopIcons[ 0 ] );
- SpecifyButtonFont( gLaptopButton[0], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[0], 30, 11, TRUE );
- SpecifyButtonDownTextColors( gLaptopButton[0], 2, 0 );
- SpecifyButtonUpTextColors( gLaptopButton[0], 2, 0 );
-
- gLaptopButtonImage[1]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,1,-1,9,-1 );
- gLaptopButton[1] = QuickCreateButton( gLaptopButtonImage[1], 29, 98,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, WWWRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[1], LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES );
-
- SpecifyButtonText(  gLaptopButton[1], pLaptopIcons[1 ] );
- SpecifyButtonFont( gLaptopButton[1], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[1], 30, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[1], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[1], 2, 0 );
-
- gLaptopButtonImage[2]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,2,-1,10,-1 );
- gLaptopButton[2] = QuickCreateButton( gLaptopButtonImage[2], 29, 130,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, FilesRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[2], LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS );
-
- SpecifyButtonText(  gLaptopButton[2], pLaptopIcons[ 5 ] );
- SpecifyButtonFont( gLaptopButton[2], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[2], 30, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[2], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[2], 2, 0 );
+	INT32 img = LoadButtonImage("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1);
+	gLaptopButtonImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, 29, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, BtnGenericMouseMoveButtonCallback, click);
+	gLaptopButton[idx] = btn;
+	SetButtonFastHelpText(btn, help_text);
+	SpecifyButtonText(btn, text);
+	SpecifyButtonFont(btn, FONT10ARIAL);
+	SpecifyButtonTextOffsets(btn, off_x, 11, TRUE);
+	SpecifyButtonDownTextColors(btn, 2, 0);
+	SpecifyButtonUpTextColors(btn, 2, 0);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+}
 
 
- gLaptopButtonImage[3]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,3,-1,11,-1 );
- gLaptopButton[3] = QuickCreateButton( gLaptopButtonImage[3], 29, 194,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, PersonnelRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[3], LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO );
-
- SpecifyButtonText(  gLaptopButton[3], pLaptopIcons[ 3] );
- SpecifyButtonFont( gLaptopButton[3], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[3], 30, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[3], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[3], 2, 0 );
+static void BtnOnCallback(                GUI_BUTTON* btn, INT32 reason);
+static void EmailRegionButtonCallback(    GUI_BUTTON* btn, INT32 reason);
+static void FilesRegionButtonCallback(    GUI_BUTTON* btn, INT32 reason);
+static void FinancialRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void HistoryRegionButtonCallback(  GUI_BUTTON* btn, INT32 reason);
+static void PersonnelRegionButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static void WWWRegionButtonCallback(      GUI_BUTTON* btn, INT32 reason);
 
 
- gLaptopButtonImage[4]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,4,-1,12,-1 );
- gLaptopButton[4] = QuickCreateButton( gLaptopButtonImage[4], 29, 162,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, HistoryRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[4], LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS );
-
- SpecifyButtonText(  gLaptopButton[4], pLaptopIcons[ 4 ] );
- SpecifyButtonFont( gLaptopButton[4], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[4], 30, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[4], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[4], 2, 0 );
-
-
- gLaptopButtonImage[5]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,5,-1,13,-1 );
- gLaptopButton[5] = QuickCreateButton( gLaptopButtonImage[5], 29, 226 + 15,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, FinancialRegionButtonCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[5], LAPTOP_BN_HLP_TXT_VIEW_FINANCIAL_SUMMARY_AND_HISTORY );
-
- SpecifyButtonText(  gLaptopButton[5], pLaptopIcons[ 2 ] );
- SpecifyButtonFont( gLaptopButton[5], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[5], 30, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[5], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[5], 2, 0 );
-
-
- gLaptopButtonImage[6]=  LoadButtonImage( "LAPTOP/buttonsforlaptop.sti" ,-1,6,-1,14,-1 );
- gLaptopButton[6] = QuickCreateButton( gLaptopButtonImage[6], 29, 371 + 7, //DEF: was 19
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, BtnOnCallback);
-	CreateLaptopButtonHelpText( gLaptopButton[6], LAPTOP_BN_HLP_TXT_CLOSE_LAPTOP );
-
- SpecifyButtonText(  gLaptopButton[6], pLaptopIcons[ 6 ] );
- SpecifyButtonFont( gLaptopButton[6], FONT10ARIAL );
- SpecifyButtonTextOffsets( gLaptopButton[6], 25, 11, TRUE );
- SpecifyButtonUpTextColors( gLaptopButton[6], 2, 0 );
- SpecifyButtonDownTextColors( gLaptopButton[6], 2, 0 );
-
-
- // define the cursor
-	SetButtonCursor(gLaptopButton[0], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(gLaptopButton[1], CURSOR_LAPTOP_SCREEN);
-  SetButtonCursor(gLaptopButton[2], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(gLaptopButton[3], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(gLaptopButton[4], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(gLaptopButton[5], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(gLaptopButton[6], CURSOR_LAPTOP_SCREEN);
-
-
-
- return (TRUE);
+static void CreateLaptopButtons(void)
+{
+	MakeButton(0,  66, EmailRegionButtonCallback,     30, pLaptopIcons[0], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_EMAIL]);
+	MakeButton(1,  98, WWWRegionButtonCallback,       30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
+	MakeButton(2, 130, FilesRegionButtonCallback,     30, pLaptopIcons[5], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS]);
+	MakeButton(3, 194, PersonnelRegionButtonCallback, 30, pLaptopIcons[3], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO]);
+	MakeButton(4, 162, HistoryRegionButtonCallback,   30, pLaptopIcons[4], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS]);
+	MakeButton(5, 241, FinancialRegionButtonCallback, 30, pLaptopIcons[2], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FINANCIAL_SUMMARY_AND_HISTORY]);
+	MakeButton(6, 378, BtnOnCallback,                 25, pLaptopIcons[6], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_CLOSE_LAPTOP]);
 }
 
 
@@ -5013,10 +4932,4 @@ void CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearH
 
 	//fUnReadMailFlag
 	//fNewFilesInFileViewer
-}
-
-
-static void CreateLaptopButtonHelpText(INT32 iButtonIndex, UINT32 uiButtonHelpTextID)
-{
-	SetButtonFastHelpText( iButtonIndex, gzLaptopHelpText[ uiButtonHelpTextID ] );
 }
