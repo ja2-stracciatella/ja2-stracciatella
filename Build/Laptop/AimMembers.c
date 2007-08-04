@@ -1569,10 +1569,17 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 
 static BOOLEAN DisplayMercsVideoFace(void)
 {
-	HVOBJECT hTerminalHandle = GetVideoObject(guiVideoConfTerminal);
-	ShadowVideoSurfaceImage( FRAME_BUFFER, hTerminalHandle, AIM_MEMBER_VIDEO_CONF_TERMINAL_X, AIM_MEMBER_VIDEO_CONF_TERMINAL_Y);
-  BltVideoObject(FRAME_BUFFER, hTerminalHandle, 0,AIM_MEMBER_VIDEO_CONF_TERMINAL_X, AIM_MEMBER_VIDEO_CONF_TERMINAL_Y);
+	const ETRLEObject* e = GetVideoObjectETRLESubregionProperties(guiVideoConfTerminal, 0);
+	const INT32 x = AIM_MEMBER_VIDEO_CONF_TERMINAL_X;
+	const INT32 y = AIM_MEMBER_VIDEO_CONF_TERMINAL_Y;
+	const INT32 w = e->usWidth;
+	const INT32 h = e->usHeight;
 
+	// Draw a drop shadow
+	ShadowVideoSurfaceRect(FRAME_BUFFER, x + 3, y + h, x + w,     y + h + 3); // Horizontal
+	ShadowVideoSurfaceRect(FRAME_BUFFER, x + w, y + 3, x + w + 3, y + h);     // Vertical
+
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiVideoConfTerminal, 0, x, y);
 
 	//Display the Select light on the merc
 	if(gubVideoConferencingMode == AIM_VIDEO_HIRE_MERC_MODE)

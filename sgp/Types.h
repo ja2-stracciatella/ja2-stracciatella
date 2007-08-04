@@ -99,4 +99,7 @@ typedef struct
 
 } SGPPoint;
 
+
+typedef UINT32 COLORVAL;
+
 #endif

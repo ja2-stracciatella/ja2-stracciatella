@@ -952,20 +952,6 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPR
 }
 
 
-BOOLEAN ShadowVideoSurfaceImage(UINT32 uiDestVSurface, HVOBJECT hImageHandle, INT32 iPosX, INT32 iPosY)
-{
-	UINT32 Width  = hImageHandle->pETRLEObject->usWidth;
-	UINT32 Height = hImageHandle->pETRLEObject->usHeight;
-
-	//Horizontal shadow
-	ShadowVideoSurfaceRect(uiDestVSurface, iPosX + 3, iPosY + Height, iPosX + Width, iPosY + Height + 3);
-
-	//vertical shadow
-	ShadowVideoSurfaceRect(uiDestVSurface, iPosX + Width, iPosY + 3, iPosX + Width + 3, iPosY + Height);
-	return TRUE;
-}
-
-
 #ifdef _DEBUG
 void CheckValidVSurfaceIndex(UINT32 uiIndex)
 {

@@ -8,9 +8,6 @@
 #define NO_VOBJECT 0
 
 
-// This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
-typedef UINT32 COLORVAL;
-
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48
 
