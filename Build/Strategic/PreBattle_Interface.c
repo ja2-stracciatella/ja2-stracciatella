@@ -413,9 +413,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	SpecifyButtonTextWrappedWidth( iPBButton[0], 51 );
 	SpecifyButtonTextWrappedWidth( iPBButton[1], 51 );
 	SpecifyButtonTextWrappedWidth( iPBButton[2], 51 );
-	SpecifyButtonTextJustification( iPBButton[0], BUTTON_TEXT_CENTER );
-	SpecifyButtonTextJustification( iPBButton[1], BUTTON_TEXT_CENTER );
-	SpecifyButtonTextJustification( iPBButton[2], BUTTON_TEXT_CENTER );
 	AllowDisabledButtonFastHelp( iPBButton[0], TRUE );
 	AllowDisabledButtonFastHelp( iPBButton[1], TRUE );
 	AllowDisabledButtonFastHelp( iPBButton[2], TRUE );
