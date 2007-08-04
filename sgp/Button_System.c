@@ -108,7 +108,6 @@ static void DrawHatchOnButton(const GUI_BUTTON *b);
 BOOLEAN gfRenderHilights = TRUE;
 
 BUTTON_PICS		ButtonPictures[MAX_BUTTON_PICS];
-static INT32 ButtonPicsLoaded;
 
 UINT32 ButtonDestBuffer = FRAME_BUFFER;
 
@@ -138,10 +137,6 @@ extern MOUSE_REGION *MSYS_PrevRegion;
 static INT32 FindFreeButtonSlot(void)
 {
 	int slot;
-
-	// Are there any slots available?
-	if(ButtonPicsLoaded >= MAX_BUTTON_PICS)
-		return(BUTTON_NO_SLOT);
 
 	// Search for a slot
 	for(slot=0;slot<MAX_BUTTON_PICS;slot++)
@@ -222,8 +217,6 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 	// Set the width and height for this image set
 	ButtonPictures[UseSlot].MaxHeight = MaxHeight;
 	ButtonPictures[UseSlot].MaxWidth  = MaxWidth;
-
-	ButtonPicsLoaded++;
 }
 
 
@@ -320,7 +313,6 @@ void UnloadButtonImage(INT32 Index)
 	if(ButtonPictures[Index].fFlags & GUI_BTN_DUPLICATE_VOBJ)
 	{
 		ButtonPictures[Index].vobj = NULL;
-		ButtonPicsLoaded--;
 	}
 	else
 	{
@@ -342,7 +334,6 @@ void UnloadButtonImage(INT32 Index)
 					ButtonPictures[Index].vobj = NULL;
 
 					fDone = TRUE;
-					ButtonPicsLoaded--;
 				}
 			}
 		}
@@ -353,7 +344,6 @@ void UnloadButtonImage(INT32 Index)
 	{
 		DeleteVideoObject(ButtonPictures[Index].vobj);
 		ButtonPictures[Index].vobj = NULL;
-		ButtonPicsLoaded--;
 	}
 }
 
@@ -408,7 +398,6 @@ static BOOLEAN InitializeButtonImageManager(void)
 		ButtonPictures[x].OnNormal = -1;
 		ButtonPictures[x].OnHilite = -1;
 	}
-	ButtonPicsLoaded = 0;
 
 	// Blank out all Generic button data
 	for(x=0;x<MAX_GENERIC_PICS;x++)
