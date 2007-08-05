@@ -2735,39 +2735,16 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 static void BtnStanceUpCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT8 bNewStance;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		bNewStance = gAnimControl[ gpSMCurrentMerc->usAnimState ].ubEndHeight;
-
-		if ( bNewStance == ANIM_CROUCH )
+		INT8 bNewStance = gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight;
+		switch (bNewStance)
 		{
-			bNewStance = ANIM_STAND;
+			case ANIM_CROUCH: bNewStance = ANIM_STAND;  break;
+			case ANIM_PRONE:  bNewStance = ANIM_CROUCH; break;
 		}
-		else if ( bNewStance == ANIM_PRONE )
-		{
-			bNewStance = ANIM_CROUCH;
-		}
-
-		UIHandleSoldierStanceChange( gpSMCurrentMerc->ubID, bNewStance );
-
+		UIHandleSoldierStanceChange(gpSMCurrentMerc->ubID, bNewStance);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
@@ -2802,106 +2779,47 @@ void BtnUpdownCallback(GUI_BUTTON *btn,INT32 reason)
 
 static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	BOOLEAN						fNearHeigherLevel;
-	BOOLEAN						fNearLowerLevel;
-	INT8							bDirection;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
+		BOOLEAN fNearHeigherLevel;
+		BOOLEAN fNearLowerLevel;
+		GetMercClimbDirection(gpSMCurrentMerc->ubID, &fNearLowerLevel, &fNearHeigherLevel);
+		if (fNearLowerLevel)   BeginSoldierClimbDownRoof(gpSMCurrentMerc);
+		if (fNearHeigherLevel) BeginSoldierClimbUpRoof(gpSMCurrentMerc);
 
-		GetMercClimbDirection( gpSMCurrentMerc->ubID, &fNearLowerLevel, &fNearHeigherLevel );
-
-		if ( fNearLowerLevel )
+		INT8 bDirection;
+		if (FindFenceJumpDirection(gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection))
 		{
-			BeginSoldierClimbDownRoof( gpSMCurrentMerc );
+			BeginSoldierClimbFence(gpSMCurrentMerc);
 		}
-		if ( fNearHeigherLevel )
-		{
-			BeginSoldierClimbUpRoof( gpSMCurrentMerc );
-		}
-
-		if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection ) )
-		{
-			BeginSoldierClimbFence( gpSMCurrentMerc );
-		}
-
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnStanceDownCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT8 bNewStance;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		bNewStance = gAnimControl[ gpSMCurrentMerc->usAnimState ].ubEndHeight;
-
-		if ( bNewStance == ANIM_STAND )
+		INT8 bNewStance = gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight;
+		switch (bNewStance)
 		{
-			bNewStance = ANIM_CROUCH;
+			case ANIM_STAND:  bNewStance = ANIM_CROUCH; break;
+			case ANIM_CROUCH: bNewStance = ANIM_PRONE;  break;
 		}
-		else if ( bNewStance == ANIM_CROUCH )
-		{
-			bNewStance = ANIM_PRONE;
-		}
-
-		UIHandleSoldierStanceChange( gpSMCurrentMerc->ubID, bNewStance );
-
+		UIHandleSoldierStanceChange(gpSMCurrentMerc->ubID, bNewStance);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		gpSMCurrentMerc->bStealthMode = !	gpSMCurrentMerc->bStealthMode;
+		gpSMCurrentMerc->bStealthMode = !gpSMCurrentMerc->bStealthMode;
 		gfUIStanceDifferent		= TRUE;
 		gfPlotNewMovement			= TRUE;
 		fInterfacePanelDirty	= DIRTYLEVEL2;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
@@ -2953,177 +2871,80 @@ static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static void SelectMerc(UINT16 id)
+{
+	gubSelectSMPanelToMerc = id;
+
+	if (!gfInItemPickupMenu)
+	{
+		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
+		{
+			// Refresh background for player slots (in case item values change due to Flo's discount)
+			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
+			LocateSoldier(id, DONTSETLOCATOR);
+		}
+		else
+		{
+			LocateSoldier(id, SETLOCATOR);
+		}
+	}
+
+	// If the user is in the shop keeper interface and is in the item desc
+	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE &&
+			InItemDescriptionBox())
+	{
+		DeleteItemDescriptionBox();
+	}
+}
+
+
 static void BtnPrevMercCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT16 sID;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectMerc(FindPrevActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE));
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		sID = FindPrevActiveAndAliveMerc( gpSMCurrentMerc, TRUE, TRUE );
-
-		gubSelectSMPanelToMerc = (UINT8)sID;
-
-		if ( !gfInItemPickupMenu )
-		{
-			//if we are in the shop keeper interface
-			if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-			{
-				LocateSoldier( sID, DONTSETLOCATOR );
-				// refresh background for player slots (in case item values change due to Flo's discount)
-				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-			}
-			else
-				LocateSoldier( sID, SETLOCATOR );
-		}
-
-		//if the user is in the shop keeper interface and is in the item desc
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		{
-			if ( InItemDescriptionBox( ) )
-			{
-				DeleteItemDescriptionBox( );
-			}
-		}
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnNextMercCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT16 sID;
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectMerc(FindNextActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE));
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		sID = FindNextActiveAndAliveMerc( gpSMCurrentMerc, TRUE, TRUE );
-
-		// Give him the panel!
-		gubSelectSMPanelToMerc = (UINT8)sID;
-
-		if ( !gfInItemPickupMenu )
-		{
-			//if we are in the shop keeper interface
-			if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-			{
-				LocateSoldier( sID, DONTSETLOCATOR );
-				// refresh background for player slots (in case item values change due to Flo's discount)
-				gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-			}
-			else
-				LocateSoldier( sID, SETLOCATOR );
-		}
-
-		//if the user is in the shop keeper interface and is in the item desc
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		{
-			if ( InItemDescriptionBox( ) )
-			{
-				DeleteItemDescriptionBox( );
-			}
-		}
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnOptionsCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		guiPreviousOptionScreen = guiCurrentScreen;
-		LeaveTacticalScreen( OPTIONS_SCREEN );
-
+		LeaveTacticalScreen(OPTIONS_SCREEN);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnSMDoneCallback(GUI_BUTTON* btn, INT32 reason)
 {
-
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		gfBeginEndTurn = TRUE;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnMapScreenCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// Enter mapscreen...
 		//gfEnteringMapScreen = TRUE;
 		GoToMapScreenFromTactical();
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
+
 
 /*
 uiTempVObject[0] = LoadButtonImage( "Interface/InventoryButtons.sti", -1, 7, -1, -1, -1 );
@@ -3655,68 +3476,31 @@ void    RemoveTEAMPanelButtons( )
 
 static void BtnEndTurnCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		UIHandleEndTurn(NULL);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// END TURN
-		UIHandleEndTurn( NULL );
-
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
 static void BtnRostermodeCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		if (guiCurrentScreen == GAME_SCREEN) GoToMapScreenFromTactical();
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		if ( guiCurrentScreen == GAME_SCREEN )
-		{
-			GoToMapScreenFromTactical();
-//			EnableRadarScreenRender( );
-		}
-
-	}
-
 }
 
 
 // callback to handle squad switching callback
 static void BtnSquadCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		ToggleRadarScreenRender();
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Not Implemented Yet" );
-		ToggleRadarScreenRender( );
-
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
+
 
 void SetTEAMPanelCurrentMerc( UINT8 ubNewID )
 {
