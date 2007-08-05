@@ -2748,32 +2748,16 @@ static void BtnStanceUpCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-void BtnUpdownCallback(GUI_BUTTON *btn,INT32 reason)
+void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		//gsInterfaceLevel = gpSMCurrentMerc->bUIInterfaceLevel;
-
 		// Change interface level via HandleUI handler
-		UIHandleChangeLevel( NULL );
+		UIHandleChangeLevel(NULL);
 
 		// Remember soldier's new value
-		gpSMCurrentMerc->bUIInterfaceLevel = (INT8)gsInterfaceLevel;
+		gpSMCurrentMerc->bUIInterfaceLevel = gsInterfaceLevel;
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
@@ -2825,49 +2809,30 @@ static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void BtnHandCursorCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		ToggleHandCursorMode( &guiCurrentEvent );
+		ToggleHandCursorMode(&guiCurrentEvent);
 	}
-
 }
 
 
 static void BtnTalkCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-			ToggleTalkCursorMode( &guiCurrentEvent );
+		ToggleTalkCursorMode(&guiCurrentEvent);
 	}
-
 }
 
 
 static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if ( gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE )
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ MUTE_OFF_STR ], gpSMCurrentMerc->name );
-			gpSMCurrentMerc->uiStatusFlags &= ( ~SOLDIER_MUTE );
-		}
-		else
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ MUTE_ON_STR ], gpSMCurrentMerc->name );
-			gpSMCurrentMerc->uiStatusFlags |= ( SOLDIER_MUTE );
-		}
+		gpSMCurrentMerc->uiStatusFlags ^= SOLDIER_MUTE;
+		const wchar_t* msg = (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE ? TacticalStr[MUTE_ON_STR] : TacticalStr[MUTE_OFF_STR]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, gpSMCurrentMerc->name);
 	}
-
 }
 
 
@@ -2946,60 +2911,21 @@ static void BtnMapScreenCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-/*
-uiTempVObject[0] = LoadButtonImage( "Interface/InventoryButtons.sti", -1, 7, -1, -1, -1 );
-uiTempVObject[1] = UseLoadedButtonImage( uiTempVObject[0], -1, 17, -1, -1, -1 );
-uiTempVObject[2] = UseLoadedButtonImage( uiTempVObject[0], -1, 26, -1, -1, -1 );
-iButtonID = QuickCreateButton( uiTempVObject[0], 0, 0, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, CycleCallback );
-
-void CycleCallback( GUI_BUTTON *btn, INT32 reason )
-{
-	static INT32 buttonValue = 0;
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		buttonValue += buttonValue < 2 ? 1 : -2;
-		btn->ImageNum = uiTempVObject[ buttonValue ];
-		btn->uiFlags |= BUTTON_DIRTY;
-	}
-}
-*/
-
-
 static void BtnBurstModeCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		ChangeWeaponMode( gpSMCurrentMerc );
-//		btn->ImageNum = iBurstButtonImages[ gpSMCurrentMerc->bWeaponMode ];
-//		btn->uiFlags |= BUTTON_DIRTY;
-
+		ChangeWeaponMode(gpSMCurrentMerc);
 	}
-
 }
 
 
 static void BtnLookCallback(GUI_BUTTON* btn, INT32 reason)
 {
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		ToggleLookCursorMode(NULL);
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		ToggleLookCursorMode( NULL );
-
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-
 }
 
 
