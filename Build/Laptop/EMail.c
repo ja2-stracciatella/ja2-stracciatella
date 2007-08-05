@@ -1792,51 +1792,27 @@ static void DestroyMailScreenButtons(void)
 }
 
 
+static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+{
+	INT32 img = LoadButtonImage("LAPTOP/mailbuttons.sti", -1, idx, -1, idx + 4, -1);
+	giSortButtonImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, x, FROM_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
+	giSortButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	if (text)
+	{
+		SpecifyGeneralButtonTextAttributes(btn, text, EMAIL_WARNING_FONT, FONT_BLACK, FONT_BLACK);
+	}
+}
+
+
 static void CreateMailScreenButtons(void)
 {
-
 	// create sort buttons, right now - not finished
-
-	// read sort
-	giSortButtonImage[0]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,0,-1,4,-1 );
-	giSortButton[0] = QuickCreateButton( giSortButtonImage[0], ENVELOPE_BOX_X, FROM_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, ReadCallback);
-	SetButtonCursor(giSortButton[0], CURSOR_LAPTOP_SCREEN);
-
-
-	// subject sort
-	giSortButtonImage[1]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,1,-1,5,-1 );
-	giSortButton[1] = QuickCreateButton( giSortButtonImage[1], FROM_BOX_X, FROM_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, FromCallback);
-	SetButtonCursor(giSortButton[1], CURSOR_LAPTOP_SCREEN);
-   SpecifyFullButtonTextAttributes( giSortButton[1], pEmailHeaders[FROM_HEADER], EMAIL_WARNING_FONT,
-																		  FONT_BLACK, FONT_BLACK,
-																			FONT_BLACK, FONT_BLACK, TEXT_CJUSTIFIED );
-
-
-	// sender sort
-	giSortButtonImage[2]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,2,-1,6,-1 );
-	giSortButton[2] = QuickCreateButton( giSortButtonImage[2], SUBJECT_BOX_X, FROM_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, SubjectCallback );
-	SetButtonCursor(giSortButton[2], CURSOR_LAPTOP_SCREEN);
-	SpecifyFullButtonTextAttributes( giSortButton[2], pEmailHeaders[SUBJECT_HEADER], EMAIL_WARNING_FONT,
-																		  FONT_BLACK, FONT_BLACK,
-																			FONT_BLACK, FONT_BLACK, TEXT_CJUSTIFIED );
-
-
-
-	// date sort
-  giSortButtonImage[3]=  LoadButtonImage( "LAPTOP/mailbuttons.sti" ,-1,3,-1,7,-1 );
-	giSortButton[3] = QuickCreateButton( giSortButtonImage[3], DATE_BOX_X, FROM_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, DateCallback);
-	SetButtonCursor(giSortButton[3], CURSOR_LAPTOP_SCREEN);
-	SpecifyFullButtonTextAttributes( giSortButton[3], pEmailHeaders[RECD_HEADER], EMAIL_WARNING_FONT,
-																		  FONT_BLACK, FONT_BLACK,
-																			FONT_BLACK, FONT_BLACK, TEXT_CJUSTIFIED );
+	MakeButton(0, ENVELOPE_BOX_X, ReadCallback,    NULL);
+	MakeButton(1, FROM_BOX_X,     FromCallback,    pEmailHeaders[FROM_HEADER]);
+	MakeButton(2, SUBJECT_BOX_X,  SubjectCallback, pEmailHeaders[SUBJECT_HEADER]);
+	MakeButton(3, DATE_BOX_X,     DateCallback,    pEmailHeaders[RECD_HEADER]);
 }
 
 
