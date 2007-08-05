@@ -4733,6 +4733,20 @@ void DisplaySoldierUpdateBox( )
 }
 
 
+static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help_text)
+{
+	INT32 img = LoadButtonImage("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1);
+	guiUpdatePanelButtonsImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
+	guiUpdatePanelButtons[idx] = btn;
+	SpecifyButtonText(btn, text);
+	SpecifyButtonFont(btn, MAP_SCREEN_FONT);
+	SpecifyButtonUpTextColors(btn, FONT_MCOLOR_BLACK, FONT_BLACK);
+	SpecifyButtonDownTextColors(btn, FONT_MCOLOR_BLACK, FONT_BLACK);
+	SetButtonFastHelpText(btn, help_text);
+}
+
+
 static void ContinueUpdateButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void StopUpdateButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
@@ -4749,44 +4763,10 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 		fShowAssignmentMenu = FALSE;
 		fShowContractMenu = FALSE;
 
-//		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE/group_confirm.sti" ,-1,7,-1,8,-1 );
-//		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm.sti" ,-1,7,-1,8,-1 );
-		guiUpdatePanelButtonsImage[ 0 ]=  LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
-		guiUpdatePanelButtonsImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
-
-		if( fFourWideMode )
-		{
-			guiUpdatePanelButtons[ 0 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 0 ], ( INT16 )( iX - 4 + TACT_UPDATE_MERC_FACE_X_WIDTH + 4), (INT16)iY,
-											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											BtnGenericMouseMoveButtonCallback, ContinueUpdateButtonCallback );
-
-			guiUpdatePanelButtons[ 1 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 1 ], ( INT16 ) ( iX - 4 + 2 * TACT_UPDATE_MERC_FACE_X_WIDTH + 4 ), (INT16)iY,
-											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											BtnGenericMouseMoveButtonCallback, StopUpdateButtonCallback);
-		}
-		else
-		{
-			guiUpdatePanelButtons[ 0 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 0 ], ( INT16 )( iX), (INT16)iY,
-											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST -1,
-											BtnGenericMouseMoveButtonCallback, ContinueUpdateButtonCallback);
-
-			guiUpdatePanelButtons[ 1 ] = QuickCreateButton( guiUpdatePanelButtonsImage[ 1 ], ( INT16 )( iX + TACT_UPDATE_MERC_FACE_X_WIDTH ), (INT16)iY,
-											BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											BtnGenericMouseMoveButtonCallback, StopUpdateButtonCallback);
-
-		}
-
-		SpecifyButtonText( guiUpdatePanelButtons[ 0 ], pUpdatePanelButtons[ 0 ] );
-		SpecifyButtonFont( guiUpdatePanelButtons[ 0 ], MAP_SCREEN_FONT );
-		SpecifyButtonUpTextColors( guiUpdatePanelButtons[ 0 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-		SpecifyButtonDownTextColors( guiUpdatePanelButtons[ 0 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-		SetButtonFastHelpText( guiUpdatePanelButtons[ 0 ], gzLateLocalizedString[51] );
-
-		SpecifyButtonText( guiUpdatePanelButtons[ 1 ], pUpdatePanelButtons[ 1 ] );
-		SpecifyButtonFont( guiUpdatePanelButtons[ 1 ], MAP_SCREEN_FONT );
-		SpecifyButtonUpTextColors( guiUpdatePanelButtons[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-		SpecifyButtonDownTextColors( guiUpdatePanelButtons[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-		SetButtonFastHelpText( guiUpdatePanelButtons[ 1 ], gzLateLocalizedString[52] );
+		INT16 x = iX;
+		if (fFourWideMode) x += TACT_UPDATE_MERC_FACE_X_WIDTH;
+		MakeButton(0, x,                                 iY, ContinueUpdateButtonCallback, pUpdatePanelButtons[0], gzLateLocalizedString[51]);
+		MakeButton(1, x + TACT_UPDATE_MERC_FACE_X_WIDTH, iY, StopUpdateButtonCallback,     pUpdatePanelButtons[1], gzLateLocalizedString[52]);
 	}
 	else if( ( fShowUpdateBox == FALSE ) && ( fCreated == TRUE ) )
 	{
