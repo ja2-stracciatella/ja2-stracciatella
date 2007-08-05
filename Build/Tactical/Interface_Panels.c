@@ -1352,12 +1352,7 @@ BOOLEAN CreateSMPanelButtons( )
 										DEFAULT_MOVE_CALLBACK, BtnMapScreenCallback );
 	SetButtonFastHelpText( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ], TacticalStr[ MAPSCREEN_POPUPTEXT ]);
 
-	iSMPanelButtons[ SM_DONE_BUTTON ] = CreateIconAndTextButton( iSMPanelImages[ DONE_IMAGES ], L"", FONT12ARIAL,
-													 FONT_MCOLOR_WHITE, DEFAULT_SHADOW ,
-													 FONT_MCOLOR_WHITE, DEFAULT_SHADOW ,
-													 TEXT_CJUSTIFIED,
-													 SM_DONE_X, SM_DONE_Y, BUTTON_TOGGLE ,MSYS_PRIORITY_HIGH-1,
-													 DEFAULT_MOVE_CALLBACK, BtnSMDoneCallback );
+	iSMPanelButtons[SM_DONE_BUTTON] = QuickCreateButton(iSMPanelImages[DONE_IMAGES], SM_DONE_X, SM_DONE_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, DEFAULT_MOVE_CALLBACK, BtnSMDoneCallback);
 	SetButtonFastHelpText( iSMPanelButtons[ SM_DONE_BUTTON ], TacticalStr[ END_TURN_POPUPTEXT ] );
 
 	iSMPanelButtons[ TALK_BUTTON ] = QuickCreateButton( iSMPanelImages[ TALK_IMAGES ], SM_TALKB_X, SM_TALKB_Y,
