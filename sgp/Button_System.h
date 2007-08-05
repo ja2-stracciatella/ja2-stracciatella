@@ -204,7 +204,7 @@ extern BOOLEAN gfRenderHilights;
  * They cannot be re-sized, nor can the graphic be changed.  Providing you have
  * allocated your own image, this is a somewhat simplified function.
  */
-INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type,INT16 Priority,GUI_CALLBACK MoveCallback,GUI_CALLBACK ClickCallback);
+INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
 
 /* A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more
  * assumptions.  It self manages the loading, and deleting of the image.  The
