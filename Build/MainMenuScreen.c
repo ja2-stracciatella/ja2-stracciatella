@@ -290,20 +290,18 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void HandleMainMenuInput(void)
 {
-	InputAtom  InputEvent;
-
-	// Check for esc
-	while (DequeueEvent(&InputEvent) == TRUE)
-  {
-    if( InputEvent.usEvent == KEY_UP )
+	InputAtom InputEvent;
+	while (DequeueEvent(&InputEvent))
+	{
+		if (InputEvent.usEvent == KEY_UP)
 		{
-			switch( InputEvent.usParam )
+			switch (InputEvent.usParam)
 			{
 /*
 				case SDLK_ESCAPE: gbHandledMainMenu = QUIT; break;
 */
 
-#ifdef JA2TESTVERSION
+#if defined JA2TESTVERSION
 				case 'q':
 					gbHandledMainMenu    = NEW_GAME;
 					gfMainMenuScreenExit = TRUE;
@@ -411,18 +409,18 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 static void RenderMainMenu(void)
 {
-  HVOBJECT hPixHandle;
+	HVOBJECT hPixHandle;
 
 	//Get and display the background image
 	hPixHandle = GetVideoObject(guiMainMenuBackGroundImage);
-  BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 0, 0);
-  BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 0, 0);
+	BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 0, 0);
 
 	hPixHandle = GetVideoObject(guiJa2LogoImage);
-  BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 188, 15);
-  BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 188, 15);
+	BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 188, 15);
+	BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 188, 15);
 
-#ifdef TESTFOREIGNFONTS
+#if defined TESTFOREIGNFONTS
 	DrawTextToScreen(L"LARGEFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 105, 640, LARGEFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"SMALLFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 125, 640, SMALLFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"TINYFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",             0, 145, 640, TINYFONT1,             FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

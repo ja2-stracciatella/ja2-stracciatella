@@ -112,36 +112,16 @@ BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 static void HandleSingleClicksAndButtonRepeats(void);
 
 
-BOOLEAN DequeueEvent(InputAtom *Event)
+BOOLEAN DequeueEvent(InputAtom* Event)
 {
 	HandleSingleClicksAndButtonRepeats();
 
-	// Is there an event to dequeue
-	if (gusQueueCount > 0)
-	{
-		// We have an event, so we dequeue it
-		*Event = gEventQueue[gusHeadIndex];
+	if (gusQueueCount == 0) return FALSE;
 
-		if (gusHeadIndex == 255)
-		{
-			gusHeadIndex = 0;
-		}
-		else
-		{
-			gusHeadIndex++;
-		}
-
-		// Decrement the number of items on the input queue
-		gusQueueCount--;
-
-		// dequeued an event, return TRUE
-		return TRUE;
-	}
-	else
-	{
-		// No events to dequeue, return FALSE
-		return FALSE;
-	}
+	*Event = gEventQueue[gusHeadIndex];
+	gusHeadIndex = (gusHeadIndex + 1) % lengthof(gEventQueue);
+	gusQueueCount--;
+	return TRUE;
 }
 
 
