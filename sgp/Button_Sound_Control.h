@@ -3,8 +3,7 @@
 
 #include "Button_System.h"
 
-//These are gener
-enum
+typedef enum ButtonSoundScheme
 {
 	BUTTON_SOUND_SCHEME_NONE,
 	BUTTON_SOUND_SCHEME_GENERIC,
@@ -16,7 +15,9 @@ enum
 	BUTTON_SOUND_SCHEME_BIGSWITCH3,
 	BUTTON_SOUND_SCHEME_COMPUTERBEEP2,
 	BUTTON_SOUND_SCHEME_COMPUTERSWITCH1,
-};
+} ButtonSoundScheme;
+
+void SpecifyButtonSoundScheme(INT32 iButtonID, ButtonSoundScheme SoundScheme);
 
 void PlayButtonSound(const GUI_BUTTON* btn, INT32 iSoundType);
 

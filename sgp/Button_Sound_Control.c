@@ -5,10 +5,10 @@
 #include "ScreenIDs.h"
 
 
-void SpecifyButtonSoundScheme( INT32 iButtonID, INT8 bSoundScheme )
+void SpecifyButtonSoundScheme(INT32 iButtonID, ButtonSoundScheme SoundScheme)
 {
-	ButtonList[ iButtonID ]->ubSoundSchemeID = (UINT8)bSoundScheme;
-	if( bSoundScheme == BUTTON_SOUND_SCHEME_GENERIC )
+	ButtonList[iButtonID]->ubSoundSchemeID = SoundScheme;
+	if (SoundScheme == BUTTON_SOUND_SCHEME_GENERIC)
 	{
 		#ifdef JA2
 		switch( guiCurrentScreen )
@@ -48,8 +48,8 @@ void SpecifyButtonSoundScheme( INT32 iButtonID, INT8 bSoundScheme )
 			//SEX_SCREEN,
 		}
 		#endif
-		if( bSoundScheme == BUTTON_SOUND_SCHEME_GENERIC )
-			bSoundScheme = BUTTON_SOUND_SCHEME_NONE;
+		if (SoundScheme == BUTTON_SOUND_SCHEME_GENERIC)
+			SoundScheme = BUTTON_SOUND_SCHEME_NONE;
 	}
 }
 
