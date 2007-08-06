@@ -1,5 +1,4 @@
 #include "Types.h"
-#include "Button_System.h"
 #include "Button_Sound_Control.h"
 #include "Sound_Control.h"
 #include "JAScreens.h"
@@ -54,14 +53,10 @@ void SpecifyButtonSoundScheme( INT32 iButtonID, INT8 bSoundScheme )
 	}
 }
 
-void PlayButtonSound( INT32 iButtonID, INT32 iSoundType )
-{
-	if ( ButtonList[ iButtonID ] == NULL )
-	{
-		return;
-	}
 
-	switch( ButtonList[ iButtonID ]->ubSoundSchemeID )
+void PlayButtonSound(const GUI_BUTTON* btn, INT32 iSoundType)
+{
+	switch (btn->ubSoundSchemeID)
 	{
 		case BUTTON_SOUND_SCHEME_NONE:
 		case BUTTON_SOUND_SCHEME_GENERIC:

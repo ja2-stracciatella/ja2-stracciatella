@@ -245,7 +245,6 @@ void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextY
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth);
 
 void SpecifyButtonSoundScheme(INT32 iButtonID, INT8 bSoundScheme);
-void PlayButtonSound(INT32 iButtonID, INT32 iSoundType);
 
 void AllowDisabledButtonFastHelp(INT32 iButtonID, BOOLEAN fAllow);
 

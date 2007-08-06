@@ -1028,7 +1028,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 			if (&b->Area == MSYS_PrevRegion && !gpAnchoredButton)
 			{
 				INT32 snd = (b->uiFlags & BUTTON_ENABLED ? BUTTON_SOUND_MOVED_ONTO : BUTTON_SOUND_DISABLED_MOVED_ONTO);
-				PlayButtonSound(iButtonID, snd);
+				PlayButtonSound(b, snd);
 			}
 		}
 	}
@@ -1041,12 +1041,12 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 			{
 				if (&b->Area == MSYS_PrevRegion && !gpAnchoredButton)
 				{
-					PlayButtonSound(iButtonID, BUTTON_SOUND_MOVED_OFF_OF);
+					PlayButtonSound(b, BUTTON_SOUND_MOVED_OFF_OF);
 				}
 			}
 			else
 			{
-				PlayButtonSound(iButtonID, BUTTON_SOUND_DISABLED_MOVED_OFF_OF);
+				PlayButtonSound(b, BUTTON_SOUND_DISABLED_MOVED_OFF_OF);
 			}
 		}
 	}
@@ -1162,7 +1162,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	// Should we play a sound if clicked on while disabled?
 	if (b->ubSoundSchemeID && !(b->uiFlags & BUTTON_ENABLED) && MouseBtnDown)
 	{
-		PlayButtonSound(iButtonID, BUTTON_SOUND_DISABLED_CLICK);
+		PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
 	}
 
 	// If this button is disabled, and no callbacks allowed when disabled callback
@@ -1203,14 +1203,14 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		{
 			if (b->ubSoundSchemeID && StateBefore && !StateAfter)
 			{
-				PlayButtonSound(iButtonID, BUTTON_SOUND_CLICKED_OFF);
+				PlayButtonSound(b, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
 		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
 			if (b->ubSoundSchemeID && !StateBefore && StateAfter)
 			{
-				PlayButtonSound(iButtonID, BUTTON_SOUND_CLICKED_ON);
+				PlayButtonSound(b, BUTTON_SOUND_CLICKED_ON);
 			}
 		}
 	}
@@ -2008,7 +2008,7 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON* btn, INT32 reason)
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			if (btn->ubSoundSchemeID)
 			{
-				PlayButtonSound(btn->IDNum, BUTTON_SOUND_CLICKED_OFF);
+				PlayButtonSound(btn, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
 #if defined JA2
@@ -2020,7 +2020,7 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON* btn, INT32 reason)
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		if (btn->ubSoundSchemeID)
 		{
-			PlayButtonSound(btn->IDNum, BUTTON_SOUND_CLICKED_ON);
+			PlayButtonSound(btn, BUTTON_SOUND_CLICKED_ON);
 		}
 #if defined JA2
 		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);

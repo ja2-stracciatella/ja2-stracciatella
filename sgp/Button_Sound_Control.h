@@ -1,6 +1,7 @@
 #ifndef __BUTTON_SOUND_CONTROL_H
 #define __BUTTON_SOUND_CONTROL_H
 
+#include "Button_System.h"
 
 //These are gener
 enum
@@ -16,5 +17,7 @@ enum
 	BUTTON_SOUND_SCHEME_COMPUTERBEEP2,
 	BUTTON_SOUND_SCHEME_COMPUTERSWITCH1,
 };
+
+void PlayButtonSound(const GUI_BUTTON* btn, INT32 iSoundType);
 
 #endif
