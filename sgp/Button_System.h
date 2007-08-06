@@ -111,7 +111,6 @@ struct GUI_BUTTON
 	INT8         bIconYOffset; // -1 means vertically centered
 	BOOLEAN      fShiftImage;  // if true, icon is shifted +1,+1 when button state is down.
 
-	UINT8        ubToggleButtonOldState;  // Varibles for new toggle buttons that work
 	UINT8        ubToggleButtonActivated;
 
 	UINT8        ubSoundSchemeID;

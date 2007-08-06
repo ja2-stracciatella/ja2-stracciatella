@@ -664,7 +664,6 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	b->bIconXOffset            = -1;
 	b->bIconYOffset            = -1;
 	b->fShiftImage             = TRUE;
-	b->ubToggleButtonOldState  = 0;
 	b->ubToggleButtonActivated = FALSE;
 
 	memset(&b->Area, 0, sizeof(b->Area));
@@ -1056,16 +1055,8 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE &&
 			b->ubToggleButtonActivated)
 	{
+		b->uiFlags ^= BUTTON_CLICKED_ON;
 		b->ubToggleButtonActivated = FALSE;
-
-		if (!b->ubToggleButtonOldState)
-		{
-			b->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		else
-		{
-			b->uiFlags |= BUTTON_CLICKED_ON;
-		}
 	}
 
 	/* If this button is enabled and there is a callback function associated with
@@ -1097,7 +1088,6 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		{
 			if (!b->ubToggleButtonActivated)
 			{
-				b->ubToggleButtonOldState = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
 				b->uiFlags ^= BUTTON_CLICKED_ON;
 				b->ubToggleButtonActivated = TRUE;
 			}
