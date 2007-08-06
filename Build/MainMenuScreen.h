@@ -1,8 +1,7 @@
-#ifndef _MAINMENU_H
-#define _MAINMENU_H
+#ifndef MAINMENUSCREEN_H
+#define MAINMENUSCREEN_H
 
-
-BOOLEAN InitMainMenu( );
-void ClearMainMenu( );
+BOOLEAN InitMainMenu(void);
+void ClearMainMenu(void);
 
 #endif

@@ -1,33 +1,31 @@
-#include "Local.h"
-#include "SGP.h"
-#include "ScreenIDs.h"
-#include "Timer_Control.h"
-#include "Sys_Globals.h"
-#include "SysUtil.h"
-#include "WCheck.h"
-#include "Cursors.h"
-#include "Font_Control.h"
-#include "MainMenuScreen.h"
-#include "Cursor_Control.h"
-#include "Render_Dirty.h"
-#include "Music_Control.h"
-#include "GameSettings.h"
-#include "SaveLoadScreen.h"
-#include "Options_Screen.h"
-#include "English.h"
-#include "Gameloop.h"
-#include "Game_Init.h"
-#include "Utilities.h"
-#include "WordWrap.h"
-#include "Text.h"
-#include "Multi_Language_Graphic_Utils.h"
-#include "JA2_Splash.h"
-#include "Debug.h"
-#include "Video.h"
 #include "Button_System.h"
-#include "JAScreens.h"
+#include "Cursor_Control.h"
+#include "Cursors.h"
+#include "Debug.h"
+#include "English.h"
+#include "Font_Control.h"
+#include "GameSettings.h"
 #include "GameVersion.h"
+#include "Gameloop.h"
+#include "JA2_Splash.h"
+#include "JAScreens.h"
+#include "Local.h"
+#include "MainMenuScreen.h"
+#include "Multi_Language_Graphic_Utils.h"
+#include "Music_Control.h"
+#include "Options_Screen.h"
+#include "Render_Dirty.h"
+#include "SGP.h"
+#include "SaveLoadScreen.h"
+#include "ScreenIDs.h"
+#include "SysUtil.h"
+#include "Sys_Globals.h"
+#include "Text.h"
+#include "Timer_Control.h"
 #include "VSurface.h"
+#include "Video.h"
+#include "WCheck.h"
+#include "WordWrap.h"
 
 
 //#define TESTFOREIGNFONTS
@@ -35,7 +33,6 @@
 // MENU ITEMS
 enum
 {
-//	TITLE,
 	NEW_GAME,
 	LOAD_GAME,
 	PREFERENCES,
@@ -53,35 +50,33 @@ enum
 #endif
 
 
-INT32							iMenuImages[ NUM_MENU_ITEMS ];
-INT32							iMenuButtons[ NUM_MENU_ITEMS ];
+static INT32 iMenuImages[NUM_MENU_ITEMS];
+static INT32 iMenuButtons[NUM_MENU_ITEMS];
 
-UINT16						gusMainMenuButtonWidths[ NUM_MENU_ITEMS ];
+static UINT16 gusMainMenuButtonWidths[NUM_MENU_ITEMS];
 
-UINT32						guiMainMenuBackGroundImage;
-UINT32						guiJa2LogoImage;
+static UINT32 guiMainMenuBackGroundImage;
+static UINT32 guiJa2LogoImage;
 
-MOUSE_REGION			gBackRegion;
-INT8							gbHandledMainMenu = 0;
-BOOLEAN						fInitialRender = FALSE;
-//BOOLEAN						gfDoHelpScreen = 0;
+static MOUSE_REGION gBackRegion;
+static INT8         gbHandledMainMenu = 0;
+static BOOLEAN      fInitialRender = FALSE;
 
-BOOLEAN						gfMainMenuScreenEntry = FALSE;
-BOOLEAN						gfMainMenuScreenExit = FALSE;
+static BOOLEAN gfMainMenuScreenEntry = FALSE;
+static BOOLEAN gfMainMenuScreenExit = FALSE;
 
-UINT32						guiMainMenuExitScreen = MAINMENU_SCREEN;
-
-
-extern	BOOLEAN		gfLoadGameUponEntry;
+static UINT32 guiMainMenuExitScreen = MAINMENU_SCREEN;
 
 
-UINT32	MainMenuScreenInit( )
+extern BOOLEAN gfLoadGameUponEntry;
+
+
+UINT32 MainMenuScreenInit(void)
 {
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %ls", zVersionLabel ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s", czVersionNumber ));
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:    %ls", zTrackingNumber ));
-
-	return( TRUE );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %ls", zVersionLabel));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s",  czVersionNumber));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:    %ls", zTrackingNumber));
+	return TRUE;
 }
 
 
@@ -92,56 +87,53 @@ static void RenderMainMenu(void);
 static void RestoreButtonBackGrounds(void);
 
 
-UINT32	MainMenuScreenHandle( )
+UINT32 MainMenuScreenHandle(void)
 {
-	UINT32 cnt;
-	UINT32 uiTime;
-
-	if( guiSplashStartTime + 4000 > GetJA2Clock() )
+	if (guiSplashStartTime + 4000 > GetJA2Clock())
 	{
-		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-		SetMusicMode( MUSIC_NONE );
-		return MAINMENU_SCREEN;  //The splash screen hasn't been up long enough yet.
+		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
+		SetMusicMode(MUSIC_NONE);
+		return MAINMENU_SCREEN; // The splash screen hasn't been up long enough yet.
 	}
-	if( guiSplashFrameFade )
-	{ //Fade the splash screen.
-		uiTime = GetJA2Clock();
-		if( guiSplashFrameFade > 2 )
+	if (guiSplashFrameFade)
+	{
+		// Fade the splash screen.
+		if (guiSplashFrameFade > 2)
+		{
 			ShadowVideoSurfaceRectUsingLowPercentTable(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		else if( guiSplashFrameFade > 1 )
+		}
+		else if (guiSplashFrameFade > 1)
+		{
 			ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+		}
 		else
 		{
-			uiTime = GetJA2Clock();
-			//while( GetJA2Clock() < uiTime + 375 );
-			SetMusicMode( MUSIC_MAIN_MENU );
+			SetMusicMode(MUSIC_MAIN_MENU);
 		}
-
-		//while( uiTime + 100 > GetJA2Clock() );
 
 		guiSplashFrameFade--;
 
 		InvalidateScreen();
 		EndFrameBufferRender();
 
-		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
+		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
 
 		return MAINMENU_SCREEN;
 	}
 
-	SetCurrentCursorFromDatabase( CURSOR_NORMAL );
+	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
-	if( gfMainMenuScreenEntry )
+	if (gfMainMenuScreenEntry)
 	{
-		InitMainMenu( );
+		InitMainMenu();
 		gfMainMenuScreenEntry = FALSE;
-		gfMainMenuScreenExit = FALSE;
+		gfMainMenuScreenExit  = FALSE;
 		guiMainMenuExitScreen = MAINMENU_SCREEN;
-		SetMusicMode( MUSIC_MAIN_MENU );
+		SetMusicMode(MUSIC_MAIN_MENU);
 	}
 
 
-	if ( fInitialRender )
+	if (fInitialRender)
 	{
 		ClearMainMenu();
 		RenderMainMenu();
@@ -152,94 +144,78 @@ UINT32	MainMenuScreenHandle( )
 	RestoreButtonBackGrounds();
 
 	// Render buttons
-	for ( cnt = 0; cnt < NUM_MENU_ITEMS; cnt++ )
+	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 	{
-		MarkAButtonDirty( iMenuButtons[ cnt ] );
+		MarkAButtonDirty(iMenuButtons[cnt]);
 	}
 
-	RenderButtons( );
+	RenderButtons();
 
-	EndFrameBufferRender( );
+	EndFrameBufferRender();
 
-
-//	if ( gfDoHelpScreen )
-//		HandleHelpScreenInput();
-//	else
-		HandleMainMenuInput();
-
+	HandleMainMenuInput();
 	HandleMainMenuScreen();
 
-	if( gfMainMenuScreenExit )
+	if (gfMainMenuScreenExit)
 	{
-		ExitMainMenu( );
-		gfMainMenuScreenExit = FALSE;
+		ExitMainMenu();
+		gfMainMenuScreenExit  = FALSE;
 		gfMainMenuScreenEntry = TRUE;
 	}
 
-	if( guiMainMenuExitScreen != MAINMENU_SCREEN )
-		gfMainMenuScreenEntry = TRUE;
+	if (guiMainMenuExitScreen != MAINMENU_SCREEN) gfMainMenuScreenEntry = TRUE;
 
-	return( guiMainMenuExitScreen );
+	return guiMainMenuExitScreen;
 }
 
 
-UINT32	MainMenuScreenShutdown(  )
+UINT32 MainMenuScreenShutdown(void)
 {
-	return( FALSE );
+	return FALSE;
 }
 
 
 static void HandleMainMenuScreen(void)
 {
-	if ( gbHandledMainMenu != 0 )
+	if (gbHandledMainMenu == 0) return;
+
+	// Exit according to handled value!
+	switch (gbHandledMainMenu)
 	{
-		// Exit according to handled value!
-		switch( gbHandledMainMenu )
-		{
-			case QUIT:
-				gfMainMenuScreenExit = TRUE;
+		case QUIT:
+			gfMainMenuScreenExit = TRUE;
 
-#ifdef JA2DEMO
-				// Goto ad pages
-				SetPendingNewScreen( DEMO_EXIT_SCREEN );
-				SetMusicMode( MUSIC_MAIN_MENU );
-				FadeOutNextFrame( );
+#if defined JA2DEMO
+			// Goto ad pages
+			SetPendingNewScreen(DEMO_EXIT_SCREEN);
+			SetMusicMode(MUSIC_MAIN_MENU);
+			FadeOutNextFrame();
 #else
-				gfProgramIsRunning = FALSE;
+			gfProgramIsRunning = FALSE;
 #endif
-				break;
+			break;
 
-			case NEW_GAME:
+		case LOAD_GAME:
+			// Select the game which is to be restored
+			guiPreviousOptionScreen = guiCurrentScreen;
+			guiMainMenuExitScreen   = SAVE_LOAD_SCREEN;
+			gbHandledMainMenu       = 0;
+			gfSaveGame              = FALSE;
+			gfMainMenuScreenExit    = TRUE;
+			break;
 
-//					gfDoHelpScreen = 1;
-//				gfMainMenuScreenExit = TRUE;
-//				if( !gfDoHelpScreen )
-//					SetMainMenuExitScreen( INIT_SCREEN );
-				break;
+		case PREFERENCES:
+			guiPreviousOptionScreen = guiCurrentScreen;
+			guiMainMenuExitScreen   = OPTIONS_SCREEN;
+			gbHandledMainMenu       = 0;
+			gfMainMenuScreenExit    = TRUE;
+			break;
 
-			case LOAD_GAME:
-				// Select the game which is to be restored
-				guiPreviousOptionScreen = guiCurrentScreen;
-				guiMainMenuExitScreen = SAVE_LOAD_SCREEN;
-				gbHandledMainMenu = 0;
-				gfSaveGame = FALSE;
-				gfMainMenuScreenExit = TRUE;
-
-				break;
-
-			case PREFERENCES:
-				guiPreviousOptionScreen = guiCurrentScreen;
-				guiMainMenuExitScreen = OPTIONS_SCREEN;
-				gbHandledMainMenu = 0;
-				gfMainMenuScreenExit = TRUE;
-				break;
-
-			case CREDITS:
-				guiMainMenuExitScreen = CREDIT_SCREEN;
-				gbHandledMainMenu = 0;
-				gfMainMenuScreenExit = TRUE;
-				break;
-		}
+		case CREDITS:
+			guiMainMenuExitScreen = CREDIT_SCREEN;
+			gbHandledMainMenu     = 0;
+			gfMainMenuScreenExit  = TRUE;
+			break;
 	}
 }
 
@@ -248,72 +224,51 @@ static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate);
 static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 
-BOOLEAN InitMainMenu( )
+BOOLEAN InitMainMenu(void)
 {
-//	gfDoHelpScreen = 0;
-
-	//Check to see whatr saved game files exist
+	// Check to see whether saved game files exist
 	InitSaveGameArray();
 
-	//Create the background mouse mask
-	CreateDestroyBackGroundMouseMask( TRUE );
+	// Create the background mouse mask
+	CreateDestroyBackGroundMouseMask(TRUE);
 
-	CreateDestroyMainMenuButtons( TRUE );
+	CreateDestroyMainMenuButtons(TRUE);
 
-	// load background graphic and add it
+	// Load background graphic and add it
 	guiMainMenuBackGroundImage = AddVideoObjectFromFile("LOADSCREENS/MainMenuBackGround.sti");
 	CHECKF(guiMainMenuBackGroundImage != NO_VOBJECT);
 
-	// load ja2 logo graphic and add it
+	// Load ja2 logo graphic and add it
 	guiJa2LogoImage = AddVideoObjectFromFile("LOADSCREENS/Ja2Logo.sti");
 	CHECKF(guiJa2LogoImage != NO_VOBJECT);
 
-/*
-	// Gray out some buttons based on status of game!
-	if( gGameSettings.bLastSavedGameSlot < 0 || gGameSettings.bLastSavedGameSlot >= NUM_SAVE_GAMES )
-	{
-		DisableButton( iMenuButtons[ LOAD_GAME ] );
-	}
-	//The ini file said we have a saved game, but there is no saved game
-	else if( gbSaveGameArray[ gGameSettings.bLastSavedGameSlot ] == FALSE )
-		DisableButton( iMenuButtons[ LOAD_GAME ] );
-*/
+	// If there are no saved games, disable the button
+	if (!IsThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
 
-	//if there are no saved games, disable the button
-	if( !IsThereAnySavedGameFiles() )
-		DisableButton( iMenuButtons[ LOAD_GAME ] );
-
-
-//	DisableButton( iMenuButtons[ CREDITS ] );
-//	DisableButton( iMenuButtons[ TITLE ] );
+#if defined JA2DEMO
+	DisableButton(iMenuButtons[CREDITS]);
+#endif
 
 	gbHandledMainMenu = 0;
-	fInitialRender		= TRUE;
+	fInitialRender    = TRUE;
 
-	SetPendingNewScreen( MAINMENU_SCREEN);
+	SetPendingNewScreen(MAINMENU_SCREEN);
 	guiMainMenuExitScreen = MAINMENU_SCREEN;
 
 	InitGameOptions();
 
 	DequeueAllKeyBoardEvents();
 
-	return( TRUE );
+	return TRUE;
 }
 
 
 static void ExitMainMenu(void)
 {
-//	if( !gfDoHelpScreen )
-	{
-		CreateDestroyBackGroundMouseMask( FALSE );
-	}
-
-
-	CreateDestroyMainMenuButtons( FALSE );
-
-	DeleteVideoObjectFromIndex( guiMainMenuBackGroundImage );
-	DeleteVideoObjectFromIndex( guiJa2LogoImage );
-
+	CreateDestroyBackGroundMouseMask(FALSE);
+	CreateDestroyMainMenuButtons(FALSE);
+	DeleteVideoObjectFromIndex(guiMainMenuBackGroundImage);
+	DeleteVideoObjectFromIndex(guiJa2LogoImage);
 	gMsgBox.uiExitScreen = MAINMENU_SCREEN;
 }
 
@@ -356,25 +311,20 @@ static void HandleMainMenuInput(void)
 
 #ifdef JA2TESTVERSION
 				case 'q':
-					gbHandledMainMenu = NEW_GAME;
+					gbHandledMainMenu    = NEW_GAME;
 					gfMainMenuScreenExit = TRUE;
-					SetMainMenuExitScreen( INIT_SCREEN );
-
-//						gfDoHelpScreen = 1;
+					SetMainMenuExitScreen(INIT_SCREEN);
 					break;
 
 				case 'i':
-					SetPendingNewScreen( INTRO_SCREEN );
+					SetPendingNewScreen(INTRO_SCREEN);
 					gfMainMenuScreenExit = TRUE;
 					break;
 #endif
 
 				case 'c':
+					if (gfKeyState[ALT]) gfLoadGameUponEntry = TRUE;
 					gbHandledMainMenu = LOAD_GAME;
-
-					if( gfKeyState[ ALT ] )
-						gfLoadGameUponEntry = TRUE;
-
 					break;
 
 				case 'o':
@@ -390,24 +340,7 @@ static void HandleMainMenuInput(void)
 }
 
 
-static void HandleHelpScreenInput(void)
-{
-	InputAtom									InputEvent;
-
-	// Check for key
-	while (DequeueEvent(&InputEvent) == TRUE)
-	{
-		switch( InputEvent.usEvent )
-		{
-			case KEY_UP:
-				SetMainMenuExitScreen( INIT_SCREEN );
-			break;
-		}
-	}
-}
-
-
-void ClearMainMenu()
+void ClearMainMenu(void)
 {
 	FillSurface(FRAME_BUFFER, 0);
 	InvalidateScreen();
@@ -423,8 +356,8 @@ static void SetMainMenuExitScreen(UINT32 uiNewScreen)
 {
 	guiMainMenuExitScreen = uiNewScreen;
 
-	//REmove the background region
-	CreateDestroyBackGroundMouseMask( FALSE );
+	// Remove the background region
+	CreateDestroyBackGroundMouseMask(FALSE);
 
 	gfMainMenuScreenExit = TRUE;
 }
@@ -434,22 +367,16 @@ static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate)
 {
 	static BOOLEAN fRegionCreated = FALSE;
 
-	if( fCreate )
+	if (fCreate)
 	{
-		if( fRegionCreated )
-			return;
-
-		// Make a mouse region
+		if (fRegionCreated) return;
 		MSYS_DefineRegion(&gBackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack);
-
 		fRegionCreated = TRUE;
 	}
 	else
 	{
-		if( !fRegionCreated )
-			return;
-
-		MSYS_RemoveRegion( &gBackRegion );
+		if (!fRegionCreated) return;
+		MSYS_RemoveRegion(&gBackRegion);
 		fRegionCreated = FALSE;
 	}
 }
@@ -458,48 +385,42 @@ static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate)
 static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 {
 	static BOOLEAN fButtonsCreated = FALSE;
-	INT32 cnt;
-	SGPFILENAME filename;
-	INT16 sSlot;
 
-	if( fCreate )
+	if (fCreate)
 	{
-		if( fButtonsCreated )
-			return( TRUE );
+		if (fButtonsCreated) return TRUE;
 
-		//reset the variable that allows the user to ALT click on the continue save btn to load the save instantly
+		// Reset the variable that allows the user to ALT click on the continue save btn to load the save instantly
 		gfLoadGameUponEntry = FALSE;
 
 		// Load button images
-	GetMLGFilename( filename, MLG_TITLETEXT );
+		SGPFILENAME filename;
+		GetMLGFilename(filename, MLG_TITLETEXT);
 
-#ifdef JA2DEMO
-		iMenuImages[ NEW_GAME ]	= LoadButtonImage( filename, 17,17, 18, 19 ,-1 );
-		sSlot = 17;
+		INT32 Slot;
+#if defined JA2DEMO
+		Slot = 17;
 #else
-		iMenuImages[ NEW_GAME ]	= LoadButtonImage( filename, 0,0, 1, 2 ,-1 );
-		sSlot = 0;
+		Slot = 0;
 #endif
-		iMenuImages[ LOAD_GAME ] = UseLoadedButtonImage( iMenuImages[ NEW_GAME ] ,6,3,4,5,-1 );
-		iMenuImages[ PREFERENCES ] = UseLoadedButtonImage( iMenuImages[ NEW_GAME ] ,7,7,8,9,-1 );
-		iMenuImages[ CREDITS ] = UseLoadedButtonImage( iMenuImages[ NEW_GAME ] ,13,10,11,12,-1 );
-		iMenuImages[ QUIT ] = UseLoadedButtonImage( iMenuImages[ NEW_GAME ] ,14,14,15,16,-1 );
+		iMenuImages[NEW_GAME]    = LoadButtonImage(filename, Slot, Slot, Slot + 1, Slot + 2, -1);
+		iMenuImages[LOAD_GAME]   = UseLoadedButtonImage(iMenuImages[NEW_GAME],  6,  3,  4,  5, -1);
+		iMenuImages[PREFERENCES] = UseLoadedButtonImage(iMenuImages[NEW_GAME],  7,  7,  8,  9, -1);
+		iMenuImages[CREDITS]     = UseLoadedButtonImage(iMenuImages[NEW_GAME], 13, 10, 11, 12, -1);
+		iMenuImages[QUIT]        = UseLoadedButtonImage(iMenuImages[NEW_GAME], 14, 14, 15, 16, -1);
 
-		for ( cnt = 0; cnt < NUM_MENU_ITEMS; cnt++ )
+		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 		{
-			switch( cnt )
+			switch (cnt)
 			{
-				case NEW_GAME:		gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic( (UINT16)iMenuImages[cnt], sSlot );	break;
-				case LOAD_GAME:		gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic( (UINT16)iMenuImages[cnt], 3 );			break;
-				case PREFERENCES:	gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic( (UINT16)iMenuImages[cnt], 7 );			break;
-				case CREDITS:			gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic( (UINT16)iMenuImages[cnt], 10 );			break;
-				case QUIT:				gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic( (UINT16)iMenuImages[cnt], 15 );			break;
+				case NEW_GAME:    gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt], Slot); break;
+				case LOAD_GAME:   gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt],  3);   break;
+				case PREFERENCES: gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt],  7);   break;
+				case CREDITS:     gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt], 10);   break;
+				case QUIT:        gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt], 15);   break;
 			}
 			iMenuButtons[cnt] = QuickCreateButton(iMenuImages[cnt], (SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST, DEFAULT_MOVE_CALLBACK, MenuButtonCallback);
-			if ( iMenuButtons[ cnt ] == -1 )
-			{
-				return( FALSE );
-			}
+			if (iMenuButtons[cnt] == -1) return FALSE;
 			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);
 		}
 
@@ -507,19 +428,18 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 	}
 	else
 	{
-		if( !fButtonsCreated )
-			return( TRUE );
+		if (!fButtonsCreated) return TRUE;
 
 		// Delete images/buttons
-		for ( cnt = 0; cnt < NUM_MENU_ITEMS; cnt++ )
+		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 		{
-			RemoveButton( iMenuButtons[ cnt ] );
-			UnloadButtonImage( iMenuImages[ cnt ] );
+			RemoveButton(iMenuButtons[cnt]);
+			UnloadButtonImage(iMenuImages[cnt]);
 		}
 		fButtonsCreated = FALSE;
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -529,13 +449,12 @@ static void RenderMainMenu(void)
 
 	//Get and display the background image
 	hPixHandle = GetVideoObject(guiMainMenuBackGroundImage);
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 0, 0);
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 0, 0);
+  BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 0, 0);
+  BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 0, 0);
 
 	hPixHandle = GetVideoObject(guiJa2LogoImage);
-  BltVideoObject( FRAME_BUFFER, hPixHandle, 0, 188, 15);
-  BltVideoObject( guiSAVEBUFFER, hPixHandle, 0, 188, 15);
-
+  BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 188, 15);
+  BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 188, 15);
 
 #ifdef TESTFOREIGNFONTS
 	DrawTextToScreen(L"LARGEFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 105, 640, LARGEFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -556,7 +475,7 @@ static void RenderMainMenu(void)
 	DrawTextToScreen(L"BLOCKFONTNARROW: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",       0, 445, 640, BLOCKFONTNARROW,       FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawTextToScreen(L"FONT14HUMANIST: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",        0, 465, 640, FONT14HUMANIST,        FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 #else
-	DrawTextToScreen(gzCopyrightText[0], 0, 465, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(gzCopyrightText[0], 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 #endif
 
 	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -565,12 +484,10 @@ static void RenderMainMenu(void)
 
 static void RestoreButtonBackGrounds(void)
 {
-	UINT8	cnt;
-
 #ifndef TESTFOREIGNFONTS
-	for ( cnt = 0; cnt < NUM_MENU_ITEMS; cnt++ )
+	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 	{
-		RestoreExternBackgroundRect( (UINT16)(320 - gusMainMenuButtonWidths[cnt]/2), (INT16)( MAINMENU_Y + ( cnt * MAINMENU_Y_SPACE )-1), (UINT16)(gusMainMenuButtonWidths[cnt]+1), 23 );
+		RestoreExternBackgroundRect((SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE - 1, gusMainMenuButtonWidths[cnt] + 1, 23);
 	}
 #endif
 }
