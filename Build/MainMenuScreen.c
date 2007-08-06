@@ -58,9 +58,8 @@ static UINT16 gusMainMenuButtonWidths[NUM_MENU_ITEMS];
 static UINT32 guiMainMenuBackGroundImage;
 static UINT32 guiJa2LogoImage;
 
-static MOUSE_REGION gBackRegion;
-static INT8         gbHandledMainMenu = 0;
-static BOOLEAN      fInitialRender = FALSE;
+static INT8    gbHandledMainMenu = 0;
+static BOOLEAN fInitialRender    = FALSE;
 
 static BOOLEAN gfMainMenuScreenEntry = FALSE;
 static BOOLEAN gfMainMenuScreenExit = FALSE;
@@ -220,7 +219,6 @@ static void HandleMainMenuScreen(void)
 }
 
 
-static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate);
 static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 
@@ -228,9 +226,6 @@ BOOLEAN InitMainMenu(void)
 {
 	// Check to see whether saved game files exist
 	InitSaveGameArray();
-
-	// Create the background mouse mask
-	CreateDestroyBackGroundMouseMask(TRUE);
 
 	CreateDestroyMainMenuButtons(TRUE);
 
@@ -265,7 +260,6 @@ BOOLEAN InitMainMenu(void)
 
 static void ExitMainMenu(void)
 {
-	CreateDestroyBackGroundMouseMask(FALSE);
 	CreateDestroyMainMenuButtons(FALSE);
 	DeleteVideoObjectFromIndex(guiMainMenuBackGroundImage);
 	DeleteVideoObjectFromIndex(guiJa2LogoImage);
@@ -347,38 +341,10 @@ void ClearMainMenu(void)
 }
 
 
-static void SelectMainMenuBackGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-}
-
-
 static void SetMainMenuExitScreen(UINT32 uiNewScreen)
 {
 	guiMainMenuExitScreen = uiNewScreen;
-
-	// Remove the background region
-	CreateDestroyBackGroundMouseMask(FALSE);
-
-	gfMainMenuScreenExit = TRUE;
-}
-
-
-static void CreateDestroyBackGroundMouseMask(BOOLEAN fCreate)
-{
-	static BOOLEAN fRegionCreated = FALSE;
-
-	if (fCreate)
-	{
-		if (fRegionCreated) return;
-		MSYS_DefineRegion(&gBackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectMainMenuBackGroundRegionCallBack);
-		fRegionCreated = TRUE;
-	}
-	else
-	{
-		if (!fRegionCreated) return;
-		MSYS_RemoveRegion(&gBackRegion);
-		fRegionCreated = FALSE;
-	}
+	gfMainMenuScreenExit  = TRUE;
 }
 
 
