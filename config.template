@@ -41,6 +41,7 @@
 #INSTALL         := install
 #INSTALL_PROGRAM := $(INSTALL) -m 555 -s
 #INSTALL_MAN     := $(INSTALL) -m 444
+#INSTALL_DATA    := $(INSTALL) -m 444
 
 
 # Below are some example variable overrides for MSys/MinGW

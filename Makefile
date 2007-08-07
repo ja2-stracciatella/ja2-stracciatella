@@ -18,6 +18,7 @@ MANPREFIX ?= $(PREFIX)
 INSTALL         ?= install
 INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
 INSTALL_MAN     ?= $(INSTALL) -m 444
+INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
 SDL_CONFIG  ?= sdl-config
@@ -470,9 +471,11 @@ clean distclean:
 
 install: $(BINARY)
 	@echo '===> INSTALL'
-	$(Q)$(INSTALL) -d $(PREFIX)/bin $(MANPREFIX)/man/man6
+	$(Q)$(INSTALL) -d $(PREFIX)/bin $(MANPREFIX)/man/man6 $(PREFIX)/share/applications $(PREFIX)/share/pixmaps
 	$(Q)$(INSTALL_PROGRAM) $(BINARY) $(PREFIX)/bin
 	$(Q)$(INSTALL_MAN) ja2.6 $(MANPREFIX)/man/man6
+	$(Q)$(INSTALL_DATA) ja2-stracciatella.desktop $(PREFIX)/share/applications
+	$(Q)$(INSTALL_DATA) Build/Res/jagged3.ico $(PREFIX)/share/pixmaps/jagged2.ico
 
 
 lowercase:
