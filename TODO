@@ -10,6 +10,7 @@ med prio
 - TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
 - TODO000D In PickRandomPassengerFromVehicle() using MercPtrs[ubChosenMerc] is probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
 - TODO000E In SayBattleSoundFromAnyBodyInSector() using MercPtrs[ubChosenMerc] is probably wrong (should choose from the ubChosenMerc found mercs, not from the first ubChosenMerc mercs)
+- TODO000F Only have of the data gets saved/loaded
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.

@@ -3154,7 +3154,7 @@ static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 	if (!FileWrite(hFile, gbSeenOpponents, uiSaveSize)) return FALSE;
 
 	// Save the Last Known Opp Locations
-	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
+	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS; // XXX TODO000F
 	if (!FileWrite(hFile, gsLastKnownOppLoc, uiSaveSize)) return FALSE;
 
 	// Save the Last Known Opp Level
@@ -3162,7 +3162,7 @@ static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 	if (!FileWrite(hFile, gbLastKnownOppLevel, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Known Opp Locations
-	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
+	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS; // XXX TODO000F
 	if (!FileWrite(hFile, gsPublicLastKnownOppLoc, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Known Opp Level
@@ -3174,7 +3174,7 @@ static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 	if (!FileWrite(hFile, gubPublicNoiseVolume, uiSaveSize)) return FALSE;
 
 	// Save the Public Last Noise Gridno
-	uiSaveSize = MAXTEAMS;
+	uiSaveSize = MAXTEAMS; // XXX TODO000F
 	if (!FileWrite(hFile, gsPublicNoiseGridno, uiSaveSize)) return FALSE;
 
 	return( TRUE );
@@ -3194,7 +3194,7 @@ static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
 	if (!FileRead(hFile, gbSeenOpponents, uiLoadSize)) return FALSE;
 
 	// Load the Last Known Opp Locations
-	uiLoadSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
+	uiLoadSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS; // XXX TODO000F
 	if (!FileRead(hFile, gsLastKnownOppLoc, uiLoadSize)) return FALSE;
 
 	// Load the Last Known Opp Level
@@ -3202,7 +3202,7 @@ static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
 	if (!FileRead(hFile, gbLastKnownOppLevel, uiLoadSize)) return FALSE;
 
 	// Load the Public Last Known Opp Locations
-	uiLoadSize = MAXTEAMS * TOTAL_SOLDIERS;
+	uiLoadSize = MAXTEAMS * TOTAL_SOLDIERS; // XXX TODO000F
 	if (!FileRead(hFile, gsPublicLastKnownOppLoc, uiLoadSize)) return FALSE;
 
 	// Load the Public Last Known Opp Level
@@ -3214,7 +3214,7 @@ static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
 	if (!FileRead(hFile, gubPublicNoiseVolume, uiLoadSize)) return FALSE;
 
 	// Load the Public Last Noise Gridno
-	uiLoadSize = MAXTEAMS;
+	uiLoadSize = MAXTEAMS; // XXX TODO000F
 	if (!FileRead(hFile, gsPublicNoiseGridno, uiLoadSize)) return FALSE;
 
 	return( TRUE );
