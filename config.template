@@ -1,8 +1,9 @@
-# NOTE: This file is ONLY intended as template config file for manual builds. If
-# you are building a package (or ebuild, spell, source rpm, ...) do NOT modify
-# this file, use sed or whatever.  Just pass parameters to make.  This is much
-# simpler and way less error prone this way.  This file is NOT intended for
-# package building.  For a package just use
+# NOTE: This file is ONLY intended as template config file for manual builds.
+# If you are building a package (or ebuild, spell, source rpm, ...) do NOT
+# modify this file, use sed or whatever.  In fact do NOT use this file AT ALL.
+# Just pass parameters to make.  This is much simpler and way less error prone
+# this way.  This file is NOT intended for package building.  For a package
+# just use
 #   make LNG=$YOUR_LANGUAGE PREFIX=$YOUR_PREFIX
 # as build command and maybe some more variables, though on a sane system this
 # should not be necessary.
