@@ -52,7 +52,7 @@ static MouseCursorBackground  gMouseCursorBackground;
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
-static UINT32 guiMouseBufferState;  // BUFFER_READY, BUFFER_DIRTY, BUFFER_DISABLED
+static UINT32 guiMouseBufferState;  // BUFFER_READY, BUFFER_DISABLED
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
 
 // Dirty rectangle management variables
@@ -183,7 +183,7 @@ BOOLEAN RestoreVideoManager(void)
 		// Set the video state to VIDEO_ON
 
 		guiFrameBufferState = BUFFER_DIRTY;
-		guiMouseBufferState = BUFFER_DIRTY;
+		guiMouseBufferState = BUFFER_READY;
 		gfForceFullScreenRefresh = TRUE;
 		guiVideoManagerState = VIDEO_ON;
 		return TRUE;
@@ -587,8 +587,6 @@ static void SnapshotSmall(void);
 
 void RefreshScreen(void)
 {
-	static BOOLEAN fShowMouse = FALSE;
-
 	if (guiVideoManagerState != VIDEO_ON) return;
 
 	SDL_Rect OldMouseRect;
@@ -666,21 +664,7 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-	if (guiMouseBufferState == BUFFER_DIRTY)
-	{
-		guiMouseBufferState = BUFFER_READY;
-	}
-
-	if (!fShowMouse)
-	{
-		fShowMouse = (guiMouseBufferState == BUFFER_READY);
-	}
-	else
-	{
-		fShowMouse = (guiMouseBufferState != BUFFER_DISABLED);
-	}
-
-	if (fShowMouse)
+	if (guiMouseBufferState == BUFFER_READY)
 	{
 		POINT MousePos;
 		GetCursorPos(&MousePos);
@@ -875,7 +859,7 @@ BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursor
 
 void DirtyCursor(void)
 {
-	guiMouseBufferState = BUFFER_DIRTY;
+	guiMouseBufferState = BUFFER_READY;
 }
 
 
