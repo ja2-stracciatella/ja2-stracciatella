@@ -52,7 +52,6 @@ static MouseCursorBackground  gMouseCursorBackground;
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
-static UINT32 guiMouseBufferState;  // BUFFER_READY, BUFFER_DISABLED
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
 
 // Dirty rectangle management variables
@@ -135,7 +134,6 @@ BOOLEAN InitializeVideoManager(void)
 
 	// Initialize state variables
 	guiFrameBufferState      = BUFFER_DIRTY;
-	guiMouseBufferState      = BUFFER_DISABLED;
 	guiVideoManagerState     = VIDEO_ON;
 	guiDirtyRegionCount      = 0;
 	gfForceFullScreenRefresh = TRUE;
@@ -183,7 +181,6 @@ BOOLEAN RestoreVideoManager(void)
 		// Set the video state to VIDEO_ON
 
 		guiFrameBufferState = BUFFER_DIRTY;
-		guiMouseBufferState = BUFFER_READY;
 		gfForceFullScreenRefresh = TRUE;
 		guiVideoManagerState = VIDEO_ON;
 		return TRUE;
@@ -664,27 +661,20 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-	if (guiMouseBufferState == BUFFER_READY)
-	{
-		POINT MousePos;
-		GetCursorPos(&MousePos);
-		SDL_Rect src;
-		src.x = 0;
-		src.y = 0;
-		src.w = gusMouseCursorWidth;
-		src.h = gusMouseCursorHeight;
-		SDL_Rect dst;
-		dst.x = MousePos.x - gsMouseCursorXOffset;
-		dst.y = MousePos.y - gsMouseCursorYOffset;
-		SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
-		SDL_UpdateRects(ScreenBuffer, 1, &dst);
-		gMouseCursorBackground.rect     = dst;
-		gMouseCursorBackground.fRestore = TRUE;
-	}
-	else
-	{
-		gMouseCursorBackground.fRestore = FALSE;
-	}
+	POINT MousePos;
+	GetCursorPos(&MousePos);
+	SDL_Rect src;
+	src.x = 0;
+	src.y = 0;
+	src.w = gusMouseCursorWidth;
+	src.h = gusMouseCursorHeight;
+	SDL_Rect dst;
+	dst.x = MousePos.x - gsMouseCursorXOffset;
+	dst.y = MousePos.y - gsMouseCursorYOffset;
+	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
+	SDL_UpdateRects(ScreenBuffer, 1, &dst);
+	gMouseCursorBackground.rect     = dst;
+	gMouseCursorBackground.fRestore = TRUE;
 
 	if (UndrawMouse)
 	{
@@ -853,7 +843,6 @@ void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHei
 	gsMouseCursorYOffset = sOffsetY;
 	gusMouseCursorWidth  = usCursorWidth;
 	gusMouseCursorHeight = usCursorHeight;
-	guiMouseBufferState  = BUFFER_READY;
 }
 
 
