@@ -204,7 +204,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 	{
 		EraseMouseCursor();
 		SetMouseCursorProperties(0, 0, 5, 5);
-		DirtyCursor();
 	}
 	else if (gfCursorDatabaseInit)
 	{
@@ -252,7 +251,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			}
 
 			SetMouseCursorProperties(usEffWidth / 2, usEffHeight / 2, usEffHeight, usEffWidth);
-			DirtyCursor();
 		}
 		else
 		{
@@ -277,7 +275,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 				{
 					EraseMouseCursor();
 					SetMouseCursorProperties(0, 0, 5, 5);
-					DirtyCursor();
 					return TRUE;
 				}
 			}
@@ -357,7 +354,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			INT16 sCenterValX = pCurData->sOffsetX;
 			INT16 sCenterValY = pCurData->sOffsetY;
 			SetMouseCursorProperties(sCenterValX, sCenterValY + gsGlobalCursorYOffset, pCurData->usHeight, pCurData->usWidth);
-			DirtyCursor();
 		}
 	}
 

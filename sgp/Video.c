@@ -853,13 +853,8 @@ BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursor
 	gsMouseCursorYOffset = sOffsetY;
 	gusMouseCursorWidth  = usCursorWidth;
 	gusMouseCursorHeight = usCursorHeight;
+	guiMouseBufferState  = BUFFER_READY;
 	return TRUE;
-}
-
-
-void DirtyCursor(void)
-{
-	guiMouseBufferState = BUFFER_READY;
 }
 
 

@@ -40,7 +40,6 @@ extern void                 EndFrameBufferRender(void);
 extern void                 PrintScreen(void);
 
 extern BOOLEAN							SetMouseCursorProperties( INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth );
-void												DirtyCursor( );
 
 void												VideoCaptureToggle( void );
 
