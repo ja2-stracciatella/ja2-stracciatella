@@ -847,14 +847,13 @@ BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask,
 }
 
 
-BOOLEAN SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
+void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
 {
 	gsMouseCursorXOffset = sOffsetX;
 	gsMouseCursorYOffset = sOffsetY;
 	gusMouseCursorWidth  = usCursorWidth;
 	gusMouseCursorHeight = usCursorHeight;
 	guiMouseBufferState  = BUFFER_READY;
-	return TRUE;
 }
 
 
