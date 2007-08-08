@@ -48,13 +48,13 @@ static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
 
 // Dirty rectangle management variables
-static SGPRect gListOfDirtyRegions[MAX_DIRTY_REGIONS];
-static UINT32  guiDirtyRegionCount;
-static BOOLEAN gfForceFullScreenRefresh;
+static SDL_Rect DirtyRegions[MAX_DIRTY_REGIONS];
+static UINT32   guiDirtyRegionCount;
+static BOOLEAN  gfForceFullScreenRefresh;
 
 
-static SGPRect gDirtyRegionsEx[MAX_DIRTY_REGIONS];
-static UINT32  guiDirtyRegionExCount;
+static SDL_Rect DirtyRegionsEx[MAX_DIRTY_REGIONS];
+static UINT32   guiDirtyRegionExCount;
 
 // Screen output stuff
 static BOOLEAN gfPrintFrameBuffer;
@@ -206,10 +206,10 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (iRight - iLeft <= 0) return;
 		if (iBottom - iTop <= 0) return;
 
-		gListOfDirtyRegions[guiDirtyRegionCount].iLeft   = iLeft;
-		gListOfDirtyRegions[guiDirtyRegionCount].iTop    = iTop;
-		gListOfDirtyRegions[guiDirtyRegionCount].iRight  = iRight;
-		gListOfDirtyRegions[guiDirtyRegionCount].iBottom = iBottom;
+		DirtyRegions[guiDirtyRegionCount].x = iLeft;
+		DirtyRegions[guiDirtyRegionCount].y = iTop;
+		DirtyRegions[guiDirtyRegionCount].w = iRight  - iLeft;
+		DirtyRegions[guiDirtyRegionCount].h = iBottom - iTop;
 		guiDirtyRegionCount++;
 	}
 	else
@@ -258,10 +258,10 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (iRight - iLeft <= 0) return;
 		if (iBottom - iTop <= 0) return;
 
-		gDirtyRegionsEx[guiDirtyRegionExCount].iLeft   = iLeft;
-		gDirtyRegionsEx[guiDirtyRegionExCount].iTop    = iTop;
-		gDirtyRegionsEx[guiDirtyRegionExCount].iRight  = iRight;
-		gDirtyRegionsEx[guiDirtyRegionExCount].iBottom = iBottom;
+		DirtyRegionsEx[guiDirtyRegionExCount].x = iLeft;
+		DirtyRegionsEx[guiDirtyRegionExCount].y = iTop;
+		DirtyRegionsEx[guiDirtyRegionExCount].w = iRight  - iLeft;
+		DirtyRegionsEx[guiDirtyRegionExCount].h = iBottom - iTop;
 		guiDirtyRegionExCount++;
 	}
 	else
@@ -595,30 +595,21 @@ void RefreshScreen(void)
 			{
 				for (UINT32 i = 0; i < guiDirtyRegionCount; i++)
 				{
-					SDL_Rect SrcRect;
-					SrcRect.x = gListOfDirtyRegions[i].iLeft;
-					SrcRect.y = gListOfDirtyRegions[i].iTop;
-					SrcRect.w = gListOfDirtyRegions[i].iRight  - gListOfDirtyRegions[i].iLeft;
-					SrcRect.h = gListOfDirtyRegions[i].iBottom - gListOfDirtyRegions[i].iTop;
-					SDL_BlitSurface(FrameBuffer, &SrcRect, ScreenBuffer, &SrcRect);
+					SDL_BlitSurface(FrameBuffer, &DirtyRegions[i], ScreenBuffer, &DirtyRegions[i]);
 				}
 
 				for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 				{
-					SDL_Rect SrcRect;
-					SrcRect.x = gDirtyRegionsEx[i].iLeft;
-					SrcRect.y = gDirtyRegionsEx[i].iTop;
-					SrcRect.w = gDirtyRegionsEx[i].iRight  - gDirtyRegionsEx[i].iLeft;
-					SrcRect.h = gDirtyRegionsEx[i].iBottom - gDirtyRegionsEx[i].iTop;
+					SDL_Rect* r = &DirtyRegionsEx[i];
 					if (gfRenderScroll)
 					{
 						// Check if we are completely out of bounds
-						if (SrcRect.y <= gsVIEWPORT_WINDOW_END_Y && SrcRect.y + SrcRect.h <= gsVIEWPORT_WINDOW_END_Y)
+						if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
 						{
 							continue;
 						}
 					}
-					SDL_BlitSurface(FrameBuffer, &SrcRect, ScreenBuffer, &SrcRect);
+					SDL_BlitSurface(FrameBuffer, r, ScreenBuffer, r);
 				}
 			}
 		}
@@ -667,31 +658,19 @@ void RefreshScreen(void)
 	}
 	else
 	{
-		for (UINT32 i = 0; i < guiDirtyRegionCount; i++)
-		{
-			SDL_Rect SrcRect;
-			SrcRect.x = gListOfDirtyRegions[i].iLeft;
-			SrcRect.y = gListOfDirtyRegions[i].iTop;
-			SrcRect.w = gListOfDirtyRegions[i].iRight  - gListOfDirtyRegions[i].iLeft;
-			SrcRect.h = gListOfDirtyRegions[i].iBottom - gListOfDirtyRegions[i].iTop;
-			SDL_UpdateRects(ScreenBuffer, 1, &SrcRect);
-		}
+		SDL_UpdateRects(ScreenBuffer, guiDirtyRegionCount, DirtyRegions);
 
 		for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 		{
-			SDL_Rect SrcRect;
-			SrcRect.x = gDirtyRegionsEx[i].iLeft;
-			SrcRect.y = gDirtyRegionsEx[i].iTop;
-			SrcRect.w = gDirtyRegionsEx[i].iRight  - gDirtyRegionsEx[i].iLeft;
-			SrcRect.h = gDirtyRegionsEx[i].iBottom - gDirtyRegionsEx[i].iTop;
+			SDL_Rect* r = &DirtyRegionsEx[i];
 			if (gfRenderScroll)
 			{
-				if (SrcRect.y <= gsVIEWPORT_WINDOW_END_Y && SrcRect.y + SrcRect.h <= gsVIEWPORT_WINDOW_END_Y)
+				if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
 				{
 					continue;
 				}
 			}
-			SDL_UpdateRects(ScreenBuffer, 1, &SrcRect);
+			SDL_UpdateRects(ScreenBuffer, 1, r);
 		}
 	}
 
