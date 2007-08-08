@@ -26,13 +26,6 @@
 #define VIDEO_SUSPENDED       0x04
 
 
-typedef struct
-{
-	BOOLEAN fRestore;
-	SDL_Rect rect;
-} MouseCursorBackground;
-
-
 #define MAX_NUM_FRAMES 25
 
 static BOOLEAN gfVideoCapture = FALSE;
@@ -48,7 +41,7 @@ static UINT16 gusMouseCursorHeight;
 static INT16  gsMouseCursorXOffset;
 static INT16  gsMouseCursorYOffset;
 
-static MouseCursorBackground  gMouseCursorBackground;
+static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
@@ -129,8 +122,6 @@ BOOLEAN InitializeVideoManager(void)
 	SDL_ShowCursor(SDL_DISABLE);
 
 	FillSurface(FRAME_BUFFER, 0);
-
-	gMouseCursorBackground.fRestore = FALSE;
 
 	// Initialize state variables
 	guiFrameBufferState      = BUFFER_DIRTY;
@@ -586,13 +577,7 @@ void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
 
-	SDL_Rect OldMouseRect;
-	BOOLEAN UndrawMouse = gMouseCursorBackground.fRestore;
-	if (UndrawMouse)
-	{
-		OldMouseRect = gMouseCursorBackground.rect;
-		SDL_BlitSurface(FrameBuffer, &OldMouseRect, ScreenBuffer, &OldMouseRect);
-	}
+	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
 	if (guiFrameBufferState == BUFFER_DIRTY)
 	{
@@ -673,13 +658,8 @@ void RefreshScreen(void)
 	dst.y = MousePos.y - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
 	SDL_UpdateRects(ScreenBuffer, 1, &dst);
-	gMouseCursorBackground.rect     = dst;
-	gMouseCursorBackground.fRestore = TRUE;
-
-	if (UndrawMouse)
-	{
-		SDL_UpdateRects(ScreenBuffer, 1, &OldMouseRect);
-	}
+	SDL_UpdateRects(ScreenBuffer, 1, &MouseBackground);
+	MouseBackground = dst;
 
 	if (gfForceFullScreenRefresh)
 	{
