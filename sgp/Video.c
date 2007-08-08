@@ -29,12 +29,7 @@
 typedef struct
 {
 	BOOLEAN fRestore;
-	UINT16  usMouseXPos;
-	UINT16  usMouseYPos;
-	UINT16  usLeft;
-	UINT16  usTop;
-	UINT16  usRight;
-	UINT16  usBottom;
+	SDL_Rect rect;
 } MouseCursorBackground;
 
 
@@ -600,10 +595,7 @@ void RefreshScreen(void)
 	BOOLEAN UndrawMouse = gMouseCursorBackground.fRestore;
 	if (UndrawMouse)
 	{
-		OldMouseRect.x = gMouseCursorBackground.usMouseXPos;
-		OldMouseRect.y = gMouseCursorBackground.usMouseYPos;
-		OldMouseRect.w = gMouseCursorBackground.usRight  - gMouseCursorBackground.usLeft;
-		OldMouseRect.h = gMouseCursorBackground.usBottom - gMouseCursorBackground.usTop;
+		OldMouseRect = gMouseCursorBackground.rect;
 		SDL_BlitSurface(FrameBuffer, &OldMouseRect, ScreenBuffer, &OldMouseRect);
 	}
 
@@ -692,69 +684,18 @@ void RefreshScreen(void)
 	{
 		POINT MousePos;
 		GetCursorPos(&MousePos);
-
-		SGPRect Region;
-		Region.iLeft   = MousePos.x - gsMouseCursorXOffset;
-		Region.iTop    = MousePos.y - gsMouseCursorYOffset;
-		Region.iRight  = Region.iLeft + gusMouseCursorWidth;
-		Region.iBottom = Region.iTop + gusMouseCursorHeight;
-
-		if (Region.iRight  > SCREEN_WIDTH)  Region.iRight  = SCREEN_WIDTH;
-		if (Region.iBottom > SCREEN_HEIGHT) Region.iBottom = SCREEN_HEIGHT;
-
-		if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
-		{
-			/* Make sure the mouse background is marked for restore and coordinates
-			 * are saved for the future restore */
-
-			gMouseCursorBackground.fRestore = TRUE;
-			gMouseCursorBackground.usRight  = Region.iRight  - Region.iLeft;
-			gMouseCursorBackground.usBottom = Region.iBottom - Region.iTop;
-			if (Region.iLeft < 0)
-			{
-				gMouseCursorBackground.usLeft = -Region.iLeft;
-				gMouseCursorBackground.usMouseXPos = 0;
-				Region.iLeft = 0;
-			}
-			else
-			{
-				gMouseCursorBackground.usMouseXPos = (UINT16)MousePos.x - gsMouseCursorXOffset;
-				gMouseCursorBackground.usLeft = 0;
-			}
-			if (Region.iTop < 0)
-			{
-				gMouseCursorBackground.usMouseYPos = 0;
-				gMouseCursorBackground.usTop = -Region.iTop;
-				Region.iTop = 0;
-			}
-			else
-			{
-				gMouseCursorBackground.usMouseYPos = (UINT16)MousePos.y - gsMouseCursorYOffset;
-				gMouseCursorBackground.usTop = 0;
-			}
-
-			if (Region.iRight > Region.iLeft && Region.iBottom > Region.iTop)
-			{
-				SDL_Rect SrcRect;
-				SrcRect.x = gMouseCursorBackground.usLeft;
-				SrcRect.y = gMouseCursorBackground.usTop;
-				SrcRect.w = gMouseCursorBackground.usRight  - gMouseCursorBackground.usLeft;
-				SrcRect.h = gMouseCursorBackground.usBottom - gMouseCursorBackground.usTop;
-				SDL_Rect DstRect;
-				DstRect.x = gMouseCursorBackground.usMouseXPos;
-				DstRect.y = gMouseCursorBackground.usMouseYPos;
-				SDL_BlitSurface(MouseCursor, &SrcRect, ScreenBuffer, &DstRect);
-				SDL_UpdateRects(ScreenBuffer, 1, &DstRect);
-			}
-			else
-			{
-				gMouseCursorBackground.fRestore = FALSE;
-			}
-		}
-		else
-		{
-			gMouseCursorBackground.fRestore = FALSE;
-		}
+		SDL_Rect src;
+		src.x = 0;
+		src.y = 0;
+		src.w = gusMouseCursorWidth;
+		src.h = gusMouseCursorHeight;
+		SDL_Rect dst;
+		dst.x = MousePos.x - gsMouseCursorXOffset;
+		dst.y = MousePos.y - gsMouseCursorYOffset;
+		SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
+		SDL_UpdateRects(ScreenBuffer, 1, &dst);
+		gMouseCursorBackground.rect     = dst;
+		gMouseCursorBackground.fRestore = TRUE;
 	}
 	else
 	{
