@@ -1095,8 +1095,6 @@ static void RestoreTacticalBackGround(void);
 static BOOLEAN RenderShopKeeperInterface(void)
 {
 	CHAR16	zMoney[128];
-	SGPRect		SrcRect;
-
 
 	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
 	{
@@ -1144,15 +1142,12 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	if( gfRenderScreenOnNextLoop )
 	{
 	//	BlitBufferToBuffer(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
-		HVSURFACE hDestVSurface = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
-		HVSURFACE hSrcVSurface  = GetVideoSurface(guiSAVEBUFFER);
-
-		SrcRect.iLeft = SKI_TACTICAL_BACKGROUND_START_X;
-		SrcRect.iTop = SKI_TACTICAL_BACKGROUND_START_Y;
-		SrcRect.iRight = SKI_TACTICAL_BACKGROUND_START_X + SKI_TACTICAL_BACKGROUND_START_WIDTH;
+		SGPRect SrcRect;
+		SrcRect.iLeft   = SKI_TACTICAL_BACKGROUND_START_X;
+		SrcRect.iTop    = SKI_TACTICAL_BACKGROUND_START_Y;
+		SrcRect.iRight  = SKI_TACTICAL_BACKGROUND_START_X + SKI_TACTICAL_BACKGROUND_START_WIDTH;
 		SrcRect.iBottom = SKI_TACTICAL_BACKGROUND_START_Y + SKI_TACTICAL_BACKGROUND_START_HEIGHT;
-
-		BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, 0, 0, &SrcRect);
+		BltVideoSurface(guiCornerWhereTacticalIsStillSeenImage, guiSAVEBUFFER, 0, 0, &SrcRect);
 
 		gfRenderScreenOnNextLoop = FALSE;
 	}
@@ -1187,23 +1182,12 @@ static BOOLEAN RenderShopKeeperInterface(void)
 
 static void RestoreTacticalBackGround(void)
 {
-	SGPRect		SrcRect;
-
 	//Restore the background before blitting the text back on
 //	RestoreExternBackgroundRect( SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT );
 
 //	BlitBufferToBuffer(guiCornerWhereTacticalIsStillSeenImage, FRAME_BUFFER, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
-	HVSURFACE hDestVSurface = GetVideoSurface(FRAME_BUFFER);
-	HVSURFACE hSrcVSurface  = GetVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
-
-	SrcRect.iLeft = 0;
-	SrcRect.iTop = 0;
-	SrcRect.iRight = SKI_TACTICAL_BACKGROUND_START_WIDTH;
-	SrcRect.iBottom = SKI_TACTICAL_BACKGROUND_START_HEIGHT;
-
-
-	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, &SrcRect);
+	BltVideoSurface(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, NULL);
 
 	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

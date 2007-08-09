@@ -2039,17 +2039,11 @@ static void DisplayHelpScreenTextBufferScrollBox(void);
 
 static void RenderTextBufferToScreen(void)
 {
-	SGPRect		SrcRect;
-
-	HVSURFACE hDestVSurface = GetVideoSurface(FRAME_BUFFER);
-	HVSURFACE hSrcVSurface  = GetVideoSurface(guiHelpScreenTextBufferSurface);
-
-	SrcRect.iLeft = 0;
-	SrcRect.iTop = gHelpScreen.iLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER;
-	SrcRect.iRight = HLP_SCRN__WIDTH_OF_TEXT_BUFFER;
-	SrcRect.iBottom = SrcRect.iTop + HLP_SCRN__HEIGHT_OF_TEXT_AREA - ( 2 * 8 );
-
-	BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y, &SrcRect);
+	SGPRect SrcRect;
+	SrcRect.iTop    = gHelpScreen.iLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER;
+	SrcRect.iRight  = HLP_SCRN__WIDTH_OF_TEXT_BUFFER;
+	SrcRect.iBottom = SrcRect.iTop + HLP_SCRN__HEIGHT_OF_TEXT_AREA - 2 * 8;
+	BltVideoSurface(FRAME_BUFFER, guiHelpScreenTextBufferSurface, gHelpScreen.usLeftMarginPosX, gHelpScreen.usScreenLocY + HELP_SCREEN_TEXT_OFFSET_Y, &SrcRect);
 
 	DisplayHelpScreenTextBufferScrollBox();
 }
