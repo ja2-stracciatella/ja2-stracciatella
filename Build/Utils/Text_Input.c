@@ -8,7 +8,6 @@
 #include "Cursors.h"
 #include "Text_Input.h"
 #include "Timer_Control.h"
-#include "VObject_Blitters.h"
 #include "Font_Control.h"
 #include "Sound_Control.h"
 #include "MemMan.h"
@@ -1272,16 +1271,8 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	RestoreFontSettings();
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{
-		UINT8 *pDestBuf;
-		UINT32 uiDestPitchBYTES;
-		SGPRect ClipRect;
-		ClipRect.iLeft = pNode->region.RegionTopLeftX;
-		ClipRect.iRight = pNode->region.RegionBottomRightX;
-		ClipRect.iTop = pNode->region.RegionTopLeftY;
-		ClipRect.iBottom = pNode->region.RegionBottomRightY;
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-		UnLockVideoSurface( FRAME_BUFFER );
+		const MOUSE_REGION* r = &pNode->region;
+		ShadowVideoSurfaceRect(FRAME_BUFFER, r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
 	}
 }
 

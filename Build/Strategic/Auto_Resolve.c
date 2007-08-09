@@ -608,18 +608,9 @@ UINT32 AutoResolveScreenHandle()
 	}
 	if( gpAR->fEnteringAutoResolve )
 	{
-		UINT8 *pDestBuf;
-		UINT32 uiDestPitchBYTES;
-		SGPRect ClipRect;
 		gpAR->fEnteringAutoResolve = FALSE;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
-		ClipRect.iLeft   = 0;
-		ClipRect.iTop    = 0;
-		ClipRect.iRight  = SCREEN_WIDTH;
-		ClipRect.iBottom = SCREEN_HEIGHT;
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-		UnLockVideoSurface( FRAME_BUFFER );
+		ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
@@ -953,16 +944,7 @@ static void RenderSoldierCell(SOLDIERCELL* pCell)
 
 	if( pCell->pSoldier->bLife > 0 && pCell->pSoldier->bLife < OKLIFE && !(pCell->uiFlags & (CELL_HITBYATTACKER|CELL_HITLASTFRAME|CELL_CREATURE)) )
 	{ //Merc is unconcious (and not taking damage), so darken his portrait.
-		UINT8 *pDestBuf;
-		UINT32 uiDestPitchBYTES;
-		SGPRect ClipRect;
-		ClipRect.iLeft = pCell->xp+3+x;
-		ClipRect.iTop = pCell->yp+3;
-		ClipRect.iRight = pCell->xp+33+x;
-		ClipRect.iBottom = pCell->yp+29;
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-		UnLockVideoSurface( FRAME_BUFFER );
+		ShadowVideoSurfaceRect(FRAME_BUFFER, pCell->xp + 3 + x, pCell->yp + 3, pCell->xp + 33 + x, pCell->yp + 29);
 	}
 
 	//Draw the health text

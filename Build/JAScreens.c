@@ -3,7 +3,7 @@
 #include "Gameloop.h"
 #include "HImage.h"
 #include "VObject.h"
-#include "VObject_Blitters.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Input.h"
 #include "Font.h"
@@ -965,9 +965,6 @@ extern INT8 gbFadeSpeed;
 static void DisplayTopwareGermanyAddress(void)
 {
 	UINT32					uiTempID;
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-	SGPRect ClipRect;
 
 	//bring up the Topware address screen
 	uiTempID = AddVideoObjectFromFile("German/topware_germany.sti");
@@ -975,13 +972,7 @@ static void DisplayTopwareGermanyAddress(void)
 	if (uiTempID == NO_VOBJECT) return;
 
 	//Shade out a background piece to emphasize the German address.
-	ClipRect.iLeft = 208;
-	ClipRect.iRight = 431;
-	ClipRect.iTop = 390;
-	ClipRect.iBottom = 475;
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-	UnLockVideoSurface( FRAME_BUFFER );
+	ShadowVideoSurfaceRect(FRAME_BUFFER, 208, 390, 431, 475);
 
 	//Draw the anti-aliased address now.
 	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400);

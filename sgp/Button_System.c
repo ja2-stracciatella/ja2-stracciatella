@@ -1429,15 +1429,8 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 
 static void DrawShadeOnButton(const GUI_BUTTON* b)
 {
-	SGPRect ClipRect;
-	ClipRect.iLeft   = b->Area.RegionTopLeftX;
-	ClipRect.iRight  = b->Area.RegionBottomRightX - 1;
-	ClipRect.iTop    = b->Area.RegionTopLeftY;
-	ClipRect.iBottom = b->Area.RegionBottomRightY - 1;
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(ButtonDestBuffer, &uiDestPitchBYTES);
-	Blt16BPPBufferShadowRect(pDestBuf, uiDestPitchBYTES, &ClipRect);
-	UnLockVideoSurface(ButtonDestBuffer);
+	const MOUSE_REGION* r = &b->Area;
+	ShadowVideoSurfaceRect(ButtonDestBuffer, r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
 }
 
 

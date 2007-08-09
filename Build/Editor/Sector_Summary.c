@@ -15,7 +15,6 @@
 #include "Editor_Taskbar_Utils.h"
 #include "Line.h"
 #include "Input.h"
-#include "VObject_Blitters.h"
 #include "LoadScreen.h"
 #include "Text_Input.h"
 #include "MouseSystem.h"
@@ -1430,16 +1429,16 @@ void RenderSummaryWindow()
 					}
 					ClipRect.iLeft = MAP_LEFT + x*13;
 					ClipRect.iRight = ClipRect.iLeft + 12;
-					pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-					Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
+					ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK ||
 						  giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
 							giCurrentViewLevel == BASEMENT3_LEVEL_MASK ||
 							giCurrentViewLevel == ALTERNATE_B1_MASK		 ||
 							giCurrentViewLevel == ALTERNATE_B2_MASK		 ||
 							giCurrentViewLevel == ALTERNATE_B3_MASK		 )
-						Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-					UnLockVideoSurface( FRAME_BUFFER );
+					{
+						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+					}
 				}
 			}
 		}

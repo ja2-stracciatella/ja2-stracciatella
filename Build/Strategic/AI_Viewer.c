@@ -10,7 +10,6 @@
 #include "Editor_Taskbar_Utils.h"
 #include "Line.h"
 #include "Input.h"
-#include "VObject_Blitters.h"
 #include "Text_Input.h"
 #include "MouseSystem.h"
 #include "StrategicMap.h"
@@ -795,9 +794,6 @@ static void RenderInfoInSector(void)
 
 static void RenderViewer(void)
 {
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-	SGPRect ClipRect;
 	INT32 i, x, y, xp, yp;
 	if( gfRenderViewer )
 	{
@@ -860,6 +856,7 @@ static void RenderViewer(void)
 			SetFontShadow( FONT_NEARBLACK );
 			for( y = 0; y < 16; y++ )
 			{
+				SGPRect ClipRect;
 				ClipRect.iTop = VIEWER_TOP + y*VIEWER_CELLH;
 				ClipRect.iBottom = ClipRect.iTop + VIEWER_CELLH - 1;
 				for( x = 0; x < 16; x++ )
@@ -873,12 +870,10 @@ static void RenderViewer(void)
 					}
 					else
 					{ //not found, so visually shade it darker.
-						pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 						ClipRect.iLeft = VIEWER_LEFT + x*VIEWER_CELLW;
 						ClipRect.iRight = ClipRect.iLeft + VIEWER_CELLW - 1;
-						Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-						Blt16BPPBufferShadowRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-						UnLockVideoSurface( FRAME_BUFFER );
+						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					}
 				}
 			}
@@ -886,7 +881,8 @@ static void RenderViewer(void)
 		RenderInfoInSector();
 	}
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	UINT32 uiDestPitchBYTES;
+	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	//Render the grid for the sector if the mouse is over it (yellow).
 	if( gsHiSectorX > 0 )
