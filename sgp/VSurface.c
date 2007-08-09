@@ -658,20 +658,27 @@ BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface)
 }
 
 
-static BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect);
-
-
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
 {
 	Assert(hDestVSurface != NULL);
 	Assert(hSrcVSurface != NULL);
 
+	// First check BPP values for compatibility
+	if (hDestVSurface->ubBitDepth != hSrcVSurface->ubBitDepth)
+	{
+		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
+		return FALSE;
+	}
+
 	// Check for source coordinate options - specific rect or full src dimensions
-	SGPRect SrcRect;
+	SDL_Rect src_rect;
 	if (SRect != NULL)
 	{
-		SrcRect = *SRect;
+		src_rect.x = SRect->iLeft;
+		src_rect.y = SRect->iTop;
+		src_rect.w = SRect->iRight  - SRect->iLeft;
+		src_rect.h = SRect->iBottom - SRect->iTop;
 	}
 	else
 	{
@@ -688,105 +695,17 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 			return FALSE;
 		}
 
-		SrcRect.iTop    = (int)0;
-		SrcRect.iLeft   = (int)0;
-		SrcRect.iBottom = (int)hSrcVSurface->usHeight;
-		SrcRect.iRight  = (int)hSrcVSurface->usWidth;
+		src_rect.x = 0;
+		src_rect.y = 0;
+		src_rect.w = hSrcVSurface->usWidth;
+		src_rect.h = hSrcVSurface->usHeight;
 	}
 
-	// clipping -- added by DB
-	UINT32 uiWidth  = SrcRect.iRight  - SrcRect.iLeft;
-	UINT32 uiHeight = SrcRect.iBottom - SrcRect.iTop;
+	SDL_Rect dstrect;
+	dstrect.x = iDestX;
+	dstrect.y = iDestY;
 
-	// check for position entirely off the screen
-	if (iDestX >= hDestVSurface->usWidth)  return FALSE;
-	if (iDestY >= hDestVSurface->usHeight) return FALSE;
-	if (iDestX + (INT32)uiWidth  < 0)      return FALSE;
-	if (iDestY + (INT32)uiHeight < 0)      return FALSE;
-
-	INT32 skip_right = iDestX + (INT32)uiWidth - hDestVSurface->usWidth;
-	if (skip_right > 0)
-	{
-		SrcRect.iRight -= skip_right;
-		uiWidth        -= skip_right;
-	}
-	INT32 skip_bottom = iDestY + (INT32)uiHeight - hDestVSurface->usHeight;
-	if (skip_bottom > 0)
-	{
-		SrcRect.iBottom -= skip_bottom;
-		uiHeight        -= skip_bottom;
-	}
-	if (iDestX < 0)
-	{
-		SrcRect.iLeft -= iDestX;
-		uiWidth       += iDestX;
-		iDestX         = 0;
-	}
-	if (iDestY < 0)
-	{
-		SrcRect.iTop -= iDestY;
-		uiHeight     += iDestY;
-		iDestY        = 0;
-	}
-
-	// First check BPP values for compatibility
-	if (hDestVSurface->ubBitDepth == 16 && hSrcVSurface->ubBitDepth == 16)
-	{
-// For testing with non-DDraw blitting, uncomment to test -- DB
-#ifndef JA2
-		UINT32 uiSrcPitch;
-		const UINT16* pSrcSurface16 = (UINT16*)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch);
-		if (pSrcSurface16 == NULL)
-		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 16BPP surface for blitting");
-			return(FALSE);
-		}
-
-		UINT32 uiDestPitch;
-		UINT16* pDestSurface16 = (UINT16*)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch);
-		if (pDestSurface16 == NULL)
-		{
-			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 16BPP dest surface for blitting");
-			return FALSE;
-		}
-
-		Blt16BPPTo16BPP(pDestSurface16, uiDestPitch, pSrcSurface16, uiSrcPitch, iDestX, iDestY, SrcRect.iLeft, SrcRect.iTop, uiWidth, uiHeight);
-		UnLockVideoSurfaceBuffer(hSrcVSurface);
-		UnLockVideoSurfaceBuffer(hDestVSurface);
-		return TRUE;
-#endif
-
-		CHECKF(BltVSurfaceUsingDD(hDestVSurface, hSrcVSurface, iDestX, iDestY, &SrcRect));
-	}
-	else if (hDestVSurface->ubBitDepth == 8 && hSrcVSurface->ubBitDepth == 8)
-	{
-		UINT32 uiSrcPitch;
-		const UINT8* pSrcSurface8 = (UINT8*)LockVideoSurfaceBuffer(hSrcVSurface, &uiSrcPitch);
-		if (pSrcSurface8 == NULL)
-		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 8BPP surface for blitting");
-			return FALSE;
-		}
-
-		UINT32 uiDestPitch;
-		UINT8* pDestSurface8 = (UINT8*)LockVideoSurfaceBuffer(hDestVSurface, &uiDestPitch);
-		if (pDestSurface8 == NULL)
-		{
-			UnLockVideoSurfaceBuffer(hSrcVSurface);
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Failed on lock of 8BPP dest surface for blitting");
-			return FALSE;
-		}
-
-		Blt8BPPTo8BPP(pDestSurface8, uiDestPitch, pSrcSurface8, uiSrcPitch, iDestX, iDestY, SrcRect.iLeft, SrcRect.iTop, uiWidth, uiHeight);
-		UnLockVideoSurfaceBuffer(hSrcVSurface);
-		UnLockVideoSurfaceBuffer(hDestVSurface);
-	}
-	else
-	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
-		return FALSE;
-	}
+	SDL_BlitSurface(hSrcVSurface->surface, &src_rect, hDestVSurface->surface, &dstrect);
 
 	return TRUE;
 }
@@ -817,22 +736,6 @@ static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 C
 	return TRUE;
 }
 
-
-static BOOLEAN BltVSurfaceUsingDD(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, SGPRect* SrcRect)
-{
-	SDL_Rect srcrect;
-	srcrect.x = SrcRect->iLeft;
-	srcrect.y = SrcRect->iTop;
-	srcrect.w = SrcRect->iRight  - SrcRect->iLeft;
-	srcrect.h = SrcRect->iBottom - SrcRect->iTop;
-
-	SDL_Rect dstrect;
-	dstrect.x = iDestX;
-	dstrect.y = iDestY;
-
-	SDL_BlitSurface(hSrcVSurface->surface, &srcrect, hDestVSurface->surface, &dstrect);
-	return TRUE;
-}
 
 BOOLEAN Blt16BPPBufferShadowRectAlternateTable(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area);
 
