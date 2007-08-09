@@ -7547,18 +7547,7 @@ BlitDone:
 }
 
 
-
-/**********************************************************************************************
-	Blt16BPPBufferShadowRect
-
-		Darkens a rectangular area by 25%. This blitter is used by ShadowVideoObjectRect.
-
-	pBuffer						Pointer to a 16BPP buffer
-	uiDestPitchBytes	Pitch of the destination surface
-	area							An SGPRect, the area to darken
-
-*********************************************************************************************/
-BOOLEAN Blt16BPPBufferShadowRect(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area)
+BOOLEAN Blt16BPPBufferFilterRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const UINT16* filter_table, SGPRect* area)
 {
 INT32  width, height;
 UINT32 LineSkip;
@@ -7596,7 +7585,7 @@ UINT16 *DestPtr;
 
 		do
 		{
-			*DestPtr = ShadeTable[*DestPtr];
+			*DestPtr = filter_table[*DestPtr];
 			DestPtr++;
 		}
 		while (--w > 0);
@@ -7605,90 +7594,7 @@ UINT16 *DestPtr;
 	while (--height > 0);
 #else
 	__asm {
-		mov		esi, OFFSET ShadeTable
-		mov		edi, DestPtr
-		xor		eax, eax
-		mov		ebx, LineSkip
-		mov		edx, height
-
-BlitNewLine:
-		mov		ecx, width
-
-BlitLine:
-		mov		ax, [edi]
-		mov		ax, [esi+eax*2]
-		mov		[edi], ax
-		add		edi, 2
-		dec		ecx
-		jnz		BlitLine
-
-		add		edi, ebx
-		dec		edx
-		jnz		BlitNewLine
-}
-#endif
-
-	return(TRUE);
-}
-
-
-/**********************************************************************************************
-	Blt16BPPBufferShadowRect
-
-		Darkens a rectangular area by 25%. This blitter is used by ShadowVideoObjectRect.
-
-	pBuffer						Pointer to a 16BPP buffer
-	uiDestPitchBytes	Pitch of the destination surface
-	area							An SGPRect, the area to darken
-
-*********************************************************************************************/
-BOOLEAN Blt16BPPBufferShadowRectAlternateTable(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area)
-{
-INT32  width, height;
-UINT32 LineSkip;
-UINT16 *DestPtr;
-
-	// Assertions
-	Assert( pBuffer != NULL );
-
-	// Clipping
-	if( area->iLeft < ClippingRect.iLeft )
-		area->iLeft = ClippingRect.iLeft;
-	if( area->iTop < ClippingRect.iTop )
-		area->iTop = ClippingRect.iTop;
-	if( area->iRight >= ClippingRect.iRight )
-		area->iRight = ClippingRect.iRight - 1;
-	if( area->iBottom >= ClippingRect.iBottom )
-		area->iBottom = ClippingRect.iBottom - 1;
-	//CHECKF(area->iLeft >= ClippingRect.iLeft );
-	//CHECKF(area->iTop >= ClippingRect.iTop );
-	//CHECKF(area->iRight <= ClippingRect.iRight );
-	//CHECKF(area->iBottom <= ClippingRect.iBottom );
-
-	DestPtr=(pBuffer+(area->iTop*(uiDestPitchBYTES/2))+area->iLeft);
-	width=area->iRight-area->iLeft+1;
-	height=area->iBottom-area->iTop+1;
-	LineSkip=(uiDestPitchBYTES-(width*2));
-
-	CHECKF(width >=1);
-	CHECKF(height >=1);
-
-#if 1 // XXX TODO
-	do
-	{
-		UINT32 w = width;
-		do
-		{
-			*DestPtr = IntensityTable[*DestPtr];
-			DestPtr++;
-		}
-		while (--w > 0);
-		DestPtr = (UINT16*)((UINT8*)DestPtr + LineSkip);
-	}
-	while (--height > 0);
-#else
-	__asm {
-		mov		esi, OFFSET IntensityTable
+		mov		esi, filter_table
 		mov		edi, DestPtr
 		xor		eax, eax
 		mov		ebx, LineSkip

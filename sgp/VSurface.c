@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "MemMan.h"
+#include "Shading.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
@@ -737,10 +738,7 @@ static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 C
 }
 
 
-BOOLEAN Blt16BPPBufferShadowRectAlternateTable(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area);
-
-
-static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, BOOLEAN fLowPercentShadeTable)
+static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* filter_table)
 {
 #ifdef _DEBUG
 	gubVSDebugCode = DEBUGSTR_SHADOWVIDEOSURFACERECT;
@@ -773,15 +771,7 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(uiDestVSurface, &uiPitch);
 	if (pBuffer == NULL) return FALSE;
 
-	BOOLEAN Ret;
-	if (!fLowPercentShadeTable)
-	{
-		Ret = Blt16BPPBufferShadowRect(pBuffer, uiPitch, &area);
-	}
-	else
-	{
-		Ret = Blt16BPPBufferShadowRectAlternateTable(pBuffer, uiPitch, &area);
-	}
+	BOOLEAN Ret = Blt16BPPBufferFilterRect(pBuffer, uiPitch, filter_table, &area);
 
 	UnLockVideoSurface(uiDestVSurface);
 	return Ret;
@@ -790,13 +780,13 @@ static BOOLEAN InternalShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, I
 
 BOOLEAN ShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
 {
-	return InternalShadowVideoSurfaceRect(uiDestVSurface, X1, Y1, X2, Y2, FALSE);
+	return InternalShadowVideoSurfaceRect(uiDestVSurface, X1, Y1, X2, Y2, ShadeTable);
 }
 
 
 BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2)
 {
-	return InternalShadowVideoSurfaceRect(uiDestVSurface, X1, Y1, X2, Y2, TRUE);
+	return InternalShadowVideoSurfaceRect(uiDestVSurface, X1, Y1, X2, Y2, IntensityTable);
 }
 
 
