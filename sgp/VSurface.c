@@ -658,20 +658,6 @@ BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface)
 }
 
 
-static BOOLEAN GetVSurfaceRect(HVSURFACE hVSurface, SGPRect* pRect)
-{
-	Assert(hVSurface != NULL);
-	Assert(pRect != NULL);
-
-	pRect->iLeft   = 0;
-	pRect->iTop    = 0;
-	pRect->iRight  = hVSurface->usWidth;
-	pRect->iBottom = hVSurface->usHeight;
-
-	return TRUE;
-}
-
-
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect)
 {
@@ -706,38 +692,38 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(HVSURFACE hDestVSurface, HVSURFACE 
 	}
 
 	// clipping -- added by DB
-	SGPRect DestRect;
-	GetVSurfaceRect(hDestVSurface, &DestRect);
 	UINT32 uiWidth  = SrcRect.iRight  - SrcRect.iLeft;
 	UINT32 uiHeight = SrcRect.iBottom - SrcRect.iTop;
 
 	// check for position entirely off the screen
-	if (iDestX >= DestRect.iRight)  return FALSE;
-	if (iDestY >= DestRect.iBottom) return FALSE;
-	if (iDestX + (INT32)uiWidth  < DestRect.iLeft) return FALSE;
-	if (iDestY + (INT32)uiHeight < DestRect.iTop)  return FALSE;
+	if (iDestX >= hDestVSurface->usWidth)  return FALSE;
+	if (iDestY >= hDestVSurface->usHeight) return FALSE;
+	if (iDestX + (INT32)uiWidth  < 0)      return FALSE;
+	if (iDestY + (INT32)uiHeight < 0)      return FALSE;
 
-	if (iDestX + (INT32)uiWidth >= DestRect.iRight)
+	INT32 skip_right = iDestX + (INT32)uiWidth - hDestVSurface->usWidth;
+	if (skip_right > 0)
 	{
-		SrcRect.iRight -= (iDestX + uiWidth) - DestRect.iRight;
-		uiWidth        -= (iDestX + uiWidth) - DestRect.iRight;
+		SrcRect.iRight -= skip_right;
+		uiWidth        -= skip_right;
 	}
-	if (iDestY + (INT32)uiHeight >= DestRect.iBottom)
+	INT32 skip_bottom = iDestY + (INT32)uiHeight - hDestVSurface->usHeight;
+	if (skip_bottom > 0)
 	{
-		SrcRect.iBottom -= (iDestY + uiHeight) - DestRect.iBottom;
-		uiHeight        -= (iDestY + uiHeight) - DestRect.iBottom;
+		SrcRect.iBottom -= skip_bottom;
+		uiHeight        -= skip_bottom;
 	}
-	if (iDestX < DestRect.iLeft)
+	if (iDestX < 0)
 	{
-		SrcRect.iLeft += DestRect.iLeft - iDestX;
-		uiWidth       -= DestRect.iLeft - iDestX;
-		iDestX         = DestRect.iLeft;
+		SrcRect.iLeft -= iDestX;
+		uiWidth       += iDestX;
+		iDestX         = 0;
 	}
-	if (iDestY < DestRect.iTop)
+	if (iDestY < 0)
 	{
-		SrcRect.iTop += DestRect.iTop - iDestY;
-		uiHeight     -= DestRect.iTop - iDestY;
-		iDestY        = DestRect.iTop;
+		SrcRect.iTop -= iDestY;
+		uiHeight     += iDestY;
+		iDestY        = 0;
 	}
 
 	// First check BPP values for compatibility
