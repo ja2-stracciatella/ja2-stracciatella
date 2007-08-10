@@ -429,20 +429,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		// Zero with yellow,
 		// Set source transparcenty
 		SetVideoSurfaceTransparency( pPopUpTextBox->uiSourceBufferIndex, FROMRGB(  255, 255, 0 ) );
-
-		UINT32 uiDestPitchBYTES;
-		UINT16* pDestBuf = (UINT16*)LockVideoSurface(pPopUpTextBox->uiSourceBufferIndex, &uiDestPitchBYTES);
-
-		usColorVal = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
-		usLoopEnd  = ( usWidth * usHeight );
-
-		for ( i = 0; i <usLoopEnd; i++ )
-		{
-			pDestBuf[ i ] = usColorVal;
-		}
-
-		UnLockVideoSurface(pPopUpTextBox->uiSourceBufferIndex);
-
+		FillSurface(pPopUpTextBox->uiSourceBufferIndex, Get16BPPColor(FROMRGB(255, 255, 0)));
 	}
 	else
 	{
