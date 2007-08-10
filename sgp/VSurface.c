@@ -154,6 +154,9 @@ UINT32 AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 }
 
 
+static HVSURFACE CreateVideoSurfaceFromFile(const char* Filename);
+
+
 UINT32 AddVideoSurfaceFromFile(const char* Filename)
 {
 	HVSURFACE hVSurface = CreateVideoSurfaceFromFile(Filename);
@@ -421,7 +424,7 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
 
 
-HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
+static HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
 {
 	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
 	if (hImage == NULL)

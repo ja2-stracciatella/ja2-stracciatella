@@ -64,9 +64,6 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 // Sets transparency
 BOOLEAN SetVideoSurfaceTransparency(UINT32 uiIndex, COLORVAL TransColor);
 
-
-HVSURFACE CreateVideoSurfaceFromFile(const char* Filename);
-
 // Gets the RGB palette entry values
 BOOLEAN GetVSurfacePaletteEntries(HVSURFACE hVSurface, SGPPaletteEntry* pPalette);
 
