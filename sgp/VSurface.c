@@ -76,6 +76,9 @@ BOOLEAN InitializeVideoSurfaceManager(void)
 }
 
 
+static BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface);
+
+
 BOOLEAN ShutdownVideoSurfaceManager(void)
 {
   DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
@@ -634,8 +637,8 @@ BOOLEAN DeleteVideoSurfaceFromIndex(UINT32 uiIndex)
 }
 
 
-// Deletes all palettes, surfaces and region data
-BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface)
+// Deletes all palettes and surfaces
+static BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface)
 {
 	CHECKF(hVSurface != NULL);
 

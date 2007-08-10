@@ -73,8 +73,7 @@ BOOLEAN GetVSurfacePaletteEntries(HVSURFACE hVSurface, SGPPaletteEntry* pPalette
 // Sets HVSurface palette, creates if nessessary. Also sets 16BPP palette
 BOOLEAN SetVideoSurfacePalette(HVSURFACE hVSurface, const SGPPaletteEntry* pSrcPalette);
 
-// Deletes all data, including palettes, regions, DD Surfaces
-BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface);
+// Deletes all data, including palettes
 BOOLEAN DeleteVideoSurfaceFromIndex(UINT32 uiIndex);
 
 
