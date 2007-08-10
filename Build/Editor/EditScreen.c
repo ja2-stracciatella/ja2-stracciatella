@@ -2515,63 +2515,6 @@ static UINT32 WaitForSelectionWindowResponse(void)
 }
 
 
-//	Displays the image of the currently highlighted tileset slot if it's a video surface.
-//	(usually a 16 bit image)
-static void ShowCurrentSlotSurface(UINT32 vSurface, INT32 iWindow)
-{
-	SGPRect			ClipRect, WinRect;
-	INT32				iStartX;
-	INT32				iStartY;
-	INT32				iPicHeight, iPicWidth;
-	INT32				iWinWidth, iWinHeight;
-
-	WinRect.iLeft = (iWindow == 0) ? (336) : (488);
-	WinRect.iTop = 211;
-	WinRect.iRight = (iWindow == 0) ? (485) : (637);
-	WinRect.iBottom = 399;
-
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, WinRect.iLeft - 1, WinRect.iTop - 1,
-																					WinRect.iRight + 1, WinRect.iBottom + 1,
-																					Get16BPPColor(FROMRGB(128, 0, 0)) );
-
-	iWinWidth = WinRect.iRight - WinRect.iLeft;
-	iWinHeight = WinRect.iBottom - WinRect.iTop;
-
-	HVSURFACE hvSurface = GetVideoSurface(vSurface);
-
-	iPicWidth = (INT32)hvSurface->usWidth;
-	iPicHeight = (INT32)hvSurface->usHeight;
-
-	if ( iPicWidth > iWinWidth )
-	{
-		ClipRect.iLeft = (iPicWidth - iWinWidth) / 2;
-		ClipRect.iRight = ClipRect.iLeft + iWinWidth - 1;
-		iStartX = WinRect.iLeft;
-	}
-	else
-	{
-		ClipRect.iLeft = 0;
-		ClipRect.iRight = iPicWidth - 1;
-		iStartX = ((iWinWidth - iPicWidth) / 2) + WinRect.iLeft;
-	}
-
-	if ( iPicHeight > iWinHeight )
-	{
-		ClipRect.iTop = (iPicHeight - iWinHeight) / 2;
-		ClipRect.iBottom = ClipRect.iTop + iWinHeight - 1;
-		iStartY = WinRect.iTop;
-	}
-	else
-	{
-		ClipRect.iTop = 0;
-		ClipRect.iBottom = iPicHeight - 1;
-		iStartY = ((iWinHeight - iPicHeight) / 2) + WinRect.iTop;
-	}
-
-	BltVideoSurface(FRAME_BUFFER, vSurface, iStartX, iStartY, &ClipRect);
-}
-
-
 //	Displays the image of the currently highlighted tileset slot image. Usually this is for
 //	8 bit image (.STI) files
 static void ShowCurrentSlotImage(HVOBJECT hVObj, INT32 iWindow)
