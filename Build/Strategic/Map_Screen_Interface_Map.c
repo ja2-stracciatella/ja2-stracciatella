@@ -634,21 +634,14 @@ UINT32 DrawMap( void )
 #ifdef JA2DEMO
 	DrawMapForDemo( );
 #else
-  UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-  UINT16  *pDestBuf;
-	UINT8  *pSrcBuf;
 	SGPRect clip;
   INT16 cnt, cnt2;
 	INT32 iCounter = 0;
 
 	if( !iCurrentMapSectorZ )
 	{
-		pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-
 		HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
 		CHECKF(hSrcVSurface != NULL);
-		pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
 
 		// clip blits to mapscreen region
 		//ClipBlitsToMapViewRegion( );
@@ -687,15 +680,18 @@ UINT32 DrawMap( void )
 				clip.iRight = hSrcVSurface->usWidth;
 			}
 
-			Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X, MAP_VIEW_START_Y+MAP_GRID_Y - 2, &clip);
+			BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 2, &clip);
 		}
 		else
 		{
+			UINT32 uiDestPitchBYTES;
+			UINT16* pDestBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
+			UINT32 uiSrcPitchBYTES;
+			UINT8* pSrcBuf = LockVideoSurface(guiBIGMAP, &uiSrcPitchBYTES);
 			Blt8BPPDataTo16BPPBufferHalf( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf, uiSrcPitchBYTES, MAP_VIEW_START_X + 1, MAP_VIEW_START_Y );
+			UnLockVideoSurface(guiBIGMAP);
+			UnLockVideoSurface(guiSAVEBUFFER);
 		}
-
-		UnLockVideoSurface( guiBIGMAP );
-		UnLockVideoSurface( guiSAVEBUFFER );
 
 
 		// shade map sectors (must be done after Tixa/Orta/Mine icons have been blitted, but before icons!)
@@ -1298,9 +1294,6 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 
 				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip );
 
-				// now blit
-				//Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip);
-
 				// unlock source and dest buffers
 				UnLockVideoSurface( guiBIGMAP );
         UnLockVideoSurface( guiSAVEBUFFER );
@@ -1317,9 +1310,6 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
 
 				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY, &clip );
-
-				// now blit
-				//Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY , &clip);
 
 				// unlock source and dest buffers
 				UnLockVideoSurface( guiBIGMAP );
@@ -1338,9 +1328,6 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 
 				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY, &clip );
 
-				// now blit
-				//Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY , &clip);
-
 				// unlock source and dest buffers
 				UnLockVideoSurface( guiBIGMAP );
         UnLockVideoSurface( guiSAVEBUFFER );
@@ -1357,9 +1344,6 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
 
 				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip );
-
-				// now blit
-				//Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY , &clip);
 
 				// unlock source and dest buffers
 				UnLockVideoSurface( guiBIGMAP );
@@ -1382,11 +1366,6 @@ static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
 {
 	INT16 sScreenX, sScreenY;
   INT32 iX, iY;
-  UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-  UINT16  *pDestBuf;
-	//UINT8 *pDestBuf2;
-	UINT8  *pSrcBuf;
 	SGPRect clip;
 	UINT16 *pOriginalPallette;
 
@@ -1474,71 +1453,23 @@ static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
 
 			case( MAP_SHADE_LT_GREEN ):
 				hSrcVSurface->p16BPPPalette = pMapLTGreenPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				// now blit
-				Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip);
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-
-
-			break;
+				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_DK_GREEN ):
 				hSrcVSurface->p16BPPPalette = pMapDKGreenPalette;
-
-				/// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				// now blit
-				Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY , &clip);
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-
-
-			break;
+				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_LT_RED ):
 				hSrcVSurface->p16BPPPalette = pMapLTRedPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				// now blit
-				Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY , &clip);
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-
-
-			break;
+				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_DK_RED ):
 				hSrcVSurface->p16BPPPalette = pMapDKRedPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				// now blit
-				Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY , &clip);
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-
-
-			break;
+				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 		}
 	}
 

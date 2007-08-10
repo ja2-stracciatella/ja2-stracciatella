@@ -3,6 +3,7 @@
 #include "Font_Control.h"
 #include "Local.h"
 #include "Utilities.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
@@ -49,7 +50,6 @@
 #include "WordWrap.h"
 #include "Game_Init.h"
 #include "Game_Clock.h"
-#include "VObject_Blitters.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "Overhead.h"
@@ -464,7 +464,7 @@ UINT32 LaptopScreenShutdown()
 
 static void CreateDestroyMouseRegionForNewMailIcon(void);
 static BOOLEAN CreateLapTopMouseRegions(void);
-static BOOLEAN DrawDeskTopBackground(void);
+static void DrawDeskTopBackground(void);
 static void EnterLaptopInitLaptopPages(void);
 static void InitLaptopOpenQueue(void);
 static void InitalizeSubSitesList(void);
@@ -3802,35 +3802,9 @@ void BlitTitleBarIcons( void )
 }
 
 
-static BOOLEAN DrawDeskTopBackground(void)
+static void DrawDeskTopBackground(void)
 {
-  UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-  UINT16  *pDestBuf;
-	UINT8  *pSrcBuf;
-	SGPRect clip;
-
-	// set clipping region
-	 clip.iLeft=0 ;
-   clip.iRight=506;
-	 clip.iTop=0;
-	 clip.iBottom=408 + 19;
-	// get surfaces
-	pDestBuf = (UINT16*)LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
-	HVSURFACE hSrcVSurface = GetVideoSurface(guiDESKTOP);
-  CHECKF(hSrcVSurface != NULL);
-	pSrcBuf = LockVideoSurface( guiDESKTOP, &uiSrcPitchBYTES);
-
-
-	// blit .pcx for the background onto desktop
-	Blt8BPPDataSubTo16BPPBuffer( pDestBuf,  uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, LAPTOP_SCREEN_UL_X - 2, LAPTOP_SCREEN_UL_Y - 3, &clip);
-
-
-	// release surfaces
-	UnLockVideoSurface( guiDESKTOP );
-  UnLockVideoSurface( FRAME_BUFFER );
-
-	return ( TRUE );
+	BltVideoSurface(FRAME_BUFFER, guiDESKTOP, LAPTOP_SCREEN_UL_X - 2, LAPTOP_SCREEN_UL_Y - 4, NULL);
 }
 
 

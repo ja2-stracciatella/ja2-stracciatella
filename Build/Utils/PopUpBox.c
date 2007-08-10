@@ -6,7 +6,6 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "VSurface.h"
-#include "VObject_Blitters.h"
 #include "WCheck.h"
 
 
@@ -1353,10 +1352,6 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 	UINT32 uiNumTilesWide;
 	UINT32 uiNumTilesHigh;
 	UINT32 uiCount=0;
-	UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-	UINT16* pDestBuf;
-	UINT8  *pSrcBuf;
 	SGPRect clip;
 	UINT16 usTopX, usTopY;
 	UINT16 usWidth, usHeight;
@@ -1409,13 +1404,7 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 
 	// blit in texture first, then borders
 	// blit in surface
-	pDestBuf = (UINT16*)LockVideoSurface(Box->uiBuffer, &uiDestPitchBYTES);
-	HVSURFACE hSrcVSurface = GetVideoSurface(Box->iBackGroundSurface);
-	CHECKF(hSrcVSurface != NULL);
-	pSrcBuf = LockVideoSurface(Box->iBackGroundSurface, &uiSrcPitchBYTES);
-	Blt8BPPDataSubTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES,usTopX,usTopY, &clip);
-	UnLockVideoSurface(Box->iBackGroundSurface);
-	UnLockVideoSurface(Box->uiBuffer);
+	BltVideoSurface(Box->uiBuffer, Box->iBackGroundSurface, usTopX, usTopY, &clip);
 	HVOBJECT hBoxHandle = GetVideoObject(Box->iBorderObjectIndex);
 
 	// blit in 4 corners (they're 2x2 pixels)

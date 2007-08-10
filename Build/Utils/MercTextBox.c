@@ -1,11 +1,11 @@
 #include "Font.h"
 #include "Local.h"
 #include "MercTextBox.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Font_Control.h"
 #include "Utilities.h"
 #include "WordWrap.h"
-#include "VObject_Blitters.h"
 #include "Render_Dirty.h"
 #include "Debug.h"
 #include "Video.h"
@@ -302,10 +302,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	UINT16 usPosY, usPosX;
 	UINT16 usStringPixLength;
 	SGPRect DestRect;
-  UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-  UINT16  *pDestBuf;
-	UINT8  *pSrcBuf;
 	UINT8		ubFontColor, ubFontShadowColor;
 	UINT16	usColorVal;
 	UINT16	usLoopEnd;
@@ -434,7 +430,8 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		// Set source transparcenty
 		SetVideoSurfaceTransparency( pPopUpTextBox->uiSourceBufferIndex, FROMRGB(  255, 255, 0 ) );
 
-	  pDestBuf = (UINT16*)LockVideoSurface( pPopUpTextBox->uiSourceBufferIndex, &uiDestPitchBYTES);
+		UINT32 uiDestPitchBYTES;
+		UINT16* pDestBuf = (UINT16*)LockVideoSurface(pPopUpTextBox->uiSourceBufferIndex, &uiDestPitchBYTES);
 
 		usColorVal = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
 		usLoopEnd  = ( usWidth * usHeight );
@@ -449,19 +446,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 	else
 	{
-		HVSURFACE hSrcVSurface = GetVideoSurface(pPopUpTextBox->uiMercTextPopUpBackground);
-		AssertMsg(
-			hSrcVSurface != NULL,
-			String("Failed to GetVideoSurface for PrepareMercPopupBox.  VSurfaceID:  %d", pPopUpTextBox->uiMercTextPopUpBackground)
-		);
-
-		pDestBuf = (UINT16*)LockVideoSurface( pPopUpTextBox->uiSourceBufferIndex, &uiDestPitchBYTES);
-		pSrcBuf = LockVideoSurface( pPopUpTextBox->uiMercTextPopUpBackground, &uiSrcPitchBYTES);
-
-		Blt8BPPDataSubTo16BPPBuffer( pDestBuf,  uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES,0,0, &DestRect);
-
-		UnLockVideoSurface( pPopUpTextBox->uiMercTextPopUpBackground);
-		UnLockVideoSurface(pPopUpTextBox->uiSourceBufferIndex);
+		BltVideoSurface(pPopUpTextBox->uiSourceBufferIndex, pPopUpTextBox->uiMercTextPopUpBackground, 0, 0, &DestRect);
 	}
 
 	HVOBJECT hImageHandle = GetVideoObject(pPopUpTextBox->uiMercTextPopUpBorder);
