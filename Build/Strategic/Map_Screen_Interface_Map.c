@@ -1558,10 +1558,7 @@ BOOLEAN InitializePalettesForMap( void )
 	UINT32 uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 	CHECKF(uiTempMap != NO_VSURFACE);
 
-	// get video surface
-	HVSURFACE hSrcVSurface = GetVideoSurface(uiTempMap);
-	CHECKF(hSrcVSurface != NULL);
-	GetVSurfacePaletteEntries( hSrcVSurface, pPalette );
+	GetVSurfacePaletteEntries(uiTempMap, pPalette);
 
 	// set up various palettes
 	pMapLTRedPalette = Create16BPPPaletteShaded( pPalette, 400, 0, 0, TRUE );

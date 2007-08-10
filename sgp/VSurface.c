@@ -590,15 +590,18 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 }
 
 
-BOOLEAN GetVSurfacePaletteEntries(HVSURFACE hVSurface, SGPPaletteEntry* pPalette)
+BOOLEAN GetVSurfacePaletteEntries(UINT32 VSurface, SGPPaletteEntry* pPalette)
 {
-	CHECKF(hVSurface->pPalette != NULL);
+	HVSURFACE v = GetVideoSurface(VSurface);
+	CHECKF(v != NULL);
+	const SDL_Color* p = v->pPalette;
+	CHECKF(p != NULL);
 
 	for (UINT32 i = 0; i < 256; i++)
 	{
-		pPalette[i].peRed   = hVSurface->pPalette[i].r;
-		pPalette[i].peGreen = hVSurface->pPalette[i].g;
-		pPalette[i].peBlue  = hVSurface->pPalette[i].b;
+		pPalette[i].peRed   = p[i].r;
+		pPalette[i].peGreen = p[i].g;
+		pPalette[i].peBlue  = p[i].b;
 	}
 
 	return TRUE;
