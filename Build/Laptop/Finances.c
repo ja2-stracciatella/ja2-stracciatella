@@ -1060,11 +1060,6 @@ copy_name:
 
 static void DisplayFinancePageNumberAndDateRange(void)
 {
-	// this function will go through the list of 'histories' starting at current until end or
-	// MAX_PER_PAGE...it will get the date range and the page number
-	INT32 iCounter=0;
-	FinanceUnit* pTempFinance = pFinanceListHead;
-
   // setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
   SetFontForeground(FONT_BLACK);
@@ -1074,24 +1069,10 @@ static void DisplayFinancePageNumberAndDateRange(void)
 	if( !pCurrentFinance )
 	{
 		pCurrentFinance = pFinanceListHead;
-    if( !pCurrentFinance )
-		{
-			mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
-		 return;
-		}
 	}
 
-	// find last page
-	while(pTempFinance)
-	{
-		iCounter++;
-		pTempFinance=pTempFinance->Next;
-	}
-
-	// get the last page
 	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
 
-	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
