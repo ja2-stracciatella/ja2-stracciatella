@@ -1060,7 +1060,7 @@ static void RenderIconsForUpperLeftCornerPiece(INT8 bCharNumber)
 }
 
 
-static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
 static void DrawPay(INT16 sCharNumber)
@@ -1068,7 +1068,6 @@ static void DrawPay(INT16 sCharNumber)
 	// will draw the pay
 	INT32 uiSalary;
 	wchar_t sString[7];
-	UINT16 usX, usY;
 	INT16 usMercProfileID;
 
 
@@ -1083,14 +1082,8 @@ static void DrawPay(INT16 sCharNumber)
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	// parse salary
 	swprintf( sString, lengthof(sString), L"%d", uiSalary );
-
-	// right justify salary
-	FindFontRightCoordinates(CHAR_PAY_X,CHAR_PAY_Y , CHAR_PAY_WID,CHAR_PAY_HEI ,sString , CHAR_FONT, &usX, &usY);
-
-	// draw salary
-	DrawString(sString,usX, usY, CHAR_FONT);
+	DrawStringRight(sString, CHAR_PAY_X, CHAR_PAY_Y, CHAR_PAY_WID, CHAR_PAY_HEI, CHAR_FONT);
 }
 
 
@@ -1142,8 +1135,6 @@ static void DrawCharStats(INT16 sCharNum)
 {
 	// will draw the characters stats, max life, strength, dex, and skills
 	wchar_t sString[9];
-	UINT16 usX, usY;
-	//HVOBJECT hCrossHandle;
 	SOLDIERTYPE *pSoldier = NULL;
 
 	pSoldier = &Menptr[gCharactersList[sCharNum].usSolID];
@@ -1172,10 +1163,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(STR_X, STR_Y ,STAT_WID ,STAT_HEI ,sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, STR_Y,CHAR_FONT );
+	DrawStringRight(sString, STR_X, STR_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// dexterity
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bDexterity );
@@ -1195,10 +1183,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(DEX_X,DEX_Y ,STAT_WID ,STAT_HEI ,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, DEX_Y,CHAR_FONT );
+	DrawStringRight(sString, DEX_X, DEX_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// agility
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bAgility );
@@ -1218,10 +1203,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(AGL_X,AGL_Y,STAT_WID ,STAT_HEI ,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, AGL_Y,CHAR_FONT );
+	DrawStringRight(sString, AGL_X, AGL_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// wisdom
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bWisdom );
@@ -1241,10 +1223,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates( WIS_X,WIS_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, WIS_Y,CHAR_FONT );
+	DrawStringRight(sString, WIS_X, WIS_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// leadership
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bLeadership );
@@ -1264,10 +1243,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(LDR_X,LDR_Y,STAT_WID,STAT_HEI, sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, LDR_Y,CHAR_FONT );
+	DrawStringRight(sString, LDR_X, LDR_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// experience level
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bExpLevel );
@@ -1287,10 +1263,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(LVL_X,LVL_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, LVL_Y,CHAR_FONT );
+	DrawStringRight(sString, LVL_X, LVL_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// marksmanship
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMarksmanship );
@@ -1310,10 +1283,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(MRK_X,MRK_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, MRK_Y,CHAR_FONT );
+	DrawStringRight(sString, MRK_X, MRK_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// explosives
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bExplosive );
@@ -1333,10 +1303,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(EXP_X,EXP_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, EXP_Y,CHAR_FONT );
+	DrawStringRight(sString, EXP_X, EXP_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// mechanical
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMechanical );
@@ -1356,10 +1323,7 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(MEC_X,MEC_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX, MEC_Y,CHAR_FONT );
+	DrawStringRight(sString, MEC_X, MEC_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	// medical
 	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMedical );
@@ -1379,13 +1343,14 @@ static void DrawCharStats(INT16 sCharNum)
 	{
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	}
-
-	// right justify
-	FindFontRightCoordinates(MED_X,MED_Y,STAT_WID ,STAT_HEI,sString , CHAR_FONT, &usX, &usY);
- 	DrawString(sString,usX, MED_Y,CHAR_FONT );
+	DrawStringRight(sString, MED_X, MED_Y, STAT_WID, STAT_HEI, CHAR_FONT);
 
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 }
+
+
+static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
 static void DrawCharHealth(INT16 sCharNum)
@@ -1471,9 +1436,7 @@ static void DrawCharHealth(INT16 sCharNum)
 	{
 		// POW - health unknown
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		const wchar_t* POW = pPOWStrings[1];
-		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, POW, CHAR_FONT, &usX, &usY);
-		DrawString(POW, usX, CHAR_HP_Y, CHAR_FONT);
+		DrawStringCentered(pPOWStrings[1], CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, CHAR_FONT);
 	}
 
 
@@ -1488,7 +1451,6 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sStrin
 static void DrawCharacterInfo(INT16 sCharNumber)
 {
 	wchar_t sString[80];
-	UINT16 usX, usY;
 	INT16 usMercProfileID;
 	INT32 iTimeRemaining=0;
 	INT32 iDailyCost = 0;
@@ -1534,9 +1496,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		// soldier
 		Nickname = gMercProfiles[usMercProfileID].zNickname;
 	}
-
-	FindFontCenterCoordinates(PIC_NAME_X, PIC_NAME_Y, PIC_NAME_WID, PIC_NAME_HEI, Nickname, CHAR_FONT, &usX, &usY);
-	DrawString(Nickname, usX, usY, CHAR_FONT);
+	DrawStringCentered(Nickname, PIC_NAME_X, PIC_NAME_Y, PIC_NAME_WID, PIC_NAME_HEI, CHAR_FONT);
 
 
 	// Full name (Top Box)
@@ -1551,9 +1511,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		// soldier
 		Name = gMercProfiles[usMercProfileID].zName;
 	}
-
-	FindFontCenterCoordinates(CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, Name, CHAR_FONT, &usX, &usY);
-	DrawString(Name, usX, usY, CHAR_FONT);
+	DrawStringCentered(Name, CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
 
 
 	// Assignment
@@ -1567,9 +1525,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	{
 		Assignment = pAssignmentStrings[pSoldier->bAssignment];
 	}
-
-	FindFontCenterCoordinates(CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, Assignment, CHAR_FONT, &usX, &usY);
-	DrawString(Assignment, usX, usY, CHAR_FONT);
+	DrawStringCentered(Assignment, CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
 
 	// second assignment line
@@ -1631,8 +1587,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 
 	if ( wcslen( sString ) > 0 )
 	{
-		FindFontCenterCoordinates(CHAR_ASSIGN_X, CHAR_ASSIGN2_Y ,CHAR_ASSIGN_WID ,CHAR_ASSIGN_HEI ,sString , CHAR_FONT, &usX, &usY);
-		DrawString(sString, usX, usY, CHAR_FONT );
+		DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 	}
 
 
@@ -1736,8 +1691,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	SetFontBackground(FONT_BLACK);
 
 	// center and draw
-	FindFontCenterCoordinates(CHAR_TIME_REMAINING_X, CHAR_TIME_REMAINING_Y, CHAR_TIME_REMAINING_WID, CHAR_TIME_REMAINING_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX,usY, CHAR_FONT);
+	DrawStringCentered(sString, CHAR_TIME_REMAINING_X, CHAR_TIME_REMAINING_Y, CHAR_TIME_REMAINING_WID, CHAR_TIME_REMAINING_HEI, CHAR_FONT);
 
 
 	// salary
@@ -1763,23 +1717,20 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 	}
 
 	SPrintMoney(sString, iDailyCost);
-	FindFontRightCoordinates(CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX,usY, CHAR_FONT);
+	DrawStringRight(sString, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
 
 
 	// medical deposit
 	if( gMercProfiles[ Menptr[ gCharactersList[ sCharNumber ].usSolID ].ubProfile ].sMedicalDepositAmount > 0 )
 	{
 		SPrintMoney(sString, gMercProfiles[Menptr[gCharactersList[sCharNumber].usSolID].ubProfile].sMedicalDepositAmount);
-		FindFontRightCoordinates(CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, sString, CHAR_FONT, &usX, &usY);
-		DrawString(sString,usX,CHAR_MEDICAL_Y, CHAR_FONT);
+		DrawStringRight(sString, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 
 /*
 	// life insurance
 	SPrintMoney(sString, Menptr[gCharactersList[sCharNumber].usSolID].usLifeInsuranceAmount);
-	FindFontRightCoordinates(CHAR_LIFE_INSUR_X, CHAR_LIFE_INSUR_Y, CHAR_LIFE_INSUR_WID, CHAR_LIFE_INSUR_HEI, sString, CHAR_FONT, &usX, &usY);
-	DrawString(sString,usX,usY, CHAR_FONT);
+	DrawStringRight(sString, CHAR_LIFE_INSUR_X, CHAR_LIFE_INSUR_Y, CHAR_LIFE_INSUR_WID, CHAR_LIFE_INSUR_HEI, CHAR_FONT);
 */
 
 	// morale
@@ -1800,9 +1751,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		// POW - morale unknown
 		Morale = pPOWStrings[1];
 	}
-
-	FindFontCenterCoordinates(CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, Morale, CHAR_FONT, &usX, &usY);
-	DrawString(Morale, usX, CHAR_MORALE_Y, CHAR_FONT);
+	DrawStringCentered(Morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
 
 
@@ -3513,6 +3462,15 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 	UINT16 cy;
 	FindFontCenterCoordinates(x, y, w, h, str, font, &cx, &cy);
 	DrawString(str, cx, cy, font);
+}
+
+
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
+{
+	UINT16 rx;
+	UINT16 ry;
+	FindFontRightCoordinates(x, y, w, h, str, font, &rx, &ry);
+	DrawString(str, rx, ry, font);
 }
 
 
