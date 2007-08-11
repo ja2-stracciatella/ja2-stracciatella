@@ -1422,9 +1422,6 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		return;
 	}
 
-	if (!(reg->uiFlags & BUTTON_ENABLED))
-		return;
-
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		sWorldScreenX = ( gusMouseXPos - gsStartRestrictedX ) * 5;
