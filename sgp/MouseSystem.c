@@ -1011,34 +1011,6 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 }
 
 
-/* ==================================================================================
-   MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
-
-	 Moves a Mouse region to X Y on the screen
-
-*/
-
-void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY)
-{
-
-  INT16 sWidth;
-	INT16 sHeight;
-
-
-	sWidth =  region ->RegionBottomRightX - region ->RegionTopLeftX;
-	sHeight = region ->RegionBottomRightY - region ->RegionTopLeftY;
-
-
-	// move top left
-	region -> RegionTopLeftX = sX;
-	region -> RegionTopLeftY = sY;
-
-	// now move bottom right based on topleft + width or height
-  region -> RegionBottomRightX = sX + sWidth;
-	region -> RegionBottomRightY = sY + sHeight;
-}
-
-
 // This function will force a re-evaluation of mouse regions
 // Usually used to force change of mouse cursor if panels switch, etc
 void RefreshMouseRegions( )

@@ -145,8 +145,6 @@ void MSYS_DisableRegion(MOUSE_REGION *region);
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata);
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index);
 
-void MSYS_MoveMouseRegionTo( MOUSE_REGION *region, INT16 sX, INT16 sY);
-
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
 
 // This function will force a re-evaluation of mous regions
