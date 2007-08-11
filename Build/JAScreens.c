@@ -1198,7 +1198,7 @@ UINT32 DemoExitScreenHandle(void)
 			uiStartTime = uiTime;
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
@@ -1239,7 +1239,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop    = 0;
 			DstRect.iRight  = SCREEN_WIDTH;
 			DstRect.iBottom = SCREEN_HEIGHT;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
@@ -1253,7 +1253,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop    =                  20 * (iPercentage - 50) / 50;
 			DstRect.iRight  = SCREEN_WIDTH  - 188 * (iPercentage - 50) / 50;
 			DstRect.iBottom = SCREEN_HEIGHT - 250 * (iPercentage - 50) / 50;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
@@ -1262,7 +1262,7 @@ UINT32 DemoExitScreenHandle(void)
 			SetMusicMode( MUSIC_MAIN_MENU );
 			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			gbFadeSpeed = (INT8)50;
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 4;
 			SetFontDestBuffer(FRAME_BUFFER, 0, 230, SCREEN_WIDTH, SCREEN_HEIGHT);
 			SetFont( FONT10ARIAL );
@@ -1362,7 +1362,7 @@ UINT32 DemoExitScreenHandle(void)
 			uiStartTime = uiTime;
 			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}
 
@@ -1399,7 +1399,7 @@ UINT32 DemoExitScreenHandle(void)
 			DstRect.iTop    = 0;
 			DstRect.iRight  = SCREEN_WIDTH;
 			DstRect.iBottom = SCREEN_HEIGHT;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
@@ -1417,14 +1417,14 @@ UINT32 DemoExitScreenHandle(void)
 				DstRect.iTop -= (iPercentage-50);
 				DstRect.iBottom -= (iPercentage-50);
 			#endif
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		if( iPercentage == 100 )
 		{
 			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 6;
 			DeleteVideoSurfaceFromIndex( uiCollageID );
 			iPrevPercentage = 0;

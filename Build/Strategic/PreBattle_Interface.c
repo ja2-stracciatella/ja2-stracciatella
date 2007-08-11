@@ -734,7 +734,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	sEndTop = 180;
 
 	//save the mapscreen buffer
-	BlitBufferToBuffer(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
 
 	if( gfEnterAutoResolveMode )
 	{ //If we are intending on immediately entering autoresolve, change the global flag so that it will actually
@@ -798,7 +798,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)DstRect.iLeft, (UINT16)DstRect.iTop,
 			(UINT16)(DstRect.iRight-DstRect.iLeft+1), (UINT16)(DstRect.iBottom-DstRect.iTop+1) );
 	}
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }
 
 void KillPreBattleInterface()

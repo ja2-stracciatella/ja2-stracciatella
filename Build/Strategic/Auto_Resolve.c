@@ -470,7 +470,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	sEndTop = SrcRect.iTop + gpAR->sHeight / 2;
 
 	//save the prebattle/mapscreen interface background
-	BlitBufferToBuffer(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
 
 	//render the autoresolve panel
 	RenderAutoResolve();
@@ -611,7 +611,7 @@ UINT32 AutoResolveScreenHandle()
 		gpAR->fEnteringAutoResolve = FALSE;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
 		ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
 		CalculateSoldierCells( FALSE );
@@ -1976,7 +1976,7 @@ static void CreateAutoResolveInterface(void)
 	//Build the interface buffer, and blit the "shaded" background.  This info won't
 	//change from now on, but will be used to restore text.
 	BuildInterfaceBuffer();
-	BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 
 	//If we are bumping up the interface, then also use that piece of info to
 	//move the buttons up by the same amount.
