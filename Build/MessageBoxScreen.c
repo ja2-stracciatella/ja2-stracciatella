@@ -648,135 +648,55 @@ static void MsgBoxClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		fLButtonDown = TRUE;
-	}
-	else if( ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP ) && fLButtonDown )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSG_BOX_RETURN_OK;
 	}
-	else if ( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fLButtonDown = FALSE;
-	}
-
-
 }
 
 
 static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		fLButtonDown = TRUE;
-	}
-	else if( ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP ) && fLButtonDown )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSG_BOX_RETURN_YES;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fLButtonDown = FALSE;
 	}
 }
 
 
 static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		fLButtonDown = TRUE;
-	}
-	else if( ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP ) && fLButtonDown )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSG_BOX_RETURN_NO;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fLButtonDown = FALSE;
 	}
 }
 
 
 static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		fLButtonDown = TRUE;
-	}
-	else if( ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP ) && fLButtonDown )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSG_BOX_RETURN_CONTRACT;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fLButtonDown = FALSE;
 	}
 }
 
 
 static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	static BOOLEAN fLButtonDown = FALSE;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		fLButtonDown = TRUE;
-	}
-	else if( ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP ) && fLButtonDown )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSG_BOX_RETURN_LIE;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fLButtonDown = FALSE;
 	}
 }
 
 
 static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP  )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-		// OK, exit
 		gMsgBox.bHandled = MSYS_GetBtnUserData(btn);
 	}
-
 }
 
 

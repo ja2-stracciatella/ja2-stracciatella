@@ -5693,42 +5693,24 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 /*
 void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
 {
-	if (!(btn->uiFlags & BUTTON_ENABLED))
-		return;
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if(fMapInventoryItem)
-			return;
-		if(!(btn->uiFlags & BUTTON_CLICKED_ON))
+		if (!fMapInventoryItem)
 		{
-		 fCharacterInfoPanelDirty = TRUE;
+			fShowInventoryFlag = FALSE;
 		}
-    btn->uiFlags|=(BUTTON_CLICKED_ON);
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		if(btn->uiFlags & BUTTON_CLICKED_ON)
+
+		// set help text for item glow region
+		if (fShowInventoryFlag)
 		{
-		 btn->uiFlags&= ~(BUTTON_CLICKED_ON);
-
-		 if(!fMapInventoryItem)
-		 {
-		   fShowInventoryFlag = FALSE;
-		 }
-
-		 // set help text for item glow region
-		 if( fShowInventoryFlag )
-		 {
-			 SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
-		 }
-		 else
-		 {
-			 SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
-		 }
-
-		 fTeamPanelDirty = TRUE;
+			SetRegionFastHelpText(&gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[2]);
 		}
+		else
+		{
+			SetRegionFastHelpText(&gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[0]);
+		}
+
+		fTeamPanelDirty = TRUE;
 	}
 }
 */

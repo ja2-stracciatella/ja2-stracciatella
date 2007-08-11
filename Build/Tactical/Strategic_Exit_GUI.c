@@ -874,36 +874,21 @@ static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void OKCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP  )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// OK, exit
 		RemoveSectorExitMenu( TRUE );
-
 	}
-
 }
 
 
 static void CancelCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP  )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// OK, exit
 		RemoveSectorExitMenu( FALSE );
 	}
-
 }
 
 

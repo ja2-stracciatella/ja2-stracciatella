@@ -897,9 +897,6 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason)
 
    if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	 {
-
-		 btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
 		 // if greater than page zero, we can move back, decrement iCurrentPage counter
 		 LoadPreviousPage( );
 
@@ -915,7 +912,6 @@ static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-     btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		 // increment currentPage
      LoadNextPage( );
 
@@ -933,8 +929,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT32 uiButton = MSYS_GetBtnUserData(btn);
-
-		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 
 		//if its the first page button
 		if( uiButton == 0 )

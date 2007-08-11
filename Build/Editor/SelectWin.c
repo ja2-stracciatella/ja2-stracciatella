@@ -1360,15 +1360,8 @@ void RestoreSelectionList( void )
 //	Button callback function for the selection window's OK button
 static void OkClkCallback(GUI_BUTTON* button, INT32 reason)
 {
-
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		button->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		button->uiFlags &= (~BUTTON_CLICKED_ON);
 		fAllDone = TRUE;
 	}
 }
@@ -1381,13 +1374,8 @@ static void OkClkCallback(GUI_BUTTON* button, INT32 reason)
 //
 static void CnclClkCallback(GUI_BUTTON* button, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		button->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		button->uiFlags &= (~BUTTON_CLICKED_ON);
 		fAllDone = TRUE;
 		RestoreSelectionList();
 	}

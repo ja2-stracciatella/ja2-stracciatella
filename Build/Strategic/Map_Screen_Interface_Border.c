@@ -373,8 +373,6 @@ void DeleteMapBorderButtons( void )
 /*
 void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 {
-
-
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 		// are help messages being displayed?..redraw
@@ -384,18 +382,11 @@ void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 		}
 
 		MarkButtonsDirty( );
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-
-		  // go down one level
-		  GoDownOneLevelInMap( );
-		}
+		// go down one level
+		GoDownOneLevelInMap( );
 	}
 }
 
@@ -412,17 +403,11 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 
 
 		MarkButtonsDirty( );
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-    if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-			// go up one level
-		  GoUpOneLevelInMap( );
-		}
+		// go up one level
+		GoUpOneLevelInMap( );
 	}
 }
 */
@@ -528,15 +513,10 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 		CommonBtnCallbackBtnDownChecks();
 
-		if (btn->uiFlags & BUTTON_CLICKED_ON)
+		btn->uiFlags ^= BUTTON_CLICKED_ON;
+		fZoomFlag = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
+		if (fZoomFlag)
 		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-      fZoomFlag=FALSE;
-		}
-		else
-		{
-		 btn->uiFlags|=(BUTTON_CLICKED_ON);
-		 fZoomFlag=TRUE;
 		 if( sSelMapX > 14 )
 		 {
 			 iZoomX = ( ( sSelMapX + 2 ) / 2 ) * ( MAP_GRID_X * 2 );
@@ -793,22 +773,15 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		{
 			fMapPanelDirty = TRUE;
 		}
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-   if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-     btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		 giScrollButtonState = NORTH_DIR;
-		 fMapScrollDueToPanelButton = TRUE;
-	  }
+		giScrollButtonState = NORTH_DIR;
+		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		giScrollButtonState = NORTH_DIR;
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
@@ -829,23 +802,15 @@ void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		 {
 			 fMapPanelDirty = TRUE;
 		 }
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-   if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		  giScrollButtonState = SOUTH_DIR;
-		  fMapScrollDueToPanelButton = TRUE;
-
-	  }
+		giScrollButtonState = SOUTH_DIR;
+		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		 giScrollButtonState = SOUTH_DIR;
-	   btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
@@ -865,23 +830,15 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		{
 			fMapPanelDirty = TRUE;
 		}
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-   if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		  giScrollButtonState = EAST_DIR;
-		  fMapScrollDueToPanelButton = TRUE;
-
-	  }
+		giScrollButtonState = EAST_DIR;
+		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		 giScrollButtonState = EAST_DIR;
-	   btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 
@@ -902,23 +859,15 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		{
 			fMapPanelDirty = TRUE;
 		}
-
-	  btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
-   if (btn->uiFlags & BUTTON_CLICKED_ON)
-		{
-      btn->uiFlags&=~(BUTTON_CLICKED_ON);
-		  giScrollButtonState = WEST_DIR;
-		  fMapScrollDueToPanelButton = TRUE;
-
-	  }
+		giScrollButtonState = WEST_DIR;
+		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
 		 giScrollButtonState = WEST_DIR;
-	   btn->uiFlags|=(BUTTON_CLICKED_ON);
 	}
 }
 

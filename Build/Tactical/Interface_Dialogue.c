@@ -493,14 +493,8 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 
 static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP  )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// OK, pickup item....
 		gTalkPanel.fHandled = TRUE;
 		gTalkPanel.fHandledTalkingVal = gFacesData[ gTalkPanel.iFaceIndex ].fTalking;

@@ -1282,12 +1282,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 
 static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-//		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//Get the btn id
 		INT8 bRetValue = MSYS_GetBtnUserData(btn);
@@ -1299,23 +1294,9 @@ static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason)
 
 		gHelpScreen.ubHelpScreenDirty = HLP_SCRN_DRTY_LVL_REFRESH_TEXT;
 
-		for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
-		{
-			ButtonList[ guiHelpScreenBtns[i] ]->uiFlags &= (~BUTTON_CLICKED_ON );
-		}
-
 		//change the current sub page, and render it to the buffer
 		ChangeHelpScreenSubPage();
 */
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-//		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
@@ -1403,8 +1384,6 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 /*
-		btn->uiFlags &= ~BUTTON_CLICKED_ON;
-
 		if( gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen & ( 1 << gHelpScreen.bCurrentHelpScreen ) )
 		{
 //
@@ -1415,7 +1394,6 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason
 //			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen |= ( 1 << gHelpScreen.bCurrentHelpScreen );
 
 		}
-//		btn->uiFlags |= BUTTON_CLICKED_ON;
 */
 	}
 }
@@ -1440,23 +1418,9 @@ void NewScreenSoResetHelpScreen( )
 
 static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-
 		PrepareToExitHelpScreen();
-
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
-	if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 
@@ -2386,32 +2350,8 @@ static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY)
 
 static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		INT32 iButtonID = MSYS_GetBtnUserData(btn);
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		//if up
-		if( iButtonID == 0 )
-		{
-			ChangeTopLineInTextBufferByAmount( -1 );
-		}
-		else
-		{
-			ChangeTopLineInTextBufferByAmount( 1 );
-		}
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		INT32 iButtonID = MSYS_GetBtnUserData(btn);
 
@@ -2424,10 +2364,7 @@ static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			ChangeTopLineInTextBufferByAmount( 1 );
 		}
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
-
 }
 
 

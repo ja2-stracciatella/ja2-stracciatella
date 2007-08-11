@@ -2495,26 +2495,8 @@ static BOOLEAN ReloadItemDesc(void)
 
 static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 {
-	static BOOLEAN fRightDown = FALSE;
-
-/*	region gets disabled in SKI for shopkeeper boxes.  It now works normally for merc's inventory boxes!
-	//if we are currently in the shopkeeper interface, return;
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-		return;
-	}
-*/
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		fRightDown = TRUE;
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP && fRightDown )
-	{
-		fRightDown = FALSE;
-
 		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 		{
 			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
@@ -2560,12 +2542,8 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 
 				fItemDescDelete = TRUE;
 			}
-
 		}
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 	}
-
 }
 
 
@@ -6181,36 +6159,18 @@ void RemoveItemPickupMenu( )
 
 static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		SetupPickupPage( (UINT8)( gItemPickupMenu.bScrollPage - 1 ) );
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
 }
 
 
 static void ItemPickupScrollDown(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 		SetupPickupPage( (UINT8)( gItemPickupMenu.bScrollPage + 1 ) );
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
 }
 
@@ -6219,15 +6179,8 @@ static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
 {
 	INT32 cnt;
 
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		gItemPickupMenu.fAllSelected = !gItemPickupMenu.fAllSelected;
 
 
@@ -6250,52 +6203,28 @@ static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
 		}
 
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
 }
 
 
 static void ItemPickupOK(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// OK, pickup item....
 		gItemPickupMenu.fHandled = TRUE;
 
 		// Tell our soldier to pickup this item!
 		SoldierGetItemFromWorld( gItemPickupMenu.pSoldier, ITEM_PICKUP_SELECTION, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel, gItemPickupMenu.pfSelectedArray );
 	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-	}
 }
 
 
 static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		// OK, pickup item....
 		gItemPickupMenu.fHandled = TRUE;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 	}
 }
 
@@ -6430,21 +6359,13 @@ BOOLEAN HandleItemPickupMenu( )
 static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	INT8	i;
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
-	}
 	if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		UINT8	ubButton = MSYS_GetBtnUserData(btn);
-
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
 
 		switch( ubButton )
 		{
@@ -6509,8 +6430,6 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 				MarkAButtonDirty( guiMoneyButtonBtn[ i ] );
 			}
 		}
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 
 
@@ -6551,8 +6470,6 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			MarkAButtonDirty( guiMoneyButtonBtn[ i ] );
 		}
-
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 	}
 }
 

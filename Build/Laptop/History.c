@@ -432,7 +432,6 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		fReDrawScreenFlag=TRUE;
-		btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		// this page is > 0, there are pages before it, decrement
 
 		if(iCurrentHistoryPage > 0)
@@ -463,7 +462,6 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
     // increment currentPage
-    btn->uiFlags&=~(BUTTON_CLICKED_ON);
 		LoadNextHistoryPage( );
 		// set new state
 		SetHistoryButtonStates( );
