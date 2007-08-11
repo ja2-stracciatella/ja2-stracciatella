@@ -515,10 +515,8 @@ static void DrawRecordsText(void)
 {
   // draws the text of the records
 	FinanceUnit* pCurFinance = pCurrentFinance;
-	FinanceUnit* pTempFinance = pFinanceListHead;
 	wchar_t sString[512];
 	UINT16 usX, usY;
-  INT32 iBalance=0;
 
   // setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
@@ -532,16 +530,6 @@ static void DrawRecordsText(void)
 	{
 		// nothing to print
 		return;
-	}
-
-	// get balance to this point
-  while( pTempFinance !=pCurFinance)
-	{
-		// increment balance by amount of transaction
-    iBalance += pTempFinance->iAmount;
-
-		// next element
-		pTempFinance = pTempFinance->Next;
 	}
 
 	// loop through record list
@@ -576,7 +564,7 @@ static void DrawRecordsText(void)
 		}
 
 		// the balance to this point
-    iBalance = pCurFinance->iBalanceToDate;
+    INT32 iBalance = pCurFinance->iBalanceToDate;
 
 		// set font based on balance
 		if(iBalance >=0)
