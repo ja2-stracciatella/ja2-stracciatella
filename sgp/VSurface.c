@@ -325,6 +325,26 @@ BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDest
 }
 
 
+void BltVideoSurfaceHalf(UINT32 DestVSurfaceIdx, UINT32 SrcVSurfaceIdx, INT32 DestX, INT32 DestY, const SGPRect* SrcRect)
+{
+	HVSURFACE SrcVSurface = GetVideoSurface(SrcVSurfaceIdx);
+	UINT32 SrcPitchBYTES;
+	const UINT8* SrcBuf = LockVideoSurface(SrcVSurfaceIdx, &SrcPitchBYTES);
+	UINT32 DestPitchBYTES;
+	UINT16* DestBuf = (UINT16*)LockVideoSurface(DestVSurfaceIdx, &DestPitchBYTES);
+	if (SrcRect == NULL)
+	{
+		Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, SrcVSurface, SrcBuf, SrcPitchBYTES, DestX, DestY);
+	}
+	else
+	{
+		Blt8BPPDataTo16BPPBufferHalfRect(DestBuf, DestPitchBYTES, SrcVSurface, SrcBuf, SrcPitchBYTES, DestX, DestY, SrcRect);
+	}
+	UnLockVideoSurface(DestVSurfaceIdx);
+	UnLockVideoSurface(SrcVSurfaceIdx);
+}
+
+
 void FillSurface(UINT32 uiDestVSurface, UINT16 Colour)
 {
 	HVSURFACE hDestVSurface = GetVideoSurface(uiDestVSurface);

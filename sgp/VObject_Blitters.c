@@ -6045,7 +6045,7 @@ DoneBlit:											// finished blit
 exactly half the size.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalf( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, UINT8 *pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
+BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 usHeight, usWidth;
@@ -6153,7 +6153,7 @@ exactly half the size, from a sub-region.
 		number of pixels blitted to the destination.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, UINT8 *pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPRect *pRect)
+BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, const SGPRect* pRect)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 usHeight, usWidth;

@@ -55,6 +55,11 @@ void UnLockVideoSurface(UINT32 uiVSurface);
 // Blits a video Surface to another video Surface
 BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
 
+/* Blits a video surface in half size to another video surface.
+ * If SrcRect is NULL the entire source surface is blitted.
+ * Only blitting from 8bbp surfaces to 16bpp surfaces is supported. */
+void BltVideoSurfaceHalf(UINT32 DestVSurfaceIdx, UINT32 SrcVSurfaceIdx, INT32 DestX, INT32 DestY, const SGPRect* SrcRect);
+
 /* Fill an entire surface with a colour */
 void FillSurface(UINT32 uiDestVSurface, UINT16 Colour);
 

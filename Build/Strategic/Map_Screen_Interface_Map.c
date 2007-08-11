@@ -640,9 +640,6 @@ UINT32 DrawMap( void )
 
 	if( !iCurrentMapSectorZ )
 	{
-		HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
-		CHECKF(hSrcVSurface != NULL);
-
 		// clip blits to mapscreen region
 		//ClipBlitsToMapViewRegion( );
 
@@ -670,6 +667,9 @@ UINT32 DrawMap( void )
 			clip.iBottom=clip.iTop + MapScreenRect.iBottom - MapScreenRect.iTop;
 			*/
 
+			HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
+			CHECKF(hSrcVSurface != NULL);
+
 			if( clip.iBottom > hSrcVSurface->usHeight )
 			{
 				clip.iBottom = hSrcVSurface->usHeight;
@@ -684,13 +684,7 @@ UINT32 DrawMap( void )
 		}
 		else
 		{
-			UINT32 uiDestPitchBYTES;
-			UINT16* pDestBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
-			UINT32 uiSrcPitchBYTES;
-			UINT8* pSrcBuf = LockVideoSurface(guiBIGMAP, &uiSrcPitchBYTES);
-			Blt8BPPDataTo16BPPBufferHalf( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf, uiSrcPitchBYTES, MAP_VIEW_START_X + 1, MAP_VIEW_START_Y );
-			UnLockVideoSurface(guiBIGMAP);
-			UnLockVideoSurface(guiSAVEBUFFER);
+			BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + 1, MAP_VIEW_START_Y, NULL);
 		}
 
 
@@ -1287,68 +1281,29 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 				hSrcVSurface->p16BPPPalette = pMapLTGreenPalette;
 				//hMineSurface->p16BPPPalette = pMapLTGreenPalette;
 				//hSAMSurface->p16BPPPalette = pMapLTGreenPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip );
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-			break;
-
+				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_DK_GREEN ):
 				hSrcVSurface->p16BPPPalette = pMapDKGreenPalette;
 				//hMineSurface->p16BPPPalette = pMapDKGreenPalette;
 				//hSAMSurface->p16BPPPalette = pMapDKGreenPalette;
-
-				/// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY, &clip );
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-			break;
-
+				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_LT_RED ):
 				hSrcVSurface->p16BPPPalette = pMapLTRedPalette;
 				//hMineSurface->p16BPPPalette = pMapLTRedPalette;
 				//hSAMSurface->p16BPPPalette = pMapLTRedPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX , sScreenY, &clip );
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-			break;
-
+				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 
 			case( MAP_SHADE_DK_RED ):
 				hSrcVSurface->p16BPPPalette = pMapDKRedPalette;
 				//hMineSurface->p16BPPPalette = pMapDKRedPalette;
 				//hSAMSurface->p16BPPPalette = pMapDKRedPalette;
-
-				// lock source and dest buffers
-				pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-				pSrcBuf = LockVideoSurface( guiBIGMAP, &uiSrcPitchBYTES);
-
-				Blt8BPPDataTo16BPPBufferHalfRect( pDestBuf, uiDestPitchBYTES, hSrcVSurface, pSrcBuf,uiSrcPitchBYTES, sScreenX, sScreenY, &clip );
-
-				// unlock source and dest buffers
-				UnLockVideoSurface( guiBIGMAP );
-        UnLockVideoSurface( guiSAVEBUFFER );
-			break;
+				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+				break;
 		}
 
 		// restore original palette
