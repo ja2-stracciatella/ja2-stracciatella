@@ -270,24 +270,13 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 
 INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight)
 {
-	UINT16 usNumberVerticalPixels;
-	UINT16 usTextWidth, usHeight;
-	UINT16 i;
-	UINT16 usPosY, usPosX;
-	UINT16 usStringPixLength;
-	SGPRect DestRect;
-	UINT8		ubFontColor, ubFontShadowColor;
-	UINT16	usColorVal;
-	UINT16	usLoopEnd;
-	INT16		sDispTextXPos;
-	MercPopUpBox *pPopUpTextBox = NULL;
-
 	if (usWidth >= SCREEN_WIDTH)
 		return( -1 );
 
 	if( usWidth <= MERC_TEXT_MIN_WIDTH )
 		usWidth = MERC_TEXT_MIN_WIDTH;
 
+	MercPopUpBox* pPopUpTextBox;
 	// check id value, if -1, box has not been inited yet
 	if( iBoxId == -1 )
 	{
@@ -336,8 +325,8 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	// reset flags
 	guiFlags = 0;
 
-	usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
-
+	UINT16 usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
+	UINT16 usTextWidth;
 	if( usStringPixLength < ( usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X ) * 2 ) )
 	{
 		usWidth = usStringPixLength + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
@@ -348,9 +337,9 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		usTextWidth = usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X  ) * 2 + 1 - usMarginX;
 	}
 
-	usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
+	UINT16 usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
 
-	usHeight = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
+	UINT16 usHeight = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
 
 	// Add height for margins
 	usHeight += usMarginTopY + usMarginBottomY;
@@ -392,12 +381,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	*pActualWidth = usWidth;
 	*pActualHeight = usHeight;
 
-
-	DestRect.iLeft = 0;
-	DestRect.iTop = 0;
-	DestRect.iRight = DestRect.iLeft + usWidth;
-	DestRect.iBottom = DestRect.iTop + usHeight;
-
 	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_TRANS_BACK )
 	{
 		// Zero with yellow,
@@ -407,14 +390,19 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 	else
 	{
+		SGPRect DestRect;
+		DestRect.iLeft   = 0;
+		DestRect.iTop    = 0;
+		DestRect.iRight  = usWidth;
+		DestRect.iBottom = usHeight;
 		BltVideoSurface(pPopUpTextBox->uiSourceBufferIndex, pPopUpTextBox->uiMercTextPopUpBackground, 0, 0, &DestRect);
 	}
 
 	HVOBJECT hImageHandle = GetVideoObject(pPopUpTextBox->uiMercTextPopUpBorder);
 
-	usPosX = usPosY = 0;
+	UINT16 usPosY = 0;
 	//blit top row of images
-	for(i=TEXT_POPUP_GAP_BN_LINES; i< usWidth-TEXT_POPUP_GAP_BN_LINES; i+=TEXT_POPUP_GAP_BN_LINES)
+	for (UINT16 i = TEXT_POPUP_GAP_BN_LINES; i < usWidth - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
 		//TOP ROW
 	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 1,i, usPosY);
@@ -423,8 +411,8 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 
 	//blit the left and right row of images
-	usPosX = 0;
-	for(i=TEXT_POPUP_GAP_BN_LINES; i< usHeight-TEXT_POPUP_GAP_BN_LINES; i+=TEXT_POPUP_GAP_BN_LINES)
+	UINT16 usPosX = 0;
+	for (UINT16 i= TEXT_POPUP_GAP_BN_LINES; i < usHeight - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
 	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 3,usPosX, i);
 	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 4,usPosX+usWidth-4, i);
@@ -451,13 +439,15 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 
 	//Get the font and shadow colors
+	UINT8 ubFontColor;
+	UINT8 ubFontShadowColor;
 	GetMercPopupBoxFontColor( ubBackgroundIndex, &ubFontColor, &ubFontShadowColor );
 
 	SetFontShadow( ubFontShadowColor );
 	SetFontDestBuffer(pPopUpTextBox->uiSourceBufferIndex, 0, 0, usWidth, usHeight);
 
 	//Display the text
-	sDispTextXPos = (INT16)(( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X + usMarginX ));
+	INT16 sDispTextXPos = MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X + usMarginX;
 
 	if ( pPopUpTextBox->uiFlags & ( MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON ) )
 	{
