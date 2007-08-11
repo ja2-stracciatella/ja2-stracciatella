@@ -115,9 +115,6 @@ static FinanceUnit* pFinanceListHead = NULL;
 // current page displayed
 static INT32 iCurrentPage = 0;
 
-// current financial record (the one at the top of the current page)
-static FinanceUnit* pCurrentFinance = NULL;
-
 // video object id's
 static UINT32 guiTITLE;
 static UINT32 guiTOP;
@@ -148,7 +145,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
-static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
 static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance);
@@ -440,7 +436,6 @@ static void DrawRecordsText(void);
 static void DrawAPageOfRecords(void)
 {
 	// this procedure will draw a series of financial records to the screen
-  pCurrentFinance=pFinanceListHead;
 
 	// (re-)render background
 	DrawRecordsBackGround( );
@@ -511,10 +506,12 @@ static void DrawRecordsColumnHeadersText(void)
 }
 
 
+static void ProcessTransactionString(wchar_t pString[], size_t Length, const FinanceUnit* pFinance);
+
+
 static void DrawRecordsText(void)
 {
   // draws the text of the records
-	FinanceUnit* pCurFinance = pCurrentFinance;
 	wchar_t sString[512];
 	UINT16 usX, usY;
 
@@ -524,9 +521,10 @@ static void DrawRecordsText(void)
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
 
+	const FinanceUnit* pCurFinance = pFinanceListHead;
 
 	// anything to print
-	if( pCurrentFinance == NULL )
+	if (pCurFinance == NULL)
 	{
 		// nothing to print
 		return;
@@ -797,7 +795,6 @@ static void ClearFinanceList(void)
 		// delete current node
 		MemFree(pFinanceNode);
 	}
-  pCurrentFinance = NULL;
   pFinanceListHead = NULL;
 }
 
@@ -841,7 +838,6 @@ static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iA
 		pFinance->iBalanceToDate = iBalanceToDate;
 	  pFinanceListHead = pFinance;
 	}
-  pCurrentFinance = pFinanceListHead;
 }
 
 
@@ -906,7 +902,6 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason)
 
 		 // if greater than page zero, we can move back, decrement iCurrentPage counter
 		 LoadPreviousPage( );
-		 pCurrentFinance=pFinanceListHead;
 
 		 // set button state
 	   SetFinanceButtonStates( );
@@ -927,7 +922,6 @@ static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
 		 // set button state
 	   SetFinanceButtonStates( );
 
-		 pCurrentFinance=pFinanceListHead;
 		 // redraw screen
 		 fReDrawScreenFlag=TRUE;
 	}
@@ -960,14 +954,13 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 		// set button state
 		SetFinanceButtonStates( );
 
-		pCurrentFinance=pFinanceListHead;
 		// redraw screen
 		fReDrawScreenFlag=TRUE;
 	}
 }
 
 
-static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance)
+static void ProcessTransactionString(wchar_t pString[], size_t Length, const FinanceUnit* pFinance)
 {
 	const wchar_t* s;
 	switch (pFinance->ubCode)
@@ -1041,11 +1034,6 @@ static void DisplayFinancePageNumberAndDateRange(void)
   SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
-
-	if( !pCurrentFinance )
-	{
-		pCurrentFinance = pFinanceListHead;
-	}
 
 	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
 
@@ -1323,9 +1311,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 		// got no records, return false
 		return( FALSE );
 	}
-
-	// set up current finance
-	pCurrentFinance = pFinanceListHead;
 
 	return( TRUE );
 }
