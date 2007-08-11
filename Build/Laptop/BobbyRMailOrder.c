@@ -815,19 +815,13 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum )
 {
-	UINT16	i,j;
+	UINT16  i;
 	wchar_t	sText[400];
-	wchar_t	sBack[400];
 	wchar_t	sTemp[20];
 	UINT16	usPosY;
 	UINT32	uiStartLoc=0;
 	UINT32	uiTotal;
-	UINT16	usStringLength;
-	UINT16	usPixLength;
-	wchar_t	OneChar[2];
 	INT32		iSubTotal;
-
-
 
 	//Output the qty
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_QTY], usGridX + BOBBYR_GRID_FIRST_COLUMN_X, usGridY + BOBBYR_GRID_FIRST_COLUMN_Y - BOBBYR_GRID_TITLE_OFFSET, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -906,27 +900,14 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 
 			if( pBobbyRayPurchase[i].fUsed )
 			{
+				wchar_t	sBack[400];
 				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 				swprintf(sText, lengthof(sText), L"* %ls", sBack);
 			}
 			else
 				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
-			//if the name is bigger then can fit into the slot, reduce the size
-			if( StringPixLength(sText, BOBBYR_ORDER_DYNAMIC_TEXT_FONT) > BOBBYR_GRID_THIRD_COLUMN_WIDTH-4 )
-			{
-				usStringLength = wcslen(sText);
-				usPixLength=0;
-				OneChar[1] = L'\0';
-				for(j=0; (i<usStringLength)&&(usPixLength < BOBBYR_GRID_THIRD_COLUMN_WIDTH-16); j++)
-				{
-					sBack[j] = sText[j];
-					OneChar[0] = sBack[j];
-					usPixLength += StringPixLength(OneChar, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
-				}
-				sBack[j] = 0;
-				swprintf(sText, lengthof(sText), L"%ls...", sBack);
-			}
+			ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 
 			DrawTextToScreen(sText, usGridX + BOBBYR_GRID_THIRD_COLUMN_X + 2, usPosY, BOBBYR_GRID_THIRD_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
