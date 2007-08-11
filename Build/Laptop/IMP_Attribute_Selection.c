@@ -89,7 +89,6 @@ UINT32 giIMPAttributeSelectionSliderButtonImage[ 20 ];
 
 // mouse regions
 MOUSE_REGION pSliderRegions[ 10 ];
-MOUSE_REGION pSliderBarRegions[ 10 ];
 
 
 //The currently "anchored scroll bar"
@@ -149,7 +148,6 @@ void EnterIMPAttributeSelection( void )
 
 	// the mouse regions
 	CreateSlideRegionMouseRegions( );
-  //CreateSliderBarMouseRegions( );
 
 	// render background
   RenderIMPAttributeSelection( );
@@ -198,7 +196,6 @@ void ExitIMPAttributeSelection( void )
 
 	// the mouse regions
 	DestroySlideRegionMouseRegions( );
-  //DestroySlideBarMouseRegions( );
 
 	// get rid of done buttons
   DestroyIMPAttributeSelectionButtons( );
@@ -925,9 +922,6 @@ void RenderAttributeBoxes( void )
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
 
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
-
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, L"%d", iCurrentStrength);
@@ -938,9 +932,6 @@ void RenderAttributeBoxes( void )
 				sX =  ( ( iCurrentDexterity - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE ) / 50;
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
-
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 			  sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
@@ -953,9 +944,6 @@ void RenderAttributeBoxes( void )
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
 
-				// set sliderbar mouse region
-			MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
-
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, L"%d", iCurrentAgility);
@@ -967,9 +955,6 @@ void RenderAttributeBoxes( void )
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
 
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
-
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
 				mprintf(sX + 13, sY + 3, L"%d", iCurrentWisdom);
@@ -980,8 +965,6 @@ void RenderAttributeBoxes( void )
 				sX =  ( ( iCurrentLeaderShip - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
-        // set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
@@ -993,9 +976,6 @@ void RenderAttributeBoxes( void )
 				sX =  ( ( iCurrentHealth - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
-
-        // set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
@@ -1014,8 +994,6 @@ void RenderAttributeBoxes( void )
 
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
-        // set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
@@ -1035,9 +1013,6 @@ void RenderAttributeBoxes( void )
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
 
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
-
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, L"%d", iCurrentMedical);
@@ -1056,9 +1031,6 @@ void RenderAttributeBoxes( void )
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
 
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
-
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
 				mprintf(sX + 13, sY + 3, L"%d", iCurrentMechanical);
@@ -1076,9 +1048,6 @@ void RenderAttributeBoxes( void )
 
 				sX += SKILL_SLIDE_START_X;
 				RenderSliderBar( sX, sY );
-
-				// set sliderbar mouse region
-				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
@@ -1195,30 +1164,6 @@ static void CreateSlideRegionMouseRegions(void)
 }
 
 
-static void SliderBarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
-
-
-static void CreateSliderBarMouseRegions(void)
-{
-	// this function will create that mouse regions on the sliding bars, that, if the player clicks on, the bar will automatically jump to
-  INT32 iCounter = 0;
-	INT16 sX = 0;
-
-	// set the starting X
-	sX = ( ( ( 55 - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE ) / 50 ) + SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
-
-	for( iCounter = 0; iCounter < 10; iCounter++ )
-	{
-		 // define the region
-		 MSYS_DefineRegion( &pSliderBarRegions[ iCounter ], ( INT16 ) ( sX ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT ) , ( INT16 ) (sX + SLIDER_BAR_WIDTH ), ( INT16 ) ( LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15 ),
-			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderBarRegionButtonCallback);
-
-		 // define user data
-		 	MSYS_SetRegionUserData(&pSliderBarRegions[iCounter],0,iCounter);
-	}
-}
-
-
 static void DestroySlideRegionMouseRegions(void)
 {
   // this function will destroy the regions user for the slider ' jumping'
@@ -1228,19 +1173,6 @@ static void DestroySlideRegionMouseRegions(void)
 	for( iCounter=0; iCounter < 10; iCounter++ )
 	{
 	 MSYS_RemoveRegion( &pSliderRegions[ iCounter ] );
-	}
-}
-
-
-static void DestroySlideBarMouseRegions(void)
-{
-  // this function will destroy the regions user for the slider ' jumping'
-	INT32 iCounter=0;
-
-	// delete the regions
-	for( iCounter=0; iCounter < 10; iCounter++ )
-	{
-	 MSYS_RemoveRegion( &pSliderBarRegions[ iCounter ] );
 	}
 }
 
@@ -1427,20 +1359,6 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// otherwise want to jump to position
 			fSlideIsActive =FALSE;
 		}
-	}
-}
-
-
-static void SliderBarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-    fSlideIsActive = TRUE;
-		SliderRegionButtonCallback( &pSliderRegions[ MSYS_GetRegionUserData(pRegion, 0) ], MSYS_CALLBACK_REASON_LBUTTON_REPEAT);
-	}
-	if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		fSlideIsActive = FALSE;
 	}
 }
 
