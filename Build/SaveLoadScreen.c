@@ -1609,11 +1609,7 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		INT8	bTemp;
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
-
-
-		bTemp = gbHighLightedLocation;
+		INT8 bTemp = gbHighLightedLocation;
 		gbHighLightedLocation = -1;
 //		DisplaySaveGameList();
 		DisplaySaveGameEntry( bTemp );
@@ -1622,8 +1618,6 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		//If we are saving and this is the quick save slot, leave
 		if( gfSaveGame && MSYS_GetRegionUserData( pRegion, 0 ) != 0 )
 		{

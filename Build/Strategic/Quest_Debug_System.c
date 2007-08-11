@@ -1960,14 +1960,11 @@ static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		INT16	sSelected = (INT16)MSYS_GetRegionUserData( pRegion, 0 );// + gubCityAtTopOfList;
-
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
 
 		gpActiveListBox->sCurSelectedItem = sSelected + gpActiveListBox->usItemDisplayedOnTopOfList;
 
@@ -1987,8 +1984,6 @@ static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	else if( reason & MSYS_CALLBACK_REASON_MOVE )
 	{
 		INT16	sSelected = (INT16)MSYS_GetRegionUserData( pRegion, 0 );// + gubCityAtTopOfList;
-
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
 
 		if( gpActiveListBox->sCurSelectedItem != ( sSelected + gpActiveListBox->usItemDisplayedOnTopOfList ))
 		{
@@ -2115,8 +2110,6 @@ static void ScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
-
 //		CalcPositionOfNewScrollBoxLocation();
 
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);

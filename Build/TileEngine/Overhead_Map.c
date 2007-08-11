@@ -1425,13 +1425,8 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 	if (!(reg->uiFlags & BUTTON_ENABLED))
 		return;
 
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		reg->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		reg->uiFlags &= (~BUTTON_CLICKED_ON );
 		sWorldScreenX = ( gusMouseXPos - gsStartRestrictedX ) * 5;
 		sWorldScreenY = ( gusMouseYPos - gsStartRestrictedY ) * 5;
 

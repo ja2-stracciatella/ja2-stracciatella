@@ -1379,13 +1379,10 @@ static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		gbSelectedCity = (UINT8)MSYS_GetRegionUserData( pRegion, 0 ) + gubCityAtTopOfList;
 
 		gubDropDownAction = BR_DROP_DOWN_DISPLAY;
@@ -1586,8 +1583,6 @@ static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 
 	{
 		UINT8	ubCityNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		if( ubCityNum < gbSelectedCity )
 		{
 			gbSelectedCity--;
@@ -1613,7 +1608,6 @@ static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, INT3
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
@@ -1621,8 +1615,6 @@ static void SelectScrollAreaDropDownMovementCallBack(MOUSE_REGION* pRegion, INT3
 		if( gfLeftButtonState )
 		{
 			UINT8	ubCityNum = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
-
-			pRegion->uiFlags |= BUTTON_CLICKED_ON ;
 
 			if( ubCityNum < gbSelectedCity )
 			{

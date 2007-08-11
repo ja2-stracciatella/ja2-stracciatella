@@ -408,8 +408,6 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
-
 		if( gfLeftButtonState )
 		{
 			uiSelectedSlider = MSYS_GetRegionUserData( pRegion, 1 );
@@ -436,8 +434,6 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		if( gfLeftButtonState )
 		{
 			uiSelectedSlider = MSYS_GetRegionUserData( pRegion, 1 );
@@ -463,8 +459,6 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 
 	else if( reason & MSYS_CALLBACK_REASON_MOVE )
 	{
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		if( gfLeftButtonState )
 		{
 			uiSelectedSlider = MSYS_GetRegionUserData( pRegion, 1 );

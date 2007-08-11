@@ -818,13 +818,10 @@ static void SelectFlowerDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 re
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		pRegion->uiFlags &= (~BUTTON_CLICKED_ON );
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		pRegion->uiFlags |= BUTTON_CLICKED_ON ;
-
 		gubCurrentlySelectedFlowerLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		FlowerOrderDrawSelectedCity( gubCurrentlySelectedFlowerLocation );
 
