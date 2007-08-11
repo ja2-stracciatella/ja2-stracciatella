@@ -159,13 +159,9 @@ void GameInitInsuranceContract()
 
 static void EnterLaptopInitInsuranceContract(void)
 {
-	wchar_t		zTextField[14];
-
-	swprintf( zTextField, lengthof(zTextField), L"%d", 0 );
-	SetInputFieldStringWith16BitString( 1, zTextField );
-	SetInputFieldStringWith16BitString( 2, zTextField );
-	SetInputFieldStringWith16BitString( 3, zTextField );
-
+	SetInputFieldStringWith16BitString(1, L"0");
+	SetInputFieldStringWith16BitString(2, L"0");
+	SetInputFieldStringWith16BitString(3, L"0");
 }
 
 

@@ -901,10 +901,6 @@ void RenderAttributeBoxes( void )
   INT32 iCnt=STRENGTH_ATTRIBUTE;
   INT16 sX = 0;
   INT16 sY = 0;
-  CHAR16 sString[3];
-
-	// set last char to null
-	sString[2] = 0;
 
 	// font stuff
 	SetFont(FONT10ARIAL);
@@ -932,12 +928,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentStrength );
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentStrength);
 		  break;
+
 			case (DEXTERITY_ATTRIBUTE):
 		    // blt in strength slider
 				sX =  ( ( iCurrentDexterity - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE ) / 50;
@@ -947,13 +942,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentDexterity );
 			  sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, sString);
-
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentDexterity);
 		  break;
+
 			case (AGILITY_ATTRIBUTE):
 		    // blt in strength slider
 				sX =  ( ( iCurrentAgility - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
@@ -963,13 +956,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 			MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentAgility );
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, sString);
-
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentAgility);
 		  break;
+
 			case (WISDOM_ATTRIBUTE):
 		    // blt in strength slider
 				sX =  ( ( iCurrentWisdom - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
@@ -979,12 +970,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentWisdom );
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentWisdom);
 		  break;
+
       case (LEADERSHIP_ATTRIBUTE):
 		    // blt in strength slider
 				sX =  ( ( iCurrentLeaderShip - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
@@ -993,12 +983,11 @@ void RenderAttributeBoxes( void )
         // set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentLeaderShip );
 				sX += LAPTOP_SCREEN_UL_X;
 				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13 , sY + 3, sString);
+				mprintf(sX + 13 , sY + 3, L"%d", iCurrentLeaderShip);
 		  break;
+
 			case (HEALTH_ATTRIBUTE):
 		    // blt in health slider
 				sX =  ( ( iCurrentHealth - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
@@ -1008,12 +997,11 @@ void RenderAttributeBoxes( void )
         // set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentHealth );
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentHealth);
 		  break;
+
       case (MARKSMANSHIP_SKILL):
 		    // blt in marksmanship slider
 
@@ -1029,13 +1017,11 @@ void RenderAttributeBoxes( void )
         // set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentMarkmanship );
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentMarkmanship);
 		  break;
+
       case (MEDICAL_SKILL):
 		    // blt in medical slider
 
@@ -1052,12 +1038,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentMedical );
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentMedical);
 		  break;
+
       case (MECHANICAL_SKILL):
 		    // blt in mech slider
 
@@ -1074,13 +1059,11 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentMechanical );
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentMechanical);
 		  break;
+
 			case (EXPLOSIVE_SKILL):
 		    // blt in explosive slider
 
@@ -1097,11 +1080,9 @@ void RenderAttributeBoxes( void )
 				// set sliderbar mouse region
 				MSYS_MoveMouseRegionTo( &pSliderBarRegions[ iCnt ], ( INT16 )(sX + LAPTOP_SCREEN_UL_X ), ( INT16 )( sY + LAPTOP_SCREEN_WEB_UL_Y ) );
 
-				// the text
-				swprintf( sString, lengthof(sString), L"%d", iCurrentExplosives );
 			  sY += LAPTOP_SCREEN_WEB_UL_Y;
 				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, sString);
+				mprintf(sX + 13, sY + 3, L"%d", iCurrentExplosives);
 		  break;
 
 		}
@@ -1556,22 +1537,18 @@ void SetAttributes( void )
 void DrawBonusPointsRemaining( void )
 {
   // draws the amount of points remaining player has
-	CHAR16 sString[64];
 
 	// just reviewing, don't blit stats
 	if( fReviewStats == TRUE )
 	{
     return;
 	}
-	// parse amountof bns pts remaining
-	swprintf(sString, lengthof(sString), L"%d", iCurrentBonusPoints);
 
 	// set font color
 	SetFontForeground( FONT_WHITE );
   SetFontBackground( FONT_BLACK );
   SetFont( FONT12ARIAL );
-	// print string
-	mprintf( LAPTOP_SCREEN_UL_X + 425 ,LAPTOP_SCREEN_WEB_UL_Y + 51, sString );
+	mprintf(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, L"%d", iCurrentBonusPoints);
 
 	InvalidateRegion( LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71 );
 }

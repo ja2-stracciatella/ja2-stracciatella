@@ -109,11 +109,7 @@ void DisplayCoverOfSelectedGridNo( )
 
 				//pop up a message to say we are in the display cover routine
 #ifdef JA2TESTVERSION
-				{
-					CHAR16	zString[512];
-					swprintf(zString, lengthof(zString), L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
-				}
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
 #else
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[ TCTL_MSG__DISPLAY_COVER ] );
 #endif
@@ -596,7 +592,6 @@ static INT8 GetCurrentMercForDisplayCoverStance(void)
 void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
 	UINT16 usRange=0;
-	CHAR16	zOutputString[512];
 
 	if( sTargetGridNo == NOWHERE || sTargetGridNo == 0 )
 	{
@@ -612,16 +607,13 @@ void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	if( WeaponInHand( pSoldier ) )
 	{
 		//display a string with the weapons range, then range to target
-		swprintf( zOutputString, lengthof(zOutputString), zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE ], Weapon[ pSoldier->inv[HANDPOS].usItem ].usRange / 10, usRange );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE], Weapon[pSoldier->inv[HANDPOS].usItem].usRange / 10, usRange);
 	}
 	else
 	{
 		//display a string with the range to target
-		swprintf( zOutputString, lengthof(zOutputString), zNewTacticalMessages[ TCTL_MSG__RANGE_TO_TARGET ], usRange );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET], usRange);
 	}
-
-	//Display the msg
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zOutputString );
 
 	//if the target is out of the mercs gun range or knife
 	if( !InRange( pSoldier, sTargetGridNo ) &&
@@ -668,11 +660,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 			else
 			{
 #ifdef JA2TESTVERSION
-				{
-					CHAR16	zString[512];
-					swprintf(zString, lengthof(zString), L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__LOS], gGameSettings.ubSizeOfLOS);
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zString );
-				}
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__LOS], gGameSettings.ubSizeOfLOS);
 #else
 				//pop up a message to say we are in the display cover routine
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[ TCTL_MSG__LOS ] );

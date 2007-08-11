@@ -1064,8 +1064,6 @@ static void DisplayFinancePageNumberAndDateRange(void)
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iCounter=0;
 	FinanceUnit* pTempFinance = pFinanceListHead;
-  wchar_t sString[50];
-
 
   // setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
@@ -1078,8 +1076,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 		pCurrentFinance = pFinanceListHead;
     if( !pCurrentFinance )
 		{
-     swprintf( sString, lengthof(sString), L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
-	   mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
+			mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
 		 return;
 		}
 	}
@@ -1092,9 +1089,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 	}
 
 	// get the last page
-
-  swprintf( sString, lengthof(sString), L"%ls %d / %d",pFinanceHeaders[5], iCurrentPage + 1 , guiLastPageInRecordsList + 2 );
-	mprintf( PAGE_NUMBER_X, PAGE_NUMBER_Y, sString );
+	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

@@ -4206,7 +4206,6 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	// will render the title bar for the www program
   UINT32 uiTITLEFORWWW;
 	INT32 iIndex = 0;
-	CHAR16 sString[256];
 
 	 // title bar - load
 	uiTITLEFORWWW = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
@@ -4231,17 +4230,11 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 	{
 	  mprintf(140 ,33 ,pWebTitle[0]);
 	}
-
 	else
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-
-		swprintf( sString, lengthof(sString), L"%ls  -  %ls", pWebTitle[0], pWebPagesTitles[ iIndex ] );
-		mprintf(140 ,33 ,sString);
+		mprintf(140, 33, L"%ls  -  %ls", pWebTitle[0], pWebPagesTitles[iIndex]);
 	}
-
-
-
 
 	BlitTitleBarIcons( );
 

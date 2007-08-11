@@ -852,19 +852,13 @@ static void PrintQuizQuestionNumber(void)
 {
   // this function will print the number of the current question and the numebr of questions
 
-	CHAR16 sString[ 10 ];
-
-
 	// setup font
 	SetFont( FONT12ARIAL);
 	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK );
 
-	// get current question number into a string
-	swprintf(sString, lengthof(sString), L"%d", giCurrentPersonalityQuizQuestion + 1);
-
 	// print current question number
-  mprintf( LAPTOP_SCREEN_UL_X + 345 , LAPTOP_SCREEN_WEB_UL_Y + 370 ,sString);
+	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);
 
   // total number of questions
   mprintf( LAPTOP_SCREEN_UL_X + 383 , LAPTOP_SCREEN_WEB_UL_Y + 370 , L"16");

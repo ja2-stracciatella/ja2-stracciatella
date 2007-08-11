@@ -1476,10 +1476,7 @@ BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAt
 			if ( fAttemptingAttachment && ValidAttachmentClass( usAttachment, pObj->usItem ) )
 			{
 				// well, maybe the player thought he could
-				wchar_t	zTemp[ 100 ];
-
-				swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_ATTACH ], ItemNames[ usAttachment ], ItemNames[ pObj->usItem ] );
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_CANT_ATTACH], ItemNames[usAttachment], ItemNames[pObj->usItem]);
 			}
 
 			return( FALSE );
@@ -2967,10 +2964,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
-			wchar_t	zTemp[ 150 ];
-
-			swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD2POS ].usItem ] );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_CANT_USE_TWO_ITEMS], ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]);
 			return( FALSE );
 		}
 	}
@@ -2978,10 +2972,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
-			wchar_t	zTemp[ 150 ];
-
-			swprintf( zTemp, lengthof(zTemp), Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ pObj->usItem ], ItemNames[ pSoldier->inv[ HEAD1POS ].usItem ] );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, zTemp );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_CANT_USE_TWO_ITEMS], ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]);
 			return( FALSE );
 		}
 	}

@@ -434,7 +434,6 @@ static void RenderStationaryGroups(void)
 {
 	SECTORINFO *pSector;
 	INT32 x, y, xp, yp;
-	wchar_t str[20];
 	INT32 iSector = 0;
 	UINT8 ubIconColor;
 	UINT8 ubGroupSize = 0;
@@ -502,9 +501,7 @@ static void RenderStationaryGroups(void)
 				// draw the icon
 				BlitGroupIcon( ICON_TYPE_STOPPED, ubIconColor, xp, yp, hVObject );
 
-				//Print the group size
-				swprintf(str, lengthof(str), L"%d", ubGroupSize);
-				mprintf( xp + 2, yp + 2, str );
+				mprintf(xp + 2, yp + 2, L"%d", ubGroupSize);
 			}
 
 			iSector++;

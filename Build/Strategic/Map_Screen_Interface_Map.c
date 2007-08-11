@@ -4160,9 +4160,6 @@ void DisplayPositionOfHelicopter( void )
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
 	GROUP *pGroup;
-	INT32 iNumberOfPeopleInHelicopter = 0;
-	CHAR16 sString[ 4 ];
-
 
 	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
 	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
@@ -4274,15 +4271,10 @@ void DisplayPositionOfHelicopter( void )
 
 			BltVideoObjectFromIndex(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
-			// now get number of people and blit that too
-			iNumberOfPeopleInHelicopter =  GetNumberOfPassengersInHelicopter( );
-			swprintf( sString, lengthof(sString), L"%d", iNumberOfPeopleInHelicopter );
-
 			SetFont( MAP_MVT_ICON_FONT );
 			SetFontForeground( FONT_WHITE );
 			SetFontBackground( FONT_BLACK );
-
-			mprintf( x + 5, y + 1 , sString );
+			mprintf(x + 5, y + 1,  L"%d", GetNumberOfPassengersInHelicopter());
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
 
@@ -4716,8 +4708,6 @@ UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ )
 
 static void DisplayLevelString(void)
 {
-	CHAR16 sString[ 32 ];
-
 	// given the current level being displayed on the map, show a sub level message
 
 	// at the surface
@@ -4733,9 +4723,7 @@ static void DisplayLevelString(void)
 	SetFont( MAP_FONT );
 	SetFontForeground( MAP_INDEX_COLOR );
 	SetFontBackground( FONT_BLACK );
-	swprintf( sString, lengthof(sString), L"%ls %d", sMapLevelString[ 0 ], iCurrentMapSectorZ );
-
-	mprintf(  MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, sString  );
+	mprintf(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, L"%ls %d", sMapLevelString[0], iCurrentMapSectorZ);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

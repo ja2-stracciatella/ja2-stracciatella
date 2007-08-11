@@ -2748,8 +2748,6 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 void RenderItemDescriptionBox( )
 {
 	INT16									sStrX;
-	CHAR16								sTempString[ 128 ];
-
 	UINT16								uiStringLength, uiRightLength;
 	static wchar_t				pStr[ 100 ];
 	INT32									cnt;
@@ -2959,8 +2957,7 @@ void RenderItemDescriptionBox( )
 			SetFontShadow( DEFAULT_SHADOW );
 
 			//LABELS
-			swprintf( sTempString, lengthof(sTempString), gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
-			mprintf( gMapWeaponStats[ 0 ].sX + gsInvDescX, gMapWeaponStats[ 0 ].sY + gsInvDescY, L"%ls", sTempString );
+			mprintf(gMapWeaponStats[0].sX + gsInvDescX, gMapWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
 				mprintf( gMapWeaponStats[ 3 ].sX + gsInvDescX, gMapWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
@@ -3148,8 +3145,7 @@ void RenderItemDescriptionBox( )
 			{
 				mprintf( gMapWeaponStats[ 1 ].sX + gsInvDescX, gMapWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ] );
 			}
-			swprintf( sTempString, lengthof(sTempString), gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
-			mprintf( gMapWeaponStats[ 0 ].sX + gsInvDescX, gMapWeaponStats[ 0 ].sY + gsInvDescY, sTempString );
+			mprintf(gMapWeaponStats[0].sX + gsInvDescX, gMapWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 
 			// Values
 			SetFontForeground( 5 );
@@ -3191,6 +3187,7 @@ void RenderItemDescriptionBox( )
 
 
 				SetFontForeground( 5 );
+				wchar_t sTempString[128];
 				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString, lengthof(sTempString));
 				FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 				mprintf(usX, usY, sTempString);
@@ -3378,8 +3375,7 @@ void RenderItemDescriptionBox( )
 			SetFontShadow( DEFAULT_SHADOW );
 
 			//LABELS
-			swprintf( sTempString, lengthof(sTempString), gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
-			mprintf( gWeaponStats[ 0 ].sX + gsInvDescX, gWeaponStats[ 0 ].sY + gsInvDescY, sTempString );
+			mprintf(gWeaponStats[0].sX + gsInvDescX, gWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
 				mprintf( gWeaponStats[ 3 ].sX + gsInvDescX, gWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
@@ -3585,8 +3581,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			//Weight
-			swprintf( sTempString, lengthof(sTempString), gWeaponStatsDesc[ 0 ], GetWeightUnitString() );
-			mprintf( gWeaponStats[ 0 ].sX + gsInvDescX, gWeaponStats[ 0 ].sY + gsInvDescY, sTempString );
+			mprintf(gWeaponStats[0].sX + gsInvDescX, gWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 
 			// Values
 			SetFontForeground( 5 );
@@ -3617,6 +3612,7 @@ void RenderItemDescriptionBox( )
 
 
 				SetFontForeground( 5 );
+				wchar_t sTempString[128];
 				GetShortSectorString(SECTORX(KeyTable[gpItemDescObject->ubKeyID].usSectorFound), SECTORY(KeyTable[gpItemDescObject->ubKeyID].usSectorFound), sTempString, lengthof(sTempString));
 				FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 				mprintf(usX, usY, sTempString);

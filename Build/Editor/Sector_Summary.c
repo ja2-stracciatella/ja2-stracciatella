@@ -1375,7 +1375,6 @@ void RenderSummaryWindow()
 		if( gfRenderProgress )
 		{
 			UINT8 ubNumUndergroundLevels;
-			wchar_t str[2];
 			for( y = 0; y < 16; y++ )
 			{
 				ClipRect.iTop = MAP_TOP + y*13;
@@ -1393,8 +1392,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf(str, lengthof(str), L"%d", ubNumUndergroundLevels);
-							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
+							mprintf(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, L"%d", ubNumUndergroundLevels);
 						}
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 						{
@@ -1413,8 +1411,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							swprintf(str, lengthof(str), L"%d", ubNumUndergroundLevels);
-							mprintf( MAP_LEFT + x*13 + 4, ClipRect.iTop + 4, str );
+							mprintf(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, L"%d", ubNumUndergroundLevels);
 						}
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
 						{
