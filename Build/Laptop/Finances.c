@@ -139,17 +139,9 @@ static INT32 giFinanceButtonImage[4];
 
 // internal functions
 static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
-static void RenderBackGround(void);
 static BOOLEAN LoadFinances(void);
-static void DrawSummary(void);
-static void DrawSummaryLines(void);
-static void DrawFinanceTitleText(void);
 static void RemoveFinances(void);
-static void DrawSummaryText(void);
 static void ClearFinanceList(void);
-static void DrawAPageOfRecords(void);
-static void DrawRecordsBackGround(void);
-static void DrawRecordsText(void);
 static void DrawRecordsColumnHeadersText(void);
 static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason);
@@ -157,7 +149,6 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void ProcessTransactionString(STR16 pString, size_t Length, FinanceUnit* pFinance);
-static void DisplayFinancePageNumberAndDateRange(void);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
 static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance);
@@ -312,13 +303,7 @@ void EnterFinances()
 	// set button state
 	SetFinanceButtonStates( );
 
-  // draw finance
   RenderFinances( );
-
-//  DrawSummary( );
-
-  // draw page number
-  DisplayFinancePageNumberAndDateRange( );
 }
 
 void ExitFinances( void )
@@ -345,9 +330,16 @@ void HandleFinances( void )
 
 }
 
-void RenderFinances( void )
+
+static void DisplayFinancePageNumberAndDateRange(void);
+static void DrawAPageOfRecords(void);
+static void DrawFinanceTitleText(void);
+static void DrawSummary(void);
+static void RenderBackGround(void);
+
+
+void RenderFinances(void)
 {
-	// draw background
   RenderBackGround();
 
 	// if we are on the first page, draw the summary
@@ -356,17 +348,12 @@ void RenderFinances( void )
 	else
    DrawAPageOfRecords( );
 
-
-
-	//title
 	DrawFinanceTitleText( );
 
-	// draw pages and dates
   DisplayFinancePageNumberAndDateRange( );
 
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 
-	// title bar icon
 	BlitTitleBarIcons(  );
 }
 
@@ -416,8 +403,11 @@ static void RenderBackGround(void)
 	// render generic background for Finance system
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
-	DrawFinanceTitleText( );
 }
+
+
+static void DrawSummaryLines(void);
+static void DrawSummaryText(void);
 
 
 static void DrawSummary(void)
@@ -425,7 +415,6 @@ static void DrawSummary(void)
 	// draw day's summary to screen
   DrawSummaryLines( );
 	DrawSummaryText( );
-	DrawFinanceTitleText( );
 }
 
 
@@ -444,6 +433,10 @@ static void DrawSummaryLines(void)
 }
 
 
+static void DrawRecordsBackGround(void);
+static void DrawRecordsText(void);
+
+
 static void DrawAPageOfRecords(void)
 {
 	// this procedure will draw a series of financial records to the screen
@@ -459,7 +452,6 @@ static void DrawAPageOfRecords(void)
 
 	// current page is found, render  from here
 	DrawRecordsText( );
-  DisplayFinancePageNumberAndDateRange( );
 }
 
 
@@ -467,10 +459,6 @@ static void DrawRecordsBackGround(void)
 {
 	// proceudre will draw the background for the list of financial records
   INT32 iCounter;
-
-	// render the generic background
-	RenderBackGround( );
-
 
 	// now the columns
 	for (iCounter = 6; iCounter < 35; iCounter++)
