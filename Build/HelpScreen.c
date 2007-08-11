@@ -2040,6 +2040,7 @@ static void DisplayHelpScreenTextBufferScrollBox(void);
 static void RenderTextBufferToScreen(void)
 {
 	SGPRect SrcRect;
+	SrcRect.iLeft   = 0;
 	SrcRect.iTop    = gHelpScreen.iLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER;
 	SrcRect.iRight  = HLP_SCRN__WIDTH_OF_TEXT_BUFFER;
 	SrcRect.iBottom = SrcRect.iTop + HLP_SCRN__HEIGHT_OF_TEXT_AREA - 2 * 8;
