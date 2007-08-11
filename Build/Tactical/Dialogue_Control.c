@@ -4,6 +4,7 @@
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"
 #include "Faces.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Gap.h"
 #include "Overhead.h"
@@ -13,7 +14,6 @@
 #include "Soldier_Profile.h"
 #include "WordWrap.h"
 #include "SysUtil.h"
-#include "VObject_Blitters.h"
 #include "AIMMembers.h"
 #include "Mercs.h"
 #include "Interface_Dialogue.h"
@@ -2182,8 +2182,6 @@ void HandleDialogueEnd( FACETYPE *pFace )
 
 static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 {
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
 	INT16 sFontX, sFontY;
 	SOLDIERTYPE *pSoldier;
 	wchar_t					zTownIDString[50];
@@ -2246,18 +2244,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
 		//RenderAutoFace( gpCurrentTalkingFace->iID );
 
-
-		pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);
-		pSrcBuf = LockVideoSurface( gpCurrentTalkingFace->uiAutoDisplayBuffer, &uiSrcPitchBYTES);
-
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-					(INT16)( pBlitter->sX + 14 ), (INT16)( pBlitter->sY + 6 ),
-					0 , 0,
-					gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight );
-
-		UnLockVideoSurface( pBlitter->uiDestBuff );
-		UnLockVideoSurface( gpCurrentTalkingFace->uiAutoDisplayBuffer );
+		const SGPRect r = { 0, 0, gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight };
+		BltVideoSurface(pBlitter->uiDestBuff, gpCurrentTalkingFace->uiAutoDisplayBuffer, pBlitter->sX + 14, pBlitter->sY + 6, &r);
 
 		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + 99, pBlitter->sY + 98 );
 	}

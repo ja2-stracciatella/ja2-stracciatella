@@ -192,8 +192,6 @@ void EntryInitEditorItemsInfo()
 
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
-	UINT8	 *pDestBuf, *pSrcBuf;
-	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	SGPRect	SaveRect, NewRect;
 	INT16 i, x, y;
 	UINT16 usCounter;
@@ -297,18 +295,12 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		return;
 	}
 
-	pDestBuf = LockVideoSurface(eInfo.uiBuffer, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface(FRAME_BUFFER, &uiSrcPitchBYTES);
-
 	//copy a blank chunk of the editor interface to the new buffer.
 	for( i=0; i<eInfo.sWidth; i+=60 )
 	{
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES, 0+i, 0, 100, 360, 60, 80 );
+		const SGPRect r = { 100, 360, 100 + 60, 360 + 80 };
+		BltVideoSurface(eInfo.uiBuffer, FRAME_BUFFER, i, 0, &r);
 	}
-
-	UnLockVideoSurface(eInfo.uiBuffer);
-	UnLockVideoSurface(FRAME_BUFFER);
 
 	x = 0;
 	y = 0;
@@ -523,8 +515,6 @@ static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* 
 
 void RenderEditorItemsInfo()
 {
-	UINT8	 *pDestBuf, *pSrcBuf;
-	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	INT16 i;
 	INT16 minIndex, maxIndex;
 	UINT16 usNumItems;
@@ -538,15 +528,9 @@ void RenderEditorItemsInfo()
 	{ //Mouse has moved out of the items display region -- so nothing can be highlighted.
 		eInfo.sHilitedItemIndex = -1;
 	}
-	pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface(eInfo.uiBuffer, &uiSrcPitchBYTES);
 
-	//copy the items buffer to the editor bar
-	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES, 110, 360, 60*eInfo.sScrollIndex, 0, 360, 80 );
-
-	UnLockVideoSurface(eInfo.uiBuffer);
-	UnLockVideoSurface(FRAME_BUFFER);
+	const SGPRect r = { 60 * eInfo.sScrollIndex, 0, 60 * eInfo.sScrollIndex + 360, 80 };
+	BltVideoSurface(FRAME_BUFFER, eInfo.uiBuffer, 110, 360, &r);
 
 	//calculate the min and max index that is currently shown.  This determines
 	//if the highlighted and/or selected items are drawn with the outlines.

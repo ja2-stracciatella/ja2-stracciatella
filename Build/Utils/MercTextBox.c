@@ -214,25 +214,8 @@ BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, U
 
 static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer)
 {
-//	UINT32  uiDestPitchBYTES;
-//	UINT32  uiSrcPitchBYTES;
-//  UINT16  *pDestBuf;
-//	UINT16  *pSrcBuf;
-
-
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
-	BOOLEAN fReturnValue = TRUE;
-
-	// grab the destination buffer
-//	pDestBuf = ( UINT16* )LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-
-	// now lock it
-//	pSrcBuf = ( UINT16* )LockVideoSurface( gPopUpTextBox->uiSourceBufferIndex, &uiSrcPitchBYTES);
-
 	BltVideoSurface(uiBuffer, gPopUpTextBox->uiSourceBufferIndex, sDestX, sDestY, NULL);
-
-	// blt, and grab return value
-//	fReturnValue = Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, sDestX, sDestY, 0, 0, gPopUpTextBox->sWidth, gPopUpTextBox->sHeight);
 
 	//Invalidate!
 	if ( uiBuffer == FRAME_BUFFER )
@@ -240,16 +223,7 @@ static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer)
 		InvalidateRegion( sDestX, sDestY, (INT16)( sDestX + gPopUpTextBox->sWidth ), (INT16)( sDestY + gPopUpTextBox->sHeight ) );
 	}
 
-	// unlock the video surfaces
-
-	// source
-//	UnLockVideoSurface( gPopUpTextBox->uiSourceBufferIndex );
-
-	// destination
-//	UnLockVideoSurface( uiBuffer );
-
-	// return success or failure
-  return fReturnValue;
+  return TRUE;
 }
 
 

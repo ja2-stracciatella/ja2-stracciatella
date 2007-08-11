@@ -3,11 +3,11 @@
 #include "Video.h"
 #include "Soldier_Control.h"
 #include "Faces.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Render_Dirty.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
-#include "VObject_Blitters.h"
 #include "Interface_Dialogue.h"
 #include "Font_Control.h"
 #include "Dialogue_Control.h"
@@ -630,8 +630,6 @@ void RenderTalkingMenu( )
 	FACETYPE			*pFace;
 	INT16					sFontX, sFontY, sX, sY;
 	UINT8					ubCharacterNum = gTalkPanel.ubCharNum;
-	UINT32				uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8					*pDestBuf, *pSrcBuf;
 	UINT16				usTextBoxWidth, usTextBoxHeight;
 
 	if ( !gfInTalkPanel )
@@ -665,17 +663,7 @@ void RenderTalkingMenu( )
 		// Set font settings back
 		SetFontShadow( DEFAULT_SHADOW );
 
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
-		pSrcBuf = LockVideoSurface( gTalkPanel.uiSaveBuffer, &uiSrcPitchBYTES);
-
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-				(INT16)(gTalkPanel.sX + TALK_PANEL_FACE_X), (INT16)(gTalkPanel.sY + TALK_PANEL_FACE_Y),
-				0 , 0,
-				pFace->usFaceWidth, pFace->usFaceHeight );
-
-		UnLockVideoSurface( FRAME_BUFFER );
-		UnLockVideoSurface( gTalkPanel.uiSaveBuffer );
+		BltVideoSurface(FRAME_BUFFER, gTalkPanel.uiSaveBuffer, gTalkPanel.sX + TALK_PANEL_FACE_X, gTalkPanel.sY + TALK_PANEL_FACE_Y, NULL);
 
 		MarkButtonsDirty( );
 

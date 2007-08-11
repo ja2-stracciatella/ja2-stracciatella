@@ -3067,20 +3067,14 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	INT32 xp, yp;
 	const wchar_t *pStr;
 	wchar_t str[20];
-	UINT8	 *pDestBuf, *pSrcBuf;
-	UINT32 uiSrcPitchBYTES, uiDestPitchBYTES;
 	UINT16 usColor;
 
 	SetFont( SMALLCOMPFONT );
 	//Restore the background before drawing text.
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	pSrcBuf = LockVideoSurface( gpAR->iInterfaceBuffer, &uiSrcPitchBYTES );
-	xp = pCell->xp + 2;
+	xp = pCell->xp +  2;
 	yp = pCell->yp + 32;
-	Blt16BPPTo16BPP( (UINT16*)pDestBuf, uiDestPitchBYTES,
-			(UINT16*)pSrcBuf, uiSrcPitchBYTES, xp, yp, xp-gpAR->Rect.iLeft, yp-gpAR->Rect.iTop, 46, 10 );
-	UnLockVideoSurface( gpAR->iInterfaceBuffer );
-	UnLockVideoSurface( FRAME_BUFFER );
+	const SGPRect r = { xp - gpAR->Rect.iLeft, yp - gpAR->Rect.iTop, xp - gpAR->Rect.iLeft + 46, yp - gpAR->Rect.iTop + 10 };
+	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, xp, yp, &r);
 
 	if( pCell->pSoldier->bLife )
 	{

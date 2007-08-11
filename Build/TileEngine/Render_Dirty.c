@@ -1118,22 +1118,8 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 
 BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight)
 {
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
-	BOOLEAN fRetVal;
-
-	pDestBuf = LockVideoSurface(uiDestBuffer, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface(uiSrcBuffer, &uiSrcPitchBYTES);
-
-	fRetVal = Blt16BPPTo16BPP( (UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)pSrcBuf, uiSrcPitchBYTES,
-			usSrcX, usSrcY,
-			usSrcX, usSrcY,
-			usWidth, usHeight);
-
-	UnLockVideoSurface(uiDestBuffer);
-	UnLockVideoSurface(uiSrcBuffer);
-
-	return( fRetVal );
+	const SGPRect r = { usSrcX, usSrcY, usSrcX + usWidth, usSrcY + usHeight };
+	return BltVideoSurface(uiDestBuffer, uiSrcBuffer, usSrcX, usSrcY, &r);
 }
 
 

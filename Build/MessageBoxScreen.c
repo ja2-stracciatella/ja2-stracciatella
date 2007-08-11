@@ -5,8 +5,8 @@
 #include "Sys_Globals.h"
 #include "Fade_Screen.h"
 #include "SysUtil.h"
-#include "VObject_Blitters.h"
 #include "MercTextBox.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Cursors.h"
 #include "MessageBoxScreen.h"
@@ -86,8 +86,6 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	UINT16	usTextBoxWidth;
 	UINT16	usTextBoxHeight;
 	SGPRect	aRect;
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
 	INT16	sButtonX, sButtonY, sBlankSpace;
 	UINT8	ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND, ubMercBoxBorder = BASIC_MERC_POPUP_BORDER;
 	UINT8	ubFontColor, ubFontShadowColor;
@@ -257,17 +255,8 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return -1;
 
   //Save what we have under here...
-	pDestBuf = LockVideoSurface( gMsgBox.uiSaveBuffer, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface( FRAME_BUFFER, &uiSrcPitchBYTES);
-
-	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-				0 , 0,
-				gMsgBox.sX , gMsgBox.sY,
-				usTextBoxWidth, usTextBoxHeight );
-
-	UnLockVideoSurface( gMsgBox.uiSaveBuffer );
-	UnLockVideoSurface( FRAME_BUFFER );
+	const SGPRect r = { gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + usTextBoxWidth, gMsgBox.sY + usTextBoxHeight };
+	BltVideoSurface(gMsgBox.uiSaveBuffer, FRAME_BUFFER, 0, 0, &r);
 
 	// Create top-level mouse region
 	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, usCursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
@@ -702,8 +691,6 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 
 static UINT32 ExitMsgBox(INT8 ubExitCode)
 {
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
 	SGPPoint pPosition;
 
 	// Delete popup!
@@ -804,18 +791,7 @@ static UINT32 ExitMsgBox(INT8 ubExitCode)
 	if( ( ( gMsgBox.uiExitScreen != GAME_SCREEN ) || ( fRestoreBackgroundForMessageBox == TRUE ) ) && gfDontOverRideSaveBuffer )
 	{
 		// restore what we have under here...
-		pSrcBuf = LockVideoSurface( gMsgBox.uiSaveBuffer, &uiSrcPitchBYTES);
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES);
-
-		Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-					(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-					gMsgBox.sX , gMsgBox.sY,
-					0, 0,
-					gMsgBox.usWidth, gMsgBox.usHeight );
-
-		UnLockVideoSurface( gMsgBox.uiSaveBuffer );
-		UnLockVideoSurface( FRAME_BUFFER );
-
+		BltVideoSurface(FRAME_BUFFER, gMsgBox.uiSaveBuffer, gMsgBox.sX, gMsgBox.sY, NULL);
 		InvalidateRegion( gMsgBox.sX, gMsgBox.sY, (INT16)( gMsgBox.sX + gMsgBox.usWidth ), (INT16)( gMsgBox.sY + gMsgBox.usHeight ) );
 	}
 
@@ -884,9 +860,6 @@ UINT32	MessageBoxScreenHandle( )
 		// If in game screen....
 		if ( ( gfStartedFromGameScreen )||( gfStartedFromMapScreen ) )
 		{
-			//UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-			//UINT8	 *pDestBuf, *pSrcBuf;
-
 			if( gfStartedFromGameScreen )
 			{
 				HandleTacticalUILoseCursorFromOtherScreen( );
@@ -898,20 +871,6 @@ UINT32	MessageBoxScreenHandle( )
 
 			gfStartedFromGameScreen = FALSE;
 			gfStartedFromMapScreen = FALSE;
-/*
-			// Save what we have under here...
-			pDestBuf = LockVideoSurface( gMsgBox.uiSaveBuffer, &uiDestPitchBYTES);
-			pSrcBuf = LockVideoSurface( FRAME_BUFFER, &uiSrcPitchBYTES);
-
-			Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-						(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-						0 , 0,
-						gMsgBox.sX , gMsgBox.sY,
-						gMsgBox.usWidth, gMsgBox.usHeight );
-
-			UnLockVideoSurface( gMsgBox.uiSaveBuffer );
-			UnLockVideoSurface( FRAME_BUFFER );
-*/
 		}
 
 		gfNewMessageBox = FALSE;

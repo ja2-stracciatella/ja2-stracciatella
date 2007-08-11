@@ -6,7 +6,6 @@
 #include "SysUtil.h"
 #include "WCheck.h"
 #include "Video.h"
-#include "VObject_Blitters.h"
 #include "Faces.h"
 #include "Utilities.h"
 #include "Overhead.h"
@@ -1961,8 +1960,6 @@ void HandleTalkingAutoFaces( )
 static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight)
 {
 	FACETYPE					*pFace;
-	UINT32 uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT8	 *pDestBuf, *pSrcBuf;
 
 	// Check face index
 	CHECKF( iFaceIndex != -1 );
@@ -1975,17 +1972,8 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft,
 		return( FALSE );
 	}
 
-	pDestBuf = LockVideoSurface(pFace->uiAutoDisplayBuffer, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface( pFace->uiAutoRestoreBuffer, &uiSrcPitchBYTES);
-
-	Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-				(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-				sDestLeft , sDestTop,
-				sSrcLeft , sSrcTop,
-				sWidth, sHeight);
-
-	UnLockVideoSurface(pFace->uiAutoDisplayBuffer);
-	UnLockVideoSurface(pFace->uiAutoRestoreBuffer);
+	const SGPRect r = { sSrcLeft, sSrcTop, sSrcLeft + sWidth, sSrcTop + sHeight };
+	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
 
 	// Add rect to frame buffer queue
 	if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
