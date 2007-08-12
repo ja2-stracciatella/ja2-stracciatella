@@ -2890,7 +2890,7 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 
 
 	// Are we killing mike?
-	if ( pKilledSoldier->ubProfile == 149 && pKillerSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
+	if (pKilledSoldier->ubProfile == MIKE && pKillerSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 	{
 		// Can we see?
 		if ( fCanWeSeeLocation )
@@ -2899,7 +2899,7 @@ void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier
 		}
 	}
 	// Are we killing factory mamager?
-	else if ( pKilledSoldier->ubProfile == 139 )
+	else if (pKilledSoldier->ubProfile == DOREEN)
 	{
 		// Can we see?
 		//f ( fCanWeSeeLocation )

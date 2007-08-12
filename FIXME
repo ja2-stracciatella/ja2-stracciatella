@@ -75,6 +75,7 @@ FindValidInsertionCode(): MARK_DIRTY necessary?
 GetCostOfPassageForHelicopter(): callers
 GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
+GetDialogueDataFilename(): checking for MANNY does nothing
 GetHelpTextForItem(): complicated
 GetIdOfPastMercInSlot(): callers
 GetIdOfThisSlot(): callers

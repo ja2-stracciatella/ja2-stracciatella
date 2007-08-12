@@ -2568,7 +2568,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				AddHistoryToPlayersLog( HISTORY_MERC_MARRIED_OFF, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 
 				// if Flo is going off with Daryl, then set that fact true
-				if( pSoldier->ubProfile == 44 )
+				if (pSoldier->ubProfile == FLO)
 				{
 					SetFactTrue( FACT_PC_MARRYING_DARYL_IS_FLO );
 				}

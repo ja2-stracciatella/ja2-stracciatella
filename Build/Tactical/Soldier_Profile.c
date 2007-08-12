@@ -1182,31 +1182,31 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 }
 
 
-BOOLEAN IsProfileATerrorist( UINT8 ubProfile )
+BOOLEAN IsProfileATerrorist(UINT8 ubProfile)
 {
-	if ( ubProfile == 83 || ubProfile == 111 ||
-			 ubProfile == 64 || ubProfile == 112 ||
-			 ubProfile == 82 || ubProfile == 110 )
+	switch (ubProfile)
 	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
+		case SLAY:
+		case ANNIE:
+		case CHRIS:
+		case TIFFANY:
+		case T_REX:
+		case DRUGGIST: return TRUE;
+		default:       return FALSE;
 	}
 }
 
-BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile )
+
+BOOLEAN IsProfileAHeadMiner(UINT8 ubProfile)
 {
-	if ( ubProfile == 106 || ubProfile == 148 ||
-			 ubProfile == 156 || ubProfile == 157 ||
-			 ubProfile == 158 )
+	switch (ubProfile)
 	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
+		case FRED:
+		case MATT:
+		case OSWALD:
+		case CALVIN:
+		case CARL:   return TRUE;
+		default:     return FALSE;
 	}
 }
 

@@ -1720,15 +1720,15 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		ubFileNumID = ubCharacterNum;
 
 		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if ( ubCharacterNum >= 151 && ubCharacterNum <= 154 )
+		if (ubCharacterNum >= HERVE && ubCharacterNum <= CARLO)
 		{
-			ubFileNumID = 151;
+			ubFileNumID = HERVE;
 		}
 
 		// If we are character #155, check fact!
-		if ( ubCharacterNum == 155 && !gubFact[ 220 ] )
+		if ( ubCharacterNum == MANNY && !gubFact[FACT_MANNY_IS_BARTENDER] )
 		{
-			ubFileNumID = 155;
+			ubFileNumID = MANNY;
 		}
 
 

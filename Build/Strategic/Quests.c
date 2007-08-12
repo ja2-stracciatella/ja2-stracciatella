@@ -705,7 +705,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[FACT_IRA_NOT_PRESENT] = !CheckNPCWithin( ubProfileID, IRA, 10 );
 			break;
 		case FACT_IRA_TALKING:
-			gubFact[FACT_IRA_TALKING] = ( gubSrcSoldierProfile == 59 );
+			gubFact[FACT_IRA_TALKING] = (gubSrcSoldierProfile == IRA);
 			break;
 		case FACT_IRA_UNHIRED_AND_ALIVE:
 			if ( gMercProfiles[ IRA ].bMercStatus != MERC_IS_DEAD && CheckNPCSector( IRA, 10, 1, 1) && !(gMercProfiles[IRA].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) )

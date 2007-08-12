@@ -2114,8 +2114,7 @@ BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 u
 {
 	BOOLEAN fRefuse = FALSE;
 
-	// OK are we nails?
-	if ( pSoldier->ubProfile == 34 )
+	if (pSoldier->ubProfile == NAILS)
 	{
 		// if this the VEST POS?
 		if ( uiHandPos == VESTPOS )

@@ -653,7 +653,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-	if ( pSoldier->ubProfile == 33 )
+	if (pSoldier->ubProfile == DR_Q)
 	{
 		UINT32 uiSoundID;
 		SOUNDPARMS		spParms;
@@ -6637,7 +6637,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 	if ((ubAttacker != NOBODY) && (Menptr[ubAttacker].bTeam == OUR_TEAM) && (pSoldier->ubProfile != NO_PROFILE) && (pSoldier->ubProfile >= FIRST_RPC))
 	{
 		gMercProfiles[pSoldier->ubProfile].ubMiscFlags |= PROFILE_MISC_FLAG_WOUNDEDBYPLAYER;
-		if (pSoldier->ubProfile == 114)
+		if (pSoldier->ubProfile == PACOS)
 		{
 			SetFactTrue( FACT_PACOS_KILLED );
 		}

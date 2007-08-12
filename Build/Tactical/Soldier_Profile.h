@@ -17,6 +17,9 @@ MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 //enums for the mercs
 enum
 {
+	DR_Q  = 33,
+	NAILS = 34,
+
 	BIFF = 40,
 	HAYWIRE,
 	GASKET,
