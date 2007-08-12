@@ -209,12 +209,8 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT
 
 static void DoneFadeInKilledQueen(void)
 {
-	SOLDIERTYPE *pNPCSoldier;
-
-	// Locate gridno.....
-
 	// Run NPC script
-	pNPCSoldier = FindSoldierByProfileID( 136, FALSE );
+	const SOLDIERTYPE* pNPCSoldier = FindSoldierByProfileID(DEREK, FALSE);
 	if ( !pNPCSoldier )
 	{
 		return;

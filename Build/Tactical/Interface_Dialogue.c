@@ -1791,11 +1791,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Delete menu, give item to megual
 				DeleteTalkingMenu( );
 
-				// Get pointer for Fatima
-				pSoldier = FindSoldierByProfileID( 101, FALSE );
-
-				// Get pointer for meguel
-				pSoldier2 = FindSoldierByProfileID( 57, FALSE );
+				pSoldier  = FindSoldierByProfileID(FATIMA, FALSE);
+				pSoldier2 = FindSoldierByProfileID(MIGUEL, FALSE);
 
 				// Give item!
 				if ( !pSoldier || !pSoldier2 )
@@ -1805,10 +1802,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// Look for letter....
 				{
-					INT8 bInvPos;
-
-					// Look for item....
-					bInvPos = FindObj( pSoldier, 227 );
+					INT8 bInvPos = FindObj(pSoldier, LETTER);
 
 					AssertMsg( bInvPos != NO_SLOT, "Interface Dialogue.C:  Gift item does not exist in NPC." );
 
@@ -2180,7 +2174,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_SEND_PACOS_INTO_HIDING:
-				pSoldier = FindSoldierByProfileID( 114, FALSE );
+				pSoldier = FindSoldierByProfileID(PACOS, FALSE);
 				sGridNo = 16028;
 				if (pSoldier)
 				{
@@ -2200,7 +2194,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 			case NPC_ACTION_HAVE_PACOS_FOLLOW:
-				pSoldier = FindSoldierByProfileID( 114, FALSE );
+				pSoldier = FindSoldierByProfileID(PACOS, FALSE);
 				sGridNo = 18193;
 				if (pSoldier)
 				{
@@ -4720,8 +4714,7 @@ static void DoneFadeInActionBasement(void)
 
 	}
 
-	// Get merc id for carlos!
-	pNPCSoldier = FindSoldierByProfileID( 58, FALSE );
+	pNPCSoldier = FindSoldierByProfileID(CARLOS, FALSE);
 	if ( !pNPCSoldier )
 	{
 		return;

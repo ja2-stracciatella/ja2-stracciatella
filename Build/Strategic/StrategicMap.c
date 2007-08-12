@@ -4435,10 +4435,7 @@ static void GetLoadedSectorString(wchar_t* pString, size_t Length)
 
 void HandleSlayDailyEvent( void )
 {
-	SOLDIERTYPE *pSoldier = NULL;
-
-	// grab slay
-	pSoldier = FindSoldierByProfileID( 64, TRUE );
+	SOLDIERTYPE* pSoldier = FindSoldierByProfileID(SLAY, TRUE);
 
 	if( pSoldier == NULL )
 	{
