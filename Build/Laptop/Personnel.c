@@ -49,8 +49,10 @@
 #define MAX_STATS 20
 #define PERS_FONT						FONT10ARIAL
 #define CHAR_NAME_FONT			FONT12ARIAL
-#define CHAR_NAME_Y 177
-#define CHAR_LOC_Y	189
+#define CHAR_NAME_LOC_X     432
+#define CHAR_NAME_LOC_WIDTH 124
+#define CHAR_NAME_Y         177
+#define CHAR_LOC_Y          189
 #define PERS_TEXT_FONT_COLOR FONT_WHITE //146
 #define PERS_TEXT_FONT_ALTERNATE_COLOR FONT_YELLOW
 #define PERS_FONT_COLOR FONT_WHITE
@@ -779,7 +781,6 @@ static void DisplayCharName(INT32 iId)
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 	SOLDIERTYPE* pSoldier;
-	CHAR16 sString[64];
 	INT32 iHeightOfText;
 
 	pSoldier = MercPtrs[iId];
@@ -802,6 +803,7 @@ static void DisplayCharName(INT32 iId)
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
 
+	wchar_t sString[64];
 	if (sTownName != NULL)
 	{
 		//nick name - town name
@@ -812,24 +814,11 @@ static void DisplayCharName(INT32 iId)
 		//nick name
 		wcslcpy(sString, gMercProfiles[Menptr[iId].ubProfile].zNickname, lengthof(sString));
 	}
-
-	// nick name - assignment
-	FindFontCenterCoordinates(IMAGE_BOX_X - 5, 0, IMAGE_BOX_WIDTH + 90, 0, sString, CHAR_NAME_FONT, &sX, &sY);
-
-	// check to see if we are going to go off the left edge
-	if (sX < pers_stat_x) sX = pers_stat_x;
-
-	//Display the mercs name
+	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, sString);
 
 	const wchar_t* Assignment = pPersonnelAssignmentStrings[Menptr[iId].bAssignment];
-
-	// nick name - assignment
-	FindFontCenterCoordinates(IMAGE_BOX_X - 5, 0, IMAGE_BOX_WIDTH + 90, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
-
-	// check to see if we are going to go off the left edge
-	if (sX < pers_stat_x) sX = pers_stat_x;
-
+	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_LOC_Y, Assignment);
 
 	//
@@ -4157,13 +4146,7 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 	}
 
 	const wchar_t* Name = gMercProfiles[iId].zNickname;
-
-	// nick name - assignment
-	FindFontCenterCoordinates(IMAGE_BOX_X - 5, 0, IMAGE_BOX_WIDTH + 90, 0, Name, CHAR_NAME_FONT, &sX, &sY);
-
-	// cehck to se eif we are going to go off the left edge
-	if (sX < pers_stat_x) sX = pers_stat_x;
-
+	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Name, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, Name);
 
 	const wchar_t* State;
@@ -4202,13 +4185,8 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 			State = pPersonnelDepartedStateStrings[DEPARTED_QUIT];
 	}
 
-	// nick name - assignment
-	FindFontCenterCoordinates(IMAGE_BOX_X - 5, 0, IMAGE_BOX_WIDTH + 90, 0, State, CHAR_NAME_FONT, &sX, &sY);
-
-	// cehck to se eif we are going to go off the left edge
-	if (sX < pers_stat_x) sX = pers_stat_x;
-
-	mprintf(sX, CHAR_NAME_Y + 10, State);
+	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, State, CHAR_NAME_FONT, &sX, &sY);
+	mprintf(sX, CHAR_LOC_Y, State);
 }
 
 
