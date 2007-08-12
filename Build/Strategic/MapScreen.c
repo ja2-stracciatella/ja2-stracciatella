@@ -3480,8 +3480,8 @@ static void DrawCharInfo(INT16 row, UINT8 text_color)
 	if (row >= FIRST_VEHICLE) y += 6;
 
 	UINT16 id = gCharactersList[row].usSolID;
-	const SOLDIERTYPE* man  = &Menptr[id];  // XXX Is there a difference?
-	const SOLDIERTYPE* merc = MercPtrs[id];
+	const SOLDIERTYPE* man  = &Menptr[id];  // XXX TODO000C
+	const SOLDIERTYPE* merc = MercPtrs[id]; // XXX TODO000C
 
 	// Name
 	const wchar_t* name = man->name;
