@@ -35,94 +35,91 @@
 #include "Stubs.h" // XXX
 
 
-#define IMAGE_BOX_X									395
-#define IMAGE_BOX_Y									LAPTOP_SCREEN_UL_Y+24
-#define IMAGE_BOX_WIDTH							112
-#define IMAGE_NAME_WIDTH						106
-#define IMAGE_FULL_NAME_OFFSET_Y		111
-#define TEXT_BOX_WIDTH							160
-#define TEXT_DELTA_OFFSET						9
-#define PERS_CURR_TEAM_X LAPTOP_SCREEN_UL_X + 39 - 15
-#define PERS_CURR_TEAM_Y LAPTOP_SCREEN_UL_Y + 218
-#define PERS_DEPART_TEAM_Y LAPTOP_SCREEN_UL_Y + 247
+#define IMAGE_BOX_X              395
+#define IMAGE_BOX_Y              LAPTOP_SCREEN_UL_Y + 24
+#define IMAGE_NAME_WIDTH         106
+#define IMAGE_FULL_NAME_OFFSET_Y 111
+#define TEXT_BOX_WIDTH           160
+#define TEXT_DELTA_OFFSET          9
+#define PERS_CURR_TEAM_X         LAPTOP_SCREEN_UL_X +  39 - 15
+#define PERS_CURR_TEAM_Y         LAPTOP_SCREEN_UL_Y + 218
+#define PERS_DEPART_TEAM_Y       LAPTOP_SCREEN_UL_Y + 247
 
-#define MAX_STATS 20
-#define PERS_FONT						FONT10ARIAL
-#define CHAR_NAME_FONT			FONT12ARIAL
-#define CHAR_NAME_LOC_X     432
-#define CHAR_NAME_LOC_WIDTH 124
-#define CHAR_NAME_Y         177
-#define CHAR_LOC_Y          189
-#define PERS_TEXT_FONT_COLOR FONT_WHITE //146
+#define MAX_STATS                       20
+#define PERS_FONT                      FONT10ARIAL
+#define CHAR_NAME_FONT                 FONT12ARIAL
+#define CHAR_NAME_LOC_X                432
+#define CHAR_NAME_LOC_WIDTH            124
+#define CHAR_NAME_Y                    177
+#define CHAR_LOC_Y                     189
+#define PERS_TEXT_FONT_COLOR           FONT_WHITE
 #define PERS_TEXT_FONT_ALTERNATE_COLOR FONT_YELLOW
-#define PERS_FONT_COLOR FONT_WHITE
+#define PERS_FONT_COLOR                FONT_WHITE
 
 
-#define FACES_DIR "FACES/BIGFACES/"
+#define FACES_DIR       "FACES/BIGFACES/"
 #define SMALL_FACES_DIR "FACES/"
 
-#define NEXT_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 448
+#define NEXT_MERC_FACE_X   LAPTOP_SCREEN_UL_X + 448
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150
-#define PREV_MERC_FACE_X  LAPTOP_SCREEN_UL_X + 285
+#define PREV_MERC_FACE_X   LAPTOP_SCREEN_UL_X + 285
 
 
-
-#define DEPARTED_X LAPTOP_SCREEN_UL_X + 29 - 10
+#define DEPARTED_X LAPTOP_SCREEN_UL_X +  29 - 10
 #define DEPARTED_Y LAPTOP_SCREEN_UL_Y + 207
 
 
-#define PERSONNEL_PORTRAIT_NUMBER 20
-#define PERSONNEL_PORTRAIT_NUMBER_WIDTH 5
+#define PERSONNEL_PORTRAIT_NUMBER       20
+#define PERSONNEL_PORTRAIT_NUMBER_WIDTH  5
 
-#define SMALL_PORTRAIT_WIDTH 46
+#define SMALL_PORTRAIT_WIDTH  46
 #define SMALL_PORTRAIT_HEIGHT 42
 
-#define SMALL_PORT_WIDTH 52
+#define SMALL_PORT_WIDTH  52
 #define SMALL_PORT_HEIGHT 45
 
-#define SMALL_PORTRAIT_WIDTH_NO_BORDERS		48
+#define SMALL_PORTRAIT_WIDTH_NO_BORDERS 48
 
 #define SMALL_PORTRAIT_START_X 141 - 10
-#define SMALL_PORTRAIT_START_Y 53
+#define SMALL_PORTRAIT_START_Y  53
 
 #define PERS_CURR_TEAM_COST_X LAPTOP_SCREEN_UL_X + 150 - 10
 #define PERS_CURR_TEAM_COST_Y LAPTOP_SCREEN_UL_Y + 218
 
-#define PERS_CURR_TEAM_HIGHEST_Y PERS_CURR_TEAM_COST_Y + 15
-#define PERS_CURR_TEAM_LOWEST_Y PERS_CURR_TEAM_HIGHEST_Y + 15
+#define PERS_CURR_TEAM_HIGHEST_Y PERS_CURR_TEAM_COST_Y    + 15
+#define PERS_CURR_TEAM_LOWEST_Y  PERS_CURR_TEAM_HIGHEST_Y + 15
 
 #define PERS_CURR_TEAM_WIDTH 286 - 160
 
 #define PERS_DEPART_TEAM_WIDTH PERS_CURR_TEAM_WIDTH - 20
 
-#define PERS_STAT_AVG_X LAPTOP_SCREEN_UL_X + 157 - 10
-#define PERS_STAT_AVG_Y LAPTOP_SCREEN_UL_Y + 274
-#define PERS_STAT_AVG_WIDTH 202 - 159
-#define PERS_STAT_LOWEST_X LAPTOP_SCREEN_UL_X + 72 - 10
+#define PERS_STAT_AVG_X        LAPTOP_SCREEN_UL_X + 157 - 10
+#define PERS_STAT_AVG_Y        LAPTOP_SCREEN_UL_Y + 274
+#define PERS_STAT_AVG_WIDTH    202 - 159
+#define PERS_STAT_LOWEST_X     LAPTOP_SCREEN_UL_X +  72 - 10
 #define PERS_STAT_LOWEST_WIDTH 155 - 75
-#define PERS_STAT_HIGHEST_X LAPTOP_SCREEN_UL_X + 205 - 10
-#define PERS_STAT_LIST_X LAPTOP_SCREEN_UL_X + 33 - 10
+#define PERS_STAT_HIGHEST_X    LAPTOP_SCREEN_UL_X + 205 - 10
+#define PERS_STAT_LIST_X       LAPTOP_SCREEN_UL_X +  33 - 10
 
 
-#define PERS_TOGGLE_CUR_DEPART_WIDTH 106 - 35
+#define PERS_TOGGLE_CUR_DEPART_WIDTH  106 -  35
 #define PERS_TOGGLE_CUR_DEPART_HEIGHT 236 - 212
 
-#define PERS_TOGGLE_CUR_DEPART_X LAPTOP_SCREEN_UL_X + 35 - 10
-#define PERS_TOGGLE_CUR_Y LAPTOP_SCREEN_UL_Y + 208
-#define PERS_TOGGLE_DEPART_Y LAPTOP_SCREEN_UL_Y + 238
+#define PERS_TOGGLE_CUR_DEPART_X LAPTOP_SCREEN_UL_X +  35 - 10
+#define PERS_TOGGLE_CUR_Y        LAPTOP_SCREEN_UL_Y + 208
+#define PERS_TOGGLE_DEPART_Y     LAPTOP_SCREEN_UL_Y + 238
 
-#define PERS_DEPARTED_UP_X  LAPTOP_SCREEN_UL_X + 265 - 10
-#define PERS_DEPARTED_UP_Y  LAPTOP_SCREEN_UL_Y + 210
+#define PERS_DEPARTED_UP_X   LAPTOP_SCREEN_UL_X + 265 - 10
+#define PERS_DEPARTED_UP_Y   LAPTOP_SCREEN_UL_Y + 210
 #define PERS_DEPARTED_DOWN_Y LAPTOP_SCREEN_UL_Y + 237
 
 
 #define PERS_TITLE_X 140
-#define PERS_TITLE_Y 33
+#define PERS_TITLE_Y  33
 
 #define ATM_UL_X LAPTOP_SCREEN_UL_X + 397
-#define ATM_UL_Y LAPTOP_SCREEN_UL_Y + 27
+#define ATM_UL_Y LAPTOP_SCREEN_UL_Y +  27
 
-/// atm font
 #define ATM_FONT PERS_FONT
 
 // departed states
@@ -137,10 +134,10 @@ enum
 };
 
 // atm button positions
-#define ATM_DISPLAY_X 509
-#define ATM_DISPLAY_Y 58
-#define ATM_DISPLAY_HEIGHT 10
-#define ATM_DISPLAY_WIDTH  81
+#define ATM_DISPLAY_X      509
+#define ATM_DISPLAY_Y       58
+#define ATM_DISPLAY_HEIGHT  10
+#define ATM_DISPLAY_WIDTH   81
 
 
 // the number of inventory items per personnel page
@@ -176,29 +173,29 @@ static UINT8 gubPersonnelInfoState = PRSNL_STATS;
 //enums for the pPersonnelScreenStrings[]
 enum
 {
-	PRSNL_TXT_HEALTH, // HEALTH OF MERC
+	PRSNL_TXT_HEALTH,           //    HEALTH OF MERC
 	PRSNL_TXT_AGILITY,
 	PRSNL_TXT_DEXTERITY,
 	PRSNL_TXT_STRENGTH,
 	PRSNL_TXT_LEADERSHIP,
-	PRSNL_TXT_WISDOM, 					//5
-	PRSNL_TXT_EXP_LVL, // EXPERIENCE LEVEL
+	PRSNL_TXT_WISDOM,           //  5
+	PRSNL_TXT_EXP_LVL,          //    EXPERIENCE LEVEL
 	PRSNL_TXT_MARKSMANSHIP,
 	PRSNL_TXT_MECHANICAL,
 	PRSNL_TXT_EXPLOSIVES,
-	PRSNL_TXT_MEDICAL, 				//10
-	PRSNL_TXT_MED_DEPOSIT, // AMOUNT OF MEDICAL DEPOSIT PUT DOWN ON THE MERC
-	PRSNL_TXT_CURRENT_CONTRACT, // COST OF CURRENT CONTRACT
-	PRSNL_TXT_KILLS, // NUMBER OF KILLS BY MERC
-	PRSNL_TXT_ASSISTS, // NUMBER OF ASSISTS ON KILLS BY MERC
-	PRSNL_TXT_DAILY_COST, // DAILY COST OF MERC			//15
-	PRSNL_TXT_TOTAL_COST, // TOTAL COST OF MERC
-	PRSNL_TXT_CONTRACT, // COST OF CURRENT CONTRACT
-	PRSNL_TXT_TOTAL_SERVICE, // TOTAL SERVICE RENDERED BY MERC
-	PRSNL_TXT_UNPAID_AMOUNT, // AMOUNT LEFT ON MERC MERC TO BE PAID
-	PRSNL_TXT_HIT_PERCENTAGE, // PERCENTAGE OF SHOTS THAT HIT TARGET		//20
-	PRSNL_TXT_BATTLES, // NUMBER OF BATTLES FOUGHT
-	PRSNL_TXT_TIMES_WOUNDED, // NUMBER OF TIMES MERC HAS BEEN WOUNDED
+	PRSNL_TXT_MEDICAL,          // 10
+	PRSNL_TXT_MED_DEPOSIT,      //    AMOUNT OF MEDICAL DEPOSIT PUT DOWN ON THE MERC
+	PRSNL_TXT_CURRENT_CONTRACT, //    COST OF CURRENT CONTRACT
+	PRSNL_TXT_KILLS,            //    NUMBER OF KILLS BY MERC
+	PRSNL_TXT_ASSISTS,          //    NUMBER OF ASSISTS ON KILLS BY MERC
+	PRSNL_TXT_DAILY_COST,       // 15 DAILY COST OF MERC
+	PRSNL_TXT_TOTAL_COST,       //    TOTAL COST OF MERC
+	PRSNL_TXT_CONTRACT,         //    COST OF CURRENT CONTRACT
+	PRSNL_TXT_TOTAL_SERVICE,    //    TOTAL SERVICE RENDERED BY MERC
+	PRSNL_TXT_UNPAID_AMOUNT,    //    AMOUNT LEFT ON MERC MERC TO BE PAID
+	PRSNL_TXT_HIT_PERCENTAGE,   // 20 PERCENTAGE OF SHOTS THAT HIT TARGET
+	PRSNL_TXT_BATTLES,          //    NUMBER OF BATTLES FOUGHT
+	PRSNL_TXT_TIMES_WOUNDED,    //    NUMBER OF TIMES MERC HAS BEEN WOUNDED
 	PRSNL_TXT_SKILLS,
 	PRSNL_TXT_NOSKILLS,
 };
@@ -602,7 +599,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 		//if the string will rap
-		if ((iHeightOfText - 2) > GetFontHeight(PERS_FONT))
+		if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
 		{
 			//raise where we display it, and rap it
 			DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED);
@@ -645,21 +642,21 @@ static BOOLEAN NextPersonnelFace(void)
 	}
 	else
 	{
-	if (((iCurPortraitId + 1) == (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) - giCurrentUpperLeftPortraitNumber))
-	{
-		// about to go off the end
-		giCurrentUpperLeftPortraitNumber = 0;
-		iCurPortraitId = 0;
-	}
-	else if (iCurPortraitId == 19)
-	{
-		giCurrentUpperLeftPortraitNumber += 20;
-		iCurPortraitId = 0;
-	}
-	else
-	{
-		iCurPortraitId++;
-	}
+		if (iCurPortraitId + 1 == GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam() - giCurrentUpperLeftPortraitNumber)
+		{
+			// about to go off the end
+			giCurrentUpperLeftPortraitNumber = 0;
+			iCurPortraitId = 0;
+		}
+		else if (iCurPortraitId == 19)
+		{
+			giCurrentUpperLeftPortraitNumber += 20;
+			iCurPortraitId = 0;
+		}
+		else
+		{
+			iCurPortraitId++;
+		}
 		// get of this merc in this slot
 		iCurrentPersonSelectedId =  iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
@@ -695,7 +692,7 @@ static BOOLEAN PrevPersonnelFace(void)
 	}
 	else
 	{
-		if ((iCurPortraitId == 0) && (giCurrentUpperLeftPortraitNumber == 0))
+		if (iCurPortraitId == 0 && giCurrentUpperLeftPortraitNumber == 0)
 		{
 			// about to go off the end
 			giCurrentUpperLeftPortraitNumber = (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) - (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) % 20;
@@ -826,7 +823,7 @@ static void DisplayCharName(INT32 iId)
 	iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 	//if the string will rap
-	if ((iHeightOfText - 2) > GetFontHeight(PERS_FONT))
+	if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
 	{
 		//raise where we display it, and rap it
 		DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED);
@@ -1144,10 +1141,12 @@ static void DisplayCharStats(INT32 iId)
 				//Display the 'Skills' text
 				mprintf(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
 
-				//KM: April 16, 1999
-				//Added support for the German version, which has potential string overrun problems.  For example, the text "Skills:" can
-				//overlap "NightOps (Expert)" because the German strings are much longer.  In these cases, I ensure that the right
-				//justification of the traits don't overlap.  If it would, I move it over to the right.
+				/* KM: April 16, 1999
+				 * Added support for the German version, which has potential string
+				 * overrun problems.  For example, the text "Skills:" can overlap
+				 * "NightOps (Expert)" because the German strings are much longer.  In
+				 * these cases, I ensure that the right justification of the traits
+				 * do not overlap.  If it would, I move it over to the right. */
 				const INT32 iWidth = StringPixLength(pPersonnelScreenStrings[PRSNL_TXT_SKILLS], PERS_FONT);
 				const INT32 iMinimumX = iWidth + pers_stat_x + 2;
 
@@ -1170,7 +1169,7 @@ static void DisplayCharStats(INT32 iId)
 							if (sX <= iMinimumX)
 							{
 								FindFontRightCoordinates(pers_stat_x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-								sX = (INT16)max(sX, iMinimumX);
+								sX = max(sX, iMinimumX);
 							}
 
 							mprintf(sX, pers_stat_y[19], sString);
@@ -1195,7 +1194,7 @@ static void DisplayCharStats(INT32 iId)
 
 								//KM: April 16, 1999
 								//Perform the potential overrun check
-								sX = (INT16)max(sX, iMinimumX);
+								sX = max(sX, iMinimumX);
 
 								mprintf(sX, pers_stat_y[20], Skill);
 							}
@@ -1400,8 +1399,8 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 			SetObjectHandleShade(guiFACE, 0);
 		}
 
-		const INT32 x = SMALL_PORTRAIT_START_X + (i % PERSONNEL_PORTRAIT_NUMBER_WIDTH) * SMALL_PORT_WIDTH;
-		const INT32 y = SMALL_PORTRAIT_START_Y + (i / PERSONNEL_PORTRAIT_NUMBER_WIDTH) * SMALL_PORT_HEIGHT;
+		const INT32 x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
+		const INT32 y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, x, y);
 
 		if (man->bLife <= 0)
@@ -2476,7 +2475,8 @@ static void DisplayLowestStatValuesForCurrentTeam(void)
 			}
 		}
 
-		mprintf(PERS_STAT_LOWEST_X, PERS_STAT_AVG_Y + (i + 1) * (GetFontHeight(FONT10ARIAL) + 3), name);
+		INT32 y = PERS_STAT_AVG_Y + (i + 1) * (GetFontHeight(FONT10ARIAL) + 3);
+		mprintf(PERS_STAT_LOWEST_X, y, name);
 
 		wchar_t sString[32];
 		if (iStat == -1)
@@ -2489,7 +2489,7 @@ static void DisplayLowestStatValuesForCurrentTeam(void)
 		}
 
 		FindFontRightCoordinates(PERS_STAT_LOWEST_X, 0, PERS_STAT_LOWEST_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, PERS_STAT_AVG_Y + (i + 1) * (GetFontHeight(FONT10ARIAL) + 3), sString);
+		mprintf(sX, y, sString);
 	}
 }
 
@@ -2594,18 +2594,15 @@ static void DisplayHighestStatValuesForCurrentTeam(void)
 static void DisplayPersonnelTeamStats(void)
 {
 	// displays the stat title for each row in the team stat list
-	INT32 iCounter =0;
-
-	// set up font
 	SetFont(FONT10ARIAL);
 	SetFontBackground(FONT_BLACK);
 	SetFontForeground(FONT_WHITE);
 
 	// display titles for each row
-	for (iCounter = 0; iCounter < 11; iCounter++)
+	for (INT32 i = 0; i < 11; i++)
 	{
 		// even or odd?..color black or yellow?
-		if (iCounter % 2 == 0)
+		if (i % 2 == 0)
 		{
 			SetFontForeground(PERS_TEXT_FONT_ALTERNATE_COLOR);
 		}
@@ -2614,7 +2611,7 @@ static void DisplayPersonnelTeamStats(void)
 			SetFontForeground(PERS_TEXT_FONT_COLOR);
 		}
 
-		mprintf(PERS_STAT_LIST_X, PERS_STAT_AVG_Y + (iCounter + 1) * (GetFontHeight(FONT10ARIAL) + 3), pPersonnelTeamStatsStrings[iCounter]);
+		mprintf(PERS_STAT_LIST_X, PERS_STAT_AVG_Y + (i + 1) * (GetFontHeight(FONT10ARIAL) + 3), pPersonnelTeamStatsStrings[i]);
 	}
 }
 
@@ -2649,12 +2646,10 @@ static void InitPastCharactersList(void)
 static INT32 GetNumberOfDeadOnPastTeam(void)
 {
 	INT32 iNumberDead = 0;
-	INT32 iCounter = 0;
 
-//	for (iCounter = 0; ((iCounter < 256) && (LaptopSaveInfo.ubDeadCharactersList[iCounter] != -1)); iCounter ++)
-	for (iCounter = 0; iCounter < 256; iCounter ++)
+	for (INT32 i = 0; i < 256; i++)
 	{
-		if (LaptopSaveInfo.ubDeadCharactersList[iCounter] != -1)
+		if (LaptopSaveInfo.ubDeadCharactersList[i] != -1)
 			iNumberDead++;
 	}
 
@@ -2665,11 +2660,10 @@ static INT32 GetNumberOfDeadOnPastTeam(void)
 static INT32 GetNumberOfLeftOnPastTeam(void)
 {
 	INT32 iNumberLeft = 0;
-	INT32 iCounter = 0;
 
-	for (iCounter = 0; iCounter < 256; iCounter ++)
+	for (INT32 i = 0; i < 256; i++)
 	{
-		if (LaptopSaveInfo.ubLeftCharactersList[iCounter] != -1)
+		if (LaptopSaveInfo.ubLeftCharactersList[i] != -1)
 			iNumberLeft++;
 	}
 
@@ -2680,11 +2674,10 @@ static INT32 GetNumberOfLeftOnPastTeam(void)
 static INT32 GetNumberOfOtherOnPastTeam(void)
 {
 	INT32 iNumberOther = 0;
-	INT32 iCounter = 0;
 
-	for (iCounter = 0; iCounter < 256; iCounter ++)
+	for (INT32 i = 0; i < 256; i++)
 	{
-		if (LaptopSaveInfo.ubOtherCharactersList[iCounter] != -1)
+		if (LaptopSaveInfo.ubOtherCharactersList[i] != -1)
 			iNumberOther++;
 	}
 
@@ -2879,21 +2872,17 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 
 static void DisplayPastMercsPortraits(void)
 {
-	// display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber and going up 20 mercs
-	// start at dead mercs, then fired, then other
-
+	/* display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber
+	 * and going up 20 mercs start at dead mercs, then fired, then other */
 	INT32 iCounter = 0;
-	INT32 iCounterA = 0;
-	INT32 iStartArray = 0; // 0 = dead list, 1 = fired list, 2 = other list
+	INT32 iCounterA;
+	INT32 iStartArray; // 0 = dead list, 1 = fired list, 2 = other list
 
 	// not time to display
-	if (fCurrentTeamMode)
-	{
-		return;
-	}
+	if (fCurrentTeamMode) return;
 
 	// go through dead list
-	for (iCounterA = 0; (iCounter < giCurrentUpperLeftPortraitNumber); iCounterA++)
+	for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
 	{
 		if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
 			iCounter++;
@@ -2902,7 +2891,7 @@ static void DisplayPastMercsPortraits(void)
 	if (iCounter < giCurrentUpperLeftPortraitNumber)
 	{
 		// now the fired list
-		for (iCounterA = 0; ((iCounter < giCurrentUpperLeftPortraitNumber)); iCounterA++)
+		for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
 		{
 			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
 			{
@@ -2910,44 +2899,30 @@ static void DisplayPastMercsPortraits(void)
 			}
 		}
 
-		if (iCounter < 20)
-		{
-			iStartArray = 0;
-		}
-		else
-		{
-			iStartArray = 1;
-		}
+		iStartArray = (iCounter < 20 ? 0 : 1);
 	}
 	else
 	{
 		iStartArray = 0;
 	}
 
-	if ((iCounter < giCurrentUpperLeftPortraitNumber) && (iStartArray != 0))
+	if (iCounter < giCurrentUpperLeftPortraitNumber && iStartArray != 0)
 	{
 		// now the fired list
-		for (iCounterA = 0; (iCounter < giCurrentUpperLeftPortraitNumber); iCounterA++)
+		for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
 		{
 			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
 				iCounter++;
 		}
 
-		if (iCounter < 20)
-		{
-			iStartArray = 1;
-		}
-		else
-		{
-			iStartArray = 2;
-		}
+		iStartArray = (iCounter < 20 ? 1 : 2);
 	}
 	else if (iStartArray != 0)
 	{
 		iStartArray = 1;
 	}
 
-	//; we now have the array to start in, the position
+	// We now have the array to start in, the position
 	iCounter = 0;
 
 	if (iStartArray == 0)
@@ -2962,13 +2937,13 @@ static void DisplayPastMercsPortraits(void)
 				iCounter++;
 			}
 		}
-
 		// reset counter A for the next array, if applicable
 		iCounterA = 0;
 	}
+
 	if (iStartArray <= 1)
 	{
-		for (iCounterA; (iCounter < 20  && iCounterA < 256); iCounterA++)
+		for (iCounterA; iCounter < 20  && iCounterA < 256; iCounterA++)
 		{
 			// show fired pics
 			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
@@ -2983,7 +2958,7 @@ static void DisplayPastMercsPortraits(void)
 
 	if (iStartArray <= 2)
 	{
-		for (iCounterA; (iCounter < 20  && iCounterA < 256); iCounterA++)
+		for (iCounterA; iCounter < 20  && iCounterA < 256; iCounterA++)
 		{
 			// show other pics
 			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
@@ -2992,16 +2967,14 @@ static void DisplayPastMercsPortraits(void)
 				iCounter++;
 			}
 		}
-		// reset counter A for the next array, if applicable
-		iCounterA = 0;
 	}
 }
 
 
 static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 {
-	INT32 iCounter =-1;
-	INT32 iCounterA = 0;
+	INT32 iCounter = -1;
+	INT32 iCounterA;
 	// returns ID of Merc in this slot
 
 	// not time to display
@@ -3010,13 +2983,14 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 		return -1;
 	}
 
-	if (iSlot > ((GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) - giCurrentUpperLeftPortraitNumber))
+	if (iSlot > GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam() - giCurrentUpperLeftPortraitNumber)
 	{
 		// invalid slot
 		return iCurrentPersonSelectedId;
 	}
+
 	// go through dead list
-	for (iCounterA = 0; ((iCounter) < iSlot + giCurrentUpperLeftPortraitNumber);  iCounterA++)
+	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber;  iCounterA++)
 	{
 		if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
 			iCounter++;
@@ -3028,8 +3002,7 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 	}
 
 	// now the fired list
-	iCounterA = 0;
-	for (iCounterA = 0; (((iCounter) < iSlot + giCurrentUpperLeftPortraitNumber)); iCounterA++)
+	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber; iCounterA++)
 	{
 		if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
 			iCounter++;
@@ -3041,8 +3014,7 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 	}
 
 	// now the fired list
-	iCounterA =0;
-	for (iCounterA = 0; (((iCounter) < (iSlot + giCurrentUpperLeftPortraitNumber))); iCounterA++)
+	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber; iCounterA++)
 	{
 		if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
 			iCounter++;
@@ -3076,7 +3048,9 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 		SetObjectHandleShade(guiFACE, 0);
 	}
 
-	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, (INT16)(SMALL_PORTRAIT_START_X + (iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH) * SMALL_PORT_WIDTH), (INT16)(SMALL_PORTRAIT_START_Y + (iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH) * SMALL_PORT_HEIGHT));
+	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
+	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
+	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, x, y);
 
 	DeleteVideoObjectFromIndex(guiFACE);
 
@@ -3382,7 +3356,9 @@ static BOOLEAN DisplayHighLightBox(void)
 
 	UINT32 uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
 	CHECKF(uiBox != NO_VOBJECT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH - 2, SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3);
+	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
+	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, x, y);
 	DeleteVideoObjectFromIndex(uiBox);
 
 	return TRUE;
@@ -3550,7 +3526,7 @@ static BOOLEAN RenderAtmPanel(void)
 	// bounding
 	UINT32 uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
 	CHECKF(uiBox != NO_VOBJECT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X, ATM_UL_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 	DeleteVideoObjectFromIndex(uiBox);
 
@@ -3623,23 +3599,14 @@ static void CreateDestroyStartATMButton(void)
 
 static void FindPositionOfPersInvSlider(void)
 {
-	INT32 iValue = 0;
-	INT32 iNumberOfItems = 0;
-	INT16 sSizeOfEachSubRegion = 0;
-
 	// find out how many there are
-	iValue = (INT32)(GetNumberOfInventoryItemsOnCurrentMerc());
+	INT32 iValue = GetNumberOfInventoryItemsOnCurrentMerc();
 
-	// otherwise there are more than one item
-	iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
-
-	if (iValue <= 0)
-	{
-		iValue = 1;
-	}
+	// otherwise there is more than one item
+	INT32 iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
 
 	// get the subregion sizes
-	sSizeOfEachSubRegion = (INT16)((INT32)(Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / (INT32)(iNumberOfItems));
+	INT16 sSizeOfEachSubRegion = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / iNumberOfItems;
 
 	// get slider position
 	guiSliderPosition = uiCurrentInventoryIndex * sSizeOfEachSubRegion;
@@ -3648,17 +3615,10 @@ static void FindPositionOfPersInvSlider(void)
 
 static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	INT32 iValue = 0;
-	INT32 iNumberOfItems = 0;
-	POINT MousePos;
-	INT16 sSizeOfEachSubRegion = 0;
-	INT16 sYPositionOnBar = 0;
-	INT16 iCurrentItemValue = 0;
-
-	if ((iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN) || (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT))
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
 		// find out how many there are
-		iValue = (INT32)(GetNumberOfInventoryItemsOnCurrentMerc());
+		INT32 iValue = GetNumberOfInventoryItemsOnCurrentMerc();
 
 		// make sure there are more than one page
 		if ((INT32)uiCurrentInventoryIndex >= iValue - NUMBER_OF_INVENTORY_PERSONNEL + 1)
@@ -3667,7 +3627,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		// otherwise there are more than one item
-		iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
+		INT32 iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
 
 		// number of items is 0
 		if (iNumberOfItems == 0)
@@ -3676,13 +3636,14 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		// find the x, y on the slider bar
+		POINT MousePos;
 		GetCursorPos(&MousePos);
 
 		// get the subregion sizes
-		sSizeOfEachSubRegion = (INT16)((INT32)(Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / (INT32)(iNumberOfItems));
+		INT16 sSizeOfEachSubRegion = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / iNumberOfItems;
 
 		// get the cursor placement
-		sYPositionOnBar = MousePos.y - Y_OF_PERSONNEL_SCROLL_REGION;
+		INT16 sYPositionOnBar = MousePos.y - Y_OF_PERSONNEL_SCROLL_REGION;
 
 		if (sSizeOfEachSubRegion == 0)
 		{
@@ -3690,7 +3651,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		// get the actual item position
-		iCurrentItemValue = sYPositionOnBar / sSizeOfEachSubRegion;
+		INT16 iCurrentItemValue = sYPositionOnBar / sSizeOfEachSubRegion;
 
 		if (uiCurrentInventoryIndex != iCurrentItemValue)
 		{
@@ -3698,7 +3659,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			guiSliderPosition = iCurrentItemValue * sSizeOfEachSubRegion;
 
 			// set current inventory value
-			uiCurrentInventoryIndex = (UINT8)iCurrentItemValue;
+			uiCurrentInventoryIndex = iCurrentItemValue;
 
 			// force update
 			fReDrawScreenFlag = TRUE;
@@ -3937,14 +3898,16 @@ static void DisplayEmploymentinformation(INT32 iId)
 						}
 					}
 					// if there is going to be a both days and hours left on the contract
-					if (iTimeLeftOnContract / uiMinutesInDay)
+					const INT days  = iTimeLeftOnContract / uiMinutesInDay;
+					const INT hours = iTimeLeftOnContract % uiMinutesInDay / 60;
+					if (days > 0)
 					{
-						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls", (iTimeLeftOnContract / uiMinutesInDay), gpStrategicString[STR_PB_DAYS_ABBREVIATION], (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls", days, gpStrategicString[STR_PB_DAYS_ABBREVIATION], hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 					}
 					else //else there is under a day left
 					{
 						//DEF: removed 2/7/99
-						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", (iTimeLeftOnContract % uiMinutesInDay)/60, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 					}
 				}
 				else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
@@ -3977,7 +3940,7 @@ static void DisplayEmploymentinformation(INT32 iId)
 				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
 				// print contract cost
-				mprintf((INT16)(sX), pers_stat_y[i], sString);
+				mprintf(sX, pers_stat_y[i], sString);
 
 				INT32 salary;
 				switch (s->ubWhatKindOfMercAmI)
@@ -4026,10 +3989,10 @@ static void DisplayEmploymentinformation(INT32 iId)
 }
 
 
-// AIM merc:  Returns the amount of time left on mercs contract
-// MERC merc: Returns the amount of time the merc has worked
-// IMP merc:	Returns the amount of time the merc has worked
-// else:			returns -1
+/* AIM merc:  Returns the amount of time left on mercs contract
+ * MERC merc: Returns the amount of time the merc has worked
+ * IMP merc:  Returns the amount of time the merc has worked
+ * else:      returns -1 */
 static INT32 CalcTimeLeftOnMercContract(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iTimeLeftOnContract = -1;
