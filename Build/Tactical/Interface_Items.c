@@ -5161,42 +5161,34 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 }
 
 
-void DeleteKeyRingPopup( )
+void DeleteKeyRingPopup(void)
 {
-	INT32			cnt;
+	if (!gfInKeyRingPopup) return;
 
-	if( gfInKeyRingPopup == FALSE )
-	{
-		// done,
-		return;
-	}
+	DeleteVideoObjectFromIndex(guiItemPopupBoxes);
 
-	//Remove
-	DeleteVideoObjectFromIndex( guiItemPopupBoxes );
-
-	MSYS_RemoveRegion( &gItemPopupRegion);
-
+	MSYS_RemoveRegion(&gItemPopupRegion);
 
 	gfInKeyRingPopup = FALSE;
 
-	for ( cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++ )
+	for (INT32 i = 0; i < NUMBER_KEYS_ON_KEYRING; i++)
 	{
-		MSYS_RemoveRegion( &gKeyRingRegions[cnt]);
+		MSYS_RemoveRegion(&gKeyRingRegions[i]);
 	}
-
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	//guiTacticalInterfaceFlags &= (~INTERFACE_NORENDERBUTTONS);
 
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
+	if (guiCurrentItemDescriptionScreen != MAP_SCREEN)
 	{
-		EnableSMPanelButtons( TRUE, FALSE );
+		EnableSMPanelButtons(TRUE, FALSE);
 	}
 
-	FreeMouseCursor( );
+	FreeMouseCursor();
 }
+
 
 UINT32 GetInterfaceGraphicForItem(const INVTYPE* pItem)
 {
