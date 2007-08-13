@@ -1,4 +1,7 @@
 v0.6
+(r1393) Fix a vanilla bug: In the personnel screen the salary of non-AIM/MERC mercenaries was assumed to be 0, so it did not count twoards the min/max/daily salary stats.
+(r1387) Fix vanilla slight misplacement of name/location and assignment/state in the personnel screen.
+(r1350) Add a desktop file.
 (r1325) Fix vanilla misplacement of the key ring click area in tactical mode.
 (r1315) Improve the Russian translation.
 (r1271) Implement SoundSetPan(). This caused an unexpected termination of the game in certain places.
@@ -56,7 +59,7 @@ v0.3
 (r563) Do not close the file in STCILoadIndexed(). The caller does that.
 (r560) When reading a savegame fails do no close the file multiple times.
 (r559) When writing a savegame fails do no close the not yet opened file resp. do not close it multiple times.
-(r549) There is not technical reason to forbid % and \ when entering text. % caused problems because printf()-like functions were used incorrectly. \ never was a problem.
+(r549) There is no technical reason to forbid % and \ when entering text. % caused problems because printf()-like functions were used incorrectly. \ never was a problem.
 (r548) Use the unicode char provided by SDL for text input. This is a lot simpler and avoids the internal translation table, which cannot respect different keyboard layouts.
 (r528) Use scroll lock to toggle input grabbing. This is useful for scrolling with the mouse in tactical mode when playing in windowed mode.
 (r505, r583, r584, r602, r606, r705) Fix wide string/string format specifiers.

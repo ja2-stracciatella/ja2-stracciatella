@@ -1856,8 +1856,7 @@ static INT32 GetTotalDailyCostOfCurrentTeam(void)
 				}
 				break;
 
-			case MERC_TYPE__MERC: iCostOfTeam += p->sSalary; break;
-			default:              iCostOfTeam += 0;          break;
+			default: iCostOfTeam += p->sSalary; break;
 		}
 	}
 	return iCostOfTeam;
@@ -1889,8 +1888,7 @@ static INT32 GetLowestDailyCostOfCurrentTeam(void)
 				}
 				break;
 
-			case MERC_TYPE__MERC: iCost = p->sSalary; break;
-			default:              iCost = 0;          break;
+			default: iCost = p->sSalary; break;
 		}
 
 		if (iCost <= iLowest) iLowest = iCost;
@@ -1928,8 +1926,7 @@ static INT32 GetHighestDailyCostOfCurrentTeam(void)
 				}
 				break;
 
-			case MERC_TYPE__MERC: iCost = p->sSalary; break;
-			default:              iCost = 0;          break;
+			default: iCost = p->sSalary; break;
 		}
 
 		if (iCost >= iHighest) iHighest = iCost;
@@ -3840,8 +3837,7 @@ static void DisplayEmploymentinformation(INT32 iId)
 						}
 						break;
 
-					case MERC_TYPE__MERC: salary = p->sSalary; break;
-					default:              salary = p->sSalary; break;
+					default: salary = p->sSalary; break;
 				}
 
 				SPrintMoney(sStringA, salary);
