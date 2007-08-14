@@ -7,7 +7,6 @@
 #include "WCheck.h"
 
 
-static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color);
 static void DeletePrimaryVideoSurfaces(void);
 
 
@@ -383,8 +382,9 @@ BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iD
 	Rect.y = iDestY1;
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
+	SDL_FillRect(hDestVSurface->surface, &Rect, Color16BPP);
 
-	return FillSurfaceRect(hDestVSurface, &Rect, Color16BPP);
+	return TRUE;
 }
 
 
@@ -771,16 +771,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Success in Creating Video Surface from DD Surface");
 
 	return hVSurface;
-}
-
-
-static BOOLEAN FillSurfaceRect(HVSURFACE hDestVSurface, SDL_Rect* Rect, UINT16 Color)
-{
-	Assert(hDestVSurface != NULL);
-	CHECKF(Rect != NULL);
-
-	SDL_FillRect(hDestVSurface->surface, Rect, Color);
-	return TRUE;
 }
 
 
