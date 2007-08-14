@@ -1087,7 +1087,6 @@ static void HandleQuestDebugSystem(void)
 }
 
 
-static void ColorFillQuestDebugScreenScreen(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 static void DisplayCurrentGridNo(void);
 static void DisplayFactInformation(void);
 static void DisplayFactList(void);
@@ -1100,7 +1099,7 @@ static void DisplaySectionLine(void);
 
 static void RenderQuestDebugSystem(void)
 {
-	ColorFillQuestDebugScreenScreen(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	FillSurface(ButtonDestBuffer, gusQuestDebugBlue);
 
 	//display the title
 	DisplayWrappedString(0, 5, SCREEN_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, QuestDebugText[QUEST_DBS_TITLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -1370,12 +1369,6 @@ static void GetUserInput(void)
 			}
 		}
 	}
-}
-
-
-static void ColorFillQuestDebugScreenScreen(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
-{
-	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusQuestDebugBlue );
 }
 
 
