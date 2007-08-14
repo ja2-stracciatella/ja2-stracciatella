@@ -149,9 +149,7 @@ static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 u
 			gfFadeInVideo   = FALSE;
 
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-
-			// Clear framebuffer
-			ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
+			FillSurface(FRAME_BUFFER, Get16BPPColor(FROMRGB(0, 0, 0)));
 			break;
 
 		case FADE_OUT_REALFADE:
@@ -227,9 +225,7 @@ UINT32	FadeScreenHandle( )
 			switch( gbFadeType )
 			{
 				case FADE_OUT_REALFADE:
-
-					// Clear framebuffer
-					ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
+					FillSurface(FRAME_BUFFER, Get16BPPColor(FROMRGB(0, 0, 0)));
 					break;
 			}
 

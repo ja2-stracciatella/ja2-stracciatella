@@ -2833,10 +2833,8 @@ UINT32 MapScreenHandle(void)
 		// create merc remove box
 		CreateMercRemoveAssignBox( );
 
-		// fill in
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(RGB_NEAR_BLACK));
-		ColorFillVideoSurfaceArea(FRAME_BUFFER,  0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(RGB_NEAR_BLACK));
-
+		FillSurface(guiSAVEBUFFER, Get16BPPColor(RGB_NEAR_BLACK));
+		FillSurface(FRAME_BUFFER,  Get16BPPColor(RGB_NEAR_BLACK));
 
 		if( ( fFirstTimeInMapScreen == TRUE ) && ( AnyMercsHired( ) == FALSE ) )
 		{

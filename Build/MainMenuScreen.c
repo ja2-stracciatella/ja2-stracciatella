@@ -103,7 +103,7 @@ UINT32 MainMenuScreenHandle(void)
 		}
 		else if (guiSplashFrameFade > 1)
 		{
-			ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+			FillSurface(FRAME_BUFFER, 0);
 		}
 		else
 		{

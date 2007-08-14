@@ -736,7 +736,7 @@ UINT32 SexScreenHandle(void)
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
 
 	// OK, Clear screen and show smily face....
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
+	FillSurface(FRAME_BUFFER, Get16BPPColor(FROMRGB(0, 0, 0)));
 	InvalidateScreen( );
 	// Remove cursor....
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
@@ -926,7 +926,7 @@ void DoDemoIntroduction()
 					}
 					else
 					{
-						ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+						FillSurface(FRAME_BUFFER, 0);
 						InvalidateScreen();
 						RefreshScreen();
 						return;
