@@ -48,10 +48,7 @@
 //#ifdef JA2BETAVERSION
 
 
-typedef void ( *DROP_DOWN_DISPLAY_CALLBACK )	(STR16);
-typedef void ( *DROP_DOWN_SELECT_CALLBACK )	(STR16);
-
-#define	QUEST_DEBUG_FILE											"QuestDebugRecordLog.txt"
+#define QUEST_DEBUG_FILE "QuestDebugRecordLog.txt"
 
 
 #define		QUEST_DBS_FONT_TITLE								FONT14ARIAL
@@ -65,7 +62,6 @@ typedef void ( *DROP_DOWN_SELECT_CALLBACK )	(STR16);
 #define		QUEST_DBS_COLOR_DYNAMIC_TEXT				FONT_MCOLOR_WHITE
 
 #define		QUEST_DBS_FONT_LISTBOX_TEXT					FONT12ARIAL
-#define		QUEST_DBS_COLOR_LISTBOX_TEXT				FONT_MCOLOR_WHITE
 
 #define		QUEST_DBS_FONT_TEXT_ENTRY						FONT12ARIAL
 #define		QUEST_DBS_COLOR_TEXT_ENTRY					FONT_MCOLOR_WHITE
@@ -90,9 +86,7 @@ typedef void ( *DROP_DOWN_SELECT_CALLBACK )	(STR16);
 #define		QUEST_DBS_FIRST_COL_STATUS_Y				QUEST_DBS_FIRST_COL_NUMBER_Y
 
 
-#define		QUEST_DBS_SECOND_NUMBER_COL_WIDTH		40
 #define		QUEST_DBS_SECOND_TITLE_COL_WIDTH		140
-#define		QUEST_DBS_SECOND_STATUS_COL_WIDTH		50
 
 
 #define		QUEST_DBS_SECOND_COL_NUMBER_X				QUEST_DBS_FIRST_SECTION_WIDTH + 5
@@ -195,10 +189,6 @@ typedef void ( *DROP_DOWN_SELECT_CALLBACK )	(STR16);
 #define		QUEST_DBS_FACT_LIST_OFFSET					28
 
 
-
-#define				CLOCK_X													554
-#define				CLOCK_Y													459
-
 #define		QDS_BUTTON_HEIGHT										21
 
 
@@ -221,17 +211,13 @@ enum
 };
 
 
-
-
-
-
-const wchar_t *QuestStates[]	= {
-						L"N.S.",
-						L"In Prog.",
-						L"Done",
+static const wchar_t* const QuestStates[] = {
+	L"N.S.",
+	L"In Prog.",
+	L"Done"
 };
 
-const wchar_t *QuestDebugText[] =
+static const wchar_t* const QuestDebugText[] =
 {
 	L"Quest Debug System",
 	L"Quests",
@@ -280,8 +266,7 @@ const wchar_t *QuestDebugText[] =
 	L"Right Arrow: Next Quote",
 	L"ESC:         To Stop the merc from Talking",
 	L"",
-	L"",
-
+	L""
 };
 
 
@@ -337,8 +322,7 @@ enum
 };
 
 
-
-const wchar_t *PocketText[] = {
+static const wchar_t* const PocketText[] = {
 	L"Helmet",
 	L"Vest",
 	L"Leg",
@@ -357,7 +341,7 @@ const wchar_t *PocketText[] = {
 	L"Smallpock5",
 	L"Smallpock6",
 	L"Smallpock7",
-	L"Smallpock8",
+	L"Smallpock8"
 };
 
 
@@ -365,32 +349,32 @@ extern UINT32 guiGameClock;
 extern UINT32 guiBrownBackgroundForTeamPanel;
 
 
-typedef void (*LISTBOX_DISPLAY_FNCTN)();	// Define Display Callback function
-typedef void (*TEXT_ENTRY_CALLBACK)( INT32 );		//Callback for when the text entry field is finished
+typedef void (*LISTBOX_DISPLAY_FNCTN)();    // Define Display Callback function
+typedef void (*TEXT_ENTRY_CALLBACK)(INT32); // Callback for when the text entry field is finished
 
 typedef struct
 {
-	LISTBOX_DISPLAY_FNCTN	 DisplayFunction;													//	The array of items
+	LISTBOX_DISPLAY_FNCTN DisplayFunction; // The array of items
 
-	UINT16 usScrollPosX;										//	Top Left Pos of list box
-	UINT16 usScrollPosY;										//	Top Left Pos of list box
-	UINT16 usScrollHeight;									//	Height of list box
-	UINT16 usScrollWidth;										//	Width of list box
+	UINT16 usScrollPosX;                   // Top Left Pos of list box
+	UINT16 usScrollPosY;                   // Top Left Pos of list box
+	UINT16 usScrollHeight;                 // Height of list box
+	UINT16 usScrollWidth;                  // Width of list box
 
-	UINT16 usScrollBarHeight;								//	Height of Scroll box
-	UINT16 usScrollBarWidth;								//	Width of Scroll box
-	UINT16 usScrollBoxY;										//	Current Vertical location of the scroll box
-	UINT16 usScrollBoxEndY;									//	Bottom position on the scroll box
-	UINT16 usScrollArrowHeight;							//	Scroll Arrow height
+	UINT16 usScrollBarHeight;              // Height of Scroll box
+	UINT16 usScrollBarWidth;               // Width of Scroll box
+	UINT16 usScrollBoxY;                   // Current Vertical location of the scroll box
+	UINT16 usScrollBoxEndY;                // Bottom position on the scroll box
+	UINT16 usScrollArrowHeight;            // Scroll Arrow height
 
-	INT16		sCurSelectedItem;								//	Currently selected item
-	UINT16 usItemDisplayedOnTopOfList;			//	item at the top of displayed list
-	UINT16 usStartIndex;										//	index to start at for the array of elements
-	UINT16 usMaxArrayIndex;									//	Max Size of the array
-	UINT16 usNumDisplayedItems;							//	Num of displayed item
-	UINT16 usMaxNumDisplayedItems;					//  Max number of Displayed items
+	INT16  sCurSelectedItem;               // Currently selected item
+	UINT16 usItemDisplayedOnTopOfList;     // item at the top of displayed list
+	UINT16 usStartIndex;                   // index to start at for the array of elements
+	UINT16 usMaxArrayIndex;                // Max Size of the array
+	UINT16 usNumDisplayedItems;            // Num of displayed item
+	UINT16 usMaxNumDisplayedItems;         // Max number of Displayed items
 
-	UINT8	 ubCurScrollBoxAction;						//	Holds the status of the current action ( create; destroy... )
+	UINT8  ubCurScrollBoxAction;           // Holds the status of the current action ( create; destroy... )
 
 } SCROLL_BOX;
 
@@ -404,147 +388,118 @@ enum
 };
 
 //image identifiers
-UINT32	guiQdScrollArrowImage;
+static UINT32 guiQdScrollArrowImage;
 
 
-BOOLEAN		gfQuestDebugEntry = TRUE;
-BOOLEAN		gfQuestDebugExit = FALSE;
+static BOOLEAN gfQuestDebugEntry = TRUE;
+static BOOLEAN gfQuestDebugExit  = FALSE;
 
-BOOLEAN		gfRedrawQuestDebugSystem = TRUE;
+static BOOLEAN gfRedrawQuestDebugSystem = TRUE;
 
-UINT16 gusQuestDebugBlue;
-UINT16 gusQuestDebugLtBlue;
-UINT16 gusQuestDebugDkBlue;
-
-UINT16	gusFactAtTopOfList;
-
-//INT16		gsCurScrollBoxY=0;
+static UINT16 gusQuestDebugBlue;
 
 
-SCROLL_BOX	gNpcListBox;				// The Npc Scroll box
-SCROLL_BOX	gItemListBox;				// The Npc Scroll box
+static SCROLL_BOX gNpcListBox;  // The Npc Scroll box
+static SCROLL_BOX gItemListBox;
 
-SCROLL_BOX	*gpActiveListBox;		// Only 1 scroll box is active at a time, this is set to it.
+static SCROLL_BOX* gpActiveListBox; // Only 1 scroll box is active at a time, this is set to it.
 
-INT16				gsQdsEnteringGridNo	=0;
-
-
-UINT8				gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
-BOOLEAN			gfTextEntryActive = FALSE;
-//wchar_t			gzTextEntryReturnString[ 16 ];
-
-BOOLEAN			gfUseLocalNPCs = FALSE;
-
-UINT8				gubNPCInventoryPopupAction = QD_DROP_DOWN_NO_ACTION;
-
-UINT8				gubCurrentNpcInSector[ QUEST_DBS_SIZE_NPC_ARRAY ];
-UINT8				gubNumNPCinSector;
-
-UINT8				gubCurQuestSelected;
-UINT16			gusCurFactSelected;
-UINT16			gusFactAtTopOfList;
-
-//INT16				gsCurrentNPCLog=-1;						//If this is set, the value will be set to the
-BOOLEAN			gfNpcLogButton = FALSE;
+INT16 gsQdsEnteringGridNo = 0;
 
 
-INT32				giHaveSelectedItem=-1;			// If it is not the first time in, dont reset the Selected ITem
-INT32				giHaveSelectedNPC=-1;			// If it is not the first time in, dont reset the selected NPC
+static UINT8   gubTextEntryAction = QD_DROP_DOWN_NO_ACTION;
+static BOOLEAN gfTextEntryActive  = FALSE;
+
+static BOOLEAN gfUseLocalNPCs = FALSE;
+
+static UINT8 gubNPCInventoryPopupAction = QD_DROP_DOWN_NO_ACTION;
+
+static UINT8 gubCurrentNpcInSector[QUEST_DBS_SIZE_NPC_ARRAY];
+static UINT8 gubNumNPCinSector;
+
+static UINT8  gubCurQuestSelected;
+static UINT16 gusCurFactSelected;
+static UINT16 gusFactAtTopOfList;
+
+static BOOLEAN gfNpcLogButton = FALSE;
 
 
-INT32				giSelectedMercCurrentQuote=-1;
-SOLDIERTYPE *gTalkingMercSoldier=NULL;
-BOOLEAN			gfPauseTalkingMercPopup=FALSE;
-extern			BOOLEAN			gfFacePanelActive;
-BOOLEAN			gfAddNpcToTeam=FALSE;
-BOOLEAN			gfRpcToSaySectorDesc=FALSE;
-BOOLEAN			gfNpcPanelIsUsedForTalkingMerc=FALSE;
-extern			SOLDIERTYPE * gpDestSoldier;
-
-BOOLEAN			gfBackgroundMaskEnabled=FALSE;
-
-BOOLEAN			gfExitQdsDueToMessageBox=FALSE;
-INT32				giQdsMessageBox = -1;					// Qds pop up messages index value
-
-BOOLEAN			gfInDropDownBox=FALSE;
-//BOOLEAN			gfExitOptionsAfterMessageBox = FALSE;
-
-BOOLEAN			gfAddKeyNextPass=FALSE;
-BOOLEAN			gfDropDamagedItems=FALSE;
-
-//
-// Mouse Regions
-//
-MOUSE_REGION		gQuestDebugSysScreenRegions;
-//void QuestDebugSysScreenRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
+static INT32 giHaveSelectedItem = -1; // If it is not the first time in, dont reset the Selected ITem
+static INT32 giHaveSelectedNPC  = -1; // If it is not the first time in, dont reset the selected NPC
 
 
-UINT32	guiQuestDebugExitButton;
+static INT32        giSelectedMercCurrentQuote = -1;
+static SOLDIERTYPE* gTalkingMercSoldier        = NULL;
+static BOOLEAN      gfPauseTalkingMercPopup    = FALSE;
+extern BOOLEAN gfFacePanelActive;
+static BOOLEAN gfAddNpcToTeam                 = FALSE;
+static BOOLEAN gfRpcToSaySectorDesc           = FALSE;
+static BOOLEAN gfNpcPanelIsUsedForTalkingMerc = FALSE;
+extern SOLDIERTYPE* gpDestSoldier;
+
+static BOOLEAN gfBackgroundMaskEnabled = FALSE;
+
+static BOOLEAN gfExitQdsDueToMessageBox = FALSE;
+static INT32   giQdsMessageBox = -1; // Qds pop up messages index value
+
+static BOOLEAN gfInDropDownBox = FALSE;
+
+static BOOLEAN gfAddKeyNextPass   = FALSE;
+static BOOLEAN gfDropDamagedItems = FALSE;
+
+static MOUSE_REGION gQuestDebugSysScreenRegions;
+
+
+static UINT32 guiQuestDebugExitButton;
 
 //checkbox for weather to show all npc or just npc in sector
-UINT32	guiQuestDebugAllOrSectorNPCToggle;
+static UINT32 guiQuestDebugAllOrSectorNPCToggle;
 
 
-UINT32	guiQuestDebugCurNPCButton;
+static UINT32 guiQuestDebugCurNPCButton;
+static UINT32 guiQuestDebugCurItemButton;
+static UINT32 guiQuestDebugAddNpcToLocationButton;
+static UINT32 guiQuestDebugAddItemToLocationButton;
+static UINT32 guiQuestDebugGiveItemToNPCButton;
+static UINT32 guiQuestDebugChangeDayButton;
+static UINT32 guiQuestDebugViewNPCInvButton;
+static UINT32 guiQuestDebugRestoreNPCInvButton;
+static UINT32 guiQuestDebugNPCLogButtonButton;
+static UINT32 guiQuestDebugNPCRefreshButtonButton;
+static UINT32 guiQuestDebugStartMercTalkingButtonButton;
 
-UINT32	guiQuestDebugCurItemButton;
+// checkbox for whether to add the merc to the players team
+static UINT32 guiQuestDebugAddNpcToTeamToggle;
 
-UINT32	guiQuestDebugAddNpcToLocationButton;
-
-UINT32	guiQuestDebugAddItemToLocationButton;
-
-UINT32	guiQuestDebugGiveItemToNPCButton;
-
-UINT32	guiQuestDebugChangeDayButton;
-
-UINT32	guiQuestDebugViewNPCInvButton;
-
-UINT32	guiQuestDebugRestoreNPCInvButton;
-
-UINT32	guiQuestDebugNPCLogButtonButton;
-
-UINT32	guiQuestDebugNPCRefreshButtonButton;
-
-UINT32	guiQuestDebugStartMercTalkingButtonButton;
-
-//checkbox for weather to add the merc to the players team
-UINT32	guiQuestDebugAddNpcToTeamToggle;
-
-//checkbox for weather have rpc say the sector description
-UINT32	guiQuestDebugRPCSaySectorDescToggle;
+// checkbox for whether have rpc say the sector description
+static UINT32 guiQuestDebugRPCSaySectorDescToggle;
 
 
 
-MOUSE_REGION    gSelectedNpcListRegion[ QUEST_DBS_MAX_DISPLAYED_ENTRIES ];
-
-
-MOUSE_REGION    gScrollAreaRegion[ QUEST_DBS_NUM_INCREMENTS_IN_SCROLL_BAR ];
-
-MOUSE_REGION    gScrollArrowsRegion[2];
+static MOUSE_REGION gSelectedNpcListRegion[QUEST_DBS_MAX_DISPLAYED_ENTRIES];
+static MOUSE_REGION gScrollAreaRegion[QUEST_DBS_NUM_INCREMENTS_IN_SCROLL_BAR];
+static MOUSE_REGION gScrollArrowsRegion[2];
 
 
 //Text entry Disable the screen
-MOUSE_REGION    gQuestTextEntryDebugDisableScreenRegion;
+static MOUSE_REGION gQuestTextEntryDebugDisableScreenRegion;
 
 //Ok button on the text entry form
-UINT32	guiQuestDebugTextEntryOkBtn;
-static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static UINT32 guiQuestDebugTextEntryOkBtn;
 
 //Ok button on the NPC inventory form
-UINT32	guiQuestDebugNPCInventOkBtn;
-static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
+static UINT32 guiQuestDebugNPCInventOkBtn;
 
 
-//Mouse regions for the Quests
-MOUSE_REGION    gQuestListRegion[ QUEST_DBS_NUM_DISPLAYED_QUESTS ];
+// Mouse regions for the Quests
+static MOUSE_REGION gQuestListRegion[QUEST_DBS_NUM_DISPLAYED_QUESTS];
 
-//Mouse regions for the Facts
-MOUSE_REGION    gFactListRegion[ QUEST_DBS_NUM_DISPLAYED_FACTS ];
+// Mouse regions for the Facts
+static MOUSE_REGION gFactListRegion[QUEST_DBS_NUM_DISPLAYED_FACTS];
 
 
-UINT32	guiQDPgUpButtonButton;
-
-UINT32	guiQDPgDownButtonButton;
+static UINT32 guiQDPgUpButtonButton;
+static UINT32 guiQDPgDownButtonButton;
 
 
 static void DisplaySelectedItem(void);
@@ -2394,6 +2349,7 @@ static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, I
 }
 
 
+static void BtnQuestDebugTextEntryOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void DestroyQuestDebugTextInputBoxes(void);
 static void InitQuestDebugTextInputBoxes(void);
 
@@ -2698,6 +2654,9 @@ static void ChangeDayNumber(INT32 iDayToChangeTo)
 		//		EmptyDialogueQueue();
 	}
 }
+
+
+static void BtnQuestDebugNPCInventOkBtnButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
