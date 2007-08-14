@@ -5,7 +5,6 @@
 #include "NPC.h"
 
 
-extern	BOOLEAN			gfNpcLogButton;
 extern	INT16				gsQdsEnteringGridNo;
 
 
