@@ -1348,10 +1348,10 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 	INT32 iCnt = 0;
 	for (INT32 i = 0; i < iTotalOnTeam; iCnt++)
 	{
-		const SOLDIERTYPE* merc = MercPtrs[iId + iCnt]; // XXX TODO000C
+		const SOLDIERTYPE* merc = MercPtrs[iId + iCnt]; // XXX TODO0010
 		if (!merc->bActive) continue;
 
-		const SOLDIERTYPE* man = &Menptr[iId + iCnt]; // XXX TODO000C
+		const SOLDIERTYPE* man = &Menptr[iId + iCnt]; // XXX TODO0010
 		// found the next actual guy
 		char sTemp[100];
 		if (50 < merc->ubProfile && merc->ubProfile < 57)
