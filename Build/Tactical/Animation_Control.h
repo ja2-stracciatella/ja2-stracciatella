@@ -87,8 +87,6 @@ typedef struct
 	UINT32		uiFlags;
 	UINT8			ubHeight;
 	UINT8			ubEndHeight;
-	INT8			bProfile;
-
 } ANIMCONTROLTYPE;
 
 
