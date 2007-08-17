@@ -26,7 +26,7 @@ static UINT8 gubNumAnimProfiles = 0;
 INT8				gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
 
 
-#define M(name, file, type, flags, dir, profile) { name, file, type, flags, dir, TO_INIT, NULL, NULL, 0, profile }
+#define M(name, file, type, flags, dir, profile) { name, file, type, flags, dir, TO_INIT, NULL, 0, profile }
 
 AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES] =
 {

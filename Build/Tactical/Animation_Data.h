@@ -526,10 +526,8 @@ typedef struct
 	UINT32									uiNumDirections;
 	UINT32									uiNumFramesPerDir;
 	HVOBJECT								hVideoObject;
-	void										*Unused;
 	INT8										bUsageCount;
 	INT8										bProfile;
-
 } AnimationSurfaceType;
 
 
