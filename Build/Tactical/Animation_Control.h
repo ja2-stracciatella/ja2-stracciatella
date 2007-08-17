@@ -81,7 +81,6 @@
 typedef struct
 {
 	CHAR8			zAnimStr[ MAX_ANIM_STR_SIZE ];
-	INT16			sAP;
 	INT16			sSpeed;
 	FLOAT			dMovementChange;
 	UINT32		uiFlags;
