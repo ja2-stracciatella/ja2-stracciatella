@@ -25,7 +25,7 @@ UINT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ];
 UINT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ];
 UINT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ];
 
-UINT8 gPurpendicularDirection[ NUM_WORLD_DIRECTIONS ][ NUM_WORLD_DIRECTIONS ];
+extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS];
 
 // Macros
 

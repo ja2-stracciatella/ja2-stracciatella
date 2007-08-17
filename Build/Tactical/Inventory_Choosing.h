@@ -7,13 +7,6 @@
 #define MORTAR_GRENADE_CLASS	100
 
 
-typedef struct ARMY_GUN_CHOICE_TYPE
-{
-	UINT8		ubChoices;						// how many valid choices there are in this category
-	INT8		bItemNo[5];						// room for up to 5 choices of gun in each category
-} ARMY_GUN_CHOICE_TYPE;
-
-
 enum
 {
 	//administrator ratings (1-5)

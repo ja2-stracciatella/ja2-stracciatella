@@ -226,158 +226,168 @@ extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fF
 
 //If you change the MAX_STRATEGIC_TEAM_SIZE, then all the garrison sizes (start, desired) will have to be changed accordingly.
 
-ARMY_COMPOSITION gOrigArmyComp[ NUM_ARMY_COMPOSITIONS ] =
-{	//COMPOSITION					PRIORITY	ELITE%	TROOP%	ADMIN 	DESIRED#	START#		PADDING
-	//																							START%
-	QUEEN_DEFENCE,				100,			100,		0,			0,			32,				32,				{0,0,0,0,0,0,0,0,0,0},
-	MEDUNA_DEFENCE,				95,				55,			45,			0,			16,				20,				{0,0,0,0,0,0,0,0,0,0},
-	MEDUNA_SAMSITE,				96,				65,			35,			0,			20,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL1_DEFENCE,				40,				20,			80,			0,			12,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL2_DEFENCE,				30,				10,			90,			0,			10,				20,				{0,0,0,0,0,0,0,0,0,0},
-	LEVEL3_DEFENCE,				20,				5,			95,			0,			8,				20,				{0,0,0,0,0,0,0,0,0,0},
-	ORTA_DEFENCE,					90,				50,			50,			0,			18,				19,				{0,0,0,0,0,0,0,0,0,0},
-	EAST_GRUMM_DEFENCE,		80,				20,			80,			0,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	WEST_GRUMM_DEFENCE,		70,				0,			100,		40,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	GRUMM_MINE,						85,				25,			75,			45,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	OMERTA_WELCOME_WAGON,	0,				0,			100,		0,			0,				3,				{0,0,0,0,0,0,0,0,0,0},
-	BALIME_DEFENCE,				60,				45,			55,			20,			10,				4,				{0,0,0,0,0,0,0,0,0,0},
-	TIXA_PRISON,					80,				10,			90,			15,			15,				15,				{0,0,0,0,0,0,0,0,0,0},
-	TIXA_SAMSITE,					85,				10,			90,			0,			12,				12,				{0,0,0,0,0,0,0,0,0,0},
-	ALMA_DEFENCE,					74,				15,			85,			0,			11,				20,				{0,0,0,0,0,0,0,0,0,0},
-	ALMA_MINE,						80,				20,			80,			45,			15,				20,				{0,0,0,0,0,0,0,0,0,0},
-	CAMBRIA_DEFENCE,			50,				0,			100,		30,			10,				6,				{0,0,0,0,0,0,0,0,0,0},
-	CAMBRIA_MINE,					60,				15,			90,			40,			11,				6,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_DEFENCE,			30,				0,			100,		75,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_MINE,				40,				0,			100,		75,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
-	CHITZENA_SAMSITE,			75,				10,			90,			0,			9,				9,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_AIRPORT,			30,				0,			100,		85,			12,				10,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_DEFENCE,			20,				0,			100,		80,			10,				8,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_MINE,					35,				0,			100,		75,			11,				9,				{0,0,0,0,0,0,0,0,0,0},
-	DRASSEN_SAMSITE,			50,				0,			100,		0,			10,				10,				{0,0,0,0,0,0,0,0,0,0},
-	ROADBLOCK,						20,				2,			98,			0,			8,				0,				{0,0,0,0,0,0,0,0,0,0},
-	SANMONA_SMALL,				0,				0,			0,			0,			0,				0,				{0,0,0,0,0,0,0,0,0,0},
+#define M(composition, prio, elite, troop, admin, desired, start) { composition, prio, elite, troop, admin, desired, start, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+
+static const ARMY_COMPOSITION gOrigArmyComp[NUM_ARMY_COMPOSITIONS] =
+{	//COMPOSITION          PRIO ELITE% TROOP% ADMIN DESIRED# START#
+	//                                              START%
+	M(QUEEN_DEFENCE,        100, 100,   0,   0,  32,  32),
+	M(MEDUNA_DEFENCE,        95,  55,  45,   0,  16,  20),
+	M(MEDUNA_SAMSITE,        96,  65,  35,   0,  20,  20),
+	M(LEVEL1_DEFENCE,        40,  20,  80,   0,  12,  20),
+	M(LEVEL2_DEFENCE,        30,  10,  90,   0,  10,  20),
+	M(LEVEL3_DEFENCE,        20,   5,  95,   0,   8,  20),
+	M(ORTA_DEFENCE,          90,  50,  50,   0,  18,  19),
+	M(EAST_GRUMM_DEFENCE,    80,  20,  80,   0,  15,  15),
+	M(WEST_GRUMM_DEFENCE,    70,   0, 100,  40,  15,  15),
+	M(GRUMM_MINE,            85,  25,  75,  45,  15,  15),
+	M(OMERTA_WELCOME_WAGON,   0,   0, 100,   0,   0,   3),
+	M(BALIME_DEFENCE,        60,  45,  55,  20,  10,   4),
+	M(TIXA_PRISON,           80,  10,  90,  15,  15,  15),
+	M(TIXA_SAMSITE,          85,  10,  90,   0,  12,  12),
+	M(ALMA_DEFENCE,          74,  15,  85,   0,  11,  20),
+	M(ALMA_MINE,             80,  20,  80,  45,  15,  20),
+	M(CAMBRIA_DEFENCE,       50,   0, 100,  30,  10,   6),
+	M(CAMBRIA_MINE,          60,  15,  90,  40,  11,   6),
+	M(CHITZENA_DEFENCE,      30,   0, 100,  75,  12,  10),
+	M(CHITZENA_MINE,         40,   0, 100,  75,  10,  10),
+	M(CHITZENA_SAMSITE,      75,  10,  90,   0,   9,   9),
+	M(DRASSEN_AIRPORT,       30,   0, 100,  85,  12,  10),
+	M(DRASSEN_DEFENCE,       20,   0, 100,  80,  10,   8),
+	M(DRASSEN_MINE,          35,   0, 100,  75,  11,   9),
+	M(DRASSEN_SAMSITE,       50,   0, 100,   0,  10,  10),
+	M(ROADBLOCK,             20,   2,  98,   0,   8,   0),
+	M(SANMONA_SMALL,          0,   0,   0,   0,   0,   0)
 };
+
+#undef M
+
+#define M(size, prio, p1, p2, p3, p4) { size, prio, { p1, p2, p3, p4 }, -1, 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 
 //Patrol definitions
 //NOTE:	  A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any
 //				of the patrol groups, I am coding 0 to be ignored.
 //NOTE:		Must have at least two points.
-PATROL_GROUP gOrigPatrolGroup[] =
-{ //SIZE	PRIORITY	POINT1		POINT2		POINT3		POINT4		MOD 		GROUPID	WEIGHT	PENDING
-	//																												DAY100									GROUP ID
-	8,			40,				SEC_B1,		SEC_C1,		SEC_C3,		SEC_A3,		-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			35,				SEC_B4,		SEC_B7,		SEC_C7,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			25,				SEC_A8,		SEC_B8,		SEC_B9,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	6,			30,				SEC_B10,	SEC_B12,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	7,			45,				SEC_A11,	SEC_A14,	SEC_D14,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+static const PATROL_GROUP gOrigPatrolGroup[] =
+{ //SIZE PRIO POINT1    POINT2    POINT3    POINT4
+	M( 8,   40, SEC_B1,   SEC_C1,   SEC_C3,   SEC_A3 ),
+	M( 6,   35, SEC_B4,   SEC_B7,   SEC_C7,   0      ),
+	M( 6,   25, SEC_A8,   SEC_B8,   SEC_B9,   0      ),
+	M( 6,   30, SEC_B10,  SEC_B12,  0,        0      ),
+	M( 7,   45, SEC_A11,  SEC_A14,  SEC_D14,  0      ),
 	//5
-	6,			50,				SEC_C8,		SEC_C9,		SEC_D9,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			55,				SEC_D3,		SEC_G3,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			50,				SEC_D6,		SEC_D7,		SEC_F7,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			55,				SEC_E8,		SEC_E11,	SEC_F11,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			60,				SEC_E12,	SEC_E15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+	M( 6,   50, SEC_C8,   SEC_C9,   SEC_D9,   0      ),
+	M(12,   55, SEC_D3,   SEC_G3,   0,        0      ),
+	M(10,   50, SEC_D6,   SEC_D7,   SEC_F7,   0      ),
+	M(10,   55, SEC_E8,   SEC_E11,  SEC_F11,  0      ),
+	M(10,   60, SEC_E12,  SEC_E15,  0,        0      ),
 	//10
-	12,			60,				SEC_G4,		SEC_G7,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			65,				SEC_G10,	SEC_G12,	SEC_F12,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			65,				SEC_G13,	SEC_G15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	10,			65,				SEC_H15,	SEC_J15,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	14,			65,				SEC_H12,	SEC_J12,	SEC_J13,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+	M(12,   60, SEC_G4,   SEC_G7,   0,        0      ),
+	M(12,   65, SEC_G10,  SEC_G12,  SEC_F12,  0      ),
+	M(12,   65, SEC_G13,  SEC_G15,  0,        0      ),
+	M(10,   65, SEC_H15,  SEC_J15,  0,        0      ),
+	M(14,   65, SEC_H12,  SEC_J12,  SEC_J13,  0      ),
 	//15
-	13,			70,				SEC_H9,		SEC_I9,		SEC_I10,	SEC_J10,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	11,			70,				SEC_K11,	SEC_K14,	SEC_J14,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			75,				SEC_J2,		SEC_K2,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_I3,		SEC_J3,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_J6,		SEC_K6,		0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+	M(13,   70, SEC_H9,   SEC_I9,   SEC_I10,  SEC_J10),
+	M(11,   70, SEC_K11,  SEC_K14,  SEC_J14,  0      ),
+	M(12,   75, SEC_J2,   SEC_K2,   0,        0      ),
+	M(12,   80, SEC_I3,   SEC_J3,   0,        0      ),
+	M(12,   80, SEC_J6,   SEC_K6,   0,        0      ),
 	//20
-	13,			85,				SEC_K7,		SEC_K10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			90,				SEC_L10,	SEC_M10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			90,				SEC_N9,		SEC_N10,	0,				0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			80,				SEC_L7,		SEC_L8,		SEC_M8,		SEC_M9,		-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	14,			80,				SEC_H4,		SEC_H5,		SEC_I5,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+	M(13,   85, SEC_K7,   SEC_K10,  0,        0      ),
+	M(12,   90, SEC_L10,  SEC_M10,  0,        0      ),
+	M(12,   90, SEC_N9,   SEC_N10,  0,        0      ),
+	M(12,   80, SEC_L7,   SEC_L8,   SEC_M8,   SEC_M9 ),
+	M(14,   80, SEC_H4,   SEC_H5,   SEC_I5,   0      ),
 	//25
-	7,			40,				SEC_D4,		SEC_E4,		SEC_E5,		0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	7,			50,				SEC_C10,	SEC_C11,	SEC_D11,	SEC_D12,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	8,			40,				SEC_A15,	SEC_C15,	SEC_C16,	0,				-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
-	12,			30,				SEC_L13,	SEC_M13,	SEC_M14,	SEC_L14,	-1,			0,			0,			0,				{0,0,0,0,0,0,0,0,0,0},
+	M( 7,   40, SEC_D4,   SEC_E4,   SEC_E5,   0      ),
+	M( 7,   50, SEC_C10,  SEC_C11,  SEC_D11,  SEC_D12),
+	M( 8,   40, SEC_A15,  SEC_C15,  SEC_C16,  0      ),
+	M(12,   30, SEC_L13,  SEC_M13,  SEC_M14,  SEC_L14)
 	//29
 };
+
+#undef M
+
 #define PATROL_GROUPS 29
 
 
+#define M(sector, composition) { sector, composition, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 
-GARRISON_GROUP gOrigGarrisonGroup[] =
-{ //SECTOR	MILITARY								WEIGHT	UNUSED
-	//				COMPOSITION											GROUP ID
-	SEC_P3,		QUEEN_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_O3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_O4,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N3,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N4,		MEDUNA_SAMSITE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+static const GARRISON_GROUP gOrigGarrisonGroup[] =
+{ //SECTOR   MILITARY COMPOSITION
+	M(SEC_P3,  QUEEN_DEFENCE       ),
+	M(SEC_O3,  MEDUNA_DEFENCE      ),
+	M(SEC_O4,  MEDUNA_DEFENCE      ),
+	M(SEC_N3,  MEDUNA_DEFENCE      ),
+	M(SEC_N4,  MEDUNA_SAMSITE      ),
 	//5
-	SEC_N5,		MEDUNA_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M3,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M4,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M5,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N6,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_N5,  MEDUNA_DEFENCE      ),
+	M(SEC_M3,  LEVEL1_DEFENCE      ),
+	M(SEC_M4,  LEVEL1_DEFENCE      ),
+	M(SEC_M5,  LEVEL1_DEFENCE      ),
+	M(SEC_N6,  LEVEL1_DEFENCE      ),
 	//10
-	SEC_M2,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L3,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L4,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L5,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_M6,		LEVEL2_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_M2,  LEVEL2_DEFENCE      ),
+	M(SEC_L3,  LEVEL2_DEFENCE      ),
+	M(SEC_L4,  LEVEL2_DEFENCE      ),
+	M(SEC_L5,  LEVEL2_DEFENCE      ),
+	M(SEC_M6,  LEVEL2_DEFENCE      ),
 	//15
-	SEC_N7,		LEVEL1_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L2,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K3,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K5,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L6,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_N7,  LEVEL1_DEFENCE      ),
+	M(SEC_L2,  LEVEL3_DEFENCE      ),
+	M(SEC_K3,  LEVEL3_DEFENCE      ),
+	M(SEC_K5,  LEVEL3_DEFENCE      ),
+	M(SEC_L6,  LEVEL3_DEFENCE      ),
 	//20
-	SEC_M7,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_N8,		LEVEL3_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K4,		ORTA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G1,		WEST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G2,		EAST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_M7,  LEVEL3_DEFENCE      ),
+	M(SEC_N8,  LEVEL3_DEFENCE      ),
+	M(SEC_K4,  ORTA_DEFENCE        ),
+	M(SEC_G1,  WEST_GRUMM_DEFENCE  ),
+	M(SEC_G2,  EAST_GRUMM_DEFENCE  ),
 	//25
-	SEC_H1,		WEST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H2,		EAST_GRUMM_DEFENCE,			0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H3,		GRUMM_MINE,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_A9,		OMERTA_WELCOME_WAGON,		0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_L11,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_H1,  WEST_GRUMM_DEFENCE  ),
+	M(SEC_H2,  EAST_GRUMM_DEFENCE  ),
+	M(SEC_H3,  GRUMM_MINE          ),
+	M(SEC_A9,  OMERTA_WELCOME_WAGON),
+	M(SEC_L11, BALIME_DEFENCE      ),
 	//30
-	SEC_L12,	BALIME_DEFENCE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_J9,		TIXA_PRISON,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_I8,		TIXA_SAMSITE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H13,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H14,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_L12, BALIME_DEFENCE      ),
+	M(SEC_J9,  TIXA_PRISON         ),
+	M(SEC_I8,  TIXA_SAMSITE        ),
+	M(SEC_H13, ALMA_DEFENCE        ),
+	M(SEC_H14, ALMA_DEFENCE        ),
 	//35
-	SEC_I13,	ALMA_DEFENCE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_I14,	ALMA_MINE,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_F8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_F9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G8,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_I13, ALMA_DEFENCE        ),
+	M(SEC_I14, ALMA_MINE           ),
+	M(SEC_F8,  CAMBRIA_DEFENCE     ),
+	M(SEC_F9,  CAMBRIA_DEFENCE     ),
+	M(SEC_G8,  CAMBRIA_DEFENCE     ),
 	//40
-	SEC_G9,		CAMBRIA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_H8,		CAMBRIA_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_A2,		CHITZENA_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_B2,		CHITZENA_MINE,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D2,		CHITZENA_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_G9,  CAMBRIA_DEFENCE     ),
+	M(SEC_H8,  CAMBRIA_MINE        ),
+	M(SEC_A2,  CHITZENA_DEFENCE    ),
+	M(SEC_B2,  CHITZENA_MINE       ),
+	M(SEC_D2,  CHITZENA_SAMSITE    ),
 	//45
-	SEC_B13,	DRASSEN_AIRPORT,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C13,	DRASSEN_DEFENCE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D13,	DRASSEN_MINE,						0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_D15,	DRASSEN_SAMSITE,				0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G12,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_B13, DRASSEN_AIRPORT     ),
+	M(SEC_C13, DRASSEN_DEFENCE     ),
+	M(SEC_D13, DRASSEN_MINE        ),
+	M(SEC_D15, DRASSEN_SAMSITE     ),
+	M(SEC_G12, ROADBLOCK           ),
 	//50
-	SEC_M10,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G6,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C9,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_K10,	ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_G7,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_M10, ROADBLOCK           ),
+	M(SEC_G6,  ROADBLOCK           ),
+	M(SEC_C9,  ROADBLOCK           ),
+	M(SEC_K10, ROADBLOCK           ),
+	M(SEC_G7,  ROADBLOCK           ),
 	//55
-	SEC_G3,		ROADBLOCK,							0,			0,			{0,0,0,0,0,0,0,0,0,0},
-	SEC_C5,		SANMONA_SMALL,					0,			0,			{0,0,0,0,0,0,0,0,0,0},
+	M(SEC_G3,  ROADBLOCK           ),
+	M(SEC_C5,  SANMONA_SMALL       )
 	//57
 };
+
+#undef M
 
 
 //Records any decisions that I deem important enough into an automatically appending AI log file called

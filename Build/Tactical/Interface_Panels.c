@@ -318,27 +318,27 @@ BOOLEAN gfDeductPoints;
 
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
-INV_REGION_DESC gSMInvPocketXY[] =
+static const INV_REGION_DESC gSMInvPocketXY[] =
 {
-	344,	347,				// HELMETPOS
-	344,	376,				// VESTPOS
-	344,	436,				// LEGPOS,
-	226,	347,				// HEAD1POS
-	226,	371,				// HEAD2POS
-	226,	424,				// HANDPOS,
-	226,	448,				// SECONDHANDPOS
-	468,	346,				// BIGPOCK1
-	468,	370,				// BIGPOCK2
-	468,	394,				// BIGPOCK3
-	468,	418,				// BIGPOCK4
-	396,	346,				// SMALLPOCK1
-	396,	370,				// SMALLPOCK2
-	396,	394,				// SMALLPOCK3
-	396,	418,				// SMALLPOCK4
-	432,	346,				// SMALLPOCK5
-	432,	370,				// SMALLPOCK6
-	432,	394,				// SMALLPOCK7
-	432,	418					// SMALLPOCK8
+	{ 344, 347 }, // HELMETPOS
+	{ 344, 376 }, // VESTPOS
+	{ 344, 436 }, // LEGPOS,
+	{ 226, 347 }, // HEAD1POS
+	{ 226, 371 }, // HEAD2POS
+	{ 226, 424 }, // HANDPOS,
+	{ 226, 448 }, // SECONDHANDPOS
+	{ 468, 346 }, // BIGPOCK1
+	{ 468, 370 }, // BIGPOCK2
+	{ 468, 394 }, // BIGPOCK3
+	{ 468, 418 }, // BIGPOCK4
+	{ 396, 346 }, // SMALLPOCK1
+	{ 396, 370 }, // SMALLPOCK2
+	{ 396, 394 }, // SMALLPOCK3
+	{ 396, 418 }, // SMALLPOCK4
+	{ 432, 346 }, // SMALLPOCK5
+	{ 432, 370 }, // SMALLPOCK6
+	{ 432, 394 }, // SMALLPOCK7
+	{ 432, 418 }  // SMALLPOCK8
 };
 
 INV_REGION_DESC gSMCamoXY =
@@ -461,18 +461,18 @@ INT8						gbSMCurStanceObj;
 extern	INT8		gbCompatibleApplyItem;
 
 
-
-INT8		gbStanceButPos[2][3][3] =
+static const INT8 gbStanceButPos[2][3][3] =
 {
-	// NON-STEALTH
-	16,		14,		15,
-	10,		8,		9,
-	22,		20,		21,
-
-	// STEALTH MODE
-	13,		11,		12,
-	7,		5,		6,
-	19,		17,		18
+	{ // NON-STEALTH
+		{ 16, 14, 15 },
+		{ 10,  8,  9 },
+		{ 22, 20, 21 }
+	},
+	{ // STEALTH MODE
+		{ 13, 11, 12 },
+		{  7,  5,  6 },
+		{ 19, 17, 18 }
+	}
 };
 
 

@@ -46,29 +46,29 @@
 #define NUM_CIVQUOTE_SECTORS 20
 #define MINERS_CIV_QUOTE_INDEX  16
 
-INT16	gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
+static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 {
-	 2,		MAP_ROW_A,
-	 2,		MAP_ROW_B,
-	13,		MAP_ROW_B,
-	13,		MAP_ROW_C,
-	13,		MAP_ROW_D,
-	 8,		MAP_ROW_F,
-	 9,		MAP_ROW_F,
-	 8,		MAP_ROW_G,
-	 9,		MAP_ROW_G,
-	 1,		MAP_ROW_H,
+	{  2, MAP_ROW_A },
+	{  2, MAP_ROW_B },
+	{ 13, MAP_ROW_B },
+	{ 13, MAP_ROW_C },
+	{ 13, MAP_ROW_D },
+	{  8, MAP_ROW_F },
+	{  9, MAP_ROW_F },
+	{  8, MAP_ROW_G },
+	{  9, MAP_ROW_G },
+	{  1, MAP_ROW_H },
 
-	 2,		MAP_ROW_H,
-	 3,		MAP_ROW_H,
-	 8,		MAP_ROW_H,
-	13,		MAP_ROW_H,
-	14,		MAP_ROW_I,
-	11,		MAP_ROW_L,
-	12,		MAP_ROW_L,
-	 0,		0,    // THIS ONE USED NOW - FOR bSectorZ > 0.....
-	 0,		0,
-	 0,		0,
+	{  2, MAP_ROW_H },
+	{  3, MAP_ROW_H },
+	{  8, MAP_ROW_H },
+	{ 13, MAP_ROW_H },
+	{ 14, MAP_ROW_I },
+	{ 11, MAP_ROW_L },
+	{ 12, MAP_ROW_L },
+	{  0, 0         }, // THIS ONE USED NOW - FOR bSectorZ > 0.....
+	{  0, 0         },
+	{  0, 0         },
 };
 
 #define NO_FACT									(MAX_FACTS - 1)

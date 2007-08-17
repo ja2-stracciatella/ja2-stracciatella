@@ -17,19 +17,6 @@
 #define		HEAD_INV_SLOT_HEIGHT			24
 
 
-
-// A STRUCT USED INTERNALLY FOR INV SLOT REGIONS
-typedef struct
-{
-	BOOLEAN		fBigPocket;
-	INT16			sBarDx;
-	INT16			sBarDy;
-	INT16			sWidth;
-	INT16			sHeight;
-	INT16			sX;				// starts at 0, gets set via InitInvSlotInterface()
-	INT16			sY;				// starts at 0, gets set via InitInvSlotInterface()
-} INV_REGIONS;
-
 // USED TO SETUP REGION POSITIONS, ETC
 typedef struct
 {

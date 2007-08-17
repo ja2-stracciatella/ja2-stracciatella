@@ -4331,9 +4331,12 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 
 void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 {
-	INT8 bValidDishoutDirs[3][3] = { NORTH, NORTHEAST, -1,
-																	EAST, SOUTHEAST, -1,
-																	SOUTH, -1, -1 };
+	static const INT8 bValidDishoutDirs[3][3] =
+	{
+		{ NORTH, NORTHEAST, -1 },
+		{ EAST,  SOUTHEAST, -1 },
+		{ SOUTH, -1,        -1 }
+	};
 
 	UINT32                  cnt, cnt2;
 	SOLDIERTYPE							*pSoldier;

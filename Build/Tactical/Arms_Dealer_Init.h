@@ -224,7 +224,7 @@ typedef struct
 CASSERT(sizeof(DEALER_ITEM_HEADER) == 16)
 
 
-extern ARMS_DEALER_INFO			ArmsDealerInfo[ NUM_ARMS_DEALERS ];
+extern const ARMS_DEALER_INFO ArmsDealerInfo[NUM_ARMS_DEALERS];
 extern ARMS_DEALER_STATUS		gArmsDealerStatus[ NUM_ARMS_DEALERS ];
 extern DEALER_ITEM_HEADER		gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 

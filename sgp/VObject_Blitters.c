@@ -6290,7 +6290,7 @@ void GetClippingRect(SGPRect *clip)
 	  This was the only internal modification I made other than adding the usColor argument.
 
 *********************************************************************************************/
-static BOOLEAN Blt16BPPBufferPixelateRectWithColor(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPRect* area, UINT8 Pattern[8][8], UINT16 usColor)
+static BOOLEAN Blt16BPPBufferPixelateRectWithColor(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPRect* area, const UINT8 Pattern[8][8], UINT16 usColor)
 {
 	INT32  width, height;
 	UINT32 LineSkip;
@@ -6374,32 +6374,32 @@ BlitLine2:
 //Uses black hatch color
 BOOLEAN Blt16BPPBufferHatchRect(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area )
 {
-	UINT8 Pattern[8][8] =
+	const UINT8 Pattern[8][8] =
 	{
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1
+		{ 1,0,1,0,1,0,1,0 },
+		{ 0,1,0,1,0,1,0,1 },
+		{ 1,0,1,0,1,0,1,0 },
+		{ 0,1,0,1,0,1,0,1 },
+		{ 1,0,1,0,1,0,1,0 },
+		{ 0,1,0,1,0,1,0,1 },
+		{ 1,0,1,0,1,0,1,0 },
+		{ 0,1,0,1,0,1,0,1 }
 	};
 	return Blt16BPPBufferPixelateRectWithColor( pBuffer, uiDestPitchBYTES, area, Pattern, 0 );
 }
 
 BOOLEAN Blt16BPPBufferLooseHatchRectWithColor(UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPRect *area, UINT16 usColor )
 {
-	UINT8 Pattern[8][8] =
+	const UINT8 Pattern[8][8] =
 	{
-		1,0,0,0,1,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,1,0,0,0,1,0,
-		0,0,0,0,0,0,0,0,
-		1,0,0,0,1,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,1,0,0,0,1,0,
-		0,0,0,0,0,0,0,0,
+		{ 1,0,0,0,1,0,0,0 },
+		{ 0,0,0,0,0,0,0,0 },
+		{ 0,0,1,0,0,0,1,0 },
+		{ 0,0,0,0,0,0,0,0 },
+		{ 1,0,0,0,1,0,0,0 },
+		{ 0,0,0,0,0,0,0,0 },
+		{ 0,0,1,0,0,0,1,0 },
+		{ 0,0,0,0,0,0,0,0 }
 	};
 	return Blt16BPPBufferPixelateRectWithColor( pBuffer, uiDestPitchBYTES, area, Pattern, usColor );
 }

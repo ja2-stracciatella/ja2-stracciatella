@@ -91,7 +91,7 @@ UINT8 gubNumDoors = 0;
 //the current number (gubNumDoors) will be <= to it.
 UINT8 gubMaxDoors = 0;
 
-LOCK LockTable[NUM_LOCKS] = { 0 };
+LOCK LockTable[NUM_LOCKS];
 
 /*
 LOCK LockTable[NUM_LOCKS] =

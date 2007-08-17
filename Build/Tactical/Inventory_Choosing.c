@@ -28,34 +28,41 @@
 UINT32 guiMortarsRolledByTeam = 0;
 
 
-ARMY_GUN_CHOICE_TYPE gRegularArmyGunChoices[ARMY_GUN_LEVELS] =
-{	// INDEX		CLASS				 #CHOICES
-	{ /* 0 - lo pistols			*/	2,	SW38,					DESERTEAGLE,		-1,						-1,					-1					},
-	{ /* 1 - hi pistols			*/	2,	GLOCK_17,			BERETTA_93R,		-1,						-1,					-1					},
-	{ /* 2 - lo SMG/shotgun	*/	2,	M870,					MP5K,						-1,						-1,					-1					},
-	{ /* 3 - lo rifles			*/	1,	MINI14,				-1,							-1,						-1,					-1					},
-	{ /* 4 - hi SMGs				*/	2,	MAC10,				COMMANDO,				-1,						-1,					-1					},
-	{ /* 5 - med rifles  		*/	1,	G41,					-1,							-1,						-1,					-1					},
-	{ /* 6 - sniper rifles	*/	1,	M24,					-1,							-1,						-1,					-1					},
-	{	/* 7 - hi rifles			*/	2,	M14,					C7,							-1,						-1,					-1					},
-	{ /* 8 - best rifle			*/	1,	FNFAL,				-1,							-1,						-1,					-1					},
-	{ /* 9 - machine guns		*/	1,	MINIMI,				-1,							-1,						-1,					-1					},
-	{ /* 10- rocket rifle		*/	2,	ROCKET_RIFLE,	MINIMI,							-1,						-1,					-1					},
+typedef struct ARMY_GUN_CHOICE_TYPE
+{
+	UINT8 ubChoices;  // how many valid choices there are in this category
+	INT8  bItemNo[5]; // room for up to 5 choices of gun in each category
+} ARMY_GUN_CHOICE_TYPE;
+
+
+static const ARMY_GUN_CHOICE_TYPE gRegularArmyGunChoices[ARMY_GUN_LEVELS] =
+{
+  { /* 0 - lo pistols     */ 2, { SW38,         DESERTEAGLE, -1, -1, -1 } },
+  { /* 1 - hi pistols     */ 2, { GLOCK_17,     BERETTA_93R, -1, -1, -1 } },
+  { /* 2 - lo SMG/shotgun */ 2, { M870,         MP5K,        -1, -1, -1 } },
+  { /* 3 - lo rifles      */ 1, { MINI14,       -1,          -1, -1, -1 } },
+  { /* 4 - hi SMGs        */ 2, { MAC10,        COMMANDO,    -1, -1, -1 } },
+  { /* 5 - med rifles     */ 1, { G41,          -1,          -1, -1, -1 } },
+  { /* 6 - sniper rifles  */ 1, { M24,          -1,          -1, -1, -1 } },
+  { /* 7 - hi rifles      */ 2, { M14,          C7,          -1, -1, -1 } },
+  { /* 8 - best rifle     */ 1, { FNFAL,        -1,          -1, -1, -1 } },
+  { /* 9 - machine guns   */ 1, { MINIMI,       -1,          -1, -1, -1 } },
+  { /* 10- rocket rifle   */ 2, { ROCKET_RIFLE, MINIMI,      -1, -1, -1 } }
 };
 
-ARMY_GUN_CHOICE_TYPE gExtendedArmyGunChoices[ARMY_GUN_LEVELS] =
-{	// INDEX		CLASS				 #CHOICES
-	{ /* 0 - lo pistols			*/	5,	SW38,					BARRACUDA,			DESERTEAGLE,	GLOCK_17,		M1911,			},
-	{ /* 1 - hi pist/shtgn	*/	4,	GLOCK_18,			BERETTA_93R,		BERETTA_92F,	M870,				-1					},
-	{ /* 2 - lo SMGs/shtgn	*/	5,	TYPE85,				THOMPSON,				MP53,					MP5K,				SPAS15			},
-	{ /* 3 - lo rifles    	*/	2,	MINI14,				SKS,						-1,						-1,					-1					},
-	{ /* 4 - hi SMGs				*/	3,	MAC10,				AKSU74,					COMMANDO,			-1,					-1					},
-	{ /* 5 - med rifles  		*/	4,	AKM,					G3A3,						G41,					AK74,				-1					},
-	{ /* 6 - sniper rifles	*/	2,	DRAGUNOV,			M24,						-1,						-1,					-1					},
-	{	/* 7 - hi rifles			*/	4,	FAMAS,				M14,						AUG,					C7,					-1					},
-	{ /* 8 - best rifle			*/	1,	FNFAL,				-1,							-1,						-1,					-1					},
-	{ /* 9 - machine guns		*/	3,	MINIMI,				RPK74,					HK21E,				-1,					-1					},
-	{ /* 10- rocket rifle		*/	4,	ROCKET_RIFLE,	ROCKET_RIFLE,	RPK74,				HK21E,						-1},
+static const ARMY_GUN_CHOICE_TYPE gExtendedArmyGunChoices[ARMY_GUN_LEVELS] =
+{
+  { /* 0 - lo pistols    */ 5, { SW38,         BARRACUDA,    DESERTEAGLE, GLOCK_17, M1911  } },
+  { /* 1 - hi pist/shtgn */ 4, { GLOCK_18,     BERETTA_93R,  BERETTA_92F, M870,     -1     } },
+  { /* 2 - lo SMGs/shtgn */ 5, { TYPE85,       THOMPSON,     MP53,        MP5K,     SPAS15 } },
+  { /* 3 - lo rifles     */ 2, { MINI14,       SKS,          -1,          -1,       -1     } },
+  { /* 4 - hi SMGs       */ 3, { MAC10,        AKSU74,       COMMANDO,    -1,       -1     } },
+  { /* 5 - med rifles    */ 4, { AKM,          G3A3,         G41,         AK74,     -1     } },
+  { /* 6 - sniper rifles */ 2, { DRAGUNOV,     M24,          -1,          -1,       -1     } },
+  { /* 7 - hi rifles     */ 4, { FAMAS,        M14,          AUG,         C7,       -1     } },
+  { /* 8 - best rifle    */ 1, { FNFAL,        -1,           -1,          -1,       -1     } },
+  { /* 9 - machine guns  */ 3, { MINIMI,       RPK74,        HK21E,       -1,       -1     } },
+  { /* 10- rocket rifle  */ 4, { ROCKET_RIFLE, ROCKET_RIFLE, RPK74,       HK21E,    -1     } }
 };
 
 
@@ -64,7 +71,6 @@ static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 
 void InitArmyGunTypes(void)
 {
-	ARMY_GUN_CHOICE_TYPE *pGunChoiceTable;
 	UINT32 uiGunLevel;
 	UINT32 uiChoice;
 	INT8 bItemNo;
@@ -72,15 +78,16 @@ void InitArmyGunTypes(void)
 
 
 	// depending on selection of the gun nut option
+	const ARMY_GUN_CHOICE_TYPE* pGunChoiceTable;
 	if (gGameOptions.fGunNut)
 	{
 		// use table of extended gun choices
-		pGunChoiceTable = &(gExtendedArmyGunChoices[0]);
+		pGunChoiceTable = gExtendedArmyGunChoices;
 	}
 	else
 	{
 		// use table of regular gun choices
-		pGunChoiceTable = &(gRegularArmyGunChoices[0]);
+		pGunChoiceTable = gRegularArmyGunChoices;
 	}
 
 	// for each gun category
@@ -2080,7 +2087,6 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 
 static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel)
 {
-	ARMY_GUN_CHOICE_TYPE *pGunChoiceTable;
 	UINT32 uiChoice;
 	UINT16 usGunIndex;
 
@@ -2090,15 +2096,16 @@ static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel)
 	// decided to randomize it afterall instead of repeating the same weapon over and over
 
 	// depending on selection of the gun nut option
+	const ARMY_GUN_CHOICE_TYPE* pGunChoiceTable;
 	if (gGameOptions.fGunNut)
 	{
 		// use table of extended gun choices
-		pGunChoiceTable = &(gExtendedArmyGunChoices[0]);
+		pGunChoiceTable = gExtendedArmyGunChoices;
 	}
 	else
 	{
 		// use table of regular gun choices
-		pGunChoiceTable = &(gRegularArmyGunChoices[0]);
+		pGunChoiceTable = gRegularArmyGunChoices;
 	}
 
 	// choose one the of the possible gun choices

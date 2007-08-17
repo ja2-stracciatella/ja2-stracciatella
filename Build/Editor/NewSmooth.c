@@ -270,22 +270,22 @@ void AddCave( INT32 iMapIndex, UINT16 usIndex )
 //Wall Look Up Table containing variants and indices with each row being a different walltype.
 INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 {
-//	The number of variants of this tile type.
-//  |			The first relative index of the wall type (FIRSTWALL, SECONDWALL, etc. )  walltype + 10
-//	|			|		The 2nd relative index  ( walltype + 11 )
-//	|			|		|		3rd	4th 5th 6th
-//	|			|		|		|		|   |   |
-		6,		10, 11, 12, 27, 28, 29,					//INTERIOR_L
-		6,		 7,  8,  9, 24, 25, 26,					//INTERIOR_R
-		6,     4,  5,  6, 21, 22, 23,					//EXTERIOR_L
-		6,		 1,  2,  3, 18, 19, 20,					//EXTERIOR_R
-		1,		14,  0,  0,  0,  0,  0,					//INTERIOR_CORNER
-		1,    15,  0,  0,  0,  0,  0,					//INTERIOR_BOTTOMEND
-		1,    13,  0,  0,  0,  0,  0,					//EXTERIOR_BOTTOMEND
-		1,    16,  0,  0,  0,  0,  0,					//INTERIOR_EXTENDED
-		1,    57,  0,  0,  0,  0,  0,					//EXTERIOR_EXTENDED
-		1,    56,  0,  0,  0,  0,  0,					//INTERIOR_EXTENDED_BOTTOMEND
-		1,    17,  0,  0,  0,  0,  0,					//EXTERIOR_EXTENDED_BOTTOMEND
+//  The number of variants of this tile type.
+//  |   The first relative index of the wall type (FIRSTWALL, SECONDWALL, etc. )  walltype + 10
+//  |   |   The 2nd relative index  ( walltype + 11 )
+//  |   |   |   3rd 4th 5th 6th
+//  |   |   |   |   |   |   |
+	{ 6, 10, 11, 12, 27, 28, 29 }, // INTERIOR_L
+	{ 6,  7,  8,  9, 24, 25, 26 }, // INTERIOR_R
+	{ 6,  4,  5,  6, 21, 22, 23 }, // EXTERIOR_L
+	{ 6,  1,  2,  3, 18, 19, 20 }, // EXTERIOR_R
+	{ 1, 14,  0,  0,  0,  0,  0 }, // INTERIOR_CORNER
+	{ 1, 15,  0,  0,  0,  0,  0 }, // INTERIOR_BOTTOMEND
+	{ 1, 13,  0,  0,  0,  0,  0 }, // EXTERIOR_BOTTOMEND
+	{ 1, 16,  0,  0,  0,  0,  0 }, // INTERIOR_EXTENDED
+	{ 1, 57,  0,  0,  0,  0,  0 }, // EXTERIOR_EXTENDED
+	{ 1, 56,  0,  0,  0,  0,  0 }, // INTERIOR_EXTENDED_BOTTOMEND
+	{ 1, 17,  0,  0,  0,  0,  0 }  // EXTERIOR_EXTENDED_BOTTOMEND
 };
 
 //Roof table -- such a small table, using definitions instead.

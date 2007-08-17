@@ -219,14 +219,8 @@ enum
 HELP_SCREEN_STRUCT gHelpScreen;
 
 
-typedef struct
-{
-	INT32	iButtonTextNum[ HELP_SCREEN_NUM_BTNS ];
-
-} HELP_SCREEN_BTN_TEXT_RECORD;
-
 //An array of record nums for the text on the help buttons
-HELP_SCREEN_BTN_TEXT_RECORD gHelpScreenBtnTextRecordNum[ HELP_SCREEN_NUMBER_OF_HELP_SCREENS ] =
+static const INT32 gHelpScreenBtnTextRecordNum[HELP_SCREEN_NUMBER_OF_HELP_SCREENS][HELP_SCREEN_NUM_BTNS] =
 {
 //new screen:
 
@@ -901,7 +895,7 @@ static void CreateHelpScreenButtons(void)
 		for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
 		{
 			//get the text for the button
-			GetHelpScreenText( gHelpScreenBtnTextRecordNum[ gHelpScreen.bCurrentHelpScreen ].iButtonTextNum[i], sText );
+			GetHelpScreenText(gHelpScreenBtnTextRecordNum[gHelpScreen.bCurrentHelpScreen][i], sText);
 
 /*
 			guiHelpScreenBtns[i] = CreateTextButton( sText, HELP_SCREEN_BTN_FONT, HELP_SCREEN_BTN_FONT_COLOR, HELP_SCREEN_BTN_FONT_BACK_COLOR,

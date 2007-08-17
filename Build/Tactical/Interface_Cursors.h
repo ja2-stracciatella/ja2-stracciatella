@@ -196,11 +196,9 @@ typedef struct
 	UINT32 uiFlags;
 	UINT16 usFreeCursorName;
 	UINT16 usAdditionalData;
-
 } UICursor;
 
-
-UICursor	gUICursors[ NUM_UI_CURSORS ];
+const UICursor gUICursors[NUM_UI_CURSORS];
 
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor );

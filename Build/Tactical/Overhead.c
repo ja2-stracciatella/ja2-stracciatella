@@ -217,12 +217,12 @@ CHAR8                   gzActionStr[][ 30 ] =
 // TEMP VALUES FOR TEAM DEAFULT POSITIONS
 static const UINT8 bDefaultTeamRanges[MAXTEAMS][2] =
 {
-	0,              19,                                                                                             //20  US
-	20,             51,                                                                                             //32  ENEMY
-	52,             83,                                                                                             //32    CREATURE
-	84,             115,                                                                                    //32    REBELS ( OUR GUYS )
-	116,    MAX_NUM_SOLDIERS - 1,                   //32  CIVILIANS
-	MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1            // PLANNING SOLDIERS
+	{  0,                19                  }, // 20 US
+	{ 20,                51                  }, // 32 ENEMY
+	{ 52,                83                  }, // 32 CREATURE
+	{ 84,               115                  }, // 32 REBELS (OUR GUYS)
+	{ 116,              MAX_NUM_SOLDIERS - 1 }, // 32 CIVILIANS
+	{ MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1   }  // PLANNING SOLDIERS
 };
 
 COLORVAL bDefaultTeamColors[ MAXTEAMS ] =
