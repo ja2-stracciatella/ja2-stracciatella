@@ -7667,9 +7667,6 @@ static void CreateSquadBox(void)
 	 // get info about current squad and put in  string
 	 swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
 	 AddMonoString(&hStringHandle, sString );
-
-	 // make sure it is unhighlighted
-	 UnHighLightLine(hStringHandle);
  }
 
  // add cancel line
@@ -7946,7 +7943,6 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 				 AddMonoString(&hStringHandle, pContractStrings[uiCounter] );
 				 break;
 		 }
-		 UnHighLightLine(hStringHandle);
 	 }
  }
 
@@ -8015,9 +8011,6 @@ static void CreateAttributeBox(void)
  for(uiCounter=0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; uiCounter++)
  {
   AddMonoString(&hStringHandle, pAttributeMenuStrings[uiCounter]);
-
-	// make sure it is unhighlighted
-	UnHighLightLine(hStringHandle);
  }
 
  // set font type
@@ -8081,9 +8074,6 @@ static void CreateTrainingBox(void)
  for(uiCounter=0; uiCounter < MAX_TRAIN_STRING_COUNT; uiCounter++)
  {
   AddMonoString(&hStringHandle, pTrainingMenuStrings[uiCounter]);
-
-	// make sure it is unhighlighted
-	UnHighLightLine(hStringHandle);
  }
 
  // set font type
@@ -8165,9 +8155,6 @@ static void CreateAssignmentsBox(void)
 		}
 
 		AddMonoString(&hStringHandle, sString );
-
-		// make sure it is unhighlighted
-		UnHighLightLine(hStringHandle);
 	}
 
 	// set font type
@@ -8224,9 +8211,6 @@ void CreateMercRemoveAssignBox( void )
  for(uiCounter=0; uiCounter < MAX_REMOVE_MERC_COUNT; uiCounter++)
  {
   AddMonoString(&hStringHandle, pRemoveMercStrings[uiCounter]);
-
-	// make sure it is unhighlighted
-	UnHighLightLine(hStringHandle);
  }
 
  // set font type

@@ -36,7 +36,6 @@ void SetBoxShade(INT32 hBoxHandle, UINT8 ubColor);
 void ShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber );
 void UnShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber );
 void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber );
-void UnHighLightLine(INT32 hStringHandle);
 void UnHighLightBox(INT32 hBoxHandle);
 void RemoveAllCurrentBoxStrings( void );
 void RemoveBox(INT32 hBoxHandle);

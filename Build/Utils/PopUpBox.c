@@ -834,20 +834,6 @@ BOOLEAN GetBoxShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
 }
 
 
-void UnHighLightLine(INT32 hStringHandle)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	if (!Box->Text[hStringHandle])
-		return;
-	Box->Text[hStringHandle]->fHighLightFlag = FALSE;
-}
-
 void UnHighLightBox(INT32 hBoxHandle)
 {
 	INT32 iCounter = 0;
