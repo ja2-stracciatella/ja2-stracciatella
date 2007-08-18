@@ -42,13 +42,6 @@ enum{
 };
 
 
-enum
-{
-	SLIDER_ERROR,
-	SLIDER_OK,
-	SLIDER_OUT_OF_RANGE,
-};
-
 // the skills as they stand
 static INT32 iCurrentStrength    = 55;
 static INT32 iCurrentAgility     = 55;
@@ -172,9 +165,9 @@ void ExitIMPAttributeSelection(void)
 }
 
 
-static UINT8 DecrementStat(INT32 iStatToDecrement);
+static void DecrementStat(INT32 iStatToDecrement);
 static INT32 GetCurrentAttributeValue(INT32 iAttribute);
-static UINT8 IncrementStat(INT32 iStatToIncrement);
+static void IncrementStat(INT32 iStatToIncrement);
 static void ProcessAttributes(void);
 static void StatAtZeroBoxCallBack(UINT8 bExitValue);
 
@@ -303,19 +296,15 @@ static void ProcessAttributes(void)
 static BOOLEAN DoWeHaveThisManyBonusPoints(INT32 iBonusPoints);
 
 
-static UINT8 IncrementStat(INT32 iStatToIncrement)
+static void IncrementStat(INT32 iStatToIncrement)
 {
 	// this function is responsable for incrementing a stat
 
 	// review mode, do not allow changes
-	if (fReviewStats) return SLIDER_ERROR;
+	if (fReviewStats) return;
 
 	// make sure we have enough bonus points
-	if (iCurrentBonusPoints < 1)
-	{
-		// nope...GO GET SOME BONUS POINTS, IDIOT!
-		return SLIDER_ERROR;
-	}
+	if (iCurrentBonusPoints < 1) return;
 
 	// check to make sure stat isn't maxed out already
 	switch (iStatToIncrement)
@@ -324,7 +313,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentStrength > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -336,7 +325,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentDexterity > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -348,7 +337,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentAgility > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -360,7 +349,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentLeaderShip > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -372,7 +361,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentWisdom > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -384,7 +373,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentHealth > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -396,7 +385,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentMarkmanship > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -410,7 +399,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 					}
 					else
 					{
-						return( SLIDER_OK );
+						return;
 					}
 				}
 				else
@@ -424,7 +413,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentMechanical > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -438,7 +427,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 					}
 					else
 					{
-						return( SLIDER_OK );
+						return;
 					}
 				}
 				else
@@ -452,7 +441,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentMedical > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -466,7 +455,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 					}
 					else
 					{
-						return( SLIDER_OK );
+						return;
 					}
 				}
 				else
@@ -480,7 +469,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		  if( iCurrentExplosives > 84 )
 			{
 				// too high, leave
-				return( SLIDER_OUT_OF_RANGE );
+				return;
       }
 		  else
 			{
@@ -494,7 +483,7 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 					}
 					else
 					{
-						return( SLIDER_OK );
+						return;
 					}
 				}
 				else
@@ -506,15 +495,13 @@ static UINT8 IncrementStat(INT32 iStatToIncrement)
 		break;
 
 	}
-
-	return SLIDER_OK;
 }
 
 
-static UINT8 DecrementStat(INT32 iStatToDecrement)
+static void DecrementStat(INT32 iStatToDecrement)
 {
 	// review mode, do not allow changes
-	if (fReviewStats) return SLIDER_ERROR;
+	if (fReviewStats) return;
 
 	// decrement a stat
 	// check to make sure stat isn't maxed out already
@@ -529,7 +516,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
     case( DEXTERITY_ATTRIBUTE ):
@@ -541,7 +528,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
 		case( AGILITY_ATTRIBUTE ):
@@ -553,7 +540,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
     case( WISDOM_ATTRIBUTE ):
@@ -565,7 +552,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
 		case( LEADERSHIP_ATTRIBUTE ):
@@ -577,7 +564,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
 		case( HEALTH_ATTRIBUTE ):
@@ -589,7 +576,7 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 			}
 			else
 			{
-				return( SLIDER_OUT_OF_RANGE );
+				return;
 			}
 		break;
     case( MARKSMANSHIP_SKILL ):
@@ -659,8 +646,6 @@ static UINT8 DecrementStat(INT32 iStatToDecrement)
 		// current stat at zero
 		iCurrentStatAtZero = iStatToDecrement;
 	}
-
-	return SLIDER_OK;
 }
 
 
