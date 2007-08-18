@@ -892,172 +892,44 @@ static void BtnIMPAttributeFinishCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-void RenderAttributeBoxes( void )
+void RenderAttributeBoxes(void)
 {
-  // this function will render the boxes in the sliding attribute bar, based on position
-  INT32 iCnt=STRENGTH_ATTRIBUTE;
-  INT16 sX = 0;
-  INT16 sY = 0;
-
-	// font stuff
+	// this function will render the boxes in the sliding attribute bar, based on position
 	SetFont(FONT10ARIAL);
 	SetFontShadow(NO_SHADOW);
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
 
 	// run through and render each slider bar
-	for( iCnt = HEALTH_ATTRIBUTE; iCnt <= MECHANICAL_SKILL; iCnt++)
+	for (INT32 i = HEALTH_ATTRIBUTE; i <= MECHANICAL_SKILL; ++i)
 	{
-		// position is  ( width *  ( stat - 35 ) ) /50]
-		// unless 0, then it is 0 - for skills
-
-		// get y position
-		sY = SKILL_SLIDE_START_Y + SKILL_SLIDE_HEIGHT * ( ( INT16 )iCnt ) ;
-
-		switch( iCnt )
+		INT32 val;
+		switch (i)
 		{
-		  case (STRENGTH_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  ( ( iCurrentStrength - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE ) / 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-				sX += LAPTOP_SCREEN_UL_X;
-				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentStrength);
-		  break;
-
-			case (DEXTERITY_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  ( ( iCurrentDexterity - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE ) / 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sX += LAPTOP_SCREEN_UL_X;
-				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentDexterity);
-		  break;
-
-			case (AGILITY_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  ( ( iCurrentAgility - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-				sX += LAPTOP_SCREEN_UL_X;
-				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentAgility);
-		  break;
-
-			case (WISDOM_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  ( ( iCurrentWisdom - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-				sX += LAPTOP_SCREEN_UL_X;
-				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentWisdom);
-		  break;
-
-      case (LEADERSHIP_ATTRIBUTE):
-		    // blt in strength slider
-				sX =  ( ( iCurrentLeaderShip - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-				sX += LAPTOP_SCREEN_UL_X;
-				sY += LAPTOP_SCREEN_WEB_UL_Y;
-				mprintf(sX + 13 , sY + 3, L"%d", iCurrentLeaderShip);
-		  break;
-
-			case (HEALTH_ATTRIBUTE):
-		    // blt in health slider
-				sX =  ( ( iCurrentHealth - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
-				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentHealth);
-		  break;
-
-      case (MARKSMANSHIP_SKILL):
-		    // blt in marksmanship slider
-
-				sX =  ( ( iCurrentMarkmanship - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				// if less than zero..a zero'ed skill...reset to zero
-				if( sX < 0)
-				{
-					sX = 0;
-				}
-
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
-				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentMarkmanship);
-		  break;
-
-      case (MEDICAL_SKILL):
-		    // blt in medical slider
-
-				sX =  ( ( iCurrentMedical - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				// if less than zero..a zero'ed skill...reset to zero
-				if( sX < 0)
-				{
-					sX = 0;
-				}
-
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
-				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentMedical);
-		  break;
-
-      case (MECHANICAL_SKILL):
-		    // blt in mech slider
-
-				sX =  ( ( iCurrentMechanical - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				// if less than zero..a zero'ed skill...reset to zero
-				if( sX < 0)
-				{
-					sX = 0;
-				}
-
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
-				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentMechanical);
-		  break;
-
-			case (EXPLOSIVE_SKILL):
-		    // blt in explosive slider
-
-				sX =  ( ( iCurrentExplosives - 35 ) * BASE_SKILL_PIXEL_UNIT_SIZE )/ 50;
-				// if less than zero..a zero'ed skill...reset to zero
-				if( sX < 0)
-				{
-					sX = 0;
-				}
-
-				sX += SKILL_SLIDE_START_X;
-				RenderSliderBar( sX, sY );
-
-			  sY += LAPTOP_SCREEN_WEB_UL_Y;
-				sX += LAPTOP_SCREEN_UL_X;
-				mprintf(sX + 13, sY + 3, L"%d", iCurrentExplosives);
-		  break;
-
+			case HEALTH_ATTRIBUTE:     val = iCurrentHealth;      break;
+			case DEXTERITY_ATTRIBUTE:  val = iCurrentDexterity;   break;
+			case AGILITY_ATTRIBUTE:    val = iCurrentAgility;     break;
+			case STRENGTH_ATTRIBUTE:   val = iCurrentStrength;    break;
+			case WISDOM_ATTRIBUTE:     val = iCurrentWisdom;      break;
+			case LEADERSHIP_ATTRIBUTE: val = iCurrentLeaderShip;  break;
+			case MARKSMANSHIP_SKILL:   val = iCurrentMarkmanship; break;
+			case EXPLOSIVE_SKILL:      val = iCurrentExplosives;  break;
+			case MEDICAL_SKILL:        val = iCurrentMedical;     break;
+			case MECHANICAL_SKILL:     val = iCurrentMechanical;  break;
 		}
+
+		// Compensate for zeroed skills: x pos is at least 0
+		INT16 sX = max(0, val - 35) * BASE_SKILL_PIXEL_UNIT_SIZE / 50;
+		INT16 sY = SKILL_SLIDE_START_Y + SKILL_SLIDE_HEIGHT * i;
+
+		sX += SKILL_SLIDE_START_X;
+		RenderSliderBar(sX, sY);
+
+		sX += LAPTOP_SCREEN_UL_X;
+		sY += LAPTOP_SCREEN_WEB_UL_Y;
+		mprintf(sX + 13, sY + 3, L"%d", val);
 	}
 
-		// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
