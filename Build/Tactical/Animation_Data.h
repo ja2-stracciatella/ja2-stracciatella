@@ -519,19 +519,19 @@ enum
 // Struct for animation 'surface' information
 typedef struct
 {
-	UINT16								  ubName;
-	CHAR8										Filename[ 50 ];
-	CHAR8										bStructDataType;
-	UINT8										ubFlags;
-	UINT32									uiNumDirections;
-	UINT32									uiNumFramesPerDir;
-	HVOBJECT								hVideoObject;
-	INT8										bUsageCount;
-	INT8										bProfile;
+	const UINT16 ubName;
+	const char   Filename[50];
+	const CHAR8  bStructDataType;
+	const UINT8  ubFlags;
+	const UINT32 uiNumDirections;
+	UINT32       uiNumFramesPerDir;
+	HVOBJECT     hVideoObject;
+	INT8         bUsageCount;
+	const INT8   bProfile;
 } AnimationSurfaceType;
 
 
-AnimationSurfaceType		gAnimSurfaceDatabase[ NUMANIMATIONSURFACETYPES ];
+AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 
 BOOLEAN InitAnimationSystem( );
