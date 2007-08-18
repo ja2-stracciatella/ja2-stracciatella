@@ -313,8 +313,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			gubPBSectorY = gpBattleGroup->ubSectorY;
 			gubPBSectorZ = gpBattleGroup->ubSectorZ;
 
-			// get number of enemies thought to be here
-			SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ].bLastKnownEnemies = NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
 			fMapPanelDirty = TRUE;
 		}
 		else
@@ -1070,14 +1068,12 @@ void RenderPreBattleInterface()
 		{
 			// don't know how many
 			swprintf( str, lengthof(str), L"?" );
-			SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ].bLastKnownEnemies = -2;
 		}
 		else
 		{
 			// know exactly how many
 			i = NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
 			swprintf( str, lengthof(str), L"%d", i );
-			SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ].bLastKnownEnemies = (INT8)i;
 		}
 		x = 57 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
 		y = 36;

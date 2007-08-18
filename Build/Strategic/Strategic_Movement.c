@@ -1686,11 +1686,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 
 	if( pGroup->fPlayer )
 	{
-		if( pGroup->ubSectorZ == 0 )
-		{
-			SectorInfo[ SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) ].bLastKnownEnemies = NumEnemiesInSector( pGroup->ubSectorX, pGroup->ubSectorY );
-		}
-
 		// award life 'experience' for travelling, based on travel time!
 		if ( !pGroup->fVehicle )
 		{
@@ -3144,8 +3139,6 @@ INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection )
 void HandleArrivalOfReinforcements( GROUP *pGroup )
 {
 	SOLDIERTYPE *pSoldier;
-	SECTORINFO *pSector;
-	INT32 iNumEnemiesInSector;
 	INT32	cnt;
 
 	if( pGroup->fPlayer )
@@ -3194,21 +3187,6 @@ void HandleArrivalOfReinforcements( GROUP *pGroup )
 		gfPendingEnemies = TRUE;
 		ResetMortarsOnTeamCount();
 		AddPossiblePendingEnemiesToBattle();
-	}
-	//Update the known number of enemies in the sector.
-	pSector = &SectorInfo[ SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) ];
-	iNumEnemiesInSector = NumEnemiesInSector( pGroup->ubSectorX, pGroup->ubSectorY );
-	if( iNumEnemiesInSector )
-	{
-		if( pSector->bLastKnownEnemies >= 0 )
-		{
-			pSector->bLastKnownEnemies = (INT8)iNumEnemiesInSector;
-		}
-		//if we don't know how many enemies there are, then we can't update this value.
-	}
-	else
-	{
-		pSector->bLastKnownEnemies = 0;
 	}
 }
 

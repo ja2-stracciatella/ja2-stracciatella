@@ -698,8 +698,6 @@ static BOOLEAN PrepareEnemyForUndergroundBattle(void)
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 {
-	INT32 iNumEnemiesInSector;
-	SECTORINFO *pSector;
 	wchar_t str[128];
 	EvaluateDeathEffectsToSoldierInitList( pSoldier );
 
@@ -713,7 +711,7 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 			}
 			if( !pSoldier->bSectorZ )
 			{
-				pSector = &SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ];
+				SECTORINFO* pSector = &SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)];
 				if( pSector->ubNumElites )
 				{
 					pSector->ubNumElites--;
@@ -1079,22 +1077,6 @@ void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
 						break;
 				}
 			}
-		}
-	}
-	if( !pSoldier->bSectorZ )
-	{
-		pSector = &SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ];
-		iNumEnemiesInSector = NumEnemiesInSector( pSoldier->sSectorX, pSoldier->sSectorY );
-		if( iNumEnemiesInSector )
-		{
-			if( pSector->bLastKnownEnemies >= 0 )
-			{
-				pSector->bLastKnownEnemies = (INT8)iNumEnemiesInSector;
-			}
-		}
-		else
-		{
-			pSector->bLastKnownEnemies = 0;
 		}
 	}
 }

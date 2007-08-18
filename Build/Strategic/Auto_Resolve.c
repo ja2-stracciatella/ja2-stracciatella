@@ -391,7 +391,6 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 		pSector->ubNumElites = 0;
 		pSector->ubNumAdmins = 0;
 		pSector->ubNumCreatures = 0;
-		pSector->bLastKnownEnemies = 0;
 		//Remove the mobile forces here, but only if battle is over.
 		while( pGroup )
 		{
@@ -1610,7 +1609,6 @@ static void RenderAutoResolve(void)
 					HandleMoraleEvent( NULL, MORALE_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 
-					SectorInfo[ SECTOR( gpAR->ubSectorX, gpAR->ubSectorY ) ].bLastKnownEnemies = 0;
 					SetThisSectorAsPlayerControlled( gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE );
 
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );

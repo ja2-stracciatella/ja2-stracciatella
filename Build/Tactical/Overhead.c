@@ -5682,14 +5682,6 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		}
 	}
 
-	if( ( fBattleLost ) || ( fBattleWon ) )
-	{
-		if( !gbWorldSectorZ )
-		{
-			SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY) ].bLastKnownEnemies = NumEnemiesInSector( gWorldSectorX, gWorldSectorY );
-		}
-	}
-
 	// We should NEVER have a battle lost and won at the same time...
 
 	if ( fBattleLost )
