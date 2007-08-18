@@ -32,24 +32,6 @@ enum
 	SEC_P1,	SEC_P2,	SEC_P3, SEC_P4,	SEC_P5, SEC_P6,	SEC_P7,	SEC_P8,	SEC_P9, SEC_P10, SEC_P11, SEC_P12, SEC_P13, SEC_P14, SEC_P15, SEC_P16
 };
 
-enum //group types
-{
-	NOGROUP,
-	MOBILE,
-	DEFENCE
-};
-
-enum //strategic values for each sector
-{
-	NO_VALUE,
-	LOW_VALUE,
-	FAIR_VALUE,
-	AVG_VALUE,
-	GOOD_VALUE,
-	HI_VALUE,
-	GREAT_VALUE
-};
-
 
 //Various flag definitions
 
@@ -164,13 +146,6 @@ enum
 
 	NUM_TRAVTERRAIN_TYPES
 };
-extern UINT8 gszTerrain[NUM_TRAVTERRAIN_TYPES][15];
-
-#define TRAVELRATING_NONE				0
-#define TRAVELRATING_LOW				25
-#define TRAVELRATING_NORMAL			50
-#define TRAVELRATING_HIGH				75
-#define TRAVELRATING_EXTREME		100
 
 //Used by ubGarrisonID when a sector doesn't point to a garrison.  Used by strategic AI only.
 #define NO_GARRISON							255

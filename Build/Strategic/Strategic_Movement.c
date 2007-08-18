@@ -52,7 +52,7 @@
 
 GROUP *gpGroupList;
 
-GROUP *gpPendingSimultaneousGroup = NULL;
+static GROUP* gpPendingSimultaneousGroup = NULL;
 
 // is the bottom of the map panel dirty?
 extern BOOLEAN fMapScreenBottomDirty;
@@ -70,31 +70,42 @@ extern INT8 gubVehicleMovementGroups[ ];
 BOOLEAN gfDelayAutoResolveStart = FALSE;
 
 
-BOOLEAN gfRandomizingPatrolGroup = FALSE;
+static BOOLEAN gfRandomizingPatrolGroup = FALSE;
 
 UINT8 gubNumGroupsArrivedSimultaneously = 0;
 
 //Doesn't require text localization.  This is for debug strings only.
-UINT8 gszTerrain[NUM_TRAVTERRAIN_TYPES][15] =
+static const char* const gszTerrain[NUM_TRAVTERRAIN_TYPES] =
 {
-	"TOWN",	"ROAD",	"PLAINS", "SAND", "SPARSE", "DENSE", "SWAMP",
-	"WATER", "HILLS", "GROUNDBARRIER", "NS_RIVER", "EW_RIVER", "EDGEOFWORLD"
+	"TOWN",
+	"ROAD",
+	"PLAINS",
+	"SAND",
+	"SPARSE",
+	"DENSE",
+	"SWAMP",
+	"WATER",
+	"HILLS",
+	"GROUNDBARRIER",
+	"NS_RIVER",
+	"EW_RIVER",
+	"EDGEOFWORLD"
 };
 
 BOOLEAN gfUndergroundTacticalTraversal = FALSE;
 
 // remembers which player group is the Continue/Stop prompt about?  No need to save as long as you can't save while prompt ON
-GROUP *gpGroupPrompting = NULL;
+static GROUP* gpGroupPrompting = NULL;
 
-UINT32 uniqueIDMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+static UINT32 uniqueIDMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 
-GROUP *gpInitPrebattleGroup = NULL;
+static GROUP* gpInitPrebattleGroup = NULL;
 
 extern void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum );
 
 // waiting for input from user
-BOOLEAN gfWaitingForInput = FALSE;
+static BOOLEAN gfWaitingForInput = FALSE;
 
 
 static UINT8 AddGroupToList(GROUP* pGroup);
