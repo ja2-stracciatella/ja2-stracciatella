@@ -903,20 +903,7 @@ void RenderAttributeBoxes(void)
 	// run through and render each slider bar
 	for (INT32 i = HEALTH_ATTRIBUTE; i <= MECHANICAL_SKILL; ++i)
 	{
-		INT32 val;
-		switch (i)
-		{
-			case HEALTH_ATTRIBUTE:     val = iCurrentHealth;      break;
-			case DEXTERITY_ATTRIBUTE:  val = iCurrentDexterity;   break;
-			case AGILITY_ATTRIBUTE:    val = iCurrentAgility;     break;
-			case STRENGTH_ATTRIBUTE:   val = iCurrentStrength;    break;
-			case WISDOM_ATTRIBUTE:     val = iCurrentWisdom;      break;
-			case LEADERSHIP_ATTRIBUTE: val = iCurrentLeaderShip;  break;
-			case MARKSMANSHIP_SKILL:   val = iCurrentMarkmanship; break;
-			case EXPLOSIVE_SKILL:      val = iCurrentExplosives;  break;
-			case MEDICAL_SKILL:        val = iCurrentMedical;     break;
-			case MECHANICAL_SKILL:     val = iCurrentMechanical;  break;
-		}
+		INT32 val = GetCurrentAttributeValue(i);
 
 		// Compensate for zeroed skills: x pos is at least 0
 		INT16 sX = max(0, val - 35) * BASE_SKILL_PIXEL_UNIT_SIZE / 50;
@@ -1235,48 +1222,24 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static INT32 GetCurrentAttributeValue(INT32 iAttribute)
+// Get the value of the attribute that was passed
+static INT32 GetCurrentAttributeValue(INT32 attribute)
 {
-	// this function will get the value of the attribute that was passed to this fucntion via iAttribute
-  INT32 iValue =0;
-
-  switch( iAttribute )
+	INT32 val = 0;
+	switch (attribute)
 	{
-		case ( STRENGTH_ATTRIBUTE ):
-			iValue = iCurrentStrength;
-		break;
-		case ( DEXTERITY_ATTRIBUTE ):
-			iValue = iCurrentDexterity;
-		break;
-    case ( AGILITY_ATTRIBUTE ):
-			iValue = iCurrentAgility;
-		break;
-    case ( HEALTH_ATTRIBUTE ):
-			iValue = iCurrentHealth;
-		break;
-		case ( WISDOM_ATTRIBUTE ):
-			iValue = iCurrentWisdom;
-		break;
-		case ( LEADERSHIP_ATTRIBUTE ):
-			iValue = iCurrentLeaderShip;
-		break;
-		case ( MARKSMANSHIP_SKILL ):
-			iValue = iCurrentMarkmanship;
-		break;
-		case ( MEDICAL_SKILL ):
-			iValue = iCurrentMedical;
-		break;
-		case ( MECHANICAL_SKILL ):
-			iValue = iCurrentMechanical;
-		break;
-		case ( EXPLOSIVE_SKILL ):
-			iValue = iCurrentExplosives;
-		break;
-
-
+		case HEALTH_ATTRIBUTE:     val = iCurrentHealth;      break;
+		case DEXTERITY_ATTRIBUTE:  val = iCurrentDexterity;   break;
+		case AGILITY_ATTRIBUTE:    val = iCurrentAgility;     break;
+		case STRENGTH_ATTRIBUTE:   val = iCurrentStrength;    break;
+		case WISDOM_ATTRIBUTE:     val = iCurrentWisdom;      break;
+		case LEADERSHIP_ATTRIBUTE: val = iCurrentLeaderShip;  break;
+		case MARKSMANSHIP_SKILL:   val = iCurrentMarkmanship; break;
+		case EXPLOSIVE_SKILL:      val = iCurrentExplosives;  break;
+		case MEDICAL_SKILL:        val = iCurrentMedical;     break;
+		case MECHANICAL_SKILL:     val = iCurrentMechanical;  break;
 	}
-
-	return iValue;
+	return val;
 }
 
 
