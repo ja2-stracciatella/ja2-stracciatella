@@ -248,12 +248,10 @@ static void CreateTownInfoBox(void)
 // adds text to town info box
 static void AddTextToTownBox(void)
 {
-	UINT32 hStringHandle = 0;
 	CHAR16 wString[ 64 ];
 	UINT8 ubTownId = 0;
 	UINT16 usTownSectorIndex;
 	INT16 sMineSector = 0;
-
 
 	// remember town id
 	ubTownId = GetTownIdForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
@@ -261,67 +259,53 @@ static void AddTextToTownBox(void)
 
 	usTownSectorIndex = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
+	const wchar_t* title;
 	switch( usTownSectorIndex )
 	{
-		case SEC_B13:
-			AddMonoString( &hStringHandle, pLandTypeStrings[ DRASSEN_AIRPORT_SITE ] );
-			break;
-		case SEC_F8:
-			AddMonoString( &hStringHandle, pLandTypeStrings[ CAMBRIA_HOSPITAL_SITE ] );
-			break;
-		case SEC_J9: //Tixa
-			if( !fFoundTixa )
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SAND ] );
-			else
-				AddMonoString( &hStringHandle, pTownNames[ TIXA ] );
-			break;
-		case SEC_K4: //Orta
-			if( !fFoundOrta )
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SWAMP ] );
-			else
-				AddMonoString( &hStringHandle, pTownNames[ ORTA ] );
-			break;
-		case SEC_N3:
-			AddMonoString( &hStringHandle, pLandTypeStrings[ MEDUNA_AIRPORT_SITE ] );
-			break;
-		default:
-			if( usTownSectorIndex == SEC_N4 && fSamSiteFound[ SAM_SITE_FOUR ] )
-			{	//Meduna's SAM site
-				AddMonoString( &hStringHandle, pLandTypeStrings[ MEDUNA_SAM_SITE ] );
+		case SEC_B13: title = pLandTypeStrings[DRASSEN_AIRPORT_SITE];                    break;
+		case SEC_F8:  title = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];                   break;
+		case SEC_J9:  title = (fFoundTixa ? pTownNames[TIXA] : pLandTypeStrings[SAND]);  break;
+		case SEC_K4:  title = (fFoundOrta ? pTownNames[ORTA] : pLandTypeStrings[SWAMP]); break;
+		case SEC_N3:  title = pLandTypeStrings[MEDUNA_AIRPORT_SITE];                     break;
+
+		case SEC_N4:
+			if (fSamSiteFound[SAM_SITE_FOUR])
+			{
+				title = pLandTypeStrings[MEDUNA_SAM_SITE];
+				break;
 			}
-			else
-			{ // town name
-				AddMonoString(&hStringHandle, pTownNames[ubTownId]);
-			}
-			break;
+			/* FALLTHROUGH */
+
+		default: title = pTownNames[ubTownId]; break;
 	}
+	AddMonoString(title);
 	// blank line
-	AddMonoString( &hStringHandle, L"" );
+	AddMonoString(L"");
 
 	// sector
 	AddSectorToBox();
 
 	// town size
 	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 0 ] );
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 	swprintf( wString, lengthof(wString), L"%d",  GetTownSectorSize( ubTownId ) );
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 
 	// main facilities
 	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 8 ] );
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 	wcscpy(wString, L"");
 	GetSectorFacilitiesFlags( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, lengthof(wString));
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 
 	// the concept of control is only meaningful in sectors where militia can be trained
 	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) )
 	{
 		// town control
 		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 2 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 		swprintf(wString, lengthof(wString), L"%d%%", GetTownSectorsUnderControl(ubTownId) * 100 / GetTownSectorSize(ubTownId));
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 	}
 
 	// the concept of town loyalty is only meaningful in towns where loyalty is tracked
@@ -329,9 +313,9 @@ static void AddTextToTownBox(void)
 	{
 		// town loyalty
 		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 5 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 		swprintf(wString, lengthof(wString), L"%d%%", gTownLoyalty[ubTownId].ubRating);
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 	}
 
 	// if the town has a mine
@@ -340,9 +324,9 @@ static void AddTextToTownBox(void)
 	{
 		// Associated Mine: Sector
 	  swprintf( wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[ 4 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, lengthof(wString));
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 	}
 }
 
@@ -352,18 +336,16 @@ static void AddTextToMineBox(void)
 {
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
-	UINT32 hStringHandle;
 	CHAR16 wString[ 64 ];
-
 
 	ubMineIndex = GetMineIndexForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
 	// name of town followed by "mine"
 	swprintf( wString, lengthof(wString), L"%ls %ls", pTownNames[ GetTownAssociatedWithMine( ubMineIndex ) ], pwMineStrings[ 0 ] );
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 
 	// blank line
-	AddMonoString( &hStringHandle, L"" );
+	AddMonoString(L"");
 
 
 	// sector
@@ -371,7 +353,7 @@ static void AddTextToMineBox(void)
 
 	// mine status
 	swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 9 ]);
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 
 	// check if mine is empty (abandoned) or running out
 	const wchar_t* MineStatus;
@@ -397,7 +379,7 @@ static void AddTextToMineBox(void)
 		// producing
 		MineStatus = pwMineStrings[8];
 	}
-	AddSecondColumnMonoString(&hStringHandle, MineStatus);
+	AddSecondColumnMonoString(MineStatus);
 
 
 	// if still producing
@@ -405,18 +387,18 @@ static void AddTextToMineBox(void)
 	{
 		// current production
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 3 ]);
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 
 		SPrintMoney(wString, PredictDailyIncomeFromAMine(ubMineIndex));
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 
 
 		// potential production
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 4 ]);
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 
 		SPrintMoney(wString, GetMaxDailyRemovalFromMine(ubMineIndex));
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 
 
 		// if potential is not nil
@@ -424,49 +406,49 @@ static void AddTextToMineBox(void)
 		{
 			// production rate (current production as a percentage of potential production)
 			swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 10 ]);
-			AddMonoString( &hStringHandle, wString );
+			AddMonoString(wString);
 			swprintf(wString, lengthof(wString), L"%d%%", PredictDailyIncomeFromAMine(ubMineIndex) * 100 / GetMaxDailyRemovalFromMine(ubMineIndex));
-			AddSecondColumnMonoString( &hStringHandle, wString );
+			AddSecondColumnMonoString(wString);
 		}
 
 
 		// town control percentage
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 12 ]);
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 		swprintf(wString, lengthof(wString), L"%d%%", GetTownSectorsUnderControl(gMineLocation[ubMineIndex].bAssociatedTown) * 100 / GetTownSectorSize(gMineLocation[ubMineIndex].bAssociatedTown));
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 
 		ubTown = gMineLocation[ ubMineIndex ].bAssociatedTown;
 		if( gTownLoyalty[ ubTown ].fStarted && gfTownUsesLoyalty[ ubTown ])
 		{
 			// town loyalty percentage
 			swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 13 ]);
-			AddMonoString( &hStringHandle, wString );
+			AddMonoString(wString);
 			swprintf(wString, lengthof(wString), L"%d%%", gTownLoyalty[gMineLocation[ubMineIndex].bAssociatedTown].ubRating);
-			AddSecondColumnMonoString( &hStringHandle, wString );
+			AddSecondColumnMonoString(wString);
 		}
 
 /* gradual monster infestation concept was ditched, now simply IN PRODUCTION or SHUT DOWN
 		// percentage of miners working
 		swprintf(wString, lengthof(wString), L"%ls:", pwMineStrings[14]);
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 		swprintf(wString, lengthof(wString), L"%d%%", gubMonsterMineInfestation[gMineStatus[ubMineIndex].bMonsters]);
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 */
 
 		// ore type (silver/gold
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 11 ]);
-		AddMonoString( &hStringHandle, wString );
-		AddSecondColumnMonoString( &hStringHandle, (gMineStatus[ubMineIndex].ubMineType == SILVER_MINE) ? pwMineStrings[ 1 ] : pwMineStrings[ 2 ] );
+		AddMonoString(wString);
+		AddSecondColumnMonoString(gMineStatus[ubMineIndex].ubMineType == SILVER_MINE ? pwMineStrings[1] : pwMineStrings[2]);
 	}
 
 
 #ifdef _DEBUG
 	// dollar amount remaining in mine
-	AddMonoString(&hStringHandle, L"Remaining (DEBUG):");
+	AddMonoString(L"Remaining (DEBUG):");
 
 	SPrintMoney(wString, GetTotalLeftInMine(ubMineIndex));
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 #endif
 
 }
@@ -475,42 +457,26 @@ static void AddTextToMineBox(void)
 // add text to non-town/non-mine the other boxes
 static void AddTextToBlankSectorBox(void)
 {
-	UINT32 hStringHandle;
 	UINT16 usSectorValue = 0;
-
 
 	// get the sector value
 	usSectorValue = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
+	const wchar_t* title;
 	switch( usSectorValue )
 	{
-		case SEC_D2: //Chitzena SAM
-			if( !fSamSiteFound[ SAM_SITE_ONE ] )
-				AddMonoString( &hStringHandle, pLandTypeStrings[ TROPICS ] );
-			else
-				AddMonoString( &hStringHandle, pLandTypeStrings[ TROPICS_SAM_SITE ] );
-			break;
-		case SEC_D15: //Drassen SAM
-			if( !fSamSiteFound[ SAM_SITE_TWO ] )
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SPARSE ] );
-			else
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SPARSE_SAM_SITE ] );
-			break;
-		case SEC_I8: //Cambria SAM
-			if( !fSamSiteFound[ SAM_SITE_THREE ] )
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SAND ] );
-			else
-				AddMonoString( &hStringHandle, pLandTypeStrings[ SAND_SAM_SITE ] );
-			break;
+		case SEC_D2:  title = (fSamSiteFound[SAM_SITE_ONE]   ? pLandTypeStrings[TROPICS_SAM_SITE] : pLandTypeStrings[TROPICS]); break; // Chitzena SAM
+		case SEC_D15: title = (fSamSiteFound[SAM_SITE_TWO]   ? pLandTypeStrings[SPARSE_SAM_SITE]  : pLandTypeStrings[SPARSE]);  break; // Drassen SAM
+		case SEC_I8:  title = (fSamSiteFound[SAM_SITE_THREE] ? pLandTypeStrings[SAND_SAM_SITE]    : pLandTypeStrings[SAND]);    break; // Cambria SAM
+
 		// SAM Site 4 in Meduna is within town limits, so it's handled in AddTextToTownBox()
 
-		default:
-			AddMonoString( &hStringHandle, pLandTypeStrings[ ( SectorInfo[ usSectorValue ].ubTraversability[ 4 ] ) ] );
-			break;
+		default: title = pLandTypeStrings[SectorInfo[usSectorValue].ubTraversability[4]]; break;
 	}
+	AddMonoString(title);
 
 	// blank line
-	AddMonoString( &hStringHandle, L"" );
+	AddMonoString(L"");
 
 	// sector
 	AddSectorToBox();
@@ -521,11 +487,10 @@ static void AddSectorToBox(void)
 {
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
-	UINT32 hStringHandle = 0;
 
 	// sector
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 1 ]);
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 
 	GetShortSectorString( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, lengthof(wString));
 	if (bCurrentTownMineSectorZ != 0 )
@@ -534,14 +499,13 @@ static void AddSectorToBox(void)
 		wcscat( wString, wString2 );
 	}
 
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 }
 
 
 static void AddCommonInfoToBox(void)
 {
 	CHAR16 wString[ 64 ];
-	UINT32 hStringHandle = 0;
 	BOOLEAN fUnknownSAMSite = FALSE;
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubNumEnemies;
@@ -573,14 +537,14 @@ static void AddCommonInfoToBox(void)
 	{
 		// controlled:
 		swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 4 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 
 		// No/Yes
-		AddSecondColumnMonoString(&hStringHandle, pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5 ]);
+		AddSecondColumnMonoString(pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5]);
 
 		// militia - is there any?
 		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 11 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 
 		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 		if (ubMilitiaTotal > 0)
@@ -590,26 +554,26 @@ static void AddCommonInfoToBox(void)
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
 												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
-			AddSecondColumnMonoString( &hStringHandle, wString );
+			AddSecondColumnMonoString(wString);
 		}
 		else
 		{
 			// no militia: don't bother displaying level breakdown
-			AddSecondColumnMonoString(&hStringHandle, L"0");
+			AddSecondColumnMonoString(L"0");
 		}
 
 
 		// percentage of current militia squad training completed
 		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 10 ] );
-		AddMonoString( &hStringHandle, wString );
+		AddMonoString(wString);
 		swprintf(wString, lengthof(wString), L"%d%%", SectorInfo[SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].ubMilitiaTrainingPercentDone);
-		AddSecondColumnMonoString( &hStringHandle, wString );
+		AddSecondColumnMonoString(wString);
 	}
 
 
 	// enemy forces
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 0 ] );
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 
 	// how many are there, really?
 	ubNumEnemies = NumEnemiesInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
@@ -641,23 +605,22 @@ static void AddCommonInfoToBox(void)
 			break;
 	}
 
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 }
 
 
 static void AddItemsInSectorToBox(void)
 {
 	CHAR16 wString[ 64 ];
-	UINT32 hStringHandle = 0;
 
 	// items in sector (this works even for underground)
 
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 2 ] );
-	AddMonoString( &hStringHandle, wString );
+	AddMonoString(wString);
 
 //	swprintf( wString, L"%d", GetSizeOfStashInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ, FALSE ));
 	swprintf( wString, lengthof(wString), L"%d", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
-	AddSecondColumnMonoString( &hStringHandle, wString );
+	AddSecondColumnMonoString(wString);
 }
 
 

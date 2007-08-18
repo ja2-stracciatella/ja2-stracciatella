@@ -375,7 +375,7 @@ static void RemoveCurrentBoxPrimaryText(INT32 hStringHandle);
 
 
 // adds a FIRST column string to the CURRENT popup box
-void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
+void AddMonoString(const wchar_t* pString)
 {
 	STR16 pLocalString = NULL;
 	INT32 iCounter = 0;
@@ -415,8 +415,6 @@ void AddMonoString(INT32 *hStringHandle, const wchar_t *pString)
 	Box->Text[iCounter]->fHighLightFlag      = FALSE;
 	Box->Text[iCounter]->fSecondaryShadeFlag = FALSE;
 
-	*hStringHandle=iCounter;
-
 	Box->fUpdated = FALSE;
 }
 
@@ -425,7 +423,7 @@ static void RemoveCurrentBoxSecondaryText(INT32 hStringHandle);
 
 
 // adds a SECOND column string to the CURRENT popup box
-void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
+void AddSecondColumnMonoString(const wchar_t* pString)
 {
 	STR16 pLocalString=NULL;
 	INT32 iCounter=0;
@@ -464,8 +462,6 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 	Box->pSecondColumnString[iCounter]->pString        = pLocalString;
 	Box->pSecondColumnString[iCounter]->fShadeFlag     = FALSE;
 	Box->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
-
-	*hStringHandle=iCounter;
 }
 
 
