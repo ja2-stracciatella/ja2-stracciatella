@@ -110,9 +110,6 @@ void SpecifyBoxMinWidth( INT32 hBoxHandle, INT32 iMinWidth )
 }
 
 
-static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset);
-
-
 INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 {
 	INT32 iCounter=0;
@@ -151,7 +148,7 @@ INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 	SetCurrentBox(iCount);
 	SpecifyBoxMinWidth( iCount, 0 );
 	SetBoxSecondColumnMinimumOffset( iCount, 0 );
-	SetBoxSecondColumnCurrentOffset( iCount, 0 );
+	pBox->uiSecondColumnCurrentOffset = 0;
 
 	pBox->fUpdated = FALSE;
 
@@ -603,14 +600,6 @@ void SetBoxSecondColumnMinimumOffset( INT32 hBoxHandle, UINT32 uiWidth )
 	PopUpBoxList[hBoxHandle]->uiSecondColumnMinimunOffset = uiWidth;
 }
 
-
-static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset)
-{
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBoxList[hBoxHandle]->uiSecondColumnCurrentOffset = uiCurrentOffset;
-}
 
 void SetBoxSecondColumnFont(INT32 hBoxHandle, UINT32 uiFont)
 {
