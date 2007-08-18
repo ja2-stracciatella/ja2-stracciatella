@@ -65,19 +65,6 @@ static void InitPopUpBoxList(void)
 }
 
 
-static void InitPopUpBox(INT32 hBoxHandle)
-{
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[hBoxHandle];
-
-	Assert(Box);
-	memset(Box, 0, sizeof(*Box));
-}
-
-
-
 void SetLineSpace(INT32 hBoxHandle, UINT32 uiLineSpace)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
@@ -123,7 +110,6 @@ void SpecifyBoxMinWidth( INT32 hBoxHandle, INT32 iMinWidth )
 }
 
 
-static void SetBoxFlags(INT32 hBoxHandle, UINT32 uiFlags);
 static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset);
 
 
@@ -151,10 +137,10 @@ INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 	}
 	PopUpBoxList[iCount]=pBox;
 
-	InitPopUpBox(iCount);
+	memset(pBox, 0, sizeof(*pBox));
 	SetBoxPosition(iCount, Position);
 	SetBoxSize(iCount, Dimensions);
-	SetBoxFlags(iCount, uiFlags);
+	pBox->uiFlags = uiFlags;
 
 	for(iCounter=0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
 	{
@@ -170,20 +156,6 @@ INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 	pBox->fUpdated = FALSE;
 
 	return iCount;
-}
-
-
-static void SetBoxFlags(INT32 hBoxHandle, UINT32 uiFlags)
-{
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[hBoxHandle];
-
-	Assert(Box);
-
-	Box->uiFlags  = uiFlags;
-	Box->fUpdated = FALSE;
 }
 
 
