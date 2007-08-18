@@ -380,23 +380,6 @@ void ResetSkillsAttributesAndPersonality( void )
 }
 
 
-void ResetIncrementCharacterAttributes( void )
-{
-	// this resets any increments due to character generation
-	iAddStrength   = 0;
-	iAddDexterity  = 0;
-	iAddWisdom     = 0;
-	iAddAgility    = 0;
-	iAddHealth     = 0;
-	iAddLeadership = 0;
-
-	iAddMarksmanship = 0;
-	iAddExplosives   = 0;
-	iAddMedical      = 0;
-	iAddMechanical   = 0;
-}
-
-
 static void SetMercSkinAndHairColors(void);
 
 

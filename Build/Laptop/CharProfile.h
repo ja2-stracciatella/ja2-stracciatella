@@ -45,19 +45,6 @@ extern INT32 iPersonality;
 // attitude
 extern INT32 iAttitude;
 
-//addtivies
-extern INT32 iAddStrength;
-extern INT32 iAddDexterity;
-extern INT32 iAddAgility;
-extern INT32 iAddWisdom;
-extern INT32 iAddHealth ;
-extern INT32 iAddLeadership ;
-
-extern INT32 iAddMarksmanship ;
-extern INT32 iAddMedical ;
-extern INT32 iAddExplosives ;
-extern INT32 iAddMechanical ;
-
 // pop up strings
 extern const wchar_t *pImpPopUpStrings[];
 

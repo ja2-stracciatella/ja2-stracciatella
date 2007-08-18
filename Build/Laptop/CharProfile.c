@@ -68,20 +68,6 @@ INT32 iPersonality = 0;
 INT32 iAttitude = 0;
 
 
-// additives, but no preservatives
-INT32 iAddStrength = 0;
-INT32 iAddDexterity = 0;
-INT32 iAddAgility= 0;
-INT32 iAddWisdom= 0;
-INT32 iAddHealth = 0;
-INT32 iAddLeadership = 0;
-
-INT32 iAddMarksmanship = 0;
-INT32 iAddMedical = 0;
-INT32 iAddExplosives = 0;
-INT32 iAddMechanical = 0;
-
-
 // IMP global buttons
 INT32 giIMPButton[1];
 INT32 giIMPButtonImage[1];

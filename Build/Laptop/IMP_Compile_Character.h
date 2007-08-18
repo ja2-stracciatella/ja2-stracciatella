@@ -10,7 +10,6 @@ void CreatePlayersPersonalitySkillsAndAttitude( void );
 void AddAPersonalityToPersonalityList( INT8 bPersonlity );
 void AddSkillToSkillList( INT8 bSkill );
 void ResetSkillsAttributesAndPersonality( void );
-void ResetIncrementCharacterAttributes( void );
 void HandleMercStatsForChangesInFace( void );
 
 
