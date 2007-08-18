@@ -1457,18 +1457,14 @@ static BOOLEAN DrawBoxText(UINT32 uiCounter)
 
 	Assert(Box != NULL);
 
-	//clip text?
-	if (Box->uiFlags & POPUP_BOX_FLAG_CLIP_TEXT)
-	{
-		SetFontDestBuffer
-		(
-			Box->uiBuffer,
-			Box->Position.iX + Box->uiLeftMargin - 1,
-			Box->Position.iY + Box->uiTopMargin,
-			Box->Position.iX + Box->Dimensions.iRight  - Box->uiRightMargin,
-			Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin
-		);
-	}
+	SetFontDestBuffer
+	(
+		Box->uiBuffer,
+		Box->Position.iX + Box->uiLeftMargin - 1,
+		Box->Position.iY + Box->uiTopMargin,
+		Box->Position.iX + Box->Dimensions.iRight  - Box->uiRightMargin,
+		Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin
+	);
 
 	for (uiCount = 0; uiCount < MAX_POPUP_BOX_STRING_COUNT; uiCount++)
 	{
