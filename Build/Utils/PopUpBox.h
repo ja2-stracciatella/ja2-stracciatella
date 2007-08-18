@@ -12,8 +12,9 @@
 #define POPUP_BOX_FLAG_RESIZE 4
 #define POPUP_BOX_FLAG_CAN_HIGHLIGHT_SHADED_LINES 8
 
-BOOLEAN CreatePopUpBox(INT32 *hBoxHandle, SGPRect Dimensions, SGPPoint Position, UINT32
-										uiFlags);
+#define NO_POPUP_BOX -1
+
+INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags);
 
 void SetMargins(INT32 hBoxHandle, UINT32 uiLeft, UINT32 uiTop, UINT32 uiBottom,
 								UINT32 uiRight);

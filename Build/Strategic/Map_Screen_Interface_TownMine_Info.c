@@ -223,8 +223,7 @@ void CreateDestroyTownInfoBox( void )
 
 static void CreateTownInfoBox(void)
 {
-	// create basic box
- CreatePopUpBox(&ghTownMineBox, TownMineDimensions, TownMinePosition, (POPUP_BOX_FLAG_CLIP_TEXT ));
+	ghTownMineBox = CreatePopUpBox(TownMineDimensions, TownMinePosition, POPUP_BOX_FLAG_CLIP_TEXT);
 
  // which buffer will box render to
  SetBoxBuffer(ghTownMineBox, FRAME_BUFFER);

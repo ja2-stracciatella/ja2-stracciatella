@@ -3381,8 +3381,7 @@ static void CreatePopUpBoxForMovementBox(void)
 
 	// create the pop up box and mouse regions for movement list
 
- // create basic box
- CreatePopUpBox(&ghMoveBox, AssignmentDimensions, MovePosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghMoveBox = CreatePopUpBox(AssignmentDimensions, MovePosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghMoveBox, FRAME_BUFFER);

@@ -127,7 +127,7 @@ static void SetBoxFlags(INT32 hBoxHandle, UINT32 uiFlags);
 static void SetBoxSecondColumnCurrentOffset(INT32 hBoxHandle, UINT32 uiCurrentOffset);
 
 
-BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
+INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 {
 	INT32 iCounter=0;
 	INT32 iCount=0;
@@ -139,16 +139,15 @@ BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position
 	{
 		// ran out of available popup boxes - probably not freeing them up right!
 		Assert(0);
-		return FALSE;
+		return NO_POPUP_BOX;
 	}
 
 	iCount=iCounter;
-	*phBoxHandle=iCount;
 
 	PopUpBox* pBox = MemAlloc(sizeof(*pBox));
 	if (pBox == NULL)
 	{
-		return FALSE;
+		return NO_POPUP_BOX;
 	}
 	PopUpBoxList[iCount]=pBox;
 
@@ -170,7 +169,7 @@ BOOLEAN CreatePopUpBox(INT32 *phBoxHandle, SGPRect Dimensions, SGPPoint Position
 
 	pBox->fUpdated = FALSE;
 
-	return TRUE;
+	return iCount;
 }
 
 

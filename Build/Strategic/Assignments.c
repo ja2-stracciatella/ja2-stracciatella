@@ -7638,9 +7638,7 @@ static void CreateSquadBox(void)
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
-
- // create basic box
- CreatePopUpBox(&ghSquadBox, SquadDimensions, SquadPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghSquadBox = CreatePopUpBox(SquadDimensions, SquadPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghSquadBox, FRAME_BUFFER);
@@ -7720,8 +7718,7 @@ static void CreateEPCBox(void)
   UINT32 hStringHandle;
   INT32 iCount;
 
-	 // create basic box
-	 CreatePopUpBox(&ghEpcBox, SquadDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE|POPUP_BOX_FLAG_CENTER_TEXT ));
+	ghEpcBox = CreatePopUpBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_RESIZE | POPUP_BOX_FLAG_CENTER_TEXT);
 
 	 // which buffer will box render to
 	 SetBoxBuffer(ghEpcBox, FRAME_BUFFER);
@@ -7870,7 +7867,7 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 
 static void CreateVehicleBox(void)
 {
- CreatePopUpBox(&ghVehicleBox, VehicleDimensions, VehiclePosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghVehicleBox = CreatePopUpBox(VehicleDimensions, VehiclePosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
  SetBoxBuffer(ghVehicleBox, FRAME_BUFFER);
  SetBorderType(ghVehicleBox,guiPOPUPBORDERS);
  SetBackGroundSurface(ghVehicleBox, guiPOPUPTEX);
@@ -7881,7 +7878,7 @@ static void CreateVehicleBox(void)
 
 static void CreateRepairBox(void)
 {
- CreatePopUpBox(&ghRepairBox, RepairDimensions, RepairPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghRepairBox = CreatePopUpBox(RepairDimensions, RepairPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
  SetBoxBuffer(ghRepairBox, FRAME_BUFFER);
  SetBorderType(ghRepairBox,guiPOPUPBORDERS);
  SetBackGroundSurface(ghRepairBox, guiPOPUPTEX);
@@ -7904,7 +7901,7 @@ void CreateContractBox( SOLDIERTYPE *pCharacter )
 	 ContractPosition.iX = giBoxY;
  }
 
- CreatePopUpBox(&ghContractBox, ContractDimensions, ContractPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghContractBox = CreatePopUpBox(ContractDimensions, ContractPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_RESIZE);
  SetBoxBuffer(ghContractBox, FRAME_BUFFER);
  SetBorderType(ghContractBox,guiPOPUPBORDERS);
  SetBackGroundSurface(ghContractBox, guiPOPUPTEX);
@@ -7992,8 +7989,7 @@ static void CreateAttributeBox(void)
  // update screen assignment positions
  UpdateMapScreenAssignmentPositions( );
 
- // create basic box
- CreatePopUpBox(&ghAttributeBox, AttributeDimensions, AttributePosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghAttributeBox = CreatePopUpBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghAttributeBox, FRAME_BUFFER);
@@ -8060,8 +8056,7 @@ static void CreateTrainingBox(void)
 	 TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
  }
 
- // create basic box
- CreatePopUpBox(&ghTrainingBox, TrainDimensions, TrainPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghTrainingBox = CreatePopUpBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghTrainingBox, FRAME_BUFFER);
@@ -8135,8 +8130,7 @@ static void CreateAssignmentsBox(void)
 	pSoldier = GetSelectedAssignSoldier( TRUE );
 	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 
-	// create basic box
-	CreatePopUpBox(&ghAssignmentBox, AssignmentDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+	ghAssignmentBox = CreatePopUpBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
 
 	// which buffer will box render to
 	SetBoxBuffer(ghAssignmentBox, FRAME_BUFFER);
@@ -8205,8 +8199,8 @@ void CreateMercRemoveAssignBox( void )
 
  UINT32 hStringHandle;
  UINT32 uiCounter;
- // create basic box
- CreatePopUpBox(&ghRemoveMercAssignBox, AssignmentDimensions, AssignmentPosition, (POPUP_BOX_FLAG_CLIP_TEXT|POPUP_BOX_FLAG_CENTER_TEXT|POPUP_BOX_FLAG_RESIZE ));
+
+	ghRemoveMercAssignBox = CreatePopUpBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CLIP_TEXT | POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghRemoveMercAssignBox, FRAME_BUFFER);
