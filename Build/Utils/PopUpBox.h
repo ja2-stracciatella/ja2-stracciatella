@@ -3,13 +3,11 @@
 
 #include "Types.h"
 
-#define MAX_POPUP_BOX_COUNT 20
 #define MAX_POPUP_BOX_STRING_COUNT 50		// worst case = 45: move menu with 20 soldiers, each on different squad + overhead
 
 // PopUpBox Flags
 #define POPUP_BOX_FLAG_CENTER_TEXT 2
 #define POPUP_BOX_FLAG_RESIZE 4
-#define POPUP_BOX_FLAG_CAN_HIGHLIGHT_SHADED_LINES 8
 
 #define NO_POPUP_BOX -1
 

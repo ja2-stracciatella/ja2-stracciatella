@@ -9,6 +9,9 @@
 #include "WCheck.h"
 
 
+#define MAX_POPUP_BOX_COUNT 20
+
+
 typedef struct PopUpString {
 	STR16 pString;
 	UINT8 ubForegroundColor;
@@ -57,12 +60,6 @@ static UINT32 guiCurrentBox;
 #define BOTTOM_LEFT_CORNER  2
 #define BOTTOM_EDGE         4
 #define BOTTOM_RIGHT_CORNER 3
-
-
-static void InitPopUpBoxList(void)
-{
-	memset(PopUpBoxList, 0, sizeof(PopUpBoxList));
-}
 
 
 void SetLineSpace(INT32 hBoxHandle, UINT32 uiLineSpace)
@@ -472,50 +469,6 @@ void AddSecondColumnMonoString( INT32 *hStringHandle, const wchar_t *pString )
 }
 
 
-// Adds a COLORED first column string to the CURRENT box
-static void AddColorString(INT32* hStringHandle, STR16 pString)
-{
-	STR16 pLocalString;
-	INT32 iCounter = 0;
-
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	// find first free slot in list
-	for (iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT && Box->Text[iCounter] != NULL; iCounter++);
-
-	if ( iCounter >= MAX_POPUP_BOX_STRING_COUNT )
-	{
-		// using too many text lines, or not freeing them up properly
-		Assert(0);
-		return;
-	}
-
-	PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
-	if (pStringSt == NULL)
-		return;
-
-	pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
-	if (pLocalString == NULL)
-		return;
-
-	wcscpy(pLocalString, pString);
-
-	RemoveCurrentBoxPrimaryText( iCounter );
-
-	Box->Text[iCounter]             = pStringSt;
-	Box->Text[iCounter]->pString    = pLocalString;
-
-	*hStringHandle=iCounter;
-
-	Box->fUpdated = FALSE;
-}
-
-
 static void ResizeBoxForSecondStrings(INT32 hBoxHandle)
 {
 	INT32 iCounter = 0;
@@ -669,163 +622,6 @@ void SetBoxSecondaryShade( INT32 iBox, UINT8 ubColor )
 		}
 	}
 }
-
-
-// The following functions operate on the CURRENT box
-
-static void SetPopUpStringFont(INT32 hStringHandle, UINT32 uiFont)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->uiFont = uiFont;
-}
-
-
-static void SetPopUpSecondColumnStringFont(INT32 hStringHandle, UINT32 uiFont)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->pSecondColumnString[hStringHandle]);
-
-	Box->pSecondColumnString[hStringHandle]->uiFont = uiFont;
-}
-
-
-static void SetStringSecondaryShade(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->ubSecondaryShade = ubColor;
-}
-
-
-static void SetStringForeground(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->ubForegroundColor = ubColor;
-}
-
-
-static void SetStringBackground(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->ubBackgroundColor = ubColor;
-}
-
-
-static void SetStringHighLight(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->ubHighLight = ubColor;
-}
-
-
-static void SetStringShade(INT32 hStringHandle, UINT8 ubShade)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->Text[hStringHandle]);
-
-	Box->Text[hStringHandle]->ubShade = ubShade;
-}
-
-
-static void SetStringSecondColumnForeground(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL );
-	Assert(Box->pSecondColumnString[hStringHandle]);
-
-	Box->pSecondColumnString[hStringHandle]->ubForegroundColor = ubColor;
-}
-
-
-static void SetStringSecondColumnBackground(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->pSecondColumnString[hStringHandle]);
-
-	Box->pSecondColumnString[hStringHandle]->ubBackgroundColor = ubColor;
-}
-
-
-static void SetStringSecondColumnHighLight(INT32 hStringHandle, UINT8 ubColor)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL );
-	Assert(Box->pSecondColumnString[hStringHandle]);
-
-	Box->pSecondColumnString[hStringHandle]->ubHighLight = ubColor;
-}
-
-
-static void SetStringSecondColumnShade(INT32 hStringHandle, UINT8 ubShade)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-	Assert(Box->pSecondColumnString[hStringHandle]);
-
-	Box->pSecondColumnString[hStringHandle]->ubShade = ubShade;
-}
-
 
 
 void SetBoxForeground(INT32 hBoxHandle, UINT8 ubColor)
@@ -1004,39 +800,6 @@ static void HighLightLine(INT32 hStringHandle)
 }
 
 
-// is this line int he current boxed in a shaded state?
-static BOOLEAN GetShadeFlag(INT32 hStringHandle)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return(FALSE);
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	if (!Box->Text[hStringHandle])
-		return FALSE;
-
-	return Box->Text[hStringHandle]->fShadeFlag;
-}
-
-
-static BOOLEAN GetSecondaryShadeFlag(INT32 hStringHandle)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return(FALSE);
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	if (!Box->Text[hStringHandle])
-		return FALSE;
-
-	return Box->Text[hStringHandle]->fSecondaryShadeFlag;
-}
-
-
 void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber )
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
@@ -1071,22 +834,6 @@ BOOLEAN GetBoxShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
 }
 
 
-static BOOLEAN GetBoxSecondaryShadeFlag(INT32 hBoxHandle, INT32 iLineNumber)
-{
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return(FALSE);
-
-	const PopUpBox* Box = PopUpBoxList[hBoxHandle];
-
-	if (Box->Text[iLineNumber] != NULL)
-	{
-		return Box->Text[iLineNumber]->fSecondaryShadeFlag;
-	}
-
-
-	return( FALSE );
-}
-
 void UnHighLightLine(INT32 hStringHandle)
 {
 	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
@@ -1114,39 +861,6 @@ void UnHighLightBox(INT32 hBoxHandle)
 	{
 		if (Box->Text[iCounter])
 			Box->Text[iCounter]->fHighLightFlag = FALSE;
-	}
-}
-
-
-static void UnHighLightSecondColumnLine(INT32 hStringHandle)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	if (!Box->pSecondColumnString[hStringHandle])
-		return;
-
-	Box->pSecondColumnString[hStringHandle]->fHighLightFlag = FALSE;
-}
-
-
-static void UnHighLightSecondColumnBox(INT32 hBoxHandle)
-{
-	INT32 iCounter = 0;
-
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[hBoxHandle];
-
-	for (iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
-	{
-		if (Box->pSecondColumnString[iCounter])
-			Box->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
 	}
 }
 
