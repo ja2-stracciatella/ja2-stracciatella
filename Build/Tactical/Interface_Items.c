@@ -1689,19 +1689,6 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 }
 
 
-static void GetSlotInvXY(UINT8 ubPos, INT16* psX, INT16* psY)
-{
-	*psX = gSMInvData[ ubPos ].sX;
-	*psY = gSMInvData[ ubPos ].sY;
-}
-
-
-static void GetSlotInvHeightWidth(UINT8 ubPos, INT16* psWidth, INT16* psHeight)
-{
-	*psWidth	= gSMInvData[ ubPos ].sWidth;
-	*psHeight   = gSMInvData[ ubPos ].sHeight;
-}
-
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 {
 	UINT32 cnt;
@@ -4793,13 +4780,10 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
-	INT16						sX, sY, sCenX, sCenY;
 	SGPRect					aRect;
 	UINT8						ubLimit;
 	INT32						cnt;
 	UINT16				 usPopupWidth;
-	INT16					sItemSlotWidth, sItemSlotHeight;
-
 
 	// Set some globals
 	gsItemPopupInvX					= sInvX;
@@ -4837,18 +4821,15 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
 	usPopupWidth = pTrav->usWidth;
 
-	// Determine position, height and width of mouse region, area
-	GetSlotInvXY( ubPosition, &sX, &sY );
-	GetSlotInvHeightWidth( ubPosition, &sItemSlotWidth, &sItemSlotHeight );
-
 	// Get Width, Height
 	INT16 gsItemPopupWidth = ubLimit * usPopupWidth;
 	INT16 gsItemPopupHeight = pTrav->usHeight;
 	gubNumItemPopups = ubLimit;
 
 	// Calculate X,Y, first center
-	sCenX = sX - ( ( gsItemPopupWidth / 2 ) + ( sItemSlotWidth / 2 ) );
-	sCenY	= sY;
+	const INV_REGIONS* reg = &gSMInvData[ubPosition];
+	INT16 sCenX = reg->sX - (gsItemPopupWidth / 2 + reg->sWidth / 2);
+	INT16 sCenY	= reg->sY;
 
 	// Limit it to window for item desc
 	if ( sCenX < gsItemPopupInvX )
@@ -5005,7 +4986,6 @@ static void DeleteItemStackPopup(void)
 BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
 {
 	SGPRect			aRect;
-	UINT8				ubSlotSimilarToKeySlot = 10;
 	INT16				sKeyRingItemWidth = 0;
 	INT16				sOffSetY = 0, sOffSetX = 0;
 
@@ -5039,9 +5019,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
 	UINT16 usPopupWidth = pTrav->usWidth;
 	UINT16 usPopupHeight = pTrav->usHeight;
-
-	// Determine position, height and width of mouse region, area
-	//GetSlotInvHeightWidth( ubSlotSimilarToKeySlot, &sItemSlotWidth, &sItemSlotHeight );
 
 	for (INT32 cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++)
 	{
