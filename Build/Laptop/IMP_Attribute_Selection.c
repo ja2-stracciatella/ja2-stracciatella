@@ -293,207 +293,42 @@ static void ProcessAttributes(void)
 }
 
 
-static BOOLEAN DoWeHaveThisManyBonusPoints(INT32 iBonusPoints);
-
-
 static void IncrementStat(INT32 iStatToIncrement)
 {
-	// this function is responsable for incrementing a stat
-
 	// review mode, do not allow changes
 	if (fReviewStats) return;
 
-	// make sure we have enough bonus points
-	if (iCurrentBonusPoints < 1) return;
-
-	// check to make sure stat isn't maxed out already
+	INT32*  val = NULL;
 	switch (iStatToIncrement)
 	{
-		case( STRENGTH_ATTRIBUTE ):
-		  if( iCurrentStrength > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentStrength++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-    case( DEXTERITY_ATTRIBUTE ):
-		  if( iCurrentDexterity > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentDexterity++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-		case( AGILITY_ATTRIBUTE ):
-		  if( iCurrentAgility > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentAgility++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-		case( LEADERSHIP_ATTRIBUTE ):
-		  if( iCurrentLeaderShip > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentLeaderShip++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-		case( WISDOM_ATTRIBUTE ):
-		  if( iCurrentWisdom > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentWisdom++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-		case( HEALTH_ATTRIBUTE ):
-		  if( iCurrentHealth > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				iCurrentHealth++;
-			  iCurrentBonusPoints--;
-			}
-		break;
-		case( MARKSMANSHIP_SKILL ):
-		  if( iCurrentMarkmanship > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				if( iCurrentMarkmanship == 0)
-				{
-					if( DoWeHaveThisManyBonusPoints( 15 ) == TRUE )
-					{
-					  iCurrentMarkmanship+=35;
-					  iCurrentBonusPoints-=15;
-						fSkillAtZeroWarning = FALSE;
-					}
-					else
-					{
-						return;
-					}
-				}
-				else
-				{
-				  iCurrentMarkmanship++;
-			    iCurrentBonusPoints--;
-				}
-			}
-		break;
-		case( MECHANICAL_SKILL ):
-		  if( iCurrentMechanical > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				if( iCurrentMechanical == 0)
-				{
-					if( DoWeHaveThisManyBonusPoints( 15 ) == TRUE )
-					{
-					  iCurrentMechanical+=35;
-					  iCurrentBonusPoints-=15;
-						fSkillAtZeroWarning = FALSE;
-					}
-					else
-					{
-						return;
-					}
-				}
-				else
-				{
-				  iCurrentMechanical++;
-			    iCurrentBonusPoints--;
-				}
-			}
-		break;
-		case( MEDICAL_SKILL ):
-		  if( iCurrentMedical > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-			if( iCurrentMedical == 0)
-				{
-					if( DoWeHaveThisManyBonusPoints( 15 ) == TRUE )
-					{
-					  iCurrentMedical+=35;
-					  iCurrentBonusPoints-=15;
-						fSkillAtZeroWarning = FALSE;
-					}
-					else
-					{
-						return;
-					}
-				}
-				else
-				{
-				  iCurrentMedical++;
-			    iCurrentBonusPoints--;
-				}
-			}
-		break;
-		case( EXPLOSIVE_SKILL ):
-		  if( iCurrentExplosives > 84 )
-			{
-				// too high, leave
-				return;
-      }
-		  else
-			{
-				if( iCurrentExplosives == 0)
-				{
-					if( DoWeHaveThisManyBonusPoints( 15 ) == TRUE )
-					{
-					  iCurrentExplosives+=35;
-					  iCurrentBonusPoints-=15;
-						fSkillAtZeroWarning = FALSE;
-					}
-					else
-					{
-						return;
-					}
-				}
-				else
-				{
-				  iCurrentExplosives++;
-			    iCurrentBonusPoints--;
-				}
-			}
-		break;
+		case STRENGTH_ATTRIBUTE:   val = &iCurrentStrength;    break;
+		case DEXTERITY_ATTRIBUTE:  val = &iCurrentDexterity;   break;
+		case AGILITY_ATTRIBUTE:    val = &iCurrentAgility;     break;
+		case WISDOM_ATTRIBUTE:     val = &iCurrentWisdom;      break;
+		case LEADERSHIP_ATTRIBUTE: val = &iCurrentLeaderShip;  break;
+		case HEALTH_ATTRIBUTE:     val = &iCurrentHealth;      break;
+		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; break;
+		case MEDICAL_SKILL:        val = &iCurrentMedical;     break;
+		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  break;
+		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  break;
+	}
 
+	if (*val == 0)
+	{
+		if (iCurrentBonusPoints >= 15)
+		{
+			*val = 35;
+			iCurrentBonusPoints -= 15;
+			fSkillAtZeroWarning  = FALSE;
+		}
+	}
+	else if (*val < 85)
+	{
+		if (iCurrentBonusPoints >= 1)
+		{
+			++*val;
+			--iCurrentBonusPoints;
+		}
 	}
 }
 
@@ -503,156 +338,34 @@ static void DecrementStat(INT32 iStatToDecrement)
 	// review mode, do not allow changes
 	if (fReviewStats) return;
 
-	// decrement a stat
-	// check to make sure stat isn't maxed out already
+	BOOLEAN may_be_zero = FALSE;
+	INT32*  val         = NULL;
 	switch (iStatToDecrement)
 	{
-		case( STRENGTH_ATTRIBUTE ):
-			if( iCurrentStrength > 35 )
-			{
-				// ok to decrement
-				iCurrentStrength--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-    case( DEXTERITY_ATTRIBUTE ):
-			if( iCurrentDexterity > 35 )
-			{
-				// ok to decrement
-				iCurrentDexterity--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-		case( AGILITY_ATTRIBUTE ):
-			if( iCurrentAgility > 35 )
-			{
-				// ok to decrement
-				iCurrentAgility--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-    case( WISDOM_ATTRIBUTE ):
-			if( iCurrentWisdom > 35 )
-			{
-				// ok to decrement
-				iCurrentWisdom--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-		case( LEADERSHIP_ATTRIBUTE ):
-			if( iCurrentLeaderShip > 35 )
-			{
-				// ok to decrement
-				iCurrentLeaderShip--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-		case( HEALTH_ATTRIBUTE ):
-			if( iCurrentHealth > 35 )
-			{
-				// ok to decrement
-				iCurrentHealth--;
-        iCurrentBonusPoints++;
-			}
-			else
-			{
-				return;
-			}
-		break;
-    case( MARKSMANSHIP_SKILL ):
-			if( iCurrentMarkmanship > 35 )
-			{
-				// ok to decrement
-				iCurrentMarkmanship--;
-        iCurrentBonusPoints++;
-			}
-			else if( iCurrentMarkmanship == 35)
-			{
-        	// ok to decrement
-				iCurrentMarkmanship-=35;
-        iCurrentBonusPoints+=15;
-				fSkillAtZeroWarning = TRUE;
-			}
-		break;
-		case( MEDICAL_SKILL ):
-			if( iCurrentMedical > 35 )
-			{
-				// ok to decrement
-				iCurrentMedical--;
-        iCurrentBonusPoints++;
-			}
-			else if( iCurrentMedical == 35)
-			{
-        	// ok to decrement
-				iCurrentMedical-=35;
-        iCurrentBonusPoints+=15;
-				fSkillAtZeroWarning = TRUE;
-			}
-		break;
-		case( MECHANICAL_SKILL ):
-			if( iCurrentMechanical > 35 )
-			{
-				// ok to decrement
-				iCurrentMechanical--;
-        iCurrentBonusPoints++;
-			}
-			else if( iCurrentMechanical == 35)
-			{
-        	// ok to decrement
-				iCurrentMechanical-=35;
-        iCurrentBonusPoints+=15;
-				fSkillAtZeroWarning = TRUE;
-			}
-		break;
-		case( EXPLOSIVE_SKILL ):
-			if( iCurrentExplosives > 35 )
-			{
-				// ok to decrement
-				iCurrentExplosives--;
-        iCurrentBonusPoints++;
-			}
-			else if( iCurrentExplosives == 35)
-			{
-        	// ok to decrement
-				iCurrentExplosives-=35;
-        iCurrentBonusPoints+=15;
-				fSkillAtZeroWarning = TRUE;
-			}
-		break;
+		case STRENGTH_ATTRIBUTE:   val = &iCurrentStrength;                        break;
+		case DEXTERITY_ATTRIBUTE:  val = &iCurrentDexterity;                       break;
+		case AGILITY_ATTRIBUTE:    val = &iCurrentAgility;                         break;
+		case WISDOM_ATTRIBUTE:     val = &iCurrentWisdom;                          break;
+		case LEADERSHIP_ATTRIBUTE: val = &iCurrentLeaderShip;                      break;
+		case HEALTH_ATTRIBUTE:     val = &iCurrentHealth;                          break;
+		case MARKSMANSHIP_SKILL:   val = &iCurrentMarkmanship; may_be_zero = TRUE; break;
+		case MEDICAL_SKILL:        val = &iCurrentMedical;     may_be_zero = TRUE; break;
+		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  may_be_zero = TRUE; break;
+		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = TRUE; break;
 	}
 
-	if (fSkillAtZeroWarning)
+	if (*val > 35)
 	{
-		// current stat at zero
-		iCurrentStatAtZero = iStatToDecrement;
+		--*val;
+		++iCurrentBonusPoints;
 	}
-}
-
-
-// returns if player has at least this many bonus points
-static BOOLEAN DoWeHaveThisManyBonusPoints(INT32 iBonusPoints)
-{
-	return iCurrentBonusPoints >= iBonusPoints;
+	else if (may_be_zero && *val == 35)
+	{
+		*val = 0;
+		iCurrentBonusPoints += 15;
+		iCurrentStatAtZero   = iStatToDecrement;
+		fSkillAtZeroWarning  = TRUE;
+	}
 }
 
 
