@@ -18,7 +18,6 @@
 #include "EditScreen.h"
 #include "SelectWin.h"
 #include "Video.h"
-#include "VObject_Blitters.h"
 #include "Interface_Items.h"
 #include "Text.h"
 #include "Utilities.h"
@@ -2637,9 +2636,7 @@ static void DrawRect(SGPRect* pRect, INT16 color)
 static void RenderSelectedMercsInventory(void)
 {
 	INT32 i;
-	UINT8 *pSrc, *pDst;
 	INT32 xp, yp;
-	UINT32 uiSrcPitchBYTES, uiDstPitchBYTES;
 	UINT8 ubFontColor;
 	if( gsSelectedMercID == -1 )
 		return;
@@ -2649,12 +2646,7 @@ static void RenderSelectedMercsInventory(void)
 		{ //Render the current image.
 			xp = mercRects[ i ].iLeft + 4 + MERCPANEL_X;
 			yp = mercRects[ i ].iTop + MERCPANEL_Y;
-			pDst = LockVideoSurface( FRAME_BUFFER,							&uiDstPitchBYTES );
-			pSrc = LockVideoSurface( guiMercInvPanelBuffers[i], &uiSrcPitchBYTES );
-			Blt16BPPTo16BPPTrans( (UINT16*)pDst, uiDstPitchBYTES,
-				(UINT16 *)pSrc, uiSrcPitchBYTES, xp, yp, 0, 0, i<3 ? 22 : 44, 15, 0 );
-			UnLockVideoSurface( FRAME_BUFFER );
-			UnLockVideoSurface( guiMercInvPanelBuffers[i] );
+			BltVideoSurface(FRAME_BUFFER, guiMercInvPanelBuffers[i], xp, yp, NULL);
 			//Render the text
 			switch( i )
 			{

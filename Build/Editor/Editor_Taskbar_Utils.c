@@ -193,6 +193,7 @@ static void CreateEditorBuffers(void)
 	{
 		guiMercInvPanelBuffers[i] = AddVideoSurface(i < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH, MERCINV_SLOT_HEIGHT, PIXEL_DEPTH);
 		AssertMsg(guiMercInvPanelBuffers[i] != NO_VSURFACE, "Failed to allocate memory for merc item[] buffers.");
+		SetVideoSurfaceTransparency(guiMercInvPanelBuffers[i], 0);
 	}
 }
 
