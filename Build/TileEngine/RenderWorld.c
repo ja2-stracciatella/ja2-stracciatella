@@ -396,12 +396,12 @@ static const UINT32 gScrollDirectionFlags[NUM_WORLD_DIRECTIONS] =
 };
 
 
-INT16 gsVIEWPORT_START_X        = 0;
-INT16 gsVIEWPORT_START_Y        = 0;
-INT16 gsVIEWPORT_END_Y          = 360;
-INT16 gsVIEWPORT_WINDOW_END_Y   = 360;
-INT16 gsVIEWPORT_WINDOW_START_Y = 0;
-INT16 gsVIEWPORT_END_X          = SCREEN_WIDTH;
+const INT16 gsVIEWPORT_START_X        = 0;
+const INT16 gsVIEWPORT_START_Y        = 0;
+const INT16 gsVIEWPORT_END_X          = SCREEN_WIDTH;
+const INT16 gsVIEWPORT_END_Y          = SCREEN_HEIGHT - 120;
+INT16       gsVIEWPORT_WINDOW_END_Y   = 360;
+INT16       gsVIEWPORT_WINDOW_START_Y = 0;
 
 INT16 gsTopLeftWorldX, gsTopLeftWorldY;
 INT16 gsBottomRightWorldX, gsBottomRightWorldY;
