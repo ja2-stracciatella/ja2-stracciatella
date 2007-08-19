@@ -3,6 +3,7 @@
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"
+#include "Timer.h"
 #include "Types.h"
 #include "JAScreens.h"
 #include "Soldier_Control.h"
@@ -384,12 +385,12 @@ void BeginLoadScreen( )
 		uiTimeRange = 2000;
 		iPercentage = 0;
 		iLastShadePercentage = 0;
-		uiStartTime = GetJA2Clock();
+		uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		PlayJA2SampleFromFile("SOUNDS/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
-			uiCurrTime = GetJA2Clock();
+			uiCurrTime = GetClock();
 			iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
 			iPercentage = min( iPercentage, 100 );
 

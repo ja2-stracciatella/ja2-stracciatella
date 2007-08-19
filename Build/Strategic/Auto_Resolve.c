@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Timer.h"
 #include "Types.h"
 #include "Auto_Resolve.h"
 #include "Local.h"
@@ -461,7 +462,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 
 	uiTimeRange = 1000;
 	iPercentage = 0;
-	uiStartTime = GetJA2Clock();
+	uiStartTime = GetClock();
 
 	sStartLeft = 59;
 	sStartTop = 69;
@@ -484,7 +485,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
 	{
-		uiCurrTime = GetJA2Clock();
+		uiCurrTime = GetClock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
 		iPercentage = min( iPercentage, 100 );
 

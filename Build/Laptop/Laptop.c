@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Local.h"
+#include "Timer.h"
 #include "Utilities.h"
 #include "VSurface.h"
 #include "WCheck.h"
@@ -1458,13 +1459,13 @@ UINT32 LaptopScreenHandle()
 		DstRect.iBottom = SCREEN_HEIGHT;
 		uiTimeRange = 1000;
 		iPercentage = iRealPercentage = 0;
-		uiStartTime = GetJA2Clock();
+		uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,   0, 0, NULL);
 		BltVideoSurface(FRAME_BUFFER,  guiEXTRABUFFER, 0, 0, NULL);
 		PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iRealPercentage < 100  )
 		{
-			uiCurrTime = GetJA2Clock();
+			uiCurrTime = GetClock();
 			iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
 			iPercentage = min( iPercentage, 100 );
 
@@ -1983,14 +1984,14 @@ BOOLEAN LeaveLapTopScreen( void )
 			DstRect.iBottom = SCREEN_HEIGHT;
 			uiTimeRange = 1000;
 			iPercentage = iRealPercentage = 100;
-			uiStartTime = GetJA2Clock();
+			uiStartTime = GetClock();
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("SOUNDS/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 			while( iRealPercentage > 0  )
 			{
 				BltVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, NULL);
 
-				uiCurrTime = GetJA2Clock();
+				uiCurrTime = GetClock();
 				iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
 				iPercentage = min( iPercentage, 100 );
 				iPercentage = 100 - iPercentage;

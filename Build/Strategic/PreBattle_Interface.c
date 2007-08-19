@@ -11,6 +11,7 @@
 #include "Music_Control.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
+#include "Timer.h"
 #include "Queen_Command.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Pathing.h"
@@ -723,7 +724,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 	uiTimeRange = 1000;
 	iPercentage = 0;
-	uiStartTime = GetJA2Clock();
+	uiStartTime = GetClock();
 
 	GetScreenXYFromMapXY( gubPBSectorX, gubPBSectorY, &sStartLeft, &sStartTop );
 	sStartLeft += MAP_GRID_X / 2;
@@ -764,7 +765,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 	while( iPercentage < 100  )
 	{
-		uiCurrTime = GetJA2Clock();
+		uiCurrTime = GetClock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
 		iPercentage = min( iPercentage, 100 );
 
