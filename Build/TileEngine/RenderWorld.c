@@ -92,7 +92,7 @@ enum
 
 #define SHORT_ROUND( x ) ( x )
 
-#define	NUM_ITEM_CYCLE_COLORS			60
+#define	NUM_ITEM_CYCLE_COLORS 20
 
 static UINT16 us16BPPItemCycleWhiteColors[NUM_ITEM_CYCLE_COLORS];
 static UINT16 us16BPPItemCycleRedColors[NUM_ITEM_CYCLE_COLORS];
@@ -104,217 +104,6 @@ static INT16 gusYellowItemOutlineColor;
 
 INT16		gsRenderHeight = 0;
 BOOLEAN	gfRenderFullThisFrame = 0;
-
-
-static const UINT8 ubRGBItemCycleWhiteColors[] =
-{
-	25,		25,		25,
-	50,		50,		50,
-	75,   75,   75,
-	100,	100,	100,
-	125,	125,	125,
-	150,	150,	150,
-	175,	175,	175,
-	200,	200,	200,
-	225,	225,	225,
-	250,	250,	250,
-
-	250,	250,	250,
-	225,	225,	225,
-	200,	200,	200,
-	175,	175,	175,
-	150,	150,	150,
-	125,	125,	125,
-	100,	100,	100,
-	75,   75,   75,
-	50,		50,		50,
-	25,		25,		25,
-
-	25,		25,		25,
-	50,		50,		50,
-	75,   75,   75,
-	100,	100,	100,
-	125,	125,	125,
-	150,	150,	150,
-	175,	175,	175,
-	200,	200,	200,
-	225,	225,	225,
-	250,	250,	250,
-
-	250,	250,	250,
-	225,	225,	225,
-	200,	200,	200,
-	175,	175,	175,
-	150,	150,	150,
-	125,	125,	125,
-	100,	100,	100,
-	75,   75,   75,
-	50,		50,		50,
-	25,		25,		25,
-
-	25,		25,		25,
-	50,		50,		50,
-	75,   75,   75,
-	100,	100,	100,
-	125,	125,	125,
-	150,	150,	150,
-	175,	175,	175,
-	200,	200,	200,
-	225,	225,	225,
-	250,	250,	250,
-
-	250,	250,	250,
-	225,	225,	225,
-	200,	200,	200,
-	175,	175,	175,
-	150,	150,	150,
-	125,	125,	125,
-	100,	100,	100,
-	75,   75,   75,
-	50,		50,		50,
-	25,		25,		25
-
-};
-
-static const UINT8 ubRGBItemCycleRedColors[] =
-{
-	25,		0,		0,
-	50,		0,		0,
-	75,   0,		0,
-	100,	0,		0,
-	125,	0,		0,
-	150,	0,		0,
-	175,	0,		0,
-	200,	0,		0,
-	225,	0,		0,
-	250,	0,		0,
-
-	250,	0,		0,
-	225,	0,		0,
-	200,	0,		0,
-	175,	0,		0,
-	150,	0,		0,
-	125,	0,		0,
-	100,	0,		0,
-	75,   0,		0,
-	50,		0,		0,
-	25,		0,		0,
-
-	25,		0,		0,
-	50,		0,		0,
-	75,   0,		0,
-	100,	0,		0,
-	125,	0,		0,
-	150,	0,		0,
-	175,	0,		0,
-	200,	0,		0,
-	225,	0,		0,
-	250,	0,		0,
-
-	250,	0,		0,
-	225,	0,		0,
-	200,	0,		0,
-	175,	0,		0,
-	150,	0,		0,
-	125,	0,		0,
-	100,	0,		0,
-	75,   0,		0,
-	50,		0,		0,
-	25,		0,		0,
-
-	25,		0,		0,
-	50,		0,		0,
-	75,   0,		0,
-	100,	0,		0,
-	125,	0,		0,
-	150,	0,		0,
-	175,	0,		0,
-	200,	0,		0,
-	225,	0,		0,
-	250,	0,		0,
-
-	250,	0,		0,
-	225,	0,		0,
-	200,	0,		0,
-	175,	0,		0,
-	150,	0,		0,
-	125,	0,		0,
-	100,	0,		0,
-	75,   0,		0,
-	50,		0,		0,
-	25,		0,		0,
-
-};
-
-static const UINT8 ubRGBItemCycleYellowColors[] =
-{
-	25,		25,		0,
-	50,		50,		0,
-	75,   75,   0,
-	100,	100,	0,
-	125,	125,	0,
-	150,	150,	0,
-	175,	175,	0,
-	200,	200,	0,
-	225,	225,	0,
-	250,	250,	0,
-
-	250,	250,	0,
-	225,	225,	0,
-	200,	200,	0,
-	175,	175,	0,
-	150,	150,	0,
-	125,	125,	0,
-	100,	100,	0,
-	75,   75,   0,
-	50,		50,		0,
-	25,		25,		0,
-
-	25,		25,		0,
-	50,		50,		0,
-	75,   75,   0,
-	100,	100,	0,
-	125,	125,	0,
-	150,	150,	0,
-	175,	175,	0,
-	200,	200,	0,
-	225,	225,	0,
-	250,	250,	0,
-
-	250,	250,	0,
-	225,	225,	0,
-	200,	200,	0,
-	175,	175,	0,
-	150,	150,	0,
-	125,	125,	0,
-	100,	100,	0,
-	75,   75,   0,
-	50,		50,		0,
-	25,		25,		0,
-
-	25,		25,		0,
-	50,		50,		0,
-	75,   75,   0,
-	100,	100,	0,
-	125,	125,	0,
-	150,	150,	0,
-	175,	175,	0,
-	200,	200,	0,
-	225,	225,	0,
-	250,	250,	0,
-
-	250,	250,	0,
-	225,	225,	0,
-	200,	200,	0,
-	175,	175,	0,
-	150,	150,	0,
-	125,	125,	0,
-	100,	100,	0,
-	75,   75,   0,
-	50,		50,		0,
-	25,		25,		0,
-
-};
 
 
 #define NUMSPEEDS		5
@@ -2108,13 +1897,7 @@ UINT32 cnt = 0;
 			gsCurrentGlowFrame = 0;
 		}
 
-		gsCurrentItemGlowFrame++;
-
-		if ( gsCurrentItemGlowFrame == NUM_ITEM_CYCLE_COLORS )
-		{
-			gsCurrentItemGlowFrame = 0;
-		}
-
+		gsCurrentItemGlowFrame = (gsCurrentItemGlowFrame + 1) % NUM_ITEM_CYCLE_COLORS;
 	}
 
 
@@ -3074,7 +2857,6 @@ void ScrollWorld( )
 
 void InitRenderParams( UINT8 ubRestrictionID )
 {
-		UINT32 cnt, cnt2;
 		DOUBLE  dWorldX, dWorldY;
 
 	INT16 gTopLeftWorldLimitX;
@@ -3145,12 +2927,14 @@ void InitRenderParams( UINT8 ubRestrictionID )
 		gdScaleX = (DOUBLE)RADAR_WINDOW_WIDTH /  dWorldX;
 		gdScaleY = (DOUBLE)RADAR_WINDOW_HEIGHT / dWorldY;
 
-		for ( cnt = 0, cnt2 = 0; cnt2 < NUM_ITEM_CYCLE_COLORS; cnt+=3, cnt2++ )
-		{
-			us16BPPItemCycleWhiteColors[ cnt2 ] = Get16BPPColor( FROMRGB( ubRGBItemCycleWhiteColors[ cnt ], ubRGBItemCycleWhiteColors[ cnt + 1 ], ubRGBItemCycleWhiteColors[ cnt + 2] ) );
-			us16BPPItemCycleRedColors[ cnt2 ] = Get16BPPColor( FROMRGB( ubRGBItemCycleRedColors[ cnt ], ubRGBItemCycleRedColors[ cnt + 1 ], ubRGBItemCycleRedColors[ cnt + 2] ) );
-			us16BPPItemCycleYellowColors[ cnt2 ] = Get16BPPColor( FROMRGB( ubRGBItemCycleYellowColors[ cnt ], ubRGBItemCycleYellowColors[ cnt + 1 ], ubRGBItemCycleYellowColors[ cnt + 2] ) );
-		}
+	const UINT32 n = NUM_ITEM_CYCLE_COLORS;
+	for (UINT32 i = 0; i < n; ++i)
+	{
+		const UINT32 l = (i < n / 2 ? i + 1 : n - i) * (250 / (n / 2));
+		us16BPPItemCycleWhiteColors[i]  = Get16BPPColor(FROMRGB(l, l, l));
+		us16BPPItemCycleRedColors[i]    = Get16BPPColor(FROMRGB(l, 0, 0));
+		us16BPPItemCycleYellowColors[i] = Get16BPPColor(FROMRGB(l, l, 0));
+	}
 
 		gusNormalItemOutlineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
 		gusYellowItemOutlineColor = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
