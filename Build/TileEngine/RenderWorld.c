@@ -90,7 +90,6 @@ enum
 
 };
 
-#define SHORT_ROUND( x ) ( x )
 
 #define	NUM_ITEM_CYCLE_COLORS 20
 
@@ -787,8 +786,8 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											float dTempY_S;
 											FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
-											sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)SHORT_ROUND( dTempX_S );
-											sYPos = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)SHORT_ROUND( dTempY_S );
+											sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
+											sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
 
 											// Adjust for offset position on screen
 											sXPos -= gsRenderWorldOffsetX;
