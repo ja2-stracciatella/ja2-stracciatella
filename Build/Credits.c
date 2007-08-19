@@ -777,7 +777,7 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, STR16 pString)
 		SetVideoSurfaceTransparency( pNodeToAdd->uiVideoSurfaceImage, 0 );
 
 		//fill the surface with a transparent color
-		ColorFillVideoSurfaceArea(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA,	pNodeToAdd->sHeightOfString, 0 );
+		FillSurface(pNodeToAdd->uiVideoSurfaceImage, 0);
 
 		//set the font dest buffer to be the surface
 		SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
