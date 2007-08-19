@@ -2190,7 +2190,7 @@ static INT32 GetAvgStatOfCurrentTeamStat(INT32 iStat)
 	for (INT32 cnt = 0; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++)
 	{
 		const SOLDIERTYPE* s = MercPtrs[cnt];
-		if (!s->bActive || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
+		if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
 		switch (iStat)
 		{
