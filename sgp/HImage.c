@@ -633,14 +633,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 		UINT8 r = pPalette[cnt].peRed;
 		UINT8 g = pPalette[cnt].peGreen;
 		UINT8 b = pPalette[cnt].peBlue;
-
-		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
-		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
-		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
-
-		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
-		if (usColor == 0 && r + g + b != 0) usColor = BLACK_SUBSTITUTE;
-		p16BPPPalette[cnt] = usColor;
+		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
 	}
 
 	return p16BPPPalette;
@@ -699,15 +692,7 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 		UINT8 r = __min(rmod, 255);
 		UINT8 g = __min(gmod, 255);
 		UINT8 b = __min(bmod, 255);
-
-		UINT16 r16 = (gusRedShift   < 0 ? r >> -gusRedShift   : r << gusRedShift);
-		UINT16 g16 = (gusGreenShift < 0 ? g >> -gusGreenShift : g << gusGreenShift);
-		UINT16 b16 = (gusBlueShift  < 0 ? b >> -gusBlueShift  : b << gusBlueShift);
-
-		// Prevent creation of pure black color
-		UINT16 usColor = (r16 & gusRedMask) | (g16 & gusGreenMask) | (b16 & gusBlueMask);
-		if (usColor == 0 && r + g + b != 0) usColor = BLACK_SUBSTITUTE;
-		p16BPPPalette[cnt] = usColor;
+		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
 	}
 	return p16BPPPalette;
 }
