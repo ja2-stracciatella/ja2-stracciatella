@@ -83,7 +83,7 @@ void VideoSetFullScreen(BOOLEAN Enable)
 }
 
 
-static BOOLEAN GetRGBDistribution(void);
+static void GetRGBDistribution(void);
 
 
 BOOLEAN InitializeVideoManager(void)
@@ -742,13 +742,13 @@ void UnlockMouseBuffer(void)
 }
 
 
-static BOOLEAN GetRGBDistribution(void)
+static void GetRGBDistribution(void)
 {
-	UINT16 usBit;
+	const SDL_PixelFormat* const f = ScreenBuffer->format;
 
-	gusRedMask   = ScreenBuffer->format->Rmask;
-	gusGreenMask = ScreenBuffer->format->Gmask;
-	gusBlueMask  = ScreenBuffer->format->Bmask;
+	gusRedMask   = f->Rmask;
+	gusGreenMask = f->Gmask;
+	gusBlueMask  = f->Bmask;
 
 	// RGB 5,5,5
 	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
@@ -757,32 +757,9 @@ static BOOLEAN GetRGBDistribution(void)
 	else// if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
 		guiTranslucentMask=0x7bef;
 
-
-	usBit = 0x8000;
-	gusRedShift = 8;
-	while(!(gusRedMask & usBit))
-	{
-		usBit >>= 1;
-		gusRedShift--;
-	}
-
-	usBit = 0x8000;
-	gusGreenShift = 8;
-	while(!(gusGreenMask & usBit))
-	{
-		usBit >>= 1;
-		gusGreenShift--;
-	}
-
-	usBit = 0x8000;
-	gusBlueShift = 8;
-	while(!(gusBlueMask & usBit))
-	{
-		usBit >>= 1;
-		gusBlueShift--;
-	}
-
-	return TRUE;
+	gusRedShift   = f->Rshift - f->Rloss;
+	gusGreenShift = f->Gshift - f->Gloss;
+	gusBlueShift  = f->Bshift - f->Bloss;
 }
 
 
