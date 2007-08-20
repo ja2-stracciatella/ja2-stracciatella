@@ -202,8 +202,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 #ifdef JA2
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
-		EraseMouseCursor();
-		SetMouseCursorProperties(0, 0, 5, 5);
+		SetMouseCursorProperties(0, 0, 0, 0);
 	}
 	else if (gfCursorDatabaseInit)
 	{
@@ -273,8 +272,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			{
 				if (GetClock() - guiDelayTimer < 1000)
 				{
-					EraseMouseCursor();
-					SetMouseCursorProperties(0, 0, 5, 5);
+					SetMouseCursorProperties(0, 0, 0, 0);
 					return TRUE;
 				}
 			}
