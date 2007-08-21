@@ -60,11 +60,9 @@ UINT8								gubCurScrollSpeedID;
 #define TILES_DYNAMIC_TOPMOST									0x00000001
 
 
-BOOLEAN			gfRenderScroll;
-INT16				gsScrollXIncrement;
-INT16				gsScrollYIncrement;
-INT32				guiScrollDirection;
-extern INT16	 gsRenderHeight;
+extern INT16 gsScrollXIncrement;
+extern INT16 gsScrollYIncrement;
+extern INT16 gsRenderHeight;
 
 
 extern const INT16 gsVIEWPORT_START_X;

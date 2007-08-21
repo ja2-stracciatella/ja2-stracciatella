@@ -1052,8 +1052,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 
 
 					// Clip!!
-					iTempX = sLeft + sShiftX;
-					iTempY = sTop + sShiftY;
+					iTempX = sLeft - sShiftX;
+					iTempY = sTop  - sShiftY;
 
 					// Clip to rect
 					uiLeftSkip=__min( ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
@@ -1072,8 +1072,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 					// Set re-set values given based on clipping
 					sLeft    = iTempX + (INT16)uiLeftSkip;
 					sTop     = iTempY + (INT16)uiTopSkip;
-					sRight   = sRight + sShiftX - (INT16)uiRightSkip;
-					sBottom  = sBottom + sShiftY - (INT16)uiBottomSkip;
+					sRight   = sRight  - sShiftX - (INT16)uiRightSkip;
+					sBottom  = sBottom - sShiftY - (INT16)uiBottomSkip;
 
 					usHeight = sBottom - sTop;
 					usWidth  = sRight -  sLeft;

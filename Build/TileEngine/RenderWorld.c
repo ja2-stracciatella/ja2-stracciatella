@@ -223,11 +223,8 @@ static INT16 gsLStartPointX_M, gsLStartPointY_M;
 static INT16 gsLEndXS, gsLEndYS;
 
 
-BOOLEAN			gfRenderScroll = FALSE;
-INT16				gsScrollXIncrement;
-INT16				gsScrollYIncrement;
-INT32				guiScrollDirection;
-
+INT16 gsScrollXIncrement;
+INT16 gsScrollYIncrement;
 
 
 // Rendering flags (full, partial, etc.)
@@ -1798,7 +1795,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 // memcpy's the background to the new scroll position, and renders the missing strip
 // via the RenderStaticWorldRect. Dynamic stuff will be updated on the next frame
 // by the normal render cycle
-static void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement)
+static void ScrollBackground(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	if ( !gfDoVideoScroll )
 	{
@@ -1811,23 +1808,9 @@ static void ScrollBackground(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 
 	}
 	else
 	{
-		if ( gfRenderScroll == FALSE )
-		{
-			guiScrollDirection   = uiDirection;
-			gsScrollXIncrement	 = 0;
-			gsScrollYIncrement	 = 0;
-		}
-		else
-		{
-			guiScrollDirection   |= uiDirection;
-		}
-
-		gfRenderScroll =	TRUE;
-		gsScrollXIncrement	+= sScrollXIncrement;
-		gsScrollYIncrement	+= sScrollYIncrement;
+		gsScrollXIncrement += sScrollXIncrement;
+		gsScrollYIncrement += sScrollYIncrement;
 	}
-
-
 }
 
 
@@ -2311,9 +2294,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 		if ( !fCheckOnly )
 		{
-			ScrollBackground(SCROLL_LEFT, sScrollXStep, sScrollYStep );
+			ScrollBackground(-sScrollXStep, 0);
 		}
-
 	}
 
 	if ( ScrollFlags & SCROLL_RIGHT )
@@ -2329,7 +2311,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 			if ( !fCheckOnly )
 			{
-				ScrollBackground(SCROLL_RIGHT, sScrollXStep, sScrollYStep );
+				ScrollBackground(sScrollXStep, 0);
 			}
 	}
 
@@ -2346,7 +2328,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 			if ( !fCheckOnly )
 			{
-				ScrollBackground(SCROLL_UP, sScrollXStep, sScrollYStep );
+				ScrollBackground(0, -sScrollYStep);
 			}
 	}
 
@@ -2363,9 +2345,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 			if ( !fCheckOnly )
 			{
-				ScrollBackground(SCROLL_DOWN, sScrollXStep, sScrollYStep );
+				ScrollBackground(0, sScrollYStep);
 			}
-
 	}
 
 	if ( ScrollFlags & SCROLL_UPLEFT )
@@ -2392,9 +2373,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_UPLEFT, sScrollXStep, sScrollYStep );
+					ScrollBackground(-sScrollXStep, -sScrollYStep);
 				}
-
 			}
 			else if ( fUpOK )
 			{
@@ -2406,9 +2386,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_UP, sScrollXStep, sScrollYStep );
+					ScrollBackground(0, -sScrollYStep);
 				}
-
 			}
 			else if ( fLeftOK )
 			{
@@ -2420,7 +2399,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_LEFT, sScrollXStep, sScrollYStep );
+					ScrollBackground(-sScrollXStep, 0);
 				}
 			}
 	}
@@ -2449,9 +2428,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_UPRIGHT, sScrollXStep, sScrollYStep );
+					ScrollBackground(sScrollXStep, -sScrollYStep);
 				}
-
 			}
 			else if ( fUpOK )
 			{
@@ -2463,7 +2441,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_UP, sScrollXStep, sScrollYStep );
+					ScrollBackground(0, -sScrollYStep);
 				}
 			}
 			else if ( fRightOK )
@@ -2476,7 +2454,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_RIGHT, sScrollXStep, sScrollYStep );
+					ScrollBackground(sScrollXStep, 0);
 				}
 			}
 	}
@@ -2504,9 +2482,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground(SCROLL_DOWNLEFT, sScrollXStep, sScrollYStep );
+					ScrollBackground(-sScrollXStep, sScrollYStep);
 				}
-
 			}
 			else if ( fLeftOK )
 			{
@@ -2517,7 +2494,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 					if ( !fCheckOnly )
 					{
-						ScrollBackground(SCROLL_LEFT, sScrollXStep, sScrollYStep );
+						ScrollBackground(-sScrollXStep, 0);
 					}
 			}
 			else if ( fDownOK )
@@ -2529,7 +2506,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 					if ( !fCheckOnly )
 					{
-						ScrollBackground(SCROLL_DOWN, sScrollXStep, sScrollYStep );
+						ScrollBackground(0, sScrollYStep);
 					}
 			}
 	}
@@ -2557,9 +2534,8 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 				if ( !fCheckOnly )
 				{
-					ScrollBackground( SCROLL_DOWNRIGHT, sScrollXStep, sScrollYStep );
+					ScrollBackground(sScrollXStep, sScrollYStep);
 				}
-
 			}
 			else if ( fDownOK )
 			{
@@ -2570,7 +2546,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 					if ( !fCheckOnly )
 					{
-						ScrollBackground( SCROLL_DOWN, sScrollXStep, sScrollYStep );
+						ScrollBackground(0, sScrollYStep);
 					}
 			}
 			else if ( fRightOK )
@@ -2582,7 +2558,7 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 					if ( !fCheckOnly )
 					{
-						ScrollBackground( SCROLL_RIGHT, sScrollXStep, sScrollYStep );
+						ScrollBackground(sScrollXStep, 0);
 					}
 			}
 

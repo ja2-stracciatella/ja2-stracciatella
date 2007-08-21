@@ -290,218 +290,100 @@ void InvalidateScreen(void)
 
 //#define SCROLL_TEST
 
-static void ScrollJA2Background(UINT32 uiDirection, INT16 sScrollXIncrement, INT16 sScrollYIncrement)
+static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	SDL_Surface* Frame  = FrameBuffer;
 	SDL_Surface* Source = ScreenBuffer; // Primary
 	SDL_Surface* Dest   = ScreenBuffer; // Back
-	SDL_Rect SrcRect;
-	SDL_Rect DstRect;
+	SDL_Rect     SrcRect;
+	SDL_Rect     DstRect;
+	SDL_Rect     StripRegions[2];
+	UINT16       NumStrips = 0;
 
 	const UINT16 usWidth  = SCREEN_WIDTH;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
-	SGPRect StripRegions[2];
-	StripRegions[0].iLeft   = gsVIEWPORT_START_X;
-	StripRegions[0].iRight  = gsVIEWPORT_END_X;
-	StripRegions[0].iTop    = gsVIEWPORT_WINDOW_START_Y;
-	StripRegions[0].iBottom = gsVIEWPORT_WINDOW_END_Y;
-	StripRegions[1].iLeft   = gsVIEWPORT_START_X;
-	StripRegions[1].iRight  = gsVIEWPORT_END_X;
-	StripRegions[1].iTop    = gsVIEWPORT_WINDOW_START_Y;
-	StripRegions[1].iBottom = gsVIEWPORT_WINDOW_END_Y;
-
-	UINT16 usNumStrips = 0;
-	switch (uiDirection)
+	if (sScrollXIncrement < 0)
 	{
-		case SCROLL_LEFT:
-			SrcRect.x = 0;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight;
-			DstRect.x = sScrollXIncrement;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iRight = gsVIEWPORT_START_X + sScrollXIncrement;
-			usNumStrips = 1;
-			break;
-
-		case SCROLL_RIGHT:
-			SrcRect.x = sScrollXIncrement;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight;
-			DstRect.x = 0;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iLeft = gsVIEWPORT_END_X - sScrollXIncrement;
-			usNumStrips = 1;
-			break;
-
-		case SCROLL_UP:
-			SrcRect.x = 0;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SrcRect.w = usWidth;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = 0;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			usNumStrips = 1;
-			break;
-
-		case SCROLL_DOWN:
-			SrcRect.x = 0;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SrcRect.w = usWidth;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = 0;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iTop = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
-			usNumStrips = 1;
-			break;
-
-		case SCROLL_UPLEFT:
-			SrcRect.x = 0;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = sScrollXIncrement;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iRight  = gsVIEWPORT_START_X        + sScrollXIncrement;
-			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			StripRegions[1].iLeft   = gsVIEWPORT_START_X        + sScrollXIncrement;
-			usNumStrips = 2;
-			break;
-
-		case SCROLL_UPRIGHT:
-			SrcRect.x = sScrollXIncrement;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = 0;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iLeft   = gsVIEWPORT_END_X          - sScrollXIncrement;
-			StripRegions[1].iBottom = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			StripRegions[1].iRight  = gsVIEWPORT_END_X          - sScrollXIncrement;
-			usNumStrips = 2;
-			break;
-
-		case SCROLL_DOWNLEFT:
-			SrcRect.x = 0;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = sScrollXIncrement;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iRight = gsVIEWPORT_START_X      + sScrollXIncrement;
-			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
-			StripRegions[1].iLeft  = gsVIEWPORT_START_X      + sScrollXIncrement;
-			usNumStrips = 2;
-			break;
-
-		case SCROLL_DOWNRIGHT:
-			SrcRect.x = sScrollXIncrement;
-			SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
-			SrcRect.w = usWidth - sScrollXIncrement;
-			SrcRect.h = usHeight - sScrollYIncrement;
-			DstRect.x = 0;
-			DstRect.y = gsVIEWPORT_WINDOW_START_Y;
-			SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-
-			StripRegions[0].iLeft  = gsVIEWPORT_END_X        - sScrollXIncrement;
-			StripRegions[1].iTop   = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
-			StripRegions[1].iRight = gsVIEWPORT_END_X        - sScrollXIncrement;
-			usNumStrips = 2;
-			break;
-
+		SrcRect.x = 0;
+		SrcRect.w = usWidth + sScrollXIncrement;
+		DstRect.x = -sScrollXIncrement;
+		StripRegions[0].x = gsVIEWPORT_START_X;
+		StripRegions[0].y = gsVIEWPORT_WINDOW_START_Y;
+		StripRegions[0].w = -sScrollXIncrement;
+		StripRegions[0].h = usHeight;
+		++NumStrips;
 	}
+	else if (sScrollXIncrement > 0)
+	{
+		SrcRect.x = sScrollXIncrement;
+		SrcRect.w = usWidth - sScrollXIncrement;
+		DstRect.x = 0;
+		StripRegions[0].x = gsVIEWPORT_END_X - sScrollXIncrement;
+		StripRegions[0].y = gsVIEWPORT_WINDOW_START_Y;
+		StripRegions[0].w = sScrollXIncrement;
+		StripRegions[0].h = usHeight;
+		++NumStrips;
+	}
+	else
+	{
+		SrcRect.x = 0;
+		SrcRect.w = usWidth;
+		DstRect.x = 0;
+	}
+
+	if (sScrollYIncrement < 0)
+	{
+		SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+		SrcRect.h = usHeight + sScrollYIncrement;
+		DstRect.y = gsVIEWPORT_WINDOW_START_Y - sScrollYIncrement;
+		StripRegions[NumStrips].x = DstRect.x;
+		StripRegions[NumStrips].y = gsVIEWPORT_WINDOW_START_Y;
+		StripRegions[NumStrips].w = SrcRect.w;
+		StripRegions[NumStrips].h = -sScrollYIncrement;
+		++NumStrips;
+	}
+	else if (sScrollYIncrement > 0)
+	{
+		SrcRect.y = gsVIEWPORT_WINDOW_START_Y + sScrollYIncrement;
+		SrcRect.h = usHeight - sScrollYIncrement;
+		DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+		StripRegions[NumStrips].x = DstRect.x;
+		StripRegions[NumStrips].y = gsVIEWPORT_WINDOW_END_Y - sScrollYIncrement;
+		StripRegions[NumStrips].w = SrcRect.w;
+		StripRegions[NumStrips].h = sScrollYIncrement;
+		++NumStrips;
+	}
+	else
+	{
+		SrcRect.y = gsVIEWPORT_WINDOW_START_Y;
+		SrcRect.h = usHeight;
+		DstRect.y = gsVIEWPORT_WINDOW_START_Y;
+	}
+
+	SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
 
 #ifdef SCROLL_TEST
 	SDL_FillRect(Dest, NULL, 0);
 #endif
 
-	for (UINT cnt = 0; cnt < usNumStrips; cnt++)
+	for (UINT i = 0; i < NumStrips; i++)
 	{
-		UINT x = StripRegions[cnt].iLeft;
-		UINT y = StripRegions[cnt].iTop;
-		UINT w = StripRegions[cnt].iRight - StripRegions[cnt].iLeft;
-		UINT b = StripRegions[cnt].iBottom;
-		for (; y < b; y++)
+		UINT x = StripRegions[i].x;
+		UINT y = StripRegions[i].y;
+		UINT w = StripRegions[i].w;
+		UINT h = StripRegions[i].h;
+		for (UINT j = y; j < y + h; ++j)
 		{
-			memset(gpZBuffer + y * SCREEN_WIDTH + x, 0, w * sizeof(*gpZBuffer));
+			memset(gpZBuffer + j * SCREEN_WIDTH + x, 0, w * sizeof(*gpZBuffer));
 		}
 
-		RenderStaticWorldRect(StripRegions[cnt].iLeft, StripRegions[cnt].iTop, StripRegions[cnt].iRight, StripRegions[cnt].iBottom, TRUE);
-
-		SrcRect.x = StripRegions[cnt].iLeft;
-		SrcRect.y = StripRegions[cnt].iTop;
-		SrcRect.w = StripRegions[cnt].iRight  - StripRegions[cnt].iLeft;
-		SrcRect.h = StripRegions[cnt].iBottom - StripRegions[cnt].iTop;
-		DstRect.x = StripRegions[cnt].iLeft;
-		DstRect.y = StripRegions[cnt].iTop;
-		SDL_BlitSurface(Frame, &SrcRect, Dest, &DstRect);
-	}
-
-	INT16 sShiftX = 0;
-	INT16 sShiftY = 0;
-
-	switch (uiDirection)
-	{
-		case SCROLL_LEFT:
-			sShiftX = sScrollXIncrement;
-			sShiftY = 0;
-			break;
-
-		case SCROLL_RIGHT:
-			sShiftX = -sScrollXIncrement;
-			sShiftY = 0;
-			break;
-
-		case SCROLL_UP:
-			sShiftX = 0;
-			sShiftY = sScrollYIncrement;
-			break;
-
-		case SCROLL_DOWN:
-			sShiftX = 0;
-			sShiftY = -sScrollYIncrement;
-			break;
-
-		case SCROLL_UPLEFT:
-			sShiftX = sScrollXIncrement;
-			sShiftY = sScrollYIncrement;
-			break;
-
-		case SCROLL_UPRIGHT:
-			sShiftX = -sScrollXIncrement;
-			sShiftY = sScrollYIncrement;
-			break;
-
-		case SCROLL_DOWNLEFT:
-			sShiftX = sScrollXIncrement;
-			sShiftY = -sScrollYIncrement;
-			break;
-
-		case SCROLL_DOWNRIGHT:
-			sShiftX = -sScrollXIncrement;
-			sShiftY = -sScrollYIncrement;
-			break;
+		RenderStaticWorldRect(x, y, x + w, y + h, TRUE);
+		SDL_BlitSurface(Frame, &StripRegions[i], Dest, &StripRegions[i]);
 	}
 
 	// RESTORE SHIFTED
-	RestoreShiftedVideoOverlays(sShiftX, sShiftY);
+	RestoreShiftedVideoOverlays(sScrollXIncrement, sScrollYIncrement);
 
 	// SAVE NEW
 	SaveVideoOverlaysArea(BACKBUFFER);
@@ -579,6 +461,8 @@ void RefreshScreen(void)
 
 	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
+	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
+
 	if (guiFrameBufferState == BUFFER_DIRTY)
 	{
 		if (gfFadeInitialized && gfFadeInVideo)
@@ -601,7 +485,7 @@ void RefreshScreen(void)
 				for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 				{
 					SDL_Rect* r = &DirtyRegionsEx[i];
-					if (gfRenderScroll)
+					if (scrolling)
 					{
 						// Check if we are completely out of bounds
 						if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
@@ -613,9 +497,11 @@ void RefreshScreen(void)
 				}
 			}
 		}
-		if (gfRenderScroll)
+		if (scrolling)
 		{
-			ScrollJA2Background(guiScrollDirection, gsScrollXIncrement, gsScrollYIncrement);
+			ScrollJA2Background(gsScrollXIncrement, gsScrollYIncrement);
+			gsScrollXIncrement = 0;
+			gsScrollYIncrement = 0;
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 		guiFrameBufferState = BUFFER_READY;
@@ -663,7 +549,7 @@ void RefreshScreen(void)
 		for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 		{
 			SDL_Rect* r = &DirtyRegionsEx[i];
-			if (gfRenderScroll)
+			if (scrolling)
 			{
 				if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
 				{
@@ -672,11 +558,6 @@ void RefreshScreen(void)
 			}
 			SDL_UpdateRects(ScreenBuffer, 1, r);
 		}
-	}
-
-	if (gfRenderScroll)
-	{
-		gfRenderScroll = FALSE;
 	}
 
 	gfForceFullScreenRefresh = FALSE;
