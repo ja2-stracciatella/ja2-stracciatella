@@ -2269,15 +2269,13 @@ static void RenderDynamicWorld(void)
 }
 
 
-static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, INT16 sScrollYStep, INT16 *psTempRenderCenterX, INT16 *psTempRenderCenterY, BOOLEAN fCheckOnly )
+static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, INT16 sScrollYStep, BOOLEAN fCheckOnly)
 {
 	BOOLEAN fAGoodMove = FALSE, fMovedPos = FALSE;
 	INT16		sTempX_W, sTempY_W;
 	BOOLEAN fUpOK, fLeftOK;
 	BOOLEAN fDownOK, fRightOK;
 	INT16		sTempRenderCenterX, sTempRenderCenterY;
-
-	sTempRenderCenterX = sTempRenderCenterY = 0;
 
 	// This checking sequence just validates the values!
 	if ( ScrollFlags & SCROLL_LEFT )
@@ -2367,8 +2365,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			if ( fLeftOK && fUpOK )
 			{
 				FromScreenToCellCoordinates( (INT16)-sScrollXStep, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 				fAGoodMove = TRUE;
 
 				if ( !fCheckOnly )
@@ -2381,8 +2377,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 				fAGoodMove = TRUE;
 
 				FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 
 				if ( !fCheckOnly )
 				{
@@ -2394,8 +2388,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 				fAGoodMove = TRUE;
 
 				FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 
 				if ( !fCheckOnly )
 				{
@@ -2422,8 +2414,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			if ( fUpOK && fRightOK )
 			{
 				FromScreenToCellCoordinates( (INT16)sScrollXStep, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 				fAGoodMove = TRUE;
 
 				if ( !fCheckOnly )
@@ -2436,8 +2426,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 				fAGoodMove = TRUE;
 
 				FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 
 				if ( !fCheckOnly )
 				{
@@ -2449,8 +2437,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 				fAGoodMove = TRUE;
 
 				FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 
 				if ( !fCheckOnly )
 				{
@@ -2477,8 +2463,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			{
 				fAGoodMove = TRUE;
 				FromScreenToCellCoordinates( (INT16)-sScrollXStep, (INT16)sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 
 				if ( !fCheckOnly )
 				{
@@ -2488,8 +2472,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			else if ( fLeftOK )
 			{
 					FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-					sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-					sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 					fAGoodMove = TRUE;
 
 					if ( !fCheckOnly )
@@ -2500,8 +2482,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			else if ( fDownOK )
 			{
 					FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-					sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-					sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 					fAGoodMove = TRUE;
 
 					if ( !fCheckOnly )
@@ -2528,8 +2508,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			if ( fDownOK && fRightOK )
 			{
 				FromScreenToCellCoordinates( (INT16)sScrollXStep, (INT16)sScrollYStep, &sTempX_W, &sTempY_W );
-				sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-				sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 				fAGoodMove = TRUE;
 
 				if ( !fCheckOnly )
@@ -2540,8 +2518,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			else if ( fDownOK )
 			{
 					FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-					sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-					sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 					fAGoodMove = TRUE;
 
 					if ( !fCheckOnly )
@@ -2552,8 +2528,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 			else if ( fRightOK )
 			{
 					FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-					sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-					sTempRenderCenterY = gsRenderCenterY + sTempY_W;
 					fAGoodMove = TRUE;
 
 					if ( !fCheckOnly )
@@ -2564,10 +2538,6 @@ static BOOLEAN HandleScrollDirections( UINT32 ScrollFlags, INT16 sScrollXStep, I
 
 	}
 
-	( *psTempRenderCenterX ) = sTempRenderCenterX;
-	( *psTempRenderCenterY ) = sTempRenderCenterY;
-
-
 	return( fAGoodMove );
 }
 
@@ -2576,7 +2546,6 @@ void ScrollWorld( )
 {
 	UINT32		ScrollFlags = 0;
 	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
-	INT16	sTempRenderCenterX, sTempRenderCenterY;
 	INT8	bDirection;
 	INT16	sScrollXStep=-1;
 	INT16 sScrollYStep=-1;
@@ -2761,7 +2730,7 @@ void ScrollWorld( )
 				ScrollFlags = SCROLL_DOWNRIGHT;
 			}
 
-			fAGoodMove = HandleScrollDirections( ScrollFlags, sScrollXStep, sScrollYStep, &sTempRenderCenterX, &sTempRenderCenterY, TRUE );
+			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
 	}
 
 	// Has this been an OK scroll?
@@ -2792,7 +2761,7 @@ void ScrollWorld( )
 			gfScrollInertia++;
 
 			// Now we actually begin our scrolling
-			HandleScrollDirections( ScrollFlags, sScrollXStep, sScrollYStep, &sTempRenderCenterX, &sTempRenderCenterY, FALSE );
+			HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, FALSE);
 		}
 	}
 	else
