@@ -2339,7 +2339,7 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 void ScrollWorld( )
 {
 	UINT32		ScrollFlags = 0;
-	BOOLEAN		fDoScroll = FALSE, fAGoodMove = FALSE;
+	BOOLEAN fAGoodMove = FALSE;
 	INT8	bDirection;
 	INT16	sScrollXStep=-1;
 	INT16 sScrollYStep=-1;
@@ -2396,11 +2396,9 @@ void ScrollWorld( )
          }
 
 				 ScrollFlags = 0;
-				 fDoScroll = FALSE;
 				 if ( SoldierLocationRelativeToScreen( gTacticalStatus.sSlideTarget, gTacticalStatus.sSlideReason, &bDirection, &ScrollFlags ) && GridNoOnVisibleWorldTile( gTacticalStatus.sSlideTarget ) )
 				 {
 						ScrollFlags = gScrollDirectionFlags[ bDirection ];
-						fDoScroll			= TRUE;
 						fIgnoreInput	= TRUE;
 				 }
 				 else
@@ -2425,25 +2423,21 @@ void ScrollWorld( )
 			// Check keys
 			if (_KeyDown(SDLK_UP))
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_UP;
 			}
 
 			if (_KeyDown(SDLK_DOWN))
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_DOWN;
 			}
 
 			if (_KeyDown(SDLK_RIGHT))
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_RIGHT;
 			}
 
 			if (_KeyDown(SDLK_LEFT))
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_LEFT;
 			}
 
@@ -2462,28 +2456,24 @@ void ScrollWorld( )
 
 			if ( gusMouseYPos == 0 )
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_UP;
 			}
 
 
 			if (gusMouseYPos >= SCREEN_HEIGHT - 1)
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_DOWN;
 			}
 
 
 			if (gusMouseXPos >= SCREEN_WIDTH - 1)
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_RIGHT;
 			}
 
 
 			if ( gusMouseXPos == 0 )
 			{
-				fDoScroll = TRUE;
 				ScrollFlags |= SCROLL_LEFT;
 			}
 		}
@@ -2491,7 +2481,7 @@ void ScrollWorld( )
 	} while( FALSE );
 
 
-	if ( fDoScroll )
+	if (ScrollFlags != 0)
 	{
 			// Adjust speed based on whether shift is down
 			if ( _KeyDown( SHIFT ) )
