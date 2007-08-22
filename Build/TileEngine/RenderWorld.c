@@ -2294,30 +2294,6 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 		scroll_y += sScrollYStep;
 	}
 
-	if (ScrollFlags & SCROLL_UPLEFT)
-	{
-		scroll_x -= sScrollXStep;
-		scroll_y -= sScrollYStep;
-	}
-
-	if (ScrollFlags & SCROLL_UPRIGHT)
-	{
-		scroll_x += sScrollXStep;
-		scroll_y -= sScrollYStep;
-	}
-
-	if (ScrollFlags & SCROLL_DOWNLEFT)
-	{
-		scroll_x -= sScrollXStep;
-		scroll_y += sScrollYStep;
-	}
-
-	if (ScrollFlags & SCROLL_DOWNRIGHT)
-	{
-		scroll_x += sScrollXStep;
-		scroll_y += sScrollYStep;
-	}
-
 	if (scroll_x != 0)
 	{
 		// Check horizontal
@@ -2527,25 +2503,6 @@ void ScrollWorld( )
 			{
 				sScrollXStep = gubNewScrollXSpeeds[ gfDoVideoScroll ][ gubCurScrollSpeedID ];
 				sScrollYStep = gubNewScrollYSpeeds[ gfDoVideoScroll ][ gubCurScrollSpeedID ];
-			}
-
-
-			// Set diagonal flags!
-			if ( ( ScrollFlags & SCROLL_LEFT ) && ( ScrollFlags & SCROLL_UP ) )
-			{
-				ScrollFlags = SCROLL_UPLEFT;
-			}
-			if ( ( ScrollFlags & SCROLL_RIGHT ) && ( ScrollFlags & SCROLL_UP ) )
-			{
-				ScrollFlags = SCROLL_UPRIGHT;
-			}
-			if ( ( ScrollFlags & SCROLL_LEFT ) && ( ScrollFlags & SCROLL_DOWN ) )
-			{
-				ScrollFlags = SCROLL_DOWNLEFT;
-			}
-			if ( ( ScrollFlags & SCROLL_RIGHT ) && ( ScrollFlags & SCROLL_DOWN ) )
-			{
-				ScrollFlags = SCROLL_DOWNRIGHT;
 			}
 
 			fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
