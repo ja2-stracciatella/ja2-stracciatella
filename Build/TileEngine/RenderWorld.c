@@ -2271,274 +2271,92 @@ static void RenderDynamicWorld(void)
 
 static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, INT16 sScrollYStep, BOOLEAN fCheckOnly)
 {
-	BOOLEAN fAGoodMove = FALSE, fMovedPos = FALSE;
-	INT16		sTempX_W, sTempY_W;
-	BOOLEAN fUpOK, fLeftOK;
-	BOOLEAN fDownOK, fRightOK;
-	INT16		sTempRenderCenterX, sTempRenderCenterY;
+	INT16 scroll_x = 0;
+	INT16 scroll_y = 0;
 
-	// This checking sequence just validates the values!
-	if ( ScrollFlags & SCROLL_LEFT )
+	if (ScrollFlags & SCROLL_LEFT)
 	{
-		FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-		sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-		sTempRenderCenterY = gsRenderCenterY + sTempY_W;
+		scroll_x -= sScrollXStep;
+	}
 
-		fMovedPos=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-		if ( fMovedPos )
+	if (ScrollFlags & SCROLL_RIGHT)
+	{
+		scroll_x += sScrollXStep;
+	}
+
+	if (ScrollFlags & SCROLL_UP)
+	{
+		scroll_y -= sScrollYStep;
+	}
+
+	if (ScrollFlags & SCROLL_DOWN)
+	{
+		scroll_y += sScrollYStep;
+	}
+
+	if (ScrollFlags & SCROLL_UPLEFT)
+	{
+		scroll_x -= sScrollXStep;
+		scroll_y -= sScrollYStep;
+	}
+
+	if (ScrollFlags & SCROLL_UPRIGHT)
+	{
+		scroll_x += sScrollXStep;
+		scroll_y -= sScrollYStep;
+	}
+
+	if (ScrollFlags & SCROLL_DOWNLEFT)
+	{
+		scroll_x -= sScrollXStep;
+		scroll_y += sScrollYStep;
+	}
+
+	if (ScrollFlags & SCROLL_DOWNRIGHT)
+	{
+		scroll_x += sScrollXStep;
+		scroll_y += sScrollYStep;
+	}
+
+	if (scroll_x != 0)
+	{
+		// Check horizontal
+		INT16 sTempX_W;
+		INT16 sTempY_W;
+		FromScreenToCellCoordinates(scroll_x, 0, &sTempX_W, &sTempY_W);
+		const INT16 sTempRenderCenterX = gsRenderCenterX + sTempX_W;
+		const INT16 sTempRenderCenterY = gsRenderCenterY + sTempY_W;
+		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly))
 		{
-			fAGoodMove = TRUE;
+			scroll_x = 0;
 		}
+	}
 
-		if ( !fCheckOnly )
+	if (scroll_y != 0)
+	{
+		// Check vertical
+		INT16 sTempX_W;
+		INT16 sTempY_W;
+		FromScreenToCellCoordinates(0, scroll_y, &sTempX_W, &sTempY_W);
+		const INT16 sTempRenderCenterX = gsRenderCenterX + sTempX_W;
+		const INT16 sTempRenderCenterY = gsRenderCenterY + sTempY_W;
+		if (!ApplyScrolling(sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly))
 		{
-			ScrollBackground(-sScrollXStep, 0);
+			scroll_y = 0;
 		}
 	}
 
-	if ( ScrollFlags & SCROLL_RIGHT )
+	BOOLEAN fAGoodMove = FALSE;
+	if (scroll_x != 0 || scroll_y != 0)
 	{
-			FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fMovedPos=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-			if ( fMovedPos )
-			{
-				fAGoodMove = TRUE;
-			}
-
-			if ( !fCheckOnly )
-			{
-				ScrollBackground(sScrollXStep, 0);
-			}
+		fAGoodMove = TRUE;
+		if (!fCheckOnly)
+		{
+			ScrollBackground(scroll_x, scroll_y);
+		}
 	}
 
-	if ( ScrollFlags & SCROLL_UP )
-	{
-			FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fMovedPos=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-			if ( fMovedPos )
-			{
-				fAGoodMove = TRUE;
-			}
-
-			if ( !fCheckOnly )
-			{
-				ScrollBackground(0, -sScrollYStep);
-			}
-	}
-
-	if ( ScrollFlags & SCROLL_DOWN )
-	{
-			FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fMovedPos=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-			if ( fMovedPos )
-			{
-				fAGoodMove = TRUE;
-			}
-
-			if ( !fCheckOnly )
-			{
-				ScrollBackground(0, sScrollYStep);
-			}
-	}
-
-	if ( ScrollFlags & SCROLL_UPLEFT )
-	{
-			// Check up
-			FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fUpOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			// Check left
-			FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fLeftOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-
-			if ( fLeftOK && fUpOK )
-			{
-				FromScreenToCellCoordinates( (INT16)-sScrollXStep, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				fAGoodMove = TRUE;
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(-sScrollXStep, -sScrollYStep);
-				}
-			}
-			else if ( fUpOK )
-			{
-				fAGoodMove = TRUE;
-
-				FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(0, -sScrollYStep);
-				}
-			}
-			else if ( fLeftOK )
-			{
-				fAGoodMove = TRUE;
-
-				FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(-sScrollXStep, 0);
-				}
-			}
-	}
-
-	if ( ScrollFlags & SCROLL_UPRIGHT )
-	{
-
-			// Check up
-			FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fUpOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			// Check right
-			FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fRightOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			if ( fUpOK && fRightOK )
-			{
-				FromScreenToCellCoordinates( (INT16)sScrollXStep, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-				fAGoodMove = TRUE;
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(sScrollXStep, -sScrollYStep);
-				}
-			}
-			else if ( fUpOK )
-			{
-				fAGoodMove = TRUE;
-
-				FromScreenToCellCoordinates( 0, (INT16)-sScrollYStep, &sTempX_W, &sTempY_W );
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(0, -sScrollYStep);
-				}
-			}
-			else if ( fRightOK )
-			{
-				fAGoodMove = TRUE;
-
-				FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(sScrollXStep, 0);
-				}
-			}
-	}
-
-	if ( ScrollFlags & SCROLL_DOWNLEFT )
-	{
-			// Check down......
-			FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fDownOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			// Check left.....
-			FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fLeftOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			if ( fLeftOK && fDownOK )
-			{
-				fAGoodMove = TRUE;
-				FromScreenToCellCoordinates( (INT16)-sScrollXStep, (INT16)sScrollYStep, &sTempX_W, &sTempY_W );
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(-sScrollXStep, sScrollYStep);
-				}
-			}
-			else if ( fLeftOK )
-			{
-					FromScreenToCellCoordinates( (INT16)-sScrollXStep, 0, &sTempX_W, &sTempY_W );
-					fAGoodMove = TRUE;
-
-					if ( !fCheckOnly )
-					{
-						ScrollBackground(-sScrollXStep, 0);
-					}
-			}
-			else if ( fDownOK )
-			{
-					FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-					fAGoodMove = TRUE;
-
-					if ( !fCheckOnly )
-					{
-						ScrollBackground(0, sScrollYStep);
-					}
-			}
-	}
-
-	if ( ScrollFlags & SCROLL_DOWNRIGHT )
-	{
-			// Check right
-			FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fRightOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			// Check down
-			FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-			sTempRenderCenterX = gsRenderCenterX + sTempX_W;
-			sTempRenderCenterY = gsRenderCenterY + sTempY_W;
-			fDownOK=ApplyScrolling( sTempRenderCenterX, sTempRenderCenterY, FALSE, fCheckOnly );
-
-			if ( fDownOK && fRightOK )
-			{
-				FromScreenToCellCoordinates( (INT16)sScrollXStep, (INT16)sScrollYStep, &sTempX_W, &sTempY_W );
-				fAGoodMove = TRUE;
-
-				if ( !fCheckOnly )
-				{
-					ScrollBackground(sScrollXStep, sScrollYStep);
-				}
-			}
-			else if ( fDownOK )
-			{
-					FromScreenToCellCoordinates( 0, sScrollYStep, &sTempX_W, &sTempY_W );
-					fAGoodMove = TRUE;
-
-					if ( !fCheckOnly )
-					{
-						ScrollBackground(0, sScrollYStep);
-					}
-			}
-			else if ( fRightOK )
-			{
-					FromScreenToCellCoordinates( sScrollXStep, 0, &sTempX_W, &sTempY_W );
-					fAGoodMove = TRUE;
-
-					if ( !fCheckOnly )
-					{
-						ScrollBackground(sScrollXStep, 0);
-					}
-			}
-
-	}
-
-	return( fAGoodMove );
+	return fAGoodMove;
 }
 
 
