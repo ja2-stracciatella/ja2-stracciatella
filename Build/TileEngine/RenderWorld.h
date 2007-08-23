@@ -88,9 +88,9 @@ DOUBLE	gdScaleX, gdScaleY;
 BOOLEAN	gfIgnoreScrollDueToCenterAdjust;
 
 
-void ScrollWorld( );
-void InitRenderParams( UINT8 ubRestrictionID );
-void RenderWorld( );
+void ScrollWorld(void);
+void InitRenderParams(UINT8 ubRestrictionID);
+void RenderWorld(void);
 
 void ResetSpecificLayerOptimizing( UINT32 uiRowFlag );
 
@@ -112,7 +112,8 @@ void InvalidateWorldRedundency(void);
 void SetRenderCenter( INT16 sNewX, INT16 sNewY );
 
 #ifdef _DEBUG
-void RenderFOVDebug( );
+void RenderFOVDebug(void);
+void RenderCoverDebug(void);
 #endif
 
 #endif

@@ -33,7 +33,6 @@
 		// NB Change this to true to get visible cover debug -- CJC
 		BOOLEAN gfDisplayCoverValues = FALSE;
 	#endif
-	extern void RenderCoverDebug( void );
 #endif
 
 INT8	gubAIPathCosts[19][19];
