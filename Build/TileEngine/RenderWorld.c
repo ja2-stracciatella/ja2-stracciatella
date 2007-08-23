@@ -2271,9 +2271,8 @@ void ScrollWorld(void)
 
 	BOOLEAN fIgnoreInput = FALSE;
 
-	if (gfIgnoreScrolling == 1) return;
-	if (gfIgnoreScrolling == 2)           fIgnoreInput = TRUE;
-	if (gCurrentUIMode    == LOCKUI_MODE) fIgnoreInput = TRUE;
+	if (gfIgnoreScrolling) return;
+	if (gCurrentUIMode == LOCKUI_MODE) fIgnoreInput = TRUE;
 
 	// If in editor, ignore scrolling if any of the shift keys pressed with arrow keys
 	if (gfEditMode && _KeyDown(CTRL)) return;
@@ -2284,42 +2283,39 @@ void ScrollWorld(void)
 
 	do
 	{
-		if (gfIgnoreScrolling != 3)
+		// Check for sliding
+		if (gTacticalStatus.sSlideTarget != NOWHERE)
 		{
-			// Check for sliding
-			if (gTacticalStatus.sSlideTarget != NOWHERE)
+			// Ignore all input...
+			// Check if we have reached out dest!
+			if (fFirstTimeInSlideToMode)
 			{
-				// Ignore all input...
-				// Check if we have reached out dest!
-				if (fFirstTimeInSlideToMode)
-				{
-					ubOldScrollSpeed = gubCurScrollSpeedID;
-					fFirstTimeInSlideToMode = FALSE;
-				}
+				ubOldScrollSpeed = gubCurScrollSpeedID;
+				fFirstTimeInSlideToMode = FALSE;
+			}
 
-				ScrollFlags = 0;
-				INT8 bDirection;
-				if (SoldierLocationRelativeToScreen(gTacticalStatus.sSlideTarget, gTacticalStatus.sSlideReason, &bDirection, &ScrollFlags) &&
-						GridNoOnVisibleWorldTile(gTacticalStatus.sSlideTarget))
-				{
-					ScrollFlags = gScrollDirectionFlags[bDirection];
-					fIgnoreInput	= TRUE;
-				}
-				else
-				{
-					// We've stopped!
-					gTacticalStatus.sSlideTarget = NOWHERE;
-				}
+			ScrollFlags = 0;
+			INT8 bDirection;
+			if (SoldierLocationRelativeToScreen(gTacticalStatus.sSlideTarget, gTacticalStatus.sSlideReason, &bDirection, &ScrollFlags) &&
+					GridNoOnVisibleWorldTile(gTacticalStatus.sSlideTarget))
+			{
+				ScrollFlags = gScrollDirectionFlags[bDirection];
+				fIgnoreInput	= TRUE;
 			}
 			else
 			{
-				// Restore old scroll speed
-				if (!fFirstTimeInSlideToMode)
-				{
-					gubCurScrollSpeedID = ubOldScrollSpeed;
-				}
-				fFirstTimeInSlideToMode = TRUE;
+				// We've stopped!
+				gTacticalStatus.sSlideTarget = NOWHERE;
 			}
+		}
+		else
+		{
+			// Restore old scroll speed
+			if (!fFirstTimeInSlideToMode)
+			{
+				gubCurScrollSpeedID = ubOldScrollSpeed;
+			}
+			fFirstTimeInSlideToMode = TRUE;
 		}
 
 		if (!fIgnoreInput)
@@ -6418,7 +6414,7 @@ BlitDone:
 
 void SetRenderCenter(INT16 sNewX, INT16 sNewY)
 {
-	if (gfIgnoreScrolling == 1) return;
+	if (gfIgnoreScrolling) return;
 
 	// Apply these new coordinates to the renderer!
 	ApplyScrolling(sNewX, sNewY, TRUE, FALSE);
