@@ -1,59 +1,59 @@
-#ifndef __RENDERWORLD_H
-#define __RENDERWORLD_H
+#ifndef RENDERWORLD_H
+#define RENDERWORLD_H
 
-BOOLEAN							gfDoVideoScroll;
-UINT8								gubCurScrollSpeedID;
+extern BOOLEAN gfDoVideoScroll;
+extern UINT8   gubCurScrollSpeedID;
 
 // RENDERING FLAGS
-#define RENDER_FLAG_FULL				0x00000001
-#define RENDER_FLAG_SHADOWS			0x00000002
-#define RENDER_FLAG_MARKED			0x00000004
-#define RENDER_FLAG_SAVEOFF			0x00000008
-#define RENDER_FLAG_NOZ					0x00000010
-#define RENDER_FLAG_ROOMIDS			0x00000020
-#define RENDER_FLAG_CHECKZ			0x00000040
-#define	RENDER_FLAG_FOVDEBUG		0x00000200
+#define RENDER_FLAG_FULL     0x00000001
+#define RENDER_FLAG_SHADOWS  0x00000002
+#define RENDER_FLAG_MARKED   0x00000004
+#define RENDER_FLAG_SAVEOFF  0x00000008
+#define RENDER_FLAG_NOZ      0x00000010
+#define RENDER_FLAG_ROOMIDS  0x00000020
+#define RENDER_FLAG_CHECKZ   0x00000040
+#define RENDER_FLAG_FOVDEBUG 0x00000200
 
-#define	SCROLL_UP							0x00000001
-#define	SCROLL_DOWN						0x00000002
-#define	SCROLL_RIGHT					0x00000004
-#define	SCROLL_LEFT						0x00000008
-
-
-#define	Z_SUBLAYERS					8
-#define	LAND_Z_LEVEL				0
-#define OBJECT_Z_LEVEL			1
-#define SHADOW_Z_LEVEL			2
-#define MERC_Z_LEVEL				3
-#define STRUCT_Z_LEVEL			4
-#define ROOF_Z_LEVEL				5
-#define ONROOF_Z_LEVEL			6
-#define TOPMOST_Z_LEVEL			32767
+#define SCROLL_UP    0x00000001
+#define SCROLL_DOWN  0x00000002
+#define SCROLL_RIGHT 0x00000004
+#define SCROLL_LEFT  0x00000008
 
 
-// highest bit value is rendered first!
-#define	TILES_STATIC_LAND					0x00040000
-#define TILES_STATIC_OBJECTS			0x00020000
-#define TILES_STATIC_SHADOWS			0x00008000
-#define TILES_STATIC_STRUCTURES		0x00004000
-#define TILES_STATIC_ROOF					0x00002000
-#define TILES_STATIC_ONROOF				0x00001000
-#define TILES_STATIC_TOPMOST			0x00000800
+#define Z_SUBLAYERS         8
+#define LAND_Z_LEVEL        0
+#define OBJECT_Z_LEVEL      1
+#define SHADOW_Z_LEVEL      2
+#define MERC_Z_LEVEL        3
+#define STRUCT_Z_LEVEL      4
+#define ROOF_Z_LEVEL        5
+#define ONROOF_Z_LEVEL      6
+#define TOPMOST_Z_LEVEL 32767
 
 
 // highest bit value is rendered first!
-#define TILES_ALL_DYNAMICS										0x00000fff
-#define TILES_DYNAMIC_CHECKFOR_INT_TILE				0x00000400
-#define	TILES_DYNAMIC_LAND										0x00000200
-#define TILES_DYNAMIC_OBJECTS									0x00000100
-#define TILES_DYNAMIC_SHADOWS									0x00000080
-#define TILES_DYNAMIC_STRUCT_MERCS						0x00000040
-#define TILES_DYNAMIC_MERCS										0x00000020
-#define TILES_DYNAMIC_STRUCTURES							0x00000010
-#define TILES_DYNAMIC_ROOF										0x00000008
-#define TILES_DYNAMIC_HIGHMERCS								0x00000004
-#define TILES_DYNAMIC_ONROOF									0x00000002
-#define TILES_DYNAMIC_TOPMOST									0x00000001
+#define TILES_STATIC_LAND       0x00040000
+#define TILES_STATIC_OBJECTS    0x00020000
+#define TILES_STATIC_SHADOWS    0x00008000
+#define TILES_STATIC_STRUCTURES 0x00004000
+#define TILES_STATIC_ROOF       0x00002000
+#define TILES_STATIC_ONROOF     0x00001000
+#define TILES_STATIC_TOPMOST    0x00000800
+
+
+// highest bit value is rendered first!
+#define TILES_ALL_DYNAMICS              0x00000fff
+#define TILES_DYNAMIC_CHECKFOR_INT_TILE 0x00000400
+#define TILES_DYNAMIC_LAND              0x00000200
+#define TILES_DYNAMIC_OBJECTS           0x00000100
+#define TILES_DYNAMIC_SHADOWS           0x00000080
+#define TILES_DYNAMIC_STRUCT_MERCS      0x00000040
+#define TILES_DYNAMIC_MERCS             0x00000020
+#define TILES_DYNAMIC_STRUCTURES        0x00000010
+#define TILES_DYNAMIC_ROOF              0x00000008
+#define TILES_DYNAMIC_HIGHMERCS         0x00000004
+#define TILES_DYNAMIC_ONROOF            0x00000002
+#define TILES_DYNAMIC_TOPMOST           0x00000001
 
 
 extern INT16 gsScrollXIncrement;
@@ -68,50 +68,61 @@ extern const INT16 gsVIEWPORT_END_Y;
 extern INT16       gsVIEWPORT_WINDOW_START_Y;
 extern INT16       gsVIEWPORT_WINDOW_END_Y;
 
-INT16	gsRenderCenterX;
-INT16	gsRenderCenterY;
-INT16	gsRenderWorldOffsetX;
-INT16	gsRenderWorldOffsetY;
+extern INT16 gsRenderCenterX;
+extern INT16 gsRenderCenterY;
+extern INT16 gsRenderWorldOffsetX;
+extern INT16 gsRenderWorldOffsetY;
 
 // CURRENT VIEWPORT IN WORLD COORDS
-INT16 gsTopLeftWorldX, gsTopLeftWorldY;
-INT16 gsBottomRightWorldX, gsBottomRightWorldY;
+extern INT16 gsTopLeftWorldX;
+extern INT16 gsTopLeftWorldY;
+extern INT16 gsBottomRightWorldX;
+extern INT16 gsBottomRightWorldY;
 
 
 // GLOBAL COORDINATES
-INT16 gCenterWorldX, gCenterWorldY;
-INT16 gsTLX, gsTLY, gsTRX, gsTRY;
-INT16 gsBLX, gsBLY, gsBRX, gsBRY;
-INT16	gsCX, gsCY;
-DOUBLE	gdScaleX, gdScaleY;
+extern INT16 gCenterWorldX;
+extern INT16 gCenterWorldY;
+extern INT16 gsTLX;
+extern INT16 gsTLY;
+extern INT16 gsTRX;
+extern INT16 gsTRY;
+extern INT16 gsBLX;
+extern INT16 gsBLY;
+extern INT16 gsBRX;
+extern INT16 gsBRY;
+extern INT16 gsCX;
+extern INT16 gsCY;
+extern double gdScaleX;
+extern double gdScaleY;
 
-BOOLEAN	gfIgnoreScrollDueToCenterAdjust;
+extern BOOLEAN gfIgnoreScrollDueToCenterAdjust;
 
 
 void ScrollWorld(void);
 void InitRenderParams(UINT8 ubRestrictionID);
 void RenderWorld(void);
 
-void ResetSpecificLayerOptimizing( UINT32 uiRowFlag );
+void ResetSpecificLayerOptimizing(UINT32 uiRowFlag);
 
 void SetRenderFlags(UINT32 uiFlags);
 void ClearRenderFlags(UINT32 uiFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
 
-extern UINT16 *gpZBuffer;
-BOOLEAN gfIgnoreScrolling;
+extern UINT16* gpZBuffer;
+extern BOOLEAN gfIgnoreScrolling;
 
-BOOLEAN			gfScrollInertia;
-BOOLEAN			gfScrollPending;
+extern BOOLEAN gfScrollInertia;
+extern BOOLEAN gfScrollPending;
 
-void RenderStaticWorldRect(INT16, INT16, INT16, INT16, BOOLEAN );
+void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, BOOLEAN fDynamicsToo);
 
 void InvalidateWorldRedundency(void);
 
-void SetRenderCenter( INT16 sNewX, INT16 sNewY );
+void SetRenderCenter(INT16 sNewX, INT16 sNewY);
 
-#ifdef _DEBUG
+#if defined _DEBUG
 void RenderFOVDebug(void);
 void RenderCoverDebug(void);
 #endif

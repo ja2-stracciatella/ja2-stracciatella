@@ -383,7 +383,7 @@ INT32 uiCount;
 }
 
 
-UINT16 GetCorpseStructIndex( ROTTING_CORPSE_DEFINITION *pCorpseDef, BOOLEAN fForImage )
+UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN fForImage)
 {
 	INT8		bDirection;
 
