@@ -1799,25 +1799,6 @@ void RestoreInterface( )
 }
 
 
-static void BlitPopupText(VIDEO_OVERLAY* pBlitter)
-{
-	UINT8	 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-
-	BltVideoSurface(pBlitter->uiDestBuff, guiINTEXT, pBlitter->pBackground->sLeft, pBlitter->pBackground->sTop, NULL);
-
-	pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);
-
-	SetFont( pBlitter->uiFontID );
-	SetFontBackground( pBlitter->ubFontBack );
-	SetFontForeground( pBlitter->ubFontFore );
-
-	mprintf_buffer(pDestBuf, uiDestPitchBYTES, pBlitter->sX, pBlitter->sY, pBlitter->zText);
-
-	UnLockVideoSurface( pBlitter->uiDestBuff );
-
-}
-
 void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel )
 {
 	if ( pSoldier->bTeam == gbPlayerNum )
