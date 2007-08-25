@@ -713,13 +713,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											sYPos += pNode->sRelativeY;
 										}
 
-										if (uiLevelNodeFlags& LEVELNODE_USEZ)
+										if (uiLevelNodeFlags & LEVELNODE_USEZ)
 										{
 											sYPos -= pNode->sRelativeZ;
 										}
 
 										//ADJUST FOR ABSOLUTE POSITIONING
-										if (uiLevelNodeFlags& LEVELNODE_USEABSOLUTEPOS)
+										if (uiLevelNodeFlags & LEVELNODE_USEABSOLUTEPOS)
 										{
 											float dOffsetX = pNode->sRelativeX - gsRenderCenterX;
 											float dOffsetY = pNode->sRelativeY - gsRenderCenterY;
@@ -1825,7 +1825,7 @@ void RenderWorld(void)
 
 	if (gfScrollInertia) EmptyBackgroundRects();
 
-	if (gRenderFlags&RENDER_FLAG_ROOMIDS)
+	if (gRenderFlags & RENDER_FLAG_ROOMIDS)
 	{
 		RenderRoomInfo(gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS);
 	}
@@ -1848,7 +1848,7 @@ void RenderWorld(void)
 
 	if (gRenderFlags & RENDER_FLAG_MARKED) ClearMarkedTiles();
 
-	if (gRenderFlags&RENDER_FLAG_CHECKZ && !(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
+	if (gRenderFlags & RENDER_FLAG_CHECKZ && !(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
 	{
 		ExamineZBufferRect(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 	}
