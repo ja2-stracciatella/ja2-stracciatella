@@ -390,7 +390,7 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-static UINT32 vmprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
+static UINT32 vmprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
 {
 	Assert(pFontString != NULL);
 
@@ -403,7 +403,7 @@ static UINT32 vmprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x,
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
 		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -417,8 +417,8 @@ static UINT32 vmprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x,
  * than 512 word-characters. Uses monochrome font color settings */
 UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	UINT32  uiDestPitchBYTES;
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
 
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
@@ -430,7 +430,7 @@ UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-UINT32 mprintf_buffer(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+UINT32 mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);

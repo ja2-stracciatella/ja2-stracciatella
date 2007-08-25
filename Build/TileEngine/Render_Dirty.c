@@ -1100,10 +1100,8 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 // Common callbacks for topmost blitters
 void BlitMFont( VIDEO_OVERLAY *pBlitter )
 {
-	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
-
-	pDestBuf = LockVideoSurface( pBlitter->uiDestBuff, &uiDestPitchBYTES);
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(pBlitter->uiDestBuff, &uiDestPitchBYTES);
 
 	SetFont( pBlitter->uiFontID );
 	SetFontBackground( pBlitter->ubFontBack );

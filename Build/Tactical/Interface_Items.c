@@ -5877,8 +5877,6 @@ void RenderItemPickupMenu( )
 	INT32			cnt;
 	UINT16		usItemTileIndex;
 	INT16			sX, sY, sCenX, sCenY, sFontX, sFontY, sNewX, sNewY;
-	UINT32			uiDestPitchBYTES;
-	UINT8				*pDestBuf;
 	wchar_t			pStr[ 100 ];
 	INVTYPE   *pItem;
 	OBJECTTYPE  *pObject;
@@ -5925,7 +5923,8 @@ void RenderItemPickupMenu( )
 		sX = ITEMPICK_GRAPHIC_X + gItemPickupMenu.sX;
 		sY = ITEMPICK_GRAPHIC_Y + gItemPickupMenu.sY;
 
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+		UINT32 uiDestPitchBYTES;
+		UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 		SetFont( ITEMDESC_FONT );
 		SetFontBackground( FONT_MCOLOR_BLACK );
@@ -5956,13 +5955,13 @@ void RenderItemPickupMenu( )
 					{
 						//SetFontForeground( FONT_MCOLOR_LTYELLOW );
 						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline( (UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[ usItemTileIndex ].hTileSurface, sCenX, sCenY, gTileDatabase[ usItemTileIndex ].usRegionIndex, Get16BPPColor( FROMRGB( 255, 255, 0 ) ), TRUE );
+						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 255, 0)), TRUE);
 					}
 					else
 					{
 						//SetFontForeground( FONT_BLACK );
 						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline( (UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[ usItemTileIndex ].hTileSurface, sCenX, sCenY, gTileDatabase[ usItemTileIndex ].usRegionIndex, 0, FALSE );
+						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, 0, FALSE);
 					}
         }
 
@@ -6014,8 +6013,8 @@ void RenderItemPickupMenu( )
 						SetFontForeground( FONT_WHITE );
 						SetFontShadow( DEFAULT_SHADOW );
 					//}
-					// Blt8BPPDataTo16BPPBufferOutline( (UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[ usItemTileIndex ].hTileSurface, sCenX, sCenY, gTileDatabase[ usItemTileIndex ].usRegionIndex, Get16BPPColor( FROMRGB( 255, 0, 0 ) ), TRUE );
-					// Blt8BPPDataTo16BPPBufferOutline( (UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[ usItemTileIndex ].hTileSurface, sCenX, sCenY, gTileDatabase[ usItemTileIndex ].usRegionIndex, Get16BPPColor( FROMRGB( 255, 0, 0 ) ), TRUE );
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
 				}
 				else
 				{

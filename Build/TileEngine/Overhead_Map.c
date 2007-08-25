@@ -1066,17 +1066,16 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 
 static void RenderOverheadOverlays(void)
 {
-	UINT32			uiDestPitchBYTES;
 	WORLDITEM		*pWorldItem;
 	UINT32				i;
 	SOLDIERTYPE	*pSoldier;
 	INT16				sX, sY;
 	UINT16			end;
 	UINT16			usLineColor=0;
-	UINT8				*pDestBuf;
 	UINT8				ubPassengers = 0;
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	UINT32 uiDestPitchBYTES;
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
 
 	//SOLDIER OVERLAY
@@ -1139,18 +1138,18 @@ static void RenderOverheadOverlays(void)
 		#ifdef JA2EDITOR
 		if( gfEditMode && gpSelected && gpSelected->pSoldier == pSoldier )
 		{ //editor:  show the selected edited merc as the yellow one.
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 0 );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 0);
 		}
 		else
 		#endif
 		if( !gfTacticalPlacementGUIActive )
 		{ //normal
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
 		}
 		else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{ //vehicle
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 9 );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 9);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 6, sY, sX + 9, sY + 10);
 		}
 		//else if( pSoldier->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER) )
@@ -1159,17 +1158,17 @@ static void RenderOverheadOverlays(void)
 		//}
 		else if( gpTacticalPlacementSelectedSoldier == pSoldier )
 		{ //tactical placement selected merc
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 7 );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 7);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
 		else if( gpTacticalPlacementHilightedSoldier == pSoldier && pSoldier->uiStatusFlags )
 		{ //tactical placement hilighted merc
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 8 );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 8);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
 		else
 		{ //normal
-			Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam );
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
 		}
 		if( ubPassengers )
@@ -1220,7 +1219,7 @@ static void RenderOverheadOverlays(void)
 				usLineColor = Get16BPPColor( FROMRGB( 255,   0,   0 ) );
 			}
 
-			PixelDraw( FALSE, sX, sY, usLineColor, pDestBuf );
+			PixelDraw(FALSE, sX, sY, usLineColor, (UINT8*)pDestBuf);
 
 			InvalidateRegion( sX, sY, (INT16)( sX + 1 ), (INT16)( sY + 1 ) );
 

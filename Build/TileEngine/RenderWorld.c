@@ -1216,7 +1216,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									INT16 sX;
 									INT16 sY;
 									VarFindFontCenterCoordinates(sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pNode->uiAPCost);
-									mprintf_buffer((UINT8*)pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
+									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
 									SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_ERASEZ && !(uiFlags & TILES_DIRTY))
@@ -1644,7 +1644,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									INT16 sX;
 									INT16 sY;
 									VarFindFontCenterCoordinates(sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pSoldier->ubPlannedUIAPCost);
-									mprintf_buffer((UINT8*)pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pSoldier->ubPlannedUIAPCost);
+									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pSoldier->ubPlannedUIAPCost);
 									SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 								}
 							}
@@ -5429,7 +5429,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
 	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5504,7 +5504,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
 	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5536,7 +5536,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gubFOVDebugInfoInfo[usTileIndex]);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-					Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, gTileDatabase[0].hTileSurface, sTempPosX_S, sTempPosY_S, 0, &gClippingRect);
+					Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, gTileDatabase[0].hTileSurface, sTempPosX_S, sTempPosY_S, 0, &gClippingRect);
 				}
 
 				if (gubGridNoMarkers[usTileIndex] == gubGridNoValue)
@@ -5581,7 +5581,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
 	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5658,7 +5658,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
 	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
