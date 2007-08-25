@@ -1,4 +1,5 @@
 v0.6
+(r1442) Change the scroll speeds, so diagonal scrolling is always axis aligned.
 (r1427) Fix a vanilla bug: Do not count vehicles for calculating the average stats in the personnel screen.
 (r1393) Fix a vanilla bug: In the personnel screen the salary of non-AIM/MERC mercenaries was assumed to be 0, so it did not count twoards the min/max/daily salary stats.
 (r1387) Fix vanilla slight misplacement of name/location and assignment/state in the personnel screen.

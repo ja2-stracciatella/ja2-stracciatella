@@ -102,21 +102,6 @@ INT16   gsRenderHeight = 0;
 BOOLEAN gfRenderFullThisFrame = 0;
 
 
-#define NUMSPEEDS 5
-
-static const UINT8 gubNewScrollXSpeeds[2][NUMSPEEDS] =
-{
-	{ 40, 80, 100, 180, 200 }, // Non-video mode scroll
-	{ 20, 40,  80,  80,  80 }  // Video mode scroll
-};
-
-static const UINT8 gubNewScrollYSpeeds[2][NUMSPEEDS] =
-{
-	{ 40, 80, 100, 180, 200 }, // Non-video mode scroll
-	{ 10, 20,  60,  80,  80 }  // Video mode scroll
-};
-
-
 UINT8   gubCurScrollSpeedID = 1;
 BOOLEAN gfDoVideoScroll     = TRUE;
 BOOLEAN gfScrollPending     = FALSE;
@@ -2182,6 +2167,14 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 }
 
 
+static UINT ScrollSpeed(void)
+{
+	UINT speed = 20 << (_KeyDown(SHIFT) ? 2 : gubCurScrollSpeedID);
+	if (!gfDoVideoScroll) speed *= 2;
+	return speed;
+}
+
+
 void ScrollWorld(void)
 {
 	static UINT8   ubOldScrollSpeed        = 0;
@@ -2285,16 +2278,9 @@ void ScrollWorld(void)
 	if (ScrollFlags != 0)
 	{
 		// Adjust speed based on whether shift is down
-		if (_KeyDown(SHIFT))
-		{
-			sScrollXStep = gubNewScrollXSpeeds[gfDoVideoScroll][3];
-			sScrollYStep = gubNewScrollYSpeeds[gfDoVideoScroll][3];
-		}
-		else
-		{
-			sScrollXStep = gubNewScrollXSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
-			sScrollYStep = gubNewScrollYSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
-		}
+		const UINT speed = ScrollSpeed();
+		sScrollXStep = speed;
+		sScrollYStep = speed / 2;
 
 		fAGoodMove = HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, TRUE);
 	}
@@ -4864,11 +4850,12 @@ static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, I
 	sScreenY -= (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
 
 	//Make sure these coordinates are multiples of scroll steps
-	const INT16 sNumXSteps = sScreenX / gubNewScrollXSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
-	const INT16 sNumYSteps = sScreenY / gubNewScrollYSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
+	const UINT  speed   = ScrollSpeed();
+	const INT16 speed_x = speed;
+	const INT16 speed_y = speed / 2;
 
-	sScreenX = sNumXSteps * gubNewScrollXSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
-	sScreenY = sNumYSteps * gubNewScrollYSpeeds[gfDoVideoScroll][gubCurScrollSpeedID];
+	sScreenX = sScreenX / speed_x * speed_x;
+	sScreenY = sScreenY / speed_y * speed_y;
 
 	// Adjust back
 	sScreenX += (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
