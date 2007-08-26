@@ -150,7 +150,7 @@ void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 
 INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
-INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance );
+INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance);
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
 
 #ifdef JA2BETAVERSION

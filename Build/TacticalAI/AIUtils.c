@@ -1248,7 +1248,7 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 }
 
 
-INT16 ClosestPC( SOLDIERTYPE *pSoldier, INT16 * psDistance )
+INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 {
 	// used by NPCs... find the closest PC
 

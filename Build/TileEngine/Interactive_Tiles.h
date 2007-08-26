@@ -19,7 +19,7 @@ UINT32  GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm );
 BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection );
 BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier );
 
-BOOLEAN CalcInteractiveObjectAPs( INT16 sGridNo, STRUCTURE * pStructure, INT16 *psAPCost, INT16 *psBPCost );
+BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT16* psAPCost, INT16* psBPCost);
 
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
