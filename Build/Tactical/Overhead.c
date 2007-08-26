@@ -246,7 +246,6 @@ UINT8 NumCapableEnemyInSector( );
 
 UINT8		gubWaitingForAllMercsToExitCode			= 0;
 INT8		gbNumMercsUntilWaitingOver					= 0;
-UINT32	guiWaitingForAllMercsToExitData[3];
 UINT32	guiWaitingForAllMercsToExitTimer = 0;
 BOOLEAN	gfKillingGuysForLosingBattle = FALSE;
 
@@ -7340,13 +7339,11 @@ void ResetAllMercSpeeds( )
 
 }
 
-void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,  INT8 bNumMercsWaiting, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
+
+void SetActionToDoOnceMercsGetToLocation(UINT8 ubActionCode, INT8 bNumMercsWaiting)
 {
 	gubWaitingForAllMercsToExitCode				= ubActionCode;
 	gbNumMercsUntilWaitingOver						= bNumMercsWaiting;
-	guiWaitingForAllMercsToExitData[ 0 ]	= uiData1;
-	guiWaitingForAllMercsToExitData[ 1 ]	= uiData2;
-	guiWaitingForAllMercsToExitData[ 2 ]	= uiData3;
 
 	// Setup timer counter and report back if too long....
 	guiWaitingForAllMercsToExitTimer			= GetJA2Clock( );

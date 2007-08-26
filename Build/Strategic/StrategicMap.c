@@ -2472,15 +2472,9 @@ BEGINNING_LOOP:
 
 		// OK, setup TacticalOverhead polling system that will notify us once everybody
 		// has made it to our destination.
-		if ( ubTacticalDirection != 255 )
-		{
-			SetActionToDoOnceMercsGetToLocation( WAIT_FOR_MERCS_TO_WALKOFF_SCREEN, ubNum, ubJumpCode, 0, 0 );
-		}
-		else
-		{
-			// Add new wait action here...
-			SetActionToDoOnceMercsGetToLocation( WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO, ubNum, ubJumpCode, 0, 0 );
-		}
+		const UINT8 action = (ubTacticalDirection == 255 ?
+			WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO : WAIT_FOR_MERCS_TO_WALKOFF_SCREEN);
+		SetActionToDoOnceMercsGetToLocation(action, ubNum);
 
 		// Lock UI!
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -3070,7 +3064,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			curr = curr->next;
 		}
-		SetActionToDoOnceMercsGetToLocation( WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum, 0, 0, 0 );
+		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
 		HandleTacticalUI( );
 

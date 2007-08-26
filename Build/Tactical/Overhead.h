@@ -239,7 +239,7 @@ SOLDIERTYPE * FreeUpAttacker( UINT8 ubID );
 
 BOOLEAN PlayerTeamFull( );
 
-void SetActionToDoOnceMercsGetToLocation( UINT8 ubActionCode,  INT8 bNumMercsWaiting, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 );
+void SetActionToDoOnceMercsGetToLocation(UINT8 ubActionCode, INT8 bNumMercsWaiting);
 
 void ResetAllMercSpeeds( );
 
