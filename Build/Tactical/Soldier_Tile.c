@@ -39,7 +39,6 @@
 #include "NPC.h"
 
 
-extern INT8		gbNumMercsUntilWaitingOver;
 extern UINT8	gubWaitingForAllMercsToExitCode;
 
 
@@ -124,13 +123,6 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 {
 	// OK, If we were waiting for stuff, do it here...
-
-	// ATE: Disabled stuff below, made obsolete by timeout...
-	//if ( pSoldier->ubWaitActionToDo  )
-	//{
-	//	pSoldier->ubWaitActionToDo = 0;
-	//	gbNumMercsUntilWaitingOver--;
-	//}
 	pSoldier->sFinalDestination = pSoldier->sGridNo;
 
 	#ifdef JA2BETAVERSION
