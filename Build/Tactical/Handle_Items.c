@@ -3194,10 +3194,7 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 	sFontY = sYPos;
 
 	// Move up if over interface....
-	if ( ( sFontY + sHeight ) > 340 )
-	{
-		sFontY = 340 - sHeight;
-	}
+	sFontY = min(sFontY, gsVIEWPORT_WINDOW_END_Y - sHeight);
 
 	// Detertime vertiacal center
 	sFontY -= ( sHeight / 2 );

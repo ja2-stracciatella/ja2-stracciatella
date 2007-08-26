@@ -401,11 +401,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 		}
 
 		// Check for bottom
-		if ( ( sY + gTalkPanel.usHeight ) > 340 )
-		{
-			sY = 340 - gTalkPanel.usHeight;
-		}
-
+		sY = min(sY, gsVIEWPORT_WINDOW_END_Y - gTalkPanel.usHeight);
 	}
 
 	//Set values
