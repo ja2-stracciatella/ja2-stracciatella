@@ -215,25 +215,29 @@ CHAR8                   gzActionStr[][ 30 ] =
 
 
 // TEMP VALUES FOR TEAM DEAFULT POSITIONS
-static const UINT8 bDefaultTeamRanges[MAXTEAMS][2] =
+static const UINT8 DefaultTeamStart[] =
 {
-	{  0,                19                  }, // 20 US
-	{ 20,                51                  }, // 32 ENEMY
-	{ 52,                83                  }, // 32 CREATURE
-	{ 84,               115                  }, // 32 REBELS (OUR GUYS)
-	{ 116,              MAX_NUM_SOLDIERS - 1 }, // 32 CIVILIANS
-	{ MAX_NUM_SOLDIERS, TOTAL_SOLDIERS - 1   }  // PLANNING SOLDIERS
+	  0,              // 20 US
+	 20,              // 32 ENEMY
+	 52,              // 32 CREATURE
+	 84,              // 32 REBELS (OUR GUYS)
+	116,              // 32 CIVILIANS
+	MAX_NUM_SOLDIERS, //  8 PLANNING SOLDIERS
+	TOTAL_SOLDIERS
 };
+CASSERT(lengthof(DefaultTeamStart) == MAXTEAMS + 1);
 
-COLORVAL bDefaultTeamColors[ MAXTEAMS ] =
+
+static const COLORVAL DefaultTeamColors[] =
 {
-	FROMRGB( 255, 255, 0 ),
-	FROMRGB( 255, 0, 0 ),
-	FROMRGB( 255, 0, 255 ),
-	FROMRGB( 0, 255, 0 ),
-	FROMRGB( 255, 255, 255 ),
-	FROMRGB( 0, 0, 255 )
+	FROMRGB(255, 255,   0),
+	FROMRGB(255,   0,   0),
+	FROMRGB(255,   0, 255),
+	FROMRGB(  0, 255,   0),
+	FROMRGB(255, 255, 255),
+	FROMRGB(  0,   0, 255)
 };
+CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS);
 
 
 UINT8 NumEnemyInSector( );
@@ -502,9 +506,9 @@ BOOLEAN InitOverhead( )
 	for( cnt = 0; cnt < MAXTEAMS; cnt++ )
 	{
 		// For now, set hard-coded values
-		gTacticalStatus.Team[ cnt ].bFirstID = bDefaultTeamRanges[ cnt ][0];
-		gTacticalStatus.Team[ cnt ].bLastID =  bDefaultTeamRanges[ cnt ][1];
-		gTacticalStatus.Team[ cnt ].RadarColor = bDefaultTeamColors[ cnt ];
+		gTacticalStatus.Team[cnt].bFirstID   = DefaultTeamStart[cnt];
+		gTacticalStatus.Team[cnt].bLastID    = DefaultTeamStart[cnt + 1] - 1;
+		gTacticalStatus.Team[cnt].RadarColor = DefaultTeamColors[cnt];
 
 		if ( cnt == gbPlayerNum || cnt == PLAYER_PLAN )
 		{
