@@ -787,7 +787,7 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 
 	if ( !fAnimTypeFound )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Unknown end-of-turn breath anim: %s", gAnimControl[ usAnimState ].zAnimStr ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Unknown end-of-turn breath anim: %hs", gAnimControl[usAnimState].zAnimStr));
 	}
 
 	return( sBreathPerAP );

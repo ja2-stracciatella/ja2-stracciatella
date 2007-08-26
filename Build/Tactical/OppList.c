@@ -3754,7 +3754,7 @@ void DebugSoldierPage3( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Animation:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gAnimControl[ pSoldier->usAnimState ].zAnimStr );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gAnimControl[pSoldier->usAnimState].zAnimStr);
 		ubLine++;
 
 /*
@@ -3800,7 +3800,7 @@ void DebugSoldierPage3( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"PrevAnimation:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gAnimControl[ pSoldier->usOldAniState ].zAnimStr );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gAnimControl[pSoldier->usOldAniState].zAnimStr);
 		ubLine++;
 
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);

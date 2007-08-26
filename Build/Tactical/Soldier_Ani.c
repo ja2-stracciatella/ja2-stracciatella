@@ -2381,7 +2381,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 753:
 
 					// code: freeup attcker
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState ) );
+					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )", gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState));
 					ReduceAttackBusyCount( (UINT8) pSoldier->ubID, FALSE );
 
           // ATE: Here, reduce again if creaturequeen tentical attack...
@@ -2435,7 +2435,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// INcrement attacker busy count....
 					gTacticalStatus.ubAttackBusyCount++;
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d", gAnimControl[ pSoldier->usAnimState ].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount ) );
+					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount));
 					break;
 
 				case 758:

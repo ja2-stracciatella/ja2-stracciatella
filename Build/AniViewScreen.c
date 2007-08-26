@@ -126,8 +126,8 @@ UINT32  AniEditScreenHandle(void)
 	gprintfdirty( 0,0,L"SOLDIER ANIMATION VIEWER" );
 
 
-	mprintf( 0,20,L"Current Animation: %ls %ls", gAnimControl[ usStartAnim ].zAnimStr, gAnimSurfaceDatabase[ pSoldier->usAnimSurface ].Filename );
-	gprintfdirty( 0,20,L"Current Animation: %ls %ls", gAnimControl[ usStartAnim ].zAnimStr, gAnimSurfaceDatabase[ pSoldier->usAnimSurface ].Filename );
+	mprintf(     0, 20, L"Current Animation: %hs %hs", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename);
+	gprintfdirty(0, 20, L"Current Animation: %hs %hs", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename);
 
 
 	switch( ubStartHeight )
@@ -147,7 +147,7 @@ UINT32  AniEditScreenHandle(void)
 			mprintf( 0,40,L"Current Stance: PRONE" );
 			break;
 	}
-	gprintfdirty( 0,40,L"Current Animation: %ls", gAnimControl[ usStartAnim ].zAnimStr );
+	gprintfdirty(0, 40, L"Current Animation: %hs", gAnimControl[usStartAnim].zAnimStr);
 
 
 	if ( fToggle )
@@ -161,8 +161,8 @@ UINT32  AniEditScreenHandle(void)
 		mprintf( 0,70,L"LOADED ORDER ON" );
 		gprintfdirty( 0,70,L"LOADED ORDER ON" );
 
-		mprintf( 0,90,L"LOADED ORDER : %ls", gAnimControl[ pusStates[ ubCurLoadedState ] ].zAnimStr );
-		gprintfdirty( 0,90,L"LOADED ORDER : %ls", gAnimControl[ pusStates[ ubCurLoadedState ] ].zAnimStr );
+		mprintf(     0, 90, L"LOADED ORDER : %hs", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr);
+		gprintfdirty(0, 90, L"LOADED ORDER : %hs", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr);
 
 	}
 
