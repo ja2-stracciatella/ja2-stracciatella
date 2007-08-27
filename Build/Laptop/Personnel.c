@@ -3228,7 +3228,7 @@ static void DisplayPersonnelTextOnTitleBar(void)
 	SetFont(FONT14ARIAL);
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
-	mprintf(PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText[0]);
+	mprintf(PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText);
 }
 
 

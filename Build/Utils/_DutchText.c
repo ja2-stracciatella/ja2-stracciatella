@@ -960,11 +960,8 @@ const wchar_t* gpStrategicString[] =
 
 };
 
-const wchar_t* gpGameClockString[] =
-{
-	//This is the day represented in the game clock.  Must be very short, 4 characters max.
-	L"Dag",
-};
+//This is the day represented in the game clock.  Must be very short, 4 characters max.
+const wchar_t gpGameClockString[] = L"Dag";
 
 //When the merc finds a key, they can get a description of it which
 //tells them where and when they found it.
@@ -1029,15 +1026,8 @@ const wchar_t* gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-const wchar_t gzProsLabel[10] =
-{
-	L"Voor:",
-};
-
-const wchar_t gzConsLabel[10] =
-{
-	L"Tegen:",
-};
+const wchar_t gzProsLabel[] = L"Voor:";
+const wchar_t gzConsLabel[] = L"Tegen:";
 
 //Conversation options a player has when encountering an NPC
 const wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
@@ -1059,10 +1049,7 @@ const wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 	L"Repareer",		//Repair
 };
 
-const wchar_t zDialogActions[1][ SMALL_STRING_LENGTH ] =
-{
-	L"OK",
-};
+const wchar_t zDialogActions[] = L"OK";
 
 
 //These are vehicles in the game.
@@ -1397,20 +1384,13 @@ const wchar_t* pHelicopterEtaStrings[] =
 	L"Aanvoer",						// L"Arrivals",
 };
 
-const wchar_t* sMapLevelString[] =
-{
-	L"Subniv.:", 			// what level below the ground is the player viewing in mapscreen ("Sublevel:")
-};
+const wchar_t sMapLevelString[] = L"Subniv.:"; // what level below the ground is the player viewing in mapscreen ("Sublevel:")
 
 const wchar_t gsLoyalString[] = L"%d%% Loyaal"; // the loyalty rating of a town ie : Loyal 53%
 
 
 // error message for when player is trying to give a merc a travel order while he's underground.
-
-const wchar_t* gsUndergroundString[] =
-{
-	L"kan geen reisorders ondergronds ontvangen.",				// L"can't get travel orders underground.",
-};
+const wchar_t gsUndergroundString[] = L"kan geen reisorders ondergronds ontvangen.";
 
 const wchar_t* gsTimeStrings[] =
 {
@@ -1574,21 +1554,12 @@ const wchar_t* pMapScreenBottomFastHelp[] =
 	L"Start/Stop Tijd (|S|p|a|c|e)",	// start/stop time compression
 };
 
-const wchar_t* pMapScreenBottomText[] =
-{
-	L"Huidig Saldo", 		// current balance in player bank account
-};
+const wchar_t pMapScreenBottomText[] = L"Huidig Saldo"; // current balance in player bank account
 
-const wchar_t* pMercDeadString[] =
-{
-	L"%ls is dood.",
-};
+const wchar_t pMercDeadString[] = L"%ls is dood.";
 
 
-const wchar_t* pDayStrings[] =
-{
-	L"Dag",
-};
+const wchar_t pDayStrings[] = L"Dag";
 
 // the list of email sender names
 
@@ -1650,11 +1621,7 @@ const wchar_t* pSenderNameList[] =
 
 
 // new mail notify string
-
-const wchar_t* pNewMailStrings[] =
-{
- L"Je hebt nieuwe berichten...",
-};
+const wchar_t pNewMailStrings[] = L"Je hebt nieuwe berichten...";
 
 
 // confirm player's intent to delete messages
@@ -1676,18 +1643,11 @@ const wchar_t* pEmailHeaders[] =
 };
 
 // email titlebar text
-
-const wchar_t* pEmailTitleText[] =
-{
-	L"Postvak",
-};
+const wchar_t pEmailTitleText[] = L"Postvak";
 
 
 // the financial screen strings
-const wchar_t* pFinanceTitle[] =
-{
-	L"Account Plus",		//the name we made up for the financial program in the game
-};
+const wchar_t pFinanceTitle[] = L"Account Plus"; // the name we made up for the financial program in the game
 
 const wchar_t* pFinanceSummary[] =
 {
@@ -1813,10 +1773,7 @@ const wchar_t* pMapScreenPrevNextCharButtonHelpText[] =
 };
 
 
-const wchar_t* pEtaString[] =
-{
-	L"aank:", 				// eta is an acronym for Estimated Time of Arrival
-};
+const wchar_t pEtaString[] = L"aank:"; // eta is an acronym for Estimated Time of Arrival
 
 const wchar_t* pTrashItemText[] =
 {
@@ -2001,10 +1958,7 @@ const wchar_t* pExtraIMPStrings[] =
 	L"Selecteer de stem die het best bij je past om het proces te voltooien.",
 };
 
-const wchar_t* pFilesTitle[] =
-{
-	L"Bestanden Bekijken",		// ("File Viewer")
-};
+const wchar_t pFilesTitle[] = L"Bestanden Bekijken"; // ("File Viewer")
 
 const wchar_t* pFilesSenderList[] =
 {
@@ -2018,11 +1972,7 @@ const wchar_t* pFilesSenderList[] =
 };
 
 // Text having to do with the History Log
-
-const wchar_t* pHistoryTitle[] =
-{
-	L"Geschiedenis",
-};
+const wchar_t pHistoryTitle[] = L"Geschiedenis";
 
 const wchar_t* pHistoryHeaders[] =
 {
@@ -2136,10 +2086,7 @@ const wchar_t* pHistoryStrings[] =
 	L"%ls vermoord",						// ("Killed %ls")
 };
 
-const wchar_t* pHistoryLocations[] =
-{
-	L"Nvt",						// N/A is an acronym for Not Applicable
-};
+const wchar_t pHistoryLocations[] = L"Nvt"; // N/A is an acronym for Not Applicable
 
 // icon text strings that appear on the laptop
 
@@ -2191,22 +2138,13 @@ const wchar_t* gsAtmStartButtonText[] =
 // DNS is the acronym for Domain Name Server
 // URL is the acronym for Uniform Resource Locator
 
-const wchar_t* pErrorStrings[] =
-{
-	L"Periodieke verbinding met host. Houdt rekening met lange wachttijden.",
-};
+const wchar_t pErrorStrings[] = L"Periodieke verbinding met host. Houdt rekening met lange wachttijden.";
 
 
-const wchar_t* pPersonnelString[] =
-{
-	L"Huurlingen:", 			// mercs we have
-};
+const wchar_t pPersonnelString[] = L"Huurlingen:"; // mercs we have
 
 
-const wchar_t* pWebTitle[ ]=
-{
-	L"sir-FER 4.0",		// our name for the version of the browser, play on company name
-};
+const wchar_t pWebTitle[] = L"sir-FER 4.0"; // our name for the version of the browser, play on company name
 
 
 // The titles for the web program title bar, for each page loaded
@@ -2369,10 +2307,7 @@ const wchar_t* pMapDepthIndex[] =
 
 // text that appears on the contract button
 
-const wchar_t* pContractButtonString[] =
-{
-	L"Contract",
-};
+const wchar_t pContractButtonString[] = L"Contract";
 
 // text that appears on the update panel buttons
 
@@ -2895,10 +2830,7 @@ const wchar_t* 		AimPopUpText[] =
 
 //AIM Link.c
 
-const wchar_t* 		AimLinkText[] =
-{
-	L"A.I.M. Links",	//The title of the AIM links page
-};
+const wchar_t AimLinkText[] = L"A.I.M. Links"; // The title of the AIM links page
 
 
 
@@ -3157,10 +3089,7 @@ const wchar_t* 	zMarksMapScreenText[] =
 };
 
 
-const wchar_t* pLandMarkInSectorString[] =
-{
-	L"Team %d is heeft iemand ontdekt in sector %ls",
-};
+const wchar_t pLandMarkInSectorString[] = L"Team %d is heeft iemand ontdekt in sector %ls";
 
 // confirm the player wants to pay X dollars to build a militia force in town
 const wchar_t* pMilitiaConfirmStrings[] =
@@ -3252,10 +3181,7 @@ const wchar_t* gzMoneyWithdrawMessageText[] =
 	L"Weet je zeker dat je %ls wil storten op je rekening?",
 };
 
-const wchar_t* gzCopyrightText[] =
-{
-	L"Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.",
-};
+const wchar_t gzCopyrightText[] = L"Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.";
 
 //option Text
 const wchar_t* 	zOptionsToggleText[] =
@@ -3389,38 +3315,17 @@ const wchar_t* pDeliveryLocationStrings[] =
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
-const wchar_t* pSkillAtZeroWarning[] =
-{ //This string is used in the IMP character generation.  It is possible to select 0 ability
-	//in a skill meaning you can't use it.  This text is confirmation to the player.
-	L"Are you sure? A value of zero means NO ability in this skill.",
-};
-
-const wchar_t* pIMPBeginScreenStrings[] =
-{
-	L"( 8 Karakters Max )",
-};
-
-const wchar_t* pIMPFinishButtonText[ 1 ]=
-{
-	L"Analiseren",
-};
-
-const wchar_t* pIMPFinishStrings[ ]=
-{
-	L"Bedankt, %ls", //%ls is the name of the merc
-};
-
-// the strings for imp voices screen
-const wchar_t* pIMPVoicesStrings[] =
-{
-	L"Stem",
-};
+/* This string is used in the IMP character generation.  It is possible to
+ * select 0 ability in a skill meaning you can't use it.  This text is
+ * confirmation to the player. */
+const wchar_t pSkillAtZeroWarning[]    = L"Are you sure? A value of zero means NO ability in this skill.";
+const wchar_t pIMPBeginScreenStrings[] = L"( 8 Karakters Max )";
+const wchar_t pIMPFinishButtonText[]   = L"Analiseren";
+const wchar_t pIMPFinishStrings[]      = L"Bedankt, %ls"; //%ls is the name of the merc
+const wchar_t pIMPVoicesStrings[]      = L"Stem"; // the strings for imp voices screen
 
 // title for program
-const wchar_t* pPersTitleText[] =
-{
-	L"Personeelsmanager",
-};
+const wchar_t pPersTitleText[] = L"Personeelsmanager";
 
 // paused game strings
 const wchar_t* pPausedGameText[] =
@@ -3581,10 +3486,7 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 // to inform the player to hire some mercs to get things going
 const wchar_t pMapScreenJustStartedHelpText[] = L"Ga naar AIM en huur wat huurlingen in ( *Hint* dat kan bij Laptop )";
 
-const wchar_t* pAntiHackerString[] =
-{
-	L"Fout. Bestanden missen of zijn beschadigd. Spel wordt beëindigd.",
-};
+const wchar_t pAntiHackerString[] = L"Fout. Bestanden missen of zijn beschadigd. Spel wordt beëindigd.";
 
 
 const wchar_t* gzLaptopHelpText[] =
@@ -3613,10 +3515,7 @@ const wchar_t* gzLaptopHelpText[] =
 };
 
 
-const wchar_t* gzHelpScreenText[] =
-{
-	L"Verlaat help-scherm",
-};
+const wchar_t gzHelpScreenText[] = L"Verlaat help-scherm";
 
 const wchar_t* gzNonPersistantPBIText[] =
 {
@@ -3641,10 +3540,7 @@ const wchar_t* gzMiscString[] =
 	L"Je hebt een tankplaats verloren.",
 };
 
-const wchar_t* gzIntroScreen[] =
-{
-	L"Kan intro video niet vinden",
-};
+const wchar_t gzIntroScreen[] = L"Kan intro video niet vinden";
 
 // These strings are combined with a merc name, a volume string (from pNoiseVolStr),
 // and a direction (either "above", "below", or a string from pDirectionStr) to

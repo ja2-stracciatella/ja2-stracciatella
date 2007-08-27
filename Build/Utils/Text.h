@@ -48,10 +48,9 @@ extern const wchar_t *pRepairStrings[];
 extern const wchar_t *sPreStatBuildString[];
 extern const wchar_t *sStatGainStrings[];
 extern const wchar_t *pHelicopterEtaStrings[];
-extern const wchar_t *sMapLevelString[];
-extern const wchar_t gsLoyalString[];
-extern const wchar_t *pMapHeliErrorString[];
-extern const wchar_t *gsUndergroundString[];
+extern const wchar_t  sMapLevelString[];
+extern const wchar_t  gsLoyalString[];
+extern const wchar_t  gsUndergroundString[];
 extern const wchar_t *gsTimeStrings[];
 extern const wchar_t *sFacilitiesStrings[];
 extern const wchar_t *pMapPopUpInventoryText[];
@@ -65,14 +64,14 @@ extern const wchar_t *pMovementMenuStrings[];
 extern const wchar_t *pUpdateMercStrings[];
 extern const wchar_t *pMapScreenBorderButtonHelpText[];
 extern const wchar_t *pMapScreenBottomFastHelp[];
-extern const wchar_t *pMapScreenBottomText[];
-extern const wchar_t *pMercDeadString[];
+extern const wchar_t  pMapScreenBottomText[];
+extern const wchar_t  pMercDeadString[];
 extern const wchar_t *pSenderNameList[];
-extern const wchar_t *pNewMailStrings[];
+extern const wchar_t  pNewMailStrings[];
 extern const wchar_t *pDeleteMailStrings[];
 extern const wchar_t *pEmailHeaders[];
-extern const wchar_t *pEmailTitleText[];
-extern const wchar_t *pFinanceTitle[];
+extern const wchar_t  pEmailTitleText[];
+extern const wchar_t  pFinanceTitle[];
 extern const wchar_t *pFinanceSummary[];
 extern const wchar_t *pFinanceHeaders[];
 extern const wchar_t *pTransactionText[];
@@ -83,7 +82,7 @@ extern const wchar_t *pMercFellAsleepString[];
 extern const wchar_t *pLeftEquipmentString[];
 extern const wchar_t *pMapScreenStatusStrings[];
 extern const wchar_t *pMapScreenPrevNextCharButtonHelpText[];
-extern const wchar_t *pEtaString[];
+extern const wchar_t  pEtaString[];
 extern const wchar_t *pShortVehicleStrings[];
 extern const wchar_t *pTrashItemText[];
 extern const wchar_t *pMapErrorString[];
@@ -94,18 +93,18 @@ extern const wchar_t *pMercSheLeaveString[];
 extern const wchar_t *pImpPopUpStrings[];
 extern const wchar_t *pImpButtonText[];
 extern const wchar_t *pExtraIMPStrings[];
-extern const wchar_t *pFilesTitle[];
+extern const wchar_t  pFilesTitle[];
 extern const wchar_t *pFilesSenderList[];
-extern const wchar_t *pHistoryLocations[];
+extern const wchar_t  pHistoryLocations[];
 //extern const wchar_t *pHistoryAlternateStrings[];
 extern const wchar_t *pHistoryStrings[];
 extern const wchar_t *pHistoryHeaders[];
-extern const wchar_t *pHistoryTitle[];
+extern const wchar_t  pHistoryTitle[];
 extern const wchar_t *pShowBookmarkString[];
 extern const wchar_t *pWebPagesTitles[];
-extern const wchar_t *pWebTitle[ ];
-extern const wchar_t *pPersonnelString[];
-extern const wchar_t *pErrorStrings[];
+extern const wchar_t  pWebTitle[];
+extern const wchar_t  pPersonnelString[];
+extern const wchar_t  pErrorStrings[];
 extern const wchar_t *pDownloadString[];
 extern const wchar_t *pBookMarkStrings[];
 extern const wchar_t *pLaptopIcons[];
@@ -119,24 +118,26 @@ extern const wchar_t *pMapHortIndex[];
 extern const wchar_t *pMapVertIndex[];
 extern const wchar_t *pMapDepthIndex[];
 //extern const wchar_t *sCritLocationStrings[];
-//extern const wchar_t *sVehicleHit[ ];
 extern const wchar_t *pLaptopTitles[];
-extern const wchar_t *pDayStrings[];
+extern const wchar_t  pDayStrings[];
 extern const wchar_t *pMilitiaConfirmStrings[];
 extern const wchar_t *pDeliveryLocationStrings[];
-extern const wchar_t *pSkillAtZeroWarning[];
-extern const wchar_t *pIMPBeginScreenStrings[];
-extern const wchar_t *pIMPFinishButtonText[1];
-extern const wchar_t *pIMPFinishStrings[];
-extern const wchar_t *pIMPVoicesStrings[];
-extern const wchar_t *pPersTitleText[];
+
+extern const wchar_t pSkillAtZeroWarning[];
+extern const wchar_t pIMPBeginScreenStrings[];
+extern const wchar_t pIMPFinishButtonText[];
+extern const wchar_t pIMPFinishStrings[];
+extern const wchar_t pIMPVoicesStrings[];
+
+extern const wchar_t pPersTitleText[];
+
 extern const wchar_t *pPausedGameText[];
 extern const wchar_t *zOptionsToggleText[];
 extern const wchar_t *zOptionsScreenHelpText[];
 extern const wchar_t *pDoctorWarningString[];
 extern const wchar_t *pMilitiaButtonsHelpText[];
 extern const wchar_t pMapScreenJustStartedHelpText[];
-extern const wchar_t *pLandMarkInSectorString[];
+extern const wchar_t  pLandMarkInSectorString[];
 extern const wchar_t *gzMercSkillText[];
 extern const wchar_t *gzNonPersistantPBIText[];
 extern const wchar_t *gzMiscString[];
@@ -145,11 +146,7 @@ extern const wchar_t *wMapScreenSortButtonHelpText[];
 extern const wchar_t *pNewNoiseStr[];
 extern const wchar_t *gzLateLocalizedString[];
 
-enum
-{
-	ANTIHACKERSTR_EXITGAME,
-};
-extern const wchar_t *pAntiHackerString[];
+extern const wchar_t  pAntiHackerString[];
 
 enum
 {
@@ -319,12 +316,12 @@ extern const wchar_t* const TacticalStr[];
 extern const wchar_t* const LargeTacticalStr[];
 
 
-extern const wchar_t	zDialogActions[][ SMALL_STRING_LENGTH ];
+extern const wchar_t  zDialogActions[];
 extern const wchar_t	zDealerStrings[][ SMALL_STRING_LENGTH ];
 extern const wchar_t	zTalkMenuStrings[][ SMALL_STRING_LENGTH ];
 extern const wchar_t *gzMoneyAmounts[6];
-extern const wchar_t	gzProsLabel[10];
-extern const wchar_t	gzConsLabel[10];
+extern const wchar_t  gzProsLabel[];
+extern const wchar_t  gzConsLabel[];
 extern const wchar_t	gMoneyStatsDesc[][ 13 ];
 extern const wchar_t	gWeaponStatsDesc[][ 14 ];
 extern const wchar_t *sKeyDescriptionStrings[2];
@@ -894,11 +891,7 @@ enum
 extern		const wchar_t *AimPopUpText[];
 
 //AIM Link.c
-enum
-{
-	AIM_LINK_TITLE,
-};
-extern		const wchar_t *AimLinkText[];
+extern const wchar_t AimLinkText[];
 
 
 //Aim History
@@ -1093,11 +1086,7 @@ enum
 //Strings used in conjunction with above enumerations
 extern const wchar_t *gpStrategicString[];
 
-enum
-{
-	STR_GAMECLOCK_DAY_NAME,
-};
-extern const wchar_t *gpGameClockString[];
+extern const wchar_t gpGameClockString[];
 
 //enums for the Shopkeeper Interface
 enum
@@ -1265,19 +1254,14 @@ enum
 };
 
 
-//enums for the help screen
-enum
-{
-	HLP_SCRN_TXT__EXIT_SCREEN,
-};
-extern	const wchar_t *gzHelpScreenText[];
+extern const wchar_t gzHelpScreenText[];
 
 
 extern	const wchar_t *gzLaptopHelpText[];
 
 
 extern	const wchar_t *gzMoneyWithdrawMessageText[];
-extern const wchar_t *gzCopyrightText[];
+extern const wchar_t gzCopyrightText[];
 
 
 
@@ -1352,8 +1336,9 @@ extern const wchar_t * GetWeightUnitString( void );
 FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 
 
+// the title for the contract button on the character info panel in the upper left portion of the mapscreen
+extern const wchar_t pContractButtonString[];
 
-
-
+extern const wchar_t gzIntroScreen[];
 
 #endif

@@ -838,7 +838,7 @@ static void Print8CharacterOnlyString(void)
 	SetFont( FONT12ARIAL );
 	SetFontShadow(NO_SHADOW);
 
-	mprintf(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228,pIMPBeginScreenStrings[ 0 ]);
+	mprintf(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

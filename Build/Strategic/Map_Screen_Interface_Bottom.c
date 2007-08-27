@@ -1104,7 +1104,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
 
-	sString = pMapScreenBottomText[0];
+	sString = pMapScreenBottomText;
 	FindFontCenterCoordinates(359, 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", sString );
 

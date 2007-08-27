@@ -335,7 +335,7 @@ static void DrawFilesTitleText(void)
 	SetFontShadow(DEFAULT_SHADOW);
 
 	// draw the pages title
-	mprintf(TITLE_X,TITLE_Y,pFilesTitle[0]);
+	mprintf(TITLE_X, TITLE_Y, pFilesTitle);
 }
 
 

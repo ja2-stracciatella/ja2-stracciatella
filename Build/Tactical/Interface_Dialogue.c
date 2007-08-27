@@ -133,12 +133,6 @@ static const UINT8 ubTalkMenuApproachIDs[] =
 	APPROACH_RECRUIT
 };
 
-enum
-{
-	DIALOG_DONE,
-	DIALOG_BUY_SELL,
-};
-
 
 // GLOBAL NPC STRUCT
 NPC_DIALOGUE_TYPE		gTalkPanel;
@@ -461,7 +455,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	// Load buttons, create button
 	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", -1, 3, -1, 4, -1);
 
-	gTalkPanel.uiCancelButton = CreateIconAndTextButton( gTalkPanel.iButtonImages, zDialogActions[ DIALOG_DONE ], MILITARYFONT1,
+	gTalkPanel.uiCancelButton = CreateIconAndTextButton(gTalkPanel.iButtonImages, zDialogActions, MILITARYFONT1,
 														 33, DEFAULT_SHADOW,
 														 33, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,

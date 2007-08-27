@@ -526,8 +526,6 @@ extern PathSt* pTempHelicopterPath;
 extern BOOLEAN gfAutoAIAware;
 extern void HandlePreBattleInterfaceStates();
 
-// the title for the contract button on the character info panel in the upper left portion of the mapscreen
-extern STR16 pContractButtonString[];
 extern STR16 pBullseyeStrings[];
 
 extern OBJECTTYPE	*gpItemDescObject;
@@ -1958,7 +1956,7 @@ static void DisplayGroundEta(void)
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
-	mprintf( CLOCK_ETA_X, CLOCK_Y_START, pEtaString[ 0 ] );
+	mprintf(CLOCK_ETA_X, CLOCK_Y_START, pEtaString);
 
 	// if less than one day
 	if (iTotalTime < 60 * 24)
@@ -2799,7 +2797,7 @@ UINT32 MapScreenHandle(void)
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
 										BtnGenericMouseMoveButtonCallback, ContractButtonCallback);
 
-		SpecifyButtonText( giMapContractButton, pContractButtonString[ 0 ] );
+		SpecifyButtonText(giMapContractButton, pContractButtonString);
 		SpecifyButtonFont( giMapContractButton, MAP_SCREEN_FONT );
 		SpecifyButtonUpTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
 		SpecifyButtonDownTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
@@ -10657,9 +10655,9 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sStrin
 	uiMin	 = uiTimeInMin - ( ( uiDay * NUM_MIN_IN_DAY ) + ( uiHour * NUM_MIN_IN_HOUR ) );
 
 	// there ain't enough room to show both the day and ETA: and without ETA it's confused as the current time
-//	swprintf(sString, L"%ls %ls %d, %02d:%02d", pEtaString[0], pDayStrings[0], uiDay, uiHour, uiMin);
-//	swprintf(sString, L"%ls %d, %02d:%02d", pDayStrings[0], uiDay, uiHour, uiMin);
-	swprintf( sString, Length, L"%ls %02d:%02d", pEtaString[ 0 ], uiHour, uiMin );
+//	swprintf(sString, L"%ls %ls %d, %02d:%02d", pEtaString, pDayStrings, uiDay, uiHour, uiMin);
+//	swprintf(sString, L"%ls %d, %02d:%02d", pDayStrings, uiDay, uiHour, uiMin);
+	swprintf(sString, Length, L"%ls %02d:%02d", pEtaString, uiHour, uiMin);
 }
 
 

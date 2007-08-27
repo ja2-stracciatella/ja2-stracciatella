@@ -1044,7 +1044,7 @@ static void EnterNewLaptopMode(void)
 			 if(  fMaximizingProgram == FALSE )
 			 {
 			   fInitTitle = TRUE;
-			   InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pWebTitle[ 0 ], guiTITLEBARICONS, 1 );
+			   InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pWebTitle, guiTITLEBARICONS, 1);
 			   ExitLaptopMode(guiPreviousLaptopMode);
 			 }
 			 // minized, maximized
@@ -2518,7 +2518,7 @@ void GoToWebPage(INT32 iPageId )
 	{
 		if( giRainDelayInternetSite == -1 )
 		{
-			DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, pErrorStrings[0], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InternetRainDelayMessageBoxCallBack);
+			DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, pErrorStrings, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InternetRainDelayMessageBoxCallBack);
 			giRainDelayInternetSite = iPageId;
 			return;
 		}
@@ -3886,7 +3886,7 @@ void PrintNumberOnTeam( void )
 		++usPosX;
 		++usPosY;
 	}
-	mprintf(usPosX, usPosY, L"%ls %d", pPersonnelString[0], iCounter);
+	mprintf(usPosX, usPosY, L"%ls %d", pPersonnelString, iCounter);
 
 	SetFontShadow( DEFAULT_SHADOW );
 }
@@ -4229,12 +4229,12 @@ BOOLEAN RenderWWWProgramTitleBar( void )
 
 	if( guiCurrentLaptopMode == LAPTOP_MODE_WWW )
 	{
-	  mprintf(140 ,33 ,pWebTitle[0]);
+	  mprintf(140, 33, pWebTitle);
 	}
 	else
 	{
 		iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-		mprintf(140, 33, L"%ls  -  %ls", pWebTitle[0], pWebPagesTitles[iIndex]);
+		mprintf(140, 33, L"%ls  -  %ls", pWebTitle, pWebPagesTitles[iIndex]);
 	}
 
 	BlitTitleBarIcons( );
@@ -4313,7 +4313,7 @@ static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReas
 				break;
 				default:
 					gLaptopProgramStates[ LAPTOP_PROGRAM_WEB_BROWSER ] = LAPTOP_PROGRAM_MINIMIZED;
-				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pWebTitle[ 0 ], guiTITLEBARICONS, 1 );
+				  InitTitleBarMaximizeGraphics(guiTITLEBARLAPTOP, pWebTitle, guiTITLEBARICONS, 1);
 					SetCurrentToLastProgramOpened( );
 					gfShowBookmarks = FALSE;
 					fShowBookmarkInfo = FALSE;

@@ -1954,7 +1954,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 
 	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 ) /* Empty? */
 	{
-		//swprintf(zString, L"%ls", pErrorStrings[0]);
+		//swprintf(zString, L"%ls", pErrorStrings);
 	}
 	else if( bSectorZ != 0 )
 	{

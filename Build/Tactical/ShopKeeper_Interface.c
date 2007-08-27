@@ -6729,7 +6729,7 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubAr
 	// only show day if it's gonna take overnight
 	if ( GetWorldDay() != uiDay )
 	{
-		swprintf( sString, Length, L"%ls %d %02d:%02d", pDayStrings[ 0 ], uiDay, uiHour, uiMin );
+		swprintf(sString, Length, L"%ls %d %02d:%02d", pDayStrings, uiDay, uiHour, uiMin);
 	}
 	else
 	{

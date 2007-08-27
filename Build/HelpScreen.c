@@ -522,7 +522,7 @@ static BOOLEAN EnterHelpScreen(void)
 	giExitBtnImage = LoadButtonImage("INTERFACE/HelpScreen.sti", -1,0,4,2,6 );
 
 	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST, DEFAULT_MOVE_CALLBACK, BtnHelpScreenExitCallback);
-	SetButtonFastHelpText( guiHelpScreenExitBtn, gzHelpScreenText[HLP_SCRN_TXT__EXIT_SCREEN] );
+	SetButtonFastHelpText(guiHelpScreenExitBtn, gzHelpScreenText);
 	SetButtonCursor( guiHelpScreenExitBtn, gHelpScreen.usCursor);
 
 

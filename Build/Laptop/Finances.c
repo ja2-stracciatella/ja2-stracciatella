@@ -619,7 +619,7 @@ static void DrawFinanceTitleText(void)
 	SetFontShadow(DEFAULT_SHADOW);
 
 	// draw the pages title
-	mprintf(TITLE_X,TITLE_Y,pFinanceTitle[0]);
+	mprintf(TITLE_X, TITLE_Y, pFinanceTitle);
 }
 
 

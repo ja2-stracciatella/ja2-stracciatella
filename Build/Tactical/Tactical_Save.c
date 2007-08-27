@@ -2582,7 +2582,7 @@ static void TempFileLoadErrorMessageReturnCallback(UINT8 ubRetVal)
 //message appears.
 void InitExitGameDialogBecauseFileHackDetected()
 {
-	giErrorMessageBox = DoMessageBox(MSG_BOX_BASIC_STYLE, pAntiHackerString[ANTIHACKERSTR_EXITGAME], GAME_SCREEN, MSG_BOX_FLAG_OK, TempFileLoadErrorMessageReturnCallback, NULL);
+	giErrorMessageBox = DoMessageBox(MSG_BOX_BASIC_STYLE, pAntiHackerString, GAME_SCREEN, MSG_BOX_FLAG_OK, TempFileLoadErrorMessageReturnCallback, NULL);
 }
 
 

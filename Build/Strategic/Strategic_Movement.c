@@ -4905,7 +4905,7 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 
 	// build string for squad
 	GetSectorIDString( sSectorX, sSectorY, bSectorZ, wSectorName, lengthof(wSectorName), FALSE );
-	swprintf( sString, lengthof(sString), pLandMarkInSectorString[ 0 ], pGroup->pPlayerList->pSoldier->bAssignment + 1, wSectorName );
+	swprintf(sString, lengthof(sString), pLandMarkInSectorString, pGroup->pPlayerList->pSoldier->bAssignment + 1, wSectorName);
 
 	if ( GroupAtFinalDestination( pGroup ) )
 	{

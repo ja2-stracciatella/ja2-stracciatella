@@ -843,7 +843,7 @@ static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
 		SetFont( FONT10ARIALBOLD );
 	}
 	// draw date of message being displayed in mail viewer
-	mprintf(DATE_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, L"%ls %d", pDayStrings[0], iDate / (24 * 60));
+	mprintf(DATE_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, L"%ls %d", pDayStrings, iDate / (24 * 60));
 
 	SetFont( MESSAGE_FONT );
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1392,7 +1392,7 @@ BOOLEAN DisplayNewMailBox( void )
 	SetFontShadow( DEFAULT_SHADOW );
 
 	// print warning
-	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText[0] );
+	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
   // font stuff
 	SetFontShadow( NO_SHADOW );
@@ -1400,7 +1400,7 @@ BOOLEAN DisplayNewMailBox( void )
   SetFontForeground( FONT_BLACK );
 
 	// printf warning string
-	mprintf(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings[0] );
+	mprintf(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
 
 	// invalidate region
 	InvalidateRegion( EMAIL_WARNING_X, EMAIL_WARNING_Y, EMAIL_WARNING_X + 270, EMAIL_WARNING_Y + 200 );
@@ -1644,7 +1644,7 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
   BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 
   // title
-	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText[0] );
+	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
 	// shadow, font, and foreground
 	SetFontShadow( NO_SHADOW );
@@ -1769,7 +1769,7 @@ static void DisplayTextOnTitleBar(void)
 	SetFontBackground( FONT_BLACK );
 
 	// printf the title
-	mprintf( EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText[0] );
+	mprintf(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
 
 	// reset the shadow
 
@@ -1869,7 +1869,7 @@ static void DrawEmailMessageDisplayTitleText(INT32 iViewerY)
 	SetFontBackground( FONT_BLACK );
 
 	// dsiplay mail viewer title on message viewer
-  mprintf( VIEWER_X + 30, VIEWER_Y + 8 + (UINT16) iViewerY, pEmailTitleText[0] );
+  mprintf(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
 }
 
 

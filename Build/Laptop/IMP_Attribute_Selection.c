@@ -269,7 +269,7 @@ void HandleIMPAttributeSelection(void)
 	}
 	if (fSkillAtZeroWarning)
 	{
-		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pSkillAtZeroWarning[0], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, StatAtZeroBoxCallBack);
+		DoLapTopMessageBox(MSG_BOX_IMP_STYLE, pSkillAtZeroWarning, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, StatAtZeroBoxCallBack);
 		fSkillAtZeroWarning = FALSE;
 	}
 }

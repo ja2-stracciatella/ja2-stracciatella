@@ -2691,7 +2691,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 		// ATE: Added string to player
 		if (bVisible != -1 && pSoldierOld->ubProfile != NO_PROFILE)
 		{
-			ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString[0], pSoldierOld->name);
+			ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, pSoldierOld->name);
 		}
 
 		switch (pSoldierOld->ubProfile)

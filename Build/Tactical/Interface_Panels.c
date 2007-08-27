@@ -4004,7 +4004,7 @@ void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
 
 				if ( pSoldier->ubDeadPanelFrame == 4 )
 				{
-					ScreenMsg( FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString[ 0 ], pSoldier->name );
+					ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString, pSoldier->name);
 
 					PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 					PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);

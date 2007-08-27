@@ -85,7 +85,7 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 
 	if ( guiCurrentScreen != GAME_SCREEN )
 	{
-		ScreenMsg( FONT_RED, MSG_INTERFACE, pMercDeadString[ 0 ], pSoldier->name );
+		ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, pSoldier->name);
 	}
 
 	// robot and EPCs don't count against death rate - the mercs back home don't particularly give a damn about locals & machines!
