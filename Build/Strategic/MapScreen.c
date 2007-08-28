@@ -394,7 +394,6 @@ BOOLEAN fDrawCharacterList = TRUE;
 // was the cursor set to the checkmark?
 static BOOLEAN fCheckCursorWasSet = FALSE;
 
-static BOOLEAN fShowingMapDisableBox = FALSE;
 //BOOLEAN fMapExitDueToMessageBox = FALSE;
 static BOOLEAN fEndShowInventoryFlag = FALSE;
 
@@ -609,7 +608,6 @@ void DumpItemsList( void );
 #endif
 
 #ifdef JA2DEMO
-//void MapScreenDemoOkBoxCallback( UINT8 bExitValue );
 static void DisplayExitToTacticalGlowDuringDemo(void);
 #endif
 
@@ -7600,16 +7598,6 @@ static void RenderTeamRegionBackground(void)
 	// restore background for area
 	RestoreExternBackgroundRect( 0, 107, 261 - 0, 359 - 107 );
 
-#ifdef JA2DEMO
-	if( ( fShowingMapDisableBox == FALSE ) && ( IsMapScreenHelpTextUp() == FALSE ) )
-	{
-	//	fShowingMapDisableBox = TRUE;
-		// restore background for area
-
-		//DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapErrorString[ 14 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDemoOkBoxCallback );
-	}
-#endif
-
 	MapscreenMarkButtonsDirty();
 }
 
@@ -9543,23 +9531,6 @@ void MapScreenDefaultOkBoxCallback( UINT8 bExitValue )
 		fCharacterInfoPanelDirty = TRUE;
 	}
 }
-
-
-
-#ifdef JA2DEMO
-/*
-void MapScreenDemoOkBoxCallback( UINT8 bExitValue )
-{
-	// yes, load the game
-  if( ( bExitValue == MSG_BOX_RETURN_OK ) || ( bExitValue == MSG_BOX_RETURN_NO ) )
-	{
-
-		fShowingMapDisableBox = FALSE;
-		//SetPendingNewScreen( GAME_SCREEN );
-	}
-}
-*/
-#endif
 
 
 static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
