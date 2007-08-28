@@ -495,12 +495,10 @@ BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 {
 	if (!fSoundSystemInit) return FALSE;
 
-	UINT32 uiVolCap = __min(uiVolume, 127);
-
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
 	if (uiSound == NO_SAMPLE) return FALSE;
 
-	pSoundList[uiSound].uiFadeVolume = uiVolume;
+	pSoundList[uiSound].uiFadeVolume = __min(uiVolume, 127);
 	return TRUE;
 }
 
