@@ -117,7 +117,6 @@ extern const wchar_t *pPersonnelDepartedStateStrings[];
 extern const wchar_t *pMapHortIndex[];
 extern const wchar_t *pMapVertIndex[];
 extern const wchar_t *pMapDepthIndex[];
-//extern const wchar_t *sCritLocationStrings[];
 extern const wchar_t *pLaptopTitles[];
 extern const wchar_t  pDayStrings[];
 extern const wchar_t *pMilitiaConfirmStrings[];

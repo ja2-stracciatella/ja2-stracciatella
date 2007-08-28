@@ -1135,8 +1135,6 @@ void EVENT_SoldierBeginTakeBlood( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ub
 
 void EVENT_SoldierBeginAttachCan( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 
-void HandleSoldierTakeDamageFeedback( SOLDIERTYPE *pSoldier );
-
 void PickDropItemAnimation( SOLDIERTYPE *pSoldier );
 
 BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );

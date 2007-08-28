@@ -6134,6 +6134,9 @@ void BeginSoldierGetup( SOLDIERTYPE *pSoldier )
 }
 
 
+static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* pSoldier);
+
+
 static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 ubReason)
 {
 	switch( ubReason )
@@ -10476,7 +10479,7 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 }
 
 
-void HandleSoldierTakeDamageFeedback( SOLDIERTYPE *pSoldier )
+static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* pSoldier)
 {
 	// Do sound.....
 	// if ( pSoldier->bLife >= CONSCIOUSNESS )

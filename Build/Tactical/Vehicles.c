@@ -1178,49 +1178,6 @@ static BOOLEAN AddVehicleMembersToMvtGroup(INT32 iId)
 }
 
 
-static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier);
-
-
-// injure this person in the vehicle
-static BOOLEAN InjurePersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier, UINT8 ubPointsOfDmg)
-{
-	// find this person, see if they have this many pts left, if not, kill them
-
-
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( FALSE );
-	}
-
-	// check if soldier is valid
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-
-	// now check hpts of merc
-	if( pSoldier->bLife == 0 )
-	{
-		// guy is dead, leave
-		return( FALSE );
-	}
-
-	// see if we will infact kill them
-	if( ubPointsOfDmg >= pSoldier->bLife )
-	{
-		return( KillPersonInVehicle( iId, pSoldier ) );
-	}
-
-	// otherwise hurt them
-	SoldierTakeDamage(pSoldier, 0, ubPointsOfDmg, ubPointsOfDmg, TAKE_DAMAGE_GUNFIRE, NOBODY, NOWHERE, TRUE);
-
-	HandleSoldierTakeDamageFeedback( pSoldier );
-
-	return( TRUE );
-}
-
-
 // kill this person in the vehicle
 static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier)
 {
@@ -1617,24 +1574,8 @@ static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
-	INT32 iRand = 0, iCrit = 0;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN	fMadeCorpse = FALSE;
-
-#if 0
-		{
-			// injure someone inside
-			iRand = Random( iSeatingCapacities[ pVehicleList[ ubID ].ubVehicleType ] );
-			if( pVehicleList[ ubID ].pPassengers[ iRand ] )
-			{
-				// hurt this person
-				InjurePersonInVehicle( ( INT16 )ubID, pVehicleList[ ubID ].pPassengers[ iRand ], ( UINT8 )( sDmg / 2 ) );
-			}
-		}
-
-		ScreenMsg( FONT_BLACK, MSG_INTERFACE, sCritLocationStrings[ iCrit ] );
-	}
-#endif
 
 	pSoldier = GetSoldierStructureForVehicle( ubID );
 
