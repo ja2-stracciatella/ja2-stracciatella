@@ -394,7 +394,6 @@ BOOLEAN fDrawCharacterList = TRUE;
 // was the cursor set to the checkmark?
 static BOOLEAN fCheckCursorWasSet = FALSE;
 
-//BOOLEAN fMapExitDueToMessageBox = FALSE;
 static BOOLEAN fEndShowInventoryFlag = FALSE;
 
 // draw the temp path
@@ -2533,7 +2532,6 @@ UINT32 MapScreenHandle(void)
 	}
 
 
-//	if ( (fInMapMode == FALSE ) && ( fMapExitDueToMessageBox == FALSE ) )
 	if ( !fInMapMode )
 	{
 		gfFirstMapscreenFrame = TRUE;
@@ -4985,15 +4983,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		// shouldn't be here
 		return;
 	}
-
-/*
-	// exit is called due to message box, leave
-	if( fMapExitDueToMessageBox )
-	{
-		fMapExitDueToMessageBox = FALSE;
-		return;
-	}
-*/
 
 	fLeavingMapScreen = FALSE;
 

@@ -50,7 +50,6 @@ SGPRect MessageBoxRestrictedCursorRegion;
 BOOLEAN fCursorLockedToArea = FALSE;
 BOOLEAN	gfInMsgBox = FALSE;
 
-//extern BOOLEAN fMapExitDueToMessageBox;
 extern BOOLEAN fInMapMode;
 extern BOOLEAN gfOverheadMapDirty;
 
@@ -241,7 +240,6 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 	if ( (fInMapMode == TRUE ) )
 	{
-//		fMapExitDueToMessageBox = TRUE;
 		gfStartedFromMapScreen = TRUE;
 		fMapPanelDirty = TRUE;
 	}
