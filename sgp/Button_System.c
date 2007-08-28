@@ -58,7 +58,7 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 {
 	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
 	{
-		const GUI_BUTTON* c = ButtonList[x];
+		const GUI_BUTTON* const c = ButtonList[x];
 		if (!c)                                                       continue;
 		if (c->uiFlags                 &   BUTTON_DELETION_PENDING  ) continue;
 		if (c->uiFlags                 &   BUTTON_NO_DUPLICATE      ) continue;
@@ -151,9 +151,10 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 	// Fit the button size to the largest image in the set
 	UINT32 MaxWidth  = 0;
 	UINT32 MaxHeight = 0;
+	const ETRLEObject* const Travs = ButtonPictures[UseSlot].vobj->pETRLEObject;
 	if (Grayed != BUTTON_NO_IMAGE)
 	{
-		const ETRLEObject* pTrav = &VObj->pETRLEObject[Grayed];
+		const ETRLEObject* pTrav = &Travs[Grayed];
 		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
 		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
@@ -163,7 +164,7 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 
 	if (OffNormal != BUTTON_NO_IMAGE)
 	{
-		const ETRLEObject* pTrav = &VObj->pETRLEObject[OffNormal];
+		const ETRLEObject* pTrav = &Travs[OffNormal];
 		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
 		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
@@ -173,7 +174,7 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 
 	if (OffHilite != BUTTON_NO_IMAGE)
 	{
-		const ETRLEObject* pTrav = &VObj->pETRLEObject[OffHilite];
+		const ETRLEObject* pTrav = &Travs[OffHilite];
 		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
 		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
@@ -183,7 +184,7 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 
 	if (OnNormal != BUTTON_NO_IMAGE)
 	{
-		const ETRLEObject* pTrav = &VObj->pETRLEObject[OnNormal];
+		const ETRLEObject* pTrav = &Travs[OnNormal];
 		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
 		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
@@ -193,7 +194,7 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 
 	if (OnHilite != BUTTON_NO_IMAGE)
 	{
-		const ETRLEObject* pTrav = &VObj->pETRLEObject[OnHilite];
+		const ETRLEObject* pTrav = &Travs[OnHilite];
 		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
 		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
@@ -1589,7 +1590,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	{
 		hvObject = GetVideoObject(b->iIconID);
 	}
-	const ETRLEObject* pTrav = &hvObject->pETRLEObject[b->usIconIndex];
+	const ETRLEObject* const pTrav = &hvObject->pETRLEObject[b->usIconIndex];
 
 	/* Compute coordinates for centering the icon on the button or use the offset
 	 * system.
@@ -1597,7 +1598,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	INT32 xp;
 	if (b->bIconXOffset == -1)
 	{
-		INT32 IconW = pTrav->usWidth  + pTrav->sOffsetX;
+		const INT32 IconW = pTrav->usWidth  + pTrav->sOffsetX;
 		xp = IconX + (width - 6 - IconW) / 2;
 	}
 	else
@@ -1608,7 +1609,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	INT32 yp;
 	if (b->bIconYOffset == -1)
 	{
-		INT32 IconH = pTrav->usHeight + pTrav->sOffsetY;
+		const INT32 IconH = pTrav->usHeight + pTrav->sOffsetY;
 		yp = IconY + (height - 4 - IconH) / 2;
 	}
 	else
@@ -1682,11 +1683,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	if (NewClip.iBottom < OldClip.iTop) return;
 
 	// Did we clip the viewable area out of existance?
-	if (NewClip.iRight  <= NewClip.iLeft ||
-			NewClip.iBottom <= NewClip.iTop)
-	{
-		return;
-	}
+	if (NewClip.iRight <= NewClip.iLeft || NewClip.iBottom <= NewClip.iTop) return;
 
 	// Set the font printing settings to the buttons viewable area
 	SetFontDestBuffer(ButtonDestBuffer, NewClip.iLeft, NewClip.iTop, NewClip.iRight, NewClip.iBottom);
@@ -1756,8 +1753,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	if (b->uiFlags & BUTTON_CLICKED_ON && b->fShiftText)
 	{
 		/* Was the button clicked on? if so, move the text slightly for the illusion
-		 * that the text moved into the screen.
-		 */
+		 * that the text moved into the screen. */
 		xp++;
 		yp++;
 	}
@@ -1875,24 +1871,24 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	}
 
 #if defined JA2
-	INT32 iBorderWidth  = 3;
-	INT32 iBorderHeight = 2;
+	const INT32 iBorderWidth  = 3;
+	const INT32 iBorderHeight = 2;
 #else
 	/* DB - Added this to support more flexible sizing of border images.  The 3x2
 	 * size was a bit limiting. JA2 should default to the original size, unchanged
 	 */
-	const ETRLEObject* pTrav = &BPic->pETRLEObject[0];
-	INT32 iBorderHeight = pTrav->usHeight;
-	INT32 iBorderWidth  = pTrav->usWidth;
+	const ETRLEObject* const pTrav = &BPic->pETRLEObject[0];
+	const INT32 iBorderHeight = pTrav->usHeight;
+	const INT32 iBorderWidth  = pTrav->usWidth;
 #endif
 
 	// Compute the number of button "chunks" needed to be blitted
-	INT32 width         = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
-	INT32 height        = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
-	INT32 NumChunksWide = width  / iBorderWidth;
-	INT32 NumChunksHigh = height / iBorderHeight;
-	INT32 hremain       = height % iBorderHeight;
-	INT32 wremain       = width  % iBorderWidth;
+	const INT32 width         = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
+	const INT32 height        = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
+	const INT32 NumChunksWide = width  / iBorderWidth;
+	INT32       NumChunksHigh = height / iBorderHeight;
+	const INT32 hremain       = height % iBorderHeight;
+	const INT32 wremain       = width  % iBorderWidth;
 
 	INT32 cx = b->XLoc + (NumChunksWide - 1) * iBorderWidth  + wremain;
 	INT32 cy = b->YLoc + (NumChunksHigh - 1) * iBorderHeight + hremain;
@@ -1909,8 +1905,8 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	// Draw the button's borders and corners (horizontally)
 	for (INT32 q = 0; q < NumChunksWide; q++)
 	{
-		INT32 ImgNum = (q == 0 ? 0 : 1);
-		INT32 x = b->XLoc + q * iBorderWidth;
+		const INT32 ImgNum = (q == 0 ? 0 : 1);
+		const INT32 x = b->XLoc + q * iBorderWidth;
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  b->YLoc, ImgNum,     &ClipRect);
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy,      ImgNum + 5, &ClipRect);
 	}
@@ -1922,15 +1918,14 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 
 	if (hremain != 0)
 	{
-		INT32 q = NumChunksHigh;
-		INT32 y = b->YLoc + q * iBorderHeight - iBorderHeight + hremain;
+		const INT32 y = b->YLoc + NumChunksHigh * iBorderHeight - iBorderHeight + hremain;
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, b->XLoc, y, 3, &ClipRect);
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx,      y, 4, &ClipRect);
 	}
 
 	for (INT32 q = 1; q < NumChunksHigh; q++)
 	{
-		INT32 y = b->YLoc + q * iBorderHeight;
+		const INT32 y = b->YLoc + q * iBorderHeight;
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, b->XLoc, y, 3, &ClipRect);
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx,      y, 4, &ClipRect);
 	}
@@ -2012,7 +2007,7 @@ void BtnGenericMouseMoveButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-void ReleaseAnchorMode()
+void ReleaseAnchorMode(void)
 {
   if (!gpAnchoredButton) return;
 
