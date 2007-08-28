@@ -40,55 +40,14 @@
 #define ALWAYS_CONSIDER_HIT (STRUCTURE_WALLSTUFF | STRUCTURE_CAVEWALL | STRUCTURE_FENCE)
 
 
-UINT16 gusLOSStartGridNo = 0;
-UINT16 gusLOSEndGridNo = 0;
-UINT16 gusLOSStartSoldier = NOBODY;
-UINT16 gusLOSEndSoldier = NOBODY;
 extern INT16 DirIncrementer[8];
 
-static FIXEDPT gqStandardWallHeight = INT32_TO_FIXEDPT( WALL_HEIGHT_UNITS );
-static FIXEDPT gqStandardWindowBottomHeight = INT32_TO_FIXEDPT( WINDOW_BOTTOM_HEIGHT_UNITS );
-static FIXEDPT gqStandardWindowTopHeight = INT32_TO_FIXEDPT( WINDOW_TOP_HEIGHT_UNITS );
-
-#define FIXEDPT_MULTIPLY( a, b ) ( (a / 256) * (b / 256) )
+static const FIXEDPT gqStandardWallHeight         = INT32_TO_FIXEDPT(WALL_HEIGHT_UNITS);
+static const FIXEDPT gqStandardWindowBottomHeight = INT32_TO_FIXEDPT(WINDOW_BOTTOM_HEIGHT_UNITS);
+static const FIXEDPT gqStandardWindowTopHeight    = INT32_TO_FIXEDPT(WINDOW_TOP_HEIGHT_UNITS);
 
 
-static UINT32 FPMult32(UINT32 uiA, UINT32 uiB)
-{
-	#if 0 /* XXX I hope that's correct */
-UINT32 uiResult;
-
-	__asm {
-		// Load the 32-bit registers with the two values
-		mov		eax, uiA
-		mov		ebx, uiB
-
-		// Multiply them
-		// Top 32 bits (whole portion) goes into edx
-		// Bottom 32 bits (fractional portion) goes into eax
-		imul	ebx
-
-		// Shift the fractional portion back to (lower) 16 bits
-		shr		eax, 16
-		// Shift the whole portion to 16 bits, in the upper word
-		shl		edx, 16
-
-		// At this point, we have edx xxxx0000 and eax 0000xxxx
-		// Combine the two words into a dword
-		or		eax, edx
-
-		// Put the result into a returnable variable
-		mov		uiResult, eax
-		}
-
-		return(uiResult);
-	#else
-	return (long long)uiA * uiB >> 16;
-	#endif
-}
-
-
-static DOUBLE ddShotgunSpread[3][BUCKSHOT_SHOTS][2] =
+static const DOUBLE ddShotgunSpread[3][BUCKSHOT_SHOTS][2] =
 {
 	{
 		// spread of about 2 degrees in all directions
@@ -132,7 +91,7 @@ static DOUBLE ddShotgunSpread[3][BUCKSHOT_SHOTS][2] =
 
 };
 
-static UINT8 gubTreeSightReduction[ANIM_STAND + 1] =
+static const UINT8 gubTreeSightReduction[ANIM_STAND + 1] =
 {
 	0,
 	8, // prone
@@ -147,7 +106,7 @@ static UINT8 gubTreeSightReduction[ANIM_STAND + 1] =
 
 #define MAX_CHANCE_OF_HITTING_STRUCTURE 90
 
-static UINT32 guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
+static const UINT32 guiStructureHitChance[MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_STRUCTURE + 1] =
 {
 	 0,	// 0 tiles
 	 0,
@@ -205,9 +164,9 @@ static UINT32 guiStructureHitChance[ MAX_DIST_FOR_LESS_THAN_MAX_CHANCE_TO_HIT_ST
 
 #define MAX_LOCAL_STRUCTURES 20
 
-STRUCTURE * gpLocalStructure[MAX_LOCAL_STRUCTURES];
-UINT32			guiLocalStructureCTH[MAX_LOCAL_STRUCTURES];
-UINT8				gubLocalStructureNumTimesHit[MAX_LOCAL_STRUCTURES];
+static STRUCTURE* gpLocalStructure[MAX_LOCAL_STRUCTURES];
+static UINT32     guiLocalStructureCTH[MAX_LOCAL_STRUCTURES];
+static UINT8      gubLocalStructureNumTimesHit[MAX_LOCAL_STRUCTURES];
 
 
 extern UINT8 gubMaterialArmour[];
