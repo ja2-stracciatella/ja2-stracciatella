@@ -2720,7 +2720,6 @@ void ShowLightPositionHandles( void )
 	INT32 iMapIndex;
 	UINT16 cnt;
 	UINT16 usTmpIndex;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 
 	// Check all lights and place a position handle there!
@@ -2757,7 +2756,6 @@ static void RemoveLightPositionHandles(void)
 	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 cnt;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN fSoldierLight;
 
 	// Check all lights and remove the position handle there!

@@ -1218,7 +1218,6 @@ void GetRTMousePositionInput( UINT32 *puiNewEvent )
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
-	SOLDIERTYPE								 *pSoldier;
 
 	if (!GetMouseMapPos( &usMapPos ) )
 	{

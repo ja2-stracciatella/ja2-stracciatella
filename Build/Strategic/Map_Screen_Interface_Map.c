@@ -1210,10 +1210,6 @@ static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
 static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 {
 	INT16	sScreenX, sScreenY;
-  UINT32 uiDestPitchBYTES;
-	UINT32 uiSrcPitchBYTES;
-  UINT16  *pDestBuf;
-	UINT8  *pSrcBuf;
 	SGPRect clip;
   UINT16 *pOriginalPallette;
 

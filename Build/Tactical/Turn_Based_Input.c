@@ -658,7 +658,6 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
-	SOLDIERTYPE		*pSoldier;
 	UINT16				usMapPos;
 	BOOLEAN				fDone = FALSE;
 	if (!GetMouseMapPos( &usMapPos ) )
@@ -906,7 +905,6 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
-	SOLDIERTYPE		*pSoldier;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
 	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;

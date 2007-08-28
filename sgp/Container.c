@@ -246,7 +246,6 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 	// assign some temporary variables
 	BOOLEAN fresize = FALSE;
 	QueueHeader* pTemp_cont = hQueue;
-	UINT32 uiTotal = pTemp_cont->uiTotal_items;
 	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
 	UINT32 uiMax_size = pTemp_cont->uiMax_size;
 	UINT32 uiHead = pTemp_cont->uiHead;
@@ -370,7 +369,6 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
 		return NULL;
 	}
-	UINT32 uiTotal = pTemp_cont->uiTotal_items;
 	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
 	UINT32 uiMax_size = pTemp_cont->uiMax_size;
 	UINT32 uiHead = pTemp_cont->uiHead;
@@ -522,7 +520,6 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 		return FALSE;
 	}
 
-	UINT32 uiTotal        = pTemp_cont->uiTotal_items;
 	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
 	UINT32 uiMax_size     = pTemp_cont->uiMax_size;
 	UINT32 uiHead         = pTemp_cont->uiHead;

@@ -1725,7 +1725,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 		return FALSE;
 	if( !HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN || pEvent->usEvent == KEY_REPEAT )
 	{
-		INT32 x;
 		switch( pEvent->usParam )
 		{
 			case SDLK_ESCAPE:

@@ -272,7 +272,7 @@ void RenderRadarScreen( )
 	UINT8											 *pDestBuf;
 	UINT16										 usLineColor;
 	UINT32											 cnt;
-	INT16											 sHeight, sWidth, sX, sY;
+	INT16											 sHeight, sWidth, sX;
 	INT32											 iCounter = 0;
 
 
