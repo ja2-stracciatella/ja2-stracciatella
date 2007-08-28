@@ -1,4 +1,5 @@
 v0.6
+(r1458) Fix an infinite loop when throwing objects.
 (r1449) Fix vanilla graphical glitches: When the team panel is visible, the dialogue box, civilian quote box and the list of items on ground still get clamped vertically as if the invetory panel was visible, i.e. 20px to high.
 (r1442) Change the scroll speeds, so diagonal scrolling is always axis aligned.
 (r1427) Fix a vanilla bug: Do not count vehicles for calculating the average stats in the personnel screen.

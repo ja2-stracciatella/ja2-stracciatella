@@ -1641,7 +1641,7 @@ INT16 SoldierToLocationWindowTest( SOLDIERTYPE * pStartSoldier, INT16 sEndGridNo
 	// We don't want to consider distance limits here so pass in tile sight limit of 255
 	// and consider trees as little as possible
 	iRet = LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo );
-
+	if (sWindowGridNo == pStartSoldier->sGridNo) sWindowGridNo = NOWHERE; // XXX TODO0012
 	return( sWindowGridNo );
 }
 
