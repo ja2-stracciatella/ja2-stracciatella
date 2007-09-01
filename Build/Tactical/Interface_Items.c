@@ -314,7 +314,6 @@ SOLDIERTYPE *gpItemPopupSoldier;
 extern BOOLEAN fMapScreenBottomDirty;
 
 // inventory description done button for mapscreen
-static INT32 giMapInvDescButtonImage;
 INT32 giMapInvDescButton = -1;
 
 
@@ -2184,10 +2183,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback);
 
-		giMapInvDescButtonImage = LoadButtonImage("INTERFACE/itemdescdonebutton.sti", -1, 0, -1, 1, -1);
-
-			// create button
-		giMapInvDescButton = QuickCreateButton(giMapInvDescButtonImage, gsInvDescX + 204, gsInvDescY + 107, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST, BtnGenericMouseMoveButtonCallback, ItemDescDoneButtonCallback);
+		giMapInvDescButton = QuickCreateButtonImg("INTERFACE/itemdescdonebutton.sti", -1, 0, -1, 1, -1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
 
 			fShowDescriptionFlag = TRUE;
 	}
@@ -3718,7 +3714,6 @@ void DeleteItemDescriptionBox( )
 //	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN  )
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
-		UnloadButtonImage( giMapInvDescButtonImage );
 		RemoveButton( giMapInvDescButton );
 	}
 

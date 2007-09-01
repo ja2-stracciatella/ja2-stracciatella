@@ -92,7 +92,6 @@ enum{
 
 // the page flipping buttons
 INT32 giHistoryButton[2];
-INT32 giHistoryButtonImage[2];
 BOOLEAN fInHistoryMode=FALSE;
 
 
@@ -381,19 +380,9 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateHistoryButtons(void)
 {
-
-	// the prev page button
-  giHistoryButtonImage[PREV_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1 );
-	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnHistoryDisplayPrevPageCallBack);
-
-	// the next page button
-	giHistoryButtonImage[NEXT_PAGE_BUTTON]=  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,6,-1,7,-1 );
-	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButton( giHistoryButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-											BtnGenericMouseMoveButtonCallback, BtnHistoryDisplayNextPageCallBack);
-
+	// the prev/next page buttons
+	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 0, -1, 1, -1, PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayPrevPageCallBack);
+	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 6, -1, 7, -1, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
 
 	// set buttons
 	SetButtonCursor(giHistoryButton[0], CURSOR_LAPTOP_SCREEN);
@@ -403,16 +392,11 @@ static void CreateHistoryButtons(void)
 
 static void DestroyHistoryButtons(void)
 {
-
 	// remove History buttons and images from memory
-
 	// next page button
 	RemoveButton(giHistoryButton[1] );
-	UnloadButtonImage(giHistoryButtonImage[1] );
-
 	// prev page button
 	RemoveButton(giHistoryButton[0] );
-	UnloadButtonImage(giHistoryButtonImage[0] );
 }
 
 

@@ -780,6 +780,15 @@ INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 
 }
 
 
+INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+{
+	INT32 img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
+	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, priority, DEFAULT_MOVE_CALLBACK, click);
+	ButtonList[btn]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
+	return btn;
+}
+
+
 INT32 CreateEasyNoToggleButton(INT32 x, INT32 y, const char* filename, GUI_CALLBACK ClickCallback)
 {
 	return CreateSimpleButton(x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback);

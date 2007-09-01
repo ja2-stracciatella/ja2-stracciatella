@@ -269,11 +269,9 @@ static BOOLEAN fInitTitle = TRUE;
 static BOOLEAN fTabHandled = FALSE;
 
 static INT32 gLaptopButton[7];
-static INT32 gLaptopButtonImage[7];
 
 // minimize button
-static INT32 gLaptopMinButton[1];
-static INT32 gLaptopMinButtonImage[1];
+static INT32 gLaptopMinButton;
 
 
 static INT32 gLaptopProgramStates[LAPTOP_PROGRAM_HISTORY + 1];
@@ -1856,9 +1854,7 @@ static UINT32 ExitLaptopMode(UINT32 uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
-	INT32 img = LoadButtonImage("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1);
-	gLaptopButtonImage[idx] = img;
-	INT32 btn = QuickCreateButton(img, 29, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, BtnGenericMouseMoveButtonCallback, click);
+	INT32 btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1, 29, y, MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	SetButtonFastHelpText(btn, help_text);
 	SpecifyButtonTextOffsets(btn, off_x, 11, TRUE);
@@ -1890,11 +1886,7 @@ static void CreateLaptopButtons(void)
 
 static void DeleteLapTopButtons(void)
 {
-	for (UINT32 cnt = 0; cnt < 7; cnt++)
-	{
-		RemoveButton( gLaptopButton[ cnt ] );
-		UnloadButtonImage( gLaptopButtonImage[ cnt ] );
-	}
+	for (UINT32 i = 0; i < 7; ++i) RemoveButton(gLaptopButton[i]);
 }
 
 
@@ -3619,21 +3611,15 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
-  gLaptopMinButtonImage[0]=  LoadButtonImage( "LAPTOP/x.sti" ,-1,0,-1,1,-1 );
-  gLaptopMinButton[0] = QuickCreateButton( gLaptopMinButtonImage[0], 590, 30,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, LaptopMinimizeProgramButtonCallback);
-
-	SetButtonCursor(gLaptopMinButton[0], CURSOR_LAPTOP_SCREEN);
+  gLaptopMinButton = QuickCreateButtonImg("LAPTOP/x.sti", -1, 0, -1, 1, -1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
+	SetButtonCursor(gLaptopMinButton, CURSOR_LAPTOP_SCREEN);
 }
 
 
 static void DestroyMinimizeButtonForCurrentMode(void)
 {
 	// destroy minimize button
-	RemoveButton( gLaptopMinButton[ 0 ] );
-	UnloadButtonImage( gLaptopMinButtonImage[ 0 ] );
-
+	RemoveButton(gLaptopMinButton);
 }
 
 

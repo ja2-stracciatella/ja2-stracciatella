@@ -287,7 +287,6 @@ UINT32    guiPOPUPBORDERS;
 // the currently selected character arrow
 UINT32		guiSelectedCharArrow;
 
-INT32 guiUpdatePanelButtonsImage[ 2 ];
 INT32 guiUpdatePanelButtons[ 2 ];
 
 // the update panel
@@ -4731,9 +4730,7 @@ void DisplaySoldierUpdateBox( )
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help_text)
 {
-	INT32 img = LoadButtonImage("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1);
-	guiUpdatePanelButtonsImage[idx] = img;
-	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
+	INT32 btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	guiUpdatePanelButtons[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK);
 	SetButtonFastHelpText(btn, help_text);
@@ -4769,9 +4766,6 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 		// get rid of the buttons and images
 		RemoveButton( guiUpdatePanelButtons[ 0 ] );
 		RemoveButton( guiUpdatePanelButtons[ 1 ] );
-
-		UnloadButtonImage( guiUpdatePanelButtonsImage[ 0 ]);
-		UnloadButtonImage( guiUpdatePanelButtonsImage[ 1 ]);
 
 		// unpause
 		UnPauseDialogueQueue( );

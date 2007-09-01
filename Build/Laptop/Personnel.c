@@ -243,9 +243,7 @@ static UINT32 guiCURRENTTEAM;
 static UINT32 guiPersonnelInventory;
 
 static INT32 giPersonnelButton[6];
-static INT32 giPersonnelButtonImage[6];
 static INT32 giPersonnelInventoryButtons[2];
-static INT32 giPersonnelInventoryButtonsImages[2];
 
 // buttons for ATM
 static INT32 giPersonnelATMStartButton[3];
@@ -721,13 +719,9 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 
 static void CreatePersonnelButtons(void)
 {
-	// left button
-	giPersonnelButtonImage[0] = LoadButtonImage("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1);
-	giPersonnelButton[0] = QuickCreateButton(giPersonnelButtonImage[0], PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, LeftButtonCallBack);
-
-	// right button
-	giPersonnelButtonImage[1] = LoadButtonImage("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1);
-	giPersonnelButton[1] = QuickCreateButton(giPersonnelButtonImage[1], NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, RightButtonCallBack);
+	// left/right buttons
+	giPersonnelButton[0] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, LeftButtonCallBack);
+	giPersonnelButton[1] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, RightButtonCallBack);
 
 	SetButtonCursor(giPersonnelButton[0], CURSOR_LAPTOP_SCREEN);
 	SetButtonCursor(giPersonnelButton[1], CURSOR_LAPTOP_SCREEN);
@@ -737,9 +731,7 @@ static void CreatePersonnelButtons(void)
 static void DeletePersonnelButtons(void)
 {
 	RemoveButton(giPersonnelButton[0]);
-	UnloadButtonImage(giPersonnelButtonImage[0]);
 	RemoveButton(giPersonnelButton[1]);
-	UnloadButtonImage(giPersonnelButtonImage[1]);
 }
 
 
@@ -1753,11 +1745,8 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 	if (gubPersonnelInfoState == PRSNL_INV && !fCreated)
 	{
 		// create buttons
-		giPersonnelInventoryButtonsImages[0] = LoadButtonImage("LAPTOP/personnel_inventory.sti", -1, 1, -1, 2, -1);
-		giPersonnelInventoryButtons[0] = QuickCreateButton(giPersonnelInventoryButtonsImages[0], 176 + 397, 2 + 200, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryUpButtonCallback);
-
-		giPersonnelInventoryButtonsImages[1] = LoadButtonImage("LAPTOP/personnel_inventory.sti", -1, 3, -1, 4, -1);
-		giPersonnelInventoryButtons[1] = QuickCreateButton(giPersonnelInventoryButtonsImages[1], 397 + 176, 200 + 223, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, InventoryDownButtonCallback);
+		giPersonnelInventoryButtons[0] = QuickCreateButtonImg("LAPTOP/personnel_inventory.sti", -1, 1, -1, 2, -1, 176 + 397, 2 +   200, MSYS_PRIORITY_HIGHEST - 1, InventoryUpButtonCallback);
+		giPersonnelInventoryButtons[1] = QuickCreateButtonImg("LAPTOP/personnel_inventory.sti", -1, 3, -1, 4, -1, 176 + 397, 200 + 223, MSYS_PRIORITY_HIGHEST - 1, InventoryDownButtonCallback);
 
 		// set up cursors for these buttons
 		SetButtonCursor(giPersonnelInventoryButtons[0], CURSOR_LAPTOP_SCREEN);
@@ -1771,9 +1760,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 	{
 		// destroy buttons
 		RemoveButton(giPersonnelInventoryButtons[0]);
-		UnloadButtonImage(giPersonnelInventoryButtonsImages[0]);
 		RemoveButton(giPersonnelInventoryButtons[1]);
-		UnloadButtonImage(giPersonnelInventoryButtonsImages[1]);
 
 		MSYS_RemoveRegion(&gMouseScrollPersonnelINV);
 
@@ -2721,12 +2708,8 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 	if (!fCurrentTeamMode && !fCreated)
 	{
 		// not created. create
-		giPersonnelButtonImage[4]=  LoadButtonImage("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1);
-		giPersonnelButton[4] = QuickCreateButton(giPersonnelButtonImage[4], PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, DepartedUpCallBack);
-
-		// right button
-		giPersonnelButtonImage[5]=  LoadButtonImage("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1);
-		giPersonnelButton[5] = QuickCreateButton(giPersonnelButtonImage[5], PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, DepartedDownCallBack);
+		giPersonnelButton[4] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   MSYS_PRIORITY_HIGHEST - 1, DepartedUpCallBack);
+		giPersonnelButton[5] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
 
 		// set up cursors for these buttons
 		SetButtonCursor(giPersonnelButton[4], CURSOR_LAPTOP_SCREEN);
@@ -2738,9 +2721,7 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 	{
 		// created. destroy
 		RemoveButton(giPersonnelButton[4]);
-		UnloadButtonImage(giPersonnelButtonImage[4]);
 		RemoveButton(giPersonnelButton[5]);
-		UnloadButtonImage(giPersonnelButtonImage[5]);
 		fCreated = FALSE;
 		fReDrawScreenFlag = TRUE;
 	}

@@ -413,18 +413,13 @@ static BOOLEAN gfMapPanelWasRedrawn = FALSE;
 // currently selected character's list index
 INT8 bSelectedInfoChar = -1;
 
-// map sort button images
-static INT32 giMapSortButtonImage[MAX_SORT_METHODS] = { -1, -1, -1, -1, -1, -1 };
 static INT32 giMapSortButton[MAX_SORT_METHODS]      = { -1, -1, -1, -1, -1, -1 };
 
-static INT32 giCharInfoButtonImage[2];
 INT32 giCharInfoButton[2] = { -1, -1 };
 
-static INT32 giMapInvButtonDoneImage;
 INT32 giMapInvDoneButton = -1;
 
 INT32 giMapContractButton = -1;
-static INT32 giMapContractButtonImage;
 
 //INT32 giMapInvButton = -1;
 //INT32 giMapInvButtonImage;
@@ -2786,12 +2781,7 @@ UINT32 MapScreenHandle(void)
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButtonImage = LoadButtonImage( "INTERFACE/contractbutton.sti" ,-1,0,-1,1,-1 );
-
-		// buttonmake
-		giMapContractButton= QuickCreateButton( giMapContractButtonImage, CONTRACT_X + 5, CONTRACT_Y - 1,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, ContractButtonCallback);
+		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", -1, 0, -1, 1, -1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		SpecifyGeneralButtonTextAttributes(giMapContractButton, pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 
 		// create mouse region for pause clock
@@ -5021,7 +5011,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	// gonna need to remove the screen mask regions
 	CreateDestroyMouseRegionMasksForTimeCompressionButtons( );
 
-	UnloadButtonImage( giMapContractButtonImage );
 	RemoveButton( giMapContractButton );
 
 	HandleShutDownOfMapScreenWhileExternfaceIsTalking( );
@@ -8901,10 +8890,7 @@ static void CreateDestroyTrashCanRegion(void)
 							 MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
 
 		// done inventory button define
-		giMapInvButtonDoneImage = LoadButtonImage( "INTERFACE/done_button2.sti" ,-1,0,-1,1,-1 );
-    giMapInvDoneButton = QuickCreateButton( giMapInvButtonDoneImage, INV_BTN_X, INV_BTN_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, DoneInventoryMapBtnCallback );
+    giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", -1, 0, -1, 1, -1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 
 		SetButtonFastHelpText( giMapInvDoneButton ,pMiscMapScreenMouseRegionHelpText[ 2 ] );
 		SetRegionFastHelpText( &gTrashCanRegion, pMiscMapScreenMouseRegionHelpText[ 1 ] );
@@ -8936,9 +8922,6 @@ static void CreateDestroyTrashCanRegion(void)
 
 		// map inv done button
 		RemoveButton( giMapInvDoneButton );
-
-		// get rid of button image
-		UnloadButtonImage( giMapInvButtonDoneImage );
 
 		ShutdownKeyRingInterface( );
 
@@ -9374,39 +9357,14 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 
 	if( ( fInMapMode == TRUE ) && ( fCreated == FALSE ) )
 	{
-		// set the button image
-		giCharInfoButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
-
-#ifndef JA2DEMO
-
-		// set the button value
-		giCharInfoButton[ 0 ] = QuickCreateButton( giCharInfoButtonImage[ 0 ], 67, 69,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
+#if defined JA2DEMO
+		const INT16 prio = MSYS_PRIORITY_HIGHEST;
 #else
-
-		// set the button value
-		giCharInfoButton[ 0 ] = QuickCreateButton( giCharInfoButtonImage[ 0 ], 67, 69,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
-
+		const INT16 prio = MSYS_PRIORITY_HIGHEST - 5;
 #endif
-			// set the button image
-		giCharInfoButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
 
-#ifndef JA2DEMO
-		// set the button value
-		giCharInfoButton[ 1 ] = QuickCreateButton( giCharInfoButtonImage[ 1 ], 67, 87,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
-
-#else
-		// set the button value
-		giCharInfoButton[ 1 ] = QuickCreateButton( giCharInfoButtonImage[ 1 ], 67, 87,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
-
-#endif
+		giCharInfoButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 67, 69, prio, PrevInventoryMapBtnCallback);
+		giCharInfoButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 67, 87, prio, NextInventoryMapBtnCallback);
 
 		SetButtonFastHelpText( giCharInfoButton[ 0 ], pMapScreenPrevNextCharButtonHelpText[ 0 ] );
 		SetButtonFastHelpText( giCharInfoButton[ 1 ], pMapScreenPrevNextCharButtonHelpText[ 1 ] );
@@ -9416,8 +9374,6 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 	}
 	else if( ( ( fInMapMode == FALSE ) ) && ( fCreated == TRUE ) )
 	{
-		UnloadButtonImage( giCharInfoButtonImage[ 0 ] );
-		UnloadButtonImage( giCharInfoButtonImage[ 1 ] );
 		RemoveButton( giCharInfoButton[ 0 ]);
 		RemoveButton( giCharInfoButton[ 1 ]);
 
@@ -9540,25 +9496,16 @@ static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void AddTeamPanelSortButtonsForMapScreen(void)
 {
-	INT32 iCounter = 0;
 	SGPFILENAME filename;
 	INT32 iImageIndex[ MAX_SORT_METHODS ] = { 0, 1, 5, 2, 3, 4 };		// sleep image is out or order (last)
 
-
 	GetMLGFilename( filename, MLG_GOLDPIECEBUTTONS );
 
-	for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
+	for (INT32 i = 0; i < MAX_SORT_METHODS; ++i)
 	{
-		giMapSortButtonImage[ iCounter ] = LoadButtonImage( filename, -1, iImageIndex[ iCounter ] , -1, iImageIndex[ iCounter ] + 6 , -1 );
-
-		// buttonmake
-		giMapSortButton[ iCounter ]= QuickCreateButton( giMapSortButtonImage[ iCounter ], ( INT16 )( gMapSortButtons[ iCounter ].iX ), ( INT16 )( gMapSortButtons[ iCounter ].iY ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
-										BtnGenericMouseMoveButtonCallback, MapSortBtnCallback );
-
-		MSYS_SetBtnUserData(giMapSortButton[iCounter], iCounter);
-
-		SetButtonFastHelpText( giMapSortButton[ iCounter ], wMapScreenSortButtonHelpText[ iCounter ] );
+		giMapSortButton[i] = QuickCreateButtonImg(filename, -1, iImageIndex[i], -1, iImageIndex[i] + 6, -1, gMapSortButtons[i].iX, gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
+		MSYS_SetBtnUserData(giMapSortButton[i], i);
+		SetButtonFastHelpText(giMapSortButton[i], wMapScreenSortButtonHelpText[i]);
 	}
 }
 
@@ -9849,10 +9796,7 @@ static void RemoveTeamPanelSortButtonsForMapScreen(void)
 
 	for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
 	{
-		UnloadButtonImage( giMapSortButtonImage[ iCounter ] );
 		RemoveButton( giMapSortButton[ iCounter ] );
-
-		giMapSortButtonImage[ iCounter ] = -1;
 		giMapSortButton[ iCounter ] = -1;
 	}
 }

@@ -313,8 +313,7 @@ UINT32 guiBULLSEYE;
 #define HELI_SHADOW_ICON_HEIGHT	11
 
 
-// the militia box buttons and images
-static INT32 giMapMilitiaButtonImage[5];
+// the militia box buttons
 static INT32 giMapMilitiaButton[5] = { -1, -1, -1, -1, -1 };
 
 
@@ -5220,13 +5219,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 			sX += MILITIA_BTN_OFFSET_X;
 			sY += ( iCounter * ( MILITIA_BTN_HEIGHT ) + 2 );
 
-			// set the button image
-			giMapMilitiaButtonImage[ iCounter ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,3,-1,4,-1 );
-
-			// set the button value
-			giMapMilitiaButton[ iCounter ] = QuickCreateButton( giMapMilitiaButtonImage[ iCounter ], sX, sY,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, MilitiaButtonCallback);
+			giMapMilitiaButton[iCounter] = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 3, -1, 4, -1, sX, sY, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 
 			// set button user data
 			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
@@ -5252,7 +5245,6 @@ void CreateDestroyMilitiaSectorButtons( void )
 		for( iCounter = 0 ; iCounter < 3; iCounter++ )
 		{
 			RemoveButton( giMapMilitiaButton[ iCounter ] );
-			UnloadButtonImage( giMapMilitiaButtonImage[ iCounter ] );
 		}
 
 		if( !fShowMilitia || !sSelectedMilitiaTown )
@@ -5632,9 +5624,7 @@ static void HandleEveningOutOfTroopsAmongstSectors(void)
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	INT32 img = LoadButtonImage("INTERFACE/militia.sti", -1, 1, -1, 2, -1);
-	giMapMilitiaButtonImage[idx] = img;
-	INT32 btn = QuickCreateButton(img, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
+	INT32 btn = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 1, -1, 2, -1, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
 }
@@ -5669,9 +5659,6 @@ static void DeleteMilitiaPanelBottomButton(void)
 	// delete militia panel bottom
 	RemoveButton( giMapMilitiaButton[ 3 ] );
 	RemoveButton( giMapMilitiaButton[ 4 ] );
-
-	UnloadButtonImage( giMapMilitiaButtonImage[ 3 ] );
-	UnloadButtonImage( giMapMilitiaButtonImage[ 4 ] );
 
 	if( sSelectedMilitiaTown != 0 )
 	{

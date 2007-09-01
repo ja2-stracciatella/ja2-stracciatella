@@ -129,8 +129,6 @@ WORLDITEM *pSaveList = NULL;
 INT32 giFlashHighlightedItemBaseTime = 0;
 INT32 giCompatibleItemBaseTime = 0;
 
-// the buttons and images
-UINT32 guiMapInvenButtonImage[ 3 ];
 UINT32 guiMapInvenButton[ 3 ];
 
 BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
@@ -844,17 +842,8 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateMapInventoryButtons(void)
 {
-	guiMapInvenButtonImage[ 0 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" , 10, 1, -1, 3, -1 );
-  guiMapInvenButton[ 0 ] = QuickCreateButton( guiMapInvenButtonImage[ 0 ], 559 , 336,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, MapInventoryPoolNextBtn );
-
-
-	guiMapInvenButtonImage[ 1 ]=  LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,9, 0, -1, 2, -1 );
-  guiMapInvenButton[ 1 ] = QuickCreateButton( guiMapInvenButtonImage[ 1 ], 487, 336,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, MapInventoryPoolPrevBtn );
-
+	guiMapInvenButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, 559, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolNextBtn);
+	guiMapInvenButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, 487, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolPrevBtn);
 
 	//reset the current inventory page to be the first page
 	iCurrentInventoryPoolPage = 0;
@@ -865,9 +854,6 @@ static void DestroyMapInventoryButtons(void)
 {
 	RemoveButton( guiMapInvenButton[ 0 ] );
 	RemoveButton( guiMapInvenButton[ 1 ] );
-
-	UnloadButtonImage( guiMapInvenButtonImage[ 0 ] );
-	UnloadButtonImage( guiMapInvenButtonImage[ 1 ] );
 }
 
 
@@ -1598,19 +1584,14 @@ static void DrawNumberOfIventoryPoolItems(void)
 static void CreateMapInventoryPoolDoneButton(void)
 {
 	// create done button
-	guiMapInvenButtonImage[ 2 ]=  LoadButtonImage( "INTERFACE/done_button.sti" , -1, 0, -1, 1, -1 );
-  guiMapInvenButton[ 2 ] = QuickCreateButton( guiMapInvenButtonImage[ 2 ], 587 , 333,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										BtnGenericMouseMoveButtonCallback, MapInventoryPoolDoneBtn );
+	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", -1, 0, -1, 1, -1, 587, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
 }
 
 
 static void DestroyInventoryPoolDoneButton(void)
 {
 	// destroy ddone button
-
 	RemoveButton( guiMapInvenButton[ 2 ] );
-	UnloadButtonImage( guiMapInvenButtonImage[ 2 ] );
 }
 
 

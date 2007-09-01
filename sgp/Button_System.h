@@ -205,6 +205,8 @@ extern BOOLEAN gfRenderHilights;
  */
 INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
 
+INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+
 /* A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more
  * assumptions.  It self manages the loading, and deleting of the image.  The
  * size of the image determines the size of the button.  It also uses the

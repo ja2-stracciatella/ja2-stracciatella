@@ -254,7 +254,6 @@ static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 // The 'X' to close the video conf window button
 static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiXToCloseMercVideoButton;
-INT32		guiXToCloseMercVideoButtonImage;
 
 
 //Mouse region for the subtitles region when the merc is talking
@@ -1231,11 +1230,7 @@ static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 	//if we are asked to create the buttons and the button isnt already created
 	if( fCreate && !fButtonCreated )
 	{
-		guiXToCloseMercVideoButtonImage = LoadButtonImage("LAPTOP/CloseButton.sti", -1,0,-1,1,-1 );
-
-		guiXToCloseMercVideoButton = QuickCreateButton( guiXToCloseMercVideoButtonImage, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y,
-																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																	DEFAULT_MOVE_CALLBACK, BtnXToCloseMercVideoButtonCallback);
+		guiXToCloseMercVideoButton = QuickCreateButtonImg("LAPTOP/CloseButton.sti", -1, 0, -1, 1, -1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
 		SetButtonCursor(guiXToCloseMercVideoButton, CURSOR_LAPTOP_SCREEN);
 
 		fButtonCreated = TRUE;
@@ -1244,7 +1239,6 @@ static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 	//if we are asked to destroy the buttons and the buttons are created
 	if( !fCreate && fButtonCreated )
 	{
-		UnloadButtonImage( guiXToCloseMercVideoButtonImage );
 		RemoveButton( guiXToCloseMercVideoButton );
 		fButtonCreated = FALSE;
 	}
