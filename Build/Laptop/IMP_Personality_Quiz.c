@@ -360,7 +360,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
 		wchar_t sString[32];
 		swprintf(sString, lengthof(sString), L"%d", i + 1);
-		SpecifyFullButtonTextAttributes(Button, sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK);
+		SpecifyGeneralButtonTextAttributes(Button, sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 		SetButtonCursor(Button, CURSOR_WWW);
 	}
 

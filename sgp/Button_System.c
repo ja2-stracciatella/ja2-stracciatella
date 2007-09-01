@@ -875,20 +875,6 @@ void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, IN
 }
 
 
-void SpecifyFullButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown)
-{
-	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
-	SpecifyButtonText(iButtonID, string);
-	b->usFont           = uiFont;
-	b->sForeColor       = sForeColor;
-	b->sShadowColor     = sShadowColor;
-	b->sForeColorDown   = sForeColorDown;
-	b->sShadowColorDown = sShadowColorDown;
-	b->uiFlags |= BUTTON_DIRTY;
-}
-
-
 void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
