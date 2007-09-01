@@ -1861,11 +1861,8 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const 
 	INT32 btn = QuickCreateButton(img, 29, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, BtnGenericMouseMoveButtonCallback, click);
 	gLaptopButton[idx] = btn;
 	SetButtonFastHelpText(btn, help_text);
-	SpecifyButtonText(btn, text);
-	SpecifyButtonFont(btn, FONT10ARIAL);
 	SpecifyButtonTextOffsets(btn, off_x, 11, TRUE);
-	SpecifyButtonDownTextColors(btn, 2, 0);
-	SpecifyButtonUpTextColors(btn, 2, 0);
+	SpecifyFullButtonTextAttributes(btn, text, FONT10ARIAL, 2, 0, 2, 0);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 }
 

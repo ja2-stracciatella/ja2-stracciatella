@@ -2792,11 +2792,7 @@ UINT32 MapScreenHandle(void)
 		giMapContractButton= QuickCreateButton( giMapContractButtonImage, CONTRACT_X + 5, CONTRACT_Y - 1,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 5,
 										BtnGenericMouseMoveButtonCallback, ContractButtonCallback);
-
-		SpecifyButtonText(giMapContractButton, pContractButtonString);
-		SpecifyButtonFont( giMapContractButton, MAP_SCREEN_FONT );
-		SpecifyButtonUpTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
-		SpecifyButtonDownTextColors( giMapContractButton, CHAR_TEXT_FONT_COLOR, FONT_BLACK );
+		SpecifyFullButtonTextAttributes(giMapContractButton, pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 
 		// create mouse region for pause clock
 		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );

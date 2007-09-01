@@ -5229,9 +5229,7 @@ void CreateDestroyMilitiaSectorButtons( void )
 
 			// set button user data
 			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
-			SpecifyButtonFont( giMapMilitiaButton[ iCounter ], FONT10ARIAL );
-			SpecifyButtonUpTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
-			SpecifyButtonDownTextColors( giMapMilitiaButton[ iCounter ], gsMilitiaSectorButtonColors[ iCounter ], FONT_BLACK );
+			SpecifyFullButtonTextAttributes(giMapMilitiaButton[iCounter], NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
 
 			SetButtonFastHelpText( giMapMilitiaButton[ iCounter ], pMilitiaButtonsHelpText[ iCounter ] );
 		}
@@ -5637,10 +5635,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* tex
 	giMapMilitiaButtonImage[idx] = img;
 	INT32 btn = QuickCreateButton(img, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
 	giMapMilitiaButton[idx] = btn;
-	SpecifyButtonFont(          btn, FONT10ARIAL);
-	SpecifyButtonUpTextColors(  btn, FONT_BLACK, FONT_BLACK);
-	SpecifyButtonDownTextColors(btn, FONT_BLACK, FONT_BLACK);
-	SpecifyButtonText(          btn, text);
+	SpecifyFullButtonTextAttributes(btn, text, FONT10ARIAL, FONT_BLACK, FONT_BLACK, FONT_BLACK, FONT_BLACK);
 }
 
 

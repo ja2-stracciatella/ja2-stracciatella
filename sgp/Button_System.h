@@ -233,12 +233,10 @@ INT32 CreateTextButton(const wchar_t* string, UINT32 uiFont, INT16 sForeColor, I
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
 
 void SpecifyButtonText(INT32 iButtonID, const wchar_t* string);
-void SpecifyButtonFont(INT32 iButtonID, UINT32 uiFont);
-void SpecifyButtonUpTextColors(INT32 iButtonID, INT16 sForeColor, INT16 sShadowColor);
 void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown);
 void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited);
 void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor);
-void SpecifyFullButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification);
+void SpecifyFullButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown);
 void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth);

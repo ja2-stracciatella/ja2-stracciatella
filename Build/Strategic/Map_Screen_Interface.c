@@ -4735,10 +4735,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const wch
 	guiUpdatePanelButtonsImage[idx] = img;
 	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
 	guiUpdatePanelButtons[idx] = btn;
-	SpecifyButtonText(btn, text);
-	SpecifyButtonFont(btn, MAP_SCREEN_FONT);
-	SpecifyButtonUpTextColors(btn, FONT_MCOLOR_BLACK, FONT_BLACK);
-	SpecifyButtonDownTextColors(btn, FONT_MCOLOR_BLACK, FONT_BLACK);
+	SpecifyFullButtonTextAttributes(btn, text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK, FONT_MCOLOR_BLACK, FONT_BLACK);
 	SetButtonFastHelpText(btn, help_text);
 }
 

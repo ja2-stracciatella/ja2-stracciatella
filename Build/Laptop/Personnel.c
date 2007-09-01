@@ -3432,10 +3432,8 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 	giPersonnelATMStartButtonImage[idx] = img;
 	INT32 btn = QuickCreateButton(img, 519, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, click);
 	giPersonnelATMStartButton[idx] = btn;
-	SpecifyButtonText(        btn, text);
-	SpecifyButtonUpTextColors(btn, FONT_BLACK, FONT_BLACK);
-	SpecifyButtonFont(        btn, PERS_FONT);
-	SetButtonCursor(          btn, CURSOR_LAPTOP_SCREEN);
+	SpecifyGeneralButtonTextAttributes(btn, text, PERS_FONT, FONT_BLACK, FONT_BLACK);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 }
 
 

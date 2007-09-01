@@ -357,13 +357,10 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		Assert(i < lengthof(Callback));
 		INT32 Button = QuickCreateButton(Image, XLoc, YLoc, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CALLBACK, Callback[i]);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
-		SpecifyButtonUpTextColors(Button, FONT_WHITE, FONT_BLACK);
-		SpecifyButtonDownTextColors(Button, FONT_WHITE, FONT_BLACK);
 		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
-		SpecifyButtonFont(Button, FONT12ARIAL);
 		wchar_t sString[32];
 		swprintf(sString, lengthof(sString), L"%d", i + 1);
-		SpecifyButtonText(Button, sString);
+		SpecifyFullButtonTextAttributes(Button, sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK);
 		SetButtonCursor(Button, CURSOR_WWW);
 	}
 
