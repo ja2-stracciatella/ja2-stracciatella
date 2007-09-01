@@ -530,7 +530,6 @@ const ANI_SPEED_DEF gubAnimWalkSpeeds[TOTALBODYTYPES];
 const ANI_SPEED_DEF gubAnimRunSpeeds[TOTALBODYTYPES];
 const ANI_SPEED_DEF gubAnimSwatSpeeds[TOTALBODYTYPES];
 ANI_SPEED_DEF gubAnimCrawlSpeeds[TOTALBODYTYPES]; // XXX TODO0011 only declared
-UINT8 gubMaxActionPoints[ TOTALBODYTYPES ];
 
 
 // OK, this array contains definitions for random animations based on bodytype, total # allowed, and what is in their hand....
