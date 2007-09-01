@@ -51,8 +51,8 @@ BOOLEAN fEndAutoBandage = FALSE;
 BOOLEAN gfAutoBandageFailed;
 
 // the button and associated image for ending autobandage
-INT32 iEndAutoBandageButton[ 2 ];
-INT32 iEndAutoBandageButtonImage[ 2 ];
+static INT32 iEndAutoBandageButton[2];
+static INT32 iEndAutoBandageButtonImage[2];
 
 
 extern FACETYPE *gpCurrentTalkingFace;
@@ -939,6 +939,19 @@ static void DisplayAutoBandageUpdatePanel(void)
 static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
+static void MakeButton(UINT idx, INT16 x, INT16 y, const wchar_t* text)
+{
+	INT32 img = LoadButtonImage("INTERFACE/group_confirm_tactical.sti" ,-1, 7, -1, 8, -1);
+	iEndAutoBandageButtonImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, StopAutoBandageButtonCallback);
+	iEndAutoBandageButton[idx] = btn;
+	SpecifyButtonText(          btn, text);
+	SpecifyButtonFont(          btn, MAP_SCREEN_FONT);
+	SpecifyButtonUpTextColors(  btn, FONT_MCOLOR_BLACK, FONT_BLACK);
+	SpecifyButtonDownTextColors(btn, FONT_MCOLOR_BLACK, FONT_BLACK);
+}
+
+
 static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 {
 	// create the kill autobandage button
@@ -950,35 +963,8 @@ static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 
 	fAutoEndBandageButtonCreated = TRUE;
 
-	// the continue button
-
-	// grab the image
-	iEndAutoBandageButtonImage[ 0 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
-
-	// grab the button
-	iEndAutoBandageButton[ 0 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 0 ], sX, sY,
-														BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-														BtnGenericMouseMoveButtonCallback, StopAutoBandageButtonCallback );
-
-
-	//the cancel button
-	// grab the image
-	iEndAutoBandageButtonImage[ 1 ] = LoadButtonImage( "INTERFACE/group_confirm_tactical.sti" ,-1,7,-1,8,-1 );
-
-	// grab the button
-	iEndAutoBandageButton[ 1 ] = QuickCreateButton( iEndAutoBandageButtonImage[ 1 ], ( INT16 )( sX + 70 ) , sY,
-														BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-														BtnGenericMouseMoveButtonCallback, StopAutoBandageButtonCallback );
-
-	SpecifyButtonText( iEndAutoBandageButton[ 0 ], zMarksMapScreenText[ 15 ] );
-	SpecifyButtonFont( iEndAutoBandageButton[ 0 ], MAP_SCREEN_FONT );
-	SpecifyButtonUpTextColors( iEndAutoBandageButton[ 0 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-	SpecifyButtonDownTextColors( iEndAutoBandageButton[ 0 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-
-	SpecifyButtonText( iEndAutoBandageButton[ 1 ], zMarksMapScreenText[ 16 ] );
-	SpecifyButtonFont( iEndAutoBandageButton[ 1 ], MAP_SCREEN_FONT );
-	SpecifyButtonUpTextColors( iEndAutoBandageButton[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
-	SpecifyButtonDownTextColors( iEndAutoBandageButton[ 1 ], FONT_MCOLOR_BLACK, FONT_BLACK );
+	MakeButton(0, sX,      sY, zMarksMapScreenText[15]); // the continue button
+	MakeButton(1, sX + 70, sY, zMarksMapScreenText[16]); // the cancel button
 }
 
 

@@ -314,8 +314,8 @@ UINT32 guiBULLSEYE;
 
 
 // the militia box buttons and images
-INT32 giMapMilitiaButtonImage[ 5 ];
-INT32 giMapMilitiaButton[ 5 ] = { -1, -1, -1, -1, -1 };
+static INT32 giMapMilitiaButtonImage[5];
+static INT32 giMapMilitiaButton[5] = { -1, -1, -1, -1, -1 };
 
 
 INT16 gsMilitiaSectorButtonColors[]={
@@ -5631,6 +5631,19 @@ static void HandleEveningOutOfTroopsAmongstSectors(void)
 }
 
 
+static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+{
+	INT32 img = LoadButtonImage("INTERFACE/militia.sti", -1, 1, -1, 2, -1);
+	giMapMilitiaButtonImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, BtnGenericMouseMoveButtonCallback, click);
+	giMapMilitiaButton[idx] = btn;
+	SpecifyButtonFont(          btn, FONT10ARIAL);
+	SpecifyButtonUpTextColors(  btn, FONT_BLACK, FONT_BLACK);
+	SpecifyButtonDownTextColors(btn, FONT_BLACK, FONT_BLACK);
+	SpecifyButtonText(          btn, text);
+}
+
+
 static BOOLEAN CanMilitiaAutoDistribute(void);
 static void MilitiaAutoButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void MilitiaDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -5638,30 +5651,8 @@ static void MilitiaDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateMilitiaPanelBottomButton(void)
 {
-	// set the button image
-	giMapMilitiaButtonImage[ 3 ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,1,-1,2,-1 );
-	giMapMilitiaButtonImage[ 4 ]=  LoadButtonImage( "INTERFACE/militia.sti" ,-1,1,-1,2,-1 );
-
-
-	giMapMilitiaButton[ 3 ] = QuickCreateButton( giMapMilitiaButtonImage[ 3 ], MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_AUTO_BOX_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, MilitiaAutoButtonCallback );
-
-	giMapMilitiaButton[ 4 ] = QuickCreateButton( giMapMilitiaButtonImage[ 4 ], MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_DONE_BOX_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, MilitiaDoneButtonCallback );
-
-
-	SpecifyButtonFont( giMapMilitiaButton[ 3 ], FONT10ARIAL );
-	SpecifyButtonUpTextColors( giMapMilitiaButton[ 3 ], FONT_BLACK, FONT_BLACK );
-	SpecifyButtonDownTextColors( giMapMilitiaButton[ 3 ], FONT_BLACK, FONT_BLACK );
-
-	SpecifyButtonFont( giMapMilitiaButton[ 4 ], FONT10ARIAL );
-	SpecifyButtonUpTextColors( giMapMilitiaButton[ 4 ], FONT_BLACK, FONT_BLACK );
-	SpecifyButtonDownTextColors( giMapMilitiaButton[ 4 ], FONT_BLACK, FONT_BLACK );
-
-	SpecifyButtonText( giMapMilitiaButton[ 3 ], pMilitiaButtonString[ 0 ] );
-	SpecifyButtonText( giMapMilitiaButton[ 4 ], pMilitiaButtonString[ 1 ] );
+	MakeButton(3, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_AUTO_BOX_X, MilitiaAutoButtonCallback, pMilitiaButtonString[0]);
+	MakeButton(4, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_DONE_BOX_X, MilitiaDoneButtonCallback, pMilitiaButtonString[1]);
 
 	// AUTO button help
 	SetButtonFastHelpText( giMapMilitiaButton[ 3 ], pMilitiaButtonsHelpText[ 3 ] );
