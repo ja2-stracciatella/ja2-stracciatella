@@ -825,28 +825,20 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT32 Type, INT
 
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
-	AssertMsg(0 <= Image && Image < MAX_BUTTON_PICS, String("Attemting to CreateIconAndTextButton with out of range ImageID %d.", Image));
-
-	// Is there a QuickButton image in the given image slot?
-	const BUTTON_PICS* BtnPic = &ButtonPictures[Image];
-	if (BtnPic->vobj == NULL)
+	const INT32 id = QuickCreateButton(Image, xloc, yloc, Type, Priority, MoveCallback, ClickCallback);
+	if (id != BUTTON_NO_SLOT)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "QuickCreateButton: Invalid button image number");
-		return BUTTON_NO_SLOT;
+		GUI_BUTTON* const b = GetButton(id);
+		CopyButtonText(b, string);
+		b->bJustification   = bJustification;
+		b->usFont           = uiFont;
+		b->sForeColor       = sForeColor;
+		b->sShadowColor     = sShadowColor;
+		b->sForeColorDown   = sForeColorDown;
+		b->sShadowColorDown = sShadowColorDown;
 	}
 
-	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
-	if (b == NULL) return BUTTON_NO_SLOT;
-
-	CopyButtonText(b, string);
-	b->bJustification   = bJustification;
-	b->usFont           = uiFont;
-	b->sForeColor       = sForeColor;
-	b->sShadowColor     = sShadowColor;
-	b->sForeColorDown   = sForeColorDown;
-	b->sShadowColorDown = sShadowColorDown;
-
-	return b->IDNum;
+	return id;
 }
 
 
