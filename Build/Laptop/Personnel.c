@@ -3426,6 +3426,19 @@ static BOOLEAN RenderAtmPanel(void)
 }
 
 
+static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
+{
+	INT32 img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
+	giPersonnelATMStartButtonImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, 519, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, click);
+	giPersonnelATMStartButton[idx] = btn;
+	SpecifyButtonText(        btn, text);
+	SpecifyButtonUpTextColors(btn, FONT_BLACK, FONT_BLACK);
+	SpecifyButtonFont(        btn, PERS_FONT);
+	SetButtonCursor(          btn, CURSOR_LAPTOP_SCREEN);
+}
+
+
 static void EmployementInfoButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -3439,36 +3452,9 @@ static void CreateDestroyStartATMButton(void)
 	if (!fCreated && fShowAtmPanelStartButton)
 	{
 		// not created, must create
-
-		// the stats button
-		giPersonnelATMStartButtonImage[PERSONNEL_STAT_BTN] = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
-		giPersonnelATMStartButton[PERSONNEL_STAT_BTN] = QuickCreateButton(giPersonnelATMStartButtonImage[PERSONNEL_STAT_BTN], 519, 80, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, PersonnelStatStartButtonCallback);
-
-		// set text and what not
-		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_STAT_BTN], gsAtmStartButtonText[0]);
-		SpecifyButtonUpTextColors(giPersonnelATMStartButton[PERSONNEL_STAT_BTN], FONT_BLACK, FONT_BLACK);
-		SpecifyButtonFont(giPersonnelATMStartButton[PERSONNEL_STAT_BTN], PERS_FONT);
-		SetButtonCursor(giPersonnelATMStartButton[PERSONNEL_STAT_BTN], CURSOR_LAPTOP_SCREEN);
-
-		// the Employment selection button
-		giPersonnelATMStartButtonImage[PERSONNEL_EMPLOYMENT_BTN] = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
-		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN] = QuickCreateButton(giPersonnelATMStartButtonImage[PERSONNEL_EMPLOYMENT_BTN], 519, 110, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, EmployementInfoButtonCallback);
-
-		// set text and what not
-		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN], gsAtmStartButtonText[2]);
-		SpecifyButtonUpTextColors(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN], FONT_BLACK, FONT_BLACK);
-		SpecifyButtonFont(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN], PERS_FONT);
-		SetButtonCursor(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN], CURSOR_LAPTOP_SCREEN);
-
-		// the inventory selection button
-		giPersonnelATMStartButtonImage[PERSONNEL_INV_BTN] = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
-		giPersonnelATMStartButton[PERSONNEL_INV_BTN] = QuickCreateButton(giPersonnelATMStartButtonImage[PERSONNEL_INV_BTN], 519, 140, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, PersonnelINVStartButtonCallback);
-
-		// set text and what not
-		SpecifyButtonText(giPersonnelATMStartButton[PERSONNEL_INV_BTN], gsAtmStartButtonText[1]);
-		SpecifyButtonUpTextColors(giPersonnelATMStartButton[PERSONNEL_INV_BTN], FONT_BLACK, FONT_BLACK);
-		SpecifyButtonFont(giPersonnelATMStartButton[PERSONNEL_INV_BTN], PERS_FONT);
-		SetButtonCursor(giPersonnelATMStartButton[PERSONNEL_INV_BTN], CURSOR_LAPTOP_SCREEN);
+		MakeButton(PERSONNEL_STAT_BTN,        80, PersonnelStatStartButtonCallback, gsAtmStartButtonText[0]);
+		MakeButton(PERSONNEL_EMPLOYMENT_BTN, 110, EmployementInfoButtonCallback,    gsAtmStartButtonText[2]);
+		MakeButton(PERSONNEL_INV_BTN,        140, PersonnelINVStartButtonCallback,  gsAtmStartButtonText[1]);
 
 		fCreated = TRUE;
 	}
