@@ -2493,10 +2493,10 @@ void UpdateMercsInfo()
 			SetFontForeground( FONT_BLACK );
 			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 			{
-				mprintfEditor( 396, 374, L"%ls    ", gpSelected->pSoldier->HeadPal );
-				mprintfEditor( 396, 398, L"%ls    ", gpSelected->pSoldier->SkinPal );
-				mprintfEditor( 396, 422, L"%ls    ", gpSelected->pSoldier->VestPal );
-				mprintfEditor( 396, 446, L"%ls    ", gpSelected->pSoldier->PantsPal );
+				mprintfEditor(396, 374, L"%hs    ", gpSelected->pSoldier->HeadPal);
+				mprintfEditor(396, 398, L"%hs    ", gpSelected->pSoldier->SkinPal);
+				mprintfEditor(396, 422, L"%hs    ", gpSelected->pSoldier->VestPal);
+				mprintfEditor(396, 446, L"%hs    ", gpSelected->pSoldier->PantsPal);
 				ShowEditMercPalettes( gpSelected->pSoldier );
 			}
 			else
