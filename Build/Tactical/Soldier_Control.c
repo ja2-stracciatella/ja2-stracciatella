@@ -838,25 +838,6 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 
 		}
 
-
-		//if ( pSoldier->pBackGround != NULL )
-		//	MemFree( pSoldier->pBackGround );
-
-		// INIT ANIMATION DATA
-		//if((pSoldier->pBackGround=MemAlloc(SOLDIER_UNBLIT_SIZE))==NULL)
-		//{
-		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed unblit memory allocation");
-		//	break;
-		//}
-		//memset(pSoldier->pBackGround, 0, SOLDIER_UNBLIT_SIZE);
-
-		//if((pSoldier->pZBackground=MemAlloc(SOLDIER_UNBLIT_SIZE))==NULL)
-		//{
-		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed unblit memory allocation");
-		//	break;
-		//}
-		//memset(pSoldier->pZBackground, 0, SOLDIER_UNBLIT_SIZE);
-
 		// Init palettes
 		if( CreateSoldierPalettes( pSoldier ) == FALSE )
 		{
@@ -888,12 +869,6 @@ BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
 
 	if ( pSoldier != NULL )
 	{
-		//if(pSoldier->pBackGround!=NULL)
-			//MemFree(pSoldier->pBackGround);
-
-		//if(pSoldier->pZBackground!=NULL)
-			//MemFree(pSoldier->pZBackground);
-
 		if( pSoldier->sGridNo != NOWHERE )
 		{
 			// Remove adjacency records

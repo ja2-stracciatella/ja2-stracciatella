@@ -14,6 +14,7 @@ Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2]: merge
 BtnHelpScreenDontShowHelpAgainCallback(): empty
 BulletHitMerc: pointless EV_S_WEAPONHIT
+CalcInteractiveObjectAPs(): second parameter unnecessary
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CenterX(): use %
@@ -167,6 +168,7 @@ MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
 MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
 MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
+MSG_BOX_FLAG_CANCEL, MSG_BOX_FLAG_YESNOCONTRACT: never set
 MapExists(): complicated
 MapX(): use %
 MapscreenMarkButtonsDirty(): callers
@@ -219,11 +221,15 @@ SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SHOW_AP_LEFT: never set
 SLOW_ANIMATION: never set or cleared, only in unused function
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
+SOLDIER_GREEN_RAY: never set
 SOLDIER_QUOTE_SAID_DROWNING: never set
 SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
+SOLDIER_RECHECKLIGHT: never set
 SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
+SOLDIER_SHOULD_BE_TACTICALLY_VALID: never set or tested
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
+STR_AR_MERC_RETREATING: string too long in German
 SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
 SaveEnemySoldiersToTempFile(), NewWayOfSavingEnemyAndCivliansToTempFile(): code duplication
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
@@ -272,6 +278,7 @@ fPotentialForDebug: ?
 fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
+gOldClipRect: common variable
 gOpenDoorList[], gClosedDoorList[]: users, code duplication
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
 gTacticalStatus.ubEngagedInConvFromActionMercID, ENGAGED_IN_CONV: redundant?
