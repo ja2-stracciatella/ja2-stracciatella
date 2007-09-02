@@ -1,5 +1,6 @@
 v0.6
-(r1461) Fix wide string/string format specifiers.
+(r1472) Fix graphically stuck buttons.
+(r1461, r1475) Fix wide string/string format specifiers.
 (r1458) Fix an infinite loop when throwing objects.
 (r1449) Fix vanilla graphical glitches: When the team panel is visible, the dialogue box, civilian quote box and the list of items on ground still get clamped vertically as if the invetory panel was visible, i.e. 20px to high.
 (r1442) Change the scroll speeds, so diagonal scrolling is always axis aligned.
