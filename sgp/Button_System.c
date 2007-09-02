@@ -836,6 +836,15 @@ INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont,
 }
 
 
+INT32 CreateLabel(const wchar_t* text, UINT32 font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+{
+	INT32 btn = CreateTextButton(text, font, forecolor, shadowcolor, BUTTON_USE_DEFAULT, x, y, w, h, BUTTON_TOGGLE, priority, NULL, NULL);
+	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_NONE);
+	DisableButton(btn);
+	return btn;
+}
+
+
 void SpecifyButtonText(INT32 iButtonID, const wchar_t* string)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);

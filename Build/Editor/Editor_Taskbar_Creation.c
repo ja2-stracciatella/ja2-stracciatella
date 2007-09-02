@@ -20,11 +20,7 @@
 
 static void InitEditorItemStatsButtons(void)
 {
-	iEditorButton[ ITEMSTATS_PANEL ] =
-		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, 480, 361, 160, 99, BUTTON_TOGGLE,
-		MSYS_PRIORITY_NORMAL, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );
-	SpecifyDisabledButtonStyle( iEditorButton[ ITEMSTATS_PANEL ], DISABLED_STYLE_NONE );
-	DisableButton( iEditorButton[ ITEMSTATS_PANEL ] );
+	iEditorButton[ITEMSTATS_PANEL] = CreateLabel(NULL, 0, 0, 0, 480, 361, 160, 99, MSYS_PRIORITY_NORMAL);
 	iEditorButton[ ITEMSTATS_HIDDEN_BTN ] =
 		CreateCheckBoxButton(	485, 365, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback );
 	iEditorButton[ ITEMSTATS_DELETE_BTN ] =
@@ -132,12 +128,7 @@ static void InitEditorMercsToolbar(void)
 	MakeButtonTeam(MERCS_REBEL,    422, MercsRebelTeamCallback,    L"Rebels");
 	MakeButtonTeam(MERCS_CIVILIAN, 442, MercsCivilianTeamCallback, L"Civilian");
 
-	iEditorButton[ MERCS_1 ] =
-		CreateTextButton( L"DETAILED PLACEMENT", SMALLCOMPFONT, FONT_ORANGE, 60, BUTTON_USE_DEFAULT,
-		100, 362, 68, 20, BUTTON_TOGGLE,
-		MSYS_PRIORITY_NORMAL, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );
-	DisableButton( iEditorButton[ MERCS_1 ] );
-	SpecifyDisabledButtonStyle( iEditorButton[ MERCS_1 ], DISABLED_STYLE_NONE );
+	iEditorButton[MERCS_1] = CreateLabel(L"DETAILED PLACEMENT", SMALLCOMPFONT, FONT_ORANGE, 60, 100, 362, 68, 20, MSYS_PRIORITY_NORMAL);
 	SpecifyButtonTextOffsets( iEditorButton[ MERCS_1 ], 20, 4, FALSE );
 	SpecifyButtonTextWrappedWidth( iEditorButton[ MERCS_1 ], 46 );
 	iEditorButton[ MERCS_DETAILEDCHECKBOX ] =
@@ -361,10 +352,7 @@ static void InitEditorMapInfoToolbar(void)
 {
 	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 362, BtnDrawLightsCallback, "EDITOR/light.sti", L"Add ambient light source");
 
-	iEditorButton[ MAPINFO_LIGHT_PANEL ] =
-		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, 45, 362, 60, 50, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );
-	SpecifyDisabledButtonStyle( iEditorButton[ MAPINFO_LIGHT_PANEL ], DISABLED_STYLE_NONE );
-	DisableButton( iEditorButton[ MAPINFO_LIGHT_PANEL ] );
+	iEditorButton[MAPINFO_LIGHT_PANEL] = CreateLabel(NULL, 0, 0, 0, 45, 362, 60, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[ MAPINFO_PRIMETIME_LIGHT ] =
 		CreateCheckBoxButton(	48, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MapInfoPrimeTimeRadioCallback );
 	iEditorButton[ MAPINFO_NIGHTTIME_LIGHT ] =
@@ -375,10 +363,7 @@ static void InitEditorMapInfoToolbar(void)
 
 	MakeButton(MAPINFO_TOGGLE_FAKE_LIGHTS, 120, 362, BtnFakeLightCallback, "EDITOR/fakelight.sti", L"Toggle fake ambient lights.");
 
-	iEditorButton[ MAPINFO_RADIO_PANEL ] =
-		CreateTextButton( 0, 0, 0, 0, BUTTON_USE_DEFAULT, 207, 362, 70, 50, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK );
-	SpecifyDisabledButtonStyle( iEditorButton[ MAPINFO_RADIO_PANEL ], DISABLED_STYLE_NONE );
-	DisableButton( iEditorButton[ MAPINFO_RADIO_PANEL ] );
+	iEditorButton[MAPINFO_RADIO_PANEL] = CreateLabel(NULL, 0, 0, 0, 207, 362, 70, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[ MAPINFO_RADIO_NORMAL ] =
 		CreateCheckBoxButton(	210, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MapInfoNormalRadioCallback );
 	iEditorButton[ MAPINFO_RADIO_BASEMENT ] =

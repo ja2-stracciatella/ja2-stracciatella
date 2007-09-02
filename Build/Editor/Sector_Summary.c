@@ -249,10 +249,7 @@ void CreateSummaryWindow()
 	if( gfWorldLoaded )
 		gfMapFileDirty = TRUE;
 	//Create all of the buttons here
-	iSummaryButton[ SUMMARY_BACKGROUND ] =
-		CreateTextButton(0, 0, 0, 0, BUTTON_USE_DEFAULT, 0, 0, SCREEN_WIDTH, 360, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
-	SpecifyDisabledButtonStyle( iSummaryButton[ SUMMARY_BACKGROUND ], DISABLED_STYLE_NONE );
-	DisableButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
+	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH - 1);
 
 	iSummaryButton[ SUMMARY_OKAY ] =
 		CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT,
@@ -2640,10 +2637,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
 	gfMajorUpdate = TRUE;
-	iSummaryButton[ SUMMARY_BACKGROUND ] =
-		CreateTextButton(0, 0, 0, 0, BUTTON_USE_DEFAULT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
-	SpecifyDisabledButtonStyle( iSummaryButton[ SUMMARY_BACKGROUND ], DISABLED_STYLE_NONE );
-	DisableButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
+	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 	//Draw it
 	DrawButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
 	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

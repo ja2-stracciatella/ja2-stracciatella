@@ -459,11 +459,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	//File list window
 	iFileDlgButtons[4] = CreateHotSpot( (179+4), (69+3), (179+4+240), (69+120+3), MSYS_PRIORITY_HIGH-1, BUTTON_NO_CALLBACK, FDlgNamesCallback);
 	//Title button
-	iFileDlgButtons[5] = CreateTextButton(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI,
-		BUTTON_USE_DEFAULT,179,39,281,30,BUTTON_NO_TOGGLE,
-		MSYS_PRIORITY_HIGH-2,BUTTON_NO_CALLBACK,BUTTON_NO_CALLBACK);
-	DisableButton(iFileDlgButtons[5]);
-	SpecifyDisabledButtonStyle( iFileDlgButtons[5], DISABLED_STYLE_NONE );
+	iFileDlgButtons[5] = CreateLabel(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI, 179, 39, 281, 30, MSYS_PRIORITY_HIGH - 2);
 
 	iFileDlgButtons[6] = -1;
 	if( iCurrentAction == ACTION_SAVE_MAP )

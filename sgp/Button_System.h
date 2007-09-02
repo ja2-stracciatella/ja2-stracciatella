@@ -232,6 +232,10 @@ INT32 CreateTextButton(const wchar_t* string, UINT32 uiFont, INT16 sForeColor, I
 
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
 
+/* This is technically not a clickable button, but just a label with text. It is
+ * implemented as button */
+INT32 CreateLabel(const wchar_t* text, UINT32 font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
+
 void SpecifyButtonText(INT32 iButtonID, const wchar_t* string);
 void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown);
 void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited);

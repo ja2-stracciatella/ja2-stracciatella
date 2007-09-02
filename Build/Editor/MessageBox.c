@@ -39,9 +39,7 @@ void CreateMessageBox(const wchar_t* wzString)
 	gfMessageBoxResult = FALSE;
 
 	// Fake button for background w/ text
-	iMsgBoxBgrnd = CreateTextButton(wzString, gpLargeFontType1, FONT_LTKHAKI, FONT_DKKHAKI, BUTTON_USE_DEFAULT, sStartX, sStartY, sPixLen, 96, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, BUTTON_NO_CALLBACK, BUTTON_NO_CALLBACK);
-	DisableButton( iMsgBoxBgrnd );
-	SpecifyDisabledButtonStyle( iMsgBoxBgrnd, DISABLED_STYLE_NONE );
+	iMsgBoxBgrnd = CreateLabel(wzString, gpLargeFontType1, FONT_LTKHAKI, FONT_DKKHAKI, sStartX, sStartY, sPixLen, 96, MSYS_PRIORITY_HIGHEST - 2);
 
 	iMsgBoxOkImg = LoadButtonImage("EDITOR/ok.sti",0,1,2,3,4);
 	iMsgBoxCancelImg = LoadButtonImage("EDITOR/cancel.sti",0,1,2,3,4);
