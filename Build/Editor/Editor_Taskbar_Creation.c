@@ -35,7 +35,7 @@ static void InitEditorItemStatsButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
-	INT32 btn = CreateEasyToggleButton(x, y, gfx, click);
+	INT32 btn = CreateEasyButton(x, y, gfx, click);
 	iEditorButton[idx] = btn;
 	SetButtonFastHelpText(btn, help);
 }
@@ -43,7 +43,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const cha
 
 static void MakeButtonNo(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
-	INT32 btn = CreateEasyNoToggleButton(x, y, gfx, click);
+	INT32 btn = CreateEasyButton(x, y, gfx, click);
 	iEditorButton[idx] = btn;
 	SetButtonFastHelpText(btn, help);
 }
@@ -228,14 +228,14 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_CIVILIAN_GROUP] = CreateTextButton(gszCivGroupNames[0], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, BUTTON_USE_DEFAULT, 574, 410, 60, 25, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, MercsCivilianGroupCallback);
 
 	iEditorButton[MERCS_TOGGLECOLOR_BUTTON] = CreateCheckBoxButton(180, 364, "EDITOR/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsToggleColorModeCallback);
-	iEditorButton[MERCS_HAIRCOLOR_DOWN] = CreateEasyNoToggleButton(200, 364, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
-	iEditorButton[MERCS_HAIRCOLOR_UP]   = CreateEasyNoToggleButton(360, 364, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
-	iEditorButton[MERCS_SKINCOLOR_DOWN] = CreateEasyNoToggleButton(200, 388, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
-	iEditorButton[MERCS_SKINCOLOR_UP]   = CreateEasyNoToggleButton(360, 388, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
-	iEditorButton[MERCS_VESTCOLOR_DOWN] = CreateEasyNoToggleButton(200, 412, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
-	iEditorButton[MERCS_VESTCOLOR_UP]   = CreateEasyNoToggleButton(360, 412, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
-	iEditorButton[MERCS_PANTCOLOR_DOWN] = CreateEasyNoToggleButton(200, 436, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
-	iEditorButton[MERCS_PANTCOLOR_UP]   = CreateEasyNoToggleButton(360, 436, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
+	iEditorButton[MERCS_HAIRCOLOR_DOWN] = CreateEasyButton(200, 364, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
+	iEditorButton[MERCS_HAIRCOLOR_UP]   = CreateEasyButton(360, 364, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
+	iEditorButton[MERCS_SKINCOLOR_DOWN] = CreateEasyButton(200, 388, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
+	iEditorButton[MERCS_SKINCOLOR_UP]   = CreateEasyButton(360, 388, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
+	iEditorButton[MERCS_VESTCOLOR_DOWN] = CreateEasyButton(200, 412, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
+	iEditorButton[MERCS_VESTCOLOR_UP]   = CreateEasyButton(360, 412, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
+	iEditorButton[MERCS_PANTCOLOR_DOWN] = CreateEasyButton(200, 436, "EDITOR/leftarrow.sti",  MercsSetColorsCallback);
+	iEditorButton[MERCS_PANTCOLOR_UP]   = CreateEasyButton(360, 436, "EDITOR/rightarrow.sti", MercsSetColorsCallback);
 	for (INT32 x = FIRST_MERCS_COLOR_BUTTON; x < LAST_MERCS_COLOR_BUTTON; x += 2)
 	{
 		SetButtonFastHelpText(iEditorButton[x    ], L"Previous color set");
@@ -352,8 +352,8 @@ static void InitEditorItemsToolbar(void)
 	iEditorButton[ITEMS_TRIGGERS]   = CreateTextButton( L"Triggers",  BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, BUTTON_USE_DEFAULT, 383, 440, 59, 20, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ItemsTriggersCallback);
 	iEditorButton[ITEMS_KEYS]       = CreateTextButton( L"Keys",      BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, BUTTON_USE_DEFAULT, 442, 440, 38, 20, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ItemsKeysCallback);
 
-	iEditorButton[ITEMS_LEFTSCROLL]  = CreateEasyNoToggleButton( 1, 361, "EDITOR/leftscroll.sti",  ItemsLeftScrollCallback);
-	iEditorButton[ITEMS_RIGHTSCROLL] = CreateEasyNoToggleButton(50, 361, "EDITOR/rightscroll.sti", ItemsRightScrollCallback);
+	iEditorButton[ITEMS_LEFTSCROLL]  = CreateEasyButton( 1, 361, "EDITOR/leftscroll.sti",  ItemsLeftScrollCallback);
+	iEditorButton[ITEMS_RIGHTSCROLL] = CreateEasyButton(50, 361, "EDITOR/rightscroll.sti", ItemsRightScrollCallback);
 }
 
 

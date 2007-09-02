@@ -453,10 +453,8 @@ static void CreateFileDialog(const wchar_t* zTitle)
 		BUTTON_USE_DEFAULT, 406, 225, 50, 30, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgCancelCallback );
 
 	//Scroll buttons
-	iFileDlgButtons[2] = CreateSimpleButton( 426,92,"EDITOR/uparrow.sti", BUTTON_NO_TOGGLE,
-																MSYS_PRIORITY_HIGH, FDlgUpCallback );
-	iFileDlgButtons[3] = CreateSimpleButton( 426,182,"EDITOR/downarrow.sti", BUTTON_NO_TOGGLE,
-																MSYS_PRIORITY_HIGH, FDlgDwnCallback );
+	iFileDlgButtons[2] = CreateSimpleButton(426,  92, "EDITOR/uparrow.sti",   MSYS_PRIORITY_HIGH, FDlgUpCallback);
+	iFileDlgButtons[3] = CreateSimpleButton(426, 182, "EDITOR/downarrow.sti", MSYS_PRIORITY_HIGH, FDlgDwnCallback);
 
 	//File list window
 	iFileDlgButtons[4] = CreateHotSpot( (179+4), (69+3), (179+4+240), (69+120+3), MSYS_PRIORITY_HIGH-1, BUTTON_NO_CALLBACK, FDlgNamesCallback);

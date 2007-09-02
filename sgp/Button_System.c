@@ -789,19 +789,13 @@ INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT3
 }
 
 
-INT32 CreateEasyNoToggleButton(INT32 x, INT32 y, const char* filename, GUI_CALLBACK ClickCallback)
+INT32 CreateEasyButton(INT32 x, INT32 y, const char* filename, GUI_CALLBACK ClickCallback)
 {
-	return CreateSimpleButton(x, y, filename, BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback);
+	return CreateSimpleButton(x, y, filename, MSYS_PRIORITY_NORMAL, ClickCallback);
 }
 
 
-INT32 CreateEasyToggleButton(INT32 x, INT32 y, const char* filename, GUI_CALLBACK ClickCallback)
-{
-	return CreateSimpleButton(x, y, filename, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL, ClickCallback);
-}
-
-
-INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback)
+INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	AssertMsg(filename != NULL, "Attempting to CreateSimpleButton with null filename.");
 
@@ -812,7 +806,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT32 Type, INT
 		return BUTTON_NO_SLOT;
 	}
 
-	INT32 ButNum = QuickCreateButton(ButPic, x, y, Type, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
+	INT32 ButNum = QuickCreateButton(ButPic, x, y, BUTTON_NO_TOGGLE, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
 	AssertMsg(ButNum != BUTTON_NO_SLOT, "Failed to CreateSimpleButton.");
 
 	ButtonList[ButNum]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
