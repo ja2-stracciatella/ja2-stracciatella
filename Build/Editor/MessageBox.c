@@ -44,13 +44,8 @@ void CreateMessageBox(const wchar_t* wzString)
 	iMsgBoxOkImg = LoadButtonImage("EDITOR/ok.sti",0,1,2,3,4);
 	iMsgBoxCancelImg = LoadButtonImage("EDITOR/cancel.sti",0,1,2,3,4);
 
-	iMsgBoxOk = QuickCreateButton(iMsgBoxOkImg, (INT16)(sStartX + (sPixLen/2) - 35), (INT16)(sStartY + 58),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BUTTON_NO_CALLBACK, MsgBoxOkClkCallback);
-
-	iMsgBoxCancel = QuickCreateButton(iMsgBoxCancelImg, (INT16)(sStartX + (sPixLen/2) + 5), (INT16)(sStartY + 58),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BUTTON_NO_CALLBACK, MsgBoxCnclClkCallback);
+	iMsgBoxOk     = QuickCreateButton(iMsgBoxOkImg,     sStartX + (sPixLen / 2) - 35, sStartY + 58, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, MsgBoxOkClkCallback);
+	iMsgBoxCancel = QuickCreateButton(iMsgBoxCancelImg, sStartX + (sPixLen / 2) +  5, sStartY + 58, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, MsgBoxCnclClkCallback);
 
 	SGPRect MsgBoxRect;
 	MsgBoxRect.iLeft = sStartX;
@@ -116,11 +111,7 @@ void RemoveMessageBox( )
 
 static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
 {
-	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		butn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = TRUE;
@@ -130,11 +121,7 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason)
 
 static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		butn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubMessageBoxStatus = MESSAGEBOX_DONE;
 		gfMessageBoxResult = FALSE;
