@@ -148,7 +148,7 @@ extern UINT8 gbPlayerNum;
 
 extern UINT16 gusSelectedSoldier;
 
-extern const char* const gzActionStr[][30];
+extern const char* const gzActionStr[];
 
 // Soldier List used for all soldier overhead interaction
 extern SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];

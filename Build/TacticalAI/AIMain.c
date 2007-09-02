@@ -469,7 +469,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			// display deadlock message
 			gfUIInDeadlock = TRUE;
 			gUIDeadlockedSoldier = pSoldier->ubID;
-			DebugAI( String("DEADLOCK soldier %d action %s ABC %d", pSoldier->ubID, gzActionStr[pSoldier->bAction], gTacticalStatus.ubAttackBusyCount ) );
+			DebugAI(String("DEADLOCK soldier %d action %hs ABC %d", pSoldier->ubID, gzActionStr[pSoldier->bAction], gTacticalStatus.ubAttackBusyCount));
 #else
 
 			// If we are in beta version, also report message!
@@ -1686,11 +1686,11 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 	#ifdef TESTAICONTROL
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		DebugAI( String( "%d does %s (a.d. %d) in %d with %d APs left", pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData, pSoldier->sGridNo, pSoldier->bActionPoints ) );
+		DebugAI(String("%d does %hs (a.d. %d) in %d with %d APs left", pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData, pSoldier->sGridNo, pSoldier->bActionPoints));
 	}
 	#endif
 
-	DebugAI( String( "%d does %s (a.d. %d) at time %ld", pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock() ) );
+	DebugAI(String("%d does %hs (a.d. %d) at time %ld", pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock()));
 
 	switch (pSoldier->bAction)
 	{

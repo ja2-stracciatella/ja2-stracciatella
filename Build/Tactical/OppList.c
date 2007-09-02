@@ -3685,7 +3685,7 @@ void DebugSoldierPage3( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Action:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gzActionStr[ pSoldier->bAction ] );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzActionStr[pSoldier->bAction]);
 		if (pSoldier->uiStatusFlags & SOLDIER_ENEMY )
 		{
 			gprintf(350, LINE_HEIGHT * ubLine, L"Alert %hs", gzAlertStr[pSoldier->bAlertStatus]);
@@ -3739,7 +3739,7 @@ void DebugSoldierPage3( )
 		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 		gprintf( 0, LINE_HEIGHT * ubLine, L"Last Action:");
 		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", gzActionStr[ pSoldier->bLastAction ]  );
+		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzActionStr[pSoldier->bLastAction]);
 		ubLine++;
 
 		if ( gubWatchedLocPoints[ pSoldier->ubID ][ 2 ] > 0 )

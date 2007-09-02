@@ -153,7 +153,7 @@ UINT8 gbPlayerNum = 0;
 UINT16 gusSelectedSoldier = NO_SOLDIER;
 
 
-const char* const gzActionStr[][30] =
+const char* const gzActionStr[] =
 {
 	"NONE",
 
