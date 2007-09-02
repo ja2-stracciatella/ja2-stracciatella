@@ -92,7 +92,7 @@ static void MakeButtonDir(UINT idx, UINT dir, INT16 x, INT16 y)
 		L"northwest"
 	};
 
-	INT32 btn = CreateIconButton(giEditMercDirectionIcons[0], (dir + 1) % 8, BUTTON_USE_DEFAULT, x, y, 30, 30, BUTTON_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, MercsDirectionSetCallback);
+	INT32 btn = CreateIconButton(giEditMercDirectionIcons[0], (dir + 1) % 8, x, y, 30, 30, MSYS_PRIORITY_NORMAL + 1, MercsDirectionSetCallback);
 	iEditorButton[idx] = btn;
 	wchar_t str[30];
 	swprintf(str, lengthof(str), L"Set merc to face %ls", FaceDirs[dir]);

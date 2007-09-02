@@ -705,15 +705,13 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 }
 
 
-INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	AssertMsg(-1 <= GenImg && GenImg < MAX_GENERIC_PICS, String("Attempting to %s with out of range iconID %d.", __func__, GenImg));
-
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(GenImg < 0 ? 0 : GenImg, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	b->iIconID     = Icon;

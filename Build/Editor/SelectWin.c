@@ -227,6 +227,16 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason);
 static void UpClkCallback(GUI_BUTTON* button, INT32 reason);
 
 
+static INT32 MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const wchar_t* help)
+{
+	INT32 img = LoadGenericButtonIcon(gfx);
+	iButtonIcons[idx] = img;
+	INT32 btn = CreateIconButton(img, 0, 600, y, 40, h, MSYS_PRIORITY_HIGH, click);
+	SetButtonFastHelpText(btn, help);
+	return btn;
+}
+
+
 //----------------------------------------------------------------------------------------------
 //	CreateJA2SelectionWindow
 //
@@ -241,42 +251,13 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 
 	DisableEditorTaskbar( );
 
-	// Load up the button images
-	iButtonIcons[ CANCEL_ICON ] = LoadGenericButtonIcon( "EDITOR/bigX.sti" );
-	iButtonIcons[ UP_ICON ] = LoadGenericButtonIcon( "EDITOR/lgUpArrow.sti" );
-	iButtonIcons[ DOWN_ICON ] = LoadGenericButtonIcon( "EDITOR/lgDownArrow.sti" );
-	iButtonIcons[ OK_ICON ] = LoadGenericButtonIcon( "EDITOR/checkmark.sti" );
-
 	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH,
 														DEFAULT_MOVE_CALLBACK, SelWinClkCallback);
 
-	iCancelWin = CreateIconButton((INT16)iButtonIcons[CANCEL_ICON], 0,
-														BUTTON_USE_DEFAULT, 600, 40,
-														40, 40, BUTTON_TOGGLE,
- 														MSYS_PRIORITY_HIGH,
-														DEFAULT_MOVE_CALLBACK, CnclClkCallback);
-	SetButtonFastHelpText(iCancelWin,L"Cancel selections");
-
-	iOkWin = CreateIconButton((INT16)iButtonIcons[OK_ICON], 0,
-														BUTTON_USE_DEFAULT, 600, 0,
-														40, 40, BUTTON_TOGGLE,
-														MSYS_PRIORITY_HIGH,
-														DEFAULT_MOVE_CALLBACK, OkClkCallback);
-	SetButtonFastHelpText(iOkWin,L"Accept selections");
-
-	iScrollUp = CreateIconButton((INT16)iButtonIcons[UP_ICON], 0,
-														BUTTON_USE_DEFAULT, 600, 80,
-														40, 160, BUTTON_NO_TOGGLE,
-														MSYS_PRIORITY_HIGH,
-														DEFAULT_MOVE_CALLBACK, UpClkCallback);
-	SetButtonFastHelpText(iScrollUp,L"Scroll window up");
-
-	iScrollDown = CreateIconButton((INT16)iButtonIcons[DOWN_ICON], 0,
-														BUTTON_USE_DEFAULT, 600, 240,
-														40, 160, BUTTON_NO_TOGGLE,
-														MSYS_PRIORITY_HIGH,
-														DEFAULT_MOVE_CALLBACK, DwnClkCallback);
-	SetButtonFastHelpText(iScrollDown,L"Scroll window down");
+	iCancelWin  = MakeButton(CANCEL_ICON, "EDITOR/bigX.sti",         40,  40, CnclClkCallback, L"Cancel selections");
+	iOkWin      = MakeButton(OK_ICON,     "EDITOR/checkmark.sti",     0,  40, OkClkCallback,   L"Accept selections");
+	iScrollUp   = MakeButton(UP_ICON,     "EDITOR/lgUpArrow.sti",    80, 160, UpClkCallback,   L"Scroll window up");
+	iScrollDown = MakeButton(DOWN_ICON,   "EDITOR/lgDownArrow.sti", 240, 160, DwnClkCallback,  L"Scroll window down");
 
 	fButtonsPresent = TRUE;
 

@@ -220,7 +220,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates an Iconic type button.
-INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 GenImg, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
+INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* Creates a button like HotSpot. HotSpots have no graphics associated with
  * them.
