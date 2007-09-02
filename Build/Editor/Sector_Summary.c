@@ -251,7 +251,7 @@ void CreateSummaryWindow()
 	//Create all of the buttons here
 	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH - 1);
 
-	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryOkayCallback);
+	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
 	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] =
 		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
@@ -263,19 +263,19 @@ void CreateSummaryWindow()
 	ButtonList[ iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderProgress = TRUE;
 
-	iSummaryButton[SUMMARY_ALL] = CreateTextButton(L"A",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 110, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryToggleLevelCallback);
+	iSummaryButton[SUMMARY_ALL] = CreateTextButton(L"A",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 110, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == ALL_LEVELS_MASK || giCurrentViewLevel == ALTERNATE_LEVELS_MASK )
 		ButtonList[ iSummaryButton[ SUMMARY_ALL ] ]->uiFlags |= BUTTON_CLICKED_ON;
-	iSummaryButton[SUMMARY_G]   = CreateTextButton(L"G",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 128, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryToggleLevelCallback);
+	iSummaryButton[SUMMARY_G]   = CreateTextButton(L"G",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 128, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == GROUND_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_GROUND_MASK )
 		ButtonList[ iSummaryButton[ SUMMARY_G ] ]->uiFlags |= BUTTON_CLICKED_ON;
-	iSummaryButton[SUMMARY_B1]  = CreateTextButton(L"B1", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 146, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryToggleLevelCallback);
+	iSummaryButton[SUMMARY_B1]  = CreateTextButton(L"B1", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 146, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B1_MASK )
 		ButtonList[ iSummaryButton[ SUMMARY_B1 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-	iSummaryButton[SUMMARY_B2]  = CreateTextButton(L"B2", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 164, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryToggleLevelCallback);
+	iSummaryButton[SUMMARY_B2]  = CreateTextButton(L"B2", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 164, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT2_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B2_MASK )
 		ButtonList[ iSummaryButton[ SUMMARY_B2 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-	iSummaryButton[SUMMARY_B3]  = CreateTextButton(L"B3", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 182, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryToggleLevelCallback);
+	iSummaryButton[SUMMARY_B3]  = CreateTextButton(L"B3", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 182, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT3_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B3_MASK )
 		ButtonList[ iSummaryButton[ SUMMARY_B3 ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -284,13 +284,13 @@ void CreateSummaryWindow()
 	if( gfAlternateMaps )
 		ButtonList[ iSummaryButton[ SUMMARY_ALTERNATE ] ]->uiFlags |= BUTTON_CLICKED_ON;
 
-	iSummaryButton[SUMMARY_LOAD] = CreateTextButton(L"LOAD", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT,      MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryLoadMapCallback);
-	iSummaryButton[SUMMARY_SAVE] = CreateTextButton(L"SAVE", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT + 55, MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummarySaveMapCallback);
+	iSummaryButton[SUMMARY_LOAD] = CreateTextButton(L"LOAD", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT,      MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummaryLoadMapCallback);
+	iSummaryButton[SUMMARY_SAVE] = CreateTextButton(L"SAVE", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT + 55, MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummarySaveMapCallback);
 	iSummaryButton[ SUMMARY_OVERRIDE ] =
 		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
 
 
-	iSummaryButton[SUMMARY_UPDATE] = CreateTextButton(L"Update", FONT12POINT1, FONT_BLACK, FONT_BLACK, 255, 15, 40, 16, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, SummaryUpdateCallback);
+	iSummaryButton[SUMMARY_UPDATE] = CreateTextButton(L"Update", FONT12POINT1, FONT_BLACK, FONT_BLACK, 255, 15, 40, 16, MSYS_PRIORITY_HIGH, SummaryUpdateCallback);
 
 	iSummaryButton[ SUMMARY_REAL ] =
 		CreateCheckBoxButton( 350, 47, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );

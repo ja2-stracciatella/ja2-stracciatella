@@ -691,7 +691,7 @@ UINT32	QuestDebugScreenShutdown()
 
 static INT32 MakeButton(const wchar_t* text, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority, GUI_CALLBACK click)
 {
-	return CreateTextButton(text, QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FONT_BLACK, x, y, w, h, priority, BUTTON_NO_CALLBACK, click);
+	return CreateTextButton(text, QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FONT_BLACK, x, y, w, h, priority, click);
 }
 
 

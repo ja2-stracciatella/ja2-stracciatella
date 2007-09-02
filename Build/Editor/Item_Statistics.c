@@ -645,7 +645,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ SILENCER_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( SILENCER, gpItem->usItem ) )
 	{
-		guiAttachmentButton[SILENCER_ATTACHMENT_BUTTON] = CreateTextButton(L"SILENCER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[SILENCER_ATTACHMENT_BUTTON] = CreateTextButton(L"SILENCER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, SILENCER ) != -1 )
 		{
@@ -656,7 +656,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ SNIPERSCOPE_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( SNIPERSCOPE, gpItem->usItem ) )
 	{
-		guiAttachmentButton[SNIPERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"SNIPERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[SNIPERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"SNIPERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, SNIPERSCOPE ) != -1 )
 		{
@@ -667,7 +667,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ LASERSCOPE_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( LASERSCOPE, gpItem->usItem ) )
 	{
-		guiAttachmentButton[LASERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"LASERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[LASERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"LASERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, LASERSCOPE ) != -1 )
 		{
@@ -678,7 +678,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ BIPOD_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( BIPOD, gpItem->usItem ) )
 	{
-		guiAttachmentButton[BIPOD_ATTACHMENT_BUTTON] = CreateTextButton(L"BIPOD", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[BIPOD_ATTACHMENT_BUTTON] = CreateTextButton(L"BIPOD", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, BIPOD ) != -1 )
 		{
@@ -689,7 +689,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ DUCKBILL_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( DUCKBILL, gpItem->usItem ) )
 	{
-		guiAttachmentButton[DUCKBILL_ATTACHMENT_BUTTON] = CreateTextButton(L"DUCKBILL", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[DUCKBILL_ATTACHMENT_BUTTON] = CreateTextButton(L"DUCKBILL", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, DUCKBILL ) != -1 )
 		{
@@ -700,7 +700,7 @@ static void SetupGunGUI(void)
 	guiAttachmentButton[ GLAUNCHER_ATTACHMENT_BUTTON ] = -1;
 	if( ValidAttachment( UNDER_GLAUNCHER, gpItem->usItem ) )
 	{
-		guiAttachmentButton[GLAUNCHER_ATTACHMENT_BUTTON] = CreateTextButton(L"G-LAUNCHER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleAttachment);
+		guiAttachmentButton[GLAUNCHER_ATTACHMENT_BUTTON] = CreateTextButton(L"G-LAUNCHER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
 		yp += 14;
 		if( FindAttachment( gpItem, UNDER_GLAUNCHER ) != -1 )
 		{
@@ -827,7 +827,7 @@ static void SetupArmourGUI(void)
 	guiCeramicPlatesButton = -1;
 	if( ValidAttachment( CERAMIC_PLATES, gpItem->usItem ) )
 	{
-		guiCeramicPlatesButton = CreateTextButton(L"CERAMIC PLATES", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 558, 375, 72, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleCeramicPlates);
+		guiCeramicPlatesButton = CreateTextButton(L"CERAMIC PLATES", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 558, 375, 72, 12, MSYS_PRIORITY_NORMAL, ToggleCeramicPlates);
 		if( FindAttachment( gpItem, CERAMIC_PLATES ) != -1 )
 		{
 			ButtonList[ guiCeramicPlatesButton ]->uiFlags |= BUTTON_CLICKED_ON;
@@ -947,7 +947,7 @@ static void SetupExplosivesGUI(void)
 	guiDetonatorButton = -1;
 	if( ValidAttachment( DETONATOR, gpItem->usItem ) )
 	{
-		guiDetonatorButton = CreateTextButton(L"DETONATOR", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ToggleDetonator);
+		guiDetonatorButton = CreateTextButton(L"DETONATOR", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleDetonator);
 		yp += 14;
 		if( FindAttachment( gpItem, DETONATOR ) != -1 )
 		{
@@ -1054,7 +1054,7 @@ static void SetupOwnershipGUI(void)
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->ubOwnerProfile);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	giOwnershipGroupButton = CreateTextButton(gszCivGroupNames[gpItem->ubOwnerCivGroup], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 485, 415, 80, 25, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, OwnershipGroupButtonCallback);
+	giOwnershipGroupButton = CreateTextButton(gszCivGroupNames[gpItem->ubOwnerCivGroup], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 485, 415, 80, 25, MSYS_PRIORITY_NORMAL, OwnershipGroupButtonCallback);
 }
 
 
@@ -1139,7 +1139,7 @@ static void SetupActionItemsGUI(void)
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	pStr = GetActionItemName( gpItem );
-	guiActionItemButton = CreateTextButton(pStr, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, 410, 100, 20, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, ActionItemCallback);
+	guiActionItemButton = CreateTextButton(pStr, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, 410, 100, 20, MSYS_PRIORITY_NORMAL, ActionItemCallback);
 }
 
 

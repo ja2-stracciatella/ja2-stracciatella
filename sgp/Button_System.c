@@ -721,13 +721,13 @@ INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT1
 }
 
 
-INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
@@ -834,7 +834,7 @@ INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont,
 
 INT32 CreateLabel(const wchar_t* text, UINT32 font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
-	INT32 btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL, NULL);
+	INT32 btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
