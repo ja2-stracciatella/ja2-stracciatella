@@ -447,8 +447,8 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_HIGH - 5, 0, 0, 0 );
 
 	//Okay and cancel buttons
-	iFileDlgButtons[0] = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT, 354, 225, 50, 30, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgOkCallback);
-	iFileDlgButtons[1] = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, BUTTON_USE_DEFAULT, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgCancelCallback);
+	iFileDlgButtons[0] = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 354, 225, 50, 30, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgOkCallback);
+	iFileDlgButtons[1] = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, FDlgCancelCallback);
 
 	//Scroll buttons
 	iFileDlgButtons[2] = CreateSimpleButton(426,  92, "EDITOR/uparrow.sti",   MSYS_PRIORITY_HIGH, FDlgUpCallback);
