@@ -457,23 +457,7 @@ BOOLEAN		gfSM_HandInvDispText[ NUM_INV_SLOTS ];
 UINT16					gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 extern	SOLDIERTYPE *gpItemPopupSoldier;
-INT8						gbSMCurStanceObj;
 extern	INT8		gbCompatibleApplyItem;
-
-
-static const INT8 gbStanceButPos[2][3][3] =
-{
-	{ // NON-STEALTH
-		{ 16, 14, 15 },
-		{ 10,  8,  9 },
-		{ 22, 20, 21 }
-	},
-	{ // STEALTH MODE
-		{ 13, 11, 12 },
-		{  7,  5,  6 },
-		{ 19, 17, 18 }
-	}
-};
 
 
 // keyring stuff
@@ -741,12 +725,11 @@ static void UpdateSMPanel(void)
 		ubStanceState = gAnimControl[ gpSMCurrentMerc->usAnimState ].ubEndHeight;
 	}
 
-
+	INT32 stance_gfx;
 	switch( ubStanceState )
 	{
 		case ANIM_STAND:
-
-			gbSMCurStanceObj = 0;
+			stance_gfx = 11;
 			DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 			EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 
@@ -758,13 +741,13 @@ static void UpdateSMPanel(void)
 			break;
 
 		case ANIM_PRONE:
-			gbSMCurStanceObj = 2;
+			stance_gfx = 17;
 			DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 			EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 			break;
 
 		case ANIM_CROUCH:
-			gbSMCurStanceObj = 1;
+			stance_gfx = 5;
 			EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
 			EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 
@@ -784,10 +767,8 @@ static void UpdateSMPanel(void)
 		if (giSMStealthImages != -1) UnloadButtonImage(giSMStealthImages);
 
 		// Make new
-		const INT32 gray = gbStanceButPos[gpSMCurrentMerc->bStealthMode][gbSMCurStanceObj][0];
-		const INT32 off  = gbStanceButPos[gpSMCurrentMerc->bStealthMode][gbSMCurStanceObj][1];
-		const INT32 on   = gbStanceButPos[gpSMCurrentMerc->bStealthMode][gbSMCurStanceObj][2];
-		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], gray, off, -1, on, -1);
+		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
+		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
 		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, SM_STEALTHMODE_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, DEFAULT_MOVE_CALLBACK, BtnStealthModeCallback);
 		SetButtonFastHelpText(giSMStealthButton, TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
@@ -1544,10 +1525,6 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 			// Render faceplate
 			//BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMObjects2, 1, SM_SELMERC_NAMEPLATE_X, SM_SELMERC_NAMEPLATE_Y);
 			//RestoreExternBackgroundRect( SM_SELMERC_NAMEPLATE_X, SM_SELMERC_NAMEPLATE_Y, SM_SELMERC_NAMEPLATE_WIDTH, SM_SELMERC_NAMEPLATE_HEIGHT );
-
-			// Blit position
-			//BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMObjects, gbSMCurStanceObj, SM_POSITIONB_X, SM_POSITIONB_Y);
-			//RestoreExternBackgroundRect( SM_POSITIONB_X, SM_POSITIONB_Y, SM_POSITIONB_WIDTH , SM_POSITIONB_HEIGHT );
 
 
 			SetFont( BLOCKFONT2 );
