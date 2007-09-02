@@ -2240,7 +2240,8 @@ static UINT32 PerformSelectedAction(void)
 	return( uiRetVal );
 }
 
-void CreateNewMap()
+
+static void CreateNewMap(void)
 {
 	if( gfSummaryWindowActive )
 		DestroySummaryWindow();

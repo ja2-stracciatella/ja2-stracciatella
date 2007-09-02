@@ -195,11 +195,6 @@ enum{
 	SUMMARY_LOAD,
 	SUMMARY_SAVE,
 	SUMMARY_OVERRIDE,
-#if 0
-	SUMMARY_NEW_GROUNDLEVEL,
-	SUMMARY_NEW_BASEMENTLEVEL,
-	SUMMARY_NEW_CAVELEVEL,
-#endif
 	SUMMARY_UPDATE,
 	SUMMARY_SCIFI,
 	SUMMARY_REAL,
@@ -320,19 +315,6 @@ void CreateSummaryWindow()
 		SummarySaveMapCallback );
 	iSummaryButton[ SUMMARY_OVERRIDE ] =
 		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
-
-
-#if 0
-	iSummaryButton[ SUMMARY_NEW_GROUNDLEVEL ] =
-		CreateSimpleButton( MAP_LEFT, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewGroundLevelCallback );
-	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_GROUNDLEVEL ], L"New map" );
-	iSummaryButton[ SUMMARY_NEW_BASEMENTLEVEL ] =
-		CreateSimpleButton( MAP_LEFT+32, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewBasementLevelCallback );
-	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_BASEMENTLEVEL ], L"New basement" );
-	iSummaryButton[ SUMMARY_NEW_CAVELEVEL ] =
-		CreateSimpleButton( MAP_LEFT+64, MAP_BOTTOM+58, "EDITOR/new.sti", BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, SummaryNewCaveLevelCallback );
-	SetButtonFastHelpText( iSummaryButton[ SUMMARY_NEW_CAVELEVEL ], L"New cave level" );
-#endif
 
 
 	iSummaryButton[ SUMMARY_UPDATE ] =
@@ -2427,24 +2409,6 @@ void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSu
 	//Set current directory back to data directory!
 	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
-}
-
-
-static void SummaryNewGroundLevelCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		gfPendingBasement = FALSE;
-		gfPendingCaves = FALSE;
-		if( gfWorldLoaded )
-		{
-			iCurrentAction = ACTION_NEW_MAP;
-		}
-		else
-		{
-			CreateNewMap();
-		}
-	}
 }
 
 

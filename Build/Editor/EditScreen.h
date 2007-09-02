@@ -17,8 +17,6 @@ void ShowLightPositionHandles( void );
 
 extern void ShowCurrentDrawingMode( void );
 
-void CreateNewMap();
-
 void DisplayTilesetPage(void);
 
 BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType );
