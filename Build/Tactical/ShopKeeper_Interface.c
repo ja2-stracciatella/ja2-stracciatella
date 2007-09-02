@@ -354,14 +354,6 @@ static UINT32 guiSKI_InvPageDownButton;
 static INT32  guiSKI_InvPageDownButtonImage;
 
 
-/*
-//Evaluate:
-//Evaluate buttons
-void		BtnSKI_EvaluateButtonCallback(GUI_BUTTON *btn,INT32 reason);
-UINT32	guiSKI_EvaluateButton;
-INT32		guiSKI_EvaluateButtonImage;
-*/
-
 //Transaction buttons
 static void BtnSKI_TransactionButtonCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiSKI_TransactionButton;
@@ -663,24 +655,8 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	SpecifyDisabledButtonStyle( guiSKI_InvPageDownButton, DISABLED_STYLE_HATCHED );
 
 
-
-//Evaluate:
-	//	guiSKI_EvaluateButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );
-//	guiSKI_TransactionButtonImage = UseLoadedButtonImage( guiSKI_EvaluateButtonImage, -1,0,-1,1,-1 );
 	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );
 	guiSKI_DoneButtonImage = UseLoadedButtonImage( guiSKI_TransactionButtonImage, -1,0,-1,1,-1 );
-
-/*
-//Evaluate:
-	//Evaluate button
-	guiSKI_EvaluateButton = CreateIconAndTextButton( guiSKI_EvaluateButtonImage, SKI_Text[SKI_TEXT_EVALUATE], SKI_BUTTON_FONT,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
-													 SKI_EVALUATE_BUTTON_X, SKI_EVALUATE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 BtnSKI_EvaluateButtonCallback);
-	SpecifyDisabledButtonStyle( guiSKI_EvaluateButton, DISABLED_STYLE_HATCHED );
-*/
 
 	//Transaction button
 	guiSKI_TransactionButton = CreateIconAndTextButton( guiSKI_TransactionButtonImage, SKI_Text[SKI_TEXT_TRANSACTION], SKI_BUTTON_FONT,
@@ -901,7 +877,6 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	UnloadButtonImage( guiSKI_InvPageDownButtonImage );
 
 	UnloadButtonImage( guiSKI_TransactionButtonImage );
-	//	UnloadButtonImage( guiSKI_EvaluateButtonImage );
 	UnloadButtonImage( guiSKI_DoneButtonImage );
 
 	//loop through the area and delete small faces
@@ -913,8 +888,6 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	RemoveButton( guiSKI_InvPageUpButton );
 	RemoveButton( guiSKI_InvPageDownButton );
 
-//Evaluate:
-	//	RemoveButton( guiSKI_EvaluateButton );
 	RemoveButton( guiSKI_TransactionButton );
 	RemoveButton( guiSKI_DoneButton );
 
@@ -1314,18 +1287,6 @@ static void BtnSKI_InvPageDownButtonCallback(GUI_BUTTON* btn, INT32 reason)
 		}
 	}
 }
-
-/*
-//Evaluate:
-void BtnSKI_EvaluateButtonCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		ShutUpShopKeeper();
-		EvaluateAllItemsInPlayersOfferArea( );
-	}
-}
-*/
 
 
 static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount);

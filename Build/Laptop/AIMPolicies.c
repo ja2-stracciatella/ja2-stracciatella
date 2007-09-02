@@ -381,13 +381,6 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
 	{
-
-//		guiPoliciesMenuButton[i] = QuickCreateButton(guiPoliciesMenuButtonImage, usPosX, AIM_POLICY_MENU_Y,
-//																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-//																	DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
-//		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
-//		MSYS_SetBtnUserData(guiPoliciesMenuButton[i], i);
-
 		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
@@ -569,12 +562,6 @@ static BOOLEAN InitAgreementRegion(void)
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)
 	{
-//		guiPoliciesAgreeButton[i] = QuickCreateButton(guiPoliciesButtonImage, usPosX, AIM_POLICY_AGREEMENT_Y,
-//																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-//																	BUTTON_NO_CALLBACK, BtnPoliciesAgreeButtonCallback);
-//		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
-//		MSYS_SetBtnUserData(guiPoliciesAgreeButton[i], i);
-
 		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT,
 														 AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW,
 														 AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW,

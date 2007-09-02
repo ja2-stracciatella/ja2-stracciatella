@@ -421,9 +421,6 @@ INT32 giMapInvDoneButton = -1;
 
 INT32 giMapContractButton = -1;
 
-//INT32 giMapInvButton = -1;
-//INT32 giMapInvButtonImage;
-
 INT32 giSortStateForMapScreenList = 0;
 
 INT32 giCommonGlowBaseTime = 0;
@@ -5609,32 +5606,6 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 }
 
 
-/*
-void BtnINVCallback(GUI_BUTTON *btn,INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if (!fMapInventoryItem)
-		{
-			fShowInventoryFlag = FALSE;
-		}
-
-		// set help text for item glow region
-		if (fShowInventoryFlag)
-		{
-			SetRegionFastHelpText(&gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[2]);
-		}
-		else
-		{
-			SetRegionFastHelpText(&gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[0]);
-		}
-
-		fTeamPanelDirty = TRUE;
-	}
-}
-*/
-
-
 static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MAPInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -5649,10 +5620,6 @@ void CreateDestroyMapInvButton()
  {
 	 // create inventory button
   fOldShowInventoryFlag=TRUE;
-  //giMapInvButtonImage=  LoadButtonImage( "INTERFACE/mapinv.sti" ,-1,1,-1,2,-1 );
-  //giMapInvButton= QuickCreateButton( giMapInvButtonImage, INV_BTN_X-1, INV_BTN_Y,
-						//				BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-						//				BUTTON_NO_CALLBACK, BtnINVCallback);
   // disable allmouse regions in this space
   fTeamPanelDirty=TRUE;
 
@@ -5670,8 +5637,6 @@ void CreateDestroyMapInvButton()
 	 // destroy inventory button
 	 ShutdownInvSlotInterface( );
 	 fOldShowInventoryFlag=FALSE;
-   //RemoveButton( giMapInvButton );
-   //UnloadButtonImage( giMapInvButtonImage );
    fTeamPanelDirty=TRUE;
    MSYS_DisableRegion(&gMPanelRegion);
 

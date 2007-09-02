@@ -1375,8 +1375,6 @@ BOOLEAN CreateSMPanelButtons( )
 	}
 	SetButtonFastHelpText( iSMPanelButtons[ STANCEUP_BUTTON ], TacticalStr[ CHANGE_STANCE_UP_POPUPTEXT ] );
 
-	//SetButtonFastHelpText( iSMPanelButtons[ STANCEUP_BUTTON ],L"Change Stance Up");
-
 
 	iSMPanelButtons[ UPDOWN_BUTTON ] = QuickCreateButton( iSMPanelImages[ UPDOWN_IMAGES ], SM_UPDOWNB_X, SM_UPDOWNB_Y,
 										BUTTON_NEWTOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -1386,7 +1384,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ UPDOWN_BUTTON ],L"Whatever");
 	SetButtonFastHelpText( iSMPanelButtons[ UPDOWN_BUTTON ], TacticalStr[ CURSOR_LEVEL_POPUPTEXT ] );
 
 	iSMPanelButtons[ CLIMB_BUTTON ] = QuickCreateButton( iSMPanelImages[ CLIMB_IMAGES ], SM_CLIMBB_X, SM_CLIMBB_Y,
@@ -1397,7 +1394,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ CLIMB_BUTTON ],L"Climb");
 	SetButtonFastHelpText( iSMPanelButtons[ CLIMB_BUTTON ], TacticalStr[ JUMPCLIMB_POPUPTEXT ] );
 
 	iSMPanelButtons[ STANCEDOWN_BUTTON ] = QuickCreateButton( iSMPanelImages[ STANCEDOWN_IMAGES ], SM_STANCEDOWNB_X, SM_STANCEDOWNB_Y,
@@ -1408,7 +1404,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ STANCEDOWN_BUTTON ],L"Change Stance Down");
 	SetButtonFastHelpText( iSMPanelButtons[ STANCEDOWN_BUTTON ], TacticalStr[ CHANGE_STANCE_DOWN_POPUPTEXT ] );
 
 	iSMPanelButtons[ HANDCURSOR_BUTTON ] = QuickCreateButton( iSMPanelImages[ HANDCURSOR_IMAGES ], SM_HANDCURSORB_X, SM_HANDCURSORB_Y,
@@ -1419,7 +1414,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ HANDCURSOR_BUTTON ],L"Change Stance Down");
 	SetButtonFastHelpText( iSMPanelButtons[ HANDCURSOR_BUTTON ], TacticalStr[ EXAMINE_CURSOR_POPUPTEXT ] );
 
 	iSMPanelButtons[ PREVMERC_BUTTON ] = QuickCreateButton( iSMPanelImages[ PREVMERC_IMAGES ], SM_PREVMERCB_X, SM_PREVMERCB_Y,
@@ -1430,7 +1424,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ PREVMERC_BUTTON ],L"Change Stance Down");
 	SetButtonFastHelpText( iSMPanelButtons[ PREVMERC_BUTTON ], TacticalStr[ PREV_MERC_POPUPTEXT ] );
 
 	iSMPanelButtons[ NEXTMERC_BUTTON ] = QuickCreateButton( iSMPanelImages[ NEXTMERC_IMAGES ], SM_NEXTMERCB_X, SM_NEXTMERCB_Y,
@@ -1442,7 +1435,6 @@ BOOLEAN CreateSMPanelButtons( )
 		return( FALSE );
 	}
 	SetButtonFastHelpText( iSMPanelButtons[ NEXTMERC_BUTTON ], TacticalStr[ NEXT_MERC_POPUPTEXT ] );
-	//SetButtonFastHelpText( iSMPanelButtons[ NEXTMERC_BUTTON ],L"Change Stance Down");
 
 	iSMPanelButtons[ OPTIONS_BUTTON ] = QuickCreateButton( iSMPanelImages[ OPTIONS_IMAGES ], SM_OPTIONSB_X, SM_OPTIONSB_Y,
 										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -1452,7 +1444,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ OPTIONS_BUTTON ],L"Change Stance Down");
 	SetButtonFastHelpText( iSMPanelButtons[ OPTIONS_BUTTON ], TacticalStr[ CHANGE_OPTIONS_POPUPTEXT ] );
 
 	/*iSMPanelButtons[ BURSTMODE_BUTTON ] = QuickCreateButton( iSMPanelImages[ BURSTMODE_IMAGES ], SM_BURSTMODEB_X, SM_BURSTMODEB_Y,
@@ -1466,7 +1457,6 @@ BOOLEAN CreateSMPanelButtons( )
 		return( FALSE );
 	}
 	SetButtonFastHelpText( iSMPanelButtons[ BURSTMODE_BUTTON ], TacticalStr[ TOGGLE_BURSTMODE_POPUPTEXT ] );
-	//SetButtonFastHelpText( iSMPanelButtons[ BURSTMODE_BUTTON ],L"Change Stance Down");
 
 	iSMPanelButtons[ LOOK_BUTTON ] = QuickCreateButton( iSMPanelImages[ LOOK_IMAGES ], SM_LOOKB_X, SM_LOOKB_Y,
 										BUTTON_NEWTOGGLE, MSYS_PRIORITY_HIGH - 1,
@@ -1476,7 +1466,6 @@ BOOLEAN CreateSMPanelButtons( )
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
 		return( FALSE );
 	}
-	//SetButtonFastHelpText( iSMPanelButtons[ LOOK_BUTTON ],L"Change Stance Down");
 	SetButtonFastHelpText( iSMPanelButtons[ LOOK_BUTTON ], TacticalStr[ LOOK_CURSOR_POPUPTEXT ] );
 
 	return( TRUE );
