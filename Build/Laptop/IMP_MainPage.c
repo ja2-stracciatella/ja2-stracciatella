@@ -152,7 +152,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 15 , LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageBackCallback);
+														 BtnIMPMainPageBackCallback);
 
 
 		 SpecifyButtonTextSubOffsets( giIMPMainPageButton[0], 0, -1, FALSE );
@@ -170,7 +170,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageBeginCallback);
+														 BtnIMPMainPageBeginCallback);
   }
 	else
 	{
@@ -179,7 +179,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageBeginCallback);
+														 BtnIMPMainPageBeginCallback);
 	}
 	// the personality button
 	giIMPMainPageButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
@@ -194,7 +194,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPagePersonalityCallback);
+														 BtnIMPMainPagePersonalityCallback);
 
 
 	// the attribs button
@@ -210,7 +210,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageAttributesCallback);
+														 BtnIMPMainPageAttributesCallback);
 
 
   // the portrait button
@@ -226,7 +226,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPagePortraitCallback);
+														 BtnIMPMainPagePortraitCallback);
 
 
 
@@ -250,7 +250,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														  LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageVoiceCallback);
+														 BtnIMPMainPageVoiceCallback);
 
 
 

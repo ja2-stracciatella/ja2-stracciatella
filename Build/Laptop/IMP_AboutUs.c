@@ -84,7 +84,7 @@ static void CreateIMPAboutUsButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  216, LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPBackCallback);
+														 	BtnIMPBackCallback);
 
 	 SetButtonCursor(giIMPAboutUsButton[0], CURSOR_WWW);
 }

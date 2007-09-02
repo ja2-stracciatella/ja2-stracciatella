@@ -583,7 +583,7 @@ BOOLEAN EnterAIMMembers()
 													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 PREVIOUS_X, PREVIOUS_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnPreviousButtonCallback);
+													 BtnPreviousButtonCallback);
 	SetButtonCursor(giPreviousButton, CURSOR_WWW );
 
 
@@ -592,7 +592,7 @@ BOOLEAN EnterAIMMembers()
 													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 CONTACT_X, CONTACT_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnContactButtonCallback);
+													 BtnContactButtonCallback);
 	SetButtonCursor(giContactButton, CURSOR_WWW );
 
 
@@ -602,7 +602,7 @@ BOOLEAN EnterAIMMembers()
 													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 NEXT_X, NEXT_BOX_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnNextButtonCallback);
+													 BtnNextButtonCallback);
 	SetButtonCursor(giNextButton, CURSOR_WWW );
 
 
@@ -1747,7 +1747,7 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 															 AIM_POPUP_BOX_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 															 TEXT_CJUSTIFIED,
 															 (UINT16)(usPosX+AIM_POPUP_BOX_BUTTON_OFFSET_X), (UINT16)(usPosY+AIM_POPUP_BOX_BUTTON_OFFSET_Y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+5,
-															 DEFAULT_MOVE_CALLBACK, BtnPopUpOkButtonCallback);
+															 BtnPopUpOkButtonCallback);
 			SetButtonCursor(guiPopUpOkButton, CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
 
@@ -2820,7 +2820,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 															 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 															 TEXT_CJUSTIFIED,
 															 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-															 DEFAULT_MOVE_CALLBACK, BtnFirstContactButtonCallback);
+															 BtnFirstContactButtonCallback);
 
 			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
 			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
@@ -2855,7 +2855,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 																 TEXT_LJUSTIFIED,
 																 AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																 DEFAULT_MOVE_CALLBACK, BtnContractLengthButtonCallback);
+																 BtnContractLengthButtonCallback);
 
 			SetButtonCursor(giContractLengthButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giContractLengthButton[i], i);
@@ -2873,7 +2873,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 																 TEXT_LJUSTIFIED,
 																 AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																 DEFAULT_MOVE_CALLBACK, BtnBuyEquipmentButtonCallback);
+																 BtnBuyEquipmentButtonCallback);
 
 			SetButtonCursor(giBuyEquipmentButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
@@ -2895,7 +2895,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 																 TEXT_CJUSTIFIED,
 																 usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																 DEFAULT_MOVE_CALLBACK, BtnAuthorizeButtonCallback);
+																 BtnAuthorizeButtonCallback);
 
 			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
@@ -2927,7 +2927,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnAnsweringMachineButtonCallback);
+														 BtnAnsweringMachineButtonCallback);
 		MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
 		SetButtonCursor(giAnsweringMachineButton[0], CURSOR_LAPTOP_SCREEN);
 
@@ -2943,7 +2943,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnAnsweringMachineButtonCallback);
+														 BtnAnsweringMachineButtonCallback);
 
 		MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
 		SetButtonCursor(giAnsweringMachineButton[1], CURSOR_LAPTOP_SCREEN);
@@ -2982,7 +2982,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 														 TEXT_CJUSTIFIED,
 														 AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnHangUpButtonCallback);
+														 BtnHangUpButtonCallback);
 
 		MSYS_SetBtnUserData(giHangUpButton, 1);
 		SetButtonCursor(giHangUpButton, CURSOR_LAPTOP_SCREEN);

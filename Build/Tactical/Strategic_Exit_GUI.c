@@ -354,14 +354,14 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
 																TEXT_CJUSTIFIED,
 																(INT16)(gExitDialog.sX + 65 ), (INT16)(gExitDialog.sY + 78 ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-																DEFAULT_MOVE_CALLBACK, OKCallback );
+																OKCallback );
 
 	gExitDialog.uiCancelButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ CANCEL_BUTTON_TEXT_STR ], FONT12ARIAL,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
 																TEXT_CJUSTIFIED,
 																(INT16)(gExitDialog.sX + 135 ), (INT16)(gExitDialog.sY + 78 ), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-																DEFAULT_MOVE_CALLBACK, CancelCallback );
+																CancelCallback );
 
 	gfIgnoreScrolling = TRUE;
 

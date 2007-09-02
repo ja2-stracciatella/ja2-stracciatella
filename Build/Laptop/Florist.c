@@ -94,7 +94,7 @@ BOOLEAN EnterFlorist()
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 FLORIST_GALLERY_BUTTON_X, FLORIST_GALLERY_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnGalleryButtonCallback);
+													 BtnGalleryButtonCallback);
 	SetButtonCursor(guiGalleryButton, CURSOR_WWW );
 
 	//reset the currently selected card

@@ -183,7 +183,7 @@ static void CreateIMPPersonalityFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityFinishYesCallback);
+														 	BtnIMPPersonalityFinishYesCallback);
 
   // the no Button
 	giIMPPersonalityFinishButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
@@ -196,7 +196,7 @@ static void CreateIMPPersonalityFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityFinishNoCallback);
+														 	BtnIMPPersonalityFinishNoCallback);
 
 	 SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
 	 SetButtonCursor(giIMPPersonalityFinishButton[1], CURSOR_WWW);
@@ -286,7 +286,7 @@ static void CreatePersonalityFinishOkButton(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 186 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPPersonalityFinishOkCallback);
+														 BtnIMPPersonalityFinishOkCallback);
 
 	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
 }

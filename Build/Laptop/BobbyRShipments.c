@@ -106,7 +106,7 @@ BOOLEAN EnterBobbyRShipments()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_BACK_BUTTON_X, BOBBYR_SHIPMENT_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentBackCallback);
+													 BtnBobbyRShipmentBackCallback);
 	SetButtonCursor( guiBobbyRShipmetBack, CURSOR_LAPTOP_SCREEN);
 
 
@@ -116,7 +116,7 @@ BOOLEAN EnterBobbyRShipments()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_HOME_BUTTON_X, BOBBYR_SHIPMENT_HOME_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRShipmentHomeCallback);
+													 BtnBobbyRShipmentHomeCallback);
 	SetButtonCursor( guiBobbyRShipmentHome, CURSOR_LAPTOP_SCREEN);
 
 	CreateBobbyRayOrderTitle();

@@ -242,7 +242,7 @@ static BOOLEAN InitAimHistoryMenuBar(void)
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_HISTORY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnHistoryMenuButtonCallback);
+														 BtnHistoryMenuButtonCallback);
 		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData(guiHistoryMenuButton[i], i + 1);
 

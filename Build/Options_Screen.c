@@ -359,7 +359,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 OPT_SAVE_BTN_X, OPT_SAVE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnOptGotoSaveGameCallback);
+													 BtnOptGotoSaveGameCallback);
 	SpecifyDisabledButtonStyle( guiOptGotoSaveGameBtn, DISABLED_STYLE_HATCHED );
 	if( guiPreviousOptionScreen == MAINMENU_SCREEN || !CanGameBeSaved() )
 	{
@@ -373,7 +373,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnOptGotoLoadGameCallback);
+													 BtnOptGotoLoadGameCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
 
 
@@ -384,7 +384,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnOptQuitCallback);
+													 BtnOptQuitCallback);
 	SpecifyDisabledButtonStyle( guiQuitButton, DISABLED_STYLE_HATCHED );
 //	DisableButton( guiQuitButton );
 
@@ -395,7 +395,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 OPT_DONE_BTN_X, OPT_DONE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnDoneCallback);
+													 BtnDoneCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
 
 

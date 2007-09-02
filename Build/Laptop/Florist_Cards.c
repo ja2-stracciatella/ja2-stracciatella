@@ -90,7 +90,7 @@ BOOLEAN EnterFloristCards()
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnFlowerCardsBackButtonCallback);
+													 BtnFlowerCardsBackButtonCallback);
 	SetButtonCursor(guiFlowerCardsBackButton, CURSOR_WWW );
 
 

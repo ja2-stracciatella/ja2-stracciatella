@@ -904,7 +904,7 @@ static void CreateHelpScreenButtons(void)
 															 HELP_SCREEN_BTN_FONT_OFF_COLOR, DEFAULT_SHADOW,
 															 TEXT_CJUSTIFIED,
 															 usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, BtnHelpScreenBtnsCallback);
+															 BtnHelpScreenBtnsCallback);
 
 
 			SetButtonCursor( guiHelpScreenBtns[i], gHelpScreen.usCursor);

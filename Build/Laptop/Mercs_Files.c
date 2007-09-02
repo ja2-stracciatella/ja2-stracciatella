@@ -155,7 +155,7 @@ BOOLEAN EnterMercsFiles()
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercPrevButtonCallback);
+													 BtnMercPrevButtonCallback);
 
 	SetButtonCursor(guiPrevButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiPrevButton, DISABLED_STYLE_SHADED);
@@ -167,7 +167,7 @@ BOOLEAN EnterMercsFiles()
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercNextButtonCallback);
+													 BtnMercNextButtonCallback);
 
 	SetButtonCursor(guiNextButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiNextButton, DISABLED_STYLE_SHADED);
@@ -179,7 +179,7 @@ BOOLEAN EnterMercsFiles()
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercHireButtonCallback);
+													 BtnMercHireButtonCallback);
 	SetButtonCursor(guiHireButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiHireButton, DISABLED_STYLE_SHADED);
 
@@ -190,7 +190,7 @@ BOOLEAN EnterMercsFiles()
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnMercFilesBackButtonCallback);
+													 BtnMercFilesBackButtonCallback);
 	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiMercBackButton, DISABLED_STYLE_SHADED);
 

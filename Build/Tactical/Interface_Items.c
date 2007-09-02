@@ -2228,7 +2228,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 TEXT_CJUSTIFIED,
 															 (INT16)(ITEMDESC_AMMO_X + 18), (INT16)(ITEMDESC_AMMO_Y - 5), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, ItemDescAmmoCallback );
+															 ItemDescAmmoCallback );
 
 		}
 		else
@@ -2240,7 +2240,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 TEXT_CJUSTIFIED,
 															 (INT16)(ITEMDESC_AMMO_X), (INT16)(ITEMDESC_AMMO_Y), BUTTON_TOGGLE ,MSYS_PRIORITY_HIGHEST,
-															 DEFAULT_MOVE_CALLBACK, ItemDescAmmoCallback );
+															 ItemDescAmmoCallback );
 
 		 //if we are being called from the
 		}
@@ -2397,7 +2397,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 				5, DEFAULT_SHADOW,
 				TEXT_CJUSTIFIED,
 				(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-				DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
+				BtnMoneyButtonCallback
 			);
 			MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
 		}
@@ -2413,7 +2413,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			5, DEFAULT_SHADOW,
 			TEXT_CJUSTIFIED,
 			(UINT16)(Loc->x + gMoneyButtonOffsets[cnt].x), (UINT16)(Loc->y + gMoneyButtonOffsets[cnt].y), BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-			DEFAULT_MOVE_CALLBACK, BtnMoneyButtonCallback
+			BtnMoneyButtonCallback
 		);
 		MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
 	}

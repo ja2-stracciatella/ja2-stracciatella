@@ -387,7 +387,7 @@ static void CreateIMPHomePageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 286 - 106 ), LAPTOP_SCREEN_WEB_UL_Y + ( 248 - 48), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPAboutUsCallback);
+														 	BtnIMPAboutUsCallback);
 
 
 	SetButtonCursor(giIMPHomePageButton[ 0 ], CURSOR_WWW);

@@ -132,7 +132,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPFinishStartOverCallback);
+														 	BtnIMPFinishStartOverCallback);
 
 	// the done button
 	giIMPFinishButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
@@ -145,7 +145,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 114 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPFinishDoneCallback);
+														 	BtnIMPFinishDoneCallback);
 
 	// the personality button
 	giIMPFinishButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
@@ -159,7 +159,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPFinishPersonalityCallback);
+														 	BtnIMPFinishPersonalityCallback);
 
 	SpecifyButtonIcon( giIMPFinishButton[2] , guiANALYSE, 0, 33, 23, FALSE );
 
@@ -176,7 +176,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPFinishAttributesCallback);
+														 BtnIMPFinishAttributesCallback);
 
   SpecifyButtonIcon(  giIMPFinishButton[ 3 ], guiATTRIBUTEGRAPH, 0,
 													 25, 25, FALSE );
@@ -192,7 +192,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPagePortraitCallback);
+														 BtnIMPMainPagePortraitCallback);
 
   SpecifyButtonIcon(  giIMPFinishButton[ 4 ], guiCHARACTERPORTRAIT, 0,
 													 33, 23, FALSE );
@@ -210,7 +210,7 @@ static void CreateIMPFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPMainPageVoiceCallback);
+														 BtnIMPMainPageVoiceCallback);
 
 	SpecifyButtonIcon(  giIMPFinishButton[ 5 ], guiSMALLSILHOUETTE, 0,
 													 33, 23, FALSE );

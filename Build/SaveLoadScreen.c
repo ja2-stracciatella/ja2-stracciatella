@@ -458,7 +458,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 usPosX, SLG_CANCEL_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnSlgCancelCallback );
+													 BtnSlgCancelCallback );
 
 
 	//Either the save or load button
@@ -473,7 +473,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnSlgSaveLoadCallback );
+														 BtnSlgSaveLoadCallback );
 
 	}
 	else
@@ -485,7 +485,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnSlgSaveLoadCallback );
+														 BtnSlgSaveLoadCallback );
 	}
 
 	//if we are loading, disable the load button

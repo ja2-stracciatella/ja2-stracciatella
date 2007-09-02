@@ -392,7 +392,7 @@ BOOLEAN EnterBobbyRMailOrder()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y+4, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRClearOrderCallback);
+													 BtnBobbyRClearOrderCallback);
 	SetButtonCursor(guiBobbyRClearOrder, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiBobbyRClearOrder, DISABLED_STYLE_NONE );
 	SpecifyButtonTextOffsets( guiBobbyRClearOrder, 39, 10, TRUE );
@@ -405,7 +405,7 @@ BOOLEAN EnterBobbyRMailOrder()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y+4, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRAcceptOrderCallback);
+													 BtnBobbyRAcceptOrderCallback);
 	SetButtonCursor( guiBobbyRAcceptOrder, CURSOR_LAPTOP_SCREEN);
 	SpecifyButtonTextOffsets( guiBobbyRAcceptOrder, 43, 24, TRUE );
 
@@ -427,7 +427,7 @@ BOOLEAN EnterBobbyRMailOrder()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_BACK_BUTTON_X, BOBBYR_BACK_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRBackCallback);
+													 BtnBobbyRBackCallback);
 	SetButtonCursor(guiBobbyRBack, CURSOR_LAPTOP_SCREEN);
 
 	guiBobbyRHomeImage =  UseLoadedButtonImage( guiBobbyRBackImage, -1,0,-1,1,-1 );
@@ -436,7 +436,7 @@ BOOLEAN EnterBobbyRMailOrder()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRHomeCallback);
+													 BtnBobbyRHomeCallback);
 	SetButtonCursor(guiBobbyRHome, CURSOR_LAPTOP_SCREEN);
 
 
@@ -446,7 +446,7 @@ BOOLEAN EnterBobbyRMailOrder()
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_BUTTON_X, BOBBYR_SHIPMENT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRGotoShipmentPageCallback );
+													 BtnBobbyRGotoShipmentPageCallback );
 	SetButtonCursor(guiBobbyRGotoShipmentPage, CURSOR_LAPTOP_SCREEN);
 
 

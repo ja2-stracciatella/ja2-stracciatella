@@ -70,7 +70,7 @@ static void CreateIMPAttributeEntranceButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 136 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 	BtnGenericMouseMoveButtonCallback, BtnIMPAttributeBeginCallback);
+														 	BtnIMPAttributeBeginCallback);
 
 	SetButtonCursor(giIMPAttributeEntranceButton[0], CURSOR_WWW);
 }

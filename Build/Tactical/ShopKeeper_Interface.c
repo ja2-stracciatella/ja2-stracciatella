@@ -678,7 +678,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 SKI_EVALUATE_BUTTON_X, SKI_EVALUATE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnSKI_EvaluateButtonCallback);
+													 BtnSKI_EvaluateButtonCallback);
 	SpecifyDisabledButtonStyle( guiSKI_EvaluateButton, DISABLED_STYLE_HATCHED );
 */
 
@@ -688,7 +688,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 SKI_TRANSACTION_BUTTON_X, SKI_TRANSACTION_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnSKI_TransactionButtonCallback);
+													 BtnSKI_TransactionButtonCallback);
 	SpecifyDisabledButtonStyle( guiSKI_TransactionButton, DISABLED_STYLE_HATCHED );
 
 	//if the dealer repairs, use the repair fast help text for the transaction button
@@ -704,7 +704,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
 													 SKI_DONE_BUTTON_X, SKI_DONE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+10,
-													 DEFAULT_MOVE_CALLBACK, BtnSKI_DoneButtonCallback);
+													 BtnSKI_DoneButtonCallback);
 	SpecifyDisabledButtonStyle( guiSKI_DoneButton, DISABLED_STYLE_HATCHED );
 	SetButtonFastHelpText( guiSKI_DoneButton, SkiMessageBoxText[ SKI_DONE_BUTTON_HELP_TEXT ] );
 

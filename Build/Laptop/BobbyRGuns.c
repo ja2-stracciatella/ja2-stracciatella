@@ -355,7 +355,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRNextPreviousPageCallback);
+													 BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRPreviousPage, CURSOR_LAPTOP_SCREEN);
 	MSYS_SetBtnUserData(guiBobbyRPreviousPage, BOBBYR_PREVIOUS_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRPreviousPage, DISABLED_STYLE_SHADED );
@@ -370,7 +370,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRNextPreviousPageCallback);
+													 BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRNextPage, CURSOR_LAPTOP_SCREEN);
 	MSYS_SetBtnUserData(guiBobbyRNextPage, BOBBYR_NEXT_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRNextPage, DISABLED_STYLE_SHADED );
@@ -386,7 +386,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 usPosX, BOBBYR_CATALOGUE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRPageMenuCallback);
+													 BtnBobbyRPageMenuCallback);
 
 		SetButtonCursor(guiBobbyRPageMenu[i], CURSOR_LAPTOP_SCREEN);
 
@@ -403,7 +403,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyROrderFormCallback);
+													 BtnBobbyROrderFormCallback);
 
 	SetButtonCursor(guiBobbyROrderForm, CURSOR_LAPTOP_SCREEN);
 
@@ -416,7 +416,7 @@ BOOLEAN InitBobbyMenuBar(  )
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
 													 TEXT_CJUSTIFIED,
 													 BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 DEFAULT_MOVE_CALLBACK, BtnBobbyRHomeButtonCallback);
+													 BtnBobbyRHomeButtonCallback);
 	SetButtonCursor(guiBobbyRHome, CURSOR_LAPTOP_SCREEN);
 
 	return(TRUE);

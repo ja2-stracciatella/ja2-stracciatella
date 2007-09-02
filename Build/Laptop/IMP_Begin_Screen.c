@@ -266,7 +266,7 @@ static void CreateIMPBeginScreenButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X +  ( 134 ), LAPTOP_SCREEN_WEB_UL_Y + ( 314 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 BtnGenericMouseMoveButtonCallback, BtnIMPBeginScreenDoneCallback);
+														 BtnIMPBeginScreenDoneCallback);
 
 	SetButtonCursor(giIMPBeginScreenButton[0], CURSOR_WWW);
 }

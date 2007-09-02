@@ -393,7 +393,7 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_POLICY_MENU_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnPoliciesMenuButtonCallback);
+														 BtnPoliciesMenuButtonCallback);
 		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData(guiPoliciesMenuButton[i], i);
 
@@ -580,7 +580,7 @@ static BOOLEAN InitAgreementRegion(void)
 														 AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_POLICY_AGREEMENT_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-														 DEFAULT_MOVE_CALLBACK, BtnPoliciesAgreeButtonCallback);
+														 BtnPoliciesAgreeButtonCallback);
 		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData(guiPoliciesAgreeButton[i], i);
 
