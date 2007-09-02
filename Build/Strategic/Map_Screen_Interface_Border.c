@@ -192,6 +192,17 @@ void RenderMapBorderEtaPopUp( void )
 }
 
 
+static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wchar_t* help)
+{
+	INT32 img = LoadButtonImage("INTERFACE/map_border_buttons.sti", -1, gfx, -1, gfx + 9, -1);
+	giMapBorderButtonsImage[idx] = img;
+	INT32 btn = QuickCreateButton(img, x, 323, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, click);
+	giMapBorderButtons[idx] = btn;
+	SetButtonFastHelpText(btn, help);
+	SetButtonCursor(btn, MSYS_NO_CURSOR);
+}
+
+
 static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason);
@@ -237,44 +248,12 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	SetButtonFastHelpText( guiMapBorderScrollButtons[ 3 ], pMapScreenBorderButtonHelpText[ 9 ] );
 */
 
-
-	// towns
-	giMapBorderButtonsImage[ MAP_BORDER_TOWN_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,5,-1,14,-1 );
-  giMapBorderButtons[ MAP_BORDER_TOWN_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TOWN_BTN ], 299, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnTownCallback);
-
-
-	// mines
-	giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,4,-1,13,-1 );
-  giMapBorderButtons[ MAP_BORDER_MINE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MINE_BTN ], 342, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnMineCallback);
-
-	// people
-	giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,3,-1,12,-1 );
-  giMapBorderButtons[ MAP_BORDER_TEAMS_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_TEAMS_BTN ], 385, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnTeamCallback);
-
-	// militia
-	giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,8,-1,17,-1 );
-  giMapBorderButtons[ MAP_BORDER_MILITIA_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_MILITIA_BTN ], 428, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnMilitiaCallback);
-
-	// airspace
-	giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,2,-1,11,-1 );
-  giMapBorderButtons[ MAP_BORDER_AIRSPACE_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_AIRSPACE_BTN ], 471, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnAircraftCallback);
-
-	// items
-	giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ] = LoadButtonImage( "INTERFACE/map_border_buttons.sti" ,-1,1,-1,10,-1 );
-  giMapBorderButtons[ MAP_BORDER_ITEM_BTN ] = QuickCreateButton( giMapBorderButtonsImage[ MAP_BORDER_ITEM_BTN ], 514, 323,
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnItemCallback);
-
+  MakeButton(MAP_BORDER_TOWN_BTN,     5, 299, BtnTownCallback,     pMapScreenBorderButtonHelpText[0]); // towns
+  MakeButton(MAP_BORDER_MINE_BTN,     4, 342, BtnMineCallback,     pMapScreenBorderButtonHelpText[1]); // mines
+  MakeButton(MAP_BORDER_TEAMS_BTN,    3, 385, BtnTeamCallback,     pMapScreenBorderButtonHelpText[2]); // people
+  MakeButton(MAP_BORDER_MILITIA_BTN,  8, 428, BtnMilitiaCallback,  pMapScreenBorderButtonHelpText[5]); // militia
+  MakeButton(MAP_BORDER_AIRSPACE_BTN, 2, 471, BtnAircraftCallback, pMapScreenBorderButtonHelpText[3]); // airspace
+  MakeButton(MAP_BORDER_ITEM_BTN,     1, 514, BtnItemCallback,     pMapScreenBorderButtonHelpText[4]); // items
 
 	// raise and lower view level
 
@@ -292,23 +271,9 @@ BOOLEAN CreateButtonsForMapBorder( void )
 										MSYS_NO_CALLBACK, BtnLowerLevelBtnCallback);
 
 */
-	// set up fast help text
-	SetButtonFastHelpText( giMapBorderButtons[ 0 ], pMapScreenBorderButtonHelpText[ 0 ] );
-	SetButtonFastHelpText( giMapBorderButtons[ 1 ], pMapScreenBorderButtonHelpText[ 1 ] );
-	SetButtonFastHelpText( giMapBorderButtons[ 2 ], pMapScreenBorderButtonHelpText[ 2 ] );
-	SetButtonFastHelpText( giMapBorderButtons[ 3 ], pMapScreenBorderButtonHelpText[ 3 ] );
-	SetButtonFastHelpText( giMapBorderButtons[ 4 ], pMapScreenBorderButtonHelpText[ 4 ] );
-	SetButtonFastHelpText( giMapBorderButtons[ 5 ], pMapScreenBorderButtonHelpText[ 5 ] );
 
 	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 0 ], pMapScreenBorderButtonHelpText[ 10 ] );
 	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 1 ], pMapScreenBorderButtonHelpText[ 11 ] );
-
-	SetButtonCursor(giMapBorderButtons[ 0 ], MSYS_NO_CURSOR );
-	SetButtonCursor(giMapBorderButtons[ 1 ], MSYS_NO_CURSOR );
-	SetButtonCursor(giMapBorderButtons[ 2 ], MSYS_NO_CURSOR );
-	SetButtonCursor(giMapBorderButtons[ 3 ], MSYS_NO_CURSOR );
-	SetButtonCursor(giMapBorderButtons[ 4 ], MSYS_NO_CURSOR );
-	SetButtonCursor(giMapBorderButtons[ 5 ], MSYS_NO_CURSOR );
 
 //	SetButtonCursor(guiMapBorderLandRaiseButtons[ 0 ], MSYS_NO_CURSOR );
 //	SetButtonCursor(guiMapBorderLandRaiseButtons[ 1 ], MSYS_NO_CURSOR );
