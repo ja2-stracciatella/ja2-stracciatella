@@ -432,13 +432,6 @@ INT32 giFlashContractBaseTime = 0;
 UINT32 guiFlashCursorBaseTime = 0;
 INT32 giPotCharPathBaseTime = 0;
 
-/*
-// next and prev
-static INT32 giMapInvPrev;
-static INT32 giMapInvNext;
-INT32 giMapInvPrevImage;
-INT32 giMapInvNextImage;
-*/
 extern UINT32 guiVObjectSize;
 extern UINT32 guiVSurfaceSize;
 
@@ -8896,19 +8889,6 @@ static void CreateDestroyTrashCanRegion(void)
 		SetRegionFastHelpText( &gTrashCanRegion, pMiscMapScreenMouseRegionHelpText[ 1 ] );
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
-/*
-		giMapInvNextImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,20,-1,22,-1 );
-    giMapInvNext= QuickCreateButton( giMapInvNextImage, ( 2 ), ( 79 ) ,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, NextInventoryMapBtnCallback );
-
-
-		giMapInvPrevImage=  LoadButtonImage( "INTERFACE/inventory_buttons.sti" ,-1,21,-1,23,-1 );
-    giMapInvPrev= QuickCreateButton( giMapInvPrevImage, ( 30 ) , ( 79 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, PrevInventoryMapBtnCallback );
-
-	*/
 
 			// reset the compatable item array at this point
 		ResetCompatibleItemArray( );

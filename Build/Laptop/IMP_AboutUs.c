@@ -75,10 +75,6 @@ static void CreateIMPAboutUsButtons(void)
   // this function will create the buttons needed for th IMP about us page
   // the back button button
   giIMPAboutUsButtonImage[0]=  LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
-	/*giIMPAboutUsButton[0] = QuickCreateButton( giIMPAboutUsButtonImage[0], LAPTOP_SCREEN_UL_X +  426 , LAPTOP_SCREEN_WEB_UL_Y + ( 360 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPBackCallback); */
-
    giIMPAboutUsButton[0] = CreateIconAndTextButton( giIMPAboutUsButtonImage[0], pImpButtonText[6], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

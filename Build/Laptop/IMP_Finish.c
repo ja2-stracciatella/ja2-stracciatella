@@ -123,10 +123,6 @@ static void CreateIMPFinishButtons(void)
   // this function will create the buttons needed for th IMP about us page
   // the start over button button
   giIMPFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	/*giIMPFinishButton[0] = QuickCreateButton( giIMPFinishButtonImage[0], LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 114 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishStartOverCallback);
-  */
 	giIMPFinishButton[ 0 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 0 ], pImpButtonText[ 7 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
@@ -136,10 +132,6 @@ static void CreateIMPFinishButtons(void)
 
 	// the done button
 	giIMPFinishButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-/*	giIMPFinishButton[1] = QuickCreateButton( giIMPFinishButtonImage[1], LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishDoneCallback);
-*/
 	giIMPFinishButton[ 1 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 1 ], pImpButtonText[ 6 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
@@ -149,11 +141,6 @@ static void CreateIMPFinishButtons(void)
 
 	// the personality button
 	giIMPFinishButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-
-/*	giIMPFinishButton[2] = QuickCreateButton( giIMPFinishButtonImage[2], LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishPersonalityCallback);
-*/
 	giIMPFinishButton[ 2 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
@@ -167,10 +154,6 @@ static void CreateIMPFinishButtons(void)
 
 	// the attribs button
 	giIMPFinishButtonImage[3]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-/*	giIMPFinishButton[3] = QuickCreateButton( giIMPFinishButtonImage[3], LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishAttributesCallback);
-*/
   giIMPFinishButton[ 3 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
@@ -183,10 +166,6 @@ static void CreateIMPFinishButtons(void)
 
   // the portrait button
 	giIMPFinishButtonImage[4]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-/*	giIMPFinishButton[4] = QuickCreateButton( giIMPFinishButtonImage[4], LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishPortraitCallback);
- */
 	giIMPFinishButton[ 4 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
 										  			 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
@@ -201,10 +180,6 @@ static void CreateIMPFinishButtons(void)
 
 	// the voice button
 	giIMPFinishButtonImage[5]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-	/* giIMPFinishButton[5] = QuickCreateButton( giIMPFinishButtonImage[5], LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPFinishVoiceCallback);
-  */
 	giIMPFinishButton[ 5 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 5 ], sString, FONT12ARIAL,
 										  			 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

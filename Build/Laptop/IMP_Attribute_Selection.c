@@ -376,10 +376,6 @@ static void CreateIMPAttributeSelectionButtons(void)
 {
 	// the finished button
 	giIMPAttributeSelectionButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
-/*	giIMPAttributeSelectionButton[0] = QuickCreateButton(giIMPAttributeSelectionButtonImage[0], LAPTOP_SCREEN_UL_X +  136, LAPTOP_SCREEN_WEB_UL_Y + 314,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										BtnGenericMouseMoveButtonCallback, BtnIMPAttributeFinishCallback);
-*/
 	giIMPAttributeSelectionButton[0] = CreateIconAndTextButton
 	(
 		giIMPAttributeSelectionButtonImage[0], pImpButtonText[11], FONT12ARIAL,
