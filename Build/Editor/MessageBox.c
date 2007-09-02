@@ -13,8 +13,6 @@
 #include "Button_System.h"
 
 
-//internal variables.
-INT32 iMsgBoxOkImg, iMsgBoxCancelImg;
 INT32 iMsgBoxBgrnd,iMsgBoxOk,iMsgBoxCancel;
 
 BOOLEAN gfMessageBoxResult = FALSE;
@@ -41,11 +39,8 @@ void CreateMessageBox(const wchar_t* wzString)
 	// Fake button for background w/ text
 	iMsgBoxBgrnd = CreateLabel(wzString, gpLargeFontType1, FONT_LTKHAKI, FONT_DKKHAKI, sStartX, sStartY, sPixLen, 96, MSYS_PRIORITY_HIGHEST - 2);
 
-	iMsgBoxOkImg = LoadButtonImage("EDITOR/ok.sti",0,1,2,3,4);
-	iMsgBoxCancelImg = LoadButtonImage("EDITOR/cancel.sti",0,1,2,3,4);
-
-	iMsgBoxOk     = QuickCreateButton(iMsgBoxOkImg,     sStartX + (sPixLen / 2) - 35, sStartY + 58, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, MsgBoxOkClkCallback);
-	iMsgBoxCancel = QuickCreateButton(iMsgBoxCancelImg, sStartX + (sPixLen / 2) +  5, sStartY + 58, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, MsgBoxCnclClkCallback);
+	iMsgBoxOk     = QuickCreateButtonImg("EDITOR/ok.sti",     0, 1, 2, 3, 4, sStartX + (sPixLen / 2) - 35, sStartY + 58, MSYS_PRIORITY_HIGHEST - 1, MsgBoxOkClkCallback);
+	iMsgBoxCancel = QuickCreateButtonImg("EDITOR/cancel.sti", 0, 1, 2, 3, 4, sStartX + (sPixLen / 2) +  5, sStartY + 58, MSYS_PRIORITY_HIGHEST - 1, MsgBoxCnclClkCallback);
 
 	SGPRect MsgBoxRect;
 	MsgBoxRect.iLeft = sStartX;
@@ -103,8 +98,6 @@ void RemoveMessageBox( )
 	RemoveButton( iMsgBoxCancel );
 	RemoveButton( iMsgBoxOk );
 	RemoveButton( iMsgBoxBgrnd );
-	UnloadButtonImage( iMsgBoxOkImg );
-	UnloadButtonImage( iMsgBoxCancelImg );
 	gubMessageBoxStatus = MESSAGEBOX_NONE;
 }
 
