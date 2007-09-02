@@ -729,7 +729,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(GenImg < 0 ? 0 : GenImg, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(GenImg < 0 ? 0 : GenImg, (Type & BUTTON_TYPE_MASK) | BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, MoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
@@ -771,7 +771,7 @@ INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 
 		return BUTTON_NO_SLOT;
 	}
 
-	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_TYPE_MASK | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(Image, (Type & BUTTON_TYPE_MASK) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;

@@ -33,7 +33,7 @@ extern "C" {
 //effects how the button is rendered.
 #define BUTTON_TYPES (BUTTON_QUICK | BUTTON_GENERIC | BUTTON_HOT_SPOT | BUTTON_CHECKBOX)
 //effects how the button is processed
-#define BUTTON_TYPE_MASK (BUTTON_NO_TOGGLE | BUTTON_CHECKBOX)
+#define BUTTON_TYPE_MASK (BUTTON_NO_TOGGLE | BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)
 
 //button flags
 #define BUTTON_TOGGLE           0x00000000
