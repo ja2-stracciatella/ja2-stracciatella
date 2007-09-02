@@ -35,14 +35,6 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const cha
 }
 
 
-static void MakeButtonNo(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
-{
-	INT32 btn = CreateEasyButton(x, y, gfx, click);
-	iEditorButton[idx] = btn;
-	SetButtonFastHelpText(btn, help);
-}
-
-
 static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
 	INT32 btn = CreateCheckBoxButton(x, y, gfx, MSYS_PRIORITY_NORMAL, click);
@@ -233,8 +225,8 @@ static void InitEditorMercsToolbar(void)
 		DisableButton(iEditorButton[x + 1]);
 	}
 
-	MakeButtonNo(MERCS_BODYTYPE_DOWN, 460, 364, MercsSetBodyTypeCallback, "EDITOR/leftarrow.sti",  L"Previous body type");
-	MakeButtonNo(MERCS_BODYTYPE_UP,   560, 364, MercsSetBodyTypeCallback, "EDITOR/rightarrow.sti", L"Next body type");
+	MakeButton(MERCS_BODYTYPE_DOWN, 460, 364, MercsSetBodyTypeCallback, "EDITOR/leftarrow.sti",  L"Previous body type");
+	MakeButton(MERCS_BODYTYPE_UP,   560, 364, MercsSetBodyTypeCallback, "EDITOR/rightarrow.sti", L"Next body type");
 
 	MakeCheck(MERCS_SCHEDULE_VARIANCE1, 309, 375, MercsScheduleToggleVariance1Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
 	MakeCheck(MERCS_SCHEDULE_VARIANCE2, 309, 396, MercsScheduleToggleVariance2Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
@@ -323,8 +315,8 @@ static void InitEditorBuildingsToolbar(void)
 
 	MakeButton(BUILDING_TOGGLE_ERASEMODE,   500, 400, BtnEraseCallback,               "EDITOR/eraser.sti",       L"Toggle erase mode");
 
-	MakeButtonNo(BUILDING_UNDO,            530, 400, BtnUndoCallback,  "EDITOR/undo.sti",  L"Undo last change");
-	MakeButtonNo(BUILDING_CYCLE_BRUSHSIZE, 500, 430, BtnBrushCallback, "EDITOR/paint.sti", L"Cycle brush size");
+	MakeButton(BUILDING_UNDO,            530, 400, BtnUndoCallback,  "EDITOR/undo.sti",  L"Undo last change");
+	MakeButton(BUILDING_CYCLE_BRUSHSIZE, 500, 430, BtnBrushCallback, "EDITOR/paint.sti", L"Cycle brush size");
 }
 
 
@@ -369,48 +361,48 @@ static void InitEditorMapInfoToolbar(void)
 	iEditorButton[ MAPINFO_RADIO_CAVES ] =
 		CreateCheckBoxButton(	210, 395, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MapInfoCavesRadioCallback );
 
-	MakeButton(  MAPINFO_DRAW_EXITGRIDS,   305, 372, MapInfoDrawExitGridCallback, "EDITOR/exitgridbut.sti", L"Add exit grids (r-clk to query existing).");
-	MakeButtonNo(MAPINFO_CYCLE_BRUSHSIZE,  420, 430, BtnBrushCallback,            "EDITOR/paint.sti",       L"Cycle brush size");
-	MakeButtonNo(MAPINFO_UNDO,             510, 430, BtnUndoCallback,             "EDITOR/undo.sti",        L"Undo last change");
-	MakeButton(  MAPINFO_TOGGLE_ERASEMODE, 540, 430, BtnEraseCallback,            "EDITOR/eraser.sti",      L"Toggle erase mode");
-	MakeButton(  MAPINFO_NORTH_POINT,      540, 365, MapInfoEntryPointsCallback,  "EDITOR/north.sti",       L"Specify north point for validation purposes.");
-	MakeButton(  MAPINFO_WEST_POINT,       525, 386, MapInfoEntryPointsCallback,  "EDITOR/west.sti",        L"Specify west point for validation purposes.");
-	MakeButton(  MAPINFO_EAST_POINT,       555, 386, MapInfoEntryPointsCallback,  "EDITOR/east.sti",        L"Specify east point for validation purposes.");
-	MakeButton(  MAPINFO_SOUTH_POINT,      540, 407, MapInfoEntryPointsCallback,  "EDITOR/south.sti",       L"Specify south point for validation purposes.");
-	MakeButton(  MAPINFO_CENTER_POINT,     590, 375, MapInfoEntryPointsCallback,  "EDITOR/center.sti",      L"Specify center point for validation purposes.");
-	MakeButton(  MAPINFO_ISOLATED_POINT,   590, 396, MapInfoEntryPointsCallback,  "EDITOR/isolated.sti",    L"Specify isolated point for validation purposes.");
+	MakeButton(MAPINFO_DRAW_EXITGRIDS,   305, 372, MapInfoDrawExitGridCallback, "EDITOR/exitgridbut.sti", L"Add exit grids (r-clk to query existing).");
+	MakeButton(MAPINFO_CYCLE_BRUSHSIZE,  420, 430, BtnBrushCallback,            "EDITOR/paint.sti",       L"Cycle brush size");
+	MakeButton(MAPINFO_UNDO,             510, 430, BtnUndoCallback,             "EDITOR/undo.sti",        L"Undo last change");
+	MakeButton(MAPINFO_TOGGLE_ERASEMODE, 540, 430, BtnEraseCallback,            "EDITOR/eraser.sti",      L"Toggle erase mode");
+	MakeButton(MAPINFO_NORTH_POINT,      540, 365, MapInfoEntryPointsCallback,  "EDITOR/north.sti",       L"Specify north point for validation purposes.");
+	MakeButton(MAPINFO_WEST_POINT,       525, 386, MapInfoEntryPointsCallback,  "EDITOR/west.sti",        L"Specify west point for validation purposes.");
+	MakeButton(MAPINFO_EAST_POINT,       555, 386, MapInfoEntryPointsCallback,  "EDITOR/east.sti",        L"Specify east point for validation purposes.");
+	MakeButton(MAPINFO_SOUTH_POINT,      540, 407, MapInfoEntryPointsCallback,  "EDITOR/south.sti",       L"Specify south point for validation purposes.");
+	MakeButton(MAPINFO_CENTER_POINT,     590, 375, MapInfoEntryPointsCallback,  "EDITOR/center.sti",      L"Specify center point for validation purposes.");
+	MakeButton(MAPINFO_ISOLATED_POINT,   590, 396, MapInfoEntryPointsCallback,  "EDITOR/isolated.sti",    L"Specify isolated point for validation purposes.");
 }
 
 
 static void InitEditorOptionsToolbar(void)
 {
-	MakeButtonNo(OPTIONS_NEW_MAP,         71, 401, BtnNewMapCallback,        "EDITOR/new.sti",     L"New map");
-	MakeButtonNo(OPTIONS_NEW_BASEMENT,   101, 401, BtnNewBasementCallback,   "EDITOR/new.sti",     L"New basement");
-	MakeButtonNo(OPTIONS_NEW_CAVES,      131, 401, BtnNewCavesCallback,      "EDITOR/new.sti",     L"New cave level");
-	MakeButtonNo(OPTIONS_SAVE_MAP,       161, 401, BtnSaveCallback,          "EDITOR/save.sti",    L"Save map");
-	MakeButtonNo(OPTIONS_LOAD_MAP,       191, 401, BtnLoadCallback,          "EDITOR/load.sti",    L"Load map");
-	MakeButtonNo(OPTIONS_CHANGE_TILESET, 221, 401, BtnChangeTilesetCallback, "EDITOR/tileset.sti", L"Select tileset");
-	MakeButtonNo(OPTIONS_LEAVE_EDITOR,   251, 401, BtnCancelCallback,        "EDITOR/cancel.sti",  L"Leave Editor mode");
-	MakeButtonNo(OPTIONS_QUIT_GAME,      281, 401, BtnQuitCallback,          "EDITOR/cancel.sti",  L"Exit game.");
+	MakeButton(OPTIONS_NEW_MAP,         71, 401, BtnNewMapCallback,        "EDITOR/new.sti",     L"New map");
+	MakeButton(OPTIONS_NEW_BASEMENT,   101, 401, BtnNewBasementCallback,   "EDITOR/new.sti",     L"New basement");
+	MakeButton(OPTIONS_NEW_CAVES,      131, 401, BtnNewCavesCallback,      "EDITOR/new.sti",     L"New cave level");
+	MakeButton(OPTIONS_SAVE_MAP,       161, 401, BtnSaveCallback,          "EDITOR/save.sti",    L"Save map");
+	MakeButton(OPTIONS_LOAD_MAP,       191, 401, BtnLoadCallback,          "EDITOR/load.sti",    L"Load map");
+	MakeButton(OPTIONS_CHANGE_TILESET, 221, 401, BtnChangeTilesetCallback, "EDITOR/tileset.sti", L"Select tileset");
+	MakeButton(OPTIONS_LEAVE_EDITOR,   251, 401, BtnCancelCallback,        "EDITOR/cancel.sti",  L"Leave Editor mode");
+	MakeButton(OPTIONS_QUIT_GAME,      281, 401, BtnQuitCallback,          "EDITOR/cancel.sti",  L"Exit game.");
 }
 
 
 static void InitEditorTerrainToolbar(void)
 {
-	MakeButton(  TERRAIN_FGROUND_TEXTURES, 100, 400, BtnFgGrndCallback,          "EDITOR/downgrid.sti",  L"Draw ground textures");
-	MakeButton(  TERRAIN_BGROUND_TEXTURES, 130, 400, BtnBkGrndCallback,          "EDITOR/upgrid.sti",    L"Set map ground textures");
-	MakeButton(  TERRAIN_PLACE_CLIFFS,     160, 400, BtnBanksCallback,           "EDITOR/banks.sti",     L"Place banks and cliffs");
-	MakeButton(  TERRAIN_PLACE_ROADS,      190, 400, BtnRoadsCallback,           "EDITOR/road.sti",      L"Draw roads");
-	MakeButton(  TERRAIN_PLACE_DEBRIS,     220, 400, BtnDebrisCallback,          "EDITOR/debris.sti",    L"Draw debris");
-	MakeButton(  TERRAIN_PLACE_TREES,      250, 400, BtnObjectCallback,          "EDITOR/tree.sti",      L"Place trees & bushes");
-	MakeButton(  TERRAIN_PLACE_ROCKS,      280, 400, BtnObject1Callback,         "EDITOR/num1.sti",      L"Place rocks");
-	MakeButton(  TERRAIN_PLACE_MISC,       310, 400, BtnObject2Callback,         "EDITOR/num2.sti",      L"Place barrels & other junk");
-	MakeButton(  TERRAIN_FILL_AREA,        100, 430, BtnFillCallback,            "EDITOR/fill.sti",      L"Fill area");
-	MakeButtonNo(TERRAIN_UNDO,             130, 430, BtnUndoCallback,            "EDITOR/undo.sti",      L"Undo last change");
-	MakeButton(  TERRAIN_TOGGLE_ERASEMODE, 160, 430, BtnEraseCallback,           "EDITOR/eraser.sti",    L"Toggle erase mode");
-	MakeButtonNo(TERRAIN_CYCLE_BRUSHSIZE,  190, 430, BtnBrushCallback,           "EDITOR/paint.sti",     L"Cycle brush size");
-	MakeButtonNo(TERRAIN_RAISE_DENSITY,    280, 430, BtnIncBrushDensityCallback, "EDITOR/uparrow.sti",   L"Raise brush density");
-	MakeButtonNo(TERRAIN_LOWER_DENSITY,    350, 430, BtnDecBrushDensityCallback, "EDITOR/downarrow.sti", L"Lower brush density");
+	MakeButton(TERRAIN_FGROUND_TEXTURES, 100, 400, BtnFgGrndCallback,          "EDITOR/downgrid.sti",  L"Draw ground textures");
+	MakeButton(TERRAIN_BGROUND_TEXTURES, 130, 400, BtnBkGrndCallback,          "EDITOR/upgrid.sti",    L"Set map ground textures");
+	MakeButton(TERRAIN_PLACE_CLIFFS,     160, 400, BtnBanksCallback,           "EDITOR/banks.sti",     L"Place banks and cliffs");
+	MakeButton(TERRAIN_PLACE_ROADS,      190, 400, BtnRoadsCallback,           "EDITOR/road.sti",      L"Draw roads");
+	MakeButton(TERRAIN_PLACE_DEBRIS,     220, 400, BtnDebrisCallback,          "EDITOR/debris.sti",    L"Draw debris");
+	MakeButton(TERRAIN_PLACE_TREES,      250, 400, BtnObjectCallback,          "EDITOR/tree.sti",      L"Place trees & bushes");
+	MakeButton(TERRAIN_PLACE_ROCKS,      280, 400, BtnObject1Callback,         "EDITOR/num1.sti",      L"Place rocks");
+	MakeButton(TERRAIN_PLACE_MISC,       310, 400, BtnObject2Callback,         "EDITOR/num2.sti",      L"Place barrels & other junk");
+	MakeButton(TERRAIN_FILL_AREA,        100, 430, BtnFillCallback,            "EDITOR/fill.sti",      L"Fill area");
+	MakeButton(TERRAIN_UNDO,             130, 430, BtnUndoCallback,            "EDITOR/undo.sti",      L"Undo last change");
+	MakeButton(TERRAIN_TOGGLE_ERASEMODE, 160, 430, BtnEraseCallback,           "EDITOR/eraser.sti",    L"Toggle erase mode");
+	MakeButton(TERRAIN_CYCLE_BRUSHSIZE,  190, 430, BtnBrushCallback,           "EDITOR/paint.sti",     L"Cycle brush size");
+	MakeButton(TERRAIN_RAISE_DENSITY,    280, 430, BtnIncBrushDensityCallback, "EDITOR/uparrow.sti",   L"Raise brush density");
+	MakeButton(TERRAIN_LOWER_DENSITY,    350, 430, BtnDecBrushDensityCallback, "EDITOR/downarrow.sti", L"Lower brush density");
 }
 
 
