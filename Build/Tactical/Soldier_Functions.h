@@ -6,7 +6,7 @@
 
 void ContinueMercMovement( SOLDIERTYPE *pSoldier );
 
-BOOLEAN IsValidStance( SOLDIERTYPE *pSoldier, INT8 bNewStance );
+BOOLEAN IsValidStance(const SOLDIERTYPE* pSoldier, INT8 bNewStance);
 void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier );
 BOOLEAN IsValidMovementMode(const SOLDIERTYPE* pSoldier, INT16 usMovementMode);
 void SoldierCollapse( SOLDIERTYPE *pSoldier );

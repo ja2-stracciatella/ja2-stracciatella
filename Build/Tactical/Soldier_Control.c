@@ -9067,7 +9067,7 @@ BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNewStance )
+BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8 bNewStance)
 {
 	UINT16								usOKToAddStructID=0;
 	STRUCTURE_FILE_REF		*pStructureFileRef;
@@ -9171,7 +9171,7 @@ BOOLEAN InternalIsValidStance( SOLDIERTYPE *pSoldier, INT8 bDirection, INT8 bNew
 }
 
 
-BOOLEAN IsValidStance( SOLDIERTYPE *pSoldier, INT8 bNewStance )
+BOOLEAN IsValidStance(const SOLDIERTYPE* pSoldier, INT8 bNewStance)
 {
 	return( InternalIsValidStance( pSoldier, pSoldier->bDirection, bNewStance ) );
 }
