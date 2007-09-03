@@ -1727,6 +1727,15 @@ static void RenderAutoResolve(void)
 }
 
 
+static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN hide, const wchar_t* text)
+{
+	INT32 btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, click);
+	gpAR->iButton[idx] = btn;
+	if (text != NULL) SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT2, 169, FONT_NEARBLACK);
+	if (hide) HideButton(btn);
+}
+
+
 static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
 static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -1981,54 +1990,23 @@ static void CreateAutoResolveInterface(void)
 	//move the buttons up by the same amount.
 	gpAR->bVerticalOffset = 240 - gpAR->sHeight/2 > 120 ? -40 : 0;
 
+	const INT16 dx = gpAR->sCenterStartX;
+	const INT16 dy = gpAR->bVerticalOffset;
+
 	//Create the buttons -- subject to relocation
-	gpAR->iButton[ PLAY_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ PLAY_BUTTON ] , (INT16)(gpAR->sCenterStartX+11), (INT16)(240+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, PlayButtonCallback );
-	gpAR->iButton[ FAST_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ FAST_BUTTON ] , (INT16)(gpAR->sCenterStartX+51), (INT16)(240+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, FastButtonCallback );
-	gpAR->iButton[ FINISH_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ FINISH_BUTTON ] , (INT16)(gpAR->sCenterStartX+91), (INT16)(240+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, FinishButtonCallback );
-	gpAR->iButton[ PAUSE_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ PAUSE_BUTTON ] , (INT16)(gpAR->sCenterStartX+11), (INT16)(274+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, PauseButtonCallback );
+	MakeButton(PLAY_BUTTON,     dx + 11, dy + 240, PlayButtonCallback,      FALSE, NULL);
+	MakeButton(FAST_BUTTON,     dx + 51, dy + 240, FastButtonCallback,      FALSE, NULL);
+	MakeButton(FINISH_BUTTON,   dx + 91, dy + 240, FinishButtonCallback,    FALSE, NULL);
+	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 274, PauseButtonCallback,     FALSE, NULL);
+	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 274, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
+	if (!gpAR->ubMercs) DisableButton(gpAR->iButton[RETREAT_BUTTON]);
 
-	gpAR->iButton[ RETREAT_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ RETREAT_BUTTON ], (INT16)(gpAR->sCenterStartX+51), (INT16)(274+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, RetreatButtonCallback );
-	if( !gpAR->ubMercs )
-	{
-		DisableButton( gpAR->iButton[ RETREAT_BUTTON ] );
-	}
-	SpecifyGeneralButtonTextAttributes( gpAR->iButton[ RETREAT_BUTTON ], gpStrategicString[STR_AR_RETREAT_BUTTON], BLOCKFONT2, 169, FONT_NEARBLACK );
-
-	gpAR->iButton[ BANDAGE_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ BANDAGE_BUTTON ] , (INT16)(gpAR->sCenterStartX+11), (INT16)(245+gpAR->bVerticalOffset), BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, BandageButtonCallback );
-
-	gpAR->iButton[ DONEWIN_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ DONEWIN_BUTTON ], (INT16)(gpAR->sCenterStartX+51), (INT16)(245+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, DoneButtonCallback );
-	SpecifyGeneralButtonTextAttributes( gpAR->iButton[ DONEWIN_BUTTON ], gpStrategicString[STR_AR_DONE_BUTTON], BLOCKFONT2, 169, FONT_NEARBLACK );
-
-	gpAR->iButton[ DONELOSE_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ DONELOSE_BUTTON ], (INT16)(gpAR->sCenterStartX+25), (INT16)(245+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, DoneButtonCallback );
-	SpecifyGeneralButtonTextAttributes( gpAR->iButton[ DONELOSE_BUTTON ], gpStrategicString[STR_AR_DONE_BUTTON], BLOCKFONT2, 169, FONT_NEARBLACK );
-	gpAR->iButton[ YES_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ YES_BUTTON ], (INT16)(gpAR->sCenterStartX+21), (INT16)(257+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, AcceptSurrenderCallback );
-	gpAR->iButton[ NO_BUTTON ] =
-		QuickCreateButton( gpAR->iButtonImage[ NO_BUTTON ], (INT16)(gpAR->sCenterStartX+81), (INT16)(257+gpAR->bVerticalOffset), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, RejectSurrenderCallback );
-	HideButton( gpAR->iButton[ YES_BUTTON ] );
-	HideButton( gpAR->iButton[ NO_BUTTON ] );
-	HideButton( gpAR->iButton[ DONEWIN_BUTTON ] );
-	HideButton( gpAR->iButton[ DONELOSE_BUTTON ] );
-	HideButton( gpAR->iButton[ BANDAGE_BUTTON ] );
-	ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	MakeButton(BANDAGE_BUTTON,  dx + 11, dy + 245, BandageButtonCallback,   TRUE,  NULL);
+	MakeButton(DONEWIN_BUTTON,  dx + 51, dy + 245, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(DONELOSE_BUTTON, dx + 25, dy + 245, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(YES_BUTTON,      dx + 21, dy + 257, AcceptSurrenderCallback, TRUE,  NULL);
+	MakeButton(NO_BUTTON,       dx + 81, dy + 257, RejectSurrenderCallback, TRUE,  NULL);
+	ButtonList[gpAR->iButton[PLAY_BUTTON]]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 

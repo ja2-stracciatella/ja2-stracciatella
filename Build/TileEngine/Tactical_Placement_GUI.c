@@ -187,6 +187,16 @@ static void CheckForValidMapEdge(UINT8* pubStrategicInsertionCode)
 #endif
 
 
+static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help)
+{
+	INT32 btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, click);
+	iTPButtons[idx] = btn;
+	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
+	SetButtonFastHelpText(btn, help);
+	SpecifyButtonHilitedTextColors(btn, FONT_WHITE, FONT_NEARBLACK);
+}
+
+
 static void ClearPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoneOverheadPlacementClickCallback(GUI_BUTTON* btn, INT32 reason);
 static void GroupPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
@@ -229,32 +239,11 @@ void InitTacticalPlacementGUI()
 	giOverheadButtonImages[ CLEAR_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );
 
 	//Create the buttons which provide automatic placements.
-	iTPButtons[ CLEAR_BUTTON ] =
-		QuickCreateButton( giOverheadButtonImages[ CLEAR_BUTTON ], 11, 332, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, ClearPlacementsCallback );
-	SpecifyGeneralButtonTextAttributes( iTPButtons[ CLEAR_BUTTON ], gpStrategicString[ STR_TP_CLEAR ], BLOCKFONT, FONT_BEIGE, 141 );
-	SetButtonFastHelpText( iTPButtons[ CLEAR_BUTTON ], gpStrategicString[ STR_TP_CLEARHELP ] );
-	iTPButtons[ SPREAD_BUTTON ] =
-		QuickCreateButton( giOverheadButtonImages[ SPREAD_BUTTON ], 11, 367, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, SpreadPlacementsCallback );
-	SpecifyGeneralButtonTextAttributes( iTPButtons[ SPREAD_BUTTON ], gpStrategicString[ STR_TP_SPREAD ], BLOCKFONT, FONT_BEIGE, 141 );
-	SetButtonFastHelpText( iTPButtons[ SPREAD_BUTTON ], gpStrategicString[ STR_TP_SPREADHELP ] );
-	iTPButtons[ GROUP_BUTTON ] =
-		QuickCreateButton( giOverheadButtonImages[ GROUP_BUTTON ], 11, 402, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, GroupPlacementsCallback );
-	SpecifyGeneralButtonTextAttributes( iTPButtons[ GROUP_BUTTON ], gpStrategicString[ STR_TP_GROUP ], BLOCKFONT, FONT_BEIGE, 141 );
-	SetButtonFastHelpText( iTPButtons[ GROUP_BUTTON ], gpStrategicString[ STR_TP_GROUPHELP ] );
-	iTPButtons[ DONE_BUTTON ] =
-		QuickCreateButton( giOverheadButtonImages[ DONE_BUTTON ], 11, 437, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH,
-		DEFAULT_MOVE_CALLBACK, DoneOverheadPlacementClickCallback );
-	SpecifyGeneralButtonTextAttributes( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONE ], BLOCKFONT, FONT_BEIGE, 141 );
-	SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONEHELP ] );
-	AllowDisabledButtonFastHelp( iTPButtons[ DONE_BUTTON ], TRUE );
-
-	SpecifyButtonHilitedTextColors( iTPButtons[ CLEAR_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonHilitedTextColors( iTPButtons[ SPREAD_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonHilitedTextColors( iTPButtons[ GROUP_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonHilitedTextColors( iTPButtons[ DONE_BUTTON ], FONT_WHITE, FONT_NEARBLACK );
+	MakeButton(CLEAR_BUTTON,  332, ClearPlacementsCallback,            gpStrategicString[STR_TP_CLEAR],  gpStrategicString[STR_TP_CLEARHELP]);
+	MakeButton(SPREAD_BUTTON, 367, SpreadPlacementsCallback,           gpStrategicString[STR_TP_SPREAD], gpStrategicString[STR_TP_SPREADHELP]);
+	MakeButton(GROUP_BUTTON,  402, GroupPlacementsCallback,            gpStrategicString[STR_TP_GROUP],  gpStrategicString[STR_TP_GROUPHELP]);
+	MakeButton(DONE_BUTTON,   437, DoneOverheadPlacementClickCallback, gpStrategicString[STR_TP_DONE],   gpStrategicString[STR_TP_DONEHELP]);
+	AllowDisabledButtonFastHelp(iTPButtons[DONE_BUTTON], TRUE);
 
 	//First pass:  Count the number of mercs that are going to be placed by the player.
 	//             This determines the size of the array we will allocate.

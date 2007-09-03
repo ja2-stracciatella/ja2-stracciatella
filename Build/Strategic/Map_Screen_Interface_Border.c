@@ -62,7 +62,6 @@ INT32 giMapBorderButtons[ 6 ] = { -1, -1, -1, -1, -1, -1 };
 INT32 giMapBorderButtonsImage[ 6 ] = { -1, -1, -1, -1, -1, -1 };
 
 //UINT32 guiMapBorderScrollButtons[ 4 ] = { -1, -1, -1, -1 };
-//UINT32 guiMapBorderScrollButtonsImage[ 4 ];
 
 // raise/lower land buttons
 //UINT32 guiMapBorderLandRaiseButtons[ 2 ] = { -1, -1 };
@@ -203,6 +202,16 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 }
 
 
+#if 0
+static void MakeButtonScroll(UINT idx, INT32 gray, INT32 normal, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
+{
+	INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", gray, normal, -1, normal + 2, -1, x, y, MSYS_PRIORITY_HIGH, click);
+	guiMapBorderScrollButtons[idx] = btn;
+	SetButtonFastHelpText(btn, help);
+}
+#endif
+
+
 static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason);
@@ -215,38 +224,12 @@ static void InitializeMapBorderButtonStates(void);
 BOOLEAN CreateButtonsForMapBorder( void )
 {
 	// will create the buttons needed for the map screen border region
-
-/*
-	// up button
-	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_UP ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
-  guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_UP ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_UP ], 602, 303,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, BtnScrollNorthMapScreenCallback);
-
-	// dwn button
-	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_DWN ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1 );
-  guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_DWN ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_DWN ], 602, 338,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, BtnScrollSouthMapScreenCallback);
-
-	// left button
-	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,9,0,-1,2,-1 );
-  guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_LEFT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_LEFT ], 584, 322,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, BtnScrollWestMapScreenCallback);
-
-	// right button
-	guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,10,1,-1,3,-1 );
-  guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_RIGHT ] = QuickCreateButton( guiMapBorderScrollButtonsImage[ ZOOM_MAP_SCROLL_RIGHT ], 619, 322,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										BtnGenericMouseMoveButtonCallback, BtnScrollEastMapScreenCallback);
-
-	// set up fast help text
-	SetButtonFastHelpText( guiMapBorderScrollButtons[ 0 ], pMapScreenBorderButtonHelpText[ 6 ] );
-	SetButtonFastHelpText( guiMapBorderScrollButtons[ 1 ], pMapScreenBorderButtonHelpText[ 7 ] );
-	SetButtonFastHelpText( guiMapBorderScrollButtons[ 2 ], pMapScreenBorderButtonHelpText[ 8 ] );
-	SetButtonFastHelpText( guiMapBorderScrollButtons[ 3 ], pMapScreenBorderButtonHelpText[ 9 ] );
-*/
+#if 0
+	MakeButtonScroll(ZOOM_MAP_SCROLL_UP,    11, 4, 602, 303, BtnScrollNorthMapScreenCallback, pMapScreenBorderButtonHelpText[6]);
+	MakeButtonScroll(ZOOM_MAP_SCROLL_DWN,   12, 5, 602, 338, BtnScrollSouthMapScreenCallback, pMapScreenBorderButtonHelpText[7]);
+	MakeButtonScroll(ZOOM_MAP_SCROLL_LEFT,   9, 0, 584, 322, BtnScrollWestMapScreenCallback,  pMapScreenBorderButtonHelpText[9]);
+	MakeButtonScroll(ZOOM_MAP_SCROLL_RIGHT, 10, 1, 619, 322, BtnScrollEastMapScreenCallback,  pMapScreenBorderButtonHelpText[8]);
+#endif
 
   MakeButton(MAP_BORDER_TOWN_BTN,     5, 299, BtnTownCallback,     pMapScreenBorderButtonHelpText[0]); // towns
   MakeButton(MAP_BORDER_MINE_BTN,     4, 342, BtnMineCallback,     pMapScreenBorderButtonHelpText[1]); // mines
@@ -259,16 +242,12 @@ BOOLEAN CreateButtonsForMapBorder( void )
 
 	// raise
 	/*
-	guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_RAISE_LEVEL ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,11,4,-1,6,-1 );
-	guiMapBorderLandRaiseButtons[ MAP_BORDER_RAISE_LEVEL ] = QuickCreateButton( guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_RAISE_LEVEL ], MAP_BORDER_X + 264, 322,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnRaiseLevelBtnCallback);
+	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1);
+	guiMapBorderLandRaiseButtons[MAP_BORDER_RAISE_LEVEL] = QuickCreateButton(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL], MAP_BORDER_X + 264, 322, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, BtnRaiseLevelBtnCallback);
 
 	// lower
-	guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_LOWER_LEVEL ] = LoadButtonImage( "INTERFACE/map_screen_bottom_arrows.sti" ,12,5,-1,7,-1  );
-	guiMapBorderLandRaiseButtons[ MAP_BORDER_LOWER_LEVEL ] = QuickCreateButton( guiMapBorderLandRaiseButtonsImage[ MAP_BORDER_LOWER_LEVEL ], MAP_BORDER_X + 264, 340,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-										MSYS_NO_CALLBACK, BtnLowerLevelBtnCallback);
+	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1);
+	guiMapBorderLandRaiseButtons[MAP_BORDER_LOWER_LEVEL] = QuickCreateButton(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL], MAP_BORDER_X + 264, 340, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, BtnLowerLevelBtnCallback);
 
 */
 
@@ -306,13 +285,6 @@ void DeleteMapBorderButtons( void )
 	//RemoveButton( guiMapBorderLandRaiseButtons[ 1 ]);
 
 	// images
-
-/*
-	UnloadButtonImage( guiMapBorderScrollButtonsImage[ 0 ] );
-	UnloadButtonImage( guiMapBorderScrollButtonsImage[ 1 ] );
-	UnloadButtonImage( guiMapBorderScrollButtonsImage[ 2 ] );
-	UnloadButtonImage( guiMapBorderScrollButtonsImage[ 3 ] );
-*/
 
 	UnloadButtonImage( giMapBorderButtonsImage[ 0 ] );
 	UnloadButtonImage( giMapBorderButtonsImage[ 1 ] );

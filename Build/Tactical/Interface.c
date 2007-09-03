@@ -525,12 +525,28 @@ void HandleInterfaceBackgrounds( )
 
 
 static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static BOOLEAN MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* event, const wchar_t* help)
+{
+	INT32 btn = QuickCreateButton(iIconImages[gfx], x, y, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, BtnMovementCallback);
+	iActionIcons[idx] = btn;
+	if (btn == -1)
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+		return FALSE;
+	}
+	ButtonList[btn]->User.Ptr = event;
+	SetButtonFastHelpText(btn, help);
+	return TRUE;
+}
+
+
 static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent )
 {
-	SOLDIERTYPE					*pSoldier = NULL;
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	UINT32							uiActionImages;
 	BOOLEAN							fDisableAction = FALSE;
@@ -568,11 +584,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 
 
-
-	if ( gusSelectedSoldier != NOBODY )
-	{
-		pSoldier = MercPtrs[ gusSelectedSoldier ];
-	}
+	const SOLDIERTYPE* const s = (gusSelectedSoldier == NOBODY ? NULL : MercPtrs[gusSelectedSoldier]);
 
 	// Blit background!
 	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, iMenuAnchorX, iMenuAnchorY);
@@ -580,112 +592,40 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	iMenuAnchorX = giMenuAnchorX + 9;
 	iMenuAnchorY = giMenuAnchorY + 8;
 
-	iActionIcons[ RUN_ICON ] = QuickCreateButton( iIconImages[ RUN_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ RUN_ICON ] == -1 )
+	if (!MakeButtonMove(RUN_ICON, RUN_IMAGES, iMenuAnchorX + 20, iMenuAnchorY, pUIEvent, pTacticalPopupButtonStrings[RUN_ICON])) return;
+	if (MercInWater(s) || s->uiStatusFlags & SOLDIER_VEHICLE || s->uiStatusFlags & SOLDIER_ROBOT)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ RUN_ICON ], pTacticalPopupButtonStrings[ RUN_ICON ] );
-	ButtonList[iActionIcons[RUN_ICON]]->User.Ptr = pUIEvent;
-
-	if ( MercInWater( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
-	{
-		DisableButton( iActionIcons[ RUN_ICON ] );
+		DisableButton(iActionIcons[RUN_ICON]);
 	}
 
-  iActionIcons[ WALK_ICON ] = QuickCreateButton( iIconImages[ WALK_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY  ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ WALK_ICON ] == -1 )
+	const wchar_t* const help = (s->uiStatusFlags & SOLDIER_VEHICLE ? TacticalStr[DRIVE_POPUPTEXT] : pTacticalPopupButtonStrings[WALK_ICON]);
+	if (!MakeButtonMove(WALK_ICON, WALK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY, pUIEvent, help)) return;
+	if (s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
+		DisableButton(iActionIcons[WALK_ICON]);
 	}
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if (!MakeButtonMove(SNEAK_ICON, SNEAK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[SNEAK_ICON])) return;
+	if (!IsValidStance(s, ANIM_CROUCH))
 	{
-		SetButtonFastHelpText( iActionIcons[ WALK_ICON ], TacticalStr[ DRIVE_POPUPTEXT ] );
-	}
-	else
-	{
-		SetButtonFastHelpText( iActionIcons[ WALK_ICON ], pTacticalPopupButtonStrings[ WALK_ICON ] );
+		DisableButton(iActionIcons[SNEAK_ICON]);
 	}
 
-	ButtonList[iActionIcons[WALK_ICON]]->User.Ptr = pUIEvent;
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+	if (!MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[CRAWL_ICON])) return;
+	if (!IsValidStance(s, ANIM_PRONE))
 	{
-		if ( !CanRobotBeControlled( pSoldier ) )
-		{
-			DisableButton( iActionIcons[ WALK_ICON ] );
-		}
+		DisableButton(iActionIcons[CRAWL_ICON]);
 	}
 
-
-	iActionIcons[ SNEAK_ICON ] = QuickCreateButton( iIconImages[ SNEAK_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ SNEAK_ICON ] == -1 )
+	if (!MakeButtonMove(LOOK_ICON, LOOK_IMAGES, iMenuAnchorX, iMenuAnchorY, pUIEvent, TacticalStr[LOOK_CURSOR_POPUPTEXT])) return;
+	if (s->uiStatusFlags & SOLDIER_VEHICLE ||
+			s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ SNEAK_ICON ], pTacticalPopupButtonStrings[ SNEAK_ICON ] );
-	ButtonList[iActionIcons[SNEAK_ICON]]->User.Ptr = pUIEvent;
-
-	// Check if this is a valid stance, diable if not!
-	if ( !IsValidStance( pSoldier, ANIM_CROUCH ) )
-	{
-		DisableButton( iActionIcons[ SNEAK_ICON ]  );
-	}
-
-	iActionIcons[ CRAWL_ICON ] = QuickCreateButton( iIconImages[ CRAWL_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ CRAWL_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ CRAWL_ICON ], pTacticalPopupButtonStrings[ CRAWL_ICON ] );
-	ButtonList[iActionIcons[CRAWL_ICON]]->User.Ptr = pUIEvent;
-
-	// Check if this is a valid stance, diable if not!
-	if ( !IsValidStance( pSoldier, ANIM_PRONE ) )
-	{
-		DisableButton( iActionIcons[ CRAWL_ICON ]  );
-	}
-
-
-	iActionIcons[ LOOK_ICON ] = QuickCreateButton( iIconImages[ LOOK_IMAGES ], (INT16)(iMenuAnchorX ), (INT16)(iMenuAnchorY ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ LOOK_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ LOOK_ICON ], TacticalStr[ LOOK_CURSOR_POPUPTEXT ] );
-	ButtonList[iActionIcons[LOOK_ICON]]->User.Ptr = pUIEvent;
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		DisableButton( iActionIcons[ LOOK_ICON ]  );
-	}
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
-	{
-		if ( !CanRobotBeControlled( pSoldier ) )
-		{
-			DisableButton( iActionIcons[ LOOK_ICON ] );
-		}
+		DisableButton(iActionIcons[LOOK_ICON]);
 	}
 
 	const wchar_t* Action;
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if (s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		// Until we get mounted weapons...
 		uiActionImages = CANCEL_IMAGES;
@@ -694,12 +634,13 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 	else
 	{
-		if ( pSoldier->inv[ HANDPOS ].usItem == TOOLKIT )
+		const UINT16 item = s->inv[HANDPOS].usItem;
+		if (item == TOOLKIT)
 		{
 			uiActionImages = TOOLKITACTIONC_IMAGES;
 			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
-		else if ( pSoldier->inv[ HANDPOS ].usItem == WIRECUTTERS )
+		else if (item == WIRECUTTERS)
 		{
 			uiActionImages = WIRECUTACTIONC_IMAGES;
 			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
@@ -707,7 +648,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		else
 		{
 			// Create button based on what is in our hands at the moment!
-			switch( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass )
+			switch (Item[item].usItemClass)
 			{
 				case IC_PUNCH:
 					uiActionImages = PUNCHACTIONC_IMAGES;
@@ -744,71 +685,27 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		}
 	}
 
-	if ( AM_AN_EPC( pSoldier ) )
+	if (AM_AN_EPC(s)) fDisableAction = TRUE;
+
+	if (!MakeButtonMove(ACTIONC_ICON, uiActionImages, iMenuAnchorX, iMenuAnchorY + 20, pUIEvent, Action)) return;
+	if (fDisableAction)
 	{
-		fDisableAction = TRUE;
+		DisableButton(iActionIcons[ACTIONC_ICON]);
 	}
 
-	iActionIcons[ ACTIONC_ICON ] = QuickCreateButton( iIconImages[ uiActionImages ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ ACTIONC_ICON ] == -1 )
+	if (!MakeButtonMove(TALK_ICON, TALK_IMAGES, iMenuAnchorX, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[TALK_ICON])) return;
+	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText(iActionIcons[ACTIONC_ICON], Action);
-	ButtonList[iActionIcons[ACTIONC_ICON]]->User.Ptr = pUIEvent;
-
-	if ( fDisableAction )
-	{
-		DisableButton( iActionIcons[ ACTIONC_ICON ]  );
+		DisableButton(iActionIcons[TALK_ICON]);
 	}
 
-
-	iActionIcons[ TALK_ICON ] = QuickCreateButton( iIconImages[ TALK_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ TALK_ICON ] == -1 )
+	if (!MakeButtonMove(HAND_ICON, HAND_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[HAND_ICON])) return;
+	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ TALK_ICON ], pTacticalPopupButtonStrings[ TALK_ICON ] );
-	ButtonList[iActionIcons[TALK_ICON]]->User.Ptr = pUIEvent;
-
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		DisableButton( iActionIcons[ TALK_ICON ]  );
+		DisableButton(iActionIcons[HAND_ICON]);
 	}
 
-
-	iActionIcons[ HAND_ICON ] = QuickCreateButton( iIconImages[ HAND_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ HAND_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ HAND_ICON ], pTacticalPopupButtonStrings[ HAND_ICON ] );
-	ButtonList[iActionIcons[HAND_ICON]]->User.Ptr = pUIEvent;
-
-	if ( AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		DisableButton( iActionIcons[ HAND_ICON ]  );
-	}
-
-	iActionIcons[ CANCEL_ICON ] = QuickCreateButton( iIconImages[ CANCEL_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnMovementCallback );
-	if ( iActionIcons[ CANCEL_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ CANCEL_ICON ], pTacticalPopupButtonStrings[ CANCEL_ICON ] );
-	ButtonList[iActionIcons[CANCEL_ICON]]->User.Ptr = pUIEvent;
+	if (!MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
 
 	//LockTacticalInterface( );
 
@@ -1886,274 +1783,76 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 
 
 static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
+
+
+static BOOLEAN MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const wchar_t* help)
+{
+	INT32 btn = QuickCreateButton(iIconImages[gfx], x, y, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback);
+	iActionIcons[idx] = btn;
+	if (btn == -1)
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+		return FALSE;
+	}
+	if (ap == 0 || !(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
+	{
+		SetButtonFastHelpText(btn, help);
+	}
+	else
+	{
+		wchar_t zDisp[100];
+		swprintf(zDisp, lengthof(zDisp), L"%ls ( %d )", help, ap);
+		SetButtonFastHelpText(btn, zDisp);
+	}
+	if (disable ||
+			(ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
+	{
+		DisableButton(btn);
+	}
+	return TRUE;
+}
+
+
 static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 {
-	INT32								iMenuAnchorX, iMenuAnchorY;
-	wchar_t							zDisp[ 100 ];
-
-	iMenuAnchorX = gOpenDoorMenu.sX;
-	iMenuAnchorY = gOpenDoorMenu.sY;
+	INT32 dx = gOpenDoorMenu.sX;
+	INT32 dy = gOpenDoorMenu.sY;
 
 	// Blit background!
-	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, iMenuAnchorX, iMenuAnchorY);
-	iMenuAnchorX = gOpenDoorMenu.sX + 9;
-	iMenuAnchorY = gOpenDoorMenu.sY + 8;
+	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, dx, dy);
 
+	dx += 9;
+	dy += 8;
 
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback);
 
+	const BOOLEAN d0 = fClosingDoor || AM_AN_EPC(gOpenDoorMenu.pSoldier);
+	BOOLEAN d;
 
-	iActionIcons[ USE_KEYRING_ICON ] = QuickCreateButton( iIconImages[ USE_KEYRING_IMAGES ], (INT16)(iMenuAnchorX + 20 ), (INT16)(iMenuAnchorY ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ USE_KEYRING_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
+	d = d0 || !SoldierHasKey(gOpenDoorMenu.pSoldier, ANYKEY);
+	if (!MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d, pTacticalPopupButtonStrings[USE_KEYRING_ICON])) return;
 
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ USE_KEYRING_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ USE_KEYRING_ICON ], AP_UNLOCK_DOOR );
-	}
-	SetButtonFastHelpText( iActionIcons[ USE_KEYRING_ICON ], zDisp );
+	d = fClosingDoor || FindUsableObj(gOpenDoorMenu.pSoldier, CROWBAR) == NO_SLOT;
+	if (!MakeButtonDoor(USE_CROWBAR_ICON, CROWBAR_DOOR_IMAGES, dx + 40, dy, AP_USE_CROWBAR, BP_USE_CROWBAR, d, pTacticalPopupButtonStrings[USE_CROWBAR_ICON])) return;
 
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ USE_KEYRING_ICON ] );
-	}
+	d = d0 || FindObj(gOpenDoorMenu.pSoldier, LOCKSMITHKIT) == NO_SLOT;
+	if (!MakeButtonDoor(LOCKPICK_DOOR_ICON, LOCKPICK_DOOR_IMAGES, dx + 40, dy + 20, AP_PICKLOCK, BP_PICKLOCK, d, pTacticalPopupButtonStrings[LOCKPICK_DOOR_ICON])) return;
 
-	// Greyout if no keys found...
-	if ( !SoldierHasKey( gOpenDoorMenu.pSoldier, ANYKEY ) )
-	{
-		DisableButton( iActionIcons[ USE_KEYRING_ICON ] );
-	}
+	d = d0 || FindObj(gOpenDoorMenu.pSoldier, SHAPED_CHARGE) == NO_SLOT;
+	if (!MakeButtonDoor(EXPLOSIVE_DOOR_ICON, EXPLOSIVE_DOOR_IMAGES, dx + 40, dy + 40, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON])) return;
 
+	const wchar_t* const help = pTacticalPopupButtonStrings[fClosingDoor ? CANCEL_ICON + 1 : OPEN_DOOR_ICON];
+	if (!MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help)) return;
 
-	iActionIcons[ USE_CROWBAR_ICON ] = QuickCreateButton( iIconImages[ CROWBAR_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY  ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ USE_CROWBAR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
+	if (!MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx,      dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0, pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON])) return;
+	if (!MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES,       dx,      dy + 40, AP_BOOT_DOOR,    BP_BOOT_DOOR,    d0, pTacticalPopupButtonStrings[BOOT_DOOR_ICON]))    return;
+	if (!MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON,     dx + 20, dy + 40, AP_UNTRAP_DOOR,  BP_UNTRAP_DOOR,  d0, pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]))  return;
 
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ USE_CROWBAR_ICON ], AP_USE_CROWBAR );
-	}
-	SetButtonFastHelpText( iActionIcons[ USE_CROWBAR_ICON ], zDisp );
-
-	// Greyout if no crowbar found...
-	if ( FindUsableObj( gOpenDoorMenu.pSoldier, CROWBAR ) == NO_SLOT  || fClosingDoor )
-	{
-		DisableButton( iActionIcons[ USE_CROWBAR_ICON ] );
-	}
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_USE_CROWBAR, BP_USE_CROWBAR, FALSE ) )
-	{
-		DisableButton( iActionIcons[ USE_CROWBAR_ICON ] );
-	}
-
-	iActionIcons[ LOCKPICK_DOOR_ICON ] = QuickCreateButton( iIconImages[ LOCKPICK_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ LOCKPICK_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ LOCKPICK_DOOR_ICON ], AP_PICKLOCK );
-	}
-	SetButtonFastHelpText( iActionIcons[ LOCKPICK_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_PICKLOCK, BP_PICKLOCK, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ LOCKPICK_DOOR_ICON ] );
-	}
-
-
-	// Grayout if no lockpick found....
-	if ( FindObj( gOpenDoorMenu.pSoldier, LOCKSMITHKIT ) == NO_SLOT )
-	{
-		DisableButton( iActionIcons[ LOCKPICK_DOOR_ICON ] );
-	}
-
-
-	iActionIcons[ EXPLOSIVE_DOOR_ICON ] = QuickCreateButton( iIconImages[ EXPLOSIVE_DOOR_IMAGES ], (INT16)(iMenuAnchorX + 40 ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ EXPLOSIVE_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ EXPLOSIVE_DOOR_ICON ], AP_EXPLODE_DOOR );
-	}
-	SetButtonFastHelpText( iActionIcons[ EXPLOSIVE_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ EXPLOSIVE_DOOR_ICON ] );
-	}
-
-	// Grayout if no lock explosive found....
-	// For no use bomb1 until we get a special item for this
-	if ( FindObj( gOpenDoorMenu.pSoldier, SHAPED_CHARGE ) == NO_SLOT )
-	{
-		DisableButton( iActionIcons[ EXPLOSIVE_DOOR_ICON ] );
-	}
-
-
-	iActionIcons[ OPEN_DOOR_ICON ] = QuickCreateButton( iIconImages[ OPEN_DOOR_IMAGES ], (INT16)(iMenuAnchorX ), (INT16)(iMenuAnchorY ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ OPEN_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if ( fClosingDoor )
-	{
-		if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-		{
-			swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ] );
-		}
-		else
-		{
-			swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ CANCEL_ICON + 1 ], AP_OPEN_DOOR );
-		}
-	}
-	else
-	{
-		if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-		{
-			swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ] );
-		}
-		else
-		{
-			swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ OPEN_DOOR_ICON ], AP_OPEN_DOOR );
-		}
-	}
-	SetButtonFastHelpText( iActionIcons[ OPEN_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE ) )
-	{
-		DisableButton( iActionIcons[ OPEN_DOOR_ICON ] );
-	}
-
-
-	// Create button based on what is in our hands at the moment!
-	iActionIcons[ EXAMINE_DOOR_ICON ] = QuickCreateButton( iIconImages[ EXAMINE_DOOR_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ EXAMINE_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ EXAMINE_DOOR_ICON ], AP_EXAMINE_DOOR );
-	}
-	SetButtonFastHelpText( iActionIcons[ EXAMINE_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ EXAMINE_DOOR_ICON ] );
-	}
-
-	iActionIcons[ BOOT_DOOR_ICON ] = QuickCreateButton( iIconImages[ BOOT_DOOR_IMAGES ], (INT16)(iMenuAnchorX  ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ BOOT_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ BOOT_DOOR_ICON ], AP_BOOT_DOOR );
-	}
-	SetButtonFastHelpText( iActionIcons[ BOOT_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_BOOT_DOOR, BP_BOOT_DOOR, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ BOOT_DOOR_ICON ] );
-	}
-
-
-	iActionIcons[ UNTRAP_DOOR_ICON ] = QuickCreateButton( iIconImages[ UNTRAP_DOOR_ICON ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 40 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ UNTRAP_DOOR_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		swprintf( zDisp, lengthof(zDisp), pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ] );
-	}
-	else
-	{
-		swprintf( zDisp, lengthof(zDisp), L"%ls ( %d )", pTacticalPopupButtonStrings[ UNTRAP_DOOR_ICON ], AP_UNTRAP_DOOR );
-	}
-	SetButtonFastHelpText( iActionIcons[ UNTRAP_DOOR_ICON ], zDisp );
-
-	if ( !EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, FALSE ) || fClosingDoor || AM_AN_EPC( gOpenDoorMenu.pSoldier ) )
-	{
-		DisableButton( iActionIcons[ UNTRAP_DOOR_ICON ] );
-	}
-
-	iActionIcons[ CANCEL_ICON ] = QuickCreateButton( iIconImages[ CANCEL_IMAGES ], (INT16)(iMenuAnchorX + 20  ), (INT16)(iMenuAnchorY + 20 ),
-										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-										DEFAULT_MOVE_CALLBACK, BtnDoorMenuCallback );
-	if ( iActionIcons[ CANCEL_ICON ] == -1 )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button" );
-		return;
-	}
-	SetButtonFastHelpText( iActionIcons[ CANCEL_ICON ], pTacticalPopupButtonStrings[ CANCEL_ICON ] );
+	if (!MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
 
 	//LockTacticalInterface( );
 
