@@ -1322,7 +1322,6 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 		case BUTTON_CHECKBOX: DrawCheckBoxButton(b); break;
 
 		case BUTTON_HOT_SPOT:
-			if (b->uiFlags & BUTTON_NO_TOGGLE) b->uiFlags &= ~BUTTON_CLICKED_ON;
 			return; // hotspots don't have text, but if you want to, change this to a break!
 	}
 	if (b->iIconID != -1) DrawIconOnButton(b);
