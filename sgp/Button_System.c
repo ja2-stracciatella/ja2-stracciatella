@@ -705,13 +705,16 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 }
 
 
+static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
+
+
 INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
+	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	b->iIconID     = Icon;
@@ -727,7 +730,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
+	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
@@ -741,7 +744,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
+	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;
@@ -778,7 +781,7 @@ INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type
 
 INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
 {
-	return QuickCreateButtonInternal(image, x, y, BUTTON_NO_TOGGLE, priority, DEFAULT_MOVE_CALLBACK, click);
+	return QuickCreateButtonInternal(image, x, y, BUTTON_NO_TOGGLE, priority, DefaultMoveCallback, click);
 }
 
 
@@ -833,7 +836,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	const INT32 id = QuickCreateButtonInternal(Image, xloc, yloc, Type, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
+	const INT32 id = QuickCreateButtonInternal(Image, xloc, yloc, Type, Priority, DefaultMoveCallback, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);
@@ -1088,7 +1091,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	 * that are already down, and anchored never change state, unless you release
 	 * the mouse in the button area.
 	 */
-	if (b->MoveCallback == DEFAULT_MOVE_CALLBACK && b->uiFlags & BUTTON_ENABLED)
+	if (b->MoveCallback == DefaultMoveCallback && b->uiFlags & BUTTON_ENABLED)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
@@ -1150,7 +1153,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		 */
 		gfDelayButtonDeletion = TRUE;
 		if (!(reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ||
-				b->MoveCallback != DEFAULT_MOVE_CALLBACK ||
+				b->MoveCallback != DefaultMoveCallback ||
 				gpPrevAnchoredButton == b)
 		{
 			b->ClickCallback(b, reason);
@@ -1955,7 +1958,10 @@ INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b)
 }
 
 
-void BtnGenericMouseMoveButtonCallback(GUI_BUTTON* btn, INT32 reason)
+/* Generic Button Movement Callback to reset the mouse button if the mouse is no
+ * longer in the button region.
+ */
+static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	// If the button isn't the anchored button, then we don't want to modify the button state.
 	if (btn != gpAnchoredButton) return;

@@ -274,12 +274,6 @@ void UnMarkButtonDirty(INT32 iButtonIndex);  // unmark button
 void UnmarkButtonsDirty(void); // unmark ALL the buttoms on the screen dirty
 void ForceButtonUnDirty(INT32 iButtonIndex); // forces button undirty no matter the reason, only lasts one frame
 
-/* Generic Button Movement Callback to reset the mouse button if the mouse is no
- * longer in the button region.
- */
-void BtnGenericMouseMoveButtonCallback(GUI_BUTTON* btn, INT32 reason);
-#define DEFAULT_MOVE_CALLBACK BtnGenericMouseMoveButtonCallback
-
 
 void DrawCheckBoxButtonOn(INT32 iButtonID);
 void DrawCheckBoxButtonOff(INT32 iButtonID);
