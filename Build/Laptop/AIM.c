@@ -516,7 +516,6 @@ BOOLEAN InitAimMenuBar(void)
 		guiBottomButtons[i] = CreateIconAndTextButton( guiBottomButtonImage, AimBottomMenuText[i], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 usPosX, BOTTOM_BUTTON_START_Y, MSYS_PRIORITY_HIGH,
 														 BtnAimBottomButtonsCallback);
 		SetButtonCursor(guiBottomButtons[i], CURSOR_LAPTOP_SCREEN);

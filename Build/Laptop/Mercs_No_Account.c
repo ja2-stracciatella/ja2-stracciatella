@@ -63,7 +63,6 @@ BOOLEAN EnterMercsNoAccount()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnOpenAccountBoxButtonCallback);
 	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
@@ -74,7 +73,6 @@ BOOLEAN EnterMercsNoAccount()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnCancelBoxButtonCallback);
 	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);

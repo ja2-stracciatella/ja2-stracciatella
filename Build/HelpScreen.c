@@ -902,7 +902,6 @@ static void CreateHelpScreenButtons(void)
 			guiHelpScreenBtns[i] = CreateIconAndTextButton( giHelpScreenButtonsImage[i], sText, HELP_SCREEN_BTN_FONT,
 															 HELP_SCREEN_BTN_FONT_ON_COLOR, DEFAULT_SHADOW,
 															 HELP_SCREEN_BTN_FONT_OFF_COLOR, DEFAULT_SHADOW,
-															 TEXT_CJUSTIFIED,
 															 usPosX, usPosY, MSYS_PRIORITY_HIGHEST,
 															 BtnHelpScreenBtnsCallback);
 

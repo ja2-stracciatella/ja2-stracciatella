@@ -106,7 +106,6 @@ BOOLEAN EnterInsuranceInfo()
 	guiInsPrevBackButton = CreateIconAndTextButton( guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsPrevButtonCallback);
 	SetButtonCursor( guiInsPrevBackButton, CURSOR_WWW );
@@ -118,7 +117,6 @@ BOOLEAN EnterInsuranceInfo()
 	guiInsNextBackButton = CreateIconAndTextButton( guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_FONT_BIG,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsNextButtonCallback);
 	SetButtonCursor( guiInsNextBackButton, CURSOR_WWW );

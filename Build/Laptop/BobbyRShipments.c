@@ -104,7 +104,6 @@ BOOLEAN EnterBobbyRShipments()
 	guiBobbyRShipmetBack = CreateIconAndTextButton( guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_BACK_BUTTON_X, BOBBYR_SHIPMENT_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRShipmentBackCallback);
 	SetButtonCursor( guiBobbyRShipmetBack, CURSOR_LAPTOP_SCREEN);
@@ -114,7 +113,6 @@ BOOLEAN EnterBobbyRShipments()
 	guiBobbyRShipmentHome = CreateIconAndTextButton( giBobbyRShipmentHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_HOME_BUTTON_X, BOBBYR_SHIPMENT_HOME_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRShipmentHomeCallback);
 	SetButtonCursor( guiBobbyRShipmentHome, CURSOR_LAPTOP_SCREEN);

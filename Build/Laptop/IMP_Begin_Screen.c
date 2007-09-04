@@ -259,7 +259,6 @@ static void CreateIMPBeginScreenButtons(void)
 	giIMPBeginScreenButton[0] = CreateIconAndTextButton( giIMPBeginScreenButtonImage[ 0 ], pImpButtonText[ 6 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 134, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
 														 BtnIMPBeginScreenDoneCallback);
 

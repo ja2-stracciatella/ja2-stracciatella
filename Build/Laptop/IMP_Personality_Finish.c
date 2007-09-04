@@ -177,7 +177,6 @@ static void CreateIMPPersonalityFinishButtons(void)
 	giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 9 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 90, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityFinishYesCallback);
 
@@ -186,7 +185,6 @@ static void CreateIMPPersonalityFinishButtons(void)
 	giIMPPersonalityFinishButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[ 1 ], pImpButtonText[ 10 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 276, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityFinishNoCallback);
 
@@ -276,7 +274,6 @@ static void CreatePersonalityFinishOkButton(void)
   giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 24 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 186, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 BtnIMPPersonalityFinishOkCallback);
 

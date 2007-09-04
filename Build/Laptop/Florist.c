@@ -92,7 +92,6 @@ BOOLEAN EnterFlorist()
 	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLORIST_GALLERY_BUTTON_X, FLORIST_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnGalleryButtonCallback);
 	SetButtonCursor(guiGalleryButton, CURSOR_WWW );

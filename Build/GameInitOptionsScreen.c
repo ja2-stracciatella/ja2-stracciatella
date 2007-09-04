@@ -279,7 +279,6 @@ static BOOLEAN EnterGIOScreen(void)
 	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT,
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 GIO_BTN_OK_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
 													 BtnGIODoneCallback);
 	SpecifyButtonSoundScheme( guiGIODoneButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
@@ -290,7 +289,6 @@ static BOOLEAN EnterGIOScreen(void)
 	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT,
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 GIO_CANCEL_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
 													 BtnGIOCancelCallback );
 	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );

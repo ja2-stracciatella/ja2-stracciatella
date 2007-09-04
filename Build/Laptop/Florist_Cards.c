@@ -88,7 +88,6 @@ BOOLEAN EnterFloristCards()
 	guiFlowerCardsBackButton = CreateIconAndTextButton( guiFlowerCardsButtonImage, sFloristCards[FLORIST_CARDS_BACK], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerCardsBackButtonCallback);
 	SetButtonCursor(guiFlowerCardsBackButton, CURSOR_WWW );

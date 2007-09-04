@@ -171,7 +171,6 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giIMPPersonalityQuizButton[0] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[0], pImpButtonText[ 8 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityQuizAnswerConfirmCallback);
 
@@ -180,7 +179,6 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giIMPPersonalityQuizButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[ 1 ], pImpButtonText[ 7 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + BTN_FIRST_COLUMN_X, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityQuizStartOverCallback);
 
@@ -188,7 +186,6 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giPreviousQuestionButton = CreateIconAndTextButton( giPreviousQuestionButtonImage, pImpButtonText[ 12 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
 														 	PreviousQuestionButtonCallback);
 
@@ -196,7 +193,6 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giNextQuestionButton = CreateIconAndTextButton( giNextQuestionButtonImage, pImpButtonText[ 13 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 417, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
 														 	NextQuestionButtonCallback);
 

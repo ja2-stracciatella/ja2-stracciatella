@@ -384,7 +384,6 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_POLICY_MENU_Y, MSYS_PRIORITY_HIGH,
 														 BtnPoliciesMenuButtonCallback);
 		SetButtonCursor(guiPoliciesMenuButton[i], CURSOR_WWW);
@@ -565,7 +564,6 @@ static BOOLEAN InitAgreementRegion(void)
 		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT,
 														 AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW,
 														 AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_POLICY_AGREEMENT_Y, MSYS_PRIORITY_HIGH,
 														 BtnPoliciesAgreeButtonCallback);
 		SetButtonCursor(guiPoliciesAgreeButton[i], CURSOR_WWW);

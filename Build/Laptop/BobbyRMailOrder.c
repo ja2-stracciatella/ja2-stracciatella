@@ -390,7 +390,6 @@ BOOLEAN EnterBobbyRMailOrder()
 	guiBobbyRClearOrder = CreateIconAndTextButton( guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_ORDER_TITLE_TEXT_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRClearOrderCallback);
 	SetButtonCursor(guiBobbyRClearOrder, CURSOR_LAPTOP_SCREEN);
@@ -403,7 +402,6 @@ BOOLEAN EnterBobbyRMailOrder()
 	guiBobbyRAcceptOrder = CreateIconAndTextButton( guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ORDER_TITLE_TEXT_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y + 4, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRAcceptOrderCallback);
 	SetButtonCursor( guiBobbyRAcceptOrder, CURSOR_LAPTOP_SCREEN);
@@ -425,7 +423,6 @@ BOOLEAN EnterBobbyRMailOrder()
 	guiBobbyRBack = CreateIconAndTextButton( guiBobbyRBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_BACK_BUTTON_X, BOBBYR_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRBackCallback);
 	SetButtonCursor(guiBobbyRBack, CURSOR_LAPTOP_SCREEN);
@@ -434,7 +431,6 @@ BOOLEAN EnterBobbyRMailOrder()
 	guiBobbyRHome = CreateIconAndTextButton( guiBobbyRHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRHomeCallback);
 	SetButtonCursor(guiBobbyRHome, CURSOR_LAPTOP_SCREEN);
@@ -444,7 +440,6 @@ BOOLEAN EnterBobbyRMailOrder()
 	guiBobbyRGotoShipmentPage = CreateIconAndTextButton( giBobbyRGotoShipmentPageImage, BobbyROrderFormText[BOBBYR_GOTOSHIPMENT_PAGE], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_SHIPMENT_BUTTON_X, BOBBYR_SHIPMENT_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRGotoShipmentPageCallback );
 	SetButtonCursor(guiBobbyRGotoShipmentPage, CURSOR_LAPTOP_SCREEN);

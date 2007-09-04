@@ -458,7 +458,6 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.uiCancelButton = CreateIconAndTextButton(gTalkPanel.iButtonImages, zDialogActions, MILITARYFONT1,
 														 33, DEFAULT_SHADOW,
 														 33, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 gTalkPanel.sX + TALK_PANEL_BUTTON_X, gTalkPanel.sY + TALK_PANEL_BUTTON_Y, MSYS_PRIORITY_HIGHEST,
 														 DoneTalkingButtonClickCallback );
 

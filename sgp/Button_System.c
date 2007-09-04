@@ -834,14 +834,13 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 }
 
 
-INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
+INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);
 		CopyButtonText(b, string);
-		b->bJustification   = bJustification;
 		b->usFont           = uiFont;
 		b->sForeColor       = sForeColor;
 		b->sShadowColor     = sShadowColor;
@@ -892,6 +891,16 @@ void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, IN
 	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorHilited   = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
+	b->uiFlags |= BUTTON_DIRTY;
+}
+
+
+void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
+{
+	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(b != NULL); // XXX HACK000C
+	Assert(bJustification >= BUTTON_TEXT_LEFT && bJustification <= BUTTON_TEXT_RIGHT);
+	b->bJustification = bJustification;
 	b->uiFlags |= BUTTON_DIRTY;
 }
 

@@ -710,7 +710,6 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2,
 														 FONT_WHITE, FONT_BLACK,
 														 FONT_WHITE, FONT_BLACK,
-														 TEXT_CJUSTIFIED,
 														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
 														 MapTownMineInventoryButtonCallBack );
 
@@ -723,7 +722,6 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2,
 														 FONT_WHITE, FONT_BLACK,
 														 FONT_WHITE, FONT_BLACK,
-														 TEXT_CJUSTIFIED,
 														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
 														 MapTownMineExitButtonCallBack );
 

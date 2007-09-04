@@ -126,7 +126,6 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[ 0 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 0 ], pImpButtonText[ 7 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
 														 	BtnIMPFinishStartOverCallback);
 
@@ -135,7 +134,6 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[ 1 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 1 ], pImpButtonText[ 6 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + 114, MSYS_PRIORITY_HIGH,
 														 	BtnIMPFinishDoneCallback);
 
@@ -144,7 +142,6 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[ 2 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 	BtnIMPFinishPersonalityCallback);
 
@@ -157,7 +154,6 @@ static void CreateIMPFinishButtons(void)
   giIMPFinishButton[ 3 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPFinishAttributesCallback);
 
@@ -169,7 +165,6 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[ 4 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
 										  			 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPagePortraitCallback);
 
@@ -183,7 +178,6 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[ 5 ] = CreateIconAndTextButton(  giIMPFinishButtonImage[ 5 ], sString, FONT12ARIAL,
 										  			 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageVoiceCallback);
 

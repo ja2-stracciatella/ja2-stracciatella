@@ -300,7 +300,6 @@ BOOLEAN EnterFloristOrderForm()
 	guiFlowerOrderBackButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_BACK], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOWER_ORDER_BACK_BUTTON_X, FLOWER_ORDER_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerOrderBackButtonCallback);
 	SetButtonCursor(guiFlowerOrderBackButton, CURSOR_WWW );
@@ -308,7 +307,6 @@ BOOLEAN EnterFloristOrderForm()
 	guiFlowerOrderSendButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_SEND], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOWER_ORDER_SEND_BUTTON_X, FLOWER_ORDER_SEND_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerOrderSendButtonCallback);
 	SetButtonCursor(guiFlowerOrderSendButton, CURSOR_WWW );
@@ -316,7 +314,6 @@ BOOLEAN EnterFloristOrderForm()
 	guiFlowerOrderClearButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_CLEAR], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOWER_ORDER_CLEAR_BUTTON_X, FLOWER_ORDER_CLEAR_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerOrderClearButtonCallback);
 	SetButtonCursor(guiFlowerOrderClearButton, CURSOR_WWW );
@@ -324,7 +321,6 @@ BOOLEAN EnterFloristOrderForm()
 	guiFlowerOrderGalleryButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_GALLERY], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOWER_ORDER_GALLERY_BUTTON_X, FLOWER_ORDER_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerOrderGalleryButtonCallback);
 	SetButtonCursor(guiFlowerOrderGalleryButton, CURSOR_WWW );

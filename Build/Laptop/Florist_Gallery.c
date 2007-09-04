@@ -97,7 +97,6 @@ BOOLEAN EnterFloristGallery()
 	guiFloralGalleryButton[0] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_PREV], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOR_GALLERY_BACK_BUTTON_X, FLOR_GALLERY_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFloralGalleryBackButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[0], CURSOR_WWW );
@@ -105,7 +104,6 @@ BOOLEAN EnterFloristGallery()
 	guiFloralGalleryButton[1] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_NEXT], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 FLOR_GALLERY_NEXT_BUTTON_X, FLOR_GALLERY_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFloralGalleryNextButtonCallback);
 	SetButtonCursor(guiFloralGalleryButton[1], CURSOR_WWW );

@@ -143,7 +143,6 @@ static void CreateIMPMainPageButtons(void)
 		 giIMPMainPageButton[0] = CreateIconAndTextButton( giIMPMainPageButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBackCallback);
 
@@ -157,7 +156,6 @@ static void CreateIMPMainPageButtons(void)
 	  giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 1 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBeginCallback);
   }
@@ -166,7 +164,6 @@ static void CreateIMPMainPageButtons(void)
     giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 22 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBeginCallback);
 	}
@@ -175,7 +172,6 @@ static void CreateIMPMainPageButtons(void)
   giIMPMainPageButton[2] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														LAPTOP_SCREEN_UL_X + 13, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPagePersonalityCallback);
 
@@ -185,7 +181,6 @@ static void CreateIMPMainPageButtons(void)
   giIMPMainPageButton[3] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 133, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageAttributesCallback);
 
@@ -195,7 +190,6 @@ static void CreateIMPMainPageButtons(void)
   giIMPMainPageButton[4] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 253, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPagePortraitCallback);
 
@@ -214,7 +208,6 @@ static void CreateIMPMainPageButtons(void)
 	giIMPMainPageButton[5] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 5 ], sString, FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														  LAPTOP_SCREEN_UL_X + 373, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageVoiceCallback);
 

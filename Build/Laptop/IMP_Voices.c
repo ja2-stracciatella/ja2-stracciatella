@@ -156,7 +156,6 @@ static void CreateIMPVoicesButtons(void)
 	giIMPVoicesButton[0] = CreateIconAndTextButton( giIMPVoicesButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														  LAPTOP_SCREEN_UL_X + 343, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 	BtnIMPVoicesNextCallback);
 
@@ -166,7 +165,6 @@ static void CreateIMPVoicesButtons(void)
   giIMPVoicesButton[ 1 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 93, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 BtnIMPVoicesPreviousCallback);
 
@@ -176,7 +174,6 @@ static void CreateIMPVoicesButtons(void)
   giIMPVoicesButton[ 2 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 187, LAPTOP_SCREEN_WEB_UL_Y + 330, MSYS_PRIORITY_HIGH,
 														 	BtnIMPVoicesDoneCallback);
 

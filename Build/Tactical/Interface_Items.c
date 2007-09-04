@@ -2226,7 +2226,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			giItemDescAmmoButton = CreateIconAndTextButton( giItemDescAmmoButtonImages, pStr, TINYFONT1,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 sForeColour, FONT_MCOLOR_BLACK,
-															 TEXT_CJUSTIFIED,
 															 ITEMDESC_AMMO_X + 18, ITEMDESC_AMMO_Y - 5, MSYS_PRIORITY_HIGHEST,
 															 ItemDescAmmoCallback );
 
@@ -2238,7 +2237,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		 giItemDescAmmoButton = CreateIconAndTextButton( giItemDescAmmoButtonImages, pStr, TINYFONT1,
 															 sForeColour, FONT_MCOLOR_BLACK,
 															 sForeColour, FONT_MCOLOR_BLACK,
-															 TEXT_CJUSTIFIED,
 															 ITEMDESC_AMMO_X, ITEMDESC_AMMO_Y, MSYS_PRIORITY_HIGHEST,
 															 ItemDescAmmoCallback );
 
@@ -2395,7 +2393,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 				guiMoneyButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
 				5, DEFAULT_SHADOW,
 				5, DEFAULT_SHADOW,
-				TEXT_CJUSTIFIED,
 				Loc->x + gMoneyButtonOffsets[cnt].x, Loc->y + gMoneyButtonOffsets[cnt].y, MSYS_PRIORITY_HIGHEST,
 				BtnMoneyButtonCallback
 			);
@@ -2411,7 +2408,6 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
 			5, DEFAULT_SHADOW,
 			5, DEFAULT_SHADOW,
-			TEXT_CJUSTIFIED,
 			Loc->x + gMoneyButtonOffsets[cnt].x, Loc->y + gMoneyButtonOffsets[cnt].y, MSYS_PRIORITY_HIGHEST,
 			BtnMoneyButtonCallback
 		);

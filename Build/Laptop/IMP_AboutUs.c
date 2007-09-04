@@ -78,7 +78,6 @@ static void CreateIMPAboutUsButtons(void)
    giIMPAboutUsButton[0] = CreateIconAndTextButton( giIMPAboutUsButtonImage[0], pImpButtonText[6], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 216, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 	BtnIMPBackCallback);
 

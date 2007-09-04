@@ -105,7 +105,6 @@ BOOLEAN EnterMercsAccount()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_AC_AUTHORIZE_BUTTON_X, MERC_AC_AUTHORIZE_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercAuthorizeButtonCallback);
 	SetButtonCursor(guiMercAuthorizeBoxButton, CURSOR_LAPTOP_SCREEN);
@@ -115,7 +114,6 @@ BOOLEAN EnterMercsAccount()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_AC_CANCEL_BUTTON_X, MERC_AC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercBackButtonCallback);
 	SetButtonCursor(guiMercBackBoxButton, CURSOR_LAPTOP_SCREEN);

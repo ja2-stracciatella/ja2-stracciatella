@@ -353,7 +353,6 @@ BOOLEAN InitBobbyMenuBar(  )
 	guiBobbyRPreviousPage = CreateIconAndTextButton( guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRPreviousPage, CURSOR_LAPTOP_SCREEN);
@@ -368,7 +367,6 @@ BOOLEAN InitBobbyMenuBar(  )
 	guiBobbyRNextPage = CreateIconAndTextButton( guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRNextPreviousPageCallback);
 	SetButtonCursor(guiBobbyRNextPage, CURSOR_LAPTOP_SCREEN);
@@ -384,7 +382,6 @@ BOOLEAN InitBobbyMenuBar(  )
 		guiBobbyRPageMenu[i] = CreateIconAndTextButton( guiBobbyRPageMenuImage, BobbyRText[BOBBYR_GUNS_GUNS+i], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 usPosX, BOBBYR_CATALOGUE_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRPageMenuCallback);
 
@@ -401,7 +398,6 @@ BOOLEAN InitBobbyMenuBar(  )
 	guiBobbyROrderForm = CreateIconAndTextButton( guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyROrderFormCallback);
 
@@ -414,7 +410,6 @@ BOOLEAN InitBobbyMenuBar(  )
 	guiBobbyRHome = CreateIconAndTextButton( guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_GUNS_BUTTON_FONT,
 													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
 													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 TEXT_CJUSTIFIED,
 													 BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnBobbyRHomeButtonCallback);
 	SetButtonCursor(guiBobbyRHome, CURSOR_LAPTOP_SCREEN);

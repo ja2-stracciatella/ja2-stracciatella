@@ -380,7 +380,6 @@ static void CreateIMPHomePageButtons(void)
 	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 286 - 106, LAPTOP_SCREEN_WEB_UL_Y + 248 - 48, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAboutUsCallback);
 

@@ -352,14 +352,12 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 	gExitDialog.uiOKButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ OK_BUTTON_TEXT_STR ], FONT12ARIAL,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																TEXT_CJUSTIFIED,
 																gExitDialog.sX + 65, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST,
 																OKCallback );
 
 	gExitDialog.uiCancelButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ CANCEL_BUTTON_TEXT_STR ], FONT12ARIAL,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
 																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																TEXT_CJUSTIFIED,
 																gExitDialog.sX + 135, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST,
 																CancelCallback );
 

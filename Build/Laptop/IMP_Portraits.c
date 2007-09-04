@@ -161,7 +161,6 @@ static void CreateIMPPortraitButtons(void)
 	giIMPPortraitButton[0] = CreateIconAndTextButton( giIMPPortraitButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 343, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitNextCallback);
 
@@ -171,7 +170,6 @@ static void CreateIMPPortraitButtons(void)
   giIMPPortraitButton[ 1 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														  LAPTOP_SCREEN_UL_X + 93, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitPreviousCallback);
 
@@ -181,7 +179,6 @@ static void CreateIMPPortraitButtons(void)
   giIMPPortraitButton[ 2 ] = CreateIconAndTextButton( giIMPPortraitButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 187, LAPTOP_SCREEN_WEB_UL_Y + 330, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitDoneCallback);
 

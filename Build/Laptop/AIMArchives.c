@@ -190,7 +190,6 @@ BOOLEAN EnterAimArchives()
 		guiAlumniPageButton[i] = CreateIconAndTextButton( guiAlumniPageButtonImage, AimAlumniText[i], AIM_ALUMNI_PAGE_FONT,
 														 AIM_ALUMNI_PAGE_COLOR_UP, DEFAULT_SHADOW,
 														 AIM_ALUMNI_PAGE_COLOR_DOWN, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_ALUMNI_PAGE1_Y, MSYS_PRIORITY_HIGH,
 														 BtnAlumniPageButtonCallback);
 		SetButtonCursor(guiAlumniPageButton[i], CURSOR_WWW);

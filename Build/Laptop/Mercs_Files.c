@@ -153,7 +153,6 @@ BOOLEAN EnterMercsFiles()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercPrevButtonCallback);
 
@@ -165,7 +164,6 @@ BOOLEAN EnterMercsFiles()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercNextButtonCallback);
 
@@ -177,7 +175,6 @@ BOOLEAN EnterMercsFiles()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercHireButtonCallback);
 	SetButtonCursor(guiHireButton, CURSOR_LAPTOP_SCREEN);
@@ -188,7 +185,6 @@ BOOLEAN EnterMercsFiles()
 													 FONT12ARIAL,
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 TEXT_CJUSTIFIED,
 													 MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercFilesBackButtonCallback);
 	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);

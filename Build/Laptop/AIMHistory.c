@@ -234,7 +234,6 @@ static BOOLEAN InitAimHistoryMenuBar(void)
 		guiHistoryMenuButton[i] = CreateIconAndTextButton( guiHistoryMenuButtonImage, AimHistoryText[i+AIM_HISTORY_PREVIOUS], FONT10ARIAL,
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 usPosX, AIM_HISTORY_MENU_Y, MSYS_PRIORITY_HIGH,
 														 BtnHistoryMenuButtonCallback);
 		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);

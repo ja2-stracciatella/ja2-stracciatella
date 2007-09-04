@@ -585,7 +585,6 @@ static void CreateIMPButtons(void)
 	giIMPButton[0] = CreateIconAndTextButton( giIMPButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 BtnIMPCancelCallback);
 

@@ -76,7 +76,6 @@ static void CreateAttributeFinishButtons(void)
 	 giIMPAttributeFinishButton[0] = CreateIconAndTextButton(  giIMPAttributeFinishButtonImage[0], pImpButtonText[ 20 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 180, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAttributeFinishYesCallback );
 
@@ -85,7 +84,6 @@ static void CreateAttributeFinishButtons(void)
 	 giIMPAttributeFinishButton[1] = CreateIconAndTextButton(  giIMPAttributeFinishButtonImage[1], pImpButtonText[ 21 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
-														 TEXT_CJUSTIFIED,
 														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 264, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAttributeFinishNoCallback);
 
