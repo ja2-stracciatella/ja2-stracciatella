@@ -32,15 +32,12 @@ extern "C" {
 
 //effects how the button is rendered.
 #define BUTTON_TYPES (BUTTON_QUICK | BUTTON_GENERIC | BUTTON_HOT_SPOT | BUTTON_CHECKBOX)
-//effects how the button is processed
-#define BUTTON_TYPE_MASK (BUTTON_NO_TOGGLE | BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)
 
 //button flags
 #define BUTTON_TOGGLE           0x00000000
 #define BUTTON_QUICK            0x00000000
 #define BUTTON_ENABLED          0x00000001
 #define BUTTON_CLICKED_ON       0x00000002
-#define BUTTON_NO_TOGGLE        0x00000004
 #define BUTTON_GENERIC          0x00000020
 #define BUTTON_HOT_SPOT         0x00000040
 #define BUTTON_SELFDELETE_IMAGE 0x00000080

@@ -760,7 +760,7 @@ BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 }
 
 
-INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+static INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
 	AssertMsg(0 <= Image && Image < MAX_BUTTON_PICS, String("Attempting to QuickCreateButton with out of range ImageID %d.", Image));
 
@@ -772,7 +772,7 @@ INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type
 		return BUTTON_NO_SLOT;
 	}
 
-	GUI_BUTTON* b = AllocateButton(Image, (Type & BUTTON_TYPE_MASK) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;
@@ -781,7 +781,7 @@ INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type
 
 INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
 {
-	return QuickCreateButtonInternal(image, x, y, BUTTON_NO_TOGGLE, priority, DefaultMoveCallback, click);
+	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, DefaultMoveCallback, click);
 }
 
 
