@@ -188,7 +188,6 @@ BOOLEAN EnterMercsFiles()
 													 MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercFilesBackButtonCallback);
 	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiMercBackButton, DISABLED_STYLE_SHADED);
 
 //	RenderMercsFiles();
 	return( TRUE );

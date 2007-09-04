@@ -343,7 +343,6 @@ BOOLEAN EnterMercs()
 
 	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnAccountBoxButtonCallback);
 	SetButtonCursor(guiAccountBoxButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiAccountBoxButton, DISABLED_STYLE_SHADED);
 
 	guiFileBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_FILE_BUTTON_X, MERC_FILE_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnFileBoxButtonCallback);
 	SetButtonCursor(guiFileBoxButton, CURSOR_LAPTOP_SCREEN);

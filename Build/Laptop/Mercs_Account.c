@@ -117,8 +117,6 @@ BOOLEAN EnterMercsAccount()
 													 MERC_AC_CANCEL_BUTTON_X, MERC_AC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnMercBackButtonCallback);
 	SetButtonCursor(guiMercBackBoxButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiMercBackBoxButton, DISABLED_STYLE_SHADED);
-
 
 //	RenderMercsAccount();
 

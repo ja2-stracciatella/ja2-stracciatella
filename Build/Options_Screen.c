@@ -372,8 +372,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnOptGotoLoadGameCallback);
-//	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
-
 
 	//Quit to main menu button
 	giQuitBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
@@ -382,8 +380,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnOptQuitCallback);
-	SpecifyDisabledButtonStyle( guiQuitButton, DISABLED_STYLE_HATCHED );
-//	DisableButton( guiQuitButton );
 
 	//Done button
 	giDoneBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
@@ -392,9 +388,6 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 OPT_DONE_BTN_X, OPT_DONE_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnDoneCallback);
-//	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
-
-
 
 	// Toggle Boxes
 	UINT16 usTextHeight = GetFontHeight(OPT_MAIN_FONT);

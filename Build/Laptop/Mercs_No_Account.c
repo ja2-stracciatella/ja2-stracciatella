@@ -66,8 +66,6 @@ BOOLEAN EnterMercsNoAccount()
 													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnOpenAccountBoxButtonCallback);
 	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiOpenAccountBoxButton, DISABLED_STYLE_SHADED);
-
 
 	guiCancelBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_CANCEL],
 													 FONT12ARIAL,
@@ -76,7 +74,6 @@ BOOLEAN EnterMercsNoAccount()
 													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnCancelBoxButtonCallback);
 	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiCancelBoxButton, DISABLED_STYLE_SHADED);
 
 	RenderMercsNoAccount();
 
