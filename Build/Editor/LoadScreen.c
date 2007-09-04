@@ -455,7 +455,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	iFileDlgButtons[3] = CreateSimpleButton(426, 182, "EDITOR/downarrow.sti", MSYS_PRIORITY_HIGH, FDlgDwnCallback);
 
 	//File list window
-	iFileDlgButtons[4] = CreateHotSpot( (179+4), (69+3), (179+4+240), (69+120+3), MSYS_PRIORITY_HIGH-1, BUTTON_NO_CALLBACK, FDlgNamesCallback);
+	iFileDlgButtons[4] = CreateHotSpot(179 + 4, 69 + 3, 179 + 4 + 240, 69 + 120 + 3, MSYS_PRIORITY_HIGH - 1, FDlgNamesCallback);
 	//Title button
 	iFileDlgButtons[5] = CreateLabel(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI, 179, 39, 281, 30, MSYS_PRIORITY_HIGH - 2);
 

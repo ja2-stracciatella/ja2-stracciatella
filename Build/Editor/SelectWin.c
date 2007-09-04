@@ -251,8 +251,7 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 
 	DisableEditorTaskbar( );
 
-	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH,
-														DEFAULT_MOVE_CALLBACK, SelWinClkCallback);
+	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH, SelWinClkCallback);
 
 	iCancelWin  = MakeButton(CANCEL_ICON, "EDITOR/bigX.sti",         40,  40, CnclClkCallback, L"Cancel selections");
 	iOkWin      = MakeButton(OK_ICON,     "EDITOR/checkmark.sti",     0,  40, OkClkCallback,   L"Accept selections");

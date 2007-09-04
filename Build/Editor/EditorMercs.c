@@ -1324,7 +1324,7 @@ static void CreateEditMercWindow(void)
 	iEditMercLocation = (INT32)pSoldier->sGridNo;
 	gpWorldLevelData[ iEditMercLocation ].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 
-	iEditMercBkgrndArea = CreateHotSpot((INT16)iXPos, (INT16)iYPos, (INT16)iWidth, (INT16)iHeight, MSYS_PRIORITY_NORMAL, DEFAULT_MOVE_CALLBACK, EditMercBkgrndCallback );
+	iEditMercBkgrndArea = CreateHotSpot(iXPos, iYPos, iWidth, iHeight, MSYS_PRIORITY_NORMAL, EditMercBkgrndCallback);
 
 	iEditMercColorPage = CreateTextButton(L"Merc Colors", FONT12POINT1, FONT_BLACK,        FONT_BLACK, iXPos + 183, iYPos + 315, 80, 20, MSYS_PRIORITY_NORMAL + 1, EditMercChangeToColorPageCallback);
 	iEditMercEnd       = CreateTextButton(L"Done",        FONT12POINT1, FONT_MCOLOR_BLACK, FONT_BLACK, iXPos + 183, iYPos + 337, 80, 20, MSYS_PRIORITY_NORMAL + 1, EditMercDoneEditCallback);

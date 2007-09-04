@@ -739,9 +739,9 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 }
 
 
-INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DEFAULT_MOVE_CALLBACK);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;
