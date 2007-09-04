@@ -711,7 +711,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 														 FONT_WHITE, FONT_BLACK,
 														 FONT_WHITE, FONT_BLACK,
 														 TEXT_CJUSTIFIED,
-														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
+														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
 														 MapTownMineInventoryButtonCallBack );
 
 
@@ -724,7 +724,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 														 FONT_WHITE, FONT_BLACK,
 														 FONT_WHITE, FONT_BLACK,
 														 TEXT_CJUSTIFIED,
-														 (INT16)(sX ), (INT16)( sY ), BUTTON_TOGGLE , MSYS_PRIORITY_HIGHEST - 1,
+														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
 														 MapTownMineExitButtonCallBack );
 
 	// delete video object

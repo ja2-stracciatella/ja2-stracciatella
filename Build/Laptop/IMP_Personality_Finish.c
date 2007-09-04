@@ -178,7 +178,7 @@ static void CreateIMPPersonalityFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 90 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 90, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityFinishYesCallback);
 
   // the no Button
@@ -187,7 +187,7 @@ static void CreateIMPPersonalityFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 276 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 276, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityFinishNoCallback);
 
 	 SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
@@ -277,7 +277,7 @@ static void CreatePersonalityFinishOkButton(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 186 ), LAPTOP_SCREEN_WEB_UL_Y + ( 224 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 186, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
 														 BtnIMPPersonalityFinishOkCallback);
 
 	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);

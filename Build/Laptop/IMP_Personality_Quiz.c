@@ -172,7 +172,7 @@ static void CreateIMPPersonalityQuizButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 197 ), LAPTOP_SCREEN_WEB_UL_Y + ( 302 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityQuizAnswerConfirmCallback);
 
   // start over
@@ -181,7 +181,7 @@ static void CreateIMPPersonalityQuizButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( BTN_FIRST_COLUMN_X ), LAPTOP_SCREEN_WEB_UL_Y + ( 302 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + BTN_FIRST_COLUMN_X, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityQuizStartOverCallback);
 
 	giPreviousQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
@@ -189,7 +189,7 @@ static void CreateIMPPersonalityQuizButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 197 ), LAPTOP_SCREEN_WEB_UL_Y + ( 361 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
 														 	PreviousQuestionButtonCallback);
 
 	giNextQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
@@ -197,7 +197,7 @@ static void CreateIMPPersonalityQuizButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 417 ), LAPTOP_SCREEN_WEB_UL_Y + ( 361 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 417, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
 														 	NextQuestionButtonCallback);
 
 

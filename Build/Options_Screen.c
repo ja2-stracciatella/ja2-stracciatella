@@ -358,7 +358,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 OPT_SAVE_BTN_X, OPT_SAVE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 OPT_SAVE_BTN_X, OPT_SAVE_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnOptGotoSaveGameCallback);
 	SpecifyDisabledButtonStyle( guiOptGotoSaveGameBtn, DISABLED_STYLE_HATCHED );
 	if( guiPreviousOptionScreen == MAINMENU_SCREEN || !CanGameBeSaved() )
@@ -372,7 +372,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnOptGotoLoadGameCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
 
@@ -383,7 +383,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnOptQuitCallback);
 	SpecifyDisabledButtonStyle( guiQuitButton, DISABLED_STYLE_HATCHED );
 //	DisableButton( guiQuitButton );
@@ -394,7 +394,7 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 OPT_DONE_BTN_X, OPT_DONE_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 OPT_DONE_BTN_X, OPT_DONE_BTN_Y, MSYS_PRIORITY_HIGH,
 													 BtnDoneCallback);
 //	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
 

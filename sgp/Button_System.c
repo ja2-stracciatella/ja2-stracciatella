@@ -834,9 +834,9 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 }
 
 
-INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback)
+INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	const INT32 id = QuickCreateButtonInternal(Image, xloc, yloc, Type, Priority, DefaultMoveCallback, ClickCallback);
+	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);

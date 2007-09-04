@@ -191,7 +191,7 @@ BOOLEAN EnterAimArchives()
 														 AIM_ALUMNI_PAGE_COLOR_UP, DEFAULT_SHADOW,
 														 AIM_ALUMNI_PAGE_COLOR_DOWN, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 usPosX, AIM_ALUMNI_PAGE1_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 usPosX, AIM_ALUMNI_PAGE1_Y, MSYS_PRIORITY_HIGH,
 														 BtnAlumniPageButtonCallback);
 		SetButtonCursor(guiAlumniPageButton[i], CURSOR_WWW);
 		MSYS_SetBtnUserData(guiAlumniPageButton[i], i);

@@ -659,7 +659,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 SKI_TRANSACTION_BUTTON_X, SKI_TRANSACTION_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 SKI_TRANSACTION_BUTTON_X, SKI_TRANSACTION_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnSKI_TransactionButtonCallback);
 	SpecifyDisabledButtonStyle( guiSKI_TransactionButton, DISABLED_STYLE_HATCHED );
 
@@ -675,7 +675,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 SKI_DONE_BUTTON_X, SKI_DONE_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH+10,
+													 SKI_DONE_BUTTON_X, SKI_DONE_BUTTON_Y, MSYS_PRIORITY_HIGH + 10,
 													 BtnSKI_DoneButtonCallback);
 	SpecifyDisabledButtonStyle( guiSKI_DoneButton, DISABLED_STYLE_HATCHED );
 	SetButtonFastHelpText( guiSKI_DoneButton, SkiMessageBoxText[ SKI_DONE_BUTTON_HELP_TEXT ] );

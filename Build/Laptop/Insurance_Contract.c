@@ -212,7 +212,7 @@ BOOLEAN EnterInsuranceContract()
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsContractPrevButtonCallback);
 	SetButtonCursor( guiInsContractPrevBackButton, CURSOR_WWW );
 	SpecifyButtonTextOffsets( guiInsContractPrevBackButton, 17, 16, FALSE );
@@ -224,7 +224,7 @@ BOOLEAN EnterInsuranceContract()
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsContractNextButtonCallBack);
 	SetButtonCursor( guiInsContractNextBackButton, CURSOR_WWW );
 	SpecifyButtonTextOffsets( guiInsContractNextBackButton, 18, 16, FALSE );
@@ -854,7 +854,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 TEXT_CJUSTIFIED,
-															 INS_CTRCT_ORDER_GRID1_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															 INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
 															 BtnInsuranceAcceptClearForm1ButtonCallback);
 			SetButtonCursor( guiInsuranceAcceptClearForm1Button, CURSOR_LAPTOP_SCREEN );
 			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm1Button, 0);
@@ -869,7 +869,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 TEXT_CJUSTIFIED,
-															 INS_CTRCT_ORDER_GRID2_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															 INS_CTRCT_ORDER_GRID2_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
 															 BtnInsuranceAcceptClearForm2ButtonCallback);
 			SetButtonCursor(guiInsuranceAcceptClearForm2Button, CURSOR_LAPTOP_SCREEN );
 			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm2Button, 0);
@@ -886,7 +886,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
 															 TEXT_CJUSTIFIED,
-															 INS_CTRCT_ORDER_GRID3_X+INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_ACCEPT_BTN_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+															 INS_CTRCT_ORDER_GRID3_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
 															 BtnInsuranceAcceptClearForm3ButtonCallback);
 			SetButtonCursor( guiInsuranceAcceptClearForm3Button, CURSOR_LAPTOP_SCREEN );
 			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm3Button, 0);

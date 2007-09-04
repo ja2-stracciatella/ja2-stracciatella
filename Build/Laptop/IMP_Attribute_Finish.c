@@ -77,7 +77,7 @@ static void CreateAttributeFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 130 ), LAPTOP_SCREEN_WEB_UL_Y + ( 180 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 180, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAttributeFinishYesCallback );
 
 	// the no button
@@ -86,7 +86,7 @@ static void CreateAttributeFinishButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 130 ), LAPTOP_SCREEN_WEB_UL_Y + ( 264 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 264, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAttributeFinishNoCallback);
 
   SetButtonCursor(giIMPAttributeFinishButton[0], CURSOR_WWW);

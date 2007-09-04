@@ -162,7 +162,7 @@ static void CreateIMPPortraitButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 343 ), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ),BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 343, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitNextCallback);
 
 
@@ -172,7 +172,7 @@ static void CreateIMPPortraitButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														  LAPTOP_SCREEN_UL_X +  ( 93), LAPTOP_SCREEN_WEB_UL_Y + ( 205 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														  LAPTOP_SCREEN_UL_X + 93, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitPreviousCallback);
 
 
@@ -182,7 +182,7 @@ static void CreateIMPPortraitButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X +  ( 187 ), LAPTOP_SCREEN_WEB_UL_Y + ( 330 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 187, LAPTOP_SCREEN_WEB_UL_Y + 330, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPortraitDoneCallback);
 
 

@@ -457,7 +457,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 usPosX, SLG_CANCEL_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 usPosX, SLG_CANCEL_POS_Y, MSYS_PRIORITY_HIGH,
 													 BtnSlgCancelCallback );
 
 
@@ -472,7 +472,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 														 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, MSYS_PRIORITY_HIGH,
 														 BtnSlgSaveLoadCallback );
 
 	}
@@ -484,7 +484,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 														 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, MSYS_PRIORITY_HIGH,
 														 BtnSlgSaveLoadCallback );
 	}
 

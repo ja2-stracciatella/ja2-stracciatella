@@ -107,7 +107,7 @@ BOOLEAN EnterInsuranceInfo()
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsPrevButtonCallback);
 	SetButtonCursor( guiInsPrevBackButton, CURSOR_WWW );
 	SpecifyButtonTextOffsets( guiInsPrevBackButton, 17, 16, FALSE );
@@ -119,7 +119,7 @@ BOOLEAN EnterInsuranceInfo()
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 INS_FONT_COLOR, INS_FONT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnInsNextButtonCallback);
 	SetButtonCursor( guiInsNextBackButton, CURSOR_WWW );
 	SpecifyButtonTextOffsets( guiInsNextBackButton, 18, 16, FALSE );

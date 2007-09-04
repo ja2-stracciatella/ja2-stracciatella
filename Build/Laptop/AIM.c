@@ -517,7 +517,7 @@ BOOLEAN InitAimMenuBar(void)
 														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 usPosX, BOTTOM_BUTTON_START_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 usPosX, BOTTOM_BUTTON_START_Y, MSYS_PRIORITY_HIGH,
 														 BtnAimBottomButtonsCallback);
 		SetButtonCursor(guiBottomButtons[i], CURSOR_LAPTOP_SCREEN);
 		MSYS_SetBtnUserData(guiBottomButtons[i], gCurrentAimPage[i]);

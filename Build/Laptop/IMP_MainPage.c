@@ -144,7 +144,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X + 15 , LAPTOP_SCREEN_WEB_UL_Y + ( 360 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBackCallback);
 
 
@@ -158,7 +158,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBeginCallback);
   }
 	else
@@ -167,7 +167,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														LAPTOP_SCREEN_UL_X + 136 , LAPTOP_SCREEN_WEB_UL_Y + ( 174 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageBeginCallback);
 	}
 	// the personality button
@@ -176,7 +176,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														LAPTOP_SCREEN_UL_X + 13, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPagePersonalityCallback);
 
 
@@ -186,7 +186,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 133, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageAttributesCallback);
 
 
@@ -196,7 +196,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														 LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														 LAPTOP_SCREEN_UL_X + 253, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPagePortraitCallback);
 
 
@@ -215,7 +215,7 @@ static void CreateIMPMainPageButtons(void)
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 TEXT_CJUSTIFIED,
-														  LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+														  LAPTOP_SCREEN_UL_X + 373, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
 														 BtnIMPMainPageVoiceCallback);
 
 

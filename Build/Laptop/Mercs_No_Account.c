@@ -64,7 +64,7 @@ BOOLEAN EnterMercsNoAccount()
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnOpenAccountBoxButtonCallback);
 	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiOpenAccountBoxButton, DISABLED_STYLE_SHADED);
@@ -75,7 +75,7 @@ BOOLEAN EnterMercsNoAccount()
 													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
 													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnCancelBoxButtonCallback);
 	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiCancelBoxButton, DISABLED_STYLE_SHADED);

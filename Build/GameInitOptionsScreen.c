@@ -280,7 +280,7 @@ static BOOLEAN EnterGIOScreen(void)
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 GIO_BTN_OK_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 GIO_BTN_OK_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
 													 BtnGIODoneCallback);
 	SpecifyButtonSoundScheme( guiGIODoneButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 	SpecifyDisabledButtonStyle( guiGIODoneButton, DISABLED_STYLE_NONE );
@@ -291,7 +291,7 @@ static BOOLEAN EnterGIOScreen(void)
 													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
 													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 													 TEXT_CJUSTIFIED,
-													 GIO_CANCEL_X, GIO_BTN_OK_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
+													 GIO_CANCEL_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
 													 BtnGIOCancelCallback );
 	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
 
