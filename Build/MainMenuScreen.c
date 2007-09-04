@@ -383,7 +383,7 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 				case CREDITS:     gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt], 10);   break;
 				case QUIT:        gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt], 15);   break;
 			}
-			iMenuButtons[cnt] = QuickCreateButton(iMenuImages[cnt], (SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST, DEFAULT_MOVE_CALLBACK, MenuButtonCallback);
+			iMenuButtons[cnt] = QuickCreateButton(iMenuImages[cnt], (SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			if (iMenuButtons[cnt] == -1) return FALSE;
 			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);
 		}

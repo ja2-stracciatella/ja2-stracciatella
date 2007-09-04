@@ -521,7 +521,7 @@ static BOOLEAN EnterHelpScreen(void)
 	//Create the exit buttons
 	giExitBtnImage = LoadButtonImage("INTERFACE/HelpScreen.sti", -1,0,4,2,6 );
 
-	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST, DEFAULT_MOVE_CALLBACK, BtnHelpScreenExitCallback);
+	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenExitCallback);
 	SetButtonFastHelpText(guiHelpScreenExitBtn, gzHelpScreenText);
 	SetButtonCursor( guiHelpScreenExitBtn, gHelpScreen.usCursor);
 
@@ -2174,18 +2174,14 @@ static void CreateScrollAreaButtons(void)
 	usPosY = gHelpScreen.usScreenLocY + HLP_SCRN__SCROLL_UP_ARROW_Y;
 
 	//Create the scroll arrows
-	giHelpScreenScrollArrows[ 0 ] = QuickCreateButton( guiHelpScreenScrollArrowImage[ 0 ], usPosX, usPosY,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										DEFAULT_MOVE_CALLBACK, BtnHelpScreenScrollArrowsCallback );
+	giHelpScreenScrollArrows[0] = QuickCreateButton(guiHelpScreenScrollArrowImage[0], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
 	MSYS_SetBtnUserData(giHelpScreenScrollArrows[0], 0);
 	SetButtonCursor( giHelpScreenScrollArrows[0], gHelpScreen.usCursor );
 
 	usPosY = gHelpScreen.usScreenLocY + HLP_SCRN__SCROLL_DWN_ARROW_Y;
 
 	//Create the scroll arrows
-	giHelpScreenScrollArrows[ 1 ] = QuickCreateButton( guiHelpScreenScrollArrowImage[ 1 ], usPosX, usPosY,
-										BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST,
-										DEFAULT_MOVE_CALLBACK, BtnHelpScreenScrollArrowsCallback );
+	giHelpScreenScrollArrows[1] = QuickCreateButton(guiHelpScreenScrollArrowImage[1], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
 	MSYS_SetBtnUserData(giHelpScreenScrollArrows[1], 1);
 	SetButtonCursor( giHelpScreenScrollArrows[1], gHelpScreen.usCursor );
 }

@@ -769,7 +769,7 @@ static void UpdateSMPanel(void)
 		// Make new
 		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
 		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
-		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, SM_STEALTHMODE_Y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, DEFAULT_MOVE_CALLBACK, BtnStealthModeCallback);
+		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
 		SetButtonFastHelpText(giSMStealthButton, TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
 		gfUIStanceDifferent = FALSE;
@@ -1262,7 +1262,7 @@ BOOLEAN InitializeSMPanel(  )
 
 static BOOLEAN MakeButtonN(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(image, x, y, BUTTON_NEWTOGGLE, MSYS_PRIORITY_HIGH - 1, MSYS_NO_CALLBACK, click);
+	INT32 btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
 	if (btn == -1)
 	{
@@ -1276,7 +1276,7 @@ static BOOLEAN MakeButtonN(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK
 
 static BOOLEAN MakeButtonT(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(image, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, DEFAULT_MOVE_CALLBACK, click);
+	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
 	if (btn == -1)
 	{
@@ -3197,7 +3197,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 static BOOLEAN MakeButtonTeam(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(image, x, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH - 1, DEFAULT_MOVE_CALLBACK, click);
+	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;
 	if (btn == -1)
 	{

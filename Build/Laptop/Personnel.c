@@ -3411,7 +3411,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 {
 	INT32 img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
 	giPersonnelATMStartButtonImage[idx] = img;
-	INT32 btn = QuickCreateButton(img, 519, y, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CALLBACK, click);
+	INT32 btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, PERS_FONT, FONT_BLACK, FONT_BLACK);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);

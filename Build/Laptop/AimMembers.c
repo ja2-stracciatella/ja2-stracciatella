@@ -2692,9 +2692,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 	{
 		if( !fXRegionActive )
 		{
-			giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y,
-																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																	DEFAULT_MOVE_CALLBACK, BtnXToCloseVideoConfButtonCallback);
+			giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y, MSYS_PRIORITY_HIGH, BtnXToCloseVideoConfButtonCallback);
 			SetButtonCursor(giXToCloseVideoConfButton, CURSOR_LAPTOP_SCREEN);
 			SpecifyDisabledButtonStyle( giXToCloseVideoConfButton, DISABLED_STYLE_NONE );
 			fXRegionActive = TRUE;

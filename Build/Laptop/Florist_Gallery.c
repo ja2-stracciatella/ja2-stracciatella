@@ -249,9 +249,7 @@ static BOOLEAN InitFlowerButtons(void)
 	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/GalleryButtons.sti", -1,0,-1,1,-1 );
 	for(j=0; j<gubCurNumberOfFlowers; j++)
 	{
-		guiGalleryButton[j] = QuickCreateButton( guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY,
-																	BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																	DEFAULT_MOVE_CALLBACK, BtnGalleryFlowerButtonCallback);
+		guiGalleryButton[j] = QuickCreateButton(guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY, MSYS_PRIORITY_HIGH, BtnGalleryFlowerButtonCallback);
 		SetButtonCursor( guiGalleryButton[j], CURSOR_WWW);
 		MSYS_SetBtnUserData(guiGalleryButton[j], count);
 

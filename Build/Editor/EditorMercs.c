@@ -1333,51 +1333,51 @@ static void CreateEditMercWindow(void)
 	if ( (UINT16)gsSelectedMercID >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && (UINT16)gsSelectedMercID <=  gTacticalStatus.Team[ OUR_TEAM ].bLastID )
 		DisableButton( iEditMercColorPage );
 
-	iEditorButton[8] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 98), (INT16)(iYPos + 51), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercPrevOrderCallback );
-	iEditorButton[9] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 233), (INT16)(iYPos + 51), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercNextOrderCallback );
+	iEditorButton[8]  = QuickCreateButton(giEditMercImage[0], iXPos +  98, iYPos +  51, MSYS_PRIORITY_NORMAL + 1, EditMercPrevOrderCallback);
+	iEditorButton[9]  = QuickCreateButton(giEditMercImage[1], iXPos + 233, iYPos +  51, MSYS_PRIORITY_NORMAL + 1, EditMercNextOrderCallback);
 	SetButtonFastHelpText( iEditorButton[8], L"Previous merc standing orders" );
 	SetButtonFastHelpText( iEditorButton[9], L"Next merc standing orders" );
 
-	iEditorButton[10] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 98), (INT16)(iYPos + 86), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercPrevAttCallback );
-	iEditorButton[11] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 233), (INT16)(iYPos + 86), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercNextAttCallback );
+	iEditorButton[10] = QuickCreateButton(giEditMercImage[0], iXPos +  98, iYPos +  86, MSYS_PRIORITY_NORMAL + 1, EditMercPrevAttCallback);
+	iEditorButton[11] = QuickCreateButton(giEditMercImage[1], iXPos + 233, iYPos +  86, MSYS_PRIORITY_NORMAL + 1, EditMercNextAttCallback);
 	SetButtonFastHelpText( iEditorButton[10], L"Previous merc combat attitude" );
 	SetButtonFastHelpText( iEditorButton[11], L"Next merc combat attitude" );
 
-	iEditorButton[12] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 110), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[13] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 110), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[12] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 110, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[13] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 110, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[14] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 130), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[15] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 130), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[14] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 130, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[15] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 130, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[16] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 150), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[17] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 150), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[16] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 150, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[17] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 150, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[18] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 170), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[19] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 170), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[18] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 170, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[19] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 170, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[20] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 190), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[21] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 190), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[20] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 190, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[21] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 190, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[22] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 210), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[23] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 210), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[22] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 210, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[23] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 210, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[24] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 230), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[25] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 230), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[24] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 230, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[25] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 230, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[26] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 250), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[27] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 250), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[26] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 250, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[27] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 250, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[28] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 270), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[29] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 270), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[28] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 270, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[29] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 270, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[30] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 290), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[31] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 290), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[30] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 290, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[31] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 290, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[32] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 310), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[33] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 310), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[32] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 310, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[33] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 310, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
-	iEditorButton[34] = QuickCreateButton( giEditMercImage[0], (INT16)(iXPos + 86), (INT16)(iYPos + 330), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatDwnCallback );
-	iEditorButton[35] = QuickCreateButton( giEditMercImage[1], (INT16)(iXPos + 146), (INT16)(iYPos + 330), BUTTON_NO_TOGGLE, MSYS_PRIORITY_NORMAL + 1, DEFAULT_MOVE_CALLBACK, EditMercStatUpCallback );
+	iEditorButton[34] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 330, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
+	iEditorButton[35] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 330, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
 
 	for ( x = 12; x < 36; x += 2 )
 	{

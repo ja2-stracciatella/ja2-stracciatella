@@ -203,7 +203,9 @@ extern BOOLEAN gfRenderHilights;
  * They cannot be re-sized, nor can the graphic be changed.  Providing you have
  * allocated your own image, this is a somewhat simplified function.
  */
-INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback);
+INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+INT32 QuickCreateButtonNoMove(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
 INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 

@@ -195,7 +195,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 {
 	INT32 img = LoadButtonImage("INTERFACE/map_border_buttons.sti", -1, gfx, -1, gfx + 9, -1);
 	giMapBorderButtonsImage[idx] = img;
-	INT32 btn = QuickCreateButton(img, x, 323, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, click);
+	INT32 btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
@@ -243,11 +243,11 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	// raise
 	/*
 	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1);
-	guiMapBorderLandRaiseButtons[MAP_BORDER_RAISE_LEVEL] = QuickCreateButton(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL], MAP_BORDER_X + 264, 322, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, BtnRaiseLevelBtnCallback);
+	guiMapBorderLandRaiseButtons[MAP_BORDER_RAISE_LEVEL] = QuickCreateButtonNoMove(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL], MAP_BORDER_X + 264, 322, MSYS_PRIORITY_HIGH, BtnRaiseLevelBtnCallback);
 
 	// lower
 	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1);
-	guiMapBorderLandRaiseButtons[MAP_BORDER_LOWER_LEVEL] = QuickCreateButton(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL], MAP_BORDER_X + 264, 340, BUTTON_TOGGLE, MSYS_PRIORITY_HIGH, MSYS_NO_CALLBACK, BtnLowerLevelBtnCallback);
+	guiMapBorderLandRaiseButtons[MAP_BORDER_LOWER_LEVEL] = QuickCreateButtonNoMove(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL], MAP_BORDER_X + 264, 340, MSYS_PRIORITY_HIGH, BtnLowerLevelBtnCallback);
 
 */
 

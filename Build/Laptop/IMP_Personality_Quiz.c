@@ -344,7 +344,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		INT32 Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
 		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
 		Assert(i < lengthof(Callback));
-		INT32 Button = QuickCreateButton(Image, XLoc, YLoc, BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CALLBACK, Callback[i]);
+		INT32 Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
 		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
 		wchar_t sString[32];

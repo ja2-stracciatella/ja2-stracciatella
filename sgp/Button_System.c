@@ -757,7 +757,7 @@ BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 }
 
 
-INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
 {
 	AssertMsg(0 <= Image && Image < MAX_BUTTON_PICS, String("Attempting to QuickCreateButton with out of range ImageID %d.", Image));
 
@@ -776,10 +776,28 @@ INT32 QuickCreateButton(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 
 }
 
 
+INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+{
+	return QuickCreateButtonInternal(image, x, y, BUTTON_NO_TOGGLE, priority, DEFAULT_MOVE_CALLBACK, click);
+}
+
+
+INT32 QuickCreateButtonNoMove(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+{
+	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, MSYS_NO_CALLBACK, click);
+}
+
+
+INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+{
+	return QuickCreateButtonInternal(image, x, y, BUTTON_NEWTOGGLE, priority, MSYS_NO_CALLBACK, click);
+}
+
+
 INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
 {
 	INT32 img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
-	INT32 btn = QuickCreateButton(img, x, y, BUTTON_TOGGLE, priority, DEFAULT_MOVE_CALLBACK, click);
+	INT32 btn = QuickCreateButton(img, x, y, priority, click);
 	ButtonList[btn]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
 	return btn;
 }
@@ -802,7 +820,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 		return BUTTON_NO_SLOT;
 	}
 
-	INT32 ButNum = QuickCreateButton(ButPic, x, y, BUTTON_NO_TOGGLE, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
+	INT32 ButNum = QuickCreateButton(ButPic, x, y, Priority, ClickCallback);
 	AssertMsg(ButNum != BUTTON_NO_SLOT, "Failed to CreateSimpleButton.");
 
 	ButtonList[ButNum]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
@@ -815,7 +833,7 @@ INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority,
 
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT8 bJustification, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	const INT32 id = QuickCreateButton(Image, xloc, yloc, Type, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
+	const INT32 id = QuickCreateButtonInternal(Image, xloc, yloc, Type, Priority, DEFAULT_MOVE_CALLBACK, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);
@@ -1907,7 +1925,7 @@ INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priorit
 		return BUTTON_NO_SLOT;
 	}
 
-	INT32 iButtonID = QuickCreateButton(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
+	INT32 iButtonID = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
 	if (iButtonID == BUTTON_NO_SLOT)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't create button");

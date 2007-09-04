@@ -341,15 +341,11 @@ BOOLEAN EnterMercs()
 	// Account Box button
 	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP/SmallButtons.sti", -1,0,-1,1,-1 );
 
-	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y,
-																BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																DEFAULT_MOVE_CALLBACK, BtnAccountBoxButtonCallback);
+	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnAccountBoxButtonCallback);
 	SetButtonCursor(guiAccountBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiAccountBoxButton, DISABLED_STYLE_SHADED);
 
-	guiFileBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_FILE_BUTTON_X, MERC_FILE_BUTTON_Y,
-																BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-																DEFAULT_MOVE_CALLBACK, BtnFileBoxButtonCallback);
+	guiFileBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_FILE_BUTTON_X, MERC_FILE_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnFileBoxButtonCallback);
 	SetButtonCursor(guiFileBoxButton, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiFileBoxButton, DISABLED_STYLE_SHADED);
 

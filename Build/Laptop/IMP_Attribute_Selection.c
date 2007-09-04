@@ -457,24 +457,10 @@ static void CreateAttributeSliderButtons(void)
 
 	for (INT32 iCounter = 0; iCounter < 20; iCounter += 2)
 	{
-		// left button - decrement stat
-		giIMPAttributeSelectionSliderButton[iCounter] = QuickCreateButton
-		(
-			giIMPAttributeSelectionSliderButtonImage[0],
-			LAPTOP_SCREEN_UL_X + 163, LAPTOP_SCREEN_WEB_UL_Y + (99 + iCounter / 2 * 20),
-			BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-			BtnGenericMouseMoveButtonCallback, BtnIMPAttributeSliderLeftCallback
-		);
-
-		// right button - increment stat
-		giIMPAttributeSelectionSliderButton[iCounter + 1] = QuickCreateButton
-		(
-			giIMPAttributeSelectionSliderButtonImage[1],
-			LAPTOP_SCREEN_UL_X + 419,
-			LAPTOP_SCREEN_WEB_UL_Y + (99 + iCounter / 2 * 20),
-			BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 1,
-			BtnGenericMouseMoveButtonCallback, BtnIMPAttributeSliderRightCallback
-		);
+		const INT16 y = LAPTOP_SCREEN_WEB_UL_Y + (99 + iCounter / 2 * 20);
+		// left/right buttons - decrement/increment stat
+		giIMPAttributeSelectionSliderButton[iCounter    ] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[0], LAPTOP_SCREEN_UL_X + 163, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderLeftCallback);
+		giIMPAttributeSelectionSliderButton[iCounter + 1] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[1], LAPTOP_SCREEN_UL_X + 419, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderRightCallback);
 
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter],     CURSOR_WWW);
 		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter + 1], CURSOR_WWW);

@@ -396,9 +396,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface/PreBattleButton.sti");
 	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
-	iPBButton[0] = QuickCreateButton( iPBButtonImage[0], 27, 54, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, DEFAULT_MOVE_CALLBACK, AutoResolveBattleCallback );
-	iPBButton[1] = QuickCreateButton( iPBButtonImage[1], 98, 54, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, DEFAULT_MOVE_CALLBACK, GoToSectorCallback );
-	iPBButton[2] = QuickCreateButton( iPBButtonImage[2], 169, 54, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST - 2, DEFAULT_MOVE_CALLBACK, RetreatMercsCallback );
+	iPBButton[0] = QuickCreateButton(iPBButtonImage[0],  27, 54, MSYS_PRIORITY_HIGHEST - 2, AutoResolveBattleCallback);
+	iPBButton[1] = QuickCreateButton(iPBButtonImage[1],  98, 54, MSYS_PRIORITY_HIGHEST - 2, GoToSectorCallback);
+	iPBButton[2] = QuickCreateButton(iPBButtonImage[2], 169, 54, MSYS_PRIORITY_HIGHEST - 2, RetreatMercsCallback);
 
 	SpecifyGeneralButtonTextAttributes( iPBButton[0], gpStrategicString[ STR_PB_AUTORESOLVE_BTN ], BLOCKFONT, FONT_BEIGE, 141 );
 	SpecifyGeneralButtonTextAttributes( iPBButton[1], gpStrategicString[ STR_PB_GOTOSECTOR_BTN ], BLOCKFONT, FONT_BEIGE, 141 );

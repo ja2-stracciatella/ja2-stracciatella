@@ -189,7 +189,7 @@ static void CheckForValidMapEdge(UINT8* pubStrategicInsertionCode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGH, DEFAULT_MOVE_CALLBACK, click);
+	INT32 btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, MSYS_PRIORITY_HIGH, click);
 	iTPButtons[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
 	SetButtonFastHelpText(btn, help);
