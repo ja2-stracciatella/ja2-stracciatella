@@ -644,13 +644,13 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 	//Page up button for the merchant inventory
 	guiSKI_InvPageUpButton = QuickCreateButton( guiSKI_InvPageUpButtonImage, SKI_PAGE_UP_ARROWS_X, SKI_PAGE_UP_ARROWS_Y,
-										BUTTON_NEWTOGGLE, MSYS_PRIORITY_HIGHEST,
+										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										DEFAULT_MOVE_CALLBACK, BtnSKI_InvPageUpButtonCallback );
 	SpecifyDisabledButtonStyle( guiSKI_InvPageUpButton, DISABLED_STYLE_HATCHED );
 
 	//Page down button for the merchant inventory
 	guiSKI_InvPageDownButton = QuickCreateButton( guiSKI_InvPageDownButtonImage, SKI_PAGE_DOWN_ARROWS_X, SKI_PAGE_DOWN_ARROWS_Y,
-										BUTTON_NEWTOGGLE, MSYS_PRIORITY_HIGHEST,
+										BUTTON_NO_TOGGLE, MSYS_PRIORITY_HIGHEST,
 										DEFAULT_MOVE_CALLBACK, BtnSKI_InvPageDownButtonCallback );
 	SpecifyDisabledButtonStyle( guiSKI_InvPageDownButton, DISABLED_STYLE_HATCHED );
 
