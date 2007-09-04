@@ -2848,7 +2848,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 																 AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, MSYS_PRIORITY_HIGH,
 																 BtnContractLengthButtonCallback);
-			SpecifyButtonTextJustification(giContractLengthButton[i], TEXT_LJUSTIFIED);
+			SpecifyButtonTextJustification(giContractLengthButton[i], BUTTON_TEXT_LEFT);
 			SetButtonCursor(giContractLengthButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giContractLengthButton[i], i);
 			SpecifyDisabledButtonStyle( giContractLengthButton[i], DISABLED_STYLE_NONE );
@@ -2865,7 +2865,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 																 AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, MSYS_PRIORITY_HIGH,
 																 BtnBuyEquipmentButtonCallback);
-			SpecifyButtonTextJustification(giBuyEquipmentButton[i], TEXT_LJUSTIFIED);
+			SpecifyButtonTextJustification(giBuyEquipmentButton[i], BUTTON_TEXT_LEFT);
 			SetButtonCursor(giBuyEquipmentButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
 			SpecifyDisabledButtonStyle( giBuyEquipmentButton[i], DISABLED_STYLE_SHADED );

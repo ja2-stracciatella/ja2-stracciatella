@@ -1056,7 +1056,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 	/* If this button is enabled and there is a callback function associated with
 	 * it, call the callback function.
 	 */
-	if (b->uiFlags & BUTTON_ENABLED && b->MoveCallback != BUTTON_NO_CALLBACK)
+	if (b->uiFlags & BUTTON_ENABLED && b->MoveCallback != NULL)
 		b->MoveCallback(b, reason);
 }
 
@@ -1153,7 +1153,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	if (!(b->uiFlags & BUTTON_ENABLED)) return;
 
 	// If there is a callback function with this button, call it
-	if (b->ClickCallback != BUTTON_NO_CALLBACK)
+	if (b->ClickCallback != NULL)
 	{
 		/* Kris:  January 6, 1998
 		 * Added these checks to avoid a case where it was possible to process a
