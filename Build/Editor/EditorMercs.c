@@ -751,7 +751,6 @@ static void DisplayEditMercWindow(void)
 
 	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
 
-//	usFillColorBack = GenericButtonFillColors[0];
 	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
 	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
 	usFillColorTextBk = Get16BPPColor(FROMRGB(250, 240, 188));

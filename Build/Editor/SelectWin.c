@@ -69,7 +69,6 @@ extern BOOLEAN gfOverheadMapDirty;
 
 extern BOOLEAN fDontUseRandom;
 
-extern UINT16 GenericButtonFillColors[40];
 
 static BOOLEAN gfRenderSquareArea = FALSE;
 static INT16 iStartClickX;
@@ -888,9 +887,7 @@ void RenderSelectionWindow( void )
 	if (!fButtonsPresent)
 		return;
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,
-													0, 0, 600, 400,
-													GenericButtonFillColors[0]);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, 600, 400, GetGenericButtonFillColor());
 	DrawSelections( );
 	MarkButtonsDirty();
 	RenderButtons( );

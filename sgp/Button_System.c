@@ -113,7 +113,7 @@ static HVOBJECT GenericButtonOffNormal[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOffHilite[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOnNormal[MAX_GENERIC_PICS];
 static HVOBJECT GenericButtonOnHilite[MAX_GENERIC_PICS];
-UINT16 GenericButtonFillColors[MAX_GENERIC_PICS];
+static UINT16   GenericButtonFillColors[MAX_GENERIC_PICS];
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
@@ -2054,4 +2054,10 @@ void ShowButton(INT32 iButtonNum)
 #if defined JA2
 	InvalidateRegion(b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
 #endif
+}
+
+
+UINT16 GetGenericButtonFillColor(void)
+{
+	return GenericButtonFillColors[0];
 }

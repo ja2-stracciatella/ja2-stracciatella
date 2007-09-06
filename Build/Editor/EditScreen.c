@@ -758,7 +758,6 @@ void ShowCurrentDrawingMode( void )
 	ETRLEObject *pETRLEObject;
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
-	UINT16			usFillColor;
 	INT32				iIndexToUse;
 
 	// Set up a clipping rectangle for the display window.
@@ -989,7 +988,7 @@ void ShowCurrentDrawingMode( void )
 	}
 
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
-	usFillColor = GenericButtonFillColors[0];
+	UINT16 usFillColor = GetGenericButtonFillColor();
 	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	RectangleDraw(FALSE, 0, 400, 99, 458, usFillColor, pDestBuf);
 
@@ -2355,8 +2354,7 @@ static UINT32 WaitForHelpScreenResponse(void)
 													Get16BPPColor(FROMRGB(136, 138, 135)) );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	51, 51, 590, 310,
 													Get16BPPColor(FROMRGB(24, 61, 81)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	51, 51, 589, 309,
-													GenericButtonFillColors[0]);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER,	51, 51, 589, 309, GetGenericButtonFillColor());
 
 	SetFont( gp12PointFont1 );
 

@@ -9,8 +9,6 @@
 
 extern BOOLEAN gfFakeLights;
 
-extern UINT16 GenericButtonFillColors[40];
-
 void DisplayWayPoints(void);
 
 void ShowLightPositionHandles( void );
@@ -24,8 +22,6 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY );
 extern BOOLEAN gfMercResetUponEditorEntry;
 
 void ProcessSelectionArea();
-
-extern UINT16 GenericButtonFillColors[40];
 
 //These go together.  The taskbar has a specific color scheme.
 extern UINT16 gusEditorTaskbarColor;
