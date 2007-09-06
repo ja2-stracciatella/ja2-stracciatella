@@ -122,7 +122,6 @@ typedef struct
 
 QUOTE_SYSTEM_STRUCT	gCivQuoteData;
 
-wchar_t	gzCivQuote[ 320 ];
 UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
 
@@ -372,6 +371,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		return;
 	}
 
+	wchar_t	gzCivQuote[320];
 	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%ls\"", zQuote );
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
