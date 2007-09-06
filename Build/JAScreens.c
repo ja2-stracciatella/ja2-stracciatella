@@ -1002,7 +1002,7 @@ UINT32 DemoExitScreenHandle(void)
 	INT32									iFactor;
 	static BOOLEAN				fSetMusicToFade = FALSE;
 	wchar_t str[150];
-	static UINT16					usCenter = 320;
+	static UINT16  usCenter;
 	static UINT32					uiCollageID = 0;
 	static BOOLEAN gfFastAnim = FALSE;
 	static BOOLEAN gfPrevFastAnim = FALSE;
@@ -1077,7 +1077,7 @@ UINT32 DemoExitScreenHandle(void)
 	if( !uiStartTime )
 	{
 		uiStartTime = uiTime;
-		usCenter = (UINT16)(320 - (StringPixLength( gpDemoString[0], FONT14ARIAL )+10) + (StringPixLength( gpDemoString[0], FONT14ARIAL )+10));
+		usCenter = SCREEN_WIDTH / 2 - (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10) + (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10);
 		uiWidthString = StringPixLength( gpDemoString[0], FONT14ARIAL );
 		SetFont( FONT14ARIAL );
 		SetFontForeground( FONT_YELLOW );
@@ -1319,7 +1319,7 @@ UINT32 DemoExitScreenHandle(void)
 			width = StringPixLength(String, usFont);
 			SetFont( usFont );
 
-			mprintf(320 - width / 2, yp + i * 17, String);
+			mprintf((SCREEN_WIDTH - width) / 2, yp + i * 17, String);
 		}
 		if( !fSetMusicToFade && iPercentage > 43000 )
 		{
@@ -1478,13 +1478,14 @@ UINT32 DemoExitScreenHandle(void)
 			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[40] );
 			str[ uiCharsToPrint ] = L'\0';
-			#ifdef GERMAN
-				mprintf( 320 - uiWidthString / 2, 370, str );
-				InvalidateRegion( 320 - uiWidthString / 2, 370, 320 + (uiWidthString+1) / 2, 383 );
-			#else
-				mprintf( 320 - uiWidthString / 2, 420, str );
-				InvalidateRegion( 320 - uiWidthString / 2, 420, 320 + (uiWidthString+1) / 2, 433 );
-			#endif
+			const INT32 x = (SCREEN_WIDTH - uiWidthString) / 2;
+#if defined GERMAN
+			const INT32 y = 370;
+#else
+			const INT32 y = 420;
+#endif
+			mprintf(x, y, str);
+			InvalidateRegion(x, y, x + uiWidthString, y + 13);
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender();
 		}

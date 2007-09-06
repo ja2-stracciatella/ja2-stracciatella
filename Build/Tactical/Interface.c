@@ -2474,7 +2474,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 	}
 
 	// Draw text....
-	FindFontCenterCoordinates( 320, 7, 1, 1, psString, TINYFONT1, &sX, &sY );
+	FindFontCenterCoordinates(0, 7, SCREEN_WIDTH, 1, psString, TINYFONT1, &sX, &sY);
 	mprintf( sX, sY, psString );
 
 	// Change back...

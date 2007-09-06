@@ -5,6 +5,7 @@
 #include "Button_System.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Local.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
 #include "LoadScreen.h"
@@ -883,7 +884,7 @@ static UINT32 ProcessFileIO(void)
 			SetFontBackground( 0 );
 			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
-			usStartX = 320 - StringPixLength(zOrigName, HUGEFONT) / 2;
+			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;
 			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
 			mprintf( usStartX, usStartY, zOrigName );
 

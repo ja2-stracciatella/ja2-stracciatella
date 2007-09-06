@@ -794,7 +794,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	gpAR->uiTimeSlice = gpAR->uiTimeSlice * gpAR->ubTimeModifierPercentage / 100;
 
-	iTop = 240 - gpAR->sHeight/2;
+	iTop = (SCREEN_HEIGHT - gpAR->sHeight) / 2;
 	if( iTop > 120 )
 		iTop -= 40;
 
@@ -1011,12 +1011,11 @@ static void BuildInterfaceBuffer(void)
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
-	gpAR->Rect.iLeft		= 320 - gpAR->sWidth/2;
-	gpAR->Rect.iRight		= gpAR->Rect.iLeft + gpAR->sWidth;
-	gpAR->Rect.iTop			= 240 - gpAR->sHeight/2;
-	if( gpAR->Rect.iTop > 120 )
-		gpAR->Rect.iTop -= 40;
-	gpAR->Rect.iBottom	= gpAR->Rect.iTop + gpAR->sHeight;
+	gpAR->Rect.iLeft   = (SCREEN_WIDTH  - gpAR->sWidth)  / 2;
+	gpAR->Rect.iTop    = (SCREEN_HEIGHT - gpAR->sHeight) / 2;
+	if (gpAR->Rect.iTop > 120) gpAR->Rect.iTop -= 40;
+	gpAR->Rect.iRight  = gpAR->Rect.iLeft + gpAR->sWidth;
+	gpAR->Rect.iBottom = gpAR->Rect.iTop  + gpAR->sHeight;
 
 	DestRect.iLeft			= 0;
 	DestRect.iTop				= 0;
@@ -1988,7 +1987,7 @@ static void CreateAutoResolveInterface(void)
 
 	//If we are bumping up the interface, then also use that piece of info to
 	//move the buttons up by the same amount.
-	gpAR->bVerticalOffset = 240 - gpAR->sHeight/2 > 120 ? -40 : 0;
+	gpAR->bVerticalOffset = (SCREEN_HEIGHT - gpAR->sHeight) / 2 > 120 ? -40 : 0;
 
 	const INT16 dx = gpAR->sCenterStartX;
 	const INT16 dy = gpAR->bVerticalOffset;

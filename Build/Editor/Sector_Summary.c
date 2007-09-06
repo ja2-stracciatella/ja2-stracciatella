@@ -1553,7 +1553,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		}
 		else
 		{
-			mprintf( 320 - StringPixLength( str, FONT10ARIAL )/2, 190, str );
+			mprintf((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
 			InvalidateRegion( 200, 190, 400, 200 );
 			CreateProgressBar( 0, 250, 200, 390, 210 );
 		}
@@ -2618,11 +2618,11 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );
 	const wchar_t* UpdateInfo = L"MAJOR VERSION UPDATE";
-	mprintf(320 - StringPixLength(UpdateInfo, HUGEFONT) / 2, 105, UpdateInfo);
+	mprintf((SCREEN_WIDTH - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);
-	mprintf( 320 - StringPixLength( str, FONT10ARIAL )/2, 130, str );
+	mprintf((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
 
 	CreateProgressBar( 2, 120, 170, 520, 202 );
 	DefineProgressBarPanel( 2, 65, 79, 94, 100, 150, 540, 222 );

@@ -1023,11 +1023,13 @@ static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 void RenderPausedGameBox( void )
 {
-	if( ( gfPauseDueToPlayerGamePause == TRUE ) && ( gfGamePaused == TRUE ) && ( iPausedPopUpBox != -1 ) )
+	if (gfPauseDueToPlayerGamePause && gfGamePaused && iPausedPopUpBox != -1)
 	{
-		RenderMercPopUpBoxFromIndex( iPausedPopUpBox, ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2 ), FRAME_BUFFER );
-		InvalidateRegion( ( INT16 )( 320 - usPausedActualWidth / 2 ), ( INT16 )( 200 - usPausedActualHeight / 2  ), ( INT16 )( 320 - usPausedActualWidth / 2 + usPausedActualWidth ), ( INT16 )( 200 - usPausedActualHeight / 2 + usPausedActualHeight ) );
- 	}
+		const INT32 x = (SCREEN_WIDTH - usPausedActualWidth)  / 2;
+		const INT32 y = 200 - usPausedActualHeight / 2;
+		RenderMercPopUpBoxFromIndex(iPausedPopUpBox, x, y, FRAME_BUFFER);
+		InvalidateRegion(x, y, x + usPausedActualWidth, y + usPausedActualHeight);
+	}
 
 	// reset we've just finished a pause by the player
 	gfJustFinishedAPause = FALSE;
