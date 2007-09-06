@@ -141,14 +141,6 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	FastDebugMsg("Initializing Input Manager");
-	// Initialize the Input Manager
-	if (InitializeInputManager() == FALSE)
-	{ // We were unable to initialize the input manager
-		FastDebugMsg("FAILED : Initializing Input Manager");
-		return FALSE;
-	}
-
 	FastDebugMsg("Initializing Video Manager");
 	// Initialize DirectDraw (DirectX 2)
 	if (!InitializeVideoManager())

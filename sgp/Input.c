@@ -37,29 +37,6 @@ static UINT16    gusHeadIndex;
 static UINT16    gusTailIndex;
 
 
-BOOLEAN InitializeInputManager(void)
-{
-	memset(gfKeyState, FALSE, sizeof(gfKeyState));
-	// Initialize the Event Queue
-	gusQueueCount = 0;
-	gusHeadIndex  = 0;
-	gusTailIndex  = 0;
-
-	// Initialize variables pertaining to DOUBLE CLIK stuff
-	guiSingleClickTimer = 0;
-	// Initialize variables pertaining to the button states
-	gfLeftButtonState  = FALSE;
-	gfRightButtonState = FALSE;
-	// Initialize variables pertaining to the repeat mechanism
-	guiLeftButtonRepeatTimer = 0;
-	guiRightButtonRepeatTimer = 0;
-	// Set the mouse to the center of the screen
-	gusMouseXPos = 320;
-	gusMouseYPos = 240;
-	return TRUE;
-}
-
-
 static void QueueMouseEvent(UINT16 ubInputEvent)
 {
 	// Can we queue up one more event, if not, the event is lost forever

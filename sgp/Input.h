@@ -39,7 +39,6 @@ typedef struct
 extern "C" {
 #endif
 
-extern BOOLEAN			InitializeInputManager(void);
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
 
 void MouseButtonDown(const SDL_MouseButtonEvent*);
